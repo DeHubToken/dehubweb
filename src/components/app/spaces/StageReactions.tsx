@@ -129,20 +129,23 @@ export function StageReactions({ spaceId, onAvatarReaction }: StageReactionsProp
 
   return (
     <>
-      {/* Floating reactions — centered in stage area */}
+      {/* Floating reactions — spread across full stage width */}
       {floating.length > 0 && (
-        <div className="flex justify-center pointer-events-none" style={{ height: 0 }}>
-          <div className="relative w-48" style={{ height: 140 }}>
-            {floating.map(r => (
-              <span
-                key={r.id}
-                className="absolute bottom-0 text-2xl animate-float-up"
-                style={{ left: `calc(50% + ${r.x}px)`, animationDuration: '2.2s' }}
-              >
-                {r.emoji}
-              </span>
-            ))}
-          </div>
+        <div className="absolute inset-x-0 bottom-0 pointer-events-none overflow-hidden" style={{ height: 200 }}>
+          {floating.map(r => (
+            <span
+              key={r.id}
+              className="absolute bottom-0 animate-float-up"
+              style={{
+                left: `${r.x}%`,
+                fontSize: `${r.scale * 1.5}rem`,
+                animationDuration: `${r.duration}s`,
+                opacity: 0.9,
+              }}
+            >
+              {r.emoji}
+            </span>
+          ))}
         </div>
       )}
 
