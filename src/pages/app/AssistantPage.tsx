@@ -2334,7 +2334,7 @@ export default function AssistantPage() {
                   >
                     
                     <LiquidGlassBubble2
-                      label={t('assistant.generateImage')}
+                      label={`🖼️ ${t('assistant.generateImage')}`}
                       onClick={() => {
                         setInput(t('assistant.generateImageOf'));
                         inputRef.current?.focus();
