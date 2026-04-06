@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
-import { Download, Pause, Play } from 'lucide-react';
+import { Download, Pause, Play, Share } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
 import { decodeAudioWaveform } from '@/components/app/audio/visualizer-styles';
 import { formatTime } from '@/lib/audio-waveform';
 import { cn } from '@/lib/utils';
+import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 
 interface GeneratedAudioPlayerProps {
   audioUrl: string;
