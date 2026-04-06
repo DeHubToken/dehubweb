@@ -42,7 +42,9 @@ export function BuyAlertCard({ content, timestamp }: { content: string; timestam
   const buyerUrl = `https://basescan.org/address/${data.buyerAddress}`;
 
   return (
-    <div className="mx-3 my-1.5 rounded-xl border border-zinc-700/50 bg-zinc-900/90 p-3 text-xs shadow-md shadow-black/40 backdrop-blur-sm">
+    <div className="mx-3 my-1.5">
+      <LiquidGlassBubble shimmer noBorder className="w-full">
+        <div className="text-xs">
       {/* Header */}
       <div className="flex items-center justify-between mb-2.5">
         <div className="flex items-center gap-1.5">
