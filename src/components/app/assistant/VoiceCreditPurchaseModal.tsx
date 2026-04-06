@@ -228,7 +228,7 @@ export function VoiceCreditPurchaseModal({
               {profileLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
               ) : (
-                <span className={hasEnoughBalance ? 'text-green-400' : 'text-red-400'}>
+                <span className={hasEnoughBalance ? 'text-white font-bold' : 'text-red-400'}>
                   {formatDhb(userBalance)} DHB
                 </span>
               )}
