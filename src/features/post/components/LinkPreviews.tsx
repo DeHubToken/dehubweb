@@ -39,7 +39,18 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
     }
   }, [text, communityDismissed]);
 
+  // Reset dismissed state when text changes to a different event
+  const prevEventRef = useRef<string | null>(null);
   useEffect(() => {
+    const currentEid = extractEventId(text);
+    if (currentEid !== prevEventRef.current) {
+      prevEventRef.current = currentEid;
+      if (currentEid && eventDismissed) {
+        setEventDismissed(false);
+      }
+    }
+  }, [text, eventDismissed]);
+
     const urls = extractUrlsFromText(text);
     
     // Skip community and event URLs - they get their own embeds
