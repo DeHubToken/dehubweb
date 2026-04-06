@@ -27,7 +27,19 @@ const CallFailureDialog: React.FC<CallFailureDialogProps> = ({
   callType,
   failureReason,
   recipientAddress,
-}) => {
+  const [displayName, setDisplayName] = useState(recipientAddress.slice(0, 6) + '...');
+
+  useEffect(() => {
+    if (recipientAddress) {
+      getAccountInfo(recipientAddress)
+        .then(user => {
+          if (user?.username) setDisplayName(`@${user.username}`);
+          else if (user?.displayName) setDisplayName(user.displayName);
+        })
+        .catch(() => {});
+    }
+  }, [recipientAddress]);
+
   const isUserOffline = failureReason === 'user_offline';
 
   const getTitle = () => {
@@ -37,7 +49,7 @@ const CallFailureDialog: React.FC<CallFailureDialogProps> = ({
 
   const getDescription = () => {
     if (isUserOffline) {
-      return `${recipientAddress.slice(0, 6)}... is not currently available for ${callType === 'video' ? 'video' : 'voice'} calls. You can send a callback request and they can call you back when online.`;
+      return `${displayName} is not currently available for ${callType === 'video' ? 'video' : 'voice'} calls. You can send a callback request and they can call you back when online.`;
     }
     return 'The call could not be completed. Please check your connection and try again.';
   };
