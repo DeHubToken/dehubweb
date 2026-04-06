@@ -461,6 +461,13 @@ export function PublicChat({ onBack }: PublicChatProps) {
             </div>
           ) : (
             filteredMessages.map((message) => (
+              message.id.startsWith('buy-alert-') ? (
+                <BuyAlertCard
+                  key={message.id}
+                  content={message.content}
+                  timestamp={message.timestamp.toISOString()}
+                />
+              ) : (
               <ChatMessage 
                 key={message.id} 
                 message={message}
@@ -475,6 +482,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
                 onRemoveReaction={removeReaction}
                 onReply={isAuthenticated ? handleReply : undefined}
               />
+              )
             ))
           )}
           <div ref={bottomRef} />

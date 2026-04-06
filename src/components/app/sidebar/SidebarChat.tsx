@@ -121,6 +121,20 @@ export function SidebarChat() {
   const { messages, isLoading: messagesLoading, isSending, send, addReaction, removeReaction } = useLiveChatMessages(roomId);
   const { onlineCount } = useLiveChatPresence(roomId);
 
+  // Buy alerts
+  const buyAlerts = useBuyAlerts();
+
+  // Merge livechat messages with buy alerts
+  type MergedItem = { type: 'message'; data: typeof messages[0] } | { type: 'buy_alert'; data: BuyAlertMessage };
+  const mergedItems: MergedItem[] = (() => {
+    const items: MergedItem[] = [
+      ...messages.map((m) => ({ type: 'message' as const, data: m })),
+      ...buyAlerts.map((a) => ({ type: 'buy_alert' as const, data: a })),
+    ];
+    items.sort((a, b) => new Date(a.data.created_at).getTime() - new Date(b.data.created_at).getTime());
+    return items;
+  })();
+
   useEffect(() => {
     if (messages.length > 0 && bottomRef.current) {
       const scrollContainer = bottomRef.current.closest('.overflow-y-auto');
