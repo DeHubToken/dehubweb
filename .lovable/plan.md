@@ -1,26 +1,26 @@
 
 
-## Add Confirmation Dialog for Clear All History
+## Plan: Post AI-Generated Audio as Actual File (Not Link)
 
 ### Problem
-Clicking "Clear All" in the conversation history drawer immediately deletes all conversations with no way to undo. Users can accidentally lose their entire chat history.
+Currently, clicking the Post/Share button on a generated audio track opens the post modal with just a text string containing the fal.ai URL. This results in a link post, not an actual audio post.
 
 ### Solution
-Add a confirmation step before clearing all conversations. When the user clicks "Clear All", show a confirmation state with "Are you sure?" and two buttons: "Cancel" and "Confirm".
+Fetch the audio file from the fal.ai URL, convert it to a `File` object, and pass it to the post modal as an actual audio file attachment — the same way the AI Chat's image posting works.
 
-### Implementation
+### Changes
 
-**File: `src/components/app/assistant/ConversationHistoryDrawer.tsx`**
+**1. `src/hooks/use-global-drop-zone.tsx`**
+- Add an `openPostModalWithFiles` function that accepts a `FileList` + optional text, sets `pendingFiles`, and opens the modal.
+- Expose it in the context.
 
-1. Add a `showClearConfirm` boolean state
-2. When "Clear All" is clicked, set `showClearConfirm = true` instead of immediately deleting
-3. Replace the button with a confirmation UI showing "Are you sure?" with Cancel and Confirm buttons
-4. Cancel resets the state; Confirm calls the existing `handleClearAll` and resets the confirm state
-5. Auto-reset `showClearConfirm` when the drawer closes
+**2. `src/components/app/assistant/GeneratedAudioPlayer.tsx`**
+- Replace the current `openPostModal` text-only call with logic that:
+  1. Fetches the audio URL as a blob
+  2. Creates a `File` object (`dehub-audio.mp3`, type `audio/mpeg`)
+  3. Uses `DataTransfer` to create a `FileList`
+  4. Calls `openPostModalWithFiles` to open the post modal with the actual audio file attached
+- Add a loading state on the Share button while fetching
 
-### UI Detail
-The confirmation replaces the "Clear All" button inline — no modal/dialog needed. Two small buttons appear: a white "Cancel" and a red "Yes, Clear" button, keeping the interaction lightweight and contextual.
-
-### Files Changed
-- `src/components/app/assistant/ConversationHistoryDrawer.tsx` — ~15 lines added
+This ensures the audio is posted as an actual playable audio file in the feed, not a URL link.
 
