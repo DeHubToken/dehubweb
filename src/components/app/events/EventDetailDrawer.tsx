@@ -406,22 +406,42 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                     : 'Request access to view the chat and RSVP'
                   }
                 </div>
-              )}
+      )}
 
+      {/* Edit drawer */}
+      {isCreator && showEditDrawer && (
+        <EditEventDrawer
+          event={event}
+          open={showEditDrawer}
+          onOpenChange={setShowEditDrawer}
+        />
+      )}
+    
               {/* Creator info + delete */}
               <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
                 <CreatorInfo event={event} />
                 {isCreator && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={handleDelete}
-                    disabled={deleteEvent.isPending}
-                    className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                  >
-                    <Trash2 className="w-4 h-4 mr-1" />
-                    Delete
-                  </Button>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setShowEditDrawer(true)}
+                      className="text-zinc-400 hover:text-white hover:bg-white/5"
+                    >
+                      <Pencil className="w-4 h-4 mr-1" />
+                      Edit
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleDelete}
+                      disabled={deleteEvent.isPending}
+                      className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                    >
+                      <Trash2 className="w-4 h-4 mr-1" />
+                      Delete
+                    </Button>
+                  </div>
                 )}
               </div>
             </div>
