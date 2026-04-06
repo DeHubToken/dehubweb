@@ -329,6 +329,7 @@ export function AudioSpacesModal() {
                                 });
                                 audioRef.current = audio;
                                 setPlayingStageId(space.id);
+                                setPlayingStageTitle(space.title);
                               }
                             }}
                             className={cn(
