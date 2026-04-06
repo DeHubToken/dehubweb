@@ -168,10 +168,26 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
 
           <div className="overflow-y-auto">
             {/* Cover */}
-            <div className="h-48 bg-gradient-to-br from-white/5 to-white/10 relative">
-              {event.cover_image_url && (
-                <img src={event.cover_image_url} alt={event.title} className="w-full h-full object-cover" />
-              )}
+            <div className="h-48 lg:max-h-56 bg-gradient-to-br from-white/5 to-white/10 relative">
+              {event.cover_image_url ? (
+                <img
+                  src={event.cover_image_url}
+                  alt={event.title}
+                  className="w-full h-48 lg:h-56 object-cover"
+                  onLoad={(e) => {
+                    const img = e.currentTarget;
+                    const natural = img.naturalHeight / img.naturalWidth;
+                    const container = img.parentElement;
+                    if (container && natural < 0.35) {
+                      // Thinner image → shrink container to fit
+                      const w = container.clientWidth;
+                      const fitted = Math.min(w * natural, container.clientHeight);
+                      container.style.height = `${fitted}px`;
+                      img.style.height = `${fitted}px`;
+                    }
+                  }}
+                />
+              ) : null}
               {/* Private badge on cover */}
               {isPrivate && (
                 <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-1 rounded-lg bg-black/60 backdrop-blur-sm">
