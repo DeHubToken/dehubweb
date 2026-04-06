@@ -35,6 +35,9 @@ interface StageContextType {
   isModalOpen: boolean;
   /** Aggregate audio volume level 0-1 from all speakers */
   volumeLevel: number;
+  /** Current voice effect */
+  voiceEffect: VoiceEffectId;
+  setVoiceEffect: (id: VoiceEffectId) => void;
 
   // Modal controls
   openModal: (view?: 'browse' | 'create' | 'live') => void;
