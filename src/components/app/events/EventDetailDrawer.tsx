@@ -96,7 +96,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                 disabled={toggleRsvp.isPending}
               >
                 <CheckCircle2 className="w-4 h-4 mr-1.5" />
-                Going ({event.going_count})
+                Going ({goingList.length})
               </Button>
               <Button
                 onClick={() => handleRsvp('interested')}
@@ -110,7 +110,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                 disabled={toggleRsvp.isPending}
               >
                 <Star className="w-4 h-4 mr-1.5" />
-                Interested ({event.interested_count})
+                Interested ({interestedList.length})
               </Button>
             </div>
 
