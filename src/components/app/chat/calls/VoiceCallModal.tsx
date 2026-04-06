@@ -59,12 +59,6 @@ const VoiceCallModal: React.FC = () => {
           <DialogDescription className="sr-only">
             Use the controls to accept, mute, or end the call.
           </DialogDescription>
-          <button
-            onClick={endCall}
-            className="absolute right-4 top-4 text-white/60 hover:text-white transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
         </DialogHeader>
 
         <audio
