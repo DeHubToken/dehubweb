@@ -47,6 +47,7 @@ import { AuthGate } from '@/components/app/AuthGate';
 import { UserMentionDropdown, type MentionUser } from '@/components/app/mentions';
 import { ConversationHistoryDrawer } from '@/components/app/assistant/ConversationHistoryDrawer';
 import { GeneratedAudioPlayer } from '@/components/app/assistant/GeneratedAudioPlayer';
+import { MusicConfirmDialog, type MusicParams } from '@/components/app/assistant/MusicConfirmDialog';
 import { SwapActionCard } from '@/components/app/chat/SwapActionCard';
 import { useAIConversation } from '@/hooks/use-ai-conversation';
 import { streamChat } from '@/lib/stream-chat';
@@ -447,6 +448,8 @@ export default function AssistantPage() {
     sourceImage?: string;
     audioUrl?: string;
   } | null>(null);
+  const [musicConfirmOpen, setMusicConfirmOpen] = useState(false);
+  const [pendingMusicPrompt, setPendingMusicPrompt] = useState('');
 
   const [voiceAutoReply, setVoiceAutoReply] = useState(true); // Auto-speak AI replies when using voice
   const [alwaysSpeakReplies, setAlwaysSpeakReplies] = useState(false); // Speak ALL AI replies, not just voice responses
@@ -1276,6 +1279,10 @@ export default function AssistantPage() {
       const body: Record<string, unknown> = { tool: actualTool, prompt };
       if (sourceImage) body.image_url = sourceImage;
       if (category === 'tts') body.text = prompt;
+      // Pass lyrics separately for music tools
+      if ((pendingAiToolRequest as any)?.lyrics) {
+        body.lyrics = (pendingAiToolRequest as any).lyrics;
+      }
 
       const { data, error } = await supabase.functions.invoke('fal-ai-tools', { body });
 
@@ -1420,6 +1427,14 @@ export default function AssistantPage() {
       const isImageRequest = !aiToolCategory && (isCreativeLogo || requiresImageGeneration(currentInput, !!currentAttachedImage));
       
       if (aiToolCategory) {
+        // For music requests, show confirm dialog first
+        if (aiToolCategory === 'music' || aiToolCategory === 'music-video') {
+          setPendingMusicPrompt(currentInput);
+          setAiToolCategory(aiToolCategory);
+          setMusicConfirmOpen(true);
+          setIsLoading(false);
+          return;
+        }
         const defaultTool = DEFAULT_TOOL_FOR_CATEGORY[aiToolCategory];
         setPendingAiToolRequest({
           prompt: currentInput,
@@ -2750,6 +2765,37 @@ export default function AssistantPage() {
           isGenerating={isImageLoading}
         />
       )}
+
+      {/* Music Confirm Dialog */}
+      <MusicConfirmDialog
+        open={musicConfirmOpen}
+        onOpenChange={(open) => {
+          setMusicConfirmOpen(open);
+          if (!open) setPendingMusicPrompt('');
+        }}
+        userPrompt={pendingMusicPrompt}
+        onConfirm={(params: MusicParams) => {
+          setMusicConfirmOpen(false);
+          // Build a structured prompt from the confirmed params
+          const parts: string[] = [];
+          if (params.title) parts.push(`Title: ${params.title}`);
+          if (params.style) parts.push(`Style: ${params.style}`);
+          if (params.voiceGender !== 'auto') parts.push(`Voice: ${params.voiceGender}`);
+          const structuredPrompt = parts.join('. ') || pendingMusicPrompt;
+          const lyricsValue = params.lyrics || '';
+
+          const defaultTool = DEFAULT_TOOL_FOR_CATEGORY[aiToolCategory];
+          setPendingAiToolRequest({
+            prompt: structuredPrompt,
+            tool: defaultTool,
+            category: aiToolCategory,
+            // Pass lyrics separately so edge function uses them correctly
+            ...(lyricsValue && { lyrics: lyricsValue }),
+          } as any);
+          setSelectedAiToolId(defaultTool);
+          setAiToolPaywallOpen(true);
+        }}
+      />
 
       {/* AI Tool Paywall Modal */}
       {pendingAiToolRequest && (
