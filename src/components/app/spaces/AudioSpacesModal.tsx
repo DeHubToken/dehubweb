@@ -14,7 +14,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
-  Loader2, Volume2,
+  Loader2, Volume2, Ear,
   Link, UserPlus, Minimize2, Play, Square, Clock, Trash2,
 } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -28,6 +28,7 @@ import { useStage } from '@/contexts/StageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { StageSoundboard } from './StageSoundboard';
+import { StageTTS } from './StageTTS';
 import { VoiceEffectSelector } from '@/components/app/stages/VoiceEffectSelector';
 import { StaticWaveform } from '@/components/app/audio/StaticWaveform';
 import { LiveWaveform } from '@/components/app/audio/LiveWaveform';
@@ -76,8 +77,10 @@ export function AudioSpacesModal() {
   const [description, setDescription] = useState('');
   const [avatarReactions, setAvatarReactions] = useState<AvatarReactions>({});
   const [playingStageId, setPlayingStageId] = useState<string | null>(null);
+  const [playingStageTitle, setPlayingStageTitle] = useState('');
   const [playbackVolume, setPlaybackVolume] = useState(0);
   const [playbackProgress, setPlaybackProgress] = useState(0);
+  const [playbackTimeLeft, setPlaybackTimeLeft] = useState('');
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
@@ -141,6 +144,8 @@ export function AudioSpacesModal() {
 
   const handleJoin = async (spaceId: string) => {
     await joinSpace(spaceId);
+    // Increment listen count
+    supabase.rpc('increment_stage_listens', { p_space_id: spaceId }).then(() => {});
   };
 
   const handleEndOrLeave = () => {
@@ -171,6 +176,7 @@ export function AudioSpacesModal() {
   const listeners = participants.filter(p => p.role === 'listener');
 
   return (
+    <>
     <Drawer open={isModalOpen} onOpenChange={(open) => !open && handleClose()}>
       <DrawerContent className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-white/10 max-h-[90vh] flex flex-col [&>div:first-child]:hidden">
         {!currentSpace ? (
@@ -218,18 +224,8 @@ export function AudioSpacesModal() {
         <div className={cn("flex-1 overflow-y-auto p-4", currentSpace && "pt-2")}>
 
           {/* ── Browse View ─────────────────────────────────────────────── */}
-          {view === 'browse' && !currentSpace && (
+           {view === 'browse' && !currentSpace && (
             <div className="space-y-4">
-              {isAuthenticated && (
-                <Button
-                  onClick={() => setView('create')}
-                  className="w-full bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl"
-                >
-                  <Mic className="w-4 h-4 mr-2" />
-                  Start Stage
-                </Button>
-              )}
-
               <div className="space-y-2">
                 <h3 className="text-sm font-medium text-white/60">Live Now</h3>
                 {liveSpaces.length === 0 ? (
@@ -251,6 +247,16 @@ export function AudioSpacesModal() {
                   </div>
                 )}
               </div>
+
+              {isAuthenticated && (
+                <Button
+                  onClick={() => setView('create')}
+                  className="w-full bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl"
+                >
+                  <Mic className="w-4 h-4 mr-2" />
+                  Start Stage
+                </Button>
+              )}
 
               {/* Past Stages */}
               {pastStages.length > 0 && (
@@ -278,6 +284,7 @@ export function AudioSpacesModal() {
                                 setPlayingStageId(null);
                                 setPlaybackVolume(0);
                                 setPlaybackProgress(0);
+                                setPlaybackTimeLeft('');
                               } else {
                                 // Stop previous
                                 cancelAnimationFrame(rafRef.current);
@@ -290,6 +297,7 @@ export function AudioSpacesModal() {
                                   setPlayingStageId(null);
                                   setPlaybackVolume(0);
                                   setPlaybackProgress(0);
+                                  setPlaybackTimeLeft('');
                                 };
 
                                 // Set up analyser for volume
@@ -308,9 +316,13 @@ export function AudioSpacesModal() {
                                   let sum = 0;
                                   for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
                                   setPlaybackVolume(sum / dataArray.length / 255);
-                                  // Track progress
+                                  // Track progress + time
                                   if (audio.duration && isFinite(audio.duration)) {
                                     setPlaybackProgress(audio.currentTime / audio.duration);
+                                    const remaining = Math.ceil(audio.duration - audio.currentTime);
+                                    const m = Math.floor(remaining / 60);
+                                    const s = remaining % 60;
+                                    setPlaybackTimeLeft(`-${m}:${s.toString().padStart(2, '0')}`);
                                   }
                                   rafRef.current = requestAnimationFrame(pump);
                                 };
@@ -320,6 +332,9 @@ export function AudioSpacesModal() {
                                 });
                                 audioRef.current = audio;
                                 setPlayingStageId(space.id);
+                                setPlayingStageTitle(space.title);
+                                // Increment listen count for recording play
+                                supabase.rpc('increment_stage_listens', { p_space_id: space.id }).then(() => {});
                               }
                             }}
                             className={cn(
@@ -383,17 +398,23 @@ export function AudioSpacesModal() {
                                   })()}
                                 </span>
                               )}
+                              {(space.total_listens ?? 0) > 0 && (
+                                <span className="flex items-center gap-1">
+                                  <Ear className="w-3 h-3" />
+                                  {space.total_listens}
+                                </span>
+                              )}
                             </div>
                           </div>
                         </div>
                         {/* Waveform - right side on desktop, below on mobile */}
                         <div className={cn(
-                          "hidden sm:flex flex-1 h-10 min-w-0 transition-all duration-300",
+                          "hidden sm:flex items-center gap-2 flex-1 h-10 min-w-0 transition-all duration-300",
                           playingStageId === space.id ? "opacity-100 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" : "opacity-40"
                         )}>
                           <StaticWaveform
                             seed={space.id}
-                            className="w-full h-full"
+                            className="w-full h-full flex-1"
                             animated={playingStageId === space.id}
                             volumeLevel={playingStageId === space.id ? playbackVolume : 0}
                             color={playingStageId === space.id ? 'rgba(255,255,255,0.95)' : undefined}
@@ -404,24 +425,32 @@ export function AudioSpacesModal() {
                               }
                             } : undefined}
                           />
+                          {playingStageId === space.id && playbackTimeLeft && (
+                            <span className="text-[10px] text-white/50 font-mono shrink-0 w-10 text-right">{playbackTimeLeft}</span>
+                          )}
                         </div>
                         <div className={cn(
-                          "sm:hidden w-full h-12 transition-all duration-300",
+                          "sm:hidden w-full transition-all duration-300",
                           playingStageId === space.id ? "opacity-100 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" : "opacity-40"
                         )}>
-                          <StaticWaveform
-                            seed={space.id}
-                            className="w-full h-full"
-                            animated={playingStageId === space.id}
-                            volumeLevel={playingStageId === space.id ? playbackVolume : 0}
-                            color={playingStageId === space.id ? 'rgba(255,255,255,0.95)' : undefined}
-                            progress={playingStageId === space.id ? playbackProgress : undefined}
-                            onSeek={playingStageId === space.id ? (pos) => {
-                              if (audioRef.current && isFinite(audioRef.current.duration)) {
-                                audioRef.current.currentTime = pos * audioRef.current.duration;
-                              }
-                            } : undefined}
-                          />
+                          <div className="h-12">
+                            <StaticWaveform
+                              seed={space.id}
+                              className="w-full h-full"
+                              animated={playingStageId === space.id}
+                              volumeLevel={playingStageId === space.id ? playbackVolume : 0}
+                              color={playingStageId === space.id ? 'rgba(255,255,255,0.95)' : undefined}
+                              progress={playingStageId === space.id ? playbackProgress : undefined}
+                              onSeek={playingStageId === space.id ? (pos) => {
+                                if (audioRef.current && isFinite(audioRef.current.duration)) {
+                                  audioRef.current.currentTime = pos * audioRef.current.duration;
+                                }
+                              } : undefined}
+                            />
+                          </div>
+                          {playingStageId === space.id && playbackTimeLeft && (
+                            <span className="block text-[10px] text-white/50 font-mono text-right mt-0.5">{playbackTimeLeft}</span>
+                          )}
                         </div>
                         {/* Delete button — only for the host */}
                         {walletAddress && space.host_wallet_address &&
@@ -442,7 +471,8 @@ export function AudioSpacesModal() {
                                   await supabase.storage.from('stage-recordings').remove([decodeURIComponent(path)]);
                                 }
                               }
-                              await supabase.from('audio_spaces').delete().eq('id', space.id);
+                              await supabase.from('audio_spaces').delete().eq('id', space.id)
+                                .setHeader('x-wallet-address', (walletAddress || '').toLowerCase());
                               queryClient.invalidateQueries({ queryKey: ['past-stages'] });
                               toast.success('Stage deleted');
                             }}
@@ -605,12 +635,6 @@ export function AudioSpacesModal() {
                 <VoiceEffectSelector activeEffect={voiceEffect} onSelect={setVoiceEffect} />
               )}
 
-              {/* Reactions bento card */}
-              <StageReactions
-                spaceId={currentSpace.id}
-                onAvatarReaction={setAvatarReactions}
-              />
-
               {/* Soundboard — always visible for hosts */}
               {myRole === 'host' && (
                 <StageSoundboard
@@ -618,6 +642,17 @@ export function AudioSpacesModal() {
                   onClose={() => {}}
                 />
               )}
+
+              {/* Text-to-Speech — hosts and speakers */}
+              {(myRole === 'host' || myRole === 'speaker') && (
+                <StageTTS />
+              )}
+
+              {/* Reactions bento card */}
+              <StageReactions
+                spaceId={currentSpace.id}
+                onAvatarReaction={setAvatarReactions}
+              />
             </div>
           )}
         </div>
@@ -682,6 +717,56 @@ export function AudioSpacesModal() {
         )}
       </DrawerContent>
     </Drawer>
+
+      {/* Floating mini player for past stage recordings */}
+      {playingStageId && !isModalOpen && (
+        <div
+          className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 w-[90vw] max-w-sm bg-black/80 backdrop-blur-xl border border-white/15 rounded-2xl p-3 shadow-2xl"
+          onClick={() => openModal('browse')}
+        >
+          <div className="flex items-center gap-3">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                cancelAnimationFrame(rafRef.current);
+                audioRef.current?.pause();
+                audioRef.current = null;
+                analyserRef.current = null;
+                setPlayingStageId(null);
+                setPlayingStageTitle('');
+                setPlaybackVolume(0);
+                setPlaybackProgress(0);
+                setPlaybackTimeLeft('');
+              }}
+              className="shrink-0 w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all"
+            >
+              <Square className="w-3.5 h-3.5" fill="currentColor" />
+            </button>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-medium text-white truncate">{playingStageTitle || 'Past Stage'}</p>
+              <div className="h-6 mt-0.5">
+                <StaticWaveform
+                  seed={playingStageId}
+                  className="w-full h-full"
+                  animated
+                  volumeLevel={playbackVolume}
+                  color="rgba(255,255,255,0.9)"
+                  progress={playbackProgress}
+                  onSeek={(pos) => {
+                    if (audioRef.current && isFinite(audioRef.current.duration)) {
+                      audioRef.current.currentTime = pos * audioRef.current.duration;
+                    }
+                  }}
+                />
+              </div>
+            </div>
+            {playbackTimeLeft && (
+              <span className="text-[10px] text-white/50 font-mono shrink-0">{playbackTimeLeft}</span>
+            )}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -733,6 +818,12 @@ function StageCard({
           <Users className="w-3 h-3" />
           {(space.speaker_count || 0) + (space.listener_count || 0)}
         </span>
+        {(space.total_listens ?? 0) > 0 && (
+          <span className="flex items-center gap-1">
+            <Ear className="w-3 h-3" />
+            {space.total_listens}
+          </span>
+        )}
       </div>
       <div className="mt-3 w-full h-10 rounded-lg overflow-hidden">
         <LiveWaveform active={true} barCount={60} />

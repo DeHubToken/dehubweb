@@ -1,26 +1,36 @@
 
+## Plan: Full ElevenLabs Voice Library with Search
 
-## Add Confirmation Dialog for Clear All History
+### What Changes
 
-### Problem
-Clicking "Clear All" in the conversation history drawer immediately deletes all conversations with no way to undo. Users can accidentally lose their entire chat history.
+**1. New Edge Function: `elevenlabs-voices`**
+- Proxies `GET https://api.elevenlabs.io/v2/voices` with search/filter params
+- Accepts query params: `search` (text query), `page_size` (default 20)
+- Returns JSON list of voices with id, name, description, labels, preview URL
+- Caches results client-side with React Query (5 min stale time)
 
-### Solution
-Add a confirmation step before clearing all conversations. When the user clicks "Clear All", show a confirmation state with "Are you sure?" and two buttons: "Cancel" and "Confirm".
+**2. Update `StageTTS.tsx`**
+- Remove hardcoded `TTS_VOICES` array
+- Add a search input field above the voice list
+- Fetch voices from the edge function using React Query, debounced search
+- Show voices as scrollable compact list with name + description tag (e.g. "young", "British")
+- Selected voice highlighted, click to select
+- Keep the text input + send button below
+- Show a few default popular voices on initial load (no search term)
 
-### Implementation
+### UI Layout in Drawer
+```
+┌─ Text-to-Speech ──────────────┐
+│ 🔍 Search voices...           │
+│ ┌─────────────────────────┐   │
+│ │ Roger  · deep male      │   │
+│ │ Sarah  · warm female    │ ◄ scrollable
+│ │ Alice  · clear female   │   │
+│ │ ...                     │   │
+│ └─────────────────────────┘   │
+│ [Type message...] [Send]      │
+│                        0/500  │
+└───────────────────────────────┘
+```
 
-**File: `src/components/app/assistant/ConversationHistoryDrawer.tsx`**
-
-1. Add a `showClearConfirm` boolean state
-2. When "Clear All" is clicked, set `showClearConfirm = true` instead of immediately deleting
-3. Replace the button with a confirmation UI showing "Are you sure?" with Cancel and Confirm buttons
-4. Cancel resets the state; Confirm calls the existing `handleClearAll` and resets the confirm state
-5. Auto-reset `showClearConfirm` when the drawer closes
-
-### UI Detail
-The confirmation replaces the "Clear All" button inline — no modal/dialog needed. Two small buttons appear: a white "Cancel" and a red "Yes, Clear" button, keeping the interaction lightweight and contextual.
-
-### Files Changed
-- `src/components/app/assistant/ConversationHistoryDrawer.tsx` — ~15 lines added
-
+### No DB changes needed

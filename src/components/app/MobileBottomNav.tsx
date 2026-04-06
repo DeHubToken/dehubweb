@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase } from 'lucide-react';
+import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
 import { AuthPrompt } from './AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
+import { useStage } from '@/contexts/StageContext';
 
 
 
@@ -22,6 +23,7 @@ const RIGHT_NAV_ITEMS = [
 const SCROLL_NAV_ITEMS = [
   { icon: User, label: 'Profile', path: '/app/profile', requiresAuth: true },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
+  { icon: Mic, label: 'Stages', path: '#stages', action: 'open-stages' },
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
   { icon: Wallet, label: 'Wallet', path: '/app/wallet' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
@@ -38,6 +40,7 @@ export function MobileBottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
+  const { openModal: openStagesModal } = useStage();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -218,7 +221,7 @@ export function MobileBottomNav() {
 
             {/* Additional items - accessible via scroll */}
             {SCROLL_NAV_ITEMS.map((item) => {
-              const isActive = !item.external && location.pathname.startsWith(item.path);
+              const isActive = !item.external && !(item as any).action && location.pathname.startsWith(item.path);
               
               if (item.external) {
                 return (
@@ -232,6 +235,19 @@ export function MobileBottomNav() {
                   >
                     <item.icon className="w-5 h-5 md:w-6 md:h-6 transition-all duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]" />
                   </a>
+                );
+              }
+
+              if ((item as any).action === 'open-stages') {
+                return (
+                  <button
+                    key={item.label}
+                    onClick={() => openStagesModal()}
+                    className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-all duration-200 text-white"
+                    style={{ width: 'calc((50% - 24px) / 2)' }}
+                  >
+                    <item.icon className="w-5 h-5 md:w-6 md:h-6 transition-all duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]" />
+                  </button>
                 );
               }
 

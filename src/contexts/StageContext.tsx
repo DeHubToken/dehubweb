@@ -56,6 +56,7 @@ interface StageContextType {
   removeSpeaker: (walletAddress: string) => Promise<void>;
   inviteSpeaker: (walletAddress: string) => Promise<void>;
   refreshSpaces: () => Promise<void>;
+  injectAudio: (audioBlob: Blob) => Promise<void>;
 }
 
 const StageContext = createContext<StageContextType | null>(null);
@@ -846,6 +847,53 @@ export function StageProvider({ children }: { children: ReactNode }) {
     };
   }, [currentSpace?.id, leaveSpace, upgradeSpeaker]);
 
+  // ─── Inject TTS audio into Agora channel ────────────────────────────────
+
+  const injectAudio = useCallback(async (audioBlob: Blob) => {
+    const client = agoraClientRef.current;
+    const originalTrack = localAudioTrackRef.current;
+    if (!client || !originalTrack) {
+      throw new Error('Not connected to a stage');
+    }
+
+    const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
+    const audioCtx = new AudioContext();
+
+    try {
+      const arrayBuffer = await audioBlob.arrayBuffer();
+      const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+
+      const source = audioCtx.createBufferSource();
+      source.buffer = audioBuffer;
+
+      const destination = audioCtx.createMediaStreamDestination();
+      source.connect(destination);
+
+      const ttsTrack = AgoraRTC.createCustomAudioTrack({
+        mediaStreamTrack: destination.stream.getAudioTracks()[0],
+      });
+
+      // Remember mute state, unpublish mic, publish TTS
+      const wasMuted = originalTrack.muted;
+      await client.unpublish([originalTrack]);
+      await client.publish([ttsTrack]);
+
+      // Play and wait for end
+      await new Promise<void>((resolve) => {
+        source.onended = () => resolve();
+        source.start(0);
+      });
+
+      // Restore original mic track
+      await client.unpublish([ttsTrack]);
+      ttsTrack.close();
+      await client.publish([originalTrack]);
+      originalTrack.setMuted(wasMuted);
+    } finally {
+      await audioCtx.close();
+    }
+  }, []);
+
   // Live spaces subscription
   useEffect(() => {
     refreshSpaces();
@@ -886,6 +934,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         removeSpeaker,
         inviteSpeaker,
         refreshSpaces,
+        injectAudio,
       }}
     >
       {children}

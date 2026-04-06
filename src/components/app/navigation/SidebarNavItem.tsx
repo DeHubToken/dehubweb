@@ -119,6 +119,37 @@ export function SidebarNavItem({
     );
   }
 
+  // Action items (like Stages) render as buttons, not links
+  if (item.action) {
+    return (
+      <button
+        onClick={(e) => {
+          onClick?.(e);
+          onNavigate?.();
+        }}
+        className={cn(
+          'relative flex items-center rounded-2xl transition-colors text-white text-[15px] w-full text-left',
+          isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
+          !isActive && (variant === 'mobile' ? 'hover:bg-zinc-700/50' : 'hover:bg-zinc-800/50')
+        )}
+      >
+        {glassIndicator}
+        <div className={cn(
+          "relative z-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
+          isDesktop ? "w-9 h-9" : "w-10 h-10",
+          isDesktop
+            ? isActive ? "bg-transparent" : (collapsed && !isForceCollapsed) ? "bg-transparent lg:bg-zinc-800" : isForceCollapsed ? "bg-transparent" : "bg-zinc-800"
+            : isActive
+              ? "bg-white/[0.10] backdrop-blur-sm border border-white/[0.12]"
+              : "bg-white/[0.06] backdrop-blur-sm border border-white/[0.08]"
+        )}>
+          <item.icon className={cn(isDesktop ? "w-5 h-5" : "w-[22px] h-[22px]")} />
+        </div>
+        <span className={cn("relative z-10 truncate", labelClass)}>{translatedLabel}</span>
+      </button>
+    );
+  }
+
   return (
     <NavLink
       to={item.path}

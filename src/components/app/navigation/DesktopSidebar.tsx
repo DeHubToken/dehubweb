@@ -9,6 +9,7 @@ import { SidebarNavItem } from './SidebarNavItem';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { AuthPrompt } from '../AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
+import { useStage } from '@/contexts/StageContext';
 
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
@@ -26,6 +27,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { isAuthenticated, user, walletAddress, connect, isConnecting, needsSignature } = useAuth();
+  const { openModal: openStagesModal } = useStage();
   
   const { isCollapsed, toggleCollapse } = useSidebarCollapse();
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
@@ -139,10 +141,11 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             !isCollapsed && "lg:p-2.5 lg:space-y-[2px] lg:items-stretch"
           )}>
           {navItemsWithoutAI.map((item) => {
-            const isActive = !item.external && location.pathname.startsWith(item.path);
+            const isActive = !item.external && !item.action && location.pathname.startsWith(item.path);
             const isProfileItem = item.label === 'Profile';
             const isNotificationsItem = item.label === 'Notifications';
             const isAfterMessages = item.label === 'Messages';
+            const isStagesItem = item.action === 'open-stages';
 
             return (
               <React.Fragment key={item.label}>
@@ -154,7 +157,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   variant="desktop"
                   collapsed={true}
                   forceCollapsed={isCollapsed}
-                  onClick={isProfileItem ? handleProfileClick : undefined}
+                  onClick={isStagesItem ? () => openStagesModal() : isProfileItem ? handleProfileClick : undefined}
                   avatarUrl={isProfileItem && isAuthenticated ? userAvatarUrl : undefined}
                   avatarFallback={isProfileItem && isAuthenticated ? displayName.charAt(0).toUpperCase() : undefined}
                   notificationCount={isNotificationsItem ? totalNotifUnread : undefined}
