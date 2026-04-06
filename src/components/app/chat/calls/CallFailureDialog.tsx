@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AlertDialog,
   AlertDialogContent,
@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { Phone, Video, MessageSquare, WifiOff } from 'lucide-react';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
+import { getAccountInfo } from '@/lib/api/dehub/users';
 
 interface CallFailureDialogProps {
   isOpen: boolean;
