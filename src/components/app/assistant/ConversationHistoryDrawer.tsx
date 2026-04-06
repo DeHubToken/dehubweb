@@ -74,6 +74,7 @@ export function ConversationHistoryDrawer({
       setSearchQuery('');
       setSearchResults(null);
       setActiveTab('chats');
+      setShowClearConfirm(false);
     }
   }, [open]);
 
