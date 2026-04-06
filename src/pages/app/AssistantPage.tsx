@@ -2353,7 +2353,7 @@ export default function AssistantPage() {
                       className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
                     />
                     <LiquidGlassBubble2
-                      label={t('assistant.generateVideo')}
+                      label={`🎥 ${t('assistant.generateVideo')}`}
                       onClick={() => {
                         setInput(t('assistant.generateVideoOf'));
                         inputRef.current?.focus();
