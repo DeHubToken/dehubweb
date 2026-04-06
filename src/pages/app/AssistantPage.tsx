@@ -1045,6 +1045,7 @@ export default function AssistantPage() {
       if (data.status === 'succeeded') {
         clearInterval(pollingRef.current[requestId]);
         delete pollingRef.current[requestId];
+        clearPendingTool();
 
         const toolModel = AI_TOOL_MODELS[toolKey];
 
@@ -1135,6 +1136,7 @@ export default function AssistantPage() {
       } else if (data.status === 'failed') {
         clearInterval(pollingRef.current[requestId]);
         delete pollingRef.current[requestId];
+        clearPendingTool();
 
         setMessages(prev => prev.map(m =>
           m.id === messageId ? { ...m, isToolProcessing: false, content: `❌ Processing failed: ${data.error || 'Unknown error'}` } : m
