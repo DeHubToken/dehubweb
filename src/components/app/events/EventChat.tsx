@@ -5,7 +5,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check } from 'lucide-react';
+import { Send, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check, Mic } from 'lucide-react';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { EmojiGifPicker } from '../chat/EmojiGifPicker';
+import { VoiceRecorder } from '../chat/VoiceRecorder';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
@@ -21,6 +22,9 @@ import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { replaceLinksWithEmoji, TranslatableText, SharedTranslationContext } from '../TranslatableText';
 import { useTranslation } from 'react-i18next';
+import { supabase } from '@/integrations/supabase/client';
+import { getAuthToken } from '@/lib/api/dehub';
+import { toast } from 'sonner';
 
 const QUICK_EMOJIS = ['👍', '❤️', '😂', '🔥', '🚀', '👀', '💯', '🙏'];
 
@@ -137,6 +141,39 @@ export function EventChat({ eventId }: EventChatProps) {
     } catch { /* handled */ }
   };
 
+  const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
+    if (!isAuthenticated) { openLoginModal(); return; }
+    const toastId = 'event-voice-upload';
+    toast.loading('Uploading voice note...', { id: toastId });
+    try {
+      const token = getAuthToken();
+      const file = new File([blob], `voice-${Date.now()}.webm`, { type: 'audio/webm' });
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+      const { data, error } = await supabase.functions.invoke('dm-upload-media', {
+        body: formData,
+        headers: {
+          'x-wallet-address': walletAddress?.toLowerCase() || '',
+          'x-dehub-token': token || '',
+        },
+      });
+      if (error || !data?.ok || !data?.url) {
+        throw new Error(data?.error || error?.message || 'Upload failed');
+      }
+      await sendMessage(data.url, 'voice', data.url, replyTo?.id, {
+        username: profileData?.handle || undefined,
+        displayName: profileData?.name || undefined,
+        avatarUrl: profileData?.avatarUrl || undefined,
+        badgeBalance: user?.badgeBalance || undefined,
+      });
+      setReplyTo(null);
+      toast.success('Voice note sent!', { id: toastId });
+    } catch (err: any) {
+      console.error('[EventChat] Voice upload failed:', err);
+      toast.error(err?.message || 'Failed to send voice note', { id: toastId });
+    }
+  }, [isAuthenticated, walletAddress, sendMessage, replyTo, profileData, user, openLoginModal]);
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
   };
@@ -209,6 +246,13 @@ export function EventChat({ eventId }: EventChatProps) {
                         </span>
                         {msg.message_type === 'gif' && msg.image_url ? (
                           <img src={msg.image_url} alt="GIF" className="max-w-[280px] max-h-32 rounded mt-0.5" loading="lazy" />
+                        ) : msg.message_type === 'voice' && msg.image_url ? (
+                          <div className="mt-1 flex items-center gap-2 bg-zinc-800 rounded-lg px-3 py-2 max-w-[200px]">
+                            <Mic className="w-3.5 h-3.5 text-green-400 shrink-0" />
+                            <audio controls preload="none" className="h-8 w-full [&::-webkit-media-controls-panel]:bg-transparent">
+                              <source src={msg.image_url} type="audio/webm" />
+                            </audio>
+                          </div>
                         ) : editingId === msg.id ? (
                           <div className="flex items-center gap-1 mt-0.5">
                             <input autoFocus value={editText} onChange={(e) => setEditText(e.target.value)}
@@ -302,7 +346,8 @@ export function EventChat({ eventId }: EventChatProps) {
       {/* Input */}
       {isAuthenticated ? (
         <div className="px-1 py-2">
-          <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2">
+          <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 relative">
+            <span className="absolute top-2 right-3 text-[10px] text-zinc-600">{newMessage.length}/500</span>
             <Textarea
               ref={textareaRef}
               placeholder="Type a message..."
@@ -321,7 +366,7 @@ export function EventChat({ eventId }: EventChatProps) {
               }}
               onKeyDown={handleKeyDown}
               maxLength={500}
-              className="min-h-[36px] max-h-32 resize-none text-sm bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-1 focus-visible:ring-0 focus-visible:ring-offset-0 leading-[1.35]"
+              className="min-h-[36px] max-h-32 resize-none text-sm bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-12 focus-visible:ring-0 focus-visible:ring-offset-0 leading-[1.35]"
               rows={1}
               style={{ fieldSizing: 'content' } as React.CSSProperties}
             />
@@ -330,7 +375,10 @@ export function EventChat({ eventId }: EventChatProps) {
                 <EmojiGifPicker onEmojiSelect={handleEmojiSelect} onGifSelect={handleGifSelect} />
               </div>
               <div className="flex items-center gap-1">
-                <span className="text-[10px] text-zinc-600">{newMessage.length}/500</span>
+                <VoiceRecorder
+                  onRecordingComplete={handleVoiceRecordingComplete}
+                  disabled={!isAuthenticated}
+                />
                 <Button variant="ghost" size="icon" onClick={handleSend} disabled={!newMessage.trim()} className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700">
                   <Send className="w-5 h-5" />
                 </Button>
