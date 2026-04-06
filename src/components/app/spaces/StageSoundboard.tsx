@@ -158,6 +158,25 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
     setCustomSounds(prev => prev.filter(s => s.path !== sound.path));
   };
 
+  // ---------- Stop helper ----------
+
+  const stopCurrentSound = useCallback(() => {
+    if (howlRef.current) {
+      howlRef.current.stop();
+      howlRef.current.unload();
+      howlRef.current = null;
+    }
+    if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
+      audioCtxRef.current.close();
+      audioCtxRef.current = null;
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setPlayingId(null);
+  }, []);
+
   // ---------- Audio playback ----------
 
   const getAudioContext = useCallback(() => {
