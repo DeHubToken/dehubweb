@@ -27,7 +27,7 @@ const corsHeaders = {
 const DHB_TOKEN_BASE = '0xd20ab1015f6a2de4a6fddebab270113f689c2f7c';
 const BASE_RPC = Deno.env.get('BASE_RPC_URL') || 'https://base-rpc.publicnode.com';
 const BOT_WALLET = '0x000000000000000000000000000000000000dead'; // sentinel address for bot messages
-const MIN_BUY_USD = parseFloat(Deno.env.get('MIN_BUY_USD') || '5');
+const MIN_BUY_USD = parseFloat(Deno.env.get('MIN_BUY_USD') || '50');
 
 // How many blocks to look back on first run (≈5 min at 2 s/block on Base)
 const DEFAULT_LOOKBACK_BLOCKS = 150;
