@@ -51,6 +51,7 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
     }
   }, [text, eventDismissed]);
 
+  useEffect(() => {
     const urls = extractUrlsFromText(text);
     
     // Skip community and event URLs - they get their own embeds
