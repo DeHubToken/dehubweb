@@ -4,7 +4,6 @@ import type { CommunityEvent } from '@/hooks/use-events';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { cn } from '@/lib/utils';
 import { FriendsAtEvent } from './FriendsAtEvent';
-import { cn } from '@/lib/utils';
 
 interface EventCardProps {
   event: CommunityEvent;
