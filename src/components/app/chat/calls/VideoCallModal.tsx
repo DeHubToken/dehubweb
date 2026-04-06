@@ -60,7 +60,7 @@ const VideoCallModal: React.FC = () => {
   const displayName = peerName || (peerAddress ? `${peerAddress.slice(0, 6)}...${peerAddress.slice(-4)}` : '');
 
   return (
-    <Dialog open={isVisible} onOpenChange={() => {}}>
+    <Dialog open={isVisible && !isMinimized} onOpenChange={(open) => { if (!open) minimizeCall(); }}>
       <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl sm:max-w-4xl h-[600px] p-0 [&>button]:text-white/60 [&>button]:hover:text-white">
         <DialogHeader className="p-4 pb-0">
           <DialogTitle className="text-white text-center">{getCallTitle()}</DialogTitle>
