@@ -238,7 +238,7 @@ export function AiToolPaywallModal({
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-zinc-400">Staker Discount</span>
-              <span className="text-green-400">0%</span>
+              <span className="text-white font-bold">0%</span>
             </div>
             <div className="border-t border-zinc-700 pt-3">
               <div className="flex items-center justify-between">
@@ -285,7 +285,7 @@ export function AiToolPaywallModal({
               {isBalanceLoading ? (
                 <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
               ) : (
-                <span className={hasEnoughBalance ? 'text-green-400' : 'text-red-400'}>
+                <span className={hasEnoughBalance ? 'text-white font-bold' : 'text-red-400'}>
                   {formatDhb(userBalance)} DHB
                 </span>
               )}
