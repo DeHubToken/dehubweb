@@ -61,20 +61,20 @@ const CallFailureDialog: React.FC<CallFailureDialogProps> = ({
           <AlertDialogDescription className="text-center text-white/60">{getDescription()}</AlertDialogDescription>
         </AlertDialogHeader>
 
-        <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+        <AlertDialogFooter className="flex-col gap-2 sm:flex-row">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-all border border-white/10"
+            className="flex-1 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-all border border-white/10"
           >
             Close
           </button>
 
           {isUserOffline && (
-            <LiquidGlassBubble shimmer noBorder className="cursor-pointer" onClick={() => {
+            <LiquidGlassBubble shimmer noBorder className="flex-1 cursor-pointer" onClick={() => {
               onSendCallbackRequest();
               onClose();
             }}>
-              <span className="flex items-center gap-2 px-4 py-2 text-white text-sm font-medium">
+              <span className="flex items-center justify-center gap-2 px-4 py-2 text-white text-sm font-medium">
                 <MessageSquare className="h-4 w-4" />
                 Send callback request
               </span>
