@@ -25,7 +25,7 @@ const TOOLS: Record<string, ToolConfig> = {
     async: true,
     buildInput: (p) => ({
       prompt: p.prompt || 'upbeat pop song',
-      lyrics_prompt: p.lyrics || p.lyrics_prompt || '[verse]\nLa la la\n[chorus]\nOh oh oh',
+      lyrics_prompt: p.lyrics || p.lyrics_prompt || p.prompt || '',
     }),
     extractResult: (d) => ({
       audioUrl: (d.audio as Record<string, unknown>)?.url,
