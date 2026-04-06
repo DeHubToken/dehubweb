@@ -59,7 +59,7 @@ const VideoCallModal: React.FC = () => {
             {isCallActive ? (
               <video ref={remoteVideoRef} autoPlay playsInline muted={false} className="w-full h-full object-cover rounded-lg" />
             ) : (
-              <div className="w-full h-full bg-white/5 backdrop-blur-sm rounded-lg flex items-center justify-center">
+              <div className="w-full h-full flex items-center justify-center">
                 <div className="text-center">
                   <div className="w-48 h-36 rounded-xl overflow-hidden border border-white/20 bg-black/40 backdrop-blur-md mx-auto mb-4">
                     <video
