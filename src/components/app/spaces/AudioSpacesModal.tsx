@@ -280,6 +280,7 @@ export function AudioSpacesModal() {
                                 setPlayingStageId(null);
                                 setPlaybackVolume(0);
                                 setPlaybackProgress(0);
+                                setPlaybackTimeLeft('');
                               } else {
                                 // Stop previous
                                 cancelAnimationFrame(rafRef.current);
