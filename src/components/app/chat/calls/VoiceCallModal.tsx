@@ -59,7 +59,7 @@ const VoiceCallModal: React.FC = () => {
 
   return (
     <Drawer open={isVisible} onOpenChange={() => {}}>
-      <DrawerContent className="bg-black/60 backdrop-blur-[24px] border-t border-white/10 shadow-2xl mx-auto max-w-md">
+      <DrawerContent className="bg-black/60 backdrop-blur-[24px] border-t border-white/10 shadow-2xl">
         <audio
           ref={remoteAudioRef}
           autoPlay
@@ -70,13 +70,6 @@ const VoiceCallModal: React.FC = () => {
         />
 
         <div className="flex flex-col items-center gap-3 px-6 pb-6 pt-2" onClick={handleUserInteraction}>
-          {/* Avatar + info */}
-          <LiquidGlassBubble shimmer className="w-16 h-16 !rounded-full">
-            <div className="w-full h-full flex items-center justify-center">
-              <Phone className="h-6 w-6 text-white" />
-            </div>
-          </LiquidGlassBubble>
-
           <div className="text-center">
             <p className="text-base font-semibold text-white">{displayName}</p>
             <p className="text-sm text-white/50">{statusText}</p>
