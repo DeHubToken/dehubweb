@@ -52,6 +52,8 @@ import { useAIConversation } from '@/hooks/use-ai-conversation';
 import { streamChat } from '@/lib/stream-chat';
 import { useVoiceAssistant } from '@/hooks/use-voice-assistant';
 import { VoiceAssistantOverlay } from '@/components/app/assistant/VoiceAssistantOverlay';
+import { useVoiceCredits } from '@/hooks/use-voice-credits';
+import { VoiceCreditPurchaseModal } from '@/components/app/assistant/VoiceCreditPurchaseModal';
 import { useAssistantUserContext } from '@/hooks/use-assistant-user-context';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
@@ -464,7 +466,7 @@ export default function AssistantPage() {
   const musicVideoRef = useRef<{ prompt: string; videoModel: string; musicMessageId?: string } | null>(null);
   const pendingVoiceRef = useRef(false); // Track if last input was voice
 
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
   const isMobile = useIsMobile();
   const { language: userLanguage } = useUserLanguage();
   const { t } = useI18n();
