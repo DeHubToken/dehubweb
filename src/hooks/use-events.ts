@@ -248,6 +248,47 @@ export function useCreateEvent() {
   });
 }
 
+// Update event (creator only)
+export function useUpdateEvent() {
+  const { walletAddress } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ eventId, updates }: {
+      eventId: string;
+      updates: {
+        title?: string;
+        description?: string | null;
+        location?: string | null;
+        starts_at?: string;
+        ends_at?: string | null;
+      };
+    }) => {
+      if (!walletAddress) throw new Error('Not authenticated');
+      const { data, error } = await withWalletHeader(
+        supabase
+          .from('community_events')
+          .update(updates)
+          .eq('id', eventId)
+          .select()
+          .single(),
+        walletAddress
+      );
+      if (error) throw error;
+      return data as CommunityEvent;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['event', variables.eventId] });
+      queryClient.invalidateQueries({ queryKey: ['events'] });
+      toast.success('Event updated!');
+    },
+    onError: () => {
+      toast.error('Failed to update event');
+    },
+  });
+}
+
+
 // Delete event
 export function useDeleteEvent() {
   const { walletAddress } = useAuth();
