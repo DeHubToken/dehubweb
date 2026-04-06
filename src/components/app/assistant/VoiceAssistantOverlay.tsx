@@ -14,6 +14,7 @@ interface VoiceAssistantOverlayProps {
   recordingDuration: number;
   onStop: () => void;
   onStopSpeaking: () => void;
+  remainingCredits?: number;
 }
 
 const STATUS_LABELS: Record<VoiceStatus, string> = {
@@ -67,6 +68,7 @@ export function VoiceAssistantOverlay({
   recordingDuration,
   onStop,
   onStopSpeaking,
+  remainingCredits,
 }: VoiceAssistantOverlayProps) {
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
