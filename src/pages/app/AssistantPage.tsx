@@ -481,6 +481,16 @@ export default function AssistantPage() {
   // User context for AI assistant personalization
   const userContext = useAssistantUserContext();
 
+  // Voice Assistant hook (Whisper STT + Dia TTS via fal.ai)
+  const voiceAssistant = useVoiceAssistant({
+    onTranscript: (text) => {
+      // Will be wired up after auth check via ref
+      voiceTranscriptHandlerRef.current?.(text);
+    },
+    isChatLoading: isLoading,
+  });
+  const voiceTranscriptHandlerRef = useRef<((text: string) => void) | null>(null);
+
   // Block access for unauthenticated users (AuthGate handles loading state internally)
   if (!isAuthenticated) {
     return (
