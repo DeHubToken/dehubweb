@@ -7,7 +7,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Howl } from 'howler';
 import { 
   Music, Volume2, VolumeX, X, Upload, Trash2, Loader2,
-  Megaphone, PartyPopper, Drum, Bug, Laugh, Sparkles, User, Ghost, Wand2,
+  Megaphone, PartyPopper, Drum, Bug, Laugh, Sparkles, User, Ghost, Wand2, Hand,
   ThumbsUp, ThumbsDown, AlertTriangle, Timer, FileAudio
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -44,6 +44,7 @@ const BUILT_IN_EFFECTS: BuiltInEffect[] = [
   { id: 'ba-dum-tish', label: 'Ba Dum Tish', icon: <Drum className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 2000 },
   { id: 'spooky', label: 'Spooky', icon: <Ghost className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 2000 },
   { id: 'magic-spell', label: 'Magic Spell', icon: <Wand2 className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 2000 },
+  { id: 'shhh', label: 'Shhh', icon: <Hand className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 2000 },
 ];
 
 // ---------- Custom sound type ----------
@@ -290,6 +291,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
     'ba-dum-tish': '/sounds/ba-dum-tish.wav',
     spooky: '/sounds/spooky.wav',
     'magic-spell': '/sounds/magic-spell.m4a',
+    shhh: '/sounds/shhh.m4a',
   };
 
   const playBuiltIn = useCallback((effect: BuiltInEffect) => {
