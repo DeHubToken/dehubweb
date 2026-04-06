@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon, ImagePlus, Loader2 } from 'lucide-react';
+import { CalendarIcon, ImagePlus, Loader2, Lock, Globe } from 'lucide-react';
 import { format } from 'date-fns';
 import { cn } from '@/lib/utils';
 import { useCreateEvent } from '@/hooks/use-events';
@@ -40,6 +40,7 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
   const [uploading, setUploading] = useState(false);
   const [hasGateFee, setHasGateFee] = useState(false);
   const [gateFee, setGateFee] = useState('');
+  const [isPrivate, setIsPrivate] = useState(false);
 
   const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -93,6 +94,7 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
         creator_username: user?.username ?? undefined,
         creator_avatar: user?.avatarImageUrl ?? user?.avatarUrl ?? undefined,
         gate_fee: feeAmount > 0 ? feeAmount : undefined,
+        is_private: isPrivate || undefined,
       },
       {
         onSuccess: () => {
@@ -106,6 +108,7 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
           setCoverPreview(null);
           setHasGateFee(false);
           setGateFee('');
+          setIsPrivate(false);
         },
       }
     );
@@ -249,6 +252,24 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
               className="mt-1 bg-white/5 border-white/10 text-white min-h-[80px] resize-none"
               maxLength={2000}
             />
+          </div>
+
+          {/* Event Type: Private */}
+          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                {isPrivate ? (
+                  <Lock className="w-4 h-4 text-zinc-400" />
+                ) : (
+                  <Globe className="w-4 h-4 text-zinc-400" />
+                )}
+                <div>
+                  <span className="text-sm font-medium text-white">Private event</span>
+                  <p className="text-xs text-zinc-500">Guests must request to attend</p>
+                </div>
+              </div>
+              <Switch checked={isPrivate} onCheckedChange={setIsPrivate} />
+            </div>
           </div>
 
           {/* Gate Fee */}

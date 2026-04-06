@@ -457,6 +457,7 @@ export type Database = {
           going_count: number
           id: string
           interested_count: number
+          is_private: boolean
           location: string | null
           starts_at: string
           title: string
@@ -474,6 +475,7 @@ export type Database = {
           going_count?: number
           id?: string
           interested_count?: number
+          is_private?: boolean
           location?: string | null
           starts_at: string
           title: string
@@ -491,6 +493,7 @@ export type Database = {
           going_count?: number
           id?: string
           interested_count?: number
+          is_private?: boolean
           location?: string | null
           starts_at?: string
           title?: string

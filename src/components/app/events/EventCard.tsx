@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { MapPin, Users, Flame, Calendar } from 'lucide-react';
+import { MapPin, Users, Flame, Calendar, Lock } from 'lucide-react';
 import type { CommunityEvent } from '@/hooks/use-events';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { cn } from '@/lib/utils';
@@ -31,6 +31,12 @@ export function EventCard({ event, onClick }: EventCardProps) {
             className="w-full h-full object-cover"
             loading="lazy"
           />
+        )}
+        {event.is_private && (
+          <div className="absolute top-2 left-2 flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-black/60 backdrop-blur-sm">
+            <Lock className="w-2.5 h-2.5 text-zinc-300" />
+            <span className="text-[9px] font-medium text-zinc-300">Private</span>
+          </div>
         )}
       </div>
 
