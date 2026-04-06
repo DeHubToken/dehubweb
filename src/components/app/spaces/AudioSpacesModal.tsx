@@ -607,12 +607,6 @@ export function AudioSpacesModal() {
                 <VoiceEffectSelector activeEffect={voiceEffect} onSelect={setVoiceEffect} />
               )}
 
-              {/* Reactions bento card */}
-              <StageReactions
-                spaceId={currentSpace.id}
-                onAvatarReaction={setAvatarReactions}
-              />
-
               {/* Soundboard — always visible for hosts */}
               {myRole === 'host' && (
                 <StageSoundboard
@@ -625,6 +619,12 @@ export function AudioSpacesModal() {
               {(myRole === 'host' || myRole === 'speaker') && (
                 <StageTTS />
               )}
+
+              {/* Reactions bento card */}
+              <StageReactions
+                spaceId={currentSpace.id}
+                onAvatarReaction={setAvatarReactions}
+              />
             </div>
           )}
         </div>
