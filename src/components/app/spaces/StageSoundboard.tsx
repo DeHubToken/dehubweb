@@ -276,6 +276,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
 
   // Map of built-in effects that use real audio files instead of synthesis
   const AUDIO_FILE_EFFECTS: Record<string, string> = {
+    airhorn: '/sounds/airhorn.wav',
     applause: '/sounds/applause.wav',
     cricket: '/sounds/crickets.wav',
     drumroll: '/sounds/drumroll.wav',
