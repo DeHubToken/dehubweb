@@ -425,32 +425,7 @@ export function ConversationHistoryDrawer({
                   </div>
                   <div className="grid grid-cols-3 gap-2">
                     {mediaItems.map((item) => (
-                      <button
-                        key={item.id}
-                        onClick={() => setSelectedMedia(item)}
-                        className="relative aspect-square rounded-xl overflow-hidden border border-white/10 hover:border-white/30 transition-all group"
-                      >
-                        {item.type === 'image' ? (
-                          <img src={item.url} alt="" className="w-full h-full object-cover" loading="lazy" />
-                        ) : item.type === 'video' ? (
-                          <div className="w-full h-full bg-white/5 relative">
-                            <video src={item.url} className="w-full h-full object-cover" muted preload="metadata" />
-                            <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                              <Play className="w-6 h-6 text-white fill-white" />
-                            </div>
-                          </div>
-                        ) : (
-                          <div className="w-full h-full bg-white/5 flex flex-col items-center justify-center gap-1">
-                            <Music className="w-6 h-6 text-white/40" />
-                            <span className="text-[9px] text-white/30">Audio</span>
-                          </div>
-                        )}
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1.5">
-                          <p className="text-[9px] text-white/60">
-                            {formatDistanceToNow(new Date(item.created_at), { addSuffix: true })}
-                          </p>
-                        </div>
-                      </button>
+                      <MediaThumbnail key={item.id} item={item} onSelect={setSelectedMedia} />
                     ))}
                   </div>
                 </div>
