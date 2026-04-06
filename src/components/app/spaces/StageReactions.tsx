@@ -27,6 +27,8 @@ interface FloatingReaction {
   id: number;
   emoji: string;
   x: number;
+  scale: number;
+  duration: number;
 }
 
 let reactionCounter = 0;
