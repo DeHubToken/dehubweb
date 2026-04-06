@@ -950,8 +950,14 @@ export default function AssistantPage() {
     setAiToolPaywallOpen(false);
     setIsAiToolProcessing(true);
 
+    // Music-video pipeline: generate music first, then chain video
+    const isMusicVideo = category === 'music-video';
+    const musicTool = 'minimax-music'; // Always use MiniMax for music part
+    const videoModel = tool === 'music-video-premium' ? 'seedance-2.0' : 'minimax-video';
+
     try {
-      const body: Record<string, unknown> = { tool, prompt };
+      const actualTool = isMusicVideo ? musicTool : tool;
+      const body: Record<string, unknown> = { tool: actualTool, prompt };
       if (sourceImage) body.image_url = sourceImage;
       if (category === 'tts') body.text = prompt;
 
@@ -990,19 +996,26 @@ export default function AssistantPage() {
       } else {
         // Async tool — start polling
         const messageId = (Date.now() + 1).toString();
+        const label = isMusicVideo ? 'Music Video' : toolModel.name;
+        const desc = isMusicVideo ? 'Step 1/2: Generating music...' : 'This may take a minute';
         const assistantMessage: Message = {
           id: messageId,
           role: 'assistant',
-          content: `${toolModel.emoji} Processing with **${toolModel.name}**...\n\n_This may take a minute_`,
+          content: `${isMusicVideo ? '🎬' : toolModel.emoji} Processing with **${label}**...\n\n_${desc}_`,
           isToolProcessing: true,
           toolRequestId: data.requestId,
           toolAppId: data.appId,
-          toolType: tool,
+          toolType: isMusicVideo ? musicTool : tool,
         };
         setMessages(prev => [...prev, assistantMessage]);
 
+        // Store music-video pipeline state
+        if (isMusicVideo) {
+          musicVideoRef.current = { prompt, videoModel, musicMessageId: messageId };
+        }
+
         pollingRef.current[data.requestId] = setInterval(() => {
-          pollAiToolStatus(data.requestId, data.appId, messageId, tool, data.statusUrl, data.responseUrl);
+          pollAiToolStatus(data.requestId, data.appId, messageId, isMusicVideo ? musicTool : tool, data.statusUrl, data.responseUrl);
         }, 5000);
       }
     } catch (err) {
