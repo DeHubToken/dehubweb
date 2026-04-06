@@ -252,6 +252,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
   // Map of built-in effects that use real audio files instead of synthesis
   const AUDIO_FILE_EFFECTS: Record<string, string> = {
     applause: '/sounds/applause.wav',
+    cricket: '/sounds/crickets.wav',
   };
 
   const playBuiltIn = useCallback((effect: BuiltInEffect) => {
