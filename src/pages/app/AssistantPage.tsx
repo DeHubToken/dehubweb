@@ -465,6 +465,19 @@ export default function AssistantPage() {
   const pollingRef = useRef<Record<string, NodeJS.Timeout>>({});
   // Track music-video pipeline: when music completes, auto-chain video generation
   const musicVideoRef = useRef<{ prompt: string; videoModel: string; musicMessageId?: string } | null>(null);
+
+  // Persist/restore pending AI tool requests across reloads
+  const PENDING_TOOL_KEY = 'dehub-pending-ai-tool';
+  const savePendingTool = useCallback((data: {
+    requestId: string; appId: string; messageId: string; toolKey: string;
+    statusUrl?: string; responseUrl?: string; content: string;
+    musicVideo?: { prompt: string; videoModel: string };
+  }) => {
+    try { localStorage.setItem(PENDING_TOOL_KEY, JSON.stringify(data)); } catch {}
+  }, []);
+  const clearPendingTool = useCallback(() => {
+    try { localStorage.removeItem(PENDING_TOOL_KEY); } catch {}
+  }, []);
   const pendingVoiceRef = useRef(false); // Track if last input was voice
 
   const { isAuthenticated, walletAddress } = useAuth();
@@ -774,6 +787,51 @@ export default function AssistantPage() {
     }
   }, [isMobile]);
 
+  // Restore pending AI tool request on mount (survives reload)
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(PENDING_TOOL_KEY);
+      if (!raw) return;
+      const pending = JSON.parse(raw) as {
+        requestId: string; appId: string; messageId: string; toolKey: string;
+        statusUrl?: string; responseUrl?: string; content: string;
+        musicVideo?: { prompt: string; videoModel: string };
+      };
+      // Re-inject the processing message
+      const restoredMessage: Message = {
+        id: pending.messageId,
+        role: 'assistant',
+        content: pending.content || '⏳ Resuming processing...',
+        isToolProcessing: true,
+        toolRequestId: pending.requestId,
+        toolAppId: pending.appId,
+        toolType: pending.toolKey,
+      };
+      setMessages(prev => {
+        // Avoid duplicates
+        if (prev.some(m => m.id === pending.messageId)) return prev;
+        return [...prev, restoredMessage];
+      });
+      setIsAiToolProcessing(true);
+
+      // Restore music-video pipeline state
+      if (pending.musicVideo) {
+        musicVideoRef.current = { ...pending.musicVideo, musicMessageId: pending.messageId };
+      }
+
+      // Resume polling
+      if (!pollingRef.current[pending.requestId]) {
+        pollingRef.current[pending.requestId] = setInterval(() => {
+          pollAiToolStatus(pending.requestId, pending.appId, pending.messageId, pending.toolKey, pending.statusUrl, pending.responseUrl);
+        }, 5000);
+        // Fire one immediately
+        pollAiToolStatus(pending.requestId, pending.appId, pending.messageId, pending.toolKey, pending.statusUrl, pending.responseUrl);
+      }
+      console.log('[AI Tool] Restored pending request from localStorage:', pending.requestId);
+    } catch {}
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+
   // Process image file helper
   const processImageFile = (file: File) => {
     if (!file.type.startsWith('image/')) return;
@@ -1032,6 +1090,7 @@ export default function AssistantPage() {
       if (data.status === 'succeeded') {
         clearInterval(pollingRef.current[requestId]);
         delete pollingRef.current[requestId];
+        clearPendingTool();
 
         const toolModel = AI_TOOL_MODELS[toolKey];
 
@@ -1101,27 +1160,30 @@ export default function AssistantPage() {
         }
 
         // Regular (non-music-video) completion
-        setMessages(prev => prev.map(m => {
-          if (m.id !== messageId) return m;
-          const updated: Message = {
-            ...m,
-            isToolProcessing: false,
-            content: '',
-          };
-          if (data.audioUrl) updated.audioUrl = data.audioUrl;
-          if (data.imageUrl) updated.imageUrl = data.imageUrl;
-          if (data.text) updated.content = `📝 **Transcription:**\n\n${data.text}`;
-          if (!data.audioUrl && !data.imageUrl && !data.text) {
-            updated.content = `✅ ${toolModel?.name || 'Tool'} completed successfully.`;
-          }
-          return updated;
-        }));
+        const completedMessage: Message = {
+          id: messageId,
+          role: 'assistant',
+          content: '',
+          isToolProcessing: false,
+        };
+        if (data.audioUrl) completedMessage.audioUrl = data.audioUrl;
+        if (data.imageUrl) completedMessage.imageUrl = data.imageUrl;
+        if (data.text) completedMessage.content = `📝 **Transcription:**\n\n${data.text}`;
+        if (!data.audioUrl && !data.imageUrl && !data.text) {
+          completedMessage.content = `✅ ${toolModel?.name || 'Tool'} completed successfully.`;
+        }
+
+        setMessages(prev => prev.map(m => m.id !== messageId ? m : completedMessage));
+
+        // Persist to conversation history
+        queueMessage(completedMessage);
 
         setIsAiToolProcessing(false);
         toast.success(`${toolModel?.name || 'AI Tool'} completed!`);
       } else if (data.status === 'failed') {
         clearInterval(pollingRef.current[requestId]);
         delete pollingRef.current[requestId];
+        clearPendingTool();
 
         setMessages(prev => prev.map(m =>
           m.id === messageId ? { ...m, isToolProcessing: false, content: `❌ Processing failed: ${data.error || 'Unknown error'}` } : m
@@ -1132,7 +1194,7 @@ export default function AssistantPage() {
     } catch (err) {
       console.error('[AI Tool] Polling error:', err);
     }
-  }, [pollVideoStatus]);
+  }, [pollVideoStatus, clearPendingTool, queueMessage]);
 
   const handleAiToolConfirm = async () => {
     if (!pendingAiToolRequest) return;
@@ -1206,6 +1268,15 @@ export default function AssistantPage() {
         if (isMusicVideo) {
           musicVideoRef.current = { prompt, videoModel, musicMessageId: messageId };
         }
+
+        // Persist pending request for reload recovery
+        savePendingTool({
+          requestId: data.requestId, appId: data.appId, messageId,
+          toolKey: isMusicVideo ? musicTool : tool,
+          statusUrl: data.statusUrl, responseUrl: data.responseUrl,
+          content: assistantMessage.content,
+          ...(isMusicVideo && { musicVideo: { prompt, videoModel } }),
+        });
 
         pollingRef.current[data.requestId] = setInterval(() => {
           pollAiToolStatus(data.requestId, data.appId, messageId, isMusicVideo ? musicTool : tool, data.statusUrl, data.responseUrl);
