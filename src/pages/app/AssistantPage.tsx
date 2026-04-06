@@ -496,6 +496,7 @@ export default function AssistantPage() {
       // Deduct a voice credit per exchange
       const hasCredit = voiceCreditDeductRef.current();
       if (!hasCredit) {
+        voiceStopRef.current?.();
         toast.error('Voice credits exhausted — purchase more to continue');
         setVoiceCreditModalOpen(true);
         return;
