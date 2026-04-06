@@ -174,6 +174,7 @@ export function AudioSpacesModal() {
   const listeners = participants.filter(p => p.role === 'listener');
 
   return (
+    <>
     <Drawer open={isModalOpen} onOpenChange={(open) => !open && handleClose()}>
       <DrawerContent className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-white/10 max-h-[90vh] flex flex-col [&>div:first-child]:hidden">
         {!currentSpace ? (
