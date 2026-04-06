@@ -1,9 +1,10 @@
 import React from 'react';
 import { Phone, PhoneOff, Mic, MicOff, Video, VideoOff, RotateCcw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { useCall } from '@/contexts/CallContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
+import { cn } from '@/lib/utils';
 
 const VideoCallModal: React.FC = () => {
   const { walletAddress } = useAuth();
@@ -46,28 +47,33 @@ const VideoCallModal: React.FC = () => {
 
   return (
     <Dialog open={isVisible} onOpenChange={() => {}}>
-      <DialogContent className="sm:max-w-4xl h-[600px] p-0">
+      <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl sm:max-w-4xl h-[600px] p-0 [&>button]:text-white/60 [&>button]:hover:text-white">
         <DialogHeader className="p-4 pb-0">
-          <DialogTitle className="text-center">{getCallTitle()}</DialogTitle>
+          <DialogTitle className="text-white text-center">{getCallTitle()}</DialogTitle>
+          <DialogDescription className="sr-only">Video call controls</DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col h-full relative">
-          <div className="flex-1 bg-background rounded-lg overflow-hidden relative">
+          {/* Main video area */}
+          <div className="flex-1 rounded-lg overflow-hidden relative mx-4">
             {isCallActive ? (
-              <video ref={remoteVideoRef} autoPlay playsInline muted={false} className="w-full h-full object-cover" />
+              <video ref={remoteVideoRef} autoPlay playsInline muted={false} className="w-full h-full object-cover rounded-lg" />
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+              <div className="w-full h-full bg-white/5 backdrop-blur-sm rounded-lg flex items-center justify-center">
                 <div className="text-center">
-                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center mx-auto mb-4">
-                    <Video className="h-8 w-8 text-white" />
-                  </div>
-                  <p className="text-lg font-semibold">{getCallAddress()}</p>
-                  {isConnecting && <p className="text-sm text-muted-foreground">Connecting...</p>}
+                  <LiquidGlassBubble shimmer className="w-24 h-24 !rounded-full mx-auto mb-4">
+                    <div className="w-full h-full flex items-center justify-center">
+                      <Video className="h-8 w-8 text-white" />
+                    </div>
+                  </LiquidGlassBubble>
+                  <p className="text-lg font-semibold text-white">{getCallAddress()}</p>
+                  {isConnecting && <p className="text-sm text-white/50">Connecting...</p>}
                 </div>
               </div>
             )}
 
-            <div className="absolute top-4 right-4 w-48 h-36 bg-background rounded-lg overflow-hidden border-2 border-border">
+            {/* Local video preview */}
+            <div className="absolute top-4 right-4 w-48 h-36 rounded-xl overflow-hidden border border-white/20 bg-black/40 backdrop-blur-md">
               <video
                 ref={localVideoRef}
                 autoPlay
@@ -76,59 +82,78 @@ const VideoCallModal: React.FC = () => {
                 className={`w-full h-full object-cover ${isCameraOff ? 'hidden' : ''}`}
               />
               {isCameraOff && (
-                <div className="w-full h-full bg-gradient-to-br from-muted to-muted/80 flex items-center justify-center">
-                  <VideoOff className="h-8 w-8 text-muted-foreground" />
+                <div className="w-full h-full bg-white/5 flex items-center justify-center">
+                  <VideoOff className="h-8 w-8 text-white/40" />
                 </div>
               )}
             </div>
           </div>
 
+          {/* Controls */}
           <div className="p-6">
             <div className="flex items-center justify-center space-x-4">
               {isIncoming ? (
                 <>
-                  <Button onClick={rejectCall} variant="destructive" size="lg" className="rounded-full w-16 h-16">
+                  <button
+                    onClick={rejectCall}
+                    className="rounded-full w-16 h-16 bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white transition-all"
+                  >
                     <PhoneOff className="h-6 w-6" />
-                  </Button>
-                  <Button
+                  </button>
+                  <button
                     onClick={acceptCall}
-                    variant="default"
-                    size="lg"
-                    className="rounded-full w-16 h-16 bg-green-600 hover:bg-green-700"
+                    className="rounded-full w-16 h-16 bg-green-600/80 hover:bg-green-600 flex items-center justify-center text-white transition-all"
                   >
                     <Phone className="h-6 w-6" />
-                  </Button>
+                  </button>
                 </>
               ) : (
                 <>
                   {isCallActive && (
                     <>
-                      <Button onClick={toggleMute} variant={isMuted ? 'destructive' : 'secondary'} size="lg" className="rounded-full w-12 h-12">
+                      <button
+                        onClick={toggleMute}
+                        className={cn(
+                          "rounded-full w-12 h-12 flex items-center justify-center transition-all",
+                          isMuted
+                            ? "bg-red-500/80 hover:bg-red-500 text-white"
+                            : "bg-white/10 hover:bg-white/20 text-white border border-white/10"
+                        )}
+                      >
                         {isMuted ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
-                      </Button>
-                      <Button
+                      </button>
+                      <button
                         onClick={toggleCamera}
-                        variant={isCameraOff ? 'destructive' : 'secondary'}
-                        size="lg"
-                        className="rounded-full w-12 h-12"
+                        className={cn(
+                          "rounded-full w-12 h-12 flex items-center justify-center transition-all",
+                          isCameraOff
+                            ? "bg-red-500/80 hover:bg-red-500 text-white"
+                            : "bg-white/10 hover:bg-white/20 text-white border border-white/10"
+                        )}
                       >
                         {isCameraOff ? <VideoOff className="h-5 w-5" /> : <Video className="h-5 w-5" />}
-                      </Button>
-                      <Button onClick={switchCamera} variant="secondary" size="lg" className="rounded-full w-12 h-12">
+                      </button>
+                      <button
+                        onClick={switchCamera}
+                        className="rounded-full w-12 h-12 bg-white/10 hover:bg-white/20 text-white border border-white/10 flex items-center justify-center transition-all"
+                      >
                         <RotateCcw className="h-5 w-5" />
-                      </Button>
+                      </button>
                     </>
                   )}
-                  <Button onClick={endCall} variant="destructive" size="lg" className="rounded-full w-16 h-16">
+                  <button
+                    onClick={endCall}
+                    className="rounded-full w-16 h-16 bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white transition-all"
+                  >
                     <PhoneOff className="h-6 w-6" />
-                  </Button>
+                  </button>
                 </>
               )}
             </div>
 
             {isCallActive && (
               <div className="text-center mt-4">
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-white/50">
                   {isMuted && 'Muted'} {isCameraOff && 'Camera Off'}
                   {!isMuted && !isCameraOff && 'Connected'}
                 </p>
