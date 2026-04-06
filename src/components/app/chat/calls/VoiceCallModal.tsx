@@ -87,7 +87,7 @@ const VoiceCallModal: React.FC = () => {
           </LiquidGlassBubble>
 
           <div className="text-center">
-            <p className="text-lg font-semibold text-white">{getCallAddress()}</p>
+            <p className="text-lg font-semibold text-white">{displayName}</p>
             {isConnecting && <p className="text-sm text-white/50">Connecting...</p>}
             {isCallActive && callDuration !== '00:00' && (
               <p className="text-sm text-white font-medium">{callDuration}</p>
