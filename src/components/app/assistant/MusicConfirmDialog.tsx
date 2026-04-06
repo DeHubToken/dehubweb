@@ -189,7 +189,8 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
                 onClick={handleGenerateLyrics}
                 disabled={isGeneratingLyrics}
                 className={cn(
-                  'absolute bottom-2 right-2 px-3 py-1 rounded-lg text-[11px] font-semibold border transition-all',
+                  'absolute bottom-[11px] right-2 px-3 py-1 rounded-lg text-[11px] font-semibold border transition-all',
+                  
                   isGeneratingLyrics
                     ? 'border-white/10 bg-white/5 text-white/30 cursor-not-allowed'
                     : 'border-white/20 bg-white/10 text-white hover:bg-white/15 hover:border-white/30 active:scale-95'
