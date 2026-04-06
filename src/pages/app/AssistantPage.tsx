@@ -787,6 +787,51 @@ export default function AssistantPage() {
     }
   }, [isMobile]);
 
+  // Restore pending AI tool request on mount (survives reload)
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(PENDING_TOOL_KEY);
+      if (!raw) return;
+      const pending = JSON.parse(raw) as {
+        requestId: string; appId: string; messageId: string; toolKey: string;
+        statusUrl?: string; responseUrl?: string; content: string;
+        musicVideo?: { prompt: string; videoModel: string };
+      };
+      // Re-inject the processing message
+      const restoredMessage: Message = {
+        id: pending.messageId,
+        role: 'assistant',
+        content: pending.content || '⏳ Resuming processing...',
+        isToolProcessing: true,
+        toolRequestId: pending.requestId,
+        toolAppId: pending.appId,
+        toolType: pending.toolKey,
+      };
+      setMessages(prev => {
+        // Avoid duplicates
+        if (prev.some(m => m.id === pending.messageId)) return prev;
+        return [...prev, restoredMessage];
+      });
+      setIsAiToolProcessing(true);
+
+      // Restore music-video pipeline state
+      if (pending.musicVideo) {
+        musicVideoRef.current = { ...pending.musicVideo, musicMessageId: pending.messageId };
+      }
+
+      // Resume polling
+      if (!pollingRef.current[pending.requestId]) {
+        pollingRef.current[pending.requestId] = setInterval(() => {
+          pollAiToolStatus(pending.requestId, pending.appId, pending.messageId, pending.toolKey, pending.statusUrl, pending.responseUrl);
+        }, 5000);
+        // Fire one immediately
+        pollAiToolStatus(pending.requestId, pending.appId, pending.messageId, pending.toolKey, pending.statusUrl, pending.responseUrl);
+      }
+      console.log('[AI Tool] Restored pending request from localStorage:', pending.requestId);
+    } catch {}
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+
   // Process image file helper
   const processImageFile = (file: File) => {
     if (!file.type.startsWith('image/')) return;
