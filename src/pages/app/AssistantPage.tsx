@@ -1160,21 +1160,23 @@ export default function AssistantPage() {
         }
 
         // Regular (non-music-video) completion
-        setMessages(prev => prev.map(m => {
-          if (m.id !== messageId) return m;
-          const updated: Message = {
-            ...m,
-            isToolProcessing: false,
-            content: '',
-          };
-          if (data.audioUrl) updated.audioUrl = data.audioUrl;
-          if (data.imageUrl) updated.imageUrl = data.imageUrl;
-          if (data.text) updated.content = `📝 **Transcription:**\n\n${data.text}`;
-          if (!data.audioUrl && !data.imageUrl && !data.text) {
-            updated.content = `✅ ${toolModel?.name || 'Tool'} completed successfully.`;
-          }
-          return updated;
-        }));
+        const completedMessage: Message = {
+          id: messageId,
+          role: 'assistant',
+          content: '',
+          isToolProcessing: false,
+        };
+        if (data.audioUrl) completedMessage.audioUrl = data.audioUrl;
+        if (data.imageUrl) completedMessage.imageUrl = data.imageUrl;
+        if (data.text) completedMessage.content = `📝 **Transcription:**\n\n${data.text}`;
+        if (!data.audioUrl && !data.imageUrl && !data.text) {
+          completedMessage.content = `✅ ${toolModel?.name || 'Tool'} completed successfully.`;
+        }
+
+        setMessages(prev => prev.map(m => m.id !== messageId ? m : completedMessage));
+
+        // Persist to conversation history
+        queueMessage(completedMessage);
 
         setIsAiToolProcessing(false);
         toast.success(`${toolModel?.name || 'AI Tool'} completed!`);
