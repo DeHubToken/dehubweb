@@ -428,28 +428,31 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
       {isMember ? (
         <div className="px-1 py-2">
           <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2">
-            <Textarea
-              ref={textareaRef}
-              placeholder={t('communities.typeMessage')}
-              value={newMessage}
-              onChange={(e) => {
-                const val = e.target.value;
-                if (val.length <= 500) {
-                  const processed = replaceLinksWithEmoji(val);
-                  setNewMessage(processed);
-                }
-                const ta = e.target;
-                requestAnimationFrame(() => {
-                  ta.style.height = 'auto';
-                  ta.style.height = `${Math.min(ta.scrollHeight, 128)}px`;
-                });
-              }}
-              onKeyDown={handleKeyDown}
-              maxLength={500}
-              className="min-h-[36px] max-h-32 resize-none text-sm bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-1 focus-visible:ring-0 focus-visible:ring-offset-0 leading-[1.35]"
-              rows={1}
-              style={{ fieldSizing: 'content' } as React.CSSProperties}
-            />
+            <div className="relative">
+              <span className="absolute top-1 right-0 text-[10px] text-zinc-600 z-10">{newMessage.length}/500</span>
+              <Textarea
+                ref={textareaRef}
+                placeholder={t('communities.typeMessage')}
+                value={newMessage}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val.length <= 500) {
+                    const processed = replaceLinksWithEmoji(val);
+                    setNewMessage(processed);
+                  }
+                  const ta = e.target;
+                  requestAnimationFrame(() => {
+                    ta.style.height = 'auto';
+                    ta.style.height = `${Math.min(ta.scrollHeight, 128)}px`;
+                  });
+                }}
+                onKeyDown={handleKeyDown}
+                maxLength={500}
+                className="min-h-[36px] max-h-32 resize-none text-sm bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-12 focus-visible:ring-0 focus-visible:ring-offset-0 leading-[1.35]"
+                rows={1}
+                style={{ fieldSizing: 'content' } as React.CSSProperties}
+              />
+            </div>
             <div className="flex items-center justify-between pt-1">
               <div className="flex items-center gap-0.5">
                 <EmojiGifPicker
@@ -458,7 +461,6 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                 />
               </div>
               <div className="flex items-center gap-1">
-                <span className="text-[10px] text-zinc-600">{newMessage.length}/500</span>
                 <VoiceRecorder
                   onRecordingComplete={handleVoiceRecordingComplete}
                   disabled={!isAuthenticated}
