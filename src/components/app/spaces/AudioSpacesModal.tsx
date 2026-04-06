@@ -77,6 +77,7 @@ export function AudioSpacesModal() {
   const [description, setDescription] = useState('');
   const [avatarReactions, setAvatarReactions] = useState<AvatarReactions>({});
   const [playingStageId, setPlayingStageId] = useState<string | null>(null);
+  const [playingStageTitle, setPlayingStageTitle] = useState('');
   const [playbackVolume, setPlaybackVolume] = useState(0);
   const [playbackProgress, setPlaybackProgress] = useState(0);
   const [playbackTimeLeft, setPlaybackTimeLeft] = useState('');
@@ -173,6 +174,7 @@ export function AudioSpacesModal() {
   const listeners = participants.filter(p => p.role === 'listener');
 
   return (
+    <>
     <Drawer open={isModalOpen} onOpenChange={(open) => !open && handleClose()}>
       <DrawerContent className="bg-black/60 backdrop-blur-[24px] saturate-[180%] border-white/10 max-h-[90vh] flex flex-col [&>div:first-child]:hidden">
         {!currentSpace ? (
@@ -328,6 +330,7 @@ export function AudioSpacesModal() {
                                 });
                                 audioRef.current = audio;
                                 setPlayingStageId(space.id);
+                                setPlayingStageTitle(space.title);
                               }
                             }}
                             className={cn(
@@ -704,6 +707,56 @@ export function AudioSpacesModal() {
         )}
       </DrawerContent>
     </Drawer>
+
+      {/* Floating mini player for past stage recordings */}
+      {playingStageId && !isModalOpen && (
+        <div
+          className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 w-[90vw] max-w-sm bg-black/80 backdrop-blur-xl border border-white/15 rounded-2xl p-3 shadow-2xl"
+          onClick={() => openModal('browse')}
+        >
+          <div className="flex items-center gap-3">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                cancelAnimationFrame(rafRef.current);
+                audioRef.current?.pause();
+                audioRef.current = null;
+                analyserRef.current = null;
+                setPlayingStageId(null);
+                setPlayingStageTitle('');
+                setPlaybackVolume(0);
+                setPlaybackProgress(0);
+                setPlaybackTimeLeft('');
+              }}
+              className="shrink-0 w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all"
+            >
+              <Square className="w-3.5 h-3.5" fill="currentColor" />
+            </button>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-medium text-white truncate">{playingStageTitle || 'Past Stage'}</p>
+              <div className="h-6 mt-0.5">
+                <StaticWaveform
+                  seed={playingStageId}
+                  className="w-full h-full"
+                  animated
+                  volumeLevel={playbackVolume}
+                  color="rgba(255,255,255,0.9)"
+                  progress={playbackProgress}
+                  onSeek={(pos) => {
+                    if (audioRef.current && isFinite(audioRef.current.duration)) {
+                      audioRef.current.currentTime = pos * audioRef.current.duration;
+                    }
+                  }}
+                />
+              </div>
+            </div>
+            {playbackTimeLeft && (
+              <span className="text-[10px] text-white/50 font-mono shrink-0">{playbackTimeLeft}</span>
+            )}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
