@@ -89,7 +89,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
 
           <div className="overflow-y-auto">
             {/* Cover */}
-            <div className="h-32 bg-gradient-to-br from-white/5 to-white/10 relative">
+            <div className="h-40 bg-gradient-to-br from-white/5 to-white/10 relative">
               {event.cover_image_url && (
                 <img src={event.cover_image_url} alt={event.title} className="w-full h-full object-cover" />
               )}
