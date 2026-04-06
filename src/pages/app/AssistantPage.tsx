@@ -1891,16 +1891,8 @@ export default function AssistantPage() {
                         <GeneratedAudioPlayer audioUrl={message.audioUrl} />
                       </div>
                     ) : message.role === 'assistant' && message.isToolProcessing ? (
-                      /* AI tool processing placeholder */
-                      <div className="max-w-[85%] flex flex-col gap-2">
-                        <div className="bg-white/10 text-white rounded-2xl px-4 py-2.5">
-                          <MarkdownText content={message.content} className="text-sm" />
-                        </div>
-                        <div className="flex items-center gap-2 px-4 py-2">
-                          <Loader2 className="w-4 h-4 animate-spin text-purple-400" />
-                          <span className="text-xs text-zinc-400">Processing...</span>
-                        </div>
-                      </div>
+                      /* AI tool processing skeleton */
+                      <AiToolProcessingSkeleton content={message.content} />
                     ) : message.role === 'assistant' && message.videoUrl ? (
                       /* Video messages */
                       <div className="max-w-[85%] flex flex-col gap-2">
