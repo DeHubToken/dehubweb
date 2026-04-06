@@ -276,7 +276,7 @@ export function PostAccessToggles({
                   <Plus className="w-3.5 h-3.5" />
                 </button>
               )}
-              {selectedCategoriesArray.filter(cat => !communitySlugs.has(cat)).map((cat) => (
+              {selectedCategoriesArray.map((cat) => (
                 <span key={cat} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] bg-white/10 text-white/80 border border-white/10">
                   {cat}
                   <button type="button" onClick={() => removeCategory(cat)} className="hover:text-red-400 transition-colors">
