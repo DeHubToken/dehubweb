@@ -255,7 +255,7 @@ export function SidebarChat() {
                 </div>
               ))}
             </div>
-          ) : messages.length === 0 ? (
+          ) : mergedItems.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center mb-2">
                 <Users className="w-5 h-5 text-zinc-500" />
@@ -264,7 +264,17 @@ export function SidebarChat() {
               <p className="text-zinc-600 text-xs">Be the first to say hello!</p>
             </div>
           ) : (
-            messages.map((msg) => {
+            mergedItems.map((item) => {
+              if (item.type === 'buy_alert') {
+                return (
+                  <BuyAlertCard
+                    key={`buy-alert-${item.data.id}`}
+                    content={item.data.content}
+                    timestamp={item.data.created_at}
+                  />
+                );
+              }
+              const msg = item.data;
               const avatarUrl = buildAvatarUrl(msg.sender_address || '', msg.sender_avatar_url);
               const name = msg.sender_display_name || msg.sender_username || msg.sender_address?.slice(0, 8) || 'Anon';
               const handle = msg.sender_username;
