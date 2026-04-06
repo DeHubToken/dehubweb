@@ -287,6 +287,10 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                         </span>
                         {msg.message_type === 'gif' && msg.image_url ? (
                           <img src={msg.image_url} alt="GIF" className="max-w-[280px] max-h-32 rounded mt-0.5" loading="lazy" />
+                        ) : msg.message_type === 'voice' && msg.image_url ? (
+                          <div className="mt-1">
+                            <VoiceWaveformPlayer src={msg.image_url} />
+                          </div>
                         ) : editingId === msg.id ? (
                           <div className="flex items-center gap-1 mt-0.5">
                             <input
