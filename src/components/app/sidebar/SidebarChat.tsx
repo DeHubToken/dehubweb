@@ -21,6 +21,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { toast } from 'sonner';
 import type { ReactionData } from '../chat/ChatMessage';
+import { useBuyAlerts, type BuyAlertMessage } from '@/hooks/use-buy-alerts';
+import { BuyAlertCard } from '../chat/BuyAlertCard';
 
 const QUICK_EMOJIS = ['👍', '❤️', '😂', '🔥', '🚀', '👀', '💯', '🙏'];
 
@@ -118,6 +120,20 @@ export function SidebarChat() {
   const roomId = rooms[0]?.id || null;
   const { messages, isLoading: messagesLoading, isSending, send, addReaction, removeReaction } = useLiveChatMessages(roomId);
   const { onlineCount } = useLiveChatPresence(roomId);
+
+  // Buy alerts
+  const buyAlerts = useBuyAlerts();
+
+  // Merge livechat messages with buy alerts
+  type MergedItem = { type: 'message'; data: typeof messages[0] } | { type: 'buy_alert'; data: BuyAlertMessage };
+  const mergedItems: MergedItem[] = (() => {
+    const items: MergedItem[] = [
+      ...messages.map((m) => ({ type: 'message' as const, data: m })),
+      ...buyAlerts.map((a) => ({ type: 'buy_alert' as const, data: a })),
+    ];
+    items.sort((a, b) => new Date(a.data.created_at).getTime() - new Date(b.data.created_at).getTime());
+    return items;
+  })();
 
   useEffect(() => {
     if (messages.length > 0 && bottomRef.current) {
@@ -239,7 +255,7 @@ export function SidebarChat() {
                 </div>
               ))}
             </div>
-          ) : messages.length === 0 ? (
+          ) : mergedItems.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center mb-2">
                 <Users className="w-5 h-5 text-zinc-500" />
@@ -248,7 +264,17 @@ export function SidebarChat() {
               <p className="text-zinc-600 text-xs">Be the first to say hello!</p>
             </div>
           ) : (
-            messages.map((msg) => {
+            mergedItems.map((item) => {
+              if (item.type === 'buy_alert') {
+                return (
+                  <BuyAlertCard
+                    key={`buy-alert-${item.data.id}`}
+                    content={item.data.content}
+                    timestamp={item.data.created_at}
+                  />
+                );
+              }
+              const msg = item.data;
               const avatarUrl = buildAvatarUrl(msg.sender_address || '', msg.sender_avatar_url);
               const name = msg.sender_display_name || msg.sender_username || msg.sender_address?.slice(0, 8) || 'Anon';
               const handle = msg.sender_username;
