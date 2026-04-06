@@ -360,7 +360,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
 
       voiceModeRef.current = true;
       setIsVoiceMode(true);
-      toast.success('Voice mode activated');
+      toast.success('Voice mode activated — each exchange uses Whisper + Dia TTS (DHB charged per use)');
 
       startListening();
     } catch (err) {
