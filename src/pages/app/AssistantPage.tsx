@@ -2334,7 +2334,7 @@ export default function AssistantPage() {
                   >
                     
                     <LiquidGlassBubble2
-                      label={t('assistant.generateImage')}
+                      label={`🖼️ ${t('assistant.generateImage')}`}
                       onClick={() => {
                         setInput(t('assistant.generateImageOf'));
                         inputRef.current?.focus();
@@ -2346,14 +2346,14 @@ export default function AssistantPage() {
                       className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
                     />
                     <LiquidGlassBubble2
-                      label={t('assistant.editImage')}
+                      label={`✏️ ${t('assistant.editImage')}`}
                       onClick={() => fileInputRef.current?.click()}
                       width="auto"
                       height="32px"
                       className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
                     />
                     <LiquidGlassBubble2
-                      label={t('assistant.generateVideo')}
+                      label={`🎥 ${t('assistant.generateVideo')}`}
                       onClick={() => {
                         setInput(t('assistant.generateVideoOf'));
                         inputRef.current?.focus();
