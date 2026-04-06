@@ -221,7 +221,7 @@ export function MobileBottomNav() {
 
             {/* Additional items - accessible via scroll */}
             {SCROLL_NAV_ITEMS.map((item) => {
-              const isActive = !item.external && location.pathname.startsWith(item.path);
+              const isActive = !item.external && !(item as any).action && location.pathname.startsWith(item.path);
               
               if (item.external) {
                 return (
@@ -235,6 +235,19 @@ export function MobileBottomNav() {
                   >
                     <item.icon className="w-5 h-5 md:w-6 md:h-6 transition-all duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]" />
                   </a>
+                );
+              }
+
+              if ((item as any).action === 'open-stages') {
+                return (
+                  <button
+                    key={item.label}
+                    onClick={() => openStagesModal()}
+                    className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-all duration-200 text-white"
+                    style={{ width: 'calc((50% - 24px) / 2)' }}
+                  >
+                    <item.icon className="w-5 h-5 md:w-6 md:h-6 transition-all duration-200 hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]" />
+                  </button>
                 );
               }
 
