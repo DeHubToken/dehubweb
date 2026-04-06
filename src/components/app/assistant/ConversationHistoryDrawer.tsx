@@ -27,9 +27,94 @@ interface Conversation {
 interface MediaItem {
   id: string;
   url: string;
-  type: 'image' | 'video';
+  type: 'image' | 'video' | 'audio';
   conversation_id: string;
   created_at: string;
+}
+
+/** Inline audio-playable thumbnail for the media grid */
+function MediaThumbnail({ item, onSelect }: { item: MediaItem; onSelect: (item: MediaItem) => void }) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const toggleAudio = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!audioRef.current) {
+      audioRef.current = new Audio(item.url);
+      audioRef.current.addEventListener('ended', () => setIsPlaying(false));
+    }
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+    }
+  }, [isPlaying, item.url]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
+    };
+  }, []);
+
+  if (item.type === 'audio') {
+    return (
+      <button
+        onClick={toggleAudio}
+        className="relative aspect-square rounded-xl overflow-hidden border border-white/10 hover:border-white/30 transition-all group"
+      >
+        <div className="w-full h-full bg-white/5 flex flex-col items-center justify-center gap-1.5">
+          {isPlaying ? (
+            <>
+              <div className="flex items-end gap-[3px] h-6">
+                {[1,2,3,4,5].map(i => (
+                  <div key={i} className="w-[3px] bg-white/80 rounded-full animate-pulse" style={{ height: `${8 + Math.random() * 16}px`, animationDelay: `${i * 0.1}s` }} />
+                ))}
+              </div>
+              <Pause className="w-4 h-4 text-white/60" />
+            </>
+          ) : (
+            <>
+              <Music className="w-6 h-6 text-white/40" />
+              <Play className="w-4 h-4 text-white/30" />
+            </>
+          )}
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1.5">
+          <p className="text-[9px] text-white/60">
+            {formatDistanceToNow(new Date(item.created_at), { addSuffix: true })}
+          </p>
+        </div>
+      </button>
+    );
+  }
+
+  return (
+    <button
+      onClick={() => onSelect(item)}
+      className="relative aspect-square rounded-xl overflow-hidden border border-white/10 hover:border-white/30 transition-all group"
+    >
+      {item.type === 'image' ? (
+        <img src={item.url} alt="" className="w-full h-full object-cover" loading="lazy" />
+      ) : (
+        <div className="w-full h-full bg-white/5 relative">
+          <video src={item.url} className="w-full h-full object-cover" muted preload="metadata" />
+          <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+            <Play className="w-6 h-6 text-white fill-white" />
+          </div>
+        </div>
+      )}
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1.5">
+        <p className="text-[9px] text-white/60">
+          {formatDistanceToNow(new Date(item.created_at), { addSuffix: true })}
+        </p>
+      </div>
+    </button>
+  );
 }
 
 interface ConversationHistoryDrawerProps {
