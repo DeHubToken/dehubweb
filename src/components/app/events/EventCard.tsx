@@ -1,6 +1,7 @@
 import { format } from 'date-fns';
 import { MapPin, Users, Flame, Calendar } from 'lucide-react';
 import type { CommunityEvent } from '@/hooks/use-events';
+import dehubCoin from '@/assets/dehub-coin.png';
 import { cn } from '@/lib/utils';
 
 interface EventCardProps {
@@ -56,6 +57,12 @@ export function EventCard({ event, onClick }: EventCardProps) {
             <Flame className="w-3 h-3" />
             {event.interested_count} interested
           </span>
+          {(event.gate_fee ?? 0) > 0 && (
+            <span className="flex items-center gap-1 ml-auto text-amber-400/80">
+              <img src={dehubCoin} alt="" className="w-3.5 h-3.5" />
+              {event.gate_fee}
+            </span>
+          )}
         </div>
       </div>
     </button>
