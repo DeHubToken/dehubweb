@@ -79,6 +79,7 @@ export function AudioSpacesModal() {
   const [playingStageId, setPlayingStageId] = useState<string | null>(null);
   const [playbackVolume, setPlaybackVolume] = useState(0);
   const [playbackProgress, setPlaybackProgress] = useState(0);
+  const [playbackTimeLeft, setPlaybackTimeLeft] = useState('');
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
