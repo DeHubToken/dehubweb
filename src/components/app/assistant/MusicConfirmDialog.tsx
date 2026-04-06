@@ -194,7 +194,7 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
                     Writing...
                   </span>
                 ) : (
-                  '✨ Generate Lyrics'
+                  '✨ Enhance Lyrics'
                 )}
               </button>
             </div>
