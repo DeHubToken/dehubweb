@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
-import { Download, Pause, Play } from 'lucide-react';
+import { Download, Pause, Play, Share } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
 import { decodeAudioWaveform } from '@/components/app/audio/visualizer-styles';
 import { formatTime } from '@/lib/audio-waveform';
 import { cn } from '@/lib/utils';
+import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 
 interface GeneratedAudioPlayerProps {
   audioUrl: string;
@@ -18,6 +19,7 @@ export function GeneratedAudioPlayer({ audioUrl, className }: GeneratedAudioPlay
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [waveformPeaks, setWaveformPeaks] = useState<number[]>([]);
+  const { openPostModal } = useGlobalDropZone();
 
   const displayPeaks = useMemo(() => {
     if (waveformPeaks.length > 0) return waveformPeaks;
@@ -132,16 +134,27 @@ export function GeneratedAudioPlayer({ audioUrl, className }: GeneratedAudioPlay
             </p>
           </div>
 
-          <a
-            href={audioUrl}
-            download="dehub-audio.mp3"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-border bg-background/60 text-foreground transition-colors hover:bg-accent"
-            aria-label="Download audio"
-          >
-            <Download className="h-4 w-4" />
-          </a>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => openPostModal?.(`🎵 Check out this AI-generated track!\n\n${audioUrl}`)}
+              className="flex h-11 w-11 items-center justify-center rounded-2xl border border-border bg-background/60 text-foreground transition-colors hover:bg-accent"
+              aria-label="Post audio"
+              title="Post to feed"
+            >
+              <Share className="h-4 w-4" />
+            </button>
+            <a
+              href={audioUrl}
+              download="dehub-audio.mp3"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-11 w-11 items-center justify-center rounded-2xl border border-border bg-background/60 text-foreground transition-colors hover:bg-accent"
+              aria-label="Download audio"
+            >
+              <Download className="h-4 w-4" />
+            </a>
+          </div>
         </div>
 
         <button
