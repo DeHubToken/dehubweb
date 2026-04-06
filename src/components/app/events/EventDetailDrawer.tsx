@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
 import { MapPin, Calendar, Users, Star, Trash2, CheckCircle2, Sparkles, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -11,6 +12,9 @@ import type { CommunityEvent } from '@/hooks/use-events';
 import { toast } from 'sonner';
 import { EventChat } from './EventChat';
 import { EventAttendeesDrawer } from './EventAttendeesDrawer';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { buildAvatarUrl } from '@/lib/media-url';
+import { useNavigate } from 'react-router-dom';
 
 interface EventDetailDrawerProps {
   event: CommunityEvent | null;
@@ -169,9 +173,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
 
               {/* Creator info + delete */}
               <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
-                <p className="text-xs text-zinc-500">
-                  Created by {event.creator_username || `${event.creator_wallet_address.slice(0, 6)}...`}
-                </p>
+                <CreatorInfo event={event} />
                 {isCreator && (
                   <Button
                     variant="ghost"
