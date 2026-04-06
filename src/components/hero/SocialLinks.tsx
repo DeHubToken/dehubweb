@@ -14,10 +14,7 @@ const fadeUpVariants = {
   }),
 };
 
-const cursorStyle = {
-  cursor:
-    "url(\"data:image/svg+xml,%3Csvg width='12' height='12' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='12' height='12' fill='white' fill-opacity='0.9' /%3E%3C/svg%3E\") 6 6, auto",
-};
+// cursor is now handled via .cursor-square CSS class in index.css
 
 const iconClass =
   'w-9 h-9 md:w-9 md:h-9 [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.6))]';

@@ -26,9 +26,7 @@ import { AppStoreButtons } from '@/components/hero/AppStoreButtons';
 import { SocialLinks } from '@/components/hero/SocialLinks';
 import { PixelCorruption } from '@/components/hero/PixelCorruption';
 
-const cursorStyle = { 
-  cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6 6, auto' 
-};
+// cursor is now handled via .cursor-square CSS class in index.css
 
 const SKIP_LANDING_KEY = "dehub_skip_landing";
 

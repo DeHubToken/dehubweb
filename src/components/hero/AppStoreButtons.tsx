@@ -17,9 +17,7 @@ const fadeUpVariants = {
   }),
 };
 
-const cursorStyle = { 
-  cursor: 'url("data:image/svg+xml,%3Csvg width=\'12\' height=\'12\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Crect width=\'12\' height=\'12\' fill=\'white\' fill-opacity=\'0.9\' /%3E%3C/svg%3E") 6 6, auto' 
-};
+// cursor is now handled via .cursor-square CSS class in index.css
 
 const glassOverride = "[&>div]:!bg-gradient-to-br [&>div]:!from-white/[0.04] [&>div]:!via-white/[0.02] [&>div]:!to-transparent [&>div]:!border-white/[0.08] [&>div]:!shadow-none [&>div]:before:!bg-none [&>div]:after:!bg-none";
 
