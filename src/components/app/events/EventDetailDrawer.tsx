@@ -16,6 +16,31 @@ import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useNavigate } from 'react-router-dom';
 
+function CreatorInfo({ event }: { event: CommunityEvent }) {
+  const navigate = useNavigate();
+  const avatarUrl = buildAvatarUrl(event.creator_wallet_address, event.creator_avatar);
+  const displayName = event.creator_username || `${event.creator_wallet_address.slice(0, 6)}...`;
+  const handle = event.creator_username;
+
+  return (
+    <button
+      onClick={() => navigate(`/${handle || event.creator_wallet_address}`)}
+      className="flex items-center gap-2 group"
+    >
+      <Avatar className="w-6 h-6">
+        <AvatarImage src={avatarUrl} />
+        <AvatarFallback className="bg-zinc-700 text-white text-[9px]">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
+      </Avatar>
+      <span className="relative inline-flex items-baseline shrink min-w-0 pr-3">
+        <span className="text-xs text-zinc-400 group-hover:text-white transition-colors">
+          Created by <span className="font-medium text-zinc-300 group-hover:text-white">{displayName}</span>
+        </span>
+        <BadgeIcon username={handle || undefined} className="w-[9px] h-[9px] absolute -top-0.5 -right-0" />
+      </span>
+    </button>
+  );
+}
+
 interface EventDetailDrawerProps {
   event: CommunityEvent | null;
   open: boolean;
