@@ -72,7 +72,7 @@ export const AppStoreButtons = ({ onEnterApp }: AppStoreButtonsProps) => {
     >
       {/* Enter App button */}
       {onEnterApp && (
-        <a href="/app" onClick={(e) => { e.preventDefault(); onEnterApp(); }} style={cursorStyle} className="w-full block">
+        <a href="/app" onClick={(e) => { e.preventDefault(); onEnterApp(); }} className="w-full block cursor-square-item">
           <LiquidGlassBubble shimmer className={btnClass}>
             <div className="flex items-center justify-center h-full">
               <span className="text-white text-base md:text-sm font-semibold tracking-wide">Enter App</span>
@@ -86,8 +86,7 @@ export const AppStoreButtons = ({ onEnterApp }: AppStoreButtonsProps) => {
         href="https://play.google.com/store/apps/details?id=io.dehub.mobile&hl"
         target="_blank"
         rel="noopener noreferrer"
-        className="w-full block transition-transform hover:scale-105"
-        style={cursorStyle}
+        className="w-full block transition-transform hover:scale-105 cursor-square-item"
       >
         <LiquidGlassBubble shimmer className={btnClass}>
           <div className="flex items-center justify-center gap-3 h-full">
@@ -103,8 +102,7 @@ export const AppStoreButtons = ({ onEnterApp }: AppStoreButtonsProps) => {
       {/* App Store */}
       <button
         onClick={handleAppStoreClick}
-        className="w-full transition-transform hover:scale-105"
-        style={cursorStyle}
+        className="w-full transition-transform hover:scale-105 cursor-square-item"
       >
         <LiquidGlassBubble shimmer className={btnClass}>
           <div className="flex items-center justify-center gap-3 h-full">

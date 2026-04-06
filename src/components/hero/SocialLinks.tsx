@@ -80,8 +80,7 @@ export const SocialLinks = () => {
           href={social.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="transition-transform hover:scale-110"
-          style={cursorStyle}
+          className="transition-transform hover:scale-110 cursor-square-item"
           aria-label={social.label}
         >
           <SocialIcon icon={social.icon} />
