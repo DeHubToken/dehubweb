@@ -1,9 +1,10 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Volume2, Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
+import { useStage } from '@/contexts/StageContext';
 
 const TTS_VOICES = [
   { id: 'CwhRBWXzGAHq8TQ4Fs17', name: 'Roger', label: 'Deep male', emoji: '🎙️' },
@@ -18,7 +19,7 @@ export function StageTTS() {
   const [text, setText] = useState('');
   const [selectedVoice, setSelectedVoice] = useState<string>(TTS_VOICES[0].id);
   const [isGenerating, setIsGenerating] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { injectAudio } = useStage();
 
   const handleGenerate = async () => {
     if (!text.trim() || isGenerating) return;
@@ -43,21 +44,7 @@ export function StageTTS() {
       }
 
       const audioBlob = await response.blob();
-      const audioUrl = URL.createObjectURL(audioBlob);
-
-      // Stop any currently playing TTS
-      if (audioRef.current) {
-        audioRef.current.pause();
-        audioRef.current = null;
-      }
-
-      const audio = new Audio(audioUrl);
-      audio.onended = () => {
-        URL.revokeObjectURL(audioUrl);
-        audioRef.current = null;
-      };
-      audioRef.current = audio;
-      await audio.play();
+      await injectAudio(audioBlob);
 
       setText('');
     } catch (err) {
