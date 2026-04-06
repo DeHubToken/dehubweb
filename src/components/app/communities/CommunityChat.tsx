@@ -7,6 +7,11 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Send, Users, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check } from 'lucide-react';
+import { VoiceRecorder } from '../chat/VoiceRecorder';
+import { VoiceWaveformPlayer } from '../chat/VoiceWaveformPlayer';
+import { supabase } from '@/integrations/supabase/client';
+import { getAuthToken } from '@/lib/api/dehub';
+import { toast } from 'sonner';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
