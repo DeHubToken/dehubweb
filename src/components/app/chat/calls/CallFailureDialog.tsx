@@ -64,7 +64,7 @@ const CallFailureDialog: React.FC<CallFailureDialogProps> = ({
         <AlertDialogFooter className="flex-col gap-2 sm:flex-row">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-all border border-white/10"
+            className="flex-1 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-all border border-white/10"
           >
             Close
           </button>
