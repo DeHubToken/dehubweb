@@ -133,7 +133,8 @@ export function BuyAlertCard({ content, timestamp }: { content: string; timestam
             </span>
           </div>
         )}
-      </div>
+        </div>
+      </LiquidGlassBubble>
     </div>
   );
 }
