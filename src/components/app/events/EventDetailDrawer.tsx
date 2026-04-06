@@ -174,13 +174,13 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                 <img
                   src={event.cover_image_url}
                   alt={event.title}
-                  className="w-full h-48 lg:h-56 object-cover"
+                  className="w-full h-48 lg:h-56 object-cover cursor-pointer"
+                  onClick={() => setShowFullImage(true)}
                   onLoad={(e) => {
                     const img = e.currentTarget;
                     const natural = img.naturalHeight / img.naturalWidth;
                     const container = img.parentElement;
                     if (container && natural < 0.35) {
-                      // Thinner image → shrink container to fit
                       const w = container.clientWidth;
                       const fitted = Math.min(w * natural, container.clientHeight);
                       container.style.height = `${fitted}px`;
