@@ -19,6 +19,8 @@ const VoiceCallModal: React.FC = () => {
     acceptCall,
     rejectCall,
     toggleMute,
+    isMinimized,
+    minimizeCall,
   } = useCall();
 
   const [audioNeedsInteraction, setAudioNeedsInteraction] = useState(false);
@@ -49,7 +51,7 @@ const VoiceCallModal: React.FC = () => {
 
   const isVisible = isCallActive || isIncoming || isConnecting;
 
-  if (!isVisible || !currentCall || currentCall.call_type !== 'audio') {
+  if (!isVisible || !currentCall || currentCall.call_type !== 'audio' || isMinimized) {
     return null;
   }
 
@@ -58,7 +60,7 @@ const VoiceCallModal: React.FC = () => {
   const statusText = isIncoming ? 'Incoming call' : isConnecting ? 'Connecting...' : callDuration !== '00:00' ? callDuration : 'Connected';
 
   return (
-    <Drawer open={isVisible} onOpenChange={() => {}}>
+    <Drawer open={isVisible && !isMinimized} onOpenChange={(open) => { if (!open) minimizeCall(); }}>
       <DrawerContent className="bg-black/60 backdrop-blur-[24px] border-t border-white/10 shadow-2xl">
         <audio
           ref={remoteAudioRef}

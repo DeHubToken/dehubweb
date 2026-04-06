@@ -39,6 +39,9 @@ export interface UseCallReturn {
   isUserOffline: boolean;
   callFailureReason: 'user_offline' | 'technical_error' | null;
   clearCallFailure: () => void;
+  isMinimized: boolean;
+  minimizeCall: () => void;
+  maximizeCall: () => void;
   callDuration: string;
   localVideoRef: React.RefObject<HTMLVideoElement>;
   remoteVideoRef: React.RefObject<HTMLVideoElement>;
@@ -63,6 +66,7 @@ export const useCall = (): UseCallReturn => {
   const [isCameraOff, setIsCameraOff] = useState(false);
   const [isUserOffline, setIsUserOffline] = useState(false);
   const [callFailureReason, setCallFailureReason] = useState<'user_offline' | 'technical_error' | null>(null);
+  const [isMinimized, setIsMinimized] = useState(false);
   const [callStartTime, setCallStartTime] = useState<Date | null>(null);
   const [callDuration, setCallDuration] = useState<string>('00:00');
 
@@ -555,6 +559,9 @@ export const useCall = (): UseCallReturn => {
     isUserOffline,
     callFailureReason,
     clearCallFailure: () => { setCallFailureReason(null); setIsUserOffline(false); },
+    isMinimized,
+    minimizeCall: () => setIsMinimized(true),
+    maximizeCall: () => setIsMinimized(false),
     callDuration,
     localVideoRef,
     remoteVideoRef,
