@@ -2563,6 +2563,17 @@ export default function AssistantPage() {
         recordingDuration={voiceAssistant.recordingDuration}
         onStop={voiceAssistant.stopVoiceMode}
         onStopSpeaking={voiceAssistant.stopSpeaking}
+        remainingCredits={voiceCredits.credits}
+      />
+
+      {/* Voice Credit Purchase Modal */}
+      <VoiceCreditPurchaseModal
+        open={voiceCreditModalOpen}
+        onOpenChange={setVoiceCreditModalOpen}
+        currentCredits={voiceCredits.credits}
+        onPurchaseComplete={(bundleSize) => {
+          voiceCredits.addCredits(bundleSize);
+        }}
       />
 
       <PostModal
