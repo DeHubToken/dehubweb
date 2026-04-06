@@ -276,7 +276,7 @@ export function PostAccessToggles({
                   <Plus className="w-3.5 h-3.5" />
                 </button>
               )}
-              {selectedCategoriesArray.filter(cat => !communitySlugs.has(cat)).map((cat) => (
+              {selectedCategoriesArray.map((cat) => (
                 <span key={cat} className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] bg-white/10 text-white/80 border border-white/10">
                   {cat}
                   <button type="button" onClick={() => removeCategory(cat)} className="hover:text-red-400 transition-colors">
@@ -401,7 +401,7 @@ export function PostAccessToggles({
             {/* Selected chips */}
             {selectedCategoriesArray.length > 0 && (
               <div className="flex flex-wrap gap-1.5">
-                {selectedCategoriesArray.filter(cat => !communitySlugs.has(cat)).map((cat) => (
+                {selectedCategoriesArray.map((cat) => (
                   <span key={cat} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs bg-white/15 text-white border border-white/20">
                     {cat}
                     <button type="button" onClick={() => removeCategory(cat)} className="hover:text-red-400 transition-colors">
@@ -520,7 +520,10 @@ export function PostAccessToggles({
                   onClick={() => {
                     // Remove any existing community slug, add this one as a plain category
                     const withoutCommunity = selectedCategoriesArray.filter(c => !communitySlugs.has(c));
-                    const next = [...withoutCommunity, community.slug].join('|||');
+                    // Also add the community slug as a regular category so it appears in both places
+                    const slug = community.slug;
+                    const withCategory = withoutCommunity.includes(slug) ? withoutCommunity : [...withoutCommunity, slug];
+                    const next = [...withCategory.filter(c => c !== slug), slug].join('|||');
                     setSelectedCategory(next);
                     setCommunityDrawerOpen(false);
                   }}
