@@ -928,7 +928,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 className="relative z-40 px-3 py-1.5 flex items-center justify-center transition-all rounded-xl text-zinc-400 hover:text-zinc-200"
               >
                 <span className={cn("relative z-10", activeTab === tab && "text-white")}>
-                  {tab === 'replies' ? <MessageSquare className="w-[17px] h-[17px]" /> : tab === 'quotes' ? <Quote className="w-[17px] h-[17px]" /> : tab === 'reposts' ? <Repeat2 className="w-[17px] h-[17px]" /> : <Search className="w-[17px] h-[17px]" />}
+                  {tab === 'replies' ? <MessageSquare className="w-[17px] h-[17px]" /> : tab === 'quotes' ? <Quote className="w-[17px] h-[17px]" /> : tab === 'reposts' ? <Repeat2 className="w-[22px] h-[22px]" /> : <Search className="w-[17px] h-[17px]" />}
                 </span>
               </button>
             ))}
