@@ -88,6 +88,7 @@ export function AudioSpacesModal() {
   const rafRef = useRef<number>(0);
   /** 0–1 seek applied on next `loadedmetadata` when starting playback */
   const pendingSeekRatioRef = useRef<number | null>(null);
+  const estimatedDurationRef = useRef<number>(0);
   /** Remove `durationchange` etc. from the active past-stage `<audio>` */
   const pastStageUnsubRef = useRef<(() => void) | null>(null);
   /** `onended` delayed reset so the waveform can show 100% briefly */
@@ -199,6 +200,13 @@ export function AudioSpacesModal() {
   const startPastStagePlayback = useCallback((space: AudioSpace) => {
     if (!space.recording_url) return;
 
+    // webm recordings often have duration=Infinity — pre-calculate from timestamps as fallback
+    const estimatedDuration =
+      space.started_at && space.ended_at
+        ? Math.max(1, (new Date(space.ended_at).getTime() - new Date(space.started_at).getTime()) / 1000)
+        : 0;
+    estimatedDurationRef.current = estimatedDuration;
+
     if (pastStageEndTimeoutRef.current !== null) {
       clearTimeout(pastStageEndTimeoutRef.current);
       pastStageEndTimeoutRef.current = null;
@@ -304,6 +312,10 @@ export function AudioSpacesModal() {
           /* ignore */
         }
       }
+      // Last resort: use timestamp-derived duration (webm duration is often Infinity)
+      if (!isFinite(dur) || dur <= 0) {
+        dur = estimatedDuration;
+      }
       if (isFinite(dur) && dur > 0) {
         const t = audio.currentTime;
         const prog = Math.min(1, Math.max(0, t / dur));
@@ -313,7 +325,6 @@ export function AudioSpacesModal() {
         const s = remaining % 60;
         setPlaybackTimeLeft(`-${m}:${s.toString().padStart(2, '0')}`);
       }
-      /* If duration isn't known yet, do not force progress to 0 every frame — that flashes the fill */
       rafRef.current = requestAnimationFrame(pump);
     };
 
@@ -345,6 +356,9 @@ export function AudioSpacesModal() {
           } catch {
             /* ignore */
           }
+        }
+        if (!isFinite(dur) || dur <= 0) {
+          dur = estimatedDurationRef.current;
         }
         if (isFinite(dur) && dur > 0) {
           a.currentTime = position * dur;
@@ -857,7 +871,7 @@ export function AudioSpacesModal() {
             </button>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-medium text-white truncate">{playingStageTitle || 'Past Stage'}</p>
-              <div className="h-6 mt-0.5">
+              <div className="h-10 mt-0.5">
                 <StaticWaveform
                   seed={playingStageId}
                   className="w-full h-full"
@@ -866,8 +880,18 @@ export function AudioSpacesModal() {
                   color="rgba(255,255,255,0.9)"
                   progress={playbackProgress}
                   onSeek={(pos) => {
-                    if (audioRef.current && isFinite(audioRef.current.duration)) {
-                      audioRef.current.currentTime = pos * audioRef.current.duration;
+                    const audio = audioRef.current;
+                    if (!audio) return;
+                    let dur = audio.duration;
+                    if (!isFinite(dur) || dur <= 0) {
+                      try {
+                        if (audio.seekable && audio.seekable.length > 0) {
+                          dur = audio.seekable.end(audio.seekable.length - 1);
+                        }
+                      } catch { /* ignore */ }
+                    }
+                    if (isFinite(dur) && dur > 0) {
+                      audio.currentTime = pos * dur;
                     }
                   }}
                 />
