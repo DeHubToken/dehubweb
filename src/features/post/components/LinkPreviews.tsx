@@ -42,11 +42,11 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
   useEffect(() => {
     const urls = extractUrlsFromText(text);
     
-    // Skip community URLs - they get their own embed
-    const nonCommunityUrls = urls.filter(url => !extractCommunitySlug(url));
+    // Skip community and event URLs - they get their own embeds
+    const nonSpecialUrls = urls.filter(url => !extractCommunitySlug(url) && !extractEventId(url));
     
     // Filter out removed and already fetched URLs
-    const newUrls = nonCommunityUrls.filter(
+    const newUrls = nonSpecialUrls.filter(
       url => !removedUrls.has(url) && !fetchedUrls.current.has(url) && !previews.has(url)
     );
 
