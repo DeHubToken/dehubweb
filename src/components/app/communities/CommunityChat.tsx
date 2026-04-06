@@ -33,6 +33,7 @@ const QUICK_EMOJIS = ['👍', '❤️', '😂', '🔥', '🚀', '👀', '💯', 
 
 // Buy alert card imported from shared component
 import { BuyAlertCard } from '../chat/BuyAlertCard';
+import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
 
 function ChatAvatar({ src, address, name }: { src?: string | null; address?: string; name: string }) {
   const [failed, setFailed] = useState(false);
@@ -115,6 +116,7 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
+  const { isHidden: buyBotHidden, hide: hideBuyBot } = useBuyBotHidden();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { user } = useAuth();
   const { t } = useTranslation();
@@ -262,11 +264,13 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
               messages.map((msg) => {
                 // Buy alert messages get a special card treatment
                 if (msg.message_type === 'buy_alert') {
+                  if (buyBotHidden) return null;
                   return (
                     <BuyAlertCard
                       key={msg.id}
                       content={msg.content}
                       timestamp={msg.created_at}
+                      onHide={hideBuyBot}
                     />
                   );
                 }

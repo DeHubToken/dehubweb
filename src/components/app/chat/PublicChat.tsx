@@ -16,6 +16,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { useBuyAlerts, type BuyAlertMessage } from '@/hooks/use-buy-alerts';
 import { BuyAlertCard } from './BuyAlertCard';
+import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -95,6 +96,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
 
   // Buy alerts
   const buyAlerts = useBuyAlerts();
+  const { isHidden: buyBotHidden, hide: hideBuyBot } = useBuyBotHidden();
 
   // Determine if current user is a moderator
   const isModerator = useMemo(() => {
@@ -462,11 +464,14 @@ export function PublicChat({ onBack }: PublicChatProps) {
           ) : (
             filteredMessages.map((message) => (
               message.id.startsWith('buy-alert-') ? (
-                <BuyAlertCard
-                  key={message.id}
-                  content={message.content}
-                  timestamp={message.timestamp.toISOString()}
-                />
+                buyBotHidden ? null : (
+                  <BuyAlertCard
+                    key={message.id}
+                    content={message.content}
+                    timestamp={message.timestamp.toISOString()}
+                    onHide={hideBuyBot}
+                  />
+                )
               ) : (
               <ChatMessage 
                 key={message.id} 
