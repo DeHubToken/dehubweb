@@ -49,7 +49,7 @@ const VideoCallModal: React.FC = () => {
     return null;
   }
 
-  const displayName = peerName || (peerAddress ? `${peerAddress.slice(0, 6)}...${peerAddress.slice(-4)}` : '');
+  const displayName = peerName ? `@${peerName}` : (peerAddress ? `${peerAddress.slice(0, 6)}...${peerAddress.slice(-4)}` : '');
   const statusText = isIncoming ? 'Incoming video call' : isConnecting ? 'Connecting...' : 'Connected';
 
   return (
