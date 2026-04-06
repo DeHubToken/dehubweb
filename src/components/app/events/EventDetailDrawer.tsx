@@ -3,13 +3,13 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
-import { MapPin, Calendar, Users, Flame, Trash2, CheckCircle2, Sparkles, MessageSquare, Share2, X, Lock } from 'lucide-react';
+import { MapPin, Calendar, Users, Flame, Trash2, CheckCircle2, Share2, X, Lock, Globe, Clock, UserCheck, UserX } from 'lucide-react';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { cn } from '@/lib/utils';
 import { GLASS_STYLES } from '@/constants/app.constants';
 import { useAuth } from '@/contexts/AuthContext';
-import { useEventRsvp, useToggleRsvp, useDeleteEvent, useEventRsvps } from '@/hooks/use-events';
-import type { CommunityEvent } from '@/hooks/use-events';
+import { useEventRsvp, useToggleRsvp, useDeleteEvent, useEventRsvps, useManageRsvp } from '@/hooks/use-events';
+import type { CommunityEvent, EventRsvp } from '@/hooks/use-events';
 import { useHasPaidGate, useEventGatePayment } from '@/hooks/use-event-gate-payment';
 import { toast } from 'sonner';
 import { EventChat } from './EventChat';
@@ -44,6 +44,35 @@ function CreatorInfo({ event }: { event: CommunityEvent }) {
   );
 }
 
+function PendingRequestItem({ rsvp, eventId, onManage }: { rsvp: EventRsvp; eventId: string; onManage: (rsvpId: string, status: 'approved' | 'denied') => void }) {
+  const addr = rsvp.wallet_address;
+  return (
+    <div className="flex items-center justify-between py-2">
+      <div className="flex items-center gap-2 min-w-0">
+        <Avatar className="w-7 h-7">
+          <AvatarImage src={buildAvatarUrl(addr)} />
+          <AvatarFallback className="bg-zinc-700 text-white text-[9px]">{addr.slice(2, 4).toUpperCase()}</AvatarFallback>
+        </Avatar>
+        <span className="text-xs text-zinc-300 truncate">{`${addr.slice(0, 6)}...${addr.slice(-4)}`}</span>
+      </div>
+      <div className="flex items-center gap-1.5 shrink-0">
+        <button
+          onClick={() => onManage(rsvp.id, 'approved')}
+          className="p-1.5 rounded-lg bg-green-500/10 text-green-400 hover:bg-green-500/20 transition-colors"
+        >
+          <UserCheck className="w-3.5 h-3.5" />
+        </button>
+        <button
+          onClick={() => onManage(rsvp.id, 'denied')}
+          className="p-1.5 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors"
+        >
+          <UserX className="w-3.5 h-3.5" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 interface EventDetailDrawerProps {
   event: CommunityEvent | null;
   open: boolean;
@@ -56,13 +85,21 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
   const { data: allRsvps = [] } = useEventRsvps(event?.id);
   const toggleRsvp = useToggleRsvp();
   const deleteEvent = useDeleteEvent();
+  const manageRsvp = useManageRsvp();
   const [showChat, setShowChat] = useState(true);
   const [attendeesType, setAttendeesType] = useState<'going' | 'interested' | null>(null);
 
   const hasGateFee = (event?.gate_fee ?? 0) > 0;
+  const isPrivate = event?.is_private ?? false;
   const isCreator = walletAddress && event?.creator_wallet_address === walletAddress.toLowerCase();
   const { data: hasPaid = false, isLoading: checkingPayment } = useHasPaidGate(hasGateFee ? event?.id : undefined);
   const isGated = hasGateFee && !isCreator && !hasPaid;
+
+  // Private event access: creator always has access, approved users have access
+  const isApproved = myRsvp?.status === 'approved' || myRsvp?.status === 'going';
+  const isPending = myRsvp?.status === 'pending';
+  const isDenied = myRsvp?.status === 'denied';
+  const isPrivateBlocked = isPrivate && !isCreator && !isApproved;
 
   const { pay: payGateFee, isPaying } = useEventGatePayment({
     eventId: event?.id ?? '',
@@ -74,13 +111,18 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
   if (!event) return null;
 
   const startDate = new Date(event.starts_at);
-  const goingList = allRsvps.filter(r => r.status === 'going');
+  const goingList = allRsvps.filter(r => r.status === 'going' || r.status === 'approved');
   const interestedList = allRsvps.filter(r => r.status === 'interested');
+  const pendingList = allRsvps.filter(r => r.status === 'pending');
 
   const handleRsvp = (status: 'going' | 'interested') => {
     if (!isAuthenticated) { openLoginModal(); return; }
     if (isGated) {
       toast.error('Pay the entry fee to join this event');
+      return;
+    }
+    if (isPrivate && !isCreator && !isApproved) {
+      toast.error('You need to be approved to RSVP');
       return;
     }
     if (myRsvp?.status === status) {
@@ -90,11 +132,28 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
     }
   };
 
+  const handleRequestAccess = () => {
+    if (!isAuthenticated) { openLoginModal(); return; }
+    if (isPending) {
+      // Cancel request
+      toggleRsvp.mutate({ eventId: event.id, status: 'remove' });
+    } else {
+      toggleRsvp.mutate({ eventId: event.id, status: 'pending' });
+      toast.success('Request sent to the event creator');
+    }
+  };
+
+  const handleManageRequest = (rsvpId: string, newStatus: 'approved' | 'denied') => {
+    manageRsvp.mutate({ rsvpId, eventId: event.id, newStatus });
+  };
+
   const handleDelete = () => {
     deleteEvent.mutate(event.id, {
       onSuccess: () => onOpenChange(false),
     });
   };
+
+  const canInteract = !isGated && !isPrivateBlocked;
 
   return (
     <>
@@ -109,6 +168,13 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
             <div className="h-40 bg-gradient-to-br from-white/5 to-white/10 relative">
               {event.cover_image_url && (
                 <img src={event.cover_image_url} alt={event.title} className="w-full h-full object-cover" />
+              )}
+              {/* Private badge on cover */}
+              {isPrivate && (
+                <div className="absolute top-2 left-2 flex items-center gap-1 px-2 py-1 rounded-lg bg-black/60 backdrop-blur-sm">
+                  <Lock className="w-3 h-3 text-zinc-300" />
+                  <span className="text-[10px] font-medium text-zinc-300">Private</span>
+                </div>
               )}
             </div>
 
@@ -159,11 +225,9 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <img src={dehubCoin} alt="Coins" className="w-5 h-5" />
-                      <div>
-                        <span className="text-sm font-medium text-white">
-                          {event.gate_fee} {event.gate_fee === 1 ? 'Coin' : 'Coins'} entry fee
-                        </span>
-                      </div>
+                      <span className="text-sm font-medium text-white">
+                        {event.gate_fee} {event.gate_fee === 1 ? 'Coin' : 'Coins'} entry fee
+                      </span>
                     </div>
                     {isCreator ? (
                       <span className="text-xs text-zinc-500">You're the creator</span>
@@ -190,18 +254,84 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                 </div>
               )}
 
+              {/* Private Event: Request Access */}
+              {isPrivate && !isCreator && (
+                <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Lock className="w-4 h-4 text-zinc-400" />
+                      <div>
+                        <span className="text-sm font-medium text-white">Private event</span>
+                        <p className="text-xs text-zinc-500">
+                          {isApproved ? 'You\'re approved' : isPending ? 'Request pending' : isDenied ? 'Request denied' : 'Request access to attend'}
+                        </p>
+                      </div>
+                    </div>
+                    {isApproved ? (
+                      <span className="text-xs text-green-400 flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5" /> Approved
+                      </span>
+                    ) : isPending ? (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={handleRequestAccess}
+                        disabled={toggleRsvp.isPending}
+                        className="rounded-xl gap-1.5 border-white/10 text-zinc-300"
+                      >
+                        <Clock className="w-3.5 h-3.5" />
+                        Pending
+                      </Button>
+                    ) : isDenied ? (
+                      <span className="text-xs text-red-400 flex items-center gap-1">
+                        <UserX className="w-3.5 h-3.5" /> Denied
+                      </span>
+                    ) : (
+                      <Button
+                        size="sm"
+                        onClick={handleRequestAccess}
+                        disabled={toggleRsvp.isPending}
+                        className="rounded-xl gap-1.5"
+                      >
+                        Request Access
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Creator: Pending Requests */}
+              {isCreator && isPrivate && pendingList.length > 0 && (
+                <div className="rounded-xl border border-amber-500/20 bg-amber-500/[0.04] p-3">
+                  <h3 className="text-sm font-medium text-white mb-2 flex items-center gap-1.5">
+                    <Clock className="w-4 h-4 text-amber-400" />
+                    Pending Requests ({pendingList.length})
+                  </h3>
+                  <div className="divide-y divide-white/[0.06]">
+                    {pendingList.map((rsvp) => (
+                      <PendingRequestItem
+                        key={rsvp.id}
+                        rsvp={rsvp}
+                        eventId={event.id}
+                        onManage={handleManageRequest}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* RSVP Buttons */}
               <div className="flex gap-2">
                 <LiquidGlassBubble2
                   label={`Going (${goingList.length})`}
                   icon={<CheckCircle2 className="w-4 h-4" />}
                   onClick={() => handleRsvp('going')}
-                  disabled={toggleRsvp.isPending || isGated}
+                  disabled={toggleRsvp.isPending || !canInteract}
                   width="100%"
                   height="42px"
                   className={cn(
                     'flex-1',
-                    isGated && 'opacity-50',
+                    !canInteract && 'opacity-50',
                     myRsvp?.status === 'going' && 'opacity-100 [&>div]:!border [&>div]:!border-white/30'
                   )}
                 />
@@ -209,12 +339,12 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                   label={`Interested (${interestedList.length})`}
                   icon={<Flame className="w-4 h-4" />}
                   onClick={() => handleRsvp('interested')}
-                  disabled={toggleRsvp.isPending || isGated}
+                  disabled={toggleRsvp.isPending || !canInteract}
                   width="100%"
                   height="42px"
                   className={cn(
                     'flex-1',
-                    isGated && 'opacity-50',
+                    !canInteract && 'opacity-50',
                     myRsvp?.status === 'interested' && 'opacity-100 [&>div]:!border [&>div]:!border-white/30'
                   )}
                 />
@@ -251,17 +381,24 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                 </div>
               )}
 
-              {/* Inline Chat — hidden behind gate if gated */}
-              {showChat && !isGated && (
+              {/* Inline Chat — hidden behind gate or private block */}
+              {showChat && canInteract && (
                 <div className="border border-white/[0.08] rounded-xl overflow-hidden">
                   <EventChat eventId={event.id} />
                 </div>
               )}
 
-              {isGated && (
+              {(isGated || isPrivateBlocked) && (
                 <div className="text-center py-6 text-zinc-500 text-sm">
                   <Lock className="w-5 h-5 mx-auto mb-2 text-zinc-600" />
-                  Pay the entry fee to access the chat and RSVP
+                  {isGated
+                    ? 'Pay the entry fee to access the chat and RSVP'
+                    : isPending
+                    ? 'Your request is pending — the creator will review it'
+                    : isDenied
+                    ? 'Your request was denied'
+                    : 'Request access to view the chat and RSVP'
+                  }
                 </div>
               )}
 

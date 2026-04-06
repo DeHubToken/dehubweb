@@ -25,14 +25,17 @@ export interface CommunityEvent {
   going_count: number;
   interested_count: number;
   gate_fee: number;
+  is_private: boolean;
   created_at: string;
 }
+
+export type RsvpStatus = 'going' | 'interested' | 'pending' | 'approved' | 'denied';
 
 export interface EventRsvp {
   id: string;
   event_id: string;
   wallet_address: string;
-  status: 'going' | 'interested';
+  status: RsvpStatus;
   created_at: string;
 }
 
@@ -128,13 +131,13 @@ export function useEventRsvps(eventId: string | undefined) {
   });
 }
 
-// Toggle RSVP (going/interested/remove)
+// Toggle RSVP (going/interested/pending/remove)
 export function useToggleRsvp() {
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ eventId, status }: { eventId: string; status: 'going' | 'interested' | 'remove' }) => {
+    mutationFn: async ({ eventId, status }: { eventId: string; status: 'going' | 'interested' | 'pending' | 'remove' }) => {
       if (!walletAddress) throw new Error('Not authenticated');
       const addr = walletAddress.toLowerCase();
 
@@ -175,6 +178,32 @@ export function useToggleRsvp() {
   });
 }
 
+// Creator manage RSVP requests (approve/deny)
+export function useManageRsvp() {
+  const { walletAddress } = useAuth();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ rsvpId, eventId, newStatus }: { rsvpId: string; eventId: string; newStatus: 'approved' | 'denied' }) => {
+      if (!walletAddress) throw new Error('Not authenticated');
+      // Update the RSVP status — RLS allows event creator to update via wallet header
+      const { error } = await withWalletHeader(
+        supabase
+          .from('community_event_rsvps')
+          .update({ status: newStatus } as any)
+          .eq('id', rsvpId),
+        walletAddress
+      );
+      if (error) throw error;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['event-rsvps', variables.eventId] });
+      queryClient.invalidateQueries({ queryKey: ['event', variables.eventId] });
+      toast.success(variables.newStatus === 'approved' ? 'Request approved' : 'Request denied');
+    },
+  });
+}
+
 // Create event
 export function useCreateEvent() {
   const { walletAddress } = useAuth();
@@ -192,6 +221,7 @@ export function useCreateEvent() {
       creator_username?: string;
       creator_avatar?: string;
       gate_fee?: number;
+      is_private?: boolean;
     }) => {
       if (!walletAddress) throw new Error('Not authenticated');
       const { data, error } = await withWalletHeader(
