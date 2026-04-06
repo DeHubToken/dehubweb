@@ -38,6 +38,7 @@ export interface UseCallReturn {
   isCameraOff: boolean;
   isUserOffline: boolean;
   callFailureReason: 'user_offline' | 'technical_error' | null;
+  clearCallFailure: () => void;
   callDuration: string;
   localVideoRef: React.RefObject<HTMLVideoElement>;
   remoteVideoRef: React.RefObject<HTMLVideoElement>;
@@ -553,6 +554,7 @@ export const useCall = (): UseCallReturn => {
     isCameraOff,
     isUserOffline,
     callFailureReason,
+    clearCallFailure: () => { setCallFailureReason(null); setIsUserOffline(false); },
     callDuration,
     localVideoRef,
     remoteVideoRef,
