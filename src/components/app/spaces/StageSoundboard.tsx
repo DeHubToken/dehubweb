@@ -190,8 +190,10 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
   }, []);
 
   const playCustomSound = useCallback((sound: CustomSound) => {
-    if (playingId) return;
-    setPlayingId(`custom-${sound.path}`);
+    const soundId = `custom-${sound.path}`;
+    if (playingId === soundId) { stopCurrentSound(); return; }
+    if (playingId) stopCurrentSound();
+    setPlayingId(soundId);
 
     if (howlRef.current) {
       howlRef.current.unload();
