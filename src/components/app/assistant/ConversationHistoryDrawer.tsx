@@ -51,6 +51,7 @@ export function ConversationHistoryDrawer({
   const [isLoading, setIsLoading] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [isClearingAll, setIsClearingAll] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Conversation[] | null>(null);
