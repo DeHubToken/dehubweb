@@ -96,14 +96,35 @@ interface PairData {
   pairName: string;
 }
 
-async function getDHBPairData(): Promise<PairData | null> {
+async function getCMCMarketCap(): Promise<number | null> {
+  const apiKey = Deno.env.get('CMC_API_KEY');
+  if (!apiKey) return null;
   try {
     const res = await fetch(
-      `https://api.dexscreener.com/latest/dex/tokens/${DHB_TOKEN_BASE}`,
-      { headers: { Accept: 'application/json' } }
+      'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=DHB',
+      { headers: { 'X-CMC_PRO_API_KEY': apiKey, Accept: 'application/json' } }
     );
     if (!res.ok) return null;
     const data = await res.json();
+    const dhb = data?.data?.DHB;
+    if (!dhb) return null;
+    return dhb.quote?.USD?.market_cap ?? dhb.quote?.USD?.fully_diluted_market_cap ?? null;
+  } catch {
+    return null;
+  }
+}
+
+async function getDHBPairData(): Promise<PairData | null> {
+  try {
+    const [dexRes, cmcMarketCap] = await Promise.all([
+      fetch(
+        `https://api.dexscreener.com/latest/dex/tokens/${DHB_TOKEN_BASE}`,
+        { headers: { Accept: 'application/json' } }
+      ),
+      getCMCMarketCap(),
+    ]);
+    if (!dexRes.ok) return null;
+    const data = await dexRes.json();
     const pairs = (data.pairs || []).filter((p: any) => p.chainId === 'base');
     if (pairs.length === 0) return null;
 
@@ -112,10 +133,12 @@ async function getDHBPairData(): Promise<PairData | null> {
       parseFloat(b.liquidity?.usd || '0') - parseFloat(a.liquidity?.usd || '0')
     );
     const top = pairs[0];
+    const dexMarketCap = top.fdv ? parseFloat(top.fdv) : null;
+
     return {
       pairAddress: top.pairAddress?.toLowerCase(),
       priceUsd: parseFloat(top.priceUsd || '0'),
-      marketCapUsd: top.fdv ? parseFloat(top.fdv) : null,
+      marketCapUsd: cmcMarketCap ?? dexMarketCap, // prefer CMC, fallback to DEX
       pairName: top.baseToken?.symbol || 'DHB',
     };
   } catch {
