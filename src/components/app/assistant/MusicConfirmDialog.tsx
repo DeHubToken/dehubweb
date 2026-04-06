@@ -207,11 +207,6 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
             </div>
           </div>
 
-          {/* Original prompt preview */}
-          <div className="rounded-xl bg-white/[0.03] border border-white/5 p-3">
-            <p className="text-[10px] text-white/30 mb-1">Original prompt</p>
-            <p className="text-xs text-white/50 line-clamp-2">{userPrompt}</p>
-          </div>
         </div>
 
         {/* Actions */}
