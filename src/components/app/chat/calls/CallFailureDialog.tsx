@@ -6,11 +6,9 @@ import {
   AlertDialogTitle,
   AlertDialogDescription,
   AlertDialogFooter,
-  AlertDialogAction,
-  AlertDialogCancel,
 } from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
 import { Phone, Video, MessageSquare, WifiOff } from 'lucide-react';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 
 interface CallFailureDialogProps {
   isOpen: boolean;
@@ -45,41 +43,52 @@ const CallFailureDialog: React.FC<CallFailureDialogProps> = ({
 
   const getIcon = () => {
     if (isUserOffline) {
-      return <WifiOff className="h-12 w-12 text-muted-foreground mx-auto mb-4" />;
+      return <WifiOff className="h-12 w-12 text-white/60 mx-auto mb-4" />;
     }
     return callType === 'video' ? (
-      <Video className="h-12 w-12 text-destructive mx-auto mb-4" />
+      <Video className="h-12 w-12 text-red-400 mx-auto mb-4" />
     ) : (
-      <Phone className="h-12 w-12 text-destructive mx-auto mb-4" />
+      <Phone className="h-12 w-12 text-red-400 mx-auto mb-4" />
     );
   };
 
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
-      <AlertDialogContent>
+      <AlertDialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl [&>button]:text-white/60 [&>button]:hover:text-white">
         <AlertDialogHeader>
           <div className="text-center">{getIcon()}</div>
-          <AlertDialogTitle className="text-center">{getTitle()}</AlertDialogTitle>
-          <AlertDialogDescription className="text-center">{getDescription()}</AlertDialogDescription>
+          <AlertDialogTitle className="text-center text-white">{getTitle()}</AlertDialogTitle>
+          <AlertDialogDescription className="text-center text-white/60">{getDescription()}</AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter className="flex-col sm:flex-row gap-2">
-          <AlertDialogCancel onClick={onClose}>Close</AlertDialogCancel>
+          <button
+            onClick={onClose}
+            className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-all border border-white/10"
+          >
+            Close
+          </button>
 
           {isUserOffline && (
-            <Button
-              onClick={() => {
-                onSendCallbackRequest();
-                onClose();
-              }}
-              className="gap-2"
-            >
-              <MessageSquare className="h-4 w-4" />
-              Send callback request
-            </Button>
+            <LiquidGlassBubble shimmer noBorder className="cursor-pointer" onClick={() => {
+              onSendCallbackRequest();
+              onClose();
+            }}>
+              <span className="flex items-center gap-2 px-4 py-2 text-white text-sm font-medium">
+                <MessageSquare className="h-4 w-4" />
+                Send callback request
+              </span>
+            </LiquidGlassBubble>
           )}
 
-          {!isUserOffline && <AlertDialogAction onClick={onClose}>Try again</AlertDialogAction>}
+          {!isUserOffline && (
+            <button
+              onClick={onClose}
+              className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-all border border-white/10"
+            >
+              Try again
+            </button>
+          )}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
