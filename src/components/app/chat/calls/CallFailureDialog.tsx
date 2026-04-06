@@ -70,11 +70,11 @@ const CallFailureDialog: React.FC<CallFailureDialogProps> = ({
           </button>
 
           {isUserOffline && (
-            <LiquidGlassBubble shimmer noBorder className="cursor-pointer" onClick={() => {
+            <LiquidGlassBubble shimmer noBorder className="flex-1 cursor-pointer" onClick={() => {
               onSendCallbackRequest();
               onClose();
             }}>
-              <span className="flex items-center gap-2 px-4 py-2 text-white text-sm font-medium">
+              <span className="flex items-center justify-center gap-2 px-4 py-2 text-white text-sm font-medium">
                 <MessageSquare className="h-4 w-4" />
                 Send callback request
               </span>
