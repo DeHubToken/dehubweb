@@ -7,7 +7,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Howl } from 'howler';
 import { 
   Music, Volume2, VolumeX, X, Upload, Trash2, Loader2,
-  Megaphone, PartyPopper, Drum, Bug,
+  Megaphone, PartyPopper, Drum, Bug, Laugh,
   ThumbsUp, ThumbsDown, AlertTriangle, Timer, FileAudio
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
