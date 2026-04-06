@@ -600,6 +600,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
       const newMuted = !isMuted;
       localAudioTrackRef.current.setMuted(newMuted);
       setIsMuted(newMuted);
+      // Optimistically update the local participant's is_muted in state
+      if (walletAddress) {
+        setParticipants(prev => prev.map(p =>
+          p.wallet_address === walletAddress ? { ...p, is_muted: newMuted } : p
+        ));
+      }
       if (currentSpace && walletAddress) {
         supabase
           .from('space_participants')
