@@ -289,7 +289,7 @@ export function ConversationHistoryDrawer({
           items.push({ id: msg.id + '-vid', url: msg.video_url, type: 'video', conversation_id: msg.conversation_id, created_at: msg.created_at });
         }
         if ((msg as any).audio_url) {
-          items.push({ id: msg.id + '-aud', url: (msg as any).audio_url, type: 'audio' as any, conversation_id: msg.conversation_id, created_at: msg.created_at });
+          items.push({ id: msg.id + '-aud', url: (msg as any).audio_url, type: 'audio', conversation_id: msg.conversation_id, created_at: msg.created_at });
         }
       });
 
