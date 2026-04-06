@@ -9,6 +9,8 @@ import { createContext, useContext, useState, useEffect, useCallback, useRef, Re
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { useVoiceEffects } from '@/hooks/use-voice-effects';
+import type { VoiceEffectId } from '@/constants/voice-effects.constants';
 import type {
   AudioSpace,
   SpaceParticipant,
