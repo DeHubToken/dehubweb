@@ -887,9 +887,17 @@ export function StageProvider({ children }: { children: ReactNode }) {
         source.buffer = audioBuffer;
 
         const destination = audioCtx.createMediaStreamDestination();
-        // Route audio into Agora stream AND into local speakers so host can monitor
+        // Only route into Agora stream — do NOT connect to audioCtx.destination.
+        // Connecting to local speakers causes acoustic loopback: the laptop mic
+        // picks up the speaker output and re-transmits it, making injection
+        // volume-dependent (only works when laptop volume is high).
         source.connect(destination);
-        source.connect(audioCtx.destination);
+
+        // Host local monitoring: play via a separate Audio element so there is
+        // zero path from speaker back into the mic/Agora chain.
+        const monitorUrl = URL.createObjectURL(audioBlob);
+        const monitor = new Audio(monitorUrl);
+        monitor.play().catch(() => {});  // best-effort; failure doesn't block injection
 
         const mediaTrack = destination.stream.getAudioTracks()[0];
         if (mediaTrack) {
@@ -921,6 +929,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
         ttsTrack.close();
         await client.publish([originalTrack]);
         originalTrack.setMuted(wasMuted);
+        URL.revokeObjectURL(monitorUrl);
       } finally {
         await audioCtx.close();
       }
