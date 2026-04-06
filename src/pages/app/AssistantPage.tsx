@@ -54,6 +54,7 @@ import { useVoiceAssistant } from '@/hooks/use-voice-assistant';
 import { VoiceAssistantOverlay } from '@/components/app/assistant/VoiceAssistantOverlay';
 import { useVoiceCredits } from '@/hooks/use-voice-credits';
 import { VoiceCreditPurchaseModal } from '@/components/app/assistant/VoiceCreditPurchaseModal';
+import { AiToolProcessingSkeleton } from '@/components/app/assistant/AiToolProcessingSkeleton';
 import { useAssistantUserContext } from '@/hooks/use-assistant-user-context';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
