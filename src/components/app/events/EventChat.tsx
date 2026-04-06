@@ -5,7 +5,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check } from 'lucide-react';
+import { Send, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check, Mic } from 'lucide-react';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -13,6 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { EmojiGifPicker } from '../chat/EmojiGifPicker';
+import { VoiceRecorder } from '../chat/VoiceRecorder';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
