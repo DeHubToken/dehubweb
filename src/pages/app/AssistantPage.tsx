@@ -1776,7 +1776,7 @@ export default function AssistantPage() {
                 setMessages([{
                   id: 'initial',
                   role: 'assistant' as const,
-                  content: currentStyle.greeting || "Hey! I'm your DeHub AI assistant. How can I help you today?",
+                  content: "Hey! I'm your DeHub AI assistant. How can I help you today?",
                 }]);
                 setInput('');
                 setAttachedImage(null);
