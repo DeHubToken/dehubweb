@@ -2360,7 +2360,13 @@ export default function AssistantPage() {
                     <TooltipTrigger asChild>
                       <button
                         type="button"
-                        onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : voiceAssistant.startVoiceMode}
+                        onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : () => {
+                          if (!voiceCredits.hasCredits) {
+                            setVoiceCreditModalOpen(true);
+                            return;
+                          }
+                          voiceAssistant.startVoiceMode();
+                        }}
                         disabled={isLoading && !voiceAssistant.isVoiceMode}
                         className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
                           voiceAssistant.isVoiceMode
@@ -2469,7 +2475,13 @@ export default function AssistantPage() {
                   {/* Voice Assistant Mode (mobile) */}
                   <button
                     type="button"
-                    onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : voiceAssistant.startVoiceMode}
+                    onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : () => {
+                      if (!voiceCredits.hasCredits) {
+                        setVoiceCreditModalOpen(true);
+                        return;
+                      }
+                      voiceAssistant.startVoiceMode();
+                    }}
                     disabled={isLoading && !voiceAssistant.isVoiceMode}
                     className={`transition-colors p-1 disabled:opacity-30 ${
                       voiceAssistant.isVoiceMode
