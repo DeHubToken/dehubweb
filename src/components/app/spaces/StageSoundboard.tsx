@@ -249,17 +249,38 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
     });
   }, []);
 
+  // Map of built-in effects that use real audio files instead of synthesis
+  const AUDIO_FILE_EFFECTS: Record<string, string> = {
+    applause: '/sounds/applause.wav',
+  };
+
   const playBuiltIn = useCallback((effect: BuiltInEffect) => {
     if (playingId) return;
+
+    // If this effect has a real audio file, play it via Howler
+    const audioFile = AUDIO_FILE_EFFECTS[effect.id];
+    if (audioFile) {
+      setPlayingId(effect.id);
+      if (howlRef.current) howlRef.current.unload();
+      howlRef.current = new Howl({
+        src: [audioFile],
+        volume: volume / 100,
+        onend: () => setPlayingId(null),
+        onloaderror: () => { setPlayingId(null); },
+        onplayerror: () => { setPlayingId(null); },
+      });
+      howlRef.current.play();
+      return;
+    }
+
+    // Otherwise use synthesized audio
     const ctx = getAudioContext();
     const gainNode = ctx.createGain();
     gainNode.gain.value = volume / 100;
     gainNode.connect(ctx.destination);
     setPlayingId(effect.id);
 
-    if (effect.id === 'applause') {
-      playApplause(ctx, gainNode, effect.duration);
-    } else if (effect.id === 'cricket') {
+    if (effect.id === 'cricket') {
       playCrickets(ctx, gainNode, effect.duration);
     } else if (effect.id === 'countdown') {
       playCountdown(ctx, gainNode);
@@ -290,7 +311,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
     }
 
     timeoutRef.current = setTimeout(() => setPlayingId(null), effect.duration);
-  }, [playingId, volume, getAudioContext, playApplause, playCrickets, playCountdown]);
+  }, [playingId, volume, getAudioContext, playCrickets, playCountdown]);
 
   useEffect(() => {
     return () => {
