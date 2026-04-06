@@ -35,6 +35,7 @@ const StageDeepLinkPage = React.lazy(() => import("./pages/app/StageDeepLinkPage
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
 const CommunityPage = React.lazy(() => import("./pages/app/CommunityPage"));
+const EventPage = React.lazy(() => import("./pages/EventPage"));
 
 const SKIP_LANDING_KEY = "dehub_skip_landing";
 
