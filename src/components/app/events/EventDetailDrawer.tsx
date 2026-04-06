@@ -54,7 +54,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
   const { data: allRsvps = [] } = useEventRsvps(event?.id);
   const toggleRsvp = useToggleRsvp();
   const deleteEvent = useDeleteEvent();
-  const [showChat, setShowChat] = useState(false);
+  const [showChat, setShowChat] = useState(true);
   const [attendeesType, setAttendeesType] = useState<'going' | 'interested' | null>(null);
 
   if (!event) return null;
@@ -176,15 +176,6 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                   </div>
                 </div>
               )}
-
-              {/* Chat toggle */}
-              <button
-                onClick={() => setShowChat(!showChat)}
-                className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-400 text-sm hover:text-white transition-colors"
-              >
-                <MessageSquare className="w-4 h-4" />
-                {showChat ? 'Hide Chat' : 'Event Chat'}
-              </button>
 
               {/* Inline Chat */}
               {showChat && (
