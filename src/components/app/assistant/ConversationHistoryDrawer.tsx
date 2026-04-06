@@ -414,7 +414,7 @@ export function ConversationHistoryDrawer({
   return (
     <>
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent glass className="border-t border-white/10">
+        <DrawerContent glass hideHandle className="border-t border-white/10">
           <DrawerHeader className="border-b border-white/10">
             <div className="flex items-center justify-between">
               <DrawerTitle className="text-white flex items-center gap-2">
