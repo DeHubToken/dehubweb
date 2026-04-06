@@ -26,6 +26,7 @@ import { CommunityLinkEmbed, extractCommunitySlug, hasCommunityLink } from '@/co
 import { TranslatableText, useTranslation } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
+import { buildPostShareImage } from '@/lib/build-post-share-image';
 import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { QuotePostModal } from '../modals/QuotePostModal';
@@ -162,28 +163,16 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
     setShowQuoteModal(true);
   }, [walletAddress, openLoginModal]);
 
-  const shareImageRef = useRef<HTMLDivElement>(null);
-
   const handleShareAsImage = useCallback(async () => {
-    if (!shareImageRef.current) {
-      toast.error('Share card not ready');
-      return;
-    }
     try {
-      const html2canvas = (await import('html2canvas')).default;
-      const canvas = await html2canvas(shareImageRef.current, {
-        backgroundColor: '#09090b',
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        logging: false,
+      const blob = await buildPostShareImage({
+        authorName: post.author.name,
+        authorHandle: post.author.handle,
+        authorAvatarUrl: post.author.avatarSeed?.startsWith('http') ? post.author.avatarSeed : undefined,
+        title: post.title,
+        content: post.content,
+        postId: post.id,
       });
-
-      // Wrap toBlob in a Promise so navigator.share stays in the async chain
-      const blob = await new Promise<Blob | null>((resolve) =>
-        canvas.toBlob(resolve, 'image/png')
-      );
-      if (!blob) { toast.error('Failed to capture image'); return; }
 
       const file = new File([blob], 'dehub-post.png', { type: 'image/png' });
       const postUrl = `${window.location.origin}/app/post/${post.id}`;
@@ -195,7 +184,6 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           url: postUrl,
         });
       } else {
-        // Desktop fallback: download
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = 'dehub-post.png';
@@ -209,7 +197,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         toast.error('Failed to share image');
       }
     }
-  }, [post.id, post.content]);
+  }, [post.id, post.content, post.title, post.author]);
 
   // Build a minimal DeHubNFT for the quote modal from post data
   const postAsNFT = {
@@ -231,8 +219,6 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
       onClick={handleCardClick}
       className="overflow-visible relative cursor-pointer isolate"
     >
-      {/* shareImageRef wraps header + content for html2canvas capture */}
-      <div ref={shareImageRef}>
       <CardHeader
         username={post.author.name}
         handle={post.author.handle}
@@ -372,7 +358,6 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
 
         {/* Link previews for URLs in content (skip if community link is shown) */}
         {post.content && !hasCommunityLink(post.content) && <FeedLinkPreviews text={post.content} />}
-      </div>{/* end shareImageRef */}
 
         {/* Metadata: timestamp and views */}
         <PostMetadata
