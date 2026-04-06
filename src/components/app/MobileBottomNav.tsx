@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic } from 'lucide-react';
+import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
 import { AuthPrompt } from './AuthPrompt';
@@ -23,15 +23,19 @@ const RIGHT_NAV_ITEMS = [
 const SCROLL_NAV_ITEMS = [
   { icon: User, label: 'Profile', path: '/app/profile', requiresAuth: true },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
+  { icon: Users, label: 'Communities', path: '/app/communities' },
+  { icon: CalendarDays, label: 'Events', path: '/app/events' },
   { icon: Mic, label: 'Stages', path: '#stages', action: 'open-stages' },
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
   { icon: Wallet, label: 'Wallet', path: '/app/wallet' },
+  { icon: Vault, label: 'Staking', path: '/app/stake' },
+  { icon: ShieldCheck, label: 'Governance', path: '/governance' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
   { icon: Settings, label: 'Settings', path: '/app/settings' },
+  { icon: Lightbulb, label: 'Features', path: '/features' },
   { icon: BookOpen, label: 'Docs', path: 'https://docs.dhb.gg', external: true },
   { icon: FileText, label: 'Blog', path: '/docs/blog' },
-  { icon: Lightbulb, label: 'Features', path: '/features' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
   { icon: BookOpen, label: 'Glossary', path: '/app/glossary' },
 ];
