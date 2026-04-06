@@ -15,7 +15,7 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Repeat2, Quote, Link, Info } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Repeat2, Quote, Link, Info, ImageDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -83,6 +83,8 @@ interface ActionBarProps {
   onSeeEngagements?: () => void;
   /** Whether voting buttons should be disabled (e.g. mutation pending) */
   disabled?: boolean;
+  /** Handler for share-as-image action (text posts only) */
+  onShareAsImage?: () => Promise<void>;
 }
 
 /** Format count for display (e.g., 1500 -> 1.5K) */
@@ -117,6 +119,7 @@ export function ActionBar({
   tipCount,
   onTip,
   onSeeEngagements,
+  onShareAsImage,
   disabled: externalDisabled = false,
 }: ActionBarProps) {
   // Add localStorage delta to comment count for instant feedback
@@ -146,9 +149,22 @@ export function ActionBar({
   const [localDislikeCount, setLocalDislikeCount] = useState(cachedVote ? cachedVote.dislikeCount : (dislikeCount ?? 0));
   const [isVoting, setIsVoting] = useState(false);
   const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
+  const [isSharingImage, setIsSharingImage] = useState(false);
   // Track when user voted locally so we don't let stale API refetches overwrite optimistic state
   const lastVoteTimeRef = useRef(cachedVote ? Date.now() : 0);
   const VOTE_GUARD_MS = 10000; // ignore prop syncs for 10s after a local vote
+
+  const handleShareAsImage = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!onShareAsImage || isSharingImage) return;
+    setIsSharingImage(true);
+    setSheetOpen(false);
+    try {
+      await onShareAsImage();
+    } finally {
+      setIsSharingImage(false);
+    }
+  };
 
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
@@ -405,6 +421,16 @@ export function ActionBar({
         <Link className="w-5 h-5" />
         <span className="font-medium">Copy Link</span>
       </button>
+      {onShareAsImage && (
+        <button
+          onClick={handleShareAsImage}
+          disabled={isSharingImage}
+          className="flex items-center gap-3 w-full p-4 text-zinc-200 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200 disabled:opacity-50"
+        >
+          <ImageDown className="w-5 h-5" />
+          <span className="font-medium">{isSharingImage ? 'Capturing...' : 'Share as Image'}</span>
+        </button>
+      )}
       {onSeeEngagements && (
         <button
           onClick={(e) => { e.stopPropagation(); setSheetOpen(false); onSeeEngagements(); }}

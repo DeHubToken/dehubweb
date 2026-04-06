@@ -9,7 +9,7 @@
  * ```
  */
 
-import { useState, memo, useEffect, useCallback } from 'react';
+import { useState, memo, useEffect, useCallback, useRef } from 'react';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
@@ -162,6 +162,38 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
     setShowQuoteModal(true);
   }, [walletAddress, openLoginModal]);
 
+  const shareCardRef = useRef<HTMLDivElement>(null);
+
+  const handleShareAsImage = useCallback(async () => {
+    if (!shareCardRef.current) return;
+    const html2canvas = (await import('html2canvas')).default;
+    const canvas = await html2canvas(shareCardRef.current, {
+      backgroundColor: '#18181b', // zinc-900
+      scale: 2,
+      useCORS: true,
+      logging: false,
+    });
+    canvas.toBlob(async (blob) => {
+      if (!blob) return;
+      const file = new File([blob], 'dehub-post.png', { type: 'image/png' });
+      const postUrl = `${window.location.origin}/app/post/${post.id}`;
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          text: post.content?.slice(0, 100) ?? '',
+          url: postUrl,
+        });
+      } else {
+        // Fallback: download the image
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'dehub-post.png';
+        a.click();
+        URL.revokeObjectURL(a.href);
+      }
+    }, 'image/png');
+  }, [post.id, post.content]);
+
   // Build a minimal DeHubNFT for the quote modal from post data
   const postAsNFT = {
     tokenId: parseInt(post.id, 10) || 0,
@@ -300,31 +332,34 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
 
       {/* Content */}
       <div className="pt-3 space-y-2">
-        {/* Title */}
-        {post.title && (
-          <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{post.title}</h3>
-        )}
-        {(isTranslated ? translatedText : post.content)?.trim() && (
-          <TranslatableText text={isTranslated ? translatedText : post.content} className="text-white/90 text-sm sm:text-base" as="p" />
-        )}
+        {/* Shareable card area — captured by html2canvas on "Share as Image" */}
+        <div ref={shareCardRef} className="space-y-2">
+          {/* Title */}
+          {post.title && (
+            <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{post.title}</h3>
+          )}
+          {(isTranslated ? translatedText : post.content)?.trim() && (
+            <TranslatableText text={isTranslated ? translatedText : post.content} className="text-white/90 text-sm sm:text-base" as="p" />
+          )}
 
-        {/* Quoted post embed (Twitter-style) */}
-        {post.isQuotePost && post.quotedPost && (
-          <QuotedPostEmbed quotedPost={post.quotedPost} className="mt-2" />
-        )}
+          {/* Quoted post embed (Twitter-style) */}
+          {post.isQuotePost && post.quotedPost && (
+            <QuotedPostEmbed quotedPost={post.quotedPost} className="mt-2" />
+          )}
 
-        {/* Community link embed */}
-        {post.content && hasCommunityLink(post.content) && (() => {
-          const slug = extractCommunitySlug(post.content);
-          return slug ? <CommunityLinkEmbed slug={slug} /> : null;
-        })()}
+          {/* Community link embed */}
+          {post.content && hasCommunityLink(post.content) && (() => {
+            const slug = extractCommunitySlug(post.content);
+            return slug ? <CommunityLinkEmbed slug={slug} /> : null;
+          })()}
 
-        {/* Link previews for URLs in content (skip if community link is shown) */}
-        {post.content && !hasCommunityLink(post.content) && <FeedLinkPreviews text={post.content} />}
+          {/* Link previews for URLs in content (skip if community link is shown) */}
+          {post.content && !hasCommunityLink(post.content) && <FeedLinkPreviews text={post.content} />}
+        </div>
 
         {/* Metadata: timestamp and views */}
-        <PostMetadata 
-          timestamp={post.createdAt} 
+        <PostMetadata
+          timestamp={post.createdAt}
           viewCount={post.views}
           translateControl={{
             isTranslated,
@@ -336,8 +371,8 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         />
 
         <div className="pt-1">
-          <ActionBar 
-            postId={post.id} 
+          <ActionBar
+            postId={post.id}
             className="p-0"
             onComment={() => {
               setCommentsInitialTab(undefined);
@@ -345,6 +380,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
             }}
             onRepost={handleRepost}
             onQuote={handleQuote}
+            onShareAsImage={handleShareAsImage}
             isLiked={post.isLiked}
             isDisliked={post.isDisliked}
             likeCount={post.stats.likes}
