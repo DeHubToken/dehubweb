@@ -3,7 +3,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
-import { MapPin, Calendar, Users, Flame, Trash2, CheckCircle2, Share2, X, Lock, Globe, Clock, UserCheck, UserX } from 'lucide-react';
+import { MapPin, Calendar, Users, Flame, Trash2, CheckCircle2, Share2, X, Lock, Globe, Clock, UserCheck, UserX, Pencil } from 'lucide-react';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { cn } from '@/lib/utils';
 import { GLASS_STYLES } from '@/constants/app.constants';
@@ -19,6 +19,7 @@ import { buildAvatarUrl } from '@/lib/media-url';
 import { useNavigate } from 'react-router-dom';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { FriendsAtEvent } from './FriendsAtEvent';
+import { EditEventDrawer } from './EditEventDrawer';
 
 function CreatorInfo({ event }: { event: CommunityEvent }) {
   const navigate = useNavigate();
@@ -89,6 +90,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
   const manageRsvp = useManageRsvp();
   const [showChat, setShowChat] = useState(true);
   const [attendeesType, setAttendeesType] = useState<'going' | 'interested' | null>(null);
+  const [showEditDrawer, setShowEditDrawer] = useState(false);
 
   const hasGateFee = (event?.gate_fee ?? 0) > 0;
   const isPrivate = event?.is_private ?? false;
