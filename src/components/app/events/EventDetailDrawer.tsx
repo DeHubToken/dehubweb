@@ -224,11 +224,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
                   <button
-                    onClick={() => {
-                      const url = `${window.location.origin}/app/events/${event.id}`;
-                      navigator.clipboard.writeText(url);
-                      toast.success('Event link copied!');
-                    }}
+                    onClick={() => setShowShareDrawer(true)}
                     className="p-2 rounded-xl bg-white/[0.06] text-zinc-400 hover:text-white hover:bg-white/[0.1] transition-colors"
                   >
                     <Share2 className="w-4 h-4" />
