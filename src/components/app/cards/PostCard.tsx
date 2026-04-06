@@ -26,7 +26,6 @@ import { CommunityLinkEmbed, extractCommunitySlug, hasCommunityLink } from '@/co
 import { TranslatableText, useTranslation } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
-import { ShareImageCard } from './ShareImageCard';
 import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { QuotePostModal } from '../modals/QuotePostModal';
@@ -227,11 +226,13 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   };
 
   return (
-    <div 
-      ref={viewRef} 
+    <div
+      ref={viewRef}
       onClick={handleCardClick}
       className="overflow-visible relative cursor-pointer isolate"
     >
+      {/* shareImageRef wraps header + content for html2canvas capture */}
+      <div ref={shareImageRef}>
       <CardHeader
         username={post.author.name}
         handle={post.author.handle}
@@ -371,6 +372,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
 
         {/* Link previews for URLs in content (skip if community link is shown) */}
         {post.content && !hasCommunityLink(post.content) && <FeedLinkPreviews text={post.content} />}
+      </div>{/* end shareImageRef */}
 
         {/* Metadata: timestamp and views */}
         <PostMetadata
@@ -466,16 +468,6 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         tokenId={post.id}
       />
 
-      {/* Off-screen card captured by html2canvas for "Share as Image" */}
-      <ShareImageCard
-        ref={shareImageRef}
-        authorName={post.author.name}
-        authorHandle={post.author.handle}
-        authorAvatarUrl={post.author.avatarSeed?.startsWith('http') ? post.author.avatarSeed : undefined}
-        title={post.title}
-        content={post.content}
-        postUrl={`${window.location.origin}/app/post/${post.id}`}
-      />
     </div>
   );
 });

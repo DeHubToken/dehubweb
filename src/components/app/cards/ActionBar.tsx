@@ -157,10 +157,12 @@ export function ActionBar({
   const handleShareAsImage = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!onShareAsImage || isSharingImage) return;
+    // Blur focused element before closing to prevent aria-hidden conflict
+    (document.activeElement as HTMLElement)?.blur();
     setIsSharingImage(true);
-    // Close drawer first, wait for animation to finish, then capture
     setSheetOpen(false);
-    await new Promise((r) => setTimeout(r, 300));
+    // Wait for drawer close animation before capturing
+    await new Promise((r) => setTimeout(r, 350));
     try {
       await onShareAsImage();
     } finally {
