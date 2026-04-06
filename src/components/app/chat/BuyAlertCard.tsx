@@ -5,6 +5,7 @@
 
 import { formatTimeAgo } from '@/lib/feed-utils';
 import dehubCoin from '@/assets/dehub-coin.png';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 
 export interface BuyAlertData {
   ethSpent: number;
