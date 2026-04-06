@@ -46,7 +46,7 @@ const VideoCallModal: React.FC = () => {
 
   const isVisible = (isCallActive || isIncoming || isConnecting) && currentCall?.call_type === 'video';
 
-  if (!isVisible || !currentCall) {
+  if (!isVisible || !currentCall || isMinimized) {
     return null;
   }
 
