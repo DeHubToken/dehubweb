@@ -57,7 +57,7 @@ export function PPVDrawerContent({
           <Ticket className="w-5 h-5 text-white" />
           {t('drawers.ppvTitle')}
         </DrawerTitle>
-        <button onClick={onClose} className="absolute top-3 right-0 p-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] transition-colors">
+        <button onClick={onClose} className="absolute top-3 right-0 p-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] transition-colors">
           <X className="w-4 h-4 text-zinc-400" />
         </button>
       </DrawerHeader>

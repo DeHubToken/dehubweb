@@ -866,7 +866,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                 <Gift className="w-5 h-5 text-white" />
                 {t('drawers.bountyTitle')}
               </DrawerTitle>
-              <button onClick={() => setShowBountyDrawer(false)} className="absolute top-3 right-0 p-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] transition-colors">
+              <button onClick={() => setShowBountyDrawer(false)} className="absolute top-3 right-0 p-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] transition-colors">
                 <X className="w-4 h-4 text-zinc-400" />
               </button>
             </DrawerHeader>
@@ -921,7 +921,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                 <Lock className="w-5 h-5 text-white" />
                 {t('drawers.gatedTitle')}
               </DrawerTitle>
-              <button onClick={() => setShowLockedDrawer(false)} className="absolute top-3 right-0 p-1.5 rounded-xl bg-white/[0.06] hover:bg-white/[0.12] transition-colors">
+              <button onClick={() => setShowLockedDrawer(false)} className="absolute top-3 right-0 p-1.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.12] transition-colors">
                 <X className="w-4 h-4 text-zinc-400" />
               </button>
             </DrawerHeader>
