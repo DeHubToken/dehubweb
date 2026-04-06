@@ -426,9 +426,8 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
                 "flex flex-col items-center gap-1 p-2 rounded-xl text-center transition-all",
                 "border border-white/10 hover:border-white/20",
                 playingId === effect.id
-                  ? "bg-white/20 border-white/30 scale-95"
-                  : "bg-white/5 hover:bg-white/10",
-                playingId !== null && playingId !== effect.id && "opacity-40"
+                  ? "bg-black/40 border-white/30 scale-95"
+                  : "bg-white/10 hover:bg-white/15"
               )}
             >
               <div className={cn(
@@ -437,7 +436,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
               )}>
                 {effect.icon}
               </div>
-              <span className="text-[10px] text-white/50 leading-tight">{effect.label}</span>
+              <span className="text-[10px] text-white/60 leading-tight">{effect.label}</span>
             </button>
           ))}
         </div>
