@@ -2530,7 +2530,15 @@ export default function AssistantPage() {
         </>
       )}
 
-      {/* Post Modal */}
+      {/* Voice Assistant Overlay */}
+      <VoiceAssistantOverlay
+        isActive={voiceAssistant.isVoiceMode}
+        status={voiceAssistant.status}
+        recordingDuration={voiceAssistant.recordingDuration}
+        onStop={voiceAssistant.stopVoiceMode}
+        onStopSpeaking={voiceAssistant.stopSpeaking}
+      />
+
       <PostModal
         isOpen={postModalOpen}
         onClose={() => setPostModalOpen(false)}
