@@ -246,6 +246,16 @@ export function AudioSpacesModal() {
                 )}
               </div>
 
+              {isAuthenticated && (
+                <Button
+                  onClick={() => setView('create')}
+                  className="w-full bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl"
+                >
+                  <Mic className="w-4 h-4 mr-2" />
+                  Start Stage
+                </Button>
+              )}
+
               {/* Past Stages */}
               {pastStages.length > 0 && (
                 <div className="space-y-2">
