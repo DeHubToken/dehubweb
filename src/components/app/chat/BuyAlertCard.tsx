@@ -71,7 +71,7 @@ export function BuyAlertCard({ content, timestamp }: { content: string; timestam
 
 
             <div className="flex items-center gap-1.5">
-              <span className="text-sm">👤</span>
+              <span className="text-sm">🟢</span>
               <span className="text-zinc-400">Buyer:</span>
               <span className="flex items-center gap-1.5">
                 <a href={buyerUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-mono">
