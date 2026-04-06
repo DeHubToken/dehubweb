@@ -5,8 +5,8 @@
  * Uses wallet address for identification (Web3Auth).
  */
 
-import { useState, useEffect, useRef } from 'react';
-import { Music } from 'lucide-react';
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { Music, Pause } from 'lucide-react';
 import { History, Trash2, Loader2, MessageCircle, ChevronRight, Image as ImageIcon, Play, Search, X } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { ScrollArea } from '@/components/ui/scroll-area';
