@@ -3,7 +3,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
-import { MapPin, Calendar, Users, Flame, Trash2, CheckCircle2, Sparkles, MessageSquare, Share2 } from 'lucide-react';
+import { MapPin, Calendar, Users, Flame, Trash2, CheckCircle2, Sparkles, MessageSquare, Share2, X } from 'lucide-react';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { cn } from '@/lib/utils';
 import { GLASS_STYLES } from '@/constants/app.constants';
@@ -116,16 +116,24 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                     </p>
                   )}
                 </div>
-                <button
-                  onClick={() => {
-                    const url = `${window.location.origin}/app/events/${event.id}`;
-                    navigator.clipboard.writeText(url);
-                    toast.success('Event link copied!');
-                  }}
-                  className="shrink-0 p-2 rounded-full bg-white/[0.06] text-zinc-400 hover:text-white hover:bg-white/[0.1] transition-colors"
-                >
-                  <Share2 className="w-4 h-4" />
-                </button>
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <button
+                    onClick={() => {
+                      const url = `${window.location.origin}/app/events/${event.id}`;
+                      navigator.clipboard.writeText(url);
+                      toast.success('Event link copied!');
+                    }}
+                    className="p-2 rounded-xl bg-white/[0.06] text-zinc-400 hover:text-white hover:bg-white/[0.1] transition-colors"
+                  >
+                    <Share2 className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => onOpenChange(false)}
+                    className="p-2 rounded-xl bg-white/[0.06] text-zinc-400 hover:text-white hover:bg-white/[0.1] transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
 
               {/* RSVP Buttons */}
