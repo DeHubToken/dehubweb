@@ -5,6 +5,7 @@ import { LinkPreviewCard } from './LinkPreviewCard';
 import { fetchLinkPreview, extractUrlsFromText, type LinkPreviewData } from '@/lib/api/link-preview';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CommunityLinkEmbed, extractCommunitySlug } from '@/components/app/communities/CommunityLinkEmbed';
+import { EventLinkEmbed, extractEventId } from '@/components/app/events/EventLinkEmbed';
 
 interface LinkPreviewsProps {
   text: string;
@@ -16,10 +17,14 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
   const [loading, setLoading] = useState<Set<string>>(new Set());
   const [removedUrls, setRemovedUrls] = useState<Set<string>>(new Set());
   const [communityDismissed, setCommunityDismissed] = useState(false);
+  const [eventDismissed, setEventDismissed] = useState(false);
   const fetchedUrls = useRef<Set<string>>(new Set());
 
   // Detect community slug from text
   const communitySlug = communityDismissed ? null : extractCommunitySlug(text);
+  
+  // Detect event ID from text
+  const eventId = eventDismissed ? null : extractEventId(text);
 
   // Reset dismissed state when text changes to a different community or no community
   const prevSlugRef = useRef<string | null>(null);
@@ -34,14 +39,26 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
     }
   }, [text, communityDismissed]);
 
+  // Reset dismissed state when text changes to a different event
+  const prevEventRef = useRef<string | null>(null);
+  useEffect(() => {
+    const currentEid = extractEventId(text);
+    if (currentEid !== prevEventRef.current) {
+      prevEventRef.current = currentEid;
+      if (currentEid && eventDismissed) {
+        setEventDismissed(false);
+      }
+    }
+  }, [text, eventDismissed]);
+
   useEffect(() => {
     const urls = extractUrlsFromText(text);
     
-    // Skip community URLs - they get their own embed
-    const nonCommunityUrls = urls.filter(url => !extractCommunitySlug(url));
+    // Skip community and event URLs - they get their own embeds
+    const nonSpecialUrls = urls.filter(url => !extractCommunitySlug(url) && !extractEventId(url));
     
     // Filter out removed and already fetched URLs
-    const newUrls = nonCommunityUrls.filter(
+    const newUrls = nonSpecialUrls.filter(
       url => !removedUrls.has(url) && !fetchedUrls.current.has(url) && !previews.has(url)
     );
 
@@ -84,15 +101,19 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
     onRemoveCommunityLink?.();
   };
 
-  // Get URLs that should be displayed (in text, not removed, not community links)
+  const handleRemoveEvent = () => {
+    setEventDismissed(true);
+  };
+
+  // Get URLs that should be displayed (in text, not removed, not community/event links)
   const currentUrls = extractUrlsFromText(text)
-    .filter(url => !removedUrls.has(url) && !extractCommunitySlug(url));
+    .filter(url => !removedUrls.has(url) && !extractCommunitySlug(url) && !extractEventId(url));
   const visiblePreviews = currentUrls
     .map(url => previews.get(url))
     .filter((p): p is LinkPreviewData => !!p);
   const loadingUrls = currentUrls.filter(url => loading.has(url));
 
-  const hasContent = communitySlug || visiblePreviews.length > 0 || loadingUrls.length > 0;
+  const hasContent = communitySlug || eventId || visiblePreviews.length > 0 || loadingUrls.length > 0;
   if (!hasContent) return null;
 
   return (
@@ -106,6 +127,23 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
             onClick={(e) => {
               e.stopPropagation();
               handleRemoveCommunity();
+            }}
+            className="absolute top-2 right-2 p-1 rounded-full bg-black/60 hover:bg-black/80 text-white/70 hover:text-white transition-colors z-10"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
+      {/* Event link embed with dismiss button */}
+      {eventId && (
+        <div className="relative">
+          <EventLinkEmbed eventId={eventId} />
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRemoveEvent();
             }}
             className="absolute top-2 right-2 p-1 rounded-full bg-black/60 hover:bg-black/80 text-white/70 hover:text-white transition-colors z-10"
           >

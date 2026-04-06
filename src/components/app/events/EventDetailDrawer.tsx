@@ -1,9 +1,9 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
-import { MapPin, Calendar, Users, Flame, Trash2, CheckCircle2, Share2, X, Lock, Globe, Clock, UserCheck, UserX, Pencil } from 'lucide-react';
+import { MapPin, Calendar, Users, Flame, Trash2, CheckCircle2, Share2, X, Lock, Globe, Clock, UserCheck, UserX, Pencil, Link2, PenSquare } from 'lucide-react';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { cn } from '@/lib/utils';
 import { GLASS_STYLES } from '@/constants/app.constants';
@@ -20,6 +20,7 @@ import { useNavigate } from 'react-router-dom';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { FriendsAtEvent } from './FriendsAtEvent';
 import { EditEventDrawer } from './EditEventDrawer';
+import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 
 function CreatorInfo({ event }: { event: CommunityEvent }) {
   const navigate = useNavigate();
@@ -92,6 +93,8 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
   const [attendeesType, setAttendeesType] = useState<'going' | 'interested' | null>(null);
   const [showEditDrawer, setShowEditDrawer] = useState(false);
   const [showFullImage, setShowFullImage] = useState(false);
+  const [showShareDrawer, setShowShareDrawer] = useState(false);
+  const { openPostModal } = useGlobalDropZone();
 
   const hasGateFee = (event?.gate_fee ?? 0) > 0;
   const isPrivate = event?.is_private ?? false;
@@ -221,11 +224,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                 </div>
                 <div className="flex items-center gap-1.5 shrink-0">
                   <button
-                    onClick={() => {
-                      const url = `${window.location.origin}/app/events/${event.id}`;
-                      navigator.clipboard.writeText(url);
-                      toast.success('Event link copied!');
-                    }}
+                    onClick={() => setShowShareDrawer(true)}
                     className="p-2 rounded-xl bg-white/[0.06] text-zinc-400 hover:text-white hover:bg-white/[0.1] transition-colors"
                   >
                     <Share2 className="w-4 h-4" />
@@ -475,6 +474,54 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
           onOpenChange={(o) => { if (!o) setAttendeesType(null); }}
         />
       )}
+
+      {/* Share options drawer */}
+      <Drawer open={showShareDrawer} onOpenChange={setShowShareDrawer}>
+        <DrawerContent className={cn(GLASS_STYLES.drawer, 'max-h-[50vh]')}>
+          <DrawerHeader className="sr-only">
+            <DrawerTitle>Share Event</DrawerTitle>
+          </DrawerHeader>
+          <div className="p-4 space-y-2">
+            <button
+              onClick={() => {
+                const url = `${window.location.origin}/app/events/${event.id}`;
+                navigator.clipboard.writeText(url);
+                toast.success('Event link copied!');
+                setShowShareDrawer(false);
+              }}
+              className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] transition-colors text-left"
+            >
+              <div className="p-2 rounded-xl bg-white/[0.06]">
+                <Link2 className="w-5 h-5 text-zinc-300" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-white">Copy Link</p>
+                <p className="text-xs text-zinc-500">Copy event link to clipboard</p>
+              </div>
+            </button>
+            <button
+              onClick={() => {
+                const url = `${window.location.origin}/app/events/${event.id}`;
+                setShowShareDrawer(false);
+                onOpenChange(false);
+                // Small delay so drawers close first
+                setTimeout(() => {
+                  openPostModal(url);
+                }, 300);
+              }}
+              className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] transition-colors text-left"
+            >
+              <div className="p-2 rounded-xl bg-white/[0.06]">
+                <PenSquare className="w-5 h-5 text-zinc-300" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-white">Post</p>
+                <p className="text-xs text-zinc-500">Share this event in a post</p>
+              </div>
+            </button>
+          </div>
+        </DrawerContent>
+      </Drawer>
 
       {/* Fullscreen image lightbox */}
       {showFullImage && event.cover_image_url && (
