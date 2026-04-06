@@ -89,15 +89,19 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
     onRemoveCommunityLink?.();
   };
 
-  // Get URLs that should be displayed (in text, not removed, not community links)
+  const handleRemoveEvent = () => {
+    setEventDismissed(true);
+  };
+
+  // Get URLs that should be displayed (in text, not removed, not community/event links)
   const currentUrls = extractUrlsFromText(text)
-    .filter(url => !removedUrls.has(url) && !extractCommunitySlug(url));
+    .filter(url => !removedUrls.has(url) && !extractCommunitySlug(url) && !extractEventId(url));
   const visiblePreviews = currentUrls
     .map(url => previews.get(url))
     .filter((p): p is LinkPreviewData => !!p);
   const loadingUrls = currentUrls.filter(url => loading.has(url));
 
-  const hasContent = communitySlug || visiblePreviews.length > 0 || loadingUrls.length > 0;
+  const hasContent = communitySlug || eventId || visiblePreviews.length > 0 || loadingUrls.length > 0;
   if (!hasContent) return null;
 
   return (
