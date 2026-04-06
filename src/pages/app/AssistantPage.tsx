@@ -486,7 +486,14 @@ export default function AssistantPage() {
   // Voice Assistant hook (Whisper STT + Dia TTS via fal.ai)
   const voiceAssistant = useVoiceAssistant({
     onTranscript: (text) => {
-      // Will be wired up after auth check via ref
+      // Deduct a voice credit per exchange
+      const hasCredit = voiceCredits.deductCredit();
+      if (!hasCredit) {
+        voiceAssistant.stopVoiceMode();
+        toast.error('Voice credits exhausted — purchase more to continue');
+        setVoiceCreditModalOpen(true);
+        return;
+      }
       voiceTranscriptHandlerRef.current?.(text);
     },
     isChatLoading: isLoading,
