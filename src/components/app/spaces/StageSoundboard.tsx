@@ -255,6 +255,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
     applause: '/sounds/applause.wav',
     cricket: '/sounds/crickets.wav',
     drumroll: '/sounds/drumroll.wav',
+    lol: '/sounds/lol.wav',
   };
 
   const playBuiltIn = useCallback((effect: BuiltInEffect) => {
