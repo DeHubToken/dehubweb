@@ -286,7 +286,8 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
   };
 
   const playBuiltIn = useCallback((effect: BuiltInEffect) => {
-    if (playingId) return;
+    if (playingId === effect.id) { stopCurrentSound(); return; }
+    if (playingId) stopCurrentSound();
 
     // If this effect has a real audio file, play it via Howler
     const audioFile = AUDIO_FILE_EFFECTS[effect.id];
