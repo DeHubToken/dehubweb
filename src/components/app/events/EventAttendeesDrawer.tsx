@@ -52,8 +52,8 @@ export function EventAttendeesDrawer({ eventId, type, open, onOpenChange }: Even
           return {
             ...a,
             username: profile?.username || undefined,
-            display_name: (profile as any)?.display_name || (profile as any)?.displayName || undefined,
-            avatar_url: (profile as any)?.avatar || (profile as any)?.avatar_url || undefined,
+            display_name: (profile as any)?.displayName || (profile as any)?.display_name || undefined,
+            avatar_url: (profile as any)?.avatarImageUrl || (profile as any)?.avatarUrl || (profile as any)?.avatar_url || (profile as any)?.avatar || undefined,
           };
         } catch {
           return a;
