@@ -570,6 +570,11 @@ export function AudioSpacesModal() {
                 </div>
               )}
 
+              {/* Voice Effect Selector (speakers only) */}
+              {(myRole === 'host' || myRole === 'speaker') && (
+                <VoiceEffectSelector activeEffect={voiceEffect} onSelect={setVoiceEffect} />
+              )}
+
               {/* Reactions bento card */}
               <StageReactions
                 spaceId={currentSpace.id}
