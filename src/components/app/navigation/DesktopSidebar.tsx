@@ -27,6 +27,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { isAuthenticated, user, walletAddress, connect, isConnecting, needsSignature } = useAuth();
+  const { openModal: openStagesModal } = useStage();
   
   const { isCollapsed, toggleCollapse } = useSidebarCollapse();
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
