@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Phone, PhoneOff, Mic, MicOff, Volume2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { useCall } from '@/contexts/CallContext';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
+import { getAccountInfo } from '@/lib/api/dehub/users';
 
 const VoiceCallModal: React.FC = () => {
   const {
@@ -21,6 +22,19 @@ const VoiceCallModal: React.FC = () => {
   } = useCall();
 
   const [audioNeedsInteraction, setAudioNeedsInteraction] = useState(false);
+  const [peerName, setPeerName] = useState<string | null>(null);
+
+  const peerAddress = currentCall
+    ? (isIncoming ? currentCall.caller_address : currentCall.recipient_address)
+    : '';
+
+  useEffect(() => {
+    if (!peerAddress) return;
+    setPeerName(null);
+    getAccountInfo(peerAddress).then(u => {
+      if (u?.username) setPeerName(u.username);
+    }).catch(() => {});
+  }, [peerAddress]);
 
   const handleUserInteraction = async () => {
     if (remoteAudioRef?.current && isCallActive) {
@@ -46,10 +60,7 @@ const VoiceCallModal: React.FC = () => {
     return 'Voice Call';
   };
 
-  const getCallAddress = () => {
-    const address = isIncoming ? currentCall.caller_address : currentCall.recipient_address;
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  };
+  const displayName = peerName || (peerAddress ? `${peerAddress.slice(0, 6)}...${peerAddress.slice(-4)}` : '');
 
   return (
     <Dialog open={isVisible} onOpenChange={() => {}}>
@@ -78,7 +89,7 @@ const VoiceCallModal: React.FC = () => {
           </LiquidGlassBubble>
 
           <div className="text-center">
-            <p className="text-lg font-semibold text-white">{getCallAddress()}</p>
+            <p className="text-lg font-semibold text-white">{displayName}</p>
             {isConnecting && <p className="text-sm text-white/50">Connecting...</p>}
             {isCallActive && callDuration !== '00:00' && (
               <p className="text-sm text-white font-medium">{callDuration}</p>

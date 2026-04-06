@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Phone, PhoneOff, Mic, MicOff, Video, VideoOff, RotateCcw } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { useCall } from '@/contexts/CallContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { cn } from '@/lib/utils';
+import { getAccountInfo } from '@/lib/api/dehub/users';
 
 const VideoCallModal: React.FC = () => {
   const { walletAddress } = useAuth();
@@ -25,6 +26,20 @@ const VideoCallModal: React.FC = () => {
     switchCamera,
   } = useCall();
 
+  const [peerName, setPeerName] = useState<string | null>(null);
+
+  const peerAddress = currentCall
+    ? (isIncoming ? currentCall.caller_address : currentCall.recipient_address)
+    : '';
+
+  useEffect(() => {
+    if (!peerAddress) return;
+    setPeerName(null);
+    getAccountInfo(peerAddress).then(u => {
+      if (u?.username) setPeerName(u.username);
+    }).catch(() => {});
+  }, [peerAddress]);
+
   if (!walletAddress) return null;
 
   const isVisible = (isCallActive || isIncoming || isConnecting) && currentCall?.call_type === 'video';
@@ -40,10 +55,7 @@ const VideoCallModal: React.FC = () => {
     return 'Video Call';
   };
 
-  const getCallAddress = () => {
-    const address = isIncoming ? currentCall.caller_address : currentCall.recipient_address;
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  };
+  const displayName = peerName || (peerAddress ? `${peerAddress.slice(0, 6)}...${peerAddress.slice(-4)}` : '');
 
   return (
     <Dialog open={isVisible} onOpenChange={() => {}}>
@@ -75,7 +87,7 @@ const VideoCallModal: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  <p className="text-lg font-semibold text-white">{getCallAddress()}</p>
+                  <p className="text-lg font-semibold text-white">{displayName}</p>
                   {isConnecting && <p className="text-sm text-white/50">Connecting...</p>}
                 </div>
               </div>
