@@ -24,7 +24,7 @@ export const DmVoiceCallButton: React.FC<DmVoiceCallButtonProps> = ({ recipientA
   };
 
   useEffect(() => {
-    if (callFailureReason && !isConnecting && !isCallActive) {
+    if (callFailureReason === 'user_offline' && !isConnecting && !isCallActive) {
       setShowFailureDialog(true);
     }
   }, [callFailureReason, isConnecting, isCallActive]);
