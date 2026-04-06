@@ -123,6 +123,23 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
         </div>
       )}
 
+      {/* Event link embed with dismiss button */}
+      {eventId && (
+        <div className="relative">
+          <EventLinkEmbed eventId={eventId} />
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRemoveEvent();
+            }}
+            className="absolute top-2 right-2 p-1 rounded-full bg-black/60 hover:bg-black/80 text-white/70 hover:text-white transition-colors z-10"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
       <AnimatePresence mode="popLayout">
         {visiblePreviews.map((preview) => (
           <LinkPreviewCard
