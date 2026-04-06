@@ -16,7 +16,7 @@ const TTS_VOICES = [
 
 export function StageTTS() {
   const [text, setText] = useState('');
-  const [selectedVoice, setSelectedVoice] = useState(TTS_VOICES[0].id);
+  const [selectedVoice, setSelectedVoice] = useState<string>(TTS_VOICES[0].id);
   const [isGenerating, setIsGenerating] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 

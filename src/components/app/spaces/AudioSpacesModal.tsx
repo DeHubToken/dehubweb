@@ -619,6 +619,11 @@ export function AudioSpacesModal() {
                   onClose={() => {}}
                 />
               )}
+
+              {/* Text-to-Speech — hosts and speakers */}
+              {(myRole === 'host' || myRole === 'speaker') && (
+                <StageTTS />
+              )}
             </div>
           )}
         </div>
