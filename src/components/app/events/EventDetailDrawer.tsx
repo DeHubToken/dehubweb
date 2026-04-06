@@ -3,19 +3,21 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
-import { MapPin, Calendar, Users, Flame, Trash2, CheckCircle2, Sparkles, MessageSquare, Share2, X } from 'lucide-react';
+import { MapPin, Calendar, Users, Flame, Trash2, CheckCircle2, Sparkles, MessageSquare, Share2, X, Lock } from 'lucide-react';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { cn } from '@/lib/utils';
 import { GLASS_STYLES } from '@/constants/app.constants';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEventRsvp, useToggleRsvp, useDeleteEvent, useEventRsvps } from '@/hooks/use-events';
 import type { CommunityEvent } from '@/hooks/use-events';
+import { useHasPaidGate, useEventGatePayment } from '@/hooks/use-event-gate-payment';
 import { toast } from 'sonner';
 import { EventChat } from './EventChat';
 import { EventAttendeesDrawer } from './EventAttendeesDrawer';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useNavigate } from 'react-router-dom';
+import dehubCoin from '@/assets/dehub-coin.png';
 
 function CreatorInfo({ event }: { event: CommunityEvent }) {
   const navigate = useNavigate();
@@ -57,15 +59,30 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
   const [showChat, setShowChat] = useState(true);
   const [attendeesType, setAttendeesType] = useState<'going' | 'interested' | null>(null);
 
+  const hasGateFee = (event?.gate_fee ?? 0) > 0;
+  const isCreator = walletAddress && event?.creator_wallet_address === walletAddress.toLowerCase();
+  const { data: hasPaid = false, isLoading: checkingPayment } = useHasPaidGate(hasGateFee ? event?.id : undefined);
+  const isGated = hasGateFee && !isCreator && !hasPaid;
+
+  const { pay: payGateFee, isPaying } = useEventGatePayment({
+    eventId: event?.id ?? '',
+    creatorAddress: event?.creator_wallet_address ?? '',
+    amount: event?.gate_fee ?? 0,
+    onSuccess: () => {},
+  });
+
   if (!event) return null;
 
   const startDate = new Date(event.starts_at);
-  const isCreator = walletAddress && event.creator_wallet_address === walletAddress.toLowerCase();
   const goingList = allRsvps.filter(r => r.status === 'going');
   const interestedList = allRsvps.filter(r => r.status === 'interested');
 
   const handleRsvp = (status: 'going' | 'interested') => {
     if (!isAuthenticated) { openLoginModal(); return; }
+    if (isGated) {
+      toast.error('Pay the entry fee to join this event');
+      return;
+    }
     if (myRsvp?.status === status) {
       toggleRsvp.mutate({ eventId: event.id, status: 'remove' });
     } else {
@@ -136,17 +153,55 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                 </div>
               </div>
 
+              {/* Gate Fee Banner */}
+              {hasGateFee && (
+                <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <img src={dehubCoin} alt="Coins" className="w-5 h-5" />
+                      <div>
+                        <span className="text-sm font-medium text-white">
+                          {event.gate_fee} {event.gate_fee === 1 ? 'Coin' : 'Coins'} entry fee
+                        </span>
+                      </div>
+                    </div>
+                    {isCreator ? (
+                      <span className="text-xs text-zinc-500">You're the creator</span>
+                    ) : hasPaid ? (
+                      <span className="text-xs text-green-400 flex items-center gap-1">
+                        <CheckCircle2 className="w-3.5 h-3.5" /> Paid
+                      </span>
+                    ) : (
+                      <Button
+                        size="sm"
+                        onClick={payGateFee}
+                        disabled={isPaying || checkingPayment}
+                        className="rounded-xl gap-1.5"
+                      >
+                        {isPaying ? (
+                          <span className="animate-spin">⏳</span>
+                        ) : (
+                          <Lock className="w-3.5 h-3.5" />
+                        )}
+                        Pay to join
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              )}
+
               {/* RSVP Buttons */}
               <div className="flex gap-2">
                 <LiquidGlassBubble2
                   label={`Going (${goingList.length})`}
                   icon={<CheckCircle2 className="w-4 h-4" />}
                   onClick={() => handleRsvp('going')}
-                  disabled={toggleRsvp.isPending}
+                  disabled={toggleRsvp.isPending || isGated}
                   width="100%"
                   height="42px"
                   className={cn(
                     'flex-1',
+                    isGated && 'opacity-50',
                     myRsvp?.status === 'going' && 'opacity-100 [&>div]:!border [&>div]:!border-white/30'
                   )}
                 />
@@ -154,11 +209,12 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                   label={`Interested (${interestedList.length})`}
                   icon={<Flame className="w-4 h-4" />}
                   onClick={() => handleRsvp('interested')}
-                  disabled={toggleRsvp.isPending}
+                  disabled={toggleRsvp.isPending || isGated}
                   width="100%"
                   height="42px"
                   className={cn(
                     'flex-1',
+                    isGated && 'opacity-50',
                     myRsvp?.status === 'interested' && 'opacity-100 [&>div]:!border [&>div]:!border-white/30'
                   )}
                 />
@@ -195,10 +251,17 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                 </div>
               )}
 
-              {/* Inline Chat */}
-              {showChat && (
+              {/* Inline Chat — hidden behind gate if gated */}
+              {showChat && !isGated && (
                 <div className="border border-white/[0.08] rounded-xl overflow-hidden">
                   <EventChat eventId={event.id} />
+                </div>
+              )}
+
+              {isGated && (
+                <div className="text-center py-6 text-zinc-500 text-sm">
+                  <Lock className="w-5 h-5 mx-auto mb-2 text-zinc-600" />
+                  Pay the entry fee to access the chat and RSVP
                 </div>
               )}
 
