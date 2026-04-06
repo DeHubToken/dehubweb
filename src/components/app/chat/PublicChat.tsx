@@ -93,6 +93,9 @@ export function PublicChat({ onBack }: PublicChatProps) {
   // Online presence
   const { onlineCount } = useLiveChatPresence(selectedRoomId);
 
+  // Buy alerts
+  const buyAlerts = useBuyAlerts();
+
   // Determine if current user is a moderator
   const isModerator = useMemo(() => {
     if (!walletAddress || !roomDetails?.moderators) return false;
@@ -104,14 +107,28 @@ export function PublicChat({ onBack }: PublicChatProps) {
   // Convert API messages to local format
   const messages: Message[] = apiMessages.map(toLocalMessage);
 
-  // Filter messages based on search query
+  // Filter messages based on search query and merge buy alerts
   const filteredMessages = useMemo(() => {
-    if (!searchQuery.trim()) return messages;
+    // Convert buy alerts to Message format for merging
+    const buyAlertMessages: Message[] = buyAlerts.map((alert) => ({
+      id: `buy-alert-${alert.id}`,
+      userId: 'buy-bot',
+      userName: 'Buy Bot',
+      content: alert.content,
+      timestamp: new Date(alert.created_at),
+      type: 'buy_alert' as Message['type'],
+    }));
+
+    const allMessages = [...messages, ...buyAlertMessages].sort(
+      (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
+    );
+
+    if (!searchQuery.trim()) return allMessages;
     const q = searchQuery.toLowerCase();
-    return messages.filter(
+    return allMessages.filter(
       m => m.content.toLowerCase().includes(q) || m.userName.toLowerCase().includes(q)
     );
-  }, [messages, searchQuery]);
+  }, [messages, buyAlerts, searchQuery]);
 
   // Find pinned message
   const pinnedMessage = messages.find(m => m.isPinned);
