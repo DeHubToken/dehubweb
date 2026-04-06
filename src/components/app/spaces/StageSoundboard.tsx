@@ -412,7 +412,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
             <button
               key={effect.id}
               onClick={() => playBuiltIn(effect)}
-              disabled={playingId !== null && playingId !== effect.id}
+              disabled={false}
               className={cn(
                 "flex flex-col items-center gap-1 p-2 rounded-xl text-center transition-all",
                 "border border-white/10 hover:border-white/20",
@@ -477,7 +477,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
                   <div key={sound.path} className="relative group">
                     <button
                       onClick={() => playCustomSound(sound)}
-                      disabled={playingId !== null && playingId !== soundId}
+                      disabled={false}
                       className={cn(
                         "w-full flex flex-col items-center gap-1 p-2 rounded-xl text-center transition-all",
                         "border border-white/10 hover:border-white/20",
