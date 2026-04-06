@@ -30,6 +30,7 @@ interface MediaItem {
   type: 'image' | 'video' | 'audio';
   conversation_id: string;
   created_at: string;
+  title?: string;
 }
 
 /** Inline audio-playable thumbnail for the media grid */
@@ -62,33 +63,29 @@ function MediaThumbnail({ item, onSelect }: { item: MediaItem; onSelect: (item: 
   }, []);
 
   if (item.type === 'audio') {
+    const displayTitle = item.title || 'Untitled Song';
     return (
       <button
         onClick={toggleAudio}
-        className="relative aspect-square rounded-xl overflow-hidden border border-white/10 hover:border-white/30 transition-all group"
+        className="col-span-3 flex items-center gap-3 px-3 py-2.5 rounded-xl border border-white/10 hover:border-white/20 bg-white/[0.03] transition-all"
       >
-        <div className="w-full h-full bg-white/5 flex flex-col items-center justify-center gap-1.5">
+        <div className="w-9 h-9 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
           {isPlaying ? (
-            <>
-              <div className="flex items-end gap-[3px] h-6">
-                {[1,2,3,4,5].map(i => (
-                  <div key={i} className="w-[3px] bg-white/80 rounded-full animate-pulse" style={{ height: `${8 + Math.random() * 16}px`, animationDelay: `${i * 0.1}s` }} />
-                ))}
-              </div>
-              <Pause className="w-4 h-4 text-white/60" />
-            </>
+            <div className="flex items-end gap-[2px] h-4">
+              {[1,2,3,4].map(i => (
+                <div key={i} className="w-[2px] bg-white/80 rounded-full animate-pulse" style={{ height: `${4 + Math.random() * 10}px`, animationDelay: `${i * 0.1}s` }} />
+              ))}
+            </div>
           ) : (
-            <>
-              <Music className="w-6 h-6 text-white/40" />
-              <Play className="w-4 h-4 text-white/30" />
-            </>
+            <Play className="w-4 h-4 text-white/50 fill-white/50" />
           )}
         </div>
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-1.5">
-          <p className="text-[9px] text-white/60">
-            {formatDistanceToNow(new Date(item.created_at), { addSuffix: true })}
-          </p>
+        <div className="flex-1 min-w-0 text-left">
+          <p className="text-xs text-white/80 font-medium truncate">{displayTitle}</p>
+          <p className="text-[10px] text-white/35">{formatDistanceToNow(new Date(item.created_at), { addSuffix: true })}</p>
         </div>
+        {isPlaying && <Pause className="w-3.5 h-3.5 text-white/50 shrink-0" />}
+        {!isPlaying && <Music className="w-3.5 h-3.5 text-white/25 shrink-0" />}
       </button>
     );
   }
@@ -270,7 +267,7 @@ export function ConversationHistoryDrawer({
       const { data: messages, error: msgError } = await withWalletHeader(
         supabase
           .from('ai_messages')
-          .select('id, image_url, video_url, audio_url, conversation_id, created_at')
+          .select('id, content, image_url, video_url, audio_url, conversation_id, created_at, role')
           .in('conversation_id', convoIds)
           .or('image_url.neq.,video_url.neq.,audio_url.neq.')
           .order('created_at', { ascending: false })
@@ -280,8 +277,30 @@ export function ConversationHistoryDrawer({
 
       if (msgError) throw msgError;
 
+      // Build a map of conversation_id -> latest user message content for audio titles
+      const allMsgs = messages || [];
+      const userPromptMap: Record<string, string> = {};
+      // Also fetch user messages from same conversations for title context
+      const audioConvoIds = [...new Set(allMsgs.filter(m => (m as any).audio_url).map(m => m.conversation_id))];
+      if (audioConvoIds.length > 0) {
+        const { data: userMsgs } = await withWalletHeader(
+          supabase
+            .from('ai_messages')
+            .select('conversation_id, content, created_at')
+            .in('conversation_id', audioConvoIds)
+            .eq('role', 'user')
+            .order('created_at', { ascending: false }),
+          walletAddress
+        );
+        (userMsgs || []).forEach(m => {
+          if (!userPromptMap[m.conversation_id]) {
+            userPromptMap[m.conversation_id] = m.content;
+          }
+        });
+      }
+
       const items: MediaItem[] = [];
-      (messages || []).forEach((msg) => {
+      allMsgs.forEach((msg) => {
         if (msg.image_url) {
           items.push({ id: msg.id + '-img', url: msg.image_url, type: 'image', conversation_id: msg.conversation_id, created_at: msg.created_at });
         }
@@ -289,7 +308,12 @@ export function ConversationHistoryDrawer({
           items.push({ id: msg.id + '-vid', url: msg.video_url, type: 'video', conversation_id: msg.conversation_id, created_at: msg.created_at });
         }
         if ((msg as any).audio_url) {
-          items.push({ id: msg.id + '-aud', url: (msg as any).audio_url, type: 'audio', conversation_id: msg.conversation_id, created_at: msg.created_at });
+          // Try to extract a title from the user's prompt
+          const prompt = userPromptMap[msg.conversation_id] || '';
+          const titleMatch = prompt.match(/(?:called|titled|named)\s+["']?([^"'\n,.]+)["']?/i)
+            || prompt.match(/title\s*[:\-]\s*["']?([^"'\n,.]+)["']?/i);
+          const title = titleMatch ? titleMatch[1].trim() : (prompt.split('\n')[0]?.slice(0, 50) || undefined);
+          items.push({ id: msg.id + '-aud', url: (msg as any).audio_url, type: 'audio', conversation_id: msg.conversation_id, created_at: msg.created_at, title });
         }
       });
 
