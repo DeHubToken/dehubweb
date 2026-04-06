@@ -1279,6 +1279,10 @@ export default function AssistantPage() {
       const body: Record<string, unknown> = { tool: actualTool, prompt };
       if (sourceImage) body.image_url = sourceImage;
       if (category === 'tts') body.text = prompt;
+      // Pass lyrics separately for music tools
+      if ((pendingAiToolRequest as any)?.lyrics) {
+        body.lyrics = (pendingAiToolRequest as any).lyrics;
+      }
 
       const { data, error } = await supabase.functions.invoke('fal-ai-tools', { body });
 
