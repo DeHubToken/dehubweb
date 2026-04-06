@@ -93,26 +93,16 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
               {event.cover_image_url && (
                 <img src={event.cover_image_url} alt={event.title} className="w-full h-full object-cover" />
               )}
-              <button
-                onClick={() => {
-                  const url = `${window.location.origin}/app/events/${event.id}`;
-                  navigator.clipboard.writeText(url);
-                  toast.success('Event link copied!');
-                }}
-                className="absolute top-2 right-2 p-2 rounded-full bg-black/50 backdrop-blur-sm text-white/80 hover:text-white transition-colors"
-              >
-                <Share2 className="w-4 h-4" />
-              </button>
             </div>
 
             <div className="px-4 py-4 space-y-4">
-              {/* Date/time */}
+              {/* Date/time + share */}
               <div className="flex items-start gap-3">
                 <div className="bg-white/10 rounded-lg px-3 py-2 text-center shrink-0">
                   <div className="text-xs font-bold text-white/70 uppercase">{format(startDate, 'MMM')}</div>
                   <div className="text-xl font-bold text-white">{format(startDate, 'd')}</div>
                 </div>
-                <div>
+                <div className="flex-1 min-w-0">
                   <h2 className="text-lg font-bold text-white">{event.title}</h2>
                   <p className="text-sm text-zinc-400 flex items-center gap-1 mt-0.5">
                     <Calendar className="w-3.5 h-3.5" />
@@ -126,6 +116,16 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                     </p>
                   )}
                 </div>
+                <button
+                  onClick={() => {
+                    const url = `${window.location.origin}/app/events/${event.id}`;
+                    navigator.clipboard.writeText(url);
+                    toast.success('Event link copied!');
+                  }}
+                  className="shrink-0 p-2 rounded-full bg-white/[0.06] text-zinc-400 hover:text-white hover:bg-white/[0.1] transition-colors"
+                >
+                  <Share2 className="w-4 h-4" />
+                </button>
               </div>
 
               {/* RSVP Buttons */}
