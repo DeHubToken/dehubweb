@@ -58,6 +58,28 @@ export const AI_TOOL_MODELS: Record<string, AiToolModel> = {
     baseCostUsd: 0.05,
   },
 
+  // ─── Music Video (Music + Video combined) ───
+  'music-video-standard': {
+    id: 'music-video-standard',
+    tool: 'music-video-standard',
+    name: 'Music Video (Standard)',
+    description: 'MiniMax Music + Minimax Video',
+    emoji: '🎬',
+    category: 'music-video',
+    tier: 'standard',
+    baseCostUsd: 0.255, // music $0.035 + video $0.22
+  },
+  'music-video-premium': {
+    id: 'music-video-premium',
+    tool: 'music-video-premium',
+    name: 'Music Video (Premium)',
+    description: 'MiniMax Music + Seedance 2.0',
+    emoji: '🎬',
+    category: 'music-video',
+    tier: 'premium',
+    baseCostUsd: 0.735, // music $0.035 + video $0.70
+  },
+
   // ─── Text-to-Speech ───
   'dia-tts': {
     id: 'dia-tts',
@@ -128,6 +150,7 @@ export const getToolsByCategory = (category: AiToolCategory): AiToolModel[] =>
 
 export const CATEGORY_LABELS: Record<AiToolCategory, { label: string; emoji: string; color: string }> = {
   'music': { label: 'Music Generation', emoji: '🎵', color: 'purple' },
+  'music-video': { label: 'Music Video', emoji: '🎬', color: 'purple' },
   'tts': { label: 'Text-to-Speech', emoji: '🗣️', color: 'cyan' },
   'background-removal': { label: 'Background Removal', emoji: '✂️', color: 'green' },
   'upscale': { label: 'Image Upscaling', emoji: '🔍', color: 'amber' },
