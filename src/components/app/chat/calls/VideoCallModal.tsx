@@ -87,7 +87,7 @@ const VideoCallModal: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  <p className="text-lg font-semibold text-white">{getCallAddress()}</p>
+                  <p className="text-lg font-semibold text-white">{displayName}</p>
                   {isConnecting && <p className="text-sm text-white/50">Connecting...</p>}
                 </div>
               </div>
