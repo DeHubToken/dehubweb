@@ -222,18 +222,8 @@ export function AudioSpacesModal() {
         <div className={cn("flex-1 overflow-y-auto p-4", currentSpace && "pt-2")}>
 
           {/* ── Browse View ─────────────────────────────────────────────── */}
-          {view === 'browse' && !currentSpace && (
+           {view === 'browse' && !currentSpace && (
             <div className="space-y-4">
-              {isAuthenticated && (
-                <Button
-                  onClick={() => setView('create')}
-                  className="w-full bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl"
-                >
-                  <Mic className="w-4 h-4 mr-2" />
-                  Start Stage
-                </Button>
-              )}
-
               <div className="space-y-2">
                 <h3 className="text-sm font-medium text-white/60">Live Now</h3>
                 {liveSpaces.length === 0 ? (
@@ -255,6 +245,16 @@ export function AudioSpacesModal() {
                   </div>
                 )}
               </div>
+
+              {isAuthenticated && (
+                <Button
+                  onClick={() => setView('create')}
+                  className="w-full bg-white/10 hover:bg-white/20 text-white border-0 rounded-xl"
+                >
+                  <Mic className="w-4 h-4 mr-2" />
+                  Start Stage
+                </Button>
+              )}
 
               {/* Past Stages */}
               {pastStages.length > 0 && (
