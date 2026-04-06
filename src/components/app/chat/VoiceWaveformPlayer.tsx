@@ -208,7 +208,7 @@ export const VoiceWaveformPlayer = memo(function VoiceWaveformPlayer({ src, clas
       <button
         onClick={togglePlay}
         disabled={!isLoaded}
-        className="w-8 h-8 rounded-full bg-white/[0.12] hover:bg-white/[0.2] flex items-center justify-center transition-colors shrink-0 disabled:opacity-30"
+        className="w-8 h-8 rounded-md bg-white/[0.12] hover:bg-white/[0.2] flex items-center justify-center transition-colors shrink-0 disabled:opacity-30"
       >
         {isPlaying ? (
           <Pause className="w-3.5 h-3.5 text-white" />
