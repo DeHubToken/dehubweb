@@ -22,7 +22,7 @@ export function EventCard({ event, onClick }: EventCardProps) {
       )}
     >
       {/* Cover image or gradient */}
-      <div className="relative h-32 bg-gradient-to-br from-purple-500/20 to-blue-500/20">
+      <div className="relative h-32 bg-gradient-to-br from-white/5 to-white/10">
         {event.cover_image_url && (
           <img
             src={event.cover_image_url}
@@ -31,15 +31,6 @@ export function EventCard({ event, onClick }: EventCardProps) {
             loading="lazy"
           />
         )}
-        {/* Date badge */}
-        <div className="absolute top-2 left-2 bg-black/70 backdrop-blur-sm rounded-lg px-2.5 py-1.5 text-center">
-          <div className="text-xs font-bold text-primary uppercase">
-            {format(startDate, 'MMM')}
-          </div>
-          <div className="text-lg font-bold text-white leading-tight">
-            {format(startDate, 'd')}
-          </div>
-        </div>
       </div>
 
       {/* Info */}
