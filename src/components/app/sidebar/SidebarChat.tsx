@@ -23,6 +23,7 @@ import { toast } from 'sonner';
 import type { ReactionData } from '../chat/ChatMessage';
 import { useBuyAlerts, type BuyAlertMessage } from '@/hooks/use-buy-alerts';
 import { BuyAlertCard } from '../chat/BuyAlertCard';
+import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
 
 const QUICK_EMOJIS = ['👍', '❤️', '😂', '🔥', '🚀', '👀', '💯', '🙏'];
 
@@ -123,6 +124,7 @@ export function SidebarChat() {
 
   // Buy alerts
   const buyAlerts = useBuyAlerts();
+  const { isHidden: buyBotHidden, hide: hideBuyBot } = useBuyBotHidden();
 
   // Merge livechat messages with buy alerts
   type MergedItem = { type: 'message'; data: typeof messages[0] } | { type: 'buy_alert'; data: BuyAlertMessage };
@@ -266,11 +268,13 @@ export function SidebarChat() {
           ) : (
             mergedItems.map((item) => {
               if (item.type === 'buy_alert') {
+                if (buyBotHidden) return null;
                 return (
                   <BuyAlertCard
                     key={`buy-alert-${item.data.id}`}
                     content={item.data.content}
                     timestamp={item.data.created_at}
+                    onHide={hideBuyBot}
                   />
                 );
               }
