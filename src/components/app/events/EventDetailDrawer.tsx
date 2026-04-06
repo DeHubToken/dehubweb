@@ -50,7 +50,7 @@ function PendingRequestItem({ rsvp, eventId, onManage }: { rsvp: EventRsvp; even
     <div className="flex items-center justify-between py-2">
       <div className="flex items-center gap-2 min-w-0">
         <Avatar className="w-7 h-7">
-          <AvatarImage src={buildAvatarUrl(addr)} />
+          <AvatarImage src={buildAvatarUrl(addr, undefined)} />
           <AvatarFallback className="bg-zinc-700 text-white text-[9px]">{addr.slice(2, 4).toUpperCase()}</AvatarFallback>
         </Avatar>
         <span className="text-xs text-zinc-300 truncate">{`${addr.slice(0, 6)}...${addr.slice(-4)}`}</span>
