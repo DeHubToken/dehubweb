@@ -75,7 +75,7 @@ export function StageTTS() {
                 : "bg-white/5 text-white/60 hover:bg-white/10 border border-transparent"
             )}
           >
-            {voice.emoji} {voice.name}
+            {voice.name}
           </button>
         ))}
       </div>
