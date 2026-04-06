@@ -110,7 +110,7 @@ export function VoiceCreditPurchaseModal({
       const chainConfig = getChainConfig(payChainId);
       await switchChain(payChainId);
 
-      toast.loading(dhbText('Processing DHB payment...'), { id: 'voice-credit-payment' });
+      toast.loading('Processing payment...', { id: 'voice-credit-payment' });
       const result = await writeContractAA(
         chainConfig.dhbToken,
         erc20TransferInterface,

@@ -120,7 +120,7 @@ export function ImagePaywallModal({
       const chainConfig = getChainConfig(payChainId);
       await switchChain(payChainId);
 
-      toast.loading(dhbText('Processing DHB payment...'), { id: 'image-gen-payment' });
+      toast.loading('Processing payment...', { id: 'image-gen-payment' });
       const result = await writeContractAA(
         chainConfig.dhbToken,
         erc20TransferInterface,
