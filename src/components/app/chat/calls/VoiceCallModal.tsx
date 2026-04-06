@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Phone, PhoneOff, Mic, MicOff, Volume2, X } from 'lucide-react';
+import { Phone, PhoneOff, Mic, MicOff, Volume2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { useCall } from '@/contexts/CallContext';
