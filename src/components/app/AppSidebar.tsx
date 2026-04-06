@@ -53,7 +53,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
           const isActive =
             item.path === '/app'
               ? location.pathname === '/app'
-              : !item.external && location.pathname.startsWith(item.path);
+              : !item.external && !item.action && location.pathname.startsWith(item.path);
 
           return (
             <SidebarNavItem
@@ -63,6 +63,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
               isHome={item.path === '/app'}
               currentPath={location.pathname}
               onNavigate={onToggle}
+              onClick={item.action === 'open-stages' ? () => { onToggle(); openStagesModal(); } : undefined}
               variant="mobile"
             />
           );
