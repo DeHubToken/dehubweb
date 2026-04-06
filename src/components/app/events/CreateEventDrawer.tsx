@@ -14,6 +14,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { GLASS_STYLES } from '@/constants/app.constants';
 import { useTranslation } from 'react-i18next';
+import { Switch } from '@/components/ui/switch';
+import dehubCoin from '@/assets/dehub-coin.png';
 
 interface CreateEventDrawerProps {
   open: boolean;
@@ -36,6 +38,8 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverPreview, setCoverPreview] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [hasGateFee, setHasGateFee] = useState(false);
+  const [gateFee, setGateFee] = useState('');
 
   const handleCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -75,6 +79,8 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
       ends_at = endsAt.toISOString();
     }
 
+    const feeAmount = hasGateFee && gateFee ? parseFloat(gateFee) : 0;
+
     createEvent.mutate(
       {
         title: title.trim(),
@@ -86,6 +92,7 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
         community_id: communityId,
         creator_username: user?.username ?? undefined,
         creator_avatar: user?.avatarImageUrl ?? user?.avatarUrl ?? undefined,
+        gate_fee: feeAmount > 0 ? feeAmount : undefined,
       },
       {
         onSuccess: () => {
@@ -97,6 +104,8 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
           setEndDate(undefined);
           setCoverFile(null);
           setCoverPreview(null);
+          setHasGateFee(false);
+          setGateFee('');
         },
       }
     );
@@ -240,6 +249,34 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
               className="mt-1 bg-white/5 border-white/10 text-white min-h-[80px] resize-none"
               maxLength={2000}
             />
+          </div>
+
+          {/* Gate Fee */}
+          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-3 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <img src={dehubCoin} alt="Coins" className="w-5 h-5" />
+                <span className="text-sm font-medium text-white">Charge entry fee</span>
+              </div>
+              <Switch checked={hasGateFee} onCheckedChange={setHasGateFee} />
+            </div>
+            {hasGateFee && (
+              <div className="flex items-center gap-2">
+                <Input
+                  type="number"
+                  min="1"
+                  step="1"
+                  value={gateFee}
+                  onChange={(e) => setGateFee(e.target.value)}
+                  placeholder="Amount"
+                  className="bg-white/5 border-white/10 text-white flex-1"
+                />
+                <div className="flex items-center gap-1 text-sm text-zinc-400 shrink-0">
+                  <img src={dehubCoin} alt="" className="w-4 h-4" />
+                  <span>Coins</span>
+                </div>
+              </div>
+            )}
           </div>
 
           <Button
