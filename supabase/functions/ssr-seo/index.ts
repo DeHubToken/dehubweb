@@ -12,6 +12,7 @@ const APP_URL = "https://dehub.io"; // Change to actual production URL if differ
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || "https://aigxuutjaqsywioxjefr.supabase.co";
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY") || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFpZ3h1dXRqYXFzeXdpb3hqZWZyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Njc2MzY0MzIsImV4cCI6MjA4MzIxMjQzMn0.hjMx0kShuJlaZ26UoG7RFGu3OC_aLR0C1Sf1qdk3x0I";
 const IMAGE_PROXY_BASE = `${SUPABASE_URL}/functions/v1/ssr-seo`;
+const OG_IMAGE_BASE = `${SUPABASE_URL}/functions/v1/og-image`;
 const DEHUB_LOGO = "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/default-icon.png";
 const AUDIO_OG_IMAGE = "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/audio-wave%20(1).png";
 
@@ -449,10 +450,19 @@ serve(async (req) => {
                         postImage = builtImage;
                         hasRealImage = true;
                     } else {
-                        // No post image — use minterUser avatar already in NFT response
-                        const minter = nft.minterUser;
-                        postImage = minter ? buildAvatarUrl(minter) : DEHUB_LOGO;
-                        hasRealImage = false; // avatar is square — use summary, not summary_large_image
+                        // Text post (no image, no video) — generate a dynamic OG card
+                        // that renders the post text as a styled 1200×630 PNG, similar
+                        // to how X/Twitter shows "tweet screenshot" cards when sharing.
+                        const postText = (nft.title || nft.name || "").trim();
+                        if (postText) {
+                            postImage = `${OG_IMAGE_BASE}?post_id=${postId}`;
+                            hasRealImage = true;
+                        } else {
+                            // Absolute fallback: minter avatar (no text to render)
+                            const minter = nft.minterUser;
+                            postImage = minter ? buildAvatarUrl(minter) : DEHUB_LOGO;
+                            hasRealImage = false;
+                        }
                     }
                 }
 
