@@ -45,7 +45,7 @@ export const AI_TOOL_MODELS: Record<string, AiToolModel> = {
     emoji: '🎵',
     category: 'music',
     tier: 'premium',
-    baseCostUsd: 0.035,
+    baseCostUsd: 0.165,
   },
   'ace-step': {
     id: 'ace-step',
@@ -67,7 +67,7 @@ export const AI_TOOL_MODELS: Record<string, AiToolModel> = {
     emoji: '🎬',
     category: 'music-video',
     tier: 'standard',
-    baseCostUsd: 0.255, // music $0.035 + video $0.22
+    baseCostUsd: 0.385, // music $0.165 + video $0.22
   },
   'music-video-premium': {
     id: 'music-video-premium',
@@ -77,7 +77,7 @@ export const AI_TOOL_MODELS: Record<string, AiToolModel> = {
     emoji: '🎬',
     category: 'music-video',
     tier: 'premium',
-    baseCostUsd: 0.735, // music $0.035 + video $0.70
+    baseCostUsd: 0.865, // music $0.165 + video $0.70
   },
 
   // ─── Text-to-Speech ───
