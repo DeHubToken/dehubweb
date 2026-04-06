@@ -40,6 +40,7 @@ const BUILT_IN_EFFECTS: BuiltInEffect[] = [
   { id: 'lol', label: 'LOL', icon: <Laugh className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 2000 },
   { id: 'ooh-ahh', label: 'Ooh Ahh', icon: <Sparkles className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 3000 },
   { id: 'ooh-man', label: 'Ooh (Man)', icon: <User className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 1000 },
+  { id: 'ohh-girl', label: 'Ohh (Girl)', icon: <User className="w-4 h-4" />, frequency: 0, type: 'sine', duration: 1500 },
 ];
 
 // ---------- Custom sound type ----------
@@ -260,6 +261,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
     lol: '/sounds/lol.wav',
     'ooh-ahh': '/sounds/ooh-ahh.wav',
     'ooh-man': '/sounds/ooh-man.wav',
+    'ohh-girl': '/sounds/ohh-girl.ogg',
   };
 
   const playBuiltIn = useCallback((effect: BuiltInEffect) => {
