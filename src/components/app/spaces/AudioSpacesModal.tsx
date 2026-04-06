@@ -42,6 +42,7 @@ type View = 'browse' | 'create' | 'live';
 
 export function AudioSpacesModal() {
   const { isAuthenticated, walletAddress } = useAuth();
+  const queryClient = useQueryClient();
   const {
     liveSpaces,
     currentSpace,
