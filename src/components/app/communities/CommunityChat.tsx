@@ -68,12 +68,12 @@ function BuyAlertCard({ content, timestamp }: { content: string; timestamp: stri
   const buyerUrl = `https://basescan.org/address/${data.buyerAddress}`;
 
   return (
-    <div className="mx-3 my-1.5 rounded-xl border border-emerald-500/20 bg-gradient-to-br from-emerald-950/60 to-zinc-900/80 p-3 text-xs shadow-md shadow-emerald-900/20 backdrop-blur-sm">
+    <div className="mx-3 my-1.5 rounded-xl border border-zinc-700/50 bg-zinc-900/90 p-3 text-xs shadow-md shadow-black/40 backdrop-blur-sm">
       {/* Header */}
       <div className="flex items-center justify-between mb-2.5">
         <div className="flex items-center gap-1.5">
           <span className="text-base">🟢</span>
-          <span className="font-bold text-emerald-400 text-sm tracking-wide">DHB BUY</span>
+          <span className="font-bold text-white text-sm tracking-wide">DHB BUY</span>
         </div>
         <span className="text-zinc-500 text-[10px]">{formatTimeAgo(timestamp)}</span>
       </div>
@@ -96,7 +96,7 @@ function BuyAlertCard({ content, timestamp }: { content: string; timestamp: stri
         <div className="flex items-center gap-1.5">
           <span className="text-sm">🪙</span>
           <span className="text-zinc-400">For:</span>
-          <span className="text-emerald-300 font-bold ml-auto">
+          <span className="text-zinc-100 font-bold ml-auto">
             {fmtTokens(data.dhbAmount)} DHB
           </span>
         </div>
@@ -132,7 +132,7 @@ function BuyAlertCard({ content, timestamp }: { content: string; timestamp: stri
             <span className="text-white ml-auto font-semibold">
               {fmtTokens(data.newBalance)}{' '}
               {data.balanceChangePct > 0 && (
-                <span className="text-emerald-400 font-normal">
+                <span className="text-zinc-400 font-normal">
                   (+{data.balanceChangePct.toFixed(2)}%)
                 </span>
               )}
