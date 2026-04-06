@@ -62,12 +62,11 @@ const CallFailureDialog: React.FC<CallFailureDialogProps> = ({
         </AlertDialogHeader>
 
         <AlertDialogFooter className="flex-col gap-2 sm:flex-row">
-          <button
-            onClick={onClose}
-            className="flex-1 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-all border border-white/10"
-          >
-            Close
-          </button>
+          <LiquidGlassBubble shimmer noBorder className="flex-1 cursor-pointer" onClick={onClose}>
+            <span className="flex items-center justify-center gap-2 px-4 py-2 text-white text-sm font-medium">
+              Close
+            </span>
+          </LiquidGlassBubble>
 
           {isUserOffline && (
             <LiquidGlassBubble shimmer noBorder className="flex-1 cursor-pointer" onClick={() => {
@@ -82,12 +81,11 @@ const CallFailureDialog: React.FC<CallFailureDialogProps> = ({
           )}
 
           {!isUserOffline && (
-            <button
-              onClick={onClose}
-              className="px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-sm font-medium transition-all border border-white/10"
-            >
-              Try again
-            </button>
+            <LiquidGlassBubble shimmer noBorder className="flex-1 cursor-pointer" onClick={onClose}>
+              <span className="flex items-center justify-center gap-2 px-4 py-2 text-white text-sm font-medium">
+                Try again
+              </span>
+            </LiquidGlassBubble>
           )}
         </AlertDialogFooter>
       </AlertDialogContent>
