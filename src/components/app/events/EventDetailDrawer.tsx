@@ -362,7 +362,10 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
               {/* Clickable Attendees */}
               {(goingList.length > 0 || interestedList.length > 0) && (
                 <div>
-                  <h3 className="text-sm font-medium text-white mb-2">Guests</h3>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-sm font-medium text-white">Guests</h3>
+                    <FriendsAtEvent eventId={event.id} mode="inline" />
+                  </div>
                   <div className="flex gap-4 text-xs text-zinc-400">
                     <button
                       onClick={() => setAttendeesType('going')}
