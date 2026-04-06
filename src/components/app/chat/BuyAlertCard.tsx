@@ -57,7 +57,7 @@ export function BuyAlertCard({ content, timestamp }: { content: string; timestam
             <div className="flex items-center gap-1.5">
               <span className="text-sm">💸</span>
               <span className="text-zinc-400">Spent:</span>
-              <span className="text-white font-semibold ml-auto">
+              <span className="text-white font-semibold">
                 {data.ethSpent > 0
                   ? `${data.ethSpent.toFixed(4)} ETH`
                   : fmt(data.dhbUsd)}
@@ -70,7 +70,7 @@ export function BuyAlertCard({ content, timestamp }: { content: string; timestam
             <div className="flex items-center gap-1.5">
               <span className="text-sm">🪙</span>
               <span className="text-zinc-400">For:</span>
-              <span className="text-zinc-100 font-bold ml-auto">
+              <span className="text-zinc-100 font-bold">
                 {fmtTokens(data.dhbAmount)} DHB
               </span>
             </div>
@@ -78,7 +78,7 @@ export function BuyAlertCard({ content, timestamp }: { content: string; timestam
             <div className="flex items-center gap-1.5">
               <span className="text-sm">👤</span>
               <span className="text-zinc-400">Buyer:</span>
-              <span className="ml-auto flex items-center gap-1.5">
+              <span className="flex items-center gap-1.5">
                 <a href={buyerUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-mono">
                   {data.shortBuyer}
                 </a>
@@ -93,7 +93,7 @@ export function BuyAlertCard({ content, timestamp }: { content: string; timestam
               <div className="flex items-center gap-1.5">
                 <span className="text-sm">🔼</span>
                 <span className="text-zinc-400">Balance:</span>
-                <span className="text-white ml-auto font-semibold">
+                <span className="text-white font-semibold">
                   {fmtTokens(data.newBalance)}{' '}
                   {data.balanceChangePct > 0 && (
                     <span className="text-zinc-400 font-normal">
@@ -107,7 +107,7 @@ export function BuyAlertCard({ content, timestamp }: { content: string; timestam
             <div className="flex items-center gap-1.5">
               <span className="text-sm">💲</span>
               <span className="text-zinc-400">Price:</span>
-              <span className="text-white ml-auto font-semibold">
+              <span className="text-white font-semibold">
                 ${data.priceUsd.toFixed(7)}
               </span>
             </div>
@@ -116,7 +116,7 @@ export function BuyAlertCard({ content, timestamp }: { content: string; timestam
               <div className="flex items-center gap-1.5">
                 <span className="text-sm">📊</span>
                 <span className="text-zinc-400">Market cap:</span>
-                <span className="text-white ml-auto font-semibold">
+                <span className="text-white font-semibold">
                   {fmt(data.marketCapUsd, 0)}
                 </span>
               </div>
