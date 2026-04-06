@@ -506,6 +506,7 @@ export default function AssistantPage() {
     isChatLoading: isLoading,
   });
   const voiceTranscriptHandlerRef = useRef<((text: string) => void) | null>(null);
+  voiceStopRef.current = voiceAssistant.stopVoiceMode;
 
   // Block access for unauthenticated users (AuthGate handles loading state internally)
   if (!isAuthenticated) {
