@@ -69,7 +69,7 @@ function buildEffectNodes(ctx: AudioContext, effectId: VoiceEffectId): AudioNode
       osc.connect(ringGain.gain); // modulates the gain param
 
       const ws = ctx.createWaveShaper();
-      ws.curve = createDistortionCurve(20);
+      ws.curve = createDistortionCurve(20) as any;
 
       return [ringGain, ws];
     }
@@ -98,7 +98,7 @@ function buildEffectNodes(ctx: AudioContext, effectId: VoiceEffectId): AudioNode
       bp.Q.value = 5;
 
       const ws = ctx.createWaveShaper();
-      ws.curve = createDistortionCurve(8);
+      ws.curve = createDistortionCurve(8) as any;
 
       const hp = ctx.createBiquadFilter();
       hp.type = 'highpass';
