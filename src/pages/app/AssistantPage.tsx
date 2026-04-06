@@ -2322,14 +2322,14 @@ export default function AssistantPage() {
                     <TooltipContent>{t('assistant.attachFile')}</TooltipContent>
                   </Tooltip>
                   
-                  {/* Voice recording button */}
+                  {/* Voice recording button (browser Web Speech API) */}
                   {isVoiceSupported && (
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button
                           type="button"
                           onClick={isRecording ? stopRecording : startRecording}
-                          disabled={isLoading}
+                          disabled={isLoading || voiceAssistant.isVoiceMode}
                           className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
                             isRecording 
                               ? 'text-red-500' 
@@ -2348,6 +2348,25 @@ export default function AssistantPage() {
                       <TooltipContent>{isRecording ? t('assistant.stopRecording') : t('assistant.voiceInput')}</TooltipContent>
                     </Tooltip>
                   )}
+                  
+                  {/* Voice Assistant Mode (Whisper + Dia TTS) */}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : voiceAssistant.startVoiceMode}
+                        disabled={isLoading && !voiceAssistant.isVoiceMode}
+                        className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
+                          voiceAssistant.isVoiceMode
+                            ? 'text-cyan-400 animate-pulse'
+                            : 'text-white hover:text-white/80'
+                        }`}
+                      >
+                        <AudioLines className="w-5 h-5" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>{voiceAssistant.isVoiceMode ? 'Stop Voice Chat' : 'Voice Chat (AI)'}</TooltipContent>
+                  </Tooltip>
                 </div>
                 
                 {/* Auto-expanding textarea */}
