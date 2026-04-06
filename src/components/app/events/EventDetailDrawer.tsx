@@ -93,6 +93,8 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
   const [attendeesType, setAttendeesType] = useState<'going' | 'interested' | null>(null);
   const [showEditDrawer, setShowEditDrawer] = useState(false);
   const [showFullImage, setShowFullImage] = useState(false);
+  const [showShareDrawer, setShowShareDrawer] = useState(false);
+  const { openPostModal } = useGlobalDropZone();
 
   const hasGateFee = (event?.gate_fee ?? 0) > 0;
   const isPrivate = event?.is_private ?? false;
