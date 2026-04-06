@@ -33,6 +33,7 @@ const QUICK_EMOJIS = ['👍', '❤️', '😂', '🔥', '🚀', '👀', '💯', 
 
 // Buy alert card imported from shared component
 import { BuyAlertCard } from '../chat/BuyAlertCard';
+import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
 
 function ChatAvatar({ src, address, name }: { src?: string | null; address?: string; name: string }) {
   const [failed, setFailed] = useState(false);
