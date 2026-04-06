@@ -47,6 +47,7 @@ import { AuthGate } from '@/components/app/AuthGate';
 import { UserMentionDropdown, type MentionUser } from '@/components/app/mentions';
 import { ConversationHistoryDrawer } from '@/components/app/assistant/ConversationHistoryDrawer';
 import { GeneratedAudioPlayer } from '@/components/app/assistant/GeneratedAudioPlayer';
+import { MusicConfirmDialog, type MusicParams } from '@/components/app/assistant/MusicConfirmDialog';
 import { SwapActionCard } from '@/components/app/chat/SwapActionCard';
 import { useAIConversation } from '@/hooks/use-ai-conversation';
 import { streamChat } from '@/lib/stream-chat';
