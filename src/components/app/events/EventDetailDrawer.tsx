@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
 import { MapPin, Calendar, Users, Star, Trash2, CheckCircle2, Sparkles, MessageSquare } from 'lucide-react';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { cn } from '@/lib/utils';
 import { GLASS_STYLES } from '@/constants/app.constants';
 import { useAuth } from '@/contexts/AuthContext';
@@ -119,34 +120,30 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
 
               {/* RSVP Buttons */}
               <div className="flex gap-2">
-                <Button
+                <LiquidGlassBubble2
+                  label={`Going (${goingList.length})`}
+                  icon={<CheckCircle2 className="w-4 h-4" />}
                   onClick={() => handleRsvp('going')}
-                  variant={myRsvp?.status === 'going' ? 'default' : 'outline'}
-                  className={cn(
-                    'flex-1 rounded-xl',
-                    myRsvp?.status === 'going'
-                      ? 'bg-white text-black hover:bg-white/90'
-                      : 'border-white/10 text-white hover:bg-white/10'
-                  )}
                   disabled={toggleRsvp.isPending}
-                >
-                  <CheckCircle2 className="w-4 h-4 mr-1.5" />
-                  Going ({goingList.length})
-                </Button>
-                <Button
+                  width="100%"
+                  height="42px"
+                  className={cn(
+                    'flex-1',
+                    myRsvp?.status === 'going' && '!bg-white/20 ring-1 ring-white/30'
+                  )}
+                />
+                <LiquidGlassBubble2
+                  label={`Interested (${interestedList.length})`}
+                  icon={<Star className="w-4 h-4" />}
                   onClick={() => handleRsvp('interested')}
-                  variant={myRsvp?.status === 'interested' ? 'default' : 'outline'}
-                  className={cn(
-                    'flex-1 rounded-xl',
-                    myRsvp?.status === 'interested'
-                      ? 'bg-white/80 text-black hover:bg-white/70'
-                      : 'border-white/10 text-white hover:bg-white/10'
-                  )}
                   disabled={toggleRsvp.isPending}
-                >
-                  <Star className="w-4 h-4 mr-1.5" />
-                  Interested ({interestedList.length})
-                </Button>
+                  width="100%"
+                  height="42px"
+                  className={cn(
+                    'flex-1',
+                    myRsvp?.status === 'interested' && '!bg-white/20 ring-1 ring-white/30'
+                  )}
+                />
               </div>
 
               {/* Description */}
