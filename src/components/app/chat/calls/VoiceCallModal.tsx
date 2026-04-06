@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Phone, PhoneOff, Mic, MicOff, Volume2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { useCall } from '@/contexts/CallContext';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
+import { getAccountInfo } from '@/lib/api/dehub/users';
 
 const VoiceCallModal: React.FC = () => {
   const {
@@ -46,10 +47,18 @@ const VoiceCallModal: React.FC = () => {
     return 'Voice Call';
   };
 
-  const getCallAddress = () => {
-    const address = isIncoming ? currentCall.caller_address : currentCall.recipient_address;
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  };
+  const [peerName, setPeerName] = useState<string | null>(null);
+
+  const peerAddress = isIncoming ? currentCall.caller_address : currentCall.recipient_address;
+
+  useEffect(() => {
+    setPeerName(null);
+    getAccountInfo(peerAddress).then(u => {
+      if (u?.username) setPeerName(u.username);
+    }).catch(() => {});
+  }, [peerAddress]);
+
+  const displayName = peerName || `${peerAddress.slice(0, 6)}...${peerAddress.slice(-4)}`;
 
   return (
     <Dialog open={isVisible} onOpenChange={() => {}}>
