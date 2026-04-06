@@ -5,6 +5,7 @@
 
 import { formatTimeAgo } from '@/lib/feed-utils';
 import dehubCoin from '@/assets/dehub-coin.png';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 
 export interface BuyAlertData {
   ethSpent: number;
@@ -41,96 +42,88 @@ export function BuyAlertCard({ content, timestamp }: { content: string; timestam
   const buyerUrl = `https://basescan.org/address/${data.buyerAddress}`;
 
   return (
-    <div className="mx-3 my-1.5 rounded-xl border border-zinc-700/50 bg-zinc-900/90 p-3 text-xs shadow-md shadow-black/40 backdrop-blur-sm">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-2.5">
-        <div className="flex items-center gap-1.5">
-          <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
-          <span className="font-bold text-white text-sm tracking-wide">DHB BUY</span>
-        </div>
-        <span className="text-zinc-500 text-[10px]">{formatTimeAgo(timestamp)}</span>
-      </div>
+    <div className="mx-3 my-1.5">
+      <LiquidGlassBubble shimmer noBorder className="w-full">
+        <div className="text-xs">
+          <div className="flex items-center justify-between mb-2.5">
+            <div className="flex items-center gap-1.5">
+              <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
+              <span className="font-bold text-white text-sm tracking-wide">DHB BUY</span>
+            </div>
+            <span className="text-zinc-500 text-[10px]">{formatTimeAgo(timestamp)}</span>
+          </div>
 
-      {/* Stats grid */}
-      <div className="space-y-1.5">
-        <div className="flex items-center gap-1.5">
-          <span className="text-sm">💸</span>
-          <span className="text-zinc-400">Spent:</span>
-          <span className="text-white font-semibold ml-auto">
-            {data.ethSpent > 0
-              ? `${data.ethSpent.toFixed(4)} ETH`
-              : fmt(data.dhbUsd)}
-            {data.ethUsd > 0 && data.ethSpent > 0 && (
-              <span className="text-zinc-400 font-normal ml-1">({fmt(data.ethUsd)})</span>
-            )}
-          </span>
-        </div>
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm">💸</span>
+              <span className="text-zinc-400">Spent:</span>
+              <span className="text-white font-semibold ml-auto">
+                {data.ethSpent > 0
+                  ? `${data.ethSpent.toFixed(4)} ETH`
+                  : fmt(data.dhbUsd)}
+                {data.ethUsd > 0 && data.ethSpent > 0 && (
+                  <span className="text-zinc-400 font-normal ml-1">({fmt(data.ethUsd)})</span>
+                )}
+              </span>
+            </div>
 
-        <div className="flex items-center gap-1.5">
-          <span className="text-sm">🪙</span>
-          <span className="text-zinc-400">For:</span>
-          <span className="text-zinc-100 font-bold ml-auto">
-            {fmtTokens(data.dhbAmount)} DHB
-          </span>
-        </div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm">🪙</span>
+              <span className="text-zinc-400">For:</span>
+              <span className="text-zinc-100 font-bold ml-auto">
+                {fmtTokens(data.dhbAmount)} DHB
+              </span>
+            </div>
 
-        <div className="flex items-center gap-1.5">
-          <span className="text-sm">👤</span>
-          <span className="text-zinc-400">Buyer:</span>
-          <span className="ml-auto flex items-center gap-1.5">
-            <a
-              href={buyerUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-400 hover:text-blue-300 font-mono"
-            >
-              {data.shortBuyer}
-            </a>
-            <span className="text-zinc-600">|</span>
-            <a
-              href={basescanUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-zinc-400 hover:text-white underline"
-            >
-              Txn
-            </a>
-          </span>
-        </div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm">👤</span>
+              <span className="text-zinc-400">Buyer:</span>
+              <span className="ml-auto flex items-center gap-1.5">
+                <a href={buyerUrl} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-mono">
+                  {data.shortBuyer}
+                </a>
+                <span className="text-zinc-600">|</span>
+                <a href={basescanUrl} target="_blank" rel="noopener noreferrer" className="text-zinc-400 hover:text-white underline">
+                  Txn
+                </a>
+              </span>
+            </div>
 
-        {data.newBalance > 0 && (
-          <div className="flex items-center gap-1.5">
-            <span className="text-sm">🔼</span>
-            <span className="text-zinc-400">Balance:</span>
-            <span className="text-white ml-auto font-semibold">
-              {fmtTokens(data.newBalance)}{' '}
-              {data.balanceChangePct > 0 && (
-                <span className="text-zinc-400 font-normal">
-                  (+{data.balanceChangePct.toFixed(2)}%)
+            {data.newBalance > 0 && (
+              <div className="flex items-center gap-1.5">
+                <span className="text-sm">🔼</span>
+                <span className="text-zinc-400">Balance:</span>
+                <span className="text-white ml-auto font-semibold">
+                  {fmtTokens(data.newBalance)}{' '}
+                  {data.balanceChangePct > 0 && (
+                    <span className="text-zinc-400 font-normal">
+                      (+{data.balanceChangePct.toFixed(2)}%)
+                    </span>
+                  )}
                 </span>
-              )}
-            </span>
-          </div>
-        )}
+              </div>
+            )}
 
-        <div className="flex items-center gap-1.5">
-          <span className="text-sm">💲</span>
-          <span className="text-zinc-400">Price:</span>
-          <span className="text-white ml-auto font-semibold">
-            ${data.priceUsd.toFixed(7)}
-          </span>
+            <div className="flex items-center gap-1.5">
+              <span className="text-sm">💲</span>
+              <span className="text-zinc-400">Price:</span>
+              <span className="text-white ml-auto font-semibold">
+                ${data.priceUsd.toFixed(7)}
+              </span>
+            </div>
+
+            {data.marketCapUsd != null && (
+              <div className="flex items-center gap-1.5">
+                <span className="text-sm">📊</span>
+                <span className="text-zinc-400">Market cap:</span>
+                <span className="text-white ml-auto font-semibold">
+                  {fmt(data.marketCapUsd, 0)}
+                </span>
+              </div>
+            )}
+          </div>
         </div>
-
-        {data.marketCapUsd != null && (
-          <div className="flex items-center gap-1.5">
-            <span className="text-sm">📊</span>
-            <span className="text-zinc-400">Market cap:</span>
-            <span className="text-white ml-auto font-semibold">
-              {fmt(data.marketCapUsd, 0)}
-            </span>
-          </div>
-        )}
-      </div>
+      </LiquidGlassBubble>
     </div>
   );
 }
