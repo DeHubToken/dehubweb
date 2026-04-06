@@ -459,6 +459,10 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
               </div>
               <div className="flex items-center gap-1">
                 <span className="text-[10px] text-zinc-600">{newMessage.length}/500</span>
+                <VoiceRecorder
+                  onRecordingComplete={handleVoiceRecordingComplete}
+                  disabled={!isAuthenticated}
+                />
                 <Button
                   variant="ghost"
                   size="icon"
