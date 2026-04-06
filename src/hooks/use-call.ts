@@ -53,6 +53,7 @@ export interface UseCallReturn {
   toggleMute: () => void;
   toggleCamera: () => void;
   switchCamera: () => void;
+  localVideoTrack: React.MutableRefObject<any>;
   debugCallState: () => void;
   checkForCalls: () => Promise<void>;
 }
@@ -575,5 +576,6 @@ export const useCall = (): UseCallReturn => {
     switchCamera,
     debugCallState,
     checkForCalls,
+    localVideoTrack: localVideoTrackRef,
   };
 };
