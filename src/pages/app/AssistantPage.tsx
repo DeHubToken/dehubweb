@@ -181,12 +181,6 @@ function requiresVideoGeneration(message: string): boolean {
 
 // ─── AI Tool Keywords ───
 
-const MUSIC_VIDEO_KEYWORDS = [
-  'music video', 'create a music video', 'make a music video', 'generate a music video',
-  'create music video', 'make music video', 'generate music video',
-  'song with video', 'song and video', 'music with video',
-  'video with music', 'mv', 'music clip'
-];
 
 const MUSIC_KEYWORDS = [
   'generate music', 'create music', 'make music', 'compose', 'song',
@@ -227,8 +221,6 @@ const STT_KEYWORDS = [
 
 function detectAiToolRequest(message: string, hasImage: boolean): AiToolCategory | null {
   const lower = message.toLowerCase();
-  // Order matters — check more specific patterns first (music video before music)
-  if (MUSIC_VIDEO_KEYWORDS.some(k => lower.includes(k))) return 'music-video';
   if (MUSIC_KEYWORDS.some(k => lower.includes(k))) return 'music';
   if (TTS_KEYWORDS.some(k => lower.includes(k))) return 'tts';
   if (STT_KEYWORDS.some(k => lower.includes(k))) return 'speech-to-text';
@@ -239,7 +231,6 @@ function detectAiToolRequest(message: string, hasImage: boolean): AiToolCategory
 
 const DEFAULT_TOOL_FOR_CATEGORY: Record<AiToolCategory, string> = {
   'music': 'minimax-music',
-  'music-video': 'music-video-standard',
   'tts': 'dia-tts',
   'background-removal': 'birefnet',
   'upscale': 'creative-upscaler',
@@ -466,15 +457,12 @@ export default function AssistantPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const pollingRef = useRef<Record<string, NodeJS.Timeout>>({});
-  // Track music-video pipeline: when music completes, auto-chain video generation
-  const musicVideoRef = useRef<{ prompt: string; videoModel: string; musicMessageId?: string } | null>(null);
 
   // Persist/restore pending AI tool requests across reloads
   const PENDING_TOOL_KEY = 'dehub-pending-ai-tool';
   const savePendingTool = useCallback((data: {
     requestId: string; appId: string; messageId: string; toolKey: string;
     statusUrl?: string; responseUrl?: string; content: string;
-    musicVideo?: { prompt: string; videoModel: string };
   }) => {
     try { localStorage.setItem(PENDING_TOOL_KEY, JSON.stringify(data)); } catch {}
   }, []);
@@ -809,7 +797,6 @@ export default function AssistantPage() {
       const pending = JSON.parse(raw) as {
         requestId: string; appId: string; messageId: string; toolKey: string;
         statusUrl?: string; responseUrl?: string; content: string;
-        musicVideo?: { prompt: string; videoModel: string };
       };
       // Re-inject the processing message
       const restoredMessage: Message = {
@@ -827,11 +814,6 @@ export default function AssistantPage() {
         return [...prev, restoredMessage];
       });
       setIsAiToolProcessing(true);
-
-      // Restore music-video pipeline state
-      if (pending.musicVideo) {
-        musicVideoRef.current = { ...pending.musicVideo, musicMessageId: pending.messageId };
-      }
 
       // Resume polling
       if (!pollingRef.current[pending.requestId]) {
@@ -1149,94 +1131,7 @@ export default function AssistantPage() {
 
         const toolModel = AI_TOOL_MODELS[toolKey];
 
-        // Check if this is part of a music-video pipeline
-        let mvState = musicVideoRef.current;
-        // Recover music-video pipeline state from localStorage if ref was lost (e.g. background tab)
-        if (!mvState && toolKey === 'minimax-music' && data.audioUrl) {
-          try {
-            const raw = localStorage.getItem(PENDING_TOOL_KEY);
-            if (raw) {
-              const parsed = JSON.parse(raw);
-              if (parsed.musicVideo) {
-                mvState = { ...parsed.musicVideo, musicMessageId: parsed.messageId };
-                musicVideoRef.current = mvState;
-              }
-            }
-          } catch {}
-        }
-        const isMusicVideoPipeline = mvState && mvState.musicMessageId === messageId;
-
-        if (isMusicVideoPipeline && data.audioUrl) {
-          // Music step complete — update message and chain video generation
-          setMessages(prev => prev.map(m => {
-            if (m.id !== messageId) return m;
-            return {
-              ...m,
-              audioUrl: data.audioUrl,
-              content: '🎬 Step 1/2 complete! Music generated.\n\n_Step 2/2: Generating video..._',
-              isToolProcessing: false,
-            };
-          }));
-          toast.success('🎵 Music generated! Now creating video...');
-
-          // Chain video generation
-          try {
-            const { data: videoData, error: videoError } = await supabase.functions.invoke('generate-video', {
-              body: {
-                prompt: mvState.prompt,
-                model: mvState.videoModel,
-                duration: '5s',
-                aspectRatio: '16:9'
-              }
-            });
-
-            if (videoError) throw videoError;
-
-            if (videoData.error) {
-              setMessages(prev => [...prev, {
-                id: (Date.now() + 1).toString(),
-                role: 'assistant',
-                content: `❌ Video generation failed: ${videoData.error}`
-              }]);
-              setIsAiToolProcessing(false);
-              musicVideoRef.current = null;
-              return;
-            }
-
-            // Create video placeholder message
-            const videoMsgId = (Date.now() + 1).toString();
-            setMessages(prev => [...prev, {
-              id: videoMsgId,
-              role: 'assistant',
-              content: `🎬 Step 2/2: Generating video...\n\n_This may take 1-3 minutes_`,
-              isVideoGenerating: true,
-              videoPredictionId: videoData.predictionId,
-            }]);
-
-            pollingRef.current[videoData.predictionId] = setInterval(() => {
-              pollVideoStatus(videoData.predictionId, videoMsgId, videoData.provider, videoData.falAppId);
-            }, 5000);
-
-            // Persist video polling for reload recovery
-            savePendingVideo({
-              predictionId: videoData.predictionId,
-              messageId: videoMsgId,
-              provider: videoData.provider,
-              falAppId: videoData.falAppId,
-              content: `🎬 Step 2/2: Generating video...\n\n_This may take 1-3 minutes_`,
-            });
-
-            musicVideoRef.current = null;
-          } catch (videoErr) {
-            console.error('[Music Video] Video chain error:', videoErr);
-            toast.error('Video generation failed.');
-            setIsAiToolProcessing(false);
-            musicVideoRef.current = null;
-          }
-          return;
-        }
-
-        // Regular (non-music-video) completion
+        // Regular completion
         const completedMessage: Message = {
           id: messageId,
           role: 'assistant',
@@ -1269,7 +1164,6 @@ export default function AssistantPage() {
           m.id === messageId ? { ...m, isToolProcessing: false, content: `❌ Processing failed: ${data.error || 'Unknown error'}` } : m
         ));
         setIsAiToolProcessing(false);
-        musicVideoRef.current = null;
       }
     } catch (err) {
       console.error('[AI Tool] Polling error:', err);
@@ -1285,13 +1179,8 @@ export default function AssistantPage() {
     setAiToolPaywallOpen(false);
     setIsAiToolProcessing(true);
 
-    // Music-video pipeline: generate music first, then chain video
-    const isMusicVideo = category === 'music-video';
-    const musicTool = 'minimax-music'; // Always use MiniMax for music part
-    const videoModel = tool === 'music-video-premium' ? 'seedance-2.0' : 'minimax-video';
-
     try {
-      const actualTool = isMusicVideo ? musicTool : tool;
+      const actualTool = tool;
       const body: Record<string, unknown> = { tool: actualTool, prompt };
       if (sourceImage) body.image_url = sourceImage;
       if (category === 'tts') body.text = prompt;
@@ -1334,35 +1223,30 @@ export default function AssistantPage() {
       } else {
         // Async tool — start polling
         const messageId = (Date.now() + 1).toString();
-        const label = isMusicVideo ? 'Music Video' : toolModel.name;
-        const desc = isMusicVideo ? 'Step 1/2: Generating music...' : 'This may take a minute';
+        const label = toolModel.name;
+        const desc = 'This may take a minute';
         const assistantMessage: Message = {
           id: messageId,
           role: 'assistant',
-          content: `${isMusicVideo ? '🎬' : toolModel.emoji} Processing with **${label}**...\n\n_${desc}_`,
+          content: `${toolModel.emoji} Processing with **${label}**...\n\n_${desc}_`,
           isToolProcessing: true,
           toolRequestId: data.requestId,
           toolAppId: data.appId,
-          toolType: isMusicVideo ? musicTool : tool,
+          toolType: tool,
         };
         setMessages(prev => [...prev, assistantMessage]);
 
-        // Store music-video pipeline state
-        if (isMusicVideo) {
-          musicVideoRef.current = { prompt, videoModel, musicMessageId: messageId };
-        }
 
         // Persist pending request for reload recovery
         savePendingTool({
           requestId: data.requestId, appId: data.appId, messageId,
-          toolKey: isMusicVideo ? musicTool : tool,
+          toolKey: tool,
           statusUrl: data.statusUrl, responseUrl: data.responseUrl,
           content: assistantMessage.content,
-          ...(isMusicVideo && { musicVideo: { prompt, videoModel } }),
         });
 
         pollingRef.current[data.requestId] = setInterval(() => {
-          pollAiToolStatus(data.requestId, data.appId, messageId, isMusicVideo ? musicTool : tool, data.statusUrl, data.responseUrl);
+          pollAiToolStatus(data.requestId, data.appId, messageId, tool, data.statusUrl, data.responseUrl);
         }, 5000);
       }
     } catch (err) {
@@ -1443,7 +1327,7 @@ export default function AssistantPage() {
       
       if (aiToolCategory) {
         // For music requests, show confirm dialog first
-        if (aiToolCategory === 'music' || aiToolCategory === 'music-video') {
+        if (aiToolCategory === 'music') {
           setPendingMusicPrompt(currentInput);
           setAiToolCategory(aiToolCategory);
           setIsAiToolProcessing(false); // Reset in case previous request got stuck
@@ -2400,18 +2284,6 @@ export default function AssistantPage() {
                       onClick={() => {
                         setPendingMusicPrompt('');
                         setMusicConfirmOpen(true);
-                      }}
-                      width="auto"
-                      height="32px"
-                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
-                    />
-                    <LiquidGlassBubble2
-                      label="🎬 Create Music Video"
-                      onClick={() => {
-                        setInput('Create a music video about ');
-                        inputRef.current?.focus();
-                        setInputGlow(true);
-                        setTimeout(() => setInputGlow(false), 2000);
                       }}
                       width="auto"
                       height="32px"
