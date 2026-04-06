@@ -9,6 +9,7 @@ import { DesktopSidebar } from './navigation/DesktopSidebar';
 import { SidebarNavItem } from './navigation/SidebarNavItem';
 import { PostModal } from '@/features/post';
 import { useAuth } from '@/contexts/AuthContext';
+import { useStage } from '@/contexts/StageContext';
 import { ChainSelector, type ChainId } from './ChainSelector';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 
