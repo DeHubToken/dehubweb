@@ -43,7 +43,7 @@ export function BuyAlertCard({ content, timestamp }: { content: string; timestam
 
   return (
     <div className="mx-3 my-1.5">
-      <LiquidGlassBubble shimmer noBorder className="w-full [&>div]:!bg-gradient-to-tl">
+      <LiquidGlassBubble shimmer noBorder className="w-full [&>div]:!bg-gradient-to-tl [&>div]:!from-white/5 [&>div]:!via-white/10 [&>div]:!to-white/20">
         <div className="text-xs">
           <div className="flex items-center justify-between mb-2.5">
             <div className="flex items-center gap-1.5">
