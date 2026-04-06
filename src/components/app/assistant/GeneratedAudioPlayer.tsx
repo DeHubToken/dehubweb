@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type MouseEvent } from 'react';
-import { Download, Pause, Play, Share } from 'lucide-react';
+import { Download, Loader2, Pause, Play, Share } from 'lucide-react';
 import { decodeAudioWaveform } from '@/components/app/audio/visualizer-styles';
 import { formatTime } from '@/lib/audio-waveform';
 import { cn } from '@/lib/utils';
@@ -18,7 +18,8 @@ export function GeneratedAudioPlayer({ audioUrl, className }: GeneratedAudioPlay
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [waveformPeaks, setWaveformPeaks] = useState<number[]>([]);
-  const { openPostModal } = useGlobalDropZone();
+  const [isSharing, setIsSharing] = useState(false);
+  const { openPostModalWithFiles } = useGlobalDropZone();
 
   const displayPeaks = useMemo(() => {
     if (waveformPeaks.length > 0) return waveformPeaks;
@@ -150,12 +151,27 @@ export function GeneratedAudioPlayer({ audioUrl, className }: GeneratedAudioPlay
         <div className="flex items-center gap-1.5 shrink-0">
           <button
             type="button"
-            onClick={() => openPostModal?.(`🎵 Check out this AI-generated track!\n\n${audioUrl}`)}
-            className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/60 transition-colors hover:text-white hover:bg-white/10"
+            disabled={isSharing}
+            onClick={async () => {
+              try {
+                setIsSharing(true);
+                const response = await fetch(audioUrl);
+                const blob = await response.blob();
+                const file = new File([blob], 'dehub-audio.mp3', { type: 'audio/mpeg' });
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                openPostModalWithFiles(dataTransfer.files, '🎵 Check out this AI-generated track!');
+              } catch (e) {
+                console.error('Failed to fetch audio for posting:', e);
+              } finally {
+                setIsSharing(false);
+              }
+            }}
+            className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-white/60 transition-colors hover:text-white hover:bg-white/10 disabled:opacity-50"
             aria-label="Post audio"
             title="Post to feed"
           >
-            <Share className="h-3.5 w-3.5" />
+            {isSharing ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Share className="h-3.5 w-3.5" />}
           </button>
           <a
             href={audioUrl}
