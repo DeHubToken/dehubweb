@@ -12,6 +12,7 @@
  */
 
 import { useParams, useNavigationType, useNavigate, useLocation } from 'react-router-dom';
+import { getVoteCache } from '@/lib/vote-cache';
 import { SEOHead } from '@/components/SEOHead';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLayoutEffect, useEffect, useState, useRef } from 'react';
@@ -658,6 +659,21 @@ export default function SinglePostPage() {
     staleTime: 5 * 60 * 1000,
     retry: 1,
     placeholderData: (previousData) => previousData,
+    // Always overlay the vote cache so likes survive refetches
+    select: (data) => {
+      if (!data || !id) return data;
+      const cached = getVoteCache(id);
+      if (!cached) return data;
+      return {
+        ...data,
+        isLiked: cached.isLiked,
+        isDisliked: cached.isDisliked,
+        totalVotes: {
+          for: cached.likeCount,
+          against: cached.dislikeCount,
+        },
+      };
+    },
   });
 
   // Check if we have cached data (from feed navigation) to show immediately
