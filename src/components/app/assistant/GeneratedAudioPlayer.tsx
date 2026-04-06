@@ -19,6 +19,13 @@ export function GeneratedAudioPlayer({ audioUrl, className }: GeneratedAudioPlay
   const [duration, setDuration] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [waveformPeaks, setWaveformPeaks] = useState<number[]>([]);
+  let openPostModal: ((text?: string) => void) | null = null;
+  try {
+    const dropZone = useGlobalDropZone();
+    openPostModal = dropZone.openPostModal;
+  } catch {
+    // Not inside GlobalDropZoneProvider — hide post button
+  }
 
   const displayPeaks = useMemo(() => {
     if (waveformPeaks.length > 0) return waveformPeaks;
