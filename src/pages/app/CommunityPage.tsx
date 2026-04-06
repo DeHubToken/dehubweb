@@ -15,12 +15,13 @@ import { CommunityFeed } from '@/components/app/communities/CommunityFeed';
 import { CommunityMembers } from '@/components/app/communities/CommunityMembers';
 import { CommunityAbout } from '@/components/app/communities/CommunityAbout';
 import { CommunityChat } from '@/components/app/communities/CommunityChat';
+import { CommunityEvents } from '@/components/app/communities/CommunityEvents';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { useTranslation } from 'react-i18next';
 
-type Tab = 'posts' | 'members' | 'about' | 'chat';
+type Tab = 'posts' | 'events' | 'members' | 'about' | 'chat';
 
 export default function CommunityPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -105,6 +106,7 @@ export default function CommunityPage() {
         {([
           { key: 'posts' as Tab, label: t('communities.posts') },
           { key: 'chat' as Tab, label: t('communities.chat') },
+          { key: 'events' as Tab, label: 'Events' },
           { key: 'members' as Tab, label: t('communities.membersTab', { count: community.member_count }) },
           { key: 'about' as Tab, label: t('communities.about') },
         ]).map(tItem => (
@@ -136,10 +138,10 @@ export default function CommunityPage() {
           />
         </div>
         <div className={tab === 'chat' ? '' : 'hidden'}>
-          <CommunityChat
-            communityId={community.id}
-            isMember={isMember}
-          />
+          <CommunityChat communityId={community.id} isMember={isMember} />
+        </div>
+        <div className={tab === 'events' ? '' : 'hidden'}>
+          <CommunityEvents communityId={community.id} isMember={isMember} />
         </div>
         <div className={tab === 'members' ? '' : 'hidden'}>
           <CommunityMembers members={members} communityId={community.id} isOwner={isOwner} />
