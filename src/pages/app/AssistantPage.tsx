@@ -487,6 +487,7 @@ export default function AssistantPage() {
   const voiceCredits = useVoiceCredits(walletAddress);
   const [voiceCreditModalOpen, setVoiceCreditModalOpen] = useState(false);
   const voiceCreditDeductRef = useRef(voiceCredits.deductCredit);
+  const voiceStopRef = useRef<(() => void) | null>(null);
   useEffect(() => { voiceCreditDeductRef.current = voiceCredits.deductCredit; }, [voiceCredits.deductCredit]);
 
   // Voice Assistant hook (Whisper STT + Dia TTS via fal.ai)
