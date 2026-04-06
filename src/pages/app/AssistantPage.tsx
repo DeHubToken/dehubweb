@@ -458,6 +458,8 @@ export default function AssistantPage() {
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const pollingRef = useRef<Record<string, NodeJS.Timeout>>({});
+  // Track music-video pipeline: when music completes, auto-chain video generation
+  const musicVideoRef = useRef<{ prompt: string; videoModel: string; musicMessageId?: string } | null>(null);
   const pendingVoiceRef = useRef(false); // Track if last input was voice
 
   const { isAuthenticated } = useAuth();
