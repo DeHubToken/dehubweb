@@ -1460,8 +1460,8 @@ export default function AssistantPage() {
         });
         setSelectedAiToolId(defaultTool);
         setAiToolCategory(aiToolCategory);
+        setIsAiToolProcessing(false); // Reset in case previous request got stuck
         setAiToolPaywallOpen(true);
-        setIsLoading(false);
         return;
       } else if (isVideoRequest) {
         // Validate Runway requires an image
