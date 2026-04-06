@@ -1,46 +1,51 @@
 
 
-## Plan: ElevenLabs TTS for Stage Speakers
+## Plan: Inject TTS Audio Directly Into Agora Channel
 
-### What You'll Get
-Hosts and speakers in a Stage can type a message, pick from 6 high-quality ElevenLabs voices, and have it spoken aloud to everyone in the room.
+### Problem
+TTS audio currently plays through the host's local speakers only. Other participants can't hear it, and it doesn't work if the host is muted.
 
-### Setup Required
-You'll need an **ElevenLabs API key**. You can get one at [elevenlabs.io](https://elevenlabs.io) — they have a free tier with limited credits.
+### Solution
+Instead of playing TTS via a local `Audio` element, inject the audio directly into the Agora audio track by mixing it with the microphone stream using Web Audio API. This way all participants hear it regardless of mute state.
+
+### How It Works
+
+```text
+TTS audio blob
+      ↓
+AudioContext.decodeAudioData()
+      ↓
+BufferSourceNode ──→ MediaStreamDestination
+                            ↓
+                     Mixed track published
+                     to Agora channel
+```
 
 ### Changes
 
-**1. Add `ELEVENLABS_API_KEY` secret**
-- Prompt you to enter your ElevenLabs API key
+**1. Expose Agora refs from `StageContext.tsx`**
+- Add a new function `injectAudio(audioBlob: Blob): Promise<void>` to the context
+- This function will:
+  - Decode the audio blob into an AudioBuffer
+  - Create a temporary AudioContext + MediaStreamDestination
+  - Create a BufferSourceNode, connect it to the destination
+  - Create a new Agora custom audio track from the destination stream
+  - Unpublish the current mic track, publish the TTS track (temporarily unmuted)
+  - On playback end, re-publish the original mic track with its previous mute state
+- Add `injectAudio` to the `StageContextType` interface and provider value
 
-**2. Create `elevenlabs-tts` edge function** (`supabase/functions/elevenlabs-tts/index.ts`)
-- Accepts `text` and `voiceId` params
-- Calls ElevenLabs TTS API with `eleven_turbo_v2_5` model (low latency)
-- Returns raw audio binary
-- 6 voice options: Roger, Sarah, Laura, Charlie, George, Alice
+**2. Update `StageTTS.tsx`**
+- Import `useStage` to access `injectAudio`
+- Replace the current local `Audio` playback with a call to `injectAudio(audioBlob)`
+- Remove the `audioRef` and local Audio element logic
+- Keep loading state and error handling
 
-**3. Create `StageTTS` component** (`src/components/app/spaces/StageTTS.tsx`)
-- Text input with character limit (~500 chars)
-- Voice selector dropdown (6 voices with preview labels)
-- Send button that calls the edge function
-- Loading state while generating
-- Plays returned audio locally via `HTMLAudioElement` (Agora picks it up through the mic, or we can use local playback for all participants to hear)
-- Visible to hosts and speakers only
+**3. Update `AudioSpacesModal.tsx`**
+- Show TTS for both hosts AND speakers (not just hosts), since speakers also have published audio tracks
 
-**4. Update `AudioSpacesModal.tsx`**
-- Add `StageTTS` component below the soundboard section
-- Show for hosts and speakers (not listeners)
-
-### Voice Options
-| Voice | ID | Style |
-|-------|----|-------|
-| Roger | CwhRBWXzGAHq8TQ4Fs17 | Deep, authoritative male |
-| Sarah | EXAVITQu4vr4xnSDxMaL | Warm, natural female |
-| Laura | FGY2WhTYpPnrIDTdsKH5 | Soft, professional female |
-| Charlie | IKne3meq5aSn9XLyUdCD | Friendly male |
-| George | JBFqnCBsd6RMkjVDRZzb | British, distinguished male |
-| Alice | Xb7hH8MSUJpSbSDYk0k2 | Young, clear female |
-
-### Audio Routing
-The generated speech plays through a local `Audio` element. Since the speaker's mic is active in the Stage, Agora will pick up the audio and broadcast it to all participants. This is the simplest approach that works without complex Agora track injection.
+### Key Details
+- During TTS playback, the mic track is temporarily replaced so TTS goes through the channel
+- After TTS finishes, the original mic track is restored with its previous mute state
+- No changes needed to the edge function — it already returns the audio blob correctly
+- The soundboard has the same local-only problem but is out of scope for this change
 
