@@ -84,6 +84,14 @@ function MediaThumbnail({ item, onSelect }: { item: MediaItem; onSelect: (item: 
           <p className="text-xs text-white/80 font-medium truncate">{displayTitle}</p>
           <p className="text-[10px] text-white/35">{formatDistanceToNow(new Date(item.created_at), { addSuffix: true })}</p>
         </div>
+        <a
+          href={item.url}
+          download={`${displayTitle}.mp3`}
+          onClick={(e) => e.stopPropagation()}
+          className="p-1.5 rounded-lg text-white/30 hover:text-white/70 hover:bg-white/10 transition-colors shrink-0"
+        >
+          <Download className="w-3.5 h-3.5" />
+        </a>
         {isPlaying && <Pause className="w-3.5 h-3.5 text-white/50 shrink-0" />}
         {!isPlaying && <Music className="w-3.5 h-3.5 text-white/25 shrink-0" />}
       </button>
