@@ -453,6 +453,7 @@ export type Database = {
           creator_wallet_address: string
           description: string | null
           ends_at: string | null
+          event_number: number
           gate_fee: number
           going_count: number
           id: string
@@ -471,6 +472,7 @@ export type Database = {
           creator_wallet_address: string
           description?: string | null
           ends_at?: string | null
+          event_number?: number
           gate_fee?: number
           going_count?: number
           id?: string
@@ -489,6 +491,7 @@ export type Database = {
           creator_wallet_address?: string
           description?: string | null
           ends_at?: string | null
+          event_number?: number
           gate_fee?: number
           going_count?: number
           id?: string
