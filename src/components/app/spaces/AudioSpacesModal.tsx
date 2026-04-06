@@ -41,7 +41,7 @@ import { formatDistanceToNow } from 'date-fns';
 type View = 'browse' | 'create' | 'live';
 
 export function AudioSpacesModal() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
   const {
     liveSpaces,
     currentSpace,
