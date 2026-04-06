@@ -8,7 +8,7 @@ import { useMention } from '@/hooks/use-mention';
 import { TranslatableText, replaceLinksWithEmoji, SharedTranslationContext } from '../TranslatableText';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { VoiceRecorder } from '../chat/VoiceRecorder';
+
 import { EmojiGifPicker } from '../chat/EmojiGifPicker';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatPresence, type SupabaseLiveChatMessage } from '@/hooks/use-livechat';
