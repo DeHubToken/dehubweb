@@ -1446,6 +1446,7 @@ export default function AssistantPage() {
         if (aiToolCategory === 'music' || aiToolCategory === 'music-video') {
           setPendingMusicPrompt(currentInput);
           setAiToolCategory(aiToolCategory);
+          setIsAiToolProcessing(false); // Reset in case previous request got stuck
           setMusicConfirmOpen(true);
           setIsLoading(false);
           return;
