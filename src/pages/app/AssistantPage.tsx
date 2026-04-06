@@ -1308,8 +1308,7 @@ export default function AssistantPage() {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
           content: '',
-          ...(data.audioUrl && { audioUrl: data.audioUrl }),
-          ...(data.imageUrl && { imageUrl: data.imageUrl }),
+          ...(data.audioUrl ? { audioUrl: data.audioUrl } : data.imageUrl ? { imageUrl: data.imageUrl } : {}),
           ...(data.text && { content: `📝 **Transcription:**\n\n${data.text}` }),
         };
         if (!assistantMessage.audioUrl && !assistantMessage.imageUrl && !assistantMessage.content) {
