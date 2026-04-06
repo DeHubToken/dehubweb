@@ -94,19 +94,17 @@ const VoiceCallModal: React.FC = () => {
               </>
             ) : (
               <>
-                {isCallActive && (
-                  <button
-                    onClick={() => { toggleMute(); handleUserInteraction(); }}
-                    className={cn(
-                      "rounded-full w-12 h-12 flex items-center justify-center transition-all",
-                      isMuted
-                        ? "bg-red-500/80 hover:bg-red-500 text-white"
-                        : "bg-white/10 hover:bg-white/20 text-white border border-white/10"
-                    )}
-                  >
-                    {isMuted ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
-                  </button>
-                )}
+                <button
+                  onClick={() => { toggleMute(); handleUserInteraction(); }}
+                  className={cn(
+                    "rounded-full w-12 h-12 flex items-center justify-center transition-all",
+                    isMuted
+                      ? "bg-red-500/80 hover:bg-red-500 text-white"
+                      : "bg-white/10 hover:bg-white/20 text-white border border-white/10"
+                  )}
+                >
+                  {isMuted ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+                </button>
                 <button
                   onClick={endCall}
                   className="rounded-full w-14 h-14 bg-red-500/80 hover:bg-red-500 flex items-center justify-center text-white transition-all"
