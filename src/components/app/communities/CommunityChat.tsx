@@ -453,14 +453,12 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                 style={{ fieldSizing: 'content' } as React.CSSProperties}
               />
             </div>
-            <div className="flex items-center justify-between pt-1">
-              <div className="flex items-center gap-0.5">
+            <div className="flex items-center justify-end pt-1">
+              <div className="flex items-center gap-1">
                 <EmojiGifPicker
                   onEmojiSelect={handleEmojiSelect}
                   onGifSelect={handleGifSelect}
                 />
-              </div>
-              <div className="flex items-center gap-1">
                 <VoiceRecorder
                   onRecordingComplete={handleVoiceRecordingComplete}
                   disabled={!isAuthenticated}

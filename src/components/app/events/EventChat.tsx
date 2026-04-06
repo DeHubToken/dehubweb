@@ -368,11 +368,9 @@ export function EventChat({ eventId }: EventChatProps) {
               rows={1}
               style={{ fieldSizing: 'content' } as React.CSSProperties}
             />
-            <div className="flex items-center justify-between pt-1">
-              <div className="flex items-center gap-0.5">
-                <EmojiGifPicker onEmojiSelect={handleEmojiSelect} onGifSelect={handleGifSelect} />
-              </div>
+            <div className="flex items-center justify-end pt-1">
               <div className="flex items-center gap-1">
+                <EmojiGifPicker onEmojiSelect={handleEmojiSelect} onGifSelect={handleGifSelect} />
                 <VoiceRecorder
                   onRecordingComplete={handleVoiceRecordingComplete}
                   disabled={!isAuthenticated}
