@@ -5,6 +5,7 @@ import { LinkPreviewCard } from './LinkPreviewCard';
 import { fetchLinkPreview, extractUrlsFromText, type LinkPreviewData } from '@/lib/api/link-preview';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CommunityLinkEmbed, extractCommunitySlug } from '@/components/app/communities/CommunityLinkEmbed';
+import { EventLinkEmbed, extractEventId } from '@/components/app/events/EventLinkEmbed';
 
 interface LinkPreviewsProps {
   text: string;
