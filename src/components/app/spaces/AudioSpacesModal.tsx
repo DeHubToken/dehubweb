@@ -18,6 +18,7 @@ import {
   Link, UserPlus, Minimize2, Play, Square, Clock, Trash2,
 } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
