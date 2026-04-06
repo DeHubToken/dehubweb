@@ -484,7 +484,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
           <div className="p-4 space-y-2">
             <button
               onClick={() => {
-                const url = `${window.location.origin}/app/events/${event.id}`;
+                const url = `${window.location.origin}/app/events/${event.event_number}`;
                 navigator.clipboard.writeText(url);
                 toast.success('Event link copied!');
                 setShowShareDrawer(false);
@@ -501,7 +501,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
             </button>
             <button
               onClick={() => {
-                const url = `${window.location.origin}/app/events/${event.id}`;
+                const url = `${window.location.origin}/app/events/${event.event_number}`;
                 setShowShareDrawer(false);
                 onOpenChange(false);
                 // Small delay so drawers close first

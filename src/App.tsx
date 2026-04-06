@@ -181,7 +181,7 @@ function AppContent() {
               <Route path="jobs" element={null} />
               <Route path="glossary" element={null} />
               <Route path="events" element={null} />
-              <Route path="events/:eventId" element={<Suspense fallback={<PageLoader />}><EventPage /></Suspense>} />
+              <Route path="events/:eventNumber" element={<Suspense fallback={<PageLoader />}><EventPage /></Suspense>} />
               <Route path="communities" element={null} />
               <Route path="communities/:slug" element={<Suspense fallback={<PageLoader />}><CommunityPage /></Suspense>} />
               <Route path="post/:postId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
