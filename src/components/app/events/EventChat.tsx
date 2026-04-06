@@ -5,7 +5,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check, Mic } from 'lucide-react';
+import { Send, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check } from 'lucide-react';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -14,6 +14,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { EmojiGifPicker } from '../chat/EmojiGifPicker';
 import { VoiceRecorder } from '../chat/VoiceRecorder';
+import { VoiceWaveformPlayer } from '../chat/VoiceWaveformPlayer';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
@@ -247,11 +248,8 @@ export function EventChat({ eventId }: EventChatProps) {
                         {msg.message_type === 'gif' && msg.image_url ? (
                           <img src={msg.image_url} alt="GIF" className="max-w-[280px] max-h-32 rounded mt-0.5" loading="lazy" />
                         ) : msg.message_type === 'voice' && msg.image_url ? (
-                          <div className="mt-1 flex items-center gap-2 bg-zinc-800 rounded-lg px-3 py-2 max-w-[200px]">
-                            <Mic className="w-3.5 h-3.5 text-green-400 shrink-0" />
-                            <audio controls preload="none" className="h-8 w-full [&::-webkit-media-controls-panel]:bg-transparent">
-                              <source src={msg.image_url} type="audio/webm" />
-                            </audio>
+                          <div className="mt-1">
+                            <VoiceWaveformPlayer src={msg.image_url} />
                           </div>
                         ) : editingId === msg.id ? (
                           <div className="flex items-center gap-1 mt-0.5">
