@@ -141,7 +141,7 @@ export function VoiceCreditPurchaseModal({
             Voice Chat Credits
           </DialogTitle>
           <DialogDescription className="text-zinc-400">
-            Buy voice exchange bundles — each exchange uses Whisper STT + Dia TTS
+            Buy voice exchange bundles — each exchange uses credits
           </DialogDescription>
         </DialogHeader>
 
