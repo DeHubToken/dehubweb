@@ -214,7 +214,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
     });
 
     howlRef.current.play();
-  }, [playingId, volume]);
+  }, [playingId, volume, stopCurrentSound]);
 
   const playApplause = useCallback((ctx: AudioContext, gainNode: GainNode, duration: number) => {
     const bufferSize = ctx.sampleRate * (duration / 1000);
@@ -343,7 +343,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
     }
 
     timeoutRef.current = setTimeout(() => setPlayingId(null), effect.duration);
-  }, [playingId, volume, getAudioContext, playCrickets, playCountdown]);
+  }, [playingId, volume, getAudioContext, playCrickets, playCountdown, stopCurrentSound]);
 
   useEffect(() => {
     return () => {
