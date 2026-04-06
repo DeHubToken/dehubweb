@@ -51,6 +51,7 @@ export function ConversationHistoryDrawer({
   const [isLoading, setIsLoading] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [isClearingAll, setIsClearingAll] = useState(false);
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<Conversation[] | null>(null);
@@ -73,6 +74,7 @@ export function ConversationHistoryDrawer({
       setSearchQuery('');
       setSearchResults(null);
       setActiveTab('chats');
+      setShowClearConfirm(false);
     }
   }, [open]);
 
@@ -303,18 +305,32 @@ export function ConversationHistoryDrawer({
                 Conversation History
               </DrawerTitle>
               {conversations.length > 0 && (
-                <button
-                  onClick={handleClearAll}
-                  disabled={isClearingAll}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-red-400 hover:bg-red-400/10 transition-colors disabled:opacity-50"
-                >
-                  {isClearingAll ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  ) : (
+                showClearConfirm ? (
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-white/60">Are you sure?</span>
+                    <button
+                      onClick={() => setShowClearConfirm(false)}
+                      className="px-2.5 py-1 rounded-lg text-xs font-medium text-white/70 hover:bg-white/10 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={() => { handleClearAll(); setShowClearConfirm(false); }}
+                      disabled={isClearingAll}
+                      className="px-2.5 py-1 rounded-lg text-xs font-medium text-red-400 bg-red-400/10 hover:bg-red-400/20 transition-colors disabled:opacity-50"
+                    >
+                      {isClearingAll ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Yes, Clear'}
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    onClick={() => setShowClearConfirm(true)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium text-red-400 hover:bg-red-400/10 transition-colors"
+                  >
                     <Trash2 className="w-3.5 h-3.5" />
-                  )}
-                  Clear All
-                </button>
+                    Clear All
+                  </button>
+                )
               )}
             </div>
 
