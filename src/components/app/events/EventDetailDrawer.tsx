@@ -91,6 +91,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
   const [showChat, setShowChat] = useState(true);
   const [attendeesType, setAttendeesType] = useState<'going' | 'interested' | null>(null);
   const [showEditDrawer, setShowEditDrawer] = useState(false);
+  const [showFullImage, setShowFullImage] = useState(false);
 
   const hasGateFee = (event?.gate_fee ?? 0) > 0;
   const isPrivate = event?.is_private ?? false;
@@ -173,13 +174,13 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                 <img
                   src={event.cover_image_url}
                   alt={event.title}
-                  className="w-full h-48 lg:h-56 object-cover"
+                  className="w-full h-48 lg:h-56 object-cover cursor-pointer"
+                  onClick={() => setShowFullImage(true)}
                   onLoad={(e) => {
                     const img = e.currentTarget;
                     const natural = img.naturalHeight / img.naturalWidth;
                     const container = img.parentElement;
                     if (container && natural < 0.35) {
-                      // Thinner image → shrink container to fit
                       const w = container.clientWidth;
                       const fitted = Math.min(w * natural, container.clientHeight);
                       container.style.height = `${fitted}px`;
@@ -473,6 +474,27 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
           open={!!attendeesType}
           onOpenChange={(o) => { if (!o) setAttendeesType(null); }}
         />
+      )}
+
+      {/* Fullscreen image lightbox */}
+      {showFullImage && event.cover_image_url && (
+        <div
+          className="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center cursor-pointer"
+          onClick={() => setShowFullImage(false)}
+        >
+          <button
+            onClick={() => setShowFullImage(false)}
+            className="absolute top-4 right-4 p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-colors"
+          >
+            <X className="w-5 h-5 text-white" />
+          </button>
+          <img
+            src={event.cover_image_url}
+            alt={event.title}
+            className="max-w-[90vw] max-h-[90vh] object-contain rounded-xl"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
       )}
     </>
   );
