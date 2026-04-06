@@ -10,7 +10,7 @@ const NAV_LABEL_KEYS: Record<string, string> = {
   Home: 'nav.home', Explore: 'nav.explore', Notifications: 'nav.notifications',
   Messages: 'nav.messages', Assistant: 'nav.assistant', Leaderboard: 'nav.leaderboard',
   Bookmarks: 'nav.bookmarks', Settings: 'nav.settings', Profile: 'nav.profile', Blog: 'nav.blog',
-  'Command': 'nav.command', 'Command Centre': 'nav.commandCentre', Wallet: 'nav.wallet', Docs: 'nav.docs', 'Feature Requests': 'nav.featureRequests', Staking: 'nav.staking', Governance: 'nav.governance', Communities: 'nav.communities', Careers: 'nav.careers', Glossary: 'nav.glossary', Stages: 'nav.stages',
+  'Command': 'nav.command', 'Command Centre': 'nav.commandCentre', Wallet: 'nav.wallet', Docs: 'nav.docs', 'Feature Requests': 'nav.featureRequests', Staking: 'nav.staking', Governance: 'nav.governance', Communities: 'nav.communities', Careers: 'nav.careers', Glossary: 'nav.glossary',
 };
 
 interface SidebarNavItemProps {

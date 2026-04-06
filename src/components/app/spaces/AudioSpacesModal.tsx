@@ -443,7 +443,8 @@ export function AudioSpacesModal() {
                                   await supabase.storage.from('stage-recordings').remove([decodeURIComponent(path)]);
                                 }
                               }
-                              await supabase.from('audio_spaces').delete().eq('id', space.id);
+                              await supabase.from('audio_spaces').delete().eq('id', space.id)
+                                .setHeader('x-wallet-address', (walletAddress || '').toLowerCase());
                               queryClient.invalidateQueries({ queryKey: ['past-stages'] });
                               toast.success('Stage deleted');
                             }}
