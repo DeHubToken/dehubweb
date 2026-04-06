@@ -141,10 +141,11 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             !isCollapsed && "lg:p-2.5 lg:space-y-[2px] lg:items-stretch"
           )}>
           {navItemsWithoutAI.map((item) => {
-            const isActive = !item.external && location.pathname.startsWith(item.path);
+            const isActive = !item.external && !item.action && location.pathname.startsWith(item.path);
             const isProfileItem = item.label === 'Profile';
             const isNotificationsItem = item.label === 'Notifications';
             const isAfterMessages = item.label === 'Messages';
+            const isStagesItem = item.action === 'open-stages';
 
             return (
               <React.Fragment key={item.label}>
