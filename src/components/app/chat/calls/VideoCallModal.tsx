@@ -57,12 +57,12 @@ const VideoCallModal: React.FC = () => {
       <DrawerContent className="bg-black/60 backdrop-blur-[24px] border-t border-white/10 shadow-2xl">
         <div className="flex flex-col items-center gap-3 px-6 pb-6 pt-2">
           {/* Video area */}
-          <div className="w-full rounded-xl overflow-hidden relative max-h-[300px] lg:max-h-[600px]" style={{ aspectRatio: '16/9' }}>
+          <div className="w-full rounded-xl overflow-hidden relative max-h-[300px]" style={{ aspectRatio: '16/9' }}>
             {isCallActive ? (
               <video ref={remoteVideoRef} autoPlay playsInline muted={false} className="w-full h-full object-cover" />
             ) : (
               <div className="w-full h-full bg-black/40 backdrop-blur-md flex items-center justify-center">
-                <div className="w-32 h-24 rounded-lg overflow-hidden border border-white/20 bg-black/40">
+                <div className="w-32 h-24 lg:w-96 lg:h-72 rounded-lg overflow-hidden border border-white/20 bg-black/40">
                   <video
                     ref={localVideoRef}
                     autoPlay
