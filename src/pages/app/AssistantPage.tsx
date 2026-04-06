@@ -2121,6 +2121,18 @@ export default function AssistantPage() {
                       height="32px"
                       className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
                     />
+                    <LiquidGlassBubble2
+                      label="🎬 Create Music Video"
+                      onClick={() => {
+                        setInput('Create a music video about ');
+                        inputRef.current?.focus();
+                        setInputGlow(true);
+                        setTimeout(() => setInputGlow(false), 2000);
+                      }}
+                      width="auto"
+                      height="32px"
+                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                    />
                   </div>
                 </motion.div>
               )}
