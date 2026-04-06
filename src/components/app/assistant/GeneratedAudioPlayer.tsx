@@ -134,16 +134,27 @@ export function GeneratedAudioPlayer({ audioUrl, className }: GeneratedAudioPlay
             </p>
           </div>
 
-          <a
-            href={audioUrl}
-            download="dehub-audio.mp3"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-border bg-background/60 text-foreground transition-colors hover:bg-accent"
-            aria-label="Download audio"
-          >
-            <Download className="h-4 w-4" />
-          </a>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={() => openPostModal?.(`🎵 Check out this AI-generated track!\n\n${audioUrl}`)}
+              className="flex h-11 w-11 items-center justify-center rounded-2xl border border-border bg-background/60 text-foreground transition-colors hover:bg-accent"
+              aria-label="Post audio"
+              title="Post to feed"
+            >
+              <Share className="h-4 w-4" />
+            </button>
+            <a
+              href={audioUrl}
+              download="dehub-audio.mp3"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-11 w-11 items-center justify-center rounded-2xl border border-border bg-background/60 text-foreground transition-colors hover:bg-accent"
+              aria-label="Download audio"
+            >
+              <Download className="h-4 w-4" />
+            </a>
+          </div>
         </div>
 
         <button
