@@ -27,6 +27,8 @@ interface FloatingReaction {
   id: number;
   emoji: string;
   x: number;
+  scale: number;
+  duration: number;
 }
 
 let reactionCounter = 0;
@@ -64,12 +66,16 @@ export function StageReactions({ spaceId, onAvatarReaction }: StageReactionsProp
 
   const spawnFloating = useCallback((emoji: string) => {
     const id = ++reactionCounter;
-    // Spread across a wider horizontal range for multiple simultaneous reactions
-    const x = Math.random() * 80 - 40;
-    setFloating(prev => [...prev, { id, emoji, x }]);
+    // Spread across the full width (0-100%) — more reactions = more coverage
+    const x = Math.random() * 100;
+    // Randomize size for visual variety
+    const scale = 0.8 + Math.random() * 0.6;
+    // Slight speed variation
+    const duration = 1.8 + Math.random() * 0.8;
+    setFloating(prev => [...prev, { id, emoji, x, scale, duration }]);
     setTimeout(() => {
       setFloating(prev => prev.filter(r => r.id !== id));
-    }, 2200);
+    }, duration * 1000);
   }, []);
 
   // Subscribe to reactions channel
@@ -123,20 +129,23 @@ export function StageReactions({ spaceId, onAvatarReaction }: StageReactionsProp
 
   return (
     <>
-      {/* Floating reactions — centered in stage area */}
+      {/* Floating reactions — spread across full stage width */}
       {floating.length > 0 && (
-        <div className="flex justify-center pointer-events-none" style={{ height: 0 }}>
-          <div className="relative w-48" style={{ height: 140 }}>
-            {floating.map(r => (
-              <span
-                key={r.id}
-                className="absolute bottom-0 text-2xl animate-float-up"
-                style={{ left: `calc(50% + ${r.x}px)`, animationDuration: '2.2s' }}
-              >
-                {r.emoji}
-              </span>
-            ))}
-          </div>
+        <div className="absolute inset-x-0 bottom-0 pointer-events-none overflow-hidden" style={{ height: 200 }}>
+          {floating.map(r => (
+            <span
+              key={r.id}
+              className="absolute bottom-0 animate-float-up"
+              style={{
+                left: `${r.x}%`,
+                fontSize: `${r.scale * 1.5}rem`,
+                animationDuration: `${r.duration}s`,
+                opacity: 0.9,
+              }}
+            >
+              {r.emoji}
+            </span>
+          ))}
         </div>
       )}
 
