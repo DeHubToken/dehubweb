@@ -282,19 +282,15 @@ export function CreateEventDrawer({ open, onOpenChange, communityId }: CreateEve
               <Switch checked={hasGateFee} onCheckedChange={setHasGateFee} />
             </div>
             {hasGateFee && (
-              <div className="relative">
-                <img src={dehubCoin} alt="" className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 z-10" />
-                <Input
-                  type="number"
-                  min="1"
-                  step="1"
-                  value={gateFee}
-                  onChange={(e) => setGateFee(e.target.value)}
-                  placeholder="Amount"
-                  className="bg-white/5 border-white/10 text-white pl-9 pr-16"
-                />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-zinc-500">Coins</span>
-              </div>
+              <Input
+                type="number"
+                min="1"
+                step="1"
+                value={gateFee}
+                onChange={(e) => setGateFee(e.target.value)}
+                placeholder="Amount"
+                className="bg-white/5 border-white/10 text-white"
+              />
             )}
           </div>
 
