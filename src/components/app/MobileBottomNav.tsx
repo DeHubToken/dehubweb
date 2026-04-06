@@ -23,6 +23,7 @@ const RIGHT_NAV_ITEMS = [
 const SCROLL_NAV_ITEMS = [
   { icon: User, label: 'Profile', path: '/app/profile', requiresAuth: true },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
+  { icon: Mic, label: 'Stages', path: '#stages', action: 'open-stages' },
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
   { icon: Wallet, label: 'Wallet', path: '/app/wallet' },
   { icon: Trophy, label: 'Leaderboard', path: '/app/leaderboard' },
