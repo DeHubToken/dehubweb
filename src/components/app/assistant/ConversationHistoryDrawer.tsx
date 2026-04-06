@@ -617,6 +617,11 @@ export function ConversationHistoryDrawer({
                   alt=""
                   className="w-full h-auto max-h-[80vh] object-contain rounded-2xl"
                 />
+              ) : selectedMedia.type === 'audio' ? (
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col items-center gap-4">
+                  <Music className="w-12 h-12 text-white/40" />
+                  <audio src={selectedMedia.url} controls autoPlay className="w-full" />
+                </div>
               ) : (
                 <video
                   src={selectedMedia.url}
