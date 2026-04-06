@@ -2384,10 +2384,8 @@ export default function AssistantPage() {
                     <LiquidGlassBubble2
                       label="🎵 Create a Song"
                       onClick={() => {
-                        setInput('Create a song about ');
-                        inputRef.current?.focus();
-                        setInputGlow(true);
-                        setTimeout(() => setInputGlow(false), 2000);
+                        setPendingMusicPrompt('');
+                        setMusicConfirmOpen(true);
                       }}
                       width="auto"
                       height="32px"
