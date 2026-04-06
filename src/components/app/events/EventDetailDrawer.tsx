@@ -18,6 +18,7 @@ import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useNavigate } from 'react-router-dom';
 import dehubCoin from '@/assets/dehub-coin.png';
+import { FriendsAtEvent } from './FriendsAtEvent';
 
 function CreatorInfo({ event }: { event: CommunityEvent }) {
   const navigate = useNavigate();
