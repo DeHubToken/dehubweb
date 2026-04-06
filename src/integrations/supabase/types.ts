@@ -199,6 +199,7 @@ export type Database = {
           started_at: string
           status: string
           title: string
+          total_listens: number
         }
         Insert: {
           channel_name: string
@@ -215,6 +216,7 @@ export type Database = {
           started_at?: string
           status?: string
           title: string
+          total_listens?: number
         }
         Update: {
           channel_name?: string
@@ -231,6 +233,7 @@ export type Database = {
           started_at?: string
           status?: string
           title?: string
+          total_listens?: number
         }
         Relationships: []
       }
@@ -1511,6 +1514,10 @@ export type Database = {
       }
       get_request_wallet_address: { Args: never; Returns: string }
       increment_category_count: { Args: { p_name: string }; Returns: undefined }
+      increment_stage_listens: {
+        Args: { p_space_id: string }
+        Returns: undefined
+      }
       increment_ticker_search: {
         Args: { p_symbol: string }
         Returns: undefined
