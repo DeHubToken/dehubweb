@@ -598,7 +598,15 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const toggleMute = useCallback(() => {
     if (localAudioTrackRef.current && (myRole === 'host' || myRole === 'speaker')) {
       const newMuted = !isMuted;
+      // Mute at Agora SDK level
       localAudioTrackRef.current.setMuted(newMuted);
+      // Also disable the underlying MediaStreamTrack to truly stop audio
+      try {
+        const mediaTrack = localAudioTrackRef.current.getMediaStreamTrack?.();
+        if (mediaTrack) {
+          mediaTrack.enabled = !newMuted;
+        }
+      } catch (_) { /* fallback: SDK mute is still applied */ }
       setIsMuted(newMuted);
       // Optimistically update the local participant's is_muted in state
       if (walletAddress) {
