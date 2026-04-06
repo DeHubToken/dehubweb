@@ -301,10 +301,6 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
             className="hidden"
           />
 
-          <VoiceRecorder
-            onRecordingComplete={handleVoiceRecordingComplete}
-            disabled={!!imagePreviewUrl}
-          />
 
           <Tooltip>
             <TooltipTrigger asChild>

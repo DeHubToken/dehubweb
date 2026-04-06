@@ -419,10 +419,6 @@ export function SidebarChat() {
               onEmojiSelect={handleEmojiSelect}
               onGifSelect={handleGifSelect}
             />
-            <VoiceRecorder
-              onRecordingComplete={handleVoiceRecordingComplete}
-              disabled={false}
-            />
             <Button
               variant="ghost"
               size="icon"
