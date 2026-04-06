@@ -88,6 +88,10 @@ export function AudioSpacesModal() {
   const rafRef = useRef<number>(0);
   /** 0–1 seek applied on next `loadedmetadata` when starting playback */
   const pendingSeekRatioRef = useRef<number | null>(null);
+  /** Remove `durationchange` etc. from the active past-stage `<audio>` */
+  const pastStageUnsubRef = useRef<(() => void) | null>(null);
+  /** `onended` delayed reset so the waveform can show 100% briefly */
+  const pastStageEndTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Fetch past (ended) stages for browse view
   const { data: pastStages = [] } = useQuery({
@@ -174,6 +178,12 @@ export function AudioSpacesModal() {
   };
 
   const stopPastStagePlayback = useCallback(() => {
+    if (pastStageEndTimeoutRef.current !== null) {
+      clearTimeout(pastStageEndTimeoutRef.current);
+      pastStageEndTimeoutRef.current = null;
+    }
+    pastStageUnsubRef.current?.();
+    pastStageUnsubRef.current = null;
     cancelAnimationFrame(rafRef.current);
     audioRef.current?.pause();
     audioRef.current = null;
@@ -189,6 +199,13 @@ export function AudioSpacesModal() {
   const startPastStagePlayback = useCallback((space: AudioSpace) => {
     if (!space.recording_url) return;
 
+    if (pastStageEndTimeoutRef.current !== null) {
+      clearTimeout(pastStageEndTimeoutRef.current);
+      pastStageEndTimeoutRef.current = null;
+    }
+    pastStageUnsubRef.current?.();
+    pastStageUnsubRef.current = null;
+
     cancelAnimationFrame(rafRef.current);
     audioRef.current?.pause();
 
@@ -197,21 +214,67 @@ export function AudioSpacesModal() {
 
     const applyPendingSeek = () => {
       const ratio = pendingSeekRatioRef.current;
-      if (ratio !== null && isFinite(audio.duration) && audio.duration > 0) {
-        audio.currentTime = ratio * audio.duration;
+      if (ratio === null) return;
+      let dur = audio.duration;
+      if (!isFinite(dur) || dur <= 0) {
+        try {
+          if (audio.seekable && audio.seekable.length > 0) {
+            dur = audio.seekable.end(audio.seekable.length - 1);
+          }
+        } catch {
+          /* ignore */
+        }
       }
-      pendingSeekRatioRef.current = null;
+      if (isFinite(dur) && dur > 0) {
+        audio.currentTime = ratio * dur;
+        pendingSeekRatioRef.current = null;
+      }
     };
 
     audio.addEventListener('loadedmetadata', applyPendingSeek, { once: true });
     audio.addEventListener('canplay', applyPendingSeek, { once: true });
 
+    /** When browser finally knows duration (common for remote recordings) */
+    const onDurationChange = () => {
+      applyPendingSeek();
+      let dur = audio.duration;
+      if (!isFinite(dur) || dur <= 0) {
+        try {
+          if (audio.seekable && audio.seekable.length > 0) {
+            dur = audio.seekable.end(audio.seekable.length - 1);
+          }
+        } catch {
+          /* ignore */
+        }
+      }
+      if (isFinite(dur) && dur > 0) {
+        setPlaybackProgress(Math.min(1, Math.max(0, audio.currentTime / dur)));
+      }
+    };
+    audio.addEventListener('durationchange', onDurationChange);
+    pastStageUnsubRef.current = () => {
+      audio.removeEventListener('durationchange', onDurationChange);
+    };
+
     audio.onended = () => {
       cancelAnimationFrame(rafRef.current);
-      setPlayingStageId(null);
+      setPlaybackProgress(1);
       setPlaybackVolume(0);
-      setPlaybackProgress(0);
-      setPlaybackTimeLeft('');
+      setPlaybackTimeLeft('-0:00');
+      pastStageEndTimeoutRef.current = setTimeout(() => {
+        pastStageEndTimeoutRef.current = null;
+        pastStageUnsubRef.current?.();
+        pastStageUnsubRef.current = null;
+        audio.pause();
+        if (audioRef.current === audio) {
+          audioRef.current = null;
+        }
+        analyserRef.current = null;
+        setPlayingStageId(null);
+        setPlayingStageTitle('');
+        setPlaybackProgress(0);
+        setPlaybackTimeLeft('');
+      }, 380);
     };
 
     const ctx = audioCtxRef.current || new AudioContext();
@@ -230,13 +293,27 @@ export function AudioSpacesModal() {
       let sum = 0;
       for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
       setPlaybackVolume(sum / dataArray.length / 255);
-      if (audio.duration && isFinite(audio.duration)) {
-        setPlaybackProgress(audio.currentTime / audio.duration);
-        const remaining = Math.ceil(audio.duration - audio.currentTime);
+
+      let dur = audio.duration;
+      if (!isFinite(dur) || dur <= 0) {
+        try {
+          if (audio.seekable && audio.seekable.length > 0) {
+            dur = audio.seekable.end(audio.seekable.length - 1);
+          }
+        } catch {
+          /* ignore */
+        }
+      }
+      if (isFinite(dur) && dur > 0) {
+        const t = audio.currentTime;
+        const prog = Math.min(1, Math.max(0, t / dur));
+        setPlaybackProgress(prog);
+        const remaining = Math.max(0, Math.ceil(dur - t));
         const m = Math.floor(remaining / 60);
         const s = remaining % 60;
         setPlaybackTimeLeft(`-${m}:${s.toString().padStart(2, '0')}`);
       }
+      /* If duration isn't known yet, do not force progress to 0 every frame — that flashes the fill */
       rafRef.current = requestAnimationFrame(pump);
     };
 
@@ -250,15 +327,29 @@ export function AudioSpacesModal() {
     audioRef.current = audio;
     setPlayingStageId(space.id);
     setPlayingStageTitle(space.title);
+    setPlaybackProgress(0);
     supabase.rpc('increment_stage_listens', { p_space_id: space.id }).then(() => {});
   }, [stopPastStagePlayback]);
 
   const seekPastStage = useCallback(
     (space: AudioSpace, position: number) => {
       if (!space.recording_url) return;
-      if (playingStageId === space.id && audioRef.current && isFinite(audioRef.current.duration) && audioRef.current.duration > 0) {
-        audioRef.current.currentTime = position * audioRef.current.duration;
-        return;
+      const a = audioRef.current;
+      if (playingStageId === space.id && a) {
+        let dur = a.duration;
+        if (!isFinite(dur) || dur <= 0) {
+          try {
+            if (a.seekable && a.seekable.length > 0) {
+              dur = a.seekable.end(a.seekable.length - 1);
+            }
+          } catch {
+            /* ignore */
+          }
+        }
+        if (isFinite(dur) && dur > 0) {
+          a.currentTime = position * dur;
+          return;
+        }
       }
       pendingSeekRatioRef.current = position;
       startPastStagePlayback(space);

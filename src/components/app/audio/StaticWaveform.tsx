@@ -65,8 +65,12 @@ export function StaticWaveform({
     volumeRef.current = volumeLevel;
   }, [volumeLevel]);
 
+  // Volume-driven bar motion conflicts with playback progress fill — disable when progress is shown
+  const showVolumeAnimation =
+    animated && (progress === undefined || !Number.isFinite(progress));
+
   useEffect(() => {
-    if (!animated) {
+    if (!showVolumeAnimation) {
       setAnimatedBars(null);
       cancelAnimationFrame(frameRef.current);
       return;
@@ -95,7 +99,7 @@ export function StaticWaveform({
 
     frameRef.current = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frameRef.current);
-  }, [animated, baseBars]);
+  }, [showVolumeAnimation, baseBars]);
 
   const handleSeek = useCallback((e: React.MouseEvent<SVGSVGElement> | React.PointerEvent<SVGSVGElement>) => {
     if (!onSeek || !svgRef.current) return;
@@ -120,8 +124,12 @@ export function StaticWaveform({
     isDragging.current = false;
   }, []);
 
-  const bars = animatedBars || baseBars;
-  const hasProgress = progress !== undefined && progress >= 0;
+  // When showing playback progress, keep bar heights stable (base pattern only).
+  // Volume animation on top of progress made the "fill" look jumpy / wrong.
+  const hasProgress =
+    progress !== undefined && Number.isFinite(progress) && progress >= 0;
+  const p = hasProgress ? Math.min(1, Math.max(0, progress!)) : 0;
+  const bars = hasProgress ? baseBars : (animatedBars || baseBars);
 
   const barWidth = 2;
   const gap = 1.5;
@@ -145,13 +153,17 @@ export function StaticWaveform({
         const x = i * (barWidth + gap);
         const y = (svgHeight - barHeight) / 2;
 
-        // Progress: played portion lights up left → right
-        const barProgress = i / (barCount - 1);
-        const isPlayed = hasProgress && barProgress <= progress;
-        const opacity = isPlayed
-          ? 0.75 + h * 0.25
-          : 0.1 + h * 0.15;
-        const fillColor = isPlayed ? 'white' : (color || 'white');
+        // Smooth left → right: playhead as float bar index (not discrete i <= p)
+        let lit = 0;
+        if (hasProgress) {
+          const filled = p * barCount;
+          lit = Math.min(1, Math.max(0, filled - i));
+        }
+
+        const dimOpacity = 0.08 + h * 0.12;
+        const brightOpacity = 0.82 + h * 0.18;
+        const opacity = dimOpacity + (brightOpacity - dimOpacity) * lit;
+        const fillColor = color || 'white';
 
         return (
           <rect
