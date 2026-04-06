@@ -76,8 +76,9 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   const views = formatViews(nft.views || 0).replace(' views', '');
   const title = nft.title || nft.name || '';
   const description = nft.description && nft.description !== title ? nft.description : undefined;
-  const timestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
-  
+  const rawTimestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
+  const timestamp = rawTimestamp && !/^(just now|\d+[smhdwy]|\d+mo)$/i.test(String(rawTimestamp).trim()) ? rawTimestamp : undefined;
+
   // Detect audio posts
   const postType = (nft as any).postType as string | undefined;
   const rawAudioUrl = (nft as any).audioUrl as string | undefined;
@@ -163,7 +164,8 @@ function toImagePost(nft: DeHubNFT): ImagePost {
   
   const title = nft.title || nft.name;
   const description = nft.description && nft.description !== title ? nft.description : undefined;
-  const timestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
+  const rawTimestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
+  const timestamp = rawTimestamp && !/^(just now|\d+[smhdwy]|\d+mo)$/i.test(String(rawTimestamp).trim()) ? rawTimestamp : undefined;
   const streamInfo = nft.streamInfo;
   
   // Canonical avatar resolution (matches feed normalization)
@@ -217,7 +219,8 @@ function toImagePost(nft: DeHubNFT): ImagePost {
  */
 function toTextPost(nft: DeHubNFT): TextPost {
   const views = formatViews(nft.views || 0).replace(' views', '');
-  const timestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
+  const rawTimestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
+  const timestamp = rawTimestamp && !/^(just now|\d+[smhdwy]|\d+mo)$/i.test(String(rawTimestamp).trim()) ? rawTimestamp : undefined;
   
   // Canonical avatar resolution (matches feed normalization)
   const creatorObj = (nft as any).creator;
@@ -613,19 +616,23 @@ export default function SinglePostPage() {
       // Try NFT info first (works for minted posts with tokenIds)
       try {
         const nft = await getNFTInfo(id!);
+        const normalizedNft = {
+          ...nft,
+          createdAt: nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at || '',
+        };
         
         // Enrich quote post if quotedPost data is missing
-        if (nft.isQuotePost && nft.quotedTokenId && !nft.quotedPost) {
+        if (normalizedNft.isQuotePost && normalizedNft.quotedTokenId && !normalizedNft.quotedPost) {
           try {
-            const quoted = await getNFTInfo(String(nft.quotedTokenId));
-            return { ...nft, quotedPost: quoted };
+            const quoted = await getNFTInfo(String(normalizedNft.quotedTokenId));
+            return { ...normalizedNft, quotedPost: quoted };
           } catch {
             // If we can't fetch the quoted post, still return the main post
-            return nft;
+            return normalizedNft;
           }
         }
         
-        return nft;
+        return normalizedNft;
       } catch {
         // Fallback: try livestream API (stream IDs from /api/live are not NFT tokenIds)
         const liveRes = await getLiveStream(id!);

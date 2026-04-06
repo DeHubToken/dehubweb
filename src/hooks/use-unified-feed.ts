@@ -462,9 +462,13 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
       }
       
       // Filter out blocked creators and ended live streams (live content is shown in the carousel instead)
-      let filteredItems = (response.result || []).filter(item => 
-        !isBlockedCreator(item, blockedAddresses) && !isBlockedPost(item) && item.postType !== 'live'
-      );
+      // Normalize timestamp fields so downstream mappers/cache always get a real ISO date.
+      let filteredItems = (response.result || [])
+        .map(item => ({
+          ...item,
+          createdAt: item.createdAt || item.updatedAt || (item as any).created_at || (item as any).updated_at || '',
+        }))
+        .filter(item => !isBlockedCreator(item, blockedAddresses) && !isBlockedPost(item) && item.postType !== 'live');
       
       // Enrich quote posts that are missing their quotedPost data
       const needsEnrich: { idx: number; item: any }[] = [];

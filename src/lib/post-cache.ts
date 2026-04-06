@@ -133,6 +133,10 @@ function imagePostToNFT(post: ImagePost): Partial<DeHubNFT> {
  * Note: postType is set to 'image' as fallback since DeHubNFT doesn't have a 'text' type
  */
 function textPostToNFT(post: TextPost): Partial<DeHubNFT> {
+  const createdAt = post.createdAt && !/^(just now|\d+[smhdwy]|\d+mo)$/i.test(post.createdAt.trim())
+    ? post.createdAt
+    : '';
+
   return {
     tokenId: parseInt(post.id) || 0,
     // Use undefined to let SinglePostPage detect as text post via absence of media
@@ -156,7 +160,7 @@ function textPostToNFT(post: TextPost): Partial<DeHubNFT> {
     totalReposts: post.stats.reposts || 0,
     isReposted: post.isReposted ?? false,
     // Preserve the original timestamp
-    createdAt: post.createdAt,
+    createdAt,
   };
 }
 

@@ -128,7 +128,7 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
       verified: false,
     },
     content: nft.description || nft.name || '',
-    createdAt: formatTimeAgo(nft.createdAt || nft.created_at),
+    createdAt: nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at || '',
     views: formatViews(nft.views || nft.view_count).replace(' views', ''),
     stats: {
       comments: nft.commentCount || nft.comment_count || 0,
