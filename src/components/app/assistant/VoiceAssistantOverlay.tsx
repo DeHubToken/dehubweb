@@ -114,7 +114,13 @@ export function VoiceAssistantOverlay({
               )}
             </div>
 
-            {/* Stop speaking button */}
+            {/* Remaining credits */}
+            {remainingCredits !== undefined && (
+              <span className="text-[10px] text-cyan-400/70 font-medium tabular-nums px-1.5 py-0.5 rounded bg-white/5">
+                {remainingCredits} left
+              </span>
+            )}
+
             {status === 'speaking' && (
               <button
                 onClick={onStopSpeaking}
