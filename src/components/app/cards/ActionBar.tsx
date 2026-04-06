@@ -257,6 +257,16 @@ export function ActionBar({
       const voteState = { isLiked: newLiked, isDisliked: newDisliked, likeCount: newLikeCount, dislikeCount: newDislikeCount };
       setVoteCache(postId, voteState);
       patchFeedCaches(queryClient, postId, voteState);
+      // Also patch the single-post query cache so dedicated post pages reflect the vote immediately
+      queryClient.setQueriesData<any>(
+        { queryKey: ['single-post', postId] },
+        (old: any) => old ? {
+          ...old,
+          isLiked: newLiked,
+          isDisliked: newDisliked,
+          totalVotes: { for: newLikeCount, against: newDislikeCount },
+        } : old,
+      );
     }
 
     try {
@@ -294,6 +304,15 @@ export function ActionBar({
         const revertState = { isLiked, isDisliked, likeCount: localLikeCount, dislikeCount: localDislikeCount };
         setVoteCache(postId, revertState);
         patchFeedCaches(queryClient, postId, revertState);
+        queryClient.setQueriesData<any>(
+          { queryKey: ['single-post', postId] },
+          (old: any) => old ? {
+            ...old,
+            isLiked,
+            isDisliked,
+            totalVotes: { for: localLikeCount, against: localDislikeCount },
+          } : old,
+        );
       }
       toast.error('Failed to vote. Please try again.');
     } finally {
