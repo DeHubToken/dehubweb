@@ -1768,14 +1768,24 @@ export default function AssistantPage() {
         </button>
 
         <div className="flex items-center gap-4">
-          {/* Command Centre Toggle */}
+          {/* New Chat Button */}
           <button
-            onClick={() => setShowCommandCentre(!showCommandCentre)}
-            className={`p-1.5 rounded-xl transition-colors ${
-              showCommandCentre ? 'text-white' : 'text-white/60 hover:text-white'
-            }`}
+            onClick={() => {
+              if (messages.length > 1) {
+                startNewConversation();
+                setMessages([{
+                  id: 'initial',
+                  role: 'assistant' as const,
+                  content: "Hey! I'm your DeHub AI assistant. How can I help you today?",
+                }]);
+                setInput('');
+                setAttachedImage(null);
+              }
+            }}
+            className="p-1.5 rounded-xl text-white/60 hover:text-white transition-colors"
+            title="New chat"
           >
-            <LayoutDashboard className="w-5 h-5" />
+            <Plus className="w-5 h-5" />
           </button>
 
           {/* History Button */}
