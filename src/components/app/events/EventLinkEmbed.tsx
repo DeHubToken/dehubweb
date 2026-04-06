@@ -5,9 +5,11 @@
  */
 
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { Calendar, MapPin, Users, Flame, Lock } from 'lucide-react';
-import { useEvent, useEventRsvps } from '@/hooks/use-events';
+import { supabase } from '@/integrations/supabase/client';
+import { useEventRsvps, type CommunityEvent } from '@/hooks/use-events';
 import { FriendsAtEvent } from './FriendsAtEvent';
 
 /** Extract event number from a URL like /app/events/1 */
@@ -41,7 +43,7 @@ export function EventLinkEmbed({ eventNumber }: EventLinkEmbedProps) {
       return data as CommunityEvent;
     },
   });
-  const { data: rsvps = [] } = useEventRsvps(eventId);
+  const { data: rsvps = [] } = useEventRsvps(event?.id);
 
   if (isLoading) {
     return (
@@ -59,7 +61,7 @@ export function EventLinkEmbed({ eventNumber }: EventLinkEmbedProps) {
     <button
       onClick={(e) => {
         e.stopPropagation();
-        navigate(`/app/events/${event.id}`);
+        navigate(`/app/events/${event.event_number}`);
       }}
       data-no-navigate
       className="w-full rounded-xl border border-white/[0.08] overflow-hidden bg-white/[0.03] hover:bg-white/[0.06] transition-colors text-left"
