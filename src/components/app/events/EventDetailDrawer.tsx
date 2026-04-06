@@ -93,6 +93,16 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
               {event.cover_image_url && (
                 <img src={event.cover_image_url} alt={event.title} className="w-full h-full object-cover" />
               )}
+              <button
+                onClick={() => {
+                  const url = `${window.location.origin}/app/events/${event.id}`;
+                  navigator.clipboard.writeText(url);
+                  toast.success('Event link copied!');
+                }}
+                className="absolute top-2 right-2 p-2 rounded-full bg-black/50 backdrop-blur-sm text-white/80 hover:text-white transition-colors"
+              >
+                <Share2 className="w-4 h-4" />
+              </button>
             </div>
 
             <div className="px-4 py-4 space-y-4">
