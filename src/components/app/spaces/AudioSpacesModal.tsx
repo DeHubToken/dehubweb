@@ -333,6 +333,8 @@ export function AudioSpacesModal() {
                                 audioRef.current = audio;
                                 setPlayingStageId(space.id);
                                 setPlayingStageTitle(space.title);
+                                // Increment listen count for recording play
+                                supabase.rpc('increment_stage_listens', { p_space_id: space.id }).then(() => {});
                               }
                             }}
                             className={cn(
