@@ -5,30 +5,45 @@
  */
 
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { Calendar, MapPin, Users, Flame, Lock } from 'lucide-react';
-import { useEvent, useEventRsvps } from '@/hooks/use-events';
+import { supabase } from '@/integrations/supabase/client';
+import { useEventRsvps, type CommunityEvent } from '@/hooks/use-events';
 import { FriendsAtEvent } from './FriendsAtEvent';
 
-/** Extract event ID from a URL like /app/events/<uuid> */
-export function extractEventId(text: string): string | null {
-  const match = text.match(/\/app\/events\/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})/i);
+/** Extract event number from a URL like /app/events/1 */
+export function extractEventNumber(text: string): string | null {
+  const match = text.match(/\/app\/events\/(\d+)/);
   return match ? match[1] : null;
 }
 
 /** Check if text contains an event link */
 export function hasEventLink(text: string): boolean {
-  return /\/app\/events\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i.test(text);
+  return /\/app\/events\/\d+/.test(text);
 }
 
 interface EventLinkEmbedProps {
-  eventId: string;
+  eventNumber: string;
 }
 
-export function EventLinkEmbed({ eventId }: EventLinkEmbedProps) {
+export function EventLinkEmbed({ eventNumber }: EventLinkEmbedProps) {
   const navigate = useNavigate();
-  const { data: event, isLoading } = useEvent(eventId);
-  const { data: rsvps = [] } = useEventRsvps(eventId);
+  const num = parseInt(eventNumber, 10);
+  const { data: event, isLoading } = useQuery({
+    queryKey: ['event-by-number', num],
+    enabled: !isNaN(num),
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('community_events')
+        .select('*')
+        .eq('event_number', num)
+        .single();
+      if (error) throw error;
+      return data as CommunityEvent;
+    },
+  });
+  const { data: rsvps = [] } = useEventRsvps(event?.id);
 
   if (isLoading) {
     return (
@@ -46,7 +61,7 @@ export function EventLinkEmbed({ eventId }: EventLinkEmbedProps) {
     <button
       onClick={(e) => {
         e.stopPropagation();
-        navigate(`/app/events/${event.id}`);
+        navigate(`/app/events/${event.event_number}`);
       }}
       data-no-navigate
       className="w-full rounded-xl border border-white/[0.08] overflow-hidden bg-white/[0.03] hover:bg-white/[0.06] transition-colors text-left"

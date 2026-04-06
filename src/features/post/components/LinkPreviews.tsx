@@ -5,7 +5,7 @@ import { LinkPreviewCard } from './LinkPreviewCard';
 import { fetchLinkPreview, extractUrlsFromText, type LinkPreviewData } from '@/lib/api/link-preview';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CommunityLinkEmbed, extractCommunitySlug } from '@/components/app/communities/CommunityLinkEmbed';
-import { EventLinkEmbed, extractEventId } from '@/components/app/events/EventLinkEmbed';
+import { EventLinkEmbed, extractEventNumber } from '@/components/app/events/EventLinkEmbed';
 
 interface LinkPreviewsProps {
   text: string;
@@ -24,7 +24,7 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
   const communitySlug = communityDismissed ? null : extractCommunitySlug(text);
   
   // Detect event ID from text
-  const eventId = eventDismissed ? null : extractEventId(text);
+  const eventNum = eventDismissed ? null : extractEventNumber(text);
 
   // Reset dismissed state when text changes to a different community or no community
   const prevSlugRef = useRef<string | null>(null);
@@ -42,7 +42,7 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
   // Reset dismissed state when text changes to a different event
   const prevEventRef = useRef<string | null>(null);
   useEffect(() => {
-    const currentEid = extractEventId(text);
+    const currentEid = extractEventNumber(text);
     if (currentEid !== prevEventRef.current) {
       prevEventRef.current = currentEid;
       if (currentEid && eventDismissed) {
@@ -55,7 +55,7 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
     const urls = extractUrlsFromText(text);
     
     // Skip community and event URLs - they get their own embeds
-    const nonSpecialUrls = urls.filter(url => !extractCommunitySlug(url) && !extractEventId(url));
+    const nonSpecialUrls = urls.filter(url => !extractCommunitySlug(url) && !extractEventNumber(url));
     
     // Filter out removed and already fetched URLs
     const newUrls = nonSpecialUrls.filter(
@@ -107,13 +107,13 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
 
   // Get URLs that should be displayed (in text, not removed, not community/event links)
   const currentUrls = extractUrlsFromText(text)
-    .filter(url => !removedUrls.has(url) && !extractCommunitySlug(url) && !extractEventId(url));
+    .filter(url => !removedUrls.has(url) && !extractCommunitySlug(url) && !extractEventNumber(url));
   const visiblePreviews = currentUrls
     .map(url => previews.get(url))
     .filter((p): p is LinkPreviewData => !!p);
   const loadingUrls = currentUrls.filter(url => loading.has(url));
 
-  const hasContent = communitySlug || eventId || visiblePreviews.length > 0 || loadingUrls.length > 0;
+  const hasContent = communitySlug || eventNum || visiblePreviews.length > 0 || loadingUrls.length > 0;
   if (!hasContent) return null;
 
   return (
@@ -136,9 +136,9 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
       )}
 
       {/* Event link embed with dismiss button */}
-      {eventId && (
+      {eventNum && (
         <div className="relative">
-          <EventLinkEmbed eventId={eventId} />
+          <EventLinkEmbed eventNumber={eventNum} />
           <button
             type="button"
             onClick={(e) => {

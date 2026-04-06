@@ -6,21 +6,22 @@ import type { CommunityEvent } from '@/hooks/use-events';
 import { Loader2 } from 'lucide-react';
 
 export default function EventPage() {
-  const { eventId } = useParams<{ eventId: string }>();
+  const { eventNumber } = useParams<{ eventNumber: string }>();
   const navigate = useNavigate();
+  const num = eventNumber ? parseInt(eventNumber, 10) : NaN;
 
   const { data: event, isLoading } = useQuery({
-    queryKey: ['event', eventId],
+    queryKey: ['event-by-number', num],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('community_events')
         .select('*')
-        .eq('id', eventId!)
+        .eq('event_number', num)
         .single();
       if (error) throw error;
       return data as CommunityEvent;
     },
-    enabled: !!eventId,
+    enabled: !isNaN(num),
   });
 
   if (isLoading) {
