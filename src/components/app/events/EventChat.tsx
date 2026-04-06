@@ -141,6 +141,39 @@ export function EventChat({ eventId }: EventChatProps) {
     } catch { /* handled */ }
   };
 
+  const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
+    if (!isAuthenticated) { openLoginModal(); return; }
+    const toastId = 'event-voice-upload';
+    toast.loading('Uploading voice note...', { id: toastId });
+    try {
+      const token = getAuthToken();
+      const file = new File([blob], `voice-${Date.now()}.webm`, { type: 'audio/webm' });
+      const formData = new FormData();
+      formData.append('file', file, file.name);
+      const { data, error } = await supabase.functions.invoke('dm-upload-media', {
+        body: formData,
+        headers: {
+          'x-wallet-address': walletAddress?.toLowerCase() || '',
+          'x-dehub-token': token || '',
+        },
+      });
+      if (error || !data?.ok || !data?.url) {
+        throw new Error(data?.error || error?.message || 'Upload failed');
+      }
+      await sendMessage(data.url, 'voice', data.url, replyTo?.id, {
+        username: profileData?.handle || undefined,
+        displayName: profileData?.name || undefined,
+        avatarUrl: profileData?.avatarUrl || undefined,
+        badgeBalance: user?.badgeBalance || undefined,
+      });
+      setReplyTo(null);
+      toast.success('Voice note sent!', { id: toastId });
+    } catch (err: any) {
+      console.error('[EventChat] Voice upload failed:', err);
+      toast.error(err?.message || 'Failed to send voice note', { id: toastId });
+    }
+  }, [isAuthenticated, walletAddress, sendMessage, replyTo, profileData, user, openLoginModal]);
+
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }
   };
