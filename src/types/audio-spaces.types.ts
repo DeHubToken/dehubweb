@@ -17,6 +17,7 @@ export interface AudioSpace {
   ended_at?: string | null;
   created_at: string;
   recording_url?: string | null;
+  total_listens?: number;
 }
 
 export interface SpaceParticipant {

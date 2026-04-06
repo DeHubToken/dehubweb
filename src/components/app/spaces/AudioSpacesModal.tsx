@@ -14,7 +14,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
-  Loader2, Volume2,
+  Loader2, Volume2, Ear,
   Link, UserPlus, Minimize2, Play, Square, Clock, Trash2,
 } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
@@ -144,6 +144,8 @@ export function AudioSpacesModal() {
 
   const handleJoin = async (spaceId: string) => {
     await joinSpace(spaceId);
+    // Increment listen count
+    supabase.rpc('increment_stage_listens', { p_space_id: spaceId }).then(() => {});
   };
 
   const handleEndOrLeave = () => {
@@ -331,6 +333,8 @@ export function AudioSpacesModal() {
                                 audioRef.current = audio;
                                 setPlayingStageId(space.id);
                                 setPlayingStageTitle(space.title);
+                                // Increment listen count for recording play
+                                supabase.rpc('increment_stage_listens', { p_space_id: space.id }).then(() => {});
                               }
                             }}
                             className={cn(
@@ -392,6 +396,12 @@ export function AudioSpacesModal() {
                                     const s = dur % 60;
                                     return m > 0 ? `${m}m ${s}s` : `${s}s`;
                                   })()}
+                                </span>
+                              )}
+                              {(space.total_listens ?? 0) > 0 && (
+                                <span className="flex items-center gap-1">
+                                  <Ear className="w-3 h-3" />
+                                  {space.total_listens}
                                 </span>
                               )}
                             </div>
@@ -808,6 +818,12 @@ function StageCard({
           <Users className="w-3 h-3" />
           {(space.speaker_count || 0) + (space.listener_count || 0)}
         </span>
+        {(space.total_listens ?? 0) > 0 && (
+          <span className="flex items-center gap-1">
+            <Ear className="w-3 h-3" />
+            {space.total_listens}
+          </span>
+        )}
       </div>
       <div className="mt-3 w-full h-10 rounded-lg overflow-hidden">
         <LiveWaveform active={true} barCount={60} />
