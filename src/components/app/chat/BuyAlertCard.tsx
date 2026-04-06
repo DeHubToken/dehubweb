@@ -45,17 +45,17 @@ export function BuyAlertCard({ content, timestamp }: { content: string; timestam
     <div className="mx-3 my-1.5">
       <LiquidGlassBubble shimmer noBorder className="w-full">
         <div className="text-xs">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-2.5">
-        <div className="flex items-center gap-1.5">
-          <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
-          <span className="font-bold text-white text-sm tracking-wide">DHB BUY</span>
-        </div>
-        <span className="text-zinc-500 text-[10px]">{formatTimeAgo(timestamp)}</span>
-      </div>
+          {/* Header */}
+          <div className="flex items-center justify-between mb-2.5">
+            <div className="flex items-center gap-1.5">
+              <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
+              <span className="font-bold text-white text-sm tracking-wide">DHB BUY</span>
+            </div>
+            <span className="text-zinc-500 text-[10px]">{formatTimeAgo(timestamp)}</span>
+          </div>
 
-      {/* Stats grid */}
-      <div className="space-y-1.5">
+          {/* Stats grid */}
+          <div className="space-y-1.5">
         <div className="flex items-center gap-1.5">
           <span className="text-sm">💸</span>
           <span className="text-zinc-400">Spent:</span>
