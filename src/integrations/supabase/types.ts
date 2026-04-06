@@ -453,6 +453,7 @@ export type Database = {
           creator_wallet_address: string
           description: string | null
           ends_at: string | null
+          gate_fee: number
           going_count: number
           id: string
           interested_count: number
@@ -469,6 +470,7 @@ export type Database = {
           creator_wallet_address: string
           description?: string | null
           ends_at?: string | null
+          gate_fee?: number
           going_count?: number
           id?: string
           interested_count?: number
@@ -485,6 +487,7 @@ export type Database = {
           creator_wallet_address?: string
           description?: string | null
           ends_at?: string | null
+          gate_fee?: number
           going_count?: number
           id?: string
           interested_count?: number
@@ -677,6 +680,47 @@ export type Database = {
             columns: ["reply_to_id"]
             isOneToOne: false
             referencedRelation: "event_chat_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      event_gate_payments: {
+        Row: {
+          amount: number
+          chain_id: number
+          created_at: string
+          creator_wallet_address: string
+          event_id: string
+          id: string
+          payer_wallet_address: string
+          tx_hash: string
+        }
+        Insert: {
+          amount: number
+          chain_id?: number
+          created_at?: string
+          creator_wallet_address: string
+          event_id: string
+          id?: string
+          payer_wallet_address: string
+          tx_hash: string
+        }
+        Update: {
+          amount?: number
+          chain_id?: number
+          created_at?: string
+          creator_wallet_address?: string
+          event_id?: string
+          id?: string
+          payer_wallet_address?: string
+          tx_hash?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_gate_payments_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "community_events"
             referencedColumns: ["id"]
           },
         ]
