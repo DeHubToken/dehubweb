@@ -1423,6 +1423,14 @@ export default function AssistantPage() {
       const isImageRequest = !aiToolCategory && (isCreativeLogo || requiresImageGeneration(currentInput, !!currentAttachedImage));
       
       if (aiToolCategory) {
+        // For music requests, show confirm dialog first
+        if (aiToolCategory === 'music' || aiToolCategory === 'music-video') {
+          setPendingMusicPrompt(currentInput);
+          setAiToolCategory(aiToolCategory);
+          setMusicConfirmOpen(true);
+          setIsLoading(false);
+          return;
+        }
         const defaultTool = DEFAULT_TOOL_FOR_CATEGORY[aiToolCategory];
         setPendingAiToolRequest({
           prompt: currentInput,
