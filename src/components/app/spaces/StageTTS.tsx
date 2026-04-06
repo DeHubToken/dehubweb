@@ -70,7 +70,7 @@ export function StageTTS() {
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
   }, [search]);
 
-  const handlePreview = (voice: VoiceOption) => {
+  const handlePreview = async (voice: VoiceOption) => {
     if (previewAudioRef.current) {
       previewAudioRef.current.pause();
       previewAudioRef.current = null;
@@ -80,11 +80,17 @@ export function StageTTS() {
       return;
     }
     if (!voice.preview_url) return;
-    const audio = new Audio(voice.preview_url);
-    audio.onended = () => { setPreviewingId(null); previewAudioRef.current = null; };
-    previewAudioRef.current = audio;
     setPreviewingId(voice.voice_id);
-    audio.play();
+    try {
+      const res = await fetch(voice.preview_url);
+      if (!res.ok) throw new Error('fetch failed');
+      const blob = await res.blob();
+      await injectAudio(blob);
+    } catch {
+      toast.error('Could not play preview on stage');
+    } finally {
+      setPreviewingId(null);
+    }
   };
 
   const getLabel = (voice: VoiceOption) => {

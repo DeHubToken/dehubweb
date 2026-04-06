@@ -912,6 +912,11 @@ export function StageProvider({ children }: { children: ReactNode }) {
         await client.unpublish([originalTrack]);
         await client.publish([ttsTrack]);
 
+        // Give Agora 250ms to establish the custom track stream before sending audio.
+        // Without this delay, audio starts before the stream is ready and listeners
+        // miss the first portion (critical for short soundboard effects).
+        await new Promise(r => setTimeout(r, 250));
+
         await new Promise<void>((resolve, reject) => {
           source.onended = () => {
             // Wait 300ms after buffer ends so the last frames finish
