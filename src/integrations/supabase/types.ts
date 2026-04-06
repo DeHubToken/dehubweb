@@ -411,6 +411,97 @@ export type Database = {
           },
         ]
       }
+      community_event_rsvps: {
+        Row: {
+          created_at: string
+          event_id: string
+          id: string
+          status: string
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          id?: string
+          status?: string
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          id?: string
+          status?: string
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_event_rsvps_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "community_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_events: {
+        Row: {
+          community_id: string | null
+          cover_image_url: string | null
+          created_at: string
+          creator_avatar: string | null
+          creator_username: string | null
+          creator_wallet_address: string
+          description: string | null
+          ends_at: string | null
+          going_count: number
+          id: string
+          interested_count: number
+          location: string | null
+          starts_at: string
+          title: string
+        }
+        Insert: {
+          community_id?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          creator_avatar?: string | null
+          creator_username?: string | null
+          creator_wallet_address: string
+          description?: string | null
+          ends_at?: string | null
+          going_count?: number
+          id?: string
+          interested_count?: number
+          location?: string | null
+          starts_at: string
+          title: string
+        }
+        Update: {
+          community_id?: string | null
+          cover_image_url?: string | null
+          created_at?: string
+          creator_avatar?: string | null
+          creator_username?: string | null
+          creator_wallet_address?: string
+          description?: string | null
+          ends_at?: string | null
+          going_count?: number
+          id?: string
+          interested_count?: number
+          location?: string | null
+          starts_at?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_events_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       community_members: {
         Row: {
           community_id: string
