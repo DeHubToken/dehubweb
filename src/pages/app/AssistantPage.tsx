@@ -2044,7 +2044,7 @@ export default function AssistantPage() {
                       /* Audio messages (music/TTS) */
                       <div className="w-full min-w-0 flex-1 flex flex-col gap-2">
                         {message.content && (
-                          <div className="rounded-2xl border border-border/60 bg-card/60 px-4 py-2.5 text-card-foreground backdrop-blur-xl">
+                          <div className="rounded-2xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-4 py-2.5 text-white">
                             <MarkdownText content={message.content} className="text-sm" />
                           </div>
                         )}
