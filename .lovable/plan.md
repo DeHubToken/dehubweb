@@ -1,13 +1,29 @@
 
 
-## Plan: Create Buy Bot State Table
+## Reorder Sidebar Navigation Items
 
-Run the provided SQL as a database migration to create the `buy_bot_state` table with RLS enabled, a service-role policy, and seed the initial row.
+Move **Events**, **Stages**, and **Communities** above **Feature Requests** in the left sidebar menu.
 
-### Technical Details
-- **New table**: `buy_bot_state` with columns: `id` (text PK), `last_block_number` (bigint), `last_tx_hashes` (text[]), `updated_at` (timestamptz)
-- **RLS**: Enabled with a permissive policy for all operations
-- **Seed data**: Initial row with id='dhb', last_block_number=0
+### Current order (lines 43-48):
+```text
+Feature Requests
+Staking
+Governance
+Communities
+Events
+Stages
+```
 
-Single migration containing the CREATE TABLE, RLS policy, and INSERT statement.
+### New order:
+```text
+Communities
+Events
+Stages
+Feature Requests
+Staking
+Governance
+```
+
+### Change
+In `src/constants/app.constants.ts`, reorder lines 43-48 so Communities, Events, and Stages come before Feature Requests, Staking, and Governance.
 
