@@ -1255,7 +1255,7 @@ export default function AssistantPage() {
     } catch (err) {
       console.error('[AI Tool] Polling error:', err);
     }
-  }, [pollVideoStatus, clearPendingTool, queueMessage]);
+  }, [pollVideoStatus, clearPendingTool, clearPendingVideo, savePendingVideo, queueMessage]);
 
   const handleAiToolConfirm = async () => {
     if (!pendingAiToolRequest) return;
