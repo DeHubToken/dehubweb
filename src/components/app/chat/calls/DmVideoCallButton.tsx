@@ -12,7 +12,7 @@ interface DmVideoCallButtonProps {
 }
 
 export const DmVideoCallButton: React.FC<DmVideoCallButtonProps> = ({ recipientAddress, className }) => {
-  const { startCall, isCallActive, isConnecting, callFailureReason } = useCall();
+  const { startCall, isCallActive, isConnecting, callFailureReason, clearCallFailure } = useCall();
   const { walletAddress } = useAuth();
   const [showFailureDialog, setShowFailureDialog] = useState(false);
   const [showCallbackModal, setShowCallbackModal] = useState(false);
@@ -49,7 +49,7 @@ export const DmVideoCallButton: React.FC<DmVideoCallButtonProps> = ({ recipientA
 
       <CallFailureDialog
         isOpen={showFailureDialog}
-        onClose={() => setShowFailureDialog(false)}
+        onClose={() => { setShowFailureDialog(false); clearCallFailure(); }}
         onSendCallbackRequest={() => setShowCallbackModal(true)}
         callType="video"
         failureReason={callFailureReason || 'technical_error'}
