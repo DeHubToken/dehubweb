@@ -14,6 +14,7 @@ interface VoiceAssistantOverlayProps {
   recordingDuration: number;
   onStop: () => void;
   onStopSpeaking: () => void;
+  remainingCredits?: number;
 }
 
 const STATUS_LABELS: Record<VoiceStatus, string> = {
@@ -67,6 +68,7 @@ export function VoiceAssistantOverlay({
   recordingDuration,
   onStop,
   onStopSpeaking,
+  remainingCredits,
 }: VoiceAssistantOverlayProps) {
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -112,7 +114,13 @@ export function VoiceAssistantOverlay({
               )}
             </div>
 
-            {/* Stop speaking button */}
+            {/* Remaining credits */}
+            {remainingCredits !== undefined && (
+              <span className="text-[10px] text-cyan-400/70 font-medium tabular-nums px-1.5 py-0.5 rounded bg-white/5">
+                {remainingCredits} left
+              </span>
+            )}
+
             {status === 'speaking' && (
               <button
                 onClick={onStopSpeaking}

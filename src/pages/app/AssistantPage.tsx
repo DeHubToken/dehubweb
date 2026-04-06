@@ -52,6 +52,8 @@ import { useAIConversation } from '@/hooks/use-ai-conversation';
 import { streamChat } from '@/lib/stream-chat';
 import { useVoiceAssistant } from '@/hooks/use-voice-assistant';
 import { VoiceAssistantOverlay } from '@/components/app/assistant/VoiceAssistantOverlay';
+import { useVoiceCredits } from '@/hooks/use-voice-credits';
+import { VoiceCreditPurchaseModal } from '@/components/app/assistant/VoiceCreditPurchaseModal';
 import { useAssistantUserContext } from '@/hooks/use-assistant-user-context';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
@@ -464,7 +466,7 @@ export default function AssistantPage() {
   const musicVideoRef = useRef<{ prompt: string; videoModel: string; musicMessageId?: string } | null>(null);
   const pendingVoiceRef = useRef(false); // Track if last input was voice
 
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
   const isMobile = useIsMobile();
   const { language: userLanguage } = useUserLanguage();
   const { t } = useI18n();
@@ -481,15 +483,30 @@ export default function AssistantPage() {
   // User context for AI assistant personalization
   const userContext = useAssistantUserContext();
 
+  // Voice credits (prepaid bundles)
+  const voiceCredits = useVoiceCredits(walletAddress);
+  const [voiceCreditModalOpen, setVoiceCreditModalOpen] = useState(false);
+  const voiceCreditDeductRef = useRef(voiceCredits.deductCredit);
+  const voiceStopRef = useRef<(() => void) | null>(null);
+  useEffect(() => { voiceCreditDeductRef.current = voiceCredits.deductCredit; }, [voiceCredits.deductCredit]);
+
   // Voice Assistant hook (Whisper STT + Dia TTS via fal.ai)
   const voiceAssistant = useVoiceAssistant({
     onTranscript: (text) => {
-      // Will be wired up after auth check via ref
+      // Deduct a voice credit per exchange
+      const hasCredit = voiceCreditDeductRef.current();
+      if (!hasCredit) {
+        voiceStopRef.current?.();
+        toast.error('Voice credits exhausted — purchase more to continue');
+        setVoiceCreditModalOpen(true);
+        return;
+      }
       voiceTranscriptHandlerRef.current?.(text);
     },
     isChatLoading: isLoading,
   });
   const voiceTranscriptHandlerRef = useRef<((text: string) => void) | null>(null);
+  voiceStopRef.current = voiceAssistant.stopVoiceMode;
 
   // Block access for unauthenticated users (AuthGate handles loading state internally)
   if (!isAuthenticated) {
@@ -2354,7 +2371,13 @@ export default function AssistantPage() {
                     <TooltipTrigger asChild>
                       <button
                         type="button"
-                        onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : voiceAssistant.startVoiceMode}
+                        onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : () => {
+                          if (!voiceCredits.hasCredits) {
+                            setVoiceCreditModalOpen(true);
+                            return;
+                          }
+                          voiceAssistant.startVoiceMode();
+                        }}
                         disabled={isLoading && !voiceAssistant.isVoiceMode}
                         className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
                           voiceAssistant.isVoiceMode
@@ -2463,7 +2486,13 @@ export default function AssistantPage() {
                   {/* Voice Assistant Mode (mobile) */}
                   <button
                     type="button"
-                    onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : voiceAssistant.startVoiceMode}
+                    onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : () => {
+                      if (!voiceCredits.hasCredits) {
+                        setVoiceCreditModalOpen(true);
+                        return;
+                      }
+                      voiceAssistant.startVoiceMode();
+                    }}
                     disabled={isLoading && !voiceAssistant.isVoiceMode}
                     className={`transition-colors p-1 disabled:opacity-30 ${
                       voiceAssistant.isVoiceMode
@@ -2537,6 +2566,17 @@ export default function AssistantPage() {
         recordingDuration={voiceAssistant.recordingDuration}
         onStop={voiceAssistant.stopVoiceMode}
         onStopSpeaking={voiceAssistant.stopSpeaking}
+        remainingCredits={voiceCredits.credits}
+      />
+
+      {/* Voice Credit Purchase Modal */}
+      <VoiceCreditPurchaseModal
+        open={voiceCreditModalOpen}
+        onOpenChange={setVoiceCreditModalOpen}
+        currentCredits={voiceCredits.credits}
+        onPurchaseComplete={(bundleSize) => {
+          voiceCredits.addCredits(bundleSize);
+        }}
       />
 
       <PostModal
