@@ -237,6 +237,27 @@ export type Database = {
         }
         Relationships: []
       }
+      buy_bot_state: {
+        Row: {
+          id: string
+          last_block_number: number
+          last_tx_hashes: string[]
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          last_block_number?: number
+          last_tx_hashes?: string[]
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          last_block_number?: number
+          last_tx_hashes?: string[]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       category_post_log: {
         Row: {
           id: string
