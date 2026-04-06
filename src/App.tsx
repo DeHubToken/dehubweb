@@ -1,14 +1,14 @@
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { OptimisticPostsProvider } from "@/hooks/use-optimistic-posts";
 import { UsernameRequiredModal } from "@/components/app/modals";
 import { LoginModal } from "@/components/app/LoginModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { AppLayout } from "./components/app/AppLayout";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { I18nextProvider } from "react-i18next";
 import i18nInstance from "@/i18n";
 import { HelmetProvider } from "react-helmet-async";
@@ -24,7 +24,6 @@ const WalletProviders = React.lazy(() =>
 const Index = React.lazy(() => import("./pages/Index"));
 const DeleteAccount = React.lazy(() => import("./pages/DeleteAccount"));
 const CreatorsPage = React.lazy(() => import("./pages/app/CreatorsPage"));
-const JobsPage = React.lazy(() => import("./pages/JobsPage"));
 const SkillPage = React.lazy(() => import("./pages/SkillPage"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
 const DocsPage = React.lazy(() => import("./pages/DocsPage"));
@@ -36,10 +35,10 @@ const StageDeepLinkPage = React.lazy(() => import("./pages/app/StageDeepLinkPage
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
 
+const SKIP_LANDING_KEY = "dehub_skip_landing";
 
 // Preload critical dynamic-route chunks after initial render so first navigation is instant
 const preloadCriticalChunks = () => {
-  // Use requestIdleCallback (or setTimeout fallback) to avoid blocking initial render
   const schedule = typeof requestIdleCallback === 'function' ? requestIdleCallback : (cb: () => void) => setTimeout(cb, 2000);
   schedule(() => {
     import("./pages/app/SinglePostPage");
@@ -47,7 +46,6 @@ const preloadCriticalChunks = () => {
     import("./pages/app/PostInfoPage");
   });
 };
-// Fire once on module load — chunks will be cached by the bundler
 if (typeof window !== 'undefined') {
   preloadCriticalChunks();
 }
@@ -56,12 +54,10 @@ const PageLoader = () => (
   <div className="min-h-screen bg-black" />
 );
 
-
 /**
  * One-time cache migration for existing testers.
  * Clears stale auth/wagmi/web3auth data after auth flow changes.
  * Bump CURRENT_CACHE_VERSION to force another clear in the future.
- * Safe to remove this block once all testers have loaded the app at least once.
  */
 const CURRENT_CACHE_VERSION = '2';
 (function migrateStaleCacheOnce() {
@@ -70,11 +66,9 @@ const CURRENT_CACHE_VERSION = '2';
 
   console.log('[CacheMigration] Clearing stale data for version', CURRENT_CACHE_VERSION);
 
-  // Clear DeHub auth state
   ['dehub_token', 'dehub_token_timestamp', 'dehub_wallet', 'dehub_user',
    'dehub_connection_source', 'dehub_deployed_sa'].forEach(k => localStorage.removeItem(k));
 
-  // Clear wagmi / WalletConnect / Web3Auth keys
   const keysToRemove: string[] = [];
   for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
@@ -95,93 +89,113 @@ const CURRENT_CACHE_VERSION = '2';
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 2 * 60 * 1000,     // 2 minutes - prevents refetching recently loaded data
-      gcTime: 10 * 60 * 1000,       // 10 minutes - keeps cached data longer
-      refetchOnWindowFocus: false,  // Prevents refetch when switching tabs
+      staleTime: 2 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+      refetchOnWindowFocus: false,
       retry: 1,
     },
   },
 });
 
-// Inner app component that uses auth context
+/**
+ * Hero route — renders immediately with NO wallet dependencies.
+ * WalletProviders (~1.5 MB) is preloaded in the background while the user
+ * watches the 3D nebula animation, so by the time they click "Enter App"
+ * the heavy chunk is already cached and the transition is instant.
+ */
+function HeroRoute() {
+  // Kick off WalletProviders chunk download in the background immediately.
+  // By the time the user clicks Enter (5-30s), it will be fully loaded.
+  useEffect(() => {
+    import("./components/app/WalletProviders");
+  }, []);
+
+  const shouldSkip = localStorage.getItem(SKIP_LANDING_KEY) === 'true';
+  if (shouldSkip) {
+    return <Navigate to="/app" replace />;
+  }
+
+  return (
+    <Suspense fallback={<PageLoader />}>
+      <Index />
+    </Suspense>
+  );
+}
+
+/**
+ * Authenticated app shell — everything that needs WalletProviders / AuthProvider.
+ * Only mounted after user has passed the hero (or is a returning user).
+ */
 function AppContent() {
   const { isLoginModalOpen, closeLoginModal } = useAuth();
-
-  // Preload 3D icons on app mount to prevent flicker during navigation
   usePreloadIcons();
 
   return (
-    <div>
-      <SEOHead />
-      <Sonner />
+    <>
       <UsernameRequiredModal />
       <LoginModal open={isLoginModalOpen} onOpenChange={closeLoginModal} />
-      <BrowserRouter>
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/mobile-preview" element={<MobilePreview />} />
-            <Route path="/guide" element={<GuidePage />} />
-            <Route path="/docs" element={<DocsPage />} />
-            <Route path="/docs/*" element={<DocsPage />} />
-            
-            <Route path="/delete-account" element={<DeleteAccount />} />
-            
-            <Route path="/creators" element={<CreatorsPage />} />
-            <Route path="/skill.md" element={<SkillPage />} />
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/mobile-preview" element={<MobilePreview />} />
+          <Route path="/guide" element={<GuidePage />} />
+          <Route path="/docs" element={<DocsPage />} />
+          <Route path="/docs/*" element={<DocsPage />} />
 
-            {/* Single shared AppLayout — header/sidebar mount ONCE and persist across all app routes */}
-            <Route element={<AppLayout />}>
-              <Route path="/jobs" element={null} />
-              <Route path="/features" element={null} />
-              <Route path="/governance" element={null} />
-              <Route path="/stake" element={null} />
+          <Route path="/delete-account" element={<DeleteAccount />} />
 
-              {/* App routes — cached pages render null, PersistentPageCache manages them */}
-              <Route path="/app">
-                <Route index element={null} />
-                <Route path="explore" element={null} />
-                <Route path="profile" element={null} />
-                <Route path="notifications" element={null} />
-                <Route path="messages" element={null} />
-                <Route path="assistant" element={null} />
-                <Route path="leaderboard" element={null} />
-                <Route path="bookmarks" element={null} />
-                <Route path="settings" element={null} />
-                <Route path="command-centre" element={null} />
-                <Route path="wallet" element={null} />
-                <Route path="music" element={null} />
-                <Route path="buy" element={null} />
-                <Route path="agents" element={null} />
-                <Route path="tv" element={null} />
-                <Route path="features" element={null} />
-                <Route path="governance" element={null} />
-                <Route path="governance/:proposalId" element={<Suspense fallback={<PageLoader />}><GovernanceProposalPage /></Suspense>} />
-                <Route path="stake" element={null} />
-                <Route path="bridge" element={null} />
-                <Route path="top-100" element={null} />
-                <Route path="jobs" element={null} />
-                <Route path="glossary" element={null} />
-                <Route path="communities" element={null} />
-                <Route path="communities/:slug" element={<Suspense fallback={<PageLoader />}>{React.createElement(React.lazy(() => import('./pages/app/CommunityPage')))}</Suspense>} />
-                <Route path="post/:postId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
-                <Route path="video/:tokenId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
-                <Route path="post/:postId/info" element={<Suspense fallback={<PageLoader />}><PostInfoPage /></Suspense>} />
-              </Route>
+          <Route path="/creators" element={<CreatorsPage />} />
+          <Route path="/skill.md" element={<SkillPage />} />
 
-              {/* Stage invite links — /stage/:id joins the stage then redirects to /app */}
-              <Route path="/stage/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
+          {/* Single shared AppLayout — header/sidebar mount ONCE and persist across all app routes */}
+          <Route element={<AppLayout />}>
+            <Route path="/jobs" element={null} />
+            <Route path="/features" element={null} />
+            <Route path="/governance" element={null} />
+            <Route path="/stake" element={null} />
 
-              {/* Username profiles — inside shared layout so header never remounts */}
-              <Route path="/:username" element={<Suspense fallback={<PageLoader />}><ProfilePage /></Suspense>} />
+            {/* App routes — cached pages render null, PersistentPageCache manages them */}
+            <Route path="/app">
+              <Route index element={null} />
+              <Route path="explore" element={null} />
+              <Route path="profile" element={null} />
+              <Route path="notifications" element={null} />
+              <Route path="messages" element={null} />
+              <Route path="assistant" element={null} />
+              <Route path="leaderboard" element={null} />
+              <Route path="bookmarks" element={null} />
+              <Route path="settings" element={null} />
+              <Route path="command-centre" element={null} />
+              <Route path="wallet" element={null} />
+              <Route path="music" element={null} />
+              <Route path="buy" element={null} />
+              <Route path="agents" element={null} />
+              <Route path="tv" element={null} />
+              <Route path="features" element={null} />
+              <Route path="governance" element={null} />
+              <Route path="governance/:proposalId" element={<Suspense fallback={<PageLoader />}><GovernanceProposalPage /></Suspense>} />
+              <Route path="stake" element={null} />
+              <Route path="bridge" element={null} />
+              <Route path="top-100" element={null} />
+              <Route path="jobs" element={null} />
+              <Route path="glossary" element={null} />
+              <Route path="communities" element={null} />
+              <Route path="communities/:slug" element={<Suspense fallback={<PageLoader />}>{React.createElement(React.lazy(() => import('./pages/app/CommunityPage')))}</Suspense>} />
+              <Route path="post/:postId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
+              <Route path="video/:tokenId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
+              <Route path="post/:postId/info" element={<Suspense fallback={<PageLoader />}><PostInfoPage /></Suspense>} />
             </Route>
 
+            {/* Stage invite links */}
+            <Route path="/stage/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
 
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
-    </div>
+            {/* Username profiles — inside shared layout so header never remounts */}
+            <Route path="/:username" element={<Suspense fallback={<PageLoader />}><ProfilePage /></Suspense>} />
+          </Route>
+
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
+    </>
   );
 }
 
@@ -191,15 +205,35 @@ const App = () => (
   <HelmetProvider>
     <I18nextProvider i18n={i18nInstance}>
       <QueryClientProvider client={queryClient}>
-        <Suspense fallback={<WalletLoader />}>
-          <WalletProviders>
-            <OptimisticPostsProvider>
-              <TooltipProvider>
-                <AppContent />
-              </TooltipProvider>
-            </OptimisticPostsProvider>
-          </WalletProviders>
-        </Suspense>
+        {/*
+         * BrowserRouter is now OUTSIDE WalletProviders so the hero route (/)
+         * can render immediately without waiting for the ~1.5 MB wallet chunk.
+         */}
+        <BrowserRouter>
+          <SEOHead />
+          <Sonner />
+          <Routes>
+            {/* Hero — zero wallet dependencies, renders on first paint */}
+            <Route path="/" element={<HeroRoute />} />
+
+            {/*
+             * All other routes need wallet/auth context.
+             * WalletProviders is preloaded by HeroRoute in the background,
+             * so this Suspense resolves instantly for users coming from the hero.
+             */}
+            <Route path="*" element={
+              <Suspense fallback={<WalletLoader />}>
+                <WalletProviders>
+                  <OptimisticPostsProvider>
+                    <TooltipProvider>
+                      <AppContent />
+                    </TooltipProvider>
+                  </OptimisticPostsProvider>
+                </WalletProviders>
+              </Suspense>
+            } />
+          </Routes>
+        </BrowserRouter>
       </QueryClientProvider>
     </I18nextProvider>
   </HelmetProvider>
