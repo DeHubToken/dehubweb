@@ -3,7 +3,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
-import { MapPin, Calendar, Users, Star, Trash2, CheckCircle2, Sparkles, MessageSquare } from 'lucide-react';
+import { MapPin, Calendar, Users, Star, Trash2, CheckCircle2, Sparkles, MessageSquare, Share2 } from 'lucide-react';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { cn } from '@/lib/utils';
 import { GLASS_STYLES } from '@/constants/app.constants';
@@ -93,6 +93,16 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
               {event.cover_image_url && (
                 <img src={event.cover_image_url} alt={event.title} className="w-full h-full object-cover" />
               )}
+              <button
+                onClick={() => {
+                  const url = `${window.location.origin}/app/events/${event.id}`;
+                  navigator.clipboard.writeText(url);
+                  toast.success('Event link copied!');
+                }}
+                className="absolute top-2 right-2 p-2 rounded-full bg-black/50 backdrop-blur-sm text-white/80 hover:text-white transition-colors"
+              >
+                <Share2 className="w-4 h-4" />
+              </button>
             </div>
 
             <div className="px-4 py-4 space-y-4">
