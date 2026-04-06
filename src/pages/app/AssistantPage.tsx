@@ -465,6 +465,19 @@ export default function AssistantPage() {
   const pollingRef = useRef<Record<string, NodeJS.Timeout>>({});
   // Track music-video pipeline: when music completes, auto-chain video generation
   const musicVideoRef = useRef<{ prompt: string; videoModel: string; musicMessageId?: string } | null>(null);
+
+  // Persist/restore pending AI tool requests across reloads
+  const PENDING_TOOL_KEY = 'dehub-pending-ai-tool';
+  const savePendingTool = useCallback((data: {
+    requestId: string; appId: string; messageId: string; toolKey: string;
+    statusUrl?: string; responseUrl?: string; content: string;
+    musicVideo?: { prompt: string; videoModel: string };
+  }) => {
+    try { localStorage.setItem(PENDING_TOOL_KEY, JSON.stringify(data)); } catch {}
+  }, []);
+  const clearPendingTool = useCallback(() => {
+    try { localStorage.removeItem(PENDING_TOOL_KEY); } catch {}
+  }, []);
   const pendingVoiceRef = useRef(false); // Track if last input was voice
 
   const { isAuthenticated, walletAddress } = useAuth();
