@@ -56,6 +56,7 @@ interface StageContextType {
   removeSpeaker: (walletAddress: string) => Promise<void>;
   inviteSpeaker: (walletAddress: string) => Promise<void>;
   refreshSpaces: () => Promise<void>;
+  injectAudio: (audioBlob: Blob) => Promise<void>;
 }
 
 const StageContext = createContext<StageContextType | null>(null);
