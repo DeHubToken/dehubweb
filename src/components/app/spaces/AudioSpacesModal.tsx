@@ -227,7 +227,6 @@ export function AudioSpacesModal() {
            {view === 'browse' && !currentSpace && (
             <div className="space-y-4">
               <div className="space-y-2">
-                <h3 className="text-sm font-medium text-white/60">Live Now</h3>
                 {liveSpaces.length === 0 ? (
                   <div className="text-center py-8 text-white/50">
                     <img src={stagesMicIcon} alt="" className="w-12 h-12 mx-auto mb-3 opacity-50" />
