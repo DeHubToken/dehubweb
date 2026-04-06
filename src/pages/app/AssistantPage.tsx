@@ -11,7 +11,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX, LayoutDashboard, Check, XCircle, Lock, Zap, History } from 'lucide-react';
+import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX, LayoutDashboard, Check, XCircle, Lock, Zap, History, AudioLines } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { useVoiceChat } from '@/hooks/use-voice-chat';
@@ -50,6 +50,8 @@ import { GeneratedAudioPlayer } from '@/components/app/assistant/GeneratedAudioP
 import { SwapActionCard } from '@/components/app/chat/SwapActionCard';
 import { useAIConversation } from '@/hooks/use-ai-conversation';
 import { streamChat } from '@/lib/stream-chat';
+import { useVoiceAssistant } from '@/hooks/use-voice-assistant';
+import { VoiceAssistantOverlay } from '@/components/app/assistant/VoiceAssistantOverlay';
 import { useAssistantUserContext } from '@/hooks/use-assistant-user-context';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
@@ -479,6 +481,16 @@ export default function AssistantPage() {
   // User context for AI assistant personalization
   const userContext = useAssistantUserContext();
 
+  // Voice Assistant hook (Whisper STT + Dia TTS via fal.ai)
+  const voiceAssistant = useVoiceAssistant({
+    onTranscript: (text) => {
+      // Will be wired up after auth check via ref
+      voiceTranscriptHandlerRef.current?.(text);
+    },
+    isChatLoading: isLoading,
+  });
+  const voiceTranscriptHandlerRef = useRef<((text: string) => void) | null>(null);
+
   // Block access for unauthenticated users (AuthGate handles loading state internally)
   if (!isAuthenticated) {
     return (
@@ -601,7 +613,104 @@ export default function AssistantPage() {
     }
   };
 
-  // Initialize with welcome message on mount
+  // Wire up voice assistant transcript handler
+  // When voice assistant gets a transcript, send it through the regular chat flow
+  // and then speak the response with Dia TTS
+  voiceTranscriptHandlerRef.current = useCallback(async (text: string) => {
+    if (!text.trim() || isLoading) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      role: 'user',
+      content: text.trim(),
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    queueMessage(userMessage);
+    setInput('');
+    setIsLoading(true);
+
+    try {
+      const chatBody = {
+        messages: [...messages, userMessage].map(m => ({
+          role: m.role,
+          content: m.content,
+        })),
+        style: selectedStyle,
+        model: selectedChatModel,
+        isAuthenticated,
+        userLanguage,
+        userContext,
+        dehubToken: localStorage.getItem('dehub_token') || undefined,
+      };
+
+      const streamingMsgId = (Date.now() + 1).toString();
+      let streamedContent = '';
+      let isFirstToken = true;
+
+      await streamChat({
+        body: chatBody,
+        onDelta: (delta) => {
+          streamedContent += delta;
+          if (isFirstToken) {
+            isFirstToken = false;
+            setMessages(prev => [...prev, {
+              id: streamingMsgId,
+              role: 'assistant',
+              content: streamedContent,
+            }]);
+          } else {
+            setMessages(prev => {
+              const updated = [...prev];
+              const lastIdx = updated.length - 1;
+              if (lastIdx >= 0 && updated[lastIdx].id === streamingMsgId) {
+                updated[lastIdx] = { ...updated[lastIdx], content: streamedContent };
+              }
+              return updated;
+            });
+          }
+        },
+        onDone: () => {
+          const finalMessage: Message = {
+            id: streamingMsgId,
+            role: 'assistant',
+            content: streamedContent || 'No response',
+          };
+          queueMessage(finalMessage);
+          setIsLoading(false);
+
+          // Speak the response via Dia TTS
+          if (streamedContent && voiceAssistant.isVoiceMode) {
+            voiceAssistant.speakResponse(streamedContent);
+          }
+        },
+        onError: (err) => {
+          setMessages(prev => [...prev, {
+            id: (Date.now() + 2).toString(),
+            role: 'assistant',
+            content: `❌ ${err?.message || 'Voice chat error'}`,
+            isError: true,
+          }]);
+          setIsLoading(false);
+          // Restart listening even on error
+          if (voiceAssistant.isVoiceMode) {
+            voiceAssistant.speakResponse('Sorry, I encountered an error. Please try again.');
+          }
+        },
+      });
+    } catch (error: any) {
+      console.error('[VoiceAssistant] Chat error:', error);
+      setMessages(prev => [...prev, {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant',
+        content: `❌ ${error?.message || 'Unknown error'}`,
+        isError: true,
+      }]);
+      setIsLoading(false);
+    }
+  }, [messages, selectedStyle, selectedChatModel, isAuthenticated, userLanguage, userContext, isLoading, voiceAssistant]);
+
+
   useEffect(() => {
     setMessages([
       {
@@ -2213,14 +2322,14 @@ export default function AssistantPage() {
                     <TooltipContent>{t('assistant.attachFile')}</TooltipContent>
                   </Tooltip>
                   
-                  {/* Voice recording button */}
+                  {/* Voice recording button (browser Web Speech API) */}
                   {isVoiceSupported && (
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <button
                           type="button"
                           onClick={isRecording ? stopRecording : startRecording}
-                          disabled={isLoading}
+                          disabled={isLoading || voiceAssistant.isVoiceMode}
                           className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
                             isRecording 
                               ? 'text-red-500' 
@@ -2239,6 +2348,25 @@ export default function AssistantPage() {
                       <TooltipContent>{isRecording ? t('assistant.stopRecording') : t('assistant.voiceInput')}</TooltipContent>
                     </Tooltip>
                   )}
+                  
+                  {/* Voice Assistant Mode (Whisper + Dia TTS) */}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : voiceAssistant.startVoiceMode}
+                        disabled={isLoading && !voiceAssistant.isVoiceMode}
+                        className={`transition-colors p-1 disabled:opacity-30 shrink-0 mb-0.5 ${
+                          voiceAssistant.isVoiceMode
+                            ? 'text-cyan-400 animate-pulse'
+                            : 'text-white hover:text-white/80'
+                        }`}
+                      >
+                        <AudioLines className="w-5 h-5" />
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>{voiceAssistant.isVoiceMode ? 'Stop Voice Chat' : 'Voice Chat (AI)'}</TooltipContent>
+                  </Tooltip>
                 </div>
                 
                 {/* Auto-expanding textarea */}
@@ -2317,7 +2445,7 @@ export default function AssistantPage() {
                     <button
                       type="button"
                       onClick={isRecording ? stopRecording : startRecording}
-                      disabled={isLoading}
+                      disabled={isLoading || voiceAssistant.isVoiceMode}
                       className={`transition-colors p-1 disabled:opacity-30 ${
                         isRecording ? 'text-red-500' : 'text-white/60 hover:text-white'
                       }`}
@@ -2331,6 +2459,20 @@ export default function AssistantPage() {
                       )}
                     </button>
                   )}
+                  
+                  {/* Voice Assistant Mode (mobile) */}
+                  <button
+                    type="button"
+                    onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : voiceAssistant.startVoiceMode}
+                    disabled={isLoading && !voiceAssistant.isVoiceMode}
+                    className={`transition-colors p-1 disabled:opacity-30 ${
+                      voiceAssistant.isVoiceMode
+                        ? 'text-cyan-400 animate-pulse'
+                        : 'text-white/60 hover:text-white'
+                    }`}
+                  >
+                    <AudioLines className="w-4 h-4" />
+                  </button>
                   
                   {/* Stop speaking button */}
                   {isSpeaking && (
@@ -2388,7 +2530,15 @@ export default function AssistantPage() {
         </>
       )}
 
-      {/* Post Modal */}
+      {/* Voice Assistant Overlay */}
+      <VoiceAssistantOverlay
+        isActive={voiceAssistant.isVoiceMode}
+        status={voiceAssistant.status}
+        recordingDuration={voiceAssistant.recordingDuration}
+        onStop={voiceAssistant.stopVoiceMode}
+        onStopSpeaking={voiceAssistant.stopSpeaking}
+      />
+
       <PostModal
         isOpen={postModalOpen}
         onClose={() => setPostModalOpen(false)}
