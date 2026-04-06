@@ -492,6 +492,10 @@ export default function AssistantPage() {
     isChatLoading: isLoading,
   });
   const voiceTranscriptHandlerRef = useRef<((text: string) => void) | null>(null);
+  
+  // Voice credits (prepaid bundles)
+  const voiceCredits = useVoiceCredits(walletAddress);
+  const [voiceCreditModalOpen, setVoiceCreditModalOpen] = useState(false);
 
   // Block access for unauthenticated users (AuthGate handles loading state internally)
   if (!isAuthenticated) {
