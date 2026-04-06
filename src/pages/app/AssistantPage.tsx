@@ -2762,6 +2762,37 @@ export default function AssistantPage() {
         />
       )}
 
+      {/* Music Confirm Dialog */}
+      <MusicConfirmDialog
+        open={musicConfirmOpen}
+        onOpenChange={(open) => {
+          setMusicConfirmOpen(open);
+          if (!open) setPendingMusicPrompt('');
+        }}
+        userPrompt={pendingMusicPrompt}
+        onConfirm={(params: MusicParams) => {
+          setMusicConfirmOpen(false);
+          // Build a structured prompt from the confirmed params
+          const parts: string[] = [];
+          if (params.title) parts.push(`Title: ${params.title}`);
+          if (params.style) parts.push(`Style: ${params.style}`);
+          if (params.voiceGender !== 'auto') parts.push(`Voice: ${params.voiceGender}`);
+          const structuredPrompt = parts.join('. ') || pendingMusicPrompt;
+          const lyricsValue = params.lyrics || '';
+
+          const defaultTool = DEFAULT_TOOL_FOR_CATEGORY[aiToolCategory];
+          setPendingAiToolRequest({
+            prompt: structuredPrompt,
+            tool: defaultTool,
+            category: aiToolCategory,
+            // Pass lyrics separately so edge function uses them correctly
+            ...(lyricsValue && { lyrics: lyricsValue }),
+          } as any);
+          setSelectedAiToolId(defaultTool);
+          setAiToolPaywallOpen(true);
+        }}
+      />
+
       {/* AI Tool Paywall Modal */}
       {pendingAiToolRequest && (
         <AiToolPaywallModal
