@@ -401,7 +401,7 @@ export function PostAccessToggles({
             {/* Selected chips */}
             {selectedCategoriesArray.length > 0 && (
               <div className="flex flex-wrap gap-1.5">
-                {selectedCategoriesArray.filter(cat => !communitySlugs.has(cat)).map((cat) => (
+                {selectedCategoriesArray.map((cat) => (
                   <span key={cat} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs bg-white/15 text-white border border-white/20">
                     {cat}
                     <button type="button" onClick={() => removeCategory(cat)} className="hover:text-red-400 transition-colors">
