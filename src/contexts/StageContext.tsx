@@ -274,10 +274,13 @@ export function StageProvider({ children }: { children: ReactNode }) {
       await client.join(tokenData.appId, tokenData.channel, tokenData.token, tokenData.uid);
 
       if (role === 'host' || role === 'speaker') {
-        const localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-        localAudioTrackRef.current = localAudioTrack;
-        localAudioTrack.setMuted(true);
-        await client.publish([localAudioTrack]);
+        const rawStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const processedTrack = voiceEffectsHook.processStream(rawStream, voiceEffect);
+        const AgoraRTC2 = AgoraRTC; // reuse import
+        const customTrack = AgoraRTC2.createCustomAudioTrack({ mediaStreamTrack: processedTrack });
+        localAudioTrackRef.current = customTrack;
+        customTrack.setMuted(true);
+        await client.publish([customTrack]);
       }
 
       setIsConnected(true);
@@ -296,10 +299,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
     try {
       const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
       await agoraClientRef.current.setClientRole('host');
-      const localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
-      localAudioTrackRef.current = localAudioTrack;
-      localAudioTrack.setMuted(true);
-      await agoraClientRef.current.publish([localAudioTrack]);
+      const rawStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const processedTrack = voiceEffectsHook.processStream(rawStream, voiceEffect);
+      const customTrack = AgoraRTC.createCustomAudioTrack({ mediaStreamTrack: processedTrack });
+      localAudioTrackRef.current = customTrack;
+      customTrack.setMuted(true);
+      await agoraClientRef.current.publish([customTrack]);
       setMyRole('speaker');
       setIsMuted(true);
       setHasRaisedHand(false);
