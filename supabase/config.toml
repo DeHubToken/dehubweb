@@ -95,3 +95,6 @@ verify_jwt = false
 
 [functions.agent-bulk-like]
 verify_jwt = false
+
+[functions.dhb-buy-bot]
+verify_jwt = false
