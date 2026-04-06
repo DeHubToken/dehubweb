@@ -1150,7 +1150,20 @@ export default function AssistantPage() {
         const toolModel = AI_TOOL_MODELS[toolKey];
 
         // Check if this is part of a music-video pipeline
-        const mvState = musicVideoRef.current;
+        let mvState = musicVideoRef.current;
+        // Recover music-video pipeline state from localStorage if ref was lost (e.g. background tab)
+        if (!mvState && toolKey === 'minimax-music' && data.audioUrl) {
+          try {
+            const raw = localStorage.getItem(PENDING_TOOL_KEY);
+            if (raw) {
+              const parsed = JSON.parse(raw);
+              if (parsed.musicVideo) {
+                mvState = { ...parsed.musicVideo, musicMessageId: parsed.messageId };
+                musicVideoRef.current = mvState;
+              }
+            }
+          } catch {}
+        }
         const isMusicVideoPipeline = mvState && mvState.musicMessageId === messageId;
 
         if (isMusicVideoPipeline && data.audioUrl) {
