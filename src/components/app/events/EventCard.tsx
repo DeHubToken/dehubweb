@@ -3,6 +3,7 @@ import { MapPin, Users, Flame, Calendar, Lock } from 'lucide-react';
 import type { CommunityEvent } from '@/hooks/use-events';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { cn } from '@/lib/utils';
+import { FriendsAtEvent } from './FriendsAtEvent';
 
 interface EventCardProps {
   event: CommunityEvent;
@@ -38,6 +39,7 @@ export function EventCard({ event, onClick }: EventCardProps) {
             <span className="text-[9px] font-medium text-zinc-300">Private</span>
           </div>
         )}
+        <FriendsAtEvent eventId={event.id} mode="overlay" />
       </div>
 
       {/* Info */}
