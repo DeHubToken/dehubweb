@@ -7,12 +7,12 @@ import { toast } from 'sonner';
 import { useStage } from '@/contexts/StageContext';
 
 const TTS_VOICES = [
-  { id: 'CwhRBWXzGAHq8TQ4Fs17', name: 'Roger', label: 'Deep male', emoji: '🎙️' },
-  { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Sarah', label: 'Warm female', emoji: '🎤' },
-  { id: 'FGY2WhTYpPnrIDTdsKH5', name: 'Laura', label: 'Soft female', emoji: '🎵' },
-  { id: 'IKne3meq5aSn9XLyUdCD', name: 'Charlie', label: 'Friendly male', emoji: '🗣️' },
-  { id: 'JBFqnCBsd6RMkjVDRZzb', name: 'George', label: 'British male', emoji: '🇬🇧' },
-  { id: 'Xb7hH8MSUJpSbSDYk0k2', name: 'Alice', label: 'Clear female', emoji: '✨' },
+  { id: 'CwhRBWXzGAHq8TQ4Fs17', name: 'Roger' },
+  { id: 'EXAVITQu4vr4xnSDxMaL', name: 'Sarah' },
+  { id: 'FGY2WhTYpPnrIDTdsKH5', name: 'Laura' },
+  { id: 'IKne3meq5aSn9XLyUdCD', name: 'Charlie' },
+  { id: 'JBFqnCBsd6RMkjVDRZzb', name: 'George' },
+  { id: 'Xb7hH8MSUJpSbSDYk0k2', name: 'Alice' },
 ] as const;
 
 export function StageTTS() {
