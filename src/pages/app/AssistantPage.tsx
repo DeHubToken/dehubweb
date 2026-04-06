@@ -478,6 +478,17 @@ export default function AssistantPage() {
   const clearPendingTool = useCallback(() => {
     try { localStorage.removeItem(PENDING_TOOL_KEY); } catch {}
   }, []);
+
+  // Persist/restore pending video generation across reloads
+  const PENDING_VIDEO_KEY = 'dehub-pending-video';
+  const savePendingVideo = useCallback((data: {
+    predictionId: string; messageId: string; provider?: string; falAppId?: string; content: string;
+  }) => {
+    try { localStorage.setItem(PENDING_VIDEO_KEY, JSON.stringify(data)); } catch {}
+  }, []);
+  const clearPendingVideo = useCallback(() => {
+    try { localStorage.removeItem(PENDING_VIDEO_KEY); } catch {}
+  }, []);
   const pendingVoiceRef = useRef(false); // Track if last input was voice
 
   const { isAuthenticated, walletAddress } = useAuth();
