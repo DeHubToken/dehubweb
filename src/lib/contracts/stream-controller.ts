@@ -110,6 +110,12 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
   await switchChain(chainId);
 
   const signerAddress = await getWalletAddress();
+
+  // Prevent self-tipping
+  if (signerAddress.toLowerCase() === params.to.toLowerCase()) {
+    throw new Error('You cannot tip yourself');
+  }
+
   const amountWei = toWei(params.amount, DHB_TOKEN.decimals);
 
   // Parallelize balance + allowance checks (skip balance if UI already verified)
