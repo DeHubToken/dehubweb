@@ -15,7 +15,9 @@ import { wagmiConfig } from '@/lib/wagmi';
 import { RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
 import '@rainbow-me/rainbowkit/styles.css';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { CallProvider } from '@/contexts/CallContext';
 import { StageProvider } from '@/contexts/StageContext';
+import { CallModalsHost } from '@/components/app/chat/calls/CallModalsHost';
 
 interface WalletProvidersProps {
   children: ReactNode;
@@ -26,9 +28,12 @@ export function WalletProviders({ children }: WalletProvidersProps) {
     <WagmiProvider config={wagmiConfig}>
       <RainbowKitProvider theme={darkTheme()} modalSize="compact">
         <AuthProvider>
-          <StageProvider>
-            {children}
-          </StageProvider>
+          <CallProvider>
+            <StageProvider>
+              <CallModalsHost />
+              {children}
+            </StageProvider>
+          </CallProvider>
         </AuthProvider>
       </RainbowKitProvider>
     </WagmiProvider>

@@ -7,7 +7,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, Video, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -55,6 +55,8 @@ import {
   onDmSendMessage,
   onDmError,
 } from '@/lib/api/dehub/dm-socket';
+import { DmVoiceCallButton } from '@/components/app/chat/calls/DmVoiceCallButton';
+import { DmVideoCallButton } from '@/components/app/chat/calls/DmVideoCallButton';
 
 interface DirectMessageChatProps {
   conversation: DeHubConversation;
@@ -936,6 +938,19 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
           >
             <Search className="w-5 h-5" />
           </Button>
+
+          {!isGroupChat && otherUser?.address && (
+            <>
+              <DmVoiceCallButton
+                recipientAddress={otherUser.address}
+                className="text-zinc-400 hover:text-white hover:bg-zinc-800"
+              />
+              <DmVideoCallButton
+                recipientAddress={otherUser.address}
+                className="text-zinc-400 hover:text-white hover:bg-zinc-800"
+              />
+            </>
+          )}
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
