@@ -22,6 +22,19 @@ const VoiceCallModal: React.FC = () => {
   } = useCall();
 
   const [audioNeedsInteraction, setAudioNeedsInteraction] = useState(false);
+  const [peerName, setPeerName] = useState<string | null>(null);
+
+  const peerAddress = currentCall
+    ? (isIncoming ? currentCall.caller_address : currentCall.recipient_address)
+    : '';
+
+  useEffect(() => {
+    if (!peerAddress) return;
+    setPeerName(null);
+    getAccountInfo(peerAddress).then(u => {
+      if (u?.username) setPeerName(u.username);
+    }).catch(() => {});
+  }, [peerAddress]);
 
   const handleUserInteraction = async () => {
     if (remoteAudioRef?.current && isCallActive) {
@@ -47,18 +60,7 @@ const VoiceCallModal: React.FC = () => {
     return 'Voice Call';
   };
 
-  const [peerName, setPeerName] = useState<string | null>(null);
-
-  const peerAddress = isIncoming ? currentCall.caller_address : currentCall.recipient_address;
-
-  useEffect(() => {
-    setPeerName(null);
-    getAccountInfo(peerAddress).then(u => {
-      if (u?.username) setPeerName(u.username);
-    }).catch(() => {});
-  }, [peerAddress]);
-
-  const displayName = peerName || `${peerAddress.slice(0, 6)}...${peerAddress.slice(-4)}`;
+  const displayName = peerName || (peerAddress ? `${peerAddress.slice(0, 6)}...${peerAddress.slice(-4)}` : '');
 
   return (
     <Dialog open={isVisible} onOpenChange={() => {}}>
