@@ -158,6 +158,25 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
     setCustomSounds(prev => prev.filter(s => s.path !== sound.path));
   };
 
+  // ---------- Stop helper ----------
+
+  const stopCurrentSound = useCallback(() => {
+    if (howlRef.current) {
+      howlRef.current.stop();
+      howlRef.current.unload();
+      howlRef.current = null;
+    }
+    if (audioCtxRef.current && audioCtxRef.current.state !== 'closed') {
+      audioCtxRef.current.close();
+      audioCtxRef.current = null;
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+    setPlayingId(null);
+  }, []);
+
   // ---------- Audio playback ----------
 
   const getAudioContext = useCallback(() => {
@@ -171,8 +190,10 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
   }, []);
 
   const playCustomSound = useCallback((sound: CustomSound) => {
-    if (playingId) return;
-    setPlayingId(`custom-${sound.path}`);
+    const soundId = `custom-${sound.path}`;
+    if (playingId === soundId) { stopCurrentSound(); return; }
+    if (playingId) stopCurrentSound();
+    setPlayingId(soundId);
 
     if (howlRef.current) {
       howlRef.current.unload();
@@ -193,7 +214,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
     });
 
     howlRef.current.play();
-  }, [playingId, volume]);
+  }, [playingId, volume, stopCurrentSound]);
 
   const playApplause = useCallback((ctx: AudioContext, gainNode: GainNode, duration: number) => {
     const bufferSize = ctx.sampleRate * (duration / 1000);
@@ -265,7 +286,8 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
   };
 
   const playBuiltIn = useCallback((effect: BuiltInEffect) => {
-    if (playingId) return;
+    if (playingId === effect.id) { stopCurrentSound(); return; }
+    if (playingId) stopCurrentSound();
 
     // If this effect has a real audio file, play it via Howler
     const audioFile = AUDIO_FILE_EFFECTS[effect.id];
@@ -321,7 +343,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
     }
 
     timeoutRef.current = setTimeout(() => setPlayingId(null), effect.duration);
-  }, [playingId, volume, getAudioContext, playCrickets, playCountdown]);
+  }, [playingId, volume, getAudioContext, playCrickets, playCountdown, stopCurrentSound]);
 
   useEffect(() => {
     return () => {
@@ -390,7 +412,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
             <button
               key={effect.id}
               onClick={() => playBuiltIn(effect)}
-              disabled={playingId !== null && playingId !== effect.id}
+              disabled={false}
               className={cn(
                 "flex flex-col items-center gap-1 p-2 rounded-xl text-center transition-all",
                 "border border-white/10 hover:border-white/20",
@@ -455,7 +477,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
                   <div key={sound.path} className="relative group">
                     <button
                       onClick={() => playCustomSound(sound)}
-                      disabled={playingId !== null && playingId !== soundId}
+                      disabled={false}
                       className={cn(
                         "w-full flex flex-col items-center gap-1 p-2 rounded-xl text-center transition-all",
                         "border border-white/10 hover:border-white/20",
