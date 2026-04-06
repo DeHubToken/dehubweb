@@ -10,7 +10,7 @@
  * - Minimize to floating StageMiniPlayer
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
@@ -86,6 +86,8 @@ export function AudioSpacesModal() {
   const analyserRef = useRef<AnalyserNode | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const rafRef = useRef<number>(0);
+  /** 0–1 seek applied on next `loadedmetadata` when starting playback */
+  const pendingSeekRatioRef = useRef<number | null>(null);
 
   // Fetch past (ended) stages for browse view
   const { data: pastStages = [] } = useQuery({
@@ -170,6 +172,115 @@ export function AudioSpacesModal() {
       toast.info(`Share this link: ${url}`);
     });
   };
+
+  const stopPastStagePlayback = useCallback(() => {
+    cancelAnimationFrame(rafRef.current);
+    audioRef.current?.pause();
+    audioRef.current = null;
+    analyserRef.current = null;
+    pendingSeekRatioRef.current = null;
+    setPlayingStageId(null);
+    setPlayingStageTitle('');
+    setPlaybackVolume(0);
+    setPlaybackProgress(0);
+    setPlaybackTimeLeft('');
+  }, []);
+
+  const startPastStagePlayback = useCallback((space: AudioSpace) => {
+    if (!space.recording_url) return;
+
+    cancelAnimationFrame(rafRef.current);
+    audioRef.current?.pause();
+
+    const audio = new Audio(space.recording_url);
+    audio.crossOrigin = 'anonymous';
+
+    const applyPendingSeek = () => {
+      const ratio = pendingSeekRatioRef.current;
+      if (ratio !== null && isFinite(audio.duration) && audio.duration > 0) {
+        audio.currentTime = ratio * audio.duration;
+      }
+      pendingSeekRatioRef.current = null;
+    };
+
+    audio.addEventListener('loadedmetadata', applyPendingSeek, { once: true });
+    audio.addEventListener('canplay', applyPendingSeek, { once: true });
+
+    audio.onended = () => {
+      cancelAnimationFrame(rafRef.current);
+      setPlayingStageId(null);
+      setPlaybackVolume(0);
+      setPlaybackProgress(0);
+      setPlaybackTimeLeft('');
+    };
+
+    const ctx = audioCtxRef.current || new AudioContext();
+    audioCtxRef.current = ctx;
+    void ctx.resume();
+    const source = ctx.createMediaElementSource(audio);
+    const analyser = ctx.createAnalyser();
+    analyser.fftSize = 256;
+    source.connect(analyser);
+    analyser.connect(ctx.destination);
+    analyserRef.current = analyser;
+
+    const dataArray = new Uint8Array(analyser.frequencyBinCount);
+    const pump = () => {
+      analyser.getByteFrequencyData(dataArray);
+      let sum = 0;
+      for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+      setPlaybackVolume(sum / dataArray.length / 255);
+      if (audio.duration && isFinite(audio.duration)) {
+        setPlaybackProgress(audio.currentTime / audio.duration);
+        const remaining = Math.ceil(audio.duration - audio.currentTime);
+        const m = Math.floor(remaining / 60);
+        const s = remaining % 60;
+        setPlaybackTimeLeft(`-${m}:${s.toString().padStart(2, '0')}`);
+      }
+      rafRef.current = requestAnimationFrame(pump);
+    };
+
+    audio.play().then(() => {
+      rafRef.current = requestAnimationFrame(pump);
+    }).catch(() => {
+      toast.error('Could not play recording');
+      stopPastStagePlayback();
+    });
+
+    audioRef.current = audio;
+    setPlayingStageId(space.id);
+    setPlayingStageTitle(space.title);
+    supabase.rpc('increment_stage_listens', { p_space_id: space.id }).then(() => {});
+  }, [stopPastStagePlayback]);
+
+  const seekPastStage = useCallback(
+    (space: AudioSpace, position: number) => {
+      if (!space.recording_url) return;
+      if (playingStageId === space.id && audioRef.current && isFinite(audioRef.current.duration) && audioRef.current.duration > 0) {
+        audioRef.current.currentTime = position * audioRef.current.duration;
+        return;
+      }
+      pendingSeekRatioRef.current = position;
+      startPastStagePlayback(space);
+    },
+    [playingStageId, startPastStagePlayback],
+  );
+
+  const togglePastStagePlay = useCallback(
+    (space: AudioSpace) => {
+      if (!space.recording_url) {
+        toast.info('Recording not available for this stage');
+        return;
+      }
+      if (playingStageId === space.id) {
+        stopPastStagePlayback();
+        return;
+      }
+      pendingSeekRatioRef.current = null;
+      startPastStagePlayback(space);
+    },
+    [playingStageId, startPastStagePlayback, stopPastStagePlayback],
+  );
 
   // ─── Derived ──────────────────────────────────────────────────────────────
 
@@ -270,73 +381,8 @@ export function AudioSpacesModal() {
                       >
                         <div className="flex items-center gap-3 shrink-0 min-w-0 sm:max-w-[380px]">
                           <button
-                            onClick={() => {
-                              if (!space.recording_url) {
-                                toast.info('Recording not available for this stage');
-                                return;
-                              }
-                              if (playingStageId === space.id) {
-                                // Stop
-                                cancelAnimationFrame(rafRef.current);
-                                audioRef.current?.pause();
-                                audioRef.current = null;
-                                analyserRef.current = null;
-                                setPlayingStageId(null);
-                                setPlaybackVolume(0);
-                                setPlaybackProgress(0);
-                                setPlaybackTimeLeft('');
-                              } else {
-                                // Stop previous
-                                cancelAnimationFrame(rafRef.current);
-                                audioRef.current?.pause();
-
-                                const audio = new Audio(space.recording_url);
-                                audio.crossOrigin = 'anonymous';
-                                audio.onended = () => {
-                                  cancelAnimationFrame(rafRef.current);
-                                  setPlayingStageId(null);
-                                  setPlaybackVolume(0);
-                                  setPlaybackProgress(0);
-                                  setPlaybackTimeLeft('');
-                                };
-
-                                // Set up analyser for volume
-                                const ctx = audioCtxRef.current || new AudioContext();
-                                audioCtxRef.current = ctx;
-                                const source = ctx.createMediaElementSource(audio);
-                                const analyser = ctx.createAnalyser();
-                                analyser.fftSize = 256;
-                                source.connect(analyser);
-                                analyser.connect(ctx.destination);
-                                analyserRef.current = analyser;
-
-                                const dataArray = new Uint8Array(analyser.frequencyBinCount);
-                                const pump = () => {
-                                  analyser.getByteFrequencyData(dataArray);
-                                  let sum = 0;
-                                  for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
-                                  setPlaybackVolume(sum / dataArray.length / 255);
-                                  // Track progress + time
-                                  if (audio.duration && isFinite(audio.duration)) {
-                                    setPlaybackProgress(audio.currentTime / audio.duration);
-                                    const remaining = Math.ceil(audio.duration - audio.currentTime);
-                                    const m = Math.floor(remaining / 60);
-                                    const s = remaining % 60;
-                                    setPlaybackTimeLeft(`-${m}:${s.toString().padStart(2, '0')}`);
-                                  }
-                                  rafRef.current = requestAnimationFrame(pump);
-                                };
-
-                                audio.play().then(() => {
-                                  rafRef.current = requestAnimationFrame(pump);
-                                });
-                                audioRef.current = audio;
-                                setPlayingStageId(space.id);
-                                setPlayingStageTitle(space.title);
-                                // Increment listen count for recording play
-                                supabase.rpc('increment_stage_listens', { p_space_id: space.id }).then(() => {});
-                              }
-                            }}
+                            type="button"
+                            onClick={() => togglePastStagePlay(space)}
                             className={cn(
                               "shrink-0 w-10 h-10 rounded-xl flex items-center justify-center transition-all",
                               playingStageId === space.id
@@ -401,45 +447,37 @@ export function AudioSpacesModal() {
                             </div>
                           </div>
                         </div>
-                        {/* Waveform - right side on desktop, below on mobile */}
+                        {/* Waveform — full width; seek starts playback or scrubs */}
                         <div className={cn(
-                          "hidden sm:flex items-center gap-2 flex-1 h-10 min-w-0 transition-all duration-300",
+                          "hidden sm:flex items-center gap-2 flex-1 min-w-0 h-10 transition-all duration-300",
                           playingStageId === space.id ? "opacity-100 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" : "opacity-40"
                         )}>
                           <StaticWaveform
                             seed={space.id}
-                            className="w-full h-full flex-1"
+                            className="w-full min-w-0 h-full flex-1"
                             animated={playingStageId === space.id}
                             volumeLevel={playingStageId === space.id ? playbackVolume : 0}
                             color={playingStageId === space.id ? 'rgba(255,255,255,0.95)' : undefined}
                             progress={playingStageId === space.id ? playbackProgress : undefined}
-                            onSeek={playingStageId === space.id ? (pos) => {
-                              if (audioRef.current && isFinite(audioRef.current.duration)) {
-                                audioRef.current.currentTime = pos * audioRef.current.duration;
-                              }
-                            } : undefined}
+                            onSeek={space.recording_url ? (pos) => seekPastStage(space, pos) : undefined}
                           />
                           {playingStageId === space.id && playbackTimeLeft && (
                             <span className="text-[10px] text-white/50 font-mono shrink-0 w-10 text-right">{playbackTimeLeft}</span>
                           )}
                         </div>
                         <div className={cn(
-                          "sm:hidden w-full transition-all duration-300",
+                          "sm:hidden w-full min-w-0 transition-all duration-300",
                           playingStageId === space.id ? "opacity-100 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" : "opacity-40"
                         )}>
-                          <div className="h-12">
+                          <div className="h-12 w-full min-w-0">
                             <StaticWaveform
                               seed={space.id}
-                              className="w-full h-full"
+                              className="w-full h-full min-w-0"
                               animated={playingStageId === space.id}
                               volumeLevel={playingStageId === space.id ? playbackVolume : 0}
                               color={playingStageId === space.id ? 'rgba(255,255,255,0.95)' : undefined}
                               progress={playingStageId === space.id ? playbackProgress : undefined}
-                              onSeek={playingStageId === space.id ? (pos) => {
-                                if (audioRef.current && isFinite(audioRef.current.duration)) {
-                                  audioRef.current.currentTime = pos * audioRef.current.duration;
-                                }
-                              } : undefined}
+                              onSeek={space.recording_url ? (pos) => seekPastStage(space, pos) : undefined}
                             />
                           </div>
                           {playingStageId === space.id && playbackTimeLeft && (
@@ -454,10 +492,7 @@ export function AudioSpacesModal() {
                               e.stopPropagation();
                               if (!confirm('Delete this stage recording?')) return;
                               if (playingStageId === space.id) {
-                                cancelAnimationFrame(rafRef.current);
-                                audioRef.current?.pause();
-                                audioRef.current = null;
-                                setPlayingStageId(null);
+                                stopPastStagePlayback();
                               }
                               if (space.recording_url) {
                                 const path = space.recording_url.split('/stage-recordings/')[1];
@@ -720,17 +755,10 @@ export function AudioSpacesModal() {
         >
           <div className="flex items-center gap-3">
             <button
+              type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                cancelAnimationFrame(rafRef.current);
-                audioRef.current?.pause();
-                audioRef.current = null;
-                analyserRef.current = null;
-                setPlayingStageId(null);
-                setPlayingStageTitle('');
-                setPlaybackVolume(0);
-                setPlaybackProgress(0);
-                setPlaybackTimeLeft('');
+                stopPastStagePlayback();
               }}
               className="shrink-0 w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all"
             >

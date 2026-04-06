@@ -93,6 +93,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const recordingChunksRef = useRef<Blob[]>([]);
   const recordingSpaceIdRef = useRef<string | null>(null);
 
+  /** Serialize injectAudio (TTS / soundboard) so tracks don’t overlap on Agora */
+  const injectAudioChainRef = useRef<Promise<void>>(Promise.resolve());
+
   // Stable refs for realtime callbacks
   const walletAddressRef = useRef(walletAddress);
   const myRoleRef = useRef(myRole);
@@ -864,48 +867,69 @@ export function StageProvider({ children }: { children: ReactNode }) {
   // ─── Inject TTS audio into Agora channel ────────────────────────────────
 
   const injectAudio = useCallback(async (audioBlob: Blob) => {
-    const client = agoraClientRef.current;
-    const originalTrack = localAudioTrackRef.current;
-    if (!client || !originalTrack) {
-      throw new Error('Not connected to a stage');
-    }
+    const run = async () => {
+      const client = agoraClientRef.current;
+      const originalTrack = localAudioTrackRef.current;
+      if (!client || !originalTrack) {
+        throw new Error('Not connected to a stage');
+      }
 
-    const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
-    const audioCtx = new AudioContext();
+      const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
+      const audioCtx = new AudioContext();
 
-    try {
-      const arrayBuffer = await audioBlob.arrayBuffer();
-      const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
+      try {
+        await audioCtx.resume();
 
-      const source = audioCtx.createBufferSource();
-      source.buffer = audioBuffer;
+        const arrayBuffer = await audioBlob.arrayBuffer();
+        const audioBuffer = await audioCtx.decodeAudioData(arrayBuffer);
 
-      const destination = audioCtx.createMediaStreamDestination();
-      source.connect(destination);
+        const source = audioCtx.createBufferSource();
+        source.buffer = audioBuffer;
 
-      const ttsTrack = AgoraRTC.createCustomAudioTrack({
-        mediaStreamTrack: destination.stream.getAudioTracks()[0],
-      });
+        const destination = audioCtx.createMediaStreamDestination();
+        // Route audio into Agora stream AND into local speakers so host can monitor
+        source.connect(destination);
+        source.connect(audioCtx.destination);
 
-      // Remember mute state, unpublish mic, publish TTS
-      const wasMuted = originalTrack.muted;
-      await client.unpublish([originalTrack]);
-      await client.publish([ttsTrack]);
+        const mediaTrack = destination.stream.getAudioTracks()[0];
+        if (mediaTrack) {
+          mediaTrack.enabled = true;
+        }
 
-      // Play and wait for end
-      await new Promise<void>((resolve) => {
-        source.onended = () => resolve();
-        source.start(0);
-      });
+        const ttsTrack = AgoraRTC.createCustomAudioTrack({
+          mediaStreamTrack: mediaTrack,
+        });
 
-      // Restore original mic track
-      await client.unpublish([ttsTrack]);
-      ttsTrack.close();
-      await client.publish([originalTrack]);
-      originalTrack.setMuted(wasMuted);
-    } finally {
-      await audioCtx.close();
-    }
+        const wasMuted = originalTrack.muted;
+        await client.unpublish([originalTrack]);
+        await client.publish([ttsTrack]);
+
+        await new Promise<void>((resolve, reject) => {
+          source.onended = () => {
+            // Wait 300ms after buffer ends so the last frames finish
+            // travelling through the network before we unpublish the track
+            setTimeout(resolve, 300);
+          };
+          try {
+            source.start(0);
+          } catch (e) {
+            reject(e);
+          }
+        });
+
+        await client.unpublish([ttsTrack]);
+        ttsTrack.close();
+        await client.publish([originalTrack]);
+        originalTrack.setMuted(wasMuted);
+      } finally {
+        await audioCtx.close();
+      }
+    };
+
+    const prev = injectAudioChainRef.current;
+    const next = prev.then(() => run(), () => run());
+    injectAudioChainRef.current = next.catch(() => {});
+    await next;
   }, []);
 
   // Live spaces subscription

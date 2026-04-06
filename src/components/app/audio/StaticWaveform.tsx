@@ -132,8 +132,8 @@ export function StaticWaveform({
     <svg
       ref={svgRef}
       viewBox={`0 0 ${svgWidth} ${svgHeight}`}
-      preserveAspectRatio="xMidYMid meet"
-      className={`${className} ${onSeek ? 'cursor-pointer' : ''}`}
+      preserveAspectRatio="none"
+      className={`${className} ${onSeek ? 'cursor-pointer' : ''} w-full min-w-0 block`}
       aria-hidden="true"
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
@@ -145,12 +145,12 @@ export function StaticWaveform({
         const x = i * (barWidth + gap);
         const y = (svgHeight - barHeight) / 2;
 
-        // Progress-based coloring: played bars are bright white, unplayed are dim
+        // Progress: played portion lights up left → right
         const barProgress = i / (barCount - 1);
         const isPlayed = hasProgress && barProgress <= progress;
         const opacity = isPlayed
-          ? 0.5 + h * 0.5    // bright white for played portion
-          : 0.12 + h * 0.22; // dim for unplayed
+          ? 0.75 + h * 0.25
+          : 0.1 + h * 0.15;
         const fillColor = isPlayed ? 'white' : (color || 'white');
 
         return (
