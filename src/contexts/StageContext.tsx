@@ -866,6 +866,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
         myRole,
         hasRaisedHand,
         volumeLevel,
+        voiceEffect,
+        setVoiceEffect,
         isModalOpen,
         openModal,
         closeModal,
