@@ -26,6 +26,7 @@ import { CommunityLinkEmbed, extractCommunitySlug, hasCommunityLink } from '@/co
 import { TranslatableText, useTranslation } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
+import { ShareImageCard } from './ShareImageCard';
 import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
 import { QuotePostModal } from '../modals/QuotePostModal';
@@ -162,13 +163,13 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
     setShowQuoteModal(true);
   }, [walletAddress, openLoginModal]);
 
-  const shareCardRef = useRef<HTMLDivElement>(null);
+  const shareImageRef = useRef<HTMLDivElement>(null);
 
   const handleShareAsImage = useCallback(async () => {
-    if (!shareCardRef.current) return;
+    if (!shareImageRef.current) return;
     const html2canvas = (await import('html2canvas')).default;
-    const canvas = await html2canvas(shareCardRef.current, {
-      backgroundColor: '#18181b', // zinc-900
+    const canvas = await html2canvas(shareImageRef.current, {
+      backgroundColor: '#09090b',
       scale: 2,
       useCORS: true,
       logging: false,
@@ -184,7 +185,6 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           url: postUrl,
         });
       } else {
-        // Fallback: download the image
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = 'dehub-post.png';
@@ -332,30 +332,27 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
 
       {/* Content */}
       <div className="pt-3 space-y-2">
-        {/* Shareable card area — captured by html2canvas on "Share as Image" */}
-        <div ref={shareCardRef} className="space-y-2">
-          {/* Title */}
-          {post.title && (
-            <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{post.title}</h3>
-          )}
-          {(isTranslated ? translatedText : post.content)?.trim() && (
-            <TranslatableText text={isTranslated ? translatedText : post.content} className="text-white/90 text-sm sm:text-base" as="p" />
-          )}
+        {/* Title */}
+        {post.title && (
+          <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{post.title}</h3>
+        )}
+        {(isTranslated ? translatedText : post.content)?.trim() && (
+          <TranslatableText text={isTranslated ? translatedText : post.content} className="text-white/90 text-sm sm:text-base" as="p" />
+        )}
 
-          {/* Quoted post embed (Twitter-style) */}
-          {post.isQuotePost && post.quotedPost && (
-            <QuotedPostEmbed quotedPost={post.quotedPost} className="mt-2" />
-          )}
+        {/* Quoted post embed (Twitter-style) */}
+        {post.isQuotePost && post.quotedPost && (
+          <QuotedPostEmbed quotedPost={post.quotedPost} className="mt-2" />
+        )}
 
-          {/* Community link embed */}
-          {post.content && hasCommunityLink(post.content) && (() => {
-            const slug = extractCommunitySlug(post.content);
-            return slug ? <CommunityLinkEmbed slug={slug} /> : null;
-          })()}
+        {/* Community link embed */}
+        {post.content && hasCommunityLink(post.content) && (() => {
+          const slug = extractCommunitySlug(post.content);
+          return slug ? <CommunityLinkEmbed slug={slug} /> : null;
+        })()}
 
-          {/* Link previews for URLs in content (skip if community link is shown) */}
-          {post.content && !hasCommunityLink(post.content) && <FeedLinkPreviews text={post.content} />}
-        </div>
+        {/* Link previews for URLs in content (skip if community link is shown) */}
+        {post.content && !hasCommunityLink(post.content) && <FeedLinkPreviews text={post.content} />}
 
         {/* Metadata: timestamp and views */}
         <PostMetadata
@@ -449,6 +446,17 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         creatorAddress={post.author.id}
         creatorName={post.author.name}
         tokenId={post.id}
+      />
+
+      {/* Off-screen card captured by html2canvas for "Share as Image" */}
+      <ShareImageCard
+        ref={shareImageRef}
+        authorName={post.author.name}
+        authorHandle={post.author.handle}
+        authorAvatarUrl={post.author.avatarSeed?.startsWith('http') ? post.author.avatarSeed : undefined}
+        title={post.title}
+        content={post.content}
+        postUrl={`${window.location.origin}/app/post/${post.id}`}
       />
     </div>
   );
