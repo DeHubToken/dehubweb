@@ -14,6 +14,8 @@ import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
+import { useBuyAlerts, type BuyAlertMessage } from '@/hooks/use-buy-alerts';
+import { BuyAlertCard } from './BuyAlertCard';
 import {
   DropdownMenu,
   DropdownMenuContent,

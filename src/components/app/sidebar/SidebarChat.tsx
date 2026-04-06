@@ -21,6 +21,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { toast } from 'sonner';
 import type { ReactionData } from '../chat/ChatMessage';
+import { useBuyAlerts, type BuyAlertMessage } from '@/hooks/use-buy-alerts';
+import { BuyAlertCard } from '../chat/BuyAlertCard';
 
 const QUICK_EMOJIS = ['👍', '❤️', '😂', '🔥', '🚀', '👀', '💯', '🙏'];
 
