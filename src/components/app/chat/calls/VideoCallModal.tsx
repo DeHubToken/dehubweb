@@ -24,6 +24,8 @@ const VideoCallModal: React.FC = () => {
     toggleMute,
     toggleCamera,
     switchCamera,
+    isMinimized,
+    minimizeCall,
   } = useCall();
 
   const [peerName, setPeerName] = useState<string | null>(null);
