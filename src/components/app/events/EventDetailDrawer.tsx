@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
 import { MapPin, Calendar, Users, Star, Trash2, CheckCircle2, Sparkles, MessageSquare } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -11,6 +12,34 @@ import type { CommunityEvent } from '@/hooks/use-events';
 import { toast } from 'sonner';
 import { EventChat } from './EventChat';
 import { EventAttendeesDrawer } from './EventAttendeesDrawer';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { buildAvatarUrl } from '@/lib/media-url';
+import { useNavigate } from 'react-router-dom';
+
+function CreatorInfo({ event }: { event: CommunityEvent }) {
+  const navigate = useNavigate();
+  const avatarUrl = buildAvatarUrl(event.creator_wallet_address, event.creator_avatar);
+  const displayName = event.creator_username || `${event.creator_wallet_address.slice(0, 6)}...`;
+  const handle = event.creator_username;
+
+  return (
+    <button
+      onClick={() => navigate(`/${handle || event.creator_wallet_address}`)}
+      className="flex items-center gap-2 group"
+    >
+      <Avatar className="w-6 h-6">
+        <AvatarImage src={avatarUrl} />
+        <AvatarFallback className="bg-zinc-700 text-white text-[9px]">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
+      </Avatar>
+      <span className="relative inline-flex items-baseline shrink min-w-0 pr-3">
+        <span className="text-xs text-zinc-400 group-hover:text-white transition-colors">
+          Created by <span className="font-medium text-zinc-300 group-hover:text-white">{displayName}</span>
+        </span>
+        <BadgeIcon username={handle || undefined} className="w-[9px] h-[9px] absolute -top-0.5 -right-0" />
+      </span>
+    </button>
+  );
+}
 
 interface EventDetailDrawerProps {
   event: CommunityEvent | null;
@@ -169,9 +198,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
 
               {/* Creator info + delete */}
               <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
-                <p className="text-xs text-zinc-500">
-                  Created by {event.creator_username || `${event.creator_wallet_address.slice(0, 6)}...`}
-                </p>
+                <CreatorInfo event={event} />
                 {isCreator && (
                   <Button
                     variant="ghost"
