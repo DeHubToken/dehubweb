@@ -174,15 +174,22 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
 
           {/* Lyrics */}
           <div>
-            <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-medium text-white/60">
-                Lyrics <span className="text-white/25">(optional — AI writes if blank)</span>
-              </label>
+            <label className="text-xs font-medium text-white/60 mb-1.5 block">
+              Lyrics <span className="text-white/25">(optional — AI writes if blank)</span>
+            </label>
+            <div className="relative">
+              <textarea
+                value={lyrics}
+                onChange={(e) => setLyrics(e.target.value)}
+                placeholder={"[verse]\nYour lyrics here...\n\n[chorus]\nChorus lyrics..."}
+                rows={5}
+                className="w-full px-3 py-2.5 pb-10 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-white/25 transition-colors resize-none"
+              />
               <button
                 onClick={handleGenerateLyrics}
                 disabled={isGeneratingLyrics}
                 className={cn(
-                  'px-3 py-1 rounded-lg text-[11px] font-semibold border transition-all',
+                  'absolute bottom-2 right-2 px-3 py-1 rounded-lg text-[11px] font-semibold border transition-all',
                   isGeneratingLyrics
                     ? 'border-white/10 bg-white/5 text-white/30 cursor-not-allowed'
                     : 'border-white/20 bg-white/10 text-white hover:bg-white/15 hover:border-white/30 active:scale-95'
@@ -198,13 +205,6 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
                 )}
               </button>
             </div>
-            <textarea
-              value={lyrics}
-              onChange={(e) => setLyrics(e.target.value)}
-              placeholder={"[verse]\nYour lyrics here...\n\n[chorus]\nChorus lyrics..."}
-              rows={5}
-              className="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/25 focus:outline-none focus:border-white/25 transition-colors resize-none"
-            />
           </div>
 
           {/* Original prompt preview */}
