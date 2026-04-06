@@ -12,6 +12,14 @@ interface PostShareImageOptions {
   title?: string;
   content?: string;
   postId: string;
+  likes?: number;
+}
+
+function fmtCount(n?: number): string {
+  if (!n) return '0';
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1).replace(/\.0$/, '')}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(1).replace(/\.0$/, '')}K`;
+  return String(n);
 }
 
 /** Word-wrap text to fit within maxWidth, returns array of lines. */
@@ -174,16 +182,34 @@ export async function buildPostShareImage(opts: PostShareImageOptions): Promise<
     }
   }
 
-  // ── Footer: post URL ─────────────────────────────────────────────────────────
+  // ── Footer divider ───────────────────────────────────────────────────────────
+  const FOOTER_Y = H - PAD - 10;
+  ctx.strokeStyle = '#1f1f23';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(PAD, FOOTER_Y - 36);
+  ctx.lineTo(W - PAD, FOOTER_Y - 36);
+  ctx.stroke();
+
+  // ── Like count ───────────────────────────────────────────────────────────────
+  ctx.font = `500 20px ${FONT}`;
+  ctx.fillStyle = '#a1a1aa';
+  ctx.fillText('👍', PAD, FOOTER_Y);
+  ctx.fillStyle = '#ffffff';
+  ctx.fillText(fmtCount(opts.likes), PAD + 32, FOOTER_Y);
+
+  // ── Post URL (right-aligned) ─────────────────────────────────────────────────
   ctx.fillStyle = '#3f3f46';
   ctx.font = `400 18px ${FONT}`;
-  ctx.fillText(`dehub.app/app/post/${opts.postId}`, PAD, H - PAD + 4);
+  ctx.textAlign = 'right';
+  ctx.fillText(`dehub.app/app/post/${opts.postId}`, W - PAD, FOOTER_Y);
+  ctx.textAlign = 'left';
 
-  // DeHub icon bottom-right
+  // DeHub icon bottom-right (above URL)
   const icon = await loadImage('/dehub-icon.png');
   if (icon) {
-    ctx.globalAlpha = 0.25;
-    ctx.drawImage(icon, W - PAD - 28, H - PAD - 22, 28, 28);
+    ctx.globalAlpha = 0.2;
+    ctx.drawImage(icon, W - PAD - 22, FOOTER_Y - 58, 22, 22);
     ctx.globalAlpha = 1;
   }
 

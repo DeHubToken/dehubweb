@@ -172,6 +172,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         title: post.title,
         content: post.content,
         postId: post.id,
+        likes: post.stats.likes,
       });
 
       const file = new File([blob], 'dehub-post.png', { type: 'image/png' });
