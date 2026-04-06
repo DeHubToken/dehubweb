@@ -253,6 +253,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
   const AUDIO_FILE_EFFECTS: Record<string, string> = {
     applause: '/sounds/applause.wav',
     cricket: '/sounds/crickets.wav',
+    drumroll: '/sounds/drumroll.wav',
   };
 
   const playBuiltIn = useCallback((effect: BuiltInEffect) => {
