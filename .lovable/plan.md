@@ -1,44 +1,26 @@
 
 
-## Fix: MiniMax Music Always Generates "La La La" Lyrics
+## Add Confirmation Dialog for Clear All History
 
-### Root Cause
+### Problem
+Clicking "Clear All" in the conversation history drawer immediately deletes all conversations with no way to undo. Users can accidentally lose their entire chat history.
 
-In the `fal-ai-tools` edge function, the MiniMax Music tool config has this:
+### Solution
+Add a confirmation step before clearing all conversations. When the user clicks "Clear All", show a confirmation state with "Are you sure?" and two buttons: "Cancel" and "Confirm".
 
-```typescript
-buildInput: (p) => ({
-  prompt: p.prompt || 'upbeat pop song',
-  lyrics_prompt: p.lyrics || p.lyrics_prompt || '[verse]\nLa la la\n[chorus]\nOh oh oh',
-}),
-```
+### Implementation
 
-The client (`AssistantPage.tsx`) sends: `{ tool: 'minimax-music', prompt: "Create a song about love" }`
+**File: `src/components/app/assistant/ConversationHistoryDrawer.tsx`**
 
-Since **no `lyrics` or `lyrics_prompt` field** is ever sent from the client, the lyrics always default to the hardcoded "La la la / Oh oh oh" placeholder. The user's creative prompt only goes into the `prompt` field (which MiniMax treats as a style/mood descriptor), not into `lyrics_prompt` (which controls the actual sung words).
+1. Add a `showClearConfirm` boolean state
+2. When "Clear All" is clicked, set `showClearConfirm = true` instead of immediately deleting
+3. Replace the button with a confirmation UI showing "Are you sure?" with Cancel and Confirm buttons
+4. Cancel resets the state; Confirm calls the existing `handleClearAll` and resets the confirm state
+5. Auto-reset `showClearConfirm` when the drawer closes
 
-### Fix
-
-**1. Edge function (`supabase/functions/fal-ai-tools/index.ts`)**
-
-Update `minimax-music.buildInput` to use the user's prompt as the lyrics source when no explicit lyrics field is provided:
-
-```typescript
-buildInput: (p) => ({
-  prompt: p.prompt || 'upbeat pop song',
-  lyrics_prompt: p.lyrics || p.lyrics_prompt || p.prompt || '',
-}),
-```
-
-This way, when a user says "Create a song about summer vibes with a chill beat", that text flows into `lyrics_prompt` as well, giving MiniMax actual creative direction for the lyrics instead of "La la la".
-
-**2. Optionally, send lyrics separately from the client** (enhancement)
-
-In `AssistantPage.tsx`, when the AI detects a music request, use the Lovable AI to generate proper structured lyrics from the user's prompt before sending to fal-ai-tools. This would produce better results since MiniMax expects formatted lyrics with `[verse]`, `[chorus]` tags.
-
-However, the minimal fix (step 1 alone) will immediately stop the "La la la" problem by passing the user's prompt as the lyrics input.
+### UI Detail
+The confirmation replaces the "Clear All" button inline — no modal/dialog needed. Two small buttons appear: a white "Cancel" and a red "Yes, Clear" button, keeping the interaction lightweight and contextual.
 
 ### Files Changed
-- `supabase/functions/fal-ai-tools/index.ts` — 1-line change in `buildInput`
-- Deploy the edge function
+- `src/components/app/assistant/ConversationHistoryDrawer.tsx` — ~15 lines added
 
