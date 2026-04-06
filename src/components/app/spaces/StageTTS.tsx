@@ -192,14 +192,17 @@ export function StageTTS() {
 
       {/* Text input + send */}
       <div className="flex gap-2">
-        <Input
-          value={text}
-          onChange={(e) => setText(e.target.value.slice(0, 500))}
-          placeholder="Type a message to speak..."
-          className="flex-1 bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl text-sm"
-          onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
-          disabled={isGenerating}
-        />
+        <div className="relative flex-1">
+          <Input
+            value={text}
+            onChange={(e) => setText(e.target.value.slice(0, 500))}
+            placeholder="Type a message to speak..."
+            className="w-full bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl text-sm pr-14"
+            onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
+            disabled={isGenerating}
+          />
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-white/30 pointer-events-none">{text.length}/500</span>
+        </div>
         <Button
           onClick={handleGenerate}
           disabled={!text.trim() || isGenerating || !selectedVoice}
@@ -213,8 +216,6 @@ export function StageTTS() {
           )}
         </Button>
       </div>
-
-      <p className="text-[10px] text-white/30 text-right">{text.length}/500</p>
     </div>
   );
 }
