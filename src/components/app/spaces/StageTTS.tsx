@@ -148,7 +148,7 @@ export function StageTTS() {
       </div>
 
       {/* Voice list */}
-      <ScrollArea className="h-[120px]">
+      <div className="h-[120px] overflow-y-auto scrollbar-none">
         {isLoadingVoices && voices.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <Loader2 className="w-4 h-4 animate-spin text-white/40" />
@@ -188,7 +188,7 @@ export function StageTTS() {
             ))}
           </div>
         )}
-      </ScrollArea>
+      </div>
 
       {/* Text input + send */}
       <div className="flex gap-2">
