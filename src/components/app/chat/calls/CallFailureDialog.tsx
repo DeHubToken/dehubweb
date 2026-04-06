@@ -74,8 +74,7 @@ const CallFailureDialog: React.FC<CallFailureDialogProps> = ({
               onClose();
             }}>
               <span className="flex items-center justify-center gap-2 px-4 py-2 text-white text-sm font-medium">
-                <MessageSquare className="h-4 w-4" />
-                Send callback request
+                Callback Request
               </span>
             </LiquidGlassBubble>
           )}
