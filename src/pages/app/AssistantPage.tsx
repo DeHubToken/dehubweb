@@ -984,7 +984,7 @@ export default function AssistantPage() {
     } catch (err) {
       console.error('Polling error:', err);
     }
-  }, []);
+  }, [clearPendingVideo]);
 
   // Handle video generation after payment confirmation
   const handleVideoGenerationConfirm = async () => {
