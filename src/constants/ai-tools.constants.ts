@@ -67,7 +67,7 @@ export const AI_TOOL_MODELS: Record<string, AiToolModel> = {
     emoji: '🎬',
     category: 'music-video',
     tier: 'standard',
-    baseCostUsd: 0.255, // music $0.035 + video $0.22
+    baseCostUsd: 0.385, // music $0.165 + video $0.22
   },
   'music-video-premium': {
     id: 'music-video-premium',
