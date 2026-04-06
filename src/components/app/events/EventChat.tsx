@@ -246,6 +246,13 @@ export function EventChat({ eventId }: EventChatProps) {
                         </span>
                         {msg.message_type === 'gif' && msg.image_url ? (
                           <img src={msg.image_url} alt="GIF" className="max-w-[280px] max-h-32 rounded mt-0.5" loading="lazy" />
+                        ) : msg.message_type === 'voice' && msg.image_url ? (
+                          <div className="mt-1 flex items-center gap-2 bg-zinc-800 rounded-lg px-3 py-2 max-w-[200px]">
+                            <Mic className="w-3.5 h-3.5 text-green-400 shrink-0" />
+                            <audio controls preload="none" className="h-8 w-full [&::-webkit-media-controls-panel]:bg-transparent">
+                              <source src={msg.image_url} type="audio/webm" />
+                            </audio>
+                          </div>
                         ) : editingId === msg.id ? (
                           <div className="flex items-center gap-1 mt-0.5">
                             <input autoFocus value={editText} onChange={(e) => setEditText(e.target.value)}
@@ -339,7 +346,8 @@ export function EventChat({ eventId }: EventChatProps) {
       {/* Input */}
       {isAuthenticated ? (
         <div className="px-1 py-2">
-          <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2">
+          <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2 relative">
+            <span className="absolute top-2 right-3 text-[10px] text-zinc-600">{newMessage.length}/500</span>
             <Textarea
               ref={textareaRef}
               placeholder="Type a message..."
@@ -358,7 +366,7 @@ export function EventChat({ eventId }: EventChatProps) {
               }}
               onKeyDown={handleKeyDown}
               maxLength={500}
-              className="min-h-[36px] max-h-32 resize-none text-sm bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-1 focus-visible:ring-0 focus-visible:ring-offset-0 leading-[1.35]"
+              className="min-h-[36px] max-h-32 resize-none text-sm bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-12 focus-visible:ring-0 focus-visible:ring-offset-0 leading-[1.35]"
               rows={1}
               style={{ fieldSizing: 'content' } as React.CSSProperties}
             />
@@ -367,7 +375,10 @@ export function EventChat({ eventId }: EventChatProps) {
                 <EmojiGifPicker onEmojiSelect={handleEmojiSelect} onGifSelect={handleGifSelect} />
               </div>
               <div className="flex items-center gap-1">
-                <span className="text-[10px] text-zinc-600">{newMessage.length}/500</span>
+                <VoiceRecorder
+                  onRecordingComplete={handleVoiceRecordingComplete}
+                  disabled={!isAuthenticated}
+                />
                 <Button variant="ghost" size="icon" onClick={handleSend} disabled={!newMessage.trim()} className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700">
                   <Send className="w-5 h-5" />
                 </Button>
