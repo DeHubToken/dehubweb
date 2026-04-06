@@ -258,6 +258,75 @@ export type Database = {
         }
         Relationships: []
       }
+      call_sessions: {
+        Row: {
+          call_type: string
+          caller_address: string
+          created_at: string
+          id: string
+          recipient_address: string
+          signaling_data: Json | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          call_type: string
+          caller_address: string
+          created_at?: string
+          id?: string
+          recipient_address: string
+          signaling_data?: Json | null
+          status: string
+          updated_at?: string
+        }
+        Update: {
+          call_type?: string
+          caller_address?: string
+          created_at?: string
+          id?: string
+          recipient_address?: string
+          signaling_data?: Json | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      callback_requests: {
+        Row: {
+          call_type: string
+          created_at: string
+          expires_at: string
+          id: string
+          message: string | null
+          recipient_address: string
+          requester_address: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          call_type: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          message?: string | null
+          recipient_address: string
+          requester_address: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          call_type?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          message?: string | null
+          recipient_address?: string
+          requester_address?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       category_post_log: {
         Row: {
           id: string
