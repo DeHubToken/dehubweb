@@ -334,6 +334,17 @@ export function PostAccessToggles({
                     <X className="w-2.5 h-2.5" />
                   </button>
                 </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    localStorage.setItem('post_default_categories', selectedCategory);
+                    markCategorySaved?.();
+                    toast.success('Default community saved');
+                  }}
+                  className="text-xs text-white/50 hover:text-white"
+                >
+                  <Save className="w-3.5 h-3.5" />
+                </button>
               </div>
             )}
           </div>
