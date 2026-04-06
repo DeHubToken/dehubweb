@@ -171,13 +171,13 @@ export function VoiceCreditPurchaseModal({
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    {isSelected && <Check className="w-4 h-4 text-cyan-400 shrink-0" />}
+                    {isSelected && <Check className="w-4 h-4 text-white shrink-0" />}
                     <div className="text-left">
                       <p className="font-medium text-white">{b.label}</p>
                       <p className="text-xs text-zinc-500">
                         ${b.perExchangeUsd.toFixed(3)}/exchange
                         {b.discount > 0 && (
-                          <span className="ml-1.5 text-green-400">({b.discount}% off)</span>
+                          <span className="ml-1.5 text-white font-bold">({b.discount}% off)</span>
                         )}
                       </p>
                     </div>
