@@ -618,6 +618,69 @@ export type Database = {
         }
         Relationships: []
       }
+      event_chat_messages: {
+        Row: {
+          avatar_url: string | null
+          badge_balance: number | null
+          content: string
+          created_at: string
+          display_name: string | null
+          event_id: string
+          id: string
+          image_url: string | null
+          message_type: string
+          reactions: Json | null
+          reply_to_id: string | null
+          username: string | null
+          wallet_address: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          badge_balance?: number | null
+          content?: string
+          created_at?: string
+          display_name?: string | null
+          event_id: string
+          id?: string
+          image_url?: string | null
+          message_type?: string
+          reactions?: Json | null
+          reply_to_id?: string | null
+          username?: string | null
+          wallet_address: string
+        }
+        Update: {
+          avatar_url?: string | null
+          badge_balance?: number | null
+          content?: string
+          created_at?: string
+          display_name?: string | null
+          event_id?: string
+          id?: string
+          image_url?: string | null
+          message_type?: string
+          reactions?: Json | null
+          reply_to_id?: string | null
+          username?: string | null
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_chat_messages_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "community_events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_chat_messages_reply_to_id_fkey"
+            columns: ["reply_to_id"]
+            isOneToOne: false
+            referencedRelation: "event_chat_messages"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       feature_request_comments: {
         Row: {
           avatar: string | null
