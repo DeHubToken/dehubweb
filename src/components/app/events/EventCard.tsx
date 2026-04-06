@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { MapPin, Users, Star, Calendar } from 'lucide-react';
+import { MapPin, Users, Flame, Calendar } from 'lucide-react';
 import type { CommunityEvent } from '@/hooks/use-events';
 import { cn } from '@/lib/utils';
 
@@ -53,7 +53,7 @@ export function EventCard({ event, onClick }: EventCardProps) {
             {event.going_count} going
           </span>
           <span className="flex items-center gap-1">
-            <Star className="w-3 h-3" />
+            <Flame className="w-3 h-3" />
             {event.interested_count} interested
           </span>
         </div>

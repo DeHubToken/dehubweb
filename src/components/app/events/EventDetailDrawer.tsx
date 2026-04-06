@@ -3,7 +3,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { format } from 'date-fns';
-import { MapPin, Calendar, Users, Star, Trash2, CheckCircle2, Sparkles, MessageSquare, Share2 } from 'lucide-react';
+import { MapPin, Calendar, Users, Flame, Trash2, CheckCircle2, Sparkles, MessageSquare, Share2 } from 'lucide-react';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { cn } from '@/lib/utils';
 import { GLASS_STYLES } from '@/constants/app.constants';
@@ -144,7 +144,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                 />
                 <LiquidGlassBubble2
                   label={`Interested (${interestedList.length})`}
-                  icon={<Star className="w-4 h-4" />}
+                  icon={<Flame className="w-4 h-4" />}
                   onClick={() => handleRsvp('interested')}
                   disabled={toggleRsvp.isPending}
                   width="100%"
@@ -180,7 +180,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                       onClick={() => setAttendeesType('interested')}
                       className="flex items-center gap-1 hover:text-white transition-colors"
                     >
-                      <Sparkles className="w-3.5 h-3.5" />
+                      <Flame className="w-3.5 h-3.5" />
                       {interestedList.length} interested
                     </button>
                   </div>
