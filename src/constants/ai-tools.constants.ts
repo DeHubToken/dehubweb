@@ -45,7 +45,7 @@ export const AI_TOOL_MODELS: Record<string, AiToolModel> = {
     emoji: '🎵',
     category: 'music',
     tier: 'premium',
-    baseCostUsd: 0.035,
+    baseCostUsd: 0.165,
   },
   'ace-step': {
     id: 'ace-step',
