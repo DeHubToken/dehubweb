@@ -19,7 +19,7 @@ export interface AiToolModel {
   requiresAudio?: boolean;
 }
 
-export type AiToolCategory = 'music' | 'tts' | 'background-removal' | 'upscale' | 'speech-to-text';
+export type AiToolCategory = 'music' | 'music-video' | 'tts' | 'background-removal' | 'upscale' | 'speech-to-text';
 
 /**
  * Markup percentage (100% = 2x cost)
