@@ -30,6 +30,7 @@ interface MediaItem {
   type: 'image' | 'video' | 'audio';
   conversation_id: string;
   created_at: string;
+  title?: string;
 }
 
 /** Inline audio-playable thumbnail for the media grid */
