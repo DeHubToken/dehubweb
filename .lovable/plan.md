@@ -1,26 +1,46 @@
 
 
-## Plan: Post AI-Generated Audio as Actual File (Not Link)
+## Plan: ElevenLabs TTS for Stage Speakers
 
-### Problem
-Currently, clicking the Post/Share button on a generated audio track opens the post modal with just a text string containing the fal.ai URL. This results in a link post, not an actual audio post.
+### What You'll Get
+Hosts and speakers in a Stage can type a message, pick from 6 high-quality ElevenLabs voices, and have it spoken aloud to everyone in the room.
 
-### Solution
-Fetch the audio file from the fal.ai URL, convert it to a `File` object, and pass it to the post modal as an actual audio file attachment — the same way the AI Chat's image posting works.
+### Setup Required
+You'll need an **ElevenLabs API key**. You can get one at [elevenlabs.io](https://elevenlabs.io) — they have a free tier with limited credits.
 
 ### Changes
 
-**1. `src/hooks/use-global-drop-zone.tsx`**
-- Add an `openPostModalWithFiles` function that accepts a `FileList` + optional text, sets `pendingFiles`, and opens the modal.
-- Expose it in the context.
+**1. Add `ELEVENLABS_API_KEY` secret**
+- Prompt you to enter your ElevenLabs API key
 
-**2. `src/components/app/assistant/GeneratedAudioPlayer.tsx`**
-- Replace the current `openPostModal` text-only call with logic that:
-  1. Fetches the audio URL as a blob
-  2. Creates a `File` object (`dehub-audio.mp3`, type `audio/mpeg`)
-  3. Uses `DataTransfer` to create a `FileList`
-  4. Calls `openPostModalWithFiles` to open the post modal with the actual audio file attached
-- Add a loading state on the Share button while fetching
+**2. Create `elevenlabs-tts` edge function** (`supabase/functions/elevenlabs-tts/index.ts`)
+- Accepts `text` and `voiceId` params
+- Calls ElevenLabs TTS API with `eleven_turbo_v2_5` model (low latency)
+- Returns raw audio binary
+- 6 voice options: Roger, Sarah, Laura, Charlie, George, Alice
 
-This ensures the audio is posted as an actual playable audio file in the feed, not a URL link.
+**3. Create `StageTTS` component** (`src/components/app/spaces/StageTTS.tsx`)
+- Text input with character limit (~500 chars)
+- Voice selector dropdown (6 voices with preview labels)
+- Send button that calls the edge function
+- Loading state while generating
+- Plays returned audio locally via `HTMLAudioElement` (Agora picks it up through the mic, or we can use local playback for all participants to hear)
+- Visible to hosts and speakers only
+
+**4. Update `AudioSpacesModal.tsx`**
+- Add `StageTTS` component below the soundboard section
+- Show for hosts and speakers (not listeners)
+
+### Voice Options
+| Voice | ID | Style |
+|-------|----|-------|
+| Roger | CwhRBWXzGAHq8TQ4Fs17 | Deep, authoritative male |
+| Sarah | EXAVITQu4vr4xnSDxMaL | Warm, natural female |
+| Laura | FGY2WhTYpPnrIDTdsKH5 | Soft, professional female |
+| Charlie | IKne3meq5aSn9XLyUdCD | Friendly male |
+| George | JBFqnCBsd6RMkjVDRZzb | British, distinguished male |
+| Alice | Xb7hH8MSUJpSbSDYk0k2 | Young, clear female |
+
+### Audio Routing
+The generated speech plays through a local `Audio` element. Since the speaker's mic is active in the Stage, Agora will pick up the audio and broadcast it to all participants. This is the simplest approach that works without complex Agora track injection.
 
