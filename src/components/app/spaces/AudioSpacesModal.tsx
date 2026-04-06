@@ -396,12 +396,12 @@ export function AudioSpacesModal() {
                         </div>
                         {/* Waveform - right side on desktop, below on mobile */}
                         <div className={cn(
-                          "hidden sm:flex flex-1 h-10 min-w-0 transition-all duration-300",
+                          "hidden sm:flex items-center gap-2 flex-1 h-10 min-w-0 transition-all duration-300",
                           playingStageId === space.id ? "opacity-100 drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]" : "opacity-40"
                         )}>
                           <StaticWaveform
                             seed={space.id}
-                            className="w-full h-full"
+                            className="w-full h-full flex-1"
                             animated={playingStageId === space.id}
                             volumeLevel={playingStageId === space.id ? playbackVolume : 0}
                             color={playingStageId === space.id ? 'rgba(255,255,255,0.95)' : undefined}
@@ -412,6 +412,9 @@ export function AudioSpacesModal() {
                               }
                             } : undefined}
                           />
+                          {playingStageId === space.id && playbackTimeLeft && (
+                            <span className="text-[10px] text-white/50 font-mono shrink-0 w-10 text-right">{playbackTimeLeft}</span>
+                          )}
                         </div>
                         <div className={cn(
                           "sm:hidden w-full h-12 transition-all duration-300",
