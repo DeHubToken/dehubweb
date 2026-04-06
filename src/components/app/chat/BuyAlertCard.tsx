@@ -3,6 +3,8 @@
  * Renders a buy bot alert message card used across community chat, public chat, and sidebar.
  */
 
+import { useState } from 'react';
+import { Minus } from 'lucide-react';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
@@ -33,7 +35,15 @@ export function fmtTokens(n: number): string {
   return n.toFixed(2);
 }
 
-export function BuyAlertCard({ content, timestamp }: { content: string; timestamp: string }) {
+interface BuyAlertCardProps {
+  content: string;
+  timestamp: string;
+  onHide?: () => void;
+}
+
+export function BuyAlertCard({ content, timestamp, onHide }: BuyAlertCardProps) {
+  const [confirming, setConfirming] = useState(false);
+
   let data: BuyAlertData | null = null;
   try { data = JSON.parse(content); } catch { return null; }
   if (!data) return null;
@@ -45,12 +55,46 @@ export function BuyAlertCard({ content, timestamp }: { content: string; timestam
     <div className="mx-3 my-1.5">
       <LiquidGlassBubble shimmer noBorder className="w-full [&>div]:!bg-gradient-to-tl [&>div]:!from-white/5 [&>div]:!via-white/10 [&>div]:!to-white/20">
         <div className="text-xs">
+          {/* Confirmation overlay */}
+          {confirming && (
+            <div className="mb-2.5 p-2.5 rounded-lg bg-white/5 border border-white/10">
+              <p className="text-zinc-300 text-[11px] leading-relaxed mb-2">
+                Are you sure you want to hide all past and future buy bot messages?
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => {
+                    onHide?.();
+                    setConfirming(false);
+                  }}
+                  className="px-3 py-1 rounded-md bg-white/10 hover:bg-white/20 text-white text-[11px] font-medium transition-colors"
+                >
+                  Confirm
+                </button>
+                <button
+                  onClick={() => setConfirming(false)}
+                  className="px-3 py-1 rounded-md bg-white/5 hover:bg-white/10 text-zinc-400 text-[11px] font-medium transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+
           <div className="flex items-center justify-between mb-2.5">
             <div className="flex items-center gap-1.5">
               <img src={dehubCoin} alt="DHB" className="w-5 h-5" />
               <span className="font-bold text-white text-sm tracking-wide">{fmtTokens(data.dhbAmount)} BUY</span>
             </div>
-            <span className="text-zinc-500 text-[10px]">{formatTimeAgo(timestamp)}</span>
+            {onHide && !confirming && (
+              <button
+                onClick={() => setConfirming(true)}
+                className="p-0.5 rounded hover:bg-white/10 text-zinc-500 hover:text-zinc-300 transition-colors"
+                title="Hide buy bot alerts"
+              >
+                <Minus className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
 
           <div className="space-y-1.5">
@@ -66,9 +110,6 @@ export function BuyAlertCard({ content, timestamp }: { content: string; timestam
                 )}
               </span>
             </div>
-
-
-
 
             <div className="flex items-center gap-1.5">
               <span className="text-sm">🟢</span>
@@ -116,6 +157,11 @@ export function BuyAlertCard({ content, timestamp }: { content: string; timestam
                 </span>
               </div>
             )}
+          </div>
+
+          {/* Timestamp bottom-right */}
+          <div className="flex justify-end mt-2">
+            <span className="text-zinc-500 text-[10px]">{formatTimeAgo(timestamp)}</span>
           </div>
         </div>
       </LiquidGlassBubble>
