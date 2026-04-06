@@ -9,6 +9,7 @@ import { DesktopSidebar } from './navigation/DesktopSidebar';
 import { SidebarNavItem } from './navigation/SidebarNavItem';
 import { PostModal } from '@/features/post';
 import { useAuth } from '@/contexts/AuthContext';
+import { useStage } from '@/contexts/StageContext';
 import { ChainSelector, type ChainId } from './ChainSelector';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 
@@ -20,6 +21,7 @@ interface AppSidebarProps {
 export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
   const location = useLocation();
   const { isAuthenticated, disconnect } = useAuth();
+  const { openModal: openStagesModal } = useStage();
   const { t } = useTranslation();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [selectedChainId, setSelectedChainId] = useState<ChainId>(() => {
@@ -51,7 +53,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
           const isActive =
             item.path === '/app'
               ? location.pathname === '/app'
-              : !item.external && location.pathname.startsWith(item.path);
+              : !item.external && !item.action && location.pathname.startsWith(item.path);
 
           return (
             <SidebarNavItem
@@ -61,6 +63,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
               isHome={item.path === '/app'}
               currentPath={location.pathname}
               onNavigate={onToggle}
+              onClick={item.action === 'open-stages' ? () => { onToggle(); openStagesModal(); } : undefined}
               variant="mobile"
             />
           );

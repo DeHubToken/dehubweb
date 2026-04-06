@@ -5,6 +5,7 @@ export interface NavItem {
   label: string;
   path: string;
   external?: boolean;
+  action?: string;
 }
 
 export interface User {
