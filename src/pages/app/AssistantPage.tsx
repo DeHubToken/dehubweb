@@ -1230,8 +1230,11 @@ export default function AssistantPage() {
           content: '',
           isToolProcessing: false,
         };
-        if (data.audioUrl) completedMessage.audioUrl = data.audioUrl;
-        if (data.imageUrl) completedMessage.imageUrl = data.imageUrl;
+        if (data.audioUrl) {
+          completedMessage.audioUrl = data.audioUrl;
+        } else if (data.imageUrl) {
+          completedMessage.imageUrl = data.imageUrl;
+        }
         if (data.text) completedMessage.content = `📝 **Transcription:**\n\n${data.text}`;
         if (!data.audioUrl && !data.imageUrl && !data.text) {
           completedMessage.content = `✅ ${toolModel?.name || 'Tool'} completed successfully.`;
