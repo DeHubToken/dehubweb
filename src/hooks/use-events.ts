@@ -24,6 +24,7 @@ export interface CommunityEvent {
   ends_at: string | null;
   going_count: number;
   interested_count: number;
+  gate_fee: number;
   created_at: string;
 }
 
@@ -190,6 +191,7 @@ export function useCreateEvent() {
       community_id?: string;
       creator_username?: string;
       creator_avatar?: string;
+      gate_fee?: number;
     }) => {
       if (!walletAddress) throw new Error('Not authenticated');
       const { data, error } = await withWalletHeader(
