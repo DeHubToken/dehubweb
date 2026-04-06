@@ -35,11 +35,12 @@ const TOOLS: Record<string, ToolConfig> = {
     appId: 'fal-ai/ace-step',
     name: 'ACE-Step',
     async: true,
-    buildInput: (p) => ({
-      lyrics: p.lyrics || p.prompt || '',
-      ...(p.tags && { tags: p.tags }),
-      ...(p.duration && { duration: p.duration }),
-    }),
+    buildInput: (p) => {
+      const input: Record<string, unknown> = { lyrics: p.lyrics || p.prompt || '' };
+      if (p.tags) input.tags = p.tags;
+      if (p.duration) input.duration = p.duration;
+      return input;
+    },
     extractResult: (d) => ({
       audioUrl: (d.audio as Record<string, unknown>)?.url || (d.audio_file as Record<string, unknown>)?.url,
     }),
@@ -50,10 +51,11 @@ const TOOLS: Record<string, ToolConfig> = {
     appId: 'fal-ai/dia-tts',
     name: 'Dia TTS',
     async: false,
-    buildInput: (p) => ({
-      text: p.text || p.prompt || '',
-      ...(p.audio_url && { audio_url: p.audio_url }),
-    }),
+    buildInput: (p) => {
+      const input: Record<string, unknown> = { text: p.text || p.prompt || '' };
+      if (p.audio_url) input.audio_url = p.audio_url;
+      return input;
+    },
     extractResult: (d) => ({
       audioUrl: (d.audio as Record<string, unknown>)?.url,
     }),
@@ -112,12 +114,11 @@ const TOOLS: Record<string, ToolConfig> = {
     appId: 'fal-ai/wizper',
     name: 'Whisper STT',
     async: false,
-    buildInput: (p) => ({
-      audio_url: p.audio_url,
-      task: p.task || 'transcribe',
-      ...(p.language && { language: p.language }),
-      chunk_level: 'segment',
-    }),
+    buildInput: (p) => {
+      const input: Record<string, unknown> = { audio_url: p.audio_url, task: p.task || 'transcribe', chunk_level: 'segment' };
+      if (p.language) input.language = p.language;
+      return input;
+    },
     extractResult: (d) => ({
       text: d.text,
       chunks: d.chunks,
