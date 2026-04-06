@@ -70,8 +70,8 @@ export function useFriendsAtEvent(eventId: string | undefined) {
       );
 
       return resolved
-        .filter((r): r is PromiseFulfilledResult<FriendAtEvent> => r.status === 'fulfilled')
-        .map(r => r.value);
+        .filter(r => r.status === 'fulfilled')
+        .map(r => (r as PromiseFulfilledResult<FriendAtEvent>).value);
     },
   });
 }
