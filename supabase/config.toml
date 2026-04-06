@@ -98,3 +98,6 @@ verify_jwt = false
 
 [functions.dhb-buy-bot]
 verify_jwt = false
+
+[functions.og-image]
+verify_jwt = false
