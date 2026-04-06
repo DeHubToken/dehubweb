@@ -180,7 +180,6 @@ export function MusicConfirmDialog({ open, onOpenChange, userPrompt, onConfirm }
             onClick={handleConfirm}
             width="auto"
             height="40px"
-            shimmer
             className="flex-1 [&>div]:!py-2 [&>div]:!px-4 [&_span]:!text-sm [&_span]:!font-semibold"
           />
         </div>
