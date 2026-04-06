@@ -158,7 +158,9 @@ export function ActionBar({
     e.stopPropagation();
     if (!onShareAsImage || isSharingImage) return;
     setIsSharingImage(true);
+    // Close drawer first, wait for animation to finish, then capture
     setSheetOpen(false);
+    await new Promise((r) => setTimeout(r, 300));
     try {
       await onShareAsImage();
     } finally {

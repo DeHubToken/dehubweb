@@ -166,18 +166,29 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const shareImageRef = useRef<HTMLDivElement>(null);
 
   const handleShareAsImage = useCallback(async () => {
-    if (!shareImageRef.current) return;
-    const html2canvas = (await import('html2canvas')).default;
-    const canvas = await html2canvas(shareImageRef.current, {
-      backgroundColor: '#09090b',
-      scale: 2,
-      useCORS: true,
-      logging: false,
-    });
-    canvas.toBlob(async (blob) => {
-      if (!blob) return;
+    if (!shareImageRef.current) {
+      toast.error('Share card not ready');
+      return;
+    }
+    try {
+      const html2canvas = (await import('html2canvas')).default;
+      const canvas = await html2canvas(shareImageRef.current, {
+        backgroundColor: '#09090b',
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+      });
+
+      // Wrap toBlob in a Promise so navigator.share stays in the async chain
+      const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, 'image/png')
+      );
+      if (!blob) { toast.error('Failed to capture image'); return; }
+
       const file = new File([blob], 'dehub-post.png', { type: 'image/png' });
       const postUrl = `${window.location.origin}/app/post/${post.id}`;
+
       if (navigator.canShare?.({ files: [file] })) {
         await navigator.share({
           files: [file],
@@ -185,13 +196,20 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           url: postUrl,
         });
       } else {
+        // Desktop fallback: download
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
         a.download = 'dehub-post.png';
         a.click();
         URL.revokeObjectURL(a.href);
+        toast.success('Image downloaded');
       }
-    }, 'image/png');
+    } catch (err) {
+      if ((err as Error)?.name !== 'AbortError') {
+        console.error('[ShareAsImage]', err);
+        toast.error('Failed to share image');
+      }
+    }
   }, [post.id, post.content]);
 
   // Build a minimal DeHubNFT for the quote modal from post data

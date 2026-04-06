@@ -32,8 +32,8 @@ export const ShareImageCard = forwardRef<HTMLDivElement, ShareImageCardProps>(
       <div
         ref={ref}
         style={{
-          position: 'fixed',
-          top: '-9999px',
+          position: 'absolute',
+          top: 0,
           left: '-9999px',
           width: '600px',
           background: '#09090b',
