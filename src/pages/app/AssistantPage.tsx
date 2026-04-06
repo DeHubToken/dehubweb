@@ -175,6 +175,13 @@ function requiresVideoGeneration(message: string): boolean {
 
 // ─── AI Tool Keywords ───
 
+const MUSIC_VIDEO_KEYWORDS = [
+  'music video', 'create a music video', 'make a music video', 'generate a music video',
+  'create music video', 'make music video', 'generate music video',
+  'song with video', 'song and video', 'music with video',
+  'video with music', 'mv', 'music clip'
+];
+
 const MUSIC_KEYWORDS = [
   'generate music', 'create music', 'make music', 'compose', 'song',
   'create a song', 'make a song', 'generate a song', 'write a song',
@@ -214,7 +221,8 @@ const STT_KEYWORDS = [
 
 function detectAiToolRequest(message: string, hasImage: boolean): AiToolCategory | null {
   const lower = message.toLowerCase();
-  // Order matters — check more specific patterns first
+  // Order matters — check more specific patterns first (music video before music)
+  if (MUSIC_VIDEO_KEYWORDS.some(k => lower.includes(k))) return 'music-video';
   if (MUSIC_KEYWORDS.some(k => lower.includes(k))) return 'music';
   if (TTS_KEYWORDS.some(k => lower.includes(k))) return 'tts';
   if (STT_KEYWORDS.some(k => lower.includes(k))) return 'speech-to-text';
@@ -225,6 +233,7 @@ function detectAiToolRequest(message: string, hasImage: boolean): AiToolCategory
 
 const DEFAULT_TOOL_FOR_CATEGORY: Record<AiToolCategory, string> = {
   'music': 'minimax-music',
+  'music-video': 'music-video-standard',
   'tts': 'dia-tts',
   'background-removal': 'birefnet',
   'upscale': 'creative-upscaler',
