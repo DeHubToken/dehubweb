@@ -483,13 +483,18 @@ export default function AssistantPage() {
   // User context for AI assistant personalization
   const userContext = useAssistantUserContext();
 
+  // Voice credits (prepaid bundles)
+  const voiceCredits = useVoiceCredits(walletAddress);
+  const [voiceCreditModalOpen, setVoiceCreditModalOpen] = useState(false);
+  const voiceCreditDeductRef = useRef(voiceCredits.deductCredit);
+  useEffect(() => { voiceCreditDeductRef.current = voiceCredits.deductCredit; }, [voiceCredits.deductCredit]);
+
   // Voice Assistant hook (Whisper STT + Dia TTS via fal.ai)
   const voiceAssistant = useVoiceAssistant({
     onTranscript: (text) => {
       // Deduct a voice credit per exchange
-      const hasCredit = voiceCredits.deductCredit();
+      const hasCredit = voiceCreditDeductRef.current();
       if (!hasCredit) {
-        voiceAssistant.stopVoiceMode();
         toast.error('Voice credits exhausted — purchase more to continue');
         setVoiceCreditModalOpen(true);
         return;
@@ -499,10 +504,6 @@ export default function AssistantPage() {
     isChatLoading: isLoading,
   });
   const voiceTranscriptHandlerRef = useRef<((text: string) => void) | null>(null);
-  
-  // Voice credits (prepaid bundles)
-  const voiceCredits = useVoiceCredits(walletAddress);
-  const [voiceCreditModalOpen, setVoiceCreditModalOpen] = useState(false);
 
   // Block access for unauthenticated users (AuthGate handles loading state internally)
   if (!isAuthenticated) {
