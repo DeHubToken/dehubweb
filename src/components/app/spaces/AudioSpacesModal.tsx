@@ -293,6 +293,7 @@ export function AudioSpacesModal() {
                                   setPlayingStageId(null);
                                   setPlaybackVolume(0);
                                   setPlaybackProgress(0);
+                                  setPlaybackTimeLeft('');
                                 };
 
                                 // Set up analyser for volume
