@@ -2,6 +2,7 @@
  * Event Attendees Drawer
  * =======================
  * Shows paginated list of going / interested users with infinite scroll.
+ * Resolves profile info (avatar, username, display name) from the DeHub API.
  */
 
 import { useState, useRef, useCallback, useEffect } from 'react';
@@ -14,14 +15,16 @@ import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useNavigate } from 'react-router-dom';
 import { formatTimeAgo } from '@/lib/feed-utils';
+import { getAccountInfo } from '@/lib/api/dehub/users';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 
 interface Attendee {
   id: string;
   wallet_address: string;
   status: string;
   created_at: string;
-  // Resolved from DeHub API or cache
   username?: string;
+  display_name?: string;
   avatar_url?: string;
 }
 
@@ -41,6 +44,25 @@ export function EventAttendeesDrawer({ eventId, type, open, onOpenChange }: Even
   const [page, setPage] = useState(0);
   const navigate = useNavigate();
 
+  const resolveProfiles = useCallback(async (items: Attendee[]): Promise<Attendee[]> => {
+    const resolved = await Promise.allSettled(
+      items.map(async (a) => {
+        try {
+          const profile = await getAccountInfo(a.wallet_address);
+          return {
+            ...a,
+            username: profile?.username || undefined,
+            display_name: (profile as any)?.display_name || (profile as any)?.displayName || undefined,
+            avatar_url: (profile as any)?.avatar || (profile as any)?.avatar_url || undefined,
+          };
+        } catch {
+          return a;
+        }
+      })
+    );
+    return resolved.map((r) => r.status === 'fulfilled' ? r.value : items[0]);
+  }, []);
+
   const loadPage = useCallback(async (pageNum: number) => {
     setLoading(true);
     try {
@@ -55,13 +77,16 @@ export function EventAttendeesDrawer({ eventId, type, open, onOpenChange }: Even
       if (error) throw error;
       const newData = (data ?? []) as Attendee[];
       if (newData.length < PAGE_SIZE) setHasMore(false);
-      setAttendees(prev => pageNum === 0 ? newData : [...prev, ...newData]);
+
+      // Resolve profiles from API
+      const withProfiles = await resolveProfiles(newData);
+      setAttendees(prev => pageNum === 0 ? withProfiles : [...prev, ...withProfiles]);
     } catch (err) {
       console.error('[EventAttendees] Load error:', err);
     } finally {
       setLoading(false);
     }
-  }, [eventId, type]);
+  }, [eventId, type, resolveProfiles]);
 
   // Reset and load when opened
   useEffect(() => {
@@ -74,7 +99,6 @@ export function EventAttendeesDrawer({ eventId, type, open, onOpenChange }: Even
   }, [open, loadPage]);
 
   // Infinite scroll observer
-  const loaderRef = useRef<HTMLDivElement>(null);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   const loaderCallback = useCallback((node: HTMLDivElement | null) => {
@@ -107,11 +131,12 @@ export function EventAttendeesDrawer({ eventId, type, open, onOpenChange }: Even
 
           {attendees.map((a) => {
             const avatarUrl = buildAvatarUrl(a.wallet_address, a.avatar_url);
-            const displayName = a.username || `${a.wallet_address.slice(0, 6)}...${a.wallet_address.slice(-4)}`;
+            const displayName = a.display_name || a.username || `${a.wallet_address.slice(0, 6)}...${a.wallet_address.slice(-4)}`;
+            const handle = a.username;
             return (
               <button
                 key={a.id}
-                onClick={() => { onOpenChange(false); navigate(`/${a.username || a.wallet_address}`); }}
+                onClick={() => { onOpenChange(false); navigate(`/${handle || a.wallet_address}`); }}
                 className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-white/[0.05] transition-colors"
               >
                 <Avatar className="w-9 h-9">
@@ -119,9 +144,15 @@ export function EventAttendeesDrawer({ eventId, type, open, onOpenChange }: Even
                   <AvatarFallback className="bg-zinc-700 text-white text-xs">{displayName.charAt(0).toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0 text-left">
-                  <p className="text-sm font-medium text-white truncate">{displayName}</p>
-                  <p className="text-xs text-zinc-500">{formatTimeAgo(a.created_at)}</p>
+                  <div className="flex items-center gap-1">
+                    <p className="text-sm font-medium text-white truncate">{displayName}</p>
+                    <BadgeIcon username={handle || undefined} className="w-3 h-3 shrink-0" />
+                  </div>
+                  {handle && (
+                    <p className="text-xs text-zinc-500">@{handle}</p>
+                  )}
                 </div>
+                <span className="text-[10px] text-zinc-600 shrink-0">{formatTimeAgo(a.created_at)}</span>
               </button>
             );
           })}
