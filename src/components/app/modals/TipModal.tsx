@@ -61,14 +61,12 @@ export function TipModal({
       if (resolvedTokenId && lastTipAmount > 0) {
         queryClient.setQueryData(['post-tip-count', resolvedTokenId], (old: number | undefined) => (old || 0) + lastTipAmount);
       }
-      setAmount('');
-      onOpenChange(false);
-    },
-    onConfirmed: () => {
-      // Reconcile with real DB total after write completes
+      // Also invalidate to reconcile with DB (the record is now guaranteed saved)
       if (resolvedTokenId) {
         queryClient.invalidateQueries({ queryKey: ['post-tip-count', resolvedTokenId] });
       }
+      setAmount('');
+      onOpenChange(false);
     },
   });
 
