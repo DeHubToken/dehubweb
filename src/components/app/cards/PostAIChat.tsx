@@ -146,6 +146,16 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
     },
   });
 
+  // Reset chat when user swipes to a different image in a carousel
+  const prevImageIndexRef = useRef(postContext.activeImageIndex);
+  useEffect(() => {
+    if (postContext.activeImageIndex !== undefined && 
+        prevImageIndexRef.current !== postContext.activeImageIndex) {
+      prevImageIndexRef.current = postContext.activeImageIndex;
+      setMessages([]);
+    }
+  }, [postContext.activeImageIndex]);
+
   // Generate initial context message
   useEffect(() => {
     if (isOpen && messages.length === 0) {
