@@ -52,8 +52,8 @@ export function BuyAlertCard({ content, timestamp, onHide }: BuyAlertCardProps) 
   const buyerUrl = `https://basescan.org/address/${data.buyerAddress}`;
 
   return (
-    <div className="mx-3 my-1.5">
-      <LiquidGlassBubble shimmer noBorder className="w-full [&>div]:!bg-gradient-to-tl [&>div]:!from-white/5 [&>div]:!via-white/10 [&>div]:!to-white/20">
+    <div className="my-1.5">
+      <LiquidGlassBubble shimmer noBorder className="w-full rounded-none [&>div]:!rounded-none [&>div]:!bg-gradient-to-tl [&>div]:!from-white/5 [&>div]:!via-white/10 [&>div]:!to-white/20">
         <div className="text-xs">
           {/* Confirmation overlay */}
           {confirming && (
