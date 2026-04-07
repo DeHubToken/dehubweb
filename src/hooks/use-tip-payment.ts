@@ -29,6 +29,8 @@ interface UseTipPaymentOptions {
   chainId?: ChainId;
   tokenId?: string;
   onSuccess?: () => void;
+  /** Called after on-chain confirmation + DB save succeeds (background) */
+  onConfirmed?: () => void;
 }
 
 /**
@@ -74,6 +76,7 @@ export function useTipPayment({
   chainId = BASE_CHAIN_ID,
   tokenId,
   onSuccess,
+  onConfirmed,
 }: UseTipPaymentOptions) {
   const [isTipping, setIsTipping] = useState(false);
   const { walletAddress, openLoginModal } = useAuth();
@@ -115,37 +118,38 @@ export function useTipPayment({
           signerAddress: walletAddress,
         });
 
-        // Update toast to show we're confirming
-        toast.loading('Confirming on chain...', { id: 'tip-payment' });
-
-        // Wait for on-chain confirmation
-        const confirmedTxHash = await tipResult.confirmed;
-
-        // Persist to database with retries
-        toast.loading('Saving tip record...', { id: 'tip-payment' });
-
-        const saved = await persistTipRecord({
-          walletAddress,
-          creatorAddress,
-          amount,
-          chainId,
-          txHash: confirmedTxHash,
-          tokenId: tokenId || null,
-        });
-
-        if (!saved) {
-          // On-chain succeeded but DB failed — warn user clearly
-          console.error('[Tip] All DB save retries failed for tx:', confirmedTxHash);
-          toast.error('Tip sent on-chain but failed to save. Contact support with tx: ' + confirmedTxHash.slice(0, 10) + '...', {
-            id: 'tip-payment',
-            duration: 10000,
-          });
-          return;
-        }
-
-        // Both on-chain AND DB succeeded — now show success
+        // Optimistic: show success immediately after tx submitted
         toast.success(dhbText(`Tip of ${amount} DHB sent!`), { id: 'tip-payment' });
         onSuccess?.();
+
+        // Background: confirm on-chain + persist to DB
+        (async () => {
+          try {
+            const confirmedTxHash = await tipResult.confirmed;
+
+            const saved = await persistTipRecord({
+              walletAddress,
+              creatorAddress,
+              amount,
+              chainId,
+              txHash: confirmedTxHash,
+              tokenId: tokenId || null,
+            });
+
+            if (!saved) {
+              console.error('[Tip] All DB save retries failed for tx:', confirmedTxHash);
+              toast.error('Tip confirmed on-chain but failed to save. Contact support with tx: ' + confirmedTxHash.slice(0, 10) + '...', {
+                duration: 10000,
+              });
+              return;
+            }
+
+            // DB saved — reconcile UI
+            onConfirmed?.();
+          } catch (err) {
+            console.error('[Tip] Background confirmation failed:', err);
+          }
+        })();
       } catch (error: unknown) {
         console.error('[Tip] Payment failed:', error);
         const message = parseTxError(error as Error);
@@ -154,7 +158,7 @@ export function useTipPayment({
         setIsTipping(false);
       }
     },
-    [walletAddress, creatorAddress, chainId, tokenId, openLoginModal, onSuccess]
+    [walletAddress, creatorAddress, chainId, tokenId, openLoginModal, onSuccess, onConfirmed]
   );
 
   return { tip, isTipping };
