@@ -108,6 +108,7 @@ export function SidebarChat() {
   const translateSignal = 0;
   const originalSignal = 0;
   const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
@@ -244,7 +245,7 @@ export function SidebarChat() {
     <div className="flex flex-col h-full pl-px">
       <SharedTranslationContext.Provider value={{ translateSignal, originalSignal, requestTranslate: () => {}, requestOriginal: () => {} }}>
       <div className="relative flex-1">
-        <div className="absolute inset-0 overflow-y-auto py-2 space-y-2">
+        <div ref={scrollContainerRef} className="absolute inset-0 overflow-y-auto py-2 space-y-2">
           {isLoading ? (
             <div className="space-y-2 py-2">
               {[...Array(4)].map((_, i) => (
@@ -284,14 +285,25 @@ export function SidebarChat() {
               const handle = msg.sender_username;
               const goToProfile = handle ? () => navigate(`/${handle}`) : undefined;
               return (
-                <div key={msg.id} className="group relative" style={{ paddingLeft: '10px', paddingRight: '10px' }}>
-                  {/* Reply indicator */}
+                <div key={msg.id} data-message-id={msg.id} className="group relative transition-colors duration-500" style={{ paddingLeft: '10px', paddingRight: '10px' }}>
+                  {/* Reply indicator – click to scroll to original */}
                   {msg.reply_to && (
-                    <div className="flex items-center gap-1 text-[10px] text-zinc-500 ml-8 mb-0.5">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const target = scrollContainerRef.current?.querySelector(`[data-message-id="${msg.reply_to!.id}"]`);
+                        if (target) {
+                          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                          (target as HTMLElement).classList.add('bg-white/10');
+                          setTimeout(() => (target as HTMLElement).classList.remove('bg-white/10'), 1500);
+                        }
+                      }}
+                      className="flex items-center gap-1 text-[10px] text-zinc-500 ml-8 mb-0.5 hover:text-zinc-300 transition-colors cursor-pointer"
+                    >
                       <CornerDownRight className="w-2.5 h-2.5" />
                       <span className="font-medium">{msg.reply_to.sender_name}</span>
                       <span className="truncate max-w-[120px]">{msg.reply_to.content}</span>
-                    </div>
+                    </button>
                   )}
                   <div className="flex items-start gap-2">
                     <button onClick={goToProfile} disabled={!handle} className={`flex-shrink-0 ${handle ? 'cursor-pointer' : 'cursor-default'}`}>
