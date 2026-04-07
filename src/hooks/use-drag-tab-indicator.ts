@@ -39,6 +39,8 @@ interface UseDragTabIndicatorOptions<T extends string> {
   onTap?: () => void;
   /** Called when drag ends — use to trigger spring transition or other cleanup */
   onDragEnd?: () => void;
+  /** Must match GlassIndicator fixedHeightPx so imperative drag transform stays vertically aligned */
+  indicatorFixedHeightPx?: number;
 }
 
 /** Rubber-band resistance: apply 35% of overshoot past the edge */
@@ -63,6 +65,7 @@ export function useDragTabIndicator<T extends string>({
   isDraggingRef,
   onTap,
   onDragEnd,
+  indicatorFixedHeightPx,
 }: UseDragTabIndicatorOptions<T>) {
   const dragStateRef = useRef<DragState<T> | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -96,11 +99,16 @@ export function useDragTabIndicator<T extends string>({
       ? sortedTabRects[sortedTabRects.length - 1].relLeft
       : tabRect.x;
 
+    const indicatorY =
+      indicatorFixedHeightPx != null
+        ? tabRect.y + (tabRect.height - indicatorFixedHeightPx) / 2
+        : tabRect.y;
+
     dragStateRef.current = {
       startX: e.clientX,
       startRectX: tabRect.x,
       startWidth: tabRect.width,
-      rectY: tabRect.y,
+      rectY: indicatorY,
       tabRects,
       sortedTabRects,
       minIndicatorX,
@@ -117,7 +125,7 @@ export function useDragTabIndicator<T extends string>({
     if (indicatorRef.current) {
       indicatorRef.current.style.willChange = 'transform, width';
     }
-  }, [tabRect, tabLayerRef, tabButtonPositions, tabValues, isDraggingRef]);
+  }, [tabRect, tabLayerRef, tabButtonPositions, tabValues, isDraggingRef, indicatorFixedHeightPx]);
 
   const handleDragMove = useCallback((e: React.PointerEvent) => {
     const drag = dragStateRef.current;

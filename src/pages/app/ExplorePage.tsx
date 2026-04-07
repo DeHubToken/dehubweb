@@ -822,6 +822,7 @@ export default function ExplorePage() {
     activeTab,
     onTabChange: setActiveTab,
     isDraggingRef: exploreIsDraggingRef,
+    indicatorFixedHeightPx: 35,
   });
 
   return (
@@ -873,7 +874,7 @@ export default function ExplorePage() {
           <div className="mt-3 -mx-1">
             <div className="bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
               <div ref={exploreTabLayerRef} className="relative overflow-visible">
-                <GlassIndicator ref={exploreIndicatorRef} rect={exploreTabRect} borderRadius="0.75rem" layoutKey={`explore-nav-${activeTab}`} enableTransition={!isExploreDragging && enableExploreTransition} />
+                <GlassIndicator ref={exploreIndicatorRef} rect={exploreTabRect} borderRadius="0.75rem" layoutKey={`explore-nav-${activeTab}`} enableTransition={!isExploreDragging && enableExploreTransition} fixedHeightPx={35} />
                 {exploreTabRect.ready && (
                   <div
                     className="absolute z-30 cursor-grab active:cursor-grabbing"

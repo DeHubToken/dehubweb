@@ -579,6 +579,7 @@ export default function HomePage() {
       resetFilters();
     },
     isDraggingRef: homeIsDraggingRef,
+    indicatorFixedHeightPx: 35,
     onTap: () => handleTabClick(activeTab),
     onDragEnd: () => {
       // Trigger spring transition after drag ends
@@ -612,7 +613,7 @@ export default function HomePage() {
       <div className={cn("sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 lg:mt-0", isCollapsed && "pl-2 pr-0", isCollapsed && "lg:hidden")}>
         <div className="bg-zinc-900 rounded-xl overflow-visible">
           <div ref={homeTabLayerRef} className="relative overflow-visible">
-            <GlassIndicator ref={homeIndicatorRef} rect={homeTabRect} borderRadius="0.75rem" layoutKey={`home-${isCollapsed}-${activeTab}`} enableTransition={!isHomeDragging && enableHomeTransition} />
+            <GlassIndicator ref={homeIndicatorRef} rect={homeTabRect} borderRadius="0.75rem" layoutKey={`home-${isCollapsed}-${activeTab}`} enableTransition={!isHomeDragging && enableHomeTransition} fixedHeightPx={35} />
             {/* Drag handle overlay */}
             {homeTabRect.ready && (
               <div
