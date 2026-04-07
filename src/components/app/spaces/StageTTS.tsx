@@ -36,7 +36,7 @@ export function StageTTS() {
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
   const { injectAudio } = useStage();
   const { user } = useAuth();
-  const { customVoices, refetch: refetchCustomVoices } = useCustomVoices();
+  const { voices: customVoices, refetch: refetchCustomVoices } = useCustomVoices();
 
   const fetchVoices = useCallback(async (query: string) => {
     setIsLoadingVoices(true);
