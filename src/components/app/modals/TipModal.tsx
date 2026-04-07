@@ -51,13 +51,21 @@ export function TipModal({
   const { walletAddress } = useAuth();
   const [amount, setAmount] = useState('');
   const [dhbBalance, setDhbBalance] = useState<number | null>(null);
+  const [lastTipAmount, setLastTipAmount] = useState(0);
   const resolvedTokenId = tokenId || context;
   const { tip, isTipping } = useTipPayment({
     creatorAddress,
     tokenId: resolvedTokenId,
     onSuccess: () => {
+      // Optimistically increment the cached tip count
+      if (resolvedTokenId && lastTipAmount > 0) {
+        queryClient.setQueryData(['post-tip-count', resolvedTokenId], (old: number | undefined) => (old || 0) + lastTipAmount);
+      }
       setAmount('');
       onOpenChange(false);
+    },
+    onConfirmed: () => {
+      // Reconcile with real DB total after write completes
       if (resolvedTokenId) {
         queryClient.invalidateQueries({ queryKey: ['post-tip-count', resolvedTokenId] });
       }
@@ -94,6 +102,7 @@ export function TipModal({
 
   const handleSendTip = () => {
     if (!isValidAmount) return;
+    setLastTipAmount(parsedAmount);
     tip(parsedAmount);
   };
 

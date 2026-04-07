@@ -24,6 +24,7 @@ interface UseTipPaymentOptions {
   chainId?: ChainId;
   tokenId?: string;
   onSuccess?: () => void;
+  onConfirmed?: () => void;
 }
 
 export function useTipPayment({
@@ -31,6 +32,7 @@ export function useTipPayment({
   chainId = BASE_CHAIN_ID,
   tokenId,
   onSuccess,
+  onConfirmed,
 }: UseTipPaymentOptions) {
   const [isTipping, setIsTipping] = useState(false);
   const { walletAddress, openLoginModal } = useAuth();
@@ -77,9 +79,9 @@ export function useTipPayment({
         onSuccess?.();
 
         // Record tip + await confirmation in background (non-blocking)
-        tipResult.confirmed.then((confirmedTxHash) => {
+        tipResult.confirmed.then(async (confirmedTxHash) => {
           try {
-            withWalletHeader(
+            await withWalletHeader(
               supabase.from('tip_records').insert({
                 sender_address: walletAddress.toLowerCase(),
                 receiver_address: creatorAddress.toLowerCase(),
@@ -90,6 +92,7 @@ export function useTipPayment({
               } as any),
               walletAddress
             );
+            onConfirmed?.();
           } catch (dbErr) {
             console.warn('[Tip] Failed to record tip in DB:', dbErr);
           }
@@ -104,7 +107,7 @@ export function useTipPayment({
         setIsTipping(false);
       }
     },
-    [walletAddress, creatorAddress, chainId, tokenId, openLoginModal, onSuccess]
+    [walletAddress, creatorAddress, chainId, tokenId, openLoginModal, onSuccess, onConfirmed]
   );
 
   return { tip, isTipping };
