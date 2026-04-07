@@ -1830,7 +1830,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         onOpenChange={setShowTipModal}
         creatorAddress={video.creatorId}
         creatorName={video.channel}
-        context={video.id}
+        tokenId={video.id}
       />
 
       {/* PPV Drawer - controlled, rendered at root level for mobile compatibility */}

@@ -59,7 +59,11 @@ export function TipModal({
     onSuccess: () => {
       // Optimistically increment the cached tip count immediately
       if (resolvedTokenId && lastTipAmount > 0) {
+        // Cancel any in-flight refetches so they don't overwrite our optimistic value
+        queryClient.cancelQueries({ queryKey: ['post-tip-count', resolvedTokenId] });
         queryClient.setQueryData(['post-tip-count', resolvedTokenId], (old: number | undefined) => (old || 0) + lastTipAmount);
+        // Mark the data as fresh so closing the modal doesn't trigger a refetch
+        queryClient.invalidateQueries({ queryKey: ['post-tip-count', resolvedTokenId], refetchType: 'none' });
       }
       setAmount('');
       onOpenChange(false);
