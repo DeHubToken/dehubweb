@@ -123,21 +123,23 @@ export function LiveCard({ stream }: LiveCardProps) {
       </div>
 
       {/* Thumbnail */}
-      <div className="relative aspect-video bg-zinc-800 rounded-lg overflow-hidden" data-no-navigate>
-        <img
-          src={stream.thumbnail}
-          alt=""
-          className="w-full h-full object-cover"
-          onError={(e) => {
-            (e.currentTarget as HTMLImageElement).src =
-              'https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=480&h=270&fit=crop';
-          }}
-        />
-        {!stream.isLive && (
-          <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-            <span className="text-white text-xs font-semibold bg-zinc-800/80 px-3 py-1 rounded-full backdrop-blur-sm">
-              Stream Ended
-            </span>
+      <div className="relative aspect-video bg-black rounded-lg overflow-hidden" data-no-navigate>
+        {stream.isLive ? (
+          <img
+            src={stream.thumbnail}
+            alt=""
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).src =
+                'https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=480&h=270&fit=crop';
+            }}
+          />
+        ) : (
+          <div className="absolute inset-0 bg-black flex flex-col items-center justify-center gap-2">
+            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+              <Radio className="w-5 h-5 text-white/40" />
+            </div>
+            <span className="text-white/60 text-xs font-medium">Live Ended</span>
           </div>
         )}
       </div>
