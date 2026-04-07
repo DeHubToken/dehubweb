@@ -112,10 +112,12 @@ export interface UnifiedFeedItem {
   minterFollowers?: number;
   minterFollowings?: number;
   stream?: {
+    _id?: string;
     streamId?: string;
     playbackId?: string;
     streamKey?: string;
     status?: string;
+    isActive?: boolean;
     viewerCount?: number;
     title?: string;
     category?: string;

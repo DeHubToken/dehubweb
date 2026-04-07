@@ -149,6 +149,18 @@ export interface VideoItem extends BaseFeedItem {
   isAudio?: boolean;
   /** Post categories */
   categories?: string[];
+  /** Whether this video card actually represents a live post */
+  isLivePost?: boolean;
+  /** Cached live status from feed navigation */
+  liveStatus?: string;
+  /** Cached stream active flag from feed navigation */
+  liveIsActive?: boolean;
+  /** Cached playback ID for live post navigation */
+  livePlaybackId?: string;
+  /** Cached playback URL for live post navigation */
+  livePlaybackUrl?: string;
+  /** Cached MongoDB stream ID for live post navigation */
+  liveStreamId?: string;
   /** Soundtrack URL (plays over the video via synced audio overlay) */
   soundtrackUrl?: string;
   /** Soundtrack display title */
