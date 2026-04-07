@@ -10,6 +10,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation as useI18n } from 'react-i18next';
 import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX, LayoutDashboard, Check, XCircle, Lock, Zap, History, AudioLines } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
@@ -2013,16 +2014,14 @@ export default function AssistantPage() {
       />
 
       {/* API Key Prompt for non-whale users */}
-      {showApiKeyPrompt && (
+      {showApiKeyPrompt && createPortal(
         <div 
-          className="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 backdrop-blur-sm"
-          onClick={(e) => { e.stopPropagation(); setShowApiKeyPrompt(false); }}
-          onPointerDown={(e) => e.stopPropagation()}
+          className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/70 backdrop-blur-sm"
+          onClick={() => setShowApiKeyPrompt(false)}
         >
           <div 
             className="w-[90%] max-w-md rounded-2xl bg-black/95 border border-white/10 p-6 space-y-4"
             onClick={(e) => e.stopPropagation()}
-            onPointerDown={(e) => e.stopPropagation()}
           >
             <div className="space-y-2">
               <h3 className="text-lg font-semibold text-white">Voice Cloning Access</h3>
@@ -2080,7 +2079,8 @@ export default function AssistantPage() {
               Your key is stored locally and never shared. It's only used for voice cloning requests.
             </p>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
 
