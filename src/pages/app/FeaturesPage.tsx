@@ -579,7 +579,7 @@ function SubmitFeatureDrawer({
           </button>
         </DrawerHeader>
 
-        <div className="px-4 pb-6 space-y-4">
+        <div className="px-4 pb-6 space-y-4 overflow-y-auto overscroll-contain flex-1">
           {/* Title */}
           <div>
             <label className="text-zinc-400 text-xs font-medium mb-1 block">{t('features.titleLabel')}</label>
