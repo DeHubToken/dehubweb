@@ -314,11 +314,12 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
         {/* Stages tab */}
         <div
           className={cn(
-            'transition-opacity duration-150 min-h-[280px]',
+            'transition-opacity duration-150',
             activeTab === 'stages'
-              ? 'opacity-100 relative z-10'
-              : 'opacity-0 pointer-events-none absolute inset-0'
+              ? 'opacity-100 relative z-10 flex flex-col'
+              : 'opacity-0 pointer-events-none absolute inset-0 flex flex-col'
           )}
+          style={{ minHeight: 280 }}
         >
           {liveStages.length > 0 ? (
             <div className="flex flex-col gap-1">
