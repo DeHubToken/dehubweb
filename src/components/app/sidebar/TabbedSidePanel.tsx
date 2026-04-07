@@ -56,8 +56,10 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
                   : 'text-zinc-500 hover:text-zinc-300 [&:hover>.tab-hover-bg]:opacity-100'
               }`}
             >
-              {effectiveTab === tab.id && (
+              {effectiveTab === tab.id ? (
                 <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
+              ) : (
+                <div className="tab-hover-bg absolute inset-0 bg-gradient-to-b from-zinc-800/40 to-transparent opacity-0 transition-opacity" />
               )}
               <Icon className="w-5 h-5 relative z-10" />
               
