@@ -452,7 +452,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
               playsInline
               {...{"webkit-playsinline": ""}}
               muted={isMuted}
-              poster={stream.thumbnail}
+              poster={stream.thumbnail || undefined}
               onPlay={() => setIsPlaying(true)}
               onPause={() => setIsPlaying(false)}
               onEnded={() => setStreamEnded(true)}
