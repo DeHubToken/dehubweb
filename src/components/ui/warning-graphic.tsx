@@ -67,7 +67,7 @@ export function WarningGraphic({
       scale: 1,
       y: 0,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 400,
         damping: 25,
         delay: shouldAnimate ? 2.5 * speedMultiplier : 0,
@@ -81,7 +81,7 @@ export function WarningGraphic({
       opacity: 1,
       scaleX: 1,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 400,
         damping: 30,
         delay: shouldAnimate ? 1.4 * speedMultiplier : 0,
@@ -95,7 +95,7 @@ export function WarningGraphic({
       opacity: 1,
       scaleX: 1,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 400,
         damping: 30,
         delay: shouldAnimate ? 1.4 * speedMultiplier : 0,
@@ -119,7 +119,7 @@ export function WarningGraphic({
       opacity: 1,
       scale: [0, 1.3, 1],
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 500,
         damping: 20,
         scale: { times: [0, 0.6, 1], duration: 0.6 * speedMultiplier },
