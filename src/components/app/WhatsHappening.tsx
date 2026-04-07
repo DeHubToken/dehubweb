@@ -91,7 +91,7 @@ const COUNTRIES = [
   { code: 'eg', flag: '🇪🇬', name: 'Egypt' },
 ];
 
-type Tab = 'posts' | 'tickers';
+type Tab = 'posts' | 'stages' | 'tickers';
 
 const TICKER_PERIODS: { value: TickerPeriod; label: string }[] = [
   { value: '1d', label: '1D' },
@@ -196,7 +196,24 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
     setActiveTab(tab);
   }, []);
 
-  const tabIcons: Record<Tab, typeof Hash> = { posts: Hash, tickers: DollarSign };
+  const tabIcons: Record<Tab, typeof Hash> = { posts: Hash, stages: Mic, tickers: DollarSign };
+
+  // Fetch live stages for the stages tab
+  const { data: liveStages = [] } = useQuery({
+    queryKey: ['sidebar-live-stages'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('audio_spaces')
+        .select('*')
+        .eq('status', 'live')
+        .order('started_at', { ascending: false })
+        .limit(10);
+      if (error) throw error;
+      return data || [];
+    },
+    staleTime: 15_000,
+    refetchInterval: 30_000,
+  });
 
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden relative">
