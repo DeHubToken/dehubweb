@@ -161,7 +161,21 @@ export function VoiceTrainingDrawer({ open, onOpenChange, onSuccess, customApiKe
 
           {/* Audio Sample */}
           <div className="space-y-2">
-            <label className="text-xs text-white/60">Audio Sample (min 30s recommended)</label>
+            <label className="text-xs text-white/60">Audio Sample</label>
+            <div className="flex flex-col gap-1 px-3 py-2 rounded-lg bg-white/5 border border-white/10">
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                <span className="text-[11px] text-white/70"><span className="text-white font-medium">Minimum:</span> 30 seconds of clear speech</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                <span className="text-[11px] text-white/70"><span className="text-white font-medium">Recommended:</span> 1–3 minutes for best results</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-white/30" />
+                <span className="text-[11px] text-white/50">No background noise or music. One speaker only.</span>
+              </div>
+            </div>
 
             {audioFile ? (
               <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
@@ -180,7 +194,16 @@ export function VoiceTrainingDrawer({ open, onOpenChange, onSuccess, customApiKe
                   <Mic className="w-6 h-6 text-red-400" />
                 </div>
                 <p className="text-sm text-white">Recording... {formatTime(recordingTime)}</p>
-                <Button onClick={stopRecording} variant="outline" size="sm" className="bg-white/10 border-white/20 text-white">
+                {recordingTime < 30 && (
+                  <p className="text-[10px] text-amber-400">Keep going — need at least {30 - recordingTime}s more</p>
+                )}
+                {recordingTime >= 30 && recordingTime < 60 && (
+                  <p className="text-[10px] text-emerald-400">✓ Minimum reached — more is better!</p>
+                )}
+                {recordingTime >= 60 && (
+                  <p className="text-[10px] text-emerald-400">✓ Great length for high quality cloning</p>
+                )}
+                <Button onClick={stopRecording} variant="outline" size="sm" className="bg-white/10 border-white/20 text-white" disabled={recordingTime < 10}>
                   <Square className="w-3 h-3 mr-1" /> Stop
                 </Button>
               </div>
@@ -208,11 +231,6 @@ export function VoiceTrainingDrawer({ open, onOpenChange, onSuccess, customApiKe
               </div>
             )}
           </div>
-
-          <p className="text-[10px] text-white/30">
-            Provide a clear audio sample of the voice you want to clone. Longer samples (30s+) produce better results. 
-            Avoid background noise for best quality.
-          </p>
 
           {/* Submit */}
           <Button
