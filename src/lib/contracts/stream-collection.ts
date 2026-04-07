@@ -63,7 +63,7 @@ export { getWalletAddress as getWeb3AuthSigner };
  * @param params - Mint parameters from API response (v, r, s, createdTokenId, timestamp)
  * @returns Transaction hash
  */
-export async function mintOnChain(params: MintParams): Promise<string> {
+export async function mintOnChain(params: MintParams): Promise<{ hash: string; confirmed: Promise<string> }> {
   const chainId = params.chainId || BASE_CHAIN_ID;
   const chainConfig = getChainConfig(chainId);
   
@@ -116,11 +116,13 @@ export async function mintOnChain(params: MintParams): Promise<string> {
     
     console.log('[StreamCollection] Transaction submitted:', result.hash);
     
-    // Wait for confirmation
-    const receipt = await result.wait(1);
-    console.log('[StreamCollection] Transaction confirmed:', receipt.hash);
+    // Return hash immediately + background confirmation promise
+    const confirmed = result.wait(1).then((receipt: any) => {
+      console.log('[StreamCollection] Transaction confirmed:', receipt.hash);
+      return receipt.hash as string;
+    });
     
-    return receipt.hash;
+    return { hash: result.hash, confirmed };
   } catch (error) {
     console.error('[StreamCollection] Mint failed:', error);
     // Log to backend for server-side debugging

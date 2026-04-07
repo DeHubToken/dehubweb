@@ -1081,6 +1081,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       }, 1200);
 
       let txHash: string;
+      let mintConfirmed: Promise<string> | undefined;
       
       try {
         if (hasBounty) {
@@ -1099,8 +1100,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
             chainId,
           });
         } else {
-          // Use StreamCollection for standard minting
-          txHash = await mintOnChain({
+          // Use StreamCollection for standard minting — optimistic return
+          const mintResult = await mintOnChain({
             tokenId: mintResponse.createdTokenId,
             timestamp: mintResponse.timestamp,
             v: mintResponse.v,
@@ -1108,9 +1109,19 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
             s: mintResponse.s,
             chainId,
           });
+          txHash = mintResult.hash;
+          mintConfirmed = mintResult.confirmed;
         }
       } finally {
         clearInterval(progressInterval);
+      }
+
+      // Fire-and-forget: wait for on-chain confirmation in background
+      if (mintConfirmed) {
+        mintConfirmed.catch((err) => {
+          console.error('[Mint] Background confirmation failed:', err);
+          toast.error('Post submitted but confirmation failed. It may still appear shortly.');
+        });
       }
 
       console.log('[Mint] Transaction hash:', txHash);
