@@ -2,7 +2,7 @@ import { memo, useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Search, Globe, ChevronDown, Hash, Flame, Mic, Plus, Users } from 'lucide-react';
+import { Search, Globe, ChevronDown, Hash, Flame, Radio, Plus, Users } from 'lucide-react';
 import { motion, LayoutGroup, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { TickerLogo } from './TickerLogo';
@@ -198,7 +198,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
     setActiveTab(tab);
   }, []);
 
-  const tabIcons: Record<Tab, typeof Hash> = { posts: Hash, stages: Mic, tickers: Flame };
+  const tabIcons: Record<Tab, typeof Hash> = { posts: Hash, stages: Radio, tickers: Flame };
 
   // Fetch live stages for the stages tab
   const { data: liveStages = [] } = useQuery({
