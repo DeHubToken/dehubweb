@@ -1091,7 +1091,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       segments.push({ items: afterShorts.slice(lastSplit), startIndex: afterShortsBase + lastSplit });
 
       const fullWidthInserts: (ReactNode | null)[] = [
-        <div key="leaderboard-carousel" className="my-3"><LeaderboardCarousel /></div>,
         radioStations.length > 0 ? <div key="radio-carousel" className="my-3"><RadioCarouselSection /></div> : null,
         liveNowStreams.length > 0 ? (
           <div key="live-now" className="my-3 space-y-2">
@@ -1110,6 +1109,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             </SwipeableCarousel>
           </div>
         ) : null,
+        <div key="leaderboard-carousel" className="my-3"><LeaderboardCarousel /></div>,
       ];
 
       return (
