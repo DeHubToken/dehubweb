@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { CalendarDays } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEvents } from '@/hooks/use-events';
 import type { CommunityEvent } from '@/hooks/use-events';
