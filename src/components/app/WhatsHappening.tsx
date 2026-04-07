@@ -300,7 +300,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
       <div className="p-4 pt-0">
 
       {/* Tab content */}
-      <div style={{ minHeight: 280, maxHeight: 400 }} className="relative overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
+      <div style={{ height: 320 }} className="relative overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
         {/* Posts tab — shared component */}
         <div
           className={cn(
@@ -318,10 +318,9 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
           className={cn(
             'transition-opacity duration-150',
             activeTab === 'stages'
-              ? 'opacity-100 relative z-10 flex flex-col'
+              ? 'opacity-100 relative z-10 flex flex-col h-full'
               : 'opacity-0 pointer-events-none absolute inset-0 flex flex-col'
           )}
-          style={{ minHeight: 280 }}
         >
           {liveStages.length > 0 ? (
             <div className="flex flex-col gap-1">
