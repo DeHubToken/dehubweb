@@ -198,7 +198,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
     setActiveTab(tab);
   }, []);
 
-  const tabIcons: Record<Tab, typeof Hash> = { posts: Hash, stages: Mic, tickers: DollarSign };
+  const tabIcons: Record<Tab, typeof Hash> = { posts: Hash, stages: Mic, tickers: Flame };
 
   // Fetch live stages for the stages tab
   const { data: liveStages = [] } = useQuery({
