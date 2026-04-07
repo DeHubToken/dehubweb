@@ -16,6 +16,7 @@ export interface CategoryCount {
 const EXCLUDED_CATEGORIES = new Set(['general', '', '-', 'other']);
 const TOP_LIMIT = 10;
 const PAGE_SIZE = 1000;
+const TRENDING_CACHE_MS = 5 * 60_000;
 
 function getPeriodCutoff(period: TopicPeriod): string {
   const now = new Date();
@@ -149,10 +150,10 @@ export function useTrendingCategories(period: TopicPeriod = 'all') {
   return useQuery<CategoryCount[]>({
     queryKey: ['trending-categories', period],
     queryFn: () => fetchTrendingCategories(period),
-    staleTime: 30_000,
+    staleTime: TRENDING_CACHE_MS,
     gcTime: 30 * 60_000,
-    refetchOnMount: true,
-    refetchOnWindowFocus: true,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     placeholderData: (prev) => prev,
   });
 }
@@ -164,9 +165,9 @@ export function useAllTrendingCategories() {
   return useQuery<CategoryCount[]>({
     queryKey: ['trending-categories-all-unlimited'],
     queryFn: () => fetchTrendingCategories('all', true),
-    staleTime: 30_000,
+    staleTime: TRENDING_CACHE_MS,
     gcTime: 30 * 60_000,
-    refetchOnMount: true,
-    refetchOnWindowFocus: true,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 }

@@ -63,7 +63,7 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
     };
   }, [cardId, destroyHls]);
 
-  // Auto-play muted on mount
+  // Track playback state from native video events
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -76,6 +76,18 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
 
     video.addEventListener('playing', onPlaying);
     video.addEventListener('pause', onPause);
+
+    return () => {
+      video.removeEventListener('playing', onPlaying);
+      video.removeEventListener('pause', onPause);
+    };
+  }, []);
+
+  // Lazily initialize HLS only when user starts playback (prevents many continuous segment requests)
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (!isPlaying) return;
 
     if (Hls.isSupported()) {
       const hls = new Hls({
@@ -100,10 +112,9 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
       hls.on(Hls.Events.ERROR, (_, data) => {
         if (data.fatal) {
           logger.error('TV Preview Fatal Error', { channel: channel.name, type: data.type, details: data.details });
+          setIsPlaying(false);
           destroyHls();
         }
-        // Non-fatal errors (bufferStalledError, bufferSeekOverHole, fragLoadTimeOut) are
-        // expected with live HLS streams and handled internally by hls.js — no need to log.
       });
 
       hlsRef.current = hls;
@@ -113,11 +124,12 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
     }
 
     return () => {
-      video.removeEventListener('playing', onPlaying);
-      video.removeEventListener('pause', onPause);
-      destroyHls();
+      if (!isInPiP) {
+        video.pause();
+        destroyHls();
+      }
     };
-  }, [channel.streamUrl, destroyHls]);
+  }, [isPlaying, channel.name, channel.streamUrl, isInPiP, destroyHls]);
 
   // Fullscreen tracking
   useEffect(() => {
@@ -136,11 +148,14 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
     if (!video) return;
 
     if (isPlaying) {
+      setIsPlaying(false);
       video.pause();
+      setShowVideo(false);
+      destroyHls();
       videoPlaybackManager.stop(cardId);
     } else {
       videoPlaybackManager.play(cardId);
-      video.play().catch(() => {});
+      setIsPlaying(true);
     }
   };
 

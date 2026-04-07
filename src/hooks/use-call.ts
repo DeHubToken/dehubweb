@@ -531,9 +531,16 @@ export const useCall = (): UseCallReturn => {
   useEffect(() => {
     if (!userAddress) return;
 
+    const runCheck = () => {
+      // Realtime listener is primary; skip fallback polling while tab is hidden.
+      if (typeof document !== 'undefined' && document.visibilityState !== 'visible') return;
+      void checkForCalls();
+    };
+
     const interval = setInterval(() => {
-      checkForCalls();
-    }, 5_000);
+      runCheck();
+    }, 15_000);
+    runCheck();
 
     return () => clearInterval(interval);
   }, [userAddress, checkForCalls]);

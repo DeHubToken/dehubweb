@@ -46,11 +46,6 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const loaderRef = useRef<HTMLDivElement>(null);
 
-  // Prefetch all periods (limited to 10)
-  useTrendingCategories('1d');
-  useTrendingCategories('1w');
-  useTrendingCategories('1m');
-  useTrendingCategories('1y');
   const { data: limitedCategories = [] } = useTrendingCategories(topicPeriod);
   
   // Fetch ALL categories for the "all" period (unlimited)
