@@ -517,7 +517,10 @@ export function useDeHubLive(options: { unit?: number; sortMode?: 'viewers' | 'r
     staleTime: 60 * 1000,
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
-    refetchOnMount: true,
+    // Prefetch already populates the cache on app load; don't fire a second
+    // /api/live call every time the Live tab mounts. Pull-to-refresh and the
+    // 60-second staleTime window will trigger genuine refetches when needed.
+    refetchOnMount: false,
     retry: 1,
   });
 }

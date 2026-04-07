@@ -176,7 +176,10 @@ function parseM3U8Playlist(content: string): TVChannel[] {
 }
 
 async function fetchFallbackChannels(): Promise<TVChannel[]> {
-  const response = await fetch(`${FREE_TV_PLAYLIST_URL}?_=${Date.now()}`);
+  // No cache-busting param — the module-level channelsCache (5-min TTL) prevents
+  // redundant fetches; the cache-buster was defeating browser HTTP caching and
+  // forcing a fresh 1 MB+ download on every session.
+  const response = await fetch(FREE_TV_PLAYLIST_URL);
   if (!response.ok) {
     throw new Error('Failed to fetch TV channels');
   }

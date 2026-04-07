@@ -106,7 +106,7 @@ export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
       if (error) throw error;
       return (data || []) as AudioSpace[];
     },
-    staleTime: 30_000,
+    staleTime: 60_000, // realtime subscription handles live updates; no need for frequent polling
   });
 
   // Realtime: remove ended stages instantly
