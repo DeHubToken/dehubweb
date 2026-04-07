@@ -1390,8 +1390,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 onLoadedData={() => console.log('Video loaded:', video.videoUrl)}
                 className={`w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`}
               />
-            ) : (
+            ) : video.thumbnail ? (
               <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading={aboveFold ? 'eager' : 'lazy'} fetchPriority={aboveFold ? 'high' : 'auto'} onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
+            ) : (
+              <div className="absolute inset-0 bg-black flex flex-col items-center justify-center gap-2">
+                <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                  <Play className="w-5 h-5 text-white/40" />
+                </div>
+                <span className="text-white/60 text-xs font-medium">Live Ended</span>
+              </div>
             )}
            </>
         )}
