@@ -339,7 +339,14 @@ export default function HomePage() {
 
     const handleTabReclick = (e: Event) => {
       const tab = (e as CustomEvent).detail;
-      if (tab) handleTabClick(tab);
+      if (!tab) return;
+      // Toggle filters for the active tab
+      if (tab === 'home') setShowHomeFilters(prev => !prev);
+      else if (tab === 'live') setShowLiveFilters(prev => !prev);
+      else if (tab === 'shorts') setShowShortsFilters(prev => !prev);
+      else if (tab === 'images') setShowImagesFilters(prev => !prev);
+      else if (tab === 'videos') setShowVideosFilters(prev => !prev);
+      else if (tab === 'music') setShowMusicFilters(prev => !prev);
     };
 
     window.addEventListener('home-refresh', handleHomeRefresh);
