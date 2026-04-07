@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import { Plus } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import { useEvents } from '@/hooks/use-events';
 import type { CommunityEvent } from '@/hooks/use-events';
 import { EventCard } from '@/components/app/events/EventCard';
 import { CreateEventDrawer } from '@/components/app/events/CreateEventDrawer';
