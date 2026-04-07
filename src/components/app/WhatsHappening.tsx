@@ -436,7 +436,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
       {/* View all button */}
       <LiquidGlassBubble2
         label={t('commandCentre.viewAll')}
-        onClick={() => navigate(showCountrySelector && activeTab === 'tickers' ? '/app/top-100' : '/app/explore')}
+        onClick={() => navigate(activeTab === 'stages' ? '/app/stages' : showCountrySelector && activeTab === 'tickers' ? '/app/top-100' : '/app/explore')}
         width="100%"
         height="auto"
         className="-mt-1 [&>div]:!py-2 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent"
