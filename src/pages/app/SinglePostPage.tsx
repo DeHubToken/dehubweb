@@ -336,7 +336,7 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     title: nft.title || nft.name || 'Live Stream',
     game: nft.description || '',
     viewers: formatViews(nft.views || 0).replace(' views', ''),
-    thumbnail: buildImageUrl(nft.tokenId, nft.imageUrl) || '/placeholder.svg',
+    thumbnail: buildImageUrl(nft.tokenId, nft.imageUrl) || '',
     tags: [],
     isLive: deriveIsLive(nft),
     creatorId: resolvedAddress,
