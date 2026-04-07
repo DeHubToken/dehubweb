@@ -367,19 +367,19 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
               </div>
 
               <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label className="text-sm text-zinc-400 flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setCategoryDrawerOpen(true)}
+                  className="flex items-center justify-between w-full"
+                >
+                  <label className="text-sm text-zinc-400 flex items-center gap-2 cursor-pointer">
                     <Hash className="w-4 h-4" />
                     Category
                   </label>
-                  <button
-                    type="button"
-                    onClick={() => setCategoryDrawerOpen(true)}
-                    className="text-xs text-white/50 hover:text-white"
-                  >
+                  <span className="text-xs text-white/50 hover:text-white">
                     {selectedCategoriesArray.length > 0 ? 'Edit' : 'Add'}
-                  </button>
-                </div>
+                  </span>
+                </button>
                 {selectedCategoriesArray.length > 0 && (
                   <div className="flex flex-wrap gap-1.5">
                     {selectedCategoriesArray.map((cat) => (
