@@ -2004,7 +2004,70 @@ export default function AssistantPage() {
         onSuccess={() => {
           // Picker will refetch custom voices automatically
         }}
+        customApiKey={(() => {
+          const badgeName = getBadgeName(user?.badgeBalance, user?.username);
+          const isWhale = badgeName === 'Meglodon' || badgeName === 'Blue Whale';
+          return isWhale ? undefined : customElevenLabsKey || undefined;
+        })()}
       />
+
+      {/* API Key Prompt for non-whale users */}
+      {showApiKeyPrompt && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 backdrop-blur-sm">
+          <div className="w-[90%] max-w-md rounded-2xl bg-black/95 border border-white/10 p-6 space-y-4">
+            <div className="space-y-2">
+              <h3 className="text-lg font-semibold text-white">Voice Cloning Access</h3>
+              <p className="text-sm text-white/60">
+                Voice cloning is free for <span className="text-amber-400 font-medium">Blue Whale</span> and <span className="text-amber-400 font-medium">Megalodon</span> badge holders.
+              </p>
+              <p className="text-sm text-white/60">
+                You can still clone voices by providing your own ElevenLabs API key. Get one free at{' '}
+                <a href="https://elevenlabs.io" target="_blank" rel="noopener noreferrer" className="text-amber-400 underline hover:text-amber-300">elevenlabs.io</a>
+              </p>
+            </div>
+
+            <div className="space-y-1">
+              <label className="text-xs text-white/50">ElevenLabs API Key</label>
+              <Input
+                value={apiKeyInput}
+                onChange={(e) => setApiKeyInput(e.target.value)}
+                placeholder="xi_..."
+                type="password"
+                className="bg-white/10 border-white/10 text-white placeholder:text-white/30 font-mono text-sm"
+              />
+            </div>
+
+            <div className="flex gap-2">
+              <Button
+                onClick={() => setShowApiKeyPrompt(false)}
+                variant="outline"
+                className="flex-1 bg-white/5 border-white/10 text-white/70 hover:bg-white/10 hover:text-white"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={() => {
+                  if (!apiKeyInput.trim()) {
+                    toast.error('Please enter your ElevenLabs API key');
+                    return;
+                  }
+                  setCustomElevenLabsKey(apiKeyInput.trim());
+                  localStorage.setItem('dehub-custom-elevenlabs-key', apiKeyInput.trim());
+                  setShowApiKeyPrompt(false);
+                  setVoiceTrainingOpen(true);
+                }}
+                className="flex-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30"
+              >
+                Continue
+              </Button>
+            </div>
+
+            <p className="text-[10px] text-white/25 text-center">
+              Your key is stored locally and never shared. It's only used for voice cloning requests.
+            </p>
+          </div>
+        </div>
+      )}
 
 
       {showCommandCentre ? (
