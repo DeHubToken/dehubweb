@@ -66,13 +66,12 @@ function clearActiveDraft(): void {
   try { localStorage.removeItem(ACTIVE_DRAFT_KEY); } catch {}
 }
 
-// Load drafts from localStorage
-const loadDrafts = (): Draft[] => {
+// Load drafts from localStorage (sync fallback for initial render)
+const loadDraftsLocal = (): Draft[] => {
   try {
     const stored = localStorage.getItem(DRAFTS_STORAGE_KEY);
     if (stored) {
       const drafts = JSON.parse(stored);
-      // Convert date strings back to Date objects
       return drafts.map((d: any) => ({ ...d, createdAt: new Date(d.createdAt) }));
     }
   } catch (e) {
@@ -81,12 +80,69 @@ const loadDrafts = (): Draft[] => {
   return [];
 };
 
-// Save drafts to localStorage
-const saveDrafts = (drafts: Draft[]) => {
+// Save drafts to localStorage (backup)
+const saveDraftsLocal = (drafts: Draft[]) => {
   try {
     localStorage.setItem(DRAFTS_STORAGE_KEY, JSON.stringify(drafts));
   } catch (e) {
     console.error('Failed to save drafts:', e);
+  }
+};
+
+// Load drafts from Supabase
+const loadDraftsFromDb = async (walletAddress: string): Promise<Draft[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('post_drafts')
+      .select('*')
+      .eq('wallet_address', walletAddress)
+      .order('created_at', { ascending: false })
+      .limit(10);
+    if (error) throw error;
+    if (data && data.length > 0) {
+      return data.map((d: any) => ({
+        id: d.id,
+        text: d.text || '',
+        createdAt: new Date(d.created_at),
+        hasImage: d.has_image || false,
+        hasVideo: d.has_video || false,
+        hasAudio: (d.metadata as any)?.hasAudio || false,
+      }));
+    }
+  } catch (e) {
+    console.error('Failed to load drafts from DB:', e);
+  }
+  return [];
+};
+
+// Save a single draft to Supabase
+const saveDraftToDb = async (walletAddress: string, draft: Draft): Promise<string | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('post_drafts')
+      .insert({
+        wallet_address: walletAddress,
+        text: draft.text,
+        has_image: draft.hasImage,
+        has_video: draft.hasVideo,
+        metadata: { hasAudio: draft.hasAudio },
+      })
+      .select('id')
+      .single();
+    if (error) throw error;
+    return data?.id || null;
+  } catch (e) {
+    console.error('Failed to save draft to DB:', e);
+    return null;
+  }
+};
+
+// Delete a draft from Supabase
+const deleteDraftFromDb = async (id: string) => {
+  try {
+    await supabase.from('post_drafts').delete().eq('id', id);
+  } catch (e) {
+    console.error('Failed to delete draft from DB:', e);
   }
 };
 
