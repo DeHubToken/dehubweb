@@ -132,15 +132,15 @@ Deno.serve(async (req: Request) => {
       );
     }
 
-    // 3. Insert only new rows in batches
+    // 3. Insert via RPC with ON CONFLICT DO NOTHING
     const BATCH_SIZE = 500;
     let upserted = 0;
 
     for (let i = 0; i < newRows.length; i += BATCH_SIZE) {
       const batch = newRows.slice(i, i + BATCH_SIZE);
 
-      const insertRes = await fetch(
-        `${supabaseUrl}/rest/v1/category_post_log`,
+      const rpcRes = await fetch(
+        `${supabaseUrl}/rest/v1/rpc/bulk_insert_category_log`,
         {
           method: 'POST',
           headers: {
@@ -148,16 +148,16 @@ Deno.serve(async (req: Request) => {
             'Authorization': `Bearer ${serviceKey}`,
             'apikey': serviceKey,
           },
-          body: JSON.stringify(batch),
+          body: JSON.stringify({ entries: batch }),
         },
       );
 
-      if (!insertRes.ok) {
-        const errText = await insertRes.text();
-        console.error(`[sync-category-log] Insert batch error: ${insertRes.status} ${errText}`);
+      if (!rpcRes.ok) {
+        const errText = await rpcRes.text();
+        console.error(`[sync-category-log] RPC batch error: ${rpcRes.status} ${errText}`);
       } else {
-        await insertRes.text();
-        upserted += batch.length;
+        const count = await rpcRes.json();
+        upserted += (typeof count === 'number' ? count : 0);
       }
     }
 

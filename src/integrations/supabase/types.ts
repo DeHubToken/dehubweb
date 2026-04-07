@@ -1823,6 +1823,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      bulk_insert_category_log: { Args: { entries: Json }; Returns: number }
       cleanup_old_client_error_logs: { Args: never; Returns: undefined }
       cleanup_old_leaderboard_snapshots: { Args: never; Returns: undefined }
       cleanup_old_story_views: { Args: never; Returns: undefined }
