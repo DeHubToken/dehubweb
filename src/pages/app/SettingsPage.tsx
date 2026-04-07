@@ -52,7 +52,8 @@ import {
   Terminal,
   Skull,
   Orbit,
-  Ban
+  Ban,
+  Bot
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
@@ -927,6 +928,14 @@ function NotificationSettings() {
             onCheckedChange={handleToggle('directMessages')}
             disabled={isDisabled}
           />
+        </div>
+      </div>
+
+      {/* Chat */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">Chat</h3>
+        <div className="space-y-4">
+          <BuyBotToggle />
         </div>
       </div>
 
