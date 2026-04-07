@@ -441,12 +441,11 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
           {step === 'setup' ? (
             <LiquidGlassBubble2
               label={isLoading ? '' : 'Go Live'}
-              icon={isLoading ? Loader2 : Radio}
+              icon={isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Radio className="w-5 h-5" />}
               onClick={handleStartStream}
               disabled={!title.trim() || isLoading}
               width="100%"
-              height={56}
-              className={isLoading ? '[&_svg]:animate-spin' : ''}
+              height="56px"
             />
           ) : (
             <div className="flex flex-col gap-2">
