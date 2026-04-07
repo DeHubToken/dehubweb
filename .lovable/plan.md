@@ -1,51 +1,39 @@
 
 
-## Why Tips Take So Long — Analysis & Fix Plan
+## Fix: Tip count not updating on post after tipping
 
-### Root Cause
+### Problem
+The optimistic tip flow fires `onSuccess` (which invalidates the tip count query) **before** the tip is written to the database. The timeline is:
 
-The tip flow has several sequential steps, each making RPC calls:
+1. Tx submitted → `onSuccess()` fires → query invalidated → refetches from DB → **record not there yet**
+2. Tx confirmed → DB insert happens → but no one re-invalidates the query
 
-1. **`switchChain()`** — checks current chain, switches if needed
-2. **`getWalletAddress()`** — RPC call
-3. **Balance + Allowance check** — 2 parallel RPC calls (good), but on first tip per session this always runs
-4. **Approval tx** (first time only) — sends approval tx, then `wait(1)` polls every 2s until confirmed
-5. **Send tip tx** — sends the actual tip
-6. **`result.wait(1)`** — polls every 2s until receipt is found
+### Solution
+Two changes needed:
 
-Even though the on-chain confirmation is fast (~2s on Base), each RPC call adds 200-500ms, and the 2s polling interval means you might wait up to 2s after the tx is already confirmed.
+**1. Optimistically update the tip count cache immediately (no DB round-trip needed)**
 
-### Proposed Optimizations
+In `TipModal.tsx`, instead of just invalidating the query, **optimistically increment** the cached tip count by the tipped amount:
 
-**1. Return tx hash immediately after submission, don't wait for confirmation**
-- The user sees "Tip sent!" as soon as the tx is submitted (the hash is known)
-- Show a subtle "confirming..." state but don't block the UI
-- Record the tip in the DB immediately with a `pending` status
-- This alone cuts perceived time by ~2-4 seconds
+```ts
+// In onSuccess callback:
+queryClient.setQueryData(['post-tip-count', resolvedTokenId], (old: number) => (old || 0) + parsedAmount);
+```
 
-**2. Reduce poll interval from 2s to 500ms**
-- Base blocks are ~2s, so 500ms polling catches confirmation much faster
-- Only applies to Web3Auth path (wagmi already uses its own receipt watcher)
+This gives instant UI feedback without waiting for DB.
 
-**3. Skip redundant `getWalletAddress()` call**
-- `use-tip-payment.ts` already has `walletAddress` from context but then calls `getWalletAddress()` again inside `sendTip()`
-- Pass it through to avoid the extra RPC round-trip
+**2. Re-invalidate after the DB write completes**
 
-**4. Cache-aware approval skip**
-- Already partially implemented (`approvedChains` Set), but the allowance RPC still fires on first tip
-- After a successful max-approval, persist to sessionStorage so it survives page navigation
+In `use-tip-payment.ts`, after the confirmed DB insert succeeds, call a second invalidation so the count reconciles with the real DB total. Pass `queryClient` or expose a second callback (`onConfirmed`) that the TipModal can use to invalidate again.
 
-### Files to Change
+### Files to change
 
 | File | Change |
 |------|--------|
-| `src/lib/contracts/aa-utils.ts` | Reduce poll interval from 2000ms to 500ms |
-| `src/lib/contracts/stream-controller.ts` | Return tx hash immediately after submission; make `wait()` optional/background |
-| `src/hooks/use-tip-payment.ts` | Don't await confirmation before showing success toast; fire DB insert + wait in background |
-| `src/components/app/chat/DmTipDialog.tsx` | Same pattern — optimistic success on tx submission |
+| `src/hooks/use-tip-payment.ts` | Add `onConfirmed` callback param; call it after DB insert succeeds |
+| `src/components/app/modals/TipModal.tsx` | Optimistically set tip count in `onSuccess`; invalidate query in `onConfirmed` |
 
-### User Experience After Fix
-
-- **Before**: User clicks Send → waits 4-8 seconds → sees "Tip sent!"
-- **After**: User clicks Send → waits 1-2 seconds (tx submission) → sees "Tip sent!" → confirmation happens silently in background
+### Result
+- Tip count updates **instantly** on the post after tipping
+- Once tx confirms and DB write completes, the count reconciles with the real total
 
