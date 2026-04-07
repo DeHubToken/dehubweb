@@ -561,6 +561,7 @@ function SubmitFeatureDrawer({
         onSuccess: () => {
           setTitle('');
           setDescription('');
+          setDeviceDetails('');
           setCategory('new_feature');
           removeMedia();
           onOpenChange(false);
