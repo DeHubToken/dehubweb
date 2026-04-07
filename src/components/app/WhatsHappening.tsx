@@ -230,11 +230,13 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
               className={`relative flex-1 py-3 flex flex-col items-center justify-center transition-colors ${
                 activeTab === tab
                   ? 'text-white'
-                  : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'
+                  : 'text-zinc-500 hover:text-zinc-300 [&:hover>.tab-hover-bg]:opacity-100'
               }`}
             >
-              {activeTab === tab && (
+              {activeTab === tab ? (
                 <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
+              ) : (
+                <div className="tab-hover-bg absolute inset-0 bg-gradient-to-b from-zinc-800/40 to-transparent opacity-0 transition-opacity" />
               )}
               <div className="relative z-10">
                 <Icon className="w-5 h-5" />
