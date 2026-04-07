@@ -12,6 +12,7 @@ import { getTopTickers, type TickerPeriod } from '@/lib/ticker-search-tracker';
 import { TrendingTopicsList } from './TrendingTopicsList';
 import { supabase } from '@/integrations/supabase/client';
 import { formatTimeAgo } from '@/lib/feed-utils';
+import { useStage } from '@/contexts/StageContext';
 
 const COUNTRIES = [
   { code: 'global', flag: '🌍', name: 'Global' },
@@ -117,6 +118,7 @@ interface WhatsHappeningProps {
 
 export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector = false }: WhatsHappeningProps) {
   const navigate = useNavigate();
+  const { openModal: openStagesModal, joinSpace } = useStage();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<Tab>('posts');
   const [hasTabInteracted, setHasTabInteracted] = useState(false);
@@ -326,7 +328,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
               {liveStages.map((stage) => (
                 <button
                   key={stage.id}
-                  onClick={() => navigate(`/app/stages?join=${stage.id}`)}
+                  onClick={() => { joinSpace(stage.id); }}
                   className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl hover:bg-zinc-800/60 transition-colors group text-left"
                 >
                   <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center shrink-0">
@@ -358,7 +360,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
               </div>
               <p className="text-zinc-400 text-xs mb-3">No stages live, create one now!</p>
               <button
-                onClick={() => navigate('/app/stages')}
+                onClick={() => openStagesModal('create')}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium transition-colors"
               >
                 <Plus className="w-3.5 h-3.5" />
@@ -439,7 +441,10 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
       {/* View all button */}
       <LiquidGlassBubble2
         label={t('commandCentre.viewAll')}
-        onClick={() => navigate(activeTab === 'stages' ? '/app/stages' : showCountrySelector && activeTab === 'tickers' ? '/app/top-100' : '/app/explore')}
+        onClick={() => {
+          if (activeTab === 'stages') { openStagesModal('browse'); }
+          else { navigate(showCountrySelector && activeTab === 'tickers' ? '/app/top-100' : '/app/explore'); }
+        }}
         width="100%"
         height="auto"
         className="-mt-1 [&>div]:!py-2 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent"
