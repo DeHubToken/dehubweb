@@ -926,6 +926,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   // Live carousel insert position: 4 posts after the radio carousel
   const LIVE_INSERT_AFTER = RADIO_INSERT_AFTER + 4;
+  // Leaderboard carousel: 10 posts after the live streams carousel
+  const LEADERBOARD_INSERT_AFTER = LIVE_INSERT_AFTER + LEADERBOARD_INSERT_AFTER_LIVE_OFFSET;
 
   // Detect number of masonry columns based on viewport + sidebar state
   // Multi-column masonry only when sidebar is collapsed; standard mode is always 1 column
