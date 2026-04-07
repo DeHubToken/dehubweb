@@ -424,6 +424,11 @@ export default function AssistantPage() {
     return '';
   });
   const [voiceTrainingOpen, setVoiceTrainingOpen] = useState(false);
+  const [showApiKeyPrompt, setShowApiKeyPrompt] = useState(false);
+  const [customElevenLabsKey, setCustomElevenLabsKey] = useState(() => {
+    try { return localStorage.getItem('dehub-custom-elevenlabs-key') || ''; } catch { return ''; }
+  });
+  const [apiKeyInput, setApiKeyInput] = useState('');
   const [selectedChatModel, setSelectedChatModel] = useState<string>(DEFAULT_CHAT_MODEL);
   const [settingsSheetOpen, setSettingsSheetOpen] = useState(false);
   const [styleSheetOpen, setStyleSheetOpen] = useState(false);
