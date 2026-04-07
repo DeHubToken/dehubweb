@@ -33,14 +33,16 @@ function parseDurationToSeconds(duration: string): number {
  * Convert VideoItem back to partial DeHubNFT format for caching
  */
 function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
+  const isLivePost = !!video.isLivePost;
+
   return {
     tokenId: parseInt(video.id) || 0,
-    postType: 'video',
+    postType: (isLivePost ? 'live' : 'video') as any,
     title: video.title,
     name: video.title,
     description: video.description || video.title,
-    imageUrl: video.thumbnail,
-    videoUrl: video.videoUrl,
+    imageUrl: video.thumbnail || undefined,
+    videoUrl: isLivePost ? undefined : video.videoUrl,
     videoDuration: video.durationSeconds || parseDurationToSeconds(video.duration),
     duration: video.durationSeconds || parseDurationToSeconds(video.duration),
     minterDisplayName: video.channel,
@@ -67,10 +69,17 @@ function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
     isUnlocked: video.isUnlocked,
     totalReposts: video.repostCount || 0,
     isReposted: video.isReposted ?? false,
-    // Preserve the original timestamp - uploadedAgo is already formatted, so we need to pass createdAt
     createdAt: video.createdAt,
-    // Include bounty data in streamInfo for proper reconstruction
-    streamInfo: video.isW2E ? {
+    stream: isLivePost
+      ? {
+          streamId: video.liveStreamId,
+          playbackId: video.livePlaybackId,
+          playbackUrl: video.livePlaybackUrl,
+          status: video.liveStatus,
+          isActive: video.liveIsActive,
+        }
+      : undefined,
+    streamInfo: !isLivePost && video.isW2E ? {
       isAddBounty: true,
       addBountyFirstXViewers: video.bountyViews,
       addBountyFirstXComments: video.bountyComments,
