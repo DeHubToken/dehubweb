@@ -1958,6 +1958,9 @@ export default function AssistantPage() {
                     onTrainVoice={() => {
                       const badgeName = getBadgeName(user?.badgeBalance, user?.username);
                       const allowed = badgeName === 'Meglodon' || badgeName === 'Blue Whale';
+
+                      setSettingsSheetOpen(false);
+
                       if (!allowed) {
                         // Check if user already has a saved custom key
                         if (customElevenLabsKey) {
@@ -1968,6 +1971,7 @@ export default function AssistantPage() {
                         }
                         return;
                       }
+
                       setVoiceTrainingOpen(true);
                     }}
                   />
