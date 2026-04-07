@@ -53,7 +53,7 @@ const LiquidGlassBubble2 = React.forwardRef<HTMLDivElement, LiquidGlassBubble2Pr
         noBorder
         onClick={isDisabled ? undefined : onClick}
         className={cn(
-          "flex-shrink-0 cursor-pointer [&>div]:!rounded-xl [&>div]:!h-full [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl",
+          "flex-shrink-0 cursor-pointer [&>div]:!rounded-xl [&>div]:!h-full [&>div]:!flex [&>div]:!items-center [&>div]:!justify-center [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl",
           isDisabled && "opacity-40 cursor-not-allowed",
           className
         )}
