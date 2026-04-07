@@ -312,7 +312,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
         {/* Stages tab */}
         <div
           className={cn(
-            'transition-opacity duration-150',
+            'transition-opacity duration-150 min-h-[280px]',
             activeTab === 'stages'
               ? 'opacity-100 relative z-10'
               : 'opacity-0 pointer-events-none absolute inset-0'
