@@ -1977,7 +1977,16 @@ export default function AssistantPage() {
         </Drawer>
       </div>
 
-      {/* Conditional content: Command Centre or Chat */}
+      {/* Voice Training Drawer */}
+      <VoiceTrainingDrawer
+        open={voiceTrainingOpen}
+        onOpenChange={setVoiceTrainingOpen}
+        onSuccess={() => {
+          // Picker will refetch custom voices automatically
+        }}
+      />
+
+
       {showCommandCentre ? (
         /* Command Centre View */
         <ScrollArea className="flex-1 px-4 pb-24 lg:pb-4">
