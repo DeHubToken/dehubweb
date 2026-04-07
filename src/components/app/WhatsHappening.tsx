@@ -2,7 +2,7 @@ import { memo, useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Search, Globe, ChevronDown, Hash, Flame, Mic, Plus, Users } from 'lucide-react';
+import { Search, Globe, ChevronDown, Hash, Flame, Radio, Plus, Users } from 'lucide-react';
 import { motion, LayoutGroup, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { TickerLogo } from './TickerLogo';
@@ -198,7 +198,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
     setActiveTab(tab);
   }, []);
 
-  const tabIcons: Record<Tab, typeof Hash> = { posts: Hash, stages: Mic, tickers: Flame };
+  const tabIcons: Record<Tab, typeof Hash> = { posts: Hash, stages: Radio, tickers: Flame };
 
   // Fetch live stages for the stages tab
   const { data: liveStages = [] } = useQuery({
@@ -332,7 +332,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
                   className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl hover:bg-zinc-800/60 transition-colors group text-left"
                 >
                   <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center shrink-0">
-                    <Mic className="w-4 h-4 text-red-400" />
+                    <Radio className="w-4 h-4 text-red-400" />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-sm text-zinc-200 font-medium truncate group-hover:text-white transition-colors">
@@ -356,7 +356,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
           ) : (
             <div className="flex flex-col items-center justify-center flex-1 text-center">
               <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center mb-2.5">
-                <Mic className="w-5 h-5 text-zinc-500" />
+                <Radio className="w-5 h-5 text-zinc-500" />
               </div>
               <p className="text-zinc-400 text-xs mb-3">No stages live, create one now!</p>
               <button
