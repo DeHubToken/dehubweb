@@ -217,7 +217,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [uploadProgress, setUploadProgress] = useState(0);
   
   const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
-  const [drafts, setDrafts] = useState<Draft[]>(loadDrafts);
+  const [drafts, setDrafts] = useState<Draft[]>(loadDraftsLocal);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [chainId, setChainId] = useState<ChainId>(BASE_CHAIN_ID as ChainId);
@@ -755,6 +755,17 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     clearActiveDraft();
   }, []);
 
+  // Load drafts from DB on mount
+  useEffect(() => {
+    if (!user?.address) return;
+    loadDraftsFromDb(user.address).then((dbDrafts) => {
+      if (dbDrafts.length > 0) {
+        setDrafts(dbDrafts);
+        saveDraftsLocal(dbDrafts); // sync to localStorage as backup
+      }
+    });
+  }, [user?.address]);
+
   // Drafts actions
   const saveDraft = useCallback(() => {
     const newDraft: Draft = {
@@ -765,14 +776,22 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       hasVideo: hasVideo,
       hasAudio: hasAudio,
     };
-    const updatedDrafts = [newDraft, ...drafts].slice(0, 10); // Keep max 10 drafts
+    const updatedDrafts = [newDraft, ...drafts].slice(0, 10);
     setDrafts(updatedDrafts);
-    saveDrafts(updatedDrafts);
-  }, [text, hasImage, hasVideo, hasAudio, drafts]);
+    saveDraftsLocal(updatedDrafts);
+    // Persist to DB
+    if (user?.address) {
+      saveDraftToDb(user.address, newDraft).then((dbId) => {
+        if (dbId) {
+          // Update local draft with DB id for proper deletion later
+          setDrafts(prev => prev.map(d => d.id === newDraft.id ? { ...d, id: dbId } : d));
+        }
+      });
+    }
+  }, [text, hasImage, hasVideo, hasAudio, drafts, user?.address]);
 
   const loadDraft = useCallback((draft: Draft) => {
     setText(draft.text);
-    // Update editor content
     if (editorRef.current) {
       editorRef.current.innerText = draft.text;
     }
@@ -781,7 +800,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const deleteDraft = useCallback((id: string) => {
     const updatedDrafts = drafts.filter(d => d.id !== id);
     setDrafts(updatedDrafts);
-    saveDrafts(updatedDrafts);
+    saveDraftsLocal(updatedDrafts);
+    deleteDraftFromDb(id); // Remove from DB
   }, [drafts]);
 
   // Audio recording functions
