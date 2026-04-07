@@ -1,43 +1,60 @@
 
 
-## Fix: AI Assistant always refers to first image in multi-image posts
+## Fix: Slow category loading in Talk of the Town
 
-### Problem
-When a user views a multi-image post and opens the AI chat, the AI always analyzes image 1 regardless of which image the user is currently viewing. Two root causes:
+### Root Causes
 
-1. **Welcome message sticks**: The initial welcome message is set once when the chat opens and never updates when the user swipes to a different image. It keeps saying "image 1 of 4" even after swiping.
+1. **Nuclear cache clear**: `queryClient.removeQueries({ queryKey: ['unified-feed'] })` destroys ALL cached feed data on every category click. This forces a full API refetch from scratch rather than leveraging React Query's background refetching.
 
-2. **Chat history confuses the model**: Even though `postContext.imageUrl` updates correctly to the active image, previous messages in the conversation were about a different image. The AI sees the old conversation context and may still reference the wrong image.
+2. **Infinite skeleton bug**: The transitioning flag only clears when `items.length > 0`. If a category has 0 posts, the skeleton spinner shows forever.
+
+3. **Unnecessary full reload for multi-category**: When multiple categories are selected, filtering happens client-side anyway, but we still nuke the cache and force a loading state.
 
 ### Solution
 
-**Reset the chat when the active image changes** — clear messages and regenerate the welcome message with the correct image index. This ensures:
-- The welcome message shows the correct "image X of Y"
-- The image URL sent to the AI matches what the user sees
-- No stale conversation about a different image confuses the model
+Replace the aggressive cache-clearing approach with a smarter strategy:
+
+1. **Use `invalidateQueries` instead of `removeQueries`** — this triggers a background refetch while keeping existing data visible, so the UI stays responsive.
+2. **Only force skeleton for single-category API calls** where the server filters (since stale data would show wrong results). For multi-category client-side filtering, skip the skeleton entirely.
+3. **Fix the infinite skeleton**: Clear `isCategoryTransitioning` when data has loaded OR when the query is no longer loading, regardless of item count.
 
 ### Files to change
 
 | File | Change |
 |------|--------|
-| `src/components/app/cards/PostAIChat.tsx` | Add a `useEffect` that watches `postContext.activeImageIndex`. When it changes and the chat is open, clear messages so the welcome message regenerates with the updated index. Also add a `key` or ref tracking to detect the change. |
-| `src/components/app/cards/ImageCard.tsx` | No changes needed — already passes `activeImageIndex` correctly |
+| `src/components/app/feeds/HomeFeed.tsx` | Replace `removeQueries` with `invalidateQueries` in the category-filter-changed handler. Only set `isCategoryTransitioning` when going from 0 to 1 category (server-filtered). Fix the clear effect to also handle 0-result responses. |
 
 ### Technical detail
 
-In `PostAIChat.tsx`, add:
+**Handler change** (line ~361):
 ```typescript
-// Reset chat when user swipes to a different image
-const prevImageIndexRef = useRef(postContext.activeImageIndex);
-useEffect(() => {
-  if (postContext.activeImageIndex !== undefined && 
-      prevImageIndexRef.current !== postContext.activeImageIndex) {
-    prevImageIndexRef.current = postContext.activeImageIndex;
-    // Clear messages so welcome message regenerates with correct image
-    setMessages([]);
-  }
-}, [postContext.activeImageIndex]);
+// Before:
+setIsCategoryTransitioning(true);
+queryClient.removeQueries({ queryKey: ['unified-feed'] });
+
+// After:
+queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+// Only show skeleton when switching to a single server-filtered category
+const willBeSingle = /* check if resulting array has exactly 1 item */;
+if (willBeSingle) setIsCategoryTransitioning(true);
 ```
 
-This is a small, targeted fix — the existing `useEffect` that sets the welcome message already runs when `messages.length === 0`, so clearing messages triggers the correct welcome message with the updated image index automatically.
+**Clear effect fix** (line ~1250):
+```typescript
+// Before: only clears when items.length > 0
+if (isCategoryTransitioning && hasQueryData && items.length > 0) {
+
+// After: clear when query has resolved (even with 0 results)
+if (isCategoryTransitioning && hasQueryData) {
+  setIsCategoryTransitioning(false);
+}
+// Also clear if not loading and no data (empty result)
+if (isCategoryTransitioning && !isLoading && !isFetching) {
+  setIsCategoryTransitioning(false);
+}
+```
+
+### Result
+- **Before**: 2-5 second skeleton loading on every category click, infinite skeleton on empty categories
+- **After**: Existing feed stays visible during refetch; instant filter for multi-category; skeleton only for necessary server-filtered switches; empty categories show "no posts" instead of infinite loading
 
