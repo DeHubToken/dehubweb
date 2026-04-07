@@ -2,7 +2,7 @@ import { memo, useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Search, Globe, ChevronDown, Hash, Flame, Radio, Plus, Users } from 'lucide-react';
+import { Search, Globe, ChevronDown, Hash, Flame, Radio, Mic, Video, Users } from 'lucide-react';
 import { motion, LayoutGroup, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { TickerLogo } from './TickerLogo';
@@ -358,20 +358,20 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
                 <Radio className="w-5 h-5 text-zinc-500" />
               </div>
               <p className="text-zinc-400 text-xs mb-3">No one live right now!</p>
-              <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() => openStagesModal('create')}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium transition-colors"
+                  className="w-9 h-9 rounded-xl bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-white transition-colors"
+                  title="Create Stage"
                 >
-                  <Plus className="w-3.5 h-3.5" />
-                  Create Stage
+                  <Mic className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() => navigate('/app/live')}
-                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium transition-colors"
+                  className="w-9 h-9 rounded-xl bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-white transition-colors"
+                  title="Live Stream"
                 >
-                  <Plus className="w-3.5 h-3.5" />
-                  Live Stream
+                  <Video className="w-4 h-4" />
                 </button>
               </div>
             </div>
