@@ -108,6 +108,7 @@ export function SidebarChat() {
   const translateSignal = 0;
   const originalSignal = 0;
   const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
@@ -244,7 +245,7 @@ export function SidebarChat() {
     <div className="flex flex-col h-full pl-px">
       <SharedTranslationContext.Provider value={{ translateSignal, originalSignal, requestTranslate: () => {}, requestOriginal: () => {} }}>
       <div className="relative flex-1">
-        <div className="absolute inset-0 overflow-y-auto py-2 space-y-2">
+        <div ref={scrollContainerRef} className="absolute inset-0 overflow-y-auto py-2 space-y-2">
           {isLoading ? (
             <div className="space-y-2 py-2">
               {[...Array(4)].map((_, i) => (
@@ -290,7 +291,7 @@ export function SidebarChat() {
                     <button
                       type="button"
                       onClick={() => {
-                        const target = scrollRef.current?.querySelector(`[data-message-id="${msg.reply_to!.id}"]`);
+                        const target = scrollContainerRef.current?.querySelector(`[data-message-id="${msg.reply_to!.id}"]`);
                         if (target) {
                           target.scrollIntoView({ behavior: 'smooth', block: 'center' });
                           (target as HTMLElement).classList.add('bg-white/10');
