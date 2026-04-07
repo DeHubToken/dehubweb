@@ -95,6 +95,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
   /** Serialize injectAudio (TTS / soundboard) so tracks don’t overlap on Agora */
   const injectAudioChainRef = useRef<Promise<void>>(Promise.resolve());
+  /** Guard against concurrent setVoiceEffect calls */
+  const isEffectSwitchingRef = useRef(false);
   /** Coalesce bursts of audio_spaces realtime events into one list fetch */
   const liveSpacesRefreshDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -583,6 +585,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const setVoiceEffect = useCallback(async (effectId: VoiceEffectId) => {
     setVoiceEffectState(effectId);
     if (!agoraClientRef.current || !localAudioTrackRef.current) return;
+    // Prevent concurrent calls from racing against each other
+    if (isEffectSwitchingRef.current) return;
+    isEffectSwitchingRef.current = true;
     try {
       // Build a fresh AudioContext + fresh processed track for the new effect.
       // We use rebuildEffect (not switchEffect) because Agora snapshots the
@@ -610,6 +615,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
     } catch (err) {
       console.error('Error switching voice effect:', err);
       toast.error('Failed to switch voice effect');
+    } finally {
+      isEffectSwitchingRef.current = false;
     }
   }, [voiceEffectsHook]);
 
@@ -960,11 +967,22 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
         await client.unpublish([ttsTrack]);
         ttsTrack.close();
-        await client.publish([originalTrack]);
-        originalTrack.setMuted(wasMutedAg);
-        if (micTrack) {
-          // Same as toggleMute: unmuted → track enabled; muted → disabled
-          micTrack.enabled = !wasMutedAg;
+
+        // Race-safe restore: check if setVoiceEffect swapped the track during injection.
+        const trackToRestore = localAudioTrackRef.current;
+        if (trackToRestore === originalTrack) {
+          // No concurrent setVoiceEffect — restore original track normally.
+          await client.publish([originalTrack]);
+          originalTrack.setMuted(wasMutedAg);
+          if (micTrack) {
+            // Same as toggleMute: unmuted → track enabled; muted → disabled
+            micTrack.enabled = !wasMutedAg;
+          }
+        } else if (trackToRestore) {
+          // setVoiceEffect ran during injection and already published the new voice
+          // effect track. Don't republish originalTrack (it would conflict). Just
+          // restore the mute state on the already-published voice effect track.
+          trackToRestore.setMuted(wasMutedAg);
         }
         URL.revokeObjectURL(monitorUrl);
       } finally {
