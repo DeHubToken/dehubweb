@@ -1,4 +1,5 @@
 import { memo, useState, useRef, useCallback, useEffect } from 'react';
+import { GoLiveModal } from '@/components/app/modals/GoLiveModal';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -128,6 +129,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
   const [showCountryDropdown, setShowCountryDropdown] = useState(false);
   const [countrySearch, setCountrySearch] = useState('');
   const countryDropdownRef = useRef<HTMLDivElement>(null);
+  const [showGoLive, setShowGoLive] = useState(false);
 
   // Close dropdown on click outside
   useEffect(() => {
@@ -364,7 +366,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
                   <Mic className="w-4 h-4" />
                 </button>
                 <button
-                  onClick={() => navigate('/app/live')}
+                  onClick={() => setShowGoLive(true)}
                   className="w-9 h-9 rounded-xl bg-zinc-800 hover:bg-zinc-700 flex items-center justify-center text-white transition-colors"
                   title="Live Stream"
                 >
@@ -455,6 +457,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
         className="-mt-1 [&>div]:!py-2 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent"
       />
       </div>
+      <GoLiveModal isOpen={showGoLive} onClose={() => setShowGoLive(false)} />
     </div>
   );
 });
