@@ -22,12 +22,12 @@ import medal8 from '@/assets/medal-8.png';
 import medal9 from '@/assets/medal-9.png';
 import medal10 from '@/assets/medal-10.png';
 
-const PERIODS = ['1d', '1w', '1m', '1y', 'All'] as const;
+const PERIODS = ['1D', '1W', '1M', '1Y', 'All'] as const;
 const PERIOD_MAP: Record<string, string> = {
-  '1d': 'day',
-  '1w': 'week',
-  '1m': 'month',
-  '1y': 'year',
+  '1D': 'day',
+  '1W': 'week',
+  '1M': 'month',
+  '1Y': 'year',
   'All': 'all',
 };
 
