@@ -190,12 +190,12 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
             size="sm"
             disabled={isPending || isOwner}
             onClick={onJoinLeave}
-            className={`rounded-xl gap-1.5 ${
+            className={`rounded-xl gap-1.5 h-9 px-3 ${
               isMember 
                 ? 'bg-white/10 border border-white/20 text-white hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30'
                 : isPendingMember
                 ? 'bg-amber-500/20 border border-amber-500/30 text-amber-400 hover:bg-red-500/20 hover:text-red-400 hover:border-red-500/30'
-                : 'bg-white text-black hover:bg-white/90'
+                : 'bg-white/10 border border-white/20 text-white hover:bg-white/15'
             }`}
           >
             {isOwner ? (
