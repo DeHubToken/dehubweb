@@ -409,7 +409,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm text-zinc-400">Stream Key</label>
+                    <label className="text-sm text-white font-medium">Stream Key</label>
                     <div className="flex gap-2">
                       <Input value={streamData.streamKey} readOnly type="password" className="bg-zinc-800 border-zinc-700 font-mono" />
                       <Button variant="outline" size="icon" onClick={() => copyToClipboard(streamData.streamKey, 'key')}>
@@ -419,7 +419,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-sm text-zinc-400">Ingest URL</label>
+                    <label className="text-sm text-white font-medium">Ingest URL</label>
                     <div className="flex gap-2">
                       <Input value={streamData.ingestUrl} readOnly className="bg-zinc-800 border-zinc-700 font-mono text-xs" />
                       <Button variant="outline" size="icon" onClick={() => copyToClipboard(streamData.ingestUrl, 'url')}>
@@ -443,7 +443,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
           )}
         </div>
 
-        <div className="pt-4 mt-2 bg-zinc-900">
+        <div className="pt-4 mt-2">
           {step === 'setup' ? (
             <LiquidGlassBubble2
               label={isLoading ? '' : 'Go Live'}
