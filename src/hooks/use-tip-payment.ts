@@ -80,22 +80,30 @@ export function useTipPayment({
 
         // Record tip + await confirmation in background (non-blocking)
         tipResult.confirmed.then(async (confirmedTxHash) => {
-          try {
-            await withWalletHeader(
-              supabase.from('tip_records').insert({
-                sender_address: walletAddress.toLowerCase(),
-                receiver_address: creatorAddress.toLowerCase(),
-                amount,
-                chain_id: chainId,
-                tx_hash: confirmedTxHash,
-                token_id: tokenId || null,
-              } as any),
-              walletAddress
-            );
-            onConfirmed?.();
-          } catch (dbErr) {
-            console.warn('[Tip] Failed to record tip in DB:', dbErr);
+          const { error } = await withWalletHeader(
+            supabase.from('tip_records').insert({
+              sender_address: walletAddress.toLowerCase(),
+              receiver_address: creatorAddress.toLowerCase(),
+              amount,
+              chain_id: chainId,
+              tx_hash: confirmedTxHash,
+              token_id: tokenId || null,
+            } as any),
+            walletAddress
+          );
+
+          if (error) {
+            console.error('[Tip] Failed to record tip in DB:', {
+              error,
+              confirmedTxHash,
+              tokenId: tokenId || null,
+              sender: walletAddress.toLowerCase(),
+              receiver: creatorAddress.toLowerCase(),
+            });
+            return;
           }
+
+          onConfirmed?.();
         }).catch((err) => {
           console.warn('[Tip] Background confirmation failed:', err);
         });
