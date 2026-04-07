@@ -1920,22 +1920,36 @@ export default function AssistantPage() {
                   <Volume2 className="w-4 h-4" />
                   {t('assistant.aiVoice')}
                 </div>
-                {VOICE_PREFERENCE_OPTIONS.map((voice) => (
-                  <button
-                    key={voice.id}
-                    type="button"
-                    onClick={() => handleVoiceSelect(voice.id as VoicePreferenceKey)}
-                    className={`w-full flex items-start gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
-                      selectedVoice === voice.id ? 'bg-white/10' : ''
-                    }`}
-                  >
-                    <span className="text-lg">{voice.emoji}</span>
-                    <div className="flex flex-col items-start">
-                      <span className="font-medium">{voice.name}</span>
-                      <span className="text-xs text-white/50">{voice.description}</span>
-                    </div>
-                  </button>
-                ))}
+                
+                {/* System default voice option */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setElevenLabsVoiceId('');
+                    localStorage.setItem('dehub-assistant-voice', JSON.stringify({ type: 'browser', preset: selectedVoice }));
+                  }}
+                  className={`w-full flex items-start gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
+                    !elevenLabsVoiceId ? 'bg-white/10' : ''
+                  }`}
+                >
+                  <span className="text-lg">🤖</span>
+                  <div className="flex flex-col items-start">
+                    <span className="font-medium">System Default</span>
+                    <span className="text-xs text-white/50">Browser built-in voice</span>
+                  </div>
+                </button>
+
+                {/* ElevenLabs Voice Picker */}
+                <div className="px-4 py-2">
+                  <ElevenLabsVoicePicker
+                    selectedVoiceId={elevenLabsVoiceId}
+                    onSelect={(voiceId) => {
+                      setElevenLabsVoiceId(voiceId);
+                      localStorage.setItem('dehub-assistant-voice', JSON.stringify({ type: 'elevenlabs', voiceId }));
+                    }}
+                    onTrainVoice={() => setVoiceTrainingOpen(true)}
+                  />
+                </div>
                 
                 {/* Always Speak Toggle */}
                 <div className="px-4 py-3 flex items-center justify-between">
