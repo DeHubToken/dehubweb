@@ -357,14 +357,23 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
               <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center mb-2.5">
                 <Radio className="w-5 h-5 text-zinc-500" />
               </div>
-              <p className="text-zinc-400 text-xs mb-3">No stages live, create one now!</p>
-              <button
-                onClick={() => openStagesModal('create')}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium transition-colors"
-              >
-                <Plus className="w-3.5 h-3.5" />
-                Create Stage
-              </button>
+              <p className="text-zinc-400 text-xs mb-3">No one live right now!</p>
+              <div className="flex flex-col gap-2">
+                <button
+                  onClick={() => openStagesModal('create')}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium transition-colors"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  Create Stage
+                </button>
+                <button
+                  onClick={() => navigate('/app/live')}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium transition-colors"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  Live Stream
+                </button>
+              </div>
             </div>
           )}
         </div>
