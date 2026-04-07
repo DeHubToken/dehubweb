@@ -1,14 +1,17 @@
 "use client";
 
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { WarningGraphic } from "@/components/ui/warning-graphic";
+import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
+import { Home } from "lucide-react";
 
 const NotFound = () => {
   const { t } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     console.error("404 Error: User attempted to access non-existent route:", location.pathname);
@@ -29,9 +32,7 @@ const NotFound = () => {
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-black">
-      {/* Content */}
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4">
-        {/* Warning graphic */}
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -51,10 +52,8 @@ const NotFound = () => {
           variants={fadeUpVariants}
           initial="hidden"
           animate="visible"
-          className="mb-4 text-[100px] sm:text-[140px] md:text-[180px] font-black tracking-tighter leading-none"
+          className="mb-4 text-[100px] sm:text-[140px] md:text-[180px] font-black tracking-tighter leading-none text-white"
           style={{
-            fontFamily: "'Exo', sans-serif",
-            color: 'white',
             textShadow: '0 0 20px rgba(255, 255, 255, 0.3), 0 0 40px rgba(255, 255, 255, 0.15)',
           }}
         >
@@ -66,10 +65,8 @@ const NotFound = () => {
           variants={fadeUpVariants}
           initial="hidden"
           animate="visible"
-          className="mb-8 text-xl sm:text-2xl md:text-3xl font-bold tracking-widest uppercase"
+          className="mb-8 text-xl sm:text-2xl md:text-3xl font-bold tracking-widest uppercase text-white/70"
           style={{
-            fontFamily: "'Exo', sans-serif",
-            color: 'rgba(255, 255, 255, 0.7)',
             textShadow: '0 0 10px rgba(255, 255, 255, 0.2)',
           }}
         >
@@ -82,21 +79,13 @@ const NotFound = () => {
           initial="hidden"
           animate="visible"
         >
-          <Link
-            to="/"
-            className="group relative inline-flex items-center gap-2 px-8 py-4 text-lg font-bold uppercase tracking-wider transition-all duration-300 hover:scale-105"
-            style={{
-              fontFamily: "'Exo', sans-serif",
-              color: 'white',
-              textShadow: '0 0 10px rgba(255, 255, 255, 0.3)',
-              border: '2px solid rgba(255, 255, 255, 0.3)',
-              background: 'rgba(255, 255, 255, 0.05)',
-              backdropFilter: 'blur(10px)',
-            }}
-          >
-            <span className="relative z-10">{t('notFound.returnHome')}</span>
-            <div className="absolute inset-0 bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-          </Link>
+          <LiquidGlassBubble2
+            label={t('notFound.returnHome')}
+            icon={<Home className="w-4 h-4" />}
+            onClick={() => navigate('/')}
+            width="180px"
+            height="48px"
+          />
         </motion.div>
       </div>
     </div>
