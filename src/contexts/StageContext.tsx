@@ -95,13 +95,20 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
   /** Serialize injectAudio (TTS / soundboard) so tracks don’t overlap on Agora */
   const injectAudioChainRef = useRef<Promise<void>>(Promise.resolve());
+  /** Coalesce bursts of audio_spaces realtime events into one list fetch */
+  const liveSpacesRefreshDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Stable refs for realtime callbacks
   const walletAddressRef = useRef(walletAddress);
   const myRoleRef = useRef(myRole);
   const hasHandledStageEndRef = useRef(false);
-  useEffect(() => { walletAddressRef.current = walletAddress; }, [walletAddress]);
-  useEffect(() => { myRoleRef.current = myRole; }, [myRole]);
+  // Keep refs aligned before effects run (avoids host-only fetches seeing stale role on first mount).
+  walletAddressRef.current = walletAddress;
+  myRoleRef.current = myRole;
+
+  /** Avoid re-subscribing realtime on every currentSpace object change (leaveSpace depends on currentSpace). */
+  const leaveSpaceRef = useRef<() => Promise<void>>(async () => {});
+  const upgradeSpeakerRef = useRef<() => Promise<void>>(async () => {});
 
   // ─── Modal controls ──────────────────────────────────────────────────────
 
@@ -544,6 +551,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
     }
   }, [currentSpace, walletAddress, myRole]);
 
+  leaveSpaceRef.current = leaveSpace;
+  upgradeSpeakerRef.current = upgradeSpeaker;
+
   // ─── End stage (host) ────────────────────────────────────────────────────
 
   const endSpace = useCallback(async () => {
@@ -570,16 +580,36 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
   // ─── Set voice effect ─────────────────────────────────────────────────────
 
-  const setVoiceEffect = useCallback((effectId: VoiceEffectId) => {
+  const setVoiceEffect = useCallback(async (effectId: VoiceEffectId) => {
     setVoiceEffectState(effectId);
-    // switchEffect reconnects the Web Audio nodes feeding the SAME processedTrack
-    // that the Agora custom track already wraps. We never unpublish/close the
-    // Agora track — doing so calls .stop() on the underlying MediaStreamTrack and
-    // permanently kills the audio graph. The effect changes are heard immediately
-    // because Agora keeps streaming whatever flows through processedTrack.
-    voiceEffectsHook.switchEffect(effectId);
-    if (localAudioTrackRef.current) {
+    if (!agoraClientRef.current || !localAudioTrackRef.current) return;
+    try {
+      // Build a fresh AudioContext + fresh processed track for the new effect.
+      // We use rebuildEffect (not switchEffect) because Agora snapshots the
+      // MediaStreamTrack reference at publish-time; rewiring the Web Audio graph
+      // on the same track is not reliably picked up by the Agora RTC stack.
+      const newTrack = voiceEffectsHook.rebuildEffect(effectId);
+      if (!newTrack) {
+        console.warn('[VoiceEffect] rebuildEffect returned null — mic stream not yet captured');
+        return;
+      }
+
+      const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
+      const wasMuted = localAudioTrackRef.current.muted;
+
+      // Swap: unpublish old track, publish brand-new custom track
+      await agoraClientRef.current.unpublish([localAudioTrackRef.current]);
+      // Don't .close() the old Agora track — it may internally reference the raw stream
+
+      const customTrack = AgoraRTC.createCustomAudioTrack({ mediaStreamTrack: newTrack });
+      customTrack.setMuted(wasMuted);
+      localAudioTrackRef.current = customTrack;
+      await agoraClientRef.current.publish([customTrack]);
+
       toast.success(`Voice: ${effectId === 'none' ? 'Normal' : effectId}`);
+    } catch (err) {
+      console.error('Error switching voice effect:', err);
+      toast.error('Failed to switch voice effect');
     }
   }, [voiceEffectsHook]);
 
@@ -770,7 +800,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
                 updated.role === 'speaker' &&
                 myRoleRef.current === 'listener'
               ) {
-                upgradeSpeaker();
+                void upgradeSpeakerRef.current();
               }
             }
           } else if (payload.eventType === 'DELETE') {
@@ -786,20 +816,25 @@ export function StageProvider({ children }: { children: ReactNode }) {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'raise_hand_requests', filter: `space_id=eq.${currentSpace.id}` },
         (payload) => {
+          const host = myRoleRef.current === 'host';
           if (payload.eventType === 'INSERT') {
             const r = payload.new as RaiseHandRequest;
-            if (r.status === 'pending') {
+            if (host && r.status === 'pending') {
               setHandRequests(prev => prev.some(x => x.id === r.id) ? prev : [...prev, r]);
             }
           } else if (payload.eventType === 'UPDATE') {
             const updated = payload.new as RaiseHandRequest;
+            if (updated.wallet_address === walletAddressRef.current && updated.status !== 'pending') {
+              setHasRaisedHand(false);
+            }
+            if (!host) return;
             if (updated.status !== 'pending') {
               setHandRequests(prev => prev.filter(r => r.id !== updated.id));
-              if (updated.wallet_address === walletAddressRef.current) setHasRaisedHand(false);
             } else {
               setHandRequests(prev => prev.map(r => r.id === updated.id ? updated : r));
             }
           } else if (payload.eventType === 'DELETE') {
+            if (!host) return;
             setHandRequests(prev => prev.filter(r => r.id !== (payload.old as RaiseHandRequest).id));
           }
         },
@@ -819,7 +854,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
             if (myRoleRef.current !== 'host') {
               toast.info('Host ended space.');
             }
-            leaveSpace();
+            void leaveSpaceRef.current();
           } else {
             setCurrentSpace(updated);
           }
@@ -849,7 +884,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       supabase.removeChannel(handChannel);
       supabase.removeChannel(spaceChannel);
     };
-  }, [currentSpace?.id, leaveSpace, upgradeSpeaker]);
+  }, [currentSpace?.id]);
 
   // ─── Inject TTS audio into Agora channel ────────────────────────────────
 
@@ -943,14 +978,24 @@ export function StageProvider({ children }: { children: ReactNode }) {
     await next;
   }, []);
 
-  // Live spaces subscription
+  // Live spaces: one fetch on mount + debounced refetch on realtime (avoids N requests per burst)
   useEffect(() => {
-    refreshSpaces();
+    void refreshSpaces();
+    const scheduleLiveSpacesRefresh = () => {
+      if (liveSpacesRefreshDebounceRef.current) clearTimeout(liveSpacesRefreshDebounceRef.current);
+      liveSpacesRefreshDebounceRef.current = setTimeout(() => {
+        liveSpacesRefreshDebounceRef.current = null;
+        void refreshSpaces();
+      }, 750);
+    };
     const channel = supabase
       .channel('live_spaces_global')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'audio_spaces' }, refreshSpaces)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'audio_spaces' }, scheduleLiveSpacesRefresh)
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      if (liveSpacesRefreshDebounceRef.current) clearTimeout(liveSpacesRefreshDebounceRef.current);
+      supabase.removeChannel(channel);
+    };
   }, [refreshSpaces]);
 
   return (

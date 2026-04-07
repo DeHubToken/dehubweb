@@ -209,9 +209,33 @@ export function useVoiceEffects() {
     rawStreamRef.current = null;
   }, []);
 
+  /**
+   * Close the current AudioContext and build a brand-new one with the new effect,
+   * reusing the same raw getUserMedia stream.
+   * Returns a fresh MediaStreamTrack for Agora to publish.
+   * Use this instead of switchEffect when you need Agora to see the new track
+   * (Agora may snapshot the track reference at publish time).
+   */
+  const rebuildEffect = useCallback((effectId: VoiceEffectId): MediaStreamTrack | null => {
+    const rawStream = rawStreamRef.current;
+    if (!rawStream) return null;
+
+    // Tear down old AudioContext (frees Web Audio resources)
+    const graph = graphRef.current;
+    if (graph) {
+      disconnectEntireGraph(graph);
+      try { graph.ctx.close(); } catch { /* noop */ }
+      graphRef.current = null;
+    }
+
+    // processStream stores rawStream in rawStreamRef and builds a fresh ctx
+    return processStream(rawStream, effectId);
+  }, [processStream]);
+
   return {
     processStream,
     switchEffect,
+    rebuildEffect,
     cleanup,
   };
 }
