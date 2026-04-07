@@ -1,4 +1,5 @@
 import { memo, useState, useRef, useCallback, useEffect } from 'react';
+import { GoLiveModal } from '@/components/app/modals/GoLiveModal';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
