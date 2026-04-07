@@ -303,24 +303,10 @@ export default function HomePage() {
 
   const handleTabClick = useCallback((tabValue: string) => {
     if (tabValue === activeTab) {
-      // Same tab clicked - always scroll to top
+      // Same tab clicked - scroll to top
       document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
       document.body.scrollTo({ top: 0, behavior: 'smooth' });
       window.scrollTo({ top: 0, behavior: 'smooth' });
-      
-      if (tabValue === 'home') {
-        setShowHomeFilters(prev => !prev);
-      } else if (tabValue === 'live') {
-        setShowLiveFilters(prev => !prev);
-      } else if (tabValue === 'shorts') {
-        setShowShortsFilters(prev => !prev);
-      } else if (tabValue === 'images') {
-        setShowImagesFilters(prev => !prev);
-      } else if (tabValue === 'videos') {
-        setShowVideosFilters(prev => !prev);
-      } else if (tabValue === 'music') {
-        setShowMusicFilters(prev => !prev);
-      }
     } else {
       setEnableHomeTransition(true);
       // Auto-reset after animation completes to prevent stale transitions on page nav
