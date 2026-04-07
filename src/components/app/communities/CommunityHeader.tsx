@@ -145,11 +145,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
               variant="ghost"
               onClick={handlePinToggle}
               disabled={pinMutation.isPending || unpinMutation.isPending}
-              className={`rounded-xl gap-1.5 h-9 px-3 ${
-                isPinned
-                  ? 'bg-white/10 border border-white/20 text-white hover:bg-white/15'
-                  : 'bg-white/[0.06] border border-white/[0.1] text-white hover:bg-white/10'
-              }`}
+              className="rounded-xl gap-1.5 h-9 px-3 bg-white/10 border border-white/20 text-white hover:bg-white/15"
             >
               {isPinned ? <PinOff className="w-3.5 h-3.5" /> : <Pin className="w-3.5 h-3.5" />}
               {isPinned ? t('communities.unpin') : t('communities.pin')}
