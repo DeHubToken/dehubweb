@@ -129,6 +129,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
   const [showCountryDropdown, setShowCountryDropdown] = useState(false);
   const [countrySearch, setCountrySearch] = useState('');
   const countryDropdownRef = useRef<HTMLDivElement>(null);
+  const [showGoLive, setShowGoLive] = useState(false);
 
   // Close dropdown on click outside
   useEffect(() => {
