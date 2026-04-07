@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback } from 'react';
-import { Mic, Upload, Loader2, X, Square } from 'lucide-react';
+import { Mic, Upload, Loader2, X, Square, Key } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -12,9 +12,11 @@ interface VoiceTrainingDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess: () => void;
+  /** If provided, user is using their own API key (non-whale flow) */
+  customApiKey?: string;
 }
 
-export function VoiceTrainingDrawer({ open, onOpenChange, onSuccess }: VoiceTrainingDrawerProps) {
+export function VoiceTrainingDrawer({ open, onOpenChange, onSuccess, customApiKey }: VoiceTrainingDrawerProps) {
   const { walletAddress } = useAuth();
   const [voiceName, setVoiceName] = useState('');
   const [audioFile, setAudioFile] = useState<File | null>(null);
@@ -75,6 +77,9 @@ export function VoiceTrainingDrawer({ open, onOpenChange, onSuccess }: VoiceTrai
       formData.append('name', voiceName.trim());
       formData.append('file', audioFile);
       formData.append('walletAddress', walletAddress);
+      if (customApiKey) {
+        formData.append('customApiKey', customApiKey);
+      }
 
       const res = await fetch(
         `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-clone-voice`,
@@ -134,6 +139,14 @@ export function VoiceTrainingDrawer({ open, onOpenChange, onSuccess }: VoiceTrai
         </DrawerHeader>
 
         <div className="px-4 pb-6 space-y-4">
+          {/* Custom API Key indicator */}
+          {customApiKey && (
+            <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-amber-500/10 border border-amber-500/20">
+              <Key className="w-3.5 h-3.5 text-amber-400" />
+              <span className="text-xs text-amber-300">Using your personal ElevenLabs API key</span>
+            </div>
+          )}
+
           {/* Voice Name */}
           <div className="space-y-1">
             <label className="text-xs text-white/60">Voice Name</label>
