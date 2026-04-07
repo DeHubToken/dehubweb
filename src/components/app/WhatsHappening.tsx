@@ -354,10 +354,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center flex-1 text-center">
-              <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center mb-2.5">
-                <Radio className="w-5 h-5 text-zinc-500" />
-              </div>
-              <p className="text-zinc-400 text-xs mb-3">No one live right now!</p>
+              <p className="text-zinc-400 text-xs mb-3">No one live right now — be the first!</p>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => openStagesModal('create')}
