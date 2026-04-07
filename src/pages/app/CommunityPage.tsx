@@ -107,7 +107,7 @@ export default function CommunityPage() {
           { key: 'posts' as Tab, label: t('communities.posts') },
           { key: 'chat' as Tab, label: t('communities.chat') },
           { key: 'events' as Tab, label: 'Events' },
-          { key: 'members' as Tab, label: t('communities.members') },
+          { key: 'members' as Tab, label: t('communities.membersLabel') },
           { key: 'about' as Tab, label: t('communities.about') },
         ]).map(tItem => (
           <button
