@@ -12,7 +12,7 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell } from 'lucide-react';
+import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell, Radio } from 'lucide-react';
 import { useTranslation as useI18n } from 'react-i18next';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
