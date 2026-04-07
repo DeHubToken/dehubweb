@@ -147,6 +147,7 @@ export interface DeHubNFT {
     category?: string;
     streamKey?: string;
     playbackId?: string;
+    playbackUrl?: string;
     startedAt?: string;
     endedAt?: string;
     scheduledFor?: string;

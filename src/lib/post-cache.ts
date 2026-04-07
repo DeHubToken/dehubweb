@@ -74,11 +74,11 @@ function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
       ? {
           streamId: video.liveStreamId,
           playbackId: video.livePlaybackId,
+          playbackUrl: video.livePlaybackUrl,
           status: video.liveStatus,
           isActive: video.liveIsActive,
         }
       : undefined,
-    playbackUrl: isLivePost ? video.livePlaybackUrl : undefined,
     streamInfo: !isLivePost && video.isW2E ? {
       isAddBounty: true,
       addBountyFirstXViewers: video.bountyViews,
