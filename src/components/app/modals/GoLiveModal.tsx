@@ -330,7 +330,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
   return (
     <Drawer open={isOpen} onOpenChange={handleClose}>
       <DrawerContent glass className="max-h-[90vh] px-4 pb-8">
-        <DrawerHeader className="border-b border-white/10 mb-4">
+        <DrawerHeader className="border-b border-white/10 mb-4 relative">
           <DrawerTitle className="text-white flex items-center gap-2">
             <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
             {step === 'setup' ? 'Go Live' : 'Stream Ready'}
@@ -338,6 +338,12 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
           <DrawerDescription className="sr-only">
             Configure your livestream settings or get your RTMP credentials.
           </DrawerDescription>
+          <button
+            onClick={handleClose}
+            className="absolute top-1/2 -translate-y-1/2 right-0 w-8 h-8 flex items-center justify-center rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
         </DrawerHeader>
 
         <div className="flex-1 overflow-y-auto px-1 custom-scrollbar">
@@ -448,18 +454,19 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
               height="56px"
             />
           ) : (
-            <div className="flex flex-col gap-2">
-              <div className="flex gap-2">
-                <Button variant="outline" onClick={handleEndStream} className="flex-1 h-14 border-zinc-700">
-                  <Radio className="w-4 h-4 mr-2" /> End Stream
-                </Button>
-                <Button onClick={() => window.open(streamData?.playbackUrl, '_blank')} variant="glass" className="flex-1 h-14">
-                  <ExternalLink className="w-4 h-4 mr-2" /> View Stream
-                </Button>
-              </div>
-              <Button variant="ghost" onClick={handleClose} className="h-10 text-zinc-400 hover:text-white">
-                Close
-              </Button>
+            <div className="flex gap-2">
+              <button
+                onClick={handleEndStream}
+                className="flex-1 h-14 flex items-center justify-center gap-2 rounded-xl bg-white/5 border border-white/10 text-white text-sm font-medium hover:bg-white/10 transition-colors"
+              >
+                <Radio className="w-4 h-4" /> End Stream
+              </button>
+              <button
+                onClick={() => window.open(streamData?.playbackUrl, '_blank')}
+                className="flex-1 h-14 flex items-center justify-center gap-2 rounded-xl bg-white/5 border border-white/10 text-white text-sm font-medium hover:bg-white/10 transition-colors"
+              >
+                <ExternalLink className="w-4 h-4" /> View Stream
+              </button>
             </div>
           )}
         </div>
