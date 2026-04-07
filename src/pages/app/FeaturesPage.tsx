@@ -512,6 +512,7 @@ function SubmitFeatureDrawer({
   const { t } = useI18n();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [deviceDetails, setDeviceDetails] = useState('');
   const [category, setCategory] = useState<FeatureCategory>('new_feature');
   const [mediaFile, setMediaFile] = useState<File | null>(null);
   const [mediaPreview, setMediaPreview] = useState<string | null>(null);
@@ -551,12 +552,16 @@ function SubmitFeatureDrawer({
       return;
     }
     setErrors({});
+    const fullDescription = deviceDetails.trim()
+      ? `${result.data.description}\n\n📱 Device & OS: ${deviceDetails.trim()}`
+      : result.data.description;
     submitMutation.mutate(
-      { title: result.data.title, description: result.data.description, category: result.data.category as FeatureCategory, mediaFile },
+      { title: result.data.title, description: fullDescription, category: result.data.category as FeatureCategory, mediaFile },
       {
         onSuccess: () => {
           setTitle('');
           setDescription('');
+          setDeviceDetails('');
           setCategory('new_feature');
           removeMedia();
           onOpenChange(false);
@@ -613,7 +618,19 @@ function SubmitFeatureDrawer({
             </div>
           </div>
 
-          {/* Category */}
+          {/* Device & OS Details */}
+          <div>
+            <label className="text-zinc-400 text-xs font-medium mb-1 block">Device & OS Details (optional)</label>
+            <textarea
+              value={deviceDetails}
+              onChange={(e) => setDeviceDetails(e.target.value)}
+              placeholder="e.g. iPhone 15 Pro, iOS 18.2 / Samsung S24, Android 15 / MacBook Pro, Chrome 124..."
+              maxLength={300}
+              rows={2}
+              className="w-full bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent"
+            />
+            <span className="text-zinc-600 text-[11px] ml-auto block text-right mt-1">{deviceDetails.length}/300</span>
+          </div>
           <div>
             <label className="text-zinc-400 text-xs font-medium mb-2 block">{t('features.categoryLabel')}</label>
             <div className="flex flex-wrap gap-2">
