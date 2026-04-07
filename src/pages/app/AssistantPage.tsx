@@ -678,7 +678,7 @@ export default function AssistantPage() {
       if (voiceAutoReply || alwaysSpeakReplies) {
         // Small delay to let the message render first
         setTimeout(() => {
-          speak(responseText);
+          elevenLabsSpeak(responseText);
         }, 300);
       }
     } catch (error: any) {
@@ -1362,7 +1362,7 @@ export default function AssistantPage() {
         setIsLoading(false);
         
         if (alwaysSpeakReplies) {
-          setTimeout(() => speak("Here's the official DeHub logo!"), 300);
+          setTimeout(() => elevenLabsSpeak("Here's the official DeHub logo!"), 300);
         }
         return;
       }
@@ -1489,7 +1489,7 @@ export default function AssistantPage() {
             // Auto-speak if enabled
             if (alwaysSpeakReplies && streamedContent) {
               setTimeout(() => {
-                speak(streamedContent);
+                elevenLabsSpeak(streamedContent);
               }, 300);
             }
           },
