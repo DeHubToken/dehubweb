@@ -123,18 +123,19 @@ export function useTipPayment({
         toast.success(dhbText(`Tip of ${amount} DHB sent!`), { id: 'tip-payment' });
         onSuccess?.();
 
-        // Background: confirm on-chain + persist to DB
+        // Background: confirm on-chain + persist decoded on-chain values to DB
         (async () => {
           try {
             const confirmedTxHash = await tipResult.confirmed;
+            const confirmedTip = await readConfirmedTipDetails(confirmedTxHash, chainId);
 
             const saved = await persistTipRecord({
               walletAddress,
-              creatorAddress,
-              amount,
+              creatorAddress: confirmedTip.receiverAddress,
+              amount: confirmedTip.amount,
               chainId,
               txHash: confirmedTxHash,
-              tokenId: tokenId || null,
+              tokenId: confirmedTip.tokenId,
             });
 
             if (!saved) {
