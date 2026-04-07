@@ -461,20 +461,27 @@ export function useDeHubImages(options: Omit<UseDeHubFeedOptions, 'postType'> = 
   });
 }
 
+/** Default params — Home, Live tab, and prefetch must match so React Query dedupes to one cache entry. */
+export const DEFAULT_DEHUB_LIVE_QUERY_OPTIONS = {
+  unit: 15,
+  sortMode: 'recent' as const,
+};
+
 /**
  * Hook to fetch live content specifically
  * Uses /api/live endpoint
  */
 export function useDeHubLive(options: { unit?: number; sortMode?: 'viewers' | 'recent' | 'popular'; category?: string } = {}) {
+  const merged = { ...DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, ...options };
   return useInfiniteQuery({
-    queryKey: ['dehub-live', options],
+    queryKey: ['dehub-live', merged],
     queryFn: async ({ pageParam = 1 }) => {
       try {
         const response = await getLiveStreams({
           page: pageParam,
-          unit: options.unit || 15,
-          sortMode: options.sortMode,
-          category: options.category,
+          unit: merged.unit,
+          sortMode: merged.sortMode,
+          category: merged.category,
         });
 
         // API returns a plain array, not { result: [...] }
@@ -483,9 +490,9 @@ export function useDeHubLive(options: { unit?: number; sortMode?: 'viewers' | 'r
         return {
           data: streams,
           page: pageParam,
-          has_more: streams.length >= (options.unit || 15),
+          has_more: streams.length >= merged.unit,
           total: streams.length,
-          limit: options.unit || 15,
+          limit: merged.unit,
         };
       } catch (error) {
         console.warn('[Live] Failed to fetch live streams:', error);
@@ -495,7 +502,7 @@ export function useDeHubLive(options: { unit?: number; sortMode?: 'viewers' | 'r
           page: pageParam,
           has_more: false,
           total: 0,
-          limit: options.unit || 15,
+          limit: merged.unit,
         };
       }
     },
@@ -506,10 +513,11 @@ export function useDeHubLive(options: { unit?: number; sortMode?: 'viewers' | 'r
       return undefined;
     },
     initialPageParam: 1,
-    staleTime: 0, // Live data should always be fresh
+    /** Avoid hammering /api/live; list is still refreshed on pull-to-refresh and after stale window. */
+    staleTime: 60 * 1000,
     gcTime: 1000 * 60 * 10,
     refetchOnWindowFocus: false,
-    refetchOnMount: 'always' as const,
+    refetchOnMount: true,
     retry: 1,
   });
 }

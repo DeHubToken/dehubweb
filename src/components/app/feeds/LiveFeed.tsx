@@ -15,7 +15,7 @@ import { useNavigate } from 'react-router-dom';
 import { LiveFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { cn } from '@/lib/utils';
 import { LiveCard } from '@/components/app/cards';
-import { useDeHubLive, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
+import { useDeHubLive, DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { TVPreviewCard } from '@/components/app/tv';
 import { StagesCarousel } from '@/components/app/music/StagesCarousel';
@@ -78,10 +78,7 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
     isError,
     refetch,
     error,
-  } = useDeHubLive({
-    unit: 15,
-    sortMode: 'recent',
-  });
+  } = useDeHubLive(DEFAULT_DEHUB_LIVE_QUERY_OPTIONS);
 
   // Map API data to LiveStream items
   const streams = useMemo(() => {

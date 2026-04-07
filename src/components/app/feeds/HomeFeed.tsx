@@ -54,7 +54,7 @@ import {
   mapToImagePost, 
   mapToTextPost,
 } from '@/hooks/use-unified-feed';
-import { useDeHubStoryUsers, useDeHubLive, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
+import { useDeHubStoryUsers, useDeHubLive, DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
 import { usePersistedFeedFilter, usePersistedContentFilters, clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
 import { getMediaUrl, getNFTInfo, getCategories } from '@/lib/api/dehub';
 import type { DeHubCategory } from '@/lib/api/dehub';
@@ -412,8 +412,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Fetch story users from API
   const { storyUsers } = useDeHubStoryUsers(10);
 
-  // Fetch active live streams for the "Live Now" section
-  const { data: liveData } = useDeHubLive({ unit: 10, sortMode: 'recent' });
+  // Same query key as Live tab + prefetch (DEFAULT_DEHUB_LIVE_QUERY_OPTIONS); slice below for carousel width.
+  const { data: liveData } = useDeHubLive(DEFAULT_DEHUB_LIVE_QUERY_OPTIONS);
   const liveNowStreams = useMemo(() => {
     if (!liveData?.pages) return [];
     const allStreams = liveData.pages.flatMap(page => page.data || []);

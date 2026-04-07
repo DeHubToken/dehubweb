@@ -15,6 +15,7 @@ import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useSearchParams, useNavigationType } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { Settings2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
@@ -70,6 +71,7 @@ const GESTURE_LOCK_DURATION = 300;
 const HOME_STATE_STORAGE_KEY = 'home-feed-state';
 
 export default function HomePage() {
+  const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isCollapsed } = useSidebarCollapse();
   
@@ -242,6 +244,9 @@ export default function HomePage() {
     lastRefreshTime.current = now;
     
     setIsRefreshing(true);
+
+    // Force fresh live streams (staleTime would otherwise skip refetch after remount)
+    void queryClient.invalidateQueries({ queryKey: ['dehub-live'] });
     
     // Clear prefetch state so feeds will be re-fetched
     clearPrefetchState();
@@ -261,7 +266,7 @@ export default function HomePage() {
         setIsRefreshing(false);
       }, 300);
     }, 800);
-  }, [isRefreshing]);
+  }, [isRefreshing, queryClient]);
   
   // Track when home feed has loaded for prefetching other tabs
   const [isHomeFeedLoaded, setIsHomeFeedLoaded] = useState(false);

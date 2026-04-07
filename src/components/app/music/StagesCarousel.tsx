@@ -6,7 +6,7 @@
  * @module components/app/music/StagesCarousel
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Mic2, Users, ChevronRight, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -86,10 +86,13 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
   );
 }
 
+const STAGES_INSERT_REFETCH_DEBOUNCE_MS = 750;
+
 export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  
+  const insertRefetchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   // Fetch live stages
   const { data: liveSpaces = [], refetch } = useQuery({
     queryKey: ['live-stages-carousel'],
@@ -126,11 +129,20 @@ export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'audio_spaces' },
-        () => { refetch(); }
+        () => {
+          if (insertRefetchDebounceRef.current) clearTimeout(insertRefetchDebounceRef.current);
+          insertRefetchDebounceRef.current = setTimeout(() => {
+            insertRefetchDebounceRef.current = null;
+            refetch();
+          }, STAGES_INSERT_REFETCH_DEBOUNCE_MS);
+        }
       )
       .subscribe();
 
-    return () => { supabase.removeChannel(channel); };
+    return () => {
+      if (insertRefetchDebounceRef.current) clearTimeout(insertRefetchDebounceRef.current);
+      supabase.removeChannel(channel);
+    };
   }, [queryClient, refetch]);
 
   return (

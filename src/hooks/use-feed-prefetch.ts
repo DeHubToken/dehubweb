@@ -16,6 +16,7 @@
 import { useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { getAuthToken, searchNFTs, getLiveStreams } from '@/lib/api/dehub';
+import { DEFAULT_DEHUB_LIVE_QUERY_OPTIONS } from '@/hooks/use-dehub-feed';
 import { useAuth } from '@/contexts/AuthContext';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
@@ -116,8 +117,12 @@ export async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryCl
     sortMode: 'new',
   });
   
-  // Live - no auth needed
-  const livePromise = getLiveStreams({ page: 1, unit: 15, sortMode: 'recent' }).catch(() => ({ result: [] }));
+  // Live - no auth needed (params must match useDeHubLive cache key)
+  const livePromise = getLiveStreams({
+    page: 1,
+    unit: DEFAULT_DEHUB_LIVE_QUERY_OPTIONS.unit,
+    sortMode: DEFAULT_DEHUB_LIVE_QUERY_OPTIONS.sortMode,
+  }).catch(() => ({ result: [] }));
   
   // ============================================================================
   // STEP 2: WAIT FOR ALL TO COMPLETE (TRULY PARALLEL!)
@@ -251,19 +256,16 @@ export async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryCl
   if (liveResult.status === 'fulfilled') {
     const response = liveResult.value as any;
     const streams = Array.isArray(response) ? response : (response.result || []);
-    const liveParams = {
-      unit: 15,
-      sortMode: 'recent' as const,
-    };
+    const liveParams = { ...DEFAULT_DEHUB_LIVE_QUERY_OPTIONS };
     queryClient.setQueryData(
       ['dehub-live', liveParams],
       {
         pages: [{
           data: streams,
           page: 1,
-          has_more: streams.length >= 15,
+          has_more: streams.length >= liveParams.unit,
           total: streams.length,
-          limit: 15,
+          limit: liveParams.unit,
         }],
         pageParams: [1],
       }
