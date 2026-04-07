@@ -1,39 +1,34 @@
 
 
-## Fix: Tip count not updating on post after tipping
+## Fix: Tip confirmation taking too long
 
 ### Problem
-The optimistic tip flow fires `onSuccess` (which invalidates the tip count query) **before** the tip is written to the database. The timeline is:
+The current flow waits sequentially for: tx submission → on-chain block confirmation (~3-5s) → DB insert with retries → then shows success. That's 10-20 seconds of waiting after the user already signed the transaction.
 
-1. Tx submitted → `onSuccess()` fires → query invalidated → refetches from DB → **record not there yet**
-2. Tx confirmed → DB insert happens → but no one re-invalidates the query
+### Solution: Hybrid approach — optimistic success + guaranteed background persistence
 
-### Solution
-Two changes needed:
+Show "Tip sent!" immediately after the transaction is **submitted** (not confirmed), then run confirmation + DB save in the background. If the background DB save fails, show a delayed error toast so the user knows.
 
-**1. Optimistically update the tip count cache immediately (no DB round-trip needed)**
+This gives the best of both worlds:
+- **Fast UX**: Success shown in ~1-2 seconds
+- **Data integrity**: DB save still happens reliably with retries
+- **No silent failures**: If DB save fails after retries, a warning toast appears
 
-In `TipModal.tsx`, instead of just invalidating the query, **optimistically increment** the cached tip count by the tipped amount:
+### Changes to `src/hooks/use-tip-payment.ts`
 
-```ts
-// In onSuccess callback:
-queryClient.setQueryData(['post-tip-count', resolvedTokenId], (old: number) => (old || 0) + parsedAmount);
-```
+1. After `sendTip()` returns with the tx hash, immediately:
+   - Show success toast
+   - Call `onSuccess()` (triggers optimistic UI update)
+   - Close modal / reset state
 
-This gives instant UI feedback without waiting for DB.
+2. In the background (fire-and-forget with error handling):
+   - Await `tipResult.confirmed` (block confirmation)
+   - Call `persistTipRecord()` with retries
+   - If DB save fails after all retries, show a warning toast: "Tip confirmed but failed to record — contact support"
 
-**2. Re-invalidate after the DB write completes**
-
-In `use-tip-payment.ts`, after the confirmed DB insert succeeds, call a second invalidation so the count reconciles with the real DB total. Pass `queryClient` or expose a second callback (`onConfirmed`) that the TipModal can use to invalidate again.
-
-### Files to change
-
-| File | Change |
-|------|--------|
-| `src/hooks/use-tip-payment.ts` | Add `onConfirmed` callback param; call it after DB insert succeeds |
-| `src/components/app/modals/TipModal.tsx` | Optimistically set tip count in `onSuccess`; invalidate query in `onConfirmed` |
+3. Remove the intermediate "Confirming on chain..." and "Saving tip record..." loading toasts — user shouldn't have to watch these
 
 ### Result
-- Tip count updates **instantly** on the post after tipping
-- Once tx confirms and DB write completes, the count reconciles with the real total
+- **Before**: 10-20 second wait after signing
+- **After**: ~1-2 second wait, background save handles the rest silently
 
