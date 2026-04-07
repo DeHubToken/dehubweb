@@ -168,7 +168,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       logger.info('Executing on-chain mint...', { tokenId });
       toast.loading('Publishing to decentralized database...', { id: 'golive-progress', duration: Infinity });
 
-      const txHash = await mintOnChain({
+      const mintResult = await mintOnChain({
         tokenId,
         timestamp: mintResponse.timestamp,
         v: mintResponse.v,
@@ -177,8 +177,14 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
         chainId: BASE_CHAIN_ID,
       });
 
-      logger.info('On-chain mint confirmed', { tokenId, txHash });
+      const txHash = mintResult.hash;
+      logger.info('On-chain mint submitted', { tokenId, txHash });
       toast.dismiss('golive-progress');
+
+      // Background confirmation
+      mintResult.confirmed.catch((err) => {
+        logger.warn('Background mint confirmation failed', err);
+      });
 
       // Step 4: Poll /api/nft_info/{tokenId} to get stream credentials
       // Backend needs a moment to provision the stream after minting

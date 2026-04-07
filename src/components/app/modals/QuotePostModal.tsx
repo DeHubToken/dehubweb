@@ -83,7 +83,7 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
       startCreepProgress();
       toast.loading('Publishing to decentralized database...', { id: 'quote-mint', duration: Infinity });
 
-      const txHash = await mintOnChain({
+      const mintResult = await mintOnChain({
         tokenId: mintSig.createdTokenId,
         timestamp: mintSig.timestamp,
         v: mintSig.v,
@@ -92,7 +92,14 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
         chainId: 8453,
       });
 
-      console.log('[QuotePost] Minted on-chain, tx:', txHash);
+      const txHash = mintResult.hash;
+      console.log('[QuotePost] Tx submitted:', txHash);
+
+      // Background confirmation — don't block UI
+      mintResult.confirmed.catch((err) => {
+        console.error('[QuotePost] Background confirmation failed:', err);
+        toast.error('Quote submitted but confirmation failed. It may still appear shortly.');
+      });
 
       clearCreepInterval();
       setUploadProgress(100);
