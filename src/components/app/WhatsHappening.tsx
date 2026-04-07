@@ -12,6 +12,7 @@ import { getTopTickers, type TickerPeriod } from '@/lib/ticker-search-tracker';
 import { TrendingTopicsList } from './TrendingTopicsList';
 import { supabase } from '@/integrations/supabase/client';
 import { formatTimeAgo } from '@/lib/feed-utils';
+import { useStage } from '@/contexts/StageContext';
 
 const COUNTRIES = [
   { code: 'global', flag: '🌍', name: 'Global' },
