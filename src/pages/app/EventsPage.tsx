@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { CalendarDays } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEvents } from '@/hooks/use-events';
 import type { CommunityEvent } from '@/hooks/use-events';
@@ -27,7 +28,10 @@ export default function EventsPage() {
     <div className="max-w-2xl mx-auto px-3 py-4">
       <SEOHead title="Events - DeHub" description="Discover and create events on DeHub" />
 
-      <h1 className="text-xl font-bold text-white mb-3">Events</h1>
+      <h1 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
+        <CalendarDays className="w-5 h-5" />
+        Events
+      </h1>
 
       {/* Filter tabs + create */}
       <div className="flex items-center border-b border-white/[0.08] mb-4">
