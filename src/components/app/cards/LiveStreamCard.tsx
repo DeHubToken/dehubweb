@@ -431,19 +431,15 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
       {/* Video Player or Stream Ended State */}
       <div ref={containerRef} className={`aspect-video bg-black relative rounded-lg overflow-hidden${isFullscreen ? ' fixed inset-0 z-[9999] !aspect-auto w-screen h-screen rounded-none' : ''}`}>
         {streamEnded ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-900">
-            <div
-              className="absolute inset-0 bg-cover bg-center opacity-20"
-              style={{ backgroundImage: `url(${stream.thumbnail})` }}
-            />
-            <div className="relative z-10 flex flex-col items-center gap-4 text-center px-4">
-              <div className="w-16 h-16 rounded-xl bg-zinc-800 flex items-center justify-center">
-                <Radio className="w-8 h-8 text-zinc-500" />
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black">
+            <div className="flex flex-col items-center gap-3 text-center px-4">
+              <div className="w-14 h-14 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                <Radio className="w-7 h-7 text-white/40" />
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-white mb-1">Stream Ended</h3>
-                <p className="text-sm text-zinc-400">
-                  This stream is no longer live. Check back later for more content.
+                <h3 className="text-base font-semibold text-white mb-0.5">Stream Ended</h3>
+                <p className="text-xs text-zinc-500">
+                  This stream is no longer live.
                 </p>
               </div>
             </div>
