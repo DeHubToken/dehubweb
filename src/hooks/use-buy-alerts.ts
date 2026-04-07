@@ -24,11 +24,11 @@ export function useBuyAlerts() {
         .from('community_chat_messages')
         .select('id, content, created_at, message_type')
         .eq('message_type', 'buy_alert')
-        .order('created_at', { ascending: true })
+        .order('created_at', { ascending: false })
         .limit(50);
 
       if (!error && data) {
-        setAlerts(data as BuyAlertMessage[]);
+        setAlerts(([...data] as BuyAlertMessage[]).reverse());
       }
     };
 
