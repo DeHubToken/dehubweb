@@ -61,36 +61,41 @@ export function useTipPayment({
 
       try {
         await switchChain(chainId);
-        const signerAddress = await getWalletAddress();
 
         toast.loading('Sending tip...', { id: 'tip-payment' });
 
-        const confirmedTxHash = await sendTip({
+        const tipResult = await sendTip({
           tokenId: tokenId || 0,
           amount,
           to: creatorAddress,
           chainId,
+          signerAddress: walletAddress,
         });
 
-        // Record tip in database for leaderboard tracking
-        try {
-          await withWalletHeader(
-            supabase.from('tip_records').insert({
-              sender_address: signerAddress.toLowerCase(),
-              receiver_address: creatorAddress.toLowerCase(),
-              amount,
-              chain_id: chainId,
-              tx_hash: confirmedTxHash,
-              token_id: tokenId || null,
-            } as any),
-            signerAddress
-          );
-        } catch (dbErr) {
-          console.warn('[Tip] Failed to record tip in DB:', dbErr);
-        }
-
+        // Show success immediately on tx submission
         toast.success(dhbText(`Tip of ${amount} DHB sent!`), { id: 'tip-payment' });
         onSuccess?.();
+
+        // Record tip + await confirmation in background (non-blocking)
+        tipResult.confirmed.then((confirmedTxHash) => {
+          try {
+            withWalletHeader(
+              supabase.from('tip_records').insert({
+                sender_address: walletAddress.toLowerCase(),
+                receiver_address: creatorAddress.toLowerCase(),
+                amount,
+                chain_id: chainId,
+                tx_hash: confirmedTxHash,
+                token_id: tokenId || null,
+              } as any),
+              walletAddress
+            );
+          } catch (dbErr) {
+            console.warn('[Tip] Failed to record tip in DB:', dbErr);
+          }
+        }).catch((err) => {
+          console.warn('[Tip] Background confirmation failed:', err);
+        });
       } catch (error: unknown) {
         console.error('[Tip] Payment failed:', error);
         const message = parseTxError(error as Error);

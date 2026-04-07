@@ -65,12 +65,13 @@ export function DmFeeGate({
 
       toast.loading('Sending tip & message...', { id: 'dm-fee-gate' });
 
-      const txHash = await sendTip({
+      const tipResult = await sendTip({
         tokenId: 0,
         amount,
         to: recipientAddress,
         chainId,
       });
+      const txHash = tipResult.hash;
 
       // Send the message with txHash — backend verifies fee inline via sendMessage socket event.
       emitSendMessage({

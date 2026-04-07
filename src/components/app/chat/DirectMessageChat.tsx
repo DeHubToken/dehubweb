@@ -741,13 +741,14 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         console.log('[DM Fee] Paying', activeFee, 'DHB to recipient:', recipientAddress, '| chain:', chainId);
         toast.loading('Processing payment...', { id: 'dm-fee-send' });
 
-        feeTxHash = await sendTip({
+        const tipResult = await sendTip({
           tokenId: 0,
           amount: activeFee,
           to: recipientAddress,
           chainId,
           skipBalanceCheck: true,
         });
+        feeTxHash = tipResult.hash;
 
         // Track this tx as locally confirmed so we don't show "confirming payment..." forever
         if (feeTxHash) confirmedTxHashes.current.add(feeTxHash.toLowerCase());

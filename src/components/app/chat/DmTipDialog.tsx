@@ -67,18 +67,22 @@ export function DmTipDialog({
 
       toast.loading('Sending tip...', { id: 'dm-tip' });
 
-      const confirmedTxHash = await sendTip({
+      const tipResult = await sendTip({
         tokenId: 0,
         amount: parsedAmount,
         to: recipientAddress,
         chainId,
+        signerAddress,
       });
 
-      // Notify backend — this creates the inline tip message (msgType:'tip') in the conversation
-      // and registers it for Alchemy webhook confirmation.
-      // DO NOT emit sendMessage via socket — backend handles the tip message creation.
-      try {
-        await apiCall('/api/dm/tip-notify', {
+      // Show success immediately on tx submission
+      toast.success(dhbText(`Sent ${parsedAmount.toLocaleString()} DHB to ${recipientName}! 🎉`), { id: 'dm-tip' });
+      setAmount('');
+      onOpenChange(false);
+
+      // Background: notify backend after confirmation
+      tipResult.confirmed.then((confirmedTxHash) => {
+        apiCall('/api/dm/tip-notify', {
           method: 'POST',
           body: {
             txHash: confirmedTxHash,
@@ -86,14 +90,12 @@ export function DmTipDialog({
             senderAddress: signerAddress,
           },
           requiresAuth: true,
+        }).catch((notifyErr) => {
+          console.warn('[DmTip] tip-notify failed (non-fatal):', notifyErr);
         });
-      } catch (notifyErr) {
-        console.warn('[DmTip] tip-notify failed (non-fatal):', notifyErr);
-      }
-
-      toast.success(dhbText(`Sent ${parsedAmount.toLocaleString()} DHB to ${recipientName}! 🎉`), { id: 'dm-tip' });
-      setAmount('');
-      onOpenChange(false);
+      }).catch((err) => {
+        console.warn('[DmTip] Background confirmation failed:', err);
+      });
     } catch (error: unknown) {
       console.error('[DmTip] Failed:', error);
       const message = parseTxError(error as Error);
