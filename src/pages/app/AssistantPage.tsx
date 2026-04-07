@@ -39,6 +39,7 @@ import { ElevenLabsVoicePicker } from '@/components/app/shared/ElevenLabsVoicePi
 import { VoiceTrainingDrawer } from '@/components/app/shared/VoiceTrainingDrawer';
 import { CHAT_MODEL_OPTIONS, DEFAULT_CHAT_MODEL, type ChatModelKey } from '@/constants/chat-models.constants';
 import { PostModal } from '@/features/post';
+import { getBadgeName } from '@/lib/staking-badges';
 import { VideoPaywallModal } from '@/components/app/video/VideoPaywallModal';
 import { ImagePaywallModal } from '@/components/app/image/ImagePaywallModal';
 import { AiToolPaywallModal } from '@/components/app/ai-tools/AiToolPaywallModal';
@@ -496,7 +497,7 @@ export default function AssistantPage() {
   }, []);
   const pendingVoiceRef = useRef(false); // Track if last input was voice
 
-  const { isAuthenticated, walletAddress } = useAuth();
+  const { isAuthenticated, walletAddress, user } = useAuth();
   const isMobile = useIsMobile();
   const { language: userLanguage } = useUserLanguage();
   const { t } = useI18n();
@@ -1947,7 +1948,15 @@ export default function AssistantPage() {
                       setElevenLabsVoiceId(voiceId);
                       localStorage.setItem('dehub-assistant-voice', JSON.stringify({ type: 'elevenlabs', voiceId }));
                     }}
-                    onTrainVoice={() => setVoiceTrainingOpen(true)}
+                    onTrainVoice={() => {
+                      const badgeName = getBadgeName(user?.badgeBalance, user?.username);
+                      const allowed = badgeName === 'Meglodon' || badgeName === 'Blue Whale';
+                      if (!allowed) {
+                        toast.error('Voice cloning is exclusive to Blue Whale and Megalodon badge holders');
+                        return;
+                      }
+                      setVoiceTrainingOpen(true);
+                    }}
                   />
                 </div>
                 

@@ -206,6 +206,7 @@ export function ElevenLabsVoicePicker({
         >
           <Mic className="w-3.5 h-3.5" />
           + Train Custom Voice
+          <span className="ml-1 text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-400 font-medium">🐋 Blue Whale+</span>
         </button>
       )}
     </div>
