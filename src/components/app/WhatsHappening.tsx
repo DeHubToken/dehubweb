@@ -118,6 +118,7 @@ interface WhatsHappeningProps {
 
 export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector = false }: WhatsHappeningProps) {
   const navigate = useNavigate();
+  const { openModal: openStagesModal, joinSpace } = useStage();
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<Tab>('posts');
   const [hasTabInteracted, setHasTabInteracted] = useState(false);
