@@ -39,6 +39,7 @@ import { ElevenLabsVoicePicker } from '@/components/app/shared/ElevenLabsVoicePi
 import { VoiceTrainingDrawer } from '@/components/app/shared/VoiceTrainingDrawer';
 import { CHAT_MODEL_OPTIONS, DEFAULT_CHAT_MODEL, type ChatModelKey } from '@/constants/chat-models.constants';
 import { PostModal } from '@/features/post';
+import { getBadgeName } from '@/lib/staking-badges';
 import { VideoPaywallModal } from '@/components/app/video/VideoPaywallModal';
 import { ImagePaywallModal } from '@/components/app/image/ImagePaywallModal';
 import { AiToolPaywallModal } from '@/components/app/ai-tools/AiToolPaywallModal';
