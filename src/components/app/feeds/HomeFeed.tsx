@@ -82,8 +82,8 @@ type FeedItemType =
 
 const PAGE_SIZE = 20;
 const SHORTS_INSERT_INTERVAL = 5;
-const LEADERBOARD_INSERT_AFTER = 8;
-const RADIO_INSERT_AFTER = 12;
+const RADIO_INSERT_AFTER = 8;
+const LEADERBOARD_INSERT_AFTER_LIVE_OFFSET = 10;
 /** Insert an all-time most-liked post every N items in trending feed */
 const CLASSIC_INSERT_INTERVAL = 6;
 
