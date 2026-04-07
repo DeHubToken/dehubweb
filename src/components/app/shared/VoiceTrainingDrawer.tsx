@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { withWalletHeader } from '@/lib/supabase-helpers';
+import { withWalletHeader } from '@/lib/supabase-wallet-client';
 
 interface VoiceTrainingDrawerProps {
   open: boolean;
