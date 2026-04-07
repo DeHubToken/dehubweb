@@ -103,13 +103,30 @@ export interface SendTipParams {
 // Cache of chains where max-approval has already been granted this session
 const approvedChains = new Set<string>();
 
-export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boolean }): Promise<string> {
+// Hydrate approval cache from sessionStorage on load
+try {
+  const cached = sessionStorage.getItem('dhb_approved_chains');
+  if (cached) JSON.parse(cached).forEach((k: string) => approvedChains.add(k));
+} catch { /* ignore */ }
+
+function persistApprovalCache() {
+  try { sessionStorage.setItem('dhb_approved_chains', JSON.stringify([...approvedChains])); } catch { /* */ }
+}
+
+export interface SendTipResult {
+  /** Transaction hash, available immediately after submission */
+  hash: string;
+  /** Resolves when the tx is confirmed on-chain */
+  confirmed: Promise<string>;
+}
+
+export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boolean; signerAddress?: string }): Promise<SendTipResult> {
   const chainId = params.chainId || BASE_CHAIN_ID;
   const chainConfig = getChainConfig(chainId);
 
   await switchChain(chainId);
 
-  const signerAddress = await getWalletAddress();
+  const signerAddress = params.signerAddress || await getWalletAddress();
 
   // Prevent self-tipping
   if (signerAddress.toLowerCase() === params.to.toLowerCase()) {
@@ -139,8 +156,10 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
       const maxApproval = BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
       await approveDHB(maxApproval, chainId);
       approvedChains.add(chainKey);
+      persistApprovalCache();
     } else if (needsAllowanceCheck) {
       approvedChains.add(chainKey);
+      persistApprovalCache();
     }
   }
 
@@ -154,8 +173,11 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
     { context: 'send tip', chainId }
   );
 
-  const receipt = await result.wait(1);
-  return receipt.hash;
+  // Return hash immediately; confirmation runs in background
+  return {
+    hash: result.hash,
+    confirmed: result.wait(1).then(r => r.hash),
+  };
 }
 
 /**

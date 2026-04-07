@@ -463,8 +463,8 @@ export async function writeContractAA(
         }
 
         // Web3Auth: poll via provider
-        const maxAttempts = 60;
-        const pollInterval = 2000;
+        const maxAttempts = 120;
+        const pollInterval = 500;
         
         for (let i = 0; i < maxAttempts; i++) {
           try {
