@@ -2014,16 +2014,24 @@ export default function AssistantPage() {
 
       {/* API Key Prompt for non-whale users */}
       {showApiKeyPrompt && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 backdrop-blur-sm">
-          <div className="w-[90%] max-w-md rounded-2xl bg-black/95 border border-white/10 p-6 space-y-4">
+        <div 
+          className="fixed inset-0 z-[200] flex items-center justify-center bg-black/70 backdrop-blur-sm"
+          onClick={(e) => { e.stopPropagation(); setShowApiKeyPrompt(false); }}
+          onPointerDown={(e) => e.stopPropagation()}
+        >
+          <div 
+            className="w-[90%] max-w-md rounded-2xl bg-black/95 border border-white/10 p-6 space-y-4"
+            onClick={(e) => e.stopPropagation()}
+            onPointerDown={(e) => e.stopPropagation()}
+          >
             <div className="space-y-2">
               <h3 className="text-lg font-semibold text-white">Voice Cloning Access</h3>
               <p className="text-sm text-white/60">
-                Voice cloning is free for <span className="text-amber-400 font-medium">Blue Whale</span> and <span className="text-amber-400 font-medium">Megalodon</span> badge holders.
+                Voice cloning is free for <span className="font-bold text-white">Blue Whale</span> and <span className="font-bold text-white">Megalodon</span> badge holders.
               </p>
               <p className="text-sm text-white/60">
                 You can still clone voices by providing your own ElevenLabs API key. Get one free at{' '}
-                <a href="https://elevenlabs.io" target="_blank" rel="noopener noreferrer" className="text-amber-400 underline hover:text-amber-300">elevenlabs.io</a>
+                <a href="https://elevenlabs.io" target="_blank" rel="noopener noreferrer" className="text-white/80 underline hover:text-white">elevenlabs.io</a>
               </p>
             </div>
 
@@ -2046,7 +2054,9 @@ export default function AssistantPage() {
               >
                 Cancel
               </Button>
-              <Button
+              <LiquidGlassBubble
+                shimmer
+                noBorder
                 onClick={() => {
                   if (!apiKeyInput.trim()) {
                     toast.error('Please enter your ElevenLabs API key');
@@ -2057,10 +2067,13 @@ export default function AssistantPage() {
                   setShowApiKeyPrompt(false);
                   setVoiceTrainingOpen(true);
                 }}
-                className="flex-1 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30"
+                className="flex-1 cursor-pointer [&>div]:!rounded-xl [&>div]:!h-full [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl"
+                style={{ height: '40px' }}
               >
-                Continue
-              </Button>
+                <span className="flex items-center justify-center text-white text-sm font-medium h-full">
+                  Continue
+                </span>
+              </LiquidGlassBubble>
             </div>
 
             <p className="text-[10px] text-white/25 text-center">
