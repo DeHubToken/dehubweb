@@ -1185,11 +1185,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         shortsInserted = true;
       }
 
-      if ((index + 1) === LEADERBOARD_INSERT_AFTER && !leaderboardInserted) {
-        addFullWidth(<div key={`leaderboard-carousel-${index}`}><LeaderboardCarousel /></div>);
-        leaderboardInserted = true;
-      }
-
       if ((index + 1) === RADIO_INSERT_AFTER && radioStations.length > 0 && !radioInserted) {
         addFullWidth(<div key={`radio-carousel-${index}`}><RadioCarouselSection /></div>);
         radioInserted = true;
@@ -1214,6 +1209,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           </div>
         );
         liveInserted = true;
+      }
+
+      if ((index + 1) === LEADERBOARD_INSERT_AFTER && !leaderboardInserted) {
+        addFullWidth(<div key={`leaderboard-carousel-${index}`}><LeaderboardCarousel /></div>);
+        leaderboardInserted = true;
       }
     });
 
