@@ -9,14 +9,6 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const ELEVENLABS_API_KEY = Deno.env.get('ELEVENLABS_API_KEY');
-    if (!ELEVENLABS_API_KEY) {
-      return new Response(
-        JSON.stringify({ error: 'ElevenLabs API key not configured' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
     const walletAddress = req.headers.get('x-wallet-address');
     if (!walletAddress) {
       return new Response(
@@ -28,6 +20,16 @@ Deno.serve(async (req) => {
     const formData = await req.formData();
     const name = formData.get('name') as string;
     const file = formData.get('file') as File;
+    const customApiKey = formData.get('customApiKey') as string | null;
+
+    // Use custom API key if provided, otherwise fall back to server key
+    const apiKey = customApiKey || Deno.env.get('ELEVENLABS_API_KEY');
+    if (!apiKey) {
+      return new Response(
+        JSON.stringify({ error: 'ElevenLabs API key not configured' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
 
     if (!name || typeof name !== 'string' || name.length < 1 || name.length > 50) {
       return new Response(
@@ -52,7 +54,7 @@ Deno.serve(async (req) => {
     const response = await fetch('https://api.elevenlabs.io/v1/voices/add', {
       method: 'POST',
       headers: {
-        'xi-api-key': ELEVENLABS_API_KEY,
+        'xi-api-key': apiKey,
       },
       body: cloneFormData,
     });
@@ -60,8 +62,13 @@ Deno.serve(async (req) => {
     if (!response.ok) {
       const errText = await response.text();
       console.error('ElevenLabs clone error:', response.status, errText);
+      const isInvalidKey = response.status === 401 || response.status === 403;
       return new Response(
-        JSON.stringify({ error: 'Voice cloning failed. Ensure audio is clear and at least 10 seconds.' }),
+        JSON.stringify({ 
+          error: isInvalidKey 
+            ? 'Invalid ElevenLabs API key. Please check your key and try again.' 
+            : 'Voice cloning failed. Ensure audio is clear and at least 10 seconds.' 
+        }),
         { status: 502, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
