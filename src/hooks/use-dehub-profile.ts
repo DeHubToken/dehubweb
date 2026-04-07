@@ -222,7 +222,7 @@ interface UseDeHubUserContentOptions {
  * Uses the /api/feed endpoint with minter filter for reliable content fetching
  * Pass viewerAddress to get isLiked/isSaved state for the logged-in user
  */
-export function useDeHubUserContent({ userId, viewerAddress, enabled = true, limit = 50 }: UseDeHubUserContentOptions = {}) {
+export function useDeHubUserContent({ userId, viewerAddress, enabled = true, limit = 15 }: UseDeHubUserContentOptions = {}) {
   return useInfiniteQuery({
     queryKey: ['dehub-user-content', userId, viewerAddress],
     queryFn: async ({ pageParam = 1 }) => {

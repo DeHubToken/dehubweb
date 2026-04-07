@@ -81,15 +81,28 @@ export function useProfilePage() {
     }
   }, [routeUsername, userId, apiProfile?.handle, navigate]);
 
-  // Fetch user content
+  // Fetch user content — small first page for fast initial paint, then auto-fetch rest
   const {
     data: userContentData,
     isLoading: isLoadingContent,
+    fetchNextPage: fetchNextContentPage,
+    hasNextPage: hasNextContentPage,
+    isFetchingNextPage: isFetchingNextContentPage,
   } = useDeHubUserContent({
     userId: apiProfile?.walletAddress,
     viewerAddress: currentWalletAddress || undefined,
     enabled: !!apiProfile?.walletAddress,
   });
+
+  // Auto-fetch remaining pages in background after first page loads
+  useEffect(() => {
+    if (userContentData?.pages?.length && hasNextContentPage && !isFetchingNextContentPage) {
+      const timer = setTimeout(() => {
+        fetchNextContentPage();
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [userContentData?.pages?.length, hasNextContentPage, isFetchingNextContentPage, fetchNextContentPage]);
 
   // Fetch user reposts (and enrich quote posts with quoted post data)
   // Capped at 5 concurrent getNFTInfo calls to avoid N+1 API floods
