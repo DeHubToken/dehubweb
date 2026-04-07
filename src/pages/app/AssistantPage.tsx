@@ -1957,7 +1957,13 @@ export default function AssistantPage() {
                       const badgeName = getBadgeName(user?.badgeBalance, user?.username);
                       const allowed = badgeName === 'Meglodon' || badgeName === 'Blue Whale';
                       if (!allowed) {
-                        toast.error('Voice cloning is exclusive to Blue Whale and Megalodon badge holders');
+                        // Check if user already has a saved custom key
+                        if (customElevenLabsKey) {
+                          setVoiceTrainingOpen(true);
+                        } else {
+                          setApiKeyInput('');
+                          setShowApiKeyPrompt(true);
+                        }
                         return;
                       }
                       setVoiceTrainingOpen(true);
