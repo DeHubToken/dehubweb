@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
-import { getWalletAddress, switchChain, parseTxError } from '@/lib/contracts/aa-utils';
+import { switchChain, parseTxError } from '@/lib/contracts/aa-utils';
 import { getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { sendTip } from '@/lib/contracts/stream-controller';
 import { useAuth } from '@/contexts/AuthContext';
