@@ -328,7 +328,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
               {liveStages.map((stage) => (
                 <button
                   key={stage.id}
-                  onClick={() => { openStagesModal('browse'); joinSpace(stage.id, walletAddress || ''); }}
+                  onClick={() => { joinSpace(stage.id); }}
                   className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl hover:bg-zinc-800/60 transition-colors group text-left"
                 >
                   <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center shrink-0">
@@ -441,7 +441,10 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
       {/* View all button */}
       <LiquidGlassBubble2
         label={t('commandCentre.viewAll')}
-        onClick={() => navigate(activeTab === 'stages' ? (() => { openStagesModal('browse'); return '#'; })() || '#' : showCountrySelector && activeTab === 'tickers' ? '/app/top-100' : '/app/explore')}
+        onClick={() => {
+          if (activeTab === 'stages') { openStagesModal('browse'); }
+          else { navigate(showCountrySelector && activeTab === 'tickers' ? '/app/top-100' : '/app/explore'); }
+        }}
         width="100%"
         height="auto"
         className="-mt-1 [&>div]:!py-2 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent"
