@@ -552,8 +552,11 @@ function SubmitFeatureDrawer({
       return;
     }
     setErrors({});
+    const fullDescription = deviceDetails.trim()
+      ? `${result.data.description}\n\n📱 Device & OS: ${deviceDetails.trim()}`
+      : result.data.description;
     submitMutation.mutate(
-      { title: result.data.title, description: result.data.description, category: result.data.category as FeatureCategory, mediaFile },
+      { title: result.data.title, description: fullDescription, category: result.data.category as FeatureCategory, mediaFile },
       {
         onSuccess: () => {
           setTitle('');
