@@ -219,8 +219,9 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
     <div className="bg-zinc-900 rounded-2xl overflow-hidden relative">
       {/* Icon tab switcher — matches TabbedSidePanel style */}
       <div className="flex">
-        {(['posts', 'tickers'] as Tab[]).map(tab => {
+        {(['posts', 'stages', 'tickers'] as Tab[]).map(tab => {
           const Icon = tabIcons[tab];
+          const isStagesLive = tab === 'stages' && liveStages.length > 0;
           return (
             <button
               type="button"
@@ -235,7 +236,12 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
               {activeTab === tab && (
                 <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
               )}
-              <Icon className="w-5 h-5 relative z-10" />
+              <div className="relative z-10">
+                <Icon className="w-5 h-5" />
+                {isStagesLive && (
+                  <span className="absolute -top-1 -right-1.5 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                )}
+              </div>
             </button>
           );
         })}
