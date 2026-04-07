@@ -1,34 +1,33 @@
 
 
-## Fix: Tip confirmation taking too long
+## Fix: Posts taking 30 seconds after token is minted
 
 ### Problem
-The current flow waits sequentially for: tx submission → on-chain block confirmation (~3-5s) → DB insert with retries → then shows success. That's 10-20 seconds of waiting after the user already signed the transaction.
+Same root cause as the tip delay we just fixed. `mintOnChain()` calls `result.wait(1)` which polls for on-chain confirmation (up to 60s at 500ms intervals). The entire post flow blocks on this before showing "Posted successfully" and creating the optimistic post.
 
-### Solution: Hybrid approach — optimistic success + guaranteed background persistence
+The flow today:
+1. Upload files + API call (`mintPost`) — variable time
+2. Submit tx to chain — ~1-2s
+3. **Wait for block confirmation** — 3-15s+ (this is the bottleneck)
+4. Show success toast + create optimistic post
 
-Show "Tip sent!" immediately after the transaction is **submitted** (not confirmed), then run confirmation + DB save in the background. If the background DB save fails, show a delayed error toast so the user knows.
+### Solution
+Split `mintOnChain` into submission and confirmation, same pattern as tips:
 
-This gives the best of both worlds:
-- **Fast UX**: Success shown in ~1-2 seconds
-- **Data integrity**: DB save still happens reliably with retries
-- **No silent failures**: If DB save fails after retries, a warning toast appears
+1. **Submit tx** → immediately return the hash
+2. **Show "Posted successfully"** + create optimistic post + close modal
+3. **Background**: wait for confirmation silently; if it fails, show a warning toast
 
-### Changes to `src/hooks/use-tip-payment.ts`
+### Files to change
 
-1. After `sendTip()` returns with the tx hash, immediately:
-   - Show success toast
-   - Call `onSuccess()` (triggers optimistic UI update)
-   - Close modal / reset state
-
-2. In the background (fire-and-forget with error handling):
-   - Await `tipResult.confirmed` (block confirmation)
-   - Call `persistTipRecord()` with retries
-   - If DB save fails after all retries, show a warning toast: "Tip confirmed but failed to record — contact support"
-
-3. Remove the intermediate "Confirming on chain..." and "Saving tip record..." loading toasts — user shouldn't have to watch these
+| File | Change |
+|------|--------|
+| `src/lib/contracts/stream-collection.ts` | Return both `hash` and a `confirmed` promise from `mintOnChain` instead of awaiting `result.wait(1)` synchronously. Return `{ hash, confirmed: result.wait(1).then(...) }` |
+| `src/features/post/hooks/usePostForm.ts` | After getting `txHash` from `mintOnChain`, immediately show success + create optimistic post. Await `confirmed` in background with error handling (warning toast if confirmation fails) |
+| `src/components/app/modals/QuotePostModal.tsx` | Same pattern — don't block on confirmation for quote posts |
+| `src/components/app/modals/GoLiveModal.tsx` | Same pattern for live stream minting |
 
 ### Result
-- **Before**: 10-20 second wait after signing
-- **After**: ~1-2 second wait, background save handles the rest silently
+- **Before**: User waits 15-30s after clicking Post (upload + tx + confirmation)
+- **After**: User waits only for upload + tx submission (~5-10s for video, ~2s for text), then modal closes. Confirmation happens silently in background.
 
