@@ -2,7 +2,7 @@ import { memo, useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Search, Globe, ChevronDown, Hash, Flame, Radio, Plus, Users } from 'lucide-react';
+import { Search, Globe, ChevronDown, Hash, Flame, Radio, Mic, Video, Users } from 'lucide-react';
 import { motion, LayoutGroup, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { TickerLogo } from './TickerLogo';
