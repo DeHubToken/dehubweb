@@ -3,6 +3,9 @@
  * ================
  * Handles tipping creators via StreamController.sendTip().
  * Uses contract so backend can detect tips via SendFunds event (not direct ERC20 transfer).
+ *
+ * IMPORTANT: Success toast is only shown AFTER on-chain confirmation AND database persistence.
+ * This ensures users never see "Tip sent!" when the record wasn't saved.
  */
 
 import { useState, useCallback } from 'react';
@@ -19,12 +22,51 @@ import type { ChainId } from '@/components/app/ChainSelector';
 export const MIN_TIP_DHB = 1;
 export const MAX_TIP_DHB = Infinity;
 
+const MAX_DB_RETRIES = 3;
+
 interface UseTipPaymentOptions {
   creatorAddress?: string;
   chainId?: ChainId;
   tokenId?: string;
   onSuccess?: () => void;
-  onConfirmed?: () => void;
+}
+
+/**
+ * Persist tip to database with retries.
+ * Returns true if saved successfully, false otherwise.
+ */
+async function persistTipRecord(
+  params: {
+    walletAddress: string;
+    creatorAddress: string;
+    amount: number;
+    chainId: ChainId;
+    txHash: string;
+    tokenId: string | null;
+  },
+): Promise<boolean> {
+  for (let attempt = 1; attempt <= MAX_DB_RETRIES; attempt++) {
+    const { error } = await withWalletHeader(
+      supabase.from('tip_records').insert({
+        sender_address: params.walletAddress.toLowerCase(),
+        receiver_address: params.creatorAddress.toLowerCase(),
+        amount: params.amount,
+        chain_id: params.chainId,
+        tx_hash: params.txHash,
+        token_id: params.tokenId,
+      } as any),
+      params.walletAddress
+    );
+
+    if (!error) return true;
+
+    console.error(`[Tip] DB save attempt ${attempt}/${MAX_DB_RETRIES} failed:`, error);
+
+    if (attempt < MAX_DB_RETRIES) {
+      await new Promise((r) => setTimeout(r, 1000 * attempt));
+    }
+  }
+  return false;
 }
 
 export function useTipPayment({
@@ -32,7 +74,6 @@ export function useTipPayment({
   chainId = BASE_CHAIN_ID,
   tokenId,
   onSuccess,
-  onConfirmed,
 }: UseTipPaymentOptions) {
   const [isTipping, setIsTipping] = useState(false);
   const { walletAddress, openLoginModal } = useAuth();
@@ -74,39 +115,37 @@ export function useTipPayment({
           signerAddress: walletAddress,
         });
 
-        // Show success immediately on tx submission
+        // Update toast to show we're confirming
+        toast.loading('Confirming on chain...', { id: 'tip-payment' });
+
+        // Wait for on-chain confirmation
+        const confirmedTxHash = await tipResult.confirmed;
+
+        // Persist to database with retries
+        toast.loading('Saving tip record...', { id: 'tip-payment' });
+
+        const saved = await persistTipRecord({
+          walletAddress,
+          creatorAddress,
+          amount,
+          chainId,
+          txHash: confirmedTxHash,
+          tokenId: tokenId || null,
+        });
+
+        if (!saved) {
+          // On-chain succeeded but DB failed — warn user clearly
+          console.error('[Tip] All DB save retries failed for tx:', confirmedTxHash);
+          toast.error('Tip sent on-chain but failed to save. Contact support with tx: ' + confirmedTxHash.slice(0, 10) + '...', {
+            id: 'tip-payment',
+            duration: 10000,
+          });
+          return;
+        }
+
+        // Both on-chain AND DB succeeded — now show success
         toast.success(dhbText(`Tip of ${amount} DHB sent!`), { id: 'tip-payment' });
         onSuccess?.();
-
-        // Record tip + await confirmation in background (non-blocking)
-        tipResult.confirmed.then(async (confirmedTxHash) => {
-          const { error } = await withWalletHeader(
-            supabase.from('tip_records').insert({
-              sender_address: walletAddress.toLowerCase(),
-              receiver_address: creatorAddress.toLowerCase(),
-              amount,
-              chain_id: chainId,
-              tx_hash: confirmedTxHash,
-              token_id: tokenId || null,
-            } as any),
-            walletAddress
-          );
-
-          if (error) {
-            console.error('[Tip] Failed to record tip in DB:', {
-              error,
-              confirmedTxHash,
-              tokenId: tokenId || null,
-              sender: walletAddress.toLowerCase(),
-              receiver: creatorAddress.toLowerCase(),
-            });
-            return;
-          }
-
-          onConfirmed?.();
-        }).catch((err) => {
-          console.warn('[Tip] Background confirmation failed:', err);
-        });
       } catch (error: unknown) {
         console.error('[Tip] Payment failed:', error);
         const message = parseTxError(error as Error);
@@ -115,7 +154,7 @@ export function useTipPayment({
         setIsTipping(false);
       }
     },
-    [walletAddress, creatorAddress, chainId, tokenId, openLoginModal, onSuccess, onConfirmed]
+    [walletAddress, creatorAddress, chainId, tokenId, openLoginModal, onSuccess]
   );
 
   return { tip, isTipping };
