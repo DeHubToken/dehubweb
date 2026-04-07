@@ -195,12 +195,13 @@ function FeePaymentStep({
 
       toast.loading('Sending tip to unlock DMs...', { id: 'dm-fee-gate' });
 
-      const txHash = await sendTip({
+      const tipResult = await sendTip({
         tokenId: 0,
         amount,
         to: user.address!,
         chainId,
       });
+      const txHash = tipResult.hash;
 
       toast.success(dhbText(`Paid ${amount.toLocaleString()} DHB — opening chat! 🎉`), { id: 'dm-fee-gate' });
       onPaid(messageText.trim(), txHash);
