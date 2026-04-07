@@ -35,6 +35,8 @@ import { AI_ASSISTANT_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { VIDEO_MODELS, VIDEO_MODEL_OPTIONS, type VideoModelKey, type VideoModel } from '@/constants/video-models.constants';
 import { IMAGE_MODELS, IMAGE_MODEL_OPTIONS, type ImageModelKey } from '@/constants/image-models.constants';
 import { VOICE_PREFERENCES, VOICE_PREFERENCE_OPTIONS, type VoicePreferenceKey } from '@/constants/voice-models.constants';
+import { ElevenLabsVoicePicker } from '@/components/app/shared/ElevenLabsVoicePicker';
+import { VoiceTrainingDrawer } from '@/components/app/shared/VoiceTrainingDrawer';
 import { CHAT_MODEL_OPTIONS, DEFAULT_CHAT_MODEL, type ChatModelKey } from '@/constants/chat-models.constants';
 import { PostModal } from '@/features/post';
 import { VideoPaywallModal } from '@/components/app/video/VideoPaywallModal';
@@ -409,6 +411,18 @@ export default function AssistantPage() {
   const [selectedVideoModel, setSelectedVideoModel] = useState<VideoModelKey>('kling-2.6-pro');
   const [selectedImageModel, setSelectedImageModel] = useState<ImageModelKey>('gemini-2.5-flash');
   const [selectedVoice, setSelectedVoice] = useState<VoicePreferenceKey>('female');
+  // ElevenLabs voice selection: { type: 'browser', preset } or { type: 'elevenlabs', voiceId }
+  const [elevenLabsVoiceId, setElevenLabsVoiceId] = useState<string>(() => {
+    try {
+      const saved = localStorage.getItem('dehub-assistant-voice');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.type === 'elevenlabs') return parsed.voiceId;
+      }
+    } catch {}
+    return '';
+  });
+  const [voiceTrainingOpen, setVoiceTrainingOpen] = useState(false);
   const [selectedChatModel, setSelectedChatModel] = useState<string>(DEFAULT_CHAT_MODEL);
   const [settingsSheetOpen, setSettingsSheetOpen] = useState(false);
   const [styleSheetOpen, setStyleSheetOpen] = useState(false);
