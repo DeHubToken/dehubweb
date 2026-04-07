@@ -437,7 +437,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
           )}
         </div>
 
-        <div className="pt-4 mt-2 border-t border-white/10 bg-zinc-900">
+        <div className="pt-4 mt-2 bg-zinc-900">
           {step === 'setup' ? (
             <LiquidGlassBubble2
               label={isLoading ? '' : 'Go Live'}
