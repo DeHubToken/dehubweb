@@ -82,8 +82,8 @@ type FeedItemType =
 
 const PAGE_SIZE = 20;
 const SHORTS_INSERT_INTERVAL = 5;
-const LEADERBOARD_INSERT_AFTER = 8;
-const RADIO_INSERT_AFTER = 12;
+const RADIO_INSERT_AFTER = 8;
+const LEADERBOARD_INSERT_AFTER_LIVE_OFFSET = 10;
 /** Insert an all-time most-liked post every N items in trending feed */
 const CLASSIC_INSERT_INTERVAL = 6;
 
@@ -926,6 +926,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   // Live carousel insert position: 4 posts after the radio carousel
   const LIVE_INSERT_AFTER = RADIO_INSERT_AFTER + 4;
+  // Leaderboard carousel: 10 posts after the live streams carousel
+  const LEADERBOARD_INSERT_AFTER = LIVE_INSERT_AFTER + LEADERBOARD_INSERT_AFTER_LIVE_OFFSET;
 
   // Detect number of masonry columns based on viewport + sidebar state
   // Multi-column masonry only when sidebar is collapsed; standard mode is always 1 column
@@ -1089,7 +1091,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       segments.push({ items: afterShorts.slice(lastSplit), startIndex: afterShortsBase + lastSplit });
 
       const fullWidthInserts: (ReactNode | null)[] = [
-        <div key="leaderboard-carousel" className="my-3"><LeaderboardCarousel /></div>,
         radioStations.length > 0 ? <div key="radio-carousel" className="my-3"><RadioCarouselSection /></div> : null,
         liveNowStreams.length > 0 ? (
           <div key="live-now" className="my-3 space-y-2">
@@ -1108,6 +1109,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             </SwipeableCarousel>
           </div>
         ) : null,
+        <div key="leaderboard-carousel" className="my-3"><LeaderboardCarousel /></div>,
       ];
 
       return (
@@ -1183,11 +1185,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         shortsInserted = true;
       }
 
-      if ((index + 1) === LEADERBOARD_INSERT_AFTER && !leaderboardInserted) {
-        addFullWidth(<div key={`leaderboard-carousel-${index}`}><LeaderboardCarousel /></div>);
-        leaderboardInserted = true;
-      }
-
       if ((index + 1) === RADIO_INSERT_AFTER && radioStations.length > 0 && !radioInserted) {
         addFullWidth(<div key={`radio-carousel-${index}`}><RadioCarouselSection /></div>);
         radioInserted = true;
@@ -1212,6 +1209,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           </div>
         );
         liveInserted = true;
+      }
+
+      if ((index + 1) === LEADERBOARD_INSERT_AFTER && !leaderboardInserted) {
+        addFullWidth(<div key={`leaderboard-carousel-${index}`}><LeaderboardCarousel /></div>);
+        leaderboardInserted = true;
       }
     });
 
