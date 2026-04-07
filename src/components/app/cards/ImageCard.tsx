@@ -832,7 +832,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         onOpenChange={setShowTipModal}
         creatorAddress={post.creatorId}
         creatorName={post.username}
-        context={post.id}
+        tokenId={post.id}
       />
 
       {/* PPV Drawer - controlled, rendered at root level for mobile compatibility */}
