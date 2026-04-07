@@ -2082,7 +2082,6 @@ export default function AssistantPage() {
         </div>,
         document.body
       )}
-      )}
 
 
       {showCommandCentre ? (
