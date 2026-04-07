@@ -138,7 +138,7 @@ export function SidebarChat() {
   })();
 
   useEffect(() => {
-    if (messages.length > 0 && bottomRef.current) {
+    if (mergedItems.length > 0 && bottomRef.current) {
       const scrollContainer = bottomRef.current.closest('.overflow-y-auto');
       if (scrollContainer) {
         requestAnimationFrame(() => {
@@ -146,7 +146,7 @@ export function SidebarChat() {
         });
       }
     }
-  }, [messages.length]);
+  }, [mergedItems.length]);
 
   const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
     if (!isAuthenticated) { openLoginModal(); return; }

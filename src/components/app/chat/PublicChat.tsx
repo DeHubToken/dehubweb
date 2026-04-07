@@ -159,10 +159,10 @@ export function PublicChat({ onBack }: PublicChatProps) {
 
   // Auto-scroll when messages change
   useEffect(() => {
-    if (messages.length > 0) {
+    if (filteredMessages.length > 0) {
       bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-  }, [messages.length]);
+  }, [filteredMessages.length]);
 
   const handleReply = useCallback((message: Message) => {
     setReplyTo(message);
