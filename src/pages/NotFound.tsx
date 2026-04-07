@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { WarningGraphic } from "@/components/ui/warning-graphic";
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
+import { NebulaParticlesBg } from "@/components/ui/nebula-particles-bg";
 import { Home } from "lucide-react";
 
 const NotFound = () => {
@@ -32,6 +33,7 @@ const NotFound = () => {
 
   return (
     <div className="relative h-screen w-full overflow-hidden bg-black">
+      <NebulaParticlesBg />
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
