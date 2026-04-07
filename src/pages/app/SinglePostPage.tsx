@@ -358,14 +358,7 @@ function LivePostWithStatus({ liveData, post }: { liveData: LiveStream; post: De
     ...liveData,
     isLive: liveData.isLive || !!isLiveFromSupabase,
   };
-  return (
-    <>
-      <LiveStreamCard stream={mergedStream} />
-      <div className="mt-4">
-        <LivePostChat streamId={liveData.id} isOffline={!mergedStream.isLive} />
-      </div>
-    </>
-  );
+  return <LiveStreamCard stream={mergedStream} />;
 }
 
 /**
