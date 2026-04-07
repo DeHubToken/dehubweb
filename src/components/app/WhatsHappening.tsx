@@ -2,7 +2,7 @@ import { memo, useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Search, Globe, ChevronDown } from 'lucide-react';
+import { Search, Globe, ChevronDown, Hash, DollarSign } from 'lucide-react';
 import { motion, LayoutGroup, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { TickerLogo } from './TickerLogo';
@@ -194,18 +194,39 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
     setActiveTab(tab);
   }, []);
 
+  const tabIcons: Record<Tab, typeof Hash> = { posts: Hash, tickers: DollarSign };
+
   return (
-    <div className="bg-zinc-900 rounded-2xl p-4 relative">
-      <div className={cn("flex items-center mb-3", showCountrySelector ? "justify-between" : "justify-center")}>
-        <h3 className="font-bold text-lg text-white">{t('sidebar.talkOfTheTown')}</h3>
+    <div className="bg-zinc-900 rounded-2xl overflow-hidden relative">
+      {/* Icon tab switcher — matches TabbedSidePanel style */}
+      <div className="flex">
+        {(['posts', 'tickers'] as Tab[]).map(tab => {
+          const Icon = tabIcons[tab];
+          return (
+            <button
+              type="button"
+              key={tab}
+              onClick={() => handleMainTabChange(tab)}
+              className={`relative flex-1 py-3 flex flex-col items-center justify-center transition-colors ${
+                activeTab === tab
+                  ? 'text-white'
+                  : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800/30'
+              }`}
+            >
+              {activeTab === tab && (
+                <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
+              )}
+              <Icon className="w-5 h-5 relative z-10" />
+            </button>
+          );
+        })}
         {showCountrySelector && (
-          <div ref={countryDropdownRef} className="relative">
+          <div ref={countryDropdownRef} className="relative flex items-center pr-3">
             <button
               onClick={() => setShowCountryDropdown(prev => !prev)}
               className="flex items-center gap-1 px-2 py-1 rounded-lg bg-zinc-800/50 hover:bg-zinc-800 border border-zinc-700/50 transition-colors text-xs text-zinc-400 hover:text-white"
             >
               <Globe className="w-3 h-3" />
-              <span>{t('sidebar.global')}</span>
               <ChevronDown className={cn('w-3 h-3 transition-transform', showCountryDropdown && 'rotate-180')} />
             </button>
             {showCountryDropdown && (
@@ -247,36 +268,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
         )}
       </div>
 
-      {/* Tab switcher */}
-      <LayoutGroup id="tott">
-        <div className="relative flex bg-zinc-800/50 rounded-xl p-0.5 mb-3">
-          {(['posts', 'tickers'] as Tab[]).map(tab => (
-            <button
-              key={tab}
-              onClick={() => handleMainTabChange(tab)}
-              className="relative flex-1 py-1.5 text-xs font-medium rounded-[10px] z-10 transition-colors duration-150"
-            >
-              {activeTab === tab && (
-                hasTabInteracted ? (
-                  <motion.div
-                    layoutId="tott-tab-bg"
-                    className="absolute inset-0 rounded-[10px] bg-gradient-to-br from-white/20 via-white/10 to-white/5 border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.3)]"
-                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                  />
-                ) : (
-                  <div className="absolute inset-0 rounded-[10px] bg-gradient-to-br from-white/20 via-white/10 to-white/5 border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.3)]" />
-                )
-              )}
-              <span className={cn(
-                'relative z-10 transition-colors duration-150',
-                activeTab === tab ? 'text-white' : 'text-zinc-500'
-              )}>
-                {t(`sidebar.${tab}`)}
-              </span>
-            </button>
-          ))}
-        </div>
-      </LayoutGroup>
+      <div className="p-4 pt-0">
 
       {/* Tab content */}
       <div style={{ minHeight: 280, maxHeight: 400 }} className="relative overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent">
@@ -368,6 +360,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
         height="auto"
         className="-mt-1 [&>div]:!py-2 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent"
       />
+      </div>
     </div>
   );
 });
