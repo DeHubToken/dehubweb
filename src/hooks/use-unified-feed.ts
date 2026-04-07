@@ -250,6 +250,12 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     repostCount: (item.totalReposts || item.reposts || 0) + (item.quotes || 0),
     isReposted: item.isReposted ?? false,
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
+    isLivePost: item.postType === 'live',
+    liveStatus: item.stream?.status,
+    liveIsActive: item.stream?.isActive,
+    livePlaybackId: item.stream?.playbackId,
+    livePlaybackUrl: item.stream?.playbackUrl,
+    liveStreamId: item.stream?._id || item.stream?.streamId,
   };
 }
 
