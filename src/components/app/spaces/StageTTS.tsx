@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { Volume2, Send, Loader2, Search, Play, Square, Mic } from 'lucide-react';
+import { Volume2, Send, Loader2, Search, Play, Square, Mic, MicOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -32,8 +32,10 @@ export function StageTTS() {
     try { return localStorage.getItem('dehub-custom-elevenlabs-key') || ''; } catch { return ''; }
   });
   const [apiKeyInput, setApiKeyInput] = useState('');
+  const [isListening, setIsListening] = useState(false);
   const previewAudioRef = useRef<HTMLAudioElement | null>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const recognitionRef = useRef<any>(null);
   const { injectAudio } = useStage();
   const { user } = useAuth();
   const { voices: customVoices, refetch: refetchCustomVoices } = useCustomVoices();
@@ -77,6 +79,33 @@ export function StageTTS() {
     }, 400);
     return () => { if (debounceRef.current) clearTimeout(debounceRef.current); };
   }, [search]);
+
+  const toggleListening = useCallback(() => {
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+      return;
+    }
+    const SpeechRecognitionAPI =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognitionAPI) {
+      toast.error('Speech recognition not supported in this browser');
+      return;
+    }
+    const recognition = new SpeechRecognitionAPI();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
+    recognition.onresult = (e: any) => {
+      const t = (e.results[0][0].transcript as string).trim();
+      if (t) setText(prev => (prev ? prev + ' ' + t : t).slice(0, 500));
+    };
+    recognition.onerror = () => setIsListening(false);
+    recognition.onend = () => setIsListening(false);
+    recognitionRef.current = recognition;
+    setIsListening(true);
+    recognition.start();
+  }, [isListening]);
 
   const handlePreview = async (voice: VoiceOption) => {
     if (previewAudioRef.current) {
@@ -128,7 +157,15 @@ export function StageTTS() {
       );
 
       if (!response.ok) {
-        throw new Error(`TTS failed: ${response.status}`);
+        const errText = await response.text().catch(() => '');
+        let detail = errText;
+        try {
+          const j = JSON.parse(errText) as { error?: string };
+          if (j?.error) detail = j.error;
+        } catch {
+          /* use raw */
+        }
+        throw new Error(detail || `TTS failed (${response.status})`);
       }
 
       const audioBlob = await response.blob();
@@ -137,7 +174,8 @@ export function StageTTS() {
       setText('');
     } catch (err) {
       console.error('TTS error:', err);
-      toast.error('Failed to generate speech');
+      const msg = err instanceof Error ? err.message : 'Failed to generate speech';
+      toast.error(msg.length > 120 ? 'Failed to generate speech' : msg);
     } finally {
       setIsGenerating(false);
     }
@@ -254,19 +292,34 @@ export function StageTTS() {
           Train Custom Voice
         </button>
 
-        {/* Text input + send */}
+        {/* Text input + speech-to-text + send */}
         <div className="flex gap-2">
           <div className="relative flex-1">
             <Input
               value={text}
               onChange={(e) => setText(e.target.value.slice(0, 500))}
-              placeholder="Type a message to speak..."
+              placeholder={isListening ? 'Listening…' : 'Type or speak a message…'}
               className="w-full bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl text-sm pr-14"
               onKeyDown={(e) => e.key === 'Enter' && handleGenerate()}
               disabled={isGenerating}
             />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-white/30 pointer-events-none">{text.length}/500</span>
           </div>
+          {/* Mic / Speech-to-text */}
+          <Button
+            onClick={toggleListening}
+            disabled={isGenerating}
+            size="icon"
+            title={isListening ? 'Stop listening' : 'Dictate text'}
+            className={cn(
+              'rounded-xl border-0 shrink-0',
+              isListening
+                ? 'bg-red-500/80 hover:bg-red-500 text-white animate-pulse'
+                : 'bg-white/10 hover:bg-white/20 text-white',
+            )}
+          >
+            {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+          </Button>
           <Button
             onClick={handleGenerate}
             disabled={!text.trim() || isGenerating || !selectedVoice}

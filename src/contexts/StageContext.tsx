@@ -317,7 +317,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       console.error('Error upgrading to speaker:', err);
       toast.error('Failed to enable microphone');
     }
-  }, []);
+  }, [voiceEffect, voiceEffectsHook]);
 
   // ─── Create stage ────────────────────────────────────────────────────────
 
@@ -570,29 +570,16 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
   // ─── Set voice effect ─────────────────────────────────────────────────────
 
-  const setVoiceEffect = useCallback(async (effectId: VoiceEffectId) => {
+  const setVoiceEffect = useCallback((effectId: VoiceEffectId) => {
     setVoiceEffectState(effectId);
-    if (!agoraClientRef.current || !localAudioTrackRef.current) return;
-    try {
-      const newTrack = voiceEffectsHook.switchEffect(effectId);
-      if (!newTrack) return;
-
-      const AgoraRTC = (await import('agora-rtc-sdk-ng')).default;
-      const wasMuted = localAudioTrackRef.current.muted;
-
-      // Unpublish old, create new custom track, publish
-      await agoraClientRef.current.unpublish([localAudioTrackRef.current]);
-      localAudioTrackRef.current.close();
-
-      const customTrack = AgoraRTC.createCustomAudioTrack({ mediaStreamTrack: newTrack });
-      customTrack.setMuted(wasMuted);
-      localAudioTrackRef.current = customTrack;
-      await agoraClientRef.current.publish([customTrack]);
-
+    // switchEffect reconnects the Web Audio nodes feeding the SAME processedTrack
+    // that the Agora custom track already wraps. We never unpublish/close the
+    // Agora track — doing so calls .stop() on the underlying MediaStreamTrack and
+    // permanently kills the audio graph. The effect changes are heard immediately
+    // because Agora keeps streaming whatever flows through processedTrack.
+    voiceEffectsHook.switchEffect(effectId);
+    if (localAudioTrackRef.current) {
       toast.success(`Voice: ${effectId === 'none' ? 'Normal' : effectId}`);
-    } catch (err) {
-      console.error('Error switching voice effect:', err);
-      toast.error('Failed to switch voice effect');
     }
   }, [voiceEffectsHook]);
 
@@ -887,17 +874,14 @@ export function StageProvider({ children }: { children: ReactNode }) {
         source.buffer = audioBuffer;
 
         const destination = audioCtx.createMediaStreamDestination();
-        // Only route into Agora stream — do NOT connect to audioCtx.destination.
-        // Connecting to local speakers causes acoustic loopback: the laptop mic
-        // picks up the speaker output and re-transmits it, making injection
-        // volume-dependent (only works when laptop volume is high).
+        // Route only into the MediaStreamDestination for Agora (no connection to
+        // audioCtx.destination) to avoid mic picking up speaker loopback.
         source.connect(destination);
 
-        // Host local monitoring: play via a separate Audio element so there is
-        // zero path from speaker back into the mic/Agora chain.
+        // Local monitor: separate Audio element — not fed into the mic graph.
         const monitorUrl = URL.createObjectURL(audioBlob);
         const monitor = new Audio(monitorUrl);
-        monitor.play().catch(() => {});  // best-effort; failure doesn't block injection
+        monitor.play().catch(() => {});
 
         const mediaTrack = destination.stream.getAudioTracks()[0];
         if (mediaTrack) {
@@ -907,21 +891,30 @@ export function StageProvider({ children }: { children: ReactNode }) {
         const ttsTrack = AgoraRTC.createCustomAudioTrack({
           mediaStreamTrack: mediaTrack,
         });
+        // Injection must always be audible to the audience, independent of mic mute.
+        ttsTrack.setMuted(false);
 
-        const wasMuted = originalTrack.muted;
+        const wasMutedAg = originalTrack.muted;
+        const micTrack = originalTrack.getMediaStreamTrack?.() as MediaStreamTrack | undefined;
+
+        // When the host is muted, the Agora server marks this client as "muted"
+        // and suppresses audio even from a freshly-published TTS track.
+        // Un-muting at the SDK level (not the underlying track) signals the server
+        // to let audio through. The processedTrack (mic) stays disabled via
+        // micTrack.enabled so no real mic audio leaks while originalTrack is
+        // briefly unpublished.
+        if (wasMutedAg) originalTrack.setMuted(false);
+
         await client.unpublish([originalTrack]);
         await client.publish([ttsTrack]);
 
-        // Give Agora 250ms to establish the custom track stream before sending audio.
-        // Without this delay, audio starts before the stream is ready and listeners
-        // miss the first portion (critical for short soundboard effects).
-        await new Promise(r => setTimeout(r, 250));
+        // Give Agora a short pipeline settle; then start playback so the buffer
+        // is actively streaming while published (avoids silent / dropped first frames).
+        await new Promise((r) => setTimeout(r, 60));
 
         await new Promise<void>((resolve, reject) => {
           source.onended = () => {
-            // Wait 300ms after buffer ends so the last frames finish
-            // travelling through the network before we unpublish the track
-            setTimeout(resolve, 300);
+            setTimeout(resolve, 280);
           };
           try {
             source.start(0);
@@ -933,7 +926,11 @@ export function StageProvider({ children }: { children: ReactNode }) {
         await client.unpublish([ttsTrack]);
         ttsTrack.close();
         await client.publish([originalTrack]);
-        originalTrack.setMuted(wasMuted);
+        originalTrack.setMuted(wasMutedAg);
+        if (micTrack) {
+          // Same as toggleMute: unmuted → track enabled; muted → disabled
+          micTrack.enabled = !wasMutedAg;
+        }
         URL.revokeObjectURL(monitorUrl);
       } finally {
         await audioCtx.close();
