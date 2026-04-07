@@ -66,13 +66,12 @@ function clearActiveDraft(): void {
   try { localStorage.removeItem(ACTIVE_DRAFT_KEY); } catch {}
 }
 
-// Load drafts from localStorage
-const loadDrafts = (): Draft[] => {
+// Load drafts from localStorage (sync fallback for initial render)
+const loadDraftsLocal = (): Draft[] => {
   try {
     const stored = localStorage.getItem(DRAFTS_STORAGE_KEY);
     if (stored) {
       const drafts = JSON.parse(stored);
-      // Convert date strings back to Date objects
       return drafts.map((d: any) => ({ ...d, createdAt: new Date(d.createdAt) }));
     }
   } catch (e) {
@@ -81,12 +80,69 @@ const loadDrafts = (): Draft[] => {
   return [];
 };
 
-// Save drafts to localStorage
-const saveDrafts = (drafts: Draft[]) => {
+// Save drafts to localStorage (backup)
+const saveDraftsLocal = (drafts: Draft[]) => {
   try {
     localStorage.setItem(DRAFTS_STORAGE_KEY, JSON.stringify(drafts));
   } catch (e) {
     console.error('Failed to save drafts:', e);
+  }
+};
+
+// Load drafts from Supabase
+const loadDraftsFromDb = async (walletAddress: string): Promise<Draft[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('post_drafts')
+      .select('*')
+      .eq('wallet_address', walletAddress)
+      .order('created_at', { ascending: false })
+      .limit(10);
+    if (error) throw error;
+    if (data && data.length > 0) {
+      return data.map((d: any) => ({
+        id: d.id,
+        text: d.text || '',
+        createdAt: new Date(d.created_at),
+        hasImage: d.has_image || false,
+        hasVideo: d.has_video || false,
+        hasAudio: (d.metadata as any)?.hasAudio || false,
+      }));
+    }
+  } catch (e) {
+    console.error('Failed to load drafts from DB:', e);
+  }
+  return [];
+};
+
+// Save a single draft to Supabase
+const saveDraftToDb = async (walletAddress: string, draft: Draft): Promise<string | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('post_drafts')
+      .insert({
+        wallet_address: walletAddress,
+        text: draft.text,
+        has_image: draft.hasImage,
+        has_video: draft.hasVideo,
+        metadata: { hasAudio: draft.hasAudio },
+      })
+      .select('id')
+      .single();
+    if (error) throw error;
+    return data?.id || null;
+  } catch (e) {
+    console.error('Failed to save draft to DB:', e);
+    return null;
+  }
+};
+
+// Delete a draft from Supabase
+const deleteDraftFromDb = async (id: string) => {
+  try {
+    await supabase.from('post_drafts').delete().eq('id', id);
+  } catch (e) {
+    console.error('Failed to delete draft from DB:', e);
   }
 };
 
@@ -161,7 +217,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [uploadProgress, setUploadProgress] = useState(0);
   
   const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
-  const [drafts, setDrafts] = useState<Draft[]>(loadDrafts);
+  const [drafts, setDrafts] = useState<Draft[]>(loadDraftsLocal);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [chainId, setChainId] = useState<ChainId>(BASE_CHAIN_ID as ChainId);
@@ -699,6 +755,17 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     clearActiveDraft();
   }, []);
 
+  // Load drafts from DB on mount
+  useEffect(() => {
+    if (!user?.address) return;
+    loadDraftsFromDb(user.address).then((dbDrafts) => {
+      if (dbDrafts.length > 0) {
+        setDrafts(dbDrafts);
+        saveDraftsLocal(dbDrafts); // sync to localStorage as backup
+      }
+    });
+  }, [user?.address]);
+
   // Drafts actions
   const saveDraft = useCallback(() => {
     const newDraft: Draft = {
@@ -709,14 +776,22 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       hasVideo: hasVideo,
       hasAudio: hasAudio,
     };
-    const updatedDrafts = [newDraft, ...drafts].slice(0, 10); // Keep max 10 drafts
+    const updatedDrafts = [newDraft, ...drafts].slice(0, 10);
     setDrafts(updatedDrafts);
-    saveDrafts(updatedDrafts);
-  }, [text, hasImage, hasVideo, hasAudio, drafts]);
+    saveDraftsLocal(updatedDrafts);
+    // Persist to DB
+    if (user?.address) {
+      saveDraftToDb(user.address, newDraft).then((dbId) => {
+        if (dbId) {
+          // Update local draft with DB id for proper deletion later
+          setDrafts(prev => prev.map(d => d.id === newDraft.id ? { ...d, id: dbId } : d));
+        }
+      });
+    }
+  }, [text, hasImage, hasVideo, hasAudio, drafts, user?.address]);
 
   const loadDraft = useCallback((draft: Draft) => {
     setText(draft.text);
-    // Update editor content
     if (editorRef.current) {
       editorRef.current.innerText = draft.text;
     }
@@ -725,7 +800,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const deleteDraft = useCallback((id: string) => {
     const updatedDrafts = drafts.filter(d => d.id !== id);
     setDrafts(updatedDrafts);
-    saveDrafts(updatedDrafts);
+    saveDraftsLocal(updatedDrafts);
+    deleteDraftFromDb(id); // Remove from DB
   }, [drafts]);
 
   // Audio recording functions
