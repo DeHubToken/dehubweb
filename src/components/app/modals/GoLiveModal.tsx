@@ -482,6 +482,21 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
               />
             </div>
             <div className="overflow-y-auto max-h-[30vh] space-y-1">
+              {categorySearch.trim() && !filteredCategories.some(c => c.name.toLowerCase() === categorySearch.trim().toLowerCase()) && (
+                <button
+                  onClick={() => {
+                    const name = categorySearch.trim();
+                    if (name && selectedCategoriesArray.length < MAX_CATEGORIES && !selectedCategoriesArray.includes(name)) {
+                      setSelectedCategory([...selectedCategoriesArray, name].join('|||'));
+                      setCategorySearch('');
+                    }
+                  }}
+                  className="w-full flex items-center gap-2 px-4 py-3 rounded-xl text-sm text-white hover:bg-white/5 transition-colors"
+                >
+                  <Plus className="w-4 h-4 text-zinc-400" />
+                  Create "{categorySearch.trim()}"
+                </button>
+              )}
               {filteredCategories.map((cat) => (
                 <button
                   key={cat.id}
