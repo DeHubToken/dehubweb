@@ -22,6 +22,7 @@ import {
   Sparkles,
   Wallet,
   BookOpen,
+  Scroll,
   Lightbulb,
   Briefcase,
   ShieldCheck,
