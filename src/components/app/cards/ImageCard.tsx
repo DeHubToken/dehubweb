@@ -192,7 +192,7 @@ function ImageCarousel({
                   fetchPriority={aboveFold && idx === 0 ? 'high' : 'auto'}
                   decoding={aboveFold && idx === 0 ? 'sync' : 'async'}
                   onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/placeholder.svg';
+                    (e.target as HTMLImageElement).style.display = 'none';
                   }}
                 />
               </div>
