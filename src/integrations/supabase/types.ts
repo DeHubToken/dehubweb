@@ -1254,6 +1254,48 @@ export type Database = {
           },
         ]
       }
+      post_drafts: {
+        Row: {
+          created_at: string
+          description: string
+          has_image: boolean
+          has_video: boolean
+          id: string
+          metadata: Json | null
+          selected_category: string
+          text: string
+          title_text: string
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          has_image?: boolean
+          has_video?: boolean
+          id?: string
+          metadata?: Json | null
+          selected_category?: string
+          text?: string
+          title_text?: string
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          has_image?: boolean
+          has_video?: boolean
+          id?: string
+          metadata?: Json | null
+          selected_category?: string
+          text?: string
+          title_text?: string
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       ppv_purchases: {
         Row: {
           amount: number
