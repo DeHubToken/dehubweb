@@ -252,15 +252,15 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
   return (
     <div className="flex flex-col h-full">
       {/* Period filter row */}
-      <div className="flex items-center justify-between px-4 py-2">
+      <div className="flex px-4 py-2">
         {PERIODS.map((period) => (
           <button
             key={period}
             onClick={() => handlePeriodClick(period)}
-            className={`text-xs font-medium transition-colors ${
+            className={`flex-1 text-xs font-semibold transition-colors duration-150 text-center py-1 ${
               activePeriod === period
                 ? 'text-white'
-                : 'text-white/40 hover:text-white/70'
+                : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
             {period}
