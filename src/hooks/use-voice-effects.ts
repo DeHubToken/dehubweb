@@ -103,7 +103,7 @@ function connectEffectGraph(
       hp.type = 'highpass';
       hp.frequency.value = 180;
       const shaper = ctx.createWaveShaper();
-      shaper.curve = createDistortionCurve(38) as Float32Array;
+      shaper.curve = createDistortionCurve(38) as any;
       const lp = ctx.createBiquadFilter();
       lp.type = 'lowpass';
       lp.frequency.value = 3200;
@@ -144,7 +144,7 @@ function connectEffectGraph(
       bp.frequency.value = 2000;
       bp.Q.value = 5;
       const ws = ctx.createWaveShaper();
-      ws.curve = createDistortionCurve(8) as Float32Array;
+      ws.curve = createDistortionCurve(8) as any;
       const hp = ctx.createBiquadFilter();
       hp.type = 'highpass';
       hp.frequency.value = 500;
