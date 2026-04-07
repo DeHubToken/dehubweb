@@ -14,7 +14,8 @@ import { dhbText } from '@/lib/dhb-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { switchChain, parseTxError } from '@/lib/contracts/aa-utils';
-import { getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { readConfirmedTipDetails } from '@/lib/contracts/read-tip-transaction';
 import { sendTip } from '@/lib/contracts/stream-controller';
 import { useAuth } from '@/contexts/AuthContext';
 import type { ChainId } from '@/components/app/ChainSelector';
@@ -122,18 +123,19 @@ export function useTipPayment({
         toast.success(dhbText(`Tip of ${amount} DHB sent!`), { id: 'tip-payment' });
         onSuccess?.();
 
-        // Background: confirm on-chain + persist to DB
+        // Background: confirm on-chain + persist decoded on-chain values to DB
         (async () => {
           try {
             const confirmedTxHash = await tipResult.confirmed;
+            const confirmedTip = await readConfirmedTipDetails(confirmedTxHash, chainId);
 
             const saved = await persistTipRecord({
               walletAddress,
-              creatorAddress,
-              amount,
+              creatorAddress: confirmedTip.receiverAddress,
+              amount: confirmedTip.amount,
               chainId,
               txHash: confirmedTxHash,
-              tokenId: tokenId || null,
+              tokenId: confirmedTip.tokenId,
             });
 
             if (!saved) {
