@@ -52,7 +52,8 @@ import {
   Terminal,
   Skull,
   Orbit,
-  Ban
+  Ban,
+  Bot
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
@@ -65,6 +66,7 @@ import { SettingDrawerSelect } from '@/components/app/settings/SettingDrawerSele
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { Search } from 'lucide-react';
+import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { updateProfile, getAccountInfo, type UpdateProfileData, type DeHubUser } from '@/lib/api/dehub';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
@@ -930,6 +932,14 @@ function NotificationSettings() {
         </div>
       </div>
 
+      {/* Chat */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">Chat</h3>
+        <div className="space-y-4">
+          <BuyBotToggle />
+        </div>
+      </div>
+
       {/* Quiet Hours */}
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.quietHours')}</h3>
@@ -1696,6 +1706,19 @@ function SettingToggle({
         disabled={disabled}
       />
     </div>
+  );
+}
+
+function BuyBotToggle() {
+  const { isHidden, hide, show } = useBuyBotHidden();
+  return (
+    <SettingToggle
+      icon={Bot}
+      title="Buy Bot Alerts"
+      description="Show buy bot transaction alerts in chat"
+      defaultChecked={!isHidden}
+      onCheckedChange={(checked) => (checked ? show() : hide())}
+    />
   );
 }
 
