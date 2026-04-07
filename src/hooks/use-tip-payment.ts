@@ -120,7 +120,7 @@ export function useTipPayment({
         });
 
         // Optimistic: show success immediately after tx submitted
-        toast.success(dhbText(`Tip of ${amount} DHB sent!`), { id: 'tip-payment' });
+        toast.success(dhbText(`DHB ${amount.toLocaleString()} tip sent!`), { id: 'tip-payment' });
         onSuccess?.();
 
         // Background: confirm on-chain + persist decoded on-chain values to DB
