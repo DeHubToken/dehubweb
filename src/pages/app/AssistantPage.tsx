@@ -35,6 +35,8 @@ import { AI_ASSISTANT_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { VIDEO_MODELS, VIDEO_MODEL_OPTIONS, type VideoModelKey, type VideoModel } from '@/constants/video-models.constants';
 import { IMAGE_MODELS, IMAGE_MODEL_OPTIONS, type ImageModelKey } from '@/constants/image-models.constants';
 import { VOICE_PREFERENCES, VOICE_PREFERENCE_OPTIONS, type VoicePreferenceKey } from '@/constants/voice-models.constants';
+import { ElevenLabsVoicePicker } from '@/components/app/shared/ElevenLabsVoicePicker';
+import { VoiceTrainingDrawer } from '@/components/app/shared/VoiceTrainingDrawer';
 import { CHAT_MODEL_OPTIONS, DEFAULT_CHAT_MODEL, type ChatModelKey } from '@/constants/chat-models.constants';
 import { PostModal } from '@/features/post';
 import { VideoPaywallModal } from '@/components/app/video/VideoPaywallModal';
@@ -409,6 +411,18 @@ export default function AssistantPage() {
   const [selectedVideoModel, setSelectedVideoModel] = useState<VideoModelKey>('kling-2.6-pro');
   const [selectedImageModel, setSelectedImageModel] = useState<ImageModelKey>('gemini-2.5-flash');
   const [selectedVoice, setSelectedVoice] = useState<VoicePreferenceKey>('female');
+  // ElevenLabs voice selection: { type: 'browser', preset } or { type: 'elevenlabs', voiceId }
+  const [elevenLabsVoiceId, setElevenLabsVoiceId] = useState<string>(() => {
+    try {
+      const saved = localStorage.getItem('dehub-assistant-voice');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.type === 'elevenlabs') return parsed.voiceId;
+      }
+    } catch {}
+    return '';
+  });
+  const [voiceTrainingOpen, setVoiceTrainingOpen] = useState(false);
   const [selectedChatModel, setSelectedChatModel] = useState<string>(DEFAULT_CHAT_MODEL);
   const [settingsSheetOpen, setSettingsSheetOpen] = useState(false);
   const [styleSheetOpen, setStyleSheetOpen] = useState(false);
@@ -573,7 +587,46 @@ export default function AssistantPage() {
     },
   });
 
-  // Voice send handler - separate from regular send to track voice input
+  // ElevenLabs TTS speak function - routes through edge function when an ElevenLabs voice is selected
+  const elevenLabsSpeak = useCallback(async (text: string) => {
+    if (!elevenLabsVoiceId) {
+      // Fallback to browser TTS
+      speak(text);
+      return;
+    }
+    try {
+      // Clean text for TTS
+      const cleanText = text
+        .replace(/\*\*/g, '').replace(/\*/g, '').replace(/`/g, '')
+        .replace(/#{1,6}\s/g, '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+        .replace(/\n+/g, '. ').trim().slice(0, 500);
+      if (!cleanText) return;
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ text: cleanText, voiceId: elevenLabsVoiceId }),
+        }
+      );
+      if (!response.ok) throw new Error('TTS failed');
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      await audio.play();
+    } catch (err) {
+      console.error('ElevenLabs TTS error:', err);
+      // Fallback to browser TTS
+      speak(text);
+    }
+  }, [elevenLabsVoiceId, speak]);
+
+
   const handleVoiceSend = async (voiceText: string) => {
     if (!voiceText.trim() || isLoading) return;
     pendingVoiceRef.current = true;
@@ -625,7 +678,7 @@ export default function AssistantPage() {
       if (voiceAutoReply || alwaysSpeakReplies) {
         // Small delay to let the message render first
         setTimeout(() => {
-          speak(responseText);
+          elevenLabsSpeak(responseText);
         }, 300);
       }
     } catch (error: any) {
@@ -1309,7 +1362,7 @@ export default function AssistantPage() {
         setIsLoading(false);
         
         if (alwaysSpeakReplies) {
-          setTimeout(() => speak("Here's the official DeHub logo!"), 300);
+          setTimeout(() => elevenLabsSpeak("Here's the official DeHub logo!"), 300);
         }
         return;
       }
@@ -1436,7 +1489,7 @@ export default function AssistantPage() {
             // Auto-speak if enabled
             if (alwaysSpeakReplies && streamedContent) {
               setTimeout(() => {
-                speak(streamedContent);
+                elevenLabsSpeak(streamedContent);
               }, 300);
             }
           },
@@ -1867,22 +1920,36 @@ export default function AssistantPage() {
                   <Volume2 className="w-4 h-4" />
                   {t('assistant.aiVoice')}
                 </div>
-                {VOICE_PREFERENCE_OPTIONS.map((voice) => (
-                  <button
-                    key={voice.id}
-                    type="button"
-                    onClick={() => handleVoiceSelect(voice.id as VoicePreferenceKey)}
-                    className={`w-full flex items-start gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
-                      selectedVoice === voice.id ? 'bg-white/10' : ''
-                    }`}
-                  >
-                    <span className="text-lg">{voice.emoji}</span>
-                    <div className="flex flex-col items-start">
-                      <span className="font-medium">{voice.name}</span>
-                      <span className="text-xs text-white/50">{voice.description}</span>
-                    </div>
-                  </button>
-                ))}
+                
+                {/* System default voice option */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setElevenLabsVoiceId('');
+                    localStorage.setItem('dehub-assistant-voice', JSON.stringify({ type: 'browser', preset: selectedVoice }));
+                  }}
+                  className={`w-full flex items-start gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors ${
+                    !elevenLabsVoiceId ? 'bg-white/10' : ''
+                  }`}
+                >
+                  <span className="text-lg">🤖</span>
+                  <div className="flex flex-col items-start">
+                    <span className="font-medium">System Default</span>
+                    <span className="text-xs text-white/50">Browser built-in voice</span>
+                  </div>
+                </button>
+
+                {/* ElevenLabs Voice Picker */}
+                <div className="px-4 py-2">
+                  <ElevenLabsVoicePicker
+                    selectedVoiceId={elevenLabsVoiceId}
+                    onSelect={(voiceId) => {
+                      setElevenLabsVoiceId(voiceId);
+                      localStorage.setItem('dehub-assistant-voice', JSON.stringify({ type: 'elevenlabs', voiceId }));
+                    }}
+                    onTrainVoice={() => setVoiceTrainingOpen(true)}
+                  />
+                </div>
                 
                 {/* Always Speak Toggle */}
                 <div className="px-4 py-3 flex items-center justify-between">
@@ -1910,7 +1977,16 @@ export default function AssistantPage() {
         </Drawer>
       </div>
 
-      {/* Conditional content: Command Centre or Chat */}
+      {/* Voice Training Drawer */}
+      <VoiceTrainingDrawer
+        open={voiceTrainingOpen}
+        onOpenChange={setVoiceTrainingOpen}
+        onSuccess={() => {
+          // Picker will refetch custom voices automatically
+        }}
+      />
+
+
       {showCommandCentre ? (
         /* Command Centre View */
         <ScrollArea className="flex-1 px-4 pb-24 lg:pb-4">

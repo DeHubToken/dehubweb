@@ -717,6 +717,30 @@ export type Database = {
         }
         Relationships: []
       }
+      custom_voices: {
+        Row: {
+          created_at: string | null
+          elevenlabs_voice_id: string
+          id: string
+          name: string
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string | null
+          elevenlabs_voice_id: string
+          id?: string
+          name: string
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string | null
+          elevenlabs_voice_id?: string
+          id?: string
+          name?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       event_chat_messages: {
         Row: {
           avatar_url: string | null
