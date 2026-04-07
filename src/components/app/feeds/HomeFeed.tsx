@@ -358,12 +358,15 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       const categoryId = getCategoryId((e as CustomEvent).detail);
       if (!categoryId) return;
 
-      setIsCategoryTransitioning(true);
-      queryClient.removeQueries({ queryKey: ['unified-feed'] });
+      // Invalidate instead of removing — keeps existing data visible during refetch
+      queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
       // Add category to selection (toggle if already present)
       setSelectedCategories(prev => {
         if (prev.includes(categoryId)) return prev;
-        return [...prev, categoryId];
+        const next = [...prev, categoryId];
+        // Only show skeleton when switching to a single server-filtered category
+        if (next.length === 1) setIsCategoryTransitioning(true);
+        return next;
       });
       window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
     };
@@ -1246,12 +1249,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const hasCachedData = hasQueryData && items.length > 0;
   const isLoadingState = isCategoryTransitioning || (!hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading)));
 
-  // Clear transitioning flag once new data has arrived
+  // Clear transitioning flag once new data has arrived (even if 0 results)
   useEffect(() => {
-    if (isCategoryTransitioning && hasQueryData && items.length > 0) {
+    if (isCategoryTransitioning && (hasQueryData || (!isLoading && !isFetchingNextPage))) {
       setIsCategoryTransitioning(false);
     }
-  }, [isCategoryTransitioning, hasQueryData, items.length]);
+  }, [isCategoryTransitioning, hasQueryData, isLoading, isFetchingNextPage]);
 
   const { isAutoRetrying, retriesExhausted } = useAutoRetryFeed({
     itemCount: items.length,
