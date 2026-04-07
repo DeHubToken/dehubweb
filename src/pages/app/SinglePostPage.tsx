@@ -908,8 +908,10 @@ export default function SinglePostPage() {
   const seoDesc = post?.description || `View this post on DeHub`;
 
   // Standard layout for other content types
+  const isLivePost = contentType === 'live';
+
   return (
-    <div className="flex flex-col">
+    <div className={`flex flex-col ${isLivePost ? 'bg-black min-h-screen' : ''}`}>
       <SEOHead
         title={seoTitle}
         description={seoDesc}
