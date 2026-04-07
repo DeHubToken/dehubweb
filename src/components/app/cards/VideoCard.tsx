@@ -1372,7 +1372,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               </div>
             ) : video.videoUrl ? (
               hasError ? (
-                <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading={aboveFold ? 'eager' : 'lazy'} fetchPriority={aboveFold ? 'high' : 'auto'} />
+                <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading={aboveFold ? 'eager' : 'lazy'} fetchPriority={aboveFold ? 'high' : 'auto'} onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
               ) :
               <video
                 ref={videoRef}
@@ -1391,7 +1391,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 className={`w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`}
               />
             ) : (
-              <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading={aboveFold ? 'eager' : 'lazy'} fetchPriority={aboveFold ? 'high' : 'auto'} />
+              <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading={aboveFold ? 'eager' : 'lazy'} fetchPriority={aboveFold ? 'high' : 'auto'} onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
             )}
            </>
         )}
