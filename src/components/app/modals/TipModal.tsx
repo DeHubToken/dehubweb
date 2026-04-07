@@ -57,16 +57,18 @@ export function TipModal({
     creatorAddress,
     tokenId: resolvedTokenId,
     onSuccess: () => {
-      // Optimistically increment the cached tip count
+      // Optimistically increment the cached tip count immediately
       if (resolvedTokenId && lastTipAmount > 0) {
         queryClient.setQueryData(['post-tip-count', resolvedTokenId], (old: number | undefined) => (old || 0) + lastTipAmount);
       }
-      // Also invalidate to reconcile with DB (the record is now guaranteed saved)
+      setAmount('');
+      onOpenChange(false);
+    },
+    onConfirmed: () => {
+      // Reconcile with DB after background save completes
       if (resolvedTokenId) {
         queryClient.invalidateQueries({ queryKey: ['post-tip-count', resolvedTokenId] });
       }
-      setAmount('');
-      onOpenChange(false);
     },
   });
 
