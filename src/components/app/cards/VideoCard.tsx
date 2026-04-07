@@ -1377,7 +1377,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               <video
                 ref={videoRef}
                 src={video.videoUrl}
-                poster={video.thumbnail}
+                poster={video.thumbnail || undefined}
                 muted={isMuted}
                 playsInline
                 {...{"webkit-playsinline": ""}}
