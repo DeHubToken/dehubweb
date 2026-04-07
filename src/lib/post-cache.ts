@@ -33,11 +33,11 @@ function parseDurationToSeconds(duration: string): number {
  * Convert VideoItem back to partial DeHubNFT format for caching
  */
 function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
-  const isLivePost = video.isLivePost;
+  const isLivePost = !!video.isLivePost;
 
   return {
     tokenId: parseInt(video.id) || 0,
-    postType: isLivePost ? 'live' : 'video',
+    postType: (isLivePost ? 'live' : 'video') as any,
     title: video.title,
     name: video.title,
     description: video.description || video.title,
@@ -70,29 +70,22 @@ function videoItemToNFT(video: VideoItem): Partial<DeHubNFT> {
     totalReposts: video.repostCount || 0,
     isReposted: video.isReposted ?? false,
     createdAt: video.createdAt,
-    stream: isLivePost ? {
-      _id: video.liveStreamId,
-      streamId: video.liveStreamId,
-      playbackId: video.livePlaybackId,
-      playbackUrl: video.livePlaybackUrl,
-      status: video.liveStatus,
-      isActive: video.liveIsActive,
-    } : (video.isW2E ? {
+    stream: isLivePost
+      ? {
+          streamId: video.liveStreamId,
+          playbackId: video.livePlaybackId,
+          status: video.liveStatus,
+          isActive: video.liveIsActive,
+        }
+      : undefined,
+    playbackUrl: isLivePost ? video.livePlaybackUrl : undefined,
+    streamInfo: !isLivePost && video.isW2E ? {
       isAddBounty: true,
       addBountyFirstXViewers: video.bountyViews,
       addBountyFirstXComments: video.bountyComments,
       addBountyAmount: video.bountyAmount,
       addBountyTokenSymbol: video.bountyCurrency || 'DHB',
-    } : undefined),
-    ...(isLivePost ? {} : {
-      streamInfo: video.isW2E ? {
-        isAddBounty: true,
-        addBountyFirstXViewers: video.bountyViews,
-        addBountyFirstXComments: video.bountyComments,
-        addBountyAmount: video.bountyAmount,
-        addBountyTokenSymbol: video.bountyCurrency || 'DHB',
-      } : undefined,
-    }),
+    } : undefined,
   };
 }
 
