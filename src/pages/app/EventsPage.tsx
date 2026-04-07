@@ -47,7 +47,7 @@ export default function EventsPage() {
         ))}
         <button
           onClick={handleCreate}
-          className="ml-auto px-4 py-2.5 text-sm font-medium text-zinc-500 hover:text-white transition-colors border-b-2 border-transparent -mb-[1px]"
+          className="ml-auto px-4 py-2.5 text-2xl font-medium text-zinc-500 hover:text-white transition-colors border-b-2 border-transparent -mb-[1px] leading-none"
         >
           +
         </button>
