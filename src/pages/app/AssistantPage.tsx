@@ -587,7 +587,46 @@ export default function AssistantPage() {
     },
   });
 
-  // Voice send handler - separate from regular send to track voice input
+  // ElevenLabs TTS speak function - routes through edge function when an ElevenLabs voice is selected
+  const elevenLabsSpeak = useCallback(async (text: string) => {
+    if (!elevenLabsVoiceId) {
+      // Fallback to browser TTS
+      speak(text);
+      return;
+    }
+    try {
+      // Clean text for TTS
+      const cleanText = text
+        .replace(/\*\*/g, '').replace(/\*/g, '').replace(/`/g, '')
+        .replace(/#{1,6}\s/g, '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+        .replace(/\n+/g, '. ').trim().slice(0, 500);
+      if (!cleanText) return;
+
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/elevenlabs-tts`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+            Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ text: cleanText, voiceId: elevenLabsVoiceId }),
+        }
+      );
+      if (!response.ok) throw new Error('TTS failed');
+      const audioBlob = await response.blob();
+      const audioUrl = URL.createObjectURL(audioBlob);
+      const audio = new Audio(audioUrl);
+      await audio.play();
+    } catch (err) {
+      console.error('ElevenLabs TTS error:', err);
+      // Fallback to browser TTS
+      speak(text);
+    }
+  }, [elevenLabsVoiceId, speak]);
+
+
   const handleVoiceSend = async (voiceText: string) => {
     if (!voiceText.trim() || isLoading) return;
     pendingVoiceRef.current = true;
