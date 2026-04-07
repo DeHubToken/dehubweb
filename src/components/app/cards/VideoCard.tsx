@@ -1222,7 +1222,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         ref={containerRef}
         tabIndex={0}
         data-no-navigate
-        className={`relative bg-zinc-800 cursor-pointer group/thumb outline-none rounded-md overflow-hidden transition-all duration-300 ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-screen rounded-none flex items-center justify-center' : (isImmersive && showComments ? 'aspect-[2/1]' : 'aspect-video')}`}
+        className={`relative bg-black cursor-pointer group/thumb outline-none rounded-md overflow-hidden transition-all duration-300 ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-screen rounded-none flex items-center justify-center' : (isImmersive && showComments ? 'aspect-[2/1]' : 'aspect-video')}`}
         onClick={isTouchDevice ? undefined : (video.isAudio ? undefined : handleVideoAreaClick)}
         onTouchEnd={isTouchDevice ? (video.isAudio ? undefined : handleTouchEnd) : undefined}
         onMouseEnter={() => {
