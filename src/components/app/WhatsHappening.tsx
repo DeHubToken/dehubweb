@@ -2,7 +2,7 @@ import { memo, useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { Search, Globe, ChevronDown, Hash, DollarSign } from 'lucide-react';
+import { Search, Globe, ChevronDown, Hash, DollarSign, Mic, Plus, Users } from 'lucide-react';
 import { motion, LayoutGroup, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { TickerLogo } from './TickerLogo';
@@ -10,6 +10,8 @@ import { cn } from '@/lib/utils';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { getTopTickers, type TickerPeriod } from '@/lib/ticker-search-tracker';
 import { TrendingTopicsList } from './TrendingTopicsList';
+import { supabase } from '@/integrations/supabase/client';
+import { formatTimeAgo } from '@/lib/feed-utils';
 
 const COUNTRIES = [
   { code: 'global', flag: '🌍', name: 'Global' },
@@ -89,7 +91,7 @@ const COUNTRIES = [
   { code: 'eg', flag: '🇪🇬', name: 'Egypt' },
 ];
 
-type Tab = 'posts' | 'tickers';
+type Tab = 'posts' | 'stages' | 'tickers';
 
 const TICKER_PERIODS: { value: TickerPeriod; label: string }[] = [
   { value: '1d', label: '1D' },
@@ -194,14 +196,32 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
     setActiveTab(tab);
   }, []);
 
-  const tabIcons: Record<Tab, typeof Hash> = { posts: Hash, tickers: DollarSign };
+  const tabIcons: Record<Tab, typeof Hash> = { posts: Hash, stages: Mic, tickers: DollarSign };
+
+  // Fetch live stages for the stages tab
+  const { data: liveStages = [] } = useQuery({
+    queryKey: ['sidebar-live-stages'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('audio_spaces')
+        .select('*')
+        .eq('status', 'live')
+        .order('started_at', { ascending: false })
+        .limit(10);
+      if (error) throw error;
+      return data || [];
+    },
+    staleTime: 15_000,
+    refetchInterval: 30_000,
+  });
 
   return (
     <div className="bg-zinc-900 rounded-2xl overflow-hidden relative">
       {/* Icon tab switcher — matches TabbedSidePanel style */}
       <div className="flex">
-        {(['posts', 'tickers'] as Tab[]).map(tab => {
+        {(['posts', 'stages', 'tickers'] as Tab[]).map(tab => {
           const Icon = tabIcons[tab];
+          const isStagesLive = tab === 'stages' && liveStages.length > 0;
           return (
             <button
               type="button"
@@ -216,7 +236,12 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
               {activeTab === tab && (
                 <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
               )}
-              <Icon className="w-5 h-5 relative z-10" />
+              <div className="relative z-10">
+                <Icon className="w-5 h-5" />
+                {isStagesLive && (
+                  <span className="absolute -top-1 -right-1.5 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                )}
+              </div>
             </button>
           );
         })}
@@ -282,6 +307,62 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
           )}
         >
           <TrendingTopicsList minHeight={0} />
+        </div>
+
+        {/* Stages tab */}
+        <div
+          className={cn(
+            'transition-opacity duration-150',
+            activeTab === 'stages'
+              ? 'opacity-100 relative z-10'
+              : 'opacity-0 pointer-events-none absolute inset-0'
+          )}
+        >
+          {liveStages.length > 0 ? (
+            <div className="flex flex-col gap-1">
+              {liveStages.map((stage) => (
+                <button
+                  key={stage.id}
+                  onClick={() => navigate(`/app/stages?join=${stage.id}`)}
+                  className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl hover:bg-zinc-800/60 transition-colors group text-left"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center shrink-0">
+                    <Mic className="w-4 h-4 text-red-400" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm text-zinc-200 font-medium truncate group-hover:text-white transition-colors">
+                      {stage.title}
+                    </p>
+                    <div className="flex items-center gap-2 text-[11px] text-zinc-500">
+                      <span>@{stage.host_username || stage.host_wallet_address?.slice(0, 6)}</span>
+                      <span className="flex items-center gap-0.5">
+                        <Users className="w-3 h-3" />
+                        {(stage.speaker_count || 1) + (stage.listener_count || 0)}
+                      </span>
+                      <span className="flex items-center gap-0.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                        Live
+                      </span>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-8 text-center">
+              <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center mb-2.5">
+                <Mic className="w-5 h-5 text-zinc-500" />
+              </div>
+              <p className="text-zinc-400 text-xs mb-3">No stages live, create one now!</p>
+              <button
+                onClick={() => navigate('/app/stages')}
+                className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium transition-colors"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                Create Stage
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Tickers tab */}
@@ -355,7 +436,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
       {/* View all button */}
       <LiquidGlassBubble2
         label={t('commandCentre.viewAll')}
-        onClick={() => navigate(showCountrySelector && activeTab === 'tickers' ? '/app/top-100' : '/app/explore')}
+        onClick={() => navigate(activeTab === 'stages' ? '/app/stages' : showCountrySelector && activeTab === 'tickers' ? '/app/top-100' : '/app/explore')}
         width="100%"
         height="auto"
         className="-mt-1 [&>div]:!py-2 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent"
