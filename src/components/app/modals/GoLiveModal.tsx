@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { mintPost } from '@/lib/api/dehub/content';
 import { getWeb3AuthSigner, mintOnChain, BASE_CHAIN_ID } from '@/lib/contracts';
 import { getCategories, getNFTInfo } from '@/lib/api/dehub/feed';
@@ -438,13 +439,15 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
 
         <div className="pt-4 mt-2 border-t border-white/10 bg-zinc-900">
           {step === 'setup' ? (
-            <Button
+            <LiquidGlassBubble2
+              label={isLoading ? '' : 'Go Live'}
+              icon={isLoading ? Loader2 : Radio}
               onClick={handleStartStream}
               disabled={!title.trim() || isLoading}
-              className="w-full bg-red-500 hover:bg-red-600 h-14 text-lg font-bold"
-            >
-              {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <><Radio className="w-5 h-5 mr-2" /> Go Live</>}
-            </Button>
+              width="100%"
+              height={56}
+              className={isLoading ? '[&_svg]:animate-spin' : ''}
+            />
           ) : (
             <div className="flex flex-col gap-2">
               <div className="flex gap-2">
