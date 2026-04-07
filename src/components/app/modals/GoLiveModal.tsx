@@ -404,9 +404,6 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
             <div className="space-y-4 pb-4">
               {streamData && (
                 <>
-                  <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-4 text-center">
-                    <p className="text-green-400 font-medium text-sm">Stream created successfully!</p>
-                  </div>
 
                   <div className="space-y-2">
                     <label className="text-sm text-white font-medium">Stream Key</label>
