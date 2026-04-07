@@ -37,7 +37,7 @@ const SCROLL_NAV_ITEMS = [
   { icon: BookOpen, label: 'Docs', path: 'https://docs.dhb.gg', external: true },
   { icon: FileText, label: 'Blog', path: '/docs/blog' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
-  { icon: BookOpen, label: 'Glossary', path: '/app/glossary' },
+  { icon: Scroll, label: 'Glossary', path: '/app/glossary' },
 ];
 
 export function MobileBottomNav() {
