@@ -181,6 +181,12 @@ export function GlobalFeedNav() {
     }
   }, [isHomePage, navigate, activeTab, isDragging, applyTab]);
 
+  const handleSettingsClick = useCallback(() => {
+    if (isHomePage) {
+      window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }));
+    }
+  }, [isHomePage, activeTab]);
+
   return (
     <div className="sticky top-0 bg-black z-50 p-2 sm:p-3 pb-2 sm:pb-2">
       <div className="bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
@@ -227,6 +233,16 @@ export function GlobalFeedNav() {
                 </button>
               );
             })}
+            {/* Settings Button - toggles current tab's filters */}
+            {isHomePage && (
+              <button
+                onClick={handleSettingsClick}
+                className="relative flex items-center justify-center px-3 py-2.5 rounded-xl transition-colors text-zinc-400 hover:text-white hover:bg-white/5"
+                aria-label="Feed settings"
+              >
+                <Settings2 className="relative z-10 w-4 h-4" />
+              </button>
+            )}
           </div>
         </div>
       </div>
