@@ -512,6 +512,7 @@ function SubmitFeatureDrawer({
   const { t } = useI18n();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [deviceDetails, setDeviceDetails] = useState('');
   const [category, setCategory] = useState<FeatureCategory>('new_feature');
   const [mediaFile, setMediaFile] = useState<File | null>(null);
   const [mediaPreview, setMediaPreview] = useState<string | null>(null);
