@@ -285,7 +285,7 @@ export function SidebarChat() {
               const handle = msg.sender_username;
               const goToProfile = handle ? () => navigate(`/${handle}`) : undefined;
               return (
-                <div key={msg.id} data-message-id={msg.id} className="group relative" style={{ paddingLeft: '10px', paddingRight: '10px' }}>
+                <div key={msg.id} data-message-id={msg.id} className="group relative transition-colors duration-500" style={{ paddingLeft: '10px', paddingRight: '10px' }}>
                   {/* Reply indicator – click to scroll to original */}
                   {msg.reply_to && (
                     <button
