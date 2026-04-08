@@ -1,37 +1,66 @@
 import { useState, useEffect, useRef } from 'react';
 
-const SCROLL_THRESHOLD = 8;
-const TOP_THRESHOLD = 50;
+const SCROLL_THRESHOLD = 6;
+const TOP_THRESHOLD = 60;
+
+function getScrollY(): number {
+  return (
+    window.scrollY ??
+    document.documentElement.scrollTop ??
+    document.body.scrollTop ??
+    0
+  );
+}
 
 export function useScrollDirection() {
   const [visible, setVisible] = useState(true);
   const lastScrollY = useRef(0);
-  const ticking = useRef(false);
+  const lastVisible = useRef(true);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (ticking.current) return;
-      ticking.current = true;
+    lastScrollY.current = getScrollY();
 
-      requestAnimationFrame(() => {
-        const currentY = window.scrollY;
-        const diff = currentY - lastScrollY.current;
+    const update = () => {
+      const currentY = getScrollY();
+      const diff = currentY - lastScrollY.current;
 
-        if (currentY < TOP_THRESHOLD) {
-          setVisible(true);
-        } else if (diff > SCROLL_THRESHOLD) {
-          setVisible(false);
-        } else if (diff < -SCROLL_THRESHOLD) {
-          setVisible(true);
-        }
-
+      let next: boolean;
+      if (currentY <= TOP_THRESHOLD) {
+        next = true;
+      } else if (diff > SCROLL_THRESHOLD) {
+        next = false;
+      } else if (diff < -SCROLL_THRESHOLD) {
+        next = true;
+      } else {
         lastScrollY.current = currentY;
-        ticking.current = false;
+        return;
+      }
+
+      lastScrollY.current = currentY;
+
+      if (next !== lastVisible.current) {
+        lastVisible.current = next;
+        setVisible(next);
+      }
+    };
+
+    let rafId: number | null = null;
+    const onScroll = () => {
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        update();
       });
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    document.addEventListener('scroll', onScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      document.removeEventListener('scroll', onScroll);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return visible;
