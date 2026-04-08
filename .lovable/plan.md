@@ -1,18 +1,48 @@
 
 
-## Fix: Submit button unreachable when image is attached in Feature Request drawer
+## Problem: `build.target: 'esnext'` breaks older Safari/iOS
 
-### Problem
-The `SubmitFeatureDrawer` content area (`div.px-4.pb-6.space-y-4` at line 582) has no scroll capability. When a user attaches an image/video preview (~192px tall), the total content exceeds the `max-h-[85vh]` of the drawer, pushing the Submit button off-screen with no way to scroll to it.
+Vite's `build.target` controls which JavaScript features are kept as-is vs transpiled down. `esnext` means "emit whatever the latest spec allows" — no transpilation. Older iPhones running iOS 14 or 15 (Safari 14/15) choke on syntax they don't understand, producing a white screen with no error visible to the user.
 
-### Solution
-Add `overflow-y-auto` to the content div so it scrolls when content exceeds available space. Also add `overscroll-contain` to prevent scroll chaining.
+### Affected devices
+- iPhone 6s / 7 / 8 / SE (1st & 2nd gen) on iOS 14–15
+- Any iPhone where the user hasn't updated past iOS 15
+- Safari 14–15 on macOS
 
-### File to change
+### Plan
 
-| File | Change |
-|------|--------|
-| `src/pages/app/FeaturesPage.tsx` | Line 582: Change `<div className="px-4 pb-6 space-y-4">` to `<div className="px-4 pb-6 space-y-4 overflow-y-auto overscroll-contain flex-1">` |
+**1. Change the Vite build target** (`vite.config.ts`)
 
-This is a one-line CSS fix — the content div becomes scrollable within the drawer's max height, ensuring the submit button is always reachable.
+Replace `target: 'esnext'` with a target that covers Safari 14+:
+
+```
+target: ['es2020', 'safari14']
+```
+
+This tells Vite/esbuild to transpile syntax newer than ES2020 (like top-level await, class static blocks, etc.) down to something Safari 14 can run. This covers iPhones back to iOS 14.
+
+If you only need to support iOS 15+, use `safari15` instead — it's slightly less transpilation.
+
+**2. Add the `browserslist` field to `package.json`** (optional but recommended)
+
+This helps other tools (Tailwind, PostCSS, autoprefixer) know your browser support:
+
+```json
+"browserslist": ["iOS >= 14", "safari >= 14", "> 0.5%", "not dead"]
+```
+
+**3. Check for unsupported API usage** (audit, no file changes)
+
+Even with syntax transpiled, some runtime APIs don't exist on older Safari:
+- `structuredClone` — not available until Safari 15.4
+- `crypto.randomUUID` — Safari 15.4+
+- `Array.prototype.at()` — Safari 15.4+
+- `AbortSignal.timeout()` — Safari 16+
+
+If any of these are used, they need polyfills or fallbacks. I'll search the codebase for usage after implementation begins.
+
+### Impact
+- No visual or functional changes on modern devices
+- Bundle size increases very slightly (a few KB) from transpiled syntax
+- Older iPhones will be able to load and use the site
 
