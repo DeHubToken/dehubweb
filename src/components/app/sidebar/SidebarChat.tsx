@@ -138,14 +138,16 @@ export function SidebarChat() {
     return items;
   })();
 
+  // Always scroll to bottom when messages change
   useEffect(() => {
-    if (mergedItems.length > 0 && bottomRef.current) {
-      const scrollContainer = bottomRef.current.closest('.overflow-y-auto');
-      if (scrollContainer) {
+    const el = scrollContainerRef.current;
+    if (mergedItems.length > 0 && el) {
+      // Double rAF to ensure DOM has painted
+      requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          scrollContainer.scrollTop = scrollContainer.scrollHeight;
+          el.scrollTop = el.scrollHeight;
         });
-      }
+      });
     }
   }, [mergedItems.length]);
 
