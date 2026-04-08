@@ -1,65 +1,62 @@
 import { useState, useEffect, useRef } from 'react';
 
-const SCROLL_THRESHOLD = 6;
 const TOP_THRESHOLD = 60;
+const SCROLL_DIFF = 4;
+const TOUCH_DIFF = 10;
 
-function getScrollY(): number {
-  return (
-    window.scrollY ??
-    document.documentElement.scrollTop ??
-    document.body.scrollTop ??
-    0
-  );
+function getScrollY() {
+  return window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
 }
 
 export function useScrollDirection() {
   const [visible, setVisible] = useState(true);
   const lastScrollY = useRef(0);
-  const lastVisible = useRef(true);
+  const touchStartY = useRef(0);
 
   useEffect(() => {
     lastScrollY.current = getScrollY();
 
-    const update = () => {
+    const onScroll = () => {
       const currentY = getScrollY();
-      const diff = currentY - lastScrollY.current;
 
-      let next: boolean;
       if (currentY <= TOP_THRESHOLD) {
-        next = true;
-      } else if (diff > SCROLL_THRESHOLD) {
-        next = false;
-      } else if (diff < -SCROLL_THRESHOLD) {
-        next = true;
-      } else {
+        setVisible(true);
         lastScrollY.current = currentY;
         return;
       }
 
-      lastScrollY.current = currentY;
+      const diff = currentY - lastScrollY.current;
+      if (Math.abs(diff) < SCROLL_DIFF) return;
 
-      if (next !== lastVisible.current) {
-        lastVisible.current = next;
-        setVisible(next);
-      }
+      setVisible(diff < 0); // up = visible, down = hidden
+      lastScrollY.current = currentY;
     };
 
-    let rafId: number | null = null;
-    const onScroll = () => {
-      if (rafId !== null) return;
-      rafId = requestAnimationFrame(() => {
-        rafId = null;
-        update();
-      });
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartY.current = e.touches[0].clientY;
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      const currentY = getScrollY();
+      if (currentY <= TOP_THRESHOLD) {
+        setVisible(true);
+        return;
+      }
+      const diff = touchStartY.current - e.touches[0].clientY;
+      if (diff > TOUCH_DIFF) setVisible(false);       // finger going up = scroll down
+      else if (diff < -TOUCH_DIFF) setVisible(true);  // finger going down = scroll up
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
     document.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('touchstart', onTouchStart, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
 
     return () => {
       window.removeEventListener('scroll', onScroll);
       document.removeEventListener('scroll', onScroll);
-      if (rafId !== null) cancelAnimationFrame(rafId);
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove', onTouchMove);
     };
   }, []);
 
