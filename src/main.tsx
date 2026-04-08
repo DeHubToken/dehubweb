@@ -1,3 +1,4 @@
+import "./lib/canvas-polyfills"; // Must run before any canvas usage (Safari 15 compat)
 import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "./components/ErrorBoundary";
 import { clearChunkReloadFlag } from "./lib/lazy-with-retry";
