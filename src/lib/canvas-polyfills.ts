@@ -37,7 +37,7 @@ if (!String.prototype.at) {
 }
 
 // ── String.prototype.replaceAll (Safari 13.1+ has it, but guard anyway) ──
-if (!String.prototype.replaceAll) {
+if (!(String.prototype as any).replaceAll) {
   (String.prototype as any).replaceAll = function (
     search: string | RegExp,
     replacement: string
@@ -53,7 +53,7 @@ if (!String.prototype.replaceAll) {
 }
 
 // ── Object.hasOwn (Safari 15.4+) ────────────────────────────────────
-if (typeof Object.hasOwn === 'undefined') {
+if (typeof (Object as any).hasOwn === 'undefined') {
   (Object as any).hasOwn = function (obj: object, key: PropertyKey): boolean {
     return Object.prototype.hasOwnProperty.call(obj, key);
   };
