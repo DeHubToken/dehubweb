@@ -8,13 +8,135 @@
  * This file MUST be imported before anything else in main.tsx.
  */
 
+type CloneableRecord = Record<PropertyKey, unknown>;
+
+function createStructuredCloneError() {
+  if (typeof DOMException !== 'undefined') {
+    return new DOMException('This value cannot be cloned.', 'DataCloneError');
+  }
+  return new TypeError('This value cannot be cloned.');
+}
+
+function cloneArrayBuffer(buffer: ArrayBuffer) {
+  return buffer.slice(0);
+}
+
+function cloneStructuredValue<T>(value: T, seen = new WeakMap<object, unknown>()): T {
+  if (typeof value === 'function') {
+    throw createStructuredCloneError();
+  }
+
+  if (typeof value !== 'object' || value === null) {
+    return value;
+  }
+
+  const source = value as object;
+  if (seen.has(source)) {
+    return seen.get(source) as T;
+  }
+
+  if (value instanceof Date) {
+    return new Date(value.getTime()) as T;
+  }
+
+  if (value instanceof RegExp) {
+    return new RegExp(value.source, value.flags) as T;
+  }
+
+  if (typeof URL !== 'undefined' && value instanceof URL) {
+    return new URL(value.toString()) as T;
+  }
+
+  if (typeof URLSearchParams !== 'undefined' && value instanceof URLSearchParams) {
+    return new URLSearchParams(value.toString()) as T;
+  }
+
+  if (value instanceof ArrayBuffer) {
+    const clonedBuffer = cloneArrayBuffer(value);
+    seen.set(source, clonedBuffer);
+    return clonedBuffer as T;
+  }
+
+  if (ArrayBuffer.isView(value)) {
+    const view = value as ArrayBufferView;
+    const clonedBuffer = cloneArrayBuffer(view.buffer);
+    const clonedView = value instanceof DataView
+      ? new DataView(clonedBuffer, view.byteOffset, view.byteLength)
+      : new (value.constructor as { new(buffer: ArrayBuffer, byteOffset?: number, length?: number): unknown })(
+          clonedBuffer,
+          view.byteOffset,
+          'length' in value ? (value as { length: number }).length : undefined,
+        );
+    seen.set(source, clonedView);
+    return clonedView as T;
+  }
+
+  if (value instanceof Map) {
+    const clonedMap = new Map();
+    seen.set(source, clonedMap);
+    value.forEach((mapValue, key) => {
+      clonedMap.set(cloneStructuredValue(key, seen), cloneStructuredValue(mapValue, seen));
+    });
+    return clonedMap as T;
+  }
+
+  if (value instanceof Set) {
+    const clonedSet = new Set();
+    seen.set(source, clonedSet);
+    value.forEach((entry) => {
+      clonedSet.add(cloneStructuredValue(entry, seen));
+    });
+    return clonedSet as T;
+  }
+
+  if (value instanceof WeakMap || value instanceof WeakSet || value instanceof Promise) {
+    throw createStructuredCloneError();
+  }
+
+  if (Array.isArray(value)) {
+    const clonedArray: unknown[] = [];
+    seen.set(source, clonedArray);
+    value.forEach((item, index) => {
+      clonedArray[index] = cloneStructuredValue(item, seen);
+    });
+    return clonedArray as T;
+  }
+
+  const prototype = Object.getPrototypeOf(value);
+  const clonedObject = Object.create(prototype ?? Object.prototype) as CloneableRecord;
+  seen.set(source, clonedObject);
+
+  for (const key of Reflect.ownKeys(value as object)) {
+    const descriptor = Object.getOwnPropertyDescriptor(value as object, key);
+    if (!descriptor) continue;
+
+    if ('value' in descriptor) {
+      descriptor.value = cloneStructuredValue((value as CloneableRecord)[key], seen);
+    }
+
+    Object.defineProperty(clonedObject, key, descriptor);
+  }
+
+  return clonedObject as T;
+}
+
 // ── structuredClone (Safari 15.4+) ──────────────────────────────────
 if (typeof globalThis.structuredClone === 'undefined') {
   (globalThis as any).structuredClone = function structuredClone<T>(value: T): T {
-    // JSON round-trip covers plain objects, arrays, strings, numbers, booleans, null.
-    // Does not handle Date, RegExp, Map, Set, ArrayBuffer, etc. — but covers
-    // the vast majority of library usage (config objects, state snapshots).
-    return JSON.parse(JSON.stringify(value));
+    return cloneStructuredValue(value);
+  };
+}
+
+// ── queueMicrotask (Safari 13+) ─────────────────────────────────────
+if (typeof globalThis.queueMicrotask === 'undefined') {
+  globalThis.queueMicrotask = function queueMicrotask(callback: VoidFunction) {
+    Promise.resolve()
+      .then(callback)
+      .catch((error) => {
+        setTimeout(() => {
+          throw error;
+        }, 0);
+      });
   };
 }
 
