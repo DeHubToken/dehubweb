@@ -45,7 +45,7 @@ export default defineConfig(({ mode }) => ({
     global: 'globalThis',
   },
   build: {
-    target: 'esnext',
+    target: ['es2020', 'safari14'],
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {
