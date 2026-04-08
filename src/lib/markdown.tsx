@@ -272,20 +272,45 @@ function parseFormattingAndUrls(text: string): React.ReactNode {
   return parseLinksAndUrls(text);
 }
 
+function findSingleItalicSegment(text: string): { before: string; content: string; after: string } | null {
+  for (let start = 0; start < text.length; start++) {
+    const delimiter = text[start];
+
+    if ((delimiter !== '*' && delimiter !== '_') || text[start - 1] === delimiter || text[start + 1] === delimiter) {
+      continue;
+    }
+
+    for (let end = start + 1; end < text.length; end++) {
+      if (text[end] !== delimiter) continue;
+      if (text[end - 1] === delimiter || text[end + 1] === delimiter) continue;
+
+      const content = text.slice(start + 1, end);
+      if (!content) continue;
+
+      return {
+        before: text.slice(0, start),
+        content,
+        after: text.slice(end + 1),
+      };
+    }
+  }
+
+  return null;
+}
+
 function parseItalicAndCode(text: string): React.ReactNode {
   const parts: React.ReactNode[] = [];
   let remaining = text;
   let keyIndex = 0;
 
   while (remaining.length > 0) {
-    // Italic: *text* or _text_ (single)
-    const italicMatch = remaining.match(/^(.*?)(?<!\*)(\*|_)(?!\*)(.+?)(?<!\*)\2(?!\*)(.*)$/s);
+    const italicMatch = findSingleItalicSegment(remaining);
     if (italicMatch) {
-      if (italicMatch[1]) {
-        parts.push(<span key={keyIndex++}>{parseCode(italicMatch[1])}</span>);
+      if (italicMatch.before) {
+        parts.push(<span key={keyIndex++}>{parseCode(italicMatch.before)}</span>);
       }
-      parts.push(<em key={keyIndex++} className="italic">{parseCode(italicMatch[3])}</em>);
-      remaining = italicMatch[4];
+      parts.push(<em key={keyIndex++} className="italic">{parseCode(italicMatch.content)}</em>);
+      remaining = italicMatch.after;
       continue;
     }
 
