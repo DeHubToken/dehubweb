@@ -32,22 +32,37 @@ const CC_TLDS = 'ac|ad|ae|af|ag|al|am|ao|aq|ar|as|at|au|aw|ax|az|ba|bb|bd|be|bf|
 const GENERIC_TLDS = 'com|org|net|info|biz|xyz|app|dev|ai|io|cc|gg|me|tv|ly|fm|sh|digital|store|online|site|tech|world|club|live|space|art|design|social|link|page|one|pro|media|studio|agency|blog|shop|network|land|zone|fund|games|gaming|vc|nft|crypto|dao|eth|web3|defi|music|video|news|chat|cloud|data|host|email|money|bank|pay|finance|trade|market|exchange|casino|bet|poker|win|lol|wtf|meme|cool|guru|ninja|expert|solutions|services|systems|technology|software|computer|science|education|academy|school|university|institute|training|health|medical|dental|fitness|yoga|beauty|fashion|style|clothing|shoes|jewelry|luxury|estate|property|house|apartments|construction|auto|car|bike|travel|flights|holiday|tours|hotel|restaurant|food|pizza|coffee|bar|pub|wine|beer|recipes|photography|photo|camera|gallery|graphics|ink|tattoo|wedding|events|party|flowers|gifts|toys|baby|kids|family|pets|dog|cat|vet|garden|green|eco|solar|energy|organic|farm|legal|law|attorney|consulting|accountant|tax|insurance|loans|credit|investments|capital|ventures|partners|associates|group|team|community|foundation|charity|church|bible|faith|domains|website|web|blog|forum|wiki|directory|guide|tips|how|reviews|best|top|cheap|discount|sale|deals|coupons|free|plus|vip|gold|black|blue|red|pink|green|orange|theater|movie|film|show|radio|audio|stream|tube|band|rocks|dance|dj|actor|place|city|town|country|earth|world|global|international|company|business|corp|inc|ltd|enterprises|holdings|industries|works|careers|jobs|hire|run|fit|life|love|date|singles|camp|center|care|support|help|repair|direct|express|delivery|supply|tools|parts|equipment|kitchen|house|furniture|lighting|glass|flooring|tiles|build|builders|contractors|plumbing|heating|cleaning|security|cctv|codes|dev|engineer|hacker|geek|tech|digital|cyber|net|systems|app|cloud|host|storage|server|mobile|phone|computer|monitor|watch|today|now|news|report|press|media|social|pics|photos|video|click|download|online|email|chat|games|play|game|poker|bet|casino|win|lol|fail|wtf|meme|cool|fun|sexy|xxx|adult|porn|sucks|gripe|icu|rest|cafe|pub|bar|bio|ceo|voting|democrat|republican|forex|trading|rip|memorial|giving|christmas|theater';
 const COMMON_TLDS = `${CC_TLDS}|${GENERIC_TLDS}`;
 
+const URL_BOUNDARY_REGEX_SRC = `(?:^|\\s|[\\(\\[<"'])`;
+
 // TLD-restricted regex for non-www links (avoids false positives like "file.mp4")
 // Allow dots in hostname to support subdomains like "Kokoroko.lnk.to"
-const TLD_URL_REGEX_SRC = `(?:^|(?<=\\s)|(?<=[\\(\\[<"']))(?:https?:\\/\\/)?(?:www\\.)?[-a-zA-Z0-9@:%_+~#=]+(?:\\.[-a-zA-Z0-9@:%_+~#=]+)*\\.(?:${COMMON_TLDS})(?:\\.[a-zA-Z]{2,3})?\\b(?:[-a-zA-Z0-9()@:%_+.~#?&\\/=]*)`;
+const TLD_URL_CORE_REGEX_SRC = `(?:https?:\\/\\/)?(?:www\\.)?[-a-zA-Z0-9@:%_+~#=]+(?:\\.[-a-zA-Z0-9@:%_+~#=]+)*\\.(?:${COMMON_TLDS})(?:\\.[a-zA-Z]{2,3})?\\b(?:[-a-zA-Z0-9()@:%_+.~#?&\\/=]*)`;
 
 // www. prefix always means a link, regardless of TLD
-const WWW_URL_REGEX_SRC = `(?:^|(?<=\\s)|(?<=[\\(\\[<"']))(?:https?:\\/\\/)?www\\.[-a-zA-Z0-9@:%_+~#=]+(?:\\.[-a-zA-Z0-9@:%_+~#=]+)*\\.[a-zA-Z]{2,63}\\b(?:[-a-zA-Z0-9()@:%_+.~#?&\\/=]*)`;
+const WWW_URL_CORE_REGEX_SRC = `(?:https?:\\/\\/)?www\\.[-a-zA-Z0-9@:%_+~#=]+(?:\\.[-a-zA-Z0-9@:%_+~#=]+)*\\.[a-zA-Z]{2,63}\\b(?:[-a-zA-Z0-9()@:%_+.~#?&\\/=]*)`;
 
-// Combined: match www. links (any TLD) OR TLD-restricted links
-const URL_REGEX = new RegExp(`(?:${WWW_URL_REGEX_SRC})|(?:${TLD_URL_REGEX_SRC})`, 'gi');
+// Core URL matcher for tooltips/hrefs, plus boundary-aware version for inline text scanning
+const URL_REGEX = new RegExp(`(?:${WWW_URL_CORE_REGEX_SRC})|(?:${TLD_URL_CORE_REGEX_SRC})`, 'gi');
+const URL_WITH_BOUNDARY_REGEX = new RegExp(`(?:${URL_BOUNDARY_REGEX_SRC})(?:${URL_REGEX.source})`, 'gi');
+const URL_LEADING_BOUNDARY_REGEX = /^[\s(\[<"']+/;
+
+function splitLeadingUrlBoundary(match: string) {
+  const leadingBoundary = match.match(URL_LEADING_BOUNDARY_REGEX)?.[0] ?? '';
+  return {
+    leadingBoundary,
+    url: match.slice(leadingBoundary.length),
+  };
+}
 
 /**
  * Replace URLs in plain text with 🔗 emoji (for use in textarea inputs).
  * Returns the transformed text.
  */
 export function replaceLinksWithEmoji(text: string): string {
-  return text.replace(new RegExp(`(?:${WWW_URL_REGEX_SRC})|(?:${TLD_URL_REGEX_SRC})`, 'gi'), '🔗');
+  return text.replace(URL_WITH_BOUNDARY_REGEX, (match) => {
+    const { leadingBoundary } = splitLeadingUrlBoundary(match);
+    return `${leadingBoundary}🔗`;
+  });
 }
 
 interface TranslatableTextProps {
@@ -98,7 +113,7 @@ export function renderTextWithLinks(text: string): ReactNode[] {
   
   // Combined regex: match emails, URLs, @mentions, $cashtags, or #hashtags
   const combinedRegex = new RegExp(
-    `([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})|(${URL_REGEX.source})|(@[a-zA-Z0-9_][a-zA-Z0-9_.-]*)|(\\$[a-zA-Z]{1,20})|(#[a-zA-Z][a-zA-Z0-9_]*)`,
+      `([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,})|(${URL_WITH_BOUNDARY_REGEX.source})|(@[a-zA-Z0-9_][a-zA-Z0-9_.-]*)|(\\$[a-zA-Z]{1,20})|(#[a-zA-Z][a-zA-Z0-9_]*)`,
     'gi'
   );
   
@@ -178,7 +193,10 @@ export function renderTextWithLinks(text: string): ReactNode[] {
       );
     } else {
       // URL — render as link emoji (skip community links since they get a card embed)
-      const url = fullMatch;
+      const { leadingBoundary, url } = splitLeadingUrlBoundary(fullMatch);
+      if (leadingBoundary) {
+        parts.push(leadingBoundary);
+      }
       if (/\/app\/communities\/[a-zA-Z0-9_-]+/.test(url)) {
         // Community link — don't show 🔗, the CommunityLinkEmbed handles it
         lastIndex = combinedRegex.lastIndex;
