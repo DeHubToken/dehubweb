@@ -9,7 +9,6 @@ import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useCallback, useRef, memo } from 'react';
-import { useScrollDirection } from '@/hooks/use-scroll-direction';
 
 const HeaderLogo = memo(function HeaderLogo({ onClick }: { onClick: (e: React.MouseEvent) => void }) {
   return (
@@ -38,7 +37,6 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, user, openLoginModal } = useAuth();
-  const navVisible = useScrollDirection();
   
   const { data: unreadCount } = useUnreadNotificationCount();
   const { data: customUnread } = useCustomUnreadCount();
@@ -68,10 +66,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   }, [isAuthenticated, openLoginModal]);
 
   return (
-    <header
-      className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black px-4 h-11 flex items-center justify-between transition-transform duration-300 ease-in-out"
-      style={{ transform: navVisible ? 'translateY(0)' : 'translateY(-100%)', willChange: 'transform' }}
-    >
+    <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black px-4 h-11 flex items-center justify-between">
       <div className="flex items-center gap-3 ml-[-8px]">
         <HeaderLogo onClick={handleLogoClick} />
       </div>
