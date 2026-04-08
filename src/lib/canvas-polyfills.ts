@@ -21,6 +21,16 @@ function cloneArrayBuffer(buffer: ArrayBuffer) {
   return buffer.slice(0);
 }
 
+function cloneBufferLike(buffer: ArrayBufferLike) {
+  if (buffer instanceof ArrayBuffer) {
+    return cloneArrayBuffer(buffer);
+  }
+
+  const cloned = new ArrayBuffer(buffer.byteLength);
+  new Uint8Array(cloned).set(new Uint8Array(buffer));
+  return cloned;
+}
+
 function cloneStructuredValue<T>(value: T, seen = new WeakMap<object, unknown>()): T {
   if (typeof value === 'function') {
     throw createStructuredCloneError();
@@ -59,7 +69,7 @@ function cloneStructuredValue<T>(value: T, seen = new WeakMap<object, unknown>()
 
   if (ArrayBuffer.isView(value)) {
     const view = value as ArrayBufferView;
-    const clonedBuffer = cloneArrayBuffer(view.buffer);
+    const clonedBuffer = cloneBufferLike(view.buffer);
     const clonedView = value instanceof DataView
       ? new DataView(clonedBuffer, view.byteOffset, view.byteLength)
       : new (value.constructor as { new(buffer: ArrayBuffer, byteOffset?: number, length?: number): unknown })(
