@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
+import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck, Scroll } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -45,6 +46,7 @@ export function MobileBottomNav() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const { openModal: openStagesModal } = useStage();
+  const navVisible = useScrollDirection();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -120,13 +122,17 @@ export function MobileBottomNav() {
   return (
     <>
       {/* Bottom blur gradient overlay */}
-      <div 
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 pointer-events-none h-[60px]"
+      <div
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 pointer-events-none h-[60px] transition-transform duration-300 ease-in-out"
         style={{
           background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.05) 15%, rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,0.85) 90%, rgba(0,0,0,0.95) 100%)',
+          transform: navVisible ? 'translateY(0)' : 'translateY(100%)',
         }}
       />
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2">
+      <div
+        className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2 transition-transform duration-300 ease-in-out"
+        style={{ transform: navVisible ? 'translateY(0)' : 'translateY(100%)' }}
+      >
         <nav
           className="relative bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-[72%] md:max-w-md shadow-xl transition-all duration-1000"
         >
