@@ -609,17 +609,11 @@ export default function HomePage() {
     <div>
       <SEOHead title="DeHub - Home Feed" description="Censorship resistant and chronological, with no shady algorithm. Your feed on DeHub — the open source, user owned social media platform." url="https://dehub.io/app" jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Home Feed', url: 'https://dehub.io/app', description: 'Censorship resistant, chronological social media feed with no algorithm.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">DeHub Home — Decentralised Social Media Feed, Censorship Resistant & Freedom of Speech</h1>
-      {/* Tab Navigation — grid-template-rows collapses height to 0 so no empty space */}
+      {/* Tab Navigation */}
       <div
-        className="overflow-hidden"
-        style={{
-          display: 'grid',
-          gridTemplateRows: feedNavVisible ? '1fr' : '0fr',
-          transition: 'grid-template-rows 300ms ease-in-out',
-        }}
+        className={cn("sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 lg:mt-0 transition-transform duration-300 ease-in-out", isCollapsed && "pl-2 pr-0", isCollapsed && "lg:hidden")}
+        style={{ transform: feedNavVisible ? 'translateY(0)' : 'translateY(-110%)', willChange: 'transform' }}
       >
-      <div style={{ minHeight: 0, overflow: 'hidden' }}>
-      <div className={cn("bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 lg:mt-0", isCollapsed && "pl-2 pr-0", isCollapsed && "lg:hidden")}>
         <div className="bg-zinc-900 rounded-xl overflow-visible">
           <div ref={homeTabLayerRef} className="relative overflow-visible">
             <GlassIndicator ref={homeIndicatorRef} rect={homeTabRect} borderRadius="0.75rem" layoutKey={`home-${isCollapsed}-${activeTab}`} enableTransition={!isHomeDragging && enableHomeTransition} fixedHeightPx={35} />
@@ -678,8 +672,6 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-      </div>
-      </div>
       </div>
 
       {/* Feed Content - Pull-to-refresh only works within this container */}
