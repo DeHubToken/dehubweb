@@ -46,12 +46,6 @@ function AssetRow({ asset, rank, onClick }: { asset: TopAsset; rank: number; onC
           <span className="text-lg w-6 h-6 flex items-center justify-center">{asset.icon}</span>
           <span className="text-white font-medium text-sm">{asset.name}</span>
           <span className="text-zinc-500 text-xs">{asset.symbol}</span>
-          <span className={cn(
-            'text-[10px] px-1.5 py-0.5 rounded font-medium',
-            asset.type === 'commodity' ? 'text-amber-400 bg-amber-400/10' : 'text-blue-400 bg-blue-400/10'
-          )}>
-            {asset.type === 'commodity' ? 'Commodity' : 'Stock'}
-          </span>
         </div>
       </td>
       <td className="py-3 px-3 text-white text-sm text-right font-mono">
@@ -89,7 +83,6 @@ function CoinRow({ coin, rank, onClick }: { coin: CmcCoin; rank: number; onClick
           />
           <span className="text-white font-medium text-sm">{coin.name}</span>
           <span className="text-zinc-500 text-xs">{coin.symbol}</span>
-          <span className="text-[10px] px-1.5 py-0.5 rounded font-medium text-purple-400 bg-purple-400/10">Crypto</span>
         </div>
       </td>
       <td className="py-3 px-3 text-white text-sm text-right font-mono">{formatPrice(coin.price)}</td>
