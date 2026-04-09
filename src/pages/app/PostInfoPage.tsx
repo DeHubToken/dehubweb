@@ -41,25 +41,13 @@ const VISIBILITY_OPTIONS: { value: TokenVisibility; label: string; icon: React.R
   { value: 'private', label: 'Private', icon: <Lock className="w-4 h-4" />, description: 'Only you can see this post' },
 ];
 
-// Types for listings and offers (data will come from API)
-interface Listing {
-  id: string;
-  seller: string;
-  amount: number;
-  pricePerFraction: number;
-  totalPrice: number;
-  createdAt: string;
-}
-
-interface Offer {
-  id: string;
-  buyer: string;
-  amount: number;
-  pricePerFraction: number;
-  totalPrice: number;
-  createdAt: string;
-  status: 'pending' | 'accepted' | 'rejected';
-}
+import { useFractionListings, useFractionOffers, useCreateListing, useCancelListing, useCancelOffer, useAcceptOffer, useRejectOffer, useRecordTrade, type FractionListing as FListing, type FractionOffer as FOffer } from '@/hooks/use-fraction-marketplace';
+import { BuyFractionDrawer } from '@/components/app/fractions/BuyFractionDrawer';
+import { MakeOfferDrawer } from '@/components/app/fractions/MakeOfferDrawer';
+import { sendERC20Token } from '@/lib/wallet/send';
+import { transferFractions } from '@/lib/contracts/fraction-transfer';
+import { DHB_TOKEN, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import type { ChainId } from '@/components/app/ChainSelector';
 
 // FractionMarketplace Component
 interface FractionMarketplaceProps {
@@ -70,27 +58,42 @@ interface FractionMarketplaceProps {
 
 function ListFractionsDrawer({ 
   availableBalance, 
+  tokenId,
+  chainId,
   open, 
   onOpenChange 
 }: { 
   availableBalance: number; 
+  tokenId: string;
+  chainId?: number;
   open: boolean; 
   onOpenChange: (v: boolean) => void;
 }) {
   const [quantity, setQuantity] = useState('');
   const [price, setPrice] = useState('');
+  const createListing = useCreateListing();
 
   const qty = parseInt(quantity) || 0;
   const prc = parseFloat(price) || 0;
   const total = qty * prc;
   const isValid = qty > 0 && qty <= availableBalance && prc > 0;
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!isValid) return;
-    toast.info(`Listing ${qty} fraction${qty > 1 ? 's' : ''} at ${prc} DHB each — on-chain listing coming soon`);
-    onOpenChange(false);
-    setQuantity('');
-    setPrice('');
+    try {
+      await createListing.mutateAsync({
+        tokenId,
+        quantity: qty,
+        pricePerFraction: prc,
+        chainId,
+      });
+      toast.success(`Listed ${qty} fraction${qty > 1 ? 's' : ''} at ${prc} DHB each`);
+      onOpenChange(false);
+      setQuantity('');
+      setPrice('');
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to create listing');
+    }
   };
 
   return (
@@ -100,7 +103,6 @@ function ListFractionsDrawer({
           <DrawerTitle className="text-white text-lg">List Your Fractions</DrawerTitle>
         </DrawerHeader>
         <div className="space-y-4">
-          {/* Quantity */}
           <div>
             <label className="text-sm text-white/60 mb-1.5 block">
               Quantity <span className="text-white/40">({availableBalance} available)</span>
@@ -126,7 +128,6 @@ function ListFractionsDrawer({
             </div>
           </div>
 
-          {/* Price per fraction */}
           <div>
             <label className="text-sm text-white/60 mb-1.5 block">Price per Fraction (DHB)</label>
             <div className="relative">
@@ -143,7 +144,6 @@ function ListFractionsDrawer({
             </div>
           </div>
 
-          {/* Summary */}
           {qty > 0 && prc > 0 && (
             <div className="bg-white/5 rounded-xl p-3 border border-white/10">
               <div className="flex justify-between text-sm">
@@ -153,14 +153,16 @@ function ListFractionsDrawer({
             </div>
           )}
 
-          {/* Submit */}
           <Button
             onClick={handleSubmit}
-            disabled={!isValid}
+            disabled={!isValid || createListing.isPending}
             className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20 disabled:opacity-40"
           >
-            <Tag className="w-4 h-4 mr-2" />
-            List {qty > 0 ? `${qty} Fraction${qty > 1 ? 's' : ''}` : 'Fractions'}
+            {createListing.isPending ? (
+              <><Loader2 className="w-4 h-4 mr-2 animate-spin" />Creating...</>
+            ) : (
+              <><Tag className="w-4 h-4 mr-2" />List {qty > 0 ? `${qty} Fraction${qty > 1 ? 's' : ''}` : 'Fractions'}</>
+            )}
           </Button>
         </div>
       </DrawerContent>
@@ -169,17 +171,96 @@ function ListFractionsDrawer({
 }
 
 function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketplaceProps) {
-  const { user, walletAddress } = useAuth();
+  const { walletAddress } = useAuth();
   const [listDrawerOpen, setListDrawerOpen] = useState(false);
+  const [buyListing, setBuyListing] = useState<FListing | null>(null);
+  const [offerDrawerOpen, setOfferDrawerOpen] = useState(false);
+  const [transferringOffer, setTransferringOffer] = useState<string | null>(null);
+
+  const tokenId = nftInfo.tokenId?.toString();
+  const chainId = nftInfo.chainId || 8453;
+
+  const { data: listings = [], isLoading: loadingListings } = useFractionListings(tokenId);
+  const { data: offers = [], isLoading: loadingOffers } = useFractionOffers(tokenId);
+  const cancelListing = useCancelListing();
+  const cancelOffer = useCancelOffer();
+  const acceptOffer = useAcceptOffer();
+  const rejectOffer = useRejectOffer();
+  const recordTrade = useRecordTrade();
   
-  // Check if current user owns any fractions
   const userHolding = walletAddress 
     ? holders.find(h => h.address.toLowerCase() === walletAddress.toLowerCase())
     : null;
   const userOwnsFractions = !!userHolding && userHolding.balance > 0;
 
-  const handleMakeOffer = () => {
-    toast.info('Make offer feature coming soon');
+  const handleCancelListing = async (listing: FListing) => {
+    try {
+      await cancelListing.mutateAsync({ listingId: listing.id, tokenId: listing.token_id });
+      toast.success('Listing cancelled');
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to cancel');
+    }
+  };
+
+  const handleCancelOffer = async (offer: FOffer) => {
+    try {
+      await cancelOffer.mutateAsync({ offerId: offer.id, tokenId: offer.token_id });
+      toast.success('Offer cancelled');
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to cancel');
+    }
+  };
+
+  const handleAcceptOffer = async (offer: FOffer) => {
+    if (!walletAddress) return;
+    setTransferringOffer(offer.id);
+    try {
+      // Step 1: Transfer fractions to buyer
+      toast.info('Transferring fractions...');
+      const transferResult = await transferFractions(
+        offer.token_id,
+        walletAddress,
+        offer.buyer_address,
+        offer.quantity,
+        (offer.chain_id || BASE_CHAIN_ID) as ChainId
+      );
+      const receipt = await transferResult.wait();
+
+      // Step 2: Accept the offer in DB
+      await acceptOffer.mutateAsync({
+        offerId: offer.id,
+        tokenId: offer.token_id,
+        txHash: receipt.hash,
+      });
+
+      // Step 3: Record trade
+      await recordTrade.mutateAsync({
+        tokenId: offer.token_id,
+        sellerAddress: walletAddress,
+        buyerAddress: offer.buyer_address,
+        quantity: offer.quantity,
+        pricePerFraction: offer.price_per_fraction,
+        txHash: receipt.hash,
+        offerId: offer.id,
+        chainId: offer.chain_id,
+      });
+
+      toast.success(`Accepted offer! ${offer.quantity} fractions transferred.`);
+    } catch (err: any) {
+      console.error('Accept offer error:', err);
+      toast.error(err?.message || 'Failed to accept offer');
+    } finally {
+      setTransferringOffer(null);
+    }
+  };
+
+  const handleRejectOffer = async (offer: FOffer) => {
+    try {
+      await rejectOffer.mutateAsync({ offerId: offer.id, tokenId: offer.token_id });
+      toast.success('Offer rejected');
+    } catch (err: any) {
+      toast.error(err?.message || 'Failed to reject');
+    }
   };
 
   return (
@@ -187,10 +268,24 @@ function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketp
       {userOwnsFractions && (
         <ListFractionsDrawer 
           availableBalance={userHolding!.balance} 
+          tokenId={tokenId}
+          chainId={chainId}
           open={listDrawerOpen} 
           onOpenChange={setListDrawerOpen} 
         />
       )}
+      <BuyFractionDrawer
+        listing={buyListing}
+        open={!!buyListing}
+        onOpenChange={(v) => { if (!v) setBuyListing(null); }}
+      />
+      <MakeOfferDrawer
+        tokenId={tokenId}
+        chainId={chainId}
+        open={offerDrawerOpen}
+        onOpenChange={setOfferDrawerOpen}
+      />
+
       <Tabs defaultValue="listings" className="w-full">
         <TabsList className="w-full bg-transparent border-b border-white/10 rounded-none h-auto p-0">
           <TabsTrigger 
@@ -198,70 +293,186 @@ function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketp
             className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent bg-transparent py-3 text-white/60 data-[state=active]:text-white"
           >
             <Tag className="w-4 h-4 mr-2" />
-            Listings
+            Listings {listings.length > 0 && `(${listings.length})`}
           </TabsTrigger>
           <TabsTrigger 
             value="offers" 
             className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent bg-transparent py-3 text-white/60 data-[state=active]:text-white"
           >
             <HandCoins className="w-4 h-4 mr-2" />
-            Offers
+            Offers {offers.length > 0 && `(${offers.length})`}
           </TabsTrigger>
         </TabsList>
         
         {/* Listings Tab */}
         <TabsContent value="listings" className="p-4 mt-0">
-          <div className="text-center py-8">
-            <Tag className="w-8 h-8 text-white/20 mx-auto mb-2" />
-            <p className="text-white/40 text-sm">No listings yet</p>
-          </div>
+          {loadingListings ? (
+            <div className="flex justify-center py-6"><Loader2 className="w-5 h-5 text-white/40 animate-spin" /></div>
+          ) : listings.length === 0 ? (
+            <div className="text-center py-8">
+              <Tag className="w-8 h-8 text-white/20 mx-auto mb-2" />
+              <p className="text-white/40 text-sm">No listings yet</p>
+            </div>
+          ) : (
+            <div className="space-y-3 mb-4">
+              {listings.map((listing) => {
+                const isMine = walletAddress?.toLowerCase() === listing.seller_address.toLowerCase();
+                const available = listing.quantity - listing.filled_quantity;
+                return (
+                  <div key={listing.id} className="bg-white/5 rounded-xl p-3 border border-white/10">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-mono text-white/60">
+                        {truncateAddr(listing.seller_address)}
+                        {isMine && <span className="text-primary ml-1">(you)</span>}
+                      </span>
+                      <span className="text-xs text-white/40">
+                        {new Date(listing.created_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-white font-medium">{available} fractions</p>
+                        <p className="text-xs text-white/60">{listing.price_per_fraction} DHB each</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-white font-bold">{(available * listing.price_per_fraction).toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB</p>
+                        {isMine ? (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-red-400 hover:text-red-300 text-xs mt-1 h-7 px-2"
+                            onClick={() => handleCancelListing(listing)}
+                            disabled={cancelListing.isPending}
+                          >
+                            Cancel
+                          </Button>
+                        ) : (
+                          <Button
+                            size="sm"
+                            className="bg-white/10 hover:bg-white/20 text-white text-xs mt-1 h-7 px-3"
+                            onClick={() => setBuyListing(listing)}
+                          >
+                            Buy
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
           
-          <div className="space-y-3">
+          <div className="space-y-2">
             {userOwnsFractions && (
               <Button 
                 onClick={() => setListDrawerOpen(true)}
                 className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
               >
                 <Plus className="w-4 h-4 mr-2" />
-                List Your Fractions ({userHolding.balance} available)
+                List Your Fractions ({userHolding!.balance} available)
               </Button>
             )}
-            {!userOwnsFractions && (
-              <Button 
-                onClick={handleMakeOffer}
-                className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Make an Offer
-              </Button>
-            )}
+            <Button 
+              onClick={() => setOfferDrawerOpen(true)}
+              variant="ghost"
+              className="w-full text-white/60 hover:text-white"
+            >
+              <HandCoins className="w-4 h-4 mr-2" />
+              Make an Offer
+            </Button>
           </div>
         </TabsContent>
         
         {/* Offers Tab */}
         <TabsContent value="offers" className="p-4 mt-0">
-          <div className="text-center py-8">
-            <HandCoins className="w-8 h-8 text-white/20 mx-auto mb-2" />
-            <p className="text-white/40 text-sm">No offers yet</p>
-          </div>
+          {loadingOffers ? (
+            <div className="flex justify-center py-6"><Loader2 className="w-5 h-5 text-white/40 animate-spin" /></div>
+          ) : offers.length === 0 ? (
+            <div className="text-center py-8">
+              <HandCoins className="w-8 h-8 text-white/20 mx-auto mb-2" />
+              <p className="text-white/40 text-sm">No offers yet</p>
+            </div>
+          ) : (
+            <div className="space-y-3 mb-4">
+              {offers.map((offer) => {
+                const isBuyer = walletAddress?.toLowerCase() === offer.buyer_address.toLowerCase();
+                const isTargetedToMe = offer.target_seller && walletAddress?.toLowerCase() === offer.target_seller.toLowerCase();
+                const canRespond = userOwnsFractions && !isBuyer;
+                const isTransferring = transferringOffer === offer.id;
+                return (
+                  <div key={offer.id} className="bg-white/5 rounded-xl p-3 border border-white/10">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-mono text-white/60">
+                        {truncateAddr(offer.buyer_address)}
+                        {isBuyer && <span className="text-primary ml-1">(you)</span>}
+                      </span>
+                      <span className="px-2 py-0.5 text-xs rounded-full bg-yellow-500/20 text-yellow-400">
+                        {offer.status}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-white font-medium">{offer.quantity} fractions</p>
+                        <p className="text-xs text-white/60">{offer.price_per_fraction} DHB each</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-white font-bold">{(offer.quantity * offer.price_per_fraction).toLocaleString(undefined, { maximumFractionDigits: 2 })} DHB</p>
+                        {isBuyer ? (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-red-400 hover:text-red-300 text-xs mt-1 h-7 px-2"
+                            onClick={() => handleCancelOffer(offer)}
+                            disabled={cancelOffer.isPending}
+                          >
+                            Cancel
+                          </Button>
+                        ) : canRespond ? (
+                          <div className="flex gap-1 mt-1">
+                            <Button
+                              size="sm"
+                              className="bg-green-500/20 hover:bg-green-500/30 text-green-400 text-xs h-7 px-2"
+                              onClick={() => handleAcceptOffer(offer)}
+                              disabled={isTransferring}
+                            >
+                              {isTransferring ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Accept'}
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              className="text-red-400 hover:text-red-300 text-xs h-7 px-2"
+                              onClick={() => handleRejectOffer(offer)}
+                              disabled={isTransferring}
+                            >
+                              Reject
+                            </Button>
+                          </div>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
           
-          <div className="space-y-3">
+          <div className="space-y-2">
+            <Button 
+              onClick={() => setOfferDrawerOpen(true)}
+              className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Make an Offer
+            </Button>
             {userOwnsFractions && (
               <Button 
                 onClick={() => setListDrawerOpen(true)}
-                className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
+                variant="ghost"
+                className="w-full text-white/60 hover:text-white"
               >
-                <Plus className="w-4 h-4 mr-2" />
-                List Your Fractions ({userHolding.balance} available)
-              </Button>
-            )}
-            {!userOwnsFractions && (
-              <Button 
-                onClick={handleMakeOffer}
-                className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Make an Offer
+                <Tag className="w-4 h-4 mr-2" />
+                List Your Fractions ({userHolding!.balance} available)
               </Button>
             )}
           </div>
