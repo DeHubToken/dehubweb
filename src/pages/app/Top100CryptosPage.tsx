@@ -95,16 +95,16 @@ function UnifiedRow({ asset, rank, onClick }: { asset: UnifiedAsset; rank: numbe
           <span className="text-zinc-500 text-xs">{asset.symbol}</span>
         </div>
       </td>
-      <td className="py-3 px-3 text-white text-sm text-right font-mono">{formatPrice(asset.price)}</td>
-      <td className="py-3 px-3 text-right hidden sm:table-cell">
+      <td className="py-3 px-3 text-right text-zinc-300 text-sm font-mono">{formatLargeNumber(asset.marketCap)}</td>
+      <td className="py-3 px-3 text-white text-sm text-right font-mono hidden sm:table-cell">{formatPrice(asset.price)}</td>
+      <td className="py-3 px-3 text-right hidden lg:table-cell">
         {asset.change1h != null ? <PercentBadge value={asset.change1h} /> : '—'}
       </td>
-      <td className="py-3 px-3 text-right"><PercentBadge value={asset.change24h} /></td>
-      <td className="py-3 px-3 text-right hidden md:table-cell">
+      <td className="py-3 px-3 text-right hidden md:table-cell"><PercentBadge value={asset.change24h} /></td>
+      <td className="py-3 px-3 text-right hidden xl:table-cell">
         {asset.change7d != null ? <PercentBadge value={asset.change7d} /> : '—'}
       </td>
-      <td className="py-3 px-3 text-right text-zinc-300 text-sm font-mono hidden lg:table-cell">{formatLargeNumber(asset.marketCap)}</td>
-      <td className="py-3 px-3 text-right text-zinc-400 text-sm font-mono hidden xl:table-cell">{formatLargeNumber(asset.volume24h)}</td>
+      <td className="py-3 px-3 text-right text-zinc-400 text-sm font-mono hidden 2xl:table-cell">{formatLargeNumber(asset.volume24h)}</td>
     </tr>
   );
 }
@@ -215,18 +215,18 @@ export default function Top100CryptosPage() {
       )}
 
       {!isLoading && visibleAssets.length > 0 && (
-        <div className="overflow-x-auto rounded-lg border border-white/10">
-          <table className="w-full min-w-[760px] sm:min-w-0">
+        <div className="rounded-lg border border-white/10 overflow-hidden">
+          <table className="w-full">
             <thead>
               <tr className="border-b border-white/10 text-zinc-500 text-xs uppercase">
                 <th className="py-3 px-3 text-left">#</th>
                 <th className="py-3 px-3 text-left">Name</th>
-                <th className="py-3 px-3 text-right">Price</th>
-                <th className="py-3 px-3 text-right hidden sm:table-cell">1h</th>
-                <th className="py-3 px-3 text-right">24h</th>
-                <th className="py-3 px-3 text-right hidden md:table-cell">7d</th>
                 <th className="py-3 px-3 text-right">Market Cap</th>
-                <th className="py-3 px-3 text-right hidden xl:table-cell">Volume (24h)</th>
+                <th className="py-3 px-3 text-right hidden sm:table-cell">Price</th>
+                <th className="py-3 px-3 text-right hidden lg:table-cell">1h</th>
+                <th className="py-3 px-3 text-right hidden md:table-cell">24h</th>
+                <th className="py-3 px-3 text-right hidden xl:table-cell">7d</th>
+                <th className="py-3 px-3 text-right hidden 2xl:table-cell">Volume (24h)</th>
               </tr>
             </thead>
             <tbody>
