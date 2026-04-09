@@ -20,6 +20,7 @@ import { Settings2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
+import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { setTabSwitchTime } from '@/lib/gesture-state';
 import { useFeedPrefetch, clearPrefetchState } from '@/hooks/use-feed-prefetch';
 import { clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
@@ -74,60 +75,7 @@ export default function HomePage() {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isCollapsed } = useSidebarCollapse();
-  const feedNavRef = useRef<HTMLDivElement>(null);
-
-  // Hide/show feed nav on mobile based on scroll direction (direct DOM — no re-render)
-  useEffect(() => {
-    const el = feedNavRef.current;
-    if (!el) return;
-    const TOP_THRESHOLD = 60;
-    let lastY = 0;
-    let touchStartY = 0;
-
-    const getScrollY = () =>
-      window.scrollY ||
-      document.documentElement.scrollTop ||
-      document.body.scrollTop ||
-      (document.getElementById('app-root')?.scrollTop ?? 0) ||
-      (document.querySelector('main')?.scrollTop ?? 0);
-
-    lastY = getScrollY();
-
-    const show = () => { el.style.transform = 'translateY(0)'; };
-    const hide = () => { el.style.transform = 'translateY(-100%)'; };
-
-    const onScroll = () => {
-      if (window.innerWidth >= 1024) return;
-      const y = getScrollY();
-      const diff = y - lastY;
-      lastY = y;
-      if (y <= TOP_THRESHOLD) { show(); return; }
-      if (diff > 2) hide();
-      else if (diff < -2) show();
-    };
-
-    const onTouchStart = (e: TouchEvent) => { touchStartY = e.touches[0].clientY; };
-    const onTouchMove = (e: TouchEvent) => {
-      if (window.innerWidth >= 1024) return;
-      const y = getScrollY();
-      if (y <= TOP_THRESHOLD) { show(); return; }
-      const moved = touchStartY - e.touches[0].clientY;
-      if (moved > 10) hide();
-      else if (moved < -10) show();
-    };
-
-    // capture:true catches scroll from ANY container (not just window)
-    document.addEventListener('scroll', onScroll, { passive: true, capture: true });
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('touchstart', onTouchStart, { passive: true });
-    window.addEventListener('touchmove', onTouchMove, { passive: true });
-    return () => {
-      document.removeEventListener('scroll', onScroll, { capture: true });
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('touchstart', onTouchStart);
-      window.removeEventListener('touchmove', onTouchMove);
-    };
-  }, []);
+  const navVisible = useScrollDirection();
 
   // Detect back navigation for tab-change scroll logic
   // Note: Actual scroll position restoration is handled by AppLayout
@@ -662,7 +610,10 @@ export default function HomePage() {
       <SEOHead title="DeHub - Home Feed" description="Censorship resistant and chronological, with no shady algorithm. Your feed on DeHub — the open source, user owned social media platform." url="https://dehub.io/app" jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Home Feed', url: 'https://dehub.io/app', description: 'Censorship resistant, chronological social media feed with no algorithm.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">DeHub Home — Decentralised Social Media Feed, Censorship Resistant & Freedom of Speech</h1>
       {/* Tab Navigation */}
-      <div ref={feedNavRef} className={cn("sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 lg:mt-0 transition-transform duration-300 ease-in-out", isCollapsed && "pl-2 pr-0", isCollapsed && "lg:hidden")}>
+      <div
+        className={cn("sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 lg:mt-0 transition-transform duration-300 ease-in-out", isCollapsed && "pl-2 pr-0", isCollapsed && "lg:hidden")}
+        style={{ transform: navVisible ? 'translateY(0)' : 'translateY(-110%)', willChange: 'transform' }}
+      >
         <div className="bg-zinc-900 rounded-xl overflow-visible">
           <div ref={homeTabLayerRef} className="relative overflow-visible">
             <GlassIndicator ref={homeIndicatorRef} rect={homeTabRect} borderRadius="0.75rem" layoutKey={`home-${isCollapsed}-${activeTab}`} enableTransition={!isHomeDragging && enableHomeTransition} fixedHeightPx={35} />
