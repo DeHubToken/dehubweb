@@ -1,36 +1,37 @@
 
 
-## Plan: Improve Stock Logo Coverage
+## Add "Assets" Button to Leaderboard Category Tabs
 
-### Problem
-The `TickerLogo` component already tries Synth Finance for stock logos, but many fail silently — resulting in letter-circle fallbacks for Netflix, Visa, Eli Lilly, etc.
+### What
+Add an "Assets" tab/button alongside the existing category tabs (Holdings, Spent, Earned, Followers, Likes, Subscribers) in the leaderboard page. When clicked, it navigates to `/app/top-100` instead of filtering the leaderboard.
 
-### Solution
-Add **Clearbit** (`logo.clearbit.com/{domain}`) as a second stock logo source. It's free, no API key, and has excellent coverage for public companies. We just need a symbol-to-domain mapping.
+### How
 
-### Changes
+**File: `src/pages/app/LeaderboardPage.tsx`**
 
-**File: `src/components/app/TickerLogo.tsx`**
+1. Import `TrendingUp` (or `BarChart3`) icon from lucide-react for the Assets button.
+2. After the `GlassFilterRow` (or appended to its items), add an "Assets" item that, when selected, navigates to `/app/top-100` via `navigate('/app/top-100')` instead of setting a category.
+3. The cleanest approach: append a special entry to the `items` array passed to `GlassFilterRow` with key `'assets'`. In the `onSelect` handler, intercept the `'assets'` key to call `navigate('/app/top-100')` and skip the normal category state change.
 
-1. Add a `STOCK_DOMAINS` map for the ~35 assets in the Top Assets list:
-   ```
-   NFLX → netflix.com, V → visa.com, LLY → lilly.com,
-   AMZN → amazon.com, NVDA → nvidia.com, META → meta.com,
-   TSLA → tesla.com, WMT → walmart.com, XOM → exxonmobil.com,
-   UNH → unitedhealthgroup.com, MA → mastercard.com,
-   HD → homedepot.com, PG → pg.com, JNJ → jnj.com,
-   COST → costco.com, ABBV → abbvie.com, BAC → bankofamerica.com,
-   KO → coca-cola.com, CRM → salesforce.com, ORCL → oracle.com,
-   NFLX → netflix.com, AMD → amd.com, etc.
-   ```
+### Technical Detail
 
-2. Update the fallback chain: if Synth Finance fails, try `https://logo.clearbit.com/{domain}` before falling through to the letter fallback.
+In the `onSelect` callback (~line 337):
+```ts
+onSelect={(key) => {
+  if (key === 'assets') {
+    navigate('/app/top-100');
+    return;
+  }
+  setCategory(key as CategoryType);
+  setSortDirection('desc');
+}}
+```
 
-This means every stock in the Top Assets list will show a proper company logo — no API key needed, no edge function required.
+In the `items` array (~line 335), append:
+```ts
+...categories.map(...),
+{ key: 'assets', label: <span className="flex items-center gap-1.5"><TrendingUp className="w-4 h-4" />Assets</span> }
+```
 
-### Why not the others?
-- **Logo.dev** requires a token (even free tier)
-- **Google Favicons** are low quality at 24px
-- **Brandfetch** requires an API key
-- **Clearbit** is free, no key, high quality, and covers all major public companies
+This keeps it visually consistent with the other tabs — one line change to the items array and a small guard in the handler.
 
