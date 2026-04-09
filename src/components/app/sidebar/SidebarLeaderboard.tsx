@@ -252,7 +252,7 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
   return (
     <div className="flex flex-col h-full">
       {/* Period filter row */}
-      <div className="flex px-4 py-2">
+      <div className="flex px-4 pt-0 pb-1">
         {PERIODS.map((period) => (
           <button
             key={period}
