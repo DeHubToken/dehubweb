@@ -23,7 +23,6 @@ import medal8 from '@/assets/medal-8.png';
 import medal9 from '@/assets/medal-9.png';
 import medal10 from '@/assets/medal-10.png';
 
-import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAuthPrompt, AuthPrompt } from '@/components/app/AuthPrompt';
