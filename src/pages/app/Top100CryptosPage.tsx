@@ -8,6 +8,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { TickerLogo } from '@/components/app/TickerLogo';
 import appleLogoImg from '@/assets/logo-apple.png';
 import googleLogoImg from '@/assets/logo-google.png';
+import microsoftLogoImg from '@/assets/logo-microsoft.png';
 
 const PAGE_SIZE = 100;
 
@@ -72,6 +73,7 @@ function AssetLogoElement({ asset }: { asset: TopAsset }) {
   if (asset.symbol === 'SILVER') return <SilverIcon />;
   if (asset.symbol === 'AAPL') return <img src={appleLogoImg} alt="Apple" className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
   if (asset.symbol === 'GOOGL') return <img src={googleLogoImg} alt="Google" className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
+  if (asset.symbol === 'MSFT') return <img src={microsoftLogoImg} alt="Microsoft" className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
   return <TickerLogo symbol={asset.symbol} size={24} />;
 }
 
