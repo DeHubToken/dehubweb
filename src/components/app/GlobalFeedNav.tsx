@@ -16,6 +16,7 @@ import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
+import { useScrollDirection } from '@/hooks/use-scroll-direction';
 
 const HOME_STATE_STORAGE_KEY = 'home-feed-state';
 const HOME_TAB_SWITCH_EVENT = 'switch-home-tab';
@@ -35,6 +36,7 @@ function getPersistedTab(): string {
 export function GlobalFeedNav() {
   const location = useLocation();
   const navigate = useNavigate();
+  const navVisible = useScrollDirection();
   const isHomePage = location.pathname === '/app';
 
   const [activeTab, setActiveTab] = useState(() => isHomePage ? getPersistedTab() : '');
@@ -188,7 +190,11 @@ export function GlobalFeedNav() {
   }, [isHomePage, activeTab]);
 
   return (
-    <div className="sticky top-0 bg-black z-50 p-2 sm:p-3 pb-2 sm:pb-2">
+    <div className={cn(
+      "sticky top-0 bg-black z-50 p-2 sm:p-3 pb-2 sm:pb-2",
+      "transition-transform duration-300 ease-in-out",
+      !navVisible && "-translate-y-full lg:translate-y-0"
+    )}>
       <div className="bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
         <div ref={layerRef} className="relative overflow-visible">
           <GlassIndicator rect={dragDisplayRect} borderRadius="0.75rem" layoutKey={`global-nav-${activeTab}`} enableTransition={!isDragging && enableTransition} fixedHeightPx={35} />
