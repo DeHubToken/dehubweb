@@ -209,11 +209,14 @@ export function renderTextWithLinks(text: string): ReactNode[] {
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center hover:scale-110 transition-transform cursor-pointer"
+          className="inline-flex items-center hover:scale-110 transition-transform cursor-pointer relative z-10"
           onClick={(e) => {
+            e.preventDefault();
             e.stopPropagation();
             window.open(href, '_blank', 'noopener,noreferrer');
           }}
+          onPointerDown={(e) => e.stopPropagation()}
+          onMouseDown={(e) => e.stopPropagation()}
           title={url}
           data-no-navigate="true"
         >
