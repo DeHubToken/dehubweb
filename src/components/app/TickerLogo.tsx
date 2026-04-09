@@ -29,6 +29,61 @@ const KNOWN_LOGOS: Record<string, string> = {
   USDC: 'https://coin-images.coingecko.com/coins/images/6319/large/usdc.png',
 };
 
+/** Stock/ETF symbol → company domain for Clearbit logo fallback */
+const STOCK_DOMAINS: Record<string, string> = {
+  AAPL: 'apple.com',
+  MSFT: 'microsoft.com',
+  NVDA: 'nvidia.com',
+  AMZN: 'amazon.com',
+  GOOG: 'google.com',
+  GOOGL: 'google.com',
+  META: 'meta.com',
+  TSLA: 'tesla.com',
+  'BRK-B': 'berkshirehathaway.com',
+  'BRK.B': 'berkshirehathaway.com',
+  'BRK-A': 'berkshirehathaway.com',
+  TSM: 'tsmc.com',
+  AVGO: 'broadcom.com',
+  JPM: 'jpmorganchase.com',
+  LLY: 'lilly.com',
+  V: 'visa.com',
+  UNH: 'unitedhealthgroup.com',
+  MA: 'mastercard.com',
+  WMT: 'walmart.com',
+  XOM: 'exxonmobil.com',
+  HD: 'homedepot.com',
+  PG: 'pg.com',
+  JNJ: 'jnj.com',
+  COST: 'costco.com',
+  ABBV: 'abbvie.com',
+  BAC: 'bankofamerica.com',
+  KO: 'coca-cola.com',
+  NFLX: 'netflix.com',
+  CRM: 'salesforce.com',
+  ORCL: 'oracle.com',
+  AMD: 'amd.com',
+  MRK: 'merck.com',
+  PEP: 'pepsico.com',
+  TMO: 'thermofisher.com',
+  CSCO: 'cisco.com',
+  ABT: 'abbott.com',
+  DHR: 'danaher.com',
+  CMCSA: 'comcast.com',
+  NKE: 'nike.com',
+  DIS: 'disney.com',
+  INTC: 'intel.com',
+  VZ: 'verizon.com',
+  ADBE: 'adobe.com',
+  QCOM: 'qualcomm.com',
+  TXN: 'ti.com',
+  INTU: 'intuit.com',
+  PM: 'pmi.com',
+  IBM: 'ibm.com',
+  GE: 'ge.com',
+  CAT: 'caterpillar.com',
+  BA: 'boeing.com',
+};
+
 /**
  * Fetches a token logo URL from DexScreener search API.
  */
@@ -75,18 +130,21 @@ async function fetchCoinGeckoLogo(symbol: string): Promise<string | null> {
  * Displays a token/stock logo with multiple fallback sources:
  * 0. Known hardcoded logos (instant, no fetch)
  * 1. Synth Finance (stocks)
- * 2. CoinGecko (crypto) — fetched in parallel with Synth
- * 3. DexScreener (crypto) — fetched if CoinGecko misses
- * 4. First-letter fallback
+ * 2. Clearbit (stocks — domain-based fallback)
+ * 3. CoinGecko (crypto)
+ * 4. DexScreener (crypto)
+ * 5. First-letter fallback
  */
 export function TickerLogo({ symbol, size = 16, className = '' }: TickerLogoProps) {
   const [synthFailed, setSynthFailed] = useState(false);
+  const [clearbitFailed, setClearbitFailed] = useState(false);
   const [cgImgFailed, setCgImgFailed] = useState(false);
   const [dexFailed, setDexFailed] = useState(false);
   const clean = symbol.replace(/^\$/, '').toUpperCase();
 
   // 0. Hardcoded known logos — instant render
   const knownLogo = KNOWN_LOGOS[clean];
+  const stockDomain = STOCK_DOMAINS[clean];
 
   // 1. CoinGecko — always fetch (fast, reliable for crypto)
   const { data: cgLogo, isFetched: cgFetched } = useQuery({
@@ -101,7 +159,7 @@ export function TickerLogo({ symbol, size = 16, className = '' }: TickerLogoProp
   const { data: dexLogo } = useQuery({
     queryKey: ['ticker-logo-dex', clean],
     queryFn: () => fetchDexLogo(clean),
-    enabled: !knownLogo && cgFetched && !cgLogo && synthFailed,
+    enabled: !knownLogo && cgFetched && !cgLogo && synthFailed && (!stockDomain || clearbitFailed),
     staleTime: 5 * 60_000,
     retry: false,
   });
@@ -126,6 +184,22 @@ export function TickerLogo({ symbol, size = 16, className = '' }: TickerLogoProp
         height={size}
         className={imgClass}
         onError={() => setSynthFailed(true)}
+        loading="lazy"
+      />
+    );
+  }
+
+  // Clearbit (stocks) — domain-based fallback
+  if (stockDomain && !clearbitFailed) {
+    const clearbitUrl = `https://logo.clearbit.com/${stockDomain}`;
+    return (
+      <img
+        src={clearbitUrl}
+        alt={clean}
+        width={size}
+        height={size}
+        className={`shrink-0 rounded-full object-contain bg-white p-0.5 ${className}`}
+        onError={() => setClearbitFailed(true)}
         loading="lazy"
       />
     );
