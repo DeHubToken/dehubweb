@@ -70,7 +70,7 @@ async function fetchTopAssets(): Promise<TopAsset[]> {
 
 export function useTopAssets() {
   return useQuery({
-    queryKey: ['top-assets', 'v5'],
+    queryKey: ['top-assets', 'v6'],
     queryFn: fetchTopAssets,
     staleTime: 300_000,
     gcTime: 600_000,
