@@ -78,7 +78,10 @@ function AssetLogoElement({ asset }: { asset: TopAsset }) {
   if (asset.symbol === 'AAPL') return <img src={appleLogoImg} alt="Apple" className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
   if (asset.symbol === 'GOOGL') return <img src={googleLogoImg} alt="Google" className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
   if (asset.symbol === 'MSFT') return <img src={microsoftLogoImg} alt="Microsoft" className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
-  return <TickerLogo symbol={asset.symbol} size={24} />;
+  if (asset.symbol === 'BRK-B' || asset.symbol === 'BRK.B' || asset.symbol === 'BRK-A') return <img src={berkshireLogoImg} alt="Berkshire Hathaway" className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
+  if (asset.symbol === 'TSM') return <img src={tsmcLogoImg} alt="TSMC" className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
+  if (asset.symbol === 'AVGO') return <img src={broadcomLogoImg} alt="Broadcom" className="w-6 h-6 rounded-full object-cover" />;
+  if (asset.symbol === 'JPM') return <img src={jpmcLogoImg} alt="JPMorgan" className="w-6 h-6 rounded-full object-cover" />;
 }
 
 function CoinLogo({ coin }: { coin: CmcCoin }) {
