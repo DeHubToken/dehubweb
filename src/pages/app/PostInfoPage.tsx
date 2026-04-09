@@ -192,6 +192,8 @@ function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketp
     ? holders.find(h => h.address.toLowerCase() === walletAddress.toLowerCase())
     : null;
   const userOwnsFractions = !!userHolding && userHolding.balance > 0;
+  const userOwnsAllFractions = !!userHolding && userHolding.balance >= 1000;
+  const otherHoldersExist = holders.some(h => h.address.toLowerCase() !== walletAddress?.toLowerCase() && h.balance > 0);
 
   const handleCancelListing = async (listing: FListing) => {
     try {
@@ -373,14 +375,16 @@ function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketp
                 List Your Fractions ({userHolding!.balance} available)
               </Button>
             )}
-            <Button 
-              onClick={() => setOfferDrawerOpen(true)}
-              variant="ghost"
-              className="w-full text-white/60 hover:text-white"
-            >
-              <HandCoins className="w-4 h-4 mr-2" />
-              Make an Offer
-            </Button>
+            {!userOwnsAllFractions && (
+              <Button 
+                onClick={() => setOfferDrawerOpen(true)}
+                variant="ghost"
+                className="w-full text-white/60 hover:text-white"
+              >
+                <HandCoins className="w-4 h-4 mr-2" />
+                Make an Offer
+              </Button>
+            )}
           </div>
         </TabsContent>
         
@@ -458,13 +462,15 @@ function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketp
           )}
           
           <div className="space-y-2">
-            <Button 
-              onClick={() => setOfferDrawerOpen(true)}
-              className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Make an Offer
-            </Button>
+            {!userOwnsAllFractions && (
+              <Button 
+                onClick={() => setOfferDrawerOpen(true)}
+                className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Make an Offer
+              </Button>
+            )}
             {userOwnsFractions && (
               <Button 
                 onClick={() => setListDrawerOpen(true)}

@@ -39,6 +39,10 @@ export function MakeOfferDrawer({ tokenId, chainId, targetSeller, open, onOpenCh
       toast.error('Please sign in first');
       return;
     }
+    if (targetSeller && walletAddress.toLowerCase() === targetSeller.toLowerCase()) {
+      toast.error('You cannot make an offer on your own fractions');
+      return;
+    }
     if (!isValid) return;
 
     setIsSubmitting(true);
