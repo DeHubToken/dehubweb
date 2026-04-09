@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck, Scroll } from 'lucide-react';
+import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck, Scroll, Map } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
 import { AuthPrompt } from './AuthPrompt';
@@ -35,6 +35,7 @@ const SCROLL_NAV_ITEMS = [
   { icon: Bookmark, label: 'Bookmarks', path: '/app/bookmarks' },
   { icon: Settings, label: 'Settings', path: '/app/settings' },
   { icon: Lightbulb, label: 'Features', path: '/features' },
+  { icon: Map, label: 'Guide', path: '/guide' },
   { icon: BookOpen, label: 'Docs', path: 'https://docs.dhb.gg', external: true },
   { icon: FileText, label: 'Blog', path: '/docs/blog' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
