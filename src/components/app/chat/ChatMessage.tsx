@@ -4,6 +4,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { TranslatableText, renderTextWithLinks } from '../TranslatableText';
+import { ChatLinkPreviews } from './ChatLinkPreviews';
 import { useTranslation as useTextTranslation } from '../TranslatableText';
 import { useNavigate } from 'react-router-dom';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
@@ -445,6 +446,11 @@ export function ChatMessage({
               className="max-w-xs max-h-48 rounded-lg"
             />
           </div>
+        )}
+
+        {/* Link preview cards for URLs in message */}
+        {message.type === 'text' && message.content && (
+          <ChatLinkPreviews content={message.content} />
         )}
 
         {/* Reactions display */}
