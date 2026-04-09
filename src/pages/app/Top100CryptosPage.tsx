@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { useEffect, useRef, useCallback, useMemo, useState } from 'react';
 import { useCmcTop100, type CmcCoin } from '@/hooks/use-cmc-top-100';
 import { useTopAssets, type TopAsset } from '@/hooks/use-top-assets';
 import { useNavigate } from 'react-router-dom';
@@ -7,8 +7,6 @@ import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
 
 const PAGE_SIZE = 100;
-
-type SortMode = 'default' | 'market_cap';
 
 interface UnifiedAsset {
   id: string;
@@ -116,10 +114,8 @@ export default function Top100CryptosPage() {
   const { data: assets, isLoading: assetsLoading } = useTopAssets();
   const navigate = useNavigate();
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const [sortMode, setSortMode] = useState<SortMode>('market_cap');
   const sentinelRef = useRef<HTMLDivElement>(null);
 
-  // Merge all assets into a unified list
   const allAssets = useMemo(() => {
     const unified: UnifiedAsset[] = [];
 
@@ -162,13 +158,10 @@ export default function Top100CryptosPage() {
       }
     }
 
-    if (sortMode === 'market_cap') {
-      unified.sort((a, b) => b.marketCap - a.marketCap);
-    }
-    // 'default' keeps insertion order: traditional first, then crypto by CMC rank
+    unified.sort((a, b) => b.marketCap - a.marketCap);
 
     return unified;
-  }, [assets, coins, sortMode]);
+  }, [assets, coins]);
 
   const hasMore = allAssets.length > visibleCount;
   const visibleAssets = allAssets.slice(0, visibleCount);
@@ -201,34 +194,12 @@ export default function Top100CryptosPage() {
         <button onClick={() => navigate(-1)} className="text-zinc-400 hover:text-white transition-colors">
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <h2 className="text-xl font-bold text-white">Top Assets</h2>
-        {!isLoading && (
-          <span className="text-zinc-500 text-sm">
+        <h2 className="text-xl font-bold text-white shrink-0">Top Assets</h2>
+        {!isLoading && allAssets.length > 0 && (
+          <span className="text-zinc-500 text-sm min-w-0 truncate">
             Showing {visibleAssets.length.toLocaleString()} of {allAssets.length.toLocaleString()}
           </span>
         )}
-      </div>
-
-      {/* Sort tabs */}
-      <div className="flex gap-2 mb-4">
-        <button
-          onClick={() => setSortMode('market_cap')}
-          className={cn(
-            'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-            sortMode === 'market_cap' ? 'bg-primary text-primary-foreground' : 'bg-white/5 text-zinc-400 hover:text-white'
-          )}
-        >
-          Market Cap
-        </button>
-        <button
-          onClick={() => setSortMode('default')}
-          className={cn(
-            'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-            sortMode === 'default' ? 'bg-primary text-primary-foreground' : 'bg-white/5 text-zinc-400 hover:text-white'
-          )}
-        >
-          Default
-        </button>
       </div>
 
       {isLoading && (
@@ -245,7 +216,7 @@ export default function Top100CryptosPage() {
 
       {!isLoading && visibleAssets.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-white/10">
-          <table className="w-full">
+          <table className="w-full min-w-[760px] sm:min-w-0">
             <thead>
               <tr className="border-b border-white/10 text-zinc-500 text-xs uppercase">
                 <th className="py-3 px-3 text-left">#</th>
@@ -254,7 +225,7 @@ export default function Top100CryptosPage() {
                 <th className="py-3 px-3 text-right hidden sm:table-cell">1h</th>
                 <th className="py-3 px-3 text-right">24h</th>
                 <th className="py-3 px-3 text-right hidden md:table-cell">7d</th>
-                <th className="py-3 px-3 text-right hidden lg:table-cell">Market Cap</th>
+                <th className="py-3 px-3 text-right">Market Cap</th>
                 <th className="py-3 px-3 text-right hidden xl:table-cell">Volume (24h)</th>
               </tr>
             </thead>
