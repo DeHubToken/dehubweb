@@ -262,7 +262,7 @@ export default function Top100CryptosPage() {
               <tr className="border-b border-white/10 text-zinc-500 text-xs uppercase">
                 <th className="py-3 px-3 text-left">#</th>
                 <th className="py-3 px-3 text-left">Name</th>
-                <th className="py-3 px-3 text-right">Market Cap</th>
+                <th className="py-3 px-3 text-right whitespace-nowrap">Market Cap</th>
                 <th className="py-3 px-3 text-right whitespace-nowrap">Price</th>
                 <th className="py-3 px-3 text-right hidden lg:table-cell">1h</th>
                 <th className="py-3 px-3 text-right whitespace-nowrap">24h</th>
