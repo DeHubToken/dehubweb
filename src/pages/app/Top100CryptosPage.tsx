@@ -6,6 +6,8 @@ import { ArrowLeft, TrendingUp, TrendingDown, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
 import { TickerLogo } from '@/components/app/TickerLogo';
+import appleLogoImg from '@/assets/logo-apple.png';
+import googleLogoImg from '@/assets/logo-google.png';
 
 const PAGE_SIZE = 100;
 
@@ -51,7 +53,7 @@ function PercentBadge({ value }: { value: number }) {
 
 function GoldIcon() {
   return (
-    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-gradient-to-br from-[hsl(var(--accent))] to-[hsl(var(--primary))] text-[hsl(var(--accent-foreground))]">
+    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-gradient-to-br from-[#FFD700] to-[#B8860B] text-black">
       Au
     </div>
   );
@@ -59,7 +61,7 @@ function GoldIcon() {
 
 function SilverIcon() {
   return (
-    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-[hsl(var(--muted))] text-[hsl(var(--foreground))] border border-border">
+    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-gradient-to-br from-[#E0E0E0] to-[#A0A0A0] text-black">
       Ag
     </div>
   );
@@ -68,6 +70,8 @@ function SilverIcon() {
 function AssetLogoElement({ asset }: { asset: TopAsset }) {
   if (asset.symbol === 'GOLD') return <GoldIcon />;
   if (asset.symbol === 'SILVER') return <SilverIcon />;
+  if (asset.symbol === 'AAPL') return <img src={appleLogoImg} alt="Apple" className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
+  if (asset.symbol === 'GOOGL') return <img src={googleLogoImg} alt="Google" className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
   return <TickerLogo symbol={asset.symbol} size={24} />;
 }
 
