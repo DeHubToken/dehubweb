@@ -969,6 +969,158 @@ export type Database = {
         }
         Relationships: []
       }
+      fraction_listings: {
+        Row: {
+          chain_id: number
+          created_at: string
+          filled_quantity: number
+          id: string
+          price_per_fraction: number
+          quantity: number
+          seller_address: string
+          status: string
+          token_id: string
+          updated_at: string
+        }
+        Insert: {
+          chain_id?: number
+          created_at?: string
+          filled_quantity?: number
+          id?: string
+          price_per_fraction: number
+          quantity: number
+          seller_address: string
+          status?: string
+          token_id: string
+          updated_at?: string
+        }
+        Update: {
+          chain_id?: number
+          created_at?: string
+          filled_quantity?: number
+          id?: string
+          price_per_fraction?: number
+          quantity?: number
+          seller_address?: string
+          status?: string
+          token_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      fraction_offers: {
+        Row: {
+          buyer_address: string
+          chain_id: number
+          created_at: string
+          id: string
+          listing_id: string | null
+          price_per_fraction: number
+          quantity: number
+          status: string
+          target_seller: string | null
+          token_id: string
+          tx_hash: string | null
+          updated_at: string
+        }
+        Insert: {
+          buyer_address: string
+          chain_id?: number
+          created_at?: string
+          id?: string
+          listing_id?: string | null
+          price_per_fraction: number
+          quantity: number
+          status?: string
+          target_seller?: string | null
+          token_id: string
+          tx_hash?: string | null
+          updated_at?: string
+        }
+        Update: {
+          buyer_address?: string
+          chain_id?: number
+          created_at?: string
+          id?: string
+          listing_id?: string | null
+          price_per_fraction?: number
+          quantity?: number
+          status?: string
+          target_seller?: string | null
+          token_id?: string
+          tx_hash?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fraction_offers_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "fraction_listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      fraction_trades: {
+        Row: {
+          buyer_address: string
+          chain_id: number
+          created_at: string
+          id: string
+          listing_id: string | null
+          offer_id: string | null
+          price_per_fraction: number
+          quantity: number
+          seller_address: string
+          token_id: string
+          total_dhb: number
+          tx_hash: string | null
+        }
+        Insert: {
+          buyer_address: string
+          chain_id?: number
+          created_at?: string
+          id?: string
+          listing_id?: string | null
+          offer_id?: string | null
+          price_per_fraction: number
+          quantity: number
+          seller_address: string
+          token_id: string
+          total_dhb: number
+          tx_hash?: string | null
+        }
+        Update: {
+          buyer_address?: string
+          chain_id?: number
+          created_at?: string
+          id?: string
+          listing_id?: string | null
+          offer_id?: string | null
+          price_per_fraction?: number
+          quantity?: number
+          seller_address?: string
+          token_id?: string
+          total_dhb?: number
+          tx_hash?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fraction_trades_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "fraction_listings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fraction_trades_offer_id_fkey"
+            columns: ["offer_id"]
+            isOneToOne: false
+            referencedRelation: "fraction_offers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       governance_comments: {
         Row: {
           avatar: string | null
