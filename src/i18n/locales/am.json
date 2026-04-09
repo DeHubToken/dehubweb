@@ -22,7 +22,8 @@
     "create": "ፍጠር",
     "login": "ግባ",
     "connecting": "እየተገናኘ...",
-    "signMessage": "መልዕክት ፈርም"
+    "signMessage": "መልዕክት ፈርም",
+    "guide": "መመሪያ"
   },
   "feed": {
     "home": "መነሻ",

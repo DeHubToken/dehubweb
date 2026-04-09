@@ -22,7 +22,8 @@
     "create": "Waihanga",
     "login": "Takiuru",
     "connecting": "Hono ana...",
-    "signMessage": "Hainatia te karere"
+    "signMessage": "Hainatia te karere",
+    "guide": "Aratohu"
   },
   "feed": {
     "home": "Kāinga",

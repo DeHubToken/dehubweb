@@ -22,7 +22,8 @@
     "create": "Жасау",
     "login": "Кіру",
     "connecting": "Қосылуда...",
-    "signMessage": "Хабарды қол қою"
+    "signMessage": "Хабарды қол қою",
+    "guide": "Нұсқаулық"
   },
   "feed": {
     "home": "Басты бет",

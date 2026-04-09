@@ -22,7 +22,8 @@
     "create": "إنشاء",
     "login": "تسجيل الدخول",
     "connecting": "جاري الاتصال...",
-    "signMessage": "توقيع الرسالة"
+    "signMessage": "توقيع الرسالة",
+    "guide": "دليل"
   },
   "feed": {
     "home": "الرئيسية",

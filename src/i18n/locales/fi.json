@@ -22,7 +22,8 @@
     "create": "Luo",
     "login": "Kirjaudu sisään",
     "connecting": "Yhdistetään...",
-    "signMessage": "Allekirjoita viesti"
+    "signMessage": "Allekirjoita viesti",
+    "guide": "Opas"
   },
   "feed": {
     "home": "Koti",

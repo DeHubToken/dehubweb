@@ -22,7 +22,8 @@
     "create": "Түзүү",
     "login": "Кирүү",
     "connecting": "Туташууда...",
-    "signMessage": "Кабарга кол коюу"
+    "signMessage": "Кабарга кол коюу",
+    "guide": "Колдонмо"
   },
   "feed": {
     "home": "Башкы бет",

@@ -22,7 +22,8 @@
     "create": "Skep",
     "login": "Meld aan",
     "connecting": "Verbind tans...",
-    "signMessage": "Teken boodskap"
+    "signMessage": "Teken boodskap",
+    "guide": "Gids"
   },
   "home": {
     "title": "Volhoubare Web3-infrastruktuur",

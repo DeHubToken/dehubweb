@@ -22,7 +22,8 @@
     "create": "Uumi",
     "login": "Seeni",
     "connecting": "Walqunnamaa...",
-    "signMessage": "Ergaa Mallatteessi"
+    "signMessage": "Ergaa Mallatteessi",
+    "guide": "Guide"
   },
   "feed": {
     "home": "Mana",

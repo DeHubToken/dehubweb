@@ -22,7 +22,8 @@
     "create": "Erstelle",
     "login": "Aamälde",
     "connecting": "Am Verbinde...",
-    "signMessage": "Nachricht unterschriibe"
+    "signMessage": "Nachricht unterschriibe",
+    "guide": "Guide"
   },
   "feed": {
     "home": "Hei",

@@ -22,7 +22,8 @@
     "create": "Cipta",
     "login": "Log masuk",
     "connecting": "Menyambung...",
-    "signMessage": "Tandatangan mesej"
+    "signMessage": "Tandatangan mesej",
+    "guide": "Panduan"
   },
   "common": {
     "yes": "Ya",

@@ -22,7 +22,8 @@
     "create": "Krijo",
     "login": "Hyr",
     "connecting": "Po lidhet...",
-    "signMessage": "Nënshkruaj mesazhin"
+    "signMessage": "Nënshkruaj mesazhin",
+    "guide": "Udhëzues"
   },
   "feed": {
     "home": "Kryefaqja",

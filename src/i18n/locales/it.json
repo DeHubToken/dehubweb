@@ -22,7 +22,8 @@
     "create": "Crea",
     "login": "Accedi",
     "connecting": "Connessione...",
-    "signMessage": "Firma messaggio"
+    "signMessage": "Firma messaggio",
+    "guide": "Guida"
   },
   "feed": {
     "home": "Home",

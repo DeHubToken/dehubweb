@@ -22,7 +22,8 @@
     "create": "Create",
     "login": "Log in",
     "connecting": "E dey connect...",
-    "signMessage": "Sign message"
+    "signMessage": "Sign message",
+    "guide": "Guide"
   },
   "feed": {
     "home": "Home",

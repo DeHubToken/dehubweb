@@ -22,7 +22,8 @@
     "create": "Buat",
     "login": "Masuk",
     "connecting": "Menghubungkan...",
-    "signMessage": "Tanda tangani pesan"
+    "signMessage": "Tanda tangani pesan",
+    "guide": "Panduan"
   },
   "feed": {
     "home": "Beranda",

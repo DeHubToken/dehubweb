@@ -22,7 +22,8 @@
     "create": "Loo",
     "login": "Logi sisse",
     "connecting": "Ühendamine...",
-    "signMessage": "Allkirjasta sõnum"
+    "signMessage": "Allkirjasta sõnum",
+    "guide": "Juhend"
   },
   "feed": {
     "home": "Avaleht",

@@ -22,7 +22,8 @@
     "create": "बनाओ",
     "login": "लॉग इन",
     "connecting": "कनेक्ट हो रहल बा...",
-    "signMessage": "संदेश साइन करो"
+    "signMessage": "संदेश साइन करो",
+    "guide": "Guide"
   },
   "feed": {
     "home": "घर",

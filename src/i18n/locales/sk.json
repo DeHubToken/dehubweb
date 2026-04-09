@@ -22,7 +22,8 @@
     "create": "Vytvoriť",
     "login": "Prihlásiť sa",
     "connecting": "Pripájanie...",
-    "signMessage": "Podpísať správu"
+    "signMessage": "Podpísať správu",
+    "guide": "Sprievodca"
   },
   "feed": {
     "home": "Domov",

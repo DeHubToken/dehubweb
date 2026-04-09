@@ -22,7 +22,8 @@
     "create": "Tạo",
     "login": "Đăng nhập",
     "connecting": "Đang kết nối...",
-    "signMessage": "Ký tin nhắn"
+    "signMessage": "Ký tin nhắn",
+    "guide": "Hướng dẫn"
   },
   "common": {
     "yes": "Có",

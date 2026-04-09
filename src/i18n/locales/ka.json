@@ -22,7 +22,8 @@
     "create": "შექმნა",
     "login": "შესვლა",
     "connecting": "დაკავშირება...",
-    "signMessage": "ხელმოწერა"
+    "signMessage": "ხელმოწერა",
+    "guide": "სახელმძღვანელო"
   },
   "feed": {
     "home": "მთავარი",

@@ -22,7 +22,8 @@
     "create": "Stvori",
     "login": "Prijava",
     "connecting": "Povezivanje...",
-    "signMessage": "Potpišite poruku"
+    "signMessage": "Potpišite poruku",
+    "guide": "Vodič"
   },
   "feed": {
     "home": "Početna",

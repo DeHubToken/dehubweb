@@ -22,7 +22,8 @@
     "create": "أنشئ",
     "login": "دخول",
     "connecting": "يتصل...",
-    "signMessage": "وقّع الرسالة"
+    "signMessage": "وقّع الرسالة",
+    "guide": "Guide"
   },
   "feed": {
     "home": "البيت",

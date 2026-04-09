@@ -22,7 +22,8 @@
     "create": "Afirandin",
     "login": "Têketin",
     "connecting": "Girêdan...",
-    "signMessage": "Peyamê îmze bike"
+    "signMessage": "Peyamê îmze bike",
+    "guide": "Rêber"
   },
   "feed": {
     "home": "Mal",
