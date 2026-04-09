@@ -5,7 +5,7 @@
  * Native-feeling page rendered inside the app layout.
  */
 
-import { useEffect } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
@@ -34,7 +34,9 @@ import {
   Clock, CheckCircle2,
   Copy, ExternalLink, RotateCcw, Pencil, Trash2,
   ChevronUp, ChevronDown, Pin, AtSign, Hash,
+  Info, PieChart, BarChart3, Globe, EyeOff, Tag, HandCoins, Plus,
 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 
 interface GlossaryEntry {
   icon: React.ReactNode;
@@ -81,6 +83,7 @@ export default function GlossaryPage() {
   const { t } = useTranslation();
   const location = useLocation();
   const iconSize = 18;
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     if (location.hash) {
@@ -128,6 +131,33 @@ export default function GlossaryPage() {
         { icon: <Lock size={iconSize} />, title: t('glossary.private', 'Private'), description: t('glossary.privateDesc', 'Content only visible to you. Private posts are hidden from other users and the public feed.') },
         { icon: <Ticket size={iconSize} />, title: t('glossary.ppv', 'Pay-Per-View (PPV)'), description: t('glossary.ppvDesc', 'Premium content that requires a DHB token payment to unlock. Creators set the price and earn revenue from each view.') },
         { icon: <Crown size={iconSize} />, title: t('glossary.subscriberOnly', 'Subscriber Only'), description: t('glossary.subscriberOnlyDesc', 'Content restricted to users who have subscribed to the creator\'s channel.') },
+      ],
+    },
+    {
+      id: 'post-info',
+      title: t('glossary.sections.postInfo', 'Post Info Page'),
+      entries: [
+        { icon: <Info size={iconSize} />, title: t('glossary.postInfoPage', 'Post Info'), description: t('glossary.postInfoPageDesc', 'A detailed view of any post showing its on-chain data, engagement stats, ownership fractions, and creator info. Access it by tapping the "ⓘ" icon on any post.') },
+        { icon: <Hash size={iconSize} />, title: t('glossary.tokenIdInfo', 'Token ID'), description: t('glossary.tokenIdInfoDesc', 'The unique on-chain identifier assigned when a post is minted as an NFT. Shown at the top of the Post Info page.') },
+        { icon: <ExternalLink size={iconSize} />, title: t('glossary.txHash', 'Transaction Hash'), description: t('glossary.txHashInfoDesc', 'The blockchain transaction hash from when the post was minted. Click it to open the block explorer (BaseScan or BscScan) and verify the on-chain record.') },
+        { icon: <Eye size={iconSize} />, title: t('glossary.engagementStats', 'Engagement Stats'), description: t('glossary.engagementStatsDesc', 'The Post Info page shows total likes, dislikes, views, comments, and tips received — giving a complete snapshot of how the post is performing.') },
+        { icon: <Globe size={iconSize} />, title: t('glossary.visibilityControl', 'Visibility Control'), description: t('glossary.visibilityControlDesc', 'Post owners can change their post\'s visibility between Public (anyone can see), Unlisted (only via direct link), and Private (only you). Accessible from the Post Info page.') },
+        { icon: <EyeOff size={iconSize} />, title: t('glossary.unlisted', 'Unlisted'), description: t('glossary.unlistedDesc', 'A visibility setting where the post won\'t appear in feeds or search, but anyone with the direct link can still view it.') },
+        { icon: <Pencil size={iconSize} />, title: t('glossary.editFromInfo', 'Edit Post (from Info)'), description: t('glossary.editFromInfoDesc', 'Post owners can edit the title and description of their post directly from the Post Info page by tapping the edit button.') },
+        { icon: <HandCoins size={iconSize} />, title: t('glossary.totalTips', 'Total Tips Received'), description: t('glossary.totalTipsDesc', 'Shows the total amount of DHB tips the post has earned from viewers, displayed on the Post Info page.') },
+        { icon: <Ticket size={iconSize} />, title: t('glossary.ppvPurchases', 'PPV Purchases'), description: t('glossary.ppvPurchasesDesc', 'For pay-per-view posts, shows the number of users who have purchased access and the total revenue earned by the creator.') },
+      ],
+    },
+    {
+      id: 'fractions',
+      title: t('glossary.sections.fractions', 'Fractions & Ownership'),
+      entries: [
+        { icon: <PieChart size={iconSize} />, title: t('glossary.fractions', 'Fractions'), description: t('glossary.fractionsDesc', 'Every post on DeHub is minted as an NFT split into 100 fractions. The creator starts with all 100 fractions, representing 100% ownership of the content.') },
+        { icon: <Users size={iconSize} />, title: t('glossary.holders', 'Holders'), description: t('glossary.holdersDesc', 'The list of wallet addresses that own fractions of a post. Shown on the Post Info page with each holder\'s balance and ownership percentage.') },
+        { icon: <BarChart3 size={iconSize} />, title: t('glossary.ownershipBar', 'Ownership Bar'), description: t('glossary.ownershipBarDesc', 'A progress bar on the Post Info page showing how many of the 100 fractions the creator still holds vs. how many have been distributed or sold.') },
+        { icon: <Tag size={iconSize} />, title: t('glossary.listFractions', 'List Fractions'), description: t('glossary.listFractionsDesc', 'If you own fractions of a post, you can list them for sale at a price you set (in DHB per fraction). Other users can then purchase your listed fractions.') },
+        { icon: <Coins size={iconSize} />, title: t('glossary.fractionMarketplace', 'Fraction Marketplace'), description: t('glossary.fractionMarketplaceDesc', 'The marketplace tab on the Post Info page where fraction holders can list their fractions for sale and buyers can make offers. Enables trading of content ownership.') },
+        { icon: <Plus size={iconSize} />, title: t('glossary.makeOffer', 'Make Offer'), description: t('glossary.makeOfferDesc', 'Submit a buy offer for fractions of a post at a price you choose. The fraction holder can accept or reject your offer.') },
       ],
     },
     {
@@ -202,12 +232,29 @@ export default function GlossaryPage() {
     },
   ];
 
+  // Filter sections based on search query
+  const filteredSections = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return sections;
+    
+    return sections
+      .map(section => ({
+        ...section,
+        entries: section.entries.filter(
+          entry =>
+            entry.title.toLowerCase().includes(q) ||
+            entry.description.toLowerCase().includes(q)
+        ),
+      }))
+      .filter(section => section.entries.length > 0);
+  }, [searchQuery, sections]);
+
   return (
     <div className="px-2 pt-1 pb-6 sm:px-3 sm:pt-1 sm:pb-6 lg:pt-2 min-h-screen">
       <SEOHead title="Glossary — Icons, Features & Web3 Terms" description="Learn what every icon, button and feature means on DeHub. A complete guide to the platform's UI, Web3 terms, staking badges and more." url="https://dehub.io/app/glossary" jsonLd={{ '@context': 'https://schema.org', '@type': 'DefinedTermSet', name: 'DeHub Glossary', url: 'https://dehub.io/app/glossary', description: 'Complete guide to DeHub icons, features and Web3 terms.' }} />
       <h1 className="sr-only">DeHub Glossary — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Header */}
-      <div className="flex items-center gap-3 mb-4">
+      <div className="flex items-center gap-3 mb-3">
         <img src={glossaryIcon} alt="Glossary" className="w-10 h-10 object-contain brightness-75" />
         <div>
           <h1 className="text-[1.1rem] sm:text-[1.32rem] font-bold text-white">{t('glossary.title', 'Glossary')}</h1>
@@ -215,10 +262,28 @@ export default function GlossaryPage() {
         </div>
       </div>
 
+      {/* Search */}
+      <div className="relative mb-5">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+        <Input
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search glossary..."
+          className="pl-9 bg-white/[0.04] border-white/[0.08] text-white placeholder:text-zinc-500 h-9 text-sm rounded-xl"
+        />
+      </div>
+
       {/* Sections */}
-      {sections.map((section, i) => (
-        <SectionBlock key={i} {...section} />
-      ))}
+      {filteredSections.length > 0 ? (
+        filteredSections.map((section, i) => (
+          <SectionBlock key={i} {...section} />
+        ))
+      ) : (
+        <div className="flex flex-col items-center justify-center py-12 text-center">
+          <Search className="w-8 h-8 text-zinc-600 mb-3" />
+          <p className="text-zinc-500 text-sm">No results for "{searchQuery}"</p>
+        </div>
+      )}
     </div>
   );
 }
