@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, TrendingUp, TrendingDown, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
+import { TickerLogo } from '@/components/app/TickerLogo';
 
 const PAGE_SIZE = 100;
 
@@ -64,13 +65,10 @@ function SilverIcon() {
   );
 }
 
-function AssetLogo({ asset }: { asset: TopAsset }) {
+function AssetLogoElement({ asset }: { asset: TopAsset }) {
   if (asset.symbol === 'GOLD') return <GoldIcon />;
   if (asset.symbol === 'SILVER') return <SilverIcon />;
-  if (asset.logoUrl) {
-    return <img src={asset.logoUrl} alt={asset.symbol} className="w-6 h-6 rounded-full bg-white" loading="lazy" />;
-  }
-  return <div className="w-6 h-6 rounded-full bg-zinc-700 flex items-center justify-center text-[10px] text-zinc-300 font-bold">{asset.symbol.slice(0, 2)}</div>;
+  return <TickerLogo symbol={asset.symbol} size={24} />;
 }
 
 function CoinLogo({ coin }: { coin: CmcCoin }) {
@@ -119,7 +117,6 @@ export default function Top100CryptosPage() {
   const allAssets = useMemo(() => {
     const unified: UnifiedAsset[] = [];
 
-    // Add traditional assets
     if (assets) {
       for (const a of assets) {
         if (a.price == null || a.marketCap == null) continue;
@@ -133,13 +130,12 @@ export default function Top100CryptosPage() {
           change7d: null,
           marketCap: a.marketCap,
           volume24h: a.volume24h ?? 0,
-          logoElement: <AssetLogo asset={a} />,
+          logoElement: <AssetLogoElement asset={a} />,
           navQuery: `$${a.symbol}`,
         });
       }
     }
 
-    // Add crypto
     if (coins) {
       for (const c of coins) {
         unified.push({
@@ -159,7 +155,6 @@ export default function Top100CryptosPage() {
     }
 
     unified.sort((a, b) => b.marketCap - a.marketCap);
-
     return unified;
   }, [assets, coins]);
 
