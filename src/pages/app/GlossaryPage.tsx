@@ -5,7 +5,7 @@
  * Native-feeling page rendered inside the app layout.
  */
 
-import { useEffect } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { SEOHead } from '@/components/SEOHead';
