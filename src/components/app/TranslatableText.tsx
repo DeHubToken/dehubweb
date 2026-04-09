@@ -204,20 +204,21 @@ export function renderTextWithLinks(text: string): ReactNode[] {
       }
       const href = url.match(/^https?:\/\//i) ? url : `https://${url}`;
       parts.push(
-        <Tooltip key={`${url}-${match.index}`}>
-          <TooltipTrigger asChild>
-            <a
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center hover:scale-110 transition-transform"
-              onClick={(e) => e.stopPropagation()}
-            >
-              🔗
-            </a>
-          </TooltipTrigger>
-          <TooltipContent>{url}</TooltipContent>
-        </Tooltip>
+        <a
+          key={`${url}-${match.index}`}
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center hover:scale-110 transition-transform cursor-pointer"
+          onClick={(e) => {
+            e.stopPropagation();
+            window.open(href, '_blank', 'noopener,noreferrer');
+          }}
+          title={url}
+          data-no-navigate="true"
+        >
+          🔗
+        </a>
       );
     }
     
