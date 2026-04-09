@@ -46,12 +46,6 @@ function AssetRow({ asset, rank, onClick }: { asset: TopAsset; rank: number; onC
           <span className="text-lg w-6 h-6 flex items-center justify-center">{asset.icon}</span>
           <span className="text-white font-medium text-sm">{asset.name}</span>
           <span className="text-zinc-500 text-xs">{asset.symbol}</span>
-          <span className={cn(
-            'text-[10px] px-1.5 py-0.5 rounded font-medium',
-            asset.type === 'commodity' ? 'text-amber-400 bg-amber-400/10' : 'text-blue-400 bg-blue-400/10'
-          )}>
-            {asset.type === 'commodity' ? 'Commodity' : 'Stock'}
-          </span>
         </div>
       </td>
       <td className="py-3 px-3 text-white text-sm text-right font-mono">
@@ -89,7 +83,6 @@ function CoinRow({ coin, rank, onClick }: { coin: CmcCoin; rank: number; onClick
           />
           <span className="text-white font-medium text-sm">{coin.name}</span>
           <span className="text-zinc-500 text-xs">{coin.symbol}</span>
-          <span className="text-[10px] px-1.5 py-0.5 rounded font-medium text-purple-400 bg-purple-400/10">Crypto</span>
         </div>
       </td>
       <td className="py-3 px-3 text-white text-sm text-right font-mono">{formatPrice(coin.price)}</td>
@@ -139,7 +132,7 @@ export default function Top100CryptosPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6">
-      <SEOHead title="Top Assets — Live Prices for Stocks, Commodities & Crypto" description="Track live prices for gold, silver, Tesla, Apple, Bitcoin and thousands of crypto assets on DeHub." url="https://dehub.io/app/top-100" jsonLd={{ '@context': 'https://schema.org', '@type': 'Table', name: 'Top Assets', url: 'https://dehub.io/app/top-100', description: 'Live prices and market data for top stocks, commodities and cryptocurrencies.' }} />
+      <SEOHead title="Top Assets — Live Prices for Stocks, Commodities & Crypto" description="Track live prices for gold, silver, oil, Tesla, Apple, Bitcoin, stocks, commodities and thousands of crypto assets on DeHub." url="https://dehub.io/app/top-100" jsonLd={{ '@context': 'https://schema.org', '@type': 'Table', name: 'Top Assets', url: 'https://dehub.io/app/top-100', description: 'Live prices and market data for top stocks, commodities and cryptocurrencies.' }} />
       <h1 className="sr-only">DeHub Top Assets — Live Prices for Stocks, Commodities & Crypto</h1>
       <div className="flex items-center gap-3 mb-6">
         <button onClick={() => navigate(-1)} className="text-zinc-400 hover:text-white transition-colors">
