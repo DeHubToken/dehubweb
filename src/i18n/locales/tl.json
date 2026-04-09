@@ -22,7 +22,8 @@
     "create": "Gumawa",
     "login": "Mag-log in",
     "connecting": "Kumokonekta...",
-    "signMessage": "Pirmahan ang mensahe"
+    "signMessage": "Pirmahan ang mensahe",
+    "guide": "Gabay"
   },
   "common": {
     "okay": "Sige",

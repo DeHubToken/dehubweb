@@ -22,7 +22,8 @@
     "create": "Maken",
     "login": "Inloggen",
     "connecting": "Verbinden...",
-    "signMessage": "Bericht ondertekenen"
+    "signMessage": "Bericht ondertekenen",
+    "guide": "Gids"
   },
   "feed": {
     "home": "Home",

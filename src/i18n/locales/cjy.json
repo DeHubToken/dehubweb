@@ -22,7 +22,8 @@
     "create": "发布",
     "login": "登录",
     "connecting": "连接中...",
-    "signMessage": "签名消息"
+    "signMessage": "签名消息",
+    "guide": "Guide"
   },
   "feed": {
     "home": "首页",

@@ -22,7 +22,8 @@
     "create": "Utwórz",
     "login": "Zaloguj się",
     "connecting": "Łączenie...",
-    "signMessage": "Podpisz wiadomość"
+    "signMessage": "Podpisz wiadomość",
+    "guide": "Przewodnik"
   },
   "feed": {
     "home": "Strona główna",
@@ -260,19 +261,58 @@
       "title": "Odznaki",
       "description": "Odznaki stakingowe są białe, aby lepiej pasowały do motywu.",
       "tiers": [
-        { "name": "Krab", "min": 10000 },
-        { "name": "Homar", "min": 25000 },
-        { "name": "Pirania", "min": 50000 },
-        { "name": "Żółw", "min": 100000 },
-        { "name": "Kobra", "min": 250000 },
-        { "name": "Ośmiornica", "min": 500000 },
-        { "name": "Krokodyl", "min": 1000000 },
-        { "name": "Delfin", "min": 2000000 },
-        { "name": "Rekin Tygrysi", "min": 3000000 },
-        { "name": "Orka", "min": 5000000 },
-        { "name": "Rekin Biały", "min": 10000000 },
-        { "name": "Płetwal Błękitny", "min": 25000000 },
-        { "name": "Megalodon", "min": 50000000 }
+        {
+          "name": "Krab",
+          "min": 10000
+        },
+        {
+          "name": "Homar",
+          "min": 25000
+        },
+        {
+          "name": "Pirania",
+          "min": 50000
+        },
+        {
+          "name": "Żółw",
+          "min": 100000
+        },
+        {
+          "name": "Kobra",
+          "min": 250000
+        },
+        {
+          "name": "Ośmiornica",
+          "min": 500000
+        },
+        {
+          "name": "Krokodyl",
+          "min": 1000000
+        },
+        {
+          "name": "Delfin",
+          "min": 2000000
+        },
+        {
+          "name": "Rekin Tygrysi",
+          "min": 3000000
+        },
+        {
+          "name": "Orka",
+          "min": 5000000
+        },
+        {
+          "name": "Rekin Biały",
+          "min": 10000000
+        },
+        {
+          "name": "Płetwal Błękitny",
+          "min": 25000000
+        },
+        {
+          "name": "Megalodon",
+          "min": 50000000
+        }
       ]
     }
   },

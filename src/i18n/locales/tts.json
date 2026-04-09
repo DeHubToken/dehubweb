@@ -22,7 +22,8 @@
     "create": "สร้าง",
     "login": "เข้าสู่ระบบ",
     "connecting": "กำลังเชื่อมต่อ...",
-    "signMessage": "เซ็นข้อความ"
+    "signMessage": "เซ็นข้อความ",
+    "guide": "Guide"
   },
   "feed": {
     "home": "บ้าน",

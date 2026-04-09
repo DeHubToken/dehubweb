@@ -22,7 +22,8 @@
     "create": "Creează",
     "login": "Autentificare",
     "connecting": "Se conectează...",
-    "signMessage": "Semnează mesajul"
+    "signMessage": "Semnează mesajul",
+    "guide": "Ghid"
   },
   "footer": {
     "about": "Despre noi",

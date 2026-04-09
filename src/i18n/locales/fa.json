@@ -22,7 +22,8 @@
     "create": "ایجاد",
     "login": "ورود",
     "connecting": "در حال اتصال...",
-    "signMessage": "امضای پیام"
+    "signMessage": "امضای پیام",
+    "guide": "راهنما"
   },
   "feed": {
     "home": "خانه",

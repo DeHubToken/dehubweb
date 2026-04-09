@@ -22,7 +22,8 @@
     "create": "Створити",
     "login": "Увійти",
     "connecting": "З'єднання...",
-    "signMessage": "Підписати повідомлення"
+    "signMessage": "Підписати повідомлення",
+    "guide": "Посібник"
   },
   "common": {
     "allRightsReserved": "Всі права захищені",

@@ -24,7 +24,8 @@
     "login": "Log in",
     "connecting": "Connecting...",
     "signMessage": "Sign message",
-    "communities": "Communities"
+    "communities": "Communities",
+    "guide": "Guide"
   },
   "feed": {
     "home": "Home",
@@ -56,7 +57,6 @@
     "content": "Content",
     "messages": "Messages",
     "assets": "Assets",
-
     "profileSettings": "Profile Settings",
     "saveChanges": "Save Changes",
     "profilePicture": "Profile Picture",
@@ -74,7 +74,6 @@
     "imageTooLarge5": "Image must be less than 5MB",
     "imageTooLarge10": "Image must be less than 10MB",
     "failedUpdateProfile": "Failed to update profile",
-
     "notificationSettings": "Notification Settings",
     "general": "General",
     "emailNotifications": "Email Notifications",
@@ -96,7 +95,6 @@
     "quietHours": "Quiet Hours",
     "enableQuietHours": "Enable Quiet Hours",
     "quietHoursDesc": "Pause notifications from 10 PM to 8 AM",
-
     "privacySecurity": "Privacy & Security",
     "profileVisibility": "Profile Visibility",
     "privateAccount": "Private Account",
@@ -154,7 +152,6 @@
     "blockCountries": "Block Countries",
     "searchCountries": "Search countries...",
     "noCountriesFound": "No countries found",
-
     "theme": "Theme",
     "layout": "Layout",
     "media": "Media",
@@ -184,7 +181,6 @@
     "stickCoinBanner": "Stick coin to banner",
     "stickCoinBannerDesc": "Show coin in header (mobile) and sidebar (desktop)",
     "applyChanges": "Apply Changes",
-
     "contentPreferences": "Content Preferences",
     "postSettings": "Post Settings",
     "whoCanSeeDefault": "Who can see your posts by default",
@@ -201,7 +197,6 @@
     "showReposts": "Show Reposts",
     "showRepostsDesc": "Display posts shared by people you follow",
     "savePreferences": "Save Preferences",
-
     "messageSettings": "Message Settings",
     "directMessageAccess": "Direct Message Access",
     "allowDirectMessages": "Allow Direct Messages",
@@ -231,7 +226,6 @@
     "quickActions": "Quick Actions",
     "archivedChats": "Archived Chats",
     "exportChats": "Export Chats",
-
     "notConnected": "Not connected",
     "manage": "Manage →",
     "fractionsOwn": "Fractions You Own",

@@ -22,7 +22,8 @@
     "create": "Erstellen",
     "login": "Anmelden",
     "connecting": "Verbinden...",
-    "signMessage": "Nachricht signieren"
+    "signMessage": "Nachricht signieren",
+    "guide": "Leitfaden"
   },
   "feed": {
     "home": "Startseite",

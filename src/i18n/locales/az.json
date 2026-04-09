@@ -22,7 +22,8 @@
     "create": "Yarat",
     "login": "Daxil ol",
     "connecting": "Qoşulur...",
-    "signMessage": "Mesajı imzala"
+    "signMessage": "Mesajı imzala",
+    "guide": "Bələdçi"
   },
   "feed": {
     "home": "Ana səhifə",

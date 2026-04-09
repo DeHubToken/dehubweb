@@ -22,7 +22,8 @@
     "create": "建立",
     "login": "登入",
     "connecting": "連接緊...",
-    "signMessage": "簽署訊息"
+    "signMessage": "簽署訊息",
+    "guide": "Guide"
   },
   "feed": {
     "home": "主頁",

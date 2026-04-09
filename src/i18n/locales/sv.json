@@ -22,7 +22,8 @@
     "create": "Skapa",
     "login": "Logga in",
     "connecting": "Ansluter...",
-    "signMessage": "Signera meddelande"
+    "signMessage": "Signera meddelande",
+    "guide": "Guide"
   },
   "feed": {
     "home": "Hem",

@@ -22,7 +22,8 @@
     "create": "Yaratish",
     "login": "Kirish",
     "connecting": "Ulanmoqda...",
-    "signMessage": "Xabarni imzolash"
+    "signMessage": "Xabarni imzolash",
+    "guide": "Qo'llanma"
   },
   "feed": {
     "home": "Bosh sahifa",

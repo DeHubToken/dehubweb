@@ -22,7 +22,8 @@
     "create": "Criar",
     "login": "Entrar",
     "connecting": "Conectando...",
-    "signMessage": "Assinar mensagem"
+    "signMessage": "Assinar mensagem",
+    "guide": "Guia"
   },
   "feed": {
     "home": "Início",

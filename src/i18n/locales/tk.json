@@ -22,7 +22,8 @@
     "create": "Döret",
     "login": "Giriş",
     "connecting": "Birikdirilýär...",
-    "signMessage": "Habary gol çek"
+    "signMessage": "Habary gol çek",
+    "guide": "Guide"
   },
   "feed": {
     "home": "Baş sahypa",

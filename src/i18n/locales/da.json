@@ -22,7 +22,8 @@
     "create": "Opret",
     "login": "Log ind",
     "connecting": "Forbinder...",
-    "signMessage": "Underskriv besked"
+    "signMessage": "Underskriv besked",
+    "guide": "Guide"
   },
   "feed": {
     "home": "Hjem",

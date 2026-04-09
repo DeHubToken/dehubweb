@@ -22,7 +22,8 @@
     "create": "צור",
     "login": "התחבר",
     "connecting": "מתחבר...",
-    "signMessage": "חתום על הודעה"
+    "signMessage": "חתום על הודעה",
+    "guide": "מדריך"
   },
   "feed": {
     "home": "דף הבית",

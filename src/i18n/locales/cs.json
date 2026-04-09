@@ -22,7 +22,8 @@
     "create": "Vytvořit",
     "login": "Přihlásit se",
     "connecting": "Připojování...",
-    "signMessage": "Podepsat zprávu"
+    "signMessage": "Podepsat zprávu",
+    "guide": "Průvodce"
   },
   "feed": {
     "home": "Domů",

@@ -22,7 +22,8 @@
     "create": "Létrehozás",
     "login": "Bejelentkezés",
     "connecting": "Csatlakozás...",
-    "signMessage": "Üzenet aláírása"
+    "signMessage": "Üzenet aláírása",
+    "guide": "Útmutató"
   },
   "feed": {
     "home": "Kezdőlap",

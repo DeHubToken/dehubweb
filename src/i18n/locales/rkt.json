@@ -22,7 +22,8 @@
     "create": "বানাও",
     "login": "লগ ইন করো",
     "connecting": "কানেক্ট হইতাছে...",
-    "signMessage": "মেসেজে সাইন করো"
+    "signMessage": "মেসেজে সাইন করো",
+    "guide": "Guide"
   },
   "feed": {
     "home": "ঘর",

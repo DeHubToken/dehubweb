@@ -22,7 +22,8 @@
     "create": "بناؤ",
     "login": "لاگ ان",
     "connecting": "جُڑ رہا ہے...",
-    "signMessage": "پیغام پر دستخط کرو"
+    "signMessage": "پیغام پر دستخط کرو",
+    "guide": "Guide"
   },
   "feed": {
     "home": "گھر",

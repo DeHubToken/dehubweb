@@ -22,7 +22,8 @@
     "create": "Opprett",
     "login": "Logg inn",
     "connecting": "Kobler til...",
-    "signMessage": "Signer melding"
+    "signMessage": "Signer melding",
+    "guide": "Guide"
   },
   "feed": {
     "home": "Hjem",

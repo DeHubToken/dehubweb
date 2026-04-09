@@ -22,7 +22,8 @@
     "create": "Izveidot",
     "login": "Pieteikties",
     "connecting": "Savienošanās...",
-    "signMessage": "Parakstīt ziņojumu"
+    "signMessage": "Parakstīt ziņojumu",
+    "guide": "Ceļvedis"
   },
   "feed": {
     "home": "Sākums",

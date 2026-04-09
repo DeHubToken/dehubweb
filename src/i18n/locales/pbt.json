@@ -22,7 +22,8 @@
     "create": "جوړول",
     "login": "ننوتل",
     "connecting": "نښلول کیږي...",
-    "signMessage": "پیغام لاسلیک کول"
+    "signMessage": "پیغام لاسلیک کول",
+    "guide": "Guide"
   },
   "feed": {
     "home": "کور",

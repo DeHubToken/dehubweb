@@ -22,7 +22,8 @@
     "create": "Kamariy",
     "login": "Yaykuy",
     "connecting": "Tinkuchkan...",
-    "signMessage": "Firmay willakuyta"
+    "signMessage": "Firmay willakuyta",
+    "guide": "Guide"
   },
   "feed": {
     "home": "Qallariy",

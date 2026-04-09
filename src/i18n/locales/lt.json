@@ -22,7 +22,8 @@
     "create": "Kurti",
     "login": "Prisijungti",
     "connecting": "Jungiamasi...",
-    "signMessage": "Pasirašyti žinutę"
+    "signMessage": "Pasirašyti žinutę",
+    "guide": "Vadovas"
   },
   "feed": {
     "home": "Pradžia",
