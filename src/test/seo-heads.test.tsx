@@ -118,6 +118,9 @@ vi.mock('@/hooks/use-token-prices', () => ({
 vi.mock('@/hooks/use-cmc-top-100', () => ({
   useCmcTop100: () => ({ data: [], isLoading: false }),
 }));
+vi.mock('@/hooks/use-top-assets', () => ({
+  useTopAssets: () => ({ data: [], isLoading: false }),
+}));
 vi.mock('@/hooks/use-voice-chat', () => ({
   useVoiceChat: () => ({ isListening: false, start: vi.fn(), stop: vi.fn() }),
 }));
