@@ -5,10 +5,11 @@
  */
 
 import { useState, useMemo, useCallback, useRef, useLayoutEffect, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp, RefreshCw } from 'lucide-react';
+import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp, RefreshCw, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
 import trophyIcon from '@/assets/trophy-icon.png';
 import medal1 from '@/assets/medal-1.png';
@@ -22,7 +23,6 @@ import medal8 from '@/assets/medal-8.png';
 import medal9 from '@/assets/medal-9.png';
 import medal10 from '@/assets/medal-10.png';
 
-import { useNavigate } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAuthPrompt, AuthPrompt } from '@/components/app/AuthPrompt';
@@ -332,9 +332,9 @@ export default function LeaderboardPage() {
         {/* Category Tabs - Horizontally scrollable */}
         <div className="relative mb-3">
           <GlassFilterRow
-            items={categories.map((cat) => ({ key: cat.id, label: <span className="flex items-center gap-1.5"><cat.icon className="w-4 h-4" />{t(cat.labelKey)}</span> }))}
+            items={[...categories.map((cat) => ({ key: cat.id, label: <span className="flex items-center gap-1.5"><cat.icon className="w-4 h-4" />{t(cat.labelKey)}</span> })), { key: 'assets' as any, label: <span className="flex items-center gap-1.5"><TrendingUp className="w-4 h-4" />Assets</span> }]}
             activeKey={category}
-            onSelect={(key) => { setCategory(key as CategoryType); setSortDirection('desc'); }}
+            onSelect={(key) => { if (key === 'assets') { navigate('/app/top-100'); return; } setCategory(key as CategoryType); setSortDirection('desc'); }}
             borderRadius="0.75rem"
             buttonClassName="px-3 py-2 rounded-xl text-sm"
           />
