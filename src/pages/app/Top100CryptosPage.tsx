@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useCmcTop100, type CmcCoin } from '@/hooks/use-cmc-top-100';
 import { useTopAssets, type TopAsset } from '@/hooks/use-top-assets';
 import { useNavigate } from 'react-router-dom';
@@ -7,6 +7,22 @@ import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
 
 const PAGE_SIZE = 100;
+
+type SortMode = 'default' | 'market_cap';
+
+interface UnifiedAsset {
+  id: string;
+  name: string;
+  symbol: string;
+  price: number;
+  change1h: number | null;
+  change24h: number;
+  change7d: number | null;
+  marketCap: number;
+  volume24h: number;
+  logoElement: React.ReactNode;
+  navQuery: string;
+}
 
 function formatPrice(price: number): string {
   if (price >= 1) return `$${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -34,63 +50,63 @@ function PercentBadge({ value }: { value: number }) {
   );
 }
 
-function AssetRow({ asset, rank, onClick }: { asset: TopAsset; rank: number; onClick: () => void }) {
+function GoldIcon() {
   return (
-    <tr
-      onClick={onClick}
-      className="border-b border-white/5 hover:bg-white/5 cursor-pointer transition-colors"
-    >
+    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ background: 'linear-gradient(135deg, #FFD700, #B8860B)', color: '#fff' }}>
+      Au
+    </div>
+  );
+}
+
+function SilverIcon() {
+  return (
+    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ background: 'linear-gradient(135deg, #C0C0C0, #808080)', color: '#fff' }}>
+      Ag
+    </div>
+  );
+}
+
+function AssetLogo({ asset }: { asset: TopAsset }) {
+  if (asset.symbol === 'GOLD') return <GoldIcon />;
+  if (asset.symbol === 'SILVER') return <SilverIcon />;
+  if (asset.logoUrl) {
+    return <img src={asset.logoUrl} alt={asset.symbol} className="w-6 h-6 rounded-full bg-white" loading="lazy" />;
+  }
+  return <div className="w-6 h-6 rounded-full bg-zinc-700 flex items-center justify-center text-[10px] text-zinc-300 font-bold">{asset.symbol.slice(0, 2)}</div>;
+}
+
+function CoinLogo({ coin }: { coin: CmcCoin }) {
+  return (
+    <img
+      src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${coin.id}.png`}
+      alt={coin.symbol}
+      className="w-6 h-6 rounded-full"
+      loading="lazy"
+    />
+  );
+}
+
+function UnifiedRow({ asset, rank, onClick }: { asset: UnifiedAsset; rank: number; onClick: () => void }) {
+  return (
+    <tr onClick={onClick} className="border-b border-white/5 hover:bg-white/5 cursor-pointer transition-colors">
       <td className="py-3 px-3 text-zinc-400 text-sm font-medium">{rank}</td>
       <td className="py-3 px-3">
         <div className="flex items-center gap-2">
-          <span className="text-lg w-6 h-6 flex items-center justify-center">{asset.icon}</span>
+          {asset.logoElement}
           <span className="text-white font-medium text-sm">{asset.name}</span>
           <span className="text-zinc-500 text-xs">{asset.symbol}</span>
         </div>
       </td>
-      <td className="py-3 px-3 text-white text-sm text-right font-mono">
-        {asset.price != null ? formatPrice(asset.price) : '—'}
+      <td className="py-3 px-3 text-white text-sm text-right font-mono">{formatPrice(asset.price)}</td>
+      <td className="py-3 px-3 text-right hidden sm:table-cell">
+        {asset.change1h != null ? <PercentBadge value={asset.change1h} /> : '—'}
       </td>
-      <td className="py-3 px-3 text-right hidden sm:table-cell">—</td>
-      <td className="py-3 px-3 text-right">
-        {asset.change24h != null ? <PercentBadge value={asset.change24h} /> : '—'}
+      <td className="py-3 px-3 text-right"><PercentBadge value={asset.change24h} /></td>
+      <td className="py-3 px-3 text-right hidden md:table-cell">
+        {asset.change7d != null ? <PercentBadge value={asset.change7d} /> : '—'}
       </td>
-      <td className="py-3 px-3 text-right hidden md:table-cell">—</td>
-      <td className="py-3 px-3 text-right text-zinc-300 text-sm font-mono hidden lg:table-cell">
-        {asset.marketCap != null ? formatLargeNumber(asset.marketCap) : '—'}
-      </td>
-      <td className="py-3 px-3 text-right text-zinc-400 text-sm font-mono hidden xl:table-cell">
-        {asset.volume24h != null ? formatLargeNumber(asset.volume24h) : '—'}
-      </td>
-    </tr>
-  );
-}
-
-function CoinRow({ coin, rank, onClick }: { coin: CmcCoin; rank: number; onClick: () => void }) {
-  return (
-    <tr
-      onClick={onClick}
-      className="border-b border-white/5 hover:bg-white/5 cursor-pointer transition-colors"
-    >
-      <td className="py-3 px-3 text-zinc-400 text-sm font-medium">{rank}</td>
-      <td className="py-3 px-3">
-        <div className="flex items-center gap-2">
-          <img
-            src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${coin.id}.png`}
-            alt={coin.symbol}
-            className="w-6 h-6 rounded-full"
-            loading="lazy"
-          />
-          <span className="text-white font-medium text-sm">{coin.name}</span>
-          <span className="text-zinc-500 text-xs">{coin.symbol}</span>
-        </div>
-      </td>
-      <td className="py-3 px-3 text-white text-sm text-right font-mono">{formatPrice(coin.price)}</td>
-      <td className="py-3 px-3 text-right hidden sm:table-cell"><PercentBadge value={coin.percent_change_1h} /></td>
-      <td className="py-3 px-3 text-right"><PercentBadge value={coin.percent_change_24h} /></td>
-      <td className="py-3 px-3 text-right hidden md:table-cell"><PercentBadge value={coin.percent_change_7d} /></td>
-      <td className="py-3 px-3 text-right text-zinc-300 text-sm font-mono hidden lg:table-cell">{formatLargeNumber(coin.market_cap)}</td>
-      <td className="py-3 px-3 text-right text-zinc-400 text-sm font-mono hidden xl:table-cell">{formatLargeNumber(coin.volume_24h)}</td>
+      <td className="py-3 px-3 text-right text-zinc-300 text-sm font-mono hidden lg:table-cell">{formatLargeNumber(asset.marketCap)}</td>
+      <td className="py-3 px-3 text-right text-zinc-400 text-sm font-mono hidden xl:table-cell">{formatLargeNumber(asset.volume24h)}</td>
     </tr>
   );
 }
@@ -100,28 +116,74 @@ export default function Top100CryptosPage() {
   const { data: assets, isLoading: assetsLoading } = useTopAssets();
   const navigate = useNavigate();
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [sortMode, setSortMode] = useState<SortMode>('market_cap');
   const sentinelRef = useRef<HTMLDivElement>(null);
 
-  const hasMore = coins ? visibleCount < coins.length : false;
-  const visibleCoins = coins?.slice(0, visibleCount) ?? [];
-  const assetCount = assets?.length ?? 0;
-  const totalVisible = assetCount + visibleCoins.length;
-  const totalAll = assetCount + (coins?.length ?? 0);
+  // Merge all assets into a unified list
+  const allAssets = useMemo(() => {
+    const unified: UnifiedAsset[] = [];
+
+    // Add traditional assets
+    if (assets) {
+      for (const a of assets) {
+        if (a.price == null || a.marketCap == null) continue;
+        unified.push({
+          id: `asset-${a.symbol}`,
+          name: a.name,
+          symbol: a.symbol,
+          price: a.price,
+          change1h: null,
+          change24h: a.change24h ?? 0,
+          change7d: null,
+          marketCap: a.marketCap,
+          volume24h: a.volume24h ?? 0,
+          logoElement: <AssetLogo asset={a} />,
+          navQuery: `$${a.symbol}`,
+        });
+      }
+    }
+
+    // Add crypto
+    if (coins) {
+      for (const c of coins) {
+        unified.push({
+          id: `coin-${c.id}`,
+          name: c.name,
+          symbol: c.symbol,
+          price: c.price,
+          change1h: c.percent_change_1h,
+          change24h: c.percent_change_24h,
+          change7d: c.percent_change_7d,
+          marketCap: c.market_cap,
+          volume24h: c.volume_24h,
+          logoElement: <CoinLogo coin={c} />,
+          navQuery: `$${c.symbol}`,
+        });
+      }
+    }
+
+    if (sortMode === 'market_cap') {
+      unified.sort((a, b) => b.marketCap - a.marketCap);
+    }
+    // 'default' keeps insertion order: traditional first, then crypto by CMC rank
+
+    return unified;
+  }, [assets, coins, sortMode]);
+
+  const hasMore = allAssets.length > visibleCount;
+  const visibleAssets = allAssets.slice(0, visibleCount);
 
   const loadMore = useCallback(() => {
     if (hasMore) {
-      setVisibleCount(prev => Math.min(prev + PAGE_SIZE, coins?.length ?? prev));
+      setVisibleCount(prev => Math.min(prev + PAGE_SIZE, allAssets.length));
     }
-  }, [hasMore, coins?.length]);
+  }, [hasMore, allAssets.length]);
 
   useEffect(() => {
     const el = sentinelRef.current;
     if (!el) return;
-
     const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting) loadMore();
-      },
+      (entries) => { if (entries[0].isIntersecting) loadMore(); },
       { rootMargin: '400px' }
     );
     observer.observe(el);
@@ -134,16 +196,39 @@ export default function Top100CryptosPage() {
     <div className="max-w-5xl mx-auto px-4 py-6">
       <SEOHead title="Top Assets — Live Prices for Stocks, Commodities & Crypto" description="Track live prices for gold, silver, oil, Tesla, Apple, Bitcoin, stocks, commodities and thousands of crypto assets on DeHub." url="https://dehub.io/app/top-100" jsonLd={{ '@context': 'https://schema.org', '@type': 'Table', name: 'Top Assets', url: 'https://dehub.io/app/top-100', description: 'Live prices and market data for top stocks, commodities and cryptocurrencies.' }} />
       <h1 className="sr-only">DeHub Top Assets — Live Prices for Stocks, Commodities & Crypto</h1>
-      <div className="flex items-center gap-3 mb-6">
+
+      <div className="flex items-center gap-3 mb-4">
         <button onClick={() => navigate(-1)} className="text-zinc-400 hover:text-white transition-colors">
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <h1 className="text-xl font-bold text-white">Top Assets</h1>
+        <h2 className="text-xl font-bold text-white">Top Assets</h2>
         {!isLoading && (
           <span className="text-zinc-500 text-sm">
-            Showing {totalVisible.toLocaleString()} of {totalAll.toLocaleString()}
+            Showing {visibleAssets.length.toLocaleString()} of {allAssets.length.toLocaleString()}
           </span>
         )}
+      </div>
+
+      {/* Sort tabs */}
+      <div className="flex gap-2 mb-4">
+        <button
+          onClick={() => setSortMode('market_cap')}
+          className={cn(
+            'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+            sortMode === 'market_cap' ? 'bg-primary text-primary-foreground' : 'bg-white/5 text-zinc-400 hover:text-white'
+          )}
+        >
+          Market Cap
+        </button>
+        <button
+          onClick={() => setSortMode('default')}
+          className={cn(
+            'px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
+            sortMode === 'default' ? 'bg-primary text-primary-foreground' : 'bg-white/5 text-zinc-400 hover:text-white'
+          )}
+        >
+          Default
+        </button>
       </div>
 
       {isLoading && (
@@ -158,7 +243,7 @@ export default function Top100CryptosPage() {
         <div className="text-red-400 text-center py-10">Failed to load data. Please try again later.</div>
       )}
 
-      {!isLoading && (totalVisible > 0) && (
+      {!isLoading && visibleAssets.length > 0 && (
         <div className="overflow-x-auto rounded-lg border border-white/10">
           <table className="w-full">
             <thead>
@@ -174,20 +259,12 @@ export default function Top100CryptosPage() {
               </tr>
             </thead>
             <tbody>
-              {assets?.map((asset, i) => (
-                <AssetRow
-                  key={asset.symbol}
+              {visibleAssets.map((asset, i) => (
+                <UnifiedRow
+                  key={asset.id}
                   asset={asset}
                   rank={i + 1}
-                  onClick={() => navigate(`/app/explore?q=$${asset.symbol}`)}
-                />
-              ))}
-              {visibleCoins.map((coin, i) => (
-                <CoinRow
-                  key={coin.id}
-                  coin={coin}
-                  rank={assetCount + i + 1}
-                  onClick={() => navigate(`/app/explore?q=$${coin.symbol}`)}
+                  onClick={() => navigate(`/app/explore?q=${asset.navQuery}`)}
                 />
               ))}
             </tbody>
@@ -195,7 +272,6 @@ export default function Top100CryptosPage() {
         </div>
       )}
 
-      {/* Infinite scroll sentinel */}
       <div ref={sentinelRef} className="py-4 flex justify-center">
         {hasMore && <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />}
       </div>
