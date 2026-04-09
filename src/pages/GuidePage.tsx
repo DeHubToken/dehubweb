@@ -411,6 +411,89 @@ const sections: GuideSection[] = [
     ]
   },
   {
+    id: "post-info",
+    screenshot: screenshotHomeFeed,
+    title: "Post Info & Fractions",
+    icon: BookOpen,
+    intro: "Every post on DeHub is minted as an NFT split into 100 fractions. The Post Info page shows on-chain data, engagement stats, ownership breakdown, and lets you trade fractions of any post.",
+    steps: [
+      "Tap the 'ⓘ' icon on any post to open its Post Info page.",
+      "At the top you'll see the Token ID (unique on-chain identifier) and the transaction hash — click the hash to view it on the block explorer.",
+      "Below that, engagement stats show total likes, dislikes, views, comments, and tips received.",
+      "The Holders section shows a progress bar of how many of the 100 fractions the creator still owns, plus a list of all fraction holders with their balances and percentages.",
+      "If the post is pay-per-view (PPV), you'll see the price, currency, and how many users have purchased access.",
+      "Post owners can change visibility (Public, Unlisted, or Private) and edit the title/description directly from this page.",
+    ],
+    tips: [
+      "Every post starts with the creator holding all 100 fractions (100% ownership).",
+      "The transaction hash links to BaseScan or BscScan depending on the chain.",
+      "Unlisted posts don't appear in feeds but can still be accessed via direct link.",
+    ]
+  },
+  {
+    id: "buying-fractions",
+    screenshot: screenshotHomeFeed,
+    title: "Buying Fractions",
+    icon: ShoppingCart,
+    intro: "You can buy fractions of any post to own a share of that content. Fraction trading happens on the Post Info page's marketplace tab.",
+    steps: [
+      "Open the Post Info page for the post you're interested in (tap the 'ⓘ' icon).",
+      "Switch to the 'Marketplace' tab to see available listings and offers.",
+      "Browse listed fractions — each listing shows the seller, quantity, price per fraction, and total cost in DHB.",
+      "Click 'Make Offer' to submit a buy offer at a price you choose.",
+      "Enter the number of fractions you want and the price per fraction in DHB.",
+      "Confirm your offer — the fraction holder can then accept or reject it.",
+      "Once accepted, the fractions transfer to your wallet and the DHB is sent to the seller."
+    ],
+    tips: [
+      "Check the holders list to see the current ownership distribution before buying.",
+      "Owning fractions of a post means you hold a share of that on-chain NFT.",
+      "Fraction prices are set by sellers — shop around for the best deals."
+    ]
+  },
+  {
+    id: "selling-fractions",
+    screenshot: screenshotHomeFeed,
+    title: "Selling Fractions",
+    icon: Landmark,
+    intro: "If you own fractions of a post (as the creator or through purchase), you can list them for sale on the marketplace.",
+    steps: [
+      "Open the Post Info page for a post you own fractions of.",
+      "Switch to the 'Marketplace' tab.",
+      "Click the 'List Fractions' button (only visible if you hold fractions).",
+      "Enter the number of fractions you want to sell.",
+      "Set your asking price per fraction in DHB.",
+      "Review the total listing value and confirm.",
+      "Your fractions are now listed — other users can purchase them or make counter-offers."
+    ],
+    tips: [
+      "You can list any amount up to your total fraction balance.",
+      "Listings can be cancelled before someone buys.",
+      "As a creator, selling fractions lets fans co-own your content."
+    ]
+  },
+  {
+    id: "minting-posts",
+    screenshot: screenshotHomeFeed,
+    title: "Minting Posts (Creating NFTs)",
+    icon: PenSquare,
+    intro: "When you create a post on DeHub, it's automatically minted as an NFT on the blockchain. You don't need to do anything special — every post is an NFT.",
+    steps: [
+      "Click the 'Post' button in the sidebar (desktop) or the + button (mobile).",
+      "Write your text, attach media (images, videos, audio), and add categories.",
+      "Click 'Post' to publish — your content is immediately minted as an NFT on the Base blockchain.",
+      "Each minted post gets a unique Token ID and a transaction hash you can verify on-chain.",
+      "You automatically receive all 100 fractions (100% ownership) of your newly minted post.",
+      "View your post's on-chain details anytime by tapping the 'ⓘ' icon on the post."
+    ],
+    tips: [
+      "Social-login users pay zero gas — DeHub sponsors all minting fees.",
+      "External-wallet users need ETH on Base for gas.",
+      "Once minted, the on-chain record is permanent even if the post is later deleted from the feed.",
+      "You can change your post's visibility after minting (Public, Unlisted, or Private)."
+    ]
+  },
+  {
     id: "glossary",
     title: "Glossary",
     icon: BookOpen,
