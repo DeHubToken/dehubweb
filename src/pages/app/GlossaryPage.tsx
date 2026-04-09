@@ -34,7 +34,7 @@ import {
   Clock, CheckCircle2,
   Copy, ExternalLink, RotateCcw, Pencil, Trash2,
   ChevronUp, ChevronDown, Pin, AtSign, Hash,
-  Info, PieChart, BarChart3, Globe, EyeOff, Tag, HandCoins,
+  Info, PieChart, BarChart3, Globe, EyeOff, Tag, HandCoins, Plus,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 
