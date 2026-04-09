@@ -81,20 +81,56 @@ const FALLBACK_MARKET_CAPS: Record<string, number> = {
   BA: 0.12e12,
 };
 
-async function fetchQuotes() {
-  const quoteUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(
-    TOP_ASSETS.map((asset) => asset.symbol).join(',')
-  )}`;
+async function fetchQuote(symbol: string) {
+  const chartUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?range=1d&interval=1d&includePrePost=false`;
+  const quoteUrl = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${encodeURIComponent(symbol)}`;
 
-  const quoteRes = await fetch(quoteUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-  if (!quoteRes.ok) {
-    const errorText = await quoteRes.text();
-    throw new Error(`Yahoo quote failed: ${quoteRes.status} ${errorText}`);
+  const [chartResult, quoteResult] = await Promise.allSettled([
+    fetch(chartUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } }),
+    fetch(quoteUrl, { headers: { 'User-Agent': 'Mozilla/5.0' } }),
+  ]);
+
+  let price: number | null = null;
+  let previousClose: number | null = null;
+  let marketCap: number | null = null;
+  let volume: number | null = null;
+  let currency = 'USD';
+
+  if (chartResult.status === 'fulfilled' && chartResult.value.ok) {
+    try {
+      const data = await chartResult.value.json();
+      const meta = data?.chart?.result?.[0]?.meta;
+      if (meta) {
+        price = meta.regularMarketPrice ?? null;
+        previousClose = meta.chartPreviousClose ?? meta.previousClose ?? null;
+        currency = meta.currency || 'USD';
+      }
+    } catch {
+      // ignore parse errors
+    }
   }
 
-  const quoteData = await quoteRes.json();
-  const results = Array.isArray(quoteData?.quoteResponse?.result) ? quoteData.quoteResponse.result : [];
-  return new Map(results.map((quote: any) => [quote.symbol, quote]));
+  if (quoteResult.status === 'fulfilled' && quoteResult.value.ok) {
+    try {
+      const quoteData = await quoteResult.value.json();
+      const q = quoteData?.quoteResponse?.result?.[0];
+      if (q) {
+        price = price ?? q.regularMarketPrice ?? null;
+        previousClose = previousClose ?? q.regularMarketPreviousClose ?? null;
+        marketCap = q.marketCap ?? null;
+        volume = q.regularMarketVolume ?? null;
+        currency = q.currency || currency;
+      }
+    } catch {
+      // ignore parse errors
+    }
+  }
+
+  const change24h = price != null && previousClose != null && previousClose !== 0
+    ? ((price - previousClose) / previousClose) * 100
+    : null;
+
+  return { price, change24h, marketCap, volume, currency };
 }
 
 Deno.serve(async (req) => {
@@ -103,27 +139,26 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const quotes = await fetchQuotes();
+    const results = await Promise.allSettled(
+      TOP_ASSETS.map(async (asset) => {
+        const q = await fetchQuote(asset.symbol);
+        return {
+          symbol: asset.displaySymbol,
+          name: asset.name,
+          type: asset.type,
+          price: q.price,
+          change24h: q.change24h,
+          marketCap: q.marketCap ?? FALLBACK_MARKET_CAPS[asset.displaySymbol] ?? null,
+          volume24h: q.volume,
+          currency: q.currency,
+        };
+      })
+    );
 
-    const assets = TOP_ASSETS.map((asset) => {
-      const q = quotes.get(asset.symbol);
-      const price = q?.regularMarketPrice ?? q?.postMarketPrice ?? q?.preMarketPrice ?? null;
-      const previousClose = q?.regularMarketPreviousClose ?? q?.postMarketPreviousClose ?? q?.previousClose ?? null;
-      const change24h = price != null && previousClose != null && previousClose !== 0
-        ? ((price - previousClose) / previousClose) * 100
-        : null;
-
-      return {
-        symbol: asset.displaySymbol,
-        name: asset.name,
-        type: asset.type,
-        price,
-        change24h,
-        marketCap: q?.marketCap ?? FALLBACK_MARKET_CAPS[asset.displaySymbol] ?? null,
-        volume24h: q?.regularMarketVolume ?? null,
-        currency: q?.currency ?? 'USD',
-      };
-    }).filter((asset) => asset.price != null || asset.marketCap != null);
+    const assets = results.flatMap((result) => {
+      if (result.status !== 'fulfilled') return [];
+      return result.value.price != null || result.value.marketCap != null ? [result.value] : [];
+    });
 
     return new Response(JSON.stringify({ assets }), {
       headers: {
