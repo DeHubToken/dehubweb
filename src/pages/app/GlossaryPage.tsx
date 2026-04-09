@@ -34,7 +34,9 @@ import {
   Clock, CheckCircle2,
   Copy, ExternalLink, RotateCcw, Pencil, Trash2,
   ChevronUp, ChevronDown, Pin, AtSign, Hash,
+  Info, PieChart, BarChart3, Globe, EyeOff, Tag, HandCoins,
 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 
 interface GlossaryEntry {
   icon: React.ReactNode;
