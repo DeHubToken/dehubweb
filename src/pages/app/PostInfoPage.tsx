@@ -462,13 +462,15 @@ function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketp
           )}
           
           <div className="space-y-2">
-            <Button 
-              onClick={() => setOfferDrawerOpen(true)}
-              className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Make an Offer
-            </Button>
+            {!userOwnsAllFractions && (
+              <Button 
+                onClick={() => setOfferDrawerOpen(true)}
+                className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/20"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Make an Offer
+              </Button>
+            )}
             {userOwnsFractions && (
               <Button 
                 onClick={() => setListDrawerOpen(true)}
