@@ -5,10 +5,11 @@
  */
 
 import { useState, useMemo, useCallback, useRef, useLayoutEffect, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp, RefreshCw } from 'lucide-react';
+import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp, RefreshCw, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
 import trophyIcon from '@/assets/trophy-icon.png';
 import medal1 from '@/assets/medal-1.png';
