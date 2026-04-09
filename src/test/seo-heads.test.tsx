@@ -236,7 +236,7 @@ const PAGE_CASES: { name: string; path: string; h1Substring: string }[] = [
   { name: 'Agents', path: 'src/pages/app/AgentsPage.tsx', h1Substring: 'AI Agents' },
   { name: 'Buy', path: 'src/pages/app/BuyCoinsPage.tsx', h1Substring: 'Buy' },
   { name: 'Glossary', path: 'src/pages/app/GlossaryPage.tsx', h1Substring: 'Glossary' },
-  { name: 'Top 100', path: 'src/pages/app/Top100CryptosPage.tsx', h1Substring: 'Top 100' },
+  { name: 'Top Assets', path: 'src/pages/app/Top100CryptosPage.tsx', h1Substring: 'Top Assets' },
   { name: 'Features', path: 'src/pages/app/FeaturesPage.tsx', h1Substring: 'Features' },
   { name: 'Careers', path: 'src/pages/app/CareersPage.tsx', h1Substring: 'Careers' },
   { name: 'Bookmarks', path: 'src/pages/app/BookmarksPage.tsx', h1Substring: 'Bookmarks' },
