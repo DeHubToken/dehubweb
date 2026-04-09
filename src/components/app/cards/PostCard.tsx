@@ -93,14 +93,15 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const [isFollowingAuthor, setIsFollowingAuthor] = useState<boolean | null>(null);
   const [isFollowLoading, setIsFollowLoading] = useState(false);
 
+  // Lazy: only check follow status when options drawer opens — avoids N API calls on feed mount
   useEffect(() => {
-    if (!walletAddress || isOwnPost || !post.author.id) return;
+    if (!showOptionsDrawer || !walletAddress || isOwnPost || !post.author.id || isFollowingAuthor !== null) return;
     let cancelled = false;
     checkIsFollowing(post.author.id).then((res) => {
       if (!cancelled) setIsFollowingAuthor(res);
     }).catch(() => {});
     return () => { cancelled = true; };
-  }, [walletAddress, isOwnPost, post.author.id]);
+  }, [showOptionsDrawer, walletAddress, isOwnPost, post.author.id, isFollowingAuthor]);
 
   const handleFollowFromMenu = useCallback(async () => {
     if (!walletAddress) { openLoginModal(); return; }
@@ -233,15 +234,13 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
 
       {/* AI Button and Options Drawer - positioned in header area */}
       <div className="absolute top-0 right-0 z-10 flex items-center gap-2">
-        <motion.button
+        <button
           onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
-          className="text-zinc-400 hover:text-white transition-colors"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
+          className="text-zinc-400 hover:text-white transition-colors active:scale-95"
           aria-label="Ask AI about this post"
         >
           <Sparkles className="w-5 h-5" />
-        </motion.button>
+        </button>
         
         <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
           <DrawerTrigger asChild>

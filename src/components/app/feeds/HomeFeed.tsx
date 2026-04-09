@@ -886,11 +886,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               : item.type === 'video' ? `bento-video-${(item.data as VideoItem).id}`
               : `bento-image-${(item.data as ImagePost).id}`;
 
+    const intrinsicH = item.type === 'video' ? '520px' : item.type === 'image' ? '640px' : '320px';
     return (
       <div
         key={key}
         className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3"
-        style={index >= 3 ? { contentVisibility: 'auto', containIntrinsicSize: '0 400px' } : undefined}
+        style={index >= 3 ? { contentVisibility: 'auto', containIntrinsicSize: `0 ${intrinsicH}` } : undefined}
       >
         {card}
       </div>
