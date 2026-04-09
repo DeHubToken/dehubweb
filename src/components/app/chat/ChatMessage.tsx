@@ -448,6 +448,11 @@ export function ChatMessage({
           </div>
         )}
 
+        {/* Link preview cards for URLs in message */}
+        {message.type === 'text' && message.content && (
+          <ChatLinkPreviews content={message.content} />
+        )}
+
         {/* Reactions display */}
         {message.reactions && (
           <ReactionBar
