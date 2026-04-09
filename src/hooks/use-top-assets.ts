@@ -4,7 +4,6 @@ import { supabase } from '@/integrations/supabase/client';
 export interface TopAsset {
   symbol: string;
   name: string;
-  logoUrl: string;
   type: 'commodity' | 'stock';
   price: number | null;
   change24h: number | null;
@@ -13,50 +12,65 @@ export interface TopAsset {
   currency: string;
 }
 
-const TOP_ASSETS = [
-  { yahooSymbol: 'GC=F', symbol: 'GOLD', name: 'Gold', logoUrl: '', type: 'commodity' as const, fallbackMarketCap: 22.5e12 },
-  { yahooSymbol: 'SI=F', symbol: 'SILVER', name: 'Silver', logoUrl: '', type: 'commodity' as const, fallbackMarketCap: 1.9e12 },
-  { yahooSymbol: 'CL=F', symbol: 'OIL', name: 'Crude Oil (WTI)', logoUrl: 'https://logo.clearbit.com/shell.com', type: 'commodity' as const, fallbackMarketCap: 3.4e12 },
-  { yahooSymbol: 'AAPL', symbol: 'AAPL', name: 'Apple', logoUrl: 'https://logo.clearbit.com/apple.com', type: 'stock' as const, fallbackMarketCap: 3.0e12 },
-  { yahooSymbol: 'MSFT', symbol: 'MSFT', name: 'Microsoft', logoUrl: 'https://logo.clearbit.com/microsoft.com', type: 'stock' as const, fallbackMarketCap: 2.9e12 },
-  { yahooSymbol: 'GOOGL', symbol: 'GOOGL', name: 'Alphabet (Google)', logoUrl: 'https://logo.clearbit.com/google.com', type: 'stock' as const, fallbackMarketCap: 2.2e12 },
-  { yahooSymbol: 'AMZN', symbol: 'AMZN', name: 'Amazon', logoUrl: 'https://logo.clearbit.com/amazon.com', type: 'stock' as const, fallbackMarketCap: 2.0e12 },
-  { yahooSymbol: 'TSLA', symbol: 'TSLA', name: 'Tesla', logoUrl: 'https://logo.clearbit.com/tesla.com', type: 'stock' as const, fallbackMarketCap: 1.1e12 },
-  { yahooSymbol: 'NVDA', symbol: 'NVDA', name: 'NVIDIA', logoUrl: 'https://logo.clearbit.com/nvidia.com', type: 'stock' as const, fallbackMarketCap: 4.4e12 },
-  { yahooSymbol: 'META', symbol: 'META', name: 'Meta', logoUrl: 'https://logo.clearbit.com/meta.com', type: 'stock' as const, fallbackMarketCap: 1.6e12 },
-  { yahooSymbol: 'BRK-B', symbol: 'BRK.B', name: 'Berkshire Hathaway', logoUrl: 'https://logo.clearbit.com/berkshirehathaway.com', type: 'stock' as const, fallbackMarketCap: 1.2e12 },
-  { yahooSymbol: 'JPM', symbol: 'JPM', name: 'JPMorgan Chase', logoUrl: 'https://logo.clearbit.com/jpmorganchase.com', type: 'stock' as const, fallbackMarketCap: 8.0e11 },
-];
+// Fallback market caps (approximate, in USD) for when Yahoo returns null
+const FALLBACK_MARKET_CAPS: Record<string, number> = {
+  GOLD: 22.5e12,
+  SILVER: 1.9e12,
+  OIL: 3.4e12,
+  NATGAS: 0.3e12,
+  COPPER: 0.4e12,
+  PLATINUM: 0.05e12,
+  AAPL: 3.0e12,
+  MSFT: 3.1e12,
+  NVDA: 3.4e12,
+  GOOGL: 2.2e12,
+  AMZN: 2.0e12,
+  META: 1.6e12,
+  TSLA: 1.1e12,
+  'BRK.B': 1.1e12,
+  TSM: 0.9e12,
+  AVGO: 0.8e12,
+  LLY: 0.75e12,
+  WMT: 0.65e12,
+  JPM: 0.7e12,
+  V: 0.6e12,
+  MA: 0.45e12,
+  UNH: 0.5e12,
+  XOM: 0.45e12,
+  JNJ: 0.38e12,
+  PG: 0.4e12,
+  HD: 0.38e12,
+  COST: 0.4e12,
+  NFLX: 0.35e12,
+  ORCL: 0.35e12,
+  CRM: 0.28e12,
+  AMD: 0.25e12,
+  PEP: 0.22e12,
+  KO: 0.27e12,
+  INTC: 0.1e12,
+  BA: 0.12e12,
+};
 
 async function fetchTopAssets(): Promise<TopAsset[]> {
-  const results = await Promise.all(
-    TOP_ASSETS.map(async (asset) => {
-      const { data, error } = await supabase.functions.invoke('stock-quote', {
-        body: { symbol: asset.yahooSymbol },
-      });
+  const { data, error } = await supabase.functions.invoke('top-assets');
 
-      if (error || !data?.found) return null;
+  if (error || !data?.assets) return [];
 
-      return {
-        symbol: asset.symbol,
-        name: asset.name,
-        logoUrl: asset.logoUrl,
-        type: asset.type,
-        price: data.price ?? null,
-        change24h: data.percentChange24h ?? null,
-          marketCap: data.marketCap ?? asset.fallbackMarketCap ?? null,
-        volume24h: data.volume24h ?? null,
-        currency: data.currency ?? 'USD',
-      } satisfies TopAsset;
-    })
-  );
-
-  return results.filter((asset): asset is TopAsset => asset !== null);
+  return (data.assets as any[]).map((a) => ({
+    symbol: a.symbol,
+    name: a.name,
+    type: a.type as 'commodity' | 'stock',
+    price: a.price ?? null,
+    change24h: a.change24h ?? null,
+    marketCap: a.marketCap ?? FALLBACK_MARKET_CAPS[a.symbol] ?? null,
+    volume24h: a.volume24h ?? null,
+    currency: a.currency ?? 'USD',
+  }));
 }
 
 export function useTopAssets() {
   return useQuery({
-    queryKey: ['top-assets', 'v4'],
+    queryKey: ['top-assets', 'v5'],
     queryFn: fetchTopAssets,
     staleTime: 300_000,
     gcTime: 600_000,
