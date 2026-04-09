@@ -6,6 +6,8 @@ import { ArrowLeft, TrendingUp, TrendingDown, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
 import { TickerLogo } from '@/components/app/TickerLogo';
+import appleLogoImg from '@/assets/logo-apple.png';
+import googleLogoImg from '@/assets/logo-google.png';
 
 const PAGE_SIZE = 100;
 
