@@ -9,6 +9,10 @@ import { TickerLogo } from '@/components/app/TickerLogo';
 import appleLogoImg from '@/assets/logo-apple.png';
 import googleLogoImg from '@/assets/logo-google.png';
 import microsoftLogoImg from '@/assets/logo-microsoft.png';
+import berkshireLogoImg from '@/assets/logo-berkshire.png';
+import tsmcLogoImg from '@/assets/logo-tsmc.png';
+import broadcomLogoImg from '@/assets/logo-broadcom.png';
+import jpmcLogoImg from '@/assets/logo-jpmc.png';
 
 const PAGE_SIZE = 100;
 
