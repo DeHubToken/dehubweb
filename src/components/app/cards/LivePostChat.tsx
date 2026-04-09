@@ -267,7 +267,7 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
             value={newMessage}
             onChange={(e) => {
               const cursorPos = e.target.selectionStart;
-              const val = replaceLinksWithEmoji(e.target.value);
+              const val = e.target.value;
               setNewMessage(val);
               mention.handleInput(val, cursorPos ?? undefined);
             }}
