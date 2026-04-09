@@ -81,36 +81,48 @@ export default function HomePage() {
     const el = feedNavRef.current;
     if (!el) return;
     const TOP_THRESHOLD = 60;
-    let lastY = window.scrollY;
+    let lastY = 0;
     let touchStartY = 0;
+
+    const getScrollY = () =>
+      window.scrollY ||
+      document.documentElement.scrollTop ||
+      document.body.scrollTop ||
+      (document.getElementById('app-root')?.scrollTop ?? 0) ||
+      (document.querySelector('main')?.scrollTop ?? 0);
+
+    lastY = getScrollY();
 
     const show = () => { el.style.transform = 'translateY(0)'; };
     const hide = () => { el.style.transform = 'translateY(-100%)'; };
 
     const onScroll = () => {
-      if (window.innerWidth >= 1024) return; // desktop: do nothing
-      const y = window.scrollY;
+      if (window.innerWidth >= 1024) return;
+      const y = getScrollY();
       const diff = y - lastY;
       lastY = y;
       if (y <= TOP_THRESHOLD) { show(); return; }
-      if (diff > 4) hide();
-      else if (diff < -4) show();
+      if (diff > 2) hide();
+      else if (diff < -2) show();
     };
 
     const onTouchStart = (e: TouchEvent) => { touchStartY = e.touches[0].clientY; };
     const onTouchMove = (e: TouchEvent) => {
       if (window.innerWidth >= 1024) return;
-      const y = window.scrollY;
+      const y = getScrollY();
       if (y <= TOP_THRESHOLD) { show(); return; }
       const moved = touchStartY - e.touches[0].clientY;
-      if (moved > 15) hide();
-      else if (moved < -15) show();
+      if (moved > 10) hide();
+      else if (moved < -10) show();
     };
 
+    // capture:true catches scroll from ANY container (not just window)
+    document.addEventListener('scroll', onScroll, { passive: true, capture: true });
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('touchstart', onTouchStart, { passive: true });
     window.addEventListener('touchmove', onTouchMove, { passive: true });
     return () => {
+      document.removeEventListener('scroll', onScroll, { capture: true });
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('touchmove', onTouchMove);
