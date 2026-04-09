@@ -72,9 +72,41 @@ function SilverIcon() {
   );
 }
 
+function CopperIcon() {
+  return (
+    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-gradient-to-br from-[#E8A065] to-[#B87333] text-black">
+      Cu
+    </div>
+  );
+}
+
+function PlatinumIcon() {
+  return (
+    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-gradient-to-br from-[#E5E4E2] to-[#8E8D8A] text-white drop-shadow-sm" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>
+      Pt
+    </div>
+  );
+}
+
+function NaturalGasIcon() {
+  return (
+    <div className="w-6 h-6 rounded-full flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-[#4FC3F7] to-[#0288D1]">
+      <div className="absolute inset-0 flex flex-wrap justify-center items-center gap-[2px] opacity-40">
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="w-[5px] h-[5px] rounded-full bg-white/70" />
+        ))}
+      </div>
+      <span className="text-[8px] font-bold text-white relative z-10" style={{ textShadow: '0 1px 2px rgba(0,0,0,0.3)' }}>NG</span>
+    </div>
+  );
+}
+
 function AssetLogoElement({ asset }: { asset: TopAsset }) {
   if (asset.symbol === 'GOLD') return <GoldIcon />;
   if (asset.symbol === 'SILVER') return <SilverIcon />;
+  if (asset.symbol === 'COPPER') return <CopperIcon />;
+  if (asset.symbol === 'PLATINUM') return <PlatinumIcon />;
+  if (asset.symbol === 'NATGAS') return <NaturalGasIcon />;
   if (asset.symbol === 'AAPL') return <img src={appleLogoImg} alt="Apple" className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
   if (asset.symbol === 'GOOGL') return <img src={googleLogoImg} alt="Google" className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
   if (asset.symbol === 'MSFT') return <img src={microsoftLogoImg} alt="Microsoft" className="w-6 h-6 rounded-full bg-white p-0.5 object-contain" />;
