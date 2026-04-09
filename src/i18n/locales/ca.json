@@ -23,7 +23,8 @@
     "login": "Iniciar sessió",
     "connecting": "Connectant...",
     "signMessage": "Signar missatge",
-    "guide": "Guia"
+    "guide": "Guia",
+    "events": "Esdeveniments"
   },
   "feed": {
     "home": "Inici",

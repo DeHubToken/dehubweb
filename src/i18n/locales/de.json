@@ -23,7 +23,8 @@
     "login": "Anmelden",
     "connecting": "Verbinden...",
     "signMessage": "Nachricht signieren",
-    "guide": "Leitfaden"
+    "guide": "Leitfaden",
+    "events": "Veranstaltungen"
   },
   "feed": {
     "home": "Startseite",

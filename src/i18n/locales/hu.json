@@ -23,7 +23,8 @@
     "login": "Bejelentkezés",
     "connecting": "Csatlakozás...",
     "signMessage": "Üzenet aláírása",
-    "guide": "Útmutató"
+    "guide": "Útmutató",
+    "events": "Események"
   },
   "feed": {
     "home": "Kezdőlap",

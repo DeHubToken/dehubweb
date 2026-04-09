@@ -23,7 +23,8 @@
     "login": "Inloggen",
     "connecting": "Verbinden...",
     "signMessage": "Bericht ondertekenen",
-    "guide": "Gids"
+    "guide": "Gids",
+    "events": "Evenementen"
   },
   "feed": {
     "home": "Home",

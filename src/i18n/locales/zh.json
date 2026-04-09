@@ -23,7 +23,8 @@
     "login": "登录",
     "connecting": "连接中...",
     "signMessage": "签名消息",
-    "guide": "指南"
+    "guide": "指南",
+    "events": "活动"
   },
   "feed": {
     "home": "首页",

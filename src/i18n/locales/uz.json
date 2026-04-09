@@ -23,7 +23,8 @@
     "login": "Kirish",
     "connecting": "Ulanmoqda...",
     "signMessage": "Xabarni imzolash",
-    "guide": "Qo'llanma"
+    "guide": "Qo'llanma",
+    "events": "Tadbirlar"
   },
   "feed": {
     "home": "Bosh sahifa",

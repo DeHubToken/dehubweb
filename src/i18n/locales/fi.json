@@ -23,7 +23,8 @@
     "login": "Kirjaudu sisään",
     "connecting": "Yhdistetään...",
     "signMessage": "Allekirjoita viesti",
-    "guide": "Opas"
+    "guide": "Opas",
+    "events": "Tapahtumat"
   },
   "feed": {
     "home": "Koti",

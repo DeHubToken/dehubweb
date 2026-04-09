@@ -23,7 +23,8 @@
     "login": "ログイン",
     "connecting": "接続中...",
     "signMessage": "メッセージに署名",
-    "guide": "ガイド"
+    "guide": "ガイド",
+    "events": "イベント"
   },
   "feed": {
     "home": "ホーム",

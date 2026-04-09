@@ -23,7 +23,8 @@
     "login": "Autentificare",
     "connecting": "Se conectează...",
     "signMessage": "Semnează mesajul",
-    "guide": "Ghid"
+    "guide": "Ghid",
+    "events": "Evenimente"
   },
   "footer": {
     "about": "Despre noi",
