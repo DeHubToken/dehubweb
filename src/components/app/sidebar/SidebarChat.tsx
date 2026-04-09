@@ -431,10 +431,9 @@ export function SidebarChat() {
             value={newMessage}
             onChange={(e) => {
               const val = e.target.value;
-              if (val.length <= 169) {
-                const processed = replaceLinksWithEmoji(val);
-                setNewMessage(processed);
-                mention.handleInput(processed, e.target.selectionStart);
+              if (val.length <= 500) {
+                setNewMessage(val);
+                mention.handleInput(val, e.target.selectionStart);
               }
               // Auto-resize — deferred to avoid forced synchronous reflow
               const ta = e.target;
