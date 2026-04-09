@@ -23,7 +23,8 @@
     "login": "Log ind",
     "connecting": "Forbinder...",
     "signMessage": "Underskriv besked",
-    "guide": "Guide"
+    "guide": "Guide",
+    "events": "Begivenheder"
   },
   "feed": {
     "home": "Hjem",

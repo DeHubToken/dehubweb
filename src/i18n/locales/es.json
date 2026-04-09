@@ -23,7 +23,8 @@
     "login": "Iniciar sesión",
     "connecting": "Conectando...",
     "signMessage": "Firmar mensaje",
-    "guide": "Guía"
+    "guide": "Guía",
+    "events": "Eventos"
   },
   "feed": {
     "home": "Inicio",

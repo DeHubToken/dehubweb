@@ -23,7 +23,8 @@
     "login": "เข้าสู่ระบบ",
     "connecting": "กำลังเชื่อมต่อ...",
     "signMessage": "เซ็นข้อความ",
-    "guide": "Guide"
+    "guide": "Guide",
+    "events": "Events"
   },
   "feed": {
     "home": "บ้าน",

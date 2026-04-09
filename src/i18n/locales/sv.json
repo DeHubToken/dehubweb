@@ -23,7 +23,8 @@
     "login": "Logga in",
     "connecting": "Ansluter...",
     "signMessage": "Signera meddelande",
-    "guide": "Guide"
+    "guide": "Guide",
+    "events": "Evenemang"
   },
   "feed": {
     "home": "Hem",

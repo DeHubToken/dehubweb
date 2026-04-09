@@ -23,7 +23,8 @@
     "login": "Log in",
     "connecting": "E dey connect...",
     "signMessage": "Sign message",
-    "guide": "Guide"
+    "guide": "Guide",
+    "events": "Events"
   },
   "feed": {
     "home": "Home",

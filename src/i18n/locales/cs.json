@@ -23,7 +23,8 @@
     "login": "Přihlásit se",
     "connecting": "Připojování...",
     "signMessage": "Podepsat zprávu",
-    "guide": "Průvodce"
+    "guide": "Průvodce",
+    "events": "Události"
   },
   "feed": {
     "home": "Domů",

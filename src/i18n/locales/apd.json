@@ -23,7 +23,8 @@
     "login": "دخول",
     "connecting": "جاري الاتصال...",
     "signMessage": "وقّع الرسالة",
-    "guide": "Guide"
+    "guide": "Guide",
+    "events": "Events"
   },
   "feed": {
     "home": "الرئيسية",

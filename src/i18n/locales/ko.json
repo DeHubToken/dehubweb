@@ -23,7 +23,8 @@
     "login": "로그인",
     "connecting": "연결 중...",
     "signMessage": "메시지 서명",
-    "guide": "가이드"
+    "guide": "가이드",
+    "events": "이벤트"
   },
   "feed": {
     "home": "홈",

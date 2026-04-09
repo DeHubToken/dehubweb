@@ -23,7 +23,8 @@
     "login": "Prisijungti",
     "connecting": "Jungiamasi...",
     "signMessage": "Pasirašyti žinutę",
-    "guide": "Vadovas"
+    "guide": "Vadovas",
+    "events": "Renginiai"
   },
   "feed": {
     "home": "Pradžia",
