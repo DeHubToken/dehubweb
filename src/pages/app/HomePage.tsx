@@ -76,6 +76,12 @@ export default function HomePage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { isCollapsed } = useSidebarCollapse();
   const navVisible = useScrollDirection();
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1024);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener('resize', check, { passive: true });
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   // Detect back navigation for tab-change scroll logic
   // Note: Actual scroll position restoration is handled by AppLayout
@@ -612,7 +618,7 @@ export default function HomePage() {
       {/* Tab Navigation */}
       <div
         className={cn("sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 lg:mt-0 transition-transform duration-300 ease-in-out", isCollapsed && "pl-2 pr-0", isCollapsed && "lg:hidden")}
-        style={{ transform: navVisible ? 'translateY(0)' : 'translateY(-110%)', willChange: 'transform' }}
+        style={{ transform: (isMobile && !navVisible) ? 'translateY(-110%)' : 'translateY(0)', willChange: 'transform' }}
       >
         <div className="bg-zinc-900 rounded-xl overflow-visible">
           <div ref={homeTabLayerRef} className="relative overflow-visible">
