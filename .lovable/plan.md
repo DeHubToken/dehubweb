@@ -1,37 +1,36 @@
 
 
-## Problems Identified
+## Plan: Improve Stock Logo Coverage
 
-1. **Only 12 traditional assets hardcoded** — the list stops at JPMorgan because that's all that was added to `TOP_ASSETS` in `use-top-assets.ts`. There are ~100 crypto from CMC but only 12 stocks/commodities.
+### Problem
+The `TickerLogo` component already tries Synth Finance for stock logos, but many fail silently — resulting in letter-circle fallbacks for Netflix, Visa, Eli Lilly, etc.
 
-2. **Logos use Clearbit URLs** which are unreliable (many return broken images or 404s). The project already has a battle-tested `TickerLogo` component that chains Synth Finance, CoinGecko, and DexScreener with proper fallbacks — but it's not being used for stock/commodity rows.
+### Solution
+Add **Clearbit** (`logo.clearbit.com/{domain}`) as a second stock logo source. It's free, no API key, and has excellent coverage for public companies. We just need a symbol-to-domain mapping.
 
-3. **Each asset fires a separate `stock-quote` edge function call** — with 12 assets that's 12 calls. Expanding to 30+ would mean 30+ sequential Yahoo Finance proxy calls, which is slow and wasteful.
+### Changes
 
-## Plan
+**File: `src/components/app/TickerLogo.tsx`**
 
-### 1. Expand the asset list to ~30 top global assets
+1. Add a `STOCK_DOMAINS` map for the ~35 assets in the Top Assets list:
+   ```
+   NFLX → netflix.com, V → visa.com, LLY → lilly.com,
+   AMZN → amazon.com, NVDA → nvidia.com, META → meta.com,
+   TSLA → tesla.com, WMT → walmart.com, XOM → exxonmobil.com,
+   UNH → unitedhealthgroup.com, MA → mastercard.com,
+   HD → homedepot.com, PG → pg.com, JNJ → jnj.com,
+   COST → costco.com, ABBV → abbvie.com, BAC → bankofamerica.com,
+   KO → coca-cola.com, CRM → salesforce.com, ORCL → oracle.com,
+   NFLX → netflix.com, AMD → amd.com, etc.
+   ```
 
-Add these to the `TOP_ASSETS` array in `use-top-assets.ts`:
+2. Update the fallback chain: if Synth Finance fails, try `https://logo.clearbit.com/{domain}` before falling through to the letter fallback.
 
-- **Commodities**: Gold, Silver, Crude Oil, Natural Gas, Copper, Platinum
-- **Mega-cap stocks**: NVDA, AAPL, MSFT, GOOGL, AMZN, META, TSLA, BRK-B, TSM, AVGO, LLY, WMT, JPM, V, MA, UNH, XOM, JNJ, PG, HD, COST, NFLX, ORCL, CRM, AMD, PEP, KO, INTC, BA
+This means every stock in the Top Assets list will show a proper company logo — no API key needed, no edge function required.
 
-Each with a `fallbackMarketCap` so sorting always works even if Yahoo returns null.
-
-### 2. Replace Clearbit logos with TickerLogo component
-
-Stop using `logoUrl` strings. Instead, render `<TickerLogo symbol={asset.symbol} size={24} />` for all stock/commodity rows. This uses Synth Finance (which has proper stock logos for AAPL, MSFT, etc.) with CoinGecko/DexScreener fallbacks. Keep the custom Gold (Au) and Silver (Ag) gradient icons for commodities.
-
-### 3. Batch the Yahoo Finance calls via a single edge function
-
-Create/update the `top-assets` edge function to accept an array of symbols and fetch them all in one Yahoo Finance multi-quote API call (`v7/finance/quote?symbols=AAPL,MSFT,...`). This reduces ~30 individual edge function invocations to 1 call, making the page load much faster.
-
-### Files Changed
-
-| File | Change |
-|------|--------|
-| `src/hooks/use-top-assets.ts` | Expand to ~30 assets, remove `logoUrl`, call single batch function |
-| `src/pages/app/Top100CryptosPage.tsx` | Use `TickerLogo` for stock rows instead of Clearbit `<img>` |
-| `supabase/functions/top-assets/index.ts` | Rewrite to batch-fetch all symbols in one Yahoo Finance call |
+### Why not the others?
+- **Logo.dev** requires a token (even free tier)
+- **Google Favicons** are low quality at 24px
+- **Brandfetch** requires an API key
+- **Clearbit** is free, no key, high quality, and covers all major public companies
 
