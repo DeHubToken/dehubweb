@@ -51,7 +51,7 @@ function PercentBadge({ value }: { value: number }) {
 
 function GoldIcon() {
   return (
-    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ background: 'linear-gradient(135deg, #FFD700, #B8860B)', color: '#fff' }}>
+    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-gradient-to-br from-[hsl(var(--accent))] to-[hsl(var(--primary))] text-[hsl(var(--accent-foreground))]">
       Au
     </div>
   );
@@ -59,7 +59,7 @@ function GoldIcon() {
 
 function SilverIcon() {
   return (
-    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold" style={{ background: 'linear-gradient(135deg, #C0C0C0, #808080)', color: '#fff' }}>
+    <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold bg-[hsl(var(--muted))] text-[hsl(var(--foreground))] border border-border">
       Ag
     </div>
   );
@@ -119,16 +119,16 @@ export default function Top100CryptosPage() {
 
     if (assets) {
       for (const a of assets) {
-        if (a.price == null || a.marketCap == null) continue;
+        if (a.price == null && a.marketCap == null) continue;
         unified.push({
           id: `asset-${a.symbol}`,
           name: a.name,
           symbol: a.symbol,
-          price: a.price,
+          price: a.price ?? 0,
           change1h: null,
           change24h: a.change24h ?? 0,
           change7d: null,
-          marketCap: a.marketCap,
+          marketCap: a.marketCap ?? 0,
           volume24h: a.volume24h ?? 0,
           logoElement: <AssetLogoElement asset={a} />,
           navQuery: `$${a.symbol}`,
