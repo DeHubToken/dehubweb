@@ -87,18 +87,18 @@ function UnifiedRow({ asset, rank, onClick }: { asset: UnifiedAsset; rank: numbe
     <tr onClick={onClick} className="border-b border-white/5 hover:bg-white/5 cursor-pointer transition-colors">
       <td className="py-3 px-3 text-zinc-400 text-sm font-medium">{rank}</td>
       <td className="py-3 px-3">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           {asset.logoElement}
-          <span className="text-white font-medium text-sm">{asset.name}</span>
+          <span className="text-white font-medium text-sm truncate">{asset.name}</span>
           <span className="text-zinc-500 text-xs">{asset.symbol}</span>
         </div>
       </td>
       <td className="py-3 px-3 text-right text-zinc-300 text-sm font-mono">{formatLargeNumber(asset.marketCap)}</td>
-      <td className="py-3 px-3 text-white text-sm text-right font-mono hidden sm:table-cell">{formatPrice(asset.price)}</td>
+      <td className="py-3 px-3 text-white text-sm text-right font-mono whitespace-nowrap">{formatPrice(asset.price)}</td>
       <td className="py-3 px-3 text-right hidden lg:table-cell">
         {asset.change1h != null ? <PercentBadge value={asset.change1h} /> : '—'}
       </td>
-      <td className="py-3 px-3 text-right hidden md:table-cell"><PercentBadge value={asset.change24h} /></td>
+      <td className="py-3 px-3 text-right whitespace-nowrap"><PercentBadge value={asset.change24h} /></td>
       <td className="py-3 px-3 text-right hidden xl:table-cell">
         {asset.change7d != null ? <PercentBadge value={asset.change7d} /> : '—'}
       </td>
@@ -210,16 +210,16 @@ export default function Top100CryptosPage() {
       )}
 
       {!isLoading && visibleAssets.length > 0 && (
-        <div className="rounded-lg border border-white/10 overflow-hidden">
-          <table className="w-full">
+        <div className="rounded-lg border border-white/10 overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+          <table className="w-full min-w-[540px]">
             <thead>
               <tr className="border-b border-white/10 text-zinc-500 text-xs uppercase">
                 <th className="py-3 px-3 text-left">#</th>
                 <th className="py-3 px-3 text-left">Name</th>
                 <th className="py-3 px-3 text-right">Market Cap</th>
-                <th className="py-3 px-3 text-right hidden sm:table-cell">Price</th>
+                <th className="py-3 px-3 text-right whitespace-nowrap">Price</th>
                 <th className="py-3 px-3 text-right hidden lg:table-cell">1h</th>
-                <th className="py-3 px-3 text-right hidden md:table-cell">24h</th>
+                <th className="py-3 px-3 text-right whitespace-nowrap">24h</th>
                 <th className="py-3 px-3 text-right hidden xl:table-cell">7d</th>
                 <th className="py-3 px-3 text-right hidden 2xl:table-cell">Volume (24h)</th>
               </tr>
