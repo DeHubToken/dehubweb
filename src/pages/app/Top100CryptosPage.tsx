@@ -132,7 +132,7 @@ export default function Top100CryptosPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-6">
-      <SEOHead title="Top Assets — Live Prices for Stocks, Commodities & Crypto" description="Track live prices for gold, silver, Tesla, Apple, Bitcoin and thousands of crypto assets on DeHub." url="https://dehub.io/app/top-100" jsonLd={{ '@context': 'https://schema.org', '@type': 'Table', name: 'Top Assets', url: 'https://dehub.io/app/top-100', description: 'Live prices and market data for top stocks, commodities and cryptocurrencies.' }} />
+      <SEOHead title="Top Assets — Live Prices for Stocks, Commodities & Crypto" description="Track live prices for gold, silver, oil, Tesla, Apple, Bitcoin, stocks, commodities and thousands of crypto assets on DeHub." url="https://dehub.io/app/top-100" jsonLd={{ '@context': 'https://schema.org', '@type': 'Table', name: 'Top Assets', url: 'https://dehub.io/app/top-100', description: 'Live prices and market data for top stocks, commodities and cryptocurrencies.' }} />
       <h1 className="sr-only">DeHub Top Assets — Live Prices for Stocks, Commodities & Crypto</h1>
       <div className="flex items-center gap-3 mb-6">
         <button onClick={() => navigate(-1)} className="text-zinc-400 hover:text-white transition-colors">
