@@ -1,48 +1,37 @@
 
 
-## Problem: `build.target: 'esnext'` breaks older Safari/iOS
+## Problems Identified
 
-Vite's `build.target` controls which JavaScript features are kept as-is vs transpiled down. `esnext` means "emit whatever the latest spec allows" — no transpilation. Older iPhones running iOS 14 or 15 (Safari 14/15) choke on syntax they don't understand, producing a white screen with no error visible to the user.
+1. **Only 12 traditional assets hardcoded** — the list stops at JPMorgan because that's all that was added to `TOP_ASSETS` in `use-top-assets.ts`. There are ~100 crypto from CMC but only 12 stocks/commodities.
 
-### Affected devices
-- iPhone 6s / 7 / 8 / SE (1st & 2nd gen) on iOS 14–15
-- Any iPhone where the user hasn't updated past iOS 15
-- Safari 14–15 on macOS
+2. **Logos use Clearbit URLs** which are unreliable (many return broken images or 404s). The project already has a battle-tested `TickerLogo` component that chains Synth Finance, CoinGecko, and DexScreener with proper fallbacks — but it's not being used for stock/commodity rows.
 
-### Plan
+3. **Each asset fires a separate `stock-quote` edge function call** — with 12 assets that's 12 calls. Expanding to 30+ would mean 30+ sequential Yahoo Finance proxy calls, which is slow and wasteful.
 
-**1. Change the Vite build target** (`vite.config.ts`)
+## Plan
 
-Replace `target: 'esnext'` with a target that covers Safari 14+:
+### 1. Expand the asset list to ~30 top global assets
 
-```
-target: ['es2020', 'safari14']
-```
+Add these to the `TOP_ASSETS` array in `use-top-assets.ts`:
 
-This tells Vite/esbuild to transpile syntax newer than ES2020 (like top-level await, class static blocks, etc.) down to something Safari 14 can run. This covers iPhones back to iOS 14.
+- **Commodities**: Gold, Silver, Crude Oil, Natural Gas, Copper, Platinum
+- **Mega-cap stocks**: NVDA, AAPL, MSFT, GOOGL, AMZN, META, TSLA, BRK-B, TSM, AVGO, LLY, WMT, JPM, V, MA, UNH, XOM, JNJ, PG, HD, COST, NFLX, ORCL, CRM, AMD, PEP, KO, INTC, BA
 
-If you only need to support iOS 15+, use `safari15` instead — it's slightly less transpilation.
+Each with a `fallbackMarketCap` so sorting always works even if Yahoo returns null.
 
-**2. Add the `browserslist` field to `package.json`** (optional but recommended)
+### 2. Replace Clearbit logos with TickerLogo component
 
-This helps other tools (Tailwind, PostCSS, autoprefixer) know your browser support:
+Stop using `logoUrl` strings. Instead, render `<TickerLogo symbol={asset.symbol} size={24} />` for all stock/commodity rows. This uses Synth Finance (which has proper stock logos for AAPL, MSFT, etc.) with CoinGecko/DexScreener fallbacks. Keep the custom Gold (Au) and Silver (Ag) gradient icons for commodities.
 
-```json
-"browserslist": ["iOS >= 14", "safari >= 14", "> 0.5%", "not dead"]
-```
+### 3. Batch the Yahoo Finance calls via a single edge function
 
-**3. Check for unsupported API usage** (audit, no file changes)
+Create/update the `top-assets` edge function to accept an array of symbols and fetch them all in one Yahoo Finance multi-quote API call (`v7/finance/quote?symbols=AAPL,MSFT,...`). This reduces ~30 individual edge function invocations to 1 call, making the page load much faster.
 
-Even with syntax transpiled, some runtime APIs don't exist on older Safari:
-- `structuredClone` — not available until Safari 15.4
-- `crypto.randomUUID` — Safari 15.4+
-- `Array.prototype.at()` — Safari 15.4+
-- `AbortSignal.timeout()` — Safari 16+
+### Files Changed
 
-If any of these are used, they need polyfills or fallbacks. I'll search the codebase for usage after implementation begins.
-
-### Impact
-- No visual or functional changes on modern devices
-- Bundle size increases very slightly (a few KB) from transpiled syntax
-- Older iPhones will be able to load and use the site
+| File | Change |
+|------|--------|
+| `src/hooks/use-top-assets.ts` | Expand to ~30 assets, remove `logoUrl`, call single batch function |
+| `src/pages/app/Top100CryptosPage.tsx` | Use `TickerLogo` for stock rows instead of Clearbit `<img>` |
+| `supabase/functions/top-assets/index.ts` | Rewrite to batch-fetch all symbols in one Yahoo Finance call |
 
