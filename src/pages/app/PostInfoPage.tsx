@@ -375,14 +375,16 @@ function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketp
                 List Your Fractions ({userHolding!.balance} available)
               </Button>
             )}
-            <Button 
-              onClick={() => setOfferDrawerOpen(true)}
-              variant="ghost"
-              className="w-full text-white/60 hover:text-white"
-            >
-              <HandCoins className="w-4 h-4 mr-2" />
-              Make an Offer
-            </Button>
+            {!userOwnsAllFractions && (
+              <Button 
+                onClick={() => setOfferDrawerOpen(true)}
+                variant="ghost"
+                className="w-full text-white/60 hover:text-white"
+              >
+                <HandCoins className="w-4 h-4 mr-2" />
+                Make an Offer
+              </Button>
+            )}
           </div>
         </TabsContent>
         
