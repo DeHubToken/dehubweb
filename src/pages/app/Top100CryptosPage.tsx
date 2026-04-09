@@ -8,6 +8,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { TickerLogo } from '@/components/app/TickerLogo';
 import appleLogoImg from '@/assets/logo-apple.png';
 import googleLogoImg from '@/assets/logo-google.png';
+import microsoftLogoImg from '@/assets/logo-microsoft.png';
 
 const PAGE_SIZE = 100;
 
