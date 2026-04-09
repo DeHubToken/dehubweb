@@ -87,9 +87,9 @@ function UnifiedRow({ asset, rank, onClick }: { asset: UnifiedAsset; rank: numbe
     <tr onClick={onClick} className="border-b border-white/5 hover:bg-white/5 cursor-pointer transition-colors">
       <td className="py-3 px-3 text-zinc-400 text-sm font-medium">{rank}</td>
       <td className="py-3 px-3">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           {asset.logoElement}
-          <span className="text-white font-medium text-sm">{asset.name}</span>
+          <span className="text-white font-medium text-sm truncate">{asset.name}</span>
           <span className="text-zinc-500 text-xs">{asset.symbol}</span>
         </div>
       </td>
@@ -210,8 +210,8 @@ export default function Top100CryptosPage() {
       )}
 
       {!isLoading && visibleAssets.length > 0 && (
-        <div className="rounded-lg border border-white/10 overflow-hidden">
-          <table className="w-full">
+        <div className="rounded-lg border border-white/10 overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+          <table className="w-full min-w-[540px]">
             <thead>
               <tr className="border-b border-white/10 text-zinc-500 text-xs uppercase">
                 <th className="py-3 px-3 text-left">#</th>
