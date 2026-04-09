@@ -138,18 +138,28 @@ export function SidebarChat() {
     return items;
   })();
 
-  // Always scroll to bottom when messages change
-  useEffect(() => {
+  // Scroll to bottom on mount and whenever message count changes
+  const scrollToBottom = useCallback(() => {
     const el = scrollContainerRef.current;
-    if (mergedItems.length > 0 && el) {
-      // Double rAF to ensure DOM has painted
+    if (!el) return;
+    requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          el.scrollTop = el.scrollHeight;
-        });
+        el.scrollTop = el.scrollHeight;
       });
+    });
+  }, []);
+
+  // On mount – always scroll down
+  useEffect(() => {
+    scrollToBottom();
+  }, [scrollToBottom]);
+
+  // When new messages arrive
+  useEffect(() => {
+    if (mergedItems.length > 0) {
+      scrollToBottom();
     }
-  }, [mergedItems.length]);
+  }, [mergedItems.length, scrollToBottom]);
 
   const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
     if (!isAuthenticated) { openLoginModal(); return; }
