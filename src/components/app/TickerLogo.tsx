@@ -138,6 +138,7 @@ async function fetchCoinGeckoLogo(symbol: string): Promise<string | null> {
 export function TickerLogo({ symbol, size = 16, className = '' }: TickerLogoProps) {
   const [synthFailed, setSynthFailed] = useState(false);
   const [clearbitFailed, setClearbitFailed] = useState(false);
+  const [faviconFailed, setFaviconFailed] = useState(false);
   const [cgImgFailed, setCgImgFailed] = useState(false);
   const [dexFailed, setDexFailed] = useState(false);
   const clean = symbol.replace(/^\$/, '').toUpperCase();
@@ -200,6 +201,22 @@ export function TickerLogo({ symbol, size = 16, className = '' }: TickerLogoProp
         height={size}
         className={`shrink-0 rounded-full object-contain bg-white p-0.5 ${className}`}
         onError={() => setClearbitFailed(true)}
+        loading="lazy"
+      />
+    );
+  }
+
+  // Google Favicon fallback (stocks with known domain)
+  if (stockDomain && !faviconFailed) {
+    const faviconUrl = `https://www.google.com/s2/favicons?domain=${stockDomain}&sz=128`;
+    return (
+      <img
+        src={faviconUrl}
+        alt={clean}
+        width={size}
+        height={size}
+        className={`shrink-0 rounded-full object-contain bg-white p-0.5 ${className}`}
+        onError={() => setFaviconFailed(true)}
         loading="lazy"
       />
     );
