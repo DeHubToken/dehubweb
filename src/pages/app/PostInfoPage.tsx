@@ -192,6 +192,8 @@ function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketp
     ? holders.find(h => h.address.toLowerCase() === walletAddress.toLowerCase())
     : null;
   const userOwnsFractions = !!userHolding && userHolding.balance > 0;
+  const userOwnsAllFractions = !!userHolding && userHolding.balance >= 1000;
+  const otherHoldersExist = holders.some(h => h.address.toLowerCase() !== walletAddress?.toLowerCase() && h.balance > 0);
 
   const handleCancelListing = async (listing: FListing) => {
     try {
