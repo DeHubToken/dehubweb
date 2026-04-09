@@ -66,7 +66,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   }, [isAuthenticated, openLoginModal]);
 
   return (
-    <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-black px-4 h-11 flex items-center justify-between">
+    <header className="lg:hidden fixed top-0 left-0 right-0 z-[60] bg-black px-4 h-11 flex items-center justify-between">
       <div className="flex items-center gap-3 ml-[-8px]">
         <HeaderLogo onClick={handleLogoClick} />
       </div>
