@@ -455,8 +455,7 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                 onChange={(e) => {
                   const val = e.target.value;
                   if (val.length <= 500) {
-                    const processed = replaceLinksWithEmoji(val);
-                    setNewMessage(processed);
+                    setNewMessage(val);
                   }
                   const ta = e.target;
                   requestAnimationFrame(() => {

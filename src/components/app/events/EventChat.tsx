@@ -353,8 +353,7 @@ export function EventChat({ eventId }: EventChatProps) {
               onChange={(e) => {
                 const val = e.target.value;
                 if (val.length <= 500) {
-                  const processed = replaceLinksWithEmoji(val);
-                  setNewMessage(processed);
+                  setNewMessage(val);
                 }
                 const ta = e.target;
                 requestAnimationFrame(() => {
