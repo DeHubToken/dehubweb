@@ -1733,16 +1733,14 @@ export default function AssistantPage() {
       <div className="flex items-center justify-between p-4">
         <button
           onClick={() => {
-            if (messages.length > 1) {
-              startNewConversation();
-              setMessages([{
-                id: 'initial',
-                role: 'assistant',
-                content: t('assistant.greeting'),
-              }]);
-              setInput('');
-              setAttachedImage(null);
-            }
+            startNewConversation();
+            setMessages([{
+              id: 'initial',
+              role: 'assistant',
+              content: t('assistant.greeting'),
+            }]);
+            setInput('');
+            setAttachedImage(null);
           }}
           className="flex items-center gap-3 group"
         >
