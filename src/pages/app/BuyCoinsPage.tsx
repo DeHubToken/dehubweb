@@ -631,6 +631,15 @@ export default function BuyCoinsPage() {
                     <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
                   </div>
                 )}
+                {hasNextPage && !isFetchingNextPage && (
+                  <button
+                    type="button"
+                    onClick={() => fetchNextPage()}
+                    className="w-full text-center text-xs text-zinc-500 hover:text-zinc-300 py-3 transition-colors"
+                  >
+                    Load more...
+                  </button>
+                )}
               </div>
             );
           })()}
