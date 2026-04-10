@@ -1055,6 +1055,11 @@ export default function AssistantPage() {
           aspectRatio: '16:9',
           ...(options?.negativePrompt && { negativePrompt: options.negativePrompt }),
           ...(options?.resolution && { resolution: options.resolution }),
+          ...(options?.referenceImageUrls && options.referenceImageUrls.length > 0 && { referenceImageUrls: options.referenceImageUrls }),
+          ...(options?.endFrameUrl && { endFrameUrl: options.endFrameUrl }),
+          ...(options?.audioUrls && options.audioUrls.length > 0 && { audioUrls: options.audioUrls }),
+          ...(options?.videoUrls && options.videoUrls.length > 0 && { videoUrls: options.videoUrls }),
+          ...(options?.seed !== undefined && { seed: options.seed }),
         }
       });
 
