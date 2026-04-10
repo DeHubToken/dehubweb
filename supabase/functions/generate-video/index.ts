@@ -95,7 +95,7 @@ interface GenerateVideoRequest {
   duration?: '5s' | '10s' | string;
   aspectRatio?: '16:9' | '9:16' | '1:1';
   negativePrompt?: string;
-  resolution?: '480p' | '720p';
+  resolution?: '480p' | '720p' | '1080p';
   referenceImageUrls?: string[];
   endFrameUrl?: string;
   audioUrls?: string[];
