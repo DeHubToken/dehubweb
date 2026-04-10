@@ -1066,6 +1066,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     toast.loading(`Connecting to ${provider === 'google' ? 'Google' : provider === 'twitter' ? 'X' : provider}...`, { id: 'auth-popup' });
 
     try {
+      // Avoid wagmi + Web3Auth competing for the same browser wallet/session; also
+      // reduces odd Torus/provider races during OAuth.
+      try {
+        await wagmiDisconnect();
+        clearWagmiStorage();
+      } catch { /* ignore */ }
+
       const socialProvider = mapSocialProvider(provider);
       const authProvider = await connectToSocialProvider(socialProvider);
       
@@ -1107,6 +1114,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('dehub_connection_source', 'web3auth');
 
     try {
+      try {
+        await wagmiDisconnect();
+        clearWagmiStorage();
+      } catch { /* ignore */ }
+
       const authProvider = await connectToSocialProvider(AUTH_CONNECTION.EMAIL_PASSWORDLESS, email);
       
       if (authProvider) {
@@ -1143,6 +1155,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('dehub_connection_source', 'web3auth');
 
     try {
+      try {
+        await wagmiDisconnect();
+        clearWagmiStorage();
+      } catch { /* ignore */ }
+
       const authProvider = await connectToSocialProvider(AUTH_CONNECTION.SMS_PASSWORDLESS, phone);
       
       if (authProvider) {

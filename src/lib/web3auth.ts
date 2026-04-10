@@ -435,29 +435,18 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           getPimlicoConfig().catch(() => ({ bundlerUrl: '', paymasterUrl: '' })),
         ]);
 
+        // walletServicesConfig and accountAbstractionConfig are intentionally omitted.
+        // Both cause the SDK to call POST api-wallet.web3auth.io/auth/verify which
+        // currently rejects ALL MPC/AA signatures with 400 "signatures[0] > 500 chars"
+        // regardless of SDK version. This is a server-side regression on Web3Auth's end.
+        // Re-enable once Web3Auth fixes their validation limit.
         const initOptions: any = {
           clientId,
           chains: [chainConfig],
           web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
           sessionTime: 86400,
           uiConfig: { modalZIndex: "99999" } as any,
-          walletServicesConfig: {
-            confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
-            modalZIndex: "99999",
-            whiteLabel: { showWidgetButton: false },
-          } as any,
         };
-
-        if (pimlicoConfig?.bundlerUrl && pimlicoConfig?.paymasterUrl) {
-          initOptions.accountAbstractionConfig = {
-            smartAccountType: "safe",
-            chains: [{
-              chainId: "0x2105",
-              bundlerConfig: { url: pimlicoConfig.bundlerUrl },
-              paymasterConfig: { url: pimlicoConfig.paymasterUrl },
-            }],
-          };
-        }
 
         web3authInstance = new Web3Auth(initOptions);
         
@@ -696,14 +685,7 @@ export function setLastConnectedConnector(connector: string | null): void {
  * Requires an active Web3Auth session (social login). Throws if not connected.
  */
 export async function showWeb3AuthCheckout(): Promise<void> {
-  const { EVM_PLUGINS } = await import("@web3auth/no-modal");
-  const instance = await getOrInitWeb3Auth();
-  if (!instance.connected) {
-    throw new Error("Web3Auth not connected — user must be logged in via social login");
-  }
-  const plugin = instance.getPlugin(EVM_PLUGINS.WALLET_SERVICES);
-  if (!plugin) {
-    throw new Error("Wallet Services plugin not available");
-  }
-  await (plugin as any).showCheckout({ show: true });
+  // Wallet Services plugin is disabled (Web3Auth /auth/verify server-side regression).
+  // Re-enable once Web3Auth fixes their 500-char signature validation limit.
+  throw new Error("Fiat on-ramp is temporarily unavailable. Please try again later.");
 }
