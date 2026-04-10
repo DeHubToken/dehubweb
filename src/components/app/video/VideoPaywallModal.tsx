@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Loader2, Video, AlertCircle, ChevronDown, Volume2 } from 'lucide-react';
+import { Loader2, Video, AlertCircle, ChevronDown, Volume2, Upload, X, Image, Music, Film, Hash, Plus } from 'lucide-react';
 import { VideoModel, VideoModelKey, VIDEO_MODELS, VIDEO_MODEL_OPTIONS, getVideoCostUsd, getVideoCostDhb } from '@/constants/video-models.constants';
 import { supabase } from '@/integrations/supabase/client';
 import dhbCoinImage from '@/assets/dehub-coin.png';
@@ -24,6 +24,11 @@ export interface VideoGenerationOptions {
   duration?: number;
   resolution?: '480p' | '720p';
   negativePrompt?: string;
+  referenceImageUrls?: string[];
+  endFrameUrl?: string;
+  audioUrls?: string[];
+  videoUrls?: string[];
+  seed?: number;
 }
 
 interface VideoPaywallModalProps {
@@ -34,6 +39,16 @@ interface VideoPaywallModalProps {
   onModelChange: (modelKey: VideoModelKey) => void;
   onConfirm: (options?: VideoGenerationOptions) => void;
   isGenerating?: boolean;
+}
+
+/** Upload a file to Supabase storage and return its public URL */
+async function uploadToStorage(file: File, folder: string): Promise<string> {
+  const ext = file.name.split('.').pop() || 'bin';
+  const path = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const { error } = await supabase.storage.from('ai-media-uploads').upload(path, file);
+  if (error) throw error;
+  const { data } = supabase.storage.from('ai-media-uploads').getPublicUrl(path);
+  return data.publicUrl;
 }
 
 export function VideoPaywallModal({ 
@@ -51,10 +66,24 @@ export function VideoPaywallModal({
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
 
-  // Seedance 2.0 options
+  // Basic Seedance 2.0 options
   const [duration, setDuration] = useState(model.defaultDuration || 5);
   const [resolution, setResolution] = useState<'480p' | '720p'>('720p');
   const [negativePrompt, setNegativePrompt] = useState('');
+
+  // Advanced Seedance 2.0 options
+  const [referenceImages, setReferenceImages] = useState<{ file: File; preview: string }[]>([]);
+  const [endFrameFile, setEndFrameFile] = useState<{ file: File; preview: string } | null>(null);
+  const [audioFiles, setAudioFiles] = useState<File[]>([]);
+  const [videoFiles, setVideoFiles] = useState<File[]>([]);
+  const [seed, setSeed] = useState<string>('');
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const refImageInputRef = useRef<HTMLInputElement>(null);
+  const endFrameInputRef = useRef<HTMLInputElement>(null);
+  const audioInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
 
   const { walletAddress } = useAuth();
   const { data: profile, isLoading: profileLoading } = useDeHubProfile({ userId: walletAddress || undefined, enabled: !!walletAddress });
@@ -65,6 +94,12 @@ export function VideoPaywallModal({
     setDuration(model.defaultDuration || 5);
     setResolution('720p');
     setNegativePrompt('');
+    setReferenceImages([]);
+    setEndFrameFile(null);
+    setAudioFiles([]);
+    setVideoFiles([]);
+    setSeed('');
+    setShowAdvanced(false);
   }, [selectedModelKey]);
 
   useEffect(() => {
@@ -100,10 +135,49 @@ export function VideoPaywallModal({
   const isBalanceLoading = profileLoading;
   const hasEnoughBalance = userBalance >= costDhb;
 
+  const hasAdvancedFeatures = model.supportsReferenceImages || model.supportsEndFrame || model.supportsAudioInput || model.supportsVideoInput || model.supportsSeed;
+
   const formatDhb = (amount: number) => {
     if (amount >= 1000000) return `${(amount / 1000000).toFixed(2)}M`;
     if (amount >= 1000) return `${(amount / 1000).toFixed(1)}K`;
     return amount.toFixed(0);
+  };
+
+  const handleAddReferenceImages = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const maxAllowed = (model.maxReferenceImages || 9) - referenceImages.length;
+    const toAdd = files.slice(0, maxAllowed);
+    const newItems = toAdd.map(file => ({ file, preview: URL.createObjectURL(file) }));
+    setReferenceImages(prev => [...prev, ...newItems]);
+    e.target.value = '';
+  };
+
+  const handleRemoveReferenceImage = (idx: number) => {
+    setReferenceImages(prev => {
+      URL.revokeObjectURL(prev[idx].preview);
+      return prev.filter((_, i) => i !== idx);
+    });
+  };
+
+  const handleEndFrame = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (endFrameFile) URL.revokeObjectURL(endFrameFile.preview);
+      setEndFrameFile({ file, preview: URL.createObjectURL(file) });
+    }
+    e.target.value = '';
+  };
+
+  const handleAudioFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []).slice(0, 3 - audioFiles.length);
+    setAudioFiles(prev => [...prev, ...files]);
+    e.target.value = '';
+  };
+
+  const handleVideoFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []).slice(0, 3 - videoFiles.length);
+    setVideoFiles(prev => [...prev, ...files]);
+    e.target.value = '';
   };
 
   const handlePayAndGenerate = async () => {
@@ -145,13 +219,46 @@ export function VideoPaywallModal({
         { context: 'AI video generation payment', chainId: payChainId }
       );
       await result.wait(1);
-      toast.success('Payment confirmed! Generating video...', { id: 'video-gen-payment' });
+      toast.success('Payment confirmed! Uploading assets...', { id: 'video-gen-payment' });
 
+      // Upload files if any
+      setIsUploading(true);
       const options: VideoGenerationOptions = {};
       if (isPerSecond) options.duration = duration;
       if (model.supportsResolution) options.resolution = resolution;
       if (model.supportsNegativePrompt && negativePrompt.trim()) options.negativePrompt = negativePrompt.trim();
+      if (model.supportsSeed && seed.trim()) options.seed = parseInt(seed.trim()) || undefined;
 
+      // Upload reference images
+      if (referenceImages.length > 0) {
+        toast.loading('Uploading reference images...', { id: 'video-gen-payment' });
+        const urls = await Promise.all(referenceImages.map(r => uploadToStorage(r.file, 'video-ref-images')));
+        options.referenceImageUrls = urls;
+      }
+
+      // Upload end frame
+      if (endFrameFile) {
+        toast.loading('Uploading end frame...', { id: 'video-gen-payment' });
+        const url = await uploadToStorage(endFrameFile.file, 'video-end-frames');
+        options.endFrameUrl = url;
+      }
+
+      // Upload audio files
+      if (audioFiles.length > 0) {
+        toast.loading('Uploading audio...', { id: 'video-gen-payment' });
+        const urls = await Promise.all(audioFiles.map(f => uploadToStorage(f, 'video-audio')));
+        options.audioUrls = urls;
+      }
+
+      // Upload video files
+      if (videoFiles.length > 0) {
+        toast.loading('Uploading video references...', { id: 'video-gen-payment' });
+        const urls = await Promise.all(videoFiles.map(f => uploadToStorage(f, 'video-refs')));
+        options.videoUrls = urls;
+      }
+
+      setIsUploading(false);
+      toast.success('Generating video...', { id: 'video-gen-payment' });
       onConfirm(options);
     } catch (err: unknown) {
       console.error('[VideoPaywall] Payment failed:', err);
@@ -160,6 +267,7 @@ export function VideoPaywallModal({
       toast.error(msg || 'Payment failed.');
     } finally {
       setIsPaying(false);
+      setIsUploading(false);
     }
   };
 
@@ -317,6 +425,224 @@ export function VideoPaywallModal({
             </div>
           )}
 
+          {/* Advanced Options Toggle */}
+          {hasAdvancedFeatures && (
+            <button
+              type="button"
+              onClick={() => setShowAdvanced(!showAdvanced)}
+              className="w-full flex items-center justify-between text-sm text-purple-400 hover:text-purple-300 transition-colors px-1"
+            >
+              <span className="font-medium">Advanced Options</span>
+              <ChevronDown className={`w-4 h-4 transition-transform ${showAdvanced ? 'rotate-180' : ''}`} />
+            </button>
+          )}
+
+          {showAdvanced && hasAdvancedFeatures && (
+            <div className="space-y-3">
+              {/* Reference Images */}
+              {model.supportsReferenceImages && (
+                <div className="bg-zinc-800/50 rounded-xl p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-zinc-300 font-medium flex items-center gap-1.5">
+                        <Image className="w-3.5 h-3.5 text-blue-400" />
+                        Reference Images
+                      </p>
+                      <p className="text-xs text-zinc-500 mt-0.5">
+                        Use <code className="text-purple-400">@Image1</code>, <code className="text-purple-400">@Image2</code> in prompt for character/style consistency
+                      </p>
+                    </div>
+                    {referenceImages.length < (model.maxReferenceImages || 9) && (
+                      <button
+                        type="button"
+                        onClick={() => refImageInputRef.current?.click()}
+                        className="p-1.5 bg-zinc-700/50 hover:bg-zinc-700 rounded-lg transition-colors"
+                      >
+                        <Plus className="w-4 h-4 text-zinc-300" />
+                      </button>
+                    )}
+                  </div>
+                  <input
+                    ref={refImageInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="hidden"
+                    onChange={handleAddReferenceImages}
+                  />
+                  {referenceImages.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {referenceImages.map((img, idx) => (
+                        <div key={idx} className="relative group w-14 h-14 rounded-lg overflow-hidden border border-zinc-600/50">
+                          <img src={img.preview} alt={`Ref ${idx + 1}`} className="w-full h-full object-cover" />
+                          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                            <button type="button" onClick={() => handleRemoveReferenceImage(idx)} className="text-white">
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                          <span className="absolute bottom-0 left-0 right-0 text-center text-[8px] bg-black/70 text-purple-300 py-0.5">
+                            @Image{idx + 1}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* End Frame Image */}
+              {model.supportsEndFrame && (
+                <div className="bg-zinc-800/50 rounded-xl p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-zinc-300 font-medium flex items-center gap-1.5">
+                        <Film className="w-3.5 h-3.5 text-green-400" />
+                        End Frame
+                      </p>
+                      <p className="text-xs text-zinc-500 mt-0.5">Set the last frame — AI interpolates between start & end</p>
+                    </div>
+                    {!endFrameFile && (
+                      <button
+                        type="button"
+                        onClick={() => endFrameInputRef.current?.click()}
+                        className="p-1.5 bg-zinc-700/50 hover:bg-zinc-700 rounded-lg transition-colors"
+                      >
+                        <Upload className="w-4 h-4 text-zinc-300" />
+                      </button>
+                    )}
+                  </div>
+                  <input
+                    ref={endFrameInputRef}
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleEndFrame}
+                  />
+                  {endFrameFile && (
+                    <div className="relative group w-20 h-14 rounded-lg overflow-hidden border border-zinc-600/50">
+                      <img src={endFrameFile.preview} alt="End frame" className="w-full h-full object-cover" />
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <button type="button" onClick={() => { URL.revokeObjectURL(endFrameFile.preview); setEndFrameFile(null); }} className="text-white">
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Audio Input (Lip-sync) */}
+              {model.supportsAudioInput && (
+                <div className="bg-zinc-800/50 rounded-xl p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-zinc-300 font-medium flex items-center gap-1.5">
+                        <Music className="w-3.5 h-3.5 text-pink-400" />
+                        Audio Input
+                      </p>
+                      <p className="text-xs text-zinc-500 mt-0.5">Lip-sync / music-reactive video (up to 3 clips)</p>
+                    </div>
+                    {audioFiles.length < 3 && (
+                      <button
+                        type="button"
+                        onClick={() => audioInputRef.current?.click()}
+                        className="p-1.5 bg-zinc-700/50 hover:bg-zinc-700 rounded-lg transition-colors"
+                      >
+                        <Plus className="w-4 h-4 text-zinc-300" />
+                      </button>
+                    )}
+                  </div>
+                  <input
+                    ref={audioInputRef}
+                    type="file"
+                    accept="audio/*"
+                    multiple
+                    className="hidden"
+                    onChange={handleAudioFiles}
+                  />
+                  {audioFiles.length > 0 && (
+                    <div className="space-y-1.5">
+                      {audioFiles.map((f, idx) => (
+                        <div key={idx} className="flex items-center justify-between bg-zinc-900/50 rounded-lg px-3 py-2 text-xs">
+                          <span className="text-zinc-300 truncate max-w-[200px]">{f.name}</span>
+                          <button type="button" onClick={() => setAudioFiles(prev => prev.filter((_, i) => i !== idx))} className="text-zinc-500 hover:text-white ml-2">
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Video Input (Restyling) */}
+              {model.supportsVideoInput && (
+                <div className="bg-zinc-800/50 rounded-xl p-4 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-zinc-300 font-medium flex items-center gap-1.5">
+                        <Video className="w-3.5 h-3.5 text-orange-400" />
+                        Video Input
+                      </p>
+                      <p className="text-xs text-zinc-500 mt-0.5">Restyle / transform existing video (up to 3 clips)</p>
+                    </div>
+                    {videoFiles.length < 3 && (
+                      <button
+                        type="button"
+                        onClick={() => videoInputRef.current?.click()}
+                        className="p-1.5 bg-zinc-700/50 hover:bg-zinc-700 rounded-lg transition-colors"
+                      >
+                        <Plus className="w-4 h-4 text-zinc-300" />
+                      </button>
+                    )}
+                  </div>
+                  <input
+                    ref={videoInputRef}
+                    type="file"
+                    accept="video/*"
+                    multiple
+                    className="hidden"
+                    onChange={handleVideoFiles}
+                  />
+                  {videoFiles.length > 0 && (
+                    <div className="space-y-1.5">
+                      {videoFiles.map((f, idx) => (
+                        <div key={idx} className="flex items-center justify-between bg-zinc-900/50 rounded-lg px-3 py-2 text-xs">
+                          <span className="text-zinc-300 truncate max-w-[200px]">{f.name}</span>
+                          <button type="button" onClick={() => setVideoFiles(prev => prev.filter((_, i) => i !== idx))} className="text-zinc-500 hover:text-white ml-2">
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Seed */}
+              {model.supportsSeed && (
+                <div className="bg-zinc-800/50 rounded-xl p-4">
+                  <div className="flex items-center gap-3">
+                    <div className="flex-1">
+                      <p className="text-sm text-zinc-300 font-medium flex items-center gap-1.5">
+                        <Hash className="w-3.5 h-3.5 text-yellow-400" />
+                        Seed <span className="text-zinc-600 text-xs font-normal">(optional)</span>
+                      </p>
+                      <p className="text-xs text-zinc-500 mt-0.5">Same seed + same prompt = same result</p>
+                    </div>
+                    <input
+                      type="number"
+                      value={seed}
+                      onChange={(e) => setSeed(e.target.value)}
+                      placeholder="Random"
+                      className="w-28 bg-zinc-900/60 border border-zinc-700/50 rounded-lg px-2.5 py-1.5 text-sm text-white placeholder:text-zinc-600 focus:outline-none focus:border-purple-500/40 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Cost Breakdown */}
           <div className="bg-zinc-800/50 rounded-xl p-4 space-y-3">
             <div className="flex items-center justify-between text-sm">
@@ -413,9 +739,14 @@ export function VideoPaywallModal({
             variant="glass"
             className="flex-1 font-medium"
             onClick={handlePayAndGenerate}
-            disabled={loading || isBalanceLoading || !hasEnoughBalance || isGenerating || isPaying}
+            disabled={loading || isBalanceLoading || !hasEnoughBalance || isGenerating || isPaying || isUploading}
           >
-            {isPaying ? (
+            {isUploading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Uploading...
+              </>
+            ) : isPaying ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                 Paying...

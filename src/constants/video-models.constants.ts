@@ -29,6 +29,18 @@ export interface VideoModel {
   supportsResolution?: boolean;
   /** Provider for the model (defaults to 'replicate') */
   provider?: 'replicate' | 'fal';
+  /** Whether the model supports reference images (character/style consistency) */
+  supportsReferenceImages?: boolean;
+  /** Max number of reference images */
+  maxReferenceImages?: number;
+  /** Whether the model supports end frame image */
+  supportsEndFrame?: boolean;
+  /** Whether the model supports audio-driven video (lip-sync) */
+  supportsAudioInput?: boolean;
+  /** Whether the model supports video-to-video restyling */
+  supportsVideoInput?: boolean;
+  /** Whether the model supports seed for reproducibility */
+  supportsSeed?: boolean;
 }
 
 /**
@@ -64,7 +76,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '5-10s',
     tier: 'premium',
     emoji: '🎬',
-    baseCostUsd: 1.10, // Average of 5s ($0.80) and 10s ($1.40)
+    baseCostUsd: 1.10,
     hasAudio: true,
   },
   'luma-ray2': {
@@ -75,7 +87,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '5s',
     tier: 'premium',
     emoji: '✨',
-    baseCostUsd: 0.65, // ~$0.50-0.80 average
+    baseCostUsd: 0.65,
   },
   'runway-gen4': {
     id: 'runway-gen4',
@@ -85,7 +97,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '10s',
     tier: 'premium',
     emoji: '🚀',
-    baseCostUsd: 0.50, // $0.50 for 10s
+    baseCostUsd: 0.50,
   },
   'minimax-video': {
     id: 'minimax-video',
@@ -95,7 +107,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '6s',
     tier: 'standard',
     emoji: '⚡',
-    baseCostUsd: 0.22, // ~$0.15-0.30 average
+    baseCostUsd: 0.22,
   },
   'ltx-video': {
     id: 'ltx-video',
@@ -105,7 +117,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '5s',
     tier: 'fast',
     emoji: '💨',
-    baseCostUsd: 0.085, // ~$0.085
+    baseCostUsd: 0.085,
   },
   'seedance-1.5-pro': {
     id: 'seedance-1.5-pro',
@@ -126,7 +138,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '4-15s',
     tier: 'premium',
     emoji: '🌊',
-    baseCostUsd: 1.55, // fallback for 5s
+    baseCostUsd: 1.55,
     perSecondCostUsd: 0.31,
     defaultDuration: 5,
     minDuration: 4,
@@ -135,6 +147,12 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     supportsNegativePrompt: true,
     supportsResolution: true,
     provider: 'fal',
+    supportsReferenceImages: true,
+    maxReferenceImages: 9,
+    supportsEndFrame: true,
+    supportsAudioInput: true,
+    supportsVideoInput: true,
+    supportsSeed: true,
   },
 };
 
