@@ -70,6 +70,18 @@ const VIDEO_MODELS: Record<string, {
     provider: 'fal',
     falTextModel: 'bytedance/seedance-2.0/text-to-video',
     falImageModel: 'bytedance/seedance-2.0/image-to-video',
+    falReferenceModel: 'bytedance/seedance-2.0/reference-to-video',
+  },
+  'seedance-2.0-fast': {
+    id: 'bytedance/seedance-2.0-fast',
+    name: 'Seedance 2.0 Fast',
+    description: 'Faster Seedance 2.0 variant via fal.ai',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '4-15s',
+    provider: 'fal',
+    falTextModel: 'bytedance/seedance-2.0/fast/text-to-video',
+    falImageModel: 'bytedance/seedance-2.0/fast/image-to-video',
+    falReferenceModel: 'bytedance/seedance-2.0/fast/reference-to-video',
   },
 };
 
