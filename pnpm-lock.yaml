@@ -138,10 +138,10 @@ importers:
         specifier: ^9.7.0
         version: 9.7.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       '@web3auth/modal':
-        specifier: ^10.14.1
+        specifier: 10.14.1
         version: 10.14.1(@babel/runtime@7.28.6)(@coinbase/wallet-sdk@4.3.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(@sentry/core@9.47.1)(@solana/web3.js@1.98.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))(bufferutil@4.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.9.3)(utf-8-validate@5.0.10)(viem@2.45.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(zod@3.25.76)
       '@web3auth/no-modal':
-        specifier: ^10.14.1
+        specifier: 10.14.1
         version: 10.14.1(@babel/runtime@7.28.6)(@coinbase/wallet-sdk@4.3.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(react@18.3.1)(typescript@5.9.3)(utf-8-validate@5.0.10)(viem@2.45.0(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(zod@3.25.76)
       agora-rtc-sdk-ng:
         specifier: ^4.24.2
@@ -11520,9 +11520,9 @@ snapshots:
       '@wallet-standard/app': 1.1.0
       '@wallet-standard/base': 1.1.0
       '@wallet-standard/features': 1.1.0
-      '@walletconnect/sign-client': 2.23.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
-      '@walletconnect/types': 2.23.4
-      '@walletconnect/utils': 2.23.4(typescript@5.9.3)(zod@3.25.76)
+      '@walletconnect/sign-client': 2.23.5(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
+      '@walletconnect/types': 2.23.5
+      '@walletconnect/utils': 2.23.5(typescript@5.9.3)(zod@3.25.76)
       '@web3auth/auth': 10.8.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
       '@web3auth/ws-embed': 5.5.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
       assert: 2.1.0
