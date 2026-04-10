@@ -11,10 +11,22 @@ export interface VideoModel {
   duration: string;
   tier: 'premium' | 'standard' | 'fast';
   emoji: string;
-  /** Base cost in USD (before markup) */
+  /** Base cost in USD (before markup) — used for flat-rate models */
   baseCostUsd: number;
+  /** Per-second cost in USD (before markup) — used for per-second billing models */
+  perSecondCostUsd?: number;
+  /** Default duration in seconds for per-second models */
+  defaultDuration?: number;
+  /** Min duration in seconds */
+  minDuration?: number;
+  /** Max duration in seconds */
+  maxDuration?: number;
   /** Whether the model supports native audio generation */
   hasAudio?: boolean;
+  /** Whether the model supports negative prompts */
+  supportsNegativePrompt?: boolean;
+  /** Whether the model supports resolution selection */
+  supportsResolution?: boolean;
   /** Provider for the model (defaults to 'replicate') */
   provider?: 'replicate' | 'fal';
 }
@@ -27,16 +39,19 @@ export const VIDEO_GENERATION_MARKUP = 1.0; // 100% markup
 /**
  * Calculate the final cost in USD with markup
  */
-export const getVideoCostUsd = (model: VideoModel): number => {
+export const getVideoCostUsd = (model: VideoModel, durationSeconds?: number): number => {
+  if (model.perSecondCostUsd && durationSeconds) {
+    return model.perSecondCostUsd * durationSeconds * (1 + VIDEO_GENERATION_MARKUP);
+  }
   return model.baseCostUsd * (1 + VIDEO_GENERATION_MARKUP);
 };
 
 /**
  * Calculate the cost in DHB tokens
  */
-export const getVideoCostDhb = (model: VideoModel, dhbPriceUsd: number): number => {
+export const getVideoCostDhb = (model: VideoModel, dhbPriceUsd: number, durationSeconds?: number): number => {
   if (dhbPriceUsd <= 0) return 0;
-  const costUsd = getVideoCostUsd(model);
+  const costUsd = getVideoCostUsd(model, durationSeconds);
   return costUsd / dhbPriceUsd;
 };
 
@@ -108,11 +123,17 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     name: 'Seedance 2.0',
     description: 'Latest ByteDance model, superior quality & audio',
     supports: ['text-to-video', 'image-to-video'],
-    duration: '4-12s',
+    duration: '4-15s',
     tier: 'premium',
     emoji: '🌊',
-    baseCostUsd: 0.70,
+    baseCostUsd: 1.55, // fallback for 5s
+    perSecondCostUsd: 0.31,
+    defaultDuration: 5,
+    minDuration: 4,
+    maxDuration: 15,
     hasAudio: true,
+    supportsNegativePrompt: true,
+    supportsResolution: true,
     provider: 'fal',
   },
 };
