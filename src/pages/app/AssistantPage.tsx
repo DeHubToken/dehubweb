@@ -1754,16 +1754,14 @@ export default function AssistantPage() {
           {/* New Chat Button */}
           <button
             onClick={() => {
-              if (messages.length > 1) {
-                startNewConversation();
-                setMessages([{
-                  id: 'initial',
-                  role: 'assistant' as const,
-                  content: "Hey! I'm your DeHub AI assistant. How can I help you today?",
-                }]);
-                setInput('');
-                setAttachedImage(null);
-              }
+              startNewConversation();
+              setMessages([{
+                id: 'initial',
+                role: 'assistant' as const,
+                content: t('assistant.greeting'),
+              }]);
+              setInput('');
+              setAttachedImage(null);
             }}
             className="p-1.5 rounded-xl text-white/60 hover:text-white transition-colors"
             title="New chat"
