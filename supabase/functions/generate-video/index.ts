@@ -66,7 +66,7 @@ const VIDEO_MODELS: Record<string, {
     name: 'Seedance 2.0',
     description: 'Latest ByteDance model via fal.ai, superior quality & audio',
     supports: ['text-to-video', 'image-to-video'],
-    duration: '4-12s',
+    duration: '4-15s',
     provider: 'fal',
     falTextModel: 'bytedance/seedance-2.0/text-to-video',
     falImageModel: 'bytedance/seedance-2.0/image-to-video',
@@ -79,8 +79,10 @@ interface GenerateVideoRequest {
   prompt: string;
   model: ModelKey;
   sourceImage?: string;
-  duration?: '5s' | '10s';
+  duration?: '5s' | '10s' | string;
   aspectRatio?: '16:9' | '9:16' | '1:1';
+  negativePrompt?: string;
+  resolution?: '480p' | '720p';
 }
 
 interface VideoGenerationResponse {
@@ -221,7 +223,7 @@ serve(async (req) => {
     }
 
     // ─── New generation ───
-    const { prompt, model, sourceImage, duration = '5s', aspectRatio = '16:9' } = body as GenerateVideoRequest;
+    const { prompt, model, sourceImage, duration = '5s', aspectRatio = '16:9', negativePrompt, resolution } = body as GenerateVideoRequest;
 
     if (!prompt) throw new Error('Prompt is required');
     if (!model || !VIDEO_MODELS[model]) {
@@ -244,7 +246,7 @@ serve(async (req) => {
 
     // Route to provider
     if (modelConfig.provider === 'fal') {
-      return await handleFalGeneration(modelConfig, prompt, sourceImage, duration, aspectRatio);
+      return await handleFalGeneration(modelConfig, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution);
     }
     return await handleReplicateGeneration(modelConfig, model, prompt, sourceImage, duration, aspectRatio);
 
