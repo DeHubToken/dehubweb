@@ -17,6 +17,7 @@ const VIDEO_MODELS: Record<string, {
   provider?: 'replicate' | 'fal';
   falTextModel?: string;
   falImageModel?: string;
+  falReferenceModel?: string;
 }> = {
   'kling-2.6-pro': {
     id: 'kwaivgi/kling-v2.6',
@@ -70,6 +71,18 @@ const VIDEO_MODELS: Record<string, {
     provider: 'fal',
     falTextModel: 'bytedance/seedance-2.0/text-to-video',
     falImageModel: 'bytedance/seedance-2.0/image-to-video',
+    falReferenceModel: 'bytedance/seedance-2.0/reference-to-video',
+  },
+  'seedance-2.0-fast': {
+    id: 'bytedance/seedance-2.0-fast',
+    name: 'Seedance 2.0 Fast',
+    description: 'Faster Seedance 2.0 variant via fal.ai',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '4-15s',
+    provider: 'fal',
+    falTextModel: 'bytedance/seedance-2.0/fast/text-to-video',
+    falImageModel: 'bytedance/seedance-2.0/fast/image-to-video',
+    falReferenceModel: 'bytedance/seedance-2.0/fast/reference-to-video',
   },
 };
 
@@ -82,7 +95,7 @@ interface GenerateVideoRequest {
   duration?: '5s' | '10s' | string;
   aspectRatio?: '16:9' | '9:16' | '1:1';
   negativePrompt?: string;
-  resolution?: '480p' | '720p';
+  resolution?: '480p' | '720p' | '1080p';
   referenceImageUrls?: string[];
   endFrameUrl?: string;
   audioUrls?: string[];
@@ -284,9 +297,15 @@ async function handleFalGeneration(
   const FAL_KEY = Deno.env.get('FAL_KEY');
   if (!FAL_KEY) throw new Error('FAL_KEY is not configured');
 
-  const appId = sourceImage && modelConfig.falImageModel
-    ? modelConfig.falImageModel
-    : modelConfig.falTextModel || modelConfig.id;
+  // Choose the right endpoint: reference-to-video if ref images, image-to-video if source image, else text-to-video
+  let appId: string;
+  if (referenceImageUrls && referenceImageUrls.length > 0 && modelConfig.falReferenceModel) {
+    appId = modelConfig.falReferenceModel;
+  } else if (sourceImage && modelConfig.falImageModel) {
+    appId = modelConfig.falImageModel;
+  } else {
+    appId = modelConfig.falTextModel || modelConfig.id;
+  }
 
   const parsedDuration = Math.min(Math.max(parseInt(duration) || 5, 4), 15);
 
