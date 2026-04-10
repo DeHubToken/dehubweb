@@ -293,10 +293,18 @@ export function AiToolPaywallModal({
           </div>
 
           {!hasEnoughBalance && !loading && !isBalanceLoading && (
-            <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-3">
+            <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-3 flex flex-col items-center gap-2">
               <p className="text-red-400 text-sm text-center">
                 Insufficient DHB balance. You need {formatDhb(costDhb - userBalance)} more DHB.
               </p>
+              <Button
+                variant="outline"
+                size="sm"
+                className="bg-emerald-600/20 border-emerald-500/40 text-emerald-400 hover:bg-emerald-600/30 text-xs"
+                onClick={() => { onOpenChange(false); window.history.pushState({}, '', '/app/buy'); window.dispatchEvent(new PopStateEvent('popstate')); }}
+              >
+                Buy DHB
+              </Button>
             </div>
           )}
         </div>
