@@ -297,9 +297,15 @@ async function handleFalGeneration(
   const FAL_KEY = Deno.env.get('FAL_KEY');
   if (!FAL_KEY) throw new Error('FAL_KEY is not configured');
 
-  const appId = sourceImage && modelConfig.falImageModel
-    ? modelConfig.falImageModel
-    : modelConfig.falTextModel || modelConfig.id;
+  // Choose the right endpoint: reference-to-video if ref images, image-to-video if source image, else text-to-video
+  let appId: string;
+  if (referenceImageUrls && referenceImageUrls.length > 0 && modelConfig.falReferenceModel) {
+    appId = modelConfig.falReferenceModel;
+  } else if (sourceImage && modelConfig.falImageModel) {
+    appId = modelConfig.falImageModel;
+  } else {
+    appId = modelConfig.falTextModel || modelConfig.id;
+  }
 
   const parsedDuration = Math.min(Math.max(parseInt(duration) || 5, 4), 15);
 
