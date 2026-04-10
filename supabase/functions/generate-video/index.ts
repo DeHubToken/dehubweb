@@ -17,6 +17,7 @@ const VIDEO_MODELS: Record<string, {
   provider?: 'replicate' | 'fal';
   falTextModel?: string;
   falImageModel?: string;
+  falReferenceModel?: string;
 }> = {
   'kling-2.6-pro': {
     id: 'kwaivgi/kling-v2.6',
