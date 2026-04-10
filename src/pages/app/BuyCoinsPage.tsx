@@ -81,7 +81,7 @@ export default function BuyCoinsPage() {
     isFetchingNextPage,
   } = useInfiniteQuery({
     queryKey: ['dpay', 'all-transactions'],
-    queryFn: ({ pageParam = 1 }) => getAllDPayTransactions({ page: pageParam, limit: 10 }),
+    queryFn: ({ pageParam = 1 }) => getAllDPayTransactions({ page: pageParam, limit: 20 }),
     getNextPageParam: (lastPage) => lastPage.hasMore ? lastPage.page + 1 : undefined,
     initialPageParam: 1,
     staleTime: 60_000,
@@ -551,7 +551,7 @@ export default function BuyCoinsPage() {
 
         {/* Purchase History */}
         <div className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800">
-          <h3 className="text-white font-semibold mb-3 text-center">Recent Purchases</h3>
+          <h3 className="text-white font-semibold mb-3 text-center">Purchase History</h3>
           
           {/* Search */}
           <div className="relative mb-3">
@@ -583,7 +583,7 @@ export default function BuyCoinsPage() {
             ) : (
                 <div
                   ref={purchaseListRef}
-                  className="space-y-0 max-h-[400px] overflow-y-auto overflow-x-hidden overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-4 -mx-4"
+                  className="space-y-0 max-h-[600px] overflow-y-auto overflow-x-hidden overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden px-4 -mx-4"
                 onScroll={(e) => {
                   const el = e.currentTarget;
                   if (el.scrollTop + el.clientHeight >= el.scrollHeight - 100 && hasNextPage && !isFetchingNextPage) {
