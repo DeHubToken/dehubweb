@@ -435,11 +435,11 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           getPimlicoConfig().catch(() => ({ bundlerUrl: '', paymasterUrl: '' })),
         ]);
 
-        // walletServicesConfig and accountAbstractionConfig are intentionally omitted.
-        // Both cause the SDK to call POST api-wallet.web3auth.io/auth/verify which
-        // currently rejects ALL MPC/AA signatures with 400 "signatures[0] > 500 chars"
-        // regardless of SDK version. This is a server-side regression on Web3Auth's end.
-        // Re-enable once Web3Auth fixes their validation limit.
+        // walletServicesConfig is intentionally omitted — it initializes the Wallet Services
+        // plugin which calls POST api-wallet.web3auth.io/auth/verify and currently fails with
+        // 400 "signatures[0] > 500 chars" (Web3Auth server-side regression). AA is kept so
+        // Smart Account addresses still work. Re-add walletServicesConfig once Web3Auth fixes
+        // their server-side validation limit.
         const initOptions: any = {
           clientId,
           chains: [chainConfig],
@@ -447,6 +447,17 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           sessionTime: 86400,
           uiConfig: { modalZIndex: "99999" } as any,
         };
+
+        if (pimlicoConfig?.bundlerUrl && pimlicoConfig?.paymasterUrl) {
+          initOptions.accountAbstractionConfig = {
+            smartAccountType: "safe",
+            chains: [{
+              chainId: "0x2105",
+              bundlerConfig: { url: pimlicoConfig.bundlerUrl },
+              paymasterConfig: { url: pimlicoConfig.paymasterUrl },
+            }],
+          };
+        }
 
         web3authInstance = new Web3Auth(initOptions);
         
