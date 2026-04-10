@@ -268,6 +268,8 @@ async function handleFalGeneration(
   sourceImage?: string,
   duration = '5s',
   aspectRatio = '16:9',
+  negativePrompt?: string,
+  resolution?: '480p' | '720p',
 ) {
   const FAL_KEY = Deno.env.get('FAL_KEY');
   if (!FAL_KEY) throw new Error('FAL_KEY is not configured');
@@ -276,13 +278,16 @@ async function handleFalGeneration(
     ? modelConfig.falImageModel
     : modelConfig.falTextModel || modelConfig.id;
 
+  const parsedDuration = Math.min(Math.max(parseInt(duration) || 5, 4), 15);
+
   const input: Record<string, unknown> = {
     prompt,
-    duration: Math.min(Math.max(parseInt(duration) || 5, 4), 12),
+    duration: parsedDuration,
     aspect_ratio: aspectRatio,
-    resolution: '720p',
+    resolution: resolution || '720p',
     generate_audio: true,
     ...(sourceImage && { image_url: sourceImage }),
+    ...(negativePrompt && { negative_prompt: negativePrompt }),
   };
 
   console.log(`[fal.ai] Submitting to ${appId}`, JSON.stringify(input).substring(0, 200));
