@@ -275,6 +275,11 @@ async function handleFalGeneration(
   aspectRatio = '16:9',
   negativePrompt?: string,
   resolution?: '480p' | '720p',
+  referenceImageUrls?: string[],
+  endFrameUrl?: string,
+  audioUrls?: string[],
+  videoUrls?: string[],
+  seed?: number,
 ) {
   const FAL_KEY = Deno.env.get('FAL_KEY');
   if (!FAL_KEY) throw new Error('FAL_KEY is not configured');
@@ -293,9 +298,14 @@ async function handleFalGeneration(
     generate_audio: true,
     ...(sourceImage && { image_url: sourceImage }),
     ...(negativePrompt && { negative_prompt: negativePrompt }),
+    ...(endFrameUrl && { last_image_url: endFrameUrl }),
+    ...(referenceImageUrls && referenceImageUrls.length > 0 && { image_urls: referenceImageUrls }),
+    ...(audioUrls && audioUrls.length > 0 && { audio_urls: audioUrls }),
+    ...(videoUrls && videoUrls.length > 0 && { video_urls: videoUrls }),
+    ...(seed !== undefined && seed !== null && { seed }),
   };
 
-  console.log(`[fal.ai] Submitting to ${appId}`, JSON.stringify(input).substring(0, 200));
+  console.log(`[fal.ai] Submitting to ${appId}`, JSON.stringify(input).substring(0, 500));
 
   const result = await falSubmit(FAL_KEY, appId, input);
   console.log(`[fal.ai] Request started: ${result.request_id}`);
