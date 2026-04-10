@@ -287,7 +287,7 @@ async function handleFalGeneration(
   duration = '5s',
   aspectRatio = '16:9',
   negativePrompt?: string,
-  resolution?: '480p' | '720p',
+  resolution?: '480p' | '720p' | '1080p',
   referenceImageUrls?: string[],
   endFrameUrl?: string,
   audioUrls?: string[],
