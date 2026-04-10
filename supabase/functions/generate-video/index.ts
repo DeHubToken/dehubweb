@@ -83,6 +83,11 @@ interface GenerateVideoRequest {
   aspectRatio?: '16:9' | '9:16' | '1:1';
   negativePrompt?: string;
   resolution?: '480p' | '720p';
+  referenceImageUrls?: string[];
+  endFrameUrl?: string;
+  audioUrls?: string[];
+  videoUrls?: string[];
+  seed?: number;
 }
 
 interface VideoGenerationResponse {
@@ -223,7 +228,7 @@ serve(async (req) => {
     }
 
     // ─── New generation ───
-    const { prompt, model, sourceImage, duration = '5s', aspectRatio = '16:9', negativePrompt, resolution } = body as GenerateVideoRequest;
+    const { prompt, model, sourceImage, duration = '5s', aspectRatio = '16:9', negativePrompt, resolution, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed } = body as GenerateVideoRequest;
 
     if (!prompt) throw new Error('Prompt is required');
     if (!model || !VIDEO_MODELS[model]) {
@@ -246,7 +251,7 @@ serve(async (req) => {
 
     // Route to provider
     if (modelConfig.provider === 'fal') {
-      return await handleFalGeneration(modelConfig, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution);
+      return await handleFalGeneration(modelConfig, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed);
     }
     return await handleReplicateGeneration(modelConfig, model, prompt, sourceImage, duration, aspectRatio);
 
