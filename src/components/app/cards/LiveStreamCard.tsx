@@ -280,15 +280,20 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
       toast.error('Sign in to like');
       return;
     }
+    const streamStatus = (stream as any).status || (stream as any).stream?.status;
+    if (streamStatus && String(streamStatus).toLowerCase() === 'ended') {
+      toast.info('Stream ended, tune in live to engage');
+      return;
+    }
     try {
       await like(stream.id);
       setIsLiked(true);
       toast.success('Stream liked!');
     } catch (err) {
       console.error('[LiveStream] Like failed:', err);
-      toast.error('Failed to like stream');
+      toast.error('Stream ended, tune in live to engage');
     }
-  }, [stream.id, isAuthenticated, like]);
+  }, [stream.id, isAuthenticated, like, stream]);
 
   const handleSendGift = useCallback(async () => {
     if (!isAuthenticated) {
