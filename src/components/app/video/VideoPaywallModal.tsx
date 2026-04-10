@@ -13,11 +13,18 @@ import { Interface } from 'ethers';
 import { writeContractAA, getWalletAddress, getERC20Balance, switchChain, parseTxError } from '@/lib/contracts/aa-utils';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
+import { Slider } from '@/components/ui/slider';
 
 const DEHUB_AI_TREASURY = '0xbf3039b0bb672b268e8384e30d81b1e6a8a43b2c';
 const erc20TransferInterface = new Interface([
   'function transfer(address to, uint256 amount) returns (bool)',
 ]);
+
+export interface VideoGenerationOptions {
+  duration?: number;
+  resolution?: '480p' | '720p';
+  negativePrompt?: string;
+}
 
 interface VideoPaywallModalProps {
   open: boolean;
@@ -25,7 +32,7 @@ interface VideoPaywallModalProps {
   model: VideoModel;
   selectedModelKey: VideoModelKey;
   onModelChange: (modelKey: VideoModelKey) => void;
-  onConfirm: () => void;
+  onConfirm: (options?: VideoGenerationOptions) => void;
   isGenerating?: boolean;
 }
 
@@ -44,9 +51,21 @@ export function VideoPaywallModal({
   const [modelSelectorOpen, setModelSelectorOpen] = useState(false);
   const [isPaying, setIsPaying] = useState(false);
 
+  // Seedance 2.0 options
+  const [duration, setDuration] = useState(model.defaultDuration || 5);
+  const [resolution, setResolution] = useState<'480p' | '720p'>('720p');
+  const [negativePrompt, setNegativePrompt] = useState('');
+
   const { walletAddress } = useAuth();
   const { data: profile, isLoading: profileLoading } = useDeHubProfile({ userId: walletAddress || undefined, enabled: !!walletAddress });
   const userBalance = profile?.badgeBalance ?? 0;
+
+  // Reset options when model changes
+  useEffect(() => {
+    setDuration(model.defaultDuration || 5);
+    setResolution('720p');
+    setNegativePrompt('');
+  }, [selectedModelKey]);
 
   useEffect(() => {
     if (open) {
@@ -59,7 +78,6 @@ export function VideoPaywallModal({
     setError(null);
     try {
       const { data, error: fetchError } = await supabase.functions.invoke('get-dhb-price');
-      
       if (fetchError) throw fetchError;
       const price = data?.prices?.DHB;
       if (price) {
@@ -70,25 +88,21 @@ export function VideoPaywallModal({
     } catch (err) {
       console.error('Error fetching DHB price:', err);
       setError('Failed to fetch DHB price. Using fallback.');
-      // Fallback price if API fails
       setDhbPrice(0.0006191);
     } finally {
       setLoading(false);
     }
   };
 
-  const costUsd = getVideoCostUsd(model);
-  const costDhb = dhbPrice ? getVideoCostDhb(model, dhbPrice) : 0;
+  const isPerSecond = !!model.perSecondCostUsd;
+  const costUsd = getVideoCostUsd(model, isPerSecond ? duration : undefined);
+  const costDhb = dhbPrice ? getVideoCostDhb(model, dhbPrice, isPerSecond ? duration : undefined) : 0;
   const isBalanceLoading = profileLoading;
   const hasEnoughBalance = userBalance >= costDhb;
 
   const formatDhb = (amount: number) => {
-    if (amount >= 1000000) {
-      return `${(amount / 1000000).toFixed(2)}M`;
-    }
-    if (amount >= 1000) {
-      return `${(amount / 1000).toFixed(1)}K`;
-    }
+    if (amount >= 1000000) return `${(amount / 1000000).toFixed(2)}M`;
+    if (amount >= 1000) return `${(amount / 1000).toFixed(1)}K`;
     return amount.toFixed(0);
   };
 
@@ -99,7 +113,6 @@ export function VideoPaywallModal({
       const signerAddress = await getWalletAddress();
       const amountWei = toWei(costDhb, DHB_TOKEN.decimals);
 
-      // Check balances on Base and BNB in parallel
       const baseConfig = getChainConfig(BASE_CHAIN_ID);
       const bnbConfig = getChainConfig(BNB_CHAIN_ID);
       const [baseBalance, bnbBalance] = await Promise.all([
@@ -107,7 +120,6 @@ export function VideoPaywallModal({
         getERC20Balance(bnbConfig.dhbToken, signerAddress, BNB_CHAIN_ID),
       ]);
 
-      // Prefer Base, fallback to BNB
       let payChainId: ChainId;
       if (baseBalance >= amountWei) {
         payChainId = BASE_CHAIN_ID;
@@ -116,9 +128,7 @@ export function VideoPaywallModal({
       } else {
         const baseDhb = Number(baseBalance) / 1e18;
         const bnbDhb = Number(bnbBalance) / 1e18;
-        toast.error(
-          `Insufficient DHB. Need ${formatDhb(costDhb)} DHB (Base: ${formatDhb(baseDhb)}, BNB: ${formatDhb(bnbDhb)})`
-        );
+        toast.error(`Insufficient DHB. Need ${formatDhb(costDhb)} DHB (Base: ${formatDhb(baseDhb)}, BNB: ${formatDhb(bnbDhb)})`);
         setIsPaying(false);
         return;
       }
@@ -136,7 +146,13 @@ export function VideoPaywallModal({
       );
       await result.wait(1);
       toast.success('Payment confirmed! Generating video...', { id: 'video-gen-payment' });
-      onConfirm();
+
+      const options: VideoGenerationOptions = {};
+      if (isPerSecond) options.duration = duration;
+      if (model.supportsResolution) options.resolution = resolution;
+      if (model.supportsNegativePrompt && negativePrompt.trim()) options.negativePrompt = negativePrompt.trim();
+
+      onConfirm(options);
     } catch (err: unknown) {
       console.error('[VideoPaywall] Payment failed:', err);
       const msg = parseTxError(err);
@@ -149,7 +165,7 @@ export function VideoPaywallModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl max-w-md">
+      <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl max-w-md max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-white">
             <Video className="w-5 h-5 text-purple-400" />
@@ -188,7 +204,6 @@ export function VideoPaywallModal({
               </div>
             </button>
             
-            {/* Model Dropdown */}
             {modelSelectorOpen && (
               <div className="absolute top-full left-0 right-0 mt-2 bg-zinc-800 border border-zinc-700 rounded-xl overflow-hidden z-10 max-h-64 overflow-y-auto">
                 {VIDEO_MODEL_OPTIONS.map((option) => {
@@ -224,7 +239,12 @@ export function VideoPaywallModal({
                         </div>
                       </div>
                       <div className="text-right shrink-0">
-                        <p className="text-sm font-medium text-white">${optionCostUsd.toFixed(2)}</p>
+                        <p className="text-sm font-medium text-white">
+                          {optionModel.perSecondCostUsd 
+                            ? `$${(optionModel.perSecondCostUsd * 2).toFixed(2)}/s`
+                            : `$${optionCostUsd.toFixed(2)}`
+                          }
+                        </p>
                         <p className="text-xs text-zinc-500">{formatDhb(optionCostDhb)} DHB</p>
                       </div>
                     </button>
@@ -234,11 +254,77 @@ export function VideoPaywallModal({
             )}
           </div>
 
+          {/* Duration Slider (for per-second models) */}
+          {isPerSecond && model.minDuration && model.maxDuration && (
+            <div className="bg-zinc-800/50 rounded-xl p-4 space-y-3">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-zinc-400">Duration</span>
+                <span className="text-white font-medium">{duration}s</span>
+              </div>
+              <Slider
+                value={[duration]}
+                onValueChange={([v]) => setDuration(v)}
+                min={model.minDuration}
+                max={model.maxDuration}
+                step={1}
+                className="py-1"
+              />
+              <div className="flex justify-between text-xs text-zinc-500">
+                <span>{model.minDuration}s</span>
+                <span>{model.maxDuration}s</span>
+              </div>
+            </div>
+          )}
+
+          {/* Resolution Toggle (for supported models) */}
+          {model.supportsResolution && (
+            <div className="bg-zinc-800/50 rounded-xl p-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-zinc-400">Resolution</span>
+                <div className="flex gap-2">
+                  {(['480p', '720p'] as const).map((res) => (
+                    <button
+                      key={res}
+                      type="button"
+                      onClick={() => setResolution(res)}
+                      className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+                        resolution === res
+                          ? 'bg-purple-500/30 text-purple-300 border border-purple-500/40'
+                          : 'bg-zinc-700/50 text-zinc-400 border border-zinc-600/30 hover:bg-zinc-700'
+                      }`}
+                    >
+                      {res}
+                      {res === '480p' && <span className="ml-1 text-[10px] opacity-60">faster</span>}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Negative Prompt (for supported models) */}
+          {model.supportsNegativePrompt && (
+            <div className="bg-zinc-800/50 rounded-xl p-4 space-y-2">
+              <label className="text-sm text-zinc-400">Negative Prompt <span className="text-zinc-600">(optional)</span></label>
+              <textarea
+                value={negativePrompt}
+                onChange={(e) => setNegativePrompt(e.target.value)}
+                placeholder="Elements to exclude, e.g. blur, watermark, low quality..."
+                className="w-full bg-zinc-900/60 border border-zinc-700/50 rounded-lg p-2.5 text-sm text-white placeholder:text-zinc-600 resize-none focus:outline-none focus:border-purple-500/40"
+                rows={2}
+                maxLength={500}
+              />
+            </div>
+          )}
+
           {/* Cost Breakdown */}
           <div className="bg-zinc-800/50 rounded-xl p-4 space-y-3">
             <div className="flex items-center justify-between text-sm">
               <span className="text-zinc-400">Video Cost</span>
-              <span className="text-zinc-300">${costUsd.toFixed(2)}</span>
+              <span className="text-zinc-300">
+                ${costUsd.toFixed(2)}
+                {isPerSecond && <span className="text-zinc-500 ml-1 text-xs">({duration}s × ${(model.perSecondCostUsd! * 2).toFixed(2)}/s)</span>}
+              </span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-zinc-400">Staker Discount</span>
@@ -268,12 +354,9 @@ export function VideoPaywallModal({
                   </div>
                   <div className="text-right">
                     <p className="text-xl font-bold text-white">{formatDhb(costDhb)} DHB</p>
-                    <p className="text-xs text-zinc-500">
-                      @ ${dhbPrice?.toFixed(6)}/DHB
-                    </p>
+                    <p className="text-xs text-zinc-500">@ ${dhbPrice?.toFixed(6)}/DHB</p>
                   </div>
                 </div>
-
                 {error && (
                   <div className="flex items-center gap-2 mt-2 text-yellow-500 text-xs">
                     <AlertCircle className="w-3 h-3" />

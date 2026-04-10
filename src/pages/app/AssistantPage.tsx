@@ -42,7 +42,7 @@ import { VoiceTrainingDrawer } from '@/components/app/shared/VoiceTrainingDrawer
 import { CHAT_MODEL_OPTIONS, DEFAULT_CHAT_MODEL, type ChatModelKey } from '@/constants/chat-models.constants';
 import { PostModal } from '@/features/post';
 import { getBadgeName } from '@/lib/staking-badges';
-import { VideoPaywallModal } from '@/components/app/video/VideoPaywallModal';
+import { VideoPaywallModal, type VideoGenerationOptions } from '@/components/app/video/VideoPaywallModal';
 import { ImagePaywallModal } from '@/components/app/image/ImagePaywallModal';
 import { AiToolPaywallModal } from '@/components/app/ai-tools/AiToolPaywallModal';
 import { AI_TOOL_MODELS, type AiToolCategory, type AiToolModel } from '@/constants/ai-tools.constants';
@@ -1033,7 +1033,7 @@ export default function AssistantPage() {
   }, [clearPendingVideo]);
 
   // Handle video generation after payment confirmation
-  const handleVideoGenerationConfirm = async () => {
+  const handleVideoGenerationConfirm = async (options?: VideoGenerationOptions) => {
     if (!pendingVideoRequest) return;
 
     const { prompt, model, sourceImage } = pendingVideoRequest;
@@ -1051,8 +1051,10 @@ export default function AssistantPage() {
           prompt,
           model,
           sourceImage,
-          duration: '5s',
-          aspectRatio: '16:9'
+          duration: options?.duration ? `${options.duration}s` : '5s',
+          aspectRatio: '16:9',
+          ...(options?.negativePrompt && { negativePrompt: options.negativePrompt }),
+          ...(options?.resolution && { resolution: options.resolution }),
         }
       });
 
