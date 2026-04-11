@@ -120,7 +120,7 @@ export function EditStoreDrawer({ store, open, onClose }: Props) {
             </div>
             <div className="flex-1">
               <Label className="text-zinc-300 text-xs">Store Name *</Label>
-              <Input value={name} onChange={e => setName(e.target.value)} className="bg-white/5 border-white/10" />
+              <Input value={name} onChange={e => setName(e.target.value)} className="bg-white/5 border-white/10 text-primary-foreground" />
             </div>
           </div>
 
@@ -131,7 +131,7 @@ export function EditStoreDrawer({ store, open, onClose }: Props) {
               value={description}
               onChange={e => setDescription(e.target.value)}
               placeholder="What do you sell?"
-              className="bg-white/5 border-white/10 min-h-[80px] resize-none"
+              className="bg-white/5 border-white/10 min-h-[80px] resize-none text-primary-foreground"
             />
           </div>
 
