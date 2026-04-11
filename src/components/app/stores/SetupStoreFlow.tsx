@@ -24,8 +24,11 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
+  const [bannerUrl, setBannerUrl] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [uploadingBanner, setUploadingBanner] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const bannerRef = useRef<HTMLInputElement>(null);
   const createStore = useCreateStore();
 
   const handleAvatarUpload = async (file: File) => {
@@ -41,10 +44,23 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
     }
   };
 
+  const handleBannerUpload = async (file: File) => {
+    if (!walletAddress) return;
+    setUploadingBanner(true);
+    try {
+      const url = await uploadStoreMedia(file, walletAddress);
+      setBannerUrl(url);
+    } catch (err: any) {
+      toast.error(err.message || 'Upload failed');
+    } finally {
+      setUploadingBanner(false);
+    }
+  };
+
   const handleCreate = () => {
     if (!name.trim()) return;
     createStore.mutate(
-      { name: name.trim(), description: description.trim(), avatar_url: avatarUrl || undefined } as any,
+      { name: name.trim(), description: description.trim(), avatar_url: avatarUrl || undefined, banner_url: bannerUrl || undefined } as any,
       { onSuccess: () => onComplete?.() }
     );
   };
@@ -56,6 +72,27 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
       )}
+
+      {/* Banner upload */}
+      <div>
+        <Label className="text-zinc-300 text-xs mb-1.5 block">Banner Image</Label>
+        <div
+          onClick={() => bannerRef.current?.click()}
+          className="relative w-full aspect-[3/1] rounded-xl overflow-hidden bg-white/5 border border-white/10 cursor-pointer group"
+        >
+          {bannerUrl ? (
+            <img src={bannerUrl} className="w-full h-full object-cover" alt="" />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-white/5 to-white/[0.02] flex items-center justify-center">
+              <Camera className="w-6 h-6 text-zinc-500" />
+            </div>
+          )}
+          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+            {uploadingBanner ? <Loader2 className="w-5 h-5 animate-spin text-primary-foreground" /> : <Camera className="w-5 h-5 text-primary-foreground" />}
+          </div>
+        </div>
+        <input ref={bannerRef} type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && handleBannerUpload(e.target.files[0])} />
+      </div>
 
       {/* Avatar upload */}
       <div
@@ -70,14 +107,14 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
           </div>
         )}
         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-full">
-          {uploading ? <Loader2 className="w-5 h-5 animate-spin text-white" /> : <Camera className="w-5 h-5 text-white" />}
+          {uploading ? <Loader2 className="w-5 h-5 animate-spin text-primary-foreground" /> : <Camera className="w-5 h-5 text-primary-foreground" />}
         </div>
       </div>
       <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={e => e.target.files?.[0] && handleAvatarUpload(e.target.files[0])} />
 
       <div className="text-center space-y-2">
         <h2 className="text-xl font-bold text-primary-foreground">{onCancel ? 'Create New Store' : 'Set up your Store'}</h2>
-        <p className="text-sm text-zinc-400">Create your store to start selling items. Tap the icon above to add a store avatar.</p>
+        <p className="text-sm text-zinc-400">Create your store to start selling items.</p>
       </div>
       <div className="w-full space-y-3">
         <div>
@@ -93,7 +130,7 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
           icon={<Store className="w-4 h-4" />}
           loading={createStore.isPending}
           loadingLabel="Creating..."
-          disabled={!name.trim() || uploading}
+          disabled={!name.trim() || uploading || uploadingBanner}
           onClick={handleCreate}
           width="100%"
           height="42px"
