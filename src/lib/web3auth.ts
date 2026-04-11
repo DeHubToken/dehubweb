@@ -207,13 +207,18 @@ let cachedClientId: string | null = null;
 let cachedPimlicoConfig: { bundlerUrl: string; paymasterUrl: string } | null = null;
 
 /**
- * Clear Web3Auth/Torus persisted session from storage to prevent stale "connected" state
+ * Clear Web3Auth/Torus persisted session from storage to prevent stale "connected" state.
+ *
+ * IMPORTANT: 'auth_store' MUST be in this list.
+ * @web3auth/auth stores the Sapphire sessionId under localStorage key "auth_store"
+ * (via BrowserStorage with _storageBaseKey = "auth_store"). Without clearing this,
+ * the next Auth.init() will find the old sessionId, contact the Sapphire server,
+ * restore the old session (Google's privKey), and all subsequent logins with ANY
+ * provider will return the SAME private key as the first login — session bleeding.
  */
 function clearWeb3AuthStorage(): void {
   if (typeof window === 'undefined') return;
-  // 'openlogin' is Web3Auth v10's internal auth layer — must be included so
-  // cached OAuth sessions don't silently re-authenticate on the next login click.
-  const prefixes = ['torus', 'web3auth', 'tkey', 'openlogin'];
+  const prefixes = ['torus', 'web3auth', 'tkey', 'openlogin', 'auth_store'];
   // Exclude our own custom dehub_* keys — they contain 'web3auth' as a substring
   // (e.g. 'dehub_web3auth_client_id') and would be wrongly cleared by the prefix check.
   const excludePrefixes = ['dehub_'];
@@ -233,6 +238,43 @@ function clearWeb3AuthStorage(): void {
       console.log('[Web3Auth] Cleared storage keys:', keysToRemove);
     }
   }
+}
+
+/**
+ * Properly invalidate the Auth (openlogin) session — bypasses the connector's status check.
+ *
+ * The outer web3auth.logout({ cleanup: true }) fails when the connector is "not connected"
+ * (e.g. after WsEmbed throws 400). But the Auth class itself only checks sessionManager.sessionId
+ * which IS set after a successful DKG. So we can call logout() directly on authInstance.
+ *
+ * This also clears BrowserStorage.instanceMap — a static module-level Map that caches
+ * BrowserStorage instances. Without clearing it, the next Auth.init() reuses the same
+ * BrowserStorage instance (which might still have in-memory/MemoryStore data).
+ */
+async function clearAuthInstance(authInstance: any): Promise<void> {
+  if (!authInstance) return;
+  // 1. Invalidate the Sapphire server-side session and clear authInstance.state
+  try {
+    await authInstance.logout();
+    console.log('[Web3Auth] authInstance.logout() succeeded — Sapphire session invalidated');
+  } catch (e) {
+    // May throw "userNotLoggedIn" if sessionId is already cleared — that's fine.
+    // Fallback: manually wipe the in-memory state.
+    try { authInstance.state = {}; } catch {}
+    console.warn('[Web3Auth] authInstance.logout() failed, state cleared manually:', String(e).slice(0, 80));
+  }
+  // 2. Clear BrowserStorage.instanceMap so the next Auth.init() creates a fresh instance.
+  //    BrowserStorage uses a static Map to cache instances by key ('auth_store').
+  //    Without clearing it, new Auth objects reuse the old BrowserStorage instance.
+  //    (When localStorage is unavailable, a MemoryStore is used — clearing instanceMap
+  //    ensures even in-memory sessions are dropped.)
+  try {
+    const BrowserStorageClass = authInstance.currentStorage?.constructor;
+    if (BrowserStorageClass?.instanceMap instanceof Map) {
+      BrowserStorageClass.instanceMap.clear();
+      console.log('[Web3Auth] BrowserStorage.instanceMap cleared');
+    }
+  } catch {}
 }
 
 /**
@@ -576,23 +618,27 @@ export async function connectToSocialProvider(
 
   savePreLoginPath();
 
-  // Pre-flight: clear any stale openlogin session before starting a new OAuth flow.
+  // Pre-flight: clear any stale openlogin/Auth session before starting a new OAuth flow.
   // Does NOT clear our custom dehub_* keys (pimlico config, client ID, wallet address).
   if (!skipConnectedCheck) {
-    // Attempt connector-level disconnect to invalidate the Sapphire session.
-    // web3auth.logout() fails when the modal status is "not connected" (e.g. after WsEmbed error),
-    // but the internal auth connector may still have a valid Sapphire session that causes
-    // subsequent logins to reuse the old private key. Calling connector.disconnect() bypasses
-    // the modal-level status check and directly invalidates the connector's session.
     const authConnector = (web3auth as any).connectors?.find((c: any) => c.name === WALLET_CONNECTORS.AUTH);
     if (authConnector) {
+      // 1. Try connector-level disconnect (may fail if connector is "not connected")
       try {
         await authConnector.disconnect?.();
-        console.log('[Web3Auth] Pre-flight: auth connector disconnected (Sapphire session cleared)');
+        console.log('[Web3Auth] Pre-flight: auth connector disconnected');
       } catch (connErr) {
-        console.warn('[Web3Auth] Pre-flight: auth connector disconnect failed (non-blocking):', String(connErr).slice(0, 100));
+        console.warn('[Web3Auth] Pre-flight: auth connector disconnect failed (non-blocking):', String(connErr).slice(0, 80));
+      }
+      // 2. Directly call authInstance.logout() to invalidate the Sapphire session.
+      //    This bypasses the connector's status check which rejects "not connected" instances.
+      //    Auth.logout() only requires sessionManager.sessionId to be set — which it is
+      //    after a successful DKG even when the overall connectTo() threw.
+      if (authConnector.authInstance) {
+        await clearAuthInstance(authConnector.authInstance);
       }
     }
+    // 3. Clear localStorage — includes 'auth_store' (the @web3auth/auth session key)
     clearWeb3AuthStorage();
   }
 
@@ -619,23 +665,25 @@ export async function connectToSocialProvider(
     if (privKey) {
       console.log('[Web3Auth] WsEmbed auth/verify failed — recovering via private key (privKey length:', privKey.length, ')');
 
-      // CRITICAL: Call logout({ cleanup: true }) on the CURRENT instance BEFORE nulling it.
-      // Web3Auth's openlogin module maintains an in-memory singleton that persists
-      // ACROSS instance recreations (it's not tied to the web3authInstance object lifecycle).
-      // If we just null web3authInstance and call clearWeb3AuthStorage(), the next
-      // init() call (e.g. from getWeb3AuthMeta()) will create a new instance that
-      // picks up the old OAuth session from the openlogin in-memory singleton.
-      // That restored instance's connectTo() calls then reuse the old private key
-      // (same account for every subsequent login, regardless of which provider is chosen).
-      // Calling logout({ cleanup: true }) on the active instance clears the openlogin
-      // singleton's in-memory state, ensuring the next init() truly starts fresh.
-      try {
-        await web3auth.logout({ cleanup: true });
-        console.log('[Web3Auth] Recovery: successfully cleared openlogin session (logout cleanup)');
-      } catch (logoutErr) {
-        // Expected to throw if the instance is in a broken state after WsEmbed failure.
-        // Even a partial cleanup helps — proceed regardless.
-        console.warn('[Web3Auth] Recovery: logout({ cleanup: true }) failed (proceeding anyway):', logoutErr);
+      // CRITICAL: Properly clear the Auth session BEFORE nulling web3authInstance.
+      //
+      // Root cause of session bleeding:
+      // - Auth.login() stores the sessionId in localStorage under key "auth_store"
+      //   (via BrowserStorage with _storageBaseKey = "auth_store")
+      // - Auth.login() also stores privKey/userInfo in authInstance.state (in-memory)
+      // - BrowserStorage uses a static instanceMap (module-level Map) that caches
+      //   instances across Auth object recreations
+      //
+      // Without proper cleanup:
+      // - The next Auth.init() reads "auth_store" from localStorage → finds old sessionId
+      // - Contacts Sapphire server → restores old session (Google's privKey)
+      // - connectTo('twitter') silently reuses Google's session → same address every time
+      //
+      // Fix: call authInstance.logout() directly (bypasses connector status check) +
+      //      clear BrowserStorage.instanceMap + clear localStorage 'auth_store' key.
+      const authConnector = (web3auth as any).connectors?.find((c: any) => c.name === WALLET_CONNECTORS.AUTH);
+      if (authConnector?.authInstance) {
+        await clearAuthInstance(authConnector.authInstance);
       }
 
       web3authInstance = null;
