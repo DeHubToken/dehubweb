@@ -70,6 +70,8 @@ function useMarkCommunityNotificationsRead(communityId?: string) {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['community-join-notifications', communityId] });
+      qc.invalidateQueries({ queryKey: ['community-activity-unread-per'] });
+      qc.invalidateQueries({ queryKey: ['community-activity-unread'] });
     },
   });
 }
