@@ -441,7 +441,7 @@ export function PostActionBar({
           className="rounded-xl border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-1.5 text-xs px-3 h-8"
         >
           {isEnhancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-          <span className="hidden sm:inline">{isEnhancing ? 'Enhancing...' : 'Enhance'}</span>
+          <span className="hidden sm:inline">{isEnhancing ? 'Enhancing...' : 'AI'}</span>
         </Button>
         
         <Drawer open={enhanceSheetOpen} onOpenChange={handleCloseEnhance}>
