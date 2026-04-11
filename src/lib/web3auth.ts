@@ -597,12 +597,16 @@ export async function connectToSocialProvider(
     const privKey = extractPrivKeyFromConnector(web3auth);
     if (privKey) {
       console.log('[Web3Auth] WsEmbed auth/verify failed — recovering via private key (privKey length:', privKey.length, ')');
-      // CRITICAL: Clear the openlogin session from storage immediately after extracting the key.
-      // connectTo() threw but the OAuth session is still persisted — without clearing it,
-      // the NEXT login (even a different provider like email OTP) silently reuses this session:
-      // - Email login opens Google popup instead of sending OTP code
-      // - Google login skips account picker and signs into the same old account
-      try { await web3auth.logout({ cleanup: true }); } catch {}
+      // CRITICAL: Destroy the web3authInstance entirely after extracting the key.
+      // The authInstance.privKey lives in memory on the connector — clearWeb3AuthStorage()
+      // alone is not enough because it only clears localStorage, not RAM.
+      // Without nulling the instance, every subsequent login (Twitter, Google, email — any
+      // provider) will call extractPrivKeyFromConnector() and find this same stale private
+      // key still on the connector object, always returning the same account regardless of
+      // which OAuth provider was used.
+      web3authInstance = null;
+      isInitializing = false;
+      initPromise = null;
       clearWeb3AuthStorage();
       const eoaProvider = await buildProviderFromPrivKey(privKey);
       lastConnectedConnector = WALLET_CONNECTORS.AUTH;
