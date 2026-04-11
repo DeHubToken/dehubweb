@@ -17,6 +17,7 @@ import { CommunityAbout } from '@/components/app/communities/CommunityAbout';
 import { CommunityChat } from '@/components/app/communities/CommunityChat';
 import { CommunityEvents } from '@/components/app/communities/CommunityEvents';
 import { CommunityOwnerActivity } from '@/components/app/communities/CommunityOwnerActivity';
+import { useCommunityUnreadCount } from '@/hooks/use-community-activity-unread';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
@@ -41,6 +42,7 @@ export default function CommunityPage() {
   const isPendingMember = !!membership && membership.status === 'pending';
   const isOwner = membership?.role === 'owner';
   const memberAddresses = useMemo(() => new Set(members.map(m => m.wallet_address.toLowerCase())), [members]);
+  const { data: activityUnread = 0 } = useCommunityUnreadCount(isOwner ? community?.id : undefined);
 
   if (isLoading) {
     return (
@@ -110,19 +112,24 @@ export default function CommunityPage() {
           { key: 'events' as Tab, label: 'Events' },
           { key: 'members' as Tab, label: t('communities.membersLabel') },
           { key: 'about' as Tab, label: t('communities.about') },
-          ...(isOwner ? [{ key: 'activity' as Tab, label: 'Activity' }] : []),
+          ...(isOwner ? [{ key: 'activity' as Tab, label: 'Activity', badge: activityUnread }] : []),
         ]).map(tItem => (
           <button
             key={tItem.key}
             onClick={() => setTab(tItem.key)}
             className={cn(
-              'px-4 py-3 text-sm font-medium transition-colors border-b-2 -mb-[1px] whitespace-nowrap',
+              'relative px-4 py-3 text-sm font-medium transition-colors border-b-2 -mb-[1px] whitespace-nowrap',
               tab === tItem.key
                 ? 'text-white border-white'
                 : 'text-zinc-500 border-transparent hover:text-white'
             )}
           >
             {tItem.label}
+            {'badge' in tItem && (tItem as any).badge > 0 && (
+              <span className="absolute top-1.5 -right-0.5 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full leading-none">
+                {(tItem as any).badge > 99 ? '99+' : (tItem as any).badge}
+              </span>
+            )}
           </button>
         ))}
       </div>
