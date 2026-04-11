@@ -41,6 +41,7 @@ export function BrowseTab() {
   const [minPrice, setMinPrice] = useState('');
   const [maxPrice, setMaxPrice] = useState('');
   const [priceOpen, setPriceOpen] = useState(false);
+  const [sortOpen, setSortOpen] = useState(false);
 
   const { data: listings = [], isLoading } = useBrowseListings(category, sort, search);
 
