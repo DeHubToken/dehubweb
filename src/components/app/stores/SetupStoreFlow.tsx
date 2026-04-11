@@ -130,7 +130,7 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
           icon={<Store className="w-4 h-4" />}
           loading={createStore.isPending}
           loadingLabel="Creating..."
-          disabled={!name.trim() || uploading}
+          disabled={!name.trim() || uploading || uploadingBanner}
           onClick={handleCreate}
           width="100%"
           height="42px"
