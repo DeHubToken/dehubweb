@@ -17,7 +17,7 @@ import {
   WEB3AUTH_NETWORK,
 } from "@web3auth/modal";
 import { AccountAbstractionProvider, SafeSmartAccount } from "@web3auth/account-abstraction-provider";
-import { CommonPrivateKeyProvider } from "@web3auth/no-modal";
+import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import type { IProvider } from "@web3auth/base";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -615,12 +615,13 @@ function extractPrivKeyFromConnector(w3a: Web3Auth): string | null {
 }
 
 /**
- * Build a Web3Auth-compatible IProvider from a raw hex private key.
- * Uses CommonPrivateKeyProvider from @web3auth/no-modal so it's compatible
- * with AccountAbstractionProvider.getProviderInstance().
+ * Build a full Ethereum-compatible IProvider from a raw hex private key.
+ * Uses EthereumPrivateKeyProvider which implements eth_accounts, personal_sign, etc.
+ * Required for AccountAbstractionProvider.getProviderInstance() which calls these methods
+ * to derive the Safe Smart Account address.
  */
 async function buildProviderFromPrivKey(privKey: string): Promise<IProvider> {
-  const pkProvider = new CommonPrivateKeyProvider({
+  const pkProvider = new EthereumPrivateKeyProvider({
     config: {
       chain: {
         chainNamespace: CHAIN_NAMESPACES.EIP155,
