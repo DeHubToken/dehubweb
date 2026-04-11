@@ -110,12 +110,13 @@ export default function CommunityPage() {
           { key: 'events' as Tab, label: 'Events' },
           { key: 'members' as Tab, label: t('communities.membersLabel') },
           { key: 'about' as Tab, label: t('communities.about') },
+          ...(isOwner ? [{ key: 'activity' as Tab, label: 'Activity' }] : []),
         ]).map(tItem => (
           <button
             key={tItem.key}
             onClick={() => setTab(tItem.key)}
             className={cn(
-              'px-4 py-3 text-sm font-medium transition-colors border-b-2 -mb-[1px]',
+              'px-4 py-3 text-sm font-medium transition-colors border-b-2 -mb-[1px] whitespace-nowrap',
               tab === tItem.key
                 ? 'text-white border-white'
                 : 'text-zinc-500 border-transparent hover:text-white'
