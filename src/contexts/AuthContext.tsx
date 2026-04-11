@@ -55,7 +55,6 @@ import type { Web3Auth } from '@web3auth/modal';
 
 const authLogger = createLogger('Auth');
 
-// Provider types for the custom login modal
 export type SocialProvider = 'google' | 'twitter' | 'telegram' | 'apple' | 'discord' | 'github';
 export type WalletProvider = 'metamask' | 'phantom' | 'trust';
 
