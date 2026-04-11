@@ -31,13 +31,14 @@ export function useCreateStore() {
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (params: { name: string; description?: string }) => {
+    mutationFn: async (params: { name: string; description?: string; avatar_url?: string }) => {
       if (!walletAddress) throw new Error('Not authenticated');
       const { data, error } = await withWalletHeader(
         supabase.from('stores').insert({
           wallet_address: walletAddress.toLowerCase(),
           name: params.name,
           description: params.description || '',
+          avatar_url: params.avatar_url || null,
         } as any).select().single(),
         walletAddress
       );
