@@ -22,7 +22,12 @@ import { toast } from 'sonner';
 
 type StoreSubTab = 'listings' | 'orders' | 'purchases';
 
-export function MyStoreTab() {
+interface MyStoreTabProps {
+  createOpen?: boolean;
+  onCreateClose?: () => void;
+}
+
+export function MyStoreTab({ createOpen = false, onCreateClose }: MyStoreTabProps) {
   const { isAuthenticated, openLoginModal } = useAuth();
   const { data: store, isLoading: loadingStore } = useMyStore();
   const { data: listings = [] } = useMyListings();
