@@ -16,6 +16,7 @@ import { CommunityMembers } from '@/components/app/communities/CommunityMembers'
 import { CommunityAbout } from '@/components/app/communities/CommunityAbout';
 import { CommunityChat } from '@/components/app/communities/CommunityChat';
 import { CommunityEvents } from '@/components/app/communities/CommunityEvents';
+import { CommunityOwnerActivity } from '@/components/app/communities/CommunityOwnerActivity';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
