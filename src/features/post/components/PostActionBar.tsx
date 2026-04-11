@@ -83,6 +83,7 @@ export function PostActionBar({
   const [enhanceSheetOpen, setEnhanceSheetOpen] = useState(false);
   const [styleView, setStyleView] = useState(false);
   const [goLiveModalOpen, setGoLiveModalOpen] = useState(false);
+  const navigate = useNavigate();
   const isLive = liveMode !== null;
   const { openModal: openStagesModal } = useStage();
 
@@ -168,6 +169,20 @@ export function PostActionBar({
               Change Style
             </div>
             <ChevronRight className="w-4 h-4 text-zinc-500" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setEnhanceSheetOpen(false);
+              setStyleView(false);
+              onCloseModal?.();
+              navigate('/app/ai');
+            }}
+            className="flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
+          >
+            <MessageSquare className="w-5 h-5 text-white" />
+            Generate Content
           </button>
         </>
       )}
