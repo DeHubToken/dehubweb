@@ -265,8 +265,6 @@ function FeedDescription({
   const [expanded, setExpanded] = useState(false);
   const MAX_LENGTH = 150;
   
-  if (!title && !description) return null;
-  
   // Parse translated text back into title/description
   const [displayTitle, displayDescription] = useMemo(() => {
     if (isTranslated && translatedText) {
@@ -297,6 +295,8 @@ function FeedDescription({
     ? dedupedDescription 
     : `${dedupedDescription.slice(0, MAX_LENGTH)}...`;
   
+  if (!title && !description) return null;
+
   return (
     <div className="space-y-1">
       {displayTitle && (
@@ -304,7 +304,7 @@ function FeedDescription({
           {renderTextWithLinks(displayTitle)}
         </h3>
       )}
-      {displayDescription && (
+      {dedupedDescription && (
         <div>
           <p className="text-zinc-300 text-sm leading-relaxed">
             {renderTextWithLinks(shownDescription)}
