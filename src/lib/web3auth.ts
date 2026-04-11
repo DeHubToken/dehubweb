@@ -17,6 +17,7 @@ import {
   WEB3AUTH_NETWORK,
 } from "@web3auth/modal";
 import { AccountAbstractionProvider, SafeSmartAccount } from "@web3auth/account-abstraction-provider";
+import { CommonPrivateKeyProvider } from "@web3auth/no-modal";
 import type { IProvider } from "@web3auth/base";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -572,7 +573,7 @@ export async function connectToSocialProvider(
     lastConnectedConnector = WALLET_CONNECTORS.AUTH;
     return provider;
   } catch (err) {
-      if (isPopupBlockedError(err) && !forceRedirectMode) {
+    if (isPopupBlockedError(err) && !forceRedirectMode) {
       console.warn('[Web3Auth] Popup blocked! Switching to REDIRECT mode...');
       forceRedirectMode = true;
       resetWeb3AuthState();
@@ -580,8 +581,60 @@ export async function connectToSocialProvider(
       params.uxMode = UX_MODE.REDIRECT;
       return await retryAuth.connectTo(WALLET_CONNECTORS.AUTH, params);
     }
+
+    // Web3Auth Modal v10 bundles WsEmbed (Torus wallet) for EIP155 chains.
+    // WsEmbed calls api-wallet.web3auth.io/auth/verify which rejects signatures > 500 chars.
+    // BUT key reconstruction via Sapphire DKG completes BEFORE loginWithSessionId is called.
+    // So even when connectTo() throws, authInstance.privKey has the reconstructed private key.
+    // We recover it here to build our own EIP1193 provider, bypassing WsEmbed entirely.
+    const privKey = extractPrivKeyFromConnector(web3auth);
+    if (privKey) {
+      console.log('[Web3Auth] WsEmbed auth/verify failed — recovering via private key (privKey length:', privKey.length, ')');
+      const eoaProvider = await buildProviderFromPrivKey(privKey);
+      lastConnectedConnector = WALLET_CONNECTORS.AUTH;
+      return eoaProvider;
+    }
+
     throw err;
   }
+}
+
+/**
+ * Extract the reconstructed private key from the auth connector's authInstance.
+ * This is available after OAuth + Sapphire DKG completes even if WsEmbed loginWithSessionId fails.
+ */
+function extractPrivKeyFromConnector(w3a: Web3Auth): string | null {
+  try {
+    const connector = (w3a as any).connectedConnector
+      || (w3a as any).connectors?.find((c: any) => c.name === WALLET_CONNECTORS.AUTH);
+    const privKey = connector?.authInstance?.privKey || connector?.authInstance?.coreKitKey;
+    return privKey && privKey.length >= 32 ? privKey : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Build a Web3Auth-compatible IProvider from a raw hex private key.
+ * Uses CommonPrivateKeyProvider from @web3auth/no-modal so it's compatible
+ * with AccountAbstractionProvider.getProviderInstance().
+ */
+async function buildProviderFromPrivKey(privKey: string): Promise<IProvider> {
+  const pkProvider = new CommonPrivateKeyProvider({
+    config: {
+      chain: {
+        chainNamespace: CHAIN_NAMESPACES.EIP155,
+        chainId: "0x2105",
+        rpcTarget: "https://base-rpc.publicnode.com",
+        displayName: "Base Mainnet",
+        blockExplorerUrl: "https://basescan.org",
+        ticker: "ETH",
+        tickerName: "Ethereum",
+      },
+    },
+  });
+  await pkProvider.setupProvider(privKey);
+  return pkProvider;
 }
 
 export function getWeb3Auth(): Web3Auth {
