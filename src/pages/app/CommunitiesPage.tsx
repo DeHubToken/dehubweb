@@ -7,7 +7,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, Plus, Search } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserCommunities, useDiscoverCommunities } from '@/hooks/use-communities';
 import { CommunityCard } from '@/components/app/communities/CommunityCard';
@@ -103,17 +103,17 @@ export default function CommunitiesPage() {
           <Users className="w-6 h-6 text-white" />
           <h1 className="text-xl font-bold text-white">{t('communities.title')}</h1>
         </div>
-        <Button
-          size="sm"
-          className="rounded-xl bg-white/10 backdrop-blur-xl border border-white/20 hover:bg-white/20 text-white gap-1.5"
+        <LiquidGlassBubble2
+          label={t('communities.create')}
+          icon={<Plus className="w-4 h-4" />}
           onClick={() => {
             if (!isAuthenticated) { openLoginModal(); return; }
             setCreateOpen(true);
           }}
-        >
-          <Plus className="w-4 h-4" />
-          {t('communities.create')}
-        </Button>
+          height="36px"
+          width="auto"
+          className="px-3.5"
+        />
       </div>
 
       {/* Search */}
