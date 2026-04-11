@@ -4,14 +4,15 @@
  * Shows user's communities first (owned at top), then all communities sorted by member count.
  */
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, Plus, Search } from 'lucide-react';
+import { Users, Plus, Search, Bell } from 'lucide-react';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserCommunities, useDiscoverCommunities } from '@/hooks/use-communities';
 import { CommunityCard } from '@/components/app/communities/CommunityCard';
 import { CreateCommunityModal } from '@/components/app/communities/CreateCommunityModal';
+import { CommunityOwnerActivity } from '@/components/app/communities/CommunityOwnerActivity';
 import { SEOHead } from '@/components/SEOHead';
 import { useTranslation } from 'react-i18next';
 import { useCommunityActivityUnreadCount } from '@/hooks/use-community-activity-unread';
@@ -60,6 +61,10 @@ export default function CommunitiesPage() {
     enabled: ownedCommunityIds.length > 0 && !!walletAddress,
     staleTime: 60_000,
   });
+
+  const [tab, setTab] = useState<'communities' | 'activity'>('communities');
+
+  const totalUnread = useMemo(() => Object.values(perCommunityUnread).reduce((a, b) => a + b, 0), [perCommunityUnread]);
 
   const userCommunityIds = new Set(userCommunities.map(m => m.community_id));
   const roleMap = useMemo(() => {
@@ -117,7 +122,30 @@ export default function CommunitiesPage() {
       </div>
 
       {/* Search */}
-      <div className="relative mb-4">
+      {/* Tabs */}
+      {isAuthenticated && ownedCommunityIds.length > 0 && (
+        <div className="flex gap-1 mb-4 p-1 rounded-xl bg-white/[0.04] border border-white/[0.06]">
+          <button
+            onClick={() => setTab('communities')}
+            className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-colors ${tab === 'communities' ? 'bg-white/[0.1] text-white' : 'text-zinc-500 hover:text-zinc-300'}`}
+          >
+            Communities
+          </button>
+          <button
+            onClick={() => setTab('activity')}
+            className={`flex-1 py-1.5 text-xs font-semibold rounded-lg transition-colors flex items-center justify-center gap-1.5 ${tab === 'activity' ? 'bg-white/[0.1] text-white' : 'text-zinc-500 hover:text-zinc-300'}`}
+          >
+            Activity
+            {totalUnread > 0 && (
+              <span className="min-w-[16px] h-[16px] px-1 flex items-center justify-center bg-red-500 text-white text-[9px] font-bold rounded-full leading-none">
+                {totalUnread > 99 ? '99+' : totalUnread}
+              </span>
+            )}
+          </button>
+        </div>
+      )}
+
+      <div className={`relative mb-4 ${tab !== 'communities' ? 'hidden' : ''}`}>
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
         <input
           type="text"
@@ -128,7 +156,21 @@ export default function CommunitiesPage() {
         />
       </div>
 
-      {isLoading ? (
+      {tab === 'activity' ? (
+        <div className="space-y-4">
+          {ownedCommunityIds.map(id => {
+            const community = myCommunities.find((c: any) => c.id === id);
+            return (
+              <div key={id}>
+                {community && (
+                  <h3 className="text-xs font-semibold text-zinc-400 mb-2 px-1">{(community as any).name}</h3>
+                )}
+                <CommunityOwnerActivity communityId={id} />
+              </div>
+            );
+          })}
+        </div>
+      ) : isLoading ? (
         <div className="space-y-2">
           {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className="h-20 rounded-xl bg-white/[0.04] animate-pulse" />
