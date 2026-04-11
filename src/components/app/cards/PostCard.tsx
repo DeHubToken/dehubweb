@@ -339,7 +339,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
       <div className="pt-3 space-y-2">
         {/* Title */}
         {post.title && (
-          <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{post.title}</h3>
+          <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{renderTextWithLinks(post.title)}</h3>
         )}
         {(isTranslated ? translatedText : post.content)?.trim() && (
           <TranslatableText text={isTranslated ? translatedText : post.content} className="text-white/90 text-sm sm:text-base" as="p" />
