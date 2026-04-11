@@ -43,9 +43,9 @@ export default function StoreDetailPage() {
       {/* Header */}
       <div className="relative">
         {store.banner_url ? (
-          <img src={store.banner_url} className="w-full h-32 object-cover" alt="" />
+          <img src={store.banner_url} className="w-full aspect-[3/1] object-cover" alt="" />
         ) : (
-          <div className="w-full h-32 bg-gradient-to-br from-primary/20 to-primary/5" />
+          <div className="w-full aspect-[3/1] bg-gradient-to-br from-primary/20 to-primary/5" />
         )}
         <button
           onClick={() => navigate(-1)}
