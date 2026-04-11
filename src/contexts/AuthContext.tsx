@@ -506,6 +506,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return;
       }
 
+      // While Web3Auth social/email/SMS is connecting, the browser wallet may
+      // auto-reconnect from extension storage and log "keeping connection alive".
+      // That races with OAuth + Torus; drop wagmi for this window.
+      if (isConnecting && connectionSource === 'web3auth') {
+        if (isWagmiConnected && wagmiAddress) {
+          console.log('[Auth] Web3Auth login in progress — disconnecting wagmi to avoid provider race');
+          clearWagmiStorage();
+          await wagmiDisconnect();
+        }
+        return;
+      }
+
       console.log('[Auth] Wagmi connection check:', { isWagmiConnected, wagmiAddress, isConnecting, isLoading, walletAddress });
 
       // If Wagmi connects (via AppKit or injected) and we are not authed yet
