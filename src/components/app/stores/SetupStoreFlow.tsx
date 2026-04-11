@@ -44,6 +44,19 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
     }
   };
 
+  const handleBannerUpload = async (file: File) => {
+    if (!walletAddress) return;
+    setUploadingBanner(true);
+    try {
+      const url = await uploadStoreMedia(file, walletAddress);
+      setBannerUrl(url);
+    } catch (err: any) {
+      toast.error(err.message || 'Upload failed');
+    } finally {
+      setUploadingBanner(false);
+    }
+  };
+
   const handleCreate = () => {
     if (!name.trim()) return;
     createStore.mutate(
