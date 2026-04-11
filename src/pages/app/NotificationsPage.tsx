@@ -1353,12 +1353,21 @@ export default function NotificationsPage() {
       markAllAsRead.mutate(undefined);
       markAllCustomAsRead.mutate();
       
+      // Also delete all custom notifications from DB so they don't reappear
+      await supabase
+        .from('custom_notifications')
+        .delete()
+        .eq('recipient_address', pageWalletAddress?.toLowerCase() || '');
+      
       // Store the "cleared at" timestamp — all notifications before this will be hidden
       const now = Date.now();
       localStorage.setItem('notifications_cleared_at', String(now));
       
       // Update state to trigger memo recalculation
       setClearedAtTs(now);
+
+      // Invalidate custom notification caches
+      queryClient.invalidateQueries({ queryKey: ['custom-notifications'] });
       
       toast.success('All notifications cleared');
     } catch (error) {
