@@ -68,7 +68,7 @@ export function CommunityCard({ community, isMember, role, unreadCount, onClick 
           <span className="text-white font-medium text-sm truncate">{community.name}</span>
           {community.is_private && <Lock className="w-3 h-3 text-zinc-500 flex-shrink-0" />}
         </div>
-        <p className="text-zinc-500 text-xs truncate">{descWithoutLinks || t('communities.noDescription')}</p>
+        <p className="text-xs truncate text-primary-foreground">{descWithoutLinks || t('communities.noDescription')}</p>
         {links.length > 0 && (
           <div className="flex items-center gap-2 mt-0.5">
             {links.slice(0, 3).map((url, i) => (
