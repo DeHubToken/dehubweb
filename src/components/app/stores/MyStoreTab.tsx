@@ -42,6 +42,7 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
   const { data: prices } = useTokenPrices();
   const [selectedStoreId, setSelectedStoreId] = useState<string | null>(null);
   const [editListing, setEditListing] = useState<any>(null);
+  const [editStore, setEditStore] = useState<any>(null);
   const [subTab, setSubTab] = useState<StoreSubTab>('listings');
   const [enableTransition, setEnableTransition] = useState(false);
   const [showSetupFlow, setShowSetupFlow] = useState(false);
