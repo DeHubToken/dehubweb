@@ -43,9 +43,9 @@ export const StoreListingCard = memo(function StoreListingCard({ listing, onClic
 
       {/* Info */}
       <div className="p-3 space-y-1">
-        <h3 className="text-sm font-medium text-foreground truncate">{listing.title}</h3>
-        <p className="text-xs text-muted-foreground truncate">{storeName}</p>
-        <p className="text-sm font-semibold text-primary">{Number(listing.price).toLocaleString()} DHB</p>
+        <h3 className="text-sm font-medium text-white truncate">{listing.title}</h3>
+        <p className="text-xs text-zinc-400 truncate">{storeName}</p>
+        <p className="text-sm font-semibold text-white">{Number(listing.price).toLocaleString()} DHB</p>
       </div>
     </button>
   );
