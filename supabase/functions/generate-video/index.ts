@@ -177,21 +177,32 @@ function mapFalStatus(s: string): VideoGenerationResponse['status'] {
 
 // ─── Replicate input builders ───
 
+interface ReplicateInputOptions {
+  prompt: string;
+  sourceImage?: string;
+  duration?: string;
+  aspectRatio?: string;
+  negativePrompt?: string;
+  resolution?: string;
+  seed?: number;
+}
+
 function buildReplicateInput(
   model: string,
-  prompt: string,
-  sourceImage?: string,
-  duration = '5s',
-  aspectRatio = '16:9',
+  opts: ReplicateInputOptions,
 ): Record<string, unknown> {
+  const { prompt, sourceImage, duration = '5s', aspectRatio = '16:9', negativePrompt, resolution, seed } = opts;
+
   switch (model) {
     case 'kling-2.6-pro':
       return {
         prompt,
-        duration: duration === '10s' ? 10 : 5,
+        duration: parseInt(duration) || 5,
         aspect_ratio: aspectRatio,
         generate_audio: true,
         ...(sourceImage && { start_image: sourceImage }),
+        ...(negativePrompt && { negative_prompt: negativePrompt }),
+        ...(seed !== undefined && { seed }),
       };
     case 'luma-ray2':
       return { prompt, aspect_ratio: aspectRatio, loop: false };
@@ -200,20 +211,27 @@ function buildReplicateInput(
     case 'runway-gen4':
       return {
         prompt,
-        duration: parseInt(duration),
+        duration: parseInt(duration) || 10,
         ratio: aspectRatio,
         ...(sourceImage && { image: sourceImage }),
       };
     case 'ltx-video':
-      return { prompt, ...(sourceImage && { image: sourceImage }) };
+      return {
+        prompt,
+        ...(sourceImage && { image: sourceImage }),
+        ...(negativePrompt && { negative_prompt: negativePrompt }),
+        ...(seed !== undefined && { seed }),
+      };
     case 'seedance-1.5-pro':
       return {
         prompt,
         duration: Math.min(Math.max(parseInt(duration) || 5, 2), 12),
         aspect_ratio: aspectRatio,
-        resolution: '720p',
+        resolution: resolution || '720p',
         generate_audio: true,
         ...(sourceImage && { image: sourceImage }),
+        ...(negativePrompt && { negative_prompt: negativePrompt }),
+        ...(seed !== undefined && { seed }),
       };
     default:
       return { prompt };
@@ -266,7 +284,7 @@ serve(async (req) => {
     if (modelConfig.provider === 'fal') {
       return await handleFalGeneration(modelConfig, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed);
     }
-    return await handleReplicateGeneration(modelConfig, model, prompt, sourceImage, duration, aspectRatio);
+    return await handleReplicateGeneration(modelConfig, model, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, seed);
 
   } catch (error) {
     console.error('Error in generate-video:', error);
@@ -414,12 +432,15 @@ async function handleReplicateGeneration(
   sourceImage?: string,
   duration = '5s',
   aspectRatio = '16:9',
+  negativePrompt?: string,
+  resolution?: string,
+  seed?: number,
 ) {
   const REPLICATE_API_KEY = Deno.env.get('REPLICATE_API_KEY');
   if (!REPLICATE_API_KEY) throw new Error('REPLICATE_API_KEY is not configured');
 
   const replicate = new Replicate({ auth: REPLICATE_API_KEY });
-  const input = buildReplicateInput(model, prompt, sourceImage, duration, aspectRatio);
+  const input = buildReplicateInput(model, { prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, seed });
 
   console.log('Model input:', JSON.stringify(input).substring(0, 200));
 

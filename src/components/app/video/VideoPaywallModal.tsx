@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
-import { Loader2, Video, AlertCircle, ChevronDown, Volume2, Upload, X, Image, Music, Film, Hash, Plus } from 'lucide-react';
+import { Loader2, Video, AlertCircle, ChevronDown, Volume2, Upload, X, Image, Music, Film, Hash, Plus, Lightbulb } from 'lucide-react';
 import { VideoModel, VideoModelKey, VIDEO_MODELS, VIDEO_MODEL_OPTIONS, getVideoCostUsd, getVideoCostDhb } from '@/constants/video-models.constants';
 import { supabase } from '@/integrations/supabase/client';
 import dhbCoinImage from '@/assets/dehub-coin.png';
@@ -225,7 +225,7 @@ export function VideoPaywallModal({
       // Upload files if any
       setIsUploading(true);
       const options: VideoGenerationOptions = {};
-      if (isPerSecond) options.duration = duration;
+      if (model.minDuration && model.maxDuration) options.duration = duration;
       if (model.supportsResolution) options.resolution = resolution;
       if (model.supportsNegativePrompt && negativePrompt.trim()) options.negativePrompt = negativePrompt.trim();
       if (model.supportsSeed && seed.trim()) options.seed = parseInt(seed.trim()) || undefined;
@@ -363,12 +363,15 @@ export function VideoPaywallModal({
               )}
             </div>
 
-            {/* Duration Slider (for per-second models) */}
-            {isPerSecond && model.minDuration && model.maxDuration && (
+            {/* Duration Slider (for models with configurable duration) */}
+            {model.minDuration && model.maxDuration && (
               <div className="bg-zinc-800/50 rounded-xl p-3 space-y-2">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-zinc-400">Duration</span>
-                  <span className="text-white font-medium">{duration}s</span>
+                  <span className="text-white font-medium">
+                    {duration}s
+                    {isPerSecond && <span className="text-zinc-500 ml-1 text-[10px]">(${(model.perSecondCostUsd! * 2 * duration).toFixed(2)})</span>}
+                  </span>
                 </div>
                 <Slider
                   value={[duration]}
@@ -408,6 +411,21 @@ export function VideoPaywallModal({
                       </button>
                     ))}
                   </div>
+                </div>
+              </div>
+            )}
+
+            {/* Model Tips */}
+            {model.tips && model.tips.length > 0 && (
+              <div className="bg-gradient-to-br from-blue-900/20 to-purple-900/20 rounded-xl p-3 border border-blue-500/10">
+                <div className="flex items-center gap-1.5 mb-1.5">
+                  <Lightbulb className="w-3.5 h-3.5 text-yellow-400" />
+                  <span className="text-xs font-medium text-zinc-300">Tips for {model.name}</span>
+                </div>
+                <div className="space-y-0.5">
+                  {model.tips.map((tip, idx) => (
+                    <p key={idx} className="text-[11px] text-zinc-400 leading-relaxed">{tip}</p>
+                  ))}
                 </div>
               </div>
             )}
