@@ -597,13 +597,26 @@ export async function connectToSocialProvider(
     const privKey = extractPrivKeyFromConnector(web3auth);
     if (privKey) {
       console.log('[Web3Auth] WsEmbed auth/verify failed — recovering via private key (privKey length:', privKey.length, ')');
-      // CRITICAL: Destroy the web3authInstance entirely after extracting the key.
-      // The authInstance.privKey lives in memory on the connector — clearWeb3AuthStorage()
-      // alone is not enough because it only clears localStorage, not RAM.
-      // Without nulling the instance, every subsequent login (Twitter, Google, email — any
-      // provider) will call extractPrivKeyFromConnector() and find this same stale private
-      // key still on the connector object, always returning the same account regardless of
-      // which OAuth provider was used.
+
+      // CRITICAL: Call logout({ cleanup: true }) on the CURRENT instance BEFORE nulling it.
+      // Web3Auth's openlogin module maintains an in-memory singleton that persists
+      // ACROSS instance recreations (it's not tied to the web3authInstance object lifecycle).
+      // If we just null web3authInstance and call clearWeb3AuthStorage(), the next
+      // init() call (e.g. from getWeb3AuthMeta()) will create a new instance that
+      // picks up the old OAuth session from the openlogin in-memory singleton.
+      // That restored instance's connectTo() calls then reuse the old private key
+      // (same account for every subsequent login, regardless of which provider is chosen).
+      // Calling logout({ cleanup: true }) on the active instance clears the openlogin
+      // singleton's in-memory state, ensuring the next init() truly starts fresh.
+      try {
+        await web3auth.logout({ cleanup: true });
+        console.log('[Web3Auth] Recovery: successfully cleared openlogin session (logout cleanup)');
+      } catch (logoutErr) {
+        // Expected to throw if the instance is in a broken state after WsEmbed failure.
+        // Even a partial cleanup helps — proceed regardless.
+        console.warn('[Web3Auth] Recovery: logout({ cleanup: true }) failed (proceeding anyway):', logoutErr);
+      }
+
       web3authInstance = null;
       isInitializing = false;
       initPromise = null;

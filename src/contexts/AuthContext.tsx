@@ -46,6 +46,7 @@ import {
   AUTH_CONNECTION,
   WALLET_CONNECTORS,
   getOrInitWeb3Auth,
+  getWeb3AuthInstance,
   isMobileDevice,
   isWalletInAppBrowser,
   setupAAProvider,
@@ -141,10 +142,19 @@ function mapSocialProvider(provider: SocialProvider): typeof AUTH_CONNECTION[key
 
 /**
  * Build web3AuthMeta from Web3Auth userInfo for the auth request.
+ *
+ * IMPORTANT: Uses getWeb3AuthInstance() (NOT getOrInitWeb3Auth()) to avoid creating
+ * a new Web3Auth instance after the WsEmbed recovery path nulled web3authInstance.
+ * Creating a new instance here would call init(), which picks up the openlogin module's
+ * in-memory singleton session, restoring the old OAuth account. That T2 instance would
+ * then contaminate the next login (connectTo() reuses the restored session's private key
+ * instead of running a fresh DKG for the newly chosen provider).
+ * If the current instance is null or not connected, we just return undefined gracefully.
  */
 async function getWeb3AuthMeta(): Promise<Web3AuthMeta | undefined> {
   try {
-    const w3a = await getOrInitWeb3Auth();
+    const w3a = getWeb3AuthInstance();
+    if (!w3a || !w3a.connected) return undefined;
     const info: any = await w3a.getUserInfo();
     if (!info) return undefined;
     return {
