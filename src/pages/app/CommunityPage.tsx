@@ -22,7 +22,7 @@ import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { useTranslation } from 'react-i18next';
 
-type Tab = 'posts' | 'events' | 'members' | 'about' | 'chat';
+type Tab = 'posts' | 'events' | 'members' | 'about' | 'chat' | 'activity';
 
 export default function CommunityPage() {
   const { slug } = useParams<{ slug: string }>();
