@@ -288,7 +288,7 @@ function FeedDescription({
     <div className="space-y-1">
       {displayTitle && (
         <h3 className="text-white text-sm font-semibold leading-tight">
-          {displayTitle}
+          {renderTextWithLinks(displayTitle)}
         </h3>
       )}
       {displayDescription && (

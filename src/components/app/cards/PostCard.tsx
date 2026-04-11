@@ -23,7 +23,7 @@ import { PostMetadata } from './PostMetadata';
 import { QuotedPostEmbed } from './QuotedPostEmbed';
 import { FeedLinkPreviews } from './FeedLinkPreviews';
 import { CommunityLinkEmbed, extractCommunitySlug, hasCommunityLink } from '@/components/app/communities/CommunityLinkEmbed';
-import { TranslatableText, useTranslation } from '../TranslatableText';
+import { TranslatableText, useTranslation, renderTextWithLinks } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
 import { buildPostShareImage } from '@/lib/build-post-share-image';
@@ -339,7 +339,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
       <div className="pt-3 space-y-2">
         {/* Title */}
         {post.title && (
-          <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{post.title}</h3>
+          <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{renderTextWithLinks(post.title)}</h3>
         )}
         {(isTranslated ? translatedText : post.content)?.trim() && (
           <TranslatableText text={isTranslated ? translatedText : post.content} className="text-white/90 text-sm sm:text-base" as="p" />
