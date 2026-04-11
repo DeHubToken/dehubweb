@@ -10,18 +10,18 @@ import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
-// ── My Store ──────────────────────────────────────────────
-export function useMyStore() {
+// ── My Stores ──────────────────────────────────────────────
+export function useMyStores() {
   const { walletAddress } = useAuth();
   return useQuery({
-    queryKey: ['my-store', walletAddress],
+    queryKey: ['my-stores', walletAddress],
     queryFn: async () => {
       const { data, error } = await withWalletHeader(
-        supabase.from('stores').select('*').eq('wallet_address', walletAddress!.toLowerCase()).maybeSingle(),
+        supabase.from('stores').select('*').eq('wallet_address', walletAddress!.toLowerCase()).order('created_at', { ascending: true }),
         walletAddress!
       );
       if (error) throw error;
-      return data;
+      return data || [];
     },
     enabled: !!walletAddress,
   });
@@ -45,7 +45,7 @@ export function useCreateStore() {
       return data;
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['my-store'] });
+      qc.invalidateQueries({ queryKey: ['my-stores'] });
       toast.success('Store created!');
     },
     onError: (e: any) => toast.error(e.message),

@@ -1,7 +1,7 @@
 /**
  * My Store Tab
  * =============
- * Seller dashboard: manage listings and view orders.
+ * Seller dashboard: manage listings and view orders across multiple stores.
  */
 
 import { useState, useCallback } from 'react';
@@ -10,38 +10,39 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import dehubCoin from '@/assets/dehub-coin.png';
-import { useMyStore, useMyListings, useMyOrders, useUpdateListing, useUpdateOrderStatus } from '@/hooks/use-stores';
+import { useMyStores, useMyListings, useMyOrders, useUpdateListing, useUpdateOrderStatus } from '@/hooks/use-stores';
 import { SetupStoreFlow } from './SetupStoreFlow';
 import { CreateListingDrawer } from './CreateListingDrawer';
 import { EditListingDrawer } from './EditListingDrawer';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { toast } from 'sonner';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 type StoreSubTab = 'listings' | 'orders' | 'purchases';
 
 interface MyStoreTabProps {
-  createOpen?: boolean;
-  onCreateClose?: () => void;
+  createListingOpen?: boolean;
+  onCreateListingClose?: () => void;
+  createStoreOpen?: boolean;
+  onCreateStoreClose?: () => void;
 }
 
-export function MyStoreTab({ createOpen = false, onCreateClose }: MyStoreTabProps) {
+export function MyStoreTab({ createListingOpen = false, onCreateListingClose, createStoreOpen = false, onCreateStoreClose }: MyStoreTabProps) {
   const { isAuthenticated, openLoginModal } = useAuth();
-  const { data: store, isLoading: loadingStore } = useMyStore();
+  const { data: stores = [], isLoading: loadingStores } = useMyStores();
   const { data: listings = [] } = useMyListings();
   const { data: sellerOrders = [] } = useMyOrders('seller');
   const { data: buyerOrders = [] } = useMyOrders('buyer');
   const updateListing = useUpdateListing();
   const updateOrderStatus = useUpdateOrderStatus();
   const { data: prices } = useTokenPrices();
-  const [internalCreateOpen, setInternalCreateOpen] = useState(false);
-  const isCreateOpen = createOpen || internalCreateOpen;
-  const handleCreateClose = () => { setInternalCreateOpen(false); onCreateClose?.(); };
+  const [selectedStoreId, setSelectedStoreId] = useState<string | null>(null);
   const [editListing, setEditListing] = useState<any>(null);
   const [subTab, setSubTab] = useState<StoreSubTab>('listings');
   const [enableTransition, setEnableTransition] = useState(false);
+  const [showSetupFlow, setShowSetupFlow] = useState(false);
 
   const { layerRef, setRef, rect } = useTabIndicator(subTab);
 
@@ -50,6 +51,13 @@ export function MyStoreTab({ createOpen = false, onCreateClose }: MyStoreTabProp
     setSubTab(tab);
     setTimeout(() => setEnableTransition(false), 450);
   }, []);
+
+  // Resolve active store
+  const activeStore = stores.find(s => s.id === selectedStoreId) || stores[0] || null;
+  const activeStoreId = activeStore?.id;
+
+  // Filter listings for the active store
+  const storeListings = activeStoreId ? listings.filter((l: any) => l.store_id === activeStoreId) : listings;
 
   if (!isAuthenticated) {
     return (
@@ -60,12 +68,18 @@ export function MyStoreTab({ createOpen = false, onCreateClose }: MyStoreTabProp
     );
   }
 
-  if (loadingStore) {
+  if (loadingStores) {
     return <div className="py-16 text-center text-muted-foreground text-sm">Loading...</div>;
   }
 
-  if (!store) {
-    return <SetupStoreFlow />;
+  // Show setup flow if no stores or explicitly requested
+  if (stores.length === 0 || createStoreOpen || showSetupFlow) {
+    return (
+      <SetupStoreFlow
+        onComplete={() => { setShowSetupFlow(false); onCreateStoreClose?.(); }}
+        onCancel={stores.length > 0 ? () => { setShowSetupFlow(false); onCreateStoreClose?.(); } : undefined}
+      />
+    );
   }
 
   const handleArchive = (id: string) => {
@@ -77,14 +91,28 @@ export function MyStoreTab({ createOpen = false, onCreateClose }: MyStoreTabProp
   };
 
   const TABS: { key: StoreSubTab; label: string; count: number }[] = [
-    { key: 'listings', label: 'My Listings', count: listings.length },
+    { key: 'listings', label: 'My Listings', count: storeListings.length },
     { key: 'orders', label: 'Orders', count: sellerOrders.length },
     { key: 'purchases', label: 'Purchases', count: buyerOrders.length },
   ];
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-muted">{store.name}</h2>
+      {/* Store selector for multi-store */}
+      {stores.length > 1 ? (
+        <Select value={activeStoreId || ''} onValueChange={setSelectedStoreId}>
+          <SelectTrigger className="bg-white/5 border-white/10 text-primary-foreground w-full">
+            <SelectValue placeholder="Select store" />
+          </SelectTrigger>
+          <SelectContent className="bg-zinc-900 border-white/10">
+            {stores.map((s: any) => (
+              <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      ) : (
+        <h2 className="text-lg font-semibold text-muted">{activeStore?.name}</h2>
+      )}
 
       {/* Toggle bar with glass indicator */}
       <div className="bg-zinc-900 rounded-xl p-1">
@@ -109,13 +137,13 @@ export function MyStoreTab({ createOpen = false, onCreateClose }: MyStoreTabProp
 
       {/* Content */}
       {subTab === 'listings' && (
-        listings.length === 0 ? (
+        storeListings.length === 0 ? (
           <div className="text-center py-12 text-muted-foreground text-sm">
             No listings yet. Create your first one!
           </div>
         ) : (
           <div className="space-y-2">
-            {listings.map((l: any) => (
+            {storeListings.map((l: any) => (
               <div key={l.id} className="flex items-center gap-3 p-3 rounded-lg border border-white/10 bg-white/5">
                 <div className="w-12 h-12 rounded-lg bg-white/10 overflow-hidden shrink-0">
                   {(l.images as string[])?.[0] && <img src={(l.images as string[])[0]} className="w-full h-full object-cover" alt="" />}
@@ -177,8 +205,12 @@ export function MyStoreTab({ createOpen = false, onCreateClose }: MyStoreTabProp
         )
       )}
 
-      <CreateListingDrawer open={isCreateOpen} onClose={handleCreateClose} storeId={store.id} />
-      <EditListingDrawer open={!!editListing} onClose={() => setEditListing(null)} listing={editListing} />
+      {activeStoreId && (
+        <>
+          <CreateListingDrawer open={createListingOpen} onClose={() => onCreateListingClose?.()} storeId={activeStoreId} />
+          <EditListingDrawer open={!!editListing} onClose={() => setEditListing(null)} listing={editListing} />
+        </>
+      )}
     </div>
   );
 }
