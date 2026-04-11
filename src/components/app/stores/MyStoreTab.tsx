@@ -84,7 +84,7 @@ export function MyStoreTab({ createOpen = false, onCreateClose }: MyStoreTabProp
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-foreground">{store.name}</h2>
+      <h2 className="text-lg font-semibold text-muted">{store.name}</h2>
 
       {/* Toggle bar with glass indicator */}
       <div className="bg-zinc-900 rounded-xl p-1">
@@ -121,7 +121,7 @@ export function MyStoreTab({ createOpen = false, onCreateClose }: MyStoreTabProp
                   {(l.images as string[])?.[0] && <img src={(l.images as string[])[0]} className="w-full h-full object-cover" alt="" />}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-foreground truncate">{l.title}</p>
+                  <p className="text-sm font-medium truncate text-primary-foreground">{l.title}</p>
                   <p className="text-xs text-muted-foreground flex items-center gap-1">
                     {(() => {
                       const usd = Number(l.price);
@@ -199,7 +199,7 @@ function OrderRow({ order, type, onUpdateStatus }: { order: any; type: 'buyer' |
         {(listing?.images as string[])?.[0] && <img src={(listing.images as string[])[0]} className="w-full h-full object-cover" alt="" />}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-foreground truncate">{listing?.title || 'Listing'}</p>
+        <p className="text-sm font-medium truncate text-primary-foreground">{listing?.title || 'Listing'}</p>
         <p className="text-xs text-muted-foreground">{Number(order.amount).toLocaleString()} DHB</p>
       </div>
       <span className={`text-[10px] px-2 py-0.5 rounded-full capitalize ${statusColors[order.status] || 'bg-white/10 text-muted-foreground'}`}>
