@@ -60,7 +60,7 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
   const handleCreate = () => {
     if (!name.trim()) return;
     createStore.mutate(
-      { name: name.trim(), description: description.trim(), avatar_url: avatarUrl || undefined } as any,
+      { name: name.trim(), description: description.trim(), avatar_url: avatarUrl || undefined, banner_url: bannerUrl || undefined } as any,
       { onSuccess: () => onComplete?.() }
     );
   };
