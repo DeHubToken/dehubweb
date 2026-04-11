@@ -110,8 +110,8 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label className="text-zinc-300">Price (DHB) *</Label>
-              <Input type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="0" className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500" />
+              <Label className="text-zinc-300">Price (USD) *</Label>
+              <Input type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="0.00" className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500" />
             </div>
             <div>
               <Label className="text-zinc-300">Stock Qty</Label>
