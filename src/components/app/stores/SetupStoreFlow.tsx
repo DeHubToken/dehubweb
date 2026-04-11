@@ -1,7 +1,7 @@
 /**
  * Setup Store Flow
  * ================
- * One-time store creation form.
+ * Store creation form — supports creating additional stores.
  */
 
 import { useState } from 'react';
@@ -9,26 +9,38 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Store, Loader2 } from 'lucide-react';
+import { Store, Loader2, ArrowLeft } from 'lucide-react';
 import { useCreateStore } from '@/hooks/use-stores';
 
-export function SetupStoreFlow() {
+interface SetupStoreFlowProps {
+  onComplete?: () => void;
+  onCancel?: () => void;
+}
+
+export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const createStore = useCreateStore();
 
   const handleCreate = () => {
     if (!name.trim()) return;
-    createStore.mutate({ name: name.trim(), description: description.trim() });
+    createStore.mutate({ name: name.trim(), description: description.trim() }, {
+      onSuccess: () => onComplete?.(),
+    });
   };
 
   return (
     <div className="flex flex-col items-center justify-center py-16 px-4 max-w-md mx-auto space-y-6">
+      {onCancel && (
+        <button onClick={onCancel} className="self-start flex items-center gap-1 text-sm text-zinc-400 hover:text-white transition-colors">
+          <ArrowLeft className="w-4 h-4" /> Back
+        </button>
+      )}
       <div className="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center">
         <Store className="w-8 h-8 text-white" />
       </div>
       <div className="text-center space-y-2">
-        <h2 className="text-xl font-bold text-white">Set up your Store</h2>
+        <h2 className="text-xl font-bold text-white">{onCancel ? 'Create New Store' : 'Set up your Store'}</h2>
         <p className="text-sm text-zinc-400">Create your store to start selling items. You can list physical goods, digital items, art, and services.</p>
       </div>
       <div className="w-full space-y-3">
