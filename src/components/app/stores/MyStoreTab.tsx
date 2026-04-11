@@ -25,6 +25,7 @@ export function MyStoreTab() {
   const { data: buyerOrders = [] } = useMyOrders('buyer');
   const updateListing = useUpdateListing();
   const updateOrderStatus = useUpdateOrderStatus();
+  const { data: prices } = useTokenPrices();
   const [createOpen, setCreateOpen] = useState(false);
   const [editListing, setEditListing] = useState<any>(null);
 
