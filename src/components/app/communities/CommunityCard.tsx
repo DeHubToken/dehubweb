@@ -1,15 +1,18 @@
-import { Users, Lock } from 'lucide-react';
+import { Users, Lock, Crown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Community } from '@/hooks/use-communities';
 
 interface CommunityCardProps {
   community: Community;
   isMember: boolean;
+  role?: string;
+  unreadCount?: number;
   onClick: () => void;
 }
 
-export function CommunityCard({ community, isMember, onClick }: CommunityCardProps) {
+export function CommunityCard({ community, isMember, role, unreadCount, onClick }: CommunityCardProps) {
   const { t } = useTranslation();
+  const isOwner = role === 'owner';
 
   return (
     <button
@@ -29,11 +32,16 @@ export function CommunityCard({ community, isMember, onClick }: CommunityCardPro
           }}
         />
       )}
-      <div className="w-12 h-12 rounded-xl bg-white/[0.08] flex items-center justify-center flex-shrink-0 overflow-hidden">
+      <div className="relative w-12 h-12 rounded-xl bg-white/[0.08] flex items-center justify-center flex-shrink-0 overflow-hidden">
         {community.avatar_url ? (
           <img src={community.avatar_url} alt={community.name} className="w-full h-full object-cover" />
         ) : (
           <Users className="w-5 h-5 text-zinc-500" />
+        )}
+        {unreadCount !== undefined && unreadCount > 0 && (
+          <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 flex items-center justify-center bg-red-500 text-white text-[10px] font-bold rounded-full z-10 leading-none">
+            {unreadCount > 99 ? '99+' : unreadCount}
+          </span>
         )}
       </div>
 
@@ -46,7 +54,14 @@ export function CommunityCard({ community, isMember, onClick }: CommunityCardPro
         <div className="flex items-center gap-3 mt-0.5">
           <span className="text-zinc-600 text-xs">{community.member_count.toLocaleString()} {t('communities.members')}</span>
           {isMember && (
-            <span className="text-xs text-emerald-500/80">{t('communities.joined')}</span>
+            isOwner ? (
+              <span className="flex items-center gap-1 text-xs text-amber-400/80">
+                <Crown className="w-3 h-3" />
+                Owner
+              </span>
+            ) : (
+              <span className="text-xs text-emerald-500/80">{t('communities.joined')}</span>
+            )
           )}
         </div>
       </div>
