@@ -225,7 +225,7 @@ export function VideoPaywallModal({
       // Upload files if any
       setIsUploading(true);
       const options: VideoGenerationOptions = {};
-      if (isPerSecond) options.duration = duration;
+      if (model.minDuration && model.maxDuration) options.duration = duration;
       if (model.supportsResolution) options.resolution = resolution;
       if (model.supportsNegativePrompt && negativePrompt.trim()) options.negativePrompt = negativePrompt.trim();
       if (model.supportsSeed && seed.trim()) options.seed = parseInt(seed.trim()) || undefined;
