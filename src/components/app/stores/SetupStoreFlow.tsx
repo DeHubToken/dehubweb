@@ -24,8 +24,11 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
+  const [bannerUrl, setBannerUrl] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [uploadingBanner, setUploadingBanner] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const bannerRef = useRef<HTMLInputElement>(null);
   const createStore = useCreateStore();
 
   const handleAvatarUpload = async (file: File) => {
