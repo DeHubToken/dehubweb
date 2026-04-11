@@ -136,8 +136,12 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
               ) : (
                 <h2 className="text-sm font-semibold text-primary-foreground truncate">{activeStore?.name}</h2>
               )}
-              <p className="text-[10px] text-zinc-500 font-mono mt-0.5">
-                Owner: {activeStore?.wallet_address?.slice(0, 6)}...{activeStore?.wallet_address?.slice(-4)}
+              <p className="text-[10px] text-zinc-500 mt-0.5 flex items-center gap-2">
+                <span>{storeListings.length} listing{storeListings.length !== 1 ? 's' : ''}</span>
+                <span>·</span>
+                <span>{sellerOrders.reduce((sum: number, o: any) => sum + Number(o.amount || 0), 0).toLocaleString()} DHB earned</span>
+                <span>·</span>
+                <span>Since {activeStore?.created_at ? new Date(activeStore.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : '—'}</span>
               </p>
             </div>
             <button
