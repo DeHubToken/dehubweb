@@ -31,13 +31,14 @@ export function useCreateStore() {
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (params: { name: string; description?: string }) => {
+    mutationFn: async (params: { name: string; description?: string; avatar_url?: string }) => {
       if (!walletAddress) throw new Error('Not authenticated');
       const { data, error } = await withWalletHeader(
         supabase.from('stores').insert({
           wallet_address: walletAddress.toLowerCase(),
           name: params.name,
           description: params.description || '',
+          avatar_url: params.avatar_url || null,
         } as any).select().single(),
         walletAddress
       );
@@ -244,4 +245,35 @@ export function useUpdateOrderStatus() {
       qc.invalidateQueries({ queryKey: ['store-orders'] });
     },
   });
+}
+
+// ── Update Store ──────────────────────────────────────────
+export function useUpdateStore() {
+  const { walletAddress } = useAuth();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, ...updates }: { id: string; name?: string; description?: string; avatar_url?: string; banner_url?: string }) => {
+      if (!walletAddress) throw new Error('Not authenticated');
+      const { error } = await withWalletHeader(
+        supabase.from('stores').update(updates as any).eq('id', id),
+        walletAddress
+      );
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['my-stores'] });
+      qc.invalidateQueries({ queryKey: ['store'] });
+      toast.success('Store updated!');
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
+}
+
+export async function uploadStoreMedia(file: File, walletAddress: string): Promise<string> {
+  const ext = file.name.split('.').pop() || 'jpg';
+  const path = `${walletAddress.toLowerCase()}/${Date.now()}.${ext}`;
+  const { error } = await supabase.storage.from('store-media').upload(path, file, { upsert: true });
+  if (error) throw error;
+  const { data } = supabase.storage.from('store-media').getPublicUrl(path);
+  return data.publicUrl;
 }
