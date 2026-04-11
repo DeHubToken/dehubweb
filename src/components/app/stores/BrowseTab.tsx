@@ -155,17 +155,39 @@ export function BrowseTab() {
           </PopoverContent>
         </Popover>
 
-        <Select value={sort} onValueChange={setSort}>
-          <SelectTrigger className="w-[140px] bg-white/5 border-white/10">
-            <SlidersHorizontal className="w-3.5 h-3.5 mr-1" />
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="newest">Newest</SelectItem>
-            <SelectItem value="price_asc">Price: Low→High</SelectItem>
-            <SelectItem value="price_desc">Price: High→Low</SelectItem>
-          </SelectContent>
-        </Select>
+        <Popover open={sortOpen} onOpenChange={setSortOpen}>
+          <PopoverTrigger asChild>
+            <div>
+              <LiquidGlassBubble
+                shimmer
+                noBorder
+                onClick={() => setSortOpen(!sortOpen)}
+                className="cursor-pointer [&>div]:!rounded-xl [&>div]:!h-full [&>div]:!flex [&>div]:!items-center [&>div]:!justify-center [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl"
+                style={{ height: '36px', width: 'auto' }}
+              >
+                <span className="flex items-center gap-1.5 text-white text-xs font-medium px-3">
+                  <SlidersHorizontal className="w-3.5 h-3.5" />
+                  {sort === 'newest' ? 'Newest' : sort === 'price_asc' ? 'Price: Low→High' : 'Price: High→Low'}
+                </span>
+              </LiquidGlassBubble>
+            </div>
+          </PopoverTrigger>
+          <PopoverContent className="w-40 bg-black/80 backdrop-blur-2xl border-white/10 p-1.5" align="end">
+            {[
+              { value: 'newest', label: 'Newest' },
+              { value: 'price_asc', label: 'Price: Low→High' },
+              { value: 'price_desc', label: 'Price: High→Low' },
+            ].map(o => (
+              <button
+                key={o.value}
+                onClick={() => { setSort(o.value); setSortOpen(false); }}
+                className={`w-full text-left px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${sort === o.value ? 'bg-white/10 text-white' : 'text-muted-foreground hover:bg-white/5'}`}
+              >
+                {o.label}
+              </button>
+            ))}
+          </PopoverContent>
+        </Popover>
       </div>
 
       {/* Active price chip */}
