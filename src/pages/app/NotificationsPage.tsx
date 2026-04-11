@@ -278,6 +278,14 @@ function getNotificationIcon(type: string) {
       return <AlertTriangle className="w-4 h-4 text-white/70" />;
     case 'governance_vote':
       return <Star className="w-4 h-4 text-white/70" />;
+    case 'community_join':
+      return <UsersRound className="w-4 h-4 text-white/70" />;
+    case 'store_order':
+      return <ShoppingBag className="w-4 h-4 text-white/70" />;
+    case 'fraction_offer':
+    case 'fraction_offer_accepted':
+    case 'fraction_offer_rejected':
+      return <Store className="w-4 h-4 text-white/70" />;
     default:
       return <Bell className="w-4 h-4 text-white/70" />;
   }
