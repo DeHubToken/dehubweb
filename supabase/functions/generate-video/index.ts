@@ -284,7 +284,7 @@ serve(async (req) => {
     if (modelConfig.provider === 'fal') {
       return await handleFalGeneration(modelConfig, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed);
     }
-    return await handleReplicateGeneration(modelConfig, model, prompt, sourceImage, duration, aspectRatio);
+    return await handleReplicateGeneration(modelConfig, model, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, seed);
 
   } catch (error) {
     console.error('Error in generate-video:', error);
@@ -432,12 +432,15 @@ async function handleReplicateGeneration(
   sourceImage?: string,
   duration = '5s',
   aspectRatio = '16:9',
+  negativePrompt?: string,
+  resolution?: string,
+  seed?: number,
 ) {
   const REPLICATE_API_KEY = Deno.env.get('REPLICATE_API_KEY');
   if (!REPLICATE_API_KEY) throw new Error('REPLICATE_API_KEY is not configured');
 
   const replicate = new Replicate({ auth: REPLICATE_API_KEY });
-  const input = buildReplicateInput(model, prompt, sourceImage, duration, aspectRatio);
+  const input = buildReplicateInput(model, { prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, seed });
 
   console.log('Model input:', JSON.stringify(input).substring(0, 200));
 
