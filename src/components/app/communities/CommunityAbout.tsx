@@ -1,6 +1,7 @@
 import { Shield, Calendar, Lock, Globe } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Community } from '@/hooks/use-communities';
+import { DescriptionWithLinks } from './DescriptionWithLinks';
 
 interface CommunityAboutProps {
   community: Community;
@@ -15,7 +16,7 @@ export function CommunityAbout({ community }: CommunityAboutProps) {
       {community.description && (
         <div>
           <h3 className="text-white font-medium text-sm mb-2">{t('communities.description')}</h3>
-          <p className="text-zinc-400 text-sm">{community.description}</p>
+          <DescriptionWithLinks text={community.description} />
         </div>
       )}
 
