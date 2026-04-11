@@ -214,11 +214,17 @@ function clearWeb3AuthStorage(): void {
   // 'openlogin' is Web3Auth v10's internal auth layer — must be included so
   // cached OAuth sessions don't silently re-authenticate on the next login click.
   const prefixes = ['torus', 'web3auth', 'tkey', 'openlogin'];
+  // Exclude our own custom dehub_* keys — they contain 'web3auth' as a substring
+  // (e.g. 'dehub_web3auth_client_id') and would be wrongly cleared by the prefix check.
+  const excludePrefixes = ['dehub_'];
   for (const storage of [localStorage, sessionStorage]) {
     const keysToRemove: string[] = [];
     for (let i = 0; i < storage.length; i++) {
       const key = storage.key(i);
-      if (key && prefixes.some(p => key.toLowerCase().includes(p))) {
+      if (!key) continue;
+      const lk = key.toLowerCase();
+      if (excludePrefixes.some(p => lk.startsWith(p))) continue;
+      if (prefixes.some(p => lk.includes(p))) {
         keysToRemove.push(key);
       }
     }
@@ -526,7 +532,9 @@ export async function connectToSocialProvider(
   loginHint?: string,
   skipConnectedCheck = false
 ): Promise<ReturnType<Web3Auth['connectTo']>> {
-  console.log(`[Web3Auth] connectToSocialProvider: ${authConnection}`);
+  // Log partial hint (last 10 chars) so we can verify same-vs-different account in console
+  const hintDebug = loginHint ? `hint=...${loginHint.slice(-10)}` : 'no-hint';
+  console.log(`[Web3Auth] connectToSocialProvider: ${authConnection} (${hintDebug})`);
 
   const web3auth = await getOrInitWeb3Auth();
 
@@ -569,9 +577,22 @@ export async function connectToSocialProvider(
   savePreLoginPath();
 
   // Pre-flight: clear any stale openlogin session before starting a new OAuth flow.
-  // This is a safety net for sessions left from before the post-recovery cleanup was added.
   // Does NOT clear our custom dehub_* keys (pimlico config, client ID, wallet address).
   if (!skipConnectedCheck) {
+    // Attempt connector-level disconnect to invalidate the Sapphire session.
+    // web3auth.logout() fails when the modal status is "not connected" (e.g. after WsEmbed error),
+    // but the internal auth connector may still have a valid Sapphire session that causes
+    // subsequent logins to reuse the old private key. Calling connector.disconnect() bypasses
+    // the modal-level status check and directly invalidates the connector's session.
+    const authConnector = (web3auth as any).connectors?.find((c: any) => c.name === WALLET_CONNECTORS.AUTH);
+    if (authConnector) {
+      try {
+        await authConnector.disconnect?.();
+        console.log('[Web3Auth] Pre-flight: auth connector disconnected (Sapphire session cleared)');
+      } catch (connErr) {
+        console.warn('[Web3Auth] Pre-flight: auth connector disconnect failed (non-blocking):', String(connErr).slice(0, 100));
+      }
+    }
     clearWeb3AuthStorage();
   }
 
@@ -638,7 +659,22 @@ function extractPrivKeyFromConnector(w3a: Web3Auth): string | null {
   try {
     const connector = (w3a as any).connectedConnector
       || (w3a as any).connectors?.find((c: any) => c.name === WALLET_CONNECTORS.AUTH);
-    const privKey = connector?.authInstance?.privKey || connector?.authInstance?.coreKitKey;
+    const authInstance = connector?.authInstance;
+
+    // DIAGNOSTIC: log verifier info to detect same-email vs actual session bleeding
+    // If typeOfLogin + verifierId are the same across two different providers,
+    // the user is logging in with the same identity (e.g. same email for Google + email_passwordless).
+    // That gives the same private key by design — it's NOT a bug.
+    const typeOfLogin = authInstance?.metaData?.typeOfLogin ?? authInstance?.typeOfLogin ?? 'unknown';
+    const verifierId = authInstance?.metaData?.verifierId ?? authInstance?.verifierId ?? 'unknown';
+    const verifier = authInstance?.aggregateVerifier ?? authInstance?.verifier ?? 'unknown';
+    console.log(
+      '[Web3Auth] extractPrivKey: typeOfLogin=', typeOfLogin,
+      'verifier=', verifier,
+      'verifierId (last 12)=', typeof verifierId === 'string' ? `...${verifierId.slice(-12)}` : verifierId,
+    );
+
+    const privKey = authInstance?.privKey || authInstance?.coreKitKey;
     return privKey && privKey.length >= 32 ? privKey : null;
   } catch {
     return null;
