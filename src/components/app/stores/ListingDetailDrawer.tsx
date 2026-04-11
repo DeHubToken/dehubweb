@@ -42,6 +42,9 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
   const sellerAddress = listing.wallet_address || listing.stores?.wallet_address;
   const isSelf = walletAddress?.toLowerCase() === sellerAddress?.toLowerCase();
   const soldOut = listing.stock_quantity === 0;
+  const priceUsd = Number(listing.price);
+  const priceDhb = dhbPrice > 0 ? priceUsd / dhbPrice : 0;
+  const priceDhbCeil = Math.ceil(priceDhb);
 
   const handleBuy = async () => {
     if (!isAuthenticated) { openLoginModal(); return; }
@@ -58,7 +61,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
       const result = await sendERC20Token(
         dhbConfig.address,
         sellerAddress,
-        String(listing.price),
+        String(priceDhbCeil),
         18,
         BASE_CHAIN_ID as any
       );
@@ -68,7 +71,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
       await createOrder.mutateAsync({
         listing_id: listing.id,
         seller_address: sellerAddress.toLowerCase(),
-        amount: Number(listing.price),
+        amount: priceUsd,
         tx_hash: result.hash,
         shipping_address: shippingAddress.trim() || undefined,
         notes: notes.trim() || undefined,
