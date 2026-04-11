@@ -1602,6 +1602,160 @@ export type Database = {
         }
         Relationships: []
       }
+      store_listings: {
+        Row: {
+          category: string
+          condition: string | null
+          created_at: string
+          currency: string
+          description: string | null
+          digital_file_url: string | null
+          id: string
+          images: Json | null
+          is_digital: boolean
+          price: number
+          shipping_info: string | null
+          status: string
+          stock_quantity: number | null
+          store_id: string
+          title: string
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          category?: string
+          condition?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          digital_file_url?: string | null
+          id?: string
+          images?: Json | null
+          is_digital?: boolean
+          price: number
+          shipping_info?: string | null
+          status?: string
+          stock_quantity?: number | null
+          store_id: string
+          title: string
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          category?: string
+          condition?: string | null
+          created_at?: string
+          currency?: string
+          description?: string | null
+          digital_file_url?: string | null
+          id?: string
+          images?: Json | null
+          is_digital?: boolean
+          price?: number
+          shipping_info?: string | null
+          status?: string
+          stock_quantity?: number | null
+          store_id?: string
+          title?: string
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "store_listings_store_id_fkey"
+            columns: ["store_id"]
+            isOneToOne: false
+            referencedRelation: "stores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      store_orders: {
+        Row: {
+          amount: number
+          buyer_address: string
+          created_at: string
+          id: string
+          listing_id: string
+          notes: string | null
+          seller_address: string
+          shipping_address: string | null
+          status: string
+          tx_hash: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          buyer_address: string
+          created_at?: string
+          id?: string
+          listing_id: string
+          notes?: string | null
+          seller_address: string
+          shipping_address?: string | null
+          status?: string
+          tx_hash?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          buyer_address?: string
+          created_at?: string
+          id?: string
+          listing_id?: string
+          notes?: string | null
+          seller_address?: string
+          shipping_address?: string | null
+          status?: string
+          tx_hash?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "store_orders_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "store_listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      stores: {
+        Row: {
+          avatar_url: string | null
+          banner_url: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_active: boolean
+          name: string | null
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          banner_url?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string | null
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          avatar_url?: string | null
+          banner_url?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_active?: boolean
+          name?: string | null
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       stories: {
         Row: {
           avatar: string | null

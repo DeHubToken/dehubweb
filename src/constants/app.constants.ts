@@ -1,4 +1,5 @@
 import {
+  Store,
   Home,
   Search,
   Bell,
@@ -49,6 +50,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Vault, label: 'Staking', path: '/app/stake' },
   { icon: ShieldCheck, label: 'Governance', path: '/governance' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
+  { icon: Store, label: 'Stores', path: '/app/stores' },
   { icon: Scroll, label: 'Glossary', path: '/app/glossary' },
   { icon: Map, label: 'Guide', path: '/guide' },
   { icon: BookOpen, label: 'Docs', path: 'https://dehub.io/docs', external: true },
