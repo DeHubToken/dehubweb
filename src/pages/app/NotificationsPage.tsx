@@ -1355,10 +1355,16 @@ export default function NotificationsPage() {
       markAllCustomAsRead.mutate();
       
       // Also delete all custom notifications from DB so they don't reappear
-      await supabase
-        .from('custom_notifications')
-        .delete()
-        .eq('recipient_address', pageWalletAddress?.toLowerCase() || '');
+      if (pageWalletAddress) {
+        const { withWalletHeader } = await import('@/lib/supabase-wallet-client');
+        await withWalletHeader(
+          supabase
+            .from('custom_notifications')
+            .delete()
+            .eq('recipient_address', pageWalletAddress.toLowerCase()),
+          pageWalletAddress
+        );
+      }
       
       // Store the "cleared at" timestamp — all notifications before this will be hidden
       const now = Date.now();
