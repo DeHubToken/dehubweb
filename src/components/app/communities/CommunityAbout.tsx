@@ -15,7 +15,7 @@ export function CommunityAbout({ community }: CommunityAboutProps) {
       {community.description && (
         <div>
           <h3 className="text-white font-medium text-sm mb-2">{t('communities.description')}</h3>
-          <p className="text-zinc-400 text-sm">{community.description}</p>
+          <DescriptionWithLinks text={community.description} />
         </div>
       )}
 

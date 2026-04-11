@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback } from 'react';
-import { Users, LogIn, LogOut, Crown, Camera, Pin, PinOff, TrendingUp, X, Pencil, Check, Share2, Link2, FileText } from 'lucide-react';
+import { Users, LogIn, LogOut, Crown, Camera, Pin, PinOff, TrendingUp, X, Pencil, Check, Share2, Link2, FileText, Link as LinkIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CommunityTickerSearch } from './CommunityTickerSearch';
@@ -314,7 +314,8 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
       ) : (
         <div className="px-2 mt-3 group/desc flex items-start gap-1.5">
           {community.description ? (
-            <p className="text-zinc-400 text-sm">{community.description}</p>
+            <DescriptionWithLinks text={community.description} />
+          
           ) : isOwner ? (
             <p className="text-zinc-600 text-sm italic">{t('communities.addDescription')}</p>
           ) : null}
