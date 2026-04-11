@@ -83,7 +83,7 @@ export function EditStoreDrawer({ store, open, onClose }: Props) {
             <Label className="text-zinc-300 text-xs mb-1.5 block">Banner Image</Label>
             <div
               onClick={() => bannerInputRef.current?.click()}
-              className="relative w-full h-24 rounded-xl overflow-hidden bg-white/5 border border-white/10 cursor-pointer group"
+              className="relative w-full aspect-[3/1] rounded-xl overflow-hidden bg-white/5 border border-white/10 cursor-pointer group"
             >
               {bannerUrl ? (
                 <img src={bannerUrl} className="w-full h-full object-cover" alt="" />

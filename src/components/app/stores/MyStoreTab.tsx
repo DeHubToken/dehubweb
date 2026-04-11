@@ -102,41 +102,51 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
   return (
     <div className="space-y-4">
       {/* Store header with avatar + info + edit */}
-      <LiquidGlassBubble shimmer noBorder className="[&>div]:!rounded-xl">
-        <div className="flex items-center gap-3 p-3">
-          {/* Avatar */}
-          {activeStore?.avatar_url ? (
-            <img src={activeStore.avatar_url} className="w-12 h-12 rounded-full object-cover border border-white/10 shrink-0" alt="" />
-          ) : (
-            <div className="w-12 h-12 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-lg font-bold text-primary-foreground shrink-0">
-              {(activeStore?.name || 'S')[0].toUpperCase()}
-            </div>
-          )}
-          <div className="flex-1 min-w-0">
-            {stores.length > 1 ? (
-              <Select value={activeStoreId || ''} onValueChange={setSelectedStoreId}>
-                <SelectTrigger className="bg-white/5 border-white/10 text-primary-foreground w-full h-8 text-sm">
-                  <SelectValue placeholder="Select store" />
-                </SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-white/10">
-                  {stores.map((s: any) => (
-                    <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+      <LiquidGlassBubble shimmer noBorder className="[&>div]:!rounded-xl overflow-hidden">
+        <div className="relative">
+          {/* Banner */}
+          <div className="aspect-[3/1] w-full overflow-hidden">
+            {activeStore?.banner_url ? (
+              <img src={activeStore.banner_url} className="w-full h-full object-cover" alt="" />
             ) : (
-              <h2 className="text-sm font-semibold text-primary-foreground truncate">{activeStore?.name}</h2>
+              <div className="w-full h-full bg-gradient-to-br from-white/5 to-white/[0.02]" />
             )}
-            <p className="text-[10px] text-zinc-500 font-mono mt-0.5">
-              Owner: {activeStore?.wallet_address?.slice(0, 6)}...{activeStore?.wallet_address?.slice(-4)}
-            </p>
           </div>
-          <button
-            onClick={() => setEditStore(activeStore)}
-            className="shrink-0 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
-          >
-            <Settings className="w-4 h-4 text-zinc-400" />
-          </button>
+          {/* Avatar + Info overlay */}
+          <div className="flex items-center gap-3 p-3 -mt-6 relative z-10">
+            {activeStore?.avatar_url ? (
+              <img src={activeStore.avatar_url} className="w-14 h-14 rounded-full object-cover border-2 border-black/60 shrink-0" alt="" />
+            ) : (
+              <div className="w-14 h-14 rounded-full bg-black/60 border-2 border-black/60 flex items-center justify-center text-lg font-bold text-primary-foreground shrink-0">
+                {(activeStore?.name || 'S')[0].toUpperCase()}
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              {stores.length > 1 ? (
+                <Select value={activeStoreId || ''} onValueChange={setSelectedStoreId}>
+                  <SelectTrigger className="bg-white/5 border-white/10 text-primary-foreground w-full h-8 text-sm">
+                    <SelectValue placeholder="Select store" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-zinc-900 border-white/10">
+                    {stores.map((s: any) => (
+                      <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              ) : (
+                <h2 className="text-sm font-semibold text-primary-foreground truncate">{activeStore?.name}</h2>
+              )}
+              <p className="text-[10px] text-zinc-500 font-mono mt-0.5">
+                Owner: {activeStore?.wallet_address?.slice(0, 6)}...{activeStore?.wallet_address?.slice(-4)}
+              </p>
+            </div>
+            <button
+              onClick={() => setEditStore(activeStore)}
+              className="shrink-0 w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors"
+            >
+              <Settings className="w-4 h-4 text-zinc-400" />
+            </button>
+          </div>
         </div>
       </LiquidGlassBubble>
 
