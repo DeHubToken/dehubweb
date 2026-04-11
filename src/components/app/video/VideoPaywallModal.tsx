@@ -363,12 +363,15 @@ export function VideoPaywallModal({
               )}
             </div>
 
-            {/* Duration Slider (for per-second models) */}
-            {isPerSecond && model.minDuration && model.maxDuration && (
+            {/* Duration Slider (for models with configurable duration) */}
+            {model.minDuration && model.maxDuration && (
               <div className="bg-zinc-800/50 rounded-xl p-3 space-y-2">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-zinc-400">Duration</span>
-                  <span className="text-white font-medium">{duration}s</span>
+                  <span className="text-white font-medium">
+                    {duration}s
+                    {isPerSecond && <span className="text-zinc-500 ml-1 text-[10px]">(${(model.perSecondCostUsd! * 2 * duration).toFixed(2)})</span>}
+                  </span>
                 </div>
                 <Slider
                   value={[duration]}
