@@ -6,6 +6,7 @@
 
 import { useState } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { useTokenPrices } from '@/hooks/use-token-prices';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -33,7 +34,8 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
   const [imgIdx, setImgIdx] = useState(0);
   const [shippingAddress, setShippingAddress] = useState('');
   const [notes, setNotes] = useState('');
-
+  const { data: prices } = useTokenPrices();
+  const dhbPrice = prices?.DHB ?? 0;
   if (!listing) return null;
 
   const images = (listing.images as string[]) || [];
