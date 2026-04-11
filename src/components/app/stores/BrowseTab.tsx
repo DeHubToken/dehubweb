@@ -77,12 +77,12 @@ export function BrowseTab() {
       {/* Filters */}
       <div className="flex gap-2 items-center">
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground z-10" />
           <Input
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search listings..."
-            className="pl-9 bg-white/5 border-white/10"
+            className="pl-9 bg-black/60 backdrop-blur-2xl border-white/10 rounded-xl text-white placeholder:text-zinc-500"
           />
         </div>
 
