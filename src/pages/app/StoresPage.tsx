@@ -58,6 +58,7 @@ export default function StoresPage() {
                 <DropdownMenuTrigger asChild>
                   <div>
                     <LiquidGlassBubble2
+                      label=""
                       icon={<Plus className="w-4 h-4" />}
                       onClick={() => {}}
                       width="38px"
