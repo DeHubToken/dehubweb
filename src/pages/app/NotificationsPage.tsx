@@ -27,6 +27,7 @@ import notificationsIcon from '@/assets/icons/notifications-icon.png';
 import { useQueries, useQueryClient } from '@tanstack/react-query';
 
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
+import { supabase } from '@/integrations/supabase/client';
 import { seedProfileCache } from '@/lib/profile-cache-seed';
 import { SEOHead } from '@/components/SEOHead';
 import { DEHUB_CDN_BASE, getNFTInfo, getFollowRequests, approveFollowRequest, rejectFollowRequest } from '@/lib/api/dehub';
