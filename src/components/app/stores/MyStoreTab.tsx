@@ -36,7 +36,9 @@ export function MyStoreTab({ createOpen = false, onCreateClose }: MyStoreTabProp
   const updateListing = useUpdateListing();
   const updateOrderStatus = useUpdateOrderStatus();
   const { data: prices } = useTokenPrices();
-  const [createOpen, setCreateOpen] = useState(false);
+  const [internalCreateOpen, setInternalCreateOpen] = useState(false);
+  const isCreateOpen = createOpen || internalCreateOpen;
+  const handleCreateClose = () => { setInternalCreateOpen(false); onCreateClose?.(); };
   const [editListing, setEditListing] = useState<any>(null);
   const [subTab, setSubTab] = useState<StoreSubTab>('listings');
   const [enableTransition, setEnableTransition] = useState(false);
@@ -82,16 +84,7 @@ export function MyStoreTab({ createOpen = false, onCreateClose }: MyStoreTabProp
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-foreground">{store.name}</h2>
-        <LiquidGlassBubble2
-          label="New Listing"
-          icon={<Plus className="w-4 h-4" />}
-          onClick={() => setCreateOpen(true)}
-          width="auto"
-          height="36px"
-        />
-      </div>
+      <h2 className="text-lg font-semibold text-foreground">{store.name}</h2>
 
       {/* Toggle bar with glass indicator */}
       <div className="bg-zinc-900 rounded-xl p-1">
@@ -184,7 +177,7 @@ export function MyStoreTab({ createOpen = false, onCreateClose }: MyStoreTabProp
         )
       )}
 
-      <CreateListingDrawer open={createOpen} onClose={() => setCreateOpen(false)} storeId={store.id} />
+      <CreateListingDrawer open={isCreateOpen} onClose={handleCreateClose} storeId={store.id} />
       <EditListingDrawer open={!!editListing} onClose={() => setEditListing(null)} listing={editListing} />
     </div>
   );
