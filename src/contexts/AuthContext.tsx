@@ -48,6 +48,7 @@ import {
   getOrInitWeb3Auth,
   isMobileDevice,
   isWalletInAppBrowser,
+  setupAAProvider,
 } from '@/lib/web3auth';
 import type { Web3Auth } from '@web3auth/modal';
 
@@ -847,10 +848,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const BASE_CHAIN_ID = 8453;
 
       // Smart Account only (no EOA fallback)
+      // AA provider is created post-login from the EOA provider to avoid the modal's
+      // internal Torus controller calling api-wallet.web3auth.io/auth/verify (400 error).
       let smartAccountAddress: string | null = null;
+      let aaProvider: any = null;
       try {
-        const w3a = await getOrInitWeb3Auth();
-        const aaProvider = (w3a as any).aaProvider || (w3a as any).accountAbstractionProvider;
+        aaProvider = await setupAAProvider(provider);
         if (aaProvider) {
           const aaAccts = await aaProvider.request({ method: 'eth_accounts' }) as string[];
           smartAccountAddress = aaAccts[0]?.toLowerCase() || null;
@@ -862,8 +865,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (smartAccountAddress) {
         let saResult: { address: string; signature: string } | null = null;
         try {
-          const w3a = await getOrInitWeb3Auth();
-          const aaProvider = (w3a as any).aaProvider || (w3a as any).accountAbstractionProvider;
           if (aaProvider) {
             const aaSign = await signWithProvider(aaProvider, displayedDate, 'REDIRECT-SA');
             if (aaSign.address.toLowerCase() === smartAccountAddress.toLowerCase()) {
@@ -936,11 +937,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       // For social logins: Smart Account only (no EOA fallback).
       if (isSocial) {
-        // Get Smart Account (AA) address — this is what the mobile app uses
+        // AA provider is created post-login from the EOA provider to avoid the modal's
+        // internal Torus controller calling api-wallet.web3auth.io/auth/verify (400 error).
         let smartAccountAddress: string | null = null;
+        let aaProvider: any = null;
         try {
-          const w3a = await getOrInitWeb3Auth();
-          const aaProvider = (w3a as any).aaProvider || (w3a as any).accountAbstractionProvider;
+          aaProvider = await setupAAProvider(signingProvider);
           if (aaProvider) {
             const aaAccts = await aaProvider.request({ method: 'eth_accounts' }) as string[];
             smartAccountAddress = aaAccts[0]?.toLowerCase() || null;
@@ -954,8 +956,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (smartAccountAddress) {
           let saResult: { address: string; signature: string } | null = null;
           try {
-            const w3a = await getOrInitWeb3Auth();
-            const aaProvider = (w3a as any).aaProvider || (w3a as any).accountAbstractionProvider;
             if (aaProvider) {
               const aaSign = await signWithProvider(aaProvider, displayedDate, 'POPUP-SA');
               if (aaSign.address.toLowerCase() === smartAccountAddress.toLowerCase()) {

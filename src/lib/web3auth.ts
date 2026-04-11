@@ -16,6 +16,8 @@ import {
   CHAIN_NAMESPACES,
   WEB3AUTH_NETWORK,
 } from "@web3auth/modal";
+import { AccountAbstractionProvider, SafeSmartAccount } from "@web3auth/account-abstraction-provider";
+import type { IProvider } from "@web3auth/base";
 import { supabase } from "@/integrations/supabase/client";
 
 /**
@@ -291,7 +293,6 @@ function prewarmConfig() {
   // Skip if both configs are already in sessionStorage
   if (sessionStorage.getItem('dehub_web3auth_client_id') && sessionStorage.getItem('dehub_pimlico_config')) {
     console.log("[Web3Auth] Configs already cached in sessionStorage, skipping prewarm");
-    // Still populate in-memory caches from sessionStorage
     cachedClientId = sessionStorage.getItem('dehub_web3auth_client_id')!;
     try { cachedPimlicoConfig = JSON.parse(sessionStorage.getItem('dehub_pimlico_config')!); } catch {}
     return;
@@ -430,16 +431,13 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           await new Promise(r => setTimeout(r, RETRY_DELAYS[attempt - 1]));
         }
 
-        const [clientId, pimlicoConfig] = await Promise.all([
-          getWeb3AuthClientId(),
-          getPimlicoConfig().catch(() => ({ bundlerUrl: '', paymasterUrl: '' })),
-        ]);
+        const clientId = await getWeb3AuthClientId();
 
-        // walletServicesConfig is intentionally omitted — it initializes the Wallet Services
-        // plugin which calls POST api-wallet.web3auth.io/auth/verify and currently fails with
-        // 400 "signatures[0] > 500 chars" (Web3Auth server-side regression). AA is kept so
-        // Smart Account addresses still work. Re-add walletServicesConfig once Web3Auth fixes
-        // their server-side validation limit.
+        // accountAbstractionConfig is intentionally omitted — it causes the internal
+        // EthereumController (AbstractTorusController) to call POST api-wallet.web3auth.io/auth/verify
+        // with a Safe smart account signature that is > 500 chars, which Web3Auth's own server
+        // rejects with 400. This makes login completely fail. Removing AA config restores login
+        // using standard EOA. Re-add once Web3Auth fixes their server-side signature length limit.
         const initOptions: any = {
           clientId,
           chains: [chainConfig],
@@ -447,17 +445,6 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           sessionTime: 86400,
           uiConfig: { modalZIndex: "99999" } as any,
         };
-
-        if (pimlicoConfig?.bundlerUrl && pimlicoConfig?.paymasterUrl) {
-          initOptions.accountAbstractionConfig = {
-            smartAccountType: "safe",
-            chains: [{
-              chainId: "0x2105",
-              bundlerConfig: { url: pimlicoConfig.bundlerUrl },
-              paymasterConfig: { url: pimlicoConfig.paymasterUrl },
-            }],
-          };
-        }
 
         web3authInstance = new Web3Auth(initOptions);
         
@@ -699,4 +686,45 @@ export async function showWeb3AuthCheckout(): Promise<void> {
   // Wallet Services plugin is disabled (Web3Auth /auth/verify server-side regression).
   // Re-enable once Web3Auth fixes their 500-char signature validation limit.
   throw new Error("Fiat on-ramp is temporarily unavailable. Please try again later.");
+}
+
+/**
+ * Create an AccountAbstractionProvider from an EOA provider (post-login).
+ * This is called AFTER Web3Auth social login completes — NOT during init.
+ * Avoids the Web3Auth modal's internal Torus controller which calls
+ * api-wallet.web3auth.io/auth/verify and fails with 400 when accountAbstractionConfig
+ * is set on the modal directly.
+ *
+ * Returns null if Pimlico config is unavailable (AA is best-effort).
+ */
+export async function setupAAProvider(eoaProvider: IProvider): Promise<AccountAbstractionProvider | null> {
+  try {
+    const pimlicoConfig = await getPimlicoConfig();
+    if (!pimlicoConfig?.bundlerUrl || !pimlicoConfig?.paymasterUrl) {
+      console.warn('[Web3Auth] Pimlico config unavailable — skipping AA setup');
+      return null;
+    }
+
+    const aaProvider = await AccountAbstractionProvider.getProviderInstance({
+      eoaProvider,
+      smartAccountInit: new SafeSmartAccount(),
+      chainConfig: {
+        chainNamespace: CHAIN_NAMESPACES.EIP155,
+        chainId: "0x2105",
+        rpcTarget: "https://base-rpc.publicnode.com",
+        displayName: "Base Mainnet",
+        blockExplorerUrl: "https://basescan.org",
+        ticker: "ETH",
+        tickerName: "Ethereum",
+      },
+      bundlerConfig: { url: pimlicoConfig.bundlerUrl },
+      paymasterConfig: { url: pimlicoConfig.paymasterUrl },
+    });
+
+    console.log('[Web3Auth] AA provider set up successfully (post-login)');
+    return aaProvider;
+  } catch (e) {
+    console.warn('[Web3Auth] AA provider setup failed:', e);
+    return null;
+  }
 }
