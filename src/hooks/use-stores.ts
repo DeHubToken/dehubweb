@@ -71,6 +71,39 @@ export function useBrowseListings(category?: string, sort?: string, search?: str
   });
 }
 
+export function useStoreById(storeId: string | undefined) {
+  return useQuery({
+    queryKey: ['store', storeId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('stores')
+        .select('*')
+        .eq('id', storeId!)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!storeId,
+  });
+}
+
+export function useStoreListings(storeId: string | undefined) {
+  return useQuery({
+    queryKey: ['store-listings', storeId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('store_listings')
+        .select('*, stores(name, avatar_url, wallet_address)')
+        .eq('store_id', storeId!)
+        .eq('status', 'active')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data || [];
+    },
+    enabled: !!storeId,
+  });
+}
+
 export function useMyListings() {
   const { walletAddress } = useAuth();
   return useQuery({
