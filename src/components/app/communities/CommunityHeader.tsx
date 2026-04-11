@@ -10,6 +10,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
+import { DescriptionWithLinks } from './DescriptionWithLinks';
 
 interface CommunityHeaderProps {
   community: Community;
