@@ -2,10 +2,12 @@
  * Store Listing Card
  * ===================
  * Grid card for a single listing in the browse view.
+ * Price is stored in USD; displayed as DHB equivalent with USD subtitle.
  */
 
 import { memo } from 'react';
 import { ImageIcon } from 'lucide-react';
+import { useTokenPrices } from '@/hooks/use-token-prices';
 
 interface StoreListingCardProps {
   listing: any;
@@ -16,6 +18,10 @@ export const StoreListingCard = memo(function StoreListingCard({ listing, onClic
   const images = (listing.images as string[]) || [];
   const firstImage = images[0];
   const storeName = listing.stores?.name || 'Unknown Store';
+  const { data: prices } = useTokenPrices();
+  const dhbPrice = prices?.DHB ?? 0;
+  const priceUsd = Number(listing.price);
+  const priceDhb = dhbPrice > 0 ? priceUsd / dhbPrice : 0;
 
   return (
     <button
@@ -42,10 +48,13 @@ export const StoreListingCard = memo(function StoreListingCard({ listing, onClic
       </div>
 
       {/* Info */}
-      <div className="p-3 space-y-1">
+      <div className="p-3 space-y-0.5">
         <h3 className="text-sm font-medium text-white truncate">{listing.title}</h3>
         <p className="text-xs text-zinc-400 truncate">{storeName}</p>
-        <p className="text-sm font-semibold text-white">{Number(listing.price).toLocaleString()} DHB</p>
+        <p className="text-sm font-semibold text-white">
+          {dhbPrice > 0 ? `${Math.ceil(priceDhb).toLocaleString()} DHB` : `$${priceUsd.toLocaleString()}`}
+        </p>
+        <p className="text-[10px] text-zinc-500">${priceUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
       </div>
     </button>
   );
