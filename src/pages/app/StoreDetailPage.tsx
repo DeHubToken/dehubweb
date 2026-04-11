@@ -68,6 +68,9 @@ export default function StoreDetailPage() {
           <div className="pb-1">
             <h1 className="text-lg font-bold text-primary-foreground">{store.name || 'Store'}</h1>
             <p className="text-xs text-muted-foreground">{listings.length} listing{listings.length !== 1 ? 's' : ''}</p>
+            <p className="text-[10px] text-zinc-500 font-mono mt-0.5">
+              Owner: {store.wallet_address?.slice(0, 6)}...{store.wallet_address?.slice(-4)}
+            </p>
           </div>
         </div>
         {store.description && (
