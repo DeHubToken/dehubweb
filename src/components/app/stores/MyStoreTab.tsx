@@ -5,13 +5,14 @@
  */
 
 import { useState } from 'react';
-import { Plus, Package, ShoppingBag, MoreVertical, Archive, CheckCircle } from 'lucide-react';
+import { Plus, Package, ShoppingBag, MoreVertical, Archive, CheckCircle, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useMyStore, useMyListings, useMyOrders, useUpdateListing, useUpdateOrderStatus } from '@/hooks/use-stores';
 import { SetupStoreFlow } from './SetupStoreFlow';
 import { CreateListingDrawer } from './CreateListingDrawer';
+import { EditListingDrawer } from './EditListingDrawer';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 
@@ -24,6 +25,7 @@ export function MyStoreTab() {
   const updateListing = useUpdateListing();
   const updateOrderStatus = useUpdateOrderStatus();
   const [createOpen, setCreateOpen] = useState(false);
+  const [editListing, setEditListing] = useState<any>(null);
 
   if (!isAuthenticated) {
     return (
@@ -88,6 +90,9 @@ export function MyStoreTab() {
                       <Button variant="ghost" size="icon" className="h-8 w-8"><MoreVertical className="w-4 h-4" /></Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
+                      <DropdownMenuItem onClick={() => setEditListing(l)}>
+                        <Pencil className="w-4 h-4 mr-2" /> Edit
+                      </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleMarkSold(l.id)}>
                         <CheckCircle className="w-4 h-4 mr-2" /> Mark Sold
                       </DropdownMenuItem>
@@ -128,6 +133,7 @@ export function MyStoreTab() {
       </Tabs>
 
       <CreateListingDrawer open={createOpen} onClose={() => setCreateOpen(false)} storeId={store.id} />
+      <EditListingDrawer open={!!editListing} onClose={() => setEditListing(null)} listing={editListing} />
     </div>
   );
 }
