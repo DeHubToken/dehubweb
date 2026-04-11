@@ -120,25 +120,25 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
           {/* Price & meta */}
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-xl font-bold text-primary flex items-center gap-1.5">
+              <span className="text-xl font-bold flex items-center gap-1.5 text-primary-foreground">
                 {dhbPrice > 0 ? (<><img src={dehubCoin} alt="DHB" className="w-5 h-5" />{priceDhbCeil.toLocaleString()}</>) : `$${priceUsd.toLocaleString()}`}
               </span>
               <p className="text-xs text-zinc-500">${priceUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD</p>
             </div>
             <div className="flex gap-2">
               {listing.is_digital && <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded">Digital</span>}
-              <span className="text-xs bg-white/10 px-2 py-0.5 rounded capitalize">{listing.condition}</span>
-              <span className="text-xs bg-white/10 px-2 py-0.5 rounded capitalize">{listing.category}</span>
+              <span className="text-xs bg-white/10 px-2 py-0.5 rounded capitalize text-primary-foreground">{listing.condition}</span>
+              <span className="text-xs bg-white/10 px-2 py-0.5 rounded capitalize text-primary-foreground">{listing.category}</span>
             </div>
           </div>
 
           {/* Description */}
           {listing.description && (
-            <p className="text-sm text-muted-foreground whitespace-pre-wrap">{listing.description}</p>
+            <p className="text-sm whitespace-pre-wrap text-primary-foreground">{listing.description}</p>
           )}
 
           {/* Stock */}
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <div className="flex items-center gap-2 text-xs text-primary-foreground">
             <Package className="w-3.5 h-3.5" />
             {listing.stock_quantity === null ? 'Unlimited stock' : listing.stock_quantity === 0 ? 'Sold out' : `${listing.stock_quantity} available`}
           </div>
@@ -154,7 +154,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
           {/* Seller */}
           <button
             onClick={() => { onClose(); navigate(`/${listing.stores?.wallet_address || sellerAddress}`); }}
-            className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-2 text-sm transition-colors text-primary-foreground"
           >
             {listing.stores?.avatar_url ? (
               <img src={listing.stores.avatar_url} className="w-6 h-6 rounded-full" alt="" />
