@@ -9,6 +9,7 @@ import { Plus, Package, ShoppingBag, MoreVertical, Archive, CheckCircle, Pencil 
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTokenPrices } from '@/hooks/use-token-prices';
 import { useMyStore, useMyListings, useMyOrders, useUpdateListing, useUpdateOrderStatus } from '@/hooks/use-stores';
 import { SetupStoreFlow } from './SetupStoreFlow';
 import { CreateListingDrawer } from './CreateListingDrawer';
@@ -83,7 +84,14 @@ export function MyStoreTab() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-foreground truncate">{l.title}</p>
-                    <p className="text-xs text-muted-foreground">{Number(l.price).toLocaleString()} DHB · <span className="capitalize">{l.status}</span></p>
+                    <p className="text-xs text-muted-foreground">
+                      {(() => {
+                        const usd = Number(l.price);
+                        const dhb = prices?.DHB && prices.DHB > 0 ? Math.ceil(usd / prices.DHB) : null;
+                        return dhb ? `${dhb.toLocaleString()} DHB · $${usd.toFixed(2)}` : `$${usd.toFixed(2)}`;
+                      })()}
+                       · <span className="capitalize">{l.status}</span>
+                    </p>
                   </div>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
