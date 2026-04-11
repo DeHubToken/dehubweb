@@ -153,13 +153,15 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
 
           {/* Seller */}
           <button
-            onClick={() => { onClose(); navigate(`/${listing.stores?.wallet_address || sellerAddress}`); }}
+            onClick={() => { onClose(); navigate(`/app/stores/${listing.store_id}`); }}
             className="flex items-center gap-2 text-sm transition-colors text-primary-foreground"
           >
             {listing.stores?.avatar_url ? (
-              <img src={listing.stores.avatar_url} className="w-6 h-6 rounded-full" alt="" />
+              <img src={listing.stores.avatar_url} className="w-6 h-6 rounded-full object-cover" alt="" />
             ) : (
-              <div className="w-6 h-6 rounded-full bg-white/10" />
+              <div className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[10px] font-bold text-primary-foreground">
+                {(listing.stores?.name || 'S')[0].toUpperCase()}
+              </div>
             )}
             {listing.stores?.name || 'Store'}
           </button>
