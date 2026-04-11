@@ -5,7 +5,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { Package, ShoppingBag, MoreVertical, Archive, CheckCircle, Pencil } from 'lucide-react';
+import { Package, ShoppingBag, MoreVertical, Archive, CheckCircle, Pencil, Settings, Store as StoreIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTokenPrices } from '@/hooks/use-token-prices';
@@ -14,11 +14,13 @@ import { useMyStores, useMyListings, useMyOrders, useUpdateListing, useUpdateOrd
 import { SetupStoreFlow } from './SetupStoreFlow';
 import { CreateListingDrawer } from './CreateListingDrawer';
 import { EditListingDrawer } from './EditListingDrawer';
+import { EditStoreDrawer } from './EditStoreDrawer';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { toast } from 'sonner';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 
 type StoreSubTab = 'listings' | 'orders' | 'purchases';
 
