@@ -12,6 +12,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useMyStore, useMyListings, useMyOrders, useUpdateListing, useUpdateOrderStatus } from '@/hooks/use-stores';
 import { SetupStoreFlow } from './SetupStoreFlow';
 import { CreateListingDrawer } from './CreateListingDrawer';
+import { EditListingDrawer } from './EditListingDrawer';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { toast } from 'sonner';
 
