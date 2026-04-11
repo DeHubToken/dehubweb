@@ -5,7 +5,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { Plus, Package, ShoppingBag, MoreVertical, Archive, CheckCircle, Pencil } from 'lucide-react';
+import { Package, ShoppingBag, MoreVertical, Archive, CheckCircle, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTokenPrices } from '@/hooks/use-token-prices';
@@ -15,7 +15,7 @@ import { SetupStoreFlow } from './SetupStoreFlow';
 import { CreateListingDrawer } from './CreateListingDrawer';
 import { EditListingDrawer } from './EditListingDrawer';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
+
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { toast } from 'sonner';
