@@ -7,6 +7,7 @@
 import { useState } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useTokenPrices } from '@/hooks/use-token-prices';
+import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -119,7 +120,9 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
           {/* Price & meta */}
           <div className="flex items-center justify-between">
             <div>
-              <span className="text-xl font-bold text-primary">{dhbPrice > 0 ? `${priceDhbCeil.toLocaleString()} DHB` : `$${priceUsd.toLocaleString()}`}</span>
+              <span className="text-xl font-bold text-primary flex items-center gap-1.5">
+                {dhbPrice > 0 ? (<><img src={dehubCoin} alt="DHB" className="w-5 h-5" />{priceDhbCeil.toLocaleString()}</>) : `$${priceUsd.toLocaleString()}`}
+              </span>
               <p className="text-xs text-zinc-500">${priceUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD</p>
             </div>
             <div className="flex gap-2">

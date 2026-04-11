@@ -8,6 +8,7 @@
 import { memo } from 'react';
 import { ImageIcon } from 'lucide-react';
 import { useTokenPrices } from '@/hooks/use-token-prices';
+import dehubCoin from '@/assets/dehub-coin.png';
 
 interface StoreListingCardProps {
   listing: any;
@@ -51,8 +52,12 @@ export const StoreListingCard = memo(function StoreListingCard({ listing, onClic
       <div className="p-3 space-y-0.5">
         <h3 className="text-sm font-medium text-white truncate">{listing.title}</h3>
         <p className="text-xs text-zinc-400 truncate">{storeName}</p>
-        <p className="text-sm font-semibold text-white">
-          {dhbPrice > 0 ? `${Math.ceil(priceDhb).toLocaleString()} DHB` : `$${priceUsd.toLocaleString()}`}
+        <p className="text-sm font-semibold text-white flex items-center gap-1">
+          {dhbPrice > 0 ? (
+            <><img src={dehubCoin} alt="DHB" className="w-4 h-4" />{Math.ceil(priceDhb).toLocaleString()}</>
+          ) : (
+            `$${priceUsd.toLocaleString()}`
+          )}
         </p>
         <p className="text-[10px] text-zinc-500">${priceUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</p>
       </div>
