@@ -97,7 +97,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
         <div className="px-4 pb-6 space-y-4 max-h-[75vh] overflow-y-auto">
           {/* Image carousel */}
           {images.length > 0 && (
-            <div className="relative aspect-square rounded-xl overflow-hidden bg-white/5">
+            <div className="relative aspect-square rounded-xl overflow-hidden bg-white/5 max-h-[40vh]">
               <img src={images[imgIdx]} alt={listing.title} className="w-full h-full object-cover" />
               {images.length > 1 && (
                 <>
