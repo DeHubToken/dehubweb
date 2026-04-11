@@ -89,6 +89,9 @@ export function MyStoreTab() {
                       <Button variant="ghost" size="icon" className="h-8 w-8"><MoreVertical className="w-4 h-4" /></Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
+                      <DropdownMenuItem onClick={() => setEditListing(l)}>
+                        <Pencil className="w-4 h-4 mr-2" /> Edit
+                      </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => handleMarkSold(l.id)}>
                         <CheckCircle className="w-4 h-4 mr-2" /> Mark Sold
                       </DropdownMenuItem>
@@ -129,6 +132,7 @@ export function MyStoreTab() {
       </Tabs>
 
       <CreateListingDrawer open={createOpen} onClose={() => setCreateOpen(false)} storeId={store.id} />
+      <EditListingDrawer open={!!editListing} onClose={() => setEditListing(null)} listing={editListing} />
     </div>
   );
 }
