@@ -96,7 +96,7 @@ export function MyStoreTab() {
             {TABS.map(t => (
               <button
                 key={t.key}
-                ref={el => setRef(t.key, el)}
+                ref={setRef(t.key)}
                 onClick={() => handleTabClick(t.key)}
                 className={`flex-1 px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
                   subTab === t.key ? 'text-white' : 'text-zinc-400'
