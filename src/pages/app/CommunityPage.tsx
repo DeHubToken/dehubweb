@@ -17,7 +17,6 @@ import { CommunityAbout } from '@/components/app/communities/CommunityAbout';
 import { CommunityChat } from '@/components/app/communities/CommunityChat';
 import { CommunityEvents } from '@/components/app/communities/CommunityEvents';
 import { cn } from '@/lib/utils';
-import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { useTranslation } from 'react-i18next';
