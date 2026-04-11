@@ -110,7 +110,6 @@ export default function CommunityPage() {
           { key: 'events' as Tab, label: 'Events' },
           { key: 'members' as Tab, label: t('communities.membersLabel') },
           { key: 'about' as Tab, label: t('communities.about') },
-          ...(isOwner ? [{ key: 'activity' as Tab, label: 'Activity', badge: activityUnread }] : []),
         ]).map(tItem => (
           <button
             key={tItem.key}
@@ -156,11 +155,6 @@ export default function CommunityPage() {
         <div className={tab === 'about' ? '' : 'hidden'}>
           <CommunityAbout community={community} />
         </div>
-        {isOwner && (
-          <div className={tab === 'activity' ? '' : 'hidden'}>
-            <CommunityOwnerActivity communityId={community.id} />
-          </div>
-        )}
       </div>
     </div>
   );
