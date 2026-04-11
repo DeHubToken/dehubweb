@@ -458,6 +458,23 @@ function getNotificationContent(
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return title ? `${actorName} commented on your proposal "${title}"` : `${actorName} commented on your proposal`;
   }
+  if ((notification.type as string) === 'community_join') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return title ? `${actorName} joined your community "${title}"` : `${actorName} joined your community`;
+  }
+  if ((notification.type as string) === 'store_order') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return title ? `${actorName} purchased your listing "${title}"` : `${actorName} purchased your listing`;
+  }
+  if ((notification.type as string) === 'fraction_offer') {
+    return (notification as any).content || `${actorName} made an offer on your fractions`;
+  }
+  if ((notification.type as string) === 'fraction_offer_accepted') {
+    return (notification as any).content || `Your fraction offer was accepted`;
+  }
+  if ((notification.type as string) === 'fraction_offer_rejected') {
+    return (notification as any).content || `Your fraction offer was rejected`;
+  }
 
   // Backend-aggregated follow
   if (notification.type === 'following' && (notification as any).aggregatedCount > 2) {
