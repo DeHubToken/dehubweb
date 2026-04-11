@@ -5,7 +5,7 @@
  */
 
 import { useState } from 'react';
-import { Plus, Package, ShoppingBag, MoreVertical, Archive, CheckCircle } from 'lucide-react';
+import { Plus, Package, ShoppingBag, MoreVertical, Archive, CheckCircle, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
@@ -24,6 +24,7 @@ export function MyStoreTab() {
   const updateListing = useUpdateListing();
   const updateOrderStatus = useUpdateOrderStatus();
   const [createOpen, setCreateOpen] = useState(false);
+  const [editListing, setEditListing] = useState<any>(null);
 
   if (!isAuthenticated) {
     return (
