@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { useBrowseListings } from '@/hooks/use-stores';
 import { StoreListingCard } from './StoreListingCard';
 import { ListingDetailDrawer } from './ListingDetailDrawer';
@@ -87,14 +88,20 @@ export function BrowseTab() {
         {/* Price range */}
         <Popover open={priceOpen} onOpenChange={setPriceOpen}>
           <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              size="sm"
-              className={`bg-white/5 border-white/10 gap-1.5 text-xs ${hasPriceFilter ? 'text-primary border-primary/30' : 'text-muted-foreground'}`}
-            >
-              <DollarSign className="w-3.5 h-3.5" />
-              {priceLabel || 'Price'}
-            </Button>
+            <div>
+              <LiquidGlassBubble
+                shimmer
+                noBorder
+                onClick={() => setPriceOpen(!priceOpen)}
+                className={`cursor-pointer [&>div]:!rounded-xl [&>div]:!h-full [&>div]:!flex [&>div]:!items-center [&>div]:!justify-center [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl ${hasPriceFilter ? 'ring-1 ring-primary/50' : ''}`}
+                style={{ height: '36px', width: 'auto' }}
+              >
+                <span className="flex items-center gap-1.5 text-white text-xs font-medium px-3">
+                  <DollarSign className="w-3.5 h-3.5" />
+                  {priceLabel || 'Price'}
+                </span>
+              </LiquidGlassBubble>
+            </div>
           </PopoverTrigger>
           <PopoverContent className="w-64 bg-black/80 backdrop-blur-2xl border-white/10 p-3 space-y-3" align="end">
             <p className="text-xs font-semibold text-primary-foreground">Price Range (USD)</p>
@@ -105,7 +112,7 @@ export function BrowseTab() {
                 <button
                   key={p.label}
                   onClick={() => applyPreset(p)}
-                  className="px-2 py-1 rounded text-[10px] font-medium bg-white/5 text-muted-foreground hover:bg-white/10 transition-colors"
+                  className="px-2 py-1 rounded-lg text-[10px] font-medium bg-white/5 text-muted-foreground hover:bg-white/10 transition-colors"
                 >
                   {p.label}
                 </button>
@@ -174,20 +181,23 @@ export function BrowseTab() {
         </div>
       )}
 
-      {/* Category chips */}
+      {/* Category chips — liquid glass style */}
       <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
         {CATEGORIES.map(c => (
-          <button
+          <LiquidGlassBubble
             key={c.value}
+            shimmer
+            noBorder
             onClick={() => setCategory(c.value)}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
-              category === c.value
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-white/5 text-muted-foreground hover:bg-white/10'
+            className={`cursor-pointer flex-shrink-0 [&>div]:!rounded-xl [&>div]:!h-full [&>div]:!flex [&>div]:!items-center [&>div]:!justify-center [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl ${
+              category === c.value ? 'ring-1 ring-primary/50' : 'opacity-60'
             }`}
+            style={{ height: '32px', width: 'auto' }}
           >
-            {c.label}
-          </button>
+            <span className="text-white text-xs font-medium px-3 whitespace-nowrap">
+              {c.label}
+            </span>
+          </LiquidGlassBubble>
         ))}
       </div>
 

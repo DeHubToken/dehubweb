@@ -6,10 +6,10 @@
 
 import { useState } from 'react';
 import { Store, ShoppingBag } from 'lucide-react';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { SEOHead } from '@/components/SEOHead';
 import { BrowseTab } from '@/components/app/stores/BrowseTab';
 import { MyStoreTab } from '@/components/app/stores/MyStoreTab';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 
 export default function StoresPage() {
   const [tab, setTab] = useState('browse');
@@ -23,26 +23,27 @@ export default function StoresPage() {
           <h1 className="text-xl font-bold text-foreground">Stores</h1>
         </div>
 
-        <Tabs value={tab} onValueChange={setTab} className="w-full">
-          <TabsList className="bg-white/5 border border-white/10">
-            <TabsTrigger value="browse" className="flex items-center gap-1.5">
-              <ShoppingBag className="w-3.5 h-3.5" />
-              Browse
-            </TabsTrigger>
-            <TabsTrigger value="my-store" className="flex items-center gap-1.5">
-              <Store className="w-3.5 h-3.5" />
-              My Store
-            </TabsTrigger>
-          </TabsList>
+        {/* Tab buttons */}
+        <div className="flex gap-2">
+          <LiquidGlassBubble2
+            label="Browse"
+            icon={<ShoppingBag className="w-4 h-4" />}
+            onClick={() => setTab('browse')}
+            width="auto"
+            height="38px"
+            className={tab === 'browse' ? 'ring-1 ring-primary/50' : 'opacity-60'}
+          />
+          <LiquidGlassBubble2
+            label="My Store"
+            icon={<Store className="w-4 h-4" />}
+            onClick={() => setTab('my-store')}
+            width="auto"
+            height="38px"
+            className={tab === 'my-store' ? 'ring-1 ring-primary/50' : 'opacity-60'}
+          />
+        </div>
 
-          <TabsContent value="browse">
-            <BrowseTab />
-          </TabsContent>
-
-          <TabsContent value="my-store">
-            <MyStoreTab />
-          </TabsContent>
-        </Tabs>
+        {tab === 'browse' ? <BrowseTab /> : <MyStoreTab />}
       </div>
     </>
   );
