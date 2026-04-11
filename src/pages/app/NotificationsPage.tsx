@@ -5,7 +5,7 @@ import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTranslation } from 'react-i18next';
-import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon } from 'lucide-react';
+import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -27,6 +27,7 @@ import notificationsIcon from '@/assets/icons/notifications-icon.png';
 import { useQueries, useQueryClient } from '@tanstack/react-query';
 
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
+import { supabase } from '@/integrations/supabase/client';
 import { seedProfileCache } from '@/lib/profile-cache-seed';
 import { SEOHead } from '@/components/SEOHead';
 import { DEHUB_CDN_BASE, getNFTInfo, getFollowRequests, approveFollowRequest, rejectFollowRequest } from '@/lib/api/dehub';
@@ -219,7 +220,7 @@ function bundleNotifications(notifications: DeHubNotification[], enrichedAvatars
 }
 
 // Notification type tabs
-type NotificationTypeFilter = 'all' | 'likes' | 'follows' | 'comments' | 'reposts' | 'subscriptions' | 'tips' | 'livestreams';
+type NotificationTypeFilter = 'all' | 'likes' | 'follows' | 'comments' | 'reposts' | 'subscriptions' | 'tips' | 'livestreams' | 'communities' | 'stores';
 
 const tabs: { labelKey: string; value: NotificationTypeFilter; icon: React.ElementType }[] = [
   { labelKey: 'notifications.all', value: 'all', icon: Bell },
@@ -227,6 +228,8 @@ const tabs: { labelKey: string; value: NotificationTypeFilter; icon: React.Eleme
   { labelKey: 'notifications.follows', value: 'follows', icon: UserPlus },
   { labelKey: 'notifications.comments', value: 'comments', icon: MessageSquareText },
   { labelKey: 'notifications.reposts', value: 'reposts', icon: Repeat2 },
+  { labelKey: 'notifications.communities', value: 'communities', icon: UsersRound },
+  { labelKey: 'notifications.stores', value: 'stores', icon: Store },
   { labelKey: 'notifications.subs', value: 'subscriptions', icon: Users },
   { labelKey: 'notifications.tips', value: 'tips', icon: Gem },
   { labelKey: 'notifications.live', value: 'livestreams', icon: Zap },
@@ -239,6 +242,8 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   follows: ['following', 'follow_request', 'followRequest', 'follow-request'],
   comments: ['comment', 'comment_reply', 'mention', 'feature_request_comment', 'governance_comment'],
   reposts: ['repost', 'quote'],
+  communities: ['community_join'],
+  stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected'],
   subscriptions: ['subscription', 'ppv_purchase'],
   tips: ['tip'],
   livestreams: ['livestream_start'],
@@ -274,6 +279,14 @@ function getNotificationIcon(type: string) {
       return <AlertTriangle className="w-4 h-4 text-white/70" />;
     case 'governance_vote':
       return <Star className="w-4 h-4 text-white/70" />;
+    case 'community_join':
+      return <UsersRound className="w-4 h-4 text-white/70" />;
+    case 'store_order':
+      return <ShoppingBag className="w-4 h-4 text-white/70" />;
+    case 'fraction_offer':
+    case 'fraction_offer_accepted':
+    case 'fraction_offer_rejected':
+      return <Store className="w-4 h-4 text-white/70" />;
     default:
       return <Bell className="w-4 h-4 text-white/70" />;
   }
@@ -445,6 +458,23 @@ function getNotificationContent(
   if ((notification.type as string) === 'governance_comment') {
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return title ? `${actorName} commented on your proposal "${title}"` : `${actorName} commented on your proposal`;
+  }
+  if ((notification.type as string) === 'community_join') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return title ? `${actorName} joined your community "${title}"` : `${actorName} joined your community`;
+  }
+  if ((notification.type as string) === 'store_order') {
+    const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
+    return title ? `${actorName} purchased your listing "${title}"` : `${actorName} purchased your listing`;
+  }
+  if ((notification.type as string) === 'fraction_offer') {
+    return (notification as any).content || `${actorName} made an offer on your fractions`;
+  }
+  if ((notification.type as string) === 'fraction_offer_accepted') {
+    return (notification as any).content || `Your fraction offer was accepted`;
+  }
+  if ((notification.type as string) === 'fraction_offer_rejected') {
+    return (notification as any).content || `Your fraction offer was rejected`;
   }
 
   // Backend-aggregated follow
@@ -1324,12 +1354,27 @@ export default function NotificationsPage() {
       markAllAsRead.mutate(undefined);
       markAllCustomAsRead.mutate();
       
+      // Also delete all custom notifications from DB so they don't reappear
+      if (pageWalletAddress) {
+        const { withWalletHeader } = await import('@/lib/supabase-wallet-client');
+        await withWalletHeader(
+          supabase
+            .from('custom_notifications')
+            .delete()
+            .eq('recipient_address', pageWalletAddress.toLowerCase()),
+          pageWalletAddress
+        );
+      }
+      
       // Store the "cleared at" timestamp — all notifications before this will be hidden
       const now = Date.now();
       localStorage.setItem('notifications_cleared_at', String(now));
       
       // Update state to trigger memo recalculation
       setClearedAtTs(now);
+
+      // Invalidate custom notification caches
+      queryClient.invalidateQueries({ queryKey: ['custom-notifications'] });
       
       toast.success('All notifications cleared');
     } catch (error) {
