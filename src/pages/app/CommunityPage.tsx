@@ -16,14 +16,13 @@ import { CommunityMembers } from '@/components/app/communities/CommunityMembers'
 import { CommunityAbout } from '@/components/app/communities/CommunityAbout';
 import { CommunityChat } from '@/components/app/communities/CommunityChat';
 import { CommunityEvents } from '@/components/app/communities/CommunityEvents';
-import { CommunityOwnerActivity } from '@/components/app/communities/CommunityOwnerActivity';
-import { useCommunityUnreadCount } from '@/hooks/use-community-activity-unread';
+import { cn } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { useTranslation } from 'react-i18next';
 
-type Tab = 'posts' | 'events' | 'members' | 'about' | 'chat' | 'activity';
+type Tab = 'posts' | 'events' | 'members' | 'about' | 'chat';
 
 export default function CommunityPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -42,7 +41,7 @@ export default function CommunityPage() {
   const isPendingMember = !!membership && membership.status === 'pending';
   const isOwner = membership?.role === 'owner';
   const memberAddresses = useMemo(() => new Set(members.map(m => m.wallet_address.toLowerCase())), [members]);
-  const { data: activityUnread = 0 } = useCommunityUnreadCount(isOwner ? community?.id : undefined);
+  
 
   if (isLoading) {
     return (
