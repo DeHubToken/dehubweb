@@ -1,6 +1,21 @@
-import { Users, Lock, Crown } from 'lucide-react';
+import { Users, Lock, Crown, Link as LinkIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Community } from '@/hooks/use-communities';
+
+const URL_REGEX = /https?:\/\/[^\s)<>]+/gi;
+
+function extractUrls(text: string): string[] {
+  return text.match(URL_REGEX) || [];
+}
+
+function cleanUrl(url: string): string {
+  try {
+    const u = new URL(url);
+    return u.hostname.replace(/^www\./, '') + (u.pathname !== '/' ? u.pathname : '');
+  } catch {
+    return url.replace(/^https?:\/\/(www\.)?/, '');
+  }
+}
 
 interface CommunityCardProps {
   community: Community;
@@ -13,6 +28,9 @@ interface CommunityCardProps {
 export function CommunityCard({ community, isMember, role, unreadCount, onClick }: CommunityCardProps) {
   const { t } = useTranslation();
   const isOwner = role === 'owner';
+  const description = community.description || '';
+  const links = extractUrls(description);
+  const descWithoutLinks = description.replace(URL_REGEX, '').trim();
 
   return (
     <button
@@ -50,7 +68,24 @@ export function CommunityCard({ community, isMember, role, unreadCount, onClick 
           <span className="text-white font-medium text-sm truncate">{community.name}</span>
           {community.is_private && <Lock className="w-3 h-3 text-zinc-500 flex-shrink-0" />}
         </div>
-        <p className="text-zinc-500 text-xs truncate">{community.description || t('communities.noDescription')}</p>
+        <p className="text-zinc-500 text-xs truncate">{descWithoutLinks || t('communities.noDescription')}</p>
+        {links.length > 0 && (
+          <div className="flex items-center gap-2 mt-0.5">
+            {links.slice(0, 3).map((url, i) => (
+              <a
+                key={i}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={e => e.stopPropagation()}
+                className="flex items-center gap-1 text-[11px] text-blue-400 hover:text-blue-300 transition-colors truncate max-w-[140px]"
+              >
+                <LinkIcon className="w-3 h-3 shrink-0" />
+                <span className="truncate">{cleanUrl(url)}</span>
+              </a>
+            ))}
+          </div>
+        )}
         <div className="flex items-center gap-3 mt-0.5">
           <span className="text-zinc-600 text-xs">{community.member_count.toLocaleString()} {t('communities.members')}</span>
           {isMember && (
