@@ -279,10 +279,23 @@ function FeedDescription({
     return [title, description];
   }, [isTranslated, translatedText, title, description]);
   
-  const hasLongDescription = displayDescription && displayDescription.length > MAX_LENGTH;
+  // Suppress duplicate: if description starts with the title text, strip it out
+  const dedupedDescription = useMemo(() => {
+    if (!displayTitle || !displayDescription) return displayDescription;
+    const trimTitle = displayTitle.trim();
+    const trimDesc = displayDescription.trim();
+    if (trimDesc === trimTitle) return undefined;
+    if (trimDesc.startsWith(trimTitle)) {
+      const rest = trimDesc.slice(trimTitle.length).replace(/^\s*\n+/, '').trim();
+      return rest || undefined;
+    }
+    return displayDescription;
+  }, [displayTitle, displayDescription]);
+
+  const hasLongDescription = dedupedDescription && dedupedDescription.length > MAX_LENGTH;
   const shownDescription = expanded || !hasLongDescription 
-    ? displayDescription 
-    : `${displayDescription.slice(0, MAX_LENGTH)}...`;
+    ? dedupedDescription 
+    : `${dedupedDescription.slice(0, MAX_LENGTH)}...`;
   
   return (
     <div className="space-y-1">
