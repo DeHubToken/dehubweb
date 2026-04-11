@@ -1,5 +1,6 @@
 import { useState, useRef } from 'react';
-import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X, Search } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X, Search, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -82,6 +83,7 @@ export function PostActionBar({
   const [enhanceSheetOpen, setEnhanceSheetOpen] = useState(false);
   const [styleView, setStyleView] = useState(false);
   const [goLiveModalOpen, setGoLiveModalOpen] = useState(false);
+  const navigate = useNavigate();
   const isLive = liveMode !== null;
   const { openModal: openStagesModal } = useStage();
 
@@ -167,6 +169,20 @@ export function PostActionBar({
               Change Style
             </div>
             <ChevronRight className="w-4 h-4 text-zinc-500" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setEnhanceSheetOpen(false);
+              setStyleView(false);
+              onCloseModal?.();
+              navigate('/app/ai');
+            }}
+            className="flex items-center gap-3 px-4 py-3 text-sm text-white hover:bg-white/10 transition-colors"
+          >
+            <MessageSquare className="w-5 h-5 text-white" />
+            Generate Content
           </button>
         </>
       )}
@@ -425,7 +441,7 @@ export function PostActionBar({
           className="rounded-xl border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white gap-1.5 text-xs px-3 h-8"
         >
           {isEnhancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3" />}
-          <span className="hidden sm:inline">{isEnhancing ? 'Enhancing...' : 'Enhance'}</span>
+          <span className="hidden sm:inline">{isEnhancing ? 'Enhancing...' : 'AI'}</span>
         </Button>
         
         <Drawer open={enhanceSheetOpen} onOpenChange={handleCloseEnhance}>
