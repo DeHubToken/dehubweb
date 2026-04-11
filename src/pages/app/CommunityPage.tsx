@@ -16,12 +16,13 @@ import { CommunityMembers } from '@/components/app/communities/CommunityMembers'
 import { CommunityAbout } from '@/components/app/communities/CommunityAbout';
 import { CommunityChat } from '@/components/app/communities/CommunityChat';
 import { CommunityEvents } from '@/components/app/communities/CommunityEvents';
+import { CommunityOwnerActivity } from '@/components/app/communities/CommunityOwnerActivity';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { SEOHead } from '@/components/SEOHead';
 import { useTranslation } from 'react-i18next';
 
-type Tab = 'posts' | 'events' | 'members' | 'about' | 'chat';
+type Tab = 'posts' | 'events' | 'members' | 'about' | 'chat' | 'activity';
 
 export default function CommunityPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -109,12 +110,13 @@ export default function CommunityPage() {
           { key: 'events' as Tab, label: 'Events' },
           { key: 'members' as Tab, label: t('communities.membersLabel') },
           { key: 'about' as Tab, label: t('communities.about') },
+          ...(isOwner ? [{ key: 'activity' as Tab, label: 'Activity' }] : []),
         ]).map(tItem => (
           <button
             key={tItem.key}
             onClick={() => setTab(tItem.key)}
             className={cn(
-              'px-4 py-3 text-sm font-medium transition-colors border-b-2 -mb-[1px]',
+              'px-4 py-3 text-sm font-medium transition-colors border-b-2 -mb-[1px] whitespace-nowrap',
               tab === tItem.key
                 ? 'text-white border-white'
                 : 'text-zinc-500 border-transparent hover:text-white'
@@ -149,6 +151,11 @@ export default function CommunityPage() {
         <div className={tab === 'about' ? '' : 'hidden'}>
           <CommunityAbout community={community} />
         </div>
+        {isOwner && (
+          <div className={tab === 'activity' ? '' : 'hidden'}>
+            <CommunityOwnerActivity communityId={community.id} />
+          </div>
+        )}
       </div>
     </div>
   );
