@@ -40,12 +40,12 @@ export default function StoreDetailPage() {
 
   return (
     <div className="pb-20">
-      {/* Header */}
-      <div className="relative">
+      {/* Header banner - contained height */}
+      <div className="relative h-36 sm:h-44">
         {store.banner_url ? (
-          <img src={store.banner_url} className="w-full aspect-[3/1] object-cover" alt="" />
+          <img src={store.banner_url} className="w-full h-full object-cover" alt="" />
         ) : (
-          <div className="w-full aspect-[3/1] bg-gradient-to-br from-primary/20 to-primary/5" />
+          <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5" />
         )}
         <button
           onClick={() => navigate(-1)}
@@ -55,26 +55,21 @@ export default function StoreDetailPage() {
         </button>
       </div>
 
-      {/* Store info */}
+      {/* Store info - avatar + details stacked below */}
       <div className="px-4 -mt-8 relative z-10">
-        <div className="flex items-end gap-3">
-          {store.avatar_url ? (
-            <img src={store.avatar_url} className="w-16 h-16 rounded-full border-2 border-background object-cover" alt={store.name || ''} />
-          ) : (
-            <div className="w-16 h-16 rounded-full border-2 border-background bg-white/10 flex items-center justify-center text-xl font-bold text-primary-foreground">
-              {(store.name || 'S')[0].toUpperCase()}
-            </div>
-          )}
-          <div className="pb-1">
-            <h1 className="text-lg font-bold text-primary-foreground">{store.name || 'Store'}</h1>
-            <p className="text-xs text-muted-foreground">{listings.length} listing{listings.length !== 1 ? 's' : ''}</p>
-            <p className="text-[10px] text-zinc-500 font-mono mt-0.5">
-              Owner: {store.wallet_address?.slice(0, 6)}...{store.wallet_address?.slice(-4)}
-            </p>
+        {store.avatar_url ? (
+          <img src={store.avatar_url} className="w-16 h-16 rounded-xl object-cover" alt={store.name || ''} />
+        ) : (
+          <div className="w-16 h-16 rounded-xl bg-white/10 flex items-center justify-center text-xl font-bold text-primary-foreground">
+            {(store.name || 'S')[0].toUpperCase()}
           </div>
+        )}
+        <div className="mt-2">
+          <h1 className="text-lg font-bold text-primary-foreground">{store.name || 'Store'}</h1>
+          <p className="text-xs text-muted-foreground">{listings.length} listing{listings.length !== 1 ? 's' : ''}</p>
         </div>
         {store.description && (
-          <p className="mt-3 text-sm text-primary-foreground/80">{store.description}</p>
+          <p className="mt-2 text-sm text-primary-foreground/80">{store.description}</p>
         )}
       </div>
 
