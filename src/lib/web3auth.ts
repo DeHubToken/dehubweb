@@ -623,7 +623,7 @@ function extractPrivKeyFromConnector(w3a: Web3Auth): string | null {
 async function buildProviderFromPrivKey(privKey: string): Promise<IProvider> {
   const pkProvider = new EthereumPrivateKeyProvider({
     config: {
-      chain: {
+      chainConfig: {
         chainNamespace: CHAIN_NAMESPACES.EIP155,
         chainId: "0x2105",
         rpcTarget: "https://base-rpc.publicnode.com",
