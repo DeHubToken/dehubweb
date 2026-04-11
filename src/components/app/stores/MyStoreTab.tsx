@@ -5,7 +5,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { Plus, Package, ShoppingBag, MoreVertical, Archive, CheckCircle, Pencil } from 'lucide-react';
+import { Package, ShoppingBag, MoreVertical, Archive, CheckCircle, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTokenPrices } from '@/hooks/use-token-prices';
@@ -15,14 +15,19 @@ import { SetupStoreFlow } from './SetupStoreFlow';
 import { CreateListingDrawer } from './CreateListingDrawer';
 import { EditListingDrawer } from './EditListingDrawer';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
+
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { toast } from 'sonner';
 
 type StoreSubTab = 'listings' | 'orders' | 'purchases';
 
-export function MyStoreTab() {
+interface MyStoreTabProps {
+  createOpen?: boolean;
+  onCreateClose?: () => void;
+}
+
+export function MyStoreTab({ createOpen = false, onCreateClose }: MyStoreTabProps) {
   const { isAuthenticated, openLoginModal } = useAuth();
   const { data: store, isLoading: loadingStore } = useMyStore();
   const { data: listings = [] } = useMyListings();
@@ -31,7 +36,9 @@ export function MyStoreTab() {
   const updateListing = useUpdateListing();
   const updateOrderStatus = useUpdateOrderStatus();
   const { data: prices } = useTokenPrices();
-  const [createOpen, setCreateOpen] = useState(false);
+  const [internalCreateOpen, setInternalCreateOpen] = useState(false);
+  const isCreateOpen = createOpen || internalCreateOpen;
+  const handleCreateClose = () => { setInternalCreateOpen(false); onCreateClose?.(); };
   const [editListing, setEditListing] = useState<any>(null);
   const [subTab, setSubTab] = useState<StoreSubTab>('listings');
   const [enableTransition, setEnableTransition] = useState(false);
@@ -77,16 +84,7 @@ export function MyStoreTab() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-foreground">{store.name}</h2>
-        <LiquidGlassBubble2
-          label="New Listing"
-          icon={<Plus className="w-4 h-4" />}
-          onClick={() => setCreateOpen(true)}
-          width="auto"
-          height="36px"
-        />
-      </div>
+      <h2 className="text-lg font-semibold text-foreground">{store.name}</h2>
 
       {/* Toggle bar with glass indicator */}
       <div className="bg-zinc-900 rounded-xl p-1">
@@ -179,7 +177,7 @@ export function MyStoreTab() {
         )
       )}
 
-      <CreateListingDrawer open={createOpen} onClose={() => setCreateOpen(false)} storeId={store.id} />
+      <CreateListingDrawer open={isCreateOpen} onClose={handleCreateClose} storeId={store.id} />
       <EditListingDrawer open={!!editListing} onClose={() => setEditListing(null)} listing={editListing} />
     </div>
   );
