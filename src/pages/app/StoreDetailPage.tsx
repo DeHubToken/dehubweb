@@ -18,6 +18,7 @@ export default function StoreDetailPage() {
   const { data: store, isLoading: storeLoading } = useStoreById(storeId);
   const { data: listings = [], isLoading: listingsLoading } = useStoreListings(storeId);
   const [selectedListing, setSelectedListing] = useState<any>(null);
+  const storeInitial = (store?.name || 'S')[0].toUpperCase();
 
   if (storeLoading) {
     return (
@@ -39,42 +40,51 @@ export default function StoreDetailPage() {
   }
 
   return (
-    <div className="pb-20">
-      {/* Header banner - contained height */}
-      <div className="relative h-36 sm:h-44">
-        {store.banner_url ? (
-          <img src={store.banner_url} className="w-full h-full object-cover" alt="" />
-        ) : (
-          <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5" />
-        )}
+    <div className="pb-20 p-2 sm:p-3 space-y-6">
+      <section className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden relative">
         <button
           onClick={() => navigate(-1)}
-          className="absolute top-3 left-3 bg-black/50 backdrop-blur-sm rounded-full p-2"
+          className="absolute top-3 left-3 z-10 bg-black/50 backdrop-blur-sm rounded-full p-2"
+          aria-label="Go back"
         >
           <ArrowLeft className="w-4 h-4 text-white" />
         </button>
-      </div>
 
-      {/* Store info - avatar + details stacked below */}
-      <div className="px-4 -mt-8 relative z-10">
-        {store.avatar_url ? (
-          <img src={store.avatar_url} className="w-16 h-16 rounded-xl object-cover" alt={store.name || ''} />
-        ) : (
-          <div className="w-16 h-16 rounded-xl bg-white/10 flex items-center justify-center text-xl font-bold text-primary-foreground">
-            {(store.name || 'S')[0].toUpperCase()}
-          </div>
-        )}
-        <div className="mt-2">
-          <h1 className="text-lg font-bold text-primary-foreground">{store.name || 'Store'}</h1>
-          <p className="text-xs text-muted-foreground">{listings.length} listing{listings.length !== 1 ? 's' : ''}</p>
+        <div className="aspect-[3/1] w-full bg-zinc-900">
+          {store.banner_url ? (
+            <img src={store.banner_url} className="w-full h-full object-cover" alt="" />
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5" />
+          )}
         </div>
-        {store.description && (
-          <p className="mt-2 text-sm text-primary-foreground/80">{store.description}</p>
-        )}
-      </div>
+
+        <div className="px-4 sm:px-6 pb-4">
+          <div className="relative -mt-10 sm:-mt-12">
+            {store.avatar_url ? (
+              <img
+                src={store.avatar_url}
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-[10px] object-cover bg-zinc-900"
+                alt={store.name || ''}
+              />
+            ) : (
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-[10px] bg-white/10 flex items-center justify-center text-xl sm:text-2xl font-bold text-primary-foreground">
+                {storeInitial}
+              </div>
+            )}
+          </div>
+
+          <div className="mt-3">
+            <h1 className="text-lg sm:text-xl font-bold text-primary-foreground">{store.name || 'Store'}</h1>
+            <p className="text-xs text-muted-foreground">{listings.length} listing{listings.length !== 1 ? 's' : ''}</p>
+            {store.description && (
+              <p className="mt-2 text-sm text-primary-foreground/80">{store.description}</p>
+            )}
+          </div>
+        </div>
+      </section>
 
       {/* Listings grid */}
-      <div className="px-4 mt-6">
+      <div className="px-2 sm:px-1">
         <h2 className="text-sm font-semibold text-primary-foreground mb-3">Listings</h2>
         {listingsLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
