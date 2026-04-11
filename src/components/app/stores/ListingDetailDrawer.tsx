@@ -20,6 +20,7 @@ import { DHB_TOKEN, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { GLASS_STYLES } from '@/constants/app.constants';
+import { ReviewSection } from './ReviewSection';
 
 interface Props {
   listing: any;
@@ -165,6 +166,9 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
             )}
             {listing.stores?.name || 'Store'}
           </button>
+
+          {/* Reviews */}
+          <ReviewSection listingId={listing.id} sellerAddress={sellerAddress} />
 
           {/* Buy form */}
           {!isSelf && !soldOut && (
