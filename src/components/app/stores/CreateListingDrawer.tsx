@@ -1,7 +1,7 @@
 /**
  * Create Listing Drawer
  * =====================
- * Drawer for creating a new store listing with image uploads.
+ * Drawer for creating a new store listing with image and video uploads.
  */
 
 import { useState } from 'react';
@@ -12,11 +12,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
-import { Loader2, ImagePlus, X } from 'lucide-react';
+import { Loader2, ImagePlus, X, Video } from 'lucide-react';
 import { useCreateListing } from '@/hooks/use-stores';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { GLASS_STYLES } from '@/constants/app.constants';
 
 const CATEGORIES = [
   { value: 'digital', label: 'Digital' },
@@ -42,7 +41,9 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
   const [shippingInfo, setShippingInfo] = useState('');
   const [stockQty, setStockQty] = useState('');
   const [images, setImages] = useState<string[]>([]);
+  const [videos, setVideos] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
 
   const createListing = useCreateListing();
 
@@ -66,6 +67,30 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
     }
   };
 
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || videos.length >= 2) return;
+    setUploadingVideo(true);
+    try {
+      for (const file of Array.from(files).slice(0, 2 - videos.length)) {
+        if (file.size > 50 * 1024 * 1024) {
+          toast.error('Video must be under 50MB');
+          continue;
+        }
+        const ext = file.name.split('.').pop();
+        const path = `listings/videos/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+        const { error } = await supabase.storage.from('store-media').upload(path, file);
+        if (error) throw error;
+        const { data: urlData } = supabase.storage.from('store-media').getPublicUrl(path);
+        setVideos(prev => [...prev, urlData.publicUrl]);
+      }
+    } catch (err: any) {
+      toast.error('Video upload failed: ' + err.message);
+    } finally {
+      setUploadingVideo(false);
+    }
+  };
+
   const handleSubmit = () => {
     if (!title.trim() || !price) {
       toast.error('Title and price are required');
@@ -77,7 +102,7 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
       description: description.trim(),
       price: Number(price),
       category,
-      images,
+      images: [...images, ...videos],
       stock_quantity: stockQty ? Number(stockQty) : null,
       is_digital: isDigital,
       condition,
@@ -86,7 +111,7 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
     }, {
       onSuccess: () => {
         onClose();
-        setTitle(''); setDescription(''); setPrice(''); setImages([]);
+        setTitle(''); setDescription(''); setPrice(''); setImages([]); setVideos([]);
         setCategory('other'); setCondition('new'); setIsDigital(false);
         setShippingInfo(''); setStockQty('');
       },
@@ -123,8 +148,8 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
               <Label className="text-zinc-300">Category</Label>
               <Select value={category} onValueChange={setCategory}>
                 <SelectTrigger className="bg-white/5 border-white/10 text-white"><SelectValue /></SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-white/10">
-                  {CATEGORIES.map(c => <SelectItem key={c.value} value={c.value} className="text-white hover:bg-white/10">{c.label}</SelectItem>)}
+                <SelectContent>
+                  {CATEGORIES.map(c => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
@@ -132,10 +157,10 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
               <Label className="text-zinc-300">Condition</Label>
               <Select value={condition} onValueChange={setCondition}>
                 <SelectTrigger className="bg-white/5 border-white/10 text-white"><SelectValue /></SelectTrigger>
-                <SelectContent className="bg-zinc-900 border-white/10">
-                  <SelectItem value="new" className="text-white hover:bg-white/10">New</SelectItem>
-                  <SelectItem value="like_new" className="text-white hover:bg-white/10">Like New</SelectItem>
-                  <SelectItem value="used" className="text-white hover:bg-white/10">Used</SelectItem>
+                <SelectContent>
+                  <SelectItem value="new">New</SelectItem>
+                  <SelectItem value="like_new">Like New</SelectItem>
+                  <SelectItem value="used">Used</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -167,6 +192,27 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
                 <label className="w-16 h-16 rounded-lg border border-dashed border-white/20 flex items-center justify-center cursor-pointer hover:border-white/40 transition-colors">
                   {uploading ? <Loader2 className="w-4 h-4 animate-spin text-white" /> : <ImagePlus className="w-4 h-4 text-zinc-400" />}
                   <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageUpload} disabled={uploading} />
+                </label>
+              )}
+            </div>
+          </div>
+
+          {/* Videos */}
+          <div>
+            <Label className="text-zinc-300">Videos (up to 2, max 50MB each)</Label>
+            <div className="flex flex-wrap gap-2 mt-1">
+              {videos.map((url, i) => (
+                <div key={i} className="relative w-24 h-16 rounded-lg overflow-hidden border border-white/10">
+                  <video src={url} className="w-full h-full object-cover" muted />
+                  <button onClick={() => setVideos(prev => prev.filter((_, j) => j !== i))} className="absolute top-0 right-0 bg-black/60 p-0.5 rounded-bl">
+                    <X className="w-3 h-3 text-white" />
+                  </button>
+                </div>
+              ))}
+              {videos.length < 2 && (
+                <label className="w-24 h-16 rounded-lg border border-dashed border-white/20 flex items-center justify-center cursor-pointer hover:border-white/40 transition-colors">
+                  {uploadingVideo ? <Loader2 className="w-4 h-4 animate-spin text-white" /> : <Video className="w-4 h-4 text-zinc-400" />}
+                  <input type="file" accept="video/*" className="hidden" onChange={handleVideoUpload} disabled={uploadingVideo} />
                 </label>
               )}
             </div>
