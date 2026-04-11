@@ -568,6 +568,13 @@ export async function connectToSocialProvider(
 
   savePreLoginPath();
 
+  // Pre-flight: clear any stale openlogin session before starting a new OAuth flow.
+  // This is a safety net for sessions left from before the post-recovery cleanup was added.
+  // Does NOT clear our custom dehub_* keys (pimlico config, client ID, wallet address).
+  if (!skipConnectedCheck) {
+    clearWeb3AuthStorage();
+  }
+
   try {
     const provider = await web3auth.connectTo(WALLET_CONNECTORS.AUTH, params);
     lastConnectedConnector = WALLET_CONNECTORS.AUTH;
@@ -590,6 +597,13 @@ export async function connectToSocialProvider(
     const privKey = extractPrivKeyFromConnector(web3auth);
     if (privKey) {
       console.log('[Web3Auth] WsEmbed auth/verify failed — recovering via private key (privKey length:', privKey.length, ')');
+      // CRITICAL: Clear the openlogin session from storage immediately after extracting the key.
+      // connectTo() threw but the OAuth session is still persisted — without clearing it,
+      // the NEXT login (even a different provider like email OTP) silently reuses this session:
+      // - Email login opens Google popup instead of sending OTP code
+      // - Google login skips account picker and signs into the same old account
+      try { await web3auth.logout({ cleanup: true }); } catch {}
+      clearWeb3AuthStorage();
       const eoaProvider = await buildProviderFromPrivKey(privKey);
       lastConnectedConnector = WALLET_CONNECTORS.AUTH;
       return eoaProvider;
@@ -667,6 +681,11 @@ export async function disconnectWeb3Auth(): Promise<void> {
   if (web3authInstance?.connected) {
     await web3authInstance.logout();
   }
+  // Always clear storage on disconnect — our WsEmbed recovery path leaves
+  // web3authInstance.connected === false even after a successful social login,
+  // so the connected check above would skip cleanup and leave the openlogin
+  // session cached, causing the next login to silently reuse the old session.
+  clearWeb3AuthStorage();
 }
 
 export async function forceCleanupWeb3Auth(): Promise<void> {
