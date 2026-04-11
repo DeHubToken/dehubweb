@@ -1,6 +1,6 @@
 /**
  * Video Generation Models Configuration
- * Premium models available via Replicate API
+ * Premium models available via Replicate API and fal.ai
  */
 
 export interface VideoModel {
@@ -41,6 +41,10 @@ export interface VideoModel {
   supportsVideoInput?: boolean;
   /** Whether the model supports seed for reproducibility */
   supportsSeed?: boolean;
+  /** Short tips/help for using this model effectively */
+  tips?: string[];
+  /** Available aspect ratios */
+  aspectRatios?: string[];
 }
 
 /**
@@ -78,6 +82,19 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     emoji: '🎬',
     baseCostUsd: 1.10,
     hasAudio: true,
+    minDuration: 5,
+    maxDuration: 10,
+    defaultDuration: 5,
+    supportsNegativePrompt: true,
+    supportsSeed: true,
+    aspectRatios: ['16:9', '9:16', '1:1'],
+    tips: [
+      '🎬 Best for cinematic, high-fidelity scenes',
+      '🖼️ Attach an image to animate it into a video',
+      '🔇 Generates native audio automatically',
+      '⏱️ 10s duration gives smoother motion arcs',
+      '🎯 Use negative prompts to avoid unwanted elements',
+    ],
   },
   'luma-ray2': {
     id: 'luma-ray2',
@@ -88,16 +105,33 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     tier: 'premium',
     emoji: '✨',
     baseCostUsd: 0.65,
+    aspectRatios: ['16:9', '9:16', '1:1', '3:4', '4:3'],
+    tips: [
+      '✨ Excels at dreamy, artistic aesthetics',
+      '📝 Text-to-video only — describe your scene vividly',
+      '🎨 Great for abstract, surreal, or nature scenes',
+      '📐 Try different aspect ratios for variety',
+    ],
   },
   'runway-gen4': {
     id: 'runway-gen4',
     name: 'Runway Gen-4 Turbo',
     description: 'Animate images (requires image)',
     supports: ['image-to-video'],
-    duration: '10s',
+    duration: '5-10s',
     tier: 'premium',
     emoji: '🚀',
     baseCostUsd: 0.50,
+    minDuration: 5,
+    maxDuration: 10,
+    defaultDuration: 10,
+    aspectRatios: ['16:9', '9:16', '1:1'],
+    tips: [
+      '🖼️ Requires an image — attach one to animate it',
+      '🚀 Best-in-class image animation quality',
+      '📸 Works great with photos, illustrations, AI art',
+      '💡 Describe the motion you want in your prompt',
+    ],
   },
   'minimax-video': {
     id: 'minimax-video',
@@ -108,6 +142,12 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     tier: 'standard',
     emoji: '⚡',
     baseCostUsd: 0.22,
+    tips: [
+      '⚡ Fast generation at an affordable price',
+      '🖼️ Attach an image for image-to-video mode',
+      '📝 Keep prompts concise for best results',
+      '💰 Great value for quick iterations',
+    ],
   },
   'ltx-video': {
     id: 'ltx-video',
@@ -118,6 +158,14 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     tier: 'fast',
     emoji: '💨',
     baseCostUsd: 0.085,
+    supportsSeed: true,
+    supportsNegativePrompt: true,
+    tips: [
+      '💨 Fastest & cheapest option for quick tests',
+      '🔁 Use seed to iterate on the same scene',
+      '🎯 Negative prompts help refine output',
+      '💡 Perfect for rapid prototyping ideas',
+    ],
   },
   'seedance-1.5-pro': {
     id: 'seedance-1.5-pro',
@@ -129,6 +177,20 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     emoji: '🌊',
     baseCostUsd: 0.65,
     hasAudio: true,
+    minDuration: 2,
+    maxDuration: 12,
+    defaultDuration: 5,
+    supportsNegativePrompt: true,
+    supportsResolution: true,
+    supportsSeed: true,
+    aspectRatios: ['16:9', '9:16', '1:1'],
+    tips: [
+      '🌊 Cinematic quality with native audio',
+      '🖼️ Attach an image to animate it',
+      '📺 Supports 720p resolution',
+      '⏱️ Flexible 2-12s duration range',
+      '🔁 Lock a seed for consistent iterations',
+    ],
   },
   'seedance-2.0': {
     id: 'seedance-2.0',
@@ -153,6 +215,15 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     supportsAudioInput: true,
     supportsVideoInput: true,
     supportsSeed: true,
+    aspectRatios: ['16:9', '9:16', '1:1'],
+    tips: [
+      '👤 Upload face photos for character consistency across videos',
+      '🎵 Upload audio for lip-sync animation',
+      '🎬 Set start + end frames for controlled transitions',
+      '🎨 Upload a video to restyle it with a new prompt',
+      '🔁 Lock a seed to iterate without randomness',
+      '📺 1080p for maximum quality, 480p for speed',
+    ],
   },
   'seedance-2.0-fast': {
     id: 'seedance-2.0-fast',
@@ -177,6 +248,14 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     supportsAudioInput: true,
     supportsVideoInput: true,
     supportsSeed: true,
+    aspectRatios: ['16:9', '9:16', '1:1'],
+    tips: [
+      '⚡ Same features as Seedance 2.0 but faster & cheaper',
+      '👤 Upload face photos for character consistency',
+      '🎵 Upload audio for lip-sync animation',
+      '🎬 Set start + end frames for controlled transitions',
+      '🔁 Lock a seed to iterate without randomness',
+    ],
   },
 };
 
