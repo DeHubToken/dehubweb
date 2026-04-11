@@ -151,6 +151,11 @@ export default function CommunityPage() {
         <div className={tab === 'about' ? '' : 'hidden'}>
           <CommunityAbout community={community} />
         </div>
+        {isOwner && (
+          <div className={tab === 'activity' ? '' : 'hidden'}>
+            <CommunityOwnerActivity communityId={community.id} />
+          </div>
+        )}
       </div>
     </div>
   );
