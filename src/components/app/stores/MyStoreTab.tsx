@@ -4,10 +4,9 @@
  * Seller dashboard: manage listings and view orders.
  */
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { Plus, Package, ShoppingBag, MoreVertical, Archive, CheckCircle, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { useTokenPrices } from '@/hooks/use-token-prices';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -16,7 +15,12 @@ import { SetupStoreFlow } from './SetupStoreFlow';
 import { CreateListingDrawer } from './CreateListingDrawer';
 import { EditListingDrawer } from './EditListingDrawer';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
+import { useTabIndicator } from '@/hooks/use-tab-indicator';
+import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { toast } from 'sonner';
+
+type StoreSubTab = 'listings' | 'orders' | 'purchases';
 
 export function MyStoreTab() {
   const { isAuthenticated, openLoginModal } = useAuth();
@@ -29,6 +33,16 @@ export function MyStoreTab() {
   const { data: prices } = useTokenPrices();
   const [createOpen, setCreateOpen] = useState(false);
   const [editListing, setEditListing] = useState<any>(null);
+  const [subTab, setSubTab] = useState<StoreSubTab>('listings');
+  const [enableTransition, setEnableTransition] = useState(false);
+
+  const { layerRef, setRef, rect } = useTabIndicator(subTab);
+
+  const handleTabClick = useCallback((tab: StoreSubTab) => {
+    setEnableTransition(true);
+    setSubTab(tab);
+    setTimeout(() => setEnableTransition(false), 450);
+  }, []);
 
   if (!isAuthenticated) {
     return (
@@ -55,92 +69,115 @@ export function MyStoreTab() {
     updateListing.mutate({ id, status: 'sold' }, { onSuccess: () => toast.success('Marked as sold') });
   };
 
+  const TABS: { key: StoreSubTab; label: string; count: number }[] = [
+    { key: 'listings', label: 'My Listings', count: listings.length },
+    { key: 'orders', label: 'Orders', count: sellerOrders.length },
+    { key: 'purchases', label: 'Purchases', count: buyerOrders.length },
+  ];
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <h2 className="text-lg font-semibold text-foreground">{store.name}</h2>
-        <Button size="sm" onClick={() => setCreateOpen(true)}>
-          <Plus className="w-4 h-4 mr-1" />
-          New Listing
-        </Button>
+        <LiquidGlassBubble2
+          label="New Listing"
+          icon={<Plus className="w-4 h-4" />}
+          onClick={() => setCreateOpen(true)}
+          width="auto"
+          height="36px"
+        />
       </div>
 
-      <Tabs defaultValue="listings" className="w-full">
-        <TabsList className="bg-white/5 border border-white/10">
-          <TabsTrigger value="listings">My Listings ({listings.length})</TabsTrigger>
-          <TabsTrigger value="orders">Orders ({sellerOrders.length})</TabsTrigger>
-          <TabsTrigger value="purchases">My Purchases ({buyerOrders.length})</TabsTrigger>
-        </TabsList>
+      {/* Toggle bar with glass indicator */}
+      <div className="bg-zinc-900 rounded-xl p-1">
+        <div ref={layerRef} className="relative">
+          <GlassIndicator rect={rect} borderRadius="0.5rem" enableTransition={enableTransition} />
+          <div className="relative z-20 flex">
+            {TABS.map(t => (
+              <button
+                key={t.key}
+                ref={setRef(t.key)}
+                onClick={() => handleTabClick(t.key)}
+                className={`flex-1 px-3 py-2 text-xs font-medium rounded-lg transition-colors ${
+                  subTab === t.key ? 'text-white' : 'text-zinc-400'
+                }`}
+              >
+                {t.label} ({t.count})
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
 
-        <TabsContent value="listings">
-          {listings.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground text-sm">
-              No listings yet. Create your first one!
-            </div>
-          ) : (
-            <div className="space-y-2">
-              {listings.map((l: any) => (
-                <div key={l.id} className="flex items-center gap-3 p-3 rounded-lg border border-white/10 bg-white/5">
-                  <div className="w-12 h-12 rounded-lg bg-white/10 overflow-hidden shrink-0">
-                    {(l.images as string[])?.[0] && <img src={(l.images as string[])[0]} className="w-full h-full object-cover" alt="" />}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground truncate">{l.title}</p>
-                    <p className="text-xs text-muted-foreground flex items-center gap-1">
-                      {(() => {
-                        const usd = Number(l.price);
-                        const dhb = prices?.DHB && prices.DHB > 0 ? Math.ceil(usd / prices.DHB) : null;
-                        return dhb ? (<><img src={dehubCoin} alt="DHB" className="w-3.5 h-3.5 inline" />{dhb.toLocaleString()} · ${usd.toFixed(2)}</>) : `$${usd.toFixed(2)}`;
-                      })()}
-                       · <span className="capitalize">{l.status}</span>
-                    </p>
-                  </div>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8"><MoreVertical className="w-4 h-4" /></Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem onClick={() => setEditListing(l)}>
-                        <Pencil className="w-4 h-4 mr-2" /> Edit
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleMarkSold(l.id)}>
-                        <CheckCircle className="w-4 h-4 mr-2" /> Mark Sold
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => handleArchive(l.id)}>
-                        <Archive className="w-4 h-4 mr-2" /> Archive
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+      {/* Content */}
+      {subTab === 'listings' && (
+        listings.length === 0 ? (
+          <div className="text-center py-12 text-muted-foreground text-sm">
+            No listings yet. Create your first one!
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {listings.map((l: any) => (
+              <div key={l.id} className="flex items-center gap-3 p-3 rounded-lg border border-white/10 bg-white/5">
+                <div className="w-12 h-12 rounded-lg bg-white/10 overflow-hidden shrink-0">
+                  {(l.images as string[])?.[0] && <img src={(l.images as string[])[0]} className="w-full h-full object-cover" alt="" />}
                 </div>
-              ))}
-            </div>
-          )}
-        </TabsContent>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-foreground truncate">{l.title}</p>
+                  <p className="text-xs text-muted-foreground flex items-center gap-1">
+                    {(() => {
+                      const usd = Number(l.price);
+                      const dhb = prices?.DHB && prices.DHB > 0 ? Math.ceil(usd / prices.DHB) : null;
+                      return dhb ? (<><img src={dehubCoin} alt="DHB" className="w-3.5 h-3.5 inline" />{dhb.toLocaleString()} · ${usd.toFixed(2)}</>) : `$${usd.toFixed(2)}`;
+                    })()}
+                     · <span className="capitalize">{l.status}</span>
+                  </p>
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-8 w-8"><MoreVertical className="w-4 h-4" /></Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem onClick={() => setEditListing(l)}>
+                      <Pencil className="w-4 h-4 mr-2" /> Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleMarkSold(l.id)}>
+                      <CheckCircle className="w-4 h-4 mr-2" /> Mark Sold
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => handleArchive(l.id)}>
+                      <Archive className="w-4 h-4 mr-2" /> Archive
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            ))}
+          </div>
+        )
+      )}
 
-        <TabsContent value="orders">
-          {sellerOrders.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground text-sm">No orders received yet</div>
-          ) : (
-            <div className="space-y-2">
-              {sellerOrders.map((o: any) => (
-                <OrderRow key={o.id} order={o} type="seller" onUpdateStatus={(id, status) => updateOrderStatus.mutate({ id, status })} />
-              ))}
-            </div>
-          )}
-        </TabsContent>
+      {subTab === 'orders' && (
+        sellerOrders.length === 0 ? (
+          <div className="text-center py-12 text-muted-foreground text-sm">No orders received yet</div>
+        ) : (
+          <div className="space-y-2">
+            {sellerOrders.map((o: any) => (
+              <OrderRow key={o.id} order={o} type="seller" onUpdateStatus={(id, status) => updateOrderStatus.mutate({ id, status })} />
+            ))}
+          </div>
+        )
+      )}
 
-        <TabsContent value="purchases">
-          {buyerOrders.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground text-sm">No purchases yet</div>
-          ) : (
-            <div className="space-y-2">
-              {buyerOrders.map((o: any) => (
-                <OrderRow key={o.id} order={o} type="buyer" onUpdateStatus={(id, status) => updateOrderStatus.mutate({ id, status })} />
-              ))}
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+      {subTab === 'purchases' && (
+        buyerOrders.length === 0 ? (
+          <div className="text-center py-12 text-muted-foreground text-sm">No purchases yet</div>
+        ) : (
+          <div className="space-y-2">
+            {buyerOrders.map((o: any) => (
+              <OrderRow key={o.id} order={o} type="buyer" onUpdateStatus={(id, status) => updateOrderStatus.mutate({ id, status })} />
+            ))}
+          </div>
+        )
+      )}
 
       <CreateListingDrawer open={createOpen} onClose={() => setCreateOpen(false)} storeId={store.id} />
       <EditListingDrawer open={!!editListing} onClose={() => setEditListing(null)} listing={editListing} />
