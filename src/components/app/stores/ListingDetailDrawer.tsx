@@ -118,7 +118,10 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
 
           {/* Price & meta */}
           <div className="flex items-center justify-between">
-            <span className="text-xl font-bold text-primary">{Number(listing.price).toLocaleString()} DHB</span>
+            <div>
+              <span className="text-xl font-bold text-primary">{dhbPrice > 0 ? `${priceDhbCeil.toLocaleString()} DHB` : `$${priceUsd.toLocaleString()}`}</span>
+              <p className="text-xs text-zinc-500">${priceUsd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD</p>
+            </div>
             <div className="flex gap-2">
               {listing.is_digital && <span className="text-xs bg-primary/20 text-primary px-2 py-0.5 rounded">Digital</span>}
               <span className="text-xs bg-white/10 px-2 py-0.5 rounded capitalize">{listing.condition}</span>
