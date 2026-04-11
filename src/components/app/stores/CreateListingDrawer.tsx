@@ -95,84 +95,84 @@ export function CreateListingDrawer({ open, onClose, storeId }: Props) {
 
   return (
     <Drawer open={open} onOpenChange={v => !v && onClose()}>
-      <DrawerContent className={GLASS_STYLES.drawer}>
+      <DrawerContent glass className="border-t border-white/10">
         <DrawerHeader>
-          <DrawerTitle>Create Listing</DrawerTitle>
+          <DrawerTitle className="text-white">Create Listing</DrawerTitle>
         </DrawerHeader>
         <div className="px-4 pb-6 space-y-4 max-h-[70vh] overflow-y-auto">
           <div>
-            <Label>Title *</Label>
-            <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Item name" className="bg-white/5 border-white/10" />
+            <Label className="text-zinc-300">Title *</Label>
+            <Input value={title} onChange={e => setTitle(e.target.value)} placeholder="Item name" className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500" />
           </div>
           <div>
-            <Label>Description</Label>
-            <Textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Describe your item..." className="bg-white/5 border-white/10 min-h-[80px]" />
+            <Label className="text-zinc-300">Description</Label>
+            <Textarea value={description} onChange={e => setDescription(e.target.value)} placeholder="Describe your item..." className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500 min-h-[80px]" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label>Price (DHB) *</Label>
-              <Input type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="0" className="bg-white/5 border-white/10" />
+              <Label className="text-zinc-300">Price (DHB) *</Label>
+              <Input type="number" value={price} onChange={e => setPrice(e.target.value)} placeholder="0" className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500" />
             </div>
             <div>
-              <Label>Stock Qty</Label>
-              <Input type="number" value={stockQty} onChange={e => setStockQty(e.target.value)} placeholder="Unlimited" className="bg-white/5 border-white/10" />
+              <Label className="text-zinc-300">Stock Qty</Label>
+              <Input type="number" value={stockQty} onChange={e => setStockQty(e.target.value)} placeholder="Unlimited" className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500" />
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <Label>Category</Label>
+              <Label className="text-zinc-300">Category</Label>
               <Select value={category} onValueChange={setCategory}>
-                <SelectTrigger className="bg-white/5 border-white/10"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  {CATEGORIES.map(c => <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>)}
+                <SelectTrigger className="bg-white/5 border-white/10 text-white"><SelectValue /></SelectTrigger>
+                <SelectContent className="bg-zinc-900 border-white/10">
+                  {CATEGORIES.map(c => <SelectItem key={c.value} value={c.value} className="text-white hover:bg-white/10">{c.label}</SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <Label>Condition</Label>
+              <Label className="text-zinc-300">Condition</Label>
               <Select value={condition} onValueChange={setCondition}>
-                <SelectTrigger className="bg-white/5 border-white/10"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="new">New</SelectItem>
-                  <SelectItem value="like_new">Like New</SelectItem>
-                  <SelectItem value="used">Used</SelectItem>
+                <SelectTrigger className="bg-white/5 border-white/10 text-white"><SelectValue /></SelectTrigger>
+                <SelectContent className="bg-zinc-900 border-white/10">
+                  <SelectItem value="new" className="text-white hover:bg-white/10">New</SelectItem>
+                  <SelectItem value="like_new" className="text-white hover:bg-white/10">Like New</SelectItem>
+                  <SelectItem value="used" className="text-white hover:bg-white/10">Used</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <Switch checked={isDigital} onCheckedChange={setIsDigital} />
-            <Label>Digital Item</Label>
+            <Label className="text-zinc-300">Digital Item</Label>
           </div>
           {!isDigital && (
             <div>
-              <Label>Shipping Info</Label>
-              <Input value={shippingInfo} onChange={e => setShippingInfo(e.target.value)} placeholder="e.g. Free worldwide shipping" className="bg-white/5 border-white/10" />
+              <Label className="text-zinc-300">Shipping Info</Label>
+              <Input value={shippingInfo} onChange={e => setShippingInfo(e.target.value)} placeholder="e.g. Free worldwide shipping" className="bg-white/5 border-white/10 text-white placeholder:text-zinc-500" />
             </div>
           )}
 
           {/* Images */}
           <div>
-            <Label>Images (up to 5)</Label>
+            <Label className="text-zinc-300">Images (up to 5)</Label>
             <div className="flex flex-wrap gap-2 mt-1">
               {images.map((url, i) => (
                 <div key={i} className="relative w-16 h-16 rounded-lg overflow-hidden border border-white/10">
                   <img src={url} className="w-full h-full object-cover" alt="" />
                   <button onClick={() => setImages(prev => prev.filter((_, j) => j !== i))} className="absolute top-0 right-0 bg-black/60 p-0.5 rounded-bl">
-                    <X className="w-3 h-3" />
+                    <X className="w-3 h-3 text-white" />
                   </button>
                 </div>
               ))}
               {images.length < 5 && (
                 <label className="w-16 h-16 rounded-lg border border-dashed border-white/20 flex items-center justify-center cursor-pointer hover:border-white/40 transition-colors">
-                  {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <ImagePlus className="w-4 h-4 text-muted-foreground" />}
+                  {uploading ? <Loader2 className="w-4 h-4 animate-spin text-white" /> : <ImagePlus className="w-4 h-4 text-zinc-400" />}
                   <input type="file" accept="image/*" multiple className="hidden" onChange={handleImageUpload} disabled={uploading} />
                 </label>
               )}
             </div>
           </div>
 
-          <Button onClick={handleSubmit} disabled={createListing.isPending} className="w-full">
+          <Button onClick={handleSubmit} disabled={createListing.isPending} className="w-full bg-white/10 hover:bg-white/20 text-white border border-white/10">
             {createListing.isPending ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
             Publish Listing
           </Button>
