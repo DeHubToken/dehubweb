@@ -188,7 +188,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
                 {soldOut ? 'Sold Out' : 'Buy Now'}
               </Button>
             )}
-            <Button variant="outline" onClick={() => { onClose(); navigate(`/app/messages`); }} className="flex-1">
+            <Button variant="outline" onClick={() => { onClose(); navigate(`/app/messages/${sellerAddress}`); }} className="flex-1">
               <MessageSquare className="w-4 h-4 mr-2" />
               Message Seller
             </Button>
