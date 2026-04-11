@@ -43,12 +43,31 @@ interface TransferRecord {
   status: string;
 }
 
+/** Fetch block timestamp via eth_getBlockByNumber (no tx details). */
+async function getBlockTimestamp(rpcUrl: string, blockNumHex: string): Promise<number | null> {
+  try {
+    const res = await fetch(rpcUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jsonrpc: '2.0', id: 1,
+        method: 'eth_getBlockByNumber',
+        params: [blockNumHex, false],
+      }),
+    });
+    const json = await res.json();
+    if (json.result?.timestamp) {
+      return parseInt(json.result.timestamp, 16);
+    }
+  } catch { /* ignore */ }
+  return null;
+}
+
 async function fetchTransfersForChain(chain: typeof CHAINS[0]): Promise<TransferRecord[]> {
   try {
     const allTransfers: TransferRecord[] = [];
     let pageKey: string | undefined;
 
-    // Paginate through all results
     do {
       const params: any = {
         fromBlock: '0x0',
@@ -58,7 +77,7 @@ async function fetchTransfersForChain(chain: typeof CHAINS[0]): Promise<Transfer
         category: ['erc20'],
         withMetadata: true,
         order: 'desc',
-        maxCount: '0x3e8', // 1000 per page
+        maxCount: '0x3e8',
       };
       if (pageKey) params.pageKey = pageKey;
 
@@ -66,8 +85,7 @@ async function fetchTransfersForChain(chain: typeof CHAINS[0]): Promise<Transfer
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          jsonrpc: '2.0',
-          id: 1,
+          jsonrpc: '2.0', id: 1,
           method: 'alchemy_getAssetTransfers',
           params: [params],
         }),
@@ -82,6 +100,27 @@ async function fetchTransfersForChain(chain: typeof CHAINS[0]): Promise<Transfer
       const result = json.result;
       if (!result?.transfers?.length) break;
 
+      // Collect block numbers that lack metadata timestamps
+      const needTimestamp: Map<string, string> = new Map(); // blockHex -> blockHex
+      for (const tx of result.transfers) {
+        if (!tx.metadata?.blockTimestamp) {
+          needTimestamp.set(tx.blockNum, tx.blockNum);
+        }
+      }
+
+      // Batch-fetch missing block timestamps (max 10 concurrent)
+      const blockTimestamps: Record<string, number> = {};
+      const blockHexes = [...needTimestamp.keys()];
+      for (let i = 0; i < blockHexes.length; i += 10) {
+        const batch = blockHexes.slice(i, i + 10);
+        const results = await Promise.all(
+          batch.map(hex => getBlockTimestamp(chain.rpcUrl, hex))
+        );
+        batch.forEach((hex, idx) => {
+          if (results[idx] != null) blockTimestamps[hex] = results[idx]!;
+        });
+      }
+
       for (const tx of result.transfers) {
         const rawValue = tx.value ?? 0;
         const amount = rawValue < 1
@@ -89,9 +128,16 @@ async function fetchTransfersForChain(chain: typeof CHAINS[0]): Promise<Transfer
           : Math.floor(rawValue).toLocaleString('en-US');
 
         const blockNum = parseInt(tx.blockNum, 16);
-        const timestamp = tx.metadata?.blockTimestamp
-          ? Math.floor(new Date(tx.metadata.blockTimestamp).getTime() / 1000)
-          : Math.floor(Date.now() / 1000);
+
+        // Prefer metadata timestamp, then fetched block timestamp, then fallback
+        let timestamp: number;
+        if (tx.metadata?.blockTimestamp) {
+          timestamp = Math.floor(new Date(tx.metadata.blockTimestamp).getTime() / 1000);
+        } else if (blockTimestamps[tx.blockNum]) {
+          timestamp = blockTimestamps[tx.blockNum];
+        } else {
+          timestamp = Math.floor(Date.now() / 1000);
+        }
 
         allTransfers.push({
           txHash: tx.hash,
