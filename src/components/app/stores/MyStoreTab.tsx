@@ -85,11 +85,11 @@ export function MyStoreTab() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-foreground truncate">{l.title}</p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-muted-foreground flex items-center gap-1">
                       {(() => {
                         const usd = Number(l.price);
                         const dhb = prices?.DHB && prices.DHB > 0 ? Math.ceil(usd / prices.DHB) : null;
-                        return dhb ? `${dhb.toLocaleString()} DHB · $${usd.toFixed(2)}` : `$${usd.toFixed(2)}`;
+                        return dhb ? (<><img src={dehubCoin} alt="DHB" className="w-3.5 h-3.5 inline" />{dhb.toLocaleString()} · ${usd.toFixed(2)}</>) : `$${usd.toFixed(2)}`;
                       })()}
                        · <span className="capitalize">{l.status}</span>
                     </p>
