@@ -12,6 +12,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useStage } from '@/contexts/StageContext';
 import { ChainSelector, type ChainId } from './ChainSelector';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { useCommunityActivityUnreadCount } from '@/hooks/use-community-activity-unread';
 
 interface AppSidebarProps {
   isOpen: boolean;
@@ -32,6 +33,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
     setSelectedChainId(id);
     localStorage.setItem('preferred-chain-id', String(id));
   }, []);
+  const { unreadCount: communityActivityUnread } = useCommunityActivityUnreadCount();
 
   const mobileNavContent = (
     <>
@@ -65,6 +67,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
               onNavigate={onToggle}
               onClick={item.action === 'open-stages' ? () => { onToggle(); openStagesModal(); } : undefined}
               variant="mobile"
+              notificationCount={item.label === 'Communities' ? communityActivityUnread : undefined}
             />
           );
         })}
