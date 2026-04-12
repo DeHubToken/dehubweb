@@ -1525,6 +1525,54 @@ export type Database = {
           },
         ]
       }
+      saved_addresses: {
+        Row: {
+          address_line1: string
+          address_line2: string | null
+          city: string
+          country: string
+          created_at: string
+          full_name: string
+          id: string
+          is_default: boolean
+          label: string
+          postal_code: string
+          state: string
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          address_line1?: string
+          address_line2?: string | null
+          city?: string
+          country?: string
+          created_at?: string
+          full_name?: string
+          id?: string
+          is_default?: boolean
+          label?: string
+          postal_code?: string
+          state?: string
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          address_line1?: string
+          address_line2?: string | null
+          city?: string
+          country?: string
+          created_at?: string
+          full_name?: string
+          id?: string
+          is_default?: boolean
+          label?: string
+          postal_code?: string
+          state?: string
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       space_participants: {
         Row: {
           avatar: string | null
