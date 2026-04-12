@@ -248,7 +248,8 @@ export function PostAccessToggles({
 
   return (
     <>
-      <div className="px-4 py-2 border-t border-white/10 space-y-1">
+      <div className="relative border-t border-white/10">
+        <div className="px-4 py-2 space-y-1 max-h-[140px] overflow-y-auto scrollbar-none" style={{ maskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)', WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 100%)' }}>
         {/* Title - forced on for video/audio, toggleable for others */}
         {!hasVideoOrAudio && (
           <label className="flex items-center justify-between py-0.5 cursor-pointer">
@@ -394,6 +395,7 @@ export function PostAccessToggles({
           </div>
           <Switch checked={isTokenGated} onCheckedChange={handleTokenToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />
         </label>
+        </div>
       </div>
 
       {/* Category Drawer */}
