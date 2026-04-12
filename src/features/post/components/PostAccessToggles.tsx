@@ -395,6 +395,7 @@ export function PostAccessToggles({
           </div>
           <Switch checked={isTokenGated} onCheckedChange={handleTokenToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />
         </label>
+        </div>
       </div>
 
       {/* Category Drawer */}
