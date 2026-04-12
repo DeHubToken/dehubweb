@@ -5,7 +5,7 @@ import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTranslation } from 'react-i18next';
-import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag } from 'lucide-react';
+import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -220,7 +220,7 @@ function bundleNotifications(notifications: DeHubNotification[], enrichedAvatars
 }
 
 // Notification type tabs
-type NotificationTypeFilter = 'all' | 'likes' | 'follows' | 'comments' | 'reposts' | 'subscriptions' | 'tips' | 'livestreams' | 'communities' | 'stores';
+type NotificationTypeFilter = 'all' | 'likes' | 'follows' | 'comments' | 'reposts' | 'subscriptions' | 'tips' | 'livestreams' | 'communities' | 'stores' | 'features';
 
 const tabs: { labelKey: string; value: NotificationTypeFilter; icon: React.ElementType }[] = [
   { labelKey: 'notifications.all', value: 'all', icon: Bell },
@@ -228,6 +228,7 @@ const tabs: { labelKey: string; value: NotificationTypeFilter; icon: React.Eleme
   { labelKey: 'notifications.follows', value: 'follows', icon: UserPlus },
   { labelKey: 'notifications.comments', value: 'comments', icon: MessageSquareText },
   { labelKey: 'notifications.reposts', value: 'reposts', icon: Repeat2 },
+  { labelKey: 'notifications.features', value: 'features', icon: Lightbulb },
   { labelKey: 'notifications.communities', value: 'communities', icon: UsersRound },
   { labelKey: 'notifications.stores', value: 'stores', icon: Store },
   { labelKey: 'notifications.subs', value: 'subscriptions', icon: Users },
@@ -242,6 +243,7 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   follows: ['following', 'follow_request', 'followRequest', 'follow-request'],
   comments: ['comment', 'comment_reply', 'mention', 'feature_request_comment', 'governance_comment'],
   reposts: ['repost', 'quote'],
+  features: ['feature_request_like', 'feature_request_comment'],
   communities: ['community_join'],
   stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected'],
   subscriptions: ['subscription', 'ppv_purchase'],
