@@ -1143,7 +1143,6 @@ export default function AssistantPage() {
 
         if (data.clearHistory) {
           setMessages([
-            { id: 'initial', role: 'assistant', content: t('assistant.welcomeAlt') },
             { id: (Date.now() + 1).toString(), role: 'assistant', content: errorMessage }
           ]);
         } else {
@@ -1728,11 +1727,7 @@ export default function AssistantPage() {
         <button
           onClick={() => {
             startNewConversation();
-            setMessages([{
-              id: 'initial',
-              role: 'assistant',
-              content: t('assistant.welcomeAlt'),
-            }]);
+            setMessages([]);
             setInput('');
             setAttachedImage(null);
           }}
@@ -1747,11 +1742,7 @@ export default function AssistantPage() {
           <button
             onClick={() => {
               startNewConversation();
-              setMessages([{
-                id: 'initial',
-                role: 'assistant' as const,
-                content: t('assistant.welcomeAlt'),
-              }]);
+              setMessages([]);
               setInput('');
               setAttachedImage(null);
             }}
