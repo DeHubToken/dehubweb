@@ -125,32 +125,32 @@ export function ShippingAddressForm({ onChange }: Props) {
     setFields(EMPTY);
   };
 
-  const inputClass = "bg-white/5 border-white/10 text-primary-foreground";
+  const inputClass = "bg-white/5 border-white/10 text-primary-foreground placeholder:text-primary-foreground/50";
+  const checkboxClass = "border-white/30 data-[state=checked]:bg-white data-[state=checked]:text-black focus-visible:ring-0 focus-visible:ring-offset-0";
 
   return (
     <div className="space-y-3">
       <Label className="text-primary-foreground font-semibold">Shipping Address</Label>
 
-      {/* Saved address selector — always show if addresses exist */}
       {saved.length > 0 && (
         <div className="flex items-center gap-2">
           <div className="flex-1">
             <Select value={selectedId} onValueChange={handleSelectChange}>
-              <SelectTrigger className={inputClass}>
+              <SelectTrigger className={`${inputClass} [&>svg]:text-primary-foreground [&>span]:text-primary-foreground`}>
                 <SelectValue placeholder="Select a saved address..." />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="text-primary-foreground">
                 {saved.map(a => (
-                  <SelectItem key={a.id} value={a.id}>
-                    <span className="flex items-center gap-1.5">
-                      {a.is_default && <MapPin className="w-3.5 h-3.5 text-primary shrink-0" />}
-                      <span className="font-medium">{a.label}</span>
-                      <span className="text-muted-foreground">— {a.full_name}, {a.address_line1}, {a.city}</span>
+                  <SelectItem key={a.id} value={a.id} className="text-primary-foreground focus:bg-white/10 focus:text-primary-foreground">
+                    <span className="flex items-center gap-1.5 text-primary-foreground">
+                      {a.is_default && <MapPin className="w-3.5 h-3.5 text-primary-foreground shrink-0" />}
+                      <span className="font-medium text-primary-foreground">{a.label}</span>
+                      <span className="text-primary-foreground/70">— {a.full_name}, {a.address_line1}, {a.city}</span>
                     </span>
                   </SelectItem>
                 ))}
-                <SelectItem value="new">
-                  <span className="text-primary">+ Enter new address</span>
+                <SelectItem value="new" className="text-primary-foreground focus:bg-white/10 focus:text-primary-foreground">
+                  <span className="text-primary-foreground">+ Enter new address</span>
                 </SelectItem>
               </SelectContent>
             </Select>
@@ -207,7 +207,7 @@ export function ShippingAddressForm({ onChange }: Props) {
       {selectedId === 'new' && (
         <div className="rounded-lg border border-white/10 bg-white/5 p-3 space-y-2">
           <div className="flex items-center gap-2">
-            <Checkbox id="save-addr" checked={wantSave} onCheckedChange={v => setWantSave(!!v)} />
+            <Checkbox id="save-addr" className={checkboxClass} checked={wantSave} onCheckedChange={v => setWantSave(!!v)} />
             <label htmlFor="save-addr" className="text-sm text-primary-foreground cursor-pointer">Save this address for next time</label>
           </div>
           {wantSave && (
@@ -220,7 +220,7 @@ export function ShippingAddressForm({ onChange }: Props) {
                   className={`${inputClass} flex-1 h-8 text-sm`}
                 />
                 <div className="flex items-center gap-1.5">
-                  <Checkbox id="set-default" checked={isDefault} onCheckedChange={v => setIsDefault(!!v)} />
+                  <Checkbox id="set-default" className={checkboxClass} checked={isDefault} onCheckedChange={v => setIsDefault(!!v)} />
                   <label htmlFor="set-default" className="text-xs text-primary-foreground whitespace-nowrap cursor-pointer">Default</label>
                 </div>
               </div>
