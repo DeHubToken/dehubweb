@@ -806,13 +806,7 @@ export default function AssistantPage() {
 
 
   useEffect(() => {
-    setMessages([
-      {
-        id: 'initial',
-        role: 'assistant',
-        content: t('assistant.welcomeAlt')
-      }
-    ]);
+    setMessages([]);
   }, []);
 
   // Scroll to top on initial mount - ensures header is visible on mobile
