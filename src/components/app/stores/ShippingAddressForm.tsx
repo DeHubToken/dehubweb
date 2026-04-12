@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useSavedAddresses, useSaveAddress, useDeleteAddress, type SavedAddress } from '@/hooks/use-saved-addresses';
-import { BookmarkPlus, Trash2, Loader2, Check } from 'lucide-react';
+import { BookmarkPlus, Trash2, Loader2, Check, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface AddressFields {
@@ -143,7 +143,7 @@ export function ShippingAddressForm({ onChange }: Props) {
                 {saved.map(a => (
                   <SelectItem key={a.id} value={a.id}>
                     <span className="flex items-center gap-1.5">
-                      {a.is_default && <span className="text-yellow-400">★</span>}
+                      {a.is_default && <MapPin className="w-3.5 h-3.5 text-primary shrink-0" />}
                       <span className="font-medium">{a.label}</span>
                       <span className="text-muted-foreground">— {a.full_name}, {a.address_line1}, {a.city}</span>
                     </span>
