@@ -85,6 +85,8 @@ export function ShippingAddressForm({ onChange }: Props) {
   }, []);
 
   const handleSelectChange = (val: string) => {
+    saveAddress.reset();
+    setJustSaved(false);
     if (val === 'new') {
       setSelectedId('new');
       setFields(EMPTY);
@@ -227,7 +229,7 @@ export function ShippingAddressForm({ onChange }: Props) {
               <Button
                 size="sm"
                 onClick={handleSave}
-                disabled={saveAddress.isPending || saveAddress.isSuccess}
+                disabled={saveAddress.isPending}
                 className="w-full"
               >
                 {saveAddress.isPending ? (
