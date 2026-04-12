@@ -810,7 +810,7 @@ export default function AssistantPage() {
       {
         id: 'initial',
         role: 'assistant',
-        content: t('assistant.welcome')
+        content: t('assistant.welcomeAlt')
       }
     ]);
   }, []);
