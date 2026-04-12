@@ -1737,7 +1737,7 @@ export default function AssistantPage() {
             setMessages([{
               id: 'initial',
               role: 'assistant',
-              content: t('assistant.greeting'),
+              content: t('assistant.welcomeAlt'),
             }]);
             setInput('');
             setAttachedImage(null);
@@ -1756,7 +1756,7 @@ export default function AssistantPage() {
               setMessages([{
                 id: 'initial',
                 role: 'assistant' as const,
-                content: t('assistant.greeting'),
+                content: t('assistant.welcomeAlt'),
               }]);
               setInput('');
               setAttachedImage(null);
