@@ -11,6 +11,7 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import { ShippingAddressForm } from './ShippingAddressForm';
 import { ShoppingCart, MessageSquare, Loader2, ChevronLeft, ChevronRight, Package, Truck } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
