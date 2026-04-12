@@ -176,7 +176,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
               {!listing.is_digital && (
                 <div>
                   <Label>Shipping Address</Label>
-                  <Textarea value={shippingAddress} onChange={e => setShippingAddress(e.target.value)} placeholder="Your shipping address..." className="bg-white/5 border-white/10 min-h-[60px]" />
+                  <Textarea value={shippingAddress} onChange={e => setShippingAddress(e.target.value)} placeholder="Your shipping address..." className="bg-white/5 border-white/10 min-h-[60px] text-primary-foreground" />
                 </div>
               )}
               <div>
