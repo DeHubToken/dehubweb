@@ -11,7 +11,7 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
+import { ShippingAddressForm } from './ShippingAddressForm';
 import { ShoppingCart, MessageSquare, Loader2, ChevronLeft, ChevronRight, Package, Truck } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCreateOrder } from '@/hooks/use-stores';
@@ -174,10 +174,7 @@ export function ListingDetailDrawer({ listing, open, onClose }: Props) {
           {!isSelf && !soldOut && (
             <>
               {!listing.is_digital && (
-                <div>
-                  <Label>Shipping Address</Label>
-                  <Textarea value={shippingAddress} onChange={e => setShippingAddress(e.target.value)} placeholder="Your shipping address..." className="bg-white/5 border-white/10 min-h-[60px] text-primary-foreground" />
-                </div>
+                <ShippingAddressForm onChange={setShippingAddress} />
               )}
               <div>
                 <Label>Note to seller (optional)</Label>
