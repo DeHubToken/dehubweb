@@ -10,7 +10,6 @@ import { useTokenPrices } from '@/hooks/use-token-prices';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ShippingAddressForm } from './ShippingAddressForm';
 import { ShoppingCart, MessageSquare, Loader2, ChevronLeft, ChevronRight, Package, Truck } from 'lucide-react';
