@@ -1,132 +1,65 @@
 
 
-# Stores Feature — Full Plan
+# Structured Shipping Address with Autocomplete & Saved Addresses
 
-## Overview
-A peer-to-peer marketplace where any user can list physical or digital items for sale on their profile. Buyers browse, message, and transact — with DHB as the native payment rail on Base chain.
+## What changes
 
-## Database Schema (3 new tables)
+### 1. Database: Add `saved_addresses` table
+Store users' shipping addresses so they can reuse them across purchases.
 
-### `stores` — One per user
-| Column | Type | Notes |
-|--------|------|-------|
-| id | uuid PK | |
-| wallet_address | text NOT NULL | Owner, unique |
-| name | text | Store display name |
-| description | text | |
-| banner_url | text | |
-| avatar_url | text | |
-| is_active | boolean | Default true |
-| created_at / updated_at | timestamptz | |
+```
+saved_addresses
+- id (uuid, PK)
+- wallet_address (text, NOT NULL)
+- label (text, e.g. "Home", "Work")
+- full_name (text)
+- address_line1 (text)
+- address_line2 (text, nullable)
+- city (text)
+- state (text)
+- postal_code (text)
+- country (text)
+- is_default (boolean, default false)
+- created_at, updated_at
+```
 
-### `store_listings` — Individual items
-| Column | Type | Notes |
-|--------|------|-------|
-| id | uuid PK | |
-| store_id | uuid FK → stores | |
-| wallet_address | text | Seller (denormalized for RLS) |
-| title | text NOT NULL | |
-| description | text | |
-| price | numeric NOT NULL | In DHB |
-| currency | text | Default 'DHB' |
-| category | text | e.g. 'digital', 'merch', 'art', 'service', 'other' |
-| images | jsonb | Array of image URLs (up to 5) |
-| status | text | 'active' / 'sold' / 'draft' / 'archived' |
-| stock_quantity | integer | NULL = unlimited, 0 = sold out |
-| is_digital | boolean | Default false |
-| digital_file_url | text | For digital goods (gated) |
-| condition | text | 'new' / 'used' / 'like_new' |
-| shipping_info | text | Free-text shipping details |
-| created_at / updated_at | timestamptz | |
+RLS: users can only CRUD their own addresses (via `get_request_wallet_address()`).
 
-### `store_orders` — Purchase records
-| Column | Type | Notes |
-|--------|------|-------|
-| id | uuid PK | |
-| listing_id | uuid FK → store_listings | |
-| buyer_address | text NOT NULL | |
-| seller_address | text NOT NULL | |
-| amount | numeric | DHB paid |
-| tx_hash | text | On-chain proof |
-| status | text | 'pending' / 'paid' / 'shipped' / 'completed' / 'disputed' / 'cancelled' |
-| shipping_address | text | Encrypted or free-text |
-| notes | text | Buyer message |
-| created_at / updated_at | timestamptz | |
+### 2. Address autocomplete via Google Places API
+Use Google Places Autocomplete to provide real-time address suggestions as the user types in the street address field. This requires a Google Maps API key with Places API enabled.
 
-### RLS policies
-- Listings: public SELECT; owner INSERT/UPDATE/DELETE by wallet.
-- Orders: buyer or seller can SELECT their own; buyer can INSERT; both can UPDATE status.
-- Stores: public SELECT; owner INSERT/UPDATE/DELETE.
+- Will use the `@react-google-maps/api` or lightweight `use-places-autocomplete` library
+- On selection, auto-fills city, state, postal code, and country fields
 
-## Frontend Architecture
+### 3. New `ShippingAddressForm` component
+Replace the single Textarea with a structured form:
+- **Saved address dropdown** — if user has saved addresses, show a selector at the top
+- **Full Name** (text input)
+- **Street Address** (with Google Places autocomplete)
+- **Apt/Suite** (optional)
+- **City**, **State**, **Postal Code** (auto-filled from autocomplete, editable)
+- **Country** (auto-filled, editable)
+- **"Save this address"** checkbox + optional label field
+- Returns formatted address string to the parent
 
-### 1. New route: `/app/stores`
-- Add to `NAV_ITEMS` with `Store` icon
-- Register in `App.tsx` routes and `PersistentPageCache`
-- **StoresPage** — Two tabs: "Browse" (all active listings grid) and "My Store" (seller dashboard)
+### 4. Update `ListingDetailDrawer`
+Replace the Textarea with the new `ShippingAddressForm`. On purchase, the structured address is concatenated into the `shipping_address` field for the order. If "Save" is checked, the address is persisted to `saved_addresses`.
 
-### 2. Browse tab
-- Grid of `StoreListingCard` components (image, title, price in DHB, seller avatar)
-- Category filter chips (All, Digital, Merch, Art, Services)
-- Search bar
-- Sort: Newest, Price Low→High, Price High→Low
+### 5. Hooks
+- `useSavedAddresses(walletAddress)` — fetch saved addresses
+- `useSaveAddress()` — mutation to save/update an address
+- `useDeleteAddress()` — mutation to remove a saved address
 
-### 3. My Store tab (requires auth)
-- "Set Up Store" one-time flow if no store exists (name, description, banner upload)
-- Listings management: add / edit / archive / mark as sold
-- Orders received: list with status badges, mark shipped/completed
-- My purchases: orders placed as buyer
+## Technical details
 
-### 4. Create/Edit Listing Drawer
-- Title, description, price (DHB), category dropdown, condition
-- Up to 5 image uploads (to `community-media` or new `store-media` bucket)
-- Stock quantity toggle (limited vs unlimited)
-- Digital item toggle → file upload field
-- Shipping info free-text
-- Save as draft or publish
+- **Google API Key**: Will need a Google Maps API key with Places API enabled. Will use `add_secret` to request this from the user before proceeding.
+- The autocomplete input uses the Places API `getPlacePredictions` for suggestions and `getDetails` for structured address components.
+- Saved addresses are loaded when the drawer opens for non-digital items.
+- A default address auto-populates the form.
 
-### 5. Listing Detail Drawer
-- Image carousel, seller info with link to profile
-- "Buy Now" button → sends DHB on-chain to seller, records order
-- "Message Seller" → opens DM
-- Stock/availability indicator
-
-### 6. Profile integration
-- Add a "Store" tab on user profiles showing their active listings
-- Link from listing cards to seller's profile
-
-### 7. Notifications
-- Notify seller on new order (`store_order` type in `custom_notifications`)
-- Notify buyer on status change (shipped, completed)
-
-## Payment Flow
-1. Buyer clicks "Buy Now" → DHB transfer via `sendERC20Token` (same pattern as tips)
-2. On tx success → insert into `store_orders` with tx_hash
-3. Seller sees order in "My Store" → marks shipped → buyer confirms receipt → completed
-4. Dispute flow: buyer can flag within 7 days (future enhancement)
-
-## Storage
-- New bucket `store-media` (public) for listing images and digital file uploads
-
-## Files to create/modify
-- **Create**: `src/pages/app/StoresPage.tsx`
-- **Create**: `src/components/app/stores/` — StoreListingCard, CreateListingDrawer, ListingDetailDrawer, MyStoreTab, BrowseTab, SetupStoreFlow, OrdersList
-- **Create**: `src/hooks/use-stores.ts` — queries for listings, orders, store
-- **Modify**: `src/constants/app.constants.ts` — add nav item
-- **Modify**: `src/App.tsx` — add route
-- **Modify**: `src/components/app/PersistentPageCache.tsx` — add cached page
-- **Migration**: 3 tables + RLS + realtime on `store_orders`
-- **Storage bucket**: `store-media`
-
-## Implementation order
-1. Database migration (tables, RLS, realtime)
-2. Storage bucket
-3. Hooks and types
-4. StoresPage with Browse + My Store tabs
-5. Create/Edit listing drawer
-6. Listing detail drawer with buy flow
-7. Order management UI
-8. Notifications trigger
-9. Profile store tab integration
-10. Nav item + routing
+## Files to create/edit
+- **Migration**: Create `saved_addresses` table with RLS
+- **New**: `src/components/app/stores/ShippingAddressForm.tsx`
+- **New**: `src/hooks/use-saved-addresses.ts`
+- **Edit**: `src/components/app/stores/ListingDetailDrawer.tsx` — swap Textarea for new form
 
