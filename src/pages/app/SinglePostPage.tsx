@@ -749,11 +749,11 @@ export default function SinglePostPage() {
       <>
         {/* Mobile/Tablet: Full immersive drawer (swipe down to close) */}
         {isMobileView && (
-          <Drawer open={true} onOpenChange={handleDrawerDismiss}>
+          <Drawer open={true} onOpenChange={handleDrawerDismiss} snapPoints={[1]} fadeFromIndex={-1}>
             <DrawerContent 
               hideHandle 
               noOverlay
-              className="!inset-0 !mt-0 !h-full !max-h-full !rounded-none !border-0 bg-black"
+              className="!inset-0 !mt-0 !h-full !max-h-full !rounded-none !border-0 bg-black [&[data-vaul-drawer]]:!transform-none [&[data-vaul-drawer]]:!transition-none"
             >
               <div 
                 ref={mobileScrollContainerRef}
@@ -962,11 +962,11 @@ export default function SinglePostPage() {
         }}
       />
       {isMobileView ? (
-        <Drawer open={true} onOpenChange={handleDrawerDismiss}>
+        <Drawer open={true} onOpenChange={handleDrawerDismiss} snapPoints={[1]} fadeFromIndex={-1}>
           <DrawerContent 
             hideHandle 
             noOverlay
-            className="!inset-0 !mt-0 !h-full !max-h-full !rounded-none !border-0 bg-black"
+            className="!inset-0 !mt-0 !h-full !max-h-full !rounded-none !border-0 bg-black [&[data-vaul-drawer]]:!transform-none [&[data-vaul-drawer]]:!transition-none"
           >
             <div className={`flex flex-col h-full overflow-y-auto ${isLivePost ? 'bg-black' : ''}`}>
               {postContent}
