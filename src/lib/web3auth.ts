@@ -879,8 +879,25 @@ export async function setupAAProvider(eoaProvider: IProvider): Promise<AccountAb
       return null;
     }
 
+    // CRITICAL: AccountAbstractionProvider calls personal_sign on eoaProvider internally
+    // when building the Safe signature. If eoaProvider is the Web3Auth modal provider,
+    // that personal_sign routes through WsEmbed → api-wallet.web3auth.io/auth/verify,
+    // which rejects ERC-6492 signatures (> 500 chars) with "Invalid signature" (-32603).
+    //
+    // Fix: swap to an EthereumPrivateKeyProvider built from the raw key — pure in-process
+    // signing, no WsEmbed, no network call. The resulting Smart Account address is identical
+    // because it's derived from the same private key.
+    let actualEoaProvider: IProvider = eoaProvider;
+    if (web3authInstance && !(eoaProvider instanceof EthereumPrivateKeyProvider)) {
+      const privKey = extractPrivKeyFromConnector(web3authInstance);
+      if (privKey) {
+        console.log('[Web3Auth] AA setup: replacing modal provider with EthereumPrivateKeyProvider to bypass WsEmbed');
+        actualEoaProvider = await buildProviderFromPrivKey(privKey);
+      }
+    }
+
     const aaProvider = await AccountAbstractionProvider.getProviderInstance({
-      eoaProvider,
+      eoaProvider: actualEoaProvider,
       smartAccountInit: new SafeSmartAccount(),
       chainConfig: {
         chainNamespace: CHAIN_NAMESPACES.EIP155,
