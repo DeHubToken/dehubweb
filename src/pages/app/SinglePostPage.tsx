@@ -962,13 +962,16 @@ export default function SinglePostPage() {
         }}
       />
       {isMobileView ? (
-        <Drawer open={true} onOpenChange={handleDrawerDismiss} modal={false}>
+        <Drawer open={true} onOpenChange={handleDrawerDismiss} modal={false} snapPoints={[1]} dismissible>
           <DrawerContent 
             hideHandle 
             noOverlay
-            className="!inset-0 !mt-0 !h-full !max-h-full !rounded-none !border-0 !bg-black"
+            className="!h-[100dvh] !max-h-[100dvh] !mt-0 !rounded-none !border-0 !bg-black"
           >
-            <div className={`flex flex-col h-full overflow-y-auto ${isLivePost ? 'bg-black' : ''}`}>
+            <div 
+              className={`flex flex-col h-full overflow-y-auto ${isLivePost ? 'bg-black' : ''}`}
+              data-vaul-no-drag
+            >
               {postContent}
             </div>
           </DrawerContent>
