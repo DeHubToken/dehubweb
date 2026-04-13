@@ -586,6 +586,23 @@ export default function SinglePostPage() {
   // Ref for mobile scroll container (needed for IntersectionObserver)
   const mobileScrollContainerRef = useRef<HTMLDivElement>(null);
 
+  // Mobile detection for drawer behavior
+  const [isMobileView, setIsMobileView] = useState(() => 
+    typeof window !== 'undefined' && window.innerWidth < 1024
+  );
+  useEffect(() => {
+    const onResize = () => setIsMobileView(window.innerWidth < 1024);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  const handleDrawerDismiss = (open: boolean) => {
+    if (!open) {
+      if (hasHistory) navigate(-1);
+      else navigate('/app');
+    }
+  };
+
   // Only scroll to top when PUSHING to the post page (not on back navigation)
   // useLayoutEffect runs before paint to prevent flash at wrong position
   useLayoutEffect(() => {
