@@ -749,17 +749,20 @@ export default function SinglePostPage() {
       <>
         {/* Mobile/Tablet: Full immersive drawer (swipe down to close) */}
         {isMobileView && (
-          <Drawer open={true} onOpenChange={handleDrawerDismiss} modal={false}>
+          <Drawer open={true} onOpenChange={handleDrawerDismiss} modal={false} snapPoints={[1]} dismissible>
             <DrawerContent 
               hideHandle 
               noOverlay
-              className="!inset-0 !mt-0 !h-full !max-h-full !rounded-none !border-0 !bg-black"
+              className="!h-[100dvh] !max-h-[100dvh] !mt-0 !rounded-none !border-0 !bg-black"
             >
               <div 
                 ref={mobileScrollContainerRef}
                 className="flex flex-col h-full bg-black overflow-y-auto"
+                data-vaul-no-drag
               >
                 <div className="relative">
+                  {/* Drag handle zone — swipe down here to dismiss */}
+                  <div className="absolute top-0 left-0 right-0 h-12 z-[60]" />
                   <ImmersiveVideoHeader
                     channel={videoData.channel}
                     channelAvatar={videoData.channelAvatar}
