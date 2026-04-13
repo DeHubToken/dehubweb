@@ -869,6 +869,15 @@ export async function showWeb3AuthCheckout(): Promise<void> {
  * api-wallet.web3auth.io/auth/verify and fails with 400 when accountAbstractionConfig
  * is set on the modal directly.
  *
+ * IMPORTANT: AccountAbstractionProvider calls personal_sign on eoaProvider internally
+ * when building the Safe signature. If eoaProvider is the Web3Auth modal provider,
+ * that personal_sign routes through WsEmbed → api-wallet.web3auth.io/auth/verify,
+ * which rejects ERC-6492 signatures (> 500 chars) with "Invalid signature" (-32603).
+ *
+ * Fix: Extract the raw private key from the provider (via private_key RPC method)
+ * and build an EthereumPrivateKeyProvider for pure in-process signing — no WsEmbed,
+ * no network calls. The Smart Account address is identical (same key → same Safe).
+ *
  * Returns null if Pimlico config is unavailable (AA is best-effort).
  */
 export async function setupAAProvider(eoaProvider: IProvider): Promise<AccountAbstractionProvider | null> {
@@ -879,8 +888,36 @@ export async function setupAAProvider(eoaProvider: IProvider): Promise<AccountAb
       return null;
     }
 
+    // Resolve the signing provider — bypass WsEmbed by using EthereumPrivateKeyProvider.
+    // WsEmbed intercepts personal_sign and routes it through api-wallet.web3auth.io/auth/verify,
+    // which rejects ERC-6492 signatures (> 500 chars) with "Invalid signature" since Apr 10 2026.
+    let signingProvider: IProvider = eoaProvider;
+
+    if (!(eoaProvider instanceof EthereumPrivateKeyProvider)) {
+      // Try to extract private key directly from the modal provider (standard Web3Auth RPC method).
+      // Works in the happy path (WsEmbed login succeeded) and gives the same key as DKG produced.
+      try {
+        const privKey = await eoaProvider.request({ method: 'private_key' }) as string;
+        if (privKey && privKey.length >= 32) {
+          signingProvider = await buildProviderFromPrivKey(privKey);
+          console.log('[Web3Auth] AA setup: using EthereumPrivateKeyProvider (bypassed WsEmbed)');
+        }
+      } catch {
+        // private_key not accessible on this provider — try connector fallback
+        const privKey = extractPrivKeyFromConnector(web3authInstance!);
+        if (privKey) {
+          signingProvider = await buildProviderFromPrivKey(privKey);
+          console.log('[Web3Auth] AA setup: using EthereumPrivateKeyProvider via connector fallback');
+        } else {
+          console.warn('[Web3Auth] AA setup: could not extract private key — WsEmbed may intercept signing');
+        }
+      }
+    } else {
+      console.log('[Web3Auth] AA setup: eoaProvider is already EthereumPrivateKeyProvider — using as-is');
+    }
+
     const aaProvider = await AccountAbstractionProvider.getProviderInstance({
-      eoaProvider,
+      eoaProvider: signingProvider,
       smartAccountInit: new SafeSmartAccount(),
       chainConfig: {
         chainNamespace: CHAIN_NAMESPACES.EIP155,
