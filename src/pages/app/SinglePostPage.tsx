@@ -586,6 +586,23 @@ export default function SinglePostPage() {
   // Ref for mobile scroll container (needed for IntersectionObserver)
   const mobileScrollContainerRef = useRef<HTMLDivElement>(null);
 
+  // Mobile detection for drawer behavior
+  const [isMobileView, setIsMobileView] = useState(() => 
+    typeof window !== 'undefined' && window.innerWidth < 1024
+  );
+  useEffect(() => {
+    const onResize = () => setIsMobileView(window.innerWidth < 1024);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  const handleDrawerDismiss = (open: boolean) => {
+    if (!open) {
+      if (hasHistory) navigate(-1);
+      else navigate('/app');
+    }
+  };
+
   // Only scroll to top when PUSHING to the post page (not on back navigation)
   // useLayoutEffect runs before paint to prevent flash at wrong position
   useLayoutEffect(() => {
@@ -730,25 +747,34 @@ export default function SinglePostPage() {
     
     return (
       <>
-        {/* Mobile/Tablet: Full immersive scrollable overlay */}
-         <div 
-          ref={mobileScrollContainerRef}
-          className={`flex flex-col fixed inset-0 bg-black lg:hidden overflow-y-auto ${showEditModal || showDeleteModal ? 'z-40' : 'z-[70]'}`}
-        >
-          <div className="relative">
-            <ImmersiveVideoHeader
-              channel={videoData.channel}
-              channelAvatar={videoData.channelAvatar}
-              creatorUsername={videoData.creatorUsername}
-              creatorId={videoData.creatorId}
-              verified={videoData.verified}
-              showBack={hasHistory}
-            />
-            {renderContent()}
-          </div>
-          {/* Related Videos Feed */}
-          {id && <RelatedVideosFeed currentVideoId={id} scrollContainerRef={mobileScrollContainerRef} />}
-        </div>
+        {/* Mobile/Tablet: Full immersive drawer (swipe down to close) */}
+        {isMobileView && (
+          <Drawer open={true} onOpenChange={handleDrawerDismiss}>
+            <DrawerContent 
+              hideHandle 
+              noOverlay
+              className="!inset-0 !mt-0 !h-full !max-h-full !rounded-none !border-0 bg-black"
+            >
+              <div 
+                ref={mobileScrollContainerRef}
+                className="flex flex-col h-full bg-black overflow-y-auto"
+              >
+                <div className="relative">
+                  <ImmersiveVideoHeader
+                    channel={videoData.channel}
+                    channelAvatar={videoData.channelAvatar}
+                    creatorUsername={videoData.creatorUsername}
+                    creatorId={videoData.creatorId}
+                    verified={videoData.verified}
+                    showBack={hasHistory}
+                  />
+                  {renderContent()}
+                </div>
+                {id && <RelatedVideosFeed currentVideoId={id} scrollContainerRef={mobileScrollContainerRef} />}
+              </div>
+            </DrawerContent>
+          </Drawer>
+        )}
         
         {/* Desktop: Standard layout with header */}
         <div className="hidden lg:flex lg:flex-col">
@@ -903,8 +929,22 @@ export default function SinglePostPage() {
   // Standard layout for other content types
   const isLivePost = contentType === 'live';
 
+  const postContent = (
+    <>
+      <PageHeader showBack={hasHistory} />
+      <div className="px-3 sm:px-4 pb-8 pt-2">
+        <div className="max-w-2xl mx-auto">
+          {renderContent()}
+          {isImagePost && id && <RelatedImagesFeed currentPostId={id} />}
+          {isAudioPost && id && <RelatedVideosFeed currentVideoId={id} />}
+          {!isImagePost && !isVideoPost && !isAudioPost && id && <RelatedPostsFeed currentPostId={id} />}
+        </div>
+      </div>
+    </>
+  );
+
   return (
-    <div className={`flex flex-col ${isLivePost ? 'bg-black min-h-screen' : ''}`}>
+    <>
       <SEOHead
         title={seoTitle}
         description={seoDesc}
@@ -921,17 +961,23 @@ export default function SinglePostPage() {
           publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },
         }}
       />
-      <PageHeader showBack={hasHistory} />
-      
-      <div className="px-3 sm:px-4 pb-8 pt-2">
-        <div className="max-w-2xl mx-auto">
-          {renderContent()}
-          {/* Related content feeds */}
-          {isImagePost && id && <RelatedImagesFeed currentPostId={id} />}
-          {isAudioPost && id && <RelatedVideosFeed currentVideoId={id} />}
-          {!isImagePost && !isVideoPost && !isAudioPost && id && <RelatedPostsFeed currentPostId={id} />}
+      {isMobileView ? (
+        <Drawer open={true} onOpenChange={handleDrawerDismiss}>
+          <DrawerContent 
+            hideHandle 
+            noOverlay
+            className="!inset-0 !mt-0 !h-full !max-h-full !rounded-none !border-0 bg-black"
+          >
+            <div className={`flex flex-col h-full overflow-y-auto ${isLivePost ? 'bg-black' : ''}`}>
+              {postContent}
+            </div>
+          </DrawerContent>
+        </Drawer>
+      ) : (
+        <div className={`flex flex-col ${isLivePost ? 'bg-black min-h-screen' : ''}`}>
+          {postContent}
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 }
