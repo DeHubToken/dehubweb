@@ -167,7 +167,8 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
 
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   
-  const showHomePagePersisted = isPostRoute && cameFromHome;
+  const navigatingFromHomeToPost = isPostRoute && prevPathRef.current === '/app';
+  const showHomePagePersisted = isPostRoute && (cameFromHome || navigatingFromHomeToPost);
   const isHomePage = location.pathname === '/app';
   const isCached = isCachedPageRoute(location.pathname);
   // Dynamic routes: post overlay, single post, post info, or username profiles
