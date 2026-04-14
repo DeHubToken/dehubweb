@@ -241,6 +241,28 @@ function clearWeb3AuthStorage(): void {
 }
 
 /**
+ * Remove Web3Auth's injected wallet button/widget from the DOM.
+ * Also ensures no injected element blocks page scrolling.
+ */
+function removeWeb3AuthWalletButton(): void {
+  if (typeof document === 'undefined') return;
+  // Remove wallet button elements
+  const selectors = [
+    '.w3a-wallet-button',
+    '[class*="wallet-button"]',
+    '#w3a-wallet-widget',
+    '[id*="wallet-widget"]',
+  ];
+  for (const sel of selectors) {
+    document.querySelectorAll(sel).forEach(el => el.remove());
+  }
+  // Ensure body scroll is not blocked
+  document.body.style.overflow = '';
+  document.body.style.position = '';
+  document.documentElement.style.overflow = '';
+}
+
+/**
  * Properly invalidate the Auth (openlogin) session — bypasses the connector's status check.
  *
  * The outer web3auth.logout({ cleanup: true }) fails when the connector is "not connected"
