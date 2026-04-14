@@ -241,6 +241,43 @@ function clearWeb3AuthStorage(): void {
 }
 
 /**
+ * Remove Web3Auth's injected wallet button/widget from the DOM.
+ * Also ensures no injected element blocks page scrolling.
+ */
+export function removeWeb3AuthWalletButton(): void {
+  if (typeof document === 'undefined') return;
+  // Remove wallet button elements
+  const selectors = [
+    '.w3a-wallet-button',
+    '[class*="wallet-button"]',
+    '#w3a-wallet-widget',
+    '[id*="wallet-widget"]',
+  ];
+  for (const sel of selectors) {
+    document.querySelectorAll(sel).forEach(el => el.remove());
+  }
+  // Ensure body scroll is not blocked by Web3Auth
+  document.body.style.overflow = '';
+  document.body.style.position = '';
+  document.documentElement.style.overflow = '';
+}
+
+/**
+ * Watch for Web3Auth injected wallet button and remove it immediately.
+ * Uses MutationObserver so it catches async injections after login.
+ */
+let walletButtonObserver: MutationObserver | null = null;
+export function startWalletButtonCleanup(): void {
+  if (typeof document === 'undefined' || walletButtonObserver) return;
+  walletButtonObserver = new MutationObserver(() => {
+    removeWeb3AuthWalletButton();
+  });
+  walletButtonObserver.observe(document.body, { childList: true, subtree: true });
+  // Also clean up immediately
+  removeWeb3AuthWalletButton();
+}
+
+/**
  * Properly invalidate the Auth (openlogin) session — bypasses the connector's status check.
  *
  * The outer web3auth.logout({ cleanup: true }) fails when the connector is "not connected"
@@ -493,6 +530,9 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
           sessionTime: 86400,
           uiConfig: { modalZIndex: "99999" } as any,
+          // Disable the floating wallet button that Web3Auth injects after login
+          enableWalletConnect: false,
+          walletPlugins: [],
         };
 
         web3authInstance = new Web3Auth(initOptions);
@@ -504,7 +544,9 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           )
         ]);
 
-        // Polling for ready state if stuck in not_ready (faster: 200ms × 15 = 3s max)
+        // Remove any injected wallet button/widget that blocks scrolling
+        removeWeb3AuthWalletButton();
+
         if (web3authInstance.status === "not_ready") {
           for (let i = 0; i < 15; i++) {
             await new Promise(r => setTimeout(r, 200));
