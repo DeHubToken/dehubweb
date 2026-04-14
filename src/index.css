@@ -492,19 +492,45 @@ html {
   display: none !important;
 }
 
+/* Hide the Web3Auth floating wallet button completely */
+.w3a-wallet-button,
+[class*="wallet-button"],
+.w3a--wallet-btn,
+#w3a-wallet-widget,
+[id*="wallet-widget"],
+button[class*="w3a"][class*="wallet"] {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  pointer-events: none !important;
+}
+
 /* Fix Web3Auth injected iframes causing layout gaps on MetaMask Mobile */
 /* These iframes have position: fixed; top: 0 which pushes content down */
 iframe[id*="auth-iframe"],
 iframe[id*="walletIframe"],
 iframe[id*="web3auth"],
 iframe[src*="web3auth"],
-#w3a-container,
-[id^="w3a-"] {
+#w3a-container {
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
   width: 0 !important;
   height: 0 !important;
+  border: none !important;
+  pointer-events: none !important;
+  background: transparent !important;
+}
+
+/* W3A parent/injected elements — hide but don't block scroll */
+[id^="w3a-"]:not(#w3a-modal) {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
   border: none !important;
   pointer-events: none !important;
   background: transparent !important;
@@ -519,6 +545,12 @@ iframe[src*="web3auth"][style*="display: block"] {
   width: 100% !important;
   height: 100% !important;
   pointer-events: auto !important;
+}
+
+/* Ensure Web3Auth injected elements never block page scroll */
+body:has([id^="w3a-"]) {
+  overflow: auto !important;
+  -webkit-overflow-scrolling: touch !important;
 }
 
 /* Fallback: ensure any injected elements at top of page match background */
