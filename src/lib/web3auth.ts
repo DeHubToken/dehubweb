@@ -507,7 +507,9 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           )
         ]);
 
-        // Polling for ready state if stuck in not_ready (faster: 200ms × 15 = 3s max)
+        // Remove any injected wallet button/widget that blocks scrolling
+        removeWeb3AuthWalletButton();
+
         if (web3authInstance.status === "not_ready") {
           for (let i = 0; i < 15; i++) {
             await new Promise(r => setTimeout(r, 200));
