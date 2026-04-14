@@ -51,6 +51,7 @@ import {
   isWalletInAppBrowser,
   setupAAProvider,
   removeWeb3AuthWalletButton,
+  startWalletButtonCleanup,
 } from '@/lib/web3auth';
 import type { Web3Auth } from '@web3auth/modal';
 
