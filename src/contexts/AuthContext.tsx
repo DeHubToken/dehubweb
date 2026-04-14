@@ -50,6 +50,7 @@ import {
   isMobileDevice,
   isWalletInAppBrowser,
   setupAAProvider,
+  removeWeb3AuthWalletButton,
 } from '@/lib/web3auth';
 import type { Web3Auth } from '@web3auth/modal';
 
