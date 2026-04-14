@@ -1,65 +1,41 @@
 
 
-# Structured Shipping Address with Autocomplete & Saved Addresses
+## Problem Analysis
 
-## What changes
+The fiat purchase gets stuck on the "Processing Purchase" spinner because:
 
-### 1. Database: Add `saved_addresses` table
-Store users' shipping addresses so they can reuse them across purchases.
+1. **Polling starts before payment is complete** — When the user clicks Buy, the checkout URL opens in a new tab and polling starts immediately in the original tab. But the backend has no transaction record yet because the user hasn't completed the Stripe checkout.
 
-```
-saved_addresses
-- id (uuid, PK)
-- wallet_address (text, NOT NULL)
-- label (text, e.g. "Home", "Work")
-- full_name (text)
-- address_line1 (text)
-- address_line2 (text, nullable)
-- city (text)
-- state (text)
-- postal_code (text)
-- country (text)
-- is_default (boolean, default false)
-- created_at, updated_at
-```
+2. **Empty API responses aren't handled** — When `getDPaySessionStatus` returns an empty array (no transaction found for that session ID yet), the code sets `result = {}`. None of the status checks match (`sent`, `succeeded`, `failed`, etc.), so it just keeps polling silently for 3 minutes.
 
-RLS: users can only CRUD their own addresses (via `get_request_wallet_address()`).
+3. **The redirect URL with `__SESSION_ID__` opens in the new tab** — The success redirect goes to the new tab, not the original one, so the original tab never gets the URL-based confirmation either.
 
-### 2. Address autocomplete via Google Places API
-Use Google Places Autocomplete to provide real-time address suggestions as the user types in the street address field. This requires a Google Maps API key with Places API enabled.
+## Plan
 
-- Will use the `@react-google-maps/api` or lightweight `use-places-autocomplete` library
-- On selection, auto-fills city, state, postal code, and country fields
+### 1. Handle empty/missing session status gracefully
+In `startPolling`, after parsing the API response, check if the result is empty/undefined. If so, just continue polling (it means the transaction hasn't been created yet). This is already happening, but the real fix is in #2.
 
-### 3. New `ShippingAddressForm` component
-Replace the single Textarea with a structured form:
-- **Saved address dropdown** — if user has saved addresses, show a selector at the top
-- **Full Name** (text input)
-- **Street Address** (with Google Places autocomplete)
-- **Apt/Suite** (optional)
-- **City**, **State**, **Postal Code** (auto-filled from autocomplete, editable)
-- **Country** (auto-filled, editable)
-- **"Save this address"** checkbox + optional label field
-- Returns formatted address string to the parent
+### 2. Add optimistic early-exit for the original tab
+After a reasonable number of polls with empty results (e.g., 20 polls = 30 seconds), if no status has been returned at all, assume the user either:
+- Hasn't completed checkout yet (show a "Waiting for payment..." message)
+- Or completed it and the session ID format doesn't match
 
-### 4. Update `ListingDetailDrawer`
-Replace the Textarea with the new `ShippingAddressForm`. On purchase, the structured address is concatenated into the `shipping_address` field for the order. If "Save" is checked, the address is persisted to `saved_addresses`.
+### 3. Show better status messages during polling
+- First phase (0-30s): "Complete payment in the checkout tab..."
+- After 30s with no status: "Still waiting for payment confirmation..."
+- After Stripe confirms: immediate success (already implemented)
 
-### 5. Hooks
-- `useSavedAddresses(walletAddress)` — fetch saved addresses
-- `useSaveAddress()` — mutation to save/update an address
-- `useDeleteAddress()` — mutation to remove a saved address
+### 4. Handle the empty result case explicitly in the polling
+In the polling callback, when `result` is empty (no `status_stripe`, no `tokenSendStatus`), don't treat it as an unknown state — just skip that poll iteration. Also log a count so we can detect if the API never returns data for that session ID.
 
-## Technical details
+### Technical Changes
 
-- **Google API Key**: Will need a Google Maps API key with Places API enabled. Will use `add_secret` to request this from the user before proceeding.
-- The autocomplete input uses the Places API `getPlacePredictions` for suggestions and `getDetails` for structured address components.
-- Saved addresses are loaded when the drawer opens for non-digital items.
-- A default address auto-populates the form.
+**File: `src/pages/app/BuyCoinsPage.tsx`**
+- Add a `pollPhase` state or ref to track whether we've received any non-empty response
+- Update the polling message text based on phase (waiting for checkout vs. processing tokens)
+- After 60 empty polls (90s), auto-dismiss with a "check wallet" message instead of spinning forever
+- Ensure `stripeConfirmed` short-circuits to success as designed
 
-## Files to create/edit
-- **Migration**: Create `saved_addresses` table with RLS
-- **New**: `src/components/app/stores/ShippingAddressForm.tsx`
-- **New**: `src/hooks/use-saved-addresses.ts`
-- **Edit**: `src/components/app/stores/ListingDetailDrawer.tsx` — swap Textarea for new form
+**File: `src/lib/api/dpay.ts` (getDPaySessionStatus)**
+- When the API returns an empty array or `{}`, return a clearly typed "pending" status instead of spreading empty object fields, so the polling logic can distinguish "no data yet" from "data with unknown status"
 
