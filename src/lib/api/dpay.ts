@@ -43,8 +43,9 @@ export interface DPayTransaction {
 /** Post-purchase polling: status by session ID (GET /dpay/tnxs?sid=...) */
 export interface DPaySessionStatus {
   status_stripe?: 'pending' | 'succeeded' | 'failed' | 'canceled' | 'expired';
-  tokenSendStatus?: 'sent' | 'sending' | 'queued' | 'failed' | 'not_sent';
+  tokenSendStatus?: 'pending' | 'sent' | 'sending' | 'queued' | 'failed' | 'not_sent';
   tokenSendTxnHash?: string;
+  _empty?: boolean;
   [key: string]: unknown;
 }
 
