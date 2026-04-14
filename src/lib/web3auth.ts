@@ -244,7 +244,7 @@ function clearWeb3AuthStorage(): void {
  * Remove Web3Auth's injected wallet button/widget from the DOM.
  * Also ensures no injected element blocks page scrolling.
  */
-function removeWeb3AuthWalletButton(): void {
+export function removeWeb3AuthWalletButton(): void {
   if (typeof document === 'undefined') return;
   // Remove wallet button elements
   const selectors = [
