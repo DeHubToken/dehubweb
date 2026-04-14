@@ -515,7 +515,7 @@ export default function BuyCoinsPage() {
                 <Loader2 className="w-10 h-10 animate-spin text-white" />
                 <h3 className="text-white font-semibold text-lg">Processing Purchase</h3>
                 <p className="text-sm text-white/60">
-                  Payment received! Delivering tokens to your wallet...
+                  {pollingMessage}
                 </p>
                 <Button
                   variant="ghost"
