@@ -285,7 +285,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     // Proactively init/check Web3Auth when modal opens
     initWeb3Auth()
-      .then((instance) => setWeb3auth(instance))
+      .then((instance) => {
+        setWeb3auth(instance);
+        startWalletButtonCleanup();
+      })
       .catch((err) => console.warn('[Auth] Web3Auth init failed on modal open:', err));
   }, []);
   
