@@ -143,44 +143,64 @@ export default function BuyCoinsPage() {
     if (pollingRef.current) clearInterval(pollingRef.current);
 
     let attempts = 0;
-    const maxAttempts = 60; // 3 minutes at 3s intervals
+    const maxAttempts = 120; // 3 minutes at 1.5s intervals
+    let stripeConfirmed = false;
 
     pollingRef.current = setInterval(async () => {
       attempts++;
       if (attempts > maxAttempts) {
         clearInterval(pollingRef.current!);
         pollingRef.current = null;
-        setPurchaseStatus('failed');
-        toast.error('Purchase verification timed out. Check your wallet later.');
+        // If stripe already confirmed, treat as success (tokens are guaranteed)
+        if (stripeConfirmed) {
+          setPurchaseStatus('success');
+          toast.success('Purchase complete! Tokens arriving shortly.', { id: 'buy-status' });
+          refreshWalletBalances();
+        } else {
+          setPurchaseStatus('failed');
+          toast.error('Purchase verification timed out. Check your wallet later.', { id: 'buy-status' });
+        }
         return;
       }
 
       try {
         const status = await getDPaySessionStatus(sessionId);
-          console.log('[Buy] Polling session status:', JSON.stringify(status));
+        console.log('[Buy] Polling session status:', JSON.stringify(status));
 
-          const sendStatus = (status.tokenSendStatus || '').toLowerCase();
-          const stripeStatus = (status.status_stripe || '').toLowerCase();
+        const sendStatus = (status.tokenSendStatus || '').toLowerCase();
+        const stripeStatus = (status.status_stripe || '').toLowerCase();
 
-          // Success: tokens delivered
-          if (sendStatus === 'sent' || sendStatus === 'completed' || sendStatus === 'success') {
-            clearInterval(pollingRef.current!);
-            pollingRef.current = null;
-            setPurchaseStatus('success');
-            toast.success('Tokens delivered to your wallet!');
-            refreshWalletBalances();
-          } else if (sendStatus === 'failed' || stripeStatus === 'failed' || stripeStatus === 'canceled' || stripeStatus === 'expired') {
-            clearInterval(pollingRef.current!);
-            pollingRef.current = null;
-            setPurchaseStatus('failed');
-            toast.error('Purchase failed. Please try again.');
-          } else if (stripeStatus === 'succeeded' || stripeStatus === 'complete' || stripeStatus === 'paid') {
-            // Payment succeeded, tokens still processing — keep polling
-          }
+        // Success: tokens delivered
+        if (sendStatus === 'sent' || sendStatus === 'completed' || sendStatus === 'success') {
+          clearInterval(pollingRef.current!);
+          pollingRef.current = null;
+          setPurchaseStatus('success');
+          toast.success('Tokens delivered to your wallet! 🎉', { id: 'buy-status' });
+          refreshWalletBalances();
+        } else if (sendStatus === 'failed' || stripeStatus === 'failed' || stripeStatus === 'canceled' || stripeStatus === 'expired') {
+          clearInterval(pollingRef.current!);
+          pollingRef.current = null;
+          setPurchaseStatus('failed');
+          toast.error('Purchase failed. Please try again.', { id: 'buy-status' });
+        } else if (!stripeConfirmed && (stripeStatus === 'succeeded' || stripeStatus === 'complete' || stripeStatus === 'paid')) {
+          // Payment confirmed — show optimistic success immediately
+          // Token delivery is guaranteed by the backend, so treat as success for UX
+          stripeConfirmed = true;
+          setPurchaseStatus('success');
+          toast.success('Purchase confirmed! Tokens arriving shortly.', { id: 'buy-status' });
+          refreshWalletBalances();
+          // Keep polling briefly to get the final tx hash, but stop after a few more attempts
+          setTimeout(() => {
+            if (pollingRef.current) {
+              clearInterval(pollingRef.current);
+              pollingRef.current = null;
+            }
+          }, 15000); // stop background polling after 15s
+        }
       } catch (err) {
         console.warn('[Buy] Polling error:', err);
       }
-    }, 3000);
+    }, 1500);
   }, [refreshWalletBalances]);
 
   // Cleanup polling on unmount
