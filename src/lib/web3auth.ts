@@ -256,10 +256,25 @@ export function removeWeb3AuthWalletButton(): void {
   for (const sel of selectors) {
     document.querySelectorAll(sel).forEach(el => el.remove());
   }
-  // Ensure body scroll is not blocked
+  // Ensure body scroll is not blocked by Web3Auth
   document.body.style.overflow = '';
   document.body.style.position = '';
   document.documentElement.style.overflow = '';
+}
+
+/**
+ * Watch for Web3Auth injected wallet button and remove it immediately.
+ * Uses MutationObserver so it catches async injections after login.
+ */
+let walletButtonObserver: MutationObserver | null = null;
+export function startWalletButtonCleanup(): void {
+  if (typeof document === 'undefined' || walletButtonObserver) return;
+  walletButtonObserver = new MutationObserver(() => {
+    removeWeb3AuthWalletButton();
+  });
+  walletButtonObserver.observe(document.body, { childList: true, subtree: true });
+  // Also clean up immediately
+  removeWeb3AuthWalletButton();
 }
 
 /**
