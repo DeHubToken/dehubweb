@@ -43,8 +43,9 @@ export interface DPayTransaction {
 /** Post-purchase polling: status by session ID (GET /dpay/tnxs?sid=...) */
 export interface DPaySessionStatus {
   status_stripe?: 'pending' | 'succeeded' | 'failed' | 'canceled' | 'expired';
-  tokenSendStatus?: 'sent' | 'sending' | 'queued' | 'failed' | 'not_sent';
+  tokenSendStatus?: 'pending' | 'sent' | 'sending' | 'queued' | 'failed' | 'not_sent';
   tokenSendTxnHash?: string;
+  _empty?: boolean;
   [key: string]: unknown;
 }
 
@@ -341,8 +342,16 @@ export async function getDPaySessionStatus(sessionId: string): Promise<DPaySessi
   // The API may return the transaction directly, in a result wrapper, or as an array
   let result = data?.result ?? data;
   if (Array.isArray(result)) {
-    // If array, take the first (most recent) entry
-    result = result[0] ?? {};
+    // If array, take the first (most recent) entry — empty array means no record yet
+    if (result.length === 0) {
+      return { status_stripe: 'pending' as const, tokenSendStatus: 'pending' as const, _empty: true };
+    }
+    result = result[0];
+  }
+
+  // If result is empty/null object, return explicit pending
+  if (!result || (typeof result === 'object' && Object.keys(result).length === 0)) {
+    return { status_stripe: 'pending' as const, tokenSendStatus: 'pending' as const, _empty: true };
   }
   
   return {
