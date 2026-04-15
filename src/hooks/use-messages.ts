@@ -186,9 +186,14 @@ export function useMessages(conversationId: string | null) {
       // when we never got a `readReceipt` broadcast (fallback UX).
       const senderAddress = msg.sender?.address?.toLowerCase();
       const senderUserId = msg.sender?._id;
-      const isFromOther =
-        (senderAddress && walletAddress && senderAddress !== walletAddress.toLowerCase()) ||
-        (senderUserId && user?._id && senderUserId !== user._id);
+      // A message is "from other" only when it's provably NOT from us.
+      // Use the same logic as isOwnIncoming — if EITHER address OR userId matches,
+      // the message is ours. The old `||` logic caused Smart Account/EOA address
+      // mismatches to be treated as "from other", prematurely marking prior messages read.
+      const isOwnMsg =
+        (!!senderAddress && !!walletAddress && senderAddress === walletAddress.toLowerCase()) ||
+        (!!senderUserId && !!user?._id && senderUserId === user._id);
+      const isFromOther = !isOwnMsg;
       if (isFromOther) {
         const msgTime = new Date(msg.createdAt ?? '').getTime();
         queryClient.setQueryData(messagesKeys.messages(conversationId), (old: any) => {

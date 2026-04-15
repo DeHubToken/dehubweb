@@ -246,9 +246,7 @@ function parseDmMessage(raw: any, myAddress: string): DmMessage {
     mediaUrls: Array.isArray(raw.mediaUrls) ? raw.mediaUrls : [],
     uploadStatus: raw.uploadStatus ?? undefined,
     voiceDuration: raw.voiceDuration ?? null,
-    // Backend may mark sender's own messages as read immediately.
-    // Only trust read state from readReceipt socket events for own messages.
-    isRead: author === 'me' ? false : (raw.isRead ?? false),
+    isRead: raw.isRead ?? false,
     isEdited: raw.isEdited ?? false,
     editedAt: raw.editedAt ?? null,
     isForwarded: raw.isForwarded ?? false,
