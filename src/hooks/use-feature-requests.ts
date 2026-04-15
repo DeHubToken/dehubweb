@@ -153,7 +153,7 @@ export function useShippedFeatures() {
       const { data, error } = await supabase
         .from('feature_requests')
         .select('*')
-        .eq('status', 'completed')
+        .in('status', ['completed', 'shipped'])
         .order('updated_at', { ascending: false });
 
       if (error) throw error;
