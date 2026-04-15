@@ -393,7 +393,8 @@ export function useMessages(conversationId: string | null) {
       // Ignore self-receipts: server echoes readReceipt back to whoever emitted markAsRead.
       // Same guard as mobile: "ignore self-receipts (our own markAsRead echoed back)"
       const readBy = data?.readBy;
-      if (readBy && user?._id && String(readBy) === String(user._id)) return;
+      const myUserId = user?._id || (user as any)?.id;
+      if (readBy && myUserId && String(readBy) === String(myUserId)) return;
       queryClient.setQueryData(
         messagesKeys.messages(conversationId),
         (old: any) => {

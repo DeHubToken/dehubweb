@@ -108,6 +108,8 @@ function normalizeUser(userData: Partial<DeHubUser> | null | undefined, fallback
     balanceDataLength: safe.balanceData?.length ?? 0,
   });
   return {
+    _id: safe._id || safe.id || undefined,
+    id: safe.id || safe._id || undefined,
     address: safe.address || fallbackAddress,
     username: safe.username || null,
     displayName: safe.displayName || null,
