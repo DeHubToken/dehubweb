@@ -431,9 +431,14 @@ function ImmersiveVideoHeader({
   showBack = true,
 }: ImmersiveVideoHeaderProps) {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleBack = () => {
-    navigate(-1);
+    if ((location.key && location.key !== 'default') || window.history.length > 1) {
+      navigate(-1);
+    } else {
+      navigate(fallbackRoute, { replace: true });
+    }
   };
 
   const handleProfileClick = () => {
@@ -571,7 +576,7 @@ export default function SinglePostPage() {
   const location = useLocation();
   
   // Hide back button when there's no navigation history (direct URL access)
-  const hasHistory = !!(location.key && location.key !== 'default');
+  const hasHistory = !!(location.key && location.key !== 'default') || window.history.length > 1;
   
   // State for desktop AI chat and options drawer
   const [showDesktopAIChat, setShowDesktopAIChat] = useState(false);
@@ -751,25 +756,25 @@ export default function SinglePostPage() {
         {isMobileView && (
           <Drawer open={true} onOpenChange={handleDrawerDismiss} modal={false} snapPoints={[1]} dismissible>
             <DrawerContent 
-              hideHandle 
+              hideHandle={false}
               noOverlay
               className="!h-[100dvh] !max-h-[100dvh] !mt-0 !rounded-none !border-0 !bg-black"
             >
               <div 
                 ref={mobileScrollContainerRef}
                 className="flex flex-col h-full bg-black overflow-y-auto"
-                data-vaul-no-drag
               >
                 <div className="relative">
                   {/* Drag handle zone — swipe down here to dismiss */}
                   <div className="absolute top-0 left-0 right-0 h-12 z-[60]" />
                   <ImmersiveVideoHeader
+                    fallbackRoute="/app"
                     channel={videoData.channel}
                     channelAvatar={videoData.channelAvatar}
                     creatorUsername={videoData.creatorUsername}
                     creatorId={videoData.creatorId}
                     verified={videoData.verified}
-                    showBack={hasHistory}
+                    showBack
                   />
                   {renderContent()}
                 </div>
@@ -781,7 +786,7 @@ export default function SinglePostPage() {
         
         {/* Desktop: Standard layout with header */}
         <div className="hidden lg:flex lg:flex-col">
-          <PageHeader showBack={hasHistory} />
+          <PageHeader showBack fallbackRoute="/app" />
           <div className="px-3 sm:px-4 pb-8">
             <div className="max-w-2xl mx-auto">
               {/* Creator info for desktop */}
@@ -934,7 +939,7 @@ export default function SinglePostPage() {
 
   const postContent = (
     <>
-      <PageHeader showBack={hasHistory} />
+      <PageHeader showBack fallbackRoute="/app" />
       <div className="px-3 sm:px-4 pb-8 pt-2">
         <div className="max-w-2xl mx-auto">
           {renderContent()}
@@ -966,14 +971,13 @@ export default function SinglePostPage() {
       />
       {isMobileView ? (
         <Drawer open={true} onOpenChange={handleDrawerDismiss} modal={false} snapPoints={[1]} dismissible>
-          <DrawerContent 
-            hideHandle 
+          <DrawerContent
+            hideHandle={false}
             noOverlay
             className="!h-[100dvh] !max-h-[100dvh] !mt-0 !rounded-none !border-0 !bg-black"
           >
             <div 
               className={`flex flex-col h-full overflow-y-auto ${isLivePost ? 'bg-black' : ''}`}
-              data-vaul-no-drag
             >
               {postContent}
             </div>
