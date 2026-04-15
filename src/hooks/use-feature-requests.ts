@@ -111,8 +111,8 @@ export function useFeatureRequests(sort: FeatureSort, category: FeatureCategory 
           break;
       }
 
-      // Exclude shipped (completed) features from the main list
-      query = query.neq('status', 'completed');
+      // Exclude shipped/completed features from the main list
+      query = query.not('status', 'in', '("completed","shipped")');
 
       // Pagination
       query = query.range(pageParam, pageParam + PAGE_SIZE - 1);
