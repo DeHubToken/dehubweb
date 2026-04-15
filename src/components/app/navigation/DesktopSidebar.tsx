@@ -14,6 +14,7 @@ import { useStage } from '@/contexts/StageContext';
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { useCommunityActivityUnreadCount } from '@/hooks/use-community-activity-unread';
+import { useTotalUnreadCount } from '@/hooks/use-messages';
 import dehubLogoCompact from '@/assets/dehub-logo-compact.png';
 import { cn } from '@/lib/utils';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -36,6 +37,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const { data: customUnread } = useCustomUnreadCount();
   const totalNotifUnread = (unreadCount?.total ?? 0) + (customUnread ?? 0);
   const { unreadCount: communityActivityUnread } = useCommunityActivityUnreadCount();
+  const dmUnread = useTotalUnreadCount();
 
   // Get balance from user or default to 0
   const coinBalance = 0; // TODO: Get from user wallet
@@ -163,7 +165,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   onClick={isStagesItem ? () => openStagesModal() : isProfileItem ? handleProfileClick : undefined}
                   avatarUrl={isProfileItem && isAuthenticated ? userAvatarUrl : undefined}
                   avatarFallback={isProfileItem && isAuthenticated ? displayName.charAt(0).toUpperCase() : undefined}
-                  notificationCount={isNotificationsItem ? totalNotifUnread : isCommunitiesItem ? communityActivityUnread : undefined}
+                  notificationCount={isNotificationsItem ? totalNotifUnread : isCommunitiesItem ? communityActivityUnread : isAfterMessages ? dmUnread : undefined}
                   layoutId={isCollapsed ? 'sidebar-nav-collapsed' : 'sidebar-nav-expanded'}
                 />
                 {isAfterMessages && (

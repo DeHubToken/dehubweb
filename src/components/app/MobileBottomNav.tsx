@@ -7,6 +7,7 @@ import { PostModal } from './PostModal';
 import { AuthPrompt } from './AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
 import { useStage } from '@/contexts/StageContext';
+import { useTotalUnreadCount } from '@/hooks/use-messages';
 
 
 
@@ -47,6 +48,7 @@ export function MobileBottomNav() {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
   const { openModal: openStagesModal } = useStage();
+  const dmUnread = useTotalUnreadCount();
   const navVisible = useScrollDirection();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
@@ -152,12 +154,12 @@ export function MobileBottomNav() {
                   : location.pathname.startsWith(item.path);
                 
                 return (
-                  <NavLink
+                   <NavLink
                     key={item.path}
                     to={item.path}
                     onClick={(e) => handleNavClick(e, item.path)}
                     className={cn(
-                      'flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white',
+                      'relative flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white',
                       index === 0 && 'rounded-l-2xl'
                     )}
                   >
@@ -171,6 +173,11 @@ export function MobileBottomNav() {
                           item.label === 'Home' ? '-ml-[6.5px] lg:ml-0' : '-ml-[5.5px] lg:ml-0'
                         )} 
                       />
+                      {item.label === 'Messages' && dmUnread > 0 && (
+                        <span className="absolute top-1.5 right-1 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
+                          {dmUnread > 99 ? '99+' : dmUnread}
+                        </span>
+                      )}
                   </NavLink>
                 );
               })}
