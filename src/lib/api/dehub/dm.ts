@@ -246,7 +246,10 @@ function parseDmMessage(raw: any, myAddress: string): DmMessage {
     mediaUrls: Array.isArray(raw.mediaUrls) ? raw.mediaUrls : [],
     uploadStatus: raw.uploadStatus ?? undefined,
     voiceDuration: raw.voiceDuration ?? null,
-    isRead: raw.isRead ?? false,
+    // Treat own-message read state as socket-driven (readReceipt), not API-driven.
+    // Backend payloads may mark sender messages read immediately, which causes
+    // a brief double-tick flash before client reconciliation.
+    isRead: author === 'me' ? false : (raw.isRead ?? false),
     isEdited: raw.isEdited ?? false,
     editedAt: raw.editedAt ?? null,
     isForwarded: raw.isForwarded ?? false,
