@@ -14,7 +14,7 @@ import { getAccountInfo, getAccountByUsername } from '@/lib/api/dehub';
 import { extractAvatarPath } from '@/lib/media-url';
 
 export type FeatureCategory = 'ui_ux' | 'performance' | 'new_feature' | 'bug_fix' | 'integration' | 'other';
-export type FeatureStatus = 'open' | 'under_review' | 'planned' | 'in_progress' | 'completed' | 'declined';
+export type FeatureStatus = 'open' | 'under_review' | 'planned' | 'in_progress' | 'completed' | 'shipped' | 'declined';
 export type FeatureSort = 'most_voted' | 'newest';
 
 export interface FeatureRequest {
@@ -56,7 +56,8 @@ const STATUS_LABELS: Record<FeatureStatus, string> = {
   under_review: 'Under Review',
   planned: 'Planned',
   in_progress: 'In Progress',
-  completed: 'Completed',
+  completed: 'Shipped',
+  shipped: 'Shipped',
   declined: 'Declined',
 };
 
@@ -110,8 +111,8 @@ export function useFeatureRequests(sort: FeatureSort, category: FeatureCategory 
           break;
       }
 
-      // Exclude shipped (completed) features from the main list
-      query = query.neq('status', 'completed');
+      // Exclude shipped/completed features from the main list
+      query = query.not('status', 'in', '("completed","shipped")');
 
       // Pagination
       query = query.range(pageParam, pageParam + PAGE_SIZE - 1);
@@ -152,7 +153,7 @@ export function useShippedFeatures() {
       const { data, error } = await supabase
         .from('feature_requests')
         .select('*')
-        .eq('status', 'completed')
+        .in('status', ['completed', 'shipped'])
         .order('updated_at', { ascending: false });
 
       if (error) throw error;
