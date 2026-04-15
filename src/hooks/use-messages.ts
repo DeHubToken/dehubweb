@@ -275,7 +275,15 @@ export function useMessages(conversationId: string | null) {
             if (optimisticIdx >= 0) {
               // Preserve `author` from the temp message — the server socket event doesn't
               // include it, but we need it later so onReadReceipt can identify sent messages.
-              newPages[0].items[optimisticIdx] = { author: firstItems[optimisticIdx].author, ...normalizedMsg };
+              // Preserve `isRead: false` from optimistic entry — the server echo often
+              // returns isRead:true for our own messages (auto-read by sender), which
+              // causes a brief double-tick flash before the real read receipt arrives.
+              const optimistic = firstItems[optimisticIdx];
+              newPages[0].items[optimisticIdx] = {
+                author: optimistic.author,
+                ...normalizedMsg,
+                isRead: optimistic.author === 'me' ? (optimistic.isRead || normalizedMsg.isRead === true && normalizedMsg.isRead) : normalizedMsg.isRead,
+              };
             } else {
               newPages[0] = { ...newPages[0], items: [normalizedMsg, ...firstItems] };
             }
