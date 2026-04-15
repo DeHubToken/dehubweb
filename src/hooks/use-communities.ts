@@ -286,6 +286,7 @@ export function useUpdateCommunity() {
     },
     onSuccess: (data) => {
       qc.invalidateQueries({ queryKey: ['communities'] });
+      qc.invalidateQueries({ queryKey: ['community'] });
       toast.success('Community updated');
     },
     onError: () => toast.error('Failed to update community'),
