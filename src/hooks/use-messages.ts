@@ -215,14 +215,24 @@ export function useMessages(conversationId: string | null) {
           const newPages = pages.map(page => ({ ...page, items: [...page.items] }));
           const firstItems = newPages[0]?.items ?? [];
           const existingIdx = firstItems.findIndex(m => m._id === msg._id);
+          const ownAddress = walletAddress?.toLowerCase();
+          const incomingAddress = msg.sender?.address?.toLowerCase();
+          const ownUserId = user?._id;
+          const incomingUserId = msg.sender?._id;
+          const isOwnIncoming =
+            (!!incomingAddress && !!ownAddress && incomingAddress === ownAddress) ||
+            (!!incomingUserId && !!ownUserId && incomingUserId === ownUserId);
+
           const normalizedMsg: DmMessage = {
             ...msg,
             conversation: dmId || conversationId,
+            // Keep explicit author so downstream read-receipt logic works reliably.
+            author: isOwnIncoming ? 'me' : 'other',
+            // Sender should not see own message as read until actual read receipt.
+            ...(isOwnIncoming ? { isRead: false } : {}),
           } as DmMessage;
-          const ownAddress = walletAddress?.toLowerCase();
-          const incomingAddress = normalizedMsg.sender?.address?.toLowerCase();
-          const ownUserId = user?._id;
-          const incomingUserId = normalizedMsg.sender?._id;
+          const incomingAddressFromNormalized = normalizedMsg.sender?.address?.toLowerCase();
+          const incomingUserIdFromNormalized = normalizedMsg.sender?._id;
           const incomingCreatedAt = new Date(normalizedMsg.createdAt ?? '').getTime();
 
           if (existingIdx >= 0) {
@@ -247,13 +257,13 @@ export function useMessages(conversationId: string | null) {
               const candidateUserId = candidate.sender?._id;
 
               const isIncomingFromCurrentUser =
-                (!!incomingAddress && !!ownAddress && incomingAddress === ownAddress) ||
-                (!!incomingUserId && !!ownUserId && incomingUserId === ownUserId);
+                (!!incomingAddressFromNormalized && !!ownAddress && incomingAddressFromNormalized === ownAddress) ||
+                (!!incomingUserIdFromNormalized && !!ownUserId && incomingUserIdFromNormalized === ownUserId);
               if (!isIncomingFromCurrentUser) return false;
 
               const sameSender =
-                (!!incomingAddress && !!candidateAddress && incomingAddress === candidateAddress) ||
-                (!!incomingUserId && !!candidateUserId && incomingUserId === candidateUserId);
+                (!!incomingAddressFromNormalized && !!candidateAddress && incomingAddressFromNormalized === candidateAddress) ||
+                (!!incomingUserIdFromNormalized && !!candidateUserId && incomingUserIdFromNormalized === candidateUserId);
               if (!sameSender) return false;
 
               const candidateContent = (candidate.content || '').trim();

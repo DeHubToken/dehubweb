@@ -1089,19 +1089,25 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
               );
             }
 
-            return filtered.map((message) => (
+            return filtered.map((message) => {
+              const senderAddress = message.sender?.address?.toLowerCase();
+              const senderId = message.sender?._id;
+              const ownAddress = walletAddress?.toLowerCase();
+              const ownId = user?._id;
+              const isOwnMessage =
+                message.author === 'me' ||
+                (!!senderAddress && !!ownAddress && senderAddress === ownAddress) ||
+                (!!senderId && !!ownId && senderId === ownId);
+
+              return (
               <MessageBubble
                 key={message._id}
                 message={message}
-                isOwnMessage={
-                  message.author === 'me' ||
-                  (message.sender?.address?.toLowerCase() || message.sender?._id) ===
-                    (walletAddress?.toLowerCase() || user?._id)
-                }
+                isOwnMessage={isOwnMessage}
                 highlightText={searchLower}
                 confirmedTxHashes={confirmedTxHashes}
               />
-            ));
+            )});
           })()}
 
           <div ref={bottomRef} />
