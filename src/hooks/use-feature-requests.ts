@@ -56,7 +56,8 @@ const STATUS_LABELS: Record<FeatureStatus, string> = {
   under_review: 'Under Review',
   planned: 'Planned',
   in_progress: 'In Progress',
-  completed: 'Completed',
+  completed: 'Shipped',
+  shipped: 'Shipped',
   declined: 'Declined',
 };
 
