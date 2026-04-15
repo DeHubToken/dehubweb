@@ -2,22 +2,22 @@
 
 ## Problem
 
-The feature requests were updated to status `shipped` in the database, but:
-1. The `useShippedFeatures` hook queries for `status = 'completed'`
-2. The TypeScript `FeatureStatus` type defines `completed`, not `shipped`
-3. The main list excludes `status = 'completed'` via `.neq('status', 'completed')`
+The `useTotalUnreadCount()` hook in `use-messages.ts` already computes total unread DM count, but it's not connected to the Messages nav item in the sidebar or mobile header. Only Notifications and Communities have unread badges.
 
-Result: all 8 "shipped" items are invisible — they appear in neither the main feed nor the Shipped tab.
+## Fix
 
-## Fix (two parts)
+### 1. DesktopSidebar — wire up DM unread count
+- Import `useTotalUnreadCount` from hooks
+- Add `const dmUnread = useTotalUnreadCount()` 
+- In the nav item loop, detect `isMessagesItem = item.label === 'Messages'` (the variable `isAfterMessages` already does this)
+- Pass `notificationCount` for Messages: update the ternary to include `isAfterMessages ? dmUnread : undefined`
 
-### 1. Database: Update the 8 rows from `shipped` to `completed`
-Change all `feature_requests` where `status = 'shipped'` to `status = 'completed'` so they match the existing code.
+### 2. MobileHeader / MobileBottomBar — wire up DM unread count
+- Same pattern: import `useTotalUnreadCount`, pass it to the Messages nav item badge
 
-### 2. No code changes needed
-The existing code already handles `completed` correctly — the Shipped tab filters by `completed`, and the main list excludes `completed`. Once the data is corrected, everything will work.
+### Files to edit
+- `src/components/app/navigation/DesktopSidebar.tsx` — add import + pass `notificationCount` for Messages
+- Mobile nav components (MobileHeader, bottom bar) — same treatment
 
-## Technical Details
-- **SQL**: `UPDATE feature_requests SET status = 'completed', updated_at = now() WHERE status = 'shipped'`
-- This will move all 8 items into the Shipped tab, bringing the count from 22 to 30.
+This is a minimal change — 2-3 lines per file, no new hooks or DB changes needed.
 
