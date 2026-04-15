@@ -291,8 +291,11 @@ export function useMessages(conversationId: string | null) {
               const optimistic = firstItems[optimisticIdx];
               const keepIsReadFalse = optimistic.author === 'me' && !optimistic.isRead;
               newPages[0].items[optimisticIdx] = {
-                author: optimistic.author,
                 ...normalizedMsg,
+                // Preserve author from optimistic — normalizedMsg.author may be 'other' if
+                // address comparison fails (e.g. Smart Account vs EOA mismatch), which would
+                // put the bubble on the wrong side.
+                author: optimistic.author,
                 ...(keepIsReadFalse ? { isRead: false } : {}),
               };
             } else {
