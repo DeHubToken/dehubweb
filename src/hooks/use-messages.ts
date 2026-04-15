@@ -156,7 +156,23 @@ export function useMessages(conversationId: string | null) {
     queryKey: messagesKeys.messages(conversationId || ''),
     queryFn: async ({ pageParam = 0 }) => {
       if (!conversationId) return { items: [], totalCount: 0, hasMore: false };
-      return getMessages(conversationId, pageParam, 30);
+      const result = await getMessages(conversationId, pageParam, 30);
+      // Preserve isRead:true from local cache — server may lag behind readReceipt socket events.
+      // Same pattern as mobile dm.store: "Preserve local isRead:true — server may not persist read status"
+      if (pageParam === 0) {
+        const existing = queryClient.getQueryData<any>(messagesKeys.messages(conversationId));
+        const existingReadIds = new Set<string>(
+          (existing?.pages?.[0]?.items ?? [])
+            .filter((m: DmMessage) => m.isRead)
+            .map((m: DmMessage) => m._id)
+        );
+        if (existingReadIds.size > 0) {
+          result.items = result.items.map((m: DmMessage) =>
+            (!m.isRead && existingReadIds.has(m._id)) ? { ...m, isRead: true } : m
+          );
+        }
+      }
+      return result;
     },
     getNextPageParam: (lastPage, allPages) => lastPage.hasMore ? allPages.length : undefined,
     initialPageParam: 0,
@@ -374,6 +390,10 @@ export function useMessages(conversationId: string | null) {
       console.log('[DM] onReadReceipt fired', { data, conversationId });
       const dmId = data?.dmId || data?.conversationId;
       if (!dmId || dmId !== conversationId) return;
+      // Ignore self-receipts: server echoes readReceipt back to whoever emitted markAsRead.
+      // Same guard as mobile: "ignore self-receipts (our own markAsRead echoed back)"
+      const readBy = data?.readBy;
+      if (readBy && user?._id && String(readBy) === String(user._id)) return;
       queryClient.setQueryData(
         messagesKeys.messages(conversationId),
         (old: any) => {
