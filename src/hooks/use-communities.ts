@@ -425,7 +425,8 @@ export function useUnpinCommunity() {
 
 export async function uploadCommunityMedia(file: File, slug: string, type: 'avatar' | 'banner'): Promise<string> {
   const ext = file.name.split('.').pop() || 'jpg';
-  const path = `${slug}/${type}.${ext}`;
+  // Use a unique path each time to bust CDN/browser cache
+  const path = `${slug}/${type}_${Date.now()}.${ext}`;
   
   const { error } = await supabase.storage
     .from('community-media')
