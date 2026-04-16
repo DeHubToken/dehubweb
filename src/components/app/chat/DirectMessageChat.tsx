@@ -328,7 +328,7 @@ function MessagesSkeleton() {
 }
 
 export function DirectMessageChat({ conversation, onBack }: DirectMessageChatProps) {
-  const { user, walletAddress } = useAuth();
+  const { user, walletAddress, openLoginModal } = useAuth();
   const queryClient = useQueryClient();
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -763,8 +763,19 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         }
       } catch (error: unknown) {
         console.error('[DM] Fee payment failed:', error);
-        const message = parseTxError(error as Error);
-        toast.error(message || 'Payment failed', { id: 'dm-fee-send' });
+        const errStr = String((error as any)?.message || error).toLowerCase();
+        const isSessionExpired = errStr.includes('session expired') || errStr.includes('torus keyring') || errStr.includes('unable to find matching address') || errStr.includes('log in again');
+        if (isSessionExpired) {
+          toast.error('Session expired', {
+            id: 'dm-fee-send',
+            description: 'Please sign in again to send this message',
+            action: { label: 'Sign in', onClick: openLoginModal },
+            duration: 10000,
+          });
+        } else {
+          const message = parseTxError(error as Error);
+          toast.error(message || 'Payment failed', { id: 'dm-fee-send' });
+        }
         // Remove optimistic message on failure
         queryClient.setQueryData(messagesKeys.messages(resolvedConversationId), (old: any) => {
           if (!old?.pages) return old;
