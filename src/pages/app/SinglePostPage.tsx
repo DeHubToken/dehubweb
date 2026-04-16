@@ -608,19 +608,28 @@ export default function SinglePostPage() {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  // Controls the drawer open state so closing can be animated before navigating
-  const [drawerOpen, setDrawerOpen] = useState(true);
+  // Start closed so vaul can animate the slide-up entry; open after first paint
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  useEffect(() => {
+    // rAF ensures the component is painted in the closed position first,
+    // then vaul sees false→true and plays the slide-up animation
+    const raf = requestAnimationFrame(() => setDrawerOpen(true));
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   const handleDrawerDismiss = (open: boolean) => {
     if (!open) {
-      setDrawerOpen(false);
-      if (hasHistory) navigate(-1);
-      else navigate('/app');
+      // Delay navigation so vaul's slide-down animation finishes before unmounting
+      setTimeout(() => {
+        if (hasHistory) navigate(-1);
+        else navigate('/app');
+      }, 320);
     }
   };
 
-  // Called by the back button inside the mobile drawer — closes the drawer
-  // with its native slide-down animation, then onOpenChange fires navigate(-1)
+  // Called by the back button — sets drawer to closed so vaul plays the
+  // slide-down animation, then onOpenChange(false) fires and navigates back
   const handleMobileBack = () => {
     setDrawerOpen(false);
   };
@@ -771,7 +780,7 @@ export default function SinglePostPage() {
       <>
         {/* Mobile/Tablet: Full immersive drawer (swipe down to close) */}
         {isMobileView && (
-          <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} dismissible>
+          <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} modal={false} dismissible>
             <DrawerContent
               hideHandle={false}
               noOverlay
@@ -986,7 +995,7 @@ export default function SinglePostPage() {
         }}
       />
       {isMobileView ? (
-        <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} dismissible>
+        <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} modal={false} dismissible>
           <DrawerContent
             hideHandle={false}
             noOverlay
