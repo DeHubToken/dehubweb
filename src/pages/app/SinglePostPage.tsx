@@ -781,11 +781,10 @@ export default function SinglePostPage() {
       <>
         {/* Mobile/Tablet: Full immersive drawer (swipe down to close) */}
         {isMobileView && (
-          <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} modal dismissible>
+          <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} modal={false} dismissible>
             <DrawerContent
               hideHandle
-              noOverlay={false}
-              overlayClassName="bg-black/60"
+              noOverlay
               className="!h-[100dvh] !max-h-[100dvh] !mt-0 !rounded-none !border-0 !shadow-none !bg-black"
             >
               <div
@@ -998,11 +997,10 @@ export default function SinglePostPage() {
         }}
       />
       {isMobileView ? (
-        <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} modal dismissible>
+        <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} modal={false} dismissible>
           <DrawerContent
             hideHandle
-            noOverlay={false}
-            overlayClassName="bg-black/60"
+            noOverlay
             className="!h-[100dvh] !max-h-[100dvh] !mt-0 !rounded-none !border-0 !shadow-none !bg-black"
           >
             <div
