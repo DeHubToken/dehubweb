@@ -781,11 +781,12 @@ export default function SinglePostPage() {
       <>
         {/* Mobile/Tablet: Full immersive drawer (swipe down to close) */}
         {isMobileView && (
-          <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} modal={false} dismissible>
+          <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} modal dismissible>
             <DrawerContent
-              hideHandle={false}
-              noOverlay
-              className="!h-[100dvh] !max-h-[100dvh] !mt-0 !rounded-none !border-0 !bg-black"
+              hideHandle
+              noOverlay={false}
+              overlayClassName="bg-black/60"
+              className="!h-[100dvh] !max-h-[100dvh] !mt-0 !rounded-none !border-0 !shadow-none !bg-black"
             >
               <div
                 ref={mobileScrollContainerRef}
@@ -997,11 +998,12 @@ export default function SinglePostPage() {
         }}
       />
       {isMobileView ? (
-        <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} modal={false} dismissible>
+        <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} modal dismissible>
           <DrawerContent
-            hideHandle={false}
-            noOverlay
-            className="!h-[100dvh] !max-h-[100dvh] !mt-0 !rounded-none !border-0 !bg-black"
+            hideHandle
+            noOverlay={false}
+            overlayClassName="bg-black/60"
+            className="!h-[100dvh] !max-h-[100dvh] !mt-0 !rounded-none !border-0 !shadow-none !bg-black"
           >
             <div
               className={`flex flex-col h-full overflow-y-auto ${isLivePost ? 'bg-black' : ''}`}
