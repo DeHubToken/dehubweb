@@ -419,9 +419,11 @@ interface ImmersiveVideoHeaderProps {
   creatorId?: string;
   verified?: boolean;
   showBack?: boolean;
+  /** Override the back action (e.g. close the drawer with animation first) */
+  onBack?: () => void;
 }
 
-function ImmersiveVideoHeader({ 
+function ImmersiveVideoHeader({
   fallbackRoute = '/app',
   channel,
   channelAvatar,
@@ -429,11 +431,16 @@ function ImmersiveVideoHeader({
   creatorId,
   verified = false,
   showBack = true,
+  onBack,
 }: ImmersiveVideoHeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
 
   const handleBack = () => {
+    if (onBack) {
+      onBack();
+      return;
+    }
     if ((location.key && location.key !== 'default') || window.history.length > 1) {
       navigate(-1);
     } else {
@@ -592,7 +599,7 @@ export default function SinglePostPage() {
   const mobileScrollContainerRef = useRef<HTMLDivElement>(null);
 
   // Mobile detection for drawer behavior
-  const [isMobileView, setIsMobileView] = useState(() => 
+  const [isMobileView, setIsMobileView] = useState(() =>
     typeof window !== 'undefined' && window.innerWidth < 1024
   );
   useEffect(() => {
@@ -601,11 +608,21 @@ export default function SinglePostPage() {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
+  // Controls the drawer open state so closing can be animated before navigating
+  const [drawerOpen, setDrawerOpen] = useState(true);
+
   const handleDrawerDismiss = (open: boolean) => {
     if (!open) {
+      setDrawerOpen(false);
       if (hasHistory) navigate(-1);
       else navigate('/app');
     }
+  };
+
+  // Called by the back button inside the mobile drawer — closes the drawer
+  // with its native slide-down animation, then onOpenChange fires navigate(-1)
+  const handleMobileBack = () => {
+    setDrawerOpen(false);
   };
 
   // Only scroll to top when PUSHING to the post page (not on back navigation)
@@ -754,19 +771,17 @@ export default function SinglePostPage() {
       <>
         {/* Mobile/Tablet: Full immersive drawer (swipe down to close) */}
         {isMobileView && (
-          <Drawer open={true} onOpenChange={handleDrawerDismiss} modal={false} snapPoints={[1]} dismissible>
-            <DrawerContent 
+          <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} dismissible>
+            <DrawerContent
               hideHandle={false}
               noOverlay
               className="!h-[100dvh] !max-h-[100dvh] !mt-0 !rounded-none !border-0 !bg-black"
             >
-              <div 
+              <div
                 ref={mobileScrollContainerRef}
                 className="flex flex-col h-full bg-black overflow-y-auto"
               >
                 <div className="relative">
-                  {/* Drag handle zone — swipe down here to dismiss */}
-                  <div className="absolute top-0 left-0 right-0 h-12 z-[60]" />
                   <ImmersiveVideoHeader
                     fallbackRoute="/app"
                     channel={videoData.channel}
@@ -775,6 +790,7 @@ export default function SinglePostPage() {
                     creatorId={videoData.creatorId}
                     verified={videoData.verified}
                     showBack
+                    onBack={handleMobileBack}
                   />
                   {renderContent()}
                 </div>
@@ -937,9 +953,9 @@ export default function SinglePostPage() {
   // Standard layout for other content types
   const isLivePost = contentType === 'live';
 
-  const postContent = (
+  const renderPostContent = (onBack?: () => void) => (
     <>
-      <PageHeader showBack fallbackRoute="/app" />
+      <PageHeader showBack fallbackRoute="/app" onBack={onBack} />
       <div className="px-3 sm:px-4 pb-8 pt-2">
         <div className="max-w-2xl mx-auto">
           {renderContent()}
@@ -970,22 +986,22 @@ export default function SinglePostPage() {
         }}
       />
       {isMobileView ? (
-        <Drawer open={true} onOpenChange={handleDrawerDismiss} modal={false} snapPoints={[1]} dismissible>
+        <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} dismissible>
           <DrawerContent
             hideHandle={false}
             noOverlay
             className="!h-[100dvh] !max-h-[100dvh] !mt-0 !rounded-none !border-0 !bg-black"
           >
-            <div 
+            <div
               className={`flex flex-col h-full overflow-y-auto ${isLivePost ? 'bg-black' : ''}`}
             >
-              {postContent}
+              {renderPostContent(handleMobileBack)}
             </div>
           </DrawerContent>
         </Drawer>
       ) : (
         <div className={`flex flex-col ${isLivePost ? 'bg-black min-h-screen' : ''}`}>
-          {postContent}
+          {renderPostContent()}
         </div>
       )}
     </>

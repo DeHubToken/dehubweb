@@ -10,14 +10,17 @@ interface PageHeaderProps {
   className?: string;
   /** Fallback route when no history exists (e.g., direct URL access) */
   fallbackRoute?: string;
+  /** Override the back action (e.g., to close a drawer with animation before navigating) */
+  onBack?: () => void;
 }
 
-export function PageHeader({ 
-  title, 
-  subtitle, 
-  showBack = true, 
+export function PageHeader({
+  title,
+  subtitle,
+  showBack = true,
   className,
-  fallbackRoute = '/app'
+  fallbackRoute = '/app',
+  onBack,
 }: PageHeaderProps) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -25,10 +28,15 @@ export function PageHeader({
 
   /**
    * Handle back navigation with fallback
+   * - If onBack is provided, use it (e.g. to close a drawer with animation)
    * - If history exists (location.key !== 'default'), use navigate(-1)
    * - Otherwise, navigate to fallback route (handles direct URL access)
    */
   const handleBack = () => {
+    if (onBack) {
+      onBack();
+      return;
+    }
     if (location.key && location.key !== 'default') {
       navigate(-1);
     } else {
