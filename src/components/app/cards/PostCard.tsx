@@ -143,7 +143,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
     
     // Cache the post data before navigation for instant display
     cacheTextPostForNavigation(queryClient, post);
-    navigate(`/app/post/${post.id}`);
+    navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
   }, [navigate, post.id, queryClient, post]);
 
   const handleRepost = useCallback(async () => {
