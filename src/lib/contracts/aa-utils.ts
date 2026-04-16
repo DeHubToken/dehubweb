@@ -424,21 +424,23 @@ export async function writeContractAA(
     hasValue: !!options?.value,
     isWeb3Auth,
   });
-  
+
   try {
     let txHash: string;
 
     if (isWeb3Auth) {
       // Web3Auth EIP-1193 provider -- raw request works because it handles signing internally
+      // IMPORTANT: value must always be present (even as '0x0') because the AA provider's
+      // processTransaction does BigInt(value) unconditionally — BigInt(undefined) throws.
       const txParams: Record<string, unknown> = {
         from: fromAddress,
         to: contractAddress,
         data,
         gas: gasLimit,
+        value: options?.value && BigInt(options.value) > BigInt(0)
+          ? toHex(options.value)
+          : '0x0',
       };
-      if (options?.value && BigInt(options.value) > BigInt(0)) {
-        txParams.value = toHex(options.value);
-      }
 
       const sendTx = async (p: any) => p.request({
         method: 'eth_sendTransaction',
