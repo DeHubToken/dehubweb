@@ -199,7 +199,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
             <GlobalFeedNav />
           </div>
           {/* Persistent page cache — all visited pages stay mounted */}
-          <PersistentPageCache />
+          <PersistentPageCache keepHomeVisible={showHomePagePersisted} />
           
           {/* Post overlay — renders on top when viewing a post from home */}
           {showHomePagePersisted && (

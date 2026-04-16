@@ -145,7 +145,7 @@ const CachedPage = memo(function CachedPage({
 // Pages that should always scroll to top when navigated to
 const SCROLL_TO_TOP_PAGES = new Set(['settings', 'leaderboard', 'bookmarks', 'command-centre', 'wallet']);
 
-export function PersistentPageCache() {
+export function PersistentPageCache({ keepHomeVisible = false }: { keepHomeVisible?: boolean }) {
   const location = useLocation();
   const pathname = location.pathname;
 
@@ -167,6 +167,13 @@ export function PersistentPageCache() {
     }
   }, [activeCachedPage?.key]);
 
+  // Ensure home remains mounted when showing a post/video overlay above it
+  useEffect(() => {
+    if (keepHomeVisible && !mountedPages.has('home')) {
+      setMountedPages(prev => new Set(prev).add('home'));
+    }
+  }, [keepHomeVisible, mountedPages]);
+
   // Scroll to top for specific pages when they become active
   useEffect(() => {
     if (activeCachedPage && SCROLL_TO_TOP_PAGES.has(activeCachedPage.key)) {
@@ -180,13 +187,17 @@ export function PersistentPageCache() {
   return (
     <>
       {/* Render all mounted cached pages — active one visible, others hidden */}
-      {CACHED_PAGES.filter(p => mountedPages.has(p.key)).map(config => (
-        <CachedPage
-          key={config.key}
-          config={config}
-          isActive={matchesPath(config, pathname)}
-        />
-      ))}
+      {CACHED_PAGES.filter(p => mountedPages.has(p.key)).map(config => {
+        const isActive = matchesPath(config, pathname) || (keepHomeVisible && config.key === 'home');
+
+        return (
+          <CachedPage
+            key={config.key}
+            config={config}
+            isActive={isActive}
+          />
+        );
+      })}
 
       {/* If current route is NOT a cached page, it's a dynamic route — render via flag */}
       {!isCachedRoute && (
