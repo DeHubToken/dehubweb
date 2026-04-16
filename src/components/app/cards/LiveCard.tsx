@@ -52,7 +52,7 @@ export function LiveCard({ stream }: LiveCardProps) {
     // Allow text selection without navigating
     const selection = window.getSelection();
     if (selection && selection.toString().length > 0) return;
-    navigate(`/app/post/${stream.id}`);
+    navigate(`/app/post/${stream.id}`, { state: { fromFeed: true } });
   }, [navigate, stream.id]);
 
   const handleLike = useCallback(async () => {

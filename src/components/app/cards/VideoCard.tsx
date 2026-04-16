@@ -1110,7 +1110,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     
     // Cache the video data before navigation for instant display
     cacheVideoForNavigation(queryClient, video);
-    navigate(`/app/post/${video.id}`);
+    navigate(`/app/post/${video.id}`, { state: { fromFeed: true } });
   }, [navigate, video.id, queryClient, video, showBountyDrawer, showPPVDrawer, showLockedDrawer]);
   
   return (
@@ -1929,7 +1929,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   onClick={() => {
                     setShowBountyDrawer(false);
                     cacheVideoForNavigation(queryClient, video);
-                    navigate(`/app/post/${video.id}`);
+                    navigate(`/app/post/${video.id}`, { state: { fromFeed: true } });
                   }}
                 >
                   <span className="block text-center text-white text-sm font-medium">

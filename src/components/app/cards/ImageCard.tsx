@@ -463,7 +463,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
     
     // Cache the post data before navigation for instant display
     cacheImageForNavigation(queryClient, post);
-    navigate(`/app/post/${post.id}`);
+    navigate(`/app/post/${post.id}`, { state: { fromFeed: true } });
   }, [navigate, post.id, queryClient, post, showPPVDrawer, showBountyDrawer, showLockedDrawer]);
 
   return (

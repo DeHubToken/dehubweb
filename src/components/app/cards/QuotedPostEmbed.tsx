@@ -39,7 +39,7 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    navigate(`/app/post/${quotedPost.tokenId}`);
+    navigate(`/app/post/${quotedPost.tokenId}`, { state: { fromFeed: true } });
   };
 
   return (
