@@ -54,6 +54,7 @@ import {
   startWalletButtonCleanup,
   setAAProvider,
   clearAAProvider,
+  getAAProvider,
 } from '@/lib/web3auth';
 import type { Web3Auth } from '@web3auth/modal';
 
@@ -466,6 +467,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       reconnectDmSocket();
     }
   }, [user, walletAddress]);
+
+  // On page restore, storedAAProvider is null even though Web3Auth session is valid.
+  // Re-setup the AA provider so sendTip/writeContractAA use the correct Smart Account.
+  useEffect(() => {
+    if (!user || connectionSource !== 'web3auth') return;
+    if (getAAProvider()) return; // Already set from a fresh login this session
+
+    console.log('[Auth] Session restored — re-initializing AA provider in background...');
+    getOrInitWeb3Auth().then(async (w3a) => {
+      if (!w3a.connected || !w3a.provider) {
+        console.warn('[Auth] Web3Auth not connected after session restore — AA provider unavailable');
+        return;
+      }
+      try {
+        const aaProvider = await setupAAProvider(w3a.provider);
+        if (aaProvider) {
+          setAAProvider(aaProvider);
+          console.log('[Auth] ✓ AA provider restored on session restore');
+        }
+      } catch (e) {
+        console.warn('[Auth] Could not restore AA provider on session restore:', e);
+      }
+    }).catch(e => console.warn('[Auth] Web3Auth init failed during AA provider restore:', e));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, connectionSource]);
 
   // ── Proactive Token Refresh Timer ──
   // Checks every 60s if the access token is about to expire or already expired.
