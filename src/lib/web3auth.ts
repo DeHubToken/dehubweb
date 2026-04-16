@@ -197,6 +197,7 @@ const chainConfig = {
 let web3authInstance: Web3Auth | null = null;
 let isInitializing = false;
 let initPromise: Promise<Web3Auth> | null = null;
+let storedAAProvider: any = null;
 // Track which connector was last used (for detecting social login vs external wallet)
 let lastConnectedConnector: string | null = null;
 // Track if we've detected that popups are blocked and should use redirect
@@ -530,10 +531,6 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
           sessionTime: 86400,
           uiConfig: { modalZIndex: "99999" } as any,
-          walletServicesConfig: {
-            confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
-            whiteLabel: { showWidgetButton: false },
-          },
         };
 
         web3authInstance = new Web3Auth(initOptions);
@@ -819,6 +816,18 @@ export function getWeb3AuthProvider() {
     return web3authInstance.provider;
   }
   return null;
+}
+
+export function setAAProvider(provider: any): void {
+  storedAAProvider = provider;
+}
+
+export function getAAProvider(): any {
+  return storedAAProvider;
+}
+
+export function clearAAProvider(): void {
+  storedAAProvider = null;
 }
 
 export async function disconnectWeb3Auth(): Promise<void> {

@@ -52,6 +52,8 @@ import {
   setupAAProvider,
   removeWeb3AuthWalletButton,
   startWalletButtonCleanup,
+  setAAProvider,
+  clearAAProvider,
 } from '@/lib/web3auth';
 import type { Web3Auth } from '@web3auth/modal';
 
@@ -873,6 +875,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (aaProvider) {
           const aaAccts = await aaProvider.request({ method: 'eth_accounts' }) as string[];
           smartAccountAddress = aaAccts[0]?.toLowerCase() || null;
+          setAAProvider(aaProvider);
         }
       } catch (e) {
         console.warn('[Auth] [REDIRECT] Could not get Smart Account address:', e);
@@ -962,6 +965,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (aaProvider) {
             const aaAccts = await aaProvider.request({ method: 'eth_accounts' }) as string[];
             smartAccountAddress = aaAccts[0]?.toLowerCase() || null;
+            setAAProvider(aaProvider);
           }
         } catch (e) {
           console.warn('[Auth] [POPUP] Could not get Smart Account address:', e);
@@ -1316,6 +1320,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Provider-level disconnect AFTER local cleanup (non-blocking)
     try {
       if (connectionSource === 'web3auth') {
+        clearAAProvider();
+        try { sessionStorage.removeItem('dhb_approved_chains'); } catch { /* */ }
         await disconnectWeb3Auth();
         // Only nuke wagmi storage for web3auth sessions — wagmi wasn't the auth source
         clearWagmiStorage();

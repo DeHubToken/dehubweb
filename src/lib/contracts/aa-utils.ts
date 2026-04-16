@@ -8,7 +8,7 @@
  */
 
 import { Interface, parseUnits, formatUnits } from 'ethers';
-import { getWeb3AuthProvider, getOrInitWeb3Auth, refreshWeb3AuthProvider } from '@/lib/web3auth';
+import { getWeb3AuthProvider, getAAProvider, getOrInitWeb3Auth, refreshWeb3AuthProvider } from '@/lib/web3auth';
 import { getAccount } from '@wagmi/core';
 import { sendTransaction, waitForTransactionReceipt, switchChain as wagmiSwitchChain } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
@@ -23,7 +23,11 @@ type Hex = `0x${string}`;
  * For external wallets, provider is null -- callers use wagmi actions or public RPC instead.
  */
 async function getActiveProvider(chainId?: number): Promise<{ provider: any; isWeb3Auth: boolean }> {
-  // Try Web3Auth first (social login sessions)
+  // Prefer AA provider (Smart Account, set after social login)
+  const aaProvider = getAAProvider();
+  if (aaProvider) return { provider: aaProvider, isWeb3Auth: true };
+
+  // Fall back to raw Web3Auth EOA provider
   const web3authProvider = getWeb3AuthProvider();
   if (web3authProvider) return { provider: web3authProvider, isWeb3Auth: true };
 
@@ -198,7 +202,14 @@ export async function isSmartAccountSession(): Promise<boolean> {
  * Get the current wallet address from Web3Auth provider
  */
 export async function getWalletAddress(): Promise<string> {
-  // Try Web3Auth first
+  // Prefer AA provider (Smart Account address)
+  const aaProvider = getAAProvider();
+  if (aaProvider) {
+    const accounts = await aaProvider.request({ method: 'eth_accounts' }) as string[];
+    if (accounts?.length) return accounts[0];
+  }
+
+  // Fall back to raw Web3Auth EOA provider
   const web3authProvider = getWeb3AuthProvider();
   if (web3authProvider) {
     const accounts = await web3authProvider.request({ method: 'eth_accounts' }) as string[];

@@ -165,13 +165,23 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
 
   const tokenId = BigInt(params.tokenId);
 
-  const result = await writeContractAA(
-    chainConfig.streamController,
-    streamControllerInterface,
-    'sendTip',
-    [tokenId, amountWei, params.to, chainConfig.dhbToken],
-    { context: 'send tip', chainId }
-  );
+  let result;
+  try {
+    result = await writeContractAA(
+      chainConfig.streamController,
+      streamControllerInterface,
+      'sendTip',
+      [tokenId, amountWei, params.to, chainConfig.dhbToken],
+      { context: 'send tip', chainId }
+    );
+  } catch (err: unknown) {
+    const msg = String((err as any)?.message || err).toLowerCase();
+    if (msg.includes('stf') || msg.includes('safetransfer') || msg.includes('execution reverted')) {
+      approvedChains.delete(chainKey);
+      persistApprovalCache();
+    }
+    throw err;
+  }
 
   // Return hash immediately; confirmation runs in background
   return {
