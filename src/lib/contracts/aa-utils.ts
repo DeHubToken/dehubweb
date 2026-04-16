@@ -8,7 +8,7 @@
  */
 
 import { Interface, parseUnits, formatUnits } from 'ethers';
-import { getWeb3AuthProvider, getAAProvider, getAAProviderForChain, setupAAProviderForChain, getOrInitWeb3Auth, refreshWeb3AuthProvider } from '@/lib/web3auth';
+import { getWeb3AuthProvider, getAAProvider, getAAProviderForChain, setupAAProviderForChain, setupAAProvider, setAAProvider, getOrInitWeb3Auth, refreshWeb3AuthProvider } from '@/lib/web3auth';
 import { getAccount } from '@wagmi/core';
 import { sendTransaction, waitForTransactionReceipt, switchChain as wagmiSwitchChain } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
@@ -43,6 +43,24 @@ async function getActiveProvider(chainId?: number): Promise<{ provider: any; isW
   if (account.address && (account.isConnected || account.status === 'reconnecting')) {
     return { provider: null, isWeb3Auth: false };
   }
+
+  // Last resort: Web3Auth session may exist but AA provider not yet restored (race condition
+  // on page restore where user acts before background useEffect completes).
+  // Try on-demand AA setup to recover gracefully.
+  try {
+    const w3a = await getOrInitWeb3Auth();
+    if (w3a.connected && w3a.provider) {
+      console.log('[AA] Provider missing — setting up AA on-demand...');
+      const onDemandAA = await setupAAProvider(w3a.provider);
+      if (onDemandAA) {
+        setAAProvider(onDemandAA);
+        console.log('[AA] On-demand AA provider ready');
+        return { provider: onDemandAA, isWeb3Auth: true };
+      }
+      // AA setup failed, use raw provider as fallback
+      return { provider: w3a.provider, isWeb3Auth: true };
+    }
+  } catch { /* ignore, fall through to error */ }
 
   throw new Error('No wallet connected. Please sign in first.');
 }
