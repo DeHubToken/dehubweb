@@ -15,7 +15,7 @@ import { useParams, useNavigationType, useNavigate, useLocation } from 'react-ro
 import { getVoteCache } from '@/lib/vote-cache';
 import { SEOHead } from '@/components/SEOHead';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useLayoutEffect, useEffect, useState, useRef } from 'react';
+import { useLayoutEffect, useEffect, useState, useRef, useCallback } from 'react';
 import { AlertCircle, Clock, ArrowLeft, Sparkles, MoreVertical, ListPlus, Flag, Download, Link2, Gem, Pencil, Trash2, Ban } from 'lucide-react';
 import { useTranslation as useI18n } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -608,31 +608,32 @@ export default function SinglePostPage() {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  // Start closed so vaul can animate the slide-up entry; open after first paint
+  // Start closed so vaul animates the slide-up entry; flip to true after first paint
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     // rAF ensures the component is painted in the closed position first,
-    // then vaul sees false→true and plays the slide-up animation
+    // so vaul sees false→true and plays the slide-up animation
     const raf = requestAnimationFrame(() => setDrawerOpen(true));
     return () => cancelAnimationFrame(raf);
   }, []);
 
+  const goBack = useCallback(() => {
+    if (hasHistory) navigate(-1);
+    else navigate('/app');
+  }, [hasHistory, navigate]);
+
+  // vaul calls this when the dismiss gesture crosses the threshold.
+  // Navigate immediately — the component unmounts and the feed re-appears,
+  // which avoids the black-screen gap that a delayed navigate would cause.
   const handleDrawerDismiss = (open: boolean) => {
-    if (!open) {
-      // Delay navigation so vaul's slide-down animation finishes before unmounting
-      setTimeout(() => {
-        if (hasHistory) navigate(-1);
-        else navigate('/app');
-      }, 320);
-    }
+    if (!open) goBack();
   };
 
-  // Called by the back button — sets drawer to closed so vaul plays the
-  // slide-down animation, then onOpenChange(false) fires and navigates back
-  const handleMobileBack = () => {
-    setDrawerOpen(false);
-  };
+  // Back button: navigate directly instead of setDrawerOpen(false).
+  // Setting open=false hides the portal content immediately → empty page → black screen.
+  // Direct navigation lets React Router mount the feed before this component unmounts.
+  const handleMobileBack = () => goBack();
 
   // Only scroll to top when PUSHING to the post page (not on back navigation)
   // useLayoutEffect runs before paint to prevent flash at wrong position
@@ -811,7 +812,7 @@ export default function SinglePostPage() {
         
         {/* Desktop: Standard layout with header */}
         <div className="hidden lg:flex lg:flex-col">
-          <PageHeader showBack fallbackRoute="/app" />
+          <PageHeader showBack={hasHistory} />
           <div className="px-3 sm:px-4 pb-8">
             <div className="max-w-2xl mx-auto">
               {/* Creator info for desktop */}
@@ -964,7 +965,8 @@ export default function SinglePostPage() {
 
   const renderPostContent = (onBack?: () => void) => (
     <>
-      <PageHeader showBack fallbackRoute="/app" onBack={onBack} />
+      {/* Mobile: always show back (user came from feed). Desktop: only show if there's history */}
+      <PageHeader showBack={onBack ? true : hasHistory} onBack={onBack} />
       <div className="px-3 sm:px-4 pb-8 pt-2">
         <div className="max-w-2xl mx-auto">
           {renderContent()}
