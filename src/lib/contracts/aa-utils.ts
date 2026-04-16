@@ -8,7 +8,7 @@
  */
 
 import { Interface, parseUnits, formatUnits } from 'ethers';
-import { getWeb3AuthProvider, getAAProvider, getOrInitWeb3Auth, refreshWeb3AuthProvider } from '@/lib/web3auth';
+import { getWeb3AuthProvider, getAAProvider, getAAProviderForChain, setupAAProviderForChain, getOrInitWeb3Auth, refreshWeb3AuthProvider } from '@/lib/web3auth';
 import { getAccount } from '@wagmi/core';
 import { sendTransaction, waitForTransactionReceipt, switchChain as wagmiSwitchChain } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
@@ -23,7 +23,12 @@ type Hex = `0x${string}`;
  * For external wallets, provider is null -- callers use wagmi actions or public RPC instead.
  */
 async function getActiveProvider(chainId?: number): Promise<{ provider: any; isWeb3Auth: boolean }> {
-  // Prefer AA provider (Smart Account, set after social login)
+  // Prefer chain-specific AA provider (e.g. BNB) if chainId provided
+  if (chainId !== undefined) {
+    const chainAA = getAAProviderForChain(chainId);
+    if (chainAA) return { provider: chainAA, isWeb3Auth: true };
+  }
+  // Prefer default AA provider (Base Smart Account, set after social login)
   const aaProvider = getAAProvider();
   if (aaProvider) return { provider: aaProvider, isWeb3Auth: true };
 
@@ -153,10 +158,19 @@ export async function switchChain(chainId: ChainId): Promise<void> {
         }
       }
 
-      // Method not supported -- wallet can't switch programmatically
+      // Method not supported — AA provider is single-chain; set up a chain-specific one
       if (code === -32601 || code === -32603 ||
           switchError?.message?.includes('does not exist')) {
-        console.warn('[AA] wallet_switchEthereumChain not supported');
+        console.warn('[AA] wallet_switchEthereumChain not supported, setting up chain-specific AA provider...');
+        try {
+          const chainAA = await setupAAProviderForChain(chainId);
+          if (chainAA) {
+            console.log('[AA] Chain-specific AA provider ready for', chainConfig.name);
+            return; // getActiveProvider(chainId) will now return this provider
+          }
+        } catch (e) {
+          console.warn('[AA] Chain-specific AA setup failed:', e);
+        }
         throw new Error(
           `Please switch to ${chainConfig.name} network in your wallet app and try again.`
         );

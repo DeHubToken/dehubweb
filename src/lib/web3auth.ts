@@ -198,6 +198,35 @@ let web3authInstance: Web3Auth | null = null;
 let isInitializing = false;
 let initPromise: Promise<Web3Auth> | null = null;
 let storedAAProvider: any = null;
+// Per-chain AA provider cache for multi-chain support (e.g. BNB)
+const storedChainAAProviders = new Map<number, any>();
+
+// Chain configs for multi-chain AA setup
+const AA_CHAIN_CONFIGS: Record<number, {
+  chainIdHex: string;
+  rpcTarget: string;
+  displayName: string;
+  blockExplorerUrl: string;
+  ticker: string;
+  tickerName: string;
+}> = {
+  8453: {
+    chainIdHex: "0x2105",
+    rpcTarget: "https://base-rpc.publicnode.com",
+    displayName: "Base Mainnet",
+    blockExplorerUrl: "https://basescan.org",
+    ticker: "ETH",
+    tickerName: "Ethereum",
+  },
+  56: {
+    chainIdHex: "0x38",
+    rpcTarget: "https://bsc-dataseed.binance.org",
+    displayName: "BNB Smart Chain",
+    blockExplorerUrl: "https://bscscan.com",
+    ticker: "BNB",
+    tickerName: "BNB",
+  },
+};
 // Track which connector was last used (for detecting social login vs external wallet)
 let lastConnectedConnector: string | null = null;
 // Track if we've detected that popups are blocked and should use redirect
@@ -829,6 +858,79 @@ export function getAAProvider(): any {
 
 export function clearAAProvider(): void {
   storedAAProvider = null;
+  storedChainAAProviders.clear();
+}
+
+export function getAAProviderForChain(chainId: number): any {
+  return storedChainAAProviders.get(chainId) || null;
+}
+
+function derivePimlicoUrlForChain(baseUrl: string, targetChainId: number): string {
+  // Pimlico format: https://api.pimlico.io/v2/8453/rpc?apikey=xxx → replace chain ID
+  return baseUrl.replace(/\/\d+\/rpc/, `/${targetChainId}/rpc`);
+}
+
+/**
+ * Set up an AA provider for a specific chain (e.g. BNB = 56).
+ * Derives Pimlico URLs from the cached Base config by replacing the chain ID segment.
+ * Caches the result per chain so subsequent calls are instant.
+ */
+export async function setupAAProviderForChain(targetChainId: number): Promise<any> {
+  const cached = storedChainAAProviders.get(targetChainId);
+  if (cached) return cached;
+
+  const chainInfo = AA_CHAIN_CONFIGS[targetChainId];
+  if (!chainInfo) {
+    console.warn('[Web3Auth] No AA chain config for chainId:', targetChainId);
+    return null;
+  }
+
+  const privKey = web3authInstance ? extractPrivKeyFromConnector(web3authInstance) : null;
+  if (!privKey) {
+    console.warn('[Web3Auth] No private key available for chain-specific AA setup (chainId:', targetChainId, ')');
+    return null;
+  }
+
+  const pimlicoConfig = await getPimlicoConfig();
+  if (!pimlicoConfig?.bundlerUrl) {
+    console.warn('[Web3Auth] Pimlico config unavailable for chain-specific AA');
+    return null;
+  }
+
+  const bundlerUrl = derivePimlicoUrlForChain(pimlicoConfig.bundlerUrl, targetChainId);
+  const paymasterUrl = derivePimlicoUrlForChain(pimlicoConfig.paymasterUrl, targetChainId);
+
+  const pkProvider = new EthereumPrivateKeyProvider({
+    config: {
+      chainConfig: {
+        chainNamespace: CHAIN_NAMESPACES.EIP155,
+        chainId: chainInfo.chainIdHex,
+        rpcTarget: chainInfo.rpcTarget,
+        displayName: chainInfo.displayName,
+      },
+    },
+  });
+  await pkProvider.setupProvider(privKey);
+
+  const aaProvider = await AccountAbstractionProvider.getProviderInstance({
+    eoaProvider: pkProvider,
+    smartAccountInit: new SafeSmartAccount(),
+    chainConfig: {
+      chainNamespace: CHAIN_NAMESPACES.EIP155,
+      chainId: chainInfo.chainIdHex,
+      rpcTarget: chainInfo.rpcTarget,
+      displayName: chainInfo.displayName,
+      blockExplorerUrl: chainInfo.blockExplorerUrl,
+      ticker: chainInfo.ticker,
+      tickerName: chainInfo.tickerName,
+    },
+    bundlerConfig: { url: bundlerUrl },
+    paymasterConfig: { url: paymasterUrl },
+  });
+
+  storedChainAAProviders.set(targetChainId, aaProvider);
+  console.log('[Web3Auth] Chain-specific AA provider ready for', chainInfo.displayName, `(${targetChainId})`);
+  return aaProvider;
 }
 
 export async function disconnectWeb3Auth(): Promise<void> {
