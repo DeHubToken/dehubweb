@@ -582,8 +582,11 @@ export default function SinglePostPage() {
   const navigationType = useNavigationType();
   const location = useLocation();
   
+  // Detect if opened from feed (overlay mode) — drawer should appear instantly
+  const isFromFeed = !!(location.state as any)?.fromFeed;
+  
   // Hide back button when there's no navigation history (direct URL access)
-  const hasHistory = !!(location.key && location.key !== 'default') || window.history.length > 1;
+  const hasHistory = isFromFeed || !!(location.key && location.key !== 'default') || window.history.length > 1;
   
   // State for desktop AI chat and options drawer
   const [showDesktopAIChat, setShowDesktopAIChat] = useState(false);
@@ -608,15 +611,16 @@ export default function SinglePostPage() {
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  // Start closed so vaul animates the slide-up entry; flip to true after first paint
-  const [drawerOpen, setDrawerOpen] = useState(false);
+  // When from feed, start open immediately (no animation delay).
+  // When direct link, start closed and animate open via rAF.
+  const [drawerOpen, setDrawerOpen] = useState(isFromFeed);
 
   useEffect(() => {
-    // rAF ensures the component is painted in the closed position first,
-    // so vaul sees false→true and plays the slide-up animation
-    const raf = requestAnimationFrame(() => setDrawerOpen(true));
-    return () => cancelAnimationFrame(raf);
-  }, []);
+    if (!isFromFeed) {
+      const raf = requestAnimationFrame(() => setDrawerOpen(true));
+      return () => cancelAnimationFrame(raf);
+    }
+  }, [isFromFeed]);
 
   const goBack = useCallback(() => {
     if (hasHistory) navigate(-1);
