@@ -531,6 +531,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
           sessionTime: 86400,
           uiConfig: { modalZIndex: "99999" } as any,
+          walletServicesConfig: { whiteLabel: { showWidgetButton: false } },
         };
 
         web3authInstance = new Web3Auth(initOptions);
