@@ -531,6 +531,7 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           sessionTime: 86400,
           uiConfig: { modalZIndex: "99999" } as any,
           walletServicesConfig: {
+            confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
             whiteLabel: {
               showWidgetButton: false,
             },
