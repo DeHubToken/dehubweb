@@ -1929,7 +1929,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                   onClick={() => {
                     setShowBountyDrawer(false);
                     cacheVideoForNavigation(queryClient, video);
-                    navigate(`/app/post/${video.id}`);
+                    navigate(`/app/post/${video.id}`, { state: { fromFeed: true } });
                   }}
                 >
                   <span className="block text-center text-white text-sm font-medium">

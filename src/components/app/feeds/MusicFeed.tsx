@@ -266,7 +266,7 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
   const handleContainerClick = () => {
     // If not playing, navigate to full view
     if (!isPlaying) {
-      navigate(`/app/post/${video.id}`);
+      navigate(`/app/post/${video.id}`, { state: { fromFeed: true } });
     }
   };
 
