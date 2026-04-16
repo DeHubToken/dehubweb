@@ -32,35 +32,47 @@ async function getActiveProvider(chainId?: number): Promise<{ provider: any; isW
   const aaProvider = getAAProvider();
   if (aaProvider) return { provider: aaProvider, isWeb3Auth: true };
 
-  // Fall back to raw Web3Auth EOA provider
-  const web3authProvider = getWeb3AuthProvider();
-  if (web3authProvider) return { provider: web3authProvider, isWeb3Auth: true };
-
-  // Check wagmi (external wallet).
-  // Accept 'connected' OR 'reconnecting' — wagmi is in 'reconnecting' on page load
-  // while auto-reconnect is in progress; address is already known in both states.
+  // Check wagmi (external wallet) BEFORE falling back to raw Web3Auth provider.
+  // External wallets use their own popups — that's expected and correct.
   const account = getAccount(wagmiConfig);
   if (account.address && (account.isConnected || account.status === 'reconnecting')) {
     return { provider: null, isWeb3Auth: false };
   }
 
-  // Last resort: Web3Auth session may exist but AA provider not yet restored (race condition
-  // on page restore where user acts before background useEffect completes).
-  // Try on-demand AA setup to recover gracefully.
-  try {
-    const w3a = await getOrInitWeb3Auth();
-    if (w3a.connected && w3a.provider) {
-      console.log('[AA] Provider missing — setting up AA on-demand...');
-      const onDemandAA = await setupAAProvider(w3a.provider);
+  // Web3Auth is connected but AA provider not set up yet (page restore race condition or
+  // AA setup failed). Always try on-demand AA setup — the raw modal provider would route
+  // through WalletServices which shows an ETH gas popup and requires ETH balance.
+  // On-demand AA uses Pimlico paymaster so gas is sponsored (no ETH needed).
+  const web3authProvider = getWeb3AuthProvider();
+  if (web3authProvider) {
+    try {
+      console.log('[AA] AA provider missing — setting up on-demand...');
+      const onDemandAA = await setupAAProvider(web3authProvider);
       if (onDemandAA) {
         setAAProvider(onDemandAA);
         console.log('[AA] On-demand AA provider ready');
         return { provider: onDemandAA, isWeb3Auth: true };
       }
-      // AA setup failed, use raw provider as fallback
+    } catch (e) {
+      console.warn('[AA] On-demand AA setup failed, falling back to raw provider:', e);
+    }
+    // AA setup failed — fall back to raw provider (will show WalletServices popup)
+    return { provider: web3authProvider, isWeb3Auth: true };
+  }
+
+  // Last resort: Web3Auth instance exists in storage but provider not loaded yet
+  try {
+    const w3a = await getOrInitWeb3Auth();
+    if (w3a.connected && w3a.provider) {
+      console.log('[AA] Re-init Web3Auth — setting up AA on-demand...');
+      const onDemandAA = await setupAAProvider(w3a.provider);
+      if (onDemandAA) {
+        setAAProvider(onDemandAA);
+        return { provider: onDemandAA, isWeb3Auth: true };
+      }
       return { provider: w3a.provider, isWeb3Auth: true };
     }
-  } catch { /* ignore, fall through to error */ }
+  } catch { /* ignore */ }
 
   throw new Error('No wallet connected. Please sign in first.');
 }

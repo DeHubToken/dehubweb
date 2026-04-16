@@ -198,6 +198,7 @@ let web3authInstance: Web3Auth | null = null;
 let isInitializing = false;
 let initPromise: Promise<Web3Auth> | null = null;
 let storedAAProvider: any = null;
+let pendingAASetupPromise: Promise<any | null> | null = null;
 // Per-chain AA provider cache for multi-chain support (e.g. BNB)
 const storedChainAAProviders = new Map<number, any>();
 
@@ -858,6 +859,7 @@ export function getAAProvider(): any {
 
 export function clearAAProvider(): void {
   storedAAProvider = null;
+  pendingAASetupPromise = null;
   storedChainAAProviders.clear();
 }
 
@@ -1036,6 +1038,21 @@ export async function showWeb3AuthCheckout(): Promise<void> {
  * Returns null if Pimlico config is unavailable (AA is best-effort).
  */
 export async function setupAAProvider(eoaProvider: IProvider): Promise<AccountAbstractionProvider | null> {
+  // Return immediately if already set up
+  if (storedAAProvider) return storedAAProvider;
+  // Deduplicate concurrent calls — share one in-flight promise
+  if (pendingAASetupPromise) {
+    console.log('[Web3Auth] AA setup already in progress — awaiting shared promise');
+    return pendingAASetupPromise;
+  }
+
+  pendingAASetupPromise = _doSetupAAProvider(eoaProvider).finally(() => {
+    pendingAASetupPromise = null;
+  });
+  return pendingAASetupPromise;
+}
+
+async function _doSetupAAProvider(eoaProvider: IProvider): Promise<AccountAbstractionProvider | null> {
   try {
     const pimlicoConfig = await getPimlicoConfig();
     if (!pimlicoConfig?.bundlerUrl || !pimlicoConfig?.paymasterUrl) {
