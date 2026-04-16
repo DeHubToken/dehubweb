@@ -51,6 +51,10 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const videoMatch = useMatch('/app/video/:tokenId');
   const isPostRoute = !!(postMatch || videoMatch);
   
+  // Detect if this post was opened from the feed (overlay mode)
+  const isFromFeed = !!(location.state as any)?.fromFeed;
+  const isOverlayPost = isPostRoute && isFromFeed;
+  
   // Track if we came from home page (for overlay behavior)
   const [cameFromHome, setCameFromHome] = useState(() => {
     return sessionStorage.getItem(POST_OVERLAY_ORIGIN_KEY) === 'home';
@@ -182,9 +186,9 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       >
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
-        <main className={cn(
+         <main className={cn(
           "flex-1 min-h-screen pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black",
-          isPostRoute ? "pt-0" : "pt-11"
+          (isPostRoute && !isOverlayPost) ? "pt-0" : "pt-11"
         )}>
           {/* Global feed nav — keep mounted and animate in/out to avoid rigid multi-step jumps */}
           <div

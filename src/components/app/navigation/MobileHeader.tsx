@@ -59,7 +59,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   }, [navigate]);
 
   const isNotificationsActive = location.pathname === '/app/notifications';
-  const isDedicatedPostPage = location.pathname.startsWith('/app/post/') || location.pathname.startsWith('/app/video/');
+  const isDedicatedPostPage = (location.pathname.startsWith('/app/post/') || location.pathname.startsWith('/app/video/')) && !(location.state as any)?.fromFeed;
   const handleMenuClick = useCallback(() => {
     if (!isAuthenticated) {
       openLoginModal();
