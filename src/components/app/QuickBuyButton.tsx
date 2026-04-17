@@ -6,7 +6,6 @@
 
 import { useState } from 'react';
 import { ShoppingCart, CreditCard, Wallet, ArrowRightLeft } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import {
   Drawer,
@@ -30,7 +29,7 @@ interface QuickBuyButtonProps {
   chainId?: string;
 }
 
-export function QuickBuyButton({ symbol, tokenType, tokenAddress, tokenDecimals, tokenLogo, chainId }: QuickBuyButtonProps) {
+export function QuickBuyButton({ symbol, tokenAddress, tokenDecimals, tokenLogo, chainId }: QuickBuyButtonProps) {
   const [open, setOpen] = useState(false);
   const [crossChainOpen, setCrossChainOpen] = useState(false);
   const [swapDHBOpen, setSwapDHBOpen] = useState(false);

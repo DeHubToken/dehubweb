@@ -1,4 +1,4 @@
-import { useMemo, useRef, useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import type { PricePoint, ChartTimeframe } from '@/hooks/use-token-chart';
 import { Loader2, ExternalLink } from 'lucide-react';
@@ -33,7 +33,7 @@ function formatTooltipPrice(value: number): string {
   return `$${value.toFixed(8)}`;
 }
 
-function formatTooltipLabel(timestamp: number, timeframe: ChartTimeframe = '7D'): string {
+function formatTooltipLabel(timestamp: number): string {
   const d = new Date(timestamp);
   return d.toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) +
     ' ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -91,7 +91,7 @@ export function TokenPriceChart({ data, isLoading, timeframe = '7D', onTimeframe
               padding: '8px 12px',
               fontSize: '12px',
             }}
-            labelFormatter={(t) => formatTooltipLabel(t, timeframe)}
+            labelFormatter={(t) => formatTooltipLabel(t)}
             formatter={(value: number) => [formatTooltipPrice(value), 'Price']}
             labelStyle={{ color: '#a1a1aa' }}
             itemStyle={{ color: '#ffffff' }}

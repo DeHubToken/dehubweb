@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Copy, Send, ArrowLeft, CreditCard, Bitcoin, Search, Check, History, Lock, Minus, LogOut } from 'lucide-react';
+import { Plus, Copy, Send, ArrowLeft, CreditCard, Bitcoin, Search, Check, History, Lock, Minus } from 'lucide-react';
 import {
   Drawer,
   DrawerContent,
@@ -11,11 +11,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { useTranslation } from 'react-i18next';
 import dehubCoin from '@/assets/dehub-coin.png';
 import usdcLogo from '@/assets/usdc-logo.png';
 import { useAuth } from '@/contexts/AuthContext';
-import { ChainSelector, type ChainId, SUPPORTED_CHAINS, getChainById } from './ChainSelector';
+import { ChainSelector, type ChainId } from './ChainSelector';
 
 interface CoinBalanceMenuProps {
   balance: number;
@@ -50,7 +49,7 @@ const MOCK_TRANSACTIONS = [
 
 export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanceMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { walletAddress, isAuthenticated, disconnect } = useAuth();
+  const { walletAddress } = useAuth();
   const navigate = useNavigate();
 
   const handleOpenChange = (open: boolean) => {
@@ -83,20 +82,6 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
     setCopied(true);
     toast.success('Address copied');
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const { t } = useTranslation();
-
-  const handleLogout = async () => {
-    try {
-      await disconnect();
-      toast.success(t('settings.loggedOut'));
-    } catch {
-      toast.error(t('settings.logoutFailed'));
-    } finally {
-      setIsOpen(false);
-      resetMenu();
-    }
   };
 
   const handleBuyWithCard = () => {
@@ -170,8 +155,6 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
     return value % 1 === 0 ? value.toLocaleString() : value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
-  const selectedChain = getChainById(selectedChainId);
-  
   const mainMenuContent = (
     <div className="space-y-1">
       {/* Balance display with chain selector */}

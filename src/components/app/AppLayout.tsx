@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useLayoutEffect, type ReactNode } from 'react';
-import { Outlet, useLocation, useMatch, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useMatch } from 'react-router-dom';
 import { AppSidebar } from './AppSidebar';
 import { RightSidebar } from './RightSidebar';
 import { MobileBottomNav } from './MobileBottomNav';
@@ -15,7 +15,6 @@ import { FloatingPiPOverlay } from '@/components/app/tv/FloatingPiPOverlay';
 import { FloatingChartPiPOverlay } from '@/components/app/charts/FloatingChartPiPOverlay';
 import { UserFeedbackSurvey } from '@/components/app/UserFeedbackSurvey';
 import { PostModal } from '@/features/post/PostModal';
-import { DevelopmentNoticeModal } from './modals';
 import { RadioMiniPlayer } from '@/components/app/radio';
 import { StageMiniPlayer, AudioSpacesModal } from '@/components/app/spaces';
 import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
@@ -37,7 +36,6 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const { isPostModalOpen, closePostModal, pendingFiles, clearPendingFiles, initialText, clearInitialText, initialCategory, clearInitialCategory } = useGlobalDropZone();
   const { isCollapsed } = useSidebarCollapse();
   const location = useLocation();
-  const navigate = useNavigate();
   
   // Disable browser's automatic scroll restoration globally
   useEffect(() => {
@@ -52,7 +50,8 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const isPostRoute = !!(postMatch || videoMatch);
   
   // Detect if this post was opened from the feed (overlay mode)
-  const isFromFeed = !!(location.state as any)?.fromFeed;
+  const routeState = location.state as { fromFeed?: boolean } | null;
+  const isFromFeed = !!routeState?.fromFeed;
   const isOverlayPost = isPostRoute && isFromFeed;
   
   // Track if we came from home page (for overlay behavior)
@@ -173,7 +172,6 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   
   const navigatingFromHomeToPost = isPostRoute && prevPathRef.current === '/app';
   const showHomePagePersisted = isOverlayPost || (isPostRoute && (cameFromHome || navigatingFromHomeToPost));
-  const isHomePage = location.pathname === '/app';
   const isCached = isCachedPageRoute(location.pathname);
   // Dynamic routes: post overlay, single post, post info, or username profiles
   const isDynamicRoute = !isCached && !showHomePagePersisted;

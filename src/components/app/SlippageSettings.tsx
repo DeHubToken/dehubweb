@@ -24,7 +24,6 @@ export function SlippageSettings({ slippageBps, onSlippageChange }: SlippageSett
   const [open, setOpen] = useState(false);
   const [customValue, setCustomValue] = useState('');
 
-  const isPreset = PRESETS.some(p => p.bps === slippageBps);
   const displayPct = (slippageBps / 100).toFixed(slippageBps % 100 === 0 ? 0 : 1);
 
   return (

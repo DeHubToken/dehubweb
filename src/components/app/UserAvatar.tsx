@@ -15,7 +15,7 @@ const sizeClasses = {
   lg: 'w-12 h-12',
 };
 
-export function UserAvatar({ name, handle, avatarUrl, size = 'md', className }: UserAvatarProps) {
+export function UserAvatar({ name, avatarUrl, size = 'md', className }: UserAvatarProps) {
   return (
     <Avatar className={cn(sizeClasses[size], className)}>
       {avatarUrl && <AvatarImage src={avatarUrl} alt={`${name}'s avatar`} />}
