@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 
 const STORAGE_KEY = "upgrade-notice-dismissed-v2";
-const MESSAGE = "DeHub is undergoing a contract upgrade and new listings will be announced soon. The app is also being upgraded so downtime should be expected.";
+const MESSAGE = "DeHub is undergoing a contract upgrade and new listings will be announced soon. The app is also undergoing maintenance so downtime should be expected during this period.";
 
 export function UpgradeNoticeBanner() {
   const [visible, setVisible] = useState(false);
