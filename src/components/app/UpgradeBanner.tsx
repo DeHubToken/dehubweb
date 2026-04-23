@@ -10,7 +10,7 @@
  * content down rather than overlapping it.
  */
 const MESSAGE =
-  'DeHub is undergoing a contract upgrade and new listings will be announced soon. The app is also being upgraded so downtime should be expected';
+  'DeHub is undergoing a contract upgrade and new listings will be announced soon. The app is also being upgraded so downtime should be expected during this period.';
 
 export function UpgradeBanner() {
   return (
