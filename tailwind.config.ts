@@ -150,7 +150,7 @@ export default {
         "story-shimmer": "story-shimmer-rotate 4s linear infinite",
         "lava-flow": "lava-flow 4s ease infinite",
         "float-up": "float-up 2s ease-out forwards",
-        "marquee": "marquee 25s linear infinite",
+        "marquee": "marquee 8s linear infinite",
       },
     },
   },
