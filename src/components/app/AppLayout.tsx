@@ -18,6 +18,7 @@ import { PostModal } from '@/features/post/PostModal';
 import { RadioMiniPlayer } from '@/components/app/radio';
 import { StageMiniPlayer, AudioSpacesModal } from '@/components/app/spaces';
 import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
+import { UpgradeNoticeBanner } from '@/components/app/UpgradeNoticeBanner';
 import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
 import { GlobalFeedNav } from './GlobalFeedNav';
 import { cn } from '@/lib/utils';
@@ -178,6 +179,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
 
   return (
     <div id="app-root" className="min-h-screen bg-black text-white overflow-x-clip" style={{ touchAction: 'manipulation', overscrollBehavior: 'none' }}>
+      <UpgradeNoticeBanner />
       <div
         className="flex w-full relative min-h-screen mx-auto transition-[max-width] duration-500 ease-in-out motion-reduce:transition-none"
         style={{ maxWidth: isCollapsed ? '100%' : '80rem', willChange: 'max-width' }}
