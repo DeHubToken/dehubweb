@@ -14,7 +14,7 @@ const MESSAGE =
 
 export function UpgradeBanner() {
   return (
-    <div className="relative w-full bg-red-600 text-white text-[11px] sm:text-xs font-medium leading-tight overflow-hidden py-1">
+    <div className="fixed top-0 left-0 right-0 z-[110] w-full bg-red-600 text-white text-[11px] sm:text-xs font-medium leading-tight overflow-hidden py-1">
       <div
         className="whitespace-nowrap inline-block"
         style={{ animation: 'upgrade-banner-marquee 35s linear infinite' }}
