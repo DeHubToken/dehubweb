@@ -179,7 +179,9 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
 
   return (
     <div id="app-root" className="min-h-screen bg-black text-white overflow-x-clip" style={{ touchAction: 'manipulation', overscrollBehavior: 'none' }}>
-      <UpgradeBanner />
+      <div className="sticky top-0 z-[100]">
+        <UpgradeBanner />
+      </div>
       <div
         className="flex w-full relative min-h-screen mx-auto transition-[max-width] duration-500 ease-in-out motion-reduce:transition-none"
         style={{ maxWidth: isCollapsed ? '100%' : '80rem', willChange: 'max-width' }}
