@@ -4,20 +4,38 @@
  * Shows a store's profile and all its active listings.
  */
 
-import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, MapPin } from 'lucide-react';
-import { useStoreById, useStoreListings } from '@/hooks/use-stores';
+import { useStoreById, useStoreListings, useStoreListing } from '@/hooks/use-stores';
 import { StoreListingCard } from '@/components/app/stores/StoreListingCard';
 import { ListingDetailDrawer } from '@/components/app/stores/ListingDetailDrawer';
 import { Button } from '@/components/ui/button';
 
 export default function StoreDetailPage() {
   const { storeId } = useParams<{ storeId: string }>();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { data: store, isLoading: storeLoading } = useStoreById(storeId);
   const { data: listings = [], isLoading: listingsLoading } = useStoreListings(storeId);
   const [selectedListing, setSelectedListing] = useState<any>(null);
+
+  // Open drawer when ?listing=<id> is present (e.g. from a shared post embed).
+  const linkedListingId = searchParams.get('listing');
+  const { data: linkedListing } = useStoreListing(linkedListingId || undefined);
+  useEffect(() => {
+    if (linkedListing && !selectedListing) setSelectedListing(linkedListing);
+  }, [linkedListing, selectedListing]);
+
+  const closeListing = () => {
+    setSelectedListing(null);
+    if (searchParams.get('listing')) {
+      const next = new URLSearchParams(searchParams);
+      next.delete('listing');
+      setSearchParams(next, { replace: true });
+    }
+  };
+
   const storeInitial = (store?.name || 'S')[0].toUpperCase();
 
   if (storeLoading) {
@@ -116,7 +134,7 @@ export default function StoreDetailPage() {
       <ListingDetailDrawer
         listing={selectedListing}
         open={!!selectedListing}
-        onClose={() => setSelectedListing(null)}
+        onClose={closeListing}
       />
     </div>
   );

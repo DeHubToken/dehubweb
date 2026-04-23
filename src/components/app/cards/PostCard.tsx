@@ -23,6 +23,7 @@ import { PostMetadata } from './PostMetadata';
 import { QuotedPostEmbed } from './QuotedPostEmbed';
 import { FeedLinkPreviews } from './FeedLinkPreviews';
 import { CommunityLinkEmbed, extractCommunitySlug, hasCommunityLink } from '@/components/app/communities/CommunityLinkEmbed';
+import { StoreLinkEmbed, extractStoreLinkInfo, hasStoreLink } from '@/components/app/stores/StoreLinkEmbed';
 import { TranslatableText, useTranslation, renderTextWithLinks } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
@@ -356,8 +357,14 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           return slug ? <CommunityLinkEmbed slug={slug} /> : null;
         })()}
 
-        {/* Link previews for URLs in content (skip if community link is shown) */}
-        {post.content && !hasCommunityLink(post.content) && <FeedLinkPreviews text={post.content} />}
+        {/* Store / listing link embed */}
+        {post.content && hasStoreLink(post.content) && (() => {
+          const info = extractStoreLinkInfo(post.content);
+          return info ? <StoreLinkEmbed storeId={info.storeId} listingId={info.listingId} /> : null;
+        })()}
+
+        {/* Link previews for URLs in content (skip if community/store link is shown) */}
+        {post.content && !hasCommunityLink(post.content) && !hasStoreLink(post.content) && <FeedLinkPreviews text={post.content} />}
 
         {/* Metadata: timestamp and views */}
         <PostMetadata
