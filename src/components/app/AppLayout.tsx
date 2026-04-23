@@ -22,7 +22,6 @@ import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
 import { GlobalFeedNav } from './GlobalFeedNav';
 import { cn } from '@/lib/utils';
 import SinglePostPage from '@/pages/app/SinglePostPage';
-import { UpgradeBanner } from './UpgradeBanner';
 
 interface AppLayoutContentProps {
   children?: ReactNode;
@@ -179,7 +178,6 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
 
   return (
     <div id="app-root" className="min-h-screen bg-black text-white overflow-x-clip" style={{ touchAction: 'manipulation', overscrollBehavior: 'none' }}>
-      <UpgradeBanner />
       <div
         className="flex w-full relative min-h-screen mx-auto transition-[max-width] duration-500 ease-in-out motion-reduce:transition-none"
         style={{ maxWidth: isCollapsed ? '100%' : '80rem', willChange: 'max-width' }}
@@ -187,8 +185,8 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
          <main className={cn(
-          "flex-1 min-h-screen pb-16 lg:pb-0 min-w-0 w-full bg-black",
-          (isPostRoute && !isOverlayPost) ? "pt-[22px] lg:pt-[22px]" : "pt-[66px] lg:pt-[22px]"
+          "flex-1 min-h-screen pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black",
+          (isPostRoute && !isOverlayPost) ? "pt-0" : "pt-11"
         )}>
           {/* Global feed nav — keep mounted and animate in/out to avoid rigid multi-step jumps */}
           <div
