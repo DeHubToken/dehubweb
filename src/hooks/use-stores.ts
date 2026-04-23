@@ -88,6 +88,22 @@ export function useStoreById(storeId: string | undefined) {
   });
 }
 
+export function useStoreListing(listingId: string | undefined) {
+  return useQuery({
+    queryKey: ['store-listing', listingId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('store_listings')
+        .select('*, stores(name, avatar_url, wallet_address)')
+        .eq('id', listingId!)
+        .maybeSingle();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!listingId,
+  });
+}
+
 export function useStoreListings(storeId: string | undefined) {
   return useQuery({
     queryKey: ['store-listings', storeId],
