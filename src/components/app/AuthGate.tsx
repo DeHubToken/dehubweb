@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import assistantAvatar from '@/assets/assistant-avatar.png';
 
-export function AuthGate() {
+export function AuthGate({ description: _description }: { description?: string } = {}) {
   const { t } = useTranslation();
   const { openLoginModal, isLoading, isConnecting, needsSignature } = useAuth();
   const [imageLoaded, setImageLoaded] = useState(false);
