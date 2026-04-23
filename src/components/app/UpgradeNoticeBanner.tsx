@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 
-const STORAGE_KEY = "upgrade-notice-dismissed-v1";
+const STORAGE_KEY = "upgrade-notice-dismissed-v2";
 const MESSAGE = "DeHub is undergoing a contract upgrade and new listings will be announced soon. The app is also being upgraded so downtime should be expected.";
 
 export function UpgradeNoticeBanner() {
