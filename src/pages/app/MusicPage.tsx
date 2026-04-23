@@ -353,7 +353,7 @@ export default function MusicPage() {
       <SEOHead title="Music — Listen & Discover on DeHub" description="Stream music, discover new artists, listen to live radio and watch music videos on DeHub — the decentralized open source media platform." url="https://dehub.io/app/music" jsonLd={{ '@context': 'https://schema.org', '@type': 'MusicPlaylist', name: 'DeHub Music', url: 'https://dehub.io/app/music', description: 'Stream music, discover artists and listen to radio on DeHub.' }} />
       <h1 className="sr-only">DeHub Music — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Tab Navigation */}
-      <div className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
+      <div className="sticky top-[66px] lg:top-[22px] bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
         <div className="bg-zinc-900 rounded-2xl p-2 overflow-visible">
           <div ref={musicTabLayerRef} className="relative overflow-visible">
             <GlassIndicator ref={musicIndicatorRef} rect={musicTabRect} enableTransition={!isMusicDragging} />
