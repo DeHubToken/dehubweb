@@ -22,6 +22,7 @@ import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
 import { GlobalFeedNav } from './GlobalFeedNav';
 import { cn } from '@/lib/utils';
 import SinglePostPage from '@/pages/app/SinglePostPage';
+import { UpgradeBanner } from './UpgradeBanner';
 
 interface AppLayoutContentProps {
   children?: ReactNode;
