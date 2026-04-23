@@ -14,20 +14,14 @@ const MESSAGE =
 
 export function UpgradeBanner() {
   return (
-    <div className="relative w-full bg-red-600 text-white text-[11px] sm:text-xs font-medium leading-tight">
-      {/* Mobile: marquee */}
-      <div className="sm:hidden overflow-hidden py-1">
-        <div
-          className="whitespace-nowrap inline-block"
-          style={{ animation: 'upgrade-banner-marquee 22s linear infinite' }}
-        >
-          <span className="px-8">{MESSAGE}</span>
-          <span className="px-8">{MESSAGE}</span>
-        </div>
+    <div className="relative w-full bg-red-600 text-white text-[11px] sm:text-xs font-medium leading-tight overflow-hidden py-1">
+      <div
+        className="whitespace-nowrap inline-block"
+        style={{ animation: 'upgrade-banner-marquee 35s linear infinite' }}
+      >
+        <span className="px-8">{MESSAGE}</span>
+        <span className="px-8">{MESSAGE}</span>
       </div>
-
-      {/* Desktop: static centered */}
-      <div className="hidden sm:block px-3 py-1 text-center">{MESSAGE}</div>
 
       <style>{`
         @keyframes upgrade-banner-marquee {
