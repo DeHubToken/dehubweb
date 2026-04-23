@@ -6,6 +6,7 @@ import { fetchLinkPreview, extractUrlsFromText, type LinkPreviewData } from '@/l
 import { Skeleton } from '@/components/ui/skeleton';
 import { CommunityLinkEmbed, extractCommunitySlug } from '@/components/app/communities/CommunityLinkEmbed';
 import { EventLinkEmbed, extractEventNumber } from '@/components/app/events/EventLinkEmbed';
+import { StoreLinkEmbed, extractStoreLinkInfo } from '@/components/app/stores/StoreLinkEmbed';
 
 interface LinkPreviewsProps {
   text: string;
@@ -18,6 +19,7 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
   const [removedUrls, setRemovedUrls] = useState<Set<string>>(new Set());
   const [communityDismissed, setCommunityDismissed] = useState(false);
   const [eventDismissed, setEventDismissed] = useState(false);
+  const [storeDismissed, setStoreDismissed] = useState(false);
   const fetchedUrls = useRef<Set<string>>(new Set());
 
   // Detect community slug from text
@@ -25,6 +27,9 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
   
   // Detect event ID from text
   const eventNum = eventDismissed ? null : extractEventNumber(text);
+
+  // Detect store / listing link from text
+  const storeInfo = storeDismissed ? null : extractStoreLinkInfo(text);
 
   // Reset dismissed state when text changes to a different community or no community
   const prevSlugRef = useRef<string | null>(null);
@@ -54,8 +59,10 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
   useEffect(() => {
     const urls = extractUrlsFromText(text);
     
-    // Skip community and event URLs - they get their own embeds
-    const nonSpecialUrls = urls.filter(url => !extractCommunitySlug(url) && !extractEventNumber(url));
+    // Skip community, event and store URLs - they get their own embeds
+    const nonSpecialUrls = urls.filter(
+      url => !extractCommunitySlug(url) && !extractEventNumber(url) && !extractStoreLinkInfo(url)
+    );
     
     // Filter out removed and already fetched URLs
     const newUrls = nonSpecialUrls.filter(
@@ -105,15 +112,15 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
     setEventDismissed(true);
   };
 
-  // Get URLs that should be displayed (in text, not removed, not community/event links)
+  // Get URLs that should be displayed (in text, not removed, not community/event/store links)
   const currentUrls = extractUrlsFromText(text)
-    .filter(url => !removedUrls.has(url) && !extractCommunitySlug(url) && !extractEventNumber(url));
+    .filter(url => !removedUrls.has(url) && !extractCommunitySlug(url) && !extractEventNumber(url) && !extractStoreLinkInfo(url));
   const visiblePreviews = currentUrls
     .map(url => previews.get(url))
     .filter((p): p is LinkPreviewData => !!p);
   const loadingUrls = currentUrls.filter(url => loading.has(url));
 
-  const hasContent = communitySlug || eventNum || visiblePreviews.length > 0 || loadingUrls.length > 0;
+  const hasContent = communitySlug || eventNum || storeInfo || visiblePreviews.length > 0 || loadingUrls.length > 0;
   if (!hasContent) return null;
 
   return (
@@ -144,6 +151,23 @@ export function LinkPreviews({ text, onRemoveCommunityLink }: LinkPreviewsProps)
             onClick={(e) => {
               e.stopPropagation();
               handleRemoveEvent();
+            }}
+            className="absolute top-2 right-2 p-1 rounded-full bg-black/60 hover:bg-black/80 text-white/70 hover:text-white transition-colors z-10"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      )}
+
+      {/* Store / listing link embed with dismiss button */}
+      {storeInfo && (
+        <div className="relative">
+          <StoreLinkEmbed storeId={storeInfo.storeId} listingId={storeInfo.listingId} />
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              setStoreDismissed(true);
             }}
             className="absolute top-2 right-2 p-1 rounded-full bg-black/60 hover:bg-black/80 text-white/70 hover:text-white transition-colors z-10"
           >

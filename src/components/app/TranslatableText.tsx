@@ -202,6 +202,11 @@ export function renderTextWithLinks(text: string): ReactNode[] {
         lastIndex = combinedRegex.lastIndex;
         continue;
       }
+      if (/\/app\/stores\/[a-fA-F0-9-]{8,}/.test(url)) {
+        // Store / listing link — handled by StoreLinkEmbed
+        lastIndex = combinedRegex.lastIndex;
+        continue;
+      }
       const href = url.match(/^https?:\/\//i) ? url : `https://${url}`;
       parts.push(
         <a
