@@ -138,6 +138,10 @@ export default {
           "0%": { transform: "translateY(0)", opacity: "1" },
           "100%": { transform: "translateY(-140px)", opacity: "0" },
         },
+        "marquee": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -146,6 +150,7 @@ export default {
         "story-shimmer": "story-shimmer-rotate 4s linear infinite",
         "lava-flow": "lava-flow 4s ease infinite",
         "float-up": "float-up 2s ease-out forwards",
+        "marquee": "marquee 25s linear infinite",
       },
     },
   },
