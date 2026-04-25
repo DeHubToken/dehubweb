@@ -1,0 +1,1 @@
+DELETE FROM public.ai_agents WHERE name = 'assistant' AND owner_wallet_address = '0xea0fe14398b96f3ae97f222a6cf0f933c1ccf61c';
