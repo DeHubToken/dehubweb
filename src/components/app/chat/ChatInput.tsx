@@ -162,6 +162,41 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     }
   };
 
+  const handleAskAssistant = () => {
+    const ta = textareaRef.current;
+    const tag = '@assistant ';
+    let newVal: string;
+    let newCursor: number;
+    if (ta) {
+      const start = ta.selectionStart ?? message.length;
+      const end = ta.selectionEnd ?? message.length;
+      const before = message.slice(0, start);
+      const after = message.slice(end);
+      // Avoid duplicate tag if already present at start
+      if (message.toLowerCase().includes('@assistant')) {
+        newVal = message;
+        newCursor = end;
+      } else {
+        const needsSpaceBefore = before.length > 0 && !/\s$/.test(before);
+        const insertion = (needsSpaceBefore ? ' ' : '') + tag;
+        newVal = before + insertion + after;
+        newCursor = before.length + insertion.length;
+      }
+    } else {
+      newVal = message ? `${message} ${tag}` : tag;
+      newCursor = newVal.length;
+    }
+    setMessage(newVal);
+    requestAnimationFrame(() => {
+      const t = textareaRef.current;
+      if (t) {
+        t.focus();
+        t.setSelectionRange(newCursor, newCursor);
+        t.style.height = 'auto';
+        t.style.height = `${Math.min(t.scrollHeight, 128)}px`;
+      }
+    });
+  };
   const clearImage = () => {
     if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
     setImageFile(null);
