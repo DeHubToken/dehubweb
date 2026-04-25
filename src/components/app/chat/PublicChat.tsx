@@ -194,19 +194,41 @@ export function PublicChat({ onBack }: PublicChatProps) {
         const { data, error } = await supabase.functions.invoke('general-ai-chat', {
           body: {
             messages: [
+              {
+                role: 'system',
+                content:
+                  'You are @assistant, the official DeHub AI helper replying inside a public chat room. ' +
+                  'CRITICAL: Keep your reply to ONE short message under 400 characters. ' +
+                  'No markdown, no link formatting like [text](url) — paste raw URLs only. ' +
+                  'Be friendly, concise, and answer the most important question first. ' +
+                  'If you cannot help, say so in one short sentence.',
+              },
               ...history.slice(0, -1),
               { role: 'user', content: userQuestion },
             ],
           },
         });
         if (error) throw error;
-        const responseText: string = data?.response || '';
+        let responseText: string = (data?.response || '').trim();
         if (!responseText) return;
-        // Reply in chat, mentioning the asker
-        const reply = `@${candidate.userHandle || candidate.userName} ${responseText}`;
-        await send(reply, 'text', undefined, candidate.id);
+        // Strip markdown links -> raw URL
+        responseText = responseText.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '$2');
+        // Reply mentioning the asker, cap to chat's 500-char limit
+        const mention = `@${candidate.userHandle || candidate.userName} `;
+        const MAX = 500;
+        const room = MAX - mention.length;
+        if (responseText.length > room) {
+          responseText = responseText.slice(0, room - 1).trimEnd() + '…';
+        }
+        const reply = mention + responseText;
+        // Only pass replyTo if it looks like a server-side Mongo ObjectId (24 hex chars).
+        // Optimistic IDs like "temp-..." crash the backend ("Cast to ObjectId failed").
+        const isObjectId = /^[a-f0-9]{24}$/i.test(candidate.id);
+        await send(reply, 'text', undefined, isObjectId ? candidate.id : undefined);
       } catch (err) {
         console.warn('[PublicChat] Assistant auto-reply failed:', err);
+        // Allow retry on next message tick if it was a transient error
+        respondedRef.current.delete(candidate.id);
       }
     })();
   }, [messages, isAuthenticated, walletAddress, selectedRoomId, send]);
