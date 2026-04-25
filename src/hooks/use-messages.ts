@@ -390,11 +390,17 @@ export function useMessages(conversationId: string | null) {
       console.log('[DM] onReadReceipt fired', { data, conversationId });
       const dmId = data?.dmId || data?.conversationId;
       if (!dmId || dmId !== conversationId) return;
-      // Ignore self-receipts: server echoes readReceipt back to whoever emitted markAsRead.
-      // Same guard as mobile: "ignore self-receipts (our own markAsRead echoed back)"
+      // Only update read state when we can positively confirm the reader is someone else.
+      // If readBy is absent we can't tell — it's likely our own markAsRead echo from the server.
       const readBy = data?.readBy;
+      if (!readBy) return;
+      const readByStr = String(readBy).toLowerCase();
       const myUserId = user?._id || (user as any)?.id;
-      if (readBy && myUserId && String(readBy) === String(myUserId)) return;
+      const myAddress = walletAddress?.toLowerCase();
+      const isSelf =
+        (!!myUserId && readByStr === String(myUserId).toLowerCase()) ||
+        (!!myAddress && readByStr === myAddress);
+      if (isSelf) return;
       queryClient.setQueryData(
         messagesKeys.messages(conversationId),
         (old: any) => {
