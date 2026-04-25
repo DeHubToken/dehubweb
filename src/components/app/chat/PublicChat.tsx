@@ -187,16 +187,18 @@ export function PublicChat({ onBack }: PublicChatProps) {
     }
   }, [filteredMessages.length]);
 
-  // ---- Auto-reply to @assistant mentions ----
+  // ---- Auto-reply to @assistant mentions (LOCAL ONLY — like buy bot, not sent to chat API) ----
   const respondedRef = useRef<Set<string>>(new Set());
   useEffect(() => {
-    if (!isAuthenticated || !walletAddress || !selectedRoomId) return;
-    // Find the most recent unprocessed message from the current user that mentions @assistant
+    if (!selectedRoomId) return;
+    // Only the message author triggers the reply, to avoid duplicates from other clients.
+    // The reply itself is rendered locally in this client only — that's fine and matches the
+    // buy bot behavior (each viewer sees the alert in their own client).
+    if (!walletAddress) return;
     const candidate = [...messages].reverse().find((m) => {
       if (respondedRef.current.has(m.id)) return false;
       if (!m.content) return false;
       if (!/@assistant\b/i.test(m.content)) return false;
-      // Only the author triggers the reply (avoids duplicates from other clients)
       return m.userId.toLowerCase() === walletAddress.toLowerCase();
     });
     if (!candidate) return;
@@ -206,10 +208,11 @@ export function PublicChat({ onBack }: PublicChatProps) {
     const idx = messages.findIndex((m) => m.id === candidate.id);
     const start = Math.max(0, idx - 6);
     const history = messages.slice(start, idx + 1).map((m) => ({
-      role: m.userId.toLowerCase() === walletAddress.toLowerCase() ? 'user' as const : 'user' as const,
+      role: 'user' as const,
       content: `${m.userName}: ${m.content}`,
     }));
     const userQuestion = candidate.content.replace(/@assistant/gi, '').trim() || 'Hello';
+    const replyToName = candidate.userHandle || candidate.userName;
 
     (async () => {
       try {
@@ -235,25 +238,25 @@ export function PublicChat({ onBack }: PublicChatProps) {
         if (!responseText) return;
         // Strip markdown links -> raw URL
         responseText = responseText.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '$2');
-        // Reply mentioning the asker, cap to chat's 500-char limit
-        const mention = `@${candidate.userHandle || candidate.userName} `;
-        const MAX = 500;
-        const room = MAX - mention.length;
-        if (responseText.length > room) {
-          responseText = responseText.slice(0, room - 1).trimEnd() + '…';
+        if (responseText.length > 500) {
+          responseText = responseText.slice(0, 499).trimEnd() + '…';
         }
-        const reply = mention + responseText;
-        // Only pass replyTo if it looks like a server-side Mongo ObjectId (24 hex chars).
-        // Optimistic IDs like "temp-..." crash the backend ("Cast to ObjectId failed").
-        const isObjectId = /^[a-f0-9]{24}$/i.test(candidate.id);
-        await send(reply, 'text', undefined, isObjectId ? candidate.id : undefined);
+        // Render LOCALLY only — do not call send() (no API write, no other clients see it)
+        setAssistantReplies((prev) => [
+          ...prev,
+          {
+            id: `${candidate.id}-${Date.now()}`,
+            content: responseText,
+            timestamp: new Date(),
+            replyToName,
+          },
+        ]);
       } catch (err) {
         console.warn('[PublicChat] Assistant auto-reply failed:', err);
-        // Allow retry on next message tick if it was a transient error
         respondedRef.current.delete(candidate.id);
       }
     })();
-  }, [messages, isAuthenticated, walletAddress, selectedRoomId, send]);
+  }, [messages, walletAddress, selectedRoomId]);
 
   const handleReply = useCallback((message: Message) => {
     setReplyTo(message);
