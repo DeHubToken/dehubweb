@@ -13,8 +13,16 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 // deno-lint-ignore-file no-explicit-any
-import satori from "npm:satori@0.10.13";
-import { Resvg } from "npm:@resvg/resvg-js@2.6.0";
+import satori from "https://esm.sh/satori@0.10.13";
+import { Resvg, initWasm } from "https://esm.sh/@resvg/resvg-wasm@2.6.2";
+
+let resvgInited = false;
+async function ensureResvg() {
+    if (resvgInited) return;
+    const wasm = await fetch("https://esm.sh/@resvg/resvg-wasm@2.6.2/index_bg.wasm").then(r => r.arrayBuffer());
+    await initWasm(wasm);
+    resvgInited = true;
+}
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
