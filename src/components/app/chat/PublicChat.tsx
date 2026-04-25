@@ -17,7 +17,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { useBuyAlerts, type BuyAlertMessage } from '@/hooks/use-buy-alerts';
 import { BuyAlertCard } from './BuyAlertCard';
+import { AssistantReplyCard } from './AssistantReplyCard';
 import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
+
+interface AssistantReply {
+  id: string;
+  content: string;
+  timestamp: Date;
+  replyToName?: string;
+}
 import {
   DropdownMenu,
   DropdownMenuContent,
