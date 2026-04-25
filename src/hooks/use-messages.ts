@@ -387,20 +387,27 @@ export function useMessages(conversationId: string | null) {
 
     // When the other person reads, mark all our sent messages as read
     const unsubReadReceipt = onReadReceipt((data: any) => {
-      console.log('[DM] onReadReceipt fired', { data, conversationId });
       const dmId = data?.dmId || data?.conversationId;
+      const readBy = data?.readBy;
+      const myUserId = user?._id || (user as any)?.id;
+      const myAddress = walletAddress?.toLowerCase();
+      console.log('[DM] onReadReceipt fired', { data, conversationId, readBy, myUserId, myAddress });
       if (!dmId || dmId !== conversationId) return;
       // Only update read state when we can positively confirm the reader is someone else.
       // If readBy is absent we can't tell — it's likely our own markAsRead echo from the server.
-      const readBy = data?.readBy;
-      if (!readBy) return;
+      if (!readBy) {
+        console.log('[DM] onReadReceipt: skipping — readBy absent');
+        return;
+      }
       const readByStr = String(readBy).toLowerCase();
-      const myUserId = user?._id || (user as any)?.id;
-      const myAddress = walletAddress?.toLowerCase();
       const isSelf =
         (!!myUserId && readByStr === String(myUserId).toLowerCase()) ||
         (!!myAddress && readByStr === myAddress);
-      if (isSelf) return;
+      if (isSelf) {
+        console.log('[DM] onReadReceipt: skipping — self-receipt', { readBy, myUserId });
+        return;
+      }
+      console.log('[DM] onReadReceipt: marking messages read for reader', readBy);
       queryClient.setQueryData(
         messagesKeys.messages(conversationId),
         (old: any) => {
