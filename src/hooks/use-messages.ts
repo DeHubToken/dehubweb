@@ -209,13 +209,11 @@ export function useMessages(conversationId: string | null) {
       // when we never got a `readReceipt` broadcast (fallback UX).
       const senderAddress = msg.sender?.address?.toLowerCase();
       const senderUserId = msg.sender?._id;
-      // A message is "from other" only when it's provably NOT from us.
-      // Use the same logic as isOwnIncoming — if EITHER address OR userId matches,
-      // the message is ours. The old `||` logic caused Smart Account/EOA address
-      // mismatches to be treated as "from other", prematurely marking prior messages read.
+      // Use refs so the check always sees the latest identity even on first login
+      // (same pattern as mobile DMContext.tsx userIdRef / addressRef).
       const isOwnMsg =
-        (!!senderAddress && !!walletAddress && senderAddress === walletAddress.toLowerCase()) ||
-        (!!senderUserId && !!user?._id && senderUserId === user._id);
+        (!!senderAddress && !!walletAddressRef.current && senderAddress === walletAddressRef.current) ||
+        (!!senderUserId && !!userIdRef.current && senderUserId === userIdRef.current);
       const isFromOther = !isOwnMsg;
       if (isFromOther) {
         const msgTime = new Date(msg.createdAt ?? '').getTime();
@@ -243,9 +241,9 @@ export function useMessages(conversationId: string | null) {
           const newPages = pages.map(page => ({ ...page, items: [...page.items] }));
           const firstItems = newPages[0]?.items ?? [];
           const existingIdx = firstItems.findIndex(m => m._id === msg._id);
-          const ownAddress = walletAddress?.toLowerCase();
+          const ownAddress = walletAddressRef.current;
           const incomingAddress = msg.sender?.address?.toLowerCase();
-          const ownUserId = user?._id;
+          const ownUserId = userIdRef.current;
           const incomingUserId = msg.sender?._id;
           const isOwnIncoming =
             (!!incomingAddress && !!ownAddress && incomingAddress === ownAddress) ||
