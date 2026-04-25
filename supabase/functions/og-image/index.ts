@@ -277,7 +277,7 @@ serve(async (req) => {
         };
 
         const { fontRegular: fr2, fontBold: fb2 } = { fontRegular: fr, fontBold: fb };
-        const svg = await satori(element, {
+        const svg = await satori(element as any, {
             width: 1200,
             height: 630,
             fonts: [
@@ -286,11 +286,12 @@ serve(async (req) => {
             ],
         });
 
-        // SVG → PNG via resvg
+        // SVG → PNG via resvg-wasm
+        await ensureResvg();
         const resvg = new Resvg(svg, { fitTo: { mode: "width", value: 1200 } });
         const png = resvg.render().asPng();
 
-        return new Response(png, {
+        return new Response(png as BodyInit, {
             headers: {
                 "Content-Type": "image/png",
                 "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800",
