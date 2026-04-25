@@ -118,7 +118,10 @@ export function PublicChat({ onBack }: PublicChatProps) {
   // Convert API messages to local format
   const messages: Message[] = apiMessages.map(toLocalMessage);
 
-  // Filter messages based on search query and merge buy alerts
+  // Local-only @assistant replies (not persisted to chat API — web app only, like buy bot)
+  const [assistantReplies, setAssistantReplies] = useState<AssistantReply[]>([]);
+
+  // Filter messages based on search query and merge buy alerts + assistant replies
   const filteredMessages = useMemo(() => {
     // Convert buy alerts to Message format for merging
     const buyAlertMessages: Message[] = buyAlerts.map((alert) => ({
@@ -130,7 +133,18 @@ export function PublicChat({ onBack }: PublicChatProps) {
       type: 'buy_alert' as Message['type'],
     }));
 
-    const allMessages = [...messages, ...buyAlertMessages].sort(
+    // Convert assistant replies to Message format for merging
+    const assistantMessages: Message[] = assistantReplies.map((r) => ({
+      id: `assistant-reply-${r.id}`,
+      userId: 'assistant',
+      userName: '@assistant',
+      content: r.content,
+      timestamp: r.timestamp,
+      type: 'assistant_reply' as Message['type'],
+      replyTo: r.replyToName ? { id: '', content: '', senderName: r.replyToName } : undefined,
+    }));
+
+    const allMessages = [...messages, ...buyAlertMessages, ...assistantMessages].sort(
       (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
     );
 
@@ -139,7 +153,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
     return allMessages.filter(
       m => m.content.toLowerCase().includes(q) || m.userName.toLowerCase().includes(q)
     );
-  }, [messages, buyAlerts, searchQuery]);
+  }, [messages, buyAlerts, assistantReplies, searchQuery]);
 
   // Find pinned message
   const pinnedMessage = messages.find(m => m.isPinned);
