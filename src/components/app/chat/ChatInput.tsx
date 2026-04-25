@@ -1,8 +1,9 @@
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Image, Send, Sparkles, Loader2, X, Gem, Reply } from 'lucide-react';
+import { Image, Send, Sparkles, Loader2, X, Gem, Reply, Wand2, MessageCircleQuestion } from 'lucide-react';
 import { EmojiGifPicker } from './EmojiGifPicker';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
