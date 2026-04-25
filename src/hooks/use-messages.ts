@@ -5,7 +5,7 @@
  * Uses Socket.io /dm namespace for real-time events.
  */
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -150,6 +150,13 @@ export function useConversations(searchQuery: string = '') {
 export function useMessages(conversationId: string | null) {
   const { isAuthenticated, walletAddress, user } = useAuth();
   const queryClient = useQueryClient();
+
+  // Refs stay current across renders without re-running the socket effect.
+  // Same pattern as mobile DMContext.tsx (userIdRef / addressRef).
+  const userIdRef = useRef<string | undefined>(undefined);
+  const walletAddressRef = useRef<string | undefined>(undefined);
+  useEffect(() => { userIdRef.current = user?._id || (user as any)?.id; }, [user?._id]);
+  useEffect(() => { walletAddressRef.current = walletAddress?.toLowerCase(); }, [walletAddress]);
 
   const isVirtual = conversationId?.startsWith('new_') || (conversationId ? /^0x[0-9a-fA-F]{40}$/i.test(conversationId) : false);
   const query = useInfiniteQuery({
@@ -390,22 +397,17 @@ export function useMessages(conversationId: string | null) {
       const dmId = data?.dmId || data?.conversationId;
       const readBy = data?.readBy;
       if (!dmId || dmId !== conversationId) return;
-      // Only update read state when we can positively confirm the reader is someone else.
-      // If readBy is absent we can't tell — it's likely our own markAsRead echo from the server.
+      // Ignore self-receipts: server echoes readReceipt to all participants including us.
+      // readBy === our userId means WE read their messages, NOT that they read ours.
+      // Use refs so the check always sees the latest identity even if this closure was
+      // created before login completed — same pattern as mobile DMContext.tsx userIdRef.
       if (!readBy) return;
       const readByStr = String(readBy).toLowerCase();
-      // user?._id may be undefined on first login (React state hasn't propagated to this
-      // closure yet when the readReceipt fires). Fall back to localStorage as source of truth.
-      const myUserId = user?._id || (user as any)?.id || (() => {
-        try {
-          const u = JSON.parse(localStorage.getItem('dehub_user') || '{}');
-          return u?._id || u?.id || null;
-        } catch { return null; }
-      })();
-      const myAddress = walletAddress?.toLowerCase();
+      const meId = userIdRef.current;
+      const meAddr = walletAddressRef.current;
       const isSelf =
-        (!!myUserId && readByStr === String(myUserId).toLowerCase()) ||
-        (!!myAddress && readByStr === myAddress);
+        (!!meId && readByStr === String(meId).toLowerCase()) ||
+        (!!meAddr && readByStr === meAddr);
       if (isSelf) return;
       queryClient.setQueryData(
         messagesKeys.messages(conversationId),
@@ -435,7 +437,7 @@ export function useMessages(conversationId: string | null) {
       unsubRevalidate();
       unsubReadReceipt();
     };
-  }, [conversationId, isAuthenticated, queryClient, walletAddress, user?._id]);
+  }, [conversationId, isAuthenticated, queryClient]);
 
   // Mark as read via socket + persist to localStorage
   const markAsRead = useMutation({
