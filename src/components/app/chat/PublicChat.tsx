@@ -17,7 +17,15 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from 'sonner';
 import { useBuyAlerts, type BuyAlertMessage } from '@/hooks/use-buy-alerts';
 import { BuyAlertCard } from './BuyAlertCard';
+import { AssistantReplyCard } from './AssistantReplyCard';
 import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
+
+interface AssistantReply {
+  id: string;
+  content: string;
+  timestamp: Date;
+  replyToName?: string;
+}
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -110,7 +118,10 @@ export function PublicChat({ onBack }: PublicChatProps) {
   // Convert API messages to local format
   const messages: Message[] = apiMessages.map(toLocalMessage);
 
-  // Filter messages based on search query and merge buy alerts
+  // Local-only @assistant replies (not persisted to chat API — web app only, like buy bot)
+  const [assistantReplies, setAssistantReplies] = useState<AssistantReply[]>([]);
+
+  // Filter messages based on search query and merge buy alerts + assistant replies
   const filteredMessages = useMemo(() => {
     // Convert buy alerts to Message format for merging
     const buyAlertMessages: Message[] = buyAlerts.map((alert) => ({
@@ -122,7 +133,18 @@ export function PublicChat({ onBack }: PublicChatProps) {
       type: 'buy_alert' as Message['type'],
     }));
 
-    const allMessages = [...messages, ...buyAlertMessages].sort(
+    // Convert assistant replies to Message format for merging
+    const assistantMessages: Message[] = assistantReplies.map((r) => ({
+      id: `assistant-reply-${r.id}`,
+      userId: 'assistant',
+      userName: '@assistant',
+      content: r.content,
+      timestamp: r.timestamp,
+      type: 'assistant_reply' as Message['type'],
+      replyTo: r.replyToName ? { id: '', content: '', senderName: r.replyToName } : undefined,
+    }));
+
+    const allMessages = [...messages, ...buyAlertMessages, ...assistantMessages].sort(
       (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
     );
 
@@ -131,7 +153,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
     return allMessages.filter(
       m => m.content.toLowerCase().includes(q) || m.userName.toLowerCase().includes(q)
     );
-  }, [messages, buyAlerts, searchQuery]);
+  }, [messages, buyAlerts, assistantReplies, searchQuery]);
 
   // Find pinned message
   const pinnedMessage = messages.find(m => m.isPinned);
@@ -165,16 +187,18 @@ export function PublicChat({ onBack }: PublicChatProps) {
     }
   }, [filteredMessages.length]);
 
-  // ---- Auto-reply to @assistant mentions ----
+  // ---- Auto-reply to @assistant mentions (LOCAL ONLY — like buy bot, not sent to chat API) ----
   const respondedRef = useRef<Set<string>>(new Set());
   useEffect(() => {
-    if (!isAuthenticated || !walletAddress || !selectedRoomId) return;
-    // Find the most recent unprocessed message from the current user that mentions @assistant
+    if (!selectedRoomId) return;
+    // Only the message author triggers the reply, to avoid duplicates from other clients.
+    // The reply itself is rendered locally in this client only — that's fine and matches the
+    // buy bot behavior (each viewer sees the alert in their own client).
+    if (!walletAddress) return;
     const candidate = [...messages].reverse().find((m) => {
       if (respondedRef.current.has(m.id)) return false;
       if (!m.content) return false;
       if (!/@assistant\b/i.test(m.content)) return false;
-      // Only the author triggers the reply (avoids duplicates from other clients)
       return m.userId.toLowerCase() === walletAddress.toLowerCase();
     });
     if (!candidate) return;
@@ -184,10 +208,11 @@ export function PublicChat({ onBack }: PublicChatProps) {
     const idx = messages.findIndex((m) => m.id === candidate.id);
     const start = Math.max(0, idx - 6);
     const history = messages.slice(start, idx + 1).map((m) => ({
-      role: m.userId.toLowerCase() === walletAddress.toLowerCase() ? 'user' as const : 'user' as const,
+      role: 'user' as const,
       content: `${m.userName}: ${m.content}`,
     }));
     const userQuestion = candidate.content.replace(/@assistant/gi, '').trim() || 'Hello';
+    const replyToName = candidate.userHandle || candidate.userName;
 
     (async () => {
       try {
@@ -213,25 +238,25 @@ export function PublicChat({ onBack }: PublicChatProps) {
         if (!responseText) return;
         // Strip markdown links -> raw URL
         responseText = responseText.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '$2');
-        // Reply mentioning the asker, cap to chat's 500-char limit
-        const mention = `@${candidate.userHandle || candidate.userName} `;
-        const MAX = 500;
-        const room = MAX - mention.length;
-        if (responseText.length > room) {
-          responseText = responseText.slice(0, room - 1).trimEnd() + '…';
+        if (responseText.length > 500) {
+          responseText = responseText.slice(0, 499).trimEnd() + '…';
         }
-        const reply = mention + responseText;
-        // Only pass replyTo if it looks like a server-side Mongo ObjectId (24 hex chars).
-        // Optimistic IDs like "temp-..." crash the backend ("Cast to ObjectId failed").
-        const isObjectId = /^[a-f0-9]{24}$/i.test(candidate.id);
-        await send(reply, 'text', undefined, isObjectId ? candidate.id : undefined);
+        // Render LOCALLY only — do not call send() (no API write, no other clients see it)
+        setAssistantReplies((prev) => [
+          ...prev,
+          {
+            id: `${candidate.id}-${Date.now()}`,
+            content: responseText,
+            timestamp: new Date(),
+            replyToName,
+          },
+        ]);
       } catch (err) {
         console.warn('[PublicChat] Assistant auto-reply failed:', err);
-        // Allow retry on next message tick if it was a transient error
         respondedRef.current.delete(candidate.id);
       }
     })();
-  }, [messages, isAuthenticated, walletAddress, selectedRoomId, send]);
+  }, [messages, walletAddress, selectedRoomId]);
 
   const handleReply = useCallback((message: Message) => {
     setReplyTo(message);
@@ -541,6 +566,13 @@ export function PublicChat({ onBack }: PublicChatProps) {
                     onHide={hideBuyBot}
                   />
                 )
+              ) : message.id.startsWith('assistant-reply-') ? (
+                <AssistantReplyCard
+                  key={message.id}
+                  content={message.content}
+                  timestamp={message.timestamp}
+                  replyToName={message.replyTo?.senderName}
+                />
               ) : (
               <ChatMessage 
                 key={message.id} 
