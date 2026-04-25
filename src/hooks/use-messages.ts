@@ -389,25 +389,24 @@ export function useMessages(conversationId: string | null) {
     const unsubReadReceipt = onReadReceipt((data: any) => {
       const dmId = data?.dmId || data?.conversationId;
       const readBy = data?.readBy;
-      const myUserId = user?._id || (user as any)?.id;
-      const myAddress = walletAddress?.toLowerCase();
-      console.log('[DM] onReadReceipt fired', { data, conversationId, readBy, myUserId, myAddress });
       if (!dmId || dmId !== conversationId) return;
       // Only update read state when we can positively confirm the reader is someone else.
       // If readBy is absent we can't tell — it's likely our own markAsRead echo from the server.
-      if (!readBy) {
-        console.log('[DM] onReadReceipt: skipping — readBy absent');
-        return;
-      }
+      if (!readBy) return;
       const readByStr = String(readBy).toLowerCase();
+      // user?._id may be undefined on first login (React state hasn't propagated to this
+      // closure yet when the readReceipt fires). Fall back to localStorage as source of truth.
+      const myUserId = user?._id || (user as any)?.id || (() => {
+        try {
+          const u = JSON.parse(localStorage.getItem('dehub_user') || '{}');
+          return u?._id || u?.id || null;
+        } catch { return null; }
+      })();
+      const myAddress = walletAddress?.toLowerCase();
       const isSelf =
         (!!myUserId && readByStr === String(myUserId).toLowerCase()) ||
         (!!myAddress && readByStr === myAddress);
-      if (isSelf) {
-        console.log('[DM] onReadReceipt: skipping — self-receipt', { readBy, myUserId });
-        return;
-      }
-      console.log('[DM] onReadReceipt: marking messages read for reader', readBy);
+      if (isSelf) return;
       queryClient.setQueryData(
         messagesKeys.messages(conversationId),
         (old: any) => {
