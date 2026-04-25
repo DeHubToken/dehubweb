@@ -566,6 +566,13 @@ export function PublicChat({ onBack }: PublicChatProps) {
                     onHide={hideBuyBot}
                   />
                 )
+              ) : message.id.startsWith('assistant-reply-') ? (
+                <AssistantReplyCard
+                  key={message.id}
+                  content={message.content}
+                  timestamp={message.timestamp}
+                  replyToName={message.replyTo?.senderName}
+                />
               ) : (
               <ChatMessage 
                 key={message.id} 
