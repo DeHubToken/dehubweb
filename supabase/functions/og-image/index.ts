@@ -13,8 +13,16 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 // deno-lint-ignore-file no-explicit-any
-import satori from "npm:satori@0.10.13";
-import { Resvg } from "npm:@resvg/resvg-js@2.6.0";
+import satori from "https://esm.sh/satori@0.10.13";
+import { Resvg, initWasm } from "https://esm.sh/@resvg/resvg-wasm@2.6.2";
+
+let resvgInited = false;
+async function ensureResvg() {
+    if (resvgInited) return;
+    const wasm = await fetch("https://esm.sh/@resvg/resvg-wasm@2.6.2/index_bg.wasm").then(r => r.arrayBuffer());
+    await initWasm(wasm);
+    resvgInited = true;
+}
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 const DEHUB_CDN_BASE = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
@@ -269,7 +277,7 @@ serve(async (req) => {
         };
 
         const { fontRegular: fr2, fontBold: fb2 } = { fontRegular: fr, fontBold: fb };
-        const svg = await satori(element, {
+        const svg = await satori(element as any, {
             width: 1200,
             height: 630,
             fonts: [
@@ -278,11 +286,12 @@ serve(async (req) => {
             ],
         });
 
-        // SVG → PNG via resvg
+        // SVG → PNG via resvg-wasm
+        await ensureResvg();
         const resvg = new Resvg(svg, { fitTo: { mode: "width", value: 1200 } });
         const png = resvg.render().asPng();
 
-        return new Response(png, {
+        return new Response(png as BodyInit, {
             headers: {
                 "Content-Type": "image/png",
                 "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800",
