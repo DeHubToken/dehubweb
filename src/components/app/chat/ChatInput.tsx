@@ -1,8 +1,9 @@
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Image, Send, Sparkles, Loader2, X, Gem, Reply } from 'lucide-react';
+import { Image, Send, Sparkles, Loader2, X, Gem, Reply, Wand2, MessageCircleQuestion } from 'lucide-react';
 import { EmojiGifPicker } from './EmojiGifPicker';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
@@ -161,6 +162,41 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     }
   };
 
+  const handleAskAssistant = () => {
+    const ta = textareaRef.current;
+    const tag = '@assistant ';
+    let newVal: string;
+    let newCursor: number;
+    if (ta) {
+      const start = ta.selectionStart ?? message.length;
+      const end = ta.selectionEnd ?? message.length;
+      const before = message.slice(0, start);
+      const after = message.slice(end);
+      // Avoid duplicate tag if already present at start
+      if (message.toLowerCase().includes('@assistant')) {
+        newVal = message;
+        newCursor = end;
+      } else {
+        const needsSpaceBefore = before.length > 0 && !/\s$/.test(before);
+        const insertion = (needsSpaceBefore ? ' ' : '') + tag;
+        newVal = before + insertion + after;
+        newCursor = before.length + insertion.length;
+      }
+    } else {
+      newVal = message ? `${message} ${tag}` : tag;
+      newCursor = newVal.length;
+    }
+    setMessage(newVal);
+    requestAnimationFrame(() => {
+      const t = textareaRef.current;
+      if (t) {
+        t.focus();
+        t.setSelectionRange(newCursor, newCursor);
+        t.style.height = 'auto';
+        t.style.height = `${Math.min(t.scrollHeight, 128)}px`;
+      }
+    });
+  };
   const clearImage = () => {
     if (imagePreviewUrl) URL.revokeObjectURL(imagePreviewUrl);
     setImageFile(null);
@@ -302,25 +338,60 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
           />
 
 
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
+          <Popover>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <PopoverTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
+                    disabled={isEnhancing}
+                  >
+                    {isEnhancing ? (
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
+                      <Sparkles className="w-5 h-5" />
+                    )}
+                  </Button>
+                </PopoverTrigger>
+              </TooltipTrigger>
+              <TooltipContent>AI</TooltipContent>
+            </Tooltip>
+            <PopoverContent
+              align="end"
+              sideOffset={6}
+              className="w-48 p-1 bg-black/80 backdrop-blur-[24px] border border-white/10 text-white"
+            >
+              <button
                 type="button"
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
-                onClick={handleEnhanceText}
-                disabled={isEnhancing}
+                onClick={(e) => {
+                  handleEnhanceText();
+                  // Close popover by blurring
+                  (e.currentTarget.closest('[data-radix-popper-content-wrapper]') as HTMLElement | null)?.blur();
+                }}
+                className="w-full flex items-center gap-2 px-2.5 py-2 rounded-md text-sm hover:bg-white/10 transition-colors text-left"
               >
-                {isEnhancing ? (
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                ) : (
-                  <Sparkles className="w-5 h-5" />
-                )}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>AI Enhance - Fix spelling & grammar</TooltipContent>
-          </Tooltip>
+                <Wand2 className="w-4 h-4 text-zinc-300" />
+                <div className="flex flex-col">
+                  <span>Enhance</span>
+                  <span className="text-[10px] text-zinc-500">Fix spelling & grammar</span>
+                </div>
+              </button>
+              <button
+                type="button"
+                onClick={() => handleAskAssistant()}
+                className="w-full flex items-center gap-2 px-2.5 py-2 rounded-md text-sm hover:bg-white/10 transition-colors text-left"
+              >
+                <MessageCircleQuestion className="w-4 h-4 text-zinc-300" />
+                <div className="flex flex-col">
+                  <span>Ask</span>
+                  <span className="text-[10px] text-zinc-500">Tag @assistant for help</span>
+                </div>
+              </button>
+            </PopoverContent>
+          </Popover>
 
           <Button
             type="button"

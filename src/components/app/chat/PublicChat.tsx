@@ -10,6 +10,7 @@ import { CreateTopicRoomModal } from './CreateTopicRoomModal';
 import { RoomSettingsModal } from './RoomSettingsModal';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatRoomDetails, useLiveChatPresence, type SupabaseLiveChatMessage } from '@/hooks/use-livechat';
 import { getMediaUrl, pinLiveChatMessage, unpinLiveChatMessage, banLiveChatUser, unbanLiveChatUser, uploadChatImage, type LiveChatRoom } from '@/lib/api/dehub';
+import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -163,6 +164,52 @@ export function PublicChat({ onBack }: PublicChatProps) {
       bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [filteredMessages.length]);
+
+  // ---- Auto-reply to @assistant mentions ----
+  const respondedRef = useRef<Set<string>>(new Set());
+  useEffect(() => {
+    if (!isAuthenticated || !walletAddress || !selectedRoomId) return;
+    // Find the most recent unprocessed message from the current user that mentions @assistant
+    const candidate = [...messages].reverse().find((m) => {
+      if (respondedRef.current.has(m.id)) return false;
+      if (!m.content) return false;
+      if (!/@assistant\b/i.test(m.content)) return false;
+      // Only the author triggers the reply (avoids duplicates from other clients)
+      return m.userId.toLowerCase() === walletAddress.toLowerCase();
+    });
+    if (!candidate) return;
+    respondedRef.current.add(candidate.id);
+
+    // Build a small history (last ~6 messages) for context
+    const idx = messages.findIndex((m) => m.id === candidate.id);
+    const start = Math.max(0, idx - 6);
+    const history = messages.slice(start, idx + 1).map((m) => ({
+      role: m.userId.toLowerCase() === walletAddress.toLowerCase() ? 'user' as const : 'user' as const,
+      content: `${m.userName}: ${m.content}`,
+    }));
+    const userQuestion = candidate.content.replace(/@assistant/gi, '').trim() || 'Hello';
+
+    (async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke('general-ai-chat', {
+          body: {
+            messages: [
+              ...history.slice(0, -1),
+              { role: 'user', content: userQuestion },
+            ],
+          },
+        });
+        if (error) throw error;
+        const responseText: string = data?.response || '';
+        if (!responseText) return;
+        // Reply in chat, mentioning the asker
+        const reply = `@${candidate.userHandle || candidate.userName} ${responseText}`;
+        await send(reply, 'text', undefined, candidate.id);
+      } catch (err) {
+        console.warn('[PublicChat] Assistant auto-reply failed:', err);
+      }
+    })();
+  }, [messages, isAuthenticated, walletAddress, selectedRoomId, send]);
 
   const handleReply = useCallback((message: Message) => {
     setReplyTo(message);
