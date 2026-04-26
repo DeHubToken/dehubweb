@@ -415,14 +415,19 @@ export function useMessages(conversationId: string | null) {
       const fallbackUser = (() => {
         try { return JSON.parse(localStorage.getItem('dehub_user') || '{}'); } catch { return {}; }
       })();
+      const fallbackAddress = localStorage.getItem('dehub_wallet')?.toLowerCase();
       const meId = userIdRef.current || fallbackUser?._id || fallbackUser?.id;
-      const meAddr = walletAddressRef.current || localStorage.getItem('dehub_wallet')?.toLowerCase();
-      if (!meId && !meAddr) return;
+      const meAddr = walletAddressRef.current || fallbackAddress;
+      
+      // If we don't know our own MongoDB ID yet (during login), we cannot safely determine
+      // if this readReceipt from the backend (which ONLY contains an ObjectId) is ours or not.
+      // Eary return to avoid accidentally marking our own messages as read by the other person.
+      // The 5s background polling will naturally sync the correct read state once auth settles.
+      if (!meId) return;
       
       const isSelf =
-        (!!meId && readByStr === String(meId).toLowerCase()) ||
-        (!!meAddr && readByStr === meAddr);
-      if (isSelf) return;
+        (!!meId && readByStr === String(meId).toLowerCase());
+      if (isSelf) return; // Ignore our own read receipt
       queryClient.setQueryData(
         messagesKeys.messages(conversationId),
         (old: any) => {
