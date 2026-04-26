@@ -137,7 +137,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
     const assistantMessages: Message[] = assistantReplies.map((r) => ({
       id: `assistant-reply-${r.id}`,
       userId: 'assistant',
-      userName: '@assistant',
+      userName: 'assistant',
       content: r.content,
       timestamp: r.timestamp,
       type: 'assistant_reply' as Message['type'],
