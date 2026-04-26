@@ -138,28 +138,42 @@ export function SidebarChat() {
     return items;
   })();
 
-  // Scroll to bottom on mount and whenever message count changes
-  const scrollToBottom = useCallback(() => {
+  // Scroll to bottom (jump, not animated). For initial load we retry a few times
+  // because async content (avatars, link previews, GIFs) keeps growing scrollHeight
+  // after the initial paint.
+  const scrollToBottom = useCallback((retry = false) => {
     const el = scrollContainerRef.current;
     if (!el) return;
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        el.scrollTop = el.scrollHeight;
+    el.scrollTop = el.scrollHeight;
+    if (retry) {
+      // Retry after async images/link previews settle.
+      [50, 150, 350, 800].forEach((ms) => {
+        setTimeout(() => {
+          const node = scrollContainerRef.current;
+          if (node) node.scrollTop = node.scrollHeight;
+        }, ms);
       });
-    });
+    }
   }, []);
 
-  // On mount – always scroll down
-  useEffect(() => {
-    scrollToBottom();
-  }, [scrollToBottom]);
+  // First time messages become available — jump to bottom synchronously before paint
+  // so the user never sees a "starts at top then jumps" flash.
+  const didInitialScrollRef = useRef(false);
+  useLayoutEffect(() => {
+    if (didInitialScrollRef.current) return;
+    if (mergedItems.length === 0) return;
+    didInitialScrollRef.current = true;
+    scrollToBottom(true);
+  }, [mergedItems.length, scrollToBottom]);
 
-  // When new messages arrive
+  // When subsequent new messages arrive, smooth-scroll to bottom.
   useEffect(() => {
+    if (!didInitialScrollRef.current) return;
     if (mergedItems.length > 0) {
       scrollToBottom();
     }
   }, [mergedItems.length, scrollToBottom]);
+
 
   const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
     if (!isAuthenticated) { openLoginModal(); return; }
