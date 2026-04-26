@@ -112,8 +112,11 @@ export function PublicChat({ onBack }: PublicChatProps) {
   // Convert API messages to local format
   const messages: Message[] = apiMessages.map(toLocalMessage);
 
-  // Local-only @assistant replies (not persisted to chat API — web app only, like buy bot)
-  const [assistantReplies, setAssistantReplies] = useState<AssistantReply[]>([]);
+  // Local-only @assistant replies — sourced from a shared singleton store so
+  // SidebarChat sees the same replies. The engine fires once per source message
+  // even if multiple chat surfaces are mounted.
+  useAssistantReplyEngine(apiMessages);
+  const assistantReplies = useAssistantReplies();
 
   // Filter messages based on search query and merge buy alerts + assistant replies
   const filteredMessages = useMemo(() => {
