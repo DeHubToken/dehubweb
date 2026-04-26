@@ -318,6 +318,41 @@ export function SidebarChat() {
                   />
                 );
               }
+              if (item.type === 'assistant') {
+                const r = item.data;
+                return (
+                  <div
+                    key={`assistant-${r.id}`}
+                    className="group relative"
+                    style={{ paddingLeft: '10px', paddingRight: '10px' }}
+                  >
+                    <div className="flex items-start gap-2">
+                      <Avatar className="w-6 h-6 flex-shrink-0">
+                        <AvatarImage src={assistantAvatar} alt="assistant" />
+                        <AvatarFallback className="bg-primary/20 text-primary">
+                          <Sparkles className="w-3 h-3" />
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="min-w-0 flex-1">
+                        {r.replyToName && (
+                          <div className="flex items-center gap-1 text-[10px] text-zinc-500 mb-0.5">
+                            <CornerDownRight className="w-2.5 h-2.5" />
+                            <span className="font-medium">{r.replyToName}</span>
+                          </div>
+                        )}
+                        <span className="inline-flex items-baseline gap-1.5">
+                          <span className="text-xs font-semibold text-white">assistant</span>
+                          <span className="text-[8px] uppercase tracking-wide px-1 py-px rounded bg-primary/20 text-primary border border-primary/30">
+                            AI
+                          </span>
+                          <span className="text-zinc-600 text-[10px]">{formatTimeAgo(r.timestamp.toISOString())}</span>
+                        </span>
+                        <p className="text-xs text-zinc-300 break-words whitespace-pre-wrap">{r.content}</p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
               const msg = item.data;
               const avatarUrl = buildAvatarUrl(msg.sender_address || '', msg.sender_avatar_url);
               const name = msg.sender_display_name || msg.sender_username || msg.sender_address?.slice(0, 8) || 'Anon';
