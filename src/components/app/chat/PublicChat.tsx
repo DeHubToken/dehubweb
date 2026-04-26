@@ -19,13 +19,7 @@ import { useBuyAlerts, type BuyAlertMessage } from '@/hooks/use-buy-alerts';
 import { BuyAlertCard } from './BuyAlertCard';
 import { AssistantReplyCard } from './AssistantReplyCard';
 import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
-
-interface AssistantReply {
-  id: string;
-  content: string;
-  timestamp: Date;
-  replyToName?: string;
-}
+import { useAssistantReplies, useAssistantReplyEngine } from '@/hooks/use-assistant-replies';
 import {
   DropdownMenu,
   DropdownMenuContent,
