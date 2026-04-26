@@ -130,14 +130,24 @@ export function SidebarChat() {
   const buyAlerts = useBuyAlerts();
   const { isHidden: buyBotHidden, hide: hideBuyBot } = useBuyBotHidden();
 
-  // Merge livechat messages with buy alerts
-  type MergedItem = { type: 'message'; data: typeof messages[0] } | { type: 'buy_alert'; data: BuyAlertMessage };
+  // Local-only @assistant replies (shared singleton — same as PublicChat)
+  useAssistantReplyEngine(messages);
+  const assistantReplies = useAssistantReplies();
+
+  // Merge livechat messages + buy alerts + assistant replies
+  type MergedItem =
+    | { type: 'message'; data: typeof messages[0] }
+    | { type: 'buy_alert'; data: BuyAlertMessage }
+    | { type: 'assistant'; data: AssistantReply };
   const mergedItems: MergedItem[] = (() => {
     const items: MergedItem[] = [
       ...messages.map((m) => ({ type: 'message' as const, data: m })),
       ...buyAlerts.map((a) => ({ type: 'buy_alert' as const, data: a })),
+      ...assistantReplies.map((a) => ({ type: 'assistant' as const, data: a })),
     ];
-    items.sort((a, b) => new Date(a.data.created_at).getTime() - new Date(b.data.created_at).getTime());
+    const tsOf = (it: MergedItem) =>
+      it.type === 'assistant' ? it.data.timestamp.getTime() : new Date(it.data.created_at).getTime();
+    items.sort((a, b) => tsOf(a) - tsOf(b));
     return items;
   })();
 
