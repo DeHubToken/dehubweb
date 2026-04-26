@@ -74,19 +74,41 @@ export function getSocket(): Socket {
   return socket;
 }
 
-/** Join the global livechat room */
-export function joinRoom(_roomId?: string) {
-  const s = getSocket();
-  console.log('[LiveChat Socket] Joining room');
-  // Support both legacy and namespaced event names – backend may listen on either.
-  s.emit('joinRoom');
-  s.emit('livechat:joinRoom');
+/**
+ * Reference-counted room membership.
+ * Multiple components (e.g. SidebarChat + PublicChat) can subscribe to the same
+ * room concurrently. We only emit `leaveRoom` when the last subscriber leaves,
+ * so unmounting one chat surface doesn't kill realtime updates for the others.
+ */
+const roomRefCounts = new Map<string, number>();
+
+/** Join the global livechat room (ref-counted) */
+export function joinRoom(roomId?: string) {
+  const key = roomId || 'global';
+  const next = (roomRefCounts.get(key) || 0) + 1;
+  roomRefCounts.set(key, next);
+  if (next === 1) {
+    const s = getSocket();
+    console.log('[LiveChat Socket] Joining room', key);
+    // Support both legacy and namespaced event names – backend may listen on either.
+    s.emit('joinRoom');
+    s.emit('livechat:joinRoom');
+  }
 }
 
-/** Leave the livechat room */
-export function leaveRoom(_roomId?: string) {
-  if (socket) {
-    socket.emit('leaveRoom');
+/** Leave the livechat room (ref-counted — only leaves when last subscriber unmounts) */
+export function leaveRoom(roomId?: string) {
+  const key = roomId || 'global';
+  const current = roomRefCounts.get(key) || 0;
+  const next = Math.max(0, current - 1);
+  if (next === 0) {
+    roomRefCounts.delete(key);
+    if (socket) {
+      console.log('[LiveChat Socket] Leaving room', key);
+      socket.emit('leaveRoom');
+    }
+  } else {
+    roomRefCounts.set(key, next);
   }
 }
 
