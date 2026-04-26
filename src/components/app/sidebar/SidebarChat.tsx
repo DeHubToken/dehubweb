@@ -286,17 +286,21 @@ export function SidebarChat() {
       <div className="relative flex-1">
         <div ref={scrollContainerRef} className="absolute inset-0 overflow-y-auto py-2 space-y-2">
           {isLoading ? (
-            <div className="space-y-2 py-2">
+            <>
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="flex items-start gap-2">
-                  <Skeleton className="w-6 h-6 rounded-md bg-white/[0.06]" />
-                  <div className="space-y-1 flex-1">
+                <div
+                  key={i}
+                  className="flex items-start gap-2"
+                  style={{ paddingLeft: '10px', paddingRight: '10px' }}
+                >
+                  <Skeleton className="w-6 h-6 rounded-full bg-white/[0.06] flex-shrink-0" />
+                  <div className="space-y-1 flex-1 min-w-0">
                     <Skeleton className="h-3 w-16 bg-white/[0.06]" />
                     <Skeleton className="h-3 w-32 bg-white/[0.06]" />
                   </div>
                 </div>
               ))}
-            </div>
+            </>
           ) : mergedItems.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center mb-2">
