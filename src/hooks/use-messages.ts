@@ -210,10 +210,18 @@ export function useMessages(conversationId: string | null) {
       const senderAddress = msg.sender?.address?.toLowerCase();
       const senderUserId = msg.sender?._id;
       // Use refs so the check always sees the latest identity even on first login
-      // (same pattern as mobile DMContext.tsx userIdRef / addressRef).
+      // (same pattern as mobile DMContext.tsx userIdRef / addressRef), and fallback
+      // to localStorage in case the effect hasn't synced the refs yet.
+      const fallbackUser = (() => {
+        try { return JSON.parse(localStorage.getItem('dehub_user') || '{}'); } catch { return {}; }
+      })();
+      const fallbackAddress = localStorage.getItem('dehub_wallet')?.toLowerCase();
+      const meId = userIdRef.current || fallbackUser?._id || fallbackUser?.id;
+      const meAddr = walletAddressRef.current || fallbackAddress;
+      
       const isOwnMsg =
-        (!!senderAddress && !!walletAddressRef.current && senderAddress === walletAddressRef.current) ||
-        (!!senderUserId && !!userIdRef.current && senderUserId === userIdRef.current);
+        (!!senderAddress && !!meAddr && senderAddress === meAddr) ||
+        (!!senderUserId && !!meId && senderUserId === meId);
       const isFromOther = !isOwnMsg;
       if (isFromOther) {
         const msgTime = new Date(msg.createdAt ?? '').getTime();
@@ -241,9 +249,12 @@ export function useMessages(conversationId: string | null) {
           const newPages = pages.map(page => ({ ...page, items: [...page.items] }));
           const firstItems = newPages[0]?.items ?? [];
           const existingIdx = firstItems.findIndex(m => m._id === msg._id);
-          const ownAddress = walletAddressRef.current;
+          const ownAddress = walletAddressRef.current || localStorage.getItem('dehub_wallet')?.toLowerCase();
+          const fallbackUser = (() => {
+            try { return JSON.parse(localStorage.getItem('dehub_user') || '{}'); } catch { return {}; }
+          })();
+          const ownUserId = userIdRef.current || fallbackUser?._id || fallbackUser?.id;
           const incomingAddress = msg.sender?.address?.toLowerCase();
-          const ownUserId = userIdRef.current;
           const incomingUserId = msg.sender?._id;
           const isOwnIncoming =
             (!!incomingAddress && !!ownAddress && incomingAddress === ownAddress) ||
@@ -401,8 +412,13 @@ export function useMessages(conversationId: string | null) {
       // created before login completed — same pattern as mobile DMContext.tsx userIdRef.
       if (!readBy) return;
       const readByStr = String(readBy).toLowerCase();
-      const meId = userIdRef.current;
-      const meAddr = walletAddressRef.current;
+      const fallbackUser = (() => {
+        try { return JSON.parse(localStorage.getItem('dehub_user') || '{}'); } catch { return {}; }
+      })();
+      const meId = userIdRef.current || fallbackUser?._id || fallbackUser?.id;
+      const meAddr = walletAddressRef.current || localStorage.getItem('dehub_wallet')?.toLowerCase();
+      if (!meId && !meAddr) return;
+      
       const isSelf =
         (!!meId && readByStr === String(meId).toLowerCase()) ||
         (!!meAddr && readByStr === meAddr);
