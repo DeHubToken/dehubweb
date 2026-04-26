@@ -461,17 +461,17 @@ export function PublicChat({ onBack }: PublicChatProps) {
               <p className="text-xs text-zinc-600">Check back later or create a new room</p>
             </div>
           ) : isLoading ? (
-            <div className="space-y-3 p-4">
+            <>
               {[...Array(5)].map((_, i) => (
-                <div key={i} className="flex gap-3">
-                  <Skeleton className="w-8 h-8 rounded-full bg-zinc-800" />
-                  <div className="space-y-1.5 flex-1">
+                <div key={i} className="flex gap-3 py-2 px-4">
+                  <Skeleton className="w-8 h-8 rounded-full bg-zinc-800 flex-shrink-0" />
+                  <div className="space-y-1.5 flex-1 min-w-0">
                     <Skeleton className="h-3 w-24 bg-zinc-800" />
                     <Skeleton className="h-4 w-48 bg-zinc-800" />
                   </div>
                 </div>
               ))}
-            </div>
+            </>
           ) : messages.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-zinc-500 gap-3">
               <MessageCircle className="w-12 h-12 text-zinc-700" />
