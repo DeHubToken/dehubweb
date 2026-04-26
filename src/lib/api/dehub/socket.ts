@@ -260,10 +260,12 @@ export function emitPing() {
 /** Subscribe to all socket events for debugging. Returns unsubscribe fn. */
 export function debugSocketEvents(): () => void {
   const s = getSocket();
-  s.onAny((eventName: string, ...args: unknown[]) => {
+  const handler = (eventName: string, ...args: unknown[]) => {
     console.log(`[LiveChat DEBUG] Event: "${eventName}"`, args.length > 0 ? args[0] : '');
-  });
-  return () => { s.offAny(); };
+  };
+  s.onAny(handler);
+  // Pass the specific handler to offAny so we don't strip other listeners.
+  return () => { s.offAny(handler); };
 }
 
 /** Disconnect and clear the singleton */
