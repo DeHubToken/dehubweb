@@ -184,76 +184,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
     }
   }, [filteredMessages.length]);
 
-  // ---- Auto-reply to @assistant mentions (LOCAL ONLY — like buy bot, not sent to chat API) ----
-  const respondedRef = useRef<Set<string>>(new Set());
-  useEffect(() => {
-    if (!selectedRoomId) return;
-    // Only the message author triggers the reply, to avoid duplicates from other clients.
-    // The reply itself is rendered locally in this client only — that's fine and matches the
-    // buy bot behavior (each viewer sees the alert in their own client).
-    if (!walletAddress) return;
-    const candidate = [...messages].reverse().find((m) => {
-      if (respondedRef.current.has(m.id)) return false;
-      if (!m.content) return false;
-      if (!/@assistant\b/i.test(m.content)) return false;
-      return m.userId.toLowerCase() === walletAddress.toLowerCase();
-    });
-    if (!candidate) return;
-    respondedRef.current.add(candidate.id);
-
-    // Build a small history (last ~6 messages) for context
-    const idx = messages.findIndex((m) => m.id === candidate.id);
-    const start = Math.max(0, idx - 6);
-    const history = messages.slice(start, idx + 1).map((m) => ({
-      role: 'user' as const,
-      content: `${m.userName}: ${m.content}`,
-    }));
-    const userQuestion = candidate.content.replace(/@assistant/gi, '').trim() || 'Hello';
-    const replyToName = candidate.userHandle || candidate.userName;
-
-    (async () => {
-      try {
-        const { data, error } = await supabase.functions.invoke('general-ai-chat', {
-          body: {
-            messages: [
-              {
-                role: 'system',
-                content:
-                  'You are @assistant, the official DeHub AI helper replying inside a public chat room. ' +
-                  'CRITICAL: Keep your reply to ONE short message under 400 characters. ' +
-                  'No markdown, no link formatting like [text](url) — paste raw URLs only. ' +
-                  'Be friendly, concise, and answer the most important question first. ' +
-                  'If you cannot help, say so in one short sentence.',
-              },
-              ...history.slice(0, -1),
-              { role: 'user', content: userQuestion },
-            ],
-          },
-        });
-        if (error) throw error;
-        let responseText: string = (data?.response || '').trim();
-        if (!responseText) return;
-        // Strip markdown links -> raw URL
-        responseText = responseText.replace(/\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g, '$2');
-        if (responseText.length > 500) {
-          responseText = responseText.slice(0, 499).trimEnd() + '…';
-        }
-        // Render LOCALLY only — do not call send() (no API write, no other clients see it)
-        setAssistantReplies((prev) => [
-          ...prev,
-          {
-            id: `${candidate.id}-${Date.now()}`,
-            content: responseText,
-            timestamp: new Date(),
-            replyToName,
-          },
-        ]);
-      } catch (err) {
-        console.warn('[PublicChat] Assistant auto-reply failed:', err);
-        respondedRef.current.delete(candidate.id);
-      }
-    })();
-  }, [messages, walletAddress, selectedRoomId]);
+  // (assistant auto-reply engine is mounted above via useAssistantReplyEngine)
 
   const handleReply = useCallback((message: Message) => {
     setReplyTo(message);
