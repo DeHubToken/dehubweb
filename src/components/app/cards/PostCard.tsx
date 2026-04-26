@@ -153,8 +153,11 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
     if (isNaN(numericId)) return;
     try {
       await repostPost(numericId);
-      queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-      queryClient.invalidateQueries({ queryKey: ['user-reposts'] });
+      // Mark caches stale WITHOUT refetching now — refetching the unified feed
+      // tears down the infinite-scroll list and snaps the user back to the top.
+      // ActionBar already shows optimistic state for the (un)repost.
+      queryClient.invalidateQueries({ queryKey: ['unified-feed'], refetchType: 'none' });
+      queryClient.invalidateQueries({ queryKey: ['user-reposts'], refetchType: 'none' });
     } catch {
       toast.error('Failed to repost');
     }
