@@ -5,11 +5,12 @@
  * Uses community_chat_messages table with realtime subscriptions.
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useQuery, useQueries, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
+import { getAccountInfo } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 
 export interface CommunityChatMessage {
