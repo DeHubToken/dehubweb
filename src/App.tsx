@@ -224,27 +224,25 @@ const App = () => (
         <BrowserRouter>
           <SEOHead />
           <Sonner />
-          <Routes>
-            {/* Hero — zero wallet dependencies, renders on first paint */}
-            <Route path="/" element={<HeroRoute />} />
-
-            {/*
-             * All other routes need wallet/auth context.
-             * WalletProviders is preloaded by HeroRoute in the background,
-             * so this Suspense resolves instantly for users coming from the hero.
-             */}
-            <Route path="*" element={
-              <Suspense fallback={<WalletLoader />}>
-                <WalletProviders>
-                  <OptimisticPostsProvider>
-                    <TooltipProvider>
-                      <AppContent />
-                    </TooltipProvider>
-                  </OptimisticPostsProvider>
-                </WalletProviders>
-              </Suspense>
-            } />
-          </Routes>
+          {/*
+           * Landing hero is currently disabled — `/` redirects straight into the app.
+           * The HeroRoute component and Index page (Welcome To Our World) are preserved
+           * in this file / src/pages/Index.tsx and can be re-enabled by restoring the
+           * `<Route path="/" element={<HeroRoute />} />` entry above the wallet tree.
+           *
+           * All routes (including `/`) now go through WalletProviders. The redirect
+           * from `/` to `/app` happens inside AppContent's <Routes>, so HeroRoute
+           * never mounts on initial load.
+           */}
+          <Suspense fallback={<WalletLoader />}>
+            <WalletProviders>
+              <OptimisticPostsProvider>
+                <TooltipProvider>
+                  <AppContent />
+                </TooltipProvider>
+              </OptimisticPostsProvider>
+            </WalletProviders>
+          </Suspense>
         </BrowserRouter>
       </QueryClientProvider>
     </I18nextProvider>
