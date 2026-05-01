@@ -5,11 +5,12 @@
  * Uses community_chat_messages table with realtime subscriptions.
  */
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
+import { useQuery, useQueries, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
+import { getAccountInfo } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 
 export interface CommunityChatMessage {
@@ -65,16 +66,82 @@ export function useCommunityChat(communityId: string | undefined) {
     staleTime: 30_000,
   });
 
-  // Overlay current user's latest profile onto their own messages so name/avatar
-  // changes are reflected immediately (messages store a snapshot at insert time).
+  // Collect unique sender wallet addresses (excluding the current user — we
+  // already have their fresh profile from useAuth) so we can fetch each one's
+  // latest profile from the DeHub API. Cached for 5 minutes per address.
+  const uniqueSenderAddresses = useMemo(() => {
+    const set = new Set<string>();
+    for (const msg of rawMessages) {
+      const addr = msg.wallet_address?.toLowerCase();
+      if (addr && addr !== myAddress) set.add(addr);
+    }
+    return Array.from(set);
+  }, [rawMessages, myAddress]);
+
+  const profileQueries = useQueries({
+    queries: uniqueSenderAddresses.map(addr => ({
+      queryKey: ['community-chat-sender-profile', addr],
+      queryFn: async () => {
+        try {
+          const info = await getAccountInfo(addr, addr);
+          return {
+            address: addr,
+            displayName: (info as any)?.displayName ?? (info as any)?.display_name ?? null,
+            username: (info as any)?.username ?? null,
+            avatarUrl:
+              (info as any)?.avatarImageUrl ??
+              (info as any)?.avatarUrl ??
+              (info as any)?.avatar_url ??
+              null,
+          };
+        } catch {
+          return { address: addr, displayName: null, username: null, avatarUrl: null };
+        }
+      },
+      staleTime: 5 * 60_000,
+      gcTime: 10 * 60_000,
+      retry: 1,
+    })),
+  });
+
+  const senderProfileMap = useMemo(() => {
+    const map = new Map<string, { displayName: string | null; username: string | null; avatarUrl: string | null }>();
+    for (const q of profileQueries) {
+      const d = q.data as any;
+      if (d?.address) {
+        map.set(d.address, {
+          displayName: d.displayName,
+          username: d.username,
+          avatarUrl: d.avatarUrl,
+        });
+      }
+    }
+    return map;
+  }, [profileQueries]);
+
+  // Overlay latest profile onto each message: current user from useAuth, others
+  // from the cached DeHub profile lookup. Messages store a snapshot at insert
+  // time, so this keeps display name / username / avatar fresh after renames.
   const overlaidMessages: CommunityChatMessage[] = rawMessages.map(msg => {
-    if (myAddress && msg.wallet_address?.toLowerCase() === myAddress) {
+    const addr = msg.wallet_address?.toLowerCase();
+    if (myAddress && addr === myAddress) {
       return {
         ...msg,
         display_name: myDisplayName ?? msg.display_name,
         username: myUsername ?? msg.username,
         avatar_url: myAvatarUrl ?? msg.avatar_url,
       };
+    }
+    if (addr) {
+      const fresh = senderProfileMap.get(addr);
+      if (fresh) {
+        return {
+          ...msg,
+          display_name: fresh.displayName ?? msg.display_name,
+          username: fresh.username ?? msg.username,
+          avatar_url: fresh.avatarUrl ?? msg.avatar_url,
+        };
+      }
     }
     return msg;
   });
