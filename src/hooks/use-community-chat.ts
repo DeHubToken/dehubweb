@@ -65,10 +65,24 @@ export function useCommunityChat(communityId: string | undefined) {
     staleTime: 30_000,
   });
 
-  // Resolve reply_to data client-side
-  const messages: CommunityChatMessage[] = rawMessages.map(msg => {
+  // Overlay current user's latest profile onto their own messages so name/avatar
+  // changes are reflected immediately (messages store a snapshot at insert time).
+  const overlaidMessages: CommunityChatMessage[] = rawMessages.map(msg => {
+    if (myAddress && msg.wallet_address?.toLowerCase() === myAddress) {
+      return {
+        ...msg,
+        display_name: myDisplayName ?? msg.display_name,
+        username: myUsername ?? msg.username,
+        avatar_url: myAvatarUrl ?? msg.avatar_url,
+      };
+    }
+    return msg;
+  });
+
+  // Resolve reply_to data client-side (using overlaid values for fresh names)
+  const messages: CommunityChatMessage[] = overlaidMessages.map(msg => {
     if (!msg.reply_to_id) return msg;
-    const parent = rawMessages.find(m => m.id === msg.reply_to_id);
+    const parent = overlaidMessages.find(m => m.id === msg.reply_to_id);
     if (!parent) return msg;
     return {
       ...msg,
