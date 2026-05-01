@@ -144,6 +144,8 @@ function AppContent() {
       <LoginModal open={isLoginModalOpen} onOpenChange={closeLoginModal} />
       <Suspense fallback={<PageLoader />}>
         <Routes>
+          {/* Root redirect — landing hero disabled, send users straight into the app */}
+          <Route path="/" element={<Navigate to="/app" replace />} />
           <Route path="/mobile-preview" element={<MobilePreview />} />
           <Route path="/guide" element={<GuidePage />} />
           <Route path="/docs" element={<DocsPage />} />
