@@ -113,11 +113,16 @@ function HeroRoute() {
     import("./components/app/WalletProviders");
   }, []);
 
+  // Landing page temporarily disabled — always redirect straight into the app.
+  // The Index page (Welcome To Our World hero) is preserved at src/pages/Index.tsx
+  // and can be re-enabled by restoring the SKIP_LANDING_KEY check below.
+  return <Navigate to="/app" replace />;
+
+  // eslint-disable-next-line no-unreachable
   const shouldSkip = localStorage.getItem(SKIP_LANDING_KEY) === 'true';
   if (shouldSkip) {
     return <Navigate to="/app" replace />;
   }
-
   return (
     <Suspense fallback={<PageLoader />}>
       <Index />
