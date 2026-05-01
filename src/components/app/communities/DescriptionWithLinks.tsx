@@ -36,11 +36,11 @@ export function DescriptionWithLinks({ text }: { text: string }) {
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-xs text-primary hover:underline truncate max-w-[250px]"
+          className="flex items-center gap-1.5 text-xs text-primary hover:underline truncate text-primary-foreground max-w-[250px]"
           onClick={e => e.stopPropagation()}
         >
-          <LinkIcon className="w-3 h-3 shrink-0" />
-          <span className="truncate">{cleanUrl(url)}</span>
+          <LinkIcon className="lucide lucide-link w-3 h-3 shrink-0 border-primary-foreground text-primary-foreground" />
+          <span className="truncate text-primary-foreground">{cleanUrl(url)}</span>
         </a>
       ))}
     </div>
