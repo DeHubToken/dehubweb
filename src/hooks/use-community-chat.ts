@@ -36,8 +36,16 @@ export interface CommunityChatMessage {
 const QUERY_KEY = 'community-chat-messages';
 
 export function useCommunityChat(communityId: string | undefined) {
-  const { walletAddress } = useAuth();
+  const { walletAddress, user } = useAuth();
   const queryClient = useQueryClient();
+
+  // Latest profile fields for the current user — used to overlay onto their own
+  // messages so display name / username / avatar updates reflect immediately
+  // across the community chat without waiting for a refetch.
+  const myAddress = walletAddress?.toLowerCase();
+  const myDisplayName = (user as any)?.displayName ?? null;
+  const myUsername = (user as any)?.username ?? null;
+  const myAvatarUrl = (user as any)?.avatarImageUrl ?? (user as any)?.avatarUrl ?? null;
 
   // Fetch messages
   const { data: rawMessages = [], isLoading } = useQuery({
