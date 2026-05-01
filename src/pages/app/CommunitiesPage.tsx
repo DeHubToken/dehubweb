@@ -73,9 +73,12 @@ export default function CommunitiesPage() {
     return map;
   }, [userCommunities]);
 
-  // Sort: owned first, then the rest
+  // Sort: owned first, then the rest. Filter out rows where the joined
+  // community row failed to load — without this we render empty card stubs.
   const myCommunities = useMemo(() => {
-    const list = userCommunities.map(m => ({ ...m.communities, _role: m.role })).filter(Boolean);
+    const list = userCommunities
+      .filter(m => m.communities && (m.communities as any).id)
+      .map(m => ({ ...m.communities, _role: m.role }));
     return list.sort((a, b) => {
       if (a._role === 'owner' && b._role !== 'owner') return -1;
       if (a._role !== 'owner' && b._role === 'owner') return 1;
@@ -93,7 +96,12 @@ export default function CommunitiesPage() {
   const filteredMine = filterBySearch(myCommunities);
   const filteredOthers = filterBySearch(otherCommunities);
 
-  const isLoading = loadingUser || loadingAll;
+  // When the user is authenticated but walletAddress hasn't resolved yet,
+  // useUserCommunities is disabled (loadingUser=false). Previously the page
+  // would render with an empty "mine" list and only fix itself after refresh.
+  // Treat that pre-wallet window as loading to ensure all communities show.
+  const waitingForWallet = isAuthenticated && !walletAddress;
+  const isLoading = loadingUser || loadingAll || waitingForWallet;
 
   return (
     <div className="max-w-2xl mx-auto px-3 sm:px-4 py-4">
