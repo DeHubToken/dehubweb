@@ -112,6 +112,11 @@ export function CardHeader({
   // Format handle to ensure it starts with @
   const formattedHandle = handle ? (handle.startsWith('@') ? handle : `@${handle}`) : null;
 
+  // Prevent focus scroll-into-view on click (which causes the feed to jump to top)
+  const handleProfileMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+  };
+
   return (
     <div className="flex items-center gap-3 pb-3 pr-3 flex-1 min-w-0">
       <ProfileHoverCard
@@ -124,38 +129,43 @@ export function CardHeader({
       >
         <button
           onClick={handleProfileClick}
+          onMouseDown={handleProfileMouseDown}
           disabled={!isClickable}
-          className={`flex items-center gap-3 text-left ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
+          className={`shrink-0 ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
         >
           <Avatar className="w-9 h-9 rounded-md">
             {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} className="rounded-md" />}
             <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-md">{username[0]?.toUpperCase()}</AvatarFallback>
           </Avatar>
-          <div className="flex flex-col min-w-0">
-            <div className="flex items-center gap-1.5 min-w-0">
-              <span className={`relative inline-flex items-baseline shrink min-w-0${badgeUrl ? ' pr-3' : ''}`}>
-                <span className="font-semibold text-white text-sm truncate max-w-[160px] sm:max-w-none leading-tight">{username}</span>
-                <BadgeIcon badgeBalance={badgeBalance} username={handle || username} className="w-[9px] h-[9px] absolute -top-0.5 right-0" />
-              </span>
-              {verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0" />}
-              
-            </div>
-            {(formattedHandle || timestamp) && (
-              <div className="flex items-center gap-1 min-w-0">
-                {formattedHandle && (
-                  <span className="text-zinc-500 text-xs truncate max-w-[160px] sm:max-w-none">{formattedHandle}</span>
-                )}
-                {timestamp && (
-                  <>
-                    <span className="text-zinc-600 text-xs">·</span>
-                    <span className="text-zinc-500 text-xs shrink-0">{timestamp}</span>
-                  </>
-                )}
-              </div>
-            )}
-          </div>
         </button>
       </ProfileHoverCard>
+      <button
+        onClick={handleProfileClick}
+        onMouseDown={handleProfileMouseDown}
+        disabled={!isClickable}
+        className={`flex flex-col min-w-0 text-left ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
+      >
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className={`relative inline-flex items-baseline shrink min-w-0${badgeUrl ? ' pr-3' : ''}`}>
+            <span className="font-semibold text-white text-sm truncate max-w-[160px] sm:max-w-none leading-tight">{username}</span>
+            <BadgeIcon badgeBalance={badgeBalance} username={handle || username} className="w-[9px] h-[9px] absolute -top-0.5 right-0" />
+          </span>
+          {verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0" />}
+        </div>
+        {(formattedHandle || timestamp) && (
+          <div className="flex items-center gap-1 min-w-0">
+            {formattedHandle && (
+              <span className="text-zinc-500 text-xs truncate max-w-[160px] sm:max-w-none">{formattedHandle}</span>
+            )}
+            {timestamp && (
+              <>
+                <span className="text-zinc-600 text-xs">·</span>
+                <span className="text-zinc-500 text-xs shrink-0">{timestamp}</span>
+              </>
+            )}
+          </div>
+        )}
+      </button>
     </div>
   );
 }
