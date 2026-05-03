@@ -151,18 +151,24 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
               Or refresh the entire page
             </button>
 
-            {/* Dev-only error details */}
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {/* Error details — visible in all environments to aid mobile debugging */}
+            {this.state.error && (
               <div className="mt-8 w-full">
-                <div className="p-4 bg-red-500/5 border border-red-500/20 rounded-xl text-left overflow-auto max-h-48">
+                <div className="p-4 bg-red-500/5 border border-red-500/20 rounded-xl text-left overflow-auto max-h-64">
+                  <p className="text-[11px] text-red-400/70 font-mono mb-1">
+                    {this.state.error.name || 'Error'}
+                  </p>
                   <p className="text-xs text-red-400 font-mono whitespace-pre-wrap break-all">
-                    {this.state.error.message}
+                    {this.state.error.message || 'Unknown error'}
                   </p>
                   {this.state.error.stack && (
-                    <p className="text-xs text-red-400/60 font-mono mt-2 whitespace-pre-wrap break-all">
-                      {this.state.error.stack.split('\n').slice(1, 6).join('\n')}
+                    <p className="text-[10px] text-red-400/60 font-mono mt-2 whitespace-pre-wrap break-all">
+                      {this.state.error.stack.split('\n').slice(0, 8).join('\n')}
                     </p>
                   )}
+                  <p className="text-[10px] text-zinc-500 font-mono mt-3 break-all">
+                    UA: {typeof navigator !== 'undefined' ? navigator.userAgent : 'n/a'}
+                  </p>
                 </div>
               </div>
             )}
