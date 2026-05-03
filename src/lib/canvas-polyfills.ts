@@ -184,6 +184,32 @@ if (!(String.prototype as any).replaceAll) {
   };
 }
 
+// ── Array.prototype.findLast / findLastIndex (Safari 15.4+) ─────────
+if (!(Array.prototype as any).findLast) {
+  (Array.prototype as any).findLast = function <T>(
+    this: T[],
+    predicate: (value: T, index: number, array: T[]) => unknown,
+    thisArg?: unknown
+  ): T | undefined {
+    for (let i = this.length - 1; i >= 0; i--) {
+      if (predicate.call(thisArg, this[i], i, this)) return this[i];
+    }
+    return undefined;
+  };
+}
+if (!(Array.prototype as any).findLastIndex) {
+  (Array.prototype as any).findLastIndex = function <T>(
+    this: T[],
+    predicate: (value: T, index: number, array: T[]) => unknown,
+    thisArg?: unknown
+  ): number {
+    for (let i = this.length - 1; i >= 0; i--) {
+      if (predicate.call(thisArg, this[i], i, this)) return i;
+    }
+    return -1;
+  };
+}
+
 // ── Object.hasOwn (Safari 15.4+) ────────────────────────────────────
 if (typeof (Object as any).hasOwn === 'undefined') {
   (Object as any).hasOwn = function (obj: object, key: PropertyKey): boolean {
