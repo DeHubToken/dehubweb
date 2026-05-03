@@ -125,23 +125,29 @@ export function RelatedVideosFeed({ currentVideoId, scrollContainerRef }: Relate
 
   // Infinite scroll observer
   const handleLoadMore = useCallback(() => {
-    if (isFetchingRef.current || !hasNextPage || isFetchingNextPage) return;
+    if (isFetchingRef.current || !hasNextPage || isFetchingNextPage || videosLoading) return;
     isFetchingRef.current = true;
     fetchNextPage().finally(() => {
       isFetchingRef.current = false;
     });
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage, videosLoading]);
 
   useEffect(() => {
+    // Don't attach observer until first page is loaded — prevents
+    // endless prefetching when the sentinel is intersecting before
+    // initial videos have rendered (iOS 15 Safari is especially eager).
+    if (videosLoading || videos.length === 0) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
           handleLoadMore();
         }
       },
-      { 
+      {
         rootMargin: '200px',
-        root: scrollContainerRef?.current || null
+        root: scrollContainerRef?.current || null,
+        threshold: 0.01,
       }
     );
 
@@ -150,7 +156,7 @@ export function RelatedVideosFeed({ currentVideoId, scrollContainerRef }: Relate
     }
 
     return () => observer.disconnect();
-  }, [handleLoadMore, scrollContainerRef]);
+  }, [handleLoadMore, scrollContainerRef, videosLoading, videos.length]);
 
   const isLoading = adLoading || videosLoading;
 

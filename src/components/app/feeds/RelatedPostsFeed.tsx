@@ -107,21 +107,22 @@ export function RelatedPostsFeed({ currentPostId }: RelatedPostsFeedProps) {
   ) || [];
 
   const handleLoadMore = useCallback(() => {
-    if (isFetchingRef.current || !hasNextPage || isFetchingNextPage) return;
+    if (isFetchingRef.current || !hasNextPage || isFetchingNextPage || postsLoading) return;
     isFetchingRef.current = true;
     fetchNextPage().finally(() => {
       isFetchingRef.current = false;
     });
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage, postsLoading]);
 
   useEffect(() => {
+    if (postsLoading || posts.length === 0) return;
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
           handleLoadMore();
         }
       },
-      { rootMargin: '200px' }
+      { rootMargin: '200px', threshold: 0.01 }
     );
 
     if (loadMoreRef.current) {
@@ -129,7 +130,7 @@ export function RelatedPostsFeed({ currentPostId }: RelatedPostsFeedProps) {
     }
 
     return () => observer.disconnect();
-  }, [handleLoadMore]);
+  }, [handleLoadMore, postsLoading, posts.length]);
 
   const isLoading = adLoading || postsLoading;
 
