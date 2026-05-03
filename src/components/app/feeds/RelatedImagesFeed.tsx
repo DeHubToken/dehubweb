@@ -119,21 +119,22 @@ export function RelatedImagesFeed({ currentPostId }: RelatedImagesFeedProps) {
 
   // Infinite scroll observer
   const handleLoadMore = useCallback(() => {
-    if (isFetchingRef.current || !hasNextPage || isFetchingNextPage) return;
+    if (isFetchingRef.current || !hasNextPage || isFetchingNextPage || imagesLoading) return;
     isFetchingRef.current = true;
     fetchNextPage().finally(() => {
       isFetchingRef.current = false;
     });
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage, imagesLoading]);
 
   useEffect(() => {
+    if (imagesLoading || images.length === 0) return;
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
           handleLoadMore();
         }
       },
-      { rootMargin: '200px' }
+      { rootMargin: '200px', threshold: 0.01 }
     );
 
     if (loadMoreRef.current) {
@@ -141,7 +142,7 @@ export function RelatedImagesFeed({ currentPostId }: RelatedImagesFeedProps) {
     }
 
     return () => observer.disconnect();
-  }, [handleLoadMore]);
+  }, [handleLoadMore, imagesLoading, images.length]);
 
   const isLoading = adLoading || imagesLoading;
 
