@@ -120,11 +120,26 @@ export function useVoiceChat(options: UseVoiceChatOptions = {}): UseVoiceChatRet
     // Initial load
     loadVoices();
     
-    // Listen for voices to be loaded (required for Chrome)
-    window.speechSynthesis.addEventListener('voiceschanged', loadVoices);
-    
+    // Listen for voices to be loaded (required for Chrome).
+    // iOS 15 Safari implements speechSynthesis but NOT addEventListener — fall back to onvoiceschanged.
+    const synth = window.speechSynthesis as SpeechSynthesis & {
+      addEventListener?: typeof window.addEventListener;
+      removeEventListener?: typeof window.removeEventListener;
+    };
+    const hasAddEventListener = typeof synth.addEventListener === 'function';
+
+    if (hasAddEventListener) {
+      synth.addEventListener!('voiceschanged', loadVoices);
+    } else {
+      synth.onvoiceschanged = loadVoices;
+    }
+
     return () => {
-      window.speechSynthesis.removeEventListener('voiceschanged', loadVoices);
+      if (hasAddEventListener) {
+        synth.removeEventListener!('voiceschanged', loadVoices);
+      } else if (synth.onvoiceschanged === loadVoices) {
+        synth.onvoiceschanged = null;
+      }
     };
   }, []);
 
