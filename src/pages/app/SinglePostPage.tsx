@@ -794,6 +794,7 @@ export default function SinglePostPage() {
               <div
                 ref={mobileScrollContainerRef}
                 className="flex flex-col h-full bg-black overflow-y-auto"
+                style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' as any }}
               >
                 <div className="relative">
                   <ImmersiveVideoHeader
