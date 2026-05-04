@@ -13,7 +13,7 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { RefreshCw, Radio, ChevronRight } from 'lucide-react';
-import { HomeFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
+import { FeedSkeleton } from '@/components/app/PageSkeletons';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
@@ -1430,7 +1430,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       )}
 
       {(isLoadingState || isAutoRetrying) ? (
-        <HomeFeedSkeleton />
+        <FeedSkeleton />
       ) : (
         <>
           {/* Stories carousel hidden for now */}
