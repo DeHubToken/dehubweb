@@ -1,58 +1,66 @@
+# Improve perceived load speed of the home page
 
-Goal: stop the mobile screen from changing before the post drawer appears, and make open/close feel like one smooth overlay instead of a route flash.
+## Problem
 
-What’s actually wrong
-- The app is still switching into “dedicated post page” mode the moment the URL changes.
-- That means the mobile header disappears and the main container padding changes before the mobile post sheet is visually in place.
-- On top of that, `SinglePostPage` intentionally mounts the drawer closed first and opens it on the next frame, which creates a visible intermediate state.
-- So even though the feed is being kept mounted, the underlying screen chrome is still changing first.
+Today, when a user hits `/app` (or `/`), they see a **plain black screen** for several seconds before anything appears. The reason is a chain of waterfalls:
 
-Plan
-1. Make feed-to-post overlay navigation explicit
-- Pass route state when opening a post from feed cards, e.g. “open as mobile overlay” plus the background route.
-- This removes the fragile guesswork based on previous pathname/session storage and makes the overlay decision deterministic on the very first render.
+```text
+HTML  ->  main.tsx  ->  React/Router  ->  WalletProviders chunk (~1.5 MB)
+                                             |
+                                             v
+                                          AppContent  ->  HomePage chunk
+                                             |
+                                             v
+                                          HomeFeed mounts -> HomeFeedSkeleton
+                                             |
+                                             v
+                                          API fetch -> real feed
+```
 
-2. Keep the underlying feed screen visually frozen during overlay mode
-- In `AppLayout`, stop using raw `isPostRoute` to change layout chrome during feed-overlay opens.
-- When the route was opened as an overlay:
-  - keep the mobile header behavior of the feed screen underneath
-  - keep the main content spacing as-is underneath
-  - keep the persisted home/feed page visible exactly as it was
+The `<Suspense>` fallbacks during this chain are all `<div className="min-h-screen bg-black" />` (`PageLoader` and `WalletLoader` in `src/App.tsx`). Skeletons only appear once the HomePage chunk has loaded, which is the slowest step.
 
-3. Replace the mobile post Vaul entry behavior with an immediate full-screen overlay
-- In `SinglePostPage`, remove the “mount closed, open on rAF” behavior for feed-overlay opens.
-- Use an always-mounted full-screen mobile overlay container for this route so it appears immediately and only animates the sheet itself.
-- No top handle, no overlay dimmer, no border/shadow edge, no outside line.
+## Goal
 
-4. Make close animation smooth and controlled
-- On close, animate the overlay down first, then navigate back after the transition finishes.
-- Preserve the existing feed scroll position behind it so closing feels like returning to the same screen, not reloading it.
+The user should see the home feed skeleton **the instant the HTML lands**, and the real feed should appear as soon as possible after that — no black flashes, no skeleton swaps.
 
-5. Keep direct deep links working normally
-- If someone lands directly on `/app/post/:id` or `/app/video/:id`, keep the normal dedicated page behavior.
-- Only feed-origin opens should use the “overlay over unchanged background” path.
+## Plan
 
-Files to update
-- `src/pages/app/SinglePostPage.tsx`
-- `src/components/app/AppLayout.tsx`
-- `src/components/app/navigation/MobileHeader.tsx`
-- Post openers that navigate into single post routes, especially:
-  - `src/components/app/cards/PostCard.tsx`
-  - `src/components/app/cards/VideoCard.tsx`
-  - `src/components/app/cards/ImageCard.tsx`
-  - `src/components/app/cards/LiveCard.tsx`
-  - any other feed card components that should open as overlay
+### 1. Inline a static skeleton in `index.html`
+Render a hand-written HTML/CSS version of `FeedSkeleton` (stories bar + 3 card placeholders) inside `#root` directly in `index.html`, with the same liquid-glass styles already defined in the critical CSS block. This means the skeleton paints on first byte, before any JS executes. React will replace `#root` contents on mount, so no cleanup is needed.
 
-Technical details
-- Root cause is not just the drawer itself; it is the combination of:
-  - route-based layout changes in `AppLayout`
-  - `MobileHeader` auto-hiding on `/app/post/*`
-  - delayed drawer open in `SinglePostPage`
-- I would keep the existing persisted-feed idea, but change the trigger from inferred state to explicit navigation state, then decouple mobile overlay rendering from Vaul’s initial closed-frame behavior for this one route.
+Constraints: keep markup small (<3 KB), use only inline styles + the existing critical CSS, no external images, respect `prefers-reduced-motion` for the shimmer.
 
-Expected result
-- Tap post from feed: background stays exactly as-is, drawer appears immediately from the bottom/top edge as a true fullscreen sheet.
-- Close drawer: smooth slide back to the same feed position, no flash, no black pre-state, no weird outside line.
-- Direct-link post visit still works as a normal page.
+### 2. Replace black Suspense fallbacks with the real skeleton
+In `src/App.tsx`:
+- `WalletLoader` and `PageLoader` currently render a black div. Switch both to render `<FeedSkeleton />` (from `src/components/app/PageSkeletons.tsx`) wrapped in the same chrome the AppLayout would use, so the skeleton stays visible continuously through:
+  HTML skeleton → Suspense (wallet chunk) → Suspense (HomePage chunk) → HomeFeed's own skeleton → real cards.
+- Move `FeedSkeleton` import to be eagerly bundled (not lazy) so it's available the moment React mounts.
 
-No backend or database changes are needed.
+### 3. Parallelize chunk loading
+Currently `WalletProviders` blocks `AppContent`, which blocks the `HomePage` chunk download. Kick off the `HomePage` chunk in parallel from `src/App.tsx` (top-level side effect, same pattern already used for `preloadCriticalChunks`). Also add `<link rel="modulepreload">` hints in `index.html` for the HomePage chunk if Vite's manifest exposes a stable name; otherwise rely on the JS-side `import()`.
+
+### 4. Warm the home feed query before HomePage mounts
+The home feed's network request currently starts only after `HomeFeed` mounts (after wallet + HomePage chunks load). Add a lightweight prefetch in `src/main.tsx` (or a tiny module imported synchronously by it) that:
+- Calls the same `searchNFTs` / unified-feed endpoint used by the default Home tab.
+- Stores the result in the existing React Query client via `queryClient.prefetchQuery` once `QueryClientProvider` mounts (or seeds a module-level cache the hook reads).
+
+This means the feed API call runs concurrently with the wallet bundle download, so by the time `HomeFeed` renders, data is often already in cache and the skeleton swaps straight to real content.
+
+### 5. Smooth the skeleton -> content transition
+- Remove the `animate-fade-in` on the first activation of the home `CachedPage` when the HTML skeleton was already visible — a fade looks worse than a direct swap when the layouts match.
+- Make sure the inline HTML skeleton, `FeedSkeleton`, and `HomeFeedSkeleton` use **identical** spacing/widths so there's no visual jump between the three stages.
+
+### 6. Verify
+- Throttled "Slow 4G" + 4× CPU in Chrome devtools: confirm a skeleton is visible at the first paint (≤ ~200 ms) and that there is no black flash at any handoff.
+- iOS Safari 15: confirm the inline skeleton renders (no `backdrop-filter` reliance — use solid `rgba(255,255,255,0.06)` like existing skeletons).
+
+## Files to change
+- `index.html` — inline skeleton + optional modulepreload
+- `src/App.tsx` — replace black loaders with `FeedSkeleton`, kick off HomePage chunk preload in parallel with WalletProviders
+- `src/main.tsx` (or a new `src/lib/prefetch-home-feed.ts`) — warm feed query
+- `src/components/app/PersistentPageCache.tsx` — skip first-mount fade for `home`
+- `src/components/app/PageSkeletons.tsx` — minor tweak so dimensions match the inline HTML skeleton
+
+## Out of scope
+- No changes to the actual feed API or data layer.
+- No changes to other pages' skeletons (only home is targeted, since that's the entry route).
