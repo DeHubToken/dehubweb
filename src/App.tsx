@@ -13,12 +13,19 @@ import { I18nextProvider } from "react-i18next";
 import i18nInstance from "@/i18n";
 import { HelmetProvider } from "react-helmet-async";
 import { SEOHead } from "@/components/SEOHead";
+import { FeedSkeleton } from "@/components/app/PageSkeletons";
 
 // Wallet/Auth providers — lazy loaded to keep them out of the main bundle.
 // Wagmi + RainbowKit + Web3Auth total ~1.5 MB; deferring them reduces TBT significantly.
 const WalletProviders = React.lazy(() =>
   import("./components/app/WalletProviders").then(m => ({ default: m.WalletProviders }))
 );
+
+// Kick off the HomePage chunk download in PARALLEL with WalletProviders so
+// the home feed is ready to mount the moment the wallet bundle resolves.
+if (typeof window !== 'undefined') {
+  import("./pages/app/HomePage").catch(() => {});
+}
 
 // Pages — lazy loaded
 const Index = React.lazy(() => import("./pages/Index"));
@@ -54,7 +61,7 @@ if (typeof window !== 'undefined') {
 }
 
 const PageLoader = () => (
-  <div className="min-h-screen bg-black" />
+  <div className="min-h-screen bg-black"><FeedSkeleton /></div>
 );
 
 /**
@@ -213,7 +220,9 @@ function AppContent() {
   );
 }
 
-const WalletLoader = () => <div className="min-h-screen bg-black" />;
+const WalletLoader = () => (
+  <div className="min-h-screen bg-black"><FeedSkeleton /></div>
+);
 
 const App = () => (
   <HelmetProvider>

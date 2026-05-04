@@ -108,9 +108,11 @@ const CachedPage = memo(function CachedPage({
   const SkeletonComponent = config.skeleton;
   const { isCollapsed } = useSidebarCollapse();
 
-  // Only animate fade-in on the very first activation, not on every revisit
+  // Only animate fade-in on the very first activation, not on every revisit.
+  // Skip the fade for the home page so it swaps directly from the boot/HTML
+  // skeleton into the real feed without a visible cross-fade.
   const hasBeenActiveRef = useRef(false);
-  const shouldAnimate = isActive && !hasBeenActiveRef.current;
+  const shouldAnimate = isActive && !hasBeenActiveRef.current && config.key !== 'home';
 
   useEffect(() => {
     if (isActive && !hasBeenActiveRef.current) {
