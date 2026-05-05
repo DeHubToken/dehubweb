@@ -172,7 +172,10 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   
   const navigatingFromHomeToPost = isPostRoute && prevPathRef.current === '/app';
-  const showHomePagePersisted = isOverlayPost || (isPostRoute && (cameFromHome || navigatingFromHomeToPost));
+  // Only persist home behind the post when navigation actually originated from home.
+  // Posts opened from communities/profiles/explore must not stack home underneath.
+  const cameFromHomeOverlay = sessionStorage.getItem(POST_OVERLAY_ORIGIN_KEY) === 'home';
+  const showHomePagePersisted = isPostRoute && isFromFeed && (navigatingFromHomeToPost || cameFromHomeOverlay || cameFromHome);
   const isCached = isCachedPageRoute(location.pathname);
   // Dynamic routes: post overlay, single post, post info, or username profiles
   const isDynamicRoute = !isCached && !showHomePagePersisted;
