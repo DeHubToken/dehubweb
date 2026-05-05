@@ -53,7 +53,10 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   // Detect if this post was opened from the feed (overlay mode)
   const routeState = location.state as { fromFeed?: boolean } | null;
   const isFromFeed = !!routeState?.fromFeed;
-  const isOverlayPost = isPostRoute && isFromFeed;
+  // Only treat as a home-overlay post when actually coming from the home feed.
+  // Other feed surfaces (communities, profiles, explore) also pass fromFeed but
+  // must NOT cause the home page to render behind the post.
+  const isOverlayPost = isPostRoute && isFromFeed && (prevPathRef.current === '/app' || sessionStorage.getItem(POST_OVERLAY_ORIGIN_KEY) === 'home');
   
   // Track if we came from home page (for overlay behavior)
   const [cameFromHome, setCameFromHome] = useState(() => {
