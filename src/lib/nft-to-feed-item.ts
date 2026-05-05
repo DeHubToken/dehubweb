@@ -97,6 +97,8 @@ function mapNFTToImagePost(nft: DeHubNFT): ImagePost {
     isOwner: nft.isOwner ?? false,
     isUnlocked: nft.isUnlocked ?? false,
     chainId: nft.chainId,
+    repostCount: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
+    isReposted: nft.isReposted ?? false,
   };
 }
 
