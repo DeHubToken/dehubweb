@@ -126,6 +126,7 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
       reposts: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
       likes: nft.totalVotes?.for || nft.like_count || 0,
     },
+    isReposted: nft.isReposted ?? false,
   };
 }
 
