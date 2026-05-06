@@ -196,7 +196,7 @@ function MessageBubble({
           >
             {/* Text message */}
             {(message.msgType === 'msg') && (
-              <p className="text-sm break-words whitespace-pre-wrap">
+              <p dir="auto" className="text-sm break-words whitespace-pre-wrap text-left">
                 {isTranslated ? translatedText : message.content}
               </p>
             )}
