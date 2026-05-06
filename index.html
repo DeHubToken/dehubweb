@@ -98,8 +98,13 @@
 
       /* Center column */
       .bs-center { flex: 1; min-width: 0; }
-      .bs-feed { padding: 8px; display: flex; flex-direction: column; gap: 12px; }
-      @media (min-width: 640px) { .bs-feed { padding: 12px; } }
+      .bs-tabs-wrap { padding: 4px 8px 8px; position: sticky; top: 44px; background: #000; z-index: 50; }
+      @media (min-width: 1024px) { .bs-tabs-wrap { padding: 8px 12px 12px; top: 0; } }
+      .bs-tabs { background: #18181b; border-radius: 12px; display: flex; }
+      .bs-tab { flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px 12px; }
+      .bs-tab-icon { width: 16px; height: 16px; border-radius: 4px; background: rgba(255,255,255,0.06); }
+      .bs-feed { padding: 0 8px 8px; display: flex; flex-direction: column; gap: 12px; }
+      @media (min-width: 640px) { .bs-feed { padding: 0 12px 12px; } }
       .bs-row { display: flex; align-items: center; gap: 12px; padding-bottom: 12px; }
       .bs-av { width: 36px; height: 36px; border-radius: 6px; background: rgba(255,255,255,0.06); flex-shrink: 0; }
       .bs-more { width: 28px; height: 28px; border-radius: 6px; background: rgba(255,255,255,0.06); }
