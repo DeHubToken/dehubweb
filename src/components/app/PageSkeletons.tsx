@@ -128,67 +128,87 @@ export function FeedBodySkeleton() {
   );
 }
 
-/** Left desktop sidebar shell — logo + nav bento + post button */
+/** Left desktop sidebar shell — mirrors real DesktopSidebar geometry exactly */
 function HomeLeftSidebarSkeleton() {
   return (
-    <aside className="hidden lg:flex sticky top-0 h-screen w-[231px] px-[18px] pb-2 flex-col">
-      {/* Logo row */}
-      <div className="flex items-center mb-[15px] mt-[9px]">
-        <Skeleton className={`w-7 h-7 rounded-lg mr-1.5 ${SK}`} />
-        <Skeleton className={`h-[36px] w-[120px] rounded ${SK}`} />
-      </div>
-      {/* Nav bento */}
-      <div className="bg-zinc-900 rounded-2xl flex-1 min-h-0 p-2.5 space-y-1">
-        {Array.from({ length: 10 }).map((_, i) => (
-          <div key={i} className="flex items-center gap-3 px-2.5 py-2.5">
-            <Skeleton className={`w-5 h-5 rounded ${SK}`} />
-            <Skeleton className={`h-3.5 rounded ${SK}`} style={{ width: `${60 + (i % 4) * 18}px` }} />
+    <aside className="hidden lg:flex sticky top-0 h-screen w-[231px] px-[18px] pb-2 -mt-[3px] flex-col items-stretch">
+      {/* Logo row — matches real DesktopSidebar */}
+      <div className="flex items-center justify-between w-full mb-[15px]">
+        <div className="flex items-center mt-[9px]">
+          <div className="w-7 h-7 mr-1.5 flex items-center justify-center">
+            <Skeleton className={`w-[18px] h-[18px] rounded ${SK}`} />
           </div>
-        ))}
+          <Skeleton className={`h-[40.6px] w-[135px] rounded relative -top-[3px] ${SK}`} />
+        </div>
       </div>
-      {/* Post button */}
+      {/* Nav bento — matches -mt-[8.5px] + lg:p-2.5 lg:space-y-[2px] from real */}
+      <div className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0">
+        <div className="lg:p-2.5 lg:space-y-[2px] flex flex-col items-stretch h-full">
+          {Array.from({ length: 10 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-3 px-2.5 py-2.5 w-full">
+              <Skeleton className={`w-9 h-9 rounded-xl flex-shrink-0 ${SK}`} />
+              <Skeleton className={`h-3.5 rounded ${SK}`} style={{ width: `${60 + (i % 4) * 18}px` }} />
+            </div>
+          ))}
+        </div>
+      </div>
+      {/* Post button — matches real py-[7px] lg:py-3 (~46px) rounded-2xl */}
       <div className="mt-3">
-        <Skeleton className={`h-11 w-full rounded-2xl ${SK}`} />
+        <Skeleton className={`h-[46px] w-full rounded-2xl ${SK}`} />
       </div>
     </aside>
   );
 }
 
-/** Right desktop sidebar shell — search + tabbed panel + what's happening */
+/** Right desktop sidebar shell — mirrors real RightSidebar geometry exactly */
 function HomeRightSidebarSkeleton() {
   return (
     <aside className="hidden lg:block w-72 xl:w-80 2xl:w-88 h-screen sticky top-0 px-4 pt-[8px] pb-4">
-      {/* Search */}
-      <Skeleton className={`h-9 w-full rounded-xl ${SK}`} />
-      {/* Tabbed side panel */}
+      {/* Search — matches real h-[36px] rounded-xl */}
+      <Skeleton className={`h-[36px] w-full rounded-xl ${SK}`} />
+      {/* Tabbed side panel — matches real mt-[11px] then 400px panel */}
       <div className="mt-[11px] space-y-4">
-        <div className="bg-zinc-900 rounded-2xl p-3 space-y-3">
-          <div className="flex gap-2">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className={`h-8 flex-1 rounded-lg ${SK}`} />
+        <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+          {/* Icon tab row — real uses py-3 with w-5 h-5 icons */}
+          <div className="flex">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="flex-1 py-3 flex items-center justify-center">
+                <Skeleton className={`w-5 h-5 rounded ${SK}`} />
+              </div>
             ))}
           </div>
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-3">
-              <Skeleton className={`w-9 h-9 rounded-full ${SK}`} />
-              <div className="flex-1 space-y-1.5">
-                <Skeleton className={`h-3.5 w-24 rounded ${SK}`} />
-                <Skeleton className={`h-3 w-16 rounded ${SK}`} />
+          {/* Panel body — real height is 400px */}
+          <div className="h-[400px] p-3 space-y-3">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-3">
+                <Skeleton className={`w-9 h-9 rounded-full ${SK}`} />
+                <div className="flex-1 space-y-1.5">
+                  <Skeleton className={`h-3.5 w-24 rounded ${SK}`} />
+                  <Skeleton className={`h-3 w-16 rounded ${SK}`} />
+                </div>
+                <Skeleton className={`h-7 w-16 rounded-lg ${SK}`} />
               </div>
-              <Skeleton className={`h-7 w-16 rounded-lg ${SK}`} />
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-        {/* What's happening */}
-        <div className="bg-zinc-900 rounded-2xl p-3 space-y-3">
-          <Skeleton className={`h-4 w-32 rounded ${SK}`} />
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="space-y-1.5">
-              <Skeleton className={`h-3 w-20 rounded ${SK}`} />
-              <Skeleton className={`h-4 w-40 rounded ${SK}`} />
-              <Skeleton className={`h-3 w-16 rounded ${SK}`} />
-            </div>
-          ))}
+        {/* What's happening — real has -mt-[4.2px] */}
+        <div className="-mt-[4.2px] bg-zinc-900 rounded-2xl overflow-hidden">
+          <div className="flex">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="flex-1 py-3 flex items-center justify-center">
+                <Skeleton className={`w-5 h-5 rounded ${SK}`} />
+              </div>
+            ))}
+          </div>
+          <div className="p-3 space-y-3">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <Skeleton className={`w-4 h-4 rounded ${SK}`} />
+                <Skeleton className={`h-4 flex-1 rounded ${SK}`} />
+                <Skeleton className={`h-3 w-12 rounded ${SK}`} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </aside>
