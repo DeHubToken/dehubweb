@@ -976,7 +976,7 @@ export default function SinglePostPage() {
       <PageHeader showBack={onBack ? true : hasHistory} onBack={onBack} />
       <div className="px-3 sm:px-4 pb-8 pt-2">
         <div className="max-w-2xl mx-auto">
-          <div className="sm:rounded-xl sm:border sm:border-white/[0.12] sm:bg-white/[0.03] sm:p-3">
+          <div className="lg:rounded-xl lg:border lg:border-white/[0.12] lg:bg-white/[0.03] lg:p-3">
             {renderContent()}
           </div>
           {isImagePost && id && <RelatedImagesFeed currentPostId={id} />}
