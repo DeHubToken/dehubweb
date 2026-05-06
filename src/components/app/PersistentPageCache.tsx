@@ -15,6 +15,7 @@ import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
 import { preloadPriorityPages } from '@/lib/preload-priority-pages';
+import HomePage from '@/pages/app/HomePage';
 import {
   FeedSkeleton,
   ExploreSkeleton,
@@ -29,7 +30,6 @@ import {
 } from './PageSkeletons';
 
 // Lazy page imports with chunk-load retry
-const HomePage = lazyWithRetry(() => import('@/pages/app/HomePage'));
 const ExplorePage = lazyWithRetry(() => import('@/pages/app/ExplorePage'));
 const ProfilePage = lazyWithRetry(() => import('@/pages/app/ProfilePage'));
 const NotificationsPage = lazyWithRetry(() => import('@/pages/app/NotificationsPage'));
@@ -59,7 +59,7 @@ const StoresPage = lazyWithRetry(() => import('@/pages/app/StoresPage'));
 interface CachedPageConfig {
   key: string;
   path: string | string[];
-  component: React.LazyExoticComponent<any>;
+  component: React.ComponentType<any> | React.LazyExoticComponent<any>;
   skeleton: React.ComponentType;
 }
 
