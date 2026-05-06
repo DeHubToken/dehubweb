@@ -46,14 +46,16 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
     }
   }, []);
 
-  // Mark home boot as ready once the feed signals it has content,
-  // so subsequent navigations can show inline skeletons normally.
-  useEffect(() => {
-    const handleReady = () => {
-      try { sessionStorage.setItem(HOME_BOOT_READY_KEY, 'true'); } catch {}
-    };
-    window.addEventListener('home-feed-boot-ready', handleReady);
-    return () => window.removeEventListener('home-feed-boot-ready', handleReady);
+  // Remove the HTML boot shell as soon as the real app chrome paints.
+  // The center column shows its own inline loader while the feed query resolves,
+  // so the user sees real chrome immediately instead of staring at the static shell.
+  useLayoutEffect(() => {
+    try { sessionStorage.setItem(HOME_BOOT_READY_KEY, 'true'); } catch {}
+    // Defer one frame so the layout is actually painted before we drop the shell.
+    const raf = requestAnimationFrame(() => {
+      window.dispatchEvent(new Event('home-feed-boot-ready'));
+    });
+    return () => cancelAnimationFrame(raf);
   }, []);
   
   // Track if we're on a post overlay route
