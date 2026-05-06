@@ -1252,15 +1252,6 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const hasCachedData = hasQueryData && items.length > 0;
   const isLoadingState = isCategoryTransitioning || (!hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading)));
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (sessionStorage.getItem(HOME_BOOT_READY_KEY) === 'true') return;
-    if (isLoadingState) return;
-
-    sessionStorage.setItem(HOME_BOOT_READY_KEY, 'true');
-    window.dispatchEvent(new Event('home-feed-boot-ready'));
-  }, [isLoadingState]);
-
   // Clear transitioning flag once new data has arrived (even if 0 results)
   useEffect(() => {
     if (isCategoryTransitioning && (hasQueryData || (!isLoading && !isFetchingNextPage))) {
@@ -1274,6 +1265,15 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     isError,
     refetch,
   });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (sessionStorage.getItem(HOME_BOOT_READY_KEY) === 'true') return;
+    if (isLoadingState || isAutoRetrying) return;
+
+    sessionStorage.setItem(HOME_BOOT_READY_KEY, 'true');
+    window.dispatchEvent(new Event('home-feed-boot-ready'));
+  }, [isLoadingState, isAutoRetrying]);
 
   const EmptyState = () => {
     // Custom message for Following feed
