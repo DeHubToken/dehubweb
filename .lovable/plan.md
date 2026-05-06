@@ -1,59 +1,37 @@
-# Make the Home Feed Feel Faster
+# Fix the double preloader at the source
 
-Goal: keep the unified preloader, but make the *content* phase look instant by progressively painting cards instead of waiting for everything to be ready at once.
+## What is actually wrong
+The issue is not only the feed logic — the raw boot HTML in `index.html` currently contains the app shell markup twice. I verified the duplicated markers in the body:
+- `.bs-left-logo` appears **2 times**
+- `.bs-center` appears **2 times**
+- `.bs-right` appears **2 times**
 
-## Strategy
+That means the page is literally painting duplicated preloader structure before React finishes mounting.
 
-We use four perception tricks, layered together:
+## Plan
 
-1. **Skeleton cards in the feed body** (not a full-page reload).  
-   While the first page loads, render N (e.g. 6) empty card-shaped placeholders inside the existing feed column. Same width, same rounded corners, same vertical spacing as real cards. The shell never moves; only the inner cards fill in.
+1. **Clean `index.html` so the boot shell exists only once**
+   - Remove the accidental duplicated shell markup from the body.
+   - Keep only one banner and one boot skeleton tree inside `#root`.
+   - Preserve the current first-paint structure and styling.
 
-2. **Render text/avatar/reactions first, defer media decode.**  
-   For each card, the shell (avatar, name, handle, body text, action bar) paints immediately from the JSON response. The image/video slot shows a soft shimmer placeholder until the asset is decoded.
+2. **Audit the handoff between boot HTML and React home feed**
+   - Re-check the temporary home boot overlay logic added in `AppLayout.tsx`.
+   - Keep only the minimum gating needed so the single boot shell stays visible until the real feed is ready.
+   - If the duplicate HTML was the main cause, simplify any extra guard that now creates unnecessary layering.
 
-3. **Prioritise the first 2-3 thumbnails.**  
-   - First 2 visible images: `loading="eager"` + `fetchpriority="high"` + `decoding="async"`.  
-   - Everything below the fold: `loading="lazy"` + `fetchpriority="low"`.  
-   - For videos, set `preload="metadata"` on the first card and `preload="none"` on the rest until they enter the viewport.
+3. **Verify there is only one loading phase left**
+   - Recount the boot DOM markers after cleanup.
+   - Reload `/app` in preview and confirm the shell appears once, then swaps once into feed content.
+   - Validate there is no second feed skeleton appearing after the shell.
 
-4. **Stream cards in as data arrives.**  
-   Instead of waiting for video + image + text queries to all settle before interleaving, render whichever query resolves first as a partial list, then re-interleave when the others arrive. This means the user sees the first cards within ~150-300 ms of the API responding, instead of after the slowest of the three.
-
-## What changes
-
-### `src/components/app/feeds/HomeFeed.tsx`
-- When `isLoadingState` is true and there are no items yet, render `FeedCardSkeleton` × 6 inside the same bento column (replace the small spinner). No size change vs real cards.
-- Compute `interleavedItems` from whichever queries have data, instead of gating on all three. Re-run the interleave on each successful query.
-- Pass an `isPriority` prop to the first 2 cards.
-
-### New: `src/components/app/cards/FeedCardSkeleton.tsx`
-- A single skeleton matching the real card geometry: avatar circle, two text lines, 16:9 media block, action bar row. Uses the existing `animate-pulse` style with `bg-white/5`.
-
-### `src/components/app/cards/VideoCard.tsx`, `ImageCard.tsx`, `PostCard.tsx`
-- Accept `priority?: boolean`.
-- On the `<img>` thumbnail: `loading={priority ? 'eager' : 'lazy'}`, `fetchPriority={priority ? 'high' : 'low'}`, `decoding="async"`.
-- Wrap the media slot in a div with a static `aspect-video` (or correct ratio) so the card never reflows when the image decodes. Show a subtle `bg-white/5` placeholder underneath until `onLoad`.
-- Render the avatar + meta + action bar synchronously regardless of media state.
-
-### Optional polish
-- Add `<link rel="preload" as="image" href="…">` for the first 2 thumbnail URLs once their JSON is in cache (inject from `HomeFeed`). This starts the network fetch a few ms earlier.
-
-## Visual flow after change
-
-```
-t=0     shell paints (already instant)
-t=50ms  6 card skeletons appear in feed column
-t=200ms first JSON arrives → cards paint with avatar + text + grey media slots
-t=300ms first 2 thumbnails decode (high priority)
-t=600ms rest fade in as they decode / scroll into view
-```
-
-No second skeleton, no layout shift, and the user sees real text + avatars in ~200 ms instead of staring at a spinner until the slowest query finishes.
-
-## Files to change
+## Files to touch
+- `index.html`
+- `src/components/app/AppLayout.tsx`
 - `src/components/app/feeds/HomeFeed.tsx`
-- `src/components/app/cards/VideoCard.tsx`
-- `src/components/app/cards/ImageCard.tsx`
-- `src/components/app/cards/PostCard.tsx`
-- `src/components/app/cards/FeedCardSkeleton.tsx` (new)
+
+## Expected result
+- One red announcement banner
+- One boot shell
+- One handoff into the actual home feed
+- No second visible preloader phase
