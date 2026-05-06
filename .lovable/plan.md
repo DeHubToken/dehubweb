@@ -1,30 +1,39 @@
-## What I verified
-- On a hard load of `/app`, I saw an initial full-page boot skeleton with the red announcement banner.
-- A few seconds later, that hands off to a second React-driven loading state before the real feed appears.
-- In code, the extra stage comes from two separate app-level loaders after the HTML boot paint:
-  1. `AppLayout.tsx` mounts a full-screen `HomeShellSkeleton` overlay.
-  2. `HomeFeed.tsx` can still render `FeedCardSkeletonList` while feed queries are resolving.
+## What’s actually wrong
+- The red announcement banner is being rendered by **two different systems**:
+  - raw boot HTML in `index.html`
+  - React `UpgradeNoticeBanner` in `src/components/app/UpgradeNoticeBanner.tsx`
+- The React banner starts with `visible = false` and only turns on in `useEffect`, so after the first HTML paint it briefly disappears, then comes back.
+- There is still another full-shell loader in React:
+  - `src/App.tsx` uses `WalletLoader` / `PageLoader` → `HomeShellSkeleton`
+- The first HTML shell and the React `HomeShellSkeleton` are **not the same geometry**, so the app visually goes:
+  - boot shell
+  - differently sized React shell
+  - real content
 
 ## Plan
-1. **Remove the redundant app-level boot overlay**
-   - Delete the `/app` startup overlay in `src/components/app/AppLayout.tsx` that renders `HomeShellSkeleton` on top of the page.
-   - Keep the raw HTML boot shell in `index.html` as the only first-paint loader.
+1. **Stop the banner disappearing during handoff**
+   - Make the React banner use a synchronous initial visibility check so it does not mount hidden and then reappear.
+   - Ensure the boot banner and app banner share the same visibility rules so hydration doesn’t cause a flash.
 
-2. **Prevent the feed from showing a second startup skeleton**
-   - Update `src/components/app/feeds/HomeFeed.tsx` so the initial `/app` load does not swap from the HTML boot shell into `FeedCardSkeletonList`.
-   - Only mark boot as ready once the feed can render real content, a valid empty state, or a stable retry/error state.
+2. **Remove the second full-page shell on initial `/app` boot**
+   - Update `src/App.tsx` so the initial `/app` startup does not swap from the HTML boot shell into a second React shell.
+   - Keep route-level lazy fallbacks for non-home routes, but stop using a competing home-shell fallback during the first app boot.
 
-3. **Keep the banner-first behavior intact**
-   - Preserve the announcement banner in the initial HTML so it still paints immediately before the app hydrates.
-   - Do not change unrelated page loading states.
+3. **Unify the shell sizing so there is only one visual loader**
+   - Either make the HTML boot shell match the React home shell exactly, or make the React path defer to the existing HTML shell instead of repainting a different one.
+   - This specifically targets the center column size mismatch you called out.
 
-4. **Verify in preview before confirming**
-   - Hard reload `/app` in the browser preview.
-   - Watch the full sequence and confirm it goes from **HTML boot shell → real feed** with no intermediate full-page/skeleton stage.
-   - Re-check desktop behavior specifically, since that is where the duplicate shell is most visible.
+4. **Verify the full sequence properly**
+   - Hard reload `/app` in preview.
+   - Watch the actual load path from first paint through real content.
+   - Confirm the sequence is only:
+     - banner + boot shell
+     - real content
+   - Confirm there is no banner drop/reappear and no intermediate “correct-sized” second skeleton.
 
-## Technical notes
-- Files likely touched:
-  - `src/components/app/AppLayout.tsx`
-  - `src/components/app/feeds/HomeFeed.tsx`
-- `index.html` should likely remain the single source of the first-paint shell unless verification shows it also needs cleanup.
+## Files involved
+- `index.html`
+- `src/App.tsx`
+- `src/components/app/UpgradeNoticeBanner.tsx`
+- `src/components/app/PageSkeletons.tsx`
+- `src/components/app/feeds/HomeFeed.tsx`
