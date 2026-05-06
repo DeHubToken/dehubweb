@@ -1,66 +1,40 @@
-# Improve perceived load speed of the home page
+# Fix first-load home preloader so it matches the real app shell
 
-## Problem
+## What I’ll change
 
-Today, when a user hits `/app` (or `/`), they see a **plain black screen** for several seconds before anything appears. The reason is a chain of waterfalls:
+1. Replace the current boot HTML skeleton in `index.html` with a full home-shell skeleton instead of a generic feed card stack.
+   - Desktop: left nav shell, center home feed area, right sidebar panels.
+   - Mobile: top app header spacing, home tabs, story/friends strip, mixed feed blocks.
+   - Keep the same liquid-glass look and white-opacity styling already used in the app.
 
-```text
-HTML  ->  main.tsx  ->  React/Router  ->  WalletProviders chunk (~1.5 MB)
-                                             |
-                                             v
-                                          AppContent  ->  HomePage chunk
-                                             |
-                                             v
-                                          HomeFeed mounts -> HomeFeedSkeleton
-                                             |
-                                             v
-                                          API fetch -> real feed
-```
+2. Refactor `src/components/app/PageSkeletons.tsx` so the home loader is split into reusable pieces.
+   - Create a dedicated shell-aware home skeleton rather than a single center-column placeholder.
+   - Reuse the same markup pattern for the boot loader and React loader so there’s no visual handoff flash.
+   - Remove any leftover old “stories-era / giant post card” structure from the home preload path.
 
-The `<Suspense>` fallbacks during this chain are all `<div className="min-h-screen bg-black" />` (`PageLoader` and `WalletLoader` in `src/App.tsx`). Skeletons only appear once the HomePage chunk has loaded, which is the slowest step.
+3. Update `src/App.tsx` so the first React fallback uses the same shell-aware home skeleton.
+   - This keeps the sequence consistent from:
+     `HTML boot skeleton -> wallet/page suspense -> cached home page load -> real home content`
+   - The dedicated post pages and other routes will keep their existing route loaders unless they are directly affected by the home boot path.
 
-## Goal
+4. If needed, align the home cached-page fallback path in `src/components/app/PersistentPageCache.tsx` with the new loader component so the home route never falls back to an outdated skeleton variant.
 
-The user should see the home feed skeleton **the instant the HTML lands**, and the real feed should appear as soon as possible after that — no black flashes, no skeleton swaps.
+## Result
 
-## Plan
+- First load on `/app` will look like your actual app layout, not one giant fake post.
+- Desktop will show panel structure instead of a stretched center card.
+- Mobile will still look like the real home feed, with no old skeleton flashes.
+- Old preload skeleton variants in the home boot path will be removed so there’s only one current style.
 
-### 1. Inline a static skeleton in `index.html`
-Render a hand-written HTML/CSS version of `FeedSkeleton` (stories bar + 3 card placeholders) inside `#root` directly in `index.html`, with the same liquid-glass styles already defined in the critical CSS block. This means the skeleton paints on first byte, before any JS executes. React will replace `#root` contents on mount, so no cleanup is needed.
+## Technical details
 
-Constraints: keep markup small (<3 KB), use only inline styles + the existing critical CSS, no external images, respect `prefers-reduced-motion` for the shimmer.
+Files likely involved:
+- `index.html`
+- `src/components/app/PageSkeletons.tsx`
+- `src/App.tsx`
+- possibly `src/components/app/PersistentPageCache.tsx`
 
-### 2. Replace black Suspense fallbacks with the real skeleton
-In `src/App.tsx`:
-- `WalletLoader` and `PageLoader` currently render a black div. Switch both to render `<FeedSkeleton />` (from `src/components/app/PageSkeletons.tsx`) wrapped in the same chrome the AppLayout would use, so the skeleton stays visible continuously through:
-  HTML skeleton → Suspense (wallet chunk) → Suspense (HomePage chunk) → HomeFeed's own skeleton → real cards.
-- Move `FeedSkeleton` import to be eagerly bundled (not lazy) so it's available the moment React mounts.
-
-### 3. Parallelize chunk loading
-Currently `WalletProviders` blocks `AppContent`, which blocks the `HomePage` chunk download. Kick off the `HomePage` chunk in parallel from `src/App.tsx` (top-level side effect, same pattern already used for `preloadCriticalChunks`). Also add `<link rel="modulepreload">` hints in `index.html` for the HomePage chunk if Vite's manifest exposes a stable name; otherwise rely on the JS-side `import()`.
-
-### 4. Warm the home feed query before HomePage mounts
-The home feed's network request currently starts only after `HomeFeed` mounts (after wallet + HomePage chunks load). Add a lightweight prefetch in `src/main.tsx` (or a tiny module imported synchronously by it) that:
-- Calls the same `searchNFTs` / unified-feed endpoint used by the default Home tab.
-- Stores the result in the existing React Query client via `queryClient.prefetchQuery` once `QueryClientProvider` mounts (or seeds a module-level cache the hook reads).
-
-This means the feed API call runs concurrently with the wallet bundle download, so by the time `HomeFeed` renders, data is often already in cache and the skeleton swaps straight to real content.
-
-### 5. Smooth the skeleton -> content transition
-- Remove the `animate-fade-in` on the first activation of the home `CachedPage` when the HTML skeleton was already visible — a fade looks worse than a direct swap when the layouts match.
-- Make sure the inline HTML skeleton, `FeedSkeleton`, and `HomeFeedSkeleton` use **identical** spacing/widths so there's no visual jump between the three stages.
-
-### 6. Verify
-- Throttled "Slow 4G" + 4× CPU in Chrome devtools: confirm a skeleton is visible at the first paint (≤ ~200 ms) and that there is no black flash at any handoff.
-- iOS Safari 15: confirm the inline skeleton renders (no `backdrop-filter` reliance — use solid `rgba(255,255,255,0.06)` like existing skeletons).
-
-## Files to change
-- `index.html` — inline skeleton + optional modulepreload
-- `src/App.tsx` — replace black loaders with `FeedSkeleton`, kick off HomePage chunk preload in parallel with WalletProviders
-- `src/main.tsx` (or a new `src/lib/prefetch-home-feed.ts`) — warm feed query
-- `src/components/app/PersistentPageCache.tsx` — skip first-mount fade for `home`
-- `src/components/app/PageSkeletons.tsx` — minor tweak so dimensions match the inline HTML skeleton
-
-## Out of scope
-- No changes to the actual feed API or data layer.
-- No changes to other pages' skeletons (only home is targeted, since that's the entry route).
+Implementation notes:
+- I’ll preserve the existing Safari-safe / low-motion constraints.
+- I’ll keep styling aligned with your current semantic/glass system and avoid reintroducing blue or old card shapes.
+- After implementation, I’ll verify the initial desktop viewport render specifically, since that’s where the current mismatch is most obvious.

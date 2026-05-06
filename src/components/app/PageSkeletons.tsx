@@ -12,12 +12,16 @@ const SK = "bg-white/[0.06]";
 
 // ─── Home Feed ──────────────────────────────────────────────────────────────
 
-/** Home feed skeleton — matches sticky tab bar + actual feed bento layout */
+/**
+ * In-page home feed skeleton (center column only).
+ * Used inside HomeFeed and PersistentPageCache where the AppLayout shell
+ * (sidebars, header) is already mounted.
+ */
 export function FeedSkeleton() {
   return (
-    <div>
-      {/* Sticky Tab Navigation (6 icons + settings) */}
-      <div className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
+    <div className="min-w-0 flex-1">
+      {/* Sticky tab bar */}
+      <div className="px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
         <div className="bg-zinc-900 rounded-xl overflow-visible">
           <div className="flex">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -32,9 +36,8 @@ export function FeedSkeleton() {
         </div>
       </div>
 
-      {/* Feed body */}
       <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3">
-        {/* Friends/Stories strip */}
+        {/* Friends strip */}
         <div className="flex gap-3 overflow-hidden pb-1">
           {Array.from({ length: 8 }).map((_, i) => (
             <div key={i} className="flex flex-col items-center gap-1.5 flex-shrink-0">
@@ -44,7 +47,7 @@ export function FeedSkeleton() {
           ))}
         </div>
 
-        {/* Mixed feed cards: media + text + image grid + media */}
+        {/* Mixed feed cards */}
         {[0, 1, 2, 3].map((i) => (
           <div key={i} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
             <div className="flex items-center gap-3 pb-3">
@@ -80,6 +83,88 @@ export function FeedSkeleton() {
           </div>
         ))}
       </div>
+    </div>
+  );
+}
+
+/** Left desktop sidebar shell — logo + nav bento + post button */
+function HomeLeftSidebarSkeleton() {
+  return (
+    <aside className="hidden lg:flex sticky top-0 h-screen w-[231px] px-[18px] pb-2 flex-col">
+      {/* Logo row */}
+      <div className="flex items-center mb-[15px] mt-[9px]">
+        <Skeleton className={`w-7 h-7 rounded-lg mr-1.5 ${SK}`} />
+        <Skeleton className={`h-[36px] w-[120px] rounded ${SK}`} />
+      </div>
+      {/* Nav bento */}
+      <div className="bg-zinc-900 rounded-2xl flex-1 min-h-0 p-2.5 space-y-1">
+        {Array.from({ length: 10 }).map((_, i) => (
+          <div key={i} className="flex items-center gap-3 px-2.5 py-2.5">
+            <Skeleton className={`w-5 h-5 rounded ${SK}`} />
+            <Skeleton className={`h-3.5 rounded ${SK}`} style={{ width: `${60 + (i % 4) * 18}px` }} />
+          </div>
+        ))}
+      </div>
+      {/* Post button */}
+      <div className="mt-3">
+        <Skeleton className={`h-11 w-full rounded-2xl ${SK}`} />
+      </div>
+    </aside>
+  );
+}
+
+/** Right desktop sidebar shell — search + tabbed panel + what's happening */
+function HomeRightSidebarSkeleton() {
+  return (
+    <aside className="hidden lg:block w-72 xl:w-80 2xl:w-88 h-screen sticky top-0 px-4 pt-[8px] pb-4">
+      {/* Search */}
+      <Skeleton className={`h-9 w-full rounded-xl ${SK}`} />
+      {/* Tabbed side panel */}
+      <div className="mt-[11px] space-y-4">
+        <div className="bg-zinc-900 rounded-2xl p-3 space-y-3">
+          <div className="flex gap-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <Skeleton key={i} className={`h-8 flex-1 rounded-lg ${SK}`} />
+            ))}
+          </div>
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-3">
+              <Skeleton className={`w-9 h-9 rounded-full ${SK}`} />
+              <div className="flex-1 space-y-1.5">
+                <Skeleton className={`h-3.5 w-24 rounded ${SK}`} />
+                <Skeleton className={`h-3 w-16 rounded ${SK}`} />
+              </div>
+              <Skeleton className={`h-7 w-16 rounded-lg ${SK}`} />
+            </div>
+          ))}
+        </div>
+        {/* What's happening */}
+        <div className="bg-zinc-900 rounded-2xl p-3 space-y-3">
+          <Skeleton className={`h-4 w-32 rounded ${SK}`} />
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="space-y-1.5">
+              <Skeleton className={`h-3 w-20 rounded ${SK}`} />
+              <Skeleton className={`h-4 w-40 rounded ${SK}`} />
+              <Skeleton className={`h-3 w-16 rounded ${SK}`} />
+            </div>
+          ))}
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+/**
+ * Full app-shell home skeleton — used by App-level Suspense fallbacks
+ * (before AppLayout mounts) so first paint matches the real layout
+ * with both sidebars on desktop.
+ */
+export function HomeShellSkeleton() {
+  return (
+    <div className="flex w-full mx-auto" style={{ maxWidth: '80rem' }}>
+      <HomeLeftSidebarSkeleton />
+      <FeedSkeleton />
+      <HomeRightSidebarSkeleton />
     </div>
   );
 }
