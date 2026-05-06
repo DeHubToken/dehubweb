@@ -12,39 +12,78 @@ const SK = "bg-white/[0.06]";
 
 // ─── Home Feed ──────────────────────────────────────────────────────────────
 
-/** Home feed skeleton — matches actual feed cards (no stories) */
+/** Home feed skeleton — matches sticky tab bar + actual feed bento layout */
 export function FeedSkeleton() {
   return (
-    <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3">
-      {/* Feed cards — mix of media + text */}
-      {Array.from({ length: 4 }).map((_, i) => (
-        <div key={i} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
-          <div className="flex items-center gap-3 pb-3">
-            <Skeleton className={`w-9 h-9 rounded-md flex-shrink-0 ${SK}`} />
-            <div className="space-y-1.5 flex-1">
-              <Skeleton className={`h-4 w-28 rounded ${SK}`} />
-              <Skeleton className={`h-3 w-16 rounded ${SK}`} />
+    <div>
+      {/* Sticky Tab Navigation (6 icons + settings) */}
+      <div className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
+        <div className="bg-zinc-900 rounded-xl overflow-visible">
+          <div className="flex">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="flex-1 flex items-center justify-center px-3 sm:px-4 py-2.5">
+                <Skeleton className={`w-4 h-4 rounded ${SK}`} />
+              </div>
+            ))}
+            <div className="flex items-center justify-center px-3 py-2.5">
+              <Skeleton className={`w-4 h-4 rounded ${SK}`} />
             </div>
-          </div>
-          {i === 1 ? (
-            <div className="space-y-2">
-              <Skeleton className={`h-4 w-full rounded ${SK}`} />
-              <Skeleton className={`h-4 w-5/6 rounded ${SK}`} />
-              <Skeleton className={`h-4 w-2/3 rounded ${SK}`} />
-            </div>
-          ) : (
-            <Skeleton className={`w-full aspect-video rounded-lg ${SK}`} />
-          )}
-          <div className="flex gap-4 pt-3">
-            <Skeleton className={`h-8 w-16 rounded-xl ${SK}`} />
-            <Skeleton className={`h-8 w-16 rounded-xl ${SK}`} />
-            <Skeleton className={`h-8 w-16 rounded-xl ${SK}`} />
           </div>
         </div>
-      ))}
+      </div>
+
+      {/* Feed body */}
+      <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3">
+        {/* Friends/Stories strip */}
+        <div className="flex gap-3 overflow-hidden pb-1">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="flex flex-col items-center gap-1.5 flex-shrink-0">
+              <Skeleton className={`w-14 h-14 rounded-full ${SK}`} />
+              <Skeleton className={`h-2.5 w-10 rounded ${SK}`} />
+            </div>
+          ))}
+        </div>
+
+        {/* Mixed feed cards: media + text + image grid + media */}
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+            <div className="flex items-center gap-3 pb-3">
+              <Skeleton className={`w-9 h-9 rounded-md flex-shrink-0 ${SK}`} />
+              <div className="space-y-1.5 flex-1">
+                <Skeleton className={`h-4 w-28 rounded ${SK}`} />
+                <Skeleton className={`h-3 w-16 rounded ${SK}`} />
+              </div>
+              <Skeleton className={`h-7 w-7 rounded-md ${SK}`} />
+            </div>
+            {i === 1 ? (
+              <div className="space-y-2">
+                <Skeleton className={`h-4 w-full rounded ${SK}`} />
+                <Skeleton className={`h-4 w-5/6 rounded ${SK}`} />
+                <Skeleton className={`h-4 w-2/3 rounded ${SK}`} />
+              </div>
+            ) : i === 2 ? (
+              <div className="grid grid-cols-2 gap-1.5">
+                <Skeleton className={`aspect-square rounded-lg ${SK}`} />
+                <Skeleton className={`aspect-square rounded-lg ${SK}`} />
+                <Skeleton className={`aspect-square rounded-lg ${SK}`} />
+                <Skeleton className={`aspect-square rounded-lg ${SK}`} />
+              </div>
+            ) : (
+              <Skeleton className={`w-full aspect-video rounded-lg ${SK}`} />
+            )}
+            <div className="flex items-center gap-4 pt-3">
+              <Skeleton className={`h-8 w-14 rounded-xl ${SK}`} />
+              <Skeleton className={`h-8 w-14 rounded-xl ${SK}`} />
+              <Skeleton className={`h-8 w-14 rounded-xl ${SK}`} />
+              <Skeleton className={`h-8 w-14 rounded-xl ml-auto ${SK}`} />
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
+
 
 // ─── Explore ────────────────────────────────────────────────────────────────
 
