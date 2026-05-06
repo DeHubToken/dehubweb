@@ -85,6 +85,7 @@ const PAGE_SIZE = 20;
 const SHORTS_INSERT_INTERVAL = 5;
 const RADIO_INSERT_AFTER = 8;
 const LEADERBOARD_INSERT_AFTER_LIVE_OFFSET = 10;
+const HOME_BOOT_READY_KEY = 'home-feed-boot-ready';
 /** Insert an all-time most-liked post every N items in trending feed */
 const CLASSIC_INSERT_INTERVAL = 6;
 
@@ -1264,6 +1265,15 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     isError,
     refetch,
   });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (sessionStorage.getItem(HOME_BOOT_READY_KEY) === 'true') return;
+    if (isLoadingState || isAutoRetrying) return;
+
+    sessionStorage.setItem(HOME_BOOT_READY_KEY, 'true');
+    window.dispatchEvent(new Event('home-feed-boot-ready'));
+  }, [isLoadingState, isAutoRetrying]);
 
   const EmptyState = () => {
     // Custom message for Following feed
