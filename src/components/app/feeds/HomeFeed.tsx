@@ -1430,7 +1430,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       )}
 
       {(isLoadingState || isAutoRetrying) ? (
-        <FeedBodySkeleton />
+        <div className="py-10 flex justify-center">
+          <div className="w-6 h-6 border-2 border-zinc-700 border-t-white rounded-full animate-spin" aria-label="Loading" />
+        </div>
       ) : (
         <>
           {/* Stories carousel hidden for now */}
