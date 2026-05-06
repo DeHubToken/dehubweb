@@ -1,40 +1,39 @@
-# Fix first-load home preloader so it matches the real app shell
+## Goal
 
-## What I’ll change
+Make `/app` show exactly one loading skeleton on first load, with no second/duplicate nav-bar flash underneath the main one.
 
-1. Replace the current boot HTML skeleton in `index.html` with a full home-shell skeleton instead of a generic feed card stack.
-   - Desktop: left nav shell, center home feed area, right sidebar panels.
-   - Mobile: top app header spacing, home tabs, story/friends strip, mixed feed blocks.
-   - Keep the same liquid-glass look and white-opacity styling already used in the app.
+## What to change
 
-2. Refactor `src/components/app/PageSkeletons.tsx` so the home loader is split into reusable pieces.
-   - Create a dedicated shell-aware home skeleton rather than a single center-column placeholder.
-   - Reuse the same markup pattern for the boot loader and React loader so there’s no visual handoff flash.
-   - Remove any leftover old “stories-era / giant post card” structure from the home preload path.
+1. Keep the outer app-shell loader as the only full-page first-load skeleton
+   - Continue using `HomeShellSkeleton` for the top-level app fallbacks in `src/App.tsx`.
+   - Do not introduce any additional shell or nav skeleton after that first handoff.
 
-3. Update `src/App.tsx` so the first React fallback uses the same shell-aware home skeleton.
-   - This keeps the sequence consistent from:
-     `HTML boot skeleton -> wallet/page suspense -> cached home page load -> real home content`
-   - The dedicated post pages and other routes will keep their existing route loaders unless they are directly affected by the home boot path.
+2. Remove the home page’s secondary nav-style fallback inside the cached page system
+   - In `src/components/app/PersistentPageCache.tsx`, stop using `FeedSkeleton` as the Suspense fallback for the cached `home` page.
+   - Replace the home-page fallback with a home-specific center-column loader that does not render the sticky tab/nav strip at all.
+   - Keep other page fallbacks unchanged.
 
-4. If needed, align the home cached-page fallback path in `src/components/app/PersistentPageCache.tsx` with the new loader component so the home route never falls back to an outdated skeleton variant.
+3. Split the current home feed skeleton into two roles in `src/components/app/PageSkeletons.tsx`
+   - Preserve the existing full-shell loader used before the app mounts.
+   - Add a center-column-only fallback variant for the home page content area that excludes the top sticky feed nav skeleton.
+   - Keep sizing/spacing consistent with the live feed cards so the content area still feels stable during lazy load.
 
-## Result
+4. Verify the loaded home UI does not stack two nav bars
+   - The real top navigation should come from the already-mounted app shell (`GlobalFeedNav` / `HomePage` behavior), not from a fallback skeleton.
+   - First load should transition from boot shell directly into the real layout without a second nav-like placeholder appearing.
 
-- First load on `/app` will look like your actual app layout, not one giant fake post.
-- Desktop will show panel structure instead of a stretched center card.
-- Mobile will still look like the real home feed, with no old skeleton flashes.
-- Old preload skeleton variants in the home boot path will be removed so there’s only one current style.
+## Technical notes
 
-## Technical details
+- Root cause: there are two loading layers for `/app`:
+  1. the top-level `HomeShellSkeleton` used by the app/router fallbacks
+  2. the cached home-page Suspense fallback (`FeedSkeleton`) inside `PersistentPageCache`
+- `FeedSkeleton` currently includes a sticky tab-bar skeleton, which visually duplicates the real home/global nav once the shell is mounted.
+- The fix is to make the cached home fallback render feed content placeholders only, not another nav bar.
 
-Files likely involved:
-- `index.html`
-- `src/components/app/PageSkeletons.tsx`
-- `src/App.tsx`
-- possibly `src/components/app/PersistentPageCache.tsx`
+## Verification
 
-Implementation notes:
-- I’ll preserve the existing Safari-safe / low-motion constraints.
-- I’ll keep styling aligned with your current semantic/glass system and avoid reintroducing blue or old card shapes.
-- After implementation, I’ll verify the initial desktop viewport render specifically, since that’s where the current mismatch is most obvious.
+After implementation, reload `/app` in desktop preview and confirm:
+- only one loader sequence appears
+- no second bar flashes under the main nav
+- no layout jump between boot skeleton and mounted app shell
+- side panels remain visually stable during the handoff
