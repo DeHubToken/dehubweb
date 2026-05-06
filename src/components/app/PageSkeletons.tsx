@@ -12,8 +12,12 @@ const SK = "bg-white/[0.06]";
 
 // ─── Home Feed ──────────────────────────────────────────────────────────────
 
-/** Center column placeholder — tabs + stories strip + mixed feed cards */
-function HomeCenterSkeleton() {
+/**
+ * In-page home feed skeleton (center column only).
+ * Used inside HomeFeed and PersistentPageCache where the AppLayout shell
+ * (sidebars, header) is already mounted.
+ */
+export function FeedSkeleton() {
   return (
     <div className="min-w-0 flex-1">
       {/* Sticky tab bar */}
