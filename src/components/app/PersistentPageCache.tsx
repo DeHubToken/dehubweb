@@ -190,7 +190,8 @@ export function PersistentPageCache({ keepHomeVisible = false }: { keepHomeVisib
     <>
       {/* Render all mounted cached pages — active one visible, others hidden */}
       {CACHED_PAGES.filter(p => mountedPages.has(p.key)).map(config => {
-        const isActive = matchesPath(config, pathname) || (keepHomeVisible && config.key === 'home');
+        // Home stays mounted (state preserved) but hidden when a post overlay is shown above it.
+        const isActive = matchesPath(config, pathname);
 
         return (
           <CachedPage
