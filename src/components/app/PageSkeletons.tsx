@@ -12,43 +12,30 @@ const SK = "bg-white/[0.06]";
 
 // ─── Home Feed ──────────────────────────────────────────────────────────────
 
-/** Home feed skeleton — GlobalFeedNav icon tab bar + mixed content cards */
+/** Home feed skeleton — matches actual feed cards (no stories) */
 export function FeedSkeleton() {
   return (
     <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3">
-      {/* Stories bar */}
-      <div className="flex gap-4 overflow-hidden pt-[7px] px-2">
-        <div className="flex flex-col items-center gap-1 flex-shrink-0">
-          <Skeleton className={`w-[72px] h-[72px] rounded-xl ${SK}`} />
-          <Skeleton className={`w-12 h-3 rounded ${SK}`} />
-        </div>
-        {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="flex flex-col items-center gap-1 flex-shrink-0">
-            <Skeleton className={`w-[68px] h-[68px] rounded-xl ${SK}`} />
-            <Skeleton className={`w-14 h-3 rounded ${SK}`} />
-          </div>
-        ))}
-      </div>
-
-      {/* Feed cards — mix of video + text */}
-      {Array.from({ length: 3 }).map((_, i) => (
-        <div key={i} className="rounded-xl border border-white/[0.08] bg-transparent p-3 space-y-3">
-          <div className="flex items-center gap-3">
+      {/* Feed cards — mix of media + text */}
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+          <div className="flex items-center gap-3 pb-3">
             <Skeleton className={`w-9 h-9 rounded-md flex-shrink-0 ${SK}`} />
             <div className="space-y-1.5 flex-1">
-              <Skeleton className={`h-4 w-28 ${SK}`} />
-              <Skeleton className={`h-3 w-16 ${SK}`} />
+              <Skeleton className={`h-4 w-28 rounded ${SK}`} />
+              <Skeleton className={`h-3 w-16 rounded ${SK}`} />
             </div>
           </div>
-          {i !== 1 && <Skeleton className={`h-48 w-full rounded-lg ${SK}`} />}
-          {i === 1 && (
+          {i === 1 ? (
             <div className="space-y-2">
-              <Skeleton className={`h-4 w-full ${SK}`} />
-              <Skeleton className={`h-4 w-5/6 ${SK}`} />
-              <Skeleton className={`h-4 w-2/3 ${SK}`} />
+              <Skeleton className={`h-4 w-full rounded ${SK}`} />
+              <Skeleton className={`h-4 w-5/6 rounded ${SK}`} />
+              <Skeleton className={`h-4 w-2/3 rounded ${SK}`} />
             </div>
+          ) : (
+            <Skeleton className={`w-full aspect-video rounded-lg ${SK}`} />
           )}
-          <div className="flex gap-4 pt-1">
+          <div className="flex gap-4 pt-3">
             <Skeleton className={`h-8 w-16 rounded-xl ${SK}`} />
             <Skeleton className={`h-8 w-16 rounded-xl ${SK}`} />
             <Skeleton className={`h-8 w-16 rounded-xl ${SK}`} />
