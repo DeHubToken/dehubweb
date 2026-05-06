@@ -75,25 +75,31 @@
       .bs-card { background: #18181b; border-radius: 16px; }
       .bs-feedcard { border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.03); border-radius: 12px; padding: 12px; }
 
-      /* Left sidebar — desktop only */
+      /* Left sidebar — desktop only — mirrors DesktopSidebar exactly */
       .bs-left { display: none; }
       @media (min-width: 1024px) {
-        .bs-left { display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; width: 231px; padding: 0 18px 8px; flex-shrink: 0; }
-        .bs-left-logo { display: flex; align-items: center; margin: 9px 0 15px; }
-        .bs-left-nav { background: #18181b; border-radius: 16px; flex: 1; padding: 10px; display: flex; flex-direction: column; gap: 4px; }
+        .bs-left { display: flex; flex-direction: column; position: sticky; top: 0; height: 100vh; width: 231px; padding: 0 18px 8px; flex-shrink: 0; margin-top: -3px; }
+        .bs-left-logo { display: flex; align-items: center; height: 40.6px; margin: 9px 0 15px; }
+        .bs-left-nav { background: #18181b; border-radius: 16px; flex: 1; padding: 10px; display: flex; flex-direction: column; gap: 2px; margin-top: -8.5px; }
         .bs-left-row { display: flex; align-items: center; gap: 12px; padding: 10px; }
-        .bs-left-post { height: 44px; border-radius: 16px; background: rgba(255,255,255,0.06); margin-top: 12px; }
+        .bs-left-icon { width: 36px; height: 36px; border-radius: 12px; background: rgba(255,255,255,0.06); flex-shrink: 0; }
+        .bs-left-post { height: 46px; border-radius: 16px; background: rgba(255,255,255,0.06); margin-top: 12px; }
       }
 
-      /* Right sidebar — desktop only */
+      /* Right sidebar — desktop only — mirrors RightSidebar exactly */
       .bs-right { display: none; }
       @media (min-width: 1024px) {
         .bs-right { display: block; width: 288px; height: 100vh; position: sticky; top: 0; padding: 8px 16px 16px; flex-shrink: 0; }
         .bs-right-search { height: 36px; border-radius: 12px; background: rgba(255,255,255,0.06); }
-        .bs-right-panel { background: #18181b; border-radius: 16px; padding: 12px; margin-top: 11px; display: flex; flex-direction: column; gap: 12px; }
-        .bs-right-tabs { display: flex; gap: 8px; }
-        .bs-right-tab { flex: 1; height: 32px; border-radius: 8px; background: rgba(255,255,255,0.06); }
+        .bs-right-panel { background: #18181b; border-radius: 16px; margin-top: 11px; overflow: hidden; }
+        .bs-right-tabs { display: flex; }
+        .bs-right-tab { flex: 1; padding: 12px 0; display: flex; align-items: center; justify-content: center; }
+        .bs-right-tab-icon { width: 20px; height: 20px; border-radius: 4px; background: rgba(255,255,255,0.06); }
+        .bs-right-body { height: 400px; padding: 12px; display: flex; flex-direction: column; gap: 12px; }
         .bs-right-row { display: flex; align-items: center; gap: 12px; }
+        .bs-right-panel-2 { background: #18181b; border-radius: 16px; margin-top: 11.8px; overflow: hidden; }
+        .bs-right-body-2 { padding: 12px; display: flex; flex-direction: column; gap: 12px; }
+        .bs-right-row-2 { display: flex; align-items: center; gap: 8px; }
       }
 
       /* Center column */
