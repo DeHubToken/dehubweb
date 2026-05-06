@@ -1266,14 +1266,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     refetch,
   });
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (sessionStorage.getItem(HOME_BOOT_READY_KEY) === 'true') return;
-    if (isLoadingState || isAutoRetrying) return;
-
-    sessionStorage.setItem(HOME_BOOT_READY_KEY, 'true');
-    window.dispatchEvent(new Event('home-feed-boot-ready'));
-  }, [isLoadingState, isAutoRetrying]);
+  // Boot shell removal is now handled by AppLayout on mount, not gated on feed data.
 
   const EmptyState = () => {
     // Custom message for Following feed
