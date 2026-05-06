@@ -830,7 +830,7 @@ export default function SinglePostPage() {
                 onAIClick={() => setShowDesktopAIChat(true)}
                 onMenuClick={() => setShowDesktopOptionsDrawer(true)}
               />
-              <div className="sm:rounded-xl sm:border sm:border-white/[0.12] sm:bg-white/[0.03] sm:p-3">
+              <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
                 {renderContent()}
               </div>
               {/* Related Videos Feed */}
