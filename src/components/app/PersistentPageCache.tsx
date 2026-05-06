@@ -59,7 +59,7 @@ const StoresPage = lazyWithRetry(() => import('@/pages/app/StoresPage'));
 interface CachedPageConfig {
   key: string;
   path: string | string[];
-  component: React.LazyExoticComponent<any>;
+  component: React.ComponentType<any> | React.LazyExoticComponent<any>;
   skeleton: React.ComponentType;
 }
 
