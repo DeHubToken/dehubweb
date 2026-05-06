@@ -154,12 +154,16 @@ function HomeRightSidebarSkeleton() {
   );
 }
 
-/** Home feed skeleton — full app shell on desktop, center column only on mobile */
-export function FeedSkeleton() {
+/**
+ * Full app-shell home skeleton — used by App-level Suspense fallbacks
+ * (before AppLayout mounts) so first paint matches the real layout
+ * with both sidebars on desktop.
+ */
+export function HomeShellSkeleton() {
   return (
     <div className="flex w-full mx-auto" style={{ maxWidth: '80rem' }}>
       <HomeLeftSidebarSkeleton />
-      <HomeCenterSkeleton />
+      <FeedSkeleton />
       <HomeRightSidebarSkeleton />
     </div>
   );
