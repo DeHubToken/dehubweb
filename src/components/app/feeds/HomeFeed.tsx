@@ -14,6 +14,7 @@ import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { RefreshCw, Radio, ChevronRight } from 'lucide-react';
 import { FeedBodySkeleton } from '@/components/app/PageSkeletons';
+import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
@@ -1430,9 +1431,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       )}
 
       {(isLoadingState || isAutoRetrying) ? (
-        <div className="py-10 flex justify-center">
-          <div className="w-6 h-6 border-2 border-zinc-700 border-t-white rounded-full animate-spin" aria-label="Loading" />
-        </div>
+        <FeedCardSkeletonList count={6} />
       ) : (
         <>
           {/* Stories carousel hidden for now */}
