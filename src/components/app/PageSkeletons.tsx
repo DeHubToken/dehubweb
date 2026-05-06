@@ -37,16 +37,6 @@ export function FeedSkeleton() {
       </div>
 
       <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3">
-        {/* Friends strip */}
-        <div className="flex gap-3 overflow-hidden pb-1">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="flex flex-col items-center gap-1.5 flex-shrink-0">
-              <Skeleton className={`w-14 h-14 rounded-full ${SK}`} />
-              <Skeleton className={`h-2.5 w-10 rounded ${SK}`} />
-            </div>
-          ))}
-        </div>
-
         {/* Mixed feed cards */}
         {[0, 1, 2, 3].map((i) => (
           <div key={i} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
