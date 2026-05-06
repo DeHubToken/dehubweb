@@ -20,23 +20,7 @@ const SK = "bg-white/[0.06]";
 export function FeedSkeleton() {
   return (
     <div className="min-w-0 flex-1">
-      {/* Sticky tab bar */}
-      <div className="px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
-        <div className="bg-zinc-900 rounded-xl overflow-visible">
-          <div className="flex">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="flex-1 flex items-center justify-center px-3 sm:px-4 py-2.5">
-                <Skeleton className={`w-4 h-4 rounded ${SK}`} />
-              </div>
-            ))}
-            <div className="flex items-center justify-center px-3 py-2.5">
-              <Skeleton className={`w-4 h-4 rounded ${SK}`} />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3">
+      <div className="p-2 sm:p-3 space-y-3">
         {/* Mixed feed cards */}
         {[0, 1, 2, 3].map((i) => (
           <div key={i} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
