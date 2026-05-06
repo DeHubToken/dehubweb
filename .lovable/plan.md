@@ -1,37 +1,30 @@
-# Fix the double preloader at the source
-
-## What is actually wrong
-The issue is not only the feed logic — the raw boot HTML in `index.html` currently contains the app shell markup twice. I verified the duplicated markers in the body:
-- `.bs-left-logo` appears **2 times**
-- `.bs-center` appears **2 times**
-- `.bs-right` appears **2 times**
-
-That means the page is literally painting duplicated preloader structure before React finishes mounting.
+## What I verified
+- On a hard load of `/app`, I saw an initial full-page boot skeleton with the red announcement banner.
+- A few seconds later, that hands off to a second React-driven loading state before the real feed appears.
+- In code, the extra stage comes from two separate app-level loaders after the HTML boot paint:
+  1. `AppLayout.tsx` mounts a full-screen `HomeShellSkeleton` overlay.
+  2. `HomeFeed.tsx` can still render `FeedCardSkeletonList` while feed queries are resolving.
 
 ## Plan
+1. **Remove the redundant app-level boot overlay**
+   - Delete the `/app` startup overlay in `src/components/app/AppLayout.tsx` that renders `HomeShellSkeleton` on top of the page.
+   - Keep the raw HTML boot shell in `index.html` as the only first-paint loader.
 
-1. **Clean `index.html` so the boot shell exists only once**
-   - Remove the accidental duplicated shell markup from the body.
-   - Keep only one banner and one boot skeleton tree inside `#root`.
-   - Preserve the current first-paint structure and styling.
+2. **Prevent the feed from showing a second startup skeleton**
+   - Update `src/components/app/feeds/HomeFeed.tsx` so the initial `/app` load does not swap from the HTML boot shell into `FeedCardSkeletonList`.
+   - Only mark boot as ready once the feed can render real content, a valid empty state, or a stable retry/error state.
 
-2. **Audit the handoff between boot HTML and React home feed**
-   - Re-check the temporary home boot overlay logic added in `AppLayout.tsx`.
-   - Keep only the minimum gating needed so the single boot shell stays visible until the real feed is ready.
-   - If the duplicate HTML was the main cause, simplify any extra guard that now creates unnecessary layering.
+3. **Keep the banner-first behavior intact**
+   - Preserve the announcement banner in the initial HTML so it still paints immediately before the app hydrates.
+   - Do not change unrelated page loading states.
 
-3. **Verify there is only one loading phase left**
-   - Recount the boot DOM markers after cleanup.
-   - Reload `/app` in preview and confirm the shell appears once, then swaps once into feed content.
-   - Validate there is no second feed skeleton appearing after the shell.
+4. **Verify in preview before confirming**
+   - Hard reload `/app` in the browser preview.
+   - Watch the full sequence and confirm it goes from **HTML boot shell → real feed** with no intermediate full-page/skeleton stage.
+   - Re-check desktop behavior specifically, since that is where the duplicate shell is most visible.
 
-## Files to touch
-- `index.html`
-- `src/components/app/AppLayout.tsx`
-- `src/components/app/feeds/HomeFeed.tsx`
-
-## Expected result
-- One red announcement banner
-- One boot shell
-- One handoff into the actual home feed
-- No second visible preloader phase
+## Technical notes
+- Files likely touched:
+  - `src/components/app/AppLayout.tsx`
+  - `src/components/app/feeds/HomeFeed.tsx`
+- `index.html` should likely remain the single source of the first-paint shell unless verification shows it also needs cleanup.
