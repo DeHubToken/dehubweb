@@ -85,6 +85,7 @@ const PAGE_SIZE = 20;
 const SHORTS_INSERT_INTERVAL = 5;
 const RADIO_INSERT_AFTER = 8;
 const LEADERBOARD_INSERT_AFTER_LIVE_OFFSET = 10;
+const HOME_BOOT_READY_KEY = 'home-feed-boot-ready';
 /** Insert an all-time most-liked post every N items in trending feed */
 const CLASSIC_INSERT_INTERVAL = 6;
 
@@ -1250,6 +1251,15 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     : (singleFeed.data?.pages?.length);
   const hasCachedData = hasQueryData && items.length > 0;
   const isLoadingState = isCategoryTransitioning || (!hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading)));
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (sessionStorage.getItem(HOME_BOOT_READY_KEY) === 'true') return;
+    if (isLoadingState) return;
+
+    sessionStorage.setItem(HOME_BOOT_READY_KEY, 'true');
+    window.dispatchEvent(new Event('home-feed-boot-ready'));
+  }, [isLoadingState]);
 
   // Clear transitioning flag once new data has arrived (even if 0 results)
   useEffect(() => {
