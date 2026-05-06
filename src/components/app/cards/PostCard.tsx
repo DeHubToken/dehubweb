@@ -136,7 +136,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   // Pre-cache post data for instant display on the single post page
   const handleCardClick = useCallback((e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
-    const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate], [data-vaul-drawer], [data-vaul-overlay]');
+    const isInteractive = target.closest('button, a, input, textarea, [role="button"], [data-no-navigate]');
     if (isInteractive) return;
     // Allow text selection without navigating
     const selection = window.getSelection();
