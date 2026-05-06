@@ -23,7 +23,7 @@ import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
 import { GlobalFeedNav } from './GlobalFeedNav';
 import { cn } from '@/lib/utils';
 import SinglePostPage from '@/pages/app/SinglePostPage';
-import { HomeShellSkeleton } from './PageSkeletons';
+
 
 interface AppLayoutContentProps {
   children?: ReactNode;
@@ -39,11 +39,6 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const { isPostModalOpen, closePostModal, pendingFiles, clearPendingFiles, initialText, clearInitialText, initialCategory, clearInitialCategory } = useGlobalDropZone();
   const { isCollapsed } = useSidebarCollapse();
   const location = useLocation();
-  const [showHomeBootOverlay, setShowHomeBootOverlay] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return window.location.pathname === '/app' && sessionStorage.getItem(HOME_BOOT_READY_KEY) !== 'true';
-  });
-  
   // Disable browser's automatic scroll restoration globally
   useEffect(() => {
     if ('scrollRestoration' in history) {
@@ -51,30 +46,15 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
     }
   }, []);
 
+  // Mark home boot as ready once the feed signals it has content,
+  // so subsequent navigations can show inline skeletons normally.
   useEffect(() => {
-    if (location.pathname !== '/app') {
-      setShowHomeBootOverlay(false);
-      return;
-    }
-
-    if (sessionStorage.getItem(HOME_BOOT_READY_KEY) === 'true') {
-      setShowHomeBootOverlay(false);
-      return;
-    }
-
-    setShowHomeBootOverlay(true);
-
     const handleReady = () => {
-      sessionStorage.setItem(HOME_BOOT_READY_KEY, 'true');
-      setShowHomeBootOverlay(false);
+      try { sessionStorage.setItem(HOME_BOOT_READY_KEY, 'true'); } catch {}
     };
-
-    window.addEventListener('home-feed-boot-ready', handleReady, { once: true });
-
-    return () => {
-      window.removeEventListener('home-feed-boot-ready', handleReady);
-    };
-  }, [location.pathname]);
+    window.addEventListener('home-feed-boot-ready', handleReady);
+    return () => window.removeEventListener('home-feed-boot-ready', handleReady);
+  }, []);
   
   // Track if we're on a post overlay route
   const postMatch = useMatch('/app/post/:postId');
@@ -253,12 +233,6 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
         </main>
         
         <RightSidebar />
-
-        {showHomeBootOverlay && (
-          <div className="pointer-events-none absolute inset-0 z-40 bg-black" aria-hidden="true">
-            <HomeShellSkeleton />
-          </div>
-        )}
       </div>
       
       <MobileBottomNav />

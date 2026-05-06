@@ -1441,7 +1441,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       )}
 
       {(isLoadingState || isAutoRetrying) ? (
-        <FeedCardSkeletonList count={6} />
+        // Initial /app boot: keep the page blank so the HTML boot shell is the only loader.
+        // Subsequent loads (category transitions, retries) still get the inline skeleton.
+        sessionStorage.getItem(HOME_BOOT_READY_KEY) === 'true' ? (
+          <FeedCardSkeletonList count={6} />
+        ) : null
       ) : (
         <>
           {/* Stories carousel hidden for now */}
