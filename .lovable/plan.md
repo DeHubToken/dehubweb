@@ -1,39 +1,29 @@
-## What’s actually wrong
-- The red announcement banner is being rendered by **two different systems**:
-  - raw boot HTML in `index.html`
-  - React `UpgradeNoticeBanner` in `src/components/app/UpgradeNoticeBanner.tsx`
-- The React banner starts with `visible = false` and only turns on in `useEffect`, so after the first HTML paint it briefly disappears, then comes back.
-- There is still another full-shell loader in React:
-  - `src/App.tsx` uses `WalletLoader` / `PageLoader` → `HomeShellSkeleton`
-- The first HTML shell and the React `HomeShellSkeleton` are **not the same geometry**, so the app visually goes:
-  - boot shell
-  - differently sized React shell
-  - real content
+# Why the page feels slow now
+
+In the previous fix we made the HTML boot shell (the first skeleton outside `#root`) stay on screen as a full-screen overlay (`z-index: 9999`) until the **entire home feed query finishes** and dispatches `home-feed-boot-ready`.
+
+Sequence today:
+1. HTML boot shell paints instantly (fast).
+2. React mounts under it — invisible (overlay covers everything).
+3. WalletProviders chunk loads, auth runs, HomeFeed mounts, query fires, network round-trip completes.
+4. Only then does HomeFeed dispatch `home-feed-boot-ready` and `main.tsx` removes the boot shell.
+
+So the user stares at the static HTML skeleton for the full duration of the feed network request. There is no second stage anymore, but the single stage is now as long as the slowest dependency (feed API). That's why it "takes so long".
+
+Previously the boot shell disappeared as soon as React mounted, and the React skeleton handled the rest — visually faster even though total time was similar.
 
 ## Plan
-1. **Stop the banner disappearing during handoff**
-   - Make the React banner use a synchronous initial visibility check so it does not mount hidden and then reappear.
-   - Ensure the boot banner and app banner share the same visibility rules so hydration doesn’t cause a flash.
 
-2. **Remove the second full-page shell on initial `/app` boot**
-   - Update `src/App.tsx` so the initial `/app` startup does not swap from the HTML boot shell into a second React shell.
-   - Keep route-level lazy fallbacks for non-home routes, but stop using a competing home-shell fallback during the first app boot.
+Drop the boot shell when **React chrome is on screen**, not when feed data resolves. The chrome (header + sidebar + feed column) is already styled identically, so the handoff is invisible and the user immediately sees the real app shell with the feed column showing its own inline loading state.
 
-3. **Unify the shell sizing so there is only one visual loader**
-   - Either make the HTML boot shell match the React home shell exactly, or make the React path defer to the existing HTML shell instead of repainting a different one.
-   - This specifically targets the center column size mismatch you called out.
+### Changes
 
-4. **Verify the full sequence properly**
-   - Hard reload `/app` in preview.
-   - Watch the actual load path from first paint through real content.
-   - Confirm the sequence is only:
-     - banner + boot shell
-     - real content
-   - Confirm there is no banner drop/reappear and no intermediate “correct-sized” second skeleton.
+1. **`src/components/app/AppLayout.tsx`** — On mount, dispatch `home-feed-boot-ready` (or call the boot-shell remover directly) inside a `useLayoutEffect` so the boot shell is removed the moment the real layout has painted.
+2. **`src/components/app/feeds/HomeFeed.tsx`** — Remove the late dispatch tied to `isLoadingState`. The feed's own skeleton inside the center column is enough; the page chrome around it is already real.
+3. **`src/main.tsx`** — Keep the listener + 10s safety timeout as-is.
+4. **Verify** — Hard reload `/app`, watch sequence: HTML shell → real AppLayout chrome with inline feed loader → feed content. No long blank wait, no second-stage skeleton (chrome is real, not a skeleton).
 
-## Files involved
-- `index.html`
-- `src/App.tsx`
-- `src/components/app/UpgradeNoticeBanner.tsx`
-- `src/components/app/PageSkeletons.tsx`
+### Files involved
+- `src/components/app/AppLayout.tsx`
 - `src/components/app/feeds/HomeFeed.tsx`
+- `src/main.tsx` (no change expected)
