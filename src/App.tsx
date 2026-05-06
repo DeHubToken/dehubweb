@@ -60,9 +60,9 @@ if (typeof window !== 'undefined') {
   preloadCriticalChunks();
 }
 
-const PageLoader = () => (
-  <div className="min-h-screen bg-black"><HomeShellSkeleton /></div>
-);
+// Empty fallback — the HTML boot shell (outside #root) handles first-paint visuals,
+// so React's Suspense fallback should be invisible to avoid a second loading stage.
+const PageLoader = () => null;
 
 /**
  * One-time cache migration for existing testers.
@@ -220,9 +220,7 @@ function AppContent() {
   );
 }
 
-const WalletLoader = () => (
-  <div className="min-h-screen bg-black"><HomeShellSkeleton /></div>
-);
+const WalletLoader = () => null;
 
 const App = () => (
   <HelmetProvider>

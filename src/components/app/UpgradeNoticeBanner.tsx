@@ -5,12 +5,12 @@ const STORAGE_KEY = "upgrade-notice-dismissed-v3";
 const MESSAGE = "DeHub is undergoing a contract upgrade and new listings will be announced soon. You do not need to claim or connect anywhere - just wait for listings to resume trading.";
 
 export function UpgradeNoticeBanner() {
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const dismissed = localStorage.getItem(STORAGE_KEY);
-    if (!dismissed) setVisible(true);
-  }, []);
+  // Synchronous initial visibility — mount visible to avoid flash from
+  // HTML boot banner → empty → re-appear during React hydration.
+  const [visible, setVisible] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    try { return localStorage.getItem(STORAGE_KEY) !== "true"; } catch { return true; }
+  });
 
   const handleClose = () => {
     localStorage.setItem(STORAGE_KEY, "true");

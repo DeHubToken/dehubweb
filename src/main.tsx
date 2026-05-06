@@ -28,6 +28,21 @@ window.addEventListener('vite:preloadError', () => {
   }
 });
 
+// Remove the HTML boot shell once the home feed is ready, OR after a safety timeout.
+// Boot shell sits outside #root so it persists through React mount; we remove it
+// only when real content is in place to avoid any second-stage skeleton flash.
+(function setupBootShellRemoval() {
+  const remove = () => {
+    const el = document.getElementById('boot-shell');
+    if (el) el.remove();
+  };
+  let removed = false;
+  const safe = () => { if (removed) return; removed = true; remove(); };
+  window.addEventListener('home-feed-boot-ready', safe, { once: true });
+  // Safety fallback: remove after 10s no matter what so users on broken APIs aren't stuck.
+  setTimeout(safe, 10000);
+})();
+
 // App entry point
 createRoot(document.getElementById("root")!).render(
   <ErrorBoundary>
