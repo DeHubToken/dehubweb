@@ -926,7 +926,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
   // ─── Inject TTS audio into Agora channel ────────────────────────────────
 
-  const injectAudio = useCallback(async (audioBlob: Blob, source?: AudioInjectionSource) => {
+  const injectAudio = useCallback(async (audioBlob: Blob, injectionSource?: AudioInjectionSource) => {
     const run = async () => {
       const client = agoraClientRef.current;
       const originalTrack = localAudioTrackRef.current;
