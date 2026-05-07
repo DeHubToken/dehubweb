@@ -41,12 +41,13 @@
     <!-- Preconnect: max 4, highest-impact origins (Lighthouse candidates sorted by est LCP savings) -->
     <link rel="preconnect" href="https://api.web3auth.io">
     <link rel="preconnect" href="https://api.dehub.io">
-    <link rel="preconnect" href="https://pulse.walletconnect.org">
+    <link rel="preconnect" href="https://aigxuutjaqsywioxjefr.supabase.co" crossorigin>
     <link rel="preconnect" href="https://api.web3modal.org">
     <!-- DNS prefetch for secondary origins (cheaper, no open connection kept alive) -->
-    <link rel="dns-prefetch" href="https://aigxuutjaqsywioxjefr.supabase.co">
+    <link rel="dns-prefetch" href="https://pulse.walletconnect.org">
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="dns-prefetch" href="https://cdn.dehub.io">
 
     <!-- LCP: header logo — same URL as DesktopSidebar / MobileHeader so browser discovers early -->
     <link rel="preload" as="image" href="/dehub-header-logo.png" fetchpriority="high">
@@ -123,8 +124,8 @@
       .bs-btn { height: 32px; width: 56px; border-radius: 12px; background: rgba(255,255,255,0.06); }
       .bs-btn-end { margin-left: auto; }
 
-      .bs-pulse { animation: bsPulse 1.6s ease-in-out infinite; }
-      @keyframes bsPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+      .bs-pulse { animation: bsPulse 1.6s ease-in-out 3; }
+      @keyframes bsPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.55; } }
       @media (prefers-reduced-motion: reduce) { .bs-pulse { animation: none; } }
 
       /* Upgrade notice banner — mirrors UpgradeNoticeBanner.tsx so it paints with first HTML */

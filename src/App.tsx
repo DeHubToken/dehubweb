@@ -70,11 +70,9 @@ const PageLoader = () => null;
  * Bump CURRENT_CACHE_VERSION to force another clear in the future.
  */
 const CURRENT_CACHE_VERSION = '2';
-(function migrateStaleCacheOnce() {
+function migrateStaleCacheOnce() {
   if (typeof window === 'undefined') return;
   if (localStorage.getItem('dehub_cache_version') === CURRENT_CACHE_VERSION) return;
-
-  console.log('[CacheMigration] Clearing stale data for version', CURRENT_CACHE_VERSION);
 
   ['dehub_token', 'dehub_token_timestamp', 'dehub_wallet', 'dehub_user',
    'dehub_connection_source', 'dehub_deployed_sa'].forEach(k => localStorage.removeItem(k));
@@ -93,8 +91,16 @@ const CURRENT_CACHE_VERSION = '2';
   keysToRemove.forEach(k => localStorage.removeItem(k));
 
   localStorage.setItem('dehub_cache_version', CURRENT_CACHE_VERSION);
-  console.log('[CacheMigration] Done. Cleared', keysToRemove.length + 6, 'keys');
-})();
+}
+// Defer until idle so it doesn't block initial React render.
+if (typeof window !== 'undefined') {
+  const run = () => migrateStaleCacheOnce();
+  if (typeof requestIdleCallback === 'function') {
+    requestIdleCallback(run, { timeout: 3000 });
+  } else {
+    setTimeout(run, 1500);
+  }
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {

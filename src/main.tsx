@@ -4,20 +4,12 @@ import { ErrorBoundary } from "./components/ErrorBoundary";
 import { clearChunkReloadFlag } from "./lib/lazy-with-retry";
 import App from "./App.tsx";
 import "./i18n";
-import "./lib/toast-i18n-interceptor"; // Auto-translate all toast messages
-import "./i18n/auth-toast-translations"; // Runtime auth toast translations for all languages
 import "./index.css";
-import { installSupabaseInterceptor } from "./lib/supabase-interceptor";
-
-// Install usage tracking before any Supabase calls
-installSupabaseInterceptor();
 
 // Clear chunk reload flag on successful boot (prevents stale flag from previous deploy)
 clearChunkReloadFlag();
 
 // Global handler for stale-deployment chunk failures.
-// Vite fires this when a <link rel="modulepreload"> or dynamic import() can't be fetched
-// (e.g. after a new deploy replaced old chunk filenames). Reload once to get fresh HTML.
 window.addEventListener('vite:preloadError', () => {
   const RELOAD_KEY = 'vite-preload-error-reload';
   if (!sessionStorage.getItem(RELOAD_KEY)) {
@@ -29,12 +21,15 @@ window.addEventListener('vite:preloadError', () => {
 });
 
 // Remove the HTML boot shell once the home feed is ready, OR after a safety timeout.
-// Boot shell sits outside #root so it persists through React mount; we remove it
-// only when real content is in place to avoid any second-stage skeleton flash.
+// Fades out so the handoff to real chrome is visually distinct (perceived speed).
 (function setupBootShellRemoval() {
+  const FADE_MS = 180;
   const remove = () => {
     const el = document.getElementById('boot-shell');
-    if (el) el.remove();
+    if (!el) return;
+    el.style.transition = `opacity ${FADE_MS}ms ease-out`;
+    el.style.opacity = '0';
+    setTimeout(() => el.remove(), FADE_MS);
   };
   let removed = false;
   const safe = () => { if (removed) return; removed = true; remove(); };
@@ -49,3 +44,16 @@ createRoot(document.getElementById("root")!).render(
     <App />
   </ErrorBoundary>
 );
+
+// Defer non-critical startup work until after first paint so it doesn't
+// compete with React mount + WalletProviders chunk parsing.
+const deferStartup = () => {
+  import("./lib/supabase-interceptor").then(m => m.installSupabaseInterceptor()).catch(() => {});
+  import("./lib/toast-i18n-interceptor").catch(() => {});
+  import("./i18n/auth-toast-translations").catch(() => {});
+};
+if (typeof requestIdleCallback === 'function') {
+  requestIdleCallback(deferStartup, { timeout: 2000 });
+} else {
+  setTimeout(deferStartup, 1000);
+}
