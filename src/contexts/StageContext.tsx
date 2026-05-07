@@ -217,15 +217,18 @@ export function StageProvider({ children }: { children: ReactNode }) {
             console.log('[Stage] Recording saved:', urlData.publicUrl);
 
             // Trigger transcription as soon as the recording is uploaded.
-            // Fire-and-forget: the edge function processes in background.
+            // Pass the timeline so the edge function can label diarized speakers
+            // (host vs AI/TTS/soundboard) instead of "Speaker 1/2".
+            const timeline = recordingTimelineRef.current.slice();
             supabase.functions
-              .invoke('transcribe-stage', { body: { stageId: spaceId } })
+              .invoke('transcribe-stage', { body: { stageId: spaceId, timeline } })
               .catch((err) => console.warn('[Stage] Transcription trigger failed:', err));
           }
         } catch (err) {
           console.error('[Stage] Recording upload error:', err);
         } finally {
           recordingChunksRef.current = [];
+          recordingTimelineRef.current = [];
           recordingSpaceIdRef.current = null;
           mediaRecorderRef.current = null;
           resolve();
