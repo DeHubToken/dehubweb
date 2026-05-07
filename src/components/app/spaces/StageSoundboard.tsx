@@ -167,11 +167,11 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
     setCustomSounds(prev => prev.filter(s => s.path !== sound.path));
   };
 
-  const playBlobOnStage = useCallback(async (blob: Blob, id: string) => {
+  const playBlobOnStage = useCallback(async (blob: Blob, id: string, label?: string) => {
     setIsInjecting(true);
     setPlayingId(id);
     try {
-      await injectAudio(blob);
+      await injectAudio(blob, { kind: 'ai', source: 'soundboard', label: `Soundboard: ${label || id}` });
     } catch (err) {
       console.error('[Soundboard]', err);
       toast.error('Could not play on stage — stay connected as host');
