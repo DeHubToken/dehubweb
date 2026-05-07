@@ -1620,44 +1620,98 @@ export type Database = {
           },
         ]
       }
+      stage_transcript_translations: {
+        Row: {
+          chapters: Json
+          created_at: string
+          error: string | null
+          id: string
+          language: string
+          segments: Json
+          stage_id: string
+          status: string
+          summary: string | null
+          updated_at: string
+        }
+        Insert: {
+          chapters?: Json
+          created_at?: string
+          error?: string | null
+          id?: string
+          language: string
+          segments?: Json
+          stage_id: string
+          status?: string
+          summary?: string | null
+          updated_at?: string
+        }
+        Update: {
+          chapters?: Json
+          created_at?: string
+          error?: string | null
+          id?: string
+          language?: string
+          segments?: Json
+          stage_id?: string
+          status?: string
+          summary?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       stage_transcripts: {
         Row: {
+          chapters: Json
           created_at: string
           error: string | null
           full_text: string | null
           id: string
+          privacy: string
           segments: Json
           source_language: string | null
           speaker_map: Json
+          speaker_overrides: Json
           speaker_timeline: Json
           stage_id: string
           status: string
+          summary: string | null
+          summary_status: string
           updated_at: string
         }
         Insert: {
+          chapters?: Json
           created_at?: string
           error?: string | null
           full_text?: string | null
           id?: string
+          privacy?: string
           segments?: Json
           source_language?: string | null
           speaker_map?: Json
+          speaker_overrides?: Json
           speaker_timeline?: Json
           stage_id: string
           status?: string
+          summary?: string | null
+          summary_status?: string
           updated_at?: string
         }
         Update: {
+          chapters?: Json
           created_at?: string
           error?: string | null
           full_text?: string | null
           id?: string
+          privacy?: string
           segments?: Json
           source_language?: string | null
           speaker_map?: Json
+          speaker_overrides?: Json
           speaker_timeline?: Json
           stage_id?: string
           status?: string
+          summary?: string | null
+          summary_status?: string
           updated_at?: string
         }
         Relationships: []
