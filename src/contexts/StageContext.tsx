@@ -163,6 +163,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
           const recorder = new MediaRecorder(stream, { mimeType });
           recordingChunksRef.current = [];
           recordingSpaceIdRef.current = spaceId;
+          recordingTimelineRef.current = [];
+          recordingStartMsRef.current = Date.now();
 
           recorder.ondataavailable = (e) => {
             if (e.data.size > 0) recordingChunksRef.current.push(e.data);
