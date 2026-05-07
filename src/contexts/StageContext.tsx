@@ -985,8 +985,22 @@ export function StageProvider({ children }: { children: ReactNode }) {
         // is actively streaming while published (avoids silent / dropped first frames).
         await new Promise((r) => setTimeout(r, 60));
 
+        // Record an AI window in the recording timeline (host-side only).
+        const recStart = recordingStartMsRef.current;
+        const winStart = recStart > 0 ? (Date.now() - recStart) / 1000 : 0;
+
         await new Promise<void>((resolve, reject) => {
           source.onended = () => {
+            if (recStart > 0 && source) {
+              const winEnd = (Date.now() - recStart) / 1000;
+              recordingTimelineRef.current.push({
+                start: Math.max(0, winStart),
+                end: Math.max(winStart + 0.1, winEnd),
+                kind: source?.kind ?? 'ai',
+                source: source?.source ?? 'tts',
+                label: source?.label ?? 'AI voice',
+              } as any);
+            }
             setTimeout(resolve, 280);
           };
           try {
