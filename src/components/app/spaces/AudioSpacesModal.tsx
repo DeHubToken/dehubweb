@@ -591,6 +591,19 @@ export function AudioSpacesModal() {
                             <span className="block text-[10px] text-white/50 font-mono text-right mt-0.5">{playbackTimeLeft}</span>
                           )}
                         </div>
+                        {/* Transcript button — visible to everyone if recording exists */}
+                        {space.recording_url && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setTranscriptStage(space);
+                            }}
+                            className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all"
+                            title="View transcript"
+                          >
+                            <FileText className="w-4 h-4" />
+                          </button>
+                        )}
                         {/* Delete button — only for the host */}
                         {walletAddress && space.host_wallet_address &&
                           walletAddress.toLowerCase() === space.host_wallet_address.toLowerCase() && (
