@@ -284,23 +284,11 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
             </div>
           ) : (
             <ScrollArea className="h-[60vh] pr-2">
-              <div className="flex items-center justify-between mb-3">
-                {transcript.source_language && (
-                  <p className="text-[10px] uppercase tracking-wider text-white/40">
-                    Detected language: {transcript.source_language}
-                  </p>
-                )}
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={() => handleTranscribe(false, true)}
-                  disabled={requesting}
-                  className="ml-auto rounded-lg text-white/60 hover:bg-white/10 h-7 text-[11px]"
-                >
-                  {requesting ? <Loader2 className="w-3 h-3 mr-1 animate-spin" /> : <RefreshCw className="w-3 h-3 mr-1" />}
-                  Re-run
-                </Button>
-              </div>
+              {transcript.source_language && (
+                <p className="text-[10px] uppercase tracking-wider text-white/40 mb-3">
+                  Detected language: {transcript.source_language}
+                </p>
+              )}
               <div className="space-y-3">
                 {transcript.segments?.length ? (
                   transcript.segments.map((seg, i) => {
