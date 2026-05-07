@@ -21,11 +21,6 @@ const WalletProviders = React.lazy(() =>
   import("./components/app/WalletProviders").then(m => ({ default: m.WalletProviders }))
 );
 
-// Kick off the HomePage chunk download in PARALLEL with WalletProviders so
-// the home feed is ready to mount the moment the wallet bundle resolves.
-if (typeof window !== 'undefined') {
-  import("./pages/app/HomePage").catch(() => {});
-}
 
 // Pages — lazy loaded
 const Index = React.lazy(() => import("./pages/Index"));
@@ -47,18 +42,6 @@ const StoreDetailPage = React.lazy(() => import("./pages/app/StoreDetailPage"));
 
 const SKIP_LANDING_KEY = "dehub_skip_landing";
 
-// Preload critical dynamic-route chunks after initial render so first navigation is instant
-const preloadCriticalChunks = () => {
-  const schedule = typeof requestIdleCallback === 'function' ? requestIdleCallback : (cb: () => void) => setTimeout(cb, 2000);
-  schedule(() => {
-    import("./pages/app/SinglePostPage");
-    import("./pages/app/ProfilePage");
-    import("./pages/app/PostInfoPage");
-  });
-};
-if (typeof window !== 'undefined') {
-  preloadCriticalChunks();
-}
 
 // Empty fallback — the HTML boot shell (outside #root) handles first-paint visuals,
 // so React's Suspense fallback should be invisible to avoid a second loading stage.
@@ -92,14 +75,8 @@ function migrateStaleCacheOnce() {
 
   localStorage.setItem('dehub_cache_version', CURRENT_CACHE_VERSION);
 }
-// Defer until idle so it doesn't block initial React render.
 if (typeof window !== 'undefined') {
-  const run = () => migrateStaleCacheOnce();
-  if (typeof requestIdleCallback === 'function') {
-    requestIdleCallback(run, { timeout: 3000 });
-  } else {
-    setTimeout(run, 1500);
-  }
+  migrateStaleCacheOnce();
 }
 
 const queryClient = new QueryClient({

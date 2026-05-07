@@ -32,7 +32,6 @@ interface AppLayoutContentProps {
 // Session storage keys
 const POST_OVERLAY_ORIGIN_KEY = 'post-overlay-origin';
 const HOME_SCROLL_POSITION_KEY = 'home-scroll-position';
-const HOME_BOOT_READY_KEY = 'home-feed-boot-ready';
 
 function AppLayoutContent({ children }: AppLayoutContentProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -44,18 +43,6 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
     if ('scrollRestoration' in history) {
       history.scrollRestoration = 'manual';
     }
-  }, []);
-
-  // Remove the HTML boot shell as soon as the real app chrome paints.
-  // The center column shows its own inline loader while the feed query resolves,
-  // so the user sees real chrome immediately instead of staring at the static shell.
-  useLayoutEffect(() => {
-    try { sessionStorage.setItem(HOME_BOOT_READY_KEY, 'true'); } catch {}
-    // Defer one frame so the layout is actually painted before we drop the shell.
-    const raf = requestAnimationFrame(() => {
-      window.dispatchEvent(new Event('home-feed-boot-ready'));
-    });
-    return () => cancelAnimationFrame(raf);
   }, []);
   
   // Track if we're on a post overlay route
