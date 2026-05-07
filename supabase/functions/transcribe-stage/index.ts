@@ -224,9 +224,24 @@ Deno.serve(async (req) => {
             source_language: lang,
             speaker_map: speakerMap,
             speaker_timeline: timeline,
+            summary_status: 'processing',
             error: null,
           })
           .eq('stage_id', stageId);
+
+        // Fire-and-forget: kick off AI summary + chapter generation.
+        try {
+          await fetch(`${SUPABASE_URL}/functions/v1/summarize-transcript`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${SERVICE_KEY}`,
+            },
+            body: JSON.stringify({ stageId, force: true }),
+          });
+        } catch (e) {
+          console.warn('summarize-transcript invoke failed', e);
+        }
       } catch (e) {
         await admin
           .from('stage_transcripts')
