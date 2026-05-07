@@ -1628,6 +1628,8 @@ export type Database = {
           id: string
           segments: Json
           source_language: string | null
+          speaker_map: Json
+          speaker_timeline: Json
           stage_id: string
           status: string
           updated_at: string
@@ -1639,6 +1641,8 @@ export type Database = {
           id?: string
           segments?: Json
           source_language?: string | null
+          speaker_map?: Json
+          speaker_timeline?: Json
           stage_id: string
           status?: string
           updated_at?: string
@@ -1650,6 +1654,8 @@ export type Database = {
           id?: string
           segments?: Json
           source_language?: string | null
+          speaker_map?: Json
+          speaker_timeline?: Json
           stage_id?: string
           status?: string
           updated_at?: string
