@@ -439,11 +439,7 @@ function prewarmConfig() {
   ]);
 }
 
-// Defer prewarm until browser is idle so it doesn't compete with LCP
-if (typeof window !== 'undefined') {
-  const ric: any = (window as any).requestIdleCallback || ((cb: () => void) => setTimeout(cb, 2500));
-  ric(() => prewarmConfig(), { timeout: 4000 });
-}
+// Configs are fetched on-demand the first time login is opened — no idle prewarm.
 
 /**
  * Save the current path before mobile redirect so we can restore it after auth.
