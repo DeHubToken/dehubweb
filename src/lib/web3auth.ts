@@ -11,15 +11,33 @@
  * Wagmi — NOT by Web3Auth.
  */
 
-import {
-  Web3Auth,
-  CHAIN_NAMESPACES,
-  WEB3AUTH_NETWORK,
-} from "@web3auth/modal";
-import { AccountAbstractionProvider, SafeSmartAccount } from "@web3auth/account-abstraction-provider";
-import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
+// Heavy SDK imports are dynamic — see loadWeb3AuthModal/loadEthProvider/loadAAProvider.
+// Static type-only imports are erased at compile time and add zero runtime cost.
+import type { Web3Auth } from "@web3auth/modal";
+import type { AccountAbstractionProvider } from "@web3auth/account-abstraction-provider";
 import type { IProvider } from "@web3auth/base";
 import { supabase } from "@/integrations/supabase/client";
+
+// Inline constants matching @web3auth/modal exports (avoids pulling the SDK at module load).
+const CHAIN_NAMESPACES = { EIP155: "eip155" } as const;
+const WEB3AUTH_NETWORK = { SAPPHIRE_MAINNET: "sapphire_mainnet" } as const;
+
+// Cached dynamic imports — load once, reuse forever.
+let _modalMod: typeof import("@web3auth/modal") | null = null;
+async function loadWeb3AuthModal() {
+  if (!_modalMod) _modalMod = await import("@web3auth/modal");
+  return _modalMod;
+}
+let _ethProviderMod: typeof import("@web3auth/ethereum-provider") | null = null;
+async function loadEthProvider() {
+  if (!_ethProviderMod) _ethProviderMod = await import("@web3auth/ethereum-provider");
+  return _ethProviderMod;
+}
+let _aaMod: typeof import("@web3auth/account-abstraction-provider") | null = null;
+async function loadAAProvider() {
+  if (!_aaMod) _aaMod = await import("@web3auth/account-abstraction-provider");
+  return _aaMod;
+}
 
 /**
  * Web3Auth Constants
@@ -421,8 +439,11 @@ function prewarmConfig() {
   ]);
 }
 
-// Start pre-warming immediately
-prewarmConfig();
+// Defer prewarm until browser is idle so it doesn't compete with LCP
+if (typeof window !== 'undefined') {
+  const ric: any = (window as any).requestIdleCallback || ((cb: () => void) => setTimeout(cb, 2500));
+  ric(() => prewarmConfig(), { timeout: 4000 });
+}
 
 /**
  * Save the current path before mobile redirect so we can restore it after auth.
@@ -564,7 +585,8 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           walletServicesConfig: { whiteLabel: { showWidgetButton: false } },
         };
 
-        web3authInstance = new Web3Auth(initOptions);
+        const { Web3Auth: Web3AuthCtor } = await loadWeb3AuthModal();
+        web3authInstance = new Web3AuthCtor(initOptions);
         
         await Promise.race([
           web3authInstance.init(),
@@ -807,6 +829,7 @@ function extractPrivKeyFromConnector(w3a: Web3Auth): string | null {
  * to derive the Safe Smart Account address.
  */
 async function buildProviderFromPrivKey(privKey: string): Promise<IProvider> {
+  const { EthereumPrivateKeyProvider } = await loadEthProvider();
   const pkProvider = new EthereumPrivateKeyProvider({
     config: {
       chainConfig: {
@@ -902,6 +925,7 @@ export async function setupAAProviderForChain(targetChainId: number): Promise<an
   const bundlerUrl = derivePimlicoUrlForChain(pimlicoConfig.bundlerUrl, targetChainId);
   const paymasterUrl = derivePimlicoUrlForChain(pimlicoConfig.paymasterUrl, targetChainId);
 
+  const { EthereumPrivateKeyProvider } = await loadEthProvider();
   const pkProvider = new EthereumPrivateKeyProvider({
     config: {
       chainConfig: {
@@ -914,6 +938,7 @@ export async function setupAAProviderForChain(targetChainId: number): Promise<an
   });
   await pkProvider.setupProvider(privKey);
 
+  const { AccountAbstractionProvider, SafeSmartAccount } = await loadAAProvider();
   const aaProvider = await AccountAbstractionProvider.getProviderInstance({
     eoaProvider: pkProvider,
     smartAccountInit: new SafeSmartAccount(),
@@ -1065,6 +1090,7 @@ async function _doSetupAAProvider(eoaProvider: IProvider): Promise<AccountAbstra
     // which rejects ERC-6492 signatures (> 500 chars) with "Invalid signature" since Apr 10 2026.
     let signingProvider: IProvider = eoaProvider;
 
+    const { EthereumPrivateKeyProvider } = await loadEthProvider();
     if (!(eoaProvider instanceof EthereumPrivateKeyProvider)) {
       // Try to extract private key directly from the modal provider (standard Web3Auth RPC method).
       // Works in the happy path (WsEmbed login succeeded) and gives the same key as DKG produced.
@@ -1088,6 +1114,7 @@ async function _doSetupAAProvider(eoaProvider: IProvider): Promise<AccountAbstra
       console.log('[Web3Auth] AA setup: eoaProvider is already EthereumPrivateKeyProvider — using as-is');
     }
 
+    const { AccountAbstractionProvider, SafeSmartAccount } = await loadAAProvider();
     const aaProvider = await AccountAbstractionProvider.getProviderInstance({
       eoaProvider: signingProvider,
       smartAccountInit: new SafeSmartAccount(),
