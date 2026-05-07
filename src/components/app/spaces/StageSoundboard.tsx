@@ -167,11 +167,11 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
     setCustomSounds(prev => prev.filter(s => s.path !== sound.path));
   };
 
-  const playBlobOnStage = useCallback(async (blob: Blob, id: string) => {
+  const playBlobOnStage = useCallback(async (blob: Blob, id: string, label?: string) => {
     setIsInjecting(true);
     setPlayingId(id);
     try {
-      await injectAudio(blob);
+      await injectAudio(blob, { kind: 'ai', source: 'soundboard', label: `Soundboard: ${label || id}` });
     } catch (err) {
       console.error('[Soundboard]', err);
       toast.error('Could not play on stage — stay connected as host');
@@ -189,7 +189,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
       try {
         const res = await fetch(`${window.location.origin}${path}`);
         if (!res.ok) throw new Error('Sound file missing');
-        await playBlobOnStage(await res.blob(), effect.id);
+        await playBlobOnStage(await res.blob(), effect.id, effect.label);
       } catch {
         toast.error('Sound file not found');
       }
@@ -198,7 +198,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
 
     const synthBlob = await synthBuiltInToWavBlob(effect.id, volume);
     if (synthBlob) {
-      await playBlobOnStage(synthBlob, effect.id);
+      await playBlobOnStage(synthBlob, effect.id, effect.label);
       return;
     }
 
@@ -211,7 +211,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
     try {
       const res = await fetch(sound.url);
       if (!res.ok) throw new Error('fetch');
-      await playBlobOnStage(await res.blob(), soundId);
+      await playBlobOnStage(await res.blob(), soundId, sound.name);
     } catch {
       toast.error('Failed to load sound');
     }
