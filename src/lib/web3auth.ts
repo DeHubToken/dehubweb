@@ -11,15 +11,33 @@
  * Wagmi — NOT by Web3Auth.
  */
 
-import {
-  Web3Auth,
-  CHAIN_NAMESPACES,
-  WEB3AUTH_NETWORK,
-} from "@web3auth/modal";
-import { AccountAbstractionProvider, SafeSmartAccount } from "@web3auth/account-abstraction-provider";
-import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
+// Heavy SDK imports are dynamic — see loadWeb3AuthModal/loadEthProvider/loadAAProvider.
+// Static type-only imports are erased at compile time and add zero runtime cost.
+import type { Web3Auth } from "@web3auth/modal";
+import type { AccountAbstractionProvider } from "@web3auth/account-abstraction-provider";
 import type { IProvider } from "@web3auth/base";
 import { supabase } from "@/integrations/supabase/client";
+
+// Inline constants matching @web3auth/modal exports (avoids pulling the SDK at module load).
+const CHAIN_NAMESPACES = { EIP155: "eip155" } as const;
+const WEB3AUTH_NETWORK = { SAPPHIRE_MAINNET: "sapphire_mainnet" } as const;
+
+// Cached dynamic imports — load once, reuse forever.
+let _modalMod: typeof import("@web3auth/modal") | null = null;
+async function loadWeb3AuthModal() {
+  if (!_modalMod) _modalMod = await import("@web3auth/modal");
+  return _modalMod;
+}
+let _ethProviderMod: typeof import("@web3auth/ethereum-provider") | null = null;
+async function loadEthProvider() {
+  if (!_ethProviderMod) _ethProviderMod = await import("@web3auth/ethereum-provider");
+  return _ethProviderMod;
+}
+let _aaMod: typeof import("@web3auth/account-abstraction-provider") | null = null;
+async function loadAAProvider() {
+  if (!_aaMod) _aaMod = await import("@web3auth/account-abstraction-provider");
+  return _aaMod;
+}
 
 /**
  * Web3Auth Constants
