@@ -193,6 +193,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
               .update({ recording_url: urlData.publicUrl })
               .eq('id', spaceId);
             console.log('[Stage] Recording saved:', urlData.publicUrl);
+
+            // Trigger transcription as soon as the recording is uploaded.
+            // Fire-and-forget: the edge function processes in background.
+            supabase.functions
+              .invoke('transcribe-stage', { body: { stageId: spaceId } })
+              .catch((err) => console.warn('[Stage] Transcription trigger failed:', err));
           }
         } catch (err) {
           console.error('[Stage] Recording upload error:', err);
