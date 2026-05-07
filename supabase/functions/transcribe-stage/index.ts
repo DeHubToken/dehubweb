@@ -1,5 +1,6 @@
 // Transcribe an ended Stage's recording using ElevenLabs Scribe v2
 // with speaker diarization. Stores results in stage_transcripts.
+// Open to any caller — transcripts are public once a stage has ended.
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
 
 const corsHeaders = {
@@ -34,7 +35,7 @@ function wordsToSegments(words: ScribeWord[]): Segment[] {
       if (cur) segs.push(cur);
       cur = { speaker, text: w.text || '', start: w.start ?? 0, end: w.end ?? 0 };
     } else {
-      cur.text += (w.text?.startsWith(' ') ? '' : '') + w.text;
+      cur.text += w.text;
       cur.end = w.end ?? cur.end;
     }
   }
@@ -55,27 +56,19 @@ Deno.serve(async (req) => {
     const { stageId } = await req.json();
     if (!stageId) throw new Error('stageId required');
 
-    const wallet = (req.headers.get('x-wallet-address') || '').toLowerCase();
-    if (!wallet) throw new Error('wallet required');
-
     const admin = createClient(SUPABASE_URL, SERVICE_KEY);
 
-    // Fetch stage and verify host
+    // Fetch stage — anyone can request transcription; we just need a valid ended stage with recording
     const { data: stage, error: stageErr } = await admin
       .from('audio_spaces')
-      .select('id, host_wallet_address, recording_url, status')
+      .select('id, recording_url, status')
       .eq('id', stageId)
       .maybeSingle();
     if (stageErr || !stage) throw new Error('stage not found');
-    if ((stage.host_wallet_address || '').toLowerCase() !== wallet) {
-      return new Response(JSON.stringify({ error: 'forbidden' }), {
-        status: 403,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
+    if (stage.status !== 'ended') throw new Error('stage not ended');
     if (!stage.recording_url) throw new Error('no recording available');
 
-    // If already exists, refuse re-run unless failed
+    // If already exists and not failed, return as-is (idempotent)
     const { data: existing } = await admin
       .from('stage_transcripts')
       .select('id, status')
