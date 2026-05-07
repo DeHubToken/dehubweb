@@ -85,7 +85,7 @@ const PAGE_SIZE = 20;
 const SHORTS_INSERT_INTERVAL = 5;
 const RADIO_INSERT_AFTER = 8;
 const LEADERBOARD_INSERT_AFTER_LIVE_OFFSET = 10;
-const HOME_BOOT_READY_KEY = 'home-feed-boot-ready';
+
 /** Insert an all-time most-liked post every N items in trending feed */
 const CLASSIC_INSERT_INTERVAL = 6;
 
@@ -1434,11 +1434,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       )}
 
       {(isLoadingState || isAutoRetrying) ? (
-        // Initial /app boot: keep the page blank so the HTML boot shell is the only loader.
-        // Subsequent loads (category transitions, retries) still get the inline skeleton.
-        sessionStorage.getItem(HOME_BOOT_READY_KEY) === 'true' ? (
-          <FeedCardSkeletonList count={6} />
-        ) : null
+        <FeedCardSkeletonList count={6} />
       ) : (
         <>
           {/* Stories carousel hidden for now */}
