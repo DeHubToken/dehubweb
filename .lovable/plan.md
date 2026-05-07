@@ -1,38 +1,86 @@
-## Goal
-Remove the host-only restriction on transcripts and make them auto-generate once a Stage ends, so every participant (and any viewer) just sees the transcript when they open the drawer.
+# Stage Transcript Drawer — Phase 2
 
-## Changes
+Build out the remaining transcript features inside the existing `StageTranscriptDrawer` (no tabs refactor). Adds an inline player, translation, search, AI summary + chapters, quote-to-post, speaker rename, privacy, and download/copy actions.
 
-### 1. `transcribe-stage` edge function
-- Drop the `host_wallet_address === wallet` check (and the wallet requirement).
-- Allow any authenticated caller to trigger transcription as long as the stage is `ended` and has a `recording_url`.
-- Keep the idempotency guard: if a `stage_transcripts` row exists with status `processing` or `ready`, return it as-is. Only re-run on `failed` or missing.
-- Keep `EdgeRuntime.waitUntil` background processing + ElevenLabs Scribe v2 with diarization.
+## 1. Database
 
-### 2. Auto-trigger on stage end
-Two layers so it "just works":
+New columns / tables (single migration):
 
-- **Server-side (primary):** add a small `auto-transcribe-ended-stages` edge function scheduled via `pg_cron` every 2 minutes. It selects `audio_spaces` where `status='ended'`, `recording_url` is not null, and there is no `stage_transcripts` row yet (or status='failed'), then calls `transcribe-stage` for each. This guarantees a transcript exists even if no one opens the drawer.
-- **Client-side (fallback):** when any user opens `StageTranscriptDrawer` for an ended stage with a recording and no transcript row, fire `transcribe-stage` once and start polling. No host check.
+- `stage_transcripts`
+  - `summary text` — AI-generated recap
+  - `chapters jsonb default '[]'` — `[{ title, start, end }]`
+  - `speaker_overrides jsonb default '{}'` — host renames: `{ speaker_0: { username, wallet? } }`
+  - `privacy text default 'public'` — `'public' | 'members' | 'private'`
+  - `summary_status text default 'pending'` — `pending | processing | ready | failed`
+- `stage_transcript_translations` — cache, one row per `(stage_id, language)`
+  - `stage_id uuid`, `language text`, `segments jsonb`, `summary text`, `chapters jsonb`, `created_at timestamptz`
+  - Unique `(stage_id, language)`. Public select; service-role write.
+- RLS update on `stage_transcripts` SELECT: gate by `privacy` — `public` always, `private` only host, `members` left as public for now (no community membership concept on a stage; future-proof).
 
-### 3. RLS on `stage_transcripts`
-- SELECT: public (already public read).
-- INSERT/UPDATE: only the service role (edge functions). Remove any "host can manage" policy so the client never writes directly. This is safer than letting any wallet write.
+## 2. Edge functions
 
-### 4. UI (`StageTranscriptDrawer.tsx`)
-- Remove host-only "Generate transcript" gating and host-only copy.
-- States shown to everyone:
-  - `none` → "Preparing transcript…" + auto-trigger.
-  - `processing` → skeleton + "Transcribing this Stage…".
-  - `ready` → speaker-labeled segments with timestamps.
-  - `failed` → "Transcript unavailable" + a single "Try again" button (any user).
-- Show the `FileText` icon button on every ended stage with a recording, for everyone — not just the host.
+- **`transcribe-stage`** (existing) — after writing `segments`, also enqueue summary job by setting `summary_status = 'processing'` and calling `summarize-transcript` (fire-and-forget) so summary + chapters appear shortly after the transcript.
+- **`summarize-transcript`** (new) — Lovable AI `google/gemini-3-flash-preview`. Input: full transcript with timestamps and speaker labels. Output JSON: `{ summary: string, chapters: [{ title, start, end }] }`. Writes back to `stage_transcripts`. Idempotent; skip if already `ready` unless `force`.
+- **`translate-transcript`** (new) — Lovable AI `google/gemini-3-flash-preview`. Input: `{ stageId, language }`. Loads original `segments` + `summary` + `chapters`, asks model to translate per-segment text (preserve indices/timestamps) and the summary/chapter titles, returns JSON. Caches in `stage_transcript_translations`. Idempotent on `(stage_id, language)` unless `force`.
 
-### 5. `AudioSpacesModal.tsx`
-- Drop the `isHost` condition around the transcript button so all users see it.
+All three use the existing CORS pattern, service-role client, and `EdgeRuntime.waitUntil` for background work.
+
+## 3. Drawer UX (`src/components/app/spaces/StageTranscriptDrawer.tsx`)
+
+Layout, top-to-bottom inside the existing liquid-glass drawer:
+
+```text
+┌─────────────────────────────────────────────────────┐
+│ Header: title • [privacy chip if host] • [X]        │
+├─────────────────────────────────────────────────────┤
+│ Inline audio player (sticky)                        │
+│  ▷  ──────●─────────  03:42 / 27:11  vol            │
+├─────────────────────────────────────────────────────┤
+│ AI summary (collapsible) + chapter chips ⏵          │
+├─────────────────────────────────────────────────────┤
+│ 🔍 search • 🌐 lang picker (src→tgt) • ⋯ menu       │
+│   menu: Copy · Download .txt · Download .srt · Share│
+├─────────────────────────────────────────────────────┤
+│ ScrollArea                                          │
+│   [skeleton segments while processing]              │
+│   speaker header (avatar/name/AI badge) • ts        │
+│   text … select → floating "Quote as post"          │
+└─────────────────────────────────────────────────────┘
+```
+
+Interactions:
+
+- **Inline player**: native `<audio src={recording_url}>` wrapped in custom controls; expose `currentTime` and `seekTo()` via a small `useAudioPlayer` hook so segment timestamps and chapter chips become click-to-seek; the active segment auto-highlights.
+- **Language picker**: source (auto-detected, read-only) and target dropdown listing common languages + the user's `preferred_language` from settings auto-selected. Switching target loads from `stage_transcript_translations` cache or invokes `translate-transcript` and shows skeletons until ready.
+- **Search**: client-side filter over current (translated or original) `segments` — substring match, debounced 150ms, highlights matches.
+- **AI summary + chapters**: render summary above transcript; chapter chips horizontally scrollable, click to seek to `start`. If `summary_status !== 'ready'`, show a small "Summarising…" pill (do not block transcript).
+- **Quote as post**: on text selection inside a segment, show a floating glass button "Quote as post". Click → opens existing composer prefilled with `> {quoted text}\n\n{stageDeepLink}#t={start}` (use existing composer event/route pattern; identify the right entrypoint during implementation).
+- **Speaker rename (host only)**: small pencil icon next to the speaker header opens a popover to type a username (autocomplete via `useDehubUserSearch`). Saves to `stage_transcripts.speaker_overrides`. Renames apply across the whole transcript and translated views (override wins over `speaker_map` and "Speaker N").
+- **Privacy toggle (host only)**: chip in header — Public / Members / Private. Updates `stage_transcripts.privacy`. RLS handled by migration.
+- **Copy / Download .txt / Download .srt / Share quote**: in `⋯` menu. SRT generated client-side from segments. Share quote = copy a deep link to the stage with `?t=` timestamp.
+- **Skeletons while transcribing**: render 6 placeholder segment cards instead of single spinner during `pending`/`processing`.
+
+## 4. Hooks & utilities
+
+- `useStageTranscript(stageId, language)` — wraps the existing query, picks translated segments when `language !== source_language`, and triggers `translate-transcript` on first miss.
+- `useStageSummary(stageId)` — query for `summary` + `chapters` + `summary_status`; auto-invalidates on realtime update.
+- `useAudioPlayer({ src })` — exposes `play`, `pause`, `seekTo`, `currentTime`, `duration`, `isPlaying`. Single shared instance inside the drawer; cleans up on close.
+- `formatSrt(segments)` and `formatTxt(segments)` helpers in `src/lib/transcript-format.ts`.
+
+## 5. Realtime
+
+Subscribe (inside the drawer) to `stage_transcripts` row updates and `stage_transcript_translations` inserts for the current `stage_id` so summary, chapters, translation, and rename changes appear without manual refetches.
+
+## 6. Out of scope / explicit non-goals
+
+- No tabs refactor of the Stage detail view (drawer stays).
+- No editing transcript text (only speaker rename).
+- "Members" privacy is wired but currently behaves like `public` until stages get a real membership model.
 
 ## Technical notes
-- Auth: edge function still requires a logged-in caller (JWT) but no wallet/host match.
-- Cron job uses `pg_net` to invoke the edge function with the service role key (stored as a Vault secret), same pattern as other server-side automations in the project.
-- No schema change needed beyond ensuring `stage_transcripts` has a unique index on `stage_id` (already created in the previous migration).
-- Cost guard: the cron job processes at most N stages per run (e.g. 5) and skips any row already `processing`/`ready` to avoid duplicate ElevenLabs calls.
+
+- All new UI strictly follows liquid-glass tokens: `bg-black/60 backdrop-blur-[24px] border-white/10`, white / white-opacity text, no blue, primary buttons `rounded-2xl`, secondary `rounded-xl`, controls `rounded-lg`/`md`.
+- Translations and summaries always run server-side via Lovable AI Gateway (`LOVABLE_API_KEY`, no extra secrets needed).
+- Existing legacy auto-rerun (`force: true` once on open) stays; new fields will populate on the next run.
+- Add `stage_transcripts` and `stage_transcript_translations` to `supabase_realtime` publication.
+- TypeScript types regenerate automatically after the migration.
