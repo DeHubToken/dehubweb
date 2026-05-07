@@ -317,7 +317,7 @@ function InlinePlayer({
 
 export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
   const queryClient = useQueryClient();
-  const { walletAddress } = useDeHubAuth();
+  const { walletAddress } = useAuth();
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const [requesting, setRequesting] = useState(false);
@@ -561,7 +561,7 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
     else delete next[renamingFor];
     const { error } = await supabase
       .from('stage_transcripts')
-      .update({ speaker_overrides: next })
+      .update({ speaker_overrides: next as never })
       .eq('stage_id', stageId!);
     if (error) toast.error('Could not save: ' + error.message);
     else toast.success('Speaker updated');
