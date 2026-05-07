@@ -53,7 +53,7 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
           <img
             src={thumbnailUrl}
             alt=""
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover rounded-lg"
             loading="lazy"
           />
           {hasVideo && (
