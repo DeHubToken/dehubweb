@@ -56,8 +56,21 @@ interface StageContextType {
   removeSpeaker: (walletAddress: string) => Promise<void>;
   inviteSpeaker: (walletAddress: string) => Promise<void>;
   refreshSpaces: () => Promise<void>;
-  injectAudio: (audioBlob: Blob) => Promise<void>;
+  injectAudio: (audioBlob: Blob, source?: AudioInjectionSource) => Promise<void>;
 }
+
+/**
+ * Describes who/what is producing an audio injection so the post-stage
+ * transcript can label diarized speakers correctly. Used to log entries
+ * into `recordingTimelineRef`.
+ */
+export interface AudioInjectionSource {
+  /** "ai" for TTS / soundboard, "human" for live mic (rarely used here). */
+  kind: 'ai' | 'human';
+  /** "tts", "soundboard", "voice-clone", etc. */
+  source: string;
+  /** Human-readable label, e.g. "AI – Aria", "Soundboard: Air Horn". */
+  label: string;
 
 const StageContext = createContext<StageContextType | null>(null);
 
