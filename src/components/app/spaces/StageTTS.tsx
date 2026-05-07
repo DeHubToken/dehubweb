@@ -122,7 +122,7 @@ export function StageTTS() {
       const res = await fetch(voice.preview_url);
       if (!res.ok) throw new Error('fetch failed');
       const blob = await res.blob();
-      await injectAudio(blob);
+      await injectAudio(blob, { kind: 'ai', source: 'tts-preview', label: `AI · ${voice.name || 'Voice preview'}` });
     } catch {
       toast.error('Could not play preview on stage');
     } finally {
@@ -169,7 +169,8 @@ export function StageTTS() {
       }
 
       const audioBlob = await response.blob();
-      await injectAudio(audioBlob);
+      const voiceLabel = voices.find((v) => v.voice_id === selectedVoice)?.name || 'TTS';
+      await injectAudio(audioBlob, { kind: 'ai', source: 'tts', label: `AI · ${voiceLabel}` });
 
       setText('');
     } catch (err) {
