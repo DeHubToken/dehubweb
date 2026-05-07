@@ -1087,6 +1087,7 @@ async function _doSetupAAProvider(eoaProvider: IProvider): Promise<AccountAbstra
     // which rejects ERC-6492 signatures (> 500 chars) with "Invalid signature" since Apr 10 2026.
     let signingProvider: IProvider = eoaProvider;
 
+    const { EthereumPrivateKeyProvider } = await loadEthProvider();
     if (!(eoaProvider instanceof EthereumPrivateKeyProvider)) {
       // Try to extract private key directly from the modal provider (standard Web3Auth RPC method).
       // Works in the happy path (WsEmbed login succeeded) and gives the same key as DKG produced.
@@ -1110,6 +1111,7 @@ async function _doSetupAAProvider(eoaProvider: IProvider): Promise<AccountAbstra
       console.log('[Web3Auth] AA setup: eoaProvider is already EthereumPrivateKeyProvider — using as-is');
     }
 
+    const { AccountAbstractionProvider, SafeSmartAccount } = await loadAAProvider();
     const aaProvider = await AccountAbstractionProvider.getProviderInstance({
       eoaProvider: signingProvider,
       smartAccountInit: new SafeSmartAccount(),
