@@ -42,7 +42,7 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 import { formatTimestamp, formatTxt, formatSrt, downloadFile } from '@/lib/transcript-format';
-import { useDeHubAuth } from '@/contexts/DeHubAuthContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface Segment { speaker: string; text: string; start: number; end: number }
 interface Chapter { title: string; start: number; end: number }
