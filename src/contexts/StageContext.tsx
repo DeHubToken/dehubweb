@@ -71,6 +71,7 @@ export interface AudioInjectionSource {
   source: string;
   /** Human-readable label, e.g. "AI – Aria", "Soundboard: Air Horn". */
   label: string;
+}
 
 const StageContext = createContext<StageContextType | null>(null);
 
