@@ -439,8 +439,11 @@ function prewarmConfig() {
   ]);
 }
 
-// Start pre-warming immediately
-prewarmConfig();
+// Defer prewarm until browser is idle so it doesn't compete with LCP
+if (typeof window !== 'undefined') {
+  const ric: any = (window as any).requestIdleCallback || ((cb: () => void) => setTimeout(cb, 2500));
+  ric(() => prewarmConfig(), { timeout: 4000 });
+}
 
 /**
  * Save the current path before mobile redirect so we can restore it after auth.
