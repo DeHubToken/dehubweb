@@ -56,7 +56,21 @@ interface StageContextType {
   removeSpeaker: (walletAddress: string) => Promise<void>;
   inviteSpeaker: (walletAddress: string) => Promise<void>;
   refreshSpaces: () => Promise<void>;
-  injectAudio: (audioBlob: Blob) => Promise<void>;
+  injectAudio: (audioBlob: Blob, source?: AudioInjectionSource) => Promise<void>;
+}
+
+/**
+ * Describes who/what is producing an audio injection so the post-stage
+ * transcript can label diarized speakers correctly. Used to log entries
+ * into `recordingTimelineRef`.
+ */
+export interface AudioInjectionSource {
+  /** "ai" for TTS / soundboard, "human" for live mic (rarely used here). */
+  kind: 'ai' | 'human';
+  /** "tts", "soundboard", "voice-clone", etc. */
+  source: string;
+  /** Human-readable label, e.g. "AI – Aria", "Soundboard: Air Horn". */
+  label: string;
 }
 
 const StageContext = createContext<StageContextType | null>(null);
@@ -92,6 +106,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordingChunksRef = useRef<Blob[]>([]);
   const recordingSpaceIdRef = useRef<string | null>(null);
+  /** Wall-clock ms when recording started — used to compute relative timeline timestamps */
+  const recordingStartMsRef = useRef<number>(0);
+  /** Timeline of AI / non-host audio windows captured during recording. */
+  const recordingTimelineRef = useRef<Array<{
+    start: number; end: number; kind: 'ai' | 'human'; source: string; label: string;
+  }>>([]);
 
   /** Serialize injectAudio (TTS / soundboard) so tracks don’t overlap on Agora */
   const injectAudioChainRef = useRef<Promise<void>>(Promise.resolve());
@@ -143,6 +163,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
           const recorder = new MediaRecorder(stream, { mimeType });
           recordingChunksRef.current = [];
           recordingSpaceIdRef.current = spaceId;
+          recordingTimelineRef.current = [];
+          recordingStartMsRef.current = Date.now();
 
           recorder.ondataavailable = (e) => {
             if (e.data.size > 0) recordingChunksRef.current.push(e.data);
@@ -195,15 +217,18 @@ export function StageProvider({ children }: { children: ReactNode }) {
             console.log('[Stage] Recording saved:', urlData.publicUrl);
 
             // Trigger transcription as soon as the recording is uploaded.
-            // Fire-and-forget: the edge function processes in background.
+            // Pass the timeline so the edge function can label diarized speakers
+            // (host vs AI/TTS/soundboard) instead of "Speaker 1/2".
+            const timeline = recordingTimelineRef.current.slice();
             supabase.functions
-              .invoke('transcribe-stage', { body: { stageId: spaceId } })
+              .invoke('transcribe-stage', { body: { stageId: spaceId, timeline } })
               .catch((err) => console.warn('[Stage] Transcription trigger failed:', err));
           }
         } catch (err) {
           console.error('[Stage] Recording upload error:', err);
         } finally {
           recordingChunksRef.current = [];
+          recordingTimelineRef.current = [];
           recordingSpaceIdRef.current = null;
           mediaRecorderRef.current = null;
           resolve();
@@ -901,7 +926,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
   // ─── Inject TTS audio into Agora channel ────────────────────────────────
 
-  const injectAudio = useCallback(async (audioBlob: Blob) => {
+  const injectAudio = useCallback(async (audioBlob: Blob, injectionSource?: AudioInjectionSource) => {
     const run = async () => {
       const client = agoraClientRef.current;
       const originalTrack = localAudioTrackRef.current;
@@ -960,8 +985,22 @@ export function StageProvider({ children }: { children: ReactNode }) {
         // is actively streaming while published (avoids silent / dropped first frames).
         await new Promise((r) => setTimeout(r, 60));
 
+        // Record an AI window in the recording timeline (host-side only).
+        const recStart = recordingStartMsRef.current;
+        const winStart = recStart > 0 ? (Date.now() - recStart) / 1000 : 0;
+
         await new Promise<void>((resolve, reject) => {
           source.onended = () => {
+            if (recStart > 0) {
+              const winEnd = (Date.now() - recStart) / 1000;
+              recordingTimelineRef.current.push({
+                start: Math.max(0, winStart),
+                end: Math.max(winStart + 0.1, winEnd),
+                kind: injectionSource?.kind ?? 'ai',
+                source: injectionSource?.source ?? 'tts',
+                label: injectionSource?.label ?? 'AI voice',
+              });
+            }
             setTimeout(resolve, 280);
           };
           try {
