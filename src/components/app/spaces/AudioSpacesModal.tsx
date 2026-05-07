@@ -918,6 +918,12 @@ export function AudioSpacesModal() {
           </div>
         </div>
       )}
+
+      <StageTranscriptDrawer
+        space={transcriptStage}
+        open={!!transcriptStage}
+        onOpenChange={(o) => !o && setTranscriptStage(null)}
+      />
     </>
   );
 }
