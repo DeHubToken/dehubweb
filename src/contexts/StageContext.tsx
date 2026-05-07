@@ -991,15 +991,15 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
         await new Promise<void>((resolve, reject) => {
           source.onended = () => {
-            if (recStart > 0 && source) {
+            if (recStart > 0) {
               const winEnd = (Date.now() - recStart) / 1000;
               recordingTimelineRef.current.push({
                 start: Math.max(0, winStart),
                 end: Math.max(winStart + 0.1, winEnd),
-                kind: source?.kind ?? 'ai',
-                source: source?.source ?? 'tts',
-                label: source?.label ?? 'AI voice',
-              } as any);
+                kind: injectionSource?.kind ?? 'ai',
+                source: injectionSource?.source ?? 'tts',
+                label: injectionSource?.label ?? 'AI voice',
+              });
             }
             setTimeout(resolve, 280);
           };
