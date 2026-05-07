@@ -144,7 +144,7 @@ export function ProfileHeader({
           <img 
             src={profile.coverUrl || getDefaultBanner(profile.walletAddress)} 
             alt="Cover" 
-            className="w-full h-full object-cover" 
+            className="w-full h-full object-cover rounded-lg" 
           />
         </button>
       )}

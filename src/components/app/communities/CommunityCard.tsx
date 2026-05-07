@@ -53,7 +53,7 @@ export function CommunityCard({ community, isMember, role, unreadCount, onClick 
       <div className="relative w-12 h-12 rounded-xl bg-white/[0.08] flex items-center justify-center flex-shrink-0">
        <div className="w-full h-full rounded-xl overflow-hidden flex items-center justify-center">
         {community.avatar_url ? (
-          <img src={community.avatar_url} alt={community.name} className="w-full h-full object-cover" />
+          <img src={community.avatar_url} alt={community.name} className="w-full h-full object-cover rounded-lg" />
         ) : (
           <Users className="w-5 h-5 text-zinc-500" />
         )}
