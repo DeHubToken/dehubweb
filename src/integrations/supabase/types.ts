@@ -1620,6 +1620,42 @@ export type Database = {
           },
         ]
       }
+      stage_transcripts: {
+        Row: {
+          created_at: string
+          error: string | null
+          full_text: string | null
+          id: string
+          segments: Json
+          source_language: string | null
+          stage_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          error?: string | null
+          full_text?: string | null
+          id?: string
+          segments?: Json
+          source_language?: string | null
+          stage_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          error?: string | null
+          full_text?: string | null
+          id?: string
+          segments?: Json
+          source_language?: string | null
+          stage_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       staking_records: {
         Row: {
           action: string
