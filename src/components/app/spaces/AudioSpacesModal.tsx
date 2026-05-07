@@ -15,8 +15,9 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   Mic, MicOff, Users, Hand, X, ChevronLeft,
   Loader2, Volume2,
-  Link, UserPlus, Minimize2, Play, Square, Clock, Trash2,
+  Link, UserPlus, Minimize2, Play, Square, Clock, Trash2, FileText,
 } from 'lucide-react';
+import { StageTranscriptDrawer } from './StageTranscriptDrawer';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { Button } from '@/components/ui/button';
@@ -93,6 +94,7 @@ export function AudioSpacesModal() {
   const pastStageUnsubRef = useRef<(() => void) | null>(null);
   /** `onended` delayed reset so the waveform can show 100% briefly */
   const pastStageEndTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [transcriptStage, setTranscriptStage] = useState<AudioSpace | null>(null);
 
   // Fetch past (ended) stages for browse view
   const { data: pastStages = [] } = useQuery({
@@ -589,6 +591,19 @@ export function AudioSpacesModal() {
                             <span className="block text-[10px] text-white/50 font-mono text-right mt-0.5">{playbackTimeLeft}</span>
                           )}
                         </div>
+                        {/* Transcript button — visible to everyone if recording exists */}
+                        {space.recording_url && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setTranscriptStage(space);
+                            }}
+                            className="shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all"
+                            title="View transcript"
+                          >
+                            <FileText className="w-4 h-4" />
+                          </button>
+                        )}
                         {/* Delete button — only for the host */}
                         {walletAddress && space.host_wallet_address &&
                           walletAddress.toLowerCase() === space.host_wallet_address.toLowerCase() && (
@@ -903,6 +918,12 @@ export function AudioSpacesModal() {
           </div>
         </div>
       )}
+
+      <StageTranscriptDrawer
+        space={transcriptStage}
+        open={!!transcriptStage}
+        onOpenChange={(o) => !o && setTranscriptStage(null)}
+      />
     </>
   );
 }
