@@ -189,7 +189,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
       try {
         const res = await fetch(`${window.location.origin}${path}`);
         if (!res.ok) throw new Error('Sound file missing');
-        await playBlobOnStage(await res.blob(), effect.id);
+        await playBlobOnStage(await res.blob(), effect.id, effect.label);
       } catch {
         toast.error('Sound file not found');
       }
@@ -198,7 +198,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
 
     const synthBlob = await synthBuiltInToWavBlob(effect.id, volume);
     if (synthBlob) {
-      await playBlobOnStage(synthBlob, effect.id);
+      await playBlobOnStage(synthBlob, effect.id, effect.label);
       return;
     }
 
@@ -211,7 +211,7 @@ export function StageSoundboard({ isVisible, onClose }: StageSoundboardProps) {
     try {
       const res = await fetch(sound.url);
       if (!res.ok) throw new Error('fetch');
-      await playBlobOnStage(await res.blob(), soundId);
+      await playBlobOnStage(await res.blob(), soundId, sound.name);
     } catch {
       toast.error('Failed to load sound');
     }
