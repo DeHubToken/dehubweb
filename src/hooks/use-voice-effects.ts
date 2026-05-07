@@ -4,6 +4,11 @@
  * Takes a raw MediaStream from getUserMedia, routes it through
  * effect nodes, and returns a processed MediaStreamTrack suitable
  * for AgoraRTC.createCustomAudioTrack().
+ *
+ * Local monitoring: when an effect other than 'none' is active, the
+ * processed output is also routed to ctx.destination at a reduced gain
+ * (0.2) so the host/speaker can hear their own voice effect.  getUserMedia
+ * AEC handles residual echo when speakers are in use.
  */
 
 import { useCallback, useRef } from 'react';
@@ -13,7 +18,7 @@ interface AudioGraph {
   ctx: AudioContext;
   source: MediaStreamAudioSourceNode;
   destination: MediaStreamAudioDestinationNode;
-  /** All nodes that must be disconnected on teardown (including echo feedback loop nodes) */
+  /** All nodes that must be disconnected on teardown (including monitor gain & echo feedback loop nodes) */
   nodes: AudioNode[];
   oscillators?: OscillatorNode[];
 }
@@ -55,20 +60,22 @@ function disconnectEntireGraph(graph: AudioGraph) {
 }
 
 /**
- * Connect mic → effect → destination. Returns nodes + optional oscillators for cleanup.
+ * Build the effect processing chain.
+ * Connects source → effect nodes internally but does NOT connect to the
+ * final destination — the caller wires output to both the Agora destination
+ * and the local monitor gain.
+ * Returns the output AudioNode (last in the chain) and any intermediate nodes
+ * that need to be tracked for cleanup.
  */
-function connectEffectGraph(
+function buildEffectChain(
   ctx: AudioContext,
   source: MediaStreamAudioSourceNode,
-  destination: MediaStreamAudioDestinationNode,
   effectId: VoiceEffectId,
-): { nodes: AudioNode[]; oscillators?: OscillatorNode[] } {
-  if (effectId === 'none') {
-    source.connect(destination);
-    return { nodes: [] };
-  }
-
+): { nodes: AudioNode[]; oscillators?: OscillatorNode[]; output: AudioNode } {
   switch (effectId) {
+    case 'none':
+      return { nodes: [], output: source };
+
     case 'deep': {
       const lp = ctx.createBiquadFilter();
       lp.type = 'lowshelf';
@@ -79,8 +86,7 @@ function connectEffectGraph(
       lp2.frequency.value = 2500;
       source.connect(lp);
       lp.connect(lp2);
-      lp2.connect(destination);
-      return { nodes: [lp, lp2] };
+      return { nodes: [lp, lp2], output: lp2 };
     }
 
     case 'chipmunk': {
@@ -93,12 +99,11 @@ function connectEffectGraph(
       hp2.frequency.value = 300;
       source.connect(hp);
       hp.connect(hp2);
-      hp2.connect(destination);
-      return { nodes: [hp, hp2] };
+      return { nodes: [hp, hp2], output: hp2 };
     }
 
     case 'robot': {
-      // Metallic / robotic: band-limit + heavy waveshaping (no broken ring-mod on gain param)
+      // Metallic / robotic: band-limit + heavy waveshaping
       const hp = ctx.createBiquadFilter();
       hp.type = 'highpass';
       hp.frequency.value = 180;
@@ -110,8 +115,7 @@ function connectEffectGraph(
       source.connect(hp);
       hp.connect(shaper);
       shaper.connect(lp);
-      lp.connect(destination);
-      return { nodes: [hp, shaper, lp] };
+      return { nodes: [hp, shaper, lp], output: lp };
     }
 
     case 'echo': {
@@ -123,19 +127,18 @@ function connectEffectGraph(
       wet.gain.value = 0.75;
       const dry = ctx.createGain();
       dry.gain.value = 0.85;
+      // Merge dry + wet into a single output node so both paths reach one point
+      const merger = ctx.createGain();
 
-      // Dry path
       source.connect(dry);
-      dry.connect(destination);
-
-      // Wet + feedback loop (must list feedback for disconnect)
+      dry.connect(merger);
       source.connect(delay);
       delay.connect(wet);
-      wet.connect(destination);
+      wet.connect(merger);
       delay.connect(feedback);
       feedback.connect(delay);
 
-      return { nodes: [delay, feedback, wet, dry] };
+      return { nodes: [delay, feedback, wet, dry, merger], output: merger };
     }
 
     case 'radio': {
@@ -151,13 +154,11 @@ function connectEffectGraph(
       source.connect(bp);
       bp.connect(ws);
       ws.connect(hp);
-      hp.connect(destination);
-      return { nodes: [bp, ws, hp] };
+      return { nodes: [bp, ws, hp], output: hp };
     }
 
     default:
-      source.connect(destination);
-      return { nodes: [] };
+      return { nodes: [], output: source };
   }
 }
 
@@ -173,9 +174,20 @@ export function useVoiceEffects() {
     const source = ctx.createMediaStreamSource(stream);
     const destination = ctx.createMediaStreamDestination();
 
-    const { nodes, oscillators } = connectEffectGraph(ctx, source, destination, effectId);
+    const { nodes, oscillators, output } = buildEffectChain(ctx, source, effectId);
 
-    graphRef.current = { ctx, source, destination, nodes, oscillators };
+    // Agora path: processed audio → Agora channel (heard by other participants)
+    output.connect(destination);
+
+    // Self-monitor path: host/speaker hears their own voice effect locally.
+    // Gain is 0 for 'none' (no loopback needed) and 0.2 for active effects
+    // (low enough that getUserMedia AEC handles residual echo from speakers).
+    const monitorGain = ctx.createGain();
+    monitorGain.gain.value = effectId !== 'none' ? 0.2 : 0;
+    output.connect(monitorGain);
+    monitorGain.connect(ctx.destination);
+
+    graphRef.current = { ctx, source, destination, nodes: [...nodes, monitorGain], oscillators };
     return destination.stream.getAudioTracks()[0];
   }, []);
 
@@ -187,9 +199,15 @@ export function useVoiceEffects() {
     disconnectEntireGraph(graph);
     void graph.ctx.resume();
 
-    const { nodes, oscillators } = connectEffectGraph(graph.ctx, graph.source, graph.destination, effectId);
+    const { nodes, oscillators, output } = buildEffectChain(graph.ctx, graph.source, effectId);
+    output.connect(graph.destination);
 
-    graph.nodes = nodes;
+    const monitorGain = graph.ctx.createGain();
+    monitorGain.gain.value = effectId !== 'none' ? 0.2 : 0;
+    output.connect(monitorGain);
+    monitorGain.connect(graph.ctx.destination);
+
+    graph.nodes = [...nodes, monitorGain];
     graph.oscillators = oscillators;
 
     return graph.destination.stream.getAudioTracks()[0];
