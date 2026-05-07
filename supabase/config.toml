@@ -102,5 +102,8 @@ verify_jwt = false
 [functions.transcribe-stage]
 verify_jwt = false
 
+[functions.auto-transcribe-ended-stages]
+verify_jwt = false
+
 [functions.og-image]
 verify_jwt = false
