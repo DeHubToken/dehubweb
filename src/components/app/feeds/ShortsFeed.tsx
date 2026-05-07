@@ -585,7 +585,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                     <AutoplayVideo
                       src={short.videoUrl}
                       poster={short.thumbnail}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover rounded-lg"
                       threshold={0.7}
                       rootMargin="200px"
                     />

@@ -67,7 +67,7 @@ export function FeedLinkPreviews({ text }: FeedLinkPreviewsProps) {
                     <img
                       src={preview.image}
                       alt={preview.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover rounded-lg"
                       loading="lazy"
                       onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                     />

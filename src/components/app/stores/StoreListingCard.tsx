@@ -32,7 +32,7 @@ export const StoreListingCard = memo(function StoreListingCard({ listing, onClic
       {/* Image */}
       <div className="aspect-square bg-white/5 relative overflow-hidden">
         {firstImage ? (
-          <img src={firstImage} alt={listing.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" loading="lazy" />
+          <img src={firstImage} alt={listing.title} className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300" loading="lazy" />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-muted-foreground">
             <ImageIcon className="w-8 h-8" />

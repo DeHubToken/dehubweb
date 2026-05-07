@@ -88,7 +88,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
     return (
       <div ref={containerRef} className={cn("relative", className)}>
         {poster ? (
-          <img src={poster} alt="" className="w-full h-full object-cover" />
+          <img src={poster} alt="" className="w-full h-full object-cover rounded-lg" />
         ) : (
           <div className="w-full h-full bg-white/[0.06]" />
         )}
@@ -102,7 +102,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
       {!hasLoaded && (
         <div className="absolute inset-0 z-[1]">
           {poster ? (
-            <img src={poster} alt="" className="w-full h-full object-cover" />
+            <img src={poster} alt="" className="w-full h-full object-cover rounded-lg" />
           ) : (
             <div className="w-full h-full animate-pulse bg-white/[0.06]" />
           )}
@@ -112,7 +112,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
         ref={videoRef}
         src={shouldLoad ? src : undefined}
         poster={poster}
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover rounded-lg"
         loop
         muted
         playsInline

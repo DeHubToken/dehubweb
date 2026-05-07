@@ -128,7 +128,7 @@ export function LiveCard({ stream }: LiveCardProps) {
           <img
             src={stream.thumbnail}
             alt=""
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover rounded-lg"
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).src =
                 'https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=480&h=270&fit=crop';

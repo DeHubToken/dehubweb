@@ -43,7 +43,7 @@ export const ProfileImageGrid = memo(function ProfileImageGrid({ images }: Profi
                 src={post.image}
                 alt={post.description || post.caption || ''}
                 className={cn(
-                  "w-full h-full object-cover transition-transform duration-300 group-hover:scale-105",
+                  "w-full h-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105",
                   post.isPPV && "blur-lg"
                 )}
                 loading="lazy"

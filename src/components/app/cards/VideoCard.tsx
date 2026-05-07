@@ -1250,7 +1250,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         {/* Combo PPV + Holdings Locked */}
         {isComboLocked ? (
           <>
-            <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover" loading="lazy" />
+            <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover rounded-lg" loading="lazy" />
             <div 
               className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
               onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
