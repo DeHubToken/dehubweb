@@ -50,16 +50,10 @@ function formatTs(s: number): string {
 }
 
 export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
-  const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
   const [requesting, setRequesting] = useState(false);
 
   const stageId = space?.id;
-  const isHost = !!(
-    walletAddress &&
-    space?.host_wallet_address &&
-    walletAddress.toLowerCase() === space.host_wallet_address.toLowerCase()
-  );
 
   const { data: transcript, refetch } = useQuery<StageTranscript | null>({
     queryKey: ['stage-transcript', stageId],
@@ -88,24 +82,33 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
     return map;
   }, [transcript]);
 
-  const handleTranscribe = async () => {
-    if (!stageId || !walletAddress) return;
+  const handleTranscribe = async (silent = false) => {
+    if (!stageId) return;
     setRequesting(true);
     try {
       const { error } = await supabase.functions.invoke('transcribe-stage', {
         body: { stageId },
-        headers: { 'x-wallet-address': walletAddress.toLowerCase() },
       });
       if (error) throw error;
-      toast.success('Transcribing — this may take a moment');
+      if (!silent) toast.success('Transcribing — this may take a moment');
       queryClient.invalidateQueries({ queryKey: ['stage-transcript', stageId] });
       refetch();
     } catch (e) {
-      toast.error((e as Error).message || 'Failed to start transcription');
+      if (!silent) toast.error((e as Error).message || 'Failed to start transcription');
     } finally {
       setRequesting(false);
     }
   };
+
+  // Auto-trigger transcription when drawer opens for an ended stage with a recording but no transcript
+  useEffect(() => {
+    if (!open || !stageId || !space?.recording_url) return;
+    if (transcript === undefined) return; // still loading
+    if (!transcript || transcript.status === 'failed') {
+      handleTranscribe(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, stageId, transcript?.status, space?.recording_url]);
 
   useEffect(() => {
     if (!open) setRequesting(false);
@@ -145,28 +148,27 @@ export function StageTranscriptDrawer({ space, open, onOpenChange }: Props) {
             </div>
           ) : !transcript || status === 'pending' || status === 'failed' ? (
             <div className="text-center text-white/60 py-12 space-y-4">
-              <Sparkles className="w-10 h-10 mx-auto opacity-50" />
-              <p>
-                {status === 'failed'
-                  ? `Transcription failed${transcript?.error ? `: ${transcript.error}` : ''}`
-                  : 'No transcript yet for this stage.'}
-              </p>
-              {isHost ? (
-                <Button
-                  onClick={handleTranscribe}
-                  disabled={requesting}
-                  className="rounded-2xl bg-white/10 hover:bg-white/20 text-white border border-white/10"
-                >
-                  {requesting ? (
-                    <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Starting…</>
-                  ) : status === 'failed' ? (
-                    <><RefreshCw className="w-4 h-4 mr-2" /> Try again</>
-                  ) : (
-                    <><Sparkles className="w-4 h-4 mr-2" /> Generate transcript</>
-                  )}
-                </Button>
+              {status === 'failed' ? (
+                <>
+                  <Sparkles className="w-10 h-10 mx-auto opacity-50" />
+                  <p>Transcript unavailable{transcript?.error ? `: ${transcript.error}` : ''}</p>
+                  <Button
+                    onClick={() => handleTranscribe(false)}
+                    disabled={requesting}
+                    className="rounded-2xl bg-white/10 hover:bg-white/20 text-white border border-white/10"
+                  >
+                    {requesting ? (
+                      <><Loader2 className="w-4 h-4 mr-2 animate-spin" /> Retrying…</>
+                    ) : (
+                      <><RefreshCw className="w-4 h-4 mr-2" /> Try again</>
+                    )}
+                  </Button>
+                </>
               ) : (
-                <p className="text-xs text-white/40">Only the host can generate a transcript.</p>
+                <>
+                  <Loader2 className="w-8 h-8 mx-auto animate-spin" />
+                  <p>Preparing transcript…</p>
+                </>
               )}
             </div>
           ) : status === 'processing' ? (
