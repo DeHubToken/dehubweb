@@ -158,7 +158,7 @@ function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNe
                 src={post.image}
                 alt=""
                 className={cn(
-                  "w-full h-full object-cover transition-transform duration-300 group-hover:scale-105",
+                  "w-full h-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105",
                   post.isPPV && "blur-lg"
                 )}
               />
