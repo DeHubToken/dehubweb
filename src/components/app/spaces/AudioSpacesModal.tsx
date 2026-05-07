@@ -94,6 +94,7 @@ export function AudioSpacesModal() {
   const pastStageUnsubRef = useRef<(() => void) | null>(null);
   /** `onended` delayed reset so the waveform can show 100% briefly */
   const pastStageEndTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [transcriptStage, setTranscriptStage] = useState<AudioSpace | null>(null);
 
   // Fetch past (ended) stages for browse view
   const { data: pastStages = [] } = useQuery({
