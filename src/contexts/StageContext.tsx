@@ -106,6 +106,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const recordingChunksRef = useRef<Blob[]>([]);
   const recordingSpaceIdRef = useRef<string | null>(null);
+  /** Wall-clock ms when recording started — used to compute relative timeline timestamps */
+  const recordingStartMsRef = useRef<number>(0);
+  /** Timeline of AI / non-host audio windows captured during recording. */
+  const recordingTimelineRef = useRef<Array<{
+    start: number; end: number; kind: 'ai' | 'human'; source: string; label: string;
+  }>>([]);
 
   /** Serialize injectAudio (TTS / soundboard) so tracks don’t overlap on Agora */
   const injectAudioChainRef = useRef<Promise<void>>(Promise.resolve());
