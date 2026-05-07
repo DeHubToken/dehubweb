@@ -582,7 +582,8 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           walletServicesConfig: { whiteLabel: { showWidgetButton: false } },
         };
 
-        web3authInstance = new Web3Auth(initOptions);
+        const { Web3Auth: Web3AuthCtor } = await loadWeb3AuthModal();
+        web3authInstance = new Web3AuthCtor(initOptions);
         
         await Promise.race([
           web3authInstance.init(),
@@ -825,6 +826,7 @@ function extractPrivKeyFromConnector(w3a: Web3Auth): string | null {
  * to derive the Safe Smart Account address.
  */
 async function buildProviderFromPrivKey(privKey: string): Promise<IProvider> {
+  const { EthereumPrivateKeyProvider } = await loadEthProvider();
   const pkProvider = new EthereumPrivateKeyProvider({
     config: {
       chainConfig: {
@@ -920,6 +922,7 @@ export async function setupAAProviderForChain(targetChainId: number): Promise<an
   const bundlerUrl = derivePimlicoUrlForChain(pimlicoConfig.bundlerUrl, targetChainId);
   const paymasterUrl = derivePimlicoUrlForChain(pimlicoConfig.paymasterUrl, targetChainId);
 
+  const { EthereumPrivateKeyProvider } = await loadEthProvider();
   const pkProvider = new EthereumPrivateKeyProvider({
     config: {
       chainConfig: {
@@ -932,6 +935,7 @@ export async function setupAAProviderForChain(targetChainId: number): Promise<an
   });
   await pkProvider.setupProvider(privKey);
 
+  const { AccountAbstractionProvider, SafeSmartAccount } = await loadAAProvider();
   const aaProvider = await AccountAbstractionProvider.getProviderInstance({
     eoaProvider: pkProvider,
     smartAccountInit: new SafeSmartAccount(),
