@@ -13,7 +13,7 @@ import { useState, memo, useCallback, useEffect, useRef, useMemo } from 'react';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Pencil, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X } from 'lucide-react';
+import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Info, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -352,9 +352,9 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
   const queryClient = useQueryClient();
   const { walletAddress, openLoginModal } = useAuth();
   const isOwnPost = walletAddress && post.creatorId?.toLowerCase() === walletAddress.toLowerCase();
-  const openEditPostPage = useCallback(() => {
+  const openPostInfoPage = useCallback(() => {
     setShowOptionsDrawer(false);
-    navigate(`/app/post/${post.id}/info?edit=1`);
+    navigate(`/app/post/${post.id}/info`);
   }, [navigate, post.id]);
   
   // PPV/Bounty/Locked status - bypass for owners & already-unlocked content
@@ -550,10 +550,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                   <>
                     <div className="border-t border-white/10 my-1" />
                     <button
-                      onClick={openEditPostPage}
+                      onClick={openPostInfoPage}
                       className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                     >
-                      <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
+                      <Info className="w-5 h-5" /> Post info
                     </button>
                     <button
                       onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowDeleteModal(true), 300); }}

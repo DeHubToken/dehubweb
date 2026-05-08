@@ -13,7 +13,7 @@ import { useState, memo, useEffect, useCallback, useRef } from 'react';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Pencil, Trash2, Repeat2, UserPlus, UserCheck, Loader2 } from 'lucide-react';
+import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { CardHeader } from './CardHeader';
@@ -85,9 +85,9 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   
   const isOwnPost = walletAddress && post.author.id?.toLowerCase() === walletAddress.toLowerCase();
 
-  const openEditPostPage = useCallback(() => {
+  const openPostInfoPage = useCallback(() => {
     setShowOptionsDrawer(false);
-    navigate(`/app/post/${post.id}/info?edit=1`);
+    navigate(`/app/post/${post.id}/info`);
   }, [navigate, post.id]);
 
   // Follow state for the post author
@@ -307,10 +307,10 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
                 <>
                   <div className="border-t border-white/10 my-1" />
                   <button
-                    onClick={openEditPostPage}
+                    onClick={openPostInfoPage}
                     className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                   >
-                    <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
+                    <Info className="w-5 h-5" /> Post info
                   </button>
                   <button
                     onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowDeleteModal(true), 300); }}
