@@ -15,7 +15,7 @@ import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Pencil, Trash2, Gem, Repeat, Music, X } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Info, Trash2, Gem, Repeat, Music, X } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -484,9 +484,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const { walletAddress, openLoginModal } = useAuth();
   const { autoplayEnabled } = useAutoplay();
   const isOwnPost = walletAddress && video.creatorId?.toLowerCase() === walletAddress.toLowerCase();
-  const openEditPostPage = useCallback(() => {
+  const openPostInfoPage = useCallback(() => {
     setShowOptionsDrawer(false);
-    navigate(`/app/post/${video.id}/info?edit=1`);
+    navigate(`/app/post/${video.id}/info`);
   }, [navigate, video.id]);
   const [isMuted, setIsMuted] = useState(() => video.isAudio ? false : videoPlaybackManager.globalMuted);
   const [showControls, setShowControls] = useState(false);
@@ -1199,10 +1199,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     <>
                       <div className="border-t border-white/10 my-1" />
                       <button
-                        onClick={openEditPostPage}
+                        onClick={openPostInfoPage}
                         className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                       >
-                        <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
+                        <Info className="w-5 h-5" /> Post info
                       </button>
                       <button
                         onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowDeleteModal(true), 300); }}
@@ -1805,10 +1805,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               <>
                 <div className="border-t border-white/10 my-1" />
                 <button
-                  onClick={openEditPostPage}
+                  onClick={openPostInfoPage}
                   className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                 >
-                  <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
+                  <Info className="w-5 h-5" /> Post info
                 </button>
                 <button
                   onClick={() => { setShowOptionsDrawer(false); setShowDeleteModal(true); }}
