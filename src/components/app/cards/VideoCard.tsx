@@ -31,6 +31,7 @@ import { PPVDrawerContent } from './PPVDrawerContent';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { TranslatableText, SharedTranslationProvider, useTranslation } from '../TranslatableText';
+import { hasCommunityLink, stripCommunityLinks } from '@/components/app/communities/CommunityLinkEmbed';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
