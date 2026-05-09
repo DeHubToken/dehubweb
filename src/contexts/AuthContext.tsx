@@ -34,6 +34,7 @@ import {
   type Web3AuthMeta,
 } from '@/lib/api/dehub';
 import { disconnectDmSocket, reconnectDmSocket } from '@/lib/api/dehub/dm-socket';
+import { clearEngagementCaches } from '@/lib/clear-engagement-caches';
 import {
   initWeb3Auth,
   disconnectWeb3Auth,
@@ -250,6 +251,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [connectionSource, setConnectionSource] = useState<'web3auth' | 'wagmi' | null>(
     (localStorage.getItem('dehub_connection_source') as 'web3auth' | 'wagmi' | null) || null
   );
+
+  // Clear cached engagement state (likes, reposts, comment-count deltas, unlocked tokens)
+  // whenever the active wallet changes — prevents one account's optimistic UI state
+  // from leaking into another account's session.
+  const prevWalletRef = useRef<string | null>(walletAddress);
+  useEffect(() => {
+    const prev = prevWalletRef.current;
+    const curr = walletAddress;
+    if (prev !== curr && (prev || curr)) {
+      clearEngagementCaches();
+    }
+    prevWalletRef.current = curr;
+  }, [walletAddress]);
 
   // Wagmi hooks
   const { address: wagmiAddress, isConnected: isWagmiConnected } = useAccount();
@@ -1303,6 +1317,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('dehub_user');
     localStorage.removeItem('dehub_wallet');
     localStorage.removeItem('dehub_connection_source');
+    clearEngagementCaches();
 
     setWalletAddress(null);
     setUser(null);
