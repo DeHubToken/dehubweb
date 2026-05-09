@@ -345,9 +345,13 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         {post.title && (
           <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{renderTextWithLinks(post.title)}</h3>
         )}
-        {(isTranslated ? translatedText : post.content)?.trim() && (
-          <TranslatableText text={isTranslated ? translatedText : post.content} className="text-white/90 text-sm sm:text-base" as="p" />
-        )}
+        {(() => {
+          const rawDisplay = isTranslated ? translatedText : post.content;
+          const displayText = rawDisplay && hasCommunityLink(rawDisplay) ? stripCommunityLinks(rawDisplay) : rawDisplay;
+          return displayText?.trim() ? (
+            <TranslatableText text={displayText} className="text-white/90 text-sm sm:text-base" as="p" />
+          ) : null;
+        })()}
 
         {/* Quoted post embed (Twitter-style) */}
         {post.isQuotePost && post.quotedPost && (
