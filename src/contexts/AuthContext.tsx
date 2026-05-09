@@ -261,9 +261,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const curr = walletAddress;
     if (prev !== curr && (prev || curr)) {
       clearEngagementCaches();
+      queryClient.removeQueries({ queryKey: ['single-post'] });
+      queryClient.removeQueries({ queryKey: ['unified-feed'] });
+      queryClient.removeQueries({ queryKey: ['dehub-videos'] });
+      queryClient.removeQueries({ queryKey: ['dehub-images'] });
+      queryClient.removeQueries({ queryKey: ['profile-content'] });
     }
     prevWalletRef.current = curr;
-  }, [walletAddress]);
+  }, [walletAddress, queryClient]);
 
   // Wagmi hooks
   const { address: wagmiAddress, isConnected: isWagmiConnected } = useAccount();

@@ -171,7 +171,7 @@ export function ActionBar({
   };
 
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, walletAddress } = useAuth();
   const queryClient = useQueryClient();
   // When external handlers are provided (governance), always sync from props
   const hasExternalHandlers = !!(onLike || onDislike);
@@ -358,6 +358,11 @@ export function ActionBar({
   };
 
   const [isReposted, setIsReposted] = useState(() => initialIsReposted || (postId ? isPostReposted(postId) : false));
+
+  useEffect(() => {
+    setRepostDelta(0);
+    setIsReposted(initialIsReposted || (postId ? isPostReposted(postId) : false));
+  }, [initialIsReposted, postId, walletAddress]);
 
   const handleRepost = () => {
     if (onRepost) {

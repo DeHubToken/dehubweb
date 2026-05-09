@@ -7,6 +7,8 @@
  * leaks into a different account's UI.
  */
 
+import { clearAllVoteCaches } from '@/lib/vote-cache';
+
 const LOCAL_KEYS = [
   'dehub-repost-cache',
   'comment_count_deltas',
@@ -23,4 +25,6 @@ export function clearEngagementCaches(): void {
   try {
     for (const k of SESSION_KEYS) sessionStorage.removeItem(k);
   } catch { /* ignore */ }
+
+  clearAllVoteCaches();
 }
