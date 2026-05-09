@@ -45,6 +45,10 @@ export function clearVoteCache(postId: string): void {
   cache.delete(postId);
 }
 
+export function clearAllVoteCaches(): void {
+  cache.clear();
+}
+
 // ---------------------------------------------------------------------------
 // Feed-cache patching
 // ---------------------------------------------------------------------------
