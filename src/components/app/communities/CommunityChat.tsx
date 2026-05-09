@@ -5,8 +5,8 @@
  * Supports text, emoji, GIF, replies, and reactions.
  */
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Users, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { Send, Users, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check, Search } from 'lucide-react';
 import { VoiceRecorder } from '../chat/VoiceRecorder';
 import { VoiceWaveformPlayer } from '../chat/VoiceWaveformPlayer';
 import { supabase } from '@/integrations/supabase/client';
