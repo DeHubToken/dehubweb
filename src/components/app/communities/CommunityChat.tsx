@@ -5,8 +5,8 @@
  * Supports text, emoji, GIF, replies, and reactions.
  */
 
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { Send, Users, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check } from 'lucide-react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { Send, Users, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check, Search } from 'lucide-react';
 import { VoiceRecorder } from '../chat/VoiceRecorder';
 import { VoiceWaveformPlayer } from '../chat/VoiceWaveformPlayer';
 import { supabase } from '@/integrations/supabase/client';
@@ -113,8 +113,15 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
   const [replyTo, setReplyTo] = useState<CommunityChatMessage | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
+  const PAGE_SIZE = 15;
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const didInitialScrollRef = useRef(false);
+  const prevScrollHeightRef = useRef<number | null>(null);
   const navigate = useNavigate();
   const { isHidden: buyBotHidden, hide: hideBuyBot } = useBuyBotHidden();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
@@ -128,16 +135,69 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
 
   const { messages, isLoading, sendMessage, editMessage, addReaction, removeReaction } = useCommunityChat(communityId);
 
+  // Filter by search query (searches content + sender names)
+  const filteredMessages = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return messages;
+    return messages.filter((m) => {
+      const name = (m.display_name || m.username || '').toLowerCase();
+      return m.content?.toLowerCase().includes(q) || name.includes(q);
+    });
+  }, [messages, searchQuery]);
+
+  // Paginate: show last `visibleCount` messages. When searching, show all matches.
+  const displayedMessages = useMemo(() => {
+    if (searchQuery.trim()) return filteredMessages;
+    if (filteredMessages.length <= visibleCount) return filteredMessages;
+    return filteredMessages.slice(filteredMessages.length - visibleCount);
+  }, [filteredMessages, visibleCount, searchQuery]);
+
+  const hasMore = !searchQuery.trim() && filteredMessages.length > displayedMessages.length;
+
+  // Initial scroll to bottom once messages first load
   useEffect(() => {
-    if (messages.length > 0 && bottomRef.current) {
-      const scrollContainer = bottomRef.current.closest('.overflow-y-auto');
-      if (scrollContainer) {
-        requestAnimationFrame(() => {
-          scrollContainer.scrollTop = scrollContainer.scrollHeight;
-        });
-      }
-    }
+    if (didInitialScrollRef.current) return;
+    if (messages.length === 0) return;
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer) return;
+    requestAnimationFrame(() => {
+      scrollContainer.scrollTop = scrollContainer.scrollHeight;
+      didInitialScrollRef.current = true;
+    });
   }, [messages.length]);
+
+  // Auto-scroll to bottom on new message arrival (only if user is near bottom)
+  const lastMessageId = messages[messages.length - 1]?.id;
+  useEffect(() => {
+    if (!didInitialScrollRef.current) return;
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer) return;
+    const distanceFromBottom = scrollContainer.scrollHeight - scrollContainer.scrollTop - scrollContainer.clientHeight;
+    if (distanceFromBottom < 120) {
+      requestAnimationFrame(() => {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+      });
+    }
+  }, [lastMessageId]);
+
+  // Preserve scroll position when loading older messages
+  useEffect(() => {
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer) return;
+    if (prevScrollHeightRef.current != null) {
+      const diff = scrollContainer.scrollHeight - prevScrollHeightRef.current;
+      scrollContainer.scrollTop = diff;
+      prevScrollHeightRef.current = null;
+    }
+  }, [visibleCount]);
+
+  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    if (el.scrollTop <= 0 && hasMore) {
+      prevScrollHeightRef.current = el.scrollHeight;
+      setVisibleCount((c) => c + PAGE_SIZE);
+    }
+  }, [hasMore]);
 
   const handleSend = async () => {
     if (!isAuthenticated) { openLoginModal(); return; }
@@ -237,9 +297,38 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
   return (
     <div className="flex flex-col" style={{ height: 'calc(100vh - 340px)', minHeight: '300px' }}>
       <SharedTranslationContext.Provider value={{ translateSignal, originalSignal, requestTranslate: () => {}, requestOriginal: () => {} }}>
+        {/* Search bar */}
+        <div className="px-1 pb-1 flex items-center gap-1">
+          {showSearch ? (
+            <div className="flex items-center gap-1.5 flex-1 rounded-xl border border-white/[0.08] bg-white/[0.03] px-2.5 py-1.5">
+              <Search className="w-3.5 h-3.5 text-zinc-500 flex-shrink-0" />
+              <input
+                autoFocus
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t('communities.searchMessages', 'Search messages')}
+                className="flex-1 bg-transparent border-none outline-none text-xs text-white placeholder:text-zinc-500"
+              />
+              <button
+                onClick={() => { setSearchQuery(''); setShowSearch(false); }}
+                className="p-0.5 text-zinc-500 hover:text-white"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowSearch(true)}
+              className="ml-auto flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] text-zinc-500 hover:text-white hover:bg-white/[0.04] transition-colors"
+            >
+              <Search className="w-3.5 h-3.5" />
+              {t('communities.searchMessages', 'Search')}
+            </button>
+          )}
+        </div>
         {/* Messages area */}
         <div className="relative flex-1">
-          <div className="absolute inset-0 overflow-y-auto py-2 space-y-2">
+          <div ref={scrollRef} onScroll={handleScroll} className="absolute inset-0 overflow-y-auto py-2 space-y-2">
             {isLoading ? (
               <div className="space-y-3 py-2 px-3">
                 {[...Array(5)].map((_, i) => (
@@ -260,8 +349,27 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                 <p className="text-zinc-500 text-sm">{t('communities.noMessagesYet')}</p>
                 <p className="text-zinc-600 text-xs mt-1">{t('communities.beFirstToChat')}</p>
               </div>
+            ) : displayedMessages.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full text-center px-3">
+                <p className="text-zinc-500 text-sm">No messages match "{searchQuery}"</p>
+              </div>
             ) : (
-              messages.map((msg) => {
+              <>
+                {hasMore && (
+                  <div className="flex justify-center py-1">
+                    <button
+                      onClick={() => {
+                        const el = scrollRef.current;
+                        if (el) prevScrollHeightRef.current = el.scrollHeight;
+                        setVisibleCount((c) => c + PAGE_SIZE);
+                      }}
+                      className="text-[11px] text-zinc-500 hover:text-white px-2 py-1 rounded-md hover:bg-white/[0.04] transition-colors"
+                    >
+                      Load older messages
+                    </button>
+                  </div>
+                )}
+                {displayedMessages.map((msg) => {
                 // Buy alert messages get a special card treatment
                 if (msg.message_type === 'buy_alert') {
                   if (buyBotHidden) return null;
@@ -419,7 +527,8 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                     </div>
                   </div>
                 );
-              })
+              })}
+              </>
             )}
             <div ref={bottomRef} />
           </div>
