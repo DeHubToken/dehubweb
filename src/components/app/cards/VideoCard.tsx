@@ -31,6 +31,7 @@ import { PPVDrawerContent } from './PPVDrawerContent';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
 import { TranslatableText, SharedTranslationProvider, useTranslation } from '../TranslatableText';
+import { hasCommunityLink, stripCommunityLinks } from '@/components/app/communities/CommunityLinkEmbed';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
@@ -389,7 +390,9 @@ interface ExpandableDescriptionProps {
 
 function ExpandableDescription({ description: rawDescription, isImmersive }: ExpandableDescriptionProps) {
   // Normalize line breaks: unify \r\n → \n, then cap consecutive blank lines to max 1 (i.e. max 2 newlines)
-  const description = rawDescription.replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+  // Also strip community URLs — the CommunityLinkEmbed card handles that visually (display-only, never sent to API).
+  const normalized = rawDescription.replace(/\r\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
+  const description = hasCommunityLink(normalized) ? stripCommunityLinks(normalized) : normalized;
   const [isExpanded, setIsExpanded] = useState(false);
   const [needsExpansion, setNeedsExpansion] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);

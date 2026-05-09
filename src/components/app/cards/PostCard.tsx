@@ -22,7 +22,7 @@ import { CommentsWrapper } from './CommentsWrapper';
 import { PostMetadata } from './PostMetadata';
 import { QuotedPostEmbed } from './QuotedPostEmbed';
 import { FeedLinkPreviews } from './FeedLinkPreviews';
-import { CommunityLinkEmbed, extractCommunitySlug, hasCommunityLink } from '@/components/app/communities/CommunityLinkEmbed';
+import { CommunityLinkEmbed, extractCommunitySlug, hasCommunityLink, stripCommunityLinks } from '@/components/app/communities/CommunityLinkEmbed';
 import { StoreLinkEmbed, extractStoreLinkInfo, hasStoreLink } from '@/components/app/stores/StoreLinkEmbed';
 import { TranslatableText, useTranslation, renderTextWithLinks } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -345,9 +345,13 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         {post.title && (
           <h3 className="text-white font-semibold text-base sm:text-lg leading-snug">{renderTextWithLinks(post.title)}</h3>
         )}
-        {(isTranslated ? translatedText : post.content)?.trim() && (
-          <TranslatableText text={isTranslated ? translatedText : post.content} className="text-white/90 text-sm sm:text-base" as="p" />
-        )}
+        {(() => {
+          const rawDisplay = isTranslated ? translatedText : post.content;
+          const displayText = rawDisplay && hasCommunityLink(rawDisplay) ? stripCommunityLinks(rawDisplay) : rawDisplay;
+          return displayText?.trim() ? (
+            <TranslatableText text={displayText} className="text-white/90 text-sm sm:text-base" as="p" />
+          ) : null;
+        })()}
 
         {/* Quoted post embed (Twitter-style) */}
         {post.isQuotePost && post.quotedPost && (

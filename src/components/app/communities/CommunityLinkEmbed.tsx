@@ -20,6 +20,21 @@ export function hasCommunityLink(text: string): boolean {
   return /\/app\/communities\/[a-zA-Z0-9_-]+/.test(text);
 }
 
+/**
+ * Strip community link URLs from display text (display-only — never use for API payloads).
+ * Removes the full URL containing /app/communities/<slug> along with any surrounding whitespace.
+ */
+export function stripCommunityLinks(text: string): string {
+  if (!text) return text;
+  return text
+    // Full URL form (with optional protocol/host)
+    .replace(/(?:https?:\/\/)?[^\s)<>"']*\/app\/communities\/[a-zA-Z0-9_-]+[^\s)<>"']*/gi, '')
+    // Collapse leftover whitespace
+    .replace(/[ \t]{2,}/g, ' ')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
+
 interface CommunityLinkEmbedProps {
   slug: string;
 }
