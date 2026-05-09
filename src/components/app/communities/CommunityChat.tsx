@@ -538,7 +538,8 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                     </div>
                   </div>
                 );
-              })
+              })}
+              </>
             )}
             <div ref={bottomRef} />
           </div>
