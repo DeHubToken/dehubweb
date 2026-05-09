@@ -297,17 +297,21 @@ function FeedDescription({
   
   if (!title && !description) return null;
 
+  // Strip community URLs from display text — card embed handles them visually elsewhere
+  const cleanedTitle = displayTitle && hasCommunityLink(displayTitle) ? stripCommunityLinks(displayTitle) : displayTitle;
+  const cleanedShownDescription = shownDescription && hasCommunityLink(shownDescription) ? stripCommunityLinks(shownDescription) : shownDescription;
+
   return (
     <div className="space-y-1">
-      {displayTitle && (
+      {cleanedTitle && (
         <h3 className="text-white text-sm font-semibold leading-tight">
-          {renderTextWithLinks(displayTitle)}
+          {renderTextWithLinks(cleanedTitle)}
         </h3>
       )}
-      {dedupedDescription && (
+      {cleanedShownDescription && (
         <div>
           <p className="text-zinc-300 text-sm leading-relaxed">
-            {renderTextWithLinks(shownDescription)}
+            {renderTextWithLinks(cleanedShownDescription)}
           </p>
           {hasLongDescription && (
             <button 
