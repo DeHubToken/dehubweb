@@ -381,17 +381,6 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                       onHide={hideBuyBot}
                     />
                   );
-                // Buy alert messages get a special card treatment
-                if (msg.message_type === 'buy_alert') {
-                  if (buyBotHidden) return null;
-                  return (
-                    <BuyAlertCard
-                      key={msg.id}
-                      content={msg.content}
-                      timestamp={msg.created_at}
-                      onHide={hideBuyBot}
-                    />
-                  );
                 }
 
                 const avatarUrl = buildAvatarUrl(msg.wallet_address, msg.avatar_url);
