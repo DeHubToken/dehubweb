@@ -10,6 +10,7 @@
  */
 
 import { useState, memo, useCallback, useEffect, useRef, useMemo } from 'react';
+import { hasCommunityLink, stripCommunityLinks } from '@/components/app/communities/CommunityLinkEmbed';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
