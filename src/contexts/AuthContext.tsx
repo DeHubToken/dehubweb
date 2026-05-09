@@ -252,6 +252,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     (localStorage.getItem('dehub_connection_source') as 'web3auth' | 'wagmi' | null) || null
   );
 
+  // Clear cached engagement state (likes, reposts, comment-count deltas, unlocked tokens)
+  // whenever the active wallet changes — prevents one account's optimistic UI state
+  // from leaking into another account's session.
+  const prevWalletRef = useRef<string | null>(walletAddress);
+  useEffect(() => {
+    const prev = prevWalletRef.current;
+    const curr = walletAddress;
+    if (prev !== curr && (prev || curr)) {
+      clearEngagementCaches();
+    }
+    prevWalletRef.current = curr;
+  }, [walletAddress]);
+
   // Wagmi hooks
   const { address: wagmiAddress, isConnected: isWagmiConnected } = useAccount();
   const { signMessageAsync } = useSignMessage();
