@@ -297,9 +297,38 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
   return (
     <div className="flex flex-col" style={{ height: 'calc(100vh - 340px)', minHeight: '300px' }}>
       <SharedTranslationContext.Provider value={{ translateSignal, originalSignal, requestTranslate: () => {}, requestOriginal: () => {} }}>
+        {/* Search bar */}
+        <div className="px-1 pb-1 flex items-center gap-1">
+          {showSearch ? (
+            <div className="flex items-center gap-1.5 flex-1 rounded-xl border border-white/[0.08] bg-white/[0.03] px-2.5 py-1.5">
+              <Search className="w-3.5 h-3.5 text-zinc-500 flex-shrink-0" />
+              <input
+                autoFocus
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={t('communities.searchMessages', 'Search messages')}
+                className="flex-1 bg-transparent border-none outline-none text-xs text-white placeholder:text-zinc-500"
+              />
+              <button
+                onClick={() => { setSearchQuery(''); setShowSearch(false); }}
+                className="p-0.5 text-zinc-500 hover:text-white"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setShowSearch(true)}
+              className="ml-auto flex items-center gap-1 px-2 py-1 rounded-lg text-[11px] text-zinc-500 hover:text-white hover:bg-white/[0.04] transition-colors"
+            >
+              <Search className="w-3.5 h-3.5" />
+              {t('communities.searchMessages', 'Search')}
+            </button>
+          )}
+        </div>
         {/* Messages area */}
         <div className="relative flex-1">
-          <div className="absolute inset-0 overflow-y-auto py-2 space-y-2">
+          <div ref={scrollRef} onScroll={handleScroll} className="absolute inset-0 overflow-y-auto py-2 space-y-2">
             {isLoading ? (
               <div className="space-y-3 py-2 px-3">
                 {[...Array(5)].map((_, i) => (
@@ -320,8 +349,38 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                 <p className="text-zinc-500 text-sm">{t('communities.noMessagesYet')}</p>
                 <p className="text-zinc-600 text-xs mt-1">{t('communities.beFirstToChat')}</p>
               </div>
+            ) : displayedMessages.length === 0 ? (
+              <div className="flex flex-col items-center justify-center h-full text-center px-3">
+                <p className="text-zinc-500 text-sm">No messages match "{searchQuery}"</p>
+              </div>
             ) : (
-              messages.map((msg) => {
+              <>
+                {hasMore && (
+                  <div className="flex justify-center py-1">
+                    <button
+                      onClick={() => {
+                        const el = scrollRef.current;
+                        if (el) prevScrollHeightRef.current = el.scrollHeight;
+                        setVisibleCount((c) => c + PAGE_SIZE);
+                      }}
+                      className="text-[11px] text-zinc-500 hover:text-white px-2 py-1 rounded-md hover:bg-white/[0.04] transition-colors"
+                    >
+                      Load older messages
+                    </button>
+                  </div>
+                )}
+                {displayedMessages.map((msg) => {
+                // Buy alert messages get a special card treatment
+                if (msg.message_type === 'buy_alert') {
+                  if (buyBotHidden) return null;
+                  return (
+                    <BuyAlertCard
+                      key={msg.id}
+                      content={msg.content}
+                      timestamp={msg.created_at}
+                      onHide={hideBuyBot}
+                    />
+                  );
                 // Buy alert messages get a special card treatment
                 if (msg.message_type === 'buy_alert') {
                   if (buyBotHidden) return null;
