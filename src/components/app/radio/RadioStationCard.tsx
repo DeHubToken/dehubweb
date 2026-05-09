@@ -114,7 +114,7 @@ export function RadioStationCard({ station }: RadioStationCardProps) {
         <h3 className="font-semibold text-white truncate text-sm sm:text-base">
           {station.name}
         </h3>
-        <div className="flex items-center gap-1.5 mt-0.5">
+        <div className="flex items-center gap-1.5 mt-0.5 text-slate-50">
           <span className="text-base flex-shrink-0">{countryFlag}</span>
           {tags.length > 0 && (
             <span className="text-zinc-400 text-xs sm:text-sm truncate flex-1 min-w-0">

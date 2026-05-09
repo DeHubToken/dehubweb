@@ -143,7 +143,7 @@ function StoreEmbed({ storeId }: { storeId: string }) {
       <div className="flex-1 min-w-0 relative">
         <p className="text-sm font-semibold text-white truncate">{store.name || 'Store'}</p>
         {store.description && (
-          <p className="text-xs text-zinc-500 truncate mt-0.5">{store.description}</p>
+          <p className="text-xs truncate mt-0.5 text-slate-50">{store.description}</p>
         )}
         <div className="flex items-center gap-1.5 mt-1">
           <StoreIcon className="w-3 h-3 text-zinc-500" />
