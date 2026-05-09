@@ -22,7 +22,7 @@ import { CommentsWrapper } from './CommentsWrapper';
 import { PostMetadata } from './PostMetadata';
 import { QuotedPostEmbed } from './QuotedPostEmbed';
 import { FeedLinkPreviews } from './FeedLinkPreviews';
-import { CommunityLinkEmbed, extractCommunitySlug, hasCommunityLink } from '@/components/app/communities/CommunityLinkEmbed';
+import { CommunityLinkEmbed, extractCommunitySlug, hasCommunityLink, stripCommunityLinks } from '@/components/app/communities/CommunityLinkEmbed';
 import { StoreLinkEmbed, extractStoreLinkInfo, hasStoreLink } from '@/components/app/stores/StoreLinkEmbed';
 import { TranslatableText, useTranslation, renderTextWithLinks } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
