@@ -113,8 +113,15 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
   const [replyTo, setReplyTo] = useState<CommunityChatMessage | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
+  const PAGE_SIZE = 15;
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const didInitialScrollRef = useRef(false);
+  const prevScrollHeightRef = useRef<number | null>(null);
   const navigate = useNavigate();
   const { isHidden: buyBotHidden, hide: hideBuyBot } = useBuyBotHidden();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
@@ -128,16 +135,69 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
 
   const { messages, isLoading, sendMessage, editMessage, addReaction, removeReaction } = useCommunityChat(communityId);
 
+  // Filter by search query (searches content + sender names)
+  const filteredMessages = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return messages;
+    return messages.filter((m) => {
+      const name = (m.display_name || m.username || '').toLowerCase();
+      return m.content?.toLowerCase().includes(q) || name.includes(q);
+    });
+  }, [messages, searchQuery]);
+
+  // Paginate: show last `visibleCount` messages. When searching, show all matches.
+  const displayedMessages = useMemo(() => {
+    if (searchQuery.trim()) return filteredMessages;
+    if (filteredMessages.length <= visibleCount) return filteredMessages;
+    return filteredMessages.slice(filteredMessages.length - visibleCount);
+  }, [filteredMessages, visibleCount, searchQuery]);
+
+  const hasMore = !searchQuery.trim() && filteredMessages.length > displayedMessages.length;
+
+  // Initial scroll to bottom once messages first load
   useEffect(() => {
-    if (messages.length > 0 && bottomRef.current) {
-      const scrollContainer = bottomRef.current.closest('.overflow-y-auto');
-      if (scrollContainer) {
-        requestAnimationFrame(() => {
-          scrollContainer.scrollTop = scrollContainer.scrollHeight;
-        });
-      }
-    }
+    if (didInitialScrollRef.current) return;
+    if (messages.length === 0) return;
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer) return;
+    requestAnimationFrame(() => {
+      scrollContainer.scrollTop = scrollContainer.scrollHeight;
+      didInitialScrollRef.current = true;
+    });
   }, [messages.length]);
+
+  // Auto-scroll to bottom on new message arrival (only if user is near bottom)
+  const lastMessageId = messages[messages.length - 1]?.id;
+  useEffect(() => {
+    if (!didInitialScrollRef.current) return;
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer) return;
+    const distanceFromBottom = scrollContainer.scrollHeight - scrollContainer.scrollTop - scrollContainer.clientHeight;
+    if (distanceFromBottom < 120) {
+      requestAnimationFrame(() => {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+      });
+    }
+  }, [lastMessageId]);
+
+  // Preserve scroll position when loading older messages
+  useEffect(() => {
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer) return;
+    if (prevScrollHeightRef.current != null) {
+      const diff = scrollContainer.scrollHeight - prevScrollHeightRef.current;
+      scrollContainer.scrollTop = diff;
+      prevScrollHeightRef.current = null;
+    }
+  }, [visibleCount]);
+
+  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    if (el.scrollTop <= 0 && hasMore) {
+      prevScrollHeightRef.current = el.scrollHeight;
+      setVisibleCount((c) => c + PAGE_SIZE);
+    }
+  }, [hasMore]);
 
   const handleSend = async () => {
     if (!isAuthenticated) { openLoginModal(); return; }
