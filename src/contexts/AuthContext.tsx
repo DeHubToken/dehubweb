@@ -34,6 +34,7 @@ import {
   type Web3AuthMeta,
 } from '@/lib/api/dehub';
 import { disconnectDmSocket, reconnectDmSocket } from '@/lib/api/dehub/dm-socket';
+import { clearEngagementCaches } from '@/lib/clear-engagement-caches';
 import {
   initWeb3Auth,
   disconnectWeb3Auth,
@@ -1303,6 +1304,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem('dehub_user');
     localStorage.removeItem('dehub_wallet');
     localStorage.removeItem('dehub_connection_source');
+    clearEngagementCaches();
 
     setWalletAddress(null);
     setUser(null);
