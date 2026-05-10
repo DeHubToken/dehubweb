@@ -342,7 +342,9 @@ serve(async (req) => {
             const username = possibleUsername.startsWith("@") ? possibleUsername.substring(1) : possibleUsername;
             console.log(`[SSR] Profile detected for: ${username}`);
 
-            const response = await fetch(`${DEHUB_API_BASE}/api/account_info/${username}`);
+            const response = await fetch(`${DEHUB_API_BASE}/api/account_info/${username}`, {
+                signal: AbortSignal.timeout(7000),
+            });
             const userData = await response.json();
             const user: DeHubUser = userData.result || userData;
 
@@ -372,7 +374,7 @@ serve(async (req) => {
                         sameAs: profileUrl,
                     },
                 });
-                return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
+                return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=7200" } });
             }
         }
 
@@ -413,7 +415,7 @@ serve(async (req) => {
                         ...(hasRealImage && { image: ogImage }),
                     },
                 });
-                return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
+                return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=7200" } });
             }
         }
 
@@ -421,7 +423,9 @@ serve(async (req) => {
         if (cleanPath.includes("/post/")) {
             const postId = cleanPath.split("/post/")[1].split("/")[0];
 
-            const response = await fetch(`${DEHUB_API_BASE}/api/nft_info/${postId}`);
+            const response = await fetch(`${DEHUB_API_BASE}/api/nft_info/${postId}`, {
+                signal: AbortSignal.timeout(7000),
+            });
             const nftData = await response.json();
             const nft: DeHubNFT = nftData.result || nftData;
 
@@ -491,7 +495,7 @@ serve(async (req) => {
                         ...(postImage && { image: postImage }),
                     },
                 });
-                return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" } });
+                return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=7200" } });
             }
         }
 
