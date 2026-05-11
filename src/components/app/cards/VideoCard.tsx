@@ -134,10 +134,12 @@ function MobileCreatorInfo({
   const [avatarError, setAvatarError] = useState(false);
 
   // Format numbers with abbreviations (1K, 1M, etc.) - matches thumbnail format
-  const formatCompact = (num: number): string => {
-    if (num >= 1000000) return `${Math.floor(num / 1000000)}M`;
-    if (num >= 1000) return `${Math.floor(num / 1000)}K`;
-    return String(num);
+  const formatCompact = (num: number | null | undefined): string => {
+    const n = Number(num);
+    if (!Number.isFinite(n) || n <= 0) return '0';
+    if (n >= 1000000) return `${Math.floor(n / 1000000)}M`;
+    if (n >= 1000) return `${Math.floor(n / 1000)}K`;
+    return String(Math.floor(n));
   };
 
   // Calculate total bounty pool
