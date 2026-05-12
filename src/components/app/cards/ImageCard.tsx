@@ -688,22 +688,9 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           </SwipeableCarousel>
         )}
 
-        {/* Content Type Badges - PPV/Bounty/Locked */}
+        {/* Content Type Badges - Bounty only (PPV/Lock are shown via centered overlay) */}
         {hasBadges && (
           <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5">
-            {/* PPV Badge */}
-            {isPPV && post.ppvPrice && (
-              <button 
-                className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
-                onClick={(e) => { e.stopPropagation(); setShowPPVDrawer(true); }}
-              >
-                <Ticket className="w-3 h-3 text-white" />
-                <span className="text-white text-xs font-medium">
-                  {formatCompact(Number(post.ppvPrice))} {post.ppvCurrency || 'USDC'}
-                </span>
-              </button>
-            )}
-            
             {/* Bounty Badge */}
             {isW2E && (
               <button 
@@ -715,21 +702,6 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                   {post.bountyAmount && post.bountyAmount > 0 
                     ? `${formatCompact(post.bountyAmount)} ${post.bountyCurrency || 'DHB'}` 
                     : 'Bounty'}
-                </span>
-              </button>
-            )}
-            
-            {/* Locked/Gated Badge */}
-            {isLocked && (
-              <button 
-                className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
-                onClick={(e) => { e.stopPropagation(); setShowLockedDrawer(true); }}
-              >
-                <Lock className="w-3 h-3 text-white" />
-                <span className="text-white text-xs font-medium">
-                  {post.lockedPrice && post.lockedPrice > 0 
-                    ? `${formatCompact(post.lockedPrice)} ${post.lockedCurrency || 'DHB'}` 
-                    : ''}
                 </span>
               </button>
             )}
