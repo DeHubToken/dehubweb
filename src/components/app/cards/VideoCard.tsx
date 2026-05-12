@@ -1432,25 +1432,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </div>
         )}
         
-        {/* Content Type Badges - PPV/Bounty/Locked - show all that apply - hide in immersive mode */}
-        {!isImmersive && (video.isLocked && !canBypassGating) && (
-          <div className="absolute top-2 left-2 z-10 flex items-center gap-1.5">
-            {/* Locked/Gated Badge */}
-            {video.isLocked && (
-              <button 
-                className="flex items-center gap-1 bg-black/40 backdrop-blur-[24px] saturate-[180%] px-2 py-1 rounded-lg border border-white/10 hover:bg-black/60 transition-colors"
-                onClick={(e) => { e.stopPropagation(); setShowLockedDrawer(true); }}
-              >
-                <Lock className="w-3 h-3 text-white" />
-                <span className="text-white text-xs font-medium">
-                  {video.lockedPrice && video.lockedPrice > 0 
-                    ? `${formatCompact(video.lockedPrice)} ${video.lockedCurrency || 'DHB'}` 
-                    : ''}
-                </span>
-              </button>
-            )}
-          </div>
-        )}
+        {/* Top-left lock badge removed — centered Holdings Required overlay covers this */}
         
         {/* Video controls - hidden when PPV locked */}
         {!isContentGated && <>

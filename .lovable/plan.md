@@ -1,38 +1,33 @@
-# Fix "NaN DHB" on @aaron's post
+# Remove redundant top-left padlock badge when content is already gated
 
-## What's happening
+## Problem
 
-Aaron's latest post is a gated/locked post, so the card renders a "Must be holding X DHB" (or "Unlock for X DHB") label. The price comes from `post.lockedPrice` / `post.ppvPrice`, which is `undefined` or non-numeric on this post.
+When a post is gated (Holdings / PPV / combo), the media area shows a large center overlay (blurred media + big lock or ticket icon + "Unlock for…" / "Holdings Required" copy). At the same time, a small lock/ticket badge is rendered in the top-left corner of the same media — so the user sees two padlocks for the same state (see screenshot of @aaron's post).
 
-The label is built with:
-
-```ts
-formatCompact(Number(post.lockedPrice))
-```
-
-`Number(undefined)` is `NaN`, and the helper in `ImageCard.tsx` / `VideoCard.tsx` is:
-
-```ts
-const formatCompact = (num: number): string => {
-  if (num >= 1000000) return `${Math.floor(num / 1000000)}M`;
-  if (num >= 1000) return `${Math.floor(num / 1000)}K`;
-  return String(num);              // → "NaN"
-};
-```
-
-So the user sees `NaN DHB`.
+The bounty badge is independent (no center overlay), so it should stay.
 
 ## Fix
 
-Make `formatCompact` resilient and don't render the gating label at all when there's no real price.
+Hide the top-left badges whose icon is already shown in the center overlay, on every card type that has both.
 
-1. **`src/components/app/cards/ImageCard.tsx`** and **`src/components/app/cards/VideoCard.tsx`**
-   - Update `formatCompact` to coerce safely: if `num` is `null`/`undefined`/`NaN` or `<= 0`, return `'0'`.
-   - Wrap every `Unlock for …` / `Must be holding …` JSX so it only renders when the underlying price is a finite positive number. If price is missing, fall back to a generic label (e.g. "Locked post") or hide the price portion entirely so we never print "0 DHB" or "NaN DHB".
+### Files & exact spots
 
-2. No backend / data-shape changes — purely presentational guards in the two card components.
+1. **`src/components/app/cards/ImageCard.tsx`**, badge row at lines 691–735:
+   - Drop the PPV badge (`isPPV && post.ppvPrice`) — the center ticket overlay already covers this when `isPPV` is true.
+   - Drop the Lock badge (`isLocked`) — the center lock overlay already covers it.
+   - Keep the Bounty (`isW2E`) badge unchanged.
+   - Update `hasBadges` so the row only renders when bounty alone is set: `const hasBadges = isW2E;`.
+
+2. **`src/components/app/cards/VideoCard.tsx`**, badge row at lines 1435–1453 (over the media):
+   - This block only contains the Locked badge, and it's already gated by `video.isLocked && !canBypassGating` — exactly when the center overlay is shown. Remove the block entirely.
+   - Leave the header badge row at lines 200–248 (next to AI / menu buttons) alone — that's a different surface, not stacked on top of the media.
+
+3. No changes to `PostCard.tsx`, `ShortsViewer.tsx`, or `LiveStreamCard.tsx` — they don't render a corner lock over the gated overlay.
 
 ## Verification
 
-- Reload the home feed, locate Aaron's post, confirm the badge no longer shows "NaN DHB".
-- Quick visual pass on other gated posts (PPV + locked + bounty variants) to make sure formatting still looks right for real numeric values.
+- Reload home feed → Aaron's post should show only the centered "Holdings Required" overlay; no second lock chip in the top-left.
+- Check a PPV-only post → centered ticket overlay only.
+- Check a combo (PPV + Holdings) post → centered combo icons only.
+- Check a Bounty-only post → bounty badge still appears in the top-left.
+- Check a video card → no top-left lock chip on locked videos; header-row lock chip next to AI/menu still appears as before.
