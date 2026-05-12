@@ -15,6 +15,7 @@ import { useTotalUnreadCount } from '@/hooks/use-messages';
 const LEFT_NAV_ITEMS = [
   { icon: Home, label: 'Home', path: '/app' },
   { icon: MessageSquare, label: 'Messages', path: '/app/messages' },
+  { icon: Users, label: 'Communities', path: '/app/communities' },
 ];
 
 // Right side: AI link, Profile
@@ -25,7 +26,6 @@ const RIGHT_NAV_ITEMS = [
 const SCROLL_NAV_ITEMS = [
   { icon: User, label: 'Profile', path: '/app/profile', requiresAuth: true },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
-  { icon: Users, label: 'Communities', path: '/app/communities' },
   { icon: CalendarDays, label: 'Events', path: '/app/events' },
   { icon: Mic, label: 'Stages', path: '#stages', action: 'open-stages' },
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
