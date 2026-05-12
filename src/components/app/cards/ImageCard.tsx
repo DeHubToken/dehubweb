@@ -370,7 +370,8 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
   const isW2E = (post.isW2E || false) && !canBypassGating;
   const isLocked = (post.isLocked || false) && !canBypassGating;
   const isComboLocked = isPPV && isLocked;
-  const hasBadges = isPPV || isW2E || isLocked;
+  // PPV/Lock badges are redundant with the centered overlay, so only show bounty here
+  const hasBadges = isW2E;
 
 
   // Format numbers with abbreviations (1K, 1M, etc.)
