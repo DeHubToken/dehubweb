@@ -149,7 +149,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             const isProfileItem = item.label === 'Profile';
             const isNotificationsItem = item.label === 'Notifications';
             const isCommunitiesItem = item.label === 'Communities';
-            const isAfterMessages = item.label === 'Messages';
+            const isMessagesItem = item.label === 'Messages';
+            const isAssistantAnchor = item.label === 'Communities';
             const isStagesItem = item.action === 'open-stages';
 
             return (
