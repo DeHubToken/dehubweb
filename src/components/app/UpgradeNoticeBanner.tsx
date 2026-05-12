@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 
 const STORAGE_KEY = "upgrade-notice-dismissed-v3";
-const MESSAGE = "DeHub is undergoing a contract upgrade and new listings will be announced soon. You do not need to claim or connect anywhere - just wait for listings to resume trading.";
+const MESSAGE = "DeHub is under going a contract upgrade and will provide updates on new lisings soon";
 
 export function UpgradeNoticeBanner() {
   // Synchronous initial visibility — mount visible to avoid flash from
