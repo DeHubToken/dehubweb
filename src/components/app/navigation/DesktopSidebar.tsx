@@ -149,7 +149,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             const isProfileItem = item.label === 'Profile';
             const isNotificationsItem = item.label === 'Notifications';
             const isCommunitiesItem = item.label === 'Communities';
-            const isAfterMessages = item.label === 'Messages';
+            const isMessagesItem = item.label === 'Messages';
+            const isAssistantAnchor = item.label === 'Communities';
             const isStagesItem = item.action === 'open-stages';
 
             return (
@@ -165,10 +166,10 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   onClick={isStagesItem ? () => openStagesModal() : isProfileItem ? handleProfileClick : undefined}
                   avatarUrl={isProfileItem && isAuthenticated ? userAvatarUrl : undefined}
                   avatarFallback={isProfileItem && isAuthenticated ? displayName.charAt(0).toUpperCase() : undefined}
-                  notificationCount={isNotificationsItem ? totalNotifUnread : isCommunitiesItem ? communityActivityUnread : isAfterMessages ? dmUnread : undefined}
+                  notificationCount={isNotificationsItem ? totalNotifUnread : isCommunitiesItem ? communityActivityUnread : isMessagesItem ? dmUnread : undefined}
                   layoutId={isCollapsed ? 'sidebar-nav-collapsed' : 'sidebar-nav-expanded'}
                 />
-                {isAfterMessages && (
+                {isAssistantAnchor && (
                   <NavLink
                     to="/app/assistant"
                     className={cn(
