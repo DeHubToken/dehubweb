@@ -21,6 +21,7 @@ import screenshotSettings from "@/assets/guide/settings.png";
 import screenshotGovernance from "@/assets/guide/governance.png";
 import screenshotCommandCentre from "@/assets/guide/command-centre.png";
 import screenshotTv from "@/assets/guide/tv.png";
+import { SEOHead } from "@/components/SEOHead";
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
