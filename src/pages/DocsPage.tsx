@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
+import { SEOHead } from '@/components/SEOHead';
 
 const DOCS_BASE = 'https://dehubdocs.lovable.app/docs';
 
@@ -32,16 +33,23 @@ const DocsPage = () => {
   }, [location.pathname, navigate]);
 
   return (
-    <div className="fixed inset-0 z-50 bg-black">
-      <iframe
-        ref={iframeRef}
-        src={iframeSrc}
-        title="DeHub Documentation"
-        className="w-full h-full border-0"
-        allow="clipboard-write"
-        loading="eager"
+    <>
+      <SEOHead
+        title="DeHub Docs — Decentralized Social Media Documentation"
+        description="Official DeHub documentation: getting started, wallet, staking, governance, creator tools and API reference for the open source social platform."
+        url={`https://dehub.io${location.pathname}`}
       />
-    </div>
+      <div className="fixed inset-0 z-50 bg-black">
+        <iframe
+          ref={iframeRef}
+          src={iframeSrc}
+          title="DeHub Documentation"
+          className="w-full h-full border-0"
+          allow="clipboard-write"
+          loading="eager"
+        />
+      </div>
+    </>
   );
 };
 

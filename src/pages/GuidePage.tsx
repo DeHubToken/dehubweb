@@ -21,6 +21,7 @@ import screenshotSettings from "@/assets/guide/settings.png";
 import screenshotGovernance from "@/assets/guide/governance.png";
 import screenshotCommandCentre from "@/assets/guide/command-centre.png";
 import screenshotTv from "@/assets/guide/tv.png";
+import { SEOHead } from "@/components/SEOHead";
 
 /* ------------------------------------------------------------------ */
 /*  Data                                                               */
@@ -713,6 +714,12 @@ const GuidePage: React.FC = () => {
   const isSearching = tokens.length > 0;
 
   return (
+    <>
+      <SEOHead
+        title="DeHub Guide — Visual Walkthrough of the App"
+        description="A visual walkthrough of DeHub: feeds, messaging, wallet, staking, governance and more. See every screen and learn how the decentralized social platform works."
+        url="https://dehub.io/guide"
+      />
     <div className="min-h-screen bg-black text-white">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-black/80 backdrop-blur-xl border-b border-white/10">
@@ -853,6 +860,7 @@ const GuidePage: React.FC = () => {
         </main>
       </div>
     </div>
+    </>
   );
 };
 
