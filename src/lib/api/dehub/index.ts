@@ -23,3 +23,7 @@ export * from './leaderboard';
 export * from './blocks';
 export * from './push';
 export * from './payments';
+export * from './bookmarks';
+export * from './pins';
+export * from './polls';
+export * from './og-image';

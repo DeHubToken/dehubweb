@@ -292,3 +292,86 @@ export interface SearchLogParams {
   clicked?: boolean;
   clickedResultId?: string;
 }
+
+// ─── Bookmark Folders ────────────────────────────────────────────────
+
+export interface BookmarkFolder {
+  _id: string;
+  address: string;
+  name: string;
+  description?: string;
+  isDefault: boolean;
+  order: number;
+  itemCount?: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface BookmarkFolderItem {
+  _id: string;
+  folderId: string;
+  tokenId: number;
+  address: string;
+  createdAt: string;
+  post?: DeHubNFT;
+}
+
+// ─── Pins ─────────────────────────────────────────────────────────────
+
+export interface DeHubPin {
+  pinId: string;
+  tokenId: number;
+  address: string;
+  pinnedAt: string;
+  pinnedBy: string;
+  isPinned: boolean;
+  name?: string;
+  description?: string;
+  postType?: string;
+  isReposted?: boolean;
+  post?: DeHubNFT;
+}
+
+export interface PinUser {
+  user: {
+    address: string;
+    username?: string;
+    displayName?: string;
+    avatarImageUrl?: string;
+  };
+  pinnedAt: string;
+}
+
+// ─── Polls ────────────────────────────────────────────────────────────
+
+export interface PollOption {
+  index: number;
+  text: string;
+  voteCount: number;
+}
+
+export interface DeHubPoll {
+  _id: string;
+  tokenId: number;
+  address: string;
+  question: string;
+  options: PollOption[];
+  totalVotes: number;
+  isActive: boolean;
+  isExpired?: boolean;
+  expiresAt?: string;
+  isMultipleChoice: boolean;
+  userVote?: {
+    optionIndexes: number[];
+    votedAt: string;
+  } | null;
+  createdAt: string;
+}
+
+export interface PaginationMeta {
+  page: number;
+  limit: number;
+  totalCount: number;
+  totalPages: number;
+  hasMore: boolean;
+}
