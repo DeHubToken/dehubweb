@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { Pin, ShieldBan, ShieldCheck, MoreVertical, Loader2, RotateCcw, Languages, SmilePlus, Reply, CornerDownRight, X } from 'lucide-react';
+import { ShieldBan, ShieldCheck, MoreVertical, Loader2, RotateCcw, Languages, SmilePlus, Reply, CornerDownRight, X } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { buildAvatarCdnFallbackUrl } from '@/lib/media-url';
@@ -63,7 +63,6 @@ export interface Message {
   timestamp: Date;
   type: 'text' | 'image' | 'gif';
   imageUrl?: string;
-  isPinned?: boolean;
   reactions?: ReactionData;
   replyTo?: ReplyToData;
 }
@@ -73,8 +72,6 @@ interface ChatMessageProps {
   showActions?: boolean;
   moderators?: string[];
   currentUserAddress?: string;
-  onPin?: (messageId: string) => void;
-  onUnpin?: (messageId: string) => void;
   onBan?: (userId: string, userName: string) => void;
   onUnban?: (userId: string, userName: string) => void;
   onReact?: (messageId: string, emoji: string) => void;
@@ -168,8 +165,6 @@ export function ChatMessage({
   showActions,
   moderators,
   currentUserAddress,
-  onPin,
-  onUnpin,
   onBan,
   onUnban,
   onReact,
@@ -222,7 +217,7 @@ export function ChatMessage({
   const isClickable = !!message.userHandle;
 
   return (
-    <div id={`chat-msg-${message.id}`} className={`flex gap-3 py-2 px-4 hover:bg-zinc-800/30 transition-colors group ${message.isPinned ? 'bg-yellow-500/5 border-l-2 border-yellow-500/30' : ''}`}>
+    <div id={`chat-msg-${message.id}`} className="flex gap-3 py-2 px-4 hover:bg-zinc-800/30 transition-colors group">
       <button
         onClick={handleProfileClick}
         disabled={!isClickable}
@@ -268,13 +263,7 @@ export function ChatMessage({
             <StakingBadgeInline badgeBalance={message.badgeBalance} username={message.userHandle} />
           </span>
           <ModeratorBadge address={message.userId} moderators={moderators} />
-          {message.isPinned && (
-            <span className="flex items-center gap-1 text-yellow-500/70 text-xs">
-              <Pin className="w-3 h-3" />
-              Pinned
-            </span>
-          )}
-          
+
           {/* Action buttons - visible on hover */}
           <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5">
             {/* Reply button */}
@@ -341,23 +330,6 @@ export function ChatMessage({
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="min-w-[140px]">
-                  {message.isPinned ? (
-                    <DropdownMenuItem
-                      onClick={() => onUnpin?.(message.id)}
-                      className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
-                    >
-                      <Pin className="w-4 h-4" />
-                      Unpin
-                    </DropdownMenuItem>
-                  ) : (
-                    <DropdownMenuItem
-                      onClick={() => onPin?.(message.id)}
-                      className="text-zinc-300 rounded-lg cursor-pointer focus:bg-transparent focus:text-white gap-2"
-                    >
-                      <Pin className="w-4 h-4" />
-                      Pin Message
-                    </DropdownMenuItem>
-                  )}
                   <DropdownMenuItem
                     onClick={() => onBan?.(message.userId, message.userName)}
                     className="text-red-400 rounded-lg cursor-pointer focus:bg-transparent focus:text-red-300 gap-2"

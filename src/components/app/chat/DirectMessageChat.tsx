@@ -342,6 +342,22 @@ function MessagesSkeleton() {
   );
 }
 
+function useDmPin(conversationId: string) {
+  const storageKey = `dehub-dm-pin-${conversationId}`;
+  const [pinnedMessageId, setPinnedMessageId] = useState<string | null>(() => {
+    try { return localStorage.getItem(storageKey) || null; } catch { return null; }
+  });
+  const pinMessage = (messageId: string) => {
+    setPinnedMessageId(messageId);
+    try { localStorage.setItem(storageKey, messageId); } catch {}
+  };
+  const unpinMessage = () => {
+    setPinnedMessageId(null);
+    try { localStorage.removeItem(storageKey); } catch {}
+  };
+  return { pinnedMessageId, pinMessage, unpinMessage };
+}
+
 export function DirectMessageChat({ conversation, onBack }: DirectMessageChatProps) {
   const { user, walletAddress, openLoginModal } = useAuth();
   const queryClient = useQueryClient();
@@ -388,9 +404,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const [isFreeAccessGranted, setIsFreeAccessGranted] = useState(false);
   const [isFreeAccessProcessing, setIsFreeAccessProcessing] = useState(false);
   const [resolvedConversationId, setResolvedConversationId] = useState(conversation.id);
-  const [pinnedMessageId, setPinnedMessageId] = useState<string | null>(() => {
-    try { return localStorage.getItem(`dehub-dm-pin-${conversation.id}`) || null; } catch { return null; }
-  });
+  const { pinnedMessageId, pinMessage: handlePinMessage, unpinMessage: handleUnpinMessage } = useDmPin(conversation.id);
   const [initError, setInitError] = useState(false);
   const { messageFee: myMessageFee } = useDmSettings();
   const isInitialMount = useRef(true);
@@ -922,16 +936,6 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   };
 
   const isVirtualConv = resolvedConversationId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(resolvedConversationId);
-
-  const handlePinMessage = (messageId: string) => {
-    setPinnedMessageId(messageId);
-    try { localStorage.setItem(`dehub-dm-pin-${resolvedConversationId}`, messageId); } catch {}
-  };
-
-  const handleUnpinMessage = () => {
-    setPinnedMessageId(null);
-    try { localStorage.removeItem(`dehub-dm-pin-${resolvedConversationId}`); } catch {}
-  };
 
   return (
     <div className="h-full flex flex-col bg-zinc-900 rounded-2xl overflow-hidden relative">

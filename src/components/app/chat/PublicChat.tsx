@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
-import { ArrowLeft, Settings, MoreVertical, MessageCircle, Loader2, Users, Pin, ShieldBan, ShieldCheck, MessageSquarePlus, AlertCircle, RefreshCw, Search, X, Languages, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Settings, MoreVertical, MessageCircle, Loader2, Users, ShieldBan, ShieldCheck, MessageSquarePlus, AlertCircle, RefreshCw, Search, X, Languages, RotateCcw } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { ChatMessage, Message } from './ChatMessage';
@@ -9,7 +9,7 @@ import { ChatInput } from './ChatInput';
 import { CreateTopicRoomModal } from './CreateTopicRoomModal';
 import { RoomSettingsModal } from './RoomSettingsModal';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatRoomDetails, useLiveChatPresence, type SupabaseLiveChatMessage } from '@/hooks/use-livechat';
-import { getMediaUrl, pinLiveChatMessage, unpinLiveChatMessage, banLiveChatUser, unbanLiveChatUser, uploadChatImage, type LiveChatRoom } from '@/lib/api/dehub';
+import { getMediaUrl, banLiveChatUser, unbanLiveChatUser, uploadChatImage, type LiveChatRoom } from '@/lib/api/dehub';
 import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
@@ -44,7 +44,7 @@ function toLocalMessage(msg: SupabaseLiveChatMessage): Message {
     timestamp: new Date(msg.created_at),
     type: (msg.message_type as Message['type']) || 'text',
     imageUrl: msg.image_url ? getMediaUrl(msg.image_url) : (msg.message_type === 'gif' && msg.content ? getMediaUrl(msg.content) : undefined),
-    isPinned: msg.is_pinned || false,
+
     reactions: msg.reactions,
     replyTo: msg.reply_to ? {
       id: msg.reply_to.id,
@@ -154,9 +154,6 @@ export function PublicChat({ onBack }: PublicChatProps) {
     );
   }, [messages, buyAlerts, assistantReplies, searchQuery]);
 
-  // Find pinned message
-  const pinnedMessage = messages.find(m => m.isPinned);
-
   // Toggle search
   const handleToggleSearch = useCallback(() => {
     setIsSearchOpen(prev => {
@@ -214,33 +211,6 @@ export function PublicChat({ onBack }: PublicChatProps) {
       toast.error('Failed to send message');
     }
   };
-
-  const handlePinMessage = useCallback(async (messageId: string) => {
-    if (!selectedRoomId || !isAuthenticated) {
-      toast.error('Sign in to moderate');
-      return;
-    }
-    try {
-      await pinLiveChatMessage(selectedRoomId, messageId);
-      toast.success('Message pinned');
-      refetch();
-    } catch (err) {
-      console.error('[PublicChat] Pin failed:', err);
-      toast.error('Failed to pin message');
-    }
-  }, [selectedRoomId, isAuthenticated, refetch]);
-
-  const handleUnpinMessage = useCallback(async (messageId: string) => {
-    if (!selectedRoomId || !isAuthenticated) return;
-    try {
-      await unpinLiveChatMessage(selectedRoomId, messageId);
-      toast.success('Message unpinned');
-      refetch();
-    } catch (err) {
-      console.error('[PublicChat] Unpin failed:', err);
-      toast.error('Failed to unpin message');
-    }
-  }, [selectedRoomId, isAuthenticated, refetch]);
 
   const handleBanUser = useCallback(async (userId: string, userName: string) => {
     if (!selectedRoomId || !isAuthenticated) {
@@ -406,35 +376,6 @@ export function PublicChat({ onBack }: PublicChatProps) {
         </div>
       )}
 
-      {/* Pinned message banner — Telegram style */}
-      {pinnedMessage && (
-        <button
-          onClick={() => {
-            const el = document.getElementById(`chat-msg-${pinnedMessage.id}`);
-            if (el) {
-              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              el.classList.add('ring-2', 'ring-blue-500/60', 'bg-blue-500/10');
-              setTimeout(() => el.classList.remove('ring-2', 'ring-blue-500/60', 'bg-blue-500/10'), 2000);
-            }
-          }}
-          className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border-b border-blue-500/20 text-sm w-full text-left hover:bg-blue-500/15 transition-colors cursor-pointer"
-        >
-          <Pin className="w-3.5 h-3.5 text-blue-400 flex-shrink-0 fill-current" />
-          <div className="flex flex-col min-w-0 flex-1">
-            <span className="text-blue-400 text-[10px] font-semibold uppercase tracking-wide leading-none mb-0.5">Pinned Message</span>
-            <span className="text-blue-100/80 text-xs truncate">
-              {pinnedMessage.content}
-            </span>
-          </div>
-          {isModerator && (
-            <X
-              onClick={(e) => { e.stopPropagation(); handleUnpinMessage(pinnedMessage.id); }}
-              className="ml-2 w-4 h-4 text-blue-400/50 hover:text-blue-300 flex-shrink-0 transition-colors"
-            />
-          )}
-        </button>
-      )}
-      
       {/* Messages Area */}
       <SharedTranslationContext.Provider value={{ translateSignal, originalSignal, requestTranslate: () => setTranslateSignal(s => s + 1), requestOriginal: () => setOriginalSignal(s => s + 1) }}>
       <div className="relative flex-1">
@@ -511,8 +452,6 @@ export function PublicChat({ onBack }: PublicChatProps) {
                 showActions={isModerator}
                 moderators={roomDetails?.moderators}
                 currentUserAddress={walletAddress || undefined}
-                onPin={handlePinMessage}
-                onUnpin={handleUnpinMessage}
                 onBan={handleBanUser}
                 onUnban={handleUnbanUser}
                 onReact={addReaction}
