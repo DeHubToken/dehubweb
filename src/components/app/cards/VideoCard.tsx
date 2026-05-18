@@ -58,6 +58,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer';
+import { PollCard } from './PollCard';
 import type { VideoItem } from '@/types/feed.types';
 
 // Use lg breakpoint (1024px) to determine if we show drawer vs inline
@@ -1688,10 +1689,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         </div>
         {!hideActions && (
           <>
+            {parseInt(video.id, 10) > 0 && <PollCard tokenId={parseInt(video.id, 10)} />}
             <ActionBar
-              postId={video.id} 
-              className="p-0" 
-              isLiked={video.isLiked} 
+              postId={video.id}
+              tokenId={parseInt(video.id, 10) || undefined}
+              className="p-0"
+              isLiked={video.isLiked}
               isDisliked={video.isDisliked}
               onComment={() => {
                 setCommentsInitialTab(undefined);

@@ -13,7 +13,7 @@ import { useState, memo, useEffect, useCallback, useRef } from 'react';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, Loader2 } from 'lucide-react';
+import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, Loader2, BarChart2, Plus, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { CardHeader } from './CardHeader';
@@ -37,6 +37,8 @@ import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { useAuth } from '@/contexts/AuthContext';
 import { updateTokenVisibility, repostPost, followUser, isFollowing as checkIsFollowing, type TokenVisibility } from '@/lib/api/dehub';
 import { cacheTextPostForNavigation } from '@/lib/post-cache';
+import { useCreatePoll } from '@/hooks/use-polls';
+import { PollCard } from './PollCard';
 import {
   Drawer,
   DrawerContent,
@@ -76,6 +78,12 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
+  const [showPollCreator, setShowPollCreator] = useState(false);
+  const [pollQuestion, setPollQuestion] = useState('');
+  const [pollOptions, setPollOptions] = useState(['', '']);
+  const [pollMultiple, setPollMultiple] = useState(false);
+  const [pollExpiry, setPollExpiry] = useState('');
+  const createPollMutation = useCreatePoll();
   const { data: tipCount = 0 } = usePostTipCount(post.id);
   const [visibility, setVisibility] = useState<TokenVisibility>('public');
   const isTabletOrMobile = useIsTabletOrMobile();
@@ -307,6 +315,12 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
                 <>
                   <div className="border-t border-white/10 my-1" />
                   <button
+                    onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowPollCreator(true), 300); }}
+                    className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                  >
+                    <BarChart2 className="w-5 h-5" /> Create Poll
+                  </button>
+                  <button
                     onClick={openPostInfoPage}
                     className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                   >
@@ -386,9 +400,12 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           }}
         />
 
+        {parseInt(post.id, 10) > 0 && <PollCard tokenId={parseInt(post.id, 10)} />}
+
         <div className="pt-1">
           <ActionBar
             postId={post.id}
+            tokenId={parseInt(post.id, 10) || undefined}
             className="p-0"
             onComment={() => {
               setCommentsInitialTab(undefined);
@@ -421,6 +438,97 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           initialTab={commentsInitialTab}
         />
       </div>
+
+      {/* Poll Creator Drawer */}
+      <Drawer open={showPollCreator} onOpenChange={setShowPollCreator}>
+        <DrawerContent glass className="px-4 pb-8" data-no-navigate onClick={(e: React.MouseEvent) => e.stopPropagation()}>
+          <DrawerHeader className="pb-2">
+            <DrawerTitle className="text-white text-lg">Create Poll</DrawerTitle>
+          </DrawerHeader>
+          <div className="flex flex-col gap-3 mt-1">
+            <input
+              className="w-full bg-white/10 rounded-xl px-4 py-3 text-white placeholder-zinc-500 text-sm outline-none focus:ring-1 focus:ring-white/20"
+              placeholder="Ask a question…"
+              value={pollQuestion}
+              onChange={e => setPollQuestion(e.target.value)}
+              maxLength={200}
+            />
+            <div className="space-y-2">
+              {pollOptions.map((opt, i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <input
+                    className="flex-1 bg-white/10 rounded-xl px-4 py-2.5 text-white placeholder-zinc-500 text-sm outline-none focus:ring-1 focus:ring-white/20"
+                    placeholder={`Option ${i + 1}`}
+                    value={opt}
+                    onChange={e => {
+                      const next = [...pollOptions];
+                      next[i] = e.target.value;
+                      setPollOptions(next);
+                    }}
+                    maxLength={100}
+                  />
+                  {pollOptions.length > 2 && (
+                    <button
+                      onClick={() => setPollOptions(pollOptions.filter((_, j) => j !== i))}
+                      className="text-zinc-500 hover:text-white transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  )}
+                </div>
+              ))}
+              {pollOptions.length < 4 && (
+                <button
+                  onClick={() => setPollOptions([...pollOptions, ''])}
+                  className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white transition-colors px-1"
+                >
+                  <Plus className="w-4 h-4" /> Add option
+                </button>
+              )}
+            </div>
+            <label className="flex items-center gap-3 px-1 cursor-pointer">
+              <input
+                type="checkbox"
+                className="w-4 h-4 rounded accent-white"
+                checked={pollMultiple}
+                onChange={e => setPollMultiple(e.target.checked)}
+              />
+              <span className="text-sm text-zinc-300">Allow multiple choices</span>
+            </label>
+            <input
+              type="datetime-local"
+              className="w-full bg-white/10 rounded-xl px-4 py-2.5 text-zinc-300 text-sm outline-none focus:ring-1 focus:ring-white/20"
+              value={pollExpiry}
+              onChange={e => setPollExpiry(e.target.value)}
+            />
+            <button
+              disabled={!pollQuestion.trim() || pollOptions.filter(o => o.trim()).length < 2 || createPollMutation.isPending}
+              onClick={async () => {
+                const tokenIdNum = parseInt(post.id, 10);
+                if (!tokenIdNum) return;
+                try {
+                  await createPollMutation.mutateAsync({
+                    tokenId: tokenIdNum,
+                    question: pollQuestion.trim(),
+                    options: pollOptions.filter(o => o.trim()),
+                    isMultipleChoice: pollMultiple,
+                    expiresAt: pollExpiry || undefined,
+                  });
+                  setShowPollCreator(false);
+                  setPollQuestion('');
+                  setPollOptions(['', '']);
+                  setPollMultiple(false);
+                  setPollExpiry('');
+                  queryClient.invalidateQueries({ queryKey: ['polls', tokenIdNum] });
+                } catch {}
+              }}
+              className="w-full py-3 rounded-xl bg-white text-black font-semibold text-sm disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
+            >
+              {createPollMutation.isPending ? 'Creating…' : 'Create Poll'}
+            </button>
+          </div>
+        </DrawerContent>
+      </Drawer>
 
       {/* AI Chat */}
       <PostAIChat

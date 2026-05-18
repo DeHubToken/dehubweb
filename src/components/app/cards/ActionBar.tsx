@@ -15,7 +15,7 @@
 
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Repeat2, Quote, Link, Info, ImageDown } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Repeat2, Quote, Link, Info, ImageDown, Pin } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -23,6 +23,7 @@ import { motion } from 'framer-motion';
 import { voteOnPost } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
+import { useTogglePin } from '@/hooks/use-pins';
 import { getVoteCache, setVoteCache, patchFeedCaches } from '@/lib/vote-cache';
 import { isPostReposted, markReposted, unmarkReposted } from '@/lib/repost-cache';
 import { getCommentCountDelta } from '@/lib/comment-count-cache';
@@ -85,6 +86,8 @@ interface ActionBarProps {
   disabled?: boolean;
   /** Handler for share-as-image action (text posts only) */
   onShareAsImage?: () => Promise<void>;
+  /** Numeric token ID for pin functionality */
+  tokenId?: number;
 }
 
 /** Format count for display (e.g., 1500 -> 1.5K) */
@@ -121,6 +124,7 @@ export function ActionBar({
   onSeeEngagements,
   onShareAsImage,
   disabled: externalDisabled = false,
+  tokenId,
 }: ActionBarProps) {
   // Add localStorage delta to comment count for instant feedback
   const commentCountDelta = postId ? getCommentCountDelta(postId) : 0;
@@ -150,6 +154,8 @@ export function ActionBar({
   const [isVoting, setIsVoting] = useState(false);
   const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
   const [isSharingImage, setIsSharingImage] = useState(false);
+  const [isPinned, setIsPinned] = useState(false);
+  const togglePinMutation = useTogglePin();
   // Track when user voted locally so we don't let stale API refetches overwrite optimistic state
   const lastVoteTimeRef = useRef(cachedVote ? Date.now() : 0);
   const VOTE_GUARD_MS = 10000; // ignore prop syncs for 10s after a local vote
@@ -544,7 +550,7 @@ export function ActionBar({
 
         {/* Right side actions */}
         <div className="flex items-center gap-3">
-          <motion.button 
+          <motion.button
             onClick={toggleBookmark}
             className={cn(
               "transition-colors",
@@ -558,7 +564,24 @@ export function ActionBar({
           >
             <Bookmark className={cn("w-5 h-5", isBookmarked && "fill-current")} />
           </motion.button>
-          <button 
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!tokenId || togglePinMutation.isPending) return;
+              togglePinMutation.mutate(tokenId, {
+                onSuccess: (data) => setIsPinned(data.pinned),
+              });
+            }}
+            disabled={!tokenId || togglePinMutation.isPending}
+            aria-label={isPinned ? "Unpin post" : "Pin post"}
+            className={cn(
+              "transition-colors disabled:opacity-40",
+              isPinned ? "text-blue-400" : "text-zinc-400 hover:text-white",
+            )}
+          >
+            <Pin className={cn("w-5 h-5", isPinned && "fill-current")} />
+          </button>
+          <button
             onClick={handleInfoClick}
             className="text-zinc-400 hover:text-white transition-colors"
             aria-label="Post info"
