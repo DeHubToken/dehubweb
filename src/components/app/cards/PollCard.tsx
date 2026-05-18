@@ -17,8 +17,14 @@ export function PollCard({ tokenId }: PollCardProps) {
   const closePollMutation = useClosePoll();
 
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
-  // Track vote state locally for instant UI feedback (API may not return userVote/voteCount)
-  const [localVotedIndexes, setLocalVotedIndexes] = useState<number[] | null>(null);
+  // Persist vote across page refreshes via localStorage
+  const [localVotedIndexes, setLocalVotedIndexes] = useState<number[] | null>(() => {
+    try {
+      const stored = localStorage.getItem(`dehub-poll-vote-${tokenId}`);
+      if (stored) return JSON.parse(stored) as number[];
+    } catch {}
+    return null;
+  });
   const [localVoteCounts, setLocalVoteCounts] = useState<Record<number, number> | null>(null);
 
   if (isLoading || !poll) return null;
@@ -48,6 +54,7 @@ export function PollCard({ tokenId }: PollCardProps) {
     indexes.forEach(idx => { counts[idx] = (counts[idx] ?? 0) + 1; });
     setLocalVotedIndexes(indexes);
     setLocalVoteCounts(counts);
+    try { localStorage.setItem(`dehub-poll-vote-${tokenId}`, JSON.stringify(indexes)); } catch {}
   };
 
   const handleOptionClick = (idx: number) => {
@@ -59,7 +66,7 @@ export function PollCard({ tokenId }: PollCardProps) {
     } else {
       applyOptimisticVote([idx]);
       voteMutation.mutate({ tokenId, optionIndexes: [idx] }, {
-        onError: () => { setLocalVotedIndexes(null); setLocalVoteCounts(null); },
+        onError: () => { setLocalVotedIndexes(null); setLocalVoteCounts(null); try { localStorage.removeItem(`dehub-poll-vote-${tokenId}`); } catch {} },
       });
     }
   };
@@ -68,7 +75,7 @@ export function PollCard({ tokenId }: PollCardProps) {
     if (selectedIndexes.length === 0) return;
     applyOptimisticVote(selectedIndexes);
     voteMutation.mutate({ tokenId, optionIndexes: selectedIndexes }, {
-      onError: () => { setLocalVotedIndexes(null); setLocalVoteCounts(null); },
+      onError: () => { setLocalVotedIndexes(null); setLocalVoteCounts(null); try { localStorage.removeItem(`dehub-poll-vote-${tokenId}`); } catch {} },
     });
     setSelectedIndexes([]);
   };
@@ -76,6 +83,7 @@ export function PollCard({ tokenId }: PollCardProps) {
   const handleRemoveVote = () => {
     setLocalVotedIndexes(null);
     setLocalVoteCounts(null);
+    try { localStorage.removeItem(`dehub-poll-vote-${tokenId}`); } catch {}
     removeVoteMutation.mutate(tokenId);
   };
 
