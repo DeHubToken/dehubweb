@@ -79,13 +79,10 @@ function StableHeightContainer({ activeTab, children }: { activeTab: string; chi
   );
 }
 
-function PinnedPostSection({ profileAddress }: { profileAddress: string }) {
-  const { data } = useUserPins(profileAddress);
-  const pin = data?.items?.[0];
-  if (!pin || !pin.tokenId) return null;
-
-  const post = pin.post as any;
-  if (!post) return null;
+function PinnedPostItem({ pin }: { pin: any }) {
+  // API returns post fields flat on the pin item itself (not nested in pin.post)
+  const post: any = pin.post || pin;
+  if (!post?.tokenId) return null;
 
   const postType = post.postType || (post.videoUrl ? 'video' : post.imageUrls?.length ? 'image' : 'post');
   const creatorObj = post.creator || post.owner;
@@ -151,6 +148,20 @@ function PinnedPostSection({ profileAddress }: { profileAddress: string }) {
           },
         }} />
       )}
+    </div>
+  );
+}
+
+function PinnedPostSection({ profileAddress }: { profileAddress: string }) {
+  const { data } = useUserPins(profileAddress);
+  const pins = data?.items || [];
+  if (pins.length === 0) return null;
+
+  return (
+    <div className="space-y-2">
+      {pins.map((pin) => (
+        <PinnedPostItem key={pin.pinId} pin={pin} />
+      ))}
     </div>
   );
 }

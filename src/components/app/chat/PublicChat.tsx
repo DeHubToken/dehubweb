@@ -101,13 +101,15 @@ export function PublicChat({ onBack }: PublicChatProps) {
   const buyAlerts = useBuyAlerts();
   const { isHidden: buyBotHidden, hide: hideBuyBot } = useBuyBotHidden();
 
-  // Determine if current user is a moderator
+  // Determine if current user is a moderator.
+  // Fallback to selectedRoom.moderators when roomDetails hasn't loaded yet.
   const isModerator = useMemo(() => {
-    if (!walletAddress || !roomDetails?.moderators) return false;
-    return roomDetails.moderators.some(
+    if (!walletAddress) return false;
+    const mods = roomDetails?.moderators || selectedRoom?.moderators || [];
+    return mods.some(
       (mod: string) => mod.toLowerCase() === walletAddress.toLowerCase()
     );
-  }, [walletAddress, roomDetails]);
+  }, [walletAddress, roomDetails, selectedRoom]);
 
   // Convert API messages to local format
   const messages: Message[] = apiMessages.map(toLocalMessage);
@@ -404,30 +406,31 @@ export function PublicChat({ onBack }: PublicChatProps) {
         </div>
       )}
 
-      {/* Pinned message banner */}
+      {/* Pinned message banner — Telegram style */}
       {pinnedMessage && (
         <button
           onClick={() => {
             const el = document.getElementById(`chat-msg-${pinnedMessage.id}`);
             if (el) {
               el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-              el.classList.add('ring-2', 'ring-yellow-500/50');
-              setTimeout(() => el.classList.remove('ring-2', 'ring-yellow-500/50'), 2000);
+              el.classList.add('ring-2', 'ring-blue-500/60', 'bg-blue-500/10');
+              setTimeout(() => el.classList.remove('ring-2', 'ring-blue-500/60', 'bg-blue-500/10'), 2000);
             }
           }}
-          className="flex items-center gap-2 px-4 py-2 bg-yellow-500/10 border-b border-yellow-500/20 text-sm w-full text-left hover:bg-yellow-500/15 transition-colors cursor-pointer"
+          className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border-b border-blue-500/20 text-sm w-full text-left hover:bg-blue-500/15 transition-colors cursor-pointer"
         >
-          <Pin className="w-3.5 h-3.5 text-yellow-500 flex-shrink-0" />
-          <span className="text-yellow-200/80 font-medium text-xs truncate">
-            {pinnedMessage.userName}: {pinnedMessage.content}
-          </span>
-          {isModerator && (
-            <span
-              onClick={(e) => { e.stopPropagation(); handleUnpinMessage(pinnedMessage.id); }}
-              className="ml-auto text-yellow-500/50 hover:text-yellow-300 text-xs flex-shrink-0"
-            >
-              Unpin
+          <Pin className="w-3.5 h-3.5 text-blue-400 flex-shrink-0 fill-current" />
+          <div className="flex flex-col min-w-0 flex-1">
+            <span className="text-blue-400 text-[10px] font-semibold uppercase tracking-wide leading-none mb-0.5">Pinned Message</span>
+            <span className="text-blue-100/80 text-xs truncate">
+              {pinnedMessage.content}
             </span>
+          </div>
+          {isModerator && (
+            <X
+              onClick={(e) => { e.stopPropagation(); handleUnpinMessage(pinnedMessage.id); }}
+              className="ml-2 w-4 h-4 text-blue-400/50 hover:text-blue-300 flex-shrink-0 transition-colors"
+            />
           )}
         </button>
       )}
