@@ -14,7 +14,8 @@ import { hasCommunityLink, stripCommunityLinks } from '@/components/app/communit
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Info, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X } from 'lucide-react';
+import { Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Info, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus } from 'lucide-react';
+import { useCreatePoll } from '@/hooks/use-polls';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import useEmblaCarousel from 'embla-carousel-react';
@@ -351,6 +352,12 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
+  const [showPollCreator, setShowPollCreator] = useState(false);
+  const [pollQuestion, setPollQuestion] = useState('');
+  const [pollOptions, setPollOptions] = useState(['', '']);
+  const [pollMultiple, setPollMultiple] = useState(false);
+  const [pollExpiry, setPollExpiry] = useState('');
+  const createPollMutation = useCreatePoll();
   const { data: tipCount = 0 } = usePostTipCount(post.id);
   const isTabletOrMobile = useIsTabletOrMobile();
   const navigate = useNavigate();
@@ -557,6 +564,12 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                 {isOwnPost && (
                   <>
                     <div className="border-t border-white/10 my-1" />
+                    <button
+                      onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowPollCreator(true), 300); }}
+                      className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                    >
+                      <BarChart2 className="w-5 h-5" /> Create Poll
+                    </button>
                     <button
                       onClick={openPostInfoPage}
                       className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
@@ -958,6 +971,76 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         onOpenChange={setShowQuoteModal}
         quotedPost={postAsNFT as any}
       />
+
+      {/* Poll Creator Drawer */}
+      <Drawer open={showPollCreator} onOpenChange={setShowPollCreator}>
+        <DrawerContent glass className="px-4 pb-6">
+          <DrawerHeader className="pb-2">
+            <DrawerTitle className="text-white text-lg">Create Poll</DrawerTitle>
+          </DrawerHeader>
+          <div className="flex flex-col gap-3">
+            <input
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm placeholder-zinc-500 outline-none"
+              placeholder="Ask a question…"
+              value={pollQuestion}
+              onChange={e => setPollQuestion(e.target.value)}
+            />
+            {pollOptions.map((opt, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <input
+                  className="flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm placeholder-zinc-500 outline-none"
+                  placeholder={`Option ${i + 1}`}
+                  value={opt}
+                  onChange={e => { const next = [...pollOptions]; next[i] = e.target.value; setPollOptions(next); }}
+                />
+                {pollOptions.length > 2 && (
+                  <button onClick={() => setPollOptions(pollOptions.filter((_, j) => j !== i))} className="text-zinc-500 hover:text-white">
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+            ))}
+            {pollOptions.length < 4 && (
+              <button onClick={() => setPollOptions([...pollOptions, ''])} className="flex items-center gap-2 text-sm text-zinc-400 hover:text-white">
+                <Plus className="w-4 h-4" /> Add option
+              </button>
+            )}
+            <label className="flex items-center gap-2 text-sm text-zinc-300 cursor-pointer">
+              <input type="checkbox" checked={pollMultiple} onChange={e => setPollMultiple(e.target.checked)} className="accent-white" />
+              Allow multiple choices
+            </label>
+            <input
+              type="datetime-local"
+              className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-white text-sm outline-none"
+              value={pollExpiry}
+              onChange={e => setPollExpiry(e.target.value)}
+            />
+            <button
+              className="w-full py-2.5 rounded-xl bg-white text-black text-sm font-semibold disabled:opacity-50"
+              disabled={!pollQuestion.trim() || pollOptions.filter(o => o.trim()).length < 2 || createPollMutation.isPending}
+              onClick={async () => {
+                const tokenIdNum = parseInt(post.id, 10);
+                if (!tokenIdNum) return;
+                await createPollMutation.mutateAsync({
+                  tokenId: tokenIdNum,
+                  question: pollQuestion.trim(),
+                  options: pollOptions.filter(o => o.trim()),
+                  isMultipleChoice: pollMultiple,
+                  expiresAt: pollExpiry || undefined,
+                });
+                setShowPollCreator(false);
+                setPollQuestion('');
+                setPollOptions(['', '']);
+                setPollMultiple(false);
+                setPollExpiry('');
+                queryClient.invalidateQueries({ queryKey: ['polls', tokenIdNum] });
+              }}
+            >
+              {createPollMutation.isPending ? 'Creating…' : 'Create Poll'}
+            </button>
+          </div>
+        </DrawerContent>
+      </Drawer>
     </div>
   );
 });

@@ -38,6 +38,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { updateTokenVisibility, repostPost, followUser, isFollowing as checkIsFollowing, type TokenVisibility } from '@/lib/api/dehub';
 import { cacheTextPostForNavigation } from '@/lib/post-cache';
 import { useCreatePoll } from '@/hooks/use-polls';
+import { PollCard } from './PollCard';
 import {
   Drawer,
   DrawerContent,
@@ -398,6 +399,8 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
             onShowOriginal: handleShowOriginal,
           }}
         />
+
+        {parseInt(post.id, 10) > 0 && <PollCard tokenId={parseInt(post.id, 10)} />}
 
         <div className="pt-1">
           <ActionBar

@@ -26,6 +26,7 @@ import dehubCoinSmall from '@/assets/dehub-coin.png';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
+import { PollCard } from './PollCard';
 import { PostMetadata } from './PostMetadata';
 import { PPVDrawerContent } from './PPVDrawerContent';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
@@ -1688,6 +1689,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         </div>
         {!hideActions && (
           <>
+            {parseInt(video.id, 10) > 0 && <PollCard tokenId={parseInt(video.id, 10)} />}
             <ActionBar
               postId={video.id}
               tokenId={parseInt(video.id, 10) || undefined}

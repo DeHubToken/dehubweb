@@ -17,33 +17,66 @@ export function PollCard({ tokenId }: PollCardProps) {
   const closePollMutation = useClosePoll();
 
   const [selectedIndexes, setSelectedIndexes] = useState<number[]>([]);
+  // Track vote state locally for instant UI feedback (API may not return userVote/voteCount)
+  const [localVotedIndexes, setLocalVotedIndexes] = useState<number[] | null>(null);
+  const [localVoteCounts, setLocalVoteCounts] = useState<Record<number, number> | null>(null);
 
   if (isLoading || !poll) return null;
 
-  const hasVoted = !!poll.userVote;
-  const votedIndexes = poll.userVote?.optionIndexes ?? [];
+  const hasVoted = localVotedIndexes !== null || !!poll.userVote;
+  const votedIndexes = localVotedIndexes ?? poll.userVote?.optionIndexes ?? [];
+
+  // Merge local optimistic counts with server counts
+  const getCount = (index: number) => {
+    if (localVoteCounts !== null) return localVoteCounts[index] ?? 0;
+    return poll.options.find(o => o.index === index)?.voteCount ?? 0;
+  };
+  const totalVotes = localVoteCounts !== null
+    ? Object.values(localVoteCounts).reduce((a, b) => a + b, 0)
+    : poll.totalVotes;
+
+  const getBarWidth = (index: number) => {
+    if (totalVotes === 0) return 0;
+    return Math.round((getCount(index) / totalVotes) * 100);
+  };
+
   const isOwner = walletAddress && poll.address.toLowerCase() === walletAddress.toLowerCase();
 
+  const applyOptimisticVote = (indexes: number[]) => {
+    const counts: Record<number, number> = {};
+    poll.options.forEach(o => { counts[o.index] = o.voteCount ?? 0; });
+    indexes.forEach(idx => { counts[idx] = (counts[idx] ?? 0) + 1; });
+    setLocalVotedIndexes(indexes);
+    setLocalVoteCounts(counts);
+  };
+
   const handleOptionClick = (idx: number) => {
-    if (hasVoted || !poll.isActive) return;
+    if (hasVoted || !poll.isActive || voteMutation.isPending) return;
     if (poll.isMultipleChoice) {
       setSelectedIndexes(prev =>
         prev.includes(idx) ? prev.filter(i => i !== idx) : [...prev, idx]
       );
     } else {
-      voteMutation.mutate({ tokenId, optionIndexes: [idx] });
+      applyOptimisticVote([idx]);
+      voteMutation.mutate({ tokenId, optionIndexes: [idx] }, {
+        onError: () => { setLocalVotedIndexes(null); setLocalVoteCounts(null); },
+      });
     }
   };
 
   const handleMultipleChoiceVote = () => {
     if (selectedIndexes.length === 0) return;
-    voteMutation.mutate({ tokenId, optionIndexes: selectedIndexes });
+    applyOptimisticVote(selectedIndexes);
+    voteMutation.mutate({ tokenId, optionIndexes: selectedIndexes }, {
+      onError: () => { setLocalVotedIndexes(null); setLocalVoteCounts(null); },
+    });
     setSelectedIndexes([]);
   };
 
-  const getBarWidth = (voteCount: number) => {
-    if (poll.totalVotes === 0) return 0;
-    return Math.round((voteCount / poll.totalVotes) * 100);
+  const handleRemoveVote = () => {
+    setLocalVotedIndexes(null);
+    setLocalVoteCounts(null);
+    removeVoteMutation.mutate(tokenId);
   };
 
   return (
@@ -66,7 +99,7 @@ export function PollCard({ tokenId }: PollCardProps) {
 
       <div className="space-y-2">
         {poll.options.map(option => {
-          const pct = getBarWidth(option.voteCount);
+          const pct = getBarWidth(option.index);
           const isVoted = votedIndexes.includes(option.index);
           const isSelected = selectedIndexes.includes(option.index);
           const canClick = !hasVoted && poll.isActive && !voteMutation.isPending;
@@ -107,7 +140,6 @@ export function PollCard({ tokenId }: PollCardProps) {
                   <span className="text-xs text-zinc-400 shrink-0 ml-2">{pct}%</span>
                 )}
               </div>
-              {/* Background bar */}
               <div className="absolute inset-0 rounded-lg bg-white/10" />
               {hasVoted && (
                 <div
@@ -134,7 +166,7 @@ export function PollCard({ tokenId }: PollCardProps) {
       )}
 
       <div className="flex items-center justify-between text-xs text-zinc-500">
-        <span>{poll.totalVotes} {poll.totalVotes === 1 ? 'vote' : 'votes'}</span>
+        <span>{totalVotes} {totalVotes === 1 ? 'vote' : 'votes'}</span>
         <div className="flex items-center gap-3">
           {poll.expiresAt && (
             <span>
@@ -145,7 +177,7 @@ export function PollCard({ tokenId }: PollCardProps) {
           )}
           {hasVoted && poll.isActive && (
             <button
-              onClick={() => removeVoteMutation.mutate(tokenId)}
+              onClick={handleRemoveVote}
               disabled={removeVoteMutation.isPending}
               className="flex items-center gap-1 text-zinc-400 hover:text-white transition-colors disabled:opacity-50"
             >
