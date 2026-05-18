@@ -29,6 +29,13 @@ import dehubCoin from '@/assets/dehub-coin.png';
 
 import { useProfilePage } from '@/hooks/use-profile-page';
 import { useProfileFollow } from '@/hooks/use-profile-follow';
+import { useUserPins } from '@/hooks/use-pins';
+import { Pin } from 'lucide-react';
+import { PostCard } from '@/components/app/cards/PostCard';
+import { ImageCard } from '@/components/app/cards/ImageCard';
+import { VideoCard } from '@/components/app/cards/VideoCard';
+import { formatTimeAgo, formatViews } from '@/lib/feed-utils';
+import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl } from '@/lib/media-url';
 import { ProfileHeader } from '@/components/app/profile/ProfileHeader';
 import { ProfileTabContent } from '@/components/app/profile/ProfileTabContent';
 import { ProfileSkeleton } from '@/components/app/profile/ProfileSkeleton';
@@ -68,6 +75,82 @@ function StableHeightContainer({ activeTab, children }: { activeTab: string; chi
   return (
     <div ref={ref} style={{ minHeight: minH > 0 ? `${minH}px` : undefined }}>
       {children}
+    </div>
+  );
+}
+
+function PinnedPostSection({ profileAddress }: { profileAddress: string }) {
+  const { data } = useUserPins(profileAddress);
+  const pin = data?.items?.[0];
+  if (!pin || !pin.tokenId) return null;
+
+  const post = pin.post as any;
+  if (!post) return null;
+
+  const postType = post.postType || (post.videoUrl ? 'video' : post.imageUrls?.length ? 'image' : 'post');
+  const creatorObj = post.creator || post.owner;
+  const rawAvatarPath = extractAvatarPath(post) || extractAvatarPath(creatorObj);
+  const resolvedAddress = post.minter || creatorObj?.id || creatorObj?.address;
+  const avatar = rawAvatarPath && resolvedAddress ? buildAvatarUrl(resolvedAddress, rawAvatarPath) || '/placeholder.svg' : '/placeholder.svg';
+  const rawTimestamp = post.createdAt || post.created_at;
+
+  return (
+    <div className="rounded-xl bg-zinc-900 border border-white/[0.08] overflow-hidden">
+      <div className="flex items-center gap-1.5 px-3 pt-2.5 pb-1">
+        <Pin className="w-3.5 h-3.5 text-zinc-400 fill-current" />
+        <span className="text-xs text-zinc-400 font-medium">Pinned post</span>
+      </div>
+      {(postType === 'video' || postType === 'audio' || postType === 'feed-audio') ? (
+        <VideoCard video={{
+          id: String(post.tokenId), type: 'video',
+          thumbnail: buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg',
+          videoUrl: buildVideoUrl(post.tokenId),
+          title: post.title || post.name || '',
+          channel: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',
+          channelAvatar: avatar, verified: false,
+          views: formatViews(post.views || 0).replace(' views', ''),
+          uploadedAgo: formatTimeAgo(rawTimestamp),
+          duration: '', durationSeconds: 0,
+          likeCount: post.totalVotes?.for || 0, dislikeCount: post.totalVotes?.against || 0,
+          commentCount: post.commentCount || 0, repostCount: (post.totalReposts || 0) + (post.quotes || 0),
+          isOwner: false, isUnlocked: false,
+          creatorId: resolvedAddress,
+          creatorUsername: post.minterUsername || creatorObj?.username,
+        }} />
+      ) : postType === 'image' || postType === 'feed-images' ? (
+        <ImageCard post={{
+          id: String(post.tokenId), type: 'image',
+          username: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',
+          verified: false, avatar,
+          image: buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg',
+          imageUrls: buildFeedImageUrls(post.imageUrls) || [buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg'],
+          caption: post.description || '', likes: post.totalVotes?.for || 0,
+          comments: post.commentCount || 0, views: formatViews(post.views || 0).replace(' views', ''),
+          timeAgo: formatTimeAgo(rawTimestamp),
+          creatorId: resolvedAddress,
+          creatorUsername: post.minterUsername || creatorObj?.username,
+          isOwner: false, isUnlocked: false,
+          repostCount: (post.totalReposts || 0) + (post.quotes || 0),
+        }} />
+      ) : (
+        <PostCard post={{
+          id: String(post.tokenId), type: 'post',
+          createdAt: rawTimestamp || '',
+          views: formatViews(post.views || 0).replace(' views', ''),
+          author: {
+            id: resolvedAddress,
+            name: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',
+            handle: post.minterUsername || creatorObj?.username || resolvedAddress?.slice(0, 8) || 'anon',
+            avatarSeed: avatar, verified: false,
+          },
+          content: post.description || post.name || '',
+          stats: {
+            comments: post.commentCount || 0,
+            reposts: (post.totalReposts || 0) + (post.quotes || 0),
+            likes: post.totalVotes?.for || 0,
+          },
+        }} />
+      )}
     </div>
   );
 }
@@ -371,6 +454,9 @@ export default function ProfilePage() {
           isBlocked={data.isBlocked}
           isFetchingProfile={data.isFetchingProfile}
         />
+
+        {/* Pinned Post — shows above tabs (X-style) */}
+        <PinnedPostSection profileAddress={data.apiProfile?.walletAddress || ''} />
 
         {/* Profile Tabs Bento */}
         <div className="bg-zinc-900 rounded-xl relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>

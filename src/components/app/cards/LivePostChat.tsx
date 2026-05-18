@@ -7,7 +7,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
-import { MessageSquare, Send, Loader2, Users, Mic, Languages, RotateCcw } from 'lucide-react';
+import { MessageSquare, Send, Loader2, Users, Mic, Languages, RotateCcw, Pin, X } from 'lucide-react';
 import { Textarea } from '@/components/ui/textarea';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
@@ -18,10 +18,12 @@ import { useLiveChatMessages, useLiveChatPresence } from '@/hooks/use-livechat';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { getMediaUrl, getAuthToken } from '@/lib/api/dehub';
+import { pinLiveChatMessage, unpinLiveChatMessage } from '@/lib/api/dehub/livechat';
 import { VoiceRecorder } from '@/components/app/chat/VoiceRecorder';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
+import type { SupabaseLiveChatMessage } from '@/hooks/use-livechat';
 
 /** Avatar with cascading fallback: primary → CDN → initials */
 function LiveChatAvatar({ src, address, name }: { src?: string | null; address?: string; name: string }) {
@@ -92,22 +94,39 @@ function TranslatableChatMsg({ content }: { content: string }) {
 interface LivePostChatProps {
   streamId: string;
   isOffline?: boolean;
+  /** Whether the current user is the stream host (can pin messages) */
+  isHost?: boolean;
 }
 
-export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps) {
+export function LivePostChat({ streamId, isOffline = false, isHost = false }: LivePostChatProps) {
   const [newMessage, setNewMessage] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const messageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const { isAuthenticated, walletAddress } = useAuth();
+
+  // Pinned message state — prefer server-side is_pinned, fallback to local
+  const [pinnedMessageId, setPinnedMessageId] = useState<string | null>(null);
+  const [isPinning, setIsPinning] = useState(false);
+  const [contextMenuMsg, setContextMenuMsg] = useState<SupabaseLiveChatMessage | null>(null);
+  const [contextMenuPos, setContextMenuPos] = useState({ x: 0, y: 0 });
 
   const mention = useMention({
     inputRef: textareaRef,
     onMentionInsert: (_user, newText) => setNewMessage(newText),
   });
 
-  // Use stream ID as the room ID for live chat
   const { messages, isLoading, isSending, send } = useLiveChatMessages(streamId);
   const { onlineCount } = useLiveChatPresence(streamId);
+
+  // Sync pinned message from server data
+  useEffect(() => {
+    const serverPinned = messages.find(m => m.is_pinned);
+    if (serverPinned) setPinnedMessageId(serverPinned.id);
+  }, [messages]);
+
+  const pinnedMessage = messages.find(m => m.id === pinnedMessageId) ?? null;
 
   // Auto-scroll on new messages
   useEffect(() => {
@@ -119,6 +138,56 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
       });
     }
   }, [messages.length]);
+
+  // Close context menu on outside click
+  useEffect(() => {
+    if (!contextMenuMsg) return;
+    const close = () => setContextMenuMsg(null);
+    document.addEventListener('click', close);
+    return () => document.removeEventListener('click', close);
+  }, [contextMenuMsg]);
+
+  const scrollToMessage = useCallback((messageId: string) => {
+    const el = messageRefs.current.get(messageId);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('bg-white/10');
+      setTimeout(() => el.classList.remove('bg-white/10'), 1200);
+    }
+  }, []);
+
+  const handlePinMessage = useCallback(async (msg: SupabaseLiveChatMessage) => {
+    setContextMenuMsg(null);
+    setIsPinning(true);
+    try {
+      await pinLiveChatMessage(streamId, msg.id);
+      setPinnedMessageId(msg.id);
+    } catch {
+      toast.error('Failed to pin message');
+    } finally {
+      setIsPinning(false);
+    }
+  }, [streamId]);
+
+  const handleUnpinMessage = useCallback(async () => {
+    if (!pinnedMessageId) return;
+    setIsPinning(true);
+    try {
+      await unpinLiveChatMessage(streamId, pinnedMessageId);
+      setPinnedMessageId(null);
+    } catch {
+      toast.error('Failed to unpin message');
+    } finally {
+      setIsPinning(false);
+    }
+  }, [streamId, pinnedMessageId]);
+
+  const handleMessageContextMenu = useCallback((e: React.MouseEvent, msg: SupabaseLiveChatMessage) => {
+    if (!isHost) return;
+    e.preventDefault();
+    setContextMenuPos({ x: e.clientX, y: e.clientY });
+    setContextMenuMsg(msg);
+  }, [isHost]);
 
   const handleVoiceRecordingComplete = useCallback(async (blob: Blob, _duration: number) => {
     if (!isAuthenticated) {
@@ -200,8 +269,33 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
         </div>
       </div>
 
+      {/* Pinned message banner (Telegram style) */}
+      {pinnedMessage && (
+        <button
+          onClick={() => scrollToMessage(pinnedMessage.id)}
+          className="w-full flex items-center gap-2 mb-2 px-3 py-2 rounded-lg bg-white/[0.06] border-l-2 border-blue-400 text-left hover:bg-white/10 transition-colors group"
+        >
+          <Pin className="w-3.5 h-3.5 text-blue-400 shrink-0 fill-current" />
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] text-blue-400 font-medium leading-none mb-0.5">Pinned Message</p>
+            <p className="text-xs text-zinc-300 truncate">
+              {pinnedMessage.content || (pinnedMessage.message_type === 'voice' ? '🎤 Voice message' : '📎 Media')}
+            </p>
+          </div>
+          {isHost && (
+            <button
+              onClick={(e) => { e.stopPropagation(); handleUnpinMessage(); }}
+              disabled={isPinning}
+              className="shrink-0 text-zinc-500 hover:text-white transition-colors opacity-0 group-hover:opacity-100"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </button>
+      )}
+
       {/* Messages */}
-      <div className="h-64 overflow-y-auto space-y-1 mb-3 scrollbar-hide">
+      <div ref={messagesContainerRef} className="h-64 overflow-y-auto space-y-1 mb-3 scrollbar-hide">
         {isLoading ? (
           <div className="flex items-center justify-center h-full">
             <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />
@@ -219,9 +313,15 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
               ? buildAvatarUrl(msg.sender_address, msg.sender_avatar_url)
               : undefined;
             const displayName = msg.sender_display_name || msg.sender_username || msg.sender_address.slice(0, 8);
+            const isPinned = msg.id === pinnedMessageId;
 
             return (
-              <div key={msg.id} className="group py-1.5 px-1">
+              <div
+                key={msg.id}
+                ref={(el) => { if (el) messageRefs.current.set(msg.id, el); else messageRefs.current.delete(msg.id); }}
+                onContextMenu={(e) => handleMessageContextMenu(e, msg)}
+                className={`group py-1.5 px-1 rounded-lg transition-colors duration-700 ${isPinned ? 'bg-blue-400/5 border-l-2 border-blue-400/50 pl-2' : ''}`}
+              >
                 <div className="flex items-start gap-2">
                   <LiveChatAvatar src={avatarUrl} address={msg.sender_address} name={displayName} />
                   <div className="flex-1 min-w-0">
@@ -232,6 +332,7 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
                         </span>
                         <LiveChatBadge badgeBalance={msg.sender_badge_balance} username={msg.sender_username} />
                       </span>
+                      {isPinned && <Pin className="w-2.5 h-2.5 text-blue-400 fill-current shrink-0" />}
                     </div>
                     {msg.message_type === 'voice' && msg.image_url ? (
                       <div className="mt-1 flex items-center gap-2 bg-zinc-800 rounded-lg px-3 py-2 max-w-[200px]">
@@ -251,6 +352,17 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
                       {format(new Date(msg.created_at), 'HH:mm')}
                     </span>
                   </div>
+                  {/* Pin button on hover (host only) */}
+                  {isHost && (
+                    <button
+                      onClick={() => isPinned ? handleUnpinMessage() : handlePinMessage(msg)}
+                      disabled={isPinning}
+                      className="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity text-zinc-500 hover:text-blue-400 mt-0.5"
+                      title={isPinned ? 'Unpin' : 'Pin message'}
+                    >
+                      <Pin className={`w-3.5 h-3.5 ${isPinned ? 'fill-current text-blue-400' : ''}`} />
+                    </button>
+                  )}
                 </div>
               </div>
             );
@@ -258,6 +370,24 @@ export function LivePostChat({ streamId, isOffline = false }: LivePostChatProps)
         )}
         <div ref={bottomRef} />
       </div>
+
+      {/* Right-click context menu for host */}
+      {contextMenuMsg && isHost && (
+        <div
+          className="fixed z-50 bg-zinc-800 border border-white/10 rounded-xl shadow-2xl py-1 min-w-[140px]"
+          style={{ top: contextMenuPos.y, left: contextMenuPos.x }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <button
+            onClick={() => contextMenuMsg.id === pinnedMessageId ? handleUnpinMessage() : handlePinMessage(contextMenuMsg)}
+            disabled={isPinning}
+            className="flex items-center gap-2 w-full px-3 py-2 text-sm text-white hover:bg-white/10 transition-colors"
+          >
+            <Pin className="w-3.5 h-3.5" />
+            {contextMenuMsg.id === pinnedMessageId ? 'Unpin message' : 'Pin message'}
+          </button>
+        </div>
+      )}
 
       {/* Input */}
       <div className="pt-2">

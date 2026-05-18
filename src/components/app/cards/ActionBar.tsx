@@ -88,6 +88,8 @@ interface ActionBarProps {
   onShareAsImage?: () => Promise<void>;
   /** Numeric token ID for pin functionality */
   tokenId?: number;
+  /** Show pin button only for own posts */
+  isOwnPost?: boolean;
 }
 
 /** Format count for display (e.g., 1500 -> 1.5K) */
@@ -125,6 +127,7 @@ export function ActionBar({
   onShareAsImage,
   disabled: externalDisabled = false,
   tokenId,
+  isOwnPost = false,
 }: ActionBarProps) {
   // Add localStorage delta to comment count for instant feedback
   const commentCountDelta = postId ? getCommentCountDelta(postId) : 0;
@@ -564,23 +567,25 @@ export function ActionBar({
           >
             <Bookmark className={cn("w-5 h-5", isBookmarked && "fill-current")} />
           </motion.button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              if (!tokenId || togglePinMutation.isPending) return;
-              togglePinMutation.mutate(tokenId, {
-                onSuccess: (data) => setIsPinned(data.pinned),
-              });
-            }}
-            disabled={!tokenId || togglePinMutation.isPending}
-            aria-label={isPinned ? "Unpin post" : "Pin post"}
-            className={cn(
-              "transition-colors disabled:opacity-40",
-              isPinned ? "text-blue-400" : "text-zinc-400 hover:text-white",
-            )}
-          >
-            <Pin className={cn("w-5 h-5", isPinned && "fill-current")} />
-          </button>
+          {isOwnPost && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!tokenId || togglePinMutation.isPending) return;
+                togglePinMutation.mutate(tokenId, {
+                  onSuccess: (data) => setIsPinned(data.pinned),
+                });
+              }}
+              disabled={!tokenId || togglePinMutation.isPending}
+              aria-label={isPinned ? "Unpin post" : "Pin post"}
+              className={cn(
+                "transition-colors disabled:opacity-40",
+                isPinned ? "text-blue-400" : "text-zinc-400 hover:text-white",
+              )}
+            >
+              <Pin className={cn("w-5 h-5", isPinned && "fill-current")} />
+            </button>
+          )}
           <button
             onClick={handleInfoClick}
             className="text-zinc-400 hover:text-white transition-colors"

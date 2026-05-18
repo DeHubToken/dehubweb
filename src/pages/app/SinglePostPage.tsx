@@ -982,9 +982,16 @@ export default function SinglePostPage() {
             {renderContent()}
           </div>
           {id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
+          {isLivePost && id && post && (
+            <LivePostChat
+              streamId={id}
+              isOffline={!('isLive' in post ? (post as any).isLive : true)}
+              isHost={!!(walletAddress && post.minter?.toLowerCase() === walletAddress.toLowerCase())}
+            />
+          )}
           {isImagePost && id && <RelatedImagesFeed currentPostId={id} />}
           {isAudioPost && id && <RelatedVideosFeed currentVideoId={id} />}
-          {!isImagePost && !isVideoPost && !isAudioPost && id && <RelatedPostsFeed currentPostId={id} />}
+          {!isImagePost && !isVideoPost && !isAudioPost && !isLivePost && id && <RelatedPostsFeed currentPostId={id} />}
         </div>
       </div>
     </>

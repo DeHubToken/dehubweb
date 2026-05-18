@@ -1693,6 +1693,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             <ActionBar
               postId={video.id}
               tokenId={parseInt(video.id, 10) || undefined}
+              isOwnPost={!!isOwnPost}
               className="p-0"
               isLiked={video.isLiked}
               isDisliked={video.isDisliked}

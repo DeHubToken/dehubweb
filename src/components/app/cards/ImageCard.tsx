@@ -750,9 +750,11 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           }}
         />
         
-        <ActionBar 
-          postId={post.id} 
-          className="p-0" 
+        <ActionBar
+          postId={post.id}
+          tokenId={parseInt(post.id, 10) || undefined}
+          isOwnPost={!!isOwnPost}
+          className="p-0"
           onComment={() => {
             setCommentsInitialTab(undefined);
             setShowComments(prev => !prev);

@@ -406,6 +406,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           <ActionBar
             postId={post.id}
             tokenId={parseInt(post.id, 10) || undefined}
+            isOwnPost={!!isOwnPost}
             className="p-0"
             onComment={() => {
               setCommentsInitialTab(undefined);
