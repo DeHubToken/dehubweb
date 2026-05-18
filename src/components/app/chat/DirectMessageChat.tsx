@@ -7,7 +7,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw } from 'lucide-react';
+import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw, Pin } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -127,11 +127,13 @@ function MessageBubble({
   isOwnMessage,
   highlightText,
   confirmedTxHashes,
+  onPin,
 }: {
   message: DmMessage;
   isOwnMessage: boolean;
   highlightText?: string;
   confirmedTxHashes: React.MutableRefObject<Set<string>>;
+  onPin?: (messageId: string) => void;
 }) {
   const avatarUrl = buildAvatarUrl(message.sender?.address || '', message.sender?.avatarImageUrl);
   const displayName = message.sender?.displayName || message.sender?.username ||
@@ -152,7 +154,20 @@ function MessageBubble({
   } = useTranslation(textContent);
 
   return (
-    <div className={`flex gap-3 py-2 ${isOwnMessage ? 'flex-row-reverse' : ''}`}>
+    <div
+      id={`dm-msg-${message._id}`}
+      className={`flex gap-3 py-2 ${isOwnMessage ? 'flex-row-reverse' : ''} group relative rounded-lg transition-colors`}
+    >
+      {onPin && !message.isDeleted && message.msgType !== 'tip' && (
+        <button
+          type="button"
+          onClick={() => onPin(message._id)}
+          className={`absolute top-3 ${isOwnMessage ? 'left-1' : 'right-1'} p-1.5 rounded-full bg-zinc-800/90 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-all opacity-0 group-hover:opacity-100 z-10`}
+          title="Pin message"
+        >
+          <Pin className="w-3 h-3" />
+        </button>
+      )}
       {!isOwnMessage && (
         <Avatar className="w-8 h-8 flex-shrink-0">
           {avatarUrl && <AvatarImage src={avatarUrl} />}
@@ -373,6 +388,9 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const [isFreeAccessGranted, setIsFreeAccessGranted] = useState(false);
   const [isFreeAccessProcessing, setIsFreeAccessProcessing] = useState(false);
   const [resolvedConversationId, setResolvedConversationId] = useState(conversation.id);
+  const [pinnedMessageId, setPinnedMessageId] = useState<string | null>(() => {
+    try { return localStorage.getItem(`dehub-dm-pin-${conversation.id}`) || null; } catch { return null; }
+  });
   const [initError, setInitError] = useState(false);
   const { messageFee: myMessageFee } = useDmSettings();
   const isInitialMount = useRef(true);
@@ -540,6 +558,8 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     isFetchingNextPage,
     markAsRead,
   } = useMessages(resolvedConversationId);
+
+  const pinnedMessage = pinnedMessageId ? messages.find(m => m._id === pinnedMessageId) ?? null : null;
 
   const sendMessageMutation = useSendMessage(resolvedConversationId);
   const deleteConversationMutation = useDeleteConversation();
@@ -903,6 +923,16 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
 
   const isVirtualConv = resolvedConversationId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(resolvedConversationId);
 
+  const handlePinMessage = (messageId: string) => {
+    setPinnedMessageId(messageId);
+    try { localStorage.setItem(`dehub-dm-pin-${resolvedConversationId}`, messageId); } catch {}
+  };
+
+  const handleUnpinMessage = () => {
+    setPinnedMessageId(null);
+    try { localStorage.removeItem(`dehub-dm-pin-${resolvedConversationId}`); } catch {}
+  };
+
   return (
     <div className="h-full flex flex-col bg-zinc-900 rounded-2xl overflow-hidden relative">
       {/* Header */}
@@ -1033,6 +1063,31 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         </div>
       )}
 
+      {/* Pinned Message Banner */}
+      {pinnedMessage && (
+        <button
+          onClick={() => {
+            const el = document.getElementById(`dm-msg-${pinnedMessage._id}`);
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              el.classList.add('ring-2', 'ring-blue-500/60', 'bg-blue-500/10');
+              setTimeout(() => el.classList.remove('ring-2', 'ring-blue-500/60', 'bg-blue-500/10'), 2000);
+            }
+          }}
+          className="flex items-center gap-2 px-4 py-2 bg-blue-500/10 border-b border-blue-500/20 text-sm w-full text-left hover:bg-blue-500/15 transition-colors cursor-pointer"
+        >
+          <Pin className="w-3.5 h-3.5 text-blue-400 flex-shrink-0 fill-current" />
+          <div className="flex flex-col min-w-0 flex-1">
+            <span className="text-blue-400 text-[10px] font-semibold uppercase tracking-wide leading-none mb-0.5">Pinned Message</span>
+            <span className="text-blue-100/80 text-xs truncate">{pinnedMessage.content || '📎 Media'}</span>
+          </div>
+          <X
+            onClick={(e) => { e.stopPropagation(); handleUnpinMessage(); }}
+            className="ml-2 w-4 h-4 text-blue-400/50 hover:text-blue-300 flex-shrink-0 transition-colors cursor-pointer"
+          />
+        </button>
+      )}
+
       {/* DM Fee banner - simple for free access */}
       {dmFee?.required && dmFee.hasFreeAccess && (
         <div className="px-4 py-2 text-xs flex items-center gap-2 bg-green-500/10 text-green-400 border-b border-green-500/20">
@@ -1117,6 +1172,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
                 isOwnMessage={isOwnMessage}
                 highlightText={searchLower}
                 confirmedTxHashes={confirmedTxHashes}
+                onPin={handlePinMessage}
               />
             )});
           })()}
