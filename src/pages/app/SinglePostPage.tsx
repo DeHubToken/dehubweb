@@ -22,6 +22,7 @@ import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { getNFTInfo, getLiveStream, type DeHubNFT } from '@/lib/api/dehub';
+import { PollCard } from '@/components/app/cards/PollCard';
 import { useStreamLiveStatus } from '@/hooks/use-stream-live-status';
 
 import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl } from '@/lib/media-url';
@@ -833,6 +834,7 @@ export default function SinglePostPage() {
               <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
                 {renderContent()}
               </div>
+              {id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
               {/* Related Videos Feed */}
               {id && <RelatedVideosFeed currentVideoId={id} />}
             </div>
@@ -979,6 +981,7 @@ export default function SinglePostPage() {
           <div className="lg:rounded-xl lg:border lg:border-white/[0.12] lg:bg-white/[0.03] lg:p-3">
             {renderContent()}
           </div>
+          {id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
           {isImagePost && id && <RelatedImagesFeed currentPostId={id} />}
           {isAudioPost && id && <RelatedVideosFeed currentVideoId={id} />}
           {!isImagePost && !isVideoPost && !isAudioPost && id && <RelatedPostsFeed currentPostId={id} />}

@@ -10,11 +10,17 @@ export function usePoll(tokenId: number) {
   return useQuery({
     queryKey: [POLLS_KEY, tokenId],
     queryFn: async () => {
-      const res = await getPoll(tokenId);
-      return res.result as DeHubPoll | null;
+      try {
+        const res = await getPoll(tokenId);
+        if (!res.status) return null;
+        return res.result as DeHubPoll | null;
+      } catch {
+        return null;
+      }
     },
     enabled: !!tokenId,
-    staleTime: 30 * 1000, // Poll results revalidate frequently
+    staleTime: 5 * 60 * 1000,
+    retry: false,
   });
 }
 
