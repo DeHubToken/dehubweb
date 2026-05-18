@@ -101,6 +101,9 @@ export function PublicChat({ onBack }: PublicChatProps) {
   const buyAlerts = useBuyAlerts();
   const { isHidden: buyBotHidden, hide: hideBuyBot } = useBuyBotHidden();
 
+  // selectedRoom must be declared before isModerator useMemo (which uses it)
+  const selectedRoom = rooms.find((r) => r.id === selectedRoomId) || null;
+
   // Determine if current user is a moderator.
   // Fallback to selectedRoom.moderators when roomDetails hasn't loaded yet.
   const isModerator = useMemo(() => {
@@ -243,7 +246,6 @@ export function PublicChat({ onBack }: PublicChatProps) {
   }, [selectedRoomId, isAuthenticated, refetch]);
 
   // Merge list-level room data with the richer single-room details
-  const selectedRoom = rooms.find((r) => r.id === selectedRoomId) || null;
   const enrichedRoom = roomDetails || selectedRoom;
   const isLoading = roomsLoading || (messagesLoading && apiMessages.length === 0);
   const roomName = t('publicChat.title');
