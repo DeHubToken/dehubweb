@@ -4,14 +4,16 @@
  * Shows join notifications for community owners within the community page.
  */
 
+import { useState, useMemo } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { useNavigate } from 'react-router-dom';
-import { User, UserPlus, Check, Bell } from 'lucide-react';
+import { User, UserPlus, Check, Bell, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { formatDistanceToNow } from 'date-fns';
 import { useTranslation } from 'react-i18next';
 
@@ -40,7 +42,7 @@ function useCommunityJoinNotifications(communityId?: string) {
           .eq('type', 'community_join')
           .eq('reference_id', communityId!)
           .order('created_at', { ascending: false })
-          .limit(50),
+          .limit(200),
         walletAddress!
       );
       if (error) throw error;
@@ -78,12 +80,15 @@ function useMarkCommunityNotificationsRead(communityId?: string) {
 
 function ActivityRow({ notification }: { notification: CommunityJoinNotification }) {
   const navigate = useNavigate();
-  const { data: profile } = useDeHubProfile({ userId: notification.actor_address });
+  const { data: profile, isLoading: profileLoading } = useDeHubProfile({ userId: notification.actor_address });
 
-  const displayName = profile?.name || `${notification.actor_address.slice(0, 6)}...${notification.actor_address.slice(-4)}`;
   const handle = profile?.handle;
   const avatarUrl = profile?.avatarUrl || notification.actor_avatar;
   const timeAgo = formatDistanceToNow(new Date(notification.created_at), { addSuffix: true });
+
+  // Don't show wallet address — show skeleton while profile loads, then real name
+  const hasName = !!profile?.name;
+  const displayName = profile?.name;
 
   return (
     <button
@@ -92,19 +97,25 @@ function ActivityRow({ notification }: { notification: CommunityJoinNotification
       }}
       className="w-full flex items-center gap-3 p-2.5 rounded-xl hover:bg-white/[0.06] transition-colors text-left"
     >
-      <div className="w-9 h-9 rounded-full bg-white/[0.08] flex items-center justify-center overflow-hidden flex-shrink-0 relative">
+      <div className="w-9 h-9 rounded-lg bg-white/[0.08] flex items-center justify-center overflow-hidden flex-shrink-0 relative">
         {avatarUrl ? (
-          <img src={avatarUrl} alt="" className="w-full h-full object-cover" />
+          <img src={avatarUrl} alt="" loading="lazy" className="w-full h-full object-cover" />
+        ) : profileLoading ? (
+          <div className="w-full h-full animate-pulse bg-white/[0.08]" />
         ) : (
           <User className="w-4 h-4 text-zinc-500" />
         )}
-        <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-green-500/20 flex items-center justify-center border border-black/40">
+        <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-md bg-green-500/20 flex items-center justify-center border border-black/40">
           <UserPlus className="w-2.5 h-2.5 text-green-400" />
         </div>
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
-          <span className="text-white text-sm font-medium truncate">{displayName}</span>
+          {hasName ? (
+            <span className="text-white text-sm font-medium truncate">{displayName}</span>
+          ) : (
+            <span className="h-3.5 w-28 rounded bg-white/[0.08] animate-pulse" />
+          )}
           {!notification.read && (
             <div className="w-1.5 h-1.5 rounded-full bg-blue-400 flex-shrink-0" />
           )}
@@ -119,18 +130,40 @@ interface CommunityOwnerActivityProps {
   communityId: string;
 }
 
+const PAGE_SIZE = 20;
+
 export function CommunityOwnerActivity({ communityId }: CommunityOwnerActivityProps) {
   const { data: notifications = [], isLoading } = useCommunityJoinNotifications(communityId);
   const markReadMutation = useMarkCommunityNotificationsRead(communityId);
   const { t } = useTranslation();
+  const [query, setQuery] = useState('');
+  const [visible, setVisible] = useState(PAGE_SIZE);
 
   const unreadCount = notifications.filter(n => !n.read).length;
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return notifications;
+    return notifications.filter(n =>
+      (n.actor_username || '').toLowerCase().includes(q) ||
+      n.actor_address.toLowerCase().includes(q) ||
+      (n.content || '').toLowerCase().includes(q)
+    );
+  }, [notifications, query]);
+
+  const shown = filtered.slice(0, visible);
 
   if (isLoading) {
     return (
       <div className="space-y-2">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="h-14 rounded-xl bg-white/[0.04] animate-pulse" />
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="flex items-center gap-3 p-2.5">
+            <div className="w-9 h-9 rounded-lg bg-white/[0.06] animate-pulse" />
+            <div className="flex-1 space-y-2">
+              <div className="h-3.5 w-32 rounded bg-white/[0.06] animate-pulse" />
+              <div className="h-3 w-48 rounded bg-white/[0.04] animate-pulse" />
+            </div>
+          </div>
         ))}
       </div>
     );
@@ -148,6 +181,16 @@ export function CommunityOwnerActivity({ communityId }: CommunityOwnerActivityPr
 
   return (
     <div className="space-y-2">
+      <div className="relative mb-2">
+        <Search className="w-3.5 h-3.5 text-zinc-500 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+        <Input
+          value={query}
+          onChange={(e) => { setQuery(e.target.value); setVisible(PAGE_SIZE); }}
+          placeholder="Search members..."
+          className="pl-9 h-9 bg-white/[0.04] border-white/10 text-sm rounded-lg"
+        />
+      </div>
+
       {unreadCount > 0 && (
         <div className="flex items-center justify-between px-1 mb-2">
           <span className="text-xs text-zinc-400">{unreadCount} new</span>
@@ -163,9 +206,24 @@ export function CommunityOwnerActivity({ communityId }: CommunityOwnerActivityPr
           </Button>
         </div>
       )}
-      {notifications.map(notification => (
+
+      {shown.map(notification => (
         <ActivityRow key={notification.id} notification={notification} />
       ))}
+
+      {filtered.length > visible && (
+        <Button
+          variant="ghost"
+          onClick={() => setVisible(v => v + PAGE_SIZE)}
+          className="w-full h-9 text-xs text-zinc-400 hover:text-white rounded-lg"
+        >
+          Show more ({filtered.length - visible})
+        </Button>
+      )}
+
+      {filtered.length === 0 && query && (
+        <p className="text-center text-xs text-zinc-500 py-6">No matches for "{query}"</p>
+      )}
     </div>
   );
 }
