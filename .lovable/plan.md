@@ -1,33 +1,46 @@
-# Remove redundant top-left padlock badge when content is already gated
+## Goal
 
-## Problem
+Let community owners flip their community between **Private** and **Public** from inside the community page. Members and non-owners never see the control.
 
-When a post is gated (Holdings / PPV / combo), the media area shows a large center overlay (blurred media + big lock or ticket icon + "Unlock for…" / "Holdings Required" copy). At the same time, a small lock/ticket badge is rendered in the top-left corner of the same media — so the user sees two padlocks for the same state (see screenshot of @aaron's post).
+## Where it lives
 
-The bounty badge is independent (no center overlay), so it should stay.
+Add a small toggle row in the **About** tab of the community page (`CommunityAbout.tsx`), visible only when `isOwner === true`. The About tab is the natural home — it already shows the Private/Public label, rules, etc. Placing it inline avoids building a whole new Settings screen for one switch.
 
-## Fix
+Layout:
+```text
+Privacy                          [ Public  ●─── ]
+Private communities require approval to join.
+```
+- Liquid-glass row (`bg-white/[0.04] border border-white/10 rounded-xl`)
+- shadcn `Switch` on the right
+- Below, helper text that swaps copy based on current state
+- A tiny "Saving…" indicator while the mutation is pending
 
-Hide the top-left badges whose icon is already shown in the center overlay, on every card type that has both.
+## Data layer
 
-### Files & exact spots
+`is_private` column already exists on `communities` and the existing RLS policy *"Creators can update their communities"* already permits this update via the `x-wallet-address` header — **no migration, no policy change needed.**
 
-1. **`src/components/app/cards/ImageCard.tsx`**, badge row at lines 691–735:
-   - Drop the PPV badge (`isPPV && post.ppvPrice`) — the center ticket overlay already covers this when `isPPV` is true.
-   - Drop the Lock badge (`isLocked`) — the center lock overlay already covers it.
-   - Keep the Bounty (`isW2E`) badge unchanged.
-   - Update `hasBadges` so the row only renders when bounty alone is set: `const hasBadges = isW2E;`.
+Add a new mutation in `src/hooks/use-communities.ts`:
 
-2. **`src/components/app/cards/VideoCard.tsx`**, badge row at lines 1435–1453 (over the media):
-   - This block only contains the Locked badge, and it's already gated by `video.isLocked && !canBypassGating` — exactly when the center overlay is shown. Remove the block entirely.
-   - Leave the header badge row at lines 200–248 (next to AI / menu buttons) alone — that's a different surface, not stacked on top of the media.
+- `useUpdateCommunityPrivacy()` — takes `{ communityId, isPrivate }`, runs `supabase.from('communities').update({ is_private }).eq('id', communityId)` wrapped in `withWalletHeader`.
+- On success: invalidate `['community', slug]` and `['communities']` so the lock icon on cards and the About label refresh.
+- Optimistic update on the `['community', slug]` cache so the switch flips instantly; rollback on error with a toast.
 
-3. No changes to `PostCard.tsx`, `ShortsViewer.tsx`, or `LiveStreamCard.tsx` — they don't render a corner lock over the gated overlay.
+## UX details
 
-## Verification
+- Owner-only: gate the entire row behind `isOwner` passed from `CommunityPage` → `CommunityAbout` (currently not passed — add the prop).
+- Confirm when going **Public → Private** with a small inline confirm ("Existing members stay, new joiners will need approval. Continue?"). No confirm needed Private → Public.
+- Toast on success: "Community is now Public" / "Community is now Private".
+- Disable switch while pending.
 
-- Reload home feed → Aaron's post should show only the centered "Holdings Required" overlay; no second lock chip in the top-left.
-- Check a PPV-only post → centered ticket overlay only.
-- Check a combo (PPV + Holdings) post → centered combo icons only.
-- Check a Bounty-only post → bounty badge still appears in the top-left.
-- Check a video card → no top-left lock chip on locked videos; header-row lock chip next to AI/menu still appears as before.
+## Files touched
+
+- `src/hooks/use-communities.ts` — add `useUpdateCommunityPrivacy` mutation.
+- `src/components/app/communities/CommunityAbout.tsx` — add owner-only privacy row + switch + confirm.
+- `src/pages/app/CommunityPage.tsx` — pass `isOwner` prop into `<CommunityAbout />`.
+
+## Out of scope
+
+- No new Settings page (can come later if more owner controls pile up).
+- No changes to membership status of existing members when flipping privacy.
+- No bulk approval UI changes — pending-member flow already exists.
