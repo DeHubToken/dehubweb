@@ -175,8 +175,27 @@ export function SidebarChat() {
   useLayoutEffect(() => {
     if (didInitialScrollRef.current) return;
     if (mergedItems.length === 0) return;
+    const el = scrollContainerRef.current;
+    // Tab may be hidden (clientHeight 0) on initial mount — defer until visible.
+    if (!el || el.clientHeight === 0) return;
     didInitialScrollRef.current = true;
     scrollToBottom(true);
+  }, [mergedItems.length, scrollToBottom]);
+
+  // Watch for the panel becoming visible (tab switched in). When clientHeight
+  // transitions from 0 → >0, jump to bottom.
+  useEffect(() => {
+    const el = scrollContainerRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(() => {
+      if (didInitialScrollRef.current) return;
+      if (el.clientHeight > 0 && mergedItems.length > 0) {
+        didInitialScrollRef.current = true;
+        scrollToBottom(true);
+      }
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
   }, [mergedItems.length, scrollToBottom]);
 
   // When subsequent new messages arrive, smooth-scroll to bottom.
