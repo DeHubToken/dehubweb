@@ -578,7 +578,10 @@ export async function initWeb3Auth(): Promise<Web3Auth> {
           web3AuthNetwork: WEB3AUTH_NETWORK.SAPPHIRE_MAINNET,
           sessionTime: 86400,
           uiConfig: { modalZIndex: "99999" } as any,
-          walletServicesConfig: { whiteLabel: { showWidgetButton: false } },
+          walletServicesConfig: {
+            whiteLabel: { showWidgetButton: false },
+            confirmationStrategy: CONFIRMATION_STRATEGY.AUTO_APPROVE,
+          },
         };
 
         const { Web3Auth: Web3AuthCtor } = await loadWeb3AuthModal();
