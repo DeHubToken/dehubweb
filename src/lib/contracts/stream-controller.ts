@@ -71,13 +71,13 @@ export async function getDHBAllowance(owner: string, chainId: ChainId = BASE_CHA
 export async function approveDHB(amount: bigint, chainId: ChainId = BASE_CHAIN_ID): Promise<string> {
   const chainConfig = getChainConfig(chainId);
   console.log('[StreamController] Approving DHB:', amount.toString(), 'on', chainConfig.name);
-  
-  const result = await approveERC20(chainConfig.dhbToken, chainConfig.streamController, amount);
-  
+
+  const result = await approveERC20(chainConfig.dhbToken, chainConfig.streamController, amount, chainId);
+
   console.log('[StreamController] Approval tx submitted:', result.hash);
   const receipt = await result.wait(1);
   console.log('[StreamController] Approval confirmed:', receipt.hash);
-  
+
   return receipt.hash;
 }
 
@@ -145,6 +145,15 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
     getDHBAllowance(signerAddress, chainId),
   ]);
 
+  console.log('[StreamController] sendTip check:', {
+    signerAddress,
+    chainId,
+    amountWei: amountWei.toString(),
+    balance: balance.toString(),
+    allowance: allowance.toString(),
+    skipBalanceCheck: params.skipBalanceCheck,
+  });
+
   if (!params.skipBalanceCheck && balance < amountWei) {
     throw new Error(
       `Insufficient DHB balance. Need ${params.amount} DHB but have ${Number(balance) / 1e18} DHB`
@@ -152,7 +161,7 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
   }
 
   if (allowance < amountWei) {
-    console.log('[StreamController] Approving DHB for sendTip...');
+    console.log('[StreamController] Approving DHB for sendTip... allowance:', allowance.toString(), '< needed:', amountWei.toString());
     const maxApproval = BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
     await approveDHB(maxApproval, chainId);
   }

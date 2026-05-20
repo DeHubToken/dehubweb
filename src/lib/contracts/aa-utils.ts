@@ -292,11 +292,18 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
   let errorStr = '';
   if (error instanceof Error) {
     errorStr = error.message;
+    // viem errors (UserOperationExecutionError etc.) carry the decoded revert reason in
+    // .details (e.g. "STF") and .cause — check them too so we don't have to parse hex.
+    const e = error as Record<string, any>;
+    if (e.details) errorStr += '\n' + e.details;
+    if (e.cause?.message) errorStr += '\n' + e.cause.message;
+    if (e.cause?.reason) errorStr += '\n' + e.cause.reason;
+    if (e.shortMessage) errorStr += '\n' + e.shortMessage;
   } else if (typeof error === 'string') {
     errorStr = error;
   } else if (error && typeof error === 'object') {
     const e = error as Record<string, any>;
-    errorStr = e.message || e.shortMessage || e.reason || 
+    errorStr = e.message || e.shortMessage || e.reason ||
                e.error?.message || e.data?.message || e.details ||
                (() => { try { return JSON.stringify(error).slice(0, 300); } catch { return 'Unknown error'; } })();
   } else {
@@ -304,7 +311,7 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
   }
 
   const lowerError = errorStr.toLowerCase();
-  
+
   if (lowerError.includes('user rejected') || lowerError.includes('user denied')) {
     return 'Transaction was rejected by user.';
   }
@@ -312,19 +319,19 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
     return 'Insufficient funds for gas. Please add ETH to your wallet.';
   }
   // STF = SafeTransferFrom failure — ERC20 has no balance or missing approval.
-  // Check before paymaster because UserOperationExecutionError includes "paymaster"
-  // in its request-body details even when the real failure is a token transfer.
-  if (lowerError.includes(': stf') || lowerError.includes('reason: stf') ||
-      lowerError.includes("reason: 'stf'") || lowerError.includes('"stf"')) {
+  // Check before paymaster: UserOperationExecutionError includes "paymaster" in its request
+  // body even when the real failure is a token transfer. Also check for hex-encoded revert
+  // (ABI-encoded Error("STF") contains "535446" — hex of "STF").
+  if (lowerError.includes('stf') || lowerError.includes('535446') ||
+      lowerError.includes('safetransfer') || lowerError.includes('token transfer failed')) {
     return 'Token transfer failed. Please check your DHB balance and wallet approval.';
   }
   if (lowerError.includes('aa21') || lowerError.includes('aa25') || lowerError.includes('aa31') ||
       (lowerError.includes('paymaster') && !lowerError.includes('execution reverted'))) {
     return 'Gas sponsorship failed. Please add ETH to your wallet for gas fees.';
   }
-  if (lowerError.includes('nonce')) {
-    return 'Transaction nonce error. Please try again.';
-  }
+  // Skip generic 'nonce' check — "nonce" appears in every UserOperation request body and
+  // fires a false match. AA25 already covers the real invalid-nonce case above.
   if (lowerError.includes('gas')) {
     return 'Gas estimation failed. The transaction may revert.';
   }
@@ -589,20 +596,21 @@ export async function readContract<T>(
 export async function approveERC20(
   tokenAddress: string,
   spenderAddress: string,
-  amount: bigint
+  amount: bigint,
+  chainId?: ChainId
 ): Promise<AAWriteResult> {
   const erc20Interface = new Interface([
     'function approve(address spender, uint256 amount) returns (bool)',
   ]);
-  
-  console.log(`[AA] Approving ${amount} tokens for ${spenderAddress}`);
-  
+
+  console.log(`[AA] Approving ${amount} tokens for ${spenderAddress} on chain ${chainId ?? 'default'}`);
+
   return writeContractAA(
     tokenAddress,
     erc20Interface,
     'approve',
     [spenderAddress, amount],
-    { context: 'token approval' }
+    { context: 'token approval', chainId }
   );
 }
 
