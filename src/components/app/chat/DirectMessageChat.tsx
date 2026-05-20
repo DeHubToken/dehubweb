@@ -28,6 +28,7 @@ import { formatDistanceToNow } from 'date-fns';
 import {
   getERC20Balance,
   parseTxError,
+  checkDHBPaused,
 } from '@/lib/contracts/aa-utils';
 import { getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { sendTip } from '@/lib/contracts/stream-controller';
@@ -799,7 +800,9 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         console.error('[DM] Fee payment failed:', error);
         const errStr = String((error as any)?.message || error).toLowerCase();
         const isSessionExpired = errStr.includes('session expired') || errStr.includes('torus keyring') || errStr.includes('unable to find matching address') || errStr.includes('log in again');
-        const isPaused = errStr.includes('paused') || errStr.includes('erc20pausable');
+        const isPausedErr = errStr.includes('paused') || errStr.includes('erc20pausable');
+        // STF (SafeTransferFrom) can be caused by DHB being paused — check on-chain
+        const isSTF = errStr.includes('stf') || errStr.includes('535446') || errStr.includes('safetransfer') || errStr.includes('token transfer failed');
 
         if (isSessionExpired) {
           toast.error('Session expired', {
@@ -808,7 +811,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
             action: { label: 'Sign in', onClick: openLoginModal },
             duration: 10000,
           });
-        } else if (isPaused) {
+        } else if (isPausedErr || (isSTF && await checkDHBPaused(chainId).catch(() => false))) {
           toast.error('DHB transactions paused', {
             id: 'dm-fee-send',
             description: 'DHB token transactions are temporarily paused on-chain. Please try again later.',

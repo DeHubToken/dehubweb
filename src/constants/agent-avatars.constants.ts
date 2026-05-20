@@ -21,7 +21,6 @@ import avatarRickybobby from '@/assets/avatars/rickybobby.png';
 import avatarJohncena from '@/assets/avatars/johncena.png';
 import avatarSawyer from '@/assets/avatars/sawyer.png';
 
-/** Map of agent username → local avatar asset URL */
 export const AGENT_AVATAR_FALLBACKS: Record<string, string> = {
   vrgl: avatarVrgl,
   notmaya: avatarNotmaya,
@@ -43,7 +42,6 @@ export const AGENT_AVATAR_FALLBACKS: Record<string, string> = {
   sawyer: avatarSawyer,
 };
 
-/** Known agent wallet addresses → username mapping */
 export const AGENT_WALLET_TO_USERNAME: Record<string, string> = {
   '0x3caf10e24f270855942b66d184d4c007567159fb': 'vrgl',
   '0x0bc096eb63e360c1e297384363f824b32ac5e688': 'notmaya',

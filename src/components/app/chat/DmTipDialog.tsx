@@ -23,6 +23,7 @@ import {
   getWalletAddress,
   switchChain,
   parseTxError,
+  checkDHBPaused,
 } from '@/lib/contracts/aa-utils';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { sendTip } from '@/lib/contracts/stream-controller';
@@ -99,8 +100,9 @@ export function DmTipDialog({
     } catch (error: unknown) {
       console.error('[DmTip] Failed:', error);
       const errStr = String((error as any)?.message || error).toLowerCase();
-      const isPaused = errStr.includes('paused') || errStr.includes('erc20pausable');
-      if (isPaused) {
+      const isPausedErr = errStr.includes('paused') || errStr.includes('erc20pausable');
+      const isSTF = errStr.includes('stf') || errStr.includes('535446') || errStr.includes('safetransfer') || errStr.includes('token transfer failed');
+      if (isPausedErr || (isSTF && await checkDHBPaused().catch(() => false))) {
         toast.error('DHB transactions paused', {
           id: 'dm-tip',
           description: 'DHB token transactions are temporarily paused on-chain. Please try again later.',

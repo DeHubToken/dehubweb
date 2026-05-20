@@ -625,6 +625,21 @@ export async function readContract<T>(
 }
 
 /**
+ * Check if the DHB token is currently paused on-chain.
+ * Returns false if the call fails (safe default — don't block UI on RPC errors).
+ */
+export async function checkDHBPaused(chainId?: ChainId): Promise<boolean> {
+  try {
+    const config = CHAIN_CONFIGS[chainId ?? BASE_CHAIN_ID];
+    if (!config?.dhbToken) return false;
+    const pausableInterface = new Interface(['function paused() view returns (bool)']);
+    return await readContract<boolean>(config.dhbToken, pausableInterface, 'paused', [], chainId);
+  } catch {
+    return false;
+  }
+}
+
+/**
  * ERC20 approval helper for AA
  */
 export async function approveERC20(
