@@ -19,7 +19,7 @@ import {
 import { extractAvatarPath, buildAvatarUrl } from '@/lib/media-url';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { useAuth } from '@/contexts/AuthContext';
-import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode } from '../types';
+import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode, PollData } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
@@ -212,6 +212,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [tokenContract, setTokenContract] = useState(d?.tokenContract ?? '');
   const [tokenAmount, setTokenAmount] = useState(d?.tokenAmount ?? '');
   const [liveMode, setLiveMode] = useState<LiveMode>(null);
+  const [poll, setPoll] = useState<PollData | null>(null);
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [isPosting, setIsPosting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -293,7 +294,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   }, [hasImage, hasAudio, hasVideo, isShort, hasMusicVideo, isLive]);
 
   const destinations = getPostDestinations();
-  const canPost = Boolean((text.trim() || media.length > 0 || isLive) && !isGeneratingThumbnail);
+  const pollIsValid = poll !== null && poll.options.filter(o => o.text.trim()).length >= 2;
+  const canPost = Boolean((text.trim() || media.length > 0 || isLive || pollIsValid) && !isGeneratingThumbnail);
 
   // Actions
   const handleImageSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -742,6 +744,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     setTokenContract('');
     setTokenAmount('');
     setLiveMode(null);
+    setPoll(null);
     setScheduledDate(null);
     setChainId(BASE_CHAIN_ID as ChainId);
     setTitleText('');
@@ -1380,10 +1383,11 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       tokenContract,
       tokenAmount,
       liveMode,
+      poll,
       isEnhancing,
       isPosting,
       uploadProgress,
-      
+
       scheduledDate,
       drafts,
       isRecording,
@@ -1412,6 +1416,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       setTokenContract,
       setTokenAmount,
       setLiveMode,
+      setPoll,
       handleImageSelect,
       handleVideoSelect,
       handleFileDrop,

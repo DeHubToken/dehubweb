@@ -39,6 +39,16 @@ export interface MediaFile {
 
 export type Currency = 'USD' | 'DHB';
 
+export interface PollOption {
+  id: string;
+  text: string;
+}
+
+export interface PollData {
+  options: PollOption[];
+  duration: number; // hours: 24, 72, 168
+}
+
 export type LiveMode = 'video' | 'townhall' | null;
 
 export interface PostFormState {
@@ -59,6 +69,7 @@ export interface PostFormState {
   tokenContract: string;
   tokenAmount: string;
   liveMode: LiveMode;
+  poll: PollData | null;
   isEnhancing: boolean;
   isPosting: boolean;
   uploadProgress: number; // 0–100 stage-based progress
@@ -83,6 +94,7 @@ export interface PostFormActions {
   setTokenContract: (value: string) => void;
   setTokenAmount: (value: string) => void;
   setLiveMode: (value: LiveMode) => void;
+  setPoll: (poll: PollData | null) => void;
   handleImageSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   handleVideoSelect: (e: React.ChangeEvent<HTMLInputElement>) => Promise<void>;
   handleAudioSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;

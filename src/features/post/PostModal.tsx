@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { usePostForm } from './hooks/usePostForm';
 import { usePostSound } from './hooks/usePostSound';
+import type { PollData } from './types';
 import { PostContentArea } from './components/PostContentArea';
 import { PostAccessToggles } from './components/PostAccessToggles';
 import { PostActionBar } from './components/PostActionBar';
@@ -18,13 +19,28 @@ interface PostModalProps {
   onFilesProcessed?: () => void;
   initialText?: string;
   initialCategory?: string;
+  initialPoll?: PollData | null;
 }
 
-export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, initialText, initialCategory }: PostModalProps) {
+export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, initialText, initialCategory, initialPoll }: PostModalProps) {
   const { state, actions, computed, refs } = usePostForm(onClose);
   const { attachedSound, selectSound, clearSound } = usePostSound();
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false);
   const [soundPickerOpen, setSoundPickerOpen] = useState(false);
+
+  const handleTogglePoll = useCallback(() => {
+    if (state.poll) {
+      actions.setPoll(null);
+    } else {
+      actions.setPoll({
+        options: [
+          { id: '1', text: '' },
+          { id: '2', text: '' },
+        ],
+        duration: 24,
+      });
+    }
+  }, [state.poll, actions.setPoll]);
 
 
   // When opening from share (initialText provided), reset form first for a fresh start
@@ -44,6 +60,13 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
       actions.setSelectedCategory(initialCategory);
     }
   }, [isOpen, initialCategory]);
+
+  // Pre-initialize poll when opened with initialPoll
+  useEffect(() => {
+    if (isOpen && initialPoll) {
+      actions.setPoll(initialPoll);
+    }
+  }, [isOpen, initialPoll]);
 
   // Process initial files when modal opens with pending files
   useEffect(() => {
@@ -103,7 +126,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         titleText={state.titleText}
         setTitleText={actions.setTitleText}
         onOpenCategories={() => setCategoryDrawerOpen(true)}
-        
+        poll={state.poll}
+        onPollChange={actions.setPoll}
       />
 
       <PostAccessToggles
@@ -182,6 +206,8 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         attachedSound={attachedSound}
         onClearSound={clearSound}
         onCloseModal={handleClose}
+        onTogglePoll={handleTogglePoll}
+        hasPoll={!!state.poll}
       />
     </>
   );
