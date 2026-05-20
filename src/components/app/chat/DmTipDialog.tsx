@@ -98,8 +98,18 @@ export function DmTipDialog({
       });
     } catch (error: unknown) {
       console.error('[DmTip] Failed:', error);
-      const message = parseTxError(error as Error);
-      toast.error(message || 'Tip failed', { id: 'dm-tip' });
+      const errStr = String((error as any)?.message || error).toLowerCase();
+      const isPaused = errStr.includes('paused') || errStr.includes('erc20pausable');
+      if (isPaused) {
+        toast.error('DHB transactions paused', {
+          id: 'dm-tip',
+          description: 'DHB token transactions are temporarily paused on-chain. Please try again later.',
+          duration: 8000,
+        });
+      } else {
+        const message = parseTxError(error as Error);
+        toast.error(message || 'Tip failed', { id: 'dm-tip' });
+      }
     } finally {
       setIsSending(false);
     }

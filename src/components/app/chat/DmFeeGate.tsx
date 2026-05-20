@@ -85,8 +85,18 @@ export function DmFeeGate({
       onUnlocked();
     } catch (error: unknown) {
       console.error('[DmFeeGate] Payment failed:', error);
-      const message = parseTxError(error as Error);
-      toast.error(message || 'Payment failed', { id: 'dm-fee-gate' });
+      const errStr = String((error as any)?.message || error).toLowerCase();
+      const isPaused = errStr.includes('paused') || errStr.includes('erc20pausable');
+      if (isPaused) {
+        toast.error('DHB transactions paused', {
+          id: 'dm-fee-gate',
+          description: 'DHB token transactions are temporarily paused on-chain. Please try again later.',
+          duration: 8000,
+        });
+      } else {
+        const message = parseTxError(error as Error);
+        toast.error(message || 'Payment failed', { id: 'dm-fee-gate' });
+      }
     } finally {
       setIsSending(false);
     }

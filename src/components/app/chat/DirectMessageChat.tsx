@@ -799,13 +799,20 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
         console.error('[DM] Fee payment failed:', error);
         const errStr = String((error as any)?.message || error).toLowerCase();
         const isSessionExpired = errStr.includes('session expired') || errStr.includes('torus keyring') || errStr.includes('unable to find matching address') || errStr.includes('log in again');
-        
+        const isPaused = errStr.includes('paused') || errStr.includes('erc20pausable');
+
         if (isSessionExpired) {
           toast.error('Session expired', {
             id: 'dm-fee-send',
             description: 'Please sign in again to send this message',
             action: { label: 'Sign in', onClick: openLoginModal },
             duration: 10000,
+          });
+        } else if (isPaused) {
+          toast.error('DHB transactions paused', {
+            id: 'dm-fee-send',
+            description: 'DHB token transactions are temporarily paused on-chain. Please try again later.',
+            duration: 8000,
           });
         } else {
           const message = parseTxError(error as Error);
