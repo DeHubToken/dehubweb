@@ -137,31 +137,27 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
 
   // Parallelize balance + allowance checks (skip balance if UI already verified)
   const chainKey = `${chainId}-${signerAddress}`;
-  const needsAllowanceCheck = !approvedChains.has(chainKey);
 
-  if (!params.skipBalanceCheck || needsAllowanceCheck) {
-    const [balance, allowance] = await Promise.all([
-      params.skipBalanceCheck ? Promise.resolve(amountWei) : getDHBBalance(signerAddress, chainId),
-      needsAllowanceCheck ? getDHBAllowance(signerAddress, chainId) : Promise.resolve(amountWei),
-    ]);
+  // Always check balance. Always verify on-chain allowance — cache was causing stale
+  // approvals to be skipped, resulting in STF (SafeTransferFrom) revert on sendTip.
+  const [balance, allowance] = await Promise.all([
+    params.skipBalanceCheck ? Promise.resolve(amountWei) : getDHBBalance(signerAddress, chainId),
+    getDHBAllowance(signerAddress, chainId),
+  ]);
 
-    if (!params.skipBalanceCheck && balance < amountWei) {
-      throw new Error(
-        `Insufficient DHB balance. Need ${params.amount} DHB but have ${Number(balance) / 1e18} DHB`
-      );
-    }
-
-    if (needsAllowanceCheck && allowance < amountWei) {
-      console.log('[StreamController] Approving DHB for sendTip...');
-      const maxApproval = BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
-      await approveDHB(maxApproval, chainId);
-      approvedChains.add(chainKey);
-      persistApprovalCache();
-    } else if (needsAllowanceCheck) {
-      approvedChains.add(chainKey);
-      persistApprovalCache();
-    }
+  if (!params.skipBalanceCheck && balance < amountWei) {
+    throw new Error(
+      `Insufficient DHB balance. Need ${params.amount} DHB but have ${Number(balance) / 1e18} DHB`
+    );
   }
+
+  if (allowance < amountWei) {
+    console.log('[StreamController] Approving DHB for sendTip...');
+    const maxApproval = BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+    await approveDHB(maxApproval, chainId);
+  }
+  approvedChains.add(chainKey);
+  persistApprovalCache();
 
   const tokenId = BigInt(params.tokenId);
 
