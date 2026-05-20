@@ -284,6 +284,31 @@ function applyGasMargin(gasEstimate: bigint): bigint {
   return (gasEstimate * BigInt(130)) / BigInt(100);
 }
 
+function tryDecodeHexReason(str: string): string {
+  try {
+    const matches = str.match(/0x[0-9a-fA-F]+/g);
+    if (!matches) return '';
+    let decodedConcat = '';
+    for (const hex of matches) {
+      let cleanHex = hex.slice(2);
+      if (cleanHex.startsWith('08c379a0')) {
+        cleanHex = cleanHex.slice(8);
+      }
+      let ascii = '';
+      for (let i = 0; i < cleanHex.length; i += 2) {
+        const charCode = parseInt(cleanHex.slice(i, i + 2), 16);
+        if (charCode >= 32 && charCode <= 126) {
+          ascii += String.fromCharCode(charCode);
+        }
+      }
+      decodedConcat += ' ' + ascii;
+    }
+    return decodedConcat.trim();
+  } catch {
+    return '';
+  }
+}
+
 /**
  * Parse transaction error into user-friendly message
  */
@@ -308,6 +333,12 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
                (() => { try { return JSON.stringify(error).slice(0, 300); } catch { return 'Unknown error'; } })();
   } else {
     errorStr = String(error);
+  }
+
+  // Try decoding any hex-encoded revert reasons (such as Pimlico / simulation revert hex)
+  const decoded = tryDecodeHexReason(errorStr);
+  if (decoded) {
+    errorStr += '\nDecoded revert: ' + decoded;
   }
 
   const lowerError = errorStr.toLowerCase();
