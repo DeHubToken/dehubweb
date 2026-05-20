@@ -1159,8 +1159,8 @@ function PrivacySettings() {
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     const val = parseFloat(feeInput);
-                    if (!isNaN(val) && val >= 0 && val !== messageFee) updateMessageFee(val);
-                    setFeeInput('');
+                    if (!isNaN(val) && val >= 0 && val !== messageFee) updateMessageFee(val, () => setFeeInput(''));
+                    else setFeeInput('');
                   }
                 }}
                 className="w-24 h-9 rounded-xl bg-zinc-800 border-zinc-700 text-white text-right"
@@ -1174,8 +1174,7 @@ function PrivacySettings() {
                   disabled={isDmUpdating}
                   onClick={() => {
                     const val = parseFloat(feeInput);
-                    if (!isNaN(val) && val >= 0) updateMessageFee(val);
-                    setFeeInput('');
+                    if (!isNaN(val) && val >= 0) updateMessageFee(val, () => setFeeInput(''));
                   }}
                 >
                   {isDmUpdating ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Save'}
@@ -1932,8 +1931,8 @@ function MessagesSettings() {
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     const val = parseFloat(feeInput);
-                    if (!isNaN(val) && val >= 0 && val !== messageFee) updateMessageFee(val);
-                    setFeeInput('');
+                    if (!isNaN(val) && val >= 0 && val !== messageFee) updateMessageFee(val, () => setFeeInput(''));
+                    else setFeeInput('');
                   }
                 }}
                 className="w-24 h-9 rounded-xl bg-zinc-800 border-zinc-700 text-white text-right"
@@ -1947,8 +1946,7 @@ function MessagesSettings() {
                   disabled={isDmUpdating}
                   onClick={() => {
                     const val = parseFloat(feeInput);
-                    if (!isNaN(val) && val >= 0) updateMessageFee(val);
-                    setFeeInput('');
+                    if (!isNaN(val) && val >= 0) updateMessageFee(val, () => setFeeInput(''));
                   }}
                 >
                   {isDmUpdating ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Save'}

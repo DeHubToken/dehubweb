@@ -311,8 +311,15 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
   if (lowerError.includes('insufficient funds')) {
     return 'Insufficient funds for gas. Please add ETH to your wallet.';
   }
-  if (lowerError.includes('paymaster') || lowerError.includes('sponsor') ||
-      lowerError.includes('aa21') || lowerError.includes('aa25') || lowerError.includes('aa31')) {
+  // STF = SafeTransferFrom failure — ERC20 has no balance or missing approval.
+  // Check before paymaster because UserOperationExecutionError includes "paymaster"
+  // in its request-body details even when the real failure is a token transfer.
+  if (lowerError.includes(': stf') || lowerError.includes('reason: stf') ||
+      lowerError.includes("reason: 'stf'") || lowerError.includes('"stf"')) {
+    return 'Token transfer failed. Please check your DHB balance and wallet approval.';
+  }
+  if (lowerError.includes('aa21') || lowerError.includes('aa25') || lowerError.includes('aa31') ||
+      (lowerError.includes('paymaster') && !lowerError.includes('execution reverted'))) {
     return 'Gas sponsorship failed. Please add ETH to your wallet for gas fees.';
   }
   if (lowerError.includes('nonce')) {

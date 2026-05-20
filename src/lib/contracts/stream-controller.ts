@@ -176,7 +176,8 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
     );
   } catch (err: unknown) {
     const msg = String((err as any)?.message || err).toLowerCase();
-    if (msg.includes('stf') || msg.includes('safetransfer') || msg.includes('execution reverted')) {
+    if (msg.includes('stf') || msg.includes('safetransfer') || msg.includes('execution reverted') ||
+        msg.includes('token transfer failed')) {
       approvedChains.delete(chainKey);
       persistApprovalCache();
     }

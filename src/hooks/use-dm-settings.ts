@@ -117,8 +117,8 @@ export function useDmSettings() {
       const payload = toStatusPayload(value);
       updateMutation.mutate(payload);
     },
-    updateMessageFee: (fee: number) => {
-      updateFeeMutation.mutate(fee);
+    updateMessageFee: (fee: number, onSaved?: () => void) => {
+      updateFeeMutation.mutate(fee, { onSuccess: onSaved });
     },
     updateDoNotDisturb: (enabled: boolean) => {
       setDoNotDisturbLocal(enabled);
