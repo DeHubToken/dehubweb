@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X, Search, MessageSquare } from 'lucide-react';
+import { Image, Film, Radio, Sparkles, Loader2, Send, Mic, Music, Video, Upload, SpellCheck, Palette, ChevronLeft, ChevronRight, Type, Camera, Hash, X, Search, MessageSquare, BarChart2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
@@ -45,6 +45,8 @@ interface PostActionBarProps {
   onOpenSoundPicker?: () => void;
   attachedSound?: AttachedSound | null;
   onClearSound?: () => void;
+  onTogglePoll?: () => void;
+  hasPoll?: boolean;
 }
 
 export function PostActionBar({
@@ -77,6 +79,8 @@ export function PostActionBar({
   onOpenSoundPicker,
   attachedSound,
   onClearSound,
+  onTogglePoll,
+  hasPoll,
 }: PostActionBarProps) {
   const [audioPopoverOpen, setAudioPopoverOpen] = useState(false);
   const [livePopoverOpen, setLivePopoverOpen] = useState(false);
@@ -420,8 +424,21 @@ export function PostActionBar({
           </Popover>
         )}
 
-        {/* Removed audio buttons when hasImage - functionality is on the image thumbnail */}
-
+        {/* Poll button — hidden when live or media attached */}
+        {!isLive && !hasVideo && !hasImage && onTogglePoll && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                type="button"
+                onClick={onTogglePoll}
+                className={cn('p-2 hover:bg-white/10 rounded-xl transition-colors', hasPoll && 'bg-white/20')}
+              >
+                <BarChart2 className="w-5 h-5 text-white" />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent>{hasPoll ? 'Remove poll' : 'Add poll'}</TooltipContent>
+          </Tooltip>
+        )}
 
         {/* Emoji/GIF picker - single working button */}
         <EmojiGifPicker 

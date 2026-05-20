@@ -3,7 +3,8 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PostMediaPreview } from './PostMediaPreview';
 import { LinkPreviews } from './LinkPreviews';
-import type { MediaFile, AudioFile, LiveMode } from '../types';
+import { PollEditor } from './PollEditor';
+import type { MediaFile, AudioFile, LiveMode, PollData } from '../types';
 import type { FilterSettings, CropSettings } from '../types/filters';
 import { useEffect, useCallback, useRef, useState } from 'react';
 import { Upload, Calendar, Save, Clock, Mic, Square, Plus, X, Hash } from 'lucide-react';
@@ -65,6 +66,9 @@ interface PostContentAreaProps {
   setTitleText: (text: string) => void;
   // Category
   onOpenCategories?: () => void;
+  // Poll
+  poll: PollData | null;
+  onPollChange: (poll: PollData | null) => void;
 }
 
 // URL regex pattern - create fresh each time to avoid state issues with global flag
@@ -144,6 +148,8 @@ export function PostContentArea({
   titleText,
   setTitleText,
   onOpenCategories,
+  poll,
+  onPollChange,
 }: PostContentAreaProps) {
   const isLive = liveMode !== null;
   const isProcessingLinks = useRef(false);
@@ -805,6 +811,15 @@ export function PostContentArea({
           </div>
         </div>
       </div>
+
+      {/* Poll editor */}
+      {poll && (
+        <PollEditor
+          poll={poll}
+          onChange={onPollChange}
+          onRemove={() => onPollChange(null)}
+        />
+      )}
 
       {/* Schedule Sheet */}
       <ScheduleSheet
