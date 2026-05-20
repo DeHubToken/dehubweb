@@ -7,6 +7,7 @@
  */
 
 import { useQuery, useInfiniteQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
+import { useMemo, useEffect } from 'react';
 import i18n from 'i18next';
 import { getAccountInfo, getAccountByUsername, getAuthToken, getNFTInfo, type DeHubUser } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildCoverUrl } from '@/lib/media-url';
@@ -143,14 +144,33 @@ interface UseDeHubProfileOptions {
  * Supports both userId and username lookups
  * Pass address to get isFollowing/followsYou status
  */
+const PROFILE_CACHE_PREFIX = 'dehub-profile-cache:';
+
+function readProfileCache(key: string): ProfileData | undefined {
+  try {
+    const raw = localStorage.getItem(PROFILE_CACHE_PREFIX + key);
+    return raw ? (JSON.parse(raw) as ProfileData) : undefined;
+  } catch { return undefined; }
+}
+
+function writeProfileCache(key: string, data: ProfileData): void {
+  try {
+    localStorage.setItem(PROFILE_CACHE_PREFIX + key, JSON.stringify(data));
+  } catch { /* quota exceeded — ignore */ }
+}
+
 export function useDeHubProfile({ userId, username, address, enabled = true }: UseDeHubProfileOptions = {}) {
   const queryClient = useQueryClient();
-  
+  const cacheKey = userId || username || '';
+
+  // Instant first paint: serve cached profile from localStorage while fresh data loads
+  const cachedProfile = useMemo(() => readProfileCache(cacheKey), [cacheKey]);
+
   const query = useQuery({
     queryKey: ['dehub-profile', userId || username, address],
     queryFn: async ({ queryKey }) => {
       let user: DeHubUser;
-      
+
       if (username) {
         // Use username-based lookup
         user = await getAccountByUsername(username, address);
@@ -160,13 +180,13 @@ export function useDeHubProfile({ userId, username, address, enabled = true }: U
       } else {
         throw new Error('Either userId or username is required');
       }
-      
+
       // Guard: API may return 200 with an empty shell (no _id, address, or username).
       // Treat this as "not found" so the profile page shows an error state.
       if (!user._id && !user.address && !user.wallet_address && !user.username) {
         throw new Error('Profile not found');
       }
-      
+
       return mapUserToProfile(user);
     },
     enabled: enabled && !!(userId || username),
@@ -178,10 +198,16 @@ export function useDeHubProfile({ userId, username, address, enabled = true }: U
       return failureCount < 3;
     },
     retryDelay: (attemptIndex) => Math.min(800 * 2 ** attemptIndex, 5000),
-    // Keep showing previous profile data when address changes (auth resolves)
-    // instead of flashing skeleton while refetching with the new address
-    placeholderData: keepPreviousData,
+    // Show localStorage cache instantly, then keep previous data on address change
+    placeholderData: cachedProfile ?? keepPreviousData,
   });
+
+  // Persist fresh data to localStorage for next visit
+  useEffect(() => {
+    if (query.data && !query.isPlaceholderData) {
+      writeProfileCache(cacheKey, query.data);
+    }
+  }, [query.data, query.isPlaceholderData, cacheKey]);
 
   // Helper to update follow status optimistically
   const setFollowStatus = (isFollowing: boolean) => {

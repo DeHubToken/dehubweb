@@ -81,6 +81,11 @@ export function useProfilePage() {
     }
   }, [routeUsername, userId, apiProfile?.handle, navigate]);
 
+  // If the URL lookup key is already a wallet address, we can start fetching content
+  // immediately without waiting for the profile query to resolve first.
+  const lookupIsAddress = !!(lookupUserId && /^0x[a-fA-F0-9]{40}$/i.test(lookupUserId));
+  const contentUserId = apiProfile?.walletAddress ?? (lookupIsAddress ? lookupUserId : undefined);
+
   // Fetch user content — small first page for fast initial paint, then auto-fetch rest
   const {
     data: userContentData,
@@ -89,9 +94,9 @@ export function useProfilePage() {
     hasNextPage: hasNextContentPage,
     isFetchingNextPage: isFetchingNextContentPage,
   } = useDeHubUserContent({
-    userId: apiProfile?.walletAddress,
+    userId: contentUserId,
     viewerAddress: currentWalletAddress || undefined,
-    enabled: !!apiProfile?.walletAddress,
+    enabled: !!contentUserId,
   });
 
   // Auto-fetch remaining pages in background after first page loads
@@ -199,11 +204,11 @@ export function useProfilePage() {
     };
   }, [userContentData, repostsData]);
 
-  // Comment count — lazy-loaded with a 2s delay to prioritize visible content
+  // Comment count — lazy-loaded after a short delay to avoid blocking initial paint
   const [commentCountEnabled, setCommentCountEnabled] = useState(false);
   useEffect(() => {
     if (!apiProfile?.walletAddress) return;
-    const timer = setTimeout(() => setCommentCountEnabled(true), 2000);
+    const timer = setTimeout(() => setCommentCountEnabled(true), 500);
     return () => clearTimeout(timer);
   }, [apiProfile?.walletAddress]);
 
