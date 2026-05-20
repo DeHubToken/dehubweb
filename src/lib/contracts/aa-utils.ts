@@ -117,7 +117,7 @@ export async function switchChain(chainId: ChainId): Promise<void> {
   await initChainRpcUrls();
 
   const { provider, isWeb3Auth } = await getActiveProvider(chainId);
-  
+
   const chainConfig = CHAIN_CONFIGS[chainId];
   if (!chainConfig) {
     throw new Error(`Unsupported chain ID: ${chainId}`);
@@ -190,7 +190,7 @@ export async function switchChain(chainId: ChainId): Promise<void> {
 
       // Method not supported — AA provider is single-chain; set up a chain-specific one
       if (code === -32601 || code === -32603 ||
-          switchError?.message?.includes('does not exist')) {
+        switchError?.message?.includes('does not exist')) {
         console.warn('[AA] wallet_switchEthereumChain not supported, setting up chain-specific AA provider...');
         try {
           const chainAA = await setupAAProviderForChain(chainId);
@@ -228,12 +228,12 @@ export async function isSmartAccountSession(): Promise<boolean> {
     const web3auth = await getOrInitWeb3Auth();
     const userInfo = await web3auth.getUserInfo();
     const info = userInfo as Record<string, unknown>;
-    
+
     // Social logins have user info, external wallets don't
     return !!(info && (
-      info.email || 
-      info.name || 
-      info.verifier || 
+      info.email ||
+      info.name ||
+      info.verifier ||
       info.typeOfLogin ||
       info.idToken
     ));
@@ -329,8 +329,8 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
   } else if (error && typeof error === 'object') {
     const e = error as Record<string, any>;
     errorStr = e.message || e.shortMessage || e.reason ||
-               e.error?.message || e.data?.message || e.details ||
-               (() => { try { return JSON.stringify(error).slice(0, 300); } catch { return 'Unknown error'; } })();
+      e.error?.message || e.data?.message || e.details ||
+      (() => { try { return JSON.stringify(error).slice(0, 300); } catch { return 'Unknown error'; } })();
   } else {
     errorStr = String(error);
   }
@@ -347,7 +347,7 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
     return 'Transaction was rejected by user.';
   }
   if (lowerError.includes('paused') || lowerError.includes('erc20pausable')) {
-    return 'DHB token transfers are currently paused by the protocol on-chain.';
+    return 'DHB token transactions are currently paused on-chain.';
   }
   if (lowerError.includes('insufficient funds')) {
     return 'Insufficient funds for gas. Please add ETH to your wallet.';
@@ -357,11 +357,11 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
   // body even when the real failure is a token transfer. Also check for hex-encoded revert
   // (ABI-encoded Error("STF") contains "535446" — hex of "STF").
   if (lowerError.includes('stf') || lowerError.includes('535446') ||
-      lowerError.includes('safetransfer') || lowerError.includes('token transfer failed')) {
+    lowerError.includes('safetransfer') || lowerError.includes('token transfer failed')) {
     return 'Token transfer failed. Please check your DHB balance and wallet approval.';
   }
   if (lowerError.includes('aa21') || lowerError.includes('aa25') || lowerError.includes('aa31') ||
-      (lowerError.includes('paymaster') && !lowerError.includes('execution reverted'))) {
+    (lowerError.includes('paymaster') && !lowerError.includes('execution reverted'))) {
     return 'Gas sponsorship failed. Please add ETH to your wallet for gas fees.';
   }
   // Skip generic 'nonce' check — "nonce" appears in every UserOperation request body and
@@ -376,8 +376,8 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
     return 'Signature verification failed on-chain.';
   }
   if (lowerError.includes('unable to find matching address') || lowerError.includes('torus keyring') ||
-      lowerError.includes('unknown account') ||
-      lowerError.includes('session expired') || lowerError.includes('log in again to complete')) {
+    lowerError.includes('unknown account') ||
+    lowerError.includes('session expired') || lowerError.includes('log in again to complete')) {
     return 'Session expired. Please log in again to complete this transaction.';
   }
   if (lowerError.includes('execution reverted')) {
@@ -385,11 +385,11 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
     if (match) return `Transaction reverted: ${match[1]}`;
     return 'Transaction reverted by the contract.';
   }
-  
+
   if (context === 'approval') {
     return 'Token approval failed. Please try again.';
   }
-  
+
   return `Failed to ${context}: ${errorStr.slice(0, 100)}`;
 }
 
@@ -426,11 +426,11 @@ export async function writeContractAA(
 ): Promise<AAWriteResult> {
   const { provider, isWeb3Auth } = await getActiveProvider(options?.chainId);
   const context = options?.context || 'send transaction';
-  
+
   // Encode the function call
   const data = contractInterface.encodeFunctionData(functionName, args) as Hex;
   const fromAddress = await getWalletAddress();
-  
+
   // Estimate gas
   let gasLimit: Hex | undefined;
   let gasLimitBigInt: bigint | undefined;
@@ -458,7 +458,7 @@ export async function writeContractAA(
         value: toHex(options?.value ?? 0),
       }]);
     }
-    
+
     const estimateBigInt = BigInt(gasEstimate);
     gasLimitBigInt = applyGasMargin(estimateBigInt);
     gasLimit = toHex(gasLimitBigInt);
@@ -477,7 +477,7 @@ export async function writeContractAA(
     gasLimitBigInt = BigInt(500_000);
     gasLimit = toHex(gasLimitBigInt);
   }
-  
+
   console.log(`[AA] Sending transaction to ${contractAddress}:`, {
     function: functionName,
     gasLimit,
@@ -542,9 +542,9 @@ export async function writeContractAA(
         ...(options?.chainId ? { chainId: options.chainId as any } : {}),
       });
     }
-    
+
     console.log('[AA] Transaction submitted:', txHash);
-    
+
     // Return a result object with wait function
     return {
       hash: txHash,
@@ -570,14 +570,14 @@ export async function writeContractAA(
         // Web3Auth: poll via provider
         const maxAttempts = 120;
         const pollInterval = 500;
-        
+
         for (let i = 0; i < maxAttempts; i++) {
           try {
             const receipt = await provider.request({
               method: 'eth_getTransactionReceipt',
               params: [txHash],
             }) as { status: string; transactionHash: string } | null;
-            
+
             if (receipt) {
               console.log('[AA] Transaction confirmed:', receipt.transactionHash);
               return {
@@ -588,10 +588,10 @@ export async function writeContractAA(
           } catch {
             // Receipt not ready yet
           }
-          
+
           await new Promise(resolve => setTimeout(resolve, pollInterval));
         }
-        
+
         throw new Error('Transaction not confirmed within timeout');
       },
     };
@@ -619,7 +619,7 @@ export async function readContract<T>(
     { to: contractAddress, data },
     'latest',
   ]);
-  
+
   const decoded = contractInterface.decodeFunctionResult(functionName, result);
   return decoded[0] as T;
 }
@@ -659,7 +659,7 @@ export async function getERC20Balance(
   const erc20Interface = new Interface([
     'function balanceOf(address owner) view returns (uint256)',
   ]);
-  
+
   return readContract<bigint>(tokenAddress, erc20Interface, 'balanceOf', [ownerAddress], chainId);
 }
 
@@ -674,6 +674,6 @@ export async function getERC20Allowance(
   const erc20Interface = new Interface([
     'function allowance(address owner, address spender) view returns (uint256)',
   ]);
-  
+
   return readContract<bigint>(tokenAddress, erc20Interface, 'allowance', [ownerAddress, spenderAddress]);
 }

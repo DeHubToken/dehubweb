@@ -133,24 +133,9 @@ export function ImagePaywallModal({
       onConfirm();
     } catch (err: unknown) {
       console.error('[ImagePaywall] Payment failed:', err);
-      const errStr = String((err as any)?.message || err).toLowerCase();
-      const isPausedOrSTF = errStr.includes('paused') || errStr.includes('stf') || errStr.includes('535446');
-      
-      if (isPausedOrSTF) {
-        console.warn('[ImagePaywall] DHB token is paused on-chain. Falling back to mock transaction.');
-        toast.warning('Token transfer paused on-chain. Processing via mock payment for testing.', { 
-          id: 'image-gen-payment',
-          duration: 4000 
-        });
-        // Simulate confirmation delay
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        toast.success('Payment confirmed! Generating image...', { id: 'image-gen-payment' });
-        onConfirm();
-      } else {
-        const msg = parseTxError(err);
-        toast.dismiss('image-gen-payment');
-        toast.error(msg || 'Payment failed.');
-      }
+      const msg = parseTxError(err);
+      toast.dismiss('image-gen-payment');
+      toast.error(msg || 'Payment failed.');
     } finally {
       setIsPaying(false);
     }
