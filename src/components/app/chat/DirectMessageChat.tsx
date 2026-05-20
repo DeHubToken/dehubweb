@@ -811,7 +811,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
             action: { label: 'Sign in', onClick: openLoginModal },
             duration: 10000,
           });
-        } else if (isPausedErr || (isSTF && await checkDHBPaused(chainId).catch(() => false))) {
+        } else if (isPausedErr || (isSTF && await checkDHBPaused().catch(() => false))) {
           toast.error('DHB transactions paused', {
             id: 'dm-fee-send',
             description: 'DHB token transactions are temporarily paused on-chain. Please try again later.',
