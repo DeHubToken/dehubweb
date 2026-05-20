@@ -1689,7 +1689,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         </div>
         {!hideActions && (
           <>
-            {parseInt(video.id, 10) > 0 && <PollCard tokenId={parseInt(video.id, 10)} />}
+            {/* {parseInt(video.id, 10) > 0 && <PollCard tokenId={parseInt(video.id, 10)} />} */}
             <ActionBar
               postId={video.id}
               tokenId={parseInt(video.id, 10) || undefined}

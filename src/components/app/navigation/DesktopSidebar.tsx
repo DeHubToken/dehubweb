@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { useLocation, useNavigate, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
-import { PenSquare, Sparkles, LogIn, Menu, BarChart2, ChevronRight } from 'lucide-react';
+import { PenSquare, Sparkles, LogIn, Menu } from 'lucide-react';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { SidebarNavItem } from './SidebarNavItem';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
@@ -23,10 +22,9 @@ import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 
 interface DesktopSidebarProps {
   onPostClick: () => void;
-  onPostWithPoll?: () => void;
 }
 
-export function DesktopSidebar({ onPostClick, onPostWithPoll }: DesktopSidebarProps) {
+export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const location = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -35,7 +33,6 @@ export function DesktopSidebar({ onPostClick, onPostWithPoll }: DesktopSidebarPr
   
   const { isCollapsed, toggleCollapse } = useSidebarCollapse();
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
-  const [createPopoverOpen, setCreatePopoverOpen] = useState(false);
   const { data: unreadCount } = useUnreadNotificationCount();
   const { data: customUnread } = useCustomUnreadCount();
   const totalNotifUnread = (unreadCount?.total ?? 0) + (customUnread ?? 0);
@@ -78,17 +75,7 @@ export function DesktopSidebar({ onPostClick, onPostWithPoll }: DesktopSidebarPr
       }
       return;
     }
-    setCreatePopoverOpen(true);
-  };
-
-  const handleCreatePost = () => {
-    setCreatePopoverOpen(false);
     onPostClick();
-  };
-
-  const handleCreatePoll = () => {
-    setCreatePopoverOpen(false);
-    onPostWithPoll?.();
   };
 
   const handleProfileClick = (e: React.MouseEvent) => {
@@ -218,69 +205,39 @@ export function DesktopSidebar({ onPostClick, onPostWithPoll }: DesktopSidebarPr
 
         {/* Post / Login Button */}
         <div className="mt-3 flex items-center justify-center lg:block">
-          <Popover open={createPopoverOpen} onOpenChange={setCreatePopoverOpen} modal={false}>
-            <PopoverTrigger asChild>
-              <LiquidGlassBubble
-                shimmer
-                noBorder
-                className={cn("cursor-pointer w-full [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent", isConnecting && "opacity-70 pointer-events-none")}
-                onClick={handlePostClick}
-              >
-                <div className={cn(
-                  "flex items-center gap-2 font-semibold text-white justify-center",
-                  isCollapsed ? "py-[7px] text-[13.5px]" : "py-[7px] lg:py-3 text-[13.5px]"
-                )}>
-                  {isAuthenticated ? (
-                    <>
-                       <PenSquare className="w-[18px] h-[18px] flex-shrink-0" />
-                       <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.create')}</span>
-                    </>
-                  ) : isConnecting ? (
-                    <>
-                       <span className="w-[18px] h-[18px] border-2 border-white/30 border-t-white rounded-full animate-spin flex-shrink-0" />
-                       <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.connecting')}</span>
-                    </>
-                  ) : needsSignature ? (
-                    <>
-                       <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
-                       <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.signMessage')}</span>
-                    </>
-                  ) : (
-                    <>
-                       <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
-                       <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.login')}</span>
-                    </>
-                  )}
-                </div>
-              </LiquidGlassBubble>
-            </PopoverTrigger>
-
-            {isAuthenticated && (
-              <PopoverContent
-                side="top"
-                align="center"
-                sideOffset={8}
-                className="w-44 p-1 bg-zinc-900/95 backdrop-blur-xl border border-white/10 shadow-xl rounded-2xl z-[200]"
-              >
-                <button
-                  type="button"
-                  onClick={handleCreatePost}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white hover:bg-white/10 transition-colors"
-                >
-                  <PenSquare className="w-4 h-4 text-white/70" />
-                  Post
-                </button>
-                <button
-                  type="button"
-                  onClick={handleCreatePoll}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-white hover:bg-white/10 transition-colors"
-                >
-                  <BarChart2 className="w-4 h-4 text-white/70" />
-                  Poll
-                </button>
-              </PopoverContent>
-            )}
-          </Popover>
+          <LiquidGlassBubble
+            shimmer
+            noBorder
+            className={cn("cursor-pointer w-full [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent", isConnecting && "opacity-70 pointer-events-none")}
+            onClick={handlePostClick}
+          >
+            <div className={cn(
+              "flex items-center gap-2 font-semibold text-white justify-center",
+              isCollapsed ? "py-[7px] text-[13.5px]" : "py-[7px] lg:py-3 text-[13.5px]"
+            )}>
+              {isAuthenticated ? (
+                <>
+                   <PenSquare className="w-[18px] h-[18px] flex-shrink-0" />
+                   <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.create')}</span>
+                </>
+              ) : isConnecting ? (
+                <>
+                   <span className="w-[18px] h-[18px] border-2 border-white/30 border-t-white rounded-full animate-spin flex-shrink-0" />
+                   <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.connecting')}</span>
+                </>
+              ) : needsSignature ? (
+                <>
+                   <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
+                   <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.signMessage')}</span>
+                </>
+              ) : (
+                <>
+                   <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
+                   <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.login')}</span>
+                </>
+              )}
+            </div>
+          </LiquidGlassBubble>
         </div>
       </aside>
 

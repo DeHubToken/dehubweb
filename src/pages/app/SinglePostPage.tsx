@@ -834,7 +834,7 @@ export default function SinglePostPage() {
               <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
                 {renderContent()}
               </div>
-              {id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
+              {/* {id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />} */}
               {/* Related Videos Feed */}
               {id && <RelatedVideosFeed currentVideoId={id} />}
             </div>
