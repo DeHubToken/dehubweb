@@ -34,7 +34,6 @@ export const HeroTitle = ({
   const { t } = useTranslation();
   const title = titleProp || t('hero.title', 'Welcome To');
   const subtitle = subtitleProp || t('hero.subtitle', 'Our World');
-  // Split title for mobile 3-line layout
   const titleWords = title.split(' ');
   const mobileLine1 = titleWords.slice(0, 2).join(' ');
   const mobileLine2 = titleWords.slice(2).join(' ');
