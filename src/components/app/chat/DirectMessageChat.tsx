@@ -798,18 +798,28 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
       } catch (error: unknown) {
         console.error('[DM] Fee payment failed:', error);
         const errStr = String((error as any)?.message || error).toLowerCase();
-        const isSessionExpired = errStr.includes('session expired') || errStr.includes('torus keyring') || errStr.includes('unable to find matching address') || errStr.includes('log in again');
-        if (isSessionExpired) {
-          toast.error('Session expired', {
+        const isPausedOrSTF = errStr.includes('paused') || errStr.includes('stf') || errStr.includes('535446');
+        
+        if (isPausedOrSTF) {
+          toast.error('Token transfer paused on-chain: DHB token transfers are currently paused by the protocol. Cannot process fee payment.', { 
             id: 'dm-fee-send',
-            description: 'Please sign in again to send this message',
-            action: { label: 'Sign in', onClick: openLoginModal },
-            duration: 10000,
+            duration: 6000 
           });
         } else {
-          const message = parseTxError(error as Error);
-          toast.error(message || 'Payment failed', { id: 'dm-fee-send' });
+          const isSessionExpired = errStr.includes('session expired') || errStr.includes('torus keyring') || errStr.includes('unable to find matching address') || errStr.includes('log in again');
+          if (isSessionExpired) {
+            toast.error('Session expired', {
+              id: 'dm-fee-send',
+              description: 'Please sign in again to send this message',
+              action: { label: 'Sign in', onClick: openLoginModal },
+              duration: 10000,
+            });
+          } else {
+            const message = parseTxError(error as Error);
+            toast.error(message || 'Payment failed', { id: 'dm-fee-send' });
+          }
         }
+        
         // Remove optimistic message on failure
         queryClient.setQueryData(messagesKeys.messages(resolvedConversationId), (old: any) => {
           if (!old?.pages) return old;

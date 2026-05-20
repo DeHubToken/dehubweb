@@ -315,6 +315,9 @@ export function parseTxError(error: unknown, context: string = 'transaction'): s
   if (lowerError.includes('user rejected') || lowerError.includes('user denied')) {
     return 'Transaction was rejected by user.';
   }
+  if (lowerError.includes('paused') || lowerError.includes('erc20pausable')) {
+    return 'DHB token transfers are currently paused by the protocol on-chain.';
+  }
   if (lowerError.includes('insufficient funds')) {
     return 'Insufficient funds for gas. Please add ETH to your wallet.';
   }
