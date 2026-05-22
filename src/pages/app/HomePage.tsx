@@ -661,7 +661,7 @@ export default function HomePage() {
               
               {/* Settings Button - toggles current tab's filters */}
               <button
-                onClick={() => handleTabClick(activeTab)}
+                onClick={() => window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }))}
                 className={cn(
                   "relative flex items-center justify-center px-3 py-2.5 rounded-xl transition-colors",
                   hasActiveFilters
