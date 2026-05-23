@@ -810,16 +810,16 @@ export function PostContentArea({
             </span>
           </div>
         </div>
-      </div>
 
-      {/* Poll editor */}
-      {poll && (
-        <PollEditor
-          poll={poll}
-          onChange={onPollChange}
-          onRemove={() => onPollChange(null)}
-        />
-      )}
+        {/* Poll editor */}
+        {poll && (
+          <PollEditor
+            poll={poll}
+            onChange={onPollChange}
+            onRemove={() => onPollChange(null)}
+          />
+        )}
+      </div>
 
       {/* Schedule Sheet */}
       <ScheduleSheet

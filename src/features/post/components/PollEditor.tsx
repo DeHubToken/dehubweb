@@ -35,7 +35,7 @@ export function PollEditor({ poll, onChange, onRemove }: PollEditorProps) {
   };
 
   return (
-    <div className="mx-4 mb-3 rounded-2xl border border-white/10 bg-white/[0.04] overflow-hidden">
+    <div className="mt-3 mb-1 rounded-2xl border border-white/10 bg-white/[0.04] overflow-hidden">
       {/* Header */}
       <div className="flex items-center justify-between px-3 py-2 border-b border-white/10">
         <span className="text-xs font-semibold text-white/70 uppercase tracking-wider">Poll</span>
