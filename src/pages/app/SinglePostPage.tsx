@@ -833,8 +833,8 @@ export default function SinglePostPage() {
               />
               <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
                 {renderContent()}
+                {id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
               </div>
-              {/* {id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />} */}
               {/* Related Videos Feed */}
               {id && <RelatedVideosFeed currentVideoId={id} />}
             </div>
@@ -980,8 +980,8 @@ export default function SinglePostPage() {
         <div className="max-w-2xl mx-auto">
           <div className="lg:rounded-xl lg:border lg:border-white/[0.12] lg:bg-white/[0.03] lg:p-3">
             {renderContent()}
+            {id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
           </div>
-          {id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
           {isLivePost && id && post && (
             <LivePostChat
               streamId={id}

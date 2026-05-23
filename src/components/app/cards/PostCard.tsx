@@ -400,7 +400,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           }}
         />
 
-        {/* {parseInt(post.id, 10) > 0 && <PollCard tokenId={parseInt(post.id, 10)} />} */}
+        {parseInt(post.id, 10) > 0 && <PollCard tokenId={parseInt(post.id, 10)} />}
 
         <div className="pt-1">
           <ActionBar
