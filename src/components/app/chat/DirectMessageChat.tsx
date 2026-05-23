@@ -17,7 +17,7 @@ import { useTranslation } from '../TranslatableText';
 import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDmSettings } from '@/hooks/use-dm-settings';
-import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, getAccountInfo, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
+import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, getAccountInfo, pinDmMessage, unpinDmMessage, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
 import { apiCall, getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
@@ -343,19 +343,40 @@ function MessagesSkeleton() {
   );
 }
 
-function useDmPin(conversationId: string) {
-  const storageKey = `dehub-dm-pin-${conversationId}`;
-  const [pinnedMessageId, setPinnedMessageId] = useState<string | null>(() => {
-    try { return localStorage.getItem(storageKey) || null; } catch { return null; }
-  });
-  const pinMessage = (messageId: string) => {
+function useDmPin(conversationId: string, address: string | undefined, conversation: DeHubConversation) {
+  const serverPinned = conversation.pinnedMessages?.length
+    ? conversation.pinnedMessages[conversation.pinnedMessages.length - 1]
+    : null;
+
+  const [pinnedMessageId, setPinnedMessageId] = useState<string | null>(serverPinned);
+
+  useEffect(() => {
+    setPinnedMessageId(serverPinned);
+  }, [serverPinned]);
+
+  const pinMessage = useCallback(async (messageId: string) => {
     setPinnedMessageId(messageId);
-    try { localStorage.setItem(storageKey, messageId); } catch {}
-  };
-  const unpinMessage = () => {
+    if (address) {
+      try {
+        await pinDmMessage(conversationId, messageId, address);
+      } catch {
+        setPinnedMessageId(serverPinned);
+      }
+    }
+  }, [conversationId, address, serverPinned]);
+
+  const unpinMessage = useCallback(async () => {
+    const previous = pinnedMessageId;
     setPinnedMessageId(null);
-    try { localStorage.removeItem(storageKey); } catch {}
-  };
+    if (address && previous) {
+      try {
+        await unpinDmMessage(conversationId, previous, address);
+      } catch {
+        setPinnedMessageId(previous);
+      }
+    }
+  }, [conversationId, address, pinnedMessageId]);
+
   return { pinnedMessageId, pinMessage, unpinMessage };
 }
 
@@ -405,7 +426,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const [isFreeAccessGranted, setIsFreeAccessGranted] = useState(false);
   const [isFreeAccessProcessing, setIsFreeAccessProcessing] = useState(false);
   const [resolvedConversationId, setResolvedConversationId] = useState(conversation.id);
-  const { pinnedMessageId, pinMessage: handlePinMessage, unpinMessage: handleUnpinMessage } = useDmPin(conversation.id);
+  const { pinnedMessageId, pinMessage: handlePinMessage, unpinMessage: handleUnpinMessage } = useDmPin(conversation.id, walletAddress ?? undefined, conversation);
   const [initError, setInitError] = useState(false);
   const { messageFee: myMessageFee } = useDmSettings();
   const isInitialMount = useRef(true);

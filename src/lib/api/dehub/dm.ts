@@ -32,6 +32,7 @@ export interface DeHubConversation {
   isGroup?: boolean;
   isBlocked?: boolean;
   dmFee?: DmFee;
+  pinnedMessages?: string[];
 }
 
 export interface DeHubDMMessage {
@@ -218,6 +219,7 @@ function mapApiConversationToDeHub(item: any, myAddress: string): DeHubConversat
     isBlocked: item.isBlocked || false,
     groupInfo: item.groupInfo,
     dmFee: item.dmFee,
+    pinnedMessages: Array.isArray(item.pinnedMessages) ? item.pinnedMessages : [],
   };
 }
 
@@ -870,6 +872,22 @@ export async function revokeFreeDmAccess(targetAddress: string): Promise<{ succe
     console.error('[DM API] revokeFreeDmAccess failed:', error);
     throw error;
   }
+}
+
+export async function pinDmMessage(dmId: string, messageId: string, address: string): Promise<void> {
+  await apiCall<any>(`/api/dm/${dmId}/pin`, {
+    method: 'POST',
+    body: { messageId, address: address.toLowerCase() },
+    requiresAuth: true,
+  });
+}
+
+export async function unpinDmMessage(dmId: string, messageId: string, address: string): Promise<void> {
+  await apiCall<any>(`/api/dm/${dmId}/pin`, {
+    method: 'DELETE',
+    body: { messageId, address: address.toLowerCase() },
+    requiresAuth: true,
+  });
 }
 
 /**
