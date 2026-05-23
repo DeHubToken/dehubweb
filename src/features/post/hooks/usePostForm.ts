@@ -881,7 +881,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     if (isPosting) return;
     
     // Validate required fields
-    if (!text.trim() && media.length === 0 && !liveMode) {
+    if (!text.trim() && media.length === 0 && !liveMode && !pollIsValid) {
       toast.error('Add some content first');
       return;
     }
