@@ -1,4 +1,4 @@
-import { X, Plus } from 'lucide-react';
+import { X, Plus, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type { PollData, PollOption } from '../types';
 
@@ -48,6 +48,18 @@ export function PollEditor({ poll, onChange, onRemove }: PollEditorProps) {
         </button>
       </div>
 
+      {/* Question */}
+      <div className="px-3 pt-3">
+        <input
+          type="text"
+          value={poll.question}
+          onChange={e => onChange({ ...poll, question: e.target.value })}
+          placeholder="Ask a question..."
+          maxLength={200}
+          className="w-full bg-white/[0.06] border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder:text-white/30 outline-none mb-2"
+        />
+      </div>
+
       {/* Options */}
       <div className="p-3 flex flex-col gap-2">
         {poll.options.map((option, idx) => (
@@ -85,6 +97,23 @@ export function PollEditor({ poll, onChange, onRemove }: PollEditorProps) {
             Add option
           </button>
         )}
+      </div>
+
+      {/* Multiple choice */}
+      <div className="px-3 pb-2">
+        <button
+          type="button"
+          onClick={() => onChange({ ...poll, isMultipleChoice: !poll.isMultipleChoice })}
+          className="flex items-center gap-2 text-xs text-white/50 hover:text-white/70 transition-colors"
+        >
+          <span className={cn(
+            'w-4 h-4 rounded flex items-center justify-center border transition-colors',
+            poll.isMultipleChoice ? 'bg-blue-500 border-blue-500' : 'border-white/30'
+          )}>
+            {poll.isMultipleChoice && <Check className="w-2.5 h-2.5 text-white" />}
+          </span>
+          Allow multiple answers
+        </button>
       </div>
 
       {/* Duration */}

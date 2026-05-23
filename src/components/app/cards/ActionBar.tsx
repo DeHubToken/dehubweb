@@ -180,7 +180,7 @@ export function ActionBar({
   };
 
   const navigate = useNavigate();
-  const { isAuthenticated, walletAddress } = useAuth();
+  const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const queryClient = useQueryClient();
   // When external handlers are provided (governance), always sync from props
   const hasExternalHandlers = !!(onLike || onDislike);
@@ -242,7 +242,7 @@ export function ActionBar({
     if (!postId || isVoting || externalDisabled) return;
     
     if (!isAuthenticated) {
-      toast.error('Log in to engage');
+      openLoginModal();
       return;
     }
 

@@ -45,8 +45,10 @@ export interface PollOption {
 }
 
 export interface PollData {
+  question: string;
   options: PollOption[];
   duration: number; // hours: 24, 72, 168
+  isMultipleChoice?: boolean;
 }
 
 export type LiveMode = 'video' | 'townhall' | null;

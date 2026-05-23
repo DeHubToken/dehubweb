@@ -6,7 +6,7 @@ import { dhbText } from '@/lib/dhb-toast';
 import { createLogger } from '@/lib/logger';
 
 const mintLogger = createLogger('PostForm.handlePost');
-import { mintPost, type StreamInfo } from '@/lib/api/dehub';
+import { mintPost, createPoll, type StreamInfo } from '@/lib/api/dehub';
 import { 
   mintOnChain, 
   getWeb3AuthSigner,
@@ -294,7 +294,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   }, [hasImage, hasAudio, hasVideo, isShort, hasMusicVideo, isLive]);
 
   const destinations = getPostDestinations();
-  const pollIsValid = poll !== null && poll.options.filter(o => o.text.trim()).length >= 2;
+  const pollIsValid = poll !== null && poll.question.trim().length > 0 && poll.options.filter(o => o.text.trim()).length >= 2;
   const canPost = Boolean((text.trim() || media.length > 0 || isLive || pollIsValid) && !isGeneratingThumbnail);
 
   // Actions
@@ -1291,6 +1291,22 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         addOptimisticPost({ id: optimisticId, type: 'post', data: textPost, createdAt: new Date() });
       }
       
+      if (poll && pollIsValid) {
+        try {
+          const validOptions = poll.options.filter(o => o.text.trim()).map(o => o.text.trim());
+          const expiresAt = new Date(Date.now() + (poll.duration ?? 24) * 3600 * 1000).toISOString();
+          await createPoll({
+            tokenId: mintResponse.createdTokenId,
+            question: poll.question.trim(),
+            options: validOptions,
+            expiresAt,
+            isMultipleChoice: poll.isMultipleChoice ?? false,
+          });
+        } catch (pollErr) {
+          console.warn('[Mint] Poll creation failed:', pollErr);
+        }
+      }
+
       resetForm();
 
       // Increment trending category counts in DB
@@ -1361,7 +1377,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     isWatch2Earn, w2eViews, w2eComments, w2eTotal,
     isTokenGated, tokenAmount, liveMode, scheduledDate,
     hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user,
-    showTitle, titleText, connectionSource
+    showTitle, titleText, connectionSource, poll, pollIsValid
   ]);
 
   return {

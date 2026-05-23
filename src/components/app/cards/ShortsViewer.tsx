@@ -171,7 +171,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
   const navigate = useNavigate();
-  const { isAuthenticated, walletAddress } = useAuth();
+  const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
 
   const currentShort = shorts[currentIndex];
   const [showTipModal, setShowTipModal] = useState(false);
@@ -207,7 +207,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     }
     
     if (!isAuthenticated) {
-      toast.error('Please log in to follow');
+      openLoginModal();
       return;
     }
     
@@ -258,7 +258,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     if (!inlineCommentText.trim() || !currentShort?.id || isPostingComment) return;
     
     if (!isAuthenticated) {
-      toast.error('Please log in to comment');
+      openLoginModal();
       return;
     }
     
@@ -337,7 +337,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     if (!tokenId || tokenId === 'undefined' || isVoting) return;
     
     if (!isAuthenticated) {
-      toast.error('Log in to engage');
+      openLoginModal();
       return;
     }
 

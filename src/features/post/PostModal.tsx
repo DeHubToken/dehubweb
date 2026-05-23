@@ -33,11 +33,13 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
       actions.setPoll(null);
     } else {
       actions.setPoll({
+        question: '',
         options: [
           { id: '1', text: '' },
           { id: '2', text: '' },
         ],
         duration: 24,
+        isMultipleChoice: false,
       });
     }
   }, [state.poll, actions.setPoll]);
