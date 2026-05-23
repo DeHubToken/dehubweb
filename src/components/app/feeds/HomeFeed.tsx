@@ -9,6 +9,7 @@
  */
 
 import { useEffect, useRef, useMemo, useCallback, useState, type ReactNode } from 'react';
+import { getDeletedPostIds } from '@/lib/deleted-posts-store';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -767,9 +768,13 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   
   // Client-side multi-category filtering (when >1 category selected, API returns all)
   const items = useMemo(() => {
-    if (selectedCategories.length <= 1) return rawItems; // 0 = all, 1 = API-filtered
+    const deletedIds = getDeletedPostIds();
+    let filtered = deletedIds.size > 0
+      ? rawItems.filter(item => !deletedIds.has(String((item.data as any)?.id)))
+      : rawItems;
+    if (selectedCategories.length <= 1) return filtered; // 0 = all, 1 = API-filtered
     const catSet = new Set(selectedCategories.map(c => c.toLowerCase()));
-    return rawItems.filter(item => {
+    return filtered.filter(item => {
       const itemCats: string[] = (item.data as any)?.category || (item.data as any)?.categories || [];
       if (!itemCats.length) return false;
       return itemCats.some(c => catSet.has(String(c).toLowerCase()));
@@ -1450,12 +1455,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           ) : (
             <div key={`${selectedSort.value}-${selectedDate.value}-${selectedPostType}`}>
               {/* Render optimistic posts */}
-              {optimisticPosts.length > 0 && (
+              {optimisticPosts.filter(op => !getDeletedPostIds().has(op.id)).length > 0 && (
                 <div className="mb-3">
-                  {renderMasonryGrid(optimisticPosts.map((op) => {
+                  {renderMasonryGrid(optimisticPosts.filter(op => !getDeletedPostIds().has(op.id)).map((op) => {
                     const feedItem: FeedItemType = { type: op.type, data: op.data as any };
                     return renderFeedItem(feedItem, -999);
-                  }), optimisticPosts.map((op) => ({ type: op.type, data: op.data as any })))}
+                  }), optimisticPosts.filter(op => !getDeletedPostIds().has(op.id)).map((op) => ({ type: op.type, data: op.data as any })))}
                 </div>
               )}
               

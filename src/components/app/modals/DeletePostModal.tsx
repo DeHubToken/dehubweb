@@ -17,6 +17,8 @@ import {
 } from '@/components/ui/drawer';
 import { deletePost } from '@/lib/api/dehub';
 import { toast } from 'sonner';
+import { useQueryClient } from '@tanstack/react-query';
+import { markPostDeleted } from '@/lib/deleted-posts-store';
 
 interface DeletePostModalProps {
   open: boolean;
@@ -32,12 +34,16 @@ export function DeletePostModal({
   onSuccess,
 }: DeletePostModalProps) {
   const [isDeleting, setIsDeleting] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleDelete = async () => {
     setIsDeleting(true);
     try {
       const result = await deletePost(tokenId);
       if (result.result) {
+        markPostDeleted(tokenId);
+        queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+        queryClient.invalidateQueries({ queryKey: ['profile-content'] });
         toast.success('Post deleted');
         onSuccess?.();
         onOpenChange(false);
