@@ -400,17 +400,30 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
   const handleSoundtrackToggle = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     const audio = soundtrackAudioRef.current;
-    if (!audio) return;
+    console.log('[Soundtrack] badge clicked', { audioEl: !!audio, src: audio?.src, isAudioPlaying, readyState: audio?.readyState, networkState: audio?.networkState });
+    if (!audio) { console.warn('[Soundtrack] no audio element ref'); return; }
     if (isAudioPlaying) {
       audio.pause();
       setIsAudioPlaying(false);
     } else {
-      audio.play().then(() => setIsAudioPlaying(true)).catch(() => {});
+      console.log('[Soundtrack] calling audio.play()...');
+      audio.play()
+        .then(() => { console.log('[Soundtrack] play() resolved OK'); setIsAudioPlaying(true); })
+        .catch((err) => { console.error('[Soundtrack] play() rejected:', err); });
     }
   }, [isAudioPlaying]);
 
   useEffect(() => {
     if (!post.soundtrackUrl) return;
+    console.log('[Soundtrack] effect running, post.id=', post.id, 'url=', post.soundtrackUrl);
+    const audio = soundtrackAudioRef.current;
+    console.log('[Soundtrack] audio ref at effect time:', audio ? 'EXISTS' : 'NULL', audio?.src);
+    if (audio) {
+      audio.onerror = (e) => console.error('[Soundtrack] audio error event:', e, 'code:', audio.error?.code, 'msg:', audio.error?.message);
+      audio.oncanplay = () => console.log('[Soundtrack] canplay, readyState=', audio.readyState);
+      audio.onstalled = () => console.warn('[Soundtrack] stalled');
+      audio.onloadstart = () => console.log('[Soundtrack] loadstart, src=', audio.src);
+    }
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) {
