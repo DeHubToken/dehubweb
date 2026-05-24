@@ -18,6 +18,18 @@ import { useAuth } from '@/contexts/AuthContext';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 
+/** Parse [soundtrack:tokenId:title:creator] tag from a description string */
+export function parseSoundtrackTag(description?: string): { soundtrackUrl?: string; soundtrackTitle?: string; soundtrackCreator?: string } {
+  if (!description) return {};
+  const m = description.match(/\[soundtrack:(\d+):([^:]*):([^\]]*)\]/);
+  if (!m) return {};
+  return {
+    soundtrackUrl: `${DEHUB_CDN_BASE}audios/${m[1]}.mp3`,
+    soundtrackTitle: m[2] || 'Sound',
+    soundtrackCreator: m[3] || '',
+  };
+}
+
 // ===========================================================================
 // TYPES
 // ===========================================================================
@@ -195,7 +207,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
   // Build audio URL from API audioUrl field, fallback to videoUrl for audio posts
   const rawAudioSource = item.audioUrl || (isAudioPost ? item.videoUrl : undefined);
   const audioUrl = isAudioPost && rawAudioSource
-    ? (rawAudioSource.startsWith('http') ? rawAudioSource : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${rawAudioSource}`)
+    ? (rawAudioSource.startsWith('http') ? rawAudioSource : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${rawAudioSource.replace(/^\/+/, '')}`)
     : undefined;
   const rawAvatarPath = extractAvatarPath(item);
   const channelAvatar = rawAvatarPath 
@@ -273,6 +285,9 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     ? buildAvatarUrl(item.minter, rawAvatarPath) || 'user'
     : 'user';
   
+  const soundtrack = parseSoundtrackTag(item.description);
+  const cleanDescription = item.description?.replace(/\[soundtrack:[^\]]*\]/, '').trim() || undefined;
+
   return {
     id,
     type: 'image',
@@ -282,7 +297,8 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     image,
     imageUrls,
     title: item.name,
-    description: item.description,
+    description: cleanDescription,
+    ...soundtrack,
     likes: item.likes ?? item.totalVotes?.for ?? 0,
     caption: item.description || item.name || '',
     comments: item.commentCount || 0,

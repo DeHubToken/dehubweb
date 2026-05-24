@@ -246,6 +246,12 @@ export interface ImagePost extends BaseFeedItem {
   isQuotePost?: boolean;
   /** The quoted post data (for rendering embedded quote) */
   quotedPost?: import('@/lib/api/dehub/types').DeHubNFT | null;
+  /** Soundtrack URL (plays while the image is in view) */
+  soundtrackUrl?: string;
+  /** Soundtrack display title */
+  soundtrackTitle?: string;
+  /** Soundtrack creator name */
+  soundtrackCreator?: string;
 }
 
 /**

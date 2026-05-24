@@ -22,6 +22,7 @@ import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { getNFTInfo, getLiveStream, type DeHubNFT } from '@/lib/api/dehub';
+import { parseSoundtrackTag } from '@/hooks/use-unified-feed';
 import { PollCard } from '@/components/app/cards/PollCard';
 import { useStreamLiveStatus } from '@/hooks/use-stream-live-status';
 
@@ -107,7 +108,7 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
   // The API sometimes returns the audio file path in videoUrl for audio posts
   const rawAudioSource = rawAudioUrl || (isAudioPost ? (nft.videoUrl || nft.media_url) : undefined);
   const audioUrl = isAudioPost && rawAudioSource
-    ? (rawAudioSource.startsWith('http') ? rawAudioSource : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${rawAudioSource}`)
+    ? (rawAudioSource.startsWith('http') ? rawAudioSource : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${rawAudioSource.replace(/^\/+/, '')}`)
     : undefined;
   
   return {
@@ -164,7 +165,9 @@ function toImagePost(nft: DeHubNFT): ImagePost {
   const imageUrls = feedImages && feedImages.length > 0 ? feedImages : [primaryImage];
   
   const title = nft.title || nft.name;
-  const description = nft.description && nft.description !== title ? nft.description : undefined;
+  const rawDescription = nft.description && nft.description !== title ? nft.description : undefined;
+  const soundtrack = parseSoundtrackTag(rawDescription);
+  const description = rawDescription?.replace(/\[soundtrack:[^\]]*\]/, '').trim() || undefined;
   const rawTimestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
   const timestamp = rawTimestamp && !/^(just now|\d+[smhdwy]|\d+mo)$/i.test(String(rawTimestamp).trim()) ? rawTimestamp : undefined;
   const streamInfo = nft.streamInfo;
@@ -212,6 +215,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     repostCount: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
     isQuotePost: !!nft.isQuotePost,
     quotedPost: nft.quotedPost || null,
+    ...soundtrack,
   };
 }
 
