@@ -877,9 +877,9 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     }
   }, []);
 
-  const handlePost = useCallback(async () => {
+  const handlePost = useCallback(async (extra?: { soundtrackTag?: string }) => {
     if (isPosting) return;
-    
+
     // Validate required fields
     if (!text.trim() && media.length === 0 && !liveMode && !pollIsValid) {
       toast.error('Add some content first');
@@ -1081,6 +1081,13 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         // Image/Text posts: no title, everything goes to description
         postTitle = ' ';
         postDescription = text.trim();
+      }
+
+      // Append soundtrack tag if provided (image/video posts with attached sound)
+      if (extra?.soundtrackTag && !postDescription.includes('[soundtrack:')) {
+        postDescription = postDescription
+          ? `${postDescription}\n${extra.soundtrackTag}`
+          : extra.soundtrackTag;
       }
 
       // Extract hashtags from description and title, use as augmented categories

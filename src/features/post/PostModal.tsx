@@ -183,16 +183,10 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         onCameraCapture={actions.openCameraCapture}
         onEnhanceWithAI={actions.handleEnhanceWithAI}
         onPost={() => {
-          // Inject soundtrack metadata into description before posting
-          if (attachedSound) {
-            const tag = `[soundtrack:${attachedSound.tokenId}:${attachedSound.title}:${attachedSound.creator}]`;
-            const currentDesc = state.text;
-            if (!currentDesc.includes('[soundtrack:')) {
-              actions.setText(currentDesc + (currentDesc ? '\n' : '') + tag);
-            }
-          }
-          // Small delay to let state update, then post
-          setTimeout(() => actions.handlePost(), 50);
+          const soundtrackTag = attachedSound
+            ? `[soundtrack:${attachedSound.tokenId}:${attachedSound.title}:${attachedSound.creator}]`
+            : undefined;
+          actions.handlePost(soundtrackTag ? { soundtrackTag } : undefined);
         }}
         canPost={computed.canPost}
         isEnhancing={state.isEnhancing}
