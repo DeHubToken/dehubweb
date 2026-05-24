@@ -419,19 +419,25 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
     const audio = soundtrackAudioRef.current;
     console.log('[Soundtrack] audio ref at effect time:', audio ? 'EXISTS' : 'NULL', audio?.src);
     if (audio) {
-      audio.onerror = (e) => console.error('[Soundtrack] audio error event:', e, 'code:', audio.error?.code, 'msg:', audio.error?.message);
+      audio.onerror = () => console.error('[Soundtrack] audio error, code:', audio.error?.code, 'msg:', audio.error?.message, 'src:', audio.src);
       audio.oncanplay = () => console.log('[Soundtrack] canplay, readyState=', audio.readyState);
-      audio.onstalled = () => console.warn('[Soundtrack] stalled');
       audio.onloadstart = () => console.log('[Soundtrack] loadstart, src=', audio.src);
     }
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting) {
-          soundtrackAudioRef.current?.pause();
+        const aud = soundtrackAudioRef.current;
+        if (!aud) return;
+        if (entry.isIntersecting) {
+          console.log('[Soundtrack] in-view, attempting autoplay');
+          aud.play()
+            .then(() => { console.log('[Soundtrack] autoplay OK'); setIsAudioPlaying(true); })
+            .catch((err) => { console.warn('[Soundtrack] autoplay blocked:', err.name, err.message); });
+        } else {
+          aud.pause();
           setIsAudioPlaying(false);
         }
       },
-      { threshold: 0.3 }
+      { threshold: 0.5 }
     );
     if (viewRef.current) observer.observe(viewRef.current);
     return () => observer.disconnect();
@@ -765,7 +771,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
 
         {/* Hidden audio element for soundtrack playback */}
         {post.soundtrackUrl && (
-          <audio ref={soundtrackAudioRef} src={post.soundtrackUrl} loop preload="none" className="hidden" />
+          <audio ref={soundtrackAudioRef} src={post.soundtrackUrl} loop preload="metadata" className="hidden" />
         )}
 
         {/* Content Type Badges - Bounty only (PPV/Lock are shown via centered overlay) */}
