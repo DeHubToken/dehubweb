@@ -14,7 +14,7 @@ import { hasCommunityLink, stripCommunityLinks } from '@/components/app/communit
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Music, Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Info, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus } from 'lucide-react';
+import { Music, Pause, Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Info, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus } from 'lucide-react';
 import { useCreatePoll } from '@/hooks/use-polls';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -393,21 +393,32 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
 
-  // Soundtrack auto-play: play when card is in view, pause when out of view
+  // Soundtrack: user-initiated play/pause; auto-pause when card scrolls out of view
   const soundtrackAudioRef = useRef<HTMLAudioElement>(null);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+
+  const handleSoundtrackToggle = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    const audio = soundtrackAudioRef.current;
+    if (!audio) return;
+    if (isAudioPlaying) {
+      audio.pause();
+      setIsAudioPlaying(false);
+    } else {
+      audio.play().then(() => setIsAudioPlaying(true)).catch(() => {});
+    }
+  }, [isAudioPlaying]);
+
   useEffect(() => {
     if (!post.soundtrackUrl) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
-        const audio = soundtrackAudioRef.current;
-        if (!audio) return;
-        if (entry.isIntersecting) {
-          audio.play().catch(() => {});
-        } else {
-          audio.pause();
+        if (!entry.isIntersecting) {
+          soundtrackAudioRef.current?.pause();
+          setIsAudioPlaying(false);
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0.3 }
     );
     if (viewRef.current) observer.observe(viewRef.current);
     return () => observer.disconnect();
@@ -721,14 +732,22 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           </SwipeableCarousel>
         )}
 
-        {/* Soundtrack badge — bottom-left, like TikTok */}
+        {/* Soundtrack badge — bottom-left, tap to play/pause */}
         {post.soundtrackUrl && post.soundtrackTitle && (
-          <div className="absolute bottom-2 left-2 z-10 flex items-center gap-1.5 bg-black/40 backdrop-blur-[16px] px-2 py-1 rounded-lg border border-white/10 max-w-[60%]">
-            <Music className="w-3 h-3 text-white flex-shrink-0" />
+          <button
+            type="button"
+            data-no-navigate
+            onClick={handleSoundtrackToggle}
+            className="absolute bottom-2 left-2 z-10 flex items-center gap-1.5 bg-black/40 backdrop-blur-[16px] px-2 py-1 rounded-lg border border-white/10 max-w-[60%] hover:bg-black/60 transition-colors"
+          >
+            {isAudioPlaying
+              ? <Pause className="w-3 h-3 text-white flex-shrink-0" />
+              : <Music className="w-3 h-3 text-white flex-shrink-0" />
+            }
             <span className="text-white text-[10px] truncate">
               {post.soundtrackTitle}{post.soundtrackCreator ? ` — ${post.soundtrackCreator}` : ''}
             </span>
-          </div>
+          </button>
         )}
 
         {/* Hidden audio element for soundtrack playback */}

@@ -20,6 +20,7 @@ import {
   type LiveStream as ApiLiveStream,
 } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildFeedImageUrls } from '@/lib/media-url';
+import { parseSoundtrackTag } from '@/hooks/use-unified-feed';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, LiveStream } from '@/types/feed.types';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
@@ -161,22 +162,13 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   const lockedPrice = nft.locked_price;
   const lockedCurrency = nft.locked_currency || 'DHB';
 
-  // Extract soundtrack metadata from description (format: [soundtrack:tokenId:title:creator])
+  // Extract soundtrack metadata from description
   const descText = nft.description || '';
-  const soundtrackMatch = descText.match(/\[soundtrack:(\d+):([^:]*):([^\]]*)\]/);
-  let soundtrackUrl: string | undefined;
-  let soundtrackTitle: string | undefined;
-  let soundtrackCreator: string | undefined;
-  let soundtrackTokenId: string | undefined;
-  if (soundtrackMatch) {
-    soundtrackTokenId = soundtrackMatch[1];
-    soundtrackTitle = soundtrackMatch[2] || 'Sound';
-    soundtrackCreator = soundtrackMatch[3] || '';
-    soundtrackUrl = `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/audios/${soundtrackTokenId}.mp3`;
-  }
+  const { soundtrackUrl, soundtrackTitle, soundtrackCreator } = parseSoundtrackTag(descText);
+  const soundtrackTokenId = soundtrackUrl ? descText.match(/\[soundtrack:(\d+)/)?.[1] : undefined;
 
   // Clean soundtrack tag from description for display
-  const cleanDescription = soundtrackMatch
+  const cleanDescription = soundtrackUrl
     ? descText.replace(/\[soundtrack:[^\]]*\]/, '').trim()
     : undefined;
 
