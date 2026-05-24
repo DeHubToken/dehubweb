@@ -10,6 +10,7 @@ import { PostActionBar } from './components/PostActionBar';
 import { CameraCaptureModal } from './components/CameraCaptureModal';
 import { SoundPicker } from './components/SoundPicker';
 import { cn } from '@/lib/utils';
+import { DEHUB_CDN_BASE } from '@/lib/api/dehub';
 
 
 interface PostModalProps {
@@ -184,7 +185,12 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         onEnhanceWithAI={actions.handleEnhanceWithAI}
         onPost={() => {
           const soundtrackTag = attachedSound
-            ? `[soundtrack:${attachedSound.tokenId}:${attachedSound.title}:${attachedSound.creator}]`
+            ? (() => {
+                const relPath = attachedSound.url.startsWith(DEHUB_CDN_BASE)
+                  ? attachedSound.url.slice(DEHUB_CDN_BASE.length)
+                  : attachedSound.url;
+                return `[soundtrack:${attachedSound.tokenId}:${attachedSound.title}:${attachedSound.creator}:${relPath}]`;
+              })()
             : undefined;
           actions.handlePost(soundtrackTag ? { soundtrackTag } : undefined);
         }}

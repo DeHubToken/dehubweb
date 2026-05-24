@@ -115,8 +115,9 @@ export function buildAvatarUrl(address: string, apiAvatarPath: string | undefine
     return `${DEHUB_CDN_BASE}${cdnPath}?v=${cacheBust}`;
   }
 
-  // For remaining relative paths, require a known address
+  // For remaining relative paths, require a known address and a valid path (must contain /)
   if (!normalizedAddress) return undefined;
+  if (!apiAvatarPath.includes('/')) return undefined;
 
   // Relative path (including avatars/) — use CDN base
   return `${DEHUB_CDN_BASE}${apiAvatarPath}${apiAvatarPath.includes('?') ? '&' : '?'}v=${cacheBust}`;
