@@ -16,7 +16,7 @@ export function getMediaUrl(relativePath?: string): string | undefined {
   if (relativePath.startsWith("http://") || relativePath.startsWith("https://")) {
     return relativePath;
   }
-  return `${DEHUB_CDN_BASE}${relativePath}`;
+  return `${DEHUB_CDN_BASE}${relativePath.replace(/^\/+/, '')}`;
 }
 
 /**
