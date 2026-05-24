@@ -109,7 +109,7 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
     const audioUrl = rawAudioSource?.startsWith('http')
       ? rawAudioSource
       : rawAudioSource
-        ? `${DEHUB_CDN_BASE}/${rawAudioSource}`
+        ? `${DEHUB_CDN_BASE}/${rawAudioSource.replace(/^\/+/, '')}`
         : `${DEHUB_CDN_BASE}/audios/${tokenId}.mp3`;
     const minterAddress = nft.minter || nft.creator?.id || '';
 
