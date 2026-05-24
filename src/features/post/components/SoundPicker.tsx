@@ -108,12 +108,14 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
     const rawAudioSource = nft.audioUrl || nft.videoUrl || nft.media_url;
     const audioUrl = rawAudioSource?.startsWith('http')
       ? rawAudioSource
-      : `${DEHUB_CDN_BASE}/${rawAudioSource}`;
+      : rawAudioSource
+        ? `${DEHUB_CDN_BASE}/${rawAudioSource}`
+        : `${DEHUB_CDN_BASE}/audios/${tokenId}.mp3`;
     const minterAddress = nft.minter || nft.creator?.id || '';
 
     onSelect({
       url: audioUrl,
-      title: nft.name || nft.title || nft.description?.slice(0, 60) || 'Untitled',
+      title: nft.name || nft.title || nft.description?.split('\n')[0]?.trim() || 'Untitled',
       creator: nft.minterUsername || nft.minterDisplayName || nft.mintername || 'Unknown',
       creatorAvatar: buildAvatarUrl(minterAddress, nft.minterAvatarUrl),
       tokenId,
@@ -162,7 +164,9 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
                 const rawAudioSource = (nft as any).audioUrl || nft.videoUrl || nft.media_url;
                 const audioUrl = rawAudioSource?.startsWith('http')
                   ? rawAudioSource
-                  : `${DEHUB_CDN_BASE}/${rawAudioSource}`;
+                  : rawAudioSource
+                    ? `${DEHUB_CDN_BASE}/${rawAudioSource}`
+                    : `${DEHUB_CDN_BASE}/audios/${tokenId}.mp3`;
                 const minterAddress = nft.minter || nft.creator?.id || '';
                 const avatar = buildAvatarUrl(minterAddress, nft.minterAvatarUrl);
                 const isSelected = currentSound?.tokenId === tokenId;
@@ -197,7 +201,7 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
                     {/* Track info */}
                     <div className="flex-1 min-w-0">
                       <div className="text-sm text-white font-medium truncate">
-                        {nft.name || nft.title || nft.description?.slice(0, 60) || 'Untitled'}
+                        {nft.name?.trim() || nft.title?.trim() || nft.description?.split('\n')[0]?.trim() || 'Untitled'}
                       </div>
                       <div className="text-xs text-white/50 truncate flex items-center gap-1.5">
                         <Avatar className="w-3.5 h-3.5">

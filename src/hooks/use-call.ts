@@ -294,8 +294,8 @@ export const useCall = (): UseCallReturn => {
       const { data: session, error } = await supabase
         .from('call_sessions')
         .insert({
-          caller_address: userAddress,
-          recipient_address: recipientAddress,
+          caller_address: userAddress?.toLowerCase(),
+          recipient_address: recipientAddress?.toLowerCase(),
           call_type: callType,
           status: 'ringing',
         })
@@ -477,16 +477,17 @@ export const useCall = (): UseCallReturn => {
 
   useEffect(() => {
     if (!userAddress) return;
+    const normalizedAddress = userAddress.toLowerCase();
 
     const channel = supabase
-      .channel(`incoming-calls-${userAddress}`)
+      .channel(`incoming-calls-${normalizedAddress}`)
       .on(
         'postgres_changes',
         {
           event: 'INSERT',
           schema: 'public',
           table: 'call_sessions',
-          filter: `recipient_address=eq.${userAddress}`,
+          filter: `recipient_address=eq.${normalizedAddress}`,
         },
         (payload) => {
           const call = payload.new as CallSession;
@@ -510,7 +511,7 @@ export const useCall = (): UseCallReturn => {
           event: 'UPDATE',
           schema: 'public',
           table: 'call_sessions',
-          filter: `recipient_address=eq.${userAddress}`,
+          filter: `recipient_address=eq.${normalizedAddress}`,
         },
         (payload) => {
           const updated = payload.new as CallSession;

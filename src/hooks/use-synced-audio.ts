@@ -43,8 +43,8 @@ export function useSyncedAudio({
     const video = videoRef.current;
     if (!audio || !soundtrackUrl) return;
 
-    if (isPlaying && video) {
-      audio.currentTime = video.currentTime;
+    if (isPlaying) {
+      if (video) audio.currentTime = video.currentTime;
       audio.play().catch(() => {});
     } else {
       audio.pause();
