@@ -29,6 +29,10 @@ export async function searchNFTs(params: SearchNFTsParams = {}): Promise<Paginat
       sortBy = 'views';
       sortOrder = 'desc';
       break;
+    case 'by-comments':
+      sortBy = 'comments';
+      sortOrder = 'desc';
+      break;
   }
 
   const apiParams: Record<string, string | number | undefined> = {
@@ -243,13 +247,26 @@ export async function getLikedPosts(
 }
 
 export async function getWatchHistory(
-  page: number = 0, 
+  page: number = 0,
   limit: number = 20,
   address?: string
 ): Promise<{ result: DeHubNFT[] }> {
   return apiCall<{ result: DeHubNFT[] }>("/api/my_watched_nfts", {
     params: { page, limit, ...(address && { address }) },
     requiresAuth: true,
+  });
+}
+
+export async function clearWatchHistory(): Promise<{ result: boolean; deleted: number }> {
+  return apiCall<{ result: boolean; deleted: number }>("/api/my_watched_nfts", {
+    method: 'DELETE',
+    requiresAuth: true,
+  });
+}
+
+export async function getPpvSalesCount(tokenId: string | number): Promise<{ result: boolean; tokenId: number; salesCount: number }> {
+  return apiCall<{ result: boolean; tokenId: number; salesCount: number }>("/api/ppv-sales-count", {
+    params: { tokenId: String(tokenId) },
   });
 }
 

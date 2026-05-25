@@ -3,12 +3,12 @@ import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
-import { Search, Bookmark, LayoutGrid, Clock, Image, Video, FileText, RefreshCw, ThumbsUp, Loader2, History, Ticket } from 'lucide-react';
+import { Search, Bookmark, LayoutGrid, Clock, Image, Video, FileText, RefreshCw, ThumbsUp, Loader2, History, Ticket, Trash2 } from 'lucide-react';
 import { BookmarksEmptyContent } from '@/components/app/bookmarks/BookmarksEmptyContent';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
-import { useBookmarks, BookmarkType } from '@/hooks/use-bookmarks';
+import { useBookmarks, useClearWatchHistory, BookmarkType } from '@/hooks/use-bookmarks';
 import { Skeleton } from '@/components/ui/skeleton';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
@@ -68,6 +68,7 @@ function BookmarksSkeleton() {
 export default function BookmarksPage() {
   const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<BookmarkType>('all');
+  const clearHistory = useClearWatchHistory();
   const bookmarksIsDraggingRef = useRef(false);
   const { layerRef: bookmarksTabLayerRef, setRef: setBookmarksTabRef, rect: bookmarksTabRect, onScroll: onBookmarksTabScroll } = useTabIndicator(activeTab, undefined, bookmarksIsDraggingRef);
   const [searchQuery, setSearchQuery] = useState('');
@@ -150,13 +151,27 @@ export default function BookmarksPage() {
             </div>
           </div>
           
-          <button 
-            onClick={() => refetch()}
-            className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 transition-colors"
-            title={t('bookmarks.refresh')}
-          >
-            <RefreshCw className={`w-4 h-4 text-zinc-400 ${isLoading ? 'animate-spin' : ''}`} />
-          </button>
+          <div className="flex items-center gap-2">
+            {activeTab === 'history' && (
+              <button
+                onClick={() => {
+                  if (confirm('Clear all watch history?')) clearHistory.mutate();
+                }}
+                disabled={clearHistory.isPending}
+                className="p-2 rounded-lg bg-zinc-800 hover:bg-red-900/40 transition-colors"
+                title="Clear history"
+              >
+                <Trash2 className={`w-4 h-4 text-zinc-400 ${clearHistory.isPending ? 'opacity-50' : ''}`} />
+              </button>
+            )}
+            <button
+              onClick={() => refetch()}
+              className="p-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 transition-colors"
+              title={t('bookmarks.refresh')}
+            >
+              <RefreshCw className={`w-4 h-4 text-zinc-400 ${isLoading ? 'animate-spin' : ''}`} />
+            </button>
+          </div>
         </div>
 
         {/* Search */}

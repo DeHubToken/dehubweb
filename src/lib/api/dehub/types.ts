@@ -214,7 +214,7 @@ export interface SearchNFTsParams {
   page?: number;
   unit?: number;
   category?: string;
-  sortMode?: "new" | "popular" | "trending";
+  sortMode?: "new" | "popular" | "trending" | "by-comments";
   creator_id?: string;
   postType?: string;
   search?: string;

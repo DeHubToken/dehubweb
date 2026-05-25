@@ -326,3 +326,26 @@ export async function getCachedSuggestedProfiles(limit: number = 10, offset: num
 
   return { items, hasMore: items.length === limit };
 }
+
+export interface AnalyticsResponse {
+  result: boolean;
+  range: string;
+  totals: {
+    likes: number;
+    dislikes: number;
+    followers: number;
+    following: number;
+    uploads: number;
+    receivedTips: number;
+    sentTips: number;
+  };
+  likesOverTime: { date: string; count: number }[];
+  followersOverTime: { date: string; count: number }[];
+}
+
+export async function getMyAnalytics(range: '7d' | '30d' | '90d' = '30d'): Promise<AnalyticsResponse> {
+  return apiCall<AnalyticsResponse>("/api/my-analytics", {
+    params: { range },
+    requiresAuth: true,
+  });
+}

@@ -156,16 +156,16 @@ export type SortValue = SortOption['value'];
  * - "popular" = sorted by views/likes 
  * - "trending" = currently trending
  */
-export type ApiSortMode = 'new' | 'popular' | 'trending';
+export type ApiSortMode = 'new' | 'popular' | 'trending' | 'by-comments';
 
 export function getApiSortMode(sortValue: SortValue): ApiSortMode {
   switch (sortValue) {
-    case 'most-viewed':
     case 'most-liked':
       return 'popular';
+    case 'most-viewed':
+      return 'trending';
     case 'most-comments':
-      // API doesn't support comment sorting, use popular as fallback
-      return 'popular';
+      return 'by-comments';
     case 'latest':
     default:
       return 'new';

@@ -231,3 +231,10 @@ export async function deleteComment(commentId: string | number): Promise<{ resul
     requiresAuth: true,
   });
 }
+
+export async function recordCommentViews(commentIds: number[]): Promise<{ result: boolean; updated: number }> {
+  return apiCall<{ result: boolean; updated: number }>("/api/comment_views", {
+    method: "POST",
+    body: { commentIds },
+  });
+}

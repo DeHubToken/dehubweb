@@ -37,7 +37,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTComments, postComment, toggleCommentLike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, followUser, unfollowUser, type ApiCommentResponse } from '@/lib/api/dehub';
+import { getNFTComments, postComment, toggleCommentLike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, recordCommentViews, getPostLikers, getPostQuotes, followUser, unfollowUser, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import { incrementCommentCount } from '@/lib/comment-count-cache';
 import { useMention } from '@/hooks/use-mention';
@@ -74,7 +74,7 @@ export interface Comment {
 interface CommentsSectionProps {
   tokenId: string;
   onClose: () => void;
-  initialTab?: 'replies' | 'quotes' | 'reposts' | 'search';
+  initialTab?: 'replies' | 'quotes' | 'reposts' | 'likers' | 'search';
   embedded?: boolean;
 }
 
@@ -217,6 +217,7 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn("flex items-start gap-3 py-3", isReply && "ml-8")}
+      data-comment-id={comment.id}
     >
       <button onClick={() => onUserPress(comment.username)} className="flex-shrink-0">
         <Avatar className="w-8 h-8 cursor-pointer hover:opacity-80 transition-opacity">
@@ -416,7 +417,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const { user, isAuthenticated, walletAddress } = useAuth();
   const isMobile = useIsMobile();
   
-  const [activeTab, setActiveTab] = useState<'replies' | 'quotes' | 'reposts' | 'search'>(initialTab ?? 'replies');
+  const [activeTab, setActiveTab] = useState<'replies' | 'quotes' | 'reposts' | 'likers' | 'search'>(initialTab ?? 'replies');
   const commentsIsDraggingRef = useRef(false);
   const { layerRef: commentsTabLayerRef, setRef: setCommentsTabRef, rect: commentsTabRect } = useTabIndicator(activeTab, undefined, commentsIsDraggingRef);
   const [searchQuery, setSearchQuery] = useState('');
@@ -476,6 +477,24 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     staleTime: 60000,
   });
 
+  // Fetch likers when likers tab is active (#12)
+  const { data: likersData, isLoading: isLoadingLikers } = useQuery({
+    queryKey: ['post-likers', tokenId],
+    queryFn: () => getPostLikers(tokenId),
+    enabled: activeTab === 'likers',
+    staleTime: 60000,
+    retry: false,
+  });
+
+  // Fetch quotes when quotes tab is active (#13)
+  const { data: quotesData, isLoading: isLoadingQuotes } = useQuery({
+    queryKey: ['post-quotes', tokenId],
+    queryFn: () => getPostQuotes(tokenId),
+    enabled: activeTab === 'quotes',
+    staleTime: 60000,
+    retry: false,
+  });
+
   // Combine API comments with optimistic ones and apply like overrides
   const allComments = useMemo(() => {
     const mapped = apiComments?.map(mapApiComment) || [];
@@ -492,6 +511,32 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       return c;
     });
   }, [apiComments, optimisticComments, likeOverrides]);
+
+  // Record comment views when visible (#9)
+  const viewedIdsRef = useRef(new Set<number>());
+  const pendingViewsRef = useRef<number[]>([]);
+  const flushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(() => {
+    if (!apiComments?.length) return;
+    const numericIds = apiComments.map(c => Number(c.id)).filter(Boolean);
+    if (!numericIds.length) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const id = Number((entry.target as HTMLElement).dataset.commentId);
+        if (!id || viewedIdsRef.current.has(id)) return;
+        viewedIdsRef.current.add(id);
+        pendingViewsRef.current.push(id);
+        if (flushTimerRef.current) clearTimeout(flushTimerRef.current);
+        flushTimerRef.current = setTimeout(() => {
+          const batch = pendingViewsRef.current.splice(0);
+          if (batch.length) recordCommentViews(batch).catch(() => {});
+        }, 2000);
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('[data-comment-id]').forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, [apiComments]);
 
   // Group comments: top-level and replies
   const groupedComments = useMemo(() => {
@@ -858,14 +903,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const canPost = (newComment.trim() || voiceNote || commentImage) && !isSubmitting;
 
   // Drag-to-swipe for comments tab indicator (after all hooks)
-  type CommentsTab = 'replies' | 'quotes' | 'reposts' | 'search';
+  type CommentsTab = 'replies' | 'quotes' | 'reposts' | 'likers' | 'search';
   const commentsTabPositions = useRef<Partial<Record<CommentsTab, HTMLElement | null>>>({});
 
   const { isDragging: isCommentsDragging, indicatorRef: commentsIndicatorRef, handleDragStart: handleCommentsDragStart, handleDragMove: handleCommentsDragMove, handleDragEnd: handleCommentsDragEnd } = useDragTabIndicator({
     tabRect: commentsTabRect,
     tabLayerRef: commentsTabLayerRef,
     tabButtonPositions: commentsTabPositions,
-    tabValues: ['replies', 'quotes', 'reposts', 'search'] as CommentsTab[],
+    tabValues: ['replies', 'quotes', 'reposts', 'likers', 'search'] as CommentsTab[],
     activeTab,
     onTabChange: setActiveTab,
     isDraggingRef: commentsIsDraggingRef,
@@ -916,7 +961,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             />
           )}
           <div className="relative z-20 flex gap-1">
-            {(['replies', 'quotes', 'reposts', 'search'] as const).map((tab) => (
+            {(['replies', 'quotes', 'reposts', 'likers', 'search'] as const).map((tab) => (
               <button
                 key={tab}
                 ref={(el) => {
@@ -928,7 +973,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 className="relative z-40 px-3 py-1.5 flex items-center justify-center transition-all rounded-xl text-zinc-400 hover:text-zinc-200"
               >
                 <span className={cn("relative z-10", activeTab === tab && "text-white")}>
-                  {tab === 'replies' ? <MessageSquare className="w-[17px] h-[17px]" /> : tab === 'quotes' ? <Quote className="w-[17px] h-[17px]" /> : tab === 'reposts' ? <Repeat2 className="w-[22px] h-[22px]" /> : <Search className="w-[17px] h-[17px]" />}
+                  {tab === 'replies' ? <MessageSquare className="w-[17px] h-[17px]" /> : tab === 'quotes' ? <Quote className="w-[17px] h-[17px]" /> : tab === 'reposts' ? <Repeat2 className="w-[22px] h-[22px]" /> : tab === 'likers' ? <ThumbsUp className="w-[17px] h-[17px]" /> : <Search className="w-[17px] h-[17px]" />}
                 </span>
               </button>
             ))}
@@ -1026,16 +1071,101 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           </div>
         )}
 
-        {/* Quotes Tab */}
+        {/* Quotes Tab (#13) */}
         {activeTab === 'quotes' && (
           <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="text-zinc-500 text-sm text-center flex items-center justify-center h-full min-h-[200px]"
-            >
-              No quotes yet. Be the first!
-            </motion.p>
+            {isLoadingQuotes ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
+              </div>
+            ) : quotesData?.result && quotesData.result.length > 0 ? (
+              <div className="space-y-2">
+                {quotesData.result.map((post: any) => {
+                  const displayName = post.minterDisplayName || post.mintername || post.minter?.slice(0, 8) || 'Unknown';
+                  const avatarUrl = post.minterAvatarUrl
+                    ? (post.minterAvatarUrl.startsWith('http') ? post.minterAvatarUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${post.minterAvatarUrl}`)
+                    : undefined;
+                  const preview = (post.description || post.name || '').slice(0, 120);
+                  return (
+                    <button
+                      key={post.tokenId}
+                      onClick={() => navigate(`/app/post/${post.tokenId}`)}
+                      className="w-full flex items-start gap-3 p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
+                    >
+                      <Avatar className="w-9 h-9 rounded-lg flex-shrink-0">
+                        {avatarUrl ? <AvatarImage src={avatarUrl} alt={displayName} /> : null}
+                        <AvatarFallback className="bg-zinc-800 text-white rounded-lg text-sm">
+                          {displayName[0].toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <span className="font-semibold text-white text-sm truncate block">{displayName}</span>
+                        {preview && <span className="text-zinc-400 text-xs line-clamp-2 mt-0.5">{preview}</span>}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-zinc-500 text-sm text-center flex items-center justify-center h-full min-h-[200px]"
+              >
+                No quotes yet. Be the first!
+              </motion.p>
+            )}
+          </div>
+        )}
+
+        {/* Likers Tab (#12) */}
+        {activeTab === 'likers' && (
+          <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">
+            {isLoadingLikers ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
+              </div>
+            ) : likersData?.data && likersData.data.length > 0 ? (
+              <div className="space-y-2">
+                {likersData.data.map((liker) => {
+                  const displayName = liker.displayName || liker.username || liker.address?.slice(0, 8) || 'Unknown';
+                  const avatarUrl = liker.avatarImageUrl
+                    ? (liker.avatarImageUrl.startsWith('http') ? liker.avatarImageUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${liker.avatarImageUrl}`)
+                    : undefined;
+                  return (
+                    <button
+                      key={liker.address}
+                      onClick={() => {
+                        if (liker.username) navigate(`/${liker.username.replace('@', '')}`);
+                        else if (liker.address) navigate(`/app/profile?id=${liker.address}`);
+                      }}
+                      className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
+                    >
+                      <Avatar className="w-10 h-10 rounded-lg">
+                        {avatarUrl ? <AvatarImage src={avatarUrl} alt={displayName} /> : null}
+                        <AvatarFallback className="bg-zinc-800 text-white rounded-lg text-sm">
+                          {displayName[0].toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <span className="font-semibold text-white text-sm truncate block">{displayName}</span>
+                        {liker.username && (
+                          <span className="text-zinc-500 text-xs truncate block">@{liker.username.replace('@', '')}</span>
+                        )}
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-zinc-500 text-sm text-center flex items-center justify-center h-full min-h-[200px]"
+              >
+                No likes yet.
+              </motion.p>
+            )}
           </div>
         )}
 

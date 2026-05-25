@@ -1,5 +1,5 @@
 import { useInfiniteQuery, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getSavedPosts, getLikedPosts, getWatchHistory, toggleSavePost, DeHubNFT, getMediaUrl, getNFTInfo } from '@/lib/api/dehub';
+import { getSavedPosts, getLikedPosts, getWatchHistory, clearWatchHistory, toggleSavePost, DeHubNFT, getMediaUrl, getNFTInfo } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
@@ -341,6 +341,20 @@ export function useBookmarks(type: BookmarkType = 'all', searchQuery: string = '
     totalCount: allNFTs.length,
     ...queryState,
   };
+}
+
+export function useClearWatchHistory() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: clearWatchHistory,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['bookmarks', 'history'] });
+      toast.success('Watch history cleared');
+    },
+    onError: () => {
+      toast.error('Failed to clear history');
+    },
+  });
 }
 
 /**

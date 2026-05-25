@@ -436,6 +436,36 @@ export interface QuotePostMintResponse {
   isQuotePost: boolean;
 }
 
+export interface PostLiker {
+  address: string;
+  username?: string | null;
+  displayName?: string | null;
+  avatarImageUrl?: string | null;
+  badgeBalance?: number;
+  isFollowing?: boolean;
+  likedAt?: string;
+}
+
+export async function getPostLikers(
+  tokenId: string | number,
+  page: number = 0,
+  limit: number = 20,
+): Promise<{ result: boolean; data: PostLiker[]; pagination: { page: number; limit: number; totalCount: number; hasMore: boolean } }> {
+  return apiCall<any>("/api/post-likers", {
+    params: { tokenId: String(tokenId), page, limit },
+  });
+}
+
+export async function getPostQuotes(
+  tokenId: string | number,
+  page: number = 1,
+  limit: number = 20,
+): Promise<{ result: DeHubNFT[]; pagination?: any }> {
+  return apiCall<any>("/api/feed", {
+    params: { quotedTokenId: String(tokenId), page, limit, status: 'minted' },
+  });
+}
+
 export async function quotePost(params: {
   quotedTokenId: number;
   content: string;
