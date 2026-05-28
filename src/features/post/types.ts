@@ -114,7 +114,7 @@ export interface PostFormActions {
   applyTrimToMedia: (index: number, trimStart: number, trimEnd: number) => void;
   handleEnhanceWithAI: (mode?: 'spellcheck' | 'grammar' | 'style', style?: string) => Promise<void>;
   insertFormatting: (format: 'bold' | 'italic' | 'mention') => void;
-  handlePost: () => void;
+  handlePost: (extra?: { soundtrackTag?: string }) => void;
   resetForm: () => void;
   markCategorySaved: () => void;
 }
