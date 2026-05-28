@@ -1303,7 +1303,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           const validOptions = poll.options.filter(o => o.text.trim()).map(o => o.text.trim());
           const expiresAt = new Date(Date.now() + (poll.duration ?? 24) * 3600 * 1000).toISOString();
           await createPoll({
-            tokenId: mintResponse.createdTokenId,
+            tokenId: typeof mintResponse.createdTokenId === 'string' ? parseInt(mintResponse.createdTokenId, 10) : mintResponse.createdTokenId,
             question: poll.question.trim(),
             options: validOptions,
             expiresAt,
