@@ -516,6 +516,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const result = await refreshAccessToken();
         if (result) {
           console.log('[Auth] ✓ Proactive token refresh succeeded');
+        } else if (timeUntilExpiry < 0) {
+          // Token already expired AND refresh failed → clear zombie session
+          console.warn('[Auth] Token expired and refresh failed — clearing session');
+          clearAuthSession();
+          localStorage.removeItem('dehub_user');
+          setUser(null);
+          setWalletAddress(null);
         } else {
           console.warn('[Auth] Proactive refresh failed — will retry or fall back on next 401');
         }

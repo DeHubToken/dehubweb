@@ -697,7 +697,11 @@ export async function connectToSocialProvider(
   const params: any = {
     authConnection: authConnection,
     uxMode,
-    redirectUrl: window.location.origin + window.location.pathname,
+    // redirectUrl is only needed in redirect mode — in popup mode, Web3Auth uses postMessage
+    // to communicate back to the opener. Setting redirectUrl in popup mode causes the popup
+    // to navigate to the main app URL after OAuth, which loads the login page inside the popup
+    // and creates an infinite loop.
+    ...(useRedirect ? { redirectUrl: window.location.origin + window.location.pathname } : {}),
   };
 
   // Always pass provider-specific options to force the account picker / re-login screen.
