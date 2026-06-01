@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { Repeat2 } from 'lucide-react';
-import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info, CornerDownRight, Image, Play, Pencil, Trash2 } from 'lucide-react';
+import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info, CornerDownRight, Image, Play, Pencil, Trash2, Pin, FileText } from 'lucide-react';
 import { useInfiniteQuery, useQueries, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -16,6 +16,7 @@ import { ProfileEmptyState } from '@/components/app/profile/ProfileEmptyState';
 import { ProfileImageGrid } from '@/components/app/profile/ProfileImageGrid';
 import { getUserComments, getNFTInfo, getMediaUrl, editComment, deleteComment } from '@/lib/api/dehub';
 import type { DeHubNFT } from '@/lib/api/dehub';
+import { useUserPins } from '@/hooks/use-pins';
 import { buildImageUrl, buildFeedImageUrls, buildAvatarUrl } from '@/lib/media-url';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { OptimisticPost } from '@/hooks/use-optimistic-posts';
@@ -237,6 +238,11 @@ export function ProfileTabContent({
       {/* FRACTIONS TAB */}
       <TabPanel tab="fractions">
         <ProfileEmptyState iconSrc={fractions3dIcon} iconAlt="Fractions" title="No fractions yet" subtitle="Fraction holdings will appear here" />
+      </TabPanel>
+
+      {/* PINNED TAB (#17) */}
+      <TabPanel tab="pinned">
+        <PinnedTabPanel profileAddress={profileAddress} />
       </TabPanel>
     </div>
   );
@@ -514,6 +520,78 @@ function SubscribersTabPanel({
           />
         ))}
       </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// Pinned Tab Panel (#17)
+// ============================================================================
+
+function PinnedTabPanel({ profileAddress }: { profileAddress: string }) {
+  const navigate = useNavigate();
+  const { data, isLoading } = useUserPins(profileAddress);
+  const pins = data?.items ?? [];
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-10">
+        <Loader2 className="w-6 h-6 text-zinc-400 animate-spin" />
+      </div>
+    );
+  }
+
+  if (pins.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-14 text-center">
+        <Pin className="w-10 h-10 text-zinc-600 mb-3" />
+        <p className="text-zinc-400 font-medium">No pinned posts</p>
+        <p className="text-zinc-600 text-sm mt-1">Pinned posts will appear here</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-3">
+      {pins.map((pin) => {
+        const post = pin.post;
+        const title = post?.title || post?.name || pin.name || post?.description?.slice(0, 80) || pin.description?.slice(0, 80) || `Post #${pin.tokenId}`;
+        const thumb = post?.thumbnail_url || post?.imageUrl || null;
+        const thumbUrl = thumb ? (thumb.startsWith('http') ? thumb : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${thumb}`) : null;
+        const postType = pin.postType || post?.postType || 'feed-simple';
+        const isVideo = postType === 'video' || postType === 'short';
+        const isImage = postType === 'feed-images' || postType === 'image';
+
+        return (
+          <button
+            key={pin.pinId || pin.tokenId}
+            onClick={() => navigate(`/app/post/${pin.tokenId}`)}
+            className="w-full flex items-start gap-3 p-3 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-left"
+          >
+            {thumbUrl ? (
+              <div className="relative flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden bg-white/[0.05]">
+                <img src={thumbUrl} alt="" className="w-full h-full object-cover" loading="lazy" />
+                {isVideo && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                    <Play className="w-4 h-4 text-white fill-white" />
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex-shrink-0 w-14 h-14 rounded-lg bg-white/[0.05] flex items-center justify-center">
+                {isVideo ? <Play className="w-5 h-5 text-zinc-500" /> : isImage ? <Image className="w-5 h-5 text-zinc-500" /> : <FileText className="w-5 h-5 text-zinc-500" />}
+              </div>
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="text-white text-sm font-medium line-clamp-2 leading-snug">{title}</p>
+              <p className="text-zinc-500 text-xs mt-1">
+                {new Date(pin.pinnedAt).toLocaleDateString()}
+              </p>
+            </div>
+            <Pin className="flex-shrink-0 w-4 h-4 text-blue-400 fill-current mt-0.5" />
+          </button>
+        );
+      })}
     </div>
   );
 }

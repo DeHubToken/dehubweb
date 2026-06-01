@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useRef, useCallback, useState } from 'react';
 import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
-import { Home, MessageSquare, Image, Film, Star, Play, Radio, PieChart } from 'lucide-react';
+import { Home, MessageSquare, Image, Film, Star, Play, Radio, PieChart, Pin } from 'lucide-react';
 import { useQuery, useInfiniteQuery as useInfiniteQueryTQ, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDeHubProfile, useDeHubUserContent, separateUserContent } from '@/hooks/use-dehub-profile';
@@ -230,6 +230,7 @@ export function useProfilePage() {
       { icon: Play, label: 'Audio', value: 'songs' as TabValue, count: 0 },
       { icon: Radio, label: 'Live', value: 'live' as TabValue, count: 0 },
       { icon: PieChart, label: 'Fractions', value: 'fractions' as TabValue, count: 0 },
+      { icon: Pin, label: 'Pinned', value: 'pinned' as TabValue, count: 0 },
     ].sort((a, b) => b.count - a.count);
     return [homeTab, ...restTabs];
   }, [ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, commentCount]);

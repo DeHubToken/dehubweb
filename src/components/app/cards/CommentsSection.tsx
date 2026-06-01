@@ -37,7 +37,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTComments, postComment, toggleCommentLike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, recordCommentViews, getPostLikers, getPostQuotes, followUser, unfollowUser, type ApiCommentResponse } from '@/lib/api/dehub';
+import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, recordCommentViews, getPostLikers, getPostQuotes, followUser, unfollowUser, type ApiCommentResponse } from '@/lib/api/dehub';
 import { toast } from 'sonner';
 import { incrementCommentCount } from '@/lib/comment-count-cache';
 import { useMention } from '@/hooks/use-mention';
@@ -746,28 +746,38 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     }
   };
 
-  const handleDislike = (commentId: string) => {
+  const handleDislike = async (commentId: string) => {
     if (!isAuthenticated) {
       toast.error('Please log in to dislike comments');
       return;
     }
-    
-    // Find current comment state
+
     const comment = allComments.find(c => c.id === commentId);
     if (!comment) return;
-    
-    // Optimistic update - toggle dislike state
+
+    const wasDisliked = comment.isDisliked;
+    // Optimistic update
     setLikeOverrides(prev => {
       const next = new Map(prev);
       next.set(commentId, {
         isLiked: false,
-        isDisliked: !comment.isDisliked,
-        likes: comment.isLiked ? comment.likes - 1 : comment.likes, // Decrease if was liked
+        isDisliked: !wasDisliked,
+        likes: comment.isLiked ? comment.likes - 1 : comment.likes,
       });
       return next;
     });
-    // Note: DeHub API doesn't have a separate dislike_comment endpoint
-    // This is UI-only for now
+
+    try {
+      await toggleCommentDislike({ commentId });
+    } catch {
+      // Revert on error
+      setLikeOverrides(prev => {
+        const next = new Map(prev);
+        next.delete(commentId);
+        return next;
+      });
+      toast.error('Failed to dislike comment');
+    }
   };
 
   const handleReply = (commentId: string) => {

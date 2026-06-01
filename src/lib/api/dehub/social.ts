@@ -241,6 +241,18 @@ export async function toggleCommentLike(params: {
   return response as CommentLikeResponse;
 }
 
+// #11 — toggle dislike on a comment
+export async function toggleCommentDislike(params: {
+  commentId: string;
+}): Promise<{ result: boolean; disliked: boolean; dislikes: number }> {
+  const response = await apiCall<{ result: boolean; disliked: boolean; dislikes: number }>('/api/dislike_comment', {
+    method: 'POST',
+    body: { commentId: params.commentId },
+    requiresAuth: true,
+  });
+  return response as { result: boolean; disliked: boolean; dislikes: number };
+}
+
 // ============ Repost / Quote Post ============
 
 export async function getUserReposts(address: string, page: number = 1, limit: number = 20): Promise<{ result: DeHubNFT[]; pagination?: { page: number; limit: number; totalCount: number; totalPages: number; hasMore: boolean } }> {
