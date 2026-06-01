@@ -466,9 +466,6 @@ export default function ProfilePage() {
           isFetchingProfile={data.isFetchingProfile}
         />
 
-        {/* Pinned Post — shows above tabs (X-style) */}
-        <PinnedPostSection profileAddress={data.apiProfile?.walletAddress || ''} />
-
         {/* Profile Tabs Bento */}
         <div className="bg-zinc-900 rounded-xl relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
           <div ref={tabsIndicatorLayerRef} className="relative overflow-visible">

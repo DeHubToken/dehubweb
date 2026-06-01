@@ -17,7 +17,8 @@ import { ProfileImageGrid } from '@/components/app/profile/ProfileImageGrid';
 import { getUserComments, getNFTInfo, getMediaUrl, editComment, deleteComment } from '@/lib/api/dehub';
 import type { DeHubNFT } from '@/lib/api/dehub';
 import { useUserPins } from '@/hooks/use-pins';
-import { buildImageUrl, buildFeedImageUrls, buildAvatarUrl } from '@/lib/media-url';
+import { buildImageUrl, buildFeedImageUrls, buildAvatarUrl, extractAvatarPath, buildVideoUrl } from '@/lib/media-url';
+import { formatTimeAgo, formatViews } from '@/lib/feed-utils';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { OptimisticPost } from '@/hooks/use-optimistic-posts';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
@@ -529,7 +530,6 @@ function SubscribersTabPanel({
 // ============================================================================
 
 function PinnedTabPanel({ profileAddress }: { profileAddress: string }) {
-  const navigate = useNavigate();
   const { data, isLoading } = useUserPins(profileAddress);
   const pins = data?.items ?? [];
 
@@ -553,45 +553,81 @@ function PinnedTabPanel({ profileAddress }: { profileAddress: string }) {
 
   return (
     <div className="space-y-3">
-      {pins.map((pin) => {
-        const post = pin.post;
-        const title = post?.title || post?.name || pin.name || post?.description?.slice(0, 80) || pin.description?.slice(0, 80) || `Post #${pin.tokenId}`;
-        const thumb = post?.thumbnail_url || post?.imageUrl || null;
-        const thumbUrl = thumb ? (thumb.startsWith('http') ? thumb : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${thumb}`) : null;
-        const postType = pin.postType || post?.postType || 'feed-simple';
-        const isVideo = postType === 'video' || postType === 'short';
-        const isImage = postType === 'feed-images' || postType === 'image';
+      {pins.map((pin) => (
+        <PinnedPostCard key={pin.pinId || pin.tokenId} pin={pin} />
+      ))}
+    </div>
+  );
+}
 
-        return (
-          <button
-            key={pin.pinId || pin.tokenId}
-            onClick={() => navigate(`/app/post/${pin.tokenId}`)}
-            className="w-full flex items-start gap-3 p-3 rounded-xl border border-white/[0.08] bg-white/[0.02] hover:bg-white/[0.05] transition-colors text-left"
-          >
-            {thumbUrl ? (
-              <div className="relative flex-shrink-0 w-14 h-14 rounded-lg overflow-hidden bg-white/[0.05]">
-                <img src={thumbUrl} alt="" className="w-full h-full object-cover" loading="lazy" />
-                {isVideo && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                    <Play className="w-4 h-4 text-white fill-white" />
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="flex-shrink-0 w-14 h-14 rounded-lg bg-white/[0.05] flex items-center justify-center">
-                {isVideo ? <Play className="w-5 h-5 text-zinc-500" /> : isImage ? <Image className="w-5 h-5 text-zinc-500" /> : <FileText className="w-5 h-5 text-zinc-500" />}
-              </div>
-            )}
-            <div className="flex-1 min-w-0">
-              <p className="text-white text-sm font-medium line-clamp-2 leading-snug">{title}</p>
-              <p className="text-zinc-500 text-xs mt-1">
-                {new Date(pin.pinnedAt).toLocaleDateString()}
-              </p>
-            </div>
-            <Pin className="flex-shrink-0 w-4 h-4 text-blue-400 fill-current mt-0.5" />
-          </button>
-        );
-      })}
+function PinnedPostCard({ pin }: { pin: any }) {
+  const post: any = pin.post || pin;
+  if (!post?.tokenId) return null;
+
+  const postType = post.postType || (post.videoUrl ? 'video' : post.imageUrls?.length ? 'image' : 'post');
+  const creatorObj = post.creator || post.owner;
+  const rawAvatarPath = extractAvatarPath(post) || extractAvatarPath(creatorObj);
+  const resolvedAddress = post.minter || creatorObj?.id || creatorObj?.address;
+  const avatar = rawAvatarPath && resolvedAddress ? buildAvatarUrl(resolvedAddress, rawAvatarPath) || '/placeholder.svg' : '/placeholder.svg';
+  const rawTimestamp = post.createdAt || post.created_at;
+
+  return (
+    <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] overflow-hidden">
+      <div className="flex items-center gap-1.5 px-3 pt-2.5 pb-1">
+        <Pin className="w-3.5 h-3.5 text-zinc-400 fill-current" />
+        <span className="text-xs text-zinc-400 font-medium">Pinned post</span>
+      </div>
+      {(postType === 'video' || postType === 'audio' || postType === 'feed-audio') ? (
+        <VideoCard video={{
+          id: String(post.tokenId), type: 'video',
+          thumbnail: buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg',
+          videoUrl: buildVideoUrl(post.tokenId),
+          title: post.title || post.name || '',
+          channel: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',
+          channelAvatar: avatar, verified: false,
+          views: formatViews(post.views || 0).replace(' views', ''),
+          uploadedAgo: formatTimeAgo(rawTimestamp),
+          duration: '', durationSeconds: 0,
+          likeCount: post.totalVotes?.for || 0, dislikeCount: post.totalVotes?.against || 0,
+          commentCount: post.commentCount || 0, repostCount: (post.totalReposts || 0) + (post.quotes || 0),
+          isOwner: false, isUnlocked: false,
+          creatorId: resolvedAddress,
+          creatorUsername: post.minterUsername || creatorObj?.username,
+        }} />
+      ) : postType === 'image' || postType === 'feed-images' ? (
+        <ImageCard post={{
+          id: String(post.tokenId), type: 'image',
+          username: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',
+          verified: false, avatar,
+          image: buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg',
+          imageUrls: buildFeedImageUrls(post.imageUrls) || [buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg'],
+          caption: post.description || '', likes: post.totalVotes?.for || 0,
+          comments: post.commentCount || 0, views: formatViews(post.views || 0).replace(' views', ''),
+          timeAgo: formatTimeAgo(rawTimestamp),
+          creatorId: resolvedAddress,
+          creatorUsername: post.minterUsername || creatorObj?.username,
+          isOwner: false, isUnlocked: false,
+          repostCount: (post.totalReposts || 0) + (post.quotes || 0),
+        }} />
+      ) : (
+        <PostCard post={{
+          id: String(post.tokenId), type: 'post',
+          createdAt: rawTimestamp || '',
+          views: formatViews(post.views || 0).replace(' views', ''),
+          author: {
+            id: resolvedAddress,
+            name: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',
+            handle: post.minterUsername || creatorObj?.username || resolvedAddress?.slice(0, 8) || 'anon',
+            avatarSeed: avatar, verified: false,
+          },
+          content: post.description || post.name || '',
+          stats: {
+            comments: post.commentCount || 0,
+            reposts: (post.totalReposts || 0) + (post.quotes || 0),
+            likes: post.totalVotes?.for || 0,
+          },
+        }} />
+      )}
     </div>
   );
 }
