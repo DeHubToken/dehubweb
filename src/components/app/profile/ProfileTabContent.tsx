@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { Repeat2 } from 'lucide-react';
-import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info, CornerDownRight, Image, Play, Pencil, Trash2, Pin, FileText } from 'lucide-react';
+import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info, CornerDownRight, Image, Play, Pencil, Trash2, Pin } from 'lucide-react';
 import { useInfiniteQuery, useQueries, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -572,11 +572,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
   const rawTimestamp = post.createdAt || post.created_at;
 
   return (
-    <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] overflow-hidden">
-      <div className="flex items-center gap-1.5 px-3 pt-2.5 pb-1">
-        <Pin className="w-3.5 h-3.5 text-zinc-400 fill-current" />
-        <span className="text-xs text-zinc-400 font-medium">Pinned post</span>
-      </div>
+    <>
       {(postType === 'video' || postType === 'audio' || postType === 'feed-audio') ? (
         <VideoCard video={{
           id: String(post.tokenId), type: 'video',
@@ -628,7 +624,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
           },
         }} />
       )}
-    </div>
+    </>
   );
 }
 

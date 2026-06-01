@@ -11,6 +11,7 @@ import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { useStories, useWatchedStories } from '@/hooks/use-stories';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
+import { useUserPins } from '@/hooks/use-pins';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { getUserComments, blockUser, unblockUser, getUserReposts, getNFTInfo } from '@/lib/api/dehub';
 import { toast } from 'sonner';
@@ -220,6 +221,9 @@ export function useProfilePage() {
   });
   const commentCount = commentCountData?.total || commentCountData?.data?.length || 0;
 
+  const { data: pinsData } = useUserPins(contentUserId || '');
+  const pinnedCount = pinsData?.items?.length ?? 0;
+
   const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = useMemo(() => {
     const homeTab = { icon: Home, label: 'All', value: 'home' as TabValue, count: ALL_CONTENT.length };
     const restTabs = [
@@ -230,10 +234,10 @@ export function useProfilePage() {
       { icon: Play, label: 'Audio', value: 'songs' as TabValue, count: 0 },
       { icon: Radio, label: 'Live', value: 'live' as TabValue, count: 0 },
       { icon: PieChart, label: 'Fractions', value: 'fractions' as TabValue, count: 0 },
-      { icon: Pin, label: 'Pinned', value: 'pinned' as TabValue, count: 0 },
+      { icon: Pin, label: 'Pinned', value: 'pinned' as TabValue, count: pinnedCount },
     ].sort((a, b) => b.count - a.count);
     return [homeTab, ...restTabs];
-  }, [ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, commentCount]);
+  }, [ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, commentCount, pinnedCount]);
 
   // Subscriptions
   const { plans, isLoading: isLoadingPlans, hasPlans, isOwnPlans } = useCreatorPlans(apiProfile?.walletAddress);
