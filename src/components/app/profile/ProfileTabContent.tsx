@@ -572,7 +572,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
   const rawTimestamp = post.createdAt || post.created_at;
 
   return (
-    <>
+    <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
       {(postType === 'video' || postType === 'audio' || postType === 'feed-audio') ? (
         <VideoCard video={{
           id: String(post.tokenId), type: 'video',
@@ -624,7 +624,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
           },
         }} />
       )}
-    </>
+    </div>
   );
 }
 
