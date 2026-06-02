@@ -1439,6 +1439,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         )}
         
         {/* Top-left lock badge removed — centered Holdings Required overlay covers this */}
+
+        {/* Optional CC subtitle overlay */}
+        {!isContentGated && video.videoUrl && (
+          <VideoSubtitleOverlay tokenId={video.id} videoRef={videoRef} />
+        )}
+        
         
         {/* Video controls - hidden when PPV locked */}
         {!isContentGated && <>
