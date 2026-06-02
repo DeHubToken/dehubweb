@@ -39,6 +39,7 @@ interface Props {
 
 export function TranscriptSection({ tokenId, durationSeconds }: Props) {
   const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
   const { data, isLoading, start } = useVideoTranscript(tokenId, open);
 
   const status = data?.status ?? 'absent';
