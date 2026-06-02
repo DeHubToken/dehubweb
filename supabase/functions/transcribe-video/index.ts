@@ -67,8 +67,22 @@ function fmtTime(sec: number) {
   return `${m}:${String(s).padStart(2, '0')}`;
 }
 
+async function fetchVideoAsDataUrl(videoUrl: string): Promise<string> {
+  const r = await fetch(videoUrl);
+  if (!r.ok) throw new Error(`Failed to fetch video: ${r.status}`);
+  const mime = r.headers.get('content-type') || 'video/mp4';
+  const buf = new Uint8Array(await r.arrayBuffer());
+  // base64 encode in chunks to avoid call-stack issues
+  let bin = '';
+  const CH = 0x8000;
+  for (let i = 0; i < buf.length; i += CH) {
+    bin += String.fromCharCode(...buf.subarray(i, i + CH));
+  }
+  return `data:${mime};base64,${btoa(bin)}`;
+}
+
 async function transcribeChunk(
-  videoUrl: string,
+  videoData: string,
   startSec: number,
   endSec: number,
 ): Promise<Segment[]> {
@@ -91,7 +105,7 @@ async function transcribeChunk(
           role: 'user',
           content: [
             { type: 'text', text: prompt },
-            { type: 'video_url', video_url: { url: videoUrl } },
+            { type: 'video_url', video_url: { url: videoData } },
           ],
         },
       ],
@@ -158,10 +172,11 @@ async function runJob(tokenId: number) {
     });
 
     const videoUrl = buildVideoUrl(tokenId);
+    const videoData = await fetchVideoAsDataUrl(videoUrl);
     const all: Segment[] = [];
     for (let i = 0; i < chunks.length; i++) {
       const [a, b] = chunks[i];
-      const segs = await transcribeRange(videoUrl, a, b);
+      const segs = await transcribeRange(videoData, a, b);
       all.push(...segs);
       await supa.from('video_transcripts')
         .update({ chunks_done: i + 1 })
