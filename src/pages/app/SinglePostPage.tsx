@@ -853,7 +853,8 @@ export default function SinglePostPage() {
             type: 'video',
             author: videoData.channel,
             title: videoData.title,
-            imageUrl: videoData.thumbnail
+            imageUrl: videoData.thumbnail,
+            videoUrl: videoData.videoUrl,
           }}
         />
 

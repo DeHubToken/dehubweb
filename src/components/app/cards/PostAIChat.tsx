@@ -43,6 +43,7 @@ interface PostContext {
   imageUrl?: string;
   imageUrls?: string[];
   activeImageIndex?: number;
+  videoUrl?: string;
 }
 
 interface PostAIChatProps {

@@ -22,6 +22,7 @@ interface PostContext {
   imageUrl?: string;
   imageUrls?: string[];
   activeImageIndex?: number;
+  videoUrl?: string;
 }
 
 const PERSONALITY_STYLES: Record<string, string> = {
@@ -1193,7 +1194,9 @@ IMPORTANT FORMATTING RULES:
       if (postContext.game) postContextInfo += `They are playing/streaming: ${postContext.game}. `;
       if (postContext.viewers) postContextInfo += `Current viewers: ${postContext.viewers}. `;
       
-      if (postContext.type === 'video' || postContext.type === 'live') {
+      if (postContext.type === 'video' && postContext.videoUrl) {
+        postContextInfo += `\n\nYou CAN watch this video directly (it has been attached to the message via Gemini Flash-Lite multimodal). Analyze the visuals, audio, and on-screen text. Provide a summary, transcript, key moments with timestamps, or answer specific questions about the content as requested.`;
+      } else if (postContext.type === 'video' || postContext.type === 'live') {
         postContextInfo += `\n\nIMPORTANT: You cannot watch or analyze video content. If the user asks about what's happening in the video, respond with: "I don't watch videos, but I can help analyze comments and reactions for you!" You can still discuss the title, caption, game being played, streamer info, and other metadata provided.`;
       } else if (postContext.type === 'image' && postContext.imageUrl) {
         if (postContext.imageUrls && postContext.imageUrls.length > 1) {
@@ -1209,20 +1212,19 @@ IMPORTANT FORMATTING RULES:
       ? `${basePrompt}${platformContext}${userMemories}${userContextInfo}${postAnalysisInfo}${otherUserInfo}${postContextInfo}\n\nIMPORTANT STYLE: ${personalityModifier}`
       : `${basePrompt}${platformContext}${userMemories}${userContextInfo}${postAnalysisInfo}${otherUserInfo}${postContextInfo}`;
 
-    // Build messages array - include image in user message if available
+    // Build messages array - include image/video in user message if available
     const apiMessages: any[] = [{ role: 'system', content: systemPrompt }];
     const hasImage = postContext?.imageUrl && postContext?.type === 'image';
+    const hasVideo = !!(postContext?.videoUrl && postContext?.type === 'video');
     
     messages.forEach((msg, index) => {
-      if (hasImage && msg.role === 'user' && index === messages.length - 1) {
-        // Include image with the latest user message for vision analysis
-        apiMessages.push({
-          role: 'user',
-          content: [
-            { type: 'image_url', image_url: { url: postContext.imageUrl } },
-            { type: 'text', text: typeof msg.content === 'string' ? msg.content : msg.content?.find(c => c.type === 'text')?.text || '' }
-          ]
-        });
+      const isLastUser = msg.role === 'user' && index === messages.length - 1;
+      if (isLastUser && (hasImage || hasVideo)) {
+        const parts: any[] = [];
+        if (hasImage) parts.push({ type: 'image_url', image_url: { url: postContext!.imageUrl } });
+        if (hasVideo) parts.push({ type: 'video_url', video_url: { url: postContext!.videoUrl } });
+        parts.push({ type: 'text', text: typeof msg.content === 'string' ? msg.content : msg.content?.find(c => c.type === 'text')?.text || '' });
+        apiMessages.push({ role: 'user', content: parts });
       } else {
         apiMessages.push({ role: msg.role, content: msg.content });
       }
@@ -1266,6 +1268,12 @@ IMPORTANT FORMATTING RULES:
         console.log('Grok requested but no API key, falling back to Gemini');
       } else {
         modelName = 'google/gemini-2.5-flash';
+      }
+      // Force cheap multimodal Gemini Flash-Lite when a video is attached
+      // (~155k tokens for a 10-min video at ~$0.015 — drastically cheaper than Flash/Pro)
+      if (hasVideo) {
+        modelName = 'google/gemini-2.5-flash-lite';
+        console.log('[AI Request] Video attached — overriding model to gemini-2.5-flash-lite');
       }
       console.log('Using Lovable AI Gateway with model:', modelName, '| Tier:', modelTier, '| Reason:', modelReason);
     }
