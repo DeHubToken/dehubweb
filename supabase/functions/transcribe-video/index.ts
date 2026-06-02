@@ -22,7 +22,7 @@ function admin() {
 }
 
 function buildVideoUrl(tokenId: number) {
-  return `https://api.dehub.io/video/${tokenId}`;
+  return `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${tokenId}.mp4`;
 }
 
 async function fetchVideoDuration(tokenId: number): Promise<number | null> {
