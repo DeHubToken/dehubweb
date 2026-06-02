@@ -1,8 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ChevronDown, ChevronUp, FileText, Loader2, Copy, Download, RefreshCw, Search, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, FileText, Loader2, Copy, Download, RefreshCw, Search, X, Sparkles } from 'lucide-react';
 import { useVideoTranscript } from '@/hooks/use-video-transcript';
+import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 function escapeRegex(s: string) {
