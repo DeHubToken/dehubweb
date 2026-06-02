@@ -76,7 +76,7 @@ export function TranscriptSection({ tokenId, durationSeconds }: Props) {
             <div className="space-y-2">
               <p className="text-sm text-white/70">
                 Generate an AI transcript for this video.
-                {minutes != null && ` Video is about ${minutes} min.`}
+                {durationLabel && ` Video is ${durationLabel}.`}
                 {isLong && ' Long videos are auto-chunked — this may take a few minutes.'}
               </p>
               <Button
