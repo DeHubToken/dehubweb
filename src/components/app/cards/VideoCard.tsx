@@ -1740,7 +1740,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           type: 'video',
           author: video.channel,
           title: video.title,
-          imageUrl: video.thumbnail
+          imageUrl: video.thumbnail,
+          videoUrl: video.videoUrl,
         }}
       />
 
