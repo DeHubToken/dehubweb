@@ -186,6 +186,18 @@ export function TranscriptSection({ tokenId, durationSeconds }: Props) {
                     </button>
                   )}
                 </div>
+                {(overview || overviewLoading) && (
+                  <div className="rounded-lg bg-white/5 border border-white/10 px-3 py-2 flex gap-2">
+                    <Sparkles className="w-3.5 h-3.5 text-white/60 mt-0.5 shrink-0" />
+                    {overviewLoading && !overview ? (
+                      <p className="text-xs text-white/60 flex items-center gap-1.5">
+                        <Loader2 className="w-3 h-3 animate-spin" /> Generating overview…
+                      </p>
+                    ) : (
+                      <p className="text-xs text-white/80 leading-relaxed">{overview}</p>
+                    )}
+                  </div>
+                )}
                 {q && (
                   <p className="text-xs text-white/50">
                     {filtered.length} {filtered.length === 1 ? 'match' : 'matches'}
@@ -196,7 +208,7 @@ export function TranscriptSection({ tokenId, durationSeconds }: Props) {
                     <p className="text-white/50 text-sm py-4 text-center">No matches found</p>
                   ) : (
                     filtered.map((s, i) => (
-                      <div key={i} className="flex gap-3">
+                      <div key={i} className="flex gap-3 items-start">
                         <button
                           type="button"
                           onClick={() => {
