@@ -1269,6 +1269,12 @@ IMPORTANT FORMATTING RULES:
       } else {
         modelName = 'google/gemini-2.5-flash';
       }
+      // Force cheap multimodal Gemini Flash-Lite when a video is attached
+      // (~155k tokens for a 10-min video at ~$0.015 — drastically cheaper than Flash/Pro)
+      if (hasVideo) {
+        modelName = 'google/gemini-2.5-flash-lite';
+        console.log('[AI Request] Video attached — overriding model to gemini-2.5-flash-lite');
+      }
       console.log('Using Lovable AI Gateway with model:', modelName, '| Tier:', modelTier, '| Reason:', modelReason);
     }
 
