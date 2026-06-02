@@ -2330,6 +2330,45 @@ export type Database = {
         }
         Relationships: []
       }
+      video_transcripts: {
+        Row: {
+          chunks_done: number | null
+          chunks_total: number | null
+          created_at: string
+          duration_seconds: number | null
+          error: string | null
+          model: string | null
+          status: string
+          token_id: number
+          transcript: Json | null
+          updated_at: string
+        }
+        Insert: {
+          chunks_done?: number | null
+          chunks_total?: number | null
+          created_at?: string
+          duration_seconds?: number | null
+          error?: string | null
+          model?: string | null
+          status?: string
+          token_id: number
+          transcript?: Json | null
+          updated_at?: string
+        }
+        Update: {
+          chunks_done?: number | null
+          chunks_total?: number | null
+          created_at?: string
+          duration_seconds?: number | null
+          error?: string | null
+          model?: string | null
+          status?: string
+          token_id?: number
+          transcript?: Json | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       winter_wonderland_results: {
         Row: {
           created_at: string
