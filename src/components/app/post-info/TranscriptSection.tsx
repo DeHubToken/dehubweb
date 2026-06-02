@@ -55,6 +55,27 @@ export function TranscriptSection({ tokenId, durationSeconds }: Props) {
     : null;
   const isLong = (durationSeconds ?? 0) > 600;
 
+  useEffect(() => {
+    if (!open || status !== 'ready' || !tokenId || overview || overviewLoading) return;
+    let cancelled = false;
+    setOverviewLoading(true);
+    supabase.functions
+      .invoke('summarize-transcript', { body: { tokenId } })
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error) return;
+        const o = (data as any)?.overview;
+        if (o) setOverview(o);
+      })
+      .finally(() => {
+        if (!cancelled) setOverviewLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [open, status, tokenId, overview, overviewLoading]);
+
+
   const handleCopy = async () => {
     await navigator.clipboard.writeText(fullText);
     toast.success('Transcript copied');
