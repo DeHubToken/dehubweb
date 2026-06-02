@@ -2338,6 +2338,7 @@ export type Database = {
           duration_seconds: number | null
           error: string | null
           model: string | null
+          overview: string | null
           status: string
           token_id: number
           transcript: Json | null
@@ -2350,6 +2351,7 @@ export type Database = {
           duration_seconds?: number | null
           error?: string | null
           model?: string | null
+          overview?: string | null
           status?: string
           token_id: number
           transcript?: Json | null
@@ -2362,6 +2364,7 @@ export type Database = {
           duration_seconds?: number | null
           error?: string | null
           model?: string | null
+          overview?: string | null
           status?: string
           token_id?: number
           transcript?: Json | null
