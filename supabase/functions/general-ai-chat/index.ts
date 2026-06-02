@@ -22,6 +22,7 @@ interface PostContext {
   imageUrl?: string;
   imageUrls?: string[];
   activeImageIndex?: number;
+  videoUrl?: string;
 }
 
 const PERSONALITY_STYLES: Record<string, string> = {
