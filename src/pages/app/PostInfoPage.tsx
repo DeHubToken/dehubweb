@@ -1168,7 +1168,15 @@ export default function PostInfoPage() {
               </section>
             );
           })()}
-          
+
+          {/* Video transcript */}
+          {nftInfo.videoUrl && nftInfo.tokenId && (
+            <TranscriptSection
+              tokenId={Number(nftInfo.tokenId)}
+              durationSeconds={nftInfo.videoDuration}
+            />
+          )}
+
         </div>
       </div>
 
