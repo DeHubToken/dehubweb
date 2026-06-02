@@ -22,7 +22,11 @@ export function TranscriptSection({ tokenId, durationSeconds }: Props) {
   const status = data?.status ?? 'absent';
   const segments = data?.transcript?.segments ?? [];
   const fullText = data?.transcript?.full_text ?? '';
-  const minutes = durationSeconds ? Math.round(durationSeconds / 60) : null;
+  const durationLabel = durationSeconds
+    ? durationSeconds < 60
+      ? 'under 1 minute'
+      : `about ${Math.round(durationSeconds / 60)} min`
+    : null;
   const isLong = (durationSeconds ?? 0) > 600;
 
   const handleCopy = async () => {
