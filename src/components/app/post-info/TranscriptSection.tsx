@@ -1,8 +1,30 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, ChevronUp, FileText, Loader2, Copy, Download, RefreshCw } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { ChevronDown, ChevronUp, FileText, Loader2, Copy, Download, RefreshCw, Search, X } from 'lucide-react';
 import { useVideoTranscript } from '@/hooks/use-video-transcript';
 import { toast } from 'sonner';
+
+function escapeRegex(s: string) {
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function Highlight({ text, query }: { text: string; query: string }) {
+  if (!query) return <>{text}</>;
+  const parts = text.split(new RegExp(`(${escapeRegex(query)})`, 'ig'));
+  const q = query.toLowerCase();
+  return (
+    <>
+      {parts.map((p, i) =>
+        p.toLowerCase() === q ? (
+          <mark key={i} className="bg-white/30 text-white rounded px-0.5">{p}</mark>
+        ) : (
+          <span key={i}>{p}</span>
+        )
+      )}
+    </>
+  );
+}
 
 function fmt(sec: number) {
   const m = Math.floor(sec / 60);
