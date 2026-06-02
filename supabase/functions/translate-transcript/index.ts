@@ -1,148 +1,146 @@
-// Translates a stage transcript (segments + summary + chapter titles) into a
-// target language. Caches per (stage_id, language) in stage_transcript_translations.
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.45.0';
+// deno-lint-ignore-file no-explicit-any
+import { createClient } from 'npm:@supabase/supabase-js@2';
 
-const corsHeaders = {
+const corsHeaders: Record<string, string> = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-wallet-address',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
 };
 
-interface Segment { speaker: string; text: string; start: number; end: number }
-interface Chapter { title: string; start: number; end: number }
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY')!;
+
+const MODEL = 'google/gemini-2.5-flash-lite';
+const CHUNK_SIZE = 60; // segments per AI call
+
+interface Segment { start: number; end: number; text: string }
+
+function admin() {
+  return createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+}
+
+async function translateChunk(segments: Segment[], lang: string): Promise<string[]> {
+  const numbered = segments.map((s, i) => `${i + 1}. ${s.text}`).join('\n');
+  const res = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${LOVABLE_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: MODEL,
+      messages: [
+        {
+          role: 'system',
+          content:
+            `You are a subtitle translator. Translate each numbered line to ${lang}. ` +
+            `Preserve the exact number and order. Do not merge, split, or add lines. ` +
+            `Return ONLY a JSON array of translated strings, one per input line, in order.`,
+        },
+        { role: 'user', content: numbered },
+      ],
+      tools: [
+        {
+          type: 'function',
+          function: {
+            name: 'return_translations',
+            description: 'Return translations in order',
+            parameters: {
+              type: 'object',
+              properties: {
+                translations: { type: 'array', items: { type: 'string' } },
+              },
+              required: ['translations'],
+              additionalProperties: false,
+            },
+          },
+        },
+      ],
+      tool_choice: { type: 'function', function: { name: 'return_translations' } },
+    }),
+  });
+  if (!res.ok) {
+    const t = await res.text();
+    throw new Error(`AI gateway ${res.status}: ${t}`);
+  }
+  const j = await res.json();
+  const args = j?.choices?.[0]?.message?.tool_calls?.[0]?.function?.arguments;
+  const parsed = typeof args === 'string' ? JSON.parse(args) : args;
+  const out: string[] = parsed?.translations ?? [];
+  // Pad/truncate to match
+  while (out.length < segments.length) out.push(segments[out.length].text);
+  return out.slice(0, segments.length);
+}
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
-
-  const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
-  const SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-  const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
-
   try {
-    if (!LOVABLE_API_KEY) throw new Error('LOVABLE_API_KEY not configured');
-    const body = await req.json().catch(() => ({}));
-    const stageId: string | undefined = body?.stageId;
-    const language: string | undefined = body?.language;
-    const force: boolean = !!body?.force;
-    if (!stageId || !language) throw new Error('stageId and language required');
+    const { tokenId, lang } = await req.json();
+    if (!tokenId || !lang) {
+      return new Response(JSON.stringify({ error: 'tokenId and lang required' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+    const langCode = String(lang).toLowerCase().slice(0, 16);
+    const tid = Number(tokenId);
+    const db = admin();
 
-    const admin = createClient(SUPABASE_URL, SERVICE_KEY);
-
-    if (!force) {
-      const { data: cached } = await admin
-        .from('stage_transcript_translations')
-        .select('status')
-        .eq('stage_id', stageId)
-        .eq('language', language)
-        .maybeSingle();
-      if (cached && (cached.status === 'ready' || cached.status === 'processing')) {
-        return new Response(JSON.stringify({ ok: true, status: cached.status }), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
-      }
+    const { data: row, error: rowErr } = await db
+      .from('video_transcripts')
+      .select('token_id, status, transcript, translations')
+      .eq('token_id', tid)
+      .maybeSingle();
+    if (rowErr) throw rowErr;
+    if (!row || row.status !== 'ready' || !row.transcript) {
+      return new Response(JSON.stringify({ error: 'transcript not ready' }), {
+        status: 409,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
-    const { data: tr, error } = await admin
-      .from('stage_transcripts')
-      .select('segments, summary, chapters, source_language')
-      .eq('stage_id', stageId)
-      .maybeSingle();
-    if (error || !tr) throw new Error('transcript not found');
+    const segments: Segment[] = row.transcript.segments ?? [];
+    const translations = (row.translations ?? {}) as Record<string, Segment[]>;
 
-    await admin
-      .from('stage_transcript_translations')
-      .upsert({
-        stage_id: stageId,
-        language,
-        status: 'processing',
-        segments: [],
-        summary: null,
-        chapters: [],
-        error: null,
-      }, { onConflict: 'stage_id,language' });
+    if (translations[langCode]?.length === segments.length) {
+      return new Response(
+        JSON.stringify({ segments: translations[langCode], cached: true }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
 
-    const work = (async () => {
+    // Translate in chunks
+    const translated: Segment[] = [];
+    for (let i = 0; i < segments.length; i += CHUNK_SIZE) {
+      const slice = segments.slice(i, i + CHUNK_SIZE);
+      let texts: string[];
       try {
-        const segments = (tr.segments as Segment[]) || [];
-        const chapters = (tr.chapters as Chapter[]) || [];
-        const summary = (tr.summary as string | null) || null;
-
-        // Translate texts in one shot — keep as JSON arrays so model preserves order.
-        const payload = {
-          texts: segments.map((s) => s.text),
-          summary,
-          chapter_titles: chapters.map((c) => c.title),
-        };
-
-        const res = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${LOVABLE_API_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: 'google/gemini-3-flash-preview',
-            messages: [
-              {
-                role: 'system',
-                content:
-                  `You are a translator. Translate every string into the language with code "${language}". Preserve meaning, tone, and proper names. Reply ONLY with strict JSON of the exact same shape as the user input: {"texts": string[], "summary": string|null, "chapter_titles": string[]}. Array lengths MUST match the input.`,
-              },
-              { role: 'user', content: JSON.stringify(payload) },
-            ],
-            response_format: { type: 'json_object' },
-          }),
-        });
-
-        if (!res.ok) {
-          const t = await res.text();
-          throw new Error(`AI ${res.status}: ${t.slice(0, 200)}`);
-        }
-        const j = await res.json();
-        const out = JSON.parse(j?.choices?.[0]?.message?.content || '{}');
-        const tTexts: string[] = Array.isArray(out.texts) ? out.texts : [];
-        const tTitles: string[] = Array.isArray(out.chapter_titles) ? out.chapter_titles : [];
-        const tSummary: string | null = typeof out.summary === 'string' ? out.summary : null;
-
-        const translatedSegments: Segment[] = segments.map((s, i) => ({
-          ...s,
-          text: tTexts[i] ?? s.text,
-        }));
-        const translatedChapters: Chapter[] = chapters.map((c, i) => ({
-          ...c,
-          title: tTitles[i] ?? c.title,
-        }));
-
-        await admin
-          .from('stage_transcript_translations')
-          .update({
-            status: 'ready',
-            segments: translatedSegments,
-            summary: tSummary,
-            chapters: translatedChapters,
-            error: null,
-          })
-          .eq('stage_id', stageId)
-          .eq('language', language);
+        texts = await translateChunk(slice, langCode);
       } catch (e) {
-        await admin
-          .from('stage_transcript_translations')
-          .update({ status: 'failed', error: String((e as Error).message || e) })
-          .eq('stage_id', stageId)
-          .eq('language', language);
+        console.error('chunk translate failed', e);
+        texts = slice.map((s) => s.text);
       }
-    })();
+      slice.forEach((s, idx) => {
+        translated.push({ start: s.start, end: s.end, text: texts[idx] ?? s.text });
+      });
+    }
 
-    // @ts-ignore EdgeRuntime
-    if (typeof EdgeRuntime !== 'undefined') EdgeRuntime.waitUntil(work);
-    else await work;
+    const next = { ...translations, [langCode]: translated };
+    await db
+      .from('video_transcripts')
+      .update({ translations: next })
+      .eq('token_id', tid);
 
-    return new Response(JSON.stringify({ ok: true, status: 'processing' }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  } catch (e) {
-    return new Response(JSON.stringify({ error: String((e as Error).message || e) }), {
-      status: 400,
+    return new Response(
+      JSON.stringify({ segments: translated, cached: false }),
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+    );
+  } catch (e: any) {
+    console.error('translate-transcript error', e);
+    return new Response(JSON.stringify({ error: e?.message ?? 'error' }), {
+      status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
