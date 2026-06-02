@@ -2342,6 +2342,7 @@ export type Database = {
           status: string
           token_id: number
           transcript: Json | null
+          translations: Json
           updated_at: string
         }
         Insert: {
@@ -2355,6 +2356,7 @@ export type Database = {
           status?: string
           token_id: number
           transcript?: Json | null
+          translations?: Json
           updated_at?: string
         }
         Update: {
@@ -2368,6 +2370,7 @@ export type Database = {
           status?: string
           token_id?: number
           transcript?: Json | null
+          translations?: Json
           updated_at?: string
         }
         Relationships: []

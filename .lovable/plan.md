@@ -1,61 +1,77 @@
-# Video Transcripts on Post Info Page
+## Goal
 
-Add a transcript section to the post info page (`/app/post/:id/info`) for video posts. Transcripts are generated on-demand via Gemini 2.5 Flash-Lite, cached server-side per `tokenId`, and automatically chunked for videos longer than 10 minutes.
+Add an optional **CC (subtitle) button** to every video player. When enabled, render synced subtitles from the existing transcript. Let users pick **any language** — translations are generated on demand and cached.
 
 ## UX
 
-On `PostInfoPage`, for any post whose `nftInfo` resolves to a video (has `videoUrl`/video duration):
+- **CC button**: small icon overlay (bottom-right of the player, near existing controls). Hidden when no `tokenId`/transcript exists.
+- **States** on the button:
+  - Greyed out → no transcript yet. Tap → triggers transcript generation (same flow as Post Info), then auto-enables.
+  - Idle → transcript ready, subtitles off.
+  - Active (filled) → subtitles on, captions render at bottom of video.
+- **Long-press / second tap** opens a small popover:
+  - Toggle CC on/off
+  - Language picker (searchable list of ~30 common languages + "Original")
+  - "Auto-detect from your locale" option (uses `navigator.language` once)
+- **Caption rendering**: bottom-center, max 2 lines, drop-shadow + `bg-black/50` rounded pill, `text-white`, scales with player size, hides on hover-controls collision.
+- **Persistence**: chosen language + enabled-state stored in `localStorage` (`video-subs:lang`, `video-subs:enabled`).
 
-- New collapsible "Transcript" section (liquid-glass card, white text), placed below the existing creator/info blocks.
-- Collapsed by default; expanding triggers a fetch of any cached transcript.
-- States:
-  - **Not generated yet** → "Generate transcript" button (always button-driven, no auto-run, regardless of length). Shows an estimated cost hint for >10-min videos.
-  - **In progress** → spinner + progress label ("Transcribing chunk 2/4…") with live updates via polling.
-  - **Ready** → scrollable segment list. Each segment shows `[mm:ss] text`; clicking a timestamp copies it (player isn't embedded on the info page).
-  - **Failed** → error + "Retry" button.
-- "Copy transcript" and "Download .txt" actions when ready.
+## Sync logic
 
-## Backend
+- Read `segments[]` (`{start, end, text}`) already cached on `video_transcripts`.
+- On each `timeupdate` (throttled ~4x/sec), find the segment where `start ≤ currentTime < end` and show its text. Binary-search by index pointer for O(1) lookups during playback.
+- If language ≠ original, look up `translated_segments[lang][i].text` instead.
 
-### New table `public.video_transcripts`
-- `token_id int PK`
-- `status text` — `pending` | `processing` | `ready` | `failed`
-- `transcript jsonb` — `{ segments: [{ start, end, text }], full_text }`
-- `duration_seconds int`
-- `chunks_total int`, `chunks_done int`
-- `error text`
-- `model text` (default `google/gemini-2.5-flash-lite`)
-- `created_at`, `updated_at`
-- RLS: public SELECT (transcripts are public, like the post). Writes only via service role.
-- GRANTs: `SELECT` to `anon` + `authenticated`, `ALL` to `service_role`.
+## Translation pipeline
 
-### New edge function `transcribe-video` (`verify_jwt = false`)
-Inputs: `{ tokenId: number, action: 'start' | 'status' }`.
+New edge function **`translate-transcript`**:
+- Input: `{ tokenId, lang }` (BCP-47 like `es`, `fr`, `ja`).
+- If `video_transcripts.translations->lang` exists → return cached.
+- Else: call Lovable AI (`google/gemini-2.5-flash-lite`) with the full segment array and a strict tool-call schema returning `{ segments: [{ i, text }] }` preserving order/count. Chunk in groups of ~80 segments to stay within token limits, with retry on count mismatch.
+- Persist into a new `translations jsonb` column on `video_transcripts`, keyed by language code.
+- Returns translated segment array.
 
-- `status` → returns current row from `video_transcripts`.
-- `start` →
-  1. Resolve `videoUrl` via existing `buildVideoUrl(tokenId)` and fetch `videoDuration` from DeHub NFT info.
-  2. Upsert row as `processing`, `chunks_total = ceil(duration / 480s)` (8-min chunks, safe under Flash-Lite limits).
-  3. Kick off background work via `EdgeRuntime.waitUntil(...)`; return immediately with the row.
-  4. Background loop: for each chunk, call Lovable AI Gateway (`/v1/chat/completions`, model `google/gemini-2.5-flash-lite`) with the video URL as a `video_url` content part and a prompt that asks for JSON segments **restricted to the time window `[start, end]`** for that chunk. Parse JSON, merge into accumulator, increment `chunks_done`, persist.
-  5. On 429 / context-limit / parse failure: halve the chunk window (recursive split, min 60 s) and retry that segment up to 3 times before marking `failed`.
-  6. When all chunks done: write `status='ready'` with merged sorted segments + `full_text`.
+Client hook **`useVideoSubtitles(tokenId, lang)`**:
+- React Query: fetch transcript row; if `lang !== 'original'`, invoke `translate-transcript` and merge.
+- Loading toast / spinner on the CC button while translating.
 
-No new secrets — uses the existing `LOVABLE_API_KEY`.
+## Schema change
 
-### Frontend wiring
-- New hook `useVideoTranscript(tokenId)` in `src/hooks/use-video-transcript.ts`:
-  - `useQuery` against the edge function's `status` action, `staleTime: Infinity` when `ready`, `refetchInterval: 3s` when `processing`.
-  - `useMutation` that calls `start` and invalidates the query.
-- New component `src/components/app/post-info/TranscriptSection.tsx` rendering the collapsible card and states.
-- Wire into `src/pages/app/PostInfoPage.tsx`, only mounted when `nftInfo.videoUrl` (or detected video content) is present.
+```sql
+ALTER TABLE public.video_transcripts
+  ADD COLUMN IF NOT EXISTS translations jsonb NOT NULL DEFAULT '{}'::jsonb;
+```
 
-## Cost / safety notes (not part of the build)
-- Always button-driven → zero passive credit burn.
-- 8-min chunks at ~124k input tokens each fit comfortably inside Flash-Lite's window; cached after first run so subsequent visitors pay nothing.
-- Recursive halving handles edge cases where a chunk still trips a limit.
+Shape: `{ "es": [{start, end, text}, ...], "fr": [...] }`.
+
+## Components
+
+New shared component **`<VideoSubtitleOverlay tokenId videoRef />`**:
+- Absolutely-positioned layer placed inside any video container.
+- Owns CC button, popover (uses `Popover` shadcn primitive), language list, caption renderer.
+- Listens to the passed `videoRef.current` for `timeupdate`/`seeked`/`ratechange`.
+
+Wired into:
+- `src/components/app/AutoplayVideo.tsx`
+- `src/components/app/cards/VideoCard.tsx`
+- `src/components/app/cards/VideoSlide.tsx`
+- `src/components/app/stories/StorySlide.tsx`
+- `src/components/app/tv/FloatingPiPPlayer.tsx`
+- Immersive video overlay
+- Each accepts an optional `tokenId` prop; overlay no-ops when absent.
+
+## Files
+
+- New: `supabase/functions/translate-transcript/index.ts`
+- New: `src/components/app/video/VideoSubtitleOverlay.tsx`
+- New: `src/hooks/use-video-subtitles.ts`
+- New: `src/lib/subtitle-languages.ts` (~30 language code/name pairs)
+- Edit: video player components above to mount the overlay
+- Migration: add `translations` column
+- Memory: add `mem://features/video/subtitles-system` rule (CC button everywhere, on-demand translation cached per language, localStorage persistence)
 
 ## Out of scope
-- Click-to-seek inside an embedded player on the info page (player isn't shown there).
-- Translations of the transcript.
-- Re-using transcripts to cheapen `general-ai-chat` follow-up questions — can be a follow-up task.
+
+- Embedding subtitles into the video file
+- Real-time speech translation (uses stored transcript only)
+- Subtitle styling customization (font size / colour pickers)
