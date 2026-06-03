@@ -37,7 +37,6 @@ import {
 import {
   emitCreateAndStart,
   emitSendMessage,
-  emitSavedMediaMessage,
   emitReadReceipt,
   onDmSendMessage,
   onEditMessage,
@@ -200,7 +199,17 @@ export function useMessages(conversationId: string | null) {
     if (!isAuthenticated || !conversationId) return;
 
     const unsubSend = onDmSendMessage((msg) => {
-      const dmId = msg.conversation || (msg as any).dmId;
+      // The server sometimes sends `conversation` as a populated object (after HTTP upload)
+      // rather than a plain ID string (like client-emitted text messages).
+      // Normalise to a string so the match check works in both cases.
+      const rawConversation = msg.conversation;
+      const dmId: string =
+        typeof rawConversation === 'string'
+          ? rawConversation
+          : (rawConversation as any)?._id ||
+            (msg as any).dmId ||
+            (msg as any).conversationId ||
+            '';
       const isMatch = dmId === conversationId ||
         (conversationId.startsWith('new_') &&
           msg.sender?.address?.toLowerCase() === conversationId.replace('new_', '').toLowerCase());
@@ -337,40 +346,7 @@ export function useMessages(conversationId: string | null) {
                 ...(keepIsReadFalse ? { isRead: false } : {}),
               };
             } else {
-              // Guard against duplicate voice/media bubbles: if the server broadcasts
-              // the same message twice (once from HTTP save, once from our socket emit),
-              // they arrive with the same _id — the existingIdx check above catches that.
-              // But if the server re-saves and assigns a new _id, detect the near-duplicate
-              // by matching sender + type + close timestamp within 5 seconds.
-              const isMediaLikeMsg = ['media', 'voice'].includes(normalizedMsg.msgType as string);
-              const nearDuplicateIdx = isMediaLikeMsg
-                ? firstItems.findIndex((candidate) => {
-                    if (candidate._id?.startsWith('temp-')) return false;
-                    if ((candidate.msgType ?? 'msg') !== (normalizedMsg.msgType ?? 'msg')) return false;
-                    const candAddr = candidate.sender?.address?.toLowerCase();
-                    const candUserId = candidate.sender?._id;
-                    const sameSender =
-                      (!!incomingAddressFromNormalized && !!candAddr && incomingAddressFromNormalized === candAddr) ||
-                      (!!incomingUserIdFromNormalized && !!candUserId && incomingUserIdFromNormalized === candUserId);
-                    if (!sameSender) return false;
-                    const candTime = new Date(candidate.createdAt ?? '').getTime();
-                    return Number.isFinite(candTime) && Number.isFinite(incomingCreatedAt)
-                      ? Math.abs(candTime - incomingCreatedAt) < 5_000
-                      : false;
-                  })
-                : -1;
-
-              if (nearDuplicateIdx >= 0) {
-                // Merge to keep the richer of the two (prefer the one with mediaUrls)
-                const existing = firstItems[nearDuplicateIdx];
-                newPages[0].items[nearDuplicateIdx] = {
-                  ...existing,
-                  ...normalizedMsg,
-                  mediaUrls: (normalizedMsg.mediaUrls?.length ? normalizedMsg.mediaUrls : existing.mediaUrls) ?? [],
-                };
-              } else {
-                newPages[0] = { ...newPages[0], items: [normalizedMsg, ...firstItems] };
-              }
+              newPages[0] = { ...newPages[0], items: [normalizedMsg, ...firstItems] };
             }
           }
           return { ...old, pages: newPages };
@@ -699,16 +675,6 @@ export function useSendMessage(conversationId: string) {
       });
 
       return { previousMessages };
-    },
-
-    onSuccess: (data, variables) => {
-      // Voice/media messages are saved via HTTP POST, not socket — the server does not
-      // broadcast a socket event to the receiver after the REST upload.
-      // Emit the saved message now so the server broadcasts it to all conversation
-      // participants (including the receiver) in real-time.
-      if ((variables.msgType === 'voice' || variables.msgType === 'media') && data?._id) {
-        emitSavedMediaMessage(data);
-      }
     },
 
     onError: (_err, _vars, context) => {

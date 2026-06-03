@@ -274,26 +274,6 @@ export function emitSendMessage(payload: SendMessagePayload): void {
   getDmSocket().emit('sendMessage', payload);
 }
 
-/**
- * After a voice/media message is saved via HTTP upload, emit the full saved
- * DmMessage via socket so the server broadcasts it to all conversation
- * participants (including the receiver) in real-time.
- * The server may or may not re-save it; client-side deduplication in the
- * onDmSendMessage listener handles the duplicate-ID case.
- */
-export function emitSavedMediaMessage(message: DmMessage): void {
-  const dmId = message.conversation;
-  if (!dmId) return;
-  getDmSocket().emit('sendMessage', {
-    dmId,
-    content: message.content || '',
-    type: message.msgType,
-    voiceDuration: message.voiceDuration ?? undefined,
-    // Spread full message so receivers can display it without a round-trip fetch
-    ...message,
-  });
-}
-
 // ─── Read-receipt queue (survives disconnect/reconnect) ──────────────────────
 
 const pendingReadReceipts = new Set<string>();
