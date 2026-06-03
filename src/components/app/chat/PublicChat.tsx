@@ -9,7 +9,7 @@ import { ChatInput } from './ChatInput';
 import { CreateTopicRoomModal } from './CreateTopicRoomModal';
 import { RoomSettingsModal } from './RoomSettingsModal';
 import { useLiveChatRooms, useLiveChatMessages, useLiveChatRoomDetails, useLiveChatPresence, type SupabaseLiveChatMessage } from '@/hooks/use-livechat';
-import { getMediaUrl, banLiveChatUser, unbanLiveChatUser, uploadChatImage, type LiveChatRoom } from '@/lib/api/dehub';
+import { getMediaUrl, banLiveChatUser, unbanLiveChatUser, uploadChatImage, uploadLiveChatVoice, type LiveChatRoom } from '@/lib/api/dehub';
 import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
@@ -44,6 +44,8 @@ function toLocalMessage(msg: SupabaseLiveChatMessage): Message {
     timestamp: new Date(msg.created_at),
     type: (msg.message_type as Message['type']) || 'text',
     imageUrl: msg.image_url ? getMediaUrl(msg.image_url) : (msg.message_type === 'gif' && msg.content ? getMediaUrl(msg.content) : undefined),
+    audioUrl: msg.audio_url ? getMediaUrl(msg.audio_url) : undefined,
+    audioDuration: msg.audio_duration || undefined,
 
     reactions: msg.reactions,
     replyTo: msg.reply_to ? {
@@ -196,7 +198,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
     setReplyTo(null);
   }, []);
 
-  const handleSendMessage = async (args: { content: string; type: string; gifUrl?: string; mediaFile?: File }) => {
+  const handleSendMessage = async (args: { content: string; type: string; gifUrl?: string; mediaFile?: File; duration?: number }) => {
     if (!isAuthenticated || !selectedRoomId) return;
     const replyToId = replyTo?.id;
     setReplyTo(null); // Clear reply after sending
@@ -206,6 +208,9 @@ export function PublicChat({ onBack }: PublicChatProps) {
         await send(args.content || '', 'image', imageUrl, replyToId);
       } else if (args.type === 'gif' && args.gifUrl) {
         await send(args.gifUrl, 'gif', args.gifUrl, replyToId);
+      } else if (args.type === 'voice' && args.mediaFile) {
+        const { url: audioUrl, duration } = await uploadLiveChatVoice(args.mediaFile);
+        await send('', 'audio', undefined, replyToId, audioUrl, duration);
       } else {
         await send(args.content || '', 'text', undefined, replyToId);
       }

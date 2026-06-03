@@ -19,6 +19,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { VoiceWaveformPlayer } from './VoiceWaveformPlayer';
 
 /** Avatar with cascading fallback: primary → CDN → initials */
 function ChatAvatar({ src, address, name, className }: { src?: string; address?: string; name: string; className?: string }) {
@@ -61,8 +62,10 @@ export interface Message {
   badgeBalance?: number | null;
   content: string;
   timestamp: Date;
-  type: 'text' | 'image' | 'gif';
+  type: 'text' | 'image' | 'gif' | 'audio';
   imageUrl?: string;
+  audioUrl?: string;
+  audioDuration?: number;
   reactions?: ReactionData;
   replyTo?: ReplyToData;
 }
@@ -417,6 +420,15 @@ export function ChatMessage({
               alt="GIF" 
               className="max-w-xs max-h-48 rounded-lg"
             />
+          </div>
+        )}
+
+        {message.type === 'audio' && message.audioUrl && (
+          <div className="mt-1 flex flex-col gap-1">
+            <VoiceWaveformPlayer src={message.audioUrl} />
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <span className="text-zinc-500 text-[10px] whitespace-nowrap">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
+            </div>
           </div>
         )}
 

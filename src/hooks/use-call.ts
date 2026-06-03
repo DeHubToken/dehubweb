@@ -56,6 +56,7 @@ export interface UseCallReturn {
   localVideoTrack: React.MutableRefObject<any>;
   debugCallState: () => void;
   checkForCalls: () => Promise<void>;
+  setCallMessageHandler: (handler: ((content: string) => void) | null) => void;
 }
 
 export const useCall = (): UseCallReturn => {
@@ -79,6 +80,12 @@ export const useCall = (): UseCallReturn => {
   // Stable currentCall ref to avoid stale closures
   const currentCallRef = useRef<CallSession | null>(null);
   useEffect(() => { currentCallRef.current = currentCall; }, [currentCall]);
+
+  // Call message handler — registered by DirectMessageChat for the active conversation
+  const callMessageHandlerRef = useRef<((content: string) => void) | null>(null);
+  const setCallMessageHandler = useCallback((handler: ((content: string) => void) | null) => {
+    callMessageHandlerRef.current = handler;
+  }, []);
 
   // Timer refs
   const callTimeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -260,10 +267,21 @@ export const useCall = (): UseCallReturn => {
       pollingIntervalRef.current = null;
     }
 
+    const call = currentCallRef.current;
+
+    // Log "call ended" message only if the call was actually connected
+    if (call?.status === 'connected') {
+      const durLabel = callTimerRef.current ? callDuration : null;
+      const typeLabel = call.call_type === 'video' ? 'Video' : 'Voice';
+      const msg = durLabel
+        ? `📞 ${typeLabel} call ended · ${durLabel}`
+        : `📞 ${typeLabel} call ended`;
+      callMessageHandlerRef.current?.(msg);
+    }
+
     await cleanupAgora();
     stopCallTimer();
 
-    const call = currentCallRef.current;
     if (call) {
       await supabase.from('call_sessions').update({ status: 'ended' }).eq('id', call.id);
     }
@@ -274,7 +292,7 @@ export const useCall = (): UseCallReturn => {
     setIsConnecting(false);
     setIsMuted(false);
     setIsCameraOff(false);
-  }, [cleanupAgora, stopCallTimer]);
+  }, [cleanupAgora, stopCallTimer, callDuration]);
 
   // ── startCall ────────────────────────────────────────────────────────────────
 
@@ -313,6 +331,9 @@ export const useCall = (): UseCallReturn => {
       setCurrentCall(callSession);
       currentCallRef.current = callSession;
 
+      // Log call initiation in chat
+      callMessageHandlerRef.current?.(callType === 'video' ? '📹 Video call' : '📞 Voice call');
+
       // Join Agora channel (caller side — will publish, wait for callee)
       const joined = await joinAgoraChannel(callSession, callType);
       if (!joined) {
@@ -331,6 +352,7 @@ export const useCall = (): UseCallReturn => {
             title: 'No answer',
             description: 'The other person did not pick up.',
           });
+          callMessageHandlerRef.current?.(`📵 Missed ${current.call_type === 'video' ? 'video' : 'voice'} call`);
           setCallFailureReason('user_offline');
           setIsUserOffline(true);
           await endCall();
@@ -585,5 +607,6 @@ export const useCall = (): UseCallReturn => {
     debugCallState,
     checkForCalls,
     localVideoTrack: localVideoTrackRef,
+    setCallMessageHandler,
   };
 };

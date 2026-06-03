@@ -116,8 +116,10 @@ export function leaveRoom(roomId?: string) {
 export function emitSendMessage(payload: {
   roomId?: string;
   content: string;
-  messageType?: 'text' | 'media' | 'gif';
+  messageType?: 'text' | 'media' | 'gif' | 'audio';
   imageUrl?: string;
+  audioUrl?: string;
+  audioDuration?: number;
   replyTo?: string;
   mentions?: Array<{ address: string; username?: string }>;
 }) {
@@ -141,6 +143,8 @@ export function emitSendMessage(payload: {
 
   if (payload.replyTo) sendPayload.replyTo = payload.replyTo;
   if (payload.mentions?.length) sendPayload.mentions = payload.mentions;
+  if (payload.audioUrl) sendPayload.audioUrl = payload.audioUrl;
+  if (payload.audioDuration != null) sendPayload.audioDuration = payload.audioDuration;
   if (payload.imageUrl) {
     sendPayload.media = [{
       url: payload.imageUrl,

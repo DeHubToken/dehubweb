@@ -39,6 +39,8 @@ export interface SupabaseLiveChatMessage {
     content: string;
     sender_name: string;
   };
+  audio_url?: string | null;
+  audio_duration?: number | null;
 }
 
 export function useLiveChatRooms() {
@@ -111,6 +113,7 @@ function parseReplyTo(raw: unknown): { id: string; content: string; sender_name:
 function normalizeMsgType(raw: string | undefined | null): string {
   if (!raw) return 'text';
   if (raw === 'media') return 'image'; // API uses "media", ChatMessage expects "image"
+  if (raw === 'voice') return 'audio'; // map legacy voice to audio type
   return raw;
 }
 
@@ -135,6 +138,8 @@ function apiMsgToLocal(msg: LiveChatMessage & { gif?: { url?: string } }, roomId
     created_at: msg.createdAt,
     reactions: parseReactions(msg.reactions || (raw as any).reactions),
     reply_to: parseReplyTo((raw as any).replyTo || (raw as any).reply_to || (raw as any).parentMessage),
+    audio_url: msg.audioUrl || (raw.audioUrl as string) || (raw.audio_url as string) || null,
+    audio_duration: msg.audioDuration || (raw.audioDuration as number) || (raw.audio_duration as number) || null,
   };
 }
 
@@ -201,6 +206,8 @@ function socketMsgToLocal(msg: unknown, roomId: string): SupabaseLiveChatMessage
     created_at: (m.createdAt ?? m.created_at ?? new Date().toISOString()) as string,
     reactions: parseReactions(m.reactions),
     reply_to: parseReplyTo(m.replyTo || m.reply_to || m.parentMessage),
+    audio_url: (m.audioUrl ?? m.audio_url ?? null) as string | null,
+    audio_duration: (m.audioDuration ?? m.audio_duration ?? null) as number | null,
   };
 }
 
@@ -341,9 +348,11 @@ export function useLiveChatMessages(roomId: string | null) {
   const send = useCallback(
     async (
       content: string,
-      type: 'text' | 'image' | 'gif' | 'voice' = 'text',
+      type: 'text' | 'image' | 'gif' | 'audio' = 'text',
       imageUrl?: string,
-      replyToId?: string
+      replyToId?: string,
+      audioUrl?: string,
+      audioDuration?: number
     ) => {
       if (!roomId || !isAuthenticated || !walletAddress) return;
       if (isBanned) {
@@ -376,6 +385,8 @@ export function useLiveChatMessages(roomId: string | null) {
         content,
         message_type: type,
         image_url: imageUrl || null,
+        audio_url: audioUrl || null,
+        audio_duration: audioDuration || null,
         is_pinned: false,
         created_at: new Date().toISOString(),
         reply_to: replyToData,
@@ -396,8 +407,16 @@ export function useLiveChatMessages(roomId: string | null) {
           });
         }
 
-        const apiType = type === 'image' || type === 'voice' ? 'media' : type;
-        emitSendMessage({ roomId, content, messageType: apiType, imageUrl, replyTo: replyToId });
+        const apiType = type === 'image' ? 'media' : type;
+        emitSendMessage({
+          roomId,
+          content,
+          messageType: apiType,
+          imageUrl,
+          audioUrl,
+          audioDuration,
+          replyTo: replyToId
+        });
 
         setTimeout(() => { fetchMessages(false); }, 1500);
       } catch (err: any) {

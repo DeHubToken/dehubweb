@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import type { Message } from './ChatMessage';
+import { VoiceRecorder } from './VoiceRecorder';
 
 interface ChatInputSendArgs {
   content: string;
@@ -335,6 +336,11 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
             accept="image/*"
             onChange={handleImageUpload}
             className="hidden"
+          />
+
+          <VoiceRecorder
+            onRecordingComplete={handleVoiceRecordingComplete}
+            disabled={sendDisabled}
           />
 
 
