@@ -58,7 +58,7 @@ function readSize(): SizeKey {
     const v = localStorage.getItem(LS_SIZE) as SizeKey | null;
     if (v && SIZE_PRESETS.some((s) => s.key === v)) return v;
   } catch { /* noop */ }
-  return 'md';
+  return 'xs';
 }
 
 export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, buttonVisible = true }: Props) {
