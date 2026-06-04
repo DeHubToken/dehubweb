@@ -419,6 +419,39 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                   );
                 }
 
+                // AI Admin response — styled like the AI Assistant page
+                if (msg.message_type === 'admin_response') {
+                  return (
+                    <motion.div
+                      key={msg.id}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0 }}
+                      className="flex items-start gap-2 px-3"
+                    >
+                      <img
+                        src={assistantAvatar}
+                        alt="AI Admin"
+                        className="w-7 h-7 rounded-full shrink-0 mt-0.5"
+                      />
+                      <div className="min-w-0 flex-1">
+                        <span className="inline-flex items-baseline gap-1.5">
+                          <span className="text-xs font-semibold text-white">AI Admin</span>
+                          <span className="inline-flex items-center gap-0.5 text-[9px] uppercase tracking-wide text-white/70 px-1.5 py-[1px] rounded-md bg-white/10 border border-white/15">
+                            <Sparkles className="w-2.5 h-2.5" /> bot
+                          </span>
+                          <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
+                        </span>
+                        <div className="mt-1 rounded-2xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-3 py-2 text-white">
+                          <MarkdownText content={msg.content} className="text-xs" />
+                        </div>
+                      </div>
+                    </motion.div>
+                  );
+                }
+
+
+
                 const avatarUrl = buildAvatarUrl(msg.wallet_address, msg.avatar_url);
                 const name = msg.display_name || msg.username || msg.wallet_address?.slice(0, 8) || 'Anon';
                 const handle = msg.username;
