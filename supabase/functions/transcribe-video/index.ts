@@ -159,11 +159,10 @@ async function runJob(tokenId: number) {
     });
 
     const videoUrl = buildVideoUrl(tokenId);
-    const videoData = await fetchVideoAsDataUrl(videoUrl);
     const all: Segment[] = [];
     for (let i = 0; i < chunks.length; i++) {
       const [a, b] = chunks[i];
-      const segs = await transcribeRange(videoData, a, b);
+      const segs = await transcribeRange(videoUrl, a, b);
       all.push(...segs);
       await supa.from('video_transcripts')
         .update({ chunks_done: i + 1 })
