@@ -90,7 +90,12 @@ export function UserMentionDropdown({
           avatarImageUrl?: string;
           address?: string;
           isFollowing?: boolean;
+          followsYou?: boolean;
           isVerified?: boolean;
+          followerCount?: number;
+          followingCount?: number;
+          followers?: number;
+          following?: number;
         }> }>('/api/users/mention_search', {
           params: { q: searchQuery },
         });
@@ -104,6 +109,10 @@ export function UserMentionDropdown({
           displayName: u.displayName ?? null,
           avatarUrl: buildAvatarUrl(u.address || '', u.avatarImageUrl) || null,
           isVerified: u.isVerified ?? false,
+          followerCount: typeof u.followerCount === 'number' ? u.followerCount : (typeof u.followers === 'number' ? u.followers : undefined),
+          followingCount: typeof u.followingCount === 'number' ? u.followingCount : (typeof u.following === 'number' ? u.following : undefined),
+          isFollowing: u.isFollowing,
+          followsYou: u.followsYou,
         }));
 
         setUsers(mapped);
