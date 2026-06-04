@@ -13,32 +13,69 @@ const Toaster = ({ ...props }: ToasterProps) => {
   useEffect(() => {
     if (isMobile || typeof window === "undefined") return;
 
-    const resolveToastAnchor = () => {
+    let resizeObserver: ResizeObserver | null = null;
+
+    const isVisible = (element: HTMLElement | null) => {
+      if (!element) return false;
+      const rect = element.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0;
+    };
+
+    const getAnchorElement = () => {
+      const loginModal = Array.from(
+        document.querySelectorAll<HTMLElement>('[data-login-modal="true"]')
+      ).find((element) => isVisible(element));
+      if (isVisible(loginModal)) return loginModal;
+
       const openDialog = Array.from(
-        document.querySelectorAll<HTMLElement>('[role="dialog"][data-state="open"]')
-      ).find((element) => element.offsetParent !== null);
+        document.querySelectorAll<HTMLElement>('[role="dialog"]')
+      ).find((element) => isVisible(element));
 
-      if (openDialog) {
-        const rect = openDialog.getBoundingClientRect();
-        return `${rect.left + rect.width / 2}px`;
-      }
+      if (openDialog) return openDialog;
 
-      const mainContent = document.querySelector<HTMLElement>("#app-root main");
-      if (mainContent) {
-        const rect = mainContent.getBoundingClientRect();
+      return document.querySelector<HTMLElement>("#app-root main");
+    };
+
+    const resolveToastAnchor = () => {
+      const anchorElement = getAnchorElement();
+
+      if (isVisible(anchorElement)) {
+        const rect = anchorElement.getBoundingClientRect();
         return `${rect.left + rect.width / 2}px`;
       }
 
       return `${window.innerWidth / 2}px`;
     };
 
+    const attachResizeObserver = () => {
+      resizeObserver?.disconnect();
+      resizeObserver = new ResizeObserver(() => {
+        window.requestAnimationFrame(() => {
+          setDesktopToastLeft(resolveToastAnchor());
+        });
+      });
+
+      const elementsToObserve = [
+        document.documentElement,
+        document.body,
+        document.querySelector<HTMLElement>("#app-root"),
+        document.querySelector<HTMLElement>("#app-root main"),
+        document.querySelector<HTMLElement>('[data-login-modal="true"]'),
+        Array.from(document.querySelectorAll<HTMLElement>('[role="dialog"]')).find((element) => isVisible(element)),
+      ].filter(Boolean) as HTMLElement[];
+
+      elementsToObserve.forEach((element) => resizeObserver?.observe(element));
+    };
+
     const updateToastAnchor = () => {
       window.requestAnimationFrame(() => {
         setDesktopToastLeft(resolveToastAnchor());
+        attachResizeObserver();
       });
     };
 
     updateToastAnchor();
+    [50, 150, 300, 500].forEach((delay) => window.setTimeout(updateToastAnchor, delay));
 
     window.addEventListener("resize", updateToastAnchor);
 
@@ -52,6 +89,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
 
     return () => {
       window.removeEventListener("resize", updateToastAnchor);
+      resizeObserver?.disconnect();
       observer.disconnect();
     };
   }, [isMobile]);
@@ -64,7 +102,12 @@ const Toaster = ({ ...props }: ToasterProps) => {
       duration={3000}
       visibleToasts={3}
       expand={false}
-      style={isMobile ? undefined : ({ width: "auto", left: desktopToastLeft, right: "auto" } as React.CSSProperties)}
+      style={isMobile ? undefined : ({
+        left: desktopToastLeft,
+        right: "auto",
+        width: "fit-content",
+        ["--width" as string]: "fit-content",
+      } as React.CSSProperties)}
       toastOptions={{
         classNames: {
           toast: "group toast group-[.toaster]:bg-white/10 group-[.toaster]:backdrop-blur-xl group-[.toaster]:border group-[.toaster]:border-white/20 group-[.toaster]:text-white group-[.toaster]:shadow-[0_8px_32px_rgba(0,0,0,0.4)] group-[.toaster]:rounded-2xl group-[.toaster]:!w-fit group-[.toaster]:!min-w-0 group-[.toaster]:!max-w-[90vw] group-[.toaster]:whitespace-nowrap",
