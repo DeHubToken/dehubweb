@@ -41,6 +41,8 @@ interface Props {
   videoRef: React.RefObject<HTMLVideoElement>;
   /** Optional className overrides for the button position. Defaults bottom-left. */
   buttonClassName?: string;
+  /** When false, the CC button is faded out (captions still render). Defaults true. */
+  buttonVisible?: boolean;
 }
 
 function readEnabled(): boolean {
