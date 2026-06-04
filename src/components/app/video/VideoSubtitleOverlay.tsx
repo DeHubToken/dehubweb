@@ -14,12 +14,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Captions, Check, Loader2, Search, Settings2, Minus, Plus } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { useVideoTranscript, type TranscriptSegment } from '@/hooks/use-video-transcript';
 import { useTranslatedSegments } from '@/hooks/use-video-subtitles';
 import { SUBTITLE_LANGUAGES, detectLocaleLang } from '@/lib/subtitle-languages';
 import { splitSegmentsIntoLines, rechunkVtt } from '@/lib/transcript-format';
+import { useIsTouchDevice } from '@/hooks/use-touch-device';
 
 const LS_ENABLED = 'video-subs:enabled';
 const LS_LANG = 'video-subs:lang';
@@ -295,186 +297,277 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
         </div>
       )}
 
-      {/* CC button + language popover */}
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
+      {/* CC button + language menu */}
+      <SubtitleMenu
+        open={open}
+        setOpen={setOpen}
+        handleToggle={handleToggle}
+        buttonVisible={buttonVisible}
+        buttonClassName={buttonClassName}
+        buttonState={buttonState}
+        enabled={enabled}
+        setEnabled={setEnabled}
+        showSettings={showSettings}
+        setShowSettings={setShowSettings}
+        size={size}
+        setSize={setSize}
+        sizePx={sizePx}
+        isReady={isReady}
+        isWorking={isWorking}
+        langLabel={langLabel}
+        query={query}
+        setQuery={setQuery}
+        filteredLangs={filteredLangs}
+        lang={lang}
+        setLang={setLang}
+      />
+    </>
+  );
+}
+
+interface SubtitleMenuProps {
+  open: boolean;
+  setOpen: (v: boolean) => void;
+  handleToggle: (e: React.MouseEvent) => void;
+  buttonVisible: boolean;
+  buttonClassName?: string;
+  buttonState: 'off' | 'on' | 'working' | 'loading';
+  enabled: boolean;
+  setEnabled: React.Dispatch<React.SetStateAction<boolean>>;
+  showSettings: boolean;
+  setShowSettings: React.Dispatch<React.SetStateAction<boolean>>;
+  size: SizeKey;
+  setSize: React.Dispatch<React.SetStateAction<SizeKey>>;
+  sizePx: number;
+  isReady: boolean;
+  isWorking: boolean;
+  langLabel: string;
+  query: string;
+  setQuery: React.Dispatch<React.SetStateAction<string>>;
+  filteredLangs: typeof SUBTITLE_LANGUAGES;
+  lang: string;
+  setLang: React.Dispatch<React.SetStateAction<string>>;
+}
+
+function SubtitleMenu(props: SubtitleMenuProps) {
+  const {
+    open, setOpen, handleToggle, buttonVisible, buttonClassName, buttonState,
+    enabled, setEnabled, showSettings, setShowSettings, size, setSize, sizePx,
+    isReady, isWorking, langLabel, query, setQuery, filteredLangs, lang, setLang,
+  } = props;
+  const isTouch = useIsTouchDevice();
+
+  const triggerButton = (
+    <button
+      type="button"
+      onClick={(e) => handleToggle(e)}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setOpen(true);
+      }}
+      aria-label={enabled ? 'Subtitles on' : 'Subtitles off'}
+      className={cn(
+        'z-20 h-8 w-8 rounded-lg bg-black/60 backdrop-blur-[24px] border border-white/10 flex items-center justify-center transition-opacity duration-200',
+        buttonVisible || open ? 'opacity-80 hover:opacity-100' : 'opacity-0 pointer-events-none',
+        buttonState === 'off' && 'text-white/60',
+        buttonState === 'on' && 'text-white',
+        buttonState === 'working' && 'text-white/80',
+        buttonClassName ?? 'absolute bottom-12 left-2',
+      )}
+    >
+      {buttonState === 'working' ? (
+        <Loader2 className="w-4 h-4 animate-spin" />
+      ) : (
+        <Captions className={cn('w-4 h-4', enabled && 'fill-white/20')} />
+      )}
+      {enabled && (
+        <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-white" />
+      )}
+    </button>
+  );
+
+  const header = (
+    <div className="p-2 border-b border-white/10">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-white text-xs font-semibold">Subtitles</span>
+        <div className="flex items-center gap-1.5">
           <button
             type="button"
-            onClick={(e) => {
-              // Single tap toggles; user opens menu via right-click / long-press handled below
-              handleToggle(e);
-            }}
-            onContextMenu={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setOpen(true);
-            }}
-            aria-label={enabled ? 'Subtitles on' : 'Subtitles off'}
+            onClick={(e) => { e.stopPropagation(); setEnabled((v) => !v); }}
             className={cn(
-              'z-20 h-8 w-8 rounded-lg bg-black/60 backdrop-blur-[24px] border border-white/10 flex items-center justify-center transition-opacity duration-200',
-              buttonVisible || open ? 'opacity-80 hover:opacity-100' : 'opacity-0 pointer-events-none',
-              buttonState === 'off' && 'text-white/60',
-              buttonState === 'on' && 'text-white',
-              buttonState === 'working' && 'text-white/80',
-              buttonClassName ?? 'absolute bottom-12 left-2',
+              'text-[10px] px-2 py-0.5 rounded-md border',
+              enabled
+                ? 'bg-white/15 text-white border-white/20'
+                : 'bg-transparent text-white/60 border-white/10',
             )}
           >
-            {buttonState === 'working' ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Captions className={cn('w-4 h-4', enabled && 'fill-white/20')} />
-            )}
-            {enabled && (
-              <span className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-white" />
-            )}
+            {enabled ? 'On' : 'Off'}
           </button>
-        </PopoverTrigger>
-        <PopoverContent
-          align="start"
-          side="top"
-          sideOffset={6}
-          className="w-64 p-0 bg-black/80 backdrop-blur-[24px] border-white/10"
-          onClick={(e) => e.stopPropagation()}
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setShowSettings((v) => !v); }}
+            aria-label="Subtitle settings"
+            className={cn(
+              'h-5 w-5 rounded-md border flex items-center justify-center',
+              showSettings
+                ? 'bg-white/15 text-white border-white/20'
+                : 'bg-transparent text-white/60 border-white/10 hover:text-white hover:bg-white/10',
+            )}
+          >
+            <Settings2 className="w-3 h-3" />
+          </button>
+        </div>
+      </div>
+      {!isReady && (
+        <p className="text-[11px] text-white/50">
+          {isWorking ? 'Generating transcript…' : 'No transcript yet. Toggle on to generate.'}
+        </p>
+      )}
+      {isReady && (
+        <p className="text-[11px] text-white/50">
+          Language: <span className="text-white/80">{langLabel}</span>
+        </p>
+      )}
+    </div>
+  );
+
+  const settingsBlock = showSettings && (
+    <div className="p-2 border-b border-white/10">
+      <div className="flex items-center justify-between mb-1.5">
+        <span className="text-[11px] text-white/60">Text size</span>
+        <span className="text-[11px] text-white/80">
+          {SIZE_PRESETS.find((s) => s.key === size)?.label}
+        </span>
+      </div>
+      <div className="flex items-center gap-1">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            const idx = SIZE_PRESETS.findIndex((s) => s.key === size);
+            if (idx > 0) setSize(SIZE_PRESETS[idx - 1].key);
+          }}
+          className="h-6 w-6 rounded-md border border-white/10 bg-white/5 text-white/70 hover:text-white hover:bg-white/10 flex items-center justify-center"
+          aria-label="Smaller"
         >
-          <div className="p-2 border-b border-white/10">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-white text-xs font-semibold">Subtitles</span>
-              <div className="flex items-center gap-1.5">
-                <button
-                  type="button"
-                  onClick={(e) => { e.stopPropagation(); setEnabled((v) => !v); }}
-                  className={cn(
-                    'text-[10px] px-2 py-0.5 rounded-md border',
-                    enabled
-                      ? 'bg-white/15 text-white border-white/20'
-                      : 'bg-transparent text-white/60 border-white/10',
-                  )}
-                >
-                  {enabled ? 'On' : 'Off'}
-                </button>
-                <button
-                  type="button"
-                  onClick={(e) => { e.stopPropagation(); setShowSettings((v) => !v); }}
-                  aria-label="Subtitle settings"
-                  className={cn(
-                    'h-5 w-5 rounded-md border flex items-center justify-center',
-                    showSettings
-                      ? 'bg-white/15 text-white border-white/20'
-                      : 'bg-transparent text-white/60 border-white/10 hover:text-white hover:bg-white/10',
-                  )}
-                >
-                  <Settings2 className="w-3 h-3" />
-                </button>
-              </div>
-            </div>
-            {!isReady && (
-              <p className="text-[11px] text-white/50">
-                {isWorking ? 'Generating transcript…' : 'No transcript yet. Toggle on to generate.'}
-              </p>
-            )}
-            {isReady && (
-              <p className="text-[11px] text-white/50">
-                Language: <span className="text-white/80">{langLabel}</span>
-              </p>
-            )}
-          </div>
-          {showSettings && (
-            <div className="p-2 border-b border-white/10">
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[11px] text-white/60">Text size</span>
-                <span className="text-[11px] text-white/80">
-                  {SIZE_PRESETS.find((s) => s.key === size)?.label}
-                </span>
-              </div>
-              <div className="flex items-center gap-1">
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    const idx = SIZE_PRESETS.findIndex((s) => s.key === size);
-                    if (idx > 0) setSize(SIZE_PRESETS[idx - 1].key);
-                  }}
-                  className="h-6 w-6 rounded-md border border-white/10 bg-white/5 text-white/70 hover:text-white hover:bg-white/10 flex items-center justify-center"
-                  aria-label="Smaller"
-                >
-                  <Minus className="w-3 h-3" />
-                </button>
-                <div className="flex-1 flex items-center gap-1">
-                  {SIZE_PRESETS.map((s) => (
-                    <button
-                      key={s.key}
-                      type="button"
-                      onClick={(e) => { e.stopPropagation(); setSize(s.key); }}
-                      className={cn(
-                        'flex-1 h-6 rounded-md border text-[10px] font-medium transition',
-                        size === s.key
-                          ? 'bg-white/20 text-white border-white/30'
-                          : 'bg-transparent text-white/60 border-white/10 hover:bg-white/5',
-                      )}
-                    >
-                      {s.label}
-                    </button>
-                  ))}
-                </div>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    const idx = SIZE_PRESETS.findIndex((s) => s.key === size);
-                    if (idx < SIZE_PRESETS.length - 1) setSize(SIZE_PRESETS[idx + 1].key);
-                  }}
-                  className="h-6 w-6 rounded-md border border-white/10 bg-white/5 text-white/70 hover:text-white hover:bg-white/10 flex items-center justify-center"
-                  aria-label="Larger"
-                >
-                  <Plus className="w-3 h-3" />
-                </button>
-              </div>
-              <div className="mt-2 rounded-md bg-black/50 border border-white/10 px-2 py-1.5 text-center">
-                <span
-                  className="text-white font-medium"
-                  style={{ fontSize: `${sizePx}px`, textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}
-                >
-                  Preview
-                </span>
-              </div>
-            </div>
+          <Minus className="w-3 h-3" />
+        </button>
+        <div className="flex-1 flex items-center gap-1">
+          {SIZE_PRESETS.map((s) => (
+            <button
+              key={s.key}
+              type="button"
+              onClick={(e) => { e.stopPropagation(); setSize(s.key); }}
+              className={cn(
+                'flex-1 h-6 rounded-md border text-[10px] font-medium transition',
+                size === s.key
+                  ? 'bg-white/20 text-white border-white/30'
+                  : 'bg-transparent text-white/60 border-white/10 hover:bg-white/5',
+              )}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            const idx = SIZE_PRESETS.findIndex((s) => s.key === size);
+            if (idx < SIZE_PRESETS.length - 1) setSize(SIZE_PRESETS[idx + 1].key);
+          }}
+          className="h-6 w-6 rounded-md border border-white/10 bg-white/5 text-white/70 hover:text-white hover:bg-white/10 flex items-center justify-center"
+          aria-label="Larger"
+        >
+          <Plus className="w-3 h-3" />
+        </button>
+      </div>
+      <div className="mt-2 rounded-md bg-black/50 border border-white/10 px-2 py-1.5 text-center">
+        <span
+          className="text-white font-medium"
+          style={{ fontSize: `${sizePx}px`, textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}
+        >
+          Preview
+        </span>
+      </div>
+    </div>
+  );
+
+  const searchBlock = (
+    <div className="p-2 border-b border-white/10">
+      <div className="relative">
+        <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-white/40" />
+        <Input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search language"
+          className="h-7 pl-7 text-xs bg-white/5 border-white/10 text-white placeholder:text-white/30"
+        />
+      </div>
+    </div>
+  );
+
+  const langList = (
+    <div className={cn('overflow-y-auto', isTouch ? 'max-h-[50vh]' : 'max-h-64')}>
+      {filteredLangs.map((l) => (
+        <button
+          key={l.code}
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            setLang(l.code);
+            if (!enabled) setEnabled(true);
+          }}
+          className={cn(
+            'w-full flex items-center justify-between px-3 py-2 text-xs hover:bg-white/5 transition',
+            lang === l.code ? 'text-white' : 'text-white/70',
           )}
-          <div className="p-2 border-b border-white/10">
-            <div className="relative">
-              <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-white/40" />
-              <Input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search language"
-                className="h-7 pl-7 text-xs bg-white/5 border-white/10 text-white placeholder:text-white/30"
-              />
+        >
+          <span>{l.name}</span>
+          {lang === l.code && <Check className="w-3 h-3" />}
+        </button>
+      ))}
+      {filteredLangs.length === 0 && (
+        <p className="px-3 py-3 text-[11px] text-white/40 text-center">No match</p>
+      )}
+    </div>
+  );
+
+  if (isTouch) {
+    return (
+      <>
+        {triggerButton}
+        <Drawer open={open} onOpenChange={setOpen}>
+          <DrawerContent glass hideHandle={false} className="px-0 pb-4 max-h-[85vh]">
+            <DrawerTitle className="sr-only">Subtitles</DrawerTitle>
+            <div onClick={(e) => e.stopPropagation()}>
+              {header}
+              {settingsBlock}
+              {searchBlock}
+              {langList}
             </div>
-          </div>
-          <div className="max-h-64 overflow-y-auto">
-            {filteredLangs.map((l) => (
-              <button
-                key={l.code}
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setLang(l.code);
-                  if (!enabled) setEnabled(true);
-                }}
-                className={cn(
-                  'w-full flex items-center justify-between px-3 py-1.5 text-xs hover:bg-white/5 transition',
-                  lang === l.code ? 'text-white' : 'text-white/70',
-                )}
-              >
-                <span>{l.name}</span>
-                {lang === l.code && <Check className="w-3 h-3" />}
-              </button>
-            ))}
-            {filteredLangs.length === 0 && (
-              <p className="px-3 py-3 text-[11px] text-white/40 text-center">No match</p>
-            )}
-          </div>
-        </PopoverContent>
-      </Popover>
-    </>
+          </DrawerContent>
+        </Drawer>
+      </>
+    );
+  }
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>{triggerButton}</PopoverTrigger>
+      <PopoverContent
+        align="start"
+        side="top"
+        sideOffset={6}
+        className="w-64 p-0 bg-black/80 backdrop-blur-[24px] border-white/10"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {header}
+        {settingsBlock}
+        {searchBlock}
+        {langList}
+      </PopoverContent>
+    </Popover>
   );
 }
