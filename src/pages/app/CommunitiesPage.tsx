@@ -20,7 +20,7 @@ import { useCommunityActivityUnreadCount } from '@/hooks/use-community-activity-
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
-const communitiesIconUrl = '/__l5e/assets-v1/87eb8b21-34b2-4fb6-8069-84321b85adc5/communities-icon.webp';
+import communitiesTitleIcon from '@/assets/communities-title-icon.webp';
 
 export default function CommunitiesPage() {
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
@@ -130,7 +130,7 @@ export default function CommunitiesPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-4 gap-2">
         <div className="flex items-center gap-2 min-w-0">
-          <img src={communitiesIconUrl} alt="" className="w-9 h-9 shrink-0 object-contain" />
+          <img src={communitiesTitleIcon} alt="" className="w-9 h-9 shrink-0 object-contain" />
           <h1 className="text-xl font-bold text-white truncate">{t('communities.title')}</h1>
         </div>
       </div>
