@@ -19,6 +19,7 @@ import { cn } from '@/lib/utils';
 import { useVideoTranscript, type TranscriptSegment } from '@/hooks/use-video-transcript';
 import { useTranslatedSegments } from '@/hooks/use-video-subtitles';
 import { SUBTITLE_LANGUAGES, detectLocaleLang } from '@/lib/subtitle-languages';
+import { splitSegmentsIntoLines, rechunkVtt } from '@/lib/transcript-format';
 
 const LS_ENABLED = 'video-subs:enabled';
 const LS_LANG = 'video-subs:lang';
