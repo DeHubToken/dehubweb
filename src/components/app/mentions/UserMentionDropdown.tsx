@@ -98,12 +98,12 @@ export function UserMentionDropdown({
           isFollowing?: boolean;
           followsYou?: boolean;
           isVerified?: boolean;
+          followers?: number;
+          followings?: number;
           followerCount?: number;
           followingCount?: number;
-          followers?: number;
-          following?: number;
-        }> }>('/api/users/mention_search', {
-          params: { q: searchQuery },
+        }> }>('/api/users_search', {
+          params: { q: searchQuery, page: 1, limit: 10 },
         });
 
         if (latestQueryRef.current !== searchQuery) return;
@@ -116,10 +116,11 @@ export function UserMentionDropdown({
           avatarUrl: buildAvatarUrl(u.address || '', u.avatarImageUrl) || null,
           isVerified: u.isVerified ?? false,
           followerCount: typeof u.followerCount === 'number' ? u.followerCount : (typeof u.followers === 'number' ? u.followers : undefined),
-          followingCount: typeof u.followingCount === 'number' ? u.followingCount : (typeof u.following === 'number' ? u.following : undefined),
+          followingCount: typeof u.followingCount === 'number' ? u.followingCount : (typeof u.followings === 'number' ? u.followings : undefined),
           isFollowing: u.isFollowing,
           followsYou: u.followsYou,
         }));
+
 
         setUsers(mapped);
         if (mapped.length > 0 && selectedIndex >= mapped.length) {
