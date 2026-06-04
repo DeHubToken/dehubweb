@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback } from 'react';
-import { Users, LogIn, LogOut, Crown, Camera, Pin, PinOff, TrendingUp, X, Pencil, Check, Share2, Link2, FileText, Link as LinkIcon } from 'lucide-react';
+import { Users, LogIn, LogOut, Crown, Camera, Pin, PinOff, TrendingUp, X, Pencil, Check, Share2, Link2, FileText, Link as LinkIcon, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CommunityTickerSearch } from './CommunityTickerSearch';
@@ -19,6 +19,21 @@ interface CommunityHeaderProps {
   isOwner: boolean;
   isPending: boolean;
   onJoinLeave: () => void;
+}
+
+function formatRelativeTime(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays < 1) return 'today';
+  if (diffDays === 1) return 'yesterday';
+  if (diffDays < 7) return `${diffDays}d`;
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)}w`;
+  if (diffDays < 365) return `${Math.floor(diffDays / 30)}m`;
+  const years = Math.floor(diffDays / 365);
+  return `${years}y`;
 }
 
 export function CommunityHeader({ community, isMember, isPendingMember, isOwner, isPending, onJoinLeave }: CommunityHeaderProps) {
@@ -101,6 +116,11 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
           </div>
         )}
+        {/* Created timestamp */}
+        <div className="absolute top-2 right-2 flex items-center gap-1 px-2 py-1 rounded-lg bg-black/50 backdrop-blur-sm border border-white/10">
+          <Clock className="w-3 h-3 text-zinc-400" />
+          <span className="text-[11px] text-zinc-300 font-medium">{formatRelativeTime(community.created_at)}</span>
+        </div>
       </div>
 
       {/* Avatar + buttons row */}
