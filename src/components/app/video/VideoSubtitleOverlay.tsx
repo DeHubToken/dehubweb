@@ -65,6 +65,8 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName }: Pro
 
   const [enabled, setEnabled] = useState<boolean>(readEnabled);
   const [lang, setLang] = useState<string>(readLang);
+  const [size, setSize] = useState<SizeKey>(readSize);
+  const [showSettings, setShowSettings] = useState(false);
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [currentText, setCurrentText] = useState('');
