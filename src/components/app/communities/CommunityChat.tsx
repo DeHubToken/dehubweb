@@ -27,6 +27,11 @@ import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { replaceLinksWithEmoji, TranslatableText, SharedTranslationContext } from '../TranslatableText';
 import { useTranslation } from 'react-i18next';
+import { motion } from 'framer-motion';
+import { MarkdownText } from '@/lib/markdown';
+import assistantAvatar from '@/assets/ai-assistant-avatar.png';
+import { Sparkles } from 'lucide-react';
+
 
 
 const QUICK_EMOJIS = ['👍', '❤️', '😂', '🔥', '🚀', '👀', '💯', '🙏'];
