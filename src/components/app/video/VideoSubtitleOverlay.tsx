@@ -240,7 +240,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
       el.id = id;
       document.head.appendChild(el);
     }
-    el.textContent = `video::cue { font-size: ${sizePxValue}px; background: rgba(0,0,0,0.6); color: #fff; white-space: nowrap; line-height: 1.2; }`;
+    el.textContent = `video::cue { font-size: ${sizePxValue}px; background: rgba(0,0,0,0.4); color: #fff; line-height: 1.3; }`;
   }, [sizePxValue]);
 
   if (!numericId) return null;
