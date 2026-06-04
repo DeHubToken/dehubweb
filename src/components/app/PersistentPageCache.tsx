@@ -85,7 +85,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'stake', path: ['/app/stake', '/stake'], component: StakingPage, skeleton: GenericPageSkeleton },
   { key: 'bridge', path: '/app/bridge', component: BridgePage, skeleton: GenericPageSkeleton },
   { key: 'top-100', path: '/app/top-100', component: Top100CryptosPage, skeleton: LeaderboardSkeleton },
-  { key: 'communities', path: '/app/communities', component: CommunitiesPage, skeleton: GenericPageSkeleton },
+  { key: 'communities', path: ['/app/communities', '/communities'], component: CommunitiesPage, skeleton: GenericPageSkeleton },
   { key: 'events', path: '/app/events', component: EventsPage, skeleton: GenericPageSkeleton },
   { key: 'stores', path: '/app/stores', component: StoresPage, skeleton: GenericPageSkeleton },
   { key: 'profile', path: '/app/profile', component: ProfilePage, skeleton: ProfileSkeleton },
