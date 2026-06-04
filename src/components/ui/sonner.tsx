@@ -100,7 +100,12 @@ const Toaster = ({ ...props }: ToasterProps) => {
       duration={3000}
       visibleToasts={3}
       expand={false}
-      style={isMobile ? undefined : ({ width: "auto", left: desktopToastLeft, right: "auto" } as React.CSSProperties)}
+      style={isMobile ? undefined : ({
+        left: desktopToastLeft,
+        right: "auto",
+        width: "fit-content",
+        ["--width" as string]: "fit-content",
+      } as React.CSSProperties)}
       toastOptions={{
         classNames: {
           toast: "group toast group-[.toaster]:bg-white/10 group-[.toaster]:backdrop-blur-xl group-[.toaster]:border group-[.toaster]:border-white/20 group-[.toaster]:text-white group-[.toaster]:shadow-[0_8px_32px_rgba(0,0,0,0.4)] group-[.toaster]:rounded-2xl group-[.toaster]:!w-fit group-[.toaster]:!min-w-0 group-[.toaster]:!max-w-[90vw] group-[.toaster]:whitespace-nowrap",
