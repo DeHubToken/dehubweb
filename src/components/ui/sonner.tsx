@@ -117,7 +117,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
     <Sonner
       theme={theme as ToasterProps["theme"]}
       className="toaster group"
-      position={isMobile ? "top-right" : "top-center"}
+      position={isMobile ? "top-right" : "top-left"}
       duration={3000}
       visibleToasts={3}
       expand={false}
@@ -125,6 +125,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
         left: desktopToastLeft,
         top: desktopToastTop,
         right: "auto",
+        transform: "translateX(-50%)",
         width: "fit-content",
         ["--width" as string]: "fit-content",
       } as React.CSSProperties)}
