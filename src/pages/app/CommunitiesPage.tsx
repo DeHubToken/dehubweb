@@ -88,7 +88,20 @@ export default function CommunitiesPage() {
     });
   }, [userCommunities]);
 
-  const otherCommunities = allCommunities.filter(c => !userCommunityIds.has(c.id));
+  const otherCommunities = useMemo(() => {
+    const list = allCommunities.filter(c => !userCommunityIds.has(c.id));
+    if (sortMode === 'new') {
+      return [...list].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    }
+    if (sortMode === 'hot') {
+      return [...list].sort((a, b) => {
+        const sa = (a.member_count || 0) + (activityScores[a.id] || 0);
+        const sb = (b.member_count || 0) + (activityScores[b.id] || 0);
+        return sb - sa;
+      });
+    }
+    return list;
+  }, [allCommunities, userCommunityIds, sortMode, activityScores]);
 
   const filterBySearch = (list: typeof allCommunities) =>
     search.trim()
