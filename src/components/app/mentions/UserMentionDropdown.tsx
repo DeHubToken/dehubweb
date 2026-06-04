@@ -291,7 +291,7 @@ export function UserMentionDropdown({
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-2 text-[12px] text-white/35 truncate">
+                  <div className="flex items-center gap-2 text-[15px] text-white/35 truncate">
                     <span className="truncate">@{user.username}</span>
                     {typeof user.followerCount === 'number' && (
                       <>
