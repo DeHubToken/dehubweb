@@ -88,11 +88,17 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   // Treat english variants as "original" — the underlying transcripts are
   // produced in the spoken language (usually English) so translating en→en
   // just produces garbled duplicate segments.
+  const sourceLang = (transcript?.source_lang || '').toLowerCase().split('-')[0];
   const normalizedLang = useMemo(() => {
     const l = (lang || '').toLowerCase();
-    if (!l || l === 'original' || l === 'en' || l.startsWith('en-')) return 'original';
+    if (!l || l === 'original') return 'original';
+    const base = l.split('-')[0];
+    // If user picked the same language as the source, treat as original.
+    if (sourceLang && base === sourceLang) return 'original';
+    // Legacy: when source_lang is unknown, treat english as original.
+    if (!sourceLang && (base === 'en')) return 'original';
     return l;
-  }, [lang]);
+  }, [lang, sourceLang]);
 
   const { data: translatedSegments, isFetching: translating } = useTranslatedSegments(
     numericId || null,
@@ -108,22 +114,75 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
     return translatedSegments;
   }, [isReady, normalizedLang, translatedSegments, transcript]);
 
-  // Persist preferences
-  useEffect(() => {
-    try { localStorage.setItem(LS_ENABLED, enabled ? '1' : '0'); } catch { /* noop */ }
-  }, [enabled]);
-  useEffect(() => {
-    try { localStorage.setItem(LS_LANG, lang); } catch { /* noop */ }
-  }, [lang]);
-  useEffect(() => {
-    try { localStorage.setItem(LS_SIZE, size); } catch { /* noop */ }
-  }, [size]);
+  // ── Native <track> mounting for original-language captions ──
+  // When VTT is available and user picked original, mount a native track
+  // on the <video> element — the browser handles perfect timestamp sync.
+  const vttBlobUrl = useMemo(() => {
+    const vtt = transcript?.vtt_original;
+    if (!vtt) return null;
+    const blob = new Blob([vtt], { type: 'text/vtt' });
+    return URL.createObjectURL(blob);
+  }, [transcript?.vtt_original]);
 
-  // Sync captions to video time
+  useEffect(() => {
+    return () => {
+      if (vttBlobUrl) URL.revokeObjectURL(vttBlobUrl);
+    };
+  }, [vttBlobUrl]);
+
+  const useNativeTrack = enabled && normalizedLang === 'original' && !!vttBlobUrl;
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+    // Remove any prior subtitle tracks we added
+    Array.from(v.querySelectorAll('track[data-lovable-subtitle]')).forEach((n) => n.remove());
+
+    if (!useNativeTrack || !vttBlobUrl) {
+      // Disable any text tracks we previously toggled on
+      for (let i = 0; i < v.textTracks.length; i++) {
+        const tt = v.textTracks[i];
+        if (tt.kind === 'subtitles' || tt.kind === 'captions') tt.mode = 'disabled';
+      }
+      return;
+    }
+
+    const track = document.createElement('track');
+    track.kind = 'subtitles';
+    track.label = 'Original';
+    track.srclang = sourceLang || 'en';
+    track.src = vttBlobUrl;
+    track.default = true;
+    track.setAttribute('data-lovable-subtitle', '1');
+    v.appendChild(track);
+
+    // Force-show the track once it loads
+    const showTrack = () => {
+      for (let i = 0; i < v.textTracks.length; i++) {
+        const tt = v.textTracks[i];
+        if (tt.label === 'Original') tt.mode = 'showing';
+      }
+    };
+    track.addEventListener('load', showTrack);
+    // Some browsers don't fire 'load' reliably — set immediately too.
+    showTrack();
+    const t = setTimeout(showTrack, 200);
+
+    return () => {
+      clearTimeout(t);
+      track.removeEventListener('load', showTrack);
+      try { v.removeChild(track); } catch { /* noop */ }
+    };
+  }, [videoRef, useNativeTrack, vttBlobUrl, sourceLang]);
+
+  // Inject ::cue size styles globally (only once per size change)
+  // applies to all native <track> renders in the document.
+
+  // Custom overlay timing — only used when NOT using native track (translations)
   const indexRef = useRef(0);
   useEffect(() => {
     const v = videoRef.current;
-    if (!v || !enabled || !activeSegments.length) {
+    if (!v || !enabled || useNativeTrack || !activeSegments.length) {
       setCurrentText('');
       return;
     }
@@ -135,12 +194,10 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
       if (ts - lastTick > 50) {
         lastTick = ts;
         const t = v.currentTime;
-        // Move pointer forward if needed
         while (
           indexRef.current < activeSegments.length - 1 &&
           activeSegments[indexRef.current].end <= t
         ) indexRef.current++;
-        // Move backward on seek
         while (
           indexRef.current > 0 &&
           activeSegments[indexRef.current].start > t
@@ -160,7 +217,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
       cancelAnimationFrame(raf);
       v.removeEventListener('seeked', onSeek);
     };
-  }, [videoRef, enabled, activeSegments]);
+  }, [videoRef, enabled, activeSegments, useNativeTrack]);
 
   if (!numericId) return null;
 
