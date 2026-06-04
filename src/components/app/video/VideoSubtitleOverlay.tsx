@@ -49,6 +49,13 @@ function readEnabled(): boolean {
 function readLang(): string {
   try { return localStorage.getItem(LS_LANG) || detectLocaleLang(); } catch { return 'original'; }
 }
+function readSize(): SizeKey {
+  try {
+    const v = localStorage.getItem(LS_SIZE) as SizeKey | null;
+    if (v && SIZE_PRESETS.some((s) => s.key === v)) return v;
+  } catch { /* noop */ }
+  return 'md';
+}
 
 export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName }: Props) {
   const numericId = useMemo(() => {
