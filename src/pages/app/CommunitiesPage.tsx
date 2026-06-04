@@ -130,7 +130,7 @@ export default function CommunitiesPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-4 gap-2">
         <div className="flex items-center gap-2 min-w-0">
-          <img src={communitiesIconUrl} alt="" className="w-7 h-7 shrink-0 object-contain" />
+          <img src={communitiesIconUrl} alt="" className="w-9 h-9 shrink-0 object-contain" />
           <h1 className="text-xl font-bold text-white truncate">{t('communities.title')}</h1>
         </div>
       </div>
