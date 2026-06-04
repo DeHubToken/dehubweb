@@ -102,6 +102,9 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName }: Pro
   useEffect(() => {
     try { localStorage.setItem(LS_LANG, lang); } catch { /* noop */ }
   }, [lang]);
+  useEffect(() => {
+    try { localStorage.setItem(LS_SIZE, size); } catch { /* noop */ }
+  }, [size]);
 
   // Sync captions to video time
   const indexRef = useRef(0);
