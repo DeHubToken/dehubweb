@@ -8,6 +8,8 @@ import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, Plus, Search, Bell } from 'lucide-react';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
+import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserCommunities, useDiscoverCommunities, useCommunityActivityScores } from '@/hooks/use-communities';
 import { CommunityCard } from '@/components/app/communities/CommunityCard';
@@ -132,22 +134,30 @@ export default function CommunitiesPage() {
           <h1 className="text-xl font-bold text-white truncate">{t('communities.title')}</h1>
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
-          <button
+          <LiquidGlassBubble
+            shimmer
+            noBorder
             onClick={() => setSortMode(sortMode === 'new' ? 'top' : 'new')}
-            aria-label="Sort by newest"
-            title="Newest"
-            className={`h-9 w-9 flex items-center justify-center rounded-lg border border-white/10 text-base transition-colors ${sortMode === 'new' ? 'bg-white/[0.12]' : 'bg-white/[0.04] hover:bg-white/[0.08]'}`}
+            className={cn(
+              "cursor-pointer flex-shrink-0 [&>div]:!rounded-xl [&>div]:!p-0 [&>div]:!flex [&>div]:!items-center [&>div]:!justify-center [&>div:before]:!rounded-xl [&>div:after]:!rounded-xl",
+              sortMode === 'new' ? "opacity-100" : "opacity-60 hover:opacity-90"
+            )}
+            style={{ width: '36px', height: '36px' }}
           >
-            💎
-          </button>
-          <button
+            <span className="flex items-center justify-center w-full h-full text-base">💎</span>
+          </LiquidGlassBubble>
+          <LiquidGlassBubble
+            shimmer
+            noBorder
             onClick={() => setSortMode(sortMode === 'hot' ? 'top' : 'hot')}
-            aria-label="Sort by most active"
-            title="Most active"
-            className={`h-9 w-9 flex items-center justify-center rounded-lg border border-white/10 text-base transition-colors ${sortMode === 'hot' ? 'bg-white/[0.12]' : 'bg-white/[0.04] hover:bg-white/[0.08]'}`}
+            className={cn(
+              "cursor-pointer flex-shrink-0 [&>div]:!rounded-xl [&>div]:!p-0 [&>div]:!flex [&>div]:!items-center [&>div]:!justify-center [&>div:before]:!rounded-xl [&>div:after]:!rounded-xl",
+              sortMode === 'hot' ? "opacity-100" : "opacity-60 hover:opacity-90"
+            )}
+            style={{ width: '36px', height: '36px' }}
           >
-            🔥
-          </button>
+            <span className="flex items-center justify-center w-full h-full text-base">🔥</span>
+          </LiquidGlassBubble>
           <LiquidGlassBubble2
             label={t('communities.create')}
             icon={<Plus className="w-4 h-4" />}
