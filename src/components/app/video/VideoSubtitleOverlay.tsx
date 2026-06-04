@@ -14,12 +14,14 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Captions, Check, Loader2, Search, Settings2, Minus, Plus } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Drawer, DrawerContent, DrawerTitle } from '@/components/ui/drawer';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import { useVideoTranscript, type TranscriptSegment } from '@/hooks/use-video-transcript';
 import { useTranslatedSegments } from '@/hooks/use-video-subtitles';
 import { SUBTITLE_LANGUAGES, detectLocaleLang } from '@/lib/subtitle-languages';
 import { splitSegmentsIntoLines, rechunkVtt } from '@/lib/transcript-format';
+import { useIsTouchDevice } from '@/hooks/use-touch-device';
 
 const LS_ENABLED = 'video-subs:enabled';
 const LS_LANG = 'video-subs:lang';
