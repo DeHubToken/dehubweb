@@ -457,7 +457,14 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       </div>
       <div className="px-6 py-4 bg-black/20 border-t border-white/10">
         <p className="text-xs text-white/40 text-center">
-          {t('loginModal.termsNotice')}
+          By continuing, you agree to our{' '}
+          <a href="https://dehub.io/terms" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors">
+            Terms
+          </a>
+          {' and '}
+          <a href="https://dehub.io/privacy" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors">
+            Privacy Policy
+          </a>
         </p>
       </div>
     </>
