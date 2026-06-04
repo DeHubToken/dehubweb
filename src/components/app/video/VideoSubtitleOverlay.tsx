@@ -109,10 +109,10 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
 
   const activeSegments: TranscriptSegment[] = useMemo(() => {
     if (!isReady) return [];
-    if (normalizedLang === 'original' || !translatedSegments) {
-      return transcript?.transcript?.segments ?? [];
-    }
-    return translatedSegments;
+    const base = (normalizedLang === 'original' || !translatedSegments)
+      ? (transcript?.transcript?.segments ?? [])
+      : translatedSegments;
+    return splitSegmentsIntoLines(base, 38);
   }, [isReady, normalizedLang, translatedSegments, transcript]);
 
   // ── Native <track> mounting for original-language captions ──
