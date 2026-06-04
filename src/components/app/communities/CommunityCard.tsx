@@ -47,7 +47,7 @@ export function CommunityCard({ community, isMember, role, unreadCount, onClick 
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] transition-colors text-left relative overflow-hidden"
+      className="w-full flex items-center gap-3 p-3 pr-16 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] transition-colors text-left relative overflow-hidden"
     >
       {community.banner_url && (
         <div
