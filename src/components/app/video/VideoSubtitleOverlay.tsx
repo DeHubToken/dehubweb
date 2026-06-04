@@ -281,11 +281,11 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
       {/* Caption text */}
       {enabled && currentText && (
         <div
-          className="absolute left-1/2 -translate-x-1/2 bottom-16 z-20 pointer-events-none max-w-[90%] text-center"
+          className="absolute left-0 right-0 bottom-16 z-20 pointer-events-none px-3 text-center"
         >
           <span
-            className="inline-block bg-black/60 backdrop-blur-[24px] border border-white/10 text-white font-medium px-3 py-1.5 rounded-xl leading-snug"
-            style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)', fontSize: `${sizePx}px` }}
+            className="block w-full bg-black/60 backdrop-blur-[24px] border border-white/10 text-white font-medium px-3 py-1.5 rounded-xl whitespace-nowrap overflow-hidden text-ellipsis"
+            style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)', fontSize: `${sizePx}px`, lineHeight: 1.2 }}
           >
             {currentText}
           </span>
