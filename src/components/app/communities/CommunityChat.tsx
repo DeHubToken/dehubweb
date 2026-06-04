@@ -213,6 +213,10 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
     const replyToId = replyTo?.id;
     setReplyTo(null);
     setNewMessage('');
+
+    // Detect /admin command
+    const adminMatch = trimmed.match(/^\/admin\b\s*(.*)$/i);
+
     try {
       await sendMessage(trimmed, 'text', undefined, replyToId, {
         username: profileData?.handle || undefined,
@@ -223,7 +227,32 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
     } catch {
       // Error handled in hook
     }
+
+    if (adminMatch) {
+      const prompt = (adminMatch[1] || '').trim();
+      if (!prompt) {
+        toast.info('Try: /admin <your question>');
+        return;
+      }
+      setAdminThinking(true);
+      try {
+        const { error } = await supabase.functions.invoke('community-admin-chat', {
+          body: {
+            communityId,
+            prompt,
+            askerName: profileData?.name || profileData?.handle || 'Member',
+          },
+        });
+        if (error) throw error;
+      } catch (err: any) {
+        console.error('[CommunityChat] AI Admin error:', err);
+        toast.error(err?.message || 'AI Admin failed to respond');
+      } finally {
+        setAdminThinking(false);
+      }
+    }
   };
+
 
   const handleEmojiSelect = (emoji: string) => {
     setNewMessage(prev => (prev + emoji).slice(0, 500));
