@@ -134,19 +134,6 @@ export default function CommunitiesPage() {
           <img src={communitiesIcon.url} alt="" className="w-7 h-7 shrink-0 object-contain" />
           <h1 className="text-xl font-bold text-white truncate">{t('communities.title')}</h1>
         </div>
-        <div className="flex items-center gap-1.5 shrink-0">
-          <LiquidGlassBubble2
-            label={t('communities.create')}
-            icon={<Plus className="w-4 h-4" />}
-            onClick={() => {
-              if (!isAuthenticated) { openLoginModal(); return; }
-              setCreateOpen(true);
-            }}
-            height="36px"
-            width="auto"
-            className="px-3.5"
-          />
-        </div>
       </div>
 
       {/* Tabs */}
@@ -206,6 +193,20 @@ export default function CommunitiesPage() {
           style={{ width: '40px', height: '40px' }}
         >
           <span className="flex items-center justify-center w-full h-full text-base">🔥</span>
+        </LiquidGlassBubble>
+        <LiquidGlassBubble
+          shimmer
+          noBorder
+          onClick={() => {
+            if (!isAuthenticated) { openLoginModal(); return; }
+            setCreateOpen(true);
+          }}
+          className={cn(
+            "cursor-pointer flex-shrink-0 [&>div]:!rounded-xl [&>div]:!p-0 [&>div]:!h-full [&>div]:!flex [&>div]:!items-center [&>div]:!justify-center [&>div:before]:!rounded-xl [&>div:after]:!rounded-xl opacity-60 hover:opacity-90"
+          )}
+          style={{ width: '40px', height: '40px' }}
+        >
+          <Plus className="w-5 h-5 text-white" />
         </LiquidGlassBubble>
       </div>
 
