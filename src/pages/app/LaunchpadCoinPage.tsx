@@ -95,7 +95,7 @@ export default function LaunchpadCoinPage() {
             <Row k="Market cap" v={fmtUsd(token.market_cap_usd)} />
             <Row k="24h volume" v={fmtUsd(token.volume_24h)} />
             <Row k="Supply sold" v={Math.floor(Number(token.supply_sold)).toLocaleString()} />
-            <Row k="Curve" v={token.curve_type ?? 'standard'} />
+            <Row k="Curve" v={(token as unknown as { curve_type?: string }).curve_type ?? 'standard'} />
             <Row k="Pair" v="DHB" />
           </div>
           <FeeBreakdown />
