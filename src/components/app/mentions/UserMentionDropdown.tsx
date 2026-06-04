@@ -21,6 +21,10 @@ export interface MentionUser {
   displayName: string | null;
   avatarUrl: string | null;
   isVerified: boolean;
+  followerCount?: number;
+  followingCount?: number;
+  isFollowing?: boolean;
+  followsYou?: boolean;
 }
 
 interface UserMentionDropdownProps {
