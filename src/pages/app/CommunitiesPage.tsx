@@ -22,6 +22,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import communitiesIcon from '@/assets/communities-icon.webp.asset.json';
 
+const communitiesIconUrl = typeof communitiesIcon === 'string' ? communitiesIcon : communitiesIcon.url;
+
 export default function CommunitiesPage() {
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const [createOpen, setCreateOpen] = useState(false);
@@ -130,7 +132,7 @@ export default function CommunitiesPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-4 gap-2">
         <div className="flex items-center gap-2 min-w-0">
-          <img src={communitiesIcon.url} alt="" className="w-7 h-7 shrink-0 object-contain" />
+          <img src={communitiesIconUrl} alt="" className="w-7 h-7 shrink-0 object-contain" />
           <h1 className="text-xl font-bold text-white truncate">{t('communities.title')}</h1>
         </div>
       </div>
