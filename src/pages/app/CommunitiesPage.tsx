@@ -6,8 +6,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Users, Plus, Search, Bell } from 'lucide-react';
-import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
+import { Users, Plus, Search } from 'lucide-react';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/AuthContext';
