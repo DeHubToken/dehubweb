@@ -1,87 +1,46 @@
 ## Goal
 
-Replace the Gemini-based transcription with **Deepgram Nova-3** (purpose-built ASR with word-level timestamps and native VTT output) and let the browser render original-language subtitles via the native `<track>` element. Keep the existing custom overlay only for translated languages and the size picker.
+Subtitles currently render full utterances as 2–3 long lines that sit on screen for several seconds. Switch to a "karaoke-style" flow: one short line at a time (~max ~38 chars / ~6–8 words), each shown for its proportional share of the original cue's duration.
 
-## Why Deepgram
+## Approach
 
-- Word-level timestamps → perfect sync (vs. Gemini's drifting sentence-level guesses)
-- Returns SRT/VTT natively → no fragile JSON parsing
-- Auto language detection on source → fixes the en→en translation bug class
-- ~$0.0043/min, fast (real-time factor ~40x)
-- One API call, no chunking gymnastics
+Add a small pure helper `splitSegmentIntoLines(segment, maxChars)` in `src/lib/transcript-format.ts` (already exists for related work) that:
+- Breaks `segment.text` into chunks at word boundaries, each ≤ ~38 chars.
+- Avoids orphan single words by merging trailing tiny chunks.
+- Returns `TranscriptSegment[]` with start/end times distributed proportionally by character length across the chunks, preserving the segment's total span.
 
-## Architecture
+Apply it in two places in `src/components/app/video/VideoSubtitleOverlay.tsx`:
 
-```text
-Original captions  →  Deepgram VTT  →  <track> on <video>  (browser-native sync)
-Translated captions →  Gemini per-line  →  custom overlay   (existing path)
-```
+1. **Custom overlay path (translations)** — when building `activeSegments`, flat-map every segment through the splitter before timing. The existing rAF ticker already advances `indexRef` automatically, so each short line replaces the previous one on time.
 
-## Changes
+2. **Native `<track>` path (original)** — replace the raw `vtt_original` blob with a re-chunked VTT:
+   - Parse cues from `transcript.vtt_original` (simple regex: timestamp line `hh:mm:ss.mmm --> hh:mm:ss.mmm` + text lines).
+   - Run each cue's text through the same splitter to get sub-cues.
+   - Emit a new VTT string and build the blob URL from that.
+   - Memoize on `vtt_original` so it only re-parses when the cached VTT changes.
 
-### 1. Secret
-- Add `DEEPGRAM_API_KEY` (request from user; they create at deepgram.com → API Keys).
+No edge function or DB changes — purely client-side reformatting of cached transcripts, so already-transcribed videos benefit immediately with no re-fetch and no extra cost.
 
-### 2. DB migration
-- `ALTER TABLE video_transcripts ADD COLUMN vtt_original text` (cached VTT)
-- `ALTER TABLE video_transcripts ADD COLUMN source_lang text` (detected language code)
-- Keep existing `transcript` (segments JSON) and `translations` jsonb — still used for non-original languages.
+## Tuning
 
-### 3. Edge function: rewrite `transcribe-video`
-- Replace Gemini call with a single POST to `https://api.deepgram.com/v1/listen?model=nova-3&smart_format=true&punctuate=true&detect_language=true&utterances=true&paragraphs=true`
-- Body: `{ url: buildVideoUrl(tokenId) }` (Deepgram fetches the MP4 directly — no upload).
-- Parse response:
-  - `vtt` from a second call with `&format=vtt` OR build VTT from `results.utterances` (word-grouped).
-  - `source_lang` from `results.channels[0].detected_language`.
-  - `segments[]` derived from utterances for backward compatibility with the translation pipeline.
-- Persist `vtt_original`, `source_lang`, `transcript: { segments, full_text }`.
-- Drop the chunked-retry loop entirely; Deepgram handles hours-long files in one call.
-
-### 4. Edge function: `translate-transcript` (small tweak)
-- Read `source_lang`. If requested `lang` equals `source_lang`, return original segments without calling the AI. Eliminates the "translate en→en" failure mode at the server level too.
-
-### 5. Client: `VideoSubtitleOverlay.tsx`
-- Add prop `videoElement: HTMLVideoElement | null` (already has `videoRef`).
-- When `normalizedLang === 'original'` AND `vtt_original` exists:
-  - Inject/replace a `<track kind="subtitles" src={blobUrl(vtt)} srclang={sourceLang} default>` onto the video element.
-  - Set `videoElement.textTracks[0].mode = 'showing'` (or `'hidden'` when CC off).
-  - Hide the custom caption layer — browser renders.
-- When language is a translation:
-  - Remove the native track (set `mode = 'disabled'`), render custom overlay as today (it already works fine for translations because timestamps come straight from utterances).
-- Size picker still works — for native captions we apply it via the standard `::cue { font-size: ... }` injected stylesheet; for custom overlay it works as today.
-
-### 6. Hook: `useVideoSubtitles`
-- Extend return to include `vttUrl` (object URL built from `vtt_original`) and `sourceLang`.
-- Memoize blob URL; revoke on unmount/lang change.
-
-### 7. Migrate existing rows
-- Any pre-existing `video_transcripts` rows without `vtt_original` keep working via the legacy overlay path. New transcripts use Deepgram. No backfill needed; users can re-trigger transcription on demand.
-
-## Verification before delivering
-
-1. Trigger transcription on a known token via the CC button.
-2. Inspect DB: `vtt_original` non-null, `source_lang` populated, `transcript.segments` populated.
-3. In preview: enable CC original → confirm captions render via native `<track>` (visible in DevTools `<video>` element), perfectly synced.
-4. Switch to Spanish/French → confirm overlay path renders translated text, no en→en garbage.
-5. Test size picker on both original (native `::cue`) and translated (overlay span) modes.
-6. Scrub video forward/back, check sync stays tight.
+- `maxChars` default `38` (fits comfortably on mobile in one line at XS-M sizes).
+- Minimum cue duration of 0.6s; if proportional split would go below that, merge neighbors so very fast speech doesn't strobe.
 
 ## Files
 
-- New migration: add `vtt_original`, `source_lang` columns
-- Edit: `supabase/functions/transcribe-video/index.ts` (rewrite core to Deepgram)
-- Edit: `supabase/functions/translate-transcript/index.ts` (short-circuit when lang === source_lang)
-- Edit: `src/hooks/use-video-subtitles.ts` (expose vtt + source lang)
-- Edit: `src/hooks/use-video-transcript.ts` (select new columns)
-- Edit: `src/components/app/video/VideoSubtitleOverlay.tsx` (native track mounting + `::cue` size)
-- Memory update: `mem://features/video/subtitles-system` → reflect Deepgram + native track standard
+- Edit: `src/lib/transcript-format.ts` — add `splitSegmentIntoLines` + `rechunkVtt` helpers (pure, unit-testable).
+- Edit: `src/components/app/video/VideoSubtitleOverlay.tsx`
+  - Use `splitSegmentIntoLines` when computing `activeSegments`.
+  - Use `rechunkVtt` when computing `vttBlobUrl`.
+
+## Verification
+
+1. Play a video with the original language captions → confirm each line flips one at a time, no 2–3 line blocks.
+2. Switch to a translated language (e.g. Spanish) → same behavior via overlay path.
+3. Scrub forward/back → lines re-sync without duplicate or stuck text.
+4. Try sizes XS → XXL → still one line, still legible.
 
 ## Out of scope
 
-- Backfilling old transcripts (re-run on demand)
-- Diarization / speaker labels
-- Replacing Gemini translation with DeepL (can be a follow-up)
-
-## Needs from user
-
-- `DEEPGRAM_API_KEY` — sign up at deepgram.com, create an API key with default scope. I'll request it via the secrets tool once you approve this plan.
+- Server-side transcript reformatting (not needed; client splitter is sufficient).
+- Word-level highlighting / karaoke fill.
