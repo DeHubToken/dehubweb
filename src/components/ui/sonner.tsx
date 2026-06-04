@@ -9,6 +9,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme();
   const isMobile = useIsMobile();
   const [desktopToastLeft, setDesktopToastLeft] = useState("50%");
+  const [desktopToastTop, setDesktopToastTop] = useState("24px");
 
   useEffect(() => {
     if (isMobile || typeof window === "undefined") return;
@@ -22,6 +23,11 @@ const Toaster = ({ ...props }: ToasterProps) => {
     };
 
     const getAnchorElement = () => {
+      const loginLogo = Array.from(
+        document.querySelectorAll<HTMLElement>('[data-login-logo-anchor="true"]')
+      ).find((element) => isVisible(element));
+      if (isVisible(loginLogo)) return loginLogo;
+
       const loginModal = Array.from(
         document.querySelectorAll<HTMLElement>('[data-login-modal="true"]')
       ).find((element) => isVisible(element));
@@ -41,17 +47,27 @@ const Toaster = ({ ...props }: ToasterProps) => {
 
       if (isVisible(anchorElement)) {
         const rect = anchorElement.getBoundingClientRect();
-        return `${rect.left + rect.width / 2}px`;
+        const isLogoAnchor = anchorElement.hasAttribute("data-login-logo-anchor");
+
+        return {
+          left: `${rect.left + rect.width / 2}px`,
+          top: isLogoAnchor ? `${Math.max(24, rect.top - 52)}px` : "24px",
+        };
       }
 
-      return `${window.innerWidth / 2}px`;
+      return {
+        left: `${window.innerWidth / 2}px`,
+        top: "24px",
+      };
     };
 
     const attachResizeObserver = () => {
       resizeObserver?.disconnect();
       resizeObserver = new ResizeObserver(() => {
         window.requestAnimationFrame(() => {
-          setDesktopToastLeft(resolveToastAnchor());
+          const { left, top } = resolveToastAnchor();
+          setDesktopToastLeft(left);
+          setDesktopToastTop(top);
         });
       });
 
@@ -60,6 +76,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
         document.body,
         document.querySelector<HTMLElement>("#app-root"),
         document.querySelector<HTMLElement>("#app-root main"),
+        document.querySelector<HTMLElement>('[data-login-logo-anchor="true"]'),
         document.querySelector<HTMLElement>('[data-login-modal="true"]'),
         Array.from(document.querySelectorAll<HTMLElement>('[role="dialog"]')).find((element) => isVisible(element)),
       ].filter(Boolean) as HTMLElement[];
@@ -69,7 +86,9 @@ const Toaster = ({ ...props }: ToasterProps) => {
 
     const updateToastAnchor = () => {
       window.requestAnimationFrame(() => {
-        setDesktopToastLeft(resolveToastAnchor());
+        const { left, top } = resolveToastAnchor();
+        setDesktopToastLeft(left);
+        setDesktopToastTop(top);
         attachResizeObserver();
       });
     };
@@ -98,13 +117,15 @@ const Toaster = ({ ...props }: ToasterProps) => {
     <Sonner
       theme={theme as ToasterProps["theme"]}
       className="toaster group"
-      position={isMobile ? "top-right" : "top-center"}
+      position={isMobile ? "top-right" : "top-left"}
       duration={3000}
       visibleToasts={3}
       expand={false}
       style={isMobile ? undefined : ({
         left: desktopToastLeft,
+        top: desktopToastTop,
         right: "auto",
+        transform: "translateX(-50%)",
         width: "fit-content",
         ["--width" as string]: "fit-content",
       } as React.CSSProperties)}

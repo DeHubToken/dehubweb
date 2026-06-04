@@ -437,7 +437,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
             <ChevronRight className="w-5 h-5 rotate-180" />
           </button>
         )}
-        <img src={dehubLogo} alt="DeHub" className="h-8" />
+        <img data-login-logo-anchor="true" src={dehubLogo} alt="DeHub" className="h-8" />
       </div>
     </>
   );
