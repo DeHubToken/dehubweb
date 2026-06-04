@@ -242,18 +242,33 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName }: Pro
           <div className="p-2 border-b border-white/10">
             <div className="flex items-center justify-between mb-2">
               <span className="text-white text-xs font-semibold">Subtitles</span>
-              <button
-                type="button"
-                onClick={(e) => { e.stopPropagation(); setEnabled((v) => !v); }}
-                className={cn(
-                  'text-[10px] px-2 py-0.5 rounded-md border',
-                  enabled
-                    ? 'bg-white/15 text-white border-white/20'
-                    : 'bg-transparent text-white/60 border-white/10',
-                )}
-              >
-                {enabled ? 'On' : 'Off'}
-              </button>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); setEnabled((v) => !v); }}
+                  className={cn(
+                    'text-[10px] px-2 py-0.5 rounded-md border',
+                    enabled
+                      ? 'bg-white/15 text-white border-white/20'
+                      : 'bg-transparent text-white/60 border-white/10',
+                  )}
+                >
+                  {enabled ? 'On' : 'Off'}
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); setShowSettings((v) => !v); }}
+                  aria-label="Subtitle settings"
+                  className={cn(
+                    'h-5 w-5 rounded-md border flex items-center justify-center',
+                    showSettings
+                      ? 'bg-white/15 text-white border-white/20'
+                      : 'bg-transparent text-white/60 border-white/10 hover:text-white hover:bg-white/10',
+                  )}
+                >
+                  <Settings2 className="w-3 h-3" />
+                </button>
+              </div>
             </div>
             {!isReady && (
               <p className="text-[11px] text-white/50">
@@ -266,6 +281,67 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName }: Pro
               </p>
             )}
           </div>
+          {showSettings && (
+            <div className="p-2 border-b border-white/10">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-[11px] text-white/60">Text size</span>
+                <span className="text-[11px] text-white/80">
+                  {SIZE_PRESETS.find((s) => s.key === size)?.label}
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const idx = SIZE_PRESETS.findIndex((s) => s.key === size);
+                    if (idx > 0) setSize(SIZE_PRESETS[idx - 1].key);
+                  }}
+                  className="h-6 w-6 rounded-md border border-white/10 bg-white/5 text-white/70 hover:text-white hover:bg-white/10 flex items-center justify-center"
+                  aria-label="Smaller"
+                >
+                  <Minus className="w-3 h-3" />
+                </button>
+                <div className="flex-1 flex items-center gap-1">
+                  {SIZE_PRESETS.map((s) => (
+                    <button
+                      key={s.key}
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); setSize(s.key); }}
+                      className={cn(
+                        'flex-1 h-6 rounded-md border text-[10px] font-medium transition',
+                        size === s.key
+                          ? 'bg-white/20 text-white border-white/30'
+                          : 'bg-transparent text-white/60 border-white/10 hover:bg-white/5',
+                      )}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const idx = SIZE_PRESETS.findIndex((s) => s.key === size);
+                    if (idx < SIZE_PRESETS.length - 1) setSize(SIZE_PRESETS[idx + 1].key);
+                  }}
+                  className="h-6 w-6 rounded-md border border-white/10 bg-white/5 text-white/70 hover:text-white hover:bg-white/10 flex items-center justify-center"
+                  aria-label="Larger"
+                >
+                  <Plus className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="mt-2 rounded-md bg-black/50 border border-white/10 px-2 py-1.5 text-center">
+                <span
+                  className="text-white font-medium"
+                  style={{ fontSize: `${sizePx}px`, textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}
+                >
+                  Preview
+                </span>
+              </div>
+            </div>
+          )}
           <div className="p-2 border-b border-white/10">
             <div className="relative">
               <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-white/40" />
