@@ -119,7 +119,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName }: Pro
     let raf = 0;
     let lastTick = 0;
     const tick = (ts: number) => {
-      if (ts - lastTick > 200) {
+      if (ts - lastTick > 50) {
         lastTick = ts;
         const t = v.currentTime;
         // Move pointer forward if needed
