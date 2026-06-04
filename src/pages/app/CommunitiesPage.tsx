@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { Users, Plus, Search, Bell } from 'lucide-react';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useAuth } from '@/contexts/AuthContext';
-import { useUserCommunities, useDiscoverCommunities } from '@/hooks/use-communities';
+import { useUserCommunities, useDiscoverCommunities, useCommunityActivityScores } from '@/hooks/use-communities';
 import { CommunityCard } from '@/components/app/communities/CommunityCard';
 import { CreateCommunityModal } from '@/components/app/communities/CreateCommunityModal';
 import { CommunityOwnerActivity } from '@/components/app/communities/CommunityOwnerActivity';
