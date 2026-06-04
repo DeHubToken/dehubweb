@@ -42,6 +42,12 @@ export function searchUsers(_query: string, _limit: number = 5): MentionUser[] {
   return [];
 }
 
+function formatCount(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(n >= 10_000_000 ? 0 : 1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(n >= 10_000 ? 0 : 1)}K`;
+  return String(n);
+}
+
 export function UserMentionDropdown({
   query: initialQuery,
   isOpen,
