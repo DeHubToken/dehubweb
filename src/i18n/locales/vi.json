@@ -1177,7 +1177,7 @@
     "sendingCode": "Sending code...",
     "smsInfo": "We'll send you a verification code via SMS",
     "or": "or",
-    "termsNotice": "By continuing, you agree to our Terms of Service and Privacy Policy",
+    "termsNotice": "By continuing, you agree to our Terms and Privacy Policy",
     "walletInfoDesktop": "Connect your wallet to sign in securely",
     "walletInfoMobile": "MetaMask, Trust & Phantom will open their app directly. Rabby will use WalletConnect."
   },
