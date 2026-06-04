@@ -121,7 +121,8 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   const vttBlobUrl = useMemo(() => {
     const vtt = transcript?.vtt_original;
     if (!vtt) return null;
-    const blob = new Blob([vtt], { type: 'text/vtt' });
+    const rechunked = rechunkVtt(vtt, 38);
+    const blob = new Blob([rechunked], { type: 'text/vtt' });
     return URL.createObjectURL(blob);
   }, [transcript?.vtt_original]);
 
