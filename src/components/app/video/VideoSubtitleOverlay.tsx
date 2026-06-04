@@ -12,7 +12,7 @@
  * - If no transcript exists yet, tapping the button kicks off transcription.
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Captions, Check, Loader2, Search } from 'lucide-react';
+import { Captions, Check, Loader2, Search, Settings2, Minus, Plus } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -22,6 +22,17 @@ import { SUBTITLE_LANGUAGES, detectLocaleLang } from '@/lib/subtitle-languages';
 
 const LS_ENABLED = 'video-subs:enabled';
 const LS_LANG = 'video-subs:lang';
+const LS_SIZE = 'video-subs:size';
+
+const SIZE_PRESETS = [
+  { key: 'xs', label: 'XS', px: 11 },
+  { key: 'sm', label: 'S', px: 13 },
+  { key: 'md', label: 'M', px: 15 },
+  { key: 'lg', label: 'L', px: 18 },
+  { key: 'xl', label: 'XL', px: 22 },
+  { key: '2xl', label: 'XXL', px: 28 },
+] as const;
+type SizeKey = typeof SIZE_PRESETS[number]['key'];
 
 interface Props {
   /** Numeric NFT/post id. Overlay is a no-op when undefined or 0. */
@@ -38,6 +49,13 @@ function readEnabled(): boolean {
 function readLang(): string {
   try { return localStorage.getItem(LS_LANG) || detectLocaleLang(); } catch { return 'original'; }
 }
+function readSize(): SizeKey {
+  try {
+    const v = localStorage.getItem(LS_SIZE) as SizeKey | null;
+    if (v && SIZE_PRESETS.some((s) => s.key === v)) return v;
+  } catch { /* noop */ }
+  return 'md';
+}
 
 export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName }: Props) {
   const numericId = useMemo(() => {
@@ -47,6 +65,8 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName }: Pro
 
   const [enabled, setEnabled] = useState<boolean>(readEnabled);
   const [lang, setLang] = useState<string>(readLang);
+  const [size, setSize] = useState<SizeKey>(readSize);
+  const [showSettings, setShowSettings] = useState(false);
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const [currentText, setCurrentText] = useState('');
@@ -82,6 +102,9 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName }: Pro
   useEffect(() => {
     try { localStorage.setItem(LS_LANG, lang); } catch { /* noop */ }
   }, [lang]);
+  useEffect(() => {
+    try { localStorage.setItem(LS_SIZE, size); } catch { /* noop */ }
+  }, [size]);
 
   // Sync captions to video time
   const indexRef = useRef(0);
@@ -157,6 +180,8 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName }: Pro
   const langLabel =
     SUBTITLE_LANGUAGES.find((l) => l.code === lang)?.name ?? 'Original';
 
+  const sizePx = SIZE_PRESETS.find((s) => s.key === size)?.px ?? 15;
+
   return (
     <>
       {/* Caption text */}
@@ -165,8 +190,8 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName }: Pro
           className="absolute left-1/2 -translate-x-1/2 bottom-16 z-20 pointer-events-none max-w-[90%] text-center"
         >
           <span
-            className="inline-block bg-black/60 backdrop-blur-[24px] border border-white/10 text-white text-sm md:text-base font-medium px-3 py-1.5 rounded-xl leading-snug"
-            style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}
+            className="inline-block bg-black/60 backdrop-blur-[24px] border border-white/10 text-white font-medium px-3 py-1.5 rounded-xl leading-snug"
+            style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)', fontSize: `${sizePx}px` }}
           >
             {currentText}
           </span>
@@ -217,18 +242,33 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName }: Pro
           <div className="p-2 border-b border-white/10">
             <div className="flex items-center justify-between mb-2">
               <span className="text-white text-xs font-semibold">Subtitles</span>
-              <button
-                type="button"
-                onClick={(e) => { e.stopPropagation(); setEnabled((v) => !v); }}
-                className={cn(
-                  'text-[10px] px-2 py-0.5 rounded-md border',
-                  enabled
-                    ? 'bg-white/15 text-white border-white/20'
-                    : 'bg-transparent text-white/60 border-white/10',
-                )}
-              >
-                {enabled ? 'On' : 'Off'}
-              </button>
+              <div className="flex items-center gap-1.5">
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); setEnabled((v) => !v); }}
+                  className={cn(
+                    'text-[10px] px-2 py-0.5 rounded-md border',
+                    enabled
+                      ? 'bg-white/15 text-white border-white/20'
+                      : 'bg-transparent text-white/60 border-white/10',
+                  )}
+                >
+                  {enabled ? 'On' : 'Off'}
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => { e.stopPropagation(); setShowSettings((v) => !v); }}
+                  aria-label="Subtitle settings"
+                  className={cn(
+                    'h-5 w-5 rounded-md border flex items-center justify-center',
+                    showSettings
+                      ? 'bg-white/15 text-white border-white/20'
+                      : 'bg-transparent text-white/60 border-white/10 hover:text-white hover:bg-white/10',
+                  )}
+                >
+                  <Settings2 className="w-3 h-3" />
+                </button>
+              </div>
             </div>
             {!isReady && (
               <p className="text-[11px] text-white/50">
@@ -241,6 +281,67 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName }: Pro
               </p>
             )}
           </div>
+          {showSettings && (
+            <div className="p-2 border-b border-white/10">
+              <div className="flex items-center justify-between mb-1.5">
+                <span className="text-[11px] text-white/60">Text size</span>
+                <span className="text-[11px] text-white/80">
+                  {SIZE_PRESETS.find((s) => s.key === size)?.label}
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const idx = SIZE_PRESETS.findIndex((s) => s.key === size);
+                    if (idx > 0) setSize(SIZE_PRESETS[idx - 1].key);
+                  }}
+                  className="h-6 w-6 rounded-md border border-white/10 bg-white/5 text-white/70 hover:text-white hover:bg-white/10 flex items-center justify-center"
+                  aria-label="Smaller"
+                >
+                  <Minus className="w-3 h-3" />
+                </button>
+                <div className="flex-1 flex items-center gap-1">
+                  {SIZE_PRESETS.map((s) => (
+                    <button
+                      key={s.key}
+                      type="button"
+                      onClick={(e) => { e.stopPropagation(); setSize(s.key); }}
+                      className={cn(
+                        'flex-1 h-6 rounded-md border text-[10px] font-medium transition',
+                        size === s.key
+                          ? 'bg-white/20 text-white border-white/30'
+                          : 'bg-transparent text-white/60 border-white/10 hover:bg-white/5',
+                      )}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    const idx = SIZE_PRESETS.findIndex((s) => s.key === size);
+                    if (idx < SIZE_PRESETS.length - 1) setSize(SIZE_PRESETS[idx + 1].key);
+                  }}
+                  className="h-6 w-6 rounded-md border border-white/10 bg-white/5 text-white/70 hover:text-white hover:bg-white/10 flex items-center justify-center"
+                  aria-label="Larger"
+                >
+                  <Plus className="w-3 h-3" />
+                </button>
+              </div>
+              <div className="mt-2 rounded-md bg-black/50 border border-white/10 px-2 py-1.5 text-center">
+                <span
+                  className="text-white font-medium"
+                  style={{ fontSize: `${sizePx}px`, textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}
+                >
+                  Preview
+                </span>
+              </div>
+            </div>
+          )}
           <div className="p-2 border-b border-white/10">
             <div className="relative">
               <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-white/40" />
