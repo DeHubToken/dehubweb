@@ -139,7 +139,7 @@ export default function CommunitiesPage() {
             noBorder
             onClick={() => setSortMode(sortMode === 'new' ? 'top' : 'new')}
             className={cn(
-              "cursor-pointer flex-shrink-0 [&>div]:!rounded-xl [&>div]:!p-0 [&>div]:!flex [&>div]:!items-center [&>div]:!justify-center [&>div:before]:!rounded-xl [&>div:after]:!rounded-xl",
+              "cursor-pointer flex-shrink-0 [&>div]:!rounded-xl [&>div]:!p-0 [&>div]:!h-full [&>div]:!flex [&>div]:!items-center [&>div]:!justify-center [&>div:before]:!rounded-xl [&>div:after]:!rounded-xl",
               sortMode === 'new' ? "opacity-100" : "opacity-60 hover:opacity-90"
             )}
             style={{ width: '36px', height: '36px' }}
@@ -151,7 +151,7 @@ export default function CommunitiesPage() {
             noBorder
             onClick={() => setSortMode(sortMode === 'hot' ? 'top' : 'hot')}
             className={cn(
-              "cursor-pointer flex-shrink-0 [&>div]:!rounded-xl [&>div]:!p-0 [&>div]:!flex [&>div]:!items-center [&>div]:!justify-center [&>div:before]:!rounded-xl [&>div:after]:!rounded-xl",
+              "cursor-pointer flex-shrink-0 [&>div]:!rounded-xl [&>div]:!p-0 [&>div]:!h-full [&>div]:!flex [&>div]:!items-center [&>div]:!justify-center [&>div:before]:!rounded-xl [&>div:after]:!rounded-xl",
               sortMode === 'hot' ? "opacity-100" : "opacity-60 hover:opacity-90"
             )}
             style={{ width: '36px', height: '36px' }}
