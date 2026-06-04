@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { Users, Plus, Search, Bell } from 'lucide-react';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useAuth } from '@/contexts/AuthContext';
-import { useUserCommunities, useDiscoverCommunities } from '@/hooks/use-communities';
+import { useUserCommunities, useDiscoverCommunities, useCommunityActivityScores } from '@/hooks/use-communities';
 import { CommunityCard } from '@/components/app/communities/CommunityCard';
 import { CreateCommunityModal } from '@/components/app/communities/CreateCommunityModal';
 import { CommunityOwnerActivity } from '@/components/app/communities/CommunityOwnerActivity';
@@ -29,6 +29,8 @@ export default function CommunitiesPage() {
 
   const { data: userCommunities = [], isLoading: loadingUser } = useUserCommunities();
   const { data: allCommunities = [], isLoading: loadingAll } = useDiscoverCommunities();
+  const { data: activityScores = {} } = useCommunityActivityScores();
+  const [sortMode, setSortMode] = useState<'top' | 'new' | 'hot'>('top');
 
   // Fetch per-community unread counts for owned communities
   const ownedCommunityIds = useMemo(
@@ -86,7 +88,20 @@ export default function CommunitiesPage() {
     });
   }, [userCommunities]);
 
-  const otherCommunities = allCommunities.filter(c => !userCommunityIds.has(c.id));
+  const otherCommunities = useMemo(() => {
+    const list = allCommunities.filter(c => !userCommunityIds.has(c.id));
+    if (sortMode === 'new') {
+      return [...list].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    }
+    if (sortMode === 'hot') {
+      return [...list].sort((a, b) => {
+        const sa = (a.member_count || 0) + (activityScores[a.id] || 0);
+        const sb = (b.member_count || 0) + (activityScores[b.id] || 0);
+        return sb - sa;
+      });
+    }
+    return list;
+  }, [allCommunities, userCommunityIds, sortMode, activityScores]);
 
   const filterBySearch = (list: typeof allCommunities) =>
     search.trim()
@@ -111,22 +126,40 @@ export default function CommunitiesPage() {
       />
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Users className="w-6 h-6 text-white" />
-          <h1 className="text-xl font-bold text-white">{t('communities.title')}</h1>
+      <div className="flex items-center justify-between mb-4 gap-2">
+        <div className="flex items-center gap-2 min-w-0">
+          <Users className="w-6 h-6 text-white shrink-0" />
+          <h1 className="text-xl font-bold text-white truncate">{t('communities.title')}</h1>
         </div>
-        <LiquidGlassBubble2
-          label={t('communities.create')}
-          icon={<Plus className="w-4 h-4" />}
-          onClick={() => {
-            if (!isAuthenticated) { openLoginModal(); return; }
-            setCreateOpen(true);
-          }}
-          height="36px"
-          width="auto"
-          className="px-3.5"
-        />
+        <div className="flex items-center gap-1.5 shrink-0">
+          <button
+            onClick={() => setSortMode(sortMode === 'new' ? 'top' : 'new')}
+            aria-label="Sort by newest"
+            title="Newest"
+            className={`h-9 w-9 flex items-center justify-center rounded-lg border border-white/10 text-base transition-colors ${sortMode === 'new' ? 'bg-white/[0.12]' : 'bg-white/[0.04] hover:bg-white/[0.08]'}`}
+          >
+            💎
+          </button>
+          <button
+            onClick={() => setSortMode(sortMode === 'hot' ? 'top' : 'hot')}
+            aria-label="Sort by most active"
+            title="Most active"
+            className={`h-9 w-9 flex items-center justify-center rounded-lg border border-white/10 text-base transition-colors ${sortMode === 'hot' ? 'bg-white/[0.12]' : 'bg-white/[0.04] hover:bg-white/[0.08]'}`}
+          >
+            🔥
+          </button>
+          <LiquidGlassBubble2
+            label={t('communities.create')}
+            icon={<Plus className="w-4 h-4" />}
+            onClick={() => {
+              if (!isAuthenticated) { openLoginModal(); return; }
+              setCreateOpen(true);
+            }}
+            height="36px"
+            width="auto"
+            className="px-3.5"
+          />
+        </div>
       </div>
 
       {/* Search */}

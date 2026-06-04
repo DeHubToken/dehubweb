@@ -65,6 +65,28 @@ export function useDiscoverCommunities() {
   });
 }
 
+// ─── Activity scores: recent chat message counts per community ────────────────
+
+export function useCommunityActivityScores() {
+  return useQuery({
+    queryKey: ['communities', 'activity-scores'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('community_chat_messages')
+        .select('community_id')
+        .order('created_at', { ascending: false })
+        .limit(2000);
+      if (error) throw error;
+      const counts: Record<string, number> = {};
+      (data ?? []).forEach((row: any) => {
+        if (row.community_id) counts[row.community_id] = (counts[row.community_id] || 0) + 1;
+      });
+      return counts;
+    },
+    staleTime: 60_000,
+  });
+}
+
 // ─── Fetch user's joined communities ──────────────────────────────────────────
 
 export function useUserCommunities() {
