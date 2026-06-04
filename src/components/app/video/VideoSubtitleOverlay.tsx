@@ -59,7 +59,7 @@ function readSize(): SizeKey {
   return 'md';
 }
 
-export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName }: Props) {
+export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, buttonVisible = true }: Props) {
   const numericId = useMemo(() => {
     const n = typeof tokenId === 'string' ? parseInt(tokenId, 10) : tokenId ?? 0;
     return Number.isFinite(n) && n > 0 ? Number(n) : 0;
