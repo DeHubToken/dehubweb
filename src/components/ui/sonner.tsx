@@ -13,10 +13,18 @@ const Toaster = ({ ...props }: ToasterProps) => {
   useEffect(() => {
     if (isMobile || typeof window === "undefined") return;
 
+    let resizeObserver: ResizeObserver | null = null;
+
+    const isVisible = (element: HTMLElement | null) => {
+      if (!element) return false;
+      const rect = element.getBoundingClientRect();
+      return rect.width > 0 && rect.height > 0;
+    };
+
     const resolveToastAnchor = () => {
       const openDialog = Array.from(
-        document.querySelectorAll<HTMLElement>('[role="dialog"][data-state="open"]')
-      ).find((element) => element.offsetParent !== null);
+        document.querySelectorAll<HTMLElement>('[role="dialog"]')
+      ).find((element) => isVisible(element));
 
       if (openDialog) {
         const rect = openDialog.getBoundingClientRect();
@@ -32,13 +40,34 @@ const Toaster = ({ ...props }: ToasterProps) => {
       return `${window.innerWidth / 2}px`;
     };
 
+    const attachResizeObserver = () => {
+      resizeObserver?.disconnect();
+      resizeObserver = new ResizeObserver(() => {
+        window.requestAnimationFrame(() => {
+          setDesktopToastLeft(resolveToastAnchor());
+        });
+      });
+
+      const elementsToObserve = [
+        document.documentElement,
+        document.body,
+        document.querySelector<HTMLElement>("#app-root"),
+        document.querySelector<HTMLElement>("#app-root main"),
+        Array.from(document.querySelectorAll<HTMLElement>('[role="dialog"]')).find((element) => isVisible(element)),
+      ].filter(Boolean) as HTMLElement[];
+
+      elementsToObserve.forEach((element) => resizeObserver?.observe(element));
+    };
+
     const updateToastAnchor = () => {
       window.requestAnimationFrame(() => {
         setDesktopToastLeft(resolveToastAnchor());
+        attachResizeObserver();
       });
     };
 
     updateToastAnchor();
+    [50, 150, 300, 500].forEach((delay) => window.setTimeout(updateToastAnchor, delay));
 
     window.addEventListener("resize", updateToastAnchor);
 
@@ -52,6 +81,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
 
     return () => {
       window.removeEventListener("resize", updateToastAnchor);
+      resizeObserver?.disconnect();
       observer.disconnect();
     };
   }, [isMobile]);
