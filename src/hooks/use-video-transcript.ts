@@ -14,6 +14,8 @@ export interface TranscriptRow {
   chunks_total: number;
   chunks_done: number;
   error: string | null;
+  vtt_original?: string | null;
+  source_lang?: string | null;
 }
 
 async function callTranscribe(tokenId: number, action: 'status' | 'start'): Promise<TranscriptRow> {
