@@ -20,9 +20,7 @@ import { useCommunityActivityUnreadCount } from '@/hooks/use-community-activity-
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
-import communitiesIcon from '@/assets/communities-icon.webp.asset.json';
-
-const communitiesIconUrl = typeof communitiesIcon === 'string' ? communitiesIcon : communitiesIcon.url;
+const communitiesIconUrl = '/__l5e/assets-v1/87eb8b21-34b2-4fb6-8069-84321b85adc5/communities-icon.webp';
 
 export default function CommunitiesPage() {
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
