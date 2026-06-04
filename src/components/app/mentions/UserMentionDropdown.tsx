@@ -9,7 +9,8 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
-import { apiCall, getMediaUrl } from '@/lib/api/dehub/core';
+import { apiCall } from '@/lib/api/dehub/core';
+import { buildAvatarUrl } from '@/lib/media-url';
 import { Search, Loader2, AtSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -97,7 +98,7 @@ export function UserMentionDropdown({
           id: u.address || u.username || '',
           username: u.username || '',
           displayName: u.displayName ?? null,
-          avatarUrl: getMediaUrl(u.avatarImageUrl) || null,
+          avatarUrl: buildAvatarUrl(u.address || '', u.avatarImageUrl) || null,
           isVerified: u.isVerified ?? false,
         }));
 
