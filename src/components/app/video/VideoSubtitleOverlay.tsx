@@ -49,7 +49,9 @@ function readEnabled(): boolean {
   try { return localStorage.getItem(LS_ENABLED) === '1'; } catch { return false; }
 }
 function readLang(): string {
-  try { return localStorage.getItem(LS_LANG) || detectLocaleLang(); } catch { return 'original'; }
+  // Default to 'original' — only translate when the user explicitly picks
+  // a non-English language. Avoids junk en→en AI "translations".
+  try { return localStorage.getItem(LS_LANG) || 'original'; } catch { return 'original'; }
 }
 function readSize(): SizeKey {
   try {
