@@ -90,7 +90,7 @@ Deno.serve(async (req) => {
 
     const { data: row, error: rowErr } = await db
       .from('video_transcripts')
-      .select('token_id, status, transcript, translations')
+      .select('token_id, status, transcript, translations, source_lang')
       .eq('token_id', tid)
       .maybeSingle();
     if (rowErr) throw rowErr;
@@ -99,6 +99,18 @@ Deno.serve(async (req) => {
         status: 409,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
+    }
+
+    // Short-circuit: if target language matches the detected source language,
+    // return original segments without calling the AI (no en→en garbage).
+    const sourceLang = String(row.source_lang ?? '').toLowerCase();
+    const normalizedSource = sourceLang.split('-')[0];
+    const normalizedTarget = langCode.split('-')[0];
+    if (normalizedSource && normalizedSource === normalizedTarget) {
+      return new Response(
+        JSON.stringify({ segments: row.transcript.segments ?? [], cached: true, sameAsSource: true }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
     }
 
     const segments: Segment[] = row.transcript.segments ?? [];
