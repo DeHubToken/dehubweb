@@ -22,6 +22,17 @@ import { SUBTITLE_LANGUAGES, detectLocaleLang } from '@/lib/subtitle-languages';
 
 const LS_ENABLED = 'video-subs:enabled';
 const LS_LANG = 'video-subs:lang';
+const LS_SIZE = 'video-subs:size';
+
+const SIZE_PRESETS = [
+  { key: 'xs', label: 'XS', px: 11 },
+  { key: 'sm', label: 'S', px: 13 },
+  { key: 'md', label: 'M', px: 15 },
+  { key: 'lg', label: 'L', px: 18 },
+  { key: 'xl', label: 'XL', px: 22 },
+  { key: '2xl', label: 'XXL', px: 28 },
+] as const;
+type SizeKey = typeof SIZE_PRESETS[number]['key'];
 
 interface Props {
   /** Numeric NFT/post id. Overlay is a no-op when undefined or 0. */
