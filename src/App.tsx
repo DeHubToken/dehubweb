@@ -144,7 +144,6 @@ function AppContent() {
           <Route path="/delete-account" element={<DeleteAccount />} />
 
           <Route path="/creators" element={<CreatorsPage />} />
-          <Route path="/communities" element={null} />
           <Route path="/skill.md" element={<SkillPage />} />
 
           {/* Single shared AppLayout — header/sidebar mount ONCE and persist across all app routes */}
@@ -153,6 +152,8 @@ function AppContent() {
             <Route path="/features" element={null} />
             <Route path="/governance" element={null} />
             <Route path="/stake" element={null} />
+            <Route path="/communities" element={null} />
+            <Route path="/communities/:slug" element={<Suspense fallback={<PageLoader />}><CommunityPage /></Suspense>} />
 
             {/* App routes — cached pages render null, PersistentPageCache manages them */}
             <Route path="/app">
