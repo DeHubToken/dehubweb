@@ -180,6 +180,8 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName }: Pro
   const langLabel =
     SUBTITLE_LANGUAGES.find((l) => l.code === lang)?.name ?? 'Original';
 
+  const sizePx = SIZE_PRESETS.find((s) => s.key === size)?.px ?? 15;
+
   return (
     <>
       {/* Caption text */}
@@ -188,8 +190,8 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName }: Pro
           className="absolute left-1/2 -translate-x-1/2 bottom-16 z-20 pointer-events-none max-w-[90%] text-center"
         >
           <span
-            className="inline-block bg-black/60 backdrop-blur-[24px] border border-white/10 text-white text-sm md:text-base font-medium px-3 py-1.5 rounded-xl leading-snug"
-            style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}
+            className="inline-block bg-black/60 backdrop-blur-[24px] border border-white/10 text-white font-medium px-3 py-1.5 rounded-xl leading-snug"
+            style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)', fontSize: `${sizePx}px` }}
           >
             {currentText}
           </span>
