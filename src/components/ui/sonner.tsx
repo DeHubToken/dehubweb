@@ -21,19 +21,24 @@ const Toaster = ({ ...props }: ToasterProps) => {
       return rect.width > 0 && rect.height > 0;
     };
 
-    const resolveToastAnchor = () => {
+    const getAnchorElement = () => {
+      const loginModal = document.querySelector<HTMLElement>('[data-login-modal="true"]');
+      if (isVisible(loginModal)) return loginModal;
+
       const openDialog = Array.from(
         document.querySelectorAll<HTMLElement>('[role="dialog"]')
       ).find((element) => isVisible(element));
 
-      if (openDialog) {
-        const rect = openDialog.getBoundingClientRect();
-        return `${rect.left + rect.width / 2}px`;
-      }
+      if (openDialog) return openDialog;
 
-      const mainContent = document.querySelector<HTMLElement>("#app-root main");
-      if (mainContent) {
-        const rect = mainContent.getBoundingClientRect();
+      return document.querySelector<HTMLElement>("#app-root main");
+    };
+
+    const resolveToastAnchor = () => {
+      const anchorElement = getAnchorElement();
+
+      if (isVisible(anchorElement)) {
+        const rect = anchorElement.getBoundingClientRect();
         return `${rect.left + rect.width / 2}px`;
       }
 
@@ -53,6 +58,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
         document.body,
         document.querySelector<HTMLElement>("#app-root"),
         document.querySelector<HTMLElement>("#app-root main"),
+        document.querySelector<HTMLElement>('[data-login-modal="true"]'),
         Array.from(document.querySelectorAll<HTMLElement>('[role="dialog"]')).find((element) => isVisible(element)),
       ].filter(Boolean) as HTMLElement[];
 
