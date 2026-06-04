@@ -39,6 +39,9 @@ const GuidePage = React.lazy(() => import("./pages/GuidePage"));
 const CommunityPage = React.lazy(() => import("./pages/app/CommunityPage"));
 const EventPage = React.lazy(() => import("./pages/EventPage"));
 const StoreDetailPage = React.lazy(() => import("./pages/app/StoreDetailPage"));
+const LaunchpadPage = React.lazy(() => import("./pages/app/LaunchpadPage"));
+const LaunchpadCreatePage = React.lazy(() => import("./pages/app/LaunchpadCreatePage"));
+const LaunchpadCoinPage = React.lazy(() => import("./pages/app/LaunchpadCoinPage"));
 
 const SKIP_LANDING_KEY = "dehub_skip_landing";
 
