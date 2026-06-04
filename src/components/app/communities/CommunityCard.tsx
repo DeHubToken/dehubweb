@@ -1,6 +1,18 @@
-import { Users, Lock, Crown, Link as LinkIcon } from 'lucide-react';
+import { Users, Lock, Crown, Link as LinkIcon, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Community } from '@/hooks/use-communities';
+
+function formatRelativeTime(dateString: string): string {
+  const date = new Date(dateString);
+  const diffMs = Date.now() - date.getTime();
+  const diffDays = Math.floor(diffMs / 86400000);
+  if (diffDays < 1) return 'today';
+  if (diffDays === 1) return 'yesterday';
+  if (diffDays < 7) return `${diffDays}d`;
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)}w`;
+  if (diffDays < 365) return `${Math.floor(diffDays / 30)}m`;
+  return `${Math.floor(diffDays / 365)}y`;
+}
 
 const URL_REGEX = /https?:\/\/[^\s)<>]+/gi;
 
