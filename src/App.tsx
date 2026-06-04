@@ -144,6 +144,7 @@ function AppContent() {
           <Route path="/delete-account" element={<DeleteAccount />} />
 
           <Route path="/creators" element={<CreatorsPage />} />
+          <Route path="/communities" element={null} />
           <Route path="/skill.md" element={<SkillPage />} />
 
           {/* Single shared AppLayout — header/sidebar mount ONCE and persist across all app routes */}
