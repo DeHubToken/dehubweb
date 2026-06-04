@@ -2339,11 +2339,13 @@ export type Database = {
           error: string | null
           model: string | null
           overview: string | null
+          source_lang: string | null
           status: string
           token_id: number
           transcript: Json | null
           translations: Json
           updated_at: string
+          vtt_original: string | null
         }
         Insert: {
           chunks_done?: number | null
@@ -2353,11 +2355,13 @@ export type Database = {
           error?: string | null
           model?: string | null
           overview?: string | null
+          source_lang?: string | null
           status?: string
           token_id: number
           transcript?: Json | null
           translations?: Json
           updated_at?: string
+          vtt_original?: string | null
         }
         Update: {
           chunks_done?: number | null
@@ -2367,11 +2371,13 @@ export type Database = {
           error?: string | null
           model?: string | null
           overview?: string | null
+          source_lang?: string | null
           status?: string
           token_id?: number
           transcript?: Json | null
           translations?: Json
           updated_at?: string
+          vtt_original?: string | null
         }
         Relationships: []
       }
