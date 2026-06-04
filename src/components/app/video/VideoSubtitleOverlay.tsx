@@ -12,7 +12,7 @@
  * - If no transcript exists yet, tapping the button kicks off transcription.
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Captions, Check, Loader2, Search } from 'lucide-react';
+import { Captions, Check, Loader2, Search, Settings2, Minus, Plus } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
