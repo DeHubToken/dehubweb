@@ -1,6 +1,18 @@
-import { Users, Lock, Crown, Link as LinkIcon } from 'lucide-react';
+import { Users, Lock, Crown, Link as LinkIcon, Clock } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import type { Community } from '@/hooks/use-communities';
+
+function formatRelativeTime(dateString: string): string {
+  const date = new Date(dateString);
+  const diffMs = Date.now() - date.getTime();
+  const diffDays = Math.floor(diffMs / 86400000);
+  if (diffDays < 1) return 'today';
+  if (diffDays === 1) return 'yesterday';
+  if (diffDays < 7) return `${diffDays}d`;
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)}w`;
+  if (diffDays < 365) return `${Math.floor(diffDays / 30)}m`;
+  return `${Math.floor(diffDays / 365)}y`;
+}
 
 const URL_REGEX = /https?:\/\/[^\s)<>]+/gi;
 
@@ -35,7 +47,7 @@ export function CommunityCard({ community, isMember, role, unreadCount, onClick 
   return (
     <button
       onClick={onClick}
-      className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] transition-colors text-left relative overflow-hidden"
+      className="w-full flex items-center gap-3 p-3 pr-16 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08] transition-colors text-left relative overflow-hidden"
     >
       {community.banner_url && (
         <div
@@ -50,6 +62,10 @@ export function CommunityCard({ community, isMember, role, unreadCount, onClick 
           }}
         />
       )}
+      <div className="absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 rounded-md bg-black/50 backdrop-blur-sm border border-white/10 z-10">
+        <Clock className="w-3 h-3 text-zinc-400" />
+        <span className="text-[10px] text-zinc-300 font-medium leading-none">{formatRelativeTime(community.created_at)}</span>
+      </div>
       <div className="relative w-12 h-12 rounded-xl bg-white/[0.08] flex items-center justify-center flex-shrink-0">
        <div className="w-full h-full rounded-xl overflow-hidden flex items-center justify-center">
         {community.avatar_url ? (
