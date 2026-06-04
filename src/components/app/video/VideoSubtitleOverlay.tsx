@@ -19,6 +19,7 @@ import { cn } from '@/lib/utils';
 import { useVideoTranscript, type TranscriptSegment } from '@/hooks/use-video-transcript';
 import { useTranslatedSegments } from '@/hooks/use-video-subtitles';
 import { SUBTITLE_LANGUAGES, detectLocaleLang } from '@/lib/subtitle-languages';
+import { splitSegmentsIntoLines, rechunkVtt } from '@/lib/transcript-format';
 
 const LS_ENABLED = 'video-subs:enabled';
 const LS_LANG = 'video-subs:lang';
@@ -108,10 +109,10 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
 
   const activeSegments: TranscriptSegment[] = useMemo(() => {
     if (!isReady) return [];
-    if (normalizedLang === 'original' || !translatedSegments) {
-      return transcript?.transcript?.segments ?? [];
-    }
-    return translatedSegments;
+    const base = (normalizedLang === 'original' || !translatedSegments)
+      ? (transcript?.transcript?.segments ?? [])
+      : translatedSegments;
+    return splitSegmentsIntoLines(base, 38);
   }, [isReady, normalizedLang, translatedSegments, transcript]);
 
   // ── Native <track> mounting for original-language captions ──
@@ -120,7 +121,8 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   const vttBlobUrl = useMemo(() => {
     const vtt = transcript?.vtt_original;
     if (!vtt) return null;
-    const blob = new Blob([vtt], { type: 'text/vtt' });
+    const rechunked = rechunkVtt(vtt, 38);
+    const blob = new Blob([rechunked], { type: 'text/vtt' });
     return URL.createObjectURL(blob);
   }, [transcript?.vtt_original]);
 
