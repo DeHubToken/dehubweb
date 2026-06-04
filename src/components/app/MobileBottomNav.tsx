@@ -40,6 +40,7 @@ const SCROLL_NAV_ITEMS = [
   { icon: FileText, label: 'Blog', path: '/docs/blog' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
   { icon: Scroll, label: 'Glossary', path: '/app/glossary' },
+  { icon: Users, label: 'Communities', path: '/app/communities' },
 ];
 
 export function MobileBottomNav() {
