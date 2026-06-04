@@ -62,6 +62,10 @@ export function CommunityCard({ community, isMember, role, unreadCount, onClick 
           }}
         />
       )}
+      <div className="absolute top-2 right-2 flex items-center gap-1 px-2 py-0.5 rounded-md bg-black/50 backdrop-blur-sm border border-white/10 z-10">
+        <Clock className="w-3 h-3 text-zinc-400" />
+        <span className="text-[10px] text-zinc-300 font-medium leading-none">{formatRelativeTime(community.created_at)}</span>
+      </div>
       <div className="relative w-12 h-12 rounded-xl bg-white/[0.08] flex items-center justify-center flex-shrink-0">
        <div className="w-full h-full rounded-xl overflow-hidden flex items-center justify-center">
         {community.avatar_url ? (
