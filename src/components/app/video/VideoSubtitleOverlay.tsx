@@ -41,6 +41,8 @@ interface Props {
   videoRef: React.RefObject<HTMLVideoElement>;
   /** Optional className overrides for the button position. Defaults bottom-left. */
   buttonClassName?: string;
+  /** When false, the CC button is faded out (captions still render). Defaults true. */
+  buttonVisible?: boolean;
 }
 
 function readEnabled(): boolean {
@@ -57,7 +59,7 @@ function readSize(): SizeKey {
   return 'md';
 }
 
-export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName }: Props) {
+export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, buttonVisible = true }: Props) {
   const numericId = useMemo(() => {
     const n = typeof tokenId === 'string' ? parseInt(tokenId, 10) : tokenId ?? 0;
     return Number.isFinite(n) && n > 0 ? Number(n) : 0;
@@ -214,8 +216,8 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName }: Pro
             }}
             aria-label={enabled ? 'Subtitles on' : 'Subtitles off'}
             className={cn(
-              'z-20 h-8 w-8 rounded-lg bg-black/60 backdrop-blur-[24px] border border-white/10 flex items-center justify-center transition-opacity',
-              'opacity-80 hover:opacity-100',
+              'z-20 h-8 w-8 rounded-lg bg-black/60 backdrop-blur-[24px] border border-white/10 flex items-center justify-center transition-opacity duration-200',
+              buttonVisible || open ? 'opacity-80 hover:opacity-100' : 'opacity-0 pointer-events-none',
               buttonState === 'off' && 'text-white/60',
               buttonState === 'on' && 'text-white',
               buttonState === 'working' && 'text-white/80',

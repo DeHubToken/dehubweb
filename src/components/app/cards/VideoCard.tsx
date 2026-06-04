@@ -1442,7 +1442,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
         {/* Optional CC subtitle overlay */}
         {!isContentGated && video.videoUrl && (
-          <VideoSubtitleOverlay tokenId={video.id} videoRef={videoRef} buttonClassName="absolute top-2 right-[228px] z-20" />
+          <VideoSubtitleOverlay tokenId={video.id} videoRef={videoRef} buttonClassName="absolute top-2 right-[228px] z-20" buttonVisible={showControls} />
         )}
         
         
