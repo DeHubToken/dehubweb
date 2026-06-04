@@ -21,6 +21,10 @@ export interface MentionUser {
   displayName: string | null;
   avatarUrl: string | null;
   isVerified: boolean;
+  followerCount?: number;
+  followingCount?: number;
+  isFollowing?: boolean;
+  followsYou?: boolean;
 }
 
 interface UserMentionDropdownProps {
@@ -36,6 +40,12 @@ interface UserMentionDropdownProps {
 // Legacy export for compatibility
 export function searchUsers(_query: string, _limit: number = 5): MentionUser[] {
   return [];
+}
+
+function formatCount(n: number): string {
+  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(n >= 10_000_000 ? 0 : 1)}M`;
+  if (n >= 1_000) return `${(n / 1_000).toFixed(n >= 10_000 ? 0 : 1)}K`;
+  return String(n);
 }
 
 export function UserMentionDropdown({
@@ -86,7 +96,12 @@ export function UserMentionDropdown({
           avatarImageUrl?: string;
           address?: string;
           isFollowing?: boolean;
+          followsYou?: boolean;
           isVerified?: boolean;
+          followerCount?: number;
+          followingCount?: number;
+          followers?: number;
+          following?: number;
         }> }>('/api/users/mention_search', {
           params: { q: searchQuery },
         });
@@ -100,6 +115,10 @@ export function UserMentionDropdown({
           displayName: u.displayName ?? null,
           avatarUrl: buildAvatarUrl(u.address || '', u.avatarImageUrl) || null,
           isVerified: u.isVerified ?? false,
+          followerCount: typeof u.followerCount === 'number' ? u.followerCount : (typeof u.followers === 'number' ? u.followers : undefined),
+          followingCount: typeof u.followingCount === 'number' ? u.followingCount : (typeof u.following === 'number' ? u.following : undefined),
+          isFollowing: u.isFollowing,
+          followsYou: u.followsYou,
         }));
 
         setUsers(mapped);
@@ -265,10 +284,29 @@ export function UserMentionDropdown({
                       {user.displayName || user.username}
                     </span>
                     {user.isVerified && <VerifiedBadge className="w-3.5 h-3.5 flex-shrink-0" />}
+                    {user.followsYou && (
+                      <span className="px-1.5 py-0.5 rounded-md bg-white/[0.08] border border-white/[0.08] text-[10px] font-medium text-white/60 leading-none flex-shrink-0">
+                        Follows you
+                      </span>
+                    )}
                   </div>
-                  <span className="text-[12px] text-white/35 truncate">
-                    @{user.username}
-                  </span>
+                  <div className="flex items-center gap-2 text-[12px] text-white/35 truncate">
+                    <span className="truncate">@{user.username}</span>
+                    {typeof user.followerCount === 'number' && (
+                      <>
+                        <span className="text-white/20">·</span>
+                        <span className="flex-shrink-0">
+                          <span className="text-white/55 font-medium">{formatCount(user.followerCount)}</span> followers
+                        </span>
+                      </>
+                    )}
+                    {user.isFollowing && (
+                      <>
+                        <span className="text-white/20">·</span>
+                        <span className="flex-shrink-0 text-white/55">Following</span>
+                      </>
+                    )}
+                  </div>
                 </div>
               </motion.button>
             ))}
