@@ -189,12 +189,12 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName }: Pro
             }}
             aria-label={enabled ? 'Subtitles on' : 'Subtitles off'}
             className={cn(
-              'absolute z-20 h-8 w-8 rounded-lg bg-black/60 backdrop-blur-[24px] border border-white/10 flex items-center justify-center transition-opacity',
+              'z-20 h-8 w-8 rounded-lg bg-black/60 backdrop-blur-[24px] border border-white/10 flex items-center justify-center transition-opacity',
               'opacity-80 hover:opacity-100',
               buttonState === 'off' && 'text-white/60',
               buttonState === 'on' && 'text-white',
               buttonState === 'working' && 'text-white/80',
-              buttonClassName ?? 'bottom-12 left-2',
+              buttonClassName ?? 'absolute bottom-12 left-2',
             )}
           >
             {buttonState === 'working' ? (
