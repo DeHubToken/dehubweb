@@ -19,9 +19,9 @@ const Toaster = ({ ...props }: ToasterProps) => {
       style={isMobile ? undefined : ({ width: 'auto' } as React.CSSProperties)}
       toastOptions={{
         classNames: {
-          toast: "group toast group-[.toaster]:bg-white/10 group-[.toaster]:backdrop-blur-xl group-[.toaster]:border group-[.toaster]:border-white/20 group-[.toaster]:text-white group-[.toaster]:shadow-[0_8px_32px_rgba(0,0,0,0.4)] group-[.toaster]:rounded-2xl group-[.toaster]:!w-fit group-[.toaster]:!min-w-0 group-[.toaster]:!max-w-[90vw] group-[.toaster]:!mx-auto",
-          title: "!w-fit",
-          description: "group-[.toast]:text-white/70",
+          toast: "group toast group-[.toaster]:bg-white/10 group-[.toaster]:backdrop-blur-xl group-[.toaster]:border group-[.toaster]:border-white/20 group-[.toaster]:text-white group-[.toaster]:shadow-[0_8px_32px_rgba(0,0,0,0.4)] group-[.toaster]:rounded-2xl group-[.toaster]:!w-fit group-[.toaster]:!min-w-0 group-[.toaster]:!max-w-[90vw] group-[.toaster]:!mx-auto group-[.toaster]:whitespace-nowrap",
+          title: "!w-fit whitespace-nowrap",
+          description: "group-[.toast]:text-white/70 whitespace-nowrap",
           actionButton: "group-[.toast]:bg-white/20 group-[.toast]:text-white group-[.toast]:hover:bg-white/30",
           cancelButton: "group-[.toast]:bg-white/10 group-[.toast]:text-white/70 group-[.toast]:hover:bg-white/20",
         },
