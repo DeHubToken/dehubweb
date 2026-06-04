@@ -29,6 +29,8 @@ export default function CommunitiesPage() {
 
   const { data: userCommunities = [], isLoading: loadingUser } = useUserCommunities();
   const { data: allCommunities = [], isLoading: loadingAll } = useDiscoverCommunities();
+  const { data: activityScores = {} } = useCommunityActivityScores();
+  const [sortMode, setSortMode] = useState<'top' | 'new' | 'hot'>('top');
 
   // Fetch per-community unread counts for owned communities
   const ownedCommunityIds = useMemo(
