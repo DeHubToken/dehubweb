@@ -98,7 +98,7 @@ export function UserMentionDropdown({
           id: u.address || u.username || '',
           username: u.username || '',
           displayName: u.displayName ?? null,
-          avatarUrl: getMediaUrl(u.avatarImageUrl) || null,
+          avatarUrl: buildAvatarUrl(u.address || '', u.avatarImageUrl) || null,
           isVerified: u.isVerified ?? false,
         }));
 
