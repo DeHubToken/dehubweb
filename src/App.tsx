@@ -39,6 +39,9 @@ const GuidePage = React.lazy(() => import("./pages/GuidePage"));
 const CommunityPage = React.lazy(() => import("./pages/app/CommunityPage"));
 const EventPage = React.lazy(() => import("./pages/EventPage"));
 const StoreDetailPage = React.lazy(() => import("./pages/app/StoreDetailPage"));
+const LaunchpadPage = React.lazy(() => import("./pages/app/LaunchpadPage"));
+const LaunchpadCreatePage = React.lazy(() => import("./pages/app/LaunchpadCreatePage"));
+const LaunchpadCoinPage = React.lazy(() => import("./pages/app/LaunchpadCoinPage"));
 
 const SKIP_LANDING_KEY = "dehub_skip_landing";
 
@@ -189,6 +192,10 @@ function AppContent() {
               <Route path="post/:postId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
               <Route path="video/:tokenId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
               <Route path="post/:postId/info" element={<Suspense fallback={<PageLoader />}><PostInfoPage /></Suspense>} />
+              {/* Launchpad — hidden, no nav links, reachable by URL only */}
+              <Route path="launchpad" element={<Suspense fallback={<PageLoader />}><LaunchpadPage /></Suspense>} />
+              <Route path="launchpad/create" element={<Suspense fallback={<PageLoader />}><LaunchpadCreatePage /></Suspense>} />
+              <Route path="launchpad/:mintId" element={<Suspense fallback={<PageLoader />}><LaunchpadCoinPage /></Suspense>} />
             </Route>
 
             {/* Stage invite links */}

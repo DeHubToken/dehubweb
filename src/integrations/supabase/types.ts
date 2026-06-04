@@ -1290,6 +1290,113 @@ export type Database = {
         }
         Relationships: []
       }
+      launchpad_tokens: {
+        Row: {
+          chain_id: number
+          created_at: string
+          creator_address: string
+          curve_type: string
+          description: string | null
+          graduation_target_usd: number
+          id: string
+          image_url: string | null
+          market_cap_usd: number
+          mint_address: string | null
+          name: string
+          progress_bps: number
+          socials: Json
+          status: string
+          supply_sold: number
+          symbol: string
+          updated_at: string
+          volume_24h: number
+        }
+        Insert: {
+          chain_id?: number
+          created_at?: string
+          creator_address: string
+          curve_type?: string
+          description?: string | null
+          graduation_target_usd?: number
+          id?: string
+          image_url?: string | null
+          market_cap_usd?: number
+          mint_address?: string | null
+          name: string
+          progress_bps?: number
+          socials?: Json
+          status?: string
+          supply_sold?: number
+          symbol: string
+          updated_at?: string
+          volume_24h?: number
+        }
+        Update: {
+          chain_id?: number
+          created_at?: string
+          creator_address?: string
+          curve_type?: string
+          description?: string | null
+          graduation_target_usd?: number
+          id?: string
+          image_url?: string | null
+          market_cap_usd?: number
+          mint_address?: string | null
+          name?: string
+          progress_bps?: number
+          socials?: Json
+          status?: string
+          supply_sold?: number
+          symbol?: string
+          updated_at?: string
+          volume_24h?: number
+        }
+        Relationships: []
+      }
+      launchpad_trades: {
+        Row: {
+          created_at: string
+          dhb_in: number
+          id: string
+          price_per_token: number
+          side: string
+          token_id: string
+          tokens_out: number
+          trader_address: string
+          tx_hash: string | null
+        }
+        Insert: {
+          created_at?: string
+          dhb_in: number
+          id?: string
+          price_per_token: number
+          side: string
+          token_id: string
+          tokens_out: number
+          trader_address: string
+          tx_hash?: string | null
+        }
+        Update: {
+          created_at?: string
+          dhb_in?: number
+          id?: string
+          price_per_token?: number
+          side?: string
+          token_id?: string
+          tokens_out?: number
+          trader_address?: string
+          tx_hash?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "launchpad_trades_token_id_fkey"
+            columns: ["token_id"]
+            isOneToOne: false
+            referencedRelation: "launchpad_tokens"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leaderboard_cache: {
         Row: {
           data: Json
