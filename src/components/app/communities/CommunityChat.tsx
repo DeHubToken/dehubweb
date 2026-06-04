@@ -120,9 +120,11 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
   const [editText, setEditText] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
+  const [adminThinking, setAdminThinking] = useState(false);
   const PAGE_SIZE = 15;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const bottomRef = useRef<HTMLDivElement>(null);
+
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const didInitialScrollRef = useRef(false);
