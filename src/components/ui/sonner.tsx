@@ -22,7 +22,9 @@ const Toaster = ({ ...props }: ToasterProps) => {
     };
 
     const getAnchorElement = () => {
-      const loginModal = document.querySelector<HTMLElement>('[data-login-modal="true"]');
+      const loginModal = Array.from(
+        document.querySelectorAll<HTMLElement>('[data-login-modal="true"]')
+      ).find((element) => isVisible(element));
       if (isVisible(loginModal)) return loginModal;
 
       const openDialog = Array.from(
