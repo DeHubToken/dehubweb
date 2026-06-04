@@ -49,7 +49,9 @@ function readEnabled(): boolean {
   try { return localStorage.getItem(LS_ENABLED) === '1'; } catch { return false; }
 }
 function readLang(): string {
-  try { return localStorage.getItem(LS_LANG) || detectLocaleLang(); } catch { return 'original'; }
+  // Default to 'original' — only translate when the user explicitly picks
+  // a non-English language. Avoids junk en→en AI "translations".
+  try { return localStorage.getItem(LS_LANG) || 'original'; } catch { return 'original'; }
 }
 function readSize(): SizeKey {
   try {
@@ -83,19 +85,28 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
   const isWorking =
     transcript?.status === 'pending' || transcript?.status === 'processing';
 
+  // Treat english variants as "original" — the underlying transcripts are
+  // produced in the spoken language (usually English) so translating en→en
+  // just produces garbled duplicate segments.
+  const normalizedLang = useMemo(() => {
+    const l = (lang || '').toLowerCase();
+    if (!l || l === 'original' || l === 'en' || l.startsWith('en-')) return 'original';
+    return l;
+  }, [lang]);
+
   const { data: translatedSegments, isFetching: translating } = useTranslatedSegments(
     numericId || null,
-    lang,
-    !!numericId && enabled && isReady && lang !== 'original',
+    normalizedLang,
+    !!numericId && enabled && isReady && normalizedLang !== 'original',
   );
 
   const activeSegments: TranscriptSegment[] = useMemo(() => {
     if (!isReady) return [];
-    if (lang === 'original' || !translatedSegments) {
+    if (normalizedLang === 'original' || !translatedSegments) {
       return transcript?.transcript?.segments ?? [];
     }
     return translatedSegments;
-  }, [isReady, lang, translatedSegments, transcript]);
+  }, [isReady, normalizedLang, translatedSegments, transcript]);
 
   // Persist preferences
   useEffect(() => {
