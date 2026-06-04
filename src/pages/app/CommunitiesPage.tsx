@@ -126,22 +126,40 @@ export default function CommunitiesPage() {
       />
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Users className="w-6 h-6 text-white" />
-          <h1 className="text-xl font-bold text-white">{t('communities.title')}</h1>
+      <div className="flex items-center justify-between mb-4 gap-2">
+        <div className="flex items-center gap-2 min-w-0">
+          <Users className="w-6 h-6 text-white shrink-0" />
+          <h1 className="text-xl font-bold text-white truncate">{t('communities.title')}</h1>
         </div>
-        <LiquidGlassBubble2
-          label={t('communities.create')}
-          icon={<Plus className="w-4 h-4" />}
-          onClick={() => {
-            if (!isAuthenticated) { openLoginModal(); return; }
-            setCreateOpen(true);
-          }}
-          height="36px"
-          width="auto"
-          className="px-3.5"
-        />
+        <div className="flex items-center gap-1.5 shrink-0">
+          <button
+            onClick={() => setSortMode(sortMode === 'new' ? 'top' : 'new')}
+            aria-label="Sort by newest"
+            title="Newest"
+            className={`h-9 w-9 flex items-center justify-center rounded-lg border border-white/10 text-base transition-colors ${sortMode === 'new' ? 'bg-white/[0.12]' : 'bg-white/[0.04] hover:bg-white/[0.08]'}`}
+          >
+            💎
+          </button>
+          <button
+            onClick={() => setSortMode(sortMode === 'hot' ? 'top' : 'hot')}
+            aria-label="Sort by most active"
+            title="Most active"
+            className={`h-9 w-9 flex items-center justify-center rounded-lg border border-white/10 text-base transition-colors ${sortMode === 'hot' ? 'bg-white/[0.12]' : 'bg-white/[0.04] hover:bg-white/[0.08]'}`}
+          >
+            🔥
+          </button>
+          <LiquidGlassBubble2
+            label={t('communities.create')}
+            icon={<Plus className="w-4 h-4" />}
+            onClick={() => {
+              if (!isAuthenticated) { openLoginModal(); return; }
+              setCreateOpen(true);
+            }}
+            height="36px"
+            width="auto"
+            className="px-3.5"
+          />
+        </div>
       </div>
 
       {/* Search */}
