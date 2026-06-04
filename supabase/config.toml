@@ -105,3 +105,7 @@ verify_jwt = false
 
 [functions.og-image]
 verify_jwt = false
+
+[functions.community-admin-chat]
+verify_jwt = false
+
