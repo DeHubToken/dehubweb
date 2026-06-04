@@ -152,6 +152,8 @@ function AppContent() {
             <Route path="/features" element={null} />
             <Route path="/governance" element={null} />
             <Route path="/stake" element={null} />
+            <Route path="/communities" element={null} />
+            <Route path="/communities/:slug" element={<Suspense fallback={<PageLoader />}><CommunityPage /></Suspense>} />
 
             {/* App routes — cached pages render null, PersistentPageCache manages them */}
             <Route path="/app">
