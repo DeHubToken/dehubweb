@@ -278,10 +278,29 @@ export function UserMentionDropdown({
                       {user.displayName || user.username}
                     </span>
                     {user.isVerified && <VerifiedBadge className="w-3.5 h-3.5 flex-shrink-0" />}
+                    {user.followsYou && (
+                      <span className="px-1.5 py-0.5 rounded-md bg-white/[0.08] border border-white/[0.08] text-[10px] font-medium text-white/60 leading-none flex-shrink-0">
+                        Follows you
+                      </span>
+                    )}
                   </div>
-                  <span className="text-[12px] text-white/35 truncate">
-                    @{user.username}
-                  </span>
+                  <div className="flex items-center gap-2 text-[12px] text-white/35 truncate">
+                    <span className="truncate">@{user.username}</span>
+                    {typeof user.followerCount === 'number' && (
+                      <>
+                        <span className="text-white/20">·</span>
+                        <span className="flex-shrink-0">
+                          <span className="text-white/55 font-medium">{formatCount(user.followerCount)}</span> followers
+                        </span>
+                      </>
+                    )}
+                    {user.isFollowing && (
+                      <>
+                        <span className="text-white/20">·</span>
+                        <span className="flex-shrink-0 text-white/55">Following</span>
+                      </>
+                    )}
+                  </div>
                 </div>
               </motion.button>
             ))}
