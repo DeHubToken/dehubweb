@@ -219,6 +219,30 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
     };
   }, [videoRef, enabled, activeSegments, useNativeTrack]);
 
+  // Persist preferences
+  useEffect(() => {
+    try { localStorage.setItem(LS_ENABLED, enabled ? '1' : '0'); } catch { /* noop */ }
+  }, [enabled]);
+  useEffect(() => {
+    try { localStorage.setItem(LS_LANG, lang); } catch { /* noop */ }
+  }, [lang]);
+  useEffect(() => {
+    try { localStorage.setItem(LS_SIZE, size); } catch { /* noop */ }
+  }, [size]);
+
+  // Inject ::cue size styles for native <track> rendering
+  const sizePxValue = SIZE_PRESETS.find((s) => s.key === size)?.px ?? 15;
+  useEffect(() => {
+    const id = 'lovable-cue-size-style';
+    let el = document.getElementById(id) as HTMLStyleElement | null;
+    if (!el) {
+      el = document.createElement('style');
+      el.id = id;
+      document.head.appendChild(el);
+    }
+    el.textContent = `video::cue { font-size: ${sizePxValue}px; background: rgba(0,0,0,0.6); color: #fff; }`;
+  }, [sizePxValue]);
+
   if (!numericId) return null;
 
   const buttonState: 'off' | 'on' | 'working' | 'loading' =
