@@ -21,6 +21,7 @@ import { useCommunityActivityUnreadCount } from '@/hooks/use-community-activity-
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
+import communitiesIcon from '@/assets/communities-icon.png.asset.json';
 
 export default function CommunitiesPage() {
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
