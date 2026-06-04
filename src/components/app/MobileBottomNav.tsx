@@ -15,7 +15,6 @@ import { useTotalUnreadCount } from '@/hooks/use-messages';
 const LEFT_NAV_ITEMS = [
   { icon: Home, label: 'Home', path: '/app' },
   { icon: MessageSquare, label: 'Messages', path: '/app/messages' },
-  { icon: Users, label: 'Communities', path: '/app/communities' },
 ];
 
 // Right side: AI link, Profile
