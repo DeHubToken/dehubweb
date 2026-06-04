@@ -1,77 +1,87 @@
 ## Goal
 
-Add an optional **CC (subtitle) button** to every video player. When enabled, render synced subtitles from the existing transcript. Let users pick **any language** — translations are generated on demand and cached.
+Replace the Gemini-based transcription with **Deepgram Nova-3** (purpose-built ASR with word-level timestamps and native VTT output) and let the browser render original-language subtitles via the native `<track>` element. Keep the existing custom overlay only for translated languages and the size picker.
 
-## UX
+## Why Deepgram
 
-- **CC button**: small icon overlay (bottom-right of the player, near existing controls). Hidden when no `tokenId`/transcript exists.
-- **States** on the button:
-  - Greyed out → no transcript yet. Tap → triggers transcript generation (same flow as Post Info), then auto-enables.
-  - Idle → transcript ready, subtitles off.
-  - Active (filled) → subtitles on, captions render at bottom of video.
-- **Long-press / second tap** opens a small popover:
-  - Toggle CC on/off
-  - Language picker (searchable list of ~30 common languages + "Original")
-  - "Auto-detect from your locale" option (uses `navigator.language` once)
-- **Caption rendering**: bottom-center, max 2 lines, drop-shadow + `bg-black/50` rounded pill, `text-white`, scales with player size, hides on hover-controls collision.
-- **Persistence**: chosen language + enabled-state stored in `localStorage` (`video-subs:lang`, `video-subs:enabled`).
+- Word-level timestamps → perfect sync (vs. Gemini's drifting sentence-level guesses)
+- Returns SRT/VTT natively → no fragile JSON parsing
+- Auto language detection on source → fixes the en→en translation bug class
+- ~$0.0043/min, fast (real-time factor ~40x)
+- One API call, no chunking gymnastics
 
-## Sync logic
+## Architecture
 
-- Read `segments[]` (`{start, end, text}`) already cached on `video_transcripts`.
-- On each `timeupdate` (throttled ~4x/sec), find the segment where `start ≤ currentTime < end` and show its text. Binary-search by index pointer for O(1) lookups during playback.
-- If language ≠ original, look up `translated_segments[lang][i].text` instead.
-
-## Translation pipeline
-
-New edge function **`translate-transcript`**:
-- Input: `{ tokenId, lang }` (BCP-47 like `es`, `fr`, `ja`).
-- If `video_transcripts.translations->lang` exists → return cached.
-- Else: call Lovable AI (`google/gemini-2.5-flash-lite`) with the full segment array and a strict tool-call schema returning `{ segments: [{ i, text }] }` preserving order/count. Chunk in groups of ~80 segments to stay within token limits, with retry on count mismatch.
-- Persist into a new `translations jsonb` column on `video_transcripts`, keyed by language code.
-- Returns translated segment array.
-
-Client hook **`useVideoSubtitles(tokenId, lang)`**:
-- React Query: fetch transcript row; if `lang !== 'original'`, invoke `translate-transcript` and merge.
-- Loading toast / spinner on the CC button while translating.
-
-## Schema change
-
-```sql
-ALTER TABLE public.video_transcripts
-  ADD COLUMN IF NOT EXISTS translations jsonb NOT NULL DEFAULT '{}'::jsonb;
+```text
+Original captions  →  Deepgram VTT  →  <track> on <video>  (browser-native sync)
+Translated captions →  Gemini per-line  →  custom overlay   (existing path)
 ```
 
-Shape: `{ "es": [{start, end, text}, ...], "fr": [...] }`.
+## Changes
 
-## Components
+### 1. Secret
+- Add `DEEPGRAM_API_KEY` (request from user; they create at deepgram.com → API Keys).
 
-New shared component **`<VideoSubtitleOverlay tokenId videoRef />`**:
-- Absolutely-positioned layer placed inside any video container.
-- Owns CC button, popover (uses `Popover` shadcn primitive), language list, caption renderer.
-- Listens to the passed `videoRef.current` for `timeupdate`/`seeked`/`ratechange`.
+### 2. DB migration
+- `ALTER TABLE video_transcripts ADD COLUMN vtt_original text` (cached VTT)
+- `ALTER TABLE video_transcripts ADD COLUMN source_lang text` (detected language code)
+- Keep existing `transcript` (segments JSON) and `translations` jsonb — still used for non-original languages.
 
-Wired into:
-- `src/components/app/AutoplayVideo.tsx`
-- `src/components/app/cards/VideoCard.tsx`
-- `src/components/app/cards/VideoSlide.tsx`
-- `src/components/app/stories/StorySlide.tsx`
-- `src/components/app/tv/FloatingPiPPlayer.tsx`
-- Immersive video overlay
-- Each accepts an optional `tokenId` prop; overlay no-ops when absent.
+### 3. Edge function: rewrite `transcribe-video`
+- Replace Gemini call with a single POST to `https://api.deepgram.com/v1/listen?model=nova-3&smart_format=true&punctuate=true&detect_language=true&utterances=true&paragraphs=true`
+- Body: `{ url: buildVideoUrl(tokenId) }` (Deepgram fetches the MP4 directly — no upload).
+- Parse response:
+  - `vtt` from a second call with `&format=vtt` OR build VTT from `results.utterances` (word-grouped).
+  - `source_lang` from `results.channels[0].detected_language`.
+  - `segments[]` derived from utterances for backward compatibility with the translation pipeline.
+- Persist `vtt_original`, `source_lang`, `transcript: { segments, full_text }`.
+- Drop the chunked-retry loop entirely; Deepgram handles hours-long files in one call.
+
+### 4. Edge function: `translate-transcript` (small tweak)
+- Read `source_lang`. If requested `lang` equals `source_lang`, return original segments without calling the AI. Eliminates the "translate en→en" failure mode at the server level too.
+
+### 5. Client: `VideoSubtitleOverlay.tsx`
+- Add prop `videoElement: HTMLVideoElement | null` (already has `videoRef`).
+- When `normalizedLang === 'original'` AND `vtt_original` exists:
+  - Inject/replace a `<track kind="subtitles" src={blobUrl(vtt)} srclang={sourceLang} default>` onto the video element.
+  - Set `videoElement.textTracks[0].mode = 'showing'` (or `'hidden'` when CC off).
+  - Hide the custom caption layer — browser renders.
+- When language is a translation:
+  - Remove the native track (set `mode = 'disabled'`), render custom overlay as today (it already works fine for translations because timestamps come straight from utterances).
+- Size picker still works — for native captions we apply it via the standard `::cue { font-size: ... }` injected stylesheet; for custom overlay it works as today.
+
+### 6. Hook: `useVideoSubtitles`
+- Extend return to include `vttUrl` (object URL built from `vtt_original`) and `sourceLang`.
+- Memoize blob URL; revoke on unmount/lang change.
+
+### 7. Migrate existing rows
+- Any pre-existing `video_transcripts` rows without `vtt_original` keep working via the legacy overlay path. New transcripts use Deepgram. No backfill needed; users can re-trigger transcription on demand.
+
+## Verification before delivering
+
+1. Trigger transcription on a known token via the CC button.
+2. Inspect DB: `vtt_original` non-null, `source_lang` populated, `transcript.segments` populated.
+3. In preview: enable CC original → confirm captions render via native `<track>` (visible in DevTools `<video>` element), perfectly synced.
+4. Switch to Spanish/French → confirm overlay path renders translated text, no en→en garbage.
+5. Test size picker on both original (native `::cue`) and translated (overlay span) modes.
+6. Scrub video forward/back, check sync stays tight.
 
 ## Files
 
-- New: `supabase/functions/translate-transcript/index.ts`
-- New: `src/components/app/video/VideoSubtitleOverlay.tsx`
-- New: `src/hooks/use-video-subtitles.ts`
-- New: `src/lib/subtitle-languages.ts` (~30 language code/name pairs)
-- Edit: video player components above to mount the overlay
-- Migration: add `translations` column
-- Memory: add `mem://features/video/subtitles-system` rule (CC button everywhere, on-demand translation cached per language, localStorage persistence)
+- New migration: add `vtt_original`, `source_lang` columns
+- Edit: `supabase/functions/transcribe-video/index.ts` (rewrite core to Deepgram)
+- Edit: `supabase/functions/translate-transcript/index.ts` (short-circuit when lang === source_lang)
+- Edit: `src/hooks/use-video-subtitles.ts` (expose vtt + source lang)
+- Edit: `src/hooks/use-video-transcript.ts` (select new columns)
+- Edit: `src/components/app/video/VideoSubtitleOverlay.tsx` (native track mounting + `::cue` size)
+- Memory update: `mem://features/video/subtitles-system` → reflect Deepgram + native track standard
 
 ## Out of scope
 
-- Embedding subtitles into the video file
-- Real-time speech translation (uses stored transcript only)
-- Subtitle styling customization (font size / colour pickers)
+- Backfilling old transcripts (re-run on demand)
+- Diarization / speaker labels
+- Replacing Gemini translation with DeepL (can be a follow-up)
+
+## Needs from user
+
+- `DEEPGRAM_API_KEY` — sign up at deepgram.com, create an API key with default scope. I'll request it via the secrets tool once you approve this plan.
