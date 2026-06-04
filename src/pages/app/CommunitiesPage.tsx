@@ -21,6 +21,7 @@ import { useCommunityActivityUnreadCount } from '@/hooks/use-community-activity-
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
+import communitiesIcon from '@/assets/communities-icon.png.asset.json';
 
 export default function CommunitiesPage() {
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
@@ -130,34 +131,10 @@ export default function CommunitiesPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-4 gap-2">
         <div className="flex items-center gap-2 min-w-0">
-          <Users className="w-6 h-6 text-white shrink-0" />
+          <img src={communitiesIcon.url} alt="" className="w-7 h-7 shrink-0 object-contain" />
           <h1 className="text-xl font-bold text-white truncate">{t('communities.title')}</h1>
         </div>
         <div className="flex items-center gap-1.5 shrink-0">
-          <LiquidGlassBubble
-            shimmer
-            noBorder
-            onClick={() => setSortMode(sortMode === 'new' ? 'top' : 'new')}
-            className={cn(
-              "cursor-pointer flex-shrink-0 [&>div]:!rounded-xl [&>div]:!p-0 [&>div]:!h-full [&>div]:!flex [&>div]:!items-center [&>div]:!justify-center [&>div:before]:!rounded-xl [&>div:after]:!rounded-xl",
-              sortMode === 'new' ? "opacity-100" : "opacity-60 hover:opacity-90"
-            )}
-            style={{ width: '36px', height: '36px' }}
-          >
-            <span className="flex items-center justify-center w-full h-full text-base">💎</span>
-          </LiquidGlassBubble>
-          <LiquidGlassBubble
-            shimmer
-            noBorder
-            onClick={() => setSortMode(sortMode === 'hot' ? 'top' : 'hot')}
-            className={cn(
-              "cursor-pointer flex-shrink-0 [&>div]:!rounded-xl [&>div]:!p-0 [&>div]:!h-full [&>div]:!flex [&>div]:!items-center [&>div]:!justify-center [&>div:before]:!rounded-xl [&>div:after]:!rounded-xl",
-              sortMode === 'hot' ? "opacity-100" : "opacity-60 hover:opacity-90"
-            )}
-            style={{ width: '36px', height: '36px' }}
-          >
-            <span className="flex items-center justify-center w-full h-full text-base">🔥</span>
-          </LiquidGlassBubble>
           <LiquidGlassBubble2
             label={t('communities.create')}
             icon={<Plus className="w-4 h-4" />}
@@ -172,7 +149,6 @@ export default function CommunitiesPage() {
         </div>
       </div>
 
-      {/* Search */}
       {/* Tabs */}
       {isAuthenticated && ownedCommunityIds.length > 0 && (
         <div className="flex gap-1 mb-4 p-1 rounded-xl bg-white/[0.04] border border-white/[0.06]">
@@ -196,15 +172,41 @@ export default function CommunitiesPage() {
         </div>
       )}
 
-      <div className={`relative mb-4 ${tab !== 'communities' ? 'hidden' : ''}`}>
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-        <input
-          type="text"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          placeholder={t('communities.searchPlaceholder')}
-          className="w-full h-10 pl-10 pr-4 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder:text-zinc-600 outline-none focus:border-white/20 text-sm"
-        />
+      <div className={`flex items-center gap-1.5 mb-4 ${tab !== 'communities' ? 'hidden' : ''}`}>
+        <div className="relative flex-1 min-w-0">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+          <input
+            type="text"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            placeholder={t('communities.searchPlaceholder')}
+            className="w-full h-10 pl-10 pr-4 bg-white/[0.04] border border-white/[0.08] rounded-xl text-white placeholder:text-zinc-600 outline-none focus:border-white/20 text-sm"
+          />
+        </div>
+        <LiquidGlassBubble
+          shimmer
+          noBorder
+          onClick={() => setSortMode(sortMode === 'new' ? 'top' : 'new')}
+          className={cn(
+            "cursor-pointer flex-shrink-0 [&>div]:!rounded-xl [&>div]:!p-0 [&>div]:!h-full [&>div]:!flex [&>div]:!items-center [&>div]:!justify-center [&>div:before]:!rounded-xl [&>div:after]:!rounded-xl",
+            sortMode === 'new' ? "opacity-100" : "opacity-60 hover:opacity-90"
+          )}
+          style={{ width: '40px', height: '40px' }}
+        >
+          <span className="flex items-center justify-center w-full h-full text-base">💎</span>
+        </LiquidGlassBubble>
+        <LiquidGlassBubble
+          shimmer
+          noBorder
+          onClick={() => setSortMode(sortMode === 'hot' ? 'top' : 'hot')}
+          className={cn(
+            "cursor-pointer flex-shrink-0 [&>div]:!rounded-xl [&>div]:!p-0 [&>div]:!h-full [&>div]:!flex [&>div]:!items-center [&>div]:!justify-center [&>div:before]:!rounded-xl [&>div:after]:!rounded-xl",
+            sortMode === 'hot' ? "opacity-100" : "opacity-60 hover:opacity-90"
+          )}
+          style={{ width: '40px', height: '40px' }}
+        >
+          <span className="flex items-center justify-center w-full h-full text-base">🔥</span>
+        </LiquidGlassBubble>
       </div>
 
       {tab === 'activity' ? (
