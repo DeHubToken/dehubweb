@@ -240,7 +240,7 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
       el.id = id;
       document.head.appendChild(el);
     }
-    el.textContent = `video::cue { font-size: ${sizePxValue}px; background: rgba(0,0,0,0.6); color: #fff; white-space: nowrap; line-height: 1.2; }`;
+    el.textContent = `video::cue { font-size: ${sizePxValue}px; background: rgba(0,0,0,0.4); color: #fff; line-height: 1.3; }`;
   }, [sizePxValue]);
 
   if (!numericId) return null;
@@ -281,11 +281,12 @@ export function VideoSubtitleOverlay({ tokenId, videoRef, buttonClassName, butto
       {/* Caption text */}
       {enabled && currentText && (
         <div
-          className="absolute left-0 right-0 bottom-16 z-20 pointer-events-none px-3 text-center"
+          className="absolute left-0 right-0 z-20 pointer-events-none px-3 text-center"
+          style={{ bottom: `${48 + Math.max(0, sizePx - 11) * 2}px` }}
         >
           <span
-            className="block w-full bg-black/60 backdrop-blur-[24px] border border-white/10 text-white font-medium px-3 py-1.5 rounded-xl whitespace-nowrap overflow-hidden text-ellipsis"
-            style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)', fontSize: `${sizePx}px`, lineHeight: 1.2 }}
+            className="inline-block max-w-[90%] bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white px-1.5 py-0.5 rounded"
+            style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)', fontSize: `${sizePx}px`, lineHeight: 1.3 }}
           >
             {currentText}
           </span>
