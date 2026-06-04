@@ -428,7 +428,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   const headerContent = (
     <>
-      <div className="flex items-center justify-center relative">
+      <div data-login-logo-anchor="true" className="flex items-center justify-center relative">
         {step !== 'main' && (
           <button
             onClick={() => setStep('main')}
