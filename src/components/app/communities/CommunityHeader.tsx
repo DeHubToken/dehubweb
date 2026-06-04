@@ -116,11 +116,6 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
           </div>
         )}
-        {/* Created timestamp */}
-        <div className="absolute top-2 right-2 flex items-center gap-1 px-2 py-1 rounded-lg bg-black/50 backdrop-blur-sm border border-white/10">
-          <Clock className="w-3 h-3 text-zinc-400" />
-          <span className="text-[11px] text-zinc-300 font-medium">{formatRelativeTime(community.created_at)}</span>
-        </div>
       </div>
 
       {/* Avatar + buttons row */}
