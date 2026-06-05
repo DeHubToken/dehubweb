@@ -68,9 +68,10 @@ function StatRow({ label, value }: { label: string; value: string }) {
 export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProps) {
   const navigate = useNavigate();
   const { addChartPiP, isChartPiP } = useChartPiP();
+  const isDhb = pair.baseToken.symbol?.toUpperCase() === 'DHB';
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const [chartTimeframe, setChartTimeframe] = useState<ChartTimeframe>('7D');
+  const [chartTimeframe, setChartTimeframe] = useState<ChartTimeframe>(isDhb ? '1Y' : '7D');
   const { data: chartData, isLoading: isChartLoading } = useTokenChart(symbol, true, chartTimeframe, {
     contractAddress: pair.baseToken.address,
     chainId: pair.chainId,
@@ -79,7 +80,6 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
   
   const change24h = cmcData?.percentChange24h ?? pair.priceChange?.h24;
   const isPositive = change24h != null && change24h >= 0;
-  const isDhb = pair.baseToken.symbol?.toUpperCase() === 'DHB';
   const DHB_SUPPLY = 4_200_000_000;
   const priceNum = cmcData?.price ?? (pair.priceUsd ? parseFloat(pair.priceUsd) : null);
   const marketCap = isDhb && priceNum
