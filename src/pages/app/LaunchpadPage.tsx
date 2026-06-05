@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLaunchpadTokens, type LaunchpadFilter } from '@/hooks/use-launchpad-tokens';
 import { CoinCard } from '@/components/app/launchpad/CoinCard';
 import { LiveActivityTicker } from '@/components/app/launchpad/LiveActivityTicker';
+import { TrendingBar } from '@/components/app/launchpad/TrendingBar';
 
 const FILTERS: { id: LaunchpadFilter; label: string }[] = [
   { id: 'new', label: 'New' },
