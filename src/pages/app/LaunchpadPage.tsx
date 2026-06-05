@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { getLaunchpadBase } from '@/lib/launchpad/base-path';
 import { Helmet } from 'react-helmet-async';
 import { Rocket, Search } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
