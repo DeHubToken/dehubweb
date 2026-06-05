@@ -175,7 +175,7 @@ export function useAllTrendingCategories() {
     queryFn: () => fetchTrendingCategories('all', true),
     staleTime: TRENDING_CACHE_MS,
     gcTime: 30 * 60_000,
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
   });
 }
