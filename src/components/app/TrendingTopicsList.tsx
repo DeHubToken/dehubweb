@@ -139,22 +139,32 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
 
   return (
     <div style={{ minHeight }} className="relative overflow-hidden">
-      {/* Period tabs */}
-      <div className="flex mb-2">
-        {TOPIC_PERIODS.map(p => (
-          <button
-            key={p.value}
-            onClick={() => handlePeriodChange(p.value)}
-            className={cn(
-              'flex-1 text-xs font-semibold transition-colors duration-150 text-center py-1',
-              topicPeriod === p.value
-                ? 'text-white'
-                : 'text-zinc-500 hover:text-zinc-300'
-            )}
-          >
-            {p.label}
-          </button>
-        ))}
+      {/* Period tabs + refresh */}
+      <div className="flex items-center gap-1 mb-2">
+        <div className="flex flex-1">
+          {TOPIC_PERIODS.map(p => (
+            <button
+              key={p.value}
+              onClick={() => handlePeriodChange(p.value)}
+              className={cn(
+                'flex-1 text-xs font-semibold transition-colors duration-150 text-center py-1',
+                topicPeriod === p.value
+                  ? 'text-white'
+                  : 'text-zinc-500 hover:text-zinc-300'
+              )}
+            >
+              {p.label}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={handleRefresh}
+          disabled={isRefreshing}
+          aria-label="Refresh trending"
+          className="shrink-0 p-1 rounded-md text-zinc-500 hover:text-white transition-colors disabled:opacity-60"
+        >
+          <RefreshCw className={cn('w-3.5 h-3.5', isRefreshing && 'animate-spin')} />
+        </button>
       </div>
 
       <AnimatePresence mode="popLayout" custom={dirRef.current} initial={false}>
