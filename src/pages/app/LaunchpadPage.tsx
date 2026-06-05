@@ -20,6 +20,8 @@ export default function LaunchpadPage() {
   const { walletAddress } = useAuth() as { walletAddress?: string };
   const [filter, setFilter] = useState<LaunchpadFilter>('new');
   const [search, setSearch] = useState('');
+  const location = useLocation();
+  const base = getLaunchpadBase(location.pathname);
   const { data: tokens = [], isLoading } = useLaunchpadTokens(filter, walletAddress);
 
   const filtered = useMemo(() => {
