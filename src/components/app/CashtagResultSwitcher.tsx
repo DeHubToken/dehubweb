@@ -54,7 +54,7 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
         liquidity: null,
         fdv: cmcData.marketCap ?? null,
         marketCap: cmcData.marketCap ?? null,
-        info: cmcData.logo ? { imageUrl: cmcData.logo } : undefined,
+        info: { imageUrl: dhbCoinIcon },
       },
       ...dexPairs,
     ];
