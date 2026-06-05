@@ -99,8 +99,11 @@ Deno.serve(async (req) => {
       }
     }
 
-    // CoinGecko fallback for missing core symbols
-    const coreSymbols = ['DHB', 'ETH', 'BNB', 'USDT', 'USDC', 'BTC'];
+    // DHB pinned to $0.001 while trading is paused
+    prices.DHB = 0.001;
+
+    // CoinGecko fallback for missing core symbols (skip DHB — pinned)
+    const coreSymbols = ['ETH', 'BNB', 'USDT', 'USDC', 'BTC'];
     const missingSymbols = coreSymbols.filter(s => prices[s] === undefined || prices[s] === 0);
     if (missingSymbols.length > 0) {
       const geckoIds = missingSymbols.map(s => COINGECKO_IDS[s]).filter(Boolean);
