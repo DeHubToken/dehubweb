@@ -16,7 +16,7 @@ export interface CategoryCount {
 const EXCLUDED_CATEGORIES = new Set(['general', '', '-', 'other']);
 const TOP_LIMIT = 10;
 const PAGE_SIZE = 1000;
-const TRENDING_CACHE_MS = 5 * 60_000;
+const TRENDING_CACHE_MS = 60_000;
 
 function getPeriodCutoff(period: TopicPeriod): string {
   const now = new Date();
