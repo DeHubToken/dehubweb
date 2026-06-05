@@ -9,6 +9,7 @@ import { CoinCard } from '@/components/app/launchpad/CoinCard';
 import { LiveActivityTicker } from '@/components/app/launchpad/LiveActivityTicker';
 import { TrendingBar } from '@/components/app/launchpad/TrendingBar';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 
 const FILTERS: { id: LaunchpadFilter; label: string }[] = [
   { id: 'new', label: 'New' },
@@ -64,19 +65,16 @@ export default function LaunchpadPage() {
       <div className="mt-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="flex gap-1.5 overflow-x-auto -mx-1 px-1">
           {FILTERS.map(f => (
-            <button key={f.id} onClick={() => setFilter(f.id)} className="shrink-0">
-              <LiquidGlassBubble
-                shimmer={false}
-                noBorder={filter !== f.id}
-                className={`[&>div]:!rounded-xl [&>div]:!px-3 [&>div]:!py-1.5 transition-all ${
-                  filter === f.id
-                    ? '[&>div]:!bg-white [&>div]:!text-black [&>div]:!font-semibold [&>div]:!shadow-none [&>div]:!border-transparent'
-                    : '[&>div]:!text-white/70 [&>div]:!bg-gradient-to-br [&>div]:!from-white/[0.04] [&>div]:!via-white/[0.02] [&>div]:!to-transparent'
-                }`}
-              >
-                <span className="text-sm whitespace-nowrap">{f.label}</span>
-              </LiquidGlassBubble>
-            </button>
+            <LiquidGlassBubble2
+              key={f.id}
+              label={f.label}
+              active={filter === f.id}
+              shimmer={false}
+              onClick={() => setFilter(f.id)}
+              width="auto"
+              height="34px"
+              className="[&>div]:!px-3 [&>div]:!py-1.5 transition-all"
+            />
           ))}
         </div>
         <div className="relative md:w-72">
