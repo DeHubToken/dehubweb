@@ -15,7 +15,7 @@ const corsHeaders = {
 
 const DEHUB_API = 'https://api.dehub.io';
 const PAGE_SIZE = 100;
-const MAX_PAGES = 50; // Safety cap: 5000 posts max per sync
+const MAX_PAGES = 500; // Safety cap: 50,000 posts max per sync
 const EXCLUDED = new Set(['general', '', 'other']);
 
 interface FeedItem {
