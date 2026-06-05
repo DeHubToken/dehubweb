@@ -59,8 +59,6 @@ export default function LaunchpadCreatePage() {
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
 
-      {/* Render the launchpad behind the drawer so users see context */}
-      <LaunchpadPage />
 
       <Drawer open onOpenChange={(o) => { if (!o) close(); }}>
         <DrawerContent
