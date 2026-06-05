@@ -29,6 +29,47 @@ serve(async (req) => {
 
     const cleanSymbol = symbol.replace(/^\$/, '').toUpperCase();
 
+    // Manual override: $DHB (Dehub) — CMC doesn't list yet, trading paused.
+    // Hard-code price/name so the cashtag/search UI surfaces it.
+    if (cleanSymbol === 'DHB' || cleanSymbol === 'DEHUB') {
+      return new Response(JSON.stringify({
+        symbol: 'DHB',
+        name: 'Dehub',
+        slug: 'dehub',
+        cmcRank: null,
+        dateAdded: null,
+        tags: [],
+        maxSupply: null,
+        circulatingSupply: null,
+        totalSupply: null,
+        platform: null,
+        price: 0.001,
+        marketCap: null,
+        fullyDilutedMarketCap: null,
+        volume24h: null,
+        volumeChange24h: null,
+        percentChange1h: null,
+        percentChange24h: null,
+        percentChange7d: null,
+        percentChange30d: null,
+        percentChange60d: null,
+        percentChange90d: null,
+        marketCapDominance: null,
+        logo: null,
+        description: 'Dehub ($DHB) — price pinned to $0.001 until trading resumes.',
+        website: 'https://dehub.net',
+        twitter: 'https://twitter.com/dehub_official',
+        reddit: null,
+        chat: [],
+        explorer: [],
+        sourceCode: null,
+        category: null,
+      }), {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
     // Fetch quotes and metadata in parallel
     const [quotesRes, metaRes] = await Promise.all([
       fetch(
