@@ -6,7 +6,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { X } from 'lucide-react';
 import { getLaunchpadBase } from '@/lib/launchpad/base-path';
-import LaunchpadPage from './LaunchpadPage';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 
 export default function LaunchpadCreatePage() {
