@@ -216,7 +216,7 @@ Deno.serve(async (req: Request) => {
     console.log(`[sync-category-log] fetchedAll=${fetchedAll} inserted=${inserted} rows=${allRows.length}`);
 
     return new Response(
-      JSON.stringify({ ok: true, pages: page - 1, synced: upserted, purged, fetchedAll }),
+      JSON.stringify({ ok: true, pages: page - 1, inserted, rows: allRows.length, fetchedAll, fullReplace: !!purged }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
   } catch (err) {
