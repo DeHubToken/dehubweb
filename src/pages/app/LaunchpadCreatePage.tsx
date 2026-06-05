@@ -24,6 +24,26 @@ export default function LaunchpadCreatePage() {
   const [chainId, setChainId] = useState<8453 | 56>(8453);
   const [curveType, setCurveType] = useState<'standard' | 'fair' | 'stealth'>('standard');
   const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  async function handleImageUpload(file: File) {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { toast.error('Image files only'); return; }
+    if (file.size > 5 * 1024 * 1024) { toast.error('Max 5MB'); return; }
+    setUploading(true);
+    try {
+      const ext = file.name.split('.').pop() || 'png';
+      const path = `launchpad/${(walletAddress || 'anon').toLowerCase()}/${Date.now()}.${ext}`;
+      const { error } = await supabase.storage.from('ai-media-uploads').upload(path, file, {
+        cacheControl: '3600', upsert: false, contentType: file.type,
+      });
+      if (error) throw error;
+      const { data } = supabase.storage.from('ai-media-uploads').getPublicUrl(path);
+      setImageUrl(data.publicUrl);
+    } catch (e) {
+      toast.error((e as Error)?.message ?? 'Upload failed');
+    } finally { setUploading(false); }
+  }
 
   const canNext1 = name.trim().length >= 2 && /^[A-Z0-9]{2,8}$/.test(symbol);
   const canSubmit = canNext1;
