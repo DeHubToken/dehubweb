@@ -42,12 +42,17 @@ Deno.serve(async (req: Request) => {
 
     while (hasMore && page <= MAX_PAGES) {
       const url = `${DEHUB_API}/api/feed?page=${page}&limit=${PAGE_SIZE}&sortBy=createdAt&sortOrder=desc&status=all`;
-      const res = await fetch(url, {
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      });
-
-      if (!res.ok) {
-        console.error(`Feed API error on page ${page}: ${res.status}`);
+      let res: Response | null = null;
+      for (let attempt = 0; attempt < 5; attempt++) {
+        res = await fetch(url, {
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        });
+        if (res.status !== 429) break;
+        await res.text();
+        await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+      }
+      if (!res || !res.ok) {
+        console.error(`Feed API error on page ${page}: ${res?.status}`);
         break;
       }
 
