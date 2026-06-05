@@ -16,6 +16,8 @@ function fmtUsd(n: number) {
 
 export default function LaunchpadCoinPage() {
   const { mintId } = useParams<{ mintId: string }>();
+  const location = useLocation();
+  const base = getLaunchpadBase(location.pathname);
   const { data: token, isLoading } = useLaunchpadToken(mintId);
   const { data: trades = [] } = useLaunchpadTrades(mintId);
 
