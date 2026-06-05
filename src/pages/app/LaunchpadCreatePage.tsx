@@ -1,14 +1,17 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { ChevronLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { getLaunchpadBase } from '@/lib/launchpad/base-path';
 
 export default function LaunchpadCreatePage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const base = getLaunchpadBase(location.pathname);
   const { walletAddress, openLoginModal } = useAuth() as { walletAddress?: string; openLoginModal: () => void };
   const [step, setStep] = useState(1);
   const [name, setName] = useState('');
