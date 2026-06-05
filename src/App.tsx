@@ -193,8 +193,9 @@ function AppContent() {
               <Route path="video/:tokenId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
               <Route path="post/:postId/info" element={<Suspense fallback={<PageLoader />}><PostInfoPage /></Suspense>} />
               {/* Launchpad — hidden, no nav links, reachable by URL only */}
-              <Route path="launchpad" element={<Suspense fallback={<PageLoader />}><LaunchpadPage /></Suspense>} />
-              <Route path="launchpad/create" element={<Suspense fallback={<PageLoader />}><LaunchpadCreatePage /></Suspense>} />
+              <Route path="launchpad" element={<Suspense fallback={<PageLoader />}><LaunchpadPage /></Suspense>}>
+                <Route path="create" element={<Suspense fallback={null}><LaunchpadCreatePage /></Suspense>} />
+              </Route>
               <Route path="launchpad/:mintId" element={<Suspense fallback={<PageLoader />}><LaunchpadCoinPage /></Suspense>} />
             </Route>
 
