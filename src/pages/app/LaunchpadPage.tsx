@@ -8,6 +8,7 @@ import { useLaunchpadTokens, type LaunchpadFilter } from '@/hooks/use-launchpad-
 import { CoinCard } from '@/components/app/launchpad/CoinCard';
 import { LiveActivityTicker } from '@/components/app/launchpad/LiveActivityTicker';
 import { TrendingBar } from '@/components/app/launchpad/TrendingBar';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 
 const FILTERS: { id: LaunchpadFilter; label: string }[] = [
   { id: 'new', label: 'New' },
@@ -52,9 +53,10 @@ export default function LaunchpadPage() {
           <h2 className="text-white text-2xl md:text-3xl font-bold mt-1">TOKENISE BUSINESS</h2>
           <p className="text-white/60 text-sm mt-1">DHB-paired bonding curve. Graduates to Uniswap at $42K market cap.</p>
         </div>
-        <Link to={`${base}/create`}
-          className="rounded-2xl bg-white text-black font-semibold px-5 py-3 text-center hover:bg-white/90 transition-colors">
-          Create coin
+        <Link to={`${base}/create`}>
+          <LiquidGlassBubble shimmer className="inline-block [&>div]:!rounded-2xl [&>div]:!px-5 [&>div]:!py-3">
+            <span className="text-white font-semibold text-sm">Create coin</span>
+          </LiquidGlassBubble>
         </Link>
       </div>
 
@@ -62,10 +64,19 @@ export default function LaunchpadPage() {
       <div className="mt-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div className="flex gap-1.5 overflow-x-auto -mx-1 px-1">
           {FILTERS.map(f => (
-            <button key={f.id} onClick={() => setFilter(f.id)}
-              className={`rounded-xl px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors ${
-                filter === f.id ? 'bg-white text-black' : 'bg-white/5 text-white/70 hover:text-white'
-              }`}>{f.label}</button>
+            <button key={f.id} onClick={() => setFilter(f.id)} className="shrink-0">
+              <LiquidGlassBubble
+                shimmer={false}
+                noBorder={filter !== f.id}
+                className={`[&>div]:!rounded-xl [&>div]:!px-3 [&>div]:!py-1.5 transition-all ${
+                  filter === f.id
+                    ? '[&>div]:!bg-white [&>div]:!text-black [&>div]:!font-semibold [&>div]:!shadow-none [&>div]:!border-transparent'
+                    : '[&>div]:!text-white/70 [&>div]:!bg-gradient-to-br [&>div]:!from-white/[0.04] [&>div]:!via-white/[0.02] [&>div]:!to-transparent'
+                }`}
+              >
+                <span className="text-sm whitespace-nowrap">{f.label}</span>
+              </LiquidGlassBubble>
+            </button>
           ))}
         </div>
         <div className="relative md:w-72">
