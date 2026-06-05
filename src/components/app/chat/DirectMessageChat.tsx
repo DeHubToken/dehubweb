@@ -22,6 +22,7 @@ import { apiCall, getAuthToken, DEHUB_API_BASE } from '@/lib/api/dehub/core';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { GroupSettingsDrawer } from './GroupSettingsDrawer';
 import { SharedVideosDrawer } from './SharedVideosDrawer';
+import { FullscreenImageViewer } from '@/components/app/cards/FullscreenImageViewer';
 import { DmTipDialog } from './DmTipDialog';
 import { DmFeeInfoBanner } from './DmFeeInfoBanner';
 import { formatDistanceToNow } from 'date-fns';
@@ -130,12 +131,14 @@ function MessageBubble({
   highlightText,
   confirmedTxHashes,
   onPin,
+  onOpenImage,
 }: {
   message: DmMessage;
   isOwnMessage: boolean;
   highlightText?: string;
   confirmedTxHashes: React.MutableRefObject<Set<string>>;
   onPin?: (messageId: string) => void;
+  onOpenImage?: (url: string) => void;
 }) {
   // Call message — detect by emoji prefix in content (📞/📹/📵)
   const isCallMessage = message.msgType === 'msg' && /^[📞📹📵]/.test(message.content || '');
@@ -242,7 +245,8 @@ function MessageBubble({
                     <img
                       src={getMediaUrl(primaryMediaUrl)!}
                       alt="Shared image"
-                      className="max-w-full max-h-64 rounded-lg object-cover"
+                      className="max-w-full max-h-64 rounded-lg object-cover cursor-zoom-in"
+                      onClick={() => onOpenImage?.(getMediaUrl(primaryMediaUrl)!)}
                     />
                     {message.content && (
                       <TranslatableText text={message.content} className="text-sm mt-1" as="p" />
@@ -414,6 +418,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const [showTipDialog, setShowTipDialog] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [dmGateChecked, setDmGateChecked] = useState(false);
   const [dmGated, setDmGated] = useState(false);
@@ -1237,6 +1242,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
                 highlightText={searchLower}
                 confirmedTxHashes={confirmedTxHashes}
                 onPin={handlePinMessage}
+                onOpenImage={setFullscreenImage}
               />
             )});
           })()}
@@ -1353,6 +1359,12 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
           </div>
         </div>
       )}
+      <FullscreenImageViewer
+        images={fullscreenImage ? [fullscreenImage] : []}
+        initialIndex={0}
+        isOpen={!!fullscreenImage}
+        onClose={() => setFullscreenImage(null)}
+      />
     </div>
   );
 }
