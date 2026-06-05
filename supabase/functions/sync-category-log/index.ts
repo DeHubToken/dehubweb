@@ -101,136 +101,60 @@ Deno.serve(async (req: Request) => {
 
     console.log(`[sync-category-log] Fetched ${page - 1} pages, ${allRows.length} category entries`);
 
-    if (allRows.length === 0) {
+    if (allRows.length === 0 && !fetchedAll) {
       return new Response(
-        JSON.stringify({ ok: true, synced: 0 }),
+        JSON.stringify({ ok: true, synced: 0, fetchedAll }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       );
     }
 
-    // 2. Fetch existing token_ids to avoid duplicates
-    const existingTokenIds = new Set<string>();
-    const uniqueTokenIds = [...new Set(allRows.map(r => r.token_id))];
-    
-    // Fetch in batches of 200
-    for (let i = 0; i < uniqueTokenIds.length; i += 200) {
-      const batch = uniqueTokenIds.slice(i, i + 200);
-      const checkRes = await fetch(
-        `${supabaseUrl}/rest/v1/category_post_log?select=token_id,name&token_id=in.(${batch.join(',')})`,
-        {
-          headers: {
-            'Authorization': `Bearer ${serviceKey}`,
-            'apikey': serviceKey,
-          },
-        },
-      );
-      if (checkRes.ok) {
-        const existing = await checkRes.json();
-        for (const row of existing) {
-          existingTokenIds.add(`${row.token_id}:${row.name}`);
-        }
-      } else {
-        await checkRes.text();
-      }
-    }
-
-    // Filter to only new rows
-    const newRows = allRows.filter(r => !existingTokenIds.has(`${r.token_id}:${r.name}`));
-    console.log(`[sync-category-log] ${newRows.length} new entries to insert (${allRows.length - newRows.length} already exist)`);
-
-    if (newRows.length === 0) {
-      return new Response(
-        JSON.stringify({ ok: true, pages: page - 1, synced: 0 }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
-      );
-    }
-
-    // 3. Insert via RPC with ON CONFLICT DO NOTHING
-    const BATCH_SIZE = 500;
-    let upserted = 0;
-
-    for (let i = 0; i < newRows.length; i += BATCH_SIZE) {
-      const batch = newRows.slice(i, i + BATCH_SIZE);
-
-      const rpcRes = await fetch(
-        `${supabaseUrl}/rest/v1/rpc/bulk_insert_category_log`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${serviceKey}`,
-            'apikey': serviceKey,
-          },
-          body: JSON.stringify({ entries: batch }),
-        },
-      );
-
-      if (!rpcRes.ok) {
-        const errText = await rpcRes.text();
-        console.error(`[sync-category-log] RPC batch error: ${rpcRes.status} ${errText}`);
-      } else {
-        const count = await rpcRes.json();
-        upserted += (typeof count === 'number' ? count : 0);
-      }
-    }
-
-    console.log(`[sync-category-log] Upserted ${upserted} rows`);
-
-    // 4. Purge log rows whose token_id no longer exists in the feed (deleted posts).
+    let inserted = 0;
     let purged = 0;
-    if (fetchedAll && activeTokenIds.size > 0) {
-      // Fetch all token_ids currently in log
-      const loggedTokenIds = new Set<number>();
-      let offset = 0;
-      const LOG_PAGE = 1000;
-      while (true) {
-        const r = await fetch(
-          `${supabaseUrl}/rest/v1/category_post_log?select=token_id&limit=${LOG_PAGE}&offset=${offset}`,
-          { headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey } },
-        );
-        if (!r.ok) { await r.text(); break; }
-        const rows: Array<{ token_id: number }> = await r.json();
-        if (!rows.length) break;
-        for (const row of rows) loggedTokenIds.add(row.token_id);
-        if (rows.length < LOG_PAGE) break;
-        offset += LOG_PAGE;
-      }
 
-      const toDelete = [...loggedTokenIds].filter(id => !activeTokenIds.has(id));
-      console.log(`[sync-category-log] Purging ${toDelete.length} stale token_ids`);
-      for (let i = 0; i < toDelete.length; i += 200) {
-        const batch = toDelete.slice(i, i + 200);
-        const delRes = await fetch(
-          `${supabaseUrl}/rest/v1/category_post_log?token_id=in.(${batch.join(',')})`,
-          { method: 'DELETE', headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey, Prefer: 'return=minimal' } },
-        );
-        if (delRes.ok) purged += batch.length;
-        else console.error(`[sync-category-log] Purge batch failed: ${delRes.status} ${await delRes.text()}`);
-      }
-    }
-
-    // 5. Recompute the trending_categories aggregate table from the now-clean log.
     if (fetchedAll) {
-      const aggCounts = new Map<string, number>();
-      let offset = 0;
-      const AGG_PAGE = 1000;
-      while (true) {
-        const r = await fetch(
-          `${supabaseUrl}/rest/v1/category_post_log?select=name&limit=${AGG_PAGE}&offset=${offset}`,
-          { headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey } },
-        );
-        if (!r.ok) { await r.text(); break; }
-        const rows: Array<{ name: string }> = await r.json();
-        if (!rows.length) break;
-        for (const row of rows) {
-          const n = (row.name || '').trim().toLowerCase();
-          if (!n || EXCLUDED.has(n)) continue;
-          aggCounts.set(n, (aggCounts.get(n) || 0) + 1);
-        }
-        if (rows.length < AGG_PAGE) break;
-        offset += AGG_PAGE;
+      // FULL REPLACE: wipe log and re-insert from the live feed so deleted
+      // posts AND edited categories both propagate.
+      const wipeRes = await fetch(
+        `${supabaseUrl}/rest/v1/category_post_log?id=not.is.null`,
+        { method: 'DELETE', headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey, Prefer: 'return=minimal' } },
+      );
+      if (!wipeRes.ok) {
+        const err = await wipeRes.text();
+        console.error(`[sync-category-log] Wipe failed: ${wipeRes.status} ${err}`);
+      } else {
+        purged = 1; // marker
       }
-      // Wipe and rewrite aggregate
+
+      const BATCH_SIZE = 500;
+      for (let i = 0; i < allRows.length; i += BATCH_SIZE) {
+        const batch = allRows.slice(i, i + BATCH_SIZE);
+        const rpcRes = await fetch(
+          `${supabaseUrl}/rest/v1/rpc/bulk_insert_category_log`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${serviceKey}`,
+              apikey: serviceKey,
+            },
+            body: JSON.stringify({ entries: batch }),
+          },
+        );
+        if (!rpcRes.ok) {
+          console.error(`[sync-category-log] RPC batch error: ${rpcRes.status} ${await rpcRes.text()}`);
+        } else {
+          const count = await rpcRes.json();
+          inserted += (typeof count === 'number' ? count : 0);
+        }
+      }
+
+      // Rebuild trending_categories aggregate from allRows directly.
+      const aggCounts = new Map<string, number>();
+      for (const row of allRows) {
+        const n = (row.name || '').trim().toLowerCase();
+        if (!n || EXCLUDED.has(n)) continue;
+        aggCounts.set(n, (aggCounts.get(n) || 0) + 1);
+      }
       await fetch(`${supabaseUrl}/rest/v1/trending_categories?name=not.is.null`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey, Prefer: 'return=minimal' },
@@ -251,7 +175,45 @@ Deno.serve(async (req: Request) => {
           body: JSON.stringify(batch),
         });
       }
+    } else {
+      // Partial fetch (e.g. rate-limited) — fall back to insert-only to avoid wiping data.
+      const existingTokenIds = new Set<string>();
+      const uniqueTokenIds = [...new Set(allRows.map(r => r.token_id))];
+      for (let i = 0; i < uniqueTokenIds.length; i += 200) {
+        const batch = uniqueTokenIds.slice(i, i + 200);
+        const checkRes = await fetch(
+          `${supabaseUrl}/rest/v1/category_post_log?select=token_id,name&token_id=in.(${batch.join(',')})`,
+          { headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey } },
+        );
+        if (checkRes.ok) {
+          const existing = await checkRes.json();
+          for (const row of existing) existingTokenIds.add(`${row.token_id}:${row.name}`);
+        } else await checkRes.text();
+      }
+      const newRows = allRows.filter(r => !existingTokenIds.has(`${r.token_id}:${r.name}`));
+      const BATCH_SIZE = 500;
+      for (let i = 0; i < newRows.length; i += BATCH_SIZE) {
+        const batch = newRows.slice(i, i + BATCH_SIZE);
+        const rpcRes = await fetch(
+          `${supabaseUrl}/rest/v1/rpc/bulk_insert_category_log`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${serviceKey}`,
+              apikey: serviceKey,
+            },
+            body: JSON.stringify({ entries: batch }),
+          },
+        );
+        if (rpcRes.ok) {
+          const count = await rpcRes.json();
+          inserted += (typeof count === 'number' ? count : 0);
+        }
+      }
     }
+
+    console.log(`[sync-category-log] fetchedAll=${fetchedAll} inserted=${inserted} rows=${allRows.length}`);
 
     return new Response(
       JSON.stringify({ ok: true, pages: page - 1, synced: upserted, purged, fetchedAll }),
