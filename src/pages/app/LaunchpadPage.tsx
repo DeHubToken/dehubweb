@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { getLaunchpadBase } from '@/lib/launchpad/base-path';
 import { Helmet } from 'react-helmet-async';
 import { Rocket, Search } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -19,6 +20,8 @@ export default function LaunchpadPage() {
   const { walletAddress } = useAuth() as { walletAddress?: string };
   const [filter, setFilter] = useState<LaunchpadFilter>('new');
   const [search, setSearch] = useState('');
+  const location = useLocation();
+  const base = getLaunchpadBase(location.pathname);
   const { data: tokens = [], isLoading } = useLaunchpadTokens(filter, walletAddress);
 
   const filtered = useMemo(() => {
@@ -48,7 +51,7 @@ export default function LaunchpadPage() {
           <h2 className="text-white text-2xl md:text-3xl font-bold mt-1">Launch a coin in 30 seconds</h2>
           <p className="text-white/60 text-sm mt-1">DHB-paired bonding curve. Graduates to Uniswap at $42K market cap.</p>
         </div>
-        <Link to="/app/launchpad/create"
+        <Link to={`${base}/create`}
           className="rounded-2xl bg-white text-black font-semibold px-5 py-3 text-center hover:bg-white/90 transition-colors">
           Create coin
         </Link>
@@ -79,7 +82,7 @@ export default function LaunchpadPage() {
             ? <div className="text-white/50 text-sm">Loading…</div>
             : filtered.length === 0
               ? <div className="rounded-2xl bg-black/60 backdrop-blur-[24px] border border-white/10 p-10 text-center text-white/60">
-                  No coins yet. <Link to="/app/launchpad/create" className="text-white underline">Be the first.</Link>
+                  No coins yet. <Link to={`${base}/create`} className="text-white underline">Be the first.</Link>
                 </div>
               : <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {filtered.map(t => <CoinCard key={t.id} token={t} />)}

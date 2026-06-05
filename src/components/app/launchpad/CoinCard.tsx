@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { getLaunchpadBase } from '@/lib/launchpad/base-path';
 import { BondingCurveProgress } from './BondingCurveProgress';
 import type { LaunchpadToken } from '@/hooks/use-launchpad-tokens';
 
@@ -16,8 +17,9 @@ function fmtAge(iso: string) {
 }
 
 export function CoinCard({ token }: { token: LaunchpadToken }) {
+  const base = getLaunchpadBase(useLocation().pathname);
   return (
-    <Link to={`/app/launchpad/${token.id}`}
+    <Link to={`${base}/${token.id}`}
       className="group block rounded-2xl bg-black/60 backdrop-blur-[24px] border border-white/10 p-4 hover:border-white/25 transition-colors">
       <div className="flex items-start gap-3">
         <div className="relative h-14 w-14 rounded-xl overflow-hidden border border-white/10 bg-white/5 shrink-0">

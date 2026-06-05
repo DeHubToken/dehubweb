@@ -1,4 +1,5 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
+import { getLaunchpadBase } from '@/lib/launchpad/base-path';
 import { Helmet } from 'react-helmet-async';
 import { ChevronLeft } from 'lucide-react';
 import { useLaunchpadToken } from '@/hooks/use-launchpad-tokens';
@@ -15,6 +16,8 @@ function fmtUsd(n: number) {
 
 export default function LaunchpadCoinPage() {
   const { mintId } = useParams<{ mintId: string }>();
+  const location = useLocation();
+  const base = getLaunchpadBase(location.pathname);
   const { data: token, isLoading } = useLaunchpadToken(mintId);
   const { data: trades = [] } = useLaunchpadTrades(mintId);
 
@@ -29,7 +32,7 @@ export default function LaunchpadCoinPage() {
         <title>{`$${token.symbol} ${token.name} — Launchpad`}</title>
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
-      <Link to="/app/launchpad" className="inline-flex items-center text-white/60 hover:text-white text-sm">
+      <Link to={base} className="inline-flex items-center text-white/60 hover:text-white text-sm">
         <ChevronLeft className="h-4 w-4" /> Launchpad
       </Link>
 

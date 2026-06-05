@@ -1,14 +1,17 @@
 import { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { ChevronLeft } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { getLaunchpadBase } from '@/lib/launchpad/base-path';
 
 export default function LaunchpadCreatePage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const base = getLaunchpadBase(location.pathname);
   const { walletAddress, openLoginModal } = useAuth() as { walletAddress?: string; openLoginModal: () => void };
   const [step, setStep] = useState(1);
   const [name, setName] = useState('');
@@ -41,7 +44,7 @@ export default function LaunchpadCreatePage() {
       }).select().single();
       if (error) throw error;
       toast.success(`${symbol} launched`);
-      navigate(`/app/launchpad/${data.id}`);
+      navigate(`${base}/${data.id}`);
     } catch (e) {
       toast.error((e as Error)?.message ?? 'Failed to create');
     } finally { setSubmitting(false); }
@@ -53,7 +56,7 @@ export default function LaunchpadCreatePage() {
         <title>Create coin — Launchpad</title>
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
-      <Link to="/app/launchpad" className="inline-flex items-center text-white/60 hover:text-white text-sm">
+      <Link to={base} className="inline-flex items-center text-white/60 hover:text-white text-sm">
         <ChevronLeft className="h-4 w-4" /> Back to Launchpad
       </Link>
       <h1 className="text-white text-2xl font-bold mt-3">Create a coin</h1>

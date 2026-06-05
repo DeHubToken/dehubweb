@@ -201,6 +201,11 @@ function AppContent() {
             {/* Stage invite links */}
             <Route path="/stage/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
 
+            {/* Launchpad — public URL alias (hidden, no nav links) */}
+            <Route path="/launchpad" element={<Suspense fallback={<PageLoader />}><LaunchpadPage /></Suspense>} />
+            <Route path="/launchpad/create" element={<Suspense fallback={<PageLoader />}><LaunchpadCreatePage /></Suspense>} />
+            <Route path="/launchpad/:mintId" element={<Suspense fallback={<PageLoader />}><LaunchpadCoinPage /></Suspense>} />
+
             {/* Username profiles — inside shared layout so header never remounts */}
             <Route path="/:username" element={<Suspense fallback={<PageLoader />}><ProfilePage /></Suspense>} />
           </Route>
