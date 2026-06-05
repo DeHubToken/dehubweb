@@ -242,7 +242,8 @@ function MessageBubble({
                     <img
                       src={getMediaUrl(primaryMediaUrl)!}
                       alt="Shared image"
-                      className="max-w-full max-h-64 rounded-lg object-cover"
+                      className="max-w-full max-h-64 rounded-lg object-cover cursor-zoom-in"
+                      onClick={() => setFullscreenImage(getMediaUrl(primaryMediaUrl)!)}
                     />
                     {message.content && (
                       <TranslatableText text={message.content} className="text-sm mt-1" as="p" />
