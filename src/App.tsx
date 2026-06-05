@@ -193,8 +193,9 @@ function AppContent() {
               <Route path="video/:tokenId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
               <Route path="post/:postId/info" element={<Suspense fallback={<PageLoader />}><PostInfoPage /></Suspense>} />
               {/* Launchpad — hidden, no nav links, reachable by URL only */}
-              <Route path="launchpad" element={<Suspense fallback={<PageLoader />}><LaunchpadPage /></Suspense>} />
-              <Route path="launchpad/create" element={<Suspense fallback={<PageLoader />}><LaunchpadCreatePage /></Suspense>} />
+              <Route path="launchpad" element={<Suspense fallback={<PageLoader />}><LaunchpadPage /></Suspense>}>
+                <Route path="create" element={<Suspense fallback={null}><LaunchpadCreatePage /></Suspense>} />
+              </Route>
               <Route path="launchpad/:mintId" element={<Suspense fallback={<PageLoader />}><LaunchpadCoinPage /></Suspense>} />
             </Route>
 
@@ -202,8 +203,9 @@ function AppContent() {
             <Route path="/stage/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
 
             {/* Launchpad — public URL alias (hidden, no nav links) */}
-            <Route path="/launchpad" element={<Suspense fallback={<PageLoader />}><LaunchpadPage /></Suspense>} />
-            <Route path="/launchpad/create" element={<Suspense fallback={<PageLoader />}><LaunchpadCreatePage /></Suspense>} />
+            <Route path="/launchpad" element={<Suspense fallback={<PageLoader />}><LaunchpadPage /></Suspense>}>
+              <Route path="create" element={<Suspense fallback={null}><LaunchpadCreatePage /></Suspense>} />
+            </Route>
             <Route path="/launchpad/:mintId" element={<Suspense fallback={<PageLoader />}><LaunchpadCoinPage /></Suspense>} />
 
             {/* Username profiles — inside shared layout so header never remounts */}
