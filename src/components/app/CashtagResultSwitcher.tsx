@@ -7,6 +7,7 @@ import type { StockQuote } from '@/hooks/use-stock-quote';
 import type { DexPair } from '@/hooks/use-dexscreener';
 import type { CmcMarketData } from '@/hooks/use-cmc-market-cap';
 import { AnimatePresence, motion } from 'framer-motion';
+import dhbCoinIcon from '@/assets/dehub-coin.png';
 
 interface CashtagResultSwitcherProps {
   stockData: StockQuote | null;
