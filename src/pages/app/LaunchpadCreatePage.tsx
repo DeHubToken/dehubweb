@@ -44,7 +44,7 @@ export default function LaunchpadCreatePage() {
       }).select().single();
       if (error) throw error;
       toast.success(`${symbol} launched`);
-      navigate(`/app/launchpad/${data.id}`);
+      navigate(`${base}/${data.id}`);
     } catch (e) {
       toast.error((e as Error)?.message ?? 'Failed to create');
     } finally { setSubmitting(false); }
