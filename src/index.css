@@ -193,6 +193,20 @@ All colors MUST be HSL.
     display: none;
   }
 
+  /* Marquee auto-scroll */
+  .trending-marquee {
+    animation: trending-scroll 40s linear infinite;
+  }
+
+  @keyframes trending-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
   /* Invisible Scrollbar - still scrollable but hidden */
   .scrollbar-invisible {
     scrollbar-width: none;
