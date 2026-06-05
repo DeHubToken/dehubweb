@@ -117,14 +117,19 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
   const websiteUrl = cmcData?.website || dexWebsites[0]?.url;
   const dexScreenerUrl = pair.url || `https://dexscreener.com/${pair.chainId}/${pair.pairAddress}`;
 
+  const isDhb = pair.baseToken.symbol?.toUpperCase() === 'DHB';
+  const displayLogo = isDhb
+    ? (pair.info?.imageUrl || cmcData?.logo)
+    : (cmcData?.logo || pair.info?.imageUrl);
+
   return (
     <div className="bg-zinc-800/60 border border-zinc-700/50 rounded-2xl overflow-hidden mb-4">
       {/* Header */}
       <div className="p-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          {(cmcData?.logo || pair.info?.imageUrl) && (
+          {displayLogo && (
             <img
-              src={cmcData?.logo || pair.info?.imageUrl}
+              src={displayLogo}
               alt={pair.baseToken.symbol}
               className="w-10 h-10 rounded-full bg-zinc-700"
             />
@@ -150,7 +155,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
                     tokenType="crypto"
                     tokenAddress={pair.baseToken.address}
                     chainId={pair.chainId}
-                    tokenLogo={pair.info?.imageUrl}
+                    tokenLogo={displayLogo}
                   />
           <button
             onClick={(e) => {
@@ -158,7 +163,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
               addChartPiP({
                 symbol: pair.baseToken.symbol,
                 displayName: cmcData?.name || pair.baseToken.name,
-                logo: cmcData?.logo || pair.info?.imageUrl,
+                logo: displayLogo,
                 pairAddress: pair.pairAddress,
                 chainId: pair.chainId,
               });
