@@ -9,6 +9,7 @@ import { CoinCard } from '@/components/app/launchpad/CoinCard';
 import { LiveActivityTicker } from '@/components/app/launchpad/LiveActivityTicker';
 import { TrendingBar } from '@/components/app/launchpad/TrendingBar';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 
 const FILTERS: { id: LaunchpadFilter; label: string }[] = [
   { id: 'new', label: 'New' },
