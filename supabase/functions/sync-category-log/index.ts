@@ -35,8 +35,10 @@ Deno.serve(async (req: Request) => {
 
     // 1. Fetch posts from DeHub feed API, paginating through all content
     const allRows: Array<{ token_id: number; name: string; posted_at: string }> = [];
+    const activeTokenIds = new Set<number>();
     let page = 1;
     let hasMore = true;
+    let fetchedAll = false;
 
     while (hasMore && page <= MAX_PAGES) {
       const url = `${DEHUB_API}/api/feed?page=${page}&limit=${PAGE_SIZE}&sortBy=createdAt&sortOrder=desc&status=all`;
