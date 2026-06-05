@@ -28,11 +28,42 @@ export function CashtagResultSwitcher({ stockData, dexPairs, cmcData, symbol }: 
   const [userPicked, setUserPicked] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  // Special case: $DHB / $DEHUB — always show as Dehub token, never as a stock
+  const upperSym = symbol.toUpperCase().replace(/^\$/, '');
+  const isDhb = upperSym === 'DHB' || upperSym === 'DEHUB';
+  const hasDhbDexPair = dexPairs.some(p => p.baseToken?.symbol?.toUpperCase() === 'DHB');
+  if (isDhb && !hasDhbDexPair && cmcData) {
+    const syntheticPrice = cmcData.price ?? 0.001;
+    dexPairs = [
+      {
+        chainId: 'base',
+        dexId: 'dehub',
+        url: 'https://dehub.io',
+        pairAddress: '',
+        baseToken: {
+          address: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c',
+          name: cmcData.name || 'Dehub',
+          symbol: 'DHB',
+        },
+        quoteToken: { address: '', name: 'USD', symbol: 'USD' },
+        priceNative: String(syntheticPrice),
+        priceUsd: String(syntheticPrice),
+        priceChange: { h24: cmcData.percentChange24h ?? 0 },
+        volume: { h24: cmcData.volume24h ?? 0 },
+        liquidity: null,
+        fdv: cmcData.marketCap ?? null,
+        marketCap: cmcData.marketCap ?? null,
+        info: cmcData.logo ? { imageUrl: cmcData.logo } : undefined,
+      },
+      ...dexPairs,
+    ];
+  }
+
   // Build options list
   const options: ResultOption[] = [];
 
-  // Stock / commodity option
-  if (stockData?.found) {
+  // Stock / commodity option — skip for DHB so we never surface a stock result for Dehub
+  if (stockData?.found && !isDhb) {
     const isCommodity = stockData.instrumentType === 'FUTURE' || stockData.symbol?.includes('=F');
     options.push({
       id: 'stock',
