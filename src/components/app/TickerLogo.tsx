@@ -28,6 +28,8 @@ const KNOWN_LOGOS: Record<string, string> = {
   TRX: 'https://coin-images.coingecko.com/coins/images/1094/large/tron-logo.png',
   USDT: 'https://coin-images.coingecko.com/coins/images/325/large/Tether.png',
   USDC: 'https://coin-images.coingecko.com/coins/images/6319/large/usdc.png',
+  DHB: dhbCoinIcon,
+  DEHUB: dhbCoinIcon,
 };
 
 /** Stock/ETF symbol → company domain for Clearbit logo fallback */
