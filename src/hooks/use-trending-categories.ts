@@ -160,7 +160,7 @@ export function useTrendingCategories(period: TopicPeriod = 'all') {
     queryFn: () => fetchTrendingCategories(period),
     staleTime: TRENDING_CACHE_MS,
     gcTime: 30 * 60_000,
-    refetchOnMount: false,
+    refetchOnMount: true,
     refetchOnWindowFocus: false,
     placeholderData: (prev) => prev,
   });
