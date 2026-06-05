@@ -155,7 +155,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
                     tokenType="crypto"
                     tokenAddress={pair.baseToken.address}
                     chainId={pair.chainId}
-                    tokenLogo={pair.info?.imageUrl}
+                    tokenLogo={displayLogo}
                   />
           <button
             onClick={(e) => {
@@ -163,7 +163,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
               addChartPiP({
                 symbol: pair.baseToken.symbol,
                 displayName: cmcData?.name || pair.baseToken.name,
-                logo: cmcData?.logo || pair.info?.imageUrl,
+                logo: displayLogo,
                 pairAddress: pair.pairAddress,
                 chainId: pair.chainId,
               });
