@@ -272,9 +272,12 @@ export default function BuyCoinsPage() {
   });
 
 
+  const symbol = selectedToken?.symbol || 'DHB';
   const priceData = chainPriceData || generalPriceData;
   const effectiveAmount = customAmount ? Number(customAmount) : selectedAmount;
-  const tokenPrice = priceData?.price || 0;
+  const rawPrice = priceData?.price || 0;
+  // Peg DHB price at $0.001 for fiat gateway
+  const tokenPrice = symbol === 'DHB' ? 0.001 : rawPrice;
   const estimatedTokens = tokenPrice > 0 ? effectiveAmount / tokenPrice : 0;
   const isPending = checkoutMutation.isPending;
 
@@ -288,7 +291,6 @@ export default function BuyCoinsPage() {
       return;
     }
 
-    const symbol = selectedToken?.symbol || 'DHB';
     const tokensToReceive = Math.floor(estimatedTokens);
 
     {
