@@ -32,7 +32,7 @@ export default function LaunchpadCoinPage() {
         <title>{`$${token.symbol} ${token.name} — Launchpad`}</title>
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
-      <Link to="/app/launchpad" className="inline-flex items-center text-white/60 hover:text-white text-sm">
+      <Link to={base} className="inline-flex items-center text-white/60 hover:text-white text-sm">
         <ChevronLeft className="h-4 w-4" /> Launchpad
       </Link>
 
