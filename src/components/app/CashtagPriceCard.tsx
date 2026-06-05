@@ -122,7 +122,6 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
   const websiteUrl = cmcData?.website || dexWebsites[0]?.url;
   const dexScreenerUrl = pair.url || `https://dexscreener.com/${pair.chainId}/${pair.pairAddress}`;
 
-  const isDhb = pair.baseToken.symbol?.toUpperCase() === 'DHB';
   const displayLogo = isDhb
     ? (pair.info?.imageUrl || cmcData?.logo)
     : (cmcData?.logo || pair.info?.imageUrl);
