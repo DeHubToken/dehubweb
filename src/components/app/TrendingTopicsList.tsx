@@ -40,26 +40,12 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
 }: TrendingTopicsListProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const queryClient = useQueryClient();
   const [topicPeriod, setTopicPeriod] = useState<TopicPeriod>(defaultPeriod);
   const dirRef = useRef(0);
   const [isAutoRotating, setIsAutoRotating] = useState(true);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const loaderRef = useRef<HTMLDivElement>(null);
 
-  const handleRefresh = useCallback(async () => {
-    if (isRefreshing) return;
-    setIsRefreshing(true);
-    try {
-      await queryClient.invalidateQueries({ queryKey: ['trending-categories'] });
-      await queryClient.invalidateQueries({ queryKey: ['trending-categories-all-unlimited'] });
-      await queryClient.refetchQueries({ queryKey: ['trending-categories'] });
-      await queryClient.refetchQueries({ queryKey: ['trending-categories-all-unlimited'] });
-    } finally {
-      setTimeout(() => setIsRefreshing(false), 400);
-    }
-  }, [queryClient, isRefreshing]);
 
   const { data: limitedCategories = [] } = useTrendingCategories(topicPeriod);
   
