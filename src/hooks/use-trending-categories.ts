@@ -105,23 +105,33 @@ async function fetchFromLog(period: TopicPeriod): Promise<CategoryCount[]> {
 }
 
 /**
- * Fetch from the aggregate trending_categories table (for "All" period).
+ * Fetch from category_post_log without time cutoff (for "All" period).
  */
-async function fetchFromAggregateTable(): Promise<CategoryCount[]> {
-  const { data, error } = await supabase
-    .from('trending_categories')
-    .select('name, post_count')
-    .order('post_count', { ascending: false })
-    .order('updated_at', { ascending: false });
+async function fetchFromLogAll(): Promise<CategoryCount[]> {
+  const rows: Array<{ name: string | null }> = [];
+  let from = 0;
 
-  if (error) throw error;
+  while (true) {
+    const { data, error } = await supabase
+      .from('category_post_log')
+      .select('name')
+      .range(from, from + PAGE_SIZE - 1);
+
+    if (error) throw error;
+    const chunk = data || [];
+    if (chunk.length === 0) break;
+    rows.push(...chunk);
+    if (chunk.length < PAGE_SIZE) break;
+    from += PAGE_SIZE;
+  }
+
+  if (!rows.length) return [];
 
   const counts = new Map<string, number>();
-  for (const row of data || []) {
+  for (const row of rows) {
     const normalized = normalizeCategoryName(row.name);
     if (!normalized || EXCLUDED_CATEGORIES.has(normalized)) continue;
-    const value = typeof row.post_count === 'number' ? row.post_count : Number(row.post_count ?? 0);
-    counts.set(normalized, Math.max(counts.get(normalized) || 0, Number.isFinite(value) ? value : 0));
+    counts.set(normalized, (counts.get(normalized) || 0) + 1);
   }
 
   return Array.from(counts.entries())
@@ -133,13 +143,11 @@ async function fetchTrendingCategories(period: TopicPeriod, fetchAll = false): P
   let computed: CategoryCount[];
 
   if (period === 'all') {
-    // "All" uses the aggregate table as-is
-    computed = await fetchFromAggregateTable();
+    // "All" aggregates the full event log (synced from feed API)
+    computed = await fetchFromLogAll();
   } else {
-    // 1D/1W/1M/1Y use the time-filtered event log (synced from feed API)
-    const logData = await fetchFromLog(period);
-    // Fall back to aggregate if log is too sparse (sync hasn't run yet)
-    computed = logData;
+    // 1D/1W/1M/1Y use the time-filtered event log
+    computed = await fetchFromLog(period);
   }
 
   if (fetchAll) return computed;
