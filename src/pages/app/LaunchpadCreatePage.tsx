@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { X } from 'lucide-react';
+import { X, Upload, Loader2 } from 'lucide-react';
 import { getLaunchpadBase } from '@/lib/launchpad/base-path';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 
