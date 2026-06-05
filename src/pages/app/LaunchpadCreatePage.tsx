@@ -56,7 +56,7 @@ export default function LaunchpadCreatePage() {
         <title>Create coin — Launchpad</title>
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
-      <Link to="/app/launchpad" className="inline-flex items-center text-white/60 hover:text-white text-sm">
+      <Link to={base} className="inline-flex items-center text-white/60 hover:text-white text-sm">
         <ChevronLeft className="h-4 w-4" /> Back to Launchpad
       </Link>
       <h1 className="text-white text-2xl font-bold mt-3">Create a coin</h1>
