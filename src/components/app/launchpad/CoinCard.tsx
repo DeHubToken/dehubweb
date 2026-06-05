@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { getLaunchpadBase } from '@/lib/launchpad/base-path';
 import { BondingCurveProgress } from './BondingCurveProgress';
 import type { LaunchpadToken } from '@/hooks/use-launchpad-tokens';
 
