@@ -58,6 +58,7 @@ Deno.serve(async (req: Request) => {
 
       for (const item of items) {
         if (!item.tokenId || !item.createdAt) continue;
+        activeTokenIds.add(item.tokenId);
 
         const cats = Array.isArray(item.category)
           ? item.category
