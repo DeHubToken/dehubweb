@@ -170,8 +170,85 @@ Deno.serve(async (req: Request) => {
 
     console.log(`[sync-category-log] Upserted ${upserted} rows`);
 
+    // 4. Purge log rows whose token_id no longer exists in the feed (deleted posts).
+    let purged = 0;
+    if (fetchedAll && activeTokenIds.size > 0) {
+      // Fetch all token_ids currently in log
+      const loggedTokenIds = new Set<number>();
+      let offset = 0;
+      const LOG_PAGE = 1000;
+      while (true) {
+        const r = await fetch(
+          `${supabaseUrl}/rest/v1/category_post_log?select=token_id&limit=${LOG_PAGE}&offset=${offset}`,
+          { headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey } },
+        );
+        if (!r.ok) { await r.text(); break; }
+        const rows: Array<{ token_id: number }> = await r.json();
+        if (!rows.length) break;
+        for (const row of rows) loggedTokenIds.add(row.token_id);
+        if (rows.length < LOG_PAGE) break;
+        offset += LOG_PAGE;
+      }
+
+      const toDelete = [...loggedTokenIds].filter(id => !activeTokenIds.has(id));
+      console.log(`[sync-category-log] Purging ${toDelete.length} stale token_ids`);
+      for (let i = 0; i < toDelete.length; i += 200) {
+        const batch = toDelete.slice(i, i + 200);
+        const delRes = await fetch(
+          `${supabaseUrl}/rest/v1/category_post_log?token_id=in.(${batch.join(',')})`,
+          { method: 'DELETE', headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey, Prefer: 'return=minimal' } },
+        );
+        if (delRes.ok) purged += batch.length;
+        else console.error(`[sync-category-log] Purge batch failed: ${delRes.status} ${await delRes.text()}`);
+      }
+    }
+
+    // 5. Recompute the trending_categories aggregate table from the now-clean log.
+    if (fetchedAll) {
+      const aggCounts = new Map<string, number>();
+      let offset = 0;
+      const AGG_PAGE = 1000;
+      while (true) {
+        const r = await fetch(
+          `${supabaseUrl}/rest/v1/category_post_log?select=name&limit=${AGG_PAGE}&offset=${offset}`,
+          { headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey } },
+        );
+        if (!r.ok) { await r.text(); break; }
+        const rows: Array<{ name: string }> = await r.json();
+        if (!rows.length) break;
+        for (const row of rows) {
+          const n = (row.name || '').trim().toLowerCase();
+          if (!n || EXCLUDED.has(n)) continue;
+          aggCounts.set(n, (aggCounts.get(n) || 0) + 1);
+        }
+        if (rows.length < AGG_PAGE) break;
+        offset += AGG_PAGE;
+      }
+      // Wipe and rewrite aggregate
+      await fetch(`${supabaseUrl}/rest/v1/trending_categories?name=not.is.null`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey, Prefer: 'return=minimal' },
+      });
+      const aggRows = [...aggCounts.entries()].map(([name, post_count]) => ({
+        name, post_count, updated_at: new Date().toISOString(),
+      }));
+      for (let i = 0; i < aggRows.length; i += 500) {
+        const batch = aggRows.slice(i, i + 500);
+        await fetch(`${supabaseUrl}/rest/v1/trending_categories`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${serviceKey}`,
+            apikey: serviceKey,
+            Prefer: 'return=minimal,resolution=merge-duplicates',
+          },
+          body: JSON.stringify(batch),
+        });
+      }
+    }
+
     return new Response(
-      JSON.stringify({ ok: true, pages: page - 1, synced: upserted }),
+      JSON.stringify({ ok: true, pages: page - 1, synced: upserted, purged, fetchedAll }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
   } catch (err) {
