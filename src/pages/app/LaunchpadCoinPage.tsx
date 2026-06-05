@@ -1,4 +1,5 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useLocation } from 'react-router-dom';
+import { getLaunchpadBase } from '@/lib/launchpad/base-path';
 import { Helmet } from 'react-helmet-async';
 import { ChevronLeft } from 'lucide-react';
 import { useLaunchpadToken } from '@/hooks/use-launchpad-tokens';
