@@ -414,6 +414,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   const [showTipDialog, setShowTipDialog] = useState(false);
   const [showSearchBar, setShowSearchBar] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [dmGateChecked, setDmGateChecked] = useState(false);
   const [dmGated, setDmGated] = useState(false);
