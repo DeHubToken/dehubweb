@@ -1241,6 +1241,7 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
                 highlightText={searchLower}
                 confirmedTxHashes={confirmedTxHashes}
                 onPin={handlePinMessage}
+                onOpenImage={setFullscreenImage}
               />
             )});
           })()}
