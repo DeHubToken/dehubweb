@@ -90,6 +90,7 @@ export default function LaunchpadPage() {
         </div>
         <LiveActivityTicker />
       </div>
+      <Outlet />
     </div>
   );
 }
