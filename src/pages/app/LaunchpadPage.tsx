@@ -76,6 +76,11 @@ export default function LaunchpadPage() {
         </div>
       </div>
 
+      {/* Trending bar */}
+      <div className="mt-4">
+        <TrendingBar />
+      </div>
+
       {/* Grid + ticker */}
       <div className="mt-5 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5">
         <div>
