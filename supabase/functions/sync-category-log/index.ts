@@ -87,6 +87,10 @@ Deno.serve(async (req: Request) => {
 
       hasMore = json.pagination?.hasMore ?? items.length >= PAGE_SIZE;
       page++;
+      if (!hasMore) fetchedAll = true;
+    }
+    if (page > MAX_PAGES) {
+      console.warn(`[sync-category-log] Hit MAX_PAGES cap; skipping purge`);
     }
 
     console.log(`[sync-category-log] Fetched ${page - 1} pages, ${allRows.length} category entries`);
