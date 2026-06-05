@@ -72,6 +72,14 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const [chartTimeframe, setChartTimeframe] = useState<ChartTimeframe>(isDhb ? '1Y' : '7D');
+  const { data: chartData, isLoading: isChartLoading } = useTokenChart(symbol, true, chartTimeframe, {
+    contractAddress: pair.baseToken.address,
+    chainId: pair.chainId,
+    pairAddress: pair.pairAddress,
+  });
+  
+  const change24h = cmcData?.percentChange24h ?? pair.priceChange?.h24;
+  const isPositive = change24h != null && change24h >= 0;
   const DHB_SUPPLY = 4_200_000_000;
   const priceNum = cmcData?.price ?? (pair.priceUsd ? parseFloat(pair.priceUsd) : null);
   const marketCap = isDhb && priceNum
