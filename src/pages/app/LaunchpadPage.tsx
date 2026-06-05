@@ -7,6 +7,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useLaunchpadTokens, type LaunchpadFilter } from '@/hooks/use-launchpad-tokens';
 import { CoinCard } from '@/components/app/launchpad/CoinCard';
 import { LiveActivityTicker } from '@/components/app/launchpad/LiveActivityTicker';
+import { TrendingBar } from '@/components/app/launchpad/TrendingBar';
 
 const FILTERS: { id: LaunchpadFilter; label: string }[] = [
   { id: 'new', label: 'New' },
@@ -73,6 +74,11 @@ export default function LaunchpadPage() {
             placeholder="Search ticker, name, creator"
             className="w-full rounded-xl bg-white/5 border border-white/10 pl-9 pr-3 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-white/30" />
         </div>
+      </div>
+
+      {/* Trending bar */}
+      <div className="mt-4">
+        <TrendingBar />
       </div>
 
       {/* Grid + ticker */}
