@@ -112,9 +112,28 @@ export default function LaunchpadCreatePage() {
                   <textarea value={description} onChange={e => setDescription(e.target.value)} rows={3} maxLength={280}
                     placeholder="Tell the world what this is" className={inputCls} />
                 </Field>
-                <Field label="Image URL (optional)">
-                  <input value={imageUrl} onChange={e => setImageUrl(e.target.value)}
-                    placeholder="https://…" className={inputCls} />
+                <Field label="Image (optional)">
+                  <label className={`flex items-center gap-3 rounded-xl border border-dashed border-white/15 bg-white/5 px-3 py-3 cursor-pointer hover:border-white/30 transition-colors ${uploading ? 'opacity-60 pointer-events-none' : ''}`}>
+                    {imageUrl ? (
+                      <img src={imageUrl} alt="" className="h-12 w-12 rounded-lg object-cover" />
+                    ) : (
+                      <div className="h-12 w-12 rounded-lg bg-white/5 flex items-center justify-center">
+                        {uploading ? <Loader2 className="h-5 w-5 text-white/60 animate-spin" /> : <Upload className="h-5 w-5 text-white/50" />}
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm text-white">{imageUrl ? 'Replace image' : 'Upload image'}</div>
+                      <div className="text-[11px] text-white/40">PNG/JPG/GIF · up to 5MB</div>
+                    </div>
+                    {imageUrl && (
+                      <button type="button" onClick={(e) => { e.preventDefault(); setImageUrl(''); }}
+                        className="rounded-md p-1 text-white/50 hover:text-white hover:bg-white/10">
+                        <X className="h-4 w-4" />
+                      </button>
+                    )}
+                    <input type="file" accept="image/*" className="hidden"
+                      onChange={e => { const f = e.target.files?.[0]; if (f) handleImageUpload(f); e.target.value = ''; }} />
+                  </label>
                 </Field>
                 <div className="grid grid-cols-3 gap-2">
                   <input value={website} onChange={e => setWebsite(e.target.value)} placeholder="Website" className={inputCls} />
