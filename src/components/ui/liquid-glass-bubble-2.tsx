@@ -22,6 +22,10 @@ export interface LiquidGlassBubble2Props {
   height?: string;
   /** Additional className */
   className?: string;
+  /** Active / selected state — white bg, black text */
+  active?: boolean;
+  /** Enable hover shimmer (default: true) */
+  shimmer?: boolean;
 }
 
 /**
