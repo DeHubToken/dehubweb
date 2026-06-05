@@ -54,7 +54,7 @@ Deno.serve(async (req: Request) => {
       const json = await res.json();
       const items: FeedItem[] = json.result || [];
 
-      if (items.length === 0) break;
+      if (items.length === 0) { fetchedAll = true; break; }
 
       for (const item of items) {
         if (!item.tokenId || !item.createdAt) continue;
