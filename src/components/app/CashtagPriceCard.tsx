@@ -79,7 +79,12 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
   
   const change24h = cmcData?.percentChange24h ?? pair.priceChange?.h24;
   const isPositive = change24h != null && change24h >= 0;
-  const marketCap = cmcData?.marketCap || pair.marketCap || pair.fdv;
+  const isDhb = pair.baseToken.symbol?.toUpperCase() === 'DHB';
+  const DHB_SUPPLY = 4_200_000_000;
+  const priceNum = cmcData?.price ?? (pair.priceUsd ? parseFloat(pair.priceUsd) : null);
+  const marketCap = isDhb && priceNum
+    ? priceNum * DHB_SUPPLY
+    : (cmcData?.marketCap || pair.marketCap || pair.fdv);
   const volume24h = cmcData?.volume24h || pair.volume?.h24;
   const displayPrice = cmcData?.price ? formatPrice(cmcData.price) : formatPrice(pair.priceUsd);
   
