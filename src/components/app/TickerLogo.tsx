@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import dhbCoinIcon from '@/assets/dehub-coin.png';
 
 interface TickerLogoProps {
   symbol: string;
