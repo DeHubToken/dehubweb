@@ -291,7 +291,6 @@ export default function BuyCoinsPage() {
       return;
     }
 
-    const symbol = selectedToken?.symbol || 'DHB';
     const tokensToReceive = Math.floor(estimatedTokens);
 
     {
