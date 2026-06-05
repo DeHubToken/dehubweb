@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { X } from 'lucide-react';
+import { X, Upload, Loader2 } from 'lucide-react';
 import { getLaunchpadBase } from '@/lib/launchpad/base-path';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 
@@ -24,6 +24,26 @@ export default function LaunchpadCreatePage() {
   const [chainId, setChainId] = useState<8453 | 56>(8453);
   const [curveType, setCurveType] = useState<'standard' | 'fair' | 'stealth'>('standard');
   const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  async function handleImageUpload(file: File) {
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { toast.error('Image files only'); return; }
+    if (file.size > 5 * 1024 * 1024) { toast.error('Max 5MB'); return; }
+    setUploading(true);
+    try {
+      const ext = file.name.split('.').pop() || 'png';
+      const path = `launchpad/${(walletAddress || 'anon').toLowerCase()}/${Date.now()}.${ext}`;
+      const { error } = await supabase.storage.from('ai-media-uploads').upload(path, file, {
+        cacheControl: '3600', upsert: false, contentType: file.type,
+      });
+      if (error) throw error;
+      const { data } = supabase.storage.from('ai-media-uploads').getPublicUrl(path);
+      setImageUrl(data.publicUrl);
+    } catch (e) {
+      toast.error((e as Error)?.message ?? 'Upload failed');
+    } finally { setUploading(false); }
+  }
 
   const canNext1 = name.trim().length >= 2 && /^[A-Z0-9]{2,8}$/.test(symbol);
   const canSubmit = canNext1;
@@ -92,9 +112,28 @@ export default function LaunchpadCreatePage() {
                   <textarea value={description} onChange={e => setDescription(e.target.value)} rows={3} maxLength={280}
                     placeholder="Tell the world what this is" className={inputCls} />
                 </Field>
-                <Field label="Image URL (optional)">
-                  <input value={imageUrl} onChange={e => setImageUrl(e.target.value)}
-                    placeholder="https://…" className={inputCls} />
+                <Field label="Image (optional)">
+                  <label className={`flex items-center gap-3 rounded-xl border border-dashed border-white/15 bg-white/5 px-3 py-3 cursor-pointer hover:border-white/30 transition-colors ${uploading ? 'opacity-60 pointer-events-none' : ''}`}>
+                    {imageUrl ? (
+                      <img src={imageUrl} alt="" className="h-12 w-12 rounded-lg object-cover" />
+                    ) : (
+                      <div className="h-12 w-12 rounded-lg bg-white/5 flex items-center justify-center">
+                        {uploading ? <Loader2 className="h-5 w-5 text-white/60 animate-spin" /> : <Upload className="h-5 w-5 text-white/50" />}
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="text-sm text-white">{imageUrl ? 'Replace image' : 'Upload image'}</div>
+                      <div className="text-[11px] text-white/40">PNG/JPG/GIF · up to 5MB</div>
+                    </div>
+                    {imageUrl && (
+                      <button type="button" onClick={(e) => { e.preventDefault(); setImageUrl(''); }}
+                        className="rounded-md p-1 text-white/50 hover:text-white hover:bg-white/10">
+                        <X className="h-4 w-4" />
+                      </button>
+                    )}
+                    <input type="file" accept="image/*" className="hidden"
+                      onChange={e => { const f = e.target.files?.[0]; if (f) handleImageUpload(f); e.target.value = ''; }} />
+                  </label>
                 </Field>
                 <div className="grid grid-cols-3 gap-2">
                   <input value={website} onChange={e => setWebsite(e.target.value)} placeholder="Website" className={inputCls} />
