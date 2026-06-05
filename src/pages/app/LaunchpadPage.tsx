@@ -48,7 +48,7 @@ export default function LaunchpadPage() {
           <div className="flex items-center gap-2 text-white/60 text-xs uppercase tracking-wide">
             <Rocket className="h-3.5 w-3.5" /> Phase 1 · Private preview
           </div>
-          <h2 className="text-white text-2xl md:text-3xl font-bold mt-1">Launch a coin in 30 seconds</h2>
+          <h2 className="text-white text-2xl md:text-3xl font-bold mt-1">TOKENISE BUSINESS</h2>
           <p className="text-white/60 text-sm mt-1">DHB-paired bonding curve. Graduates to Uniswap at $42K market cap.</p>
         </div>
         <Link to={`${base}/create`}
