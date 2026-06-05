@@ -1358,6 +1358,12 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
           </div>
         </div>
       )}
+      <FullscreenImageViewer
+        images={fullscreenImage ? [fullscreenImage] : []}
+        initialIndex={0}
+        isOpen={!!fullscreenImage}
+        onClose={() => setFullscreenImage(null)}
+      />
     </div>
   );
 }
