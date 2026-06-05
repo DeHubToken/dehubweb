@@ -70,7 +70,7 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
   const { addChartPiP, isChartPiP } = useChartPiP();
   const [copied, setCopied] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const [chartTimeframe, setChartTimeframe] = useState<ChartTimeframe>('7D');
+  const [chartTimeframe, setChartTimeframe] = useState<ChartTimeframe>(isDhb ? '1Y' : '7D');
   const { data: chartData, isLoading: isChartLoading } = useTokenChart(symbol, true, chartTimeframe, {
     contractAddress: pair.baseToken.address,
     chainId: pair.chainId,
