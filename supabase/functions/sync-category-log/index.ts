@@ -15,7 +15,7 @@ const corsHeaders = {
 
 const DEHUB_API = 'https://api.dehub.io';
 const PAGE_SIZE = 100;
-const MAX_PAGES = 50; // Safety cap: 5000 posts max per sync
+const MAX_PAGES = 500; // Safety cap: 50,000 posts max per sync
 const EXCLUDED = new Set(['general', '', 'other']);
 
 interface FeedItem {
@@ -35,27 +35,35 @@ Deno.serve(async (req: Request) => {
 
     // 1. Fetch posts from DeHub feed API, paginating through all content
     const allRows: Array<{ token_id: number; name: string; posted_at: string }> = [];
+    const activeTokenIds = new Set<number>();
     let page = 1;
     let hasMore = true;
+    let fetchedAll = false;
 
     while (hasMore && page <= MAX_PAGES) {
       const url = `${DEHUB_API}/api/feed?page=${page}&limit=${PAGE_SIZE}&sortBy=createdAt&sortOrder=desc&status=all`;
-      const res = await fetch(url, {
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      });
-
-      if (!res.ok) {
-        console.error(`Feed API error on page ${page}: ${res.status}`);
+      let res: Response | null = null;
+      for (let attempt = 0; attempt < 5; attempt++) {
+        res = await fetch(url, {
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        });
+        if (res.status !== 429) break;
+        await res.text();
+        await new Promise(r => setTimeout(r, 1000 * (attempt + 1)));
+      }
+      if (!res || !res.ok) {
+        console.error(`Feed API error on page ${page}: ${res?.status}`);
         break;
       }
 
       const json = await res.json();
       const items: FeedItem[] = json.result || [];
 
-      if (items.length === 0) break;
+      if (items.length === 0) { fetchedAll = true; break; }
 
       for (const item of items) {
         if (!item.tokenId || !item.createdAt) continue;
+        activeTokenIds.add(item.tokenId);
 
         const cats = Array.isArray(item.category)
           ? item.category
@@ -84,6 +92,11 @@ Deno.serve(async (req: Request) => {
 
       hasMore = json.pagination?.hasMore ?? items.length >= PAGE_SIZE;
       page++;
+      if (!hasMore) fetchedAll = true;
+      else await new Promise(r => setTimeout(r, 150));
+    }
+    if (page > MAX_PAGES) {
+      console.warn(`[sync-category-log] Hit MAX_PAGES cap; skipping purge`);
     }
 
     console.log(`[sync-category-log] Fetched ${page - 1} pages, ${allRows.length} category entries`);
@@ -163,8 +176,85 @@ Deno.serve(async (req: Request) => {
 
     console.log(`[sync-category-log] Upserted ${upserted} rows`);
 
+    // 4. Purge log rows whose token_id no longer exists in the feed (deleted posts).
+    let purged = 0;
+    if (fetchedAll && activeTokenIds.size > 0) {
+      // Fetch all token_ids currently in log
+      const loggedTokenIds = new Set<number>();
+      let offset = 0;
+      const LOG_PAGE = 1000;
+      while (true) {
+        const r = await fetch(
+          `${supabaseUrl}/rest/v1/category_post_log?select=token_id&limit=${LOG_PAGE}&offset=${offset}`,
+          { headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey } },
+        );
+        if (!r.ok) { await r.text(); break; }
+        const rows: Array<{ token_id: number }> = await r.json();
+        if (!rows.length) break;
+        for (const row of rows) loggedTokenIds.add(row.token_id);
+        if (rows.length < LOG_PAGE) break;
+        offset += LOG_PAGE;
+      }
+
+      const toDelete = [...loggedTokenIds].filter(id => !activeTokenIds.has(id));
+      console.log(`[sync-category-log] Purging ${toDelete.length} stale token_ids`);
+      for (let i = 0; i < toDelete.length; i += 200) {
+        const batch = toDelete.slice(i, i + 200);
+        const delRes = await fetch(
+          `${supabaseUrl}/rest/v1/category_post_log?token_id=in.(${batch.join(',')})`,
+          { method: 'DELETE', headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey, Prefer: 'return=minimal' } },
+        );
+        if (delRes.ok) purged += batch.length;
+        else console.error(`[sync-category-log] Purge batch failed: ${delRes.status} ${await delRes.text()}`);
+      }
+    }
+
+    // 5. Recompute the trending_categories aggregate table from the now-clean log.
+    if (fetchedAll) {
+      const aggCounts = new Map<string, number>();
+      let offset = 0;
+      const AGG_PAGE = 1000;
+      while (true) {
+        const r = await fetch(
+          `${supabaseUrl}/rest/v1/category_post_log?select=name&limit=${AGG_PAGE}&offset=${offset}`,
+          { headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey } },
+        );
+        if (!r.ok) { await r.text(); break; }
+        const rows: Array<{ name: string }> = await r.json();
+        if (!rows.length) break;
+        for (const row of rows) {
+          const n = (row.name || '').trim().toLowerCase();
+          if (!n || EXCLUDED.has(n)) continue;
+          aggCounts.set(n, (aggCounts.get(n) || 0) + 1);
+        }
+        if (rows.length < AGG_PAGE) break;
+        offset += AGG_PAGE;
+      }
+      // Wipe and rewrite aggregate
+      await fetch(`${supabaseUrl}/rest/v1/trending_categories?name=not.is.null`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${serviceKey}`, apikey: serviceKey, Prefer: 'return=minimal' },
+      });
+      const aggRows = [...aggCounts.entries()].map(([name, post_count]) => ({
+        name, post_count, updated_at: new Date().toISOString(),
+      }));
+      for (let i = 0; i < aggRows.length; i += 500) {
+        const batch = aggRows.slice(i, i + 500);
+        await fetch(`${supabaseUrl}/rest/v1/trending_categories`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${serviceKey}`,
+            apikey: serviceKey,
+            Prefer: 'return=minimal,resolution=merge-duplicates',
+          },
+          body: JSON.stringify(batch),
+        });
+      }
+    }
+
     return new Response(
-      JSON.stringify({ ok: true, pages: page - 1, synced: upserted }),
+      JSON.stringify({ ok: true, pages: page - 1, synced: upserted, purged, fetchedAll }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     );
   } catch (err) {
