@@ -4,9 +4,11 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { X, Upload, Loader2 } from 'lucide-react';
+import { X, Upload, Loader2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { getLaunchpadBase } from '@/lib/launchpad/base-path';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 
 export default function LaunchpadCreatePage() {
   const navigate = useNavigate();
@@ -147,18 +149,38 @@ export default function LaunchpadCreatePage() {
                 <Field label="Chain">
                   <div className="grid grid-cols-2 gap-2">
                     {([[8453,'Base'],[56,'BNB']] as const).map(([id,label]) => (
-                      <button key={id} onClick={() => setChainId(id)}
-                        className={`rounded-xl py-3 text-sm font-semibold ${chainId===id ? 'bg-white text-black' : 'bg-white/5 text-white/70 hover:text-white'}`}>
-                        {label}
-                      </button>
+                  <button key={id} onClick={() => setChainId(id)} className="shrink-0">
+                    <LiquidGlassBubble
+                      shimmer={false}
+                      noBorder={chainId !== id}
+                      className={`[&>div]:!rounded-xl [&>div]:!py-3 [&>div]:!w-full [&>div]:!text-center transition-all ${
+                        chainId === id
+                          ? '[&>div]:!bg-white [&>div]:!text-black [&>div]:!font-semibold [&>div]:!shadow-none [&>div]:!border-transparent'
+                          : '[&>div]:!text-white/70 [&>div]:!bg-gradient-to-br [&>div]:!from-white/[0.04] [&>div]:!via-white/[0.02] [&>div]:!to-transparent'
+                      }`}
+                    >
+                      <span className="text-sm font-semibold">{label}</span>
+                    </LiquidGlassBubble>
+                  </button>
                     ))}
                   </div>
                 </Field>
                 <Field label="Curve">
                   <div className="grid grid-cols-3 gap-2">
                     {(['standard','fair','stealth'] as const).map(c => (
-                      <button key={c} onClick={() => setCurveType(c)}
-                        className={`rounded-xl py-3 text-sm font-semibold capitalize ${curveType===c ? 'bg-white text-black' : 'bg-white/5 text-white/70 hover:text-white'}`}>{c}</button>
+                  <button key={c} onClick={() => setCurveType(c)} className="shrink-0">
+                    <LiquidGlassBubble
+                      shimmer={false}
+                      noBorder={curveType !== c}
+                      className={`[&>div]:!rounded-xl [&>div]:!py-3 [&>div]:!w-full [&>div]:!text-center transition-all ${
+                        curveType === c
+                          ? '[&>div]:!bg-white [&>div]:!text-black [&>div]:!font-semibold [&>div]:!shadow-none [&>div]:!border-transparent'
+                          : '[&>div]:!text-white/70 [&>div]:!bg-gradient-to-br [&>div]:!from-white/[0.04] [&>div]:!via-white/[0.02] [&>div]:!to-transparent'
+                      }`}
+                    >
+                      <span className="text-sm font-semibold capitalize">{c}</span>
+                    </LiquidGlassBubble>
+                  </button>
                     ))}
                   </div>
                 </Field>
@@ -184,16 +206,30 @@ export default function LaunchpadCreatePage() {
               </>
             )}
 
-            <div className="flex items-center justify-between pt-2">
-              <button onClick={() => setStep(s => Math.max(1, s-1))} disabled={step===1}
-                className="rounded-xl px-4 py-2 text-sm text-white/70 hover:text-white disabled:opacity-30">Back</button>
+            <div className="flex items-center justify-between pt-2 gap-3">
+              <LiquidGlassBubble2
+                label="Back"
+                icon={<ChevronLeft className="h-4 w-4" />}
+                onClick={() => setStep(s => Math.max(1, s - 1))}
+                disabled={step === 1}
+                width="90px"
+              />
               {step < 3
-                ? <button onClick={() => setStep(s => s+1)} disabled={step===1 && !canNext1}
-                    className="rounded-2xl bg-white text-black font-semibold px-5 py-2.5 disabled:opacity-40">Next</button>
-                : <button onClick={submit} disabled={!canSubmit || submitting}
-                    className="rounded-2xl bg-white text-black font-semibold px-5 py-2.5 disabled:opacity-40">
-                    {submitting ? 'Launching…' : 'Launch'}
-                  </button>}
+                ? <LiquidGlassBubble2
+                    label="Next"
+                    icon={<ChevronRight className="h-4 w-4" />}
+                    onClick={() => setStep(s => s + 1)}
+                    disabled={step === 1 && !canNext1}
+                    width="90px"
+                  />
+                : <LiquidGlassBubble2
+                    label={submitting ? 'Launching…' : 'Launch'}
+                    loading={submitting}
+                    loadingLabel="Launching…"
+                    onClick={submit}
+                    disabled={!canSubmit || submitting}
+                    width="120px"
+                  />}
             </div>
           </div>
         </DrawerContent>

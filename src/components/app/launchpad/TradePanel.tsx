@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { mockTrade } from '@/hooks/use-launchpad-trades';
 import { toast } from 'sonner';
+import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import type { LaunchpadToken } from '@/hooks/use-launchpad-tokens';
 
 export function TradePanel({ token }: { token: LaunchpadToken }) {
@@ -29,9 +31,18 @@ export function TradePanel({ token }: { token: LaunchpadToken }) {
     <div className="rounded-2xl bg-black/60 backdrop-blur-[24px] border border-white/10 p-4 space-y-3">
       <div className="grid grid-cols-2 gap-1.5 rounded-xl bg-white/5 p-1">
         {(['buy','sell'] as const).map(s => (
-          <button key={s} onClick={() => setSide(s)}
-            className={`rounded-lg py-2 text-sm font-semibold capitalize transition-colors ${side===s ? 'bg-white text-black' : 'text-white/70 hover:text-white'}`}>
-            {s}
+          <button key={s} onClick={() => setSide(s)} className="shrink-0">
+            <LiquidGlassBubble
+              shimmer={false}
+              noBorder={side !== s}
+              className={`[&>div]:!rounded-lg [&>div]:!py-2 [&>div]:!w-full [&>div]:!text-center transition-all ${
+                side === s
+                  ? '[&>div]:!bg-white [&>div]:!text-black [&>div]:!font-semibold [&>div]:!shadow-none [&>div]:!border-transparent'
+                  : '[&>div]:!text-white/70 [&>div]:!bg-gradient-to-br [&>div]:!from-white/[0.04] [&>div]:!via-white/[0.02] [&>div]:!to-transparent'
+              }`}
+            >
+              <span className="text-sm font-semibold capitalize">{s}</span>
+            </LiquidGlassBubble>
           </button>
         ))}
       </div>
@@ -43,14 +54,26 @@ export function TradePanel({ token }: { token: LaunchpadToken }) {
       </div>
       <div className="flex gap-1.5">
         {['1','10','100','1000'].map(v => (
-          <button key={v} onClick={() => setAmount(v)}
-            className="flex-1 rounded-md bg-white/5 hover:bg-white/10 text-white/80 text-xs py-1.5">{v}</button>
+          <button key={v} onClick={() => setAmount(v)} className="flex-1">
+            <LiquidGlassBubble
+              shimmer={false}
+              noBorder
+              className="[&>div]:!rounded-md [&>div]:!py-1.5 [&>div]:!w-full [&>div]:!text-center [&>div]:!text-white/80 [&>div]:!text-xs [&>div]:!bg-gradient-to-br [&>div]:!from-white/[0.04] [&>div]:!via-white/[0.02] [&>div]:!to-transparent hover:[&>div]:!bg-white/10"
+            >
+              <span>{v}</span>
+            </LiquidGlassBubble>
+          </button>
         ))}
       </div>
-      <button onClick={submit} disabled={busy || disabled}
-        className="w-full rounded-2xl bg-white text-black font-semibold py-3 disabled:opacity-40 disabled:cursor-not-allowed">
-        {disabled ? 'Trading closed' : busy ? 'Submitting…' : side === 'buy' ? `Buy ${token.symbol}` : `Sell ${token.symbol}`}
-      </button>
+      <LiquidGlassBubble2
+        label={disabled ? 'Trading closed' : busy ? 'Submitting…' : side === 'buy' ? `Buy ${token.symbol}` : `Sell ${token.symbol}`}
+        loading={busy}
+        loadingLabel="Submitting…"
+        onClick={submit}
+        disabled={disabled || busy}
+        width="100%"
+        height="48px"
+      />
       <p className="text-[10px] text-white/40 text-center">Mock trade — no on-chain transaction. Phase 1.</p>
     </div>
   );
