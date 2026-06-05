@@ -130,12 +130,14 @@ function MessageBubble({
   highlightText,
   confirmedTxHashes,
   onPin,
+  onOpenImage,
 }: {
   message: DmMessage;
   isOwnMessage: boolean;
   highlightText?: string;
   confirmedTxHashes: React.MutableRefObject<Set<string>>;
   onPin?: (messageId: string) => void;
+  onOpenImage?: (url: string) => void;
 }) {
   // Call message — detect by emoji prefix in content (📞/📹/📵)
   const isCallMessage = message.msgType === 'msg' && /^[📞📹📵]/.test(message.content || '');
