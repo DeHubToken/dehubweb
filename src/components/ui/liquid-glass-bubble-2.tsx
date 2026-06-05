@@ -47,23 +47,27 @@ export interface LiquidGlassBubble2Props {
  * ```
  */
 const LiquidGlassBubble2 = React.forwardRef<HTMLDivElement, LiquidGlassBubble2Props>(
-  ({ label, icon, loading, loadingLabel, disabled, onClick, width = "110px", height = "42px", className }, ref) => {
+  ({ label, icon, loading, loadingLabel, disabled, onClick, width = "110px", height = "42px", className, active = false, shimmer = true }, ref) => {
     const isDisabled = disabled || loading;
 
     return (
       <LiquidGlassBubble
         ref={ref}
-        shimmer
+        shimmer={shimmer}
         noBorder
         onClick={isDisabled ? undefined : onClick}
         className={cn(
           "flex-shrink-0 cursor-pointer [&>div]:!rounded-xl [&>div]:!h-full [&>div]:!flex [&>div]:!items-center [&>div]:!justify-center [&>div]:before:!rounded-xl [&>div]:after:!rounded-xl",
+          active && "[&>div]:!bg-white [&>div]:!shadow-none [&>div]:!border-transparent",
           isDisabled && "opacity-40 cursor-not-allowed",
           className
         )}
         style={{ width, height }}
       >
-        <span className="flex items-center justify-center gap-2 text-white text-sm font-medium h-full leading-none min-w-0">
+        <span className={cn(
+          "flex items-center justify-center gap-2 text-sm font-medium h-full leading-none min-w-0",
+          active ? "text-black" : "text-white"
+        )}>
           {loading ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin shrink-0" />
