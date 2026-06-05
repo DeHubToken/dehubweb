@@ -1,9 +1,8 @@
 import { memo, useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { LayoutGrid, Loader2, RefreshCw } from 'lucide-react';
+import { LayoutGrid, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useQueryClient } from '@tanstack/react-query';
 import { setFilterValue } from '@/hooks/use-persisted-feed-filter';
 import { cn } from '@/lib/utils';
 import { useTrendingCategories, useAllTrendingCategories, type TopicPeriod, type CategoryCount } from '@/hooks/use-trending-categories';
@@ -41,26 +40,12 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
 }: TrendingTopicsListProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const queryClient = useQueryClient();
   const [topicPeriod, setTopicPeriod] = useState<TopicPeriod>(defaultPeriod);
   const dirRef = useRef(0);
   const [isAutoRotating, setIsAutoRotating] = useState(true);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const loaderRef = useRef<HTMLDivElement>(null);
 
-  const handleRefresh = useCallback(async () => {
-    if (isRefreshing) return;
-    setIsRefreshing(true);
-    try {
-      await queryClient.invalidateQueries({ queryKey: ['trending-categories'] });
-      await queryClient.invalidateQueries({ queryKey: ['trending-categories-all-unlimited'] });
-      await queryClient.refetchQueries({ queryKey: ['trending-categories'] });
-      await queryClient.refetchQueries({ queryKey: ['trending-categories-all-unlimited'] });
-    } finally {
-      setTimeout(() => setIsRefreshing(false), 400);
-    }
-  }, [queryClient, isRefreshing]);
 
   const { data: limitedCategories = [] } = useTrendingCategories(topicPeriod);
   
@@ -139,33 +124,24 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
 
   return (
     <div style={{ minHeight }} className="relative overflow-hidden">
-      {/* Period tabs + refresh */}
-      <div className="flex items-center gap-1 mb-2">
-        <div className="flex flex-1">
-          {TOPIC_PERIODS.map(p => (
-            <button
-              key={p.value}
-              onClick={() => handlePeriodChange(p.value)}
-              className={cn(
-                'flex-1 text-xs font-semibold transition-colors duration-150 text-center py-1',
-                topicPeriod === p.value
-                  ? 'text-white'
-                  : 'text-zinc-500 hover:text-zinc-300'
-              )}
-            >
-              {p.label}
-            </button>
-          ))}
-        </div>
-        <button
-          onClick={handleRefresh}
-          disabled={isRefreshing}
-          aria-label="Refresh trending"
-          className="shrink-0 p-1 rounded-md text-zinc-500 hover:text-white transition-colors disabled:opacity-60"
-        >
-          <RefreshCw className={cn('w-3.5 h-3.5', isRefreshing && 'animate-spin')} />
-        </button>
+      {/* Period tabs */}
+      <div className="flex mb-2">
+        {TOPIC_PERIODS.map(p => (
+          <button
+            key={p.value}
+            onClick={() => handlePeriodChange(p.value)}
+            className={cn(
+              'flex-1 text-xs font-semibold transition-colors duration-150 text-center py-1',
+              topicPeriod === p.value
+                ? 'text-white'
+                : 'text-zinc-500 hover:text-zinc-300'
+            )}
+          >
+            {p.label}
+          </button>
+        ))}
       </div>
+
 
       <AnimatePresence mode="popLayout" custom={dirRef.current} initial={false}>
         <motion.div
