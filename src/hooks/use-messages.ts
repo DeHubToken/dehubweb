@@ -5,7 +5,7 @@
  * Uses Socket.io /dm namespace for real-time events.
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useReducer } from 'react';
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import {
