@@ -155,9 +155,26 @@ export function useConversations(searchQuery: string = '') {
     return unsub;
   }, [isAuthenticated, hasData, queryClient]);
 
+  // Re-render when the set of open conversations changes so the badge clears instantly
+  const [, forceTick] = useReducer((x: number) => x + 1, 0);
+  useEffect(() => {
+    const listener = () => forceTick();
+    openConversationListeners.add(listener);
+    return () => { openConversationListeners.delete(listener); };
+  }, []);
+
+  // Zero-out unreadCount for any conversation currently open in the UI.
+  const conversations = (query.data || []).map(conv => {
+    const convId = conv.id || (conv as any)._id;
+    if (convId && openConversationIds.has(convId) && conv.unreadCount > 0) {
+      return { ...conv, unreadCount: 0 };
+    }
+    return conv;
+  });
+
   return {
-    conversations: query.data || [],
-    allConversations: query.data || [],
+    conversations,
+    allConversations: conversations,
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error,
