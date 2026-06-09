@@ -74,6 +74,27 @@ function persistReadConversation(conversationId: string): void {
   } catch { /* storage full */ }
 }
 
+// ─── Open conversation registry ──────────────────────────────────────────────
+// Tracks which conversations are currently rendered/open so we can force
+// their unreadCount to 0 — prevents the badge from re-appearing after a
+// socket-triggered refetch races ahead of the server's markAsRead processing.
+const openConversationIds = new Set<string>();
+const openConversationListeners = new Set<() => void>();
+
+function notifyOpenConversationsChanged() {
+  openConversationListeners.forEach(fn => { try { fn(); } catch { /* noop */ } });
+}
+
+export function registerOpenConversation(conversationId: string | null | undefined): () => void {
+  if (!conversationId) return () => {};
+  openConversationIds.add(conversationId);
+  notifyOpenConversationsChanged();
+  return () => {
+    openConversationIds.delete(conversationId);
+    notifyOpenConversationsChanged();
+  };
+}
+
 // ─── Query keys ───────────────────────────────────────────────────────────────
 
 const MESSAGES_BASE_KEY = ['messages'] as const;
