@@ -632,6 +632,12 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setCallMessageHandler, resolvedConversationId]);
 
+  // Register this conversation as "open" so its unread badge is forced to 0
+  // in the conversations list while the chat is visible.
+  useEffect(() => {
+    return registerOpenConversation(resolvedConversationId);
+  }, [resolvedConversationId]);
+
   // Emit markAsRead (socket) + scroll on initial load
   useEffect(() => {
     if (isInitialMount.current && messages.length > 0) {
