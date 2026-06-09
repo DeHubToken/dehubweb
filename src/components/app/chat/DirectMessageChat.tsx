@@ -14,7 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChatInput } from './ChatInput';
 import { TranslatableText } from '../TranslatableText';
 import { useTranslation } from '../TranslatableText';
-import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys } from '@/hooks/use-messages';
+import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys, registerOpenConversation } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDmSettings } from '@/hooks/use-dm-settings';
 import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, getAccountInfo, pinDmMessage, unpinDmMessage, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
@@ -631,6 +631,12 @@ export function DirectMessageChat({ conversation, onBack }: DirectMessageChatPro
     return () => setCallMessageHandler(null);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [setCallMessageHandler, resolvedConversationId]);
+
+  // Register this conversation as "open" so its unread badge is forced to 0
+  // in the conversations list while the chat is visible.
+  useEffect(() => {
+    return registerOpenConversation(resolvedConversationId);
+  }, [resolvedConversationId]);
 
   // Emit markAsRead (socket) + scroll on initial load
   useEffect(() => {

@@ -5,7 +5,7 @@
  * Uses Socket.io /dm namespace for real-time events.
  */
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useReducer } from 'react';
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -74,6 +74,27 @@ function persistReadConversation(conversationId: string): void {
   } catch { /* storage full */ }
 }
 
+// ─── Open conversation registry ──────────────────────────────────────────────
+// Tracks which conversations are currently rendered/open so we can force
+// their unreadCount to 0 — prevents the badge from re-appearing after a
+// socket-triggered refetch races ahead of the server's markAsRead processing.
+const openConversationIds = new Set<string>();
+const openConversationListeners = new Set<() => void>();
+
+function notifyOpenConversationsChanged() {
+  openConversationListeners.forEach(fn => { try { fn(); } catch { /* noop */ } });
+}
+
+export function registerOpenConversation(conversationId: string | null | undefined): () => void {
+  if (!conversationId) return () => {};
+  openConversationIds.add(conversationId);
+  notifyOpenConversationsChanged();
+  return () => {
+    openConversationIds.delete(conversationId);
+    notifyOpenConversationsChanged();
+  };
+}
+
 // ─── Query keys ───────────────────────────────────────────────────────────────
 
 const MESSAGES_BASE_KEY = ['messages'] as const;
@@ -134,9 +155,26 @@ export function useConversations(searchQuery: string = '') {
     return unsub;
   }, [isAuthenticated, hasData, queryClient]);
 
+  // Re-render when the set of open conversations changes so the badge clears instantly
+  const [, forceTick] = useReducer((x: number) => x + 1, 0);
+  useEffect(() => {
+    const listener = () => forceTick();
+    openConversationListeners.add(listener);
+    return () => { openConversationListeners.delete(listener); };
+  }, []);
+
+  // Zero-out unreadCount for any conversation currently open in the UI.
+  const conversations = (query.data || []).map(conv => {
+    const convId = conv.id || (conv as any)._id;
+    if (convId && openConversationIds.has(convId) && conv.unreadCount > 0) {
+      return { ...conv, unreadCount: 0 };
+    }
+    return conv;
+  });
+
   return {
-    conversations: query.data || [],
-    allConversations: query.data || [],
+    conversations,
+    allConversations: conversations,
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error,
