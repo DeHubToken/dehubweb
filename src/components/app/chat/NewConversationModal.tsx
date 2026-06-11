@@ -39,6 +39,10 @@ interface NewConversationModalProps {
   onConversationCreated: (conversation: DeHubConversation) => void;
   /** Pre-select a fee user so the modal opens directly to the payment step */
   initialFeeUser?: DeHubUser | null;
+  /** Optional message body to send automatically once the recipient is picked */
+  initialMessage?: string;
+  /** Override modal title (e.g. "Invite to Community") */
+  title?: string;
 }
 
 /** Extract dmSettings from either array or object shape */
