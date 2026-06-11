@@ -429,7 +429,7 @@ export function NewConversationModal({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-white">New Message</DialogTitle>
+          <DialogTitle className="text-white">{title || 'New Message'}</DialogTitle>
         </DialogHeader>
 
         <div className="relative">
