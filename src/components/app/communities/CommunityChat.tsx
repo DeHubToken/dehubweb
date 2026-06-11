@@ -111,9 +111,10 @@ function ChatReactions({
 interface CommunityChatProps {
   communityId: string;
   isMember: boolean;
+  canModerate?: boolean;
 }
 
-export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
+export function CommunityChat({ communityId, isMember, canModerate = false }: CommunityChatProps) {
   const [newMessage, setNewMessage] = useState('');
   const [replyTo, setReplyTo] = useState<CommunityChatMessage | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
