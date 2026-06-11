@@ -151,7 +151,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
         <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center">
           <PenSquare className="w-4 h-4 text-white" />
         </div>
-        <span className="text-white font-medium">Post Something</span>
+        <span className="text-white font-medium">Create Post</span>
       </button>
     </div>
   );
