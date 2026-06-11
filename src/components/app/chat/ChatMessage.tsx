@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { TranslatableText, renderTextWithLinks } from '../TranslatableText';
 import { ChatLinkPreviews } from './ChatLinkPreviews';
+import { CommunityLinkEmbed, extractCommunitySlug, hasCommunityLink, stripCommunityLinks } from '@/components/app/communities/CommunityLinkEmbed';
 import { useTranslation as useTextTranslation } from '../TranslatableText';
 import { useNavigate } from 'react-router-dom';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
@@ -355,32 +356,40 @@ export function ChatMessage({
           </div>
         </div>
         
-        {message.type === 'text' && (
-          <div>
-            <p className="text-zinc-300 text-sm break-words whitespace-pre-wrap">
-              {renderTextWithLinks(isTranslated ? translatedText : message.content)}
-            </p>
-            <div className="flex items-center gap-1.5 mt-0.5">
-              <span className="text-zinc-500 text-[10px] whitespace-nowrap">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
-              {!isTooShort && (
-                isTranslateLoading ? (
-                  <Loader2 className="w-2.5 h-2.5 text-zinc-500 animate-spin" />
-                ) : isTranslated ? (
-                  <button onClick={handleShowOriginal} className="flex items-center text-zinc-500 hover:text-zinc-300 transition-colors">
-                    <RotateCcw className="w-2.5 h-2.5" />
-                  </button>
-                ) : (
-                  <button onClick={handleTranslate} className="flex items-center text-zinc-500 hover:text-zinc-300 transition-colors">
-                    <Languages className="w-3 h-3" />
-                  </button>
-                )
+        {message.type === 'text' && (() => {
+          const raw = isTranslated ? translatedText : message.content;
+          const communitySlug = raw ? extractCommunitySlug(raw) : null;
+          const displayText = raw && communitySlug ? stripCommunityLinks(raw) : raw;
+          return (
+            <div>
+              {displayText && (
+                <p className="text-zinc-300 text-sm break-words whitespace-pre-wrap">
+                  {renderTextWithLinks(displayText)}
+                </p>
               )}
-              {translateError && (
-                <span className="text-zinc-500 text-[10px]">{translateError}</span>
-              )}
+              {communitySlug && <CommunityLinkEmbed slug={communitySlug} />}
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <span className="text-zinc-500 text-[10px] whitespace-nowrap">{formatDate(message.timestamp)} {formatTime(message.timestamp)}</span>
+                {!isTooShort && (
+                  isTranslateLoading ? (
+                    <Loader2 className="w-2.5 h-2.5 text-zinc-500 animate-spin" />
+                  ) : isTranslated ? (
+                    <button onClick={handleShowOriginal} className="flex items-center text-zinc-500 hover:text-zinc-300 transition-colors">
+                      <RotateCcw className="w-2.5 h-2.5" />
+                    </button>
+                  ) : (
+                    <button onClick={handleTranslate} className="flex items-center text-zinc-500 hover:text-zinc-300 transition-colors">
+                      <Languages className="w-3 h-3" />
+                    </button>
+                  )
+                )}
+                {translateError && (
+                  <span className="text-zinc-500 text-[10px]">{translateError}</span>
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
         
         {message.type === 'image' && message.imageUrl && (
           <div className="mt-1">

@@ -39,6 +39,10 @@ interface NewConversationModalProps {
   onConversationCreated: (conversation: DeHubConversation) => void;
   /** Pre-select a fee user so the modal opens directly to the payment step */
   initialFeeUser?: DeHubUser | null;
+  /** Optional message body to send automatically once the recipient is picked */
+  initialMessage?: string;
+  /** Override modal title (e.g. "Invite to Community") */
+  title?: string;
 }
 
 /** Extract dmSettings from either array or object shape */
@@ -355,6 +359,8 @@ export function NewConversationModal({
   onOpenChange, 
   onConversationCreated,
   initialFeeUser,
+  initialMessage,
+  title,
 }: NewConversationModalProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -408,8 +414,8 @@ export function NewConversationModal({
   };
 
   const handleSelectUser = (user: DeHubUser) => {
-    // Always create conversation directly — fee gate is handled inline in the chat view
-    startConversation(user);
+    // If an initialMessage was provided, send it as the first message.
+    startConversation(user, initialMessage);
   };
 
   const handleClose = () => {
@@ -423,7 +429,7 @@ export function NewConversationModal({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-white">New Message</DialogTitle>
+          <DialogTitle className="text-white">{title || 'New Message'}</DialogTitle>
         </DialogHeader>
 
         <div className="relative">

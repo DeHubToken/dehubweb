@@ -1,5 +1,7 @@
 import { useRef, useState, useCallback } from 'react';
-import { Users, LogIn, LogOut, Crown, Camera, Pin, PinOff, TrendingUp, X, Pencil, Check, Share2, Link2, FileText, Link as LinkIcon, Clock } from 'lucide-react';
+import { Users, LogIn, LogOut, Crown, Camera, Pin, PinOff, TrendingUp, X, Pencil, Check, Share2, Link2, FileText, Link as LinkIcon, Clock, Send } from 'lucide-react';
+import { NewConversationModal } from '@/components/app/chat/NewConversationModal';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CommunityTickerSearch } from './CommunityTickerSearch';
@@ -48,6 +50,8 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
   const [editingDesc, setEditingDesc] = useState(false);
   const [nameInput, setNameInput] = useState(community.name);
   const [descInput, setDescInput] = useState(community.description || '');
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const { data: pinned = [] } = usePinnedCommunities(walletAddress);
@@ -188,6 +192,13 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
               >
                 <FileText className="w-4 h-4 text-zinc-400" />
                 {t('communities.post')}
+              </button>
+              <button
+                onClick={() => setInviteOpen(true)}
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-white hover:bg-white/10 transition-colors"
+              >
+                <Send className="w-4 h-4 text-zinc-400" />
+                {t('communities.sendInMessage', { defaultValue: 'Send in message' })}
               </button>
               <button
                 onClick={() => {
@@ -342,6 +353,17 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
           )}
         </div>
       )}
+      <NewConversationModal
+        open={inviteOpen}
+        onOpenChange={setInviteOpen}
+        title={t('communities.inviteToCommunity', { defaultValue: 'Invite to community' })}
+        initialMessage={`${window.location.origin}/app/communities/${community.slug}`}
+        onConversationCreated={() => {
+          setInviteOpen(false);
+          navigate('/app/messages');
+          toast.success(t('communities.inviteSent', { defaultValue: 'Invite sent' }));
+        }}
+      />
     </div>
   );
 }
