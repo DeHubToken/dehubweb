@@ -194,6 +194,13 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
                 {t('communities.post')}
               </button>
               <button
+                onClick={() => setInviteOpen(true)}
+                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-white hover:bg-white/10 transition-colors"
+              >
+                <Send className="w-4 h-4 text-zinc-400" />
+                {t('communities.sendInMessage', { defaultValue: 'Send in message' })}
+              </button>
+              <button
                 onClick={() => {
                   const url = `${window.location.origin}/app/communities/${community.slug}`;
                   navigator.clipboard.writeText(url);
