@@ -545,6 +545,21 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
                               <TooltipContent side="top">{t('communities.edit')}</TooltipContent>
                             </Tooltip>
                           )}
+                          {(walletAddress && msg.wallet_address.toLowerCase() === walletAddress.toLowerCase()) || canModerate ? (
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <button
+                                  onClick={() => {
+                                    if (confirm('Delete this message?')) deleteMessage(msg.id);
+                                  }}
+                                  className="p-0.5 text-zinc-500 hover:text-red-400 transition-colors rounded"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent side="top">Delete</TooltipContent>
+                            </Tooltip>
+                          ) : null}
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <button
