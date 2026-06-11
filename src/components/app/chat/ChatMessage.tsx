@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { TranslatableText, renderTextWithLinks } from '../TranslatableText';
 import { ChatLinkPreviews } from './ChatLinkPreviews';
+import { CommunityLinkEmbed, extractCommunitySlug, hasCommunityLink, stripCommunityLinks } from '@/components/app/communities/CommunityLinkEmbed';
 import { useTranslation as useTextTranslation } from '../TranslatableText';
 import { useNavigate } from 'react-router-dom';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
