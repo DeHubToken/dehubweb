@@ -515,7 +515,7 @@ export function EventDetailDrawer({ event, open, onOpenChange }: EventDetailDraw
                 <PenSquare className="w-5 h-5 text-zinc-300" />
               </div>
               <div>
-                <p className="text-sm font-medium text-white">Post</p>
+                <p className="text-sm font-medium text-white">Create Post</p>
                 <p className="text-xs text-zinc-500">Share this event in a post</p>
               </div>
             </button>
