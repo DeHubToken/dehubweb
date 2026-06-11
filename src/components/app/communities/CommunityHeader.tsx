@@ -50,6 +50,8 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
   const [editingDesc, setEditingDesc] = useState(false);
   const [nameInput, setNameInput] = useState(community.name);
   const [descInput, setDescInput] = useState(community.description || '');
+  const [inviteOpen, setInviteOpen] = useState(false);
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
   const { data: pinned = [] } = usePinnedCommunities(walletAddress);
