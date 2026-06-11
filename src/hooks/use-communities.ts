@@ -221,6 +221,68 @@ export function useRejectMember() {
   });
 }
 
+// ─── Moderation: ban/unban/kick ──────────────────────────────────────────────
+
+export function useBanMember() {
+  const { walletAddress } = useAuth();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ memberId }: { memberId: string; communityId: string }) => {
+      if (!walletAddress) throw new Error('Not connected');
+      const { error } = await withWalletHeader(
+        supabase.from('community_members').update({ status: 'banned' }).eq('id', memberId),
+        walletAddress
+      );
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['communities'] });
+      toast.success('Member banned from chat');
+    },
+    onError: () => toast.error('Failed to ban member'),
+  });
+}
+
+export function useUnbanMember() {
+  const { walletAddress } = useAuth();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ memberId }: { memberId: string; communityId: string }) => {
+      if (!walletAddress) throw new Error('Not connected');
+      const { error } = await withWalletHeader(
+        supabase.from('community_members').update({ status: 'active' }).eq('id', memberId),
+        walletAddress
+      );
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['communities'] });
+      toast.success('Member unbanned');
+    },
+    onError: () => toast.error('Failed to unban member'),
+  });
+}
+
+export function useKickMember() {
+  const { walletAddress } = useAuth();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ memberId }: { memberId: string; communityId: string }) => {
+      if (!walletAddress) throw new Error('Not connected');
+      const { error } = await withWalletHeader(
+        supabase.from('community_members').delete().eq('id', memberId),
+        walletAddress
+      );
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['communities'] });
+      toast.success('Member removed');
+    },
+    onError: () => toast.error('Failed to remove member'),
+  });
+}
+
 // ─── Check if user is member ─────────────────────────────────────────────────
 
 export function useIsCommunityMember(communityId: string | undefined) {
