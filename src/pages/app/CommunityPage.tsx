@@ -144,7 +144,7 @@ export default function CommunityPage() {
           />
         </div>
         <div className={tab === 'chat' ? '' : 'hidden'}>
-          <CommunityChat communityId={community.id} isMember={isMember} />
+          <CommunityChat communityId={community.id} isMember={isMember} canModerate={isOwner || membership?.role === 'admin'} />
         </div>
         <div className={tab === 'events' ? '' : 'hidden'}>
           <CommunityEvents communityId={community.id} isMember={isMember} />
