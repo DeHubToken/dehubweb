@@ -358,9 +358,9 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
         onOpenChange={setInviteOpen}
         title={t('communities.inviteToCommunity', { defaultValue: 'Invite to community' })}
         initialMessage={`${window.location.origin}/app/communities/${community.slug}`}
-        onConversationCreated={(conv) => {
+        onConversationCreated={() => {
           setInviteOpen(false);
-          if (conv?.id) navigate(`/app/messages/${conv.id}`);
+          navigate('/app/messages');
           toast.success(t('communities.inviteSent', { defaultValue: 'Invite sent' }));
         }}
       />
