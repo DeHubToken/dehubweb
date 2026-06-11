@@ -414,8 +414,8 @@ export function NewConversationModal({
   };
 
   const handleSelectUser = (user: DeHubUser) => {
-    // Always create conversation directly — fee gate is handled inline in the chat view
-    startConversation(user);
+    // If an initialMessage was provided, send it as the first message.
+    startConversation(user, initialMessage);
   };
 
   const handleClose = () => {
