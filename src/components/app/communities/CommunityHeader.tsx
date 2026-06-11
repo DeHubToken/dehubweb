@@ -1,5 +1,7 @@
 import { useRef, useState, useCallback } from 'react';
-import { Users, LogIn, LogOut, Crown, Camera, Pin, PinOff, TrendingUp, X, Pencil, Check, Share2, Link2, FileText, Link as LinkIcon, Clock } from 'lucide-react';
+import { Users, LogIn, LogOut, Crown, Camera, Pin, PinOff, TrendingUp, X, Pencil, Check, Share2, Link2, FileText, Link as LinkIcon, Clock, Send } from 'lucide-react';
+import { NewConversationModal } from '@/components/app/chat/NewConversationModal';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { CommunityTickerSearch } from './CommunityTickerSearch';
