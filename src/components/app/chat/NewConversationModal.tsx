@@ -359,6 +359,8 @@ export function NewConversationModal({
   onOpenChange, 
   onConversationCreated,
   initialFeeUser,
+  initialMessage,
+  title,
 }: NewConversationModalProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
