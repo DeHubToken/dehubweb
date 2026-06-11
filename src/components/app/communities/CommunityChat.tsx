@@ -141,7 +141,7 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
     avatarUrl: user.avatarImageUrl || user.avatarUrl || user.avatar_url,
   } : null;
 
-  const { messages, isLoading, sendMessage, editMessage, addReaction, removeReaction } = useCommunityChat(communityId);
+  const { messages, isLoading, sendMessage, editMessage, deleteMessage, addReaction, removeReaction } = useCommunityChat(communityId);
 
   // Filter by search query (searches content + sender names)
   const filteredMessages = useMemo(() => {
