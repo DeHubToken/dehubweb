@@ -322,11 +322,31 @@ export function useCommunityChat(communityId: string | undefined) {
     }
   }, [walletAddress, communityId, queryClient]);
 
+  // Delete message (own message, or moderator deleting any message)
+  const deleteMessage = useCallback(async (messageId: string) => {
+    if (!walletAddress || !communityId) return;
+    const prev = queryClient.getQueryData<CommunityChatMessage[]>([QUERY_KEY, communityId]);
+    queryClient.setQueryData<CommunityChatMessage[]>(
+      [QUERY_KEY, communityId],
+      (old = []) => old.filter(m => m.id !== messageId)
+    );
+    const { error } = await withWalletHeader(
+      supabase.from('community_chat_messages').delete().eq('id', messageId),
+      walletAddress
+    );
+    if (error) {
+      console.error('[CommunityChat] Delete error:', error);
+      toast.error('Failed to delete message');
+      if (prev) queryClient.setQueryData([QUERY_KEY, communityId], prev);
+    }
+  }, [walletAddress, communityId, queryClient]);
+
   return {
     messages,
     isLoading,
     sendMessage,
     editMessage,
+    deleteMessage,
     addReaction,
     removeReaction,
   };

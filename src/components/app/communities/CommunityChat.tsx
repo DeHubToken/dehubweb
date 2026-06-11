@@ -6,7 +6,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { Send, Users, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check, Search } from 'lucide-react';
+import { Send, Users, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check, Search, Trash2 } from 'lucide-react';
 import { VoiceRecorder } from '../chat/VoiceRecorder';
 import { VoiceWaveformPlayer } from '../chat/VoiceWaveformPlayer';
 import { supabase } from '@/integrations/supabase/client';
@@ -111,9 +111,10 @@ function ChatReactions({
 interface CommunityChatProps {
   communityId: string;
   isMember: boolean;
+  canModerate?: boolean;
 }
 
-export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
+export function CommunityChat({ communityId, isMember, canModerate = false }: CommunityChatProps) {
   const [newMessage, setNewMessage] = useState('');
   const [replyTo, setReplyTo] = useState<CommunityChatMessage | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -140,7 +141,7 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
     avatarUrl: user.avatarImageUrl || user.avatarUrl || user.avatar_url,
   } : null;
 
-  const { messages, isLoading, sendMessage, editMessage, addReaction, removeReaction } = useCommunityChat(communityId);
+  const { messages, isLoading, sendMessage, editMessage, deleteMessage, addReaction, removeReaction } = useCommunityChat(communityId);
 
   // Filter by search query (searches content + sender names)
   const filteredMessages = useMemo(() => {
@@ -544,6 +545,21 @@ export function CommunityChat({ communityId, isMember }: CommunityChatProps) {
                               <TooltipContent side="top">{t('communities.edit')}</TooltipContent>
                             </Tooltip>
                           )}
+                          {(walletAddress && msg.wallet_address.toLowerCase() === walletAddress.toLowerCase()) || canModerate ? (
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <button
+                                  onClick={() => {
+                                    if (confirm('Delete this message?')) deleteMessage(msg.id);
+                                  }}
+                                  className="p-0.5 text-zinc-500 hover:text-red-400 transition-colors rounded"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent side="top">Delete</TooltipContent>
+                            </Tooltip>
+                          ) : null}
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <button

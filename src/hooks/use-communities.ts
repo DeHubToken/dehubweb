@@ -171,6 +171,27 @@ export function usePendingCommunityMembers(communityId: string | undefined) {
   });
 }
 
+// ─── Fetch banned members ────────────────────────────────────────────────────
+
+export function useBannedCommunityMembers(communityId: string | undefined) {
+  return useQuery({
+    queryKey: ['communities', 'banned-members', communityId],
+    queryFn: async () => {
+      if (!communityId) return [];
+      const { data, error } = await supabase
+        .from('community_members')
+        .select('*')
+        .eq('community_id', communityId)
+        .eq('status', 'banned')
+        .order('joined_at', { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as CommunityMember[];
+    },
+    enabled: !!communityId,
+  });
+}
+
+
 // ─── Approve / reject pending member ─────────────────────────────────────────
 
 export function useApproveMember() {
@@ -218,6 +239,68 @@ export function useRejectMember() {
       toast.success('Request rejected');
     },
     onError: () => toast.error('Failed to reject'),
+  });
+}
+
+// ─── Moderation: ban/unban/kick ──────────────────────────────────────────────
+
+export function useBanMember() {
+  const { walletAddress } = useAuth();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ memberId }: { memberId: string; communityId: string }) => {
+      if (!walletAddress) throw new Error('Not connected');
+      const { error } = await withWalletHeader(
+        supabase.from('community_members').update({ status: 'banned' }).eq('id', memberId),
+        walletAddress
+      );
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['communities'] });
+      toast.success('Member banned from chat');
+    },
+    onError: () => toast.error('Failed to ban member'),
+  });
+}
+
+export function useUnbanMember() {
+  const { walletAddress } = useAuth();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ memberId }: { memberId: string; communityId: string }) => {
+      if (!walletAddress) throw new Error('Not connected');
+      const { error } = await withWalletHeader(
+        supabase.from('community_members').update({ status: 'active' }).eq('id', memberId),
+        walletAddress
+      );
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['communities'] });
+      toast.success('Member unbanned');
+    },
+    onError: () => toast.error('Failed to unban member'),
+  });
+}
+
+export function useKickMember() {
+  const { walletAddress } = useAuth();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ memberId }: { memberId: string; communityId: string }) => {
+      if (!walletAddress) throw new Error('Not connected');
+      const { error } = await withWalletHeader(
+        supabase.from('community_members').delete().eq('id', memberId),
+        walletAddress
+      );
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['communities'] });
+      toast.success('Member removed');
+    },
+    onError: () => toast.error('Failed to remove member'),
   });
 }
 
