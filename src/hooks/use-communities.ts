@@ -171,6 +171,27 @@ export function usePendingCommunityMembers(communityId: string | undefined) {
   });
 }
 
+// ─── Fetch banned members ────────────────────────────────────────────────────
+
+export function useBannedCommunityMembers(communityId: string | undefined) {
+  return useQuery({
+    queryKey: ['communities', 'banned-members', communityId],
+    queryFn: async () => {
+      if (!communityId) return [];
+      const { data, error } = await supabase
+        .from('community_members')
+        .select('*')
+        .eq('community_id', communityId)
+        .eq('status', 'banned')
+        .order('joined_at', { ascending: true });
+      if (error) throw error;
+      return (data ?? []) as CommunityMember[];
+    },
+    enabled: !!communityId,
+  });
+}
+
+
 // ─── Approve / reject pending member ─────────────────────────────────────────
 
 export function useApproveMember() {
