@@ -662,7 +662,7 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
               <span className="absolute top-1 right-0 text-[10px] text-zinc-600 z-10">{newMessage.length}/500</span>
               <Textarea
                 ref={textareaRef}
-                placeholder={`${t('communities.typeMessage')} — type /admin to ask AI`}
+                placeholder={`Type here...`}
                 value={newMessage}
                 onChange={(e) => {
                   const val = e.target.value;
