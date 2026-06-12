@@ -684,6 +684,23 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
             </div>
             <div className="flex items-center justify-end pt-1">
               <div className="flex items-center gap-1">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => {
+                    setNewMessage(prev => {
+                      if (/^\/admin\b/i.test(prev)) return prev;
+                      const next = prev.trim().length ? `/admin ${prev}` : '/admin ';
+                      return next.slice(0, 500);
+                    });
+                    requestAnimationFrame(() => textareaRef.current?.focus());
+                  }}
+                  className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
+                  title="Ask AI Admin (/admin)"
+                  aria-label="Ask AI Admin"
+                >
+                  <Sparkles className="w-5 h-5" />
+                </Button>
                 <EmojiGifPicker
                   onEmojiSelect={handleEmojiSelect}
                   onGifSelect={handleGifSelect}
