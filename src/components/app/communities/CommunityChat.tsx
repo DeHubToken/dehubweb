@@ -6,7 +6,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { Send, Users, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check, Search, Trash2, Sparkles } from 'lucide-react';
+import { Send, Users, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check, Search, Trash2 } from 'lucide-react';
 import { VoiceRecorder } from '../chat/VoiceRecorder';
 import { VoiceWaveformPlayer } from '../chat/VoiceWaveformPlayer';
 import { supabase } from '@/integrations/supabase/client';
