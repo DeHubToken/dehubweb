@@ -522,14 +522,12 @@ export function NewConversationModal({
             autoFocus
           />
           {searchQuery && (
-            <Button
-              variant="ghost"
-              size="icon"
-              className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 text-zinc-400 hover:text-white"
+            <button
               onClick={() => setSearchQuery('')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 text-[10px] font-medium text-white/70 bg-white/10 hover:bg-white/20 border border-white/10 rounded-md transition-colors"
             >
-              <X className="w-4 h-4" />
-            </Button>
+              Clear
+            </button>
           )}
         </div>
 
