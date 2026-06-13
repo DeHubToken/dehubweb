@@ -391,11 +391,21 @@ export function NewConversationModal({
         recipientUser: user,
       });
 
-      // Send the first message if provided (from fee payment step)
+      // Send the first message if provided (from fee payment step or invite link)
       if (firstMessage && conversation.id) {
+        // The conversation.id from createConversation is a stub ("new_<address>").
+        // The backend socket needs a real dmId, so create/start through the socket
+        // to get one before sending the message.
+        let realDmId = conversation.id;
+        try {
+          const dm = await emitCreateAndStart(userAddress);
+          if (dm?._id) realDmId = dm._id;
+        } catch (err) {
+          console.error('[NewConversationModal] emitCreateAndStart failed:', err);
+        }
         // txHash bundled in sendMessage — backend verifies fee inline. Do NOT call verify-dm-fee separately.
         emitSendMessage({
-          dmId: conversation.id,
+          dmId: realDmId,
           content: firstMessage,
           type: 'msg',
           ...(feeTxHash ? { txHash: feeTxHash } : {}),
