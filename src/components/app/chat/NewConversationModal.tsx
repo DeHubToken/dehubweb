@@ -29,7 +29,7 @@ import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useUserSearchForDM, useCreateConversation } from '@/hooks/use-messages';
-import { type DeHubUser, type DeHubConversation } from '@/lib/api/dehub';
+import { getAccountInfo, type DeHubUser, type DeHubConversation } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
@@ -406,14 +406,33 @@ export function NewConversationModal({
 
     try {
       if (firstMessage && !feeTxHash) {
-        if (!userSocketId) {
+        const profile = await getAccountInfo(userAddress).catch(() => null);
+        const candidateIds = Array.from(new Set([
+          userAddress,
+          profile?._id,
+          profile?.id,
+          userSocketId,
+        ].filter((value): value is string => !!value)));
+
+        if (candidateIds.length === 0) {
           throw new Error('Recipient is missing a valid DM id');
         }
 
-        const dmConversation = await emitCreateAndStart(userSocketId);
+        let dmConversation: Awaited<ReturnType<typeof emitCreateAndStart>> | null = null;
+        let lastError: Error | null = null;
+
+        for (const candidateId of candidateIds) {
+          try {
+            dmConversation = await emitCreateAndStart(candidateId);
+            if (dmConversation?._id) break;
+          } catch (error) {
+            lastError = error as Error;
+          }
+        }
+
         const dmId = dmConversation?._id;
         if (!dmId) {
-          throw new Error('Failed to create direct message thread');
+          throw lastError || new Error('Failed to create direct message thread');
         }
 
         emitSendMessage({
@@ -423,13 +442,13 @@ export function NewConversationModal({
         });
 
         const otherUser = {
-          _id: userSocketId,
-          address: userAddress,
-          username: user.username,
-          displayName: user.displayName || user.display_name,
-          avatarImageUrl: user.avatarImageUrl || user.avatarUrl,
-          isVerified: user.isVerified || user.is_verified,
-          badgeBalance: (user as any).badgeBalance,
+          _id: profile?._id || userSocketId || userAddress,
+          address: profile?.address || userAddress,
+          username: profile?.username || user.username,
+          displayName: profile?.displayName || profile?.display_name || user.displayName || user.display_name,
+          avatarImageUrl: profile?.avatarImageUrl || profile?.avatarUrl || user.avatarImageUrl || user.avatarUrl,
+          isVerified: profile?.isVerified || profile?.is_verified || user.isVerified || user.is_verified,
+          badgeBalance: (profile as any)?.badgeBalance ?? (user as any).badgeBalance,
         };
 
         onConversationCreated({
