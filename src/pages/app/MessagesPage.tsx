@@ -276,6 +276,19 @@ export default function MessagesPage() {
     return () => { clearInterval(fast); clearTimeout(slow); clearInterval(slowInterval); };
   }, [hasVirtualSelected, refetch]);
 
+  // Auto-send a queued invite/draft message once the selected conversation has a real dmId
+  useEffect(() => {
+    const pending = pendingAutoSendRef.current;
+    if (!pending || !selectedConversation) return;
+    const peerAddr = selectedConversation.otherUser?.address?.toLowerCase();
+    if (peerAddr !== pending.peerAddress) return;
+    const dmId = selectedConversation.id;
+    const isVirtual = dmId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(dmId);
+    if (isVirtual) return; // wait for real dmId
+    pendingAutoSendRef.current = null;
+    emitSendMessage({ dmId, content: pending.body, type: 'msg' });
+  }, [selectedConversation]);
+
   // Block access for unauthenticated users
   if (!isAuthenticated) {
     return (
