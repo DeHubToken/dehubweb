@@ -122,14 +122,6 @@ function UserSearchResult({
           </p>
         )}
       </div>
-      
-      {isLoading ? (
-        <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
-      ) : !dmDisabled && (
-        perMessageFee && perMessageFee > 0 
-          ? <Lock className="w-4 h-4 text-amber-400" />
-          : <MessageCircle className="w-5 h-5 text-zinc-400" />
-      )}
     </button>
   );
 }
