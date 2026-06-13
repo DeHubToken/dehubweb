@@ -9,7 +9,19 @@
  *   4. Only then create the conversation
  */
 
+/**
+ * NewConversationModal Component
+ * ==============================
+ * Modal for searching and selecting a user to start a new DM conversation.
+ * If the recipient has a perMessageFee, shows a payment step first:
+ *   1. Check sender's DHB balance
+ *   2. Show fee confirmation with option to tip more
+ *   3. Process on-chain DHB transfer
+ *   4. Only then create the conversation
+ */
+
 import { useState, useCallback, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, Loader2, MessageCircle, X, Lock, ArrowLeft, AlertCircle } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import padlockImg from '@/assets/padlock.png';
@@ -23,6 +35,7 @@ import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
 import { VerifiedBadge } from '../VerifiedBadge';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 import {
   getWalletAddress,
   getERC20Balance,
@@ -31,7 +44,7 @@ import {
 } from '@/lib/contracts/aa-utils';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { sendTip } from '@/lib/contracts/stream-controller';
-import { emitSendMessage, emitCreateAndStart } from '@/lib/api/dehub/dm-socket';
+import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
 
 interface NewConversationModalProps {
   open: boolean;
