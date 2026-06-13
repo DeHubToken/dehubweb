@@ -103,12 +103,15 @@ function UserSearchResult({
       </Avatar>
       
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-1.5">
-          <span className="font-semibold text-white truncate">{displayName}</span>
-          {isVerified && <VerifiedBadge className="w-3.5 h-3.5" />}
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="relative inline-flex items-baseline shrink min-w-0 pr-3">
+            <span className="font-semibold text-white text-sm truncate leading-tight">{displayName}</span>
+            <BadgeIcon badgeBalance={badgeBalance} username={user.username || displayName} className="w-[9px] h-[9px] absolute -top-0.5 right-0" />
+          </span>
+          {isVerified && <VerifiedBadge className="w-3.5 h-3.5 shrink-0" />}
         </div>
-        {user.username && (
-          <p className="text-sm text-zinc-500 truncate">@{user.username}</p>
+        {showHandle && (
+          <p className="text-xs text-zinc-500 truncate">@{user.username}</p>
         )}
         {dmDisabled && (
           <p className="text-xs text-red-400 mt-1">DMs disabled</p>
