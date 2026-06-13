@@ -31,7 +31,7 @@ import {
 } from '@/lib/contracts/aa-utils';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { sendTip } from '@/lib/contracts/stream-controller';
-import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
+import { emitSendMessage, emitCreateAndStart } from '@/lib/api/dehub/dm-socket';
 
 interface NewConversationModalProps {
   open: boolean;
