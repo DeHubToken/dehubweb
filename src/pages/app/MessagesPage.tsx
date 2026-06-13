@@ -18,6 +18,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useDMRealtime } from '@/hooks/use-dm-realtime';
+import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
 import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
 import messagesBubbleIcon from '@/assets/icons/messages-3d-icon.png';
 import dehubLogo from '@/assets/dehub-logo.png';
@@ -187,13 +188,17 @@ export default function MessagesPage() {
   };
 
   // Capture navigation state into a ref immediately (before it can be cleared)
-  const pendingDmRef = useRef<{ address: string; username?: string } | null>(null);
+  const pendingDmRef = useRef<{ address: string; username?: string; autoSendBody?: string } | null>(null);
+  const pendingAutoSendRef = useRef<{ peerAddress: string; body: string } | null>(null);
   const [pendingDmTrigger, setPendingDmTrigger] = useState(0);
   
   useEffect(() => {
-    const state = location.state as { openDmWith?: string; username?: string } | null;
+    const state = location.state as { openDmWith?: string; username?: string; autoSendBody?: string } | null;
     if (state?.openDmWith) {
-      pendingDmRef.current = { address: state.openDmWith, username: state.username };
+      pendingDmRef.current = { address: state.openDmWith, username: state.username, autoSendBody: state.autoSendBody };
+      if (state.autoSendBody) {
+        pendingAutoSendRef.current = { peerAddress: state.openDmWith.toLowerCase(), body: state.autoSendBody };
+      }
       window.history.replaceState({}, document.title);
       setPendingDmTrigger(prev => prev + 1);
     }
@@ -270,6 +275,19 @@ export default function MessagesPage() {
     }, 30000);
     return () => { clearInterval(fast); clearTimeout(slow); clearInterval(slowInterval); };
   }, [hasVirtualSelected, refetch]);
+
+  // Auto-send a queued invite/draft message once the selected conversation has a real dmId
+  useEffect(() => {
+    const pending = pendingAutoSendRef.current;
+    if (!pending || !selectedConversation) return;
+    const peerAddr = selectedConversation.otherUser?.address?.toLowerCase();
+    if (peerAddr !== pending.peerAddress) return;
+    const dmId = selectedConversation.id;
+    const isVirtual = dmId.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(dmId);
+    if (isVirtual) return; // wait for real dmId
+    pendingAutoSendRef.current = null;
+    emitSendMessage({ dmId, content: pending.body, type: 'msg' });
+  }, [selectedConversation]);
 
   // Block access for unauthenticated users
   if (!isAuthenticated) {

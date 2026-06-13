@@ -360,7 +360,6 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
         initialMessage={`${window.location.origin}/app/communities/${community.slug}`}
         onConversationCreated={() => {
           setInviteOpen(false);
-          navigate('/app/messages');
           toast.success(t('communities.inviteSent', { defaultValue: 'Invite sent' }));
         }}
       />

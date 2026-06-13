@@ -9,7 +9,19 @@
  *   4. Only then create the conversation
  */
 
+/**
+ * NewConversationModal Component
+ * ==============================
+ * Modal for searching and selecting a user to start a new DM conversation.
+ * If the recipient has a perMessageFee, shows a payment step first:
+ *   1. Check sender's DHB balance
+ *   2. Show fee confirmation with option to tip more
+ *   3. Process on-chain DHB transfer
+ *   4. Only then create the conversation
+ */
+
 import { useState, useCallback, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, Loader2, MessageCircle, X, Lock, ArrowLeft, AlertCircle } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import padlockImg from '@/assets/padlock.png';
@@ -23,6 +35,7 @@ import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
 import { VerifiedBadge } from '../VerifiedBadge';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
 import {
   getWalletAddress,
   getERC20Balance,
@@ -31,7 +44,7 @@ import {
 } from '@/lib/contracts/aa-utils';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { sendTip } from '@/lib/contracts/stream-controller';
-import { emitSendMessage, emitCreateAndStart } from '@/lib/api/dehub/dm-socket';
+import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
 
 interface NewConversationModalProps {
   open: boolean;
@@ -62,9 +75,12 @@ function UserSearchResult({
 }) {
   const avatarPath = extractAvatarPath(user);
   const avatarUrl = user.address ? buildAvatarUrl(user.address, avatarPath) : undefined;
-  const displayName = user.displayName || user.display_name || user.username || 'User';
+  const rawDisplayName = user.displayName || user.display_name;
+  const displayName = rawDisplayName || user.username || 'User';
+  const showHandle = !!user.username && !!rawDisplayName; // only show @handle when distinct from top line
   const isVerified = user.isVerified || user.is_verified;
-  
+  const badgeBalance = (user as any).badgeBalance ?? (user as any).balance ?? undefined;
+
   const dmSettingsObj = getDmSettings(user);
   const dmDisabled = dmSettingsObj?.disables?.includes('NEW_DM') || dmSettingsObj?.disables?.includes('all');
   const perMessageFee = dmSettingsObj?.perMessageFee;
@@ -87,12 +103,15 @@ function UserSearchResult({
       </Avatar>
       
       <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-1.5">
-          <span className="font-semibold text-white truncate">{displayName}</span>
-          {isVerified && <VerifiedBadge className="w-3.5 h-3.5" />}
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="relative inline-flex items-baseline shrink min-w-0 pr-3">
+            <span className="font-semibold text-white text-sm truncate leading-tight">{displayName}</span>
+            <BadgeIcon badgeBalance={badgeBalance} username={user.username || displayName} className="w-[9px] h-[9px] absolute -top-0.5 right-0" />
+          </span>
+          {isVerified && <VerifiedBadge className="w-3.5 h-3.5 shrink-0" />}
         </div>
-        {user.username && (
-          <p className="text-sm text-zinc-500 truncate">@{user.username}</p>
+        {showHandle && (
+          <p className="text-xs text-zinc-500 truncate">@{user.username}</p>
         )}
         {dmDisabled && (
           <p className="text-xs text-red-400 mt-1">DMs disabled</p>
@@ -365,6 +384,7 @@ export function NewConversationModal({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [feeUser, setFeeUser] = useState<DeHubUser | null>(null);
+  const navigate = useNavigate();
 
   // When modal opens with an initialFeeUser, jump straight to fee step
   useEffect(() => {
@@ -391,24 +411,26 @@ export function NewConversationModal({
         recipientUser: user,
       });
 
-      // Send the first message if provided (from fee payment step or invite link)
-      if (firstMessage && conversation.id) {
-        // The conversation.id from createConversation is a stub ("new_<address>").
-        // The backend socket needs a real dmId, so create/start through the socket
-        // to get one before sending the message.
-        let realDmId = conversation.id;
-        try {
-          const dm = await emitCreateAndStart(userAddress);
-          if (dm?._id) realDmId = dm._id;
-        } catch (err) {
-          console.error('[NewConversationModal] emitCreateAndStart failed:', err);
-        }
-        // txHash bundled in sendMessage — backend verifies fee inline. Do NOT call verify-dm-fee separately.
+      // Fee-paid first message goes through the socket immediately (fee tx already settled)
+      if (firstMessage && conversation.id && feeTxHash) {
         emitSendMessage({
-          dmId: realDmId,
+          dmId: conversation.id,
           content: firstMessage,
           type: 'msg',
-          ...(feeTxHash ? { txHash: feeTxHash } : {}),
+          txHash: feeTxHash,
+        });
+      }
+
+      // For non-fee invites (community invite link), navigate to /app/messages and let
+      // the page open the conversation and auto-send the message — same proven pattern
+      // used elsewhere for "Message user" buttons.
+      if (firstMessage && !feeTxHash) {
+        navigate('/app/messages', {
+          state: {
+            openDmWith: user.address || userAddress,
+            username: user.username,
+            autoSendBody: firstMessage,
+          },
         });
       }
 
