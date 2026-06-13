@@ -21,7 +21,7 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { Search, Loader2, MessageCircle, Lock, ArrowLeft, AlertCircle } from 'lucide-react';
+import { Search, Loader2, ArrowLeft, AlertCircle } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import padlockImg from '@/assets/padlock.png';
 import { Input } from '@/components/ui/input';
@@ -122,14 +122,6 @@ function UserSearchResult({
           </p>
         )}
       </div>
-      
-      {isLoading ? (
-        <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
-      ) : !dmDisabled && (
-        perMessageFee && perMessageFee > 0 
-          ? <Lock className="w-4 h-4 text-amber-400" />
-          : <MessageCircle className="w-5 h-5 text-zinc-400" />
-      )}
     </button>
   );
 }
