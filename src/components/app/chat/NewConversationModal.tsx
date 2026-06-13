@@ -21,7 +21,6 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Search, Loader2, MessageCircle, X, Lock, ArrowLeft, AlertCircle } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import padlockImg from '@/assets/padlock.png';
@@ -44,7 +43,7 @@ import {
 } from '@/lib/contracts/aa-utils';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { sendTip } from '@/lib/contracts/stream-controller';
-import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
+import { emitCreateAndStart, emitSendMessage } from '@/lib/api/dehub/dm-socket';
 
 interface NewConversationModalProps {
   open: boolean;
@@ -384,7 +383,6 @@ export function NewConversationModal({
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [feeUser, setFeeUser] = useState<DeHubUser | null>(null);
-  const navigate = useNavigate();
 
   // When modal opens with an initialFeeUser, jump straight to fee step
   useEffect(() => {
@@ -398,6 +396,7 @@ export function NewConversationModal({
 
   const startConversation = async (user: DeHubUser, firstMessage?: string, feeTxHash?: string) => {
     const userAddress = user.address || user._id;
+    const userSocketId = user._id || user.id;
     if (!userAddress) {
       toast.error('Unable to start conversation with this user');
       return;
@@ -406,6 +405,49 @@ export function NewConversationModal({
     setSelectedUserId(userAddress);
 
     try {
+      if (firstMessage && !feeTxHash) {
+        if (!userSocketId) {
+          throw new Error('Recipient is missing a valid DM id');
+        }
+
+        const dmConversation = await emitCreateAndStart(userSocketId);
+        const dmId = dmConversation?._id;
+        if (!dmId) {
+          throw new Error('Failed to create direct message thread');
+        }
+
+        emitSendMessage({
+          dmId,
+          content: firstMessage,
+          type: 'msg',
+        });
+
+        const otherUser = {
+          _id: userSocketId,
+          address: userAddress,
+          username: user.username,
+          displayName: user.displayName || user.display_name,
+          avatarImageUrl: user.avatarImageUrl || user.avatarUrl,
+          isVerified: user.isVerified || user.is_verified,
+          badgeBalance: (user as any).badgeBalance,
+        };
+
+        onConversationCreated({
+          id: dmId,
+          participants: [otherUser as DeHubUser],
+          otherUser: otherUser as DeHubUser,
+          unreadCount: 0,
+          createdAt: dmConversation.lastMessageAt || new Date().toISOString(),
+          updatedAt: dmConversation.lastMessageAt || new Date().toISOString(),
+          dmFee: dmConversation.dmFee,
+        });
+
+        onOpenChange(false);
+        setSearchQuery('');
+        setFeeUser(null);
+        return;
+      }
+
       const conversation = await createConversation.mutateAsync({
         recipientAddress: userAddress,
         recipientUser: user,
@@ -418,19 +460,6 @@ export function NewConversationModal({
           content: firstMessage,
           type: 'msg',
           txHash: feeTxHash,
-        });
-      }
-
-      // For non-fee invites (community invite link), navigate to /app/messages and let
-      // the page open the conversation and auto-send the message — same proven pattern
-      // used elsewhere for "Message user" buttons.
-      if (firstMessage && !feeTxHash) {
-        navigate('/app/messages', {
-          state: {
-            openDmWith: user.address || userAddress,
-            username: user.username,
-            autoSendBody: firstMessage,
-          },
         });
       }
 
