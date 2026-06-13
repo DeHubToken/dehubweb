@@ -18,6 +18,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useDMRealtime } from '@/hooks/use-dm-realtime';
+import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
 import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
 import messagesBubbleIcon from '@/assets/icons/messages-3d-icon.png';
 import dehubLogo from '@/assets/dehub-logo.png';
