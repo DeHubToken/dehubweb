@@ -75,9 +75,12 @@ function UserSearchResult({
 }) {
   const avatarPath = extractAvatarPath(user);
   const avatarUrl = user.address ? buildAvatarUrl(user.address, avatarPath) : undefined;
-  const displayName = user.displayName || user.display_name || user.username || 'User';
+  const rawDisplayName = user.displayName || user.display_name;
+  const displayName = rawDisplayName || user.username || 'User';
+  const showHandle = !!user.username && !!rawDisplayName; // only show @handle when distinct from top line
   const isVerified = user.isVerified || user.is_verified;
-  
+  const badgeBalance = (user as any).badgeBalance ?? (user as any).balance ?? undefined;
+
   const dmSettingsObj = getDmSettings(user);
   const dmDisabled = dmSettingsObj?.disables?.includes('NEW_DM') || dmSettingsObj?.disables?.includes('all');
   const perMessageFee = dmSettingsObj?.perMessageFee;
