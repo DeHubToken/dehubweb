@@ -187,13 +187,17 @@ export default function MessagesPage() {
   };
 
   // Capture navigation state into a ref immediately (before it can be cleared)
-  const pendingDmRef = useRef<{ address: string; username?: string } | null>(null);
+  const pendingDmRef = useRef<{ address: string; username?: string; autoSendBody?: string } | null>(null);
+  const pendingAutoSendRef = useRef<{ peerAddress: string; body: string } | null>(null);
   const [pendingDmTrigger, setPendingDmTrigger] = useState(0);
   
   useEffect(() => {
-    const state = location.state as { openDmWith?: string; username?: string } | null;
+    const state = location.state as { openDmWith?: string; username?: string; autoSendBody?: string } | null;
     if (state?.openDmWith) {
-      pendingDmRef.current = { address: state.openDmWith, username: state.username };
+      pendingDmRef.current = { address: state.openDmWith, username: state.username, autoSendBody: state.autoSendBody };
+      if (state.autoSendBody) {
+        pendingAutoSendRef.current = { peerAddress: state.openDmWith.toLowerCase(), body: state.autoSendBody };
+      }
       window.history.replaceState({}, document.title);
       setPendingDmTrigger(prev => prev + 1);
     }
