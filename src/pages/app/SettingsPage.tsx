@@ -796,8 +796,8 @@ function ProfileSettings() {
               </svg>
             }
           />
-          <SocialLinkInput 
-            label="Telegram" 
+          <SocialLinkInput
+            label="Telegram"
             placeholder="https://t.me/username"
             value={telegramLink}
             onChange={setTelegramLink}
@@ -809,7 +809,101 @@ function ProfileSettings() {
           />
         </div>
       </div>
+
+      {/* Support / Bug Report */}
+      <BugReportSection username={authUser?.username || authUser?.email || 'Anonymous'} />
     </div>
+  );
+}
+
+function BugReportSection({ username }: { username: string }) {
+  const { t } = useTranslation();
+  const [open, setOpen] = useState(false);
+  const [description, setDescription] = useState('');
+  const [sending, setSending] = useState(false);
+
+  const handleSubmit = async () => {
+    if (!description.trim()) { toast.error('Please describe the issue'); return; }
+    setSending(true);
+    try {
+      const { reportContent } = await import('@/lib/api/dehub/reports');
+      // Use a placeholder tokenId=0 for bug reports (platform-level, not content-specific)
+      await reportContent(0, 'other', `[Bug Report from ${username}]: ${description.trim()}`);
+      toast.success('Bug report submitted. Thank you!');
+      setOpen(false);
+      setDescription('');
+    } catch {
+      toast.error('Failed to submit report. Please try again.');
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    <>
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">Support</h3>
+        <div className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
+          <div className="flex items-center gap-3">
+            <Terminal className="w-5 h-5 text-zinc-500" />
+            <div>
+              <p className="text-white font-medium">Report a Bug</p>
+              <p className="text-zinc-500 text-sm">Help us fix issues by reporting bugs</p>
+            </div>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            className="bg-zinc-700 border-zinc-600 text-white hover:bg-zinc-600 rounded-lg"
+            onClick={() => setOpen(true)}
+          >
+            Report
+          </Button>
+        </div>
+      </div>
+
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-zinc-900 border border-white/10 rounded-2xl max-w-md w-full p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="text-white font-bold text-lg">Report a Bug</h3>
+              <button onClick={() => setOpen(false)} className="text-zinc-500 hover:text-white">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="bg-zinc-800/60 rounded-xl px-4 py-2.5">
+              <p className="text-zinc-400 text-sm">Reporting as <span className="text-white font-medium">@{username}</span></p>
+            </div>
+            <div>
+              <label className="block text-sm text-zinc-400 mb-1.5">Describe the issue</label>
+              <textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="What happened? What were you trying to do? Include any error messages..."
+                rows={5}
+                className="w-full bg-zinc-800 border border-zinc-700 text-white text-sm rounded-xl px-4 py-3 placeholder:text-zinc-500 resize-none focus:outline-none focus:ring-1 focus:ring-white/20"
+              />
+            </div>
+            <div className="flex gap-2 pt-1">
+              <button
+                onClick={() => setOpen(false)}
+                className="flex-1 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 text-sm font-medium hover:bg-zinc-700 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={sending}
+                className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+              >
+                {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                {sending ? 'Sending...' : 'Submit Report'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -929,6 +1023,84 @@ function NotificationSettings() {
             onCheckedChange={handleToggle('directMessages')}
             disabled={isDisabled}
           />
+          <SettingToggle
+            icon={MessageSquare}
+            title="Comment Replies"
+            description="When someone replies to your comment"
+            defaultChecked={pushPrefs?.commentReplies ?? true}
+            onCheckedChange={handleToggle('commentReplies')}
+            disabled={isDisabled}
+          />
+          <SettingToggle
+            icon={AtSign}
+            title="Mentions"
+            description="When someone mentions you in a post or comment"
+            defaultChecked={pushPrefs?.mentions ?? true}
+            onCheckedChange={handleToggle('mentions')}
+            disabled={isDisabled}
+          />
+        </div>
+      </div>
+
+      {/* Monetization */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">Monetization</h3>
+        <div className="space-y-4">
+          <SettingToggle
+            icon={Coins}
+            title="Tips Received"
+            description="When someone sends you a DHB tip"
+            defaultChecked={pushPrefs?.tips ?? true}
+            onCheckedChange={handleToggle('tips')}
+            disabled={isDisabled}
+          />
+          <SettingToggle
+            icon={Handshake}
+            title="New Subscribers"
+            description="When someone subscribes to your plan"
+            defaultChecked={pushPrefs?.subscriptions ?? true}
+            onCheckedChange={handleToggle('subscriptions')}
+            disabled={isDisabled}
+          />
+          <SettingToggle
+            icon={Coins}
+            title="PPV Purchases"
+            description="When someone purchases your pay-per-view content"
+            defaultChecked={pushPrefs?.ppvPurchases ?? true}
+            onCheckedChange={handleToggle('ppvPurchases')}
+            disabled={isDisabled}
+          />
+        </div>
+      </div>
+
+      {/* Content & Platform */}
+      <div>
+        <h3 className="font-medium text-zinc-400 text-sm mb-4">Content & Platform</h3>
+        <div className="space-y-4">
+          <SettingToggle
+            icon={Play}
+            title="Livestream Start"
+            description="When someone you follow starts a livestream"
+            defaultChecked={pushPrefs?.livestreamStart ?? true}
+            onCheckedChange={handleToggle('livestreamStart')}
+            disabled={isDisabled}
+          />
+          <SettingToggle
+            icon={Sparkles}
+            title="Milestones"
+            description="When you reach a follower or engagement milestone"
+            defaultChecked={pushPrefs?.milestones ?? true}
+            onCheckedChange={handleToggle('milestones')}
+            disabled={isDisabled}
+          />
+          <SettingToggle
+            icon={Bell}
+            title="Announcements"
+            description="Platform updates and important announcements"
+            defaultChecked={pushPrefs?.announcements ?? true}
+            onCheckedChange={handleToggle('announcements')}
+            disabled={isDisabled}
+          />
         </div>
       </div>
 
@@ -941,14 +1113,95 @@ function NotificationSettings() {
       </div>
 
       {/* Quiet Hours */}
-      <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.quietHours')}</h3>
-        <SettingToggle
-          icon={Clock}
-          title={t('settings.enableQuietHours')}
-          description={t('settings.quietHoursDesc')}
-          comingSoon
-        />
+      <QuietHoursSection />
+    </div>
+  );
+}
+
+const HOURS = Array.from({ length: 24 }, (_, i) => i);
+
+function QuietHoursSection() {
+  const { t } = useTranslation();
+  const [enabled, setEnabled] = useState(() => {
+    try { return localStorage.getItem('dehub_qh_enabled') === 'true'; } catch { return false; }
+  });
+  const [start, setStart] = useState<number>(() => {
+    try { return parseInt(localStorage.getItem('dehub_qh_start') || '22', 10); } catch { return 22; }
+  });
+  const [end, setEnd] = useState<number>(() => {
+    try { return parseInt(localStorage.getItem('dehub_qh_end') || '8', 10); } catch { return 8; }
+  });
+
+  const handleToggle = (checked: boolean) => {
+    setEnabled(checked);
+    try { localStorage.setItem('dehub_qh_enabled', String(checked)); } catch {}
+    toast.success(checked ? 'Quiet hours enabled' : 'Quiet hours disabled');
+  };
+
+  const handleStartChange = (h: number) => {
+    setStart(h);
+    try { localStorage.setItem('dehub_qh_start', String(h)); } catch {}
+  };
+
+  const handleEndChange = (h: number) => {
+    setEnd(h);
+    try { localStorage.setItem('dehub_qh_end', String(h)); } catch {}
+  };
+
+  const fmt = (h: number) => `${String(h).padStart(2, '0')}:00`;
+
+  return (
+    <div>
+      <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.quietHours')}</h3>
+      <div className="bg-zinc-800/50 rounded-xl overflow-hidden border border-zinc-700/50">
+        <div className="flex items-center justify-between px-4 py-3.5">
+          <div className="flex items-center gap-3">
+            <Clock className="w-5 h-5 text-zinc-500" />
+            <div>
+              <p className="text-white font-medium">{t('settings.enableQuietHours')}</p>
+              <p className="text-zinc-500 text-sm">
+                {enabled ? `Silenced ${fmt(start)} → ${fmt(end)}` : t('settings.quietHoursDesc')}
+              </p>
+            </div>
+          </div>
+          <Switch checked={enabled} onCheckedChange={handleToggle} />
+        </div>
+
+        {enabled && (
+          <>
+            <div className="h-px bg-zinc-700/50 mx-4" />
+            <div className="px-4 py-3 flex items-center gap-4">
+              <div className="flex-1">
+                <label className="block text-xs text-zinc-400 mb-1.5">From</label>
+                <select
+                  value={start}
+                  onChange={(e) => handleStartChange(Number(e.target.value))}
+                  className="w-full bg-zinc-800 border border-zinc-700 text-white text-sm rounded-xl px-3 py-2 focus:outline-none"
+                >
+                  {HOURS.map(h => (
+                    <option key={h} value={h}>{fmt(h)}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="pt-4 text-zinc-500">→</div>
+              <div className="flex-1">
+                <label className="block text-xs text-zinc-400 mb-1.5">To</label>
+                <select
+                  value={end}
+                  onChange={(e) => handleEndChange(Number(e.target.value))}
+                  className="w-full bg-zinc-800 border border-zinc-700 text-white text-sm rounded-xl px-3 py-2 focus:outline-none"
+                >
+                  {HOURS.map(h => (
+                    <option key={h} value={h}>{fmt(h)}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <p className="text-zinc-500 text-xs px-4 pb-3">
+              Push notifications will be silenced during these hours.
+            </p>
+          </>
+        )}
       </div>
     </div>
   );
@@ -962,6 +1215,57 @@ function PrivacySettings() {
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
   const { user } = useAuthContext();
   const [followRequestsOpen, setFollowRequestsOpen] = useState(false);
+  const [goPublicModalOpen, setGoPublicModalOpen] = useState(false);
+  const [goPublicBusy, setGoPublicBusy] = useState(false);
+  const [pendingRequestCount, setPendingRequestCount] = useState(0);
+
+  const handlePrivateToggle = useCallback(async (checked: boolean) => {
+    if (!checked && isPrivate) {
+      // Going from private → public: check pending requests first
+      try {
+        const { getFollowRequests } = await import('@/lib/api/dehub/social');
+        const requests = await getFollowRequests();
+        if (requests.length > 0) {
+          setPendingRequestCount(requests.length);
+          setGoPublicModalOpen(true);
+          return;
+        }
+      } catch {
+        // If we can't fetch, proceed anyway
+      }
+    }
+    updateSettings({ is_private: checked });
+  }, [isPrivate, updateSettings]);
+
+  const handleAcceptAllAndGoPublic = useCallback(async () => {
+    setGoPublicBusy(true);
+    try {
+      const { acceptAllFollowRequests } = await import('@/lib/api/dehub/social');
+      await acceptAllFollowRequests();
+      updateSettings({ is_private: false });
+      setGoPublicModalOpen(false);
+      toast.success('All requests accepted. Account is now public.');
+    } catch {
+      toast.error('Failed to accept requests');
+    } finally {
+      setGoPublicBusy(false);
+    }
+  }, [updateSettings]);
+
+  const handleDeclineAllAndGoPublic = useCallback(async () => {
+    setGoPublicBusy(true);
+    try {
+      const { rejectAllFollowRequests } = await import('@/lib/api/dehub/social');
+      await rejectAllFollowRequests();
+      updateSettings({ is_private: false });
+      setGoPublicModalOpen(false);
+      toast.success('All requests declined. Account is now public.');
+    } catch {
+      toast.error('Failed to decline requests');
+    } finally {
+      setGoPublicBusy(false);
+    }
+  }, [updateSettings]);
   
   const handlePostVisibilityChange = async (newVisibility: 'public' | 'private') => {
     if (!user?.address) {
@@ -1022,7 +1326,7 @@ function PrivacySettings() {
             title={t('settings.privateAccount')}
             description={t('settings.privateAccountDesc')}
             defaultChecked={isPrivate}
-            onCheckedChange={(checked) => updateSettings({ is_private: checked })}
+            onCheckedChange={handlePrivateToggle}
             disabled={isUpdating || isLoading}
           />
           {isPrivate && (
@@ -1248,6 +1552,47 @@ function PrivacySettings() {
         <p className="text-zinc-500 text-sm mb-4">{t('settings.geoBlockingDesc')}</p>
         <GeoBlockingSelector />
       </div>
+
+      {/* Go Public Security Gate Modal */}
+      {goPublicModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+          <div className="bg-zinc-900 border border-white/10 rounded-2xl max-w-sm w-full p-6 space-y-4">
+            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-amber-500/20 mx-auto">
+              <Users className="w-7 h-7 text-amber-400" />
+            </div>
+            <h3 className="text-white font-bold text-lg text-center">Switch to Public?</h3>
+            <p className="text-zinc-300 text-sm text-center">
+              You have <span className="text-white font-semibold">{pendingRequestCount}</span> pending follow {pendingRequestCount === 1 ? 'request' : 'requests'}.
+              What would you like to do before going public?
+            </p>
+            <div className="space-y-2 pt-1">
+              <button
+                onClick={handleAcceptAllAndGoPublic}
+                disabled={goPublicBusy}
+                className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+              >
+                {goPublicBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                Accept All & Go Public
+              </button>
+              <button
+                onClick={handleDeclineAllAndGoPublic}
+                disabled={goPublicBusy}
+                className="w-full py-3 rounded-xl bg-red-500/20 border border-red-500/30 hover:bg-red-500/30 text-red-400 font-semibold text-sm transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+              >
+                {goPublicBusy ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                Decline All & Go Public
+              </button>
+              <button
+                onClick={() => setGoPublicModalOpen(false)}
+                disabled={goPublicBusy}
+                className="w-full py-3 rounded-xl text-zinc-400 hover:text-white text-sm transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -1754,10 +2099,11 @@ function SocialLinkInput({
 
 function AssetsSettings() {
   const { t } = useTranslation();
-  const { walletAddress } = useAuthContext();
+  const { walletAddress, connectionSource } = useAuthContext();
   const navigate = useNavigate();
   const [walletDrawerOpen, setWalletDrawerOpen] = useState(false);
 
+  const isGasSponsored = connectionSource === 'web3auth';
   const coinBalance = 0;
 
   const truncatedAddress = walletAddress 
@@ -1825,6 +2171,32 @@ function AssetsSettings() {
           </div>
           <ExternalLink className="w-5 h-5 text-zinc-500 group-hover:text-white transition-colors" />
         </button>
+      </div>
+
+      {/* Gas Sponsorship */}
+      <div>
+        <div className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-zinc-700 rounded-xl flex items-center justify-center">
+              <Coins className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <p className="text-white font-medium">Gas Fees</p>
+              <p className="text-zinc-500 text-sm">
+                {isGasSponsored
+                  ? 'Transaction gas fees are sponsored'
+                  : 'You pay gas fees via your external wallet'}
+              </p>
+            </div>
+          </div>
+          <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+            isGasSponsored
+              ? 'bg-emerald-500/20 text-emerald-400'
+              : 'bg-zinc-700/60 text-zinc-400'
+          }`}>
+            {isGasSponsored ? 'Sponsored' : 'Self-paid'}
+          </span>
+        </div>
       </div>
 
       {/* Wallet Drawer */}

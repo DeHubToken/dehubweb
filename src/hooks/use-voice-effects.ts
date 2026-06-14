@@ -250,10 +250,15 @@ export function useVoiceEffects() {
     return processStream(rawStream, effectId);
   }, [processStream]);
 
+  const getProcessedStream = useCallback((): MediaStream | null => {
+    return graphRef.current?.destination.stream ?? null;
+  }, []);
+
   return {
     processStream,
     switchEffect,
     rebuildEffect,
     cleanup,
+    getProcessedStream,
   };
 }

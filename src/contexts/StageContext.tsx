@@ -93,6 +93,8 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const [volumeLevel, setVolumeLevel] = useState(0);
   const [voiceEffect, setVoiceEffectState] = useState<VoiceEffectId>('none');
   const voiceEffectsHook = useVoiceEffects();
+  const voiceEffectsHookRef = useRef(voiceEffectsHook);
+  voiceEffectsHookRef.current = voiceEffectsHook;
 
   // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -147,40 +149,35 @@ export function StageProvider({ children }: { children: ReactNode }) {
 
   const startRecording = useCallback((spaceId: string) => {
     try {
-      // Capture all audio playing in the tab (what the host hears = all speakers mixed)
-      const audioCtx = new AudioContext();
-      const dest = audioCtx.createMediaStreamDestination();
+      // Record the voice-effect-processed stream (same audio that Agora publishes).
+      // Accessed via ref so this callback stays stable with [] deps.
+      const processedStream = voiceEffectsHookRef.current.getProcessedStream();
+      if (!processedStream) {
+        console.warn('[Stage] Cannot start recording — processed audio stream not ready');
+        return;
+      }
 
-      // Connect system audio (tab capture) if available, otherwise use a silent stream
-      // The Agora remote tracks play through the speaker — we capture via getDisplayMedia
-      // For simplicity and broad compatibility we use getUserMedia with echoCancellation off
-      navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false }, video: false })
-        .then((stream) => {
-          const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
-            ? 'audio/webm;codecs=opus'
-            : 'audio/webm';
+      const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+        ? 'audio/webm;codecs=opus'
+        : 'audio/webm';
 
-          const recorder = new MediaRecorder(stream, { mimeType });
-          recordingChunksRef.current = [];
-          recordingSpaceIdRef.current = spaceId;
-          recordingTimelineRef.current = [];
-          recordingStartMsRef.current = Date.now();
+      const recorder = new MediaRecorder(processedStream, { mimeType });
+      recordingChunksRef.current = [];
+      recordingSpaceIdRef.current = spaceId;
+      recordingTimelineRef.current = [];
+      recordingStartMsRef.current = Date.now();
 
-          recorder.ondataavailable = (e) => {
-            if (e.data.size > 0) recordingChunksRef.current.push(e.data);
-          };
+      recorder.ondataavailable = (e) => {
+        if (e.data.size > 0) recordingChunksRef.current.push(e.data);
+      };
 
-          recorder.start(1000); // collect chunks every 1s
-          mediaRecorderRef.current = recorder;
-          console.log('[Stage] Recording started');
-        })
-        .catch((err) => {
-          console.warn('[Stage] Could not start recording:', err.message);
-        });
+      recorder.start(1000); // collect chunks every 1s
+      mediaRecorderRef.current = recorder;
+      console.log('[Stage] Recording started (voice-effect-processed stream)');
     } catch (err) {
       console.warn('[Stage] Recording setup failed:', err);
     }
-  }, []);
+  }, []); // stable — reads voiceEffectsHookRef.current at call time
 
   const stopAndUploadRecording = useCallback(async (spaceId: string) => {
     const recorder = mediaRecorderRef.current;
@@ -624,7 +621,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
       // We use rebuildEffect (not switchEffect) because Agora snapshots the
       // MediaStreamTrack reference at publish-time; rewiring the Web Audio graph
       // on the same track is not reliably picked up by the Agora RTC stack.
-      const newTrack = voiceEffectsHook.rebuildEffect(effectId);
+      const newTrack = voiceEffectsHookRef.current.rebuildEffect(effectId);
       if (!newTrack) {
         console.warn('[VoiceEffect] rebuildEffect returned null — mic stream not yet captured');
         return;
@@ -642,6 +639,27 @@ export function StageProvider({ children }: { children: ReactNode }) {
       localAudioTrackRef.current = customTrack;
       await agoraClientRef.current.publish([customTrack]);
 
+      // rebuildEffect closes the old AudioContext and creates a new one, so the
+      // MediaStreamDestination (and its track) is brand-new. Restart the MediaRecorder
+      // on the new stream so the recording continues with the active voice effect.
+      const activeRecorder = mediaRecorderRef.current;
+      if (activeRecorder && activeRecorder.state !== 'inactive') {
+        activeRecorder.addEventListener('stop', () => {
+          const newStream = voiceEffectsHookRef.current.getProcessedStream();
+          if (!newStream) return;
+          const mimeType = MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+            ? 'audio/webm;codecs=opus'
+            : 'audio/webm';
+          const newRecorder = new MediaRecorder(newStream, { mimeType });
+          newRecorder.ondataavailable = (e) => {
+            if (e.data.size > 0) recordingChunksRef.current.push(e.data);
+          };
+          newRecorder.start(1000);
+          mediaRecorderRef.current = newRecorder;
+        }, { once: true });
+        activeRecorder.stop();
+      }
+
       toast.success(`Voice: ${effectId === 'none' ? 'Normal' : effectId}`);
     } catch (err) {
       console.error('Error switching voice effect:', err);
@@ -649,7 +667,7 @@ export function StageProvider({ children }: { children: ReactNode }) {
     } finally {
       isEffectSwitchingRef.current = false;
     }
-  }, [voiceEffectsHook]);
+  }, []); // stable — all Agora and hook state accessed via refs
 
   // ─── Toggle mute ─────────────────────────────────────────────────────────
 
