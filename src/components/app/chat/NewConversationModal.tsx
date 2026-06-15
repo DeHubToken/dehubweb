@@ -89,9 +89,11 @@ function UserSearchResult({
       onClick={onSelect}
       disabled={isLoading || dmDisabled}
       className={`w-full flex items-center gap-3 p-3 rounded-xl transition-colors text-left ${
-        dmDisabled 
-          ? 'opacity-50 cursor-not-allowed' 
-          : 'hover:bg-zinc-800'
+        dmDisabled
+          ? 'opacity-50 cursor-not-allowed'
+          : isLoading
+            ? 'opacity-60 cursor-wait'
+            : 'hover:bg-zinc-800'
       }`}
     >
       <Avatar className="w-12 h-12">
@@ -100,7 +102,7 @@ function UserSearchResult({
           {displayName.charAt(0).toUpperCase()}
         </AvatarFallback>
       </Avatar>
-      
+
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5 min-w-0">
           <span className="relative inline-flex items-baseline shrink min-w-0 pr-3">
@@ -115,10 +117,16 @@ function UserSearchResult({
         {dmDisabled && (
           <p className="text-xs text-red-400 mt-1">DMs disabled</p>
         )}
-        {!dmDisabled && perMessageFee && perMessageFee > 0 && (
+        {!dmDisabled && !isLoading && perMessageFee && perMessageFee > 0 && (
           <p className="text-xs text-amber-400 mt-1 flex items-center gap-1">
             <img src={dehubCoin} alt="DHB" className="w-3 h-3" />
             {perMessageFee.toLocaleString()} DHB to message
+          </p>
+        )}
+        {isLoading && (
+          <p className="text-xs text-zinc-400 mt-1 flex items-center gap-1">
+            <Loader2 className="w-3 h-3 animate-spin" />
+            Sending invite...
           </p>
         )}
       </div>
@@ -488,7 +496,12 @@ export function NewConversationModal({
   };
 
   const handleSelectUser = (user: DeHubUser) => {
-    // If an initialMessage was provided, send it as the first message.
+    const dmSettingsObj = getDmSettings(user);
+    const perMessageFee = dmSettingsObj?.perMessageFee;
+    if (perMessageFee && perMessageFee > 0) {
+      setFeeUser(user);
+      return;
+    }
     startConversation(user, initialMessage);
   };
 
@@ -506,6 +519,14 @@ export function NewConversationModal({
           <DialogTitle className="text-white">{title || 'New Message'}</DialogTitle>
         </DialogHeader>
 
+        {feeUser ? (
+          <FeePaymentStep
+            user={feeUser}
+            fee={getDmSettings(feeUser)?.perMessageFee ?? 0}
+            onPaid={(firstMessage, feeTxHash) => startConversation(feeUser, firstMessage, feeTxHash)}
+            onBack={() => setFeeUser(null)}
+          />
+        ) : (
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
           <Input
@@ -553,6 +574,7 @@ export function NewConversationModal({
             </div>
           )}
         </div>
+        )}
       </DialogContent>
     </Dialog>
   );
