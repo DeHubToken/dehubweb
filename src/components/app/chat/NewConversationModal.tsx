@@ -43,7 +43,7 @@ import {
 } from '@/lib/contracts/aa-utils';
 import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { sendTip } from '@/lib/contracts/stream-controller';
-import { emitCreateAndStart, emitSendMessage } from '@/lib/api/dehub/dm-socket';
+import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
 
 interface NewConversationModalProps {
   open: boolean;
@@ -406,74 +406,14 @@ export function NewConversationModal({
 
     try {
       if (firstMessage && !feeTxHash) {
-        const profile = await getAccountInfo(userAddress).catch(() => null);
-        // createAndStart uses AccountModel.findById → requires MongoDB ObjectId.
-        // Never pass the Ethereum address (0x...) here — Mongoose throws a CastError
-        // on the backend, no response comes back, and the frontend stalls for 25 s.
-        const candidateIds = Array.from(new Set([
-          userSocketId,   // user._id from search results — always a MongoDB ObjectId
-          profile?._id,
-          profile?.id,
-        ].filter((value): value is string => !!value)));
-
-        if (candidateIds.length === 0) {
-          throw new Error('Recipient is missing a valid DM id');
-        }
-
-        let dmConversation: Awaited<ReturnType<typeof emitCreateAndStart>> | null = null;
-
-        for (const candidateId of candidateIds) {
-          try {
-            dmConversation = await emitCreateAndStart(candidateId);
-            if (dmConversation?._id) break;
-          } catch {
-            // socket failed — will fall back to REST below
-          }
-        }
-
-        if (dmConversation?._id) {
-          emitSendMessage({
-            dmId: dmConversation._id,
-            content: firstMessage,
-            type: 'msg',
-          });
-
-          const otherUser = {
-            _id: profile?._id || userSocketId || userAddress,
-            address: profile?.address || userAddress,
-            username: profile?.username || user.username,
-            displayName: profile?.displayName || profile?.display_name || user.displayName || user.display_name,
-            avatarImageUrl: profile?.avatarImageUrl || profile?.avatarUrl || user.avatarImageUrl || user.avatarUrl,
-            isVerified: profile?.isVerified || profile?.is_verified || user.isVerified || user.is_verified,
-            badgeBalance: (profile as any)?.badgeBalance ?? (user as any).badgeBalance,
-          };
-
-          onConversationCreated({
-            id: dmConversation._id,
-            participants: [otherUser as DeHubUser],
-            otherUser: otherUser as DeHubUser,
-            unreadCount: 0,
-            createdAt: dmConversation.lastMessageAt || new Date().toISOString(),
-            updatedAt: dmConversation.lastMessageAt || new Date().toISOString(),
-            dmFee: dmConversation.dmFee,
-          });
-
-          onOpenChange(false);
-          setSearchQuery('');
-          setFeeUser(null);
-          return;
-        }
-
-        // Socket createAndStart failed/timed-out — fall back to REST API
-        console.warn('[NewConversationModal] socket createAndStart failed, falling back to REST');
-        const restConversation = await createConversation.mutateAsync({
+        const conversation = await createConversation.mutateAsync({
           recipientAddress: userAddress,
           recipientUser: user,
         });
-        if (firstMessage && restConversation.id) {
-          emitSendMessage({ dmId: restConversation.id, content: firstMessage, type: 'msg' });
+        if (conversation.id) {
+          emitSendMessage({ dmId: conversation.id, content: firstMessage, type: 'msg' });
         }
-        onConversationCreated(restConversation);
+        onConversationCreated(conversation);
         onOpenChange(false);
         setSearchQuery('');
         setFeeUser(null);
