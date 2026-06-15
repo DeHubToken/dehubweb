@@ -399,11 +399,13 @@ export function NewConversationModal({
     try {
       if (firstMessage && !feeTxHash) {
         const profile = await getAccountInfo(userAddress).catch(() => null);
+        // createAndStart uses AccountModel.findById → requires MongoDB ObjectId.
+        // Never pass the Ethereum address (0x...) here — Mongoose throws a CastError
+        // on the backend, no response comes back, and the frontend stalls for 25 s.
         const candidateIds = Array.from(new Set([
-          userAddress,
+          userSocketId,   // user._id from search results — always a MongoDB ObjectId
           profile?._id,
           profile?.id,
-          userSocketId,
         ].filter((value): value is string => !!value)));
 
         if (candidateIds.length === 0) {

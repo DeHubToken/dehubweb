@@ -246,7 +246,8 @@ export function emitCreateAndStart(userId: string): Promise<DmConversation> {
       };
 
       const onErrorEvent = (err: DmSocketError) => {
-        settle(null, new Error(err.message || 'DM socket error'));
+        // Backend sends `msg`, not `message` — check both so the real reason surfaces.
+        settle(null, new Error(err.message || err.msg || 'DM socket error'));
       };
 
       socket.once('createAndStart', onEvent);
