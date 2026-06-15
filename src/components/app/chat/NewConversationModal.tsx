@@ -538,53 +538,55 @@ export function NewConversationModal({
             onBack={() => setFeeUser(null)}
           />
         ) : (
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-          <Input
-            placeholder="Search by username..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
-            autoFocus
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery('')}
-              className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 text-[10px] font-medium text-white/70 bg-white/10 hover:bg-white/20 border border-white/10 rounded-md transition-colors"
-            >
-              Clear
-            </button>
-          )}
-        </div>
+          <>
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+              <Input
+                placeholder="Search by username..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
+                autoFocus
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 px-2 py-0.5 text-[10px] font-medium text-white/70 bg-white/10 hover:bg-white/20 border border-white/10 rounded-md transition-colors"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
 
-        <div className="max-h-80 overflow-y-auto -mx-2">
-          {searchQuery.length < 2 ? (
-            <div className="text-center py-8 text-zinc-500">
-              <Search className="w-10 h-10 mx-auto mb-3 opacity-50" />
-              <p>Enter at least 2 characters to search</p>
+            <div className="max-h-80 overflow-y-auto -mx-2">
+              {searchQuery.length < 2 ? (
+                <div className="text-center py-8 text-zinc-500">
+                  <Search className="w-10 h-10 mx-auto mb-3 opacity-50" />
+                  <p>Enter at least 2 characters to search</p>
+                </div>
+              ) : isSearching ? (
+                <div className="flex justify-center py-8">
+                  <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
+                </div>
+              ) : searchResults?.items?.length === 0 ? (
+                <div className="text-center py-8 text-zinc-500">
+                  <p>No users found</p>
+                  <p className="text-sm mt-1">Try a different search term</p>
+                </div>
+              ) : (
+                <div className="space-y-1 px-2">
+                  {searchResults?.items?.map((user) => (
+                    <UserSearchResult
+                      key={user._id || user.address}
+                      user={user}
+                      onSelect={() => handleSelectUser(user)}
+                      isLoading={selectedUserId === (user.address || user._id)}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
-          ) : isSearching ? (
-            <div className="flex justify-center py-8">
-              <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
-            </div>
-          ) : searchResults?.items?.length === 0 ? (
-            <div className="text-center py-8 text-zinc-500">
-              <p>No users found</p>
-              <p className="text-sm mt-1">Try a different search term</p>
-            </div>
-          ) : (
-            <div className="space-y-1 px-2">
-              {searchResults?.items?.map((user) => (
-                <UserSearchResult
-                  key={user._id || user.address}
-                  user={user}
-                  onSelect={() => handleSelectUser(user)}
-                  isLoading={selectedUserId === (user.address || user._id)}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+          </>
         )}
       </DialogContent>
     </Dialog>
