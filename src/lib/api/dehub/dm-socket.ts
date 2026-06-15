@@ -173,7 +173,7 @@ function getDmSocket(): Socket {
 /** In-flight createAndStart promises keyed by userId — prevents duplicate socket.once registrations. */
 const inFlightCreateAndStart = new Map<string, Promise<DmConversation>>();
 
-const CREATE_AND_START_TIMEOUT_MS = 25000;
+const CREATE_AND_START_TIMEOUT_MS = 8000;
 const SOCKET_CONNECT_WAIT_MS = 12000;
 
 /** Wait for DM socket to be connected before emitting. Rejects if not connected within timeout. */

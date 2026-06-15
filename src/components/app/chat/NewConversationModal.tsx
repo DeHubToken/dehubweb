@@ -421,48 +421,59 @@ export function NewConversationModal({
         }
 
         let dmConversation: Awaited<ReturnType<typeof emitCreateAndStart>> | null = null;
-        let lastError: Error | null = null;
 
         for (const candidateId of candidateIds) {
           try {
             dmConversation = await emitCreateAndStart(candidateId);
             if (dmConversation?._id) break;
-          } catch (error) {
-            lastError = error as Error;
+          } catch {
+            // socket failed — will fall back to REST below
           }
         }
 
-        const dmId = dmConversation?._id;
-        if (!dmId) {
-          throw lastError || new Error('Failed to create direct message thread');
+        if (dmConversation?._id) {
+          emitSendMessage({
+            dmId: dmConversation._id,
+            content: firstMessage,
+            type: 'msg',
+          });
+
+          const otherUser = {
+            _id: profile?._id || userSocketId || userAddress,
+            address: profile?.address || userAddress,
+            username: profile?.username || user.username,
+            displayName: profile?.displayName || profile?.display_name || user.displayName || user.display_name,
+            avatarImageUrl: profile?.avatarImageUrl || profile?.avatarUrl || user.avatarImageUrl || user.avatarUrl,
+            isVerified: profile?.isVerified || profile?.is_verified || user.isVerified || user.is_verified,
+            badgeBalance: (profile as any)?.badgeBalance ?? (user as any).badgeBalance,
+          };
+
+          onConversationCreated({
+            id: dmConversation._id,
+            participants: [otherUser as DeHubUser],
+            otherUser: otherUser as DeHubUser,
+            unreadCount: 0,
+            createdAt: dmConversation.lastMessageAt || new Date().toISOString(),
+            updatedAt: dmConversation.lastMessageAt || new Date().toISOString(),
+            dmFee: dmConversation.dmFee,
+          });
+
+          onOpenChange(false);
+          setSearchQuery('');
+          setFeeUser(null);
+          return;
         }
 
-        emitSendMessage({
-          dmId,
-          content: firstMessage,
-          type: 'msg',
+        // Socket createAndStart failed/timed-out — fall back to REST API
+        console.warn('[NewConversationModal] socket createAndStart failed, falling back to REST');
+        const restConversation = await createConversation.mutateAsync({
+          recipientAddress: userAddress,
+          recipientUser: user,
         });
-
-        const otherUser = {
-          _id: profile?._id || userSocketId || userAddress,
-          address: profile?.address || userAddress,
-          username: profile?.username || user.username,
-          displayName: profile?.displayName || profile?.display_name || user.displayName || user.display_name,
-          avatarImageUrl: profile?.avatarImageUrl || profile?.avatarUrl || user.avatarImageUrl || user.avatarUrl,
-          isVerified: profile?.isVerified || profile?.is_verified || user.isVerified || user.is_verified,
-          badgeBalance: (profile as any)?.badgeBalance ?? (user as any).badgeBalance,
-        };
-
-        onConversationCreated({
-          id: dmId,
-          participants: [otherUser as DeHubUser],
-          otherUser: otherUser as DeHubUser,
-          unreadCount: 0,
-          createdAt: dmConversation.lastMessageAt || new Date().toISOString(),
-          updatedAt: dmConversation.lastMessageAt || new Date().toISOString(),
-          dmFee: dmConversation.dmFee,
-        });
-
+        if (firstMessage && restConversation.id) {
+          emitSendMessage({ dmId: restConversation.id, content: firstMessage, type: 'msg' });
+        }
+        onConversationCreated(restConversation);
         onOpenChange(false);
         setSearchQuery('');
         setFeeUser(null);
