@@ -300,6 +300,7 @@ function SortFilterSection({
 // ============================================================================
 
 export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId }: HomeFeedProps) {
+  const { t } = useI18n();
   const loaderRef = useRef<HTMLDivElement>(null);
   const bentoRef = useRef<HTMLDivElement>(null);
   const { isCollapsed } = useSidebarCollapse();
@@ -1479,7 +1480,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 {isFetchingNextPage && (
                   <div className="flex items-center gap-2 text-zinc-400">
                     <div className="w-5 h-5 border-2 border-zinc-500 border-t-white rounded-full animate-spin" />
-                    <span className="text-sm">Loading more...</span>
+                    <span className="text-sm">{t('common.loadingMore')}</span>
                   </div>
                 )}
                 {!hasNextPage && items.length > 0 && (

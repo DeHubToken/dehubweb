@@ -193,7 +193,7 @@ function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNe
         {isFetchingNextPage && (
           <div className="flex items-center gap-2 text-zinc-400">
             <Loader2 className="w-5 h-5 animate-spin" />
-            <span className="text-sm">Loading more...</span>
+            <span className="text-sm">{t('common.loadingMore')}</span>
           </div>
         )}
         {!hasNextPage && posts.length > 0 && (
@@ -221,6 +221,7 @@ function EndlessScrollView({
   startFromId,
   onBackToCollage,
 }: EndlessScrollViewProps) {
+  const { t } = useI18n();
   const scrollTargetRef = useRef<HTMLDivElement>(null);
   
   // Reorder posts to start from selected image
@@ -281,7 +282,7 @@ function EndlessScrollView({
         {isFetchingNextPage && (
           <div className="flex items-center gap-2 text-zinc-400">
             <Loader2 className="w-5 h-5 animate-spin" />
-            <span className="text-sm">Loading more...</span>
+            <span className="text-sm">{t('common.loadingMore')}</span>
           </div>
         )}
         {!hasNextPage && posts.length > 0 && (

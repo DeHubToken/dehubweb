@@ -419,7 +419,7 @@ function PostsTabPanel({
             className="text-muted-foreground hover:text-foreground"
           >
             {isFetchingNextPage ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-            Load more
+            {isFetchingNextPage ? t('common.loadingMore') : t('common.loadMore')}
           </Button>
         </div>
       )}

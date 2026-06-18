@@ -685,7 +685,7 @@ export default function BuyCoinsPage() {
                     onClick={() => fetchNextPage()}
                     className="w-full text-center text-xs text-zinc-500 hover:text-zinc-300 py-3 transition-colors"
                   >
-                    Load more...
+                    {t('common.loadMore')}
                   </button>
                 )}
               </div>
