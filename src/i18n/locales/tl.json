@@ -83,7 +83,9 @@
     "loading": "Loading...",
     "goBack": "Go back",
     "showOriginal": "Show original",
-    "translating": "Translating..."
+    "translating": "Translating...",
+    "loadingMore": "Loading more...",
+    "loadMore": "Load more"
   },
   "walletSelector": {
     "title": "Piliin ang Wallet",

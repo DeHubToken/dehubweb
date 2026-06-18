@@ -735,7 +735,9 @@
     "comingSoon": "Čoskoro",
     "goBack": "Go back",
     "showOriginal": "Show original",
-    "translating": "Translating..."
+    "translating": "Translating...",
+    "loadingMore": "Loading more...",
+    "loadMore": "Load more"
   },
   "featureRequests": {
     "title": "Požiadavky na funkcie",

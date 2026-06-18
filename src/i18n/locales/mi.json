@@ -247,7 +247,9 @@
     "goBack": "Hoki whakamuri",
     "showOriginal": "Whakaatu taketake",
     "translating": "Whakamāori ana...",
-    "close": "Kati"
+    "close": "Kati",
+    "loadingMore": "Uta ana anō...",
+    "loadMore": "Utaina anō"
   },
   "tip": {
     "title": "Tukuna koha",

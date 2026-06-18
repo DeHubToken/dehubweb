@@ -247,7 +247,9 @@
     "goBack": "Veradardel",
     "showOriginal": "Tsoutsel bnaghbayre",
     "translating": "Targmanvoum e...",
-    "close": "Phakel"
+    "close": "Phakel",
+    "loadingMore": "Bernvoum e avelin...",
+    "loadMore": "Bernel avelin"
   },
   "postOptions": {
     "options": "Entrankhner",

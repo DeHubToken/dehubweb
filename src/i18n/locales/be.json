@@ -247,7 +247,9 @@
     "goBack": "Назад",
     "showOriginal": "Паказаць арыгінал",
     "translating": "Пераклад...",
-    "close": "Зачыніць"
+    "close": "Зачыніць",
+    "loadingMore": "Loading more...",
+    "loadMore": "Загрузіць яшчэ"
   },
   "tip": {
     "title": "Адправіць чаявыя",

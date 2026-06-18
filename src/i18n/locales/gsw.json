@@ -247,7 +247,9 @@
     "goBack": "Zrugg",
     "showOriginal": "Original aazeige",
     "translating": "Am Übersetze...",
-    "close": "Schliesse"
+    "close": "Schliesse",
+    "loadingMore": "Am meh Lade...",
+    "loadMore": "Meh lade"
   },
   "tip": {
     "title": "Trinkgäld schicke",

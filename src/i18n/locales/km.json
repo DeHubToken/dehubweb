@@ -247,7 +247,9 @@
     "goBack": "ត្រឡប់ក្រោយ",
     "showOriginal": "បង្ហាញដើម",
     "translating": "កំពុងបកប្រែ...",
-    "close": "បិទ"
+    "close": "បិទ",
+    "loadingMore": "Loading more...",
+    "loadMore": "ផ្ទុកបន្ថែម"
   },
   "tip": {
     "title": "ផ្ញើជំនួយ",

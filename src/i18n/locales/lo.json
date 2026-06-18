@@ -247,7 +247,9 @@
     "goBack": "ກັບຄືນ",
     "showOriginal": "ສະແດງຕົ້ນສະບັບ",
     "translating": "ກຳລັງແປ...",
-    "close": "ປິດ"
+    "close": "ປິດ",
+    "loadingMore": "ກຳລັງໂຫຼດເພີ່ມ...",
+    "loadMore": "ໂຫຼດເພີ່ມ"
   },
   "tip": {
     "title": "ສົ່ງທິບ",

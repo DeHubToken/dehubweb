@@ -247,7 +247,9 @@
     "goBack": "واپس جائیں",
     "showOriginal": "اصل دکھائیں",
     "translating": "ترجمہ ہو رہا ہے...",
-    "close": "بند کریں"
+    "close": "بند کریں",
+    "loadingMore": "مزید لوڈ ہو رہا ہے...",
+    "loadMore": "مزید لوڈ کریں"
   },
   "drawers": {
     "ppvTitle": "پے پر ویو مواد",

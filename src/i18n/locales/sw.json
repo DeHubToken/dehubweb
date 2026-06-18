@@ -247,7 +247,9 @@
     "goBack": "Rudi",
     "showOriginal": "Onyesha asili",
     "translating": "Inatafsiri...",
-    "close": "Funga"
+    "close": "Funga",
+    "loadingMore": "Inapakia zaidi...",
+    "loadMore": "Pakia zaidi"
   },
   "tip": {
     "title": "Tuma Kidokezo",

@@ -247,7 +247,9 @@
     "goBack": "पाछू जाव",
     "showOriginal": "मूल देखाव",
     "translating": "अनुवाद होवत हे...",
-    "close": "बंद करव"
+    "close": "बंद करव",
+    "loadingMore": "अउ लोड होवत हे...",
+    "loadMore": "अउ लोड करव"
   },
   "tip": {
     "title": "टिप भेजव",

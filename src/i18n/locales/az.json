@@ -247,7 +247,9 @@
     "goBack": "Geri qayıt",
     "showOriginal": "Orijinalı göstər",
     "translating": "Tərcümə olunur...",
-    "close": "Bağla"
+    "close": "Bağla",
+    "loadingMore": "Daha çox yüklənir...",
+    "loadMore": "Daha çox yüklə"
   },
   "tip": {
     "title": "Bəxşiş Göndər",

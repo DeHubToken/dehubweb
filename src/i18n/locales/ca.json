@@ -247,7 +247,9 @@
     "goBack": "Tornar enrere",
     "showOriginal": "Mostrar original",
     "translating": "Traduint...",
-    "close": "Tancar"
+    "close": "Tancar",
+    "loadingMore": "Carregant més...",
+    "loadMore": "Carregar més"
   },
   "tip": {
     "title": "Enviar propina",

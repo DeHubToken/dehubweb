@@ -247,7 +247,9 @@
     "goBack": "ተመለስ",
     "showOriginal": "ዋናውን አሳይ",
     "translating": "እየተረጎመ...",
-    "close": "ዝጋ"
+    "close": "ዝጋ",
+    "loadingMore": "ተጨማሪ እየጫነ...",
+    "loadMore": "ተጨማሪ ጫን"
   },
   "tip": {
     "title": "ጥቆማ ላክ",

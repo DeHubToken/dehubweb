@@ -50,7 +50,9 @@
     "info": "Thông tin",
     "goBack": "Go back",
     "showOriginal": "Show original",
-    "translating": "Translating..."
+    "translating": "Translating...",
+    "loadingMore": "Loading more...",
+    "loadMore": "Load more"
   },
   "glossary": {
     "title": "Bảng thuật ngữ",

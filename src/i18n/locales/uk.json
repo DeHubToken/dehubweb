@@ -400,7 +400,9 @@
     "unregistered": "Незареєстровано",
     "goBack": "Go back",
     "showOriginal": "Show original",
-    "translating": "Translating..."
+    "translating": "Translating...",
+    "loadingMore": "Loading more...",
+    "loadMore": "Load more"
   },
   "pages": {
     "home": {

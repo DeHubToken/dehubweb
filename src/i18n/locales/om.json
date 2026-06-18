@@ -247,7 +247,9 @@
     "goBack": "Duuba deebi'i",
     "showOriginal": "Jalqaba agarsiisi",
     "translating": "Hiikaa jira...",
-    "close": "Cufi"
+    "close": "Cufi",
+    "loadingMore": "Loading more...",
+    "loadMore": "Dabalataa fe'i"
   },
   "tip": {
     "title": "Tiippii Ergi",

@@ -247,7 +247,9 @@
     "goBack": "返回",
     "showOriginal": "显示原文",
     "translating": "翻译中...",
-    "close": "关闭"
+    "close": "关闭",
+    "loadingMore": "加载更多中...",
+    "loadMore": "加载更多"
   },
   "tip": {
     "title": "送礼物",

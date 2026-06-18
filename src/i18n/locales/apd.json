@@ -247,7 +247,9 @@
     "goBack": "ارجع",
     "showOriginal": "أظهر الأصلي",
     "translating": "جاري الترجمة...",
-    "close": "أغلق"
+    "close": "أغلق",
+    "loadingMore": "جاري تحميل المزيد...",
+    "loadMore": "حمّل أكتر"
   },
   "tip": {
     "title": "ابعث هدية",

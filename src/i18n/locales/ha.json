@@ -247,7 +247,9 @@
     "goBack": "Koma baya",
     "showOriginal": "Nuna asali",
     "translating": "Ana fassara...",
-    "close": "Rufe"
+    "close": "Rufe",
+    "loadingMore": "Ana ɗora ƙari...",
+    "loadMore": "Ɗora ƙari"
   },
   "tip": {
     "title": "Aika Kyauta",

@@ -247,7 +247,9 @@
     "goBack": "返回",
     "showOriginal": "顯示原文",
     "translating": "翻譯緊...",
-    "close": "關閉"
+    "close": "關閉",
+    "loadingMore": "載入更多緊...",
+    "loadMore": "載入更多"
   },
   "tip": {
     "title": "送禮物",

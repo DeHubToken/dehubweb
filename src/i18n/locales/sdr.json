@@ -247,7 +247,9 @@
     "goBack": "واپس جاؤ",
     "showOriginal": "اصل دکھاؤ",
     "translating": "ترجمہ ہو رہا ہے...",
-    "close": "بند کرو"
+    "close": "بند کرو",
+    "loadingMore": "اور لوڈ ہو رہا ہے...",
+    "loadMore": "اور لوڈ کرو"
   },
   "tip": {
     "title": "ٹِپ بھیجو",

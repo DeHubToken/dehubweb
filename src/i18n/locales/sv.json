@@ -247,7 +247,9 @@
     "goBack": "Gå tillbaka",
     "showOriginal": "Visa original",
     "translating": "Översätter...",
-    "close": "Stäng"
+    "close": "Stäng",
+    "loadingMore": "Laddar fler...",
+    "loadMore": "Ladda fler"
   },
   "drawers": {
     "ppvTitle": "Betala per visning",

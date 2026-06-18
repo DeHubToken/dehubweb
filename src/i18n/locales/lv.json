@@ -247,7 +247,9 @@
     "goBack": "Atpakaļ",
     "showOriginal": "Rādīt oriģinālu",
     "translating": "Tulkošana...",
-    "close": "Aizvērt"
+    "close": "Aizvērt",
+    "loadingMore": "Ielādē vairāk...",
+    "loadMore": "Ielādēt vairāk"
   },
   "tip": {
     "title": "Sūtīt dzeramnaudu",

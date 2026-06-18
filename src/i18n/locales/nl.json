@@ -444,7 +444,9 @@
     "value": "Waarde",
     "goBack": "Terug",
     "showOriginal": "Origineel tonen",
-    "translating": "Vertalen..."
+    "translating": "Vertalen...",
+    "loadingMore": "Meer laden...",
+    "loadMore": "Meer laden"
   },
   "home": {
     "title": "Home",

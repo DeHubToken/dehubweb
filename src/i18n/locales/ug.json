@@ -247,7 +247,9 @@
     "goBack": "قايتىش",
     "showOriginal": "ئەسلىنى كۆرسىتىش",
     "translating": "تەرجىمە قىلىنىۋاتىدۇ...",
-    "close": "تاقاش"
+    "close": "تاقاش",
+    "loadingMore": "تېخىمۇ كۆپ يۈكلىنىۋاتىدۇ...",
+    "loadMore": "تېخىمۇ كۆپ يۈكلەش"
   },
   "postOptions": {
     "options": "تاللانمىلار",

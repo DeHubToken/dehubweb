@@ -247,7 +247,9 @@
     "goBack": "뒤로",
     "showOriginal": "원문 보기",
     "translating": "번역 중...",
-    "close": "닫기"
+    "close": "닫기",
+    "loadingMore": "더 불러오는 중...",
+    "loadMore": "더 보기"
   },
   "drawers": {
     "ppvTitle": "유료 콘텐츠",

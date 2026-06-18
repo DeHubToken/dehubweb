@@ -247,7 +247,9 @@
     "goBack": "Назад",
     "showOriginal": "Показать оригинал",
     "translating": "Перевод...",
-    "close": "Закрыть"
+    "close": "Закрыть",
+    "loadingMore": "Загрузка...",
+    "loadMore": "Загрузить ещё"
   },
   "drawers": {
     "ppvTitle": "Платный контент",

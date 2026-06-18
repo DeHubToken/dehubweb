@@ -816,7 +816,9 @@
     "comingSoon": "শীঘ্রই আসতাছে",
     "goBack": "Go back",
     "showOriginal": "Show original",
-    "translating": "Translating..."
+    "translating": "Translating...",
+    "loadingMore": "Loading more...",
+    "loadMore": "Load more"
   },
   "featureRequests": {
     "title": "ফিচার রিকোয়েস্ট",
