@@ -13,11 +13,13 @@ import {
   readContract,
   approveERC20,
   getERC20Allowance,
+  getWalletAddress,
   switchChain,
   type AAWriteResult,
 } from './aa-utils';
 import { CHAIN_CONFIGS, BASE_CHAIN_ID } from './dhb-token';
 import type { WorkCurrency, WorkJobType } from '@/features/work/types';
+
 
 // ── Addresses (Base) ─────────────────────────────────────────
 export const DEHUB_WORK_ADDRESS = '0x0000000000000000000000000000000000000000'; // TODO: deploy + paste
@@ -62,13 +64,12 @@ export async function createJobOnChain(params: {
   const totalWei = priceWei * BigInt(params.maxUnits);
 
   // Ensure allowance to escrow
-  const owner = (await import('./aa-utils')).getWalletAddress
-    ? await (await import('./aa-utils')).getWalletAddress()
-    : ZERO;
+  const owner = await getWalletAddress();
   const allowance = await getERC20Allowance(token, owner, DEHUB_WORK_ADDRESS);
   if (allowance < totalWei) {
-    await approveERC20(token, DEHUB_WORK_ADDRESS, totalWei, { chainId: BASE_CHAIN_ID });
+    await approveERC20(token, DEHUB_WORK_ADDRESS, totalWei, BASE_CHAIN_ID);
   }
+
 
   return writeContractAA(
     DEHUB_WORK_ADDRESS,
