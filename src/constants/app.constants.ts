@@ -49,7 +49,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Lightbulb, label: 'Feature Requests', path: '/features' },
   { icon: Vault, label: 'Staking', path: '/app/stake' },
   { icon: ShieldCheck, label: 'Governance', path: '/governance' },
-  { icon: Briefcase, label: 'Work', path: '/app/work' },
+  { icon: Briefcase, label: 'Work', path: '/work' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
   { icon: Store, label: 'Stores', path: '/app/stores' },
   { icon: Scroll, label: 'Glossary', path: '/app/glossary' },
@@ -178,7 +178,7 @@ export const GLASS_STYLES = {
 // ============================================
 // /work — admin arbiters
 // ============================================
-// Wallet addresses (lowercased) that can resolve disputes via /app/work/disputes.
+// Wallet addresses (lowercased) that can resolve disputes via /work/disputes or /app/work/disputes.
 // Must match the `feeRecipient` / `owner` of the deployed DeHubWork contract.
 export const WORK_ADMIN_ARBITERS: string[] = [
   // TODO: paste admin wallet address(es) here, lowercased

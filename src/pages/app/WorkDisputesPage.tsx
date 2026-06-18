@@ -53,7 +53,7 @@ export default function WorkDisputesPage() {
           <div key={k} className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl p-5 mb-4">
             <div className="flex items-start justify-between gap-3 mb-3">
               <div>
-                <Link to={`/app/work/${d.job_id}`} className="text-lg font-semibold text-white hover:underline inline-flex items-center gap-1">
+                <Link to={`/work/${d.job_id}`} className="text-lg font-semibold text-white hover:underline inline-flex items-center gap-1">
                   {j?.title || 'Untitled'} <ExternalLink className="w-3.5 h-3.5" />
                 </Link>
                 <div className="text-[11px] text-white/40 mt-0.5">

@@ -48,14 +48,14 @@ export default function WorkPostPage() {
         max_units: jobType === 'contract' ? 1 : unitsNum,
         deadline: deadline || undefined,
       });
-      navigate(`/app/work/${job.id}`);
+      navigate(`/work/${job.id}`);
     } catch { /* toast already shown */ }
   };
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6">
       <button
-        onClick={() => navigate('/app/work')}
+        onClick={() => navigate('/work')}
         className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white mb-4"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Work

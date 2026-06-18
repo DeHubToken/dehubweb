@@ -34,7 +34,7 @@ export default function WorkPage() {
           <p className="text-sm text-white/60">Post jobs, complete bounties, get paid in DHB or USDC.</p>
         </div>
         <Link
-          to="/app/work/post"
+          to="/work/post"
           className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white text-black font-semibold hover:bg-white/90 transition-colors"
         >
           <Plus className="w-4 h-4" /> Post a Job
@@ -102,7 +102,7 @@ export default function WorkPage() {
         <div className="text-center py-16 text-white/50">
           <Briefcase className="w-10 h-10 mx-auto mb-3 opacity-50" />
           <p className="mb-4">No jobs yet — be the first to post one.</p>
-          <Link to="/app/work/post" className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 text-white hover:bg-white/20">
+          <Link to="/work/post" className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 text-white hover:bg-white/20">
             <Plus className="w-4 h-4" /> Post a Job
           </Link>
         </div>
