@@ -811,7 +811,7 @@ function ProfileSettings() {
       </div>
 
       {/* Support / Bug Report */}
-      <BugReportSection username={authUser?.username || authUser?.email || 'Anonymous'} />
+      <BugReportSection username={authUser?.username || 'Anonymous'} />
     </div>
   );
 }
