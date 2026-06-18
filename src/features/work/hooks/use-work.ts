@@ -398,8 +398,14 @@ export function useOpenDispute() {
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (params: { job_id: string; reason: string; evidence_url?: string }) => {
+    mutationFn: async (params: { job_id: string; onchain_job_id?: number | null; reason: string; evidence_url?: string }) => {
       if (!walletAddress) throw new Error('Not authenticated');
+
+      if (isWorkContractDeployed() && params.onchain_job_id) {
+        const r = await openDisputeOnChain(params.onchain_job_id);
+        if (r) await r.wait(1);
+      }
+
       const { error: e1 } = await withWalletHeader(
         supabase.from(TBL_DISPUTES).insert({
           job_id: params.job_id,
@@ -418,11 +424,91 @@ export function useOpenDispute() {
     },
     onSuccess: (_, v) => {
       qc.invalidateQueries({ queryKey: ['work-job', v.job_id] });
+      qc.invalidateQueries({ queryKey: ['work-disputes-admin'] });
       toast.success('Dispute opened — admin will review');
     },
     onError: (e: any) => toast.error(e.message || 'Failed to open dispute'),
   });
 }
+
+// ── Admin: disputes queue + resolve ──────────────────────────
+export function useAdminDisputes() {
+  return useQuery({
+    queryKey: ['work-disputes-admin'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from(TBL_DISPUTES)
+        .select('*, job:work_jobs(*)' as any)
+        .eq('status', 'open')
+        .order('created_at', { ascending: true });
+      if (error) throw error;
+      return (data || []) as any[];
+    },
+    staleTime: 15_000,
+  });
+}
+
+export function useAdminResolveDispute() {
+  const { walletAddress } = useAuth();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (params: {
+      dispute_id: string;
+      job_id: string;
+      onchain_job_id?: number | null;
+      currency: WorkCurrency;
+      worker_address: string;
+      worker_amount: number;
+      poster_refund: number;
+      resolution_notes?: string;
+    }) => {
+      if (!walletAddress) throw new Error('Not authenticated');
+
+      let txHash: string | null = null;
+      if (isWorkContractDeployed() && params.onchain_job_id) {
+        const r = await adminResolveOnChain({
+          jobId: params.onchain_job_id,
+          worker: params.worker_address,
+          currency: params.currency,
+          workerAmount: params.worker_amount,
+          posterRefund: params.poster_refund,
+        });
+        if (r) { const rec = await r.wait(1); txHash = rec.hash; }
+      }
+
+      const newStatus =
+        params.worker_amount > 0 && params.poster_refund > 0 ? 'resolved_split'
+        : params.worker_amount > 0 ? 'resolved_worker'
+        : 'resolved_poster';
+
+      const { error: e1 } = await withWalletHeader(
+        supabase.from(TBL_DISPUTES).update({
+          status: newStatus,
+          resolved_by_address: walletAddress.toLowerCase(),
+          resolved_at: new Date().toISOString(),
+          worker_amount: params.worker_amount,
+          poster_refund: params.poster_refund,
+          resolve_tx_hash: txHash,
+          resolution_notes: params.resolution_notes || null,
+        } as any).eq('id', params.dispute_id),
+        walletAddress
+      );
+      if (e1) throw e1;
+
+      const { error: e2 } = await withWalletHeader(
+        supabase.from(TBL_JOBS).update({ status: 'completed' } as any).eq('id', params.job_id),
+        walletAddress
+      );
+      if (e2) throw e2;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['work-disputes-admin'] });
+      toast.success('Dispute resolved');
+    },
+    onError: (e: any) => toast.error(e.message || 'Failed to resolve'),
+  });
+}
+
 
 export function useMarkComplete() {
   const { walletAddress } = useAuth();
