@@ -203,8 +203,14 @@ export function useAwardApplicant() {
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (params: { job_id: string; application_id: string; worker_address: string }) => {
+    mutationFn: async (params: { job_id: string; onchain_job_id?: number | null; application_id: string; worker_address: string }) => {
       if (!walletAddress) throw new Error('Not authenticated');
+
+      if (isWorkContractDeployed() && params.onchain_job_id) {
+        const r = await awardApplicantOnChain(params.onchain_job_id, params.worker_address);
+        if (r) await r.wait(1);
+      }
+
       const { error: e1 } = await withWalletHeader(
         supabase.from(TBL_APPS).update({ status: 'awarded' } as any).eq('id', params.application_id),
         walletAddress
@@ -227,6 +233,7 @@ export function useAwardApplicant() {
     onError: (e: any) => toast.error(e.message || 'Failed to award'),
   });
 }
+
 
 // ── Submissions ──────────────────────────────────────────────
 export function useJobSubmissions(jobId: string | undefined) {
@@ -273,12 +280,27 @@ export function useApproveSubmission() {
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (params: { submission_id: string; job_id: string; payout_amount: number }) => {
+    mutationFn: async (params: {
+      submission_id: string;
+      job_id: string;
+      onchain_job_id?: number | null;
+      worker_address: string;
+      payout_amount: number;
+      units?: number;
+    }) => {
       if (!walletAddress) throw new Error('Not authenticated');
+
+      let txHash: string | null = null;
+      if (isWorkContractDeployed() && params.onchain_job_id) {
+        const r = await approveSubmissionOnChain(params.onchain_job_id, params.worker_address, params.units ?? 1);
+        if (r) { const rec = await r.wait(1); txHash = rec.hash; }
+      }
+
       const { error } = await withWalletHeader(
         supabase.from(TBL_SUBS).update({
           approval_status: 'approved',
           payout_amount: params.payout_amount,
+          payout_tx_hash: txHash,
         } as any).eq('id', params.submission_id),
         walletAddress
       );
@@ -292,6 +314,7 @@ export function useApproveSubmission() {
     onError: (e: any) => toast.error(e.message || 'Failed to approve'),
   });
 }
+
 
 export function useRejectSubmission() {
   const { walletAddress } = useAuth();
