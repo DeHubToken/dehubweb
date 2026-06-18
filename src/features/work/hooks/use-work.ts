@@ -53,7 +53,7 @@ export function useWorkJob(jobId: string | undefined) {
     queryFn: async () => {
       const { data, error } = await supabase.from(TBL_JOBS).select('*').eq('id', jobId!).maybeSingle();
       if (error) throw error;
-      return data as WorkJob | null;
+      return data as unknown as WorkJob | null;
     },
     enabled: !!jobId,
   });
@@ -115,7 +115,7 @@ export function useCreateJob() {
         walletAddress
       );
       if (error) throw error;
-      return data as WorkJob;
+      return data as unknown as WorkJob;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['work-jobs-browse'] });
