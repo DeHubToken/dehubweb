@@ -208,6 +208,12 @@ function AppContent() {
               <Route path="launchpad/:mintId" element={<Suspense fallback={<PageLoader />}><LaunchpadCoinPage /></Suspense>} />
             </Route>
 
+            {/* /work aliases */}
+            <Route path="/work" element={null} />
+            <Route path="/work/post" element={<Suspense fallback={<PageLoader />}><WorkPostPage /></Suspense>} />
+            <Route path="/work/disputes" element={<Suspense fallback={<PageLoader />}><WorkDisputesPage /></Suspense>} />
+            <Route path="/work/:jobId" element={<Suspense fallback={<PageLoader />}><WorkJobDetailPage /></Suspense>} />
+
             {/* Stage invite links */}
             <Route path="/stage/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
 

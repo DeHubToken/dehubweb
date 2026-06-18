@@ -51,7 +51,7 @@ export default function WorkJobDetailPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6">
-      <button onClick={() => navigate('/app/work')} className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white mb-4">
+      <button onClick={() => navigate('/work')} className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white mb-4">
         <ArrowLeft className="w-4 h-4" /> Back
       </button>
 
