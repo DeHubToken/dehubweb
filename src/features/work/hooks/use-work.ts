@@ -1,12 +1,21 @@
 /**
  * /work — Jobs marketplace hooks
- * Off-chain ledger v1. Smart-contract escrow wires in once contract is deployed.
+ * Off-chain ledger + on-chain escrow via DeHubWork (best-effort; falls back
+ * to off-chain when the contract address is the placeholder zero address).
  */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import {
+  createJobOnChain,
+  awardApplicantOnChain,
+  approveSubmissionOnChain,
+  openDisputeOnChain,
+  adminResolveOnChain,
+  isWorkContractDeployed,
+} from '@/lib/contracts/dehub-work';
 import type {
   WorkJob, WorkApplication, WorkSubmission, WorkReview,
   WorkJobType, WorkCurrency, WorkPlatform,
@@ -17,6 +26,7 @@ const TBL_APPS = 'work_applications' as any;
 const TBL_SUBS = 'work_submissions' as any;
 const TBL_REVIEWS = 'work_reviews' as any;
 const TBL_DISPUTES = 'work_disputes' as any;
+
 
 // ── Browse jobs ──────────────────────────────────────────────
 export function useBrowseJobs(filters?: {
