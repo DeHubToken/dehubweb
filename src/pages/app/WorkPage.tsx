@@ -1,0 +1,116 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Plus, Briefcase, Scissors, MessageSquare, Search } from 'lucide-react';
+import { useBrowseJobs } from '@/features/work/hooks/use-work';
+import { JobCard } from '@/features/work/components/JobCard';
+import type { WorkJobType, WorkCurrency } from '@/features/work/types';
+
+const TABS: Array<{ id: WorkJobType | 'all'; label: string; icon: any }> = [
+  { id: 'all', label: 'All', icon: Briefcase },
+  { id: 'shill', label: 'Comments & Shill', icon: MessageSquare },
+  { id: 'clipping', label: 'Clipping', icon: Scissors },
+  { id: 'contract', label: 'Contracts', icon: Briefcase },
+];
+
+export default function WorkPage() {
+  const [tab, setTab] = useState<WorkJobType | 'all'>('all');
+  const [currency, setCurrency] = useState<WorkCurrency | 'all'>('all');
+  const [sort, setSort] = useState<'newest' | 'highest_pay' | 'ending_soon'>('newest');
+  const [search, setSearch] = useState('');
+
+  const { data: jobs = [], isLoading } = useBrowseJobs({
+    job_type: tab,
+    currency,
+    sort,
+    search: search.trim() || undefined,
+  });
+
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-6">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Work</h1>
+          <p className="text-sm text-white/60">Post jobs, complete bounties, get paid in DHB or USDC.</p>
+        </div>
+        <Link
+          to="/app/work/post"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-white text-black font-semibold hover:bg-white/90 transition-colors"
+        >
+          <Plus className="w-4 h-4" /> Post a Job
+        </Link>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 mb-4">
+        {TABS.map((t) => {
+          const Icon = t.icon;
+          const active = tab === t.id;
+          return (
+            <button
+              key={t.id}
+              onClick={() => setTab(t.id)}
+              className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm whitespace-nowrap transition-colors ${
+                active ? 'bg-white/15 text-white' : 'bg-white/5 text-white/60 hover:bg-white/10'
+              }`}
+            >
+              <Icon className="w-3.5 h-3.5" /> {t.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Filter bar */}
+      <div className="flex flex-wrap items-center gap-2 mb-6">
+        <div className="relative flex-1 min-w-[200px]">
+          <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-white/40" />
+          <input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search jobs…"
+            className="w-full pl-10 pr-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-white/30"
+          />
+        </div>
+        <select
+          value={currency}
+          onChange={(e) => setCurrency(e.target.value as any)}
+          className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none"
+        >
+          <option value="all">All currencies</option>
+          <option value="DHB">DHB</option>
+          <option value="USDC">USDC</option>
+        </select>
+        <select
+          value={sort}
+          onChange={(e) => setSort(e.target.value as any)}
+          className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white focus:outline-none"
+        >
+          <option value="newest">Newest</option>
+          <option value="highest_pay">Highest pay</option>
+          <option value="ending_soon">Ending soon</option>
+        </select>
+      </div>
+
+      {/* List */}
+      {isLoading ? (
+        <div className="grid sm:grid-cols-2 gap-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="h-40 rounded-2xl bg-white/5 animate-pulse" />
+          ))}
+        </div>
+      ) : jobs.length === 0 ? (
+        <div className="text-center py-16 text-white/50">
+          <Briefcase className="w-10 h-10 mx-auto mb-3 opacity-50" />
+          <p className="mb-4">No jobs yet — be the first to post one.</p>
+          <Link to="/app/work/post" className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 text-white hover:bg-white/20">
+            <Plus className="w-4 h-4" /> Post a Job
+          </Link>
+        </div>
+      ) : (
+        <div className="grid sm:grid-cols-2 gap-3">
+          {jobs.map((j) => <JobCard key={j.id} job={j} />)}
+        </div>
+      )}
+    </div>
+  );
+}

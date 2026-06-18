@@ -811,7 +811,7 @@ function ProfileSettings() {
       </div>
 
       {/* Support / Bug Report */}
-      <BugReportSection username={authUser?.username || authUser?.email || 'Anonymous'} />
+      <BugReportSection username={authUser?.username || 'Anonymous'} />
     </div>
   );
 }
@@ -828,7 +828,7 @@ function BugReportSection({ username }: { username: string }) {
     try {
       const { reportContent } = await import('@/lib/api/dehub/reports');
       // Use a placeholder tokenId=0 for bug reports (platform-level, not content-specific)
-      await reportContent(0, 'other', `[Bug Report from ${username}]: ${description.trim()}`);
+      await reportContent({ tokenId: 0, reason: 'other', description: `[Bug Report from ${username}]: ${description.trim()}` });
       toast.success('Bug report submitted. Thank you!');
       setOpen(false);
       setDescription('');
