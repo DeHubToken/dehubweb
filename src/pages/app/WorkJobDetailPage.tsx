@@ -178,7 +178,8 @@ export default function WorkJobDetailPage() {
               {isPoster && s.approval_status === 'pending' && (
                 <div className="flex gap-2 mt-2">
                   <button
-                    onClick={() => approveMutation.mutate({ submission_id: s.id, job_id: job.id, payout_amount: job.job_type === 'contract' ? job.total_budget : job.price_per_unit })}
+                    onClick={() => approveMutation.mutate({ submission_id: s.id, job_id: job.id, onchain_job_id: job.onchain_job_id, worker_address: s.worker_address, payout_amount: job.job_type === 'contract' ? job.total_budget : job.price_per_unit })}
+
                     className="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 text-xs font-semibold inline-flex items-center gap-1"
                   >
                     <Check className="w-3 h-3" /> Approve & release
