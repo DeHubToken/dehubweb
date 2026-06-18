@@ -119,13 +119,10 @@ export function useCreateJob() {
         if (result) {
           const receipt = await result.wait(1);
           fundTxHash = receipt.hash;
-          // Best-effort extract jobId from JobCreated log (topic[1])
-          try {
-            const log = receipt.logs?.find((l: any) => l.address?.toLowerCase() === (await import('@/lib/contracts/dehub-work')).DEHUB_WORK_ADDRESS.toLowerCase());
-            if (log?.topics?.[1]) onchainJobId = Number(BigInt(log.topics[1]));
-          } catch { /* non-fatal */ }
+          // onchain_job_id is reconciled later by the indexer edge function
         }
       }
+
 
       // 2) Off-chain record
       const { data, error } = await withWalletHeader(
