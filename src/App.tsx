@@ -44,6 +44,8 @@ const LaunchpadCreatePage = React.lazy(() => import("./pages/app/LaunchpadCreate
 const LaunchpadCoinPage = React.lazy(() => import("./pages/app/LaunchpadCoinPage"));
 const WorkPostPage = React.lazy(() => import("./pages/app/WorkPostPage"));
 const WorkJobDetailPage = React.lazy(() => import("./pages/app/WorkJobDetailPage"));
+const WorkDisputesPage = React.lazy(() => import("./pages/app/WorkDisputesPage"));
+
 
 const SKIP_LANDING_KEY = "dehub_skip_landing";
 
@@ -192,7 +194,9 @@ function AppContent() {
               <Route path="stores/:storeId" element={<Suspense fallback={<PageLoader />}><StoreDetailPage /></Suspense>} />
               <Route path="work" element={null} />
               <Route path="work/post" element={<Suspense fallback={<PageLoader />}><WorkPostPage /></Suspense>} />
+              <Route path="work/disputes" element={<Suspense fallback={<PageLoader />}><WorkDisputesPage /></Suspense>} />
               <Route path="work/:jobId" element={<Suspense fallback={<PageLoader />}><WorkJobDetailPage /></Suspense>} />
+
               <Route path="communities/:slug" element={<Suspense fallback={<PageLoader />}><CommunityPage /></Suspense>} />
               <Route path="post/:postId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
               <Route path="video/:tokenId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />

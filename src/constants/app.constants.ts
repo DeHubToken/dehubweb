@@ -174,3 +174,17 @@ export const GLASS_STYLES = {
   // For Cards with glass effect
   card: "bg-white/5 backdrop-blur-xl border border-white/10",
 } as const;
+
+// ============================================
+// /work — admin arbiters
+// ============================================
+// Wallet addresses (lowercased) that can resolve disputes via /app/work/disputes.
+// Must match the `feeRecipient` / `owner` of the deployed DeHubWork contract.
+export const WORK_ADMIN_ARBITERS: string[] = [
+  // TODO: paste admin wallet address(es) here, lowercased
+];
+
+export function isWorkAdmin(addr?: string | null): boolean {
+  if (!addr) return false;
+  return WORK_ADMIN_ARBITERS.includes(addr.toLowerCase());
+}

@@ -1,12 +1,21 @@
 /**
  * /work — Jobs marketplace hooks
- * Off-chain ledger v1. Smart-contract escrow wires in once contract is deployed.
+ * Off-chain ledger + on-chain escrow via DeHubWork (best-effort; falls back
+ * to off-chain when the contract address is the placeholder zero address).
  */
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import {
+  createJobOnChain,
+  awardApplicantOnChain,
+  approveSubmissionOnChain,
+  openDisputeOnChain,
+  adminResolveOnChain,
+  isWorkContractDeployed,
+} from '@/lib/contracts/dehub-work';
 import type {
   WorkJob, WorkApplication, WorkSubmission, WorkReview,
   WorkJobType, WorkCurrency, WorkPlatform,
@@ -17,6 +26,7 @@ const TBL_APPS = 'work_applications' as any;
 const TBL_SUBS = 'work_submissions' as any;
 const TBL_REVIEWS = 'work_reviews' as any;
 const TBL_DISPUTES = 'work_disputes' as any;
+
 
 // ── Browse jobs ──────────────────────────────────────────────
 export function useBrowseJobs(filters?: {
@@ -95,6 +105,26 @@ export function useCreateJob() {
     }) => {
       if (!walletAddress) throw new Error('Not authenticated');
       const total = params.price_per_unit * params.max_units;
+
+      // 1) On-chain escrow funding (if contract deployed)
+      let onchainJobId: number | null = null;
+      let fundTxHash: string | null = null;
+      if (isWorkContractDeployed()) {
+        const result = await createJobOnChain({
+          currency: params.currency,
+          jobType: params.job_type,
+          pricePerUnit: params.price_per_unit,
+          maxUnits: params.max_units,
+        });
+        if (result) {
+          const receipt = await result.wait(1);
+          fundTxHash = receipt.hash;
+          // onchain_job_id is reconciled later by the indexer edge function
+        }
+      }
+
+
+      // 2) Off-chain record
       const { data, error } = await withWalletHeader(
         supabase.from(TBL_JOBS).insert({
           poster_address: walletAddress.toLowerCase(),
@@ -109,14 +139,18 @@ export function useCreateJob() {
           price_per_unit: params.price_per_unit,
           max_units: params.max_units,
           total_budget: total,
+          funded_amount: fundTxHash ? total : 0,
           deadline: params.deadline || null,
-          status: 'open', // off-chain v1; flips to 'open' after escrow funding tx in v2
+          onchain_job_id: onchainJobId,
+          fund_tx_hash: fundTxHash,
+          status: 'open',
         } as any).select().single(),
         walletAddress
       );
       if (error) throw error;
       return data as unknown as WorkJob;
     },
+
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['work-jobs-browse'] });
       qc.invalidateQueries({ queryKey: ['work-my-posted'] });
@@ -169,8 +203,14 @@ export function useAwardApplicant() {
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (params: { job_id: string; application_id: string; worker_address: string }) => {
+    mutationFn: async (params: { job_id: string; onchain_job_id?: number | null; application_id: string; worker_address: string }) => {
       if (!walletAddress) throw new Error('Not authenticated');
+
+      if (isWorkContractDeployed() && params.onchain_job_id) {
+        const r = await awardApplicantOnChain(params.onchain_job_id, params.worker_address);
+        if (r) await r.wait(1);
+      }
+
       const { error: e1 } = await withWalletHeader(
         supabase.from(TBL_APPS).update({ status: 'awarded' } as any).eq('id', params.application_id),
         walletAddress
@@ -193,6 +233,7 @@ export function useAwardApplicant() {
     onError: (e: any) => toast.error(e.message || 'Failed to award'),
   });
 }
+
 
 // ── Submissions ──────────────────────────────────────────────
 export function useJobSubmissions(jobId: string | undefined) {
@@ -239,12 +280,27 @@ export function useApproveSubmission() {
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (params: { submission_id: string; job_id: string; payout_amount: number }) => {
+    mutationFn: async (params: {
+      submission_id: string;
+      job_id: string;
+      onchain_job_id?: number | null;
+      worker_address: string;
+      payout_amount: number;
+      units?: number;
+    }) => {
       if (!walletAddress) throw new Error('Not authenticated');
+
+      let txHash: string | null = null;
+      if (isWorkContractDeployed() && params.onchain_job_id) {
+        const r = await approveSubmissionOnChain(params.onchain_job_id, params.worker_address, params.units ?? 1);
+        if (r) { const rec = await r.wait(1); txHash = rec.hash; }
+      }
+
       const { error } = await withWalletHeader(
         supabase.from(TBL_SUBS).update({
           approval_status: 'approved',
           payout_amount: params.payout_amount,
+          payout_tx_hash: txHash,
         } as any).eq('id', params.submission_id),
         walletAddress
       );
@@ -258,6 +314,7 @@ export function useApproveSubmission() {
     onError: (e: any) => toast.error(e.message || 'Failed to approve'),
   });
 }
+
 
 export function useRejectSubmission() {
   const { walletAddress } = useAuth();
@@ -341,8 +398,14 @@ export function useOpenDispute() {
   const { walletAddress } = useAuth();
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (params: { job_id: string; reason: string; evidence_url?: string }) => {
+    mutationFn: async (params: { job_id: string; onchain_job_id?: number | null; reason: string; evidence_url?: string }) => {
       if (!walletAddress) throw new Error('Not authenticated');
+
+      if (isWorkContractDeployed() && params.onchain_job_id) {
+        const r = await openDisputeOnChain(params.onchain_job_id);
+        if (r) await r.wait(1);
+      }
+
       const { error: e1 } = await withWalletHeader(
         supabase.from(TBL_DISPUTES).insert({
           job_id: params.job_id,
@@ -361,11 +424,91 @@ export function useOpenDispute() {
     },
     onSuccess: (_, v) => {
       qc.invalidateQueries({ queryKey: ['work-job', v.job_id] });
+      qc.invalidateQueries({ queryKey: ['work-disputes-admin'] });
       toast.success('Dispute opened — admin will review');
     },
     onError: (e: any) => toast.error(e.message || 'Failed to open dispute'),
   });
 }
+
+// ── Admin: disputes queue + resolve ──────────────────────────
+export function useAdminDisputes() {
+  return useQuery({
+    queryKey: ['work-disputes-admin'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from(TBL_DISPUTES)
+        .select('*, job:work_jobs(*)' as any)
+        .eq('status', 'open')
+        .order('created_at', { ascending: true });
+      if (error) throw error;
+      return (data || []) as any[];
+    },
+    staleTime: 15_000,
+  });
+}
+
+export function useAdminResolveDispute() {
+  const { walletAddress } = useAuth();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (params: {
+      dispute_id: string;
+      job_id: string;
+      onchain_job_id?: number | null;
+      currency: WorkCurrency;
+      worker_address: string;
+      worker_amount: number;
+      poster_refund: number;
+      resolution_notes?: string;
+    }) => {
+      if (!walletAddress) throw new Error('Not authenticated');
+
+      let txHash: string | null = null;
+      if (isWorkContractDeployed() && params.onchain_job_id) {
+        const r = await adminResolveOnChain({
+          jobId: params.onchain_job_id,
+          worker: params.worker_address,
+          currency: params.currency,
+          workerAmount: params.worker_amount,
+          posterRefund: params.poster_refund,
+        });
+        if (r) { const rec = await r.wait(1); txHash = rec.hash; }
+      }
+
+      const newStatus =
+        params.worker_amount > 0 && params.poster_refund > 0 ? 'resolved_split'
+        : params.worker_amount > 0 ? 'resolved_worker'
+        : 'resolved_poster';
+
+      const { error: e1 } = await withWalletHeader(
+        supabase.from(TBL_DISPUTES).update({
+          status: newStatus,
+          resolved_by_address: walletAddress.toLowerCase(),
+          resolved_at: new Date().toISOString(),
+          worker_amount: params.worker_amount,
+          poster_refund: params.poster_refund,
+          resolve_tx_hash: txHash,
+          resolution_notes: params.resolution_notes || null,
+        } as any).eq('id', params.dispute_id),
+        walletAddress
+      );
+      if (e1) throw e1;
+
+      const { error: e2 } = await withWalletHeader(
+        supabase.from(TBL_JOBS).update({ status: 'completed' } as any).eq('id', params.job_id),
+        walletAddress
+      );
+      if (e2) throw e2;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['work-disputes-admin'] });
+      toast.success('Dispute resolved');
+    },
+    onError: (e: any) => toast.error(e.message || 'Failed to resolve'),
+  });
+}
+
 
 export function useMarkComplete() {
   const { walletAddress } = useAuth();

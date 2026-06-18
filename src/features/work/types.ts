@@ -75,3 +75,20 @@ export interface WorkReview {
   comment: string;
   created_at: string;
 }
+
+export interface WorkDispute {
+  id: string;
+  job_id: string;
+  opened_by_address: string;
+  reason: string;
+  evidence_url: string | null;
+  status: WorkDisputeStatus;
+  resolution_notes: string | null;
+  resolved_by_address: string | null;
+  resolved_at: string | null;
+  worker_amount: number | null;
+  poster_refund: number | null;
+  resolve_tx_hash: string | null;
+  created_at: string;
+  updated_at: string;
+}
