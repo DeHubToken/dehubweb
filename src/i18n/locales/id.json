@@ -247,7 +247,9 @@
     "goBack": "Kembali",
     "showOriginal": "Tampilkan asli",
     "translating": "Menerjemahkan...",
-    "close": "Tutup"
+    "close": "Tutup",
+    "loadingMore": "Memuat lebih banyak...",
+    "loadMore": "Muat lebih banyak"
   },
   "drawers": {
     "ppvTitle": "Konten Bayar-Per-Tayang",

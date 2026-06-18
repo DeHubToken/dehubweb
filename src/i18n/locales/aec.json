@@ -247,7 +247,9 @@
     "goBack": "ارجع",
     "showOriginal": "وري الأصلي",
     "translating": "بيترجم...",
-    "close": "قفّل"
+    "close": "قفّل",
+    "loadingMore": "بيحمّل أكتر...",
+    "loadMore": "حمّل أكتر"
   },
   "tip": {
     "title": "ابعت بقشيش",

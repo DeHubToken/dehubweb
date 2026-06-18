@@ -247,7 +247,9 @@
     "goBack": "திரும்பு",
     "showOriginal": "அசலைக் காட்டு",
     "translating": "மொழிபெயர்க்கிறது...",
-    "close": "மூடு"
+    "close": "மூடு",
+    "loadingMore": "மேலும் ஏற்றுகிறது...",
+    "loadMore": "மேலும் ஏற்று"
   },
   "drawers": {
     "ppvTitle": "பே பெர் வியூ உள்ளடக்கம்",

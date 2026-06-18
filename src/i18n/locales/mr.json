@@ -247,7 +247,9 @@
     "goBack": "मागे जा",
     "showOriginal": "मूळ दाखवा",
     "translating": "भाषांतर होत आहे...",
-    "close": "बंद करा"
+    "close": "बंद करा",
+    "loadingMore": "अधिक लोड होत आहे...",
+    "loadMore": "अधिक लोड करा"
   },
   "drawers": {
     "ppvTitle": "पे पर व्ह्यू मजकूर",

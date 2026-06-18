@@ -247,7 +247,9 @@
     "goBack": "ارجع",
     "showOriginal": "عرض الأصل",
     "translating": "عم يترجم...",
-    "close": "إغلاق"
+    "close": "إغلاق",
+    "loadingMore": "عم يحمّل أكثر...",
+    "loadMore": "حمّل أكثر"
   },
   "tip": {
     "title": "أرسل إكرامية",

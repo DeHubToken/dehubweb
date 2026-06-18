@@ -247,7 +247,9 @@
     "goBack": "Miverina",
     "showOriginal": "Asehoy ny tany am-boalohany",
     "translating": "Mandika teny...",
-    "close": "Hidio"
+    "close": "Hidio",
+    "loadingMore": "Mampiditra betsaka kokoa...",
+    "loadMore": "Ampidiro betsaka kokoa"
   },
   "tip": {
     "title": "Handefa fanomezana",

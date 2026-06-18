@@ -247,7 +247,9 @@
     "goBack": "رجع",
     "showOriginal": "بين الأصلي",
     "translating": "كيترجم...",
-    "close": "سد"
+    "close": "سد",
+    "loadingMore": "كيحمّل كثر...",
+    "loadMore": "حمل كثر"
   },
   "tip": {
     "title": "بعت تيب",

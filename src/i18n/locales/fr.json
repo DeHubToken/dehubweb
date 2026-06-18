@@ -247,7 +247,9 @@
     "goBack": "Retour",
     "showOriginal": "Afficher l'original",
     "translating": "Traduction...",
-    "close": "Fermer"
+    "close": "Fermer",
+    "loadingMore": "Chargement...",
+    "loadMore": "Charger plus"
   },
   "drawers": {
     "ppvTitle": "Contenu à la carte",

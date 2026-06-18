@@ -656,7 +656,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
               {isFetchingNextPage && (
                 <div className="flex items-center gap-2 text-zinc-400">
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  <span className="text-sm">Loading more...</span>
+                  <span className="text-sm">{t('common.loadingMore')}</span>
                 </div>
               )}
               {!hasNextPage && shorts.length > 0 && (

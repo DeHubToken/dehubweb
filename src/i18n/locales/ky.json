@@ -247,7 +247,9 @@
     "goBack": "Артка кайтуу",
     "showOriginal": "Түпнускасын көрсөтүү",
     "translating": "Которулууда...",
-    "close": "Жабуу"
+    "close": "Жабуу",
+    "loadingMore": "Дагы жүктөлүүдө...",
+    "loadMore": "Дагы жүктөө"
   },
   "postOptions": {
     "options": "Тандоолор",

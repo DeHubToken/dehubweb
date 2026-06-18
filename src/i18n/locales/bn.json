@@ -247,7 +247,9 @@
     "goBack": "ফিরে যান",
     "showOriginal": "মূল দেখান",
     "translating": "অনুবাদ হচ্ছে...",
-    "close": "বন্ধ করুন"
+    "close": "বন্ধ করুন",
+    "loadingMore": "আরও লোড হচ্ছে...",
+    "loadMore": "আরও লোড করুন"
   },
   "drawers": {
     "ppvTitle": "পে-পার-ভিউ কন্টেন্ট",

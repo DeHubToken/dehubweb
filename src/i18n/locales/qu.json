@@ -247,7 +247,9 @@
     "goBack": "Kutiy",
     "showOriginal": "Qallariy rikuchiy",
     "translating": "Tikrachkan...",
-    "close": "Wisq'ay"
+    "close": "Wisq'ay",
+    "loadingMore": "Astawanta chaskichkan...",
+    "loadMore": "Astawanta chaskiy"
   },
   "tip": {
     "title": "Propina apachiy",

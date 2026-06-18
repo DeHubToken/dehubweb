@@ -247,7 +247,9 @@
     "goBack": "ਵਾਪਸ ਜਾਓ",
     "showOriginal": "ਅਸਲੀ ਦਿਖਾਓ",
     "translating": "ਅਨੁਵਾਦ ਹੋ ਰਿਹਾ ਹੈ...",
-    "close": "ਬੰਦ ਕਰੋ"
+    "close": "ਬੰਦ ਕਰੋ",
+    "loadingMore": "ਹੋਰ ਲੋਡ ਹੋ ਰਿਹਾ ਹੈ...",
+    "loadMore": "ਹੋਰ ਲੋਡ ਕਰੋ"
   },
   "drawers": {
     "ppvTitle": "ਪੇ ਪਰ ਵਿਊ ਸਮੱਗਰੀ",

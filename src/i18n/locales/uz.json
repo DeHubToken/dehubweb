@@ -247,7 +247,9 @@
     "goBack": "Orqaga qaytish",
     "showOriginal": "Aslini koʻrsatish",
     "translating": "Tarjima qilinmoqda...",
-    "close": "Yopish"
+    "close": "Yopish",
+    "loadingMore": "Koʻproq yuklanmoqda...",
+    "loadMore": "Koʻproq yuklash"
   },
   "tip": {
     "title": "Tip yuborish",

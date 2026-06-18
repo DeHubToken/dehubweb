@@ -247,7 +247,9 @@
     "goBack": "Vissza",
     "showOriginal": "Eredeti megjelenítése",
     "translating": "Fordítás...",
-    "close": "Bezárás"
+    "close": "Bezárás",
+    "loadingMore": "Több betöltése...",
+    "loadMore": "Több betöltése"
   },
   "drawers": {
     "ppvTitle": "Fizetés megtekintésenként",

@@ -247,7 +247,9 @@
     "goBack": "Mine tagasi",
     "showOriginal": "Näita originaali",
     "translating": "Tõlkimine...",
-    "close": "Sulge"
+    "close": "Sulge",
+    "loadingMore": "Laaditakse rohkem...",
+    "loadMore": "Laadi rohkem"
   },
   "tip": {
     "title": "Saada jootraha",

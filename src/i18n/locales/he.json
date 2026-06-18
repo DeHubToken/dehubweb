@@ -247,7 +247,9 @@
     "goBack": "חזור",
     "showOriginal": "הצג מקור",
     "translating": "מתרגם...",
-    "close": "סגור"
+    "close": "סגור",
+    "loadingMore": "טוען עוד...",
+    "loadMore": "טען עוד"
   },
   "drawers": {
     "ppvTitle": "תוכן בתשלום",

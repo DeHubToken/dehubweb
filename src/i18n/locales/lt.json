@@ -247,7 +247,9 @@
     "goBack": "Grįžti atgal",
     "showOriginal": "Rodyti originalą",
     "translating": "Verčiama...",
-    "close": "Uždaryti"
+    "close": "Uždaryti",
+    "loadingMore": "Kraunama daugiau...",
+    "loadMore": "Įkelti daugiau"
   },
   "tip": {
     "title": "Siųsti arbatpinigius",

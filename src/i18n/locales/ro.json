@@ -408,7 +408,9 @@
     "goBack": "Go back",
     "showOriginal": "Show original",
     "translating": "Translating...",
-    "close": "Close"
+    "close": "Close",
+    "loadingMore": "Loading more...",
+    "loadMore": "Load more"
   },
   "postOptions": {
     "options": "Options",

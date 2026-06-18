@@ -247,7 +247,9 @@
     "goBack": "Takaisin",
     "showOriginal": "Näytä alkuperäinen",
     "translating": "Käännetään...",
-    "close": "Sulje"
+    "close": "Sulje",
+    "loadingMore": "Ladataan lisää...",
+    "loadMore": "Lataa lisää"
   },
   "postOptions": {
     "options": "Vaihtoehdot",

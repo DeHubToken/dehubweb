@@ -247,7 +247,9 @@
     "goBack": "Kthehu",
     "showOriginal": "Shfaq origjinalin",
     "translating": "Po përkthehet...",
-    "close": "Mbyll"
+    "close": "Mbyll",
+    "loadingMore": "Po ngarkohen më shumë...",
+    "loadMore": "Ngarko më shumë"
   },
   "tip": {
     "title": "Dërgo Bakshish",

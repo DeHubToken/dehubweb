@@ -247,7 +247,9 @@
     "goBack": "Бозгашт",
     "showOriginal": "Намоиши аслӣ",
     "translating": "Тарҷума мешавад...",
-    "close": "Бастан"
+    "close": "Бастан",
+    "loadingMore": "Бештар бор мешавад...",
+    "loadMore": "Бештар бор кардан"
   },
   "postOptions": {
     "options": "Имконот",

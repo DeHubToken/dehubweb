@@ -247,7 +247,9 @@
     "goBack": "နောက်သို့ပြန်ရန်",
     "showOriginal": "မူရင်းပြသရန်",
     "translating": "ဘာသာပြန်နေသည်...",
-    "close": "ပိတ်ရန်"
+    "close": "ပိတ်ရန်",
+    "loadingMore": "Loading more...",
+    "loadMore": "နောက်ထပ်ဖွင့်ရန်"
   },
   "tip": {
     "title": "အကူအညီပေးရန်",

@@ -247,7 +247,9 @@
     "goBack": "Gå tilbake",
     "showOriginal": "Vis original",
     "translating": "Oversetter...",
-    "close": "Lukk"
+    "close": "Lukk",
+    "loadingMore": "Laster mer...",
+    "loadMore": "Last mer"
   },
   "postOptions": {
     "options": "Alternativer",

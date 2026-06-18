@@ -247,7 +247,9 @@
     "goBack": "Voltar",
     "showOriginal": "Mostrar original",
     "translating": "Traduzindo...",
-    "close": "Fechar"
+    "close": "Fechar",
+    "loadingMore": "Carregando mais...",
+    "loadMore": "Carregar mais"
   },
   "drawers": {
     "ppvTitle": "Conteúdo Pay-Per-View",

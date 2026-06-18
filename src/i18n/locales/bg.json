@@ -247,7 +247,9 @@
     "goBack": "Назад",
     "showOriginal": "Покажи оригинала",
     "translating": "Превеждане...",
-    "close": "Затвори"
+    "close": "Затвори",
+    "loadingMore": "Зареждане...",
+    "loadMore": "Зареди още"
   },
   "drawers": {
     "ppvTitle": "Плащане на гледане",

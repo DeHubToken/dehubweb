@@ -247,7 +247,9 @@
     "goBack": "वापस जाओ",
     "showOriginal": "असली दिखाओ",
     "translating": "अनुवाद हो रहल बा...",
-    "close": "बंद"
+    "close": "बंद",
+    "loadingMore": "आउर लोड हो रहल बा...",
+    "loadMore": "आउर लोड करो"
   },
   "tip": {
     "title": "टिप भेजो",

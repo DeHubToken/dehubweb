@@ -247,7 +247,9 @@
     "goBack": "戻る",
     "showOriginal": "原文を表示",
     "translating": "翻訳中...",
-    "close": "閉じる"
+    "close": "閉じる",
+    "loadingMore": "読み込み中...",
+    "loadMore": "もっと読み込む"
   },
   "postOptions": {
     "options": "オプション",

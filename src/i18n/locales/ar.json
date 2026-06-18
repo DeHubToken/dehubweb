@@ -247,7 +247,9 @@
     "goBack": "رجوع",
     "showOriginal": "عرض الأصلي",
     "translating": "جاري الترجمة...",
-    "close": "إغلاق"
+    "close": "إغلاق",
+    "loadingMore": "جارٍ تحميل المزيد...",
+    "loadMore": "تحميل المزيد"
   },
   "drawers": {
     "ppvTitle": "محتوى الدفع لكل مشاهدة",

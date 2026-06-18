@@ -247,7 +247,9 @@
     "goBack": "Bali",
     "showOriginal": "Tampilake Asli",
     "translating": "Nerjemahake...",
-    "close": "Tutup"
+    "close": "Tutup",
+    "loadingMore": "Ngemot luwih akeh...",
+    "loadMore": "Muat Luwih Akeh"
   },
   "tip": {
     "title": "Kirim Hadiah",

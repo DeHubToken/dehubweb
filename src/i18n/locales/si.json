@@ -247,7 +247,9 @@
     "goBack": "ආපසු යන්න",
     "showOriginal": "මුල් පිටපත පෙන්වන්න",
     "translating": "පරිවර්තනය වෙමින්...",
-    "close": "වසන්න"
+    "close": "වසන්න",
+    "loadingMore": "Loading more...",
+    "loadMore": "තවත් පූරණය"
   },
   "tip": {
     "title": "ටිප් එවන්න",

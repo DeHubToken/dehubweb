@@ -247,7 +247,9 @@
     "goBack": "Zurück",
     "showOriginal": "Original anzeigen",
     "translating": "Übersetzen...",
-    "close": "Schließen"
+    "close": "Schließen",
+    "loadingMore": "Mehr laden...",
+    "loadMore": "Mehr laden"
   },
   "postOptions": {
     "options": "Optionen",

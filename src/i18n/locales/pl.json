@@ -247,7 +247,9 @@
     "goBack": "Wróć",
     "showOriginal": "Pokaż oryginał",
     "translating": "Tłumaczenie...",
-    "close": "Zamknij"
+    "close": "Zamknij",
+    "loadingMore": "Ładowanie więcej...",
+    "loadMore": "Załaduj więcej"
   },
   "glossary": {
     "title": "Słownik",

@@ -247,7 +247,9 @@
     "goBack": "Назад",
     "showOriginal": "Прикажи оригинал",
     "translating": "Превођење...",
-    "close": "Затвори"
+    "close": "Затвори",
+    "loadingMore": "Учитавање...",
+    "loadMore": "Учитај још"
   },
   "drawers": {
     "ppvTitle": "Плаћање по гледању",

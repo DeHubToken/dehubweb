@@ -247,7 +247,9 @@
     "goBack": "بازگشت",
     "showOriginal": "نمایش اصلی",
     "translating": "در حال ترجمه...",
-    "close": "بستن"
+    "close": "بستن",
+    "loadingMore": "بارگذاری بیشتر...",
+    "loadMore": "بارگذاری بیشتر"
   },
   "tip": {
     "title": "ارسال انعام",

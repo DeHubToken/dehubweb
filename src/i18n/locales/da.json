@@ -247,7 +247,9 @@
     "goBack": "Tilbage",
     "showOriginal": "Vis original",
     "translating": "Oversætter...",
-    "close": "Luk"
+    "close": "Luk",
+    "loadingMore": "Indlæser...",
+    "loadMore": "Indlæs mere"
   },
   "drawers": {
     "ppvTitle": "Betal per visning",

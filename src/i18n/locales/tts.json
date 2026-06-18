@@ -247,7 +247,9 @@
     "goBack": "กลับ",
     "showOriginal": "สะแดงต้นฉบับ",
     "translating": "กำลังแปล...",
-    "close": "ปิด"
+    "close": "ปิด",
+    "loadingMore": "กำลังโหลดเพิ่ม...",
+    "loadMore": "โหลดเพิ่ม"
   },
   "tip": {
     "title": "ส่งทิป",

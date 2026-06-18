@@ -247,7 +247,9 @@
     "goBack": "Zpět",
     "showOriginal": "Zobrazit originál",
     "translating": "Překládání...",
-    "close": "Zavřít"
+    "close": "Zavřít",
+    "loadingMore": "Načítání dalších...",
+    "loadMore": "Načíst více"
   },
   "drawers": {
     "ppvTitle": "Platba za zhlédnutí",

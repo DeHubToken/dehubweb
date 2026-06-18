@@ -247,7 +247,9 @@
     "goBack": "Buyela emuva",
     "showOriginal": "Bonisa okwangempela",
     "translating": "Iyahumusha...",
-    "close": "Vala"
+    "close": "Vala",
+    "loadingMore": "Ilayisha okwengeziwe...",
+    "loadMore": "Layisha okwengeziwe"
   },
   "tip": {
     "title": "Thumela Ithiphu",

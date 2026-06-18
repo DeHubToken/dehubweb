@@ -247,7 +247,9 @@
     "goBack": "ተመለስ",
     "showOriginal": "ኦሪጅናል ኣርኢ",
     "translating": "ይትርጎም ኣሎ...",
-    "close": "ዕጸው"
+    "close": "ዕጸው",
+    "loadingMore": "ዝያዳ ይጽዓን ኣሎ...",
+    "loadMore": "ዝያዳ ጽዓን"
   },
   "tip": {
     "title": "ሽልማት ስደድ",

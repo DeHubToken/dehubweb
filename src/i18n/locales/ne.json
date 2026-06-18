@@ -247,7 +247,9 @@
     "goBack": "पछाडि जानुहोस्",
     "showOriginal": "मूल देखाउनुहोस्",
     "translating": "अनुवाद हुँदैछ...",
-    "close": "बन्द गर्नुहोस्"
+    "close": "बन्द गर्नुहोस्",
+    "loadingMore": "Loading more...",
+    "loadMore": "थप लोड गर्नुहोस्"
   },
   "tip": {
     "title": "टिप पठाउनुहोस्",

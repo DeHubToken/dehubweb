@@ -247,7 +247,9 @@
     "goBack": "Geri dön",
     "showOriginal": "Orijinali göster",
     "translating": "Çevriliyor...",
-    "close": "Kapat"
+    "close": "Kapat",
+    "loadingMore": "Daha fazla yükleniyor...",
+    "loadMore": "Daha fazla yükle"
   },
   "tip": {
     "title": "Bahşiş Gönder",

@@ -247,7 +247,9 @@
     "goBack": "वापस जाएँ",
     "showOriginal": "मूल दिखाएँ",
     "translating": "अनुवाद हो रहा है...",
-    "close": "बंद करें"
+    "close": "बंद करें",
+    "loadingMore": "और लोड हो रहा है...",
+    "loadMore": "और लोड करें"
   },
   "drawers": {
     "ppvTitle": "पे-पर-व्यू सामग्री",

@@ -247,7 +247,9 @@
     "goBack": "Natrag",
     "showOriginal": "Prikaži izvornik",
     "translating": "Prevođenje...",
-    "close": "Zatvori"
+    "close": "Zatvori",
+    "loadingMore": "Učitavanje...",
+    "loadMore": "Učitaj više"
   },
   "tip": {
     "title": "Pošalji napojnicu",

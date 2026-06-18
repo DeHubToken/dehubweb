@@ -1,4 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Repeat2 } from 'lucide-react';
 import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info, CornerDownRight, Image, Play, Pencil, Trash2, Pin } from 'lucide-react';
 import { useInfiniteQuery, useQueries, useQueryClient } from '@tanstack/react-query';
@@ -337,6 +338,7 @@ function PostsTabPanel({
   profileAddress: string;
   isLoadingContent: boolean;
 }) {
+  const { t } = useTranslation();
   // Collect unique tokenIds from comments to batch-fetch parent posts
   const uniqueTokenIds = React.useMemo(() => {
     const ids = new Set<string>();
@@ -419,7 +421,7 @@ function PostsTabPanel({
             className="text-muted-foreground hover:text-foreground"
           >
             {isFetchingNextPage ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-            Load more
+            {isFetchingNextPage ? t('common.loadingMore') : t('common.loadMore')}
           </Button>
         </div>
       )}

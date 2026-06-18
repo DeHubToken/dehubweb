@@ -247,7 +247,9 @@
     "goBack": "Dib u noqo",
     "showOriginal": "Muuji asal ahaan",
     "translating": "Waa la turjumayaa...",
-    "close": "Xir"
+    "close": "Xir",
+    "loadingMore": "Wax kale waa la soo dejinayaa...",
+    "loadMore": "Wax kale soo dejiso"
   },
   "tip": {
     "title": "Dir Bakhshiish",

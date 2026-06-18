@@ -247,7 +247,9 @@
     "goBack": "Go back",
     "showOriginal": "Show original",
     "translating": "E dey translate...",
-    "close": "Close"
+    "close": "Close",
+    "loadingMore": "Dey load more...",
+    "loadMore": "Load more"
   },
   "tip": {
     "title": "Send Tip",

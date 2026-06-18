@@ -247,7 +247,9 @@
     "goBack": "بیرته لاړ شئ",
     "showOriginal": "اصلي ښکاره کړئ",
     "translating": "ژباړه کیږي...",
-    "close": "بندول"
+    "close": "بندول",
+    "loadingMore": "نور لوډ کیږي...",
+    "loadMore": "نور لوډ کړئ"
   },
   "tip": {
     "title": "ټپ ولیږئ",

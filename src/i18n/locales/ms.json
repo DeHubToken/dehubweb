@@ -306,7 +306,8 @@
     "userAccountSafeOutFailed": "Tandakan akaun pengguna selamat keluar gagal",
     "goBack": "Go back",
     "showOriginal": "Show original",
-    "translating": "Translating..."
+    "translating": "Translating...",
+    "loadMore": "Load more"
   },
   "profileOptions": {
     "copyProfileUrl": "Salin URL profil",

@@ -6,6 +6,7 @@
  */
 
 import { useState, useRef, useCallback, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Search, Play, Pause, Check, Music, X, Loader2 } from 'lucide-react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { searchNFTs, getMediaUrl, DEHUB_CDN_BASE } from '@/lib/api/dehub';
@@ -24,6 +25,7 @@ interface SoundPickerProps {
 }
 
 export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPickerProps) {
+  const { t } = useTranslation();
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [playingId, setPlayingId] = useState<string | null>(null);
@@ -226,7 +228,7 @@ export function SoundPicker({ isOpen, onClose, onSelect, currentSound }: SoundPi
                   {isFetchingNextPage ? (
                     <Loader2 className="w-4 h-4 animate-spin mx-auto" />
                   ) : (
-                    'Load more'
+                    t('common.loadMore')
                   )}
                 </button>
               )}

@@ -247,7 +247,9 @@
     "goBack": "Yza",
     "showOriginal": "Asyl nusgasyny görkez",
     "translating": "Terjime edilýär...",
-    "close": "Ýap"
+    "close": "Ýap",
+    "loadingMore": "Has köp ýüklenýär...",
+    "loadMore": "Has köp ýükle"
   },
   "postOptions": {
     "options": "Saýlawlar",
