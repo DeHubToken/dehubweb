@@ -122,7 +122,7 @@ export default function WorkJobDetailPage() {
               <p className="text-sm text-white/70 whitespace-pre-wrap">{a.cover_letter}</p>
               {isPoster && a.status === 'pending' && job.status === 'open' && (
                 <button
-                  onClick={() => awardMutation.mutate({ job_id: job.id, application_id: a.id, worker_address: a.applicant_address })}
+                  onClick={() => awardMutation.mutate({ job_id: job.id, onchain_job_id: job.onchain_job_id, application_id: a.id, worker_address: a.applicant_address })}
                   className="mt-2 px-3 py-1.5 rounded-lg bg-white text-black text-xs font-semibold"
                 >
                   Award & escrow
@@ -270,7 +270,7 @@ export default function WorkJobDetailPage() {
           <textarea value={disputeReason} onChange={(e) => setDisputeReason(e.target.value)} rows={3} placeholder="Explain the issue…" className={inputCls} />
           <button
             disabled={!disputeReason.trim()}
-            onClick={() => { disputeMutation.mutate({ job_id: job.id, reason: disputeReason.trim() }); setShowDispute(false); setDisputeReason(''); }}
+            onClick={() => { disputeMutation.mutate({ job_id: job.id, onchain_job_id: job.onchain_job_id, reason: disputeReason.trim() }); setShowDispute(false); setDisputeReason(''); }}
             className="px-4 py-2 rounded-xl bg-red-500/30 text-red-100 text-sm font-semibold"
           >
             Submit dispute to admin
