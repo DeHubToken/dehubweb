@@ -131,6 +131,7 @@ interface CollageViewProps {
 }
 
 function CollageView({ posts, onImageClick, loaderRef, isFetchingNextPage, hasNextPage }: CollageViewProps) {
+  const { t } = useI18n();
   const { isCollapsed } = useSidebarCollapse();
   return (
     <div className="p-1 sm:p-2 pt-0 sm:pt-0">
