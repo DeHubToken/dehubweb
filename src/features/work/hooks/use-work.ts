@@ -41,7 +41,7 @@ export function useBrowseJobs(filters?: {
 
       const { data, error } = await q.limit(100);
       if (error) throw error;
-      return (data || []) as WorkJob[];
+      return (data || []) as unknown as WorkJob[];
     },
     staleTime: 30_000,
   });
@@ -69,7 +69,7 @@ export function useMyPostedJobs() {
         .eq('poster_address', walletAddress!.toLowerCase())
         .order('created_at', { ascending: false });
       if (error) throw error;
-      return (data || []) as WorkJob[];
+      return (data || []) as unknown as WorkJob[];
     },
     enabled: !!walletAddress,
   });
@@ -133,7 +133,7 @@ export function useJobApplications(jobId: string | undefined) {
     queryFn: async () => {
       const { data, error } = await supabase.from(TBL_APPS).select('*').eq('job_id', jobId!).order('created_at', { ascending: false });
       if (error) throw error;
-      return (data || []) as WorkApplication[];
+      return (data || []) as unknown as WorkApplication[];
     },
     enabled: !!jobId,
   });
@@ -201,7 +201,7 @@ export function useJobSubmissions(jobId: string | undefined) {
     queryFn: async () => {
       const { data, error } = await supabase.from(TBL_SUBS).select('*').eq('job_id', jobId!).order('created_at', { ascending: false });
       if (error) throw error;
-      return (data || []) as WorkSubmission[];
+      return (data || []) as unknown as WorkSubmission[];
     },
     enabled: !!jobId,
   });
@@ -289,7 +289,7 @@ export function useJobReviews(jobId: string | undefined) {
     queryFn: async () => {
       const { data, error } = await supabase.from(TBL_REVIEWS).select('*').eq('job_id', jobId!);
       if (error) throw error;
-      return (data || []) as WorkReview[];
+      return (data || []) as unknown as WorkReview[];
     },
     enabled: !!jobId,
   });
@@ -301,7 +301,7 @@ export function useUserReviews(address: string | undefined) {
     queryFn: async () => {
       const { data, error } = await supabase.from(TBL_REVIEWS).select('*').eq('reviewee_address', address!.toLowerCase()).order('created_at', { ascending: false });
       if (error) throw error;
-      return (data || []) as WorkReview[];
+      return (data || []) as unknown as WorkReview[];
     },
     enabled: !!address,
   });
