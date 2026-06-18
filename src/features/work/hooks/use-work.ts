@@ -105,6 +105,29 @@ export function useCreateJob() {
     }) => {
       if (!walletAddress) throw new Error('Not authenticated');
       const total = params.price_per_unit * params.max_units;
+
+      // 1) On-chain escrow funding (if contract deployed)
+      let onchainJobId: number | null = null;
+      let fundTxHash: string | null = null;
+      if (isWorkContractDeployed()) {
+        const result = await createJobOnChain({
+          currency: params.currency,
+          jobType: params.job_type,
+          pricePerUnit: params.price_per_unit,
+          maxUnits: params.max_units,
+        });
+        if (result) {
+          const receipt = await result.wait(1);
+          fundTxHash = receipt.hash;
+          // Best-effort extract jobId from JobCreated log (topic[1])
+          try {
+            const log = receipt.logs?.find((l: any) => l.address?.toLowerCase() === (await import('@/lib/contracts/dehub-work')).DEHUB_WORK_ADDRESS.toLowerCase());
+            if (log?.topics?.[1]) onchainJobId = Number(BigInt(log.topics[1]));
+          } catch { /* non-fatal */ }
+        }
+      }
+
+      // 2) Off-chain record
       const { data, error } = await withWalletHeader(
         supabase.from(TBL_JOBS).insert({
           poster_address: walletAddress.toLowerCase(),
@@ -119,14 +142,18 @@ export function useCreateJob() {
           price_per_unit: params.price_per_unit,
           max_units: params.max_units,
           total_budget: total,
+          funded_amount: fundTxHash ? total : 0,
           deadline: params.deadline || null,
-          status: 'open', // off-chain v1; flips to 'open' after escrow funding tx in v2
+          onchain_job_id: onchainJobId,
+          fund_tx_hash: fundTxHash,
+          status: 'open',
         } as any).select().single(),
         walletAddress
       );
       if (error) throw error;
       return data as unknown as WorkJob;
     },
+
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['work-jobs-browse'] });
       qc.invalidateQueries({ queryKey: ['work-my-posted'] });
