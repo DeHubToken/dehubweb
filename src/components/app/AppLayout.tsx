@@ -18,7 +18,7 @@ import { PostModal } from '@/features/post/PostModal';
 import { RadioMiniPlayer } from '@/components/app/radio';
 import { StageMiniPlayer, AudioSpacesModal } from '@/components/app/spaces';
 import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
-import { UpgradeNoticeBanner } from '@/components/app/UpgradeNoticeBanner';
+
 import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
 import { GlobalFeedNav } from './GlobalFeedNav';
 import { cn } from '@/lib/utils';
