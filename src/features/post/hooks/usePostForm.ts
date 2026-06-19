@@ -13,9 +13,13 @@ import {
   mintWithBounty,
   calculateTotalBounty,
   getDHBBalance,
-  DHB_TOKEN,
+  getChainConfig,
   BASE_CHAIN_ID,
 } from '@/lib/contracts';
+import { isSolanaChain, findLockToken, isValidEvmAddress } from '@/lib/chains/constants';
+import { connectSolanaWallet, isValidSolanaAddress } from '@/lib/solana/wallet';
+import { broadcastSolanaMint } from '@/lib/solana/mint';
+import { confirmEvmMint } from '@/lib/api/dehub/solana';
 import { extractAvatarPath, buildAvatarUrl } from '@/lib/media-url';
 import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
 import { useAuth } from '@/contexts/AuthContext';
@@ -23,7 +27,7 @@ import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormCompu
 import type { FilterSettings, CropSettings } from '../types/filters';
 import type { Draft } from '../components/DraftsSheet';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
-import type { ChainId } from '@/components/app/ChainSelector';
+import type { PostChainId } from '@/components/app/ChainSelector';
 
 // Storage key for drafts
 const DRAFTS_STORAGE_KEY = 'post_drafts';
@@ -47,6 +51,7 @@ interface ActiveDraft {
   w2eCurrency: Currency;
   isTokenGated: boolean;
   tokenContract: string;
+  tokenSymbol: string;
   tokenAmount: string;
 }
 
@@ -152,7 +157,7 @@ interface UsePostFormReturn {
     drafts: Draft[];
     isRecording: boolean;
     recordingTime: number;
-    chainId: ChainId;
+    chainId: PostChainId;
     isCameraModalOpen: boolean;
     selectedCategory: string;
     showTitle: boolean;
@@ -165,7 +170,7 @@ interface UsePostFormReturn {
     deleteDraft: (id: string) => void;
     startRecording: () => void;
     stopRecording: () => void;
-    setChainId: (chainId: ChainId) => void;
+    setChainId: (chainId: PostChainId) => void;
     setSelectedCategory: (category: string) => void;
     setShowTitle: (show: boolean) => void;
     setTitleText: (text: string) => void;
@@ -210,6 +215,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [w2eCurrency, setW2eCurrency] = useState<Currency>(d?.w2eCurrency ?? 'USD');
   const [isTokenGated, setIsTokenGated] = useState(d?.isTokenGated ?? false);
   const [tokenContract, setTokenContract] = useState(d?.tokenContract ?? '');
+  const [tokenSymbol, setTokenSymbol] = useState(d?.tokenSymbol ?? 'DHB');
   const [tokenAmount, setTokenAmount] = useState(d?.tokenAmount ?? '');
   const [liveMode, setLiveMode] = useState<LiveMode>(null);
   const [poll, setPoll] = useState<PollData | null>(null);
@@ -221,7 +227,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   const [drafts, setDrafts] = useState<Draft[]>(loadDraftsLocal);
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
-  const [chainId, setChainId] = useState<ChainId>(BASE_CHAIN_ID as ChainId);
+  const [chainId, setChainId] = useState<PostChainId>(BASE_CHAIN_ID as PostChainId);
   const [selectedCategory, setSelectedCategory] = useState<string>(() => {
     // Active draft category takes priority, then saved defaults
     if (d?.selectedCategory) return d.selectedCategory;
@@ -247,7 +253,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       text, description, showDescription, titleText, showTitle,
       selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
       isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
-      isTokenGated, tokenContract, tokenAmount,
+      isTokenGated, tokenContract, tokenSymbol, tokenAmount,
     };
     // Only save if there's meaningful content
     const hasContent = text.trim() || description.trim() || titleText.trim() ||
@@ -260,7 +266,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   }, [text, description, showDescription, titleText, showTitle,
     selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
-    isTokenGated, tokenContract, tokenAmount]);
+    isTokenGated, tokenContract, tokenSymbol, tokenAmount]);
 
   // Refs
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -742,11 +748,12 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     setW2eCurrency('USD');
     setIsTokenGated(false);
     setTokenContract('');
+    setTokenSymbol('DHB');
     setTokenAmount('');
     setLiveMode(null);
     setPoll(null);
     setScheduledDate(null);
-    setChainId(BASE_CHAIN_ID as ChainId);
+    setChainId(BASE_CHAIN_ID as PostChainId);
     setTitleText('');
     // Only persist category if user explicitly saved defaults
     if (!categorySavedRef.current) {
@@ -902,58 +909,96 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         postType = 'feed-images';
       }
 
-      // Get user's wallet address for signature generation
-      const minterAddress = await getWeb3AuthSigner();
-      console.log('[Mint] User wallet address (minter):', minterAddress);
+      const postingOnSolana = isSolanaChain(chainId);
 
-      // Build streamInfo for monetization - ONLY DHB on Base chain
+      if (postingOnSolana && (isWatch2Earn || isSubscribersOnly)) {
+        toast.error('Bounty and subscribers are not available on Solana');
+        setIsPosting(false);
+        return;
+      }
+
+      // Wallet for minting: Solana = Phantom; EVM = Web3Auth/wagmi
+      let minterAddress: string;
+      if (postingOnSolana) {
+        minterAddress = await connectSolanaWallet();
+      } else {
+        minterAddress = await getWeb3AuthSigner();
+      }
+      console.log('[Mint] Minter address:', minterAddress, 'chainId:', chainId);
+
+      const evmChainConfig = !postingOnSolana ? getChainConfig(chainId as import('@/components/app/ChainSelector').ChainId) : null;
+
+      // Build streamInfo for monetization
       const streamInfo: StreamInfo = {
         isLockContent: false,
         isPayPerView: false,
         isAddBounty: false,
       };
 
-      // Add Lock/Subscribers settings (Token Gated)
+      const applyLockContent = (contract: string, symbol: string, lockChainId: number) => {
+        streamInfo.isLockContent = true;
+        streamInfo.lockContentContractAddress = contract;
+        streamInfo.lockContentTokenSymbol = symbol;
+        streamInfo.lockContentChainIds = [lockChainId];
+      };
+
+      // Token-gated content (any supported or custom token on active chain)
       if (isTokenGated && tokenAmount) {
-        streamInfo.isLockContent = true;
-        streamInfo.lockContentContractAddress = DHB_TOKEN.address;
-        streamInfo.lockContentTokenSymbol = 'DHB';
-        streamInfo.lockContentAmount = parseFloat(tokenAmount);
-        streamInfo.lockContentChainIds = [BASE_CHAIN_ID];
-      } else if (isSubscribersOnly) {
-        streamInfo.isLockContent = true;
-        streamInfo.lockContentContractAddress = DHB_TOKEN.address;
-        streamInfo.lockContentTokenSymbol = 'DHB';
-        streamInfo.lockContentChainIds = [BASE_CHAIN_ID];
+        const amount = parseFloat(tokenAmount);
+        if (amount > 0) {
+          let contract = tokenContract.trim();
+          let symbol = tokenSymbol.trim() || 'TOKEN';
+          if (!contract) {
+            const known = findLockToken(symbol, chainId);
+            if (!known) {
+              toast.error('Select a valid token for token gating');
+              setIsPosting(false);
+              return;
+            }
+            contract = known.address;
+            symbol = known.symbol;
+          } else if (postingOnSolana) {
+            if (!isValidSolanaAddress(contract)) {
+              toast.error('Invalid Solana token mint address for token gating');
+              setIsPosting(false);
+              return;
+            }
+          } else if (!isValidEvmAddress(contract)) {
+            toast.error('Invalid token contract address for token gating');
+            setIsPosting(false);
+            return;
+          }
+          applyLockContent(contract, symbol, chainId);
+          streamInfo.lockContentAmount = amount;
+        }
+      } else if (isSubscribersOnly && evmChainConfig?.dhbToken) {
+        applyLockContent(evmChainConfig.dhbToken, 'DHB', chainId);
       }
 
-      // Add PPV settings
+      // PPV settings
       if (isPPV && ppvAmount) {
         const ppvValue = parseFloat(ppvAmount);
         if (ppvValue > 0) {
           streamInfo.isPayPerView = true;
           streamInfo.payPerViewTokenSymbol = ppvCurrency;
           streamInfo.payPerViewAmount = ppvValue;
-          if (ppvCurrency === 'DHB') {
-            streamInfo.payPerViewContractAddress = DHB_TOKEN.address;
-            streamInfo.payPerViewChainIds = [BASE_CHAIN_ID];
+          if (ppvCurrency === 'DHB' && evmChainConfig?.dhbToken) {
+            streamInfo.payPerViewContractAddress = evmChainConfig.dhbToken;
+            streamInfo.payPerViewChainIds = [chainId];
           }
         }
       }
 
-      // Add Bounty (W2E) settings - DHB only
-      const hasBounty = isWatch2Earn && w2eTotal && w2eViews;
-      if (hasBounty) {
+      // Bounty (W2E) — DHB on selected EVM chain
+      const hasBounty = !postingOnSolana && isWatch2Earn && w2eTotal && w2eViews;
+      if (hasBounty && evmChainConfig) {
         const bountyAmount = parseFloat(w2eTotal);
         const viewerCount = w2eViews.trim() !== '' ? parseInt(w2eViews) : 10;
         const commentCount = w2eComments.trim() !== '' ? parseInt(w2eComments) : 0;
         
         if (bountyAmount > 0 && (viewerCount > 0 || commentCount > 0)) {
-          // Calculate total bounty needed
           const totalBounty = calculateTotalBounty(bountyAmount, viewerCount, commentCount);
-          
-          // Check DHB balance
-          const balance = await getDHBBalance(minterAddress);
+          const balance = await getDHBBalance(minterAddress, chainId as import('@/components/app/ChainSelector').ChainId);
           const balanceNum = Number(balance) / 1e18;
           
           if (balanceNum < totalBounty) {
@@ -967,7 +1012,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
           streamInfo.addBountyAmount = bountyAmount;
           streamInfo.addBountyFirstXViewers = viewerCount;
           streamInfo.addBountyFirstXComments = commentCount;
-          streamInfo.addBountyChainId = BASE_CHAIN_ID;
+          streamInfo.addBountyChainId = chainId;
         }
       }
 
@@ -1126,15 +1171,24 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
       console.log('[Mint] API response:', JSON.stringify(mintResponse, null, 2));
 
-      // Validate signature data from API
-      if (!mintResponse.v || !mintResponse.r || !mintResponse.s) {
-        console.error('[Mint] Missing signature components in API response');
-        throw new Error('Invalid signature data from backend - missing v, r, or s');
-      }
-      
       if (!mintResponse.createdTokenId) {
         console.error('[Mint] Missing token ID in API response');
         throw new Error('Invalid response from backend - missing token ID');
+      }
+
+      const isSolanaMint = !!(mintResponse.isSolana && mintResponse.transaction && mintResponse.mintAddress);
+
+      if (postingOnSolana && !isSolanaMint) {
+        throw new Error(
+          mintResponse.isSolana
+            ? 'Solana mint data incomplete from server. Please try again.'
+            : 'Solana minting is not enabled on the server. Contact support or try an EVM chain.',
+        );
+      }
+
+      if (!isSolanaMint && (!mintResponse.v || !mintResponse.r || !mintResponse.s)) {
+        console.error('[Mint] Missing signature components in API response');
+        throw new Error('Invalid signature data from backend - missing v, r, or s');
       }
 
       // Handle scheduled posts (skip on-chain minting)
@@ -1166,34 +1220,45 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         setUploadProgress(Math.round(simulatedProgress));
       }, 1200);
 
-      let txHash: string;
+      let txHash: string | undefined;
       let mintConfirmed: Promise<string> | undefined;
       
       try {
-        if (hasBounty) {
-          // Use StreamController for bounty minting
+        if (isSolanaMint) {
+          toast.loading('Sign with Phantom to publish', { id: 'mint-progress', duration: Infinity });
+          const solResult = await broadcastSolanaMint({
+            transactionBase64: mintResponse.transaction!,
+            mintAddress: mintResponse.mintAddress!,
+            tokenId: mintResponse.createdTokenId,
+            chainId,
+            walletAddress: minterAddress,
+          });
+          txHash = solResult.signature;
+          if (solResult.confirmWarning) {
+            toast.warning(solResult.confirmWarning, { duration: 10000 });
+          }
+        } else if (hasBounty) {
           toast.loading('Approving tokens', { id: 'mint-progress', duration: Infinity });
           
           txHash = await mintWithBounty({
             tokenId: mintResponse.createdTokenId,
-            timestamp: mintResponse.timestamp,
-            v: mintResponse.v,
-            r: mintResponse.r,
-            s: mintResponse.s,
+            timestamp: mintResponse.timestamp!,
+            v: mintResponse.v!,
+            r: mintResponse.r!,
+            s: mintResponse.s!,
             bountyAmount: parseFloat(w2eTotal),
             countOfViewers: w2eViews.trim() !== '' ? parseInt(w2eViews) : 10,
             countOfCommentors: w2eComments.trim() !== '' ? parseInt(w2eComments) : 0,
-            chainId,
+            chainId: chainId as import('@/components/app/ChainSelector').ChainId,
           });
         } else {
-          // Use StreamCollection for standard minting — optimistic return
           const mintResult = await mintOnChain({
             tokenId: mintResponse.createdTokenId,
-            timestamp: mintResponse.timestamp,
-            v: mintResponse.v,
-            r: mintResponse.r,
-            s: mintResponse.s,
-            chainId,
+            timestamp: mintResponse.timestamp!,
+            v: mintResponse.v!,
+            r: mintResponse.r!,
+            s: mintResponse.s!,
+            chainId: chainId as import('@/components/app/ChainSelector').ChainId,
           });
           txHash = mintResult.hash;
           mintConfirmed = mintResult.confirmed;
@@ -1202,12 +1267,26 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         clearInterval(progressInterval);
       }
 
-      // Fire-and-forget: wait for on-chain confirmation in background
-      if (mintConfirmed) {
-        mintConfirmed.catch((err) => {
-          console.error('[Mint] Background confirmation failed:', err);
-          toast.error('Post submitted but confirmation failed. It may still appear shortly.');
-        });
+      // Fire-and-forget: EVM confirmation + backend polling
+      if (mintConfirmed && txHash) {
+        mintConfirmed
+          .then((confirmedHash) =>
+            confirmEvmMint({
+              tokenId: mintResponse.createdTokenId,
+              txHash: confirmedHash,
+              chainId: chainId as number,
+            }),
+          )
+          .catch((err) => {
+            console.error('[Mint] Background confirmation failed:', err);
+            toast.error('Post submitted but confirmation failed. It may still appear shortly.');
+          });
+      } else if (!isSolanaMint && txHash) {
+        confirmEvmMint({
+          tokenId: mintResponse.createdTokenId,
+          txHash,
+          chainId: chainId as number,
+        }).catch((err) => console.warn('[Mint] confirm-mint queue failed:', err));
       }
 
       console.log('[Mint] Transaction hash:', txHash);
@@ -1360,13 +1439,21 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       // with a reconnect action instead of the raw technical error.
       const isWalletGone = errorMsg.toLowerCase().includes('no wallet connected') ||
         errorMsg.toLowerCase().includes('please sign in first');
-      const isGasFunds = errorMsg === 'INSUFFICIENT_GAS_FUNDS' ||
+      const isSolanaWalletIssue =
+        isSolanaChain(chainId) ||
+        errorMsg.toLowerCase().includes('phantom') ||
+        errorMsg.toLowerCase().includes('solana');
+      const isGasFunds = !isSolanaWalletIssue && (
+        errorMsg === 'INSUFFICIENT_GAS_FUNDS' ||
         errorMsg.toLowerCase().includes('insufficient funds') ||
         errorMsg.toLowerCase().includes('insufficient balance') ||
-        errorMsg.toLowerCase().includes('gas required exceeds allowance');
+        errorMsg.toLowerCase().includes('gas required exceeds allowance')
+      );
 
       if (isGasFunds && connectionSource === 'wagmi') {
-        toast.error('Post failed: Insufficient Base ETH for gas fees. Please add ETH to your wallet on Base network and try again.');
+        const gasName = chainId === 56 ? 'BNB' : 'ETH';
+        const chainName = chainId === 56 ? 'BNB' : chainId === 1 ? 'Ethereum' : 'Base';
+        toast.error(`Post failed: Insufficient ${gasName} for gas on ${chainName}. Add ${gasName} to your wallet and try again.`);
       } else if (isWalletGone && connectionSource === 'wagmi') {
         // Wallet connection dropped mid-session. The silent reconnect effect in AuthContext
         // will have already triggered a logout with a toast. Just silently swallow this error
@@ -1382,9 +1469,9 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   }, [
     text, description, media, isSubscribersOnly, isPPV, ppvAmount,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal,
-    isTokenGated, tokenAmount, liveMode, scheduledDate,
+    isTokenGated, tokenContract, tokenSymbol, tokenAmount, liveMode, scheduledDate,
     hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user,
-    showTitle, titleText, connectionSource, poll, pollIsValid
+    showTitle, titleText, connectionSource, poll, pollIsValid, chainId
   ]);
 
   return {
@@ -1404,6 +1491,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       w2eCurrency,
       isTokenGated,
       tokenContract,
+      tokenSymbol,
       tokenAmount,
       liveMode,
       poll,
@@ -1437,6 +1525,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       setW2eCurrency,
       setIsTokenGated,
       setTokenContract,
+      setTokenSymbol,
       setTokenAmount,
       setLiveMode,
       setPoll,

@@ -34,11 +34,19 @@ export interface MintPostParams {
 }
 
 export interface MintResponse {
-  r: string;
-  s: string;
-  v: number;
   createdTokenId: string;
-  timestamp: number;
+  chainId?: number;
+  /** EVM mint signature fields */
+  r?: string;
+  s?: string;
+  v?: number;
+  timestamp?: number;
+  /** Solana mint fields */
+  isSolana?: boolean;
+  transaction?: string;
+  mintAddress?: string;
+  scheduled?: boolean;
+  scheduledAt?: string;
 }
 
 export async function mintPost(

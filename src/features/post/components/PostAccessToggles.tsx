@@ -10,13 +10,14 @@ import { toast } from 'sonner';
 import { useUserCommunities } from '@/hooks/use-communities';
 import { useAuth } from '@/contexts/AuthContext';
 import type { Currency } from '../types';
-
-// DHB is the only supported token
-const DHB_INFO = {
-  symbol: 'DHB',
-  chainId: 8453,
-  address: '0xD20ab1015f6a2De4a6FdDEbAB270113F689c2F7c',
-};
+import {
+  getLockTokensForChain,
+  isSolanaChain,
+  isValidEvmAddress,
+} from '@/lib/chains/constants';
+import { isValidSolanaAddress } from '@/lib/solana/wallet';
+import type { PostChainId } from '@/components/app/ChainSelector';
+import { getChainById } from '@/components/app/ChainSelector';
 
 interface PostAccessTogglesProps {
   isSubscribersOnly: boolean;
@@ -41,8 +42,11 @@ interface PostAccessTogglesProps {
   setIsTokenGated: (value: boolean) => void;
   tokenContract: string;
   setTokenContract: (value: string) => void;
+  tokenSymbol: string;
+  setTokenSymbol: (value: string) => void;
   tokenAmount: string;
   setTokenAmount: (value: string) => void;
+  postChainId: PostChainId;
   selectedCategory: string;
   setSelectedCategory: (value: string) => void;
   markCategorySaved?: () => void;
@@ -73,9 +77,13 @@ export function PostAccessToggles({
   setW2eCurrency,
   isTokenGated,
   setIsTokenGated,
+  tokenContract,
   setTokenContract,
+  tokenSymbol,
+  setTokenSymbol,
   tokenAmount,
   setTokenAmount,
+  postChainId,
   selectedCategory,
   setSelectedCategory,
   markCategorySaved,
@@ -107,6 +115,13 @@ export function PostAccessToggles({
   const [tempW2eComments, setTempW2eComments] = useState(w2eComments);
   const [tempW2eTotal, setTempW2eTotal] = useState(w2eTotal);
   const [tempTokenAmount, setTempTokenAmount] = useState(tokenAmount);
+  const [tempTokenSymbol, setTempTokenSymbol] = useState(tokenSymbol || 'DHB');
+  const [tempTokenContract, setTempTokenContract] = useState(tokenContract);
+  const [useCustomToken, setUseCustomToken] = useState(!!tokenContract);
+
+  const lockTokens = useMemo(() => getLockTokensForChain(postChainId), [postChainId]);
+  const chainLabel = getChainById(postChainId)?.name ?? 'chain';
+  const solanaChain = isSolanaChain(postChainId);
 
   // Category state
   const [categories, setCategories] = useState<DeHubCategory[]>([]);
@@ -198,6 +213,9 @@ export function PostAccessToggles({
   const handleTokenToggle = (checked: boolean) => {
     if (checked) {
       setTempTokenAmount(tokenAmount);
+      setTempTokenSymbol(tokenSymbol || lockTokens[0]?.symbol || 'DHB');
+      setTempTokenContract(tokenContract);
+      setUseCustomToken(!!tokenContract);
       setTokenDrawerOpen(true);
     } else {
       setIsTokenGated(false);
@@ -229,7 +247,31 @@ export function PostAccessToggles({
   };
 
   const confirmToken = () => {
-    setTokenContract(DHB_INFO.address); // Always DHB contract
+    if (!tempTokenAmount.trim() || parseFloat(tempTokenAmount) <= 0) {
+      toast.error('Enter a valid minimum token amount');
+      return;
+    }
+    if (useCustomToken) {
+      const addr = tempTokenContract.trim();
+      if (!addr) {
+        toast.error('Enter a token contract address');
+        return;
+      }
+      if (solanaChain ? !isValidSolanaAddress(addr) : !isValidEvmAddress(addr)) {
+        toast.error(solanaChain ? 'Invalid Solana mint address' : 'Invalid token contract address');
+        return;
+      }
+      setTokenContract(addr);
+      setTokenSymbol(tempTokenSymbol.trim() || 'TOKEN');
+    } else {
+      const picked = lockTokens.find((t) => t.symbol === tempTokenSymbol);
+      if (!picked) {
+        toast.error('Select a token');
+        return;
+      }
+      setTokenContract(picked.address);
+      setTokenSymbol(picked.symbol);
+    }
     setTokenAmount(tempTokenAmount);
     setIsTokenGated(true);
     setTokenDrawerOpen(false);
@@ -351,7 +393,8 @@ export function PostAccessToggles({
           </div>
         )}
 
-        {/* Subscribers */}
+        {/* Subscribers — EVM only */}
+        {!solanaChain && (
         <label className="flex items-center justify-between py-0.5 cursor-pointer">
           <div className="flex items-center gap-2">
             <Lock className="w-4 h-4 text-white" />
@@ -359,6 +402,7 @@ export function PostAccessToggles({
           </div>
           <Switch checked={isSubscribersOnly} onCheckedChange={setIsSubscribersOnly} className="data-[state=checked]:bg-white scale-75" />
         </label>
+        )}
 
         {/* PPV */}
         <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => handlePpvToggle(!isPPV)}>
@@ -372,7 +416,8 @@ export function PostAccessToggles({
           <Switch checked={isPPV} onCheckedChange={handlePpvToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />
         </label>
 
-        {/* Bounty */}
+        {/* Bounty — EVM only */}
+        {!solanaChain && (
         <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => handleBountyToggle(!isWatch2Earn)}>
           <div className="flex items-center gap-2">
             <Gift className="w-4 h-4 text-white" />
@@ -383,6 +428,7 @@ export function PostAccessToggles({
           </div>
           <Switch checked={isWatch2Earn} onCheckedChange={handleBountyToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />
         </label>
+        )}
 
         {/* Token Gated */}
         <label className="flex items-center justify-between py-0.5 cursor-pointer" onClick={() => handleTokenToggle(!isTokenGated)}>
@@ -390,7 +436,7 @@ export function PostAccessToggles({
             <Shield className="w-4 h-4 text-white" />
             <span className="text-sm text-white">Token Gated</span>
             {isTokenGated && tokenAmount && (
-              <span className="text-xs text-white/50">({tokenAmount} DHB)</span>
+              <span className="text-xs text-white/50">({tokenAmount} {tokenSymbol || 'DHB'})</span>
             )}
           </div>
           <Switch checked={isTokenGated} onCheckedChange={handleTokenToggle} className="data-[state=checked]:bg-white scale-75" onClick={e => e.stopPropagation()} />
@@ -725,11 +771,64 @@ export function PostAccessToggles({
             <div className="flex items-center gap-2 p-3 rounded-lg bg-zinc-800/30 border border-white/10">
               <Info className="w-4 h-4 text-white/50 shrink-0" />
               <span className="text-xs text-white/50">
-                {t('drawers.requiresDhb')} ({DHB_INFO.address.slice(0, 8)}...)
+                Viewers need the minimum balance of the selected token on {chainLabel}.
               </span>
             </div>
+
+            {!useCustomToken && (
+              <div className="space-y-2">
+                <label className="text-sm text-white/70">Token</label>
+                <div className="flex flex-wrap gap-2">
+                  {lockTokens.map((tok) => (
+                    <button
+                      key={`${tok.symbol}-${tok.address}`}
+                      type="button"
+                      onClick={() => setTempTokenSymbol(tok.symbol)}
+                      className={cn(
+                        'px-3 py-2 rounded-xl text-sm font-medium border transition-colors',
+                        tempTokenSymbol === tok.symbol
+                          ? 'bg-white/15 text-white border-white/30'
+                          : 'bg-white/5 text-zinc-400 border-white/10 hover:bg-white/10',
+                      )}
+                    >
+                      {tok.symbol}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <label className="flex items-center justify-between gap-3 cursor-pointer">
+              <span className="text-sm text-white/70">Custom token contract</span>
+              <Switch
+                checked={useCustomToken}
+                onCheckedChange={setUseCustomToken}
+                className="data-[state=checked]:bg-white scale-75"
+              />
+            </label>
+
+            {useCustomToken && (
+              <div className="space-y-2">
+                <label className="text-sm text-white/70">Contract / mint address</label>
+                <input
+                  type="text"
+                  value={tempTokenContract}
+                  onChange={(e) => setTempTokenContract(e.target.value)}
+                  placeholder={solanaChain ? 'Solana mint address' : '0x...'}
+                  className={cn(inputClass, 'text-sm font-mono')}
+                />
+                <input
+                  type="text"
+                  value={tempTokenSymbol}
+                  onChange={(e) => setTempTokenSymbol(e.target.value.toUpperCase())}
+                  placeholder="Symbol (e.g. PEPE)"
+                  className={inputClass}
+                />
+              </div>
+            )}
+
             <div className="space-y-2">
-              <label className="text-sm text-white/70">{t('drawers.minimumDhb')}</label>
+              <label className="text-sm text-white/70">{t('drawers.minimumDhb', 'Minimum balance')}</label>
               <input
                 type="number"
                 value={tempTokenAmount}

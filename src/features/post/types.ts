@@ -69,6 +69,7 @@ export interface PostFormState {
   w2eCurrency: Currency;
   isTokenGated: boolean;
   tokenContract: string;
+  tokenSymbol: string;
   tokenAmount: string;
   liveMode: LiveMode;
   poll: PollData | null;
@@ -94,6 +95,7 @@ export interface PostFormActions {
   setW2eCurrency: (value: Currency) => void;
   setIsTokenGated: (value: boolean) => void;
   setTokenContract: (value: string) => void;
+  setTokenSymbol: (value: string) => void;
   setTokenAmount: (value: string) => void;
   setLiveMode: (value: LiveMode) => void;
   setPoll: (poll: PollData | null) => void;

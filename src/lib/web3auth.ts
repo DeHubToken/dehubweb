@@ -245,6 +245,14 @@ const AA_CHAIN_CONFIGS: Record<number, {
     ticker: "BNB",
     tickerName: "BNB",
   },
+  1: {
+    chainIdHex: "0x1",
+    rpcTarget: "https://ethereum-rpc.publicnode.com",
+    displayName: "Ethereum Mainnet",
+    blockExplorerUrl: "https://etherscan.io",
+    ticker: "ETH",
+    tickerName: "Ethereum",
+  },
 };
 // Track which connector was last used (for detecting social login vs external wallet)
 let lastConnectedConnector: string | null = null;

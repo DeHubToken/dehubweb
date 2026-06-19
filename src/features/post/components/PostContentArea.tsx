@@ -16,7 +16,7 @@ import { UserMentionDropdown, type MentionUser } from '@/components/app/mentions
 import { useMention } from '@/hooks/use-mention';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl } from '@/lib/media-url';
-import { ChainSelector, type ChainId } from '@/components/app/ChainSelector';
+import { ChainSelector, type PostChainId } from '@/components/app/ChainSelector';
 
 interface PostContentAreaProps {
   text: string;
@@ -58,8 +58,8 @@ interface PostContentAreaProps {
   recordingTime?: number;
   onStopRecording?: () => void;
   // Chain selector props
-  chainId: ChainId;
-  onChainChange: (chainId: ChainId) => void;
+  chainId: PostChainId;
+  onChainChange: (chainId: PostChainId) => void;
   // Title props
   showTitle: boolean;
   titleText: string;

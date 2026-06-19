@@ -156,8 +156,11 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         setIsTokenGated={actions.setIsTokenGated}
         tokenContract={state.tokenContract}
         setTokenContract={actions.setTokenContract}
+        tokenSymbol={state.tokenSymbol}
+        setTokenSymbol={actions.setTokenSymbol}
         tokenAmount={state.tokenAmount}
         setTokenAmount={actions.setTokenAmount}
+        postChainId={state.chainId}
         selectedCategory={state.selectedCategory}
         setSelectedCategory={actions.setSelectedCategory}
         markCategorySaved={actions.markCategorySaved}

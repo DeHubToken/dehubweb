@@ -2,7 +2,7 @@
  * Tip Modal Component
  * ===================
  * Drawer for tipping creators on posts or profiles.
- * Supports quick amounts and custom input.
+ * Supports Base, BNB, and Ethereum mainnet.
  */
 
 import { useState, useEffect } from 'react';
@@ -19,11 +19,11 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer';
+import { ChainSelector, type ChainId, getChainById } from '@/components/app/ChainSelector';
 import { useTipPayment, MIN_TIP_DHB, MAX_TIP_DHB } from '@/hooks/use-tip-payment';
 import { useAuth } from '@/contexts/AuthContext';
 import { getDHBBalance } from '@/lib/contracts/stream-controller';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
-
 
 const QUICK_AMOUNTS = [500, 1000, 5000, 10000, 25000, 50000, 100000, 1000000];
 
@@ -32,9 +32,7 @@ interface TipModalProps {
   onOpenChange: (open: boolean) => void;
   creatorAddress?: string;
   creatorName?: string;
-  /** Post tokenId for per-post tip tracking */
   tokenId?: string;
-  /** @deprecated Use tokenId instead */
   context?: string;
 }
 
@@ -50,45 +48,42 @@ export function TipModal({
   const queryClient = useQueryClient();
   const { walletAddress } = useAuth();
   const [amount, setAmount] = useState('');
+  const [tipChainId, setTipChainId] = useState<ChainId>(BASE_CHAIN_ID as ChainId);
   const [dhbBalance, setDhbBalance] = useState<number | null>(null);
   const [lastTipAmount, setLastTipAmount] = useState(0);
   const resolvedTokenId = tokenId || context;
+
   const { tip, isTipping } = useTipPayment({
     creatorAddress,
+    chainId: tipChainId,
     tokenId: resolvedTokenId,
     onSuccess: () => {
-      // Optimistically increment the cached tip count immediately
       if (resolvedTokenId && lastTipAmount > 0) {
-        // Cancel any in-flight refetches so they don't overwrite our optimistic value
         queryClient.cancelQueries({ queryKey: ['post-tip-count', resolvedTokenId] });
         queryClient.setQueryData(['post-tip-count', resolvedTokenId], (old: number | undefined) => (old || 0) + lastTipAmount);
-        // Mark the data as fresh so closing the modal doesn't trigger a refetch
         queryClient.invalidateQueries({ queryKey: ['post-tip-count', resolvedTokenId], refetchType: 'none' });
       }
       setAmount('');
       onOpenChange(false);
     },
     onConfirmed: () => {
-      // Reconcile with DB after background save completes
       if (resolvedTokenId) {
         queryClient.invalidateQueries({ queryKey: ['post-tip-count', resolvedTokenId] });
       }
     },
   });
 
-  // Fetch user's DHB balance when drawer opens
   useEffect(() => {
     if (open && walletAddress) {
-      getDHBBalance(walletAddress, BASE_CHAIN_ID)
+      getDHBBalance(walletAddress, tipChainId)
         .then((raw) => {
           const human = Number(raw) / 1e18;
           setDhbBalance(Math.floor(human * 100) / 100);
         })
         .catch(() => setDhbBalance(null));
     }
-  }, [open, walletAddress]);
+  }, [open, walletAddress, tipChainId]);
 
-  /** Parse abbreviated amounts like 1k, 1.5k, 2m, 500 */
   function parseAbbreviatedAmount(val: string): number {
     const trimmed = val.trim().toLowerCase();
     const match = trimmed.match(/^(\d+(?:\.\d+)?)\s*(k|m)?$/);
@@ -101,8 +96,8 @@ export function TipModal({
   }
 
   const parsedAmount = parseAbbreviatedAmount(amount);
-  const isValidAmount =
-    !Number.isNaN(parsedAmount) && parsedAmount >= MIN_TIP_DHB;
+  const isValidAmount = !Number.isNaN(parsedAmount) && parsedAmount >= MIN_TIP_DHB;
+  const chainName = getChainById(tipChainId)?.name ?? 'chain';
 
   const handleSendTip = () => {
     if (!isValidAmount) return;
@@ -110,9 +105,7 @@ export function TipModal({
     tip(parsedAmount);
   };
 
-  const handleQuickAmount = (val: number) => {
-    setAmount(String(val));
-  };
+  const handleQuickAmount = (val: number) => setAmount(String(val));
 
   const handleAll = () => {
     if (dhbBalance != null && dhbBalance >= MIN_TIP_DHB) {
@@ -129,13 +122,22 @@ export function TipModal({
             {t('tip.title', 'Send Tip')}
           </DrawerTitle>
           {creatorName && (
-            <p className="text-white/60 text-sm mt-1">
+            <p className="text-white/60 text-sm mt-1 text-center">
               {t('tip.toCreator', 'Tip {{name}}', { name: creatorName })}
             </p>
           )}
         </DrawerHeader>
         <div className="flex flex-col gap-4">
-          {/* Quick amounts */}
+          <div className="flex items-center justify-between">
+            <p className="text-white/60 text-xs">Network</p>
+            <ChainSelector
+              selectedChainId={tipChainId}
+              onChainChange={(id) => setTipChainId(id as ChainId)}
+              variant="compact"
+              evmOnly
+            />
+          </div>
+
           <div>
             <p className="text-white/60 text-xs mb-2">{t('tip.quickAmounts', 'Quick amounts')}</p>
             <div className="flex flex-wrap gap-2">
@@ -150,19 +152,21 @@ export function TipModal({
                       : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'
                   }`}
                 >
-                  <span className="inline-flex items-center gap-1">{val.toLocaleString()} <img src={dehubCoin} alt="DHB" className="w-4 h-4" style={{ marginTop: '-1px' }} /></span>
+                  <span className="inline-flex items-center gap-1">
+                    {val.toLocaleString()}{' '}
+                    <img src={dehubCoin} alt="DHB" className="w-4 h-4" style={{ marginTop: '-1px' }} />
+                  </span>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Custom amount */}
           <div>
             <div className="flex items-center justify-between mb-2">
               <p className="text-white/60 text-xs">{t('tip.customAmount', 'Or enter amount')}</p>
               {dhbBalance != null && (
                 <p className="text-white/30 text-xs">
-                  Balance: {dhbBalance.toLocaleString()} DHB
+                  {chainName} balance: {dhbBalance.toLocaleString()} DHB
                 </p>
               )}
             </div>

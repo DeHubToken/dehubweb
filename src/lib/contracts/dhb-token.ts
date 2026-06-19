@@ -47,9 +47,9 @@ export const CHAIN_CONFIGS: Record<ChainId, ChainConfig> = {
     name: 'Ethereum',
     rpcUrl: 'https://ethereum-rpc.publicnode.com',
     explorerUrl: 'https://etherscan.io',
-    dhbToken: '', // No DHB on Ethereum mainnet
-    streamCollection: '',
-    streamController: '',
+    dhbToken: '0x99BB69Ee1BbFC7706C3ebb79b21C5B698fe58EC0',
+    streamCollection: '0x1065F5922a336C75623B55D22c4a0C760efCe947',
+    streamController: '0x6e19ba22da239c46941582530c0ef61400b0e3e6',
   },
 };
 
