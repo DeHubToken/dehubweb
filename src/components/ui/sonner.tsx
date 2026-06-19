@@ -22,6 +22,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           description: "group-[.toast]:text-white/70 group-[.toast]:text-center",
           actionButton: "group-[.toast]:bg-white/20 group-[.toast]:text-white group-[.toast]:hover:bg-white/30",
           cancelButton: "group-[.toast]:bg-white/10 group-[.toast]:text-white/70 group-[.toast]:hover:bg-white/20",
+          loader: "group-[.toast]:text-white",
         },
       }}
       {...props}
