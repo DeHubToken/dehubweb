@@ -74,12 +74,12 @@ export function Timeline() {
 
   // ── Playhead scrub ──
   const isScrubbingRef = useRef(false);
-  const onRulerDown = (e: React.MouseEvent) => {
+  const onRulerDown = (e: React.PointerEvent) => {
     isScrubbingRef.current = true;
     setIsPlaying(false);
     onScrub(e.clientX);
-    window.addEventListener("mousemove", onScrubWin);
-    window.addEventListener("mouseup", onScrubUp);
+    window.addEventListener("pointermove", onScrubWin);
+    window.addEventListener("pointerup", onScrubUp);
   };
   const onScrub = (clientX: number) => {
     const wrap = scrollRef.current;
@@ -89,11 +89,11 @@ export function Timeline() {
     const t = Math.max(0, px / zoom);
     setCurrentTime(t);
   };
-  const onScrubWin = (e: MouseEvent) => { if (isScrubbingRef.current) onScrub(e.clientX); };
+  const onScrubWin = (e: PointerEvent) => { if (isScrubbingRef.current) onScrub(e.clientX); };
   const onScrubUp = () => {
     isScrubbingRef.current = false;
-    window.removeEventListener("mousemove", onScrubWin);
-    window.removeEventListener("mouseup", onScrubUp);
+    window.removeEventListener("pointermove", onScrubWin);
+    window.removeEventListener("pointerup", onScrubUp);
   };
 
   // ── Drop from media panel ──
