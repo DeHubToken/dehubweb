@@ -196,20 +196,30 @@ export function Compositor() {
     return () => cancelAnimationFrame(raf);
   }, [tracks, clips, settings]);
 
-  // ── Layout: scale canvas to fit ──
-  const [scale, setScale] = useState(1);
+  // ── Layout: scale canvas to fit (sync initial measurement + observer) ──
+  const [scale, setScale] = useState(0);
+  const PAD = 24;
+  const measure = () => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const aw = Math.max(0, wrap.clientWidth - PAD * 2);
+    const ah = Math.max(0, wrap.clientHeight - PAD * 2);
+    if (aw <= 0 || ah <= 0) return;
+    const s = Math.min(aw / settings.width, ah / settings.height);
+    setScale(Math.max(0.01, s));
+  };
+  useLayoutEffect(() => {
+    measure();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings.width, settings.height]);
   useEffect(() => {
-    const ro = new ResizeObserver(() => {
-      const wrap = wrapRef.current;
-      if (!wrap) return;
-      const pad = 24;
-      const aw = wrap.clientWidth - pad * 2;
-      const ah = wrap.clientHeight - pad * 2;
-      const s = Math.min(aw / settings.width, ah / settings.height);
-      setScale(Math.max(0.05, s));
-    });
-    if (wrapRef.current) ro.observe(wrapRef.current);
-    return () => ro.disconnect();
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const ro = new ResizeObserver(() => measure());
+    ro.observe(wrap);
+    window.addEventListener("resize", measure);
+    return () => { ro.disconnect(); window.removeEventListener("resize", measure); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings.width, settings.height]);
 
   // ── Click-to-select & drag text overlays on canvas ──
@@ -219,8 +229,16 @@ export function Compositor() {
     return c && c.kind === "text" ? (c as TextClip) : null;
   }, [selectedClipIds, clips]);
 
+  const [editingTextId, setEditingTextId] = useState<string | null>(null);
+  const editingText = useMemo(() => {
+    if (!editingTextId) return null;
+    const c = clips.find((x) => x.id === editingTextId);
+    return c && c.kind === "text" ? (c as TextClip) : null;
+  }, [editingTextId, clips]);
+
   const draggingRef = useRef<{ id: string; dx: number; dy: number } | null>(null);
-  const onCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const onCanvasPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (editingTextId) return;
     if (!selectedTextClip) return;
     const t = currentTime;
     if (t < selectedTextClip.start || t > selectedTextClip.start + selectedTextClip.duration) return;
@@ -228,10 +246,10 @@ export function Compositor() {
     const nx = (e.clientX - rect.left) / rect.width;
     const ny = (e.clientY - rect.top) / rect.height;
     draggingRef.current = { id: selectedTextClip.id, dx: nx - selectedTextClip.x, dy: ny - selectedTextClip.y };
-    window.addEventListener("mousemove", onWindowMove);
-    window.addEventListener("mouseup", onWindowUp);
+    window.addEventListener("pointermove", onWindowMove);
+    window.addEventListener("pointerup", onWindowUp);
   };
-  const onWindowMove = (e: MouseEvent) => {
+  const onWindowMove = (e: PointerEvent) => {
     const d = draggingRef.current;
     const c = canvasRef.current;
     if (!d || !c) return;
@@ -245,8 +263,11 @@ export function Compositor() {
   };
   const onWindowUp = () => {
     draggingRef.current = null;
-    window.removeEventListener("mousemove", onWindowMove);
-    window.removeEventListener("mouseup", onWindowUp);
+    window.removeEventListener("pointermove", onWindowMove);
+    window.removeEventListener("pointerup", onWindowUp);
+  };
+  const onCanvasDoubleClick = () => {
+    if (selectedTextClip) setEditingTextId(selectedTextClip.id);
   };
 
   return (
