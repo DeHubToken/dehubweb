@@ -14,7 +14,7 @@ import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import usdcLogo from '@/assets/usdc-logo.png';
 import { useAuth } from '@/contexts/AuthContext';
-import { ChainSelector, type ChainId } from './ChainSelector';
+import { ChainSelector, type ChainId, type PostChainId } from './ChainSelector';
 
 interface CoinBalanceMenuProps {
   balance: number;
@@ -65,7 +65,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
   const [sendAmount, setSendAmount] = useState('');
   const [stakeAmount, setStakeAmount] = useState('');
   const [copied, setCopied] = useState(false);
-  const [selectedChainId, setSelectedChainId] = useState<ChainId>(8453);
+  const [selectedChainId, setSelectedChainId] = useState<PostChainId>(8453);
 
   const formattedWalletAddress = useMemo(() => {
     if (!walletAddress) return null;
