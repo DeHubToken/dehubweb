@@ -180,8 +180,8 @@ export function Timeline() {
             <div className="sticky left-0 z-30 shrink-0 border-r border-white/10 bg-black/80"
               style={{ width: HEADER_WIDTH, height: RULER_HEIGHT }} />
             <div
-              onMouseDown={onRulerDown}
-              className="relative cursor-ew-resize select-none border-b border-white/10 bg-black/80"
+              onPointerDown={onRulerDown}
+              className="relative cursor-ew-resize touch-none select-none border-b border-white/10 bg-black/80"
               style={{ width: contentWidth, height: RULER_HEIGHT }}
             >
               {ticks.out.map((t) => (
