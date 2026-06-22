@@ -8,6 +8,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { listProjects, deleteProject, setLastProjectId } from "@/lib/editor/projectStore";
 import type { ProjectSnapshot } from "@/lib/editor/types";
 import { ExportDialog } from "@/components/editor/ExportDialog";
+import { PostToDeHub } from "@/components/editor/PostToDeHub";
 
 export function EditorTopBar() {
   const title = useEditorStore((s) => s.projectTitle);
