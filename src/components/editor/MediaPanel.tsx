@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Upload, Trash2, Film, Music, Image as ImageIcon } from "lucide-react";
+import { Upload, Trash2, Film, Music, Image as ImageIcon, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useEditorStore, toMediaItem, type MediaItem } from "@/store/editorStore";
@@ -15,7 +15,7 @@ import {
   type StoredMedia,
 } from "@/lib/editor/mediaStore";
 
-const MAX_BYTES = 500 * 1024 * 1024; // 500 MB safety cap
+const MAX_BYTES = 500 * 1024 * 1024;
 
 function formatDuration(s?: number) {
   if (!s || !Number.isFinite(s)) return "—";
@@ -34,15 +34,13 @@ export function MediaPanel() {
   const media = useEditorStore((s) => s.media);
   const setMedia = useEditorStore((s) => s.setMedia);
   const addMedia = useEditorStore((s) => s.addMedia);
-  const selectedId = useEditorStore((s) => s.selectedId);
-  const selectMedia = useEditorStore((s) => s.selectMedia);
   const removeMediaFromStore = useEditorStore((s) => s.removeMedia);
+  const addClipFromMedia = useEditorStore((s) => s.addClipFromMedia);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [busy, setBusy] = useState(false);
 
-  // Hydrate from IndexedDB on mount.
   useEffect(() => {
     let revokeOnUnmount: MediaItem[] = [];
     (async () => {
@@ -71,15 +69,8 @@ export function MediaPanel() {
     try {
       for (const file of list) {
         const kind = detectKind(file);
-        if (!kind) {
-          toast.error(`Unsupported file: ${file.name}`);
-          continue;
-        }
-        if (file.size > MAX_BYTES) {
-          toast.error(`${file.name} is too large (max 500 MB).`);
-          continue;
-        }
-
+        if (!kind) { toast.error(`Unsupported file: ${file.name}`); continue; }
+        if (file.size > MAX_BYTES) { toast.error(`${file.name} is too large (max 500 MB).`); continue; }
         try {
           const id =
             (typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -94,10 +85,7 @@ export function MediaPanel() {
           if (kind === "video") {
             try {
               const r = await captureVideoThumbnail(file);
-              thumbnail = r.thumbnail;
-              width = r.width;
-              height = r.height;
-              duration = r.duration;
+              thumbnail = r.thumbnail; width = r.width; height = r.height; duration = r.duration;
             } catch {
               duration = await probeDuration(file, "video").catch(() => 0);
             }
@@ -105,23 +93,14 @@ export function MediaPanel() {
             duration = await probeDuration(file, "audio");
           } else {
             const r = await captureImageThumbnail(file);
-            thumbnail = r.thumbnail;
-            width = r.width;
-            height = r.height;
+            thumbnail = r.thumbnail; width = r.width; height = r.height;
           }
 
           const row: StoredMedia = {
-            id,
-            name: file.name,
-            kind,
+            id, name: file.name, kind,
             mimeType: file.type || "application/octet-stream",
-            size: file.size,
-            duration,
-            width,
-            height,
-            thumbnail,
-            blob: file,
-            createdAt: Date.now(),
+            size: file.size, duration, width, height, thumbnail,
+            blob: file, createdAt: Date.now(),
           };
           await putMedia(row);
           addMedia(toMediaItem(row));
@@ -139,45 +118,27 @@ export function MediaPanel() {
     (e: React.DragEvent) => {
       e.preventDefault();
       setIsDragging(false);
-      if (e.dataTransfer?.files) void importFiles(e.dataTransfer.files);
+      if (e.dataTransfer?.files?.length) void importFiles(e.dataTransfer.files);
     },
     [importFiles],
   );
 
   const handleRemove = useCallback(async (id: string) => {
-    try {
-      await deleteMedia(id);
-      removeMediaFromStore(id);
-    } catch (e) {
-      console.error(e);
-      toast.error("Failed to remove media");
-    }
+    try { await deleteMedia(id); removeMediaFromStore(id); }
+    catch (e) { console.error(e); toast.error("Failed to remove media"); }
   }, [removeMediaFromStore]);
 
   return (
     <aside className="flex h-full w-full flex-col border-r border-white/10 bg-black/60 backdrop-blur-[24px]">
       <div className="flex items-center justify-between px-3 py-2.5">
         <h2 className="text-xs font-semibold uppercase tracking-wide text-white/70">Media</h2>
-        <Button
-          size="sm"
-          variant="ghost"
+        <Button size="sm" variant="ghost"
           className="h-7 rounded-md px-2 text-white/80 hover:bg-white/10 hover:text-white"
-          onClick={() => inputRef.current?.click()}
-          disabled={busy}
-        >
+          onClick={() => inputRef.current?.click()} disabled={busy}>
           <Upload className="mr-1 h-3.5 w-3.5" /> Import
         </Button>
-        <input
-          ref={inputRef}
-          type="file"
-          accept="video/*,audio/*,image/*"
-          multiple
-          hidden
-          onChange={(e) => {
-            if (e.target.files) void importFiles(e.target.files);
-            e.target.value = "";
-          }}
-        />
+        <input ref={inputRef} type="file" accept="video/*,audio/*,image/*" multiple hidden
+          onChange={(e) => { if (e.target.files) void importFiles(e.target.files); e.target.value = ""; }} />
       </div>
 
       <div
@@ -185,11 +146,11 @@ export function MediaPanel() {
         onDragLeave={() => setIsDragging(false)}
         onDrop={onDrop}
         className={cn(
-          "mx-3 mb-2 rounded-xl border border-dashed border-white/15 px-3 py-4 text-center text-xs text-white/60 transition",
+          "mx-3 mb-2 rounded-xl border border-dashed border-white/15 px-3 py-3 text-center text-xs text-white/60 transition",
           isDragging && "border-white/40 bg-white/5 text-white",
         )}
       >
-        Drop video, audio or image files here
+        Drop files here to import
       </div>
 
       <div className="flex-1 overflow-y-auto px-2 pb-3">
@@ -201,19 +162,19 @@ export function MediaPanel() {
           <ul className="space-y-1.5">
             {media.map((m) => {
               const Icon = kindIcon(m.kind);
-              const active = selectedId === m.id;
               return (
                 <li key={m.id}>
                   <div
-                    role="button"
-                    tabIndex={0}
-                    onClick={() => selectMedia(m.id)}
-                    onKeyDown={(e) => { if (e.key === "Enter") selectMedia(m.id); }}
-                    className={cn(
-                      "group flex cursor-pointer items-center gap-2 rounded-lg border border-transparent p-1.5 transition",
-                      "hover:bg-white/5",
-                      active && "border-white/20 bg-white/10",
-                    )}
+                    draggable
+                    onDragStart={(e) => {
+                      e.dataTransfer.effectAllowed = "copy";
+                      e.dataTransfer.setData(
+                        "application/x-dehub-media",
+                        JSON.stringify({ mediaId: m.id }),
+                      );
+                    }}
+                    onDoubleClick={() => addClipFromMedia(m.id)}
+                    className="group flex cursor-grab items-center gap-2 rounded-lg border border-transparent p-1.5 transition hover:bg-white/5 active:cursor-grabbing"
                   >
                     <div className="relative h-10 w-14 shrink-0 overflow-hidden rounded-md bg-white/5">
                       {m.thumbnailUrl ? (
@@ -232,6 +193,14 @@ export function MediaPanel() {
                     </div>
                     <button
                       type="button"
+                      aria-label={`Add ${m.name} to timeline`}
+                      onClick={(e) => { e.stopPropagation(); addClipFromMedia(m.id); }}
+                      className="rounded-md p-1 text-white/40 opacity-0 transition hover:bg-white/10 hover:text-white group-hover:opacity-100"
+                    >
+                      <Plus className="h-3.5 w-3.5" />
+                    </button>
+                    <button
+                      type="button"
                       aria-label={`Remove ${m.name}`}
                       onClick={(e) => { e.stopPropagation(); void handleRemove(m.id); }}
                       className="rounded-md p-1 text-white/40 opacity-0 transition hover:bg-white/10 hover:text-white group-hover:opacity-100"
@@ -244,6 +213,10 @@ export function MediaPanel() {
             })}
           </ul>
         )}
+      </div>
+
+      <div className="border-t border-white/10 px-3 py-2 text-[10px] text-white/40">
+        Drag a clip onto the timeline, double-click, or hit <kbd className="rounded bg-white/10 px-1">+</kbd>.
       </div>
     </aside>
   );
