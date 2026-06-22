@@ -278,9 +278,10 @@ export function Compositor() {
       >
         <div
           style={{
-            width: settings.width * scale,
-            height: settings.height * scale,
+            width: Math.max(2, settings.width * scale),
+            height: Math.max(2, settings.height * scale),
             background: settings.background,
+            visibility: scale > 0 ? "visible" : "hidden",
           }}
           className="relative overflow-hidden rounded-lg shadow-2xl ring-1 ring-white/10"
         >
@@ -288,12 +289,48 @@ export function Compositor() {
             ref={canvasRef}
             width={settings.width}
             height={settings.height}
-            onMouseDown={onCanvasMouseDown}
+            onPointerDown={onCanvasPointerDown}
+            onDoubleClick={onCanvasDoubleClick}
             className={cn(
-              "h-full w-full",
-              selectedTextClip ? "cursor-grab active:cursor-grabbing" : "cursor-default",
+              "h-full w-full touch-none",
+              editingTextId ? "cursor-text" : selectedTextClip ? "cursor-grab active:cursor-grabbing" : "cursor-default",
             )}
           />
+          {editingText && (
+            <textarea
+              autoFocus
+              value={editingText.text}
+              onChange={(e) => updateTextClip(editingText.id, { text: e.target.value })}
+              onBlur={() => setEditingTextId(null)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") { e.preventDefault(); setEditingTextId(null); }
+              }}
+              style={{
+                position: "absolute",
+                left: `${editingText.x * 100}%`,
+                top: `${editingText.y * 100}%`,
+                transform: editingText.align === "centre"
+                  ? "translate(-50%, -50%)"
+                  : editingText.align === "right"
+                    ? "translate(-100%, -50%)"
+                    : "translate(0, -50%)",
+                color: editingText.color,
+                fontFamily: editingText.fontFamily,
+                fontWeight: editingText.fontWeight,
+                fontSize: `${(editingText.fontSize / 1080) * settings.height * scale}px`,
+                textAlign: editingText.align === "centre" ? "center" : editingText.align,
+                background: "rgba(0,0,0,0.35)",
+                border: "1px dashed rgba(255,255,255,0.5)",
+                borderRadius: 4,
+                padding: "2px 6px",
+                outline: "none",
+                resize: "none",
+                minWidth: 80,
+                lineHeight: 1.2,
+              }}
+              rows={Math.max(1, editingText.text.split("\n").length)}
+            />
+          )}
         </div>
       </div>
 
