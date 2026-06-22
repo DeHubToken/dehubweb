@@ -74,12 +74,12 @@ export function Timeline() {
 
   // ── Playhead scrub ──
   const isScrubbingRef = useRef(false);
-  const onRulerDown = (e: React.MouseEvent) => {
+  const onRulerDown = (e: React.PointerEvent) => {
     isScrubbingRef.current = true;
     setIsPlaying(false);
     onScrub(e.clientX);
-    window.addEventListener("mousemove", onScrubWin);
-    window.addEventListener("mouseup", onScrubUp);
+    window.addEventListener("pointermove", onScrubWin);
+    window.addEventListener("pointerup", onScrubUp);
   };
   const onScrub = (clientX: number) => {
     const wrap = scrollRef.current;
@@ -89,11 +89,11 @@ export function Timeline() {
     const t = Math.max(0, px / zoom);
     setCurrentTime(t);
   };
-  const onScrubWin = (e: MouseEvent) => { if (isScrubbingRef.current) onScrub(e.clientX); };
+  const onScrubWin = (e: PointerEvent) => { if (isScrubbingRef.current) onScrub(e.clientX); };
   const onScrubUp = () => {
     isScrubbingRef.current = false;
-    window.removeEventListener("mousemove", onScrubWin);
-    window.removeEventListener("mouseup", onScrubUp);
+    window.removeEventListener("pointermove", onScrubWin);
+    window.removeEventListener("pointerup", onScrubUp);
   };
 
   // ── Drop from media panel ──
@@ -180,8 +180,8 @@ export function Timeline() {
             <div className="sticky left-0 z-30 shrink-0 border-r border-white/10 bg-black/80"
               style={{ width: HEADER_WIDTH, height: RULER_HEIGHT }} />
             <div
-              onMouseDown={onRulerDown}
-              className="relative cursor-ew-resize select-none border-b border-white/10 bg-black/80"
+              onPointerDown={onRulerDown}
+              className="relative cursor-ew-resize touch-none select-none border-b border-white/10 bg-black/80"
               style={{ width: contentWidth, height: RULER_HEIGHT }}
             >
               {ticks.out.map((t) => (
@@ -346,16 +346,16 @@ function ClipBlock({ clip, track, zoom, selected, tracks, onSelect, onMove, onTr
     moved: boolean;
   } | null>(null);
 
-  const onMouseDown = (e: React.MouseEvent) => {
+  const onPointerDown = (e: React.PointerEvent) => {
     if ((e.target as HTMLElement).dataset.handle) return; // skip if handle
     e.stopPropagation();
     onSelect(e.shiftKey);
     setIsPlaying(false);
     dragRef.current = { startX: e.clientX, startTime: clip.start, startTrackId: clip.trackId, moved: false };
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("mouseup", onMouseUp);
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
   };
-  const onMouseMove = (e: MouseEvent) => {
+  const onPointerMove = (e: PointerEvent) => {
     const d = dragRef.current;
     if (!d) return;
     const deltaX = e.clientX - d.startX;
@@ -382,20 +382,20 @@ function ClipBlock({ clip, track, zoom, selected, tracks, onSelect, onMove, onTr
     const snapped = snapToTime(newStart);
     onMove(snapped - clip.start, targetTrackId);
   };
-  const onMouseUp = () => {
+  const onPointerUp = () => {
     dragRef.current = null;
-    window.removeEventListener("mousemove", onMouseMove);
-    window.removeEventListener("mouseup", onMouseUp);
+    window.removeEventListener("pointermove", onPointerMove);
+    window.removeEventListener("pointerup", onPointerUp);
   };
 
   // ── Trim handles ──
-  const startTrim = (edge: "in" | "out") => (e: React.MouseEvent) => {
+  const startTrim = (edge: "in" | "out") => (e: React.PointerEvent) => {
     e.stopPropagation();
     e.preventDefault();
     setIsPlaying(false);
     const startX = e.clientX;
     let lastDelta = 0;
-    const move = (ev: MouseEvent) => {
+    const move = (ev: PointerEvent) => {
       const dx = ev.clientX - startX;
       const sec = dx / zoom;
       const delta = sec - lastDelta;
@@ -404,11 +404,11 @@ function ClipBlock({ clip, track, zoom, selected, tracks, onSelect, onMove, onTr
       lastDelta = sec;
     };
     const up = () => {
-      window.removeEventListener("mousemove", move);
-      window.removeEventListener("mouseup", up);
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
     };
-    window.addEventListener("mousemove", move);
-    window.addEventListener("mouseup", up);
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
   };
 
   // Colour per track kind.
@@ -423,9 +423,9 @@ function ClipBlock({ clip, track, zoom, selected, tracks, onSelect, onMove, onTr
 
   return (
     <div
-      onMouseDown={onMouseDown}
+      onPointerDown={onPointerDown}
       className={cn(
-        "absolute top-1.5 cursor-grab overflow-hidden rounded-md border text-[10px] text-white shadow-sm transition select-none",
+        "absolute top-1.5 cursor-grab touch-none overflow-hidden rounded-md border text-[10px] text-white shadow-sm transition select-none",
         bg,
         selected && "outline outline-2 outline-white/80",
       )}
@@ -434,13 +434,13 @@ function ClipBlock({ clip, track, zoom, selected, tracks, onSelect, onMove, onTr
     >
       <div
         data-handle="in"
-        onMouseDown={startTrim("in")}
-        className="absolute left-0 top-0 z-10 h-full w-1.5 cursor-ew-resize bg-white/20 hover:bg-white/60"
+        onPointerDown={startTrim("in")}
+        className="absolute left-0 top-0 z-10 h-full w-3 cursor-ew-resize touch-none bg-white/20 hover:bg-white/60 md:w-1.5"
       />
       <div
         data-handle="out"
-        onMouseDown={startTrim("out")}
-        className="absolute right-0 top-0 z-10 h-full w-1.5 cursor-ew-resize bg-white/20 hover:bg-white/60"
+        onPointerDown={startTrim("out")}
+        className="absolute right-0 top-0 z-10 h-full w-3 cursor-ew-resize touch-none bg-white/20 hover:bg-white/60 md:w-1.5"
       />
       {/* Thumbnail strip for media clips */}
       {media?.thumbnailUrl && track.kind === "video" && (

@@ -3,7 +3,7 @@
  * (video frames + images + text overlays) and synchronises audio elements.
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
  */
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Play, Pause, Repeat, Type, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
@@ -196,20 +196,30 @@ export function Compositor() {
     return () => cancelAnimationFrame(raf);
   }, [tracks, clips, settings]);
 
-  // ── Layout: scale canvas to fit ──
-  const [scale, setScale] = useState(1);
+  // ── Layout: scale canvas to fit (sync initial measurement + observer) ──
+  const [scale, setScale] = useState(0);
+  const PAD = 24;
+  const measure = () => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const aw = Math.max(0, wrap.clientWidth - PAD * 2);
+    const ah = Math.max(0, wrap.clientHeight - PAD * 2);
+    if (aw <= 0 || ah <= 0) return;
+    const s = Math.min(aw / settings.width, ah / settings.height);
+    setScale(Math.max(0.01, s));
+  };
+  useLayoutEffect(() => {
+    measure();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings.width, settings.height]);
   useEffect(() => {
-    const ro = new ResizeObserver(() => {
-      const wrap = wrapRef.current;
-      if (!wrap) return;
-      const pad = 24;
-      const aw = wrap.clientWidth - pad * 2;
-      const ah = wrap.clientHeight - pad * 2;
-      const s = Math.min(aw / settings.width, ah / settings.height);
-      setScale(Math.max(0.05, s));
-    });
-    if (wrapRef.current) ro.observe(wrapRef.current);
-    return () => ro.disconnect();
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const ro = new ResizeObserver(() => measure());
+    ro.observe(wrap);
+    window.addEventListener("resize", measure);
+    return () => { ro.disconnect(); window.removeEventListener("resize", measure); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings.width, settings.height]);
 
   // ── Click-to-select & drag text overlays on canvas ──
@@ -219,8 +229,16 @@ export function Compositor() {
     return c && c.kind === "text" ? (c as TextClip) : null;
   }, [selectedClipIds, clips]);
 
+  const [editingTextId, setEditingTextId] = useState<string | null>(null);
+  const editingText = useMemo(() => {
+    if (!editingTextId) return null;
+    const c = clips.find((x) => x.id === editingTextId);
+    return c && c.kind === "text" ? (c as TextClip) : null;
+  }, [editingTextId, clips]);
+
   const draggingRef = useRef<{ id: string; dx: number; dy: number } | null>(null);
-  const onCanvasMouseDown = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const onCanvasPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
+    if (editingTextId) return;
     if (!selectedTextClip) return;
     const t = currentTime;
     if (t < selectedTextClip.start || t > selectedTextClip.start + selectedTextClip.duration) return;
@@ -228,10 +246,10 @@ export function Compositor() {
     const nx = (e.clientX - rect.left) / rect.width;
     const ny = (e.clientY - rect.top) / rect.height;
     draggingRef.current = { id: selectedTextClip.id, dx: nx - selectedTextClip.x, dy: ny - selectedTextClip.y };
-    window.addEventListener("mousemove", onWindowMove);
-    window.addEventListener("mouseup", onWindowUp);
+    window.addEventListener("pointermove", onWindowMove);
+    window.addEventListener("pointerup", onWindowUp);
   };
-  const onWindowMove = (e: MouseEvent) => {
+  const onWindowMove = (e: PointerEvent) => {
     const d = draggingRef.current;
     const c = canvasRef.current;
     if (!d || !c) return;
@@ -245,8 +263,11 @@ export function Compositor() {
   };
   const onWindowUp = () => {
     draggingRef.current = null;
-    window.removeEventListener("mousemove", onWindowMove);
-    window.removeEventListener("mouseup", onWindowUp);
+    window.removeEventListener("pointermove", onWindowMove);
+    window.removeEventListener("pointerup", onWindowUp);
+  };
+  const onCanvasDoubleClick = () => {
+    if (selectedTextClip) setEditingTextId(selectedTextClip.id);
   };
 
   return (
@@ -257,9 +278,10 @@ export function Compositor() {
       >
         <div
           style={{
-            width: settings.width * scale,
-            height: settings.height * scale,
+            width: Math.max(2, settings.width * scale),
+            height: Math.max(2, settings.height * scale),
             background: settings.background,
+            visibility: scale > 0 ? "visible" : "hidden",
           }}
           className="relative overflow-hidden rounded-lg shadow-2xl ring-1 ring-white/10"
         >
@@ -267,12 +289,48 @@ export function Compositor() {
             ref={canvasRef}
             width={settings.width}
             height={settings.height}
-            onMouseDown={onCanvasMouseDown}
+            onPointerDown={onCanvasPointerDown}
+            onDoubleClick={onCanvasDoubleClick}
             className={cn(
-              "h-full w-full",
-              selectedTextClip ? "cursor-grab active:cursor-grabbing" : "cursor-default",
+              "h-full w-full touch-none",
+              editingTextId ? "cursor-text" : selectedTextClip ? "cursor-grab active:cursor-grabbing" : "cursor-default",
             )}
           />
+          {editingText && (
+            <textarea
+              autoFocus
+              value={editingText.text}
+              onChange={(e) => updateTextClip(editingText.id, { text: e.target.value })}
+              onBlur={() => setEditingTextId(null)}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") { e.preventDefault(); setEditingTextId(null); }
+              }}
+              style={{
+                position: "absolute",
+                left: `${editingText.x * 100}%`,
+                top: `${editingText.y * 100}%`,
+                transform: editingText.align === "centre"
+                  ? "translate(-50%, -50%)"
+                  : editingText.align === "right"
+                    ? "translate(-100%, -50%)"
+                    : "translate(0, -50%)",
+                color: editingText.color,
+                fontFamily: editingText.fontFamily,
+                fontWeight: editingText.fontWeight,
+                fontSize: `${(editingText.fontSize / 1080) * settings.height * scale}px`,
+                textAlign: editingText.align === "centre" ? "center" : editingText.align,
+                background: "rgba(0,0,0,0.35)",
+                border: "1px dashed rgba(255,255,255,0.5)",
+                borderRadius: 4,
+                padding: "2px 6px",
+                outline: "none",
+                resize: "none",
+                minWidth: 80,
+                lineHeight: 1.2,
+              }}
+              rows={Math.max(1, editingText.text.split("\n").length)}
+            />
+          )}
         </div>
       </div>
 
@@ -316,12 +374,16 @@ export function Compositor() {
         <Button
           size="sm"
           variant="ghost"
-          onClick={() => addTextClip()}
+          onClick={() => {
+            addTextClip();
+            // Surface the inspector on small screens.
+            try { window.dispatchEvent(new CustomEvent("editor:open-inspector")); } catch { /* noop */ }
+          }}
           className="h-8 rounded-md text-white/80 hover:bg-white/10 hover:text-white"
         >
           <Type className="mr-1.5 h-4 w-4" /> Add text
         </Button>
-        <span className="w-32 text-xs tabular-nums text-white/70">
+        <span className="hidden w-32 text-xs tabular-nums text-white/70 sm:inline">
           {fmtTime(currentTime, settings.fps)} / {fmtTime(duration, settings.fps)}
         </span>
         <Slider

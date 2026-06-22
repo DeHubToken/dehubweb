@@ -12,6 +12,7 @@ import { Timeline } from "@/components/editor/Timeline/Timeline";
 import { Inspector } from "@/components/editor/Inspector";
 import { ShortcutsLayer } from "@/components/editor/ShortcutsLayer";
 import { Autosave } from "@/components/editor/Autosave";
+import { MobileBottomBar } from "@/components/editor/MobileBottomBar";
 
 export default function EditorPage() {
   return (
@@ -24,7 +25,7 @@ export default function EditorPage() {
       <EditorTopBar />
 
       <div className="flex min-h-0 flex-1 flex-col md:flex-row">
-        <div className="hidden h-full w-64 shrink-0 md:block">
+        <div className="hidden h-full w-64 shrink-0 lg:block">
           <MediaPanel />
         </div>
         <div className="flex min-h-0 flex-1 flex-col">
@@ -36,9 +37,10 @@ export default function EditorPage() {
               <Inspector />
             </div>
           </div>
-          <div className="h-[38vh] min-h-[220px] shrink-0">
+          <div className="h-[38vh] min-h-[180px] shrink-0">
             <Timeline />
           </div>
+          <MobileBottomBar />
         </div>
       </div>
 
