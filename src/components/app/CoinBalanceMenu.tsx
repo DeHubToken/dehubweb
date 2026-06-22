@@ -14,7 +14,7 @@ import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import usdcLogo from '@/assets/usdc-logo.png';
 import { useAuth } from '@/contexts/AuthContext';
-import { ChainSelector, type ChainId } from './ChainSelector';
+import { ChainSelector, type ChainId, type PostChainId } from './ChainSelector';
 
 interface CoinBalanceMenuProps {
   balance: number;
