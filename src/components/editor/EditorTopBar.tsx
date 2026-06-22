@@ -93,22 +93,22 @@ export function EditorTopBar() {
         className="mx-auto w-64 max-w-[40vw] rounded-md bg-transparent px-2 py-1 text-center text-sm text-white/90 outline-none ring-1 ring-transparent transition focus:bg-white/5 focus:ring-white/20"
       />
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 sm:gap-2">
         <LiquidGlassBubble2
           label="Save"
           icon={<Save className="h-4 w-4" />}
           onClick={() => toast.success("Project autosaved.")}
-          width="100px"
+          width="92px"
           height="36px"
         />
         <LiquidGlassBubble2
           label="Export"
           icon={<Download className="h-4 w-4" />}
           onClick={() => setExportOpen(true)}
-          width="110px"
+          width="100px"
           height="36px"
-          active
         />
+        <PostToDeHub />
       </div>
       <ExportDialog open={exportOpen} onOpenChange={setExportOpen} />
     </header>
