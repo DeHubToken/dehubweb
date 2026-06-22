@@ -17,7 +17,7 @@ export async function confirmSolanaMint(params: {
 }): Promise<{ success: boolean; tokenId: number; mintAddress: string }> {
   return apiCall('/solana/confirm-mint', {
     method: 'POST',
-    body: JSON.stringify(params),
+    body: params,
   });
 }
 

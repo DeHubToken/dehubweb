@@ -65,7 +65,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
   const [sendAmount, setSendAmount] = useState('');
   const [stakeAmount, setStakeAmount] = useState('');
   const [copied, setCopied] = useState(false);
-  const [selectedChainId, setSelectedChainId] = useState<ChainId>(8453);
+  const [selectedChainId, setSelectedChainId] = useState<PostChainId>(8453);
 
   const formattedWalletAddress = useMemo(() => {
     if (!walletAddress) return null;
