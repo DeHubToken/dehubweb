@@ -12,6 +12,7 @@ import { Timeline } from "@/components/editor/Timeline/Timeline";
 import { Inspector } from "@/components/editor/Inspector";
 import { ShortcutsLayer } from "@/components/editor/ShortcutsLayer";
 import { Autosave } from "@/components/editor/Autosave";
+import { MobileBottomBar } from "@/components/editor/MobileBottomBar";
 
 export default function EditorPage() {
   return (
