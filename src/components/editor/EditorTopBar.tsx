@@ -3,11 +3,11 @@ import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
 import { Button } from "@/components/ui/button";
 import { Save, Download, Undo2, Redo2, FilePlus2 } from "lucide-react";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { listProjects, deleteProject, setLastProjectId } from "@/lib/editor/projectStore";
-import { useEffect } from "react";
 import type { ProjectSnapshot } from "@/lib/editor/types";
+import { ExportDialog } from "@/components/editor/ExportDialog";
 
 export function EditorTopBar() {
   const title = useEditorStore((s) => s.projectTitle);
@@ -21,14 +21,12 @@ export function EditorTopBar() {
   const projectId = useEditorStore((s) => s.projectId);
 
   const [open, setOpen] = useState(false);
+  const [exportOpen, setExportOpen] = useState(false);
   const [projects, setProjects] = useState<ProjectSnapshot[]>([]);
   useEffect(() => {
     if (!open) return;
     listProjects().then(setProjects).catch(() => undefined);
   }, [open]);
-
-  const handleExport = () =>
-    toast("Export pipeline arrives in the next phase — WebCodecs MP4/WebM encoder.");
 
   return (
     <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-white/10 bg-black/60 px-4 backdrop-blur-[24px]">
@@ -105,12 +103,13 @@ export function EditorTopBar() {
         <LiquidGlassBubble2
           label="Export"
           icon={<Download className="h-4 w-4" />}
-          onClick={handleExport}
+          onClick={() => setExportOpen(true)}
           width="110px"
           height="36px"
           active
         />
       </div>
+      <ExportDialog open={exportOpen} onOpenChange={setExportOpen} />
     </header>
   );
 }
