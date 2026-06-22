@@ -16,7 +16,7 @@ export function EditorTopBar() {
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/10">
           <Film className="h-4 w-4 text-white" />
         </div>
-        <span className="text-sm font-semibold text-white">DeHub Editor</span>
+        <span className="text-sm font-semibold text-white">{"\n"}</span>
       </div>
 
       <input
