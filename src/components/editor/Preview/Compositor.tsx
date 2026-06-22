@@ -3,7 +3,7 @@
  * (video frames + images + text overlays) and synchronises audio elements.
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
  */
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Play, Pause, Repeat, Type, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
