@@ -79,6 +79,7 @@
     "jsdom": "^20.0.3",
     "lucide-react": "^0.462.0",
     "motion": "^12.23.24",
+    "mp4-muxer": "^5.2.2",
     "nanoid": "^5.1.15",
     "next-themes": "^0.3.0",
     "permissionless": "^0.3.4",
@@ -102,6 +103,7 @@
     "viem": "2.44.4",
     "vitest": "^3.2.4",
     "wagmi": "^2.19.5",
+    "webm-muxer": "^5.1.4",
     "zod": "^3.25.76",
     "zustand": "^5.0.14"
   },
