@@ -45,6 +45,7 @@ const LaunchpadCoinPage = React.lazy(() => import("./pages/app/LaunchpadCoinPage
 const WorkPostPage = React.lazy(() => import("./pages/app/WorkPostPage"));
 const WorkJobDetailPage = React.lazy(() => import("./pages/app/WorkJobDetailPage"));
 const WorkDisputesPage = React.lazy(() => import("./pages/app/WorkDisputesPage"));
+const EditorPage = React.lazy(() => import("./pages/Editor"));
 
 
 const SKIP_LANDING_KEY = "dehub_skip_landing";
@@ -152,6 +153,7 @@ function AppContent() {
 
           <Route path="/creators" element={<CreatorsPage />} />
           <Route path="/skill.md" element={<SkillPage />} />
+          <Route path="/editor" element={<Suspense fallback={<PageLoader />}><EditorPage /></Suspense>} />
 
           {/* Single shared AppLayout — header/sidebar mount ONCE and persist across all app routes */}
           <Route element={<AppLayout />}>
