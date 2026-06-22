@@ -400,7 +400,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
         numberOfFrames: count,
         numberOfChannels: 2,
         timestamp: Math.round((i / sampleRate) * 1_000_000),
-        data,
+        data: data.buffer as ArrayBuffer,
       });
       audioEncoder.encode(ad);
       ad.close();
