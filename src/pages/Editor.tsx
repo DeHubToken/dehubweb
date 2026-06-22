@@ -1,13 +1,17 @@
 /**
  * /editor — DeHub in-browser video editor.
- * Phase 1 (shell) + Phase 2 (media import) only. Adapted from OpenCut (MIT).
- * See LICENSE-OpenCut for attribution.
+ * Phase 3: multi-track timeline, canvas compositor, text overlays, undo/redo,
+ * autosave to IndexedDB, keyboard shortcuts.
+ * Adapted from OpenCut (MIT) — see LICENSE-OpenCut.
  */
 import { Helmet } from "react-helmet-async";
 import { EditorTopBar } from "@/components/editor/EditorTopBar";
 import { MediaPanel } from "@/components/editor/MediaPanel";
-import { PreviewPlayer } from "@/components/editor/PreviewPlayer";
-import { TimelinePlaceholder } from "@/components/editor/TimelinePlaceholder";
+import { Compositor } from "@/components/editor/Preview/Compositor";
+import { Timeline } from "@/components/editor/Timeline/Timeline";
+import { Inspector } from "@/components/editor/Inspector";
+import { ShortcutsLayer } from "@/components/editor/ShortcutsLayer";
+import { Autosave } from "@/components/editor/Autosave";
 
 export default function EditorPage() {
   return (
@@ -20,12 +24,21 @@ export default function EditorPage() {
       <EditorTopBar />
 
       <div className="flex min-h-0 flex-1 flex-col md:flex-row">
-        <div className="h-56 w-full shrink-0 md:h-full md:w-72">
+        <div className="hidden h-full w-64 shrink-0 md:block">
           <MediaPanel />
         </div>
         <div className="flex min-h-0 flex-1 flex-col">
-          <PreviewPlayer />
-          <TimelinePlaceholder />
+          <div className="flex min-h-0 flex-1">
+            <div className="flex min-h-0 flex-1 flex-col">
+              <Compositor />
+            </div>
+            <div className="hidden h-full w-72 shrink-0 lg:block">
+              <Inspector />
+            </div>
+          </div>
+          <div className="h-[38vh] min-h-[220px] shrink-0">
+            <Timeline />
+          </div>
         </div>
       </div>
 
@@ -40,6 +53,9 @@ export default function EditorPage() {
           OpenCut (MIT)
         </a>
       </footer>
+
+      <ShortcutsLayer />
+      <Autosave />
     </div>
   );
 }
