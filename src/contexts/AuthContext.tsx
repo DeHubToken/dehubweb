@@ -725,7 +725,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Coinbase Wallet desktop extension ALSO sets isCoinbaseWallet, so we deliberately
       // do NOT include it here to avoid triggering auto-connect for desktop extension users.
       const eth = (window as any).ethereum;
-      const isWalletInAppBrowser = hasInjected && (!!eth?.isTrust || !!eth?.isTrustWallet);
+      // IMPORTANT: require isMobile here. Trust Wallet's DESKTOP browser extension also
+      // sets window.ethereum.isTrust, so without the mobile gate, desktop users with the
+      // Trust extension installed would get the extension auto-opened on page load —
+      // robbing them of the chance to pick a wallet. Real in-app browsers are mobile-only.
+      const isWalletInAppBrowser = isMobile && hasInjected && (!!eth?.isTrust || !!eth?.isTrustWallet);
       const alreadyAttempted = sessionStorage.getItem('dehub_wallet_auto_connect_attempted');
       // Check existing session synchronously (no API call)
       const hasExistingSession = !!getAuthToken() && !isTokenExpired();
@@ -780,7 +784,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (isWagmiConnected) return; // Wagmi is fine — nothing to do
 
     const eth = (window as any).ethereum;
-    const isInWalletBrowser = isMobileDevice() || !!eth?.isTrust || !!eth?.isTrustWallet;
+    // Mobile-only: the Trust DESKTOP extension also sets isTrust, and we don't want to
+    // surprise-open it on desktop. Wagmi's own reconnectOnMount handles desktop sessions.
+    const isInWalletBrowser = isMobileDevice();
     if (!isInWalletBrowser || !eth) return;
 
     if (wagmiSilentReconnectAttemptedRef.current) return;

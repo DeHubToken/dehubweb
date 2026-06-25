@@ -22,6 +22,8 @@ interface PPVDrawerContentProps {
   currency?: string;
   creatorAddress?: string;
   chainId?: number;
+  /** Optional DHB tip bundled atomically when payment router is deployed (#45) */
+  tipAmount?: number;
   onClose: () => void;
   onUnlocked?: () => void;
   formatCompact: (num: number) => string;
@@ -33,6 +35,7 @@ export function PPVDrawerContent({
   currency = 'DHB',
   creatorAddress,
   chainId,
+  tipAmount = 0,
   onClose,
   onUnlocked,
   formatCompact,
@@ -44,6 +47,7 @@ export function PPVDrawerContent({
     price,
     currency,
     chainId: chainId as ChainId,
+    tipAmount,
     onSuccess: () => {
       onUnlocked?.();
       onClose();

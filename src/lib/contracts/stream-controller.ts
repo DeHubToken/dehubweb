@@ -26,6 +26,7 @@ export const STREAM_CONTROLLER_ADDRESS = '0x4fa30dAef50c6dc8593470750F3c721CA327
 // mintWithBounty: for stream minting with bounty
 export const STREAM_CONTROLLER_ABI = [
   'function sendTip(uint256 tokenId, uint256 amount, address to, address tokenAddress)',
+  'function sendFundsForPPV(uint256 tokenId, uint256 amount, address to, address tokenAddress)',
   'function mintWithBounty(uint256 id, uint256 timestamp, uint8 v, bytes32 r, bytes32 s, string uri, uint256 bountyAmount, uint32 countOfViewers, uint32 countOfCommentors, address tokenAddress)',
   'function bounties(uint256) view returns (uint256 totalAmount, uint256 reserveAmount, uint256 bountyAmount, uint32 countOfViewers, uint32 countOfCommentors, address tokenAddress)',
   'function streamCollection() view returns (address)',
@@ -193,6 +194,73 @@ export async function sendTip(params: SendTipParams & { skipBalanceCheck?: boole
   return {
     hash: result.hash,
     confirmed: result.wait(1).then(r => r.hash),
+  };
+}
+
+export interface SendPPVParams {
+  tokenId: string | number;
+  amount: number;
+  to: string;
+  chainId?: ChainId;
+}
+
+export interface SendPPVResult {
+  hash: string;
+  confirmed: Promise<string>;
+}
+
+/**
+ * Unlock PPV via StreamController.sendFundsForPPV().
+ * Emits SendFunds(FundType.PPV) for backend webhook + /ppv/confirm detection.
+ */
+export async function sendFundsForPPV(
+  params: SendPPVParams & { skipBalanceCheck?: boolean; signerAddress?: string },
+): Promise<SendPPVResult> {
+  const chainId = params.chainId || BASE_CHAIN_ID;
+  const chainConfig = getChainConfig(chainId);
+
+  await switchChain(chainId);
+
+  const signerAddress = params.signerAddress || await getWalletAddress();
+
+  if (signerAddress.toLowerCase() === params.to.toLowerCase()) {
+    throw new Error('You cannot pay yourself');
+  }
+
+  const amountWei = toWei(params.amount, DHB_TOKEN.decimals);
+  const chainKey = `${chainId}-${signerAddress}`;
+
+  const [balance, allowance] = await Promise.all([
+    params.skipBalanceCheck ? Promise.resolve(amountWei) : getDHBBalance(signerAddress, chainId),
+    getDHBAllowance(signerAddress, chainId),
+  ]);
+
+  if (!params.skipBalanceCheck && balance < amountWei) {
+    throw new Error(
+      `Insufficient DHB balance. Need ${params.amount} DHB but have ${Number(balance) / 1e18} DHB`,
+    );
+  }
+
+  if (allowance < amountWei) {
+    const maxApproval = BigInt('0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff');
+    await approveDHB(maxApproval, chainId);
+  }
+  approvedChains.add(chainKey);
+  persistApprovalCache();
+
+  const tokenId = BigInt(params.tokenId);
+
+  const result = await writeContractAA(
+    chainConfig.streamController,
+    streamControllerInterface,
+    'sendFundsForPPV',
+    [tokenId, amountWei, params.to, chainConfig.dhbToken],
+    { context: 'PPV unlock payment', chainId },
+  );
+
+  return {
+    hash: result.hash,
+    confirmed: result.wait(1).then((r) => r.hash),
   };
 }
 

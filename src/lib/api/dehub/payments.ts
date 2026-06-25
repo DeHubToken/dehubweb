@@ -151,3 +151,56 @@ export async function createOnrampSession(body: Record<string, unknown>): Promis
     requiresAuth: true,
   });
 }
+
+// ── PPV / Payment config (#44, #45) ──
+
+export interface PaymentChainConfig {
+  chainId: number;
+  name: string;
+  dhbToken: string;
+  streamController: string;
+  weth?: string;
+  dex?: {
+    swapRouter: string;
+    quoter: string;
+    type: 'uniswap-v3' | 'pancakeswap-v3';
+  };
+  paymentRouter?: string;
+}
+
+export interface PaymentConfigResponse {
+  chains: PaymentChainConfig[];
+  fundTypes: { tip: number; ppv: number; stake: number };
+}
+
+export async function getPaymentConfig(): Promise<PaymentConfigResponse> {
+  const response = await apiCall<{ status: boolean; result: PaymentConfigResponse }>(
+    '/api/config/payments',
+  );
+  return response.result;
+}
+
+export interface ConfirmPPVResponse {
+  result: boolean;
+  queued?: boolean;
+  confirmed?: boolean;
+  alreadyUnlocked?: boolean;
+  failed?: boolean;
+  message?: string;
+}
+
+export async function confirmPPVPurchase(params: {
+  tokenId: string | number;
+  txHash: string;
+  chainId?: number;
+}): Promise<ConfirmPPVResponse> {
+  return apiCall<ConfirmPPVResponse>('/api/ppv/confirm', {
+    method: 'POST',
+    body: {
+      tokenId: Number(params.tokenId),
+      txHash: params.txHash,
+      chainId: params.chainId ?? 8453,
+    },
+    requiresAuth: true,
+  });
+}

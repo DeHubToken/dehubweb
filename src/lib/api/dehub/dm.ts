@@ -431,6 +431,36 @@ export async function createConversation(
     address: recipientAddress,
   };
 
+  // Prefer MongoDB _id if available (search results always have it)
+  const recipientId = recipientUser?._id;
+
+  try {
+    const response = await apiCall<{ status: boolean; data: { _id: string } }>(
+      '/api/dm/create',
+      {
+        method: 'POST',
+        body: recipientId
+          ? { recipientId }
+          : { recipientAddress: recipientAddress.toLowerCase() },
+        requiresAuth: true,
+      },
+    );
+
+    if (response?.status && response.data?._id) {
+      return {
+        id: response.data._id,
+        participants: [otherUser],
+        otherUser,
+        unreadCount: 0,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+    }
+  } catch (err) {
+    console.warn('[DM] createConversation REST failed, using local fallback:', err);
+  }
+
+  // Fallback: local virtual conversation (message won't reach recipient until socket is healthy)
   return {
     id: `new_${recipientAddress}`,
     participants: [otherUser],

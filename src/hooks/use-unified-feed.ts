@@ -42,7 +42,7 @@ export function parseSoundtrackTag(description?: string): { soundtrackUrl?: stri
 export interface UnifiedFeedParams {
   page?: number;
   limit?: number;
-  sortBy?: 'views' | 'likes' | 'createdAt' | 'tips' | 'comments' | 'random';
+  sortBy?: 'views' | 'likes' | 'createdAt' | 'tips' | 'comments' | 'random' | 'score';
   sortOrder?: 'asc' | 'desc';
   postType?: 'all' | 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio' | 'feed-audio';
   status?: 'minted' | 'signed' | 'all' | 'pending' | 'failed';

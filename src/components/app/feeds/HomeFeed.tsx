@@ -337,7 +337,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   }, [showFilters]);
   const isFetchingRef = useRef(false);
   
-  // Default to Trending (first option) - persisted to sessionStorage
+  // Default to For You (feedScore algorithm) — persisted to sessionStorage
   const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('home', 'sort', SORT_OPTIONS[0]);
   const [selectedDate, setSelectedDate] = usePersistedFeedFilter<DateFilterOption>('home', 'date', DATE_FILTER_OPTIONS[0]);
   const [selectedPostType, setSelectedPostType] = usePersistedFeedFilter<PostTypeFilterValue>('home', 'postType', 'all');
@@ -444,6 +444,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // For trending, we fetch by recency (last month) then sort client-side
   const sortBy = useMemo(() => {
     switch (selectedSort.value) {
+      case 'for-you':
+        return 'score' as const;
       case 'following': // Following uses latest sort, filtered client-side
         return 'createdAt' as const;
       case 'most-liked':
@@ -464,8 +466,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   
   // For following and random, don't limit range
   const range = useMemo(() => {
-    if (selectedSort.value === 'following' || selectedSort.value === 'random') {
-      return undefined; // No range limit
+    if (
+      selectedSort.value === 'for-you' ||
+      selectedSort.value === 'following' ||
+      selectedSort.value === 'random'
+    ) {
+      return undefined; // Algorithm + following/random use full catalog
     }
     return getDateRange(selectedDate.value);
   }, [selectedSort.value, selectedDate.value]);
@@ -492,7 +498,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // For "Most Liked", "Trending", "Following", "Random", or default "Latest" sorting, we need global ranking across all types
   // So we use a single unified feed instead of three separate type feeds
   // "Latest" must also use a single feed to maintain true chronological order across all post types
-  const useSingleFeedForGlobalSort = selectedSort.value === 'latest' || selectedSort.value === 'most-liked' || selectedSort.value === 'following' || selectedSort.value === 'random';
+  const useSingleFeedForGlobalSort =
+    selectedSort.value === 'for-you' ||
+    selectedSort.value === 'latest' ||
+    selectedSort.value === 'most-liked' ||
+    selectedSort.value === 'most-viewed' ||
+    selectedSort.value === 'most-comments' ||
+    selectedSort.value === 'following' ||
+    selectedSort.value === 'random';
   const hasContentFilter = contentFilters.ppv || contentFilters.w2e || contentFilters.locked;
   const useInterleavedFeed = selectedPostType === 'all' && !useSingleFeedForGlobalSort && !hasContentFilter;
 

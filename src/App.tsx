@@ -28,6 +28,11 @@ const DeleteAccount = React.lazy(() => import("./pages/DeleteAccount"));
 const CreatorsPage = React.lazy(() => import("./pages/app/CreatorsPage"));
 const SkillPage = React.lazy(() => import("./pages/SkillPage"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
+const AdminLoginPage = React.lazy(() => import("./pages/admin/AdminLoginPage"));
+const AdminUsersPage = React.lazy(() => import("./pages/admin/AdminUsersPage"));
+const AdminRoute = React.lazy(() =>
+  import("./components/admin/AdminRoute").then((m) => ({ default: m.AdminRoute }))
+);
 const DocsPage = React.lazy(() => import("./pages/DocsPage"));
 const ProfilePage = React.lazy(() => import("./pages/app/ProfilePage"));
 const PostInfoPage = React.lazy(() => import("./pages/app/PostInfoPage"));
@@ -150,6 +155,13 @@ function AppContent() {
           <Route path="/docs/*" element={<DocsPage />} />
 
           <Route path="/delete-account" element={<DeleteAccount />} />
+
+          {/* Admin panel — email/password auth, separate from user wallet session */}
+          <Route path="/admin/login" element={<Suspense fallback={<PageLoader />}><AdminLoginPage /></Suspense>} />
+          <Route path="/admin" element={<Suspense fallback={<PageLoader />}><AdminRoute /></Suspense>}>
+            <Route index element={<Navigate to="/admin/users" replace />} />
+            <Route path="users" element={<Suspense fallback={<PageLoader />}><AdminUsersPage /></Suspense>} />
+          </Route>
 
           <Route path="/creators" element={<CreatorsPage />} />
           <Route path="/skill.md" element={<SkillPage />} />
