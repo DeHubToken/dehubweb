@@ -1370,9 +1370,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       </AnimatePresence>
 
       {/* Active filter chips bar (sort, date, content access, categories) */}
-      {(selectedSort.value !== 'latest' || selectedDate.value !== 'all' || contentFilters.ppv || contentFilters.w2e || contentFilters.locked || selectedCategories.length > 0) && (
+      {(selectedSort.value !== 'for-you' || selectedDate.value !== 'all' || contentFilters.ppv || contentFilters.w2e || contentFilters.locked || selectedCategories.length > 0) && (
         <div className="flex items-center gap-1.5 flex-wrap px-1">
-          {selectedSort.value !== 'latest' && (
+          {selectedSort.value !== 'for-you' && (
             <button
               onClick={() => setSelectedSort(SORT_OPTIONS[0])}
               className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
