@@ -186,12 +186,7 @@ function buildSvg(opts: {
   ${(() => {
     const tlW = W * 0.18;
     const tlH = tlW / LOGO_ASPECT;
-    const blW = W * 0.16;
-    const blH = blW / LOGO_ASPECT;
-    return `
-    <image href="${DEHUB_LOGO_DATA_URI}" x="${W - tlW - W * 0.05}" y="${H * 0.06}" width="${tlW}" height="${tlH}" preserveAspectRatio="xMidYMid meet"/>
-    <image href="${DEHUB_LOGO_DATA_URI}" x="${W * 0.05}" y="${H - blH - H * 0.06}" width="${blW}" height="${blH}" preserveAspectRatio="xMidYMid meet"/>
-    `;
+    return `<image href="${DEHUB_LOGO_DATA_URI}" x="${W - tlW - W * 0.05}" y="${H * 0.06}" width="${tlW}" height="${tlH}" preserveAspectRatio="xMidYMid meet"/>`;
   })()}
 </svg>`;
 }
