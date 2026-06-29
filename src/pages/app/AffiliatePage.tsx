@@ -211,10 +211,15 @@ export default function AffiliatePage() {
 
 
           {wallet && (
-            <p className="text-xs text-white/40">
-              Affiliate wallet:&nbsp;
+            <p className="text-xs text-white/40 inline-flex items-center gap-1.5 flex-wrap">
+              <span>Affiliate wallet:&nbsp;</span>
               <code className="font-mono">{wallet.slice(0, 6)}…{wallet.slice(-4)}</code>
-              {displayName ? <> · {displayName}</> : null}
+              {displayName ? (
+                <span className="inline-flex items-center gap-1.5">
+                  <span>· {displayName}</span>
+                  <BadgeIcon badgeBalance={badgeBalance ?? undefined} username={username} className="w-3 h-3" />
+                </span>
+              ) : null}
             </p>
           )}
         </div>
