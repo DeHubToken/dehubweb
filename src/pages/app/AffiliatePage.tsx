@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Copy, Share2, Users, Wallet, Sparkles, RefreshCw, ExternalLink } from "lucide-react";
+import { Share2, Users, Wallet, Sparkles, RefreshCw, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { AuthGate } from "@/components/app/AuthGate";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -60,16 +59,6 @@ export default function AffiliatePage() {
     () => (stats?.code ? `${SITE}/r/${stats.code}` : ""),
     [stats?.code],
   );
-  const inviteUrl = useMemo(
-    () => (stats?.code ? `${SITE}/app?ref=${stats.code}` : ""),
-    [stats?.code],
-  );
-  const shareText = useMemo(
-    () => (stats?.code
-      ? `Join me on DeHub — the decentralised creator network. Use my link for an instant invite: ${shareUrl}`
-      : ""),
-    [shareUrl, stats?.code],
-  );
   const shareImageUrl = useMemo(
     () => `${getAffiliateShareImageUrl(stats?.code, 1200, 630)}&v=${imgVersion}`,
     [stats?.code, imgVersion],
@@ -83,9 +72,9 @@ export default function AffiliatePage() {
   const nativeShare = () => {
     const nav = navigator as Navigator & { share?: (d: ShareData) => Promise<void> };
     if (nav.share) {
-      nav.share({ title: "DeHub", text: shareText, url: shareUrl }).catch(() => undefined);
+      nav.share({ title: "DeHub", text: "Join me on DeHub.", url: shareUrl }).catch(() => undefined);
     } else {
-      void copy(shareText, "Share text copied");
+      void copy(shareUrl, "Invite link copied");
     }
   };
 
@@ -179,52 +168,23 @@ export default function AffiliatePage() {
               {loading ? (
                 <Skeleton className="h-12 w-full" />
               ) : stats?.code ? (
-                <>
-                  <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-2">
-                    <Input readOnly value={shareUrl} className="font-mono text-sm bg-black/40 border-white/10 text-white placeholder:text-white/40" />
-                    <LiquidGlassBubble2
-                      label="Copy link"
-                      icon={<Copy className="w-4 h-4" />}
-                      width="140px"
-                      onClick={() => void copy(shareUrl, "Invite link copied")}
-                    />
-                    <LiquidGlassBubble2
-                      label="Share"
-                      icon={<Share2 className="w-4 h-4" />}
-                      width="120px"
-                      onClick={nativeShare}
-                    />
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-2 text-sm">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div className="flex flex-wrap items-center gap-3 text-sm">
                     <span className="text-white/60">Your code:</span>
-                    <code className="px-2 py-1 rounded-md bg-white/10 text-white font-mono tracking-[0.25em]">
+                    <code className="px-3 py-1.5 rounded-md bg-white/10 text-white font-mono tracking-[0.25em]">
                       {stats.code}
                     </code>
-                    <Button variant="ghost" size="sm" onClick={() => void copy(stats.code!, "Code copied")}>
-                      <Copy className="w-3 h-3 mr-1" /> Copy
-                    </Button>
-                    <span className="text-white/40">·</span>
                     <Link to={`/r/${stats.code}`} className="text-white/70 hover:text-white inline-flex items-center gap-1">
                       Preview landing <ExternalLink className="w-3 h-3" />
                     </Link>
                   </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    <Input
-                      readOnly
-                      value={inviteUrl}
-                      onClick={() => void copy(inviteUrl, "Direct app link copied")}
-                      className="font-mono text-xs bg-black/40 border-white/10 text-white placeholder:text-white/40 cursor-pointer"
-                    />
-                    <Input
-                      readOnly
-                      value={shareText}
-                      onClick={() => void copy(shareText, "Share text copied")}
-                      className="text-xs bg-black/40 border-white/10 text-white placeholder:text-white/40 cursor-pointer"
-                    />
-                  </div>
-                </>
+                  <LiquidGlassBubble2
+                    label="Share"
+                    icon={<Share2 className="w-4 h-4" />}
+                    width="140px"
+                    onClick={nativeShare}
+                  />
+                </div>
               ) : (
                 <p className="text-sm text-white/60">Could not generate a code. Try refreshing.</p>
               )}
