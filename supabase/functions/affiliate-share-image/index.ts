@@ -230,7 +230,8 @@ function buildSvg(opts: {
   const W = opts.width;
   const H = opts.height;
   const name = escapeXml(opts.name);
-  const handle = opts.username ? escapeXml(`@${opts.username}`) : "";
+  const showHandle = Boolean(opts.username) && opts.username!.toLowerCase() !== opts.name.toLowerCase();
+  const handle = showHandle ? escapeXml(`@${opts.username}`) : "";
   const code = escapeXml(opts.code || "INVITE");
   const portraitR = Math.min(W, H) * 0.22;
   const portraitCX = W * 0.30;
