@@ -139,8 +139,21 @@ function HeroRoute() {
  * Only mounted after user has passed the hero (or is a returning user).
  */
 function AppContent() {
-  const { isLoginModalOpen, closeLoginModal } = useAuth();
+  const { isLoginModalOpen, closeLoginModal, user } = useAuth();
   usePreloadIcons();
+
+  // Capture ?ref=CODE / ?aff=CODE on first load (first-touch wins, 90-day cookie).
+  useEffect(() => {
+    import("@/lib/affiliateRef").then(m => m.captureAffiliateRefFromUrl());
+  }, []);
+
+  // When a wallet signs in, self-attribute any pending cookie referral.
+  const wallet = (user as { walletAddress?: string | null } | null)?.walletAddress ?? null;
+  useEffect(() => {
+    if (!wallet) return;
+    import("@/lib/affiliate").then(m => m.attributeReferralIfPending(wallet)).catch(() => undefined);
+  }, [wallet]);
+
 
   return (
     <>
