@@ -512,6 +512,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // "Latest" must also use a single feed to maintain true chronological order across all post types
   const useSingleFeedForGlobalSort =
     deferredSort.value === 'for-you' ||
+    deferredSort.value === 'prompt' ||
     deferredSort.value === 'latest' ||
     deferredSort.value === 'most-liked' ||
     deferredSort.value === 'most-viewed' ||
