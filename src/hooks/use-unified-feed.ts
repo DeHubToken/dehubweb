@@ -8,7 +8,7 @@
  */
 
 import { useMemo } from 'react';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery, keepPreviousData } from '@tanstack/react-query';
 import { getAuthToken, DEHUB_CDN_BASE, type DeHubNFT, getBlockList, getNFTInfo } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
@@ -548,6 +548,6 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
     refetchOnMount: true,
     refetchOnReconnect: true,
     retry: 2,
-    placeholderData: (previousData) => previousData,
+    placeholderData: keepPreviousData,
   });
 }

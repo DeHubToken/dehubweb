@@ -823,6 +823,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     ? (videosFeed.isLoading || imagesFeed.isLoading || textsFeed.isLoading)
     : singleFeed.isLoading;
 
+  // Background fetching (filter switches with cached/previous data) — used to show a
+  // non-blocking progress shimmer so the UI never feels frozen while requests run.
+  const isFetching = useInterleavedFeed
+    ? (videosFeed.isFetching || imagesFeed.isFetching || textsFeed.isFetching)
+    : singleFeed.isFetching;
+
   const isError = useInterleavedFeed
     ? (videosFeed.isError || imagesFeed.isError || textsFeed.isError)
     : singleFeed.isError;
@@ -1318,8 +1324,20 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     );
   };
 
+  // Show a non-blocking top progress bar whenever something is loading in the background
+  // (filter switches, pagination, refetch). Filters stay clickable; existing items remain visible.
+  const showTopProgress = (isFetching || isAutoRetrying) && !isLoadingState;
+
   return (
-    <div className={cn("p-2 sm:p-3 pt-0 sm:pt-0 space-y-3", isCollapsed && "pt-2 sm:pt-2")}>
+    <div className={cn("relative p-2 sm:p-3 pt-0 sm:pt-0 space-y-3", isCollapsed && "pt-2 sm:pt-2")}>
+      {showTopProgress && (
+        <div
+          aria-hidden
+          className="pointer-events-none sticky top-0 z-30 -mx-2 sm:-mx-3 h-[2px] overflow-hidden"
+        >
+          <div className="h-full w-1/3 bg-gradient-to-r from-transparent via-white/70 to-transparent animate-[shimmer-sweep_1.2s_linear_infinite]" />
+        </div>
+      )}
       {/* Filters - ALWAYS accessible so users can change settings even when feed is empty/retrying */}
       <AnimatePresence mode="wait">
         {showFilters && (
