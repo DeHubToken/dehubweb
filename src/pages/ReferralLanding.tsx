@@ -38,14 +38,28 @@ export default function ReferralLanding() {
         .eq("active", true)
         .maybeSingle() as unknown as { data: { share_name: string | null; owner_address: string } | null };
       if (cancelled) return;
-      if (data) {
-        const name = data.share_name?.trim();
-        if (name) setInviter(name);
-        else if (data.owner_address) {
-          setInviter(`${data.owner_address.slice(0, 6)}…${data.owner_address.slice(-4)}`);
-        }
+      let resolved: string | null = null;
+      if (data?.owner_address) {
+        try {
+          const r = await fetch(`https://api.dehub.io/api/account_info/${data.owner_address}`);
+          if (r.ok) {
+            const j = await r.json();
+            const u = j?.result || j;
+            const apiDisplay = (u?.displayName || "").trim();
+            const apiUser = (u?.username || "").trim();
+            resolved = apiDisplay || apiUser || null;
+          }
+        } catch { /* ignore */ }
       }
-      setInviterLoaded(true);
+      if (!resolved) {
+        const sn = data?.share_name?.trim();
+        if (sn) resolved = sn;
+        else if (data?.owner_address) resolved = `${data.owner_address.slice(0, 6)}…${data.owner_address.slice(-4)}`;
+      }
+      if (!cancelled) {
+        if (resolved) setInviter(resolved);
+        setInviterLoaded(true);
+      }
     })();
     return () => { cancelled = true; };
   }, [code, valid]);
