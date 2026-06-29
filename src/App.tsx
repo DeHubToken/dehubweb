@@ -181,6 +181,8 @@ function AppContent() {
           <Route path="/skill.md" element={<SkillPage />} />
           <Route path="/editor" element={<Suspense fallback={<PageLoader />}><EditorPage /></Suspense>} />
           <Route path="/r/:code" element={<Suspense fallback={<PageLoader />}><ReferralLanding /></Suspense>} />
+          <Route path="/prompt" element={<Suspense fallback={<PageLoader />}><PromptLanding /></Suspense>} />
+
 
           {/* Single shared AppLayout — header/sidebar mount ONCE and persist across all app routes */}
           <Route element={<AppLayout />}>
