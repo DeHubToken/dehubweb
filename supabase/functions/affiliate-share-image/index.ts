@@ -142,11 +142,11 @@ async function fetchAvatarDataUri(address: string | null, apiAvatarPath: string 
     }
   }
   for (const url of candidates) {
+    const r = await fetchWithTimeout(url);
+    if (!r || !r.ok) continue;
+    const ct = r.headers.get("content-type") || "image/jpeg";
+    if (!ct.startsWith("image/")) continue;
     try {
-      const r = await fetch(url);
-      if (!r.ok) continue;
-      const ct = r.headers.get("content-type") || "image/jpeg";
-      if (!ct.startsWith("image/")) continue;
       const buf = new Uint8Array(await r.arrayBuffer());
       if (buf.byteLength < 200) continue;
       return `data:${ct};base64,${encodeB64(buf)}`;
