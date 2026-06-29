@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { isValidAffiliateCode, setAffiliateRef } from "@/lib/affiliateRef";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
+import { BadgeIcon } from "@/components/app/BadgeIcon";
 
 
 const SITE = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
