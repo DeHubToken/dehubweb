@@ -238,7 +238,7 @@ serve(async (req) => {
       headers: {
         ...corsHeaders,
         "Content-Type": "image/svg+xml; charset=utf-8",
-        "Cache-Control": "public, max-age=180, s-maxage=3600",
+        "Cache-Control": "no-store, max-age=0, must-revalidate",
       },
     });
   } catch (error) {
