@@ -6,13 +6,20 @@ import type { RefObject } from 'react';
  * The indicator is rendered in an overflow-visible layer ABOVE the
  * scroll container so spring animations are never clipped.
  */
-export function useTabIndicator<T extends string>(activeTab: T, layoutShiftKey?: string | number | boolean, isDraggingRef?: RefObject<boolean>) {
+export function useTabIndicator<T extends string>(
+  activeTab: T,
+  layoutShiftKey?: string | number | boolean,
+  isDraggingRef?: RefObject<boolean>,
+  shrinkWidthByPercent: number = 0,
+) {
   const layerRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<Partial<Record<T, HTMLElement | null>>>({});
   const trackingRafRef = useRef<number | null>(null);
   const initialTabRef = useRef<T>(activeTab);
   const hasMountedRef = useRef(false);
   const [rect, setRect] = useState({ x: 0, y: 0, width: 0, height: 0, ready: false });
+  const shrinkFactor = 1 - shrinkWidthByPercent / 100;
+
 
   const update = useCallback(() => {
     const layer = layerRef.current;
