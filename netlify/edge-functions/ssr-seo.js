@@ -71,6 +71,8 @@ function shouldServeSSR(pathname) {
   if (pathname.includes('/post/')) return true;
   // Always SSR for community pages
   if (pathname.includes('/communities/')) return true;
+  // Always SSR for affiliate referral landings (/r/{code})
+  if (/^\/r\/[A-Za-z0-9]+/.test(pathname)) return true;
   // Always SSR for root
   if (pathname === '/') return true;
   // Always SSR for profile pages (top-level non-system routes)

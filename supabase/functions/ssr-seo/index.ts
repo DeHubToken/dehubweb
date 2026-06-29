@@ -331,9 +331,56 @@ serve(async (req) => {
         if (cleanPath.startsWith("/")) cleanPath = cleanPath.substring(1);
         const pathParts = cleanPath.split("/").filter(Boolean);
 
+        // 0. Affiliate Referral Landing (/r/{CODE}) — must run BEFORE profile handler
+        if (pathParts[0]?.toLowerCase() === "r" && pathParts[1]) {
+            const code = pathParts[1].toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 16);
+            if (code) {
+                let inviter = "A creator";
+                try {
+                    const r = await fetch(
+                        `${SUPABASE_URL}/rest/v1/affiliate_codes?code=eq.${code}&active=eq.true&select=share_name,owner_address&limit=1`,
+                        { headers: { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` }, signal: AbortSignal.timeout(5000) },
+                    );
+                    if (r.ok) {
+                        const rows = await r.json();
+                        const row = rows[0];
+                        if (row?.share_name?.trim()) inviter = row.share_name.trim();
+                        else if (row?.owner_address) inviter = `${row.owner_address.slice(0, 6)}…${row.owner_address.slice(-4)}`;
+                    }
+                } catch { /* keep default */ }
+
+                const referralUrl = `${APP_URL}/r/${code}`;
+                const shareImage = `${SUPABASE_URL}/functions/v1/affiliate-share-image?code=${encodeURIComponent(code)}&width=1200&height=630`;
+                const title = `${inviter} invited you to DeHub — earn, post & build on-chain`;
+                const description = `Use invite code ${code} to join DeHub. The decentralised creator network for video, music, social, jobs and Web3.`;
+
+                const html = generateMetaHTML({
+                    title,
+                    description,
+                    image: shareImage,
+                    url: referralUrl,
+                    type: "website",
+                    twitterCard: "summary_large_image",
+                    imageWidth: 1200,
+                    imageHeight: 630,
+                    functionBaseUrl,
+                    isBot,
+                    jsonLd: {
+                        "@context": "https://schema.org",
+                        "@type": "WebPage",
+                        name: title,
+                        description,
+                        url: referralUrl,
+                        image: shareImage,
+                    },
+                });
+                return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=7200" } });
+            }
+        }
+
         // 1. Profile Handling (/@username or /username)
         const possibleUsername = pathParts[0] || "";
-        const isSystemRoute = ["post", "app", "explore", "notifications", "messages", "settings"].includes(
+        const isSystemRoute = ["post", "app", "explore", "notifications", "messages", "settings", "r"].includes(
             possibleUsername.toLowerCase(),
         );
 
