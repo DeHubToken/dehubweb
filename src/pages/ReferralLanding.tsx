@@ -40,9 +40,8 @@ export default function ReferralLanding() {
         setInviter(`${data.owner_address.slice(0, 6)}…${data.owner_address.slice(-4)}`);
       }
     })();
-    const t = window.setTimeout(() => { window.location.replace(ctaUrl); }, 2200);
-    return () => { cancelled = true; window.clearTimeout(t); };
-  }, [code, ctaUrl, valid]);
+    return () => { cancelled = true; };
+  }, [code, valid]);
 
   const title = useMemo(
     () => (valid ? `${inviter} invited you to DeHub — earn, post & build on-chain` : "DeHub — the decentralised creator network"),
@@ -74,7 +73,7 @@ export default function ReferralLanding() {
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={shareImage} />
-        <meta httpEquiv="refresh" content={`4;url=${ctaUrl}`} />
+        
       </Helmet>
 
       <main className="min-h-screen bg-black text-white flex items-center justify-center px-6 py-16">
@@ -82,8 +81,9 @@ export default function ReferralLanding() {
           {valid ? (
             <>
               <p className="text-sm uppercase tracking-[0.3em] text-white/50">You've been invited</p>
-              <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-                {inviter} invited you to <span className="bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">DeHub</span>
+              <h1 className="text-4xl md:text-6xl font-bold leading-tight flex flex-col items-center gap-4">
+                <span>{inviter} invited you to</span>
+                <img src={dehubLogo.url} alt="DeHub" className="h-12 md:h-16 w-auto" />
               </h1>
               <p className="text-lg text-white/70">
                 Join with code <span className="font-mono font-bold tracking-[0.3em] text-white">{code}</span>
@@ -114,7 +114,7 @@ export default function ReferralLanding() {
                   </Button>
                 )}
               </div>
-              <p className="text-xs text-white/40 pt-4">Redirecting you to DeHub…</p>
+              
             </>
           ) : (
             <>
