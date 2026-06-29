@@ -522,10 +522,10 @@ function SubmitFeatureDrawer({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Sync category when the drawer opens with a new initial category
+  // Sync category when the drawer opens based on whether a bug category is requested
   useEffect(() => {
-    if (open && initialCategory) {
-      setCategory(initialCategory);
+    if (open) {
+      setCategory(initialCategory || 'new_feature');
     }
   }, [open, initialCategory]);
 
