@@ -253,7 +253,7 @@ function buildSvg(opts: {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Inter, sans-serif">
   <defs>
-    <clipPath id="circle"><circle cx="${portraitCX}" cy="${portraitCY}" r="${portraitR}"/></clipPath>
+    <clipPath id="avatarClip"><rect x="${portraitX}" y="${portraitY}" width="${portraitSize}" height="${portraitSize}" rx="${portraitR * 0.22}"/></clipPath>
     <clipPath id="bgClip"><rect width="${W}" height="${H}"/></clipPath>
     <filter id="bgBlur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="18"/></filter>
     <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="10"/></filter>
