@@ -115,8 +115,11 @@ export async function attributeReferralIfPending(referredAddress: string) {
 export type AffiliateStats = {
   code: string | null;
   shareName: string | null;
-  referrals: number;
+  referrals: number;        // L1 — directly invited
+  l2Referrals: number;      // L2 — invited by your L1s
   totalEarnedCents: number;
+  l1EarnedCents: number;
+  l2EarnedCents: number;
   currency: string;
 };
 
@@ -130,23 +133,36 @@ export async function loadAffiliateStats(ownerAddress: string, shareName?: strin
     .from("affiliate_referrals" as never)
     .select("id", { count: "exact", head: true })
     .ilike("owner_address", addr) as unknown as { count: number | null };
+
+  // @ts-ignore
+  const l2RefRes = await supabase
+    .from("affiliate_referrals" as never)
+    .select("id", { count: "exact", head: true })
+    .ilike("l2_owner_address", addr) as unknown as { count: number | null };
+
   // @ts-ignore
   const earnRes = await withWalletHeader(
     // @ts-ignore
     supabase
       .from("affiliate_earnings" as never)
-      .select("commission_cents,currency"),
+      .select("commission_cents,currency,tier"),
     addr,
-  ) as unknown as { data: Array<{ commission_cents: number; currency: string }> | null };
+  ) as unknown as { data: Array<{ commission_cents: number; currency: string; tier: number }> | null };
 
-  const totalEarnedCents = (earnRes.data ?? []).reduce((sum, r) => sum + (r.commission_cents ?? 0), 0);
-  const currency = (earnRes.data?.[0]?.currency || "usd").toUpperCase();
+  const rows = earnRes.data ?? [];
+  const l1EarnedCents = rows.filter(r => r.tier !== 2).reduce((s, r) => s + (r.commission_cents ?? 0), 0);
+  const l2EarnedCents = rows.filter(r => r.tier === 2).reduce((s, r) => s + (r.commission_cents ?? 0), 0);
+  const totalEarnedCents = l1EarnedCents + l2EarnedCents;
+  const currency = (rows[0]?.currency || "usd").toUpperCase();
 
   return {
     code,
     shareName: codeRes?.share_name ?? null,
     referrals: refRes.count ?? 0,
+    l2Referrals: l2RefRes.count ?? 0,
     totalEarnedCents,
+    l1EarnedCents,
+    l2EarnedCents,
     currency,
   };
 }
