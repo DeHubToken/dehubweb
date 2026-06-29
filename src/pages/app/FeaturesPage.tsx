@@ -826,6 +826,7 @@ function InfiniteScrollSentinel({ onIntersect, isFetching }: { onIntersect: () =
 export default function FeaturesPage() {
   const { t } = useI18n();
   const { isAuthenticated, openLoginModal } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<PageTab>('requests');
   const [sort, setSort] = useState<FeatureSort>('most_voted');
   const [category, setCategory] = useState<FeatureCategory | 'all'>('all');
@@ -834,6 +835,20 @@ export default function FeaturesPage() {
   const [searchInput, setSearchInput] = useState('');
   const search = useDebouncedValue(searchInput, 300);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [initialCategory, setInitialCategory] = useState<FeatureCategory | undefined>(undefined);
+
+  // Handle deep-link from "Report a Bug" buttons: open the bug-fix category
+  // and pre-populate the submit drawer with the bug_fix category.
+  useEffect(() => {
+    const report = searchParams.get('report');
+    if (report === 'bug') {
+      setActiveTab('requests');
+      setCategory('bug_fix');
+      setInitialCategory('bug_fix');
+      setDrawerOpen(true);
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   const { data: featuresData, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeatureRequests(sort, category, search);
   const features = useMemo(() => featuresData?.pages.flat() ?? [], [featuresData]);
