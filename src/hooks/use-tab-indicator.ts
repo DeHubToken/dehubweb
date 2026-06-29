@@ -32,13 +32,15 @@ export function useTabIndicator<T extends string>(
     if (lr.width === 0 && lr.height === 0) return;
 
     const br = btn.getBoundingClientRect();
+    const width = br.width * shrinkFactor;
     const next = {
-      x: br.left - lr.left,
+      x: br.left - lr.left + (br.width - width) / 2,
       y: br.top - lr.top,
-      width: br.width,
+      width,
       height: br.height,
       ready: true,
     };
+
 
     setRect((prev) => (
       prev.x === next.x &&
