@@ -39,8 +39,11 @@ interface UseDragTabIndicatorOptions<T extends string> {
   onTap?: () => void;
   /** Called when drag ends — use to trigger spring transition or other cleanup */
   onDragEnd?: () => void;
+  /** Shrink the indicator width by this percentage (0-100) to leave a tiny gap between adjacent active tabs. */
+  shrinkWidthByPercent?: number;
   /** Must match GlassIndicator fixedHeightPx so imperative drag transform stays vertically aligned */
   indicatorFixedHeightPx?: number;
+
 }
 
 /** Rubber-band resistance: apply 35% of overshoot past the edge */
