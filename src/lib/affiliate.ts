@@ -3,6 +3,8 @@ import { getAffiliateRef } from "@/lib/affiliateRef";
 import { withWalletHeader } from "@/lib/supabase-wallet-client";
 
 export const AFFILIATE_COMMISSION_PCT = 20;
+export const AFFILIATE_L1_COMMISSION_PCT = 20;
+export const AFFILIATE_L2_COMMISSION_PCT = 5;
 
 const randomCode = (len = 8) => {
   const alphabet = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
