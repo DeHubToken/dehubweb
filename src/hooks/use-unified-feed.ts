@@ -548,6 +548,6 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
     refetchOnMount: true,
     refetchOnReconnect: true,
     retry: 2,
-    placeholderData: (previousData) => previousData,
+    placeholderData: keepPreviousData,
   });
 }
