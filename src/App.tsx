@@ -181,6 +181,7 @@ function AppContent() {
             {/* App routes — cached pages render null, PersistentPageCache manages them */}
             <Route path="/app">
               <Route index element={null} />
+              <Route path="affiliate" element={null} />
               <Route path="explore" element={null} />
               <Route path="profile" element={null} />
               <Route path="notifications" element={null} />
