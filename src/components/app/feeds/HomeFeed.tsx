@@ -479,6 +479,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const range = useMemo(() => {
     if (
       deferredSort.value === 'for-you' ||
+      deferredSort.value === 'prompt' ||
       deferredSort.value === 'following' ||
       deferredSort.value === 'random'
     ) {
