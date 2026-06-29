@@ -8,7 +8,7 @@
  * @module components/app/feeds/HomeFeed
  */
 
-import { useEffect, useRef, useMemo, useCallback, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useMemo, useCallback, useState, useDeferredValue, type ReactNode } from 'react';
 import { getDeletedPostIds } from '@/lib/deleted-posts-store';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
@@ -427,6 +427,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // "Following" mode is handled server-side via followingOnly=true API param
   const isFollowingMode = selectedSort.value === 'following';
 
+
   // Handle sort selection with special logic for "Subscribed" (coming soon)
   const handleSortSelect = useCallback((option: SortOption) => {
     if (option.value === 'subscribed') {
@@ -440,10 +441,19 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     setSelectedSort(option);
   }, [isAuthenticated]);
 
+  // Defer heavy filter-derived values so chip clicks paint instantly.
+  // The chip buttons read `selectedSort`/`selectedCategories`/etc. directly (urgent),
+  // while query params derive from the deferred copies (non-urgent commit).
+  const deferredSort = useDeferredValue(selectedSort);
+  const deferredDate = useDeferredValue(selectedDate);
+  const deferredPostType = useDeferredValue(selectedPostType);
+  const deferredCategories = useDeferredValue(selectedCategories);
+  const deferredContentFilters = useDeferredValue(contentFilters);
+
   // Build API params from filters
   // For trending, we fetch by recency (last month) then sort client-side
   const sortBy = useMemo(() => {
-    switch (selectedSort.value) {
+    switch (deferredSort.value) {
       case 'for-you':
         return 'score' as const;
       case 'following': // Following uses latest sort, filtered client-side
@@ -460,21 +470,21 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       default:
         return 'createdAt' as const;
     }
-  }, [selectedSort.value]);
+  }, [deferredSort.value]);
 
   const sortOrder: 'asc' | 'desc' = 'desc'; // Always sort descending (highest first)
   
   // For following and random, don't limit range
   const range = useMemo(() => {
     if (
-      selectedSort.value === 'for-you' ||
-      selectedSort.value === 'following' ||
-      selectedSort.value === 'random'
+      deferredSort.value === 'for-you' ||
+      deferredSort.value === 'following' ||
+      deferredSort.value === 'random'
     ) {
       return undefined; // Algorithm + following/random use full catalog
     }
-    return getDateRange(selectedDate.value);
-  }, [selectedSort.value, selectedDate.value]);
+    return getDateRange(deferredDate.value);
+  }, [deferredSort.value, deferredDate.value]);
 
   // Common API params for all three feeds
   const commonParams = useMemo(() => ({
@@ -484,12 +494,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     range,
     status: 'minted' as const,
     // Single category → pass to API; multiple → fetch all, filter client-side
-    category: selectedCategories.length === 1 ? selectedCategories[0] : undefined,
-    isPPV: contentFilters.ppv ? true : undefined,
-    hasBounty: contentFilters.w2e ? true : undefined,
-    isLocked: contentFilters.locked ? true : undefined,
-    followingOnly: selectedSort.value === 'following' ? true : undefined,
-  }), [sortBy, sortOrder, range, selectedCategories, contentFilters, selectedSort.value]);
+    category: deferredCategories.length === 1 ? deferredCategories[0] : undefined,
+    isPPV: deferredContentFilters.ppv ? true : undefined,
+    hasBounty: deferredContentFilters.w2e ? true : undefined,
+    isLocked: deferredContentFilters.locked ? true : undefined,
+    followingOnly: deferredSort.value === 'following' ? true : undefined,
+  }), [sortBy, sortOrder, range, deferredCategories, deferredContentFilters, deferredSort.value]);
 
   // ============================================================================
   // THREE SEPARATE FEED QUERIES
@@ -499,15 +509,15 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // So we use a single unified feed instead of three separate type feeds
   // "Latest" must also use a single feed to maintain true chronological order across all post types
   const useSingleFeedForGlobalSort =
-    selectedSort.value === 'for-you' ||
-    selectedSort.value === 'latest' ||
-    selectedSort.value === 'most-liked' ||
-    selectedSort.value === 'most-viewed' ||
-    selectedSort.value === 'most-comments' ||
-    selectedSort.value === 'following' ||
-    selectedSort.value === 'random';
-  const hasContentFilter = contentFilters.ppv || contentFilters.w2e || contentFilters.locked;
-  const useInterleavedFeed = selectedPostType === 'all' && !useSingleFeedForGlobalSort && !hasContentFilter;
+    deferredSort.value === 'for-you' ||
+    deferredSort.value === 'latest' ||
+    deferredSort.value === 'most-liked' ||
+    deferredSort.value === 'most-viewed' ||
+    deferredSort.value === 'most-comments' ||
+    deferredSort.value === 'following' ||
+    deferredSort.value === 'random';
+  const hasContentFilter = deferredContentFilters.ppv || deferredContentFilters.w2e || deferredContentFilters.locked;
+  const useInterleavedFeed = deferredPostType === 'all' && !useSingleFeedForGlobalSort && !hasContentFilter;
 
   // Fetch videos
   const videosFeed = useUnifiedFeed({
@@ -533,7 +543,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Fallback: single unified feed when post type filter is active OR using global sort
   const singleFeed = useUnifiedFeed({
     ...commonParams,
-    postType: selectedPostType === 'all' ? undefined : selectedPostType,
+    postType: deferredPostType === 'all' ? undefined : deferredPostType,
     enabled: !useInterleavedFeed,
   });
 
