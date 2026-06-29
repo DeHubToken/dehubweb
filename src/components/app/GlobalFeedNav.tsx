@@ -81,7 +81,8 @@ export function GlobalFeedNav() {
     }
   }, [isHomePage]);
 
-  const { layerRef, setRef, rect } = useTabIndicator(activeTab, true);
+  const { layerRef, setRef, rect } = useTabIndicator(activeTab, true, undefined, 5);
+
 
   // ── Drag-to-swipe state ──────────────────────────────────────────────
   const tabButtonPositions = useRef<Partial<Record<string, HTMLElement | null>>>({});
