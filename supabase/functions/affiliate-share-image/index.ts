@@ -167,16 +167,14 @@ function buildSvg(opts: {
   </g>
 
   <g text-anchor="start">
-    <text x="${textX}" y="${H * 0.32}" fill="#ffffff" fill-opacity="0.62" font-size="${H * 0.035}" font-weight="600" letter-spacing="6">DEHUB · AFFILIATE INVITE</text>
     <text x="${textX}" y="${H * 0.46}" fill="#fff" font-size="${H * 0.085}" font-weight="800" letter-spacing="-1">${name}</text>
     ${handle ? `<text x="${textX}" y="${H * 0.535}" fill="#ffffff" fill-opacity="0.55" font-size="${H * 0.034}" font-weight="500">${handle}</text>` : ""}
-    <text x="${textX}" y="${H * 0.66}" fill="#ffffff" fill-opacity="0.92" font-size="${H * 0.042}" font-weight="500">invites you to join DeHub —</text>
-    <text x="${textX}" y="${H * 0.715}" fill="#ffffff" fill-opacity="0.92" font-size="${H * 0.042}" font-weight="500">the decentralised creator network.</text>
-    <g transform="translate(${textX}, ${H * 0.80})">
+    <text x="${textX}" y="${H * 0.66}" fill="#ffffff" fill-opacity="0.92" font-size="${H * 0.042}" font-weight="500">invites you to join DeHub.</text>
+    <g transform="translate(${textX}, ${H * 0.78})">
       <rect width="${H * 0.15}" height="${H * 0.072}" rx="${H * 0.014}" fill="#fff"/>
       <text x="${H * 0.075}" y="${H * 0.05}" fill="#0a0a0b" font-size="${H * 0.034}" font-weight="800" text-anchor="middle" letter-spacing="1">JOIN</text>
     </g>
-    <text x="${textX + H * 0.17}" y="${H * 0.85}" fill="#ffffff" fill-opacity="0.85" font-size="${H * 0.030}" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">dehub.io/r/${code}</text>
+    <text x="${textX + H * 0.17}" y="${H * 0.83}" fill="#ffffff" fill-opacity="0.85" font-size="${H * 0.030}" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">dehub.io/r/${code}</text>
   </g>
 
   <g transform="translate(${qrX - 18}, ${qrY - 18})">
@@ -185,8 +183,16 @@ function buildSvg(opts: {
     <text x="${(qrSize + 36) / 2}" y="${qrSize + 32}" fill="#0a0a0b" font-size="14" font-weight="700" text-anchor="middle" letter-spacing="2">SCAN TO JOIN</text>
   </g>
 
-  <text x="${W * 0.06}" y="${H * 0.92}" fill="#fff" font-size="${H * 0.045}" font-weight="900" letter-spacing="3">DEHUB</text>
-  <text x="${W * 0.06}" y="${H * 0.955}" fill="#ffffff" fill-opacity="0.45" font-size="${H * 0.022}" font-weight="500" letter-spacing="2">EARN 20% FOR LIFE</text>
+  ${(() => {
+    const tlW = W * 0.18;
+    const tlH = tlW / LOGO_ASPECT;
+    const blW = W * 0.16;
+    const blH = blW / LOGO_ASPECT;
+    return `
+    <image href="${DEHUB_LOGO_DATA_URI}" x="${W - tlW - W * 0.05}" y="${H * 0.06}" width="${tlW}" height="${tlH}" preserveAspectRatio="xMidYMid meet"/>
+    <image href="${DEHUB_LOGO_DATA_URI}" x="${W * 0.05}" y="${H - blH - H * 0.06}" width="${blW}" height="${blH}" preserveAspectRatio="xMidYMid meet"/>
+    `;
+  })()}
 </svg>`;
 }
 
