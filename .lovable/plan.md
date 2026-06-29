@@ -1,56 +1,48 @@
-# /editor — OpenCut Parity Plan
+## Why Telegram and Facebook show no preview image
 
-Porting OpenCut's full surface area in one turn would mean 12 half-wired features. Instead, here is a phased plan that delivers a genuinely usable editor now and finishes the harder pieces in follow-ups. Each phase ends in a working, typechecking build.
+The SSR HTML and OG tags are correct. The broken link is the image format:
 
-## Phase 3 (this turn) — Working multi-track editing core
+- `supabase/functions/affiliate-share-image` returns `image/svg+xml`.
+- **Facebook, Telegram, WhatsApp, LinkedIn, Discord, Slack** all reject SVG as an OG image (their crawlers only accept PNG/JPG/GIF/WebP).
+- X (Twitter) is the lenient outlier — that's why the X card works and the others don't.
+- Hosting: this project uses **Netlify edge functions** (`netlify/edge-functions/ssr-seo.js`), not Cloudflare. That part is fine.
 
-Goal: drag media to a timeline, arrange clips across tracks, trim/split/delete with snapping, scrub a synchronised canvas preview, undo/redo, autosave to IndexedDB, keyboard shortcuts. This is the foundation everything else hangs off.
+## Fix
 
-Includes:
-- Editor store rewrite (zustand + undo/redo command history): `tracks[]`, `clips[]`, `selection`, `playhead`, `zoom`, `projectSettings` (aspect, resolution, fps, background).
-- Multi-track timeline UI: time ruler, draggable playhead, video/image/audio/text track lanes, drag-from-media-panel to create clips, drag-to-move within/across tracks, left/right trim handles, split at playhead, ripple delete, multi-select (shift-click + marquee), clip+playhead snapping, zoom in/out.
-- Canvas-based preview compositor: `requestAnimationFrame` loop, composites video frames + images + text overlays in z-order at the current playhead, synced `HTMLAudioElement`s for audio clips, play/pause/seek/scrub, frame-accurate time display, loop toggle.
-- Project/canvas settings panel: aspect presets (16:9, 9:16, 1:1, 4:5), resolution, fps, background colour.
-- Text tool (basic): add text overlay clip, edit content/font/size/weight/colour/alignment, drag-to-position on preview, own timeline duration.
-- Keyboard shortcuts: Space, S, Delete, ←/→ (Shift = frame), Cmd/Ctrl+Z / Shift+Z, +/−.
-- IndexedDB project persistence + autosave + simple project list to reopen.
-- Performance: object-URL revocation, single decoded HTMLVideoElement pool per source, no re-decode per frame.
+Rasterize the SVG to PNG inside the existing edge function. No new infra, no schema changes, no frontend changes.
 
-Explicitly deferred from this turn (stubbed with clear UI affordances + TODOs, no fake buttons):
-- Export (MP4/WebM via WebCodecs + ffmpeg.wasm fallback) — Phase 4.
-- Transitions (crossfade) — Phase 5.
-- Per-clip adjustments (brightness/contrast/saturation/opacity/blur/speed), detach-audio, per-clip volume/mute/fades, waveform rendering — Phase 6.
+### Changes
 
-## Phase 4 (next turn) — Export pipeline
+1. **`supabase/functions/affiliate-share-image/index.ts`**
+   - Add `resvg-wasm` (`https://esm.sh/@resvg/resvg-wasm@2.6.2`) — runs in Deno, no native deps.
+   - Default response: render the SVG → PNG (1200×630), return `Content-Type: image/png`.
+   - Keep `?format=svg` as an opt-in for the in-app `/affiliate` preview (lighter, sharper at any size) — flip the `<img>` in `AffiliatePage.tsx` to request `?format=svg` so the dashboard stays snappy.
+   - Cache: `public, s-maxage=86400, stale-while-revalidate=604800` on the PNG so social scrapers cache aggressively; keep `no-store` only for `?format=svg&fresh=1` refresh button.
 
-- Lazy-loaded `mp4-muxer` + `webm-muxer` + WebCodecs `VideoEncoder`/`AudioEncoder`.
-- Offscreen canvas render loop driven by timeline → encoded video track.
-- Audio mixdown via OfflineAudioContext → AAC/Opus.
-- ffmpeg.wasm fallback for Safari/Firefox where WebCodecs is missing.
-- Resolution/quality options, progress bar, cancellation, download.
+2. **`supabase/functions/ssr-seo/index.ts`**
+   - No code change needed — the OG meta already points at `affiliate-share-image?code=...&width=1200&height=630`, which will now be a PNG.
+   - Confirm `og:image:type` stays `image/png` (already derived from URL extension; add explicit `.png`-style query handling if needed — easiest: append `&fmt=png` to the OG URL and have the function honor it).
 
-## Phase 5 — Transitions and clip adjustments
+3. **`src/pages/app/AffiliatePage.tsx`**
+   - Switch the on-page preview `<img>` to `?format=svg` so the page itself loads the lightweight SVG (faster, crisp on retina). Sharing/OG still uses PNG via the SSR meta tags.
 
-- Cut + crossfade between adjacent clips on the same track.
-- Per-clip CSS-style filter stack (brightness, contrast, saturation, opacity, blur) applied in the compositor.
-- Per-clip playback speed (affects timeline length + decode rate).
+### Post-deploy: bust social caches
 
-## Phase 6 — Audio polish
+Telegram/Facebook cache previews aggressively. After deploy the user must force a re-scrape per platform, or the old (image-less) preview persists for hours/days:
 
-- Waveform rendering (custom analyser on decoded `AudioBuffer`s; no extra dep needed).
-- Per-clip volume/mute/fade in/out.
-- Detach-audio-from-video (splits a video clip into linked video + audio clips).
+- **Facebook/WhatsApp:** https://developers.facebook.com/tools/debug/ → paste link → "Scrape Again"
+- **LinkedIn:** https://www.linkedin.com/post-inspector/
+- **Telegram:** message `@WebpageBot` with the link, or append `?v=2` to force a fresh fetch
+- **X:** already works
 
-## Technical notes (for reference)
+### Verification
 
-- Deps to add this turn: `nanoid` (stable clip ids). `zustand` and `idb` are already installed from Phase 2.
-- Deps deferred until Phase 4: `mp4-muxer`, `webm-muxer`, `@ffmpeg/ffmpeg`, `@ffmpeg/util`.
-- File layout under `src/components/editor/` will add: `Timeline/`, `Preview/`, `Inspector/`, `ProjectSettings.tsx`, `ShortcutsLayer.tsx`. Store splits into `editorStore.ts` (state + actions) and `src/lib/editor/history.ts` (command stack). IndexedDB project layer in `src/lib/editor/projectStore.ts`.
-- OpenCut MIT attribution + `LICENSE-OpenCut` stay intact.
-- UK English throughout (colour, centre, etc.).
+- `curl -I "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/affiliate-share-image?code=CPZQS9G9"` → expect `content-type: image/png`.
+- Run the Facebook debugger on `https://dehub.io/r/CPZQS9G9` → expect og:image to load and a card preview to render.
+- Re-share in Telegram with `?v=2` → expect image to appear.
 
-## What you get at the end of this turn
+## Not changing
 
-A `/editor` route where you can: create a project, import media, drag clips onto a real multi-track timeline, trim/split/move/delete with snapping, scrub a live canvas preview with synced audio, add text overlays, change canvas settings, undo/redo everything, and have it autosave and reopen on refresh. Export and transitions will be stubbed buttons that say "coming in next phase" rather than fake no-ops.
-
-Approve this scope and I'll execute Phase 3 end-to-end, then we tackle Phase 4 (export) in the next turn.
+- No DB, no auth, no contracts, no frontend logic beyond the one `<img src>` swap.
+- No migration off Netlify.
+- The SSR function, bot detection, and OG tag structure all stay as-is.
