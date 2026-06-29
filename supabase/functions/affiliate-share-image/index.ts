@@ -174,7 +174,7 @@ async function fetchProfile(code: string) {
   }
   let avatarPath: string | null = null;
   let coverPath: string | null = null;
-  let displayName: string | null = shareName;
+  let displayName: string | null = null;
   let username: string | null = null;
   if (address) {
     try {
@@ -184,11 +184,22 @@ async function fetchProfile(code: string) {
         const u = j?.result || j;
         avatarPath = u?.avatarImageUrl || u?.avatarUrl || null;
         coverPath = u?.coverImageUrl || u?.coverUrl || null;
-        displayName = displayName || u?.displayName || u?.username || null;
-        username = u?.username || null;
+        const apiDisplay = (u?.displayName || "").trim() || null;
+        const apiUser = (u?.username || "").trim() || null;
+        username = apiUser;
+        // Prefer API displayName. Fall back to shareName only if it differs from username.
+        const sn = (shareName || "").trim() || null;
+        displayName = apiDisplay || (sn && sn.toLowerCase() !== (apiUser || "").toLowerCase() ? sn : null) || apiUser;
+      } else {
+        displayName = shareName;
       }
-    } catch { /* ignore */ }
+    } catch {
+      displayName = shareName;
+    }
+  } else {
+    displayName = shareName;
   }
+
   return { address, displayName, username, avatarPath, coverPath };
 }
 
