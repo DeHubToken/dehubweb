@@ -19,6 +19,57 @@ const CDN = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
 const API = "https://api.dehub.io";
 const VALID_CODE = /^[A-Z0-9_-]{3,40}$/;
 
+const DEFAULT_BANNERS = [
+  "https://dehub.io/__l5e/assets-v1/cd209550-77ef-4c95-b16a-d83ad3adc7ea/default-banner-1.png",
+  "https://dehub.io/__l5e/assets-v1/4be06f0a-849c-44c4-bdc2-7c5f0a261b6c/default-banner-2.png",
+  "https://dehub.io/__l5e/assets-v1/fa63c89b-9a94-4f94-98f3-8eb5e8289350/default-banner-3.png",
+  "https://dehub.io/__l5e/assets-v1/2362a631-0fc5-4a89-8e6b-bf6be734f67b/default-banner-4.png",
+  "https://dehub.io/__l5e/assets-v1/bd3416e0-f49a-4bc6-a758-7443d9dbcd87/default-banner-5.png",
+  "https://dehub.io/__l5e/assets-v1/d3b70189-d07f-43f5-b901-ef4f9aeb24c6/default-banner-6.png",
+  "https://dehub.io/__l5e/assets-v1/fcfba189-8e23-45a0-a96f-bd865f11eb88/default-banner-7.png",
+  "https://dehub.io/__l5e/assets-v1/11cfc96b-88ac-4745-adc1-4ba16c47c0a9/default-banner-8.png",
+  "https://dehub.io/__l5e/assets-v1/fb0303c4-fe1a-4742-93a7-5c612166d7b2/default-banner-9.png",
+];
+
+function pickDefaultBanner(address: string | null): string {
+  if (!address) return DEFAULT_BANNERS[0];
+  let h = 0;
+  for (let i = 0; i < address.length; i++) h = (h * 31 + address.charCodeAt(i)) >>> 0;
+  return DEFAULT_BANNERS[h % DEFAULT_BANNERS.length];
+}
+
+async function fetchAsDataUri(url: string): Promise<string | null> {
+  try {
+    const r = await fetch(url);
+    if (!r.ok) return null;
+    const ct = r.headers.get("content-type") || "image/png";
+    if (!ct.startsWith("image/")) return null;
+    const buf = new Uint8Array(await r.arrayBuffer());
+    if (buf.byteLength < 200) return null;
+    return `data:${ct};base64,${encodeB64(buf)}`;
+  } catch {
+    return null;
+  }
+}
+
+async function fetchCoverDataUri(address: string | null, apiCoverPath: string | null): Promise<string | null> {
+  const candidates: string[] = [];
+  if (apiCoverPath) {
+    if (apiCoverPath.startsWith("http")) candidates.push(apiCoverPath);
+    else candidates.push(`${CDN}${apiCoverPath.replace(/^\/+/, "").replace(/^statics\//, "")}`);
+  }
+  if (address) {
+    for (const ext of ["jpg", "png", "jpeg", "webp"]) {
+      candidates.push(`${CDN}covers/${address.toLowerCase()}.${ext}`);
+    }
+  }
+  for (const url of candidates) {
+    const data = await fetchAsDataUri(url);
+    if (data) return data;
+  }
+  return null;
+}
+
 function escapeXml(value: string) {
   return value.replace(/[<>&"']/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;" }[c] as string));
 }
