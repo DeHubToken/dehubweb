@@ -31,6 +31,8 @@ export default function AffiliatePage() {
     ?? null;
   const displayName = (user as { username?: string | null; displayName?: string | null } | null)
     ?.displayName ?? (user as { username?: string | null } | null)?.username ?? null;
+  const username = (user as { username?: string | null } | null)?.username ?? null;
+  const badgeBalance = (user as { badgeBalance?: number | null } | null)?.badgeBalance ?? null;
 
   const [stats, setStats] = useState<AffiliateStats | null>(null);
   const [loading, setLoading] = useState(true);
