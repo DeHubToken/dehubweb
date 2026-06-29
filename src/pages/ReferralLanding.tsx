@@ -112,7 +112,16 @@ export default function ReferralLanding() {
               <p className="text-sm uppercase tracking-[0.3em] text-white/50">You've been invited</p>
               <h1 className="text-4xl md:text-6xl font-bold leading-tight flex flex-col items-center gap-4">
                 {inviterLoaded ? (
-                  <span>{inviter ? `${inviter} invited you to` : "You've been invited to"}</span>
+                  <span className="inline-flex items-center justify-center gap-3 flex-wrap">
+                    <span>{inviter ? `${inviter} invited you to` : "You've been invited to"}</span>
+                    {inviter && (inviterBadgeBalance !== null || inviterUsername) && (
+                      <BadgeIcon
+                        badgeBalance={inviterBadgeBalance ?? undefined}
+                        username={inviterUsername}
+                        className="w-6 h-6 md:w-8 md:h-8"
+                      />
+                    )}
+                  </span>
                 ) : (
                   <span className="inline-block h-10 md:h-14 w-64 md:w-96 rounded-xl bg-white/[0.06] relative overflow-hidden">
                     <span className="absolute inset-0 animate-pulse bg-white/[0.04]" />
