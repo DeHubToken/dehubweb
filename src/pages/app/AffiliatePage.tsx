@@ -16,7 +16,7 @@ const SITE = typeof window !== "undefined" ? window.location.origin : "https://d
 
 function formatMoney(cents: number, currency = "USD") {
   try {
-    return new Intl.NumberFormat("en-GB", { style: "currency", currency }).format(cents / 100);
+    return new Intl.NumberFormat("en-US", { style: "currency", currency }).format(cents / 100);
   } catch {
     return `$${(cents / 100).toFixed(2)}`;
   }
