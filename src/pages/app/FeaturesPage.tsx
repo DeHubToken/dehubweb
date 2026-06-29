@@ -8,6 +8,7 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useTranslation as useI18n } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
