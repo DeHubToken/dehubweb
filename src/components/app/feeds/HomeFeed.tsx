@@ -543,7 +543,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // Fallback: single unified feed when post type filter is active OR using global sort
   const singleFeed = useUnifiedFeed({
     ...commonParams,
-    postType: selectedPostType === 'all' ? undefined : selectedPostType,
+    postType: deferredPostType === 'all' ? undefined : deferredPostType,
     enabled: !useInterleavedFeed,
   });
 
