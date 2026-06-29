@@ -15,7 +15,9 @@ export default function ReferralLanding() {
   const { code: rawCode } = useParams<{ code: string }>();
   const code = (rawCode || "").trim().toUpperCase();
   const valid = isValidAffiliateCode(code);
-  const [inviter, setInviter] = useState<string>("A creator");
+  const [inviter, setInviter] = useState<string | null>(null);
+  const [inviterLoaded, setInviterLoaded] = useState(false);
+  const [imgLoaded, setImgLoaded] = useState(false);
 
   const shareImage = getAffiliateShareImageUrl(code, 1200, 630);
   const pageUrl = `${SITE}/r/${code}`;
@@ -33,18 +35,21 @@ export default function ReferralLanding() {
         .eq("code", code)
         .eq("active", true)
         .maybeSingle() as unknown as { data: { share_name: string | null; owner_address: string } | null };
-      if (cancelled || !data) return;
-      const name = data.share_name?.trim();
-      if (name) setInviter(name);
-      else if (data.owner_address) {
-        setInviter(`${data.owner_address.slice(0, 6)}…${data.owner_address.slice(-4)}`);
+      if (cancelled) return;
+      if (data) {
+        const name = data.share_name?.trim();
+        if (name) setInviter(name);
+        else if (data.owner_address) {
+          setInviter(`${data.owner_address.slice(0, 6)}…${data.owner_address.slice(-4)}`);
+        }
       }
+      setInviterLoaded(true);
     })();
     return () => { cancelled = true; };
   }, [code, valid]);
 
   const title = useMemo(
-    () => (valid ? `${inviter} invited you to DeHub — earn, post & build on-chain` : "DeHub — the decentralised creator network"),
+    () => (valid && inviter ? `${inviter} invited you to DeHub — earn, post & build on-chain` : "DeHub — the decentralised creator network"),
     [inviter, valid],
   );
   const description = valid
