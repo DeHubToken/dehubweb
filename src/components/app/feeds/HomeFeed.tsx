@@ -69,6 +69,7 @@ import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { MobileWhoToFollowCarousel } from '@/components/app/mobile';
 import { LeaderboardCarousel } from '@/components/app/feeds/LeaderboardCarousel';
 import { FriendsOnStageBar } from '@/components/app/feeds/FriendsOnStageBar';
+import { PromptFlowModal } from '@/components/app/feeds/PromptFlowModal';
 
 import type { VideoItem, ImagePost, TextPost, ShortVideo } from '@/types/feed.types';
 
