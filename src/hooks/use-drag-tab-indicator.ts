@@ -163,13 +163,14 @@ export function useDragTabIndicator<T extends string>({
       if (indicatorCenter >= left.center && indicatorCenter <= right.center) {
         const span = right.center - left.center;
         const t = span > 0 ? (indicatorCenter - left.center) / span : 0;
-        morphedWidth = lerp(left.width, right.width, t);
+        morphedWidth = lerp(left.width, right.width, t) * shrinkFactor;
         break;
       }
     }
     // Clamp to outermost tabs
-    if (indicatorCenter < sorted[0]?.center) morphedWidth = sorted[0]?.width ?? drag.startWidth;
-    if (indicatorCenter > sorted[sorted.length - 1]?.center) morphedWidth = sorted[sorted.length - 1]?.width ?? drag.startWidth;
+    if (indicatorCenter < sorted[0]?.center) morphedWidth = (sorted[0]?.width ?? drag.startWidth) * shrinkFactor;
+    if (indicatorCenter > sorted[sorted.length - 1]?.center) morphedWidth = (sorted[sorted.length - 1]?.width ?? drag.startWidth) * shrinkFactor;
+
 
     // Direct DOM update — zero React re-renders, zero layout reads
     if (indicatorRef.current) {
