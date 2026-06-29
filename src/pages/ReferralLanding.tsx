@@ -18,8 +18,10 @@ export default function ReferralLanding() {
   const [inviter, setInviter] = useState<string | null>(null);
   const [inviterLoaded, setInviterLoaded] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgRetry, setImgRetry] = useState(0);
 
-  const shareImage = getAffiliateShareImageUrl(code, 1200, 630);
+  const baseShareImage = getAffiliateShareImageUrl(code, 1200, 630);
+  const shareImage = imgRetry > 0 ? `${baseShareImage}&r=${imgRetry}` : baseShareImage;
   const pageUrl = `${SITE}/r/${code}`;
   const ctaUrl = `/app?ref=${code}`;
 
