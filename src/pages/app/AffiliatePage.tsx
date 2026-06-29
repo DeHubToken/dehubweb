@@ -91,8 +91,6 @@ export default function AffiliatePage() {
       ) : (
         <div className="mx-auto w-full max-w-5xl px-4 py-6 md:py-10 space-y-6">
           {/* Custom per-user share image */}
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black shadow-[0_18px_70px_rgba(255,255,255,0.08)]">
-          {/* Custom per-user share image */}
           <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black shadow-[0_18px_70px_rgba(255,255,255,0.08)] aspect-[1200/630]">
             {stats?.code ? (
               <img
