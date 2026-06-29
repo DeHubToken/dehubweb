@@ -296,12 +296,27 @@ serve(async (req) => {
       width,
       height,
     });
-    return new Response(svg, {
+    if (format === "svg") {
+      return new Response(svg, {
+        status: 200,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "image/svg+xml; charset=utf-8",
+          "Cache-Control": "no-store, max-age=0, must-revalidate",
+        },
+      });
+    }
+
+    // Rasterize SVG → PNG so Facebook/Telegram/WhatsApp/LinkedIn/Discord render the preview.
+    await ensureResvg();
+    const resvg = new Resvg(svg, { fitTo: { mode: "width", value: width } });
+    const png = resvg.render().asPng();
+    return new Response(png, {
       status: 200,
       headers: {
         ...corsHeaders,
-        "Content-Type": "image/svg+xml; charset=utf-8",
-        "Cache-Control": "no-store, max-age=0, must-revalidate",
+        "Content-Type": "image/png",
+        "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800",
       },
     });
   } catch (error) {
