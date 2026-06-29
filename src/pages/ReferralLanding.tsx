@@ -87,20 +87,42 @@ export default function ReferralLanding() {
             <>
               <p className="text-sm uppercase tracking-[0.3em] text-white/50">You've been invited</p>
               <h1 className="text-4xl md:text-6xl font-bold leading-tight flex flex-col items-center gap-4">
-                <span>{inviter} invited you to</span>
+                {inviterLoaded ? (
+                  <span>{inviter ? `${inviter} invited you to` : "You've been invited to"}</span>
+                ) : (
+                  <span className="inline-block h-10 md:h-14 w-64 md:w-96 rounded-xl bg-white/[0.06] relative overflow-hidden">
+                    <span className="absolute inset-0 animate-pulse bg-white/[0.04]" />
+                    <span
+                      className="absolute inset-y-0 -left-full w-1/2 bg-gradient-to-r from-transparent via-white/15 to-transparent"
+                      style={{ animation: "shimmer-sweep 1.6s linear infinite" }}
+                    />
+                  </span>
+                )}
                 <span className="text-white">DeHub</span>
               </h1>
               <p className="text-lg text-white/70">
                 Join with code <span className="font-mono font-bold tracking-[0.3em] text-white">{code}</span>
               </p>
-              <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]">
-                <img
-                  src={shareImage}
-                  alt={`${inviter} invited you to DeHub`}
-                  width={1200}
-                  height={630}
-                  className="w-full h-auto block"
-                />
+              <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] aspect-[1200/630] relative">
+                {inviterLoaded && (
+                  <img
+                    src={shareImage}
+                    alt={inviter ? `${inviter} invited you to DeHub` : "DeHub invite"}
+                    width={1200}
+                    height={630}
+                    onLoad={() => setImgLoaded(true)}
+                    className={`absolute inset-0 w-full h-full block transition-opacity duration-500 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
+                  />
+                )}
+                {(!inviterLoaded || !imgLoaded) && (
+                  <div className="absolute inset-0 overflow-hidden">
+                    <div className="absolute inset-0 bg-white/[0.04] animate-pulse" />
+                    <div
+                      className="absolute inset-y-0 -left-full w-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                      style={{ animation: "shimmer-sweep 1.6s linear infinite" }}
+                    />
+                  </div>
+                )}
               </div>
               <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
                 <Button asChild size="lg">
@@ -119,6 +141,7 @@ export default function ReferralLanding() {
                   </Button>
                 )}
               </div>
+              
               
             </>
           ) : (
