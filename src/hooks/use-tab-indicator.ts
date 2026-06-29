@@ -6,13 +6,20 @@ import type { RefObject } from 'react';
  * The indicator is rendered in an overflow-visible layer ABOVE the
  * scroll container so spring animations are never clipped.
  */
-export function useTabIndicator<T extends string>(activeTab: T, layoutShiftKey?: string | number | boolean, isDraggingRef?: RefObject<boolean>) {
+export function useTabIndicator<T extends string>(
+  activeTab: T,
+  layoutShiftKey?: string | number | boolean,
+  isDraggingRef?: RefObject<boolean>,
+  shrinkWidthByPercent: number = 0,
+) {
   const layerRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<Partial<Record<T, HTMLElement | null>>>({});
   const trackingRafRef = useRef<number | null>(null);
   const initialTabRef = useRef<T>(activeTab);
   const hasMountedRef = useRef(false);
   const [rect, setRect] = useState({ x: 0, y: 0, width: 0, height: 0, ready: false });
+  const shrinkFactor = 1 - shrinkWidthByPercent / 100;
+
 
   const update = useCallback(() => {
     const layer = layerRef.current;
@@ -25,13 +32,15 @@ export function useTabIndicator<T extends string>(activeTab: T, layoutShiftKey?:
     if (lr.width === 0 && lr.height === 0) return;
 
     const br = btn.getBoundingClientRect();
+    const width = br.width * shrinkFactor;
     const next = {
-      x: br.left - lr.left,
+      x: br.left - lr.left + (br.width - width) / 2,
       y: br.top - lr.top,
-      width: br.width,
+      width,
       height: br.height,
       ready: true,
     };
+
 
     setRect((prev) => (
       prev.x === next.x &&
@@ -40,7 +49,8 @@ export function useTabIndicator<T extends string>(activeTab: T, layoutShiftKey?:
       prev.height === next.height &&
       prev.ready === next.ready
     ) ? prev : next);
-  }, [activeTab]);
+  }, [activeTab, shrinkFactor]);
+
 
   const stopTracking = useCallback(() => {
     if (trackingRafRef.current !== null) {

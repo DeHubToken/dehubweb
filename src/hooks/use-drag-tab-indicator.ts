@@ -39,8 +39,11 @@ interface UseDragTabIndicatorOptions<T extends string> {
   onTap?: () => void;
   /** Called when drag ends — use to trigger spring transition or other cleanup */
   onDragEnd?: () => void;
+  /** Shrink the indicator width by this percentage (0-100) to leave a tiny gap between adjacent active tabs. */
+  shrinkWidthByPercent?: number;
   /** Must match GlassIndicator fixedHeightPx so imperative drag transform stays vertically aligned */
   indicatorFixedHeightPx?: number;
+
 }
 
 /** Rubber-band resistance: apply 35% of overshoot past the edge */
@@ -65,6 +68,7 @@ export function useDragTabIndicator<T extends string>({
   isDraggingRef,
   onTap,
   onDragEnd,
+  shrinkWidthByPercent = 0,
   indicatorFixedHeightPx,
 }: UseDragTabIndicatorOptions<T>) {
   const dragStateRef = useRef<DragState<T> | null>(null);
@@ -72,6 +76,8 @@ export function useDragTabIndicator<T extends string>({
   const indicatorRef = useRef<HTMLDivElement | null>(null);
   const activeTabRef = useRef<T>(activeTab);
   activeTabRef.current = activeTab;
+  const shrinkFactor = 1 - shrinkWidthByPercent / 100;
+
 
   const handleDragStart = useCallback((e: React.PointerEvent) => {
     if (e.button !== 0) return;
@@ -157,13 +163,14 @@ export function useDragTabIndicator<T extends string>({
       if (indicatorCenter >= left.center && indicatorCenter <= right.center) {
         const span = right.center - left.center;
         const t = span > 0 ? (indicatorCenter - left.center) / span : 0;
-        morphedWidth = lerp(left.width, right.width, t);
+        morphedWidth = lerp(left.width, right.width, t) * shrinkFactor;
         break;
       }
     }
     // Clamp to outermost tabs
-    if (indicatorCenter < sorted[0]?.center) morphedWidth = sorted[0]?.width ?? drag.startWidth;
-    if (indicatorCenter > sorted[sorted.length - 1]?.center) morphedWidth = sorted[sorted.length - 1]?.width ?? drag.startWidth;
+    if (indicatorCenter < sorted[0]?.center) morphedWidth = (sorted[0]?.width ?? drag.startWidth) * shrinkFactor;
+    if (indicatorCenter > sorted[sorted.length - 1]?.center) morphedWidth = (sorted[sorted.length - 1]?.width ?? drag.startWidth) * shrinkFactor;
+
 
     // Direct DOM update — zero React re-renders, zero layout reads
     if (indicatorRef.current) {
