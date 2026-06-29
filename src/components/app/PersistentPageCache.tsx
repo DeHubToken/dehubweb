@@ -55,6 +55,7 @@ const CommunitiesPage = lazyWithRetry(() => import('@/pages/app/CommunitiesPage'
 const EventsPage = lazyWithRetry(() => import('@/pages/app/EventsPage'));
 const StoresPage = lazyWithRetry(() => import('@/pages/app/StoresPage'));
 const WorkPage = lazyWithRetry(() => import('@/pages/app/WorkPage'));
+const AffiliatePage = lazyWithRetry(() => import('@/pages/app/AffiliatePage'));
 
 // Pages that get cached (mount-once, hide with CSS)
 interface CachedPageConfig {
@@ -90,6 +91,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'events', path: '/app/events', component: EventsPage, skeleton: GenericPageSkeleton },
   { key: 'stores', path: '/app/stores', component: StoresPage, skeleton: GenericPageSkeleton },
   { key: 'work', path: ['/app/work', '/work'], component: WorkPage, skeleton: GenericPageSkeleton },
+  { key: 'affiliate', path: ['/app/affiliate', '/affiliate'], component: AffiliatePage, skeleton: GenericPageSkeleton },
   { key: 'profile', path: '/app/profile', component: ProfilePage, skeleton: ProfileSkeleton },
 ];
 

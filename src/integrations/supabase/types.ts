@@ -14,6 +14,108 @@ export type Database = {
   }
   public: {
     Tables: {
+      affiliate_codes: {
+        Row: {
+          active: boolean
+          code: string
+          commission_pct: number
+          created_at: string
+          id: string
+          owner_address: string
+          share_name: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          commission_pct?: number
+          created_at?: string
+          id?: string
+          owner_address: string
+          share_name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          commission_pct?: number
+          created_at?: string
+          id?: string
+          owner_address?: string
+          share_name?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      affiliate_earnings: {
+        Row: {
+          code: string | null
+          commission_cents: number
+          created_at: string
+          currency: string
+          gross_amount_cents: number
+          id: string
+          owner_address: string
+          referred_address: string
+          source: string
+          source_ref: string | null
+          status: string
+        }
+        Insert: {
+          code?: string | null
+          commission_cents?: number
+          created_at?: string
+          currency?: string
+          gross_amount_cents?: number
+          id?: string
+          owner_address: string
+          referred_address: string
+          source: string
+          source_ref?: string | null
+          status?: string
+        }
+        Update: {
+          code?: string | null
+          commission_cents?: number
+          created_at?: string
+          currency?: string
+          gross_amount_cents?: number
+          id?: string
+          owner_address?: string
+          referred_address?: string
+          source?: string
+          source_ref?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      affiliate_referrals: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          owner_address: string
+          referred_address: string
+          source: string | null
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          owner_address: string
+          referred_address: string
+          source?: string | null
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          owner_address?: string
+          referred_address?: string
+          source?: string | null
+        }
+        Relationships: []
+      }
       ai_agent_rate_limits: {
         Row: {
           action_type: string

@@ -51,6 +51,7 @@ const WorkPostPage = React.lazy(() => import("./pages/app/WorkPostPage"));
 const WorkJobDetailPage = React.lazy(() => import("./pages/app/WorkJobDetailPage"));
 const WorkDisputesPage = React.lazy(() => import("./pages/app/WorkDisputesPage"));
 const EditorPage = React.lazy(() => import("./pages/Editor"));
+const ReferralLanding = React.lazy(() => import("./pages/ReferralLanding"));
 
 
 const SKIP_LANDING_KEY = "dehub_skip_landing";
@@ -138,8 +139,21 @@ function HeroRoute() {
  * Only mounted after user has passed the hero (or is a returning user).
  */
 function AppContent() {
-  const { isLoginModalOpen, closeLoginModal } = useAuth();
+  const { isLoginModalOpen, closeLoginModal, user } = useAuth();
   usePreloadIcons();
+
+  // Capture ?ref=CODE / ?aff=CODE on first load (first-touch wins, 90-day cookie).
+  useEffect(() => {
+    import("@/lib/affiliateRef").then(m => m.captureAffiliateRefFromUrl());
+  }, []);
+
+  // When a wallet signs in, self-attribute any pending cookie referral.
+  const wallet = (user as { walletAddress?: string | null } | null)?.walletAddress ?? null;
+  useEffect(() => {
+    if (!wallet) return;
+    import("@/lib/affiliate").then(m => m.attributeReferralIfPending(wallet)).catch(() => undefined);
+  }, [wallet]);
+
 
   return (
     <>
@@ -166,6 +180,7 @@ function AppContent() {
           <Route path="/creators" element={<CreatorsPage />} />
           <Route path="/skill.md" element={<SkillPage />} />
           <Route path="/editor" element={<Suspense fallback={<PageLoader />}><EditorPage /></Suspense>} />
+          <Route path="/r/:code" element={<Suspense fallback={<PageLoader />}><ReferralLanding /></Suspense>} />
 
           {/* Single shared AppLayout — header/sidebar mount ONCE and persist across all app routes */}
           <Route element={<AppLayout />}>
@@ -179,6 +194,7 @@ function AppContent() {
             {/* App routes — cached pages render null, PersistentPageCache manages them */}
             <Route path="/app">
               <Route index element={null} />
+              <Route path="affiliate" element={null} />
               <Route path="explore" element={null} />
               <Route path="profile" element={null} />
               <Route path="notifications" element={null} />
@@ -227,6 +243,9 @@ function AppContent() {
             <Route path="/work/post" element={<Suspense fallback={<PageLoader />}><WorkPostPage /></Suspense>} />
             <Route path="/work/disputes" element={<Suspense fallback={<PageLoader />}><WorkDisputesPage /></Suspense>} />
             <Route path="/work/:jobId" element={<Suspense fallback={<PageLoader />}><WorkJobDetailPage /></Suspense>} />
+
+            {/* /affiliate alias (page itself is rendered by PersistentPageCache) */}
+            <Route path="/affiliate" element={null} />
 
             {/* Stage invite links */}
             <Route path="/stage/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
