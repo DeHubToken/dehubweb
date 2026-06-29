@@ -64,17 +64,12 @@ export default function AffiliatePage() {
     [stats?.code, imgVersion],
   );
 
-  const copy = async (txt: string, label = "Copied") => {
-    try { await navigator.clipboard.writeText(txt); toast.success(label); }
-    catch { toast.error("Copy failed"); }
-  };
-
   const nativeShare = () => {
     const nav = navigator as Navigator & { share?: (d: ShareData) => Promise<void> };
     if (nav.share) {
-      nav.share({ title: "DeHub", text: shareText, url: shareUrl }).catch(() => undefined);
+      nav.share({ title: "DeHub", text: "Join me on DeHub.", url: shareUrl }).catch(() => undefined);
     } else {
-      void copy(shareText, "Share text copied");
+      void copy(shareUrl, "Invite link copied");
     }
   };
 
