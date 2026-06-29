@@ -118,7 +118,8 @@ export default function HomePage() {
   // Tab state - initialized from sessionStorage for back navigation
   const [activeTab, setActiveTab] = useState(getInitialTab);
   const homeIsDraggingRef = useRef(false);
-  const { layerRef: homeTabLayerRef, setRef: setHomeTabRef, rect: homeTabRect, onScroll: onHomeTabScroll } = useTabIndicator(activeTab, isCollapsed, homeIsDraggingRef);
+  const { layerRef: homeTabLayerRef, setRef: setHomeTabRef, rect: homeTabRect, onScroll: onHomeTabScroll } = useTabIndicator(activeTab, isCollapsed, homeIsDraggingRef, 5);
+
   // Deferred tab value: tab indicator moves instantly, content swap is deferred
   // so heavy feeds (e.g. Videos) don't block the tab animation
   const deferredTab = useDeferredValue(activeTab);
@@ -586,6 +587,7 @@ export default function HomePage() {
     },
     isDraggingRef: homeIsDraggingRef,
     indicatorFixedHeightPx: 35,
+    shrinkWidthByPercent: 5,
     onTap: () => handleTabClick(activeTab),
     onDragEnd: () => {
       // Trigger spring transition after drag ends
@@ -600,6 +602,7 @@ export default function HomePage() {
       window.scrollTo(0, 0);
     },
   });
+
 
   // --------------------------------------------------------------------------
   // RENDER FEED BASED ON ACTIVE TAB
