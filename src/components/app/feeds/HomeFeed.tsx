@@ -1559,6 +1559,16 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           )}
         </>
       )}
+      <PromptFlowModal
+        open={promptModalOpen}
+        onOpenChange={setPromptModalOpen}
+        categories={categories}
+        initialPrompt={initialPromptText}
+        onSave={(catIds) => {
+          setSelectedCategories(catIds);
+          setSelectedSort(SORT_OPTIONS.find(o => o.value === 'prompt') || SORT_OPTIONS[0]);
+        }}
+      />
     </div>
   );
 }
