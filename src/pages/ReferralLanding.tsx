@@ -18,8 +18,10 @@ export default function ReferralLanding() {
   const [inviter, setInviter] = useState<string | null>(null);
   const [inviterLoaded, setInviterLoaded] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
+  const [imgRetry, setImgRetry] = useState(0);
 
-  const shareImage = getAffiliateShareImageUrl(code, 1200, 630);
+  const baseShareImage = getAffiliateShareImageUrl(code, 1200, 630);
+  const shareImage = imgRetry > 0 ? `${baseShareImage}&r=${imgRetry}` : baseShareImage;
   const pageUrl = `${SITE}/r/${code}`;
   const ctaUrl = `/app?ref=${code}`;
 
@@ -111,6 +113,11 @@ export default function ReferralLanding() {
                     width={1200}
                     height={630}
                     onLoad={() => setImgLoaded(true)}
+                    onError={() => {
+                      if (imgRetry < 3) {
+                        setTimeout(() => setImgRetry((n) => n + 1), 600 * (imgRetry + 1));
+                      }
+                    }}
                     className={`absolute inset-0 w-full h-full block transition-opacity duration-500 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
                   />
                 )}
