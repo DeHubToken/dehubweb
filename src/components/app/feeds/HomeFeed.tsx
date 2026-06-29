@@ -455,6 +455,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const sortBy = useMemo(() => {
     switch (deferredSort.value) {
       case 'for-you':
+      case 'prompt':
         return 'score' as const;
       case 'following': // Following uses latest sort, filtered client-side
         return 'createdAt' as const;
