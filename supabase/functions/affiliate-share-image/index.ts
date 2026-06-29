@@ -270,10 +270,10 @@ function buildSvg(opts: {
   <rect width="${W}" height="${H}" fill="url(#vignette)"/>
 
   <g>
-    <circle cx="${portraitCX}" cy="${portraitCY}" r="${portraitR + 14}" fill="#fff" opacity="0.08" filter="url(#softGlow)"/>
-    <circle cx="${portraitCX}" cy="${portraitCY}" r="${portraitR + 6}" fill="none" stroke="url(#ring)" stroke-width="3"/>
-    ${hasAvatar ? `<image href="${avatarHref}" x="${portraitX}" y="${portraitY}" width="${portraitSize}" height="${portraitSize}" preserveAspectRatio="xMidYMid slice" clip-path="url(#circle)"/>` : `
-      <circle cx="${portraitCX}" cy="${portraitCY}" r="${portraitR}" fill="#1f2026"/>
+    <rect x="${portraitX - 14}" y="${portraitY - 14}" width="${portraitSize + 28}" height="${portraitSize + 28}" rx="${(portraitR + 14) * 0.22}" fill="#fff" opacity="0.08" filter="url(#softGlow)"/>
+    <rect x="${portraitX - 6}" y="${portraitY - 6}" width="${portraitSize + 12}" height="${portraitSize + 12}" rx="${(portraitR + 6) * 0.22}" fill="none" stroke="url(#ring)" stroke-width="3"/>
+    ${hasAvatar ? `<image href="${avatarHref}" x="${portraitX}" y="${portraitY}" width="${portraitSize}" height="${portraitSize}" preserveAspectRatio="xMidYMid slice" clip-path="url(#avatarClip)"/>` : `
+      <rect x="${portraitX}" y="${portraitY}" width="${portraitSize}" height="${portraitSize}" rx="${portraitR * 0.22}" fill="#1f2026"/>
       <text x="${portraitCX}" y="${portraitCY + portraitR * 0.22}" fill="#fff" font-size="${portraitR}" font-weight="800" text-anchor="middle">${escapeXml((opts.name[0] || "D").toUpperCase())}</text>
     `}
   </g>
