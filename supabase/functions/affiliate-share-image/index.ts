@@ -256,15 +256,21 @@ serve(async (req) => {
     let displayName: string | null = null;
     let username: string | null = null;
     let avatarPath: string | null = null;
+    let coverPath: string | null = null;
     if (rawCode) {
       const p = await fetchProfile(rawCode);
       address = p.address;
       displayName = p.displayName;
       username = p.username;
       avatarPath = p.avatarPath;
+      coverPath = p.coverPath;
     }
 
-    const avatarDataUri = await fetchAvatarDataUri(address, avatarPath);
+    const [avatarDataUri, coverDataUri] = await Promise.all([
+      fetchAvatarDataUri(address, avatarPath),
+      fetchCoverDataUri(address, coverPath),
+    ]);
+    const bannerDataUri = coverDataUri || (await fetchAsDataUri(pickDefaultBanner(address)));
     const shareUrl = rawCode ? `${SITE}/r/${rawCode}` : SITE;
     const { path: qrPath, count: qrCount } = await buildQrSvgInner(shareUrl);
 
@@ -273,6 +279,7 @@ serve(async (req) => {
       name: cleanName(displayName || username),
       username,
       avatarDataUri,
+      bannerDataUri,
       qrPath,
       qrCount,
       width,
