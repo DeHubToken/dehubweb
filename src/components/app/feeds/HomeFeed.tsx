@@ -440,10 +440,19 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     setSelectedSort(option);
   }, [isAuthenticated]);
 
+  // Defer heavy filter-derived values so chip clicks paint instantly.
+  // The chip buttons read `selectedSort`/`selectedCategories`/etc. directly (urgent),
+  // while query params derive from the deferred copies (non-urgent commit).
+  const deferredSort = useDeferredValue(selectedSort);
+  const deferredDate = useDeferredValue(selectedDate);
+  const deferredPostType = useDeferredValue(selectedPostType);
+  const deferredCategories = useDeferredValue(selectedCategories);
+  const deferredContentFilters = useDeferredValue(contentFilters);
+
   // Build API params from filters
   // For trending, we fetch by recency (last month) then sort client-side
   const sortBy = useMemo(() => {
-    switch (selectedSort.value) {
+    switch (deferredSort.value) {
       case 'for-you':
         return 'score' as const;
       case 'following': // Following uses latest sort, filtered client-side
@@ -460,21 +469,21 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       default:
         return 'createdAt' as const;
     }
-  }, [selectedSort.value]);
+  }, [deferredSort.value]);
 
   const sortOrder: 'asc' | 'desc' = 'desc'; // Always sort descending (highest first)
   
   // For following and random, don't limit range
   const range = useMemo(() => {
     if (
-      selectedSort.value === 'for-you' ||
-      selectedSort.value === 'following' ||
-      selectedSort.value === 'random'
+      deferredSort.value === 'for-you' ||
+      deferredSort.value === 'following' ||
+      deferredSort.value === 'random'
     ) {
       return undefined; // Algorithm + following/random use full catalog
     }
-    return getDateRange(selectedDate.value);
-  }, [selectedSort.value, selectedDate.value]);
+    return getDateRange(deferredDate.value);
+  }, [deferredSort.value, deferredDate.value]);
 
   // Common API params for all three feeds
   const commonParams = useMemo(() => ({
@@ -484,12 +493,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     range,
     status: 'minted' as const,
     // Single category → pass to API; multiple → fetch all, filter client-side
-    category: selectedCategories.length === 1 ? selectedCategories[0] : undefined,
-    isPPV: contentFilters.ppv ? true : undefined,
-    hasBounty: contentFilters.w2e ? true : undefined,
-    isLocked: contentFilters.locked ? true : undefined,
-    followingOnly: selectedSort.value === 'following' ? true : undefined,
-  }), [sortBy, sortOrder, range, selectedCategories, contentFilters, selectedSort.value]);
+    category: deferredCategories.length === 1 ? deferredCategories[0] : undefined,
+    isPPV: deferredContentFilters.ppv ? true : undefined,
+    hasBounty: deferredContentFilters.w2e ? true : undefined,
+    isLocked: deferredContentFilters.locked ? true : undefined,
+    followingOnly: deferredSort.value === 'following' ? true : undefined,
+  }), [sortBy, sortOrder, range, deferredCategories, deferredContentFilters, deferredSort.value]);
 
   // ============================================================================
   // THREE SEPARATE FEED QUERIES
