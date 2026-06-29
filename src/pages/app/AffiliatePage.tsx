@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Copy, Share2, Users, Wallet, Sparkles, RefreshCw, ExternalLink } from "lucide-react";
+import { Share2, Users, Wallet, Sparkles, RefreshCw, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { AuthGate } from "@/components/app/AuthGate";
 import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
