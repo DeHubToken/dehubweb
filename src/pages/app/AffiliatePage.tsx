@@ -11,7 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
 import { SEOHead } from "@/components/SEOHead";
-import { AFFILIATE_COMMISSION_PCT, loadAffiliateStats, type AffiliateStats } from "@/lib/affiliate";
+import { AFFILIATE_COMMISSION_PCT, AFFILIATE_L1_COMMISSION_PCT, AFFILIATE_L2_COMMISSION_PCT, loadAffiliateStats, type AffiliateStats } from "@/lib/affiliate";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
 
 const SITE = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
