@@ -76,12 +76,24 @@ function pickDefaultBanner(address: string | null): string {
   return DEFAULT_BANNERS[h % DEFAULT_BANNERS.length];
 }
 
-async function fetchAsDataUri(url: string): Promise<string | null> {
+async function fetchWithTimeout(url: string, ms = 3500): Promise<Response | null> {
   try {
-    const r = await fetch(url);
-    if (!r.ok) return null;
-    const ct = r.headers.get("content-type") || "image/png";
-    if (!ct.startsWith("image/")) return null;
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), ms);
+    const r = await fetch(url, { signal: ctrl.signal, redirect: "follow" });
+    clearTimeout(t);
+    return r;
+  } catch {
+    return null;
+  }
+}
+
+async function fetchAsDataUri(url: string): Promise<string | null> {
+  const r = await fetchWithTimeout(url);
+  if (!r || !r.ok) return null;
+  const ct = r.headers.get("content-type") || "image/png";
+  if (!ct.startsWith("image/")) return null;
+  try {
     const buf = new Uint8Array(await r.arrayBuffer());
     if (buf.byteLength < 200) return null;
     return `data:${ct};base64,${encodeB64(buf)}`;
