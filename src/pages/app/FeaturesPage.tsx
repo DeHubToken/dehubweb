@@ -506,19 +506,28 @@ function FeatureCard({
 function SubmitFeatureDrawer({
   open,
   onOpenChange,
+  initialCategory,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  initialCategory?: FeatureCategory;
 }) {
   const { t } = useI18n();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [deviceDetails, setDeviceDetails] = useState('');
-  const [category, setCategory] = useState<FeatureCategory>('new_feature');
+  const [category, setCategory] = useState<FeatureCategory>(initialCategory || 'new_feature');
   const [mediaFile, setMediaFile] = useState<File | null>(null);
   const [mediaPreview, setMediaPreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Sync category when the drawer opens with a new initial category
+  useEffect(() => {
+    if (open && initialCategory) {
+      setCategory(initialCategory);
+    }
+  }, [open, initialCategory]);
 
   const submitMutation = useSubmitFeatureRequest();
 
