@@ -170,7 +170,7 @@ function buildSvg(opts: {
     <text x="${textX}" y="${H * 0.46}" fill="#fff" font-size="${H * 0.085}" font-weight="800" letter-spacing="-1">${name}</text>
     ${handle ? `<text x="${textX}" y="${H * 0.535}" fill="#ffffff" fill-opacity="0.55" font-size="${H * 0.034}" font-weight="500">${handle}</text>` : ""}
     <text x="${textX}" y="${H * 0.66}" fill="#ffffff" fill-opacity="0.92" font-size="${H * 0.042}" font-weight="500">invites you to join DeHub.</text>
-    <g transform="translate(${W * 0.06}, ${H * 0.78})">
+    <g transform="translate(${W * 0.04}, ${H * 0.85})">
       <rect width="${H * 0.15}" height="${H * 0.072}" rx="${H * 0.014}" fill="#fff"/>
       <text x="${H * 0.075}" y="${H * 0.05}" fill="#0a0a0b" font-size="${H * 0.034}" font-weight="800" text-anchor="middle" letter-spacing="1">JOIN</text>
       <text x="${H * 0.17}" y="${H * 0.05}" fill="#ffffff" fill-opacity="0.85" font-size="${H * 0.030}" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">dehub.io/r/${code}</text>
