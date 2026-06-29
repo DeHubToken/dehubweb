@@ -28,8 +28,8 @@ async function loadFonts(): Promise<Uint8Array[]> {
   if (fontBuffers) return fontBuffers;
   // Prefer TTF directly to avoid woff2 decode requirements in resvg-wasm.
   const ttfs = [
-    "https://github.com/googlefonts/Inter/raw/main/fonts/ttf/Inter-Bold.ttf",
-    "https://github.com/googlefonts/Inter/raw/main/fonts/ttf/Inter-Regular.ttf",
+    "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-700-normal.ttf",
+    "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.ttf",
   ];
   const out: Uint8Array[] = [];
   for (const u of ttfs) {
