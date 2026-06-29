@@ -68,6 +68,7 @@ export function useDragTabIndicator<T extends string>({
   isDraggingRef,
   onTap,
   onDragEnd,
+  shrinkWidthByPercent = 0,
   indicatorFixedHeightPx,
 }: UseDragTabIndicatorOptions<T>) {
   const dragStateRef = useRef<DragState<T> | null>(null);
@@ -75,6 +76,8 @@ export function useDragTabIndicator<T extends string>({
   const indicatorRef = useRef<HTMLDivElement | null>(null);
   const activeTabRef = useRef<T>(activeTab);
   activeTabRef.current = activeTab;
+  const shrinkFactor = 1 - shrinkWidthByPercent / 100;
+
 
   const handleDragStart = useCallback((e: React.PointerEvent) => {
     if (e.button !== 0) return;
