@@ -509,15 +509,15 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // So we use a single unified feed instead of three separate type feeds
   // "Latest" must also use a single feed to maintain true chronological order across all post types
   const useSingleFeedForGlobalSort =
-    selectedSort.value === 'for-you' ||
-    selectedSort.value === 'latest' ||
-    selectedSort.value === 'most-liked' ||
-    selectedSort.value === 'most-viewed' ||
-    selectedSort.value === 'most-comments' ||
-    selectedSort.value === 'following' ||
-    selectedSort.value === 'random';
-  const hasContentFilter = contentFilters.ppv || contentFilters.w2e || contentFilters.locked;
-  const useInterleavedFeed = selectedPostType === 'all' && !useSingleFeedForGlobalSort && !hasContentFilter;
+    deferredSort.value === 'for-you' ||
+    deferredSort.value === 'latest' ||
+    deferredSort.value === 'most-liked' ||
+    deferredSort.value === 'most-viewed' ||
+    deferredSort.value === 'most-comments' ||
+    deferredSort.value === 'following' ||
+    deferredSort.value === 'random';
+  const hasContentFilter = deferredContentFilters.ppv || deferredContentFilters.w2e || deferredContentFilters.locked;
+  const useInterleavedFeed = deferredPostType === 'all' && !useSingleFeedForGlobalSort && !hasContentFilter;
 
   // Fetch videos
   const videosFeed = useUnifiedFeed({
