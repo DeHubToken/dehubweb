@@ -129,13 +129,13 @@ export default function AffiliatePage() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <StatCard
               icon={<Users className="w-4 h-4" />}
-              label="Tier 1 referrals"
+              label="Direct"
               value={loading ? null : String(stats?.referrals ?? 0)}
               hint={`${AFFILIATE_L1_COMMISSION_PCT}%`}
             />
             <StatCard
               icon={<Users className="w-4 h-4" />}
-              label="Tier 2 referrals"
+              label="Secondary"
               value={loading ? null : String(stats?.l2Referrals ?? 0)}
               hint={`${AFFILIATE_L2_COMMISSION_PCT}%`}
             />
