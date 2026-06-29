@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { getAffiliateRef } from "@/lib/affiliateRef";
+import { withWalletHeader } from "@/lib/supabase-wallet-client";
 
 export const AFFILIATE_COMMISSION_PCT = 20;
 
@@ -15,6 +16,7 @@ export async function getOrCreateAffiliateCode(
   shareName?: string | null,
 ): Promise<{ code: string; share_name: string | null } | null> {
   const addr = ownerAddress.toLowerCase();
+  const cleanShareName = shareName?.trim().replace(/^@+/, "").slice(0, 32) || null;
   // @ts-ignore - new table may not yet be in generated Database types
   const { data: existing } = await supabase
     .from("affiliate_codes" as never)
@@ -24,21 +26,41 @@ export async function getOrCreateAffiliateCode(
     .order("created_at", { ascending: true })
     .limit(1) as unknown as { data: Array<{ code: string; share_name: string | null }> | null };
 
-  if (existing && existing.length > 0) return existing[0];
+  if (existing && existing.length > 0) {
+    const current = existing[0];
+    if (cleanShareName && current.share_name !== cleanShareName) {
+      const { data } = await withWalletHeader(
+        // @ts-ignore
+        supabase
+          .from("affiliate_codes" as never)
+          .update({ share_name: cleanShareName } as never)
+          .ilike("owner_address", addr)
+          .eq("code", current.code)
+          .select("code,share_name")
+          .maybeSingle(),
+        addr,
+      ) as unknown as { data: { code: string; share_name: string | null } | null };
+      if (data) return data;
+    }
+    return current;
+  }
 
   for (let attempt = 0; attempt < 5; attempt++) {
     const code = randomCode(8);
-    // @ts-ignore
-    const { data, error } = await supabase
-      .from("affiliate_codes" as never)
-      .insert({
-        code,
-        owner_address: addr,
-        share_name: shareName ?? null,
-        commission_pct: AFFILIATE_COMMISSION_PCT,
-      } as never)
-      .select("code,share_name")
-      .maybeSingle() as unknown as { data: { code: string; share_name: string | null } | null; error: { message?: string } | null };
+    const { data, error } = await withWalletHeader(
+      // @ts-ignore
+      supabase
+        .from("affiliate_codes" as never)
+        .insert({
+          code,
+          owner_address: addr,
+          share_name: cleanShareName,
+          commission_pct: AFFILIATE_COMMISSION_PCT,
+        } as never)
+        .select("code,share_name")
+        .maybeSingle(),
+      addr,
+    ) as unknown as { data: { code: string; share_name: string | null } | null; error: { message?: string } | null };
     if (!error && data) return data;
   }
   return null;
@@ -63,15 +85,18 @@ export async function attributeReferralIfPending(referredAddress: string) {
   if (!codeRow) return;
   if (codeRow.owner_address.toLowerCase() === addr) return; // can't self-refer
 
-  // @ts-ignore
-  await supabase
-    .from("affiliate_referrals" as never)
-    .insert({
-      code,
-      owner_address: codeRow.owner_address.toLowerCase(),
-      referred_address: addr,
-      source: typeof window !== "undefined" ? window.location.hostname : null,
-    } as never);
+  await withWalletHeader(
+    // @ts-ignore
+    supabase
+      .from("affiliate_referrals" as never)
+      .insert({
+        code,
+        owner_address: codeRow.owner_address.toLowerCase(),
+        referred_address: addr,
+        source: typeof window !== "undefined" ? window.location.hostname : null,
+      } as never),
+    addr,
+  );
 }
 
 export type AffiliateStats = {
@@ -82,9 +107,9 @@ export type AffiliateStats = {
   currency: string;
 };
 
-export async function loadAffiliateStats(ownerAddress: string): Promise<AffiliateStats> {
+export async function loadAffiliateStats(ownerAddress: string, shareName?: string | null): Promise<AffiliateStats> {
   const addr = ownerAddress.toLowerCase();
-  const codeRes = await getOrCreateAffiliateCode(addr);
+  const codeRes = await getOrCreateAffiliateCode(addr, shareName);
   const code = codeRes?.code ?? null;
 
   // @ts-ignore
@@ -93,9 +118,13 @@ export async function loadAffiliateStats(ownerAddress: string): Promise<Affiliat
     .select("id", { count: "exact", head: true })
     .ilike("owner_address", addr) as unknown as { count: number | null };
   // @ts-ignore
-  const earnRes = await supabase
-    .from("affiliate_earnings" as never)
-    .select("commission_cents,currency") as unknown as { data: Array<{ commission_cents: number; currency: string }> | null };
+  const earnRes = await withWalletHeader(
+    // @ts-ignore
+    supabase
+      .from("affiliate_earnings" as never)
+      .select("commission_cents,currency"),
+    addr,
+  ) as unknown as { data: Array<{ commission_cents: number; currency: string }> | null };
 
   const totalEarnedCents = (earnRes.data ?? []).reduce((sum, r) => sum + (r.commission_cents ?? 0), 0);
   const currency = (earnRes.data?.[0]?.currency || "usd").toUpperCase();
