@@ -141,30 +141,30 @@ export default function AffiliatePage() {
           {/* Share section */}
           <Card className="border-white/10 bg-white/[0.03] backdrop-blur">
             <CardContent className="p-5 md:p-6 space-y-5">
-              <div className="flex items-center justify-between gap-3 flex-wrap">
+              <div className="flex items-start justify-between gap-3 flex-wrap">
                 <div>
                   <h2 className="text-lg font-semibold text-white">Your invite link</h2>
                   <p className="text-sm text-white/60">
                     Share anywhere. You earn {AFFILIATE_L1_COMMISSION_PCT}% of every dollar your invites ever spend on DeHub, plus {AFFILIATE_L2_COMMISSION_PCT}% from everyone <em>they</em> invite.
                   </p>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => void load()} disabled={loading}>
-                  <RefreshCw className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`} /> Refresh
-                </Button>
               </div>
 
               {loading ? (
                 <Skeleton className="h-12 w-full" />
               ) : stats?.code ? (
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                  <div className="flex flex-wrap items-center gap-3 text-sm">
-                    <span className="text-white/60">Your code:</span>
-                    <code className="px-3 py-1.5 rounded-md bg-white/10 text-white font-mono tracking-[0.25em]">
-                      {stats.code}
-                    </code>
-                    <Link to={`/r/${stats.code}`} className="text-white/70 hover:text-white inline-flex items-center gap-1">
-                      Preview landing <ExternalLink className="w-3 h-3" />
+                  <div className="flex flex-wrap items-center gap-2 text-sm min-w-0">
+                    <Link
+                      to={`/r/${stats.code}`}
+                      className="px-3 py-1.5 rounded-md bg-white/10 text-white font-mono truncate hover:bg-white/15 inline-flex items-center gap-2"
+                    >
+                      {`${typeof window !== "undefined" ? window.location.origin : "https://dehub.io"}/r/${stats.code}`}
+                      <ExternalLink className="w-3 h-3 opacity-70" />
                     </Link>
+                    <Button variant="ghost" size="sm" onClick={() => void load()} disabled={loading}>
+                      <RefreshCw className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`} /> Refresh
+                    </Button>
                   </div>
                   <LiquidGlassBubble2
                     label="Share"
@@ -173,6 +173,7 @@ export default function AffiliatePage() {
                     onClick={nativeShare}
                   />
                 </div>
+
               ) : (
                 <p className="text-sm text-white/60">Could not generate a code. Try refreshing.</p>
               )}
