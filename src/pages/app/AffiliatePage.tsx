@@ -59,7 +59,7 @@ export default function AffiliatePage() {
     [stats?.code],
   );
   const shareImageUrl = useMemo(
-    () => `${getAffiliateShareImageUrl(stats?.code, 1200, 630)}&v=${imgVersion}`,
+    () => `${getAffiliateShareImageUrl(stats?.code, 1200, 630, "svg")}&v=${imgVersion}`,
     [stats?.code, imgVersion],
   );
 

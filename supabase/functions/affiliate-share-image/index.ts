@@ -1,11 +1,21 @@
-// Dynamic per-affiliate DeHub share image (SVG).
-// Public endpoint used by /affiliate previews and /r/:code OG tags.
+// Dynamic per-affiliate DeHub share image.
+// Default: PNG (Facebook/Telegram/WhatsApp/LinkedIn/Discord reject SVG OG images).
+// Use ?format=svg for in-app lightweight preview.
 
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import QRCode from "https://esm.sh/qrcode@1.5.4";
 import { encode as encodeB64 } from "https://deno.land/std@0.190.0/encoding/base64.ts";
+import { Resvg, initWasm } from "https://esm.sh/@resvg/resvg-wasm@2.6.2";
 import { DEHUB_LOGO_DATA_URI } from "./logo.ts";
+
+let resvgReady: Promise<void> | null = null;
+function ensureResvg(): Promise<void> {
+  if (!resvgReady) {
+    resvgReady = initWasm(fetch("https://esm.sh/@resvg/resvg-wasm@2.6.2/index_bg.wasm"));
+  }
+  return resvgReady;
+}
 
 const LOGO_ASPECT = 1752 / 417; // width / height of the wordmark PNG
 
@@ -248,6 +258,7 @@ serve(async (req) => {
     const rawCode = (url.searchParams.get("code") || "").trim().toUpperCase();
     const width = Math.min(1920, Math.max(600, Number(url.searchParams.get("width")) || 1200));
     const height = Math.min(1080, Math.max(315, Number(url.searchParams.get("height")) || 630));
+    const format = (url.searchParams.get("format") || "png").toLowerCase() === "svg" ? "svg" : "png";
     if (rawCode && !VALID_CODE.test(rawCode)) {
       return new Response("invalid code", { status: 400, headers: corsHeaders });
     }
@@ -285,12 +296,27 @@ serve(async (req) => {
       width,
       height,
     });
-    return new Response(svg, {
+    if (format === "svg") {
+      return new Response(svg, {
+        status: 200,
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "image/svg+xml; charset=utf-8",
+          "Cache-Control": "no-store, max-age=0, must-revalidate",
+        },
+      });
+    }
+
+    // Rasterize SVG → PNG so Facebook/Telegram/WhatsApp/LinkedIn/Discord render the preview.
+    await ensureResvg();
+    const resvg = new Resvg(svg, { fitTo: { mode: "width", value: width } });
+    const png = resvg.render().asPng();
+    return new Response(png, {
       status: 200,
       headers: {
         ...corsHeaders,
-        "Content-Type": "image/svg+xml; charset=utf-8",
-        "Cache-Control": "no-store, max-age=0, must-revalidate",
+        "Content-Type": "image/png",
+        "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800",
       },
     });
   } catch (error) {
