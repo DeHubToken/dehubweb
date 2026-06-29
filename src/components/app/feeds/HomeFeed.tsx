@@ -823,6 +823,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     ? (videosFeed.isLoading || imagesFeed.isLoading || textsFeed.isLoading)
     : singleFeed.isLoading;
 
+  // Background fetching (filter switches with cached/previous data) — used to show a
+  // non-blocking progress shimmer so the UI never feels frozen while requests run.
+  const isFetching = useInterleavedFeed
+    ? (videosFeed.isFetching || imagesFeed.isFetching || textsFeed.isFetching)
+    : singleFeed.isFetching;
+
   const isError = useInterleavedFeed
     ? (videosFeed.isError || imagesFeed.isError || textsFeed.isError)
     : singleFeed.isError;
