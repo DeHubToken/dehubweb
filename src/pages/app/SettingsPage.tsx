@@ -818,92 +818,33 @@ function ProfileSettings() {
 
 function BugReportSection({ username }: { username: string }) {
   const { t } = useTranslation();
-  const [open, setOpen] = useState(false);
-  const [description, setDescription] = useState('');
-  const [sending, setSending] = useState(false);
+  const navigate = useNavigate();
 
-  const handleSubmit = async () => {
-    if (!description.trim()) { toast.error('Please describe the issue'); return; }
-    setSending(true);
-    try {
-      const { reportContent } = await import('@/lib/api/dehub/reports');
-      // Use a placeholder tokenId=0 for bug reports (platform-level, not content-specific)
-      await reportContent({ tokenId: 0, reason: 'other', description: `[Bug Report from ${username}]: ${description.trim()}` });
-      toast.success('Bug report submitted. Thank you!');
-      setOpen(false);
-      setDescription('');
-    } catch {
-      toast.error('Failed to submit report. Please try again.');
-    } finally {
-      setSending(false);
-    }
+  const handleReportBug = () => {
+    navigate(`/app/features?report=bug&reporter=${encodeURIComponent(username)}`);
   };
 
   return (
-    <>
-      <div>
-        <h3 className="font-medium text-zinc-400 text-sm mb-4">Support</h3>
-        <div className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
-          <div className="flex items-center gap-3">
-            <Terminal className="w-5 h-5 text-zinc-500" />
-            <div>
-              <p className="text-white font-medium">Report a Bug</p>
-              <p className="text-zinc-500 text-sm">Help us fix issues by reporting bugs</p>
-            </div>
+    <div>
+      <h3 className="font-medium text-zinc-400 text-sm mb-4">Support</h3>
+      <div className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
+        <div className="flex items-center gap-3">
+          <Terminal className="w-5 h-5 text-zinc-500" />
+          <div>
+            <p className="text-white font-medium">Report a Bug</p>
+            <p className="text-zinc-500 text-sm">Help us fix issues by reporting bugs</p>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            className="bg-zinc-700 border-zinc-600 text-white hover:bg-zinc-600 rounded-lg"
-            onClick={() => setOpen(true)}
-          >
-            Report
-          </Button>
         </div>
+        <Button
+          variant="outline"
+          size="sm"
+          className="bg-zinc-700 border-zinc-600 text-white hover:bg-zinc-600 rounded-lg"
+          onClick={handleReportBug}
+        >
+          Report
+        </Button>
       </div>
-
-      {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-zinc-900 border border-white/10 rounded-2xl max-w-md w-full p-6 space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="text-white font-bold text-lg">Report a Bug</h3>
-              <button onClick={() => setOpen(false)} className="text-zinc-500 hover:text-white">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-            <div className="bg-zinc-800/60 rounded-xl px-4 py-2.5">
-              <p className="text-zinc-400 text-sm">Reporting as <span className="text-white font-medium">@{username}</span></p>
-            </div>
-            <div>
-              <label className="block text-sm text-zinc-400 mb-1.5">Describe the issue</label>
-              <textarea
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="What happened? What were you trying to do? Include any error messages..."
-                rows={5}
-                className="w-full bg-zinc-800 border border-zinc-700 text-white text-sm rounded-xl px-4 py-3 placeholder:text-zinc-500 resize-none focus:outline-none focus:ring-1 focus:ring-white/20"
-              />
-            </div>
-            <div className="flex gap-2 pt-1">
-              <button
-                onClick={() => setOpen(false)}
-                className="flex-1 py-2.5 rounded-xl bg-zinc-800 text-zinc-300 text-sm font-medium hover:bg-zinc-700 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSubmit}
-                disabled={sending}
-                className="flex-1 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
-              >
-                {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                {sending ? 'Sending...' : 'Submit Report'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+    </div>
   );
 }
 

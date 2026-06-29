@@ -8,6 +8,7 @@
 
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useTranslation as useI18n } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
@@ -505,19 +506,28 @@ function FeatureCard({
 function SubmitFeatureDrawer({
   open,
   onOpenChange,
+  initialCategory,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  initialCategory?: FeatureCategory;
 }) {
   const { t } = useI18n();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [deviceDetails, setDeviceDetails] = useState('');
-  const [category, setCategory] = useState<FeatureCategory>('new_feature');
+  const [category, setCategory] = useState<FeatureCategory>(initialCategory || 'new_feature');
   const [mediaFile, setMediaFile] = useState<File | null>(null);
   const [mediaPreview, setMediaPreview] = useState<string | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Sync category when the drawer opens based on whether a bug category is requested
+  useEffect(() => {
+    if (open) {
+      setCategory(initialCategory || 'new_feature');
+    }
+  }, [open, initialCategory]);
 
   const submitMutation = useSubmitFeatureRequest();
 
@@ -816,6 +826,7 @@ function InfiniteScrollSentinel({ onIntersect, isFetching }: { onIntersect: () =
 export default function FeaturesPage() {
   const { t } = useI18n();
   const { isAuthenticated, openLoginModal } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<PageTab>('requests');
   const [sort, setSort] = useState<FeatureSort>('most_voted');
   const [category, setCategory] = useState<FeatureCategory | 'all'>('all');
@@ -824,6 +835,20 @@ export default function FeaturesPage() {
   const [searchInput, setSearchInput] = useState('');
   const search = useDebouncedValue(searchInput, 300);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [initialCategory, setInitialCategory] = useState<FeatureCategory | undefined>(undefined);
+
+  // Handle deep-link from "Report a Bug" buttons: open the bug-fix category
+  // and pre-populate the submit drawer with the bug_fix category.
+  useEffect(() => {
+    const report = searchParams.get('report');
+    if (report === 'bug') {
+      setActiveTab('requests');
+      setCategory('bug_fix');
+      setInitialCategory('bug_fix');
+      setDrawerOpen(true);
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   const { data: featuresData, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeatureRequests(sort, category, search);
   const features = useMemo(() => featuresData?.pages.flat() ?? [], [featuresData]);
@@ -1053,7 +1078,14 @@ export default function FeaturesPage() {
       )}
 
       {/* Submit Drawer */}
-      <SubmitFeatureDrawer open={drawerOpen} onOpenChange={setDrawerOpen} />
+      <SubmitFeatureDrawer
+        open={drawerOpen}
+        onOpenChange={(open) => {
+          setDrawerOpen(open);
+          if (!open) setInitialCategory(undefined);
+        }}
+        initialCategory={initialCategory}
+      />
     </div>
   );
 }
