@@ -160,7 +160,7 @@ export default function AffiliatePage() {
               ) : stats?.code ? (
                 <>
                   <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_auto] gap-2">
-                    <Input readOnly value={shareUrl} className="font-mono text-sm bg-black/40 border-white/10" />
+                    <Input readOnly value={shareUrl} className="font-mono text-sm bg-black/40 border-white/10 text-white placeholder:text-white/40" />
                     <LiquidGlassBubble2
                       label="Copy link"
                       icon={<Copy className="w-4 h-4" />}
@@ -194,13 +194,13 @@ export default function AffiliatePage() {
                       readOnly
                       value={inviteUrl}
                       onClick={() => void copy(inviteUrl, "Direct app link copied")}
-                      className="font-mono text-xs bg-black/40 border-white/10 cursor-pointer"
+                      className="font-mono text-xs bg-black/40 border-white/10 text-white placeholder:text-white/40 cursor-pointer"
                     />
                     <Input
                       readOnly
                       value={shareText}
                       onClick={() => void copy(shareText, "Share text copied")}
-                      className="text-xs bg-black/40 border-white/10 cursor-pointer"
+                      className="text-xs bg-black/40 border-white/10 text-white placeholder:text-white/40 cursor-pointer"
                     />
                   </div>
                 </>
