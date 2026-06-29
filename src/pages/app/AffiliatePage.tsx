@@ -6,7 +6,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { AuthGate } from "@/components/app/AuthGate";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
 import { SEOHead } from "@/components/SEOHead";
@@ -102,18 +101,7 @@ export default function AffiliatePage() {
 
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge className="rounded-full bg-white/10 text-white border border-white/15 backdrop-blur-md">
-                  <Sparkles className="w-3 h-3 mr-1" /> Beta · 2-tier residual
-                </Badge>
-                <Badge className="rounded-full bg-white/10 text-white border border-white/15 backdrop-blur-md">
-                  {AFFILIATE_L1_COMMISSION_PCT}% direct
-                </Badge>
-                <Badge className="rounded-full bg-white/10 text-white border border-white/15 backdrop-blur-md">
-                  + {AFFILIATE_L2_COMMISSION_PCT}% second tier
-                </Badge>
-              </div>
-              <h1 className="mt-2 text-2xl md:text-4xl font-bold text-white">
+              <h1 className="text-2xl md:text-4xl font-bold text-white">
                 Earn {AFFILIATE_L1_COMMISSION_PCT}% from everyone you invite — and {AFFILIATE_L2_COMMISSION_PCT}% from everyone <em>they</em> invite.
               </h1>
               <p className="mt-2 text-sm md:text-base text-white/60 max-w-3xl">
