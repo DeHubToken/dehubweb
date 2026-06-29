@@ -184,8 +184,8 @@ export default function AffiliatePage() {
             <CardContent className="p-5 md:p-6 grid grid-cols-1 md:grid-cols-4 gap-4">
               <Step n={1} title="Share your link" body="Drop your invite link into Discord, X, YouTube, your stream — anywhere." />
               <Step n={2} title="They join DeHub" body="Anyone who lands via your link is permanently attributed to you (first-touch wins, 90-day cookie)." />
-              <Step n={3} title={`Earn ${AFFILIATE_L1_COMMISSION_PCT}% — direct`} body={`You receive ${AFFILIATE_L1_COMMISSION_PCT}% of every dollar of revenue your invites ever generate on DeHub.`} />
-              <Step n={4} title={`Earn ${AFFILIATE_L2_COMMISSION_PCT}% — second tier`} body={`When your invites invite their friends, you also earn ${AFFILIATE_L2_COMMISSION_PCT}% of their revenue. Recurring, lifetime.`} />
+              <Step n={3} title={`Earn ${AFFILIATE_L1_COMMISSION_PCT}% direct`} body={`You receive ${AFFILIATE_L1_COMMISSION_PCT}% of every dollar of revenue your invites ever generate on DeHub.`} />
+              <Step n={4} title={`Earn ${AFFILIATE_L2_COMMISSION_PCT}% secondary`} body={`When your invites invite their friends, you also earn ${AFFILIATE_L2_COMMISSION_PCT}% of their revenue. Recurring, lifetime.`} />
             </CardContent>
           </Card>
 
