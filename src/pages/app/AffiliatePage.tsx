@@ -31,7 +31,7 @@ export default function AffiliatePage() {
     ?? (user as { address?: string | null } | null)?.address
     ?? null;
   const displayName = (user as { username?: string | null; displayName?: string | null } | null)
-    ?.username ?? (user as { displayName?: string | null } | null)?.displayName ?? "early";
+    ?.username ?? (user as { displayName?: string | null } | null)?.displayName ?? null;
 
   const [stats, setStats] = useState<AffiliateStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -40,7 +40,8 @@ export default function AffiliatePage() {
     if (!wallet) { setLoading(false); return; }
     setLoading(true);
     try {
-      const s = await loadAffiliateStats(wallet, displayName);
+      const fallbackName = wallet ? `${wallet.slice(0, 6)}…${wallet.slice(-4)}` : null;
+      const s = await loadAffiliateStats(wallet, displayName ?? fallbackName);
       setStats(s);
     } catch (e) {
       toast.error("Could not load affiliate stats");
