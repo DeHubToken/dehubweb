@@ -69,6 +69,7 @@ import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { MobileWhoToFollowCarousel } from '@/components/app/mobile';
 import { LeaderboardCarousel } from '@/components/app/feeds/LeaderboardCarousel';
 import { FriendsOnStageBar } from '@/components/app/feeds/FriendsOnStageBar';
+import { PromptFlowModal } from '@/components/app/feeds/PromptFlowModal';
 
 import type { VideoItem, ImagePost, TextPost, ShortVideo } from '@/types/feed.types';
 
@@ -428,6 +429,25 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const isFollowingMode = selectedSort.value === 'following';
 
 
+  // Prompt flow modal state
+  const [promptModalOpen, setPromptModalOpen] = useState(false);
+  const [initialPromptText, setInitialPromptText] = useState('');
+
+  // Auto-open from /prompt landing redirect (?prompt=…)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const p = params.get('prompt');
+    if (p) {
+      setInitialPromptText(p);
+      setPromptModalOpen(true);
+      // clean URL
+      const url = new URL(window.location.href);
+      url.searchParams.delete('prompt');
+      window.history.replaceState({}, '', url.toString());
+    }
+  }, []);
+
   // Handle sort selection with special logic for "Subscribed" (coming soon)
   const handleSortSelect = useCallback((option: SortOption) => {
     if (option.value === 'subscribed') {
@@ -436,6 +456,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     }
     if (option.value === 'following' && !isAuthenticated) {
       toast.info('Log in to see followed creators');
+      return;
+    }
+    if (option.value === 'prompt') {
+      setInitialPromptText('');
+      setPromptModalOpen(true);
       return;
     }
     setSelectedSort(option);
@@ -455,6 +480,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const sortBy = useMemo(() => {
     switch (deferredSort.value) {
       case 'for-you':
+      case 'prompt':
         return 'score' as const;
       case 'following': // Following uses latest sort, filtered client-side
         return 'createdAt' as const;
@@ -478,6 +504,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const range = useMemo(() => {
     if (
       deferredSort.value === 'for-you' ||
+      deferredSort.value === 'prompt' ||
       deferredSort.value === 'following' ||
       deferredSort.value === 'random'
     ) {
@@ -510,6 +537,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // "Latest" must also use a single feed to maintain true chronological order across all post types
   const useSingleFeedForGlobalSort =
     deferredSort.value === 'for-you' ||
+    deferredSort.value === 'prompt' ||
     deferredSort.value === 'latest' ||
     deferredSort.value === 'most-liked' ||
     deferredSort.value === 'most-viewed' ||
@@ -1532,6 +1560,16 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           )}
         </>
       )}
+      <PromptFlowModal
+        open={promptModalOpen}
+        onOpenChange={setPromptModalOpen}
+        categories={categories}
+        initialPrompt={initialPromptText}
+        onSave={(catIds) => {
+          setSelectedCategories(catIds);
+          setSelectedSort(SORT_OPTIONS.find(o => o.value === 'prompt') || SORT_OPTIONS[0]);
+        }}
+      />
     </div>
   );
 }

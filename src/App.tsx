@@ -41,6 +41,7 @@ const GovernanceProposalPage = React.lazy(() => import("./pages/app/GovernancePr
 const StageDeepLinkPage = React.lazy(() => import("./pages/app/StageDeepLinkPage"));
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
+const PromptLanding = React.lazy(() => import("./pages/PromptLanding"));
 const CommunityPage = React.lazy(() => import("./pages/app/CommunityPage"));
 const EventPage = React.lazy(() => import("./pages/EventPage"));
 const StoreDetailPage = React.lazy(() => import("./pages/app/StoreDetailPage"));
@@ -181,6 +182,8 @@ function AppContent() {
           <Route path="/skill.md" element={<SkillPage />} />
           <Route path="/editor" element={<Suspense fallback={<PageLoader />}><EditorPage /></Suspense>} />
           <Route path="/r/:code" element={<Suspense fallback={<PageLoader />}><ReferralLanding /></Suspense>} />
+          <Route path="/prompt" element={<Suspense fallback={<PageLoader />}><PromptLanding /></Suspense>} />
+
 
           {/* Single shared AppLayout — header/sidebar mount ONCE and persist across all app routes */}
           <Route element={<AppLayout />}>
