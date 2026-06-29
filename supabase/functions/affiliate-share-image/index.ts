@@ -253,7 +253,7 @@ function buildSvg(opts: {
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Inter, sans-serif">
   <defs>
-    <clipPath id="circle"><circle cx="${portraitCX}" cy="${portraitCY}" r="${portraitR}"/></clipPath>
+    <clipPath id="avatarClip"><rect x="${portraitX}" y="${portraitY}" width="${portraitSize}" height="${portraitSize}" rx="${portraitR * 0.22}"/></clipPath>
     <clipPath id="bgClip"><rect width="${W}" height="${H}"/></clipPath>
     <filter id="bgBlur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="18"/></filter>
     <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="10"/></filter>
@@ -270,10 +270,10 @@ function buildSvg(opts: {
   <rect width="${W}" height="${H}" fill="url(#vignette)"/>
 
   <g>
-    <circle cx="${portraitCX}" cy="${portraitCY}" r="${portraitR + 14}" fill="#fff" opacity="0.08" filter="url(#softGlow)"/>
-    <circle cx="${portraitCX}" cy="${portraitCY}" r="${portraitR + 6}" fill="none" stroke="url(#ring)" stroke-width="3"/>
-    ${hasAvatar ? `<image href="${avatarHref}" x="${portraitX}" y="${portraitY}" width="${portraitSize}" height="${portraitSize}" preserveAspectRatio="xMidYMid slice" clip-path="url(#circle)"/>` : `
-      <circle cx="${portraitCX}" cy="${portraitCY}" r="${portraitR}" fill="#1f2026"/>
+    <rect x="${portraitX - 14}" y="${portraitY - 14}" width="${portraitSize + 28}" height="${portraitSize + 28}" rx="${(portraitR + 14) * 0.22}" fill="#fff" opacity="0.08" filter="url(#softGlow)"/>
+    <rect x="${portraitX - 6}" y="${portraitY - 6}" width="${portraitSize + 12}" height="${portraitSize + 12}" rx="${(portraitR + 6) * 0.22}" fill="none" stroke="url(#ring)" stroke-width="3"/>
+    ${hasAvatar ? `<image href="${avatarHref}" x="${portraitX}" y="${portraitY}" width="${portraitSize}" height="${portraitSize}" preserveAspectRatio="xMidYMid slice" clip-path="url(#avatarClip)"/>` : `
+      <rect x="${portraitX}" y="${portraitY}" width="${portraitSize}" height="${portraitSize}" rx="${portraitR * 0.22}" fill="#1f2026"/>
       <text x="${portraitCX}" y="${portraitCY + portraitR * 0.22}" fill="#fff" font-size="${portraitR}" font-weight="800" text-anchor="middle">${escapeXml((opts.name[0] || "D").toUpperCase())}</text>
     `}
   </g>
