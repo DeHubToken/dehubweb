@@ -1,48 +1,38 @@
-## Why Telegram and Facebook show no preview image
+## Goal
 
-The SSR HTML and OG tags are correct. The broken link is the image format:
+While the per-user affiliate share image is loading on both `/affiliate` and `/r/:code`, show a shimmer skeleton in the exact image slot. Never render the generic "A creator invited you" / default placeholder — only ever show the personalised version once the user data has resolved.
 
-- `supabase/functions/affiliate-share-image` returns `image/svg+xml`.
-- **Facebook, Telegram, WhatsApp, LinkedIn, Discord, Slack** all reject SVG as an OG image (their crawlers only accept PNG/JPG/GIF/WebP).
-- X (Twitter) is the lenient outlier — that's why the X card works and the others don't.
-- Hosting: this project uses **Netlify edge functions** (`netlify/edge-functions/ssr-seo.js`), not Cloudflare. That part is fine.
+## Changes
 
-## Fix
+### 1. `src/pages/app/AffiliatePage.tsx`
+- Add local `imgLoaded` state, reset to `false` whenever `shareImageUrl` changes (code or `imgVersion`).
+- Wrap the `<img>` in the existing rounded container with:
+  - Fixed aspect ratio box (`aspect-[1200/630]`) so the skeleton occupies the final image area.
+  - Absolutely-positioned shimmer overlay (gradient sweep using existing `animate-pulse` plus a moving white/5 → white/20 → white/5 gradient — matches the project's liquid-glass aesthetic, no blue).
+  - The `<img>` rendered with `opacity-0` until `onLoad` fires, then fades to `opacity-100`.
+- Only render the share-image card when `stats?.code` is available. Until then, show the same shimmer block (so users never see a generic image or alt-text fallback).
 
-Rasterize the SVG to PNG inside the existing edge function. No new infra, no schema changes, no frontend changes.
+### 2. `src/pages/ReferralLanding.tsx`
+- Add `imgLoaded` state on the `<img>`, same fade-in pattern.
+- Add `inviterLoaded` state — set to `true` only after the Supabase lookup resolves (success or miss).
+- While `inviterLoaded` is `false`:
+  - Render shimmer placeholders for the headline ("X invited you to DeHub") instead of the default "A creator" string.
+  - Render the image slot as the shimmer skeleton (same aspect-ratio container).
+- Once `inviterLoaded` is `true`:
+  - If the code is valid and a real `share_name`/address was returned, render the personalised heading + image (image still fades in on its own `onLoad`).
+  - If lookup returned nothing for a valid code, keep the heading minimal ("You've been invited to DeHub" with the code) — no "A creator" string.
+- Keep the existing invalid-code branch unchanged.
 
-### Changes
+### 3. Shimmer styling (inline, no new file)
+Reuse Tailwind primitives already used elsewhere in the project:
+```
+<div class="absolute inset-0 overflow-hidden rounded-3xl bg-white/[0.04]">
+  <div class="absolute inset-0 -translate-x-full animate-[shimmer_1.6s_infinite] bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+</div>
+```
+The `shimmer` keyframe already exists in `tailwind.config.ts` / `index.css` for other skeletons; if not, add a minimal `@keyframes shimmer { 100% { transform: translateX(100%); } }` to `src/index.css` (one small addition, no token changes).
 
-1. **`supabase/functions/affiliate-share-image/index.ts`**
-   - Add `resvg-wasm` (`https://esm.sh/@resvg/resvg-wasm@2.6.2`) — runs in Deno, no native deps.
-   - Default response: render the SVG → PNG (1200×630), return `Content-Type: image/png`.
-   - Keep `?format=svg` as an opt-in for the in-app `/affiliate` preview (lighter, sharper at any size) — flip the `<img>` in `AffiliatePage.tsx` to request `?format=svg` so the dashboard stays snappy.
-   - Cache: `public, s-maxage=86400, stale-while-revalidate=604800` on the PNG so social scrapers cache aggressively; keep `no-store` only for `?format=svg&fresh=1` refresh button.
-
-2. **`supabase/functions/ssr-seo/index.ts`**
-   - No code change needed — the OG meta already points at `affiliate-share-image?code=...&width=1200&height=630`, which will now be a PNG.
-   - Confirm `og:image:type` stays `image/png` (already derived from URL extension; add explicit `.png`-style query handling if needed — easiest: append `&fmt=png` to the OG URL and have the function honor it).
-
-3. **`src/pages/app/AffiliatePage.tsx`**
-   - Switch the on-page preview `<img>` to `?format=svg` so the page itself loads the lightweight SVG (faster, crisp on retina). Sharing/OG still uses PNG via the SSR meta tags.
-
-### Post-deploy: bust social caches
-
-Telegram/Facebook cache previews aggressively. After deploy the user must force a re-scrape per platform, or the old (image-less) preview persists for hours/days:
-
-- **Facebook/WhatsApp:** https://developers.facebook.com/tools/debug/ → paste link → "Scrape Again"
-- **LinkedIn:** https://www.linkedin.com/post-inspector/
-- **Telegram:** message `@WebpageBot` with the link, or append `?v=2` to force a fresh fetch
-- **X:** already works
-
-### Verification
-
-- `curl -I "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/affiliate-share-image?code=CPZQS9G9"` → expect `content-type: image/png`.
-- Run the Facebook debugger on `https://dehub.io/r/CPZQS9G9` → expect og:image to load and a card preview to render.
-- Re-share in Telegram with `?v=2` → expect image to appear.
-
-## Not changing
-
-- No DB, no auth, no contracts, no frontend logic beyond the one `<img src>` swap.
-- No migration off Netlify.
-- The SSR function, bot detection, and OG tag structure all stay as-is.
+### Out of scope
+- No edge-function changes.
+- No copy changes beyond removing the "A creator" fallback.
+- No layout or spacing changes outside the image card / hero block.

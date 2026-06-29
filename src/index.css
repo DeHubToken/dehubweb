@@ -327,6 +327,11 @@ html {
   }
 }
 
+@keyframes shimmer-sweep {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(400%); }
+}
+
 /* Medal shine animation for leaderboard */
 .medal-shine-container {
   position: relative;
