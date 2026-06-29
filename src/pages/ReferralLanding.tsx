@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { isValidAffiliateCode, setAffiliateRef } from "@/lib/affiliateRef";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
-import dehubLogo from "@/assets/dehub-logo-full.png.asset.json";
+
 
 const SITE = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
 
@@ -83,7 +83,7 @@ export default function ReferralLanding() {
               <p className="text-sm uppercase tracking-[0.3em] text-white/50">You've been invited</p>
               <h1 className="text-4xl md:text-6xl font-bold leading-tight flex flex-col items-center gap-4">
                 <span>{inviter} invited you to</span>
-                <img src={dehubLogo.url} alt="DeHub" className="h-12 md:h-16 w-auto" />
+                <span className="text-white">DeHub</span>
               </h1>
               <p className="text-lg text-white/70">
                 Join with code <span className="font-mono font-bold tracking-[0.3em] text-white">{code}</span>
