@@ -92,8 +92,8 @@ export default function AffiliatePage() {
   return (
     <>
       <SEOHead
-        title="DeHub Affiliate — Earn 20% Recurring"
-        description="Invite anyone to DeHub and earn 20% of all revenue they generate, forever."
+        title="DeHub Affiliate — Earn 20% + 5% Recurring"
+        description={`Invite anyone to DeHub and earn ${AFFILIATE_L1_COMMISSION_PCT}% of all revenue they generate, plus ${AFFILIATE_L2_COMMISSION_PCT}% from everyone they invite. Forever.`}
       />
       {!wallet ? (
         <AuthGate description="You need a DeHub account to access the affiliate programme." />
@@ -113,31 +113,51 @@ export default function AffiliatePage() {
 
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <Badge className="rounded-full bg-white/10 text-white border border-white/15 backdrop-blur-md">
-                <Sparkles className="w-3 h-3 mr-1" /> {AFFILIATE_COMMISSION_PCT}% recurring
-              </Badge>
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge className="rounded-full bg-white/10 text-white border border-white/15 backdrop-blur-md">
+                  <Sparkles className="w-3 h-3 mr-1" /> Beta · 2-tier residual
+                </Badge>
+                <Badge className="rounded-full bg-white/10 text-white border border-white/15 backdrop-blur-md">
+                  {AFFILIATE_L1_COMMISSION_PCT}% direct
+                </Badge>
+                <Badge className="rounded-full bg-white/10 text-white border border-white/15 backdrop-blur-md">
+                  + {AFFILIATE_L2_COMMISSION_PCT}% second tier
+                </Badge>
+              </div>
               <h1 className="mt-2 text-2xl md:text-4xl font-bold text-white">
-                Earn {AFFILIATE_COMMISSION_PCT}% of every invite's revenue, forever
+                Earn {AFFILIATE_L1_COMMISSION_PCT}% from everyone you invite — and {AFFILIATE_L2_COMMISSION_PCT}% from everyone <em>they</em> invite.
               </h1>
+              <p className="mt-2 text-sm md:text-base text-white/60 max-w-3xl">
+                Every time someone uses any DeHub revenue-generating feature, you earn residually and perpetually.
+              </p>
             </div>
           </div>
 
           {/* Stats grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <StatCard
               icon={<Users className="w-4 h-4" />}
-              label="Referrals"
+              label="Tier 1 referrals"
               value={loading ? null : String(stats?.referrals ?? 0)}
+              hint={`${AFFILIATE_L1_COMMISSION_PCT}%`}
+            />
+            <StatCard
+              icon={<Users className="w-4 h-4" />}
+              label="Tier 2 referrals"
+              value={loading ? null : String(stats?.l2Referrals ?? 0)}
+              hint={`${AFFILIATE_L2_COMMISSION_PCT}%`}
             />
             <StatCard
               icon={<Wallet className="w-4 h-4" />}
               label="Total earned"
               value={loading ? null : formatMoney(stats?.totalEarnedCents ?? 0, stats?.currency || "USD")}
+              hint={loading || !stats ? undefined : `T1 ${formatMoney(stats.l1EarnedCents, stats.currency || "USD")} · T2 ${formatMoney(stats.l2EarnedCents, stats.currency || "USD")}`}
             />
             <StatCard
               icon={<Sparkles className="w-4 h-4" />}
-              label="Commission rate"
-              value={`${AFFILIATE_COMMISSION_PCT}%`}
+              label="Commission"
+              value={`${AFFILIATE_L1_COMMISSION_PCT}% + ${AFFILIATE_L2_COMMISSION_PCT}%`}
+              hint="residual · perpetual"
             />
           </div>
 
@@ -148,8 +168,7 @@ export default function AffiliatePage() {
                 <div>
                   <h2 className="text-lg font-semibold text-white">Your invite link</h2>
                   <p className="text-sm text-white/60">
-                    Share this anywhere. Anyone who signs up via your link earns you {AFFILIATE_COMMISSION_PCT}% of
-                    every dollar they ever spend on DeHub.
+                    Share anywhere. You earn {AFFILIATE_L1_COMMISSION_PCT}% of every dollar your invites ever spend on DeHub, plus {AFFILIATE_L2_COMMISSION_PCT}% from everyone <em>they</em> invite.
                   </p>
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => void load()} disabled={loading}>
@@ -214,12 +233,14 @@ export default function AffiliatePage() {
 
           {/* How it works */}
           <Card className="border-white/10 bg-white/[0.03]">
-            <CardContent className="p-5 md:p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <CardContent className="p-5 md:p-6 grid grid-cols-1 md:grid-cols-4 gap-4">
               <Step n={1} title="Share your link" body="Drop your invite link into Discord, X, YouTube, your stream — anywhere." />
-              <Step n={2} title="They join DeHub" body="Anyone who lands via your link is permanently attributed to you (first-touch wins, 90 days)." />
-              <Step n={3} title={`Earn ${AFFILIATE_COMMISSION_PCT}% forever`} body={`You receive ${AFFILIATE_COMMISSION_PCT}% of every dollar of revenue they ever generate on DeHub. Recurring, lifetime.`} />
+              <Step n={2} title="They join DeHub" body="Anyone who lands via your link is permanently attributed to you (first-touch wins, 90-day cookie)." />
+              <Step n={3} title={`Earn ${AFFILIATE_L1_COMMISSION_PCT}% — direct`} body={`You receive ${AFFILIATE_L1_COMMISSION_PCT}% of every dollar of revenue your invites ever generate on DeHub.`} />
+              <Step n={4} title={`Earn ${AFFILIATE_L2_COMMISSION_PCT}% — second tier`} body={`When your invites invite their friends, you also earn ${AFFILIATE_L2_COMMISSION_PCT}% of their revenue. Recurring, lifetime.`} />
             </CardContent>
           </Card>
+
 
           {wallet && (
             <p className="text-xs text-white/40">
