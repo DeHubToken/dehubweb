@@ -1078,7 +1078,7 @@ export default function FeaturesPage() {
       )}
 
       {/* Submit Drawer */}
-      <SubmitFeatureDrawer open={drawerOpen} onOpenChange={setDrawerOpen} />
+      <SubmitFeatureDrawer open={drawerOpen} onOpenChange={setDrawerOpen} initialCategory={initialCategory} />
     </div>
   );
 }
