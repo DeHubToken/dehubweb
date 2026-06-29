@@ -219,6 +219,16 @@ export function GlobalFeedNav() {
             />
           )}
           <div className="relative z-20 flex scrollbar-hide" style={{ touchAction: 'pan-x' }}>
+            {/* Settings Button - toggles current tab's filters */}
+            {isHomePage && (
+              <button
+                onClick={handleSettingsClick}
+                className="relative flex items-center justify-center px-3 py-2.5 rounded-xl transition-colors text-zinc-400 hover:text-white hover:bg-white/5"
+                aria-label="Feed settings"
+              >
+                <Settings2 className="relative z-10 w-4 h-4" />
+              </button>
+            )}
             {FEED_TABS.map((tab) => {
               const isActive = activeTab === tab.value;
               return (
@@ -239,16 +249,6 @@ export function GlobalFeedNav() {
                 </button>
               );
             })}
-            {/* Settings Button - toggles current tab's filters */}
-            {isHomePage && (
-              <button
-                onClick={handleSettingsClick}
-                className="relative flex items-center justify-center px-3 py-2.5 rounded-xl transition-colors text-zinc-400 hover:text-white hover:bg-white/5"
-                aria-label="Feed settings"
-              >
-                <Settings2 className="relative z-10 w-4 h-4" />
-              </button>
-            )}
           </div>
         </div>
       </div>
