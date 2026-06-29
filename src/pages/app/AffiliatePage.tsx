@@ -59,16 +59,6 @@ export default function AffiliatePage() {
     () => (stats?.code ? `${SITE}/r/${stats.code}` : ""),
     [stats?.code],
   );
-  const inviteUrl = useMemo(
-    () => (stats?.code ? `${SITE}/app?ref=${stats.code}` : ""),
-    [stats?.code],
-  );
-  const shareText = useMemo(
-    () => (stats?.code
-      ? `Join me on DeHub — the decentralised creator network. Use my link for an instant invite: ${shareUrl}`
-      : ""),
-    [shareUrl, stats?.code],
-  );
   const shareImageUrl = useMemo(
     () => `${getAffiliateShareImageUrl(stats?.code, 1200, 630)}&v=${imgVersion}`,
     [stats?.code, imgVersion],
