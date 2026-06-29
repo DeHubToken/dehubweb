@@ -220,6 +220,7 @@ export default function AffiliatePage() {
               <code className="font-mono">{wallet.slice(0, 6)}…{wallet.slice(-4)}</code>
               {displayName ? <> · {displayName}</> : null}
             </p>
+          )}
         </div>
       )}
     </>
