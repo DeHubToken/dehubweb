@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { isValidAffiliateCode, setAffiliateRef } from "@/lib/affiliateRef";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
+import { BadgeIcon } from "@/components/app/BadgeIcon";
 
 
 const SITE = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
@@ -16,6 +17,8 @@ export default function ReferralLanding() {
   const code = (rawCode || "").trim().toUpperCase();
   const valid = isValidAffiliateCode(code);
   const [inviter, setInviter] = useState<string | null>(null);
+  const [inviterUsername, setInviterUsername] = useState<string | null>(null);
+  const [inviterBadgeBalance, setInviterBadgeBalance] = useState<number | null>(null);
   const [inviterLoaded, setInviterLoaded] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgRetry, setImgRetry] = useState(0);
@@ -48,6 +51,11 @@ export default function ReferralLanding() {
             const apiDisplay = (u?.displayName || "").trim();
             const apiUser = (u?.username || "").trim();
             resolved = apiDisplay || apiUser || null;
+            if (!cancelled) {
+              setInviterUsername(apiUser || null);
+              const bb = Number(u?.badgeBalance);
+              setInviterBadgeBalance(Number.isFinite(bb) ? bb : null);
+            }
           }
         } catch { /* ignore */ }
       }
@@ -104,7 +112,16 @@ export default function ReferralLanding() {
               <p className="text-sm uppercase tracking-[0.3em] text-white/50">You've been invited</p>
               <h1 className="text-4xl md:text-6xl font-bold leading-tight flex flex-col items-center gap-4">
                 {inviterLoaded ? (
-                  <span>{inviter ? `${inviter} invited you to` : "You've been invited to"}</span>
+                  <span className="inline-flex items-center justify-center gap-3 flex-wrap">
+                    <span>{inviter ? `${inviter} invited you to` : "You've been invited to"}</span>
+                    {inviter && (inviterBadgeBalance !== null || inviterUsername) && (
+                      <BadgeIcon
+                        badgeBalance={inviterBadgeBalance ?? undefined}
+                        username={inviterUsername}
+                        className="w-6 h-6 md:w-8 md:h-8"
+                      />
+                    )}
+                  </span>
                 ) : (
                   <span className="inline-block h-10 md:h-14 w-64 md:w-96 rounded-xl bg-white/[0.06] relative overflow-hidden">
                     <span className="absolute inset-0 animate-pulse bg-white/[0.04]" />

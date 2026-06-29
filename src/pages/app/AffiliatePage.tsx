@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
 import { SEOHead } from "@/components/SEOHead";
+import { BadgeIcon } from "@/components/app/BadgeIcon";
 import { AFFILIATE_COMMISSION_PCT, AFFILIATE_L1_COMMISSION_PCT, AFFILIATE_L2_COMMISSION_PCT, loadAffiliateStats, type AffiliateStats } from "@/lib/affiliate";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
 
@@ -30,6 +31,8 @@ export default function AffiliatePage() {
     ?? null;
   const displayName = (user as { username?: string | null; displayName?: string | null } | null)
     ?.displayName ?? (user as { username?: string | null } | null)?.username ?? null;
+  const username = (user as { username?: string | null } | null)?.username ?? null;
+  const badgeBalance = (user as { badgeBalance?: number | null } | null)?.badgeBalance ?? null;
 
   const [stats, setStats] = useState<AffiliateStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -208,10 +211,15 @@ export default function AffiliatePage() {
 
 
           {wallet && (
-            <p className="text-xs text-white/40">
-              Affiliate wallet:&nbsp;
+            <p className="text-xs text-white/40 inline-flex items-center gap-1.5 flex-wrap">
+              <span>Affiliate wallet:&nbsp;</span>
               <code className="font-mono">{wallet.slice(0, 6)}…{wallet.slice(-4)}</code>
-              {displayName ? <> · {displayName}</> : null}
+              {displayName ? (
+                <span className="inline-flex items-center gap-1.5">
+                  <span>· {displayName}</span>
+                  <BadgeIcon badgeBalance={badgeBalance ?? undefined} username={username} className="w-3 h-3" />
+                </span>
+              ) : null}
             </p>
           )}
         </div>
