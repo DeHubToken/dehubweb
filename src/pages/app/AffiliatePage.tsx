@@ -29,7 +29,7 @@ export default function AffiliatePage() {
     ?? (user as { address?: string | null } | null)?.address
     ?? null;
   const displayName = (user as { username?: string | null; displayName?: string | null } | null)
-    ?.username ?? (user as { displayName?: string | null } | null)?.displayName ?? null;
+    ?.displayName ?? (user as { username?: string | null } | null)?.username ?? null;
 
   const [stats, setStats] = useState<AffiliateStats | null>(null);
   const [loading, setLoading] = useState(true);
