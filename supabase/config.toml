@@ -109,3 +109,6 @@ verify_jwt = false
 [functions.community-admin-chat]
 verify_jwt = false
 
+[functions.affiliate-share-image]
+verify_jwt = false
+
