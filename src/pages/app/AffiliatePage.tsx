@@ -194,13 +194,13 @@ export default function AffiliatePage() {
                       readOnly
                       value={inviteUrl}
                       onClick={() => void copy(inviteUrl, "Direct app link copied")}
-                      className="font-mono text-xs bg-black/40 border-white/10 cursor-pointer"
+                      className="font-mono text-xs bg-black/40 border-white/10 text-white placeholder:text-white/40 cursor-pointer"
                     />
                     <Input
                       readOnly
                       value={shareText}
                       onClick={() => void copy(shareText, "Share text copied")}
-                      className="text-xs bg-black/40 border-white/10 cursor-pointer"
+                      className="text-xs bg-black/40 border-white/10 text-white placeholder:text-white/40 cursor-pointer"
                     />
                   </div>
                 </>
