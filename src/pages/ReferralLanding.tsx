@@ -51,6 +51,11 @@ export default function ReferralLanding() {
             const apiDisplay = (u?.displayName || "").trim();
             const apiUser = (u?.username || "").trim();
             resolved = apiDisplay || apiUser || null;
+            if (!cancelled) {
+              setInviterUsername(apiUser || null);
+              const bb = Number(u?.badgeBalance);
+              setInviterBadgeBalance(Number.isFinite(bb) ? bb : null);
+            }
           }
         } catch { /* ignore */ }
       }
