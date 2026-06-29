@@ -17,6 +17,8 @@ export default function ReferralLanding() {
   const code = (rawCode || "").trim().toUpperCase();
   const valid = isValidAffiliateCode(code);
   const [inviter, setInviter] = useState<string | null>(null);
+  const [inviterUsername, setInviterUsername] = useState<string | null>(null);
+  const [inviterBadgeBalance, setInviterBadgeBalance] = useState<number | null>(null);
   const [inviterLoaded, setInviterLoaded] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgRetry, setImgRetry] = useState(0);
