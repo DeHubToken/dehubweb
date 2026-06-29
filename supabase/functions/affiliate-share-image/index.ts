@@ -19,6 +19,57 @@ const CDN = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
 const API = "https://api.dehub.io";
 const VALID_CODE = /^[A-Z0-9_-]{3,40}$/;
 
+const DEFAULT_BANNERS = [
+  "https://dehub.io/__l5e/assets-v1/cd209550-77ef-4c95-b16a-d83ad3adc7ea/default-banner-1.png",
+  "https://dehub.io/__l5e/assets-v1/4be06f0a-849c-44c4-bdc2-7c5f0a261b6c/default-banner-2.png",
+  "https://dehub.io/__l5e/assets-v1/fa63c89b-9a94-4f94-98f3-8eb5e8289350/default-banner-3.png",
+  "https://dehub.io/__l5e/assets-v1/2362a631-0fc5-4a89-8e6b-bf6be734f67b/default-banner-4.png",
+  "https://dehub.io/__l5e/assets-v1/bd3416e0-f49a-4bc6-a758-7443d9dbcd87/default-banner-5.png",
+  "https://dehub.io/__l5e/assets-v1/d3b70189-d07f-43f5-b901-ef4f9aeb24c6/default-banner-6.png",
+  "https://dehub.io/__l5e/assets-v1/fcfba189-8e23-45a0-a96f-bd865f11eb88/default-banner-7.png",
+  "https://dehub.io/__l5e/assets-v1/11cfc96b-88ac-4745-adc1-4ba16c47c0a9/default-banner-8.png",
+  "https://dehub.io/__l5e/assets-v1/fb0303c4-fe1a-4742-93a7-5c612166d7b2/default-banner-9.png",
+];
+
+function pickDefaultBanner(address: string | null): string {
+  if (!address) return DEFAULT_BANNERS[0];
+  let h = 0;
+  for (let i = 0; i < address.length; i++) h = (h * 31 + address.charCodeAt(i)) >>> 0;
+  return DEFAULT_BANNERS[h % DEFAULT_BANNERS.length];
+}
+
+async function fetchAsDataUri(url: string): Promise<string | null> {
+  try {
+    const r = await fetch(url);
+    if (!r.ok) return null;
+    const ct = r.headers.get("content-type") || "image/png";
+    if (!ct.startsWith("image/")) return null;
+    const buf = new Uint8Array(await r.arrayBuffer());
+    if (buf.byteLength < 200) return null;
+    return `data:${ct};base64,${encodeB64(buf)}`;
+  } catch {
+    return null;
+  }
+}
+
+async function fetchCoverDataUri(address: string | null, apiCoverPath: string | null): Promise<string | null> {
+  const candidates: string[] = [];
+  if (apiCoverPath) {
+    if (apiCoverPath.startsWith("http")) candidates.push(apiCoverPath);
+    else candidates.push(`${CDN}${apiCoverPath.replace(/^\/+/, "").replace(/^statics\//, "")}`);
+  }
+  if (address) {
+    for (const ext of ["jpg", "png", "jpeg", "webp"]) {
+      candidates.push(`${CDN}covers/${address.toLowerCase()}.${ext}`);
+    }
+  }
+  for (const url of candidates) {
+    const data = await fetchAsDataUri(url);
+    if (data) return data;
+  }
+  return null;
+}
+
 function escapeXml(value: string) {
   return value.replace(/[<>&"']/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;" }[c] as string));
 }
@@ -72,6 +123,7 @@ async function fetchProfile(code: string) {
     }
   }
   let avatarPath: string | null = null;
+  let coverPath: string | null = null;
   let displayName: string | null = shareName;
   let username: string | null = null;
   if (address) {
@@ -81,12 +133,13 @@ async function fetchProfile(code: string) {
         const j = await r.json();
         const u = j?.result || j;
         avatarPath = u?.avatarImageUrl || u?.avatarUrl || null;
+        coverPath = u?.coverImageUrl || u?.coverUrl || null;
         displayName = displayName || u?.displayName || u?.username || null;
         username = u?.username || null;
       }
     } catch { /* ignore */ }
   }
-  return { address, displayName, username, avatarPath };
+  return { address, displayName, username, avatarPath, coverPath };
 }
 
 async function buildQrSvgInner(text: string): Promise<{ path: string; count: number }> {
@@ -107,6 +160,7 @@ function buildSvg(opts: {
   name: string;
   username: string | null;
   avatarDataUri: string | null;
+  bannerDataUri: string | null;
   qrPath: string;
   qrCount: number;
   width: number;
@@ -131,31 +185,27 @@ function buildSvg(opts: {
 
   const avatarHref = opts.avatarDataUri ?? "";
   const hasAvatar = Boolean(opts.avatarDataUri);
+  const bannerHref = opts.bannerDataUri ?? "";
+  const hasBanner = Boolean(opts.bannerDataUri);
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Inter, sans-serif">
   <defs>
     <clipPath id="circle"><circle cx="${portraitCX}" cy="${portraitCY}" r="${portraitR}"/></clipPath>
     <clipPath id="bgClip"><rect width="${W}" height="${H}"/></clipPath>
-    <filter id="bgBlur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="60"/></filter>
+    <filter id="bgBlur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="40"/></filter>
     <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="22"/></filter>
     <radialGradient id="vignette" cx="50%" cy="50%" r="75%"><stop offset="55%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity="0.85"/></radialGradient>
-    <linearGradient id="scrim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0.15"/><stop offset="1" stop-color="#000" stop-opacity="0.85"/></linearGradient>
+    <linearGradient id="scrim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0.25"/><stop offset="1" stop-color="#000" stop-opacity="0.85"/></linearGradient>
     <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff" stop-opacity="0.9"/><stop offset="1" stop-color="#ffffff" stop-opacity="0.25"/></linearGradient>
   </defs>
 
   <rect width="${W}" height="${H}" fill="#0a0a0b"/>
-  ${hasAvatar ? `
   <g clip-path="url(#bgClip)">
-    <image href="${avatarHref}" x="${-W * 0.1}" y="${-H * 0.1}" width="${W * 1.2}" height="${H * 1.2}" preserveAspectRatio="xMidYMid slice" filter="url(#bgBlur)" opacity="0.85"/>
+    <image href="${bannerHref}" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="xMidYMid slice" filter="${hasBanner ? "url(#bgBlur)" : "none"}" opacity="0.9"/>
   </g>
   <rect width="${W}" height="${H}" fill="url(#scrim)"/>
   <rect width="${W}" height="${H}" fill="url(#vignette)"/>
-  ` : `
-  <rect width="${W}" height="${H}" fill="#0a0a0b"/>
-  <circle cx="${W * 0.2}" cy="${H * 0.2}" r="${W * 0.4}" fill="#1a1a22" opacity="0.7"/>
-  <circle cx="${W * 0.85}" cy="${H * 0.85}" r="${W * 0.35}" fill="#15151c" opacity="0.7"/>
-  `}
 
   <g>
     <circle cx="${portraitCX}" cy="${portraitCY}" r="${portraitR + 14}" fill="#fff" opacity="0.08" filter="url(#softGlow)"/>
@@ -206,15 +256,21 @@ serve(async (req) => {
     let displayName: string | null = null;
     let username: string | null = null;
     let avatarPath: string | null = null;
+    let coverPath: string | null = null;
     if (rawCode) {
       const p = await fetchProfile(rawCode);
       address = p.address;
       displayName = p.displayName;
       username = p.username;
       avatarPath = p.avatarPath;
+      coverPath = p.coverPath;
     }
 
-    const avatarDataUri = await fetchAvatarDataUri(address, avatarPath);
+    const [avatarDataUri, coverDataUri] = await Promise.all([
+      fetchAvatarDataUri(address, avatarPath),
+      fetchCoverDataUri(address, coverPath),
+    ]);
+    const bannerDataUri = coverDataUri || (await fetchAsDataUri(pickDefaultBanner(address)));
     const shareUrl = rawCode ? `${SITE}/r/${rawCode}` : SITE;
     const { path: qrPath, count: qrCount } = await buildQrSvgInner(shareUrl);
 
@@ -223,6 +279,7 @@ serve(async (req) => {
       name: cleanName(displayName || username),
       username,
       avatarDataUri,
+      bannerDataUri,
       qrPath,
       qrCount,
       width,
