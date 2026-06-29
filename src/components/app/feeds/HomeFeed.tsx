@@ -8,7 +8,7 @@
  * @module components/app/feeds/HomeFeed
  */
 
-import { useEffect, useRef, useMemo, useCallback, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useMemo, useCallback, useState, useDeferredValue, type ReactNode } from 'react';
 import { getDeletedPostIds } from '@/lib/deleted-posts-store';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
