@@ -35,6 +35,7 @@ export default function AffiliatePage() {
 
   const [stats, setStats] = useState<AffiliateStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [imgVersion, setImgVersion] = useState(() => Date.now());
 
   const load = useCallback(async () => {
     if (!wallet) { setLoading(false); return; }
@@ -43,6 +44,7 @@ export default function AffiliatePage() {
       const fallbackName = wallet ? `${wallet.slice(0, 6)}…${wallet.slice(-4)}` : null;
       const s = await loadAffiliateStats(wallet, displayName ?? fallbackName);
       setStats(s);
+      setImgVersion(Date.now());
     } catch (e) {
       toast.error("Could not load affiliate stats");
       // eslint-disable-next-line no-console
@@ -69,8 +71,8 @@ export default function AffiliatePage() {
     [shareUrl, stats?.code],
   );
   const shareImageUrl = useMemo(
-    () => getAffiliateShareImageUrl(stats?.code, 1200, 630),
-    [stats?.code],
+    () => `${getAffiliateShareImageUrl(stats?.code, 1200, 630)}&v=${imgVersion}`,
+    [stats?.code, imgVersion],
   );
 
   const copy = async (txt: string, label = "Copied") => {
