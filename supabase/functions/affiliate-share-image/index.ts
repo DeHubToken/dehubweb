@@ -337,7 +337,11 @@ serve(async (req) => {
 
     // Rasterize SVG → PNG so Facebook/Telegram/WhatsApp/LinkedIn/Discord render the preview.
     await ensureResvg();
-    const resvg = new Resvg(svg, { fitTo: { mode: "width", value: width } });
+    const fonts = await loadFonts();
+    const resvg = new Resvg(svg, {
+      fitTo: { mode: "width", value: width },
+      font: { fontBuffers: fonts, loadSystemFonts: false, defaultFontFamily: "Inter" },
+    });
     const png = resvg.render().asPng();
     return new Response(png, {
       status: 200,
