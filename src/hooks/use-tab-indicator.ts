@@ -49,7 +49,8 @@ export function useTabIndicator<T extends string>(
       prev.height === next.height &&
       prev.ready === next.ready
     ) ? prev : next);
-  }, [activeTab]);
+  }, [activeTab, shrinkFactor]);
+
 
   const stopTracking = useCallback(() => {
     if (trackingRafRef.current !== null) {
