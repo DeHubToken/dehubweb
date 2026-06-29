@@ -88,10 +88,9 @@ export default function AffiliatePage() {
         title="DeHub Affiliate — Earn 20% Recurring"
         description="Invite anyone to DeHub and earn 20% of all revenue they generate, forever."
       />
-      <AuthGate
-        title="Sign in to your DeHub account"
-        description="You need a DeHub account to access the affiliate programme."
-      >
+      {!wallet ? (
+        <AuthGate description="You need a DeHub account to access the affiliate programme." />
+      ) : (
         <div className="mx-auto w-full max-w-5xl px-4 py-6 md:py-10 space-y-6">
           {/* Hero / brand card */}
           <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black">
