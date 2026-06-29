@@ -428,6 +428,25 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const isFollowingMode = selectedSort.value === 'following';
 
 
+  // Prompt flow modal state
+  const [promptModalOpen, setPromptModalOpen] = useState(false);
+  const [initialPromptText, setInitialPromptText] = useState('');
+
+  // Auto-open from /prompt landing redirect (?prompt=…)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const p = params.get('prompt');
+    if (p) {
+      setInitialPromptText(p);
+      setPromptModalOpen(true);
+      // clean URL
+      const url = new URL(window.location.href);
+      url.searchParams.delete('prompt');
+      window.history.replaceState({}, '', url.toString());
+    }
+  }, []);
+
   // Handle sort selection with special logic for "Subscribed" (coming soon)
   const handleSortSelect = useCallback((option: SortOption) => {
     if (option.value === 'subscribed') {
@@ -436,6 +455,11 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     }
     if (option.value === 'following' && !isAuthenticated) {
       toast.info('Log in to see followed creators');
+      return;
+    }
+    if (option.value === 'prompt') {
+      setInitialPromptText('');
+      setPromptModalOpen(true);
       return;
     }
     setSelectedSort(option);
