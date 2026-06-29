@@ -255,7 +255,7 @@ export default function AffiliatePage() {
   );
 }
 
-function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: string | null }) {
+function StatCard({ icon, label, value, hint }: { icon: React.ReactNode; label: string; value: string | null; hint?: string }) {
   return (
     <Card className="border-white/10 bg-white/[0.03] backdrop-blur">
       <CardContent className="p-4">
@@ -265,6 +265,7 @@ function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string
         <div className="mt-2 text-2xl font-semibold text-white">
           {value === null ? <Skeleton className="h-7 w-24" /> : value}
         </div>
+        {hint ? <div className="mt-1 text-[11px] text-white/40">{hint}</div> : null}
       </CardContent>
     </Card>
   );
