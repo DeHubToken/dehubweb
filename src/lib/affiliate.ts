@@ -3,6 +3,8 @@ import { getAffiliateRef } from "@/lib/affiliateRef";
 import { withWalletHeader } from "@/lib/supabase-wallet-client";
 
 export const AFFILIATE_COMMISSION_PCT = 20;
+export const AFFILIATE_L1_COMMISSION_PCT = 20;
+export const AFFILIATE_L2_COMMISSION_PCT = 5;
 
 const randomCode = (len = 8) => {
   const alphabet = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
@@ -83,7 +85,17 @@ export async function attributeReferralIfPending(referredAddress: string) {
     .eq("active", true)
     .maybeSingle() as unknown as { data: { owner_address: string } | null };
   if (!codeRow) return;
-  if (codeRow.owner_address.toLowerCase() === addr) return; // can't self-refer
+  const l1Owner = codeRow.owner_address.toLowerCase();
+  if (l1Owner === addr) return; // can't self-refer
+
+  // Look up L2: who referred the L1 owner (if anyone)?
+  // @ts-ignore
+  const { data: l2Row } = await supabase
+    .from("affiliate_referrals" as never)
+    .select("owner_address")
+    .ilike("referred_address", l1Owner)
+    .maybeSingle() as unknown as { data: { owner_address: string } | null };
+  const l2Owner = l2Row?.owner_address?.toLowerCase() ?? null;
 
   await withWalletHeader(
     // @ts-ignore
@@ -91,8 +103,9 @@ export async function attributeReferralIfPending(referredAddress: string) {
       .from("affiliate_referrals" as never)
       .insert({
         code,
-        owner_address: codeRow.owner_address.toLowerCase(),
+        owner_address: l1Owner,
         referred_address: addr,
+        l2_owner_address: l2Owner && l2Owner !== addr ? l2Owner : null,
         source: typeof window !== "undefined" ? window.location.hostname : null,
       } as never),
     addr,
@@ -102,8 +115,11 @@ export async function attributeReferralIfPending(referredAddress: string) {
 export type AffiliateStats = {
   code: string | null;
   shareName: string | null;
-  referrals: number;
+  referrals: number;        // L1 — directly invited
+  l2Referrals: number;      // L2 — invited by your L1s
   totalEarnedCents: number;
+  l1EarnedCents: number;
+  l2EarnedCents: number;
   currency: string;
 };
 
@@ -117,23 +133,36 @@ export async function loadAffiliateStats(ownerAddress: string, shareName?: strin
     .from("affiliate_referrals" as never)
     .select("id", { count: "exact", head: true })
     .ilike("owner_address", addr) as unknown as { count: number | null };
+
+  // @ts-ignore
+  const l2RefRes = await supabase
+    .from("affiliate_referrals" as never)
+    .select("id", { count: "exact", head: true })
+    .ilike("l2_owner_address", addr) as unknown as { count: number | null };
+
   // @ts-ignore
   const earnRes = await withWalletHeader(
     // @ts-ignore
     supabase
       .from("affiliate_earnings" as never)
-      .select("commission_cents,currency"),
+      .select("commission_cents,currency,tier"),
     addr,
-  ) as unknown as { data: Array<{ commission_cents: number; currency: string }> | null };
+  ) as unknown as { data: Array<{ commission_cents: number; currency: string; tier: number }> | null };
 
-  const totalEarnedCents = (earnRes.data ?? []).reduce((sum, r) => sum + (r.commission_cents ?? 0), 0);
-  const currency = (earnRes.data?.[0]?.currency || "usd").toUpperCase();
+  const rows = earnRes.data ?? [];
+  const l1EarnedCents = rows.filter(r => r.tier !== 2).reduce((s, r) => s + (r.commission_cents ?? 0), 0);
+  const l2EarnedCents = rows.filter(r => r.tier === 2).reduce((s, r) => s + (r.commission_cents ?? 0), 0);
+  const totalEarnedCents = l1EarnedCents + l2EarnedCents;
+  const currency = (rows[0]?.currency || "usd").toUpperCase();
 
   return {
     code,
     shareName: codeRes?.share_name ?? null,
     referrals: refRes.count ?? 0,
+    l2Referrals: l2RefRes.count ?? 0,
     totalEarnedCents,
+    l1EarnedCents,
+    l2EarnedCents,
     currency,
   };
 }

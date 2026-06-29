@@ -60,6 +60,7 @@ export type Database = {
           source: string
           source_ref: string | null
           status: string
+          tier: number
         }
         Insert: {
           code?: string | null
@@ -73,6 +74,7 @@ export type Database = {
           source: string
           source_ref?: string | null
           status?: string
+          tier?: number
         }
         Update: {
           code?: string | null
@@ -86,6 +88,7 @@ export type Database = {
           source?: string
           source_ref?: string | null
           status?: string
+          tier?: number
         }
         Relationships: []
       }
@@ -94,6 +97,7 @@ export type Database = {
           code: string
           created_at: string
           id: string
+          l2_owner_address: string | null
           owner_address: string
           referred_address: string
           source: string | null
@@ -102,6 +106,7 @@ export type Database = {
           code: string
           created_at?: string
           id?: string
+          l2_owner_address?: string | null
           owner_address: string
           referred_address: string
           source?: string | null
@@ -110,6 +115,7 @@ export type Database = {
           code?: string
           created_at?: string
           id?: string
+          l2_owner_address?: string | null
           owner_address?: string
           referred_address?: string
           source?: string | null
