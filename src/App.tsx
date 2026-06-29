@@ -41,6 +41,7 @@ const GovernanceProposalPage = React.lazy(() => import("./pages/app/GovernancePr
 const StageDeepLinkPage = React.lazy(() => import("./pages/app/StageDeepLinkPage"));
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
+const PromptLanding = React.lazy(() => import("./pages/PromptLanding"));
 const CommunityPage = React.lazy(() => import("./pages/app/CommunityPage"));
 const EventPage = React.lazy(() => import("./pages/EventPage"));
 const StoreDetailPage = React.lazy(() => import("./pages/app/StoreDetailPage"));
