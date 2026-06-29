@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { isValidAffiliateCode, setAffiliateRef } from "@/lib/affiliateRef";
-import affiliateShareCard from "@/assets/affiliate-share-card.jpg";
+import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
 
 const SITE = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
 
@@ -16,7 +16,7 @@ export default function ReferralLanding() {
   const valid = isValidAffiliateCode(code);
   const [inviter, setInviter] = useState<string>("A creator");
 
-  const shareImage = `${SITE}${affiliateShareCard}`;
+  const shareImage = getAffiliateShareImageUrl(code, 1200, 630);
   const pageUrl = `${SITE}/r/${code}`;
   const ctaUrl = `/app?ref=${code}`;
 
@@ -89,10 +89,10 @@ export default function ReferralLanding() {
               </p>
               <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02]">
                 <img
-                  src={affiliateShareCard}
+                  src={shareImage}
                   alt={`${inviter} invited you to DeHub`}
-                  width={1216}
-                  height={640}
+                  width={1200}
+                  height={630}
                   className="w-full h-auto block"
                 />
               </div>

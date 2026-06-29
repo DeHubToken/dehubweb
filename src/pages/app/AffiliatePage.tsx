@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
 import { SEOHead } from "@/components/SEOHead";
 import { AFFILIATE_COMMISSION_PCT, loadAffiliateStats, type AffiliateStats } from "@/lib/affiliate";
-import affiliateShareCard from "@/assets/affiliate-share-card.jpg";
+import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
 
 const SITE = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
 
@@ -31,7 +31,7 @@ export default function AffiliatePage() {
     ?? (user as { address?: string | null } | null)?.address
     ?? null;
   const displayName = (user as { username?: string | null; displayName?: string | null } | null)
-    ?.username ?? (user as { displayName?: string | null } | null)?.displayName ?? null;
+    ?.username ?? (user as { displayName?: string | null } | null)?.displayName ?? "early";
 
   const [stats, setStats] = useState<AffiliateStats | null>(null);
   const [loading, setLoading] = useState(true);
@@ -40,7 +40,7 @@ export default function AffiliatePage() {
     if (!wallet) { setLoading(false); return; }
     setLoading(true);
     try {
-      const s = await loadAffiliateStats(wallet);
+      const s = await loadAffiliateStats(wallet, displayName);
       setStats(s);
     } catch (e) {
       toast.error("Could not load affiliate stats");
@@ -49,7 +49,7 @@ export default function AffiliatePage() {
     } finally {
       setLoading(false);
     }
-  }, [wallet]);
+  }, [displayName, wallet]);
 
   useEffect(() => { void load(); }, [load]);
 
@@ -66,6 +66,10 @@ export default function AffiliatePage() {
       ? `Join me on DeHub — the decentralised creator network. Use my link for an instant invite: ${shareUrl}`
       : ""),
     [shareUrl, stats?.code],
+  );
+  const shareImageUrl = useMemo(
+    () => getAffiliateShareImageUrl(stats?.code, 1200, 630),
+    [stats?.code],
   );
 
   const copy = async (txt: string, label = "Copied") => {
@@ -92,26 +96,26 @@ export default function AffiliatePage() {
         <AuthGate description="You need a DeHub account to access the affiliate programme." />
       ) : (
         <div className="mx-auto w-full max-w-5xl px-4 py-6 md:py-10 space-y-6">
-          {/* Hero / brand card */}
-          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black">
+          {/* Custom per-user share image */}
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black shadow-[0_18px_70px_rgba(255,255,255,0.08)]">
             <img
-              src={affiliateShareCard}
-              alt="DeHub Affiliate — Earn 20%"
-              width={1216}
-              height={640}
+              src={shareImageUrl}
+              alt={`${displayName || "A creator"} invited you to DeHub`}
+              width={1200}
+              height={630}
               loading="eager"
-              className="w-full h-auto block opacity-90"
+              className="w-full h-auto block"
             />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-            <div className="absolute left-4 right-4 bottom-4 md:left-8 md:bottom-8 flex flex-wrap items-end justify-between gap-3">
-              <div>
-                <Badge className="rounded-full bg-white/10 text-white border border-white/15 backdrop-blur-md">
-                  <Sparkles className="w-3 h-3 mr-1" /> {AFFILIATE_COMMISSION_PCT}% recurring
-                </Badge>
-                <h1 className="mt-2 text-2xl md:text-4xl font-bold text-white drop-shadow-md">
-                  Earn {AFFILIATE_COMMISSION_PCT}% of every invite's revenue, forever
-                </h1>
-              </div>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <Badge className="rounded-full bg-white/10 text-white border border-white/15 backdrop-blur-md">
+                <Sparkles className="w-3 h-3 mr-1" /> {AFFILIATE_COMMISSION_PCT}% recurring
+              </Badge>
+              <h1 className="mt-2 text-2xl md:text-4xl font-bold text-white">
+                Earn {AFFILIATE_COMMISSION_PCT}% of every invite's revenue, forever
+              </h1>
             </div>
           </div>
 
