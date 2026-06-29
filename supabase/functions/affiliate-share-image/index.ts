@@ -291,6 +291,69 @@ function buildSvg(opts: {
 </svg>`;
 }
 
+// In-memory PNG cache + in-flight dedup (per worker). Survives between requests.
+const PNG_CACHE = new Map<string, Uint8Array>();
+const PNG_INFLIGHT = new Map<string, Promise<Uint8Array>>();
+const PNG_CACHE_MAX = 200;
+
+function cachePng(key: string, png: Uint8Array) {
+  if (PNG_CACHE.size >= PNG_CACHE_MAX) {
+    const firstKey = PNG_CACHE.keys().next().value;
+    if (firstKey) PNG_CACHE.delete(firstKey);
+  }
+  PNG_CACHE.set(key, png);
+}
+
+async function buildPngFor(rawCode: string, width: number, height: number): Promise<{ png: Uint8Array | null; svg: string }> {
+  let address: string | null = null;
+  let displayName: string | null = null;
+  let username: string | null = null;
+  let avatarPath: string | null = null;
+  let coverPath: string | null = null;
+  if (rawCode) {
+    const p = await fetchProfile(rawCode);
+    address = p.address;
+    displayName = p.displayName;
+    username = p.username;
+    avatarPath = p.avatarPath;
+    coverPath = p.coverPath;
+  }
+
+  const [avatarDataUri, coverDataUri] = await Promise.all([
+    fetchAvatarDataUri(address, avatarPath),
+    fetchCoverDataUri(address, coverPath),
+  ]);
+  const bannerDataUri = coverDataUri || (await fetchAsDataUri(pickDefaultBanner(address)));
+  const shareUrl = rawCode ? `${SITE}/r/${rawCode}` : SITE;
+  const { path: qrPath, count: qrCount } = await buildQrSvgInner(shareUrl);
+
+  const svg = buildSvg({
+    code: rawCode,
+    name: cleanName(displayName || username),
+    username,
+    avatarDataUri,
+    bannerDataUri,
+    qrPath,
+    qrCount,
+    width,
+    height,
+  });
+
+  try {
+    await ensureResvg();
+    const fonts = await loadFonts();
+    const resvg = new Resvg(svg, {
+      fitTo: { mode: "width", value: width },
+      font: { fontBuffers: fonts, loadSystemFonts: false, defaultFontFamily: "Inter" },
+    });
+    const png = resvg.render().asPng();
+    return { png, svg };
+  } catch (e) {
+    console.error("[affiliate-share-image] rasterize failed", e);
+    return { png: null, svg };
+  }
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
   try {
@@ -299,68 +362,77 @@ serve(async (req) => {
     const width = Math.min(1920, Math.max(600, Number(url.searchParams.get("width")) || 1200));
     const height = Math.min(1080, Math.max(315, Number(url.searchParams.get("height")) || 630));
     const format = (url.searchParams.get("format") || "png").toLowerCase() === "svg" ? "svg" : "png";
+    const noCache = url.searchParams.has("v") || url.searchParams.has("nocache");
     if (rawCode && !VALID_CODE.test(rawCode)) {
       return new Response("invalid code", { status: 400, headers: corsHeaders });
     }
 
-    let address: string | null = null;
-    let displayName: string | null = null;
-    let username: string | null = null;
-    let avatarPath: string | null = null;
-    let coverPath: string | null = null;
-    if (rawCode) {
-      const p = await fetchProfile(rawCode);
-      address = p.address;
-      displayName = p.displayName;
-      username = p.username;
-      avatarPath = p.avatarPath;
-      coverPath = p.coverPath;
+    const cacheKey = `${format}:${rawCode}:${width}x${height}`;
+
+    if (format === "png" && !noCache) {
+      const cached = PNG_CACHE.get(cacheKey);
+      if (cached) {
+        return new Response(cached, {
+          status: 200,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "image/png",
+            "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800",
+            "X-Cache": "HIT",
+          },
+        });
+      }
     }
 
-    const [avatarDataUri, coverDataUri] = await Promise.all([
-      fetchAvatarDataUri(address, avatarPath),
-      fetchCoverDataUri(address, coverPath),
-    ]);
-    const bannerDataUri = coverDataUri || (await fetchAsDataUri(pickDefaultBanner(address)));
-    const shareUrl = rawCode ? `${SITE}/r/${rawCode}` : SITE;
-    const { path: qrPath, count: qrCount } = await buildQrSvgInner(shareUrl);
-
-    const svg = buildSvg({
-      code: rawCode,
-      name: cleanName(displayName || username),
-      username,
-      avatarDataUri,
-      bannerDataUri,
-      qrPath,
-      qrCount,
-      width,
-      height,
-    });
-    if (format === "svg") {
-      return new Response(svg, {
-        status: 200,
-        headers: {
-          ...corsHeaders,
-          "Content-Type": "image/svg+xml; charset=utf-8",
-          "Cache-Control": "no-store, max-age=0, must-revalidate",
-        },
-      });
+    if (format === "png") {
+      let inflight = PNG_INFLIGHT.get(cacheKey);
+      if (!inflight) {
+        inflight = (async () => {
+          const { png, svg } = await buildPngFor(rawCode, width, height);
+          if (png) cachePng(cacheKey, png);
+          // If raster failed, throw a tagged error carrying svg so caller can fallback.
+          if (!png) throw Object.assign(new Error("raster_failed"), { svg });
+          return png;
+        })();
+        PNG_INFLIGHT.set(cacheKey, inflight);
+        inflight.finally(() => PNG_INFLIGHT.delete(cacheKey));
+      }
+      try {
+        const png = await inflight;
+        return new Response(png, {
+          status: 200,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "image/png",
+            "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800",
+            "X-Cache": "MISS",
+          },
+        });
+      } catch (e) {
+        const svg = (e as { svg?: string }).svg;
+        if (svg) {
+          return new Response(svg, {
+            status: 200,
+            headers: {
+              ...corsHeaders,
+              "Content-Type": "image/svg+xml; charset=utf-8",
+              "Cache-Control": "public, s-maxage=3600",
+              "X-Fallback": "svg",
+            },
+          });
+        }
+        throw e;
+      }
     }
 
-    // Rasterize SVG → PNG so Facebook/Telegram/WhatsApp/LinkedIn/Discord render the preview.
-    await ensureResvg();
-    const fonts = await loadFonts();
-    const resvg = new Resvg(svg, {
-      fitTo: { mode: "width", value: width },
-      font: { fontBuffers: fonts, loadSystemFonts: false, defaultFontFamily: "Inter" },
-    });
-    const png = resvg.render().asPng();
-    return new Response(png, {
+    // SVG-only path
+    const { svg } = await buildPngFor(rawCode, width, height);
+    return new Response(svg, {
       status: 200,
       headers: {
         ...corsHeaders,
-        "Content-Type": "image/png",
-        "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800",
+        "Content-Type": "image/svg+xml; charset=utf-8",
+        "Cache-Control": "public, s-maxage=3600",
       },
     });
   } catch (error) {
