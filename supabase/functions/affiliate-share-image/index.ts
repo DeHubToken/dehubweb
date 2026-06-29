@@ -17,6 +17,34 @@ function ensureResvg(): Promise<void> {
   return resvgReady;
 }
 
+// Fonts: resvg-wasm has no system fonts — text is invisible without explicit buffers.
+const FONT_URLS = [
+  "https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_nVMrMxCp50ojIw2-cD-AU.woff2",
+  "https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIw2-cD-AU.woff2",
+  "https://fonts.gstatic.com/s/robotomono/v23/L0xuDF4xlVMF-BfR8bXMIhJHg45mwgGEFl0_3vqPQA.woff2",
+];
+let fontBuffers: Uint8Array[] | null = null;
+async function loadFonts(): Promise<Uint8Array[]> {
+  if (fontBuffers) return fontBuffers;
+  // Prefer TTF directly to avoid woff2 decode requirements in resvg-wasm.
+  const ttfs = [
+    "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-700-normal.ttf",
+    "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.ttf",
+  ];
+  const out: Uint8Array[] = [];
+  for (const u of ttfs) {
+    try {
+      const r = await fetch(u, { redirect: "follow" });
+      if (r.ok) {
+        const buf = new Uint8Array(await r.arrayBuffer());
+        if (buf.byteLength > 1000) out.push(buf);
+      }
+    } catch { /* ignore */ }
+  }
+  fontBuffers = out;
+  return out;
+}
+
 const LOGO_ASPECT = 1752 / 417; // width / height of the wordmark PNG
 
 const corsHeaders = {
@@ -309,7 +337,11 @@ serve(async (req) => {
 
     // Rasterize SVG → PNG so Facebook/Telegram/WhatsApp/LinkedIn/Discord render the preview.
     await ensureResvg();
-    const resvg = new Resvg(svg, { fitTo: { mode: "width", value: width } });
+    const fonts = await loadFonts();
+    const resvg = new Resvg(svg, {
+      fitTo: { mode: "width", value: width },
+      font: { fontBuffers: fonts, loadSystemFonts: false, defaultFontFamily: "Inter" },
+    });
     const png = resvg.render().asPng();
     return new Response(png, {
       status: 200,
