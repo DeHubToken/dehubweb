@@ -92,14 +92,28 @@ export default function AffiliatePage() {
         <div className="mx-auto w-full max-w-5xl px-4 py-6 md:py-10 space-y-6">
           {/* Custom per-user share image */}
           <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black shadow-[0_18px_70px_rgba(255,255,255,0.08)]">
-            <img
-              src={shareImageUrl}
-              alt={`${displayName || "A creator"} invited you to DeHub`}
-              width={1200}
-              height={630}
-              loading="eager"
-              className="w-full h-auto block"
-            />
+          {/* Custom per-user share image */}
+          <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-black shadow-[0_18px_70px_rgba(255,255,255,0.08)] aspect-[1200/630]">
+            {stats?.code ? (
+              <img
+                src={shareImageUrl}
+                alt={`${displayName || ""} invited you to DeHub`}
+                width={1200}
+                height={630}
+                loading="eager"
+                onLoad={() => setImgLoaded(true)}
+                className={`absolute inset-0 w-full h-full block transition-opacity duration-500 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
+              />
+            ) : null}
+            {(!stats?.code || !imgLoaded) && (
+              <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute inset-0 bg-white/[0.04] animate-pulse" />
+                <div
+                  className="absolute inset-y-0 -left-full w-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent"
+                  style={{ animation: "shimmer-sweep 1.6s linear infinite" }}
+                />
+              </div>
+            )}
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-3">
