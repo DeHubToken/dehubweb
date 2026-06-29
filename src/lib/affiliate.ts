@@ -85,7 +85,17 @@ export async function attributeReferralIfPending(referredAddress: string) {
     .eq("active", true)
     .maybeSingle() as unknown as { data: { owner_address: string } | null };
   if (!codeRow) return;
-  if (codeRow.owner_address.toLowerCase() === addr) return; // can't self-refer
+  const l1Owner = codeRow.owner_address.toLowerCase();
+  if (l1Owner === addr) return; // can't self-refer
+
+  // Look up L2: who referred the L1 owner (if anyone)?
+  // @ts-ignore
+  const { data: l2Row } = await supabase
+    .from("affiliate_referrals" as never)
+    .select("owner_address")
+    .ilike("referred_address", l1Owner)
+    .maybeSingle() as unknown as { data: { owner_address: string } | null };
+  const l2Owner = l2Row?.owner_address?.toLowerCase() ?? null;
 
   await withWalletHeader(
     // @ts-ignore
@@ -93,8 +103,9 @@ export async function attributeReferralIfPending(referredAddress: string) {
       .from("affiliate_referrals" as never)
       .insert({
         code,
-        owner_address: codeRow.owner_address.toLowerCase(),
+        owner_address: l1Owner,
         referred_address: addr,
+        l2_owner_address: l2Owner && l2Owner !== addr ? l2Owner : null,
         source: typeof window !== "undefined" ? window.location.hostname : null,
       } as never),
     addr,
