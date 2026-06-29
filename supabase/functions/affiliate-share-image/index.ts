@@ -258,6 +258,7 @@ serve(async (req) => {
     const rawCode = (url.searchParams.get("code") || "").trim().toUpperCase();
     const width = Math.min(1920, Math.max(600, Number(url.searchParams.get("width")) || 1200));
     const height = Math.min(1080, Math.max(315, Number(url.searchParams.get("height")) || 630));
+    const format = (url.searchParams.get("format") || "png").toLowerCase() === "svg" ? "svg" : "png";
     if (rawCode && !VALID_CODE.test(rawCode)) {
       return new Response("invalid code", { status: 400, headers: corsHeaders });
     }
