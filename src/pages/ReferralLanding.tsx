@@ -113,6 +113,11 @@ export default function ReferralLanding() {
                     width={1200}
                     height={630}
                     onLoad={() => setImgLoaded(true)}
+                    onError={() => {
+                      if (imgRetry < 3) {
+                        setTimeout(() => setImgRetry((n) => n + 1), 600 * (imgRetry + 1));
+                      }
+                    }}
                     className={`absolute inset-0 w-full h-full block transition-opacity duration-500 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
                   />
                 )}
