@@ -5,6 +5,9 @@ import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import QRCode from "https://esm.sh/qrcode@1.5.4";
 import { encode as encodeB64 } from "https://deno.land/std@0.190.0/encoding/base64.ts";
+import { DEHUB_LOGO_DATA_URI } from "./logo.ts";
+
+const LOGO_ASPECT = 1752 / 417; // width / height of the wordmark PNG
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
