@@ -162,7 +162,7 @@ export function ProfileHoverCard({
         side="bottom"
         align="start"
         sideOffset={8}
-        className="w-72 rounded-2xl p-0 bg-black/80 backdrop-blur-[24px] border border-white/[0.12] shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
+        className="w-72 rounded-2xl p-0 bg-white/[0.06] backdrop-blur-[28px] backdrop-saturate-150 border border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.45)]"
       >
         {isLoading ? (
           <div className="flex items-center justify-center py-8">
