@@ -34,6 +34,9 @@ export default function AffiliatePage() {
   const [stats, setStats] = useState<AffiliateStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [imgVersion, setImgVersion] = useState(() => Date.now());
+  const [imgLoaded, setImgLoaded] = useState(false);
+
+  useEffect(() => { setImgLoaded(false); }, [stats?.code, imgVersion]);
 
   const load = useCallback(async () => {
     if (!wallet) { setLoading(false); return; }
