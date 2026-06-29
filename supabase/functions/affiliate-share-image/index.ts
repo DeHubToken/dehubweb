@@ -1,11 +1,21 @@
-// Dynamic per-affiliate DeHub share image (SVG).
-// Public endpoint used by /affiliate previews and /r/:code OG tags.
+// Dynamic per-affiliate DeHub share image.
+// Default: PNG (Facebook/Telegram/WhatsApp/LinkedIn/Discord reject SVG OG images).
+// Use ?format=svg for in-app lightweight preview.
 
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import QRCode from "https://esm.sh/qrcode@1.5.4";
 import { encode as encodeB64 } from "https://deno.land/std@0.190.0/encoding/base64.ts";
+import { Resvg, initWasm } from "https://esm.sh/@resvg/resvg-wasm@2.6.2";
 import { DEHUB_LOGO_DATA_URI } from "./logo.ts";
+
+let resvgReady: Promise<void> | null = null;
+function ensureResvg(): Promise<void> {
+  if (!resvgReady) {
+    resvgReady = initWasm(fetch("https://esm.sh/@resvg/resvg-wasm@2.6.2/index_bg.wasm"));
+  }
+  return resvgReady;
+}
 
 const LOGO_ASPECT = 1752 / 417; // width / height of the wordmark PNG
 
