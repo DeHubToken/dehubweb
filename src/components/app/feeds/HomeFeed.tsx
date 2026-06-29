@@ -427,6 +427,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   // "Following" mode is handled server-side via followingOnly=true API param
   const isFollowingMode = selectedSort.value === 'following';
 
+
   // Handle sort selection with special logic for "Subscribed" (coming soon)
   const handleSortSelect = useCallback((option: SortOption) => {
     if (option.value === 'subscribed') {
