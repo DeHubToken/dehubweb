@@ -7,7 +7,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
 // Map nav item labels to i18n keys
 const NAV_LABEL_KEYS: Record<string, string> = {
-  Home: 'nav.home', Explore: 'nav.explore', Notifications: 'nav.notifications',
+  Home: 'nav.home', Explore: 'nav.explore', Prompt: 'nav.prompt', Notifications: 'nav.notifications',
   Messages: 'nav.messages', Assistant: 'nav.assistant', Leaderboard: 'nav.leaderboard',
   Bookmarks: 'nav.bookmarks', Settings: 'nav.settings', Profile: 'nav.profile', Blog: 'nav.blog',
   'Command': 'nav.command', 'Command Centre': 'nav.commandCentre', Wallet: 'nav.wallet', Docs: 'nav.docs', 'Feature Requests': 'nav.featureRequests', Staking: 'nav.staking', Governance: 'nav.governance', Communities: 'nav.communities', Events: 'nav.events', Careers: 'nav.careers', Glossary: 'nav.glossary', Guide: 'nav.guide',
