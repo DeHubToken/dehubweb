@@ -53,6 +53,7 @@ const DialogContent = React.forwardRef<
         "sm:max-w-lg sm:rounded-2xl sm:max-h-none",
         "sm:data-[state=closed]:slide-out-to-left-1/2 sm:data-[state=closed]:slide-out-to-top-[48%]",
         "sm:data-[state=open]:slide-in-from-left-1/2 sm:data-[state=open]:slide-in-from-top-[48%]",
+        "focus:outline-none focus-visible:outline-none",
         className,
       )}
       {...props}

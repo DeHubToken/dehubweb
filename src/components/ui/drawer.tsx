@@ -39,6 +39,7 @@ const DrawerContent = React.forwardRef<
         glass 
           ? "bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl" 
           : "border bg-background",
+        "focus:outline-none focus-visible:outline-none",
         className,
       )}
       onClick={(e) => e.stopPropagation()}

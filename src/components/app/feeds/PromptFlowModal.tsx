@@ -192,7 +192,7 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
               onChange={e => setPrompt(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') handleSubmit(); }}
               placeholder="More AI, tech, gaming…"
-              className="w-full pl-4 pr-12 py-3 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-white/30 transition-colors"
+              className="w-full pl-4 pr-12 py-3 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus-visible:outline-none focus:border-white/10 transition-colors"
             />
             <button
               onClick={() => handleSubmit()}
@@ -270,7 +270,7 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
                     max={100}
                     value={w.weight}
                     onChange={e => handleWeightChange(w.id, Number(e.target.value))}
-                    className="flex-1 accent-white"
+                    className="flex-1 accent-white focus:outline-none focus-visible:outline-none"
                   />
                   <span className="text-xs text-white/60 w-10 text-right tabular-nums">{w.weight}%</span>
                 </div>
