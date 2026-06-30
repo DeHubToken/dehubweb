@@ -223,13 +223,15 @@ export default function Premium() {
           <ul className="mt-5 space-y-3">
             {FAMILY_PERKS.map((p) => <PerkRow key={p.label} {...p} />)}
           </ul>
-          <a
-            href="/app/settings#premium"
-            className="mt-7 block text-center px-5 py-3 rounded-2xl bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors"
+          <button
+            type="button"
+            onClick={() => startCheckout('dehub_family_monthly')}
+            className="mt-7 w-full text-center px-5 py-3 rounded-2xl bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors"
           >
             Get Family
-          </a>
+          </button>
         </GlassCard>
+
 
         {/* Extra Large */}
         <GlassCard>
