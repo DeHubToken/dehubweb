@@ -113,7 +113,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 <img
                   src={dehubLogoCompact}
                   alt="dehub"
-                  className="h-[32px] w-auto"
+                  className="h-[22px] w-auto"
                   decoding="async"
                 />
               ) : (
@@ -128,6 +128,15 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 />
               )}
             </button>
+            {isCollapsed && (
+              <button
+                onClick={toggleCollapse}
+                className="flex-shrink-0 w-5 h-5 ml-1 flex items-center justify-center rounded-md hover:bg-zinc-800 transition-colors"
+                aria-label="Expand sidebar"
+              >
+                <Menu className="w-[14px] h-[14px] text-zinc-400" />
+              </button>
+            )}
           </div>
         </div>
 
