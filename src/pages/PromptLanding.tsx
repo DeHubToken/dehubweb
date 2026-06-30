@@ -122,7 +122,7 @@ export default function PromptLanding() {
             <button
               key={s}
               onClick={() => submit(s)}
-              className="px-3 py-1.5 rounded-full text-xs bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+              className="px-3 py-1.5 rounded-lg text-xs bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-colors"
             >
               {s}
             </button>
