@@ -15,6 +15,103 @@
 const SUPABASE_FUNCTION_URL = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/ssr-seo';
 const DEHUB_LOGO = 'https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/default-icon.png';
 const APP_URL = 'https://dehub.io';
+const BLOG_SHARE_IMAGE_BASE = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/blog-share-image';
+
+function escHtml(s = '') {
+  return String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function absolutize(url) {
+  if (!url) return null;
+  if (/^https?:\/\//i.test(url)) return url;
+  return `${APP_URL}${url.startsWith('/') ? '' : '/'}${url}`;
+}
+
+function buildBlogShareImage(post) {
+  const p = new URLSearchParams();
+  p.set('slug', post.slug);
+  p.set('title', (post.title || '').slice(0, 240));
+  if (post.author) p.set('author', String(post.author).slice(0, 60));
+  if (post.publishedAt) {
+    try {
+      const d = new Date(post.publishedAt);
+      p.set('date', d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }));
+    } catch {}
+  }
+  const banner = absolutize(post.bannerImage);
+  if (banner) p.set('banner', banner);
+  p.set('width', '1200');
+  p.set('height', '630');
+  p.set('format', 'png');
+  return `${BLOG_SHARE_IMAGE_BASE}?${p.toString()}`;
+}
+
+let _blogManifestCache = null;
+let _blogManifestFetchedAt = 0;
+async function getBlogManifest(request) {
+  const now = Date.now();
+  if (_blogManifestCache && now - _blogManifestFetchedAt < 5 * 60 * 1000) {
+    return _blogManifestCache;
+  }
+  try {
+    const origin = new URL(request.url).origin;
+    const res = await fetch(`${origin}/blog-manifest.json`, { headers: { Accept: 'application/json' } });
+    if (res.ok) {
+      const data = await res.json();
+      const map = new Map();
+      for (const p of data) map.set(p.slug, p);
+      _blogManifestCache = map;
+      _blogManifestFetchedAt = now;
+      return map;
+    }
+  } catch (e) {
+    console.error('[Edge] blog manifest fetch failed', e);
+  }
+  return _blogManifestCache || new Map();
+}
+
+function buildBlogHtml(post, canonicalUrl) {
+  const image = buildBlogShareImage(post);
+  const title = `${post.title} — DeHub Blog`;
+  const description = (post.excerpt || `${post.title} — read on DeHub.`).slice(0, 280);
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>${escHtml(title)}</title>
+<meta name="description" content="${escHtml(description)}">
+<link rel="canonical" href="${escHtml(canonicalUrl)}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="${escHtml(canonicalUrl)}">
+<meta property="og:title" content="${escHtml(title)}">
+<meta property="og:description" content="${escHtml(description)}">
+<meta property="og:image" content="${escHtml(image)}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="${escHtml(post.title)}">
+<meta property="article:published_time" content="${escHtml(post.publishedAt || '')}">
+<meta property="article:author" content="${escHtml(post.author || 'DeHub Team')}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="${escHtml(title)}">
+<meta name="twitter:description" content="${escHtml(description)}">
+<meta name="twitter:image" content="${escHtml(image)}">
+<meta name="twitter:site" content="@DeHubApp">
+<script type="application/ld+json">${JSON.stringify({
+  '@context':'https://schema.org','@type':'Article',
+  headline: post.title, image: [image], datePublished: post.publishedAt,
+  author: { '@type':'Person', name: post.author || 'DeHub Team' },
+  publisher: { '@type':'Organization', name:'DeHub' },
+  mainEntityOfPage: canonicalUrl,
+})}</script>
+</head>
+<body style="background:#000;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0">
+<p><a href="${escHtml(canonicalUrl)}" style="color:#0f0">${escHtml(post.title)}</a></p>
+</body>
+</html>`;
+}
+
 
 /** Minimal OG HTML served to bots when SSR times out or fails.
  *  Prevents them from caching the generic React SPA index.html,
@@ -62,7 +159,9 @@ const SYSTEM_ROUTES = [
   '_netlify', 'favicon.ico', 'assets', 'og-image.png',
   'radio', 'tv', 'governance', 'stake', 'leaderboard', 'music',
   'top-100', 'glossary', 'bridge', 'agents', 'assistant', 'buy',
+  'docs', 'prompt', 'premium', 'affiliate', 'work', 'editor',
 ];
+
 
 const BOT_UA_PATTERN = /bot|crawl|spider|facebook|twitter|linkedin|whatsapp|telegram|slack|discord|facebot|oggrabber/i;
 
@@ -73,6 +172,8 @@ function shouldServeSSR(pathname) {
   if (pathname.includes('/communities/')) return true;
   // Always SSR for affiliate referral landings (/r/{code})
   if (/^\/r\/[A-Za-z0-9]+/.test(pathname)) return true;
+  // Always SSR for blog posts
+  if (/^\/docs\/blog\/[^/]+/.test(pathname)) return true;
   // Always SSR for root
   if (pathname === '/') return true;
   // Always SSR for profile pages (top-level non-system routes)
@@ -80,6 +181,7 @@ function shouldServeSSR(pathname) {
   if (first && !SYSTEM_ROUTES.includes(first) && !first.includes('.')) return true;
   return false;
 }
+
 
 export default async (request, context) => {
   const url = new URL(request.url);
@@ -106,7 +208,37 @@ export default async (request, context) => {
     return context.next();
   }
 
+  // Blog posts: build OG HTML directly from manifest (no Supabase SSR involved).
+  const blogMatch = pathname.match(/^\/docs\/blog\/([^/?#]+)/);
+  if (blogMatch) {
+    const slug = decodeURIComponent(blogMatch[1]);
+    const manifest = await getBlogManifest(request);
+    const post = manifest.get(slug);
+    if (post) {
+      const canonical = `${APP_URL}/docs/blog/${slug}`;
+      return new Response(buildBlogHtml(post, canonical), {
+        status: 200,
+        headers: {
+          'Content-Type': 'text/html; charset=utf-8',
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+          'Vary': 'User-Agent',
+          'X-Powered-By': 'DeHub-Edge-SEO-Blog',
+        },
+      });
+    }
+    // Fall through to generic fallback if manifest missing.
+    return new Response(buildFallbackHtml(pathname, request.url), {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+        'Vary': 'User-Agent',
+      },
+    });
+  }
+
   const ssrUrl = `${SUPABASE_FUNCTION_URL}?path=${encodeURIComponent(pathname)}&original_url=${encodeURIComponent(request.url)}`;
+
 
   try {
     const controller = new AbortController();
