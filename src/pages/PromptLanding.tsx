@@ -104,10 +104,11 @@ export default function PromptLanding() {
       </div>
 
 
-      <div className="relative w-full max-w-2xl flex flex-col items-center gap-6">
+      <div className="relative w-full max-w-2xl flex flex-col items-center gap-6 mt-16 sm:mt-0">
         <img src={wandUrl} alt="" width={64} height={64} loading="eager" decoding="async" fetchPriority="high" className="w-16 h-16 object-contain drop-shadow-[0_4px_18px_rgba(255,255,255,0.15)]" />
         <h1 className="text-4xl md:text-5xl font-semibold text-center tracking-tight">
-          What do you want to see?
+          <span className="sm:hidden">What do you want?</span>
+          <span className="hidden sm:inline">What do you want to see?</span>
         </h1>
         <p className="text-white/50 text-center max-w-md">
           Describe your perfect feed.
@@ -154,7 +155,7 @@ export default function PromptLanding() {
             <button
               key={s}
               onClick={() => submit(s)}
-              className="px-3 py-1.5 rounded-lg text-xs bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+              className={`px-3 py-1.5 rounded-lg text-xs bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-colors ${s === 'Football highlights' ? 'hidden sm:inline-flex' : ''}`}
             >
               {s}
             </button>
