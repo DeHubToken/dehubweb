@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Check, Crown, Sparkles, Users, Zap, Shield, PlayCircle, ImageIcon, Video, MessageSquare } from 'lucide-react';
+import { Check, Crown, Sparkles, Users, Zap, Shield, PlayCircle, ImageIcon, Video, MessageSquare, Palette, Eye, Lock, Rocket, Infinity as InfinityIcon } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import {
   Accordion,
@@ -12,6 +12,10 @@ const EXTRA_PERKS = [
   { icon: Shield, label: 'Ad-free feed', detail: 'No promoted posts, no upgrade banners' },
   { icon: PlayCircle, label: 'Background playback', detail: 'Audio & video keep going with screen off' },
   { icon: Crown, label: 'Animated Extra badge', detail: 'Plus gradient username + 3 profile themes' },
+  { icon: Palette, label: 'Custom themes', detail: 'Pick from curated themes — soon, build your own with a simple text-based theme builder' },
+  { icon: Eye, label: 'Profile insights', detail: 'See who visits your profile and when' },
+  { icon: Lock, label: '10 exclusive sneak peeks / mo', detail: 'Peek into gated content feeds you don\'t hold' },
+  { icon: Rocket, label: 'Timeline boost', detail: 'Your posts get seen by more of the right people' },
   { icon: MessageSquare, label: '500 Assistant messages / mo', detail: '10× the free tier' },
   { icon: ImageIcon, label: '150 AI images / mo', detail: 'All models, all styles' },
   { icon: Video, label: '20 seconds of AI video / mo', detail: 'Generate clips for posts & shorts' },
@@ -22,6 +26,16 @@ const FAMILY_PERKS = [
   { icon: Zap, label: 'Full Extra perks per seat', detail: 'Each member gets their own quotas' },
   { icon: Shield, label: 'One bill, one plan', detail: 'Owner manages seats from Settings' },
 ];
+
+const XL_PERKS = [
+  { icon: Users, label: 'Up to 20 @usernames', detail: 'Bring the whole crew, studio or DAO' },
+  { icon: Rocket, label: 'Maximum timeline boosts', detail: 'Everything on acid — top placement priority' },
+  { icon: InfinityIcon, label: 'Sky-high AI limits', detail: '5,000 Assistant msgs, 1,500 images, 5 min of AI video / mo' },
+  { icon: Lock, label: 'Unlimited sneak peeks', detail: 'Peek into every gated feed, no monthly cap' },
+  { icon: Palette, label: 'All themes + early access', detail: 'Every custom theme, first dibs on the theme builder' },
+  { icon: Eye, label: 'Pro profile insights', detail: 'Full visitor history, sources and trends' },
+];
+
 
 const FAQS = [
   {
