@@ -1123,10 +1123,11 @@ export default function AssistantPage() {
   };
 
   // Handle image generation after payment confirmation
-  const handleImageGenerationConfirm = async () => {
-    if (!pendingImageRequest) return;
+  const handleImageGenerationConfirm = async (override?: { prompt: string; model: string; sourceImage?: string }) => {
+    const req = override ?? pendingImageRequest;
+    if (!req) return;
 
-    const { prompt, model, sourceImage } = pendingImageRequest;
+    const { prompt, model, sourceImage } = req;
     const imageModel = IMAGE_MODELS[model];
 
     // User message was already added by handleSend before paywall opened
