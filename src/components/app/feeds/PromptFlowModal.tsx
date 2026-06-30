@@ -107,10 +107,12 @@ function scorePromptAgainstCategories(prompt: string, categories: DeHubCategory[
 }
 
 export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt = '', onSave }: Props) {
+  const { t } = useTranslation();
   const [stage, setStage] = useState<Stage>('input');
   const [prompt, setPrompt] = useState(initialPrompt);
   const [weights, setWeights] = useState<CategoryWeight[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+
 
   // Reset when re-opened
   useEffect(() => {
