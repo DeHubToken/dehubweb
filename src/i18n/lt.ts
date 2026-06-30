@@ -860,7 +860,7 @@ export const lt = {
     experience: 'Patirtis',
     malName: 'Mal Jan',
     malRole: 'Įkūrėjas',
-    malBio: 'Full stack blockchain engineer, scaled DeHub to a £250m market cap with a near $10m liquidity pool and $2m year 1 revenue. Previously the annual top billing consultant at the UK\'s largest agency Blue Arrow',
+    malBio: "Full stack web and blockchain developer, building AI business solutions at Pixcellor, former senior consultant at Randstad, scaled DeHub to a £250m market cap peak with a near $10m liquidity pool and $2m year 1 revenue. Previously the annual top billing consultant at the UK's largest agency Blue Arrow and builder of entire regions at the UK's largest construction agency, ITS.",
     malExp1: 'Guide Dogs: Surinkta >$1m',
     malExp2: 'Randstad: Vyresnysis konsultantas',
     malExp3: 'Blue Arrow: Didžiausias pardavėjas',
