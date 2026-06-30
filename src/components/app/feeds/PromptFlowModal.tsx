@@ -119,13 +119,29 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
     }
   }, [open, initialPrompt]);
 
-  // Auto-submit when initialPrompt provided
+  // Keep latest categories in a ref so deferred timers always score against fresh data.
+  const categoriesRef = useRef(categories);
+  useEffect(() => { categoriesRef.current = categories; }, [categories]);
+
+  // Auto-submit when initialPrompt provided AND categories have loaded.
+  const autoSubmittedRef = useRef(false);
   useEffect(() => {
-    if (open && initialPrompt && initialPrompt.trim() && stage === 'input') {
-      handleSubmit(initialPrompt);
-    }
+    if (!open) { autoSubmittedRef.current = false; return; }
+    if (autoSubmittedRef.current) return;
+    if (!initialPrompt || !initialPrompt.trim()) return;
+    if (stage !== 'input') return;
+    if (!categories || categories.length === 0) return;
+    autoSubmittedRef.current = true;
+    handleSubmit(initialPrompt);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, initialPrompt, categories, stage]);
+
+  // If we landed on `tune` but categories were empty (race), recompute when they arrive.
+  useEffect(() => {
+    if (stage === 'tune' && weights.length === 0 && categories.length > 0 && prompt.trim()) {
+      setWeights(scorePromptAgainstCategories(prompt, categories));
+    }
+  }, [stage, weights.length, categories, prompt]);
 
   const handleSubmit = (text?: string) => {
     const value = (text ?? prompt).trim();
@@ -133,7 +149,7 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
     setStage('analysing');
     // simulate analysis
     setTimeout(() => {
-      const computed = scorePromptAgainstCategories(value, categories);
+      const computed = scorePromptAgainstCategories(value, categoriesRef.current);
       setWeights(computed);
       setStage('tune');
     }, 1400);
@@ -155,7 +171,7 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
       <DialogContent className="max-w-md bg-black/80 backdrop-blur-2xl border border-white/10 text-white rounded-2xl p-6">
         {stage === 'input' && (
           <div className="flex flex-col items-center gap-5 py-4">
-            <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
               <Sparkles className="w-6 h-6 text-white" />
             </div>
             <h2 className="text-lg font-semibold text-center">What do you want to see more of?</h2>
@@ -166,12 +182,12 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
                 onChange={e => setPrompt(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter') handleSubmit(); }}
                 placeholder="More AI, tech, gaming…"
-                className="w-full pl-4 pr-12 py-3 rounded-full bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-white/30 transition-colors"
+                className="w-full pl-4 pr-12 py-3 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-white/30 transition-colors"
               />
               <button
                 onClick={() => handleSubmit()}
                 disabled={!prompt.trim()}
-                className="absolute right-1.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white text-black flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:scale-105 transition-transform"
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:scale-105 transition-transform"
                 aria-label="Submit"
               >
                 <ArrowUp className="w-4 h-4" strokeWidth={3} />
