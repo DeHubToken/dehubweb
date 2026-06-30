@@ -2,6 +2,7 @@
   "nav": {
     "home": "Home",
     "explore": "Explore",
+    "prompt": "Prompt",
     "notifications": "Notifications",
     "messages": "Messages",
     "assistant": "Assistant",
