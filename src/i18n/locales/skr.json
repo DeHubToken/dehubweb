@@ -24,7 +24,8 @@
     "connecting": "جُڑ ریہا ہے...",
     "signMessage": "پیغام تے دستخط کرو",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "پرامپٹ"
   },
   "feed": {
     "home": "گھر",
@@ -304,7 +305,9 @@
     "bounty": "انعام",
     "locked": "گیٹڈ",
     "any": "کوئی وی",
-    "resetFilters": "فلٹر ری سیٹ کرو"
+    "resetFilters": "فلٹر ری سیٹ کرو",
+    "prompt": "پرامپٹ",
+    "for-you": "تہاڈے کیتے"
   },
   "drawers": {
     "ppvTitle": "پے-پر-ویو مواد",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "اپنڑا فیڈ پرامپٹ کیو— DeHub",
+    "seoDescription": "DeHub کوں ڈسائو جو تُساں کیہہ ڈیکھݨ چاہندے او اَساں تہاڈی ٹائم لائن کوں ٹیون کر ڈیسوں۔",
+    "goHome": "گھر ون٘جو",
+    "headline": "تُساں کیہہ ڈیکھݨ چاہندے او؟",
+    "headlineShort": "تُساں کیہہ چاہندے او؟",
+    "subheadline": "اپنڑے بہترین فیڈ کوں بیان کرو۔",
+    "placeholder": "وَدھ AI، گیمنگ کلپس، انڈی میوزک۔۔۔",
+    "send": "بھیجو",
+    "stop": "روکو",
+    "record": "ریکارڈ کرو",
+    "skip": "چھوڑو — مینوں سِدّھا فیڈ اُتے گھن چلو",
+    "submit": "جمع کراؤ",
+    "modalQuestion": "تُساں مزید کیہہ ڈیکھݨ چاہندے او؟",
+    "modalPlaceholder": "وَدھ AI، ٹیک، گیمنگ۔۔۔",
+    "analysing": "تہاڈیاں دلچسپیاں دا تجزیہ کریندا پی آں۔۔۔",
+    "timelineReady": "تہاڈی ٹائم لائن تیار اے",
+    "dragToTune": "اپنڑی مکس کوں چَنڳی طرح سانڳݨ کیتے کھین٘ڈو۔",
+    "save": "محفوظ کرو",
+    "voiceUnsupported": "اِس براؤزر وِچ آواز اِن پٹ کائنی چلدی۔",
+    "suggestion1": "وَدھ AI اتے کرپٹو خبراں",
+    "suggestion2": "گیمنگ کلپس اتے esports",
+    "suggestion3": "انڈی میوزک دیاں دریافتاں",
+    "suggestion4": "ٹیک دے بانی اتے سٹارٹ اپس",
+    "suggestion5": "فٹ بال دیاں ہائی لائٹس"
   }
 }

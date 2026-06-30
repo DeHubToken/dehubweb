@@ -24,7 +24,8 @@
     "connecting": "Ühendamine...",
     "signMessage": "Allkirjasta sõnum",
     "guide": "Juhend",
-    "events": "Sündmused"
+    "events": "Sündmused",
+    "prompt": "Kohanda"
   },
   "feed": {
     "home": "Avaleht",
@@ -304,7 +305,9 @@
     "bounty": "Preemia",
     "locked": "Piiratud",
     "any": "Ükskõik",
-    "resetFilters": "Lähtesta filtrid"
+    "resetFilters": "Lähtesta filtrid",
+    "prompt": "Kohanda",
+    "for-you": "Sulle"
   },
   "drawers": {
     "ppvTitle": "Maksa-vaatamise-eest sisu",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Kohandage oma voogu — DeHub",
+    "seoDescription": "Öelge DeHubile, mida soovite näha, ja me kohandame teie ajajoont.",
+    "goHome": "Avalehele",
+    "headline": "Mida soovite näha?",
+    "headlineShort": "Mida soovite?",
+    "subheadline": "Kirjeldage oma täiuslikku voogu.",
+    "placeholder": "Rohkem AI-d, mänguklippe, indie-muusikat…",
+    "send": "Saada",
+    "stop": "Peata",
+    "record": "Salvesta",
+    "skip": "Jäta vahele — vii mind kohe voogu",
+    "submit": "Esita",
+    "modalQuestion": "Mida soovite rohkem näha?",
+    "modalPlaceholder": "Rohkem AI-d, tehnoloogiat, mänge…",
+    "analysing": "Analüüsin teie huvisid…",
+    "timelineReady": "Teie ajajoon on valmis",
+    "dragToTune": "Lohistage oma segu peenhäälestamiseks.",
+    "save": "Salvesta",
+    "voiceUnsupported": "Häälsisendit selles brauseris ei toetata.",
+    "suggestion1": "Rohkem AI ja krüptouudiseid",
+    "suggestion2": "Mänguklipid ja esports",
+    "suggestion3": "Indie-muusika avastused",
+    "suggestion4": "Tehnoloogia asutajad ja idufirmad",
+    "suggestion5": "Jalgpalli tipphetked"
   }
 }

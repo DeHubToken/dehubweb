@@ -24,7 +24,8 @@
     "connecting": "Connexion...",
     "signMessage": "Signer le message",
     "guide": "Guide",
-    "events": "Événements"
+    "events": "Événements",
+    "prompt": "Invite"
   },
   "feed": {
     "home": "Accueil",
@@ -595,7 +596,9 @@
     "bounty": "Prime",
     "locked": "Restreint",
     "any": "Tous",
-    "resetFilters": "Réinitialiser les filtres"
+    "resetFilters": "Réinitialiser les filtres",
+    "prompt": "Invite",
+    "for-you": "Pour vous"
   },
   "assistant": {
     "title": "Assistant",
@@ -1305,5 +1308,31 @@
     "processing": "Traitement...",
     "uploading": "Téléchargement...",
     "deleting": "Suppression..."
+  },
+  "prompt": {
+    "seoTitle": "Alimentez votre fil d'actualité — DeHub",
+    "seoDescription": "Dites à DeHub ce que vous voulez voir et nous ajusterons votre fil d'actualité.",
+    "goHome": "Aller à l'accueil",
+    "headline": "Que voulez-vous voir ?",
+    "headlineShort": "Que voulez-vous ?",
+    "subheadline": "Décrivez votre fil d'actualité parfait.",
+    "placeholder": "Plus d'AI, clips de jeux, musique indépendante…",
+    "send": "Envoyer",
+    "stop": "Arrêter",
+    "record": "Enregistrer",
+    "skip": "Passer — emmenez-moi directement au fil d'actualité",
+    "submit": "Soumettre",
+    "modalQuestion": "Que voulez-vous voir plus souvent ?",
+    "modalPlaceholder": "Plus d'AI, tech, jeux…",
+    "analysing": "Analyse de vos centres d'intérêt…",
+    "timelineReady": "Votre fil d'actualité est prêt",
+    "dragToTune": "Faites glisser pour affiner votre mélange.",
+    "save": "Enregistrer",
+    "voiceUnsupported": "La saisie vocale n'est pas prise en charge dans ce navigateur.",
+    "suggestion1": "Plus d'actualités AI et crypto",
+    "suggestion2": "Clips de jeux et esports",
+    "suggestion3": "Découvertes de musique indépendante",
+    "suggestion4": "Fondateurs de technologies et startups",
+    "suggestion5": "Faits saillants du football"
   }
 }

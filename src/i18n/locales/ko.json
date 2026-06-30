@@ -24,7 +24,8 @@
     "connecting": "연결 중...",
     "signMessage": "메시지 서명",
     "guide": "가이드",
-    "events": "이벤트"
+    "events": "이벤트",
+    "prompt": "프롬프트"
   },
   "feed": {
     "home": "홈",
@@ -488,7 +489,9 @@
     "bounty": "바운티",
     "locked": "제한됨",
     "any": "전체",
-    "resetFilters": "필터 초기화"
+    "resetFilters": "필터 초기화",
+    "prompt": "프롬프트",
+    "for-you": "추천"
   },
   "commandCentre": {
     "title": "커맨드 센터",
@@ -1298,5 +1301,31 @@
     "insufficient_balance": "잔액 부족",
     "transaction_submitted": "거래 제출됨!",
     "transaction_failed": "거래 실패"
+  },
+  "prompt": {
+    "seoTitle": "피드에 메시지 보내기 — DeHub",
+    "seoDescription": "DeHub에 보고 싶은 것을 알려주시면 타임라인을 조정해 드립니다.",
+    "goHome": "홈으로 가기",
+    "headline": "무엇을 보고 싶으세요?",
+    "headlineShort": "무엇을 원하세요?",
+    "subheadline": "완벽한 피드를 설명하세요.",
+    "placeholder": "더 많은 AI, 게임 클립, 인디 음악…",
+    "send": "보내기",
+    "stop": "중지",
+    "record": "녹화",
+    "skip": "건너뛰기 — 그냥 피드로 이동",
+    "submit": "제출",
+    "modalQuestion": "무엇을 더 보고 싶으세요?",
+    "modalPlaceholder": "더 많은 AI, 기술, 게임…",
+    "analysing": "관심사를 분석 중입니다…",
+    "timelineReady": "타임라인이 준비되었습니다",
+    "dragToTune": "드래그하여 믹스를 세밀하게 조정합니다.",
+    "save": "저장",
+    "voiceUnsupported": "이 브라우저에서는 음성 입력이 지원되지 않습니다.",
+    "suggestion1": "더 많은 AI 및 암호화폐 뉴스",
+    "suggestion2": "게임 클립 및 e스포츠",
+    "suggestion3": "인디 음악 발견",
+    "suggestion4": "기술 창업가 및 스타트업",
+    "suggestion5": "축구 하이라이트"
   }
 }

@@ -24,7 +24,8 @@
     "connecting": "З'єднання...",
     "signMessage": "Підписати повідомлення",
     "guide": "Посібник",
-    "events": "Події"
+    "events": "Події",
+    "prompt": "Сформувати"
   },
   "common": {
     "allRightsReserved": "Всі права захищені",
@@ -928,7 +929,9 @@
     "bounty": "Bounty",
     "locked": "Gated",
     "any": "Any",
-    "resetFilters": "Reset filters"
+    "resetFilters": "Reset filters",
+    "prompt": "Сформувати",
+    "for-you": "Для вас"
   },
   "drawers": {
     "ppvTitle": "Pay-Per-View Content",
@@ -1743,5 +1746,31 @@
     "unlistedDesc": "Only people with the link can see",
     "private": "Private",
     "privateDesc": "Only you can see this post"
+  },
+  "prompt": {
+    "seoTitle": "Сформуйте свою стрічку — DeHub",
+    "seoDescription": "Розкажіть DeHub, що ви хочете бачити, і ми налаштуємо вашу хроніку.",
+    "goHome": "На головну",
+    "headline": "Що ви хочете бачити?",
+    "headlineShort": "Що ви хочете?",
+    "subheadline": "Опишіть свою ідеальну стрічку.",
+    "placeholder": "Більше AI, ігрових кліпів, інді-музики…",
+    "send": "Надіслати",
+    "stop": "Стоп",
+    "record": "Записати",
+    "skip": "Пропустити — просто перейдіть до стрічки",
+    "submit": "Надіслати",
+    "modalQuestion": "Чого ви хочете бачити більше?",
+    "modalPlaceholder": "Більше AI, технологій, ігор…",
+    "analysing": "Аналізуємо ваші інтереси…",
+    "timelineReady": "Ваша хроніка готова",
+    "dragToTune": "Перетягніть, щоб точно налаштувати свій мікс.",
+    "save": "Зберегти",
+    "voiceUnsupported": "Голосовий ввід не підтримується в цьому браузері.",
+    "suggestion1": "Більше новин AI та крипто",
+    "suggestion2": "Ігрові кліпи та кіберспорт",
+    "suggestion3": "Відкриття інді-музики",
+    "suggestion4": "Технологічні засновники та стартапи",
+    "suggestion5": "Основні моменти футболу"
   }
 }

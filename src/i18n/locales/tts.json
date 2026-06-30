@@ -24,7 +24,8 @@
     "connecting": "กำลังเชื่อมต่อ...",
     "signMessage": "เซ็นข้อความ",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "ความต้องการ"
   },
   "feed": {
     "home": "บ้าน",
@@ -304,7 +305,9 @@
     "bounty": "เงินรางวัล",
     "locked": "ล็อก",
     "any": "อันใดก็ได้",
-    "resetFilters": "ล้างตัวกรอง"
+    "resetFilters": "ล้างตัวกรอง",
+    "prompt": "ความต้องการ",
+    "for-you": "สำหรับคุณ"
   },
   "drawers": {
     "ppvTitle": "เนื้อหาจ่ายเพื่อเบิ่ง",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "บอกความต้องการของคุณ — DeHub",
+    "seoDescription": "บอก DeHub ว่าคุณอยากเห็นอะไร แล้วเฮาสิปรับหน้าฟีดให้",
+    "goHome": "กลับหน้าหลัก",
+    "headline": "คุณอยากเห็นอิหยัง?",
+    "headlineShort": "คุณอยากเห็นอีหยัง?",
+    "subheadline": "อธิบายฟีดที่คุณอยากได้",
+    "placeholder": "AI หลายๆ, คลิปเกม, เพลงอินดี้…",
+    "send": "ส่ง",
+    "stop": "หยุด",
+    "record": "บันทึก",
+    "skip": "ข้าม — ไปหน้าฟีดเลย",
+    "submit": "ยืนยัน",
+    "modalQuestion": "คุณอยากเห็นหยังเพิ่มขึ้น?",
+    "modalPlaceholder": "AI หลายๆ, เทคโนโลยี, เกม…",
+    "analysing": "กำลังวิเคราะห์ความสนใจของคุณ…",
+    "timelineReady": "หน้าฟีดของคุณพร้อมแล้ว",
+    "dragToTune": "ลากเพื่อปรับแต่งฟีดของคุณ",
+    "save": "บันทึก",
+    "voiceUnsupported": "บราวเซอร์นี้บ่รองรับการสั่งด้วยเสียง",
+    "suggestion1": "ข่าว AI กับ คริปโต หลายๆ",
+    "suggestion2": "คลิปเกมกับ esports",
+    "suggestion3": "เพลงอินดี้ใหม่ๆ",
+    "suggestion4": "ผู้ก่อตั้ง Tech กับ สตาร์ทอัพ",
+    "suggestion5": "ไฮไลท์ฟุตบอล"
   }
 }

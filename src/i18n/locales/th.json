@@ -24,7 +24,8 @@
     "connecting": "กำลังเชื่อมต่อ...",
     "signMessage": "ลงนามข้อความ",
     "guide": "คู่มือ",
-    "events": "กิจกรรม"
+    "events": "กิจกรรม",
+    "prompt": "พร้อมท์"
   },
   "common": {
     "yes": "ใช่",
@@ -487,7 +488,9 @@
     "bounty": "Bounty",
     "locked": "Gated",
     "any": "Any",
-    "resetFilters": "Reset filters"
+    "resetFilters": "Reset filters",
+    "prompt": "พร้อมท์",
+    "for-you": "สำหรับคุณ"
   },
   "drawers": {
     "ppvTitle": "Pay-Per-View Content",
@@ -1302,5 +1305,31 @@
     "unlistedDesc": "Only people with the link can see",
     "private": "Private",
     "privateDesc": "Only you can see this post"
+  },
+  "prompt": {
+    "seoTitle": "พร้อมท์ฟีดของคุณ — DeHub",
+    "seoDescription": "บอก DeHub ว่าคุณต้องการเห็นอะไร แล้วเราจะปรับแต่งไทม์ไลน์ของคุณให้",
+    "goHome": "ไปยังหน้าหลัก",
+    "headline": "คุณต้องการเห็นอะไร?",
+    "headlineShort": "คุณต้องการอะไร?",
+    "subheadline": "อธิบายฟีดที่คุณต้องการ",
+    "placeholder": "AI มากขึ้น, คลิปเกม, เพลงอินดี้…",
+    "send": "ส่ง",
+    "stop": "หยุด",
+    "record": "บันทึก",
+    "skip": "ข้าม — พาฉันไปที่ฟีดเลย",
+    "submit": "ส่ง",
+    "modalQuestion": "คุณต้องการเห็นอะไรเพิ่มเติม?",
+    "modalPlaceholder": "AI, เทคโนโลยี, เกม…",
+    "analysing": "วิเคราะห์ความสนใจของคุณ…",
+    "timelineReady": "ไทม์ไลน์ของคุณพร้อมแล้ว",
+    "dragToTune": "ลากเพื่อปรับแต่งส่วนผสมของคุณ",
+    "save": "บันทึก",
+    "voiceUnsupported": "เบราว์เซอร์นี้ไม่รองรับการป้อนข้อมูลด้วยเสียง",
+    "suggestion1": "ข่าว AI และ crypto เพิ่มเติม",
+    "suggestion2": "คลิปเกมและ esports",
+    "suggestion3": "การค้นพบเพลงอินดี้",
+    "suggestion4": "ผู้ก่อตั้งและสตาร์ทอัพด้านเทคโนโลยี",
+    "suggestion5": "ไฮไลท์ฟุตบอล"
   }
 }

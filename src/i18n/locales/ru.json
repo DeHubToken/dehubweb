@@ -24,7 +24,8 @@
     "connecting": "Подключение...",
     "signMessage": "Подписать сообщение",
     "guide": "Руководство",
-    "events": "События"
+    "events": "События",
+    "prompt": "Настроить"
   },
   "feed": {
     "home": "Главная",
@@ -488,7 +489,9 @@
     "bounty": "Награда",
     "locked": "Ограниченный",
     "any": "Любой",
-    "resetFilters": "Сбросить фильтры"
+    "resetFilters": "Сбросить фильтры",
+    "prompt": "Настроить",
+    "for-you": "Для вас"
   },
   "commandCentre": {
     "title": "Центр управления",
@@ -1298,5 +1301,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Настройте свою ленту — DeHub",
+    "seoDescription": "Расскажите DeHub, что вы хотите видеть, и мы настроим вашу ленту.",
+    "goHome": "Перейти на главную",
+    "headline": "Что вы хотите видеть?",
+    "headlineShort": "Чего вы хотите?",
+    "subheadline": "Опишите свою идеальную ленту.",
+    "placeholder": "Больше AI, игровых клипов, инди-музыки…",
+    "send": "Отправить",
+    "stop": "Остановить",
+    "record": "Запись",
+    "skip": "Пропустить — просто перенесите меня в ленту",
+    "submit": "Отправить",
+    "modalQuestion": "Что вы хотите видеть больше?",
+    "modalPlaceholder": "Больше AI, технологий, игр…",
+    "analysing": "Анализируем ваши интересы…",
+    "timelineReady": "Ваша лента готова",
+    "dragToTune": "Перетащите, чтобы настроить свою комбинацию.",
+    "save": "Сохранить",
+    "voiceUnsupported": "Голосовой ввод не поддерживается в этом браузере.",
+    "suggestion1": "Больше новостей AI и криптовалют",
+    "suggestion2": "Игровые клипы и esports",
+    "suggestion3": "Открытия инди-музыки",
+    "suggestion4": "Основатели технологий и стартапы",
+    "suggestion5": "Основные моменты футбола"
   }
 }

@@ -24,7 +24,8 @@
     "connecting": "Hono ana...",
     "signMessage": "Hainatia te karere",
     "guide": "Aratohu",
-    "events": "Ngā Kaupapa"
+    "events": "Ngā Kaupapa",
+    "prompt": "Whakahau"
   },
   "feed": {
     "home": "Kāinga",
@@ -304,7 +305,9 @@
     "bounty": "Utu",
     "locked": "Raka",
     "any": "Ahakoa",
-    "resetFilters": "Tautuhi anō ngā tātari"
+    "resetFilters": "Tautuhi anō ngā tātari",
+    "prompt": "Whakahau",
+    "for-you": "Mo Koe"
   },
   "drawers": {
     "ppvTitle": "Utu-mō-te-kite ihirangi",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Whakahauhia to whangai — DeHub",
+    "seoDescription": "Korerohia ki a DeHub nga mea e hiahia ana koe kia kite, ka whakatika matou i to raarangi waahi.",
+    "goHome": "Haere ki te kainga",
+    "headline": "He aha taau e hiahia ana kia kite?",
+    "headlineShort": "He aha taau e hiahia ana?",
+    "subheadline": "Whakaahuahia to whangai tino pai.",
+    "placeholder": "He maha atu AI, topenga takaro, puoro indie…",
+    "send": "Tukua",
+    "stop": "Kati",
+    "record": "Tuhia",
+    "skip": "Pārera — kawea noa ahau ki te whangai",
+    "submit": "Tukua",
+    "modalQuestion": "He aha atu e hiahia ana koe kia kite?",
+    "modalPlaceholder": "He maha atu AI, hangarau, takaro…",
+    "analysing": "Te tātari i o hiahia…",
+    "timelineReady": "Kua reri to raarangi waahi",
+    "dragToTune": "Tōia ki te whakatikatika i to ranunga.",
+    "save": "Tiaki",
+    "voiceUnsupported": "Kaore e tautokohia te whakauru reo i roto i tenei pūtirotiro.",
+    "suggestion1": "He maha atu AI me nga korero crypto",
+    "suggestion2": "Topenga takaro me esports",
+    "suggestion3": "Nga kitenga puoro indie",
+    "suggestion4": "Nga kaiwhakaara hangarau me nga tiimata",
+    "suggestion5": "Nga whakaihuatanga whutupaoro"
   }
 }

@@ -24,7 +24,8 @@
     "connecting": "Birikdirilýär...",
     "signMessage": "Habary gol çek",
     "guide": "Guide",
-    "events": "Çäreler"
+    "events": "Çäreler",
+    "prompt": "Sowal"
   },
   "feed": {
     "home": "Baş sahypa",
@@ -296,7 +297,9 @@
     "bounty": "Sylag",
     "locked": "Çäklendirilen",
     "any": "Islendik",
-    "resetFilters": "Süzgüçleri täzele"
+    "resetFilters": "Süzgüçleri täzele",
+    "prompt": "Sowal",
+    "for-you": "Siziň üçin"
   },
   "drawers": {
     "ppvTitle": "Tölegli mazmun",
@@ -1258,5 +1261,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Lentanyz üçin sowal ediň — DeHub",
+    "seoDescription": "DeHub-a näme görmek isleýändigiňizi aýdyň, biz bolsa wagt setiriňizi sazlaýarys.",
+    "goHome": "Baş sahypa git",
+    "headline": "Näme görmek isleýärsiňiz?",
+    "headlineShort": "Näme isleýärsiňiz?",
+    "subheadline": "Kämil lentaňyzy suratlandyryň.",
+    "placeholder": "Has köp AI, oýun wideolary, garaşsyz aýdym-saz…",
+    "send": "Ugrat",
+    "stop": "Dur",
+    "record": "Ýazgy et",
+    "skip": "Geç — gönüden-göni lentaňa elt",
+    "submit": "Ugrat",
+    "modalQuestion": "Näme has köp görmek isleýärsiňiz?",
+    "modalPlaceholder": "Has köp AI, tehnologiýa, oýunlar…",
+    "analysing": "Gyzyklanmalaryňyz derňenýär…",
+    "timelineReady": "Wagt setiriňiz taýýar",
+    "dragToTune": "Gatnaşygyňyzy sazlamak üçin süýşüriň.",
+    "save": "Ýatda sakla",
+    "voiceUnsupported": "Bu brauzerde sesli giriş goldanok.",
+    "suggestion1": "Has köp AI we kripto täzelikler",
+    "suggestion2": "Oýun wideolary we esports",
+    "suggestion3": "Garaşsyz aýdym-saz açyşlary",
+    "suggestion4": "Tehnologiýa esaslandyryjylar we başlangyçlar",
+    "suggestion5": "Futbol pursatlary"
   }
 }

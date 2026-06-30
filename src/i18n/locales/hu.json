@@ -24,7 +24,8 @@
     "connecting": "Csatlakozás...",
     "signMessage": "Üzenet aláírása",
     "guide": "Útmutató",
-    "events": "Események"
+    "events": "Események",
+    "prompt": "Ösztönzés"
   },
   "feed": {
     "home": "Kezdőlap",
@@ -488,7 +489,9 @@
     "bounty": "Jutalom",
     "locked": "Korlátozott",
     "any": "Bármely",
-    "resetFilters": "Szűrők visszaállítása"
+    "resetFilters": "Szűrők visszaállítása",
+    "prompt": "Ösztönzés",
+    "for-you": "Neked"
   },
   "commandCentre": {
     "title": "Parancsnoki központ",
@@ -1271,5 +1274,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Ösztönözd a hírfolyamodat — DeHub",
+    "seoDescription": "Mondd el a DeHub-nak, mit szeretnél látni, és mi beállítjuk az idővonaladat.",
+    "goHome": "Irány a kezdőlap",
+    "headline": "Mit szeretnél látni?",
+    "headlineShort": "Mit szeretnél?",
+    "subheadline": "Írd le a tökéletes hírfolyamodat.",
+    "placeholder": "Több AI, játék klipek, indie zene…",
+    "send": "Küldés",
+    "stop": "Leállítás",
+    "record": "Felvétel",
+    "skip": "Kihagyás — csak vigyél a hírfolyamra",
+    "submit": "Küldés",
+    "modalQuestion": "Mit szeretnél még látni?",
+    "modalPlaceholder": "Több AI, tech, gaming…",
+    "analysing": "Érdeklődési köröd elemzése…",
+    "timelineReady": "Az idővonalad kész",
+    "dragToTune": "Húzd a mix finomhangolásához.",
+    "save": "Mentés",
+    "voiceUnsupported": "A hangbevitel nem támogatott ebben a böngészőben.",
+    "suggestion1": "Több AI és kripto hír",
+    "suggestion2": "Gaming klipek és esports",
+    "suggestion3": "Indie zenei felfedezések",
+    "suggestion4": "Tech alapítók és startupok",
+    "suggestion5": "Foci összefoglalók"
   }
 }

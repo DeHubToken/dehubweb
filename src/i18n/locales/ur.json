@@ -24,7 +24,8 @@
     "connecting": "جوڑ رہا ہے...",
     "signMessage": "پیغام پر دستخط",
     "guide": "گائیڈ",
-    "events": "تقریبات"
+    "events": "تقریبات",
+    "prompt": "پرامپٹ"
   },
   "feed": {
     "home": "ہوم",
@@ -488,7 +489,9 @@
     "bounty": "انعام",
     "locked": "محدود",
     "any": "سب",
-    "resetFilters": "فلٹرز ری سیٹ کریں"
+    "resetFilters": "فلٹرز ری سیٹ کریں",
+    "prompt": "پرامپٹ",
+    "for-you": "آپ کے لیے"
   },
   "commandCentre": {
     "title": "کمانڈ سینٹر",
@@ -1271,5 +1274,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "اپنے فیڈ کو پرامپٹ کریں — DeHub",
+    "seoDescription": "DeHub کو بتائیں کہ آپ کیا دیکھنا چاہتے ہیں اور ہم آپ کی ٹائم لائن کو بہتر بنائیں گے۔",
+    "goHome": "ہوم پر جائیں",
+    "headline": "آپ کیا دیکھنا چاہتے ہیں؟",
+    "headlineShort": "آپ کیا چاہتے ہیں؟",
+    "subheadline": "اپنی بہترین فیڈ کی وضاحت کریں۔",
+    "placeholder": "مزید AI, گیمنگ کلپس، انڈی میوزک…",
+    "send": "بھیجیں",
+    "stop": "روکیں",
+    "record": "ریکارڈ کریں",
+    "skip": "چھوڑیں — بس مجھے فیڈ پر لے چلیں",
+    "submit": "جمع کرائیں",
+    "modalQuestion": "آپ مزید کیا دیکھنا چاہتے ہیں؟",
+    "modalPlaceholder": "مزید AI، ٹیک، گیمنگ…",
+    "analysing": "آپ کی دلچسپیوں کا تجزیہ کیا جا رہا ہے…",
+    "timelineReady": "آپ کی ٹائم لائن تیار ہے",
+    "dragToTune": "اپنے مکس کو بہتر بنانے کے لیے گھسیٹیں۔",
+    "save": "محفوظ کریں",
+    "voiceUnsupported": "اس براؤزر میں صوتی ان پٹ تعاون یافتہ نہیں ہے۔",
+    "suggestion1": "مزید AI اور کرپٹو خبریں",
+    "suggestion2": "گیمنگ کلپس اور esports",
+    "suggestion3": "انڈی میوزک کی دریافتیں",
+    "suggestion4": "ٹیک بانی اور اسٹارٹ اپس",
+    "suggestion5": "فٹ بال کی جھلکیاں"
   }
 }

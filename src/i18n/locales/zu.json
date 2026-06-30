@@ -24,7 +24,8 @@
     "connecting": "Ixhuma...",
     "signMessage": "Sayina umlayezo",
     "guide": "Umhlahlandlela",
-    "events": "Imicimbi"
+    "events": "Imicimbi",
+    "prompt": "Yenza"
   },
   "feed": {
     "home": "Ekhaya",
@@ -304,7 +305,9 @@
     "bounty": "Umvuzo",
     "locked": "Kukhiyiwe",
     "any": "Noma yikuphi",
-    "resetFilters": "Setha kabusha izihluzi"
+    "resetFilters": "Setha kabusha izihluzi",
+    "prompt": "Yenza",
+    "for-you": "Okwakho"
   },
   "drawers": {
     "ppvTitle": "Okuqukethwe Kokukhokha-Ngokubuka",
@@ -1298,5 +1301,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Yenza i-feed yakho — DeHub",
+    "seoDescription": "Tshela uDeHub ukuthi yini ofuna ukuyibona futhi sizolungisa umugqa wakho wesikhathi.",
+    "goHome": "Hambani ekhaya",
+    "headline": "Yini ofuna ukuyibona?",
+    "headlineShort": "Ufunani?",
+    "subheadline": "Chaza i-feed yakho ephelele.",
+    "placeholder": "Olunye ulwazi nge-AI, iziqephu zemidlalo, umculo we-indie…",
+    "send": "Thumela",
+    "stop": "Misa",
+    "record": "Rekhoda",
+    "skip": "Yeqa — ngiyise ngqo ku-feed",
+    "submit": "Thumela",
+    "modalQuestion": "Yini ofuna ukuyibona kakhulu?",
+    "modalPlaceholder": "Kabanzi nge-AI, ubuchwepheshe, imidlalo…",
+    "analysing": "Sihlaziya izinto ozithandayo…",
+    "timelineReady": "Isikhathi sakho sesilungile",
+    "dragToTune": "Hudula ukuze ulungise ingxube yakho.",
+    "save": "Londoloza",
+    "voiceUnsupported": "Ukufaka kwezwi akusekelwe kulesi siphequluli.",
+    "suggestion1": "Olunye ulwazi lwe-AI nolwe-crypto",
+    "suggestion2": "Iziqephu zemidlalo neze-esports",
+    "suggestion3": "Ukutholakala komculo we-indie",
+    "suggestion4": "Abasunguli bezobuchwepheshe nabaqalayo",
+    "suggestion5": "Izithombe ezinhle kakhulu zebhola"
   }
 }

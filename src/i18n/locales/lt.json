@@ -24,7 +24,8 @@
     "connecting": "Jungiamasi...",
     "signMessage": "Pasirašyti žinutę",
     "guide": "Vadovas",
-    "events": "Renginiai"
+    "events": "Renginiai",
+    "prompt": "Valdymas"
   },
   "feed": {
     "home": "Pradžia",
@@ -304,7 +305,9 @@
     "bounty": "Premija",
     "locked": "Apribota",
     "any": "Bet koks",
-    "resetFilters": "Atstatyti filtrus"
+    "resetFilters": "Atstatyti filtrus",
+    "prompt": "Valdymas",
+    "for-you": "Jums"
   },
   "drawers": {
     "ppvTitle": "Mokėk-už-peržiūrą turinys",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Valdykite savo informacijos srautą („feed“) – DeHub",
+    "seoDescription": "Pasakykite „DeHub“, ką norite matyti, ir mes pakoreguosime jūsų laiko juostą.",
+    "goHome": "Eiti į pagrindinį puslapį",
+    "headline": "Ką norėtumėte pamatyti?",
+    "headlineShort": "Ko nori?",
+    "subheadline": "Apibūdinkite savo idealų informacijos srautą.",
+    "placeholder": "Daugiau AI, žaidimų klipų, nepriklausomos muzikos…",
+    "send": "Siųsti",
+    "stop": "Sustabdyti",
+    "record": "Įrašyti",
+    "skip": "Praleisti – tiesiog nukelkite mane į informacijos srautą",
+    "submit": "Pateikti",
+    "modalQuestion": "Ko norėtumėte matyti daugiau?",
+    "modalPlaceholder": "Daugiau AI, technologijų, žaidimų…",
+    "analysing": "Analizuojami jūsų interesai…",
+    "timelineReady": "Jūsų laiko juosta paruošta",
+    "dragToTune": "Vilkite, kad tiksliau sureguliuotumėte savo derinį.",
+    "save": "Išsaugoti",
+    "voiceUnsupported": "Balso įvestis šioje naršyklėje nepalaikoma.",
+    "suggestion1": "Daugiau AI ir kriptovaliutų naujienų",
+    "suggestion2": "Žaidimų klipai ir esports",
+    "suggestion3": "Nepriklausomos muzikos atradimai",
+    "suggestion4": "Technologijų įkūrėjai ir startuoliai",
+    "suggestion5": "Futbolo epizodai"
   }
 }

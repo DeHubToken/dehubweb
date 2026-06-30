@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -6,6 +7,7 @@ import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { ArrowUp, Sparkles, Cpu, Atom, Gamepad2, Trophy, Music2, Film, Image as ImageIcon, Radio, Check } from 'lucide-react';
 import type { DeHubCategory } from '@/lib/api/dehub';
 import { cn } from '@/lib/utils';
+
 
 type Stage = 'input' | 'analysing' | 'tune';
 
@@ -105,10 +107,12 @@ function scorePromptAgainstCategories(prompt: string, categories: DeHubCategory[
 }
 
 export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt = '', onSave }: Props) {
+  const { t } = useTranslation();
   const [stage, setStage] = useState<Stage>('input');
   const [prompt, setPrompt] = useState(initialPrompt);
   const [weights, setWeights] = useState<CategoryWeight[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
+
 
   // Reset when re-opened
   useEffect(() => {
@@ -184,25 +188,26 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
           <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
             <Sparkles className="w-6 h-6 text-white" />
           </div>
-          <h2 className="text-lg font-semibold text-center">What do you want to see more of?</h2>
+          <h2 className="text-lg font-semibold text-center">{t('prompt.modalQuestion', 'What do you want to see more of?')}</h2>
           <div className="relative w-full">
             <input
               ref={inputRef}
               value={prompt}
               onChange={e => setPrompt(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') handleSubmit(); }}
-              placeholder="More AI, tech, gaming…"
+              placeholder={t('prompt.modalPlaceholder', 'More AI, tech, gaming…')}
               className="w-full pl-4 pr-12 py-3 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus-visible:outline-none focus:border-white/10 transition-colors"
             />
             <button
               onClick={() => handleSubmit()}
               disabled={!prompt.trim()}
               className="absolute right-1.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:scale-105 transition-transform"
-              aria-label="Submit"
+              aria-label={t('prompt.submit', 'Submit')}
             >
               <ArrowUp className="w-4 h-4" strokeWidth={3} />
             </button>
           </div>
+
         </div>
       )}
 
@@ -245,16 +250,17 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
               })}
             </div>
           </div>
-          <p className="text-sm text-white/60 animate-pulse">Analysing your interests…</p>
+          <p className="text-sm text-white/60 animate-pulse">{t('prompt.analysing', 'Analysing your interests…')}</p>
         </div>
       )}
 
       {stage === 'tune' && (
         <div className="flex flex-col gap-5 py-2">
           <div className="text-center">
-            <h2 className="text-lg font-semibold">Your timeline is ready</h2>
-            <p className="text-sm text-white/50">Drag to fine-tune your mix.</p>
+            <h2 className="text-lg font-semibold">{t('prompt.timelineReady', 'Your timeline is ready')}</h2>
+            <p className="text-sm text-white/50">{t('prompt.dragToTune', 'Drag to fine-tune your mix.')}</p>
           </div>
+
           <div className="flex flex-col gap-4">
             {weights.map((w, idx) => {
               const Icon = ORBIT_ICONS[idx % ORBIT_ICONS.length];
@@ -278,7 +284,7 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
             })}
           </div>
           <LiquidGlassBubble2
-            label="Save"
+            label={t('prompt.save', 'Save')}
             icon={<Check className="w-4 h-4" />}
             onClick={handleSave}
             width="100%"

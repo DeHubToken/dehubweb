@@ -307,7 +307,9 @@
     "bounty": "Bounty",
     "locked": "Gated",
     "any": "Any",
-    "resetFilters": "Reset filters"
+    "resetFilters": "Reset filters",
+    "prompt": "Prompt",
+    "for-you": "For You"
   },
   "drawers": {
     "ppvTitle": "Pay-Per-View Content",
@@ -1488,5 +1490,31 @@
     "pinToProfile": "Pin communities to profile",
     "joinFirst": "Join communities first to pin them",
     "pinCommunity": "Pin community"
+  },
+  "prompt": {
+    "seoTitle": "Prompt your feed — DeHub",
+    "seoDescription": "Tell DeHub what you want to see and we'll tune your timeline.",
+    "goHome": "Go to home",
+    "headline": "What do you want to see?",
+    "headlineShort": "What do you want?",
+    "subheadline": "Describe your perfect feed.",
+    "placeholder": "More AI, gaming clips, indie music…",
+    "send": "Send",
+    "stop": "Stop",
+    "record": "Record",
+    "skip": "Skip — just take me to the feed",
+    "submit": "Submit",
+    "modalQuestion": "What do you want to see more of?",
+    "modalPlaceholder": "More AI, tech, gaming…",
+    "analysing": "Analysing your interests…",
+    "timelineReady": "Your timeline is ready",
+    "dragToTune": "Drag to fine-tune your mix.",
+    "save": "Save",
+    "voiceUnsupported": "Voice input is not supported in this browser.",
+    "suggestion1": "More AI and crypto news",
+    "suggestion2": "Gaming clips and esports",
+    "suggestion3": "Indie music discoveries",
+    "suggestion4": "Tech founders and startups",
+    "suggestion5": "Football highlights"
   }
 }

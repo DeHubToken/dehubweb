@@ -24,7 +24,8 @@
     "connecting": "Kumokonekta...",
     "signMessage": "Pirmahan ang mensahe",
     "guide": "Gabay",
-    "events": "Mga Kaganapan"
+    "events": "Mga Kaganapan",
+    "prompt": "Prompt"
   },
   "common": {
     "okay": "Sige",
@@ -658,7 +659,9 @@
     "bounty": "Bounty",
     "locked": "Gated",
     "any": "Any",
-    "resetFilters": "Reset filters"
+    "resetFilters": "Reset filters",
+    "prompt": "Prompt",
+    "for-you": "Para sa Iyo"
   },
   "drawers": {
     "ppvTitle": "Pay-Per-View Content",
@@ -1444,5 +1447,31 @@
     "unlistedDesc": "Only people with the link can see",
     "private": "Private",
     "privateDesc": "Only you can see this post"
+  },
+  "prompt": {
+    "seoTitle": "I-prompt ang iyong feed — DeHub",
+    "seoDescription": "Sabihin sa DeHub kung ano ang gusto mong makita at iaakma namin ang iyong timeline.",
+    "goHome": "Pumunta sa home",
+    "headline": "Ano ang gusto mong makita?",
+    "headlineShort": "Ano ang gusto mo?",
+    "subheadline": "Ilarawan ang iyong perpektong feed.",
+    "placeholder": "Mas maraming AI, gaming clips, indie music…",
+    "send": "Ipadala",
+    "stop": "Ihinto",
+    "record": "Mag-record",
+    "skip": "Laktawan — dalhin mo lang ako sa feed",
+    "submit": "Isumite",
+    "modalQuestion": "Ano ang gusto mong mas makita?",
+    "modalPlaceholder": "Mas maraming AI, tech, gaming…",
+    "analysing": "Sinusuri ang iyong mga interes…",
+    "timelineReady": "Handa na ang iyong timeline",
+    "dragToTune": "I-drag para ayusin ang iyong mix.",
+    "save": "I-save",
+    "voiceUnsupported": "Hindi suportado ang voice input sa browser na ito.",
+    "suggestion1": "Mas maraming balita sa AI at crypto",
+    "suggestion2": "Gaming clips at esports",
+    "suggestion3": "Mga tuklas sa indie music",
+    "suggestion4": "Mga tagapagtatag ng tech at mga startup",
+    "suggestion5": "Mga highlight ng football"
   }
 }

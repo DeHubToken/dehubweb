@@ -24,7 +24,8 @@
     "connecting": "Savienošanās...",
     "signMessage": "Parakstīt ziņojumu",
     "guide": "Ceļvedis",
-    "events": "Pasākumi"
+    "events": "Pasākumi",
+    "prompt": "Prompt"
   },
   "feed": {
     "home": "Sākums",
@@ -304,7 +305,9 @@
     "bounty": "Prēmija",
     "locked": "Ierobežots",
     "any": "Jebkurš",
-    "resetFilters": "Atiestatīt filtrus"
+    "resetFilters": "Atiestatīt filtrus",
+    "prompt": "Prompt",
+    "for-you": "Jums"
   },
   "drawers": {
     "ppvTitle": "Maksā-par-skatīšanos saturs",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Virziet savu plūsmu — DeHub",
+    "seoDescription": "Pastāstiet DeHub, ko vēlaties redzēt, un mēs pielāgosim jūsu laika joslu.",
+    "goHome": "Doties uz sākumu",
+    "headline": "Ko vēlaties redzēt?",
+    "headlineShort": "Ko vēlaties?",
+    "subheadline": "Aprakstiet savu ideālo plūsmu.",
+    "placeholder": "Vairāk AI, spēļu klipu, neatkarīgās mūzikas…",
+    "send": "Sūtīt",
+    "stop": "Apturēt",
+    "record": "Ierakstīt",
+    "skip": "Izlaist — vienkārši aizved mani uz plūsmu",
+    "submit": "Iesniegt",
+    "modalQuestion": "Ko vēlaties redzēt vairāk?",
+    "modalPlaceholder": "Vairāk AI, tehnoloģiju, spēļu…",
+    "analysing": "Analizēju jūsu intereses…",
+    "timelineReady": "Jūsu laika josla ir gatava",
+    "dragToTune": "Velciet, lai precizētu savu sajaukumu.",
+    "save": "Saglabāt",
+    "voiceUnsupported": "Balss ievade šajā pārlūkprogrammā netiek atbalstīta.",
+    "suggestion1": "Vairāk AI un kripto ziņu",
+    "suggestion2": "Spēļu klipi un esports",
+    "suggestion3": "Neatkarīgās mūzikas atklājumi",
+    "suggestion4": "Tehnoloģiju dibinātāji un jaunuzņēmumi",
+    "suggestion5": "Futbola svarīgākie momenti"
   }
 }

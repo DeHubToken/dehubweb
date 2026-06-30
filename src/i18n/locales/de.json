@@ -24,7 +24,8 @@
     "connecting": "Verbinden...",
     "signMessage": "Nachricht signieren",
     "guide": "Leitfaden",
-    "events": "Veranstaltungen"
+    "events": "Veranstaltungen",
+    "prompt": "Eingabeaufforderung"
   },
   "feed": {
     "home": "Startseite",
@@ -296,7 +297,9 @@
     "bounty": "Belohnung",
     "locked": "Geschützt",
     "any": "Alle",
-    "resetFilters": "Filter zurücksetzen"
+    "resetFilters": "Filter zurücksetzen",
+    "prompt": "Eingabeaufforderung",
+    "for-you": "Für dich"
   },
   "drawers": {
     "ppvTitle": "Pay-Per-View-Inhalt",
@@ -1320,5 +1323,31 @@
     "processing": "Wird verarbeitet...",
     "uploading": "Wird hochgeladen...",
     "deleting": "Wird gelöscht..."
+  },
+  "prompt": {
+    "seoTitle": "Deinen Feed anstoßen — DeHub",
+    "seoDescription": "Erkläre DeHub, was du sehen möchtest, und wir stimmen deine Timeline ab.",
+    "goHome": "Zur Startseite",
+    "headline": "Was möchtest du sehen?",
+    "headlineShort": "Was möchten Sie?",
+    "subheadline": "Beschreibe deinen perfekten Feed.",
+    "placeholder": "Mehr AI, Gaming-Clips, Indie-Musik…",
+    "send": "Senden",
+    "stop": "Stoppen",
+    "record": "Aufnehmen",
+    "skip": "Überspringen — führe mich direkt zum Feed",
+    "submit": "Absenden",
+    "modalQuestion": "Wovon möchtest du mehr sehen?",
+    "modalPlaceholder": "Mehr AI, Tech, Gaming…",
+    "analysing": "Interessen werden analysiert…",
+    "timelineReady": "Deine Timeline ist bereit",
+    "dragToTune": "Ziehen zum Feinabstimmen deiner Mischung.",
+    "save": "Speichern",
+    "voiceUnsupported": "Spracheingabe wird in diesem Browser nicht unterstützt.",
+    "suggestion1": "Mehr AI und Krypto-Nachrichten",
+    "suggestion2": "Gaming-Clips und esports",
+    "suggestion3": "Entdeckungen der Indie-Musik",
+    "suggestion4": "Tech-Gründer und Startups",
+    "suggestion5": "Fußball-Highlights"
   }
 }

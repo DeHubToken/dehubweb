@@ -24,7 +24,8 @@
     "connecting": "ချိတ်ဆက်နေသည်...",
     "signMessage": "မက်ဆေ့ဂျ်လက်မှတ်ထိုးရန်",
     "guide": "လမ်းညွှန်",
-    "events": "ပွဲများ"
+    "events": "ပွဲများ",
+    "prompt": "ပြောပြပါ"
   },
   "feed": {
     "home": "ပင်မ",
@@ -304,7 +305,9 @@
     "ppv": "PPV",
     "bounty": "Bounty",
     "locked": "Gated",
-    "any": "Any"
+    "any": "Any",
+    "prompt": "ပြောပြပါ",
+    "for-you": "သင့်အတွက်"
   },
   "drawers": {
     "ppvTitle": "ငွေပေးချေကြည့်ရှုရသော အကြောင်းအရာ",
@@ -1307,5 +1310,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "သင်၏ဖိဒ်ကို ပြောပြပါ — DeHub",
+    "seoDescription": "သင်မြင်လိုသောအရာကို DeHub သို့ပြောပြပါ၊ ကျွန်ုပ်တို့သည် သင့်အချိန်ဇယားကို ချိန်ညှိပေးပါမည်။",
+    "goHome": "ပင်မစာမျက်နှာသို့သွားရန်",
+    "headline": "ဘာတွေမြင်ချင်လဲ။",
+    "headlineShort": "ဘာတွေလိုချင်လဲ။",
+    "subheadline": "သင့်အကြိုက်ဆုံးဖိဒ်ကို ဖော်ပြပါ။",
+    "placeholder": "AI ပိုများ၊ ဂိမ်းကလစ်များ၊ အင်ဒီဂီတ…",
+    "send": "ပေးပို့မည်",
+    "stop": "ရပ်မည်",
+    "record": "မှတ်တမ်းတင်မည်",
+    "skip": "ကျော်မည် — ဖိဒ်သို့သာ ခေါ်သွားပါ",
+    "submit": "တင်ပြမည်",
+    "modalQuestion": "ဘာတွေကို ပိုမြင်ချင်လဲ။",
+    "modalPlaceholder": "AI ပိုများ၊ နည်းပညာ၊ ဂိမ်းကစားခြင်း…",
+    "analysing": "သင့်စိတ်ဝင်စားမှုများကို ခွဲခြမ်းစိတ်ဖြာနေသည်…",
+    "timelineReady": "သင်၏အချိန်ဇယား အသင့်ဖြစ်ပါပြီ။",
+    "dragToTune": "သင့်ရောစပ်ထားသည်များကို ချိန်ညှိရန် ဆွဲယူပါ။",
+    "save": "သိမ်းဆည်းမည်",
+    "voiceUnsupported": "အသံထည့်သွင်းမှုကို ဤဘရောက်ဆာတွင် မပံ့ပိုးပါ။",
+    "suggestion1": "AI နှင့် crypto သတင်းများ ပိုမို",
+    "suggestion2": "ဂိမ်းကလစ်များနှင့် esports",
+    "suggestion3": "အင်ဒီဂီတ ရှာဖွေတွေ့ရှိမှုများ",
+    "suggestion4": "နည်းပညာ တည်ထောင်သူများနှင့် စတင်တည်ထောင်သူများ",
+    "suggestion5": "ဘောလုံးပွဲ အသားပေးများ"
   }
 }

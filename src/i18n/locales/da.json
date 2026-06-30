@@ -24,7 +24,8 @@
     "connecting": "Forbinder...",
     "signMessage": "Underskriv besked",
     "guide": "Guide",
-    "events": "Begivenheder"
+    "events": "Begivenheder",
+    "prompt": "Styr"
   },
   "feed": {
     "home": "Hjem",
@@ -488,7 +489,9 @@
     "bounty": "Dusør",
     "locked": "Begrænset",
     "any": "Alle",
-    "resetFilters": "Nulstil filtre"
+    "resetFilters": "Nulstil filtre",
+    "prompt": "Styr",
+    "for-you": "Til dig"
   },
   "commandCentre": {
     "title": "Kommandocenter",
@@ -1298,5 +1301,31 @@
     "insufficient_balance": "Utilstrækkelig saldo",
     "transaction_submitted": "Transaktion indsendt!",
     "transaction_failed": "Transaktion mislykkedes"
+  },
+  "prompt": {
+    "seoTitle": "Styr dit feed — DeHub",
+    "seoDescription": "Fortæl DeHub, hvad du vil se, så justerer vi din tidslinje.",
+    "goHome": "Gå til hjemmeside",
+    "headline": "Hvad vil du se?",
+    "headlineShort": "Hvad vil du?",
+    "subheadline": "Beskriv dit perfekte feed.",
+    "placeholder": "Mere AI, gaming klip, indie musik…",
+    "send": "Send",
+    "stop": "Stop",
+    "record": "Optag",
+    "skip": "Spring over — tag mig bare til feedet",
+    "submit": "Indsend",
+    "modalQuestion": "Hvad vil du se mere af?",
+    "modalPlaceholder": "Mere AI, tech, gaming…",
+    "analysing": "Analyserer dine interesser…",
+    "timelineReady": "Din tidslinje er klar",
+    "dragToTune": "Træk for at finjustere din blanding.",
+    "save": "Gem",
+    "voiceUnsupported": "Stemmeinput understøttes ikke i denne browser.",
+    "suggestion1": "Mere AI og krypto nyheder",
+    "suggestion2": "Gaming klip og esports",
+    "suggestion3": "Opdagelser inden for indie musik",
+    "suggestion4": "Tech grundlæggere og startups",
+    "suggestion5": "Fodbold højdepunkter"
   }
 }

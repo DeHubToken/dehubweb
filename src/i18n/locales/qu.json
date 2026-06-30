@@ -24,7 +24,8 @@
     "connecting": "Tinkuchkan...",
     "signMessage": "Firmay willakuyta",
     "guide": "Guide",
-    "events": "Rurasqakuna"
+    "events": "Rurasqakuna",
+    "prompt": "Yanapaq"
   },
   "feed": {
     "home": "Qallariy",
@@ -304,7 +305,9 @@
     "bounty": "Chanin",
     "locked": "Llavesqa",
     "any": "Imapas",
-    "resetFilters": "Ch'uyanchay kutichiy"
+    "resetFilters": "Ch'uyanchay kutichiy",
+    "prompt": "Yanapaq",
+    "for-you": "Qampaq"
   },
   "drawers": {
     "ppvTitle": "Rikuymanta qullqi imaymana",
@@ -1298,5 +1301,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Yanapaqniykita tapukuy — DeHub",
+    "seoDescription": "DeHubta niy imata rikuyta munanki chayta chaymanta qillqasqaykikunata allichasunchis.",
+    "goHome": "Wasiman riy",
+    "headline": "Imatataq rikuyta munanki?",
+    "headlineShort": "Imatataq munanki?",
+    "subheadline": "Allin rikuyta munasqaykita willaway.",
+    "placeholder": "Astawan AI, pukllay videokuna, indie takiykuna…",
+    "send": "Kachay",
+    "stop": "Sayachiy",
+    "record": "Grabay",
+    "skip": "Puntata — feedman pusaway",
+    "submit": "Kachariy",
+    "modalQuestion": "Imatataq astawan rikuyta munanki?",
+    "modalPlaceholder": "Astawan AI, tech, pukllay…",
+    "analysing": "Munapayayniykikunata t'aqwipa",
+    "timelineReady": "Qillqasqaykiqa listoñam",
+    "dragToTune": "Qaqayta kuyuchiy allin allichanapaq.",
+    "save": "Waqaychay",
+    "voiceUnsupported": "Kay maskaqpi rimaywan churanaqa mana yanapasqachu.",
+    "suggestion1": "Astawan AI chaymanta crypto willakuykuna",
+    "suggestion2": "Pukllay videokuna chaymanta esports",
+    "suggestion3": "Indie takiykunata taripaykuna",
+    "suggestion4": "Tech ruraqkunata chaymanta qallariykuna",
+    "suggestion5": "Pukllay qhawarinakuna"
   }
 }

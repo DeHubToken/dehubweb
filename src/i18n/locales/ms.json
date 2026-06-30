@@ -24,7 +24,8 @@
     "connecting": "Menyambung...",
     "signMessage": "Tandatangan mesej",
     "guide": "Panduan",
-    "events": "Acara"
+    "events": "Acara",
+    "prompt": "Gesaan"
   },
   "common": {
     "yes": "Ya",
@@ -712,7 +713,9 @@
     "bounty": "Bounty",
     "locked": "Gated",
     "any": "Any",
-    "resetFilters": "Reset filters"
+    "resetFilters": "Reset filters",
+    "prompt": "Gesaan",
+    "for-you": "Untuk Anda"
   },
   "drawers": {
     "ppvTitle": "Pay-Per-View Content",
@@ -1527,5 +1530,31 @@
     "unlistedDesc": "Only people with the link can see",
     "private": "Private",
     "privateDesc": "Only you can see this post"
+  },
+  "prompt": {
+    "seoTitle": "Gesaan suapan anda — DeHub",
+    "seoDescription": "Beritahu DeHub apa yang anda ingin lihat dan kami akan menala garis masa anda.",
+    "goHome": "Pergi ke laman utama",
+    "headline": "Apa yang anda ingin lihat?",
+    "headlineShort": "Apa yang anda mahu?",
+    "subheadline": "Terangkan suapan sempurna anda.",
+    "placeholder": "Lebih banyak AI, klip permainan, muzik indie…",
+    "send": "Hantar",
+    "stop": "Berhenti",
+    "record": "Rakam",
+    "skip": "Langkau — bawa saya terus ke suapan",
+    "submit": "Hantar",
+    "modalQuestion": "Apa yang ingin anda lihat lebih banyak?",
+    "modalPlaceholder": "Lebih banyak AI, teknologi, permainan…",
+    "analysing": "Menganalisis minat anda…",
+    "timelineReady": "Garis masa anda sudah sedia",
+    "dragToTune": "Seret untuk menala campuran anda.",
+    "save": "Simpan",
+    "voiceUnsupported": "Input suara tidak disokong dalam pelayar ini.",
+    "suggestion1": "Lebih banyak berita AI dan kripto",
+    "suggestion2": "Klip permainan dan esports",
+    "suggestion3": "Penemuan muzik indie",
+    "suggestion4": "Pengasas teknologi dan syarikat permulaan",
+    "suggestion5": "Sorotan bola sepak"
   }
 }

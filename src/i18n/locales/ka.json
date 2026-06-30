@@ -24,7 +24,8 @@
     "connecting": "დაკავშირება...",
     "signMessage": "ხელმოწერა",
     "guide": "სახელმძღვანელო",
-    "events": "ღონისძიებები"
+    "events": "ღონისძიებები",
+    "prompt": "მოთხოვნა"
   },
   "feed": {
     "home": "მთავარი",
@@ -304,7 +305,9 @@
     "bounty": "ჯილდო",
     "locked": "დაბლოკილი",
     "any": "ნებისმიერი",
-    "resetFilters": "ფილტრების გასუფთავება"
+    "resetFilters": "ფილტრების გასუფთავება",
+    "prompt": "მოთხოვნა",
+    "for-you": "თქვენთვის"
   },
   "drawers": {
     "ppvTitle": "ფასიანი კონტენტი",
@@ -1322,5 +1325,31 @@
     "startSaving": "Start saving posts by tapping the bookmark icon on any post you want to save.",
     "reachedEnd": "You've reached the end of your bookmarks",
     "loginDescription": "Log in to view and manage your saved bookmarks."
+  },
+  "prompt": {
+    "seoTitle": "მოითხოვეთ თქვენი ფიდი — DeHub",
+    "seoDescription": "უთხარით DeHub-ს, რისი ხილვა გსურთ და ჩვენ დავარეგულირებთ თქვენს ქრონოლოგიას.",
+    "goHome": "მთავარ გვერდზე გადასვლა",
+    "headline": "რისი ნახვა გსურთ?",
+    "headlineShort": "რა გსურთ?",
+    "subheadline": "აღწერეთ თქვენი სრულყოფილი ფიდი.",
+    "placeholder": "მეტი AI, თამაშის კლიპები, ინდი მუსიკა…",
+    "send": "გაგზავნა",
+    "stop": "შეჩერება",
+    "record": "ჩაწერა",
+    "skip": "გამოტოვება — უბრალოდ გადამიყვანე ფიდზე",
+    "submit": "გაგზავნა",
+    "modalQuestion": "რისი ნახვა გსურთ მეტად?",
+    "modalPlaceholder": "მეტი AI, ტექნოლოგია, თამაშები…",
+    "analysing": "თქვენი ინტერესების ანალიზი…",
+    "timelineReady": "თქვენი ქრონოლოგია მზადაა",
+    "dragToTune": "გადაათრიეთ თქვენი მიქსის დასაზუსტებლად.",
+    "save": "შენახვა",
+    "voiceUnsupported": "ხმოვანი შეყვანა არ არის მხარდაჭერილი ამ ბრაუზერში.",
+    "suggestion1": "მეტი AI და კრიპტო სიახლეები",
+    "suggestion2": "თამაშის კლიპები და esports",
+    "suggestion3": "ინდი მუსიკის აღმოჩენები",
+    "suggestion4": "ტექ დამფუძნებლები და სტარტაპები",
+    "suggestion5": "ფეხბურთის საუკეთესო მომენტები"
   }
 }

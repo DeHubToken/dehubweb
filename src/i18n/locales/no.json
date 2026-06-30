@@ -24,7 +24,8 @@
     "connecting": "Kobler til...",
     "signMessage": "Signer melding",
     "guide": "Guide",
-    "events": "Arrangementer"
+    "events": "Arrangementer",
+    "prompt": "Fremlegg"
   },
   "feed": {
     "home": "Hjem",
@@ -296,7 +297,9 @@
     "bounty": "Dusør",
     "locked": "Låst",
     "any": "Alle",
-    "resetFilters": "Tilbakestill filtre"
+    "resetFilters": "Tilbakestill filtre",
+    "prompt": "Fremlegg",
+    "for-you": "For deg"
   },
   "drawers": {
     "ppvTitle": "Betal-per-visning-innhold",
@@ -1285,5 +1288,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Be om feeden din — DeHub",
+    "seoDescription": "Fortell DeHub hva du vil se, så skal vi tilpasse tidslinjen din.",
+    "goHome": "Gå til hjemmesiden",
+    "headline": "Hva vil du se?",
+    "headlineShort": "Hva vil du ha?",
+    "subheadline": "Beskriv din perfekte feed.",
+    "placeholder": "Mer AI, gamingklipp, indie musikk…",
+    "send": "Send",
+    "stop": "Stopp",
+    "record": "Spill inn",
+    "skip": "Hopp over — bare ta meg til feeden",
+    "submit": "Send inn",
+    "modalQuestion": "Hva vil du se mer av?",
+    "modalPlaceholder": "Mer AI, teknologi, spilling…",
+    "analysing": "Analyserer interessene dine…",
+    "timelineReady": "Tidslinjen din er klar",
+    "dragToTune": "Dra for å finjustere miksen din.",
+    "save": "Lagre",
+    "voiceUnsupported": "Stemmeinntasting støttes ikke i denne nettleseren.",
+    "suggestion1": "Mer AI- og kryptonyheter",
+    "suggestion2": "Gamingklipp og esports",
+    "suggestion3": "Oppdagelser innen indie musikk",
+    "suggestion4": "Teknologigründere og startups",
+    "suggestion5": "Fotballhøydepunkter"
   }
 }

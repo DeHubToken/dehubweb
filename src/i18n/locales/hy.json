@@ -24,7 +24,8 @@
     "connecting": "Kapaktsvoum...",
     "signMessage": "Storagrel haghordagrotyun",
     "guide": "Guide",
-    "events": "Իրադարձություններ"
+    "events": "Իրադարձություններ",
+    "prompt": "Հրահանգ"
   },
   "feed": {
     "home": "Գլხավոdelays",
@@ -296,7 +297,9 @@
     "bounty": "Padshir",
     "locked": "Sahmanaphakvaats",
     "any": "Yerkaghin",
-    "resetFilters": "Verakangnel zangvoshnere"
+    "resetFilters": "Verakangnel zangvoshnere",
+    "prompt": "Հրահանգ",
+    "for-you": "Ձեզ համար"
   },
   "drawers": {
     "ppvTitle": "Vcharovits yelek bovalandakoutyun",
@@ -1258,5 +1261,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Ստեղծեք Ձեր լրահոսը — DeHub",
+    "seoDescription": "Ասեք DeHub-ին, թե ինչ եք ուզում տեսնել, և մենք կկարգավորենք Ձեր ժամանակացույցը։",
+    "goHome": "Անցնել գլխավոր էջ",
+    "headline": "Ի՞նչ եք ուզում տեսնել։",
+    "headlineShort": "Ի՞նչ եք ուզում։",
+    "subheadline": "Նկարագրեք Ձեր կատարյալ լրահոսը։",
+    "placeholder": "Ավելի շատ AI, խաղային տեսահոլովակներ, անկախ երաժշտություն…",
+    "send": "Ուղարկել",
+    "stop": "Կանգնեցնել",
+    "record": "Ձայնագրել",
+    "skip": "Բաց թողնել — պարզապես տանել դեպի լրահոս",
+    "submit": "Ներկայացնել",
+    "modalQuestion": "Ի՞նչ եք ուզում ավելին տեսնել։",
+    "modalPlaceholder": "Ավելի շատ AI, տեխնոլոգիա, խաղեր…",
+    "analysing": "Վերլուծվում են Ձեր հետաքրքրությունները…",
+    "timelineReady": "Ձեր ժամանակացույցը պատրաստ է",
+    "dragToTune": "Քաշեք՝ Ձեր խառնուրդը ճշգրտելու համար։",
+    "save": "Պահպանել",
+    "voiceUnsupported": "Ձայնային մուտքը չի աջակցվում այս դիտարկիչում։",
+    "suggestion1": "Ավելի շատ AI և կրիպտո նորություններ",
+    "suggestion2": "Խաղային տեսահոլովակներ և esports",
+    "suggestion3": "Անկախ երաժշտության հայտնագործություններ",
+    "suggestion4": "Տեխնոլոգիական հիմնադիրներ և ստարտափներ",
+    "suggestion5": "Ֆուտբոլային հիմնական դրվագներ"
   }
 }

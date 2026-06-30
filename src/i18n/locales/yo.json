@@ -24,7 +24,8 @@
     "connecting": "Ó ń so pọ̀...",
     "signMessage": "Fi ọwọ́ sí",
     "guide": "Ìtọ́sọ́nà",
-    "events": "Awọn iṣẹlẹ"
+    "events": "Awọn iṣẹlẹ",
+    "prompt": "Ohun tí o fẹ́ kà"
   },
   "feed": {
     "home": "Ilé",
@@ -304,7 +305,9 @@
     "bounty": "Ẹ̀san",
     "locked": "Títìí",
     "any": "Èyíkéyìí",
-    "resetFilters": "Tún àwọn àyọ̀ ṣe"
+    "resetFilters": "Tún àwọn àyọ̀ ṣe",
+    "prompt": "Ohun tí o fẹ́ kà",
+    "for-you": "Fún Ìwọ"
   },
   "drawers": {
     "ppvTitle": "Àkóónú Bíyà-Kí-O-Wò",
@@ -1268,5 +1271,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Se ohun tí o fẹ́ kà — DeHub",
+    "seoDescription": "Sọ fún DeHub ohun tó o fẹ́ rí, àwa yóò sì tún ìṣàkóso rẹ ṣe.",
+    "goHome": "Lọ sí ojúlé àkọ́kọ́",
+    "headline": "Kí ni o fẹ́ rí?",
+    "headlineShort": "Kí ni o fẹ́?",
+    "subheadline": "Ṣàpèjúwe ohun tí o fẹ́ kà dáadáa.",
+    "placeholder": "AI púpọ̀ sí i, àwọn fídíò eré, orin indie…",
+    "send": "Ránṣẹ́",
+    "stop": "Dúró",
+    "record": "Ṣe àgbéjáde ohùn",
+    "skip": "Fò — kàn mú mi lọ sí ohun tí o fẹ́ kà",
+    "submit": "Fi sílẹ̀",
+    "modalQuestion": "Kí ni o fẹ́ rí púpọ̀ sí i?",
+    "modalPlaceholder": "AI púpọ̀ sí i, ìmọ̀-ẹrọ, eré…",
+    "analysing": "Ṣàyẹ̀wò àwọn ohun tí o nífẹ̀ẹ́ sí…",
+    "timelineReady": "Ohun tí o fẹ́ kà ti múra sílẹ̀",
+    "dragToTune": "Fà láti tún àfikún rẹ ṣe.",
+    "save": "Fipamọ́",
+    "voiceUnsupported": "Ìmúdánilóhùn kò ní àtìlẹ́yìn nínú bébà yí.",
+    "suggestion1": "Àwọn ìròyìn AI àti crypto púpọ̀ sí i",
+    "suggestion2": "Àwọn fídíò eré àti esports",
+    "suggestion3": "Àwọn ìwádìí orin Indie",
+    "suggestion4": "Àwọn olùdásílẹ̀ ìmọ̀-ẹrọ àti àwọn ilé-iṣẹ́ titun",
+    "suggestion5": "Àwọn àkànṣe bọ́ọ̀lù"
   }
 }

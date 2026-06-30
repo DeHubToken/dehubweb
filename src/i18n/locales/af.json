@@ -24,7 +24,8 @@
     "connecting": "Verbind tans...",
     "signMessage": "Teken boodskap",
     "guide": "Gids",
-    "events": "Geleenthede"
+    "events": "Geleenthede",
+    "prompt": "Stel saam"
   },
   "home": {
     "title": "Volhoubare Web3-infrastruktuur",
@@ -910,7 +911,9 @@
     "bounty": "Bounty",
     "locked": "Gated",
     "any": "Any",
-    "resetFilters": "Reset filters"
+    "resetFilters": "Reset filters",
+    "prompt": "Stel saam",
+    "for-you": "Vir Jou"
   },
   "drawers": {
     "ppvTitle": "Pay-Per-View Content",
@@ -1384,5 +1387,31 @@
     "unlistedDesc": "Only people with the link can see",
     "private": "Private",
     "privateDesc": "Only you can see this post"
+  },
+  "prompt": {
+    "seoTitle": "Stel jou voer saam — DeHub",
+    "seoDescription": "Vertel DeHub wat jy wil sien en ons sal jou tydlyn instel.",
+    "goHome": "Gaan na tuisblad",
+    "headline": "Wat wil jy sien?",
+    "headlineShort": "Wat wil jy hê?",
+    "subheadline": "Beskryf jou perfekte voer.",
+    "placeholder": "Meer AI, speletjie grepe, indie musiek...",
+    "send": "Stuur",
+    "stop": "Stop",
+    "record": "Neem op",
+    "skip": "Slaan oor — neem my direk na die voer",
+    "submit": "Dien in",
+    "modalQuestion": "Wat wil jy meer van sien?",
+    "modalPlaceholder": "Meer AI, tegnologie, speletjies...",
+    "analysing": "Ontleed jou belangstellings...",
+    "timelineReady": "Jou tydlyn is gereed",
+    "dragToTune": "Sleep om jou mengsel fyn te stel.",
+    "save": "Stoor",
+    "voiceUnsupported": "Stem invoer word nie in hierdie blaaier ondersteun nie.",
+    "suggestion1": "Meer AI en kripto nuus",
+    "suggestion2": "Speletjie-grepe en esports",
+    "suggestion3": "Indie musiek ontdekkings",
+    "suggestion4": "Tegnologie stigters en startups",
+    "suggestion5": "Sokker hoogtepunte"
   }
 }

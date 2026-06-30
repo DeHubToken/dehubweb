@@ -24,7 +24,8 @@
     "connecting": "Verbinden...",
     "signMessage": "Bericht ondertekenen",
     "guide": "Gids",
-    "events": "Evenementen"
+    "events": "Evenementen",
+    "prompt": "Prompt"
   },
   "feed": {
     "home": "Home",
@@ -704,7 +705,9 @@
     "bounty": "Beloning",
     "locked": "Vergrendeld",
     "any": "Alle",
-    "resetFilters": "Filters resetten"
+    "resetFilters": "Filters resetten",
+    "prompt": "Prompt",
+    "for-you": "Voor Jou"
   },
   "drawers": {
     "ppvTitle": "Pay-per-view inhoud",
@@ -1546,5 +1549,31 @@
     "unlistedDesc": "Alleen mensen met de link",
     "private": "Privé",
     "privateDesc": "Alleen jij kunt dit bericht zien"
+  },
+  "prompt": {
+    "seoTitle": "Stuur je feed aan — DeHub",
+    "seoDescription": "Vertel DeHub wat je wilt zien en wij stemmen je tijdlijn af.",
+    "goHome": "Ga naar home",
+    "headline": "Wat wil je zien?",
+    "headlineShort": "Wat wil je?",
+    "subheadline": "Beschrijf je perfecte feed.",
+    "placeholder": "Meer AI, gaming clips, indie muziek…",
+    "send": "Verzenden",
+    "stop": "Stop",
+    "record": "Opnemen",
+    "skip": "Overslaan — breng me direct naar de feed",
+    "submit": "Verzenden",
+    "modalQuestion": "Waar wil je meer van zien?",
+    "modalPlaceholder": "Meer AI, tech, gaming…",
+    "analysing": "Interesses analyseren…",
+    "timelineReady": "Je tijdlijn is klaar",
+    "dragToTune": "Slepen om je mix te verfijnen.",
+    "save": "Opslaan",
+    "voiceUnsupported": "Spraakinvoer wordt niet ondersteund in deze browser.",
+    "suggestion1": "Meer AI en crypto nieuws",
+    "suggestion2": "Gaming clips en esports",
+    "suggestion3": "Indie muziek ontdekkingen",
+    "suggestion4": "Tech oprichters en startups",
+    "suggestion5": "Voetbal hoogtepunten"
   }
 }

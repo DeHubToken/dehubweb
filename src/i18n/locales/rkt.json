@@ -24,7 +24,8 @@
     "connecting": "কানেক্ট হইতাছে...",
     "signMessage": "মেসেজে সাইন করো",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "প্রম্পট"
   },
   "feed": {
     "home": "ঘর",
@@ -970,7 +971,9 @@
     "bounty": "Bounty",
     "locked": "Gated",
     "any": "Any",
-    "resetFilters": "Reset filters"
+    "resetFilters": "Reset filters",
+    "prompt": "প্রম্পট",
+    "for-you": "তোর বাদে"
   },
   "drawers": {
     "comments": "মন্তব্য",
@@ -1500,5 +1503,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "তোর ফিড প্রম্পট করো — DeHub",
+    "seoDescription": "DeHub-ক কও তুই কিসের দেখির চাস আর হামরা তোর টাইমলাইন ঠিক করি দিমু।",
+    "goHome": "ঘরে যাও",
+    "headline": "তুই কিসের দেখির চাস?",
+    "headlineShort": "তুই কিসের চাস?",
+    "subheadline": "তোর দারুণ ফিড বৰ্ণনা করো।",
+    "placeholder": "অধিক AI, গেমিং ক্লিপ, ইন্ডি সঙ্গীত…",
+    "send": "পাঠান",
+    "stop": "বন্দ করো",
+    "record": "রেকর্ড করো",
+    "skip": "বাদ দাও — সগায় মোক ফিডত লিয়ে যাও",
+    "submit": "জমা দাও",
+    "modalQuestion": "তুই কিসের বেশি দেখির চাস?",
+    "modalPlaceholder": "অধিক AI, টেক, গেমিং…",
+    "analysing": "তোর আগ্রহ বিশ্লেষণ করা হইতেছে…",
+    "timelineReady": "তোর টাইমলাইন তৈরি আছে",
+    "dragToTune": "তোর মিশ্রণ ঠিক করার বাদে টানো।",
+    "save": "সেভ করো",
+    "voiceUnsupported": "এই ব্রাউজারত ভয়েস ইনপুট সমর্থন করা হয় না।",
+    "suggestion1": "অধিক AI আর ক্রিপ্টো খবর",
+    "suggestion2": "গেমিং ক্লিপ আর esports",
+    "suggestion3": "ইন্ডি সঙ্গীত আবিষ্কার",
+    "suggestion4": "টেক প্রতিষ্ঠাতা আর স্টার্টআপ",
+    "suggestion5": "ফুটবল হাইলাইটস"
   }
 }

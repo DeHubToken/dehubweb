@@ -24,7 +24,8 @@
     "connecting": "جاري الاتصال...",
     "signMessage": "توقيع الرسالة",
     "guide": "دليل",
-    "events": "فعاليات"
+    "events": "فعاليات",
+    "prompt": "موجه"
   },
   "feed": {
     "home": "الرئيسية",
@@ -488,7 +489,9 @@
     "bounty": "مكافأة",
     "locked": "مقيد",
     "any": "الكل",
-    "resetFilters": "إعادة تعيين الفلاتر"
+    "resetFilters": "إعادة تعيين الفلاتر",
+    "prompt": "موجه",
+    "for-you": "لك"
   },
   "commandCentre": {
     "title": "مركز القيادة",
@@ -1298,5 +1301,31 @@
     "insufficient_balance": "رصيد غير كافٍ",
     "transaction_submitted": "تم إرسال المعاملة!",
     "transaction_failed": "فشلت المعاملة"
+  },
+  "prompt": {
+    "seoTitle": "وجّه موجزك — DeHub",
+    "seoDescription": "أخبر DeHub بما تريد رؤيته وسنقوم بتعديل جدولك الزمني.",
+    "goHome": "اذهب إلى الصفحة الرئيسية",
+    "headline": "ماذا تريد أن ترى؟",
+    "headlineShort": "ماذا تريد؟",
+    "subheadline": "صف موجزك المثالي.",
+    "placeholder": "المزيد من AI، مقاطع الألعاب، الموسيقى المستقلة...",
+    "send": "إرسال",
+    "stop": "إيقاف",
+    "record": "تسجيل",
+    "skip": "تخطي — فقط خذني إلى الموجز",
+    "submit": "إرسال",
+    "modalQuestion": "ماذا تريد أن ترى المزيد منه؟",
+    "modalPlaceholder": "المزيد من AI، التكنولوجيا، الألعاب...",
+    "analysing": "نقوم بتحليل اهتماماتك...",
+    "timelineReady": "موجزك الزمني جاهز",
+    "dragToTune": "اسحب لضبط مزيجك بدقة.",
+    "save": "حفظ",
+    "voiceUnsupported": "الإدخال الصوتي غير مدعوم في هذا المتصفح.",
+    "suggestion1": "المزيد من أخبار AI والعملات المشفرة",
+    "suggestion2": "مقاطع الألعاب و esports",
+    "suggestion3": "اكتشافات الموسيقى المستقلة",
+    "suggestion4": "مؤسسو التكنولوجيا والشركات الناشئة",
+    "suggestion5": "أبرز لقطات كرة القدم"
   }
 }

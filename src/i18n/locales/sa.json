@@ -24,7 +24,8 @@
     "connecting": "संयोज्यते...",
     "signMessage": "सन्देशं हस्ताक्षरयतु",
     "guide": "Guide",
-    "events": "कार्यक्रमाः"
+    "events": "कार्यक्रमाः",
+    "prompt": "प्रॉम्प्ट"
   },
   "feed": {
     "home": "गृहम्",
@@ -304,7 +305,9 @@
     "bounty": "पारितोषिकम्",
     "locked": "द्वारबद्धम्",
     "any": "किमपि",
-    "resetFilters": "शोधकान् पुनःस्थापयतु"
+    "resetFilters": "शोधकान् पुनःस्थापयतु",
+    "prompt": "प्रॉम्प्ट",
+    "for-you": "आपके लिए"
   },
   "drawers": {
     "ppvTitle": "प्रतिदर्शनभुक्तिविषयः",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "प्रॉम्प्ट युअर फ़ीड — DeHub",
+    "seoDescription": "DeHub को बताएं कि आप क्या देखना चाहते हैं और हम आपकी टाइमलाइन को ट्यून करेंगे।",
+    "goHome": "होम पर जाएं",
+    "headline": "आप क्या देखना चाहते हैं?",
+    "headlineShort": "आप क्या चाहते हैं?",
+    "subheadline": "अपनी परफेक्ट फ़ीड का वर्णन करें।",
+    "placeholder": "अधिक AI, गेमिंग क्लिप्स, इंडी संगीत…",
+    "send": "भेजें",
+    "stop": "बंद करें",
+    "record": "रिकॉर्ड करें",
+    "skip": "छोड़ें — बस मुझे फ़ीड पर ले जाएं",
+    "submit": "सबमिट करें",
+    "modalQuestion": "आप और क्या देखना चाहते हैं?",
+    "modalPlaceholder": "और AI, टेक, गेमिंग…",
+    "analysing": "आपकी रुचियों का विश्लेषण किया जा रहा है…",
+    "timelineReady": "आपकी टाइमलाइन तैयार है",
+    "dragToTune": "अपने मिश्रण को फाइन-ट्यून करने के लिए खींचें।",
+    "save": "सहेजें",
+    "voiceUnsupported": "इस ब्राउज़र में ध्वनि इनपुट समर्थित नहीं है।",
+    "suggestion1": "अधिक AI और क्रिप्टो समाचार",
+    "suggestion2": "गेमिंग क्लिप्स और esports",
+    "suggestion3": "इंडी संगीत खोज",
+    "suggestion4": "टेक संस्थापक और स्टार्टअप्स",
+    "suggestion5": "फुटबॉल हाइलाइट्स"
   }
 }

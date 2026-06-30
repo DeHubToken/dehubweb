@@ -24,7 +24,8 @@
     "connecting": "Am Verbinde...",
     "signMessage": "Nachricht unterschriibe",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "Aazäig"
   },
   "feed": {
     "home": "Hei",
@@ -304,7 +305,9 @@
     "bounty": "Bounty",
     "locked": "Gsperrt",
     "any": "Alli",
-    "resetFilters": "Filter zruggsetze"
+    "resetFilters": "Filter zruggsetze",
+    "prompt": "Füehrä",
+    "for-you": "Für dich"
   },
   "drawers": {
     "ppvTitle": "Pay-Per-View Inhalt",
@@ -1297,5 +1300,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Gib dis Feedback bekannt — DeHub",
+    "seoDescription": "Gib DeHub Bescheid, was du wotsch gseh und mir passe dini Timeline aa.",
+    "goHome": "Gang uf d'Startsite",
+    "headline": "Was wotsch gseh?",
+    "headlineShort": "Was wotsch?",
+    "subheadline": "Beschriib din perfekte Feed.",
+    "placeholder": "Meh AI, Gaming Clips, Indie Musig…",
+    "send": "Sende",
+    "stop": "Stopp",
+    "record": "Ufneh",
+    "skip": "Überspringä — bring mich direkt zum Feed",
+    "submit": "Abschicke",
+    "modalQuestion": "Was wotsch meh gseh?",
+    "modalPlaceholder": "Meh AI, Tech, Gaming…",
+    "analysing": "Dini Interesse werde analysiert…",
+    "timelineReady": "Dini Timeline isch beräit",
+    "dragToTune": "Zieh, zum dini Mischig fäi aazpasse.",
+    "save": "Spiechere",
+    "voiceUnsupported": "Sproch-iigab wird in däm Browser nöd unterstützt.",
+    "suggestion1": "Meh AI und Krypto News",
+    "suggestion2": "Gaming Clips und esports",
+    "suggestion3": "Indie Musig Entdeckige",
+    "suggestion4": "Tech Gründer und Startups",
+    "suggestion5": "Fuessball Highlights"
   }
 }

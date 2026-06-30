@@ -24,7 +24,8 @@
     "connecting": "Connectant...",
     "signMessage": "Signar missatge",
     "guide": "Guia",
-    "events": "Esdeveniments"
+    "events": "Esdeveniments",
+    "prompt": "Demana"
   },
   "feed": {
     "home": "Inici",
@@ -304,7 +305,9 @@
     "bounty": "Recompensa",
     "locked": "Restringit",
     "any": "Qualsevol",
-    "resetFilters": "Restablir filtres"
+    "resetFilters": "Restablir filtres",
+    "prompt": "Demana",
+    "for-you": "Per a tu"
   },
   "drawers": {
     "ppvTitle": "Contingut de pagament per visió",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Demana al teu feed — DeHub",
+    "seoDescription": "Digues a DeHub què vols veure i ajustarem la teva línia de temps.",
+    "goHome": "Anar a la pàgina d'inici",
+    "headline": "Què vols veure?",
+    "headlineShort": "Què vols?",
+    "subheadline": "Descriu el teu feed perfecte.",
+    "placeholder": "Més AI, clips de jocs, música indie…",
+    "send": "Enviar",
+    "stop": "Aturar",
+    "record": "Gravar",
+    "skip": "Ometre — només porta-me al feed",
+    "submit": "Enviar",
+    "modalQuestion": "De què vols veure més?",
+    "modalPlaceholder": "Més AI, tecnologia, jocs…",
+    "analysing": "Analitzant els teus interessos…",
+    "timelineReady": "La teva línia de temps està a punt",
+    "dragToTune": "Arrossega per afinar la teva barreja.",
+    "save": "Desar",
+    "voiceUnsupported": "L'entrada de veu no és compatible amb aquest navegador.",
+    "suggestion1": "Més notícies d'AI i cripto",
+    "suggestion2": "Clips de jocs i esports",
+    "suggestion3": "Descobriments de música indie",
+    "suggestion4": "Fundadors de tecnologia i startups",
+    "suggestion5": "Punts destacats de futbol"
   }
 }

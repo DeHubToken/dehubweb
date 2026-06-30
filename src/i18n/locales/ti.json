@@ -24,7 +24,8 @@
     "connecting": "ይራኸብ ኣሎ...",
     "signMessage": "መልእኽቲ ፈርም",
     "guide": "Guide",
-    "events": "ፍጻመታት"
+    "events": "ፍጻመታት",
+    "prompt": "ሃናጺ"
   },
   "feed": {
     "home": "ገዛ",
@@ -304,7 +305,9 @@
     "bounty": "ሽልማት",
     "locked": "ዝተዓገተ",
     "any": "ዝኾነ",
-    "resetFilters": "ፊልተራት ደምስስ"
+    "resetFilters": "ፊልተራት ደምስስ",
+    "prompt": "ሃናጺ",
+    "for-you": "ንዓኻ"
   },
   "drawers": {
     "ppvTitle": "ብኽፍሊት-ንነፍሲ-ወከፍ-ምርኣይ ትሕዝቶ",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "መግብኻ ኣጣጥሕ — DeHub",
+    "seoDescription": "ንDeHub እንታይ ከም እትደሊ ንገሮሞ እሞ ንሕና ድማ ግዜ-ሰሌዳኻ ነዐርየልካ።",
+    "goHome": "ናብ ገዛውቲ ይኺድ",
+    "headline": "እንታይ ክትርእይ ትደሊ?",
+    "headlineShort": "እንታይ ትደሊ?",
+    "subheadline": "ፍጹም መግብኻ ግለጽ።",
+    "placeholder": "ተወሳኺ AI፣ ቪድዮታት ጸወታ፣ ኢንዲ ሙዚቃ…",
+    "send": "ልአኽ",
+    "stop": "ቁም",
+    "record": "ቅዳሕ",
+    "skip": "ዝሕለፍ — ንቕጽታ ናብቲ መግብኻ ውሰደኒ",
+    "submit": "ኣሕሉፍ",
+    "modalQuestion": "እንታይ ኢኻ ክትረክብ ትደሊ?",
+    "modalPlaceholder": "ተወሳኺ AI፣ ቴክኖሎጅይ፣ ጸወታታት…",
+    "analysing": "ሃናጺታትካ ትትንትን…",
+    "timelineReady": "ግዜ-ሰሌዳኻ ድሉው እዩ",
+    "dragToTune": "ንሓርበኛ ናይ ምጥምማቕ ምምላስ ንምግባር ይስሓብ።",
+    "save": "ኣቀምጥ",
+    "voiceUnsupported": "ኣስማዊ ምትእትታው ኣብዚ ብራውዘር ኣይድገፍን እዩ።",
+    "suggestion1": "ተወሳኺ ዜናታት AI ከምኡ’ውን ምስጢራት",
+    "suggestion2": "ቪድዮታት ጸወታን esports",
+    "suggestion3": "እንዲ ሙዚቃዊ ምምራጽ",
+    "suggestion4": "መፍጠርቲ ቴክኖሎጅይን ጀመርቲ ንግዳትን",
+    "suggestion5": "ፍጻመታት ኩዕሾ እግሪ"
   }
 }

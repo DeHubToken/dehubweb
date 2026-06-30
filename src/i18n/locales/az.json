@@ -24,7 +24,8 @@
     "connecting": "Qoşulur...",
     "signMessage": "Mesajı imzala",
     "guide": "Bələdçi",
-    "events": "Tədbirlər"
+    "events": "Tədbirlər",
+    "prompt": "Tənzimlə"
   },
   "feed": {
     "home": "Ana səhifə",
@@ -304,7 +305,9 @@
     "bounty": "Mükafat",
     "locked": "Bağlı",
     "any": "İstənilən",
-    "resetFilters": "Filtrləri sıfırla"
+    "resetFilters": "Filtrləri sıfırla",
+    "prompt": "Tənzimlə",
+    "for-you": "Sizin üçün"
   },
   "drawers": {
     "ppvTitle": "Hər Baxışa Ödəniş Məzmunu",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "DeHub-da lentinizi tənzimləyin — DeHub",
+    "seoDescription": "DeHub-a nə görmək istədiyinizi deyin və biz sizin vaxt qrafikinizi tənzimləyəcəyik.",
+    "goHome": "Ana səhifəyə get",
+    "headline": "Nə görmək istəyirsiniz?",
+    "headlineShort": "Nə istəyirsiniz?",
+    "subheadline": "Mükəmməl lentinizi təsvir edin.",
+    "placeholder": "Daha çox AI, oyun klipləri, indie musiqisi…",
+    "send": "Göndər",
+    "stop": "Dayandır",
+    "record": "Qeyd et",
+    "skip": "Keçid — məni birbaşa lentə apar",
+    "submit": "Təqdim et",
+    "modalQuestion": "Daha çox nə görmək istəyirsiniz?",
+    "modalPlaceholder": "Daha çox AI, texnologiya, oyun…",
+    "analysing": "Maraqlarınız təhlil edilir…",
+    "timelineReady": "Vaxt qrafikiniz hazırdır",
+    "dragToTune": "Qarışığınızı incə tənzimləmək üçün sürükləyin.",
+    "save": "Saxla",
+    "voiceUnsupported": "Bu brauzerdə səs daxiletmə dəstəklənmir.",
+    "suggestion1": "Daha çox AI və kripto xəbərləri",
+    "suggestion2": "Oyun klipləri və esports",
+    "suggestion3": "İndie musiqi kəşfləri",
+    "suggestion4": "Texnologiya təsisçiləri və startaplar",
+    "suggestion5": "Futbol əsas məqamlar"
   }
 }

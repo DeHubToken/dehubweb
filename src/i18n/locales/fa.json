@@ -24,7 +24,8 @@
     "connecting": "در حال اتصال...",
     "signMessage": "امضای پیام",
     "guide": "راهنما",
-    "events": "رویدادها"
+    "events": "رویدادها",
+    "prompt": "درخواست"
   },
   "feed": {
     "home": "خانه",
@@ -304,7 +305,9 @@
     "bounty": "جایزه",
     "locked": "قفل شده",
     "any": "هر",
-    "resetFilters": "بازنشانی فیلترها"
+    "resetFilters": "بازنشانی فیلترها",
+    "prompt": "درخواست",
+    "for-you": "برای شما"
   },
   "drawers": {
     "ppvTitle": "محتوای پرداخت به ازای مشاهده",
@@ -1297,5 +1300,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "فید خود را درخواست کنید — DeHub",
+    "seoDescription": "به DeHub بگویید چه چیزی می‌خواهید ببینید و ما جدول زمانی شما را تنظیم خواهیم کرد.",
+    "goHome": "رفتن به خانه",
+    "headline": "چه چیزی می‌خواهید ببینید؟",
+    "headlineShort": "چه چیزی می‌خواهید؟",
+    "subheadline": "فید عالی خود را توصیف کنید.",
+    "placeholder": "بیشتر در مورد AI، کلیپ‌های بازی، موسیقی مستقل…",
+    "send": "ارسال",
+    "stop": "توقف",
+    "record": "ضبط",
+    "skip": "رد شدن — فقط مرا به فید ببر",
+    "submit": "ارسال",
+    "modalQuestion": "چه چیزی بیشتر می‌خواهید ببینید؟",
+    "modalPlaceholder": "بیشتر AI، فناوری، بازی…",
+    "analysing": "در حال تحلیل علایق شما…",
+    "timelineReady": "جدول زمانی شما آماده است",
+    "dragToTune": "برای تنظیم دقیق ترکیب خود بکشید.",
+    "save": "ذخیره",
+    "voiceUnsupported": "ورودی صوتی در این مرورگر پشتیبانی نمی‌شود.",
+    "suggestion1": "اخبار بیشتر در مورد AI و کریپتو",
+    "suggestion2": "کلیپ‌های بازی و esports",
+    "suggestion3": "کشف موسیقی‌های مستقل",
+    "suggestion4": "بنیانگذاران فناوری و استارتاپ‌ها",
+    "suggestion5": "خلاصه‌ی فوتبال"
   }
 }

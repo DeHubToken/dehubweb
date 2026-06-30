@@ -24,7 +24,8 @@
     "connecting": "Свързване...",
     "signMessage": "Подпиши съобщение",
     "guide": "Ръководство",
-    "events": "Събития"
+    "events": "Събития",
+    "prompt": "Подкана"
   },
   "feed": {
     "home": "Начало",
@@ -488,7 +489,9 @@
     "bounty": "Награда",
     "locked": "Ограничено",
     "any": "Всякакви",
-    "resetFilters": "Нулирай филтрите"
+    "resetFilters": "Нулирай филтрите",
+    "prompt": "Подкана",
+    "for-you": "За вас"
   },
   "commandCentre": {
     "title": "Команден център",
@@ -1271,5 +1274,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Въведете заявка за вашата емисия — DeHub",
+    "seoDescription": "Кажете на DeHub какво искате да видите и ние ще настроим вашата времева линия.",
+    "goHome": "Отидете на началната страница",
+    "headline": "Какво искате да видите?",
+    "headlineShort": "Какво искате?",
+    "subheadline": "Опишете идеалната си емисия.",
+    "placeholder": "Повече AI, гейминг клипове, инди музика…",
+    "send": "Изпрати",
+    "stop": "Спри",
+    "record": "Запиши",
+    "skip": "Пропусни — просто ме заведи до емисията",
+    "submit": "Изпрати",
+    "modalQuestion": "Какво искате да виждате повече?",
+    "modalPlaceholder": "Повече AI, технологии, игри…",
+    "analysing": "Анализиране на вашите интереси…",
+    "timelineReady": "Вашата времева линия е готова",
+    "dragToTune": "Плъзнете, за да настроите своя микс.",
+    "save": "Запази",
+    "voiceUnsupported": "Гласовият вход не се поддържа в този браузър.",
+    "suggestion1": "Още AI и крипто новини",
+    "suggestion2": "Гейминг клипове и esports",
+    "suggestion3": "Открития на инди музика",
+    "suggestion4": "Технологични основатели и стартъпи",
+    "suggestion5": "Акценти от футбола"
   }
 }

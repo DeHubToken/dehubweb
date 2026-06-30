@@ -24,7 +24,8 @@
     "connecting": "Ulanmoqda...",
     "signMessage": "Xabarni imzolash",
     "guide": "Qo'llanma",
-    "events": "Tadbirlar"
+    "events": "Tadbirlar",
+    "prompt": "Sozlash"
   },
   "feed": {
     "home": "Bosh sahifa",
@@ -304,7 +305,9 @@
     "bounty": "Mukofot",
     "locked": "Qulflangan",
     "any": "Har qanday",
-    "resetFilters": "Filtrlarni tozalash"
+    "resetFilters": "Filtrlarni tozalash",
+    "prompt": "Sozlash",
+    "for-you": "Siz uchun"
   },
   "drawers": {
     "ppvTitle": "Pullik kontent",
@@ -1322,5 +1325,31 @@
     "startSaving": "Start saving posts by tapping the bookmark icon on any post you want to save.",
     "reachedEnd": "You've reached the end of your bookmarks",
     "loginDescription": "Log in to view and manage your saved bookmarks."
+  },
+  "prompt": {
+    "seoTitle": "Lentangizni sozlang — DeHub",
+    "seoDescription": "DeHub'ga nima ko'rishni xohlayotganingizni ayting va biz vaqtingizni sozlaymiz.",
+    "goHome": "Uyga qaytish",
+    "headline": "Nima ko'rishni xohlaysiz?",
+    "headlineShort": "Nima xohlaysiz?",
+    "subheadline": "Mukammal lentangizni tasvirlang.",
+    "placeholder": "Ko'proq AI, o'yin kliplari, noaniq musiqa…",
+    "send": "Yuborish",
+    "stop": "To'xtatish",
+    "record": "Yozish",
+    "skip": "O'tkazib yuborish — menga lentani ko'rsating",
+    "submit": "Yuborish",
+    "modalQuestion": "Nimalarni ko'proq ko'rishni xohlaysiz?",
+    "modalPlaceholder": "Ko'proq AI, texnologiya, o'yinlar…",
+    "analysing": "Qiziqishlaringiz tahlil qilinmoqda…",
+    "timelineReady": "Lentangiz tayyor",
+    "dragToTune": "Aralashmangizni sozlash uchun suring.",
+    "save": "Saqlash",
+    "voiceUnsupported": "Bu brauzerda ovozli kiritish qo'llab-quvvatlanmaydi.",
+    "suggestion1": "Ko'proq AI va kripto yangiliklari",
+    "suggestion2": "O'yin kliplari va esports",
+    "suggestion3": "Noaniq musiqa kashfiyotlari",
+    "suggestion4": "Texnologiya asoschilari va startaplari",
+    "suggestion5": "Futbolning eng yaxshi lahzalari"
   }
 }

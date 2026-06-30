@@ -24,7 +24,8 @@
     "connecting": "Падключэнне...",
     "signMessage": "Падпісаць паведамленне",
     "guide": "Даведнік",
-    "events": "Мерапрыемствы"
+    "events": "Мерапрыемствы",
+    "prompt": "Падказка"
   },
   "feed": {
     "home": "Галоўная",
@@ -304,7 +305,9 @@
     "ppv": "PPV",
     "bounty": "Bounty",
     "locked": "Gated",
-    "any": "Any"
+    "any": "Any",
+    "prompt": "Падказка",
+    "for-you": "Для вас"
   },
   "drawers": {
     "ppvTitle": "Платны кантэнт",
@@ -1307,5 +1310,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Сфармуйце сваю стужку — DeHub",
+    "seoDescription": "Раскажыце DeHub, што вы хочаце бачыць, і мы наладзім вашу стужку.",
+    "goHome": "На галоўную",
+    "headline": "Што вы хочаце бачыць?",
+    "headlineShort": "Што вы хочаце?",
+    "subheadline": "Апішыце сваю ідэальную стужку.",
+    "placeholder": "Больш AI, гульнявыя кліпы, індзі-музыка…",
+    "send": "Даслаць",
+    "stop": "Спыніць",
+    "record": "Запісаць",
+    "skip": "Прапусціць — проста перайдзіце да стужкі",
+    "submit": "Адправіць",
+    "modalQuestion": "Што вы хочаце бачыць больш?",
+    "modalPlaceholder": "Больш AI, тэхналогіі, гульні…",
+    "analysing": "Аналізуем вашыя інтарэсы…",
+    "timelineReady": "Ваша стужка гатовая",
+    "dragToTune": "Перацягніце, каб дакладна наладзіць мікс.",
+    "save": "Захаваць",
+    "voiceUnsupported": "Галасавы ўвод не падтрымліваецца ў гэтым браўзеры.",
+    "suggestion1": "Больш AI і крыпта-навін",
+    "suggestion2": "Гульнявыя кліпы і esports",
+    "suggestion3": "Адкрыцці індзі-музыкі",
+    "suggestion4": "Заснавальнікі тэхналогій і стартапы",
+    "suggestion5": "Футбольныя моманты"
   }
 }

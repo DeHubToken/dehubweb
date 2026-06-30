@@ -24,7 +24,8 @@
     "connecting": "Bɔ kɛ...",
     "signMessage": "Kɔrɔbɔw kɛ",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "Fiyɛri"
   },
   "feed": {
     "home": "Kɛnɛ",
@@ -304,7 +305,9 @@
     "bounty": "Kɔrɔbɔ",
     "locked": "Kɔrɔbɔ",
     "any": "Kɔrɔbɔ",
-    "resetFilters": "Kɔrɔbɔ"
+    "resetFilters": "Kɔrɔbɔ",
+    "prompt": "Fiyɛri",
+    "for-you": "I Dɛfɛ"
   },
   "drawers": {
     "ppvTitle": "PPV Kɔrɔbɔ",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Fiyɛri i ka duniŋkɛ — DeHub",
+    "seoDescription": "Fɔ DeHub ka fɛn min bɛ fɛ i ka ye, ani an bɛna i ka wagati-laada jɔlen kɛ.",
+    "goHome": "Taga so",
+    "headline": "I b'a fɛ k'o ye?",
+    "headlineShort": "I b'a fɛ min?",
+    "subheadline": "Jɔlen i ka duniŋkɛ kɛcogo.",
+    "placeholder": "AI dɔ wɛrɛ, tulon-videwo, duniŋkɛ misɛnnin…",
+    "send": "Lasɔn",
+    "stop": "Donsu",
+    "record": "Dɔnniya",
+    "skip": "Tɛmɛ — taga n'o duniŋkɛ fɛ duniŋkɛ",
+    "submit": "Lasɔn",
+    "modalQuestion": "I b'a fɛkɛ min na?",
+    "modalPlaceholder": "AI minnu ka dɔgɔ, tech, tulon…",
+    "analysing": "I ka fɛnɲɛnɛmɛntɔ bɛ sɛnɛ…",
+    "timelineReady": "I ka wagati-laada jɔlen bɛ yɛlɛ",
+    "dragToTune": "La'a i ka nɔnɔba tun.",
+    "save": "Maa",
+    "voiceUnsupported": "Cikan-kuntigi tɛ baara de kɛ kaɲɛ ni baarakɛlan tɛ.",
+    "suggestion1": "AI dɔ wɛrɛ ni kɔbɔ-kɔlɔsiliw",
+    "suggestion2": "Tulon-videwo ani esports",
+    "suggestion3": "Duniŋkɛ misɛnninw ka dɔgɔ-dɔgɔw",
+    "suggestion4": "Tech seginkɛnɛw ani lakana-baara",
+    "suggestion5": "Bolokun kɔmɔgɔnɲe"
   }
 }

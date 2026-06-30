@@ -24,7 +24,8 @@
     "connecting": "Isku xiraya...",
     "signMessage": "Saxiix fariinta",
     "guide": "Hagaha",
-    "events": "Dhacdooyinka"
+    "events": "Dhacdooyinka",
+    "prompt": "Dejiso"
   },
   "feed": {
     "home": "Guriga",
@@ -304,7 +305,9 @@
     "bounty": "Abaalmarin",
     "locked": "Xiran",
     "any": "Mid kasta",
-    "resetFilters": "Dib u dejiso shaandheeyaha"
+    "resetFilters": "Dib u dejiso shaandheeyaha",
+    "prompt": "Dejiso",
+    "for-you": "Adiga"
   },
   "drawers": {
     "ppvTitle": "Nuxurka Bixinta-Daawashada",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Dejiso waxaad rabo — DeHub",
+    "seoDescription": "U sheeg DeHub waxaad rabto inaad aragto waxaan ku hagaajin doonaa jadwalkaaga.",
+    "goHome": "Tag bogga hore",
+    "headline": "Maxaad rabtaa inaad aragto?",
+    "headlineShort": "Maxaad rabtaa?",
+    "subheadline": "Sharax jadwalkaaga qumman.",
+    "placeholder": "AI dheeraad ah, clips gaming, muusig indie…",
+    "send": "Dir",
+    "stop": "Jooji",
+    "record": "Duub",
+    "skip": "Ka gudub — i gee jadwalka",
+    "submit": "Gudbi",
+    "modalQuestion": "Maxaad rabtaa inaad aragto wax ka badan?",
+    "modalPlaceholder": "AI badan, tech, gaming…",
+    "analysing": "Falanqaynta danahaaga…",
+    "timelineReady": "Jadwalkaagu waa diyaar",
+    "dragToTune": "Jiid si aad u hagaajiso isku dhafkaaga.",
+    "save": "Keydi",
+    "voiceUnsupported": "Gelinta codka laguma taageero biraawsarkan.",
+    "suggestion1": "Warar badan oo AI iyo crypto ah",
+    "suggestion2": "Clips gaming iyo esports",
+    "suggestion3": "Helitaanka muusig indie ah",
+    "suggestion4": "Aasaasayaasha tech iyo shirkadaha bilowga ah",
+    "suggestion5": "Muqaallo kubadda cagta ah"
   }
 }
