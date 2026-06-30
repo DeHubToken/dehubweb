@@ -119,43 +119,59 @@ export function Compositor() {
         state.setCurrentTime(t);
       }
 
-      // Determine active clips.
+      // Determine active clips (audio still uses simple active set; visuals use render-ops).
       const active = state.clips.filter((c) => t >= c.start && t < c.start + c.duration);
+
+      // Compute visual render ops (covers normal + outgoing + incoming-preroll transitions).
+      const isVisualTrack = (trackId: string) => {
+        const tr = state.tracks.find((x) => x.id === trackId);
+        return !!tr && !tr.hidden && tr.kind !== "audio";
+      };
+      const renderOps: RenderOp[] = computeRenderOps(
+        state.clips,
+        isVisualTrack,
+        t,
+        state.settings.width,
+      );
 
       // Sync video/audio media.
       const activeVideoMediaIds = new Set<string>();
       const activeAudioMediaIds = new Set<string>();
 
+      // Video sync uses render-ops so incoming pre-roll clips also seek to the right frame.
+      for (const op of renderOps) {
+        if (op.clip.kind !== "video") continue;
+        const mc = op.clip as MediaClip;
+        const v = videoPool.current.get(mc.mediaId);
+        if (!v) continue;
+        activeVideoMediaIds.add(mc.mediaId);
+        const localT =
+          op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start);
+        if (state.isPlaying) {
+          if (Math.abs(v.currentTime - localT) > 0.25) v.currentTime = localT;
+          if (v.paused) { void v.play().catch(() => undefined); }
+        } else {
+          if (!v.paused) v.pause();
+          if (Math.abs(v.currentTime - localT) > 0.03) v.currentTime = localT;
+        }
+      }
+
+      // Audio sync (no crossfade — hard cut at clip boundaries).
       for (const c of active) {
-        if (c.kind === "video" || c.kind === "audio") {
-          const localT = (c as MediaClip).trimIn + (t - c.start);
-          if (c.kind === "video") {
-            const v = videoPool.current.get((c as MediaClip).mediaId);
-            if (v) {
-              activeVideoMediaIds.add((c as MediaClip).mediaId);
-              if (state.isPlaying) {
-                if (Math.abs(v.currentTime - localT) > 0.25) v.currentTime = localT;
-                if (v.paused) { void v.play().catch(() => undefined); }
-              } else {
-                if (!v.paused) v.pause();
-                if (Math.abs(v.currentTime - localT) > 0.03) v.currentTime = localT;
-              }
-            }
-          } else {
-            const a = audioPool.current.get((c as MediaClip).mediaId);
-            const track = state.tracks.find((tr) => tr.id === c.trackId);
-            if (a) {
-              activeAudioMediaIds.add((c as MediaClip).mediaId);
-              a.muted = !!track?.muted;
-              if (state.isPlaying) {
-                if (Math.abs(a.currentTime - localT) > 0.25) a.currentTime = localT;
-                if (a.paused) { void a.play().catch(() => undefined); }
-              } else {
-                if (!a.paused) a.pause();
-                if (Math.abs(a.currentTime - localT) > 0.03) a.currentTime = localT;
-              }
-            }
-          }
+        if (c.kind !== "audio") continue;
+        const mc = c as MediaClip;
+        const localT = mc.trimIn + (t - mc.start);
+        const a = audioPool.current.get(mc.mediaId);
+        const track = state.tracks.find((tr) => tr.id === mc.trackId);
+        if (!a) continue;
+        activeAudioMediaIds.add(mc.mediaId);
+        a.muted = !!track?.muted;
+        if (state.isPlaying) {
+          if (Math.abs(a.currentTime - localT) > 0.25) a.currentTime = localT;
+          if (a.paused) { void a.play().catch(() => undefined); }
+        } else {
+          if (!a.paused) a.pause();
+          if (Math.abs(a.currentTime - localT) > 0.03) a.currentTime = localT;
         }
       }
 
@@ -177,16 +193,22 @@ export function Compositor() {
           ctx.fillStyle = state.settings.background;
           ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-          // Sort visible clips by track index then by kind priority (video < image < text).
-          const visible = active
-            .filter((c) => {
-              const tr = state.tracks.find((x) => x.id === c.trackId);
-              return tr && !tr.hidden && tr.kind !== "audio";
-            })
-            .sort((a, b) => trackZ(a.trackId) - trackZ(b.trackId));
+          // Sort by track index then preserve op order (so incoming draws over outgoing where alpha overlaps).
+          const ordered = renderOps.slice().sort(
+            (a, b) => trackZ(a.clip.trackId) - trackZ(b.clip.trackId),
+          );
 
-          for (const c of visible) {
-            drawClip(ctx, canvas, c, t, videoPool.current, imagePool.current);
+          for (const op of ordered) {
+            ctx.save();
+            if (op.translateX) ctx.translate(op.translateX, 0);
+            if (op.clipRect) {
+              ctx.beginPath();
+              ctx.rect(op.clipRect.x, 0, op.clipRect.w, canvas.height);
+              ctx.clip();
+            }
+            ctx.globalAlpha = op.alpha;
+            drawClip(ctx, canvas, op.clip, t, videoPool.current, imagePool.current);
+            ctx.restore();
           }
         }
       }
