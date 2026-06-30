@@ -30,13 +30,17 @@ export function ChristmasSnow() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const BUCKET = 6; // px wide accumulation columns
-    const MAX_PILE = 80; // px max snow drift height
+    const BUCKET = 6;
+    const MAX_PILE = 80;
     const MAX_FLAKES = 260;
+    const PUSH_RADIUS = 90;
+    const WIPE_RADIUS = 55;
 
     let width = 0;
     let height = 0;
     let cols = 0;
+
+    const mouse = { x: -9999, y: -9999, vx: 0, vy: 0, active: false, lastMove: 0 };
 
     const resize = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -58,6 +62,36 @@ export function ChristmasSnow() {
     resize();
     window.addEventListener('resize', resize);
 
+    const setPointer = (x: number, y: number) => {
+      if (mouse.active) {
+        mouse.vx = x - mouse.x;
+        mouse.vy = y - mouse.y;
+      } else {
+        mouse.vx = 0;
+        mouse.vy = 0;
+      }
+      mouse.x = x;
+      mouse.y = y;
+      mouse.active = true;
+      mouse.lastMove = performance.now();
+    };
+    const onPointerMove = (e: PointerEvent) => setPointer(e.clientX, e.clientY);
+    const onTouchMove = (e: TouchEvent) => {
+      const t = e.touches[0];
+      if (t) setPointer(t.clientX, t.clientY);
+    };
+    const onPointerLeave = () => {
+      mouse.active = false;
+      mouse.x = -9999;
+      mouse.y = -9999;
+      mouse.vx = 0;
+      mouse.vy = 0;
+    };
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
+    window.addEventListener('pointerleave', onPointerLeave);
+    window.addEventListener('blur', onPointerLeave);
+
     const spawn = () => {
       flakesRef.current.push({
         x: Math.random() * width,
@@ -73,13 +107,33 @@ export function ChristmasSnow() {
       ctx.clearRect(0, 0, width, height);
       const heights = heightsRef.current!;
 
-      // Spawn
+      if (performance.now() - mouse.lastMove > 60) {
+        mouse.vx *= 0.6;
+        mouse.vy *= 0.6;
+      }
+      const speed = Math.hypot(mouse.vx, mouse.vy);
+
       if (flakesRef.current.length < MAX_FLAKES && Math.random() < 0.85) spawn();
 
-      // Update + draw flakes
       const flakes = flakesRef.current;
       for (let i = flakes.length - 1; i >= 0; i--) {
         const f = flakes[i];
+
+        if (mouse.active) {
+          const dx = f.x - mouse.x;
+          const dy = f.y - mouse.y;
+          const d2 = dx * dx + dy * dy;
+          if (d2 < PUSH_RADIUS * PUSH_RADIUS) {
+            const d = Math.sqrt(d2) || 1;
+            const falloff = 1 - d / PUSH_RADIUS;
+            const force = 0.6 + speed * 0.08;
+            f.vx += (dx / d) * falloff * force;
+            f.vy += (dy / d) * falloff * force * 0.4;
+          }
+        }
+        f.vx *= 0.94;
+        if (f.vy > 1.6) f.vy *= 0.96;
+
         f.y += f.vy;
         f.x += f.vx + Math.sin((f.y + i) * 0.01) * 0.3;
         if (f.x < -10) f.x = width + 10;
@@ -88,7 +142,6 @@ export function ChristmasSnow() {
         const col = Math.max(0, Math.min(cols - 1, Math.floor(f.x / BUCKET)));
         const ground = height - heights[col];
         if (f.y + f.r >= ground) {
-          // Land: bump neighboring columns slightly so the drift looks soft.
           const add = 1.2 + f.r * 0.6;
           heights[col] = Math.min(MAX_PILE, heights[col] + add);
           if (col > 0) heights[col - 1] = Math.min(MAX_PILE, heights[col - 1] + add * 0.5);
@@ -102,7 +155,23 @@ export function ChristmasSnow() {
         ctx.fill();
       }
 
-      // Draw accumulated drift along the bottom.
+      // Wipe pile: when the pointer moves through the drift, rub it off.
+      if (mouse.active && speed > 0.5) {
+        const radiusCols = Math.ceil(WIPE_RADIUS / BUCKET);
+        const centerCol = Math.floor(mouse.x / BUCKET);
+        const wipeStrength = Math.min(8, 0.6 + speed * 0.25);
+        for (let i = -radiusCols; i <= radiusCols; i++) {
+          const c = centerCol + i;
+          if (c < 0 || c >= cols) continue;
+          const colX = c * BUCKET + BUCKET / 2;
+          const surfaceY = height - heights[c];
+          if (mouse.y < surfaceY - 12) continue;
+          const dx = colX - mouse.x;
+          const falloff = Math.max(0, 1 - Math.abs(dx) / WIPE_RADIUS);
+          heights[c] = Math.max(0, heights[c] - wipeStrength * falloff);
+        }
+      }
+
       ctx.beginPath();
       ctx.moveTo(0, height);
       for (let i = 0; i < cols; i++) {
@@ -119,6 +188,10 @@ export function ChristmasSnow() {
 
     return () => {
       window.removeEventListener('resize', resize);
+      window.removeEventListener('pointermove', onPointerMove);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('pointerleave', onPointerLeave);
+      window.removeEventListener('blur', onPointerLeave);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       rafRef.current = null;
     };
