@@ -119,7 +119,6 @@ const tabs = [
 ];
 
 import { SkillsLibrary } from '@/components/app/skills/SkillsLibrary';
-import { SkillsLibrary } from '@/components/app/skills/SkillsLibrary';
 import { CharactersLibrary } from '@/components/app/characters/CharactersLibrary';
 
 import { SEOHead } from '@/components/SEOHead';
