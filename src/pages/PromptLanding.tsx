@@ -74,7 +74,7 @@ export default function PromptLanding() {
 
   return (
     <div className="h-[100dvh] w-full bg-black text-white flex flex-col items-center justify-center px-6 relative overflow-hidden overscroll-none">
-      <SEOHead title="Prompt your feed — DeHub" description="Tell DeHub what you want to see and we'll tune your timeline." />
+      <SEOHead title={t('prompt.seoTitle', 'Prompt your feed — DeHub')} description={t('prompt.seoDescription', "Tell DeHub what you want to see and we'll tune your timeline.")} />
 
       <NebulaBackground />
 
@@ -82,7 +82,7 @@ export default function PromptLanding() {
         <button
           onClick={() => navigate('/app')}
           className="block cursor-pointer hover:opacity-80 transition-opacity"
-          aria-label="Go to home"
+          aria-label={t('prompt.goHome', 'Go to home')}
         >
           <img
             src="/dehub-header-logo.png"
@@ -109,11 +109,11 @@ export default function PromptLanding() {
       <div className="relative w-full max-w-2xl flex flex-col items-center gap-6 mt-16 sm:mt-0">
         <img src={wandUrl} alt="" width={64} height={64} loading="eager" decoding="async" fetchPriority="high" className="w-16 h-16 object-contain drop-shadow-[0_4px_18px_rgba(255,255,255,0.15)]" />
         <h1 className="text-4xl md:text-5xl font-semibold text-center tracking-tight">
-          <span className="sm:hidden">What do you want?</span>
-          <span className="hidden sm:inline">What do you want to see?</span>
+          <span className="sm:hidden">{t('prompt.headlineShort', 'What do you want?')}</span>
+          <span className="hidden sm:inline">{t('prompt.headline', 'What do you want to see?')}</span>
         </h1>
         <p className="text-white/50 text-center max-w-md">
-          Describe your perfect feed.
+          {t('prompt.subheadline', 'Describe your perfect feed.')}
         </p>
 
         <div className="w-full mt-2 flex flex-col gap-3">
@@ -127,13 +127,13 @@ export default function PromptLanding() {
                 submit();
               }
             }}
-            placeholder="More AI, gaming clips, indie music…"
+            placeholder={t('prompt.placeholder', 'More AI, gaming clips, indie music…')}
             rows={3}
             className="w-full resize-none rounded-3xl bg-white/[0.04] border border-white/10 backdrop-blur-2xl px-6 py-5 text-base placeholder-white/30 focus:outline-none focus-visible:outline-none focus:border-white/10 transition-colors"
           />
           <div className="w-full flex items-center gap-2">
             <LiquidGlassBubble2
-              label="Send"
+              label={t('prompt.send', 'Send')}
               icon={<ArrowUp className="w-4 h-4" strokeWidth={3} />}
               onClick={() => submit()}
               disabled={!text.trim()}
@@ -142,7 +142,7 @@ export default function PromptLanding() {
               className="flex-1"
             />
             <LiquidGlassBubble2
-              label={recording ? 'Stop' : 'Record'}
+              label={recording ? t('prompt.stop', 'Stop') : t('prompt.record', 'Record')}
               icon={recording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
               onClick={toggleRecord}
               width="120px"
@@ -153,24 +153,34 @@ export default function PromptLanding() {
         </div>
 
         <div className="flex flex-wrap gap-2 justify-center mt-2">
-          {SUGGESTIONS.map(s => (
-            <button
-              key={s}
-              onClick={() => submit(s)}
-              className={`px-3 py-1.5 rounded-lg text-xs bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-colors ${s === 'Football highlights' ? 'hidden sm:inline-flex' : ''}`}
-            >
-              {s}
-            </button>
-          ))}
+          {SUGGESTION_KEYS.map((key, idx) => {
+            const label = t(key, [
+              'More AI and crypto news',
+              'Gaming clips and esports',
+              'Indie music discoveries',
+              'Tech founders and startups',
+              'Football highlights',
+            ][idx]);
+            return (
+              <button
+                key={key}
+                onClick={() => submit(label)}
+                className={`px-3 py-1.5 rounded-lg text-xs bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-colors ${idx === 4 ? 'hidden sm:inline-flex' : ''}`}
+              >
+                {label}
+              </button>
+            );
+          })}
         </div>
 
         <button
           onClick={() => navigate('/app')}
           className="mt-6 text-xs text-white/40 hover:text-white/70 transition-colors"
         >
-          Skip — just take me to the feed
+          {t('prompt.skip', 'Skip — just take me to the feed')}
         </button>
       </div>
     </div>
   );
+
 }
