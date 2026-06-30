@@ -111,5 +111,8 @@ export default function DocsRoutes() {
         </Routes>
       </SearchProvider>
     </LanguageProvider>
+    </NextThemesProvider>
   );
+}
+
 }
