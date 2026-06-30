@@ -142,7 +142,7 @@ export function ChristmasSnow() {
         const col = Math.max(0, Math.min(cols - 1, Math.floor(f.x / BUCKET)));
         const ground = height - heights[col];
         if (f.y + f.r >= ground) {
-          const add = 1.2 + f.r * 0.6;
+          const add = (1.2 + f.r * 0.6) * 3.5;
           heights[col] = Math.min(MAX_PILE, heights[col] + add);
           if (col > 0) heights[col - 1] = Math.min(MAX_PILE, heights[col - 1] + add * 0.5);
           if (col < cols - 1) heights[col + 1] = Math.min(MAX_PILE, heights[col + 1] + add * 0.5);
