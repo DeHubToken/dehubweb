@@ -412,6 +412,7 @@ export default function AssistantPage() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { data: userSkills = [] } = useUserSkills();
+  const { data: userCharacters = [] } = useUserCharacters();
   // Prefill input from ?skill=slug (deep-link from Skills library)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
