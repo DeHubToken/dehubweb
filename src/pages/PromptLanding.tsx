@@ -76,6 +76,34 @@ export default function PromptLanding() {
 
       <NebulaBackground />
 
+      <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-4 sm:px-6 py-4">
+        <button
+          onClick={() => navigate('/app')}
+          className="block cursor-pointer hover:opacity-80 transition-opacity"
+          aria-label="Go to home"
+        >
+          <img
+            src="/dehub-header-logo.png"
+            alt="DeHub"
+            className="h-7 w-auto"
+            loading="eager"
+            decoding="async"
+            width={93}
+            height={28}
+          />
+        </button>
+        {!isAuthenticated && (
+          <LiquidGlassBubble2
+            label={isConnecting ? t('nav.connecting') : needsSignature ? t('nav.signMessage') : t('nav.login')}
+            onClick={() => openLoginModal()}
+            width="110px"
+            height="40px"
+            disabled={isConnecting}
+          />
+        )}
+      </div>
+
+
       <div className="relative w-full max-w-2xl flex flex-col items-center gap-6">
         <img src={wandUrl} alt="" width={64} height={64} loading="eager" decoding="async" fetchPriority="high" className="w-16 h-16 object-contain drop-shadow-[0_4px_18px_rgba(255,255,255,0.15)]" />
         <h1 className="text-4xl md:text-5xl font-semibold text-center tracking-tight">
