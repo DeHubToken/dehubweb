@@ -12,6 +12,8 @@ export function ChristmasSnow() {
   const { pathname } = useLocation();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const heightsRef = useRef<Float32Array | null>(null);
+  const mediaRectsRef = useRef<DOMRect[]>([]);
+  const frameCountRef = useRef(0);
   const flakesRef = useRef<
     Array<{ x: number; y: number; r: number; vy: number; vx: number; o: number }>
   >([]);
