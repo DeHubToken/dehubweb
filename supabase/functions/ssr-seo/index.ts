@@ -378,11 +378,47 @@ serve(async (req) => {
             }
         }
 
+        // 0.5 Blog post handler (/docs/blog/:slug)
+        if (pathParts[0]?.toLowerCase() === "docs" && pathParts[1]?.toLowerCase() === "blog" && pathParts[2]) {
+            const slug = decodeURIComponent(pathParts[2]).split("?")[0];
+            const post = await getBlogPost(slug);
+            if (post) {
+                const canonical = `${APP_URL}/docs/blog/${slug}`;
+                const image = buildBlogShareImage(post);
+                const title = `${post.title} — DeHub Blog`;
+                const description = (post.excerpt || `${post.title} — read on DeHub.`).slice(0, 280);
+                const html = generateMetaHTML({
+                    title,
+                    description,
+                    image,
+                    url: canonical,
+                    type: "article",
+                    twitterCard: "summary_large_image",
+                    imageWidth: 1200,
+                    imageHeight: 630,
+                    functionBaseUrl,
+                    isBot,
+                    jsonLd: {
+                        "@context": "https://schema.org",
+                        "@type": "Article",
+                        headline: post.title,
+                        image: [image],
+                        datePublished: post.publishedAt,
+                        author: { "@type": "Person", name: post.author || "DeHub Team" },
+                        publisher: { "@type": "Organization", name: "DeHub" },
+                        mainEntityOfPage: canonical,
+                    },
+                });
+                return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400" } });
+            }
+        }
+
         // 1. Profile Handling (/@username or /username)
         const possibleUsername = pathParts[0] || "";
-        const isSystemRoute = ["post", "app", "explore", "notifications", "messages", "settings", "r"].includes(
+        const isSystemRoute = ["post", "app", "explore", "notifications", "messages", "settings", "r", "docs", "prompt", "premium", "affiliate", "work", "editor", "creators", "jobs", "features", "radio", "tv", "governance", "stake", "leaderboard", "music", "top-100", "glossary", "bridge", "agents", "assistant", "buy"].includes(
             possibleUsername.toLowerCase(),
         );
+
 
         if (possibleUsername && !isSystemRoute) {
             // Remove leading @ if present
