@@ -143,7 +143,7 @@ export function ChristmasSnow() {
 
       frameCountRef.current++;
       if (frameCountRef.current % 20 === 0) {
-        mediaRectsRef.current = Array.from(document.querySelectorAll('video, img'))
+        mediaRectsRef.current = Array.from(document.querySelectorAll('video'))
           .filter((el) => {
             const rect = (el as HTMLElement).getBoundingClientRect();
             return rect.width >= 80 && rect.height >= 80;
