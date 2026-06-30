@@ -85,6 +85,7 @@ interface EditorState extends EditableState {
   rippleDelete: (ids?: string[]) => void;
   updateTextClip: (id: string, patch: Partial<TextClip>) => void;
   updateMediaClip: (id: string, patch: Partial<MediaClip>) => void;
+  setClipTransition: (id: string, transition: Clip["transitionOut"] | null) => void;
   updateSettings: (patch: Partial<ProjectSettings>) => void;
 }
 
