@@ -64,7 +64,7 @@ export const SearchDialog = () => {
     <CommandDialog 
       open={isOpen} 
       onOpenChange={handleOpenChange} 
-      shouldFilter={false}
+      
     >
       <CommandInput
         placeholder="Search documentation..."
