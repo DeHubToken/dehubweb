@@ -31,8 +31,8 @@ export function ChristmasSnow() {
     if (!ctx) return;
 
     const BUCKET = 6; // px wide accumulation columns
-    const MAX_PILE = 60; // px max snow drift height
-    const MAX_FLAKES = 180;
+    const MAX_PILE = 80; // px max snow drift height
+    const MAX_FLAKES = 260;
 
     let width = 0;
     let height = 0;
