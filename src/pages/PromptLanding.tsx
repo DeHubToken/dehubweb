@@ -73,7 +73,7 @@ export default function PromptLanding() {
       <NebulaBackground />
 
       <div className="relative w-full max-w-2xl flex flex-col items-center gap-6">
-        <img src={wandAsset.url} alt="" className="w-16 h-16 object-contain drop-shadow-[0_4px_18px_rgba(255,255,255,0.15)]" />
+        <img src={wandUrl} alt="" width={64} height={64} loading="eager" decoding="async" fetchPriority="high" className="w-16 h-16 object-contain drop-shadow-[0_4px_18px_rgba(255,255,255,0.15)]" />
         <h1 className="text-4xl md:text-5xl font-semibold text-center tracking-tight">
           What do you want to see?
         </h1>
