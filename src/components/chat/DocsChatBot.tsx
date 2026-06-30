@@ -252,9 +252,10 @@ export const DocsChatBot = () => {
       >
         <LiquidGlassBubble2
           label=""
-          icon={<MessageCircle className="w-6 h-6" />}
+          icon={<MessageCircle className="w-6 h-6 text-white" />}
           width="56px"
           height="56px"
+          className="[&>div]:!bg-black/70 dark:[&>div]:!bg-transparent"
         />
       </div>
 
