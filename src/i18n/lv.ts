@@ -860,7 +860,7 @@ export const lv = {
     experience: 'Pieredze',
     malName: 'Mal Jan',
     malRole: 'Dibinātājs',
-    malBio: 'Full stack blockchain inženieris, top 1% Lovable kodētājs 2025.',
+    malBio: 'Full stack blockchain engineer, scaled DeHub to a £250m market cap with a near $10m liquidity pool and $2m year 1 revenue. Previously the annual top billing consultant at the UK's largest agency Blue Arrow',
     malExp1: 'Guide Dogs: Savākts >$1m',
     malExp2: 'Randstad: Vecākais konsultants',
     malExp3: 'Blue Arrow: Lielākais pārdošanas apjoms',

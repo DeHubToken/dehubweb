@@ -966,7 +966,7 @@ export const en = {
     experience: 'Experience',
     malName: 'Mal Jan',
     malRole: 'Co-Founder',
-    malBio: "Full stack blockchain engineer, top 1% Lovable code writer in 2025, founder of U.K registered Web3 developers DeLabs LTD and Co-founder of Puso group, a SEC licensed construction & development company in the Philippines.",
+    malBio: "Full stack blockchain engineer, scaled DeHub to a £250m market cap with a near $10m liquidity pool and $2m year 1 revenue. Previously the annual top billing consultant at the UK's largest agency Blue Arrow",
     malExp1: "Guide Dogs: Raised >$1m as fundraising manager with a team of 5-10 across multiple sectors",
     malExp2: "Randstad: Senior consultant at $8bn dollar market cap and world's largest agency",
     malExp3: "Blue Arrow: Biggest biller & award winning consultant at UK's largest agency with >600 staff & 70 offices nationwide. Producing personal net margins in excess of $10,000 per week & hiring thousands in the process with >100 full or part time staff at any one time",

@@ -860,7 +860,7 @@ export const mn = {
     experience: 'Туршлага',
     malName: 'Mal Jan',
     malRole: 'Үүсгэн байгуулагч',
-    malBio: 'Full stack блокчэйн инженер, 2025 оны Lovable топ 1% кодлогч.',
+    malBio: 'Full stack blockchain engineer, scaled DeHub to a £250m market cap with a near $10m liquidity pool and $2m year 1 revenue. Previously the annual top billing consultant at the UK's largest agency Blue Arrow',
     malExp1: 'Guide Dogs: >$1 сая цуглуулсан',
     malExp2: 'Randstad: Ахлах зөвлөх',
     malExp3: 'Blue Arrow: Хамгийн их борлуулалт',
