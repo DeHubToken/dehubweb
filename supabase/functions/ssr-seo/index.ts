@@ -34,24 +34,35 @@ async function getBlogManifest(): Promise<Map<string, BlogManifestPost>> {
     if (_blogManifestCache && now - _blogManifestFetchedAt < 5 * 60 * 1000) {
         return _blogManifestCache;
     }
-    try {
-        const res = await fetch(`${APP_URL}/blog-manifest.json`, {
-            headers: { Accept: "application/json" },
-            signal: AbortSignal.timeout(5000),
-        });
-        if (res.ok) {
+    // Try multiple origins — production Netlify (dehub.io) may not yet have
+    // blog-manifest.json deployed; cosmic-echo-hero.lovable.app always does
+    // because Lovable auto-deploys static assets immediately.
+    const origins = [
+        "https://cosmic-echo-hero.lovable.app",
+        APP_URL,
+    ];
+    for (const origin of origins) {
+        try {
+            const res = await fetch(`${origin}/blog-manifest.json`, {
+                headers: { Accept: "application/json" },
+                signal: AbortSignal.timeout(5000),
+            });
+            if (!res.ok) continue;
+            const ct = res.headers.get("content-type") || "";
+            if (!ct.includes("json")) continue;
             const data: BlogManifestPost[] = await res.json();
             const map = new Map<string, BlogManifestPost>();
             for (const p of data) map.set(p.slug, p);
             _blogManifestCache = map;
             _blogManifestFetchedAt = now;
             return map;
+        } catch (e) {
+            console.error(`[SSR] blog manifest fetch failed for ${origin}`, e);
         }
-    } catch (e) {
-        console.error("[SSR] blog manifest fetch failed", e);
     }
     return _blogManifestCache || new Map();
 }
+
 
 async function getBlogPost(slug: string): Promise<BlogManifestPost | null> {
     const m = await getBlogManifest();
