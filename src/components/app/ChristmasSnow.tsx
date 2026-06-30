@@ -115,6 +115,16 @@ export function ChristmasSnow() {
       }
       const speed = Math.hypot(mouse.vx, mouse.vy);
 
+      frameCountRef.current++;
+      if (frameCountRef.current % 20 === 0) {
+        mediaRectsRef.current = Array.from(document.querySelectorAll('video, img'))
+          .filter((el) => {
+            const rect = (el as HTMLElement).getBoundingClientRect();
+            return rect.width >= 80 && rect.height >= 80;
+          })
+          .map((el) => (el as HTMLElement).getBoundingClientRect());
+      }
+
       if (flakesRef.current.length < MAX_FLAKES && Math.random() < 0.85) spawn();
 
       const flakes = flakesRef.current;
@@ -153,7 +163,10 @@ export function ChristmasSnow() {
         }
         ctx.beginPath();
         ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${f.o})`;
+        const overMedia = mediaRectsRef.current.some(
+          (r) => f.x >= r.left && f.x <= r.right && f.y >= r.top && f.y <= r.bottom
+        );
+        ctx.fillStyle = `rgba(255,255,255,${overMedia ? f.o * 0.12 : f.o})`;
         ctx.fill();
       }
 
