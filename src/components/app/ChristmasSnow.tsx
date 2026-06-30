@@ -213,11 +213,50 @@ export function ChristmasSnow() {
         }
       }
 
+      // Smooth the pile so mounds are rounded rather than spiky.
+      if (cols > 2) {
+        let prev = heights[0];
+        for (let i = 1; i < cols - 1; i++) {
+          const cur = heights[i];
+          const next = heights[i + 1];
+          heights[i] = cur * 0.7 + (prev + next) * 0.15;
+          prev = cur;
+        }
+      }
+
+      // Blown-away particles from previous pile during route change.
+      const blow = blowRef.current;
+      for (let i = blow.length - 1; i >= 0; i--) {
+        const b = blow[i];
+        b.vy += 0.05;
+        b.vx *= 0.985;
+        b.x += b.vx;
+        b.y += b.vy;
+        b.o *= 0.978;
+        if (b.o < 0.04 || b.x < -20 || b.x > width + 20 || b.y > height + 20) {
+          blow.splice(i, 1);
+          continue;
+        }
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${b.o})`;
+        ctx.fill();
+      }
+
+      // Draw the snow drift as a smooth curve.
       ctx.beginPath();
       ctx.moveTo(0, height);
-      for (let i = 0; i < cols; i++) {
-        ctx.lineTo(i * BUCKET + BUCKET / 2, height - heights[i]);
+      ctx.lineTo(0, height - heights[0]);
+      for (let i = 0; i < cols - 1; i++) {
+        const x1 = i * BUCKET + BUCKET / 2;
+        const x2 = (i + 1) * BUCKET + BUCKET / 2;
+        const y1 = height - heights[i];
+        const y2 = height - heights[i + 1];
+        const cx = (x1 + x2) / 2;
+        const cy = (y1 + y2) / 2;
+        ctx.quadraticCurveTo(x1, y1, cx, cy);
       }
+      ctx.lineTo(width, height - heights[cols - 1]);
       ctx.lineTo(width, height);
       ctx.closePath();
       ctx.fillStyle = 'rgba(255,255,255,0.92)';
