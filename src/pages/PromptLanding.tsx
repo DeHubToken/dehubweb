@@ -4,6 +4,8 @@ import { ArrowUp, Mic, MicOff } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { NebulaBackground } from '@/components/ui/NebulaBackground';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
+import { useAuth } from '@/contexts/AuthContext';
+import { useTranslation } from 'react-i18next';
 import wandUrl from '@/assets/wand.png';
 
 const SUGGESTIONS = [
