@@ -62,7 +62,7 @@ const CampaignCreator = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Target className="w-5 h-5 text-middle-blue" />
+            <Target className="w-5 h-5 text-foreground" />
             Create New Campaign
           </CardTitle>
         </CardHeader>
@@ -135,7 +135,7 @@ const CampaignCreator = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-middle-blue" />
+            <MapPin className="w-5 h-5 text-foreground" />
             Geographic Targeting
           </CardTitle>
           <p className="text-sm text-muted-foreground">
@@ -199,7 +199,7 @@ const CampaignCreator = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Users className="w-5 h-5 text-middle-blue" />
+            <Users className="w-5 h-5 text-foreground" />
             POVR Audience Targeting
           </CardTitle>
           <p className="text-sm text-muted-foreground">
@@ -210,7 +210,7 @@ const CampaignCreator = () => {
           <div className="flex flex-col gap-6">
             <div className="w-full">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {badgeTiers.map(tier => <div key={tier.name} className={`border rounded-lg p-4 cursor-pointer transition-all hover:shadow-md ${selectedTiers.includes(tier.name) ? 'border-middle-blue bg-middle-blue/5' : 'border-gray-200'}`} onClick={() => handleTierToggle(tier.name)}>
+                {badgeTiers.map(tier => <div key={tier.name} className={`border rounded-lg p-4 cursor-pointer transition-all hover:shadow-md ${selectedTiers.includes(tier.name) ? 'border-foreground bg-foreground/5' : 'border-border'}`} onClick={() => handleTierToggle(tier.name)}>
                     <div className="flex items-center space-x-2 mb-3">
                       <Checkbox checked={selectedTiers.includes(tier.name)} onChange={() => handleTierToggle(tier.name)} />
                       {badgeImages[tier.name] ? <img src={badgeImages[tier.name]} alt={tier.name} className="w-6 h-6 object-contain dark:invert" /> : <div className="w-6 h-6 rounded-full bg-gray-300"></div>}
@@ -233,7 +233,7 @@ const CampaignCreator = () => {
             <div className="lg:self-end">
               <div className="flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-4">
                 <Button variant="outline">Save as Draft</Button>
-                <Button className="bg-middle-blue hover:bg-middle-blue/90 text-white">
+                <Button className="bg-foreground text-background hover:bg-foreground/90">
                   Launch Campaign
                 </Button>
               </div>
@@ -315,7 +315,7 @@ const CampaignCreator = () => {
             <div className="md:hidden flex justify-center mb-4">
               <Handshake className="w-8 h-8 text-primary" />
             </div>
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 md:px-8 w-full md:w-auto text-sm md:text-base" onClick={() => window.open('https://forms.gle/y413DekZR1X9oL4g6', '_blank')}>
+            <Button size="lg" className="bg-foreground text-background hover:bg-foreground/90 px-6 py-3 md:px-8 w-full md:w-auto text-sm md:text-base" onClick={() => window.open('https://forms.gle/y413DekZR1X9oL4g6', '_blank')}>
               <Handshake className="hidden md:block w-4 h-4 md:w-5 md:h-5 mr-2" />
               Become a Launch Partner
             </Button>
