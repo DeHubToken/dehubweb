@@ -3,16 +3,37 @@ import { useLocation } from 'react-router-dom';
 import { useAppTheme } from '@/contexts/ThemeContext';
 
 /**
- * Winter snow overlay. Snowflakes fall and accumulate at the bottom of
- * the viewport. The accumulated drift wipes every time the user navigates
- * to a different route (back/forward included).
+ * Winter snow overlay.
+ *
+ * Behaviour:
+ * - Flakes fall and accumulate on the bottom of the viewport (ground).
+ * - Flakes also accumulate on top of flat surfaces (cards, buttons,
+ *   bento tiles). When a pile gets too tall it tips off the side and
+ *   falls onto whatever is below.
+ * - Scrolling the page blows the surface piles off — they cascade down
+ *   to the ground rather than getting wiped completely.
+ * - Navigating to a new route wipes the ground drift entirely (the
+ *   original "page change" behaviour).
  */
+
+type Surface = {
+  /** Stable key derived from the element pointer so we can keep state across rect refreshes. */
+  id: number;
+  rect: DOMRect;
+  /** Per-column pile heights for this surface (BUCKET-wide columns). */
+  heights: Float32Array;
+};
+
 export function WinterSnow() {
   const { theme } = useAppTheme();
   const { pathname } = useLocation();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const heightsRef = useRef<Float32Array | null>(null);
   const mediaRectsRef = useRef<DOMRect[]>([]);
+  const surfacesRef = useRef<Surface[]>([]);
+  const surfaceMapRef = useRef<Map<number, Surface>>(new Map());
+  const elementIdRef = useRef<WeakMap<Element, number>>(new WeakMap());
+  const nextIdRef = useRef(1);
   const frameCountRef = useRef(0);
   const flakesRef = useRef<
     Array<{ x: number; y: number; r: number; vy: number; vx: number; o: number }>
@@ -24,7 +45,7 @@ export function WinterSnow() {
   const rafRef = useRef<number | null>(null);
   const isFirstNav = useRef(true);
 
-  // On navigation: blow the built-up drift away in style. Falling flakes keep falling.
+  // On navigation: blow the built-up ground drift away in style. Falling flakes keep falling.
   useEffect(() => {
     if (isFirstNav.current) { isFirstNav.current = false; return; }
     const heights = heightsRef.current;
@@ -35,9 +56,7 @@ export function WinterSnow() {
     for (let c = 0; c < heights.length; c++) {
       const pile = heights[c];
       if (pile < 0.5) continue;
-      // Particle count scales with how much snow accumulated in this column.
-      // Tiny pile -> 0-1 particles, tall pile -> up to ~8.
-      const ratio = Math.min(1, pile / 80); // MAX_PILE
+      const ratio = Math.min(1, pile / 80);
       const count = Math.floor(ratio * 7 + Math.random() * (ratio + 0.3));
       for (let k = 0; k < count; k++) {
         blowRef.current.push({
@@ -51,8 +70,9 @@ export function WinterSnow() {
       }
     }
     heights.fill(0);
+    // Also wipe any surface piles on route change.
+    for (const s of surfacesRef.current) s.heights.fill(0);
   }, [pathname]);
-
 
   useEffect(() => {
     if (theme !== 'winter') return;
@@ -63,6 +83,7 @@ export function WinterSnow() {
 
     const BUCKET = 6;
     const MAX_PILE = 80;
+    const SURFACE_MAX_PILE = 14; // tipping threshold per column on a surface
     const MAX_FLAKES = 260;
     const PUSH_RADIUS = 90;
     const WIPE_RADIUS = 55;
@@ -123,6 +144,96 @@ export function WinterSnow() {
     window.addEventListener('pointerleave', onPointerLeave);
     window.addEventListener('blur', onPointerLeave);
 
+    // Scroll → blow surface piles down to the floor below (don't wipe ground drift).
+    let lastScrollY = window.scrollY;
+    const onScroll = () => {
+      const dy = window.scrollY - lastScrollY;
+      lastScrollY = window.scrollY;
+      const intensity = Math.min(3, Math.abs(dy) / 30 + 0.4);
+      for (const s of surfacesRef.current) {
+        for (let c = 0; c < s.heights.length; c++) {
+          const pile = s.heights[c];
+          if (pile < 0.5) continue;
+          const ratio = Math.min(1, pile / SURFACE_MAX_PILE);
+          const count = Math.max(1, Math.floor(ratio * 2 + Math.random() * 2));
+          const colX = s.rect.left + c * BUCKET + BUCKET / 2;
+          const topY = s.rect.top - pile;
+          for (let k = 0; k < count; k++) {
+            blowRef.current.push({
+              x: colX + (Math.random() - 0.5) * BUCKET,
+              y: topY + Math.random() * pile,
+              vx: (Math.random() - 0.5) * 1.4 * intensity,
+              vy: 0.6 + Math.random() * 1.8 * intensity,
+              r: 1 + Math.random() * 1.6,
+              o: 0.55 + Math.random() * 0.3,
+            });
+          }
+          s.heights[c] = 0;
+        }
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    const SURFACE_SELECTOR = [
+      'button',
+      '[role="button"]',
+      '.rounded-xl',
+      '.rounded-2xl',
+      '.rounded-3xl',
+      '[data-snow="surface"]',
+    ].join(',');
+
+    const refreshSurfaces = () => {
+      const seen = new Set<number>();
+      const list: Surface[] = [];
+      const candidates = document.querySelectorAll(SURFACE_SELECTOR);
+      let count = 0;
+      candidates.forEach((el) => {
+        if (count >= 60) return;
+        const rect = (el as HTMLElement).getBoundingClientRect();
+        if (rect.width < 60 || rect.width > 900) return;
+        if (rect.height < 24) return;
+        if (rect.top < -20 || rect.top > height - 20) return;
+        // Skip elements off-screen horizontally.
+        if (rect.right < 0 || rect.left > width) return;
+        // Skip if covered by something opaque directly above: cheap check via topmost element at midpoint.
+        const probe = document.elementFromPoint(
+          rect.left + rect.width / 2,
+          rect.top + 2,
+        );
+        if (probe && probe !== el && !el.contains(probe) && !probe.contains(el)) return;
+
+        let id = elementIdRef.current.get(el);
+        if (id == null) {
+          id = nextIdRef.current++;
+          elementIdRef.current.set(el, id);
+        }
+        seen.add(id);
+        const surfCols = Math.max(1, Math.ceil(rect.width / BUCKET));
+        const existing = surfaceMapRef.current.get(id);
+        let heights: Float32Array;
+        if (existing && existing.heights.length === surfCols) {
+          heights = existing.heights;
+        } else if (existing) {
+          heights = new Float32Array(surfCols);
+          for (let i = 0; i < Math.min(existing.heights.length, surfCols); i++) {
+            heights[i] = existing.heights[i];
+          }
+        } else {
+          heights = new Float32Array(surfCols);
+        }
+        const surface: Surface = { id, rect, heights };
+        list.push(surface);
+        surfaceMapRef.current.set(id, surface);
+        count++;
+      });
+      // Garbage-collect surfaces that disappeared.
+      for (const id of Array.from(surfaceMapRef.current.keys())) {
+        if (!seen.has(id)) surfaceMapRef.current.delete(id);
+      }
+      surfacesRef.current = list;
+    };
+
     const spawn = () => {
       flakesRef.current.push({
         x: Math.random() * width,
@@ -153,8 +264,14 @@ export function WinterSnow() {
           })
           .map((el) => (el as HTMLElement).getBoundingClientRect());
       }
+      // Surface rects refresh less often — DOM queries are expensive.
+      if (frameCountRef.current % 30 === 0) {
+        refreshSurfaces();
+      }
 
       if (flakesRef.current.length < MAX_FLAKES && Math.random() < 0.85) spawn();
+
+      const surfaces = surfacesRef.current;
 
       const flakes = flakesRef.current;
       for (let i = flakes.length - 1; i >= 0; i--) {
@@ -169,21 +286,57 @@ export function WinterSnow() {
             const falloff = 1 - d / PUSH_RADIUS;
             const force = 0.6 + speed * 0.08;
             f.vx += (dx / d) * falloff * force;
-            // Only push sideways/down — never upward. Snow always falls.
             const vertical = (dy / d) * falloff * force * 0.4;
             if (vertical > 0) f.vy += vertical;
           }
         }
         f.vx *= 0.94;
         if (f.vy > 1.6) f.vy *= 0.96;
-        // Clamp to a minimum downward velocity so flakes never hover or rise.
         const minFall = 0.3 + f.r * 0.15;
         if (f.vy < minFall) f.vy = minFall;
 
+        const prevY = f.y;
         f.y += f.vy;
         f.x += f.vx + Math.sin((f.y + i) * 0.01) * 0.3;
         if (f.x < -10) f.x = width + 10;
         if (f.x > width + 10) f.x = -10;
+
+        // Surface collision (top edge only — flake must cross from above).
+        let landed = false;
+        for (let si = 0; si < surfaces.length; si++) {
+          const s = surfaces[si];
+          if (f.x < s.rect.left || f.x > s.rect.right) continue;
+          const col = Math.max(0, Math.min(s.heights.length - 1, Math.floor((f.x - s.rect.left) / BUCKET)));
+          const surfaceTop = s.rect.top - s.heights[col];
+          if (prevY <= surfaceTop && f.y + f.r >= surfaceTop) {
+            const add = (1.0 + f.r * 0.5) * 1.4;
+            s.heights[col] = Math.min(SURFACE_MAX_PILE, s.heights[col] + add);
+            if (col > 0) s.heights[col - 1] = Math.min(SURFACE_MAX_PILE, s.heights[col - 1] + add * 0.5);
+            if (col < s.heights.length - 1)
+              s.heights[col + 1] = Math.min(SURFACE_MAX_PILE, s.heights[col + 1] + add * 0.5);
+
+            // Tipping: if pile is near max, spawn a few falling particles that
+            // tumble off the side onto whatever is below.
+            if (s.heights[col] >= SURFACE_MAX_PILE - 0.1) {
+              const sideDir = col < s.heights.length / 2 ? -1 : 1;
+              for (let k = 0; k < 2; k++) {
+                blowRef.current.push({
+                  x: f.x + sideDir * (Math.random() * 4),
+                  y: surfaceTop - 1,
+                  vx: sideDir * (0.4 + Math.random() * 1.2),
+                  vy: 0.3 + Math.random() * 0.8,
+                  r: 1 + Math.random() * 1.2,
+                  o: 0.55 + Math.random() * 0.3,
+                });
+              }
+              s.heights[col] -= 3;
+            }
+            flakes.splice(i, 1);
+            landed = true;
+            break;
+          }
+        }
+        if (landed) continue;
 
         const col = Math.max(0, Math.min(cols - 1, Math.floor(f.x / BUCKET)));
         const ground = height - heights[col];
@@ -204,7 +357,7 @@ export function WinterSnow() {
         ctx.fill();
       }
 
-      // Wipe pile: when the pointer moves through the drift, rub it off.
+      // Wipe ground pile when pointer rubs through it.
       if (mouse.active && speed > 0.5) {
         const radiusCols = Math.ceil(WIPE_RADIUS / BUCKET);
         const centerCol = Math.floor(mouse.x / BUCKET);
@@ -221,7 +374,7 @@ export function WinterSnow() {
         }
       }
 
-      // Smooth the pile so mounds are rounded rather than spiky.
+      // Smooth ground pile.
       if (cols > 2) {
         let prev = heights[0];
         for (let i = 1; i < cols - 1; i++) {
@@ -232,15 +385,50 @@ export function WinterSnow() {
         }
       }
 
-      // Blown-away particles from previous pile during route change.
+      // Smooth surface piles too, and let pointer rub them off.
+      for (const s of surfaces) {
+        const sh = s.heights;
+        if (sh.length > 2) {
+          let prev = sh[0];
+          for (let i = 1; i < sh.length - 1; i++) {
+            const cur = sh[i];
+            const next = sh[i + 1];
+            sh[i] = cur * 0.75 + (prev + next) * 0.125;
+            prev = cur;
+          }
+        }
+        if (mouse.active && speed > 0.5) {
+          if (mouse.x < s.rect.left - 20 || mouse.x > s.rect.right + 20) continue;
+          if (mouse.y < s.rect.top - 30 || mouse.y > s.rect.top + 6) continue;
+          const localX = mouse.x - s.rect.left;
+          const centerCol = Math.floor(localX / BUCKET);
+          const wipeStrength = Math.min(6, 0.6 + speed * 0.2);
+          for (let i = -4; i <= 4; i++) {
+            const c = centerCol + i;
+            if (c < 0 || c >= sh.length) continue;
+            const falloff = Math.max(0, 1 - Math.abs(i) / 4);
+            sh[c] = Math.max(0, sh[c] - wipeStrength * falloff);
+          }
+        }
+      }
+
+      // Blown / tipping particles.
       const blow = blowRef.current;
       for (let i = blow.length - 1; i >= 0; i--) {
         const b = blow[i];
-        b.vy += 0.05;
-        b.vx *= 0.985;
+        b.vy += 0.08;
+        b.vx *= 0.99;
         b.x += b.vx;
         b.y += b.vy;
-        b.o *= 0.978;
+        b.o *= 0.985;
+        // Let them land on the floor too so cascades feel real.
+        if (b.y + b.r >= height - heights[Math.max(0, Math.min(cols - 1, Math.floor(b.x / BUCKET)))]) {
+          const col = Math.max(0, Math.min(cols - 1, Math.floor(b.x / BUCKET)));
+          const add = (0.8 + b.r * 0.4) * 1.2;
+          heights[col] = Math.min(MAX_PILE, heights[col] + add);
+          blow.splice(i, 1);
+          continue;
+        }
         if (b.o < 0.04 || b.x < -20 || b.x > width + 20 || b.y > height + 20) {
           blow.splice(i, 1);
           continue;
@@ -251,7 +439,33 @@ export function WinterSnow() {
         ctx.fill();
       }
 
-      // Draw the snow drift as a smooth curve.
+      // Draw surface piles as smooth white caps sitting on top of each surface.
+      for (const s of surfaces) {
+        const sh = s.heights;
+        let any = false;
+        for (let i = 0; i < sh.length; i++) if (sh[i] > 0.4) { any = true; break; }
+        if (!any) continue;
+        const baseY = s.rect.top;
+        ctx.beginPath();
+        ctx.moveTo(s.rect.left, baseY);
+        ctx.lineTo(s.rect.left, baseY - sh[0]);
+        for (let i = 0; i < sh.length - 1; i++) {
+          const x1 = s.rect.left + i * BUCKET + BUCKET / 2;
+          const x2 = s.rect.left + (i + 1) * BUCKET + BUCKET / 2;
+          const y1 = baseY - sh[i];
+          const y2 = baseY - sh[i + 1];
+          const cx = (x1 + x2) / 2;
+          const cy = (y1 + y2) / 2;
+          ctx.quadraticCurveTo(x1, y1, cx, cy);
+        }
+        ctx.lineTo(s.rect.right, baseY - sh[sh.length - 1]);
+        ctx.lineTo(s.rect.right, baseY);
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(255,255,255,0.92)';
+        ctx.fill();
+      }
+
+      // Draw ground drift.
       ctx.beginPath();
       ctx.moveTo(0, height);
       ctx.lineTo(0, height - heights[0]);
@@ -280,14 +494,13 @@ export function WinterSnow() {
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('pointerleave', onPointerLeave);
       window.removeEventListener('blur', onPointerLeave);
+      window.removeEventListener('scroll', onScroll);
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       rafRef.current = null;
     };
   }, [theme]);
 
   if (theme !== 'winter') return null;
-
-  // Disable snowfall on the /prompt page because it clashes with the animated nebula background.
   if (pathname === '/prompt') return null;
 
   return (
