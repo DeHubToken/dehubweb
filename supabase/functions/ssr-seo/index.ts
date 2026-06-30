@@ -15,6 +15,81 @@ const IMAGE_PROXY_BASE = `${SUPABASE_URL}/functions/v1/ssr-seo`;
 const OG_IMAGE_BASE = `${SUPABASE_URL}/functions/v1/og-image`;
 const DEHUB_LOGO = "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/default-icon.png";
 const AUDIO_OG_IMAGE = "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/audio-wave%20(1).png";
+const BLOG_SHARE_IMAGE_BASE = `${SUPABASE_URL}/functions/v1/blog-share-image`;
+
+interface BlogManifestPost {
+    slug: string;
+    title: string;
+    excerpt?: string;
+    author?: string;
+    publishedAt?: string;
+    bannerImage?: string;
+}
+
+let _blogManifestCache: Map<string, BlogManifestPost> | null = null;
+let _blogManifestFetchedAt = 0;
+
+async function getBlogManifest(): Promise<Map<string, BlogManifestPost>> {
+    const now = Date.now();
+    if (_blogManifestCache && now - _blogManifestFetchedAt < 5 * 60 * 1000) {
+        return _blogManifestCache;
+    }
+    // Try multiple origins — production Netlify (dehub.io) may not yet have
+    // blog-manifest.json deployed; cosmic-echo-hero.lovable.app always does
+    // because Lovable auto-deploys static assets immediately.
+    const origins = [
+        "https://cosmic-echo-hero.lovable.app",
+        APP_URL,
+    ];
+    for (const origin of origins) {
+        try {
+            const res = await fetch(`${origin}/blog-manifest.json`, {
+                headers: { Accept: "application/json" },
+                signal: AbortSignal.timeout(5000),
+            });
+            if (!res.ok) continue;
+            const ct = res.headers.get("content-type") || "";
+            if (!ct.includes("json")) continue;
+            const data: BlogManifestPost[] = await res.json();
+            const map = new Map<string, BlogManifestPost>();
+            for (const p of data) map.set(p.slug, p);
+            _blogManifestCache = map;
+            _blogManifestFetchedAt = now;
+            return map;
+        } catch (e) {
+            console.error(`[SSR] blog manifest fetch failed for ${origin}`, e);
+        }
+    }
+    return _blogManifestCache || new Map();
+}
+
+
+async function getBlogPost(slug: string): Promise<BlogManifestPost | null> {
+    const m = await getBlogManifest();
+    return m.get(slug) || null;
+}
+
+function buildBlogShareImage(post: BlogManifestPost): string {
+    const p = new URLSearchParams();
+    p.set("slug", post.slug);
+    p.set("title", (post.title || "").slice(0, 240));
+    if (post.author) p.set("author", String(post.author).slice(0, 60));
+    if (post.publishedAt) {
+        try {
+            const d = new Date(post.publishedAt);
+            p.set("date", d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }));
+        } catch { /* ignore */ }
+    }
+    if (post.bannerImage) {
+        const banner = /^https?:\/\//i.test(post.bannerImage) ? post.bannerImage : `${APP_URL}${post.bannerImage.startsWith("/") ? "" : "/"}${post.bannerImage}`;
+        p.set("banner", banner);
+    }
+    p.set("width", "1200");
+    p.set("height", "630");
+    p.set("format", "png");
+    return `${BLOG_SHARE_IMAGE_BASE}?${p.toString()}`;
+}
+
 
 interface DeHubUser {
     username?: string;
@@ -378,11 +453,47 @@ serve(async (req) => {
             }
         }
 
+        // 0.5 Blog post handler (/docs/blog/:slug)
+        if (pathParts[0]?.toLowerCase() === "docs" && pathParts[1]?.toLowerCase() === "blog" && pathParts[2]) {
+            const slug = decodeURIComponent(pathParts[2]).split("?")[0];
+            const post = await getBlogPost(slug);
+            if (post) {
+                const canonical = `${APP_URL}/docs/blog/${slug}`;
+                const image = buildBlogShareImage(post);
+                const title = `${post.title} — DeHub Blog`;
+                const description = (post.excerpt || `${post.title} — read on DeHub.`).slice(0, 280);
+                const html = generateMetaHTML({
+                    title,
+                    description,
+                    image,
+                    url: canonical,
+                    type: "article",
+                    twitterCard: "summary_large_image",
+                    imageWidth: 1200,
+                    imageHeight: 630,
+                    functionBaseUrl,
+                    isBot,
+                    jsonLd: {
+                        "@context": "https://schema.org",
+                        "@type": "Article",
+                        headline: post.title,
+                        image: [image],
+                        datePublished: post.publishedAt,
+                        author: { "@type": "Person", name: post.author || "DeHub Team" },
+                        publisher: { "@type": "Organization", name: "DeHub" },
+                        mainEntityOfPage: canonical,
+                    },
+                });
+                return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400" } });
+            }
+        }
+
         // 1. Profile Handling (/@username or /username)
         const possibleUsername = pathParts[0] || "";
-        const isSystemRoute = ["post", "app", "explore", "notifications", "messages", "settings", "r"].includes(
+        const isSystemRoute = ["post", "app", "explore", "notifications", "messages", "settings", "r", "docs", "prompt", "premium", "affiliate", "work", "editor", "creators", "jobs", "features", "radio", "tv", "governance", "stake", "leaderboard", "music", "top-100", "glossary", "bridge", "agents", "assistant", "buy"].includes(
             possibleUsername.toLowerCase(),
         );
+
 
         if (possibleUsername && !isSystemRoute) {
             // Remove leading @ if present
