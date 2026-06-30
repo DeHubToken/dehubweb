@@ -1402,7 +1402,7 @@ export default function AssistantPage() {
     queueMessage(userMessage);
     
     const currentInput = effectiveInput;
-    const currentAttachedImage = attachedImage || skillSourceImage;
+    const currentAttachedImage = attachedImage || skillSourceImage || characterSourceImage;
     setInput('');
     setAttachedImage(null);
     setIsLoading(true);
