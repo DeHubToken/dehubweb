@@ -210,7 +210,7 @@ const CampaignCreator = () => {
           <div className="flex flex-col gap-6">
             <div className="w-full">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {badgeTiers.map(tier => <div key={tier.name} className={`border rounded-lg p-4 cursor-pointer transition-all hover:shadow-md ${selectedTiers.includes(tier.name) ? 'border-white bg-white/5' : 'border-border'}`} onClick={() => handleTierToggle(tier.name)}>
+                {badgeTiers.map(tier => <div key={tier.name} className={`border rounded-lg p-4 cursor-pointer transition-all hover:shadow-md ${selectedTiers.includes(tier.name) ? 'border-white bg-white/5' : 'border-white/10'}`} onClick={() => handleTierToggle(tier.name)}>
                     <div className="flex items-center space-x-2 mb-3">
                       <Checkbox checked={selectedTiers.includes(tier.name)} onChange={() => handleTierToggle(tier.name)} />
                       {badgeImages[tier.name] ? <img src={badgeImages[tier.name]} alt={tier.name} className="w-6 h-6 object-contain dark:invert" /> : <div className="w-6 h-6 rounded-full bg-zinc-300"></div>}
