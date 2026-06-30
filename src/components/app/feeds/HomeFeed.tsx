@@ -171,6 +171,7 @@ function SortFilterSection({
 
   const activeFilterClass = 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]';
   const inactiveFilterClass = 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700';
+  const rowFadeMask = '[mask-image:linear-gradient(to_right,black_calc(100%-24px),transparent)] [-webkit-mask-image:linear-gradient(to_right,black_calc(100%-24px),transparent)]';
 
   return (
     <div className="relative flex flex-col gap-4">
@@ -179,11 +180,11 @@ function SortFilterSection({
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.sort')}</span>
         <div className="relative">
           <GlassFilterRow
+            className={rowFadeMask}
             items={SORT_OPTIONS.map((o) => ({ key: o.label, label: t(`filters.${o.value === 'most-viewed' ? 'mostViewed' : o.value === 'most-liked' ? 'mostLiked' : o.value === 'most-comments' ? 'mostComments' : o.value}`, o.label) }))}
             activeKey={selectedSort.label}
             onSelect={(key) => { const o = SORT_OPTIONS.find(x => x.label === key); if (o) onSortSelect(o); }}
           />
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900/90 to-transparent pointer-events-none z-20" />
         </div>
       </div>
 
@@ -198,7 +199,7 @@ function SortFilterSection({
           className="w-full px-3 py-1.5 rounded-lg text-xs bg-zinc-800 text-zinc-200 placeholder-zinc-500 border border-zinc-700 focus:border-zinc-500 focus:outline-none transition-colors mb-1"
         />
         <div className="relative">
-          <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
+          <div className={cn('flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1', rowFadeMask)} style={{ touchAction: 'pan-x' }}>
             <button
               onClick={() => { onCategoryClear(); setCategorySearch(''); }}
               className={cn(
@@ -230,7 +231,6 @@ function SortFilterSection({
               <span className="text-xs text-zinc-500 py-1.5">{t('filters.noMatches')}</span>
             )}
           </div>
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900/90 to-transparent pointer-events-none" />
         </div>
       </div>
       
@@ -239,11 +239,11 @@ function SortFilterSection({
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.uploadDate')}</span>
         <div className="relative">
           <GlassFilterRow
+            className={rowFadeMask}
             items={DATE_FILTER_OPTIONS.map((o) => ({ key: o.value, label: o.label }))}
             activeKey={selectedDate.value}
             onSelect={(key) => { const o = DATE_FILTER_OPTIONS.find(x => x.value === key); if (o) onDateSelect(o); }}
           />
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900/90 to-transparent pointer-events-none z-20" />
         </div>
       </div>
 
@@ -252,11 +252,11 @@ function SortFilterSection({
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.postType')}</span>
         <div className="relative">
           <GlassFilterRow
+            className={rowFadeMask}
             items={POST_TYPE_FILTERS.map((o) => ({ key: o.value, label: t(`filters.${o.value === 'all' ? 'all' : o.value === 'video' ? 'videos' : o.value === 'feed-images' ? 'images' : o.value === 'feed-audio' ? 'audio' : 'text'}`, o.label) }))}
             activeKey={selectedPostType}
             onSelect={(key) => onPostTypeSelect(key as PostTypeFilterValue)}
           />
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900/90 to-transparent pointer-events-none z-20" />
         </div>
       </div>
 
@@ -264,7 +264,7 @@ function SortFilterSection({
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.contentAccess')}</span>
         <div className="relative">
-          <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
+          <div className={cn('flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1', rowFadeMask)} style={{ touchAction: 'pan-x' }}>
             {CONTENT_TYPE_FILTERS.map((filter) => (
               <button
                 key={filter.value}
@@ -280,7 +280,6 @@ function SortFilterSection({
               </button>
             ))}
           </div>
-          <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900/90 to-transparent pointer-events-none" />
         </div>
       </div>
 
