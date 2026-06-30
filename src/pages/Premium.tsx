@@ -219,9 +219,17 @@ export default function Premium() {
           </div>
           <p className="mt-1 text-xs text-zinc-500">Free for Top 2 staking tiers</p>
 
-          <div className="mt-6 rounded-xl bg-white/5 border border-white/10 p-3 text-xs text-zinc-300">
+          <div className="mt-4 rounded-xl bg-white/10 border border-white/25 p-3 text-xs text-white">
+            <div className="flex items-center gap-1.5 font-semibold uppercase tracking-wide text-[10px] text-white/80 mb-1">
+              <Sparkles className="w-3 h-3" /> Limited time
+            </div>
+            100% token cashback — get <span className="font-semibold">$50 in DHB tokens</span> back every month you're subscribed.
+          </div>
+
+          <div className="mt-3 rounded-xl bg-white/5 border border-white/10 p-3 text-xs text-zinc-300">
             Everything in <span className="text-white font-medium">Family</span>, expanded to up to 20 @usernames with maxed-out AI and boosts.
           </div>
+
 
           <ul className="mt-5 space-y-3">
             {XL_PERKS.map((p) => <PerkRow key={p.label} {...p} />)}
