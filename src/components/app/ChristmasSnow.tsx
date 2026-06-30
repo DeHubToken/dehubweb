@@ -17,11 +17,11 @@ export function ChristmasSnow() {
   >([]);
   const rafRef = useRef<number | null>(null);
 
-  // Reset accumulation on every navigation.
+  // Only wipe the built-up drift on navigation. Falling flakes keep falling.
   useEffect(() => {
     if (heightsRef.current) heightsRef.current.fill(0);
-    flakesRef.current = [];
   }, [pathname]);
+
 
   useEffect(() => {
     if (theme !== 'christmas') return;
@@ -31,8 +31,8 @@ export function ChristmasSnow() {
     if (!ctx) return;
 
     const BUCKET = 6; // px wide accumulation columns
-    const MAX_PILE = 60; // px max snow drift height
-    const MAX_FLAKES = 180;
+    const MAX_PILE = 80; // px max snow drift height
+    const MAX_FLAKES = 260;
 
     let width = 0;
     let height = 0;
@@ -74,7 +74,7 @@ export function ChristmasSnow() {
       const heights = heightsRef.current!;
 
       // Spawn
-      if (flakesRef.current.length < MAX_FLAKES && Math.random() < 0.6) spawn();
+      if (flakesRef.current.length < MAX_FLAKES && Math.random() < 0.85) spawn();
 
       // Update + draw flakes
       const flakes = flakesRef.current;
@@ -89,10 +89,10 @@ export function ChristmasSnow() {
         const ground = height - heights[col];
         if (f.y + f.r >= ground) {
           // Land: bump neighboring columns slightly so the drift looks soft.
-          const add = 0.35 + f.r * 0.15;
+          const add = 1.2 + f.r * 0.6;
           heights[col] = Math.min(MAX_PILE, heights[col] + add);
-          if (col > 0) heights[col - 1] = Math.min(MAX_PILE, heights[col - 1] + add * 0.4);
-          if (col < cols - 1) heights[col + 1] = Math.min(MAX_PILE, heights[col + 1] + add * 0.4);
+          if (col > 0) heights[col - 1] = Math.min(MAX_PILE, heights[col - 1] + add * 0.5);
+          if (col < cols - 1) heights[col + 1] = Math.min(MAX_PILE, heights[col + 1] + add * 0.5);
           flakes.splice(i, 1);
           continue;
         }
