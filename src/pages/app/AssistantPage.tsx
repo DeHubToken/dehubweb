@@ -410,6 +410,19 @@ export default function AssistantPage() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { data: userSkills = [] } = useUserSkills();
+  // Prefill input from ?skill=slug (deep-link from Skills library)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const slug = params.get('skill');
+    if (slug) {
+      setInput((prev) => prev || `/${slug} `);
+      // clean URL so it doesn't re-trigger
+      const url = new URL(window.location.href);
+      url.searchParams.delete('skill');
+      window.history.replaceState({}, '', url.toString());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
   const [imageLoadStartTime, setImageLoadStartTime] = useState<number>(0);
