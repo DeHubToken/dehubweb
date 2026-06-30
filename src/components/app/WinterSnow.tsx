@@ -166,11 +166,16 @@ export function WinterSnow() {
             const falloff = 1 - d / PUSH_RADIUS;
             const force = 0.6 + speed * 0.08;
             f.vx += (dx / d) * falloff * force;
-            f.vy += (dy / d) * falloff * force * 0.4;
+            // Only push sideways/down — never upward. Snow always falls.
+            const vertical = (dy / d) * falloff * force * 0.4;
+            if (vertical > 0) f.vy += vertical;
           }
         }
         f.vx *= 0.94;
         if (f.vy > 1.6) f.vy *= 0.96;
+        // Clamp to a minimum downward velocity so flakes never hover or rise.
+        const minFall = 0.3 + f.r * 0.15;
+        if (f.vy < minFall) f.vy = minFall;
 
         f.y += f.vy;
         f.x += f.vx + Math.sin((f.y + i) * 0.01) * 0.3;
