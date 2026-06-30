@@ -4,6 +4,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Download, Image, FileText, Package } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
+import designSystemZip from '@/assets/design-system/dehub-design-system.zip.asset.json';
+import wordmarkWhite from '@/assets/design-system/wordmark-white.png.asset.json';
+import wordmarkBlack from '@/assets/design-system/wordmark-black.png.asset.json';
+import markWhite from '@/assets/design-system/mark-white.png.asset.json';
+import markBlack from '@/assets/design-system/mark-black.png.asset.json';
+import templateSignup from '@/assets/design-system/template-signup.png.asset.json';
+import templateAffiliates from '@/assets/design-system/template-affiliates.png.asset.json';
+
 
 const BrandAssets = () => {
   const { t } = useLanguage();
