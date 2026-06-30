@@ -200,7 +200,7 @@ export default function AffiliatePage() {
                       {`${typeof window !== "undefined" ? window.location.origin : "https://dehub.io"}/r/${stats.code}`}
                       <ExternalLink className="w-3 h-3 opacity-70" />
                     </Link>
-                    <Button variant="ghost" size="sm" onClick={() => void load()} disabled={loading}>
+                    <Button variant="ghost" size="sm" onClick={() => void load({ refreshImage: true })} disabled={loading}>
                       <RefreshCw className={`w-4 h-4 mr-2 ${loading ? "animate-spin" : ""}`} /> Refresh
                     </Button>
                   </div>
