@@ -303,10 +303,13 @@ function buildSvg(opts: {
 </svg>`;
 }
 
-// In-memory PNG cache + in-flight dedup (per worker). Survives between requests.
+// In-memory PNG + SVG cache + in-flight dedup (per worker). Survives between requests.
 const PNG_CACHE = new Map<string, Uint8Array>();
 const PNG_INFLIGHT = new Map<string, Promise<Uint8Array>>();
+const SVG_CACHE = new Map<string, string>();
+const SVG_INFLIGHT = new Map<string, Promise<string>>();
 const PNG_CACHE_MAX = 200;
+const SVG_CACHE_MAX = 400;
 
 function cachePng(key: string, png: Uint8Array) {
   if (PNG_CACHE.size >= PNG_CACHE_MAX) {
@@ -314,6 +317,14 @@ function cachePng(key: string, png: Uint8Array) {
     if (firstKey) PNG_CACHE.delete(firstKey);
   }
   PNG_CACHE.set(key, png);
+}
+
+function cacheSvg(key: string, svg: string) {
+  if (SVG_CACHE.size >= SVG_CACHE_MAX) {
+    const firstKey = SVG_CACHE.keys().next().value;
+    if (firstKey) SVG_CACHE.delete(firstKey);
+  }
+  SVG_CACHE.set(key, svg);
 }
 
 async function buildPngFor(rawCode: string, width: number, height: number): Promise<{ png: Uint8Array | null; svg: string }> {
