@@ -317,7 +317,7 @@ const DocsLayoutContent = () => {
                                 {item.hasSubmenu && item.submenuItems ? <div>
                                     <button onClick={() => toggleSubmenu(item.title)} className={`
                                         w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200
-                                        ${isActivePath(item.path) ? 'bg-muted text-foreground font-medium border-l-4 border-primary ml-0' : 'text-muted-foreground hover:bg-muted hover:text-foreground'}
+                                        ${isActivePath(item.path) ? 'bg-muted text-foreground font-medium' : 'text-muted-foreground hover:bg-muted hover:text-foreground'}
                                       `}>
                                       <div className="flex items-center space-x-3">
                                         {item.iconComponent ? <item.iconComponent className="w-4 h-4 text-muted-foreground" /> : item.isImage ? <img src={item.icon} alt={item.title} className="w-4 h-4" /> : <span className="text-base">{item.icon}</span>}
@@ -337,7 +337,7 @@ const DocsLayoutContent = () => {
                                       </ul>}
                                   </div> : <Link to={item.path} onClick={closeSidebar} className={`
                                       flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200
-                                      ${isActivePath(item.path) ? 'bg-muted text-foreground font-medium border-l-4 border-primary ml-0' : 'text-muted-foreground hover:bg-muted hover:text-foreground'}
+                                      ${isActivePath(item.path) ? 'bg-muted text-foreground font-medium' : 'text-muted-foreground hover:bg-muted hover:text-foreground'}
                                     `}>
                                     <div className="flex items-center space-x-3">
                                       {item.iconComponent ? <item.iconComponent className="w-4 h-4 text-muted-foreground" /> : item.isImage ? <img src={item.icon} alt={item.title} className={`w-4 h-4 ${item.title !== 'App' && item.title !== 'CoinGecko' ? 'dark:invert' : ''}`} /> : <span className="text-base">{item.icon}</span>}
