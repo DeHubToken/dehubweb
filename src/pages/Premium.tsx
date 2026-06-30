@@ -99,13 +99,27 @@ function PerkRow({ icon: Icon, label, detail }: { icon: React.ElementType; label
 }
 
 export default function Premium() {
+  const { walletAddress, user, openLoginModal } = useAuth() as any;
+  const [checkoutPriceId, setCheckoutPriceId] = useState<string | null>(null);
+
+  const startCheckout = (priceId: string) => {
+    if (!walletAddress) {
+      toast.error('Connect your wallet to subscribe');
+      try { openLoginModal?.(); } catch {}
+      return;
+    }
+    setCheckoutPriceId(priceId);
+  };
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <SEOHead
-        title="DeHub Premium — Extra & Family plans"
-        description="Go ad-free, unlock background playback, get a Premium badge and more AI. DeHub Extra $4.99/mo, Family $11.99/mo. Free for top-tier stakers."
+        title="DeHub Premium — Extra, Family & Extra Large"
+        description="Go ad-free, unlock background playback, custom themes, profile insights and more AI. Extra $4.99/mo, Family $11.99/mo, Extra Large $50/mo with 100% token cashback for first 50."
         url="https://dehub.io/premium"
       />
+
+      <PaymentTestModeBanner />
 
       {/* Ambient backdrop */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
@@ -125,6 +139,7 @@ export default function Premium() {
           </Link>
         </div>
       </header>
+
 
       {/* Hero */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-12 text-center">
