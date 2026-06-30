@@ -246,12 +246,6 @@ const CampaignCreator = () => {
       {/* Partnership Promotional Section */}
       <Card className="border-2 border-foreground/10 bg-gradient-to-br from-white/5 via-background to-white/5">
         <CardHeader className="text-center px-4 py-6">
-          <div className="flex justify-center mb-4">
-            <Badge className="bg-foreground text-background text-sm md:text-lg px-3 py-1 md:px-4 md:py-2">
-              <Star className="w-3 h-3 md:w-4 md:h-4 mr-2" />
-              Launch Partnership
-            </Badge>
-          </div>
           <CardTitle className="text-xl md:text-2xl flex items-center justify-center gap-2">
             <Handshake className="hidden md:block w-5 h-5 md:w-6 md:h-6 text-foreground" />
             Partner with DeHub for Our App Launch
