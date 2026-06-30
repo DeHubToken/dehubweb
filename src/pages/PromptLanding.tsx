@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowUp, Sparkles } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
+import { NebulaBackground } from '@/components/ui/NebulaBackground';
 
 const SUGGESTIONS = [
   'More AI and crypto news',
