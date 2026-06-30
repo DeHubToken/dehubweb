@@ -37,7 +37,7 @@ const SCROLL_NAV_ITEMS = [
   { icon: Settings, label: 'Settings', path: '/app/settings' },
   { icon: Lightbulb, label: 'Features', path: '/features' },
   { icon: Map, label: 'Guide', path: '/guide' },
-  { icon: BookOpen, label: 'Docs', path: 'https://docs.dhb.gg', external: true },
+  { icon: BookOpen, label: 'Docs', path: '/docs' },
   { icon: FileText, label: 'Blog', path: '/docs/blog' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
   { icon: Scroll, label: 'Glossary', path: '/app/glossary' },
@@ -252,9 +252,9 @@ export function MobileBottomNav() {
 
             {/* Additional items - accessible via scroll */}
             {SCROLL_NAV_ITEMS.map((item) => {
-              const isActive = !item.external && !(item as any).action && location.pathname.startsWith(item.path);
+              const isActive = !(item as any).external && !(item as any).action && location.pathname.startsWith(item.path);
               
-              if (item.external) {
+              if ((item as any).external) {
                 return (
                   <a
                     key={item.label}

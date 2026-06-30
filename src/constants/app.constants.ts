@@ -59,7 +59,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Store, label: 'Stores', path: '/app/stores' },
   { icon: Scroll, label: 'Glossary', path: '/app/glossary' },
   { icon: Map, label: 'Guide', path: '/guide' },
-  { icon: BookOpen, label: 'Docs', path: 'https://dehub.io/docs', external: true },
+  { icon: BookOpen, label: 'Docs', path: '/docs' },
   { icon: FileText, label: 'Blog', path: '/docs/blog' },
   { icon: Home, label: 'Home', path: '/app' },
 ];
