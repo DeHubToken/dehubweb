@@ -112,3 +112,6 @@ verify_jwt = false
 [functions.affiliate-share-image]
 verify_jwt = false
 
+[functions.blog-share-image]
+verify_jwt = false
+
