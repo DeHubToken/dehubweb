@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -6,6 +7,7 @@ import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { ArrowUp, Sparkles, Cpu, Atom, Gamepad2, Trophy, Music2, Film, Image as ImageIcon, Radio, Check } from 'lucide-react';
 import type { DeHubCategory } from '@/lib/api/dehub';
 import { cn } from '@/lib/utils';
+
 
 type Stage = 'input' | 'analysing' | 'tune';
 
