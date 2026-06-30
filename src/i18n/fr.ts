@@ -811,7 +811,7 @@ export const fr = {
     title: 'Équipe',
     subtitle: "Rencontrez les esprits innovants derrière DeHub — une équipe diversifiée d'entrepreneurs, d'experts en réseaux sociaux et de professionnels du gaming qui propulsent l'avenir du divertissement décentralisé.",
     experience: 'Expérience',
-    malName: 'Malik Jan',
+    malName: 'Mal Jan',
     malRole: 'Co-fondateur',
     malBio: "Ingénieur blockchain full stack, top 1% des codeurs Lovable en 2025, fondateur de DeLabs LTD, développeurs Web3 enregistrés au Royaume-Uni et co-fondateur du groupe Puso, une entreprise de construction et développement licenciée SEC aux Philippines.",
     malExp1: "Guide Dogs : A levé plus d'1M$ en tant que responsable de collecte de fonds avec une équipe de 5-10 personnes dans plusieurs secteurs",

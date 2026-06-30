@@ -811,7 +811,7 @@ export const gsw = {
     title: 'Team',
     subtitle: "Lerned Sie die innovative Chöpf hinter DeHub kenne — es vielfältigs Team vo Unternehmer, Social-Media-Experte und Gaming-Profis.",
     experience: 'Erfahrig',
-    malName: 'Malik Jan',
+    malName: 'Mal Jan',
     malRole: 'Co-Gründer',
     malBio: "Full-Stack-Blockchain-Ingenieur, Top 1% Lovable-Code-Schrieber 2025, Gründer vo DeLabs LTD und Co-Gründer vo dr Puso-Gruppe.",
     malExp1: "Guide Dogs: Het über 1M$ ufbracht als Fundraising-Manager",

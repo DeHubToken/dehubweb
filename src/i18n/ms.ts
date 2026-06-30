@@ -858,7 +858,7 @@ export const ms = {
     title: 'Pasukan',
     subtitle: 'Kenali minda inovatif di sebalik DeHub.',
     experience: 'Pengalaman',
-    malName: 'Malik Jan',
+    malName: 'Mal Jan',
     malRole: 'Pengasas',
     malBio: 'Jurutera blockchain full stack, pengekod Lovable 1% teratas 2025.',
     malExp1: 'Guide Dogs: Kumpul >$1j',

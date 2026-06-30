@@ -963,7 +963,7 @@ export const acm = {
     title: 'الفريق',
     subtitle: 'تعرّف على العقول المبتكرة ورا DeHub - فريق متنوع من رواد الأعمال وخبراء التواصل الاجتماعي ومحترفي الألعاب.',
     experience: 'الخبرة',
-    malName: 'Malik Jan',
+    malName: 'Mal Jan',
     malRole: 'مؤسس مشارك',
     malBio: 'مهندس بلوكتشين متكامل، من أفضل 1% كتّاب كود Lovable بـ 2025، مؤسس DeLabs LTD المسجلة ببريطانيا ومؤسس مشارك لمجموعة Puso.',
     malExp1: 'Guide Dogs: جمع أكثر من مليون دولار چمدير جمع تبرعات',

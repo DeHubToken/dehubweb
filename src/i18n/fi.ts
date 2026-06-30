@@ -769,7 +769,7 @@ export const fi = {
     title: 'Tiimi',
     subtitle: 'Tutustu DeHubin innovatiivisiin mieliin – monipuolinen tiimi yrittäjiä, some-asiantuntijoita ja pelialan ammattilaisia.',
     experience: 'Kokemus',
-    malName: 'Malik Jan',
+    malName: 'Mal Jan',
     malRole: 'Perustaja',
     malBio: 'Full stack -lohkoketjuinsinööri, top 1 % Lovable-koodaaja vuonna 2025, DeLabs LTD:n perustaja ja Puso-ryhmän perustaja.',
     malExp1: 'Guide Dogs: Keräsi yli 1 miljoona dollaria varainhankinnan johtajana',

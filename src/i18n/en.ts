@@ -964,7 +964,7 @@ export const en = {
     title: 'Team',
     subtitle: 'Meet the innovative minds behind DeHub - a diverse team of entrepreneurs, social media experts, and gaming professionals driving the future of decentralized entertainment.',
     experience: 'Experience',
-    malName: 'Malik Jan',
+    malName: 'Mal Jan',
     malRole: 'Co-Founder',
     malBio: "Full stack blockchain engineer, top 1% Lovable code writer in 2025, founder of U.K registered Web3 developers DeLabs LTD and Co-founder of Puso group, a SEC licensed construction & development company in the Philippines.",
     malExp1: "Guide Dogs: Raised >$1m as fundraising manager with a team of 5-10 across multiple sectors",

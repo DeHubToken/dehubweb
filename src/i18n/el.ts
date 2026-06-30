@@ -959,7 +959,7 @@ export const el = {
     title: 'Ομάδα',
     subtitle: 'Γνωρίστε τα καινοτόμα μυαλά πίσω από το DeHub.',
     experience: 'Εμπειρία',
-    malName: 'Malik Jan',
+    malName: 'Mal Jan',
     malRole: 'Συνιδρυτής',
     malBio: 'Full stack blockchain μηχανικός, κορυφαίος 1% Lovable code writer 2025.',
     malExp1: 'Guide Dogs: Συγκέντρωσε >$1εκ ως διευθυντής fundraising',
