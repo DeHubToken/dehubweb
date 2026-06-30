@@ -17,11 +17,37 @@ export function ChristmasSnow() {
   const flakesRef = useRef<
     Array<{ x: number; y: number; r: number; vy: number; vx: number; o: number }>
   >([]);
+  const blowRef = useRef<
+    Array<{ x: number; y: number; vx: number; vy: number; r: number; o: number }>
+  >([]);
+  const windDirRef = useRef(1);
   const rafRef = useRef<number | null>(null);
+  const isFirstNav = useRef(true);
 
-  // Only wipe the built-up drift on navigation. Falling flakes keep falling.
+  // On navigation: blow the built-up drift away in style. Falling flakes keep falling.
   useEffect(() => {
-    if (heightsRef.current) heightsRef.current.fill(0);
+    if (isFirstNav.current) { isFirstNav.current = false; return; }
+    const heights = heightsRef.current;
+    if (!heights) return;
+    const h = window.innerHeight;
+    const dir = Math.random() < 0.5 ? -1 : 1;
+    windDirRef.current = dir;
+    for (let c = 0; c < heights.length; c++) {
+      const pile = heights[c];
+      if (pile < 1) continue;
+      const count = Math.min(6, Math.ceil(pile / 10));
+      for (let k = 0; k < count; k++) {
+        blowRef.current.push({
+          x: c * 6 + Math.random() * 6,
+          y: h - Math.random() * pile,
+          vx: dir * (2 + Math.random() * 4),
+          vy: -1 - Math.random() * 2,
+          r: 1 + Math.random() * 2.2,
+          o: 0.75 + Math.random() * 0.25,
+        });
+      }
+    }
+    heights.fill(0);
   }, [pathname]);
 
 
@@ -187,11 +213,50 @@ export function ChristmasSnow() {
         }
       }
 
+      // Smooth the pile so mounds are rounded rather than spiky.
+      if (cols > 2) {
+        let prev = heights[0];
+        for (let i = 1; i < cols - 1; i++) {
+          const cur = heights[i];
+          const next = heights[i + 1];
+          heights[i] = cur * 0.7 + (prev + next) * 0.15;
+          prev = cur;
+        }
+      }
+
+      // Blown-away particles from previous pile during route change.
+      const blow = blowRef.current;
+      for (let i = blow.length - 1; i >= 0; i--) {
+        const b = blow[i];
+        b.vy += 0.05;
+        b.vx *= 0.985;
+        b.x += b.vx;
+        b.y += b.vy;
+        b.o *= 0.978;
+        if (b.o < 0.04 || b.x < -20 || b.x > width + 20 || b.y > height + 20) {
+          blow.splice(i, 1);
+          continue;
+        }
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${b.o})`;
+        ctx.fill();
+      }
+
+      // Draw the snow drift as a smooth curve.
       ctx.beginPath();
       ctx.moveTo(0, height);
-      for (let i = 0; i < cols; i++) {
-        ctx.lineTo(i * BUCKET + BUCKET / 2, height - heights[i]);
+      ctx.lineTo(0, height - heights[0]);
+      for (let i = 0; i < cols - 1; i++) {
+        const x1 = i * BUCKET + BUCKET / 2;
+        const x2 = (i + 1) * BUCKET + BUCKET / 2;
+        const y1 = height - heights[i];
+        const y2 = height - heights[i + 1];
+        const cx = (x1 + x2) / 2;
+        const cy = (y1 + y2) / 2;
+        ctx.quadraticCurveTo(x1, y1, cx, cy);
       }
+      ctx.lineTo(width, height - heights[cols - 1]);
       ctx.lineTo(width, height);
       ctx.closePath();
       ctx.fillStyle = 'rgba(255,255,255,0.92)';
