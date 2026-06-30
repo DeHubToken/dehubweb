@@ -313,9 +313,9 @@ const CampaignCreator = () => {
           </div>
           <div className="text-center pt-4">
             <div className="md:hidden flex justify-center mb-4">
-              <Handshake className="w-8 h-8 text-white" />
+              <Handshake className="w-8 h-8 text-foreground" />
             </div>
-            <Button size="lg" className="bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 px-6 py-3 md:px-8 w-full md:w-auto text-sm md:text-base" onClick={() => window.open('https://forms.gle/y413DekZR1X9oL4g6', '_blank')}>
+            <Button size="lg" className="bg-black/5 dark:bg-white/10 backdrop-blur-md border border-black/20 dark:border-white/20 text-foreground hover:bg-black/10 dark:hover:bg-white/20 px-6 py-3 md:px-8 w-full md:w-auto text-sm md:text-base" onClick={() => window.open('https://forms.gle/y413DekZR1X9oL4g6', '_blank')}>
               <Handshake className="hidden md:block w-4 h-4 md:w-5 md:h-5 mr-2" />
               Become a Launch Partner
             </Button>
