@@ -233,7 +233,7 @@ const CampaignCreator = () => {
             <div className="lg:self-end">
               <div className="flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-4">
                 <Button variant="outline">Save as Draft</Button>
-                <Button className="bg-foreground text-background hover:bg-foreground/90">
+                <Button className="bg-white text-black hover:bg-white/90 rounded-2xl">
                   Launch Campaign
                 </Button>
               </div>
