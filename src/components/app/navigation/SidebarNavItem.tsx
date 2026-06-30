@@ -192,6 +192,11 @@ export function SidebarNavItem({
               {notificationCount > 99 ? '99+' : notificationCount}
             </span>
           )}
+          {item.label === 'Prompt' && (
+            <span className="absolute -top-1 -right-2 px-1 h-[14px] flex items-center justify-center bg-white/90 text-black text-[8px] font-bold rounded-md z-20 leading-none tracking-wide uppercase shadow-sm">
+              Test
+            </span>
+          )}
         </div>
       )}
       <span className={cn("relative z-10 truncate", labelClass)}>{translatedLabel}</span>

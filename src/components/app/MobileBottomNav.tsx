@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck, Scroll, Map } from 'lucide-react';
+import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck, Scroll, Map, Wand2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
 import { AuthPrompt } from './AuthPrompt';
@@ -25,6 +25,7 @@ const RIGHT_NAV_ITEMS = [
 const SCROLL_NAV_ITEMS = [
   { icon: User, label: 'Profile', path: '/app/profile', requiresAuth: true },
   { icon: Bell, label: 'Notifications', path: '/app/notifications' },
+  { icon: Wand2, label: 'Prompt', path: '/prompt' },
   { icon: CalendarDays, label: 'Events', path: '/app/events' },
   { icon: Mic, label: 'Stages', path: '#stages', action: 'open-stages' },
   { icon: LayoutDashboard, label: 'Command', path: '/app/command-centre' },
@@ -286,17 +287,24 @@ export function MobileBottomNav() {
                   key={item.path}
                   to={item.path}
                   onClick={(e) => handleProtectedNavClick(e, item.path, (item as any).requiresAuth)}
-                  className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-all duration-200 text-white"
+                  className="relative flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-all duration-200 text-white"
                   style={{ width: 'calc((50% - 24px) / 2)' }}
                 >
-                  <item.icon 
-                    className={cn(
-                      'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
-                      isActive 
-                        ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
-                        : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
-                    )} 
-                  />
+                  <div className="relative">
+                    <item.icon
+                      className={cn(
+                        'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
+                        isActive
+                          ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]'
+                          : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]'
+                      )}
+                    />
+                    {item.label === 'Prompt' && (
+                      <span className="absolute -top-2 -right-3 px-1 h-[12px] flex items-center justify-center bg-white/90 text-black text-[8px] font-bold rounded-md leading-none tracking-wide uppercase shadow-sm">
+                        Test
+                      </span>
+                    )}
+                  </div>
                 </NavLink>
               );
             })}
