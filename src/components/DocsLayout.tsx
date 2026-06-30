@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
+import { DocsSEO } from '@/components/DocsSEO';
 import { Book, ChevronRight, Menu, X, Search, Home, FileText, Settings, Code, Database, Shield, Zap, Users, ExternalLink, ChevronDown, Coins, Github, Phone } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
@@ -361,6 +362,7 @@ const DocsLayoutContent = () => {
 
         {/* Main content */}
         <main className="flex-1 min-w-0">
+          <DocsSEO />
           <div className="max-w-4xl mx-auto px-6 py-8">
             <Outlet />
           </div>
