@@ -99,7 +99,7 @@ export default function Team() {
                   {member.socials.map((social, idx) => {
                     const SocialIcon = socialIcons[social.platform as keyof typeof socialIcons];
                     return (
-                      <Button key={idx} variant="outline" size="sm" asChild className="flex-1 min-w-0 bg-foreground text-background border-border hover:bg-foreground/90">
+                      <Button key={idx} variant="outline" size="sm" asChild className="flex-1 min-w-0 bg-foreground !text-background border-border hover:bg-foreground/90">
                         <a href={social.url} className="flex items-center justify-center" target="_blank" rel="noopener noreferrer" aria-label={social.platform}>
                           {social.platform === 'TikTok' ? (
                             <img src={tiktokLogo} alt="TikTok" className="w-4 h-4" />
