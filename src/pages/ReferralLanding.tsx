@@ -23,7 +23,9 @@ export default function ReferralLanding() {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgRetry, setImgRetry] = useState(0);
 
-  const baseShareImage = getAffiliateShareImageUrl(code, 1200, 630);
+  // PNG for OG/social meta (cached cross-platform), SVG for the fast in-page preview.
+  const ogImage = getAffiliateShareImageUrl(code, 1200, 630, "png");
+  const baseShareImage = getAffiliateShareImageUrl(code, 1200, 630, "svg");
   const shareImage = imgRetry > 0 ? `${baseShareImage}&r=${imgRetry}` : baseShareImage;
   const pageUrl = `${SITE}/r/${code}`;
   const ctaUrl = `/app?ref=${code}`;
