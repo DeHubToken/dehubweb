@@ -250,16 +250,17 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
               })}
             </div>
           </div>
-          <p className="text-sm text-white/60 animate-pulse">Analysing your interests…</p>
+          <p className="text-sm text-white/60 animate-pulse">{t('prompt.analysing', 'Analysing your interests…')}</p>
         </div>
       )}
 
       {stage === 'tune' && (
         <div className="flex flex-col gap-5 py-2">
           <div className="text-center">
-            <h2 className="text-lg font-semibold">Your timeline is ready</h2>
-            <p className="text-sm text-white/50">Drag to fine-tune your mix.</p>
+            <h2 className="text-lg font-semibold">{t('prompt.timelineReady', 'Your timeline is ready')}</h2>
+            <p className="text-sm text-white/50">{t('prompt.dragToTune', 'Drag to fine-tune your mix.')}</p>
           </div>
+
           <div className="flex flex-col gap-4">
             {weights.map((w, idx) => {
               const Icon = ORBIT_ICONS[idx % ORBIT_ICONS.length];
