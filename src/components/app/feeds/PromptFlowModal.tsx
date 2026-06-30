@@ -188,25 +188,26 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
           <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
             <Sparkles className="w-6 h-6 text-white" />
           </div>
-          <h2 className="text-lg font-semibold text-center">What do you want to see more of?</h2>
+          <h2 className="text-lg font-semibold text-center">{t('prompt.modalQuestion', 'What do you want to see more of?')}</h2>
           <div className="relative w-full">
             <input
               ref={inputRef}
               value={prompt}
               onChange={e => setPrompt(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter') handleSubmit(); }}
-              placeholder="More AI, tech, gaming…"
+              placeholder={t('prompt.modalPlaceholder', 'More AI, tech, gaming…')}
               className="w-full pl-4 pr-12 py-3 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus-visible:outline-none focus:border-white/10 transition-colors"
             />
             <button
               onClick={() => handleSubmit()}
               disabled={!prompt.trim()}
               className="absolute right-1.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:scale-105 transition-transform"
-              aria-label="Submit"
+              aria-label={t('prompt.submit', 'Submit')}
             >
               <ArrowUp className="w-4 h-4" strokeWidth={3} />
             </button>
           </div>
+
         </div>
       )}
 
