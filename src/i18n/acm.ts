@@ -965,7 +965,7 @@ export const acm = {
     experience: 'الخبرة',
     malName: 'Mal Jan',
     malRole: 'مؤسس مشارك',
-    malBio: 'Full stack blockchain engineer, scaled DeHub to a £250m market cap with a near $10m liquidity pool and $2m year 1 revenue. Previously the annual top billing consultant at the UK\'s largest agency Blue Arrow',
+    malBio: "Full stack web and blockchain developer, building AI business solutions at Pixcellor, former senior consultant at Randstad, scaled DeHub to a £250m market cap peak with a near $10m liquidity pool and $2m year 1 revenue. Previously the annual top billing consultant at the UK's largest agency Blue Arrow and builder of entire regions at the UK's largest construction agency, ITS.",
     malExp1: 'Guide Dogs: جمع أكثر من مليون دولار چمدير جمع تبرعات',
     malExp2: 'Randstad: مستشار أول بشركة بقيمة سوقية 8 مليار دولار وأكبر وكالة بالعالم',
     malExp3: 'Blue Arrow: أفضل فوترجي ومستشار حائز على جوائز بأكبر وكالة ببريطانيا',
