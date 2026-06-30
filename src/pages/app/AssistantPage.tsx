@@ -1444,7 +1444,7 @@ export default function AssistantPage() {
       // Check request type — AI tools first, then video/image
       const aiToolCategory = detectAiToolRequest(currentInput, !!currentAttachedImage);
       const isVideoRequest = !aiToolCategory && requiresVideoGeneration(currentInput);
-      const isImageRequest = !aiToolCategory && (isCreativeLogo || matchedSkill?.kind === 'image' || requiresImageGeneration(currentInput, !!currentAttachedImage));
+      const isImageRequest = !aiToolCategory && (isCreativeLogo || matchedSkill?.kind === 'image' || charMatch.hasMentions || requiresImageGeneration(currentInput, !!currentAttachedImage));
       
       if (aiToolCategory) {
         // For music requests, show confirm dialog first
