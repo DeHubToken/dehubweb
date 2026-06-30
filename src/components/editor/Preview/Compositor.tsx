@@ -415,7 +415,7 @@ export function Compositor() {
           max={Math.max(duration, 0.01)}
           step={1 / settings.fps}
           onValueChange={(v) => { setIsPlaying(false); setCurrentTime(v[0] ?? 0); }}
-          className="flex-1"
+          className="min-w-0 flex-1"
           disabled={duration <= 0}
         />
       </div>
