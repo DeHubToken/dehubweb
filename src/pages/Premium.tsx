@@ -156,19 +156,21 @@ export default function Premium() {
           Ad-free DeHub, background playback, a Premium badge, and more AI — for a couple of bucks a month.
         </p>
         <div className="mt-8 flex items-center justify-center gap-3 flex-wrap">
-          <a
-            href="#tiers"
+          <button
+            type="button"
+            onClick={() => startCheckout('dehub_extra_monthly')}
             className="px-6 py-3 rounded-2xl bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors"
           >
             Get DeHub Extra
-          </a>
+          </button>
           <a
             href="#tiers"
             className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 text-sm font-semibold hover:bg-white/10 transition-colors"
           >
-            Compare Family
+            Compare plans
           </a>
         </div>
+
         <p className="mt-5 text-xs text-zinc-500">
           Already a top-tier staker? <Link to="/app/stake" className="underline underline-offset-2 hover:text-white">It's on us.</Link>
         </p>
