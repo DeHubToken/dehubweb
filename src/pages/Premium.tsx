@@ -166,6 +166,19 @@ export default function Premium() {
             <span className="text-4xl font-bold">$4.99</span>
             <span className="text-zinc-400 text-sm">/ month</span>
           </div>
+      {/* Tiers */}
+      <section id="tiers" className="max-w-6xl mx-auto px-4 sm:px-6 py-12 grid md:grid-cols-3 gap-5">
+        {/* Extra */}
+        <GlassCard>
+          <div className="flex items-center gap-2 mb-2">
+            <Crown className="w-4 h-4 text-white" />
+            <h2 className="text-lg font-semibold">DeHub Extra</h2>
+          </div>
+          <p className="text-sm text-zinc-400">For single users who want the full DeHub, cleaner.</p>
+          <div className="mt-5 flex items-baseline gap-1">
+            <span className="text-4xl font-bold">$4.99</span>
+            <span className="text-zinc-400 text-sm">/ month</span>
+          </div>
           <p className="mt-1 text-xs text-zinc-500">Free for Top 7 staking tiers</p>
           <ul className="mt-6 space-y-3">
             {EXTRA_PERKS.map((p) => <PerkRow key={p.label} {...p} />)}
@@ -205,7 +218,36 @@ export default function Premium() {
             Get Family
           </a>
         </GlassCard>
+
+        {/* Extra Large */}
+        <GlassCard>
+          <div className="flex items-center gap-2 mb-2">
+            <Rocket className="w-4 h-4 text-white" />
+            <h2 className="text-lg font-semibold">DeHub Extra Large</h2>
+          </div>
+          <p className="text-sm text-zinc-400">All perks on acid. For studios, DAOs and power users.</p>
+          <div className="mt-5 flex items-baseline gap-1">
+            <span className="text-4xl font-bold">$50.00</span>
+            <span className="text-zinc-400 text-sm">/ month</span>
+          </div>
+          <p className="mt-1 text-xs text-zinc-500">Free for Top 2 staking tiers</p>
+
+          <div className="mt-6 rounded-xl bg-white/5 border border-white/10 p-3 text-xs text-zinc-300">
+            Everything in <span className="text-white font-medium">Family</span>, expanded to up to 20 @usernames with maxed-out AI and boosts.
+          </div>
+
+          <ul className="mt-5 space-y-3">
+            {XL_PERKS.map((p) => <PerkRow key={p.label} {...p} />)}
+          </ul>
+          <a
+            href="/app/settings#premium"
+            className="mt-7 block text-center px-5 py-3 rounded-2xl bg-white/10 border border-white/15 text-sm font-semibold hover:bg-white/15 transition-colors"
+          >
+            Get Extra Large
+          </a>
+        </GlassCard>
       </section>
+
 
       {/* Deep-dive perks */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 py-16 space-y-12">
