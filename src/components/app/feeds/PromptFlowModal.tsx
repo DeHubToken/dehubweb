@@ -182,31 +182,51 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
         {stage === 'analysing' && (
           <div className="flex flex-col items-center gap-6 py-10">
             <div className="relative w-44 h-44">
-              <div className="absolute inset-0 rounded-full border border-white/10 animate-[spin_4s_linear_infinite]" />
+              {/* Outer ring */}
+              <div className="absolute inset-0 rounded-full border border-white/10 animate-[spin_6s_linear_infinite]" />
+              {/* Inner dashed ring, counter-rotating */}
+              <div
+                className="absolute inset-3 rounded-full border border-dashed border-white/15 animate-[spin_10s_linear_infinite]"
+                style={{ animationDirection: 'reverse' }}
+              />
+              {/* Pulsing glow */}
+              <div className="absolute inset-6 rounded-full bg-white/[0.04] blur-xl animate-pulse" />
+              {/* Centre badge with subtle scale pulse */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
-                  <Sparkles className="w-6 h-6" />
+                <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center animate-[pulse_2s_ease-in-out_infinite]">
+                  <Sparkles className="w-6 h-6 animate-pulse" />
                 </div>
               </div>
-              {ORBIT_ICONS.slice(0, 5).map((Icon, i) => {
-                const angle = (i / 5) * Math.PI * 2 - Math.PI / 2;
-                const r = 70;
-                const x = Math.cos(angle) * r;
-                const y = Math.sin(angle) * r;
-                return (
-                  <div
-                    key={i}
-                    className="absolute top-1/2 left-1/2 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center"
-                    style={{ transform: `translate(${x - 20}px, ${y - 20}px)` }}
-                  >
-                    <Icon className="w-4 h-4 text-white" />
-                  </div>
-                );
-              })}
+              {/* Orbiting icons: container rotates, icons counter-rotate to stay upright */}
+              <div className="absolute inset-0 animate-[spin_8s_linear_infinite]">
+                {ORBIT_ICONS.slice(0, 6).map((Icon, i) => {
+                  const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
+                  const r = 72;
+                  const x = Math.cos(angle) * r;
+                  const y = Math.sin(angle) * r;
+                  return (
+                    <div
+                      key={i}
+                      className="absolute top-1/2 left-1/2 w-10 h-10 -ml-5 -mt-5 rounded-full bg-white/5 border border-white/10 flex items-center justify-center animate-[spin_8s_linear_infinite] backdrop-blur-sm"
+                      style={{
+                        transform: `translate(${x}px, ${y}px)`,
+                        animationDirection: 'reverse',
+                        animationDelay: `${-i * 0.2}s`,
+                      }}
+                    >
+                      <Icon
+                        className="w-4 h-4 text-white"
+                        style={{ animation: `pulse 1.6s ease-in-out ${i * 0.15}s infinite` }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-            <p className="text-sm text-white/60">Analysing your interests…</p>
+            <p className="text-sm text-white/60 animate-pulse">Analysing your interests…</p>
           </div>
         )}
+
 
         {stage === 'tune' && (
           <div className="flex flex-col gap-5 py-2">
