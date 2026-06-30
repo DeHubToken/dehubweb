@@ -1,6 +1,8 @@
 import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
+import "@/styles/docs-dark.css";
+
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { SearchProvider } from "@/components/search/SearchProvider";
 import { DocsChatBot } from "@/components/chat/DocsChatBot";
