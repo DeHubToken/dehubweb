@@ -21,6 +21,7 @@ import {
   Mic,
   LayoutDashboard,
   Sparkles,
+  Wand2,
   Wallet,
   BookOpen,
   Scroll,
