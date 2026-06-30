@@ -78,7 +78,7 @@ export default function PromptLanding() {
           What do you want to see?
         </h1>
         <p className="text-white/50 text-center max-w-md">
-          Describe your perfect feed. We'll tune it to your interests in seconds.
+          Describe your perfect feed.
         </p>
 
         <div className="w-full mt-2 flex flex-col gap-3">
