@@ -409,6 +409,7 @@ export default function AssistantPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { data: userSkills = [] } = useUserSkills();
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
   const [imageLoadStartTime, setImageLoadStartTime] = useState<number>(0);
