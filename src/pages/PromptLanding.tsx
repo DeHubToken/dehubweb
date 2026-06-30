@@ -37,9 +37,10 @@ export default function PromptLanding() {
   const toggleRecord = () => {
     const SR: any = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (!SR) {
-      alert('Voice input is not supported in this browser.');
+      alert(t('prompt.voiceUnsupported', 'Voice input is not supported in this browser.'));
       return;
     }
+
     if (recording) {
       recognitionRef.current?.stop();
       setRecording(false);
