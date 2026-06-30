@@ -36,19 +36,38 @@ export default function AffiliatePage() {
 
   const [stats, setStats] = useState<AffiliateStats | null>(null);
   const [loading, setLoading] = useState(true);
-  const [imgVersion, setImgVersion] = useState(() => Date.now());
+  // Stable per-code version stored in localStorage. Only bumped when user clicks Refresh,
+  // so the browser HTTP cache hits instantly on revisits.
+  const versionKey = stats?.code ? `affiliate-img-v:${stats.code}` : null;
+  const [imgVersion, setImgVersion] = useState<string>(() => {
+    if (typeof window === "undefined") return "1";
+    return "1";
+  });
   const [imgLoaded, setImgLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!versionKey) return;
+    try {
+      const stored = window.localStorage.getItem(versionKey);
+      if (stored) setImgVersion(stored);
+      else window.localStorage.setItem(versionKey, "1");
+    } catch { /* ignore */ }
+  }, [versionKey]);
 
   useEffect(() => { setImgLoaded(false); }, [stats?.code, imgVersion]);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async (opts?: { refreshImage?: boolean }) => {
     if (!wallet) { setLoading(false); return; }
     setLoading(true);
     try {
       const fallbackName = wallet ? `${wallet.slice(0, 6)}…${wallet.slice(-4)}` : null;
       const s = await loadAffiliateStats(wallet, displayName ?? fallbackName);
       setStats(s);
-      setImgVersion(Date.now());
+      if (opts?.refreshImage && s?.code) {
+        const next = String(Date.now());
+        setImgVersion(next);
+        try { window.localStorage.setItem(`affiliate-img-v:${s.code}`, next); } catch { /* ignore */ }
+      }
     } catch (e) {
       toast.error("Could not load affiliate stats");
       // eslint-disable-next-line no-console
