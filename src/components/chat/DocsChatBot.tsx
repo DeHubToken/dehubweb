@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { MessageCircle, X, Send, User, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import robotAvatar from '@/assets/robot-avatar.png';
