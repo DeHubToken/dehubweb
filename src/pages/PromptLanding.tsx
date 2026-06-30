@@ -20,6 +20,8 @@ export default function PromptLanding() {
   const [text, setText] = useState('');
   const [recording, setRecording] = useState(false);
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const { isAuthenticated, openLoginModal, isConnecting, needsSignature } = useAuth();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const recognitionRef = useRef<any>(null);
 
