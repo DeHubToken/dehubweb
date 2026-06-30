@@ -1466,12 +1466,20 @@ export default function AssistantPage() {
         setIsLoading(false);
         
       } else if (isImageRequest) {
-        // Show image paywall instead of generating directly
-        setPendingImageRequest({
+        const imgReq = {
           prompt: currentInput,
           model: selectedImageModel,
           sourceImage: effectiveSourceImage || currentAttachedImage || undefined,
-        });
+        };
+        // Free generation for branded DeHub posters (skill slug: dehub-poster)
+        // — bypass the DHB paywall and run generation directly.
+        if (matchedSkill?.slug === 'dehub-poster') {
+          setIsLoading(false);
+          await handleImageGenerationConfirm(imgReq);
+          return;
+        }
+        // Show image paywall instead of generating directly
+        setPendingImageRequest(imgReq);
         setImagePaywallOpen(true);
         setIsLoading(false);
         return;
