@@ -62,7 +62,7 @@ const CampaignCreator = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Target className="w-5 h-5 text-foreground" />
+            <Target className="w-5 h-5 text-white" />
             Create New Campaign
           </CardTitle>
         </CardHeader>
@@ -101,7 +101,7 @@ const CampaignCreator = () => {
             </div>
 
             <div className="space-y-4 w-full">
-              <div className="p-4 border rounded-lg bg-muted/20 w-full">
+              <div className="p-4 border rounded-lg bg-white/5 w-full">
                 <h3 className="font-semibold mb-2 flex items-center gap-2">
                   <Eye className="w-4 h-4" />
                   Estimated Performance
@@ -135,10 +135,10 @@ const CampaignCreator = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-foreground" />
+            <MapPin className="w-5 h-5 text-white" />
             Geographic Targeting
           </CardTitle>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-zinc-400">
             Select regions and countries to target your campaign audience
           </p>
         </CardHeader>
@@ -182,8 +182,8 @@ const CampaignCreator = () => {
                 
                 {selectedCountries.length > 0 && <div className="space-y-2">
                     <Label className="text-sm">Selected Countries ({selectedCountries.length})</Label>
-                    <div className="flex flex-wrap gap-2 p-3 border rounded-lg bg-muted/20 max-h-32 overflow-y-auto">
-                      {selectedCountries.map(country => <Badge key={country} variant="secondary" className="flex items-center gap-1">
+                    <div className="flex flex-wrap gap-2 p-3 border rounded-lg bg-white/5 max-h-32 overflow-y-auto">
+                      {selectedCountries.map(country => <Badge key={country} variant="outline" className="flex items-center gap-1 bg-white/10 border-white/20 text-white">
                           {country}
                           <button onClick={() => handleCountryRemove(country)} className="ml-1 hover:bg-destructive/20 rounded-full w-4 h-4 flex items-center justify-center">
                             ×
@@ -199,10 +199,10 @@ const CampaignCreator = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Users className="w-5 h-5 text-foreground" />
+            <Users className="w-5 h-5 text-white" />
             POVR Audience Targeting
           </CardTitle>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-zinc-400">
             Select badge tiers to target users with verified financial capacity
           </p>
         </CardHeader>
@@ -210,13 +210,13 @@ const CampaignCreator = () => {
           <div className="flex flex-col gap-6">
             <div className="w-full">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {badgeTiers.map(tier => <div key={tier.name} className={`border rounded-lg p-4 cursor-pointer transition-all hover:shadow-md ${selectedTiers.includes(tier.name) ? 'border-foreground bg-foreground/5' : 'border-border'}`} onClick={() => handleTierToggle(tier.name)}>
+                {badgeTiers.map(tier => <div key={tier.name} className={`border rounded-lg p-4 cursor-pointer transition-all hover:shadow-md ${selectedTiers.includes(tier.name) ? 'border-white bg-white/5' : 'border-white/10'}`} onClick={() => handleTierToggle(tier.name)}>
                     <div className="flex items-center space-x-2 mb-3">
                       <Checkbox checked={selectedTiers.includes(tier.name)} onChange={() => handleTierToggle(tier.name)} />
-                      {badgeImages[tier.name] ? <img src={badgeImages[tier.name]} alt={tier.name} className="w-6 h-6 object-contain dark:invert" /> : <div className="w-6 h-6 rounded-full bg-gray-300"></div>}
+                      {badgeImages[tier.name] ? <img src={badgeImages[tier.name]} alt={tier.name} className="w-6 h-6 object-contain dark:invert" /> : <div className="w-6 h-6 rounded-full bg-zinc-300"></div>}
                       <span className="font-medium text-sm">{tier.name === 'No Badge' ? 'No Badge' : `${tier.name} Badge`}</span>
                     </div>
-                    <div className="space-y-1 text-xs text-muted-foreground">
+                    <div className="space-y-1 text-xs text-zinc-400">
                       <div className="flex justify-between">
                         <span>Holdings:</span>
                         <span>{tier.holdings} $DHB</span>
@@ -233,7 +233,7 @@ const CampaignCreator = () => {
             <div className="lg:self-end">
               <div className="flex flex-col lg:flex-row space-y-2 lg:space-y-0 lg:space-x-4">
                 <Button variant="outline">Save as Draft</Button>
-                <Button className="bg-foreground text-background hover:bg-foreground/90">
+                <Button className="bg-white text-black hover:bg-white/90 rounded-2xl">
                   Launch Campaign
                 </Button>
               </div>
@@ -244,19 +244,19 @@ const CampaignCreator = () => {
 
 
       {/* Partnership Promotional Section */}
-      <Card className="border-2 border-primary/20 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+      <Card className="border-2 border-white/20 bg-gradient-to-br from-white/5 via-background to-white/5">
         <CardHeader className="text-center px-4 py-6">
           <div className="flex justify-center mb-4">
-            <Badge className="bg-primary text-primary-foreground text-sm md:text-lg px-3 py-1 md:px-4 md:py-2">
+            <Badge className="bg-white text-black text-sm md:text-lg px-3 py-1 md:px-4 md:py-2">
               <Star className="w-3 h-3 md:w-4 md:h-4 mr-2" />
               Launch Partnership
             </Badge>
           </div>
           <CardTitle className="text-xl md:text-2xl flex items-center justify-center gap-2">
-            <Handshake className="hidden md:block w-5 h-5 md:w-6 md:h-6 text-primary" />
+            <Handshake className="hidden md:block w-5 h-5 md:w-6 md:h-6 text-white" />
             Partner with DeHub for Our App Launch
           </CardTitle>
-          <p className="text-base md:text-lg text-muted-foreground px-2">
+          <p className="text-base md:text-lg text-zinc-400 px-2">
             Promote your brand on the DeHub app for our heavily funded launch campaigns
           </p>
         </CardHeader>
@@ -264,47 +264,47 @@ const CampaignCreator = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-4">
               <h3 className="font-semibold text-base md:text-lg flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-primary" />
+                <TrendingUp className="w-4 h-4 md:w-5 md:h-5 text-white" />
                 Partnership Benefits
               </h3>
               <div className="space-y-3">
-                <div className="p-3 md:p-4 rounded-lg bg-primary/10 border border-primary/20">
+                <div className="p-3 md:p-4 rounded-lg bg-white/10 border border-white/20">
                   <span className="text-sm md:text-base">Early access to revolutionary POVR targeting technology</span>
                 </div>
-                <div className="p-3 md:p-4 rounded-lg bg-secondary/10 border border-secondary/20">
+                <div className="p-3 md:p-4 rounded-lg bg-white/10 border border-white/20">
                   <span className="text-sm md:text-base">Featured placement as exclusive launch partner</span>
                 </div>
-                <div className="p-3 md:p-4 rounded-lg bg-accent/10 border border-accent/20">
+                <div className="p-3 md:p-4 rounded-lg bg-white/10 border border-white/20">
                   <span className="text-sm md:text-base">Joint press releases and co-marketing campaigns</span>
                 </div>
                 
                 
-                <div className="p-3 md:p-4 rounded-lg bg-secondary/10 border border-secondary/20">
+                <div className="p-3 md:p-4 rounded-lg bg-white/10 border border-white/20">
                   <span className="text-sm md:text-base">Promote to a holder base which saw a peak all time high of over $500,000,000 FDV</span>
                 </div>
               </div>
             </div>
             <div className="space-y-4">
               <h3 className="font-semibold text-base md:text-lg flex items-center gap-2">
-                <Rocket className="w-4 h-4 md:w-5 md:h-5 text-primary" />
+                <Rocket className="w-4 h-4 md:w-5 md:h-5 text-white" />
                 Why Partner Now?
               </h3>
               <div className="space-y-3">
-                <div className="p-3 md:p-4 rounded-lg bg-primary/10 border border-primary/20">
+                <div className="p-3 md:p-4 rounded-lg bg-white/10 border border-white/20">
                   <h4 className="font-medium mb-2 text-sm md:text-base">First-Mover Advantage</h4>
-                  <p className="text-xs md:text-sm text-muted-foreground">
+                  <p className="text-xs md:text-sm text-zinc-400">
                     Be among the first brands to leverage blockchain-verified audience targeting
                   </p>
                 </div>
-                <div className="p-3 md:p-4 rounded-lg bg-secondary/10 border border-secondary/20">
+                <div className="p-3 md:p-4 rounded-lg bg-white/10 border border-white/20">
                   <h4 className="font-medium mb-2 text-sm md:text-base">Brand Association</h4>
-                  <p className="text-xs md:text-sm text-muted-foreground">
+                  <p className="text-xs md:text-sm text-zinc-400">
                     Align your brand with cutting-edge Web3 innovation and technology
                   </p>
                 </div>
-                <div className="p-3 md:p-4 rounded-lg bg-accent/10 border border-accent/20">
+                <div className="p-3 md:p-4 rounded-lg bg-white/10 border border-white/20">
                   <h4 className="font-medium mb-2 text-sm md:text-base">Mutual Growth</h4>
-                  <p className="text-xs md:text-sm text-muted-foreground">
+                  <p className="text-xs md:text-sm text-zinc-400">
                     Grow together through cross-promotion and shared audiences
                   </p>
                 </div>
@@ -313,13 +313,13 @@ const CampaignCreator = () => {
           </div>
           <div className="text-center pt-4">
             <div className="md:hidden flex justify-center mb-4">
-              <Handshake className="w-8 h-8 text-primary" />
+              <Handshake className="w-8 h-8 text-white" />
             </div>
             <Button size="lg" className="bg-white/10 backdrop-blur-md border border-white/20 text-white hover:bg-white/20 px-6 py-3 md:px-8 w-full md:w-auto text-sm md:text-base" onClick={() => window.open('https://forms.gle/y413DekZR1X9oL4g6', '_blank')}>
               <Handshake className="hidden md:block w-4 h-4 md:w-5 md:h-5 mr-2" />
               Become a Launch Partner
             </Button>
-            <p className="text-xs md:text-sm text-muted-foreground mt-2 px-2">
+            <p className="text-xs md:text-sm text-zinc-400 mt-2 px-2">
               Limited partnership slots available for our official launch
             </p>
           </div>
