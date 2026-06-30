@@ -1691,7 +1691,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
               { value: 'system', icon: Monitor, labelKey: 'settings.system', available: true, badge: null },
               { value: 'cosmic', icon: Orbit, labelKey: 'settings.cosmic', available: true, badge: 'Test' },
               { value: 'light', icon: Sun, labelKey: 'settings.light', available: false, badge: null },
-              { value: 'christmas', icon: Gift, labelKey: 'settings.christmas', available: false, badge: null },
+              { value: 'christmas', icon: Gift, labelKey: 'settings.christmas', available: true, badge: 'Test' },
               { value: 'island', icon: Palmtree, labelKey: 'settings.island', available: false, badge: null },
               { value: 'hacker', icon: Terminal, labelKey: 'settings.hacker', available: false, badge: null },
               { value: 'horror', icon: Skull, labelKey: 'settings.horror', available: false, badge: null },
