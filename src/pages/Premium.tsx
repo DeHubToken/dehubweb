@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Check, Crown, Sparkles, Users, Zap, Shield, PlayCircle, ImageIcon, Video, MessageSquare } from 'lucide-react';
+import { Check, Crown, Sparkles, Users, Zap, Shield, PlayCircle, ImageIcon, Video, MessageSquare, Palette, Eye, Lock, Rocket, Infinity as InfinityIcon } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import {
   Accordion,
@@ -12,6 +12,10 @@ const EXTRA_PERKS = [
   { icon: Shield, label: 'Ad-free feed', detail: 'No promoted posts, no upgrade banners' },
   { icon: PlayCircle, label: 'Background playback', detail: 'Audio & video keep going with screen off' },
   { icon: Crown, label: 'Animated Extra badge', detail: 'Plus gradient username + 3 profile themes' },
+  { icon: Palette, label: 'Custom themes', detail: 'Pick from curated themes — soon, build your own with a simple text-based theme builder' },
+  { icon: Eye, label: 'Profile insights', detail: 'See who visits your profile and when' },
+  { icon: Lock, label: '10 exclusive sneak peeks / mo', detail: 'Peek into gated content feeds you don\'t hold' },
+  { icon: Rocket, label: 'Timeline boost', detail: 'Your posts get seen by more of the right people' },
   { icon: MessageSquare, label: '500 Assistant messages / mo', detail: '10× the free tier' },
   { icon: ImageIcon, label: '150 AI images / mo', detail: 'All models, all styles' },
   { icon: Video, label: '20 seconds of AI video / mo', detail: 'Generate clips for posts & shorts' },
@@ -22,6 +26,16 @@ const FAMILY_PERKS = [
   { icon: Zap, label: 'Full Extra perks per seat', detail: 'Each member gets their own quotas' },
   { icon: Shield, label: 'One bill, one plan', detail: 'Owner manages seats from Settings' },
 ];
+
+const XL_PERKS = [
+  { icon: Users, label: 'Up to 20 @usernames', detail: 'Bring the whole crew, studio or DAO' },
+  { icon: Rocket, label: 'Maximum timeline boosts', detail: 'Everything on acid — top placement priority' },
+  { icon: InfinityIcon, label: 'Sky-high AI limits', detail: '5,000 Assistant msgs, 1,500 images, 5 min of AI video / mo' },
+  { icon: Lock, label: 'Unlimited sneak peeks', detail: 'Peek into every gated feed, no monthly cap' },
+  { icon: Palette, label: 'All themes + early access', detail: 'Every custom theme, first dibs on the theme builder' },
+  { icon: Eye, label: 'Pro profile insights', detail: 'Full visitor history, sources and trends' },
+];
+
 
 const FAQS = [
   {
@@ -140,7 +154,7 @@ export default function Premium() {
       </section>
 
       {/* Tiers */}
-      <section id="tiers" className="max-w-5xl mx-auto px-4 sm:px-6 py-12 grid md:grid-cols-2 gap-5">
+      <section id="tiers" className="max-w-6xl mx-auto px-4 sm:px-6 py-12 grid md:grid-cols-3 gap-5">
         {/* Extra */}
         <GlassCard>
           <div className="flex items-center gap-2 mb-2">
@@ -191,7 +205,36 @@ export default function Premium() {
             Get Family
           </a>
         </GlassCard>
+
+        {/* Extra Large */}
+        <GlassCard>
+          <div className="flex items-center gap-2 mb-2">
+            <Rocket className="w-4 h-4 text-white" />
+            <h2 className="text-lg font-semibold">DeHub Extra Large</h2>
+          </div>
+          <p className="text-sm text-zinc-400">All perks on acid. For studios, DAOs and power users.</p>
+          <div className="mt-5 flex items-baseline gap-1">
+            <span className="text-4xl font-bold">$50.00</span>
+            <span className="text-zinc-400 text-sm">/ month</span>
+          </div>
+          <p className="mt-1 text-xs text-zinc-500">Free for Top 2 staking tiers</p>
+
+          <div className="mt-6 rounded-xl bg-white/5 border border-white/10 p-3 text-xs text-zinc-300">
+            Everything in <span className="text-white font-medium">Family</span>, expanded to up to 20 @usernames with maxed-out AI and boosts.
+          </div>
+
+          <ul className="mt-5 space-y-3">
+            {XL_PERKS.map((p) => <PerkRow key={p.label} {...p} />)}
+          </ul>
+          <a
+            href="/app/settings#premium"
+            className="mt-7 block text-center px-5 py-3 rounded-2xl bg-white/10 border border-white/15 text-sm font-semibold hover:bg-white/15 transition-colors"
+          >
+            Get Extra Large
+          </a>
+        </GlassCard>
       </section>
+
 
       {/* Deep-dive perks */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 py-16 space-y-12">
