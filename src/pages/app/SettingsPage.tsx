@@ -103,6 +103,7 @@ const TAB_KEYS: Record<string, string> = {
   messages: 'settings.messages',
   assets: 'settings.assets',
   skills: 'settings.skills',
+  characters: 'settings.characters',
 };
 
 const tabs = [
@@ -114,9 +115,12 @@ const tabs = [
   { icon: MessageSquare, value: 'messages', label: 'settings.messages' },
   { icon: Wallet, value: 'assets', label: 'settings.assets' },
   { icon: Sparkles, value: 'skills', label: 'settings.skills' },
+  { icon: Users, value: 'characters', label: 'settings.characters' },
 ];
 
 import { SkillsLibrary } from '@/components/app/skills/SkillsLibrary';
+import { CharactersLibrary } from '@/components/app/characters/CharactersLibrary';
+import { Users } from 'lucide-react';
 
 import { SEOHead } from '@/components/SEOHead';
 import { useAppTheme } from '@/contexts/ThemeContext';
