@@ -118,12 +118,13 @@ const tabs = [
 import { SkillsLibrary } from '@/components/app/skills/SkillsLibrary';
 
 import { SEOHead } from '@/components/SEOHead';
+import { useAppTheme } from '@/contexts/ThemeContext';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
   const settingsIsDraggingRef = useRef(false);
   const { layerRef: settingsTabLayerRef, setRef: setSettingsTabRef, rect: settingsTabRect } = useTabIndicator(activeTab, undefined, settingsIsDraggingRef);
-  const [theme, setTheme] = useState('system');
+  const { theme, setTheme } = useAppTheme();
   const [selectedChainId, setSelectedChainId] = useState<ChainId>(() => {
     const stored = localStorage.getItem('preferred-chain-id');
     return stored ? (Number(stored) as ChainId) : (BASE_CHAIN_ID as ChainId);
@@ -1690,7 +1691,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
               { value: 'system', icon: Monitor, labelKey: 'settings.system', available: true },
               { value: 'light', icon: Sun, labelKey: 'settings.light', available: false },
               { value: 'dark', icon: Moon, labelKey: 'settings.dark', available: false },
-              { value: 'cosmic', icon: Orbit, labelKey: 'settings.cosmic', available: false },
+              { value: 'cosmic', icon: Orbit, labelKey: 'settings.cosmic', available: true },
               { value: 'christmas', icon: Gift, labelKey: 'settings.christmas', available: false },
               { value: 'island', icon: Palmtree, labelKey: 'settings.island', available: false },
               { value: 'hacker', icon: Terminal, labelKey: 'settings.hacker', available: false },
