@@ -50,6 +50,8 @@ import { OverviewTab } from '@/components/app/command-centre';
 import { AuthPrompt } from '@/components/app/AuthPrompt';
 import { useUserSkills, incrementSkillUsage, type UserSkill } from '@/hooks/use-user-skills';
 import { matchSkill, extractSlashSkill } from '@/lib/skills/matchTriggerPhrases';
+import { useUserCharacters, incrementCharacterUsage } from '@/hooks/use-user-characters';
+import { parseCharacterMentions, buildCharacterPersonaBlock } from '@/lib/characters/parseCharacterMentions';
 import { AuthGate } from '@/components/app/AuthGate';
 import { UserMentionDropdown, type MentionUser } from '@/components/app/mentions';
 import { ConversationHistoryDrawer } from '@/components/app/assistant/ConversationHistoryDrawer';
