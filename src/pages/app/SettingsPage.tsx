@@ -253,6 +253,7 @@ export default function SettingsPage() {
         {activeTab === 'messages' && <MessagesSettings />}
         {activeTab === 'assets' && <AssetsSettings />}
         {activeTab === 'skills' && <SkillsLibrary />}
+        {activeTab === 'characters' && <CharactersLibrary />}
       </div>
     </div>
   );
