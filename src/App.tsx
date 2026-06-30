@@ -53,6 +53,7 @@ const WorkJobDetailPage = React.lazy(() => import("./pages/app/WorkJobDetailPage
 const WorkDisputesPage = React.lazy(() => import("./pages/app/WorkDisputesPage"));
 const EditorPage = React.lazy(() => import("./pages/Editor"));
 const ReferralLanding = React.lazy(() => import("./pages/ReferralLanding"));
+const PremiumPage = React.lazy(() => import("./pages/Premium"));
 
 
 const SKIP_LANDING_KEY = "dehub_skip_landing";
@@ -183,6 +184,7 @@ function AppContent() {
           <Route path="/editor" element={<Suspense fallback={<PageLoader />}><EditorPage /></Suspense>} />
           <Route path="/r/:code" element={<Suspense fallback={<PageLoader />}><ReferralLanding /></Suspense>} />
           <Route path="/prompt" element={<Suspense fallback={<PageLoader />}><PromptLanding /></Suspense>} />
+          <Route path="/premium" element={<Suspense fallback={<PageLoader />}><PremiumPage /></Suspense>} />
 
 
           {/* Single shared AppLayout — header/sidebar mount ONCE and persist across all app routes */}
