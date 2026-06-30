@@ -478,7 +478,19 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     });
   },
 
-  updateSettings: (patch) => {
+  setClipTransition: (id, transition) => {
+    const s = get();
+    const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
+    set({
+      past,
+      future: [],
+      clips: s.clips.map((c) => {
+        if (c.id !== id) return c;
+        const { transitionOut: _omit, ...rest } = c;
+        return (transition ? { ...rest, transitionOut: transition } : rest) as Clip;
+      }),
+    });
+  },
     const s = get();
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
     set({ past, future: [], settings: { ...s.settings, ...patch } });
