@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Check, Crown, Sparkles, Users, Zap, Shield, PlayCircle, ImageIcon, Video, MessageSquare, Palette, Eye, Lock, Rocket, Infinity as InfinityIcon } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
@@ -7,6 +8,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { PaymentTestModeBanner } from '@/components/PaymentTestModeBanner';
+import { PremiumCheckoutModal } from '@/components/premium/PremiumCheckoutModal';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
+
 
 const EXTRA_PERKS = [
   { icon: Shield, label: 'Ad-free feed', detail: 'No promoted posts, no upgrade banners' },
@@ -93,13 +99,27 @@ function PerkRow({ icon: Icon, label, detail }: { icon: React.ElementType; label
 }
 
 export default function Premium() {
+  const { walletAddress, user, openLoginModal } = useAuth() as any;
+  const [checkoutPriceId, setCheckoutPriceId] = useState<string | null>(null);
+
+  const startCheckout = (priceId: string) => {
+    if (!walletAddress) {
+      toast.error('Connect your wallet to subscribe');
+      try { openLoginModal?.(); } catch {}
+      return;
+    }
+    setCheckoutPriceId(priceId);
+  };
+
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <SEOHead
-        title="DeHub Premium — Extra & Family plans"
-        description="Go ad-free, unlock background playback, get a Premium badge and more AI. DeHub Extra $4.99/mo, Family $11.99/mo. Free for top-tier stakers."
+        title="DeHub Premium — Extra, Family & Extra Large"
+        description="Go ad-free, unlock background playback, custom themes, profile insights and more AI. Extra $4.99/mo, Family $11.99/mo, Extra Large $50/mo with 100% token cashback for first 50."
         url="https://dehub.io/premium"
       />
+
+      <PaymentTestModeBanner />
 
       {/* Ambient backdrop */}
       <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
@@ -120,6 +140,7 @@ export default function Premium() {
         </div>
       </header>
 
+
       {/* Hero */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-16 sm:pt-24 pb-12 text-center">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-xs text-zinc-300 mb-6">
@@ -135,19 +156,21 @@ export default function Premium() {
           Ad-free DeHub, background playback, a Premium badge, and more AI — for a couple of bucks a month.
         </p>
         <div className="mt-8 flex items-center justify-center gap-3 flex-wrap">
-          <a
-            href="#tiers"
+          <button
+            type="button"
+            onClick={() => startCheckout('dehub_extra_monthly')}
             className="px-6 py-3 rounded-2xl bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors"
           >
             Get DeHub Extra
-          </a>
+          </button>
           <a
             href="#tiers"
             className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 text-sm font-semibold hover:bg-white/10 transition-colors"
           >
-            Compare Family
+            Compare plans
           </a>
         </div>
+
         <p className="mt-5 text-xs text-zinc-500">
           Already a top-tier staker? <Link to="/app/stake" className="underline underline-offset-2 hover:text-white">It's on us.</Link>
         </p>
@@ -170,13 +193,15 @@ export default function Premium() {
           <ul className="mt-6 space-y-3">
             {EXTRA_PERKS.map((p) => <PerkRow key={p.label} {...p} />)}
           </ul>
-          <a
-            href="/app/settings#premium"
-            className="mt-7 block text-center px-5 py-3 rounded-2xl bg-white/10 border border-white/15 text-sm font-semibold hover:bg-white/15 transition-colors"
+          <button
+            type="button"
+            onClick={() => startCheckout('dehub_extra_monthly')}
+            className="mt-7 w-full text-center px-5 py-3 rounded-2xl bg-white/10 border border-white/15 text-sm font-semibold hover:bg-white/15 transition-colors"
           >
             Get Extra
-          </a>
+          </button>
         </GlassCard>
+
 
         {/* Family */}
         <GlassCard highlight>
@@ -198,13 +223,15 @@ export default function Premium() {
           <ul className="mt-5 space-y-3">
             {FAMILY_PERKS.map((p) => <PerkRow key={p.label} {...p} />)}
           </ul>
-          <a
-            href="/app/settings#premium"
-            className="mt-7 block text-center px-5 py-3 rounded-2xl bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors"
+          <button
+            type="button"
+            onClick={() => startCheckout('dehub_family_monthly')}
+            className="mt-7 w-full text-center px-5 py-3 rounded-2xl bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors"
           >
             Get Family
-          </a>
+          </button>
         </GlassCard>
+
 
         {/* Extra Large */}
         <GlassCard>
@@ -235,12 +262,14 @@ export default function Premium() {
           <ul className="mt-5 space-y-3">
             {XL_PERKS.map((p) => <PerkRow key={p.label} {...p} />)}
           </ul>
-          <a
-            href="/app/settings#premium"
-            className="mt-7 block text-center px-5 py-3 rounded-2xl bg-white/10 border border-white/15 text-sm font-semibold hover:bg-white/15 transition-colors"
+          <button
+            type="button"
+            onClick={() => startCheckout('dehub_xl_monthly')}
+            className="mt-7 w-full text-center px-5 py-3 rounded-2xl bg-white/10 border border-white/15 text-sm font-semibold hover:bg-white/15 transition-colors"
           >
             Get Extra Large
-          </a>
+          </button>
+
         </GlassCard>
       </section>
 
@@ -335,17 +364,18 @@ export default function Premium() {
             $4.99 to clean it up. $11.99 to bring the family. Cancel any time.
           </p>
           <div className="mt-7 flex items-center justify-center gap-3 flex-wrap">
-            <a
-              href="/app/settings#premium"
+            <button
+              type="button"
+              onClick={() => startCheckout('dehub_extra_monthly')}
               className="px-6 py-3 rounded-2xl bg-white text-black text-sm font-semibold hover:bg-white/90 transition-colors"
             >
               Try DeHub Extra
-            </a>
+            </button>
             <a
               href="#tiers"
               className="px-6 py-3 rounded-2xl bg-white/5 border border-white/10 text-sm font-semibold hover:bg-white/10 transition-colors"
             >
-              Compare Family
+              Compare plans
             </a>
           </div>
         </div>
@@ -354,6 +384,15 @@ export default function Premium() {
       <footer className="border-t border-white/5 py-8 text-center text-xs text-zinc-500">
         © DeHub. Premium pricing and limits may change.
       </footer>
+
+      <PremiumCheckoutModal
+        open={!!checkoutPriceId}
+        onOpenChange={(o) => { if (!o) setCheckoutPriceId(null); }}
+        priceId={checkoutPriceId ?? 'dehub_extra_monthly'}
+        walletAddress={walletAddress ?? ''}
+        customerEmail={user?.email}
+      />
     </div>
   );
 }
+
