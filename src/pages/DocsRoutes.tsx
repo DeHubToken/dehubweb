@@ -56,8 +56,10 @@ const wrap = (El: React.ComponentType) => (
 
 export default function DocsRoutes() {
   return (
+    <NextThemesProvider attribute="class" defaultTheme="dark" enableSystem={false} storageKey="dehub-docs-theme">
     <LanguageProvider>
       <SearchProvider>
+
         <DocsChatBot />
         <Routes>
           <Route path="/" element={<DocsLayout />}>
