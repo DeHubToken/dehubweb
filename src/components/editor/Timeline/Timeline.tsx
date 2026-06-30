@@ -3,11 +3,21 @@
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Plus, Minus, Scissors, Trash2, Volume2, VolumeX, Eye, EyeOff, X } from "lucide-react";
+import { Plus, Minus, Scissors, Trash2, Volume2, VolumeX, Eye, EyeOff, X, ArrowLeftRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
 import type { Clip, Track } from "@/lib/editor/types";
+import {
+  DEFAULT_TRANSITION_DURATION,
+  MAX_TRANSITION_DURATION,
+  MIN_TRANSITION_DURATION,
+  TRANSITION_OPTIONS,
+  findAdjacentNext,
+  maxTransitionFor,
+} from "@/lib/editor/transitions";
 
 const TRACK_HEIGHT = 56;
 const HEADER_WIDTH = 120;
