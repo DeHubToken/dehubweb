@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { MessageCircle, X, Send, User, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
 import robotAvatar from '@/assets/robot-avatar.png';
@@ -240,18 +241,22 @@ export const DocsChatBot = () => {
   return (
     <>
       {/* Chat Toggle Button */}
-      <button
+      <div
+        role="button"
+        aria-label="Open chat"
         onClick={() => setIsOpen(!isOpen)}
         className={cn(
-          "fixed bottom-6 right-6 z-50 w-14 h-14 rounded-2xl shadow-lg transition-all duration-300 flex items-center justify-center",
-          "bg-card hover:bg-muted border border-border",
-          "hover:scale-110 hover:shadow-xl",
+          "fixed bottom-6 right-6 z-50 transition-all duration-300 hover:scale-110",
           isOpen && "scale-0 opacity-0"
         )}
-        aria-label="Open chat"
       >
-        <MessageCircle className="w-6 h-6 text-foreground" />
-      </button>
+        <LiquidGlassBubble2
+          label=""
+          icon={<MessageCircle className="w-6 h-6" />}
+          width="56px"
+          height="56px"
+        />
+      </div>
 
       {/* Chat Window */}
       <div
