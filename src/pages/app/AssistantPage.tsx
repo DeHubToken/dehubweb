@@ -48,6 +48,8 @@ import { AiToolPaywallModal } from '@/components/app/ai-tools/AiToolPaywallModal
 import { AI_TOOL_MODELS, type AiToolCategory, type AiToolModel } from '@/constants/ai-tools.constants';
 import { OverviewTab } from '@/components/app/command-centre';
 import { AuthPrompt } from '@/components/app/AuthPrompt';
+import { useUserSkills, incrementSkillUsage, type UserSkill } from '@/hooks/use-user-skills';
+import { matchSkill, extractSlashSkill } from '@/lib/skills/matchTriggerPhrases';
 import { AuthGate } from '@/components/app/AuthGate';
 import { UserMentionDropdown, type MentionUser } from '@/components/app/mentions';
 import { ConversationHistoryDrawer } from '@/components/app/assistant/ConversationHistoryDrawer';
@@ -407,6 +409,20 @@ export default function AssistantPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const { data: userSkills = [] } = useUserSkills();
+  // Prefill input from ?skill=slug (deep-link from Skills library)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const slug = params.get('skill');
+    if (slug) {
+      setInput((prev) => prev || `/${slug} `);
+      // clean URL so it doesn't re-trigger
+      const url = new URL(window.location.href);
+      url.searchParams.delete('skill');
+      window.history.replaceState({}, '', url.toString());
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [isVideoLoading, setIsVideoLoading] = useState(false);
   const [imageLoadStartTime, setImageLoadStartTime] = useState<number>(0);
@@ -1330,6 +1346,27 @@ export default function AssistantPage() {
     const messageToSend = overrideMessage || input.trim();
     if (!messageToSend || isLoading) return;
 
+    // ── Skill matching: slash command wins, otherwise auto-trigger ──
+    const slash = extractSlashSkill(messageToSend, userSkills);
+    const matchedSkill: UserSkill | null = slash.skill ?? matchSkill(messageToSend, userSkills);
+    const skillCleanedInput = slash.skill ? slash.cleaned : messageToSend;
+    let skillSourceImage: string | null = null;
+    if (matchedSkill) {
+      // Use first asset as reference image when generating an image skill
+      if (matchedSkill.kind === 'image' && matchedSkill.asset_urls.length > 0) {
+        try {
+          skillSourceImage = await imageUrlToBase64(matchedSkill.asset_urls[0]);
+        } catch {
+          // non-fatal
+        }
+      }
+      void incrementSkillUsage(matchedSkill.id);
+      toast(`Using skill: ${matchedSkill.name}`, { duration: 2000 });
+    }
+    const effectiveInput = matchedSkill
+      ? `${matchedSkill.system_prompt}\n\nUser request: ${skillCleanedInput}`
+      : messageToSend;
+
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
@@ -1341,8 +1378,8 @@ export default function AssistantPage() {
     // Save user message to conversation
     queueMessage(userMessage);
     
-    const currentInput = messageToSend;
-    const currentAttachedImage = attachedImage;
+    const currentInput = effectiveInput;
+    const currentAttachedImage = attachedImage || skillSourceImage;
     setInput('');
     setAttachedImage(null);
     setIsLoading(true);
@@ -1384,7 +1421,7 @@ export default function AssistantPage() {
       // Check request type — AI tools first, then video/image
       const aiToolCategory = detectAiToolRequest(currentInput, !!currentAttachedImage);
       const isVideoRequest = !aiToolCategory && requiresVideoGeneration(currentInput);
-      const isImageRequest = !aiToolCategory && (isCreativeLogo || requiresImageGeneration(currentInput, !!currentAttachedImage));
+      const isImageRequest = !aiToolCategory && (isCreativeLogo || matchedSkill?.kind === 'image' || requiresImageGeneration(currentInput, !!currentAttachedImage));
       
       if (aiToolCategory) {
         // For music requests, show confirm dialog first

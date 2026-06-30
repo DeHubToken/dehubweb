@@ -101,6 +101,7 @@ const TAB_KEYS: Record<string, string> = {
   content: 'settings.content',
   messages: 'settings.messages',
   assets: 'settings.assets',
+  skills: 'settings.skills',
 };
 
 const tabs = [
@@ -111,7 +112,10 @@ const tabs = [
   { icon: Eye, value: 'content', label: 'settings.content' },
   { icon: MessageSquare, value: 'messages', label: 'settings.messages' },
   { icon: Wallet, value: 'assets', label: 'settings.assets' },
+  { icon: Sparkles, value: 'skills', label: 'settings.skills' },
 ];
+
+import { SkillsLibrary } from '@/components/app/skills/SkillsLibrary';
 
 import { SEOHead } from '@/components/SEOHead';
 
@@ -243,6 +247,7 @@ export default function SettingsPage() {
         {activeTab === 'content' && <ContentSettings />}
         {activeTab === 'messages' && <MessagesSettings />}
         {activeTab === 'assets' && <AssetsSettings />}
+        {activeTab === 'skills' && <SkillsLibrary />}
       </div>
     </div>
   );
