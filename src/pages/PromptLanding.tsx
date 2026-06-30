@@ -8,13 +8,14 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useTranslation } from 'react-i18next';
 import wandUrl from '@/assets/wand.png';
 
-const SUGGESTIONS = [
-  'More AI and crypto news',
-  'Gaming clips and esports',
-  'Indie music discoveries',
-  'Tech founders and startups',
-  'Football highlights',
-];
+const SUGGESTION_KEYS = [
+  'prompt.suggestion1',
+  'prompt.suggestion2',
+  'prompt.suggestion3',
+  'prompt.suggestion4',
+  'prompt.suggestion5',
+] as const;
+
 
 export default function PromptLanding() {
   const [text, setText] = useState('');
