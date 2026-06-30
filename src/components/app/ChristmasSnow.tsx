@@ -17,11 +17,11 @@ export function ChristmasSnow() {
   >([]);
   const rafRef = useRef<number | null>(null);
 
-  // Reset accumulation on every navigation.
+  // Only wipe the built-up drift on navigation. Falling flakes keep falling.
   useEffect(() => {
     if (heightsRef.current) heightsRef.current.fill(0);
-    flakesRef.current = [];
   }, [pathname]);
+
 
   useEffect(() => {
     if (theme !== 'christmas') return;
