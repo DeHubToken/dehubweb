@@ -294,10 +294,10 @@ export function Compositor() {
   };
 
   return (
-    <section className="flex h-full min-h-0 flex-1 flex-col bg-black">
+    <section className="flex h-full min-h-0 min-w-0 flex-1 flex-col bg-black">
       <div
         ref={wrapRef}
-        className="relative flex flex-1 items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.04),_transparent_70%)] p-6"
+        className="relative flex min-h-0 min-w-0 flex-1 items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.04),_transparent_70%)] p-6"
       >
         <div
           style={{
