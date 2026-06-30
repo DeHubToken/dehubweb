@@ -2,6 +2,21 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
+import { execSync } from "child_process";
+
+function blogManifestPlugin() {
+  return {
+    name: 'blog-manifest',
+    buildStart() {
+      try {
+        execSync('node scripts/generate-blog-manifest.mjs', { stdio: 'inherit' });
+      } catch (e) {
+        console.warn('[blog-manifest] generation failed', e);
+      }
+    },
+  };
+}
+
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
