@@ -1714,6 +1714,7 @@ export type Database = {
           stripe_subscription_id: string
           updated_at: string
           wallet_address: string
+          xl_cashback_eligible: boolean
         }
         Insert: {
           cancel_at_period_end?: boolean
@@ -1729,6 +1730,7 @@ export type Database = {
           stripe_subscription_id: string
           updated_at?: string
           wallet_address: string
+          xl_cashback_eligible?: boolean
         }
         Update: {
           cancel_at_period_end?: boolean
@@ -1744,6 +1746,7 @@ export type Database = {
           stripe_subscription_id?: string
           updated_at?: string
           wallet_address?: string
+          xl_cashback_eligible?: boolean
         }
         Relationships: []
       }
@@ -3041,6 +3044,10 @@ export type Database = {
     }
     Functions: {
       bulk_insert_category_log: { Args: { entries: Json }; Returns: number }
+      claim_xl_cashback_slot: {
+        Args: { p_subscription_id: string; p_xl_price_id: string }
+        Returns: boolean
+      }
       cleanup_old_client_error_logs: { Args: never; Returns: undefined }
       cleanup_old_leaderboard_snapshots: { Args: never; Returns: undefined }
       cleanup_old_story_views: { Args: never; Returns: undefined }

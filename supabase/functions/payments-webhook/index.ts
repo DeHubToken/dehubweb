@@ -45,6 +45,9 @@ async function handleSubscriptionCreated(subscription: any, env: StripeEnv) {
   const periodEnd =
     item?.current_period_end ?? subscription.current_period_end;
 
+  const priceId = resolvePriceId(item);
+  const isActive = ["active", "trialing", "past_due"].includes(subscription.status);
+
   await getSupabase()
     .from("premium_subscriptions")
     .upsert(
@@ -56,7 +59,7 @@ async function handleSubscriptionCreated(subscription: any, env: StripeEnv) {
             ? subscription.customer
             : subscription.customer?.id,
         product_id: resolveProductId(item),
-        price_id: resolvePriceId(item),
+        price_id: priceId,
         status: subscription.status,
         current_period_start: isoFromUnix(periodStart),
         current_period_end: isoFromUnix(periodEnd),
@@ -66,7 +69,18 @@ async function handleSubscriptionCreated(subscription: any, env: StripeEnv) {
       },
       { onConflict: "stripe_subscription_id" },
     );
+
+  // First-50-active XL cashback slot
+  if (priceId === "dehub_extra_large_monthly" && isActive) {
+    const { data: claimed, error } = await getSupabase().rpc(
+      "claim_xl_cashback_slot",
+      { p_subscription_id: subscription.id, p_xl_price_id: priceId },
+    );
+    if (error) console.error("claim_xl_cashback_slot error", error);
+    else console.log("XL cashback slot claimed:", claimed, subscription.id);
+  }
 }
+
 
 async function handleSubscriptionUpdated(subscription: any, env: StripeEnv) {
   const item = subscription.items?.data?.[0];
