@@ -1688,14 +1688,13 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
           
           <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
             {[
-              { value: 'system', icon: Monitor, labelKey: 'settings.system', available: true },
-              { value: 'light', icon: Sun, labelKey: 'settings.light', available: false },
-              { value: 'dark', icon: Moon, labelKey: 'settings.dark', available: false },
-              { value: 'cosmic', icon: Orbit, labelKey: 'settings.cosmic', available: true },
-              { value: 'christmas', icon: Gift, labelKey: 'settings.christmas', available: false },
-              { value: 'island', icon: Palmtree, labelKey: 'settings.island', available: false },
-              { value: 'hacker', icon: Terminal, labelKey: 'settings.hacker', available: false },
-              { value: 'horror', icon: Skull, labelKey: 'settings.horror', available: false },
+              { value: 'system', icon: Monitor, labelKey: 'settings.system', available: true, badge: null },
+              { value: 'cosmic', icon: Orbit, labelKey: 'settings.cosmic', available: true, badge: 'Test' },
+              { value: 'light', icon: Sun, labelKey: 'settings.light', available: false, badge: null },
+              { value: 'christmas', icon: Gift, labelKey: 'settings.christmas', available: false, badge: null },
+              { value: 'island', icon: Palmtree, labelKey: 'settings.island', available: false, badge: null },
+              { value: 'hacker', icon: Terminal, labelKey: 'settings.hacker', available: false, badge: null },
+              { value: 'horror', icon: Skull, labelKey: 'settings.horror', available: false, badge: null },
             ].map((option) => {
               const Icon = option.icon;
               return (
@@ -1708,7 +1707,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
                       toast.info(t('settings.comingSoon', 'Coming soon'));
                     }
                   }}
-                  className={`flex flex-col items-center gap-2 p-4 rounded-xl transition-colors flex-shrink-0 min-w-[100px] ${
+                  className={`relative flex flex-col items-center gap-2 p-4 rounded-xl transition-colors flex-shrink-0 min-w-[100px] ${
                     option.available
                       ? theme === option.value
                         ? 'bg-zinc-800 border-2 border-white'
@@ -1716,11 +1715,17 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
                       : 'bg-zinc-800/30 border-2 border-transparent opacity-40 cursor-not-allowed'
                   }`}
                 >
+                  {option.badge && (
+                    <span className="absolute top-1.5 right-1.5 bg-white text-black text-[10px] font-semibold px-1.5 py-0.5 rounded-md leading-none">
+                      {option.badge}
+                    </span>
+                  )}
                   <Icon className="w-6 h-6 text-zinc-400" />
                   <span className="text-white text-sm">{t(option.labelKey)}</span>
                 </button>
               );
             })}
+
           </div>
         </div>
       </div>
