@@ -216,7 +216,7 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
             />
             <div className="absolute inset-6 rounded-full bg-white/[0.04] blur-xl animate-pulse" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center animate-[pulse_2s_ease-in-out_infinite]">
+              <div className="w-12 h-12 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center animate-[pulse_2s_ease-in-out_infinite]">
                 <Sparkles className="w-6 h-6 animate-pulse" />
               </div>
             </div>
@@ -229,7 +229,7 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
                 return (
                   <div
                     key={i}
-                    className="absolute top-1/2 left-1/2 w-10 h-10 -ml-5 -mt-5 rounded-full bg-white/5 border border-white/10 flex items-center justify-center animate-[spin_8s_linear_infinite] backdrop-blur-sm"
+                    className="absolute top-1/2 left-1/2 w-10 h-10 -ml-5 -mt-5 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center animate-[spin_8s_linear_infinite] backdrop-blur-sm"
                     style={{
                       transform: `translate(${x}px, ${y}px)`,
                       animationDirection: 'reverse',
@@ -260,7 +260,7 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
               const Icon = ORBIT_ICONS[idx % ORBIT_ICONS.length];
               return (
                 <div key={w.id} className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
                     <Icon className="w-4 h-4 text-white" />
                   </div>
                   <span className="text-sm w-20 truncate">{w.name}</span>
