@@ -34,16 +34,19 @@ export function WinterSnow() {
     windDirRef.current = dir;
     for (let c = 0; c < heights.length; c++) {
       const pile = heights[c];
-      if (pile < 1) continue;
-      const count = Math.min(6, Math.ceil(pile / 10));
+      if (pile < 0.5) continue;
+      // Particle count scales with how much snow accumulated in this column.
+      // Tiny pile -> 0-1 particles, tall pile -> up to ~8.
+      const ratio = Math.min(1, pile / 80); // MAX_PILE
+      const count = Math.floor(ratio * 7 + Math.random() * (ratio + 0.3));
       for (let k = 0; k < count; k++) {
         blowRef.current.push({
           x: c * 6 + Math.random() * 6,
           y: h - Math.random() * pile,
-          vx: dir * (2 + Math.random() * 4),
-          vy: -1 - Math.random() * 2,
-          r: 1 + Math.random() * 2.2,
-          o: 0.75 + Math.random() * 0.25,
+          vx: dir * (1.2 + Math.random() * 3 * (0.4 + ratio)),
+          vy: -0.4 - Math.random() * (0.8 + ratio * 1.6),
+          r: 1 + Math.random() * (1 + ratio * 1.2),
+          o: 0.55 + Math.random() * 0.35,
         });
       }
     }
