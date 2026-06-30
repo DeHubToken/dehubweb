@@ -24,7 +24,8 @@
     "connecting": "ସଂଯୋଗ ହେଉଛି...",
     "signMessage": "ବାର୍ତ୍ତା ସାଇନ କରନ୍ତୁ",
     "guide": "Guide",
-    "events": "ଇଭେଣ୍ଟ"
+    "events": "ଇଭେଣ୍ଟ",
+    "prompt": "ପ୍ରମ୍ପ୍ଟ"
   },
   "feed": {
     "home": "ହୋମ",
@@ -304,7 +305,9 @@
     "bounty": "ବାଉଣ୍ଟି",
     "locked": "ଲକ୍ଡ",
     "any": "ଯେକୌଣସି",
-    "resetFilters": "ଫିଲ୍ଟର ରିସେଟ କରନ୍ତୁ"
+    "resetFilters": "ଫିଲ୍ଟର ରିସେଟ କରନ୍ତୁ",
+    "prompt": "ପ୍ରମ୍ପ୍ଟ",
+    "for-you": "ଆପଣଙ୍କ ପାଇଁ"
   },
   "drawers": {
     "ppvTitle": "ପେ-ପର-ଭ୍ୟୁ ବିଷୟବସ୍ତୁ",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "ଆପଣଙ୍କ ଫିଡ୍ ପ୍ରମ୍ପ୍ଟ କରନ୍ତୁ — DeHub",
+    "seoDescription": "DeHub କୁ ଆପଣ କ'ଣ ଦେଖିବାକୁ ଚାହୁଁଛନ୍ତି ତାହା କୁହନ୍ତୁ ଏବଂ ଆମେ ଆପଣଙ୍କ ଟାଇମ୍‌ଲାଇନ୍ ଟ୍ୟୁନ୍ କରିବୁ।",
+    "goHome": "ହୋମ୍ କୁ ଯାଆନ୍ତୁ",
+    "headline": "ଆପଣ କ'ଣ ଦେଖିବାକୁ ଚାହୁଁଛନ୍ତି?",
+    "headlineShort": "ଆପଣ କ'ଣ ଚାହୁଁଛନ୍ତି?",
+    "subheadline": "ଆପଣଙ୍କର ସିଦ୍ଧ ଫିଡ୍ ବର୍ଣ୍ଣନା କରନ୍ତୁ।",
+    "placeholder": "ଅଧିକ AI, ଗେମିଂ କ୍ଲିପ୍ସ, ଇଣ୍ଡି ମ୍ୟୁଜିକ୍…",
+    "send": "ପଠାନ୍ତୁ",
+    "stop": "ବନ୍ଦ କରନ୍ତୁ",
+    "record": "ରେକର୍ଡ କରନ୍ତୁ",
+    "skip": "ଛାଡ଼ି ଦିଅନ୍ତୁ — ମୋତେ ସିଧା ଫିଡ୍ କୁ ନିଅନ୍ତୁ",
+    "submit": "ଦାଖଲ କରନ୍ତୁ",
+    "modalQuestion": "ଆପଣ ଆଉ କ'ଣ ଅଧିକ ଦେଖିବାକୁ ଚାହୁଁଛନ୍ତି?",
+    "modalPlaceholder": "ଅଧିକ AI, ଟେକ୍, ଗେମିଂ…",
+    "analysing": "ଆପଣଙ୍କ ଆଗ୍ରହ ବିଶ୍ଳେଷଣ କରାଯାଉଛି…",
+    "timelineReady": "ଆପଣଙ୍କ ଟାଇମ୍‌ଲାଇନ୍ ପ୍ରସ୍ତୁତ ଅଛି",
+    "dragToTune": "ଆପଣଙ୍କ ମିଶ୍ରଣକୁ ସୂକ୍ଷ୍ମ ଟ୍ୟୁନ୍ କରିବା ପାଇଁ ଟାଣନ୍ତୁ।",
+    "save": "ସେଭ୍ କରନ୍ତୁ",
+    "voiceUnsupported": "ଏହି ବ୍ରାଉଜରରେ ଭଏସ୍ ଇନ୍‌ପୁଟ୍ ସମର୍ଥିତ ନୁହେଁ।",
+    "suggestion1": "ଅଧିକ AI ଏବଂ କ୍ରିପ୍ଟୋ ଖବର",
+    "suggestion2": "ଗେମିଂ କ୍ଲିପ୍ସ ଏବଂ esports",
+    "suggestion3": "ଇଣ୍ଡି ମ୍ୟୁଜିକ୍ ଆବିଷ୍କାର",
+    "suggestion4": "ଟେକ୍ ପ୍ରତିଷ୍ଠାତା ଏବଂ ଷ୍ଟାର୍ଟଅପ୍",
+    "suggestion5": "ଫୁଟବଲ୍ ହାଇଲାଇଟ୍ସ"
   }
 }

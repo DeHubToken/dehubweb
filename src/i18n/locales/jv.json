@@ -24,7 +24,8 @@
     "connecting": "Nyambung...",
     "signMessage": "Tandha Tangani Pesen",
     "guide": "Pandhuan",
-    "events": "Acara"
+    "events": "Acara",
+    "prompt": "Pituduh"
   },
   "feed": {
     "home": "Beranda",
@@ -304,7 +305,9 @@
     "bounty": "Bounti",
     "locked": "Dikunci",
     "any": "Apa Wae",
-    "resetFilters": "Reset Panyaring"
+    "resetFilters": "Reset Panyaring",
+    "prompt": "Pituduh",
+    "for-you": "Kanggo Sampeyan"
   },
   "drawers": {
     "ppvTitle": "Konten Berbayar",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Wenehi feed sampeyan — DeHub",
+    "seoDescription": "Saben DeHub apa sing arep kok deleng lan bakal ngatur timeline sampeyan.",
+    "goHome": "Bali menyang ngarep",
+    "headline": "Apa sing arep kok deleng?",
+    "headlineShort": "Apa sing arep kok deleng?",
+    "subheadline": "Terangna feed sing sampurna sampeyan.",
+    "placeholder": "Luwih akeh AI, klip game, musik indie…",
+    "send": "Kirim",
+    "stop": "Mungkasi",
+    "record": "Rekam",
+    "skip": "Liwati — langsung menyang feed",
+    "submit": "Kirim",
+    "modalQuestion": "Apa sing arep kok deleng luwih akeh?",
+    "modalPlaceholder": "Luwih akeh AI, teknologi, game…",
+    "analysing": "Nganalisa minat sampeyan…",
+    "timelineReady": "Timeline sampeyan wis siyap",
+    "dragToTune": "Seret kanggo ngatur campuran sampeyan.",
+    "save": "Simpen",
+    "voiceUnsupported": "Input swara ora didhukung ing browser iki.",
+    "suggestion1": "Luwih akeh pawarta AI lan crypto",
+    "suggestion2": "Klip game lan esports",
+    "suggestion3": "Penemuan musik indie",
+    "suggestion4": "Pendiri lan startup teknologi",
+    "suggestion5": "Sorotan bal-balan"
   }
 }

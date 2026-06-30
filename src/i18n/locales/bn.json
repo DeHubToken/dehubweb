@@ -24,7 +24,8 @@
     "connecting": "সংযোগ হচ্ছে...",
     "signMessage": "বার্তা স্বাক্ষর করুন",
     "guide": "গাইড",
-    "events": "ইভেন্ট"
+    "events": "ইভেন্ট",
+    "prompt": "প্রম্পট"
   },
   "feed": {
     "home": "হোম",
@@ -488,7 +489,9 @@
     "bounty": "পুরস্কার",
     "locked": "সীমাবদ্ধ",
     "any": "যেকোনো",
-    "resetFilters": "ফিল্টার রিসেট করুন"
+    "resetFilters": "ফিল্টার রিসেট করুন",
+    "prompt": "প্রম্পট",
+    "for-you": "আপনার জন্য"
   },
   "assistant": {
     "title": "সহকারী",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "আপনার ফিড প্রম্পট করুন — DeHub",
+    "seoDescription": "আপনার কী দেখতে চান তা DeHub-কে বলুন এবং আমরা আপনার টাইমলাইন টিউন করব।",
+    "goHome": "হোমপেজে যান",
+    "headline": "আপনি কী দেখতে চান?",
+    "headlineShort": "আপনি কী চান?",
+    "subheadline": "আপনার পছন্দসই ফিডের বর্ণনা দিন।",
+    "placeholder": "আরও AI, গেমিং ক্লিপ, ইন্ডিপেন্ডেন্ট মিউজিক...",
+    "send": "প্রেরণ করুন",
+    "stop": "থামুন",
+    "record": "রেকর্ড করুন",
+    "skip": "এড়িয়ে যান — সরাসরি ফিডে নিয়ে যান",
+    "submit": "জমা দিন",
+    "modalQuestion": "আপনি আরও কী দেখতে চান?",
+    "modalPlaceholder": "আরও AI, প্রযুক্তি, গেমিং...",
+    "analysing": "আপনার আগ্রহ বিশ্লেষণ করা হচ্ছে...",
+    "timelineReady": "আপনার টাইমলাইন প্রস্তুত",
+    "dragToTune": "আপনার মিশ্রণটি সূক্ষ্মভাবে টিউন করতে ড্র্যাগ করুন।",
+    "save": "সংরক্ষণ করুন",
+    "voiceUnsupported": "এই ব্রাউজারে ভয়েস ইনপুট সমর্থিত নয়।",
+    "suggestion1": "আরও AI এবং ক্রিপ্টো খবর",
+    "suggestion2": "গেমিং ক্লিপ এবং esports",
+    "suggestion3": "ইন্ডিপেন্ডেন্ট মিউজিক আবিষ্কার",
+    "suggestion4": "টেক প্রতিষ্ঠাতা এবং স্টার্টআপ",
+    "suggestion5": "ফুটবল হাইলাইটস"
   }
 }

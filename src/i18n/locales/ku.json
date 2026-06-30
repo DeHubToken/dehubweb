@@ -24,7 +24,8 @@
     "connecting": "Girêdan...",
     "signMessage": "Peyamê îmze bike",
     "guide": "Rêber",
-    "events": "Çalakî"
+    "events": "Çalakî",
+    "prompt": "پرۆمۆت"
   },
   "feed": {
     "home": "Mal",
@@ -304,7 +305,9 @@
     "bounty": "Xelat",
     "locked": "Girtî",
     "any": "Her",
-    "resetFilters": "Fîlteran sifir bike"
+    "resetFilters": "Fîlteran sifir bike",
+    "prompt": "پرۆمۆت",
+    "for-you": "بۆ تۆ"
   },
   "drawers": {
     "ppvTitle": "Naveroka Per-Dîtin Bidê",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "فیدەکەت پرۆمۆت بکە — DeHub",
+    "seoDescription": "بە DeHub بڵێ چی دەوێت بیبینیت و ئێمە کاتی تۆ ڕێکدەخەین.",
+    "goHome": "بچۆ ماڵەوە",
+    "headline": "چی دەوێت بیبینیت؟",
+    "headlineShort": "چی دەوێت؟",
+    "subheadline": "فیدە نایابەکەی خۆت وەسف بکە.",
+    "placeholder": "زیاتر AI، گرتە ڤیدیۆییەکانی گەیمینگ، مۆسیقای سەربەخۆ…",
+    "send": "ناردن",
+    "stop": "وەستاندن",
+    "record": "تۆمارکردن",
+    "skip": "تێپەڕاندن — تەنها بمبە بۆ فیدەکە",
+    "submit": "ناردن",
+    "modalQuestion": "چی زیاتر دەوێت بیبینیت؟",
+    "modalPlaceholder": "زیاتر AI, تەکنۆلۆژیا, گەیمینگ…",
+    "analysing": "شیکردنەوەی حەز و ویستەکانت…",
+    "timelineReady": "تایملاینەکەت ئامادەیە",
+    "dragToTune": "ڕایکێشە بۆ وردەکاریی زیاتر لە تێکەڵەکەتدا.",
+    "save": "پاشەکەوتکردن",
+    "voiceUnsupported": "لەم وێبگەڕەدا پشتگیری لە دەنگ ناکرێت.",
+    "suggestion1": "زیاتر AI و هەواڵی کریپتۆ",
+    "suggestion2": "گرتە ڤیدیۆییەکانی گەیمینگ و esports",
+    "suggestion3": "دۆزینەوەی مۆسیقای سەربەخۆ",
+    "suggestion4": "دامەزرێنەرانی تەکنۆلۆژیا و دەستپێکەکان",
+    "suggestion5": "کورتە ڤیدیۆییەکانی تۆپی پێ"
   }
 }

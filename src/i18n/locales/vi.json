@@ -24,7 +24,8 @@
     "connecting": "Đang kết nối...",
     "signMessage": "Ký tin nhắn",
     "guide": "Hướng dẫn",
-    "events": "Sự kiện"
+    "events": "Sự kiện",
+    "prompt": "Lời nhắc"
   },
   "common": {
     "yes": "Có",
@@ -532,7 +533,9 @@
     "bounty": "Bounty",
     "locked": "Gated",
     "any": "Any",
-    "resetFilters": "Reset filters"
+    "resetFilters": "Reset filters",
+    "prompt": "Lời nhắc",
+    "for-you": "Dành cho bạn"
   },
   "drawers": {
     "ppvTitle": "Pay-Per-View Content",
@@ -1347,5 +1350,31 @@
     "unlistedDesc": "Only people with the link can see",
     "private": "Private",
     "privateDesc": "Only you can see this post"
+  },
+  "prompt": {
+    "seoTitle": "Nhắc nhở nguồn cấp dữ liệu của bạn — DeHub",
+    "seoDescription": "Hãy cho DeHub biết những gì bạn muốn xem và chúng tôi sẽ điều chỉnh dòng thời gian của bạn.",
+    "goHome": "Đi tới trang chủ",
+    "headline": "Bạn muốn xem gì?",
+    "headlineShort": "Bạn muốn gì?",
+    "subheadline": "Mô tả nguồn cấp dữ liệu hoàn hảo của bạn.",
+    "placeholder": "Thêm AI, video trò chơi, nhạc indie…",
+    "send": "Gửi",
+    "stop": "Dừng",
+    "record": "Ghi",
+    "skip": "Bỏ qua — chỉ đưa tôi đến nguồn cấp dữ liệu",
+    "submit": "Gửi",
+    "modalQuestion": "Bạn muốn xem thêm gì?",
+    "modalPlaceholder": "Thêm AI, công nghệ, trò chơi…",
+    "analysing": "Đang phân tích sở thích của bạn…",
+    "timelineReady": "Dòng thời gian của bạn đã sẵn sàng",
+    "dragToTune": "Kéo để tinh chỉnh bản phối của bạn.",
+    "save": "Lưu",
+    "voiceUnsupported": "Trình duyệt này không hỗ trợ nhập bằng giọng nói.",
+    "suggestion1": "Thêm tin tức về AI và tiền điện tử",
+    "suggestion2": "Video trò chơi và esports",
+    "suggestion3": "Khám phá nhạc indie",
+    "suggestion4": "Những người sáng lập công nghệ và công ty khởi nghiệp",
+    "suggestion5": "Điểm nổi bật của bóng đá"
   }
 }

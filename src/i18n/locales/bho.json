@@ -24,7 +24,8 @@
     "connecting": "जुड़त बा...",
     "signMessage": "संदेस पर हस्ताक्षर करीं",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "प्रॉम्प्ट"
   },
   "feed": {
     "home": "घरे",
@@ -304,7 +305,9 @@
     "bounty": "इनाम",
     "locked": "बंद बा",
     "any": "कवनो",
-    "resetFilters": "फ़िल्टर रीसेट करीं"
+    "resetFilters": "फ़िल्टर रीसेट करीं",
+    "prompt": "प्रॉम्प्ट",
+    "for-you": "आपके खातिर"
   },
   "drawers": {
     "ppvTitle": "भुगतान वाला सामग्री",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "रउवा आपन फ़ीड प्रॉम्प्ट करीं — DeHub",
+    "seoDescription": "DeHub के बताईं कि रउआ का देखल चाहत बानी आ हमनी के रउआ के टाइमलाइन सेट करब जा.",
+    "goHome": "घर जाईं",
+    "headline": "रउआ का देखल चाहत बानी?",
+    "headlineShort": "रउआ का चाहत बानी?",
+    "subheadline": "आपन सही फ़ीड के बारे में बताईं.",
+    "placeholder": "और ढेर AI, गेमिंग क्लिप, इंडी म्यूजिक…",
+    "send": "भेजीं",
+    "stop": "रोकीं",
+    "record": "रिकॉर्ड करीं",
+    "skip": "छोड़ीं — सीधे हमरा के फ़ीड पर ले आईं",
+    "submit": "जमा करीं",
+    "modalQuestion": "रउआ का ढेर देखल चाहत बानी?",
+    "modalPlaceholder": "और ढेर AI, टेक, गेमिंग…",
+    "analysing": "रउआ के रुचि के विश्लेषण कइल जा रहल बा…",
+    "timelineReady": "रउआ के टाइमलाइन तइयार बा",
+    "dragToTune": "आपन मिक्स के ठीक करे खातिर खींचीं.",
+    "save": "सेव करीं",
+    "voiceUnsupported": "ई ब्राउजर में आवाज इनपुट सपोर्टेड नइखे.",
+    "suggestion1": "और ढेर AI आ क्रिप्टो खबर",
+    "suggestion2": "गेमिंग क्लिप आ esports",
+    "suggestion3": "इंडी म्यूजिक के खोज",
+    "suggestion4": "टेक संस्थापक आ स्टार्टअप",
+    "suggestion5": "फुटबॉल हाइलाइट्स"
   }
 }

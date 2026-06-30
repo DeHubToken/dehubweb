@@ -24,7 +24,8 @@
     "connecting": "कनेक्ट हो रहा है...",
     "signMessage": "संदेश पर हस्ताक्षर करें",
     "guide": "गाइड",
-    "events": "कार्यक्रम"
+    "events": "कार्यक्रम",
+    "prompt": "प्रॉम्प्ट"
   },
   "feed": {
     "home": "होम",
@@ -1200,7 +1201,9 @@
     "bounty": "Bounty",
     "locked": "Gated",
     "any": "Any",
-    "resetFilters": "Reset filters"
+    "resetFilters": "Reset filters",
+    "prompt": "प्रॉम्प्ट",
+    "for-you": "आपके लिए"
   },
   "assistant": {
     "title": "Assistant",
@@ -1292,5 +1295,31 @@
     "officialLogo": "Here's the official DeHub logo! 🎨",
     "editedImage": "Here's your edited image!",
     "generatedImage": "Here's your generated image!"
+  },
+  "prompt": {
+    "seoTitle": "अपने फ़ीड को प्रॉम्प्ट करें — DeHub",
+    "seoDescription": "DeHub को बताएं कि आप क्या देखना चाहते हैं और हम आपकी टाइमलाइन को ट्यून करेंगे।",
+    "goHome": "होम पर जाएं",
+    "headline": "आप क्या देखना चाहते हैं?",
+    "headlineShort": "आप क्या चाहते हैं?",
+    "subheadline": "अपनी परफेक्ट फ़ीड का वर्णन करें।",
+    "placeholder": "अधिक AI, गेमिंग क्लिप, इंडी संगीत…",
+    "send": "भेजें",
+    "stop": "रोकें",
+    "record": "रिकॉर्ड करें",
+    "skip": "छोड़ें — बस मुझे फ़ीड पर ले जाएं",
+    "submit": "सबमिट करें",
+    "modalQuestion": "आप और क्या देखना चाहते हैं?",
+    "modalPlaceholder": "अधिक AI, तकनीक, गेमिंग…",
+    "analysing": "आपकी रुचियों का विश्लेषण किया जा रहा है…",
+    "timelineReady": "आपकी टाइमलाइन तैयार है",
+    "dragToTune": "अपने मिश्रण को बेहतर बनाने के लिए खींचें।",
+    "save": "सहेजें",
+    "voiceUnsupported": "इस ब्राउज़र में वॉइस इनपुट समर्थित नहीं है।",
+    "suggestion1": "अधिक AI और क्रिप्टो समाचार",
+    "suggestion2": "गेमिंग क्लिप और esports",
+    "suggestion3": "इंडी संगीत की खोजें",
+    "suggestion4": "टेक संस्थापक और स्टार्टअप",
+    "suggestion5": "फुटबॉल हाइलाइट्स"
   }
 }

@@ -24,7 +24,8 @@
     "connecting": "Menghubungkan...",
     "signMessage": "Tanda tangani pesan",
     "guide": "Panduan",
-    "events": "Acara"
+    "events": "Acara",
+    "prompt": "Prompt"
   },
   "feed": {
     "home": "Beranda",
@@ -488,7 +489,9 @@
     "bounty": "Hadiah",
     "locked": "Terbatas",
     "any": "Semua",
-    "resetFilters": "Reset filter"
+    "resetFilters": "Reset filter",
+    "prompt": "Prompt",
+    "for-you": "Untuk Anda"
   },
   "assistant": {
     "title": "Asisten",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Prompt feed Anda — DeHub",
+    "seoDescription": "Beritahu DeHub apa yang ingin Anda lihat dan kami akan menyetel timeline Anda.",
+    "goHome": "Pulang",
+    "headline": "Apa yang ingin Anda lihat?",
+    "headlineShort": "Apa yang kamu mau?",
+    "subheadline": "Jelaskan feed ideal Anda.",
+    "placeholder": "Lebih banyak AI, klip game, musik indie…",
+    "send": "Kirim",
+    "stop": "Berhenti",
+    "record": "Rekam",
+    "skip": "Lewati — langsung bawa saya ke feed",
+    "submit": "Kirim",
+    "modalQuestion": "Apa lagi yang ingin Anda lihat?",
+    "modalPlaceholder": "Lebih banyak AI, teknologi, game…",
+    "analysing": "Menganalisis minat Anda…",
+    "timelineReady": "Timeline Anda siap",
+    "dragToTune": "Seret untuk menyempurnakan campuran Anda.",
+    "save": "Simpan",
+    "voiceUnsupported": "Input suara tidak didukung di browser ini.",
+    "suggestion1": "Lebih banyak berita AI dan kripto",
+    "suggestion2": "Klip game dan esports",
+    "suggestion3": "Penemuan musik indie",
+    "suggestion4": "Pendiri dan startup teknologi",
+    "suggestion5": "Sorotan sepak bola"
   }
 }

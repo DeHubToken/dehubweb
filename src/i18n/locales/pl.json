@@ -24,7 +24,8 @@
     "connecting": "Łączenie...",
     "signMessage": "Podpisz wiadomość",
     "guide": "Przewodnik",
-    "events": "Wydarzenia"
+    "events": "Wydarzenia",
+    "prompt": "Wybierz tematy"
   },
   "feed": {
     "home": "Strona główna",
@@ -511,7 +512,9 @@
     "bounty": "Nagroda",
     "locked": "Zablokowane",
     "any": "Dowolny",
-    "resetFilters": "Resetuj filtry"
+    "resetFilters": "Resetuj filtry",
+    "prompt": "Wybierz tematy",
+    "for-you": "Dla Ciebie"
   },
   "drawers": {
     "ppvTitle": "Treść pay-per-view",
@@ -1353,5 +1356,31 @@
     "unlistedDesc": "Tylko osoby z linkiem",
     "private": "Prywatny",
     "privateDesc": "Tylko Ty możesz zobaczyć ten post"
+  },
+  "prompt": {
+    "seoTitle": "Wybierz tematy dla swojego kanału — DeHub",
+    "seoDescription": "Powiedz DeHub, co chcesz zobaczyć, a my dostosujemy Twój kanał.",
+    "goHome": "Przejdź do strony głównej",
+    "headline": "Co chcesz zobaczyć?",
+    "headlineShort": "Co chcesz?",
+    "subheadline": "Opisz swój idealny kanał.",
+    "placeholder": "Więcej AI, klipów z gier, muzyki niezależnej...",
+    "send": "Wyślij",
+    "stop": "Zatrzymaj",
+    "record": "Nagraj",
+    "skip": "Pomiń — po prostu przejdź do kanału",
+    "submit": "Prześlij",
+    "modalQuestion": "Czego chcesz zobaczyć więcej?",
+    "modalPlaceholder": "Więcej AI, technologii, gier...",
+    "analysing": "Analizuję Twoje zainteresowania...",
+    "timelineReady": "Twój kanał jest gotowy",
+    "dragToTune": "Przeciągnij, aby dostroić swój miks.",
+    "save": "Zapisz",
+    "voiceUnsupported": "Wprowadzanie głosowe nie jest obsługiwane w tej przeglądarce.",
+    "suggestion1": "Więcej wiadomości o AI i kryptowalutach",
+    "suggestion2": "Klipy z gier i esport",
+    "suggestion3": "Odkrycia muzyki niezależnej",
+    "suggestion4": "Założyciele firm technologicznych i startupy",
+    "suggestion5": "Najciekawsze momenty meczów piłki nożnej"
   }
 }

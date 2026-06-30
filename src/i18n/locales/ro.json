@@ -24,7 +24,8 @@
     "connecting": "Se conectează...",
     "signMessage": "Semnează mesajul",
     "guide": "Ghid",
-    "events": "Evenimente"
+    "events": "Evenimente",
+    "prompt": "Configurează"
   },
   "footer": {
     "about": "Despre noi",
@@ -457,7 +458,9 @@
     "bounty": "Bounty",
     "locked": "Gated",
     "any": "Any",
-    "resetFilters": "Reset filters"
+    "resetFilters": "Reset filters",
+    "prompt": "Configurează",
+    "for-you": "Pentru tine"
   },
   "drawers": {
     "ppvTitle": "Pay-Per-View Content",
@@ -1272,5 +1275,31 @@
     "unlistedDesc": "Only people with the link can see",
     "private": "Private",
     "privateDesc": "Only you can see this post"
+  },
+  "prompt": {
+    "seoTitle": "Configurează-ți feed-ul — DeHub",
+    "seoDescription": "Spune-i lui DeHub ce vrei să vezi și îți vom ajusta cronologia.",
+    "goHome": "Mergi la pagina principală",
+    "headline": "Ce vrei să vezi?",
+    "headlineShort": "Ce vrei?",
+    "subheadline": "Descrie feed-ul tău perfect.",
+    "placeholder": "Mai mult AI, clipuri de gaming, muzică indie…",
+    "send": "Trimite",
+    "stop": "Oprește",
+    "record": "Înregistrează",
+    "skip": "Sari — du-mă direct la feed",
+    "submit": "Trimite",
+    "modalQuestion": "Ce vrei să vezi mai mult?",
+    "modalPlaceholder": "Mai mult AI, tech, gaming…",
+    "analysing": "Analizăm interesele tale…",
+    "timelineReady": "Cronologia ta este gata",
+    "dragToTune": "Trage pentru a ajusta fin mixul.",
+    "save": "Salvează",
+    "voiceUnsupported": "Intrarea vocală nu este acceptată în acest browser.",
+    "suggestion1": "Mai multe știri AI și crypto",
+    "suggestion2": "Clipuri de gaming și esports",
+    "suggestion3": "Descoperiri muzicale indie",
+    "suggestion4": "Fondatori tech și startup-uri",
+    "suggestion5": "Momente importante din fotbal"
   }
 }

@@ -24,7 +24,8 @@
     "connecting": "ڳنڍجي رهيو آهي...",
     "signMessage": "پيغام سائن ڪريو",
     "guide": "گائيڊ",
-    "events": "واقعا"
+    "events": "واقعا",
+    "prompt": "پرمٽ"
   },
   "feed": {
     "home": "گھر",
@@ -304,7 +305,9 @@
     "bounty": "بائونٽي",
     "locked": "لاڪ",
     "any": "ڪو به",
-    "resetFilters": "فلٽر ري سيٽ ڪريو"
+    "resetFilters": "فلٽر ري سيٽ ڪريو",
+    "prompt": "پرمٽ",
+    "for-you": "توهان لاءِ"
   },
   "drawers": {
     "ppvTitle": "پي-پر-ويو مواد",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "پنھنجي فيڊ کي تيز ڪريو — DeHub",
+    "seoDescription": "DeHub کي ٻڌايو ته توهان ڇا ڏسڻ چاهيو ٿا ۽ اسين توهان جي ٽائم لائن کي ترتيب ڏينداسين.",
+    "goHome": "گھر وڃو",
+    "headline": "توهان ڇا ڏسڻ چاهيو ٿا؟",
+    "headlineShort": "توهان ڇا ٿا چاهيو؟",
+    "subheadline": "پنهنجي بهترين فيڊ بيان ڪريو.",
+    "placeholder": "وڌيڪ AI، گيمنگ ڪلپس، انڊي ميوزڪ…",
+    "send": "موڪليو",
+    "stop": "روڪيو",
+    "record": "رڪارڊ",
+    "skip": "ڇڏي ڏيو — بس مون کي فيڊ تي وٺي وڃو",
+    "submit": "جمع ڪرايو",
+    "modalQuestion": "توهان وڌيڪ ڇا ڏسڻ چاهيو ٿا؟",
+    "modalPlaceholder": "وڌيڪ AI، ٽيڪ، گيمنگ…",
+    "analysing": "توهان جي دلچسپين جو تجزيو ڪري رهيا آهيون…",
+    "timelineReady": "توهان جي ٽائم لائن تيار آهي",
+    "dragToTune": "پنهنجي ميلاپ کي بهتر ڪرڻ لاءِ ڇڪيو.",
+    "save": "محفوظ ڪريو",
+    "voiceUnsupported": "هن برائوزر ۾ آواز ان پٽ سپورٽ ناهي.",
+    "suggestion1": "وڌيڪ AI ۽ crypto خبرون",
+    "suggestion2": "گيمنگ ڪلپس ۽ esports",
+    "suggestion3": "انڊي ميوزڪ دريافتون",
+    "suggestion4": "ٽيڪ باني ۽ startups",
+    "suggestion5": "فوٽ بال جا خاص حصا"
   }
 }

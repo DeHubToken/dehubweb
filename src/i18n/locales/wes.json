@@ -24,7 +24,8 @@
     "connecting": "E dey connect...",
     "signMessage": "Sign message",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "Prompt"
   },
   "feed": {
     "home": "Home",
@@ -304,7 +305,9 @@
     "bounty": "Bounty",
     "locked": "Gated",
     "any": "Any",
-    "resetFilters": "Reset filters"
+    "resetFilters": "Reset filters",
+    "prompt": "Prompt",
+    "for-you": "For You"
   },
   "drawers": {
     "ppvTitle": "Pay-Per-View Content",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Tell your feed — DeHub",
+    "seoDescription": "Tell DeHub wetin you want see and we go arrange your timeline.",
+    "goHome": "Go for home",
+    "headline": "Wetin you want see?",
+    "headlineShort": "Wetin you want?",
+    "subheadline": "Explain how your feed go fine.",
+    "placeholder": "Plenty AI, gaming clips, indie music…",
+    "send": "Sendam",
+    "stop": "Stopam",
+    "record": "Recordam",
+    "skip": "Skip — just carry me go for feed",
+    "submit": "Submitam",
+    "modalQuestion": "Wetin you want see plenty pass?",
+    "modalPlaceholder": "Plenty AI, tech, gaming…",
+    "analysing": "De check your interests…",
+    "timelineReady": "Your timeline don ready",
+    "dragToTune": "Drag for arrange your mix.",
+    "save": "Saveam",
+    "voiceUnsupported": "Voice input no de work for dis browser.",
+    "suggestion1": "Plenty AI and crypto news",
+    "suggestion2": "Gaming clips and esports",
+    "suggestion3": "Indie music wey you go discover",
+    "suggestion4": "Tech founders and startups",
+    "suggestion5": "Football highlights"
   }
 }

@@ -24,7 +24,8 @@
     "connecting": "जडान हुँदैछ...",
     "signMessage": "सन्देश हस्ताक्षर गर्नुहोस्",
     "guide": "गाइड",
-    "events": "कार्यक्रमहरू"
+    "events": "कार्यक्रमहरू",
+    "prompt": "प्रम्प्ट"
   },
   "feed": {
     "home": "गृहपृष्ठ",
@@ -304,7 +305,9 @@
     "ppv": "PPV",
     "bounty": "Bounty",
     "locked": "Gated",
-    "any": "Any"
+    "any": "Any",
+    "prompt": "प्रम्प्ट",
+    "for-you": "तपाईको लागि"
   },
   "drawers": {
     "ppvTitle": "तिर्नुपर्ने सामग्री",
@@ -1307,5 +1310,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "आफ्नो फिड प्रम्प्ट गर्नुहोस् — DeHub",
+    "seoDescription": "DeHub लाई तपाई के हेर्न चाहनुहुन्छ भन्नुहोस् र हामी तपाईको टाइमलाइन मिलाउनेछौं।",
+    "goHome": "गृहमा जानुहोस्",
+    "headline": "तपाई के हेर्न चाहनुहुन्छ?",
+    "headlineShort": "तपाई के चाहनुहुन्छ?",
+    "subheadline": "आफ्नो उत्तम फिडको वर्णन गर्नुहोस्।",
+    "placeholder": "थप AI, गेमिङ क्लिपहरू, इन्डी संगीत…",
+    "send": "पठाउनुहोस्",
+    "stop": "रोक्नुहोस्",
+    "record": "रेकर्ड गर्नुहोस्",
+    "skip": "छोड्नुहोस् — सिधै फिडमा जानुहोस्",
+    "submit": "पेश गर्नुहोस्",
+    "modalQuestion": "तपाई के धेरै हेर्न चाहनुहुन्छ?",
+    "modalPlaceholder": "थप AI, प्रविधि, गेमिङ…",
+    "analysing": "तपाईको रुचिहरूको विश्लेषण गर्दै…",
+    "timelineReady": "तपाईको टाइमलाइन तयार छ",
+    "dragToTune": "आफ्नो मिश्रणलाई राम्ररी मिलाउन तान्नुहोस्।",
+    "save": "बचत गर्नुहोस्",
+    "voiceUnsupported": "यस ब्राउजरमा आवाज इनपुट समर्थित छैन।",
+    "suggestion1": "थप AI र क्रिप्टो समाचार",
+    "suggestion2": "गेमिङ क्लिपहरू र esports",
+    "suggestion3": "इन्डी संगीत खोजहरू",
+    "suggestion4": "प्राविधिक संस्थापकहरू र स्टार्टअपहरू",
+    "suggestion5": "फुटबल हाइलाइटहरू"
   }
 }

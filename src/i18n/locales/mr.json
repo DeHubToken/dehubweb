@@ -24,7 +24,8 @@
     "connecting": "कनेक्ट होत आहे...",
     "signMessage": "संदेशावर स्वाक्षरी करा",
     "guide": "मार्गदर्शक",
-    "events": "कार्यक्रम"
+    "events": "कार्यक्रम",
+    "prompt": "प्रॉम्प्ट करा"
   },
   "feed": {
     "home": "मुख्यपृष्ठ",
@@ -488,7 +489,9 @@
     "bounty": "बाउंटी",
     "locked": "गेटेड",
     "any": "सर्व",
-    "resetFilters": "फिल्टर्स रीसेट करा"
+    "resetFilters": "फिल्टर्स रीसेट करा",
+    "prompt": "प्रॉम्प्ट करा",
+    "for-you": "तुमच्यासाठी"
   },
   "commandCentre": {
     "title": "कमांड सेंटर",
@@ -1271,5 +1274,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "तुमचे फीड प्रॉम्प्ट करा — DeHub",
+    "seoDescription": "तुम्हाला काय बघायचे आहे ते DeHub ला सांगा आणि आम्ही तुमची टाइमलाइन ट्यून करू.",
+    "goHome": "घरी जा",
+    "headline": "तुम्हाला काय बघायचे आहे?",
+    "headlineShort": "तुम्हाला काय पाहिजे?",
+    "subheadline": "तुमच्या परिपूर्ण फीडचे वर्णन करा.",
+    "placeholder": "अधिक AI, गेमिंग क्लिप्स, इंडी म्युझिक…",
+    "send": "पाठवा",
+    "stop": "थांबवा",
+    "record": "रेकॉर्ड करा",
+    "skip": "सोडून द्या — फक्त मला फीडवर घेऊन चला",
+    "submit": "सबमिट करा",
+    "modalQuestion": "तुम्हाला अजून काय बघायचे आहे?",
+    "modalPlaceholder": "अधिक AI, तंत्रज्ञान, गेमिंग…",
+    "analysing": "तुमच्या आवडींचे विश्लेषण करत आहे…",
+    "timelineReady": "तुमची टाइमलाइन तयार आहे",
+    "dragToTune": "तुमचे मिश्रण फाइन-ट्यून करण्यासाठी ड्रॅग करा.",
+    "save": "सेव्ह करा",
+    "voiceUnsupported": "या ब्राउझरमध्ये व्हॉइस इनपुट समर्थित नाही.",
+    "suggestion1": "अधिक AI आणि क्रिप्टो बातम्या",
+    "suggestion2": "गेमिंग क्लिप्स आणि esports",
+    "suggestion3": "इंडी म्युझिक शोध",
+    "suggestion4": "टेक संस्थापक आणि स्टार्टअप्स",
+    "suggestion5": "फुटबॉल ठळक क्षण"
   }
 }

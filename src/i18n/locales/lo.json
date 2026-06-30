@@ -24,7 +24,8 @@
     "connecting": "ກຳລັງເຊື່ອມຕໍ່...",
     "signMessage": "ເຊັນຂໍ້ຄວາມ",
     "guide": "ຄູ່ມື",
-    "events": "ກິດຈະກຳ"
+    "events": "ກິດຈະກຳ",
+    "prompt": "ປ້ອນຂໍ້ມູນ"
   },
   "feed": {
     "home": "ໜ້າຫຼັກ",
@@ -304,7 +305,9 @@
     "bounty": "ລາງວັນ",
     "locked": "ລັອກ",
     "any": "ໃດກໍໄດ້",
-    "resetFilters": "ລ້າງຕົວກອງ"
+    "resetFilters": "ລ້າງຕົວກອງ",
+    "prompt": "ປ້ອນຂໍ້ມູນ",
+    "for-you": "ສຳລັບທ່ານ"
   },
   "drawers": {
     "ppvTitle": "ເນື້ອຫາແບບຈ່າຍຕໍ່ການເບິ່ງ",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "ປ້ອນຂໍ້ມູນໃສ່ຟີດຂອງທ່ານ — DeHub",
+    "seoDescription": "ບອກ DeHub ວ່າທ່ານຕ້ອງການເຫັນຫຍັງ ແລະພວກເຮົາຈະປັບແຕ່ງຕາມຄວາມຕ້ອງການຂອງທ່ານ.",
+    "goHome": "ກັບໄປໜ້າຫຼັກ",
+    "headline": "ທ່ານຕ້ອງການເບິ່ງຫຍັງ?",
+    "headlineShort": "ທ່ານຕ້ອງການຫຍັງ?",
+    "subheadline": "ອະທິບາຍຟີດທີ່ທ່ານຕ້ອງການ.",
+    "placeholder": "AI ເພີ່ມເຕີມ, ຄລິບເກມ, ເພງອິນດີ້…",
+    "send": "ສົ່ງ",
+    "stop": "ຢຸດ",
+    "record": "ບັນທຶກ",
+    "skip": "ຂ້າມ — ພາຂ້ອຍໄປທີ່ຟີດເລີຍ",
+    "submit": "ສົ່ງ",
+    "modalQuestion": "ທ່ານຕ້ອງການເຫັນຫຍັງອີກ?",
+    "modalPlaceholder": "AI, ເທັກໂນໂລຍີ, ເກມ…",
+    "analysing": "ກຳລັງວິເຄາະຄວາມສົນໃຈຂອງທ່ານ…",
+    "timelineReady": "ຟີດຂອງທ່ານພ້ອມແລ້ວ",
+    "dragToTune": "ລາກເພື່ອປັບລະອຽດການປະສົມຂອງທ່ານ.",
+    "save": "ບັນທຶກ",
+    "voiceUnsupported": "ຕົວທ່ອງເວັບນີ້ບໍ່ຮອງຮັບການປ້ອນຂໍ້ມູນດ້ວຍສຽງ.",
+    "suggestion1": "ຂ່າວ AI ແລະ crypto ເພີ່ມເຕີມ",
+    "suggestion2": "ຄລິບເກມ ແລະ esports",
+    "suggestion3": "ເພງອິນດີ້",
+    "suggestion4": "ຜູ້ກໍ່ຕັ້ງເທັກໂນໂລຍີ ແລະ Startups",
+    "suggestion5": "ຈຸດເດັ່ນຂອງບານເຕະ"
   }
 }

@@ -24,7 +24,8 @@
     "connecting": "接続中...",
     "signMessage": "メッセージに署名",
     "guide": "ガイド",
-    "events": "イベント"
+    "events": "イベント",
+    "prompt": "プロンプト"
   },
   "feed": {
     "home": "ホーム",
@@ -296,7 +297,9 @@
     "bounty": "バウンティ",
     "locked": "制限付き",
     "any": "すべて",
-    "resetFilters": "フィルターをリセット"
+    "resetFilters": "フィルターをリセット",
+    "prompt": "プロンプト",
+    "for-you": "おすすめ"
   },
   "drawers": {
     "ppvTitle": "ペイパービューコンテンツ",
@@ -1304,5 +1307,31 @@
     "processing": "処理中...",
     "uploading": "アップロード中...",
     "deleting": "削除中..."
+  },
+  "prompt": {
+    "seoTitle": "フィードをプロンプト — DeHub",
+    "seoDescription": "DeHubに見たいものを伝えてください。タイムラインを調整します。",
+    "goHome": "ホームへ",
+    "headline": "何を見たいですか？",
+    "headlineShort": "何が欲しいですか？",
+    "subheadline": "あなたの完璧なフィードを説明してください。",
+    "placeholder": "より多くのAI、ゲームクリップ、インディーズ音楽…",
+    "send": "送信",
+    "stop": "停止",
+    "record": "録音",
+    "skip": "スキップ — フィードに移動",
+    "submit": "送信",
+    "modalQuestion": "どんなものをより多く見たいですか？",
+    "modalPlaceholder": "より多くのAI、テクノロジー、ゲーム…",
+    "analysing": "興味を分析中…",
+    "timelineReady": "タイムラインの準備ができました",
+    "dragToTune": "ドラッグしてミックスを微調整。",
+    "save": "保存",
+    "voiceUnsupported": "このブラウザでは音声入力はサポートされていません。",
+    "suggestion1": "より多くのAIと仮想通貨ニュース",
+    "suggestion2": "ゲームクリップとeスポーツ",
+    "suggestion3": "インディーズ音楽の発見",
+    "suggestion4": "テック創業者とスタートアップ",
+    "suggestion5": "サッカーのハイライト"
   }
 }

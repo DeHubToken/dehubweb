@@ -24,7 +24,8 @@
     "connecting": "Пайваст мешавад...",
     "signMessage": "Имзо кардани паём",
     "guide": "Роҳнамо",
-    "events": "Чорабиниҳо"
+    "events": "Чорабиниҳо",
+    "prompt": "Вуруд"
   },
   "feed": {
     "home": "Асосӣ",
@@ -296,7 +297,9 @@
     "bounty": "Мукофот",
     "locked": "Маҳдуд",
     "any": "Ҳар гуна",
-    "resetFilters": "Бозгардонии филтрҳо"
+    "resetFilters": "Бозгардонии филтрҳо",
+    "prompt": "Вуруд",
+    "for-you": "Барои шумо"
   },
   "drawers": {
     "ppvTitle": "Мундариҷаи пулакӣ",
@@ -1258,5 +1261,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Вуруди худро дубора таъин кунед — DeHub",
+    "seoDescription": "Ба DeHub бигӯед, ки чӣ дидан мехоҳед ва мо ҷадвали шуморо танзим мекунем.",
+    "goHome": "Ба хона равед",
+    "headline": "Чиро дидан мехоҳед?",
+    "headlineShort": "Чиро мехоҳед?",
+    "subheadline": "Хусусиятҳои шуморо тавсиф кунед.",
+    "placeholder": "Бештар AI, клипҳои бозӣ, мусиқии мустақил…",
+    "send": "Фиристан",
+    "stop": "Ист",
+    "record": "Сабт",
+    "skip": "Гузаштан — танҳо маро ба лента баред",
+    "submit": "Тасдиқ кардан",
+    "modalQuestion": "Чиро бештар дидан мехоҳед?",
+    "modalPlaceholder": "Бештар AI, технология, бозӣ…",
+    "analysing": "Таваҷҷӯҳи шумо таҳлил карда мешавад…",
+    "timelineReady": "Лентаи шумо омода аст",
+    "dragToTune": "Барои танзим кардани омехтаи худ кашед.",
+    "save": "Захира кардан",
+    "voiceUnsupported": "Вуруди овозӣ дар ин браузер дастгирӣ намешавад.",
+    "suggestion1": "Бештар AI ва ахбори крипто",
+    "suggestion2": "Клипҳои бозӣ ва esports",
+    "suggestion3": "Кашфиёти мусиқии мустақил",
+    "suggestion4": "Асосгузорон ва startup-ҳои технология",
+    "suggestion5": "Нуқтаҳои муҳими футбол"
   }
 }

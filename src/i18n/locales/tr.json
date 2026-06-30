@@ -24,7 +24,8 @@
     "connecting": "Bağlanıyor...",
     "signMessage": "Mesajı imzala",
     "guide": "Rehber",
-    "events": "Etkinlikler"
+    "events": "Etkinlikler",
+    "prompt": "Yönlendir"
   },
   "feed": {
     "home": "Ana Sayfa",
@@ -304,7 +305,9 @@
     "bounty": "Ödül",
     "locked": "Kısıtlı",
     "any": "Hepsi",
-    "resetFilters": "Filtreleri sıfırla"
+    "resetFilters": "Filtreleri sıfırla",
+    "prompt": "Yönlendir",
+    "for-you": "Sizin İçin"
   },
   "drawers": {
     "ppvTitle": "İzle-Öde İçeriği",
@@ -1294,5 +1297,31 @@
     "processing": "İşleniyor...",
     "uploading": "Yükleniyor...",
     "deleting": "Siliniyor..."
+  },
+  "prompt": {
+    "seoTitle": "Akışınızı Yönlendirin — DeHub",
+    "seoDescription": "DeHub'a ne görmek istediğinizi söyleyin, biz de zaman akışınızı ayarlayalım.",
+    "goHome": "Ana Sayfaya Git",
+    "headline": "Ne görmek istersiniz?",
+    "headlineShort": "Ne istersiniz?",
+    "subheadline": "Mükemmel akışınızı tanımlayın.",
+    "placeholder": "Daha fazla AI, oyun klipleri, bağımsız müzik…",
+    "send": "Gönder",
+    "stop": "Durdur",
+    "record": "Kaydet",
+    "skip": "Atla — doğrudan akışa git",
+    "submit": "Gönder",
+    "modalQuestion": "Neleri daha fazla görmek istersiniz?",
+    "modalPlaceholder": "Daha fazla AI, teknoloji, oyun…",
+    "analysing": "İlgi alanlarınız analiz ediliyor…",
+    "timelineReady": "Zaman akışınız hazır",
+    "dragToTune": "Akışınızı hassas ayarlamak için sürükleyin.",
+    "save": "Kaydet",
+    "voiceUnsupported": "Bu tarayıcıda ses girişi desteklenmiyor.",
+    "suggestion1": "Daha fazla AI ve kripto haberleri",
+    "suggestion2": "Oyun klipleri ve esports",
+    "suggestion3": "Bağımsız müzik keşifleri",
+    "suggestion4": "Teknoloji kurucuları ve startup'lar",
+    "suggestion5": "Futbol özetleri"
   }
 }

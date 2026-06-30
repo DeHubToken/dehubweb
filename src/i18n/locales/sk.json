@@ -24,7 +24,8 @@
     "connecting": "Pripájanie...",
     "signMessage": "Podpísať správu",
     "guide": "Sprievodca",
-    "events": "Udalosti"
+    "events": "Udalosti",
+    "prompt": "Prompt"
   },
   "feed": {
     "home": "Domov",
@@ -1141,7 +1142,9 @@
     "bounty": "Bounty",
     "locked": "Gated",
     "any": "Any",
-    "resetFilters": "Reset filters"
+    "resetFilters": "Reset filters",
+    "prompt": "Prompt",
+    "for-you": "Pre vás"
   },
   "drawers": {
     "ppvTitle": "Pay-Per-View Content",
@@ -1433,5 +1436,31 @@
     "fillRequired": "Please fill in all required fields",
     "submitted": "Application submitted successfully!",
     "failedSubmit": "Failed to submit application. Please try again."
+  },
+  "prompt": {
+    "seoTitle": "Prompt your feed — DeHub",
+    "seoDescription": "Povedzte DeHubu, čo chcete vidieť a my prispôsobíme vašu časovú os.",
+    "goHome": "Prejsť na domovskú stránku",
+    "headline": "Čo chcete vidieť?",
+    "headlineShort": "Čo chceš?",
+    "subheadline": "Opíšte svoj ideálny kanál.",
+    "placeholder": "Viac AI, herných klipov, nezávislej hudby…",
+    "send": "Odoslať",
+    "stop": "Zastaviť",
+    "record": "Nahrať",
+    "skip": "Preskočiť — rovno ma preveď na kanál",
+    "submit": "Odoslať",
+    "modalQuestion": "Čoho chcete vidieť viac?",
+    "modalPlaceholder": "Viac AI, technológií, hier…",
+    "analysing": "Analyzujeme vaše záujmy…",
+    "timelineReady": "Vaša časová os je pripravená",
+    "dragToTune": "Ťahajte pre dolaďovanie vášho mixu.",
+    "save": "Uložiť",
+    "voiceUnsupported": "Hlasové zadávanie nie je v tomto prehliadači podporované.",
+    "suggestion1": "Viac správ o AI a kryptomenách",
+    "suggestion2": "Herné klipy a esports",
+    "suggestion3": "Objavy nezávislej hudby",
+    "suggestion4": "Zakladatelia technologických firiem a startupy",
+    "suggestion5": "Zostrihy futbalových zápasov"
   }
 }

@@ -24,7 +24,8 @@
     "connecting": "نښلول کیږي...",
     "signMessage": "پیغام لاسلیک کول",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "اشاره"
   },
   "feed": {
     "home": "کور",
@@ -304,7 +305,8 @@
     "bounty": "بونټي",
     "locked": "بند شوی",
     "any": "هر",
-    "resetFilters": "فلترونه بیا تنظیم کړئ"
+    "resetFilters": "فلترونه بیا تنظیم کړئ",
+    "prompt": "اشاره"
   },
   "drawers": {
     "ppvTitle": "پی-پی-وی منځپانګه",
@@ -1267,5 +1269,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "خپل فیډ ته اشاره وکړئ — DeHub",
+    "seoDescription": "DeHub ته ووایاست چې تاسو څه غواړئ وګورئ او موږ به ستاسو مهال ویش تنظیم کړو.",
+    "goHome": "کور ته لاړ شه",
+    "headline": "تاسو څه غواړئ وګورئ؟",
+    "headlineShort": "تاسو څه غواړئ؟",
+    "subheadline": "خپل کامل فیډ تشریح کړئ.",
+    "placeholder": "نور AI، د لوبو کلیپونه، خپلواکه موسیقي…",
+    "send": "لیږل",
+    "stop": "بندول",
+    "record": "ریکارډ",
+    "skip": "پرېښودل — یوازې ما فیډ ته بوځه",
+    "submit": "سپارل",
+    "modalQuestion": "تاسو څه غواړئ نور وګورئ؟",
+    "modalPlaceholder": "نور AI، تخنیک، لوبې…",
+    "analysing": "ستاسو ګټې تحلیل کیږي…",
+    "timelineReady": "ستاسو مهال ویش چمتو دی",
+    "dragToTune": "خپل ترکیب دقیق کولو لپاره کش کړئ.",
+    "save": "خوندي کول",
+    "voiceUnsupported": "په دې براوزر کې د غږ داخلول ملاتړ نه کیږي.",
+    "suggestion1": "نور AI او کریپټو خبرونه",
+    "suggestion2": "د لوبو کلیپونه او esports",
+    "suggestion3": "د خپلواکې موسیقۍ کشفونه",
+    "suggestion4": "تخنیکي بنسټ ایښودونکي او پیل شوي شرکتونه",
+    "suggestion5": "د فوټبال مهمې پیښې"
   }
 }

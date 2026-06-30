@@ -24,7 +24,8 @@
     "connecting": "جُڑ رہا ہے...",
     "signMessage": "پیغام پر دستخط کرو",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "ପ୍ରମ୍ପ୍ଟ"
   },
   "feed": {
     "home": "گھر",
@@ -304,7 +305,9 @@
     "bounty": "باؤنٹی",
     "locked": "گیٹڈ",
     "any": "کوئی بھی",
-    "resetFilters": "فلٹر ری سیٹ کرو"
+    "resetFilters": "فلٹر ری سیٹ کرو",
+    "prompt": "ପ୍ରମ୍ପ୍ଟ",
+    "for-you": "ତମର୍ ଲାଗି"
   },
   "drawers": {
     "ppvTitle": "پے پر ویو مواد",
@@ -1338,5 +1341,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "ତମ ଫିଡ୍‌କେ ପ୍ରମ୍ପ୍ଟ କରା — DeHub",
+    "seoDescription": "ତମେ କାଣା ଦେଖ୍‌ବାର୍ ଚାହୁଛ ବଲି DeHub କେ କୁଆ ଆର୍ ଆମେ ତମ ଟାଇମ୍‌ଲାଇନ୍‌କେ ଠିକ୍ କର୍‌ମୁଁ।",
+    "goHome": "ଘର୍‌କେ ଯା",
+    "headline": "ତମେ କାଣା ଦେଖ୍‌ବାର୍ ଚାହୁଛ?",
+    "headlineShort": "ତମେ କାଣା ଚାହୁଛ?",
+    "subheadline": "ତମର୍ ଭଲ୍ ଫିଡ୍‌କେ ବରନା କରା।",
+    "placeholder": "ବେସି AI, ଗେମିଂ କ୍ଲିପ୍ ସବୁ, ଇଣ୍ଡି ମିଉଜିକ୍…",
+    "send": "ପଠା",
+    "stop": "ବନ୍ଦ୍ କରା",
+    "record": "ରେକର୍ଡ଼ କରା",
+    "skip": "ଛାଡ଼ିଦିଅ — ମାତର୍ ମୋତେ ଫିଡ୍‌କେ ନେଇଯା",
+    "submit": "ଜମା କରା",
+    "modalQuestion": "ତମେ କାଣା ବେସି ଦେଖ୍‌ବାର୍ ଚାହୁଛ?",
+    "modalPlaceholder": "ବେସି AI, ଟେକ୍, ଗେମିଂ…",
+    "analysing": "ତମର୍ ପସନ୍ଦ୍‌କେ ବିଶ୍ଳେଷଣ କରୁଛୁ…",
+    "timelineReady": "ତମର୍ ଟାଇମ୍‌ଲାଇନ୍ ରେଡ଼ି ଅଛି",
+    "dragToTune": "ତମର୍ ମିକ୍ସକେ ଭଲ୍ କରିବାର୍ ଲାଗି ଟାନା।",
+    "save": "ସାଁଚା",
+    "voiceUnsupported": "ଏ ବ୍ରାଉଜର୍‌ନେ ଭଏସ୍ ଇନ୍‌ପୁଟ୍ ସପୋର୍ଟ ନାଇଁକରୁଁ।",
+    "suggestion1": "ବେସି AI ଆର୍ କ୍ରିପ୍‌ଟୋ ଖବର୍",
+    "suggestion2": "ଗେମିଂ କ୍ଲିପ୍ ସବୁ ଆର୍ esports",
+    "suggestion3": "ଇଣ୍ଡି ମିଉଜିକ୍ ଖୋଜ୍",
+    "suggestion4": "ଟେକ୍ ଫାଉଣ୍ଡର୍ ସବୁ ଆର୍ ଷ୍ଟାର୍ଟଅପ୍ ସବୁ",
+    "suggestion5": "ଫୁଟ୍‌ବଲ୍‌ର୍ ଭଲ୍ ସର୍ତେ ସବୁ"
   }
 }

@@ -24,7 +24,8 @@
     "connecting": "සම්බන්ධ වෙමින්...",
     "signMessage": "පණිවිඩය අත්සන් කරන්න",
     "guide": "මාර්ගෝපදේශය",
-    "events": "සිදුවීම්"
+    "events": "සිදුවීම්",
+    "prompt": "Prompt"
   },
   "feed": {
     "home": "මුල් පිටුව",
@@ -304,7 +305,9 @@
     "ppv": "PPV",
     "bounty": "Bounty",
     "locked": "Gated",
-    "any": "Any"
+    "any": "Any",
+    "prompt": "Prompt",
+    "for-you": "ඔබ වෙනුවෙන්"
   },
   "drawers": {
     "ppvTitle": "ගෙවීම්-අනුව-නැරඹුම අන්තර්ගතය",
@@ -1307,5 +1310,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "ඔබේ සංග්‍රහය ආරම්භ කරන්න — DeHub",
+    "seoDescription": "ඔබට දැකීමට අවශ්‍ය දේ DeHub ට කියන්න, එවිට අපි ඔබේ කාලරේඛාව සකස් කරන්නෙමු.",
+    "goHome": "මුල් පිටුවට යන්න",
+    "headline": "ඔබට දැකීමට අවශ්‍ය කුමක්ද?",
+    "headlineShort": "ඔබට අවශ්‍ය කුමක්ද?",
+    "subheadline": "ඔබේ පරිපූර්ණ සංග්‍රහය විස්තර කරන්න.",
+    "placeholder": "තවත් AI, gaming clips, indie music…",
+    "send": "යවන්න",
+    "stop": "නවත්වන්න",
+    "record": "පටිගත කරන්න",
+    "skip": "මඟ හරින්න — මාව feed එකටම ගෙන යන්න",
+    "submit": "ඉදිරිපත් කරන්න",
+    "modalQuestion": "ඔබට තවත් දැකීමට අවශ්‍ය කුමක්ද?",
+    "modalPlaceholder": "තවත් AI, tech, gaming…",
+    "analysing": "ඔබේ රුචිකත්වයන් විශ්ලේෂණය කරයි…",
+    "timelineReady": "ඔබේ කාලරේඛාව සූදානම්",
+    "dragToTune": "ඔබේ මිශ්‍රණය සියුම් සුසර කිරීමට අදින්න.",
+    "save": "සුරකින්න",
+    "voiceUnsupported": "මෙම බ්‍රවුසරයේ හඬ ආදානය සහය නොදක්වයි.",
+    "suggestion1": "තවත් AI සහ crypto පුවත්",
+    "suggestion2": "Gaming clips සහ esports",
+    "suggestion3": "Indie music සොයාගැනීම්",
+    "suggestion4": "Tech ආරම්භකයින් සහ startups",
+    "suggestion5": "පාපන්දු විශේෂ අවස්ථා"
   }
 }

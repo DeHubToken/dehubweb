@@ -24,7 +24,8 @@
     "connecting": "جاري الاتصال...",
     "signMessage": "وقّع الرسالة",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "اكتب"
   },
   "feed": {
     "home": "الرئيسية",
@@ -304,7 +305,9 @@
     "bounty": "مكافأة",
     "locked": "مقفل",
     "any": "أي",
-    "resetFilters": "إعادة تعيين الفلاتر"
+    "resetFilters": "إعادة تعيين الفلاتر",
+    "prompt": "اكتب",
+    "for-you": "لك"
   },
   "drawers": {
     "ppvTitle": "محتوى مدفوع",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "اكتب لصفحتك الرئيسية — DeHub",
+    "seoDescription": "قول لـDeHub اللي عايز تشوفه وحنظبط صفحتك الرئيسية.",
+    "goHome": "اذهب للصفحة الرئيسية",
+    "headline": "عايز تشوف شنو؟",
+    "headlineShort": "عايز شنو؟",
+    "subheadline": "اوصف صفحتك الرئيسية المثالية.",
+    "placeholder": "المزيد من الـAI، مقاطع ألعاب، موسيقى مستقلة…",
+    "send": "إرسال",
+    "stop": "إيقاف",
+    "record": "تسجيل",
+    "skip": "تخطي — وديني للصفحة الرئيسية طوالي",
+    "submit": "إرسال",
+    "modalQuestion": "عايز تشوف شنو أكتر؟",
+    "modalPlaceholder": "المزيد من الـAI، التقنية، الألعاب…",
+    "analysing": "جاري تحليل اهتماماتك…",
+    "timelineReady": "صفحتك الرئيسية جاهزة",
+    "dragToTune": "اسحب عشان تضبط الإعدادات.",
+    "save": "حفظ",
+    "voiceUnsupported": "الإدخال الصوتي غير مدعوم في هذا المتصفح.",
+    "suggestion1": "المزيد من أخبار الـAI والعملات المشفرة",
+    "suggestion2": "مقاطع ألعاب وesports",
+    "suggestion3": "اكتشافات الموسيقى المستقلة",
+    "suggestion4": "مؤسسي التقنيات والشركات الناشئة",
+    "suggestion5": "ملخصات مباريات كرة القدم"
   }
 }

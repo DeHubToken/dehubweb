@@ -24,7 +24,8 @@
     "connecting": "कनेक्ट हो रहल बा...",
     "signMessage": "संदेश साइन करो",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "मांगू"
   },
   "feed": {
     "home": "घर",
@@ -304,7 +305,9 @@
     "bounty": "बाउंटी",
     "locked": "गेटेड",
     "any": "कोई भी",
-    "resetFilters": "फिल्टर रिसेट"
+    "resetFilters": "फिल्टर रिसेट",
+    "prompt": "मांगू",
+    "for-you": "अहां लेल"
   },
   "drawers": {
     "ppvTitle": "पे-पर-व्यू कंटेंट",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "अहाँ के Feed मांगा — DeHub",
+    "seoDescription": "DeHub के बताऊ जे अहां की देखय चाहब आ हम अहाँ के टाइमलाइन के ट्यून करब.",
+    "goHome": "घर जाऊ",
+    "headline": "अहां की देखय चाहैत छी?",
+    "headlineShort": "अहां की चाहैत छी?",
+    "subheadline": "अपन सही फीड के वर्णन करू.",
+    "placeholder": "बेसी AI, गेमिंग क्लिप, इंडी संगीत…",
+    "send": "पठाऊ",
+    "stop": "बंद करू",
+    "record": "रिकॉर्ड करू",
+    "skip": "छोड़ू — बस हमरा फीड पर ल जाउ",
+    "submit": "जमा करू",
+    "modalQuestion": "अहां आओर की देखय चाहैत छी?",
+    "modalPlaceholder": "बेसी AI, टेक, गेमिंग…",
+    "analysing": "अहां के रुचि के विश्लेषण कैल जा रहल अछि…",
+    "timelineReady": "अहां के टाइमलाइन तैयार अछि",
+    "dragToTune": "अपन मिक्स के ठीक करबा लेल घसीटू.",
+    "save": "सेव करू",
+    "voiceUnsupported": "ई ब्राउजर मे आवाज इनपुट सपोर्ट नहि करैत अछि.",
+    "suggestion1": "बेसी AI आ क्रिप्टो न्यूज",
+    "suggestion2": "गेमिंग क्लिप आ esports",
+    "suggestion3": "इंडी संगीत के खोज",
+    "suggestion4": "टेक संस्थापक आ स्टार्टअप",
+    "suggestion5": "फुटबॉल हाइलाइट्स"
   }
 }

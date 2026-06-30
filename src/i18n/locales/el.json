@@ -24,7 +24,8 @@
     "connecting": "Σύνδεση...",
     "signMessage": "Υπογραφή μηνύματος",
     "guide": "Οδηγός",
-    "events": "Εκδηλώσεις"
+    "events": "Εκδηλώσεις",
+    "prompt": "Προτροπή"
   },
   "feed": {
     "home": "Αρχική",
@@ -304,7 +305,9 @@
     "bounty": "Bounty",
     "locked": "Κλειδωμένο",
     "any": "Οποιοδήποτε",
-    "resetFilters": "Επαναφορά φίλτρων"
+    "resetFilters": "Επαναφορά φίλτρων",
+    "prompt": "Προτροπή",
+    "for-you": "Για εσάς"
   },
   "drawers": {
     "ppvTitle": "Περιεχόμενο Pay-Per-View",
@@ -1297,5 +1300,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Προτρέψτε τη ροή σας — DeHub",
+    "seoDescription": "Πείτε στο DeHub τι θέλετε να δείτε και θα ρυθμίσουμε το χρονολόγιό σας.",
+    "goHome": "Πήγαινε στην αρχική",
+    "headline": "Τι θέλετε να δείτε;",
+    "headlineShort": "Τι θέλετε;",
+    "subheadline": "Περιγράψτε την τέλεια ροή σας.",
+    "placeholder": "Περισσότερο AI, κλιπ παιχνιδιών, indie μουσική…",
+    "send": "Αποστολή",
+    "stop": "Σταματήστε",
+    "record": "Εγγραφή",
+    "skip": "Παράλειψη — απλά πηγαίνετέ με στη ροή",
+    "submit": "Υποβολή",
+    "modalQuestion": "Τι θέλετε να δείτε περισσότερο;",
+    "modalPlaceholder": "Περισσότερο AI, τεχνολογία, παιχνίδια…",
+    "analysing": "Αναλύοντας τα ενδιαφέροντά σας…",
+    "timelineReady": "Η ροή σας είναι έτοιμη",
+    "dragToTune": "Σύρετε για να ρυθμίσετε τη μίξη σας.",
+    "save": "Αποθήκευση",
+    "voiceUnsupported": "Η φωνητική εισαγωγή δεν υποστηρίζεται σε αυτό το πρόγραμμα περιήγησης.",
+    "suggestion1": "Περισσότερα νέα AI και κρυπτονομισμάτων",
+    "suggestion2": "Κλιπ παιχνιδιών και esports",
+    "suggestion3": "Ανακαλύψεις indie μουσικής",
+    "suggestion4": "Ιδρυτές τεχνολογίας και startups",
+    "suggestion5": "Στιγμιότυπα ποδοσφαίρου"
   }
 }

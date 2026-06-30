@@ -24,7 +24,8 @@
     "connecting": "Conectando...",
     "signMessage": "Firmar mensaje",
     "guide": "Guía",
-    "events": "Eventos"
+    "events": "Eventos",
+    "prompt": "Solicitar"
   },
   "feed": {
     "home": "Inicio",
@@ -296,7 +297,9 @@
     "bounty": "Recompensa",
     "locked": "Restringido",
     "any": "Cualquiera",
-    "resetFilters": "Restablecer filtros"
+    "resetFilters": "Restablecer filtros",
+    "prompt": "Solicitar",
+    "for-you": "Para ti"
   },
   "drawers": {
     "ppvTitle": "Contenido de pago por ver",
@@ -1371,5 +1374,31 @@
     "hoursAgo": "hace {{count}}h",
     "daysAgo": "hace {{count}}d",
     "cancelUnstake": "Cancelar retiro"
+  },
+  "prompt": {
+    "seoTitle": "Solicita tu feed — DeHub",
+    "seoDescription": "Dile a DeHub lo que quieres ver y ajustaremos tu línea de tiempo.",
+    "goHome": "Ir a inicio",
+    "headline": "¿Qué quieres ver?",
+    "headlineShort": "¿Qué quieres?",
+    "subheadline": "Describe tu feed perfecto.",
+    "placeholder": "Más AI, clips de juegos, música independiente…",
+    "send": "Enviar",
+    "stop": "Detener",
+    "record": "Grabar",
+    "skip": "Omitir — solo llévame al feed",
+    "submit": "Enviar",
+    "modalQuestion": "¿De qué quieres ver más?",
+    "modalPlaceholder": "Más AI, tecnología, juegos…",
+    "analysing": "Analizando tus intereses…",
+    "timelineReady": "Tu línea de tiempo está lista",
+    "dragToTune": "Arrastra para ajustar tu combinación.",
+    "save": "Guardar",
+    "voiceUnsupported": "La entrada de voz no es compatible con este navegador.",
+    "suggestion1": "Más noticias de AI y cripto",
+    "suggestion2": "Clips de juegos y esports",
+    "suggestion3": "Descubrimientos de música independiente",
+    "suggestion4": "Fundadores de tecnología y startups",
+    "suggestion5": "Momentos destacados de fútbol"
   }
 }

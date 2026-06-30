@@ -24,7 +24,8 @@
     "connecting": "Connessione...",
     "signMessage": "Firma messaggio",
     "guide": "Guida",
-    "events": "Eventi"
+    "events": "Eventi",
+    "prompt": "Personalizza"
   },
   "feed": {
     "home": "Home",
@@ -488,7 +489,9 @@
     "bounty": "Ricompensa",
     "locked": "Limitato",
     "any": "Tutti",
-    "resetFilters": "Reimposta filtri"
+    "resetFilters": "Reimposta filtri",
+    "prompt": "Personalizza",
+    "for-you": "Per Te"
   },
   "assistant": {
     "title": "Assistente",
@@ -1294,5 +1297,31 @@
     "insufficient_balance": "Saldo insufficiente",
     "transaction_submitted": "Transazione inviata!",
     "transaction_failed": "Transazione fallita"
+  },
+  "prompt": {
+    "seoTitle": "Personalizza il tuo feed — DeHub",
+    "seoDescription": "Di' a DeHub cosa vuoi vedere e noi sintonizzeremo la tua timeline.",
+    "goHome": "Vai alla home",
+    "headline": "Cosa vuoi vedere?",
+    "headlineShort": "Cosa vuoi?",
+    "subheadline": "Descrivi il tuo feed perfetto.",
+    "placeholder": "Più AI, clip di giochi, musica indipendente…",
+    "send": "Invia",
+    "stop": "Ferma",
+    "record": "Registra",
+    "skip": "Salta — portami direttamente al feed",
+    "submit": "Invia",
+    "modalQuestion": "Di cosa vuoi vedere di più?",
+    "modalPlaceholder": "Più AI, tecnologia, giochi…",
+    "analysing": "Analizzo i tuoi interessi…",
+    "timelineReady": "La tua timeline è pronta",
+    "dragToTune": "Trascina per affinare il tuo mix.",
+    "save": "Salva",
+    "voiceUnsupported": "L'input vocale non è supportato in questo browser.",
+    "suggestion1": "Più notizie su AI e cripto",
+    "suggestion2": "Clip di giochi ed esports",
+    "suggestion3": "Scoperte di musica indipendente",
+    "suggestion4": "Fondatori di tecnologia e startup",
+    "suggestion5": "Momenti salienti di calcio"
   }
 }

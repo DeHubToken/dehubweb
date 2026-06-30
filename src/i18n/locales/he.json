@@ -24,7 +24,8 @@
     "connecting": "מתחבר...",
     "signMessage": "חתום על הודעה",
     "guide": "מדריך",
-    "events": "אירועים"
+    "events": "אירועים",
+    "prompt": "הגדרה"
   },
   "feed": {
     "home": "דף הבית",
@@ -488,7 +489,9 @@
     "bounty": "פרס",
     "locked": "מוגבל",
     "any": "הכל",
-    "resetFilters": "אפס מסננים"
+    "resetFilters": "אפס מסננים",
+    "prompt": "הגדרה",
+    "for-you": "בשבילך"
   },
   "commandCentre": {
     "title": "מרכז פיקוד",
@@ -1271,5 +1274,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "הגדר את הפיד שלך — DeHub",
+    "seoDescription": "ספר ל-DeHub מה אתה רוצה לראות ואנו נכוונן את ציר הזמן שלך.",
+    "goHome": "עבור לדף הבית",
+    "headline": "מה ברצונך לראות?",
+    "headlineShort": "מה אתה רוצה?",
+    "subheadline": "תאר את הפיד המושלם שלך.",
+    "placeholder": "עוד AI, קטעי גיימינג, מוזיקה אינדי…",
+    "send": "שלח",
+    "stop": "עצור",
+    "record": "הקלט",
+    "skip": "דלג — קח אותי ישר לפיד",
+    "submit": "שלח",
+    "modalQuestion": "ממה תרצה לראות יותר?",
+    "modalPlaceholder": "עוד AI, טכנולוגיה, גיימינג…",
+    "analysing": "מנתח את תחומי העניין שלך…",
+    "timelineReady": "ציר הזמן שלך מוכן",
+    "dragToTune": "גרור כדי לכוונן את התמהיל שלך.",
+    "save": "שמור",
+    "voiceUnsupported": "קלט קולי אינו נתמך בדפדפן זה.",
+    "suggestion1": "עוד חדשות AI וקריפטו",
+    "suggestion2": "קטעי גיימינג ו-esports",
+    "suggestion3": "גילויים של מוזיקה אינדי",
+    "suggestion4": "מייסדי טק וסטארט-אפים",
+    "suggestion5": "תקצירי כדורגל"
   }
 }

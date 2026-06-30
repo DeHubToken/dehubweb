@@ -24,7 +24,8 @@
     "connecting": "Қосылуда...",
     "signMessage": "Хабарды қол қою",
     "guide": "Нұсқаулық",
-    "events": "Іс-шаралар"
+    "events": "Іс-шаралар",
+    "prompt": "Баптау"
   },
   "feed": {
     "home": "Басты бет",
@@ -304,7 +305,9 @@
     "bounty": "Сыйлық",
     "locked": "Құлыпталған",
     "any": "Кез келген",
-    "resetFilters": "Сүзгілерді тазалау"
+    "resetFilters": "Сүзгілерді тазалау",
+    "prompt": "Баптау",
+    "for-you": "Сіз үшін"
   },
   "drawers": {
     "ppvTitle": "Ақылы мазмұн",
@@ -1322,5 +1325,31 @@
     "startSaving": "Start saving posts by tapping the bookmark icon on any post you want to save.",
     "reachedEnd": "You've reached the end of your bookmarks",
     "loginDescription": "Log in to view and manage your saved bookmarks."
+  },
+  "prompt": {
+    "seoTitle": "DeHub — арнаңызды баптаңыз",
+    "seoDescription": "DeHub-қа не көргіңіз келетінін айтыңыз, біз сіздің уақыт жолыңызды реттейміз.",
+    "goHome": "Бастапқы бетке өту",
+    "headline": "Сіз не көргіңіз келеді?",
+    "headlineShort": "Сіз не қалайсыз?",
+    "subheadline": "Өзіңіздің тамаша арнаңызды сипаттаңыз.",
+    "placeholder": "Көбірек AI, ойын клиптері, инди музыкасы…",
+    "send": "Жіберу",
+    "stop": "Тоқтату",
+    "record": "Жазу",
+    "skip": "Өткізіп жіберу — мені тікелей арнаға апарыңыз",
+    "submit": "Жіберу",
+    "modalQuestion": "Сіз нені көбірек көргіңіз келеді?",
+    "modalPlaceholder": "Көбірек AI, технология, ойындар…",
+    "analysing": "Қызығушылықтарыңызды талдау…",
+    "timelineReady": "Сіздің уақыт жолыңыз дайын",
+    "dragToTune": "Микс жазбаңызды дәл реттеу үшін сүйреңіз.",
+    "save": "Сақтау",
+    "voiceUnsupported": "Бұл браузерде дауыстық енгізу қолдау таппайды.",
+    "suggestion1": "Көбірек AI және крипто жаңалықтары",
+    "suggestion2": "Ойын клиптері мен esports",
+    "suggestion3": "Инди музыкалық жаңалықтары",
+    "suggestion4": "Технологиялық негізін қалаушылар мен стартаптар",
+    "suggestion5": "Футболдағы ерекше сәттер"
   }
 }

@@ -24,7 +24,8 @@
     "connecting": "Připojování...",
     "signMessage": "Podepsat zprávu",
     "guide": "Průvodce",
-    "events": "Události"
+    "events": "Události",
+    "prompt": "Dotaz"
   },
   "feed": {
     "home": "Domů",
@@ -488,7 +489,9 @@
     "bounty": "Odměna",
     "locked": "Omezené",
     "any": "Vše",
-    "resetFilters": "Resetovat filtry"
+    "resetFilters": "Resetovat filtry",
+    "prompt": "Dotaz",
+    "for-you": "Pro vás"
   },
   "commandCentre": {
     "title": "Příkazové centrum",
@@ -1271,5 +1274,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Prompt your feed — DeHub",
+    "seoDescription": "Řekněte DeHubu, co chcete vidět, a my vám vyladíme vaši časovou osu.",
+    "goHome": "Přejít na domovskou stránku",
+    "headline": "Co chcete vidět?",
+    "headlineShort": "Co chcete?",
+    "subheadline": "Popište svůj ideální feed.",
+    "placeholder": "Více AI, herních klipů, nezávislé hudby…",
+    "send": "Odeslat",
+    "stop": "Zastavit",
+    "record": "Nahrát",
+    "skip": "Přeskočit — rovnou na feed",
+    "submit": "Odeslat",
+    "modalQuestion": "Čeho chcete vidět více?",
+    "modalPlaceholder": "Více AI, technologií, her…",
+    "analysing": "Analyzuji vaše zájmy…",
+    "timelineReady": "Vaše časová osa je připravena",
+    "dragToTune": "Přetáhněte pro doladění vašeho mixu.",
+    "save": "Uložit",
+    "voiceUnsupported": "Hlasový vstup není v tomto prohlížeči podporován.",
+    "suggestion1": "Více AI a krypto novinek",
+    "suggestion2": "Herní klipy a esports",
+    "suggestion3": "Objevy nezávislé hudby",
+    "suggestion4": "Technologičtí zakladatelé a startupy",
+    "suggestion5": "Nejdůležitější fotbalové momenty"
   }
 }

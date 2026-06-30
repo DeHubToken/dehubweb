@@ -24,7 +24,8 @@
     "connecting": "কানেক্ট অইতাছে...",
     "signMessage": "বার্তাত সই গরো",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "কও"
   },
   "feed": {
     "home": "ঘর",
@@ -961,7 +962,9 @@
     "postType": "Post Type",
     "contentAccess": "Content Access",
     "contentType": "Content Type",
-    "duration": "Duration"
+    "duration": "Duration",
+    "prompt": "কও",
+    "for-you": "তুমার লাই"
   },
   "drawers": {
     "ppvTitle": "পে-পার-ভিউ কন্টেন্ট",
@@ -1441,5 +1444,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "তুমার ফিডরে সাজাও — DeHub",
+    "seoDescription": "DeHub রে কও কি দেকতে চাও আর আমরা তুমার টাইমলাইন ঠিক গরি দিমু।",
+    "goHome": "ঘরে যাও",
+    "headline": "কিয়ান দেকতে চও?",
+    "headlineShort": "কিয়া দেকতে চও?",
+    "subheadline": "তুমার পছন্দের ফিডখান কও।",
+    "placeholder": "আর AI, গেমিং ভিডিও, স্বাধীন গান…",
+    "send": "ফ্যাডাও",
+    "stop": "থাকো",
+    "record": "রেকর্ড গোরো",
+    "skip": "বাদ দেও — খালি ফিডে লৈ যাও",
+    "submit": "জমা দেও",
+    "modalQuestion": "আর কি বেশি দেকতে চও?",
+    "modalPlaceholder": "আর AI, টেক, গেমিং…",
+    "analysing": "তুমার পছন্দ বিচার গরিয়ের…",
+    "timelineReady": "তুমার টাইমলাইন তৈরি অইয়ে",
+    "dragToTune": "তুমার মিশেল ঠিক গরিবার লাই টানো।",
+    "save": "বাঁচাও",
+    "voiceUnsupported": "এই ব্রাউজারত গলা দিয়া কওন যাইত ন।",
+    "suggestion1": "আর AI আর ক্রিপ্টো খবর",
+    "suggestion2": "গেমিং ভিডিও আর esports",
+    "suggestion3": "স্বাধীন গান আবিষ্কার",
+    "suggestion4": "টেক কোম্পানি আর নতুন ব্যবসা",
+    "suggestion5": "ফুটবলর সেরা মুহূর্ত"
   }
 }

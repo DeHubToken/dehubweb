@@ -24,7 +24,8 @@
     "connecting": "કનેક્ટ થઈ રહ્યું છે...",
     "signMessage": "સંદેશ સાઇન કરો",
     "guide": "માર્ગદર્શિકા",
-    "events": "ઇવેન્ટ્સ"
+    "events": "ઇવેન્ટ્સ",
+    "prompt": "પ્રોમ્પ્ટ"
   },
   "feed": {
     "home": "હોમ",
@@ -304,7 +305,9 @@
     "bounty": "બાઉન્ટી",
     "locked": "લૉક્ડ",
     "any": "કોઈપણ",
-    "resetFilters": "ફિલ્ટર્સ રીસેટ કરો"
+    "resetFilters": "ફિલ્ટર્સ રીસેટ કરો",
+    "prompt": "પ્રોમ્પ્ટ",
+    "for-you": "તમારા માટે"
   },
   "drawers": {
     "ppvTitle": "પે-પર-વ્યુ સામગ્રી",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "તમારા ફીડને પ્રોમ્પ્ટ કરો — DeHub",
+    "seoDescription": "તમે શું જોવા માંગો છો તે DeHub ને કહો અને અમે તમારી સમયરેખાને ટ્યુન કરીશું.",
+    "goHome": "ઘર પર જાઓ",
+    "headline": "તમે શું જોવા માંગો છો?",
+    "headlineShort": "તમે શું માંગો છો?",
+    "subheadline": "તમારા સંપૂર્ણ ફીડનું વર્ણન કરો.",
+    "placeholder": "વધુ AI, ગેમિંગ ક્લિપ્સ, ઇન્ડી સંગીત…",
+    "send": "મોકલો",
+    "stop": "રોકો",
+    "record": "રેકોર્ડ કરો",
+    "skip": "છોડો — મને ફીડ પર લઈ જાઓ",
+    "submit": "સબમિટ કરો",
+    "modalQuestion": "તમે વધુ શું જોવા માંગો છો?",
+    "modalPlaceholder": "વધુ AI, ટેક, ગેમિંગ…",
+    "analysing": "તમારી રુચિઓનું વિશ્લેષણ કરી રહ્યા છીએ…",
+    "timelineReady": "તમારી સમયરેખા તૈયાર છે",
+    "dragToTune": "તમારા મિશ્રણને ફાઇન-ટ્યુન કરવા ખેંચો.",
+    "save": "સાચવો",
+    "voiceUnsupported": "આ બ્રાઉઝરમાં વૉઇસ ઇનપુટ સપોર્ટેડ નથી.",
+    "suggestion1": "વધુ AI અને ક્રિપ્ટો સમાચાર",
+    "suggestion2": "ગેમિંગ ક્લિપ્સ અને esports",
+    "suggestion3": "ઇન્ડી સંગીત શોધો",
+    "suggestion4": "ટેક સ્થાપકો અને સ્ટાર્ટઅપ્સ",
+    "suggestion5": "ફૂટબોલ હાઇલાઇટ્સ"
   }
 }

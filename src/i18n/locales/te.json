@@ -24,7 +24,8 @@
     "connecting": "కనెక్ట్ అవుతోంది...",
     "signMessage": "సందేశంపై సంతకం చేయండి",
     "guide": "గైడ్",
-    "events": "ఈవెంట్స్"
+    "events": "ఈవెంట్స్",
+    "prompt": "ప్రాంప్ట్"
   },
   "feed": {
     "home": "హోమ్",
@@ -488,7 +489,9 @@
     "bounty": "బౌంటీ",
     "locked": "గేటెడ్",
     "any": "అన్నీ",
-    "resetFilters": "ఫిల్టర్లను రీసెట్ చేయి"
+    "resetFilters": "ఫిల్టర్లను రీసెట్ చేయి",
+    "prompt": "ప్రాంప్ట్",
+    "for-you": "మీ కోసం"
   },
   "commandCentre": {
     "title": "కమాండ్ సెంటర్",
@@ -1271,5 +1274,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "మీ ఫీడ్‌ను ప్రాంప్ట్ చేయండి — DeHub",
+    "seoDescription": "DeHubకి మీరు ఏమి చూడాలనుకుంటున్నారో చెప్పండి మరియు మేము మీ టైమ్‌లైన్‌ను సర్దుబాటు చేస్తాము.",
+    "goHome": "హోమ్‌కి వెళ్లండి",
+    "headline": "మీరు ఏమి చూడాలనుకుంటున్నారు?",
+    "headlineShort": "మీరు ఏమి కావాలి?",
+    "subheadline": "మీ ఆదర్శవంతమైన ఫీడ్‌ను వివరించండి.",
+    "placeholder": "మరిన్ని AI, గేమింగ్ క్లిప్‌లు, స్వతంత్ర సంగీతం…",
+    "send": "పంపండి",
+    "stop": "ఆపండి",
+    "record": "రికార్డ్ చేయండి",
+    "skip": "దాటవేయి — నన్ను ఫీడ్‌కి తీసుకెళ్లండి",
+    "submit": "సమర్పించు",
+    "modalQuestion": "మీరు ఏమి ఎక్కువగా చూడాలనుకుంటున్నారు?",
+    "modalPlaceholder": "మరిన్ని AI, టెక్, గేమింగ్…",
+    "analysing": "మీ ఆసక్తులను విశ్లేషిస్తున్నాము…",
+    "timelineReady": "మీ టైమ్‌లైన్ సిద్ధంగా ఉంది",
+    "dragToTune": "మీ మిశ్రమాన్ని చక్కగా ట్యూన్ చేయడానికి లాగండి.",
+    "save": "సేవ్ చేయండి",
+    "voiceUnsupported": "ఈ బ్రౌజర్‌లో వాయిస్ ఇన్‌పుట్ మద్దతు లేదు.",
+    "suggestion1": "మరిన్ని AI మరియు క్రిప్టో వార్తలు",
+    "suggestion2": "గేమింగ్ క్లిప్‌లు మరియు esports",
+    "suggestion3": "ఇండీ సంగీత ఆవిష్కరణలు",
+    "suggestion4": "టెక్ వ్యవస్థాపకులు మరియు స్టార్టప్‌లు",
+    "suggestion5": "ఫుట్‌బాల్ హైలైట్స్"
   }
 }

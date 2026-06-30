@@ -24,7 +24,8 @@
     "connecting": "কানেক্ট অইতাসে...",
     "signMessage": "মেসেজে সাইন করো",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "নির্দেশ করুন"
   },
   "feed": {
     "home": "ঘর",
@@ -970,7 +971,8 @@
     "bounty": "Bounty",
     "locked": "Gated",
     "any": "Any",
-    "resetFilters": "Reset filters"
+    "resetFilters": "Reset filters",
+    "prompt": "নির্দেশ করুন"
   },
   "drawers": {
     "comments": "মন্তব্য",
@@ -1500,5 +1502,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "আপনার ফিড নির্দেশ করুন — DeHub",
+    "seoDescription": "DeHub কইন আপনার কি কি দেখাতো চাইন আর আমরা আপনার টাইমলাইন ঠিক করিলাইমু।",
+    "goHome": "হোমত যান",
+    "headline": "আপনি কিতা দেখাতো চাইন?",
+    "headlineShort": "আপনি কিতা চাইন?",
+    "subheadline": "আপনার পছন্দমতো ফিড কইন।",
+    "placeholder": "আর AI, গেমিং ক্লিপ, ইন্ডি মিউজিক…",
+    "send": "ফঠাও",
+    "stop": "বন্ধ কর",
+    "record": "রেকর্ড কর",
+    "skip": "বাদ দাও — আমারে সরাসরি ফিডে লইয়া যাও",
+    "submit": "জমা দেও",
+    "modalQuestion": "আপনি আর কিতা দেখাতো চাইন?",
+    "modalPlaceholder": "আর AI, টেক, গেমিং…",
+    "analysing": "আপনার পছন্দ বিচার করা অর…",
+    "timelineReady": "আপনার টাইমলাইন তৈরি",
+    "dragToTune": "আপনার মিশ্রণ সূক্ষ্মভাবে টিউন করার লাগি টানুন।",
+    "save": "সেভ কর",
+    "voiceUnsupported": "এই ব্রাউজারো ভয়েস ইনপুট সাপোর্ট করে না।",
+    "suggestion1": "আর AI আর ক্রিপ্টো খবর",
+    "suggestion2": "গেমিং ক্লিপ আর esports",
+    "suggestion3": "ইন্ডি মিউজিক আবিষ্কার",
+    "suggestion4": "টেক প্রতিষ্ঠাতা আর স্টার্টআপ",
+    "suggestion5": "ফুটবলর সেরা মুহূর্ত"
   }
 }

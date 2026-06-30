@@ -24,7 +24,8 @@
     "connecting": "کنیکٹ ہو رئی ہے...",
     "signMessage": "پیغام سائن کرو",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "Prompt"
   },
   "feed": {
     "home": "گھر",
@@ -304,7 +305,9 @@
     "bounty": "باؤنٹی",
     "locked": "گیٹڈ",
     "any": "کوئی بھی",
-    "resetFilters": "فلٹر ریسٹ"
+    "resetFilters": "فلٹر ریسٹ",
+    "prompt": "Prompt",
+    "for-you": "Tumhare liye"
   },
   "drawers": {
     "ppvTitle": "پے-پر-ویو کانٹینٹ",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "DeHub ku apna feed batao",
+    "seoDescription": "DeHub ku bolo ki tum kaiku nako dekhna aur hum tumhari timeline ku set karte.",
+    "goHome": "Ghar ku jao",
+    "headline": "Tum kaiku dekhna chahate?",
+    "headlineShort": "Tum kaiku chahate?",
+    "subheadline": "Apne pasand ka feed batao.",
+    "placeholder": "Aur AI, gaming clips, indie music…",
+    "send": "Bhejo",
+    "stop": "Roko",
+    "record": "Record karo",
+    "skip": "Skip karo — seedhe feed pe leke jao",
+    "submit": "Submit karo",
+    "modalQuestion": "Tum kaiku zyada dekhna chahate?",
+    "modalPlaceholder": "Aur AI, tech, gaming…",
+    "analysing": "Tumhari pasand check karre…",
+    "timelineReady": "Tumhari timeline ready hai",
+    "dragToTune": "Drag karke set karo tumhara mix.",
+    "save": "Save karo",
+    "voiceUnsupported": "Voice input ispe support nahi karta.",
+    "suggestion1": "Aur AI aur crypto news",
+    "suggestion2": "Gaming clips aur esports",
+    "suggestion3": "Indie music ke naye gaane",
+    "suggestion4": "Tech founders aur startups",
+    "suggestion5": "Football ke highlights"
   }
 }

@@ -24,7 +24,8 @@
     "connecting": "Ọ na-ejikọ...",
     "signMessage": "Debanye aha",
     "guide": "Nduzi",
-    "events": "Mmemme"
+    "events": "Mmemme",
+    "prompt": "Nye ndụmọdụ"
   },
   "feed": {
     "home": "Ụlọ",
@@ -304,7 +305,9 @@
     "bounty": "Ụgwọ",
     "locked": "Akpọchiri",
     "any": "Ọ bụla",
-    "resetFilters": "Tọgharia nyocha"
+    "resetFilters": "Tọgharia nyocha",
+    "prompt": "Nye ndụmọdụ",
+    "for-you": "Maka Gị"
   },
   "drawers": {
     "ppvTitle": "Ọdịnaya Kwụọ-Ka-Ị-Hụ",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Nye nri gị—DeHub",
+    "seoDescription": "Gwa DeHub ihe ị chọrọ ịhụ, anyị ga-emegharị ahịrị oge gị.",
+    "goHome": "Gaa n'ụlọ",
+    "headline": "Kedu ihe ị chọrọ ịhụ?",
+    "headlineShort": "Kedu ihe ị chọrọ?",
+    "subheadline": "Kọwaa nri gị zuru oke.",
+    "placeholder": "Ọtụtụ AI, vidiyo egwuregwu, egwu indie…",
+    "send": "Zipu",
+    "stop": "Kwụsị",
+    "record": "Detuo",
+    "skip": "Mafere – kpọga m na nri ahụ",
+    "submit": "Nyefee",
+    "modalQuestion": "Kedu ihe ị chọrọ ịhụ ọzọ?",
+    "modalPlaceholder": "Ọtụtụ AI, teknụzụ, egwuregwu…",
+    "analysing": "Na-enyocha mmasị gị…",
+    "timelineReady": "Ahịrị oge gị adịla njikere",
+    "dragToTune": "Dọrọ ka ịhazie ngwakọta gị.",
+    "save": "Chekwa",
+    "voiceUnsupported": "Ntinye olu anaghị akwado na ihe nchọgharị a.",
+    "suggestion1": "Ọtụtụ akụkọ AI na crypto",
+    "suggestion2": "Vidiyo egwuregwu na esports",
+    "suggestion3": "Nchọpụta egwu indie",
+    "suggestion4": "Ndị guzobere teknụzụ na ndị ọhụrụ",
+    "suggestion5": "Isi ihe banyere bọọlụ"
   }
 }

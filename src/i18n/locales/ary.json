@@ -24,7 +24,8 @@
     "connecting": "كيتكونيكطا...",
     "signMessage": "وقع الرسالة",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "برمجة"
   },
   "feed": {
     "home": "الصفحة الرئيسية",
@@ -304,7 +305,9 @@
     "bounty": "مكافأة",
     "locked": "مسدود",
     "any": "أي",
-    "resetFilters": "رجع الفلاتر"
+    "resetFilters": "رجع الفلاتر",
+    "prompt": "برمجة",
+    "for-you": "ليك"
   },
   "drawers": {
     "ppvTitle": "محتوى الدفع لكل مشاهدة",
@@ -1297,5 +1300,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "بْرمَج لْعَلَف ديالك — DeHub",
+    "seoDescription": "قول لـ DeHub آش بغيتي تشوف وحنا غادي نعدلو لك الخط الزمني ديالك.",
+    "goHome": "سير للصفحة الرئيسية",
+    "headline": "آشنو بغيتي تشوف؟",
+    "headlineShort": "آشنو بغيتي؟",
+    "subheadline": "وصف لينا العلف المثالي ديالك.",
+    "placeholder": "المزيد من AI، مقاطع ألعاب، موسيقى إيندي...",
+    "send": "صيفط",
+    "stop": "حبس",
+    "record": "سجل",
+    "skip": "تخطى — ديني مباشرة للعلف",
+    "submit": "إرسال",
+    "modalQuestion": "آشنو بغيتي تشوف كثر؟",
+    "modalPlaceholder": "المزيد من AI، تكنولوجيا، ألعاب...",
+    "analysing": "كنحللو اهتماماتك...",
+    "timelineReady": "الخط الزمني ديالك واجد",
+    "dragToTune": "جر باش تعدل المزيج ديالك.",
+    "save": "حفظ",
+    "voiceUnsupported": "الإدخال الصوتي غير مدعوم في هذا المتصفح.",
+    "suggestion1": "المزيد من أخبار AI والعملات المشفرة",
+    "suggestion2": "مقاطع ألعاب و esports",
+    "suggestion3": "اكتشافات الموسيقى الإيندي",
+    "suggestion4": "مؤسسو التكنولوجيا والشركات الناشئة",
+    "suggestion5": "ملخصات مباريات كرة القدم"
   }
 }

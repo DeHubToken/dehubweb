@@ -24,7 +24,8 @@
     "connecting": "Ansluter...",
     "signMessage": "Signera meddelande",
     "guide": "Guide",
-    "events": "Evenemang"
+    "events": "Evenemang",
+    "prompt": "Styr"
   },
   "feed": {
     "home": "Hem",
@@ -488,7 +489,9 @@
     "bounty": "Belöning",
     "locked": "Begränsat",
     "any": "Alla",
-    "resetFilters": "Återställ filter"
+    "resetFilters": "Återställ filter",
+    "prompt": "Styr",
+    "for-you": "För dig"
   },
   "commandCentre": {
     "title": "Kommandocentral",
@@ -1298,5 +1301,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Styr ditt flöde — DeHub",
+    "seoDescription": "Berätta för DeHub vad du vill se så anpassar vi din tidslinje.",
+    "goHome": "Gå hem",
+    "headline": "Vad vill du se?",
+    "headlineShort": "Vad vill du ha?",
+    "subheadline": "Beskriv ditt perfekta flöde.",
+    "placeholder": "Mer AI, spelklipp, indiemusik…",
+    "send": "Skicka",
+    "stop": "Stoppa",
+    "record": "Spela in",
+    "skip": "Hoppa över — ta mig bara till flödet",
+    "submit": "Skicka in",
+    "modalQuestion": "Vad vill du se mer av?",
+    "modalPlaceholder": "Mer AI, teknik, spel…",
+    "analysing": "Analyserar dina intressen…",
+    "timelineReady": "Din tidslinje är redo",
+    "dragToTune": "Dra för att finjustera din mix.",
+    "save": "Spara",
+    "voiceUnsupported": "Röstinmatning stöds inte i den här webbläsaren.",
+    "suggestion1": "Mer AI och kryptonyheter",
+    "suggestion2": "Spelklipp och esports",
+    "suggestion3": "Upptäckter av indiemusik",
+    "suggestion4": "Teknikgrundare och startups",
+    "suggestion5": "Fotbollshöjdpunkter"
   }
 }

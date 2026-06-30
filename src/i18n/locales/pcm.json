@@ -24,7 +24,8 @@
     "connecting": "E dey connect...",
     "signMessage": "Sign message",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "Prompt"
   },
   "feed": {
     "home": "Home",
@@ -304,7 +305,9 @@
     "bounty": "Bounty",
     "locked": "Gated",
     "any": "Any",
-    "resetFilters": "Reset filters"
+    "resetFilters": "Reset filters",
+    "prompt": "Prompt",
+    "for-you": "For You"
   },
   "drawers": {
     "ppvTitle": "Pay-Per-View Content",
@@ -1268,5 +1271,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Tell us wetin go show for your feed — DeHub",
+    "seoDescription": "Tell DeHub wetin you wan see and we go arrange your timeline.",
+    "goHome": "Go house",
+    "headline": "Wetin you wan see?",
+    "headlineShort": "Wetin you wan?",
+    "subheadline": "Explain how your perfect feed go be.",
+    "placeholder": "More AI, gaming clips, indie music…",
+    "send": "Send am",
+    "stop": "Stop",
+    "record": "Record",
+    "skip": "Skip — carry me go feed straight",
+    "submit": "Submit",
+    "modalQuestion": "Wetin you wan see plenty?",
+    "modalPlaceholder": "More AI, tech, gaming…",
+    "analysing": "De check wetin you like…",
+    "timelineReady": "Your timeline don ready",
+    "dragToTune": "Drag am to arrange your mix well well.",
+    "save": "Save",
+    "voiceUnsupported": "Voice input no dey work for this browser.",
+    "suggestion1": "Plenty AI and crypto news",
+    "suggestion2": "Gaming clips and esports",
+    "suggestion3": "Discover fresh indie music",
+    "suggestion4": "Tech founders and new businesses",
+    "suggestion5": "Football highlights"
   }
 }

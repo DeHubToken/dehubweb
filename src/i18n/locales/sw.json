@@ -24,7 +24,8 @@
     "connecting": "Inaunganisha...",
     "signMessage": "Saini ujumbe",
     "guide": "Mwongozo",
-    "events": "Matukio"
+    "events": "Matukio",
+    "prompt": "Ishara"
   },
   "feed": {
     "home": "Nyumbani",
@@ -304,7 +305,9 @@
     "bounty": "Zawadi",
     "locked": "Imefungwa",
     "any": "Yoyote",
-    "resetFilters": "Weka upya vichujio"
+    "resetFilters": "Weka upya vichujio",
+    "prompt": "Ishara",
+    "for-you": "Kwa Ajili Yako"
   },
   "drawers": {
     "ppvTitle": "Maudhui ya Kulipa-Kwa-Kutazama",
@@ -1268,5 +1271,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Weka ishara kwenye malisho yako — DeHub",
+    "seoDescription": "Iambie DeHub unachotaka kuona na tutarekebisha ratiba yako ya matukio.",
+    "goHome": "Nenda nyumbani",
+    "headline": "Unataka kuona nini?",
+    "headlineShort": "Unataka nini?",
+    "subheadline": "Eleza malisho yako kamili.",
+    "placeholder": "AI zaidi, klipu za michezo, muziki huru…",
+    "send": "Tuma",
+    "stop": "Simama",
+    "record": "Rekodi",
+    "skip": "Ruka — nipeleke kwenye malisho",
+    "submit": "Wasilisha",
+    "modalQuestion": "Unataka kuona nini zaidi?",
+    "modalPlaceholder": "AI zaidi, teknolojia, michezo…",
+    "analysing": "Inachambua maslahi yako…",
+    "timelineReady": "Ratiba yako ya matukio iko tayari",
+    "dragToTune": "Buruta ili kurekebisha mchanganyiko wako.",
+    "save": "Hifadhi",
+    "voiceUnsupported": "Uingizaji wa sauti hautumiki katika kivinjari hiki.",
+    "suggestion1": "AI zaidi na habari za crypto",
+    "suggestion2": "Klipu za michezo na esports",
+    "suggestion3": "Uvumbuzi wa muziki huru",
+    "suggestion4": "Waanzilishi wa teknolojia na makampuni chipukizi",
+    "suggestion5": "Muhtasari wa mpira wa miguu"
   }
 }

@@ -24,7 +24,8 @@
     "connecting": "जुड़त हे...",
     "signMessage": "संदेश मा हस्ताक्षर करव",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "संकेत"
   },
   "feed": {
     "home": "घर",
@@ -304,7 +305,9 @@
     "bounty": "इनाम",
     "locked": "बंद",
     "any": "कोनो भी",
-    "resetFilters": "फिल्टर साफ करव"
+    "resetFilters": "फिल्टर साफ करव",
+    "prompt": "संकेत",
+    "for-you": "आपके बर"
   },
   "drawers": {
     "ppvTitle": "पे-पर-व्यू सामग्री",
@@ -1311,5 +1314,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "अपन फ़ीड ल संकेत देवव — DeHub",
+    "seoDescription": "DeHub ला बतावव जउन आप देखन चाहत हव अउ हमर तुहर टाइमलाइन ल सही कर देबव।",
+    "goHome": "घर जावव",
+    "headline": "आप का देखन चाहत हव?",
+    "headlineShort": "आप का चाहत हव?",
+    "subheadline": "अपन एकदम सही फ़ीड के वर्णन करव।",
+    "placeholder": "और AI, गेमिंग क्लिप, इंडी संगीत…",
+    "send": "भेजव",
+    "stop": "रोकव",
+    "record": "रिकॉर्ड करव",
+    "skip": "छोड़ दव — सीधा फ़ीड म ले जावव",
+    "submit": "जमा करव",
+    "modalQuestion": "आप का जादा देखन चाहत हव?",
+    "modalPlaceholder": "और AI, टेक, गेमिंग…",
+    "analysing": "आपकी रुचि के विश्लेषण करत हावय…",
+    "timelineReady": "तुहर टाइमलाइन तय्यार हावय",
+    "dragToTune": "अपन मिश्रण ल ठीक करे बर घसिंटव।",
+    "save": "बांचावव",
+    "voiceUnsupported": "ए वेइब ब्राउज़र म आवाज इनपुट समर्थित नइ हे।",
+    "suggestion1": "और AI अउ क्रिप्टो समाचार",
+    "suggestion2": "गेमिंग क्लिप अउ esports",
+    "suggestion3": "इंडी संगीत के खोज",
+    "suggestion4": "टेक संस्थापक अउ स्टार्टअप",
+    "suggestion5": "फुटबॉल के खास पल"
   }
 }

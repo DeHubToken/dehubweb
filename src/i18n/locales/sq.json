@@ -24,7 +24,8 @@
     "connecting": "Po lidhet...",
     "signMessage": "Nënshkruaj mesazhin",
     "guide": "Udhëzues",
-    "events": "Ngjarje"
+    "events": "Ngjarje",
+    "prompt": "Kërkesa"
   },
   "feed": {
     "home": "Kryefaqja",
@@ -304,7 +305,9 @@
     "bounty": "Shpërblim",
     "locked": "E Mbyllur",
     "any": "Çfarëdo",
-    "resetFilters": "Rivendos filtrat"
+    "resetFilters": "Rivendos filtrat",
+    "prompt": "Kërkesa jote",
+    "for-you": "Për ty"
   },
   "drawers": {
     "ppvTitle": "Përmbajtje me Pagesë për Shikim",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Kërkesa jote — DeHub",
+    "seoDescription": "Tregoi DeHub-it se çfarë dëshiron të shohësh dhe ne do të rregullojmë kronologjinë tënde.",
+    "goHome": "Shko te faqja kryesore",
+    "headline": "Çfarë dëshiron të shohësh?",
+    "headlineShort": "Çfarë dëshiron?",
+    "subheadline": "Përshkruaj ushqimin tënd perfekt.",
+    "placeholder": "Më shumë AI, klipe lojërash, muzikë indie...",
+    "send": "Dërgo",
+    "stop": "Ndalo",
+    "record": "Regjistro",
+    "skip": "Anashkalo — thjesht më çoni te burimi",
+    "submit": "Dërgo",
+    "modalQuestion": "Çfarë dëshiron të shohësh më shumë?",
+    "modalPlaceholder": "Më shumë AI, teknologji, gaming...",
+    "analysing": "Duke analizuar interesat tuaja...",
+    "timelineReady": "Kronologjia juaj është gati",
+    "dragToTune": "Zvarrit për të rregulluar përzierjen tënde.",
+    "save": "Ruaj",
+    "voiceUnsupported": "Hyrja me zë nuk mbështetet në këtë shfletues.",
+    "suggestion1": "Më shumë lajme për AI dhe kriptovaluta",
+    "suggestion2": "Klipe lojërash dhe esports",
+    "suggestion3": "Zbulime muzikore indie",
+    "suggestion4": "Themelues të teknologjisë dhe sipërmarrje",
+    "suggestion5": "Pjesë të theksuara nga futbolli"
   }
 }

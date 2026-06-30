@@ -24,7 +24,8 @@
     "connecting": "ਜੁੜ ਰਿਹਾ ਹੈ...",
     "signMessage": "ਸੁਨੇਹੇ ਤੇ ਦਸਤਖ਼ਤ",
     "guide": "ਗਾਈਡ",
-    "events": "ਸਮਾਗਮ"
+    "events": "ਸਮਾਗਮ",
+    "prompt": "ਪ੍ਰੋਂਪਟ"
   },
   "feed": {
     "home": "ਹੋਮ",
@@ -488,7 +489,9 @@
     "bounty": "ਇਨਾਮ",
     "locked": "ਸੀਮਤ",
     "any": "ਸਭ",
-    "resetFilters": "ਫਿਲਟਰ ਰੀਸੈੱਟ ਕਰੋ"
+    "resetFilters": "ਫਿਲਟਰ ਰੀਸੈੱਟ ਕਰੋ",
+    "prompt": "ਪ੍ਰੋਂਪਟ",
+    "for-you": "ਤੁਹਾਡੇ ਲਈ"
   },
   "commandCentre": {
     "title": "ਕਮਾਂਡ ਸੈਂਟਰ",
@@ -1271,5 +1274,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "ਆਪਣੀ ਫੀਡ ਨੂੰ ਪ੍ਰੋਂਪਟ ਕਰੋ — DeHub",
+    "seoDescription": "DeHub ਨੂੰ ਦੱਸੋ ਕਿ ਤੁਸੀਂ ਕੀ ਦੇਖਣਾ ਚਾਹੁੰਦੇ ਹੋ ਅਤੇ ਅਸੀਂ ਤੁਹਾਡੀ ਟਾਈਮਲਾਈਨ ਨੂੰ ਟਿਊਨ ਕਰਾਂਗੇ।",
+    "goHome": "ਘਰ ਜਾਓ",
+    "headline": "ਤੁਸੀਂ ਕੀ ਦੇਖਣਾ ਚਾਹੁੰਦੇ ਹੋ?",
+    "headlineShort": "ਤੁਸੀਂ ਕੀ ਚਾਹੁੰਦੇ ਹੋ?",
+    "subheadline": "ਆਪਣੀ ਸੰਪੂਰਨ ਫੀਡ ਦਾ ਵਰਣਨ ਕਰੋ।",
+    "placeholder": "ਹੋਰ AI, ਗੇਮਿੰਗ ਕਲਿੱਪਾਂ, ਇੰਡੀ ਸੰਗੀਤ…",
+    "send": "ਭੇਜੋ",
+    "stop": "ਰੋਕੋ",
+    "record": "ਰਿਕਾਰਡ ਕਰੋ",
+    "skip": "ਛੱਡੋ — ਬਸ ਮੈਨੂੰ ਫੀਡ 'ਤੇ ਲੈ ਜਾਓ",
+    "submit": "ਜਮ੍ਹਾ ਕਰੋ",
+    "modalQuestion": "ਤੁਸੀਂ ਹੋਰ ਕੀ ਦੇਖਣਾ ਚਾਹੁੰਦੇ ਹੋ?",
+    "modalPlaceholder": "ਹੋਰ AI, ਤਕਨੀਕ, ਗੇਮਿੰਗ…",
+    "analysing": "ਤੁਹਾਡੀਆਂ ਰੁਚੀਆਂ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ…",
+    "timelineReady": "ਤੁਹਾਡੀ ਟਾਈਮਲਾਈਨ ਤਿਆਰ ਹੈ",
+    "dragToTune": "ਆਪਣੇ ਮਿਸ਼ਰਣ ਨੂੰ ਵਧੀਆ ਬਣਾਉਣ ਲਈ ਖਿੱਚੋ।",
+    "save": "ਸੇਵ ਕਰੋ",
+    "voiceUnsupported": "ਇਸ ਬ੍ਰਾਊਜ਼ਰ ਵਿੱਚ ਵੌਇਸ ਇਨਪੁਟ ਸਮਰਥਿਤ ਨਹੀਂ ਹੈ।",
+    "suggestion1": "ਹੋਰ AI ਅਤੇ ਕ੍ਰਿਪਟੋ ਖ਼ਬਰਾਂ",
+    "suggestion2": "ਗੇਮਿੰਗ ਕਲਿੱਪਾਂ ਅਤੇ esports",
+    "suggestion3": "ਇੰਡੀ ਸੰਗੀਤ ਖੋਜਾਂ",
+    "suggestion4": "ਤਕਨੀਕੀ ਸੰਸਥਾਪਕ ਅਤੇ ਸਟਾਰਟਅੱਪ",
+    "suggestion5": "ਫੁੱਟਬਾਲ ਹਾਈਲਾਈਟਸ"
   }
 }

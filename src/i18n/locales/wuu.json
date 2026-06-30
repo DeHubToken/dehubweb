@@ -24,7 +24,8 @@
     "connecting": "连接中...",
     "signMessage": "签名消息",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "提示"
   },
   "feed": {
     "home": "主页",
@@ -304,7 +305,9 @@
     "bounty": "赏金",
     "locked": "已锁定",
     "any": "任何",
-    "resetFilters": "重设筛选"
+    "resetFilters": "重设筛选",
+    "prompt": "提示",
+    "for-you": "为侬推荐"
   },
   "drawers": {
     "ppvTitle": "付费内容",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "提示侬嗰信息 — DeHub",
+    "seoDescription": "告诉DeHub侬想看啥，我们会调整侬嗰时间线。",
+    "goHome": "回主页",
+    "headline": "侬想看啥？",
+    "headlineShort": "侬想啥？",
+    "subheadline": "描述侬理想嗰信息流。",
+    "placeholder": "更加多嗰AI，游戏片段，独立音乐…",
+    "send": "发送",
+    "stop": "停止",
+    "record": "录音",
+    "skip": "跳过 — 直接带我去信息流",
+    "submit": "提交",
+    "modalQuestion": "侬想多看点啥？",
+    "modalPlaceholder": "更加多嗰AI，科技，游戏…",
+    "analysing": "分析侬嗰兴趣中…",
+    "timelineReady": "侬嗰时间线已经准备好哉",
+    "dragToTune": "拖动来微调侬嗰组合。",
+    "save": "保存",
+    "voiceUnsupported": "迭个浏览器不支持语音输入。",
+    "suggestion1": "更加多嗰AI搭加密货币新闻",
+    "suggestion2": "游戏片段搭esports",
+    "suggestion3": "独立音乐发现",
+    "suggestion4": "科技创始人搭新创企业",
+    "suggestion5": "足球集锦"
   }
 }

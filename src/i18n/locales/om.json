@@ -24,7 +24,8 @@
     "connecting": "Walqunnamaa...",
     "signMessage": "Ergaa Mallatteessi",
     "guide": "Guide",
-    "events": "Taateewwan"
+    "events": "Taateewwan",
+    "prompt": "Kakaasi"
   },
   "feed": {
     "home": "Mana",
@@ -304,7 +305,9 @@
     "bounty": "Badhaasa",
     "locked": "Cufamaa",
     "any": "Kamiyyuu",
-    "resetFilters": "Calaltuu haqqi"
+    "resetFilters": "Calaltuu haqqi",
+    "prompt": "Kakaasi",
+    "for-you": "Akka kee"
   },
   "drawers": {
     "ppvTitle": "Qabiyyee Kaffalamaa",
@@ -1317,5 +1320,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Nyaata keessan kakaasi — DeHub",
+    "seoDescription": "DeHubitti wanta arguun barbaaddan himaa, nutis yeroo keessan ni qabna.",
+    "goHome": "Gara manaatti deebi’i",
+    "headline": "Maal arguu barbaadda?",
+    "headlineShort": "Maal barbaadda?",
+    "subheadline": "Nyaata keessan guutuu ibsaa.",
+    "placeholder": "AI dabalataa, viidiyoowwan taphootaa, muuziqaa indie…",
+    "send": "Ergi",
+    "stop": "Dhaabi",
+    "record": "Waraabi",
+    "skip": "Dabarsi — gara nyaataatti na geessi",
+    "submit": "Dhiyeessi",
+    "modalQuestion": "Maal caalaa arguu barbaadda?",
+    "modalPlaceholder": "AI dabalataa, teeknooloojii, taphoota…",
+    "analysing": "Fedhii keessan xiinxalaa jira…",
+    "timelineReady": "Yeroon keessan qophii dha",
+    "dragToTune": "Waliin makamuu keessan sirreessuuf harkisaa.",
+    "save": "Olkaa’i",
+    "voiceUnsupported": "Sagalee galchuun braawzara kana keessatti hin deeggeramu.",
+    "suggestion1": "Oduu AI fi kiriptoo dabalataa",
+    "suggestion2": "Viidiyoowwan taphootaa fi esports",
+    "suggestion3": "Odaawwan muuziqaa indie",
+    "suggestion4": "Hundeessitootaa fi dhaabbatoota teeknooloojii",
+    "suggestion5": "Qabxiiwwan kubbaa miilaa"
   }
 }

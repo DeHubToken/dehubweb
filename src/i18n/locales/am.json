@@ -24,7 +24,8 @@
     "connecting": "እየተገናኘ...",
     "signMessage": "መልዕክት ፈርም",
     "guide": "መመሪያ",
-    "events": "ዝግጅቶች"
+    "events": "ዝግጅቶች",
+    "prompt": "ጥያቄ"
   },
   "feed": {
     "home": "መነሻ",
@@ -304,7 +305,9 @@
     "bounty": "ሽልማት",
     "locked": "የተቆለፈ",
     "any": "ማንኛውም",
-    "resetFilters": "ማጣሪያዎችን ዳግም አስጀምር"
+    "resetFilters": "ማጣሪያዎችን ዳግም አስጀምር",
+    "prompt": "ጥያቄ",
+    "for-you": "ለእርስዎ"
   },
   "drawers": {
     "ppvTitle": "በእይታ-ክፈል ይዘት",
@@ -1297,5 +1300,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "የእርስዎን ምግብ ይጠይቁ — DeHub",
+    "seoDescription": "ለDeHub ምን ማየት እንደሚፈልጉ ይንገሩን እና የጊዜ መስመርዎን እናስተካክላለን።",
+    "goHome": "ወደ መነሻ ገጽ ይሂዱ",
+    "headline": "ምን ማየት ይፈልጋሉ?",
+    "headlineShort": "ምን ይፈልጋሉ?",
+    "subheadline": "ፍጹም ምግብዎን ይግለጹ።",
+    "placeholder": "ተጨማሪ AI፣ የጨዋታ ክሊፖች፣ ኢንዲ ሙዚቃ…",
+    "send": "ይላኩ",
+    "stop": "አቁም",
+    "record": "ይቅረጹ",
+    "skip": "ይዝለሉ — በቀጥታ ወደ ምግብ ይውሰዱኝ",
+    "submit": "አስገባ",
+    "modalQuestion": "ምን ተጨማሪ ማየት ይፈልጋሉ?",
+    "modalPlaceholder": "ተጨማሪ AI፣ ቴክኖሎጂ፣ ጌም…",
+    "analysing": "ፍላጎቶችዎን እየተተነተነ ነው…",
+    "timelineReady": "የጊዜ መስመርዎ ዝግጁ ነው።",
+    "dragToTune": "የእርስዎን ድብልቅ ለማስተካከል ይጎትቱ።",
+    "save": "አስቀምጥ",
+    "voiceUnsupported": "የድምፅ ግቤት በዚህ አሳሽ ውስጥ አይደገፍም።",
+    "suggestion1": "ተጨማሪ AI እና ክሪፕቶ ዜናዎች",
+    "suggestion2": "የጨዋታ ክሊፖች እና esports",
+    "suggestion3": "የኢንዲ ሙዚቃ ግኝቶች",
+    "suggestion4": "የቴክኖሎጂ መስራቾች እና ጅምር ኩባንያዎች",
+    "suggestion5": "የእግር ኳስ ድምቀቶች"
   }
 }

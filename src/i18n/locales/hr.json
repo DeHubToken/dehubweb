@@ -24,7 +24,8 @@
     "connecting": "Povezivanje...",
     "signMessage": "Potpišite poruku",
     "guide": "Vodič",
-    "events": "Događaji"
+    "events": "Događaji",
+    "prompt": "Potakni"
   },
   "feed": {
     "home": "Početna",
@@ -304,7 +305,9 @@
     "bounty": "Nagrada",
     "locked": "Zaključano",
     "any": "Bilo koji",
-    "resetFilters": "Poništi filtere"
+    "resetFilters": "Poništi filtere",
+    "prompt": "Potakni",
+    "for-you": "Za Vas"
   },
   "drawers": {
     "ppvTitle": "Sadržaj s plaćanjem po pregledu",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Potaknite svoj feed — DeHub",
+    "seoDescription": "Recite DeHubu što želite vidjeti i mi ćemo prilagoditi vašu vremensku traku.",
+    "goHome": "Idi na početnu",
+    "headline": "Što želite vidjeti?",
+    "headlineShort": "Što želite?",
+    "subheadline": "Opišite svoj savršeni feed.",
+    "placeholder": "Više AI-a, isječaka igara, indie glazbe…",
+    "send": "Pošalji",
+    "stop": "Zaustavi",
+    "record": "Snimi",
+    "skip": "Preskoči — samo me odvedi na feed",
+    "submit": "Predaj",
+    "modalQuestion": "Što želite vidjeti više?",
+    "modalPlaceholder": "Više AI-a, tehnologije, igara…",
+    "analysing": "Analiziram vaše interese…",
+    "timelineReady": "Vaša je vremenska traka spremna",
+    "dragToTune": "Povucite za preciznu prilagodbu vašeg miksa.",
+    "save": "Spremi",
+    "voiceUnsupported": "Glasovni unos nije podržan u ovom pregledniku.",
+    "suggestion1": "Više AI i kripto vijesti",
+    "suggestion2": "Gaming isječci i esports",
+    "suggestion3": "Otkrića indie glazbe",
+    "suggestion4": "Tehnološki osnivači i startupi",
+    "suggestion5": "Nogometni highlights"
   }
 }

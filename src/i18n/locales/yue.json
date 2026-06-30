@@ -24,7 +24,8 @@
     "connecting": "連接緊...",
     "signMessage": "簽署訊息",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "提示"
   },
   "feed": {
     "home": "主頁",
@@ -304,7 +305,9 @@
     "bounty": "賞金",
     "locked": "已鎖定",
     "any": "任何",
-    "resetFilters": "重設篩選"
+    "resetFilters": "重設篩選",
+    "prompt": "提示",
+    "for-you": "為你推薦"
   },
   "drawers": {
     "ppvTitle": "付費內容",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "提示你的訂閱 — DeHub",
+    "seoDescription": "告訴 DeHub 你想看什麼，我們會調整你的時間線。",
+    "goHome": "前往首頁",
+    "headline": "你想看什麼？",
+    "headlineShort": "你想要什麼？",
+    "subheadline": "描述你理想的訂閱。",
+    "placeholder": "更多 AI、遊戲片段、獨立音樂…",
+    "send": "發送",
+    "stop": "停止",
+    "record": "錄音",
+    "skip": "跳過 — 直接帶我去訂閱",
+    "submit": "提交",
+    "modalQuestion": "你想看更多什麼？",
+    "modalPlaceholder": "更多 AI、科技、遊戲…",
+    "analysing": "正在分析你的興趣…",
+    "timelineReady": "你的時間線已準備好",
+    "dragToTune": "拖動以微調你的內容。",
+    "save": "保存",
+    "voiceUnsupported": "此瀏覽器不支持語音輸入。",
+    "suggestion1": "更多 AI 和加密貨幣新聞",
+    "suggestion2": "遊戲片段和 esports",
+    "suggestion3": "獨立音樂發現",
+    "suggestion4": "科技創辦人和初創公司",
+    "suggestion5": "足球精彩片段"
   }
 }

@@ -24,7 +24,8 @@
     "connecting": "连接中...",
     "signMessage": "签名消息",
     "guide": "Guide",
-    "events": "Events"
+    "events": "Events",
+    "prompt": "提示"
   },
   "feed": {
     "home": "首页",
@@ -304,7 +305,9 @@
     "bounty": "赏金",
     "locked": "锁住",
     "any": "任意",
-    "resetFilters": "重置筛选"
+    "resetFilters": "重置筛选",
+    "prompt": "提示",
+    "for-you": "为您"
   },
   "drawers": {
     "ppvTitle": "付费内容",
@@ -1311,5 +1314,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "提示你的内容 — DeHub",
+    "seoDescription": "告诉 DeHub 你想看什么，我们会调整你的时间线。",
+    "goHome": "回主页",
+    "headline": "你想看什么？",
+    "headlineShort": "你想看什么？",
+    "subheadline": "描述你完美的内容。",
+    "placeholder": "更多 AI, 游戏片段, 独立音乐…",
+    "send": "发",
+    "stop": "停",
+    "record": "录",
+    "skip": "跳过 — 直接带我去内容",
+    "submit": "提交",
+    "modalQuestion": "你想看更多什么？",
+    "modalPlaceholder": "更多 AI, 科技, 游戏…",
+    "analysing": "正在分析你的兴趣…",
+    "timelineReady": "你的时间线已准备好",
+    "dragToTune": "拖动以微调你的混合。",
+    "save": "保存",
+    "voiceUnsupported": "此浏览器不支持语音输入。",
+    "suggestion1": "更多 AI 和加密货币新闻",
+    "suggestion2": "游戏片段和 esports",
+    "suggestion3": "独立音乐发现",
+    "suggestion4": "科技创始人和初创公司",
+    "suggestion5": "足球精彩集锦"
   }
 }

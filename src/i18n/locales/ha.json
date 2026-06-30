@@ -24,7 +24,8 @@
     "connecting": "Ana haɗawa...",
     "signMessage": "Sanya hannu",
     "guide": "Jagora",
-    "events": "Abubuwan"
+    "events": "Abubuwan",
+    "prompt": "Fadakarwa"
   },
   "feed": {
     "home": "Gida",
@@ -304,7 +305,9 @@
     "bounty": "Lada",
     "locked": "An kulle",
     "any": "Kowanne",
-    "resetFilters": "Sake saita tacewa"
+    "resetFilters": "Sake saita tacewa",
+    "prompt": "Fadakarwa",
+    "for-you": "Domin Kai"
   },
   "drawers": {
     "ppvTitle": "Abun Ciki na Biya-Da-Kallo",
@@ -1267,5 +1270,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Fadakar da abincinka - DeHub",
+    "seoDescription": "Fadakar da DeHub abin da kake so ka gani kuma za mu gyara layin lokacinka.",
+    "goHome": "Koma gida",
+    "headline": "Me kake so ka gani?",
+    "headlineShort": "Me kake so?",
+    "subheadline": "Bayyana cikakken abincinka.",
+    "placeholder": "Karin AI, faifan wasanni, wakokin indie...",
+    "send": "Aika",
+    "stop": "Tsaya",
+    "record": "Yi Rikodi",
+    "skip": "Tsallake - kawai kai ni layin abinci",
+    "submit": "Aika",
+    "modalQuestion": "Me kake so ka ga karinshi?",
+    "modalPlaceholder": "Karin AI, fasaha, wasanni...",
+    "analysing": "Nazarin abubuwan da kake so...",
+    "timelineReady": "Layinka na abinci a shirye yake",
+    "dragToTune": "Ja don daidaita gaurayinka.",
+    "save": "Ajiye",
+    "voiceUnsupported": "Ba a goyi bayan shigar da murya a wannan burauzar ba.",
+    "suggestion1": "Karin labaran AI da crypto",
+    "suggestion2": "Faifan wasanni da esports",
+    "suggestion3": "Gano wakokin indie",
+    "suggestion4": "Masu kafa fasaha da farfesa",
+    "suggestion5": "Bayanan kula na kwallon kafa"
   }
 }

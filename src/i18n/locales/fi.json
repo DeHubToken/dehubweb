@@ -24,7 +24,8 @@
     "connecting": "Yhdistetään...",
     "signMessage": "Allekirjoita viesti",
     "guide": "Opas",
-    "events": "Tapahtumat"
+    "events": "Tapahtumat",
+    "prompt": "Ohjaa"
   },
   "feed": {
     "home": "Koti",
@@ -296,7 +297,9 @@
     "bounty": "Palkkio",
     "locked": "Lukittu",
     "any": "Mikä tahansa",
-    "resetFilters": "Nollaa suodattimet"
+    "resetFilters": "Nollaa suodattimet",
+    "prompt": "Ohjaa",
+    "for-you": "Sinulle"
   },
   "drawers": {
     "ppvTitle": "Maksu-per-katselu -sisältö",
@@ -1258,5 +1261,31 @@
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
     "transaction_failed": "Transaction failed"
+  },
+  "prompt": {
+    "seoTitle": "Ohjaa syötteesi – DeHub",
+    "seoDescription": "Kerro DeHubille, mitä haluat nähdä, niin viritämme aikajanasi.",
+    "goHome": "Siirry kotiin",
+    "headline": "Mitä haluat nähdä?",
+    "headlineShort": "Mitä haluat?",
+    "subheadline": "Kuvaile täydellinen syötteesi.",
+    "placeholder": "Lisää tekoälyä, peliklippejä, indie-musiikkia…",
+    "send": "Lähetä",
+    "stop": "Pysäytä",
+    "record": "Tallenna",
+    "skip": "Ohita – vie minut suoraan syötteeseen",
+    "submit": "Lähetä",
+    "modalQuestion": "Mitä haluat nähdä enemmän?",
+    "modalPlaceholder": "Lisää tekoälyä, teknologiaa, pelaamista…",
+    "analysing": "Analysoidaan kiinnostuksiasi…",
+    "timelineReady": "Aikajanasi on valmis",
+    "dragToTune": "Vedä säätääksesi sekoitusta.",
+    "save": "Tallenna",
+    "voiceUnsupported": "Selaimessasi ei tueta äänisyöttöä.",
+    "suggestion1": "Lisää AI- ja krypto-uutisia",
+    "suggestion2": "Peliklippejä ja esportsia",
+    "suggestion3": "Indie-musiikkilöytöjä",
+    "suggestion4": "Teknologian perustajat ja startupit",
+    "suggestion5": "Jalkapallon kohokohdat"
   }
 }

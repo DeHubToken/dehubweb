@@ -24,7 +24,8 @@
     "connecting": "Mifandray...",
     "signMessage": "Soniavy ny hafatra",
     "guide": "Torolalana",
-    "events": "Hetsika"
+    "events": "Hetsika",
+    "prompt": "Ampodio"
   },
   "feed": {
     "home": "Fandraisana",
@@ -304,7 +305,9 @@
     "bounty": "Valisoa",
     "locked": "Mihidy",
     "any": "Na inona na inona",
-    "resetFilters": "Avereno ny sivana"
+    "resetFilters": "Avereno ny sivana",
+    "prompt": "Ampodio",
+    "for-you": "Ho Anao"
   },
   "drawers": {
     "ppvTitle": "Atiny vidiam-bola",
@@ -1365,5 +1368,31 @@
     "txPpvSale": "PPV sale — {{amount}} DHB",
     "txTipSent": "You tipped {{name}} {{amount}} DHB",
     "txTipReceived": "{{name}} tipped you {{amount}} DHB"
+  },
+  "prompt": {
+    "seoTitle": "Ampodio ny sakafonao — DeHub",
+    "seoDescription": "Lazao amin'i DeHub izay tianao hojerena ary hamboarinay ny fandaharam-potoananao.",
+    "goHome": "Mankanesa any amin'ny pejy fandraisana",
+    "headline": "Inona no tianao hojerena?",
+    "headlineShort": "Inona no tianao?",
+    "subheadline": "Farito ny sakafonao lavorary.",
+    "placeholder": "AI bebe kokoa, horonan-tsary momba ny lalao, mozika indie…",
+    "send": "Alefaso",
+    "stop": "Ajanony",
+    "record": "Raketo",
+    "skip": "Adino — ento any amin'ny feed fotsiny aho",
+    "submit": "Alefaso",
+    "modalQuestion": "Inona no tianao hojerena bebe kokoa?",
+    "modalPlaceholder": "AI bebe kokoa, teknolojia, lalao…",
+    "analysing": "Mikajy ny tombontsoanao…",
+    "timelineReady": "Efa vonona ny fandaharam-potoananao",
+    "dragToTune": "Tariho mba hanitsiana tsara ny fifangaroanao.",
+    "save": "Tehirizo",
+    "voiceUnsupported": "Tsy tohanana amin'ity navigateur ity ny fandraisana feo.",
+    "suggestion1": "Vaovao momba ny AI sy crypto bebe kokoa",
+    "suggestion2": "Horonan-tsary momba ny lalao sy esports",
+    "suggestion3": "Fikarohana mozika indie",
+    "suggestion4": "Mpanorina teknolojia sy fanombohana",
+    "suggestion5": "Fanazavana lehibe momba ny baolina kitra"
   }
 }
