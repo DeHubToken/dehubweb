@@ -294,10 +294,10 @@ export function Compositor() {
   };
 
   return (
-    <section className="flex h-full min-h-0 flex-1 flex-col bg-black">
+    <section className="flex h-full min-h-0 min-w-0 flex-1 flex-col bg-black">
       <div
         ref={wrapRef}
-        className="relative flex flex-1 items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.04),_transparent_70%)] p-6"
+        className="relative flex min-h-0 min-w-0 flex-1 items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.04),_transparent_70%)] p-6"
       >
         <div
           style={{
@@ -357,7 +357,7 @@ export function Compositor() {
         </div>
       </div>
 
-      <div className="flex items-center gap-3 border-t border-white/10 bg-black/60 px-4 py-2.5 backdrop-blur-[24px]">
+      <div className="flex min-w-0 items-center gap-3 border-t border-white/10 bg-black/60 px-4 py-2.5 backdrop-blur-[24px]">
         <Button
           size="icon"
           variant="ghost"
@@ -415,7 +415,7 @@ export function Compositor() {
           max={Math.max(duration, 0.01)}
           step={1 / settings.fps}
           onValueChange={(v) => { setIsPlaying(false); setCurrentTime(v[0] ?? 0); }}
-          className="flex-1"
+          className="min-w-0 flex-1"
           disabled={duration <= 0}
         />
       </div>
