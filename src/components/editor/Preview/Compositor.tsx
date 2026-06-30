@@ -10,6 +10,7 @@ import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
 import type { Clip, MediaClip, TextClip } from "@/lib/editor/types";
+import { computeRenderOps, type RenderOp } from "@/lib/editor/transitions";
 
 function fmtTime(t: number, fps: number) {
   if (!Number.isFinite(t) || t < 0) t = 0;
