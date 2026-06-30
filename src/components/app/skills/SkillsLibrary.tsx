@@ -44,9 +44,13 @@ export function SkillsLibrary() {
           </h2>
           <p className="text-xs text-zinc-500">Reusable prompt + brand kits for the AI assistant. Anyone can create or use them.</p>
         </div>
-        <LiquidGlassBubble2 onClick={() => { setEditing(null); setCreateOpen(true); }} disabled={!walletAddress}>
-          <Plus className="w-4 h-4 mr-1" /> Create Skill
-        </LiquidGlassBubble2>
+        <LiquidGlassBubble2
+          onClick={() => { setEditing(null); setCreateOpen(true); }}
+          disabled={!walletAddress}
+          label="Create Skill"
+          icon={<Plus className="w-4 h-4" />}
+          width="150px"
+        />
       </div>
 
       <div className="flex flex-col sm:flex-row gap-2">

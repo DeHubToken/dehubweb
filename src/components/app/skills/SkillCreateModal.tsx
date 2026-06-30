@@ -149,9 +149,13 @@ export function SkillCreateModal({ open, onOpenChange, editing }: Props) {
           </div>
           <div className="flex justify-end gap-2 pt-2">
             <Button variant="ghost" onClick={() => onOpenChange(false)}>Cancel</Button>
-            <LiquidGlassBubble2 onClick={handleSave} disabled={isSaving}>
-              {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : editing ? 'Save changes' : 'Create skill'}
-            </LiquidGlassBubble2>
+            <LiquidGlassBubble2
+              onClick={handleSave}
+              disabled={isSaving}
+              loading={isSaving}
+              label={editing ? 'Save changes' : 'Create skill'}
+              width="160px"
+            />
           </div>
         </div>
       </DialogContent>

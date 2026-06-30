@@ -75,7 +75,7 @@ export function SkillDetailDrawer({ skill, open, onOpenChange, onEdit }: Props) 
             </div>
           )}
           <div className="flex flex-wrap gap-2 pt-2">
-            <LiquidGlassBubble2 onClick={handleUse}>Use in Assistant</LiquidGlassBubble2>
+            <LiquidGlassBubble2 onClick={handleUse} label="Use in Assistant" width="170px" />
             {isOwner && (
               <>
                 <Button variant="ghost" size="sm" onClick={() => { onEdit(skill); onOpenChange(false); }}>
