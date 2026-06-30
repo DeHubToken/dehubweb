@@ -270,7 +270,7 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
                     max={100}
                     value={w.weight}
                     onChange={e => handleWeightChange(w.id, Number(e.target.value))}
-                    className="flex-1 accent-white"
+                    className="flex-1 accent-white focus:outline-none focus-visible:outline-none"
                   />
                   <span className="text-xs text-white/60 w-10 text-right tabular-nums">{w.weight}%</span>
                 </div>
