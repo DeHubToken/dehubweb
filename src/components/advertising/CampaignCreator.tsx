@@ -101,7 +101,7 @@ const CampaignCreator = () => {
             </div>
 
             <div className="space-y-4 w-full">
-              <div className="p-4 border rounded-lg bg-muted/20 w-full">
+              <div className="p-4 border rounded-lg bg-white/5 w-full">
                 <h3 className="font-semibold mb-2 flex items-center gap-2">
                   <Eye className="w-4 h-4" />
                   Estimated Performance
@@ -138,7 +138,7 @@ const CampaignCreator = () => {
             <MapPin className="w-5 h-5 text-white" />
             Geographic Targeting
           </CardTitle>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-zinc-400">
             Select regions and countries to target your campaign audience
           </p>
         </CardHeader>
@@ -182,8 +182,8 @@ const CampaignCreator = () => {
                 
                 {selectedCountries.length > 0 && <div className="space-y-2">
                     <Label className="text-sm">Selected Countries ({selectedCountries.length})</Label>
-                    <div className="flex flex-wrap gap-2 p-3 border rounded-lg bg-muted/20 max-h-32 overflow-y-auto">
-                      {selectedCountries.map(country => <Badge key={country} variant="secondary" className="flex items-center gap-1">
+                    <div className="flex flex-wrap gap-2 p-3 border rounded-lg bg-white/5 max-h-32 overflow-y-auto">
+                      {selectedCountries.map(country => <Badge key={country} variant="outline" className="flex items-center gap-1 bg-white/10 border-white/20 text-white">
                           {country}
                           <button onClick={() => handleCountryRemove(country)} className="ml-1 hover:bg-destructive/20 rounded-full w-4 h-4 flex items-center justify-center">
                             ×
@@ -202,7 +202,7 @@ const CampaignCreator = () => {
             <Users className="w-5 h-5 text-white" />
             POVR Audience Targeting
           </CardTitle>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-zinc-400">
             Select badge tiers to target users with verified financial capacity
           </p>
         </CardHeader>
@@ -216,7 +216,7 @@ const CampaignCreator = () => {
                       {badgeImages[tier.name] ? <img src={badgeImages[tier.name]} alt={tier.name} className="w-6 h-6 object-contain dark:invert" /> : <div className="w-6 h-6 rounded-full bg-zinc-300"></div>}
                       <span className="font-medium text-sm">{tier.name === 'No Badge' ? 'No Badge' : `${tier.name} Badge`}</span>
                     </div>
-                    <div className="space-y-1 text-xs text-muted-foreground">
+                    <div className="space-y-1 text-xs text-zinc-400">
                       <div className="flex justify-between">
                         <span>Holdings:</span>
                         <span>{tier.holdings} $DHB</span>
@@ -256,7 +256,7 @@ const CampaignCreator = () => {
             <Handshake className="hidden md:block w-5 h-5 md:w-6 md:h-6 text-white" />
             Partner with DeHub for Our App Launch
           </CardTitle>
-          <p className="text-base md:text-lg text-muted-foreground px-2">
+          <p className="text-base md:text-lg text-zinc-400 px-2">
             Promote your brand on the DeHub app for our heavily funded launch campaigns
           </p>
         </CardHeader>
@@ -292,19 +292,19 @@ const CampaignCreator = () => {
               <div className="space-y-3">
                 <div className="p-3 md:p-4 rounded-lg bg-white/10 border border-white/20">
                   <h4 className="font-medium mb-2 text-sm md:text-base">First-Mover Advantage</h4>
-                  <p className="text-xs md:text-sm text-muted-foreground">
+                  <p className="text-xs md:text-sm text-zinc-400">
                     Be among the first brands to leverage blockchain-verified audience targeting
                   </p>
                 </div>
                 <div className="p-3 md:p-4 rounded-lg bg-white/10 border border-white/20">
                   <h4 className="font-medium mb-2 text-sm md:text-base">Brand Association</h4>
-                  <p className="text-xs md:text-sm text-muted-foreground">
+                  <p className="text-xs md:text-sm text-zinc-400">
                     Align your brand with cutting-edge Web3 innovation and technology
                   </p>
                 </div>
                 <div className="p-3 md:p-4 rounded-lg bg-white/10 border border-white/20">
                   <h4 className="font-medium mb-2 text-sm md:text-base">Mutual Growth</h4>
-                  <p className="text-xs md:text-sm text-muted-foreground">
+                  <p className="text-xs md:text-sm text-zinc-400">
                     Grow together through cross-promotion and shared audiences
                   </p>
                 </div>
@@ -319,7 +319,7 @@ const CampaignCreator = () => {
               <Handshake className="hidden md:block w-4 h-4 md:w-5 md:h-5 mr-2" />
               Become a Launch Partner
             </Button>
-            <p className="text-xs md:text-sm text-muted-foreground mt-2 px-2">
+            <p className="text-xs md:text-sm text-zinc-400 mt-2 px-2">
               Limited partnership slots available for our official launch
             </p>
           </div>
