@@ -297,7 +297,7 @@ export function Compositor() {
     <section className="flex h-full min-h-0 min-w-0 flex-1 flex-col bg-black">
       <div
         ref={wrapRef}
-        className="relative flex min-h-0 min-w-0 flex-1 items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.04),_transparent_70%)] p-6"
+        className="relative grid min-h-0 min-w-0 flex-1 place-items-center overflow-hidden bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.04),_transparent_70%)] p-6"
       >
         <div
           style={{
@@ -305,8 +305,9 @@ export function Compositor() {
             height: Math.max(2, settings.height * scale),
             background: settings.background,
             visibility: scale > 0 ? "visible" : "hidden",
+            margin: "auto",
           }}
-          className="relative overflow-hidden rounded-lg shadow-2xl ring-1 ring-white/10"
+          className="relative col-start-1 row-start-1 overflow-hidden rounded-lg shadow-2xl ring-1 ring-white/10"
         >
           <canvas
             ref={canvasRef}
