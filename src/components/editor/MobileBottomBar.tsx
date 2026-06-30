@@ -1,16 +1,22 @@
 /**
- * Mobile/tablet bottom bar: surfaces Media & Inspector panels via slide-up sheets
- * so every editor capability is reachable below the lg breakpoint.
+ * Mobile/tablet bottom bar.
+ * - <md: full action row (Home, Media, Inspect, Save, Export, Post).
+ * - md..xl: only Media + Inspect panel openers.
  */
 import { useEffect, useState } from "react";
-import { ImagePlus, SlidersHorizontal } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ImagePlus, SlidersHorizontal, Home, Save, Download } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { MediaPanel } from "@/components/editor/MediaPanel";
 import { Inspector } from "@/components/editor/Inspector";
+import { ExportDialog } from "@/components/editor/ExportDialog";
+import { PostToDeHub } from "@/components/editor/PostToDeHub";
 
 export function MobileBottomBar() {
   const [open, setOpen] = useState<null | "media" | "inspector">(null);
+  const [exportOpen, setExportOpen] = useState(false);
 
   useEffect(() => {
     const handler = () => setOpen("inspector");
@@ -18,26 +24,53 @@ export function MobileBottomBar() {
     return () => window.removeEventListener("editor:open-inspector", handler);
   }, []);
 
+  const btn = "h-10 flex-1 rounded-md text-white/80 hover:bg-white/10 hover:text-white text-xs";
+
   return (
     <>
+      {/* Mobile-only full action bar */}
       <nav
-        className="flex h-12 shrink-0 items-center justify-around gap-1 border-t border-white/10 bg-black/70 px-2 backdrop-blur-[24px] xl:hidden"
+        className="flex h-14 shrink-0 items-center justify-around gap-1 border-t border-white/10 bg-black/70 px-2 backdrop-blur-[24px] md:hidden"
+        aria-label="Editor actions"
+      >
+        <Button asChild size="sm" variant="ghost" className={btn}>
+          <Link to="/" aria-label="Home">
+            <Home className="h-4 w-4" />
+            <span className="ml-1">Home</span>
+          </Link>
+        </Button>
+        <Button size="sm" variant="ghost" onClick={() => setOpen("media")} className={btn}>
+          <ImagePlus className="h-4 w-4" />
+          <span className="ml-1">Media</span>
+        </Button>
+        <Button size="sm" variant="ghost" onClick={() => setOpen("inspector")} className={btn}>
+          <SlidersHorizontal className="h-4 w-4" />
+          <span className="ml-1">Edit</span>
+        </Button>
+        <Button size="sm" variant="ghost" onClick={() => toast.success("Project autosaved.")} className={btn}>
+          <Save className="h-4 w-4" />
+          <span className="ml-1">Save</span>
+        </Button>
+        <Button size="sm" variant="ghost" onClick={() => setExportOpen(true)} className={btn}>
+          <Download className="h-4 w-4" />
+          <span className="ml-1">Export</span>
+        </Button>
+        <div className="flex-1">
+          <PostToDeHub />
+        </div>
+      </nav>
+
+      {/* md..xl tablet bar: just panel openers */}
+      <nav
+        className="hidden h-12 shrink-0 items-center justify-around gap-1 border-t border-white/10 bg-black/70 px-2 backdrop-blur-[24px] md:flex xl:hidden"
         aria-label="Editor panels"
       >
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => setOpen("media")}
-          className="h-9 flex-1 rounded-md text-white/80 hover:bg-white/10 hover:text-white"
-        >
+        <Button size="sm" variant="ghost" onClick={() => setOpen("media")}
+          className="h-9 flex-1 rounded-md text-white/80 hover:bg-white/10 hover:text-white">
           <ImagePlus className="mr-1.5 h-4 w-4" /> Media
         </Button>
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => setOpen("inspector")}
-          className="h-9 flex-1 rounded-md text-white/80 hover:bg-white/10 hover:text-white"
-        >
+        <Button size="sm" variant="ghost" onClick={() => setOpen("inspector")}
+          className="h-9 flex-1 rounded-md text-white/80 hover:bg-white/10 hover:text-white">
           <SlidersHorizontal className="mr-1.5 h-4 w-4" /> Inspect
         </Button>
       </nav>
@@ -69,6 +102,8 @@ export function MobileBottomBar() {
           </div>
         </SheetContent>
       </Sheet>
+
+      <ExportDialog open={exportOpen} onOpenChange={setExportOpen} />
     </>
   );
 }
