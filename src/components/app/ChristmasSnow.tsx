@@ -74,7 +74,7 @@ export function ChristmasSnow() {
       const heights = heightsRef.current!;
 
       // Spawn
-      if (flakesRef.current.length < MAX_FLAKES && Math.random() < 0.6) spawn();
+      if (flakesRef.current.length < MAX_FLAKES && Math.random() < 0.85) spawn();
 
       // Update + draw flakes
       const flakes = flakesRef.current;
