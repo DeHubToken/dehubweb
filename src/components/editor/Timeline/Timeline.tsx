@@ -464,7 +464,96 @@ function ClipBlock({ clip, track, zoom, selected, tracks, onSelect, onMove, onTr
       <div className="absolute inset-0 flex items-center px-2.5">
         <span className="truncate font-medium">{label}</span>
       </div>
+      <TransitionHandle clip={clip} />
     </div>
+  );
+}
+
+function TransitionHandle({ clip }: { clip: Clip }) {
+  const allClips = useEditorStore((s) => s.clips);
+  const setClipTransition = useEditorStore((s) => s.setClipTransition);
+  const next = useMemo(() => findAdjacentNext(clip, allClips), [clip, allClips]);
+  if (!next) return null;
+  const tr = clip.transitionOut;
+  const maxD = maxTransitionFor(clip, next);
+  const value = tr ?? { kind: "fade" as const, duration: Math.min(DEFAULT_TRANSITION_DURATION, maxD) };
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          data-handle="transition"
+          onPointerDown={(e) => e.stopPropagation()}
+          className={cn(
+            "absolute right-2 top-1/2 z-20 flex h-5 w-5 -translate-y-1/2 translate-x-1/2 items-center justify-center rounded-full border border-white/30 backdrop-blur-[24px] transition",
+            tr ? "bg-white text-black" : "bg-black/70 text-white/70 hover:text-white hover:bg-black/90",
+          )}
+          aria-label="Transition to next clip"
+          title={tr ? `Transition: ${tr.kind} (${tr.duration.toFixed(2)}s)` : "Add transition"}
+        >
+          <ArrowLeftRight className="h-3 w-3" />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        side="top"
+        align="end"
+        className="w-60 border-white/10 bg-black/80 p-3 text-white backdrop-blur-[24px]"
+        onPointerDown={(e) => e.stopPropagation()}
+      >
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-semibold uppercase tracking-wide text-white/70">Transition</span>
+            {tr && (
+              <button
+                onClick={() => setClipTransition(clip.id, null)}
+                className="text-[10px] text-white/50 hover:text-white"
+              >
+                Remove
+              </button>
+            )}
+          </div>
+          <div className="grid grid-cols-2 gap-1">
+            {TRANSITION_OPTIONS.map((opt) => (
+              <button
+                key={opt.kind}
+                onClick={() =>
+                  setClipTransition(clip.id, {
+                    kind: opt.kind,
+                    duration: Math.min(value.duration, maxD),
+                  })
+                }
+                className={cn(
+                  "rounded-md border px-2 py-1 text-[11px] transition",
+                  value.kind === opt.kind && tr
+                    ? "border-white/40 bg-white/10 text-white"
+                    : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
+                )}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+          <div className="pt-1">
+            <div className="mb-1 flex items-center justify-between text-[10px] text-white/60">
+              <span>Duration</span>
+              <span className="tabular-nums">{value.duration.toFixed(2)}s</span>
+            </div>
+            <Slider
+              value={[value.duration]}
+              min={MIN_TRANSITION_DURATION}
+              max={Math.max(MIN_TRANSITION_DURATION + 0.05, Math.min(MAX_TRANSITION_DURATION, maxD))}
+              step={0.05}
+              onValueChange={(v) =>
+                setClipTransition(clip.id, {
+                  kind: value.kind,
+                  duration: Math.max(MIN_TRANSITION_DURATION, Math.min(maxD, v[0] ?? value.duration)),
+                })
+              }
+            />
+            <p className="pt-1 text-[10px] text-white/40">Overlaps the next clip for the chosen duration.</p>
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 }
 
