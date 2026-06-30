@@ -257,14 +257,14 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
                 );
               })}
             </div>
-            <Button
+            <LiquidGlassBubble2
+              label="Save"
+              icon={<Check className="w-4 h-4" />}
               onClick={handleSave}
-              className={cn(
-                'w-full mt-2 h-12 rounded-2xl bg-white text-black hover:bg-white/90 font-semibold'
-              )}
-            >
-              Save
-            </Button>
+              width="100%"
+              height="48px"
+              className="mt-2"
+            />
           </div>
         )}
       </DialogContent>
