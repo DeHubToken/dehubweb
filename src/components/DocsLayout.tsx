@@ -361,6 +361,7 @@ const DocsLayoutContent = () => {
 
         {/* Main content */}
         <main className="flex-1 min-w-0">
+          <DocsSEO />
           <div className="max-w-4xl mx-auto px-6 py-8">
             <Outlet />
           </div>
