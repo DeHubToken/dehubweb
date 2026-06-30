@@ -14,6 +14,8 @@ import i18nInstance from "@/i18n";
 import { HelmetProvider } from "react-helmet-async";
 import { SEOHead } from "@/components/SEOHead";
 import { HomeShellSkeleton } from "@/components/app/PageSkeletons";
+import { ThemeProvider } from "@/contexts/ThemeContext";
+import { CosmicBackground } from "@/components/app/CosmicBackground";
 
 // Wallet/Auth providers — lazy loaded to keep them out of the main bundle.
 // Wagmi + RainbowKit + Web3Auth total ~1.5 MB; deferring them reduces TBT significantly.
@@ -297,11 +299,14 @@ const App = () => (
            */}
           <Suspense fallback={<WalletLoader />}>
             <WalletProviders>
-              <OptimisticPostsProvider>
-                <TooltipProvider>
-                  <AppContent />
-                </TooltipProvider>
-              </OptimisticPostsProvider>
+              <ThemeProvider>
+                <OptimisticPostsProvider>
+                  <TooltipProvider>
+                    <CosmicBackground />
+                    <AppContent />
+                  </TooltipProvider>
+                </OptimisticPostsProvider>
+              </ThemeProvider>
             </WalletProviders>
           </Suspense>
         </BrowserRouter>
