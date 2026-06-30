@@ -1,10 +1,12 @@
 import { Suspense, lazy } from "react";
 import { Routes, Route } from "react-router-dom";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import { SearchProvider } from "@/components/search/SearchProvider";
 import { DocsChatBot } from "@/components/chat/DocsChatBot";
 import { DocsLayout } from "@/components/DocsLayout";
 import ComingSoonPage from "@/components/ComingSoonPage";
+
 
 const DocsHome = lazy(() => import("./docs/DocsHome"));
 const Overview = lazy(() => import("./docs/Overview"));
@@ -54,8 +56,10 @@ const wrap = (El: React.ComponentType) => (
 
 export default function DocsRoutes() {
   return (
+    <NextThemesProvider attribute="class" defaultTheme="dark" enableSystem={false} storageKey="dehub-docs-theme">
     <LanguageProvider>
       <SearchProvider>
+
         <DocsChatBot />
         <Routes>
           <Route path="/" element={<DocsLayout />}>
@@ -107,5 +111,7 @@ export default function DocsRoutes() {
         </Routes>
       </SearchProvider>
     </LanguageProvider>
+    </NextThemesProvider>
   );
 }
+
