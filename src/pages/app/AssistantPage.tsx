@@ -50,6 +50,8 @@ import { OverviewTab } from '@/components/app/command-centre';
 import { AuthPrompt } from '@/components/app/AuthPrompt';
 import { useUserSkills, incrementSkillUsage, type UserSkill } from '@/hooks/use-user-skills';
 import { matchSkill, extractSlashSkill } from '@/lib/skills/matchTriggerPhrases';
+import { useUserCharacters, incrementCharacterUsage } from '@/hooks/use-user-characters';
+import { parseCharacterMentions, buildCharacterPersonaBlock } from '@/lib/characters/parseCharacterMentions';
 import { AuthGate } from '@/components/app/AuthGate';
 import { UserMentionDropdown, type MentionUser } from '@/components/app/mentions';
 import { ConversationHistoryDrawer } from '@/components/app/assistant/ConversationHistoryDrawer';
@@ -410,6 +412,7 @@ export default function AssistantPage() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { data: userSkills = [] } = useUserSkills();
+  const { data: userCharacters = [] } = useUserCharacters();
   // Prefill input from ?skill=slug (deep-link from Skills library)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -1364,9 +1367,28 @@ export default function AssistantPage() {
       void incrementSkillUsage(matchedSkill.id);
       toast(`Using skill: ${matchedSkill.name}`, { duration: 2000 });
     }
+
+    // ── Character mention matching ──
+    const charMatch = parseCharacterMentions(skillCleanedInput, userCharacters);
+    let characterSourceImage: string | null = null;
+    if (charMatch.hasMentions) {
+      const primary = charMatch.characters[0].primary_image_url
+        ?? charMatch.characters[0].reference_image_urls[0];
+      if (primary) {
+        try { characterSourceImage = await imageUrlToBase64(primary); } catch { /* non-fatal */ }
+      }
+      charMatch.characters.forEach((c) => void incrementCharacterUsage(c.id));
+      const names = charMatch.characters.map((c) => c.name).join(', ');
+      toast(`Using character${charMatch.characters.length > 1 ? 's' : ''}: ${names}`, { duration: 2000 });
+    }
+
+    const personaBlock = buildCharacterPersonaBlock(charMatch.characters);
+    const promptCore = charMatch.cleanedPrompt;
     const effectiveInput = matchedSkill
-      ? `${matchedSkill.system_prompt}\n\nUser request: ${skillCleanedInput}`
-      : messageToSend;
+      ? `${matchedSkill.system_prompt}${personaBlock ? `\n\n${personaBlock}` : ''}\n\nUser request: ${promptCore}`
+      : personaBlock
+        ? `${personaBlock}\n\nUser request: ${promptCore}`
+        : messageToSend;
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -1380,7 +1402,7 @@ export default function AssistantPage() {
     queueMessage(userMessage);
     
     const currentInput = effectiveInput;
-    const currentAttachedImage = attachedImage || skillSourceImage;
+    const currentAttachedImage = attachedImage || skillSourceImage || characterSourceImage;
     setInput('');
     setAttachedImage(null);
     setIsLoading(true);
@@ -1422,7 +1444,7 @@ export default function AssistantPage() {
       // Check request type — AI tools first, then video/image
       const aiToolCategory = detectAiToolRequest(currentInput, !!currentAttachedImage);
       const isVideoRequest = !aiToolCategory && requiresVideoGeneration(currentInput);
-      const isImageRequest = !aiToolCategory && (isCreativeLogo || matchedSkill?.kind === 'image' || requiresImageGeneration(currentInput, !!currentAttachedImage));
+      const isImageRequest = !aiToolCategory && (isCreativeLogo || matchedSkill?.kind === 'image' || charMatch.hasMentions || requiresImageGeneration(currentInput, !!currentAttachedImage));
       
       if (aiToolCategory) {
         // For music requests, show confirm dialog first

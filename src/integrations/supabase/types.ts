@@ -2533,6 +2533,54 @@ export type Database = {
         }
         Relationships: []
       }
+      user_characters: {
+        Row: {
+          created_at: string
+          creator_username: string | null
+          creator_wallet_address: string
+          description: string
+          id: string
+          is_featured: boolean
+          name: string
+          primary_image_url: string | null
+          reference_image_urls: string[]
+          slug: string
+          updated_at: string
+          usage_count: number
+          visibility: string
+        }
+        Insert: {
+          created_at?: string
+          creator_username?: string | null
+          creator_wallet_address: string
+          description?: string
+          id?: string
+          is_featured?: boolean
+          name: string
+          primary_image_url?: string | null
+          reference_image_urls?: string[]
+          slug: string
+          updated_at?: string
+          usage_count?: number
+          visibility?: string
+        }
+        Update: {
+          created_at?: string
+          creator_username?: string | null
+          creator_wallet_address?: string
+          description?: string
+          id?: string
+          is_featured?: boolean
+          name?: string
+          primary_image_url?: string | null
+          reference_image_urls?: string[]
+          slug?: string
+          updated_at?: string
+          usage_count?: number
+          visibility?: string
+        }
+        Relationships: []
+      }
       user_feedback_surveys: {
         Row: {
           age_range: string | null
@@ -3063,6 +3111,10 @@ export type Database = {
       }
       increment_ticker_search: {
         Args: { p_symbol: string }
+        Returns: undefined
+      }
+      increment_user_character_usage: {
+        Args: { p_character_id: string }
         Returns: undefined
       }
       increment_user_skill_usage: {
