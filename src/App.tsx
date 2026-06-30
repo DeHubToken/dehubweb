@@ -16,7 +16,7 @@ import { SEOHead } from "@/components/SEOHead";
 import { HomeShellSkeleton } from "@/components/app/PageSkeletons";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { CosmicBackground } from "@/components/app/CosmicBackground";
-import { ChristmasSnow } from "@/components/app/ChristmasSnow";
+import { WinterSnow } from "@/components/app/WinterSnow";
 
 // Wallet/Auth providers — lazy loaded to keep them out of the main bundle.
 // Wagmi + RainbowKit + Web3Auth total ~1.5 MB; deferring them reduces TBT significantly.
@@ -304,7 +304,7 @@ const App = () => (
                 <OptimisticPostsProvider>
                   <TooltipProvider>
                     <CosmicBackground />
-                    <ChristmasSnow />
+                    <WinterSnow />
 
                     <AppContent />
                   </TooltipProvider>
