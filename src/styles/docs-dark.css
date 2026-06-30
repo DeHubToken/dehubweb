@@ -1,0 +1,244 @@
+/* ============================================================
+   DOCS DARK MODE — ported from the dehubdocs project
+   Scoped to .docs-root so it never bleeds into the main app.
+   ============================================================ */
+
+/* Light theme tokens for /docs (when .dark is NOT present) */
+.docs-root {
+  --background: 0 0% 100%;
+  --foreground: 0 0% 0%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 0%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 0%;
+  --primary: 0 0% 0%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 83%;
+  --secondary-foreground: 0 0% 0%;
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
+  --accent: 0 0% 66%;
+  --accent-foreground: 0 0% 0%;
+  --border: 0 0% 90%;
+  --input: 0 0% 90%;
+  --ring: 0 0% 66%;
+  --sidebar-background: 0 0% 98%;
+  --sidebar-foreground: 0 0% 0%;
+  --sidebar-primary: 0 0% 0%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 0 0% 83%;
+  --sidebar-accent-foreground: 0 0% 0%;
+  --sidebar-border: 0 0% 90%;
+  --sidebar-ring: 0 0% 66%;
+}
+
+/* Dark theme tokens for /docs */
+html.dark .docs-root {
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  --card: 0 0% 8%;
+  --card-foreground: 0 0% 100%;
+  --popover: 0 0% 8%;
+  --popover-foreground: 0 0% 100%;
+  --primary: 0 0% 100%;
+  --primary-foreground: 0 0% 0%;
+  --secondary: 0 0% 15%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 0 0% 12%;
+  --muted-foreground: 0 0% 70%;
+  --accent: 0 0% 18%;
+  --accent-foreground: 0 0% 100%;
+  --border: 0 0% 20%;
+  --input: 0 0% 15%;
+  --ring: 0 0% 40%;
+  --sidebar-background: 0 0% 5%;
+  --sidebar-foreground: 0 0% 100%;
+  --sidebar-primary: 0 0% 100%;
+  --sidebar-primary-foreground: 0 0% 0%;
+  --sidebar-accent: 0 0% 12%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-border: 0 0% 15%;
+  --sidebar-ring: 0 0% 40%;
+}
+
+/* ========================================
+   DARK MODE OVERRIDES - FORCE BLACK/WHITE
+   ======================================== */
+
+html.dark .docs-root h1,
+html.dark .docs-root h2,
+html.dark .docs-root h3,
+html.dark .docs-root h4,
+html.dark .docs-root h5,
+html.dark .docs-root h6,
+html.dark .docs-root p,
+html.dark .docs-root span,
+html.dark .docs-root li,
+html.dark .docs-root a,
+html.dark .docs-root strong,
+html.dark .docs-root b,
+html.dark .docs-root label,
+html.dark .docs-root div {
+  color: hsl(0 0% 100%);
+}
+
+html.dark .docs-root .text-muted-foreground {
+  color: hsl(0 0% 70%) !important;
+}
+
+html.dark .docs-root [class*="text-royal-blue"],
+html.dark .docs-root [class*="text-middle-blue"],
+html.dark .docs-root [class*="text-sky-blue"],
+html.dark .docs-root [class*="text-jet-black"],
+html.dark .docs-root [class*="text-gray-"],
+html.dark .docs-root [class*="text-slate-"],
+html.dark .docs-root [class*="text-purple-"],
+html.dark .docs-root [class*="text-blue-"],
+html.dark .docs-root [class*="text-green-"],
+html.dark .docs-root [class*="text-amber-"],
+html.dark .docs-root [class*="text-indigo-"],
+html.dark .docs-root [class*="text-cyan-"],
+html.dark .docs-root [class*="text-orange-"],
+html.dark .docs-root [class*="text-emerald-"],
+html.dark .docs-root [class*="text-teal-"],
+html.dark .docs-root [class*="text-black"] {
+  color: hsl(0 0% 100%) !important;
+}
+
+html.dark .docs-root [class*="text-red-"] {
+  color: hsl(0 75% 70%) !important;
+}
+
+html.dark .docs-root [class*="bg-plain-white"],
+html.dark .docs-root [class*="bg-white"],
+html.dark .docs-root [class*="bg-gray-50"],
+html.dark .docs-root [class*="bg-gray-100"],
+html.dark .docs-root [class*="bg-gray-200"],
+html.dark .docs-root [class*="bg-slate-50"],
+html.dark .docs-root [class*="bg-slate-100"],
+html.dark .docs-root [class*="bg-slate-200"],
+html.dark .docs-root [class*="bg-purple-50"],
+html.dark .docs-root [class*="bg-purple-100"],
+html.dark .docs-root [class*="bg-indigo-50"],
+html.dark .docs-root [class*="bg-indigo-100"],
+html.dark .docs-root [class*="bg-blue-50"],
+html.dark .docs-root [class*="bg-blue-100"],
+html.dark .docs-root [class*="bg-green-50"],
+html.dark .docs-root [class*="bg-green-100"],
+html.dark .docs-root [class*="bg-emerald-50"],
+html.dark .docs-root [class*="bg-emerald-100"],
+html.dark .docs-root [class*="bg-amber-50"],
+html.dark .docs-root [class*="bg-amber-100"],
+html.dark .docs-root [class*="bg-orange-50"],
+html.dark .docs-root [class*="bg-orange-100"],
+html.dark .docs-root [class*="bg-red-50"],
+html.dark .docs-root [class*="bg-red-100"],
+html.dark .docs-root [class*="bg-cyan-50"],
+html.dark .docs-root [class*="bg-cyan-100"],
+html.dark .docs-root [class*="bg-sky-blue"],
+html.dark .docs-root [class*="bg-royal-blue"] {
+  background-color: hsl(0 0% 8%) !important;
+}
+
+html.dark .docs-root [class*="bg-gradient-to-"]:not([class*="text-transparent"]):not(.bg-clip-text) {
+  background: hsl(0 0% 10%) !important;
+}
+
+html.dark .docs-root .text-transparent {
+  color: transparent !important;
+}
+
+html.dark .docs-root .bg-clip-text {
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+}
+
+html.dark .docs-root [class*="border-slate-"],
+html.dark .docs-root [class*="border-gray-"],
+html.dark .docs-root [class*="border-sky-blue"],
+html.dark .docs-root [class*="border-purple-"],
+html.dark .docs-root [class*="border-blue-"],
+html.dark .docs-root [class*="border-green-"],
+html.dark .docs-root [class*="border-amber-"],
+html.dark .docs-root [class*="border-orange-"],
+html.dark .docs-root [class*="border-red-"],
+html.dark .docs-root [class*="border-indigo-"],
+html.dark .docs-root [class*="border-cyan-"] {
+  border-color: hsl(0 0% 20%) !important;
+}
+
+html.dark .docs-root table,
+html.dark .docs-root thead,
+html.dark .docs-root tbody,
+html.dark .docs-root tr,
+html.dark .docs-root th,
+html.dark .docs-root td {
+  background-color: hsl(0 0% 8%) !important;
+  color: hsl(0 0% 100%) !important;
+  border-color: hsl(0 0% 20%) !important;
+}
+
+html.dark .docs-root thead tr,
+html.dark .docs-root th {
+  background-color: hsl(0 0% 12%) !important;
+}
+
+html.dark .docs-root .Card,
+html.dark .docs-root [class*="Card"] {
+  background-color: hsl(0 0% 8%) !important;
+  border-color: hsl(0 0% 20%) !important;
+}
+
+html.dark .docs-root svg {
+  color: hsl(0 0% 85%);
+}
+
+html.dark .docs-root img[class*="brightness-0"] {
+  filter: invert(1) !important;
+}
+
+html.dark .docs-root a {
+  color: hsl(0 0% 100%);
+}
+
+html.dark .docs-root a:hover {
+  color: hsl(0 0% 80%);
+}
+
+html.dark .docs-root .bg-primary {
+  background-color: hsl(0 0% 100%) !important;
+  color: hsl(0 0% 0%) !important;
+}
+
+html.dark .docs-root .bg-primary:hover {
+  background-color: hsl(0 0% 90%) !important;
+}
+
+html.dark .docs-root .text-primary-foreground {
+  color: hsl(0 0% 0%) !important;
+}
+
+html.dark .docs-root input,
+html.dark .docs-root textarea,
+html.dark .docs-root select {
+  background-color: hsl(0 0% 8%) !important;
+  color: hsl(0 0% 100%) !important;
+  border-color: hsl(0 0% 25%) !important;
+}
+
+html.dark .docs-root input::placeholder,
+html.dark .docs-root textarea::placeholder {
+  color: hsl(0 0% 50%) !important;
+}
+
+html.dark .docs-root code,
+html.dark .docs-root pre {
+  background-color: hsl(0 0% 12%) !important;
+  color: hsl(0 0% 90%) !important;
+}
+
+html.dark .docs-root [class*="badge"],
+html.dark .docs-root [class*="Badge"] {
+  background-color: hsl(0 0% 15%) !important;
+  color: hsl(0 0% 100%) !important;
+}

@@ -223,7 +223,7 @@ const DocsLayoutContent = () => {
     setSidebarOpen(false);
   };
 
-  return <div className="min-h-screen bg-background">
+  return <div className="docs-root min-h-screen bg-background">
       {/* Header */}
       <header className="bg-card/90 backdrop-blur-sm border-b border-border sticky top-0 z-40">
         <div className="flex items-center justify-between px-4 h-16">
