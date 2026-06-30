@@ -89,10 +89,10 @@ export function ChristmasSnow() {
         const ground = height - heights[col];
         if (f.y + f.r >= ground) {
           // Land: bump neighboring columns slightly so the drift looks soft.
-          const add = 0.35 + f.r * 0.15;
+          const add = 1.2 + f.r * 0.6;
           heights[col] = Math.min(MAX_PILE, heights[col] + add);
-          if (col > 0) heights[col - 1] = Math.min(MAX_PILE, heights[col - 1] + add * 0.4);
-          if (col < cols - 1) heights[col + 1] = Math.min(MAX_PILE, heights[col + 1] + add * 0.4);
+          if (col > 0) heights[col - 1] = Math.min(MAX_PILE, heights[col - 1] + add * 0.5);
+          if (col < cols - 1) heights[col + 1] = Math.min(MAX_PILE, heights[col + 1] + add * 0.5);
           flakes.splice(i, 1);
           continue;
         }
