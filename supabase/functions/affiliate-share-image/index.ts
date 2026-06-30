@@ -327,7 +327,7 @@ function cacheSvg(key: string, svg: string) {
   SVG_CACHE.set(key, svg);
 }
 
-async function buildPngFor(rawCode: string, width: number, height: number): Promise<{ png: Uint8Array | null; svg: string }> {
+async function buildSvgFor(rawCode: string, width: number, height: number): Promise<string> {
   let address: string | null = null;
   let displayName: string | null = null;
   let username: string | null = null;
@@ -361,6 +361,12 @@ async function buildPngFor(rawCode: string, width: number, height: number): Prom
     width,
     height,
   });
+
+  return svg;
+}
+
+async function buildPngFor(rawCode: string, width: number, height: number): Promise<{ png: Uint8Array | null; svg: string }> {
+  const svg = await buildSvgFor(rawCode, width, height);
 
   try {
     await ensureResvg();
@@ -466,7 +472,7 @@ serve(async (req) => {
     let svgInflight = SVG_INFLIGHT.get(cacheKey);
     if (!svgInflight) {
       svgInflight = (async () => {
-        const { svg } = await buildPngFor(rawCode, width, height);
+        const svg = await buildSvgFor(rawCode, width, height);
         cacheSvg(cacheKey, svg);
         return svg;
       })();
