@@ -4,7 +4,7 @@ import { ArrowUp, Mic, MicOff } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { NebulaBackground } from '@/components/ui/NebulaBackground';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
-import wandAsset from '@/assets/wand.png.asset.json';
+import wandUrl from '@/assets/wand.png';
 
 const SUGGESTIONS = [
   'More AI and crypto news',
