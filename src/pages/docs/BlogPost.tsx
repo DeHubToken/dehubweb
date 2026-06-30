@@ -14,6 +14,7 @@ import { raffleContent } from '@/data/raffleContent';
 import { getNewPostBySlug, excludedTitles } from '@/data/newPosts';
 import { useBlogData } from '@/hooks/useBlogData';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { getBlogShareImageUrl } from '@/lib/blogShareImage';
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -55,6 +56,13 @@ const BlogPost = () => {
 
   const shareUrl = `${window.location.origin}/docs/blog/${post.slug}`;
   const fullImageUrl = bannerImage ? (bannerImage.startsWith('http') ? bannerImage : `${window.location.origin}${bannerImage}`) : null;
+  const shareImage = getBlogShareImageUrl({
+    slug: post.slug,
+    title: post.title,
+    author: post.author.name,
+    date: formatDate(post.publishedAt),
+    banner: fullImageUrl,
+  });
 
   const displayDate =
     post.title === 'Dream Big: The $1M Home Crypto Raffle by DeHub'
@@ -66,7 +74,7 @@ const BlogPost = () => {
       <SEO
         title={post.seoTitle || post.title}
         description={post.seoDescription || post.excerpt}
-        image={bannerImage}
+        image={shareImage}
         url={`/docs/blog/${post.slug}`}
         type="article"
         publishedTime={post.publishedAt}
