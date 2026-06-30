@@ -154,19 +154,6 @@ export default function Premium() {
       </section>
 
       {/* Tiers */}
-      <section id="tiers" className="max-w-5xl mx-auto px-4 sm:px-6 py-12 grid md:grid-cols-2 gap-5">
-        {/* Extra */}
-        <GlassCard>
-          <div className="flex items-center gap-2 mb-2">
-            <Crown className="w-4 h-4 text-white" />
-            <h2 className="text-lg font-semibold">DeHub Extra</h2>
-          </div>
-          <p className="text-sm text-zinc-400">For single users who want the full DeHub, cleaner.</p>
-          <div className="mt-5 flex items-baseline gap-1">
-            <span className="text-4xl font-bold">$4.99</span>
-            <span className="text-zinc-400 text-sm">/ month</span>
-          </div>
-      {/* Tiers */}
       <section id="tiers" className="max-w-6xl mx-auto px-4 sm:px-6 py-12 grid md:grid-cols-3 gap-5">
         {/* Extra */}
         <GlassCard>
