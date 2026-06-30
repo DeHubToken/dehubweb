@@ -961,7 +961,7 @@ export const es = {
     experience: 'Experiencia',
     malName: 'Mal Jan',
     malRole: 'Cofundador',
-    malBio: 'Full stack blockchain engineer, scaled DeHub to a £250m market cap with a near 0m liquidity pool and m year 1 revenue. Previously the annual top billing consultant at the UK's largest agency Blue Arrow',
+    malBio: 'Full stack blockchain engineer, scaled DeHub to a £250m market cap with a near $10m liquidity pool and $2m year 1 revenue. Previously the annual top billing consultant at the UK's largest agency Blue Arrow',
     malExp1: 'Guide Dogs: Recaudó >$1M como gerente de recaudación de fondos',
     malExp2: 'Randstad: Consultor senior en empresa con capitalización de mercado de $8 mil millones',
     malExp3: 'Blue Arrow: Mayor facturador y consultor premiado en la agencia más grande del Reino Unido',
