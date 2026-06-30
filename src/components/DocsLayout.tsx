@@ -310,7 +310,7 @@ const DocsLayoutContent = () => {
                         {section.items.map(item => <li key={item.path}>
                             {item.external && (item.path.startsWith('http') || item.path.startsWith('https')) ? <a href={item.path} target="_blank" rel="noopener noreferrer" className="flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200 text-muted-foreground hover:bg-muted hover:text-foreground">
                                 <div className="flex items-center space-x-3">
-                                  {item.isImage ? <img src={item.icon} alt={item.title} className={`w-4 h-4 ${item.title !== 'App' && item.title !== 'CoinGecko' && item.title !== 'Twitter' ? 'dark:invert' : ''} ${item.title === 'Twitter' ? 'invert dark:invert-0' : ''}`} /> : <span className="text-base">{item.icon}</span>}
+                                  {item.isImage ? <img src={item.icon} alt={item.title} className={`${item.title === 'App' ? 'w-[1.17rem] h-[1.17rem]' : 'w-4 h-4'} ${item.title !== 'App' && item.title !== 'CoinGecko' && item.title !== 'Twitter' ? 'dark:invert' : ''} ${item.title === 'Twitter' ? 'invert dark:invert-0' : ''}`} /> : <span className="text-base">{item.icon}</span>}
                                   <span>{item.title}</span>
                                 </div>
                                 <ExternalLink className="w-3 h-3 text-muted-foreground" />
