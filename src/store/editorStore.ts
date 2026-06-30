@@ -491,6 +491,8 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       }),
     });
   },
+
+  updateSettings: (patch) => {
     const s = get();
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
     set({ past, future: [], settings: { ...s.settings, ...patch } });
