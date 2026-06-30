@@ -284,7 +284,7 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
             })}
           </div>
           <LiquidGlassBubble2
-            label="Save"
+            label={t('prompt.save', 'Save')}
             icon={<Check className="w-4 h-4" />}
             onClick={handleSave}
             width="100%"
