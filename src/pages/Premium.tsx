@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Check, Crown, Sparkles, Users, Zap, Shield, PlayCircle, ImageIcon, Video, MessageSquare, Palette, Eye, Lock, Rocket, Infinity as InfinityIcon } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
@@ -7,6 +8,11 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { PaymentTestModeBanner } from '@/components/PaymentTestModeBanner';
+import { PremiumCheckoutModal } from '@/components/premium/PremiumCheckoutModal';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
+
 
 const EXTRA_PERKS = [
   { icon: Shield, label: 'Ad-free feed', detail: 'No promoted posts, no upgrade banners' },
