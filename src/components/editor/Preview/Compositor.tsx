@@ -357,7 +357,7 @@ export function Compositor() {
         </div>
       </div>
 
-      <div className="flex items-center gap-3 border-t border-white/10 bg-black/60 px-4 py-2.5 backdrop-blur-[24px]">
+      <div className="flex min-w-0 items-center gap-3 border-t border-white/10 bg-black/60 px-4 py-2.5 backdrop-blur-[24px]">
         <Button
           size="icon"
           variant="ghost"
