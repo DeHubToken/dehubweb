@@ -160,7 +160,6 @@
     "dark": "غامق",
     "system": "النظام",
     "cosmic": "كوزمي",
-    "christmas": "كرسمس",
     "island": "جزيرة",
     "hacker": "هاكر",
     "horror": "رعب",
@@ -235,7 +234,8 @@
     "noOffers": "ما قدّمت عروض لسه",
     "walletCopied": "عنوان المحفظة اتنسخ!",
     "note": "ملاحظة",
-    "loginDescription": "سجّل دخول لإدارة إعدادات حسابك."
+    "loginDescription": "سجّل دخول لإدارة إعدادات حسابك.",
+    "winter": "Winter"
   },
   "common": {
     "save": "احفظ",

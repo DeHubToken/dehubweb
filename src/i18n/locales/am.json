@@ -160,7 +160,6 @@
     "dark": "ጨለማ",
     "system": "ስርዓት",
     "cosmic": "ጠፈራዊ",
-    "christmas": "ገና",
     "island": "ደሴት",
     "hacker": "ሃከር",
     "horror": "አስፈሪ",
@@ -235,7 +234,8 @@
     "noOffers": "እስካሁን ምንም ቅናሽ አላቀረብክም",
     "walletCopied": "የቦርሳ አድራሻ ተቀድቷል!",
     "note": "ማስታወሻ",
-    "loginDescription": "የመለያ ቅንብሮችህን ለመድረስና ለማስተዳደር ግባ።"
+    "loginDescription": "የመለያ ቅንብሮችህን ለመድረስና ለማስተዳደር ግባ።",
+    "winter": "Winter"
   },
   "common": {
     "save": "አስቀምጥ",

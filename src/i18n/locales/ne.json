@@ -109,7 +109,6 @@
     "dark": "अँध्यारो",
     "system": "प्रणाली",
     "cosmic": "कस्मिक",
-    "christmas": "क्रिसमस",
     "island": "टापु",
     "hacker": "ह्याकर",
     "horror": "डरलाग्दो",
@@ -235,7 +234,8 @@
     "offersMade": "Offers You've Made",
     "noOffers": "You haven't made any offers yet",
     "walletCopied": "Wallet address copied!",
-    "note": "Note"
+    "note": "Note",
+    "winter": "Winter"
   },
   "common": {
     "save": "सुरक्षित गर्नुहोस्",

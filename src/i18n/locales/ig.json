@@ -160,7 +160,6 @@
     "dark": "Ọchịchịrị",
     "system": "Sistemu",
     "cosmic": "Mbara igwe",
-    "christmas": "Keresimesi",
     "island": "Agwaetiti",
     "hacker": "Hacker",
     "horror": "Egwu",
@@ -235,7 +234,8 @@
     "noOffers": "Ị nyebeghị onyinye ọ bụla",
     "walletCopied": "Edepụtala adreesị obere akpa!",
     "note": "Ncheta",
-    "loginDescription": "Banye iji nweta ohere ma jikwaa ntọala akaụntụ gị."
+    "loginDescription": "Banye iji nweta ohere ma jikwaa ntọala akaụntụ gị.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Chekwaa",

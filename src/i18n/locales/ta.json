@@ -160,7 +160,6 @@
     "dark": "இருள்",
     "system": "கணினி",
     "cosmic": "அண்டம்",
-    "christmas": "கிறிஸ்துமஸ்",
     "island": "தீவு",
     "hacker": "ஹேக்கர்",
     "horror": "திகில்",
@@ -235,7 +234,8 @@
     "noOffers": "நீங்கள் இன்னும் சலுகைகள் செய்யவில்லை",
     "walletCopied": "பணப்பை முகவரி நகலெடுக்கப்பட்டது!",
     "note": "குறிப்பு",
-    "loginDescription": "Log in to access and manage your account settings."
+    "loginDescription": "Log in to access and manage your account settings.",
+    "winter": "Winter"
   },
   "common": {
     "save": "சேமி",

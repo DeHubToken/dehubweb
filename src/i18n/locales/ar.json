@@ -160,7 +160,6 @@
     "dark": "داكن",
     "system": "النظام",
     "cosmic": "كوني",
-    "christmas": "عيد الميلاد",
     "island": "جزيرة",
     "hacker": "هاكر",
     "horror": "رعب",
@@ -235,7 +234,8 @@
     "noOffers": "لم تقدم أي عروض بعد",
     "walletCopied": "تم نسخ عنوان المحفظة!",
     "note": "ملاحظة",
-    "loginDescription": "سجّل الدخول للوصول إلى حسابك وإدارته."
+    "loginDescription": "سجّل الدخول للوصول إلى حسابك وإدارته.",
+    "winter": "Winter"
   },
   "common": {
     "save": "حفظ",

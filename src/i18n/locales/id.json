@@ -160,7 +160,6 @@
     "dark": "Gelap",
     "system": "Sistem",
     "cosmic": "Kosmik",
-    "christmas": "Natal",
     "island": "Pulau",
     "hacker": "Hacker",
     "horror": "Horor",
@@ -235,7 +234,8 @@
     "noOffers": "Anda belum membuat penawaran",
     "walletCopied": "Alamat dompet disalin!",
     "note": "Catatan",
-    "loginDescription": "Masuk untuk mengakses dan mengelola pengaturan akun Anda."
+    "loginDescription": "Masuk untuk mengakses dan mengelola pengaturan akun Anda.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Simpan",

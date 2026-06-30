@@ -3,11 +3,11 @@ import { useLocation } from 'react-router-dom';
 import { useAppTheme } from '@/contexts/ThemeContext';
 
 /**
- * Christmas snow overlay. Snowflakes fall and accumulate at the bottom of
+ * Winter snow overlay. Snowflakes fall and accumulate at the bottom of
  * the viewport. The accumulated drift wipes every time the user navigates
  * to a different route (back/forward included).
  */
-export function ChristmasSnow() {
+export function WinterSnow() {
   const { theme } = useAppTheme();
   const { pathname } = useLocation();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -52,7 +52,7 @@ export function ChristmasSnow() {
 
 
   useEffect(() => {
-    if (theme !== 'christmas') return;
+    if (theme !== 'winter') return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
@@ -277,7 +277,7 @@ export function ChristmasSnow() {
     };
   }, [theme]);
 
-  if (theme !== 'christmas') return null;
+  if (theme !== 'winter') return null;
 
   return (
     <canvas

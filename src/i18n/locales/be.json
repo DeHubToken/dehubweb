@@ -109,7 +109,6 @@
     "dark": "Цёмная",
     "system": "Сістэмная",
     "cosmic": "Касмічная",
-    "christmas": "Каляды",
     "island": "Востраў",
     "hacker": "Хакер",
     "horror": "Жахі",
@@ -235,7 +234,8 @@
     "offersMade": "Offers You've Made",
     "noOffers": "You haven't made any offers yet",
     "walletCopied": "Wallet address copied!",
-    "note": "Note"
+    "note": "Note",
+    "winter": "Winter"
   },
   "common": {
     "save": "Захаваць",

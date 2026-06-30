@@ -160,7 +160,6 @@
     "dark": "Duhu",
     "system": "Na'ura",
     "cosmic": "Sararin sama",
-    "christmas": "Kirsimeti",
     "island": "Tsibiri",
     "hacker": "Hacker",
     "horror": "Tsoro",
@@ -235,7 +234,8 @@
     "noOffers": "Ba ka yi wani tayi ba tukuna",
     "walletCopied": "An kwafi adireshin walat!",
     "note": "Bayanin kula",
-    "loginDescription": "Shiga don samun dama da sarrafa saituna na asusunka."
+    "loginDescription": "Shiga don samun dama da sarrafa saituna na asusunka.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Ajiye",

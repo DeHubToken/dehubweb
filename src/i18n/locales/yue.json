@@ -160,7 +160,6 @@
     "dark": "深色",
     "system": "系統",
     "cosmic": "宇宙",
-    "christmas": "聖誕",
     "island": "海島",
     "hacker": "黑客",
     "horror": "恐怖",
@@ -235,7 +234,8 @@
     "noOffers": "你暫時冇提交報價",
     "walletCopied": "錢包地址已複製！",
     "note": "備註",
-    "loginDescription": "登入嚟管理你嘅帳戶設定。"
+    "loginDescription": "登入嚟管理你嘅帳戶設定。",
+    "winter": "Winter"
   },
   "common": {
     "save": "儲存",

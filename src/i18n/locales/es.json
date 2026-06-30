@@ -160,7 +160,6 @@
     "dark": "Oscuro",
     "system": "Sistema",
     "cosmic": "Cósmico",
-    "christmas": "Navidad",
     "island": "Isla",
     "hacker": "Hacker",
     "horror": "Terror",
@@ -235,7 +234,8 @@
     "noOffers": "Aún no has hecho ninguna oferta",
     "walletCopied": "¡Dirección de billetera copiada!",
     "note": "Nota",
-    "loginDescription": "Inicia sesión para acceder y gestionar tu cuenta."
+    "loginDescription": "Inicia sesión para acceder y gestionar tu cuenta.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Guardar",

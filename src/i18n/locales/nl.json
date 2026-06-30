@@ -160,7 +160,6 @@
     "dark": "Donker",
     "system": "Systeem",
     "cosmic": "Kosmisch",
-    "christmas": "Kerst",
     "island": "Eiland",
     "hacker": "Hacker",
     "horror": "Horror",
@@ -235,7 +234,8 @@
     "noOffers": "Je hebt nog geen biedingen gedaan",
     "walletCopied": "Portemonnee-adres gekopieerd!",
     "note": "Opmerking",
-    "loginDescription": "Log in om je accountinstellingen te openen en beheren."
+    "loginDescription": "Log in om je accountinstellingen te openen en beheren.",
+    "winter": "Winter"
   },
   "common": {
     "allRightsReserved": "Alle rechten voorbehouden",

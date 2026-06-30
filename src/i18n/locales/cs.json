@@ -160,7 +160,6 @@
     "dark": "Tmavý",
     "system": "Systém",
     "cosmic": "Kosmický",
-    "christmas": "Vánoce",
     "island": "Ostrov",
     "hacker": "Hacker",
     "horror": "Horor",
@@ -235,7 +234,8 @@
     "noOffers": "Zatím jste nepodali žádné nabídky",
     "walletCopied": "Adresa peněženky zkopírována!",
     "note": "Poznámka",
-    "loginDescription": "Log in to access and manage your account settings."
+    "loginDescription": "Log in to access and manage your account settings.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Uložit",

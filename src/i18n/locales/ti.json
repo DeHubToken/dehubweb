@@ -160,7 +160,6 @@
     "dark": "ጸልማት",
     "system": "ስርዓት",
     "cosmic": "ኮስሚክ",
-    "christmas": "ልደት",
     "island": "ደሴት",
     "hacker": "ሃከር",
     "horror": "ስምብራት",
@@ -235,7 +234,8 @@
     "noOffers": "ገና ቅድመ-ሓሳብ ኣየቕረብካን",
     "walletCopied": "ኣድራሻ ዋሌት ተቐዲሑ!",
     "note": "ማስታወሻ",
-    "loginDescription": "ቅጥዕታት ኣካውንትኻ ንምብጻሕን ንምምሕዳርን ብዓል።"
+    "loginDescription": "ቅጥዕታት ኣካውንትኻ ንምብጻሕን ንምምሕዳርን ብዓል።",
+    "winter": "Winter"
   },
   "common": {
     "save": "ዓቅብ",

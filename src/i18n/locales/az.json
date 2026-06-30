@@ -160,7 +160,6 @@
     "dark": "Qaranlıq",
     "system": "Sistem",
     "cosmic": "Kosmik",
-    "christmas": "Milad",
     "island": "Ada",
     "hacker": "Haker",
     "horror": "Dəhşət",
@@ -235,7 +234,8 @@
     "noOffers": "Hələ heç bir təklif etməmisiniz",
     "walletCopied": "Cüzdan ünvanı kopyalandı!",
     "note": "Qeyd",
-    "loginDescription": "Hesab parametrlərinizə daxil olmaq və idarə etmək üçün daxil olun."
+    "loginDescription": "Hesab parametrlərinizə daxil olmaq və idarə etmək üçün daxil olun.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Saxla",

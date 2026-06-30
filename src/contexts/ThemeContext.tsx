@@ -12,7 +12,9 @@ const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<string>(() => {
     if (typeof window === 'undefined') return 'system';
-    return window.localStorage.getItem(THEME_STORAGE_KEY) || 'system';
+    const stored = window.localStorage.getItem(THEME_STORAGE_KEY) || 'system';
+    // Migrate old 'christmas' theme name to 'winter'.
+    return stored === 'christmas' ? 'winter' : stored;
   });
 
   const setTheme = (value: string) => {

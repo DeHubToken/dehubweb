@@ -160,7 +160,6 @@
     "dark": "Tarî",
     "system": "Pergal",
     "cosmic": "Kozmîk",
-    "christmas": "Noel",
     "island": "Girav",
     "hacker": "Hacker",
     "horror": "Tirsnak",
@@ -235,7 +234,8 @@
     "noOffers": "Te hîn tu pêşniyar nekiriye",
     "walletCopied": "Navnîşana berîkê hat kopîkirin!",
     "note": "Nîşe",
-    "loginDescription": "Ji bo gihîştina û birêvebirina mîhengên hesabê xwe têkevin."
+    "loginDescription": "Ji bo gihîştina û birêvebirina mîhengên hesabê xwe têkevin.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Tomar bike",

@@ -160,7 +160,6 @@
     "dark": "డార్క్",
     "system": "సిస్టమ్",
     "cosmic": "కాస్మిక్",
-    "christmas": "క్రిస్మస్",
     "island": "ఐలాండ్",
     "hacker": "హ్యాకర్",
     "horror": "హారర్",
@@ -235,7 +234,8 @@
     "noOffers": "మీరు ఇంకా ఆఫర్లు చేయలేదు",
     "walletCopied": "వాలెట్ చిరునామా కాపీ చేయబడింది!",
     "note": "గమనిక",
-    "loginDescription": "Log in to access and manage your account settings."
+    "loginDescription": "Log in to access and manage your account settings.",
+    "winter": "Winter"
   },
   "common": {
     "save": "సేవ్",

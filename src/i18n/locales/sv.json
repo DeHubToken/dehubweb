@@ -160,7 +160,6 @@
     "dark": "Mörkt",
     "system": "System",
     "cosmic": "Kosmisk",
-    "christmas": "Jul",
     "island": "Ö",
     "hacker": "Hacker",
     "horror": "Skräck",
@@ -235,7 +234,8 @@
     "noOffers": "Du har inte gjort några erbjudanden ännu",
     "walletCopied": "Plånboksadress kopierad!",
     "note": "Notering",
-    "loginDescription": "Log in to access and manage your account settings."
+    "loginDescription": "Log in to access and manage your account settings.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Spara",

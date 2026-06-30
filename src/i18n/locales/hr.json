@@ -160,7 +160,6 @@
     "dark": "Tamno",
     "system": "Sustav",
     "cosmic": "Kozmičko",
-    "christmas": "Božić",
     "island": "Otok",
     "hacker": "Haker",
     "horror": "Horor",
@@ -235,7 +234,8 @@
     "noOffers": "Još niste napravili nijednu ponudu",
     "walletCopied": "Adresa novčanika kopirana!",
     "note": "Napomena",
-    "loginDescription": "Prijavite se za pristup i upravljanje postavkama računa."
+    "loginDescription": "Prijavite se za pristup i upravljanje postavkama računa.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Spremi",

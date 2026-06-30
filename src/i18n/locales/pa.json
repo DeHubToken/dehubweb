@@ -160,7 +160,6 @@
     "dark": "ਗੂੜ੍ਹਾ",
     "system": "ਸਿਸਟਮ",
     "cosmic": "ਬ੍ਰਹਿਮੰਡੀ",
-    "christmas": "ਕ੍ਰਿਸਮਸ",
     "island": "ਟਾਪੂ",
     "hacker": "ਹੈਕਰ",
     "horror": "ਡਰਾਉਣਾ",
@@ -235,7 +234,8 @@
     "noOffers": "ਤੁਸੀਂ ਅਜੇ ਕੋਈ ਪੇਸ਼ਕਸ਼ ਨਹੀਂ ਦਿੱਤੀ",
     "walletCopied": "ਵਾਲਿਟ ਐਡਰੈੱਸ ਕਾਪੀ ਹੋ ਗਿਆ!",
     "note": "ਨੋਟ",
-    "loginDescription": "Log in to access and manage your account settings."
+    "loginDescription": "Log in to access and manage your account settings.",
+    "winter": "Winter"
   },
   "common": {
     "save": "ਸੇਵ ਕਰੋ",

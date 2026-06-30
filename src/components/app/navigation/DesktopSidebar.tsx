@@ -113,17 +113,15 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 <img
                   src={dehubLogoCompact}
                   alt="dehub"
-                  className="h-[22px] w-auto"
+                  className="h-[22px] w-auto object-contain"
                   decoding="async"
                 />
               ) : (
                 <img
                   src="/dehub-header-logo.png"
                   alt="dehub"
-                  className="h-[40.6px] w-auto relative -top-[3px]"
+                  className="h-[40.6px] w-auto object-contain relative -top-[3px]"
                   fetchPriority="high"
-                  width={135}
-                  height={41}
                   decoding="async"
                 />
               )}

@@ -109,7 +109,6 @@
     "dark": "ងងឹត",
     "system": "ប្រព័ន្ធ",
     "cosmic": "អវកាស",
-    "christmas": "បុណ្យណូអែល",
     "island": "កោះ",
     "hacker": "ហេកឃ័រ",
     "horror": "ភ័យរន្ធត់",
@@ -235,7 +234,8 @@
     "offersMade": "Offers You've Made",
     "noOffers": "You haven't made any offers yet",
     "walletCopied": "Wallet address copied!",
-    "note": "Note"
+    "note": "Note",
+    "winter": "Winter"
   },
   "common": {
     "save": "រក្សាទុក",

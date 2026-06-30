@@ -160,7 +160,6 @@
     "dark": "Тамна",
     "system": "Систем",
     "cosmic": "Космичка",
-    "christmas": "Божић",
     "island": "Острво",
     "hacker": "Хакер",
     "horror": "Хорор",
@@ -235,7 +234,8 @@
     "noOffers": "Још нисте послали понуде",
     "walletCopied": "Адреса новчаника копирана!",
     "note": "Напомена",
-    "loginDescription": "Log in to access and manage your account settings."
+    "loginDescription": "Log in to access and manage your account settings.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Сачувај",

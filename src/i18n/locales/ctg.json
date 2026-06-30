@@ -250,7 +250,6 @@
     "media": "Media",
     "languageDesc": "Choose your preferred language",
     "cosmic": "Cosmic",
-    "christmas": "Christmas",
     "island": "Island",
     "hacker": "Hacker",
     "horror": "Horror",
@@ -324,7 +323,8 @@
     "noOffers": "You haven't made any offers yet",
     "walletCopied": "Wallet address copied!",
     "note": "Note",
-    "loginDescription": "Log in to access and manage your account settings."
+    "loginDescription": "Log in to access and manage your account settings.",
+    "winter": "Winter"
   },
   "notifications": {
     "title": "জানাইন",
