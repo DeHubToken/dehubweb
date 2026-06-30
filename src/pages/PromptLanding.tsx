@@ -94,7 +94,7 @@ export default function PromptLanding() {
             }}
             placeholder="More AI, gaming clips, indie music…"
             rows={3}
-            className="w-full resize-none rounded-3xl bg-white/[0.04] border border-white/10 backdrop-blur-2xl px-6 py-5 text-base placeholder-white/30 focus:outline-none focus:border-white/30 transition-colors"
+            className="w-full resize-none rounded-3xl bg-white/[0.04] border border-white/10 backdrop-blur-2xl px-6 py-5 text-base placeholder-white/30 focus:outline-none focus-visible:outline-none focus:border-white/10 transition-colors"
           />
           <div className="w-full flex items-center gap-2">
             <LiquidGlassBubble2
