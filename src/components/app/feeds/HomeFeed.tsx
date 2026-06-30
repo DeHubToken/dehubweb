@@ -171,7 +171,7 @@ function SortFilterSection({
 
   const activeFilterClass = 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]';
   const inactiveFilterClass = 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700';
-  const rowFadeMask = '[mask-image:linear-gradient(to_right,black_calc(100%-24px),transparent)] [-webkit-mask-image:linear-gradient(to_right,black_calc(100%-24px),transparent)]';
+  const rowFadeMask = '[mask-image:linear-gradient(to_right,black_calc(100%_-_24px),transparent)] [-webkit-mask-image:linear-gradient(to_right,black_calc(100%_-_24px),transparent)]';
 
   return (
     <div className="relative flex flex-col gap-4">
