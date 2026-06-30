@@ -15,6 +15,70 @@ const IMAGE_PROXY_BASE = `${SUPABASE_URL}/functions/v1/ssr-seo`;
 const OG_IMAGE_BASE = `${SUPABASE_URL}/functions/v1/og-image`;
 const DEHUB_LOGO = "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/default-icon.png";
 const AUDIO_OG_IMAGE = "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/audio-wave%20(1).png";
+const BLOG_SHARE_IMAGE_BASE = `${SUPABASE_URL}/functions/v1/blog-share-image`;
+
+interface BlogManifestPost {
+    slug: string;
+    title: string;
+    excerpt?: string;
+    author?: string;
+    publishedAt?: string;
+    bannerImage?: string;
+}
+
+let _blogManifestCache: Map<string, BlogManifestPost> | null = null;
+let _blogManifestFetchedAt = 0;
+
+async function getBlogManifest(): Promise<Map<string, BlogManifestPost>> {
+    const now = Date.now();
+    if (_blogManifestCache && now - _blogManifestFetchedAt < 5 * 60 * 1000) {
+        return _blogManifestCache;
+    }
+    try {
+        const res = await fetch(`${APP_URL}/blog-manifest.json`, {
+            headers: { Accept: "application/json" },
+            signal: AbortSignal.timeout(5000),
+        });
+        if (res.ok) {
+            const data: BlogManifestPost[] = await res.json();
+            const map = new Map<string, BlogManifestPost>();
+            for (const p of data) map.set(p.slug, p);
+            _blogManifestCache = map;
+            _blogManifestFetchedAt = now;
+            return map;
+        }
+    } catch (e) {
+        console.error("[SSR] blog manifest fetch failed", e);
+    }
+    return _blogManifestCache || new Map();
+}
+
+async function getBlogPost(slug: string): Promise<BlogManifestPost | null> {
+    const m = await getBlogManifest();
+    return m.get(slug) || null;
+}
+
+function buildBlogShareImage(post: BlogManifestPost): string {
+    const p = new URLSearchParams();
+    p.set("slug", post.slug);
+    p.set("title", (post.title || "").slice(0, 240));
+    if (post.author) p.set("author", String(post.author).slice(0, 60));
+    if (post.publishedAt) {
+        try {
+            const d = new Date(post.publishedAt);
+            p.set("date", d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }));
+        } catch { /* ignore */ }
+    }
+    if (post.bannerImage) {
+        const banner = /^https?:\/\//i.test(post.bannerImage) ? post.bannerImage : `${APP_URL}${post.bannerImage.startsWith("/") ? "" : "/"}${post.bannerImage}`;
+        p.set("banner", banner);
+    }
+    p.set("width", "1200");
+    p.set("height", "630");
+    p.set("format", "png");
+    return `${BLOG_SHARE_IMAGE_BASE}?${p.toString()}`;
+}
+
 
 interface DeHubUser {
     username?: string;
