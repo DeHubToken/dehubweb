@@ -159,7 +159,9 @@ const SYSTEM_ROUTES = [
   '_netlify', 'favicon.ico', 'assets', 'og-image.png',
   'radio', 'tv', 'governance', 'stake', 'leaderboard', 'music',
   'top-100', 'glossary', 'bridge', 'agents', 'assistant', 'buy',
+  'docs', 'prompt', 'premium', 'affiliate', 'work', 'editor',
 ];
+
 
 const BOT_UA_PATTERN = /bot|crawl|spider|facebook|twitter|linkedin|whatsapp|telegram|slack|discord|facebot|oggrabber/i;
 
