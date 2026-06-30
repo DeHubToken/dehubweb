@@ -193,7 +193,7 @@ export function SidebarNavItem({
             </span>
           )}
           {item.label === 'Prompt' && (
-            <span className="absolute -top-1 -right-2 px-1 h-[14px] flex items-center justify-center bg-white/90 text-black text-[8px] font-bold rounded-md z-20 leading-none tracking-wide uppercase shadow-sm">
+            <span className="absolute -top-0.5 -right-1 px-0.5 h-[10px] flex items-center justify-center bg-white/90 text-black text-[6px] font-bold rounded-sm z-20 leading-none tracking-wide uppercase shadow-sm">
               Test
             </span>
           )}
