@@ -13,12 +13,27 @@ export interface Track {
   hidden: boolean;
 }
 
+export type TransitionKind =
+  | "fade"
+  | "slide-left"
+  | "slide-right"
+  | "wipe-left"
+  | "wipe-right";
+
+export interface Transition {
+  kind: TransitionKind;
+  /** Transition length in seconds (overlap window between this clip and the next on the same track). */
+  duration: number;
+}
+
 interface BaseClip {
   id: string;
   trackId: string;
   start: number; // timeline seconds where clip starts
   duration: number; // length on timeline (s)
   trimIn: number; // offset into source media (s); 0 for images/text
+  /** Outgoing transition into the next adjacent clip on the same track. */
+  transitionOut?: Transition;
 }
 
 export interface MediaClip extends BaseClip {
