@@ -208,7 +208,37 @@ export default async (request, context) => {
     return context.next();
   }
 
+  // Blog posts: build OG HTML directly from manifest (no Supabase SSR involved).
+  const blogMatch = pathname.match(/^\/docs\/blog\/([^/?#]+)/);
+  if (blogMatch) {
+    const slug = decodeURIComponent(blogMatch[1]);
+    const manifest = await getBlogManifest(request);
+    const post = manifest.get(slug);
+    if (post) {
+      const canonical = `${APP_URL}/docs/blog/${slug}`;
+      return new Response(buildBlogHtml(post, canonical), {
+        status: 200,
+        headers: {
+          'Content-Type': 'text/html; charset=utf-8',
+          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
+          'Vary': 'User-Agent',
+          'X-Powered-By': 'DeHub-Edge-SEO-Blog',
+        },
+      });
+    }
+    // Fall through to generic fallback if manifest missing.
+    return new Response(buildFallbackHtml(pathname, request.url), {
+      status: 200,
+      headers: {
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+        'Vary': 'User-Agent',
+      },
+    });
+  }
+
   const ssrUrl = `${SUPABASE_FUNCTION_URL}?path=${encodeURIComponent(pathname)}&original_url=${encodeURIComponent(request.url)}`;
+
 
   try {
     const controller = new AbortController();
