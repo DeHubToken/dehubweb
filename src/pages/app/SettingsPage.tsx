@@ -119,8 +119,8 @@ const tabs = [
 ];
 
 import { SkillsLibrary } from '@/components/app/skills/SkillsLibrary';
+import { SkillsLibrary } from '@/components/app/skills/SkillsLibrary';
 import { CharactersLibrary } from '@/components/app/characters/CharactersLibrary';
-import { Users } from 'lucide-react';
 
 import { SEOHead } from '@/components/SEOHead';
 import { useAppTheme } from '@/contexts/ThemeContext';
