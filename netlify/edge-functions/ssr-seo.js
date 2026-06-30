@@ -170,6 +170,8 @@ function shouldServeSSR(pathname) {
   if (pathname.includes('/communities/')) return true;
   // Always SSR for affiliate referral landings (/r/{code})
   if (/^\/r\/[A-Za-z0-9]+/.test(pathname)) return true;
+  // Always SSR for blog posts
+  if (/^\/docs\/blog\/[^/]+/.test(pathname)) return true;
   // Always SSR for root
   if (pathname === '/') return true;
   // Always SSR for profile pages (top-level non-system routes)
@@ -177,6 +179,7 @@ function shouldServeSSR(pathname) {
   if (first && !SYSTEM_ROUTES.includes(first) && !first.includes('.')) return true;
   return false;
 }
+
 
 export default async (request, context) => {
   const url = new URL(request.url);
