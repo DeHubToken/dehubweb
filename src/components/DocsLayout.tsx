@@ -240,7 +240,7 @@ const DocsLayoutContent = () => {
             
             {/* Center: Logo */}
             <div className="flex-1 flex justify-center">
-              <Link to="/docs" className="flex items-center space-x-2 font-bold text-xl text-foreground">
+              <Link to="/app" className="flex items-center space-x-2 font-bold text-xl text-foreground">
                 <img src="/lovable-uploads/bca432dc-7ef2-4a07-99b6-fac376265184.png" alt="DeHub Logo" className="w-6 h-6 dark:invert" />
               </Link>
             </div>
@@ -258,7 +258,7 @@ const DocsLayoutContent = () => {
 
           {/* Desktop Layout */}
           <div className="hidden lg:flex items-center space-x-3">
-            <Link to="/docs" className="flex items-center space-x-2 font-bold text-xl text-foreground">
+            <Link to="/app" className="flex items-center space-x-2 font-bold text-xl text-foreground">
               <img src="/lovable-uploads/bca432dc-7ef2-4a07-99b6-fac376265184.png" alt="DeHub Logo" className="w-6 h-6 dark:invert" />
             </Link>
             <a href="https://dehub.io/app" className="p-2 rounded-lg hover:bg-muted transition-colors" title="Go to DeHub App">
