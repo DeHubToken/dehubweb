@@ -2545,6 +2545,60 @@ export type Database = {
         }
         Relationships: []
       }
+      user_skills: {
+        Row: {
+          asset_urls: string[]
+          created_at: string
+          creator_username: string | null
+          creator_wallet_address: string
+          description: string
+          id: string
+          is_featured: boolean
+          kind: string
+          model: string
+          name: string
+          slug: string
+          system_prompt: string
+          trigger_phrases: string[]
+          updated_at: string
+          usage_count: number
+        }
+        Insert: {
+          asset_urls?: string[]
+          created_at?: string
+          creator_username?: string | null
+          creator_wallet_address: string
+          description?: string
+          id?: string
+          is_featured?: boolean
+          kind?: string
+          model?: string
+          name: string
+          slug: string
+          system_prompt: string
+          trigger_phrases?: string[]
+          updated_at?: string
+          usage_count?: number
+        }
+        Update: {
+          asset_urls?: string[]
+          created_at?: string
+          creator_username?: string | null
+          creator_wallet_address?: string
+          description?: string
+          id?: string
+          is_featured?: boolean
+          kind?: string
+          model?: string
+          name?: string
+          slug?: string
+          system_prompt?: string
+          trigger_phrases?: string[]
+          updated_at?: string
+          usage_count?: number
+        }
+        Relationships: []
+      }
       video_transcripts: {
         Row: {
           chunks_done: number | null
@@ -2954,6 +3008,10 @@ export type Database = {
       }
       increment_ticker_search: {
         Args: { p_symbol: string }
+        Returns: undefined
+      }
+      increment_user_skill_usage: {
+        Args: { p_skill_id: string }
         Returns: undefined
       }
     }
