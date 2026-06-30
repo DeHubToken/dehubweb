@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import { cn } from '@/lib/utils';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useGlobalDropZone } from '@/hooks/use-global-drop-zone';
 import { useNavigate } from 'react-router-dom';
@@ -59,7 +60,7 @@ import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Switch } from '@/components/ui/switch';
-import { Button } from '@/components/ui/button';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { SettingDrawerSelect } from '@/components/app/settings/SettingDrawerSelect';
