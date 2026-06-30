@@ -193,13 +193,15 @@ export default function Premium() {
           <ul className="mt-6 space-y-3">
             {EXTRA_PERKS.map((p) => <PerkRow key={p.label} {...p} />)}
           </ul>
-          <a
-            href="/app/settings#premium"
-            className="mt-7 block text-center px-5 py-3 rounded-2xl bg-white/10 border border-white/15 text-sm font-semibold hover:bg-white/15 transition-colors"
+          <button
+            type="button"
+            onClick={() => startCheckout('dehub_extra_monthly')}
+            className="mt-7 w-full text-center px-5 py-3 rounded-2xl bg-white/10 border border-white/15 text-sm font-semibold hover:bg-white/15 transition-colors"
           >
             Get Extra
-          </a>
+          </button>
         </GlassCard>
+
 
         {/* Family */}
         <GlassCard highlight>
