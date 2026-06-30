@@ -29,10 +29,7 @@ export default function PromptLanding() {
     <div className="min-h-screen w-full bg-black text-white flex flex-col items-center justify-center px-6 relative overflow-hidden">
       <SEOHead title="Prompt your feed — DeHub" description="Tell DeHub what you want to see and we'll tune your timeline." />
 
-      {/* Soft radial glow */}
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-white/[0.04] blur-3xl" />
-      </div>
+      <NebulaBackground />
 
       <div className="relative w-full max-w-2xl flex flex-col items-center gap-6">
         <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-xl">
