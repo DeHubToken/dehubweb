@@ -24,20 +24,20 @@ export default function EditorPage() {
 
       <EditorTopBar />
 
-      <div className="flex min-h-0 flex-1 flex-col md:flex-row">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col md:flex-row">
         <div className="hidden h-full w-64 shrink-0 lg:block">
           <MediaPanel />
         </div>
-        <div className="flex min-h-0 flex-1 flex-col">
-          <div className="flex min-h-0 flex-1">
-            <div className="flex min-h-0 flex-1 flex-col">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+          <div className="flex min-h-0 min-w-0 flex-1">
+            <div className="flex min-h-0 min-w-0 flex-1 flex-col">
               <Compositor />
             </div>
             <div className="hidden h-full w-72 shrink-0 lg:block">
               <Inspector />
             </div>
           </div>
-          <div className="h-[38vh] min-h-[180px] shrink-0">
+          <div className="h-[38vh] min-h-[180px] w-full shrink-0 overflow-hidden">
             <Timeline />
           </div>
           <MobileBottomBar />
