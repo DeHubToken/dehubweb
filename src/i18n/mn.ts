@@ -858,7 +858,7 @@ export const mn = {
     title: 'Баг',
     subtitle: 'DeHub-ийн ард зогсож буй инноваторуудтай танилцаарай.',
     experience: 'Туршлага',
-    malName: 'Malik Jan',
+    malName: 'Mal Jan',
     malRole: 'Үүсгэн байгуулагч',
     malBio: 'Full stack блокчэйн инженер, 2025 оны Lovable топ 1% кодлогч.',
     malExp1: 'Guide Dogs: >$1 сая цуглуулсан',

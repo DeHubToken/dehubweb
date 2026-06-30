@@ -858,7 +858,7 @@ export const no = {
     title: 'Team',
     subtitle: 'Møt innovatørene bak DeHub.',
     experience: 'Erfaring',
-    malName: 'Malik Jan',
+    malName: 'Mal Jan',
     malRole: 'Grunnlegger',
     malBio: 'Full stack blockchain-ingeniør, 2025 Lovable topp 1% koder.',
     malExp1: 'Guide Dogs: >$1 million samlet inn',

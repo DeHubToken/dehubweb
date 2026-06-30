@@ -858,7 +858,7 @@ export const ne = {
     title: 'टोली',
     subtitle: 'DeHub पछाडिका नवप्रवर्तकहरूलाई भेट्नुहोस्।',
     experience: 'अनुभव',
-    malName: 'Malik Jan',
+    malName: 'Mal Jan',
     malRole: 'संस्थापक',
     malBio: 'Full stack ब्लकचेन इन्जिनियर, 2025 को Lovable शीर्ष 1% कोडर।',
     malExp1: 'Guide Dogs: >$1 मिलियन संकलन',

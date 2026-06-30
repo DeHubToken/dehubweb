@@ -288,7 +288,7 @@ export const th = {
     title: 'ทีม',
     subtitle: 'พบกับจิตใจสร้างสรรค์เบื้องหลัง DeHub',
     experience: 'ประสบการณ์',
-    malName: 'Malik Jan',
+    malName: 'Mal Jan',
     malRole: 'ผู้ร่วมก่อตั้ง',
     malBio: 'วิศวกรบล็อกเชนแบบ full stack ผู้เขียนโค้ดอันดับต้น 1% ของ Lovable ในปี 2025 ผู้ก่อตั้ง DeLabs LTD และ Puso group',
     malExp1: 'Guide Dogs: ระดมทุน >$1m ในฐานะผู้จัดการระดมทุน',

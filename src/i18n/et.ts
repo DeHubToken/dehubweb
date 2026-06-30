@@ -959,7 +959,7 @@ export const et = {
     title: 'Meeskond',
     subtitle: 'Tutvu innovatiivsete mõtlejatega DeHubi taga — mitmekesine meeskond ettevõtjaid, sotsiaalmeedia eksperte ja mänguprofessionaale.',
     experience: 'Kogemus',
-    malName: 'Malik Jan',
+    malName: 'Mal Jan',
     malRole: 'Kaasasutaja',
     malBio: 'Full stack plokiahela insener, top 1% Lovable koodikirjutaja 2025, UK-s registreeritud Web3 arendajate DeLabs LTD asutaja.',
     malExp1: 'Guide Dogs: Kogus >$1M fondikogumise juhina',

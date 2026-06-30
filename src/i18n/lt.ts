@@ -858,7 +858,7 @@ export const lt = {
     title: 'Komanda',
     subtitle: 'Susipažinkite su inovatyviais protais, stovinčiais už DeHub.',
     experience: 'Patirtis',
-    malName: 'Malik Jan',
+    malName: 'Mal Jan',
     malRole: 'Įkūrėjas',
     malBio: 'Full stack blockchain inžinierius, top 1% Lovable koduotojas 2025.',
     malExp1: 'Guide Dogs: Surinkta >$1m',

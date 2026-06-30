@@ -858,7 +858,7 @@ export const lo = {
     title: 'ທີມ',
     subtitle: 'ພົບກັບທີມນັກຄິດສ້າງສັນທີ່ຢູ່ເບື້ອງຫຼັງ DeHub.',
     experience: 'ປະສົບການ',
-    malName: 'Malik Jan',
+    malName: 'Mal Jan',
     malRole: 'ຜູ້ຮ່ວມກໍ່ຕັ້ງ',
     malBio: 'ວິສະວະກອນ blockchain full stack, ນັກຂຽນ code top 1% Lovable ໃນ 2025.',
     malExp1: 'Guide Dogs: ລະດົມທຶນ >$1m',

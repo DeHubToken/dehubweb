@@ -959,7 +959,7 @@ export const es = {
     title: 'Equipo',
     subtitle: 'Conoce las mentes innovadoras detrás de DeHub — un equipo diverso de emprendedores, expertos en redes sociales y profesionales del gaming que impulsan el futuro del entretenimiento descentralizado.',
     experience: 'Experiencia',
-    malName: 'Malik Jan',
+    malName: 'Mal Jan',
     malRole: 'Cofundador',
     malBio: 'Ingeniero blockchain full stack, top 1% escritor de código Lovable en 2025, fundador de DeLabs LTD registrada en el Reino Unido y cofundador de Puso group.',
     malExp1: 'Guide Dogs: Recaudó >$1M como gerente de recaudación de fondos',

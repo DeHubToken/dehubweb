@@ -959,7 +959,7 @@ export const bn = {
     title: 'টিম',
     subtitle: 'DeHub-এর পিছনের উদ্ভাবনী মনগুলির সাথে পরিচিত হন।',
     experience: 'অভিজ্ঞতা',
-    malName: 'Malik Jan',
+    malName: 'Mal Jan',
     malRole: 'সহ-প্রতিষ্ঠাতা',
     malBio: 'ফুল স্ট্যাক ব্লকচেইন ইঞ্জিনিয়ার, ২০২৫ সালে শীর্ষ ১% Lovable কোড রাইটার।',
     malExp1: 'Guide Dogs: ৫-১০ জনের একটি দলের সাথে ফান্ডরেইজিং ম্যানেজার হিসাবে >$1m সংগ্রহ',
