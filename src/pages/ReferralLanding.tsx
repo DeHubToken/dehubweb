@@ -23,7 +23,9 @@ export default function ReferralLanding() {
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgRetry, setImgRetry] = useState(0);
 
-  const baseShareImage = getAffiliateShareImageUrl(code, 1200, 630);
+  // PNG for OG/social meta (cached cross-platform), SVG for the fast in-page preview.
+  const ogImage = getAffiliateShareImageUrl(code, 1200, 630, "png");
+  const baseShareImage = getAffiliateShareImageUrl(code, 1200, 630, "svg");
   const shareImage = imgRetry > 0 ? `${baseShareImage}&r=${imgRetry}` : baseShareImage;
   const pageUrl = `${SITE}/r/${code}`;
   const ctaUrl = `/app?ref=${code}`;
@@ -95,13 +97,13 @@ export default function ReferralLanding() {
         <meta property="og:url" content={pageUrl} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
-        <meta property="og:image" content={shareImage} />
+        <meta property="og:image" content={ogImage} />
         <meta property="og:image:width" content="1216" />
         <meta property="og:image:height" content="640" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={shareImage} />
+        <meta name="twitter:image" content={ogImage} />
         
       </Helmet>
 
