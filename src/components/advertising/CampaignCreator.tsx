@@ -62,7 +62,7 @@ const CampaignCreator = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Target className="w-5 h-5 text-foreground" />
+            <Target className="w-5 h-5 text-white" />
             Create New Campaign
           </CardTitle>
         </CardHeader>
@@ -135,7 +135,7 @@ const CampaignCreator = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <MapPin className="w-5 h-5 text-foreground" />
+            <MapPin className="w-5 h-5 text-white" />
             Geographic Targeting
           </CardTitle>
           <p className="text-sm text-muted-foreground">
@@ -199,7 +199,7 @@ const CampaignCreator = () => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Users className="w-5 h-5 text-foreground" />
+            <Users className="w-5 h-5 text-white" />
             POVR Audience Targeting
           </CardTitle>
           <p className="text-sm text-muted-foreground">
@@ -210,10 +210,10 @@ const CampaignCreator = () => {
           <div className="flex flex-col gap-6">
             <div className="w-full">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {badgeTiers.map(tier => <div key={tier.name} className={`border rounded-lg p-4 cursor-pointer transition-all hover:shadow-md ${selectedTiers.includes(tier.name) ? 'border-foreground bg-foreground/5' : 'border-border'}`} onClick={() => handleTierToggle(tier.name)}>
+                {badgeTiers.map(tier => <div key={tier.name} className={`border rounded-lg p-4 cursor-pointer transition-all hover:shadow-md ${selectedTiers.includes(tier.name) ? 'border-white bg-white/5' : 'border-border'}`} onClick={() => handleTierToggle(tier.name)}>
                     <div className="flex items-center space-x-2 mb-3">
                       <Checkbox checked={selectedTiers.includes(tier.name)} onChange={() => handleTierToggle(tier.name)} />
-                      {badgeImages[tier.name] ? <img src={badgeImages[tier.name]} alt={tier.name} className="w-6 h-6 object-contain dark:invert" /> : <div className="w-6 h-6 rounded-full bg-gray-300"></div>}
+                      {badgeImages[tier.name] ? <img src={badgeImages[tier.name]} alt={tier.name} className="w-6 h-6 object-contain dark:invert" /> : <div className="w-6 h-6 rounded-full bg-zinc-300"></div>}
                       <span className="font-medium text-sm">{tier.name === 'No Badge' ? 'No Badge' : `${tier.name} Badge`}</span>
                     </div>
                     <div className="space-y-1 text-xs text-muted-foreground">
