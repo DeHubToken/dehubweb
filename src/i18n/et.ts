@@ -961,7 +961,7 @@ export const et = {
     experience: 'Kogemus',
     malName: 'Mal Jan',
     malRole: 'Kaasasutaja',
-    malBio: 'Full stack plokiahela insener, top 1% Lovable koodikirjutaja 2025, UK-s registreeritud Web3 arendajate DeLabs LTD asutaja.',
+    malBio: 'Full stack blockchain engineer, scaled DeHub to a £250m market cap with a near 0m liquidity pool and m year 1 revenue. Previously the annual top billing consultant at the UK's largest agency Blue Arrow',
     malExp1: 'Guide Dogs: Kogus >$1M fondikogumise juhina',
     malExp2: 'Randstad: Vanemkonsultant $8 miljardi turuväärtusega ettevõttes',
     malExp3: 'Blue Arrow: Suurim arvete esitaja ja auhinnatud konsultant UK suurimas agentuuris',

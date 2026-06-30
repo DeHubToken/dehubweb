@@ -771,7 +771,7 @@ export const fa = {
     experience: 'تجربه',
     malName: 'Mal Jan',
     malRole: 'هم‌بنیان‌گذار',
-    malBio: 'مهندس بلاکچین فول‌استک، نویسنده کد در ۱٪ برتر Lovable در سال ۲۰۲۵، بنیان‌گذار DeLabs LTD و هم‌بنیان‌گذار گروه Puso.',
+    malBio: 'Full stack blockchain engineer, scaled DeHub to a £250m market cap with a near 0m liquidity pool and m year 1 revenue. Previously the annual top billing consultant at the UK's largest agency Blue Arrow',
     malExp1: 'Guide Dogs: جمع‌آوری بیش از ۱ میلیون دلار به عنوان مدیر جمع‌آوری کمک',
     malExp2: 'Randstad: مشاور ارشد در شرکتی با ارزش بازار ۸ میلیارد دلاری',
     malExp3: 'Blue Arrow: بهترین فروشنده و مشاور برنده جایزه در بزرگ‌ترین آژانس انگلستان',

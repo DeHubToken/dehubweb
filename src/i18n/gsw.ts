@@ -813,7 +813,7 @@ export const gsw = {
     experience: 'Erfahrig',
     malName: 'Mal Jan',
     malRole: 'Co-Gründer',
-    malBio: "Full-Stack-Blockchain-Ingenieur, Top 1% Lovable-Code-Schrieber 2025, Gründer vo DeLabs LTD und Co-Gründer vo dr Puso-Gruppe.",
+    malBio: "Full stack blockchain engineer, scaled DeHub to a £250m market cap with a near 0m liquidity pool and m year 1 revenue. Previously the annual top billing consultant at the UK's largest agency Blue Arrow",
     malExp1: "Guide Dogs: Het über 1M$ ufbracht als Fundraising-Manager",
     malExp2: "Randstad: Senior Consultant bi dr 8Mrd$-Firma und grösste Agentur vo dr Wält",
     malExp3: "Blue Arrow: Grösste Rechnigssteller und prämierte Consultant bi dr grösste britische Agentur",

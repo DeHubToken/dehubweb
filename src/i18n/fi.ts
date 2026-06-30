@@ -771,7 +771,7 @@ export const fi = {
     experience: 'Kokemus',
     malName: 'Mal Jan',
     malRole: 'Perustaja',
-    malBio: 'Full stack -lohkoketjuinsinööri, top 1 % Lovable-koodaaja vuonna 2025, DeLabs LTD:n perustaja ja Puso-ryhmän perustaja.',
+    malBio: 'Full stack blockchain engineer, scaled DeHub to a £250m market cap with a near 0m liquidity pool and m year 1 revenue. Previously the annual top billing consultant at the UK's largest agency Blue Arrow',
     malExp1: 'Guide Dogs: Keräsi yli 1 miljoona dollaria varainhankinnan johtajana',
     malExp2: 'Randstad: Vanhempi konsultti 8 miljardin dollarin markkina-arvon yrityksessä',
     malExp3: 'Blue Arrow: Paras myyjä ja palkittu konsultti Iso-Britannian suurimmassa toimistossa',
