@@ -448,14 +448,39 @@ serve(async (req) => {
       }
     }
 
-    // SVG-only path
-    const { svg } = await buildPngFor(rawCode, width, height);
+    // SVG path — cache + in-flight dedup so repeat visits are instant.
+    if (!noCache) {
+      const cachedSvg = SVG_CACHE.get(cacheKey);
+      if (cachedSvg) {
+        return new Response(cachedSvg, {
+          status: 200,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "image/svg+xml; charset=utf-8",
+            "Cache-Control": "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800, immutable",
+            "X-Cache": "HIT",
+          },
+        });
+      }
+    }
+    let svgInflight = SVG_INFLIGHT.get(cacheKey);
+    if (!svgInflight) {
+      svgInflight = (async () => {
+        const { svg } = await buildPngFor(rawCode, width, height);
+        cacheSvg(cacheKey, svg);
+        return svg;
+      })();
+      SVG_INFLIGHT.set(cacheKey, svgInflight);
+      svgInflight.finally(() => SVG_INFLIGHT.delete(cacheKey));
+    }
+    const svg = await svgInflight;
     return new Response(svg, {
       status: 200,
       headers: {
         ...corsHeaders,
         "Content-Type": "image/svg+xml; charset=utf-8",
-        "Cache-Control": "public, s-maxage=3600",
+        "Cache-Control": "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800, immutable",
+        "X-Cache": "MISS",
       },
     });
   } catch (error) {
