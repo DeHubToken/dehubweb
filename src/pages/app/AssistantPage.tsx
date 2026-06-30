@@ -1367,9 +1367,28 @@ export default function AssistantPage() {
       void incrementSkillUsage(matchedSkill.id);
       toast(`Using skill: ${matchedSkill.name}`, { duration: 2000 });
     }
+
+    // ── Character mention matching ──
+    const charMatch = parseCharacterMentions(skillCleanedInput, userCharacters);
+    let characterSourceImage: string | null = null;
+    if (charMatch.hasMentions) {
+      const primary = charMatch.characters[0].primary_image_url
+        ?? charMatch.characters[0].reference_image_urls[0];
+      if (primary) {
+        try { characterSourceImage = await imageUrlToBase64(primary); } catch { /* non-fatal */ }
+      }
+      charMatch.characters.forEach((c) => void incrementCharacterUsage(c.id));
+      const names = charMatch.characters.map((c) => c.name).join(', ');
+      toast(`Using character${charMatch.characters.length > 1 ? 's' : ''}: ${names}`, { duration: 2000 });
+    }
+
+    const personaBlock = buildCharacterPersonaBlock(charMatch.characters);
+    const promptCore = charMatch.cleanedPrompt;
     const effectiveInput = matchedSkill
-      ? `${matchedSkill.system_prompt}\n\nUser request: ${skillCleanedInput}`
-      : messageToSend;
+      ? `${matchedSkill.system_prompt}${personaBlock ? `\n\n${personaBlock}` : ''}\n\nUser request: ${promptCore}`
+      : personaBlock
+        ? `${personaBlock}\n\nUser request: ${promptCore}`
+        : messageToSend;
 
     const userMessage: Message = {
       id: Date.now().toString(),
