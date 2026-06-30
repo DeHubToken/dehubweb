@@ -36,7 +36,7 @@ const AdminUsersPage = React.lazy(() => import("./pages/admin/AdminUsersPage"));
 const AdminRoute = React.lazy(() =>
   import("./components/admin/AdminRoute").then((m) => ({ default: m.AdminRoute }))
 );
-const DocsPage = React.lazy(() => import("./pages/DocsPage"));
+const DocsPage = React.lazy(() => import("./pages/DocsRoutes"));
 const ProfilePage = React.lazy(() => import("./pages/app/ProfilePage"));
 const PostInfoPage = React.lazy(() => import("./pages/app/PostInfoPage"));
 const SinglePostPage = React.lazy(() => import("./pages/app/SinglePostPage"));

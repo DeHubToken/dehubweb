@@ -1,33 +1,136 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  <!-- Main Pages -->
   <url>
     <loc>https://dehub.io/</loc>
+    <lastmod>2025-01-07T16:00:00+00:00</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://dehub.io/app</loc>
-    <changefreq>hourly</changefreq>
+    <loc>https://dehub.io/docs</loc>
+    <lastmod>2025-01-07T16:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://dehub.io/app/explore</loc>
-    <changefreq>hourly</changefreq>
+    <loc>https://dehub.io/docs/blog</loc>
+    <lastmod>2025-01-07T16:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Documentation Pages -->
+  <url>
+    <loc>https://dehub.io/docs/overview</loc>
+    <lastmod>2025-01-07T16:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://dehub.io/creators</loc>
+    <loc>https://dehub.io/docs/quick-start</loc>
+    <lastmod>2025-01-07T16:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/installation</loc>
+    <lastmod>2025-01-07T16:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://dehub.io/jobs</loc>
+    <loc>https://dehub.io/docs/token-economics</loc>
+    <lastmod>2025-01-07T16:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/advertising</loc>
+    <lastmod>2025-01-07T16:00:00+00:00</lastmod>
     <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Blog Posts -->
+  <url>
+    <loc>https://dehub.io/docs/blog/leading-the-way-dehub-founders-official-tiktok-partner-agency-becomes-uk-1-with-1000-streamers</loc>
+    <lastmod>2024-11-22T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/13d7ca20-9fba-4ea4-963d-3b95ec9be963.png</image:loc>
+      <image:title>Mike Hales at TikTok Live Fest event</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/blog/strategic-shift-discontinuing-ethereum-mainnet-support-for-dhb</loc>
+    <lastmod>2025-01-07T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/e66cc5a1-ea1a-4e5b-8760-490c174f0b24.png</image:loc>
+      <image:title>Strategic Shift: DHB moves to Base L2</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/blog/off-ramp-service-revealed-dehub-card-coming-soon</loc>
+    <lastmod>2024-12-15T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/82928389-9659-4117-8bbe-351a68241694.png</image:loc>
+      <image:title>DeHub Card premium payment solution</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/blog/dehub-flagship-game-launch-partner-airdrop</loc>
+    <lastmod>2024-11-30T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/79082851-6427-4cc2-847b-a7780deb8f44.png</image:loc>
+      <image:title>Last Chad Standing game airdrop calculator</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/blog/interactive-streaming-on-chain-live-streams-with-animated-tip</loc>
+    <lastmod>2024-03-10T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/e0c268eb-4499-4b2a-8a02-850ea7d6f7ec.png</image:loc>
+      <image:title>Interactive live streaming with animated tips</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/blog/award-winning-innovation-dehub-wins-corporate-livewire-tech-innovator-award</loc>
+    <lastmod>2024-07-15T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/blog/tokenised-uploads-seamless-content-sharing-with-smart-contract-integration</loc>
+    <lastmod>2024-10-20T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/blog/dubai-crypto-event-dehub-co-founder-speaks-at-mena-summit</loc>
+    <lastmod>2024-09-10T12:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/blog/2022-wrap-up</loc>
+    <lastmod>2022-12-31T12:00:00+00:00</lastmod>
+    <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://dehub.io/docs</loc>
-    <changefreq>weekly</changefreq>
+    <loc>https://dehub.io/docs/blog/dream-big-the-1m-home-crypto-raffle-by-dehub---a-dehub-milestone-from-q3-2022</loc>
+    <lastmod>2022-07-11T12:00:00+00:00</lastmod>
+    <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>
 </urlset>
