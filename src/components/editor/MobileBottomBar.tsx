@@ -21,7 +21,7 @@ export function MobileBottomBar() {
   return (
     <>
       <nav
-        className="flex h-12 shrink-0 items-center justify-around gap-1 border-t border-white/10 bg-black/70 px-2 backdrop-blur-[24px] lg:hidden"
+        className="flex h-12 shrink-0 items-center justify-around gap-1 border-t border-white/10 bg-black/70 px-2 backdrop-blur-[24px] xl:hidden"
         aria-label="Editor panels"
       >
         <Button
