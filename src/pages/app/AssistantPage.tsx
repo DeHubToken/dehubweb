@@ -48,6 +48,8 @@ import { AiToolPaywallModal } from '@/components/app/ai-tools/AiToolPaywallModal
 import { AI_TOOL_MODELS, type AiToolCategory, type AiToolModel } from '@/constants/ai-tools.constants';
 import { OverviewTab } from '@/components/app/command-centre';
 import { AuthPrompt } from '@/components/app/AuthPrompt';
+import { useUserSkills, incrementSkillUsage, type UserSkill } from '@/hooks/use-user-skills';
+import { matchSkill, extractSlashSkill } from '@/lib/skills/matchTriggerPhrases';
 import { AuthGate } from '@/components/app/AuthGate';
 import { UserMentionDropdown, type MentionUser } from '@/components/app/mentions';
 import { ConversationHistoryDrawer } from '@/components/app/assistant/ConversationHistoryDrawer';
