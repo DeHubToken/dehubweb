@@ -1333,6 +1333,27 @@ export default function AssistantPage() {
     const messageToSend = overrideMessage || input.trim();
     if (!messageToSend || isLoading) return;
 
+    // ── Skill matching: slash command wins, otherwise auto-trigger ──
+    const slash = extractSlashSkill(messageToSend, userSkills);
+    const matchedSkill: UserSkill | null = slash.skill ?? matchSkill(messageToSend, userSkills);
+    const skillCleanedInput = slash.skill ? slash.cleaned : messageToSend;
+    let skillSourceImage: string | null = null;
+    if (matchedSkill) {
+      // Use first asset as reference image when generating an image skill
+      if (matchedSkill.kind === 'image' && matchedSkill.asset_urls.length > 0) {
+        try {
+          skillSourceImage = await imageUrlToBase64(matchedSkill.asset_urls[0]);
+        } catch {
+          // non-fatal
+        }
+      }
+      void incrementSkillUsage(matchedSkill.id);
+      toast(`Using skill: ${matchedSkill.name}`, { duration: 2000 });
+    }
+    const effectiveInput = matchedSkill
+      ? `${matchedSkill.system_prompt}\n\nUser request: ${skillCleanedInput}`
+      : messageToSend;
+
     const userMessage: Message = {
       id: Date.now().toString(),
       role: 'user',
@@ -1344,8 +1365,8 @@ export default function AssistantPage() {
     // Save user message to conversation
     queueMessage(userMessage);
     
-    const currentInput = messageToSend;
-    const currentAttachedImage = attachedImage;
+    const currentInput = effectiveInput;
+    const currentAttachedImage = attachedImage || skillSourceImage;
     setInput('');
     setAttachedImage(null);
     setIsLoading(true);
