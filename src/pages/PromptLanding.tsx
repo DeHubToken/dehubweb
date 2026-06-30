@@ -71,7 +71,7 @@ export default function PromptLanding() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-black text-white flex flex-col items-center justify-center px-6 relative overflow-hidden">
+    <div className="h-[100dvh] w-full bg-black text-white flex flex-col items-center justify-center px-6 relative overflow-hidden overscroll-none touch-none">
       <SEOHead title="Prompt your feed — DeHub" description="Tell DeHub what you want to see and we'll tune your timeline." />
 
       <NebulaBackground />
