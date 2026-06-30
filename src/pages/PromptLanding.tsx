@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowUp, Sparkles } from 'lucide-react';
+import { ArrowUp, Mic, MicOff } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { NebulaBackground } from '@/components/ui/NebulaBackground';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
+import wandAsset from '@/assets/wand.png.asset.json';
 
 const SUGGESTIONS = [
   'More AI and crypto news',
@@ -14,8 +16,10 @@ const SUGGESTIONS = [
 
 export default function PromptLanding() {
   const [text, setText] = useState('');
+  const [recording, setRecording] = useState(false);
   const navigate = useNavigate();
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const recognitionRef = useRef<any>(null);
 
   useEffect(() => { inputRef.current?.focus(); }, []);
 
@@ -25,6 +29,43 @@ export default function PromptLanding() {
     navigate(`/app?prompt=${encodeURIComponent(v)}`);
   };
 
+  const toggleRecord = () => {
+    const SR: any = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SR) {
+      alert('Voice input is not supported in this browser.');
+      return;
+    }
+    if (recording) {
+      recognitionRef.current?.stop();
+      setRecording(false);
+      return;
+    }
+    const rec = new SR();
+    rec.continuous = true;
+    rec.interimResults = true;
+    rec.lang = navigator.language || 'en-US';
+    let base = text ? text + ' ' : '';
+    rec.onresult = (e: any) => {
+      let interim = '';
+      let final = '';
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        const r = e.results[i];
+        if (r.isFinal) final += r[0].transcript;
+        else interim += r[0].transcript;
+      }
+      if (final) {
+        base += final;
+      }
+      setText((base + interim).trimStart());
+    };
+    rec.onend = () => setRecording(false);
+    rec.onerror = () => setRecording(false);
+    recognitionRef.current = rec;
+    setRecording(true);
+    rec.start();
+    inputRef.current?.focus();
+  };
+
   return (
     <div className="min-h-screen w-full bg-black text-white flex flex-col items-center justify-center px-6 relative overflow-hidden">
       <SEOHead title="Prompt your feed — DeHub" description="Tell DeHub what you want to see and we'll tune your timeline." />
@@ -32,9 +73,7 @@ export default function PromptLanding() {
       <NebulaBackground />
 
       <div className="relative w-full max-w-2xl flex flex-col items-center gap-6">
-        <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 flex items-center justify-center backdrop-blur-xl">
-          <Sparkles className="w-6 h-6" />
-        </div>
+        <img src={wandAsset.url} alt="" className="w-16 h-16 object-contain drop-shadow-[0_4px_18px_rgba(255,255,255,0.15)]" />
         <h1 className="text-4xl md:text-5xl font-semibold text-center tracking-tight">
           What do you want to see?
         </h1>
@@ -42,7 +81,7 @@ export default function PromptLanding() {
           Describe your perfect feed. We'll tune it to your interests in seconds.
         </p>
 
-        <div className="relative w-full mt-2">
+        <div className="w-full mt-2 flex flex-col gap-3">
           <textarea
             ref={inputRef}
             value={text}
@@ -55,16 +94,27 @@ export default function PromptLanding() {
             }}
             placeholder="More AI, gaming clips, indie music…"
             rows={3}
-            className="w-full resize-none rounded-3xl bg-white/[0.04] border border-white/10 backdrop-blur-2xl px-6 py-5 pr-16 text-base placeholder-white/30 focus:outline-none focus:border-white/30 transition-colors"
+            className="w-full resize-none rounded-3xl bg-white/[0.04] border border-white/10 backdrop-blur-2xl px-6 py-5 text-base placeholder-white/30 focus:outline-none focus:border-white/30 transition-colors"
           />
-          <button
-            onClick={() => submit()}
-            disabled={!text.trim()}
-            className="absolute right-3 bottom-3 w-11 h-11 rounded-2xl bg-white text-black flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:scale-105 transition-transform"
-            aria-label="Submit"
-          >
-            <ArrowUp className="w-5 h-5" strokeWidth={3} />
-          </button>
+          <div className="w-full flex items-center gap-2">
+            <LiquidGlassBubble2
+              label="Send"
+              icon={<ArrowUp className="w-4 h-4" strokeWidth={3} />}
+              onClick={() => submit()}
+              disabled={!text.trim()}
+              width="100%"
+              height="48px"
+              className="flex-1"
+            />
+            <LiquidGlassBubble2
+              label={recording ? 'Stop' : 'Record'}
+              icon={recording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              onClick={toggleRecord}
+              width="120px"
+              height="48px"
+              active={recording}
+            />
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-2 justify-center mt-2">
