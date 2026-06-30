@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Target, DollarSign, Users, Eye, Handshake, Rocket, Star, TrendingUp, MapPin, Globe } from 'lucide-react';
+import { Target, DollarSign, Users, Eye, Handshake, Rocket, TrendingUp, MapPin, Globe } from 'lucide-react';
 import { badgeTiers } from './utils/badgeTiers';
 const CampaignCreator = () => {
   const [selectedTiers, setSelectedTiers] = useState<string[]>([]);
