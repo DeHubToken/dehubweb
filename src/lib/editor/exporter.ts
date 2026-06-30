@@ -316,11 +316,10 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
     framerate: fps,
   });
 
-  // Sort visible clips by track z each frame.
-  const visualClips = clips.filter((c) => {
-    const tr = tracks.find((x) => x.id === c.trackId);
-    return tr && !tr.hidden && tr.kind !== "audio";
-  });
+  const isVisualTrack = (trackId: string) => {
+    const tr = tracks.find((x) => x.id === trackId);
+    return !!tr && !tr.hidden && tr.kind !== "audio";
+  };
 
   // ── Render every frame ──
   for (let f = 0; f < totalFrames; f++) {
@@ -331,22 +330,34 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
     ctx.fillStyle = settings.background;
     ctx.fillRect(0, 0, width, height);
 
-    // Active video clips: seek each.
-    const active = visualClips
-      .filter((c) => t >= c.start && t < c.start + c.duration)
-      .sort((a, b) => trackZ(a.trackId) - trackZ(b.trackId));
+    // Compute render ops (handles outgoing + incoming-preroll transitions).
+    const ops = computeRenderOps(clips, isVisualTrack, t, width).sort(
+      (a, b) => trackZ(a.clip.trackId) - trackZ(b.clip.trackId),
+    );
 
-    for (const c of active) {
-      if (c.kind === "video") {
-        const v = videos.get((c as MediaClip).mediaId);
-        if (v) {
-          const localT = (c as MediaClip).trimIn + (t - c.start);
-          await seekVideo(v, localT);
-        }
-      }
+    // Seek every video op (including incoming pre-roll) to its local time.
+    for (const op of ops) {
+      if (op.clip.kind !== "video") continue;
+      const mc = op.clip as MediaClip;
+      const v = videos.get(mc.mediaId);
+      if (!v) continue;
+      const localT =
+        op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start);
+      await seekVideo(v, localT);
     }
 
-    for (const c of active) drawClipExport(ctx, canvas, c, t, videos, images);
+    for (const op of ops) {
+      ctx.save();
+      if (op.translateX) ctx.translate(op.translateX, 0);
+      if (op.clipRect) {
+        ctx.beginPath();
+        ctx.rect(op.clipRect.x, 0, op.clipRect.w, canvas.height);
+        ctx.clip();
+      }
+      ctx.globalAlpha = op.alpha;
+      drawClipExport(ctx, canvas, op.clip, t, videos, images);
+      ctx.restore();
+    }
 
     const frame = new VideoFrame(canvas, { timestamp: Math.round((f / fps) * 1_000_000) });
     const keyFrame = f % Math.max(1, Math.round(fps * 2)) === 0;
