@@ -1,82 +1,91 @@
+# User Skills System
 
-# /premium — Marketing Page
+Let anyone create AI "skills" (like DeHub Poster) — prompt templates with brand assets — and surface them in Settings and in the AI assistant.
 
-A pure marketing/landing page at `/premium`. No checkout, no DB writes, no perk gating wired up in this pass — just the public sales surface. Two tiers, clear perks, transparent limits, and a callout that high-tier stakers already get it free.
+## What gets built
 
-## Tiers & pricing
+### 1. Database (new table `user_skills`)
 
-**DeHub Extra — $4.99/mo**
-- Ad-free feed (no promoted posts, no upgrade banners)
-- Background audio & video playback (screen-off, multitask)
-- Animated **Extra** badge on profile + comments
-- Profile flair: gradient username + 3 exclusive profile themes
-- AI Assistant: **500 messages/mo** (vs 50 free)
-- Image generation: **150 images/mo**
-- Video generation: **20 seconds/mo** of generated video
-- Free for **Top 7 staking tiers**
+Columns:
+- `id` uuid pk
+- `creator_wallet_address` text (lowercased)
+- `creator_username` text (denormalized for display)
+- `name` text — display name
+- `slug` text unique — url/id
+- `description` text — when to use it
+- `trigger_phrases` text[] — phrases that auto-trigger (e.g. "dehub poster", "dehub image")
+- `system_prompt` text — the instruction body
+- `asset_urls` text[] — uploaded brand assets (logos, references) in `ai-media-uploads`
+- `model` text default `'google/gemini-3.1-flash-image'` — assistant uses this when skill activates
+- `kind` text default `'image'` — `image | chat` (drives which assistant tool runs)
+- `usage_count` int default 0
+- `is_featured` bool default false
+- `created_at` / `updated_at` timestamptz
 
-**DeHub Family — $8.99/mo**
-- Everything in Extra, for **up to 5 @usernames**
-- Owner manages seats from `/app/settings` (future)
-- Each seat gets their own quotas (not pooled)
-- Free for **Top 4 staking tiers**
+RLS (public read, creator-only write):
+- SELECT to `anon` + `authenticated` (public library)
+- INSERT/UPDATE/DELETE only when `lower(get_request_wallet_address()) = creator_wallet_address` (matches the project's existing wallet-header identity pattern)
 
-Limits are intentionally generous-feeling but capped so margins stay healthy at $4.99. Numbers shown above are placeholders we can tune — they are display-only on this page.
+Seed row: insert the DeHub Poster skill on migration so it shows up immediately, marked `is_featured = true`, creator = platform wallet.
 
-## Page structure
+### 2. Settings → Skills section
 
-```text
-/premium
- ├─ Hero
- │   "DeHub Extra. Less noise. More you."
- │   Two CTAs: [Get Extra] [Get Family]   ← link to /app/settings#premium (placeholder)
- │   Subtext: "Already a top-tier staker? It's on us."
- │
- ├─ Tier comparison (2-column on desktop, stacked on mobile)
- │   Extra card  |  Family card (highlighted "Best value")
- │   Each lists perks with check icons + limit numbers
- │
- ├─ Perks deep-dive (3 feature blocks, alternating left/right)
- │   1. Ad-free + background play  (mock phone screen)
- │   2. AI you can actually rely on (Assistant/image/video icons + quotas)
- │   3. Badge & profile flair  (animated badge preview)
- │
- ├─ Staker reward callout
- │   "Top 7 tiers → Extra free. Top 4 tiers → Family free."
- │   Links to /app/stake
- │
- ├─ FAQ accordion
- │   - What counts as an ad on DeHub?
- │   - Can I switch between Extra and Family?
- │   - How do family seats work?
- │   - What happens if I unstake?
- │   - Can I pay in DHB? (Answer: coming soon)
- │
- └─ Footer CTA band
-     "Try DeHub Extra" + secondary "Compare with Family"
-```
+New route: `/app/settings` gets a "Skills" tab (or new collapsible card if the page uses cards).
 
-## Visual direction
+UI:
+- Search bar at top (filters by name / description / trigger phrases / creator)
+- Filter chips: `All` · `Featured` · `Mine`
+- Grid of skill cards (liquid glass, `rounded-2xl`) showing: thumbnail (first asset or generated initials), name, creator @handle, description, trigger phrase preview, usage count
+- `+ Create Skill` button (top-right, LiquidGlassBubble2) → opens create modal
+- Click a card → detail drawer with full prompt, all assets, "Use in Assistant" button, and Edit/Delete (only for creator)
 
-- Follows the project's liquid-glass standard: `bg-black/60 backdrop-blur-[24px] border-white/10`, `rounded-2xl` primary CTAs via `LiquidGlassBubble2`.
-- No blue. White + white-opacity per project color rule.
-- Family card gets a subtle white gradient ring to read as "best value" without breaking the no-blue rule.
-- Animated Extra badge: small SVG with a slow shimmer sweep.
+Create/Edit modal:
+- Name, description, trigger phrases (tag input), system prompt (textarea)
+- Asset uploader (drag-drop, multi-file, stored in `ai-media-uploads/skills/<skill-id>/`)
+- Kind toggle: Image generation / Chat-only
+- Save → upserts row, toast confirmation
 
-## Technical details
+### 3. Assistant integration (`/app/assistant`)
 
-- New file: `src/pages/Premium.tsx` (public route, not under `/app`).
-- Route registered in `src/App.tsx` alongside other public marketing routes (`/affiliate`, `/work`, `/guide`).
-- Add nav entry in `src/constants/app.constants.ts` `NAV_ITEMS` (icon: `Sparkles` or `Crown` from lucide), label `Premium`, path `/premium`.
-- Add i18n keys under `common.premium.*` (hero, tiers, perks, faq) — English only in this pass; existing translation pipeline will pick the rest up later, matching the established pattern.
-- SEO: `<SEOHead>` with title "DeHub Premium — Extra & Family plans", meta description under 160 chars, single H1, OG image (reuse existing brand asset for now).
-- CTAs link to `/app/settings` with a `#premium` hash as a placeholder anchor — real checkout is out of scope here.
-- No backend changes. No new tables. No edge functions. No payment provider enabled yet (that comes when we wire checkout).
+Two surfaces:
 
-## Explicitly out of scope (next passes)
+**Auto-trigger**: before sending each user message, lowercase-match the message against every skill's `trigger_phrases`. On strongest match (longest phrase wins), prepend the skill's `system_prompt` and assets to the request, increment `usage_count`, and show a small "Using skill: <name>" chip above the assistant reply.
 
-- Stripe/DHB checkout
-- `premium_subscriptions` table + RLS
-- Family seat invite flow
-- Perk gating in feed/Assistant/image-gen code paths
-- Auto-comping logic that reads staking tier and grants Premium
+**Slash menu**: typing `/` in the composer opens a popover with the searchable skill list (same data as Settings). Selecting one inserts a tag (`/dehub-poster`) into the prompt, locks the skill for that turn, and adds the same prompt+assets to the request. Tag is removable.
+
+When a skill of `kind = image` activates, the assistant routes through the existing image-generation edge function with model `google/gemini-3.1-flash-image` and passes the skill's assets as reference images (matches the DeHub Poster skill behavior).
+
+## Files
+
+New:
+- `supabase/migrations/<ts>_user_skills.sql`
+- `src/hooks/use-user-skills.ts` — list / search / create / update / delete / increment-usage
+- `src/components/app/skills/SkillCard.tsx`
+- `src/components/app/skills/SkillDetailDrawer.tsx`
+- `src/components/app/skills/SkillCreateModal.tsx`
+- `src/components/app/skills/SkillsLibrary.tsx` — search + grid (used in Settings and slash menu)
+- `src/components/app/assistant/SkillSlashMenu.tsx`
+- `src/lib/skills/matchTriggerPhrases.ts`
+
+Edited:
+- `src/pages/app/SettingsPage.tsx` — add Skills tab/section mounting `SkillsLibrary`
+- Assistant composer (existing file in `src/pages/app/AssistantPage.tsx` or equivalent) — wire slash menu and auto-trigger
+- Assistant send handler — apply matched/selected skill prompt + assets, increment usage
+- i18n: add `skills.*` keys across locale files (title, search placeholder, create button, kind labels, empty states)
+
+## Behavior details
+
+- Public read, so unauthenticated visitors browsing Settings see the library too (read-only).
+- Wallet identity required to create/edit/delete (existing `withWalletHeader` flow).
+- Slug auto-generated from name; collisions get a numeric suffix.
+- Assets capped at 5 per skill, 5 MB each, png/jpg/webp/svg.
+- Usage counter increments server-side via a tiny edge function (or RPC) to avoid client tampering inflating the leaderboard.
+- Slash menu and Settings grid share `SkillsLibrary` so search behavior is consistent.
+
+## Out of scope (call out if user wants later)
+
+- Skill versioning / forking
+- Per-skill access control (private, paid)
+- Rating / reviews
+- Categories or tags beyond `featured`
+- Editing the DeHub Poster seed skill from the UI (it's owned by the platform wallet)
