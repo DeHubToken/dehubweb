@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { ArrowUp, Sparkles, Cpu, Atom, Gamepad2, Trophy, Music2, Film, Image as ImageIcon, Radio, Check } from 'lucide-react';
@@ -166,123 +167,143 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
     onOpenChange(false);
   };
 
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md bg-black/80 backdrop-blur-2xl border border-white/10 text-white rounded-2xl p-6">
-        {stage === 'input' && (
-          <div className="flex flex-col items-center gap-5 py-4">
-            <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
-              <Sparkles className="w-6 h-6 text-white" />
-            </div>
-            <h2 className="text-lg font-semibold text-center">What do you want to see more of?</h2>
-            <div className="relative w-full">
-              <input
-                ref={inputRef}
-                value={prompt}
-                onChange={e => setPrompt(e.target.value)}
-                onKeyDown={e => { if (e.key === 'Enter') handleSubmit(); }}
-                placeholder="More AI, tech, gaming…"
-                className="w-full pl-4 pr-12 py-3 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-white/30 transition-colors"
-              />
-              <button
-                onClick={() => handleSubmit()}
-                disabled={!prompt.trim()}
-                className="absolute right-1.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:scale-105 transition-transform"
-                aria-label="Submit"
-              >
-                <ArrowUp className="w-4 h-4" strokeWidth={3} />
-              </button>
-            </div>
-          </div>
-        )}
+  // Use drawer on tablets and phones (< lg breakpoint), dialog on desktop.
+  const [isTouchLayout, setIsTouchLayout] = useState(false);
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 1023px)');
+    const sync = () => setIsTouchLayout(mql.matches);
+    sync();
+    mql.addEventListener('change', sync);
+    return () => mql.removeEventListener('change', sync);
+  }, []);
 
-        {stage === 'analysing' && (
-          <div className="flex flex-col items-center gap-6 py-10">
-            <div className="relative w-44 h-44">
-              {/* Outer ring */}
-              <div className="absolute inset-0 rounded-full border border-white/10 animate-[spin_6s_linear_infinite]" />
-              {/* Inner dashed ring, counter-rotating */}
-              <div
-                className="absolute inset-3 rounded-full border border-dashed border-white/15 animate-[spin_10s_linear_infinite]"
-                style={{ animationDirection: 'reverse' }}
-              />
-              {/* Pulsing glow */}
-              <div className="absolute inset-6 rounded-full bg-white/[0.04] blur-xl animate-pulse" />
-              {/* Centre badge with subtle scale pulse */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center animate-[pulse_2s_ease-in-out_infinite]">
-                  <Sparkles className="w-6 h-6 animate-pulse" />
-                </div>
-              </div>
-              {/* Orbiting icons: container rotates, icons counter-rotate to stay upright */}
-              <div className="absolute inset-0 animate-[spin_8s_linear_infinite]">
-                {ORBIT_ICONS.slice(0, 6).map((Icon, i) => {
-                  const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
-                  const r = 72;
-                  const x = Math.cos(angle) * r;
-                  const y = Math.sin(angle) * r;
-                  return (
-                    <div
-                      key={i}
-                      className="absolute top-1/2 left-1/2 w-10 h-10 -ml-5 -mt-5 rounded-full bg-white/5 border border-white/10 flex items-center justify-center animate-[spin_8s_linear_infinite] backdrop-blur-sm"
-                      style={{
-                        transform: `translate(${x}px, ${y}px)`,
-                        animationDirection: 'reverse',
-                        animationDelay: `${-i * 0.2}s`,
-                      }}
-                    >
-                      <Icon
-                        className="w-4 h-4 text-white"
-                        style={{ animation: `pulse 1.6s ease-in-out ${i * 0.15}s infinite` }}
-                      />
-                    </div>
-                  );
-                })}
+  const body = (
+    <>
+      {stage === 'input' && (
+        <div className="flex flex-col items-center gap-5 py-4">
+          <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
+            <Sparkles className="w-6 h-6 text-white" />
+          </div>
+          <h2 className="text-lg font-semibold text-center">What do you want to see more of?</h2>
+          <div className="relative w-full">
+            <input
+              ref={inputRef}
+              value={prompt}
+              onChange={e => setPrompt(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter') handleSubmit(); }}
+              placeholder="More AI, tech, gaming…"
+              className="w-full pl-4 pr-12 py-3 rounded-2xl bg-white/5 border border-white/10 text-white placeholder-white/40 focus:outline-none focus:border-white/30 transition-colors"
+            />
+            <button
+              onClick={() => handleSubmit()}
+              disabled={!prompt.trim()}
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl bg-white text-black flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:scale-105 transition-transform"
+              aria-label="Submit"
+            >
+              <ArrowUp className="w-4 h-4" strokeWidth={3} />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {stage === 'analysing' && (
+        <div className="flex flex-col items-center gap-6 py-10">
+          <div className="relative w-44 h-44">
+            <div className="absolute inset-0 rounded-full border border-white/10 animate-[spin_6s_linear_infinite]" />
+            <div
+              className="absolute inset-3 rounded-full border border-dashed border-white/15 animate-[spin_10s_linear_infinite]"
+              style={{ animationDirection: 'reverse' }}
+            />
+            <div className="absolute inset-6 rounded-full bg-white/[0.04] blur-xl animate-pulse" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center animate-[pulse_2s_ease-in-out_infinite]">
+                <Sparkles className="w-6 h-6 animate-pulse" />
               </div>
             </div>
-            <p className="text-sm text-white/60 animate-pulse">Analysing your interests…</p>
-          </div>
-        )}
-
-
-        {stage === 'tune' && (
-          <div className="flex flex-col gap-5 py-2">
-            <div className="text-center">
-              <h2 className="text-lg font-semibold">Your timeline is ready</h2>
-              <p className="text-sm text-white/50">Drag to fine-tune your mix.</p>
-            </div>
-            <div className="flex flex-col gap-4">
-              {weights.map((w, idx) => {
-                const Icon = ORBIT_ICONS[idx % ORBIT_ICONS.length];
+            <div className="absolute inset-0 animate-[spin_8s_linear_infinite]">
+              {ORBIT_ICONS.slice(0, 6).map((Icon, i) => {
+                const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
+                const r = 72;
+                const x = Math.cos(angle) * r;
+                const y = Math.sin(angle) * r;
                 return (
-                  <div key={w.id} className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
-                      <Icon className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="text-sm w-20 truncate">{w.name}</span>
-                    <input
-                      type="range"
-                      min={0}
-                      max={100}
-                      value={w.weight}
-                      onChange={e => handleWeightChange(w.id, Number(e.target.value))}
-                      className="flex-1 accent-white"
+                  <div
+                    key={i}
+                    className="absolute top-1/2 left-1/2 w-10 h-10 -ml-5 -mt-5 rounded-full bg-white/5 border border-white/10 flex items-center justify-center animate-[spin_8s_linear_infinite] backdrop-blur-sm"
+                    style={{
+                      transform: `translate(${x}px, ${y}px)`,
+                      animationDirection: 'reverse',
+                      animationDelay: `${-i * 0.2}s`,
+                    }}
+                  >
+                    <Icon
+                      className="w-4 h-4 text-white"
+                      style={{ animation: `pulse 1.6s ease-in-out ${i * 0.15}s infinite` }}
                     />
-                    <span className="text-xs text-white/60 w-10 text-right tabular-nums">{w.weight}%</span>
                   </div>
                 );
               })}
             </div>
-            <LiquidGlassBubble2
-              label="Save"
-              icon={<Check className="w-4 h-4" />}
-              onClick={handleSave}
-              width="100%"
-              height="48px"
-              className="mt-2"
-            />
           </div>
-        )}
+          <p className="text-sm text-white/60 animate-pulse">Analysing your interests…</p>
+        </div>
+      )}
+
+      {stage === 'tune' && (
+        <div className="flex flex-col gap-5 py-2">
+          <div className="text-center">
+            <h2 className="text-lg font-semibold">Your timeline is ready</h2>
+            <p className="text-sm text-white/50">Drag to fine-tune your mix.</p>
+          </div>
+          <div className="flex flex-col gap-4">
+            {weights.map((w, idx) => {
+              const Icon = ORBIT_ICONS[idx % ORBIT_ICONS.length];
+              return (
+                <div key={w.id} className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center flex-shrink-0">
+                    <Icon className="w-4 h-4 text-white" />
+                  </div>
+                  <span className="text-sm w-20 truncate">{w.name}</span>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={w.weight}
+                    onChange={e => handleWeightChange(w.id, Number(e.target.value))}
+                    className="flex-1 accent-white"
+                  />
+                  <span className="text-xs text-white/60 w-10 text-right tabular-nums">{w.weight}%</span>
+                </div>
+              );
+            })}
+          </div>
+          <LiquidGlassBubble2
+            label="Save"
+            icon={<Check className="w-4 h-4" />}
+            onClick={handleSave}
+            width="100%"
+            height="48px"
+            className="mt-2"
+          />
+        </div>
+      )}
+    </>
+  );
+
+  if (isTouchLayout) {
+    return (
+      <Drawer open={open} onOpenChange={onOpenChange}>
+        <DrawerContent glass hideHandle={false} className="text-white px-5 pb-8 max-h-[92vh] overflow-y-auto">
+          {body}
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-md bg-black/80 backdrop-blur-2xl border border-white/10 text-white rounded-2xl p-6">
+        {body}
       </DialogContent>
     </Dialog>
   );
