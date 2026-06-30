@@ -287,6 +287,9 @@ export function WinterSnow() {
 
   if (theme !== 'winter') return null;
 
+  // Disable snowfall on the /prompt page because it clashes with the animated nebula background.
+  if (pathname === '/prompt') return null;
+
   return (
     <canvas
       ref={canvasRef}
