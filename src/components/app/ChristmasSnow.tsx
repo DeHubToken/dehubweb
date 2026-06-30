@@ -17,11 +17,37 @@ export function ChristmasSnow() {
   const flakesRef = useRef<
     Array<{ x: number; y: number; r: number; vy: number; vx: number; o: number }>
   >([]);
+  const blowRef = useRef<
+    Array<{ x: number; y: number; vx: number; vy: number; r: number; o: number }>
+  >([]);
+  const windDirRef = useRef(1);
   const rafRef = useRef<number | null>(null);
+  const isFirstNav = useRef(true);
 
-  // Only wipe the built-up drift on navigation. Falling flakes keep falling.
+  // On navigation: blow the built-up drift away in style. Falling flakes keep falling.
   useEffect(() => {
-    if (heightsRef.current) heightsRef.current.fill(0);
+    if (isFirstNav.current) { isFirstNav.current = false; return; }
+    const heights = heightsRef.current;
+    if (!heights) return;
+    const h = window.innerHeight;
+    const dir = Math.random() < 0.5 ? -1 : 1;
+    windDirRef.current = dir;
+    for (let c = 0; c < heights.length; c++) {
+      const pile = heights[c];
+      if (pile < 1) continue;
+      const count = Math.min(6, Math.ceil(pile / 10));
+      for (let k = 0; k < count; k++) {
+        blowRef.current.push({
+          x: c * 6 + Math.random() * 6,
+          y: h - Math.random() * pile,
+          vx: dir * (2 + Math.random() * 4),
+          vy: -1 - Math.random() * 2,
+          r: 1 + Math.random() * 2.2,
+          o: 0.75 + Math.random() * 0.25,
+        });
+      }
+    }
+    heights.fill(0);
   }, [pathname]);
 
 
