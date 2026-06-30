@@ -83,7 +83,7 @@ export default function Premium() {
     <div className="min-h-screen bg-[#0a0a0a] text-white">
       <SEOHead
         title="DeHub Premium — Extra & Family plans"
-        description="Go ad-free, unlock background playback, get a Premium badge and more AI. DeHub Extra $4.99/mo, Family $8.99/mo. Free for top-tier stakers."
+        description="Go ad-free, unlock background playback, get a Premium badge and more AI. DeHub Extra $4.99/mo, Family $11.99/mo. Free for top-tier stakers."
         url="https://dehub.io/premium"
       />
 
@@ -172,7 +172,7 @@ export default function Premium() {
           </div>
           <p className="text-sm text-zinc-400">Premium for you and up to 5 people you choose.</p>
           <div className="mt-5 flex items-baseline gap-1">
-            <span className="text-4xl font-bold">$8.99</span>
+            <span className="text-4xl font-bold">$11.99</span>
             <span className="text-zinc-400 text-sm">/ month</span>
           </div>
           <p className="mt-1 text-xs text-zinc-500">Free for Top 4 staking tiers</p>
@@ -280,7 +280,7 @@ export default function Premium() {
             Ready when you are.
           </h3>
           <p className="mt-3 text-zinc-400 text-sm sm:text-base">
-            $4.99 to clean it up. $8.99 to bring the family. Cancel any time.
+            $4.99 to clean it up. $11.99 to bring the family. Cancel any time.
           </p>
           <div className="mt-7 flex items-center justify-center gap-3 flex-wrap">
             <a
