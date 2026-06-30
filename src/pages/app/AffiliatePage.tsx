@@ -45,12 +45,19 @@ export default function AffiliatePage() {
   });
   const [imgLoaded, setImgLoaded] = useState(false);
 
+  // Bump this whenever the share-image renderer changes so all users pick up the new look.
+  const RENDERER_VERSION = "2";
   useEffect(() => {
     if (!versionKey) return;
     try {
       const stored = window.localStorage.getItem(versionKey);
-      if (stored) setImgVersion(stored);
-      else window.localStorage.setItem(versionKey, "1");
+      if (stored && stored.startsWith(`${RENDERER_VERSION}:`)) {
+        setImgVersion(stored);
+      } else {
+        const fresh = `${RENDERER_VERSION}:${Date.now()}`;
+        window.localStorage.setItem(versionKey, fresh);
+        setImgVersion(fresh);
+      }
     } catch { /* ignore */ }
   }, [versionKey]);
 
