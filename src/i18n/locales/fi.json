@@ -160,7 +160,6 @@
     "dark": "Tumma",
     "system": "Järjestelmä",
     "cosmic": "Kosminen",
-    "christmas": "Joulu",
     "island": "Saari",
     "hacker": "Hakkeri",
     "horror": "Kauhu",
@@ -235,7 +234,8 @@
     "noOffers": "Et ole vielä tehnyt tarjouksia",
     "walletCopied": "Lompakko-osoite kopioitu!",
     "note": "Huomautus",
-    "loginDescription": "Kirjaudu sisään hallinnoidaksesi tiliäsi."
+    "loginDescription": "Kirjaudu sisään hallinnoidaksesi tiliäsi.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Tallenna",

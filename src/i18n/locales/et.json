@@ -160,7 +160,6 @@
     "dark": "Tume",
     "system": "Süsteem",
     "cosmic": "Kosmiline",
-    "christmas": "Jõulud",
     "island": "Saar",
     "hacker": "Häkker",
     "horror": "Õudus",
@@ -235,7 +234,8 @@
     "noOffers": "Sa pole veel pakkumisi teinud",
     "walletCopied": "Rahakoti aadress kopeeritud!",
     "note": "Märkus",
-    "loginDescription": "Logi sisse, et pääseda ligi ja hallata konto seadeid."
+    "loginDescription": "Logi sisse, et pääseda ligi ja hallata konto seadeid.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Salvesta",

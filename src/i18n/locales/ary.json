@@ -160,7 +160,6 @@
     "dark": "غامق",
     "system": "النظام",
     "cosmic": "كوزميك",
-    "christmas": "كريسماس",
     "island": "جزيرة",
     "hacker": "هاكر",
     "horror": "رعب",
@@ -235,7 +234,8 @@
     "noOffers": "ما درتي حتى عرض حتى دابا",
     "walletCopied": "عنوان المحفظة تنسخ!",
     "note": "ملاحظة",
-    "loginDescription": "دخل باش توصل وتدبر إعدادات الحساب ديالك."
+    "loginDescription": "دخل باش توصل وتدبر إعدادات الحساب ديالك.",
+    "winter": "Winter"
   },
   "common": {
     "save": "حفظ",

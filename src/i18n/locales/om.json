@@ -152,7 +152,6 @@
     "dark": "Dukkana",
     "system": "Sirna",
     "cosmic": "Hawaa",
-    "christmas": "Kiristmaasii",
     "island": "Odola",
     "hacker": "Haakara",
     "horror": "Sodaachisaa",
@@ -235,7 +234,8 @@
     "usernamesOwn": "Usernames You Own",
     "noUsernames": "You don't own any usernames yet",
     "offersMade": "Offers You've Made",
-    "noOffers": "You haven't made any offers yet"
+    "noOffers": "You haven't made any offers yet",
+    "winter": "Winter"
   },
   "common": {
     "save": "Olchi",

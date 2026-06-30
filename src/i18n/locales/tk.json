@@ -160,7 +160,6 @@
     "dark": "Garaňky",
     "system": "Ulgam",
     "cosmic": "Kosmik",
-    "christmas": "Täze ýyl",
     "island": "Ada",
     "hacker": "Haker",
     "horror": "Gorkunç",
@@ -235,7 +234,8 @@
     "noOffers": "Entek teklip bermediňiz",
     "walletCopied": "Gapjyk salgysy göçürildi!",
     "note": "Bellik",
-    "loginDescription": "Hasabyňyza girmek we dolandyrmak üçin giriň."
+    "loginDescription": "Hasabyňyza girmek we dolandyrmak üçin giriň.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Ýatda sakla",

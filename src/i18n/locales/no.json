@@ -160,7 +160,6 @@
     "dark": "Mørk",
     "system": "System",
     "cosmic": "Kosmisk",
-    "christmas": "Jul",
     "island": "Øy",
     "hacker": "Hacker",
     "horror": "Skrekk",
@@ -235,7 +234,8 @@
     "noOffers": "Du har ikke gitt noen tilbud ennå",
     "walletCopied": "Lommebokadresse kopiert!",
     "note": "Merknad",
-    "loginDescription": "Logg inn for å få tilgang til og administrere kontoen din."
+    "loginDescription": "Logg inn for å få tilgang til og administrere kontoen din.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Lagre",

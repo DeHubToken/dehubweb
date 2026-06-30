@@ -160,7 +160,6 @@
     "dark": "E errët",
     "system": "Sistemi",
     "cosmic": "Kozmike",
-    "christmas": "Krishtlindje",
     "island": "Ishull",
     "hacker": "Haker",
     "horror": "Horror",
@@ -235,7 +234,8 @@
     "noOffers": "Nuk keni bërë asnjë ofertë akoma",
     "walletCopied": "Adresa e portofolit u kopjua!",
     "note": "Shënim",
-    "loginDescription": "Hyni për të aksesuar dhe menaxhuar cilësimet e llogarisë suaj."
+    "loginDescription": "Hyni për të aksesuar dhe menaxhuar cilësimet e llogarisë suaj.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Ruaj",

@@ -160,7 +160,6 @@
     "dark": "Peteng",
     "system": "Sistem",
     "cosmic": "Kosmik",
-    "christmas": "Natal",
     "island": "Pulo",
     "hacker": "Hacker",
     "horror": "Medeni",
@@ -235,7 +234,8 @@
     "noOffers": "Kowe durung gawe tawaran",
     "walletCopied": "Alamat dompet wis dikopi!",
     "note": "Cathetan",
-    "loginDescription": "Mlebu kanggo ngatur setelan akunmu."
+    "loginDescription": "Mlebu kanggo ngatur setelan akunmu.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Simpen",

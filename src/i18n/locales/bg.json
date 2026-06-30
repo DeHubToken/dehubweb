@@ -160,7 +160,6 @@
     "dark": "Тъмна",
     "system": "Системна",
     "cosmic": "Космическа",
-    "christmas": "Коледна",
     "island": "Островна",
     "hacker": "Хакерска",
     "horror": "Хорър",
@@ -235,7 +234,8 @@
     "noOffers": "Все още не сте правили оферти",
     "walletCopied": "Адресът на портфейла е копиран!",
     "note": "Бележка",
-    "loginDescription": "Log in to access and manage your account settings."
+    "loginDescription": "Log in to access and manage your account settings.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Запази",

@@ -160,7 +160,6 @@
     "dark": "כהה",
     "system": "מערכת",
     "cosmic": "קוסמי",
-    "christmas": "חג המולד",
     "island": "אי",
     "hacker": "האקר",
     "horror": "אימה",
@@ -235,7 +234,8 @@
     "noOffers": "עדיין לא הגשת הצעות",
     "walletCopied": "כתובת הארנק הועתקה!",
     "note": "הערה",
-    "loginDescription": "Log in to access and manage your account settings."
+    "loginDescription": "Log in to access and manage your account settings.",
+    "winter": "Winter"
   },
   "common": {
     "save": "שמור",

@@ -160,7 +160,6 @@
     "dark": "Pōuri",
     "system": "Pūnaha",
     "cosmic": "Tuarangi",
-    "christmas": "Kirihimete",
     "island": "Motu",
     "hacker": "Kaihūkere",
     "horror": "Whakamataku",
@@ -235,7 +234,8 @@
     "noOffers": "Kāore anō koe i tāpae tono",
     "walletCopied": "Kua tāruatia te wāhitau pūkoro moni!",
     "note": "Tuhipoka",
-    "loginDescription": "Takiuru ki te whakahaere i ngā tautuhinga pūkete."
+    "loginDescription": "Takiuru ki te whakahaere i ngā tautuhinga pūkete.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Tiaki",

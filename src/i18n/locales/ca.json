@@ -160,7 +160,6 @@
     "dark": "Fosc",
     "system": "Sistema",
     "cosmic": "Còsmic",
-    "christmas": "Nadal",
     "island": "Illa",
     "hacker": "Hacker",
     "horror": "Terror",
@@ -235,7 +234,8 @@
     "noOffers": "Encara no has fet cap oferta",
     "walletCopied": "Adreça de la cartera copiada!",
     "note": "Nota",
-    "loginDescription": "Inicia sessió per accedir i gestionar la configuració del teu compte."
+    "loginDescription": "Inicia sessió per accedir i gestionar la configuració del teu compte.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Desar",

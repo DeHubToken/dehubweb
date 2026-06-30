@@ -160,7 +160,6 @@
     "dark": "Òkùnkùn",
     "system": "Ètò ẹ̀rọ",
     "cosmic": "Sánmà",
-    "christmas": "Kérésìmesì",
     "island": "Erékùṣù",
     "hacker": "Hacker",
     "horror": "Ẹ̀rù",
@@ -235,7 +234,8 @@
     "noOffers": "O kò tíì ṣe àwọn ìfúnni kankan",
     "walletCopied": "A ti dàkọ àdírẹ́sì àpò owó!",
     "note": "Àkíyèsí",
-    "loginDescription": "Wọlé láti wọlé sí àti ṣàkóso ètò àkáǹtì rẹ."
+    "loginDescription": "Wọlé láti wọlé sí àti ṣàkóso ètò àkáǹtì rẹ.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Fipamọ́",

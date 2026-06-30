@@ -160,7 +160,6 @@
     "dark": "Tamsi",
     "system": "Sistema",
     "cosmic": "Kosminė",
-    "christmas": "Kalėdos",
     "island": "Sala",
     "hacker": "Hakeris",
     "horror": "Siaubas",
@@ -235,7 +234,8 @@
     "noOffers": "Dar nepateikėte jokių pasiūlymų",
     "walletCopied": "Piniginės adresas nukopijuotas!",
     "note": "Pastaba",
-    "loginDescription": "Prisijunkite, kad pasiektumėte ir tvarkytumėte paskyros nustatymus."
+    "loginDescription": "Prisijunkite, kad pasiektumėte ir tvarkytumėte paskyros nustatymus.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Saugoti",

@@ -160,7 +160,6 @@
     "dark": "Giza",
     "system": "Mfumo",
     "cosmic": "Ulimwengu",
-    "christmas": "Krismasi",
     "island": "Kisiwa",
     "hacker": "Hakeri",
     "horror": "Hofu",
@@ -235,7 +234,8 @@
     "noOffers": "Bado hujatoa ofa yoyote",
     "walletCopied": "Anwani ya pochi imenakiliwa!",
     "note": "Dokezo",
-    "loginDescription": "Ingia ili kufikia na kusimamia mipangilio ya akaunti yako."
+    "loginDescription": "Ingia ili kufikia na kusimamia mipangilio ya akaunti yako.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Hifadhi",

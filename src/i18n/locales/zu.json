@@ -160,7 +160,6 @@
     "dark": "Ubumnyama",
     "system": "Isistimu",
     "cosmic": "Yomkhathi",
-    "christmas": "UKhisimusi",
     "island": "Isiqhingi",
     "hacker": "Ihekha",
     "horror": "Ukwesaba",
@@ -235,7 +234,8 @@
     "noOffers": "Awukazani nesiphakamiso okwamanje",
     "walletCopied": "Ikheli lesikhwama likopishiwe!",
     "note": "Iqaphelo",
-    "loginDescription": "Ngena ukufinyelela nokuphatha izilungiselelo ze-akhawunti yakho."
+    "loginDescription": "Ngena ukufinyelela nokuphatha izilungiselelo ze-akhawunti yakho.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Gcina",

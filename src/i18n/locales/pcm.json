@@ -160,7 +160,6 @@
     "dark": "Dark",
     "system": "System",
     "cosmic": "Cosmic",
-    "christmas": "Christmas",
     "island": "Island",
     "hacker": "Hacker",
     "horror": "Horror",
@@ -235,7 +234,8 @@
     "noOffers": "You never make any offers yet",
     "walletCopied": "Wallet address don copy!",
     "note": "Note",
-    "loginDescription": "Log in make you fit access and manage your account settings."
+    "loginDescription": "Log in make you fit access and manage your account settings.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Save",

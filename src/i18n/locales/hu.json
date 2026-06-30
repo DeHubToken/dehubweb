@@ -160,7 +160,6 @@
     "dark": "Sötét",
     "system": "Rendszer",
     "cosmic": "Kozmikus",
-    "christmas": "Karácsony",
     "island": "Sziget",
     "hacker": "Hacker",
     "horror": "Horror",
@@ -235,7 +234,8 @@
     "noOffers": "Még nem tett ajánlatot",
     "walletCopied": "Pénztárca cím másolva!",
     "note": "Megjegyzés",
-    "loginDescription": "Log in to access and manage your account settings."
+    "loginDescription": "Log in to access and manage your account settings.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Mentés",

@@ -160,7 +160,6 @@
     "dark": "گہرا",
     "system": "سسٹم",
     "cosmic": "کائناتی",
-    "christmas": "کرسمس",
     "island": "جزیرہ",
     "hacker": "ہیکر",
     "horror": "ہارر",
@@ -235,7 +234,8 @@
     "noOffers": "آپ نے ابھی کوئی پیشکش نہیں دی",
     "walletCopied": "والٹ ایڈریس کاپی ہو گیا!",
     "note": "نوٹ",
-    "loginDescription": "Log in to access and manage your account settings."
+    "loginDescription": "Log in to access and manage your account settings.",
+    "winter": "Winter"
   },
   "common": {
     "save": "محفوظ کریں",

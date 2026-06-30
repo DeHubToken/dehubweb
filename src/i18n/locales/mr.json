@@ -160,7 +160,6 @@
     "dark": "डार्क",
     "system": "सिस्टम",
     "cosmic": "कॉस्मिक",
-    "christmas": "ख्रिसमस",
     "island": "बेट",
     "hacker": "हॅकर",
     "horror": "भयपट",
@@ -235,7 +234,8 @@
     "noOffers": "तुम्ही अजून ऑफर्स केलेल्या नाहीत",
     "walletCopied": "वॉलेट पत्ता कॉपी केला!",
     "note": "टीप",
-    "loginDescription": "Log in to access and manage your account settings."
+    "loginDescription": "Log in to access and manage your account settings.",
+    "winter": "Winter"
   },
   "common": {
     "save": "जतन करा",

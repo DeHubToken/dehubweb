@@ -160,7 +160,6 @@
     "dark": "Qorongʻi",
     "system": "Tizim",
     "cosmic": "Kosmik",
-    "christmas": "Rojdestvo",
     "island": "Orol",
     "hacker": "Xaker",
     "horror": "Dahshat",
@@ -235,7 +234,8 @@
     "noOffers": "Hali takliflaringiz yoʻq",
     "walletCopied": "Hamyon manzili nusxalandi!",
     "note": "Eslatma",
-    "loginDescription": "Hisob sozlamalaringizni boshqarish uchun kiring."
+    "loginDescription": "Hisob sozlamalaringizni boshqarish uchun kiring.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Saqlash",

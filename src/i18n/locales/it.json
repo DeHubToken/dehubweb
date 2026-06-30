@@ -160,7 +160,6 @@
     "dark": "Scuro",
     "system": "Sistema",
     "cosmic": "Cosmico",
-    "christmas": "Natale",
     "island": "Isola",
     "hacker": "Hacker",
     "horror": "Horror",
@@ -235,7 +234,8 @@
     "noOffers": "Non hai ancora fatto offerte",
     "walletCopied": "Indirizzo portafoglio copiato!",
     "note": "Nota",
-    "loginDescription": "Accedi per gestire il tuo account e le impostazioni."
+    "loginDescription": "Accedi per gestire il tuo account e le impostazioni.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Salva",

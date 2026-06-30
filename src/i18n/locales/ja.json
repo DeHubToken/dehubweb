@@ -160,7 +160,6 @@
     "dark": "ダーク",
     "system": "システム",
     "cosmic": "コスミック",
-    "christmas": "クリスマス",
     "island": "アイランド",
     "hacker": "ハッカー",
     "horror": "ホラー",
@@ -235,7 +234,8 @@
     "noOffers": "まだオファーを出していません",
     "walletCopied": "ウォレットアドレスがコピーされました！",
     "note": "メモ",
-    "loginDescription": "ログインしてアカウントと設定にアクセス・管理してください。"
+    "loginDescription": "ログインしてアカウントと設定にアクセス・管理してください。",
+    "winter": "Winter"
   },
   "common": {
     "save": "保存",

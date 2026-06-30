@@ -160,7 +160,6 @@
     "dark": "Mout",
     "system": "Hamakarg",
     "cosmic": "Tiezerakan",
-    "christmas": "Drristoneakan",
     "island": "Kghzi",
     "hacker": "Haker",
     "horror": "Sarsaph",
@@ -235,7 +234,8 @@
     "noOffers": "Douq derevs aratcharkhner cheq aratel",
     "walletCopied": "Drami hascen patchervaats e!",
     "note": "Tsanoutsagroum",
-    "loginDescription": "Moutk gortsuhr dzer hashiv ev nahapatchoutyounere kargatselou hamar."
+    "loginDescription": "Moutk gortsuhr dzer hashiv ev nahapatchoutyounere kargatselou hamar.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Pahpanel",

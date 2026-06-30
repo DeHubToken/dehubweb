@@ -160,7 +160,6 @@
     "dark": "Maizina",
     "system": "Rafitra",
     "cosmic": "Kôsmika",
-    "christmas": "Krismasy",
     "island": "Nosy",
     "hacker": "Hacker",
     "horror": "Mampatahotra",
@@ -235,7 +234,8 @@
     "noOffers": "Tsy mbola nanao tolotra ianao",
     "walletCopied": "Adiresy kitapom-bola voatahiry!",
     "note": "Fanamarihana",
-    "loginDescription": "Midira mba hitantana ny kaontinao sy ny safidianao."
+    "loginDescription": "Midira mba hitantana ny kaontinao sy ny safidianao.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Tehirizo",

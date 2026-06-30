@@ -160,7 +160,6 @@
     "dark": "暗色",
     "system": "系统",
     "cosmic": "宇宙",
-    "christmas": "圣诞",
     "island": "海岛",
     "hacker": "黑客",
     "horror": "恐怖",
@@ -235,7 +234,8 @@
     "noOffers": "你还无做过任何报价",
     "walletCopied": "钱包地址已复制！",
     "note": "备注",
-    "loginDescription": "登录来访问和管理你其账户设置。"
+    "loginDescription": "登录来访问和管理你其账户设置。",
+    "winter": "Winter"
   },
   "common": {
     "save": "保存",

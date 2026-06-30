@@ -160,7 +160,6 @@
     "dark": "Yana",
     "system": "Sistema",
     "cosmic": "Hanaq pacha",
-    "christmas": "Navidad",
     "island": "Wat'a",
     "hacker": "Hacker",
     "horror": "Manchachiy",
@@ -235,7 +234,8 @@
     "noOffers": "Manaraj quykuna ruwasqachu",
     "walletCopied": "Qullqi wasi churana copiasqa!",
     "note": "Qillqa",
-    "loginDescription": "Yaykuy cuenta churanakunaykiman yaykumunaykipaq kamachiynaykipaq."
+    "loginDescription": "Yaykuy cuenta churanakunaykiman yaykumunaykipaq kamachiynaykipaq.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Waqaychay",

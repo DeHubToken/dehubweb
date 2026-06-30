@@ -160,7 +160,6 @@
     "dark": "Tumšs",
     "system": "Sistēma",
     "cosmic": "Kosmisks",
-    "christmas": "Ziemassvētki",
     "island": "Sala",
     "hacker": "Hakeris",
     "horror": "Šausmas",
@@ -235,7 +234,8 @@
     "noOffers": "Jūs vēl neesat izteicis piedāvājumus",
     "walletCopied": "Maka adrese nokopēta!",
     "note": "Piezīme",
-    "loginDescription": "Piesakieties, lai piekļūtu un pārvaldītu konta iestatījumus."
+    "loginDescription": "Piesakieties, lai piekļūtu un pārvaldītu konta iestatījumus.",
+    "winter": "Winter"
   },
   "common": {
     "save": "Saglabāt",

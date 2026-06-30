@@ -160,7 +160,6 @@
     "dark": "ڊارڪ",
     "system": "سسٽم",
     "cosmic": "ڪاسمڪ",
-    "christmas": "ڪرسمس",
     "island": "ٻيٽ",
     "hacker": "هيڪر",
     "horror": "خوفناڪ",
@@ -235,7 +234,8 @@
     "noOffers": "توهان اڃا آفر نه ڪيون آهن",
     "walletCopied": "والٽ ايڊريس ڪاپي ٿيو!",
     "note": "نوٽ",
-    "loginDescription": "اڪائونٽ سيٽنگون منظم ڪرڻ لاءِ لاگ ان ڪريو."
+    "loginDescription": "اڪائونٽ سيٽنگون منظم ڪرڻ لاءِ لاگ ان ڪريو.",
+    "winter": "Winter"
   },
   "common": {
     "save": "محفوظ ڪريو",
