@@ -377,7 +377,7 @@ export default function CreatorPage() {
                       'absolute right-3 top-3 rounded px-1.5 py-0.5 text-[9px] font-black uppercase italic leading-none',
                       tool.badge === 'TEST' ? 'bg-white text-black' : tool.badge === 'TRENDING' ? 'text-white' : 'text-black'
                     )}
-                    style={tool.badge === 'TRENDING' ? { backgroundColor: hot } : tool.badge === 'NEW' ? { backgroundColor: accent } : undefined}
+                    style={tool.badge === 'TRENDING' ? { backgroundColor: hot } : tool.badge === 'NEW' ? metallicStyle : undefined}
                     >
                       {tool.badge}
                     </span>
