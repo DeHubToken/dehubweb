@@ -173,7 +173,7 @@ ART DIRECTION: ${enhancedUserRequest}`;
 - Aesthetic: liquid glass, frosted blur, cinematic, premium, decentralized-tech. Lots of negative space. Strong focal hierarchy.
 - Typography (if any): Exo / Exo 2, white, minimal, generous letter-spacing. No emoji. No generic AI clichés.
 
-USER REQUEST: ${prompt}`;
+ART DIRECTION: ${enhancedUserRequest}`;
         } else {
           console.warn('[dehub-poster] Logo fetch failed:', logoRes.status);
         }
