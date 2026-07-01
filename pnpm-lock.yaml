@@ -107,6 +107,12 @@ importers:
       '@solana/web3.js':
         specifier: ^1.98.4
         version: 1.98.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
+      '@stripe/react-stripe-js':
+        specifier: 6.2.0
+        version: 6.2.0(@stripe/stripe-js@9.2.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@stripe/stripe-js':
+        specifier: 9.2.0
+        version: 9.2.0
       '@supabase/supabase-js':
         specifier: ^2.89.0
         version: 2.93.1(bufferutil@4.1.0)(utf-8-validate@5.0.10)
@@ -122,6 +128,9 @@ importers:
       '@toruslabs/base-controllers':
         specifier: ^8.17.0
         version: 8.17.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
+      '@types/dompurify':
+        specifier: ^3.2.0
+        version: 3.2.0
       '@types/three':
         specifier: ^0.181.0
         version: 0.181.0
@@ -173,6 +182,9 @@ importers:
       date-fns:
         specifier: ^3.6.0
         version: 3.6.0
+      dompurify:
+        specifier: ^3.4.11
+        version: 3.4.11
       embla-carousel-react:
         specifier: ^8.6.0
         version: 8.6.0(react@18.3.1)
@@ -182,6 +194,9 @@ importers:
       framer-motion:
         specifier: ^12.23.24
         version: 12.29.2(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      fuse.js:
+        specifier: ^7.4.2
+        version: 7.4.2
       hls.js:
         specifier: ^1.6.15
         version: 1.6.15
@@ -2448,6 +2463,17 @@ packages:
   '@solana/web3.js@1.98.4':
     resolution: {integrity: sha512-vv9lfnvjUsRiq//+j5pBdXig0IQdtzA0BRZ3bXEP4KaIyF1CcaydWqgyzQgfZMNIsWNWmG+AUHwPy4AHOD6gpw==}
 
+  '@stripe/react-stripe-js@6.2.0':
+    resolution: {integrity: sha512-GSCErjljZEQv9LaxP30xGOwstcMyyUzb5JyihXwvjOU95yrfhbiPG4K2KkwxYxn+WY0/AyHsRhPPoGRw7urBzg==}
+    peerDependencies:
+      '@stripe/stripe-js': '>=9.2.0 <10.0.0'
+      react: '>=16.8.0 <20.0.0'
+      react-dom: '>=16.8.0 <20.0.0'
+
+  '@stripe/stripe-js@9.2.0':
+    resolution: {integrity: sha512-YSzLC0t6VS9MDdPTynSMqU8IxrItFUjkDORALFT6sSMR/XZ5Vgm3RDp/Gk7z727MC4A9s4MFVel0gF0c7+kdrg==}
+    engines: {node: '>=12.16'}
+
   '@supabase/auth-js@2.93.1':
     resolution: {integrity: sha512-pC0Ek4xk4z6q7A/3+UuZ/eYgfFUUQTg3DhapzrAgJnFGDJDFDyGCj6v9nIz8+3jfLqSZ3QKGe6AoEodYjShghg==}
     engines: {node: '>=20.0.0'}
@@ -2806,6 +2832,10 @@ packages:
 
   '@types/dom-webcodecs@0.1.18':
     resolution: {integrity: sha512-vAvE8C9DGWR+tkb19xyjk1TSUlJ7RUzzp4a9Anu7mwBT+fpyePWK1UxmH14tMO5zHmrnrRIMg5NutnnDztLxgg==}
+
+  '@types/dompurify@3.2.0':
+    resolution: {integrity: sha512-Fgg31wv9QbLDA0SpTOXO3MaxySc4DKGLi8sna4/Utjo4r3ZRPdCt4UQee8BWr+Q5z21yifghREPJGYaEOEIACg==}
+    deprecated: This is a stub types definition. dompurify provides its own type definitions, so you do not need this installed.
 
   '@types/estree-jsx@1.0.5':
     resolution: {integrity: sha512-52CcUVNFyfb1A2ALocQw/Dd1BQFNmSdkuC3BkZ6iqhdMfQz7JWOFRuJFloOzjk+6WijU56m9oKXFAXc7o3Towg==}
@@ -3952,6 +3982,9 @@ packages:
     engines: {node: '>=12'}
     deprecated: Use your platform's native DOMException instead
 
+  dompurify@3.4.11:
+    resolution: {integrity: sha512-zhlUV12GsaRzMsf9q5M254YhA4+VuF0fG+QFqu6aYpoGlKtz+w8//jBcGVYBgQkR5GHjUomejY84AV+/uPbWdw==}
+
   dset@3.1.4:
     resolution: {integrity: sha512-2QF/g9/zTaPDc3BjNcVTGoBbXBgYfMTTceLaYcFJ/W9kggFUkhxD/hMEeuLKbugyef9SqAx8cpgwlIP/jinUTA==}
     engines: {node: '>=4'}
@@ -4318,6 +4351,10 @@ packages:
 
   function-bind@1.1.2:
     resolution: {integrity: sha512-7XHNxH7qX9xG5mIwxkhumTox/MIRNcOgDrxWsMt2pAr23WHp6MrRlN7FBSFpCpr+oVO0F744iUgR82nJMfG2SA==}
+
+  fuse.js@7.4.2:
+    resolution: {integrity: sha512-LVbzjD4WA6UP5B1UnP8wuaXJiLnqMdM/E4fiJXTJ5haJ5b/MBNsK29h2fm6swEoQaVQjvYFWKLE2RanyZIoRVQ==}
+    engines: {node: '>=10'}
 
   generator-function@2.0.1:
     resolution: {integrity: sha512-SFdFmIJi+ybC0vjlHN0ZGVGHc3lgE0DxPAT0djjVg+kjOnSqclqmj0KQ7ykTOLP6YxoqOvuAODGdcHJn+43q3g==}
@@ -9410,6 +9447,15 @@ snapshots:
       - typescript
       - utf-8-validate
 
+  '@stripe/react-stripe-js@6.2.0(@stripe/stripe-js@9.2.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@stripe/stripe-js': 9.2.0
+      prop-types: 15.8.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  '@stripe/stripe-js@9.2.0': {}
+
   '@supabase/auth-js@2.93.1':
     dependencies:
       tslib: 2.8.1
@@ -9896,6 +9942,10 @@ snapshots:
   '@types/deep-eql@4.0.2': {}
 
   '@types/dom-webcodecs@0.1.18': {}
+
+  '@types/dompurify@3.2.0':
+    dependencies:
+      dompurify: 3.4.11
 
   '@types/estree-jsx@1.0.5':
     dependencies:
@@ -12370,6 +12420,10 @@ snapshots:
     dependencies:
       webidl-conversions: 7.0.0
 
+  dompurify@3.4.11:
+    optionalDependencies:
+      '@types/trusted-types': 2.0.7
+
   dset@3.1.4: {}
 
   dunder-proto@1.0.1:
@@ -12806,6 +12860,8 @@ snapshots:
     optional: true
 
   function-bind@1.1.2: {}
+
+  fuse.js@7.4.2: {}
 
   generator-function@2.0.1: {}
 
