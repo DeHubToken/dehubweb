@@ -3118,7 +3118,7 @@ export default function AssistantPage() {
             await handleImageGenerationConfirm({
               prompt: buildDeHubBrandPrompt(cfg.finalPrompt),
               model: DEHUB_BRAND_IMAGE_MODEL,
-              sourceImage: logoBase64,
+              logoImage: logoBase64,
             });
           } catch (err) {
             console.error('Poster generation error:', err);
