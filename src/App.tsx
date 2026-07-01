@@ -55,6 +55,7 @@ const WorkPostPage = React.lazy(() => import("./pages/app/WorkPostPage"));
 const WorkJobDetailPage = React.lazy(() => import("./pages/app/WorkJobDetailPage"));
 const WorkDisputesPage = React.lazy(() => import("./pages/app/WorkDisputesPage"));
 const EditorPage = React.lazy(() => import("./pages/Editor"));
+const CreatorPage = React.lazy(() => import("./pages/app/CreatorPage"));
 const ReferralLanding = React.lazy(() => import("./pages/ReferralLanding"));
 const PremiumPage = React.lazy(() => import("./pages/Premium"));
 
