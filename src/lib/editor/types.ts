@@ -63,6 +63,8 @@ export interface MediaClip extends BaseClip {
   sourceDuration?: number;
   effects?: ClipEffects;
   audio?: ClipAudio;
+  /** Playback rate for video/audio sources. 1 = normal, 2 = 2x, 0.5 = half. Default 1. */
+  speed?: number;
 }
 
 export interface TextClip extends BaseClip {
