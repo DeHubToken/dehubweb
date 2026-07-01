@@ -1572,7 +1572,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         initialPrompt={initialPromptText}
         onSave={(catIds) => {
           setSelectedCategories(catIds);
-          setSelectedSort(SORT_OPTIONS.find(o => o.value === 'prompt') || SORT_OPTIONS[0]);
+          setSelectedSort(SORT_OPTIONS.find(o => o.value === 'prompt') || DEFAULT_HOME_SORT);
         }}
       />
     </div>
