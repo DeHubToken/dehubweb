@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
+import { PremiumCheckoutModal } from '@/components/premium/PremiumCheckoutModal';
+import { toast } from 'sonner';
 
 type Billing = 'monthly' | 'annual';
 
