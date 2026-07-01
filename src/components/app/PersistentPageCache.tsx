@@ -56,6 +56,7 @@ const EventsPage = lazyWithRetry(() => import('@/pages/app/EventsPage'));
 const StoresPage = lazyWithRetry(() => import('@/pages/app/StoresPage'));
 const WorkPage = lazyWithRetry(() => import('@/pages/app/WorkPage'));
 const AffiliatePage = lazyWithRetry(() => import('@/pages/app/AffiliatePage'));
+const CreatorPage = lazyWithRetry(() => import('@/pages/app/CreatorPage'));
 
 // Pages that get cached (mount-once, hide with CSS)
 interface CachedPageConfig {
