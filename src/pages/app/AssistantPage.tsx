@@ -162,7 +162,7 @@ function buildDeHubBrandPrompt(userRequest: string): string {
 - The attached image is the official DeHub wordmark. Composite it prominently, crisp, unaltered, pure white, with clear space around it. Do not redraw, recolor, gradient-fill, warp, or replace it.
 - Palette: deep black / charcoal backgrounds, white text, subtle white-opacity accents. Never use blue.
 - Aesthetic: liquid glass, frosted blur, cinematic, premium, decentralized-tech, lots of negative space, strong focal hierarchy.
-- Typography if any: minimal white sans-serif only. No emoji. No generic AI clichés.
+- Typography if any: use the Exo / Exo 2 typeface family (geometric technical sans-serif) for ALL rendered text — Light/Regular for body and links, Medium/SemiBold for headings, Bold only for short display words. Pure white, generous letter-spacing. Never Inter, Poppins, DM Sans, serifs, or script. Fallbacks: Eurostile, Michroma, Rajdhani. No emoji. No generic AI clichés.
 
 OFFICIAL DEHUB LINKS (render ONLY if the user explicitly asks for socials, links, website, QR, or contact info — otherwise omit entirely):
 - Website: dehub.io
