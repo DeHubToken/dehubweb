@@ -308,8 +308,3 @@ function categoryEmoji(c: Tool['category']): string {
   }
 }
 
-// Tiny local useState shim to avoid another import above.
-function useMemoState<T>(initial: T): [T, (v: T) => void] {
-  const [v, setV] = (require('react') as typeof import('react')).useState<T>(initial);
-  return [v, setV];
-}
