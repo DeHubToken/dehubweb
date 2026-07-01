@@ -206,7 +206,7 @@ function AppContent() {
             <Route path="/app">
               <Route index element={null} />
               <Route path="affiliate" element={null} />
-              <Route path="creator" element={null} />
+              
               <Route path="explore" element={null} />
               <Route path="profile" element={null} />
               <Route path="notifications" element={null} />
