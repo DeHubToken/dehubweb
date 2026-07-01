@@ -21,7 +21,6 @@ import { useUserLanguage } from '@/hooks/use-user-language';
 import { useMention } from '@/hooks/use-mention';
 import { useAuth } from '@/contexts/AuthContext';
 import dehubLogo from '@/assets/dehub-logo-white.png';
-import ftvLogoSymbol from '@/assets/ftv-logo-symbol.png';
 import assistantAvatar from '@/assets/ai-assistant-avatar.png';
 import aiSparkleIcon from '@/assets/icons/ai-sparkle-icon.png';
 import { motion, AnimatePresence } from 'framer-motion';
