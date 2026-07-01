@@ -160,7 +160,7 @@
     "light": "สว่าง",
     "dark": "มืด",
     "system": "ระบบ",
-    "cosmic": "จักรวาล",
+    "cosmic": "Cosmic Pixels",
     "island": "เกาะ",
     "hacker": "แฮกเกอร์",
     "horror": "สยองขวัญ",
@@ -236,7 +236,7 @@
     "walletCopied": "คัดลอกที่อยู่กระเป๋าแล้ว!",
     "note": "หมายเหตุ",
     "loginDescription": "เข้าสู่ระบบเพื่อเข้าถึงและจัดการตั้งค่าบัญชี",
-    "winter": "Winter"
+    "winter": "Winter Drops"
   },
   "common": {
     "save": "บันทึก",

@@ -160,7 +160,7 @@
     "light": "Hell",
     "dark": "Dunkel",
     "system": "System",
-    "cosmic": "Kosmisch",
+    "cosmic": "Cosmic Pixels",
     "island": "Insle",
     "hacker": "Hacker",
     "horror": "Horror",
@@ -236,7 +236,7 @@
     "walletCopied": "Wallet-Adrässe kopiert!",
     "note": "Notiz",
     "loginDescription": "Mäld di aa zum dini Konto-Istelligä z verwaltä.",
-    "winter": "Winter"
+    "winter": "Winter Drops"
   },
   "common": {
     "save": "Speichere",

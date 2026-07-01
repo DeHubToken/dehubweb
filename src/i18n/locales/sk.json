@@ -234,7 +234,7 @@
     "light": "Svetlá",
     "dark": "Tmavá",
     "system": "Systém",
-    "cosmic": "Kozmická",
+    "cosmic": "Cosmic Pixels",
     "island": "Ostrov",
     "hacker": "Hacker",
     "horror": "Horor",
@@ -310,7 +310,7 @@
     "stickCoinBanner": "Stick coin to banner",
     "stickCoinBannerDesc": "Show coin in header (mobile) and sidebar (desktop)",
     "applyChanges": "Apply Changes",
-    "winter": "Winter"
+    "winter": "Winter Drops"
   },
   "notifications": {
     "title": "Upozornenia",

@@ -160,7 +160,7 @@
     "light": "Lys",
     "dark": "Mørk",
     "system": "System",
-    "cosmic": "Kosmisk",
+    "cosmic": "Cosmic Pixels",
     "island": "Øy",
     "hacker": "Hacker",
     "horror": "Skrekk",
@@ -236,7 +236,7 @@
     "walletCopied": "Lommebokadresse kopiert!",
     "note": "Merknad",
     "loginDescription": "Logg inn for å få tilgang til og administrere kontoen din.",
-    "winter": "Winter"
+    "winter": "Winter Drops"
   },
   "common": {
     "save": "Lagre",

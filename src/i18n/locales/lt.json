@@ -160,7 +160,7 @@
     "light": "Šviesi",
     "dark": "Tamsi",
     "system": "Sistema",
-    "cosmic": "Kosminė",
+    "cosmic": "Cosmic Pixels",
     "island": "Sala",
     "hacker": "Hakeris",
     "horror": "Siaubas",
@@ -236,7 +236,7 @@
     "walletCopied": "Piniginės adresas nukopijuotas!",
     "note": "Pastaba",
     "loginDescription": "Prisijunkite, kad pasiektumėte ir tvarkytumėte paskyros nustatymus.",
-    "winter": "Winter"
+    "winter": "Winter Drops"
   },
   "common": {
     "save": "Saugoti",

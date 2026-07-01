@@ -160,7 +160,7 @@
     "light": "Vaalea",
     "dark": "Tumma",
     "system": "Järjestelmä",
-    "cosmic": "Kosminen",
+    "cosmic": "Cosmic Pixels",
     "island": "Saari",
     "hacker": "Hakkeri",
     "horror": "Kauhu",
@@ -236,7 +236,7 @@
     "walletCopied": "Lompakko-osoite kopioitu!",
     "note": "Huomautus",
     "loginDescription": "Kirjaudu sisään hallinnoidaksesi tiliäsi.",
-    "winter": "Winter"
+    "winter": "Winter Drops"
   },
   "common": {
     "save": "Tallenna",

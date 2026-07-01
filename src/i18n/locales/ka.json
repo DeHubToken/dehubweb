@@ -160,7 +160,7 @@
     "light": "ღია",
     "dark": "მუქი",
     "system": "სისტემა",
-    "cosmic": "კოსმიური",
+    "cosmic": "Cosmic Pixels",
     "island": "კუნძული",
     "hacker": "ჰაკერი",
     "horror": "საშინელებათა",
@@ -236,7 +236,7 @@
     "walletCopied": "საფულის მისამართი კოპირებულია!",
     "note": "შენიშვნა",
     "loginDescription": "შედით თქვენი ანგარიშის პარამეტრების სამართავად.",
-    "winter": "Winter"
+    "winter": "Winter Drops"
   },
   "common": {
     "save": "შენახვა",

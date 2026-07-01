@@ -160,7 +160,7 @@
     "light": "ສະຫວ່າງ",
     "dark": "ມືດ",
     "system": "ລະບົບ",
-    "cosmic": "ຈັກກະວານ",
+    "cosmic": "Cosmic Pixels",
     "island": "ເກາະ",
     "hacker": "ແຮັກເກີ",
     "horror": "ສະຫຍອງ",
@@ -236,7 +236,7 @@
     "walletCopied": "ສຳເນົາທີ່ຢູ່ກະເປົາເງິນແລ້ວ!",
     "note": "ໝາຍເຫດ",
     "loginDescription": "ເຂົ້າສູ່ລະບົບເພື່ອເຂົ້າເຖິງ ແລະ ຈັດການການຕັ້ງຄ່າບັນຊີ.",
-    "winter": "Winter"
+    "winter": "Winter Drops"
   },
   "common": {
     "save": "ບັນທຶກ",

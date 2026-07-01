@@ -160,7 +160,7 @@
     "light": "رڼا",
     "dark": "تیاره",
     "system": "سیسټم",
-    "cosmic": "کاسمیک",
+    "cosmic": "Cosmic Pixels",
     "island": "ټاپو",
     "hacker": "هیکر",
     "horror": "وحشت",
@@ -236,7 +236,7 @@
     "walletCopied": "د والټ پته کاپي شوه!",
     "note": "یادونه",
     "loginDescription": "د خپلو حساب تنظیماتو لاسرسي او اداره لپاره ننوتل وکړئ.",
-    "winter": "Winter"
+    "winter": "Winter Drops"
   },
   "common": {
     "save": "خوندي",

@@ -160,7 +160,7 @@
     "light": "Жарык",
     "dark": "Караңгы",
     "system": "Тутум",
-    "cosmic": "Космостук",
+    "cosmic": "Cosmic Pixels",
     "island": "Аралдык",
     "hacker": "Хакер",
     "horror": "Коркунуч",
@@ -236,7 +236,7 @@
     "walletCopied": "Капчык дареги көчүрүлдү!",
     "note": "Эскертүү",
     "loginDescription": "Каттоо эсебиңизди жана каалоолоруңузду башкаруу үчүн кириңиз.",
-    "winter": "Winter"
+    "winter": "Winter Drops"
   },
   "common": {
     "save": "Сактоо",

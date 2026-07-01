@@ -160,7 +160,7 @@
     "light": "Claro",
     "dark": "Oscuro",
     "system": "Sistema",
-    "cosmic": "Cósmico",
+    "cosmic": "Cosmic Pixels",
     "island": "Isla",
     "hacker": "Hacker",
     "horror": "Terror",
@@ -236,7 +236,7 @@
     "walletCopied": "¡Dirección de billetera copiada!",
     "note": "Nota",
     "loginDescription": "Inicia sesión para acceder y gestionar tu cuenta.",
-    "winter": "Winter"
+    "winter": "Winter Drops"
   },
   "common": {
     "save": "Guardar",

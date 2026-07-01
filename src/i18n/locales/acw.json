@@ -160,7 +160,7 @@
     "light": "فاتح",
     "dark": "غامق",
     "system": "النظام",
-    "cosmic": "كوني",
+    "cosmic": "Cosmic Pixels",
     "island": "جزيرة",
     "hacker": "هاكر",
     "horror": "رعب",
@@ -236,7 +236,7 @@
     "walletCopied": "نسخ عنوان المحفظة!",
     "note": "ملاحظة",
     "loginDescription": "سجّل دخول عشان تدخل وتدير إعدادات حسابك.",
-    "winter": "Winter"
+    "winter": "Winter Drops"
   },
   "common": {
     "save": "حفظ",

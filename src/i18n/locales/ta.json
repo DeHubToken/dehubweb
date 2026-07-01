@@ -160,7 +160,7 @@
     "light": "வெளிர்",
     "dark": "இருள்",
     "system": "கணினி",
-    "cosmic": "அண்டம்",
+    "cosmic": "Cosmic Pixels",
     "island": "தீவு",
     "hacker": "ஹேக்கர்",
     "horror": "திகில்",
@@ -236,7 +236,7 @@
     "walletCopied": "பணப்பை முகவரி நகலெடுக்கப்பட்டது!",
     "note": "குறிப்பு",
     "loginDescription": "Log in to access and manage your account settings.",
-    "winter": "Winter"
+    "winter": "Winter Drops"
   },
   "common": {
     "save": "சேமி",

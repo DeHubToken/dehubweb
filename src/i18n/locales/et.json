@@ -160,7 +160,7 @@
     "light": "Hele",
     "dark": "Tume",
     "system": "Süsteem",
-    "cosmic": "Kosmiline",
+    "cosmic": "Cosmic Pixels",
     "island": "Saar",
     "hacker": "Häkker",
     "horror": "Õudus",
@@ -236,7 +236,7 @@
     "walletCopied": "Rahakoti aadress kopeeritud!",
     "note": "Märkus",
     "loginDescription": "Logi sisse, et pääseda ligi ja hallata konto seadeid.",
-    "winter": "Winter"
+    "winter": "Winter Drops"
   },
   "common": {
     "save": "Salvesta",

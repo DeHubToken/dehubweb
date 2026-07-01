@@ -160,7 +160,7 @@
     "light": "Жарық",
     "dark": "Қараңғы",
     "system": "Жүйе",
-    "cosmic": "Ғарыштық",
+    "cosmic": "Cosmic Pixels",
     "island": "Арал",
     "hacker": "Хакер",
     "horror": "Қорқынышты",
@@ -236,7 +236,7 @@
     "walletCopied": "Әмиян мекенжайы көшірілді!",
     "note": "Ескертпе",
     "loginDescription": "Тіркелгі параметрлерін басқару үшін кіріңіз.",
-    "winter": "Winter"
+    "winter": "Winter Drops"
   },
   "common": {
     "save": "Сақтау",

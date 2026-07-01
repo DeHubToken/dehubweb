@@ -160,7 +160,7 @@
     "light": "Jasny",
     "dark": "Ciemny",
     "system": "Systemowy",
-    "cosmic": "Kosmiczny",
+    "cosmic": "Cosmic Pixels",
     "island": "Wyspa",
     "hacker": "Hacker",
     "horror": "Horror",
@@ -236,7 +236,7 @@
     "walletCopied": "Adres portfela skopiowany!",
     "note": "Uwaga",
     "loginDescription": "Zaloguj się, aby uzyskać dostęp do ustawień konta.",
-    "winter": "Winter"
+    "winter": "Winter Drops"
   },
   "common": {
     "save": "Zapisz",

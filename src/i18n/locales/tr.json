@@ -160,7 +160,7 @@
     "light": "Açık",
     "dark": "Koyu",
     "system": "Sistem",
-    "cosmic": "Kozmik",
+    "cosmic": "Cosmic Pixels",
     "island": "Ada",
     "hacker": "Hacker",
     "horror": "Korku",
@@ -236,7 +236,7 @@
     "walletCopied": "Cüzdan adresi kopyalandı!",
     "note": "Not",
     "loginDescription": "Hesap ayarlarınıza erişmek için giriş yapın.",
-    "winter": "Winter"
+    "winter": "Winter Drops"
   },
   "common": {
     "save": "Kaydet",

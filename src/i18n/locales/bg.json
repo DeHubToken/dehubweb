@@ -160,7 +160,7 @@
     "light": "Светла",
     "dark": "Тъмна",
     "system": "Системна",
-    "cosmic": "Космическа",
+    "cosmic": "Cosmic Pixels",
     "island": "Островна",
     "hacker": "Хакерска",
     "horror": "Хорър",
@@ -236,7 +236,7 @@
     "walletCopied": "Адресът на портфейла е копиран!",
     "note": "Бележка",
     "loginDescription": "Log in to access and manage your account settings.",
-    "winter": "Winter"
+    "winter": "Winter Drops"
   },
   "common": {
     "save": "Запази",
