@@ -163,11 +163,11 @@ export function Timeline() {
         <div className="mx-2 h-4 w-px bg-white/10" />
         <Button size="sm" variant="ghost" onClick={() => addTrack("video")}
           className="h-7 rounded-md px-2 text-white/80 hover:bg-white/10 hover:text-white">
-          <Plus className="mr-1 h-3.5 w-3.5" /> Video track
+          <Plus className="mr-1 h-3.5 w-3.5" /> Video&nbsp;
         </Button>
         <Button size="sm" variant="ghost" onClick={() => addTrack("audio")}
           className="h-7 rounded-md px-2 text-white/80 hover:bg-white/10 hover:text-white">
-          <Plus className="mr-1 h-3.5 w-3.5" /> Audio track
+          <Plus className="mr-1 h-3.5 w-3.5" /> Audio
         </Button>
         <div className="ml-auto flex items-center gap-1">
           <Button size="icon" variant="ghost" onClick={() => setZoom(zoom / 1.25)}
