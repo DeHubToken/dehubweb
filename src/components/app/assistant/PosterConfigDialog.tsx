@@ -364,32 +364,62 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
             </select>
           </div>
 
-          {/* Roadmap features */}
+          {/* Logo variant */}
           <div>
-            <label className="text-xs font-medium text-white/60 mb-2 block uppercase tracking-wider">
-              Spotlight a Feature <span className="text-white/25 normal-case tracking-normal">(from our roadmap)</span>
-            </label>
-            <div className="flex flex-wrap gap-1.5">
-              {FEATURES.map(f => {
-                const active = features.includes(f.value);
-                return (
-                  <button
-                    key={f.value}
-                    onClick={() => toggleFeature(f.value)}
-                    title={f.blurb}
-                    className={cn(
-                      'py-1.5 px-2.5 rounded-lg text-[11px] font-medium border transition-colors',
-                      active
-                        ? 'border-white/30 bg-white/15 text-white'
-                        : 'border-white/5 bg-white/[0.02] text-white/50 hover:text-white/80 hover:bg-white/5'
-                    )}
-                  >
-                    {f.label}
-                  </button>
-                );
-              })}
+            <label className="text-xs font-medium text-white/60 mb-2 block uppercase tracking-wider">Logo Variant</label>
+            <div className="grid grid-cols-3 gap-2">
+              {LOGO_VARIANTS.map(v => (
+                <button
+                  key={v.value}
+                  onClick={() => setLogoVariant(v.value)}
+                  className={cn(
+                    'py-2.5 px-2 rounded-xl text-xs font-medium border transition-colors text-left',
+                    logoVariant === v.value
+                      ? 'border-white/30 bg-white/10 text-white'
+                      : 'border-white/5 bg-white/[0.02] text-white/40 hover:text-white/60 hover:bg-white/5'
+                  )}
+                >
+                  <div className="font-semibold">{v.label}</div>
+                  <div className="text-[10px] text-white/40 mt-0.5">{v.hint}</div>
+                </button>
+              ))}
             </div>
           </div>
+
+          {/* Feature spotlight (grouped from every dapp + docs page) */}
+          <div>
+            <label className="text-xs font-medium text-white/60 mb-2 block uppercase tracking-wider">
+              Spotlight Features <span className="text-white/25 normal-case tracking-normal">(from our dapp &amp; docs)</span>
+            </label>
+            <div className="space-y-3">
+              {FEATURE_GROUPS.map(group => (
+                <div key={group.group}>
+                  <div className="text-[10px] uppercase tracking-wider text-white/30 mb-1.5">{group.group}</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {group.items.map(f => {
+                      const active = features.includes(f.value);
+                      return (
+                        <button
+                          key={f.value}
+                          onClick={() => toggleFeature(f.value)}
+                          title={f.blurb}
+                          className={cn(
+                            'py-1.5 px-2.5 rounded-lg text-[11px] font-medium border transition-colors',
+                            active
+                              ? 'border-white/30 bg-white/15 text-white'
+                              : 'border-white/5 bg-white/[0.02] text-white/50 hover:text-white/80 hover:bg-white/5'
+                          )}
+                        >
+                          {f.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
 
           {/* Tagline */}
           <div>
