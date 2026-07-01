@@ -24,7 +24,7 @@ serve(async (req) => {
   }
 
   try {
-    const { prompt, sourceImage, conversationHistory = [], model = 'gemini-2.5-flash' } = await req.json() as GenerateImageRequest;
+    let { prompt, sourceImage, conversationHistory = [], model = 'gemini-2.5-flash' } = await req.json() as GenerateImageRequest;
 
     if (!prompt) {
       throw new Error('Prompt is required');
@@ -34,15 +34,14 @@ serve(async (req) => {
     const xaiApiKey = Deno.env.get('XAI_API_KEY');
     
     // Determine which API to use based on model
-    const isGrokModel = model.startsWith('grok-');
+    let isGrokModel = model.startsWith('grok-');
     
     console.log('Generating image with prompt:', prompt.substring(0, 100), '| Model:', model, '| Has source image:', !!sourceImage, '| Conversation history length:', conversationHistory.length);
 
     // Build context from conversation history
     let contextualPrompt = prompt;
     if (conversationHistory.length > 0) {
-      // Build a summary of recent conversation for context
-      const recentHistory = conversationHistory.slice(-6); // Last 6 messages for context
+      const recentHistory = conversationHistory.slice(-6);
       const contextSummary = recentHistory
         .map(m => `${m.role === 'user' ? 'User' : 'AI'}: ${m.content}`)
         .join('\n');
@@ -50,7 +49,35 @@ serve(async (req) => {
       contextualPrompt = `CONVERSATION CONTEXT (use this to understand references like "him", "it", "that", etc.):\n${contextSummary}\n\nCURRENT REQUEST: ${prompt}`;
     }
 
-    // Build messages based on whether we're editing or generating
+    // ── DeHub brand skill: auto-detect requests for DeHub-branded imagery and
+    //    force logo-attached, brand-compliant generation.
+    const brandIntent = /\bde\s*hub\b/i.test(prompt) && /\b(poster|banner|thumbnail|content|card|announce|announcement|flyer|artwork|social|cover|graphic|ad|advert|image|logo|wallpaper|meme)\b/i.test(prompt);
+    if (brandIntent && !sourceImage) {
+      console.log('[dehub-poster] Brand intent detected — attaching logo + brand system prompt');
+      try {
+        const logoRes = await fetch('https://cosmic-echo-hero.lovable.app/__l5e/assets-v1/4cf0b92e-3cfd-4459-9c72-cdec81055a23/dehub-logo-white.png');
+        if (logoRes.ok) {
+          const buf = new Uint8Array(await logoRes.arrayBuffer());
+          let bin = '';
+          for (let i = 0; i < buf.byteLength; i++) bin += String.fromCharCode(buf[i]);
+          sourceImage = `data:image/png;base64,${btoa(bin)}`;
+          model = 'gemini-2.5-flash';
+          isGrokModel = false;
+          contextualPrompt = `DEHUB BRAND SYSTEM (mandatory):
+- The attached image is the official DeHub wordmark. Composite it PROMINENTLY, UNALTERED, PURE WHITE into the final image with clear space around it (min 8% of canvas). Do NOT recolor, gradient-fill, distort, or redraw the logo — use the attached pixels.
+- Palette: deep black / charcoal background (#000–#0a0a0a), white text, subtle white-opacity accents. NEVER use blue anywhere. Muted neon (magenta/violet/cyan) ambient glow is OK.
+- Aesthetic: liquid glass, frosted blur, cinematic, premium, decentralized-tech. Lots of negative space. Strong focal hierarchy.
+- Typography (if any): minimal, sans-serif, thin-to-medium, white. No emoji. No generic AI clichés.
+
+USER REQUEST: ${prompt}`;
+        } else {
+          console.warn('[dehub-poster] Logo fetch failed:', logoRes.status);
+        }
+      } catch (e) {
+        console.warn('[dehub-poster] Logo fetch error:', e);
+      }
+    }
+
     const userContent = sourceImage ? [
       { type: 'image_url', image_url: { url: sourceImage } },
       { type: 'text', text: contextualPrompt }
