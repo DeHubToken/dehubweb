@@ -2542,6 +2542,13 @@ export default function AssistantPage() {
                   >
                     
                     <LiquidGlassBubble2
+                      label="🧠 Skills"
+                      onClick={() => setSkillsHubOpen(true)}
+                      width="auto"
+                      height="32px"
+                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                    />
+                    <LiquidGlassBubble2
                       label={`🖼️ ${t('assistant.generateImage')}`}
                       onClick={() => {
                         setInput(t('assistant.generateImageOf'));
@@ -2577,6 +2584,16 @@ export default function AssistantPage() {
                       onClick={() => {
                         setPendingMusicPrompt('');
                         setMusicConfirmOpen(true);
+                      }}
+                      width="auto"
+                      height="32px"
+                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                    />
+                    <LiquidGlassBubble2
+                      label="🎨 Make DeHub Poster"
+                      onClick={() => {
+                        setPendingPosterPrompt('');
+                        setPosterConfigOpen(true);
                       }}
                       width="auto"
                       height="32px"
