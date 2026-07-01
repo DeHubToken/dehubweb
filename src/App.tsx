@@ -259,8 +259,6 @@ function AppContent() {
             {/* /affiliate alias (page itself is rendered by PersistentPageCache) */}
             <Route path="/affiliate" element={null} />
 
-            {/* /creator alias */}
-            <Route path="/creator" element={null} />
 
             {/* Stage invite links */}
             <Route path="/stage/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
