@@ -6,9 +6,10 @@ import { useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editorStore";
-import { aspectToDims, type AspectPreset, type TextClip } from "@/lib/editor/types";
+import { aspectToDims, type AspectPreset, type MediaClip, type TextClip } from "@/lib/editor/types";
 
 const ASPECTS: { value: AspectPreset; label: string }[] = [
   { value: "16:9", label: "16:9" },
@@ -23,11 +24,15 @@ export function Inspector() {
   const selectedClipIds = useEditorStore((s) => s.selectedClipIds);
   const clips = useEditorStore((s) => s.clips);
   const updateTextClip = useEditorStore((s) => s.updateTextClip);
+  const updateMediaClip = useEditorStore((s) => s.updateMediaClip);
 
-  const text = useMemo<TextClip | null>(() => {
-    const c = clips.find((x) => x.id === selectedClipIds[0]);
-    return c && c.kind === "text" ? (c as TextClip) : null;
-  }, [clips, selectedClipIds]);
+  const selected = useMemo(() => clips.find((x) => x.id === selectedClipIds[0]) ?? null, [clips, selectedClipIds]);
+  const text = selected && selected.kind === "text" ? (selected as TextClip) : null;
+  const mediaClip = selected && (selected.kind === "video" || selected.kind === "image" || selected.kind === "audio")
+    ? (selected as MediaClip)
+    : null;
+  const visualMedia = mediaClip && mediaClip.kind !== "audio" ? mediaClip : null;
+  const hasAudio = mediaClip && (mediaClip.kind === "video" || mediaClip.kind === "audio") ? mediaClip : null;
 
   const setAspect = (a: AspectPreset) => {
     const { width, height } = aspectToDims(a, Math.min(settings.height, 1080));
@@ -86,11 +91,44 @@ export function Inspector() {
 
       <section className="space-y-2 p-3">
         <h3 className="text-[11px] font-semibold uppercase tracking-wide text-white/50">Selection</h3>
-        {!text && (
-          <p className="text-xs text-white/40">
-            {selectedClipIds.length ? "Selected clip has no editable properties yet." : "Select a clip on the timeline."}
-          </p>
+        {!selected && (
+          <p className="text-xs text-white/40">Select a clip on the timeline.</p>
         )}
+
+        {visualMedia && (
+          <div className="space-y-3">
+            <p className="text-[10px] uppercase tracking-wide text-white/40">Effects</p>
+            <EffectSlider label="Brightness" value={visualMedia.effects?.brightness ?? 1} min={0} max={2} step={0.01}
+              onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, brightness: v } })} />
+            <EffectSlider label="Contrast" value={visualMedia.effects?.contrast ?? 1} min={0} max={2} step={0.01}
+              onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, contrast: v } })} />
+            <EffectSlider label="Saturation" value={visualMedia.effects?.saturation ?? 1} min={0} max={2} step={0.01}
+              onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, saturation: v } })} />
+            <EffectSlider label="Blur (px)" value={visualMedia.effects?.blur ?? 0} min={0} max={20} step={0.5}
+              onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, blur: v } })} />
+            <Button size="sm" variant="ghost"
+              onClick={() => updateMediaClip(visualMedia.id, { effects: undefined })}
+              className="h-7 w-full rounded-md border border-white/10 text-[11px] text-white/70 hover:bg-white/5 hover:text-white">
+              Reset effects
+            </Button>
+          </div>
+        )}
+
+        {hasAudio && (
+          <div className="space-y-3 pt-2">
+            <p className="text-[10px] uppercase tracking-wide text-white/40">Audio</p>
+            <EffectSlider label={`Volume ${Math.round(((hasAudio.audio?.volume ?? 1) * 100))}%`}
+              value={hasAudio.audio?.volume ?? 1} min={0} max={2} step={0.01}
+              onChange={(v) => updateMediaClip(hasAudio.id, { audio: { ...hasAudio.audio, volume: v } })} />
+            <EffectSlider label={`Fade in ${(hasAudio.audio?.fadeIn ?? 0).toFixed(2)}s`}
+              value={hasAudio.audio?.fadeIn ?? 0} min={0} max={Math.max(0.1, hasAudio.duration)} step={0.05}
+              onChange={(v) => updateMediaClip(hasAudio.id, { audio: { ...hasAudio.audio, fadeIn: v } })} />
+            <EffectSlider label={`Fade out ${(hasAudio.audio?.fadeOut ?? 0).toFixed(2)}s`}
+              value={hasAudio.audio?.fadeOut ?? 0} min={0} max={Math.max(0.1, hasAudio.duration)} step={0.05}
+              onChange={(v) => updateMediaClip(hasAudio.id, { audio: { ...hasAudio.audio, fadeOut: v } })} />
+          </div>
+        )}
+
         {text && (
           <div className="space-y-2">
             <Field label="Text">
@@ -153,6 +191,18 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     <div className="space-y-1">
       <Label className="text-[10px] uppercase tracking-wide text-white/40">{label}</Label>
       {children}
+    </div>
+  );
+}
+
+function EffectSlider({
+  label, value, min, max, step, onChange,
+}: { label: string; value: number; min: number; max: number; step: number; onChange: (v: number) => void }) {
+  return (
+    <div className="space-y-1">
+      <Label className="text-[10px] uppercase tracking-wide text-white/40">{label}</Label>
+      <Slider value={[value]} min={min} max={max} step={step}
+        onValueChange={(v) => onChange(v[0])} />
     </div>
   );
 }
