@@ -12,6 +12,8 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { cn } from '@/lib/utils';
 
+export type LogoVariant = 'primary' | 'icon' | 'both';
+
 export interface PosterConfig {
   dimension: 'square' | 'portrait' | 'landscape' | 'story';
   style: string;
@@ -20,6 +22,7 @@ export interface PosterConfig {
   includeSocials: boolean;
   includeWebsite: boolean;
   extraNotes: string;
+  logoVariant: LogoVariant;
   finalPrompt: string;
 }
 
