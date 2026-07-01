@@ -279,7 +279,7 @@ export default function CreatorPage() {
                       }
                     }}
                     className={cn(
-                      'relative shrink-0 text-[14px] font-medium tracking-wide transition-colors',
+                      'relative shrink-0 inline-flex items-start gap-1 text-[14px] font-medium tracking-wide transition-colors',
                       activeNav === item ? '' : 'text-white/55 hover:text-white'
                     )}
                     style={activeNav === item ? { color: accent } : undefined}
@@ -287,7 +287,7 @@ export default function CreatorPage() {
                     {index === 4 && <span className="mr-2 text-white/40">••</span>}
                     {item}
                     {(item === 'Studio' || item === 'Agents') && (
-                      <span className="ml-1 rounded px-1.5 py-0.5 text-[9px] font-black uppercase leading-none text-black" style={metallicStyle}>New</span>
+                      <span className="rounded px-1.5 py-0.5 text-[9px] font-black uppercase leading-none text-black" style={metallicStyle}>New</span>
                     )}
                   </button>
                 ))}
