@@ -52,8 +52,61 @@ serve(async (req) => {
     // ── DeHub brand skill: auto-detect requests for DeHub-branded imagery and
     //    force logo-attached, brand-compliant generation.
     const brandIntent = /\bde\s*hub\b/i.test(prompt) && /\b(posters?|banners?|thumbnails?|content|cards?|announc(?:e|ement|ements?)|flyers?|artworks?|social|covers?|graphics?|ads?|adverts?|images?|logos?|wallpapers?|memes?|promos?|campaigns?)\b/i.test(prompt);
+    let brandPromptOverride: string | null = null;
     if (brandIntent && !sourceImage) {
       console.log('[dehub-poster] Brand intent detected — attaching logo + brand system prompt');
+      brandPromptOverride = `DEHUB BRAND SYSTEM (mandatory):
+- Render the official DeHub wordmark as PURE WHITE bold uppercase text reading "DEHUB" in the Exo / Exo 2 typeface (geometric technical sans-serif; fall back to Eurostile or Michroma if unavailable). Place it PROMINENTLY with generous clear space around it (min 8% of canvas). Never recolor, gradient-fill, or distort the wordmark.
+- Palette: deep black / charcoal background (#000–#0a0a0a), white text, subtle white-opacity accents. NEVER use blue anywhere. Muted neon (magenta / violet / cyan) ambient glow is OK.
+- Aesthetic: liquid glass, frosted blur, cinematic, premium, decentralized-tech. Lots of negative space. Strong focal hierarchy.
+- Typography (all rendered text): Exo / Exo 2, white, minimal, generous letter-spacing. No emoji. No generic AI clichés (purple/indigo gradients, glossy 3D blobs).
+
+USER REQUEST: ${prompt}`;
+
+      // Try GPT-image-2 (medium) first — dramatically better typography than Gemini
+      // for the DeHub wordmark and brand text. Falls through to Gemini path below on failure.
+      if (lovableApiKey) {
+        try {
+          console.log('[dehub-poster] Trying openai/gpt-image-2 (medium) for brand request');
+          const gptRes = await fetch('https://ai.gateway.lovable.dev/v1/images/generations', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${lovableApiKey}`,
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              model: 'openai/gpt-image-2',
+              prompt: brandPromptOverride,
+              quality: 'medium',
+              size: '1024x1024',
+              n: 1,
+            }),
+          });
+          if (gptRes.ok) {
+            const gptData = await gptRes.json();
+            const b64 = gptData.data?.[0]?.b64_json;
+            if (b64) {
+              console.log('[dehub-poster] GPT-image-2 success');
+              return new Response(
+                JSON.stringify({
+                  imageUrl: `data:image/png;base64,${b64}`,
+                  text: '',
+                  success: true,
+                }),
+                { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+              );
+            }
+            console.warn('[dehub-poster] GPT-image-2 returned no image; falling back to Gemini');
+          } else {
+            const errText = await gptRes.text().catch(() => '');
+            console.warn('[dehub-poster] GPT-image-2 failed', gptRes.status, errText.substring(0, 200), '— falling back to Gemini');
+          }
+        } catch (e) {
+          console.warn('[dehub-poster] GPT-image-2 error, falling back to Gemini:', e);
+        }
+      }
+
+      // Gemini fallback: attach the real logo PNG for compositing
       try {
         const logoRes = await fetch('https://cosmic-echo-hero.lovable.app/__l5e/assets-v1/4cf0b92e-3cfd-4459-9c72-cdec81055a23/dehub-logo-white.png');
         if (logoRes.ok) {
@@ -67,7 +120,7 @@ serve(async (req) => {
 - The attached image is the official DeHub wordmark. Composite it PROMINENTLY, UNALTERED, PURE WHITE into the final image with clear space around it (min 8% of canvas). Do NOT recolor, gradient-fill, distort, or redraw the logo — use the attached pixels.
 - Palette: deep black / charcoal background (#000–#0a0a0a), white text, subtle white-opacity accents. NEVER use blue anywhere. Muted neon (magenta/violet/cyan) ambient glow is OK.
 - Aesthetic: liquid glass, frosted blur, cinematic, premium, decentralized-tech. Lots of negative space. Strong focal hierarchy.
-- Typography (if any): minimal, sans-serif, thin-to-medium, white. No emoji. No generic AI clichés.
+- Typography (if any): Exo / Exo 2, white, minimal, generous letter-spacing. No emoji. No generic AI clichés.
 
 USER REQUEST: ${prompt}`;
         } else {
@@ -77,6 +130,7 @@ USER REQUEST: ${prompt}`;
         console.warn('[dehub-poster] Logo fetch error:', e);
       }
     }
+
 
     const userContent = sourceImage ? [
       { type: 'image_url', image_url: { url: sourceImage } },
