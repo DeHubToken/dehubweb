@@ -9,10 +9,16 @@ Use this skill whenever the user asks for a DeHub-branded image: posters, social
 
 ## Model
 
-Always use **`google/gemini-3.1-flash-image`** (Nano Banana 2) via the agent-side `imagegen--edit_image` tool. It's ~1¢ per image, fast, and excellent at compositing brand logos into generated scenes.
+Two-step flow: generate the scene with GPT-image-2, then composite the real logo PNG on top so the wordmark stays pixel-perfect.
 
-- For brand-locked output, prefer `edit_image` with the logo as input (keeps the mark crisp).
-- Use `generate_image` with `model: "fast"` ONLY when no logo placement is needed (background plates, abstract textures).
+| Tier | Model | Approx cost | When |
+|---|---|---|---|
+| **Default** | `imagegen--generate_image` with `model: "premium.gpt"` (OpenAI GPT-image-2, medium quality) | ~8–12¢ | Final posters, social cards, banners, announcements |
+| **Fallback** | `imagegen--edit_image` with `model` unset (Nano Banana 2, `google/gemini-3.1-flash-image`) | ~1¢ | Rough drafts, quick iterations, GPT moderation rejection retries |
+| **Hero** | `imagegen--generate_image` with `model: "premium"` (GPT-image-2 high) | ~20–40¢ | Only when the user explicitly asks for hero / campaign / marketing top-tier art |
+
+GPT-image-2 renders typography (Exo, taglines, socials, URLs) far more accurately than Gemini — that's why it's the default. The logo is composited in step 2 rather than drawn by the model, so the wordmark never drifts.
+
 
 ## Brand assets
 
@@ -39,10 +45,11 @@ These mirror the DeHub app design system — apply to every generated image:
 When generating, structure the prompt like:
 
 ```
-[SCENE / SUBJECT in 1–2 sentences], cinematic, dark background, premium liquid-glass aesthetic, subtle ambient glow, lots of negative space. The DeHub white wordmark logo is placed [POSITION, e.g. top-left / centered / bottom-center] at roughly [SIZE]% of canvas width, crisp, unaltered, pure white, with clear space around it. No additional text unless specified. No blue. High detail, 4k, poster quality.
+[SCENE / SUBJECT in 1–2 sentences], cinematic, dark background, premium liquid-glass aesthetic, subtle ambient glow, lots of negative space. Leave [POSITION, e.g. the top-left third / a centered horizontal band / the bottom-center] as calm empty space reserved for a logo lockup — do not draw a logo, do not draw text there. No additional text unless specified. No blue. High detail, 4k, poster quality.
 ```
 
-Always pass the chosen logo file as the first input image to `edit_image` so the mark stays sharp.
+The logo is NOT drawn by the scene model — it's composited in step 2 of the workflow using the real PNG.
+
 
 ## Official brand links
 
@@ -60,18 +67,23 @@ Rendering rules for links on a poster: pure white, **Exo / Exo 2** (Light or Reg
 ## Workflow
 
 1. Confirm intent (poster, social card, banner?) and any specific message/theme — ask only if truly ambiguous.
-2. Pick logo variant (primary by default).
-3. Pick dimensions based on format.
-4. Call `imagegen--edit_image` with:
-   - `image_paths`: `[".agents/skills/dehub-poster/assets/dehub-logo-primary.png"]` (or alternative)
-   - `prompt`: built from the scaffold above
-   - `target_path`: `/mnt/documents/dehub-<slug>.png` (scratchpad — don't dump into project unless user asks)
-   - `width` / `height` set to chosen dimensions
-5. Show the result. Offer 1 quick variant if the user wants tweaks.
+2. Pick logo variant (primary by default) and dimensions (1024×1024 square default; 1536×1024 poster/banner; 1024×1536 story).
+3. **Step 1 — Generate scene** with `imagegen--generate_image`:
+   - `model`: `"premium.gpt"` (GPT-image-2 medium)
+   - `prompt`: built from the scaffold above, reserving clear negative space for the logo
+   - `target_path`: `/mnt/documents/dehub-<slug>-bg.jpg`
+   - `width` / `height`: chosen dimensions
+4. **Step 2 — Composite the logo** with `imagegen--edit_image`:
+   - `image_paths`: `["/mnt/documents/dehub-<slug>-bg.jpg", ".agents/skills/dehub-poster/assets/dehub-logo-primary.png"]` (or the alternative wordmark)
+   - `prompt`: `"Place the DeHub white wordmark from the second image onto the first image in the [POSITION] area at roughly [SIZE]% of canvas width. Keep the mark pure white, crisp, unaltered, perfectly aligned, with generous clear space around it. Do not modify, recolor, or redraw anything else in the scene."`
+   - `target_path`: `/mnt/documents/dehub-<slug>.png`
+5. Show the final image. Offer 1 quick variant if the user wants tweaks — use the Nano Banana 2 fallback for cheap iterations, then re-run GPT for the final.
 
 ## Don'ts
 
-- Don't use premium/expensive image models for routine DeHub content — Nano Banana 2 is the standard.
+- Don't burn premium credits on rough iterations — use the Nano Banana 2 fallback for drafts, GPT-image-2 for the final.
+- Don't let the scene model render the logo — always composite the real PNG in step 2.
 - Don't recolor the logo, add gradients to it, or place it on busy areas without clear space.
 - Don't introduce blue anywhere in the composition.
 - Don't save outputs into `src/assets/` unless the user explicitly wants the image shipped into the app.
+
