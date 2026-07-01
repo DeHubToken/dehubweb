@@ -145,9 +145,11 @@ export function Compositor() {
         const v = videoPool.current.get(mc.mediaId);
         if (!v) continue;
         activeVideoMediaIds.add(mc.mediaId);
+        const speed = mc.speed && mc.speed > 0 ? mc.speed : 1;
         const localT =
-          op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start);
+          op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * speed;
         if (state.isPlaying) {
+          if (v.playbackRate !== speed) v.playbackRate = speed;
           if (Math.abs(v.currentTime - localT) > 0.25) v.currentTime = localT;
           if (v.paused) { void v.play().catch(() => undefined); }
         } else {
@@ -160,13 +162,16 @@ export function Compositor() {
       for (const c of active) {
         if (c.kind !== "audio") continue;
         const mc = c as MediaClip;
-        const localT = mc.trimIn + (t - mc.start);
+        const speed = mc.speed && mc.speed > 0 ? mc.speed : 1;
+        const localT = mc.trimIn + (t - mc.start) * speed;
         const a = audioPool.current.get(mc.mediaId);
         const track = state.tracks.find((tr) => tr.id === mc.trackId);
         if (!a) continue;
         activeAudioMediaIds.add(mc.mediaId);
         a.muted = !!track?.muted;
+        a.volume = Math.max(0, Math.min(1, mc.audio?.volume ?? 1));
         if (state.isPlaying) {
+          if (a.playbackRate !== speed) a.playbackRate = speed;
           if (Math.abs(a.currentTime - localT) > 0.25) a.currentTime = localT;
           if (a.paused) { void a.play().catch(() => undefined); }
         } else {

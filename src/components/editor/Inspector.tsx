@@ -114,6 +114,24 @@ export function Inspector() {
           </div>
         )}
 
+        {mediaClip && (mediaClip.kind === "video" || mediaClip.kind === "audio") && (
+          <div className="space-y-3 pt-2">
+            <p className="text-[10px] uppercase tracking-wide text-white/40">Speed</p>
+            <EffectSlider label={`${(mediaClip.speed ?? 1).toFixed(2)}×`}
+              value={mediaClip.speed ?? 1} min={0.25} max={4} step={0.05}
+              onChange={(v) => updateMediaClip(mediaClip.id, { speed: Math.max(0.25, Math.min(4, v)) })} />
+            <div className="grid grid-cols-4 gap-1">
+              {[0.5, 1, 1.5, 2].map((s) => (
+                <Button key={s} size="sm" variant="ghost"
+                  onClick={() => updateMediaClip(mediaClip.id, { speed: s })}
+                  className="h-6 rounded-md border border-white/10 text-[10px] text-white/70 hover:bg-white/5 hover:text-white">
+                  {s}×
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
+
         {hasAudio && (
           <div className="space-y-3 pt-2">
             <p className="text-[10px] uppercase tracking-wide text-white/40">Audio</p>

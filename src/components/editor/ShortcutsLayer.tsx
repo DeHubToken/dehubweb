@@ -27,6 +27,12 @@ export function ShortcutsLayer() {
         if (e.shiftKey) s.redo(); else s.undo();
         return;
       }
+      // Duplicate
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "d") {
+        e.preventDefault();
+        s.duplicateSelected();
+        return;
+      }
       // Zoom
       if (e.key === "+" || e.key === "=") { e.preventDefault(); s.setZoom(s.zoom * 1.25); return; }
       if (e.key === "-" || e.key === "_") { e.preventDefault(); s.setZoom(s.zoom / 1.25); return; }
