@@ -284,7 +284,7 @@ export default function CreatorPage() {
                 <button
                   type="button"
                   onClick={() => navigate('/premium')}
-                  className="relative rounded-lg bg-white/8 px-4 py-2 text-sm font-semibold text-white hover:bg-white/12"
+                  className="relative rounded-lg bg-white/[0.08] px-4 py-2 text-sm font-semibold text-white hover:bg-white/[0.12]"
                 >
                   Pricing
                   <span className="absolute -bottom-2 left-4 rounded px-1.5 py-0.5 text-[9px] font-black leading-none text-white" style={{ backgroundColor: hot }}>30% OFF</span>
@@ -372,8 +372,8 @@ export default function CreatorPage() {
                     </span>
                   )}
                   <div className="mb-6 flex items-center gap-3">
-                    <Icon className="h-6 w-6 text-white/85" />
-                    <span className="rounded-full bg-white/8 px-2 py-1 text-xs text-white/60">{tool.label}</span>
+                    <Icon className="h-6 w-6 text-white/[0.85]" />
+                    <span className="rounded-full bg-white/[0.08] px-2 py-1 text-xs text-white/60">{tool.label}</span>
                   </div>
                   <div className="pr-8">
                     <h3 className="text-lg font-black text-white">{tool.name}</h3>
@@ -395,7 +395,7 @@ export default function CreatorPage() {
                 onClick={() => setActiveCategory(category)}
                 className={cn(
                   'shrink-0 rounded-lg px-3 py-2 text-xs font-bold uppercase tracking-wide transition-colors',
-                  activeCategory === category ? 'bg-white text-black' : 'bg-white/8 text-white/55 hover:text-white'
+                  activeCategory === category ? 'bg-white text-black' : 'bg-white/[0.08] text-white/55 hover:text-white'
                 )}
               >
                 {category}
