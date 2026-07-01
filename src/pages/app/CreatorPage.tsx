@@ -549,9 +549,24 @@ function FeatureStrip({ icon: Icon, title, copy }: { icon: React.ComponentType<{
 
 type GalleryItem = { id: string; image_url: string | null; video_url: string | null; created_at: string };
 
+// Rewrite Supabase Storage public-object URLs to the on-the-fly image resizer
+// so the gallery grid downloads ~400px thumbs instead of full-res originals.
+function thumbUrl(url: string, width = 480): string {
+  if (!url) return url;
+  try {
+    if (url.includes('/storage/v1/object/public/')) {
+      const resized = url.replace('/storage/v1/object/public/', '/storage/v1/render/image/public/');
+      const sep = resized.includes('?') ? '&' : '?';
+      return `${resized}${sep}width=${width}&quality=65&resize=cover`;
+    }
+  } catch {}
+  return url;
+}
+
 function CommunityGallery() {
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [lightbox, setLightbox] = useState<GalleryItem | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -571,6 +586,15 @@ function CommunityGallery() {
     })();
     return () => { cancelled = true; };
   }, []);
+
+  useEffect(() => {
+    if (!lightbox) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setLightbox(null); };
+    window.addEventListener('keydown', onKey);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = prev; };
+  }, [lightbox]);
 
   return (
     <section className="px-3 pb-10 sm:px-4">
@@ -605,11 +629,10 @@ function CommunityGallery() {
             const isVideo = !!item.video_url;
             const url = item.video_url || item.image_url || '';
             return (
-              <a
+              <button
                 key={item.id}
-                href={url}
-                target="_blank"
-                rel="noreferrer"
+                type="button"
+                onClick={() => setLightbox(item)}
                 className="group relative block aspect-square overflow-hidden rounded-lg border border-white/10 bg-black"
               >
                 {isVideo ? (
@@ -617,17 +640,17 @@ function CommunityGallery() {
                     src={url}
                     muted
                     loop
+                    autoPlay
                     playsInline
                     preload="metadata"
-                    onMouseEnter={(e) => { void e.currentTarget.play().catch(() => {}); }}
-                    onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
                     className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
                   />
                 ) : (
                   <img
-                    src={url}
+                    src={thumbUrl(url, 480)}
                     alt="AI generation from the DeHub community"
                     loading="lazy"
+                    decoding="async"
                     className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
                   />
                 )}
@@ -636,11 +659,46 @@ function CommunityGallery() {
                     Video
                   </span>
                 )}
-              </a>
+              </button>
             );
           })}
+        </div>
+      )}
+
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-md"
+          onClick={() => setLightbox(null)}
+        >
+          <button
+            type="button"
+            aria-label="Close"
+            onClick={() => setLightbox(null)}
+            className="absolute right-4 top-4 rounded-full border border-white/15 bg-black/60 px-3 py-1.5 text-xs font-bold uppercase text-white hover:bg-white/10"
+          >
+            Close
+          </button>
+          <div className="max-h-[92vh] max-w-[92vw]" onClick={(e) => e.stopPropagation()}>
+            {lightbox.video_url ? (
+              <video
+                src={lightbox.video_url}
+                controls
+                autoPlay
+                loop
+                playsInline
+                className="max-h-[92vh] max-w-[92vw] rounded-xl"
+              />
+            ) : (
+              <img
+                src={lightbox.image_url || ''}
+                alt="AI generation"
+                className="max-h-[92vh] max-w-[92vw] rounded-xl object-contain"
+              />
+            )}
+          </div>
         </div>
       )}
     </section>
   );
 }
+
