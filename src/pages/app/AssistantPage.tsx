@@ -2321,8 +2321,10 @@ export default function AssistantPage() {
                           <img 
                             src={message.imageUrl} 
                             alt="Generated" 
-                            className="max-w-full rounded-lg"
+                            className="max-w-full rounded-lg cursor-zoom-in"
+                            onClick={() => setLightboxImage(message.imageUrl!)}
                           />
+
                           {/* Action buttons row */}
                           <div className="absolute bottom-3 right-3 flex items-center gap-2">
                             {/* Attach to edit button */}
