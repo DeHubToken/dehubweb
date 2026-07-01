@@ -1236,7 +1236,7 @@ export default function AssistantPage() {
     if (!req) return;
 
     const { prompt, model, sourceImage } = req;
-    const logoImage = (override as { logoImage?: string } | undefined)?.logoImage;
+    const logoImage = override?.logoImage;
     const imageModel = IMAGE_MODELS[model];
 
     // User message was already added by handleSend before paywall opened
