@@ -22,8 +22,19 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const accent = '#d7ff00';
+const accent = '#e5e7eb';
 const hot = '#ff2c91';
+// Metallic liquid glass surface — replaces the old lime green accent for backgrounds
+const metallicBg =
+  'linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(228,228,231,0.85) 22%, rgba(161,161,170,0.75) 50%, rgba(212,212,216,0.85) 78%, rgba(255,255,255,0.92) 100%)';
+const metallicStyle: React.CSSProperties = {
+  backgroundImage: metallicBg,
+  backgroundColor: 'rgba(228,228,231,0.6)',
+  backdropFilter: 'blur(14px) saturate(160%)',
+  WebkitBackdropFilter: 'blur(14px) saturate(160%)',
+  boxShadow:
+    'inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.12), 0 4px 18px rgba(0,0,0,0.35)',
+};
 
 type Preset = 'image' | 'edit' | 'video' | 'song' | 'poster' | 'skills' | 'chat' | 'voice';
 type ToolAction = { kind: 'assistant'; preset: Preset } | { kind: 'navigate'; to: string };
@@ -229,7 +240,7 @@ export default function CreatorPage() {
         <h1 className="sr-only">DeHub Creator Studio</h1>
 
         <div className="sticky top-0 z-50">
-          <div className="relative flex h-8 items-center justify-center px-10 text-center text-[12px] font-black uppercase tracking-[0.08em] text-black" style={{ backgroundColor: accent }}>
+          <div className="relative flex h-8 items-center justify-center px-10 text-center text-[12px] font-black uppercase tracking-[0.08em] text-black" style={metallicStyle}>
             <span>Launch creative campaigns faster with DeHub AI tools</span>
             <span className="ml-2 hidden rounded px-2 py-0.5 text-[10px] font-black italic text-white sm:inline-flex" style={{ backgroundColor: hot }}>TEST STUDIO</span>
             <button
@@ -274,7 +285,7 @@ export default function CreatorPage() {
                     {index === 4 && <span className="mr-2 text-white/40">••</span>}
                     {item}
                     {(item === 'Studio' || item === 'Agents') && (
-                      <span className="ml-1 rounded px-1.5 py-0.5 text-[9px] font-black uppercase leading-none text-black" style={{ backgroundColor: accent }}>New</span>
+                      <span className="ml-1 rounded px-1.5 py-0.5 text-[9px] font-black uppercase leading-none text-black" style={metallicStyle}>New</span>
                     )}
                   </button>
                 ))}
@@ -301,7 +312,7 @@ export default function CreatorPage() {
                   type="button"
                   onClick={() => navigate('/app')}
                   className="rounded-lg px-4 py-2 text-sm font-bold text-black hover:brightness-95"
-                  style={{ backgroundColor: accent }}
+                  style={metallicStyle}
                 >
                   Sign up
                 </button>
@@ -343,7 +354,7 @@ export default function CreatorPage() {
             <p className="mt-4 max-w-[270px] text-sm text-white/70">Posters, promos, thumbnails and launch cards using the DeHub brand system.</p>
             <div className="absolute bottom-4 left-4 rounded-xl bg-white px-6 py-3 text-sm font-black text-black">Make DeHub Poster</div>
             <div className="absolute bottom-6 right-4 h-36 w-32 rotate-6 rounded-xl border border-white/20 bg-black/70 p-3 shadow-2xl">
-              <div className="mb-3 h-3 w-16 rounded-full" style={{ backgroundColor: accent }} />
+              <div className="mb-3 h-3 w-16 rounded-full" style={metallicStyle} />
               <div className="h-16 rounded-lg bg-white/15" />
               <div className="mt-3 h-2 w-full rounded-full bg-white/30" />
               <div className="mt-2 h-2 w-2/3 rounded-full bg-white/20" />
@@ -366,7 +377,7 @@ export default function CreatorPage() {
                       'absolute right-3 top-3 rounded px-1.5 py-0.5 text-[9px] font-black uppercase italic leading-none',
                       tool.badge === 'TEST' ? 'bg-white text-black' : tool.badge === 'TRENDING' ? 'text-white' : 'text-black'
                     )}
-                    style={tool.badge === 'TRENDING' ? { backgroundColor: hot } : tool.badge === 'NEW' ? { backgroundColor: accent } : undefined}
+                    style={tool.badge === 'TRENDING' ? { backgroundColor: hot } : tool.badge === 'NEW' ? metallicStyle : undefined}
                     >
                       {tool.badge}
                     </span>
@@ -416,7 +427,7 @@ export default function CreatorPage() {
               className="h-[420px] w-full object-cover object-center opacity-90 transition-transform duration-500 group-hover:scale-[1.015] sm:h-[560px] lg:h-[680px]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent" />
-            <div className="absolute left-5 top-5 rounded px-4 py-2 text-4xl font-black italic leading-none text-black sm:right-8 sm:left-auto sm:text-6xl" style={{ backgroundColor: accent }}>4K</div>
+            <div className="absolute left-5 top-5 rounded px-4 py-2 text-4xl font-black italic leading-none text-black sm:right-8 sm:left-auto sm:text-6xl" style={metallicStyle}>4K</div>
             <div className="absolute bottom-6 left-5 max-w-3xl sm:bottom-10 sm:left-8">
               <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-white/80 backdrop-blur-xl">
                 <PanelsTopLeft className="h-4 w-4" /> Creator workspace
@@ -463,13 +474,13 @@ function MediaCardVisual({ kind }: { kind: string }) {
         <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.42), transparent 28%)' }} />
         <div className="absolute left-8 top-8 h-28 w-24 -rotate-6 rounded-xl border border-white/20 bg-white/15 shadow-2xl" />
         <div className="absolute right-16 bottom-7 h-40 w-28 rotate-6 rounded-xl border border-white/20 bg-black/55 p-3 shadow-2xl">
-          <div className="h-3 w-16 rounded-full" style={{ backgroundColor: accent }} />
+          <div className="h-3 w-16 rounded-full" style={metallicStyle} />
           <div className="mt-4 h-16 rounded-lg bg-white/20" />
           <div className="mt-4 h-2 w-full rounded-full bg-white/35" />
           <div className="mt-2 h-2 w-2/3 rounded-full bg-white/20" />
         </div>
         <div className="absolute bottom-10 left-10 text-[46px] font-black uppercase leading-none tracking-tighter text-white">Creator<br />Drop</div>
-        <div className="absolute right-6 top-8 rounded px-2 py-1 text-xl font-black text-black" style={{ backgroundColor: accent }}>4K</div>
+        <div className="absolute right-6 top-8 rounded px-2 py-1 text-xl font-black text-black" style={metallicStyle}>4K</div>
       </div>
     );
   }
@@ -499,7 +510,7 @@ function MediaCardVisual({ kind }: { kind: string }) {
         <div className="flex items-center justify-between">
           <span className="text-lg font-light text-white">＋</span>
           <span className="text-[10px] font-semibold text-white/70">DeHub AI</span>
-          <span className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-black text-black" style={{ backgroundColor: accent }}>↑</span>
+          <span className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-black text-black" style={metallicStyle}>↑</span>
         </div>
       </div>
     </div>
