@@ -93,7 +93,6 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'stores', path: '/app/stores', component: StoresPage, skeleton: GenericPageSkeleton },
   { key: 'work', path: ['/app/work', '/work'], component: WorkPage, skeleton: GenericPageSkeleton },
   { key: 'affiliate', path: ['/app/affiliate', '/affiliate'], component: AffiliatePage, skeleton: GenericPageSkeleton },
-  { key: 'creator', path: ['/app/creator', '/creator'], component: CreatorPage, skeleton: GenericPageSkeleton },
   { key: 'profile', path: '/app/profile', component: ProfilePage, skeleton: ProfileSkeleton },
 ];
 
