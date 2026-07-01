@@ -672,12 +672,10 @@ export default function AssistantPage() {
   const voiceTranscriptHandlerRef = useRef<((text: string) => void) | null>(null);
   voiceStopRef.current = voiceAssistant.stopVoiceMode;
 
-  // Block access for unauthenticated users (AuthGate handles loading state internally)
-  if (!isAuthenticated) {
-    return (
-      <AuthGate description={t('assistant.loginRequired')} />
-    );
-  }
+  // Auth gate is rendered in JSX below (do NOT early-return here — it changes
+  // hook count between renders and triggers React error #310 on login/logout).
+
+
   
   // Mention hook for @mentions in input
   const mention = useMention({
