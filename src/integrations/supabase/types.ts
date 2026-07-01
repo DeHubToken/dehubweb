@@ -3103,6 +3103,15 @@ export type Database = {
         Args: { _community_id: string; _wallet_address: string }
         Returns: string
       }
+      get_creator_gallery: {
+        Args: { p_limit?: number }
+        Returns: {
+          created_at: string
+          id: string
+          image_url: string
+          video_url: string
+        }[]
+      }
       get_request_wallet_address: { Args: never; Returns: string }
       increment_category_count: { Args: { p_name: string }; Returns: undefined }
       increment_stage_listens: {
