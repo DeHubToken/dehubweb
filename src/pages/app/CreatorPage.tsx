@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { SEOHead } from '@/components/SEOHead';
 import { PricingSection } from '@/components/pricing/PricingSection';
+import dehubIcon from '@/assets/dehub-icon.png.asset.json';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import showcaseImage from '@/assets/creator-studio-showcase.jpg';
 import {
