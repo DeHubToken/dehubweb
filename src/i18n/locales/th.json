@@ -365,7 +365,7 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System",
-    "cosmic": "Cosmic",
+    "cosmic": "Cosmic Pixels",
     "island": "Island",
     "hacker": "Hacker",
     "horror": "Horror",
@@ -441,7 +441,7 @@
     "walletCopied": "Wallet address copied!",
     "note": "Note",
     "loginDescription": "Log in to access and manage your account settings.",
-    "winter": "Winter"
+    "winter": "Winter Drops"
   },
   "postOptions": {
     "options": "Options",
