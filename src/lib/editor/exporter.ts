@@ -211,11 +211,22 @@ async function renderAudioMix(
     if (!buf) continue;
     const src = ctx.createBufferSource();
     src.buffer = buf;
-    src.connect(ctx.destination);
+    const gain = ctx.createGain();
+    const vol = c.audio?.volume ?? 1;
+    const fIn = Math.max(0, Math.min(c.duration, c.audio?.fadeIn ?? 0));
+    const fOut = Math.max(0, Math.min(c.duration - fIn, c.audio?.fadeOut ?? 0));
     const when = c.start;
     const offset = c.trimIn;
     const dur = Math.min(c.duration, Math.max(0, buf.duration - offset));
     if (dur <= 0) continue;
+    // Envelope: 0 → vol (fadeIn) → vol → 0 (fadeOut)
+    gain.gain.setValueAtTime(fIn > 0 ? 0 : vol, when);
+    if (fIn > 0) gain.gain.linearRampToValueAtTime(vol, when + fIn);
+    if (fOut > 0) {
+      gain.gain.setValueAtTime(vol, when + Math.max(fIn, dur - fOut));
+      gain.gain.linearRampToValueAtTime(0, when + dur);
+    }
+    src.connect(gain).connect(ctx.destination);
     src.start(when, offset, dur);
   }
   return await ctx.startRendering();
