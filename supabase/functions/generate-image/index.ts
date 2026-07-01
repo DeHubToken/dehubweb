@@ -51,10 +51,14 @@ serve(async (req) => {
     }
 
     // ── DeHub brand skill: auto-detect requests for DeHub-branded imagery and
-    //    force logo-attached, brand-compliant generation.
-    const brandIntent = /\bde\s*hub\b/i.test(prompt) && /\b(posters?|banners?|thumbnails?|content|cards?|announc(?:e|ement|ements?)|flyers?|artworks?|social|covers?|graphics?|ads?|adverts?|images?|logos?|wallpapers?|memes?|promos?|campaigns?)\b/i.test(prompt);
+    //    force logo-attached, brand-compliant generation. Also triggers when the
+    //    Poster Studio passes an explicit `logoImage` (two-step composite path).
+    const brandKeywordHit = /\bde\s*hub\b/i.test(prompt) && /\b(posters?|banners?|thumbnails?|content|cards?|announc(?:e|ement|ements?)|flyers?|artworks?|social|covers?|graphics?|ads?|adverts?|images?|logos?|wallpapers?|memes?|promos?|campaigns?)\b/i.test(prompt);
+    const brandIntent = brandKeywordHit || !!logoImage;
     let brandPromptOverride: string | null = null;
-    if (brandIntent && !sourceImage) {
+    // Only bypass brand pipeline when the caller sent a plain sourceImage edit
+    // (e.g. "make this darker" on a user photo) AND no explicit logoImage.
+    if (brandIntent && (!sourceImage || logoImage)) {
       console.log('[dehub-poster] Brand intent detected — attaching logo + brand system prompt');
 
       // ── Format detection: pick the right aspect ratio from the user's wording.
