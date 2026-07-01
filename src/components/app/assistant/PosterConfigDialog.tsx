@@ -273,6 +273,7 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
   const [includeSocials, setIncludeSocials] = useState(false);
   const [includeWebsite, setIncludeWebsite] = useState(false);
   const [extraNotes, setExtraNotes] = useState('');
+  const [logoVariant, setLogoVariant] = useState<LogoVariant>('primary');
 
   useEffect(() => {
     if (!open || !userPrompt) return;
@@ -283,6 +284,10 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
     setIncludeSocials(detectSocials(userPrompt));
     setIncludeWebsite(detectWebsite(userPrompt));
     setExtraNotes('');
+    const lower = userPrompt.toLowerCase();
+    if (/\bicon|symbol|mark|d-mark|small logo\b/.test(lower)) setLogoVariant('icon');
+    else if (/\bboth logos?|lockup|icon\s*\+\s*wordmark|wordmark\s*\+\s*icon\b/.test(lower)) setLogoVariant('both');
+    else setLogoVariant('primary');
   }, [open, userPrompt]);
 
   const toggleFeature = useCallback((value: string) => {
@@ -290,8 +295,8 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
   }, []);
 
   const previewPrompt = useMemo(
-    () => buildFinalPrompt({ dimension, style, features, tagline, includeSocials, includeWebsite, extraNotes }, userPrompt),
-    [dimension, style, features, tagline, includeSocials, includeWebsite, extraNotes, userPrompt]
+    () => buildFinalPrompt({ dimension, style, features, tagline, includeSocials, includeWebsite, extraNotes, logoVariant }, userPrompt),
+    [dimension, style, features, tagline, includeSocials, includeWebsite, extraNotes, logoVariant, userPrompt]
   );
 
   const handleConfirm = useCallback(() => {
@@ -303,9 +308,10 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
       includeSocials,
       includeWebsite,
       extraNotes,
+      logoVariant,
       finalPrompt: previewPrompt,
     });
-  }, [dimension, style, features, tagline, includeSocials, includeWebsite, extraNotes, previewPrompt, onConfirm]);
+  }, [dimension, style, features, tagline, includeSocials, includeWebsite, extraNotes, logoVariant, previewPrompt, onConfirm]);
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
