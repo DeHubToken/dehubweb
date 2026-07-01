@@ -3022,6 +3022,21 @@ export default function AssistantPage() {
         />
       )}
 
+      {/* Skills library */}
+      <SkillsHubModal
+        open={skillsHubOpen}
+        onOpenChange={setSkillsHubOpen}
+        onUseSkill={(skill) => {
+          const seed = skill.trigger_phrases[0] || skill.name.toLowerCase();
+          setInput(`/${seed} `);
+          inputRef.current?.focus();
+          setInputGlow(true);
+          setTimeout(() => setInputGlow(false), 2000);
+          incrementSkillUsage(skill.id).catch(() => {});
+          toast.success(`Loaded skill: ${skill.name}`);
+        }}
+      />
+
       {/* DeHub Poster Studio */}
       <PosterConfigDialog
         open={posterConfigOpen}
