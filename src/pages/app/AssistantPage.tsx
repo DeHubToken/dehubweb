@@ -49,6 +49,8 @@ import { OverviewTab } from '@/components/app/command-centre';
 import { AuthPrompt } from '@/components/app/AuthPrompt';
 import { useUserSkills, incrementSkillUsage, type UserSkill } from '@/hooks/use-user-skills';
 import { matchSkill, extractSlashSkill } from '@/lib/skills/matchTriggerPhrases';
+import { SlashSkillDropdown, filterSkills } from '@/components/app/skills/SlashSkillDropdown';
+import { SkillsBrowserModal } from '@/components/app/skills/SkillsBrowserModal';
 import { useUserCharacters, incrementCharacterUsage } from '@/hooks/use-user-characters';
 import { parseCharacterMentions, buildCharacterPersonaBlock } from '@/lib/characters/parseCharacterMentions';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -432,6 +434,12 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
 export default function AssistantPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  // Slash-command skill picker
+  const [slashOpen, setSlashOpen] = useState(false);
+  const [slashQuery, setSlashQuery] = useState('');
+  const [slashRange, setSlashRange] = useState<{ start: number; end: number }>({ start: 0, end: 0 });
+  const [slashSelected, setSlashSelected] = useState(0);
+  const [skillsBrowserOpen, setSkillsBrowserOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { data: userSkills = [] } = useUserSkills();
   const { data: userCharacters = [] } = useUserCharacters();
