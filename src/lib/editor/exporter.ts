@@ -365,8 +365,9 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
       const mc = op.clip as MediaClip;
       const v = videos.get(mc.mediaId);
       if (!v) continue;
+      const speed = mc.speed && mc.speed > 0 ? mc.speed : 1;
       const localT =
-        op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start);
+        op.localTimeOverride !== undefined ? op.localTimeOverride : mc.trimIn + (t - mc.start) * speed;
       await seekVideo(v, localT);
     }
 
