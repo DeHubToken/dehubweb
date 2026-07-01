@@ -9,10 +9,16 @@ Use this skill whenever the user asks for a DeHub-branded image: posters, social
 
 ## Model
 
-Always use **`google/gemini-3.1-flash-image`** (Nano Banana 2) via the agent-side `imagegen--edit_image` tool. It's ~1¢ per image, fast, and excellent at compositing brand logos into generated scenes.
+Two-step flow: generate the scene with GPT-image-2, then composite the real logo PNG on top so the wordmark stays pixel-perfect.
 
-- For brand-locked output, prefer `edit_image` with the logo as input (keeps the mark crisp).
-- Use `generate_image` with `model: "fast"` ONLY when no logo placement is needed (background plates, abstract textures).
+| Tier | Model | Approx cost | When |
+|---|---|---|---|
+| **Default** | `imagegen--generate_image` with `model: "premium.gpt"` (OpenAI GPT-image-2, medium quality) | ~8–12¢ | Final posters, social cards, banners, announcements |
+| **Fallback** | `imagegen--edit_image` with `model` unset (Nano Banana 2, `google/gemini-3.1-flash-image`) | ~1¢ | Rough drafts, quick iterations, GPT moderation rejection retries |
+| **Hero** | `imagegen--generate_image` with `model: "premium"` (GPT-image-2 high) | ~20–40¢ | Only when the user explicitly asks for hero / campaign / marketing top-tier art |
+
+GPT-image-2 renders typography (Exo, taglines, socials, URLs) far more accurately than Gemini — that's why it's the default. The logo is composited in step 2 rather than drawn by the model, so the wordmark never drifts.
+
 
 ## Brand assets
 
