@@ -69,7 +69,7 @@ import { useAssistantUserContext } from '@/hooks/use-assistant-user-context';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 
-const DEHUB_BRAND_IMAGE_MODEL = 'gemini-3.1-flash-image';
+const DEHUB_BRAND_IMAGE_MODEL: ImageModelKey = 'gemini-3.1-flash-image';
 const DEHUB_BRAND_IMAGE_KEYWORDS = [
   'poster', 'banner', 'thumbnail', 'content', 'card', 'announce', 'announcement',
   'flyer', 'artwork', 'social', 'cover', 'graphic', 'ad', 'advert', 'image',
