@@ -2703,8 +2703,7 @@ export default function AssistantPage() {
                         const tokenStart = caret - m[1].length - 1; // include the `/`
                         setSlashRange({ start: tokenStart, end: caret });
                         setSlashQuery(m[1]);
-                        setSlashOpen(m[1].length >= 2 || m[1].length === 0 ? m[1].length >= 2 : false);
-                        // Only auto-open when >=2 chars typed after `/`
+                        // Auto-open once user types >=2 chars after `/`
                         setSlashOpen(m[1].length >= 2);
                       } else {
                         setSlashOpen(false);
