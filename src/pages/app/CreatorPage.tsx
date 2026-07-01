@@ -578,7 +578,7 @@ function CommunityGallery() {
         <div>
           <div className="text-xs font-bold uppercase tracking-[0.18em] text-white/45">Community Feed</div>
           <h2 className="mt-1 text-2xl font-black uppercase tracking-tight text-white sm:text-3xl">
-            Every AI creation on DeHub
+            USER CREATIONS
           </h2>
           <p className="mt-1 max-w-xl text-sm text-white/50">
             A live wall of the newest AI-generated images and videos made across the platform.
