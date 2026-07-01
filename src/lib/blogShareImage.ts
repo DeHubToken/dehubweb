@@ -10,7 +10,6 @@ export interface BlogShareImageInput {
   author?: string;
   date?: string; // human-readable string
   banner?: string | null; // absolute URL to the post banner
-  cacheVersion?: string; // bust CDN/social cache when post metadata changes
 }
 
 function absolutize(url: string | null | undefined): string | null {
@@ -33,7 +32,6 @@ export function getBlogShareImageUrl(
   if (input.date) params.set("date", input.date.slice(0, 40));
   const banner = absolutize(input.banner ?? null);
   if (banner) params.set("banner", banner);
-  if (input.cacheVersion) params.set("v", input.cacheVersion.slice(0, 40));
   params.set("width", String(width));
   params.set("height", String(height));
   params.set("format", format);

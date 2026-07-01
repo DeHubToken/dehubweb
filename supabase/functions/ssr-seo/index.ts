@@ -21,8 +21,6 @@ interface BlogManifestPost {
     slug: string;
     title: string;
     excerpt?: string;
-    seoTitle?: string;
-    seoDescription?: string;
     author?: string;
     publishedAt?: string;
     bannerImage?: string;
@@ -86,24 +84,10 @@ function buildBlogShareImage(post: BlogManifestPost): string {
         const banner = /^https?:\/\//i.test(post.bannerImage) ? post.bannerImage : `${APP_URL}${post.bannerImage.startsWith("/") ? "" : "/"}${post.bannerImage}`;
         p.set("banner", banner);
     }
-    if (post.publishedAt) p.set("v", post.publishedAt.slice(0, 10));
     p.set("width", "1200");
     p.set("height", "630");
     p.set("format", "png");
     return `${BLOG_SHARE_IMAGE_BASE}?${p.toString()}`;
-}
-
-function blogMetaDescription(post: BlogManifestPost): string {
-    const raw = post.seoDescription || post.excerpt || `${post.title} — read on DeHub.`;
-    const normalized = raw.replace(/\s+/g, " ").trim();
-    if (normalized.length <= 280) return normalized;
-    const cut = normalized.slice(0, 280);
-    const lastSpace = cut.lastIndexOf(" ");
-    return `${lastSpace > 40 ? cut.slice(0, lastSpace) : cut}…`;
-}
-
-function blogMetaTitle(post: BlogManifestPost): string {
-    return post.seoTitle || `${post.title} — DeHub Blog`;
 }
 
 
@@ -476,8 +460,8 @@ serve(async (req) => {
             if (post) {
                 const canonical = `${APP_URL}/docs/blog/${slug}`;
                 const image = buildBlogShareImage(post);
-                const title = blogMetaTitle(post);
-                const description = blogMetaDescription(post);
+                const title = `${post.title} — DeHub Blog`;
+                const description = (post.excerpt || `${post.title} — read on DeHub.`).slice(0, 280);
                 const html = generateMetaHTML({
                     title,
                     description,
@@ -498,7 +482,6 @@ serve(async (req) => {
                         author: { "@type": "Person", name: post.author || "DeHub Team" },
                         publisher: { "@type": "Organization", name: "DeHub" },
                         mainEntityOfPage: canonical,
-                        description,
                     },
                 });
                 return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400" } });

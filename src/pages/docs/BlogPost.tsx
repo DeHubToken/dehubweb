@@ -62,7 +62,6 @@ const BlogPost = () => {
     author: post.author.name,
     date: formatDate(post.publishedAt),
     banner: fullImageUrl,
-    cacheVersion: post.publishedAt.slice(0, 10),
   });
 
   const displayDate =

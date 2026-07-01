@@ -42,24 +42,10 @@ function buildBlogShareImage(post) {
   }
   const banner = absolutize(post.bannerImage);
   if (banner) p.set('banner', banner);
-  if (post.publishedAt) p.set('v', post.publishedAt.slice(0, 10));
   p.set('width', '1200');
   p.set('height', '630');
   p.set('format', 'png');
   return `${BLOG_SHARE_IMAGE_BASE}?${p.toString()}`;
-}
-
-function blogMetaDescription(post) {
-  const raw = post.seoDescription || post.excerpt || `${post.title} — read on DeHub.`;
-  const normalized = raw.replace(/\s+/g, ' ').trim();
-  if (normalized.length <= 280) return normalized;
-  const cut = normalized.slice(0, 280);
-  const lastSpace = cut.lastIndexOf(' ');
-  return `${lastSpace > 40 ? cut.slice(0, lastSpace) : cut}…`;
-}
-
-function blogMetaTitle(post) {
-  return post.seoTitle || `${post.title} — DeHub Blog`;
 }
 
 let _blogManifestCache = null;
@@ -88,8 +74,8 @@ async function getBlogManifest(request) {
 
 function buildBlogHtml(post, canonicalUrl) {
   const image = buildBlogShareImage(post);
-  const title = blogMetaTitle(post);
-  const description = blogMetaDescription(post);
+  const title = `${post.title} — DeHub Blog`;
+  const description = (post.excerpt || `${post.title} — read on DeHub.`).slice(0, 280);
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -98,37 +84,30 @@ function buildBlogHtml(post, canonicalUrl) {
 <meta name="description" content="${escHtml(description)}">
 <link rel="canonical" href="${escHtml(canonicalUrl)}">
 <meta property="og:type" content="article">
-<meta property="og:site_name" content="DeHub Docs">
 <meta property="og:url" content="${escHtml(canonicalUrl)}">
 <meta property="og:title" content="${escHtml(title)}">
 <meta property="og:description" content="${escHtml(description)}">
 <meta property="og:image" content="${escHtml(image)}">
-<meta property="og:image:secure_url" content="${escHtml(image)}">
-<meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="${escHtml(post.title)}">
 <meta property="article:published_time" content="${escHtml(post.publishedAt || '')}">
 <meta property="article:author" content="${escHtml(post.author || 'DeHub Team')}">
-<meta property="fb:app_id" content="966242223397117">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@DeHubApp">
 <meta name="twitter:title" content="${escHtml(title)}">
 <meta name="twitter:description" content="${escHtml(description)}">
 <meta name="twitter:image" content="${escHtml(image)}">
-<meta name="twitter:image:alt" content="${escHtml(post.title)}">
+<meta name="twitter:site" content="@DeHubApp">
 <script type="application/ld+json">${JSON.stringify({
   '@context':'https://schema.org','@type':'Article',
   headline: post.title, image: [image], datePublished: post.publishedAt,
-  description,
   author: { '@type':'Person', name: post.author || 'DeHub Team' },
-  publisher: { '@type':'Organization', name:'DeHub', url: 'https://dehub.io' },
+  publisher: { '@type':'Organization', name:'DeHub' },
   mainEntityOfPage: canonicalUrl,
 })}</script>
 </head>
 <body style="background:#000;color:#fff;font-family:sans-serif;display:flex;align-items:center;justify-content:center;height:100vh;margin:0">
 <p><a href="${escHtml(canonicalUrl)}" style="color:#0f0">${escHtml(post.title)}</a></p>
-<img src="${escHtml(image)}" alt="${escHtml(post.title)}" width="600" style="max-width:90%;border-radius:12px;margin-top:24px" />
 </body>
 </html>`;
 }

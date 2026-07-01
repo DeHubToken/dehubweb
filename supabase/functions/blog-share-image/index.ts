@@ -6,7 +6,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { encode as encodeB64 } from "https://deno.land/std@0.190.0/encoding/base64.ts";
 import { Resvg, initWasm } from "https://esm.sh/@resvg/resvg-wasm@2.6.2";
-import { DEHUB_LOGO_DATA_URI } from "./logo.ts";
 
 let resvgReady: Promise<void> | null = null;
 function ensureResvg(): Promise<void> {
@@ -37,8 +36,6 @@ async function loadFonts(): Promise<Uint8Array[]> {
   fontBuffers = out;
   return out;
 }
-
-const LOGO_ASPECT = 1752 / 417;
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -74,37 +71,6 @@ async function fetchAsDataUri(url: string): Promise<string | null> {
   }
 }
 
-function escapeXml(value: string) {
-  return value.replace(/[<>&"']/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;" }[c] as string));
-}
-
-// Naive word-wrap for SVG <text> rendering (resvg has no auto-wrap).
-function wrapText(text: string, maxCharsPerLine: number, maxLines: number): string[] {
-  const words = text.split(/\s+/).filter(Boolean);
-  const lines: string[] = [];
-  let cur = "";
-  for (const w of words) {
-    const candidate = cur ? `${cur} ${w}` : w;
-    if (candidate.length > maxCharsPerLine) {
-      if (cur) lines.push(cur);
-      cur = w;
-      if (lines.length === maxLines - 1) break;
-    } else {
-      cur = candidate;
-    }
-  }
-  if (cur && lines.length < maxLines) lines.push(cur);
-  if (lines.length === maxLines) {
-    // Append remaining unused words as ellipsis if truncated
-    const used = lines.join(" ").split(/\s+/).length;
-    if (used < words.length) {
-      const last = lines[lines.length - 1];
-      lines[lines.length - 1] = (last.length > maxCharsPerLine - 1 ? last.slice(0, maxCharsPerLine - 1) : last) + "…";
-    }
-  }
-  return lines;
-}
-
 function buildSvg(opts: {
   title: string;
   author: string;
@@ -119,66 +85,12 @@ function buildSvg(opts: {
   const bannerHref = opts.bannerDataUri ?? "";
   const hasBanner = Boolean(opts.bannerDataUri);
 
-  const titleLines = wrapText(opts.title, 32, 3);
-  const titleFontSize = titleLines.length >= 3 ? H * 0.078 : H * 0.092;
-  const lineHeight = titleFontSize * 1.08;
-  const titleBlockHeight = lineHeight * titleLines.length;
-  const titleStartY = H * 0.62 - titleBlockHeight + lineHeight * 0.85;
-
-  const author = escapeXml(opts.author || "DeHub");
-  const date = escapeXml(opts.date || "");
-  const meta = [date, author].filter(Boolean).join(" · ");
-  const slugUrl = escapeXml(`dehub.io/docs/blog/${opts.slug}`);
-
-  const tlW = W * 0.18;
-  const tlH = tlW / LOGO_ASPECT;
-
+  // Image-only share card for /docs/blog posts: render the banner full-bleed
+  // with no title, meta, branding or URL overlay.
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="Inter, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif">
-  <defs>
-    <clipPath id="bgClip"><rect width="${W}" height="${H}"/></clipPath>
-    <filter id="bgBlur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="14"/></filter>
-    <linearGradient id="scrim" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#000" stop-opacity="0.05"/>
-      <stop offset="0.55" stop-color="#000" stop-opacity="0.55"/>
-      <stop offset="1" stop-color="#000" stop-opacity="0.92"/>
-    </linearGradient>
-    <radialGradient id="vignette" cx="50%" cy="50%" r="80%">
-      <stop offset="60%" stop-color="#000" stop-opacity="0"/>
-      <stop offset="100%" stop-color="#000" stop-opacity="0.7"/>
-    </radialGradient>
-  </defs>
-
+<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
   <rect width="${W}" height="${H}" fill="#0a0a0b"/>
-  <g clip-path="url(#bgClip)">
-    ${hasBanner ? `<image href="${bannerHref}" x="-20" y="-20" width="${W + 40}" height="${H + 40}" preserveAspectRatio="xMidYMid slice" filter="url(#bgBlur)" opacity="0.55"/>
-       <image href="${bannerHref}" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="xMidYMid slice" opacity="0.95"/>` : ""}
-  </g>
-  <rect width="${W}" height="${H}" fill="url(#scrim)"/>
-  <rect width="${W}" height="${H}" fill="url(#vignette)"/>
-
-  <!-- Top-right wordmark -->
-  <image href="${DEHUB_LOGO_DATA_URI}" x="${W - tlW - W * 0.05}" y="${H * 0.07}" width="${tlW}" height="${tlH}" preserveAspectRatio="xMidYMid meet"/>
-
-  <!-- BLOG eyebrow -->
-  <g transform="translate(${W * 0.05}, ${H * 0.085})">
-    <rect width="${H * 0.13}" height="${H * 0.058}" rx="${H * 0.012}" fill="#ffffff"/>
-    <text x="${H * 0.065}" y="${H * 0.04}" fill="#0a0a0b" font-size="${H * 0.028}" font-weight="800" text-anchor="middle" letter-spacing="3">BLOG</text>
-  </g>
-
-  <!-- Title -->
-  <g>
-    ${titleLines.map((line, i) => `<text x="${W * 0.05}" y="${titleStartY + i * lineHeight}" fill="#ffffff" font-size="${titleFontSize}" font-weight="800" letter-spacing="-1.5">${escapeXml(line)}</text>`).join("")}
-  </g>
-
-  <!-- Meta -->
-  ${meta ? `<text x="${W * 0.05}" y="${H * 0.78}" fill="#ffffff" fill-opacity="0.78" font-size="${H * 0.032}" font-weight="500">${escapeXml(meta)}</text>` : ""}
-
-  <!-- URL footer -->
-  <g transform="translate(${W * 0.05}, ${H * 0.86})">
-    <rect width="${H * 0.65}" height="${H * 0.078}" rx="${H * 0.014}" fill="#ffffff" fill-opacity="0.1" stroke="#ffffff" stroke-opacity="0.25" stroke-width="1"/>
-    <text x="${H * 0.04}" y="${H * 0.053}" fill="#ffffff" font-size="${H * 0.032}" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">${slugUrl}</text>
-  </g>
+  ${hasBanner ? `<image href="${bannerHref}" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="xMidYMid slice"/>` : ""}
 </svg>`;
 }
 
