@@ -424,6 +424,18 @@ export function Compositor() {
   );
 }
 
+function cssFilterFor(clip: Clip): string {
+  if (clip.kind !== "video" && clip.kind !== "image") return "none";
+  const e = (clip as MediaClip).effects;
+  if (!e) return "none";
+  const parts: string[] = [];
+  if (e.brightness !== undefined && e.brightness !== 1) parts.push(`brightness(${e.brightness})`);
+  if (e.contrast !== undefined && e.contrast !== 1) parts.push(`contrast(${e.contrast})`);
+  if (e.saturation !== undefined && e.saturation !== 1) parts.push(`saturate(${e.saturation})`);
+  if (e.blur !== undefined && e.blur > 0) parts.push(`blur(${e.blur}px)`);
+  return parts.length ? parts.join(" ") : "none";
+}
+
 function drawClip(
   ctx: CanvasRenderingContext2D,
   canvas: HTMLCanvasElement,
@@ -432,17 +444,16 @@ function drawClip(
   vPool: Map<string, HTMLVideoElement>,
   iPool: Map<string, HTMLImageElement>,
 ) {
+  const prevFilter = ctx.filter;
+  ctx.filter = cssFilterFor(clip);
   if (clip.kind === "video") {
     const v = vPool.get(clip.mediaId);
-    if (!v || !v.videoWidth) return;
-    drawContain(ctx, v, v.videoWidth, v.videoHeight, canvas.width, canvas.height);
+    if (v && v.videoWidth) drawContain(ctx, v, v.videoWidth, v.videoHeight, canvas.width, canvas.height);
   } else if (clip.kind === "image") {
     const img = iPool.get(clip.mediaId);
-    if (!img || !img.naturalWidth) return;
-    drawContain(ctx, img, img.naturalWidth, img.naturalHeight, canvas.width, canvas.height);
+    if (img && img.naturalWidth) drawContain(ctx, img, img.naturalWidth, img.naturalHeight, canvas.width, canvas.height);
   } else if (clip.kind === "text") {
     const text = clip as TextClip;
-    // Simple fade in/out (first/last 0.3s).
     const FADE = 0.3;
     const into = t - text.start;
     const outof = text.start + text.duration - t;
@@ -456,13 +467,13 @@ function drawClip(
     ctx.textAlign = text.align === "centre" ? "center" : text.align;
     const x = text.x * canvas.width;
     const y = text.y * canvas.height;
-    // Multi-line support.
     const lines = text.text.split(/\n/);
     const lh = size * 1.2;
     const startY = y - ((lines.length - 1) * lh) / 2;
     lines.forEach((ln, i) => ctx.fillText(ln, x, startY + i * lh));
     ctx.restore();
   }
+  ctx.filter = prevFilter;
 }
 
 function drawContain(

@@ -36,11 +36,33 @@ interface BaseClip {
   transitionOut?: Transition;
 }
 
+export interface ClipEffects {
+  /** 0..2, 1 = neutral */
+  brightness?: number;
+  /** 0..2, 1 = neutral */
+  contrast?: number;
+  /** 0..2, 1 = neutral */
+  saturation?: number;
+  /** 0..20 px */
+  blur?: number;
+}
+
+export interface ClipAudio {
+  /** 0..2, 1 = 100% */
+  volume?: number;
+  /** seconds of linear fade-in */
+  fadeIn?: number;
+  /** seconds of linear fade-out */
+  fadeOut?: number;
+}
+
 export interface MediaClip extends BaseClip {
   kind: "video" | "audio" | "image";
   mediaId: string;
   /** Source media natural duration (seconds), if applicable. */
   sourceDuration?: number;
+  effects?: ClipEffects;
+  audio?: ClipAudio;
 }
 
 export interface TextClip extends BaseClip {

@@ -44,17 +44,6 @@ export default function EditorPage() {
         </div>
       </div>
 
-      <footer className="flex h-7 shrink-0 items-center justify-end gap-2 border-t border-white/10 bg-black/60 px-3 text-[10px] text-white/40 backdrop-blur-[24px]">
-        <span>Built on</span>
-        <a
-          href="https://github.com/OpenCut-app/OpenCut"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-white/60 underline-offset-2 hover:text-white hover:underline"
-        >
-          OpenCut (MIT)
-        </a>
-      </footer>
 
       <ShortcutsLayer />
       <Autosave />

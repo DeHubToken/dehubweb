@@ -121,6 +121,18 @@ function seekVideo(v: HTMLVideoElement, t: number): Promise<void> {
   });
 }
 
+function cssFilterFor(clip: Clip): string {
+  if (clip.kind !== "video" && clip.kind !== "image") return "none";
+  const e = (clip as MediaClip).effects;
+  if (!e) return "none";
+  const parts: string[] = [];
+  if (e.brightness !== undefined && e.brightness !== 1) parts.push(`brightness(${e.brightness})`);
+  if (e.contrast !== undefined && e.contrast !== 1) parts.push(`contrast(${e.contrast})`);
+  if (e.saturation !== undefined && e.saturation !== 1) parts.push(`saturate(${e.saturation})`);
+  if (e.blur !== undefined && e.blur > 0) parts.push(`blur(${e.blur}px)`);
+  return parts.length ? parts.join(" ") : "none";
+}
+
 function drawClipExport(
   ctx: OffscreenCanvasRenderingContext2D,
   canvas: OffscreenCanvas,
@@ -129,14 +141,14 @@ function drawClipExport(
   videos: Map<string, HTMLVideoElement>,
   images: Map<string, HTMLImageElement>,
 ) {
+  const prev = ctx.filter;
+  ctx.filter = cssFilterFor(clip);
   if (clip.kind === "video") {
     const v = videos.get((clip as MediaClip).mediaId);
-    if (!v || !v.videoWidth) return;
-    drawContain(ctx, v as unknown as CanvasImageSource, v.videoWidth, v.videoHeight, canvas.width, canvas.height);
+    if (v && v.videoWidth) drawContain(ctx, v as unknown as CanvasImageSource, v.videoWidth, v.videoHeight, canvas.width, canvas.height);
   } else if (clip.kind === "image") {
     const img = images.get((clip as MediaClip).mediaId);
-    if (!img || !img.naturalWidth) return;
-    drawContain(ctx, img, img.naturalWidth, img.naturalHeight, canvas.width, canvas.height);
+    if (img && img.naturalWidth) drawContain(ctx, img, img.naturalWidth, img.naturalHeight, canvas.width, canvas.height);
   } else if (clip.kind === "text") {
     const text = clip as TextClip;
     const into = t - text.start;
@@ -157,6 +169,7 @@ function drawClipExport(
     lines.forEach((ln, i) => ctx.fillText(ln, x, startY + i * lh));
     ctx.restore();
   }
+  ctx.filter = prev;
 }
 
 function drawContain(
@@ -198,11 +211,22 @@ async function renderAudioMix(
     if (!buf) continue;
     const src = ctx.createBufferSource();
     src.buffer = buf;
-    src.connect(ctx.destination);
+    const gain = ctx.createGain();
+    const vol = c.audio?.volume ?? 1;
+    const fIn = Math.max(0, Math.min(c.duration, c.audio?.fadeIn ?? 0));
+    const fOut = Math.max(0, Math.min(c.duration - fIn, c.audio?.fadeOut ?? 0));
     const when = c.start;
     const offset = c.trimIn;
     const dur = Math.min(c.duration, Math.max(0, buf.duration - offset));
     if (dur <= 0) continue;
+    // Envelope: 0 → vol (fadeIn) → vol → 0 (fadeOut)
+    gain.gain.setValueAtTime(fIn > 0 ? 0 : vol, when);
+    if (fIn > 0) gain.gain.linearRampToValueAtTime(vol, when + fIn);
+    if (fOut > 0) {
+      gain.gain.setValueAtTime(vol, when + Math.max(fIn, dur - fOut));
+      gain.gain.linearRampToValueAtTime(0, when + dur);
+    }
+    src.connect(gain).connect(ctx.destination);
     src.start(when, offset, dur);
   }
   return await ctx.startRendering();
