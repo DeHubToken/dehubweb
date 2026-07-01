@@ -83,6 +83,7 @@ interface EditorState extends EditableState {
   trimClip: (id: string, edge: "in" | "out", deltaSeconds: number) => void;
   splitAtPlayhead: () => void;
   rippleDelete: (ids?: string[]) => void;
+  duplicateSelected: () => void;
   updateTextClip: (id: string, patch: Partial<TextClip>) => void;
   updateMediaClip: (id: string, patch: Partial<MediaClip>) => void;
   setClipTransition: (id: string, transition: Clip["transitionOut"] | null) => void;
