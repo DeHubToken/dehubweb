@@ -10,6 +10,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 
 export type LogoVariant = 'primary' | 'icon' | 'both';
@@ -350,18 +351,32 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
           {/* Style */}
           <div>
             <label className="text-xs font-medium text-white/60 mb-2 block uppercase tracking-wider">Style Archetype</label>
-            <select
-              value={style}
-              onChange={(e) => setStyle(e.target.value)}
-              className="w-full px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white focus:outline-none focus:border-white/25 transition-colors"
-              style={{ fontFamily: 'Exo, Exo 2, sans-serif' }}
-            >
-              {STYLES.map(s => (
-                <option key={s.value} value={s.value} className="bg-black text-white">
-                  {s.label} — {s.desc}
-                </option>
-              ))}
-            </select>
+            <Select value={style} onValueChange={setStyle}>
+              <SelectTrigger
+                className="w-full h-auto px-3 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white hover:bg-white/[0.07] focus:ring-0 focus:ring-offset-0 focus:border-white/25 transition-colors [&>svg]:opacity-70 [&>svg]:ml-2"
+                style={{ fontFamily: 'Exo, Exo 2, sans-serif' }}
+              >
+                <SelectValue placeholder="Select style…" />
+              </SelectTrigger>
+              <SelectContent
+                position="popper"
+                side="bottom"
+                sideOffset={6}
+                align="start"
+                className="max-h-[50vh] w-[var(--radix-select-trigger-width)] rounded-2xl bg-black/70 backdrop-blur-[24px] border border-white/10 shadow-2xl"
+              >
+                {STYLES.map(s => (
+                  <SelectItem
+                    key={s.value}
+                    value={s.value}
+                    className="rounded-xl px-3 py-2 text-sm text-white/90 focus:bg-white/10 focus:text-white data-[state=checked]:bg-white/10"
+                  >
+                    <span className="font-medium">{s.label}</span>
+                    <span className="text-white/40"> — {s.desc}</span>
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Logo variant */}
