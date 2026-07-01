@@ -22,6 +22,9 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+const accent = '#d7ff00';
+const hot = '#ff2c91';
+
 type Preset = 'image' | 'edit' | 'video' | 'song' | 'poster' | 'skills' | 'chat' | 'voice';
 type ToolAction = { kind: 'assistant'; preset: Preset } | { kind: 'navigate'; to: string };
 
@@ -222,13 +225,13 @@ export default function CreatorPage() {
         }}
       />
 
-      <main className="min-h-screen bg-[#090a0b] text-white overflow-x-hidden">
+      <main className="min-h-screen text-white overflow-x-hidden" style={{ backgroundColor: '#090a0b' }}>
         <h1 className="sr-only">DeHub Creator Studio</h1>
 
         <div className="sticky top-0 z-50">
-          <div className="relative flex h-8 items-center justify-center bg-[#d7ff00] px-10 text-center text-[12px] font-black uppercase tracking-[0.08em] text-black">
+          <div className="relative flex h-8 items-center justify-center px-10 text-center text-[12px] font-black uppercase tracking-[0.08em] text-black" style={{ backgroundColor: accent }}>
             <span>Launch creative campaigns faster with DeHub AI tools</span>
-            <span className="ml-2 hidden rounded px-2 py-0.5 text-[10px] font-black italic text-white sm:inline-flex bg-[#ff2c91]">TEST STUDIO</span>
+            <span className="ml-2 hidden rounded px-2 py-0.5 text-[10px] font-black italic text-white sm:inline-flex" style={{ backgroundColor: hot }}>TEST STUDIO</span>
             <button
               type="button"
               onClick={() => navigate('/app')}
@@ -239,7 +242,7 @@ export default function CreatorPage() {
             </button>
           </div>
 
-          <header className="border-b border-white/8 bg-[#090a0b]/95 px-3 py-3 backdrop-blur-xl sm:px-4">
+          <header className="border-b border-white/10 px-3 py-3 backdrop-blur-xl sm:px-4" style={{ backgroundColor: 'rgba(9,10,11,0.95)' }}>
             <div className="flex items-center gap-3">
               <button
                 type="button"
@@ -264,13 +267,14 @@ export default function CreatorPage() {
                     }}
                     className={cn(
                       'relative shrink-0 text-[14px] font-medium tracking-wide transition-colors',
-                      activeNav === item ? 'text-[#d7ff00]' : 'text-white/55 hover:text-white'
+                      activeNav === item ? '' : 'text-white/55 hover:text-white'
                     )}
+                    style={activeNav === item ? { color: accent } : undefined}
                   >
                     {index === 4 && <span className="mr-2 text-white/40">••</span>}
                     {item}
                     {(item === 'Studio' || item === 'Agents') && (
-                      <span className="ml-1 rounded bg-[#d7ff00] px-1.5 py-0.5 text-[9px] font-black uppercase leading-none text-black">New</span>
+                      <span className="ml-1 rounded px-1.5 py-0.5 text-[9px] font-black uppercase leading-none text-black" style={{ backgroundColor: accent }}>New</span>
                     )}
                   </button>
                 ))}
@@ -283,19 +287,21 @@ export default function CreatorPage() {
                   className="relative rounded-lg bg-white/8 px-4 py-2 text-sm font-semibold text-white hover:bg-white/12"
                 >
                   Pricing
-                  <span className="absolute -bottom-2 left-4 rounded bg-[#ff2c91] px-1.5 py-0.5 text-[9px] font-black leading-none text-white">30% OFF</span>
+                  <span className="absolute -bottom-2 left-4 rounded px-1.5 py-0.5 text-[9px] font-black leading-none text-white" style={{ backgroundColor: hot }}>30% OFF</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => navigate('/app')}
-                  className="rounded-lg bg-white/8 px-4 py-2 text-sm font-semibold text-[#d7ff00] hover:bg-white/12"
+                  className="rounded-lg bg-white/10 px-4 py-2 text-sm font-semibold hover:bg-white/15"
+                  style={{ color: accent }}
                 >
                   Login
                 </button>
                 <button
                   type="button"
                   onClick={() => navigate('/app')}
-                  className="rounded-lg bg-[#d7ff00] px-4 py-2 text-sm font-bold text-black hover:brightness-95"
+                  className="rounded-lg px-4 py-2 text-sm font-bold text-black hover:brightness-95"
+                  style={{ backgroundColor: accent }}
                 >
                   Sign up
                 </button>
@@ -327,16 +333,17 @@ export default function CreatorPage() {
           <button
             type="button"
             onClick={() => runAction({ kind: 'assistant', preset: 'poster' })}
-            className="relative min-h-[264px] overflow-hidden rounded-2xl border border-white/10 bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.24),transparent_30%),linear-gradient(135deg,rgba(255,255,255,0.12),rgba(255,255,255,0.03)_50%,rgba(215,255,0,0.22))] p-4 text-left shadow-[0_24px_80px_rgba(0,0,0,0.45)]"
+            className="relative min-h-[264px] overflow-hidden rounded-2xl border border-white/10 p-4 text-left shadow-[0_24px_80px_rgba(0,0,0,0.45)]"
+            style={{ background: 'radial-gradient(circle at 80% 20%, rgba(255,255,255,0.24), transparent 30%), linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03) 50%, rgba(215,255,0,0.22))' }}
           >
-            <span className="inline-flex rounded bg-[#ff2c91] px-2 py-1 text-[10px] font-black italic text-white">TEST STUDIO</span>
+            <span className="inline-flex rounded px-2 py-1 text-[10px] font-black italic text-white" style={{ backgroundColor: hot }}>TEST STUDIO</span>
             <div className="mt-7 max-w-[300px] text-3xl font-black uppercase leading-[1.02] tracking-tight text-white sm:text-4xl">
               Make every launch look expensive
             </div>
             <p className="mt-4 max-w-[270px] text-sm text-white/70">Posters, promos, thumbnails and launch cards using the DeHub brand system.</p>
             <div className="absolute bottom-4 left-4 rounded-xl bg-white px-6 py-3 text-sm font-black text-black">Make DeHub Poster</div>
             <div className="absolute bottom-6 right-4 h-36 w-32 rotate-6 rounded-xl border border-white/20 bg-black/70 p-3 shadow-2xl">
-              <div className="mb-3 h-3 w-16 rounded-full bg-[#d7ff00]" />
+              <div className="mb-3 h-3 w-16 rounded-full" style={{ backgroundColor: accent }} />
               <div className="h-16 rounded-lg bg-white/15" />
               <div className="mt-3 h-2 w-full rounded-full bg-white/30" />
               <div className="mt-2 h-2 w-2/3 rounded-full bg-white/20" />
@@ -351,12 +358,13 @@ export default function CreatorPage() {
                   key={tool.id}
                   type="button"
                   onClick={() => runAction(tool.action)}
-                  className="group relative min-h-[128px] rounded-2xl border border-white/8 bg-[#1b1c1f] p-5 text-left transition-colors hover:bg-[#222327]"
+                  className="group relative min-h-[128px] rounded-2xl border border-white/10 p-5 text-left transition-colors hover:brightness-110"
+                  style={{ backgroundColor: '#1b1c1f' }}
                 >
                   {tool.badge && (
                     <span className={cn(
                       'absolute right-3 top-3 rounded px-1.5 py-0.5 text-[9px] font-black uppercase italic leading-none',
-                      tool.badge === 'TEST' ? 'bg-white text-black' : tool.badge === 'TRENDING' ? 'bg-[#ff2c91] text-white' : 'bg-[#d7ff00] text-black'
+                      tool.badge === 'TEST' ? 'bg-white text-black' : tool.badge === 'TRENDING' ? 'text-white' : 'text-black'
                     )}>
                       {tool.badge}
                     </span>
