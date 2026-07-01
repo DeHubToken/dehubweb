@@ -1,87 +1,123 @@
-/**
- * CreatorPage — DeHub Creator Studio (/creator)
- * ============================================
- * Higgsfield-style AI studio hub. One place that surfaces every AI feature
- * on DeHub: image, edit, video, poster, characters, music, skills, voice,
- * translate/subtitles. Each tile is a promoted entry point that either
- * launches the Assistant with a preset prompt/action, opens a dedicated
- * modal on the Assistant, or navigates to a related feature page.
- */
-
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SEOHead } from '@/components/SEOHead';
-import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
+import dehubLogo from '@/assets/dehub-logo-white.png';
+import showcaseImage from '@/assets/creator-studio-showcase.jpg';
 import {
-  ImageIcon,
-  Wand2,
-  Video,
-  Music2,
-  Palette,
-  UserSquare2,
-  Brain,
-  MessageSquare,
-  Mic,
-  Languages,
-  Sparkles,
   ArrowUpRight,
-  Zap,
+  Blocks,
+  Bot,
+  Clapperboard,
+  Crown,
+  Film,
+  ImageIcon,
+  Languages,
+  Megaphone,
+  Mic2,
+  Music2,
+  PanelsTopLeft,
+  PenTool,
+  Sparkles,
+  Wand2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-type ToolAction =
-  | { kind: 'assistant'; preset?: 'image' | 'edit' | 'video' | 'song' | 'poster' | 'skills' | 'chat' | 'voice' }
-  | { kind: 'navigate'; to: string };
+const accent = '#d7ff00';
+const hot = '#ff2c91';
+
+type Preset = 'image' | 'edit' | 'video' | 'song' | 'poster' | 'skills' | 'chat' | 'voice';
+type ToolAction = { kind: 'assistant'; preset: Preset } | { kind: 'navigate'; to: string };
 
 interface Tool {
   id: string;
   name: string;
-  tagline: string;
+  label: string;
   description: string;
   icon: React.ComponentType<{ className?: string }>;
-  category: 'Image' | 'Video' | 'Audio' | 'Brand' | 'Agents';
-  test?: boolean;
-  featured?: boolean;
+  category: 'Image' | 'Video' | 'Audio' | 'Studio' | 'Agents';
+  badge?: 'TEST' | 'NEW' | 'TRENDING';
   action: ToolAction;
 }
 
-const TOOLS: Tool[] = [
+const navItems = ['Explore', 'Image', 'Video', 'Audio', 'Studio', 'Marketing', 'Agents', 'Apps'] as const;
+const categories = ['All', 'Image', 'Video', 'Audio', 'Studio', 'Agents'] as const;
+
+const heroCards = [
+  {
+    id: 'poster-flow',
+    title: 'DEHUB POSTER STUDIO',
+    subtitle: 'Brand-safe campaign images from one prompt',
+    kind: 'prompt',
+    action: { kind: 'assistant', preset: 'poster' } satisfies ToolAction,
+  },
+  {
+    id: 'video-timeline',
+    title: 'CINEMA STUDIO',
+    subtitle: 'Generate clips, cut scenes, export edits',
+    kind: 'timeline',
+    action: { kind: 'navigate', to: '/editor' } satisfies ToolAction,
+  },
+  {
+    id: 'skill-library',
+    title: 'SKILLS LIBRARY',
+    subtitle: 'Reusable creative systems and brand brains',
+    kind: 'poster',
+    action: { kind: 'assistant', preset: 'skills' } satisfies ToolAction,
+  },
+  {
+    id: 'agents',
+    title: 'AI AGENTS',
+    subtitle: 'Chat, create, publish, remix and automate',
+    kind: 'mist',
+    action: { kind: 'assistant', preset: 'chat' } satisfies ToolAction,
+  },
+];
+
+const tools: Tool[] = [
+  {
+    id: 'poster',
+    name: 'DeHub Poster',
+    label: 'Brand',
+    description: 'Campaign posters, launch assets and social posts with DeHub logo rules.',
+    icon: Megaphone,
+    category: 'Studio',
+    badge: 'TEST',
+    action: { kind: 'assistant', preset: 'poster' },
+  },
   {
     id: 'image',
     name: 'Image Generator',
-    tagline: 'Text → photoreal image',
-    description: 'GPT-image-2 & Nano Banana 2. Character references, style transfer, high fidelity.',
+    label: 'Image',
+    description: 'High-quality visuals, product scenes, thumbnails and references.',
     icon: ImageIcon,
     category: 'Image',
-    featured: true,
     action: { kind: 'assistant', preset: 'image' },
-  },
-  {
-    id: 'poster',
-    name: 'DeHub Poster Studio',
-    tagline: 'Branded posters & social cards',
-    description: '15 marketing archetypes, auto-brand rules, logo lockup composited pixel-perfect.',
-    icon: Palette,
-    category: 'Brand',
-    featured: true,
-    test: true,
-    action: { kind: 'assistant', preset: 'poster' },
   },
   {
     id: 'video',
     name: 'Video Generator',
-    tagline: 'Text → cinematic clip',
-    description: 'Per-second billing, ref-image conditioning, up to 12s HD output.',
-    icon: Video,
+    label: 'Video',
+    description: 'Cinematic clips from text, references and creator prompts.',
+    icon: Film,
     category: 'Video',
-    featured: true,
+    badge: 'NEW',
     action: { kind: 'assistant', preset: 'video' },
   },
   {
+    id: 'skills',
+    name: 'Skills',
+    label: 'Agents',
+    description: 'Save reusable prompts, models, assets and workflows.',
+    icon: Blocks,
+    category: 'Agents',
+    badge: 'TEST',
+    action: { kind: 'assistant', preset: 'skills' },
+  },
+  {
     id: 'edit',
-    name: 'Image Editor',
-    tagline: 'Edit any image with words',
-    description: 'Upload a reference, describe the change, keep the composition — inpainting via Nano Banana.',
+    name: 'Image Edit',
+    label: 'Image',
+    description: 'Upload a shot, describe the change, preserve the intent.',
     icon: Wand2,
     category: 'Image',
     action: { kind: 'assistant', preset: 'edit' },
@@ -89,105 +125,93 @@ const TOOLS: Tool[] = [
   {
     id: 'song',
     name: 'Song Studio',
-    tagline: 'Full tracks from a prompt',
-    description: 'Genre, mood, vocals, lyrics. 30s previews, up to 3 minute masters.',
+    label: 'Audio',
+    description: 'Tracks, hooks, lyrics and production prompts in one flow.',
     icon: Music2,
     category: 'Audio',
     action: { kind: 'assistant', preset: 'song' },
   },
   {
-    id: 'characters',
-    name: 'Characters',
-    tagline: 'Reference characters with @slug',
-    description: 'Save personas, faces, style refs — mention them in any prompt for consistent results.',
-    icon: UserSquare2,
-    category: 'Image',
-    action: { kind: 'navigate', to: '/app/settings?tab=characters' },
-  },
-  {
-    id: 'skills',
-    name: 'Skills Library',
-    tagline: 'GPTs & Projects, DeHub-native',
-    description: 'Reusable AI recipes: system prompts, refs, preferred model. Browse or ship your own.',
-    icon: Brain,
-    category: 'Agents',
-    test: true,
-    action: { kind: 'assistant', preset: 'skills' },
-  },
-  {
-    id: 'chat',
-    name: 'Chat Assistant',
-    tagline: 'Universal DeHub AI',
-    description: 'Search, swap, tip, post, launch — chat once, do anything on-chain and on-app.',
-    icon: MessageSquare,
-    category: 'Agents',
-    action: { kind: 'assistant', preset: 'chat' },
-  },
-  {
     id: 'voice',
     name: 'Voice Assistant',
-    tagline: 'Hands-free AI',
-    description: 'Push-to-talk realtime voice with ambient noise cancel. Credits per minute.',
-    icon: Mic,
+    label: 'Audio',
+    description: 'Hands-free creation, search and publishing controls.',
+    icon: Mic2,
     category: 'Audio',
     action: { kind: 'assistant', preset: 'voice' },
   },
   {
+    id: 'chat',
+    name: 'Creative Chat',
+    label: 'Agents',
+    description: 'Talk through concepts, captions, briefs and launch plans.',
+    icon: Bot,
+    category: 'Agents',
+    action: { kind: 'assistant', preset: 'chat' },
+  },
+  {
+    id: 'characters',
+    name: 'Characters',
+    label: 'Studio',
+    description: 'Reference saved characters across image and video prompts.',
+    icon: PenTool,
+    category: 'Studio',
+    action: { kind: 'navigate', to: '/app/settings?tab=characters' },
+  },
+  {
     id: 'subtitles',
-    name: 'Video Subtitles & Translate',
-    tagline: 'Auto CC in 110 languages',
-    description: 'Transcribe any DeHub video, translate on demand, cached per language.',
+    name: 'Subtitles',
+    label: 'Video',
+    description: 'Caption and translate videos across the full language stack.',
     icon: Languages,
     category: 'Video',
     action: { kind: 'navigate', to: '/app/tv' },
   },
   {
-    id: 'agents',
-    name: 'AI Agents',
-    tagline: 'Autonomous on-chain bots',
-    description: 'Build agents with MCP tools, wallet permissions, and community deployment.',
-    icon: Sparkles,
-    category: 'Agents',
-    action: { kind: 'navigate', to: '/app/agents' },
-  },
-  {
     id: 'editor',
     name: 'Video Editor',
-    tagline: 'In-browser NLE',
-    description: 'Multi-track timeline, canvas composite, WebCodecs export. Drop clips, cut, ship.',
-    icon: Zap,
+    label: 'Studio',
+    description: 'Timeline editing, layers, text, audio and browser export.',
+    icon: Clapperboard,
     category: 'Video',
     action: { kind: 'navigate', to: '/editor' },
   },
+  {
+    id: 'automations',
+    name: 'AI Agents',
+    label: 'Agents',
+    description: 'Autonomous creative workflows connected to DeHub actions.',
+    icon: Sparkles,
+    category: 'Agents',
+    badge: 'TRENDING',
+    action: { kind: 'navigate', to: '/app/agents' },
+  },
 ];
-
-const CATEGORIES = ['All', 'Image', 'Video', 'Audio', 'Brand', 'Agents'] as const;
 
 export default function CreatorPage() {
   const navigate = useNavigate();
-  const [active, setActive] = useState<typeof CATEGORIES[number]>('All');
+  const [activeCategory, setActiveCategory] = useState<typeof categories[number]>('All');
+  const [activeNav, setActiveNav] = useState<typeof navItems[number]>('Explore');
 
-  const featured = useMemo(() => TOOLS.filter(t => t.featured), []);
-  const grid = useMemo(
-    () => (active === 'All' ? TOOLS : TOOLS.filter(t => t.category === active)),
-    [active]
+  const visibleTools = useMemo(
+    () => activeCategory === 'All' ? tools : tools.filter(tool => tool.category === activeCategory),
+    [activeCategory]
   );
 
-  const runAction = (t: Tool) => {
-    if (t.action.kind === 'navigate') {
-      navigate(t.action.to);
+  const runAction = (action: ToolAction) => {
+    if (action.kind === 'navigate') {
+      navigate(action.to);
       return;
     }
-    // Route to assistant with a preset hash the AssistantPage listens for.
-    const preset = t.action.preset ?? 'chat';
-    navigate(`/app/assistant#preset=${preset}`);
+
+    navigate(`/app/assistant#preset=${action.preset}`);
   };
 
   return (
     <>
       <SEOHead
-        title="DeHub Creator Studio — AI Image, Video, Poster, Song & Agents"
-        description="One studio for every DeHub AI tool: image generation, video, poster studio, song creation, characters, skills, voice, subtitles and autonomous agents."
+        title="DeHub Creator Studio — AI Creative Tools"
+        description="DeHub Creator Studio brings image, video, posters, music, skills, characters and AI agents into one native creative landing page."
         url="https://dehub.io/creator"
         jsonLd={{
           '@context': 'https://schema.org',
@@ -196,115 +220,298 @@ export default function CreatorPage() {
           url: 'https://dehub.io/creator',
           applicationCategory: 'MultimediaApplication',
           operatingSystem: 'Web',
-          description: 'AI-powered creator studio for image, video, audio, and brand asset generation on DeHub.',
+          description: 'Native AI creator studio for DeHub image, video, music, posters, skills and agents.',
           offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
         }}
       />
 
-      <div className="min-h-screen w-full text-white">
+      <main className="min-h-screen text-white overflow-x-hidden" style={{ backgroundColor: '#090a0b' }}>
         <h1 className="sr-only">DeHub Creator Studio</h1>
 
-        {/* Hero */}
-        <section className="relative overflow-hidden border-b border-white/5">
-          <div className="absolute inset-0 -z-10">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.08),transparent_60%)]" />
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_60%,rgba(255,255,255,0.05),transparent_55%)]" />
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-3xl" />
+        <div className="sticky top-0 z-50">
+          <div className="relative flex h-8 items-center justify-center px-10 text-center text-[12px] font-black uppercase tracking-[0.08em] text-black" style={{ backgroundColor: accent }}>
+            <span>Launch creative campaigns faster with DeHub AI tools</span>
+            <span className="ml-2 hidden rounded px-2 py-0.5 text-[10px] font-black italic text-white sm:inline-flex" style={{ backgroundColor: hot }}>TEST STUDIO</span>
+            <button
+              type="button"
+              onClick={() => navigate('/app')}
+              aria-label="Close creator banner"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-black/80 hover:text-black"
+            >
+              ×
+            </button>
           </div>
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] uppercase tracking-widest text-white/70 mb-5">
-              <Sparkles className="w-3 h-3" /> Creator Studio
-            </div>
-            <h2 className="text-4xl sm:text-6xl font-semibold tracking-tight leading-[1.05] max-w-3xl">
-              Every AI tool on DeHub,{' '}
-              <span className="text-white/50">in one studio.</span>
-            </h2>
-            <p className="mt-4 text-base sm:text-lg text-white/60 max-w-2xl">
-              Generate images, videos, posters, songs. Save characters and skills. Ship agents. All native. All on-chain-ready.
-            </p>
 
-            <div className="mt-8 flex flex-wrap gap-2">
-              {featured.map(t => (
-                <LiquidGlassBubble2
-                  key={t.id}
-                  label={`${categoryEmoji(t.category)} ${t.name}`}
-                  onClick={() => runAction(t)}
-                  width="auto"
-                  height="40px"
-                  className="[&>div]:!px-4 [&_span]:!text-sm"
-                />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Categories */}
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-8">
-          <div className="flex gap-1 rounded-2xl bg-white/5 border border-white/10 p-1 w-fit overflow-x-auto">
-            {CATEGORIES.map(c => (
+          <header className="border-b border-white/10 px-3 py-3 backdrop-blur-xl sm:px-4" style={{ backgroundColor: 'rgba(9,10,11,0.95)' }}>
+            <div className="flex items-center gap-3">
               <button
-                key={c}
-                onClick={() => setActive(c)}
-                className={cn(
-                  'text-xs px-3 py-1.5 rounded-xl transition-colors whitespace-nowrap',
-                  active === c ? 'bg-white/15 text-white' : 'text-white/50 hover:text-white'
-                )}
+                type="button"
+                onClick={() => navigate('/app')}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-black"
+                aria-label="Open DeHub app"
               >
-                {c}
+                <img src={dehubLogo} alt="DeHub" className="h-5 w-5 object-contain invert" />
+              </button>
+
+              <nav className="flex min-w-0 flex-1 items-center gap-4 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {navItems.map((item, index) => (
+                  <button
+                    key={item}
+                    type="button"
+                    onClick={() => {
+                      setActiveNav(item);
+                      if (item !== 'Explore') {
+                        const match = categories.find(category => category === item);
+                        if (match) setActiveCategory(match);
+                      }
+                    }}
+                    className={cn(
+                      'relative shrink-0 text-[14px] font-medium tracking-wide transition-colors',
+                      activeNav === item ? '' : 'text-white/55 hover:text-white'
+                    )}
+                    style={activeNav === item ? { color: accent } : undefined}
+                  >
+                    {index === 4 && <span className="mr-2 text-white/40">••</span>}
+                    {item}
+                    {(item === 'Studio' || item === 'Agents') && (
+                      <span className="ml-1 rounded px-1.5 py-0.5 text-[9px] font-black uppercase leading-none text-black" style={{ backgroundColor: accent }}>New</span>
+                    )}
+                  </button>
+                ))}
+              </nav>
+
+              <div className="hidden items-center gap-2 sm:flex">
+                <button
+                  type="button"
+                  onClick={() => navigate('/premium')}
+                  className="relative rounded-lg bg-white/[0.08] px-4 py-2 text-sm font-semibold text-white hover:bg-white/[0.12]"
+                >
+                  Pricing
+                  <span className="absolute -bottom-2 left-4 rounded px-1.5 py-0.5 text-[9px] font-black leading-none text-white" style={{ backgroundColor: hot }}>30% OFF</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => navigate('/app')}
+                  className="rounded-lg bg-white/10 px-4 py-2 text-sm font-semibold hover:bg-white/15"
+                  style={{ color: accent }}
+                >
+                  Login
+                </button>
+                <button
+                  type="button"
+                  onClick={() => navigate('/app')}
+                  className="rounded-lg px-4 py-2 text-sm font-bold text-black hover:brightness-95"
+                  style={{ backgroundColor: accent }}
+                >
+                  Sign up
+                </button>
+              </div>
+            </div>
+          </header>
+        </div>
+
+        <section className="px-3 py-4 sm:px-4">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+            {heroCards.map((card) => (
+              <button
+                key={card.id}
+                type="button"
+                onClick={() => runAction(card.action)}
+                className="group overflow-hidden rounded-lg text-left"
+              >
+                <MediaCardVisual kind={card.kind} />
+                <div className="pt-3">
+                  <h2 className="text-sm font-black uppercase leading-tight text-white">{card.title}</h2>
+                  <p className="mt-1 truncate text-sm text-white/45">{card.subtitle}</p>
+                </div>
               </button>
             ))}
           </div>
         </section>
 
-        {/* Tool grid */}
-        <section className="max-w-6xl mx-auto px-4 sm:px-6 py-6 pb-24">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-            {grid.map(t => {
-              const Icon = t.icon;
+        <section className="grid gap-3 px-3 pb-6 sm:px-4 lg:grid-cols-[0.38fr_1fr]">
+          <button
+            type="button"
+            onClick={() => runAction({ kind: 'assistant', preset: 'poster' })}
+            className="relative min-h-[264px] overflow-hidden rounded-2xl border border-white/10 p-4 text-left shadow-[0_24px_80px_rgba(0,0,0,0.45)]"
+            style={{ background: 'radial-gradient(circle at 80% 20%, rgba(255,255,255,0.24), transparent 30%), linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03) 50%, rgba(215,255,0,0.22))' }}
+          >
+            <span className="inline-flex rounded px-2 py-1 text-[10px] font-black italic text-white" style={{ backgroundColor: hot }}>TEST STUDIO</span>
+            <div className="mt-7 max-w-[300px] text-3xl font-black uppercase leading-[1.02] tracking-tight text-white sm:text-4xl">
+              Make every launch look expensive
+            </div>
+            <p className="mt-4 max-w-[270px] text-sm text-white/70">Posters, promos, thumbnails and launch cards using the DeHub brand system.</p>
+            <div className="absolute bottom-4 left-4 rounded-xl bg-white px-6 py-3 text-sm font-black text-black">Make DeHub Poster</div>
+            <div className="absolute bottom-6 right-4 h-36 w-32 rotate-6 rounded-xl border border-white/20 bg-black/70 p-3 shadow-2xl">
+              <div className="mb-3 h-3 w-16 rounded-full" style={{ backgroundColor: accent }} />
+              <div className="h-16 rounded-lg bg-white/15" />
+              <div className="mt-3 h-2 w-full rounded-full bg-white/30" />
+              <div className="mt-2 h-2 w-2/3 rounded-full bg-white/20" />
+            </div>
+          </button>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            {visibleTools.map((tool) => {
+              const Icon = tool.icon;
               return (
                 <button
-                  key={t.id}
-                  onClick={() => runAction(t)}
-                  className="group text-left rounded-3xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] backdrop-blur-xl p-5 transition-all hover:border-white/20 relative overflow-hidden"
+                  key={tool.id}
+                  type="button"
+                  onClick={() => runAction(tool.action)}
+                  className="group relative min-h-[128px] rounded-2xl border border-white/10 p-5 text-left transition-colors hover:brightness-110"
+                  style={{ backgroundColor: '#1b1c1f' }}
                 >
-                  {/* subtle top-right glow */}
-                  <div className="pointer-events-none absolute -top-16 -right-16 w-40 h-40 rounded-full bg-white/5 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                  <div className="flex items-start justify-between gap-3 mb-4">
-                    <div className="w-11 h-11 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center">
-                      <Icon className="w-5 h-5 text-white" />
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      {t.test && (
-                        <span className="text-[9px] font-bold tracking-wider bg-white text-black rounded px-1.5 py-[2px] leading-none">
-                          TEST
-                        </span>
-                      )}
-                      <ArrowUpRight className="w-4 h-4 text-white/40 group-hover:text-white transition-colors" />
-                    </div>
+                  {tool.badge && (
+                    <span className={cn(
+                      'absolute right-3 top-3 rounded px-1.5 py-0.5 text-[9px] font-black uppercase italic leading-none',
+                      tool.badge === 'TEST' ? 'bg-white text-black' : tool.badge === 'TRENDING' ? 'text-white' : 'text-black'
+                    )}
+                    style={tool.badge === 'TRENDING' ? { backgroundColor: hot } : tool.badge === 'NEW' ? { backgroundColor: accent } : undefined}
+                    >
+                      {tool.badge}
+                    </span>
+                  )}
+                  <div className="mb-6 flex items-center gap-3">
+                    <Icon className="h-6 w-6 text-white/[0.85]" />
+                    <span className="rounded-full bg-white/[0.08] px-2 py-1 text-xs text-white/60">{tool.label}</span>
                   </div>
-
-                  <div className="text-xs uppercase tracking-widest text-white/40 mb-1">{t.category}</div>
-                  <h3 className="text-lg font-semibold text-white mb-1">{t.name}</h3>
-                  <p className="text-xs text-white/70 mb-2">{t.tagline}</p>
-                  <p className="text-xs text-white/50 leading-relaxed">{t.description}</p>
+                  <div className="pr-8">
+                    <h3 className="text-lg font-black text-white">{tool.name}</h3>
+                    <p className="mt-1 text-sm leading-relaxed text-white/45">{tool.description}</p>
+                  </div>
+                  <ArrowUpRight className="absolute bottom-4 right-4 h-4 w-4 text-white/30 transition-colors group-hover:text-white" />
                 </button>
               );
             })}
           </div>
         </section>
-      </div>
+
+        <section className="px-3 pb-4 sm:px-4">
+          <div className="mb-4 flex gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {categories.map((category) => (
+              <button
+                key={category}
+                type="button"
+                onClick={() => setActiveCategory(category)}
+                className={cn(
+                  'shrink-0 rounded-lg px-3 py-2 text-xs font-bold uppercase tracking-wide transition-colors',
+                  activeCategory === category ? 'bg-white text-black' : 'bg-white/[0.08] text-white/55 hover:text-white'
+                )}
+              >
+                {category}
+              </button>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => navigate('/editor')}
+            className="group relative block w-full overflow-hidden rounded-[28px] border border-white/10 bg-black text-left shadow-[0_-20px_80px_rgba(255,255,255,0.05)]"
+          >
+            <img
+              src={showcaseImage}
+              alt="DeHub creator studio interface inside a laptop display"
+              width={1920}
+              height={1080}
+              className="h-[420px] w-full object-cover object-center opacity-90 transition-transform duration-500 group-hover:scale-[1.015] sm:h-[560px] lg:h-[680px]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent" />
+            <div className="absolute left-5 top-5 rounded px-4 py-2 text-4xl font-black italic leading-none text-black sm:right-8 sm:left-auto sm:text-6xl" style={{ backgroundColor: accent }}>4K</div>
+            <div className="absolute bottom-6 left-5 max-w-3xl sm:bottom-10 sm:left-8">
+              <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-white/80 backdrop-blur-xl">
+                <PanelsTopLeft className="h-4 w-4" /> Creator workspace
+              </div>
+              <p className="text-5xl font-black uppercase leading-[0.92] tracking-tight text-white sm:text-7xl lg:text-8xl">
+                One studio for every creative drop
+              </p>
+            </div>
+          </button>
+        </section>
+
+        <section className="grid gap-3 px-3 pb-10 sm:px-4 lg:grid-cols-3">
+          <FeatureStrip icon={Crown} title="Premium campaigns" copy="Poster, video, image and audio assets built around the same idea." />
+          <FeatureStrip icon={Sparkles} title="Creator memory" copy="Characters, skills and brand rules stay available across prompts." />
+          <FeatureStrip icon={ArrowUpRight} title="Connected to DeHub" copy="Jump from a tool into assistant, editor, TV, agents or settings." />
+        </section>
+      </main>
     </>
   );
 }
 
-function categoryEmoji(c: Tool['category']): string {
-  switch (c) {
-    case 'Image': return '🖼️';
-    case 'Video': return '🎥';
-    case 'Audio': return '🎵';
-    case 'Brand': return '🎨';
-    case 'Agents': return '🧠';
+function MediaCardVisual({ kind }: { kind: string }) {
+  if (kind === 'timeline') {
+    return (
+      <div className="relative h-[288px] overflow-hidden rounded-lg p-4 text-black" style={{ backgroundColor: '#f7f7f2' }}>
+        <div className="h-36 rounded-lg" style={{ background: 'radial-gradient(circle at 70% 30%, rgba(255,255,255,0.8), transparent 18%), linear-gradient(135deg, #171717, #5d5246 45%, #161616)' }} />
+        <div className="mt-3 grid h-24 grid-cols-12 gap-px overflow-hidden rounded bg-black/5">
+          {Array.from({ length: 48 }).map((_, i) => <span key={i} className="bg-black/[0.045]" />)}
+        </div>
+        <div className="absolute bottom-10 left-1/2 w-56 -translate-x-1/2 rounded-xl bg-white/60 p-4 shadow-xl backdrop-blur-xl">
+          <div className="mb-3 h-2 w-28 rounded-full bg-black/20" />
+          <div className="flex items-center justify-between">
+            <span className="h-5 w-5 rounded bg-black/10" />
+            <span className="h-6 w-6 rounded-full" style={{ backgroundColor: '#ff6b3d' }} />
+          </div>
+        </div>
+      </div>
+    );
   }
+
+  if (kind === 'poster') {
+    return (
+      <div className="relative h-[288px] overflow-hidden rounded-lg border border-white/10" style={{ background: 'linear-gradient(135deg, #2a2a2a, #5b5b5b 42%, #101010)' }}>
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.42), transparent 28%)' }} />
+        <div className="absolute left-8 top-8 h-28 w-24 -rotate-6 rounded-xl border border-white/20 bg-white/15 shadow-2xl" />
+        <div className="absolute right-16 bottom-7 h-40 w-28 rotate-6 rounded-xl border border-white/20 bg-black/55 p-3 shadow-2xl">
+          <div className="h-3 w-16 rounded-full" style={{ backgroundColor: accent }} />
+          <div className="mt-4 h-16 rounded-lg bg-white/20" />
+          <div className="mt-4 h-2 w-full rounded-full bg-white/35" />
+          <div className="mt-2 h-2 w-2/3 rounded-full bg-white/20" />
+        </div>
+        <div className="absolute bottom-10 left-10 text-[46px] font-black uppercase leading-none tracking-tighter text-white">Creator<br />Drop</div>
+        <div className="absolute right-6 top-8 rounded px-2 py-1 text-xl font-black text-black" style={{ backgroundColor: accent }}>4K</div>
+      </div>
+    );
+  }
+
+  if (kind === 'mist') {
+    return (
+      <div className="relative h-[288px] overflow-hidden rounded-lg border border-white/10" style={{ background: 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.45), transparent 28%), linear-gradient(135deg, #b6c1c8, #30383d 42%, #020303)' }}>
+        <div className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-black to-transparent" />
+        <div className="absolute left-6 top-6 grid grid-cols-3 gap-2">
+          {Array.from({ length: 9 }).map((_, index) => (
+            <span key={index} className="h-12 w-12 rounded-lg bg-white/20 shadow-lg" />
+          ))}
+        </div>
+        <div className="absolute bottom-9 right-8 text-right text-3xl font-black uppercase leading-none text-white">Agent<br />Flow</div>
+        <img src={dehubLogo} alt="DeHub" className="absolute bottom-12 left-10 h-12 w-auto opacity-90" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative h-[288px] overflow-hidden rounded-lg border border-white/10" style={{ background: 'radial-gradient(circle at 68% 18%, rgba(255,255,255,0.85), transparent 16%), linear-gradient(135deg, #e9e6df, #8a8278 45%, #111)' }}>
+      <div className="absolute inset-0 bg-gradient-to-r from-black/5 via-transparent to-black/65" />
+      <div className="absolute bottom-0 left-0 h-52 w-40 rounded-tr-[80px] bg-black/25" />
+      <div className="absolute right-8 top-8 h-28 w-28 rounded-full bg-white/25 blur-xl" />
+      <div className="absolute bottom-11 left-1/2 w-[245px] -translate-x-1/2 rounded-2xl border border-white/20 bg-black/55 p-4 shadow-2xl backdrop-blur-xl">
+        <div className="mb-4 h-2 w-32 rounded-full bg-white/80" />
+        <div className="flex items-center justify-between">
+          <span className="text-lg font-light text-white">＋</span>
+          <span className="text-[10px] font-semibold text-white/70">DeHub AI</span>
+          <span className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-black text-black" style={{ backgroundColor: accent }}>↑</span>
+        </div>
+      </div>
+    </div>
+  );
 }
 
+function FeatureStrip({ icon: Icon, title, copy }: { icon: React.ComponentType<{ className?: string }>; title: string; copy: string }) {
+  return (
+    <div className="rounded-2xl border border-white/10 p-5" style={{ backgroundColor: '#1b1c1f' }}>
+      <Icon className="mb-5 h-6 w-6 text-white" />
+      <h3 className="text-lg font-black text-white">{title}</h3>
+      <p className="mt-2 text-sm leading-relaxed text-white/45">{copy}</p>
+    </div>
+  );
+}
