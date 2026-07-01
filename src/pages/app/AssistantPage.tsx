@@ -3060,6 +3060,39 @@ export default function AssistantPage() {
       {/* Skills Browser Modal (from slash `/` menu "Show all") */}
       <SkillsBrowserModal open={skillsBrowserOpen} onOpenChange={setSkillsBrowserOpen} />
 
+      {/* Fullscreen image lightbox for AI-generated images */}
+      <AnimatePresence>
+        {lightboxImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            onClick={() => setLightboxImage(null)}
+            className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-xl p-4 cursor-zoom-out"
+          >
+            <button
+              onClick={(e) => { e.stopPropagation(); setLightboxImage(null); }}
+              aria-label="Close"
+              className="absolute top-4 right-4 flex items-center justify-center w-11 h-11 rounded-xl text-white bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/20 transition-all"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <motion.img
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              transition={{ duration: 0.2 }}
+              src={lightboxImage}
+              alt="Generated (fullscreen)"
+              onClick={(e) => e.stopPropagation()}
+              className="max-w-full max-h-full object-contain rounded-lg cursor-default"
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+
 
 
       {/* Auth Prompt for transaction simulation */}
