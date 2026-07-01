@@ -8,7 +8,7 @@
  * modal on the Assistant, or navigates to a related feature page.
  */
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SEOHead } from '@/components/SEOHead';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
