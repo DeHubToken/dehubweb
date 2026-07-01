@@ -3039,6 +3039,11 @@ export default function AssistantPage() {
         currentConversationId={conversationId}
       />
 
+      {/* Skills Browser Modal (from slash `/` menu "Show all") */}
+      <SkillsBrowserModal open={skillsBrowserOpen} onOpenChange={setSkillsBrowserOpen} />
+
+
+
       {/* Auth Prompt for transaction simulation */}
       <AuthPrompt 
         isOpen={showAuthPrompt} 
