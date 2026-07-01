@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { SEOHead } from '@/components/SEOHead';
 import { PricingSection } from '@/components/pricing/PricingSection';
+import dehubIcon from '@/assets/dehub-icon.png.asset.json';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import showcaseImage from '@/assets/creator-studio-showcase.jpg';
 import {
@@ -260,10 +261,23 @@ export default function CreatorPage() {
               <button
                 type="button"
                 onClick={() => navigate('/app')}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-black"
+                className="group flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/[0.06] hover:bg-white/[0.10]"
                 aria-label="Open DeHub app"
               >
-                <img src={dehubLogo} alt="DeHub" className="h-5 w-5 object-contain invert" />
+                <div
+                  className="h-5 w-5 bg-cover bg-center bg-no-repeat transition-transform duration-200 group-hover:scale-105"
+                  style={{
+                    backgroundImage: metallicBg,
+                    maskImage: `url(${dehubIcon.url})`,
+                    WebkitMaskImage: `url(${dehubIcon.url})`,
+                    maskSize: 'contain',
+                    WebkitMaskSize: 'contain',
+                    maskRepeat: 'no-repeat',
+                    WebkitMaskRepeat: 'no-repeat',
+                    maskPosition: 'center',
+                    WebkitMaskPosition: 'center',
+                  }}
+                />
               </button>
 
               <nav className="flex min-w-0 flex-1 items-center gap-4 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
