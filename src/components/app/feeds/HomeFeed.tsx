@@ -88,6 +88,9 @@ const SHORTS_INSERT_INTERVAL = 5;
 const RADIO_INSERT_AFTER = 8;
 const LEADERBOARD_INSERT_AFTER_LIVE_OFFSET = 10;
 
+/** Default home sort is chronological latest; "For You" remains available as a filter option. */
+const DEFAULT_HOME_SORT = SORT_OPTIONS.find(o => o.value === 'latest') || SORT_OPTIONS[0];
+
 /** Insert an all-time most-liked post every N items in trending feed */
 const CLASSIC_INSERT_INTERVAL = 6;
 
