@@ -346,99 +346,70 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
       animate={{ opacity: 1 }}
       className="flex justify-start"
     >
-      {/* Growing skeleton with colorful smoky shimmer */}
+      {/* Growing skeleton — metallic silver on matte black liquid glass */}
       <motion.div
         animate={{ width: size, height: size }}
         transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-gray-900/80 to-gray-800/60"
+        className="relative overflow-hidden rounded-2xl border border-white/10 backdrop-blur-[24px]"
+        style={{
+          background: 'linear-gradient(135deg, rgba(20,20,22,0.85) 0%, rgba(0,0,0,0.75) 100%)',
+          boxShadow: 'inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(0,0,0,0.4)',
+        }}
       >
-        {/* Base ambient glow */}
-        <div 
+        {/* Base matte black wash */}
+        <div
           className="absolute inset-0"
           style={{
-            background: 'radial-gradient(ellipse at 30% 40%, rgba(139, 92, 246, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 70% 60%, rgba(59, 130, 246, 0.15) 0%, transparent 50%)',
+            background: 'radial-gradient(ellipse at 30% 30%, rgba(255,255,255,0.05) 0%, transparent 60%), radial-gradient(ellipse at 70% 70%, rgba(255,255,255,0.03) 0%, transparent 55%)',
           }}
         />
-        
-        {/* Primary color wave - purple/violet */}
-        <motion.div 
+
+        {/* Brushed metal sheen — slow drift */}
+        <motion.div
           className="absolute inset-0"
-          animate={{ 
-            opacity: [0.1, 0.3, 0.1],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+          animate={{ opacity: [0.15, 0.28, 0.15], scale: [1, 1.05, 1] }}
+          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
           style={{
-            background: 'radial-gradient(ellipse at 20% 30%, rgba(168, 85, 247, 0.4) 0%, transparent 60%)',
-            filter: 'blur(20px)',
+            background: 'linear-gradient(120deg, rgba(255,255,255,0.12) 0%, rgba(180,180,190,0.06) 30%, transparent 55%, rgba(220,220,230,0.08) 80%, rgba(255,255,255,0.04) 100%)',
+            filter: 'blur(14px)',
           }}
         />
-        
-        {/* Secondary color wave - cyan/blue */}
-        <motion.div 
+
+        {/* Secondary silver highlight — counter drift */}
+        <motion.div
           className="absolute inset-0"
-          animate={{ 
-            opacity: [0.15, 0.35, 0.15],
-            scale: [1.1, 1, 1.1],
-          }}
-          transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
+          animate={{ opacity: [0.08, 0.2, 0.08], x: [0, 8, -4, 0], y: [0, -6, 4, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 0.8 }}
           style={{
-            background: 'radial-gradient(ellipse at 80% 70%, rgba(34, 211, 238, 0.4) 0%, transparent 60%)',
-            filter: 'blur(25px)',
+            background: 'radial-gradient(ellipse at 65% 40%, rgba(255,255,255,0.18) 0%, transparent 55%)',
+            filter: 'blur(22px)',
           }}
         />
-        
-        {/* Tertiary color wave - pink/magenta */}
-        <motion.div 
+
+        {/* Traveling chrome shimmer */}
+        <motion.div
           className="absolute inset-0"
-          animate={{ 
-            opacity: [0.2, 0.1, 0.25, 0.1],
-            x: [0, 10, -5, 0],
-            y: [0, -10, 5, 0],
-          }}
-          transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+          animate={{ x: ['-100%', '200%'] }}
+          transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
           style={{
-            background: 'radial-gradient(ellipse at 50% 50%, rgba(236, 72, 153, 0.35) 0%, transparent 55%)',
-            filter: 'blur(30px)',
+            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.06) 40%, rgba(255,255,255,0.22) 50%, rgba(255,255,255,0.06) 60%, transparent 100%)',
+            width: '60%',
           }}
         />
-        
-        {/* Warm accent - orange/amber */}
-        <motion.div 
-          className="absolute inset-0"
-          animate={{ 
-            opacity: [0.1, 0.25, 0.1],
-            rotate: [0, 5, -5, 0],
-          }}
-          transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
-          style={{
-            background: 'radial-gradient(ellipse at 60% 20%, rgba(251, 146, 60, 0.3) 0%, transparent 50%)',
-            filter: 'blur(20px)',
-          }}
-        />
-        
-        {/* Traveling shimmer highlight */}
-        <motion.div 
-          className="absolute inset-0"
-          animate={{ 
-            x: ['-100%', '200%'],
-          }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-          style={{
-            background: 'linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%)',
-            width: '50%',
-          }}
-        />
-        
+
         {/* Subtle progress indicator at bottom */}
         <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/5">
-          <motion.div 
-            className="h-full bg-gradient-to-r from-violet-500/60 via-cyan-400/60 to-pink-500/60"
+          <motion.div
+            className="h-full"
+            style={{
+              background: 'linear-gradient(90deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.7) 50%, rgba(180,180,190,0.3) 100%)',
+            }}
             animate={{ width: `${progress}%` }}
             transition={{ ease: 'linear' }}
           />
         </div>
       </motion.div>
+
     </motion.div>
   );
 }
