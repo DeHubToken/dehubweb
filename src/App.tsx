@@ -55,6 +55,7 @@ const WorkPostPage = React.lazy(() => import("./pages/app/WorkPostPage"));
 const WorkJobDetailPage = React.lazy(() => import("./pages/app/WorkJobDetailPage"));
 const WorkDisputesPage = React.lazy(() => import("./pages/app/WorkDisputesPage"));
 const EditorPage = React.lazy(() => import("./pages/Editor"));
+const CreatorPage = React.lazy(() => import("./pages/app/CreatorPage"));
 const ReferralLanding = React.lazy(() => import("./pages/ReferralLanding"));
 const PremiumPage = React.lazy(() => import("./pages/Premium"));
 
@@ -185,9 +186,11 @@ function AppContent() {
           <Route path="/creators" element={<CreatorsPage />} />
           <Route path="/skill.md" element={<SkillPage />} />
           <Route path="/editor" element={<Suspense fallback={<PageLoader />}><EditorPage /></Suspense>} />
+          <Route path="/creator" element={<Suspense fallback={<PageLoader />}><CreatorPage /></Suspense>} />
           <Route path="/r/:code" element={<Suspense fallback={<PageLoader />}><ReferralLanding /></Suspense>} />
           <Route path="/prompt" element={<Suspense fallback={<PageLoader />}><PromptLanding /></Suspense>} />
           <Route path="/premium" element={<Suspense fallback={<PageLoader />}><PremiumPage /></Suspense>} />
+
 
 
           {/* Single shared AppLayout — header/sidebar mount ONCE and persist across all app routes */}
@@ -203,7 +206,7 @@ function AppContent() {
             <Route path="/app">
               <Route index element={null} />
               <Route path="affiliate" element={null} />
-              <Route path="creator" element={null} />
+              
               <Route path="explore" element={null} />
               <Route path="profile" element={null} />
               <Route path="notifications" element={null} />
@@ -256,8 +259,6 @@ function AppContent() {
             {/* /affiliate alias (page itself is rendered by PersistentPageCache) */}
             <Route path="/affiliate" element={null} />
 
-            {/* /creator alias */}
-            <Route path="/creator" element={null} />
 
             {/* Stage invite links */}
             <Route path="/stage/:id" element={<Suspense fallback={<PageLoader />}><StageDeepLinkPage /></Suspense>} />
