@@ -197,12 +197,21 @@ export function WinterSnow() {
           flakes.splice(i, 1);
           continue;
         }
-        ctx.beginPath();
-        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
         const overMedia = mediaRectsRef.current.some(
           (r) => f.x >= r.left && f.x <= r.right && f.y >= r.top && f.y <= r.bottom
         );
-        ctx.fillStyle = `rgba(255,255,255,${overMedia ? f.o * 0.12 : f.o})`;
+        if (overMedia) {
+          // Soft melt: fade opacity + shrink until gone
+          f.o *= 0.9;
+          f.r *= 0.985;
+          if (f.o < 0.04 || f.r < 0.3) {
+            flakes.splice(i, 1);
+            continue;
+          }
+        }
+        ctx.beginPath();
+        ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${f.o})`;
         ctx.fill();
       }
 
