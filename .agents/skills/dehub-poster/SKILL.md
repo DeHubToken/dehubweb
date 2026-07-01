@@ -44,6 +44,19 @@ When generating, structure the prompt like:
 
 Always pass the chosen logo file as the first input image to `edit_image` so the mark stays sharp.
 
+## Official brand links
+
+Only include these on a poster if the user explicitly asks for socials, website, links, contact, or QR. Otherwise omit — a clean logo-only composition is the default.
+
+- **Website**: `dehub.io`
+- **X / Twitter**: `x.com/dehub_official`
+- **Telegram (main)**: `t.me/dehub_dhb`
+- **Discord**: `discord.gg/dehub`
+- **Regional Telegrams**: Turkish `t.me/Dehub_Turkish` · Arabic `t.me/Dehub_Arabic` · Hindi `t.me/dehub_hindi` · China `t.me/dehub_china` · Indonesia `t.me/dehub_indonesia` · Germany `t.me/dehub_dach` · Vietnam `t.me/dehub_vietnam` · Philippines `t.me/DeHub_Philippines`
+
+Rendering rules for links on a poster: pure white, minimal thin/medium sans-serif, small size, placed along the bottom of the composition with generous letter-spacing, no colored icons. Only include the specific links the user asked for — e.g. "with socials" = X + Telegram + Discord + Website; "with website" = just `dehub.io`; "regional Telegrams" = only those. Never invent or shorten handles.
+
+
 ## Workflow
 
 1. Confirm intent (poster, social card, banner?) and any specific message/theme — ask only if truly ambiguous.
