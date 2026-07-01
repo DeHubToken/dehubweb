@@ -449,6 +449,15 @@ export default function AssistantPage() {
   const [slashSelected, setSlashSelected] = useState(0);
   const [skillsBrowserOpen, setSkillsBrowserOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [lightboxImage, setLightboxImage] = useState<string | null>(null);
+  useEffect(() => {
+    if (!lightboxImage) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setLightboxImage(null); };
+    window.addEventListener('keydown', onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = prevOverflow; };
+  }, [lightboxImage]);
   const { data: userSkills = [] } = useUserSkills();
   const { data: userCharacters = [] } = useUserCharacters();
   // Prefill input from ?skill=slug (deep-link from Skills library)
