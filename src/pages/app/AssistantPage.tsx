@@ -69,6 +69,13 @@ import { useAssistantUserContext } from '@/hooks/use-assistant-user-context';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 
+const DEHUB_BRAND_IMAGE_MODEL = 'gemini-3.1-flash-image';
+const DEHUB_BRAND_IMAGE_KEYWORDS = [
+  'poster', 'banner', 'thumbnail', 'content', 'card', 'announce', 'announcement',
+  'flyer', 'artwork', 'social', 'cover', 'graphic', 'ad', 'advert', 'image',
+  'wallpaper', 'meme', 'creative', 'promo', 'promotion', 'campaign'
+];
+
 // Simulation data for token transactions
 interface SimulationData {
   txHash: string;
@@ -141,6 +148,22 @@ const LOGO_KEYWORDS = [
 function requiresLogoAsset(message: string): boolean {
   const lower = message.toLowerCase();
   return LOGO_KEYWORDS.some(keyword => lower.includes(keyword));
+}
+
+function isDeHubBrandedImageRequest(message: string): boolean {
+  const lower = message.toLowerCase();
+  const mentionsDeHub = /\bde\s*hub\b/.test(lower) || /\bdhb\b/.test(lower);
+  return mentionsDeHub && DEHUB_BRAND_IMAGE_KEYWORDS.some(keyword => lower.includes(keyword));
+}
+
+function buildDeHubBrandPrompt(userRequest: string): string {
+  return `DEHUB BRAND SYSTEM (mandatory):
+- The attached image is the official DeHub wordmark. Composite it prominently, crisp, unaltered, pure white, with clear space around it. Do not redraw, recolor, gradient-fill, warp, or replace it.
+- Palette: deep black / charcoal backgrounds, white text, subtle white-opacity accents. Never use blue.
+- Aesthetic: liquid glass, frosted blur, cinematic, premium, decentralized-tech, lots of negative space, strong focal hierarchy.
+- Typography if any: minimal white sans-serif only. No emoji. No generic AI clichés.
+
+USER REQUEST: ${userRequest}`;
 }
 
 // Check if logo request also wants something creative (not just "show me the logo")
@@ -1414,7 +1437,8 @@ export default function AssistantPage() {
 
     try {
       // Check if user wants to use the official logo in their image
-      const wantsLogo = requiresLogoAsset(currentInput);
+      const wantsDeHubBrand = matchedSkill?.slug === 'dehub-poster' || isDeHubBrandedImageRequest(messageToSend) || isDeHubBrandedImageRequest(currentInput);
+      const wantsLogo = wantsDeHubBrand || requiresLogoAsset(currentInput);
       const isCreativeLogo = wantsLogo && isCreativeLogoRequest(currentInput);
       
       // If just asking "show me the logo" without creative context, display it directly
@@ -1423,7 +1447,7 @@ export default function AssistantPage() {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
           content: t('assistant.officialLogo'),
-          imageUrl: ftvLogoSymbol
+          imageUrl: dehubLogo
         };
         setMessages(prev => [...prev, assistantMessage]);
         queueMessage(assistantMessage);
@@ -1437,8 +1461,8 @@ export default function AssistantPage() {
       
       // If creative logo request, convert logo to base64 and use as source image
       let effectiveSourceImage = currentAttachedImage;
-      if (isCreativeLogo) {
-        effectiveSourceImage = await imageUrlToBase64(ftvLogoSymbol);
+      if (wantsDeHubBrand || isCreativeLogo) {
+        effectiveSourceImage = await imageUrlToBase64(dehubLogo);
       }
 
       // Check request type — AI tools first, then video/image
@@ -1489,8 +1513,8 @@ export default function AssistantPage() {
         
       } else if (isImageRequest) {
         const imgReq = {
-          prompt: currentInput,
-          model: selectedImageModel,
+          prompt: wantsDeHubBrand ? buildDeHubBrandPrompt(messageToSend) : currentInput,
+          model: wantsDeHubBrand ? DEHUB_BRAND_IMAGE_MODEL : selectedImageModel,
           sourceImage: effectiveSourceImage || currentAttachedImage || undefined,
         };
         // Free generation for branded DeHub posters (skill slug: dehub-poster)
