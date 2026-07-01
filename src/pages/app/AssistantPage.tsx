@@ -3013,7 +3013,12 @@ export default function AssistantPage() {
         onConfirm={async (cfg: PosterConfig) => {
           setPosterConfigOpen(false);
           try {
-            const logoBase64 = await imageUrlToBase64(dehubLogo);
+            // Pick the right source logo based on user's variant choice
+            const logoUrl =
+              cfg.logoVariant === 'icon' ? dehubLogoIcon.url
+              : cfg.logoVariant === 'both' ? dehubLogoPrimary.url // primary wordmark; "both" is expressed in the prompt
+              : dehubLogoPrimary.url;
+            const logoBase64 = await imageUrlToBase64(logoUrl).catch(() => imageUrlToBase64(dehubLogo));
             await handleImageGenerationConfirm({
               prompt: buildDeHubBrandPrompt(cfg.finalPrompt),
               model: DEHUB_BRAND_IMAGE_MODEL,
