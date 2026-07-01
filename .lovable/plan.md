@@ -1,39 +1,44 @@
-You're right — the app has 108 locale files in `src/i18n/`, not 18.
+# Upgrade DeHub Poster Skill to GPT-image-2 (medium) + Logo Overlay
 
-## What's actually there today
+## Goal
+Replace Nano Banana 2 with **OpenAI GPT-image-2 at `quality: "medium"`** as the default for DeHub-branded image generation, and composite the official white wordmark onto the result in post so the logo stays perfectly crisp (no model drift on the mark).
 
-- 108 `.ts` locale files total.
-- 104 of them have a `team:` section, but most only contain the shell keys (`title`, `subtitle`, `coreTeam`, `advisors`, `viewLinkedIn`, `readMore`, `showLess`).
-- Only 18 locales (en, es, fr, de-adjacent set: el, gsw, fi, th, fa, no, et, bn, ne, lt, acm, lo, lv, ms, mn) have the full member keys: `experience`, `malName/Role/Bio/Exp1-4`, `mikeName/Role/Bio/Exp1-4`, `indiName/Role/Bio/Exp1-3`, `baileyName/Role/Bio/Exp1-3`.
-- The other ~86 locales fall back silently to English at runtime for everything below the header.
+## Why
+- GPT-image-2 renders typography (Exo, taglines, socials, URLs) dramatically more accurately than Gemini — critical for brand posters.
+- `quality: "medium"` (~8–12¢/image) is the sweet spot: premium look without the ~20–40¢ hit of `high`.
+- Compositing the real logo PNG guarantees a pixel-perfect wordmark instead of relying on the model to redraw it.
+- Nano Banana 2 stays available as a fast/cheap fallback for iteration.
 
-That's why my last update only touched 18 files — those were the only ones that had `malBio` to replace.
+## Changes
 
-## Plan
+### 1. Update `.agents/skills/dehub-poster/SKILL.md`
+- Change **Model** section:
+  - Default: `openai/gpt-image-2` via `imagegen--generate_image` using `model: "premium.gpt"` (the agent-side premium tier that routes to GPT-image-2 medium).
+  - Fallback: `google/gemini-3.1-flash-image` via `imagegen--edit_image` when the user wants a fast/cheap iteration or when GPT moderation rejects the prompt.
+- Change **Workflow**:
+  1. Generate the scene *without* the logo using `imagegen--generate_image` (`model: "premium.gpt"`, `transparent_background: false`), saving to `/mnt/documents/dehub-<slug>-bg.jpg`.
+  2. Composite the white wordmark on top using `imagegen--edit_image` with `image_paths: [bg, logo]` and a short prompt: *"Place the DeHub white wordmark from the second image onto the first image at [position] at ~[size]% width, keep the mark pure white, crisp, unaltered, with generous clear space. Do not modify anything else."*
+  3. Save final to `/mnt/documents/dehub-<slug>.png`.
+- Update **Default prompt scaffold** to drop the "logo is placed..." sentence for the *scene* prompt (that's step 2's job) and instead reserve a clean area (e.g. "leave the top-left third as calm negative space for a logo lockup").
+- Update **Don'ts**: remove the line about Nano Banana 2 being "the standard"; replace with "Don't burn premium credits on rough iterations — use Nano Banana 2 fallback for drafts, GPT-image-2 for the final."
 
-1. Extend every `team:` block in the remaining ~86 locale files to include the full member key set, matching the shape used in `es.ts`/`fr.ts`:
-   - `experience`
-   - `malName`, `malRole`, `malBio`, `malExp1..4`
-   - `mikeName`, `mikeRole`, `mikeBio`, `mikeExp1..4`
-   - `indiName`, `indiRole`, `indiBio`, `indiExp1..3`
-   - `baileyName`, `baileyRole`, `baileyBio`, `baileyExp1..3`
-2. Names stay as-is (Mal Jan, Mike Hales, Indi Jay Cammish, Bailey Young). Roles, bios, and experience bullets get translated per locale, keeping `$`, `£`, `m`, `bn`, brand names (Pixcellor, Randstad, Blue Arrow, ITS, Guide Dogs, Rapz, First Class, UFC, TikTok, DeHub) intact.
-3. Re-sync the 18 already-populated locales so any drift (older Mal bio text, older Mike/Indi/Bailey copy if it diverged) matches the current English source of truth.
-4. Insert the keys right before the closing `}` of each `team:` block via a script so we don't reflow the rest of the file.
-5. Spot-check a few RTL/CJK locales (ar, zh, ja, he) after the edit to confirm quotes/apostrophes don't break the TS file.
+### 2. Add a cost + model reference block to the skill
+Small table at the top of the Model section so future agent runs pick correctly:
 
-## Question before I run it
+```
+Default:   openai/gpt-image-2 (medium)   ~8–12¢   final posters, socials, banners
+Fallback:  google/gemini-3.1-flash-image ~1¢      drafts, quick iterations, retries
+Hero:      openai/gpt-image-2 (high)     ~20–40¢  campaign/marketing hero art (only if user asks)
+```
 
-Which translation route do you want?
+### 3. Apply the draft
+Call `skills--apply_draft` on `.agents/skills/dehub-poster` to activate.
 
-- A) Machine-translate per locale using the existing English copy (fastest, covers all ~86 locales in one pass, quality varies on long bios).
-- B) Leave bios + experience bullets in English everywhere, only translate the short role labels ("Co-founder", "Experience"). Cleaner, no risk of mistranslated brand/finance terms.
-- C) English-only fallback intentionally — remove the per-locale member keys from the 18 that have them so every language reads the same authoritative English copy.
+## Not changing
+- Brand style rules (deep black, no blue, liquid glass, Exo typography, negative space) — unchanged.
+- Official links section and rendering rules — unchanged.
+- Logo assets under `assets/` — unchanged.
+- In-app assistant prompt (`AssistantPage.tsx` `buildDeHubBrandPrompt`) — will mirror the same model change in a follow-up if you want; flag it and I'll include it.
 
-Default if you don't pick: A.
-
-## Technical notes
-
-- Edits happen via a Python script that parses each `team: { ... }` block and injects the missing keys before the closing brace; double-quoted strings used so apostrophes in bios (UK's, etc.) don't need escaping.
-- No component changes — `Team.tsx` already reads every key via `t('team.<key>')`.
-- I'll also re-run the bio sync on the 18 existing files so the latest Mal copy is identical everywhere.
+## Open question
+Do you also want the in-app AI assistant (`/app/assistant`) to switch to GPT-image-2 medium for branded requests, or keep that on Nano Banana 2 for cost and change only the agent-side skill? I'll include the assistant change in this plan if you say yes.
