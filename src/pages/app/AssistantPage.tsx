@@ -522,6 +522,8 @@ export default function AssistantPage() {
   // DeHub poster config drawer
   const [posterConfigOpen, setPosterConfigOpen] = useState(false);
   const [pendingPosterPrompt, setPendingPosterPrompt] = useState<string>('');
+  // Skills hub modal
+  const [skillsHubOpen, setSkillsHubOpen] = useState(false);
   // AI Tools state
   const [aiToolPaywallOpen, setAiToolPaywallOpen] = useState(false);
   const [selectedAiToolId, setSelectedAiToolId] = useState<string>('minimax-music');
