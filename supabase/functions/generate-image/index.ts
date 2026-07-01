@@ -56,23 +56,65 @@ serve(async (req) => {
     if (brandIntent && !sourceImage) {
       console.log('[dehub-poster] Brand intent detected — attaching logo + brand system prompt');
 
-      // ── Auto-enhance: rewrite the short user brief into a senior-art-director
-      //    grade visual prompt before sending to the image model. Silent, server-side,
-      //    with a hard timeout + fallback to the raw prompt.
+      // ── Format detection: pick the right aspect ratio from the user's wording.
+      //    GPT-image-2 supports 1024x1024, 1024x1536 (portrait), 1536x1024 (landscape).
+      const p = prompt.toLowerCase();
+      let posterSize: '1024x1024' | '1024x1536' | '1536x1024' = '1024x1536'; // default: portrait poster
+      let formatHint = 'vertical poster (2:3), think movie poster / concert flyer / Instagram story';
+      if (/\b(banner|cover|header|hero|billboard|landscape|wide|1920|16:?9|youtube thumb|thumbnail)\b/.test(p)) {
+        posterSize = '1536x1024';
+        formatHint = 'landscape banner (3:2, close to 16:9), think YouTube cover / web hero / OOH billboard';
+      } else if (/\b(square|1:1|instagram post|feed post)\b/.test(p)) {
+        posterSize = '1024x1024';
+        formatHint = 'square social post (1:1), think Instagram feed / album cover';
+      }
+
+      // ── Template library: 15 proven marketing poster archetypes. One is picked at
+      //    random per request so the same brief yields different stunning results, and
+      //    outputs feel like real campaign work — not a repetitive "brand system" look.
+      const TEMPLATES = [
+        'Apple keynote hero: single ultra-detailed hero product/subject floating dead-center on infinite black, dramatic top rim light, hard shadow beneath, wide margins, one bold headline word optional.',
+        'A24 film poster: cinematic character or object photograph, film-grain, muted teal-magenta duotone accents on black, tiny credits-block treatment near the bottom edge.',
+        'Cyberpunk street: rain-slick night alley, neon reflections in puddles, atmospheric haze, blade-runner depth, lone silhouetted figure or object as focal point.',
+        'Nike sportswear campaign: dynamic action pose, motion blur, bold cropping, high-contrast lighting, negative space top-left for headline.',
+        'Off-White / Virgil fashion editorial: raw industrial textures, exposed grid lines, quotation-mark UI accents, subject centered, deadstock zine energy.',
+        'Cosmic scale: astronaut / planet / nebula scene, tiny human silhouette for scale, deep space blacks, muted violet-cyan ambient glow, awe-inspiring vastness.',
+        'Liquid glass hero: translucent frosted-glass geometric slab tumbling through dark void, refracted light caustics, ultra-premium fintech energy.',
+        'Underground rave flyer: distorted photocopy grain, high-contrast subject, warped type block area, magenta / cyan spot color on charcoal.',
+        'Luxury watch ad: macro product photography aesthetic, precision detail, single-source rim light, deep shadow falloff, obsidian background.',
+        'Vaporwave sunset: distant chrome-mirror horizon, sun/grid vanishing point, retrofuturist geometry, muted magenta afterglow, dead-center symmetry.',
+        'Brutalist typography poster: massive negative space, tiny detail object in one corner, giant implied text-block zone reserved, Swiss-grid discipline.',
+        'Sci-fi keyart: single monolithic architectural structure or artifact under an alien sky, tiny scale figure at base, cinematic anamorphic lens flare.',
+        'Editorial magazine cover: portrait-style hero shot with shallow depth of field, cover-line block reserved along left margin, high-fashion lighting.',
+        'Product launch teaser: single glowing object emerging from pure black, volumetric god-rays, particulate atmosphere, "the reveal" energy.',
+        'Concert tour poster: subject in mid-motion under stage haze, high-contrast spotlight, dust particles, gritty concert photography grain, one-headline slot.',
+      ];
+      const templatePick = TEMPLATES[Math.floor(Math.random() * TEMPLATES.length)];
+      console.log('[dehub-poster] Template pick:', templatePick.split(':')[0], '| Size:', posterSize);
+
+      // ── Auto-enhance: rewrite the short user brief into a senior-marketing-director
+      //    grade visual prompt. Silent, server-side, hard timeout + fallback.
       let enhancedUserRequest = prompt;
       if (lovableApiKey) {
         try {
-          const directorSystem = `You are a senior art director rewriting a short user brief into a single dense image-generation prompt for a premium DeHub brand poster. Output ONE paragraph, 120–180 words, no lists, no preamble, no quotes.
+          const directorSystem = `You are a senior creative director at a top ad agency (think Wieden+Kennedy, Mother, Anomaly) writing the visual brief for a STUNNING promotional marketing poster for DeHub — a decentralized social platform. Output ONE dense paragraph, 140–200 words, no lists, no preamble, no quotes.
+
+This is a PROMO ASSET meant to hype, sell, and stop the scroll — not a brand-guidelines diagram. Think campaign artwork you'd see on a billboard or in a magazine, not a corporate slide.
+
+FORMAT: ${formatHint}. Compose specifically for this shape.
+
+TEMPLATE ARCHETYPE for this piece: ${templatePick}
+Adapt the user's subject into that archetype — don't just describe the archetype generically.
 
 Rules:
-- Subject first, then environment, then lighting, then materials/textures, then camera/lens feel, then mood, then composition + negative space.
-- Reserve a specific clear region (top-left third / centered band / bottom-center) for a logo lockup — do NOT draw a logo or text there.
+- Lead with a hero subject that dramatizes the user's brief. Real photography feel, cinematic depth, editorial polish.
+- Then: environment, lighting (specify direction and quality: rim / key / backlight / god-rays / neon reflection), materials & textures, camera/lens feel (specify: anamorphic / macro / wide / shallow DOF), mood, composition, negative space reserved for a logo lockup in a specific named region.
 - Palette: deep black/charcoal (#000–#0a0a0a), white, subtle white-opacity accents, optional muted neon glow (magenta/violet/cyan). NEVER blue.
-- Aesthetic: liquid glass, frosted blur, cinematic, A24-poster meets Apple-keynote meets cyberpunk. Premium, decentralized-tech.
-- Add art-direction specifics the user didn't think of: grain, subtle chromatic aberration, depth cues, subject scale, background falloff, rim light, atmospheric haze.
-- If text is warranted by the brief, specify it as Exo/Exo 2, white, wide tracking; otherwise say "no additional text".
-- Never invent facts (dates, prices, names, quotes) the user didn't state.
-- End with: "4k, poster quality, high detail."`;
+- Add craft specifics: film grain, subtle chromatic aberration, atmospheric haze, dust particulates, depth cues.
+- Reserve a named clear region for the logo (e.g. "bottom-center third", "upper-right quadrant") — do NOT draw a logo or wordmark text yourself.
+- No stock-AI clichés (purple/indigo gradients on white, floating 3D blobs, generic hero-with-arms-up). No emoji.
+- Never invent facts (dates, prices, names, quotes) the user didn't state. If no headline is warranted, say "no additional text".
+- End with: "4k, campaign quality, editorial polish, poster-grade detail."`;
           const ctrl = new AbortController();
           const timer = setTimeout(() => ctrl.abort(), 4000);
           const rewriteRes = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
@@ -93,7 +135,7 @@ Rules:
             const rewritten = rj.choices?.[0]?.message?.content?.trim();
             if (rewritten && rewritten.length > 40) {
               enhancedUserRequest = rewritten;
-              console.log('[dehub-poster] Prompt enhanced:', prompt.substring(0, 80), '→', rewritten.substring(0, 120));
+              console.log('[dehub-poster] Prompt enhanced:', prompt.substring(0, 80), '→', rewritten.substring(0, 140));
             } else {
               console.log('[dehub-poster] Rewrite empty/short, using original prompt');
             }
@@ -105,11 +147,15 @@ Rules:
         }
       }
 
-      brandPromptOverride = `DEHUB BRAND SYSTEM (mandatory):
-- Render the official DeHub wordmark as PURE WHITE bold uppercase text reading "DEHUB" in the Exo / Exo 2 typeface (geometric technical sans-serif; fall back to Eurostile or Michroma if unavailable). Place it PROMINENTLY with generous clear space around it (min 8% of canvas). Never recolor, gradient-fill, or distort the wordmark.
-- Palette: deep black / charcoal background (#000–#0a0a0a), white text, subtle white-opacity accents. NEVER use blue anywhere. Muted neon (magenta / violet / cyan) ambient glow is OK.
-- Aesthetic: liquid glass, frosted blur, cinematic, premium, decentralized-tech. Lots of negative space. Strong focal hierarchy.
-- Typography (all rendered text): Exo / Exo 2, white, minimal, generous letter-spacing. No emoji. No generic AI clichés (purple/indigo gradients, glossy 3D blobs).
+      brandPromptOverride = `Create a STUNNING promotional marketing poster (not a brand-guidelines layout). This is campaign artwork — think billboard, magazine cover, movie key-art. Cinematic, editorial, premium.
+
+Format: ${formatHint}. Compose for this aspect ratio.
+
+Non-negotiable brand rules:
+- Palette: deep black / charcoal (#000–#0a0a0a) dominant, white accents, subtle muted neon glow (magenta / violet / cyan) OK. NEVER any blue.
+- Include the DeHub wordmark ONCE, small-to-medium, as PURE WHITE bold uppercase "DEHUB" in Exo / Exo 2 (fall back Eurostile / Michroma) with generous clear space, placed in the reserved logo region — do NOT plaster it, do NOT recolor, do NOT distort.
+- No emoji. No purple/indigo gradients on white. No glossy 3D blobs. No generic AI stock look.
+- Any additional text must be Exo / Exo 2, white, wide letter-spacing, minimal.
 
 ART DIRECTION: ${enhancedUserRequest}`;
 
@@ -129,10 +175,11 @@ ART DIRECTION: ${enhancedUserRequest}`;
               model: 'openai/gpt-image-2',
               prompt: brandPromptOverride,
               quality: 'medium',
-              size: '1024x1024',
+              size: posterSize,
               n: 1,
             }),
           });
+
           if (gptRes.ok) {
             const gptData = await gptRes.json();
             const b64 = gptData.data?.[0]?.b64_json;
