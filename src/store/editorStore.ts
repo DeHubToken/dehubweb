@@ -455,6 +455,27 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     });
   },
 
+  duplicateSelected: () => {
+    const s = get();
+    if (!s.selectedClipIds.length) return;
+    const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
+    const newIds: string[] = [];
+    const additions: Clip[] = [];
+    let workingClips = s.clips.slice();
+    for (const id of s.selectedClipIds) {
+      const orig = workingClips.find((c) => c.id === id);
+      if (!orig) continue;
+      const desired = orig.start + orig.duration;
+      const placedStart = findFreeStart(workingClips, orig.trackId, desired, orig.duration);
+      const copy = { ...orig, id: nanoid(10), start: placedStart } as Clip;
+      additions.push(copy);
+      workingClips = [...workingClips, copy];
+      newIds.push(copy.id);
+    }
+    if (!additions.length) return;
+    set({ past, future: [], clips: workingClips, selectedClipIds: newIds });
+  },
+
   updateTextClip: (id, patch) => {
     const s = get();
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
