@@ -159,7 +159,9 @@ export function SkillCreateModal({ open, onOpenChange, editing }: Props) {
             />
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+        </div>
+        </div>
+      </DrawerContent>
+    </Drawer>
   );
 }
