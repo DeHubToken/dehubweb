@@ -165,7 +165,7 @@ const CATEGORIES = ['All', 'Image', 'Video', 'Audio', 'Brand', 'Agents'] as cons
 
 export default function CreatorPage() {
   const navigate = useNavigate();
-  const [active, setActive] = useMemoState<typeof CATEGORIES[number]>('All');
+  const [active, setActive] = useState<typeof CATEGORIES[number]>('All');
 
   const featured = useMemo(() => TOOLS.filter(t => t.featured), []);
   const grid = useMemo(
