@@ -12,6 +12,8 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { cn } from '@/lib/utils';
 
+export type LogoVariant = 'primary' | 'icon' | 'both';
+
 export interface PosterConfig {
   dimension: 'square' | 'portrait' | 'landscape' | 'story';
   style: string;
@@ -20,6 +22,7 @@ export interface PosterConfig {
   includeSocials: boolean;
   includeWebsite: boolean;
   extraNotes: string;
+  logoVariant: LogoVariant;
   finalPrompt: string;
 }
 
@@ -57,21 +60,103 @@ const STYLES: { value: string; label: string; desc: string }[] = [
   { value: 'concert-tour', label: '🎤 Concert Tour', desc: 'Stage haze, spotlights' },
 ];
 
-// ─── DeHub roadmap features (from Q1–Q4 2026 roadmap) ───
-const FEATURES: { value: string; label: string; blurb: string }[] = [
-  { value: 'lcs-tge', label: '🎮 Last Chad Standing TGE', blurb: 'Open beta + March 2026 TGE launch' },
-  { value: 'apple-store', label: '📱 Apple App Store', blurb: 'Native iOS launch' },
-  { value: 'lp-farming', label: '🌾 LP Farming', blurb: 'Community yields on Base' },
-  { value: 'dhb-staking', label: '💎 DHB Staking on Base', blurb: 'Stake DHB, earn rewards' },
-  { value: 'ai-toolkits', label: '🤖 AI Toolkits', blurb: 'Auto tips, engagement, guidance' },
-  { value: 'ad-stack', label: '🎯 Advertising Stack', blurb: 'Wallet-based targeting' },
-  { value: 'fiat-offramp', label: '💵 Fiat Off-Ramp', blurb: 'Token-to-cash conversion' },
-  { value: 'sdks', label: '🛠️ Developer SDKs', blurb: 'Mini apps + games' },
-  { value: 'multi-posting', label: '📢 Multi-Posting', blurb: 'Post to all web2+3 socials' },
-  { value: 'streaming', label: '🎬 Streaming Aggregation', blurb: 'All major platforms in one' },
-  { value: 'tv-console', label: '📺 TV & Console Apps', blurb: 'Living room takeover' },
-  { value: 'vr-hub', label: '🥽 V/AR Profile Hub', blurb: 'Immersive identity' },
+// ─── Logo variants ───
+const LOGO_VARIANTS: { value: LogoVariant; label: string; hint: string }[] = [
+  { value: 'primary', label: 'Wordmark', hint: 'Long-form DeHub logo' },
+  { value: 'icon', label: 'Icon', hint: 'Compact D-mark' },
+  { value: 'both', label: 'Both', hint: 'Wordmark + icon lockup' },
 ];
+
+// ─── DeHub features (sourced from every dapp + docs page, not just roadmap) ───
+const FEATURE_GROUPS: { group: string; items: { value: string; label: string; blurb: string }[] }[] = [
+  {
+    group: 'Social & Feed',
+    items: [
+      { value: 'unified-feed', label: '📰 Unified Feed', blurb: 'Web2 + web3 social in one home' },
+      { value: 'communities', label: '👥 Communities', blurb: 'Token-gated groups & channels' },
+      { value: 'stories', label: '📸 Stories', blurb: 'Ephemeral daily posts' },
+      { value: 'shorts', label: '🎞️ Shorts', blurb: 'Vertical short-form video' },
+      { value: 'multi-posting', label: '📢 Multi-Posting', blurb: 'Cross-post to X, TG, Discord, IG' },
+    ],
+  },
+  {
+    group: 'Live & Media',
+    items: [
+      { value: 'livestream', label: '📡 Livestreaming', blurb: 'Native + aggregated streams' },
+      { value: 'streaming-agg', label: '🎬 Streaming Aggregation', blurb: 'All major platforms in one' },
+      { value: 'stages', label: '🎙️ Stages', blurb: 'Audio rooms with AI TTS hosts' },
+      { value: 'radio', label: '📻 DeHub Radio', blurb: '24/7 crypto radio' },
+      { value: 'tv-console', label: '📺 TV & Console Apps', blurb: 'Living room takeover' },
+      { value: 'editor', label: '🎬 In-Browser Video Editor', blurb: 'Multi-track studio at /editor' },
+    ],
+  },
+  {
+    group: 'Chat & Comms',
+    items: [
+      { value: 'dm-tipped', label: '💌 Tipped DMs', blurb: 'End-to-end encrypted, tip-per-message' },
+      { value: 'e2e', label: '🔒 E2E Encryption', blurb: 'Zero-knowledge chats' },
+      { value: 'voice-video', label: '🎥 Voice & Video Calls', blurb: 'WebRTC calling' },
+      { value: 'voice-notes', label: '🎤 Voice Notes', blurb: 'Waveform-visualised messages' },
+    ],
+  },
+  {
+    group: 'Token & DeFi',
+    items: [
+      { value: 'dhb-staking', label: '💎 DHB Staking (Base)', blurb: 'Stake DHB, earn rewards' },
+      { value: 'lp-farming', label: '🌾 LP Farming', blurb: 'Provide liquidity, earn yield' },
+      { value: 'token-bridge', label: '🌉 Token Bridge', blurb: 'BNB ↔ Base cross-chain' },
+      { value: 'governance', label: '🗳️ Governance', blurb: 'On-chain proposals & voting' },
+      { value: 'token-utility', label: '🪙 DHB Utility', blurb: 'Fees, boosts, gating, tipping' },
+      { value: 'fiat-onramp', label: '💳 Fiat On-Ramp', blurb: 'Card → USDC → DHB' },
+      { value: 'fiat-offramp', label: '💵 Fiat Off-Ramp', blurb: 'Token-to-cash conversion' },
+      { value: 'uniswap-swap', label: '🔄 In-App Swap', blurb: 'Uniswap V3, one click' },
+      { value: 'wallet', label: '👛 Cross-Chain Wallet', blurb: 'BNB + Base aggregated' },
+    ],
+  },
+  {
+    group: 'Marketplace & Commerce',
+    items: [
+      { value: 'stores', label: '🛍️ DeHub Stores', blurb: 'P2P commerce on Base DHB' },
+      { value: 'fractions', label: '🧩 Fractions', blurb: 'Fractional NFT marketplace' },
+      { value: 'work', label: '🧑‍💻 DeHub Work', blurb: 'Escrow jobs: shills, clips, contracts' },
+      { value: 'tipping', label: '💸 Tipping', blurb: 'Reward creators on any post' },
+      { value: 'premium', label: '👑 DeHub Extra', blurb: 'Premium tiers with cashback' },
+    ],
+  },
+  {
+    group: 'AI & Creator Tools',
+    items: [
+      { value: 'ai-assistant', label: '🤖 AI Assistant', blurb: 'DeHub-aware chat + skills' },
+      { value: 'ai-image', label: '🖼️ AI Image Gen', blurb: 'GPT-image-2 & Nano Banana 2' },
+      { value: 'ai-video', label: '🎥 AI Video Gen', blurb: 'Per-second billed clips' },
+      { value: 'ai-toolkits', label: '🧰 AI Toolkits', blurb: 'Auto tips, engagement, guidance' },
+      { value: 'characters', label: '🎭 Characters', blurb: '@mention reusable AI personas' },
+      { value: 'skills', label: '🧠 User Skills', blurb: 'Personal AI knowledge packs' },
+      { value: 'affiliate', label: '🤝 20% Affiliate', blurb: '2-tier referral revenue share' },
+    ],
+  },
+  {
+    group: 'Games & DePIN',
+    items: [
+      { value: 'lcs-tge', label: '🎮 Last Chad Standing TGE', blurb: 'March 2026 launch' },
+      { value: 'games-hub', label: '🕹️ Games Hub', blurb: 'Web3-native mini games' },
+      { value: 'depin', label: '🛰️ DePIN', blurb: 'Decentralized physical infra' },
+      { value: 'sdks', label: '🛠️ Developer SDKs', blurb: 'Build mini apps & games' },
+    ],
+  },
+  {
+    group: 'Growth & Reach',
+    items: [
+      { value: 'ad-stack', label: '🎯 Advertising Stack', blurb: 'Wallet-based targeting' },
+      { value: 'apple-store', label: '📱 Apple App Store', blurb: 'Native iOS launch' },
+      { value: 'blog', label: '✍️ Blog', blurb: 'Long-form + SEO content' },
+      { value: 'events', label: '📅 Events', blurb: 'IRL & virtual RSVPs' },
+      { value: 'vr-hub', label: '🥽 V/AR Profile Hub', blurb: 'Immersive identity' },
+    ],
+  },
+];
+
+const FEATURES = FEATURE_GROUPS.flatMap(g => g.items);
 
 // ─── Auto-detection from user prompt ───
 
@@ -145,6 +230,14 @@ function buildFinalPrompt(cfg: Omit<PosterConfig, 'finalPrompt'>, userPrompt: st
   const dim = DIMENSIONS.find(d => d.value === cfg.dimension);
   if (dim) parts.push(`Format: ${dim.label} (${dim.hint}).`);
 
+  const logoNote =
+    cfg.logoVariant === 'icon'
+      ? 'Reserve clear negative space for the DeHub icon mark (compact D-symbol) only — do not draw the wordmark.'
+      : cfg.logoVariant === 'both'
+      ? 'Reserve clear negative space for a DeHub lockup combining the icon mark and the long-form wordmark side-by-side or stacked.'
+      : 'Reserve clear negative space for the DeHub long-form wordmark logo.';
+  parts.push(logoNote);
+
   if (cfg.style && cfg.style !== 'auto') {
     const style = STYLES.find(s => s.value === cfg.style);
     if (style) parts.push(`Style archetype: ${style.label.replace(/^[^\w]+/, '')} — ${style.desc}.`);
@@ -180,6 +273,7 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
   const [includeSocials, setIncludeSocials] = useState(false);
   const [includeWebsite, setIncludeWebsite] = useState(false);
   const [extraNotes, setExtraNotes] = useState('');
+  const [logoVariant, setLogoVariant] = useState<LogoVariant>('primary');
 
   useEffect(() => {
     if (!open || !userPrompt) return;
@@ -190,6 +284,10 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
     setIncludeSocials(detectSocials(userPrompt));
     setIncludeWebsite(detectWebsite(userPrompt));
     setExtraNotes('');
+    const lower = userPrompt.toLowerCase();
+    if (/\bicon|symbol|mark|d-mark|small logo\b/.test(lower)) setLogoVariant('icon');
+    else if (/\bboth logos?|lockup|icon\s*\+\s*wordmark|wordmark\s*\+\s*icon\b/.test(lower)) setLogoVariant('both');
+    else setLogoVariant('primary');
   }, [open, userPrompt]);
 
   const toggleFeature = useCallback((value: string) => {
@@ -197,8 +295,8 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
   }, []);
 
   const previewPrompt = useMemo(
-    () => buildFinalPrompt({ dimension, style, features, tagline, includeSocials, includeWebsite, extraNotes }, userPrompt),
-    [dimension, style, features, tagline, includeSocials, includeWebsite, extraNotes, userPrompt]
+    () => buildFinalPrompt({ dimension, style, features, tagline, includeSocials, includeWebsite, extraNotes, logoVariant }, userPrompt),
+    [dimension, style, features, tagline, includeSocials, includeWebsite, extraNotes, logoVariant, userPrompt]
   );
 
   const handleConfirm = useCallback(() => {
@@ -210,9 +308,10 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
       includeSocials,
       includeWebsite,
       extraNotes,
+      logoVariant,
       finalPrompt: previewPrompt,
     });
-  }, [dimension, style, features, tagline, includeSocials, includeWebsite, extraNotes, previewPrompt, onConfirm]);
+  }, [dimension, style, features, tagline, includeSocials, includeWebsite, extraNotes, logoVariant, previewPrompt, onConfirm]);
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
@@ -265,32 +364,62 @@ export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }
             </select>
           </div>
 
-          {/* Roadmap features */}
+          {/* Logo variant */}
           <div>
-            <label className="text-xs font-medium text-white/60 mb-2 block uppercase tracking-wider">
-              Spotlight a Feature <span className="text-white/25 normal-case tracking-normal">(from our roadmap)</span>
-            </label>
-            <div className="flex flex-wrap gap-1.5">
-              {FEATURES.map(f => {
-                const active = features.includes(f.value);
-                return (
-                  <button
-                    key={f.value}
-                    onClick={() => toggleFeature(f.value)}
-                    title={f.blurb}
-                    className={cn(
-                      'py-1.5 px-2.5 rounded-lg text-[11px] font-medium border transition-colors',
-                      active
-                        ? 'border-white/30 bg-white/15 text-white'
-                        : 'border-white/5 bg-white/[0.02] text-white/50 hover:text-white/80 hover:bg-white/5'
-                    )}
-                  >
-                    {f.label}
-                  </button>
-                );
-              })}
+            <label className="text-xs font-medium text-white/60 mb-2 block uppercase tracking-wider">Logo Variant</label>
+            <div className="grid grid-cols-3 gap-2">
+              {LOGO_VARIANTS.map(v => (
+                <button
+                  key={v.value}
+                  onClick={() => setLogoVariant(v.value)}
+                  className={cn(
+                    'py-2.5 px-2 rounded-xl text-xs font-medium border transition-colors text-left',
+                    logoVariant === v.value
+                      ? 'border-white/30 bg-white/10 text-white'
+                      : 'border-white/5 bg-white/[0.02] text-white/40 hover:text-white/60 hover:bg-white/5'
+                  )}
+                >
+                  <div className="font-semibold">{v.label}</div>
+                  <div className="text-[10px] text-white/40 mt-0.5">{v.hint}</div>
+                </button>
+              ))}
             </div>
           </div>
+
+          {/* Feature spotlight (grouped from every dapp + docs page) */}
+          <div>
+            <label className="text-xs font-medium text-white/60 mb-2 block uppercase tracking-wider">
+              Spotlight Features <span className="text-white/25 normal-case tracking-normal">(from our dapp &amp; docs)</span>
+            </label>
+            <div className="space-y-3">
+              {FEATURE_GROUPS.map(group => (
+                <div key={group.group}>
+                  <div className="text-[10px] uppercase tracking-wider text-white/30 mb-1.5">{group.group}</div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {group.items.map(f => {
+                      const active = features.includes(f.value);
+                      return (
+                        <button
+                          key={f.value}
+                          onClick={() => toggleFeature(f.value)}
+                          title={f.blurb}
+                          className={cn(
+                            'py-1.5 px-2.5 rounded-lg text-[11px] font-medium border transition-colors',
+                            active
+                              ? 'border-white/30 bg-white/15 text-white'
+                              : 'border-white/5 bg-white/[0.02] text-white/50 hover:text-white/80 hover:bg-white/5'
+                          )}
+                        >
+                          {f.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
 
           {/* Tagline */}
           <div>

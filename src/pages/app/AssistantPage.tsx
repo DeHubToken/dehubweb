@@ -21,6 +21,8 @@ import { useUserLanguage } from '@/hooks/use-user-language';
 import { useMention } from '@/hooks/use-mention';
 import { useAuth } from '@/contexts/AuthContext';
 import dehubLogo from '@/assets/dehub-logo-white.png';
+import dehubLogoPrimary from '@/assets/dehub-logo-primary.png.asset.json';
+import dehubLogoIcon from '@/assets/dehub-logo-icon.png.asset.json';
 import assistantAvatar from '@/assets/ai-assistant-avatar.png';
 import aiSparkleIcon from '@/assets/icons/ai-sparkle-icon.png';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -3011,7 +3013,12 @@ export default function AssistantPage() {
         onConfirm={async (cfg: PosterConfig) => {
           setPosterConfigOpen(false);
           try {
-            const logoBase64 = await imageUrlToBase64(dehubLogo);
+            // Pick the right source logo based on user's variant choice
+            const logoUrl =
+              cfg.logoVariant === 'icon' ? dehubLogoIcon.url
+              : cfg.logoVariant === 'both' ? dehubLogoPrimary.url // primary wordmark; "both" is expressed in the prompt
+              : dehubLogoPrimary.url;
+            const logoBase64 = await imageUrlToBase64(logoUrl).catch(() => imageUrlToBase64(dehubLogo));
             await handleImageGenerationConfirm({
               prompt: buildDeHubBrandPrompt(cfg.finalPrompt),
               model: DEHUB_BRAND_IMAGE_MODEL,
