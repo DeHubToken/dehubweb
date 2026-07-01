@@ -1871,6 +1871,10 @@ export default function AssistantPage() {
     </div>
   );
 
+  if (!isAuthenticated) {
+    return <AuthGate description={t('assistant.loginRequired')} />;
+  }
+
   return (
     <div 
       className="flex flex-col h-full lg:h-screen relative overflow-hidden"
