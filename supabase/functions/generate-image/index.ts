@@ -14,6 +14,7 @@ interface ConversationMessage {
 interface GenerateImageRequest {
   prompt: string;
   sourceImage?: string;
+  logoImage?: string; // Explicit brand-logo channel (Poster Studio). Triggers two-step: GPT scene → Gemini logo composite.
   conversationHistory?: ConversationMessage[];
   model?: string;
 }
