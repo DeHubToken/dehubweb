@@ -58,6 +58,7 @@ import { UserMentionDropdown, type MentionUser } from '@/components/app/mentions
 import { ConversationHistoryDrawer } from '@/components/app/assistant/ConversationHistoryDrawer';
 import { GeneratedAudioPlayer } from '@/components/app/assistant/GeneratedAudioPlayer';
 import { MusicConfirmDialog, type MusicParams } from '@/components/app/assistant/MusicConfirmDialog';
+import { PosterConfigDialog, type PosterConfig } from '@/components/app/assistant/PosterConfigDialog';
 import { SwapActionCard } from '@/components/app/chat/SwapActionCard';
 import { useAIConversation } from '@/hooks/use-ai-conversation';
 import { streamChat } from '@/lib/stream-chat';
@@ -515,6 +516,9 @@ export default function AssistantPage() {
     model: ImageModelKey;
     sourceImage?: string;
   } | null>(null);
+  // DeHub poster config drawer
+  const [posterConfigOpen, setPosterConfigOpen] = useState(false);
+  const [pendingPosterPrompt, setPendingPosterPrompt] = useState<string>('');
   // AI Tools state
   const [aiToolPaywallOpen, setAiToolPaywallOpen] = useState(false);
   const [selectedAiToolId, setSelectedAiToolId] = useState<string>('minimax-music');
@@ -1536,18 +1540,19 @@ export default function AssistantPage() {
         setIsLoading(false);
         
       } else if (isImageRequest) {
-        const imgReq = {
-          prompt: wantsDeHubBrand ? buildDeHubBrandPrompt(messageToSend) : currentInput,
-          model: wantsDeHubBrand ? DEHUB_BRAND_IMAGE_MODEL : selectedImageModel,
-          sourceImage: effectiveSourceImage || currentAttachedImage || undefined,
-        };
-        // Free generation for branded DeHub posters (skill slug: dehub-poster)
-        // — bypass the DHB paywall and run generation directly.
-        if (matchedSkill?.slug === 'dehub-poster') {
+        // DeHub-branded posters get the poster studio drawer first
+        // (dimensions, style archetype, roadmap feature spotlight, tagline, links).
+        if (wantsDeHubBrand) {
+          setPendingPosterPrompt(messageToSend);
+          setPosterConfigOpen(true);
           setIsLoading(false);
-          await handleImageGenerationConfirm(imgReq);
           return;
         }
+        const imgReq = {
+          prompt: currentInput,
+          model: selectedImageModel,
+          sourceImage: effectiveSourceImage || currentAttachedImage || undefined,
+        };
         // Show image paywall instead of generating directly
         setPendingImageRequest(imgReq);
         setImagePaywallOpen(true);
@@ -2994,6 +2999,32 @@ export default function AssistantPage() {
           isGenerating={isImageLoading}
         />
       )}
+
+      {/* DeHub Poster Studio */}
+      <PosterConfigDialog
+        open={posterConfigOpen}
+        onOpenChange={(open) => {
+          setPosterConfigOpen(open);
+          if (!open) setPendingPosterPrompt('');
+        }}
+        userPrompt={pendingPosterPrompt}
+        onConfirm={async (cfg: PosterConfig) => {
+          setPosterConfigOpen(false);
+          try {
+            const logoBase64 = await imageUrlToBase64(dehubLogo);
+            await handleImageGenerationConfirm({
+              prompt: buildDeHubBrandPrompt(cfg.finalPrompt),
+              model: DEHUB_BRAND_IMAGE_MODEL,
+              sourceImage: logoBase64,
+            });
+          } catch (err) {
+            console.error('Poster generation error:', err);
+            toast.error('Failed to start poster generation');
+          } finally {
+            setPendingPosterPrompt('');
+          }
+        }}
+      />
 
       {/* Music Confirm Dialog */}
       <MusicConfirmDialog
