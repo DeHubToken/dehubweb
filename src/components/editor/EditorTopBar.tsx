@@ -1,7 +1,7 @@
 import { useEditorStore } from "@/store/editorStore";
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
 import { Button } from "@/components/ui/button";
-import { Save, Download, Undo2, Redo2, FilePlus2 } from "lucide-react";
+import { Save, Download, Undo2, Redo2, FilePlus2, Info } from "lucide-react";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -9,6 +9,7 @@ import { listProjects, deleteProject, setLastProjectId } from "@/lib/editor/proj
 import type { ProjectSnapshot } from "@/lib/editor/types";
 import { ExportDialog } from "@/components/editor/ExportDialog";
 import { PostToDeHub } from "@/components/editor/PostToDeHub";
+import { AboutDialog } from "@/components/editor/AboutDialog";
 
 export function EditorTopBar() {
   const title = useEditorStore((s) => s.projectTitle);
@@ -23,6 +24,7 @@ export function EditorTopBar() {
 
   const [open, setOpen] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
   const [projects, setProjects] = useState<ProjectSnapshot[]>([]);
   useEffect(() => {
     if (!open) return;
@@ -84,6 +86,11 @@ export function EditorTopBar() {
           className="h-8 w-8 rounded-md text-white/80 hover:bg-white/10 hover:text-white disabled:opacity-30">
           <Redo2 className="h-4 w-4" />
         </Button>
+        <Button size="icon" variant="ghost" onClick={() => setAboutOpen(true)}
+          aria-label="About the editor"
+          className="h-8 w-8 rounded-md text-white/60 hover:bg-white/10 hover:text-white">
+          <Info className="h-4 w-4" />
+        </Button>
       </div>
 
       <input
@@ -111,6 +118,7 @@ export function EditorTopBar() {
         <PostToDeHub />
       </div>
       <ExportDialog open={exportOpen} onOpenChange={setExportOpen} />
+      <AboutDialog open={aboutOpen} onOpenChange={setAboutOpen} />
     </header>
   );
 }
