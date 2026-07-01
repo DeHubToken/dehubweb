@@ -30,7 +30,6 @@ import {
   ShieldCheck,
   Vault,
   Map,
-  Crown,
 } from 'lucide-react';
 import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/types/app.types';
 
@@ -53,7 +52,6 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Vault, label: 'Staking', path: '/app/stake' },
   { icon: ShieldCheck, label: 'Governance', path: '/governance' },
   { icon: Briefcase, label: 'Work', path: '/work' },
-  { icon: Crown, label: 'Premium', path: '/premium' },
   { icon: Users, label: 'Affiliate', path: '/affiliate' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
   { icon: Store, label: 'Stores', path: '/app/stores' },
