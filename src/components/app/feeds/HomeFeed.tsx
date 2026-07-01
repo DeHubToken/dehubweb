@@ -1418,7 +1418,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 contentFilters={contentFilters}
                 onContentFilterToggle={toggleContentFilter}
                 onReset={() => {
-                  setSelectedSort(SORT_OPTIONS[0]);
+                  setSelectedSort(DEFAULT_HOME_SORT);
                   setSelectedCategories([]);
                   setSelectedDate(DATE_FILTER_OPTIONS[0]);
                   setSelectedPostType('all');
