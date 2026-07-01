@@ -30,7 +30,7 @@ These mirror the DeHub app design system — apply to every generated image:
 - **Palette**: deep black / charcoal backgrounds (`#000`–`#0a0a0a`), white text, subtle white-opacity accents. **Never use blue.** Occasional muted neon (magenta, violet, cyan glow) is OK only as ambient lighting, never as logo color.
 - **Aesthetic**: liquid glass, frosted blur, cinematic, premium, decentralized-tech feel. Think Apple keynote × cyberpunk × A24 poster.
 - **Composition**: lots of negative space, strong focal hierarchy, logo placed with breathing room (min 8% of canvas as clear space around it).
-- **Typography in image**: if any text is rendered, keep it minimal, sans-serif, thin to medium weight, white.
+- **Typography in image**: use the **Exo / Exo 2** typeface family (geometric, slightly technical sans-serif) for ALL rendered text — headings, taglines, links, handles. Weights: Light (300) or Regular (400) for body/links, Medium (500) or SemiBold (600) for headings, Bold (700) only for short high-impact display words. Always white. Generous letter-spacing (tracking) on caps and links. No serifs, no script, no rounded/humanist sans (Inter, Poppins, DM Sans etc.). If Exo is unavailable to the model, fall back to a near-equivalent geometric technical sans (Eurostile, Michroma, Rajdhani) — never a generic default.
 - **No emoji. No stock-AI clichés** (purple/indigo gradient on white, generic "hero with arms up", glossy 3D blobs).
 - **Square (1024×1024) by default** for social. Use 1536×1024 for posters/banners, 1024×1536 for stories.
 
@@ -54,7 +54,7 @@ Only include these on a poster if the user explicitly asks for socials, website,
 - **Discord**: `discord.gg/dehub`
 - **Regional Telegrams**: Turkish `t.me/Dehub_Turkish` · Arabic `t.me/Dehub_Arabic` · Hindi `t.me/dehub_hindi` · China `t.me/dehub_china` · Indonesia `t.me/dehub_indonesia` · Germany `t.me/dehub_dach` · Vietnam `t.me/dehub_vietnam` · Philippines `t.me/DeHub_Philippines`
 
-Rendering rules for links on a poster: pure white, minimal thin/medium sans-serif, small size, placed along the bottom of the composition with generous letter-spacing, no colored icons. Only include the specific links the user asked for — e.g. "with socials" = X + Telegram + Discord + Website; "with website" = just `dehub.io`; "regional Telegrams" = only those. Never invent or shorten handles.
+Rendering rules for links on a poster: pure white, **Exo / Exo 2** (Light or Regular weight), small size, placed along the bottom of the composition with generous letter-spacing, no colored icons. Only include the specific links the user asked for — e.g. "with socials" = X + Telegram + Discord + Website; "with website" = just `dehub.io`; "regional Telegrams" = only those. Never invent or shorten handles.
 
 
 ## Workflow

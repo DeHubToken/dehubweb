@@ -162,7 +162,7 @@ function buildDeHubBrandPrompt(userRequest: string): string {
 - The attached image is the official DeHub wordmark. Composite it prominently, crisp, unaltered, pure white, with clear space around it. Do not redraw, recolor, gradient-fill, warp, or replace it.
 - Palette: deep black / charcoal backgrounds, white text, subtle white-opacity accents. Never use blue.
 - Aesthetic: liquid glass, frosted blur, cinematic, premium, decentralized-tech, lots of negative space, strong focal hierarchy.
-- Typography if any: minimal white sans-serif only. No emoji. No generic AI clichés.
+- Typography if any: use the Exo / Exo 2 typeface family (geometric technical sans-serif) for ALL rendered text — Light/Regular for body and links, Medium/SemiBold for headings, Bold only for short display words. Pure white, generous letter-spacing. Never Inter, Poppins, DM Sans, serifs, or script. Fallbacks: Eurostile, Michroma, Rajdhani. No emoji. No generic AI clichés.
 
 OFFICIAL DEHUB LINKS (render ONLY if the user explicitly asks for socials, links, website, QR, or contact info — otherwise omit entirely):
 - Website: dehub.io
@@ -170,7 +170,7 @@ OFFICIAL DEHUB LINKS (render ONLY if the user explicitly asks for socials, links
 - Telegram (main): t.me/dehub_dhb
 - Discord: discord.gg/dehub
 - Regional Telegrams: Turkish t.me/Dehub_Turkish · Arabic t.me/Dehub_Arabic · Hindi t.me/dehub_hindi · China t.me/dehub_china · Indonesia t.me/dehub_indonesia · Germany t.me/dehub_dach · Vietnam t.me/dehub_vietnam · Philippines t.me/DeHub_Philippines
-When rendering links: pure white, minimal sans-serif, small size, bottom of composition, generous letter-spacing, no icons unless requested. Only include the specific links the user asked for (e.g. "with socials" = X + Telegram + Discord + Website; "with website" = just dehub.io).
+When rendering links: pure white, Exo / Exo 2 (Light or Regular), small size, bottom of composition, generous letter-spacing, no icons unless requested. Only include the specific links the user asked for (e.g. "with socials" = X + Telegram + Discord + Website; "with website" = just dehub.io).
 
 USER REQUEST: ${userRequest}`;
 }
