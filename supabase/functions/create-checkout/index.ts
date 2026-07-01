@@ -152,7 +152,13 @@ Deno.serve(async (req) => {
     });
 
     const session = await stripe.checkout.sessions.create({
-      line_items: [{ price: stripePrice.id, quantity: 1 }],
+      line_items: [{
+        price: stripePrice.id,
+        quantity: finalQty,
+        ...(maxQty > minQty && {
+          adjustable_quantity: { enabled: true, minimum: minQty, maximum: maxQty },
+        }),
+      }],
       mode: "subscription",
       ui_mode: "embedded_page",
       return_url: returnUrl,
