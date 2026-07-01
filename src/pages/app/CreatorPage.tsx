@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { SEOHead } from '@/components/SEOHead';
+import { PricingSection } from '@/components/pricing/PricingSection';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import showcaseImage from '@/assets/creator-studio-showcase.jpg';
 import {
@@ -441,6 +442,8 @@ export default function CreatorPage() {
         </section>
 
         <CommunityGallery />
+
+        <PricingSection />
 
         <section className="grid gap-3 px-3 pb-10 sm:px-4 lg:grid-cols-3">
           <FeatureStrip icon={Crown} title="Premium campaigns" copy="Poster, video, image and audio assets built around the same idea." />

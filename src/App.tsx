@@ -58,6 +58,7 @@ const EditorPage = React.lazy(() => import("./pages/Editor"));
 const CreatorPage = React.lazy(() => import("./pages/app/CreatorPage"));
 const ReferralLanding = React.lazy(() => import("./pages/ReferralLanding"));
 const PremiumPage = React.lazy(() => import("./pages/Premium"));
+const PricingPage = React.lazy(() => import("./pages/PricingPage"));
 
 
 const SKIP_LANDING_KEY = "dehub_skip_landing";
@@ -190,6 +191,7 @@ function AppContent() {
           <Route path="/r/:code" element={<Suspense fallback={<PageLoader />}><ReferralLanding /></Suspense>} />
           <Route path="/prompt" element={<Suspense fallback={<PageLoader />}><PromptLanding /></Suspense>} />
           <Route path="/premium" element={<Suspense fallback={<PageLoader />}><PremiumPage /></Suspense>} />
+          <Route path="/pricing" element={<Suspense fallback={<PageLoader />}><PricingPage /></Suspense>} />
 
 
 
