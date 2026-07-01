@@ -77,11 +77,12 @@ export function SkillCreateModal({ open, onOpenChange, editing }: Props) {
   const isSaving = create.isPending || update.isPending;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-xl bg-zinc-900 border-white/10 max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>{editing ? 'Edit Skill' : 'Create Skill'}</DialogTitle>
-        </DialogHeader>
+    <Drawer open={open} onOpenChange={onOpenChange}>
+      <DrawerContent className="bg-zinc-900 border-white/10 max-h-[92vh]">
+        <div className="mx-auto w-full max-w-xl px-4 pb-6 overflow-y-auto">
+        <DrawerHeader className="px-0">
+          <DrawerTitle>{editing ? 'Edit Skill' : 'Create Skill'}</DrawerTitle>
+        </DrawerHeader>
         <div className="space-y-4">
           <div>
             <label className="text-xs text-zinc-400 mb-1 block">Name</label>
