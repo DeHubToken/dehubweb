@@ -11,6 +11,12 @@ const ALLOWED_PRICE_IDS = new Set([
   "dehub_extra_monthly",
   "dehub_family_monthly",
   "dehub_xl_monthly",
+  "ultra_monthly",
+  "ultra_annual",
+  "team_monthly",
+  "team_annual",
+  "scale_monthly",
+  "scale_annual",
 ]);
 
 async function resolveOrCreateCustomer(
