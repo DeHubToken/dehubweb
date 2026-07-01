@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/AuthContext';
+import { PremiumCheckoutModal } from '@/components/premium/PremiumCheckoutModal';
+import { toast } from 'sonner';
 
 type Billing = 'monthly' | 'annual';
 
@@ -32,12 +35,16 @@ interface Plan {
   featured?: boolean;
   groups: { title: string; items: string[] }[];
   freeGens?: { label: string; note: string }[];
+  monthlyPriceId: string;
+  annualPriceId: string;
 }
 
 const plans: Plan[] = [
   {
     id: 'ultra',
     name: 'Ultra',
+    monthlyPriceId: 'ultra_monthly',
+    annualPriceId: 'ultra_annual',
     discount: '23% OFF',
     tagline: 'Best value',
     headline: 'For creators building AI projects',
@@ -78,6 +85,8 @@ const plans: Plan[] = [
   {
     id: 'team',
     name: 'Team',
+    monthlyPriceId: 'team_monthly',
+    annualPriceId: 'team_annual',
     discount: '18% OFF',
     tagline: '',
     headline: 'For agencies and small teams to create faster',
@@ -90,7 +99,7 @@ const plans: Plan[] = [
     annual: 65,
     perLabel: 'per seat/mo, billed annually',
     cta: 'Get Team',
-    savings: 'Save $168 compared to monthly',
+    savings: 'Save £168 compared to monthly',
     seats: '2 seats',
     groups: [
       {
@@ -129,6 +138,8 @@ const plans: Plan[] = [
   {
     id: 'scale',
     name: 'Scale',
+    monthlyPriceId: 'scale_monthly',
+    annualPriceId: 'scale_annual',
     discount: '30% OFF',
     tagline: '',
     headline: 'Designed for growing creative teams',
@@ -141,7 +152,7 @@ const plans: Plan[] = [
     annual: 150,
     perLabel: 'per seat/mo, billed annually',
     cta: 'Get Scale',
-    savings: 'Save $228 compared to monthly',
+    savings: 'Save £228 compared to monthly',
     seats: '5 seats',
     groups: [
       {
@@ -186,6 +197,17 @@ interface Props {
 
 export function PricingSection({ compact = false, showHeader = true }: Props) {
   const [billing, setBilling] = useState<Billing>('annual');
+  const { walletAddress, user, openLoginModal } = useAuth() as any;
+  const [checkoutPriceId, setCheckoutPriceId] = useState<string | null>(null);
+
+  const handleSelect = (priceId: string) => {
+    if (!walletAddress) {
+      toast.error('Please sign in to subscribe');
+      openLoginModal?.();
+      return;
+    }
+    setCheckoutPriceId(priceId);
+  };
 
   return (
     <section className="w-full px-3 py-10 sm:px-6 sm:py-14">
@@ -214,9 +236,17 @@ export function PricingSection({ compact = false, showHeader = true }: Props) {
         )}
       >
         {plans.map((plan) => (
-          <PlanCard key={plan.id} plan={plan} billing={billing} />
+          <PlanCard key={plan.id} plan={plan} billing={billing} onSelect={handleSelect} />
         ))}
       </div>
+
+      <PremiumCheckoutModal
+        open={!!checkoutPriceId}
+        onOpenChange={(o) => { if (!o) setCheckoutPriceId(null); }}
+        priceId={checkoutPriceId ?? ''}
+        walletAddress={walletAddress ?? ''}
+        customerEmail={user?.email}
+      />
     </section>
   );
 }
@@ -253,9 +283,10 @@ function BillingToggle({
   );
 }
 
-function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
+function PlanCard({ plan, billing, onSelect }: { plan: Plan; billing: Billing; onSelect: (priceId: string) => void }) {
   const price = billing === 'annual' ? plan.annual : plan.monthly;
   const strike = billing === 'annual' ? plan.monthly : null;
+  const priceId = billing === 'annual' ? plan.annualPriceId : plan.monthlyPriceId;
 
   return (
     <div
@@ -292,9 +323,9 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
 
       <div className="mt-5 flex items-end gap-2">
         {strike !== null && (
-          <span className="text-lg text-white/40 line-through">${strike}</span>
+          <span className="text-lg text-white/40 line-through">£{strike}</span>
         )}
-        <span className="text-4xl font-black text-white">${price}</span>
+        <span className="text-4xl font-black text-white">£{price}</span>
       </div>
       <div className="text-xs text-white/50">{plan.perLabel}</div>
       {plan.savings && <div className="mt-1 text-xs text-white/60">{plan.savings}</div>}
@@ -302,6 +333,7 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
 
       <button
         type="button"
+        onClick={() => onSelect(priceId)}
         className={cn(
           'mt-5 w-full rounded-2xl py-3 text-sm font-bold transition',
           plan.featured

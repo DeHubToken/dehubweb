@@ -11,6 +11,12 @@ const ALLOWED_PRICE_IDS = new Set([
   "dehub_extra_monthly",
   "dehub_family_monthly",
   "dehub_xl_monthly",
+  "ultra_monthly",
+  "ultra_annual",
+  "team_monthly",
+  "team_annual",
+  "scale_monthly",
+  "scale_annual",
 ]);
 
 async function resolveOrCreateCustomer(
@@ -71,13 +77,34 @@ Deno.serve(async (req) => {
       customerEmail,
       returnUrl,
       environment,
+      quantity,
     }: {
       priceId: string;
       walletAddress: string;
       customerEmail?: string;
       returnUrl: string;
       environment: StripeEnv;
+      quantity?: number;
     } = body;
+
+    // Enforce per-plan seat minimums (matches the Stripe price quantity bounds).
+    const seatMin: Record<string, number> = {
+      team_monthly: 2,
+      team_annual: 2,
+      scale_monthly: 5,
+      scale_annual: 5,
+    };
+    const seatMax: Record<string, number> = {
+      team_monthly: 9,
+      team_annual: 9,
+      scale_monthly: 15,
+      scale_annual: 15,
+    };
+    const minQty = seatMin[priceId] ?? 1;
+    const maxQty = seatMax[priceId] ?? 1;
+    const rawQty = Number.isFinite(quantity) ? Math.floor(Number(quantity)) : minQty;
+    const finalQty = Math.min(Math.max(rawQty, minQty), maxQty);
+
 
     if (!ALLOWED_PRICE_IDS.has(priceId)) {
       return new Response(JSON.stringify({ error: "Unknown priceId" }), {
@@ -125,7 +152,13 @@ Deno.serve(async (req) => {
     });
 
     const session = await stripe.checkout.sessions.create({
-      line_items: [{ price: stripePrice.id, quantity: 1 }],
+      line_items: [{
+        price: stripePrice.id,
+        quantity: finalQty,
+        ...(maxQty > minQty && {
+          adjustable_quantity: { enabled: true, minimum: minQty, maximum: maxQty },
+        }),
+      }],
       mode: "subscription",
       ui_mode: "embedded_page",
       return_url: returnUrl,
