@@ -14,6 +14,7 @@ interface ConversationMessage {
 interface GenerateImageRequest {
   prompt: string;
   sourceImage?: string;
+  logoImage?: string; // Explicit brand-logo channel (Poster Studio). Triggers two-step: GPT scene → Gemini logo composite.
   conversationHistory?: ConversationMessage[];
   model?: string;
 }
@@ -24,7 +25,7 @@ serve(async (req) => {
   }
 
   try {
-    let { prompt, sourceImage, conversationHistory = [], model = 'gemini-2.5-flash' } = await req.json() as GenerateImageRequest;
+    let { prompt, sourceImage, logoImage, conversationHistory = [], model = 'gemini-2.5-flash' } = await req.json() as GenerateImageRequest;
 
     if (!prompt) {
       throw new Error('Prompt is required');
@@ -50,10 +51,14 @@ serve(async (req) => {
     }
 
     // ── DeHub brand skill: auto-detect requests for DeHub-branded imagery and
-    //    force logo-attached, brand-compliant generation.
-    const brandIntent = /\bde\s*hub\b/i.test(prompt) && /\b(posters?|banners?|thumbnails?|content|cards?|announc(?:e|ement|ements?)|flyers?|artworks?|social|covers?|graphics?|ads?|adverts?|images?|logos?|wallpapers?|memes?|promos?|campaigns?)\b/i.test(prompt);
+    //    force logo-attached, brand-compliant generation. Also triggers when the
+    //    Poster Studio passes an explicit `logoImage` (two-step composite path).
+    const brandKeywordHit = /\bde\s*hub\b/i.test(prompt) && /\b(posters?|banners?|thumbnails?|content|cards?|announc(?:e|ement|ements?)|flyers?|artworks?|social|covers?|graphics?|ads?|adverts?|images?|logos?|wallpapers?|memes?|promos?|campaigns?)\b/i.test(prompt);
+    const brandIntent = brandKeywordHit || !!logoImage;
     let brandPromptOverride: string | null = null;
-    if (brandIntent && !sourceImage) {
+    // Only bypass brand pipeline when the caller sent a plain sourceImage edit
+    // (e.g. "make this darker" on a user photo) AND no explicit logoImage.
+    if (brandIntent && (!sourceImage || logoImage)) {
       console.log('[dehub-poster] Brand intent detected — attaching logo + brand system prompt');
 
       // ── Format detection: pick the right aspect ratio from the user's wording.
@@ -184,13 +189,61 @@ ART DIRECTION: ${enhancedUserRequest}`;
             const gptData = await gptRes.json();
             const b64 = gptData.data?.[0]?.b64_json;
             if (b64) {
-              console.log('[dehub-poster] GPT-image-2 success');
+              const sceneDataUrl = `data:image/png;base64,${b64}`;
+
+              // ── Step 2: if the caller supplied a real logo PNG, composite it on top
+              //    with Gemini so the wordmark stays pixel-perfect (never redrawn).
+              if (logoImage) {
+                try {
+                  console.log('[dehub-poster] GPT scene ok — compositing real logo via Gemini');
+                  const compositePrompt = `Take the first image (a finished DeHub marketing scene) and place the second image (the official DeHub white wordmark, transparent PNG) onto it as a logo lockup. 
+- Position the wordmark in the pre-reserved empty area of the scene (usually bottom-center, upper-left, or wherever the scene has calm negative space). Do not cover the hero subject.
+- Size it so its width is roughly 18-26% of the canvas width. Keep generous clear space around it (min 8% of canvas on every side of the mark).
+- Keep the wordmark PURE WHITE, crisp, sharp, perfectly horizontal, unaltered. Do NOT recolor, gradient-fill, redraw, warp, add drop shadows, or restyle it — use the attached pixels as-is, only scaled and positioned.
+- Do NOT modify, restyle, recolor, or regenerate any other part of the scene. Preserve the original scene exactly.
+- Output the composited image.`;
+                  const compRes = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                      'Authorization': `Bearer ${lovableApiKey}`,
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      model: 'google/gemini-3.1-flash-image',
+                      messages: [{
+                        role: 'user',
+                        content: [
+                          { type: 'image_url', image_url: { url: sceneDataUrl } },
+                          { type: 'image_url', image_url: { url: logoImage } },
+                          { type: 'text', text: compositePrompt },
+                        ],
+                      }],
+                      modalities: ['image', 'text'],
+                    }),
+                  });
+                  if (compRes.ok) {
+                    const compData = await compRes.json();
+                    const compUrl = compData.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+                    if (compUrl) {
+                      console.log('[dehub-poster] Composite success');
+                      return new Response(
+                        JSON.stringify({ imageUrl: compUrl, text: '', success: true }),
+                        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+                      );
+                    }
+                    console.warn('[dehub-poster] Composite returned no image — returning scene without logo overlay');
+                  } else {
+                    const et = await compRes.text().catch(() => '');
+                    console.warn('[dehub-poster] Composite failed', compRes.status, et.substring(0, 200), '— returning scene without logo overlay');
+                  }
+                } catch (e) {
+                  console.warn('[dehub-poster] Composite error — returning scene without logo overlay:', e);
+                }
+              }
+
+              console.log('[dehub-poster] GPT-image-2 success (no composite)');
               return new Response(
-                JSON.stringify({
-                  imageUrl: `data:image/png;base64,${b64}`,
-                  text: '',
-                  success: true,
-                }),
+                JSON.stringify({ imageUrl: sceneDataUrl, text: '', success: true }),
                 { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
               );
             }
@@ -206,12 +259,20 @@ ART DIRECTION: ${enhancedUserRequest}`;
 
       // Gemini fallback: attach the real logo PNG for compositing
       try {
-        const logoRes = await fetch('https://cosmic-echo-hero.lovable.app/__l5e/assets-v1/4cf0b92e-3cfd-4459-9c72-cdec81055a23/dehub-logo-white.png');
-        if (logoRes.ok) {
-          const buf = new Uint8Array(await logoRes.arrayBuffer());
-          let bin = '';
-          for (let i = 0; i < buf.byteLength; i++) bin += String.fromCharCode(buf[i]);
-          sourceImage = `data:image/png;base64,${btoa(bin)}`;
+        let logoDataUrl = logoImage;
+        if (!logoDataUrl) {
+          const logoRes = await fetch('https://cosmic-echo-hero.lovable.app/__l5e/assets-v1/4cf0b92e-3cfd-4459-9c72-cdec81055a23/dehub-logo-white.png');
+          if (logoRes.ok) {
+            const buf = new Uint8Array(await logoRes.arrayBuffer());
+            let bin = '';
+            for (let i = 0; i < buf.byteLength; i++) bin += String.fromCharCode(buf[i]);
+            logoDataUrl = `data:image/png;base64,${btoa(bin)}`;
+          } else {
+            console.warn('[dehub-poster] Logo fetch failed:', logoRes.status);
+          }
+        }
+        if (logoDataUrl) {
+          sourceImage = logoDataUrl;
           model = 'gemini-3.1-flash-image';
           isGrokModel = false;
           contextualPrompt = `DEHUB BRAND SYSTEM (mandatory):
@@ -221,8 +282,6 @@ ART DIRECTION: ${enhancedUserRequest}`;
 - Typography (if any): Exo / Exo 2, white, minimal, generous letter-spacing. No emoji. No generic AI clichés.
 
 ART DIRECTION: ${enhancedUserRequest}`;
-        } else {
-          console.warn('[dehub-poster] Logo fetch failed:', logoRes.status);
         }
       } catch (e) {
         console.warn('[dehub-poster] Logo fetch error:', e);

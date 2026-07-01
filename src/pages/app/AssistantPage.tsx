@@ -1231,11 +1231,12 @@ export default function AssistantPage() {
   };
 
   // Handle image generation after payment confirmation
-  const handleImageGenerationConfirm = async (override?: { prompt: string; model: string; sourceImage?: string }) => {
+  const handleImageGenerationConfirm = async (override?: { prompt: string; model: string; sourceImage?: string; logoImage?: string }) => {
     const req = override ?? pendingImageRequest;
     if (!req) return;
 
     const { prompt, model, sourceImage } = req;
+    const logoImage = override?.logoImage;
     const imageModel = IMAGE_MODELS[model];
 
     // User message was already added by handleSend before paywall opened
@@ -1254,6 +1255,7 @@ export default function AssistantPage() {
         body: {
           prompt,
           sourceImage: sourceImage || undefined,
+          logoImage: logoImage || undefined,
           conversationHistory,
           model
         }
@@ -3116,7 +3118,7 @@ export default function AssistantPage() {
             await handleImageGenerationConfirm({
               prompt: buildDeHubBrandPrompt(cfg.finalPrompt),
               model: DEHUB_BRAND_IMAGE_MODEL,
-              sourceImage: logoBase64,
+              logoImage: logoBase64,
             });
           } catch (err) {
             console.error('Poster generation error:', err);
