@@ -529,3 +529,102 @@ function FeatureStrip({ icon: Icon, title, copy }: { icon: React.ComponentType<{
     </div>
   );
 }
+
+type GalleryItem = { id: string; image_url: string | null; video_url: string | null; created_at: string };
+
+function CommunityGallery() {
+  const [items, setItems] = useState<GalleryItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { data, error } = await supabase.rpc('get_creator_gallery', { p_limit: 90 });
+        if (cancelled) return;
+        if (error) {
+          console.error('[creator gallery] rpc error', error);
+          setItems([]);
+        } else {
+          setItems((data ?? []) as GalleryItem[]);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, []);
+
+  return (
+    <section className="px-3 pb-10 sm:px-4">
+      <div className="mb-4 flex items-end justify-between gap-3">
+        <div>
+          <div className="text-xs font-bold uppercase tracking-[0.18em] text-white/45">Community Feed</div>
+          <h2 className="mt-1 text-2xl font-black uppercase tracking-tight text-white sm:text-3xl">
+            Every AI creation on DeHub
+          </h2>
+          <p className="mt-1 max-w-xl text-sm text-white/50">
+            A live wall of the newest AI-generated images and videos made across the platform.
+          </p>
+        </div>
+        <span className="hidden shrink-0 rounded-lg px-3 py-1.5 text-[10px] font-black uppercase text-black sm:inline-flex" style={metallicStyle}>
+          Live
+        </span>
+      </div>
+
+      {loading ? (
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+          {Array.from({ length: 12 }).map((_, i) => (
+            <div key={i} className="aspect-square animate-pulse rounded-lg bg-white/5" />
+          ))}
+        </div>
+      ) : items.length === 0 ? (
+        <div className="rounded-2xl border border-white/10 p-10 text-center text-sm text-white/50" style={{ backgroundColor: '#1b1c1f' }}>
+          No AI creations yet. Be the first to generate one.
+        </div>
+      ) : (
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+          {items.map((item) => {
+            const isVideo = !!item.video_url;
+            const url = item.video_url || item.image_url || '';
+            return (
+              <a
+                key={item.id}
+                href={url}
+                target="_blank"
+                rel="noreferrer"
+                className="group relative block aspect-square overflow-hidden rounded-lg border border-white/10 bg-black"
+              >
+                {isVideo ? (
+                  <video
+                    src={url}
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    onMouseEnter={(e) => { void e.currentTarget.play().catch(() => {}); }}
+                    onMouseLeave={(e) => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
+                    className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
+                  />
+                ) : (
+                  <img
+                    src={url}
+                    alt="AI generation from the DeHub community"
+                    loading="lazy"
+                    className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
+                  />
+                )}
+                {isVideo && (
+                  <span className="absolute right-1.5 top-1.5 rounded bg-black/70 px-1.5 py-0.5 text-[9px] font-black uppercase text-white backdrop-blur">
+                    Video
+                  </span>
+                )}
+              </a>
+            );
+          })}
+        </div>
+      )}
+    </section>
+  );
+}
+}
