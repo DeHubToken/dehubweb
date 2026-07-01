@@ -88,6 +88,9 @@ const SHORTS_INSERT_INTERVAL = 5;
 const RADIO_INSERT_AFTER = 8;
 const LEADERBOARD_INSERT_AFTER_LIVE_OFFSET = 10;
 
+/** Default home sort is chronological latest; "For You" remains available as a filter option. */
+const DEFAULT_HOME_SORT = SORT_OPTIONS.find(o => o.value === 'latest') || SORT_OPTIONS[0];
+
 /** Insert an all-time most-liked post every N items in trending feed */
 const CLASSIC_INSERT_INTERVAL = 6;
 
@@ -337,8 +340,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   }, [showFilters]);
   const isFetchingRef = useRef(false);
   
-  // Default to For You (feedScore algorithm) — persisted to sessionStorage
-  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('home', 'sort', SORT_OPTIONS[0]);
+  // Default to Latest (chronological) — persisted to sessionStorage. "For You" remains a filter option.
+  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('home', 'sort', DEFAULT_HOME_SORT);
   const [selectedDate, setSelectedDate] = usePersistedFeedFilter<DateFilterOption>('home', 'date', DATE_FILTER_OPTIONS[0]);
   const [selectedPostType, setSelectedPostType] = usePersistedFeedFilter<PostTypeFilterValue>('home', 'postType', 'all');
   const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('home');
@@ -1415,7 +1418,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 contentFilters={contentFilters}
                 onContentFilterToggle={toggleContentFilter}
                 onReset={() => {
-                  setSelectedSort(SORT_OPTIONS[0]);
+                  setSelectedSort(DEFAULT_HOME_SORT);
                   setSelectedCategories([]);
                   setSelectedDate(DATE_FILTER_OPTIONS[0]);
                   setSelectedPostType('all');
@@ -1432,7 +1435,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         <div className="flex items-center gap-1.5 flex-wrap px-1">
           {selectedSort.value !== 'latest' && (
             <button
-              onClick={() => setSelectedSort(SORT_OPTIONS[0])}
+              onClick={() => setSelectedSort(DEFAULT_HOME_SORT)}
               className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
             >
               <span className="leading-[1]">{selectedSort.label}</span>
@@ -1498,7 +1501,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           })}
           <button
             onClick={() => {
-              setSelectedSort(SORT_OPTIONS[0]);
+              setSelectedSort(DEFAULT_HOME_SORT);
               setSelectedDate(DATE_FILTER_OPTIONS[0]);
               resetContentFilters();
               setSelectedCategories([]);
@@ -1569,7 +1572,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         initialPrompt={initialPromptText}
         onSave={(catIds) => {
           setSelectedCategories(catIds);
-          setSelectedSort(SORT_OPTIONS.find(o => o.value === 'prompt') || SORT_OPTIONS[0]);
+          setSelectedSort(SORT_OPTIONS.find(o => o.value === 'prompt') || DEFAULT_HOME_SORT);
         }}
       />
     </div>

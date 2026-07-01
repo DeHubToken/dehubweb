@@ -179,7 +179,7 @@ export default function HomePage() {
       const postType = home.postType;
       const cf = home.contentFilters;
       const active = 
-        (sort && sort.value !== SORT_OPTIONS[0].value) ||
+        (sort && sort.value !== 'latest') ||
         (category && category !== 'all') ||
         (postType && postType !== 'all') ||
         (cf && (cf.ppv || cf.w2e || cf.locked));
