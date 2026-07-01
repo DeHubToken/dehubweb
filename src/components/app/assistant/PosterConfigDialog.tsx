@@ -10,6 +10,7 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 
 export type LogoVariant = 'primary' | 'icon' | 'both';
