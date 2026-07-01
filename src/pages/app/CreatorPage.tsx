@@ -440,6 +440,8 @@ export default function CreatorPage() {
           </button>
         </section>
 
+        <CommunityGallery />
+
         <section className="grid gap-3 px-3 pb-10 sm:px-4 lg:grid-cols-3">
           <FeatureStrip icon={Crown} title="Premium campaigns" copy="Poster, video, image and audio assets built around the same idea." />
           <FeatureStrip icon={Sparkles} title="Creator memory" copy="Characters, skills and brand rules stay available across prompts." />
