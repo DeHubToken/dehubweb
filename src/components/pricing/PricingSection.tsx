@@ -85,6 +85,8 @@ const plans: Plan[] = [
   {
     id: 'team',
     name: 'Team',
+    monthlyPriceId: 'team_monthly',
+    annualPriceId: 'team_annual',
     discount: '18% OFF',
     tagline: '',
     headline: 'For agencies and small teams to create faster',
@@ -97,7 +99,7 @@ const plans: Plan[] = [
     annual: 65,
     perLabel: 'per seat/mo, billed annually',
     cta: 'Get Team',
-    savings: 'Save $168 compared to monthly',
+    savings: 'Save £168 compared to monthly',
     seats: '2 seats',
     groups: [
       {
