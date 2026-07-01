@@ -43,6 +43,8 @@ const plans: Plan[] = [
   {
     id: 'ultra',
     name: 'Ultra',
+    monthlyPriceId: 'ultra_monthly',
+    annualPriceId: 'ultra_annual',
     discount: '23% OFF',
     tagline: 'Best value',
     headline: 'For creators building AI projects',
