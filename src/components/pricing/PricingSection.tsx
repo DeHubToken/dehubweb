@@ -283,9 +283,10 @@ function BillingToggle({
   );
 }
 
-function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
+function PlanCard({ plan, billing, onSelect }: { plan: Plan; billing: Billing; onSelect: (priceId: string) => void }) {
   const price = billing === 'annual' ? plan.annual : plan.monthly;
   const strike = billing === 'annual' ? plan.monthly : null;
+  const priceId = billing === 'annual' ? plan.annualPriceId : plan.monthlyPriceId;
 
   return (
     <div
@@ -322,9 +323,9 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
 
       <div className="mt-5 flex items-end gap-2">
         {strike !== null && (
-          <span className="text-lg text-white/40 line-through">${strike}</span>
+          <span className="text-lg text-white/40 line-through">£{strike}</span>
         )}
-        <span className="text-4xl font-black text-white">${price}</span>
+        <span className="text-4xl font-black text-white">£{price}</span>
       </div>
       <div className="text-xs text-white/50">{plan.perLabel}</div>
       {plan.savings && <div className="mt-1 text-xs text-white/60">{plan.savings}</div>}
@@ -332,6 +333,7 @@ function PlanCard({ plan, billing }: { plan: Plan; billing: Billing }) {
 
       <button
         type="button"
+        onClick={() => onSelect(priceId)}
         className={cn(
           'mt-5 w-full rounded-2xl py-3 text-sm font-bold transition',
           plan.featured
