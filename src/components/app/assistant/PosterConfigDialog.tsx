@@ -60,21 +60,103 @@ const STYLES: { value: string; label: string; desc: string }[] = [
   { value: 'concert-tour', label: '🎤 Concert Tour', desc: 'Stage haze, spotlights' },
 ];
 
-// ─── DeHub roadmap features (from Q1–Q4 2026 roadmap) ───
-const FEATURES: { value: string; label: string; blurb: string }[] = [
-  { value: 'lcs-tge', label: '🎮 Last Chad Standing TGE', blurb: 'Open beta + March 2026 TGE launch' },
-  { value: 'apple-store', label: '📱 Apple App Store', blurb: 'Native iOS launch' },
-  { value: 'lp-farming', label: '🌾 LP Farming', blurb: 'Community yields on Base' },
-  { value: 'dhb-staking', label: '💎 DHB Staking on Base', blurb: 'Stake DHB, earn rewards' },
-  { value: 'ai-toolkits', label: '🤖 AI Toolkits', blurb: 'Auto tips, engagement, guidance' },
-  { value: 'ad-stack', label: '🎯 Advertising Stack', blurb: 'Wallet-based targeting' },
-  { value: 'fiat-offramp', label: '💵 Fiat Off-Ramp', blurb: 'Token-to-cash conversion' },
-  { value: 'sdks', label: '🛠️ Developer SDKs', blurb: 'Mini apps + games' },
-  { value: 'multi-posting', label: '📢 Multi-Posting', blurb: 'Post to all web2+3 socials' },
-  { value: 'streaming', label: '🎬 Streaming Aggregation', blurb: 'All major platforms in one' },
-  { value: 'tv-console', label: '📺 TV & Console Apps', blurb: 'Living room takeover' },
-  { value: 'vr-hub', label: '🥽 V/AR Profile Hub', blurb: 'Immersive identity' },
+// ─── Logo variants ───
+const LOGO_VARIANTS: { value: LogoVariant; label: string; hint: string }[] = [
+  { value: 'primary', label: 'Wordmark', hint: 'Long-form DeHub logo' },
+  { value: 'icon', label: 'Icon', hint: 'Compact D-mark' },
+  { value: 'both', label: 'Both', hint: 'Wordmark + icon lockup' },
 ];
+
+// ─── DeHub features (sourced from every dapp + docs page, not just roadmap) ───
+const FEATURE_GROUPS: { group: string; items: { value: string; label: string; blurb: string }[] }[] = [
+  {
+    group: 'Social & Feed',
+    items: [
+      { value: 'unified-feed', label: '📰 Unified Feed', blurb: 'Web2 + web3 social in one home' },
+      { value: 'communities', label: '👥 Communities', blurb: 'Token-gated groups & channels' },
+      { value: 'stories', label: '📸 Stories', blurb: 'Ephemeral daily posts' },
+      { value: 'shorts', label: '🎞️ Shorts', blurb: 'Vertical short-form video' },
+      { value: 'multi-posting', label: '📢 Multi-Posting', blurb: 'Cross-post to X, TG, Discord, IG' },
+    ],
+  },
+  {
+    group: 'Live & Media',
+    items: [
+      { value: 'livestream', label: '📡 Livestreaming', blurb: 'Native + aggregated streams' },
+      { value: 'streaming-agg', label: '🎬 Streaming Aggregation', blurb: 'All major platforms in one' },
+      { value: 'stages', label: '🎙️ Stages', blurb: 'Audio rooms with AI TTS hosts' },
+      { value: 'radio', label: '📻 DeHub Radio', blurb: '24/7 crypto radio' },
+      { value: 'tv-console', label: '📺 TV & Console Apps', blurb: 'Living room takeover' },
+      { value: 'editor', label: '🎬 In-Browser Video Editor', blurb: 'Multi-track studio at /editor' },
+    ],
+  },
+  {
+    group: 'Chat & Comms',
+    items: [
+      { value: 'dm-tipped', label: '💌 Tipped DMs', blurb: 'End-to-end encrypted, tip-per-message' },
+      { value: 'e2e', label: '🔒 E2E Encryption', blurb: 'Zero-knowledge chats' },
+      { value: 'voice-video', label: '🎥 Voice & Video Calls', blurb: 'WebRTC calling' },
+      { value: 'voice-notes', label: '🎤 Voice Notes', blurb: 'Waveform-visualised messages' },
+    ],
+  },
+  {
+    group: 'Token & DeFi',
+    items: [
+      { value: 'dhb-staking', label: '💎 DHB Staking (Base)', blurb: 'Stake DHB, earn rewards' },
+      { value: 'lp-farming', label: '🌾 LP Farming', blurb: 'Provide liquidity, earn yield' },
+      { value: 'token-bridge', label: '🌉 Token Bridge', blurb: 'BNB ↔ Base cross-chain' },
+      { value: 'governance', label: '🗳️ Governance', blurb: 'On-chain proposals & voting' },
+      { value: 'token-utility', label: '🪙 DHB Utility', blurb: 'Fees, boosts, gating, tipping' },
+      { value: 'fiat-onramp', label: '💳 Fiat On-Ramp', blurb: 'Card → USDC → DHB' },
+      { value: 'fiat-offramp', label: '💵 Fiat Off-Ramp', blurb: 'Token-to-cash conversion' },
+      { value: 'uniswap-swap', label: '🔄 In-App Swap', blurb: 'Uniswap V3, one click' },
+      { value: 'wallet', label: '👛 Cross-Chain Wallet', blurb: 'BNB + Base aggregated' },
+    ],
+  },
+  {
+    group: 'Marketplace & Commerce',
+    items: [
+      { value: 'stores', label: '🛍️ DeHub Stores', blurb: 'P2P commerce on Base DHB' },
+      { value: 'fractions', label: '🧩 Fractions', blurb: 'Fractional NFT marketplace' },
+      { value: 'work', label: '🧑‍💻 DeHub Work', blurb: 'Escrow jobs: shills, clips, contracts' },
+      { value: 'tipping', label: '💸 Tipping', blurb: 'Reward creators on any post' },
+      { value: 'premium', label: '👑 DeHub Extra', blurb: 'Premium tiers with cashback' },
+    ],
+  },
+  {
+    group: 'AI & Creator Tools',
+    items: [
+      { value: 'ai-assistant', label: '🤖 AI Assistant', blurb: 'DeHub-aware chat + skills' },
+      { value: 'ai-image', label: '🖼️ AI Image Gen', blurb: 'GPT-image-2 & Nano Banana 2' },
+      { value: 'ai-video', label: '🎥 AI Video Gen', blurb: 'Per-second billed clips' },
+      { value: 'ai-toolkits', label: '🧰 AI Toolkits', blurb: 'Auto tips, engagement, guidance' },
+      { value: 'characters', label: '🎭 Characters', blurb: '@mention reusable AI personas' },
+      { value: 'skills', label: '🧠 User Skills', blurb: 'Personal AI knowledge packs' },
+      { value: 'affiliate', label: '🤝 20% Affiliate', blurb: '2-tier referral revenue share' },
+    ],
+  },
+  {
+    group: 'Games & DePIN',
+    items: [
+      { value: 'lcs-tge', label: '🎮 Last Chad Standing TGE', blurb: 'March 2026 launch' },
+      { value: 'games-hub', label: '🕹️ Games Hub', blurb: 'Web3-native mini games' },
+      { value: 'depin', label: '🛰️ DePIN', blurb: 'Decentralized physical infra' },
+      { value: 'sdks', label: '🛠️ Developer SDKs', blurb: 'Build mini apps & games' },
+    ],
+  },
+  {
+    group: 'Growth & Reach',
+    items: [
+      { value: 'ad-stack', label: '🎯 Advertising Stack', blurb: 'Wallet-based targeting' },
+      { value: 'apple-store', label: '📱 Apple App Store', blurb: 'Native iOS launch' },
+      { value: 'blog', label: '✍️ Blog', blurb: 'Long-form + SEO content' },
+      { value: 'events', label: '📅 Events', blurb: 'IRL & virtual RSVPs' },
+      { value: 'vr-hub', label: '🥽 V/AR Profile Hub', blurb: 'Immersive identity' },
+    ],
+  },
+];
+
+const FEATURES = FEATURE_GROUPS.flatMap(g => g.items);
 
 // ─── Auto-detection from user prompt ───
 
