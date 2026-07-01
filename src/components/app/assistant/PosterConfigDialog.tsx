@@ -230,6 +230,14 @@ function buildFinalPrompt(cfg: Omit<PosterConfig, 'finalPrompt'>, userPrompt: st
   const dim = DIMENSIONS.find(d => d.value === cfg.dimension);
   if (dim) parts.push(`Format: ${dim.label} (${dim.hint}).`);
 
+  const logoNote =
+    cfg.logoVariant === 'icon'
+      ? 'Reserve clear negative space for the DeHub icon mark (compact D-symbol) only — do not draw the wordmark.'
+      : cfg.logoVariant === 'both'
+      ? 'Reserve clear negative space for a DeHub lockup combining the icon mark and the long-form wordmark side-by-side or stacked.'
+      : 'Reserve clear negative space for the DeHub long-form wordmark logo.';
+  parts.push(logoNote);
+
   if (cfg.style && cfg.style !== 'auto') {
     const style = STYLES.find(s => s.value === cfg.style);
     if (style) parts.push(`Style archetype: ${style.label.replace(/^[^\w]+/, '')} — ${style.desc}.`);
