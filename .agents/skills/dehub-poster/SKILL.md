@@ -67,18 +67,23 @@ Rendering rules for links on a poster: pure white, **Exo / Exo 2** (Light or Reg
 ## Workflow
 
 1. Confirm intent (poster, social card, banner?) and any specific message/theme — ask only if truly ambiguous.
-2. Pick logo variant (primary by default).
-3. Pick dimensions based on format.
-4. Call `imagegen--edit_image` with:
-   - `image_paths`: `[".agents/skills/dehub-poster/assets/dehub-logo-primary.png"]` (or alternative)
-   - `prompt`: built from the scaffold above
-   - `target_path`: `/mnt/documents/dehub-<slug>.png` (scratchpad — don't dump into project unless user asks)
-   - `width` / `height` set to chosen dimensions
-5. Show the result. Offer 1 quick variant if the user wants tweaks.
+2. Pick logo variant (primary by default) and dimensions (1024×1024 square default; 1536×1024 poster/banner; 1024×1536 story).
+3. **Step 1 — Generate scene** with `imagegen--generate_image`:
+   - `model`: `"premium.gpt"` (GPT-image-2 medium)
+   - `prompt`: built from the scaffold above, reserving clear negative space for the logo
+   - `target_path`: `/mnt/documents/dehub-<slug>-bg.jpg`
+   - `width` / `height`: chosen dimensions
+4. **Step 2 — Composite the logo** with `imagegen--edit_image`:
+   - `image_paths`: `["/mnt/documents/dehub-<slug>-bg.jpg", ".agents/skills/dehub-poster/assets/dehub-logo-primary.png"]` (or the alternative wordmark)
+   - `prompt`: `"Place the DeHub white wordmark from the second image onto the first image in the [POSITION] area at roughly [SIZE]% of canvas width. Keep the mark pure white, crisp, unaltered, perfectly aligned, with generous clear space around it. Do not modify, recolor, or redraw anything else in the scene."`
+   - `target_path`: `/mnt/documents/dehub-<slug>.png`
+5. Show the final image. Offer 1 quick variant if the user wants tweaks — use the Nano Banana 2 fallback for cheap iterations, then re-run GPT for the final.
 
 ## Don'ts
 
-- Don't use premium/expensive image models for routine DeHub content — Nano Banana 2 is the standard.
+- Don't burn premium credits on rough iterations — use the Nano Banana 2 fallback for drafts, GPT-image-2 for the final.
+- Don't let the scene model render the logo — always composite the real PNG in step 2.
 - Don't recolor the logo, add gradients to it, or place it on busy areas without clear space.
 - Don't introduce blue anywhere in the composition.
 - Don't save outputs into `src/assets/` unless the user explicitly wants the image shipped into the app.
+
