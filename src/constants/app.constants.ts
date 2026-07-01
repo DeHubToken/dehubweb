@@ -30,7 +30,6 @@ import {
   ShieldCheck,
   Vault,
   Map,
-  Crown,
 } from 'lucide-react';
 import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/types/app.types';
 
