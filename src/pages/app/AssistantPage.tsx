@@ -516,6 +516,9 @@ export default function AssistantPage() {
     model: ImageModelKey;
     sourceImage?: string;
   } | null>(null);
+  // DeHub poster config drawer
+  const [posterConfigOpen, setPosterConfigOpen] = useState(false);
+  const [pendingPosterPrompt, setPendingPosterPrompt] = useState<string>('');
   // AI Tools state
   const [aiToolPaywallOpen, setAiToolPaywallOpen] = useState(false);
   const [selectedAiToolId, setSelectedAiToolId] = useState<string>('minimax-music');
