@@ -61,6 +61,7 @@ import { ConversationHistoryDrawer } from '@/components/app/assistant/Conversati
 import { GeneratedAudioPlayer } from '@/components/app/assistant/GeneratedAudioPlayer';
 import { MusicConfirmDialog, type MusicParams } from '@/components/app/assistant/MusicConfirmDialog';
 import { PosterConfigDialog, type PosterConfig } from '@/components/app/assistant/PosterConfigDialog';
+import { SkillsHubModal } from '@/components/app/assistant/SkillsHubModal';
 import { SwapActionCard } from '@/components/app/chat/SwapActionCard';
 import { useAIConversation } from '@/hooks/use-ai-conversation';
 import { streamChat } from '@/lib/stream-chat';
@@ -521,6 +522,8 @@ export default function AssistantPage() {
   // DeHub poster config drawer
   const [posterConfigOpen, setPosterConfigOpen] = useState(false);
   const [pendingPosterPrompt, setPendingPosterPrompt] = useState<string>('');
+  // Skills hub modal
+  const [skillsHubOpen, setSkillsHubOpen] = useState(false);
   // AI Tools state
   const [aiToolPaywallOpen, setAiToolPaywallOpen] = useState(false);
   const [selectedAiToolId, setSelectedAiToolId] = useState<string>('minimax-music');
@@ -2539,6 +2542,13 @@ export default function AssistantPage() {
                   >
                     
                     <LiquidGlassBubble2
+                      label="🧠 Skills"
+                      onClick={() => setSkillsHubOpen(true)}
+                      width="auto"
+                      height="32px"
+                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                    />
+                    <LiquidGlassBubble2
                       label={`🖼️ ${t('assistant.generateImage')}`}
                       onClick={() => {
                         setInput(t('assistant.generateImageOf'));
@@ -2574,6 +2584,16 @@ export default function AssistantPage() {
                       onClick={() => {
                         setPendingMusicPrompt('');
                         setMusicConfirmOpen(true);
+                      }}
+                      width="auto"
+                      height="32px"
+                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                    />
+                    <LiquidGlassBubble2
+                      label="🎨 Make DeHub Poster"
+                      onClick={() => {
+                        setPendingPosterPrompt('');
+                        setPosterConfigOpen(true);
                       }}
                       width="auto"
                       height="32px"
@@ -3001,6 +3021,21 @@ export default function AssistantPage() {
           isGenerating={isImageLoading}
         />
       )}
+
+      {/* Skills library */}
+      <SkillsHubModal
+        open={skillsHubOpen}
+        onOpenChange={setSkillsHubOpen}
+        onUseSkill={(skill) => {
+          const seed = skill.trigger_phrases[0] || skill.name.toLowerCase();
+          setInput(`/${seed} `);
+          inputRef.current?.focus();
+          setInputGlow(true);
+          setTimeout(() => setInputGlow(false), 2000);
+          incrementSkillUsage(skill.id).catch(() => {});
+          toast.success(`Loaded skill: ${skill.name}`);
+        }}
+      />
 
       {/* DeHub Poster Studio */}
       <PosterConfigDialog
