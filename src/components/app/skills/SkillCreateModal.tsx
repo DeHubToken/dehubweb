@@ -160,7 +160,6 @@ export function SkillCreateModal({ open, onOpenChange, editing }: Props) {
           </div>
         </div>
         </div>
-        </div>
       </DrawerContent>
     </Drawer>
   );
