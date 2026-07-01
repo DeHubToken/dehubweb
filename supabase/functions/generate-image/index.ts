@@ -1,5 +1,5 @@
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+
+const serve = (handler: (req: Request) => Response | Promise<Response>) => Deno.serve(handler);
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -55,13 +55,64 @@ serve(async (req) => {
     let brandPromptOverride: string | null = null;
     if (brandIntent && !sourceImage) {
       console.log('[dehub-poster] Brand intent detected — attaching logo + brand system prompt');
+
+      // ── Auto-enhance: rewrite the short user brief into a senior-art-director
+      //    grade visual prompt before sending to the image model. Silent, server-side,
+      //    with a hard timeout + fallback to the raw prompt.
+      let enhancedUserRequest = prompt;
+      if (lovableApiKey) {
+        try {
+          const directorSystem = `You are a senior art director rewriting a short user brief into a single dense image-generation prompt for a premium DeHub brand poster. Output ONE paragraph, 120–180 words, no lists, no preamble, no quotes.
+
+Rules:
+- Subject first, then environment, then lighting, then materials/textures, then camera/lens feel, then mood, then composition + negative space.
+- Reserve a specific clear region (top-left third / centered band / bottom-center) for a logo lockup — do NOT draw a logo or text there.
+- Palette: deep black/charcoal (#000–#0a0a0a), white, subtle white-opacity accents, optional muted neon glow (magenta/violet/cyan). NEVER blue.
+- Aesthetic: liquid glass, frosted blur, cinematic, A24-poster meets Apple-keynote meets cyberpunk. Premium, decentralized-tech.
+- Add art-direction specifics the user didn't think of: grain, subtle chromatic aberration, depth cues, subject scale, background falloff, rim light, atmospheric haze.
+- If text is warranted by the brief, specify it as Exo/Exo 2, white, wide tracking; otherwise say "no additional text".
+- Never invent facts (dates, prices, names, quotes) the user didn't state.
+- End with: "4k, poster quality, high detail."`;
+          const ctrl = new AbortController();
+          const timer = setTimeout(() => ctrl.abort(), 4000);
+          const rewriteRes = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
+            method: 'POST',
+            headers: { 'Authorization': `Bearer ${lovableApiKey}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              model: 'google/gemini-2.5-flash',
+              messages: [
+                { role: 'system', content: directorSystem },
+                { role: 'user', content: `User brief: ${prompt}` },
+              ],
+            }),
+            signal: ctrl.signal,
+          });
+          clearTimeout(timer);
+          if (rewriteRes.ok) {
+            const rj = await rewriteRes.json();
+            const rewritten = rj.choices?.[0]?.message?.content?.trim();
+            if (rewritten && rewritten.length > 40) {
+              enhancedUserRequest = rewritten;
+              console.log('[dehub-poster] Prompt enhanced:', prompt.substring(0, 80), '→', rewritten.substring(0, 120));
+            } else {
+              console.log('[dehub-poster] Rewrite empty/short, using original prompt');
+            }
+          } else {
+            console.warn('[dehub-poster] Rewrite failed', rewriteRes.status, '— using original prompt');
+          }
+        } catch (e) {
+          console.warn('[dehub-poster] Rewrite error/timeout — using original prompt:', (e as Error).message);
+        }
+      }
+
       brandPromptOverride = `DEHUB BRAND SYSTEM (mandatory):
 - Render the official DeHub wordmark as PURE WHITE bold uppercase text reading "DEHUB" in the Exo / Exo 2 typeface (geometric technical sans-serif; fall back to Eurostile or Michroma if unavailable). Place it PROMINENTLY with generous clear space around it (min 8% of canvas). Never recolor, gradient-fill, or distort the wordmark.
 - Palette: deep black / charcoal background (#000–#0a0a0a), white text, subtle white-opacity accents. NEVER use blue anywhere. Muted neon (magenta / violet / cyan) ambient glow is OK.
 - Aesthetic: liquid glass, frosted blur, cinematic, premium, decentralized-tech. Lots of negative space. Strong focal hierarchy.
 - Typography (all rendered text): Exo / Exo 2, white, minimal, generous letter-spacing. No emoji. No generic AI clichés (purple/indigo gradients, glossy 3D blobs).
 
-USER REQUEST: ${prompt}`;
+ART DIRECTION: ${enhancedUserRequest}`;
+
 
       // Try GPT-image-2 (medium) first — dramatically better typography than Gemini
       // for the DeHub wordmark and brand text. Falls through to Gemini path below on failure.
@@ -122,7 +173,7 @@ USER REQUEST: ${prompt}`;
 - Aesthetic: liquid glass, frosted blur, cinematic, premium, decentralized-tech. Lots of negative space. Strong focal hierarchy.
 - Typography (if any): Exo / Exo 2, white, minimal, generous letter-spacing. No emoji. No generic AI clichés.
 
-USER REQUEST: ${prompt}`;
+ART DIRECTION: ${enhancedUserRequest}`;
         } else {
           console.warn('[dehub-poster] Logo fetch failed:', logoRes.status);
         }

@@ -1,44 +1,56 @@
-# Upgrade DeHub Poster Skill to GPT-image-2 (medium) + Logo Overlay
+# Auto-enhance user prompts for DeHub posters
 
 ## Goal
-Replace Nano Banana 2 with **OpenAI GPT-image-2 at `quality: "medium"`** as the default for DeHub-branded image generation, and composite the official white wordmark onto the result in post so the logo stays perfectly crisp (no model drift on the mark).
+When a user asks the in-app AI assistant for a DeHub poster/banner/social card with a short or vague prompt (e.g. "make a dehub poster about our airdrop"), silently rewrite it into a **senior-art-director-grade** brief before sending to GPT-image-2 — so results feel like a $100k/yr content creator made them, not a generic AI render.
 
-## Why
-- GPT-image-2 renders typography (Exo, taglines, socials, URLs) dramatically more accurately than Gemini — critical for brand posters.
-- `quality: "medium"` (~8–12¢/image) is the sweet spot: premium look without the ~20–40¢ hit of `high`.
-- Compositing the real logo PNG guarantees a pixel-perfect wordmark instead of relying on the model to redraw it.
-- Nano Banana 2 stays available as a fast/cheap fallback for iteration.
+## Where
+Only one file changes: `supabase/functions/generate-image/index.ts` — inside the existing `brandIntent` branch that already forces DeHub brand rules. This keeps the enhancement server-side, invisible to the user, and automatic.
 
-## Changes
+## How it works
 
-### 1. Update `.agents/skills/dehub-poster/SKILL.md`
-- Change **Model** section:
-  - Default: `openai/gpt-image-2` via `imagegen--generate_image` using `model: "premium.gpt"` (the agent-side premium tier that routes to GPT-image-2 medium).
-  - Fallback: `google/gemini-3.1-flash-image` via `imagegen--edit_image` when the user wants a fast/cheap iteration or when GPT moderation rejects the prompt.
-- Change **Workflow**:
-  1. Generate the scene *without* the logo using `imagegen--generate_image` (`model: "premium.gpt"`, `transparent_background: false`), saving to `/mnt/documents/dehub-<slug>-bg.jpg`.
-  2. Composite the white wordmark on top using `imagegen--edit_image` with `image_paths: [bg, logo]` and a short prompt: *"Place the DeHub white wordmark from the second image onto the first image at [position] at ~[size]% width, keep the mark pure white, crisp, unaltered, with generous clear space. Do not modify anything else."*
-  3. Save final to `/mnt/documents/dehub-<slug>.png`.
-- Update **Default prompt scaffold** to drop the "logo is placed..." sentence for the *scene* prompt (that's step 2's job) and instead reserve a clean area (e.g. "leave the top-left third as calm negative space for a logo lockup").
-- Update **Don'ts**: remove the line about Nano Banana 2 being "the standard"; replace with "Don't burn premium credits on rough iterations — use Nano Banana 2 fallback for drafts, GPT-image-2 for the final."
+1. **Detect brand intent** — already done (`/de\s*hub/` + poster/banner/etc keywords).
+2. **Extract user's core subject** — the raw prompt (e.g. "airdrop announcement").
+3. **Call a fast text model** (`google/gemini-2.5-flash` via `/v1/chat/completions`, ~free tier) with a locked "senior art director" system prompt that:
+   - Takes the user's short brief
+   - Returns a single dense visual prompt (~120–180 words)
+   - Enforces: concrete subject, lighting, camera/lens feel, materials, mood, composition, focal hierarchy, negative space reservation for logo, explicit "no text unless requested", brand palette (deep black, white, muted neon glow, no blue), Exo typography if any text is warranted
+   - Adds art-direction specifics the user didn't think of (grain, chromatic aberration hints, depth cues, subject scale, background falloff)
+   - Never invents facts (dates, prices, names) — if the user didn't say it, it's not in the image
+4. **Use the enhanced prompt** as the scene prompt sent to GPT-image-2 (existing path). Falls back to the user's original prompt if the rewrite call fails or times out (>4s).
+5. **Log** the before/after at info level so we can tune the director prompt over time.
 
-### 2. Add a cost + model reference block to the skill
-Small table at the top of the Model section so future agent runs pick correctly:
+## The "Senior Art Director" system prompt (locked in code)
 
 ```
-Default:   openai/gpt-image-2 (medium)   ~8–12¢   final posters, socials, banners
-Fallback:  google/gemini-3.1-flash-image ~1¢      drafts, quick iterations, retries
-Hero:      openai/gpt-image-2 (high)     ~20–40¢  campaign/marketing hero art (only if user asks)
+You are a senior art director rewriting a short user brief into a single
+dense image-generation prompt for a premium DeHub brand poster. Output ONE
+paragraph, 120–180 words, no lists, no preamble.
+
+Rules:
+- Subject first, then environment, then lighting, then materials/textures,
+  then camera/lens feel, then mood, then composition + negative space.
+- Reserve a specific clear region (top-left third / centered band / bottom-
+  center) for a logo lockup — do NOT draw a logo or text there.
+- Palette: deep black/charcoal (#000–#0a0a0a), white, subtle white-opacity
+  accents, optional muted neon glow (magenta/violet/cyan). NEVER blue.
+- Aesthetic: liquid glass, frosted blur, cinematic, A24-poster meets Apple-
+  keynote meets cyberpunk. Premium, decentralized-tech.
+- If text is warranted, specify it as Exo/Exo 2, white, wide tracking; else
+  say "no additional text".
+- Never invent facts (dates, prices, names, quotes) the user didn't state.
+- End with: "4k, poster quality, high detail."
 ```
 
-### 3. Apply the draft
-Call `skills--apply_draft` on `.agents/skills/dehub-poster` to activate.
+## Cost / latency
+- Extra call: `gemini-2.5-flash` text, ~free.
+- Adds ~600–1200ms before the image call. Acceptable for a 15–25s image generation.
+- Hard 4s timeout with fallback to original prompt.
 
 ## Not changing
-- Brand style rules (deep black, no blue, liquid glass, Exo typography, negative space) — unchanged.
-- Official links section and rendering rules — unchanged.
-- Logo assets under `assets/` — unchanged.
-- In-app assistant prompt (`AssistantPage.tsx` `buildDeHubBrandPrompt`) — will mirror the same model change in a follow-up if you want; flag it and I'll include it.
+- The `.agents/skills/dehub-poster` skill (agent-side) — separate surface.
+- GPT-image-2 as default model, Gemini fallback, logo compositing rules.
+- Detection heuristic (already works).
+- Any UI / frontend code.
 
 ## Open question
-Do you also want the in-app AI assistant (`/app/assistant`) to switch to GPT-image-2 medium for branded requests, or keep that on Nano Banana 2 for cost and change only the agent-side skill? I'll include the assistant change in this plan if you say yes.
+Should the enhancement also apply to **non-brand** image requests (i.e. any prompt), or strictly only when `brandIntent` fires? I'd default to **brand-only** to keep behavior predictable and costs nil — say the word if you want it universal.
