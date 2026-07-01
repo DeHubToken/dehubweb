@@ -49,6 +49,8 @@ import { OverviewTab } from '@/components/app/command-centre';
 import { AuthPrompt } from '@/components/app/AuthPrompt';
 import { useUserSkills, incrementSkillUsage, type UserSkill } from '@/hooks/use-user-skills';
 import { matchSkill, extractSlashSkill } from '@/lib/skills/matchTriggerPhrases';
+import { SlashSkillDropdown, filterSkills } from '@/components/app/skills/SlashSkillDropdown';
+import { SkillsBrowserModal } from '@/components/app/skills/SkillsBrowserModal';
 import { useUserCharacters, incrementCharacterUsage } from '@/hooks/use-user-characters';
 import { parseCharacterMentions, buildCharacterPersonaBlock } from '@/lib/characters/parseCharacterMentions';
 import { AuthGate } from '@/components/app/AuthGate';
@@ -432,6 +434,12 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
 export default function AssistantPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  // Slash-command skill picker
+  const [slashOpen, setSlashOpen] = useState(false);
+  const [slashQuery, setSlashQuery] = useState('');
+  const [slashRange, setSlashRange] = useState<{ start: number; end: number }>({ start: 0, end: 0 });
+  const [slashSelected, setSlashSelected] = useState(0);
+  const [skillsBrowserOpen, setSkillsBrowserOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { data: userSkills = [] } = useUserSkills();
   const { data: userCharacters = [] } = useUserCharacters();
@@ -2685,8 +2693,21 @@ export default function AssistantPage() {
                   onChange={(e) => {
                     if (!isRecording) {
                       const newValue = e.target.value;
+                      const caret = e.target.selectionStart ?? newValue.length;
                       setInput(newValue);
-                      mention.handleInput(newValue, e.target.selectionStart);
+                      mention.handleInput(newValue, caret);
+                      // Slash-skill detection: `/` at start or after whitespace, followed by [a-z0-9-]*
+                      const before = newValue.slice(0, caret);
+                      const m = before.match(/(?:^|\s)\/([a-z0-9-]{0,32})$/i);
+                      if (m) {
+                        const tokenStart = caret - m[1].length - 1; // include the `/`
+                        setSlashRange({ start: tokenStart, end: caret });
+                        setSlashQuery(m[1]);
+                        // Auto-open once user types >=2 chars after `/`
+                        setSlashOpen(m[1].length >= 2);
+                      } else {
+                        setSlashOpen(false);
+                      }
                       const t = e.target;
                       requestAnimationFrame(() => {
                         t.style.height = 'auto';
@@ -2696,6 +2717,28 @@ export default function AssistantPage() {
                     }
                   }}
                   onKeyDown={(e) => {
+                    if (slashOpen) {
+                      const results = filterSkills(slashQuery, userSkills);
+                      if (e.key === 'ArrowDown') { e.preventDefault(); setSlashSelected((i) => Math.min(i + 1, Math.max(0, results.length - 1))); return; }
+                      if (e.key === 'ArrowUp') { e.preventDefault(); setSlashSelected((i) => Math.max(i - 1, 0)); return; }
+                      if (e.key === 'Escape') { e.preventDefault(); setSlashOpen(false); return; }
+                      if ((e.key === 'Enter' || e.key === 'Tab') && results[slashSelected]) {
+                        e.preventDefault();
+                        const skill = results[slashSelected];
+                        const before = input.slice(0, slashRange.start);
+                        const after = input.slice(slashRange.end);
+                        const insert = `/${skill.slug} `;
+                        const next = before + insert + after;
+                        setInput(next);
+                        setSlashOpen(false);
+                        requestAnimationFrame(() => {
+                          const pos = (before + insert).length;
+                          inputRef.current?.focus();
+                          inputRef.current?.setSelectionRange(pos, pos);
+                        });
+                        return;
+                      }
+                    }
                     if (mention.isOpen) {
                       const handled = mention.handleKeyDown(e);
                       if (handled) {
@@ -2726,7 +2769,31 @@ export default function AssistantPage() {
                   rows={isMobile ? 2 : 1}
                   readOnly={isRecording}
                 />
-                
+
+                {/* Slash Skill Dropdown */}
+                <SlashSkillDropdown
+                  isOpen={slashOpen}
+                  query={slashQuery}
+                  skills={userSkills}
+                  selectedIndex={slashSelected}
+                  onSelectedIndexChange={setSlashSelected}
+                  onSelect={(skill) => {
+                    const before = input.slice(0, slashRange.start);
+                    const after = input.slice(slashRange.end);
+                    const insert = `/${skill.slug} `;
+                    const next = before + insert + after;
+                    setInput(next);
+                    setSlashOpen(false);
+                    requestAnimationFrame(() => {
+                      const pos = (before + insert).length;
+                      inputRef.current?.focus();
+                      inputRef.current?.setSelectionRange(pos, pos);
+                    });
+                  }}
+                  onOpenAll={() => { setSlashOpen(false); setSkillsBrowserOpen(true); }}
+                  onClose={() => setSlashOpen(false)}
+                />
+
                 {/* User Mention Dropdown */}
                 <UserMentionDropdown
                   query={mention.query}
@@ -2737,6 +2804,7 @@ export default function AssistantPage() {
                   onSelect={mention.handleSelect}
                   onClose={mention.handleClose}
                 />
+
                 
                 {/* Mobile: action buttons in bottom-right corner */}
                 <div className="absolute bottom-2 right-2 flex items-center gap-1 lg:hidden">
@@ -2969,6 +3037,11 @@ export default function AssistantPage() {
         }}
         currentConversationId={conversationId}
       />
+
+      {/* Skills Browser Modal (from slash `/` menu "Show all") */}
+      <SkillsBrowserModal open={skillsBrowserOpen} onOpenChange={setSkillsBrowserOpen} />
+
+
 
       {/* Auth Prompt for transaction simulation */}
       <AuthPrompt 
