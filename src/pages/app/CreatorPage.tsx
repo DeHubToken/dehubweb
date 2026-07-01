@@ -365,7 +365,9 @@ export default function CreatorPage() {
                     <span className={cn(
                       'absolute right-3 top-3 rounded px-1.5 py-0.5 text-[9px] font-black uppercase italic leading-none',
                       tool.badge === 'TEST' ? 'bg-white text-black' : tool.badge === 'TRENDING' ? 'text-white' : 'text-black'
-                    )}>
+                    )}
+                    style={tool.badge === 'TRENDING' ? { backgroundColor: hot } : tool.badge === 'NEW' ? { backgroundColor: accent } : undefined}
+                    >
                       {tool.badge}
                     </span>
                   )}
@@ -414,7 +416,7 @@ export default function CreatorPage() {
               className="h-[420px] w-full object-cover object-center opacity-90 transition-transform duration-500 group-hover:scale-[1.015] sm:h-[560px] lg:h-[680px]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent" />
-            <div className="absolute left-5 top-5 rounded bg-[#d7ff00] px-4 py-2 text-4xl font-black italic leading-none text-black sm:right-8 sm:left-auto sm:text-6xl">4K</div>
+            <div className="absolute left-5 top-5 rounded px-4 py-2 text-4xl font-black italic leading-none text-black sm:right-8 sm:left-auto sm:text-6xl" style={{ backgroundColor: accent }}>4K</div>
             <div className="absolute bottom-6 left-5 max-w-3xl sm:bottom-10 sm:left-8">
               <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.14em] text-white/80 backdrop-blur-xl">
                 <PanelsTopLeft className="h-4 w-4" /> Creator workspace
@@ -439,8 +441,8 @@ export default function CreatorPage() {
 function MediaCardVisual({ kind }: { kind: string }) {
   if (kind === 'timeline') {
     return (
-      <div className="relative h-[288px] overflow-hidden rounded-lg bg-[#f7f7f2] p-4 text-black">
-        <div className="h-36 rounded-lg bg-[radial-gradient(circle_at_70%_30%,rgba(255,255,255,0.8),transparent_18%),linear-gradient(135deg,#171717,#5d5246_45%,#161616)]" />
+      <div className="relative h-[288px] overflow-hidden rounded-lg p-4 text-black" style={{ backgroundColor: '#f7f7f2' }}>
+        <div className="h-36 rounded-lg" style={{ background: 'radial-gradient(circle at 70% 30%, rgba(255,255,255,0.8), transparent 18%), linear-gradient(135deg, #171717, #5d5246 45%, #161616)' }} />
         <div className="mt-3 grid h-24 grid-cols-12 gap-px overflow-hidden rounded bg-black/5">
           {Array.from({ length: 48 }).map((_, i) => <span key={i} className="bg-black/[0.045]" />)}
         </div>
@@ -448,7 +450,7 @@ function MediaCardVisual({ kind }: { kind: string }) {
           <div className="mb-3 h-2 w-28 rounded-full bg-black/20" />
           <div className="flex items-center justify-between">
             <span className="h-5 w-5 rounded bg-black/10" />
-            <span className="h-6 w-6 rounded-full bg-[#ff6b3d]" />
+            <span className="h-6 w-6 rounded-full" style={{ backgroundColor: '#ff6b3d' }} />
           </div>
         </div>
       </div>
@@ -457,17 +459,17 @@ function MediaCardVisual({ kind }: { kind: string }) {
 
   if (kind === 'poster') {
     return (
-      <div className="relative h-[288px] overflow-hidden rounded-lg bg-[linear-gradient(135deg,#171717,#3a3a3a_42%,#101010)]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.26),transparent_28%)]" />
+      <div className="relative h-[288px] overflow-hidden rounded-lg" style={{ background: 'linear-gradient(135deg, #171717, #3a3a3a 42%, #101010)' }}>
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.26), transparent 28%)' }} />
         <div className="absolute bottom-10 left-10 text-[46px] font-black uppercase leading-none tracking-tighter text-white/90">Creator<br />Drop</div>
-        <div className="absolute right-6 top-8 rounded bg-[#d7ff00] px-2 py-1 text-xl font-black text-black">4K</div>
+        <div className="absolute right-6 top-8 rounded px-2 py-1 text-xl font-black text-black" style={{ backgroundColor: accent }}>4K</div>
       </div>
     );
   }
 
   if (kind === 'mist') {
     return (
-      <div className="relative h-[288px] overflow-hidden rounded-lg bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.35),transparent_28%),linear-gradient(135deg,#b6c1c8,#1d2327_48%,#020303)]">
+      <div className="relative h-[288px] overflow-hidden rounded-lg" style={{ background: 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.35), transparent 28%), linear-gradient(135deg, #b6c1c8, #1d2327 48%, #020303)' }}>
         <div className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-black to-transparent" />
         <img src={dehubLogo} alt="DeHub" className="absolute bottom-12 left-10 h-12 w-auto opacity-90" />
       </div>
@@ -475,14 +477,14 @@ function MediaCardVisual({ kind }: { kind: string }) {
   }
 
   return (
-    <div className="relative h-[288px] overflow-hidden rounded-lg bg-[radial-gradient(circle_at_35%_20%,rgba(255,255,255,0.6),transparent_24%),linear-gradient(135deg,#e9e6df,#777_45%,#111)]">
+    <div className="relative h-[288px] overflow-hidden rounded-lg" style={{ background: 'radial-gradient(circle at 35% 20%, rgba(255,255,255,0.6), transparent 24%), linear-gradient(135deg, #e9e6df, #777 45%, #111)' }}>
       <div className="absolute inset-0 bg-gradient-to-r from-black/15 via-transparent to-black/70" />
       <div className="absolute bottom-11 left-1/2 w-[245px] -translate-x-1/2 rounded-2xl border border-white/20 bg-black/55 p-4 shadow-2xl backdrop-blur-xl">
         <div className="mb-4 h-2 w-32 rounded-full bg-white/80" />
         <div className="flex items-center justify-between">
           <span className="text-lg font-light text-white">＋</span>
           <span className="text-[10px] font-semibold text-white/70">DeHub AI</span>
-          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-[#d7ff00] text-xs font-black text-black">↑</span>
+          <span className="flex h-6 w-6 items-center justify-center rounded-full text-xs font-black text-black" style={{ backgroundColor: accent }}>↑</span>
         </div>
       </div>
     </div>
@@ -491,7 +493,7 @@ function MediaCardVisual({ kind }: { kind: string }) {
 
 function FeatureStrip({ icon: Icon, title, copy }: { icon: React.ComponentType<{ className?: string }>; title: string; copy: string }) {
   return (
-    <div className="rounded-2xl border border-white/8 bg-[#1b1c1f] p-5">
+    <div className="rounded-2xl border border-white/10 p-5" style={{ backgroundColor: '#1b1c1f' }}>
       <Icon className="mb-5 h-6 w-6 text-white" />
       <h3 className="text-lg font-black text-white">{title}</h3>
       <p className="mt-2 text-sm leading-relaxed text-white/45">{copy}</p>
