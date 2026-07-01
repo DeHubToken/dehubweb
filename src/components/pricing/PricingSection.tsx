@@ -138,6 +138,8 @@ const plans: Plan[] = [
   {
     id: 'scale',
     name: 'Scale',
+    monthlyPriceId: 'scale_monthly',
+    annualPriceId: 'scale_annual',
     discount: '30% OFF',
     tagline: '',
     headline: 'Designed for growing creative teams',
@@ -150,7 +152,7 @@ const plans: Plan[] = [
     annual: 150,
     perLabel: 'per seat/mo, billed annually',
     cta: 'Get Scale',
-    savings: 'Save $228 compared to monthly',
+    savings: 'Save £228 compared to monthly',
     seats: '5 seats',
     groups: [
       {
