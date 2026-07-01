@@ -3000,6 +3000,32 @@ export default function AssistantPage() {
         />
       )}
 
+      {/* DeHub Poster Studio */}
+      <PosterConfigDialog
+        open={posterConfigOpen}
+        onOpenChange={(open) => {
+          setPosterConfigOpen(open);
+          if (!open) setPendingPosterPrompt('');
+        }}
+        userPrompt={pendingPosterPrompt}
+        onConfirm={async (cfg: PosterConfig) => {
+          setPosterConfigOpen(false);
+          try {
+            const logoBase64 = await imageUrlToBase64(dehubLogo);
+            await handleImageGenerationConfirm({
+              prompt: buildDeHubBrandPrompt(cfg.finalPrompt),
+              model: DEHUB_BRAND_IMAGE_MODEL,
+              sourceImage: logoBase64,
+            });
+          } catch (err) {
+            console.error('Poster generation error:', err);
+            toast.error('Failed to start poster generation');
+          } finally {
+            setPendingPosterPrompt('');
+          }
+        }}
+      />
+
       {/* Music Confirm Dialog */}
       <MusicConfirmDialog
         open={musicConfirmOpen}
