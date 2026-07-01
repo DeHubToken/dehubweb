@@ -1540,18 +1540,19 @@ export default function AssistantPage() {
         setIsLoading(false);
         
       } else if (isImageRequest) {
-        const imgReq = {
-          prompt: wantsDeHubBrand ? buildDeHubBrandPrompt(messageToSend) : currentInput,
-          model: wantsDeHubBrand ? DEHUB_BRAND_IMAGE_MODEL : selectedImageModel,
-          sourceImage: effectiveSourceImage || currentAttachedImage || undefined,
-        };
-        // Free generation for branded DeHub posters (skill slug: dehub-poster)
-        // — bypass the DHB paywall and run generation directly.
-        if (matchedSkill?.slug === 'dehub-poster') {
+        // DeHub-branded posters get the poster studio drawer first
+        // (dimensions, style archetype, roadmap feature spotlight, tagline, links).
+        if (wantsDeHubBrand) {
+          setPendingPosterPrompt(messageToSend);
+          setPosterConfigOpen(true);
           setIsLoading(false);
-          await handleImageGenerationConfirm(imgReq);
           return;
         }
+        const imgReq = {
+          prompt: currentInput,
+          model: selectedImageModel,
+          sourceImage: effectiveSourceImage || currentAttachedImage || undefined,
+        };
         // Show image paywall instead of generating directly
         setPendingImageRequest(imgReq);
         setImagePaywallOpen(true);
