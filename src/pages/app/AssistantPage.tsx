@@ -170,7 +170,7 @@ OFFICIAL DEHUB LINKS (render ONLY if the user explicitly asks for socials, links
 - Telegram (main): t.me/dehub_dhb
 - Discord: discord.gg/dehub
 - Regional Telegrams: Turkish t.me/Dehub_Turkish · Arabic t.me/Dehub_Arabic · Hindi t.me/dehub_hindi · China t.me/dehub_china · Indonesia t.me/dehub_indonesia · Germany t.me/dehub_dach · Vietnam t.me/dehub_vietnam · Philippines t.me/DeHub_Philippines
-When rendering links: pure white, minimal sans-serif, small size, bottom of composition, generous letter-spacing, no icons unless requested. Only include the specific links the user asked for (e.g. "with socials" = X + Telegram + Discord + Website; "with website" = just dehub.io).
+When rendering links: pure white, Exo / Exo 2 (Light or Regular), small size, bottom of composition, generous letter-spacing, no icons unless requested. Only include the specific links the user asked for (e.g. "with socials" = X + Telegram + Discord + Website; "with website" = just dehub.io).
 
 USER REQUEST: ${userRequest}`;
 }
