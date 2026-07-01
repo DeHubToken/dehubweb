@@ -137,6 +137,8 @@ export const SORT_OPTIONS = [
   { label: 'For You', value: 'for-you' as const },
   { label: 'Prompt', value: 'prompt' as const },
   { label: 'Latest', value: 'latest' as const },
+  // Engagement+recency ranking (API sortBy=score). Backup to chronological while we test it.
+  { label: 'Discovery', value: 'discovery' as const },
   { label: 'Following', value: 'following' as const },
   { label: 'Subscribed', value: 'subscribed' as const },
   { label: 'Most Viewed', value: 'most-viewed' as const },
