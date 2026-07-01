@@ -22,8 +22,19 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-const accent = '#d7ff00';
+const accent = '#e5e7eb';
 const hot = '#ff2c91';
+// Metallic liquid glass surface — replaces the old lime green accent for backgrounds
+const metallicBg =
+  'linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(228,228,231,0.85) 22%, rgba(161,161,170,0.75) 50%, rgba(212,212,216,0.85) 78%, rgba(255,255,255,0.92) 100%)';
+const metallicStyle: React.CSSProperties = {
+  backgroundImage: metallicBg,
+  backgroundColor: 'rgba(228,228,231,0.6)',
+  backdropFilter: 'blur(14px) saturate(160%)',
+  WebkitBackdropFilter: 'blur(14px) saturate(160%)',
+  boxShadow:
+    'inset 0 1px 0 rgba(255,255,255,0.9), inset 0 -1px 0 rgba(0,0,0,0.12), 0 4px 18px rgba(0,0,0,0.35)',
+};
 
 type Preset = 'image' | 'edit' | 'video' | 'song' | 'poster' | 'skills' | 'chat' | 'voice';
 type ToolAction = { kind: 'assistant'; preset: Preset } | { kind: 'navigate'; to: string };
