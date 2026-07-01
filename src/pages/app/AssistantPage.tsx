@@ -524,6 +524,57 @@ export default function AssistantPage() {
   const [pendingPosterPrompt, setPendingPosterPrompt] = useState<string>('');
   // Skills hub modal
   const [skillsHubOpen, setSkillsHubOpen] = useState(false);
+
+  // Handle preset hash (?/# from /creator tiles): e.g. #preset=image | poster | skills | video | song | edit | chat
+  useEffect(() => {
+    const applyPreset = () => {
+      const hash = typeof window !== 'undefined' ? window.location.hash : '';
+      const match = hash.match(/preset=([a-z]+)/i);
+      if (!match) return;
+      const preset = match[1].toLowerCase();
+      // Clear hash so re-navigation re-triggers cleanly
+      if (typeof window !== 'undefined' && window.history.replaceState) {
+        window.history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+      switch (preset) {
+        case 'skills':
+          setSkillsHubOpen(true);
+          break;
+        case 'poster':
+          setPendingPosterPrompt('');
+          setPosterConfigOpen(true);
+          break;
+        case 'song':
+          setPendingMusicPrompt('');
+          setMusicConfirmOpen(true);
+          break;
+        case 'edit':
+          fileInputRef.current?.click();
+          break;
+        case 'image':
+          setInput(t('assistant.generateImageOf'));
+          inputRef.current?.focus();
+          setInputGlow(true);
+          setTimeout(() => setInputGlow(false), 2000);
+          break;
+        case 'video':
+          setInput(t('assistant.generateVideoOf'));
+          inputRef.current?.focus();
+          setInputGlow(true);
+          setTimeout(() => setInputGlow(false), 2000);
+          break;
+        case 'voice':
+        case 'chat':
+        default:
+          inputRef.current?.focus();
+          break;
+      }
+    };
+    applyPreset();
+    window.addEventListener('hashchange', applyPreset);
+    return () => window.removeEventListener('hashchange', applyPreset);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   // AI Tools state
   const [aiToolPaywallOpen, setAiToolPaywallOpen] = useState(false);
   const [selectedAiToolId, setSelectedAiToolId] = useState<string>('minimax-music');
@@ -2541,13 +2592,29 @@ export default function AssistantPage() {
                     }}
                   >
                     
-                    <LiquidGlassBubble2
-                      label="🧠 Skills"
-                      onClick={() => setSkillsHubOpen(true)}
-                      width="auto"
-                      height="32px"
-                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
-                    />
+                    <div className="relative shrink-0">
+                      <LiquidGlassBubble2
+                        label="🧠 Skills"
+                        onClick={() => setSkillsHubOpen(true)}
+                        width="auto"
+                        height="32px"
+                        className="[&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                      />
+                      <span className="pointer-events-none absolute -top-1.5 -right-1.5 text-[8px] font-bold tracking-wider bg-white text-black rounded px-1 py-[1px] leading-none">TEST</span>
+                    </div>
+                    <div className="relative shrink-0">
+                      <LiquidGlassBubble2
+                        label="🎨 Make DeHub Poster"
+                        onClick={() => {
+                          setPendingPosterPrompt('');
+                          setPosterConfigOpen(true);
+                        }}
+                        width="auto"
+                        height="32px"
+                        className="[&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                      />
+                      <span className="pointer-events-none absolute -top-1.5 -right-1.5 text-[8px] font-bold tracking-wider bg-white text-black rounded px-1 py-[1px] leading-none">TEST</span>
+                    </div>
                     <LiquidGlassBubble2
                       label={`🖼️ ${t('assistant.generateImage')}`}
                       onClick={() => {
@@ -2584,16 +2651,6 @@ export default function AssistantPage() {
                       onClick={() => {
                         setPendingMusicPrompt('');
                         setMusicConfirmOpen(true);
-                      }}
-                      width="auto"
-                      height="32px"
-                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
-                    />
-                    <LiquidGlassBubble2
-                      label="🎨 Make DeHub Poster"
-                      onClick={() => {
-                        setPendingPosterPrompt('');
-                        setPosterConfigOpen(true);
                       }}
                       width="auto"
                       height="32px"
