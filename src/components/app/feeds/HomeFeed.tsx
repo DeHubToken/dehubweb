@@ -340,8 +340,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   }, [showFilters]);
   const isFetchingRef = useRef(false);
   
-  // Default to For You (feedScore algorithm) — persisted to sessionStorage
-  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('home', 'sort', SORT_OPTIONS[0]);
+  // Default to Latest (chronological) — persisted to sessionStorage. "For You" remains a filter option.
+  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('home', 'sort', DEFAULT_HOME_SORT);
   const [selectedDate, setSelectedDate] = usePersistedFeedFilter<DateFilterOption>('home', 'date', DATE_FILTER_OPTIONS[0]);
   const [selectedPostType, setSelectedPostType] = usePersistedFeedFilter<PostTypeFilterValue>('home', 'postType', 'all');
   const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('home');
