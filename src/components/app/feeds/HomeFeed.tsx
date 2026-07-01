@@ -1501,7 +1501,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           })}
           <button
             onClick={() => {
-              setSelectedSort(SORT_OPTIONS[0]);
+              setSelectedSort(DEFAULT_HOME_SORT);
               setSelectedDate(DATE_FILTER_OPTIONS[0]);
               resetContentFilters();
               setSelectedCategories([]);
