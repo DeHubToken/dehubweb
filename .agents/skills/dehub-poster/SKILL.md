@@ -45,10 +45,11 @@ These mirror the DeHub app design system — apply to every generated image:
 When generating, structure the prompt like:
 
 ```
-[SCENE / SUBJECT in 1–2 sentences], cinematic, dark background, premium liquid-glass aesthetic, subtle ambient glow, lots of negative space. The DeHub white wordmark logo is placed [POSITION, e.g. top-left / centered / bottom-center] at roughly [SIZE]% of canvas width, crisp, unaltered, pure white, with clear space around it. No additional text unless specified. No blue. High detail, 4k, poster quality.
+[SCENE / SUBJECT in 1–2 sentences], cinematic, dark background, premium liquid-glass aesthetic, subtle ambient glow, lots of negative space. Leave [POSITION, e.g. the top-left third / a centered horizontal band / the bottom-center] as calm empty space reserved for a logo lockup — do not draw a logo, do not draw text there. No additional text unless specified. No blue. High detail, 4k, poster quality.
 ```
 
-Always pass the chosen logo file as the first input image to `edit_image` so the mark stays sharp.
+The logo is NOT drawn by the scene model — it's composited in step 2 of the workflow using the real PNG.
+
 
 ## Official brand links
 
