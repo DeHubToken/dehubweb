@@ -51,7 +51,7 @@ serve(async (req) => {
 
     // ── DeHub brand skill: auto-detect requests for DeHub-branded imagery and
     //    force logo-attached, brand-compliant generation.
-    const brandIntent = /\bde\s*hub\b/i.test(prompt) && /\b(poster|banner|thumbnail|content|card|announce|announcement|flyer|artwork|social|cover|graphic|ad|advert|image|logo|wallpaper|meme)\b/i.test(prompt);
+    const brandIntent = /\bde\s*hub\b/i.test(prompt) && /\b(posters?|banners?|thumbnails?|content|cards?|announc(?:e|ement|ements?)|flyers?|artworks?|social|covers?|graphics?|ads?|adverts?|images?|logos?|wallpapers?|memes?|promos?|campaigns?)\b/i.test(prompt);
     if (brandIntent && !sourceImage) {
       console.log('[dehub-poster] Brand intent detected — attaching logo + brand system prompt');
       try {
@@ -61,7 +61,7 @@ serve(async (req) => {
           let bin = '';
           for (let i = 0; i < buf.byteLength; i++) bin += String.fromCharCode(buf[i]);
           sourceImage = `data:image/png;base64,${btoa(bin)}`;
-          model = 'gemini-2.5-flash';
+          model = 'gemini-3.1-flash-image';
           isGrokModel = false;
           contextualPrompt = `DEHUB BRAND SYSTEM (mandatory):
 - The attached image is the official DeHub wordmark. Composite it PROMINENTLY, UNALTERED, PURE WHITE into the final image with clear space around it (min 8% of canvas). Do NOT recolor, gradient-fill, distort, or redraw the logo — use the attached pixels.
@@ -138,7 +138,9 @@ USER REQUEST: ${prompt}`;
 
     // Map model to Lovable AI model path
     let apiModel = 'google/gemini-2.5-flash-image-preview';
-    if (model === 'gemini-3-pro-image') {
+    if (model === 'gemini-3.1-flash-image') {
+      apiModel = 'google/gemini-3.1-flash-image';
+    } else if (model === 'gemini-3-pro-image') {
       apiModel = 'google/gemini-3-pro-image-preview';
     } else if (model === 'gpt-5') {
       apiModel = 'openai/gpt-5';
