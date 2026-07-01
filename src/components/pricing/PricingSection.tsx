@@ -35,6 +35,8 @@ interface Plan {
   featured?: boolean;
   groups: { title: string; items: string[] }[];
   freeGens?: { label: string; note: string }[];
+  monthlyPriceId: string;
+  annualPriceId: string;
 }
 
 const plans: Plan[] = [
