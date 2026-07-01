@@ -62,7 +62,6 @@ import { GeneratedAudioPlayer } from '@/components/app/assistant/GeneratedAudioP
 import { MusicConfirmDialog, type MusicParams } from '@/components/app/assistant/MusicConfirmDialog';
 import { PosterConfigDialog, type PosterConfig } from '@/components/app/assistant/PosterConfigDialog';
 import { SkillsHubModal } from '@/components/app/assistant/SkillsHubModal';
-import { incrementSkillUsage, type UserSkill } from '@/hooks/use-user-skills';
 import { SwapActionCard } from '@/components/app/chat/SwapActionCard';
 import { useAIConversation } from '@/hooks/use-ai-conversation';
 import { streamChat } from '@/lib/stream-chat';
