@@ -459,9 +459,16 @@ function MediaCardVisual({ kind }: { kind: string }) {
 
   if (kind === 'poster') {
     return (
-      <div className="relative h-[288px] overflow-hidden rounded-lg" style={{ background: 'linear-gradient(135deg, #171717, #3a3a3a 42%, #101010)' }}>
-        <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.26), transparent 28%)' }} />
-        <div className="absolute bottom-10 left-10 text-[46px] font-black uppercase leading-none tracking-tighter text-white/90">Creator<br />Drop</div>
+      <div className="relative h-[288px] overflow-hidden rounded-lg border border-white/10" style={{ background: 'linear-gradient(135deg, #2a2a2a, #5b5b5b 42%, #101010)' }}>
+        <div className="absolute inset-0" style={{ background: 'radial-gradient(circle at 20% 20%, rgba(255,255,255,0.42), transparent 28%)' }} />
+        <div className="absolute left-8 top-8 h-28 w-24 -rotate-6 rounded-xl border border-white/20 bg-white/15 shadow-2xl" />
+        <div className="absolute right-16 bottom-7 h-40 w-28 rotate-6 rounded-xl border border-white/20 bg-black/55 p-3 shadow-2xl">
+          <div className="h-3 w-16 rounded-full" style={{ backgroundColor: accent }} />
+          <div className="mt-4 h-16 rounded-lg bg-white/20" />
+          <div className="mt-4 h-2 w-full rounded-full bg-white/35" />
+          <div className="mt-2 h-2 w-2/3 rounded-full bg-white/20" />
+        </div>
+        <div className="absolute bottom-10 left-10 text-[46px] font-black uppercase leading-none tracking-tighter text-white">Creator<br />Drop</div>
         <div className="absolute right-6 top-8 rounded px-2 py-1 text-xl font-black text-black" style={{ backgroundColor: accent }}>4K</div>
       </div>
     );
@@ -469,16 +476,24 @@ function MediaCardVisual({ kind }: { kind: string }) {
 
   if (kind === 'mist') {
     return (
-      <div className="relative h-[288px] overflow-hidden rounded-lg" style={{ background: 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.35), transparent 28%), linear-gradient(135deg, #b6c1c8, #1d2327 48%, #020303)' }}>
+      <div className="relative h-[288px] overflow-hidden rounded-lg border border-white/10" style={{ background: 'radial-gradient(circle at 30% 20%, rgba(255,255,255,0.45), transparent 28%), linear-gradient(135deg, #b6c1c8, #30383d 42%, #020303)' }}>
         <div className="absolute inset-y-0 right-0 w-1/2 bg-gradient-to-l from-black to-transparent" />
+        <div className="absolute left-6 top-6 grid grid-cols-3 gap-2">
+          {Array.from({ length: 9 }).map((_, index) => (
+            <span key={index} className="h-12 w-12 rounded-lg bg-white/20 shadow-lg" />
+          ))}
+        </div>
+        <div className="absolute bottom-9 right-8 text-right text-3xl font-black uppercase leading-none text-white">Agent<br />Flow</div>
         <img src={dehubLogo} alt="DeHub" className="absolute bottom-12 left-10 h-12 w-auto opacity-90" />
       </div>
     );
   }
 
   return (
-    <div className="relative h-[288px] overflow-hidden rounded-lg" style={{ background: 'radial-gradient(circle at 35% 20%, rgba(255,255,255,0.6), transparent 24%), linear-gradient(135deg, #e9e6df, #777 45%, #111)' }}>
-      <div className="absolute inset-0 bg-gradient-to-r from-black/15 via-transparent to-black/70" />
+    <div className="relative h-[288px] overflow-hidden rounded-lg border border-white/10" style={{ background: 'radial-gradient(circle at 68% 18%, rgba(255,255,255,0.85), transparent 16%), linear-gradient(135deg, #e9e6df, #8a8278 45%, #111)' }}>
+      <div className="absolute inset-0 bg-gradient-to-r from-black/5 via-transparent to-black/65" />
+      <div className="absolute bottom-0 left-0 h-52 w-40 rounded-tr-[80px] bg-black/25" />
+      <div className="absolute right-8 top-8 h-28 w-28 rounded-full bg-white/25 blur-xl" />
       <div className="absolute bottom-11 left-1/2 w-[245px] -translate-x-1/2 rounded-2xl border border-white/20 bg-black/55 p-4 shadow-2xl backdrop-blur-xl">
         <div className="mb-4 h-2 w-32 rounded-full bg-white/80" />
         <div className="flex items-center justify-between">
