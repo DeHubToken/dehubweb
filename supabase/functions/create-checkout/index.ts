@@ -77,13 +77,34 @@ Deno.serve(async (req) => {
       customerEmail,
       returnUrl,
       environment,
+      quantity,
     }: {
       priceId: string;
       walletAddress: string;
       customerEmail?: string;
       returnUrl: string;
       environment: StripeEnv;
+      quantity?: number;
     } = body;
+
+    // Enforce per-plan seat minimums (matches the Stripe price quantity bounds).
+    const seatMin: Record<string, number> = {
+      team_monthly: 2,
+      team_annual: 2,
+      scale_monthly: 5,
+      scale_annual: 5,
+    };
+    const seatMax: Record<string, number> = {
+      team_monthly: 9,
+      team_annual: 9,
+      scale_monthly: 15,
+      scale_annual: 15,
+    };
+    const minQty = seatMin[priceId] ?? 1;
+    const maxQty = seatMax[priceId] ?? 1;
+    const rawQty = Number.isFinite(quantity) ? Math.floor(Number(quantity)) : minQty;
+    const finalQty = Math.min(Math.max(rawQty, minQty), maxQty);
+
 
     if (!ALLOWED_PRICE_IDS.has(priceId)) {
       return new Response(JSON.stringify({ error: "Unknown priceId" }), {
