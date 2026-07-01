@@ -42,6 +42,14 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
     tier: 'fast',
     baseCostUsd: 0.02,
   },
+  'gemini-3.1-flash-image': {
+    id: 'gemini-3.1-flash-image',
+    name: 'Nano Banana 2',
+    description: 'Fast brand image generation',
+    emoji: '🍌',
+    tier: 'fast',
+    baseCostUsd: 0.01,
+  },
   'gemini-3-pro-image': {
     id: 'gemini-3-pro-image',
     name: 'Gemini 3 Pro',
