@@ -197,6 +197,17 @@ interface Props {
 
 export function PricingSection({ compact = false, showHeader = true }: Props) {
   const [billing, setBilling] = useState<Billing>('annual');
+  const { walletAddress, user, openLoginModal } = useAuth() as any;
+  const [checkoutPriceId, setCheckoutPriceId] = useState<string | null>(null);
+
+  const handleSelect = (priceId: string) => {
+    if (!walletAddress) {
+      toast.error('Please sign in to subscribe');
+      openLoginModal?.();
+      return;
+    }
+    setCheckoutPriceId(priceId);
+  };
 
   return (
     <section className="w-full px-3 py-10 sm:px-6 sm:py-14">
@@ -225,9 +236,17 @@ export function PricingSection({ compact = false, showHeader = true }: Props) {
         )}
       >
         {plans.map((plan) => (
-          <PlanCard key={plan.id} plan={plan} billing={billing} />
+          <PlanCard key={plan.id} plan={plan} billing={billing} onSelect={handleSelect} />
         ))}
       </div>
+
+      <PremiumCheckoutModal
+        open={!!checkoutPriceId}
+        onOpenChange={(o) => { if (!o) setCheckoutPriceId(null); }}
+        priceId={checkoutPriceId ?? ''}
+        walletAddress={walletAddress ?? ''}
+        customerEmail={user?.email}
+      />
     </section>
   );
 }
