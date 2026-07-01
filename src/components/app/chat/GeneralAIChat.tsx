@@ -22,7 +22,14 @@ import { useAuth } from '@/contexts/AuthContext';
 import { MarkdownText } from '@/lib/markdown';
 import { PostModal } from '@/features/post';
 import { SwapActionCard } from './SwapActionCard';
-import ftvLogoSymbol from '@/assets/ftv-logo-symbol.png';
+import dehubLogo from '@/assets/dehub-logo-white.png';
+
+const DEHUB_BRAND_IMAGE_KEYWORDS = [
+  'poster', 'posters', 'banner', 'banners', 'thumbnail', 'thumbnails', 'content',
+  'card', 'cards', 'announcement', 'announcements', 'flyer', 'flyers', 'artwork',
+  'social', 'cover', 'graphic', 'graphics', 'ad', 'advert', 'image', 'wallpaper',
+  'meme', 'promo', 'campaign'
+];
 
 interface SwapAction {
   tokenIn: string;
@@ -69,6 +76,22 @@ function requiresImageGeneration(message: string, hasAttachedImage: boolean): bo
 function requiresLogoAsset(message: string): boolean {
   const lower = message.toLowerCase();
   return LOGO_KEYWORDS.some(keyword => lower.includes(keyword));
+}
+
+function isDeHubBrandedImageRequest(message: string): boolean {
+  const lower = message.toLowerCase();
+  const mentionsDeHub = /\bde\s*hub\b/.test(lower) || /\bdhb\b/.test(lower);
+  return mentionsDeHub && DEHUB_BRAND_IMAGE_KEYWORDS.some(keyword => lower.includes(keyword));
+}
+
+function buildDeHubBrandPrompt(userRequest: string): string {
+  return `DEHUB BRAND SYSTEM (mandatory):
+- The attached image is the official DeHub wordmark. Composite it prominently, crisp, unaltered, pure white, with clear space around it. Do not redraw, recolor, gradient-fill, warp, or replace it.
+- Palette: deep black / charcoal backgrounds, white text, subtle white-opacity accents. Never use blue.
+- Aesthetic: liquid glass, frosted blur, cinematic, premium, decentralized-tech, lots of negative space, strong focal hierarchy.
+- Typography if any: minimal white sans-serif only. No emoji. No generic AI clichés.
+
+USER REQUEST: ${userRequest}`;
 }
 
 // Check if logo request also wants something creative (not just "show me the logo")
@@ -175,7 +198,8 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
 
     try {
       // Check if user wants to use the official logo in their image
-      const wantsLogo = requiresLogoAsset(currentInput);
+      const wantsDeHubBrand = isDeHubBrandedImageRequest(currentInput);
+      const wantsLogo = wantsDeHubBrand || requiresLogoAsset(currentInput);
       const isCreativeLogo = wantsLogo && isCreativeLogoRequest(currentInput);
       
       // If just asking "show me the logo" without creative context, display it directly
@@ -184,7 +208,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
           id: (Date.now() + 1).toString(),
           role: 'assistant',
           content: t('aiChat.officialLogo'),
-          imageUrl: ftvLogoSymbol
+          imageUrl: dehubLogo
         };
         setMessages(prev => [...prev, assistantMessage]);
         setIsLoading(false);
@@ -193,15 +217,15 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
       
       // If creative logo request, convert logo to base64 and use as source image
       let effectiveSourceImage = currentAttachedImage;
-      if (isCreativeLogo) {
-        effectiveSourceImage = await imageUrlToBase64(ftvLogoSymbol);
+      if (wantsDeHubBrand || isCreativeLogo) {
+        effectiveSourceImage = await imageUrlToBase64(dehubLogo);
       }
       const isImageRequest = isCreativeLogo || requiresImageGeneration(currentInput, !!currentAttachedImage);
       
       if (isImageRequest) {
         const { data, error } = await supabase.functions.invoke('generate-image', {
           body: {
-            prompt: currentInput,
+            prompt: wantsDeHubBrand ? buildDeHubBrandPrompt(currentInput) : currentInput,
             sourceImage: effectiveSourceImage || undefined
           }
         });
