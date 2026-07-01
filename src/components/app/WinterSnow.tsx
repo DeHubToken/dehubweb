@@ -147,7 +147,9 @@ export function WinterSnow() {
 
       frameCount++;
       if (frameCount % 20 === 0) {
-        mediaRectsRef.current = Array.from(document.querySelectorAll('video'))
+        mediaRectsRef.current = Array.from(
+          document.querySelectorAll('video, img')
+        )
           .filter((el) => {
             const rect = (el as HTMLElement).getBoundingClientRect();
             return rect.width >= 80 && rect.height >= 80;
