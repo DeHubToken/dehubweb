@@ -29,6 +29,7 @@ export default function WorkPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6">
+      <SEOHead title="Work — Paid Jobs, Clipping & Contracts | DeHub" description="Browse paid jobs on DeHub: comments & shill work, clipping bounties, and fixed-price contracts. Get paid in DHB or USDC." url="https://dehub.io/work" />
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <div>
