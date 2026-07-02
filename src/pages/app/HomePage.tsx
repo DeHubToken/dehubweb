@@ -669,6 +669,8 @@ export default function HomePage() {
                       homeTabButtonPositions.current[tab.value] = el;
                     }}
                     onClick={() => handleTabClick(tab.value)}
+                    aria-label={tab.label}
+                    aria-current={isActive ? 'page' : undefined}
                     className={cn(
                       'relative z-40 flex-1 flex items-center justify-center px-3 sm:px-4 py-2.5 rounded-xl',
                       isActive ? 'text-white' : 'text-zinc-400 hover:text-white'
@@ -676,6 +678,7 @@ export default function HomePage() {
                   >
                     <tab.icon className="relative z-10 w-4 h-4" />
                   </button>
+
                 );
               })}
             </div>
