@@ -13,8 +13,9 @@ export default function PricingPage() {
       <div className="min-h-[100dvh] bg-black text-white">
         <header className="flex items-center justify-between px-4 py-4 sm:px-8">
           <Link to="/" className="flex items-center gap-2">
-            <img src={dehubLogo} alt="DeHub" className="h-6 w-auto" />
+            <img src={dehubLogo} alt="DeHub logo white" className="h-6 w-auto" />
           </Link>
+          <h1 className="sr-only">DeHub Pricing — Choose Your Creator Plan</h1>
           <Link
             to="/creator"
             className="rounded-xl border border-white/15 bg-white/5 px-4 py-2 text-xs font-semibold text-white hover:bg-white/10"

@@ -840,6 +840,7 @@ export default function ExplorePage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder={t('explorePage.searchPlaceholder')}
+                aria-label={t('explorePage.searchPlaceholder')}
                 className="w-full pl-12 pr-4 h-[48px] bg-zinc-800 border-zinc-700 rounded-xl text-white placeholder:text-zinc-500 focus:border-zinc-600 text-sm sm:text-base"
               />
               {searchQuery && (
@@ -1185,7 +1186,7 @@ export default function ExplorePage() {
                   <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-                        <img src={search3dIcon} alt="Search" className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
+                        <img src={search3dIcon} alt="Search explore icon" className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
                         {t('explorePage.searchHistory')}
                       </h2>
                       {recentSearches.length > 0 && (
