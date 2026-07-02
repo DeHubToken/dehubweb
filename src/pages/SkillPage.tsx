@@ -3,6 +3,7 @@ import ReactMarkdown from 'react-markdown';
 import { ArrowLeft, Bot, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { SEOHead } from '@/components/SEOHead';
 
 export default function SkillPage() {
   const [content, setContent] = useState<string>('');
