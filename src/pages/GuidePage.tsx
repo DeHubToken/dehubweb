@@ -744,6 +744,7 @@ const GuidePage: React.FC = () => {
             {searchQuery ? (
               <button
                 onClick={() => { setSearchQuery(""); searchInputRef.current?.focus(); }}
+                aria-label="Clear search"
                 className="absolute right-2 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-md bg-white/10 hover:bg-white/20 transition-colors"
               >
                 <X className="w-3 h-3" />
@@ -758,6 +759,7 @@ const GuidePage: React.FC = () => {
           <button
             className="md:hidden w-10 h-10 flex items-center justify-center rounded-xl bg-white/5"
             onClick={() => setMobileNavOpen(!mobileNavOpen)}
+            aria-label={mobileNavOpen ? "Close navigation" : "Toggle navigation"}
           >
             {mobileNavOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
