@@ -339,13 +339,13 @@ export default function CreatorPage() {
         </div>
 
         <section className="px-3 py-4 sm:px-4">
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+          <SwipeableCarousel className="flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory scroll-pl-3 scroll-pr-3">
             {heroCards.map((card) => (
               <button
                 key={card.id}
                 type="button"
                 onClick={() => runAction(card.action)}
-                className="group overflow-hidden rounded-lg text-left"
+                className="group snap-start shrink-0 overflow-hidden rounded-lg text-left w-[72%] md:w-[45%] xl:w-[28%]"
               >
                 <MediaCardVisual kind={card.kind} />
                 <div className="pt-3">
@@ -354,7 +354,7 @@ export default function CreatorPage() {
                 </div>
               </button>
             ))}
-          </div>
+          </SwipeableCarousel>
         </section>
 
         <section className="grid gap-3 px-3 pb-6 sm:px-4 lg:grid-cols-[0.38fr_1fr]">
