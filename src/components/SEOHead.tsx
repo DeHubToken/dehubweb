@@ -25,7 +25,12 @@ export function SEOHead({
   jsonLd,
 }: SEOHeadProps) {
   const fullTitle = title || defaults.title;
-  const canonicalUrl = url || defaults.url;
+  // Prefer the current URL so canonical/og:url self-reference the route
+  // instead of always pointing at the homepage.
+  const currentUrl =
+    typeof window !== 'undefined' ? window.location.href.split('#')[0] : '';
+  const canonicalUrl = url || currentUrl || defaults.url;
+
 
   return (
     <Helmet>
