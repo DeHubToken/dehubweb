@@ -34,6 +34,7 @@ import { EditPostModal } from '@/components/app/modals/EditPostModal';
 import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { usePPVPurchaseCount } from '@/hooks/use-ppv-purchase-count';
 import { TranscriptSection } from '@/components/app/post-info/TranscriptSection';
+import { SEOHead } from '@/components/SEOHead';
 
 // Visibility options configuration
 const VISIBILITY_OPTIONS: { value: TokenVisibility; label: string; icon: React.ReactNode; description: string }[] = [
