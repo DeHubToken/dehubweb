@@ -39,7 +39,7 @@ export function DocsSEO() {
           isPartOf: {
             "@type": "WebSite",
             name: "DeHub Docs",
-            url: "https://cosmic-echo-hero.lovable.app/docs",
+            url: "https://dehub.io/docs",
           },
         })}
       </script>
