@@ -732,6 +732,7 @@ export default function PostInfoPage() {
 
   return (
     <div className="min-h-screen bg-black">
+      <SEOHead title={`Post #${nftInfo.tokenId} — DeHub`} description={`On-chain post info for token #${nftInfo.tokenId} on DeHub. View mint transaction, creator wallet, and holders.`} url={`https://dehub.io/app/post/${postId}/info`} />
       {/* Header */}
       <div className="sticky top-0 z-50 bg-black border-b border-white/10">
         <div className="flex items-center gap-4 p-4">
