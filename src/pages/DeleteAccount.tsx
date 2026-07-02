@@ -1,9 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { SEOHead } from "@/components/SEOHead";
 
 const DeleteAccount = () => {
   return (
+    <>
+      <SEOHead
+        title="Delete Account and Data — DeHub"
+        description="Request deletion of your DeHub account and associated data. Learn what is deleted, what is retained, and how to submit a request."
+        url="https://dehub.io/delete-account"
+      />
     <div className="min-h-screen h-auto overflow-y-auto bg-black text-white fixed inset-0">
       <div className="container mx-auto px-4 py-4 max-w-4xl pb-8">
         <Button 
@@ -153,7 +160,8 @@ const DeleteAccount = () => {
           </p>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

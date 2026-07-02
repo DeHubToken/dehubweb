@@ -116,7 +116,7 @@ export default function BestDecentralizedSocialMedia() {
   return (
     <>
       <SEOHead
-        title="Best Decentralized Social Media Platforms in 2026 — DeHub vs Mastodon, Bluesky, Farcaster & Lens"
+        title="Best Decentralized Social Media 2026 — DeHub Guide"
         description="Comparison guide of the best decentralized and Web3 social media platforms in 2026. DeHub, Mastodon, Bluesky, Farcaster and Lens — features, monetization, ownership and who each is for."
         url={url}
         type="article"
