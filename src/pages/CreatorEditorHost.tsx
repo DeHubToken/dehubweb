@@ -8,6 +8,7 @@
 import React, { Suspense, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { lazyWithRetry } from "@/lib/lazy-with-retry";
+import { SEOHead } from "@/components/SEOHead";
 
 const CreatorPage = lazyWithRetry(() => import("@/pages/app/CreatorPage"));
 const EditorPage = lazyWithRetry(() => import("@/pages/Editor"));
