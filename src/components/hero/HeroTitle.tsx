@@ -32,8 +32,8 @@ export const HeroTitle = ({
   subtitle: subtitleProp
 }: HeroTitleProps) => {
   const { t } = useTranslation();
-  const title = titleProp || t('hero.title', 'Welcome To');
-  const subtitle = subtitleProp || t('hero.subtitle', 'Our World');
+  const title = titleProp || t('hero.title', 'DeHub — The Decentralized Social Media Network');
+  const subtitle = subtitleProp || t('hero.subtitle', 'Open source, user-owned & censorship-resistant media');
   const titleWords = title.split(' ');
   const mobileLine1 = titleWords.slice(0, 2).join(' ');
   const mobileLine2 = titleWords.slice(2).join(' ');
