@@ -60,6 +60,7 @@ export default function StoreDetailPage() {
 
   return (
     <div className="pb-20 p-2 sm:p-3 space-y-6">
+      <SEOHead title={`${store.name} — DeHub Stores`} description={(store.description || `Shop ${store.name} on DeHub. Peer-to-peer commerce paid in DHB or USDC.`).slice(0, 155)} url={`https://dehub.io/app/stores/${store.id}`} />
       <section className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] overflow-hidden relative">
         <button
           onClick={() => navigate(-1)}
