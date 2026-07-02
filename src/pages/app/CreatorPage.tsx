@@ -564,13 +564,88 @@ function thumbUrl(url: string, width = 480): string {
   return url;
 }
 
-function CommunityGallery() {
-  const [items, setItems] = useState<GalleryItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [lightbox, setLightbox] = useState<GalleryItem | null>(null);
+const PAGE_SIZE = 18;
+
+function GalleryTile({ item, onOpen }: { item: GalleryItem; onOpen: (i: GalleryItem) => void }) {
+  const ref = useRef<HTMLButtonElement | null>(null);
+  const [visible, setVisible] = useState(false);
+  const isVideo = !!item.video_url;
+  const url = item.video_url || item.image_url || '';
 
   useEffect(() => {
+    if (!ref.current || visible) return;
+    const io = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setVisible(true);
+        io.disconnect();
+      }
+    }, { rootMargin: '300px' });
+    io.observe(ref.current);
+    return () => io.disconnect();
+  }, [visible]);
+
+  return (
+    <button
+      ref={ref}
+      type="button"
+      onClick={() => onOpen(item)}
+      className="group relative block aspect-square overflow-hidden rounded-lg border border-white/10 bg-white/5"
+    >
+      {visible && (isVideo ? (
+        <video
+          src={url}
+          muted
+          loop
+          autoPlay
+          playsInline
+          preload="none"
+          className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
+        />
+      ) : (
+        <img
+          src={thumbUrl(url, 400)}
+          alt="AI generation from the DeHub community"
+          loading="lazy"
+          decoding="async"
+          className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
+        />
+      ))}
+      {isVideo && (
+        <span className="absolute right-1.5 top-1.5 rounded bg-black/70 px-1.5 py-0.5 text-[9px] font-black uppercase text-white backdrop-blur">
+          Video
+        </span>
+      )}
+    </button>
+  );
+}
+
+function CommunityGallery() {
+  const [items, setItems] = useState<GalleryItem[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [lightbox, setLightbox] = useState<GalleryItem | null>(null);
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const [inView, setInView] = useState(false);
+
+  // Defer RPC until the section is close to viewport → keeps LCP fast.
+  useEffect(() => {
+    if (!sectionRef.current || inView) return;
+    const io = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setInView(true);
+        io.disconnect();
+      }
+    }, { rootMargin: '600px' });
+    io.observe(sectionRef.current);
+    return () => io.disconnect();
+  }, [inView]);
+
+  useEffect(() => {
+    if (!inView || loaded) return;
     let cancelled = false;
+    setLoading(true);
     (async () => {
       try {
         const { data, error } = await supabase.rpc('get_creator_gallery', { p_limit: 90 });
@@ -582,11 +657,23 @@ function CommunityGallery() {
           setItems((data ?? []) as GalleryItem[]);
         }
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) { setLoading(false); setLoaded(true); }
       }
     })();
     return () => { cancelled = true; };
-  }, []);
+  }, [inView, loaded]);
+
+  // Infinite reveal for already-fetched items.
+  useEffect(() => {
+    if (!sentinelRef.current) return;
+    const io = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setVisibleCount((c) => Math.min(c + PAGE_SIZE, items.length));
+      }
+    }, { rootMargin: '400px' });
+    io.observe(sentinelRef.current);
+    return () => io.disconnect();
+  }, [items.length]);
 
   useEffect(() => {
     if (!lightbox) return;
@@ -597,8 +684,10 @@ function CommunityGallery() {
     return () => { window.removeEventListener('keydown', onKey); document.body.style.overflow = prev; };
   }, [lightbox]);
 
+  const shown = items.slice(0, visibleCount);
+
   return (
-    <section className="px-3 pb-10 sm:px-4">
+    <section ref={sectionRef} className="px-3 pb-10 sm:px-4">
       <div className="mb-4 flex items-end justify-between gap-3">
         <div>
           <div className="text-xs font-bold uppercase tracking-[0.18em] text-white/45">Community Feed</div>
@@ -614,7 +703,7 @@ function CommunityGallery() {
         </span>
       </div>
 
-      {loading ? (
+      {!inView || loading ? (
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
           {Array.from({ length: 12 }).map((_, i) => (
             <div key={i} className="aspect-square animate-pulse rounded-lg bg-white/5" />
@@ -625,46 +714,18 @@ function CommunityGallery() {
           No AI creations yet. Be the first to generate one.
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-          {items.map((item) => {
-            const isVideo = !!item.video_url;
-            const url = item.video_url || item.image_url || '';
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => setLightbox(item)}
-                className="group relative block aspect-square overflow-hidden rounded-lg border border-white/10 bg-black"
-              >
-                {isVideo ? (
-                  <video
-                    src={url}
-                    muted
-                    loop
-                    autoPlay
-                    playsInline
-                    preload="metadata"
-                    className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
-                  />
-                ) : (
-                  <img
-                    src={thumbUrl(url, 480)}
-                    alt="AI generation from the DeHub community"
-                    loading="lazy"
-                    decoding="async"
-                    className="h-full w-full object-cover opacity-90 transition-transform duration-500 group-hover:scale-105"
-                  />
-                )}
-                {isVideo && (
-                  <span className="absolute right-1.5 top-1.5 rounded bg-black/70 px-1.5 py-0.5 text-[9px] font-black uppercase text-white backdrop-blur">
-                    Video
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </div>
+        <>
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
+            {shown.map((item) => (
+              <GalleryTile key={item.id} item={item} onOpen={setLightbox} />
+            ))}
+          </div>
+          {visibleCount < items.length && (
+            <div ref={sentinelRef} className="h-16" />
+          )}
+        </>
       )}
+
 
       {lightbox && (
         <div
