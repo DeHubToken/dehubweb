@@ -44,6 +44,8 @@ const GovernanceProposalPage = React.lazy(() => import("./pages/app/GovernancePr
 const StageDeepLinkPage = React.lazy(() => import("./pages/app/StageDeepLinkPage"));
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
+const BestDecentralizedSocialMedia = React.lazy(() => import("./pages/BestDecentralizedSocialMedia"));
+
 const PromptLanding = React.lazy(() => import("./pages/PromptLanding"));
 const CommunityPage = React.lazy(() => import("./pages/app/CommunityPage"));
 const EventPage = React.lazy(() => import("./pages/EventPage"));
@@ -171,6 +173,8 @@ function AppContent() {
           <Route path="/" element={<Navigate to="/app" replace />} />
           <Route path="/mobile-preview" element={<MobilePreview />} />
           <Route path="/guide" element={<GuidePage />} />
+          <Route path="/guides/best-decentralized-social-media" element={<Suspense fallback={<PageLoader />}><BestDecentralizedSocialMedia /></Suspense>} />
+
           <Route path="/docs" element={<DocsPage />} />
           <Route path="/docs/*" element={<DocsPage />} />
 
