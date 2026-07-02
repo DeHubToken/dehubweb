@@ -4,6 +4,7 @@ import { ArrowLeft, MessageSquare, Scissors, Briefcase } from 'lucide-react';
 import { useCreateJob } from '@/features/work/hooks/use-work';
 import type { WorkJobType, WorkCurrency, WorkPlatform } from '@/features/work/types';
 import { useAuth } from '@/contexts/AuthContext';
+import { SEOHead } from '@/components/SEOHead';
 
 const TYPE_OPTIONS: Array<{ id: WorkJobType; label: string; desc: string; icon: any; unitLabel: string }> = [
   { id: 'shill', label: 'Comments / Shill', desc: 'Pay per verified comment on X, YouTube, IG, TikTok.', icon: MessageSquare, unitLabel: 'comment' },
