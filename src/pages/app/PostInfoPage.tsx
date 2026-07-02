@@ -34,6 +34,7 @@ import { EditPostModal } from '@/components/app/modals/EditPostModal';
 import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { usePPVPurchaseCount } from '@/hooks/use-ppv-purchase-count';
 import { TranscriptSection } from '@/components/app/post-info/TranscriptSection';
+import { SEOHead } from '@/components/SEOHead';
 
 // Visibility options configuration
 const VISIBILITY_OPTIONS: { value: TokenVisibility; label: string; icon: React.ReactNode; description: string }[] = [
@@ -731,6 +732,7 @@ export default function PostInfoPage() {
 
   return (
     <div className="min-h-screen bg-black">
+      <SEOHead title={`Post #${nftInfo.tokenId} — DeHub`} description={`On-chain post info for token #${nftInfo.tokenId} on DeHub. View mint transaction, creator wallet, and holders.`} url={`https://dehub.io/app/post/${postId}/info`} />
       {/* Header */}
       <div className="sticky top-0 z-50 bg-black border-b border-white/10">
         <div className="flex items-center gap-4 p-4">

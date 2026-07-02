@@ -4,6 +4,7 @@ import { ArrowLeft, MessageSquare, Scissors, Briefcase } from 'lucide-react';
 import { useCreateJob } from '@/features/work/hooks/use-work';
 import type { WorkJobType, WorkCurrency, WorkPlatform } from '@/features/work/types';
 import { useAuth } from '@/contexts/AuthContext';
+import { SEOHead } from '@/components/SEOHead';
 
 const TYPE_OPTIONS: Array<{ id: WorkJobType; label: string; desc: string; icon: any; unitLabel: string }> = [
   { id: 'shill', label: 'Comments / Shill', desc: 'Pay per verified comment on X, YouTube, IG, TikTok.', icon: MessageSquare, unitLabel: 'comment' },
@@ -54,6 +55,7 @@ export default function WorkPostPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6">
+      <SEOHead title="Post a Job — DeHub Work" description="Post a paid job on DeHub Work: comments & shills, clipping bounties, or fixed-price contracts paid in DHB or USDC." url="https://dehub.io/work/post" />
       <button
         onClick={() => navigate('/work')}
         className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white mb-4"

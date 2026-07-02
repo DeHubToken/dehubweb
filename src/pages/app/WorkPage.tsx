@@ -4,6 +4,8 @@ import { Plus, Briefcase, Scissors, MessageSquare, Search } from 'lucide-react';
 import { useBrowseJobs } from '@/features/work/hooks/use-work';
 import { JobCard } from '@/features/work/components/JobCard';
 import type { WorkJobType, WorkCurrency } from '@/features/work/types';
+import { SEOHead } from '@/components/SEOHead';
+
 
 const TABS: Array<{ id: WorkJobType | 'all'; label: string; icon: any }> = [
   { id: 'all', label: 'All', icon: Briefcase },
@@ -27,6 +29,7 @@ export default function WorkPage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6">
+      <SEOHead title="Work — Paid Jobs, Clipping & Contracts | DeHub" description="Browse paid jobs on DeHub: comments & shill work, clipping bounties, and fixed-price contracts. Get paid in DHB or USDC." url="https://dehub.io/work" />
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
         <div>

@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { EventDetailDrawer } from '@/components/app/events/EventDetailDrawer';
 import type { CommunityEvent } from '@/hooks/use-events';
 import { Loader2 } from 'lucide-react';
+import { SEOHead } from '@/components/SEOHead';
 
 export default function EventPage() {
   const { eventNumber } = useParams<{ eventNumber: string }>();
@@ -33,12 +34,22 @@ export default function EventPage() {
   }
 
   return (
-    <EventDetailDrawer
-      event={event ?? null}
-      open={!!event}
-      onOpenChange={(open) => {
-        if (!open) navigate('/app/events');
-      }}
-    />
+    <>
+      {event && (
+        <SEOHead
+          title={`${event.title} — DeHub Events`}
+          description={(event.description || 'Community event on DeHub.').slice(0, 155)}
+          url={`https://dehub.io/app/events/${event.event_number}`}
+          type="article"
+        />
+      )}
+      <EventDetailDrawer
+        event={event ?? null}
+        open={!!event}
+        onOpenChange={(open) => {
+          if (!open) navigate('/app/events');
+        }}
+      />
+    </>
   );
 }

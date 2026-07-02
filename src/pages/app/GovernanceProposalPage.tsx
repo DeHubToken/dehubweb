@@ -18,6 +18,7 @@ import { useCallback, useRef, useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ArrowLeft, Loader2, Send, Trash2, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
+import { SEOHead } from '@/components/SEOHead';
 import { TranslatableText } from '@/components/app/TranslatableText';
 import { Input } from '@/components/ui/input';
 import { CardHeader } from '@/components/app/cards/CardHeader';
@@ -129,6 +130,7 @@ export default function GovernanceProposalPage() {
 
   return (
     <div className="min-h-screen px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 max-w-2xl mx-auto">
+      <SEOHead title={`${proposal.title} — DeHub Governance`} description={(proposal.description || 'DeHub governance proposal — vote and discuss.').slice(0, 155)} url={`https://dehub.io/app/governance/${proposalId}`} type="article" />
       {/* Back button */}
       <button
         onClick={() => navigate('/app/governance')}

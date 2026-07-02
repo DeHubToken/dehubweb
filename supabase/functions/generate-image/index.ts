@@ -261,7 +261,7 @@ ART DIRECTION: ${enhancedUserRequest}`;
       try {
         let logoDataUrl = logoImage;
         if (!logoDataUrl) {
-          const logoRes = await fetch('https://cosmic-echo-hero.lovable.app/__l5e/assets-v1/4cf0b92e-3cfd-4459-9c72-cdec81055a23/dehub-logo-white.png');
+          const logoRes = await fetch('https://dehub.io/__l5e/assets-v1/4cf0b92e-3cfd-4459-9c72-cdec81055a23/dehub-logo-white.png');
           if (logoRes.ok) {
             const buf = new Uint8Array(await logoRes.arrayBuffer());
             let bin = '';
