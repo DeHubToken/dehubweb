@@ -24,7 +24,8 @@ export function MobileBottomBar() {
     return () => window.removeEventListener("editor:open-inspector", handler);
   }, []);
 
-  const btn = "h-10 flex-1 rounded-md text-white/80 hover:bg-white/10 hover:text-white text-xs";
+  const btn =
+    "h-10 w-10 shrink-0 rounded-md p-0 text-white/80 hover:bg-white/10 hover:text-white flex items-center justify-center";
 
   return (
     <>
@@ -33,31 +34,24 @@ export function MobileBottomBar() {
         className="flex h-14 shrink-0 items-center justify-around gap-1 border-t border-white/10 bg-black/70 px-2 backdrop-blur-[24px] md:hidden"
         aria-label="Editor actions"
       >
-        <Button asChild size="sm" variant="ghost" className={btn}>
-          <Link to="/" aria-label="Home">
+        <Button asChild size="sm" variant="ghost" className={btn} aria-label="Home">
+          <Link to="/">
             <Home className="h-4 w-4" />
-            <span className="ml-1">Home</span>
           </Link>
         </Button>
-        <Button size="sm" variant="ghost" onClick={() => setOpen("media")} className={btn}>
+        <Button size="sm" variant="ghost" onClick={() => setOpen("media")} className={btn} aria-label="Media">
           <ImagePlus className="h-4 w-4" />
-          <span className="ml-1">Media</span>
         </Button>
-        <Button size="sm" variant="ghost" onClick={() => setOpen("inspector")} className={btn}>
+        <Button size="sm" variant="ghost" onClick={() => setOpen("inspector")} className={btn} aria-label="Edit">
           <SlidersHorizontal className="h-4 w-4" />
-          <span className="ml-1">Edit</span>
         </Button>
-        <Button size="sm" variant="ghost" onClick={() => toast.success("Project autosaved.")} className={btn}>
+        <Button size="sm" variant="ghost" onClick={() => toast.success("Project autosaved.")} className={btn} aria-label="Save">
           <Save className="h-4 w-4" />
-          <span className="ml-1">Save</span>
         </Button>
-        <Button size="sm" variant="ghost" onClick={() => setExportOpen(true)} className={btn}>
+        <Button size="sm" variant="ghost" onClick={() => setExportOpen(true)} className={btn} aria-label="Export">
           <Download className="h-4 w-4" />
-          <span className="ml-1">Export</span>
         </Button>
-        <div className="flex-1">
-          <PostToDeHub />
-        </div>
+        <PostToDeHub iconOnly />
       </nav>
 
       {/* md..xl tablet bar: just panel openers */}

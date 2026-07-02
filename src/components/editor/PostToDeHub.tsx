@@ -27,7 +27,7 @@ function filesToFileList(files: File[]): FileList {
   return dt.files;
 }
 
-export function PostToDeHub() {
+export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
   const auth = useAuth() as { isAuthenticated: boolean; openLoginModal: () => void };
   const isAuthenticated = !!auth?.isAuthenticated;
   const openLoginModal = auth?.openLoginModal;
@@ -113,10 +113,11 @@ export function PostToDeHub() {
   return (
     <>
       <LiquidGlassBubble2
-        label="Post"
+        label="Post to DeHub"
         icon={<Share2 className="h-4 w-4" />}
         onClick={onClick}
-        width="100px"
+        iconOnly={iconOnly}
+        width={iconOnly ? "40px" : "100px"}
         height="36px"
       />
 
