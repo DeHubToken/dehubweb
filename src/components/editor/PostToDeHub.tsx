@@ -113,7 +113,7 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
   return (
     <>
       <LiquidGlassBubble2
-        label="Post to DeHub"
+        label="Post"
         icon={<Share2 className="h-4 w-4" />}
         onClick={onClick}
         iconOnly={iconOnly}
