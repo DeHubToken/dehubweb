@@ -34,11 +34,8 @@ async function getBlogManifest(): Promise<Map<string, BlogManifestPost>> {
     if (_blogManifestCache && now - _blogManifestFetchedAt < 5 * 60 * 1000) {
         return _blogManifestCache;
     }
-    // Try multiple origins — production Netlify (dehub.io) may not yet have
-    // blog-manifest.json deployed; cosmic-echo-hero.lovable.app always does
-    // because Lovable auto-deploys static assets immediately.
+    // Try APP_URL (dehub.io) for the blog manifest.
     const origins = [
-        "https://cosmic-echo-hero.lovable.app",
         APP_URL,
     ];
     for (const origin of origins) {
