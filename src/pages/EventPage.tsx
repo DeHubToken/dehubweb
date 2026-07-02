@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { EventDetailDrawer } from '@/components/app/events/EventDetailDrawer';
 import type { CommunityEvent } from '@/hooks/use-events';
 import { Loader2 } from 'lucide-react';
+import { SEOHead } from '@/components/SEOHead';
 
 export default function EventPage() {
   const { eventNumber } = useParams<{ eventNumber: string }>();
