@@ -51,6 +51,11 @@ export default function CreatorEditorHost() {
 
   return (
     <>
+      {isCreator ? (
+        <SEOHead title="DeHub Creator — AI Studio, Agents & Video Tools" description="Generate images and videos, edit with AI, and publish to DeHub. A complete AI creator studio with metallic liquid glass design." url="https://dehub.io/creator" />
+      ) : (
+        <SEOHead title="DeHub Editor — In-Browser Video Editor" description="Cut, trim, and export videos in your browser. Multi-track timeline, audio waveforms, effects, and one-click publish to DeHub." url="https://dehub.io/editor" />
+      )}
       {mounted.creator && (
         <div style={isCreator ? undefined : { display: "none" }}>
           <Suspense fallback={isCreator ? <PageLoader /> : null}>
