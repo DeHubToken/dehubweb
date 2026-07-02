@@ -25,6 +25,7 @@ export default function SkillPage() {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      <SEOHead title="AI Skill Instructions — DeHub" description="Reference documentation for DeHub's AI assistant skills and prompt library." url="https://dehub.io/skill.md" />
       {/* Header */}
       <header className="sticky top-0 z-50 bg-black border-b border-white/10 px-4 py-3">
         <div className="max-w-4xl mx-auto flex items-center justify-between">
