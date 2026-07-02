@@ -5,7 +5,7 @@ import { LiquidGlassBubble } from "./liquid-glass-bubble";
 
 export interface LiquidGlassBubble2Props {
   /** Button label */
-  label: string;
+  label?: string;
   /** Icon to display next to label */
   icon?: React.ReactNode;
   /** Loading state — shows spinner and optional loading label */
@@ -26,6 +26,8 @@ export interface LiquidGlassBubble2Props {
   active?: boolean;
   /** Enable hover shimmer (default: true) */
   shimmer?: boolean;
+  /** Show only the icon, no visible label */
+  iconOnly?: boolean;
 }
 
 /**
@@ -47,7 +49,7 @@ export interface LiquidGlassBubble2Props {
  * ```
  */
 const LiquidGlassBubble2 = React.forwardRef<HTMLDivElement, LiquidGlassBubble2Props>(
-  ({ label, icon, loading, loadingLabel, disabled, onClick, width = "110px", height = "42px", className, active = false, shimmer = true }, ref) => {
+  ({ label, icon, loading, loadingLabel, disabled, onClick, width = "110px", height = "42px", className, active = false, shimmer = true, iconOnly = false }, ref) => {
     const isDisabled = disabled || loading;
 
     return (
@@ -63,6 +65,7 @@ const LiquidGlassBubble2 = React.forwardRef<HTMLDivElement, LiquidGlassBubble2Pr
           className
         )}
         style={{ width, height }}
+        aria-label={label}
       >
         <span className={cn(
           "flex items-center justify-center gap-2 text-sm font-medium h-full leading-none min-w-0",
@@ -71,12 +74,12 @@ const LiquidGlassBubble2 = React.forwardRef<HTMLDivElement, LiquidGlassBubble2Pr
           {loading ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin shrink-0" />
-              {loadingLabel || label}
+              {!iconOnly && (loadingLabel || label)}
             </>
           ) : (
             <>
               {icon ? <span className="shrink-0 flex items-center">{icon}</span> : null}
-              {label}
+              {!iconOnly && label}
             </>
           )}
         </span>
