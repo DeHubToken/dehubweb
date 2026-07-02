@@ -18,6 +18,7 @@ import { useCallback, useRef, useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ArrowLeft, Loader2, Send, Trash2, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
+import { SEOHead } from '@/components/SEOHead';
 import { TranslatableText } from '@/components/app/TranslatableText';
 import { Input } from '@/components/ui/input';
 import { CardHeader } from '@/components/app/cards/CardHeader';
