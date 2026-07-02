@@ -9,6 +9,7 @@ import {
 } from '@/features/work/hooks/use-work';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
+import { SEOHead } from '@/components/SEOHead';
 
 export default function WorkJobDetailPage() {
   const { jobId } = useParams<{ jobId: string }>();
