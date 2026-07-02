@@ -111,6 +111,13 @@ export function EditorTopBar() {
           height="36px"
         />
         <LiquidGlassBubble2
+          label="Creator"
+          icon={<Sparkles className="h-4 w-4" />}
+          onClick={() => navigate('/creator')}
+          width="104px"
+          height="36px"
+        />
+        <LiquidGlassBubble2
           label="Export"
           icon={<Download className="h-4 w-4" />}
           onClick={() => setExportOpen(true)}
