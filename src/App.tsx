@@ -185,8 +185,8 @@ function AppContent() {
 
           <Route path="/creators" element={<CreatorsPage />} />
           <Route path="/skill.md" element={<SkillPage />} />
-          <Route path="/editor" element={<Suspense fallback={<PageLoader />}><EditorPage /></Suspense>} />
-          <Route path="/creator" element={<Suspense fallback={<PageLoader />}><CreatorPage /></Suspense>} />
+          <Route path="/editor" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
+          <Route path="/creator" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
           <Route path="/r/:code" element={<Suspense fallback={<PageLoader />}><ReferralLanding /></Suspense>} />
           <Route path="/prompt" element={<Suspense fallback={<PageLoader />}><PromptLanding /></Suspense>} />
           <Route path="/premium" element={<Suspense fallback={<PageLoader />}><PremiumPage /></Suspense>} />
