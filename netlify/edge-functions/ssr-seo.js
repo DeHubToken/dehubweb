@@ -165,6 +165,16 @@ const SYSTEM_ROUTES = [
 
 const BOT_UA_PATTERN = /bot|crawl|spider|facebook|twitter|linkedin|whatsapp|telegram|slack|discord|facebot|oggrabber/i;
 
+// Static marketing/app routes that need per-route OG meta (bots only).
+// Kept in sync with the STATIC_ROUTES map inside supabase/functions/ssr-seo.
+const SSR_STATIC_ROUTES = new Set([
+  'features', 'pricing', 'creator', 'editor', 'prompt', 'work',
+  'affiliate', 'premium', 'governance', 'leaderboard', 'top-100',
+  'music', 'radio', 'tv', 'glossary', 'bridge', 'agents',
+  'assistant', 'creators', 'jobs', 'delete-account',
+  'guides/best-decentralized-social-media',
+]);
+
 function shouldServeSSR(pathname) {
   // Always SSR for post pages
   if (pathname.includes('/post/')) return true;
@@ -176,6 +186,9 @@ function shouldServeSSR(pathname) {
   if (/^\/docs\/blog\/[^/]+/.test(pathname)) return true;
   // Always SSR for root
   if (pathname === '/') return true;
+  // Static marketing routes with per-route OG meta
+  const trimmed = pathname.replace(/^\/+|\/+$/g, '').toLowerCase();
+  if (SSR_STATIC_ROUTES.has(trimmed)) return true;
   // Always SSR for profile pages (top-level non-system routes)
   const first = pathname.replace(/^\//, '').split('/')[0].toLowerCase().replace('@', '');
   if (first && !SYSTEM_ROUTES.includes(first) && !first.includes('.')) return true;

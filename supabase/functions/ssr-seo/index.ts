@@ -654,6 +654,123 @@ serve(async (req) => {
             }
         }
 
+        // 4. Static marketing/app routes — per-route title & description so shares
+        // on Telegram/X/Facebook show the right preview instead of the sitewide default.
+        const STATIC_ROUTES: Record<string, { title: string; description: string }> = {
+            "features": {
+                title: "Features — DeHub",
+                description: "Every DeHub feature in one place: decentralized social feed, video, music, live TV, DHB token, AI creator studio, jobs and Web3 payments.",
+            },
+            "pricing": {
+                title: "Pricing — DeHub Creator Studio",
+                description: "DeHub Creator Studio pricing in GBP. Ultra, Team and Scale plans with monthly credits for AI image, video, music and poster generation.",
+            },
+            "creator": {
+                title: "DeHub Creator Studio — AI Image, Video & Music",
+                description: "Generate images, videos, songs and branded posters with the DeHub Creator Studio. One workspace for every AI tool a modern creator needs.",
+            },
+            "editor": {
+                title: "DeHub Video Editor — In-Browser Timeline",
+                description: "Edit video in your browser with the DeHub multi-track timeline, effects, transitions and one-click publish to the decentralized feed.",
+            },
+            "prompt": {
+                title: "DeHub Prompt — Personalize Your Feed",
+                description: "Tell DeHub what you want to see and shape a feed that actually matches your taste. Prompt-powered personalization for Web3 social.",
+            },
+            "work": {
+                title: "DeHub Work — Web3 Jobs, Clipping & Escrow",
+                description: "Open jobs for commenting, clipping (paid per view) and on-chain contracts with escrow and disputes on Base. Get paid to create on DeHub.",
+            },
+            "affiliate": {
+                title: "DeHub Affiliate — Earn 20% Revenue Share",
+                description: "Refer creators to DeHub and earn 20% of the revenue they generate, plus 5% from second-tier invites. Transparent on-chain payouts.",
+            },
+            "premium": {
+                title: "DeHub Extra — Premium Membership",
+                description: "Unlock DeHub Extra: bigger uploads, priority AI credits, exclusive drops and creator perks across DeHub.",
+            },
+            "governance": {
+                title: "DeHub Governance — Vote with DHB",
+                description: "Propose and vote on the future of DeHub with the DHB token. Transparent, on-chain governance for the decentralized social network.",
+            },
+            "leaderboard": {
+                title: "DeHub Leaderboard — Top Creators & Stakers",
+                description: "See the top DeHub creators, DHB stakers and community leaders across Base and BNB Chain.",
+            },
+            "top-100": {
+                title: "Top 100 Cryptos — Live Prices on DeHub",
+                description: "Track the top 100 cryptocurrencies with live prices, market cap and charts inside DeHub.",
+            },
+            "music": {
+                title: "DeHub Music — Web3 Songs & Radio",
+                description: "Discover songs and radio stations from Web3 artists on DeHub. Stream, tip and collect on-chain.",
+            },
+            "radio": {
+                title: "DeHub Radio — 24/7 Web3 Stations",
+                description: "Tune into DeHub Radio for 24/7 stations curated by the Web3 community.",
+            },
+            "tv": {
+                title: "DeHub TV — Live Streams & Shows",
+                description: "Watch live streams and shows from creators across DeHub TV.",
+            },
+            "glossary": {
+                title: "DeHub Glossary — Web3 & DeFi Terms",
+                description: "Plain-English definitions for Web3, DeFi and DeHub-specific terms.",
+            },
+            "bridge": {
+                title: "DeHub Bridge — Move DHB Cross-Chain",
+                description: "Bridge DHB between BNB Chain and Base securely from inside DeHub.",
+            },
+            "agents": {
+                title: "DeHub Agents — AI Assistants for Creators",
+                description: "Custom AI agents that help you post, edit, moderate and grow on DeHub.",
+            },
+            "assistant": {
+                title: "DeHub Assistant — Your Creator AI",
+                description: "Chat with the DeHub Assistant to generate posts, images, videos and songs in seconds.",
+            },
+            "creators": {
+                title: "Creators on DeHub — Discover & Follow",
+                description: "Discover creators building on DeHub and follow the ones that match your taste.",
+            },
+            "jobs": {
+                title: "DeHub Jobs — Work with the Team",
+                description: "Open roles at DeHub. Help build the decentralized social network.",
+            },
+            "delete-account": {
+                title: "Delete Account and Data — DeHub",
+                description: "Permanently delete your DeHub account and associated data.",
+            },
+            "guides/best-decentralized-social-media": {
+                title: "Best Decentralized Social Media 2026 — DeHub Guide",
+                description: "Compare DeHub, Mastodon, Bluesky, Farcaster and Lens — features, tokens, moderation and how to choose the right decentralized social network.",
+            },
+        };
+
+        const normalizedKey = cleanPath.replace(/^\/+|\/+$/g, "").toLowerCase();
+        const staticMatch = STATIC_ROUTES[normalizedKey];
+        if (staticMatch) {
+            const html = generateMetaHTML({
+                title: staticMatch.title,
+                description: staticMatch.description,
+                image: "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo//Screenshot%202026-03-20%20225233.png",
+                url: `${APP_URL}/${normalizedKey}`,
+                twitterCard: "summary_large_image",
+                imageWidth: 1200,
+                imageHeight: 628,
+                functionBaseUrl,
+                isBot,
+                jsonLd: {
+                    "@context": "https://schema.org",
+                    "@type": "WebPage",
+                    name: staticMatch.title,
+                    description: staticMatch.description,
+                    url: `${APP_URL}/${normalizedKey}`,
+                },
+            });
+            return new Response(html, { headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400" } });
+        }
+
         // Default Fallback
         const html = generateMetaHTML({
             title: "DeHub — Open Source, User Owned & Censorship Resistant Media",
