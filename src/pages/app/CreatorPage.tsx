@@ -319,6 +319,13 @@ export default function CreatorPage() {
                 </button>
                 <button
                   type="button"
+                  onClick={() => navigate('/editor')}
+                  className="rounded-lg bg-white/[0.08] px-4 py-2 text-sm font-semibold text-white hover:bg-white/[0.12]"
+                >
+                  Editor
+                </button>
+                <button
+                  type="button"
                   onClick={() => navigate('/app')}
                   className="rounded-lg bg-white/10 px-4 py-2 text-sm font-semibold hover:bg-white/15"
                   style={{ color: accent }}
