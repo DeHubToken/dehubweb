@@ -11,6 +11,7 @@ import { useStoreById, useStoreListings, useStoreListing } from '@/hooks/use-sto
 import { StoreListingCard } from '@/components/app/stores/StoreListingCard';
 import { ListingDetailDrawer } from '@/components/app/stores/ListingDetailDrawer';
 import { Button } from '@/components/ui/button';
+import { SEOHead } from '@/components/SEOHead';
 
 export default function StoreDetailPage() {
   const { storeId } = useParams<{ storeId: string }>();
