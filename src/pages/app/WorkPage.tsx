@@ -4,6 +4,8 @@ import { Plus, Briefcase, Scissors, MessageSquare, Search } from 'lucide-react';
 import { useBrowseJobs } from '@/features/work/hooks/use-work';
 import { JobCard } from '@/features/work/components/JobCard';
 import type { WorkJobType, WorkCurrency } from '@/features/work/types';
+import { SEOHead } from '@/components/SEOHead';
+
 
 const TABS: Array<{ id: WorkJobType | 'all'; label: string; icon: any }> = [
   { id: 'all', label: 'All', icon: Briefcase },
