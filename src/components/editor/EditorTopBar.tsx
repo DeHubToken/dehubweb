@@ -1,9 +1,10 @@
 import { useEditorStore } from "@/store/editorStore";
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
 import { Button } from "@/components/ui/button";
-import { Save, Download, Undo2, Redo2, FilePlus2, Info } from "lucide-react";
+import { Save, Download, Undo2, Redo2, FilePlus2, Info, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { listProjects, deleteProject, setLastProjectId } from "@/lib/editor/projectStore";
 import type { ProjectSnapshot } from "@/lib/editor/types";
@@ -12,6 +13,7 @@ import { PostToDeHub } from "@/components/editor/PostToDeHub";
 import { AboutDialog } from "@/components/editor/AboutDialog";
 
 export function EditorTopBar() {
+  const navigate = useNavigate();
   const title = useEditorStore((s) => s.projectTitle);
   const setTitle = useEditorStore((s) => s.setProjectTitle);
   const undo = useEditorStore((s) => s.undo);
@@ -106,6 +108,13 @@ export function EditorTopBar() {
           icon={<Save className="h-4 w-4" />}
           onClick={() => toast.success("Project autosaved.")}
           width="92px"
+          height="36px"
+        />
+        <LiquidGlassBubble2
+          label="Creator"
+          icon={<Sparkles className="h-4 w-4" />}
+          onClick={() => navigate('/creator')}
+          width="104px"
           height="36px"
         />
         <LiquidGlassBubble2

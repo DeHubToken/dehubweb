@@ -54,8 +54,7 @@ const LaunchpadCoinPage = React.lazy(() => import("./pages/app/LaunchpadCoinPage
 const WorkPostPage = React.lazy(() => import("./pages/app/WorkPostPage"));
 const WorkJobDetailPage = React.lazy(() => import("./pages/app/WorkJobDetailPage"));
 const WorkDisputesPage = React.lazy(() => import("./pages/app/WorkDisputesPage"));
-const EditorPage = React.lazy(() => import("./pages/Editor"));
-const CreatorPage = React.lazy(() => import("./pages/app/CreatorPage"));
+const CreatorEditorHost = React.lazy(() => import("./pages/CreatorEditorHost"));
 const ReferralLanding = React.lazy(() => import("./pages/ReferralLanding"));
 const PremiumPage = React.lazy(() => import("./pages/Premium"));
 const PricingPage = React.lazy(() => import("./pages/PricingPage"));
@@ -186,8 +185,8 @@ function AppContent() {
 
           <Route path="/creators" element={<CreatorsPage />} />
           <Route path="/skill.md" element={<SkillPage />} />
-          <Route path="/editor" element={<Suspense fallback={<PageLoader />}><EditorPage /></Suspense>} />
-          <Route path="/creator" element={<Suspense fallback={<PageLoader />}><CreatorPage /></Suspense>} />
+          <Route path="/editor" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
+          <Route path="/creator" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
           <Route path="/r/:code" element={<Suspense fallback={<PageLoader />}><ReferralLanding /></Suspense>} />
           <Route path="/prompt" element={<Suspense fallback={<PageLoader />}><PromptLanding /></Suspense>} />
           <Route path="/premium" element={<Suspense fallback={<PageLoader />}><PremiumPage /></Suspense>} />
