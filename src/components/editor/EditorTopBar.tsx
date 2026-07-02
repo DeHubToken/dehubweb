@@ -1,9 +1,10 @@
 import { useEditorStore } from "@/store/editorStore";
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
 import { Button } from "@/components/ui/button";
-import { Save, Download, Undo2, Redo2, FilePlus2, Info } from "lucide-react";
+import { Save, Download, Undo2, Redo2, FilePlus2, Info, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { listProjects, deleteProject, setLastProjectId } from "@/lib/editor/projectStore";
 import type { ProjectSnapshot } from "@/lib/editor/types";
