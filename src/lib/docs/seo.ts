@@ -203,7 +203,7 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
   },
 };
 
-const BASE_URL = "https://cosmic-echo-hero.lovable.app";
+const BASE_URL = "https://dehub.io";
 
 export function getDocsSeoForPath(pathname: string): {
   entry: DocsSeoEntry;
