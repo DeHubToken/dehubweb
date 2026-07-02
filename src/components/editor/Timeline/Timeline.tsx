@@ -151,24 +151,52 @@ export function Timeline() {
       {/* Toolbar */}
       <div className="flex shrink-0 items-center gap-1 border-b border-white/10 px-2 py-1.5">
         <Button size="sm" variant="ghost" onClick={() => splitAtPlayhead()}
-          className="h-7 rounded-md px-2 text-white/80 hover:bg-white/10 hover:text-white">
-          <Scissors className="mr-1 h-3.5 w-3.5" /> Split
+          className="h-7 w-7 rounded-md p-0 text-white/80 hover:bg-white/10 hover:text-white md:h-7 md:w-auto md:px-2"
+          aria-label="Split">
+          <Scissors className="h-3.5 w-3.5" />
+          <span className="ml-1 hidden md:inline">Split</span>
         </Button>
         <Button size="sm" variant="ghost"
           onClick={() => rippleDelete()}
           disabled={!selectedClipIds.length}
-          className="h-7 rounded-md px-2 text-white/80 hover:bg-white/10 hover:text-white disabled:opacity-40">
-          <Trash2 className="mr-1 h-3.5 w-3.5" /> Delete
+          className="h-7 w-7 rounded-md p-0 text-white/80 hover:bg-white/10 hover:text-white disabled:opacity-40 md:h-7 md:w-auto md:px-2"
+          aria-label="Delete">
+          <Trash2 className="h-3.5 w-3.5" />
+          <span className="ml-1 hidden md:inline">Delete</span>
         </Button>
         <div className="mx-2 h-4 w-px bg-white/10" />
+
+        {/* Mobile: single + icon with popover */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button size="sm" variant="ghost"
+              className="h-7 w-7 rounded-md p-0 text-white/80 hover:bg-white/10 hover:text-white md:hidden"
+              aria-label="Add track">
+              <Plus className="h-3.5 w-3.5" />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent side="bottom" align="start" className="w-40 border-white/10 bg-black/80 p-1 text-white backdrop-blur-[24px]">
+            <Button size="sm" variant="ghost" onClick={() => addTrack("video")}
+              className="w-full justify-start rounded-md px-2 text-white/90 hover:bg-white/10">
+              <Film className="mr-2 h-3.5 w-3.5" /> Video
+            </Button>
+            <Button size="sm" variant="ghost" onClick={() => addTrack("audio")}
+              className="w-full justify-start rounded-md px-2 text-white/90 hover:bg-white/10">
+              <Music className="mr-2 h-3.5 w-3.5" /> Audio
+            </Button>
+          </PopoverContent>
+        </Popover>
+
+        {/* Desktop: separate + Video / + Audio buttons */}
         <Button size="sm" variant="ghost" onClick={() => addTrack("video")}
-          className="h-7 rounded-md px-2 text-white/80 hover:bg-white/10 hover:text-white">
-          <Plus className="mr-1 h-3.5 w-3.5" /> Video&nbsp;
+          className="hidden h-7 rounded-md px-2 text-white/80 hover:bg-white/10 hover:text-white md:flex">
+          <Plus className="mr-1 h-3.5 w-3.5" /> Video
         </Button>
         <Button size="sm" variant="ghost" onClick={() => addTrack("audio")}
-          className="h-7 rounded-md px-2 text-white/80 hover:bg-white/10 hover:text-white">
+          className="hidden h-7 rounded-md px-2 text-white/80 hover:bg-white/10 hover:text-white md:flex">
           <Plus className="mr-1 h-3.5 w-3.5" /> Audio
         </Button>
+
         <div className="ml-auto flex items-center gap-1">
           <Button size="icon" variant="ghost" onClick={() => setZoom(zoom / 1.25)}
             className="h-7 w-7 rounded-md text-white/80 hover:bg-white/10 hover:text-white" aria-label="Zoom out">
