@@ -34,12 +34,22 @@ export default function EventPage() {
   }
 
   return (
-    <EventDetailDrawer
-      event={event ?? null}
-      open={!!event}
-      onOpenChange={(open) => {
-        if (!open) navigate('/app/events');
-      }}
-    />
+    <>
+      {event && (
+        <SEOHead
+          title={`${event.title} — DeHub Events`}
+          description={(event.description || 'Community event on DeHub.').slice(0, 155)}
+          url={`https://dehub.io/app/events/${event.event_number}`}
+          type="article"
+        />
+      )}
+      <EventDetailDrawer
+        event={event ?? null}
+        open={!!event}
+        onOpenChange={(open) => {
+          if (!open) navigate('/app/events');
+        }}
+      />
+    </>
   );
 }
