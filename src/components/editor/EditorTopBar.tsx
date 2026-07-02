@@ -13,6 +13,7 @@ import { PostToDeHub } from "@/components/editor/PostToDeHub";
 import { AboutDialog } from "@/components/editor/AboutDialog";
 
 export function EditorTopBar() {
+  const navigate = useNavigate();
   const title = useEditorStore((s) => s.projectTitle);
   const setTitle = useEditorStore((s) => s.setProjectTitle);
   const undo = useEditorStore((s) => s.undo);
