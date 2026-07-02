@@ -54,8 +54,7 @@ const LaunchpadCoinPage = React.lazy(() => import("./pages/app/LaunchpadCoinPage
 const WorkPostPage = React.lazy(() => import("./pages/app/WorkPostPage"));
 const WorkJobDetailPage = React.lazy(() => import("./pages/app/WorkJobDetailPage"));
 const WorkDisputesPage = React.lazy(() => import("./pages/app/WorkDisputesPage"));
-const EditorPage = React.lazy(() => import("./pages/Editor"));
-const CreatorPage = React.lazy(() => import("./pages/app/CreatorPage"));
+const CreatorEditorHost = React.lazy(() => import("./pages/CreatorEditorHost"));
 const ReferralLanding = React.lazy(() => import("./pages/ReferralLanding"));
 const PremiumPage = React.lazy(() => import("./pages/Premium"));
 const PricingPage = React.lazy(() => import("./pages/PricingPage"));
