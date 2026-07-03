@@ -747,17 +747,41 @@ serve(async (req) => {
             },
         };
 
+        // Per-route OG share images (1200×630, dark mono, DeHub wordmark).
+        // CDN-served via Lovable Assets so social crawlers get the right preview.
+        const STATIC_ROUTE_IMAGES: Record<string, string> = {
+            "features":    "https://dehub.io/__l5e/assets-v1/d8db86c9-6dac-4b0b-860f-fee14a965c91/features.png",
+            "pricing":     "https://dehub.io/__l5e/assets-v1/bfd6d5d6-bacf-4dea-96a2-be3a1371d78d/pricing.png",
+            "creator":     "https://dehub.io/__l5e/assets-v1/fcbce8b8-50a4-4c01-af3c-6d86bc53ea48/creator.png",
+            "editor":      "https://dehub.io/__l5e/assets-v1/8e8c7196-4aca-4f40-b512-06c13d4db34d/editor.png",
+            "prompt":      "https://dehub.io/__l5e/assets-v1/ebfafb49-db47-44e4-ad02-8fe40c12c412/prompt.png",
+            "premium":     "https://dehub.io/__l5e/assets-v1/44996c46-ea77-462c-845f-3ebf22ed7ec0/premium.png",
+            "affiliate":   "https://dehub.io/__l5e/assets-v1/f5e79149-e7ac-4eb3-a1fd-d007e2c0c673/affiliate.png",
+            "governance":  "https://dehub.io/__l5e/assets-v1/d941d317-bdce-4210-8da3-63d5846e500b/governance.png",
+            "leaderboard": "https://dehub.io/__l5e/assets-v1/18833790-70b5-4077-9ede-f2005b263e93/leaderboard.png",
+            "top-100":     "https://dehub.io/__l5e/assets-v1/09bcace7-fe93-4176-a259-4cefd859b59e/top-100.png",
+            "music":       "https://dehub.io/__l5e/assets-v1/50f08ba0-d4f2-4f48-8276-6161c70da966/music.png",
+            "tv":          "https://dehub.io/__l5e/assets-v1/12b98dbb-bcba-429f-9956-7118c447985a/tv.png",
+            "agents":      "https://dehub.io/__l5e/assets-v1/ef064781-7419-43d2-beda-747320a36a49/agents.png",
+            "assistant":   "https://dehub.io/__l5e/assets-v1/4536d501-bc3a-403b-979b-ea7885c685ad/assistant.png",
+            "creators":    "https://dehub.io/__l5e/assets-v1/fae9d28d-a391-4ddd-aed1-a91cbfee0ae5/creators.png",
+            "bridge":      "https://dehub.io/__l5e/assets-v1/f1d02806-409b-498e-8c59-ff44b17ecd90/bridge.png",
+            "guides/best-decentralized-social-media": "https://dehub.io/__l5e/assets-v1/c2d40758-fdae-4b6f-9f93-080061013b7a/guides-best-decentralized-social-media.png",
+        };
+        const DEFAULT_OG_IMAGE = "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo//Screenshot%202026-03-20%20225233.png";
+
         const normalizedKey = cleanPath.replace(/^\/+|\/+$/g, "").toLowerCase();
         const staticMatch = STATIC_ROUTES[normalizedKey];
         if (staticMatch) {
+            const routeImage = STATIC_ROUTE_IMAGES[normalizedKey] || DEFAULT_OG_IMAGE;
             const html = generateMetaHTML({
                 title: staticMatch.title,
                 description: staticMatch.description,
-                image: "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo//Screenshot%202026-03-20%20225233.png",
+                image: routeImage,
                 url: `${APP_URL}/${normalizedKey}`,
                 twitterCard: "summary_large_image",
                 imageWidth: 1200,
-                imageHeight: 628,
+                imageHeight: 630,
                 functionBaseUrl,
                 isBot,
                 jsonLd: {
