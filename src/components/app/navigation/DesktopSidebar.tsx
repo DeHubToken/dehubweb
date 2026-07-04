@@ -204,7 +204,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         </motion.div>
 
         {/* Post / Login Button */}
-        <div className="mt-3 flex items-center justify-center lg:block">
+        <div className="mt-3 flex items-center justify-center lg:block px-1">
           <LiquidGlassBubble
             shimmer
             noBorder
