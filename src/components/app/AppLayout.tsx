@@ -44,6 +44,12 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       history.scrollRestoration = 'manual';
     }
   }, []);
+
+  // Expose sidebar collapsed state on <html> for CSS theming (e.g., minimal mode grid)
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    document.documentElement.setAttribute('data-sidebar-collapsed', isCollapsed ? 'true' : 'false');
+  }, [isCollapsed]);
   
   // Track if we're on a post overlay route
   const postMatch = useMatch('/app/post/:postId');
