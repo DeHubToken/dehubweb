@@ -10,6 +10,7 @@ import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { AuthPrompt } from '../AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
 import { useStage } from '@/contexts/StageContext';
+import { useAppTheme } from '@/contexts/ThemeContext';
 
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
@@ -32,6 +33,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const { openModal: openStagesModal } = useStage();
   
   const { isCollapsed, toggleCollapse } = useSidebarCollapse();
+  const { theme } = useAppTheme();
+  const isMinimal = theme === 'minimal';
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const { data: unreadCount } = useUnreadNotificationCount();
   const { data: customUnread } = useCustomUnreadCount();
@@ -208,7 +211,11 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           <LiquidGlassBubble
             shimmer
             noBorder
-            className={cn("cursor-pointer w-full box-border border border-white/30 rounded-2xl [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent", isConnecting && "opacity-70 pointer-events-none")}
+            className={cn(
+              "cursor-pointer w-full box-border rounded-2xl [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent",
+              isMinimal ? "border border-zinc-700" : "border border-white/30",
+              isConnecting && "opacity-70 pointer-events-none"
+            )}
             onClick={handlePostClick}
           >
             <div className={cn(
