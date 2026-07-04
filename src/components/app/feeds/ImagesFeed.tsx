@@ -259,7 +259,7 @@ function EndlessScrollView({
   }, [startFromId]);
 
   return (
-    <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3 relative">
+    <div data-feed-root className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3 relative">
       {/* Back to Grid Button - Bottom center, above mobile nav */}
       {onBackToCollage && (
         <button
