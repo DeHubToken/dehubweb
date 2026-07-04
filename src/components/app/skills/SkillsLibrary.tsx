@@ -93,7 +93,7 @@ export function SkillsLibrary() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {filtered.map((s) => (
-            <SkillCard key={s.id} skill={s} onClick={() => setDetail(s)} />
+            <SkillCard key={s.id} skill={s} onClick={() => navigate(`/app/assistant?skill=${s.slug}`)} />
           ))}
         </div>
       )}
