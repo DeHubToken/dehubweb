@@ -53,13 +53,22 @@ serve(async (req) => {
     // ── DeHub brand skill: auto-detect requests for DeHub-branded imagery and
     //    force logo-attached, brand-compliant generation. Also triggers when the
     //    Poster Studio passes an explicit `logoImage` (two-step composite path).
+    //    If the caller sent the DeHub logo in `sourceImage` (older client path
+    //    from GeneralAIChat), promote it to `logoImage` so the brand pipeline runs
+    //    and composites correctly instead of being bypassed as a generic edit.
     const brandKeywordHit = /\bde\s*hub\b/i.test(prompt) && /\b(posters?|banners?|thumbnails?|content|cards?|announc(?:e|ement|ements?)|flyers?|artworks?|social|covers?|graphics?|ads?|adverts?|images?|logos?|wallpapers?|memes?|promos?|campaigns?)\b/i.test(prompt);
+    if (brandKeywordHit && sourceImage && !logoImage) {
+      logoImage = sourceImage;
+      sourceImage = undefined;
+      console.log('[dehub-poster] Promoted sourceImage → logoImage for brand pipeline');
+    }
     const brandIntent = brandKeywordHit || !!logoImage;
     let brandPromptOverride: string | null = null;
-    // Only bypass brand pipeline when the caller sent a plain sourceImage edit
-    // (e.g. "make this darker" on a user photo) AND no explicit logoImage.
-    if (brandIntent && (!sourceImage || logoImage)) {
-      console.log('[dehub-poster] Brand intent detected — attaching logo + brand system prompt');
+    // Brand intent ALWAYS runs the brand pipeline. Previously we bypassed it when
+    // a sourceImage was present without an explicit logoImage — that dropped every
+    // brand rule and returned a generic Gemini edit of the logo. No more.
+    if (brandIntent) {
+
 
       // ── Format detection: pick the right aspect ratio from the user's wording.
       //    GPT-image-2 supports 1024x1024, 1024x1536 (portrait), 1536x1024 (landscape).
@@ -152,23 +161,48 @@ Rules:
         }
       }
 
-      brandPromptOverride = `Create a STUNNING promotional marketing poster (not a brand-guidelines layout). This is campaign artwork — think billboard, magazine cover, movie key-art. Cinematic, editorial, premium.
+      brandPromptOverride = `Create a STUNNING promotional marketing poster for DeHub (a decentralized social platform). This is campaign artwork — cinematic, editorial, premium.
 
 Format: ${formatHint}. Compose for this aspect ratio.
 
-Non-negotiable brand rules:
-- Palette: deep black / charcoal (#000–#0a0a0a) dominant, white accents, subtle muted neon glow (magenta / violet / cyan) OK. NEVER any blue.
-- Include the DeHub wordmark ONCE, small-to-medium, as PURE WHITE bold uppercase "DEHUB" in Exo / Exo 2 (fall back Eurostile / Michroma) with generous clear space, placed in the reserved logo region — do NOT plaster it, do NOT recolor, do NOT distort.
-- No emoji. No purple/indigo gradients on white. No glossy 3D blobs. No generic AI stock look.
-- Any additional text must be Exo / Exo 2, white, wide letter-spacing, minimal.
+Non-negotiable brand rules (violating these ruins the piece):
+- PALETTE: dominant deep black / charcoal (#000000–#0a0a0a). Accent color is PURE WHITE only. Subtle muted neon ambient glow (magenta, violet, cyan, warm amber) is allowed ONLY as atmospheric lighting on a black scene. ABSOLUTELY NO blue (no navy, no cobalt, no cyan-blue, no indigo, no periwinkle). NO purple/indigo gradient on white. NO pastel palettes.
+- LOGO: Reserve a clean, empty, calm region (roughly 20-25% of canvas width, min 8% clear space on every side) — typically bottom-center third, upper-left quadrant, or upper-right — where the real DeHub wordmark will be composited later. DO NOT DRAW A LOGO OR WORDMARK YOURSELF. Do not write "DEHUB", "DeHub", or any variant. Leave that region visually calm.
+- TYPOGRAPHY (if the user requested a headline/tagline): Exo / Exo 2 geometric technical sans-serif ONLY (fallback Eurostile / Michroma / Rajdhani). Pure white. Generous letter-spacing. Never serifs, script, or humanist sans (Inter, Poppins, DM Sans, Helvetica Neue).
+- NO emoji. NO glossy 3D blobs. NO generic-AI stock look (hero-with-arms-up, purple/indigo gradient on white, floating chrome spheres).
 
 ART DIRECTION: ${enhancedUserRequest}`;
 
+
+
+
+      // ── Guarantee we have a real DeHub logo PNG to composite. If the caller
+      //    didn't attach one (e.g. brand intent detected via keywords, or older
+      //    client path), fetch the canonical white wordmark from CDN so the
+      //    composite step ALWAYS runs. Never rely on the model to redraw the mark.
+      let compositeLogo = logoImage;
+      if (!compositeLogo) {
+        try {
+          const lr = await fetch('https://dehub.io/__l5e/assets-v1/4cf0b92e-3cfd-4459-9c72-cdec81055a23/dehub-logo-white.png');
+          if (lr.ok) {
+            const buf = new Uint8Array(await lr.arrayBuffer());
+            let bin = '';
+            for (let i = 0; i < buf.byteLength; i++) bin += String.fromCharCode(buf[i]);
+            compositeLogo = `data:image/png;base64,${btoa(bin)}`;
+            console.log('[dehub-poster] Auto-fetched canonical DeHub logo for composite');
+          } else {
+            console.warn('[dehub-poster] Canonical logo fetch failed:', lr.status);
+          }
+        } catch (e) {
+          console.warn('[dehub-poster] Canonical logo fetch error:', (e as Error).message);
+        }
+      }
 
       // Try GPT-image-2 (medium) first — dramatically better typography than Gemini
       // for the DeHub wordmark and brand text. Falls through to Gemini path below on failure.
       if (lovableApiKey) {
         try {
+
           console.log('[dehub-poster] Trying openai/gpt-image-2 (medium) for brand request');
           const gptRes = await fetch('https://ai.gateway.lovable.dev/v1/images/generations', {
             method: 'POST',
@@ -191,9 +225,11 @@ ART DIRECTION: ${enhancedUserRequest}`;
             if (b64) {
               const sceneDataUrl = `data:image/png;base64,${b64}`;
 
-              // ── Step 2: if the caller supplied a real logo PNG, composite it on top
-              //    with Gemini so the wordmark stays pixel-perfect (never redrawn).
-              if (logoImage) {
+              // ── Step 2: composite the real DeHub logo PNG on top with Gemini so
+              //    the wordmark stays pixel-perfect (never redrawn by the scene model).
+              //    `compositeLogo` is guaranteed above (client-supplied OR CDN fetch).
+              if (compositeLogo) {
+
                 try {
                   console.log('[dehub-poster] GPT scene ok — compositing real logo via Gemini');
                   const compositePrompt = `Take the first image (a finished DeHub marketing scene) and place the second image (the official DeHub white wordmark, transparent PNG) onto it as a logo lockup. 
@@ -214,7 +250,7 @@ ART DIRECTION: ${enhancedUserRequest}`;
                         role: 'user',
                         content: [
                           { type: 'image_url', image_url: { url: sceneDataUrl } },
-                          { type: 'image_url', image_url: { url: logoImage } },
+                          { type: 'image_url', image_url: { url: compositeLogo } },
                           { type: 'text', text: compositePrompt },
                         ],
                       }],
@@ -257,21 +293,11 @@ ART DIRECTION: ${enhancedUserRequest}`;
         }
       }
 
-      // Gemini fallback: attach the real logo PNG for compositing
+      // Gemini fallback: reuse the pre-fetched compositeLogo (guaranteed above)
       try {
-        let logoDataUrl = logoImage;
-        if (!logoDataUrl) {
-          const logoRes = await fetch('https://dehub.io/__l5e/assets-v1/4cf0b92e-3cfd-4459-9c72-cdec81055a23/dehub-logo-white.png');
-          if (logoRes.ok) {
-            const buf = new Uint8Array(await logoRes.arrayBuffer());
-            let bin = '';
-            for (let i = 0; i < buf.byteLength; i++) bin += String.fromCharCode(buf[i]);
-            logoDataUrl = `data:image/png;base64,${btoa(bin)}`;
-          } else {
-            console.warn('[dehub-poster] Logo fetch failed:', logoRes.status);
-          }
-        }
+        const logoDataUrl = compositeLogo;
         if (logoDataUrl) {
+
           sourceImage = logoDataUrl;
           model = 'gemini-3.1-flash-image';
           isGrokModel = false;
