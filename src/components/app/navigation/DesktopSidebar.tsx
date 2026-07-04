@@ -33,6 +33,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const { openModal: openStagesModal } = useStage();
   
   const { isCollapsed, toggleCollapse } = useSidebarCollapse();
+  const { theme } = useAppTheme();
+  const isMinimal = theme === 'minimal';
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const { data: unreadCount } = useUnreadNotificationCount();
   const { data: customUnread } = useCustomUnreadCount();
