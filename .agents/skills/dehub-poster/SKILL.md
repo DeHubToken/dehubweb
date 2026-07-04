@@ -128,29 +128,32 @@ Rendering rules for links on a poster: pure white, **Exo / Exo 2** (Light or Reg
 ## Workflow
 
 1. Confirm intent (poster, social card, banner?) and any specific message/theme — ask only if truly ambiguous. If the user gave no scene direction, **invent one from the Brand DNA section** — never default to a plain monolith or empty room.
-2. Pick logo variant (primary by default) and dimensions (1024×1024 square default; 1536×1024 poster/banner; 1024×1536 story).
+2. Pick logo variant (primary by default), dimensions (1024×1024 square default; 1536×1024 poster/banner; 1024×1536 story), and — critical — a **logo surface** from the Logo Integration section that fits the scene.
 3. **Step 1 — Generate scene** with `imagegen--generate_image`:
    - `model`: `"gemini-3.1-flash-image"` (Nano Banana 2). Do not switch unless the user explicitly named a different model.
-   - `prompt`: built from the scaffold below — dense, specific subject + specific material + specific atmosphere + explicit color bans. Every prompt must include a concrete Brand DNA scene, not a placeholder like "abstract shape".
+   - `prompt`: built from the scaffold above — subject + materials + lighting + textured background + **explicit blank logo surface** built into the scene (material, position, orientation, lighting). The blank surface is what makes the logo look integrated, not stuck on.
    - `target_path`: `/mnt/documents/dehub-<slug>-bg.jpg`
    - `width` / `height`: chosen dimensions
-4. **Step 2 — Composite the logo** with `imagegen--edit_image`:
+4. **Step 2 — Composite the logo into the scene surface** with `imagegen--edit_image`:
    - `image_paths`: `["/mnt/documents/dehub-<slug>-bg.jpg", ".agents/skills/dehub-poster/assets/dehub-logo-primary.png"]` (or the alternative wordmark)
-   - `prompt`: `"Place the DeHub white wordmark from the second image onto the first image in the [POSITION] area at roughly [SIZE]% of canvas width. Keep the mark pure white, crisp, unaltered, perfectly aligned, with generous clear space around it. Do not modify, recolor, or redraw anything else in the scene."`
+   - `prompt`: `"The first image contains a [SURFACE — e.g. 'polished obsidian slab', 'brushed-aluminum plaque', 'backlit smoked-glass panel'] at [POSITION]. Integrate the DeHub white wordmark from the second image onto that surface as if it is [physically part of it — e.g. 'engraved into the obsidian with subtle recessed depth', 'milled into the brushed aluminum', 'backlit through the frosted glass with soft internal glow', 'projected as cool-white light onto the mist']. Match the scene's perspective, key-light direction, and shadow falloff so the wordmark inherits the scene's lighting. Keep the mark pure white / cool near-white, preserve its exact letterforms and proportions — do NOT redraw or restyle the typography. Do not add any other letters, text, or logos. Do not alter anything else in the scene."`
    - `target_path`: `/mnt/documents/dehub-<slug>.png`
-5. **Self-check before showing the user.** View the final image and confirm: (a) background has real texture/depth, not flat black; (b) zero color hues — only blacks, greys, silvers, whites; (c) logo is crisp, white, well-spaced; (d) composition feels premium and cinematic, not generic. If any of these fail, regenerate with a tighter prompt before showing. Never ship an image you know is off-brand.
+5. **Self-check before showing the user.** View the final image and confirm: (a) background has real texture/depth, not flat black; (b) zero color hues — only blacks, greys, silvers, whites; (c) logo reads as **part of the scene** (matching perspective, inheriting scene lighting), not a sticker floating on top; (d) any typography is Exo-like (geometric, sharp, wide tracking) — regenerate if it looks like generic sans-serif; (e) composition feels premium and cinematic. If any fail, regenerate with a tighter prompt.
 6. Show the final image. Offer 1 quick variant if the user wants tweaks.
 
 ## Don'ts
 
 - **Don't ever produce a flat pure-black background.** Backgrounds must have texture, gradient, atmospheric depth, or a real material (marble, brushed steel, misted glass, obsidian, mercury). Flat #000 is the #1 failure mode.
 - **Don't use any color hues.** No red, orange, yellow, magenta, purple, violet, green, blue, teal. Monochrome only — blacks, greys, silvers, chromes, whites. If a swatch has a nameable hue, regenerate.
+- **Don't let the logo look stuck-on.** If the scene didn't include a physical surface built for the wordmark, regenerate the scene — don't try to composite onto empty space.
 - **Don't submit a lazy scene.** "Abstract dark background" or "empty room" is not a scene. Every generation must have a concrete subject drawn from the Brand DNA vocabulary.
+- **Don't ship generic-sans typography.** If rendered text on the poster looks like default Arial/Inter/Helvetica, regenerate with a tighter Exo prompt or reduce the text to 1–3 words.
 - Don't switch models away from Nano Banana 2 unless the user literally named a different one.
 - Don't let the scene model render the logo — always composite the real PNG in step 2.
-- Don't recolor the logo, add gradients to it, or place it on busy areas without clear space.
+- Don't recolor the logo (beyond inheriting cool scene lighting), add gradients to it, or place it on busy areas without clear space.
 - Don't skip the self-check step. Shipping an ugly image because "the tool returned it" is not acceptable.
 - Don't save outputs into `src/assets/` unless the user explicitly wants the image shipped into the app.
+
 
 
 
