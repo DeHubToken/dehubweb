@@ -53,13 +53,22 @@ serve(async (req) => {
     // ── DeHub brand skill: auto-detect requests for DeHub-branded imagery and
     //    force logo-attached, brand-compliant generation. Also triggers when the
     //    Poster Studio passes an explicit `logoImage` (two-step composite path).
+    //    If the caller sent the DeHub logo in `sourceImage` (older client path
+    //    from GeneralAIChat), promote it to `logoImage` so the brand pipeline runs
+    //    and composites correctly instead of being bypassed as a generic edit.
     const brandKeywordHit = /\bde\s*hub\b/i.test(prompt) && /\b(posters?|banners?|thumbnails?|content|cards?|announc(?:e|ement|ements?)|flyers?|artworks?|social|covers?|graphics?|ads?|adverts?|images?|logos?|wallpapers?|memes?|promos?|campaigns?)\b/i.test(prompt);
+    if (brandKeywordHit && sourceImage && !logoImage) {
+      logoImage = sourceImage;
+      sourceImage = undefined;
+      console.log('[dehub-poster] Promoted sourceImage → logoImage for brand pipeline');
+    }
     const brandIntent = brandKeywordHit || !!logoImage;
     let brandPromptOverride: string | null = null;
-    // Only bypass brand pipeline when the caller sent a plain sourceImage edit
-    // (e.g. "make this darker" on a user photo) AND no explicit logoImage.
-    if (brandIntent && (!sourceImage || logoImage)) {
-      console.log('[dehub-poster] Brand intent detected — attaching logo + brand system prompt');
+    // Brand intent ALWAYS runs the brand pipeline. Previously we bypassed it when
+    // a sourceImage was present without an explicit logoImage — that dropped every
+    // brand rule and returned a generic Gemini edit of the logo. No more.
+    if (brandIntent) {
+
 
       // ── Format detection: pick the right aspect ratio from the user's wording.
       //    GPT-image-2 supports 1024x1024, 1024x1536 (portrait), 1536x1024 (landscape).
