@@ -895,6 +895,22 @@ html[data-theme="minimal"] [data-sidebar-fade] {
     border-radius: 0 !important;
     max-width: none !important;
   }
+
+  /* Full-width post separator line in minimal mode on mobile */
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] {
+    position: relative;
+    border-bottom: 0 !important;
+  }
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item]::after {
+    content: "";
+    position: absolute;
+    left: -0.5rem;
+    right: -0.5rem;
+    bottom: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+  }
 }
 @media (min-width: 640px) and (max-width: 1023px) {
   html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] {
@@ -903,7 +919,30 @@ html[data-theme="minimal"] [data-sidebar-fade] {
     border-radius: 0 !important;
     max-width: none !important;
   }
+
+  /* Full-width post separator line in minimal mode on tablet */
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] {
+    position: relative;
+    border-bottom: 0 !important;
+  }
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item]::after {
+    content: "";
+    position: absolute;
+    left: -0.75rem;
+    right: -0.75rem;
+    bottom: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+  }
 }
+
+/* Hide the full-width separator on the last feed item in minimal mode */
+html[data-theme="minimal"] [data-feed-root] [data-feed-item]:last-child::after {
+  display: none;
+}
+
+
 
 
 
