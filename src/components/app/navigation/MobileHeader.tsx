@@ -88,7 +88,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
         
         {/* Notifications Button - only visible when logged in.
             When the post overlay is opened from the feed, keep the DEHUB header exactly as it was. */}
-        {isAuthenticated && (!isPostPage || isOverlayFromFeed) && (
+        {isAuthenticated && (
           <button
             onClick={() => navigate('/app/notifications')}
             className={`relative flex items-center justify-center transition-colors ${isNotificationsActive ? 'text-white' : 'text-zinc-400'}`}
