@@ -759,6 +759,13 @@ html[data-theme="cosmic"] #app-root > div > main {
   background-color: transparent !important;
 }
 
+/* Equal spacing around feed divider lines: the space between the divider and the
+   post above it (bottom padding) should match the space between the divider and
+   the post below it (gap + top padding of the next item). */
+[data-feed-root] > [data-feed-item] {
+  padding-bottom: 1.5rem !important;
+}
+
 /* ==========================================================================
    Minimalistic theme — replaces bento panels with thin white grid lines
    and swaps per-post borders for a hairline horizontal separator.
