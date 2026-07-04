@@ -960,6 +960,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     return (
       <div
         key={key}
+        data-feed-item
         className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3"
         style={index >= 3 ? { contentVisibility: 'auto', containIntrinsicSize: `0 ${intrinsicH}` } : undefined}
       >

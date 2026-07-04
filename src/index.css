@@ -758,3 +758,26 @@ html[data-theme="cosmic"] #app-root,
 html[data-theme="cosmic"] #app-root > div > main {
   background-color: transparent !important;
 }
+
+/* ==========================================================================
+   Minimalistic theme — replaces bento panels with thin white grid lines
+   and swaps per-post borders for a hairline horizontal separator.
+   ========================================================================== */
+html[data-theme="minimal"] [data-side-panel] {
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+html[data-theme="minimal"] [data-feed-item] {
+  background-color: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+html[data-theme="minimal"] [data-feed-item]:last-child {
+  border-bottom: 0 !important;
+}
