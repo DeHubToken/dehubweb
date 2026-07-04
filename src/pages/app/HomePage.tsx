@@ -674,7 +674,7 @@ export default function HomePage() {
                   ? handleOverlayBack
                   : () => window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }))}
                 className={cn(
-                  "relative flex items-center justify-center px-3 h-[35px] rounded-xl transition-colors",
+                  "relative flex items-center justify-center px-3 h-[35px] rounded-xl transition-colors overflow-hidden",
                   hasActiveFilters
                     ? "text-white"
                     : "text-zinc-400 hover:text-white hover:bg-white/5"
@@ -682,11 +682,33 @@ export default function HomePage() {
                 aria-label={isPostOverlayActive ? "Back to feed" : "Feed settings"}
               >
                 {hasActiveFilters && !isPostOverlayActive && (
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]" />
+                  <div className="absolute inset-0 translate-y-[0.6px] lg:translate-y-[0.25px] rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]" />
                 )}
-                {isPostOverlayActive
-                  ? <ArrowLeft className="relative z-10 w-4 h-4 text-white" />
-                  : <Settings2 className="relative z-10 w-4 h-4" />}
+                <AnimatePresence mode="wait" initial={false}>
+                  {isPostOverlayActive ? (
+                    <motion.div
+                      key="back"
+                      initial={{ rotate: -180, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: 180, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: "easeInOut" }}
+                      className="relative z-10"
+                    >
+                      <ArrowLeft className="w-4 h-4 text-white" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="settings"
+                      initial={{ rotate: 180, opacity: 0 }}
+                      animate={{ rotate: 0, opacity: 1 }}
+                      exit={{ rotate: -180, opacity: 0 }}
+                      transition={{ duration: 0.25, ease: "easeInOut" }}
+                      className="relative z-10"
+                    >
+                      <Settings2 className="w-4 h-4" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </button>
 
               {FEED_TABS.map((tab) => {
