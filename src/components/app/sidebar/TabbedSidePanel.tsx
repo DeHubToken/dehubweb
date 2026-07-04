@@ -40,7 +40,7 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
   }, []);
 
   return (
-    <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+    <div data-side-panel className="bg-zinc-900 rounded-2xl overflow-hidden">
       {/* Tab Icons */}
       <div className="flex">
         {tabs.map((tab) => {
