@@ -467,7 +467,7 @@ export function ActionBar({
       showBorder && "border-t border-zinc-800",
       className
     )}>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-y-2">
         {/* Primary actions */}
         <div className="flex items-center gap-3 lg:gap-3 xl:gap-4 min-w-0">
           <motion.button 
