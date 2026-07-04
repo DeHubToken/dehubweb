@@ -526,7 +526,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   return (
     <>
-      <div className="p-2 sm:p-3 pt-0 sm:pt-0">
+      <div data-feed-root className="p-2 sm:p-3 pt-0 sm:pt-0">
         {/* Filters */}
         <AnimatePresence mode="wait">
           {showFilters && (

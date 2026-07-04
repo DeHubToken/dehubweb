@@ -125,7 +125,7 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
   ], []);
 
   return (
-    <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-4">
+    <div data-feed-root className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-4">
       {/* Categories filter - toggles via tab re-click or settings icon */}
       <AnimatePresence>
         {showFilters && (

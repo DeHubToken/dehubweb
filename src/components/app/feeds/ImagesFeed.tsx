@@ -259,7 +259,7 @@ function EndlessScrollView({
   }, [startFromId]);
 
   return (
-    <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3 relative">
+    <div data-feed-root className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3 relative">
       {/* Back to Grid Button - Bottom center, above mobile nav */}
       {onBackToCollage && (
         <button
@@ -273,7 +273,7 @@ function EndlessScrollView({
       
       <div ref={scrollTargetRef} />
       {orderedPosts.map((post) => (
-        <div key={post.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+        <div key={post.id} data-feed-item className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
           <ImageCard post={post} />
         </div>
       ))}
