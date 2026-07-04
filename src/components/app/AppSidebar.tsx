@@ -40,7 +40,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
       {/* Log in Button - shown at top when not authenticated */}
       {!isAuthenticated && (
         <div className="mb-4 pb-4 px-1">
-          <LiquidGlassBubble shimmer noBorder className="w-full cursor-pointer ring-1 ring-white/30 rounded-2xl" onClick={() => setIsPostModalOpen(true)}>
+          <LiquidGlassBubble shimmer noBorder className="w-full box-border cursor-pointer border border-white/30 rounded-2xl" onClick={() => setIsPostModalOpen(true)}>
             <div className="flex items-center justify-center gap-2 font-semibold text-base text-white py-1.5">
               <LogIn className="w-5 h-5" />
               {t('sidebar.logIn')}
@@ -76,7 +76,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
       {/* Post Button - only shown when authenticated */}
       {isAuthenticated && (
         <div className="mt-4 pt-4 space-y-3 px-1">
-          <LiquidGlassBubble shimmer className="w-full cursor-pointer ring-1 ring-white/30 rounded-2xl" onClick={() => setIsPostModalOpen(true)}>
+          <LiquidGlassBubble shimmer noBorder className="w-full box-border cursor-pointer border border-white/30 rounded-2xl" onClick={() => setIsPostModalOpen(true)}>
             <div className="flex items-center justify-center gap-2 font-semibold text-base text-white py-1.5">
               <PenSquare className="w-5 h-5" />
               {t('sidebar.post')}
