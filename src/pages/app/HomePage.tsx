@@ -655,21 +655,27 @@ export default function HomePage() {
               />
             )}
             <div className="relative z-20 flex scrollbar-hide">
-              {/* Settings Button - toggles current tab's filters */}
+              {/* Settings Button - toggles current tab's filters.
+                  When a post overlay is open on top of the feed, this slot becomes a back button
+                  so the top nav bar feels seamless — the user never "leaves" the feed. */}
               <button
-                onClick={() => window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }))}
+                onClick={isPostOverlayActive
+                  ? handleOverlayBack
+                  : () => window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }))}
                 className={cn(
                   "relative flex items-center justify-center px-3 h-[35px] rounded-xl transition-colors",
                   hasActiveFilters
                     ? "text-white"
                     : "text-zinc-400 hover:text-white hover:bg-white/5"
                 )}
-                aria-label="Feed settings"
+                aria-label={isPostOverlayActive ? "Back to feed" : "Feed settings"}
               >
-                {hasActiveFilters && (
+                {hasActiveFilters && !isPostOverlayActive && (
                   <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]" />
                 )}
-                <Settings2 className="relative z-10 w-4 h-4" />
+                {isPostOverlayActive
+                  ? <ArrowLeft className="relative z-10 w-4 h-4 text-white" />
+                  : <Settings2 className="relative z-10 w-4 h-4" />}
               </button>
 
               {FEED_TABS.map((tab) => {
