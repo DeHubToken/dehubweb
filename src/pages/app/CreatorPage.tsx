@@ -207,6 +207,7 @@ export default function CreatorPage() {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<typeof categories[number]>('All');
   const [activeNav, setActiveNav] = useState<typeof navItems[number]>('Explore');
+  const [bannerDismissed, setBannerDismissed] = useState(false);
 
   const visibleTools = useMemo(
     () => activeCategory === 'All' ? tools : tools.filter(tool => tool.category === activeCategory),
@@ -244,18 +245,20 @@ export default function CreatorPage() {
         <h1 className="sr-only">DeHub Creator Studio</h1>
 
         <div className="sticky top-0 z-50">
+        {!bannerDismissed && (
           <div className="relative flex h-8 items-center justify-center px-10 text-center text-[12px] font-black uppercase tracking-[0.08em] text-black" style={metallicStyle}>
             <span>Launch creative campaigns faster with DeHub AI tools</span>
             <span className="ml-2 hidden rounded px-2 py-0.5 text-[10px] font-black italic text-white sm:inline-flex" style={{ backgroundColor: hot }}>TEST STUDIO</span>
             <button
               type="button"
-              onClick={() => navigate('/app')}
+              onClick={() => setBannerDismissed(true)}
               aria-label="Close creator banner"
               className="absolute right-3 top-1/2 -translate-y-1/2 text-black/80 hover:text-black"
             >
               ×
             </button>
           </div>
+        )}
 
           <header className="border-b border-white/10 px-3 py-3 backdrop-blur-xl sm:px-4" style={{ backgroundColor: 'rgba(9,10,11,0.95)' }}>
             <div className="flex items-center gap-3">
