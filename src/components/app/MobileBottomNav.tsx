@@ -53,6 +53,8 @@ export function MobileBottomNav() {
   const navVisible = useScrollDirection();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
+  const [isHomeRefreshing, setIsHomeRefreshing] = useState(false);
+  const homeRefreshTimerRef = useRef<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
