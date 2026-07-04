@@ -883,13 +883,13 @@ html[data-theme="minimal"] [data-sidebar-fade] {
   background-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.6) 40%, transparent 100%) !important;
 }
 
-/* Full-width media (images/videos) on mobile/tablet.
+/* Full-width media (images/videos) on mobile/tablet — MINIMAL THEME ONLY.
    Text/avatars/actions keep the bento card's padding — only the media
    bleeds past the card's border + the feed's outer padding to reach the
    screen edges. Values below sum: feed-root padding + feed-item p-3 (12px)
    + 1px card border. */
 @media (max-width: 639px) {
-  [data-feed-root] [data-feed-item] [data-media-full] {
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] {
     margin-left: calc(-0.75rem - 0.5rem - 1px) !important;
     margin-right: calc(-0.75rem - 0.5rem - 1px) !important;
     border-radius: 0 !important;
@@ -897,13 +897,14 @@ html[data-theme="minimal"] [data-sidebar-fade] {
   }
 }
 @media (min-width: 640px) and (max-width: 1023px) {
-  [data-feed-root] [data-feed-item] [data-media-full] {
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] {
     margin-left: calc(-0.75rem - 0.75rem - 1px) !important;
     margin-right: calc(-0.75rem - 0.75rem - 1px) !important;
     border-radius: 0 !important;
     max-width: none !important;
   }
 }
+
 
 
 
