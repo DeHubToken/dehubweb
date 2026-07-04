@@ -211,7 +211,11 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           <LiquidGlassBubble
             shimmer
             noBorder
-            className={cn("cursor-pointer w-full box-border border border-white/30 rounded-2xl [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent", isConnecting && "opacity-70 pointer-events-none")}
+            className={cn(
+              "cursor-pointer w-full box-border rounded-2xl [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent",
+              isMinimal ? "border border-zinc-700" : "border border-white/30",
+              isConnecting && "opacity-70 pointer-events-none"
+            )}
             onClick={handlePostClick}
           >
             <div className={cn(
