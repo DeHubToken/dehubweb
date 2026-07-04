@@ -105,9 +105,11 @@ function matchesPath(config: CachedPageConfig, pathname: string): boolean {
 const CachedPage = memo(function CachedPage({
   config,
   isActive,
+  forceVisible = false,
 }: {
   config: CachedPageConfig;
   isActive: boolean;
+  forceVisible?: boolean;
 }) {
   const Component = config.component;
   const SkeletonComponent = config.skeleton;
@@ -128,11 +130,15 @@ const CachedPage = memo(function CachedPage({
   // Apply top spacing in collapsed mode for all pages except home (which handles it internally)
   const needsCollapsedSpacing = isCollapsed && isActive && config.key !== 'home';
 
+  // When a post overlay is open on top of home, keep home visible so its sticky
+  // tab bar remains at the top — this is what makes the transition feel seamless.
+  const shouldStayVisible = isActive || forceVisible;
+
   return (
     <div
       className={cn(shouldAnimate ? 'animate-fade-in' : '')}
       style={
-        isActive
+        shouldStayVisible
           ? undefined
           : {
               visibility: 'hidden' as const,
