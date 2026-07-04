@@ -1118,11 +1118,33 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     if (colCount <= 1) {
       return <div className="space-y-3">{nodes}</div>;
     }
+    // Interleave "Your advert here" placeholder cards so the masonry can pack
+    // them into the empty spaces at the bottom of columns on full screen /
+    // collapsed sidebar layouts. Cadence + varied heights lets the browser
+    // slot them into gaps naturally.
+    const adVariants: Array<'sm' | 'md' | 'lg'> = ['sm', 'md', 'lg'];
+    const AD_EVERY = colCount === 3 ? 7 : 6;
+    const withAds: ReactNode[] = [];
+    let adIdx = 0;
+    nodes.forEach((node, i) => {
+      withAds.push(node);
+      if (nodes.length > AD_EVERY && (i + 1) % AD_EVERY === 0 && i !== nodes.length - 1) {
+        withAds.push(
+          <AdSlotCard key={`ad-slot-${i}`} variant={adVariants[adIdx % adVariants.length]} />
+        );
+        adIdx += 1;
+      }
+    });
+    // Always cap the grid with an ad so trailing column gaps get filled too.
+    withAds.push(
+      <AdSlotCard key="ad-slot-tail" variant={adVariants[adIdx % adVariants.length]} />
+    );
+
     // Use CSS multi-column layout for true browser-balanced masonry
     // The browser knows actual rendered heights, eliminating gaps from weight estimates
     return (
       <div style={{ columnCount: colCount, columnGap: '0.75rem' }}>
-        {nodes.map((node, i) => (
+        {withAds.map((node, i) => (
           <div key={i} className="mb-3" style={{ breakInside: 'avoid' }}>
             {node}
           </div>
@@ -1130,6 +1152,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       </div>
     );
   };
+
 
   // Render feed items with shorts and radio carousels inserted
   // Segments feed into alternating masonry containers and full-width inserts
