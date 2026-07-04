@@ -646,7 +646,7 @@ export default function HomePage() {
               <button
                 onClick={() => window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }))}
                 className={cn(
-                  "relative flex items-center justify-center px-3 py-2.5 rounded-xl transition-colors",
+                  "relative flex items-center justify-center px-3 h-[35px] rounded-xl transition-colors",
                   hasActiveFilters
                     ? "text-white"
                     : "text-zinc-400 hover:text-white hover:bg-white/5"
