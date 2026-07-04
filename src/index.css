@@ -764,9 +764,18 @@ html[data-theme="cosmic"] #app-root > div > main {
    and swaps per-post borders for a hairline horizontal separator.
    ========================================================================== */
 html[data-theme="minimal"] [data-side-panel] {
-  background-color: black !important;
+  background-color: transparent !important;
   border-radius: 0 !important;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 0 !important;
+  box-shadow: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Pull inner content flush to the left so text aligns cleanly without the bento frame */
+html[data-theme="minimal"] [data-side-panel] > * {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 /* Remove grey/zinc shading inside side panels (tabs, view-all buttons, fades, hover states) */
