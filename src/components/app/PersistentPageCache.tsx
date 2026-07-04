@@ -105,9 +105,11 @@ function matchesPath(config: CachedPageConfig, pathname: string): boolean {
 const CachedPage = memo(function CachedPage({
   config,
   isActive,
+  forceVisible = false,
 }: {
   config: CachedPageConfig;
   isActive: boolean;
+  forceVisible?: boolean;
 }) {
   const Component = config.component;
   const SkeletonComponent = config.skeleton;
@@ -128,11 +130,15 @@ const CachedPage = memo(function CachedPage({
   // Apply top spacing in collapsed mode for all pages except home (which handles it internally)
   const needsCollapsedSpacing = isCollapsed && isActive && config.key !== 'home';
 
+  // When a post overlay is open on top of home, keep home visible so its sticky
+  // tab bar remains at the top — this is what makes the transition feel seamless.
+  const shouldStayVisible = isActive || forceVisible;
+
   return (
     <div
       className={cn(shouldAnimate ? 'animate-fade-in' : '')}
       style={
-        isActive
+        shouldStayVisible
           ? undefined
           : {
               visibility: 'hidden' as const,
@@ -195,14 +201,18 @@ export function PersistentPageCache({ keepHomeVisible = false }: { keepHomeVisib
     <>
       {/* Render all mounted cached pages — active one visible, others hidden */}
       {CACHED_PAGES.filter(p => mountedPages.has(p.key)).map(config => {
-        // Home stays mounted (state preserved) but hidden when a post overlay is shown above it.
+        // Home stays mounted (state preserved) but hidden when a post overlay is shown above it —
+        // except when `keepHomeVisible` is set, in which case we keep home visible so its
+        // sticky top nav bar remains anchored to the top during the overlay.
         const isActive = matchesPath(config, pathname);
+        const forceVisible = config.key === 'home' && keepHomeVisible;
 
         return (
           <CachedPage
             key={config.key}
             config={config}
             isActive={isActive}
+            forceVisible={forceVisible}
           />
         );
       })}

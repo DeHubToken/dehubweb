@@ -14,9 +14,9 @@ import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
-import { useSearchParams, useNavigationType } from 'react-router-dom';
+import { useSearchParams, useNavigationType, useLocation, useNavigate, useMatch } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Settings2 } from 'lucide-react';
+import { Settings2, ArrowLeft } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
@@ -155,6 +155,19 @@ export default function HomePage() {
   }, [activeTab]);
   
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Detect if a post overlay is currently active on top of the persistent home
+  const location = useLocation();
+  const navigate = useNavigate();
+  const postOverlayMatch = useMatch('/app/post/:postId');
+  const videoOverlayMatch = useMatch('/app/video/:tokenId');
+  const isPostOverlayActive = !!(postOverlayMatch || videoOverlayMatch) &&
+    !!(location.state as any)?.fromFeed;
+
+  const handleOverlayBack = useCallback(() => {
+    if (window.history.length > 1) navigate(-1);
+    else navigate('/app');
+  }, [navigate]);
   
   // Filter states for each feed type
   const [showHomeFilters, setShowHomeFilters] = useState(false);
@@ -620,7 +633,7 @@ export default function HomePage() {
       <h1 className="sr-only">DeHub Home — Decentralised Social Media Feed, Censorship Resistant & Freedom of Speech</h1>
       {/* Tab Navigation */}
       <div
-        className={cn("sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 lg:mt-0 transition-transform duration-300 ease-in-out", isCollapsed && "pl-2 pr-0", isCollapsed && "lg:hidden")}
+        className={cn("sticky top-11 lg:top-0 bg-black z-[110] px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 lg:mt-0 transition-transform duration-300 ease-in-out", isCollapsed && "pl-2 pr-0", isCollapsed && "lg:hidden")}
         style={{ transform: (isMobile && !navVisible) ? 'translateY(-110%)' : 'translateY(0)', willChange: 'transform' }}
       >
         <div className="bg-zinc-900 rounded-xl overflow-visible">
@@ -642,21 +655,27 @@ export default function HomePage() {
               />
             )}
             <div className="relative z-20 flex scrollbar-hide">
-              {/* Settings Button - toggles current tab's filters */}
+              {/* Settings Button - toggles current tab's filters.
+                  When a post overlay is open on top of the feed, this slot becomes a back button
+                  so the top nav bar feels seamless — the user never "leaves" the feed. */}
               <button
-                onClick={() => window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }))}
+                onClick={isPostOverlayActive
+                  ? handleOverlayBack
+                  : () => window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }))}
                 className={cn(
                   "relative flex items-center justify-center px-3 h-[35px] rounded-xl transition-colors",
                   hasActiveFilters
                     ? "text-white"
                     : "text-zinc-400 hover:text-white hover:bg-white/5"
                 )}
-                aria-label="Feed settings"
+                aria-label={isPostOverlayActive ? "Back to feed" : "Feed settings"}
               >
-                {hasActiveFilters && (
+                {hasActiveFilters && !isPostOverlayActive && (
                   <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]" />
                 )}
-                <Settings2 className="relative z-10 w-4 h-4" />
+                {isPostOverlayActive
+                  ? <ArrowLeft className="relative z-10 w-4 h-4 text-white" />
+                  : <Settings2 className="relative z-10 w-4 h-4" />}
               </button>
 
               {FEED_TABS.map((tab) => {

@@ -195,7 +195,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
          <main className={cn(
-          "flex-1 min-h-screen pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black pt-11"
+          "flex-1 min-h-screen pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black pt-11 relative"
         )}>
           {/* Global feed nav — keep mounted and animate in/out to avoid rigid multi-step jumps */}
           <div
@@ -212,9 +212,12 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           {/* Persistent page cache — all visited pages stay mounted */}
           <PersistentPageCache keepHomeVisible={showHomePagePersisted} />
           
-          {/* Post overlay — renders on top when viewing a post from home */}
+          {/* Post overlay — renders on top when viewing a post from home.
+              Positioned absolutely so it visually covers the home feed content,
+              while the home page's sticky top tab bar (z-50) peeks above it —
+              the toggle in that bar swaps to a back button for a seamless feel. */}
           {showHomePagePersisted && (
-            <div className="w-full min-h-screen relative z-10">
+            <div className="absolute top-0 left-0 right-0 min-h-screen z-10 bg-black">
               <SinglePostPage />
             </div>
           )}
