@@ -937,6 +937,35 @@ html[data-theme="minimal"] [data-sidebar-fade] {
   }
 }
 
+/* Minimal theme: media bleeds to screen edges on mobile/tablet, but overlay
+   controls (fullscreen, timers, badges, arrows) need extra horizontal inset
+   so they don't hug the screen edge. Bumps common Tailwind edge offsets by
+   ~8px on the horizontal axis only. */
+@media (max-width: 1023px) {
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] > .absolute.left-2,
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] .absolute.left-2 {
+    left: 0.75rem !important;
+  }
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] > .absolute.right-2,
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] .absolute.right-2 {
+    right: 0.75rem !important;
+  }
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] > .absolute.left-8,
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] .absolute.left-8 {
+    left: 1.25rem !important;
+  }
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] > .absolute.right-8,
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] .absolute.right-8 {
+    right: 1.25rem !important;
+  }
+  /* Bottom gradient bar padding for controls (play/scrubber) */
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] .absolute.bottom-0.left-0.right-0 {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+}
+
+
 /* Hide the full-width separator on the last feed item in minimal mode */
 html[data-theme="minimal"] [data-feed-root] [data-feed-item]:last-child::after {
   display: none;
