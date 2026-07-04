@@ -1,5 +1,5 @@
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Menu, Bell } from 'lucide-react';
+import { useLocation, useNavigate, useNavigationType } from 'react-router-dom';
+import { Menu, Bell, ArrowLeft } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -36,6 +36,7 @@ interface MobileHeaderProps {
 export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) {
   const location = useLocation();
   const navigate = useNavigate();
+  const navType = useNavigationType();
   const { isAuthenticated, user, openLoginModal } = useAuth();
   
   const { data: unreadCount } = useUnreadNotificationCount();
@@ -59,14 +60,20 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   }, [navigate]);
 
   const isNotificationsActive = location.pathname === '/app/notifications';
-  const isDedicatedPostPage = (location.pathname.startsWith('/app/post/') || location.pathname.startsWith('/app/video/')) && !(location.state as any)?.fromFeed;
+  const isPostPage = location.pathname.startsWith('/app/post/') || location.pathname.startsWith('/app/video/');
   const handleMenuClick = useCallback(() => {
     if (!isAuthenticated) {
       openLoginModal();
     }
   }, [isAuthenticated, openLoginModal]);
 
-  if (isDedicatedPostPage) return null;
+  const handleBackClick = useCallback(() => {
+    if (navType === 'POP') {
+      navigate('/app');
+    } else {
+      navigate(-1);
+    }
+  }, [navType, navigate]);
 
   return (
     <header className="lg:hidden fixed top-0 left-0 right-0 z-[60] bg-black px-4 h-11 flex items-center justify-between">
@@ -77,7 +84,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
       <div className="flex items-center gap-3">
         
         {/* Notifications Button - only visible when logged in */}
-        {isAuthenticated && (
+        {isAuthenticated && !isPostPage && (
           <button
             onClick={() => navigate('/app/notifications')}
             className={`relative flex items-center justify-center transition-colors ${isNotificationsActive ? 'text-white' : 'text-zinc-400'}`}
@@ -92,8 +99,16 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
           </button>
         )}
         
-        {/* Menu Button - Avatar drawer when authenticated, login prompt when not */}
-        {isAuthenticated ? (
+        {/* On dedicated post pages: back button replaces the menu/settings toggle */}
+        {isPostPage ? (
+          <button
+            onClick={handleBackClick}
+            className="p-2 -mr-2 rounded-full text-white hover:bg-white/10 transition-colors"
+            aria-label="Back"
+          >
+            <ArrowLeft className="w-6 h-6" />
+          </button>
+        ) : isAuthenticated ? (
           <Drawer open={isOpen} onOpenChange={onToggle}>
             <DrawerTrigger asChild>
               {user ? (

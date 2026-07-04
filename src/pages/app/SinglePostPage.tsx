@@ -788,13 +788,13 @@ export default function SinglePostPage() {
     
     return (
       <>
-        {/* Mobile/Tablet: Full immersive drawer (swipe down to close) */}
+        {/* Mobile/Tablet: Drawer opens just below the top nav bar (h-11 = 2.75rem) */}
         {isMobileView && (
           <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} modal={false} dismissible>
             <DrawerContent
               hideHandle
               noOverlay
-              className="!h-[100dvh] !max-h-[100dvh] !mt-0 !rounded-none !border-0 !shadow-none !bg-black"
+              className="!h-[calc(100dvh-2.75rem)] !max-h-[calc(100dvh-2.75rem)] !mt-11 !rounded-t-2xl !border-0 !shadow-none !bg-black top-11"
             >
               <div
                 ref={mobileScrollContainerRef}
@@ -802,16 +802,6 @@ export default function SinglePostPage() {
                 style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' as any }}
               >
                 <div className="relative">
-                  <ImmersiveVideoHeader
-                    fallbackRoute="/app"
-                    channel={videoData.channel}
-                    channelAvatar={videoData.channelAvatar}
-                    creatorUsername={videoData.creatorUsername}
-                    creatorId={videoData.creatorId}
-                    verified={videoData.verified}
-                    showBack
-                    onBack={handleMobileBack}
-                  />
                   {renderContent()}
                 </div>
                 {id && <RelatedVideosFeed currentVideoId={id} scrollContainerRef={mobileScrollContainerRef} />}
@@ -977,10 +967,12 @@ export default function SinglePostPage() {
   // Standard layout for other content types
   const isLivePost = contentType === 'live';
 
-  const renderPostContent = (onBack?: () => void) => (
+  const renderPostContent = (onBack?: () => void, hideHeader = false) => (
     <>
-      {/* Mobile: always show back (user came from feed). Desktop: only show if there's history */}
-      <PageHeader showBack={onBack ? true : hasHistory} onBack={onBack} innerClassName="max-w-2xl mx-auto w-full" />
+      {/* Mobile: header hidden — top nav bar provides the back button. Desktop: only show if there's history */}
+      {!hideHeader && (
+        <PageHeader showBack={onBack ? true : hasHistory} onBack={onBack} innerClassName="max-w-2xl mx-auto w-full" />
+      )}
       <div className="px-3 sm:px-4 pb-8 pt-2">
         <div className="max-w-2xl mx-auto">
           <div className="lg:rounded-xl lg:border lg:border-white/[0.12] lg:bg-white/[0.03] lg:p-3">
@@ -1025,12 +1017,12 @@ export default function SinglePostPage() {
           <DrawerContent
             hideHandle
             noOverlay
-            className="!h-[100dvh] !max-h-[100dvh] !mt-0 !rounded-none !border-0 !shadow-none !bg-black"
+            className="!h-[calc(100dvh-2.75rem)] !max-h-[calc(100dvh-2.75rem)] !mt-11 !rounded-t-2xl !border-0 !shadow-none !bg-black top-11"
           >
             <div
               className={`flex flex-col h-full overflow-y-auto ${isLivePost ? 'bg-black' : ''}`}
             >
-              {renderPostContent(handleMobileBack)}
+              {renderPostContent(handleMobileBack, true)}
             </div>
           </DrawerContent>
         </Drawer>
