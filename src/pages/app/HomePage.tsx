@@ -155,6 +155,19 @@ export default function HomePage() {
   }, [activeTab]);
   
   const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Detect if a post overlay is currently active on top of the persistent home
+  const location = useLocation();
+  const navigate = useNavigate();
+  const postOverlayMatch = useMatch('/app/post/:postId');
+  const videoOverlayMatch = useMatch('/app/video/:tokenId');
+  const isPostOverlayActive = !!(postOverlayMatch || videoOverlayMatch) &&
+    !!(location.state as any)?.fromFeed;
+
+  const handleOverlayBack = useCallback(() => {
+    if (window.history.length > 1) navigate(-1);
+    else navigate('/app');
+  }, [navigate]);
   
   // Filter states for each feed type
   const [showHomeFilters, setShowHomeFilters] = useState(false);
