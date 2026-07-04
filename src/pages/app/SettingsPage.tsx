@@ -1728,7 +1728,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
                     </span>
                   )}
                   <Icon className="w-6 h-6 text-zinc-400" />
-                  <span className="text-white text-sm">{t(option.labelKey)}</span>
+                  <span className="text-white text-sm">{t(option.labelKey, option.value === 'minimal' ? 'Minimal' : undefined as any)}</span>
                 </button>
               );
             })}
