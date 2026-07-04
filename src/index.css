@@ -847,12 +847,13 @@ html[data-theme="minimal"] [data-view-all] *::after {
   display: none !important;
 }
 
-/* Square off EVERYTHING in minimal mode — keep only true circular elements (avatars/dots) round */
-html[data-theme="minimal"] *:not(img):not(video):not(canvas):not(svg):not(picture):not([class*="rounded-full"]):not([class*="avatar"]):not([data-keep-round]) {
+/* Square off EVERYTHING in minimal mode — including avatars and circular dots.
+   Only opt-outs marked with [data-keep-round] stay round. */
+html[data-theme="minimal"] *:not([data-keep-round]) {
   border-radius: 0 !important;
 }
-html[data-theme="minimal"] *:not(img):not(video):not(canvas):not(svg):not(picture):not([class*="rounded-full"]):not([class*="avatar"]):not([data-keep-round])::before,
-html[data-theme="minimal"] *:not(img):not(video):not(canvas):not(svg):not(picture):not([class*="rounded-full"]):not([class*="avatar"]):not([data-keep-round])::after {
+html[data-theme="minimal"] *:not([data-keep-round])::before,
+html[data-theme="minimal"] *:not([data-keep-round])::after {
   border-radius: 0 !important;
 }
 
