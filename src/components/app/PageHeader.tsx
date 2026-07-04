@@ -46,15 +46,15 @@ export function PageHeader({
 
   return (
     <div className={cn(
-      'sticky bg-black z-40 px-3 pt-0 pb-3 sm:p-4',
+      'sticky z-40 px-3 pt-0 pb-3 sm:px-0 sm:pt-3 sm:pb-3',
       isCollapsed ? 'top-0 lg:top-12' : 'top-0',
       className
     )}>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 px-3 py-2">
         {showBack && (
           <button
             onClick={handleBack}
-            className="p-2 rounded-xl hover:bg-zinc-800 transition-colors"
+            className="p-2 rounded-xl hover:bg-white/10 transition-colors"
             aria-label="Go back"
           >
             <ArrowLeft className="w-5 h-5 text-white" />
@@ -70,5 +70,6 @@ export function PageHeader({
         )}
       </div>
     </div>
+
   );
 }
