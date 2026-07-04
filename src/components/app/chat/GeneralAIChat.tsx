@@ -215,9 +215,14 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
         return;
       }
       
-      // If creative logo request, convert logo to base64 and use as source image
+      // For DeHub-branded requests, send the logo through the dedicated `logoImage`
+      // channel so the server's brand pipeline runs (scene + composite + brand rules).
+      // Sending it as `sourceImage` would bypass the pipeline and just edit the logo.
       let effectiveSourceImage = currentAttachedImage;
-      if (wantsDeHubBrand || isCreativeLogo) {
+      let brandLogoImage: string | undefined;
+      if (wantsDeHubBrand) {
+        brandLogoImage = await imageUrlToBase64(dehubLogo);
+      } else if (isCreativeLogo) {
         effectiveSourceImage = await imageUrlToBase64(dehubLogo);
       }
       const isImageRequest = isCreativeLogo || requiresImageGeneration(currentInput, !!currentAttachedImage);
@@ -226,9 +231,11 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
         const { data, error } = await supabase.functions.invoke('generate-image', {
           body: {
             prompt: wantsDeHubBrand ? buildDeHubBrandPrompt(currentInput) : currentInput,
-            sourceImage: effectiveSourceImage || undefined
+            sourceImage: effectiveSourceImage || undefined,
+            logoImage: brandLogoImage,
           }
         });
+
 
         if (error) throw error;
         
