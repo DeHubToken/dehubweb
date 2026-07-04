@@ -752,6 +752,27 @@ export default function SinglePostPage() {
       document.body.classList.remove('immersive-video-mode');
     };
   }, [isVideoPost]);
+
+  // Vaul drawer (used on mobile for post overlay) sets `body { pointer-events: none }`
+  // even when modal={false}, which blocks taps on the fixed MobileHeader / back button
+  // on some mobile browsers. Force body pointer-events auto while this page is mounted
+  // and keep it in sync via a MutationObserver in case Vaul re-applies it.
+  useEffect(() => {
+    const body = document.body;
+    const restore = body.style.pointerEvents;
+    const enforce = () => {
+      if (body.style.pointerEvents === 'none') {
+        body.style.pointerEvents = 'auto';
+      }
+    };
+    enforce();
+    const mo = new MutationObserver(enforce);
+    mo.observe(body, { attributes: true, attributeFilter: ['style'] });
+    return () => {
+      mo.disconnect();
+      body.style.pointerEvents = restore;
+    };
+  }, []);
   
   // Determine content type and render appropriate card
   const renderContent = () => {
