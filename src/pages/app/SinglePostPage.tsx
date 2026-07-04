@@ -788,13 +788,13 @@ export default function SinglePostPage() {
     
     return (
       <>
-        {/* Mobile/Tablet: Full immersive drawer (swipe down to close) */}
+        {/* Mobile/Tablet: Drawer opens just below the top nav bar (h-11 = 2.75rem) */}
         {isMobileView && (
           <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} modal={false} dismissible>
             <DrawerContent
               hideHandle
               noOverlay
-              className="!h-[100dvh] !max-h-[100dvh] !mt-0 !rounded-none !border-0 !shadow-none !bg-black"
+              className="!h-[calc(100dvh-2.75rem)] !max-h-[calc(100dvh-2.75rem)] !mt-11 !rounded-t-2xl !border-0 !shadow-none !bg-black top-11"
             >
               <div
                 ref={mobileScrollContainerRef}
@@ -802,16 +802,6 @@ export default function SinglePostPage() {
                 style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' as any }}
               >
                 <div className="relative">
-                  <ImmersiveVideoHeader
-                    fallbackRoute="/app"
-                    channel={videoData.channel}
-                    channelAvatar={videoData.channelAvatar}
-                    creatorUsername={videoData.creatorUsername}
-                    creatorId={videoData.creatorId}
-                    verified={videoData.verified}
-                    showBack
-                    onBack={handleMobileBack}
-                  />
                   {renderContent()}
                 </div>
                 {id && <RelatedVideosFeed currentVideoId={id} scrollContainerRef={mobileScrollContainerRef} />}
