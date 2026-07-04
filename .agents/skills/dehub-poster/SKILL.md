@@ -38,24 +38,29 @@ Both are **white-on-transparent**. They must always appear in white (or near-whi
 
 ## Brand style rules
 
-These mirror the DeHub app design system — apply to every generated image:
+These mirror the DeHub app design system — apply to every generated image. **Strict monochrome + metallic glass.** Anything else is off-brand.
 
-- **Palette**: deep black / charcoal backgrounds (`#000`–`#0a0a0a`), white text, subtle white-opacity accents. **Never use blue.** Occasional muted neon (magenta, violet, cyan glow) is OK only as ambient lighting, never as logo color.
-- **Aesthetic**: liquid glass, frosted blur, cinematic, premium, decentralized-tech feel. Think Apple keynote × cyberpunk × A24 poster.
-- **Composition**: lots of negative space, strong focal hierarchy, logo placed with breathing room (min 8% of canvas as clear space around it).
-- **Typography in image**: use the **Exo / Exo 2** typeface family (geometric, slightly technical sans-serif) for ALL rendered text — headings, taglines, links, handles. Weights: Light (300) or Regular (400) for body/links, Medium (500) or SemiBold (600) for headings, Bold (700) only for short high-impact display words. Always white. Generous letter-spacing (tracking) on caps and links. No serifs, no script, no rounded/humanist sans (Inter, Poppins, DM Sans etc.). If Exo is unavailable to the model, fall back to a near-equivalent geometric technical sans (Eurostile, Michroma, Rajdhani) — never a generic default.
-- **No emoji. No stock-AI clichés** (purple/indigo gradient on white, generic "hero with arms up", glossy 3D blobs).
-- **Square (1024×1024) by default** for social. Use 1536×1024 for posters/banners, 1024×1536 for stories.
+- **Palette — strict monochrome**: deep charcoal → black backgrounds (`#000`–`#0f0f10`), silvers, chromes, brushed-steel greys, cool off-whites, pure white highlights. **NO color hues at all** — no red, no orange, no yellow, no magenta, no purple, no violet, no green, no blue, no teal. Any tinted ambient light must be a **cool near-white** (barely-there cyan-white or silver-white glow, saturation under ~10%). If a swatch would read as a color name, it's wrong.
+- **Materials & texture**: liquid glass, frosted glass, polished chrome, brushed aluminum, obsidian, wet volcanic stone, mercury, holographic silver foil, oil-slick greyscale, smoked crystal. Every surface should have depth — reflections, refractions, subsurface scattering, subtle caustics. **Never a flat black background.** The background must have gradient falloff, atmospheric depth (soft grey mist / volumetric light), or a textured material (brushed metal, glass ripples, black marble). Flat #000 = fail.
+- **Lighting**: cinematic key light from one direction (usually upper-left or upper-right), soft rim light on subject edges, deep shadow falloff into the negative-space region. Think product photography for a $10k watch or an Apple keynote hero shot.
+- **Aesthetic reference**: Apple keynote × A24 poster × Zaha Hadid × Blade Runner 2049 interiors. Premium, restrained, expensive, decentralized-tech. Never "cyberpunk neon city" — that pulls in colored lights.
+- **Composition**: strong focal hierarchy, generous negative space, logo placed with breathing room (min 8% of canvas as clear space around it). Rule of thirds or centered symmetry — never busy edge-to-edge chaos.
+- **Typography in image**: **Exo / Exo 2** (geometric technical sans) for ALL rendered text. Weights: Light/Regular for body, Medium/SemiBold for headings, Bold only for short display words. Always white or silver. Wide letter-spacing on caps and links. No serifs, no script, no rounded/humanist sans. Fallbacks if Exo unavailable: Eurostile, Michroma, Rajdhani — never a generic default.
+- **Hard bans**: no emoji, no purple/indigo gradients, no rainbow anything, no glossy 3D blobs, no "hero with arms up", no stock-AI cliché lens flares, no red/orange energy trails, no warm sunset tones, no fire, no lava.
+- **Dimensions**: 1024×1024 square default; 1536×1024 posters/banners; 1024×1536 stories.
 
 ## Default prompt scaffold
 
-When generating, structure the prompt like:
+When generating, structure the prompt like this — be **dense and specific**. Vague prompts are why outputs go generic. Aim for 80–140 words.
 
 ```
-[SCENE / SUBJECT in 1–2 sentences], cinematic, dark background, premium liquid-glass aesthetic, subtle ambient glow, lots of negative space. Leave [POSITION, e.g. the top-left third / a centered horizontal band / the bottom-center] as calm empty space reserved for a logo lockup — do not draw a logo, do not draw text there. No additional text unless specified. No blue. High detail, 4k, poster quality.
+[SPECIFIC SUBJECT with material description, e.g. "a floating obsidian monolith with liquid-mercury surface" or "a hovering brushed-chrome geometric shard"] rendered in strict monochrome — blacks, charcoals, silvers, chromes, cool off-whites only. Cinematic key light from [DIRECTION] with soft rim light and deep shadow falloff. Background: [SPECIFIC textured backdrop, e.g. "black marble with subtle grey veining", "volumetric charcoal mist with faint silver-white light shafts", "brushed dark steel with faint horizontal grain"] — NEVER flat black. Materials: liquid glass, frosted crystal, polished chrome, subtle caustics, subsurface scattering. Premium product-photography feel — Apple keynote meets A24 poster. Reserve [POSITION, e.g. "the upper-left third" or "a centered horizontal band"] as calm empty space for a logo lockup — do NOT draw a logo or text there. Absolutely NO color hues: no red, orange, yellow, magenta, purple, green, blue, teal. Any glow must be cool near-white (saturation under 10%). No lens flares, no rainbow, no neon. Shot on Hasselblad, 85mm, f/2.8, ultra-sharp, 4k, gallery quality.
 ```
 
 The logo is NOT drawn by the scene model — it's composited in step 2 of the workflow using the real PNG.
+
+
+
 
 
 ## Official brand links
