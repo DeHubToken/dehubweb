@@ -631,16 +631,16 @@ export default function PostInfoPage() {
   if (isProcessing) {
     return (
       <div className="min-h-screen bg-black">
-        <div className="sticky top-0 z-50 bg-black border-b border-white/10">
-          <div className="flex items-center gap-4 p-4">
+        <div className="sticky top-0 z-50 px-4 pt-0 pb-3 sm:px-4 sm:pt-3 sm:pb-3">
+          <div className="flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] saturate-[180%] px-3 py-2">
             <button
               onClick={() => navigate(-1)}
-              className="p-2 -ml-2 text-white hover:text-white/70 transition-colors"
+              className="p-2 rounded-xl hover:bg-white/10 transition-colors"
               aria-label="Go back"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-5 h-5 text-white" />
             </button>
-            <h1 className="text-lg font-semibold text-white">{t('postInfo.title')}</h1>
+            <h1 className="font-bold text-white">{t('postInfo.title')}</h1>
           </div>
         </div>
         
