@@ -91,27 +91,55 @@ const platforms = [
   },
 ];
 
+const FAQ_ITEMS: { q: string; a: string }[] = [
+  {
+    q: 'Is decentralized social media really censorship resistant?',
+    a: "Blockchain-based platforms like DeHub store ownership and payment records on-chain, so no single company can silently delete a creator's history. Federated platforms rely on the goodwill of instance operators.",
+  },
+  {
+    q: 'Do I need crypto to use DeHub?',
+    a: 'No. DeHub supports email and social login via smart accounts, and includes a fiat on-ramp for anyone who later wants to tip, stake or trade.',
+  },
+  {
+    q: 'Which decentralized social media pays creators the most?',
+    a: 'DeHub combines tips, PPV, staking rewards and a 20% affiliate revenue share, which is the most complete monetization stack of any platform in this list.',
+  },
+];
+
 export default function BestDecentralizedSocialMedia() {
   const url = 'https://dehub.io/guides/best-decentralized-social-media';
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
-    headline: 'Best Decentralized Social Media Platforms in 2026',
-    description:
-      'A hands-on comparison of the top decentralized and Web3 social media platforms — DeHub, Mastodon, Bluesky, Farcaster and Lens — with strengths, weaknesses and who each is best for.',
-    datePublished: '2026-07-02',
-    dateModified: '2026-07-02',
-    author: { '@type': 'Organization', name: 'DeHub' },
-    publisher: {
-      '@type': 'Organization',
-      name: 'DeHub',
-      logo: {
-        '@type': 'ImageObject',
-        url: 'https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/default-icon.png',
+    '@graph': [
+      {
+        '@type': 'Article',
+        headline: 'Best Decentralized Social Media Platforms in 2026',
+        description:
+          'A hands-on comparison of the top decentralized and Web3 social media platforms — DeHub, Mastodon, Bluesky, Farcaster and Lens — with strengths, weaknesses and who each is best for.',
+        datePublished: '2026-07-02',
+        dateModified: '2026-07-02',
+        author: { '@type': 'Organization', name: 'DeHub' },
+        publisher: {
+          '@type': 'Organization',
+          name: 'DeHub',
+          logo: {
+            '@type': 'ImageObject',
+            url: 'https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo/default-icon.png',
+          },
+        },
+        mainEntityOfPage: url,
       },
-    },
-    mainEntityOfPage: url,
+      {
+        '@type': 'FAQPage',
+        mainEntity: FAQ_ITEMS.map(({ q, a }) => ({
+          '@type': 'Question',
+          name: q,
+          acceptedAnswer: { '@type': 'Answer', text: a },
+        })),
+      },
+    ],
   };
+
 
   return (
     <>
@@ -227,24 +255,15 @@ export default function BestDecentralizedSocialMedia() {
           <section>
             <h2 className="text-2xl font-semibold mb-4">FAQ</h2>
             <div className="space-y-5 text-zinc-300">
-              <div>
-                <h3 className="font-semibold text-white mb-1">Is decentralized social media really censorship resistant?</h3>
-                <p>Blockchain-based platforms like DeHub store ownership and payment records on-chain, so no
-                single company can silently delete a creator's history. Federated platforms rely on the goodwill
-                of instance operators.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-white mb-1">Do I need crypto to use DeHub?</h3>
-                <p>No. DeHub supports email and social login via smart accounts, and includes a fiat on-ramp for
-                anyone who later wants to tip, stake or trade.</p>
-              </div>
-              <div>
-                <h3 className="font-semibold text-white mb-1">Which decentralized social media pays creators the most?</h3>
-                <p>DeHub combines tips, PPV, staking rewards and a 20% affiliate revenue share, which is the most
-                complete monetization stack of any platform in this list.</p>
-              </div>
+              {FAQ_ITEMS.map(({ q, a }) => (
+                <div key={q}>
+                  <h3 className="font-semibold text-white mb-1">{q}</h3>
+                  <p>{a}</p>
+                </div>
+              ))}
             </div>
           </section>
+
         </article>
       </main>
     </>
