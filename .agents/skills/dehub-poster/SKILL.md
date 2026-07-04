@@ -9,22 +9,30 @@ Use this skill whenever the user asks for a DeHub-branded image: posters, social
 
 ## Model
 
-Two-step flow: generate the scene, then composite the real logo PNG on top so the wordmark stays pixel-perfect. Pick the scene model by whether the poster has **baked-in typography** (socials, URLs, taglines, headings drawn into the image itself).
+Two-step flow: generate the scene, then composite the real logo PNG on top so the wordmark stays pixel-perfect.
 
-| Tier | Model | Speed | Approx cost | When |
-|---|---|---|---|---|
-| **Default — logo-only** | `imagegen--generate_image` with `model: "gemini-3.1-flash-image"` (Nano Banana 2) | ~4s | ~1¢ | The common case: logo-only compositions, no rendered text in the scene |
-| **Text-in-image** | `imagegen--generate_image` with `model: "premium.gpt"` (GPT-image-2 medium) | ~30s | ~8–12¢ | Poster has baked-in socials strip, URLs, handles, taglines, headings — anything that must be legibly typeset |
-| **Hero / campaign** | `imagegen--generate_image` with `model: "premium"` (GPT-image-2 high) | ~40s | ~20–40¢ | Only when the user explicitly asks for hero / campaign / marketing top-tier art |
-| **Rough drafts** | `imagegen--edit_image` with `model` unset (Nano Banana 2) | ~3s | ~1¢ | Cheap iterations before locking a direction, or GPT moderation-rejection retries |
+**Always use Nano Banana 2** (`google/gemini-3.1-flash-image`) for both steps unless the user explicitly asks for a different model. It's fast (~4s), cheap (~1¢), and — with the tight prompt scaffold in this skill — produces the right monochrome-metallic-glass look. The old habit of defaulting to GPT-image-2 is retired: it's slower, more expensive, and doesn't obey the brand palette any better than Nano Banana 2 when the prompt is tight.
 
-### Decision rule
-- **Words like "quality", "premium", "hero", "campaign", "final", "publish", "post it", "for socials" → Hero tier** (GPT-image-2 high). Never cheap out on something the user is about to publish.
-- **User asks for socials, links, website, URL, handle, tagline, headline, or literal text on the poster → Text-in-image tier** (GPT-image-2 medium). Gemini renders typography unreliably.
-- **User asks for a quick / draft / iteration / "just try something" → Default tier** (Nano Banana 2).
-- **Everything else (a normal DeHub poster request) → Text-in-image tier by default** (GPT-image-2 medium). It's the safe middle: strong material rendering, restrained color obedience, ~30s. Nano Banana 2 is faster but drifts into flat black backgrounds and stray warm tints without extremely tight prompting — reserve it for drafts or when the user asked for speed.
+- **Step 1 (scene)** → `imagegen--generate_image` with `model: "gemini-3.1-flash-image"`.
+- **Step 2 (logo composite)** → `imagegen--edit_image` with `model` unset (routes to Nano Banana 2 automatically).
 
-The logo is composited in step 2 using the real PNG, so the wordmark never drifts regardless of scene model.
+Only override the model if the user literally names another one, or if a generation fails moderation and needs a retry on a different model.
+
+## Brand DNA — the "vibe" every scene must express
+
+DeHub is a **decentralized creator ecosystem** — social, media, staking, tipping, live streaming, AI tools, marketplaces, all on-chain. Mission: give creators sovereignty (own their audience, own their content, own their revenue) with an interface that feels as premium as any centralized app. Think "the Apple of Web3."
+
+When the user is NOT specific about what the poster should depict, invent a scene from this vocabulary — never fall back to a generic monolith or empty room. Pick one:
+
+- **Architectural** — floating obsidian pavilion, chrome monolith, cantilevered brushed-steel platform, mirrored glass amphitheatre, weightless silver ring suspended in mist
+- **Product-hero** — a smoked-glass hardware wallet on a plinth, a mercury sphere hovering over a chrome disc, a stack of translucent smoked-crystal cards, a single silver key floating in fog
+- **Landscape** — endless mirror-black lake with faint silver mist, moonlit obsidian dunes, a monochrome mountain range in cold moonlight, a chrome desert horizon
+- **Abstract** — liquid mercury frozen mid-splash, a smoked-glass helix, a ribbon of brushed steel curling through space, geometric silver shards suspended weightlessly
+- **Human presence (rare, silhouette only)** — a lone silhouetted figure in a chrome corridor, a hooded silhouette facing a floating silver monolith. Never a face, never a full character.
+
+Combine one subject with a specific material and a specific atmosphere ("mercury sphere on brushed-steel plinth in charcoal mist with cold rim light"). The result should feel like a still from a $50M sci-fi film or an Apple keynote hero shot — not a stock AI render.
+
+
 
 
 
@@ -80,30 +88,31 @@ Rendering rules for links on a poster: pure white, **Exo / Exo 2** (Light or Reg
 
 ## Workflow
 
-1. Confirm intent (poster, social card, banner?) and any specific message/theme — ask only if truly ambiguous.
+1. Confirm intent (poster, social card, banner?) and any specific message/theme — ask only if truly ambiguous. If the user gave no scene direction, **invent one from the Brand DNA section** — never default to a plain monolith or empty room.
 2. Pick logo variant (primary by default) and dimensions (1024×1024 square default; 1536×1024 poster/banner; 1024×1536 story).
 3. **Step 1 — Generate scene** with `imagegen--generate_image`:
-   - `model`: apply the Decision rule above. When in doubt, `"premium.gpt"` (GPT-image-2 medium) is the correct default for a real poster the user will actually use.
-   - `prompt`: built from the scaffold above — dense, specific materials, specific background texture, explicit color bans. Vague prompts = flat black + stray colors = fail.
+   - `model`: `"gemini-3.1-flash-image"` (Nano Banana 2). Do not switch unless the user explicitly named a different model.
+   - `prompt`: built from the scaffold below — dense, specific subject + specific material + specific atmosphere + explicit color bans. Every prompt must include a concrete Brand DNA scene, not a placeholder like "abstract shape".
    - `target_path`: `/mnt/documents/dehub-<slug>-bg.jpg`
    - `width` / `height`: chosen dimensions
 4. **Step 2 — Composite the logo** with `imagegen--edit_image`:
    - `image_paths`: `["/mnt/documents/dehub-<slug>-bg.jpg", ".agents/skills/dehub-poster/assets/dehub-logo-primary.png"]` (or the alternative wordmark)
    - `prompt`: `"Place the DeHub white wordmark from the second image onto the first image in the [POSITION] area at roughly [SIZE]% of canvas width. Keep the mark pure white, crisp, unaltered, perfectly aligned, with generous clear space around it. Do not modify, recolor, or redraw anything else in the scene."`
    - `target_path`: `/mnt/documents/dehub-<slug>.png`
-5. **Self-check before showing the user.** View the final image and confirm: (a) background has real texture/depth, not flat black; (b) zero color hues — only blacks, greys, silvers, whites; (c) logo is crisp, white, well-spaced; (d) composition feels premium, not generic. If any of these fail, re-generate with a tighter prompt before showing the user. Never ship an image you know is off-brand.
-6. Show the final image. Offer 1 quick variant if the user wants tweaks — use the Nano Banana 2 edit fallback for cheap iterations.
+5. **Self-check before showing the user.** View the final image and confirm: (a) background has real texture/depth, not flat black; (b) zero color hues — only blacks, greys, silvers, whites; (c) logo is crisp, white, well-spaced; (d) composition feels premium and cinematic, not generic. If any of these fail, regenerate with a tighter prompt before showing. Never ship an image you know is off-brand.
+6. Show the final image. Offer 1 quick variant if the user wants tweaks.
 
 ## Don'ts
 
-- **Don't ever produce a flat pure-black background.** Backgrounds must have texture, gradient, atmospheric depth, or a real material (marble, brushed steel, misted glass). Flat #000 is the #1 failure mode.
+- **Don't ever produce a flat pure-black background.** Backgrounds must have texture, gradient, atmospheric depth, or a real material (marble, brushed steel, misted glass, obsidian, mercury). Flat #000 is the #1 failure mode.
 - **Don't use any color hues.** No red, orange, yellow, magenta, purple, violet, green, blue, teal. Monochrome only — blacks, greys, silvers, chromes, whites. If a swatch has a nameable hue, regenerate.
-- Don't default to Nano Banana 2 for a poster the user will actually publish — its cheap speed comes at the cost of drifting into flat backgrounds and warm color contamination. Use GPT-image-2 medium as the safe default for real posters; reserve Nano Banana 2 for drafts or when speed was explicitly requested.
-- Don't burn hero-tier credits on rough iterations — use the Nano Banana 2 edit fallback for drafts.
+- **Don't submit a lazy scene.** "Abstract dark background" or "empty room" is not a scene. Every generation must have a concrete subject drawn from the Brand DNA vocabulary.
+- Don't switch models away from Nano Banana 2 unless the user literally named a different one.
 - Don't let the scene model render the logo — always composite the real PNG in step 2.
 - Don't recolor the logo, add gradients to it, or place it on busy areas without clear space.
 - Don't skip the self-check step. Shipping an ugly image because "the tool returned it" is not acceptable.
 - Don't save outputs into `src/assets/` unless the user explicitly wants the image shipped into the app.
+
 
 
 
