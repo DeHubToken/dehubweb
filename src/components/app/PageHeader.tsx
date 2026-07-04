@@ -2,12 +2,17 @@ import { ArrowLeft } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
+import type { ReactNode } from 'react';
 
 interface PageHeaderProps {
   title?: string;
   subtitle?: string;
   showBack?: boolean;
   className?: string;
+  /** Optional className for the inner bar, e.g. to constrain width to match content below */
+  innerClassName?: string;
+  /** Optional right-side actions aligned to the end of the bar */
+  rightActions?: ReactNode;
   /** Fallback route when no history exists (e.g., direct URL access) */
   fallbackRoute?: string;
   /** Override the back action (e.g., to close a drawer with animation before navigating) */
@@ -19,6 +24,8 @@ export function PageHeader({
   subtitle,
   showBack = true,
   className,
+  innerClassName,
+  rightActions,
   fallbackRoute = '/app',
   onBack,
 }: PageHeaderProps) {
@@ -50,7 +57,10 @@ export function PageHeader({
       isCollapsed ? 'top-0 lg:top-12' : 'top-0',
       className
     )}>
-      <div className="flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 px-3 py-2">
+      <div className={cn(
+        'flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] saturate-[180%] px-3 py-2',
+        innerClassName
+      )}>
         {showBack && (
           <button
             onClick={handleBack}
@@ -61,11 +71,16 @@ export function PageHeader({
           </button>
         )}
         {(title || subtitle) && (
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             {title && <h1 className="font-bold text-white truncate">{title}</h1>}
             {subtitle && (
               <p className="text-zinc-500 text-sm truncate">{subtitle}</p>
             )}
+          </div>
+        )}
+        {rightActions && (
+          <div className="flex items-center gap-2 shrink-0">
+            {rightActions}
           </div>
         )}
       </div>
