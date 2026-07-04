@@ -874,12 +874,22 @@ html[data-theme="minimal"] [data-sidebar-fade] {
   background-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.6) 40%, transparent 100%) !important;
 }
 
-/* Full-width feed content on mobile/tablet in minimal mode — remove side gaps so
-   videos/images span edge-to-edge. Text padding stays via [data-feed-item] rule. */
-@media (max-width: 1023px) {
-  html[data-theme="minimal"] [data-feed-root] {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+/* Full-width media (images/videos) on mobile/tablet in minimal mode.
+   Text/avatars/actions keep their normal card padding — only media bleeds
+   past the feed's horizontal padding to reach the screen edges. */
+@media (max-width: 639px) {
+  html[data-theme="minimal"] [data-feed-item] [data-media-full] {
+    margin-left: -0.5rem !important;
+    margin-right: -0.5rem !important;
+    border-radius: 0 !important;
   }
 }
+@media (min-width: 640px) and (max-width: 1023px) {
+  html[data-theme="minimal"] [data-feed-item] [data-media-full] {
+    margin-left: -0.75rem !important;
+    margin-right: -0.75rem !important;
+    border-radius: 0 !important;
+  }
+}
+
 
