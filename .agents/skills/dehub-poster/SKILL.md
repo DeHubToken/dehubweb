@@ -19,11 +19,13 @@ Two-step flow: generate the scene, then composite the real logo PNG on top so th
 | **Rough drafts** | `imagegen--edit_image` with `model` unset (Nano Banana 2) | ~3s | ~1¢ | Cheap iterations before locking a direction, or GPT moderation-rejection retries |
 
 ### Decision rule
-Before picking a tier, check whether the user asked for any of: socials, links, website, URL, handle, tagline, contact, QR, headline, or literal text on the poster.
-- **No → Default tier** (Nano Banana 2). Fast and cheap; quality matches Gemini Pro on non-text scenes.
-- **Yes → Text-in-image tier** (GPT-image-2 medium). Gemini renders in-image typography less reliably; use GPT for anything the viewer must read.
+- **Words like "quality", "premium", "hero", "campaign", "final", "publish", "post it", "for socials" → Hero tier** (GPT-image-2 high). Never cheap out on something the user is about to publish.
+- **User asks for socials, links, website, URL, handle, tagline, headline, or literal text on the poster → Text-in-image tier** (GPT-image-2 medium). Gemini renders typography unreliably.
+- **User asks for a quick / draft / iteration / "just try something" → Default tier** (Nano Banana 2).
+- **Everything else (a normal DeHub poster request) → Text-in-image tier by default** (GPT-image-2 medium). It's the safe middle: strong material rendering, restrained color obedience, ~30s. Nano Banana 2 is faster but drifts into flat black backgrounds and stray warm tints without extremely tight prompting — reserve it for drafts or when the user asked for speed.
 
 The logo is composited in step 2 using the real PNG, so the wordmark never drifts regardless of scene model.
+
 
 
 
