@@ -83,23 +83,27 @@ Rendering rules for links on a poster: pure white, **Exo / Exo 2** (Light or Reg
 1. Confirm intent (poster, social card, banner?) and any specific message/theme — ask only if truly ambiguous.
 2. Pick logo variant (primary by default) and dimensions (1024×1024 square default; 1536×1024 poster/banner; 1024×1536 story).
 3. **Step 1 — Generate scene** with `imagegen--generate_image`:
-   - `model`: apply the Decision rule above — `"gemini-3.1-flash-image"` for logo-only (default), `"premium.gpt"` when the poster has baked-in text, `"premium"` only if the user explicitly asked for hero/campaign tier
-   - `prompt`: built from the scaffold above, reserving clear negative space for the logo
+   - `model`: apply the Decision rule above. When in doubt, `"premium.gpt"` (GPT-image-2 medium) is the correct default for a real poster the user will actually use.
+   - `prompt`: built from the scaffold above — dense, specific materials, specific background texture, explicit color bans. Vague prompts = flat black + stray colors = fail.
    - `target_path`: `/mnt/documents/dehub-<slug>-bg.jpg`
    - `width` / `height`: chosen dimensions
 4. **Step 2 — Composite the logo** with `imagegen--edit_image`:
    - `image_paths`: `["/mnt/documents/dehub-<slug>-bg.jpg", ".agents/skills/dehub-poster/assets/dehub-logo-primary.png"]` (or the alternative wordmark)
    - `prompt`: `"Place the DeHub white wordmark from the second image onto the first image in the [POSITION] area at roughly [SIZE]% of canvas width. Keep the mark pure white, crisp, unaltered, perfectly aligned, with generous clear space around it. Do not modify, recolor, or redraw anything else in the scene."`
    - `target_path`: `/mnt/documents/dehub-<slug>.png`
-5. Show the final image. Offer 1 quick variant if the user wants tweaks — use the Nano Banana 2 edit fallback for cheap iterations.
+5. **Self-check before showing the user.** View the final image and confirm: (a) background has real texture/depth, not flat black; (b) zero color hues — only blacks, greys, silvers, whites; (c) logo is crisp, white, well-spaced; (d) composition feels premium, not generic. If any of these fail, re-generate with a tighter prompt before showing the user. Never ship an image you know is off-brand.
+6. Show the final image. Offer 1 quick variant if the user wants tweaks — use the Nano Banana 2 edit fallback for cheap iterations.
 
 ## Don'ts
 
-- Don't reach for GPT-image-2 by default — Nano Banana 2 is ~8× faster and ~10× cheaper, and matches quality on logo-only scenes. Use GPT only when the poster has baked-in text or the user asked for hero tier.
-- Don't burn premium credits on rough iterations — use the Nano Banana 2 edit fallback for drafts.
+- **Don't ever produce a flat pure-black background.** Backgrounds must have texture, gradient, atmospheric depth, or a real material (marble, brushed steel, misted glass). Flat #000 is the #1 failure mode.
+- **Don't use any color hues.** No red, orange, yellow, magenta, purple, violet, green, blue, teal. Monochrome only — blacks, greys, silvers, chromes, whites. If a swatch has a nameable hue, regenerate.
+- Don't default to Nano Banana 2 for a poster the user will actually publish — its cheap speed comes at the cost of drifting into flat backgrounds and warm color contamination. Use GPT-image-2 medium as the safe default for real posters; reserve Nano Banana 2 for drafts or when speed was explicitly requested.
+- Don't burn hero-tier credits on rough iterations — use the Nano Banana 2 edit fallback for drafts.
 - Don't let the scene model render the logo — always composite the real PNG in step 2.
 - Don't recolor the logo, add gradients to it, or place it on busy areas without clear space.
-- Don't introduce blue anywhere in the composition.
+- Don't skip the self-check step. Shipping an ugly image because "the tool returned it" is not acceptable.
 - Don't save outputs into `src/assets/` unless the user explicitly wants the image shipped into the app.
+
 
 
