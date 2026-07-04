@@ -179,7 +179,7 @@ export function RelatedVideosFeed({ currentVideoId, scrollContainerRef }: Relate
 
       {/* Latest Videos */}
       {videos.map((video) => (
-        <div key={video.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+        <div key={video.id} className="rounded-xl bg-white/[0.03] p-3">
           <VideoCard video={video} disableAutoplay />
         </div>
       ))}

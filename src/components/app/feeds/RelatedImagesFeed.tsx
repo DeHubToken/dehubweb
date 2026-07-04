@@ -165,7 +165,7 @@ export function RelatedImagesFeed({ currentPostId }: RelatedImagesFeedProps) {
 
       {/* Latest Images */}
       {images.map((img) => (
-        <div key={img.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+        <div key={img.id} className="rounded-xl bg-white/[0.03] p-3">
           <ImageCard post={img} />
         </div>
       ))}
