@@ -207,6 +207,7 @@ export default function CreatorPage() {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<typeof categories[number]>('All');
   const [activeNav, setActiveNav] = useState<typeof navItems[number]>('Explore');
+  const [bannerDismissed, setBannerDismissed] = useState(false);
 
   const visibleTools = useMemo(
     () => activeCategory === 'All' ? tools : tools.filter(tool => tool.category === activeCategory),
