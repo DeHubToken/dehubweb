@@ -71,19 +71,42 @@ These mirror the DeHub app design system — apply to every generated image. **S
 - **Lighting**: cinematic key light from one direction (usually upper-left or upper-right), soft rim light on subject edges, deep shadow falloff into the negative-space region. Think product photography for a $10k watch or an Apple keynote hero shot.
 - **Aesthetic reference**: Apple keynote × A24 poster × Zaha Hadid × Blade Runner 2049 interiors. Premium, restrained, expensive, decentralized-tech. Never "cyberpunk neon city" — that pulls in colored lights.
 - **Composition**: strong focal hierarchy, generous negative space, logo placed with breathing room (min 8% of canvas as clear space around it). Rule of thirds or centered symmetry — never busy edge-to-edge chaos.
-- **Typography in image**: **Exo / Exo 2** (geometric technical sans) for ALL rendered text. Weights: Light/Regular for body, Medium/SemiBold for headings, Bold only for short display words. Always white or silver. Wide letter-spacing on caps and links. No serifs, no script, no rounded/humanist sans. Fallbacks if Exo unavailable: Eurostile, Michroma, Rajdhani — never a generic default.
+- **Typography in image** (only when text is explicitly requested): **Exo / Exo 2** (geometric technical sans, sharp uppercase, wide letter-spacing). Prompt language that reliably steers Nano Banana 2 toward Exo: `"typeset in Exo 2, geometric technical sans-serif, thin uniform strokes, sharp corners, wide letter-spacing"`. Always white or silver. Keep text minimal (1–5 words max) — Gemini's text rendering is fragile, and less text = higher chance it renders correctly. If the text still looks generic, regenerate rather than shipping it in the wrong typeface. No serifs, no script, no rounded/humanist sans. Fallbacks: Eurostile, Michroma, Rajdhani, Orbitron — never a generic default.
 - **Hard bans**: no emoji, no purple/indigo gradients, no rainbow anything, no glossy 3D blobs, no "hero with arms up", no stock-AI cliché lens flares, no red/orange energy trails, no warm sunset tones, no fire, no lava.
 - **Dimensions**: 1024×1024 square default; 1536×1024 posters/banners; 1024×1536 stories.
 
+## Logo integration — the wordmark is PART of the scene, not stuck on top
+
+The logo must feel like a real object *in* the scene, not a sticker slapped on afterward. To achieve this, the scene must be generated with a **physical logo surface** built into the composition — a specific object designed to hold the wordmark, matched to the scene's lighting, perspective, and material. Step 2 then places the real logo PNG onto that surface so it inherits the scene.
+
+**Pick a logo surface for every scene** (drawn from the Brand DNA scene). Examples:
+
+- Wordmark **engraved into obsidian** — a polished obsidian slab in the scene, with a subtle recessed etched panel where the wordmark will sit
+- Wordmark **milled into brushed steel** — a brushed-aluminum plaque angled with the scene's key light
+- Wordmark **backlit through smoked glass** — a translucent glass panel with a soft internal glow
+- Wordmark **projected as light onto mist** — a volumetric holographic slab of cool-white light hanging in charcoal fog
+- Wordmark **etched into a chrome monolith face** — a mirror-chrome vertical face oriented toward camera
+- Wordmark **cast as shadow on marble** — a soft cast shadow on a slab of black marble, wordmark reads as absence of light
+- Wordmark **embossed on mercury** — a raised relief on a mercury pool's surface, catching the rim light
+- Wordmark **frosted into glass** — a frosted-glass panel where the mark reads as clear-through-frost
+
+The step-1 scene prompt must explicitly describe this surface — its material, its position, its orientation, its lighting, and the fact that its face is **currently blank** (so step 2 can place the real logo there without conflict).
+
 ## Default prompt scaffold
 
-When generating, structure the prompt like this — be **dense and specific**. Vague prompts are why outputs go generic. Aim for 80–140 words.
+Structure the prompt like this — **dense and specific, 100–160 words**. Every prompt must include: subject, materials, lighting, background texture, and an explicit **logo surface** built into the scene.
 
 ```
-[SPECIFIC SUBJECT with material description, e.g. "a floating obsidian monolith with liquid-mercury surface" or "a hovering brushed-chrome geometric shard"] rendered in strict monochrome — blacks, charcoals, silvers, chromes, cool off-whites only. Cinematic key light from [DIRECTION] with soft rim light and deep shadow falloff. Background: [SPECIFIC textured backdrop, e.g. "black marble with subtle grey veining", "volumetric charcoal mist with faint silver-white light shafts", "brushed dark steel with faint horizontal grain"] — NEVER flat black. Materials: liquid glass, frosted crystal, polished chrome, subtle caustics, subsurface scattering. Premium product-photography feel — Apple keynote meets A24 poster. Reserve [POSITION, e.g. "the upper-left third" or "a centered horizontal band"] as calm empty space for a logo lockup — do NOT draw a logo or text there. Absolutely NO color hues: no red, orange, yellow, magenta, purple, green, blue, teal. Any glow must be cool near-white (saturation under 10%). No lens flares, no rainbow, no neon. Shot on Hasselblad, 85mm, f/2.8, ultra-sharp, 4k, gallery quality.
+[SPECIFIC SUBJECT with material description — e.g. "a monolithic obsidian pavilion floating over a mirror-black lake"] rendered in strict monochrome — blacks, charcoals, silvers, chromes, cool off-whites only. Cinematic key light from [DIRECTION] with soft rim light and deep shadow falloff. Background: [SPECIFIC textured backdrop — e.g. "volumetric charcoal mist with faint silver-white light shafts", "black marble with subtle grey veining"] — NEVER flat black.
+
+Built into the composition at [POSITION — e.g. "the centered vertical face of the pavilion"], a [LOGO SURFACE — e.g. "polished obsidian slab with a subtly recessed rectangular panel", "brushed-aluminum plaque catching the key light", "backlit smoked-glass panel with soft internal glow"] sized for a wordmark lockup roughly [SIZE — e.g. "40% of the scene width"]. This panel's face is currently BLANK — do NOT draw a logo, letters, or text on it. Match the panel's perspective, lighting, and material to the scene so it feels physically present.
+
+Materials throughout: liquid glass, frosted crystal, polished chrome, subtle caustics, subsurface scattering. Premium product-photography feel — Apple keynote meets A24 poster. Absolutely NO color hues: no red, orange, yellow, magenta, purple, green, blue, teal. Any glow must be cool near-white (saturation under 10%). No lens flares, no rainbow, no neon. Shot on Hasselblad, 85mm, f/2.8, ultra-sharp, 4k, gallery quality.
 ```
 
-The logo is NOT drawn by the scene model — it's composited in step 2 of the workflow using the real PNG.
+The logo is NOT drawn by the scene model — it's composited in step 2 onto the blank surface the scene reserved for it.
+
+
 
 
 
