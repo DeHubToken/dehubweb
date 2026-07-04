@@ -106,15 +106,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
         {/* Direct post-page URL access: back button replaces the menu/settings toggle.
             When opened as an overlay from the feed, the feed's tab bar already hosts a back button,
             so we keep the normal menu/avatar here to preserve the "you never left the feed" feel. */}
-        {isPostPage && !isOverlayFromFeed ? (
-          <button
-            onClick={handleBackClick}
-            className="p-2 -mr-2 rounded-full text-white hover:bg-white/10 transition-colors"
-            aria-label="Back"
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </button>
-        ) : isAuthenticated ? (
+        {isAuthenticated ? (
           <Drawer open={isOpen} onOpenChange={onToggle}>
 
             <DrawerTrigger asChild>
