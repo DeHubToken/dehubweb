@@ -743,7 +743,7 @@ export default function PostInfoPage() {
           >
             <ArrowLeft className="w-5 h-5 text-white" />
           </button>
-          <h1 className="font-bold text-white flex-1">{t('postInfo.title')}</h1>
+          <h1 className="font-bold text-white flex-1 truncate">{t('postInfo.title')}</h1>
           {isOwner && (
             <button
               onClick={() => setShowEditModal(true)}
