@@ -157,7 +157,7 @@ export function WinterSnow() {
           .map((el) => (el as HTMLElement).getBoundingClientRect());
       }
 
-      if (flakesRef.current.length < MAX_FLAKES && Math.random() < 0.85) spawn();
+      if (flakesRef.current.length < MAX_FLAKES && Math.random() < 0.6) spawn();
 
       const flakes = flakesRef.current;
       for (let i = flakes.length - 1; i >= 0; i--) {
