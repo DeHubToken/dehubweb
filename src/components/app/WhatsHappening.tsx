@@ -402,7 +402,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
 
       {/* Globe / Country selector button at bottom */}
       {showCountrySelector && (
-        <div ref={countryDropdownRef} className="relative -mt-1">
+        <div ref={countryDropdownRef} className="relative -mt-1" data-view-all>
           <button
             onClick={() => setShowCountryDropdown(prev => !prev)}
             className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-b-2xl bg-zinc-900/90 hover:bg-zinc-800/90 border-t border-zinc-800/50 transition-colors text-xs text-zinc-400 hover:text-white"
