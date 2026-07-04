@@ -161,17 +161,19 @@ Rules:
         }
       }
 
-      brandPromptOverride = `Create a STUNNING promotional marketing poster (not a brand-guidelines layout). This is campaign artwork — think billboard, magazine cover, movie key-art. Cinematic, editorial, premium.
+      brandPromptOverride = `Create a STUNNING promotional marketing poster for DeHub (a decentralized social platform). This is campaign artwork — cinematic, editorial, premium.
 
 Format: ${formatHint}. Compose for this aspect ratio.
 
-Non-negotiable brand rules:
-- Palette: deep black / charcoal (#000–#0a0a0a) dominant, white accents, subtle muted neon glow (magenta / violet / cyan) OK. NEVER any blue.
-- Include the DeHub wordmark ONCE, small-to-medium, as PURE WHITE bold uppercase "DEHUB" in Exo / Exo 2 (fall back Eurostile / Michroma) with generous clear space, placed in the reserved logo region — do NOT plaster it, do NOT recolor, do NOT distort.
-- No emoji. No purple/indigo gradients on white. No glossy 3D blobs. No generic AI stock look.
-- Any additional text must be Exo / Exo 2, white, wide letter-spacing, minimal.
+Non-negotiable brand rules (violating these ruins the piece):
+- PALETTE: dominant deep black / charcoal (#000000–#0a0a0a). Accent color is PURE WHITE only. Subtle muted neon ambient glow (magenta, violet, cyan, warm amber) is allowed ONLY as atmospheric lighting on a black scene. ABSOLUTELY NO blue (no navy, no cobalt, no cyan-blue, no indigo, no periwinkle). NO purple/indigo gradient on white. NO pastel palettes.
+- LOGO: Reserve a clean, empty, calm region (roughly 20-25% of canvas width, min 8% clear space on every side) — typically bottom-center third, upper-left quadrant, or upper-right — where the real DeHub wordmark will be composited later. DO NOT DRAW A LOGO OR WORDMARK YOURSELF. Do not write "DEHUB", "DeHub", or any variant. Leave that region visually calm.
+- TYPOGRAPHY (if the user requested a headline/tagline): Exo / Exo 2 geometric technical sans-serif ONLY (fallback Eurostile / Michroma / Rajdhani). Pure white. Generous letter-spacing. Never serifs, script, or humanist sans (Inter, Poppins, DM Sans, Helvetica Neue).
+- NO emoji. NO glossy 3D blobs. NO generic-AI stock look (hero-with-arms-up, purple/indigo gradient on white, floating chrome spheres).
 
 ART DIRECTION: ${enhancedUserRequest}`;
+
+
 
 
       // Try GPT-image-2 (medium) first — dramatically better typography than Gemini
