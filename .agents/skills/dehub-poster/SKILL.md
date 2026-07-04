@@ -9,15 +9,22 @@ Use this skill whenever the user asks for a DeHub-branded image: posters, social
 
 ## Model
 
-Two-step flow: generate the scene with GPT-image-2, then composite the real logo PNG on top so the wordmark stays pixel-perfect.
+Two-step flow: generate the scene, then composite the real logo PNG on top so the wordmark stays pixel-perfect. Pick the scene model by whether the poster has **baked-in typography** (socials, URLs, taglines, headings drawn into the image itself).
 
-| Tier | Model | Approx cost | When |
-|---|---|---|---|
-| **Default** | `imagegen--generate_image` with `model: "premium.gpt"` (OpenAI GPT-image-2, medium quality) | ~8–12¢ | Final posters, social cards, banners, announcements |
-| **Fallback** | `imagegen--edit_image` with `model` unset (Nano Banana 2, `google/gemini-3.1-flash-image`) | ~1¢ | Rough drafts, quick iterations, GPT moderation rejection retries |
-| **Hero** | `imagegen--generate_image` with `model: "premium"` (GPT-image-2 high) | ~20–40¢ | Only when the user explicitly asks for hero / campaign / marketing top-tier art |
+| Tier | Model | Speed | Approx cost | When |
+|---|---|---|---|---|
+| **Default — logo-only** | `imagegen--generate_image` with `model: "gemini-3.1-flash-image"` (Nano Banana 2) | ~4s | ~1¢ | The common case: logo-only compositions, no rendered text in the scene |
+| **Text-in-image** | `imagegen--generate_image` with `model: "premium.gpt"` (GPT-image-2 medium) | ~30s | ~8–12¢ | Poster has baked-in socials strip, URLs, handles, taglines, headings — anything that must be legibly typeset |
+| **Hero / campaign** | `imagegen--generate_image` with `model: "premium"` (GPT-image-2 high) | ~40s | ~20–40¢ | Only when the user explicitly asks for hero / campaign / marketing top-tier art |
+| **Rough drafts** | `imagegen--edit_image` with `model` unset (Nano Banana 2) | ~3s | ~1¢ | Cheap iterations before locking a direction, or GPT moderation-rejection retries |
 
-GPT-image-2 renders typography (Exo, taglines, socials, URLs) far more accurately than Gemini — that's why it's the default. The logo is composited in step 2 rather than drawn by the model, so the wordmark never drifts.
+### Decision rule
+Before picking a tier, check whether the user asked for any of: socials, links, website, URL, handle, tagline, contact, QR, headline, or literal text on the poster.
+- **No → Default tier** (Nano Banana 2). Fast and cheap; quality matches Gemini Pro on non-text scenes.
+- **Yes → Text-in-image tier** (GPT-image-2 medium). Gemini renders in-image typography less reliably; use GPT for anything the viewer must read.
+
+The logo is composited in step 2 using the real PNG, so the wordmark never drifts regardless of scene model.
+
 
 
 ## Brand assets
