@@ -19,11 +19,13 @@ Two-step flow: generate the scene, then composite the real logo PNG on top so th
 | **Rough drafts** | `imagegen--edit_image` with `model` unset (Nano Banana 2) | ~3s | ~1¢ | Cheap iterations before locking a direction, or GPT moderation-rejection retries |
 
 ### Decision rule
-Before picking a tier, check whether the user asked for any of: socials, links, website, URL, handle, tagline, contact, QR, headline, or literal text on the poster.
-- **No → Default tier** (Nano Banana 2). Fast and cheap; quality matches Gemini Pro on non-text scenes.
-- **Yes → Text-in-image tier** (GPT-image-2 medium). Gemini renders in-image typography less reliably; use GPT for anything the viewer must read.
+- **Words like "quality", "premium", "hero", "campaign", "final", "publish", "post it", "for socials" → Hero tier** (GPT-image-2 high). Never cheap out on something the user is about to publish.
+- **User asks for socials, links, website, URL, handle, tagline, headline, or literal text on the poster → Text-in-image tier** (GPT-image-2 medium). Gemini renders typography unreliably.
+- **User asks for a quick / draft / iteration / "just try something" → Default tier** (Nano Banana 2).
+- **Everything else (a normal DeHub poster request) → Text-in-image tier by default** (GPT-image-2 medium). It's the safe middle: strong material rendering, restrained color obedience, ~30s. Nano Banana 2 is faster but drifts into flat black backgrounds and stray warm tints without extremely tight prompting — reserve it for drafts or when the user asked for speed.
 
 The logo is composited in step 2 using the real PNG, so the wordmark never drifts regardless of scene model.
+
 
 
 
@@ -38,24 +40,29 @@ Both are **white-on-transparent**. They must always appear in white (or near-whi
 
 ## Brand style rules
 
-These mirror the DeHub app design system — apply to every generated image:
+These mirror the DeHub app design system — apply to every generated image. **Strict monochrome + metallic glass.** Anything else is off-brand.
 
-- **Palette**: deep black / charcoal backgrounds (`#000`–`#0a0a0a`), white text, subtle white-opacity accents. **Never use blue.** Occasional muted neon (magenta, violet, cyan glow) is OK only as ambient lighting, never as logo color.
-- **Aesthetic**: liquid glass, frosted blur, cinematic, premium, decentralized-tech feel. Think Apple keynote × cyberpunk × A24 poster.
-- **Composition**: lots of negative space, strong focal hierarchy, logo placed with breathing room (min 8% of canvas as clear space around it).
-- **Typography in image**: use the **Exo / Exo 2** typeface family (geometric, slightly technical sans-serif) for ALL rendered text — headings, taglines, links, handles. Weights: Light (300) or Regular (400) for body/links, Medium (500) or SemiBold (600) for headings, Bold (700) only for short high-impact display words. Always white. Generous letter-spacing (tracking) on caps and links. No serifs, no script, no rounded/humanist sans (Inter, Poppins, DM Sans etc.). If Exo is unavailable to the model, fall back to a near-equivalent geometric technical sans (Eurostile, Michroma, Rajdhani) — never a generic default.
-- **No emoji. No stock-AI clichés** (purple/indigo gradient on white, generic "hero with arms up", glossy 3D blobs).
-- **Square (1024×1024) by default** for social. Use 1536×1024 for posters/banners, 1024×1536 for stories.
+- **Palette — strict monochrome**: deep charcoal → black backgrounds (`#000`–`#0f0f10`), silvers, chromes, brushed-steel greys, cool off-whites, pure white highlights. **NO color hues at all** — no red, no orange, no yellow, no magenta, no purple, no violet, no green, no blue, no teal. Any tinted ambient light must be a **cool near-white** (barely-there cyan-white or silver-white glow, saturation under ~10%). If a swatch would read as a color name, it's wrong.
+- **Materials & texture**: liquid glass, frosted glass, polished chrome, brushed aluminum, obsidian, wet volcanic stone, mercury, holographic silver foil, oil-slick greyscale, smoked crystal. Every surface should have depth — reflections, refractions, subsurface scattering, subtle caustics. **Never a flat black background.** The background must have gradient falloff, atmospheric depth (soft grey mist / volumetric light), or a textured material (brushed metal, glass ripples, black marble). Flat #000 = fail.
+- **Lighting**: cinematic key light from one direction (usually upper-left or upper-right), soft rim light on subject edges, deep shadow falloff into the negative-space region. Think product photography for a $10k watch or an Apple keynote hero shot.
+- **Aesthetic reference**: Apple keynote × A24 poster × Zaha Hadid × Blade Runner 2049 interiors. Premium, restrained, expensive, decentralized-tech. Never "cyberpunk neon city" — that pulls in colored lights.
+- **Composition**: strong focal hierarchy, generous negative space, logo placed with breathing room (min 8% of canvas as clear space around it). Rule of thirds or centered symmetry — never busy edge-to-edge chaos.
+- **Typography in image**: **Exo / Exo 2** (geometric technical sans) for ALL rendered text. Weights: Light/Regular for body, Medium/SemiBold for headings, Bold only for short display words. Always white or silver. Wide letter-spacing on caps and links. No serifs, no script, no rounded/humanist sans. Fallbacks if Exo unavailable: Eurostile, Michroma, Rajdhani — never a generic default.
+- **Hard bans**: no emoji, no purple/indigo gradients, no rainbow anything, no glossy 3D blobs, no "hero with arms up", no stock-AI cliché lens flares, no red/orange energy trails, no warm sunset tones, no fire, no lava.
+- **Dimensions**: 1024×1024 square default; 1536×1024 posters/banners; 1024×1536 stories.
 
 ## Default prompt scaffold
 
-When generating, structure the prompt like:
+When generating, structure the prompt like this — be **dense and specific**. Vague prompts are why outputs go generic. Aim for 80–140 words.
 
 ```
-[SCENE / SUBJECT in 1–2 sentences], cinematic, dark background, premium liquid-glass aesthetic, subtle ambient glow, lots of negative space. Leave [POSITION, e.g. the top-left third / a centered horizontal band / the bottom-center] as calm empty space reserved for a logo lockup — do not draw a logo, do not draw text there. No additional text unless specified. No blue. High detail, 4k, poster quality.
+[SPECIFIC SUBJECT with material description, e.g. "a floating obsidian monolith with liquid-mercury surface" or "a hovering brushed-chrome geometric shard"] rendered in strict monochrome — blacks, charcoals, silvers, chromes, cool off-whites only. Cinematic key light from [DIRECTION] with soft rim light and deep shadow falloff. Background: [SPECIFIC textured backdrop, e.g. "black marble with subtle grey veining", "volumetric charcoal mist with faint silver-white light shafts", "brushed dark steel with faint horizontal grain"] — NEVER flat black. Materials: liquid glass, frosted crystal, polished chrome, subtle caustics, subsurface scattering. Premium product-photography feel — Apple keynote meets A24 poster. Reserve [POSITION, e.g. "the upper-left third" or "a centered horizontal band"] as calm empty space for a logo lockup — do NOT draw a logo or text there. Absolutely NO color hues: no red, orange, yellow, magenta, purple, green, blue, teal. Any glow must be cool near-white (saturation under 10%). No lens flares, no rainbow, no neon. Shot on Hasselblad, 85mm, f/2.8, ultra-sharp, 4k, gallery quality.
 ```
 
 The logo is NOT drawn by the scene model — it's composited in step 2 of the workflow using the real PNG.
+
+
+
 
 
 ## Official brand links
@@ -76,23 +83,27 @@ Rendering rules for links on a poster: pure white, **Exo / Exo 2** (Light or Reg
 1. Confirm intent (poster, social card, banner?) and any specific message/theme — ask only if truly ambiguous.
 2. Pick logo variant (primary by default) and dimensions (1024×1024 square default; 1536×1024 poster/banner; 1024×1536 story).
 3. **Step 1 — Generate scene** with `imagegen--generate_image`:
-   - `model`: apply the Decision rule above — `"gemini-3.1-flash-image"` for logo-only (default), `"premium.gpt"` when the poster has baked-in text, `"premium"` only if the user explicitly asked for hero/campaign tier
-   - `prompt`: built from the scaffold above, reserving clear negative space for the logo
+   - `model`: apply the Decision rule above. When in doubt, `"premium.gpt"` (GPT-image-2 medium) is the correct default for a real poster the user will actually use.
+   - `prompt`: built from the scaffold above — dense, specific materials, specific background texture, explicit color bans. Vague prompts = flat black + stray colors = fail.
    - `target_path`: `/mnt/documents/dehub-<slug>-bg.jpg`
    - `width` / `height`: chosen dimensions
 4. **Step 2 — Composite the logo** with `imagegen--edit_image`:
    - `image_paths`: `["/mnt/documents/dehub-<slug>-bg.jpg", ".agents/skills/dehub-poster/assets/dehub-logo-primary.png"]` (or the alternative wordmark)
    - `prompt`: `"Place the DeHub white wordmark from the second image onto the first image in the [POSITION] area at roughly [SIZE]% of canvas width. Keep the mark pure white, crisp, unaltered, perfectly aligned, with generous clear space around it. Do not modify, recolor, or redraw anything else in the scene."`
    - `target_path`: `/mnt/documents/dehub-<slug>.png`
-5. Show the final image. Offer 1 quick variant if the user wants tweaks — use the Nano Banana 2 edit fallback for cheap iterations.
+5. **Self-check before showing the user.** View the final image and confirm: (a) background has real texture/depth, not flat black; (b) zero color hues — only blacks, greys, silvers, whites; (c) logo is crisp, white, well-spaced; (d) composition feels premium, not generic. If any of these fail, re-generate with a tighter prompt before showing the user. Never ship an image you know is off-brand.
+6. Show the final image. Offer 1 quick variant if the user wants tweaks — use the Nano Banana 2 edit fallback for cheap iterations.
 
 ## Don'ts
 
-- Don't reach for GPT-image-2 by default — Nano Banana 2 is ~8× faster and ~10× cheaper, and matches quality on logo-only scenes. Use GPT only when the poster has baked-in text or the user asked for hero tier.
-- Don't burn premium credits on rough iterations — use the Nano Banana 2 edit fallback for drafts.
+- **Don't ever produce a flat pure-black background.** Backgrounds must have texture, gradient, atmospheric depth, or a real material (marble, brushed steel, misted glass). Flat #000 is the #1 failure mode.
+- **Don't use any color hues.** No red, orange, yellow, magenta, purple, violet, green, blue, teal. Monochrome only — blacks, greys, silvers, chromes, whites. If a swatch has a nameable hue, regenerate.
+- Don't default to Nano Banana 2 for a poster the user will actually publish — its cheap speed comes at the cost of drifting into flat backgrounds and warm color contamination. Use GPT-image-2 medium as the safe default for real posters; reserve Nano Banana 2 for drafts or when speed was explicitly requested.
+- Don't burn hero-tier credits on rough iterations — use the Nano Banana 2 edit fallback for drafts.
 - Don't let the scene model render the logo — always composite the real PNG in step 2.
 - Don't recolor the logo, add gradients to it, or place it on busy areas without clear space.
-- Don't introduce blue anywhere in the composition.
+- Don't skip the self-check step. Shipping an ugly image because "the tool returned it" is not acceptable.
 - Don't save outputs into `src/assets/` unless the user explicitly wants the image shipped into the app.
+
 
 
