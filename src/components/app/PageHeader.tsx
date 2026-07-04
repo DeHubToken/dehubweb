@@ -12,7 +12,7 @@ interface PageHeaderProps {
   /** Optional className for the inner bar, e.g. to constrain width to match content below */
   innerClassName?: string;
   /** Optional right-side actions aligned to the end of the bar */
-  rightActions?: React.ReactNode;
+  rightActions?: ReactNode;
   /** Fallback route when no history exists (e.g., direct URL access) */
   fallbackRoute?: string;
   /** Override the back action (e.g., to close a drawer with animation before navigating) */
