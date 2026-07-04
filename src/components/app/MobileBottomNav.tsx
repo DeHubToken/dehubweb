@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck, Scroll, Map, Wand2 } from 'lucide-react';
+import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck, Scroll, Map, Wand2, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PostModal } from './PostModal';
 import { AuthPrompt } from './AuthPrompt';
@@ -53,6 +53,8 @@ export function MobileBottomNav() {
   const navVisible = useScrollDirection();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
+  const [isHomeRefreshing, setIsHomeRefreshing] = useState(false);
+  const homeRefreshTimerRef = useRef<number | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const [scrollProgress, setScrollProgress] = useState(0);
 
@@ -83,9 +85,16 @@ export function MobileBottomNav() {
     if (path === '/app' && location.pathname === '/app') {
       e.preventDefault();
       window.dispatchEvent(new CustomEvent('home-refresh'));
+      setIsHomeRefreshing(true);
+      if (homeRefreshTimerRef.current) window.clearTimeout(homeRefreshTimerRef.current);
+      homeRefreshTimerRef.current = window.setTimeout(() => setIsHomeRefreshing(false), 900);
       navigate('/app');
     }
   };
+
+  useEffect(() => () => {
+    if (homeRefreshTimerRef.current) window.clearTimeout(homeRefreshTimerRef.current);
+  }, []);
 
   const handleProtectedNavClick = (e: React.MouseEvent, path: string, requiresAuth?: boolean) => {
     if (requiresAuth && !isAuthenticated) {
@@ -164,16 +173,25 @@ export function MobileBottomNav() {
                       index === 0 && 'rounded-l-2xl'
                     )}
                   >
-                      <item.icon 
-                        className={cn(
-                          'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
-                          isActive 
-                            ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]' 
-                            : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]',
-                          item.label === 'Messages' && 'lg:ml-0',
-                          item.label === 'Home' ? '-ml-[6.5px] lg:ml-0' : '-ml-[5.5px] lg:ml-0'
-                        )} 
-                      />
+                      {item.label === 'Home' && isHomeRefreshing ? (
+                        <Loader2
+                          className={cn(
+                            'w-5 h-5 md:w-6 md:h-6 animate-spin drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]',
+                            '-ml-[6.5px] lg:ml-0'
+                          )}
+                        />
+                      ) : (
+                        <item.icon
+                          className={cn(
+                            'w-5 h-5 md:w-6 md:h-6 transition-all duration-200',
+                            isActive
+                              ? 'drop-shadow-[0_0_12px_rgba(255,255,255,0.9)]'
+                              : 'hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.7)]',
+                            item.label === 'Messages' && 'lg:ml-0',
+                            item.label === 'Home' ? '-ml-[6.5px] lg:ml-0' : '-ml-[5.5px] lg:ml-0'
+                          )}
+                        />
+                      )}
                       {item.label === 'Messages' && dmUnread > 0 && (
                         <span className="absolute top-1.5 right-1 min-w-[16px] h-[16px] px-[3px] bg-red-500 text-white text-[9px] font-bold rounded-full flex items-center justify-center leading-none">
                           {dmUnread > 99 ? '99+' : dmUnread}
