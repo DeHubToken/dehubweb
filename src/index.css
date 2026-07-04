@@ -873,6 +873,12 @@ html[data-theme="minimal"] *:not([data-keep-round])::after {
   border-radius: 0 !important;
 }
 
+/* Minimal theme: solid right wall for the login/create/post action button
+   so its straight edge doesn't look dim against the grid lines. */
+html[data-theme="minimal"] [data-login-button] {
+  border-right-color: rgba(255, 255, 255, 0.9) !important;
+}
+
 /* Wide-screen collapsed sidebar: draw a grid square around every post */
 html[data-theme="minimal"][data-sidebar-collapsed="true"] [data-feed-item] {
   border: 1px solid rgba(255, 255, 255, 0.10) !important;
