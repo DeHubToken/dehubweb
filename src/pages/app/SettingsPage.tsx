@@ -54,6 +54,7 @@ import {
   Terminal,
   Skull,
   Orbit,
+  Minus,
   Ban,
   Bot,
 } from 'lucide-react';
