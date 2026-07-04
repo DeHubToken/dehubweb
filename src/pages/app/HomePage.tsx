@@ -10,7 +10,7 @@
 
 import { useState, useEffect, useRef, useCallback, useDeferredValue, memo } from 'react';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
