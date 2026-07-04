@@ -1373,7 +1373,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const showTopProgress = (isFetching || isAutoRetrying) && !isLoadingState;
 
   return (
-    <div className={cn("relative p-2 sm:p-3 pt-0 sm:pt-0 space-y-3", isCollapsed && "pt-2 sm:pt-2")}>
+    <div data-feed-root className={cn("relative p-2 sm:p-3 pt-0 sm:pt-0 space-y-3", isCollapsed && "pt-2 sm:pt-2")}>
       {showTopProgress && (
         <div
           aria-hidden
