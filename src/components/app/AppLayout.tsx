@@ -195,7 +195,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
          <main className={cn(
-          "flex-1 min-h-screen pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black pt-11"
+          "flex-1 min-h-screen pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black pt-11 relative"
         )}>
           {/* Global feed nav — keep mounted and animate in/out to avoid rigid multi-step jumps */}
           <div
