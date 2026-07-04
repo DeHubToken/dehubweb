@@ -967,10 +967,12 @@ export default function SinglePostPage() {
   // Standard layout for other content types
   const isLivePost = contentType === 'live';
 
-  const renderPostContent = (onBack?: () => void) => (
+  const renderPostContent = (onBack?: () => void, hideHeader = false) => (
     <>
-      {/* Mobile: always show back (user came from feed). Desktop: only show if there's history */}
-      <PageHeader showBack={onBack ? true : hasHistory} onBack={onBack} innerClassName="max-w-2xl mx-auto w-full" />
+      {/* Mobile: header hidden — top nav bar provides the back button. Desktop: only show if there's history */}
+      {!hideHeader && (
+        <PageHeader showBack={onBack ? true : hasHistory} onBack={onBack} innerClassName="max-w-2xl mx-auto w-full" />
+      )}
       <div className="px-3 sm:px-4 pb-8 pt-2">
         <div className="max-w-2xl mx-auto">
           <div className="lg:rounded-xl lg:border lg:border-white/[0.12] lg:bg-white/[0.03] lg:p-3">
