@@ -983,6 +983,20 @@ html[data-theme="minimal"] [data-feed-root] [data-feed-item]:last-child::after {
   }
 }
 
+/* Minimal theme: restore hover states for side panel menu items.
+   The zinc-removal rules above strip the default grey hover backgrounds;
+   replace them with a subtle white wash so rows/tabs feel interactive. */
+html[data-theme="minimal"] [data-side-panel] [class*="hover:bg-zinc-"]:hover {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+html[data-theme="minimal"] [data-side-panel] [class*="hover:text-zinc-"]:hover {
+  color: #ffffff !important;
+}
+html[data-theme="minimal"] [data-side-panel] .tab-hover-bg {
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.08), transparent) !important;
+}
+
+
 
 
 
