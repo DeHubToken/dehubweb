@@ -822,7 +822,7 @@ export default function SinglePostPage() {
         
         {/* Desktop: Standard layout with header */}
         <div className="hidden lg:flex lg:flex-col">
-          <PageHeader showBack={hasHistory} />
+          <PageHeader showBack={hasHistory} innerClassName="max-w-2xl mx-auto w-full" />
           <div className="px-3 sm:px-4 pb-8">
             <div className="max-w-2xl mx-auto">
               {/* Creator info for desktop */}
