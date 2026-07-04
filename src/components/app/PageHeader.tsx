@@ -23,6 +23,8 @@ export function PageHeader({
   subtitle,
   showBack = true,
   className,
+  innerClassName,
+  rightActions,
   fallbackRoute = '/app',
   onBack,
 }: PageHeaderProps) {
