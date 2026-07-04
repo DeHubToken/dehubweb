@@ -9,22 +9,30 @@ Use this skill whenever the user asks for a DeHub-branded image: posters, social
 
 ## Model
 
-Two-step flow: generate the scene, then composite the real logo PNG on top so the wordmark stays pixel-perfect. Pick the scene model by whether the poster has **baked-in typography** (socials, URLs, taglines, headings drawn into the image itself).
+Two-step flow: generate the scene, then composite the real logo PNG on top so the wordmark stays pixel-perfect.
 
-| Tier | Model | Speed | Approx cost | When |
-|---|---|---|---|---|
-| **Default — logo-only** | `imagegen--generate_image` with `model: "gemini-3.1-flash-image"` (Nano Banana 2) | ~4s | ~1¢ | The common case: logo-only compositions, no rendered text in the scene |
-| **Text-in-image** | `imagegen--generate_image` with `model: "premium.gpt"` (GPT-image-2 medium) | ~30s | ~8–12¢ | Poster has baked-in socials strip, URLs, handles, taglines, headings — anything that must be legibly typeset |
-| **Hero / campaign** | `imagegen--generate_image` with `model: "premium"` (GPT-image-2 high) | ~40s | ~20–40¢ | Only when the user explicitly asks for hero / campaign / marketing top-tier art |
-| **Rough drafts** | `imagegen--edit_image` with `model` unset (Nano Banana 2) | ~3s | ~1¢ | Cheap iterations before locking a direction, or GPT moderation-rejection retries |
+**Always use Nano Banana 2** (`google/gemini-3.1-flash-image`) for both steps unless the user explicitly asks for a different model. It's fast (~4s), cheap (~1¢), and — with the tight prompt scaffold in this skill — produces the right monochrome-metallic-glass look. The old habit of defaulting to GPT-image-2 is retired: it's slower, more expensive, and doesn't obey the brand palette any better than Nano Banana 2 when the prompt is tight.
 
-### Decision rule
-- **Words like "quality", "premium", "hero", "campaign", "final", "publish", "post it", "for socials" → Hero tier** (GPT-image-2 high). Never cheap out on something the user is about to publish.
-- **User asks for socials, links, website, URL, handle, tagline, headline, or literal text on the poster → Text-in-image tier** (GPT-image-2 medium). Gemini renders typography unreliably.
-- **User asks for a quick / draft / iteration / "just try something" → Default tier** (Nano Banana 2).
-- **Everything else (a normal DeHub poster request) → Text-in-image tier by default** (GPT-image-2 medium). It's the safe middle: strong material rendering, restrained color obedience, ~30s. Nano Banana 2 is faster but drifts into flat black backgrounds and stray warm tints without extremely tight prompting — reserve it for drafts or when the user asked for speed.
+- **Step 1 (scene)** → `imagegen--generate_image` with `model: "gemini-3.1-flash-image"`.
+- **Step 2 (logo composite)** → `imagegen--edit_image` with `model` unset (routes to Nano Banana 2 automatically).
 
-The logo is composited in step 2 using the real PNG, so the wordmark never drifts regardless of scene model.
+Only override the model if the user literally names another one, or if a generation fails moderation and needs a retry on a different model.
+
+## Brand DNA — the "vibe" every scene must express
+
+DeHub is a **decentralized creator ecosystem** — social, media, staking, tipping, live streaming, AI tools, marketplaces, all on-chain. Mission: give creators sovereignty (own their audience, own their content, own their revenue) with an interface that feels as premium as any centralized app. Think "the Apple of Web3."
+
+When the user is NOT specific about what the poster should depict, invent a scene from this vocabulary — never fall back to a generic monolith or empty room. Pick one:
+
+- **Architectural** — floating obsidian pavilion, chrome monolith, cantilevered brushed-steel platform, mirrored glass amphitheatre, weightless silver ring suspended in mist
+- **Product-hero** — a smoked-glass hardware wallet on a plinth, a mercury sphere hovering over a chrome disc, a stack of translucent smoked-crystal cards, a single silver key floating in fog
+- **Landscape** — endless mirror-black lake with faint silver mist, moonlit obsidian dunes, a monochrome mountain range in cold moonlight, a chrome desert horizon
+- **Abstract** — liquid mercury frozen mid-splash, a smoked-glass helix, a ribbon of brushed steel curling through space, geometric silver shards suspended weightlessly
+- **Human presence (rare, silhouette only)** — a lone silhouetted figure in a chrome corridor, a hooded silhouette facing a floating silver monolith. Never a face, never a full character.
+
+Combine one subject with a specific material and a specific atmosphere ("mercury sphere on brushed-steel plinth in charcoal mist with cold rim light"). The result should feel like a still from a $50M sci-fi film or an Apple keynote hero shot — not a stock AI render.
+
+
 
 
 
