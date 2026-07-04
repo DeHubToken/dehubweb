@@ -621,9 +621,9 @@ function MusicVideosSection({ walletAddress }: { walletAddress: string | null })
   }
 
   return (
-    <div className="space-y-3 pb-32">
+    <div data-feed-root className="space-y-3 pb-32">
       {videos.map((video) => (
-        <div key={video.id} className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3">
+        <div key={video.id} data-feed-item className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3">
           <VideoCard video={video} />
         </div>
       ))}
