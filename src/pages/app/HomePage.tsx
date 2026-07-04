@@ -324,6 +324,17 @@ export default function HomePage() {
   const [enableHomeTransition, setEnableHomeTransition] = useState(false);
 
   const handleTabClick = useCallback((tabValue: string) => {
+    // If a post overlay is currently covering the feed, tapping any tab should
+    // dismiss the overlay and take the user back to the feed on that tab —
+    // otherwise the tab change happens underneath the overlay and looks broken.
+    if (isPostOverlayActive) {
+      setEnableHomeTransition(true);
+      setTimeout(() => setEnableHomeTransition(false), 450);
+      setActiveTab(tabValue);
+      resetFilters();
+      navigate('/app', { replace: false });
+      return;
+    }
     if (tabValue === activeTab) {
       // Same tab clicked - scroll to top
       document.documentElement.scrollTo({ top: 0, behavior: 'smooth' });
@@ -336,7 +347,7 @@ export default function HomePage() {
       setActiveTab(tabValue);
       resetFilters();
     }
-  }, [activeTab, resetFilters]);
+  }, [activeTab, resetFilters, isPostOverlayActive, navigate]);
 
   /**
    * Listen for home refresh events from navigation.
