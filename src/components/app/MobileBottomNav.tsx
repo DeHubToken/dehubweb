@@ -85,9 +85,16 @@ export function MobileBottomNav() {
     if (path === '/app' && location.pathname === '/app') {
       e.preventDefault();
       window.dispatchEvent(new CustomEvent('home-refresh'));
+      setIsHomeRefreshing(true);
+      if (homeRefreshTimerRef.current) window.clearTimeout(homeRefreshTimerRef.current);
+      homeRefreshTimerRef.current = window.setTimeout(() => setIsHomeRefreshing(false), 900);
       navigate('/app');
     }
   };
+
+  useEffect(() => () => {
+    if (homeRefreshTimerRef.current) window.clearTimeout(homeRefreshTimerRef.current);
+  }, []);
 
   const handleProtectedNavClick = (e: React.MouseEvent, path: string, requiresAuth?: boolean) => {
     if (requiresAuth && !isAuthenticated) {
