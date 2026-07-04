@@ -828,3 +828,50 @@ html[data-theme="minimal"] [data-feed-item] {
 html[data-theme="minimal"] [data-feed-item]:last-child {
   border-bottom: 0 !important;
 }
+
+/* Strip the "View all" bubble in side panels — leave text only */
+html[data-theme="minimal"] [data-view-all],
+html[data-theme="minimal"] [data-view-all] * {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+html[data-theme="minimal"] [data-view-all] *::before,
+html[data-theme="minimal"] [data-view-all] *::after {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  display: none !important;
+}
+
+/* Square off all buttons/inputs/nav/header in minimal mode */
+html[data-theme="minimal"] :is(
+  button,
+  input,
+  textarea,
+  select,
+  nav,
+  header,
+  [role="button"],
+  [role="search"],
+  [role="tab"],
+  [role="tablist"],
+  [role="menu"],
+  [role="dialog"]
+) {
+  border-radius: 0 !important;
+}
+
+/* Wide-screen collapsed sidebar: draw a grid square around every post */
+html[data-theme="minimal"][data-sidebar-collapsed="true"] [data-feed-item] {
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 0 !important;
+  padding: 0.75rem !important;
+  margin-bottom: -1px; /* collapse borders so it reads as a grid */
+}
+html[data-theme="minimal"][data-sidebar-collapsed="true"] [data-feed-item]:last-child {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10) !important;
+}
