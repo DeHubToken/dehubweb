@@ -267,11 +267,17 @@ export default function HomePage() {
     
     setIsRefreshing(true);
 
-    // Force fresh live streams (staleTime would otherwise skip refetch after remount)
+    // Invalidate feed queries so cards re-render with fresh data (or the
+    // same data re-mounted) — this gives users clear visual feedback even
+    // when nothing new is available.
     void queryClient.invalidateQueries({ queryKey: ['dehub-live'] });
+    void queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+    void queryClient.invalidateQueries({ queryKey: ['home-feed'] });
+    void queryClient.invalidateQueries({ queryKey: ['feed'] });
     
     // Clear prefetch state so feeds will be re-fetched
     clearPrefetchState();
+
     
     // Clear persisted filter states so filters reset to defaults
     clearPersistedFeedFilters();
