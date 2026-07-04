@@ -293,21 +293,11 @@ ART DIRECTION: ${enhancedUserRequest}`;
         }
       }
 
-      // Gemini fallback: attach the real logo PNG for compositing
+      // Gemini fallback: reuse the pre-fetched compositeLogo (guaranteed above)
       try {
-        let logoDataUrl = logoImage;
-        if (!logoDataUrl) {
-          const logoRes = await fetch('https://dehub.io/__l5e/assets-v1/4cf0b92e-3cfd-4459-9c72-cdec81055a23/dehub-logo-white.png');
-          if (logoRes.ok) {
-            const buf = new Uint8Array(await logoRes.arrayBuffer());
-            let bin = '';
-            for (let i = 0; i < buf.byteLength; i++) bin += String.fromCharCode(buf[i]);
-            logoDataUrl = `data:image/png;base64,${btoa(bin)}`;
-          } else {
-            console.warn('[dehub-poster] Logo fetch failed:', logoRes.status);
-          }
-        }
+        const logoDataUrl = compositeLogo;
         if (logoDataUrl) {
+
           sourceImage = logoDataUrl;
           model = 'gemini-3.1-flash-image';
           isGrokModel = false;
