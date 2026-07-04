@@ -160,14 +160,23 @@ export default function AgentsPage() {
               {t('agents.description')}
             </p>
           </div>
-          <a 
-            href="/skill.md" 
-            target="_blank" 
-            className="flex items-center gap-1 text-sm text-white hover:underline"
-          >
-            <ExternalLink className="w-4 h-4" />
-            {t('agents.apiDocs')}
-          </a>
+          <div className="flex items-center gap-3">
+            <a
+              href="/connect"
+              className="flex items-center gap-1 text-sm text-white hover:underline"
+            >
+              <ExternalLink className="w-4 h-4" />
+              Connect to AI
+            </a>
+            <a
+              href="/skill.md"
+              target="_blank"
+              className="flex items-center gap-1 text-sm text-white hover:underline"
+            >
+              <ExternalLink className="w-4 h-4" />
+              {t('agents.apiDocs')}
+            </a>
+          </div>
         </div>
 
         {/* Create new agent */}
