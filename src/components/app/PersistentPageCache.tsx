@@ -201,14 +201,18 @@ export function PersistentPageCache({ keepHomeVisible = false }: { keepHomeVisib
     <>
       {/* Render all mounted cached pages — active one visible, others hidden */}
       {CACHED_PAGES.filter(p => mountedPages.has(p.key)).map(config => {
-        // Home stays mounted (state preserved) but hidden when a post overlay is shown above it.
+        // Home stays mounted (state preserved) but hidden when a post overlay is shown above it —
+        // except when `keepHomeVisible` is set, in which case we keep home visible so its
+        // sticky top nav bar remains anchored to the top during the overlay.
         const isActive = matchesPath(config, pathname);
+        const forceVisible = config.key === 'home' && keepHomeVisible;
 
         return (
           <CachedPage
             key={config.key}
             config={config}
             isActive={isActive}
+            forceVisible={forceVisible}
           />
         );
       })}
