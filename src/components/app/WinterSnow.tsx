@@ -63,7 +63,7 @@ export function WinterSnow() {
 
     const BUCKET = 6;
     const MAX_PILE = 80;
-    const MAX_FLAKES = 260;
+    const MAX_FLAKES = 180;
     const PUSH_RADIUS = 90;
     const WIPE_RADIUS = 55;
 
