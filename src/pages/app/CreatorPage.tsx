@@ -576,6 +576,16 @@ function thumbUrl(url: string, width = 480): string {
 
 const PAGE_SIZE = 18;
 
+// Match the grid breakpoints on the gallery (2 / sm:3 / md:4 / lg:6 columns).
+function getGalleryColumns(): number {
+  if (typeof window === 'undefined') return 4;
+  const w = window.innerWidth;
+  if (w >= 1024) return 6;
+  if (w >= 768) return 4;
+  if (w >= 640) return 3;
+  return 2;
+}
+
 function GalleryTile({ item, onOpen }: { item: GalleryItem; onOpen: (i: GalleryItem) => void }) {
   const ref = useRef<HTMLButtonElement | null>(null);
   const [visible, setVisible] = useState(false);
@@ -633,7 +643,7 @@ function CommunityGallery() {
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [visibleCount, setVisibleCount] = useState(() => getGalleryColumns() * 4);
   const [lightbox, setLightbox] = useState<GalleryItem | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -684,6 +694,18 @@ function CommunityGallery() {
     io.observe(sentinelRef.current);
     return () => io.disconnect();
   }, [items.length]);
+
+  // Keep the initial 4-row window accurate if the viewport is resized before scroll.
+  useEffect(() => {
+    const onResize = () => {
+      setVisibleCount((c) => {
+        const minRows = getGalleryColumns() * 4;
+        return c < minRows ? minRows : c;
+      });
+    };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   useEffect(() => {
     if (!lightbox) return;
