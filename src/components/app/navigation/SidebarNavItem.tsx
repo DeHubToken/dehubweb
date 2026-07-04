@@ -193,10 +193,11 @@ export function SidebarNavItem({
             </span>
           )}
           {(item.label === 'Prompt' || item.label === 'Work' || item.label === 'Stores') && (
-            <span className="absolute -top-0.5 -right-1 px-0.5 h-[10px] flex items-center justify-center bg-white/90 text-black text-[6px] font-bold rounded-sm z-20 leading-none tracking-wide uppercase shadow-sm">
+            <span className="pointer-events-none absolute -top-1 left-1/2 -translate-x-1/2 px-1 h-[10px] flex items-center justify-center bg-white/90 text-black text-[6px] font-bold rounded-sm z-20 leading-none tracking-wide uppercase shadow-sm whitespace-nowrap">
               Test
             </span>
           )}
+
         </div>
       )}
       <span className={cn("relative z-10 truncate", labelClass)}>{translatedLabel}</span>
