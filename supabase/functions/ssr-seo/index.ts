@@ -770,7 +770,9 @@ serve(async (req) => {
         };
         const DEFAULT_OG_IMAGE = "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo//Screenshot%202026-03-20%20225233.png";
 
-        const normalizedKey = cleanPath.replace(/^\/+|\/+$/g, "").toLowerCase();
+        const rawKey = cleanPath.replace(/^\/+|\/+$/g, "").toLowerCase();
+        // Product pages live under /app/*; accept both `/slug` and `/app/slug`.
+        const normalizedKey = STATIC_ROUTES[rawKey] ? rawKey : rawKey.replace(/^app\//, "");
         const staticMatch = STATIC_ROUTES[normalizedKey];
         if (staticMatch) {
             const routeImage = STATIC_ROUTE_IMAGES[normalizedKey] || DEFAULT_OG_IMAGE;
