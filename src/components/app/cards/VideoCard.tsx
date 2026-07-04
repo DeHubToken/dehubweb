@@ -873,7 +873,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   }, []);
 
   const handleVideoEnded = useCallback(() => {
-    if (isLooping && videoRef.current) {
+    // Ads always loop — never stop
+    if ((video.isAd || isLooping) && videoRef.current) {
       videoRef.current.currentTime = 0;
       videoRef.current.play().catch(() => {});
       return;
@@ -881,7 +882,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     isPlayingRef.current = false;
     setIsPlaying(false);
     videoPlaybackManager.stop(instanceId);
-  }, [instanceId, isLooping]);
+  }, [instanceId, isLooping, video.isAd]);
+
 
   const cyclePlaybackRate = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
