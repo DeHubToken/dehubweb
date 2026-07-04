@@ -695,6 +695,18 @@ function CommunityGallery() {
     return () => io.disconnect();
   }, [items.length]);
 
+  // Keep the initial 4-row window accurate if the viewport is resized before scroll.
+  useEffect(() => {
+    const onResize = () => {
+      setVisibleCount((c) => {
+        const minRows = getGalleryColumns() * 4;
+        return c < minRows ? minRows : c;
+      });
+    };
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
+
   useEffect(() => {
     if (!lightbox) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setLightbox(null); };
