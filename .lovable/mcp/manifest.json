@@ -1,0 +1,153 @@
+{
+  "version": 1,
+  "sdk_version": "0.20.0",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "none"
+  },
+  "mcp": {
+    "server": {
+      "name": "dehub-mcp",
+      "version": "0.1.0",
+      "title": "DeHub"
+    },
+    "tools": [
+      {
+        "name": "dehub_feed",
+        "title": "Get DeHub feed",
+        "description": "Fetch posts from the DeHub decentralized social feed.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "sort": {
+              "type": "string",
+              "enum": [
+                "new",
+                "hot",
+                "trending"
+              ],
+              "description": "Sort order"
+            },
+            "category": {
+              "type": "string",
+              "description": "Optional category filter"
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "description": "Max posts (1-50)"
+            },
+            "offset": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Pagination offset"
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "dehub_post",
+        "title": "Get DeHub post",
+        "description": "Fetch a single DeHub post by its token ID.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "token_id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The post's token ID"
+            }
+          },
+          "required": [
+            "token_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "dehub_search",
+        "title": "Search DeHub",
+        "description": "Search DeHub posts, users, and videos.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Search query"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "all",
+                "posts",
+                "users",
+                "videos"
+              ],
+              "description": "Result type filter"
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "description": "Max results (1-50)"
+            }
+          },
+          "required": [
+            "query"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "dehub_profile",
+        "title": "Get DeHub profile",
+        "description": "Fetch a DeHub user profile by wallet address.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "wallet_address": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Wallet address (0x...) to look up"
+            }
+          },
+          "required": [
+            "wallet_address"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}
