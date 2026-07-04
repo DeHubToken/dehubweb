@@ -805,7 +805,7 @@ export default function HomePage() {
             their own props change, not when activeTab/deferredTab changes. */}
         {visitedTabs.has('home') && (
           <div style={{ display: deferredTab === 'home' ? 'block' : 'none' }}>
-            <MemoHomeFeed shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters} pinnedPostId={pinnedPostId} />
+            <MemoHomeFeed key={refreshKey} shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters} pinnedPostId={pinnedPostId} />
           </div>
         )}
         {visitedTabs.has('videos') && (
