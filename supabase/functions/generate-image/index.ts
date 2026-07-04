@@ -225,9 +225,11 @@ ART DIRECTION: ${enhancedUserRequest}`;
             if (b64) {
               const sceneDataUrl = `data:image/png;base64,${b64}`;
 
-              // ── Step 2: if the caller supplied a real logo PNG, composite it on top
-              //    with Gemini so the wordmark stays pixel-perfect (never redrawn).
-              if (logoImage) {
+              // ── Step 2: composite the real DeHub logo PNG on top with Gemini so
+              //    the wordmark stays pixel-perfect (never redrawn by the scene model).
+              //    `compositeLogo` is guaranteed above (client-supplied OR CDN fetch).
+              if (compositeLogo) {
+
                 try {
                   console.log('[dehub-poster] GPT scene ok — compositing real logo via Gemini');
                   const compositePrompt = `Take the first image (a finished DeHub marketing scene) and place the second image (the official DeHub white wordmark, transparent PNG) onto it as a logo lockup. 
