@@ -186,9 +186,11 @@ function shouldServeSSR(pathname) {
   if (/^\/docs\/blog\/[^/]+/.test(pathname)) return true;
   // Always SSR for root
   if (pathname === '/') return true;
-  // Static marketing routes with per-route OG meta
+  // Static marketing routes with per-route OG meta.
+  // Accept both `/slug` and `/app/slug` — many product pages live under /app.
   const trimmed = pathname.replace(/^\/+|\/+$/g, '').toLowerCase();
-  if (SSR_STATIC_ROUTES.has(trimmed)) return true;
+  const trimmedNoApp = trimmed.replace(/^app\//, '');
+  if (SSR_STATIC_ROUTES.has(trimmed) || SSR_STATIC_ROUTES.has(trimmedNoApp)) return true;
   // Always SSR for profile pages (top-level non-system routes)
   const first = pathname.replace(/^\//, '').split('/')[0].toLowerCase().replace('@', '');
   if (first && !SYSTEM_ROUTES.includes(first) && !first.includes('.')) return true;
