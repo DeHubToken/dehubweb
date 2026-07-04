@@ -576,6 +576,16 @@ function thumbUrl(url: string, width = 480): string {
 
 const PAGE_SIZE = 18;
 
+// Match the grid breakpoints on the gallery (2 / sm:3 / md:4 / lg:6 columns).
+function getGalleryColumns(): number {
+  if (typeof window === 'undefined') return 4;
+  const w = window.innerWidth;
+  if (w >= 1024) return 6;
+  if (w >= 768) return 4;
+  if (w >= 640) return 3;
+  return 2;
+}
+
 function GalleryTile({ item, onOpen }: { item: GalleryItem; onOpen: (i: GalleryItem) => void }) {
   const ref = useRef<HTMLButtonElement | null>(null);
   const [visible, setVisible] = useState(false);
