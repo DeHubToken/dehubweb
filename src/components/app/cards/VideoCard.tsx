@@ -1397,6 +1397,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 poster={video.thumbnail || undefined}
                 muted={isMuted}
                 playsInline
+                loop={video.isAd || isLooping}
+
                 {...{"webkit-playsinline": ""}}
                 preload={aboveFold ? 'auto' : 'metadata'}
                 crossOrigin="anonymous"
