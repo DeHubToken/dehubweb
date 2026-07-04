@@ -86,8 +86,9 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
       
       <div className="flex items-center gap-3">
         
-        {/* Notifications Button - only visible when logged in */}
-        {isAuthenticated && !isPostPage && (
+        {/* Notifications Button - only visible when logged in.
+            When the post overlay is opened from the feed, keep the DEHUB header exactly as it was. */}
+        {isAuthenticated && (!isPostPage || isOverlayFromFeed) && (
           <button
             onClick={() => navigate('/app/notifications')}
             className={`relative flex items-center justify-center transition-colors ${isNotificationsActive ? 'text-white' : 'text-zinc-400'}`}
@@ -101,9 +102,11 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
             )}
           </button>
         )}
-        
-        {/* On dedicated post pages: back button replaces the menu/settings toggle */}
-        {isPostPage ? (
+
+        {/* Direct post-page URL access: back button replaces the menu/settings toggle.
+            When opened as an overlay from the feed, the feed's tab bar already hosts a back button,
+            so we keep the normal menu/avatar here to preserve the "you never left the feed" feel. */}
+        {isPostPage && !isOverlayFromFeed ? (
           <button
             onClick={handleBackClick}
             className="p-2 -mr-2 rounded-full text-white hover:bg-white/10 transition-colors"
@@ -113,6 +116,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
           </button>
         ) : isAuthenticated ? (
           <Drawer open={isOpen} onOpenChange={onToggle}>
+
             <DrawerTrigger asChild>
               {user ? (
                 <button
