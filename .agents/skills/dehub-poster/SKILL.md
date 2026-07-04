@@ -32,6 +32,22 @@ When the user is NOT specific about what the poster should depict, invent a scen
 
 Combine one subject with a specific material and a specific atmosphere ("mercury sphere on brushed-steel plinth in charcoal mist with cold rim light"). The result should feel like a still from a $50M sci-fi film or an Apple keynote hero shot — not a stock AI render.
 
+### Theme translation — monochrome is non-negotiable
+
+Whatever theme the user names (Christmas, summer, airdrop, Halloween, Valentine's, Diwali, hackathon, birthday, launch, milestone, anything else), the visual must still be **strict monochrome metallic-glass**. Translate the theme into DeHub's material vocabulary — never into the theme's stereotypical color palette.
+
+Examples of correct translation:
+- **Christmas** → silver frost on obsidian, chrome ornaments on brushed-steel branches, monochrome snow drifting past a smoked-glass monolith. Never red/green/gold.
+- **Summer** → chrome sun disc over a mirror-black lake, silver heat shimmer over obsidian dunes. Never orange/yellow/beach-blue.
+- **Halloween** → matte black skull carved from obsidian on a silver plinth in cold mist. Never orange/purple.
+- **Airdrop / launch** → silver capsules descending through charcoal fog, a chrome sphere splitting open to reveal mercury light. Never confetti/rainbow.
+- **Valentine's** → two mirrored chrome hearts fused, or a single obsidian heart on brushed steel. Never red/pink.
+- **Anniversary / milestone number** → the number sculpted in polished chrome or smoked glass on a monolithic plinth. Never gold.
+
+Rule of thumb: if the theme suggests a color, **replace that color with its metallic-monochrome equivalent** (gold → chrome, red → polished obsidian with silver rim, green → brushed dark steel with cool white glow, warm light → cool near-white light). If in doubt, ask yourself: "would this look at home in an Apple keynote?" If no, tighten the prompt.
+
+
+
 
 
 
