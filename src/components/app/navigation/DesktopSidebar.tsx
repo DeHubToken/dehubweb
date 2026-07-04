@@ -206,6 +206,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         {/* Post / Login Button */}
         <div className="mt-3 flex items-center justify-center lg:block px-1">
           <LiquidGlassBubble
+            data-login-button
             shimmer
             noBorder
             className={cn("cursor-pointer w-full box-border border border-white/30 rounded-2xl [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent", isConnecting && "opacity-70 pointer-events-none")}
