@@ -48,6 +48,7 @@ import {
   StoriesBar,
   LiveCard,
 } from '@/components/app/cards';
+import { AdSlotCard } from '@/components/app/cards/AdSlotCard';
 
 
 import { 
