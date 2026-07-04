@@ -884,22 +884,27 @@ html[data-theme="minimal"] [data-sidebar-fade] {
 }
 
 /* Full-width media (images/videos) on mobile/tablet.
-   Text/avatars/actions keep their normal card padding — only media bleeds
-   past the feed's horizontal padding to reach the screen edges. */
+   Text/avatars/actions keep the bento card's padding — only the media
+   bleeds past the card's border + the feed's outer padding to reach the
+   screen edges. Values below sum: feed-root padding + feed-item p-3 (12px)
+   + 1px card border. */
 @media (max-width: 639px) {
-  [data-feed-root] [data-media-full] {
-    margin-left: -0.5rem !important;
-    margin-right: -0.5rem !important;
+  [data-feed-root] [data-feed-item] [data-media-full] {
+    margin-left: calc(-0.75rem - 0.5rem - 1px) !important;
+    margin-right: calc(-0.75rem - 0.5rem - 1px) !important;
     border-radius: 0 !important;
+    max-width: none !important;
   }
 }
 @media (min-width: 640px) and (max-width: 1023px) {
-  [data-feed-root] [data-media-full] {
-    margin-left: -0.75rem !important;
-    margin-right: -0.75rem !important;
+  [data-feed-root] [data-feed-item] [data-media-full] {
+    margin-left: calc(-0.75rem - 0.75rem - 1px) !important;
+    margin-right: calc(-0.75rem - 0.75rem - 1px) !important;
     border-radius: 0 !important;
+    max-width: none !important;
   }
 }
+
 
 
 
