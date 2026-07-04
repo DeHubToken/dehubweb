@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Search, Plus, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
@@ -12,6 +13,7 @@ type Filter = 'all' | 'featured' | 'mine';
 
 export function SkillsLibrary() {
   const { walletAddress } = useAuth();
+  const navigate = useNavigate();
   const { data: skills = [], isLoading } = useUserSkills();
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
@@ -91,7 +93,7 @@ export function SkillsLibrary() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {filtered.map((s) => (
-            <SkillCard key={s.id} skill={s} onClick={() => setDetail(s)} />
+            <SkillCard key={s.id} skill={s} onClick={() => navigate(`/app/assistant?skill=${s.slug}`)} />
           ))}
         </div>
       )}
