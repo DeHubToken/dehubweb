@@ -825,7 +825,7 @@ export default function SinglePostPage() {
                 onAIClick={() => setShowDesktopAIChat(true)}
                 onMenuClick={() => setShowDesktopOptionsDrawer(true)}
               />
-              <div className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+              <div data-feed-item className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
                 {renderContent()}
                 {id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
               </div>
