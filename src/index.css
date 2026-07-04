@@ -866,3 +866,9 @@ html[data-theme="minimal"][data-sidebar-collapsed="true"] [data-feed-item] {
 html[data-theme="minimal"][data-sidebar-collapsed="true"] [data-feed-item]:last-child {
   border-bottom: 1px solid rgba(255, 255, 255, 0.10) !important;
 }
+
+/* Restore the sidebar bottom fade in minimal mode (background is black, not zinc-900) */
+html[data-theme="minimal"] [data-sidebar-fade] {
+  background: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.6) 40%, transparent 100%) !important;
+  background-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.6) 40%, transparent 100%) !important;
+}

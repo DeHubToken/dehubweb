@@ -200,7 +200,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           })}
           </div>
           {/* Bottom fade overlay */}
-          <div className={cn("pointer-events-none absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent rounded-b-2xl z-10")} />
+          <div data-sidebar-fade className={cn("pointer-events-none absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent rounded-b-2xl z-10")} />
         </motion.div>
 
         {/* Post / Login Button */}
