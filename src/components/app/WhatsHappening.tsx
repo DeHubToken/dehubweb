@@ -220,7 +220,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
   });
 
   return (
-    <div className="bg-zinc-900 rounded-2xl overflow-hidden relative">
+    <div data-side-panel className="bg-zinc-900 rounded-2xl overflow-hidden relative">
       {/* Icon tab switcher — matches TabbedSidePanel style */}
       <div className="flex">
         {(['posts', 'stages', 'tickers'] as Tab[]).map(tab => {
