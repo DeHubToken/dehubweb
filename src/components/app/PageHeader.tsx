@@ -56,7 +56,10 @@ export function PageHeader({
       isCollapsed ? 'top-0 lg:top-12' : 'top-0',
       className
     )}>
-      <div className="flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/10 px-3 py-2">
+      <div className={cn(
+        'flex items-center gap-3 rounded-2xl bg-black/60 backdrop-blur-[24px] saturate-[180%] px-3 py-2',
+        innerClassName
+      )}>
         {showBack && (
           <button
             onClick={handleBack}
@@ -67,11 +70,16 @@ export function PageHeader({
           </button>
         )}
         {(title || subtitle) && (
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             {title && <h1 className="font-bold text-white truncate">{title}</h1>}
             {subtitle && (
               <p className="text-zinc-500 text-sm truncate">{subtitle}</p>
             )}
+          </div>
+        )}
+        {rightActions && (
+          <div className="flex items-center gap-2 shrink-0">
+            {rightActions}
           </div>
         )}
       </div>
