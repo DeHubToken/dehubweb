@@ -143,7 +143,7 @@ export function RelatedPostsFeed({ currentPostId }: RelatedPostsFeedProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4 pt-[30px]">
+    <div data-feed-root className="flex flex-col gap-4 pt-[30px]">
       {/* Ad Video - First Slot */}
       {adVideo && (
         <div className="relative rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
@@ -153,7 +153,7 @@ export function RelatedPostsFeed({ currentPostId }: RelatedPostsFeedProps) {
 
       {/* Latest Text Posts */}
       {posts.map((post) => (
-        <div key={post.id} className="rounded-xl bg-white/[0.03] p-3">
+        <div key={post.id} data-feed-item className="rounded-xl bg-white/[0.03] p-3">
           <PostCard post={post} />
         </div>
       ))}
