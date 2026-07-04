@@ -250,7 +250,7 @@ ART DIRECTION: ${enhancedUserRequest}`;
                         role: 'user',
                         content: [
                           { type: 'image_url', image_url: { url: sceneDataUrl } },
-                          { type: 'image_url', image_url: { url: logoImage } },
+                          { type: 'image_url', image_url: { url: compositeLogo } },
                           { type: 'text', text: compositePrompt },
                         ],
                       }],
