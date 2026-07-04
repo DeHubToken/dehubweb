@@ -1017,12 +1017,12 @@ export default function SinglePostPage() {
           <DrawerContent
             hideHandle
             noOverlay
-            className="!h-[100dvh] !max-h-[100dvh] !mt-0 !rounded-none !border-0 !shadow-none !bg-black"
+            className="!h-[calc(100dvh-2.75rem)] !max-h-[calc(100dvh-2.75rem)] !mt-11 !rounded-t-2xl !border-0 !shadow-none !bg-black top-11"
           >
             <div
               className={`flex flex-col h-full overflow-y-auto ${isLivePost ? 'bg-black' : ''}`}
             >
-              {renderPostContent(handleMobileBack)}
+              {renderPostContent(handleMobileBack, true)}
             </div>
           </DrawerContent>
         </Drawer>
