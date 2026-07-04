@@ -1695,6 +1695,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
           <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
             {[
               { value: 'system', icon: Monitor, labelKey: 'settings.system', available: true, badge: null },
+              { value: 'minimal', icon: Minus, labelKey: 'settings.minimal', available: true, badge: 'New' },
               { value: 'cosmic', icon: Orbit, labelKey: 'settings.cosmic', available: true, badge: 'Test' },
               { value: 'light', icon: Sun, labelKey: 'settings.light', available: false, badge: null },
               { value: 'winter', icon: Snowflake, labelKey: 'settings.winter', available: true, badge: 'Test' },
