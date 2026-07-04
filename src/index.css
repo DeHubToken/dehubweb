@@ -847,21 +847,12 @@ html[data-theme="minimal"] [data-view-all] *::after {
   display: none !important;
 }
 
-/* Square off all buttons/inputs/nav/header in minimal mode */
-html[data-theme="minimal"] :is(
-  button,
-  input,
-  textarea,
-  select,
-  nav,
-  header,
-  [role="button"],
-  [role="search"],
-  [role="tab"],
-  [role="tablist"],
-  [role="menu"],
-  [role="dialog"]
-) {
+/* Square off EVERYTHING in minimal mode — keep only true circular elements (avatars/dots) round */
+html[data-theme="minimal"] *:not(img):not(video):not(canvas):not(svg):not(picture):not([class*="rounded-full"]):not([class*="avatar"]):not([data-keep-round]) {
+  border-radius: 0 !important;
+}
+html[data-theme="minimal"] *:not(img):not(video):not(canvas):not(svg):not(picture):not([class*="rounded-full"]):not([class*="avatar"]):not([data-keep-round])::before,
+html[data-theme="minimal"] *:not(img):not(video):not(canvas):not(svg):not(picture):not([class*="rounded-full"]):not([class*="avatar"]):not([data-keep-round])::after {
   border-radius: 0 !important;
 }
 
