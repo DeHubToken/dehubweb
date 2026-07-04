@@ -552,7 +552,7 @@ export function ActionBar({
         </div>
 
         {/* Right side actions */}
-        <div className="flex flex-wrap items-center justify-end gap-3">
+        <div className="flex items-center justify-end gap-3 ml-auto flex-nowrap">
           <motion.button
             onClick={toggleBookmark}
             className={cn(
