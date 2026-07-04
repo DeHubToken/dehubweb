@@ -942,6 +942,20 @@ html[data-theme="minimal"] [data-feed-root] [data-feed-item]:last-child::after {
   display: none;
 }
 
+/* Minimal theme: full-width top nav tabs on mobile/tablet.
+   Non-minimal themes keep the bento card inset to match the feed below. */
+@media (max-width: 1023px) {
+  html[data-theme="minimal"] [data-home-tabs] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  html[data-theme="minimal"] [data-home-tabs] > div:first-child {
+    border-radius: 0 !important;
+  }
+}
+
+
+
 
 
 
