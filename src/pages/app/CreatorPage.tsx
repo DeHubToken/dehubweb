@@ -65,7 +65,7 @@ const heroCards = [
     title: 'DEHUB ORIGINALS',
     subtitle: 'Community created and curated content',
     kind: 'originals',
-    action: { kind: 'navigate', to: '/app/tv' } satisfies ToolAction,
+    action: { kind: 'navigate', to: 'https://dehub.io/originals' } satisfies ToolAction,
   },
   {
     id: 'video-timeline',
@@ -218,7 +218,12 @@ export default function CreatorPage() {
 
   const runAction = (action: ToolAction) => {
     if (action.kind === 'navigate') {
-      navigate(action.to);
+      const url = action.to;
+      if (url.startsWith('http://') || url.startsWith('https://')) {
+        window.open(url, '_blank', 'noopener,noreferrer');
+      } else {
+        navigate(url);
+      }
       return;
     }
 
