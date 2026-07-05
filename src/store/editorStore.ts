@@ -515,6 +515,58 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     set({ past, future: [], clips: workingClips, selectedClipIds: newIds });
   },
 
+  copySelectedToClipboard: () => {
+    const s = get();
+    if (!s.selectedClipIds.length) return;
+    const picked = s.clips.filter((c) => s.selectedClipIds.includes(c.id));
+    if (!picked.length) return;
+    const minStart = Math.min(...picked.map((c) => c.start));
+    const payload = {
+      kind: "dehub-editor-clips" as const,
+      version: 1,
+      relative: picked.map((c) => ({ ...c, start: c.start - minStart })),
+    };
+    try {
+      const json = JSON.stringify(payload);
+      if (typeof navigator !== "undefined" && navigator.clipboard?.writeText) {
+        void navigator.clipboard.writeText(json);
+      }
+      (globalThis as unknown as { __dehubClipboard?: string }).__dehubClipboard = json;
+    } catch { /* noop */ }
+  },
+
+  pasteFromClipboard: () => {
+    const readSync = (): string | null =>
+      (globalThis as unknown as { __dehubClipboard?: string }).__dehubClipboard ?? null;
+    const raw = readSync();
+    if (!raw) return;
+    let parsed: { kind?: string; relative?: Clip[] } | null = null;
+    try { parsed = JSON.parse(raw); } catch { return; }
+    if (!parsed || parsed.kind !== "dehub-editor-clips" || !Array.isArray(parsed.relative)) return;
+    const s = get();
+    const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
+    let workingClips = s.clips.slice();
+    const newIds: string[] = [];
+    const baseTime = s.currentTime;
+    for (const c of parsed.relative) {
+      const track = s.tracks.find((t) => t.id === c.trackId) ??
+        s.tracks.find((t) =>
+          (t.kind === "video" && (c.kind === "video" || c.kind === "image")) ||
+          (t.kind === "audio" && c.kind === "audio") ||
+          (t.kind === "text" && c.kind === "text"),
+        );
+      if (!track) continue;
+      const desired = baseTime + c.start;
+      const placed = findFreeStart(workingClips, track.id, desired, c.duration);
+      const copy = { ...c, id: nanoid(10), trackId: track.id, start: placed } as Clip;
+      workingClips = [...workingClips, copy];
+      newIds.push(copy.id);
+    }
+    if (!newIds.length) return;
+    set({ past, future: [], clips: workingClips, selectedClipIds: newIds });
+  },
+
+
   updateTextClip: (id, patch) => {
     const s = get();
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
