@@ -118,6 +118,7 @@ export default function HomePage() {
   // Tab state - initialized from sessionStorage for back navigation
   const [activeTab, setActiveTab] = useState(getInitialTab);
   const homeIsDraggingRef = useRef(false);
+  const homeFiltersRef = useRef<HTMLDivElement>(null);
   const { layerRef: homeTabLayerRef, setRef: setHomeTabRef, rect: homeTabRect, onScroll: onHomeTabScroll } = useTabIndicator(activeTab, isCollapsed, homeIsDraggingRef, 5);
 
   // Deferred tab value: tab indicator moves instantly, content swap is deferred
@@ -652,7 +653,7 @@ export default function HomePage() {
       <div
         data-home-tabs
         className={cn("sticky top-11 lg:top-0 bg-black z-[110] px-2 sm:px-3 pt-1 pb-2 sm:pt-1 sm:pb-3 lg:px-3 lg:pt-2 lg:mt-0 transition-transform duration-300 ease-in-out", isCollapsed && "lg:pl-2 lg:pr-0", isCollapsed && "lg:hidden")}
-        style={{ transform: (isMobile && !navVisible) ? 'translateY(calc(-100% - 3rem))' : 'translateY(0)', willChange: 'transform' }}
+        style={{ transform: (isMobile && !navVisible && !(showHomeFilters && deferredTab === 'home')) ? 'translateY(calc(-100% - 3rem))' : 'translateY(0)', willChange: 'transform' }}
       >
         <div className="bg-zinc-900 overflow-visible rounded-xl">
 
@@ -742,8 +743,9 @@ export default function HomePage() {
                 );
               })}
             </div>
-          </div>
         </div>
+        <div ref={homeFiltersRef} className="contents" />
+      </div>
       </div>
 
       {/* Feed Content - Pull-to-refresh only works within this container */}
@@ -806,7 +808,7 @@ export default function HomePage() {
             their own props change, not when activeTab/deferredTab changes. */}
         {visitedTabs.has('home') && (
           <div style={{ display: deferredTab === 'home' ? 'block' : 'none' }}>
-            <MemoHomeFeed key={refreshKey} shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters} pinnedPostId={pinnedPostId} />
+            <MemoHomeFeed key={refreshKey} shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters && deferredTab === 'home'} pinnedPostId={pinnedPostId} filtersPortalRef={homeFiltersRef} />
           </div>
         )}
         {visitedTabs.has('videos') && (
