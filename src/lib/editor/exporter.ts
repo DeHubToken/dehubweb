@@ -315,7 +315,7 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
 
   // Lazy-load the appropriate muxer.
   const trackZ = (trackId: string) => tracks.findIndex((t) => t.id === trackId);
-  const { codec: videoCodec, muxerCodec: videoMuxerCodec } = pickVideoCodec(format);
+  const { codec: videoCodec, muxerCodec: videoMuxerCodec } = pickVideoCodec(format, width, height, fps);
   const { codec: audioCodec, muxerCodec: audioMuxerCodec } = pickAudioCodec(format);
 
   const mixed = await audioBufferPromise;
