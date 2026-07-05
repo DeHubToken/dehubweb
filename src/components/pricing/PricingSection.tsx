@@ -34,7 +34,6 @@ interface Plan {
   seats?: string;
   featured?: boolean;
   groups: { title: string; items: string[] }[];
-  freeGens?: { label: string; note: string }[];
   monthlyPriceId: string;
   annualPriceId: string;
 }
@@ -75,11 +74,6 @@ const plans: Plan[] = [
         title: 'Seedance 2.0',
         items: ['Seedance 2.0 — Full access', 'Seedance 2.0 Fast — Full access'],
       },
-    ],
-    freeGens: [
-      { label: 'Nano Banana Pro', note: '2K · 7 days unlimited' },
-      { label: 'Nano Banana 2', note: '2K · 7 days unlimited' },
-      { label: 'Kling 3.0', note: '7 days unlimited' },
     ],
   },
   {
@@ -361,22 +355,6 @@ function PlanCard({ plan, billing, onSelect }: { plan: Plan; billing: Billing; o
             </ul>
           </div>
         ))}
-
-        {plan.freeGens && (
-          <div>
-            <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-white/40">
-              Unlimited & Free Gens
-            </div>
-            <ul className="space-y-1.5">
-              {plan.freeGens.map((f) => (
-                <li key={f.label} className="flex items-center justify-between rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-xs text-white/80">
-                  <span className="font-semibold">{f.label}</span>
-                  <span className="text-white/50">{f.note}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
       </div>
     </div>
   );
