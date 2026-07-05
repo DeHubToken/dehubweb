@@ -503,6 +503,9 @@ export default function AssistantPage() {
       const match = hash.match(/preset=([a-z]+)/i);
       if (!match) return;
       const preset = match[1].toLowerCase();
+      // Optional ?prompt=... pre-fill from /creator composer
+      const promptMatch = hash.match(/prompt=([^&]+)/i);
+      const prefill = promptMatch ? decodeURIComponent(promptMatch[1]) : '';
       // Clear hash so re-navigation re-triggers cleanly
       if (typeof window !== 'undefined' && window.history.replaceState) {
         window.history.replaceState(null, '', window.location.pathname + window.location.search);
