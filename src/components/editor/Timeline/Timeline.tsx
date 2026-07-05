@@ -343,10 +343,14 @@ export function Timeline() {
   );
 }
 
-function TrackHeader({ track }: { track: Track }) {
+const TRACK_DRAG_MIME = "application/x-dehub-track";
+
+function TrackHeader({ track, index }: { track: Track; index: number }) {
   const removeTrack = useEditorStore((s) => s.removeTrack);
+  const reorderTrack = useEditorStore((s) => s.reorderTrack);
   const tracksLen = useEditorStore((s) => s.tracks.length);
   const setTracks = useEditorStore;
+  const [dropSide, setDropSide] = useState<"above" | "below" | null>(null);
   const toggleMute = () => {
     const s = setTracks.getState();
     setTracks.setState({
@@ -362,9 +366,41 @@ function TrackHeader({ track }: { track: Track }) {
   const kindLabel = track.kind === "video" ? "V" : track.kind === "audio" ? "A" : "T";
   return (
     <div
-      className="sticky left-0 z-10 flex shrink-0 items-center gap-1.5 border-r border-white/10 bg-black/80 px-2"
+      className="group sticky left-0 z-10 flex shrink-0 items-center gap-1.5 border-r border-white/10 bg-black/80 px-2 relative"
       style={{ width: HEADER_WIDTH }}
+      onDragOver={(e) => {
+        if (!e.dataTransfer.types.includes(TRACK_DRAG_MIME)) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+        setDropSide(e.clientY - rect.top < rect.height / 2 ? "above" : "below");
+      }}
+      onDragLeave={() => setDropSide(null)}
+      onDrop={(e) => {
+        const raw = e.dataTransfer.getData(TRACK_DRAG_MIME);
+        setDropSide(null);
+        if (!raw) return;
+        e.preventDefault();
+        const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+        const above = e.clientY - rect.top < rect.height / 2;
+        const target = above ? index : index + 1;
+        reorderTrack(raw, target);
+      }}
     >
+      {dropSide === "above" && <div className="pointer-events-none absolute inset-x-0 top-0 h-0.5 bg-white/80" />}
+      {dropSide === "below" && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 bg-white/80" />}
+      <button
+        draggable
+        onDragStart={(e) => {
+          e.dataTransfer.effectAllowed = "move";
+          e.dataTransfer.setData(TRACK_DRAG_MIME, track.id);
+        }}
+        className="cursor-grab rounded p-0.5 text-white/30 hover:text-white/70 active:cursor-grabbing"
+        title="Drag to reorder layer"
+        aria-label="Reorder track"
+      >
+        <GripVertical className="h-3.5 w-3.5" />
+      </button>
       <span className="flex h-5 w-5 items-center justify-center rounded bg-white/10 text-[10px] font-semibold text-white/80">
         {kindLabel}
       </span>
@@ -386,6 +422,7 @@ function TrackHeader({ track }: { track: Track }) {
     </div>
   );
 }
+
 
 function Playhead({
   time, zoom, headerWidth, rulerHeight,
