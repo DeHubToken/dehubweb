@@ -151,6 +151,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
 
             <div className="rounded-md border border-white/10 bg-white/5 p-2.5 text-xs text-white/70">
               <div>Duration: <span className="text-white">{duration.toFixed(2)}s</span></div>
+              <div>Cut preview: <span className="text-white">{Math.min(currentTime, duration).toFixed(2)}s</span></div>
               <div>Output: <span className="text-white">{outW}×{outH} @ {settings.fps}fps</span></div>
             </div>
           </div>
