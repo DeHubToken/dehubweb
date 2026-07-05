@@ -87,6 +87,9 @@ interface EditorState extends EditableState {
   splitAtPlayhead: () => void;
   rippleDelete: (ids?: string[]) => void;
   duplicateSelected: () => void;
+  copySelectedToClipboard: () => void;
+  pasteFromClipboard: () => void;
+
   updateTextClip: (id: string, patch: Partial<TextClip>) => void;
   updateMediaClip: (id: string, patch: Partial<MediaClip>) => void;
   setClipTransition: (id: string, transition: Clip["transitionOut"] | null) => void;
