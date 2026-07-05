@@ -828,9 +828,15 @@ html[data-theme="minimal"] [data-side-panel] :where(
   [class*="via-zinc-800"],
   [class*="via-zinc-700"]
 )::after {
-  background-color: black !important;
+/* Turn page-level grey bento squares into transparent cards with a thin white border. */
+html[data-theme="minimal"] main > div > div[class~="bg-zinc-900"].rounded-2xl,
+html[data-theme="minimal"] main > div > div:not([class~="bg-zinc-900"]) > div[class~="bg-zinc-900"].rounded-2xl {
+  background-color: transparent !important;
   background-image: none !important;
+  border: 1px solid hsl(0 0% 100% / 0.10) !important;
 }
+
+
 
 html[data-theme="minimal"] [data-feed-item] {
   background-color: transparent !important;
