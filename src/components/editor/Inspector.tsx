@@ -200,6 +200,12 @@ export function Inspector() {
           </div>
         )}
 
+        {selected && (
+          <AnimationSection clip={selected} />
+        )}
+
+
+
         {text && (
           <div className="space-y-2">
             <Field label="Text">
