@@ -482,6 +482,24 @@ export default function CreatorPage() {
 }
 
 function MediaCardVisual({ kind }: { kind: string }) {
+  if (kind === 'originals') {
+    return (
+      <div className="relative h-[288px] overflow-hidden rounded-lg border border-white/10 bg-black">
+        <img
+          src={dehubOriginals.url}
+          alt="DeHub Originals — cinematic post-apocalyptic wasteland with the DeHub wordmark"
+          className="h-full w-full object-cover object-center"
+          loading="lazy"
+          decoding="async"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
+        <span className="absolute left-3 top-3 rounded px-2 py-1 text-[10px] font-black uppercase italic tracking-wide text-black" style={metallicStyle}>
+          Originals
+        </span>
+      </div>
+    );
+  }
+
   if (kind === 'timeline') {
     return (
       <div className="relative h-[288px] overflow-hidden rounded-lg p-4 text-black" style={{ backgroundColor: '#f7f7f2' }}>
