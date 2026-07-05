@@ -10,7 +10,7 @@ import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 
 const TABS: Array<{ id: WorkJobType | 'all'; label: string; icon: any }> = [
   { id: 'all', label: 'All', icon: Briefcase },
-  { id: 'shill', label: 'Comments & Shill', icon: MessageSquare },
+  { id: 'shill', label: 'Social Media', icon: MessageSquare },
   { id: 'clipping', label: 'Clipping', icon: Scissors },
   { id: 'contract', label: 'Contracts', icon: Briefcase },
 ];
