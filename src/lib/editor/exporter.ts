@@ -39,10 +39,41 @@ export function isExportSupported(): boolean {
 
 const FADE = 0.3;
 
-function pickVideoCodec(format: ExportFormat): { codec: string; muxerCodec: "avc" | "vp9" } {
-  return format === "mp4"
-    ? { codec: "avc1.42E01F", muxerCodec: "avc" }
-    : { codec: "vp09.00.10.08", muxerCodec: "vp9" };
+/** Pick an H.264 level whose max coded area fits width*height (rounded to macroblocks). */
+function pickAvcLevel(width: number, height: number, fps: number): string {
+  // Coded area uses 16px-aligned dimensions (macroblocks).
+  const mbW = Math.ceil(width / 16);
+  const mbH = Math.ceil(height / 16);
+  const mbs = mbW * mbH;
+  const mbsPerSec = mbs * Math.max(1, fps);
+  // [level hex, maxMBs/frame, maxMBs/sec]
+  const levels: Array<[string, number, number]> = [
+    ["1F", 3600, 108000],    // 3.1  (up to ~720x480@30 / 921600 px)
+    ["20", 5120, 216000],    // 3.2
+    ["28", 8192, 245760],    // 4.0  (1080p30)
+    ["29", 8192, 522240],    // 4.1  (1080p60)
+    ["2A", 8704, 522240],    // 4.2
+    ["32", 22080, 589824],   // 5.0  (up to 4k)
+    ["33", 36864, 983040],   // 5.1  (4k60)
+    ["34", 36864, 2073600],  // 5.2
+  ];
+  for (const [hex, maxMbs, maxMbsSec] of levels) {
+    if (mbs <= maxMbs && mbsPerSec <= maxMbsSec) return hex;
+  }
+  return "34";
+}
+
+function pickVideoCodec(
+  format: ExportFormat,
+  width: number,
+  height: number,
+  fps: number,
+): { codec: string; muxerCodec: "avc" | "vp9" } {
+  if (format === "mp4") {
+    const level = pickAvcLevel(width, height, fps);
+    return { codec: `avc1.42E0${level}`, muxerCodec: "avc" };
+  }
+  return { codec: "vp09.00.10.08", muxerCodec: "vp9" };
 }
 
 function pickAudioCodec(format: ExportFormat): { codec: string; muxerCodec: "aac" | "opus" } {
