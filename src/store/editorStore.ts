@@ -77,6 +77,7 @@ interface EditorState extends EditableState {
   // --- timeline edits (all go through history) ---
   addTrack: (kind: TrackKind) => string;
   removeTrack: (id: string) => void;
+  moveTrack: (id: string, direction: "front" | "back" | "forward" | "backward") => void;
   addClipFromMedia: (mediaId: string, trackId?: string, start?: number) => string | null;
   addTextClip: (trackId?: string, start?: number) => string;
   moveClip: (id: string, patch: { start?: number; trackId?: string }) => void;
@@ -102,10 +103,12 @@ function snapshotEditable(s: EditorState): EditableState {
 }
 
 function defaultTracks(): Track[] {
+  // Order matters: later entries render on top of earlier ones.
+  // Text sits at the end so overlays land above video by default.
   return [
-    { id: nanoid(8), kind: "text", name: "Text", muted: false, hidden: false },
     { id: nanoid(8), kind: "video", name: "Video 1", muted: false, hidden: false },
     { id: nanoid(8), kind: "audio", name: "Audio 1", muted: false, hidden: false },
+    { id: nanoid(8), kind: "text", name: "Text", muted: false, hidden: false },
   ];
 }
 
@@ -267,6 +270,23 @@ export const useEditorStore = create<EditorState>((set, get) => ({
         (cid) => !s.clips.some((c) => c.id === cid && c.trackId === id),
       ),
     });
+  },
+
+  moveTrack: (id, direction) => {
+    const s = get();
+    const idx = s.tracks.findIndex((t) => t.id === id);
+    if (idx < 0) return;
+    const arr = s.tracks.slice();
+    const [item] = arr.splice(idx, 1);
+    let newIdx = idx;
+    if (direction === "front") newIdx = arr.length;
+    else if (direction === "back") newIdx = 0;
+    else if (direction === "forward") newIdx = Math.min(arr.length, idx + 1);
+    else if (direction === "backward") newIdx = Math.max(0, idx - 1);
+    if (newIdx === idx) return;
+    arr.splice(newIdx, 0, item);
+    const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
+    set({ past, future: [], tracks: arr });
   },
 
   addClipFromMedia: (mediaId, trackId, start) => {

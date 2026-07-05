@@ -196,7 +196,96 @@ export function Inspector() {
                 onChange={(e) => updateTextClip(text.id, { fontFamily: e.target.value })}
                 className="h-7 bg-white/5 text-xs" />
             </Field>
-            <p className="pt-1 text-[10px] text-white/40">Drag the text directly on the preview to position it.</p>
+
+            <div className="mt-2 rounded-md border border-white/10 bg-white/[0.02] p-2">
+              <label className="flex items-center justify-between text-[11px] text-white/70">
+                <span className="font-medium">Background pill</span>
+                <input
+                  type="checkbox"
+                  checked={!!text.background}
+                  onChange={(e) =>
+                    updateTextClip(text.id, {
+                      background: e.target.checked
+                        ? (text.background ?? { color: "#000000", opacity: 0.5, padding: 18, radius: 12 })
+                        : null,
+                    })
+                  }
+                  className="h-3.5 w-3.5 accent-white"
+                />
+              </label>
+              {text.background && (
+                <div className="mt-2 space-y-2">
+                  <div className="grid grid-cols-2 gap-2">
+                    <Field label="Colour">
+                      <input type="color" value={text.background.color}
+                        onChange={(e) => updateTextClip(text.id, {
+                          background: { ...text.background!, color: e.target.value },
+                        })}
+                        className="h-7 w-full cursor-pointer rounded-md border border-white/10 bg-white/5" />
+                    </Field>
+                    <Field label={`Opacity ${Math.round(text.background.opacity * 100)}%`}>
+                      <Slider value={[text.background.opacity]} min={0} max={1} step={0.05}
+                        onValueChange={(v) => updateTextClip(text.id, {
+                          background: { ...text.background!, opacity: v[0] ?? 0.5 },
+                        })} />
+                    </Field>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Field label={`Padding ${Math.round(text.background.padding)}`}>
+                      <Slider value={[text.background.padding]} min={0} max={80} step={1}
+                        onValueChange={(v) => updateTextClip(text.id, {
+                          background: { ...text.background!, padding: v[0] ?? 18 },
+                        })} />
+                    </Field>
+                    <Field label={`Radius ${Math.round(text.background.radius)}`}>
+                      <Slider value={[text.background.radius]} min={0} max={80} step={1}
+                        onValueChange={(v) => updateTextClip(text.id, {
+                          background: { ...text.background!, radius: v[0] ?? 12 },
+                        })} />
+                    </Field>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="mt-2 rounded-md border border-white/10 bg-white/[0.02] p-2">
+              <label className="flex items-center justify-between text-[11px] text-white/70">
+                <span className="font-medium">Outline</span>
+                <input
+                  type="checkbox"
+                  checked={!!text.stroke}
+                  onChange={(e) =>
+                    updateTextClip(text.id, {
+                      stroke: e.target.checked
+                        ? (text.stroke ?? { color: "#000000", width: 4 })
+                        : null,
+                    })
+                  }
+                  className="h-3.5 w-3.5 accent-white"
+                />
+              </label>
+              {text.stroke && (
+                <div className="mt-2 grid grid-cols-2 gap-2">
+                  <Field label="Colour">
+                    <input type="color" value={text.stroke.color}
+                      onChange={(e) => updateTextClip(text.id, {
+                        stroke: { ...text.stroke!, color: e.target.value },
+                      })}
+                      className="h-7 w-full cursor-pointer rounded-md border border-white/10 bg-white/5" />
+                  </Field>
+                  <Field label={`Width ${Math.round(text.stroke.width)}`}>
+                    <Slider value={[text.stroke.width]} min={0} max={20} step={0.5}
+                      onValueChange={(v) => updateTextClip(text.id, {
+                        stroke: { ...text.stroke!, width: v[0] ?? 4 },
+                      })} />
+                  </Field>
+                </div>
+              )}
+            </div>
+
+            <p className="pt-1 text-[10px] text-white/40">
+              Drag directly on the preview to position. Right-click for layer controls.
+            </p>
           </div>
         )}
       </section>

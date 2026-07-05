@@ -3,14 +3,22 @@
  * (video frames + images + text overlays) and synchronises audio elements.
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
  */
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Play, Pause, Repeat, Type, RotateCcw } from "lucide-react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Play, Pause, Repeat, Type, RotateCcw, ChevronsUp, ChevronsDown, ChevronUp, ChevronDown, Copy, Trash2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 import { cn } from "@/lib/utils";
 import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
 import type { Clip, MediaClip, TextClip } from "@/lib/editor/types";
 import { computeRenderOps, type RenderOp } from "@/lib/editor/transitions";
+import { TEXT_DRAG_MIME, type TextPreset } from "@/lib/editor/textPresets";
 
 function fmtTime(t: number, fps: number) {
   if (!Number.isFinite(t) || t < 0) t = 0;
@@ -24,6 +32,7 @@ function fmtTime(t: number, fps: number) {
 export function Compositor() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const surfaceRef = useRef<HTMLDivElement>(null);
 
   const tracks = useEditorStore((s) => s.tracks);
   const clips = useEditorStore((s) => s.clips);
@@ -37,6 +46,7 @@ export function Compositor() {
   const toggleLoop = useEditorStore((s) => s.toggleLoop);
   const addTextClip = useEditorStore((s) => s.addTextClip);
   const selectedClipIds = useEditorStore((s) => s.selectedClipIds);
+  const selectClip = useEditorStore((s) => s.selectClip);
   const updateTextClip = useEditorStore((s) => s.updateTextClip);
   const duration = useEditorStore(selectTimelineDuration);
 
@@ -250,12 +260,59 @@ export function Compositor() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings.width, settings.height]);
 
-  // ── Click-to-select & drag text overlays on canvas ──
-  const selectedTextClip = useMemo(() => {
-    const id = selectedClipIds[0];
-    const c = clips.find((x) => x.id === id);
-    return c && c.kind === "text" ? (c as TextClip) : null;
-  }, [selectedClipIds, clips]);
+  // ── Canvas interactions: hit-test, click-select, drag, right-click, drop ──
+  const trackZIndex = useCallback(
+    (trackId: string) => {
+      const i = tracks.findIndex((t) => t.id === trackId);
+      return i < 0 ? -1 : i;
+    },
+    [tracks],
+  );
+
+  const activeTextClips = useMemo(() => {
+    return clips
+      .filter((c): c is TextClip =>
+        c.kind === "text" && currentTime >= c.start && currentTime <= c.start + c.duration,
+      )
+      .sort((a, b) => trackZIndex(a.trackId) - trackZIndex(b.trackId));
+  }, [clips, currentTime, trackZIndex]);
+
+  const hitTestText = useCallback(
+    (clientX: number, clientY: number): TextClip | null => {
+      const canvas = canvasRef.current;
+      if (!canvas) return null;
+      const rect = canvas.getBoundingClientRect();
+      const cx = ((clientX - rect.left) / rect.width) * canvas.width;
+      const cy = ((clientY - rect.top) / rect.height) * canvas.height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return null;
+      // Iterate top-down (last drawn is on top).
+      for (let i = activeTextClips.length - 1; i >= 0; i--) {
+        const text = activeTextClips[i];
+        const size = (text.fontSize / 1080) * canvas.height;
+        ctx.save();
+        ctx.font = `${text.fontWeight} ${size}px ${text.fontFamily}`;
+        const lines = text.text.split(/\n/);
+        const lh = size * 1.2;
+        const widths = lines.map((ln) => ctx.measureText(ln).width);
+        ctx.restore();
+        const pad = text.background ? (text.background.padding / 1080) * canvas.height : size * 0.35;
+        const boxW = Math.max(...widths, 1) + pad * 2;
+        const boxH = lines.length * lh + pad * 2;
+        const x = text.x * canvas.width;
+        const y = text.y * canvas.height;
+        let bx = x - pad;
+        if (text.align === "centre") bx = x - boxW / 2;
+        else if (text.align === "right") bx = x - boxW + pad;
+        const by = y - boxH / 2;
+        if (cx >= bx && cx <= bx + boxW && cy >= by && cy <= by + boxH) {
+          return text;
+        }
+      }
+      return null;
+    },
+    [activeTextClips],
+  );
 
   const [editingTextId, setEditingTextId] = useState<string | null>(null);
   const editingText = useMemo(() => {
@@ -264,16 +321,26 @@ export function Compositor() {
     return c && c.kind === "text" ? (c as TextClip) : null;
   }, [editingTextId, clips]);
 
+  const selectedTextClip = useMemo(() => {
+    const id = selectedClipIds[0];
+    const c = clips.find((x) => x.id === id);
+    return c && c.kind === "text" ? (c as TextClip) : null;
+  }, [selectedClipIds, clips]);
+
   const draggingRef = useRef<{ id: string; dx: number; dy: number } | null>(null);
   const onCanvasPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (editingTextId) return;
-    if (!selectedTextClip) return;
-    const t = currentTime;
-    if (t < selectedTextClip.start || t > selectedTextClip.start + selectedTextClip.duration) return;
+    if (e.button !== 0) return;
+    const hit = hitTestText(e.clientX, e.clientY);
+    if (!hit) {
+      selectClip(null);
+      return;
+    }
+    if (selectedClipIds[0] !== hit.id) selectClip(hit.id);
     const rect = (e.currentTarget as HTMLCanvasElement).getBoundingClientRect();
     const nx = (e.clientX - rect.left) / rect.width;
     const ny = (e.clientY - rect.top) / rect.height;
-    draggingRef.current = { id: selectedTextClip.id, dx: nx - selectedTextClip.x, dy: ny - selectedTextClip.y };
+    draggingRef.current = { id: hit.id, dx: nx - hit.x, dy: ny - hit.y };
     window.addEventListener("pointermove", onWindowMove);
     window.addEventListener("pointerup", onWindowUp);
   };
@@ -294,17 +361,64 @@ export function Compositor() {
     window.removeEventListener("pointermove", onWindowMove);
     window.removeEventListener("pointerup", onWindowUp);
   };
-  const onCanvasDoubleClick = () => {
-    if (selectedTextClip) setEditingTextId(selectedTextClip.id);
+  const onCanvasDoubleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const hit = hitTestText(e.clientX, e.clientY);
+    if (hit) {
+      selectClip(hit.id);
+      setEditingTextId(hit.id);
+    }
+  };
+  const onCanvasContextMenu = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const hit = hitTestText(e.clientX, e.clientY);
+    if (hit) selectClip(hit.id);
+    else selectClip(null);
+  };
+
+  // ── Drag-and-drop text presets onto the canvas ──
+  const [isDropTarget, setIsDropTarget] = useState(false);
+  const onSurfaceDragOver = (e: React.DragEvent) => {
+    if (e.dataTransfer.types.includes(TEXT_DRAG_MIME)) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "copy";
+      setIsDropTarget(true);
+    }
+  };
+  const onSurfaceDragLeave = (e: React.DragEvent) => {
+    if (e.currentTarget === e.target) setIsDropTarget(false);
+  };
+  const onSurfaceDrop = (e: React.DragEvent) => {
+    const raw = e.dataTransfer.getData(TEXT_DRAG_MIME);
+    setIsDropTarget(false);
+    if (!raw) return;
+    e.preventDefault();
+    let preset: TextPreset | null = null;
+    try { preset = JSON.parse(raw) as TextPreset; } catch { /* noop */ }
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const nx = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const ny = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+    const id = addTextClip();
+    updateTextClip(id, {
+      x: nx,
+      y: ny,
+      ...(preset
+        ? { text: preset.text, fontSize: preset.fontSize, fontWeight: preset.fontWeight }
+        : {}),
+    });
   };
 
   return (
     <section className="flex h-full min-h-0 min-w-0 flex-1 flex-col bg-black">
       <div
         ref={wrapRef}
+        onDragOver={onSurfaceDragOver}
+        onDragLeave={onSurfaceDragLeave}
+        onDrop={onSurfaceDrop}
         className="relative grid min-h-0 min-w-0 flex-1 place-items-center overflow-hidden bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.04),_transparent_70%)] p-6"
       >
         <div
+          ref={surfaceRef}
           style={{
             width: Math.max(2, settings.width * scale),
             height: Math.max(2, settings.height * scale),
@@ -312,19 +426,38 @@ export function Compositor() {
             visibility: scale > 0 ? "visible" : "hidden",
             margin: "auto",
           }}
-          className="relative col-start-1 row-start-1 overflow-hidden rounded-lg shadow-2xl ring-1 ring-white/10"
+          className={cn(
+            "relative col-start-1 row-start-1 overflow-hidden rounded-lg shadow-2xl ring-1 ring-white/10 transition",
+            isDropTarget && "ring-2 ring-white/70",
+          )}
         >
-          <canvas
-            ref={canvasRef}
-            width={settings.width}
-            height={settings.height}
-            onPointerDown={onCanvasPointerDown}
-            onDoubleClick={onCanvasDoubleClick}
-            className={cn(
-              "h-full w-full touch-none",
-              editingTextId ? "cursor-text" : selectedTextClip ? "cursor-grab active:cursor-grabbing" : "cursor-default",
-            )}
-          />
+          <ContextMenu>
+            <ContextMenuTrigger asChild>
+              <canvas
+                ref={canvasRef}
+                width={settings.width}
+                height={settings.height}
+                onPointerDown={onCanvasPointerDown}
+                onDoubleClick={onCanvasDoubleClick}
+                onContextMenu={onCanvasContextMenu}
+                className={cn(
+                  "h-full w-full touch-none",
+                  editingTextId ? "cursor-text" : selectedTextClip ? "cursor-grab active:cursor-grabbing" : "cursor-default",
+                )}
+              />
+            </ContextMenuTrigger>
+            <CanvasContextMenu
+              textClip={selectedTextClip}
+              onEdit={(id) => setEditingTextId(id)}
+            />
+          </ContextMenu>
+          {isDropTarget && (
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white/[0.03]">
+              <div className="rounded-lg border border-dashed border-white/50 px-4 py-2 text-xs font-medium uppercase tracking-wide text-white/90 backdrop-blur-[8px]">
+                Drop to add text
+              </div>
+            </div>
+          )}
           {editingText && (
             <textarea
               autoFocus
@@ -348,20 +481,22 @@ export function Compositor() {
                 fontWeight: editingText.fontWeight,
                 fontSize: `${(editingText.fontSize / 1080) * settings.height * scale}px`,
                 textAlign: editingText.align === "centre" ? "center" : editingText.align,
-                background: "rgba(0,0,0,0.35)",
-                border: "1px dashed rgba(255,255,255,0.5)",
+                background: "transparent",
+                border: "1px dashed rgba(255,255,255,0.6)",
                 borderRadius: 4,
                 padding: "2px 6px",
                 outline: "none",
                 resize: "none",
                 minWidth: 80,
                 lineHeight: 1.2,
+                caretColor: "#fff",
               }}
               rows={Math.max(1, editingText.text.split("\n").length)}
             />
           )}
         </div>
       </div>
+
 
       <div className="flex min-w-0 items-center gap-3 border-t border-white/10 bg-black/60 px-4 py-2.5 backdrop-blur-[24px]">
         <Button
@@ -429,6 +564,65 @@ export function Compositor() {
   );
 }
 
+function CanvasContextMenu({
+  textClip,
+  onEdit,
+}: {
+  textClip: TextClip | null;
+  onEdit: (id: string) => void;
+}) {
+  const moveTrack = useEditorStore((s) => s.moveTrack);
+  const duplicateSelected = useEditorStore((s) => s.duplicateSelected);
+  const rippleDelete = useEditorStore((s) => s.rippleDelete);
+  const addTextClip = useEditorStore((s) => s.addTextClip);
+  const tracks = useEditorStore((s) => s.tracks);
+
+  if (!textClip) {
+    return (
+      <ContextMenuContent className="w-52 border-white/10 bg-black/85 text-white backdrop-blur-[24px]">
+        <ContextMenuItem onSelect={() => addTextClip()}>
+          <Type className="mr-2 h-3.5 w-3.5" /> Add text
+        </ContextMenuItem>
+      </ContextMenuContent>
+    );
+  }
+
+  const idx = tracks.findIndex((t) => t.id === textClip.trackId);
+  const canForward = idx >= 0 && idx < tracks.length - 1;
+  const canBackward = idx > 0;
+
+  return (
+    <ContextMenuContent className="w-56 border-white/10 bg-black/85 text-white backdrop-blur-[24px]">
+      <ContextMenuItem onSelect={() => onEdit(textClip.id)}>
+        <Pencil className="mr-2 h-3.5 w-3.5" /> Edit text
+      </ContextMenuItem>
+      <ContextMenuSeparator className="bg-white/10" />
+      <ContextMenuItem disabled={!canForward} onSelect={() => moveTrack(textClip.trackId, "front")}>
+        <ChevronsUp className="mr-2 h-3.5 w-3.5" /> Bring to front
+      </ContextMenuItem>
+      <ContextMenuItem disabled={!canForward} onSelect={() => moveTrack(textClip.trackId, "forward")}>
+        <ChevronUp className="mr-2 h-3.5 w-3.5" /> Bring forward
+      </ContextMenuItem>
+      <ContextMenuItem disabled={!canBackward} onSelect={() => moveTrack(textClip.trackId, "backward")}>
+        <ChevronDown className="mr-2 h-3.5 w-3.5" /> Send backward
+      </ContextMenuItem>
+      <ContextMenuItem disabled={!canBackward} onSelect={() => moveTrack(textClip.trackId, "back")}>
+        <ChevronsDown className="mr-2 h-3.5 w-3.5" /> Send to back
+      </ContextMenuItem>
+      <ContextMenuSeparator className="bg-white/10" />
+      <ContextMenuItem onSelect={() => duplicateSelected()}>
+        <Copy className="mr-2 h-3.5 w-3.5" /> Duplicate
+      </ContextMenuItem>
+      <ContextMenuItem
+        onSelect={() => rippleDelete([textClip.id])}
+        className="text-red-300 focus:text-red-200"
+      >
+        <Trash2 className="mr-2 h-3.5 w-3.5" /> Delete
+      </ContextMenuItem>
+    </ContextMenuContent>
+  );
+}
+
 function cssFilterFor(clip: Clip): string {
   if (clip.kind !== "video" && clip.kind !== "image") return "none";
   const e = (clip as MediaClip).effects;
@@ -465,7 +659,6 @@ function drawClip(
     const alpha = Math.max(0, Math.min(1, Math.min(into / FADE, outof / FADE, 1)));
     ctx.save();
     ctx.globalAlpha = alpha;
-    ctx.fillStyle = text.color;
     const size = (text.fontSize / 1080) * canvas.height;
     ctx.font = `${text.fontWeight} ${size}px ${text.fontFamily}`;
     ctx.textBaseline = "middle";
@@ -475,10 +668,50 @@ function drawClip(
     const lines = text.text.split(/\n/);
     const lh = size * 1.2;
     const startY = y - ((lines.length - 1) * lh) / 2;
+
+    // Optional background pill.
+    if (text.background && text.background.opacity > 0) {
+      const pad = (text.background.padding / 1080) * canvas.height;
+      const radius = Math.max(0, (text.background.radius / 1080) * canvas.height);
+      const widths = lines.map((ln) => ctx.measureText(ln).width);
+      const boxW = Math.max(...widths, 1) + pad * 2;
+      const boxH = lines.length * lh + pad * 2;
+      let bx = x - pad;
+      if (text.align === "centre") bx = x - boxW / 2;
+      else if (text.align === "right") bx = x - boxW + pad;
+      const by = startY - lh / 2 - pad;
+      const prevAlpha = ctx.globalAlpha;
+      ctx.globalAlpha = prevAlpha * text.background.opacity;
+      ctx.fillStyle = text.background.color;
+      roundRectPath(ctx, bx, by, boxW, boxH, radius);
+      ctx.fill();
+      ctx.globalAlpha = prevAlpha;
+    }
+
+    // Optional stroke.
+    if (text.stroke && text.stroke.width > 0) {
+      ctx.lineWidth = (text.stroke.width / 1080) * canvas.height;
+      ctx.strokeStyle = text.stroke.color;
+      ctx.lineJoin = "round";
+      lines.forEach((ln, i) => ctx.strokeText(ln, x, startY + i * lh));
+    }
+
+    ctx.fillStyle = text.color;
     lines.forEach((ln, i) => ctx.fillText(ln, x, startY + i * lh));
     ctx.restore();
   }
   ctx.filter = prevFilter;
+}
+
+function roundRectPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+  const rr = Math.max(0, Math.min(r, w / 2, h / 2));
+  ctx.beginPath();
+  ctx.moveTo(x + rr, y);
+  ctx.arcTo(x + w, y, x + w, y + h, rr);
+  ctx.arcTo(x + w, y + h, x, y + h, rr);
+  ctx.arcTo(x, y + h, x, y, rr);
+  ctx.arcTo(x, y, x + w, y, rr);
+  ctx.closePath();
 }
 
 function drawContain(
