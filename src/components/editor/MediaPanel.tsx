@@ -18,6 +18,7 @@ import {
   listEditorAssets,
   type CloudAsset,
 } from "@/lib/editor/cloudMedia";
+import { GeneratePanel } from "./GeneratePanel";
 
 function formatDuration(s?: number | null) {
   if (!s || !Number.isFinite(s)) return "—";
