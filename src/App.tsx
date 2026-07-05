@@ -45,6 +45,7 @@ const StageDeepLinkPage = React.lazy(() => import("./pages/app/StageDeepLinkPage
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
 const BestDecentralizedSocialMedia = React.lazy(() => import("./pages/BestDecentralizedSocialMedia"));
+const BlogGuideRoute = React.lazy(() => import("./pages/BlogGuideRoute"));
 
 const PromptLanding = React.lazy(() => import("./pages/PromptLanding"));
 const CommunityPage = React.lazy(() => import("./pages/app/CommunityPage"));
