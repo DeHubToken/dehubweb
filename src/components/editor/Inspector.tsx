@@ -205,12 +205,6 @@ export function Inspector() {
                   onChange={(e) => updateTextClip(text.id, { color: e.target.value })}
                   className="h-7 w-full cursor-pointer rounded-md border border-white/10 bg-white/5" />
               </Field>
-
-              <Field label="Colour">
-                <input type="color" value={text.color}
-                  onChange={(e) => updateTextClip(text.id, { color: e.target.value })}
-                  className="h-7 w-full cursor-pointer rounded-md border border-white/10 bg-white/5" />
-              </Field>
               <Field label="Align">
                 <select
                   value={text.align}
