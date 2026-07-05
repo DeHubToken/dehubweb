@@ -68,7 +68,7 @@ const heroCards = [
   {
     id: 'video-timeline',
     title: 'HOLLYWOOD STUDIO',
-    subtitle: 'Generate clips, cut scenes, export edits',
+    subtitle: 'Create cinema grade productions',
     kind: 'timeline',
     action: { kind: 'navigate', to: '/editor' } satisfies ToolAction,
   },
