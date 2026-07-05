@@ -86,7 +86,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
 
   return (
     <article className={`group bg-card rounded-xl border border-border hover:border-primary/40 transition-all duration-200 hover:shadow-lg overflow-hidden ${featured ? 'lg:col-span-2' : ''}`}>
-      <Link to={`/docs/blog/${post.slug}`} className="block" onClick={handleLinkClick}>
+      <Link to={`/guides/${post.slug}`} className="block" onClick={handleLinkClick}>
         <div className="relative">
           <img 
             src={getBannerImage()} 
