@@ -690,8 +690,8 @@ function ClipContextMenu({ clipId, trackId }: { clipId: string; trackId: string 
       <ContextMenuItem onSelect={pick(() => copySelected())}>
         <Copy className="mr-2 h-3.5 w-3.5" /> Copy
       </ContextMenuItem>
-      <ContextMenuItem onSelect={pick(() => pasteClipboard())}>
-        <Copy className="mr-2 h-3.5 w-3.5" /> Paste at playhead
+      <ContextMenuItem onSelect={pick(() => pasteClipboard(clip ? { time: clip.start + clip.duration, trackId: clip.trackId } : undefined))}>
+        <Copy className="mr-2 h-3.5 w-3.5" /> Paste after this
       </ContextMenuItem>
       <ContextMenuItem onSelect={pick(() => duplicateSelected())}>
         <Copy className="mr-2 h-3.5 w-3.5" /> Duplicate
