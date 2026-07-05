@@ -172,10 +172,9 @@ export function MediaPanel() {
                     draggable
                     onDragStart={(e) => {
                       e.dataTransfer.effectAllowed = "copy";
-                      e.dataTransfer.setData(
-                        "application/x-dehub-media",
-                        JSON.stringify({ mediaId: m.id }),
-                      );
+                      const payload = JSON.stringify({ type: "dehub-media", mediaId: m.id });
+                      e.dataTransfer.setData("application/x-dehub-media", payload);
+                      e.dataTransfer.setData("text/plain", payload);
                     }}
                     onDoubleClick={() => addClipFromMedia(m.id)}
                     className="group flex cursor-grab items-center gap-2 rounded-lg border border-transparent p-1.5 transition hover:bg-white/5 active:cursor-grabbing"

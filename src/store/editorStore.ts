@@ -314,10 +314,22 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     if (!media) return null;
 
     const wantKind: TrackKind = media.kind === "audio" ? "audio" : "video";
-    const targetTrack =
+    let targetTrack =
       (trackId && s.tracks.find((t) => t.id === trackId && t.kind === wantKind)) ||
       s.tracks.find((t) => t.kind === wantKind);
-    if (!targetTrack) return null;
+
+    let tracks = s.tracks;
+    if (!targetTrack) {
+      const count = s.tracks.filter((t) => t.kind === wantKind).length + 1;
+      targetTrack = {
+        id: nanoid(8),
+        kind: wantKind,
+        name: wantKind === "audio" ? `Audio ${count}` : `Video ${count}`,
+        muted: false,
+        hidden: false,
+      };
+      tracks = [...s.tracks, targetTrack];
+    }
 
     const duration =
       media.kind === "image"
@@ -341,7 +353,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     };
 
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
-    set({ past, future: [], clips: [...s.clips, clip], selectedClipIds: [clip.id] });
+    set({ past, future: [], tracks, clips: [...s.clips, clip], selectedClipIds: [clip.id] });
     return clip.id;
   },
 
