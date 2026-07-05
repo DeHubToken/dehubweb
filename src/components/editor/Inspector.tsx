@@ -229,10 +229,28 @@ export function Inspector() {
               </Field>
             </div>
             <Field label="Font family">
-              <Input value={text.fontFamily}
-                onChange={(e) => updateTextClip(text.id, { fontFamily: e.target.value })}
-                className="h-7 bg-white/5 text-xs" />
+              <FontPicker
+                value={text.fontFamily}
+                onChange={(css, weights) => {
+                  const weight = weights.includes(text.fontWeight)
+                    ? text.fontWeight
+                    : (weights.find((w) => w >= 400) ?? weights[0] ?? 400);
+                  updateTextClip(text.id, { fontFamily: css, fontWeight: weight });
+                }}
+              />
             </Field>
+            <Field label="Weight (available)">
+              <select
+                value={text.fontWeight}
+                onChange={(e) => updateTextClip(text.id, { fontWeight: Number(e.target.value) })}
+                className="h-7 w-full rounded-md border border-white/10 bg-white/5 px-2 text-xs text-white"
+              >
+                {(currentFontWeights.length ? currentFontWeights : [300, 400, 500, 600, 700, 800, 900]).map((w) => (
+                  <option key={w} value={w} className="bg-black">{w}</option>
+                ))}
+              </select>
+            </Field>
+
 
             <div className="mt-2 rounded-md border border-white/10 bg-white/[0.02] p-2">
               <label className="flex items-center justify-between text-[11px] text-white/70">
