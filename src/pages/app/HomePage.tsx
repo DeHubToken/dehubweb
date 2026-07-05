@@ -287,11 +287,8 @@ export default function HomePage() {
     };
   }, [showHomeFilters, showShortsFilters, showImagesFilters, showVideosFilters, showMusicFilters, showLiveFilters, resetFilters]);
 
-
-
-
-
   // Mobile touch gesture refs
+
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
   const touchStartY = useRef<number | null>(null);
