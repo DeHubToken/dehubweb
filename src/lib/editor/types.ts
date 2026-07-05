@@ -34,7 +34,12 @@ interface BaseClip {
   trimIn: number; // offset into source media (s); 0 for images/text
   /** Outgoing transition into the next adjacent clip on the same track. */
   transitionOut?: Transition;
+  /** Entrance animation applied at the start of the clip. */
+  animateIn?: ClipAnimation;
+  /** Exit animation applied at the end of the clip. */
+  animateOut?: ClipAnimation;
 }
+
 
 export interface ClipEffects {
   /** 0..2, 1 = neutral */
@@ -45,7 +50,34 @@ export interface ClipEffects {
   saturation?: number;
   /** 0..20 px */
   blur?: number;
+  /** 0..1, 0 = off */
+  grayscale?: number;
+  /** 0..1, 0 = off */
+  sepia?: number;
+  /** 0..360 deg */
+  hueRotate?: number;
+  /** 0..1, 0 = off */
+  invert?: number;
 }
+
+export type ClipAnimationKind =
+  | "fade"
+  | "slide-up"
+  | "slide-down"
+  | "slide-left"
+  | "slide-right"
+  | "zoom-in"
+  | "zoom-out"
+  | "pop"
+  | "rise"
+  | "blur";
+
+export interface ClipAnimation {
+  kind: ClipAnimationKind;
+  /** seconds */
+  duration: number;
+}
+
 
 export interface ClipAudio {
   /** 0..2, 1 = 100% */

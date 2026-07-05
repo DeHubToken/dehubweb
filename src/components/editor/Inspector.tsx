@@ -2,14 +2,19 @@
  * Right-hand inspector: project canvas settings + selected-clip properties (text).
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
  */
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editorStore";
-import { aspectToDims, type AspectPreset, type MediaClip, type TextClip } from "@/lib/editor/types";
+import { aspectToDims, type AspectPreset, type Clip, type MediaClip, type TextClip } from "@/lib/editor/types";
+import { FILTER_PRESETS, applyFilterPreset } from "@/lib/editor/filterPresets";
+import { ANIMATION_PRESETS, newAnimation } from "@/lib/editor/animationPresets";
+import { FontPicker } from "@/components/editor/FontPicker";
+import { findFontByCss, loadGoogleFont, primaryFamily } from "@/lib/editor/googleFonts";
+
 
 const ASPECTS: { value: AspectPreset; label: string }[] = [
   { value: "16:9", label: "16:9" },
@@ -34,10 +39,26 @@ export function Inspector() {
   const visualMedia = mediaClip && mediaClip.kind !== "audio" ? mediaClip : null;
   const hasAudio = mediaClip && (mediaClip.kind === "video" || mediaClip.kind === "audio") ? mediaClip : null;
 
+  const currentFontWeights = useMemo(() => {
+    if (!text) return [] as number[];
+    const f = findFontByCss(text.fontFamily);
+    return f ? f.weights.slice() : [];
+  }, [text]);
+
+  // Ensure the currently-selected text clip's font is loaded so the canvas can render it.
+  useEffect(() => {
+    if (!text) return;
+    const f = findFontByCss(text.fontFamily);
+    if (f) loadGoogleFont(f.family, f.weights);
+    // Fallback: try to load whatever the primary family name is.
+    else if (text.fontFamily) loadGoogleFont(primaryFamily(text.fontFamily), [text.fontWeight]);
+  }, [text?.fontFamily, text?.fontWeight, text]);
+
   const setAspect = (a: AspectPreset) => {
     const { width, height } = aspectToDims(a, Math.min(settings.height, 1080));
     updateSettings({ aspectPreset: a, width, height });
   };
+
 
   return (
     <aside className="flex h-full w-full flex-col overflow-y-auto border-l border-white/10 bg-black/60 backdrop-blur-[24px]">
@@ -97,7 +118,29 @@ export function Inspector() {
 
         {visualMedia && (
           <div className="space-y-3">
-            <p className="text-[10px] uppercase tracking-wide text-white/40">Effects</p>
+            <p className="text-[10px] uppercase tracking-wide text-white/40">Vibes</p>
+            <div className="grid grid-cols-4 gap-1">
+              {FILTER_PRESETS.map((p) => {
+                const active = presetMatches(visualMedia.effects, p.effects);
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => updateMediaClip(visualMedia.id, { effects: applyFilterPreset(p.id) })}
+                    className={cn(
+                      "rounded-md border px-1 py-1 text-[10px] transition",
+                      active
+                        ? "border-white/50 bg-white/15 text-white"
+                        : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
+                    )}
+                    title={p.label}
+                  >
+                    {p.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            <p className="pt-1 text-[10px] uppercase tracking-wide text-white/40">Effects</p>
             <EffectSlider label="Brightness" value={visualMedia.effects?.brightness ?? 1} min={0} max={2} step={0.01}
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, brightness: v } })} />
             <EffectSlider label="Contrast" value={visualMedia.effects?.contrast ?? 1} min={0} max={2} step={0.01}
@@ -106,6 +149,15 @@ export function Inspector() {
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, saturation: v } })} />
             <EffectSlider label="Blur (px)" value={visualMedia.effects?.blur ?? 0} min={0} max={20} step={0.5}
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, blur: v } })} />
+            <EffectSlider label={`Hue ${Math.round(visualMedia.effects?.hueRotate ?? 0)}°`}
+              value={visualMedia.effects?.hueRotate ?? 0} min={0} max={360} step={1}
+              onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, hueRotate: v } })} />
+            <EffectSlider label={`Grayscale ${Math.round((visualMedia.effects?.grayscale ?? 0) * 100)}%`}
+              value={visualMedia.effects?.grayscale ?? 0} min={0} max={1} step={0.01}
+              onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, grayscale: v } })} />
+            <EffectSlider label={`Sepia ${Math.round((visualMedia.effects?.sepia ?? 0) * 100)}%`}
+              value={visualMedia.effects?.sepia ?? 0} min={0} max={1} step={0.01}
+              onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, sepia: v } })} />
             <Button size="sm" variant="ghost"
               onClick={() => updateMediaClip(visualMedia.id, { effects: undefined })}
               className="h-7 w-full rounded-md border border-white/10 text-[11px] text-white/70 hover:bg-white/5 hover:text-white">
@@ -113,6 +165,7 @@ export function Inspector() {
             </Button>
           </div>
         )}
+
 
         {mediaClip && (mediaClip.kind === "video" || mediaClip.kind === "audio") && (
           <div className="space-y-3 pt-2">
@@ -147,6 +200,12 @@ export function Inspector() {
           </div>
         )}
 
+        {selected && (
+          <AnimationSection clip={selected} />
+        )}
+
+
+
         {text && (
           <div className="space-y-2">
             <Field label="Text">
@@ -162,17 +221,6 @@ export function Inspector() {
                 <Input type="number" value={text.fontSize} min={8} max={400}
                   onChange={(e) => updateTextClip(text.id, { fontSize: Number(e.target.value) || 72 })}
                   className="h-7 bg-white/5 text-xs" />
-              </Field>
-              <Field label="Weight">
-                <select
-                  value={text.fontWeight}
-                  onChange={(e) => updateTextClip(text.id, { fontWeight: Number(e.target.value) })}
-                  className="h-7 w-full rounded-md border border-white/10 bg-white/5 px-2 text-xs text-white"
-                >
-                  {[300, 400, 500, 600, 700, 800, 900].map((w) => (
-                    <option key={w} value={w} className="bg-black">{w}</option>
-                  ))}
-                </select>
               </Field>
               <Field label="Colour">
                 <input type="color" value={text.color}
@@ -192,10 +240,28 @@ export function Inspector() {
               </Field>
             </div>
             <Field label="Font family">
-              <Input value={text.fontFamily}
-                onChange={(e) => updateTextClip(text.id, { fontFamily: e.target.value })}
-                className="h-7 bg-white/5 text-xs" />
+              <FontPicker
+                value={text.fontFamily}
+                onChange={(css, weights) => {
+                  const weight = weights.includes(text.fontWeight)
+                    ? text.fontWeight
+                    : (weights.find((w) => w >= 400) ?? weights[0] ?? 400);
+                  updateTextClip(text.id, { fontFamily: css, fontWeight: weight });
+                }}
+              />
             </Field>
+            <Field label="Weight (available)">
+              <select
+                value={text.fontWeight}
+                onChange={(e) => updateTextClip(text.id, { fontWeight: Number(e.target.value) })}
+                className="h-7 w-full rounded-md border border-white/10 bg-white/5 px-2 text-xs text-white"
+              >
+                {(currentFontWeights.length ? currentFontWeights : [300, 400, 500, 600, 700, 800, 900]).map((w) => (
+                  <option key={w} value={w} className="bg-black">{w}</option>
+                ))}
+              </select>
+            </Field>
+
 
             <div className="mt-2 rounded-md border border-white/10 bg-white/[0.02] p-2">
               <label className="flex items-center justify-between text-[11px] text-white/70">
@@ -313,3 +379,117 @@ function EffectSlider({
     </div>
   );
 }
+
+/** Shallow compare of two ClipEffects objects for preset highlight. */
+function presetMatches(current: MediaClip["effects"], preset: MediaClip["effects"]): boolean {
+  const keys: (keyof NonNullable<MediaClip["effects"]>)[] = [
+    "brightness", "contrast", "saturation", "blur", "grayscale", "sepia", "hueRotate", "invert",
+  ];
+  const norm = (e: MediaClip["effects"], k: keyof NonNullable<MediaClip["effects"]>) => {
+    const v = e?.[k];
+    if (v === undefined) {
+      // Default neutral values differ by field.
+      return k === "brightness" || k === "contrast" || k === "saturation" ? 1 : 0;
+    }
+    return v;
+  };
+  return keys.every((k) => Math.abs(norm(current, k) - norm(preset, k)) < 0.001);
+}
+
+function AnimationSection({ clip }: { clip: Clip }) {
+  const updateClipAnimation = (patch: Partial<Pick<Clip, "animateIn" | "animateOut">>) => {
+    const s = useEditorStore.getState();
+    if (clip.kind === "text") s.updateTextClip(clip.id, patch as Partial<TextClip>);
+    else s.updateMediaClip(clip.id, patch as Partial<MediaClip>);
+  };
+  const inA = clip.animateIn;
+  const outA = clip.animateOut;
+  return (
+    <div className="space-y-3 pt-2">
+      <p className="text-[10px] uppercase tracking-wide text-white/40">Animation in</p>
+      <div className="grid grid-cols-3 gap-1">
+        <button
+          onClick={() => updateClipAnimation({ animateIn: undefined })}
+          className={cn(
+            "rounded-md border px-1 py-1 text-[10px] transition",
+            !inA ? "border-white/50 bg-white/15 text-white" : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
+          )}
+        >
+          None
+        </button>
+        {ANIMATION_PRESETS.map((p) => {
+          const active = inA?.kind === p.kind;
+          return (
+            <button
+              key={p.kind}
+              onClick={() => updateClipAnimation({ animateIn: newAnimation(p.kind) })}
+              className={cn(
+                "rounded-md border px-1 py-1 text-[10px] transition",
+                active ? "border-white/50 bg-white/15 text-white" : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
+              )}
+            >
+              {p.label}
+            </button>
+          );
+        })}
+      </div>
+      {inA && (
+        <div className="space-y-1">
+          <Label className="text-[10px] uppercase tracking-wide text-white/40">
+            Duration {inA.duration.toFixed(2)}s
+          </Label>
+          <Slider
+            value={[inA.duration]}
+            min={0.1}
+            max={Math.max(0.2, Math.min(3, clip.duration))}
+            step={0.05}
+            onValueChange={(v) => updateClipAnimation({ animateIn: { kind: inA.kind, duration: v[0] ?? inA.duration } })}
+          />
+        </div>
+      )}
+
+      <p className="pt-1 text-[10px] uppercase tracking-wide text-white/40">Animation out</p>
+      <div className="grid grid-cols-3 gap-1">
+        <button
+          onClick={() => updateClipAnimation({ animateOut: undefined })}
+          className={cn(
+            "rounded-md border px-1 py-1 text-[10px] transition",
+            !outA ? "border-white/50 bg-white/15 text-white" : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
+          )}
+        >
+          None
+        </button>
+        {ANIMATION_PRESETS.map((p) => {
+          const active = outA?.kind === p.kind;
+          return (
+            <button
+              key={p.kind}
+              onClick={() => updateClipAnimation({ animateOut: newAnimation(p.kind) })}
+              className={cn(
+                "rounded-md border px-1 py-1 text-[10px] transition",
+                active ? "border-white/50 bg-white/15 text-white" : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
+              )}
+            >
+              {p.label}
+            </button>
+          );
+        })}
+      </div>
+      {outA && (
+        <div className="space-y-1">
+          <Label className="text-[10px] uppercase tracking-wide text-white/40">
+            Duration {outA.duration.toFixed(2)}s
+          </Label>
+          <Slider
+            value={[outA.duration]}
+            min={0.1}
+            max={Math.max(0.2, Math.min(3, clip.duration))}
+            step={0.05}
+            onValueChange={(v) => updateClipAnimation({ animateOut: { kind: outA.kind, duration: v[0] ?? outA.duration } })}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+

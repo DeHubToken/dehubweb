@@ -8,6 +8,8 @@
 import type { Clip, MediaClip, TextClip, ProjectSnapshot } from "./types";
 import type { MediaItem } from "@/store/editorStore";
 import { computeRenderOps } from "./transitions";
+import { computeClipAnimation } from "./animationPresets";
+
 
 export type ExportFormat = "mp4" | "webm";
 
@@ -154,15 +156,24 @@ function seekVideo(v: HTMLVideoElement, t: number): Promise<void> {
   });
 }
 
-function cssFilterFor(clip: Clip): string {
-  if (clip.kind !== "video" && clip.kind !== "image") return "none";
-  const e = (clip as MediaClip).effects;
-  if (!e) return "none";
+function cssFilterFor(clip: Clip, extraBlur = 0): string {
   const parts: string[] = [];
-  if (e.brightness !== undefined && e.brightness !== 1) parts.push(`brightness(${e.brightness})`);
-  if (e.contrast !== undefined && e.contrast !== 1) parts.push(`contrast(${e.contrast})`);
-  if (e.saturation !== undefined && e.saturation !== 1) parts.push(`saturate(${e.saturation})`);
-  if (e.blur !== undefined && e.blur > 0) parts.push(`blur(${e.blur}px)`);
+  if (clip.kind === "video" || clip.kind === "image") {
+    const e = (clip as MediaClip).effects;
+    if (e) {
+      if (e.brightness !== undefined && e.brightness !== 1) parts.push(`brightness(${e.brightness})`);
+      if (e.contrast !== undefined && e.contrast !== 1) parts.push(`contrast(${e.contrast})`);
+      if (e.saturation !== undefined && e.saturation !== 1) parts.push(`saturate(${e.saturation})`);
+      if (e.grayscale !== undefined && e.grayscale > 0) parts.push(`grayscale(${e.grayscale})`);
+      if (e.sepia !== undefined && e.sepia > 0) parts.push(`sepia(${e.sepia})`);
+      if (e.hueRotate !== undefined && e.hueRotate !== 0) parts.push(`hue-rotate(${e.hueRotate}deg)`);
+      if (e.invert !== undefined && e.invert > 0) parts.push(`invert(${e.invert})`);
+      const totalBlur = (e.blur ?? 0) + extraBlur;
+      if (totalBlur > 0) parts.push(`blur(${totalBlur}px)`);
+      return parts.length ? parts.join(" ") : "none";
+    }
+  }
+  if (extraBlur > 0) parts.push(`blur(${extraBlur}px)`);
   return parts.length ? parts.join(" ") : "none";
 }
 
@@ -174,8 +185,18 @@ function drawClipExport(
   videos: Map<string, HTMLVideoElement>,
   images: Map<string, HTMLImageElement>,
 ) {
+  const anim = computeClipAnimation(clip, t);
+  const hasCustomAnim = !!clip.animateIn || !!clip.animateOut;
   const prev = ctx.filter;
-  ctx.filter = cssFilterFor(clip);
+  const prevAlpha = ctx.globalAlpha;
+  ctx.save();
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  ctx.translate(cx + anim.dx * canvas.width, cy + anim.dy * canvas.height);
+  if (anim.scale !== 1) ctx.scale(anim.scale, anim.scale);
+  ctx.translate(-cx, -cy);
+  ctx.globalAlpha = prevAlpha * anim.alpha;
+  ctx.filter = cssFilterFor(clip, anim.blurPx);
   if (clip.kind === "video") {
     const v = videos.get((clip as MediaClip).mediaId);
     if (v && v.videoWidth) drawContain(ctx, v as unknown as CanvasImageSource, v.videoWidth, v.videoHeight, canvas.width, canvas.height);
@@ -184,11 +205,12 @@ function drawClipExport(
     if (img && img.naturalWidth) drawContain(ctx, img, img.naturalWidth, img.naturalHeight, canvas.width, canvas.height);
   } else if (clip.kind === "text") {
     const text = clip as TextClip;
-    const into = t - text.start;
-    const outof = text.start + text.duration - t;
-    const alpha = Math.max(0, Math.min(1, Math.min(into / FADE, outof / FADE, 1)));
-    ctx.save();
-    ctx.globalAlpha = alpha;
+    if (!hasCustomAnim) {
+      const into = t - text.start;
+      const outof = text.start + text.duration - t;
+      const fade = Math.max(0, Math.min(1, Math.min(into / FADE, outof / FADE, 1)));
+      ctx.globalAlpha = prevAlpha * fade;
+    }
     ctx.fillStyle = text.color;
     const size = (text.fontSize / 1080) * canvas.height;
     ctx.font = `${text.fontWeight} ${size}px ${text.fontFamily}`;
@@ -200,10 +222,12 @@ function drawClipExport(
     const lh = size * 1.2;
     const startY = y - ((lines.length - 1) * lh) / 2;
     lines.forEach((ln, i) => ctx.fillText(ln, x, startY + i * lh));
-    ctx.restore();
   }
+  ctx.restore();
   ctx.filter = prev;
+  ctx.globalAlpha = prevAlpha;
 }
+
 
 function drawContain(
   ctx: OffscreenCanvasRenderingContext2D,
