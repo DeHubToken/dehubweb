@@ -18,7 +18,7 @@ export const BreadcrumbNavigation: React.FC<BreadcrumbNavigationProps> = ({ curr
       label: currentPost.title.length > 50 
         ? currentPost.title.substring(0, 47) + '...' 
         : currentPost.title, 
-      href: `/docs/blog/${currentPost.slug}` 
+      href: `/guides/${currentPost.slug}` 
     });
   }
 
