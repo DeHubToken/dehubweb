@@ -503,6 +503,9 @@ export default function AssistantPage() {
       const match = hash.match(/preset=([a-z]+)/i);
       if (!match) return;
       const preset = match[1].toLowerCase();
+      // Optional ?prompt=... pre-fill from /creator composer
+      const promptMatch = hash.match(/prompt=([^&]+)/i);
+      const prefill = promptMatch ? decodeURIComponent(promptMatch[1]) : '';
       // Clear hash so re-navigation re-triggers cleanly
       if (typeof window !== 'undefined' && window.history.replaceState) {
         window.history.replaceState(null, '', window.location.pathname + window.location.search);
@@ -512,24 +515,24 @@ export default function AssistantPage() {
           setSkillsHubOpen(true);
           break;
         case 'poster':
-          setPendingPosterPrompt('');
+          setPendingPosterPrompt(prefill || '');
           setPosterConfigOpen(true);
           break;
         case 'song':
-          setPendingMusicPrompt('');
+          setPendingMusicPrompt(prefill || '');
           setMusicConfirmOpen(true);
           break;
         case 'edit':
           fileInputRef.current?.click();
           break;
         case 'image':
-          setInput(t('assistant.generateImageOf'));
+          setInput(prefill || t('assistant.generateImageOf'));
           inputRef.current?.focus();
           setInputGlow(true);
           setTimeout(() => setInputGlow(false), 2000);
           break;
         case 'video':
-          setInput(t('assistant.generateVideoOf'));
+          setInput(prefill || t('assistant.generateVideoOf'));
           inputRef.current?.focus();
           setInputGlow(true);
           setTimeout(() => setInputGlow(false), 2000);
@@ -537,6 +540,11 @@ export default function AssistantPage() {
         case 'voice':
         case 'chat':
         default:
+          if (prefill) {
+            setInput(prefill);
+            setInputGlow(true);
+            setTimeout(() => setInputGlow(false), 2000);
+          }
           inputRef.current?.focus();
           break;
       }

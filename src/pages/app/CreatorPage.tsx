@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { SEOHead } from '@/components/SEOHead';
 import { PricingSection } from '@/components/pricing/PricingSection';
 import SwipeableCarousel from '@/components/app/SwipeableCarousel';
+import { CreatorComposerBar } from '@/components/app/creator/CreatorComposerBar';
 import dehubIcon from '@/assets/dehub-icon.png.asset.json';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import showcaseImage from '@/assets/creator-studio-showcase.jpg';
@@ -476,6 +477,7 @@ export default function CreatorPage() {
           <FeatureStrip icon={Sparkles} title="Creator memory" copy="Characters, skills and brand rules stay available across prompts." />
           <FeatureStrip icon={ArrowUpRight} title="Connected to DeHub" copy="Jump from a tool into assistant, editor, TV, agents or settings." />
         </section>
+        <CreatorComposerBar />
       </main>
     </>
   );
