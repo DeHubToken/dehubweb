@@ -13,6 +13,9 @@ import {
   ContextMenuItem,
   ContextMenuSeparator,
   ContextMenuTrigger,
+  ContextMenuSub,
+  ContextMenuSubTrigger,
+  ContextMenuSubContent,
 } from "@/components/ui/context-menu";
 import { cn } from "@/lib/utils";
 import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
