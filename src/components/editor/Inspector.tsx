@@ -102,7 +102,29 @@ export function Inspector() {
 
         {visualMedia && (
           <div className="space-y-3">
-            <p className="text-[10px] uppercase tracking-wide text-white/40">Effects</p>
+            <p className="text-[10px] uppercase tracking-wide text-white/40">Vibes</p>
+            <div className="grid grid-cols-4 gap-1">
+              {FILTER_PRESETS.map((p) => {
+                const active = presetMatches(visualMedia.effects, p.effects);
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => updateMediaClip(visualMedia.id, { effects: applyFilterPreset(p.id) })}
+                    className={cn(
+                      "rounded-md border px-1 py-1 text-[10px] transition",
+                      active
+                        ? "border-white/50 bg-white/15 text-white"
+                        : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
+                    )}
+                    title={p.label}
+                  >
+                    {p.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            <p className="pt-1 text-[10px] uppercase tracking-wide text-white/40">Effects</p>
             <EffectSlider label="Brightness" value={visualMedia.effects?.brightness ?? 1} min={0} max={2} step={0.01}
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, brightness: v } })} />
             <EffectSlider label="Contrast" value={visualMedia.effects?.contrast ?? 1} min={0} max={2} step={0.01}
@@ -111,6 +133,15 @@ export function Inspector() {
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, saturation: v } })} />
             <EffectSlider label="Blur (px)" value={visualMedia.effects?.blur ?? 0} min={0} max={20} step={0.5}
               onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, blur: v } })} />
+            <EffectSlider label={`Hue ${Math.round(visualMedia.effects?.hueRotate ?? 0)}°`}
+              value={visualMedia.effects?.hueRotate ?? 0} min={0} max={360} step={1}
+              onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, hueRotate: v } })} />
+            <EffectSlider label={`Grayscale ${Math.round((visualMedia.effects?.grayscale ?? 0) * 100)}%`}
+              value={visualMedia.effects?.grayscale ?? 0} min={0} max={1} step={0.01}
+              onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, grayscale: v } })} />
+            <EffectSlider label={`Sepia ${Math.round((visualMedia.effects?.sepia ?? 0) * 100)}%`}
+              value={visualMedia.effects?.sepia ?? 0} min={0} max={1} step={0.01}
+              onChange={(v) => updateMediaClip(visualMedia.id, { effects: { ...visualMedia.effects, sepia: v } })} />
             <Button size="sm" variant="ghost"
               onClick={() => updateMediaClip(visualMedia.id, { effects: undefined })}
               className="h-7 w-full rounded-md border border-white/10 text-[11px] text-white/70 hover:bg-white/5 hover:text-white">
@@ -118,6 +149,7 @@ export function Inspector() {
             </Button>
           </div>
         )}
+
 
         {mediaClip && (mediaClip.kind === "video" || mediaClip.kind === "audio") && (
           <div className="space-y-3 pt-2">
