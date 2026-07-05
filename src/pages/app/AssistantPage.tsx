@@ -515,11 +515,11 @@ export default function AssistantPage() {
           setSkillsHubOpen(true);
           break;
         case 'poster':
-          setPendingPosterPrompt('');
+          setPendingPosterPrompt(prefill || '');
           setPosterConfigOpen(true);
           break;
         case 'song':
-          setPendingMusicPrompt('');
+          setPendingMusicPrompt(prefill || '');
           setMusicConfirmOpen(true);
           break;
         case 'edit':
