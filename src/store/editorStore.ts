@@ -354,7 +354,14 @@ export const useEditorStore = create<EditorState>((set, get) => ({
 
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
     set({ past, future: [], tracks, clips: [...s.clips, clip], selectedClipIds: [clip.id] });
+    // Fire-and-forget: bump cloud "last used" timestamp so 12-month cleanup resets.
+    void import("@/lib/editor/cloudMedia").then(({ touchEditorAsset }) => {
+      import("@/contexts/AuthContext").catch(() => null);
+      const w = (typeof window !== "undefined" ? (window as unknown as { __dehubWallet?: string }).__dehubWallet : null) ?? null;
+      if (w) touchEditorAsset(w, mediaId).catch(() => { /* noop */ });
+    }).catch(() => { /* noop */ });
     return clip.id;
+
   },
 
   addTextClip: (trackId, start) => {
