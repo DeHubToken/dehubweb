@@ -340,7 +340,7 @@ export default function BuyCoinsPage() {
 
 
         {/* Amount Selection */}
-        <div className="bg-zinc-900 rounded-2xl p-4 space-y-4">
+        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-4">
           <label className="text-sm text-zinc-400 block">{t('buyCoins.amountUsd')}</label>
           
           <div className="grid grid-cols-3 gap-2">
@@ -402,7 +402,7 @@ export default function BuyCoinsPage() {
         </div>
 
         {/* Price Summary */}
-        <div className="bg-zinc-900 rounded-2xl p-4 space-y-3">
+        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-3">
           <div>
             <div className="flex items-center justify-between">
               <span className="text-zinc-400">{t('buyCoins.youReceive')}</span>
@@ -460,7 +460,7 @@ export default function BuyCoinsPage() {
         </div>
 
         {/* Payment Methods */}
-        <div className="bg-zinc-900 rounded-2xl p-4 space-y-3">
+        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 space-y-3">
           <label className="text-sm text-zinc-400 block">{t('buyCoins.paymentMethod')}</label>
           
           <button
@@ -573,7 +573,7 @@ export default function BuyCoinsPage() {
 
         {/* Platform Stats Banner */}
         {platformStats && (platformStats.totalVolume > 0 || platformStats.totalTransactions > 0) && (
-          <div className="bg-zinc-900 rounded-2xl p-4 flex items-center justify-around border border-zinc-800">
+          <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 flex items-center justify-around border border-zinc-800">
             <div className="text-center">
               <div className="flex items-center justify-center gap-1.5 mb-1">
                 <TrendingUp className="w-4 h-4 text-emerald-400" />
@@ -598,7 +598,7 @@ export default function BuyCoinsPage() {
 
 
         {/* Purchase History */}
-        <div className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800">
+        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800">
           <h3 className="text-white font-semibold mb-3 text-center">Purchase History</h3>
           
           {/* Search */}

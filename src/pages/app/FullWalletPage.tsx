@@ -219,7 +219,7 @@ export default function FullWalletPage() {
       )}
 
       {/* Wallet balance bar */}
-      <div className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800 mb-4">
+      <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 border border-zinc-800 mb-4">
         <div className="flex items-center justify-between">
           <div className="min-w-0">
             <div className="flex items-center gap-2">

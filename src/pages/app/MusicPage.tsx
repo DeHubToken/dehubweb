@@ -206,7 +206,7 @@ const MUSIC_TABS: { icon: typeof Music; labelKey: string; value: MusicTabValue }
 
 function AudioTrackCard({ track }: { track: AudioTrack }) {
   return (
-    <div className="bg-zinc-900 rounded-2xl p-3 sm:p-4 flex gap-3 sm:gap-4 items-center hover:bg-zinc-800/80 transition-colors cursor-pointer">
+    <div data-page-bento className="bg-zinc-900 rounded-2xl p-3 sm:p-4 flex gap-3 sm:gap-4 items-center hover:bg-zinc-800/80 transition-colors cursor-pointer">
       {/* Cover Art */}
       <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-xl overflow-hidden flex-shrink-0">
         <img 
@@ -354,7 +354,7 @@ export default function MusicPage() {
       <h1 className="sr-only">DeHub Music — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Tab Navigation */}
       <div className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2">
-        <div className="bg-zinc-900 rounded-2xl p-2 overflow-visible">
+        <div data-page-bento className="bg-zinc-900 rounded-2xl p-2 overflow-visible">
           <div ref={musicTabLayerRef} className="relative overflow-visible">
             <GlassIndicator ref={musicIndicatorRef} rect={musicTabRect} enableTransition={!isMusicDragging} />
             {musicTabRect.ready && (

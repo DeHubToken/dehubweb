@@ -139,7 +139,7 @@ export default function BookmarksPage() {
       <SEOHead title="Bookmarks — Your Saved Content" description="Access your saved posts, liked content, watch history and pay-per-view purchases all in one place on DeHub. Never lose track of content you love." url="https://dehub.io/app/bookmarks" />
       <h1 className="sr-only">DeHub Bookmarks — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Header */}
-      <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
+      <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
             <img src={bookmark3dIcon} alt={t('nav.bookmarks')} className="w-[52px] h-[52px] object-contain" />
@@ -233,7 +233,7 @@ export default function BookmarksPage() {
       {isLoading ? (
         <BookmarksSkeleton />
       ) : isError ? (
-        <div className="bg-zinc-900 rounded-2xl p-8 sm:p-12 flex flex-col items-center justify-center min-h-[400px]">
+        <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 sm:p-12 flex flex-col items-center justify-center min-h-[400px]">
           <div className="text-center">
             <div className="w-16 h-16 bg-red-500/10 rounded-xl flex items-center justify-center mx-auto mb-6">
               <Bookmark className="w-8 h-8 text-red-400" />
@@ -251,7 +251,7 @@ export default function BookmarksPage() {
           </div>
         </div>
       ) : bookmarks.length === 0 ? (
-        <div className="bg-zinc-900 rounded-2xl p-8 sm:p-12 flex flex-col items-center justify-center min-h-[400px]">
+        <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 sm:p-12 flex flex-col items-center justify-center min-h-[400px]">
           <BookmarksEmptyContent activeTab={activeTab} searchQuery={searchQuery} />
         </div>
       ) : (
