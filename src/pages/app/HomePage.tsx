@@ -245,7 +245,8 @@ export default function HomePage() {
     const hasOpenFilters = showHomeFilters || showShortsFilters || showImagesFilters || showVideosFilters || showMusicFilters || showLiveFilters;
     if (!hasOpenFilters) return;
 
-    const getY = () => window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    const getY = () =>
+      window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
     let lastY = getY();
     let accumulatedDown = 0;
     const SCROLL_CLOSE_THRESHOLD = 24; // px
@@ -270,12 +271,22 @@ export default function HomePage() {
       });
     };
 
-    window.addEventListener('scroll', onScroll, { passive: true });
+    const targets: EventTarget[] = [
+      window,
+      document,
+      document.documentElement,
+      document.body,
+    ];
+    const appRoot = document.getElementById('app-root');
+    if (appRoot) targets.push(appRoot);
+
+    targets.forEach(t => t.addEventListener('scroll', onScroll, { passive: true }));
     return () => {
-      window.removeEventListener('scroll', onScroll);
+      targets.forEach(t => t.removeEventListener('scroll', onScroll));
       if (rafId) cancelAnimationFrame(rafId);
     };
   }, [showHomeFilters, showShortsFilters, showImagesFilters, showVideosFilters, showMusicFilters, showLiveFilters, resetFilters]);
+
 
 
 
