@@ -285,7 +285,35 @@ export function Timeline() {
       </div>
 
       {/* Body */}
-      <div ref={scrollRef} className="relative flex-1 overflow-auto">
+      <div
+        ref={scrollRef}
+        onWheel={(e) => {
+          const el = scrollRef.current;
+          if (!el) return;
+          // Ctrl/⌘ + wheel: zoom around cursor.
+          if (e.ctrlKey || e.metaKey) {
+            e.preventDefault();
+            const rect = el.getBoundingClientRect();
+            const cursorPx = e.clientX - rect.left + el.scrollLeft - HEADER_WIDTH;
+            const timeAtCursor = cursorPx / zoom;
+            const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+            const nextZoom = Math.max(2, Math.min(400, zoom * factor));
+            setZoom(nextZoom);
+            requestAnimationFrame(() => {
+              if (scrollRef.current) {
+                scrollRef.current.scrollLeft = timeAtCursor * nextZoom - (e.clientX - rect.left) + HEADER_WIDTH;
+              }
+            });
+            return;
+          }
+          // Shift + wheel, or trackpad horizontal delta: side-scroll.
+          if (e.shiftKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+            e.preventDefault();
+            el.scrollLeft += (e.shiftKey && e.deltaX === 0 ? e.deltaY : e.deltaX || e.deltaY);
+          }
+        }}
+        className="relative flex-1 overflow-x-auto overflow-y-auto"
+      >
         <div style={{ width: HEADER_WIDTH + contentWidth }}>
           {/* Ruler */}
           <div className="sticky top-0 z-20 flex" style={{ height: RULER_HEIGHT }}>
