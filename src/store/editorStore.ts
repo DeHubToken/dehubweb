@@ -533,9 +533,11 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const picked = s.clips.filter((c) => s.selectedClipIds.includes(c.id));
     if (!picked.length) return;
     const minStart = Math.min(...picked.map((c) => c.start));
+    const maxEnd = Math.max(...picked.map((c) => c.start + c.duration));
     const payload = {
       kind: "dehub-editor-clips" as const,
-      version: 1,
+      version: 2,
+      sourceEnd: maxEnd,
       relative: picked.map((c) => ({ ...c, start: c.start - minStart })),
     };
     try {
@@ -547,26 +549,45 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     } catch { /* noop */ }
   },
 
-  pasteFromClipboard: () => {
+  pasteFromClipboard: (opts) => {
     const readSync = (): string | null =>
       (globalThis as unknown as { __dehubClipboard?: string }).__dehubClipboard ?? null;
     const raw = readSync();
     if (!raw) return;
-    let parsed: { kind?: string; relative?: Clip[] } | null = null;
+    let parsed: { kind?: string; relative?: Clip[]; sourceEnd?: number } | null = null;
     try { parsed = JSON.parse(raw); } catch { return; }
     if (!parsed || parsed.kind !== "dehub-editor-clips" || !Array.isArray(parsed.relative)) return;
     const s = get();
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
     let workingClips = s.clips.slice();
     const newIds: string[] = [];
-    const baseTime = s.currentTime;
+    // Default: paste immediately after the copied clips' end. Fallback to playhead.
+    const baseTime = opts?.time ?? parsed.sourceEnd ?? s.currentTime;
+    const overrideTrackId = opts?.trackId;
     for (const c of parsed.relative) {
-      const track = s.tracks.find((t) => t.id === c.trackId) ??
+      let track =
+        (overrideTrackId ? s.tracks.find((t) => t.id === overrideTrackId) : null) ??
+        s.tracks.find((t) => t.id === c.trackId) ??
         s.tracks.find((t) =>
           (t.kind === "video" && (c.kind === "video" || c.kind === "image")) ||
           (t.kind === "audio" && c.kind === "audio") ||
           (t.kind === "text" && c.kind === "text"),
         );
+      // If override track kind is incompatible, fall back to compatible track.
+      if (track && overrideTrackId && track.id === overrideTrackId) {
+        const compatible =
+          (track.kind === "video" && (c.kind === "video" || c.kind === "image")) ||
+          (track.kind === "audio" && c.kind === "audio") ||
+          (track.kind === "text" && c.kind === "text");
+        if (!compatible) {
+          track = s.tracks.find((t) => t.id === c.trackId) ??
+            s.tracks.find((t) =>
+              (t.kind === "video" && (c.kind === "video" || c.kind === "image")) ||
+              (t.kind === "audio" && c.kind === "audio") ||
+              (t.kind === "text" && c.kind === "text"),
+            );
+        }
+      }
       if (!track) continue;
       const desired = baseTime + c.start;
       const placed = findFreeStart(workingClips, track.id, desired, c.duration);
