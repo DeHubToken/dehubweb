@@ -1,20 +1,15 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { toast } from "sonner";
 import { Upload, Trash2, Film, Music, Image as ImageIcon, Plus, Type } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useEditorStore, toMediaItem, type MediaItem } from "@/store/editorStore";
 import {
-  captureImageThumbnail,
-  captureVideoThumbnail,
-  detectKind,
   deleteMedia,
   getAllMedia,
-  probeDuration,
-  putMedia,
-  type StoredMedia,
 } from "@/lib/editor/mediaStore";
+import { importFiles as importFilesShared } from "@/lib/editor/importFiles";
 import { TEXT_DRAG_MIME, TEXT_PRESETS, type TextPreset } from "@/lib/editor/textPresets";
+
 
 const MAX_BYTES = 500 * 1024 * 1024;
 
