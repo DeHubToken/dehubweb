@@ -56,8 +56,9 @@ export function ExportDialog({ open, onOpenChange }: Props) {
     }
   }, [open]);
 
-  const handleExport = async () => {
-    if (duration <= 0) {
+  const handleExport = async (cutEndAt?: number) => {
+    const exportDuration = cutEndAt !== undefined && cutEndAt > 0 ? Math.min(cutEndAt, duration) : duration;
+    if (exportDuration <= 0) {
       toast.error("Add clips to the timeline first.");
       return;
     }
@@ -73,6 +74,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
         format,
         scale,
         videoBitrate: QUALITY_PRESETS[qualityKey],
+        cutEndAt,
         onProgress: (p, l) => { setProgress(Math.round(p * 100)); setLabel(l); },
         signal: ctl.signal,
       });
