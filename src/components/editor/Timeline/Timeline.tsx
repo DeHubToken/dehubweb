@@ -34,6 +34,24 @@ const TRACK_HEIGHT = 56;
 const HEADER_WIDTH = 120;
 const RULER_HEIGHT = 28;
 const SNAP_PX = 8;
+const MEDIA_DRAG_MIME = "application/x-dehub-media";
+
+function hasDragType(types: DOMStringList | readonly string[], type: string) {
+  return typeof (types as DOMStringList).contains === "function"
+    ? (types as DOMStringList).contains(type)
+    : Array.from(types as readonly string[]).includes(type);
+}
+
+function getDraggedMediaId(e: React.DragEvent): string | null {
+  const raw = e.dataTransfer.getData(MEDIA_DRAG_MIME) || e.dataTransfer.getData("text/plain");
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as { mediaId?: unknown; type?: unknown };
+    return typeof parsed.mediaId === "string" ? parsed.mediaId : null;
+  } catch {
+    return null;
+  }
+}
 
 function fmtRuler(s: number) {
   const m = Math.floor(s / 60);
@@ -123,9 +141,10 @@ export function Timeline() {
   const onLaneDragOver = (e: React.DragEvent) => {
     const types = e.dataTransfer.types;
     if (
-      types.includes("application/x-dehub-media") ||
-      types.includes(TEXT_DRAG_MIME) ||
-      types.includes("Files")
+      hasDragType(types, MEDIA_DRAG_MIME) ||
+      hasDragType(types, TEXT_DRAG_MIME) ||
+      hasDragType(types, "Files") ||
+      hasDragType(types, "text/plain")
     ) {
       e.preventDefault();
       e.dataTransfer.dropEffect = "copy";
@@ -157,12 +176,9 @@ export function Timeline() {
     }
 
     // Media clip drop from library.
-    const raw = e.dataTransfer.getData("application/x-dehub-media");
-    if (raw) {
+    const mediaId = getDraggedMediaId(e);
+    if (mediaId) {
       e.preventDefault();
-      let mediaId: string | null = null;
-      try { mediaId = JSON.parse(raw)?.mediaId ?? null; } catch { /* noop */ }
-      if (!mediaId) return;
       addClipFromMedia(mediaId, track.id, start);
       return;
     }
