@@ -42,17 +42,22 @@ async function loadFonts(): Promise<Uint8Array[]> {
 }
 
 // Canonical DeHub white wordmark on CDN. Cached in-memory per worker.
+// Prefer the hardcoded base64 wordmark (guaranteed correct pixels — the
+// dehub.io CDN path returns HTML/SPA-fallback in production, which broke
+// the composite silently before). CDN fetch kept as a last-ditch fallback.
 const DEHUB_LOGO_URL =
   "https://dehub.io/__l5e/assets-v1/4cf0b92e-3cfd-4459-9c72-cdec81055a23/dehub-logo-white.png";
-let cachedLogoDataUri: string | null = null;
 async function fetchLogoDataUri(): Promise<string | null> {
-  if (cachedLogoDataUri) return cachedLogoDataUri;
+  if (DEHUB_LOGO_DATA_URI && DEHUB_LOGO_DATA_URI.startsWith("data:image/")) {
+    return DEHUB_LOGO_DATA_URI;
+  }
   try {
     const r = await fetch(DEHUB_LOGO_URL);
     if (!r.ok) return null;
+    const ct = r.headers.get("content-type") || "";
+    if (!ct.startsWith("image/")) return null;
     const buf = new Uint8Array(await r.arrayBuffer());
-    cachedLogoDataUri = `data:image/png;base64,${encodeB64(buf)}`;
-    return cachedLogoDataUri;
+    return `data:image/png;base64,${encodeB64(buf)}`;
   } catch {
     return null;
   }
