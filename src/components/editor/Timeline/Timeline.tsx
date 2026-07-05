@@ -54,6 +54,8 @@ export function Timeline() {
   const moveClip = useEditorStore((s) => s.moveClip);
   const trimClip = useEditorStore((s) => s.trimClip);
   const addClipFromMedia = useEditorStore((s) => s.addClipFromMedia);
+  const addTextClip = useEditorStore((s) => s.addTextClip);
+  const updateTextClip = useEditorStore((s) => s.updateTextClip);
   const updateMutate = useEditorStore;
   const duration = useEditorStore(selectTimelineDuration);
 
@@ -114,25 +116,46 @@ export function Timeline() {
     window.removeEventListener("pointerup", onScrubUp);
   };
 
-  // ── Drop from media panel ──
+  // ── Drop from media panel (media clips + text presets) ──
   const onLaneDragOver = (e: React.DragEvent) => {
-    if (e.dataTransfer.types.includes("application/x-dehub-media")) {
+    const types = e.dataTransfer.types;
+    if (types.includes("application/x-dehub-media") || types.includes(TEXT_DRAG_MIME)) {
       e.preventDefault();
       e.dataTransfer.dropEffect = "copy";
     }
   };
   const onLaneDrop = (e: React.DragEvent, track: Track) => {
+    const wrap = scrollRef.current;
+    if (!wrap) return;
+    const rect = wrap.getBoundingClientRect();
+    const px = e.clientX - rect.left + wrap.scrollLeft - HEADER_WIDTH;
+    const start = Math.max(0, px / zoom);
+
+    // Text preset drop.
+    const rawText = e.dataTransfer.getData(TEXT_DRAG_MIME);
+    if (rawText) {
+      e.preventDefault();
+      let preset: TextPreset | null = null;
+      try { preset = JSON.parse(rawText) as TextPreset; } catch { /* noop */ }
+      const trackId = track.kind === "text" ? track.id : undefined;
+      const id = addTextClip(trackId, start);
+      if (preset && id) {
+        updateTextClip(id, {
+          text: preset.text,
+          fontSize: preset.fontSize,
+          fontWeight: preset.fontWeight,
+        });
+      }
+      return;
+    }
+
+    // Media clip drop.
     const raw = e.dataTransfer.getData("application/x-dehub-media");
     if (!raw) return;
     e.preventDefault();
     let mediaId: string | null = null;
     try { mediaId = JSON.parse(raw)?.mediaId ?? null; } catch { /* noop */ }
     if (!mediaId) return;
-    const wrap = scrollRef.current;
-    if (!wrap) return;
-    const rect = wrap.getBoundingClientRect();
-    const px = e.clientX - rect.left + wrap.scrollLeft - HEADER_WIDTH;
-    const start = Math.max(0, px / zoom);
     addClipFromMedia(mediaId, track.id, start);
   };
 
