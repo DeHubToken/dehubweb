@@ -205,7 +205,7 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   setCurrentTime: (t) => set({ currentTime: Math.max(0, t) }),
   setIsPlaying: (p) => set({ isPlaying: p }),
   toggleLoop: () => set((s) => ({ isLooping: !s.isLooping })),
-  setZoom: (z) => set({ zoom: Math.max(8, Math.min(400, z)) }),
+  setZoom: (z) => set({ zoom: Math.max(2, Math.min(400, z)) }),
 
   // ── selection ──
   selectClip: (id, additive) =>
