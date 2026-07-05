@@ -74,52 +74,11 @@ export function MediaPanel() {
     if (!list.length) return;
     setBusy(true);
     try {
-      for (const file of list) {
-        const kind = detectKind(file);
-        if (!kind) { toast.error(`Unsupported file: ${file.name}`); continue; }
-        if (file.size > MAX_BYTES) { toast.error(`${file.name} is too large (max 500 MB).`); continue; }
-        try {
-          const id =
-            (typeof crypto !== "undefined" && "randomUUID" in crypto
-              ? crypto.randomUUID()
-              : `m_${Date.now()}_${Math.random().toString(36).slice(2)}`);
-
-          let duration: number | undefined;
-          let width: number | undefined;
-          let height: number | undefined;
-          let thumbnail: Blob | undefined;
-
-          if (kind === "video") {
-            try {
-              const r = await captureVideoThumbnail(file);
-              thumbnail = r.thumbnail; width = r.width; height = r.height; duration = r.duration;
-            } catch {
-              duration = await probeDuration(file, "video").catch(() => 0);
-            }
-          } else if (kind === "audio") {
-            duration = await probeDuration(file, "audio");
-          } else {
-            const r = await captureImageThumbnail(file);
-            thumbnail = r.thumbnail; width = r.width; height = r.height;
-          }
-
-          const row: StoredMedia = {
-            id, name: file.name, kind,
-            mimeType: file.type || "application/octet-stream",
-            size: file.size, duration, width, height, thumbnail,
-            blob: file, createdAt: Date.now(),
-          };
-          await putMedia(row);
-          addMedia(toMediaItem(row));
-        } catch (e) {
-          console.error("[editor] import failed", file.name, e);
-          toast.error(`Failed to import ${file.name}`);
-        }
-      }
+      await importFilesShared(list);
     } finally {
       setBusy(false);
     }
-  }, [addMedia]);
+  }, []);
 
   const onDrop = useCallback(
     (e: React.DragEvent) => {
@@ -132,8 +91,9 @@ export function MediaPanel() {
 
   const handleRemove = useCallback(async (id: string) => {
     try { await deleteMedia(id); removeMediaFromStore(id); }
-    catch (e) { console.error(e); toast.error("Failed to remove media"); }
+    catch (e) { console.error(e); const { toast } = await import("sonner"); toast.error("Failed to remove media"); }
   }, [removeMediaFromStore]);
+
 
   return (
     <aside className="flex h-full w-full flex-col border-r border-white/10 bg-black/60 backdrop-blur-[24px]">
