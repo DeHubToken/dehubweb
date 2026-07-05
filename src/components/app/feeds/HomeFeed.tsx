@@ -9,6 +9,7 @@
  */
 
 import { useEffect, useRef, useMemo, useCallback, useState, useDeferredValue, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { getDeletedPostIds } from '@/lib/deleted-posts-store';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
@@ -101,6 +102,8 @@ interface HomeFeedProps {
   showFilters?: boolean;
   /** Optional post ID to pin at the top of the feed */
   pinnedPostId?: string;
+  /** DOM node to render the filter panel into; when omitted, the panel renders in-flow */
+  filtersPortalRef?: React.RefObject<HTMLElement | null>;
 }
 
 // ============================================================================
@@ -303,7 +306,7 @@ function SortFilterSection({
 // MAIN COMPONENT
 // ============================================================================
 
-export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId }: HomeFeedProps) {
+export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId, filtersPortalRef }: HomeFeedProps) {
   const { t } = useI18n();
   const loaderRef = useRef<HTMLDivElement>(null);
   const bentoRef = useRef<HTMLDivElement>(null);
@@ -1406,23 +1409,32 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           <div className="h-full w-1/3 bg-gradient-to-r from-transparent via-white/70 to-transparent animate-[shimmer-sweep_1.2s_linear_infinite]" />
         </div>
       )}
-      {/* Filters - ALWAYS accessible so users can change settings even when feed is empty/retrying */}
-      <AnimatePresence mode="wait">
-        {showFilters && (
+      {/* Filters - ALWAYS accessible so users can change settings even when feed is empty/retrying.
+          When a portal target is provided, render the panel into the sticky tab bar so it stays
+          visible while scrolling; otherwise fall back to the in-flow panel. */}
+      {(() => {
+        const filterPanel = (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className="overflow-y-clip overflow-x-visible"
+            className={cn("overflow-y-clip overflow-x-visible", filtersPortalRef?.current && "mt-2")}
           >
-            <div ref={bentoRef} data-no-swipe className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-2 sm:px-3 py-3 space-y-4">
-              <SortFilterSection 
-                selectedSort={selectedSort} 
+            <div
+              ref={bentoRef}
+              data-no-swipe
+              className={cn(
+                "rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-2 sm:px-3 py-3 space-y-4",
+                filtersPortalRef?.current && "max-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-visible scrollbar-hide"
+              )}
+            >
+              <SortFilterSection
+                selectedSort={selectedSort}
                 onSortSelect={handleSortSelect}
                 selectedCategories={selectedCategories}
                 onCategoryToggle={(cat) => {
-                  setSelectedCategories(prev => 
+                  setSelectedCategories(prev =>
                     prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
                   );
                 }}
@@ -1452,8 +1464,21 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               />
             </div>
           </motion.div>
-        )}
-      </AnimatePresence>
+        );
+
+        if (filtersPortalRef?.current) {
+          return showFilters ? createPortal(
+            <AnimatePresence mode="wait">{filterPanel}</AnimatePresence>,
+            filtersPortalRef.current
+          ) : null;
+        }
+
+        return (
+          <AnimatePresence mode="wait">
+            {showFilters && filterPanel}
+          </AnimatePresence>
+        );
+      })()}
 
       {/* Active filter chips bar (sort, date, content access, categories) */}
       {(selectedSort.value !== 'latest' || selectedDate.value !== 'all' || contentFilters.ppv || contentFilters.w2e || contentFilters.locked || selectedCategories.length > 0) && (
