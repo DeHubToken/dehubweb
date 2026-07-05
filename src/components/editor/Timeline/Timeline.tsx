@@ -84,6 +84,48 @@ export function Timeline() {
   const totalSeconds = Math.max(30, duration + 10);
   const contentWidth = Math.ceil(totalSeconds * zoom);
 
+  // ── Native wheel + pinch listener (non-passive so preventDefault works,
+  // preventing browser/page zoom from leaking through the timeline). ──
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      // Ctrl/⌘ + wheel (incl. trackpad pinch which reports ctrlKey=true): zoom timeline only.
+      if (e.ctrlKey || e.metaKey) {
+        e.preventDefault();
+        e.stopPropagation();
+        const rect = el.getBoundingClientRect();
+        const z = useEditorStore.getState().zoom;
+        const cursorPx = e.clientX - rect.left + el.scrollLeft - HEADER_WIDTH;
+        const timeAtCursor = cursorPx / z;
+        const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+        const nextZoom = Math.max(2, Math.min(400, z * factor));
+        useEditorStore.getState().setZoom(nextZoom);
+        requestAnimationFrame(() => {
+          el.scrollLeft = timeAtCursor * nextZoom - (e.clientX - rect.left) + HEADER_WIDTH;
+        });
+        return;
+      }
+      if (e.shiftKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        e.preventDefault();
+        el.scrollLeft += (e.shiftKey && e.deltaX === 0 ? e.deltaY : e.deltaX || e.deltaY);
+      }
+    };
+    // Safari pinch gestures.
+    const onGesture = (e: Event) => { e.preventDefault(); };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    el.addEventListener("gesturestart", onGesture as EventListener, { passive: false });
+    el.addEventListener("gesturechange", onGesture as EventListener, { passive: false });
+    el.addEventListener("gestureend", onGesture as EventListener, { passive: false });
+    return () => {
+      el.removeEventListener("wheel", onWheel);
+      el.removeEventListener("gesturestart", onGesture as EventListener);
+      el.removeEventListener("gesturechange", onGesture as EventListener);
+      el.removeEventListener("gestureend", onGesture as EventListener);
+    };
+  }, []);
+
+
   // ── Snap helpers ──
   const snapTargets = useMemo(() => {
     const set = new Set<number>([0, currentTime]);
@@ -287,33 +329,9 @@ export function Timeline() {
       {/* Body */}
       <div
         ref={scrollRef}
-        onWheel={(e) => {
-          const el = scrollRef.current;
-          if (!el) return;
-          // Ctrl/⌘ + wheel: zoom around cursor.
-          if (e.ctrlKey || e.metaKey) {
-            e.preventDefault();
-            const rect = el.getBoundingClientRect();
-            const cursorPx = e.clientX - rect.left + el.scrollLeft - HEADER_WIDTH;
-            const timeAtCursor = cursorPx / zoom;
-            const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
-            const nextZoom = Math.max(2, Math.min(400, zoom * factor));
-            setZoom(nextZoom);
-            requestAnimationFrame(() => {
-              if (scrollRef.current) {
-                scrollRef.current.scrollLeft = timeAtCursor * nextZoom - (e.clientX - rect.left) + HEADER_WIDTH;
-              }
-            });
-            return;
-          }
-          // Shift + wheel, or trackpad horizontal delta: side-scroll.
-          if (e.shiftKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-            e.preventDefault();
-            el.scrollLeft += (e.shiftKey && e.deltaX === 0 ? e.deltaY : e.deltaX || e.deltaY);
-          }
-        }}
-        className="relative flex-1 overflow-x-auto overflow-y-auto"
+        className="relative flex-1 overflow-x-auto overflow-y-auto [overscroll-behavior:contain] [touch-action:pan-x_pan-y]"
       >
+
         <div style={{ width: HEADER_WIDTH + contentWidth }}>
           {/* Ruler */}
           <div className="sticky top-0 z-20 flex" style={{ height: RULER_HEIGHT }}>
