@@ -2,14 +2,19 @@
  * Right-hand inspector: project canvas settings + selected-clip properties (text).
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
  */
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { useEditorStore } from "@/store/editorStore";
-import { aspectToDims, type AspectPreset, type MediaClip, type TextClip } from "@/lib/editor/types";
+import { aspectToDims, type AspectPreset, type Clip, type MediaClip, type TextClip } from "@/lib/editor/types";
+import { FILTER_PRESETS, applyFilterPreset } from "@/lib/editor/filterPresets";
+import { ANIMATION_PRESETS, newAnimation } from "@/lib/editor/animationPresets";
+import { FontPicker } from "@/components/editor/FontPicker";
+import { findFontByCss, loadGoogleFont, primaryFamily } from "@/lib/editor/googleFonts";
+
 
 const ASPECTS: { value: AspectPreset; label: string }[] = [
   { value: "16:9", label: "16:9" },
