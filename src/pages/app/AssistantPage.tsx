@@ -526,13 +526,13 @@ export default function AssistantPage() {
           fileInputRef.current?.click();
           break;
         case 'image':
-          setInput(t('assistant.generateImageOf'));
+          setInput(prefill || t('assistant.generateImageOf'));
           inputRef.current?.focus();
           setInputGlow(true);
           setTimeout(() => setInputGlow(false), 2000);
           break;
         case 'video':
-          setInput(t('assistant.generateVideoOf'));
+          setInput(prefill || t('assistant.generateVideoOf'));
           inputRef.current?.focus();
           setInputGlow(true);
           setTimeout(() => setInputGlow(false), 2000);
@@ -540,6 +540,11 @@ export default function AssistantPage() {
         case 'voice':
         case 'chat':
         default:
+          if (prefill) {
+            setInput(prefill);
+            setInputGlow(true);
+            setTimeout(() => setInputGlow(false), 2000);
+          }
           inputRef.current?.focus();
           break;
       }
