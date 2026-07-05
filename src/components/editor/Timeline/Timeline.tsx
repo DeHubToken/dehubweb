@@ -491,40 +491,84 @@ function ClipBlock({ clip, track, zoom, selected, tracks, onSelect, onMove, onTr
   void store;
 
   return (
-    <div
-      onPointerDown={onPointerDown}
-      className={cn(
-        "absolute top-1.5 cursor-grab touch-none overflow-hidden rounded-md border text-[10px] text-white shadow-sm transition select-none",
-        bg,
-        selected && "outline outline-2 outline-white/80",
-      )}
-      style={{ left, width, height: TRACK_HEIGHT - 12 }}
-      title={label}
-    >
-      <div
-        data-handle="in"
-        onPointerDown={startTrim("in")}
-        className="absolute left-0 top-0 z-10 h-full w-3 cursor-ew-resize touch-none bg-white/20 hover:bg-white/60 md:w-1.5"
-      />
-      <div
-        data-handle="out"
-        onPointerDown={startTrim("out")}
-        className="absolute right-0 top-0 z-10 h-full w-3 cursor-ew-resize touch-none bg-white/20 hover:bg-white/60 md:w-1.5"
-      />
-      {/* Thumbnail strip for media clips */}
-      {media?.thumbnailUrl && track.kind === "video" && (
-        <div className="absolute inset-0 opacity-50">
+    <ContextMenu>
+      <ContextMenuTrigger asChild>
+        <div
+          onPointerDown={onPointerDown}
+          onContextMenu={() => onSelect(false)}
+          className={cn(
+            "absolute top-1.5 cursor-grab touch-none overflow-hidden rounded-md border text-[10px] text-white shadow-sm transition select-none",
+            bg,
+            selected && "outline outline-2 outline-white/80",
+          )}
+          style={{ left, width, height: TRACK_HEIGHT - 12 }}
+          title={label}
+        >
           <div
-            className="h-full w-full bg-cover bg-center"
-            style={{ backgroundImage: `url(${media.thumbnailUrl})` }}
+            data-handle="in"
+            onPointerDown={startTrim("in")}
+            className="absolute left-0 top-0 z-10 h-full w-3 cursor-ew-resize touch-none bg-white/20 hover:bg-white/60 md:w-1.5"
           />
+          <div
+            data-handle="out"
+            onPointerDown={startTrim("out")}
+            className="absolute right-0 top-0 z-10 h-full w-3 cursor-ew-resize touch-none bg-white/20 hover:bg-white/60 md:w-1.5"
+          />
+          {/* Thumbnail strip for media clips */}
+          {media?.thumbnailUrl && track.kind === "video" && (
+            <div className="absolute inset-0 opacity-50">
+              <div
+                className="h-full w-full bg-cover bg-center"
+                style={{ backgroundImage: `url(${media.thumbnailUrl})` }}
+              />
+            </div>
+          )}
+          <div className="absolute inset-0 flex items-center px-2.5">
+            <span className="truncate font-medium">{label}</span>
+          </div>
+          <TransitionHandle clip={clip} />
         </div>
-      )}
-      <div className="absolute inset-0 flex items-center px-2.5">
-        <span className="truncate font-medium">{label}</span>
-      </div>
-      <TransitionHandle clip={clip} />
-    </div>
+      </ContextMenuTrigger>
+      <ClipContextMenu clipId={clip.id} trackId={clip.trackId} />
+    </ContextMenu>
+  );
+}
+
+function ClipContextMenu({ clipId, trackId }: { clipId: string; trackId: string }) {
+  const moveTrack = useEditorStore((s) => s.moveTrack);
+  const duplicateSelected = useEditorStore((s) => s.duplicateSelected);
+  const rippleDelete = useEditorStore((s) => s.rippleDelete);
+  const selectClip = useEditorStore((s) => s.selectClip);
+  const tracks = useEditorStore((s) => s.tracks);
+  const idx = tracks.findIndex((t) => t.id === trackId);
+  const canForward = idx >= 0 && idx < tracks.length - 1;
+  const canBackward = idx > 0;
+  const pick = (fn: () => void) => () => { selectClip(clipId); fn(); };
+  return (
+    <ContextMenuContent className="w-56 border-white/10 bg-black/85 text-white backdrop-blur-[24px]">
+      <ContextMenuItem disabled={!canForward} onSelect={pick(() => moveTrack(trackId, "front"))}>
+        <ChevronsUp className="mr-2 h-3.5 w-3.5" /> Bring to front
+      </ContextMenuItem>
+      <ContextMenuItem disabled={!canForward} onSelect={pick(() => moveTrack(trackId, "forward"))}>
+        <ChevronUp className="mr-2 h-3.5 w-3.5" /> Bring forward
+      </ContextMenuItem>
+      <ContextMenuItem disabled={!canBackward} onSelect={pick(() => moveTrack(trackId, "backward"))}>
+        <ChevronDown className="mr-2 h-3.5 w-3.5" /> Send backward
+      </ContextMenuItem>
+      <ContextMenuItem disabled={!canBackward} onSelect={pick(() => moveTrack(trackId, "back"))}>
+        <ChevronsDown className="mr-2 h-3.5 w-3.5" /> Send to back
+      </ContextMenuItem>
+      <ContextMenuSeparator className="bg-white/10" />
+      <ContextMenuItem onSelect={pick(() => duplicateSelected())}>
+        <Copy className="mr-2 h-3.5 w-3.5" /> Duplicate
+      </ContextMenuItem>
+      <ContextMenuItem
+        onSelect={pick(() => rippleDelete([clipId]))}
+        className="text-red-300 focus:text-red-200"
+      >
+        <Trash2 className="mr-2 h-3.5 w-3.5" /> Delete
+      </ContextMenuItem>
+    </ContextMenuContent>
   );
 }
 
