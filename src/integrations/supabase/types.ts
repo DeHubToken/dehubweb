@@ -849,6 +849,63 @@ export type Database = {
         }
         Relationships: []
       }
+      editor_assets: {
+        Row: {
+          created_at: string
+          duration_seconds: number | null
+          height: number | null
+          id: string
+          kind: string
+          last_used_at: string
+          mime_type: string
+          name: string
+          posted_post_id: string | null
+          preserved: boolean
+          size_bytes: number
+          storage_path: string
+          thumbnail_path: string | null
+          updated_at: string
+          wallet_address: string
+          width: number | null
+        }
+        Insert: {
+          created_at?: string
+          duration_seconds?: number | null
+          height?: number | null
+          id?: string
+          kind: string
+          last_used_at?: string
+          mime_type: string
+          name: string
+          posted_post_id?: string | null
+          preserved?: boolean
+          size_bytes?: number
+          storage_path: string
+          thumbnail_path?: string | null
+          updated_at?: string
+          wallet_address: string
+          width?: number | null
+        }
+        Update: {
+          created_at?: string
+          duration_seconds?: number | null
+          height?: number | null
+          id?: string
+          kind?: string
+          last_used_at?: string
+          mime_type?: string
+          name?: string
+          posted_post_id?: string | null
+          preserved?: boolean
+          size_bytes?: number
+          storage_path?: string
+          thumbnail_path?: string | null
+          updated_at?: string
+          wallet_address?: string
+          width?: number | null
+        }
+        Relationships: []
+      }
       event_chat_messages: {
         Row: {
           avatar_url: string | null
@@ -3110,6 +3167,13 @@ export type Database = {
           id: string
           image_url: string
           video_url: string
+        }[]
+      }
+      get_editor_storage_usage: {
+        Args: { _wallet: string }
+        Returns: {
+          asset_count: number
+          used_bytes: number
         }[]
       }
       get_request_wallet_address: { Args: never; Returns: string }
