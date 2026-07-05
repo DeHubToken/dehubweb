@@ -116,10 +116,14 @@ export function Timeline() {
     window.removeEventListener("pointerup", onScrubUp);
   };
 
-  // ── Drop from media panel (media clips + text presets) ──
+  // ── Drop from media panel (media clips + text presets) OR OS files ──
   const onLaneDragOver = (e: React.DragEvent) => {
     const types = e.dataTransfer.types;
-    if (types.includes("application/x-dehub-media") || types.includes(TEXT_DRAG_MIME)) {
+    if (
+      types.includes("application/x-dehub-media") ||
+      types.includes(TEXT_DRAG_MIME) ||
+      types.includes("Files")
+    ) {
       e.preventDefault();
       e.dataTransfer.dropEffect = "copy";
     }
@@ -149,15 +153,39 @@ export function Timeline() {
       return;
     }
 
-    // Media clip drop.
+    // Media clip drop from library.
     const raw = e.dataTransfer.getData("application/x-dehub-media");
-    if (!raw) return;
-    e.preventDefault();
-    let mediaId: string | null = null;
-    try { mediaId = JSON.parse(raw)?.mediaId ?? null; } catch { /* noop */ }
-    if (!mediaId) return;
-    addClipFromMedia(mediaId, track.id, start);
+    if (raw) {
+      e.preventDefault();
+      let mediaId: string | null = null;
+      try { mediaId = JSON.parse(raw)?.mediaId ?? null; } catch { /* noop */ }
+      if (!mediaId) return;
+      addClipFromMedia(mediaId, track.id, start);
+      return;
+    }
+
+    // OS file drop — import then place at drop point.
+    if (e.dataTransfer.files?.length) {
+      e.preventDefault();
+      const files = Array.from(e.dataTransfer.files);
+      void (async () => {
+        const { importFiles } = await import("@/lib/editor/importFiles");
+        const ids = await importFiles(files);
+        let cursor = start;
+        for (const id of ids) {
+          const state = useEditorStore.getState();
+          const m = state.media.find((x) => x.id === id);
+          if (!m) continue;
+          const clipId = state.addClipFromMedia(id, track.id, cursor);
+          if (clipId) {
+            const c = useEditorStore.getState().clips.find((x) => x.id === clipId);
+            if (c) cursor = c.start + c.duration;
+          }
+        }
+      })();
+    }
   };
+
 
   // ── Marquee deselect by clicking empty area ──
   const onLanesBackgroundDown = (e: React.MouseEvent) => {
