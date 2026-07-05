@@ -241,15 +241,15 @@ export function Timeline() {
           <PopoverContent side="bottom" align="start" className="w-44 border-white/10 bg-black/85 p-1 text-white backdrop-blur-[24px]">
             <Button size="sm" variant="ghost" onClick={() => addTrack("video")}
               className="w-full justify-start rounded-md px-2 text-white/90 hover:bg-white/10">
-              <Film className="mr-2 h-3.5 w-3.5" /> Video track
+              <Film className="mr-2 h-3.5 w-3.5" /> Video&nbsp;
             </Button>
             <Button size="sm" variant="ghost" onClick={() => addTrack("audio")}
               className="w-full justify-start rounded-md px-2 text-white/90 hover:bg-white/10">
-              <Music className="mr-2 h-3.5 w-3.5" /> Audio track
+              <Music className="mr-2 h-3.5 w-3.5" /> Audio&nbsp;
             </Button>
             <Button size="sm" variant="ghost" onClick={() => addTextClip()}
               className="w-full justify-start rounded-md px-2 text-white/90 hover:bg-white/10">
-              <Type className="mr-2 h-3.5 w-3.5" /> Text overlay
+              <Type className="mr-2 h-3.5 w-3.5" /> Text&nbsp;
             </Button>
           </PopoverContent>
         </Popover>
