@@ -65,11 +65,14 @@ export function Compositor() {
     for (const m of media) {
       if (m.kind === "video" && !vPool.has(m.id)) {
         const v = document.createElement("video");
-        v.src = m.url;
-        v.crossOrigin = "anonymous";
+        // Don't set crossOrigin on blob: URLs — it can prevent decoding in
+        // some Chromium builds and blob: URLs are always same-origin.
+        if (!m.url.startsWith("blob:")) v.crossOrigin = "anonymous";
         v.muted = true; // audio handled separately via audioPool when needed
         v.playsInline = true;
         v.preload = "auto";
+        v.src = m.url;
+        try { v.load(); } catch { /* noop */ }
         vPool.set(m.id, v);
       }
       if (m.kind === "audio" && !aPool.has(m.id)) {
@@ -79,6 +82,7 @@ export function Compositor() {
       }
       if (m.kind === "image" && !iPool.has(m.id)) {
         const img = new Image();
+        if (!m.url.startsWith("blob:")) img.crossOrigin = "anonymous";
         img.src = m.url;
         iPool.set(m.id, img);
       }
