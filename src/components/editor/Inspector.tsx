@@ -39,10 +39,26 @@ export function Inspector() {
   const visualMedia = mediaClip && mediaClip.kind !== "audio" ? mediaClip : null;
   const hasAudio = mediaClip && (mediaClip.kind === "video" || mediaClip.kind === "audio") ? mediaClip : null;
 
+  const currentFontWeights = useMemo(() => {
+    if (!text) return [] as number[];
+    const f = findFontByCss(text.fontFamily);
+    return f ? f.weights.slice() : [];
+  }, [text]);
+
+  // Ensure the currently-selected text clip's font is loaded so the canvas can render it.
+  useEffect(() => {
+    if (!text) return;
+    const f = findFontByCss(text.fontFamily);
+    if (f) loadGoogleFont(f.family, f.weights);
+    // Fallback: try to load whatever the primary family name is.
+    else if (text.fontFamily) loadGoogleFont(primaryFamily(text.fontFamily), [text.fontWeight]);
+  }, [text?.fontFamily, text?.fontWeight, text]);
+
   const setAspect = (a: AspectPreset) => {
     const { width, height } = aspectToDims(a, Math.min(settings.height, 1080));
     updateSettings({ aspectPreset: a, width, height });
   };
+
 
   return (
     <aside className="flex h-full w-full flex-col overflow-y-auto border-l border-white/10 bg-black/60 backdrop-blur-[24px]">
