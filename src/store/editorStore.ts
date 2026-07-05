@@ -77,6 +77,7 @@ interface EditorState extends EditableState {
   // --- timeline edits (all go through history) ---
   addTrack: (kind: TrackKind) => string;
   removeTrack: (id: string) => void;
+  moveTrack: (id: string, direction: "front" | "back" | "forward" | "backward") => void;
   addClipFromMedia: (mediaId: string, trackId?: string, start?: number) => string | null;
   addTextClip: (trackId?: string, start?: number) => string;
   moveClip: (id: string, patch: { start?: number; trackId?: string }) => void;
@@ -102,10 +103,12 @@ function snapshotEditable(s: EditorState): EditableState {
 }
 
 function defaultTracks(): Track[] {
+  // Order matters: later entries render on top of earlier ones.
+  // Text sits at the end so overlays land above video by default.
   return [
-    { id: nanoid(8), kind: "text", name: "Text", muted: false, hidden: false },
     { id: nanoid(8), kind: "video", name: "Video 1", muted: false, hidden: false },
     { id: nanoid(8), kind: "audio", name: "Audio 1", muted: false, hidden: false },
+    { id: nanoid(8), kind: "text", name: "Text", muted: false, hidden: false },
   ];
 }
 
