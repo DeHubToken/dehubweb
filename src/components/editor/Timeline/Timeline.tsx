@@ -599,6 +599,8 @@ function ClipBlock({ clip, track, zoom, selected, tracks, onSelect, onMove, onTr
 function ClipContextMenu({ clipId, trackId }: { clipId: string; trackId: string }) {
   const moveTrack = useEditorStore((s) => s.moveTrack);
   const duplicateSelected = useEditorStore((s) => s.duplicateSelected);
+  const copySelected = useEditorStore((s) => s.copySelectedToClipboard);
+  const pasteClipboard = useEditorStore((s) => s.pasteFromClipboard);
   const rippleDelete = useEditorStore((s) => s.rippleDelete);
   const selectClip = useEditorStore((s) => s.selectClip);
   const tracks = useEditorStore((s) => s.tracks);
@@ -621,6 +623,12 @@ function ClipContextMenu({ clipId, trackId }: { clipId: string; trackId: string 
         <ChevronsDown className="mr-2 h-3.5 w-3.5" /> Send to back
       </ContextMenuItem>
       <ContextMenuSeparator className="bg-white/10" />
+      <ContextMenuItem onSelect={pick(() => copySelected())}>
+        <Copy className="mr-2 h-3.5 w-3.5" /> Copy
+      </ContextMenuItem>
+      <ContextMenuItem onSelect={pick(() => pasteClipboard())}>
+        <Copy className="mr-2 h-3.5 w-3.5" /> Paste at playhead
+      </ContextMenuItem>
       <ContextMenuItem onSelect={pick(() => duplicateSelected())}>
         <Copy className="mr-2 h-3.5 w-3.5" /> Duplicate
       </ContextMenuItem>
@@ -633,6 +641,7 @@ function ClipContextMenu({ clipId, trackId }: { clipId: string; trackId: string 
     </ContextMenuContent>
   );
 }
+
 
 function TransitionHandle({ clip }: { clip: Clip }) {
   const allClips = useEditorStore((s) => s.clips);
