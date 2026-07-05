@@ -34,7 +34,6 @@ interface Plan {
   seats?: string;
   featured?: boolean;
   groups: { title: string; items: string[] }[];
-  freeGens?: { label: string; note: string }[];
   monthlyPriceId: string;
   annualPriceId: string;
 }
