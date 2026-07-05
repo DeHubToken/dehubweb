@@ -153,6 +153,43 @@ export function MediaPanel() {
           onChange={(e) => { if (e.target.files) void importFiles(e.target.files); e.target.value = ""; }} />
       </div>
 
+      <div className="mx-3 mb-2 rounded-xl border border-white/10 bg-white/[0.02] p-2">
+        <div className="mb-1.5 flex items-center gap-1.5 px-1 text-[10px] font-semibold uppercase tracking-wide text-white/50">
+          <Type className="h-3 w-3" /> Text
+        </div>
+        <div className="grid grid-cols-3 gap-1.5">
+          {TEXT_PRESETS.map((p) => (
+            <div
+              key={p.id}
+              draggable
+              onDragStart={(e) => {
+                e.dataTransfer.effectAllowed = "copy";
+                e.dataTransfer.setData(TEXT_DRAG_MIME, JSON.stringify(p));
+              }}
+              onDoubleClick={() => insertTextPreset(p)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => { if (e.key === "Enter") insertTextPreset(p); }}
+              className="group flex cursor-grab flex-col items-center justify-center gap-1 rounded-lg border border-white/10 bg-white/5 px-2 py-2 text-white/80 transition hover:border-white/25 hover:bg-white/10 hover:text-white active:cursor-grabbing"
+              title={`Drag onto the canvas or timeline — ${p.label}`}
+            >
+              <span
+                className="leading-none"
+                style={{ fontWeight: p.fontWeight, fontSize: p.previewSize }}
+              >
+                Aa
+              </span>
+              <span className="text-[9px] uppercase tracking-wide text-white/50 group-hover:text-white/70">
+                {p.label}
+              </span>
+            </div>
+          ))}
+        </div>
+        <p className="mt-1.5 px-1 text-[9px] leading-tight text-white/40">
+          Drag onto the canvas to place, or the timeline to schedule.
+        </p>
+      </div>
+
       <div
         onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
         onDragLeave={() => setIsDragging(false)}
