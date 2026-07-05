@@ -595,11 +595,11 @@ function ProfileSettings() {
           <h2 className="text-lg font-semibold text-white">{t('settings.profileSettings')}</h2>
         </div>
         <LiquidGlassBubble2
-          label={t('settings.save') || 'Save'}
+          label={t('settings.save', 'Save')}
           icon={<Save className="w-4 h-4" />}
           onClick={handleSave}
           loading={updateMutation.isPending}
-          loadingLabel={t('settings.saving') || 'Saving...'}
+          loadingLabel={t('settings.saving', 'Saving...')}
           disabled={!canSave}
           width="auto"
           height="38px"
