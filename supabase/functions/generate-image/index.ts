@@ -1,4 +1,10 @@
 
+import {
+  compositeDeHubBranding,
+  extractQuotedHeadline,
+  pickLayoutForFormat,
+} from '../_shared/dehub-brand-composite.ts';
+
 const serve = (handler: (req: Request) => Response | Promise<Response>) => Deno.serve(handler);
 
 const corsHeaders = {
