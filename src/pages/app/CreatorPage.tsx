@@ -60,11 +60,11 @@ const categories = ['All', 'Image', 'Video', 'Audio', 'Studio', 'Agents'] as con
 
 const heroCards = [
   {
-    id: 'poster-flow',
-    title: 'DEHUB POSTER STUDIO',
-    subtitle: 'Brand-safe campaign images from one prompt',
-    kind: 'prompt',
-    action: { kind: 'assistant', preset: 'poster' } satisfies ToolAction,
+    id: 'dehub-originals',
+    title: 'DEHUB ORIGINALS',
+    subtitle: 'Cinematic series, drops and worlds made on DeHub',
+    kind: 'originals',
+    action: { kind: 'navigate', to: '/app/tv' } satisfies ToolAction,
   },
   {
     id: 'video-timeline',
