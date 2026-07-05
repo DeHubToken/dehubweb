@@ -176,6 +176,8 @@ function AppContent() {
           <Route path="/mobile-preview" element={<MobilePreview />} />
           <Route path="/guide" element={<GuidePage />} />
           <Route path="/guides/best-decentralized-social-media" element={<Suspense fallback={<PageLoader />}><BestDecentralizedSocialMedia /></Suspense>} />
+          <Route path="/guides/*" element={<Suspense fallback={<PageLoader />}><BlogGuideRoute /></Suspense>} />
+
 
           <Route path="/docs" element={<DocsPage />} />
           <Route path="/docs/*" element={<DocsPage />} />
