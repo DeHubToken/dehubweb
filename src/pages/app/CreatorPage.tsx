@@ -63,7 +63,7 @@ const heroCards = [
   {
     id: 'dehub-originals',
     title: 'DEHUB ORIGINALS',
-    subtitle: 'Cinematic series, drops and worlds made on DeHub',
+    subtitle: 'Community created and curated content',
     kind: 'originals',
     action: { kind: 'navigate', to: '/app/tv' } satisfies ToolAction,
   },
