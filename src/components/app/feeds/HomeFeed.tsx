@@ -8,7 +8,7 @@
  * @module components/app/feeds/HomeFeed
  */
 
-import { useEffect, useRef, useMemo, useCallback, useState, useDeferredValue, type ReactNode } from 'react';
+import { useEffect, useRef, useMemo, useCallback, useState, useDeferredValue, startTransition, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { getDeletedPostIds } from '@/lib/deleted-posts-store';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -345,11 +345,51 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const isFetchingRef = useRef(false);
   
   // Default to Latest (chronological) — persisted to sessionStorage. "For You" remains a filter option.
-  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('home', 'sort', DEFAULT_HOME_SORT);
-  const [selectedDate, setSelectedDate] = usePersistedFeedFilter<DateFilterOption>('home', 'date', DATE_FILTER_OPTIONS[0]);
-  const [selectedPostType, setSelectedPostType] = usePersistedFeedFilter<PostTypeFilterValue>('home', 'postType', 'all');
-  const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('home');
-  const [selectedCategories, setSelectedCategories] = usePersistedFeedFilter<string[]>('home', 'categories', []);
+  const [selectedSort, setSelectedSortRaw] = usePersistedFeedFilter<SortOption>('home', 'sort', DEFAULT_HOME_SORT);
+  const [selectedDate, setSelectedDateRaw] = usePersistedFeedFilter<DateFilterOption>('home', 'date', DATE_FILTER_OPTIONS[0]);
+  const [selectedPostType, setSelectedPostTypeRaw] = usePersistedFeedFilter<PostTypeFilterValue>('home', 'postType', 'all');
+  const [contentFilters, toggleContentFilterRaw, resetContentFiltersRaw] = usePersistedContentFilters('home');
+  const [selectedCategories, setSelectedCategoriesRaw] = usePersistedFeedFilter<string[]>('home', 'categories', []);
+
+  // Optimistic mirror state — chips flip active instantly on tap while heavy
+  // downstream re-render (feed refetch, list re-render) runs at lower priority
+  // via startTransition. Prevents 1-2s lag on slow devices/networks where the
+  // synchronous re-render used to block paint of the active state.
+  const [optimisticSort, setOptimisticSort] = useState(selectedSort);
+  const [optimisticDate, setOptimisticDate] = useState(selectedDate);
+  const [optimisticPostType, setOptimisticPostType] = useState(selectedPostType);
+  const [optimisticCategories, setOptimisticCategories] = useState(selectedCategories);
+  const [optimisticContentFilters, setOptimisticContentFilters] = useState(contentFilters);
+  useEffect(() => { setOptimisticSort(selectedSort); }, [selectedSort]);
+  useEffect(() => { setOptimisticDate(selectedDate); }, [selectedDate]);
+  useEffect(() => { setOptimisticPostType(selectedPostType); }, [selectedPostType]);
+  useEffect(() => { setOptimisticCategories(selectedCategories); }, [selectedCategories]);
+  useEffect(() => { setOptimisticContentFilters(contentFilters); }, [contentFilters]);
+
+  const setSelectedSort = useCallback((value: SortOption | ((prev: SortOption) => SortOption)) => {
+    setOptimisticSort(prev => (typeof value === 'function' ? (value as (p: SortOption) => SortOption)(prev) : value));
+    startTransition(() => setSelectedSortRaw(value));
+  }, [setSelectedSortRaw]);
+  const setSelectedDate = useCallback((value: DateFilterOption | ((prev: DateFilterOption) => DateFilterOption)) => {
+    setOptimisticDate(prev => (typeof value === 'function' ? (value as (p: DateFilterOption) => DateFilterOption)(prev) : value));
+    startTransition(() => setSelectedDateRaw(value));
+  }, [setSelectedDateRaw]);
+  const setSelectedPostType = useCallback((value: PostTypeFilterValue | ((prev: PostTypeFilterValue) => PostTypeFilterValue)) => {
+    setOptimisticPostType(prev => (typeof value === 'function' ? (value as (p: PostTypeFilterValue) => PostTypeFilterValue)(prev) : value));
+    startTransition(() => setSelectedPostTypeRaw(value));
+  }, [setSelectedPostTypeRaw]);
+  const setSelectedCategories = useCallback((value: string[] | ((prev: string[]) => string[])) => {
+    setOptimisticCategories(prev => (typeof value === 'function' ? (value as (p: string[]) => string[])(prev) : value));
+    startTransition(() => setSelectedCategoriesRaw(value));
+  }, [setSelectedCategoriesRaw]);
+  const toggleContentFilter = useCallback((filter: 'ppv' | 'w2e' | 'locked') => {
+    setOptimisticContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
+    startTransition(() => toggleContentFilterRaw(filter));
+  }, [toggleContentFilterRaw]);
+  const resetContentFilters = useCallback(() => {
+    setOptimisticContentFilters({ ppv: false, w2e: false, locked: false });
+    startTransition(() => resetContentFiltersRaw());
+  }, [resetContentFiltersRaw]);
 
   // Listen for external category changes (e.g. from Talk of the Town sidebar)
   // Set a transitioning flag so we force skeleton state (bypasses placeholderData)
@@ -1430,9 +1470,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               )}
             >
               <SortFilterSection
-                selectedSort={selectedSort}
+                selectedSort={optimisticSort}
                 onSortSelect={handleSortSelect}
-                selectedCategories={selectedCategories}
+                selectedCategories={optimisticCategories}
                 onCategoryToggle={(cat) => {
                   setSelectedCategories(prev =>
                     prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
@@ -1440,9 +1480,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 }}
                 onCategoryClear={() => setSelectedCategories([])}
                 categories={categories}
-                selectedDate={selectedDate}
+                selectedDate={optimisticDate}
                 onDateSelect={setSelectedDate}
-                selectedPostType={selectedPostType}
+                selectedPostType={optimisticPostType}
                 onPostTypeSelect={(v) => {
                   if (v === 'video') {
                     window.dispatchEvent(new CustomEvent('switch-home-tab', { detail: 'videos' }));
@@ -1452,7 +1492,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                     setSelectedPostType(v);
                   }
                 }}
-                contentFilters={contentFilters}
+                contentFilters={optimisticContentFilters}
                 onContentFilterToggle={toggleContentFilter}
                 onReset={() => {
                   setSelectedSort(DEFAULT_HOME_SORT);
@@ -1481,27 +1521,27 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       })()}
 
       {/* Active filter chips bar (sort, date, content access, categories) */}
-      {(selectedSort.value !== 'latest' || selectedDate.value !== 'all' || contentFilters.ppv || contentFilters.w2e || contentFilters.locked || selectedCategories.length > 0) && (
+      {(optimisticSort.value !== 'latest' || optimisticDate.value !== 'all' || optimisticContentFilters.ppv || optimisticContentFilters.w2e || optimisticContentFilters.locked || optimisticCategories.length > 0) && (
         <div className="flex items-center gap-1.5 flex-wrap px-1">
-          {selectedSort.value !== 'latest' && (
+          {optimisticSort.value !== 'latest' && (
             <button
               onClick={() => setSelectedSort(DEFAULT_HOME_SORT)}
               className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
             >
-              <span className="leading-[1]">{selectedSort.label}</span>
+              <span className="leading-[1]">{optimisticSort.label}</span>
               <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
             </button>
           )}
-          {selectedDate.value !== 'all' && (
+          {optimisticDate.value !== 'all' && (
             <button
               onClick={() => setSelectedDate(DATE_FILTER_OPTIONS[0])}
               className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
             >
-              <span className="leading-[1]">{selectedDate.label}</span>
+              <span className="leading-[1]">{optimisticDate.label}</span>
               <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
             </button>
           )}
-          {contentFilters.ppv && (
+          {optimisticContentFilters.ppv && (
             <button
               onClick={() => toggleContentFilter('ppv')}
               className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
@@ -1510,7 +1550,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
             </button>
           )}
-          {contentFilters.w2e && (
+          {optimisticContentFilters.w2e && (
             <button
               onClick={() => toggleContentFilter('w2e')}
               className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
@@ -1519,7 +1559,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
             </button>
           )}
-          {contentFilters.locked && (
+          {optimisticContentFilters.locked && (
             <button
               onClick={() => toggleContentFilter('locked')}
               className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
@@ -1528,7 +1568,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
             </button>
           )}
-          {selectedCategories.map((rawCatId, index) => {
+          {optimisticCategories.map((rawCatId, index) => {
             const catId = typeof rawCatId === 'string'
               ? rawCatId
               : (rawCatId && typeof rawCatId === 'object' && 'categoryId' in rawCatId && typeof (rawCatId as { categoryId?: unknown }).categoryId === 'string')
