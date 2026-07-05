@@ -362,21 +362,7 @@ function PlanCard({ plan, billing, onSelect }: { plan: Plan; billing: Billing; o
           </div>
         ))}
 
-        {plan.freeGens && (
-          <div>
-            <div className="mb-2 text-[10px] font-bold uppercase tracking-widest text-white/40">
-              Unlimited & Free Gens
-            </div>
-            <ul className="space-y-1.5">
-              {plan.freeGens.map((f) => (
-                <li key={f.label} className="flex items-center justify-between rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2 text-xs text-white/80">
-                  <span className="font-semibold">{f.label}</span>
-                  <span className="text-white/50">{f.note}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
