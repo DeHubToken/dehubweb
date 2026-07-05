@@ -34,7 +34,12 @@ interface BaseClip {
   trimIn: number; // offset into source media (s); 0 for images/text
   /** Outgoing transition into the next adjacent clip on the same track. */
   transitionOut?: Transition;
+  /** Entrance animation applied at the start of the clip. */
+  animateIn?: ClipAnimation;
+  /** Exit animation applied at the end of the clip. */
+  animateOut?: ClipAnimation;
 }
+
 
 export interface ClipEffects {
   /** 0..2, 1 = neutral */
