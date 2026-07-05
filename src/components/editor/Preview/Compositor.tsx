@@ -564,6 +564,65 @@ export function Compositor() {
   );
 }
 
+function CanvasContextMenu({
+  textClip,
+  onEdit,
+}: {
+  textClip: TextClip | null;
+  onEdit: (id: string) => void;
+}) {
+  const moveTrack = useEditorStore((s) => s.moveTrack);
+  const duplicateSelected = useEditorStore((s) => s.duplicateSelected);
+  const rippleDelete = useEditorStore((s) => s.rippleDelete);
+  const addTextClip = useEditorStore((s) => s.addTextClip);
+  const tracks = useEditorStore((s) => s.tracks);
+
+  if (!textClip) {
+    return (
+      <ContextMenuContent className="w-52 border-white/10 bg-black/85 text-white backdrop-blur-[24px]">
+        <ContextMenuItem onSelect={() => addTextClip()}>
+          <Type className="mr-2 h-3.5 w-3.5" /> Add text
+        </ContextMenuItem>
+      </ContextMenuContent>
+    );
+  }
+
+  const idx = tracks.findIndex((t) => t.id === textClip.trackId);
+  const canForward = idx >= 0 && idx < tracks.length - 1;
+  const canBackward = idx > 0;
+
+  return (
+    <ContextMenuContent className="w-56 border-white/10 bg-black/85 text-white backdrop-blur-[24px]">
+      <ContextMenuItem onSelect={() => onEdit(textClip.id)}>
+        <Pencil className="mr-2 h-3.5 w-3.5" /> Edit text
+      </ContextMenuItem>
+      <ContextMenuSeparator className="bg-white/10" />
+      <ContextMenuItem disabled={!canForward} onSelect={() => moveTrack(textClip.trackId, "front")}>
+        <ChevronsUp className="mr-2 h-3.5 w-3.5" /> Bring to front
+      </ContextMenuItem>
+      <ContextMenuItem disabled={!canForward} onSelect={() => moveTrack(textClip.trackId, "forward")}>
+        <ChevronUp className="mr-2 h-3.5 w-3.5" /> Bring forward
+      </ContextMenuItem>
+      <ContextMenuItem disabled={!canBackward} onSelect={() => moveTrack(textClip.trackId, "backward")}>
+        <ChevronDown className="mr-2 h-3.5 w-3.5" /> Send backward
+      </ContextMenuItem>
+      <ContextMenuItem disabled={!canBackward} onSelect={() => moveTrack(textClip.trackId, "back")}>
+        <ChevronsDown className="mr-2 h-3.5 w-3.5" /> Send to back
+      </ContextMenuItem>
+      <ContextMenuSeparator className="bg-white/10" />
+      <ContextMenuItem onSelect={() => duplicateSelected()}>
+        <Copy className="mr-2 h-3.5 w-3.5" /> Duplicate
+      </ContextMenuItem>
+      <ContextMenuItem
+        onSelect={() => rippleDelete([textClip.id])}
+        className="text-red-300 focus:text-red-200"
+      >
+        <Trash2 className="mr-2 h-3.5 w-3.5" /> Delete
+      </ContextMenuItem>
+    </ContextMenuContent>
+  );
+}
+
 function cssFilterFor(clip: Clip): string {
   if (clip.kind !== "video" && clip.kind !== "image") return "none";
   const e = (clip as MediaClip).effects;
