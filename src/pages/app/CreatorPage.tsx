@@ -477,6 +477,7 @@ export default function CreatorPage() {
           <FeatureStrip icon={Sparkles} title="Creator memory" copy="Characters, skills and brand rules stay available across prompts." />
           <FeatureStrip icon={ArrowUpRight} title="Connected to DeHub" copy="Jump from a tool into assistant, editor, TV, agents or settings." />
         </section>
+        <CreatorComposerBar />
       </main>
     </>
   );
