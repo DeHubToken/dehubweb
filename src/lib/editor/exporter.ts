@@ -8,6 +8,8 @@
 import type { Clip, MediaClip, TextClip, ProjectSnapshot } from "./types";
 import type { MediaItem } from "@/store/editorStore";
 import { computeRenderOps } from "./transitions";
+import { computeClipAnimation } from "./animationPresets";
+
 
 export type ExportFormat = "mp4" | "webm";
 
