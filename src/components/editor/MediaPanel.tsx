@@ -18,6 +18,7 @@ import {
   listEditorAssets,
   type CloudAsset,
 } from "@/lib/editor/cloudMedia";
+import { GeneratePanel } from "./GeneratePanel";
 
 function formatDuration(s?: number | null) {
   if (!s || !Number.isFinite(s)) return "—";
@@ -270,6 +271,10 @@ export function MediaPanel() {
           Drag onto the canvas to place, or the timeline to schedule.
         </p>
       </div>
+
+      <GeneratePanel onImported={() => void quota.refetchUsage()} />
+
+
 
       <div
         onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
