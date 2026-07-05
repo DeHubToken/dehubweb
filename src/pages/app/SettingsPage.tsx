@@ -1690,7 +1690,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.theme')}</h3>
         <div className="relative">
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+          <div data-theme-picker-fade className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
           
           <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
             {[
