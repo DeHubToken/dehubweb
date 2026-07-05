@@ -412,9 +412,13 @@ export function Compositor() {
     <section className="flex h-full min-h-0 min-w-0 flex-1 flex-col bg-black">
       <div
         ref={wrapRef}
+        onDragOver={onSurfaceDragOver}
+        onDragLeave={onSurfaceDragLeave}
+        onDrop={onSurfaceDrop}
         className="relative grid min-h-0 min-w-0 flex-1 place-items-center overflow-hidden bg-[radial-gradient(circle_at_center,_rgba(255,255,255,0.04),_transparent_70%)] p-6"
       >
         <div
+          ref={surfaceRef}
           style={{
             width: Math.max(2, settings.width * scale),
             height: Math.max(2, settings.height * scale),
@@ -422,19 +426,38 @@ export function Compositor() {
             visibility: scale > 0 ? "visible" : "hidden",
             margin: "auto",
           }}
-          className="relative col-start-1 row-start-1 overflow-hidden rounded-lg shadow-2xl ring-1 ring-white/10"
+          className={cn(
+            "relative col-start-1 row-start-1 overflow-hidden rounded-lg shadow-2xl ring-1 ring-white/10 transition",
+            isDropTarget && "ring-2 ring-white/70",
+          )}
         >
-          <canvas
-            ref={canvasRef}
-            width={settings.width}
-            height={settings.height}
-            onPointerDown={onCanvasPointerDown}
-            onDoubleClick={onCanvasDoubleClick}
-            className={cn(
-              "h-full w-full touch-none",
-              editingTextId ? "cursor-text" : selectedTextClip ? "cursor-grab active:cursor-grabbing" : "cursor-default",
-            )}
-          />
+          <ContextMenu>
+            <ContextMenuTrigger asChild>
+              <canvas
+                ref={canvasRef}
+                width={settings.width}
+                height={settings.height}
+                onPointerDown={onCanvasPointerDown}
+                onDoubleClick={onCanvasDoubleClick}
+                onContextMenu={onCanvasContextMenu}
+                className={cn(
+                  "h-full w-full touch-none",
+                  editingTextId ? "cursor-text" : selectedTextClip ? "cursor-grab active:cursor-grabbing" : "cursor-default",
+                )}
+              />
+            </ContextMenuTrigger>
+            <CanvasContextMenu
+              textClip={selectedTextClip}
+              onEdit={(id) => setEditingTextId(id)}
+            />
+          </ContextMenu>
+          {isDropTarget && (
+            <div className="pointer-events-none absolute inset-0 flex items-center justify-center bg-white/[0.03]">
+              <div className="rounded-lg border border-dashed border-white/50 px-4 py-2 text-xs font-medium uppercase tracking-wide text-white/90 backdrop-blur-[8px]">
+                Drop to add text
+              </div>
+            </div>
+          )}
           {editingText && (
             <textarea
               autoFocus
@@ -458,20 +481,22 @@ export function Compositor() {
                 fontWeight: editingText.fontWeight,
                 fontSize: `${(editingText.fontSize / 1080) * settings.height * scale}px`,
                 textAlign: editingText.align === "centre" ? "center" : editingText.align,
-                background: "rgba(0,0,0,0.35)",
-                border: "1px dashed rgba(255,255,255,0.5)",
+                background: "transparent",
+                border: "1px dashed rgba(255,255,255,0.6)",
                 borderRadius: 4,
                 padding: "2px 6px",
                 outline: "none",
                 resize: "none",
                 minWidth: 80,
                 lineHeight: 1.2,
+                caretColor: "#fff",
               }}
               rows={Math.max(1, editingText.text.split("\n").length)}
             />
           )}
         </div>
       </div>
+
 
       <div className="flex min-w-0 items-center gap-3 border-t border-white/10 bg-black/60 px-4 py-2.5 backdrop-blur-[24px]">
         <Button
