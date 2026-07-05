@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
-import { Download, X } from "lucide-react";
+import { Download, X, Scissors } from "lucide-react";
 import { toast } from "sonner";
 import { useEditorStore, selectTimelineDuration } from "@/store/editorStore";
 import { exportProject, isExportSupported, type ExportFormat } from "@/lib/editor/exporter";
