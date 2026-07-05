@@ -67,7 +67,7 @@ export function CreatorComposerBar() {
   const [isRecording, setIsRecording] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const recognitionRef = useRef<ReturnType<SpeechRecognitionCtor> | null>(null);
+  const recognitionRef = useRef<SpeechRecognitionInstance | null>(null);
 
   // Auto-grow textarea
   useEffect(() => {
