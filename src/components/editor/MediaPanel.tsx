@@ -272,6 +272,10 @@ export function MediaPanel() {
         </p>
       </div>
 
+      <GeneratePanel onImported={() => void quota.refetchUsage()} />
+
+
+
       <div
         onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
         onDragLeave={() => setIsDragging(false)}
