@@ -29,7 +29,7 @@ function kindIcon(k: MediaItem["kind"]) {
 export function MediaPanel() {
   const media = useEditorStore((s) => s.media);
   const setMedia = useEditorStore((s) => s.setMedia);
-  void useEditorStore((s) => s.addMedia); // subscribe kept for parity
+  
   const removeMediaFromStore = useEditorStore((s) => s.removeMedia);
   const addClipFromMedia = useEditorStore((s) => s.addClipFromMedia);
   const addTextClip = useEditorStore((s) => s.addTextClip);
