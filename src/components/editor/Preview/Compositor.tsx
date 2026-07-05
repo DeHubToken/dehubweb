@@ -473,7 +473,6 @@ function drawClip(
     const alpha = Math.max(0, Math.min(1, Math.min(into / FADE, outof / FADE, 1)));
     ctx.save();
     ctx.globalAlpha = alpha;
-    ctx.fillStyle = text.color;
     const size = (text.fontSize / 1080) * canvas.height;
     ctx.font = `${text.fontWeight} ${size}px ${text.fontFamily}`;
     ctx.textBaseline = "middle";
@@ -483,10 +482,50 @@ function drawClip(
     const lines = text.text.split(/\n/);
     const lh = size * 1.2;
     const startY = y - ((lines.length - 1) * lh) / 2;
+
+    // Optional background pill.
+    if (text.background && text.background.opacity > 0) {
+      const pad = (text.background.padding / 1080) * canvas.height;
+      const radius = Math.max(0, (text.background.radius / 1080) * canvas.height);
+      const widths = lines.map((ln) => ctx.measureText(ln).width);
+      const boxW = Math.max(...widths, 1) + pad * 2;
+      const boxH = lines.length * lh + pad * 2;
+      let bx = x - pad;
+      if (text.align === "centre") bx = x - boxW / 2;
+      else if (text.align === "right") bx = x - boxW + pad;
+      const by = startY - lh / 2 - pad;
+      const prevAlpha = ctx.globalAlpha;
+      ctx.globalAlpha = prevAlpha * text.background.opacity;
+      ctx.fillStyle = text.background.color;
+      roundRectPath(ctx, bx, by, boxW, boxH, radius);
+      ctx.fill();
+      ctx.globalAlpha = prevAlpha;
+    }
+
+    // Optional stroke.
+    if (text.stroke && text.stroke.width > 0) {
+      ctx.lineWidth = (text.stroke.width / 1080) * canvas.height;
+      ctx.strokeStyle = text.stroke.color;
+      ctx.lineJoin = "round";
+      lines.forEach((ln, i) => ctx.strokeText(ln, x, startY + i * lh));
+    }
+
+    ctx.fillStyle = text.color;
     lines.forEach((ln, i) => ctx.fillText(ln, x, startY + i * lh));
     ctx.restore();
   }
   ctx.filter = prevFilter;
+}
+
+function roundRectPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
+  const rr = Math.max(0, Math.min(r, w / 2, h / 2));
+  ctx.beginPath();
+  ctx.moveTo(x + rr, y);
+  ctx.arcTo(x + w, y, x + w, y + h, rr);
+  ctx.arcTo(x + w, y + h, x, y + h, rr);
+  ctx.arcTo(x, y + h, x, y, rr);
+  ctx.arcTo(x, y, x + w, y, rr);
+  ctx.closePath();
 }
 
 function drawContain(
