@@ -7,6 +7,7 @@ import SwipeableCarousel from '@/components/app/SwipeableCarousel';
 import dehubIcon from '@/assets/dehub-icon.png.asset.json';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import showcaseImage from '@/assets/creator-studio-showcase.jpg';
+import dehubOriginals from '@/assets/dehub-originals.webp.asset.json';
 import {
   ArrowUpRight,
   Blocks,
@@ -59,11 +60,11 @@ const categories = ['All', 'Image', 'Video', 'Audio', 'Studio', 'Agents'] as con
 
 const heroCards = [
   {
-    id: 'poster-flow',
-    title: 'DEHUB POSTER STUDIO',
-    subtitle: 'Brand-safe campaign images from one prompt',
-    kind: 'prompt',
-    action: { kind: 'assistant', preset: 'poster' } satisfies ToolAction,
+    id: 'dehub-originals',
+    title: 'DEHUB ORIGINALS',
+    subtitle: 'Cinematic series, drops and worlds made on DeHub',
+    kind: 'originals',
+    action: { kind: 'navigate', to: '/app/tv' } satisfies ToolAction,
   },
   {
     id: 'video-timeline',
@@ -481,6 +482,24 @@ export default function CreatorPage() {
 }
 
 function MediaCardVisual({ kind }: { kind: string }) {
+  if (kind === 'originals') {
+    return (
+      <div className="relative h-[288px] overflow-hidden rounded-lg border border-white/10 bg-black">
+        <img
+          src={dehubOriginals.url}
+          alt="DeHub Originals — cinematic post-apocalyptic wasteland with the DeHub wordmark"
+          className="h-full w-full object-cover object-center"
+          loading="lazy"
+          decoding="async"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
+        <span className="absolute left-3 top-3 rounded px-2 py-1 text-[10px] font-black uppercase italic tracking-wide text-black" style={metallicStyle}>
+          Originals
+        </span>
+      </div>
+    );
+  }
+
   if (kind === 'timeline') {
     return (
       <div className="relative h-[288px] overflow-hidden rounded-lg p-4 text-black" style={{ backgroundColor: '#f7f7f2' }}>
