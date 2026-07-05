@@ -88,7 +88,7 @@ interface EditorState extends EditableState {
   rippleDelete: (ids?: string[]) => void;
   duplicateSelected: () => void;
   copySelectedToClipboard: () => void;
-  pasteFromClipboard: () => void;
+  pasteFromClipboard: (opts?: { time?: number; trackId?: string }) => void;
 
   updateTextClip: (id: string, patch: Partial<TextClip>) => void;
   updateMediaClip: (id: string, patch: Partial<MediaClip>) => void;
