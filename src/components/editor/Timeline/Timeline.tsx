@@ -288,9 +288,10 @@ export function Timeline() {
 
           {/* Tracks */}
           <div onMouseDown={onLanesBackgroundDown}>
-            {tracks.map((tr) => (
+            {tracks.map((tr, idx) => (
               <div key={tr.id} className="flex border-b border-white/5" style={{ height: TRACK_HEIGHT }}>
-                <TrackHeader track={tr} />
+                <TrackHeader track={tr} index={idx} />
+
                 <div
                   onDragOver={onLaneDragOver}
                   onDrop={(e) => onLaneDrop(e, tr)}
