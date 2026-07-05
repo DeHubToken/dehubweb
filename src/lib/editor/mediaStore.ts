@@ -124,7 +124,6 @@ export function captureVideoThumbnail(
     video.preload = "auto";
     video.muted = true;
     video.playsInline = true;
-    video.crossOrigin = "anonymous";
 
     const cleanup = () => {
       URL.revokeObjectURL(url);
