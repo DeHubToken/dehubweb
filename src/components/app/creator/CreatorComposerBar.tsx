@@ -39,7 +39,7 @@ const PRESETS: Array<{ id: Preset; label: string; icon: React.ComponentType<{ cl
 ];
 
 // Web Speech API type helpers — keep loose to stay Safari-friendly.
-type SpeechRecognitionCtor = new () => {
+interface SpeechRecognitionInstance {
   lang: string;
   continuous: boolean;
   interimResults: boolean;
@@ -48,7 +48,8 @@ type SpeechRecognitionCtor = new () => {
   onend: (() => void) | null;
   start: () => void;
   stop: () => void;
-};
+}
+type SpeechRecognitionCtor = new () => SpeechRecognitionInstance;
 
 function getSpeechRecognition(): SpeechRecognitionCtor | null {
   if (typeof window === 'undefined') return null;
