@@ -29,6 +29,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const toSnapshot = useEditorStore((s) => s.toSnapshot);
   const media = useEditorStore((s) => s.media);
   const duration = useEditorStore(selectTimelineDuration);
+  const currentTime = useEditorStore((s) => s.currentTime);
   const settings = useEditorStore((s) => s.settings);
 
   const [format, setFormat] = useState<ExportFormat>("mp4");
