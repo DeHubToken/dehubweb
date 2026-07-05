@@ -1424,7 +1424,7 @@ export default function NotificationsPage() {
       <h1 className="sr-only">DeHub Notifications — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Header */}
       <div className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
-        <div className="bg-zinc-900 rounded-2xl px-4 py-3">
+        <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <img src={notificationsIcon} alt="Notifications" className="w-9 h-9 object-contain" />
@@ -1671,7 +1671,7 @@ export default function NotificationsPage() {
 
       {/* Notifications List */}
       <div className="px-2 sm:px-3 pt-2 pb-2">
-        <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+        <div data-page-bento className="bg-zinc-900 rounded-2xl overflow-hidden">
           {isLoading ? (
             <div className="flex justify-center py-12">
               <Loader2 className="w-8 h-8 animate-spin text-zinc-500" />

@@ -832,7 +832,7 @@ export default function ExplorePage() {
       {/* Search Header - Bento Style */}
       <div className="sticky top-11 lg:top-0 bg-black z-50 px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2 space-y-2 sm:space-y-3">
         {/* Search Input Bento */}
-        <div className="bg-zinc-900 rounded-2xl p-3 sm:p-4">
+        <div data-page-bento className="bg-zinc-900 rounded-2xl p-3 sm:p-4">
           <div className="relative flex gap-2">
             <div className="relative flex-1">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
@@ -936,7 +936,7 @@ export default function ExplorePage() {
               className="space-y-2"
             >
               {/* Search Results Header */}
-              <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+              <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <h2 className="text-lg sm:text-xl font-bold text-white break-all">
@@ -1103,7 +1103,7 @@ export default function ExplorePage() {
             >
               {/* Category Carousel */}
               {exploreCategories.length > 0 && (
-                <div className="bg-zinc-900 rounded-2xl p-3 sm:p-4">
+                <div data-page-bento className="bg-zinc-900 rounded-2xl p-3 sm:p-4">
                   <SwipeableCarousel className="flex gap-2 overflow-x-auto scrollbar-hide">
                     <button
                       onClick={() => setExploreCategoryId(null)}
@@ -1139,7 +1139,7 @@ export default function ExplorePage() {
 
               {/* Category Browse Feed */}
               {exploreCategoryId ? (
-                <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+                <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
                   <h2 className="text-lg sm:text-xl font-bold text-white mb-4">
                     {exploreCategories.find(c => c.id === exploreCategoryId)?.name || exploreCategoryId}
                   </h2>
@@ -1183,7 +1183,7 @@ export default function ExplorePage() {
               ) : (
                 <>
                   {/* Recent Searches Bento */}
-                  <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+                  <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
                         <img src={search3dIcon} alt="Search explore icon" className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
