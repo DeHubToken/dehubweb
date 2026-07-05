@@ -100,6 +100,27 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
       setFiles(filesToFileList([file]));
       setRenderOpen(false);
       setPostOpen(true);
+
+      // Preserve all source assets used on the timeline + store the exported MP4.
+      if (walletAddress) {
+        const sourceIds = Array.from(
+          new Set(clips.map((c) => (c.kind !== "text" ? c.mediaId : null)).filter((x): x is string => !!x)),
+        );
+        void preserveEditorAssets(walletAddress, sourceIds, `pending-${Date.now()}`).catch((e) =>
+          console.warn("[editor] preserve failed", e),
+        );
+        void uploadEditorAsset({
+          wallet: walletAddress,
+          name: filename,
+          kind: "export",
+          blob,
+          mimeType: "video/mp4",
+          preserved: true,
+        })
+          .then(() => window.dispatchEvent(new CustomEvent("editor:storage-usage-changed")))
+          .catch((e) => console.warn("[editor] export upload failed", e));
+      }
+
     } catch (e) {
       if ((e as Error).name === "AbortError") {
         toast("Cancelled");
