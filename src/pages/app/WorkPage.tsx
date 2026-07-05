@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Plus, Briefcase, Scissors, MessageSquare, Search } from 'lucide-react';
 import { useBrowseJobs } from '@/features/work/hooks/use-work';
 import { JobCard } from '@/features/work/components/JobCard';
 import type { WorkJobType, WorkCurrency } from '@/features/work/types';
 import { SEOHead } from '@/components/SEOHead';
+import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 
 
 const TABS: Array<{ id: WorkJobType | 'all'; label: string; icon: any }> = [
