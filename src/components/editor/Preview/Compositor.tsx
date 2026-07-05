@@ -32,6 +32,7 @@ function fmtTime(t: number, fps: number) {
 export function Compositor() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
+  const surfaceRef = useRef<HTMLDivElement>(null);
 
   const tracks = useEditorStore((s) => s.tracks);
   const clips = useEditorStore((s) => s.clips);
@@ -45,6 +46,7 @@ export function Compositor() {
   const toggleLoop = useEditorStore((s) => s.toggleLoop);
   const addTextClip = useEditorStore((s) => s.addTextClip);
   const selectedClipIds = useEditorStore((s) => s.selectedClipIds);
+  const selectClip = useEditorStore((s) => s.selectClip);
   const updateTextClip = useEditorStore((s) => s.updateTextClip);
   const duration = useEditorStore(selectTimelineDuration);
 
@@ -258,12 +260,59 @@ export function Compositor() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings.width, settings.height]);
 
-  // ── Click-to-select & drag text overlays on canvas ──
-  const selectedTextClip = useMemo(() => {
-    const id = selectedClipIds[0];
-    const c = clips.find((x) => x.id === id);
-    return c && c.kind === "text" ? (c as TextClip) : null;
-  }, [selectedClipIds, clips]);
+  // ── Canvas interactions: hit-test, click-select, drag, right-click, drop ──
+  const trackZIndex = useCallback(
+    (trackId: string) => {
+      const i = tracks.findIndex((t) => t.id === trackId);
+      return i < 0 ? -1 : i;
+    },
+    [tracks],
+  );
+
+  const activeTextClips = useMemo(() => {
+    return clips
+      .filter((c): c is TextClip =>
+        c.kind === "text" && currentTime >= c.start && currentTime <= c.start + c.duration,
+      )
+      .sort((a, b) => trackZIndex(a.trackId) - trackZIndex(b.trackId));
+  }, [clips, currentTime, trackZIndex]);
+
+  const hitTestText = useCallback(
+    (clientX: number, clientY: number): TextClip | null => {
+      const canvas = canvasRef.current;
+      if (!canvas) return null;
+      const rect = canvas.getBoundingClientRect();
+      const cx = ((clientX - rect.left) / rect.width) * canvas.width;
+      const cy = ((clientY - rect.top) / rect.height) * canvas.height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return null;
+      // Iterate top-down (last drawn is on top).
+      for (let i = activeTextClips.length - 1; i >= 0; i--) {
+        const text = activeTextClips[i];
+        const size = (text.fontSize / 1080) * canvas.height;
+        ctx.save();
+        ctx.font = `${text.fontWeight} ${size}px ${text.fontFamily}`;
+        const lines = text.text.split(/\n/);
+        const lh = size * 1.2;
+        const widths = lines.map((ln) => ctx.measureText(ln).width);
+        ctx.restore();
+        const pad = text.background ? (text.background.padding / 1080) * canvas.height : size * 0.35;
+        const boxW = Math.max(...widths, 1) + pad * 2;
+        const boxH = lines.length * lh + pad * 2;
+        const x = text.x * canvas.width;
+        const y = text.y * canvas.height;
+        let bx = x - pad;
+        if (text.align === "centre") bx = x - boxW / 2;
+        else if (text.align === "right") bx = x - boxW + pad;
+        const by = y - boxH / 2;
+        if (cx >= bx && cx <= bx + boxW && cy >= by && cy <= by + boxH) {
+          return text;
+        }
+      }
+      return null;
+    },
+    [activeTextClips],
+  );
 
   const [editingTextId, setEditingTextId] = useState<string | null>(null);
   const editingText = useMemo(() => {
@@ -272,16 +321,26 @@ export function Compositor() {
     return c && c.kind === "text" ? (c as TextClip) : null;
   }, [editingTextId, clips]);
 
+  const selectedTextClip = useMemo(() => {
+    const id = selectedClipIds[0];
+    const c = clips.find((x) => x.id === id);
+    return c && c.kind === "text" ? (c as TextClip) : null;
+  }, [selectedClipIds, clips]);
+
   const draggingRef = useRef<{ id: string; dx: number; dy: number } | null>(null);
   const onCanvasPointerDown = (e: React.PointerEvent<HTMLCanvasElement>) => {
     if (editingTextId) return;
-    if (!selectedTextClip) return;
-    const t = currentTime;
-    if (t < selectedTextClip.start || t > selectedTextClip.start + selectedTextClip.duration) return;
+    if (e.button !== 0) return;
+    const hit = hitTestText(e.clientX, e.clientY);
+    if (!hit) {
+      selectClip(null);
+      return;
+    }
+    if (selectedClipIds[0] !== hit.id) selectClip(hit.id);
     const rect = (e.currentTarget as HTMLCanvasElement).getBoundingClientRect();
     const nx = (e.clientX - rect.left) / rect.width;
     const ny = (e.clientY - rect.top) / rect.height;
-    draggingRef.current = { id: selectedTextClip.id, dx: nx - selectedTextClip.x, dy: ny - selectedTextClip.y };
+    draggingRef.current = { id: hit.id, dx: nx - hit.x, dy: ny - hit.y };
     window.addEventListener("pointermove", onWindowMove);
     window.addEventListener("pointerup", onWindowUp);
   };
@@ -302,8 +361,51 @@ export function Compositor() {
     window.removeEventListener("pointermove", onWindowMove);
     window.removeEventListener("pointerup", onWindowUp);
   };
-  const onCanvasDoubleClick = () => {
-    if (selectedTextClip) setEditingTextId(selectedTextClip.id);
+  const onCanvasDoubleClick = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const hit = hitTestText(e.clientX, e.clientY);
+    if (hit) {
+      selectClip(hit.id);
+      setEditingTextId(hit.id);
+    }
+  };
+  const onCanvasContextMenu = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const hit = hitTestText(e.clientX, e.clientY);
+    if (hit) selectClip(hit.id);
+    else selectClip(null);
+  };
+
+  // ── Drag-and-drop text presets onto the canvas ──
+  const [isDropTarget, setIsDropTarget] = useState(false);
+  const onSurfaceDragOver = (e: React.DragEvent) => {
+    if (e.dataTransfer.types.includes(TEXT_DRAG_MIME)) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "copy";
+      setIsDropTarget(true);
+    }
+  };
+  const onSurfaceDragLeave = (e: React.DragEvent) => {
+    if (e.currentTarget === e.target) setIsDropTarget(false);
+  };
+  const onSurfaceDrop = (e: React.DragEvent) => {
+    const raw = e.dataTransfer.getData(TEXT_DRAG_MIME);
+    setIsDropTarget(false);
+    if (!raw) return;
+    e.preventDefault();
+    let preset: TextPreset | null = null;
+    try { preset = JSON.parse(raw) as TextPreset; } catch { /* noop */ }
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const nx = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+    const ny = Math.max(0, Math.min(1, (e.clientY - rect.top) / rect.height));
+    const id = addTextClip();
+    updateTextClip(id, {
+      x: nx,
+      y: ny,
+      ...(preset
+        ? { text: preset.text, fontSize: preset.fontSize, fontWeight: preset.fontWeight }
+        : {}),
+    });
   };
 
   return (
