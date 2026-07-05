@@ -7,6 +7,7 @@ import SwipeableCarousel from '@/components/app/SwipeableCarousel';
 import dehubIcon from '@/assets/dehub-icon.png.asset.json';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import showcaseImage from '@/assets/creator-studio-showcase.jpg';
+import dehubOriginals from '@/assets/dehub-originals.webp.asset.json';
 import {
   ArrowUpRight,
   Blocks,
