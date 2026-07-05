@@ -207,47 +207,8 @@ export default function HomePage() {
     return () => window.removeEventListener('feed-filters-changed', checkActiveFilters);
   }, [checkActiveFilters]);
 
-  /**
-   * Auto-close any open filter panel when the user scrolls down.
-   * Keeps the sticky tab bar clean while browsing feed content.
-   */
-  useEffect(() => {
-    const hasOpenFilters = showHomeFilters || showShortsFilters || showImagesFilters || showVideosFilters || showMusicFilters || showLiveFilters;
-    if (!hasOpenFilters) return;
-
-    const getY = () => window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
-    let lastY = getY();
-    let accumulatedDown = 0;
-    const SCROLL_CLOSE_THRESHOLD = 24; // px
-    let rafId: number | null = null;
-
-    const onScroll = () => {
-      if (rafId) return;
-      rafId = requestAnimationFrame(() => {
-        const y = getY();
-        const diff = y - lastY;
-        lastY = y;
-
-        if (diff > 0) {
-          accumulatedDown += diff;
-          if (accumulatedDown > SCROLL_CLOSE_THRESHOLD) {
-            resetFilters();
-          }
-        } else {
-          accumulatedDown = 0;
-        }
-        rafId = null;
-      });
-    };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      if (rafId) cancelAnimationFrame(rafId);
-    };
-  }, [showHomeFilters, showShortsFilters, showImagesFilters, showVideosFilters, showMusicFilters, showLiveFilters, resetFilters]);
-
   // Save tab state to sessionStorage whenever it changes and notify GlobalFeedNav
+
 
   useEffect(() => {
     // Skip during drag — avoid synchronous I/O and global event dispatch
