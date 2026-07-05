@@ -18,7 +18,9 @@ import { cn } from "@/lib/utils";
 import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
 import type { Clip, MediaClip, TextClip } from "@/lib/editor/types";
 import { computeRenderOps, type RenderOp } from "@/lib/editor/transitions";
+import { computeClipAnimation } from "@/lib/editor/animationPresets";
 import { TEXT_DRAG_MIME, type TextPreset } from "@/lib/editor/textPresets";
+
 
 function fmtTime(t: number, fps: number) {
   if (!Number.isFinite(t) || t < 0) t = 0;
