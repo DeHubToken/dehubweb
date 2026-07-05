@@ -20,6 +20,8 @@ import { PostModal } from "@/features/post";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEditorStore, selectTimelineDuration } from "@/store/editorStore";
 import { exportProject, isExportSupported } from "@/lib/editor/exporter";
+import { preserveEditorAssets, uploadEditorAsset } from "@/lib/editor/cloudMedia";
+
 
 function filesToFileList(files: File[]): FileList {
   const dt = new DataTransfer();
