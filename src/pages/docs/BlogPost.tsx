@@ -54,7 +54,11 @@ const BlogPost = () => {
   const bannerImage = isRafflePost ? raffleBanner : post.bannerImage;
   const content = isRafflePost ? raffleContent : post.content;
 
-  const shareUrl = `${window.location.origin}/docs/blog/${post.slug}`;
+  // Canonical URL for a blog post is now `/guides/<slug>`. The legacy
+  // `/docs/blog/<slug>` route still resolves the same content for
+  // backward-compat, but share links + og:url + canonical all point at
+  // the new top-level URL so SEO consolidates there.
+  const shareUrl = `${window.location.origin}/guides/${post.slug}`;
   const fullImageUrl = bannerImage ? (bannerImage.startsWith('http') ? bannerImage : `${window.location.origin}${bannerImage}`) : null;
   const shareImage = getBlogShareImageUrl({
     slug: post.slug,
