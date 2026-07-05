@@ -116,64 +116,41 @@ export async function compositeDeHubBranding(
   const logoDataUri = opts.logoDataUrl ?? (await fetchLogoDataUri());
   if (!logoDataUri) return null;
 
-  // Logo lockup sizing — wordmark is a very wide aspect ratio (~4.2:1)
-  // so a "22% of width" mark looks tiny. Size by target HEIGHT instead
-  // (~7% of shorter edge) so it reads clearly on any format.
-  const logoH = Math.max(48, Math.round(Math.min(W, H) * 0.075));
+  // Logo lockup sizing — the wordmark is very wide (~4.2:1), so size by
+  // target HEIGHT to keep it readable at all formats. 8-9% of the shorter
+  // edge lands around a typical "campaign lockup" size.
+  const logoH = Math.max(56, Math.round(Math.min(W, H) * 0.085));
   const logoW = Math.round(logoH * LOGO_ASPECT);
   const margin = Math.round(Math.min(W, H) * 0.06);
 
-  let logoX = 0;
-  let logoY = 0;
-  switch (layout) {
-    case "upper-left":
-      logoX = margin;
-      logoY = margin;
-      break;
-    case "upper-right":
-      logoX = W - logoW - margin;
-      logoY = margin;
-      break;
-    case "bottom-left":
-      logoX = margin;
-      logoY = H - logoH - margin;
-      break;
-    case "bottom-center":
-    default:
-      logoX = Math.round((W - logoW) / 2);
-      logoY = H - logoH - margin;
-      break;
-  }
+  // Always place the logo lockup at bottom-center with a scrim behind it.
+  // This is the safest, most brand-consistent placement across portrait /
+  // landscape / square and matches how the scene prompt reserves negative
+  // space at the bottom third.
+  const logoX = Math.round((W - logoW) / 2);
+  const logoY = H - logoH - margin;
 
-  // Optional headline: rendered in Inter 800 uppercase, white, wide
-  // letter-spacing (Exo-like feel), with a soft bottom scrim behind it
-  // so it stays readable regardless of scene brightness. Placed ABOVE
-  // the logo lockup with breathing room between them.
+  // Optional headline: Inter 800 uppercase, white, wide letter-spacing
+  // (Exo-like feel). Placed ABOVE the logo with a soft scrim so it stays
+  // readable regardless of scene brightness.
   let headlineSvg = "";
-  let scrimSvg = "";
-  let scrimH = 0;
+  let scrimH = logoH + margin * 2;
   const hl = (opts.headline || "").trim();
   if (hl) {
     const lines = wrapHeadline(hl.toUpperCase(), 18, 2);
     const fontSize = Math.round(H * 0.065);
     const lineH = Math.round(fontSize * 1.1);
     const blockH = lineH * lines.length;
-    const gap = Math.round(H * 0.025);
-    // Baseline of first line — headline block ends `gap` above the logo.
+    const gap = Math.round(H * 0.03);
     const lastBaseline = logoY - gap;
     const firstBaseline = lastBaseline - lineH * (lines.length - 1);
     const textX = W / 2;
     scrimH = blockH + logoH + margin * 2 + gap;
-    scrimSvg = `<rect x="0" y="${H - scrimH}" width="${W}" height="${scrimH}" fill="url(#dehubScrim)"/>`;
     headlineSvg = lines.map((l, i) =>
       `<text x="${textX}" y="${firstBaseline + i * lineH}" text-anchor="middle" fill="#ffffff" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-weight="800" font-size="${fontSize}" letter-spacing="${Math.max(2, fontSize * 0.04)}">${escapeXml(l)}</text>`
     ).join("");
-  } else {
-    // Small scrim behind logo so pure-white wordmark stays readable on
-    // brighter areas of the scene.
-    scrimH = logoH + margin * 2;
-    scrimSvg = `<rect x="0" y="${H - scrimH}" width="${W}" height="${scrimH}" fill="url(#dehubScrim)"/>`;
   }
+  const scrimSvg = `<rect x="0" y="${H - scrimH}" width="${W}" height="${scrimH}" fill="url(#dehubScrim)"/>`;
 
   const svg = `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
