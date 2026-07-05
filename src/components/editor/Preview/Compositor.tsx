@@ -3,14 +3,22 @@
  * (video frames + images + text overlays) and synchronises audio elements.
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
  */
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
-import { Play, Pause, Repeat, Type, RotateCcw } from "lucide-react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Play, Pause, Repeat, Type, RotateCcw, ChevronsUp, ChevronsDown, ChevronUp, ChevronDown, Copy, Trash2, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from "@/components/ui/context-menu";
 import { cn } from "@/lib/utils";
 import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
 import type { Clip, MediaClip, TextClip } from "@/lib/editor/types";
 import { computeRenderOps, type RenderOp } from "@/lib/editor/transitions";
+import { TEXT_DRAG_MIME, type TextPreset } from "@/lib/editor/textPresets";
 
 function fmtTime(t: number, fps: number) {
   if (!Number.isFinite(t) || t < 0) t = 0;
