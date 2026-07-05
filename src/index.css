@@ -838,6 +838,9 @@ html[data-theme="minimal"] [data-page-bento] {
   background-image: none !important;
   border: 1px solid hsl(0 0% 100% / 0.10) !important;
 }
+html[data-theme="minimal"] [data-page-bento]:hover {
+  background-color: hsl(0 0% 100% / 0.06) !important;
+}
 
 
 
