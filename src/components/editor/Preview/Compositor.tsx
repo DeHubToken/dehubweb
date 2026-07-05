@@ -539,18 +539,6 @@ export function Compositor() {
         >
           <Repeat className="h-4 w-4" />
         </Button>
-        <Button
-          size="sm"
-          variant="ghost"
-          onClick={() => {
-            addTextClip();
-            // Surface the inspector on small screens.
-            try { window.dispatchEvent(new CustomEvent("editor:open-inspector")); } catch { /* noop */ }
-          }}
-          className="h-8 rounded-md text-white/80 hover:bg-white/10 hover:text-white"
-        >
-          <Type className="mr-1.5 h-4 w-4" /> Add text
-        </Button>
         <span className="hidden w-32 text-xs tabular-nums text-white/70 sm:inline">
           {fmtTime(currentTime, settings.fps)} / {fmtTime(duration, settings.fps)}
         </span>
