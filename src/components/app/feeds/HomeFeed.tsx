@@ -1470,9 +1470,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               )}
             >
               <SortFilterSection
-                selectedSort={selectedSort}
+                selectedSort={optimisticSort}
                 onSortSelect={handleSortSelect}
-                selectedCategories={selectedCategories}
+                selectedCategories={optimisticCategories}
                 onCategoryToggle={(cat) => {
                   setSelectedCategories(prev =>
                     prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
@@ -1480,9 +1480,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                 }}
                 onCategoryClear={() => setSelectedCategories([])}
                 categories={categories}
-                selectedDate={selectedDate}
+                selectedDate={optimisticDate}
                 onDateSelect={setSelectedDate}
-                selectedPostType={selectedPostType}
+                selectedPostType={optimisticPostType}
                 onPostTypeSelect={(v) => {
                   if (v === 'video') {
                     window.dispatchEvent(new CustomEvent('switch-home-tab', { detail: 'videos' }));
@@ -1492,7 +1492,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
                     setSelectedPostType(v);
                   }
                 }}
-                contentFilters={contentFilters}
+                contentFilters={optimisticContentFilters}
                 onContentFilterToggle={toggleContentFilter}
                 onReset={() => {
                   setSelectedSort(DEFAULT_HOME_SORT);
