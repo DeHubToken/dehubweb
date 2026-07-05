@@ -200,17 +200,12 @@ export function Inspector() {
                   onChange={(e) => updateTextClip(text.id, { fontSize: Number(e.target.value) || 72 })}
                   className="h-7 bg-white/5 text-xs" />
               </Field>
-              <Field label="Weight">
-                <select
-                  value={text.fontWeight}
-                  onChange={(e) => updateTextClip(text.id, { fontWeight: Number(e.target.value) })}
-                  className="h-7 w-full rounded-md border border-white/10 bg-white/5 px-2 text-xs text-white"
-                >
-                  {[300, 400, 500, 600, 700, 800, 900].map((w) => (
-                    <option key={w} value={w} className="bg-black">{w}</option>
-                  ))}
-                </select>
+              <Field label="Colour">
+                <input type="color" value={text.color}
+                  onChange={(e) => updateTextClip(text.id, { color: e.target.value })}
+                  className="h-7 w-full cursor-pointer rounded-md border border-white/10 bg-white/5" />
               </Field>
+
               <Field label="Colour">
                 <input type="color" value={text.color}
                   onChange={(e) => updateTextClip(text.id, { color: e.target.value })}
