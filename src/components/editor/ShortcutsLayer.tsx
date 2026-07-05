@@ -33,6 +33,20 @@ export function ShortcutsLayer() {
         s.duplicateSelected();
         return;
       }
+      // Copy
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "c") {
+        if (!s.selectedClipIds.length) return;
+        e.preventDefault();
+        s.copySelectedToClipboard();
+        return;
+      }
+      // Paste
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "v") {
+        e.preventDefault();
+        s.pasteFromClipboard();
+        return;
+      }
+
       // Zoom
       if (e.key === "+" || e.key === "=") { e.preventDefault(); s.setZoom(s.zoom * 1.25); return; }
       if (e.key === "-" || e.key === "_") { e.preventDefault(); s.setZoom(s.zoom / 1.25); return; }

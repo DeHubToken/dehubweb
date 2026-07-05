@@ -3,7 +3,7 @@
  * Architecture inspired by OpenCut (MIT) — see LICENSE-OpenCut.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Plus, Minus, Scissors, Trash2, Volume2, VolumeX, Eye, EyeOff, X, ArrowLeftRight, Film, Music, ChevronsUp, ChevronsDown, ChevronUp, ChevronDown, Copy } from "lucide-react";
+import { Plus, Minus, Scissors, Trash2, Volume2, VolumeX, Eye, EyeOff, X, ArrowLeftRight, Film, Music, Type, ChevronsUp, ChevronsDown, ChevronUp, ChevronDown, Copy, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Slider } from "@/components/ui/slider";
@@ -116,10 +116,14 @@ export function Timeline() {
     window.removeEventListener("pointerup", onScrubUp);
   };
 
-  // ── Drop from media panel (media clips + text presets) ──
+  // ── Drop from media panel (media clips + text presets) OR OS files ──
   const onLaneDragOver = (e: React.DragEvent) => {
     const types = e.dataTransfer.types;
-    if (types.includes("application/x-dehub-media") || types.includes(TEXT_DRAG_MIME)) {
+    if (
+      types.includes("application/x-dehub-media") ||
+      types.includes(TEXT_DRAG_MIME) ||
+      types.includes("Files")
+    ) {
       e.preventDefault();
       e.dataTransfer.dropEffect = "copy";
     }
@@ -149,15 +153,39 @@ export function Timeline() {
       return;
     }
 
-    // Media clip drop.
+    // Media clip drop from library.
     const raw = e.dataTransfer.getData("application/x-dehub-media");
-    if (!raw) return;
-    e.preventDefault();
-    let mediaId: string | null = null;
-    try { mediaId = JSON.parse(raw)?.mediaId ?? null; } catch { /* noop */ }
-    if (!mediaId) return;
-    addClipFromMedia(mediaId, track.id, start);
+    if (raw) {
+      e.preventDefault();
+      let mediaId: string | null = null;
+      try { mediaId = JSON.parse(raw)?.mediaId ?? null; } catch { /* noop */ }
+      if (!mediaId) return;
+      addClipFromMedia(mediaId, track.id, start);
+      return;
+    }
+
+    // OS file drop — import then place at drop point.
+    if (e.dataTransfer.files?.length) {
+      e.preventDefault();
+      const files = Array.from(e.dataTransfer.files);
+      void (async () => {
+        const { importFiles } = await import("@/lib/editor/importFiles");
+        const ids = await importFiles(files);
+        let cursor = start;
+        for (const id of ids) {
+          const state = useEditorStore.getState();
+          const m = state.media.find((x) => x.id === id);
+          if (!m) continue;
+          const clipId = state.addClipFromMedia(id, track.id, cursor);
+          if (clipId) {
+            const c = useEditorStore.getState().clips.find((x) => x.id === clipId);
+            if (c) cursor = c.start + c.duration;
+          }
+        }
+      })();
+    }
   };
+
 
   // ── Marquee deselect by clicking empty area ──
   const onLanesBackgroundDown = (e: React.MouseEvent) => {
@@ -197,36 +225,32 @@ export function Timeline() {
         </Button>
         <div className="mx-2 h-4 w-px bg-white/10" />
 
-        {/* Mobile: single + icon with popover */}
+        {/* Unified "+" popover: Video track / Audio track / Text overlay */}
         <Popover>
           <PopoverTrigger asChild>
             <Button size="sm" variant="ghost"
-              className="h-7 w-7 rounded-md p-0 text-white/80 hover:bg-white/10 hover:text-white md:hidden"
-              aria-label="Add track">
-              <Plus className="h-3.5 w-3.5" />
+              className="h-7 rounded-md px-2 text-white/80 hover:bg-white/10 hover:text-white"
+              aria-label="Add">
+              <Plus className="h-3.5 w-3.5 md:mr-1" />
+              <span className="hidden md:inline">Add</span>
             </Button>
           </PopoverTrigger>
-          <PopoverContent side="bottom" align="start" className="w-40 border-white/10 bg-black/80 p-1 text-white backdrop-blur-[24px]">
+          <PopoverContent side="bottom" align="start" className="w-44 border-white/10 bg-black/85 p-1 text-white backdrop-blur-[24px]">
             <Button size="sm" variant="ghost" onClick={() => addTrack("video")}
               className="w-full justify-start rounded-md px-2 text-white/90 hover:bg-white/10">
-              <Film className="mr-2 h-3.5 w-3.5" /> Video
+              <Film className="mr-2 h-3.5 w-3.5" /> Video track
             </Button>
             <Button size="sm" variant="ghost" onClick={() => addTrack("audio")}
               className="w-full justify-start rounded-md px-2 text-white/90 hover:bg-white/10">
-              <Music className="mr-2 h-3.5 w-3.5" /> Audio
+              <Music className="mr-2 h-3.5 w-3.5" /> Audio track
+            </Button>
+            <Button size="sm" variant="ghost" onClick={() => addTextClip()}
+              className="w-full justify-start rounded-md px-2 text-white/90 hover:bg-white/10">
+              <Type className="mr-2 h-3.5 w-3.5" /> Text overlay
             </Button>
           </PopoverContent>
         </Popover>
 
-        {/* Desktop: separate + Video / + Audio buttons */}
-        <Button size="sm" variant="ghost" onClick={() => addTrack("video")}
-          className="hidden h-7 rounded-md px-2 text-white/80 hover:bg-white/10 hover:text-white md:flex">
-          <Plus className="mr-1 h-3.5 w-3.5" /> Video
-        </Button>
-        <Button size="sm" variant="ghost" onClick={() => addTrack("audio")}
-          className="hidden h-7 rounded-md px-2 text-white/80 hover:bg-white/10 hover:text-white md:flex">
-          <Plus className="mr-1 h-3.5 w-3.5" /> Audio
-        </Button>
 
         <div className="ml-auto flex items-center gap-1">
           <Button size="icon" variant="ghost" onClick={() => setZoom(zoom / 1.25)}
@@ -264,9 +288,10 @@ export function Timeline() {
 
           {/* Tracks */}
           <div onMouseDown={onLanesBackgroundDown}>
-            {tracks.map((tr) => (
+            {tracks.map((tr, idx) => (
               <div key={tr.id} className="flex border-b border-white/5" style={{ height: TRACK_HEIGHT }}>
-                <TrackHeader track={tr} />
+                <TrackHeader track={tr} index={idx} />
+
                 <div
                   onDragOver={onLaneDragOver}
                   onDrop={(e) => onLaneDrop(e, tr)}
@@ -318,10 +343,14 @@ export function Timeline() {
   );
 }
 
-function TrackHeader({ track }: { track: Track }) {
+const TRACK_DRAG_MIME = "application/x-dehub-track";
+
+function TrackHeader({ track, index }: { track: Track; index: number }) {
   const removeTrack = useEditorStore((s) => s.removeTrack);
+  const reorderTrack = useEditorStore((s) => s.reorderTrack);
   const tracksLen = useEditorStore((s) => s.tracks.length);
   const setTracks = useEditorStore;
+  const [dropSide, setDropSide] = useState<"above" | "below" | null>(null);
   const toggleMute = () => {
     const s = setTracks.getState();
     setTracks.setState({
@@ -337,9 +366,41 @@ function TrackHeader({ track }: { track: Track }) {
   const kindLabel = track.kind === "video" ? "V" : track.kind === "audio" ? "A" : "T";
   return (
     <div
-      className="sticky left-0 z-10 flex shrink-0 items-center gap-1.5 border-r border-white/10 bg-black/80 px-2"
+      className="group sticky left-0 z-10 flex shrink-0 items-center gap-1.5 border-r border-white/10 bg-black/80 px-2 relative"
       style={{ width: HEADER_WIDTH }}
+      onDragOver={(e) => {
+        if (!e.dataTransfer.types.includes(TRACK_DRAG_MIME)) return;
+        e.preventDefault();
+        e.dataTransfer.dropEffect = "move";
+        const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+        setDropSide(e.clientY - rect.top < rect.height / 2 ? "above" : "below");
+      }}
+      onDragLeave={() => setDropSide(null)}
+      onDrop={(e) => {
+        const raw = e.dataTransfer.getData(TRACK_DRAG_MIME);
+        setDropSide(null);
+        if (!raw) return;
+        e.preventDefault();
+        const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+        const above = e.clientY - rect.top < rect.height / 2;
+        const target = above ? index : index + 1;
+        reorderTrack(raw, target);
+      }}
     >
+      {dropSide === "above" && <div className="pointer-events-none absolute inset-x-0 top-0 h-0.5 bg-white/80" />}
+      {dropSide === "below" && <div className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 bg-white/80" />}
+      <button
+        draggable
+        onDragStart={(e) => {
+          e.dataTransfer.effectAllowed = "move";
+          e.dataTransfer.setData(TRACK_DRAG_MIME, track.id);
+        }}
+        className="cursor-grab rounded p-0.5 text-white/30 hover:text-white/70 active:cursor-grabbing"
+        title="Drag to reorder layer"
+        aria-label="Reorder track"
+      >
+        <GripVertical className="h-3.5 w-3.5" />
+      </button>
       <span className="flex h-5 w-5 items-center justify-center rounded bg-white/10 text-[10px] font-semibold text-white/80">
         {kindLabel}
       </span>
@@ -361,6 +422,7 @@ function TrackHeader({ track }: { track: Track }) {
     </div>
   );
 }
+
 
 function Playhead({
   time, zoom, headerWidth, rulerHeight,
@@ -537,6 +599,8 @@ function ClipBlock({ clip, track, zoom, selected, tracks, onSelect, onMove, onTr
 function ClipContextMenu({ clipId, trackId }: { clipId: string; trackId: string }) {
   const moveTrack = useEditorStore((s) => s.moveTrack);
   const duplicateSelected = useEditorStore((s) => s.duplicateSelected);
+  const copySelected = useEditorStore((s) => s.copySelectedToClipboard);
+  const pasteClipboard = useEditorStore((s) => s.pasteFromClipboard);
   const rippleDelete = useEditorStore((s) => s.rippleDelete);
   const selectClip = useEditorStore((s) => s.selectClip);
   const tracks = useEditorStore((s) => s.tracks);
@@ -559,6 +623,12 @@ function ClipContextMenu({ clipId, trackId }: { clipId: string; trackId: string 
         <ChevronsDown className="mr-2 h-3.5 w-3.5" /> Send to back
       </ContextMenuItem>
       <ContextMenuSeparator className="bg-white/10" />
+      <ContextMenuItem onSelect={pick(() => copySelected())}>
+        <Copy className="mr-2 h-3.5 w-3.5" /> Copy
+      </ContextMenuItem>
+      <ContextMenuItem onSelect={pick(() => pasteClipboard())}>
+        <Copy className="mr-2 h-3.5 w-3.5" /> Paste at playhead
+      </ContextMenuItem>
       <ContextMenuItem onSelect={pick(() => duplicateSelected())}>
         <Copy className="mr-2 h-3.5 w-3.5" /> Duplicate
       </ContextMenuItem>
@@ -571,6 +641,7 @@ function ClipContextMenu({ clipId, trackId }: { clipId: string; trackId: string 
     </ContextMenuContent>
   );
 }
+
 
 function TransitionHandle({ clip }: { clip: Clip }) {
   const allClips = useEditorStore((s) => s.clips);
