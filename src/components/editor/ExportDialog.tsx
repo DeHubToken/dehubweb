@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
-import { Download, X } from "lucide-react";
+import { Download, X, Scissors } from "lucide-react";
 import { toast } from "sonner";
 import { useEditorStore, selectTimelineDuration } from "@/store/editorStore";
 import { exportProject, isExportSupported, type ExportFormat } from "@/lib/editor/exporter";
@@ -29,6 +29,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
   const toSnapshot = useEditorStore((s) => s.toSnapshot);
   const media = useEditorStore((s) => s.media);
   const duration = useEditorStore(selectTimelineDuration);
+  const currentTime = useEditorStore((s) => s.currentTime);
   const settings = useEditorStore((s) => s.settings);
 
   const [format, setFormat] = useState<ExportFormat>("mp4");
@@ -55,8 +56,9 @@ export function ExportDialog({ open, onOpenChange }: Props) {
     }
   }, [open]);
 
-  const handleExport = async () => {
-    if (duration <= 0) {
+  const handleExport = async (cutEndAt?: number) => {
+    const exportDuration = cutEndAt !== undefined && cutEndAt > 0 ? Math.min(cutEndAt, duration) : duration;
+    if (exportDuration <= 0) {
       toast.error("Add clips to the timeline first.");
       return;
     }
@@ -72,6 +74,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
         format,
         scale,
         videoBitrate: QUALITY_PRESETS[qualityKey],
+        cutEndAt,
         onProgress: (p, l) => { setProgress(Math.round(p * 100)); setLabel(l); },
         signal: ctl.signal,
       });
@@ -148,6 +151,7 @@ export function ExportDialog({ open, onOpenChange }: Props) {
 
             <div className="rounded-md border border-white/10 bg-white/5 p-2.5 text-xs text-white/70">
               <div>Duration: <span className="text-white">{duration.toFixed(2)}s</span></div>
+              <div>Cut preview: <span className="text-white">{Math.min(currentTime, duration).toFixed(2)}s</span></div>
               <div>Output: <span className="text-white">{outW}×{outH} @ {settings.fps}fps</span></div>
             </div>
           </div>
@@ -173,12 +177,17 @@ export function ExportDialog({ open, onOpenChange }: Props) {
             <>
               <Button variant="ghost" onClick={() => onOpenChange(false)}
                 className="rounded-lg text-white/80 hover:bg-white/10 hover:text-white">
-                Close
+                Cancel
+              </Button>
+              <Button variant="ghost" onClick={() => handleExport(currentTime)}
+                disabled={!supported || duration <= 0 || currentTime <= 0}
+                className="rounded-lg text-white/80 hover:bg-white/10 hover:text-white disabled:opacity-40">
+                <Scissors className="mr-1 h-4 w-4" /> Cut
               </Button>
               <LiquidGlassBubble2
                 label="Export"
                 icon={<Download className="h-4 w-4" />}
-                onClick={handleExport}
+                onClick={() => handleExport()}
                 disabled={!supported || duration <= 0}
                 width="120px"
                 height="36px"

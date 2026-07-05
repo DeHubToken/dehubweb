@@ -21,6 +21,8 @@ export interface ExportOptions {
   videoBitrate: number;
   /** Audio bitrate in bps (AAC/Opus). */
   audioBitrate?: number;
+  /** If set, export only from 0 up to this time (seconds) instead of the full timeline. */
+  cutEndAt?: number;
   /** Progress 0..1. */
   onProgress?: (p: number, label: string) => void;
   signal?: AbortSignal;
@@ -291,13 +293,14 @@ export async function exportProject(opts: ExportOptions): Promise<ExportResult> 
     throw new Error("Your browser doesn't support video export. Use a Chromium-based browser (Chrome, Edge, Brave, Arc).");
   }
 
-  const { snapshot, media, format, scale, videoBitrate, audioBitrate = 192_000, onProgress, signal } = opts;
+  const { snapshot, media, format, scale, videoBitrate, audioBitrate = 192_000, cutEndAt, onProgress, signal } = opts;
   const { settings, clips, tracks } = snapshot;
   const fps = settings.fps;
   const width = Math.max(2, Math.round(settings.width * scale) & ~1);
   const height = Math.max(2, Math.round(settings.height * scale) & ~1);
 
-  const duration = clips.reduce((m, c) => Math.max(m, c.start + c.duration), 0);
+  const fullDuration = clips.reduce((m, c) => Math.max(m, c.start + c.duration), 0);
+  const duration = cutEndAt !== undefined && cutEndAt > 0 ? Math.min(cutEndAt, fullDuration) : fullDuration;
   if (duration <= 0) throw new Error("Nothing to export — the timeline is empty.");
 
   const totalFrames = Math.ceil(duration * fps);
