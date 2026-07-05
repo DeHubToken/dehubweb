@@ -177,12 +177,17 @@ export function ExportDialog({ open, onOpenChange }: Props) {
             <>
               <Button variant="ghost" onClick={() => onOpenChange(false)}
                 className="rounded-lg text-white/80 hover:bg-white/10 hover:text-white">
-                Close
+                Cancel
+              </Button>
+              <Button variant="ghost" onClick={() => handleExport(currentTime)}
+                disabled={!supported || duration <= 0 || currentTime <= 0}
+                className="rounded-lg text-white/80 hover:bg-white/10 hover:text-white disabled:opacity-40">
+                <Scissors className="mr-1 h-4 w-4" /> Cut
               </Button>
               <LiquidGlassBubble2
                 label="Export"
                 icon={<Download className="h-4 w-4" />}
-                onClick={handleExport}
+                onClick={() => handleExport()}
                 disabled={!supported || duration <= 0}
                 width="120px"
                 height="36px"
