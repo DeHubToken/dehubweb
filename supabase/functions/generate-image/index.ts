@@ -182,27 +182,14 @@ ART DIRECTION: ${enhancedUserRequest}`;
 
 
 
-      // ── Guarantee we have a real DeHub logo PNG to composite. If the caller
-      //    didn't attach one (e.g. brand intent detected via keywords, or older
-      //    client path), fetch the canonical white wordmark from CDN so the
-      //    composite step ALWAYS runs. Never rely on the model to redraw the mark.
-      let compositeLogo = logoImage;
-      if (!compositeLogo) {
-        try {
-          const lr = await fetch('https://dehub.io/__l5e/assets-v1/4cf0b92e-3cfd-4459-9c72-cdec81055a23/dehub-logo-white.png');
-          if (lr.ok) {
-            const buf = new Uint8Array(await lr.arrayBuffer());
-            let bin = '';
-            for (let i = 0; i < buf.byteLength; i++) bin += String.fromCharCode(buf[i]);
-            compositeLogo = `data:image/png;base64,${btoa(bin)}`;
-            console.log('[dehub-poster] Auto-fetched canonical DeHub logo for composite');
-          } else {
-            console.warn('[dehub-poster] Canonical logo fetch failed:', lr.status);
-          }
-        } catch (e) {
-          console.warn('[dehub-poster] Canonical logo fetch error:', (e as Error).message);
-        }
-      }
+      // Client-supplied logo (from Chat / Poster Studio) takes precedence;
+      // otherwise the deterministic composite function will fall back to
+      // its hardcoded canonical DeHub wordmark data URI. We no longer fetch
+      // dehub.io/__l5e/... here because that path returns SPA HTML in
+      // production and silently broke the composite step.
+      const compositeLogo: string | undefined = logoImage;
+      if (compositeLogo) console.log('[dehub-poster] Using client-supplied logo image');
+      else console.log('[dehub-poster] No client logo — composite will use hardcoded canonical wordmark');
 
       // Try GPT-image-2 (medium) first — dramatically better typography than Gemini
       // for the DeHub wordmark and brand text. Falls through to Gemini path below on failure.
