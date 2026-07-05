@@ -75,11 +75,6 @@ const plans: Plan[] = [
         items: ['Seedance 2.0 — Full access', 'Seedance 2.0 Fast — Full access'],
       },
     ],
-    freeGens: [
-      { label: 'Nano Banana Pro', note: '2K · 7 days unlimited' },
-      { label: 'Nano Banana 2', note: '2K · 7 days unlimited' },
-      { label: 'Kling 3.0', note: '7 days unlimited' },
-    ],
   },
   {
     id: 'team',
