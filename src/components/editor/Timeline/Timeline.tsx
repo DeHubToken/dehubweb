@@ -197,36 +197,32 @@ export function Timeline() {
         </Button>
         <div className="mx-2 h-4 w-px bg-white/10" />
 
-        {/* Mobile: single + icon with popover */}
+        {/* Unified "+" popover: Video track / Audio track / Text overlay */}
         <Popover>
           <PopoverTrigger asChild>
             <Button size="sm" variant="ghost"
-              className="h-7 w-7 rounded-md p-0 text-white/80 hover:bg-white/10 hover:text-white md:hidden"
-              aria-label="Add track">
-              <Plus className="h-3.5 w-3.5" />
+              className="h-7 rounded-md px-2 text-white/80 hover:bg-white/10 hover:text-white"
+              aria-label="Add">
+              <Plus className="h-3.5 w-3.5 md:mr-1" />
+              <span className="hidden md:inline">Add</span>
             </Button>
           </PopoverTrigger>
-          <PopoverContent side="bottom" align="start" className="w-40 border-white/10 bg-black/80 p-1 text-white backdrop-blur-[24px]">
+          <PopoverContent side="bottom" align="start" className="w-44 border-white/10 bg-black/85 p-1 text-white backdrop-blur-[24px]">
             <Button size="sm" variant="ghost" onClick={() => addTrack("video")}
               className="w-full justify-start rounded-md px-2 text-white/90 hover:bg-white/10">
-              <Film className="mr-2 h-3.5 w-3.5" /> Video
+              <Film className="mr-2 h-3.5 w-3.5" /> Video track
             </Button>
             <Button size="sm" variant="ghost" onClick={() => addTrack("audio")}
               className="w-full justify-start rounded-md px-2 text-white/90 hover:bg-white/10">
-              <Music className="mr-2 h-3.5 w-3.5" /> Audio
+              <Music className="mr-2 h-3.5 w-3.5" /> Audio track
+            </Button>
+            <Button size="sm" variant="ghost" onClick={() => addTextClip()}
+              className="w-full justify-start rounded-md px-2 text-white/90 hover:bg-white/10">
+              <Type className="mr-2 h-3.5 w-3.5" /> Text overlay
             </Button>
           </PopoverContent>
         </Popover>
 
-        {/* Desktop: separate + Video / + Audio buttons */}
-        <Button size="sm" variant="ghost" onClick={() => addTrack("video")}
-          className="hidden h-7 rounded-md px-2 text-white/80 hover:bg-white/10 hover:text-white md:flex">
-          <Plus className="mr-1 h-3.5 w-3.5" /> Video
-        </Button>
-        <Button size="sm" variant="ghost" onClick={() => addTrack("audio")}
-          className="hidden h-7 rounded-md px-2 text-white/80 hover:bg-white/10 hover:text-white md:flex">
-          <Plus className="mr-1 h-3.5 w-3.5" /> Audio
-        </Button>
 
         <div className="ml-auto flex items-center gap-1">
           <Button size="icon" variant="ghost" onClick={() => setZoom(zoom / 1.25)}
