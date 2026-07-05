@@ -45,7 +45,34 @@ export interface ClipEffects {
   saturation?: number;
   /** 0..20 px */
   blur?: number;
+  /** 0..1, 0 = off */
+  grayscale?: number;
+  /** 0..1, 0 = off */
+  sepia?: number;
+  /** 0..360 deg */
+  hueRotate?: number;
+  /** 0..1, 0 = off */
+  invert?: number;
 }
+
+export type ClipAnimationKind =
+  | "fade"
+  | "slide-up"
+  | "slide-down"
+  | "slide-left"
+  | "slide-right"
+  | "zoom-in"
+  | "zoom-out"
+  | "pop"
+  | "rise"
+  | "blur";
+
+export interface ClipAnimation {
+  kind: ClipAnimationKind;
+  /** seconds */
+  duration: number;
+}
+
 
 export interface ClipAudio {
   /** 0..2, 1 = 100% */
