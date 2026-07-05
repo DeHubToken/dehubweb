@@ -347,7 +347,7 @@ const createSearchIndex = (): SearchIndex[] => {
       id: 'blog-coinbase',
       title: 'Coinbase DHB Listing',
       content: 'Coinbase listing for DHB token, exchange listing, trading, centralized exchange',
-      path: '/docs/blog/coinbase-dhb',
+      path: '/guides/coinbase-dhb',
       category: 'Blog',
       type: 'blog',
       keywords: ['coinbase', 'listing', 'exchange', 'dhb', 'trading']
@@ -356,7 +356,7 @@ const createSearchIndex = (): SearchIndex[] => {
       id: 'blog-e2ee',
       title: 'E2EE Announcement',
       content: 'End-to-end encryption launch, secure messaging feature, privacy update',
-      path: '/docs/blog/e2ee',
+      path: '/guides/e2ee',
       category: 'Blog',
       type: 'blog',
       keywords: ['e2ee', 'encryption', 'privacy', 'secure', 'messaging']
@@ -365,7 +365,7 @@ const createSearchIndex = (): SearchIndex[] => {
       id: 'blog-google-play',
       title: 'Google Play Store Launch',
       content: 'DeHub app on Google Play Store, Android app, mobile download, app launch',
-      path: '/docs/blog/google-play-store',
+      path: '/guides/google-play-store',
       category: 'Blog',
       type: 'blog',
       keywords: ['google play', 'android', 'app', 'mobile', 'download', 'play store']
@@ -374,7 +374,7 @@ const createSearchIndex = (): SearchIndex[] => {
       id: 'blog-dev-update',
       title: 'Developer Update January 2026',
       content: 'Development update, new features, improvements, technical progress, changelog',
-      path: '/docs/blog/dev-update-jan-2026',
+      path: '/guides/dev-update-jan-2026',
       category: 'Blog',
       type: 'blog',
       keywords: ['dev update', 'development', 'features', 'improvements', 'changelog']
@@ -383,7 +383,7 @@ const createSearchIndex = (): SearchIndex[] => {
       id: 'blog-town-hall',
       title: 'Town Hall AMA January 2026',
       content: 'Town hall meeting, AMA session, community questions, answers, live event',
-      path: '/docs/blog/town-hall-jan-2026',
+      path: '/guides/town-hall-jan-2026',
       category: 'Blog',
       type: 'blog',
       keywords: ['town hall', 'ama', 'community', 'meeting', 'questions', 'live']
@@ -392,7 +392,7 @@ const createSearchIndex = (): SearchIndex[] => {
       id: 'blog-yearly-wrap',
       title: 'Yearly Wrap Up 2025',
       content: 'Year in review 2025, annual summary, achievements, milestones, yearly recap',
-      path: '/docs/blog/yearly-wrap-up-2025',
+      path: '/guides/yearly-wrap-up-2025',
       category: 'Blog',
       type: 'blog',
       keywords: ['yearly', 'wrap up', 'review', '2025', 'annual', 'recap', 'summary']
@@ -401,7 +401,7 @@ const createSearchIndex = (): SearchIndex[] => {
       id: 'blog-dubai',
       title: 'Dubai Event',
       content: 'DeHub Dubai event, blockchain conference, crypto event, networking, partnership',
-      path: '/docs/blog/dubai-event',
+      path: '/guides/dubai-event',
       category: 'Blog',
       type: 'blog',
       keywords: ['dubai', 'event', 'conference', 'blockchain', 'networking']
@@ -410,7 +410,7 @@ const createSearchIndex = (): SearchIndex[] => {
       id: 'blog-award',
       title: 'Award-Winning Innovation',
       content: 'DeHub award winning innovation, recognition, blockchain award, technology prize',
-      path: '/docs/blog/award-winning-innovation',
+      path: '/guides/award-winning-innovation',
       category: 'Blog',
       type: 'blog',
       keywords: ['award', 'innovation', 'winning', 'recognition', 'prize']
@@ -419,7 +419,7 @@ const createSearchIndex = (): SearchIndex[] => {
       id: 'blog-tokenised-uploads',
       title: 'Tokenised Uploads',
       content: 'Tokenised uploads feature, content tokenisation, upload rewards, NFT content',
-      path: '/docs/blog/tokenised-uploads',
+      path: '/guides/tokenised-uploads',
       category: 'Blog',
       type: 'blog',
       keywords: ['tokenised', 'uploads', 'content', 'nft', 'tokenization']

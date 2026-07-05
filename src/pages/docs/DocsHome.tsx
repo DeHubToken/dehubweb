@@ -189,7 +189,7 @@ const DocsHome = () => {
               <div className="text-center">
                 <span className="inline-block bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">{t('home.latestFromBlog')}</span>
               </div>
-              <Link to={`/docs/blog/${latestPost.slug}`} className="w-full block">
+              <Link to={`/guides/${latestPost.slug}`} className="w-full block">
                 <img src={bannerImage} alt={bannerImageAlt} className="w-full aspect-video object-cover rounded-xl hover:opacity-95 transition-opacity cursor-pointer" />
               </Link>
               <div className="text-center">
@@ -202,7 +202,7 @@ const DocsHome = () => {
                   </p>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link to={`/docs/blog/${latestPost.slug}`} className="flex justify-center sm:inline-flex sm:items-center px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-all duration-200 shadow-lg hover:shadow-xl font-exo text-center">
+                  <Link to={`/guides/${latestPost.slug}`} className="flex justify-center sm:inline-flex sm:items-center px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-lg hover:bg-primary/90 transition-all duration-200 shadow-lg hover:shadow-xl font-exo text-center">
                     {t('common.readArticle')}
                   </Link>
                   <Link to="/docs/blog" className="flex justify-center sm:inline-flex sm:items-center px-6 py-3 border border-border text-foreground font-semibold rounded-lg hover:bg-muted transition-all duration-200 font-exo text-center">

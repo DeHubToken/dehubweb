@@ -68,7 +68,7 @@ export const generateSitemap = (): string => {
 
     sitemap += `
   <url>
-    <loc>${baseUrl}/docs/blog/${post.slug}</loc>
+    <loc>${baseUrl}/guides/${post.slug}</loc>
     <lastmod>${postDate}</lastmod>
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>`;
