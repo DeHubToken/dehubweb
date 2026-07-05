@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-import { Upload, Trash2, Film, Music, Image as ImageIcon, Plus } from "lucide-react";
+import { Upload, Trash2, Film, Music, Image as ImageIcon, Plus, Type } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useEditorStore, toMediaItem, type MediaItem } from "@/store/editorStore";
@@ -14,6 +14,7 @@ import {
   putMedia,
   type StoredMedia,
 } from "@/lib/editor/mediaStore";
+import { TEXT_DRAG_MIME, TEXT_PRESETS, type TextPreset } from "@/lib/editor/textPresets";
 
 const MAX_BYTES = 500 * 1024 * 1024;
 
@@ -36,6 +37,17 @@ export function MediaPanel() {
   const addMedia = useEditorStore((s) => s.addMedia);
   const removeMediaFromStore = useEditorStore((s) => s.removeMedia);
   const addClipFromMedia = useEditorStore((s) => s.addClipFromMedia);
+  const addTextClip = useEditorStore((s) => s.addTextClip);
+  const updateTextClip = useEditorStore((s) => s.updateTextClip);
+
+  const insertTextPreset = useCallback((p: TextPreset) => {
+    const id = addTextClip();
+    updateTextClip(id, {
+      text: p.text,
+      fontSize: p.fontSize,
+      fontWeight: p.fontWeight,
+    });
+  }, [addTextClip, updateTextClip]);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
