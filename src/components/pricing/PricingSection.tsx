@@ -361,8 +361,6 @@ function PlanCard({ plan, billing, onSelect }: { plan: Plan; billing: Billing; o
             </ul>
           </div>
         ))}
-
-        </div>
       </div>
     </div>
   );
