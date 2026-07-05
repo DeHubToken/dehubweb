@@ -78,6 +78,8 @@ interface EditorState extends EditableState {
   addTrack: (kind: TrackKind) => string;
   removeTrack: (id: string) => void;
   moveTrack: (id: string, direction: "front" | "back" | "forward" | "backward") => void;
+  reorderTrack: (id: string, toIndex: number) => void;
+
   addClipFromMedia: (mediaId: string, trackId?: string, start?: number) => string | null;
   addTextClip: (trackId?: string, start?: number) => string;
   moveClip: (id: string, patch: { start?: number; trackId?: string }) => void;
