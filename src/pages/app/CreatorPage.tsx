@@ -65,7 +65,7 @@ const heroCards = [
     title: 'DEHUB ORIGINALS',
     subtitle: 'Community created and curated content',
     kind: 'originals',
-    action: { kind: 'navigate', to: '/app/tv' } satisfies ToolAction,
+    action: { kind: 'navigate', to: 'https://dehub.io/originals' } satisfies ToolAction,
   },
   {
     id: 'video-timeline',
