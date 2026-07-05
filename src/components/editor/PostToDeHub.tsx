@@ -20,6 +20,8 @@ import { PostModal } from "@/features/post";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEditorStore, selectTimelineDuration } from "@/store/editorStore";
 import { exportProject, isExportSupported } from "@/lib/editor/exporter";
+import { preserveEditorAssets, uploadEditorAsset } from "@/lib/editor/cloudMedia";
+
 
 function filesToFileList(files: File[]): FileList {
   const dt = new DataTransfer();
@@ -28,14 +30,17 @@ function filesToFileList(files: File[]): FileList {
 }
 
 export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
-  const auth = useAuth() as { isAuthenticated: boolean; openLoginModal: () => void };
+  const auth = useAuth() as { isAuthenticated: boolean; openLoginModal: () => void; walletAddress: string | null };
   const isAuthenticated = !!auth?.isAuthenticated;
   const openLoginModal = auth?.openLoginModal;
+  const walletAddress = auth?.walletAddress ?? null;
 
   const toSnapshot = useEditorStore((s) => s.toSnapshot);
   const media = useEditorStore((s) => s.media);
+  const clips = useEditorStore((s) => s.clips);
   const settings = useEditorStore((s) => s.settings);
   const duration = useEditorStore(selectTimelineDuration);
+
 
   const [renderOpen, setRenderOpen] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -95,6 +100,27 @@ export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
       setFiles(filesToFileList([file]));
       setRenderOpen(false);
       setPostOpen(true);
+
+      // Preserve all source assets used on the timeline + store the exported MP4.
+      if (walletAddress) {
+        const sourceIds = Array.from(
+          new Set(clips.map((c) => (c.kind !== "text" ? c.mediaId : null)).filter((x): x is string => !!x)),
+        );
+        void preserveEditorAssets(walletAddress, sourceIds, `pending-${Date.now()}`).catch((e) =>
+          console.warn("[editor] preserve failed", e),
+        );
+        void uploadEditorAsset({
+          wallet: walletAddress,
+          name: filename,
+          kind: "export",
+          blob,
+          mimeType: "video/mp4",
+          preserved: true,
+        })
+          .then(() => window.dispatchEvent(new CustomEvent("editor:storage-usage-changed")))
+          .catch((e) => console.warn("[editor] export upload failed", e));
+      }
+
     } catch (e) {
       if ((e as Error).name === "AbortError") {
         toast("Cancelled");

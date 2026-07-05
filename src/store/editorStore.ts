@@ -355,6 +355,8 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
     set({ past, future: [], tracks, clips: [...s.clips, clip], selectedClipIds: [clip.id] });
     return clip.id;
+
+
   },
 
   addTextClip: (trackId, start) => {
