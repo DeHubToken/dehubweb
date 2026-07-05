@@ -1521,27 +1521,27 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       })()}
 
       {/* Active filter chips bar (sort, date, content access, categories) */}
-      {(selectedSort.value !== 'latest' || selectedDate.value !== 'all' || contentFilters.ppv || contentFilters.w2e || contentFilters.locked || selectedCategories.length > 0) && (
+      {(optimisticSort.value !== 'latest' || optimisticDate.value !== 'all' || optimisticContentFilters.ppv || optimisticContentFilters.w2e || optimisticContentFilters.locked || optimisticCategories.length > 0) && (
         <div className="flex items-center gap-1.5 flex-wrap px-1">
-          {selectedSort.value !== 'latest' && (
+          {optimisticSort.value !== 'latest' && (
             <button
               onClick={() => setSelectedSort(DEFAULT_HOME_SORT)}
               className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
             >
-              <span className="leading-[1]">{selectedSort.label}</span>
+              <span className="leading-[1]">{optimisticSort.label}</span>
               <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
             </button>
           )}
-          {selectedDate.value !== 'all' && (
+          {optimisticDate.value !== 'all' && (
             <button
               onClick={() => setSelectedDate(DATE_FILTER_OPTIONS[0])}
               className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
             >
-              <span className="leading-[1]">{selectedDate.label}</span>
+              <span className="leading-[1]">{optimisticDate.label}</span>
               <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
             </button>
           )}
-          {contentFilters.ppv && (
+          {optimisticContentFilters.ppv && (
             <button
               onClick={() => toggleContentFilter('ppv')}
               className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
@@ -1550,7 +1550,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
             </button>
           )}
-          {contentFilters.w2e && (
+          {optimisticContentFilters.w2e && (
             <button
               onClick={() => toggleContentFilter('w2e')}
               className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
@@ -1559,7 +1559,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
             </button>
           )}
-          {contentFilters.locked && (
+          {optimisticContentFilters.locked && (
             <button
               onClick={() => toggleContentFilter('locked')}
               className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
@@ -1568,7 +1568,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
             </button>
           )}
-          {selectedCategories.map((rawCatId, index) => {
+          {optimisticCategories.map((rawCatId, index) => {
             const catId = typeof rawCatId === 'string'
               ? rawCatId
               : (rawCatId && typeof rawCatId === 'object' && 'categoryId' in rawCatId && typeof (rawCatId as { categoryId?: unknown }).categoryId === 'string')
