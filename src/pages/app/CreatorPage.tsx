@@ -646,8 +646,11 @@ function CommunityGallery() {
   const [visibleCount, setVisibleCount] = useState(() => getGalleryColumns() * 4);
   const [lightbox, setLightbox] = useState<GalleryItem | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const gridRef = useRef<HTMLDivElement | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const [inView, setInView] = useState(false);
+  const [windowHeight, setWindowHeight] = useState<number>(360);
 
   // Defer RPC until the section is close to viewport → keeps LCP fast.
   useEffect(() => {
@@ -683,29 +686,39 @@ function CommunityGallery() {
     return () => { cancelled = true; };
   }, [inView, loaded]);
 
-  // Infinite reveal for already-fetched items.
+  // Infinite reveal inside the dedicated scroll window (not the page).
   useEffect(() => {
-    if (!sentinelRef.current) return;
+    if (!sentinelRef.current || !scrollRef.current) return;
     const io = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
         setVisibleCount((c) => Math.min(c + PAGE_SIZE, items.length));
       }
-    }, { rootMargin: '400px' });
+    }, { root: scrollRef.current, rootMargin: '400px' });
     io.observe(sentinelRef.current);
     return () => io.disconnect();
   }, [items.length]);
 
-  // Keep the initial 4-row window accurate if the viewport is resized before scroll.
+  // Compute the 2.5-row window height from the current tile size.
+  // Tiles are aspect-square, so row height = (gridWidth - (cols-1)*gap) / cols.
   useEffect(() => {
-    const onResize = () => {
-      setVisibleCount((c) => {
-        const minRows = getGalleryColumns() * 4;
-        return c < minRows ? minRows : c;
-      });
+    const GAP = 8; // gap-2 = 0.5rem = 8px
+    const compute = () => {
+      const el = gridRef.current;
+      if (!el) return;
+      const cols = getGalleryColumns();
+      const width = el.clientWidth;
+      if (width <= 0) return;
+      const tile = (width - GAP * (cols - 1)) / cols;
+      // 2 full rows + half of a third row + gaps between them
+      const h = tile * 2.5 + GAP * 2;
+      setWindowHeight(Math.max(200, Math.round(h)));
     };
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
-  }, []);
+    compute();
+    const ro = new ResizeObserver(compute);
+    if (gridRef.current) ro.observe(gridRef.current);
+    window.addEventListener('resize', compute);
+    return () => { ro.disconnect(); window.removeEventListener('resize', compute); };
+  }, [inView, loaded]);
 
   useEffect(() => {
     if (!lightbox) return;
@@ -717,6 +730,12 @@ function CommunityGallery() {
   }, [lightbox]);
 
   const shown = items.slice(0, visibleCount);
+
+  // Fade mask: bottom edge fades out to hint at more content below.
+  const fadeMask = {
+    WebkitMaskImage: 'linear-gradient(to bottom, black 0, black calc(100% - 72px), transparent 100%)',
+    maskImage: 'linear-gradient(to bottom, black 0, black calc(100% - 72px), transparent 100%)',
+  } as React.CSSProperties;
 
   return (
     <section ref={sectionRef} className="px-3 pb-10 sm:px-4">
@@ -746,17 +765,27 @@ function CommunityGallery() {
           No AI creations yet. Be the first to generate one.
         </div>
       ) : (
-        <>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-            {shown.map((item) => (
-              <GalleryTile key={item.id} item={item} onOpen={setLightbox} />
-            ))}
+        <div className="relative">
+          <div
+            ref={scrollRef}
+            className="overflow-y-auto overflow-x-hidden scrollbar-hide"
+            style={{ height: windowHeight, ...fadeMask }}
+          >
+            <div
+              ref={gridRef}
+              className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 pb-16"
+            >
+              {shown.map((item) => (
+                <GalleryTile key={item.id} item={item} onOpen={setLightbox} />
+              ))}
+            </div>
+            {visibleCount < items.length && (
+              <div ref={sentinelRef} className="h-16" />
+            )}
           </div>
-          {visibleCount < items.length && (
-            <div ref={sentinelRef} className="h-16" />
-          )}
-        </>
+        </div>
       )}
+
 
 
       {lightbox && (
