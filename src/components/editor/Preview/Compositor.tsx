@@ -615,15 +615,26 @@ function CanvasContextMenu({
   );
 }
 
-function cssFilterFor(clip: Clip): string {
-  if (clip.kind !== "video" && clip.kind !== "image") return "none";
-  const e = (clip as MediaClip).effects;
-  if (!e) return "none";
+function cssFilterFor(clip: Clip, extraBlur = 0): string {
   const parts: string[] = [];
-  if (e.brightness !== undefined && e.brightness !== 1) parts.push(`brightness(${e.brightness})`);
-  if (e.contrast !== undefined && e.contrast !== 1) parts.push(`contrast(${e.contrast})`);
-  if (e.saturation !== undefined && e.saturation !== 1) parts.push(`saturate(${e.saturation})`);
-  if (e.blur !== undefined && e.blur > 0) parts.push(`blur(${e.blur}px)`);
+  if (clip.kind === "video" || clip.kind === "image") {
+    const e = (clip as MediaClip).effects;
+    if (e) {
+      if (e.brightness !== undefined && e.brightness !== 1) parts.push(`brightness(${e.brightness})`);
+      if (e.contrast !== undefined && e.contrast !== 1) parts.push(`contrast(${e.contrast})`);
+      if (e.saturation !== undefined && e.saturation !== 1) parts.push(`saturate(${e.saturation})`);
+      if (e.grayscale !== undefined && e.grayscale > 0) parts.push(`grayscale(${e.grayscale})`);
+      if (e.sepia !== undefined && e.sepia > 0) parts.push(`sepia(${e.sepia})`);
+      if (e.hueRotate !== undefined && e.hueRotate !== 0) parts.push(`hue-rotate(${e.hueRotate}deg)`);
+      if (e.invert !== undefined && e.invert > 0) parts.push(`invert(${e.invert})`);
+      const totalBlur = (e.blur ?? 0) + extraBlur;
+      if (totalBlur > 0) parts.push(`blur(${totalBlur}px)`);
+    } else if (extraBlur > 0) {
+      parts.push(`blur(${extraBlur}px)`);
+    }
+  } else if (extraBlur > 0) {
+    parts.push(`blur(${extraBlur}px)`);
+  }
   return parts.length ? parts.join(" ") : "none";
 }
 
@@ -635,8 +646,21 @@ function drawClip(
   vPool: Map<string, HTMLVideoElement>,
   iPool: Map<string, HTMLImageElement>,
 ) {
+  const anim = computeClipAnimation(clip, t);
+  const hasCustomAnim = !!clip.animateIn || !!clip.animateOut;
   const prevFilter = ctx.filter;
-  ctx.filter = cssFilterFor(clip);
+  const prevAlpha = ctx.globalAlpha;
+
+  // Compose animation transforms around canvas centre.
+  ctx.save();
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+  ctx.translate(cx + anim.dx * canvas.width, cy + anim.dy * canvas.height);
+  if (anim.scale !== 1) ctx.scale(anim.scale, anim.scale);
+  ctx.translate(-cx, -cy);
+  ctx.globalAlpha = prevAlpha * anim.alpha;
+  ctx.filter = cssFilterFor(clip, anim.blurPx);
+
   if (clip.kind === "video") {
     const v = vPool.get(clip.mediaId);
     if (v && v.videoWidth) drawContain(ctx, v, v.videoWidth, v.videoHeight, canvas.width, canvas.height);
@@ -645,12 +669,14 @@ function drawClip(
     if (img && img.naturalWidth) drawContain(ctx, img, img.naturalWidth, img.naturalHeight, canvas.width, canvas.height);
   } else if (clip.kind === "text") {
     const text = clip as TextClip;
-    const FADE = 0.3;
-    const into = t - text.start;
-    const outof = text.start + text.duration - t;
-    const alpha = Math.max(0, Math.min(1, Math.min(into / FADE, outof / FADE, 1)));
-    ctx.save();
-    ctx.globalAlpha = alpha;
+    if (!hasCustomAnim) {
+      // Preserve historical soft fade for text clips without an explicit animation.
+      const FADE = 0.3;
+      const into = t - text.start;
+      const outof = text.start + text.duration - t;
+      const fade = Math.max(0, Math.min(1, Math.min(into / FADE, outof / FADE, 1)));
+      ctx.globalAlpha = prevAlpha * fade;
+    }
     const size = (text.fontSize / 1080) * canvas.height;
     ctx.font = `${text.fontWeight} ${size}px ${text.fontFamily}`;
     ctx.textBaseline = "middle";
@@ -661,7 +687,6 @@ function drawClip(
     const lh = size * 1.2;
     const startY = y - ((lines.length - 1) * lh) / 2;
 
-    // Optional background pill.
     if (text.background && text.background.opacity > 0) {
       const pad = (text.background.padding / 1080) * canvas.height;
       const radius = Math.max(0, (text.background.radius / 1080) * canvas.height);
@@ -672,15 +697,14 @@ function drawClip(
       if (text.align === "centre") bx = x - boxW / 2;
       else if (text.align === "right") bx = x - boxW + pad;
       const by = startY - lh / 2 - pad;
-      const prevAlpha = ctx.globalAlpha;
-      ctx.globalAlpha = prevAlpha * text.background.opacity;
+      const bgAlpha = ctx.globalAlpha;
+      ctx.globalAlpha = bgAlpha * text.background.opacity;
       ctx.fillStyle = text.background.color;
       roundRectPath(ctx, bx, by, boxW, boxH, radius);
       ctx.fill();
-      ctx.globalAlpha = prevAlpha;
+      ctx.globalAlpha = bgAlpha;
     }
 
-    // Optional stroke.
     if (text.stroke && text.stroke.width > 0) {
       ctx.lineWidth = (text.stroke.width / 1080) * canvas.height;
       ctx.strokeStyle = text.stroke.color;
@@ -690,9 +714,11 @@ function drawClip(
 
     ctx.fillStyle = text.color;
     lines.forEach((ln, i) => ctx.fillText(ln, x, startY + i * lh));
-    ctx.restore();
   }
+
+  ctx.restore();
   ctx.filter = prevFilter;
+  ctx.globalAlpha = prevAlpha;
 }
 
 function roundRectPath(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) {
@@ -721,3 +747,4 @@ function drawContain(
   const y = (dh - h) / 2;
   ctx.drawImage(src, x, y, w, h);
 }
+
