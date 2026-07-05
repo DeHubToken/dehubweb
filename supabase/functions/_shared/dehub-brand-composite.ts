@@ -116,9 +116,11 @@ export async function compositeDeHubBranding(
   const logoDataUri = opts.logoDataUrl ?? (await fetchLogoDataUri());
   if (!logoDataUri) return null;
 
-  // Logo lockup sizing — width ~22% of canvas, generous safe margin.
-  const logoW = Math.round(W * 0.22);
-  const logoH = Math.round(logoW / LOGO_ASPECT);
+  // Logo lockup sizing — wordmark is a very wide aspect ratio (~4.2:1)
+  // so a "22% of width" mark looks tiny. Size by target HEIGHT instead
+  // (~7% of shorter edge) so it reads clearly on any format.
+  const logoH = Math.max(48, Math.round(Math.min(W, H) * 0.075));
+  const logoW = Math.round(logoH * LOGO_ASPECT);
   const margin = Math.round(Math.min(W, H) * 0.06);
 
   let logoX = 0;
@@ -145,22 +147,32 @@ export async function compositeDeHubBranding(
 
   // Optional headline: rendered in Inter 800 uppercase, white, wide
   // letter-spacing (Exo-like feel), with a soft bottom scrim behind it
-  // so it stays readable regardless of scene brightness.
+  // so it stays readable regardless of scene brightness. Placed ABOVE
+  // the logo lockup with breathing room between them.
   let headlineSvg = "";
   let scrimSvg = "";
+  let scrimH = 0;
   const hl = (opts.headline || "").trim();
   if (hl) {
-    const lines = wrapHeadline(hl.toUpperCase(), 22, 2);
-    const fontSize = Math.round(H * 0.055);
+    const lines = wrapHeadline(hl.toUpperCase(), 18, 2);
+    const fontSize = Math.round(H * 0.065);
     const lineH = Math.round(fontSize * 1.1);
     const blockH = lineH * lines.length;
-    const startY = logoY - Math.round(H * 0.03) - blockH + lineH * 0.85;
+    const gap = Math.round(H * 0.025);
+    // Baseline of first line — headline block ends `gap` above the logo.
+    const lastBaseline = logoY - gap;
+    const firstBaseline = lastBaseline - lineH * (lines.length - 1);
     const textX = W / 2;
-    const scrimH = blockH + logoH + margin * 2 + Math.round(H * 0.04);
+    scrimH = blockH + logoH + margin * 2 + gap;
     scrimSvg = `<rect x="0" y="${H - scrimH}" width="${W}" height="${scrimH}" fill="url(#dehubScrim)"/>`;
     headlineSvg = lines.map((l, i) =>
-      `<text x="${textX}" y="${startY + i * lineH}" text-anchor="middle" fill="#ffffff" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-weight="800" font-size="${fontSize}" letter-spacing="${Math.max(2, fontSize * 0.05)}">${escapeXml(l)}</text>`
+      `<text x="${textX}" y="${firstBaseline + i * lineH}" text-anchor="middle" fill="#ffffff" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-weight="800" font-size="${fontSize}" letter-spacing="${Math.max(2, fontSize * 0.04)}">${escapeXml(l)}</text>`
     ).join("");
+  } else {
+    // Small scrim behind logo so pure-white wordmark stays readable on
+    // brighter areas of the scene.
+    scrimH = logoH + margin * 2;
+    scrimSvg = `<rect x="0" y="${H - scrimH}" width="${W}" height="${scrimH}" fill="url(#dehubScrim)"/>`;
   }
 
   const svg = `<?xml version="1.0" encoding="UTF-8"?>
