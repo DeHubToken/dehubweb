@@ -605,14 +605,59 @@ function ClipContextMenu({ clipId, trackId }: { clipId: string; trackId: string 
   const copySelected = useEditorStore((s) => s.copySelectedToClipboard);
   const pasteClipboard = useEditorStore((s) => s.pasteFromClipboard);
   const rippleDelete = useEditorStore((s) => s.rippleDelete);
+  const splitAtPlayhead = useEditorStore((s) => s.splitAtPlayhead);
   const selectClip = useEditorStore((s) => s.selectClip);
+  const setClipTransition = useEditorStore((s) => s.setClipTransition);
   const tracks = useEditorStore((s) => s.tracks);
+  const clips = useEditorStore((s) => s.clips);
+  const clip = clips.find((c) => c.id === clipId);
+  const nextClip = clip ? findAdjacentNext(clip, clips) : null;
+  const canTransition = !!clip && !!nextClip && clip.kind !== "text";
+  const currentTransition = clip?.transitionOut ?? null;
   const idx = tracks.findIndex((t) => t.id === trackId);
   const canForward = idx >= 0 && idx < tracks.length - 1;
   const canBackward = idx > 0;
   const pick = (fn: () => void) => () => { selectClip(clipId); fn(); };
+
+  const applyTransition = (kind: TransitionKindLike) => {
+    if (!clip || !nextClip) return;
+    const maxD = maxTransitionFor(clip, nextClip);
+    const dur = Math.min(currentTransition?.duration ?? DEFAULT_TRANSITION_DURATION, maxD);
+    setClipTransition(clipId, { kind, duration: Math.max(MIN_TRANSITION_DURATION, dur) });
+  };
+
   return (
     <ContextMenuContent className="w-56 border-white/10 bg-black/85 text-white backdrop-blur-[24px]">
+      <ContextMenuItem onSelect={pick(() => splitAtPlayhead())}>
+        <Scissors className="mr-2 h-3.5 w-3.5" /> Split at playhead
+      </ContextMenuItem>
+      {canTransition && (
+        <ContextMenuSub>
+          <ContextMenuSubTrigger className="text-white/90">
+            <ArrowLeftRight className="mr-2 h-3.5 w-3.5" /> Transition
+          </ContextMenuSubTrigger>
+          <ContextMenuSubContent className="w-44 border-white/10 bg-black/85 text-white backdrop-blur-[24px]">
+            {TRANSITION_OPTIONS.map((opt) => (
+              <ContextMenuItem
+                key={opt.kind}
+                onSelect={pick(() => applyTransition(opt.kind))}
+                className={cn(currentTransition?.kind === opt.kind && "bg-white/10")}
+              >
+                {opt.label}
+              </ContextMenuItem>
+            ))}
+            {currentTransition && (
+              <>
+                <ContextMenuSeparator className="bg-white/10" />
+                <ContextMenuItem onSelect={pick(() => setClipTransition(clipId, null))}>
+                  Remove transition
+                </ContextMenuItem>
+              </>
+            )}
+          </ContextMenuSubContent>
+        </ContextMenuSub>
+      )}
+      <ContextMenuSeparator className="bg-white/10" />
       <ContextMenuItem disabled={!canForward} onSelect={pick(() => moveTrack(trackId, "front"))}>
         <ChevronsUp className="mr-2 h-3.5 w-3.5" /> Bring to front
       </ContextMenuItem>
@@ -644,6 +689,8 @@ function ClipContextMenu({ clipId, trackId }: { clipId: string; trackId: string 
     </ContextMenuContent>
   );
 }
+
+type TransitionKindLike = (typeof TRANSITION_OPTIONS)[number]["kind"];
 
 
 function TransitionHandle({ clip }: { clip: Clip }) {
