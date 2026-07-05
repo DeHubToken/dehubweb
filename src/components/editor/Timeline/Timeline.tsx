@@ -690,10 +690,22 @@ function ClipContextMenu({ clipId, trackId }: { clipId: string; trackId: string 
 
   return (
     <ContextMenuContent className="w-56 border-white/10 bg-black/85 text-white backdrop-blur-[24px]">
+      <ContextMenuItem
+        onSelect={pick(() => {
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new CustomEvent("editor:open-inspector"));
+            // Bring the desktop inspector into view too.
+            document.querySelector('aside[class*="border-l"]')?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          }
+        })}
+      >
+        <Pencil className="mr-2 h-3.5 w-3.5" /> Edit
+      </ContextMenuItem>
       <ContextMenuItem onSelect={pick(() => splitAtPlayhead())}>
         <Scissors className="mr-2 h-3.5 w-3.5" /> Split at playhead
       </ContextMenuItem>
       {canTransition && (
+
         <ContextMenuSub>
           <ContextMenuSubTrigger className="text-white/90">
             <ArrowLeftRight className="mr-2 h-3.5 w-3.5" /> Transition
