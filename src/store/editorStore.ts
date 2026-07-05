@@ -272,6 +272,23 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     });
   },
 
+  moveTrack: (id, direction) => {
+    const s = get();
+    const idx = s.tracks.findIndex((t) => t.id === id);
+    if (idx < 0) return;
+    const arr = s.tracks.slice();
+    const [item] = arr.splice(idx, 1);
+    let newIdx = idx;
+    if (direction === "front") newIdx = arr.length;
+    else if (direction === "back") newIdx = 0;
+    else if (direction === "forward") newIdx = Math.min(arr.length, idx + 1);
+    else if (direction === "backward") newIdx = Math.max(0, idx - 1);
+    if (newIdx === idx) return;
+    arr.splice(newIdx, 0, item);
+    const past = [...s.past, snapshotEditable(s)].slice(-MAX_HISTORY);
+    set({ past, future: [], tracks: arr });
+  },
+
   addClipFromMedia: (mediaId, trackId, start) => {
     const s = get();
     const media = s.media.find((m) => m.id === mediaId);
