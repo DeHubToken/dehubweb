@@ -67,6 +67,23 @@ export interface MediaClip extends BaseClip {
   speed?: number;
 }
 
+export interface TextBackground {
+  /** Hex colour. */
+  color: string;
+  /** 0..1 opacity of the background fill. */
+  opacity: number;
+  /** Padding in px, relative to a 1080p canvas height. */
+  padding: number;
+  /** Corner radius in px, relative to a 1080p canvas height. */
+  radius: number;
+}
+
+export interface TextStroke {
+  color: string;
+  /** Stroke width in px relative to 1080p. */
+  width: number;
+}
+
 export interface TextClip extends BaseClip {
   kind: "text";
   text: string;
@@ -78,6 +95,10 @@ export interface TextClip extends BaseClip {
   /** Normalised 0..1 position inside the canvas. */
   x: number;
   y: number;
+  /** Optional background pill behind the text. Off by default. */
+  background?: TextBackground | null;
+  /** Optional outline stroke around the glyphs. Off by default. */
+  stroke?: TextStroke | null;
 }
 
 export type Clip = MediaClip | TextClip;
