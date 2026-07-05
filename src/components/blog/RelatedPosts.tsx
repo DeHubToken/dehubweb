@@ -28,7 +28,7 @@ export const RelatedPosts: React.FC<RelatedPostsProps> = ({ currentPost, allPost
         {relatedPosts.map((post) => (
           <Link
             key={post.id}
-            to={`/docs/blog/${post.slug}`}
+            to={`/guides/${post.slug}`}
             className="group bg-plain-white rounded-lg shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden border border-sky-blue/10"
           >
             <div className="h-20 overflow-hidden">
