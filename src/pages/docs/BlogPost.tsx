@@ -79,7 +79,7 @@ const BlogPost = () => {
         title={post.seoTitle || post.title}
         description={post.seoDescription || post.excerpt}
         image={shareImage}
-        url={`/docs/blog/${post.slug}`}
+        url={`/guides/${post.slug}`}
         type="article"
         publishedTime={post.publishedAt}
         authorName={post.author.name}
