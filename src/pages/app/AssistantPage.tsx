@@ -2568,7 +2568,7 @@ export default function AssistantPage() {
                   className="relative mt-4 -mx-4 px-4 lg:mx-0 lg:px-0"
                 >
                   <div 
-                    className="flex gap-1.5 overflow-x-auto scrollbar-hide pt-2.5 pb-1 pr-8 lg:pr-0 lg:flex-wrap lg:overflow-visible lg:mask-none"
+                    className="flex flex-nowrap gap-1.5 overflow-x-auto scrollbar-hide pt-2.5 pb-1 pr-8"
                     style={{
                       maskImage: 'linear-gradient(to right, black 85%, transparent 100%)',
                       WebkitMaskImage: 'linear-gradient(to right, black 85%, transparent 100%)'
