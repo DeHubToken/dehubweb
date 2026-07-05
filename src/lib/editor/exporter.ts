@@ -21,6 +21,8 @@ export interface ExportOptions {
   videoBitrate: number;
   /** Audio bitrate in bps (AAC/Opus). */
   audioBitrate?: number;
+  /** If set, export only from 0 up to this time (seconds) instead of the full timeline. */
+  cutEndAt?: number;
   /** Progress 0..1. */
   onProgress?: (p: number, label: string) => void;
   signal?: AbortSignal;
