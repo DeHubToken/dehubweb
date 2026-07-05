@@ -6,6 +6,7 @@
 
 import { Resvg, initWasm } from "https://esm.sh/@resvg/resvg-wasm@2.6.2";
 import { encode as encodeB64 } from "https://deno.land/std@0.190.0/encoding/base64.ts";
+import { DEHUB_LOGO_DATA_URI } from "./dehub-logo.ts";
 
 let resvgReady: Promise<void> | null = null;
 function ensureResvg(): Promise<void> {
