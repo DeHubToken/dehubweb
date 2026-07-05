@@ -345,11 +345,51 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const isFetchingRef = useRef(false);
   
   // Default to Latest (chronological) — persisted to sessionStorage. "For You" remains a filter option.
-  const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('home', 'sort', DEFAULT_HOME_SORT);
-  const [selectedDate, setSelectedDate] = usePersistedFeedFilter<DateFilterOption>('home', 'date', DATE_FILTER_OPTIONS[0]);
-  const [selectedPostType, setSelectedPostType] = usePersistedFeedFilter<PostTypeFilterValue>('home', 'postType', 'all');
-  const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('home');
-  const [selectedCategories, setSelectedCategories] = usePersistedFeedFilter<string[]>('home', 'categories', []);
+  const [selectedSort, setSelectedSortRaw] = usePersistedFeedFilter<SortOption>('home', 'sort', DEFAULT_HOME_SORT);
+  const [selectedDate, setSelectedDateRaw] = usePersistedFeedFilter<DateFilterOption>('home', 'date', DATE_FILTER_OPTIONS[0]);
+  const [selectedPostType, setSelectedPostTypeRaw] = usePersistedFeedFilter<PostTypeFilterValue>('home', 'postType', 'all');
+  const [contentFilters, toggleContentFilterRaw, resetContentFiltersRaw] = usePersistedContentFilters('home');
+  const [selectedCategories, setSelectedCategoriesRaw] = usePersistedFeedFilter<string[]>('home', 'categories', []);
+
+  // Optimistic mirror state — chips flip active instantly on tap while heavy
+  // downstream re-render (feed refetch, list re-render) runs at lower priority
+  // via startTransition. Prevents 1-2s lag on slow devices/networks where the
+  // synchronous re-render used to block paint of the active state.
+  const [optimisticSort, setOptimisticSort] = useState(selectedSort);
+  const [optimisticDate, setOptimisticDate] = useState(selectedDate);
+  const [optimisticPostType, setOptimisticPostType] = useState(selectedPostType);
+  const [optimisticCategories, setOptimisticCategories] = useState(selectedCategories);
+  const [optimisticContentFilters, setOptimisticContentFilters] = useState(contentFilters);
+  useEffect(() => { setOptimisticSort(selectedSort); }, [selectedSort]);
+  useEffect(() => { setOptimisticDate(selectedDate); }, [selectedDate]);
+  useEffect(() => { setOptimisticPostType(selectedPostType); }, [selectedPostType]);
+  useEffect(() => { setOptimisticCategories(selectedCategories); }, [selectedCategories]);
+  useEffect(() => { setOptimisticContentFilters(contentFilters); }, [contentFilters]);
+
+  const setSelectedSort = useCallback((value: SortOption | ((prev: SortOption) => SortOption)) => {
+    setOptimisticSort(prev => (typeof value === 'function' ? (value as (p: SortOption) => SortOption)(prev) : value));
+    startTransition(() => setSelectedSortRaw(value));
+  }, [setSelectedSortRaw]);
+  const setSelectedDate = useCallback((value: DateFilterOption | ((prev: DateFilterOption) => DateFilterOption)) => {
+    setOptimisticDate(prev => (typeof value === 'function' ? (value as (p: DateFilterOption) => DateFilterOption)(prev) : value));
+    startTransition(() => setSelectedDateRaw(value));
+  }, [setSelectedDateRaw]);
+  const setSelectedPostType = useCallback((value: PostTypeFilterValue | ((prev: PostTypeFilterValue) => PostTypeFilterValue)) => {
+    setOptimisticPostType(prev => (typeof value === 'function' ? (value as (p: PostTypeFilterValue) => PostTypeFilterValue)(prev) : value));
+    startTransition(() => setSelectedPostTypeRaw(value));
+  }, [setSelectedPostTypeRaw]);
+  const setSelectedCategories = useCallback((value: string[] | ((prev: string[]) => string[])) => {
+    setOptimisticCategories(prev => (typeof value === 'function' ? (value as (p: string[]) => string[])(prev) : value));
+    startTransition(() => setSelectedCategoriesRaw(value));
+  }, [setSelectedCategoriesRaw]);
+  const toggleContentFilter = useCallback((filter: 'ppv' | 'w2e' | 'locked') => {
+    setOptimisticContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
+    startTransition(() => toggleContentFilterRaw(filter));
+  }, [toggleContentFilterRaw]);
+  const resetContentFilters = useCallback(() => {
+    setOptimisticContentFilters({ ppv: false, w2e: false, locked: false });
+    startTransition(() => resetContentFiltersRaw());
+  }, [resetContentFiltersRaw]);
 
   // Listen for external category changes (e.g. from Talk of the Town sidebar)
   // Set a transitioning flag so we force skeleton state (bypasses placeholderData)
