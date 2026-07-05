@@ -30,14 +30,17 @@ function filesToFileList(files: File[]): FileList {
 }
 
 export function PostToDeHub({ iconOnly = false }: { iconOnly?: boolean }) {
-  const auth = useAuth() as { isAuthenticated: boolean; openLoginModal: () => void };
+  const auth = useAuth() as { isAuthenticated: boolean; openLoginModal: () => void; walletAddress: string | null };
   const isAuthenticated = !!auth?.isAuthenticated;
   const openLoginModal = auth?.openLoginModal;
+  const walletAddress = auth?.walletAddress ?? null;
 
   const toSnapshot = useEditorStore((s) => s.toSnapshot);
   const media = useEditorStore((s) => s.media);
+  const clips = useEditorStore((s) => s.clips);
   const settings = useEditorStore((s) => s.settings);
   const duration = useEditorStore(selectTimelineDuration);
+
 
   const [renderOpen, setRenderOpen] = useState(false);
   const [progress, setProgress] = useState(0);
