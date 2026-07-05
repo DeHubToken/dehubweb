@@ -318,7 +318,7 @@ export default function LeaderboardPage() {
       <SEOHead title="Leaderboard — Top Creators & Earners" description="See who's leading on DeHub. Track top holders, biggest tippers, most followed creators, and trending accounts across all time periods." url="https://dehub.io/app/leaderboard" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Leaderboard', url: 'https://dehub.io/app/leaderboard', description: 'Track top DHB holders, tippers and creators on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">DeHub Leaderboard — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Header */}
-      <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-2">
+      <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-2">
         <div className="flex items-center gap-4 mb-4">
           <div className="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden">
             <img src={trophyIcon} alt="Trophy" className="w-11 h-11 object-contain" />
@@ -385,7 +385,7 @@ export default function LeaderboardPage() {
       </div>
 
       {/* Leaderboard Table */}
-      <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+      <div data-page-bento className="bg-zinc-900 rounded-2xl overflow-hidden">
         {/* Table Header - only render when we have entries to avoid border flash */}
         {entries.length > 0 && (
           <div className="hidden sm:grid grid-cols-12 gap-4 px-4 sm:px-6 py-4 border-b border-zinc-800 text-zinc-500 text-sm font-medium">

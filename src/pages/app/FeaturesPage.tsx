@@ -883,7 +883,7 @@ export default function FeaturesPage() {
       <SEOHead title="Features — Submit & Vote on Ideas" description="Submit feature requests, vote on community ideas, and help shape DeHub's roadmap. Your voice drives the platform's development." url="https://dehub.io/app/features" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Feature Requests', url: 'https://dehub.io/app/features', description: 'Submit and vote on feature requests to shape DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">DeHub Features — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Header */}
-      <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
+      <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <img src={featuresLightbulb} alt="Features" className="w-12 h-12 object-contain" />
@@ -1028,7 +1028,7 @@ export default function FeaturesPage() {
               )}
             </div>
           ) : (
-            <div className="bg-zinc-900 rounded-2xl p-8 text-center">
+            <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
               <div className="w-16 h-16 flex items-center justify-center mx-auto mb-4">
                 <img src={featuresLightbulb} alt="No features yet" className="w-16 h-16 object-contain opacity-40" />
               </div>
@@ -1066,7 +1066,7 @@ export default function FeaturesPage() {
               ))}
             </div>
           ) : (
-            <div className="bg-zinc-900 rounded-2xl p-8 text-center">
+            <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
               <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mx-auto mb-4">
                 <CheckCircle2 className="w-8 h-8 text-zinc-600" />
               </div>

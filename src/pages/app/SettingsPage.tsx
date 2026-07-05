@@ -176,7 +176,7 @@ export default function SettingsPage() {
       <SEOHead title="Settings — Manage Your Account" description="Customize your DeHub experience. Update your profile, privacy settings, notification preferences, and connected wallets." url="https://dehub.io/app/settings" />
       <h1 className="sr-only">DeHub Settings — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Header */}
-      <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
+      <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
             <img src={settingsIcon} alt="Settings" className="w-10 h-10 object-contain" />
@@ -245,7 +245,7 @@ export default function SettingsPage() {
       </div>
 
       {/* Content */}
-      <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+      <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         {activeTab === 'profile' && <ProfileSettings />}
         {activeTab === 'notifications' && <NotificationSettings />}
         {activeTab === 'privacy' && <PrivacySettings />}

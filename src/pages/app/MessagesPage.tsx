@@ -326,7 +326,7 @@ export default function MessagesPage() {
       <h1 className="sr-only">DeHub Messages — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       <div className="h-[calc(100dvh-120px)] lg:h-[calc(100dvh-32px)] max-h-full">
         {/* Full Width Messages Panel */}
-        <div className="w-full h-full bg-zinc-900 rounded-2xl flex flex-col">
+        <div data-page-bento className="w-full h-full bg-zinc-900 rounded-2xl flex flex-col">
           {/* Header */}
           <div className="p-4">
             <div className="flex items-center justify-between mb-4">
