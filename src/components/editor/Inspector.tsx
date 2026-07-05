@@ -379,3 +379,117 @@ function EffectSlider({
     </div>
   );
 }
+
+/** Shallow compare of two ClipEffects objects for preset highlight. */
+function presetMatches(current: MediaClip["effects"], preset: MediaClip["effects"]): boolean {
+  const keys: (keyof NonNullable<MediaClip["effects"]>)[] = [
+    "brightness", "contrast", "saturation", "blur", "grayscale", "sepia", "hueRotate", "invert",
+  ];
+  const norm = (e: MediaClip["effects"], k: keyof NonNullable<MediaClip["effects"]>) => {
+    const v = e?.[k];
+    if (v === undefined) {
+      // Default neutral values differ by field.
+      return k === "brightness" || k === "contrast" || k === "saturation" ? 1 : 0;
+    }
+    return v;
+  };
+  return keys.every((k) => Math.abs(norm(current, k) - norm(preset, k)) < 0.001);
+}
+
+function AnimationSection({ clip }: { clip: Clip }) {
+  const updateClipAnimation = (patch: Partial<Pick<Clip, "animateIn" | "animateOut">>) => {
+    const s = useEditorStore.getState();
+    if (clip.kind === "text") s.updateTextClip(clip.id, patch as Partial<TextClip>);
+    else s.updateMediaClip(clip.id, patch as Partial<MediaClip>);
+  };
+  const inA = clip.animateIn;
+  const outA = clip.animateOut;
+  return (
+    <div className="space-y-3 pt-2">
+      <p className="text-[10px] uppercase tracking-wide text-white/40">Animation in</p>
+      <div className="grid grid-cols-3 gap-1">
+        <button
+          onClick={() => updateClipAnimation({ animateIn: undefined })}
+          className={cn(
+            "rounded-md border px-1 py-1 text-[10px] transition",
+            !inA ? "border-white/50 bg-white/15 text-white" : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
+          )}
+        >
+          None
+        </button>
+        {ANIMATION_PRESETS.map((p) => {
+          const active = inA?.kind === p.kind;
+          return (
+            <button
+              key={p.kind}
+              onClick={() => updateClipAnimation({ animateIn: newAnimation(p.kind) })}
+              className={cn(
+                "rounded-md border px-1 py-1 text-[10px] transition",
+                active ? "border-white/50 bg-white/15 text-white" : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
+              )}
+            >
+              {p.label}
+            </button>
+          );
+        })}
+      </div>
+      {inA && (
+        <div className="space-y-1">
+          <Label className="text-[10px] uppercase tracking-wide text-white/40">
+            Duration {inA.duration.toFixed(2)}s
+          </Label>
+          <Slider
+            value={[inA.duration]}
+            min={0.1}
+            max={Math.max(0.2, Math.min(3, clip.duration))}
+            step={0.05}
+            onValueChange={(v) => updateClipAnimation({ animateIn: { kind: inA.kind, duration: v[0] ?? inA.duration } })}
+          />
+        </div>
+      )}
+
+      <p className="pt-1 text-[10px] uppercase tracking-wide text-white/40">Animation out</p>
+      <div className="grid grid-cols-3 gap-1">
+        <button
+          onClick={() => updateClipAnimation({ animateOut: undefined })}
+          className={cn(
+            "rounded-md border px-1 py-1 text-[10px] transition",
+            !outA ? "border-white/50 bg-white/15 text-white" : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
+          )}
+        >
+          None
+        </button>
+        {ANIMATION_PRESETS.map((p) => {
+          const active = outA?.kind === p.kind;
+          return (
+            <button
+              key={p.kind}
+              onClick={() => updateClipAnimation({ animateOut: newAnimation(p.kind) })}
+              className={cn(
+                "rounded-md border px-1 py-1 text-[10px] transition",
+                active ? "border-white/50 bg-white/15 text-white" : "border-white/10 text-white/60 hover:bg-white/5 hover:text-white",
+              )}
+            >
+              {p.label}
+            </button>
+          );
+        })}
+      </div>
+      {outA && (
+        <div className="space-y-1">
+          <Label className="text-[10px] uppercase tracking-wide text-white/40">
+            Duration {outA.duration.toFixed(2)}s
+          </Label>
+          <Slider
+            value={[outA.duration]}
+            min={0.1}
+            max={Math.max(0.2, Math.min(3, clip.duration))}
+            step={0.05}
+            onValueChange={(v) => updateClipAnimation({ animateOut: { kind: outA.kind, duration: v[0] ?? outA.duration } })}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
