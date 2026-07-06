@@ -90,7 +90,7 @@ export default function JobsPage() {
 
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      <SEOHead title="Careers" description="Join the DeHub team — open positions in business development, marketing and more." url="https://dehub.io/jobs" />
+      <SEOHead title="Careers at DeHub — Join the Team" description="Join the DeHub team — open positions in business development, marketing and more." url="https://dehub.io/jobs" />
       {/* Background particles */}
       <div className="absolute inset-0 pointer-events-none">
         {Array.from({ length: 60 }).map((_, i) => (
