@@ -107,8 +107,9 @@ const BrandAssets = () => {
               <div key={asset.id} className="border border-border rounded-lg p-6 space-y-4">
                 <div
                   className={`aspect-video rounded-lg flex items-center justify-center p-6 ${
-                    asset.bg === 'dark' ? 'bg-black' : 'bg-white'
+                    asset.bg === 'dark' ? 'bg-black' : ''
                   }`}
+                  style={asset.bg === 'light' ? { backgroundColor: '#ffffff' } : undefined}
                 >
                   <img
                     src={asset.url}
