@@ -8,6 +8,43 @@ import QRCode from "https://esm.sh/qrcode@1.5.4";
 import { encode as encodeB64 } from "https://deno.land/std@0.190.0/encoding/base64.ts";
 import { Resvg, initWasm } from "https://esm.sh/@resvg/resvg-wasm@2.6.2";
 import { DEHUB_LOGO_DATA_URI } from "./logo.ts";
+import { BADGE_DATA_URIS } from "./badges.ts";
+
+// Staking badge tiers — mirror of src/lib/staking-badges.ts.
+const BADGE_LEVELS: { name: string; min: number }[] = [
+  { name: "Crab", min: 10000 },
+  { name: "Lobster", min: 25000 },
+  { name: "Piranha", min: 50000 },
+  { name: "Tortoise", min: 100000 },
+  { name: "Cobra", min: 250000 },
+  { name: "Octopus", min: 500000 },
+  { name: "Crocodite", min: 1000000 },
+  { name: "Dolphin", min: 2000000 },
+  { name: "Tiger Shark", min: 3000000 },
+  { name: "Killer Whale", min: 5000000 },
+  { name: "Great White Shark", min: 10000000 },
+  { name: "Blue Whale", min: 25000000 },
+  { name: "Meglodon", min: 50000000 },
+];
+const USERNAME_BADGE_OVERRIDES: Record<string, string> = {
+  "maldoteth": "Meglodon",
+  "mal": "Meglodon",
+  "aaron": "Meglodon",
+};
+function resolveBadgeDataUri(badgeBalance: number | null, username: string | null): string | null {
+  if (username) {
+    const key = username.replace(/^@+/, "").toLowerCase();
+    const override = USERNAME_BADGE_OVERRIDES[key];
+    if (override && BADGE_DATA_URIS[override]) return BADGE_DATA_URIS[override];
+  }
+  if (badgeBalance === null || !Number.isFinite(badgeBalance) || badgeBalance < 10000) return null;
+  let current: string | null = null;
+  for (const b of BADGE_LEVELS) {
+    if (badgeBalance >= b.min) current = b.name;
+    else break;
+  }
+  return current ? BADGE_DATA_URIS[current] || null : null;
+}
 
 let resvgReady: Promise<void> | null = null;
 function ensureResvg(): Promise<void> {
@@ -176,6 +213,7 @@ async function fetchProfile(code: string) {
   let coverPath: string | null = null;
   let displayName: string | null = null;
   let username: string | null = null;
+  let badgeBalance: number | null = null;
   if (address) {
     try {
       const r = await fetch(`${API}/api/account_info/${address}`);
@@ -187,6 +225,8 @@ async function fetchProfile(code: string) {
         const apiDisplay = (u?.displayName || "").trim() || null;
         const apiUser = (u?.username || "").trim() || null;
         username = apiUser;
+        const bb = Number(u?.badgeBalance);
+        badgeBalance = Number.isFinite(bb) ? bb : null;
         // Prefer API displayName. Fall back to shareName only if it differs from username.
         const sn = (shareName || "").trim() || null;
         displayName = apiDisplay || (sn && sn.toLowerCase() !== (apiUser || "").toLowerCase() ? sn : null) || apiUser;
@@ -200,7 +240,7 @@ async function fetchProfile(code: string) {
     displayName = shareName;
   }
 
-  return { address, displayName, username, avatarPath, coverPath };
+  return { address, displayName, username, avatarPath, coverPath, badgeBalance };
 }
 
 async function buildQrSvgInner(text: string): Promise<{ path: string; count: number }> {
@@ -222,6 +262,7 @@ function buildSvg(opts: {
   username: string | null;
   avatarDataUri: string | null;
   bannerDataUri: string | null;
+  badgeDataUri: string | null;
   qrPath: string;
   qrCount: number;
   width: number;
@@ -280,6 +321,15 @@ function buildSvg(opts: {
 
   <g text-anchor="start">
     <text x="${textX}" y="${H * 0.46}" fill="#fff" font-size="${H * 0.085}" font-weight="800" letter-spacing="-1">${name}</text>
+    ${opts.badgeDataUri ? (() => {
+      // Approximate rendered width of the name to anchor a superscript badge at its top-right.
+      const fs = H * 0.085;
+      const approxNameW = opts.name.length * fs * 0.55;
+      const badgeSize = fs * 0.55;
+      const bx = textX + approxNameW + fs * 0.15;
+      const by = H * 0.46 - fs * 0.95;
+      return `<image href="${opts.badgeDataUri}" x="${bx}" y="${by}" width="${badgeSize}" height="${badgeSize}" preserveAspectRatio="xMidYMid meet"/>`;
+    })() : ""}
     ${handle ? `<text x="${textX}" y="${H * 0.535}" fill="#ffffff" fill-opacity="0.55" font-size="${H * 0.034}" font-weight="500">${handle}</text>` : ""}
     <text x="${textX}" y="${handle ? H * 0.585 : H * 0.575}" fill="#ffffff" fill-opacity="0.92" font-size="${H * 0.042}" font-weight="500">invites you to join DeHub.</text>
     <g transform="translate(${W * 0.04}, ${H * 0.85})">
@@ -288,6 +338,7 @@ function buildSvg(opts: {
       <text x="${H * 0.17}" y="${H * 0.05}" fill="#ffffff" fill-opacity="0.85" font-size="${H * 0.030}" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">dehub.io/r/${code}</text>
     </g>
   </g>
+
 
   <g transform="translate(${qrX - 18}, ${qrY - 18})">
     <rect width="${qrSize + 36}" height="${qrSize + 36}" rx="18" fill="#ffffff"/>
@@ -333,6 +384,7 @@ async function buildSvgFor(rawCode: string, width: number, height: number): Prom
   let username: string | null = null;
   let avatarPath: string | null = null;
   let coverPath: string | null = null;
+  let badgeBalance: number | null = null;
   if (rawCode) {
     const p = await fetchProfile(rawCode);
     address = p.address;
@@ -340,6 +392,7 @@ async function buildSvgFor(rawCode: string, width: number, height: number): Prom
     username = p.username;
     avatarPath = p.avatarPath;
     coverPath = p.coverPath;
+    badgeBalance = p.badgeBalance;
   }
 
   const [avatarDataUri, coverDataUri] = await Promise.all([
@@ -349,6 +402,7 @@ async function buildSvgFor(rawCode: string, width: number, height: number): Prom
   const bannerDataUri = coverDataUri || (await fetchAsDataUri(pickDefaultBanner(address)));
   const shareUrl = rawCode ? `${SITE}/r/${rawCode}` : SITE;
   const { path: qrPath, count: qrCount } = await buildQrSvgInner(shareUrl);
+  const badgeDataUri = resolveBadgeDataUri(badgeBalance, username);
 
   const svg = buildSvg({
     code: rawCode,
@@ -356,6 +410,7 @@ async function buildSvgFor(rawCode: string, width: number, height: number): Prom
     username,
     avatarDataUri,
     bannerDataUri,
+    badgeDataUri,
     qrPath,
     qrCount,
     width,
@@ -364,6 +419,7 @@ async function buildSvgFor(rawCode: string, width: number, height: number): Prom
 
   return svg;
 }
+
 
 async function buildPngFor(rawCode: string, width: number, height: number): Promise<{ png: Uint8Array | null; svg: string }> {
   const svg = await buildSvgFor(rawCode, width, height);
