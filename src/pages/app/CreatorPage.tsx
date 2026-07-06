@@ -175,16 +175,6 @@ const tools: Tool[] = [
     category: 'Studio',
     action: { kind: 'navigate', to: '/app/settings?tab=characters' },
   },
-  {
-    id: 'automations-placeholder-removed',
-    name: '',
-    label: '',
-    description: '',
-    icon: Languages,
-    category: 'Video',
-    action: { kind: 'navigate', to: '/app/tv' },
-    hidden: true,
-  } as any,
 
   {
     id: 'editor',
