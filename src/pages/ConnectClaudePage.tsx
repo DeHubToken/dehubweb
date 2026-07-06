@@ -2,8 +2,8 @@ import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
 import ogImage from "@/assets/og-claude.jpg";
-import dehubLogo from "@/assets/dehub-logo-white.png";
-import dehubIcon from "@/assets/dehub-logo.png";
+import dehubLogo from "@/assets/dehub-wordmark-white.png";
+import dehubIcon from "@/assets/dehub-mark-white.png";
 import anthropicLogo from "@/assets/ai-logos/anthropic.png";
 
 const APP_URL =
