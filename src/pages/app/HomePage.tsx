@@ -701,7 +701,7 @@ export default function HomePage() {
   return (
     <div>
       <SEOHead title="DeHub - Home Feed" description="Censorship resistant and chronological, with no shady algorithm. Your feed on DeHub — the open source, user owned social media platform." url="https://dehub.io/app" jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Home Feed', url: 'https://dehub.io/app', description: 'Censorship resistant, chronological social media feed with no algorithm.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
-      <h1 className="text-xl sm:text-2xl font-bold text-white px-4 pt-4 pb-2">Your Decentralized Social Feed</h1>
+      <h1 className="sr-only">Your Decentralized Social Feed</h1>
       {/* Tab Navigation */}
       <div
         data-home-tabs
