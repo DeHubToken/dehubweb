@@ -151,16 +151,29 @@ const BrandAssets = () => {
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {palette.map((c) => (
-              <div
-                key={c.hex}
-                className="rounded-xl p-4 border border-border"
-                style={{ background: c.hex, color: c.text }}
-              >
-                <div className="font-semibold text-sm">{c.name}</div>
-                <div className="font-mono text-xs opacity-70 mt-1">{c.hex}</div>
-              </div>
-            ))}
+            {palette.map((c) => {
+              const isLight = c.hex === '#eef0f3' || c.hex === '#ffffff';
+              return (
+                <div
+                  key={c.hex}
+                  className="rounded-xl p-4 border border-border"
+                  style={{
+                    background: c.hex,
+                    color: isLight ? '#0a0b0d' : c.text,
+                  }}
+                >
+                  <div className="font-semibold text-sm" style={{ color: isLight ? '#0a0b0d' : undefined }}>
+                    {c.name}
+                  </div>
+                  <div
+                    className={`font-mono text-xs mt-1 ${isLight ? '' : 'opacity-70'}`}
+                    style={{ color: isLight ? '#0a0b0d' : undefined }}
+                  >
+                    {c.hex}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </CardContent>
       </Card>
