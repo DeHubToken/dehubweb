@@ -54,6 +54,26 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
+# Sitemap tree — proxy to Supabase edge functions so URLs stay on dehub.io.
+# These MUST come before the SPA fallback (Netlify uses first match).
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/sitemap-index"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/sitemap-posts-:page.xml"
+  to = "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/sitemap-posts?page=:page"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/sitemap-profiles-:page.xml"
+  to = "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/sitemap-profiles?page=:page"
+  status = 200
+  force = true
+
 # SPA fallback - redirect all routes to index.html
 [[redirects]]
   from = "/*"
