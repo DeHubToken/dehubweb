@@ -219,7 +219,17 @@ const BrandAssets = () => {
             Editable Figma templates for social posts, banners and campaigns.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
+          <Button variant="outline" asChild className="flex items-center gap-2 w-full sm:w-auto">
+            <a
+              href="https://www.figma.com/design/BjnSoqSIFYXL73yz4svKLh/Dehub-SM-Template-2.0--Copy-"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <ExternalLink className="w-4 h-4" />
+              Copy and edit
+            </a>
+          </Button>
           <div className="w-full rounded-lg overflow-hidden border border-border bg-black">
             <iframe
               title="DeHub Social Media Templates"
