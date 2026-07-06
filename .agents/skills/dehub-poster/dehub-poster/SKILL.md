@@ -62,18 +62,6 @@ Logos live in this skill's `assets/` folder:
 
 Both are **white-on-transparent**. They must always appear in white (or near-white). Never recolor, gradient-fill, drop-shadow heavily, distort, paraphrase, redraw, or allow the model to invent alternate DeHub lettering.
 
-### Production app / social share image logo rules
-
-When working inside the DeHub app codebase, **never generate, redraw, approximate, or substitute the DeHub logo**. Use the real project logo files:
-
-- `src/assets/dehub-logo-white.png` — official full DeHub wordmark. Use this for headers, social cards, guide hero lockups, and any place where the brand name must be visible.
-- `src/assets/dehub-logo.png` / `src/assets/dehub-logo-center.png` — official standalone DeHub icon mark. Use this only for compact badges or icon slots.
-- `src/assets/dehub-logo-primary.png.asset.json` and `src/assets/dehub-logo-icon.png.asset.json` — CDN pointer versions of the official wordmark/icon when a CDN URL is needed.
-
-For integrations, compose partner logos **beside the official DeHub assets**. For ChatGPT/OpenAI and Claude/Anthropic, use real full-color/official project logo assets such as `src/assets/ai-logos/openai.png` and `src/assets/ai-logos/anthropic.png`; do not use text-only placeholders, fake glyphs, simple colored dots, or AI-generated approximations.
-
-If creating OG/share images for the app, build them by compositing the actual PNG assets in code or image tooling. Do not ask an image model to draw the DeHub logo — generated DeHub marks are invalid even if they look close.
-
 ## Brand style rules
 
 These mirror the DeHub app design system — apply to every generated image. **Strict monochrome + metallic glass by default.** Anything else is off-brand unless the user explicitly asked for specific colors.
