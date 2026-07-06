@@ -2,6 +2,8 @@ import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
 import ogImage from "@/assets/og-claude.jpg";
+import dehubLogo from "@/assets/dehub-logo-white.png";
+import anthropicLogo from "@/assets/ai-logos/anthropic.png";
 
 const APP_URL =
   "https://claude.ai/new#settings/customize-connectors/10c6ee66-064b-4d66-b544-139cdc732b0f";
