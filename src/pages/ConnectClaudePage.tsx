@@ -140,13 +140,6 @@ export default function ConnectClaudePage() {
           <ArrowUpRight className="h-4 w-4" />
         </a>
 
-        <div className="mt-10 rounded-2xl border border-white/10 bg-black/60 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-[24px]">
-          <div className="flex items-center justify-center gap-5 sm:gap-8">
-            <img src={dehubLogo} alt="DeHub" className="h-9 w-auto max-w-[44%] object-contain sm:h-11" />
-            <span className="text-xl font-light text-white/35">×</span>
-            <img src={anthropicLogo} alt="Claude" className="h-12 w-12 rounded-xl bg-white p-2 object-contain sm:h-14 sm:w-14" />
-          </div>
-        </div>
 
         <section className="mt-14">
           <h2 className="text-xl font-bold md:text-2xl">Setup in 3 steps</h2>
