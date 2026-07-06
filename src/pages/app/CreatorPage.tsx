@@ -274,8 +274,8 @@ export default function CreatorPage() {
                   className="h-5 w-5 bg-cover bg-center bg-no-repeat transition-transform duration-200 group-hover:scale-105"
                   style={{
                     backgroundImage: metallicBg,
-                    maskImage: `url(${dehubIcon.url})`,
-                    WebkitMaskImage: `url(${dehubIcon.url})`,
+                    maskImage: `url(${dehubIcon})`,
+                    WebkitMaskImage: `url(${dehubIcon})`,
                     maskSize: 'contain',
                     WebkitMaskSize: 'contain',
                     maskRepeat: 'no-repeat',
