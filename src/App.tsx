@@ -45,6 +45,7 @@ const StageDeepLinkPage = React.lazy(() => import("./pages/app/StageDeepLinkPage
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
 const BestDecentralizedSocialMedia = React.lazy(() => import("./pages/BestDecentralizedSocialMedia"));
+const BestWeb3SocialMediaDapps = React.lazy(() => import("./pages/BestWeb3SocialMediaDapps"));
 const BlogGuideRoute = React.lazy(() => import("./pages/BlogGuideRoute"));
 
 const PromptLanding = React.lazy(() => import("./pages/PromptLanding"));
@@ -176,6 +177,7 @@ function AppContent() {
           <Route path="/mobile-preview" element={<MobilePreview />} />
           <Route path="/guide" element={<GuidePage />} />
           <Route path="/guides/best-decentralized-social-media" element={<Suspense fallback={<PageLoader />}><BestDecentralizedSocialMedia /></Suspense>} />
+          <Route path="/guides/best-web3-social-media-dapps" element={<Suspense fallback={<PageLoader />}><BestWeb3SocialMediaDapps /></Suspense>} />
           <Route path="/guides/*" element={<Suspense fallback={<PageLoader />}><BlogGuideRoute /></Suspense>} />
 
 
