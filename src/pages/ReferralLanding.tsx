@@ -115,13 +115,24 @@ export default function ReferralLanding() {
               <h1 className="text-4xl md:text-6xl font-bold leading-tight flex flex-col items-center gap-4">
                 {inviterLoaded ? (
                   <span className="inline-flex items-center justify-center gap-3 flex-wrap">
-                    <span>{inviter ? `${inviter} invited you to` : "You've been invited to"}</span>
-                    {inviter && (inviterBadgeBalance !== null || inviterUsername) && (
-                      <BadgeIcon
-                        badgeBalance={inviterBadgeBalance ?? undefined}
-                        username={inviterUsername}
-                        className="w-6 h-6 md:w-8 md:h-8"
-                      />
+                    {inviter ? (
+                      <>
+                        <span className="relative inline-block">
+                          <span>{inviter}</span>
+                          {(inviterBadgeBalance !== null || inviterUsername) && (
+                            <span className="absolute -top-1 -right-3 md:-top-2 md:-right-4">
+                              <BadgeIcon
+                                badgeBalance={inviterBadgeBalance ?? undefined}
+                                username={inviterUsername}
+                                className="w-3 h-3 md:w-4 md:h-4"
+                              />
+                            </span>
+                          )}
+                        </span>
+                        <span>invited you to</span>
+                      </>
+                    ) : (
+                      <span>You've been invited to</span>
                     )}
                   </span>
                 ) : (
@@ -133,6 +144,7 @@ export default function ReferralLanding() {
                     />
                   </span>
                 )}
+
                 <span className="text-white">DeHub</span>
               </h1>
               <p className="text-lg text-white/70">
