@@ -321,6 +321,15 @@ function buildSvg(opts: {
 
   <g text-anchor="start">
     <text x="${textX}" y="${H * 0.46}" fill="#fff" font-size="${H * 0.085}" font-weight="800" letter-spacing="-1">${name}</text>
+    ${opts.badgeDataUri ? (() => {
+      // Approximate rendered width of the name to anchor a superscript badge at its top-right.
+      const fs = H * 0.085;
+      const approxNameW = opts.name.length * fs * 0.55;
+      const badgeSize = fs * 0.55;
+      const bx = textX + approxNameW + fs * 0.15;
+      const by = H * 0.46 - fs * 0.95;
+      return `<image href="${opts.badgeDataUri}" x="${bx}" y="${by}" width="${badgeSize}" height="${badgeSize}" preserveAspectRatio="xMidYMid meet"/>`;
+    })() : ""}
     ${handle ? `<text x="${textX}" y="${H * 0.535}" fill="#ffffff" fill-opacity="0.55" font-size="${H * 0.034}" font-weight="500">${handle}</text>` : ""}
     <text x="${textX}" y="${handle ? H * 0.585 : H * 0.575}" fill="#ffffff" fill-opacity="0.92" font-size="${H * 0.042}" font-weight="500">invites you to join DeHub.</text>
     <g transform="translate(${W * 0.04}, ${H * 0.85})">
@@ -329,6 +338,7 @@ function buildSvg(opts: {
       <text x="${H * 0.17}" y="${H * 0.05}" fill="#ffffff" fill-opacity="0.85" font-size="${H * 0.030}" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">dehub.io/r/${code}</text>
     </g>
   </g>
+
 
   <g transform="translate(${qrX - 18}, ${qrY - 18})">
     <rect width="${qrSize + 36}" height="${qrSize + 36}" rx="18" fill="#ffffff"/>
