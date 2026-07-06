@@ -238,7 +238,7 @@ const DocsHome = () => {
             {t('home.readyDescription')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link to="/docs/quickstart" className="inline-flex items-center px-6 py-3 bg-foreground text-background font-semibold rounded-lg hover:bg-foreground/90 transition-all duration-200 font-exo">
+            <Link to="/docs/quickstart" className="inline-flex items-center px-6 py-3 bg-[#0a0b0d] text-white font-semibold rounded-lg hover:bg-[#0a0b0d]/90 transition-all duration-200 font-exo">
               {t('common.startBuilding')}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Link>
