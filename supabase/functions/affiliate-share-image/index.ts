@@ -8,6 +8,43 @@ import QRCode from "https://esm.sh/qrcode@1.5.4";
 import { encode as encodeB64 } from "https://deno.land/std@0.190.0/encoding/base64.ts";
 import { Resvg, initWasm } from "https://esm.sh/@resvg/resvg-wasm@2.6.2";
 import { DEHUB_LOGO_DATA_URI } from "./logo.ts";
+import { BADGE_DATA_URIS } from "./badges.ts";
+
+// Staking badge tiers — mirror of src/lib/staking-badges.ts.
+const BADGE_LEVELS: { name: string; min: number }[] = [
+  { name: "Crab", min: 10000 },
+  { name: "Lobster", min: 25000 },
+  { name: "Piranha", min: 50000 },
+  { name: "Tortoise", min: 100000 },
+  { name: "Cobra", min: 250000 },
+  { name: "Octopus", min: 500000 },
+  { name: "Crocodite", min: 1000000 },
+  { name: "Dolphin", min: 2000000 },
+  { name: "Tiger Shark", min: 3000000 },
+  { name: "Killer Whale", min: 5000000 },
+  { name: "Great White Shark", min: 10000000 },
+  { name: "Blue Whale", min: 25000000 },
+  { name: "Meglodon", min: 50000000 },
+];
+const USERNAME_BADGE_OVERRIDES: Record<string, string> = {
+  "maldoteth": "Meglodon",
+  "mal": "Meglodon",
+  "aaron": "Meglodon",
+};
+function resolveBadgeDataUri(badgeBalance: number | null, username: string | null): string | null {
+  if (username) {
+    const key = username.replace(/^@+/, "").toLowerCase();
+    const override = USERNAME_BADGE_OVERRIDES[key];
+    if (override && BADGE_DATA_URIS[override]) return BADGE_DATA_URIS[override];
+  }
+  if (badgeBalance === null || !Number.isFinite(badgeBalance) || badgeBalance < 10000) return null;
+  let current: string | null = null;
+  for (const b of BADGE_LEVELS) {
+    if (badgeBalance >= b.min) current = b.name;
+    else break;
+  }
+  return current ? BADGE_DATA_URIS[current] || null : null;
+}
 
 let resvgReady: Promise<void> | null = null;
 function ensureResvg(): Promise<void> {
