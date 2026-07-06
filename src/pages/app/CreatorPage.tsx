@@ -368,7 +368,7 @@ export default function CreatorPage() {
 
         <section className="grid gap-3 px-3 pb-4 sm:px-4 md:grid-cols-2">
           <a
-            href="https://chatgpt.com/"
+            href="https://chatgpt.com/apps#settings/Connectors?connector=asdk_app_6a4962fb2cdc8191afcda7ca74b6082c"
             target="_blank"
             rel="noopener noreferrer"
             className="group relative min-h-[220px] overflow-hidden rounded-2xl border border-white/10 p-5 text-left shadow-[0_24px_80px_rgba(0,0,0,0.45)] transition-transform hover:-translate-y-0.5"
@@ -379,19 +379,17 @@ export default function CreatorPage() {
               Use DeHub inside ChatGPT
             </div>
             <p className="mt-3 max-w-[380px] text-sm text-white/70">
-              Add DeHub as a connector in ChatGPT (Pro/Team/Enterprise) and let it fetch posts, profiles and trends for you.
+              DeHub is already added as a ChatGPT app. Open it to ask about posts, profiles and trends.
             </p>
-            <div className="mt-4 rounded-lg border border-white/10 bg-black/50 p-3 font-mono text-[11px] text-white/80 break-all">
-              https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/mcp
+            <div className="mt-4 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/50 px-3 py-2 text-sm font-semibold text-white transition-colors group-hover:bg-black/60">
+              Open DeHub in ChatGPT
+              <ArrowUpRight className="h-4 w-4 text-white/60 transition-colors group-hover:text-white" />
             </div>
-            <p className="mt-2 text-[11px] text-white/50">
-              ChatGPT → Settings → Connectors → Create → paste URL above.
-            </p>
             <ArrowUpRight className="absolute right-4 top-4 h-5 w-5 text-white/40 transition-colors group-hover:text-white" />
           </a>
 
           <a
-            href="https://claude.ai/"
+            href="https://claude.ai/new#settings/customize-connectors/10c6ee66-064b-4d66-b544-139cdc732b0f"
             target="_blank"
             rel="noopener noreferrer"
             className="group relative min-h-[220px] overflow-hidden rounded-2xl border border-white/10 p-5 text-left shadow-[0_24px_80px_rgba(0,0,0,0.45)] transition-transform hover:-translate-y-0.5"
@@ -402,14 +400,12 @@ export default function CreatorPage() {
               Use DeHub inside Claude
             </div>
             <p className="mt-3 max-w-[380px] text-sm text-white/70">
-              Add DeHub as a custom connector in Claude (Pro/Team). Ask it to pull DeHub content directly.
+              DeHub is already added as a Claude connector. Open it to pull DeHub content directly.
             </p>
-            <div className="mt-4 rounded-lg border border-white/10 bg-black/50 p-3 font-mono text-[11px] text-white/80 break-all">
-              https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/mcp
+            <div className="mt-4 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/50 px-3 py-2 text-sm font-semibold text-white transition-colors group-hover:bg-black/60">
+              Open DeHub in Claude
+              <ArrowUpRight className="h-4 w-4 text-white/60 transition-colors group-hover:text-white" />
             </div>
-            <p className="mt-2 text-[11px] text-white/50">
-              Claude → Settings → Connectors → Add custom → paste URL above.
-            </p>
             <ArrowUpRight className="absolute right-4 top-4 h-5 w-5 text-white/40 transition-colors group-hover:text-white" />
           </a>
         </section>
