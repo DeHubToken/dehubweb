@@ -197,9 +197,9 @@ export default function ConnectChatGPTPage() {
             href={APP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold text-black"
-            style={{ backgroundColor: "#10a37f" }}
+            className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-black/60 px-5 py-3 text-sm font-bold text-white shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-[24px]"
           >
+            <img src={openaiLogo} alt="" className="h-4 w-4 object-contain" />
             Open DeHub in ChatGPT
             <ArrowUpRight className="h-4 w-4" />
           </a>
