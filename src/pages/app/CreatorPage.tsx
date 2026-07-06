@@ -175,15 +175,7 @@ const tools: Tool[] = [
     category: 'Studio',
     action: { kind: 'navigate', to: '/app/settings?tab=characters' },
   },
-  {
-    id: 'subtitles',
-    name: 'Subtitles',
-    label: 'Video',
-    description: 'Caption and translate videos across the full language stack.',
-    icon: Languages,
-    category: 'Video',
-    action: { kind: 'navigate', to: '/app/tv' },
-  },
+
   {
     id: 'editor',
     name: 'Video Editor',
@@ -374,28 +366,57 @@ export default function CreatorPage() {
           </SwipeableCarousel>
         </section>
 
-        <section className="grid gap-3 px-3 pb-6 sm:px-4 lg:grid-cols-[0.38fr_1fr]">
-          <button
-            type="button"
-            onClick={() => runAction({ kind: 'assistant', preset: 'poster' })}
-            className="relative min-h-[264px] overflow-hidden rounded-2xl border border-white/10 p-4 text-left shadow-[0_24px_80px_rgba(0,0,0,0.45)]"
-            style={{ background: 'radial-gradient(circle at 80% 20%, rgba(255,255,255,0.24), transparent 30%), linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.03) 50%, rgba(215,255,0,0.22))' }}
+        <section className="grid gap-3 px-3 pb-4 sm:px-4 md:grid-cols-2">
+          <a
+            href="https://chatgpt.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative min-h-[220px] overflow-hidden rounded-2xl border border-white/10 p-5 text-left shadow-[0_24px_80px_rgba(0,0,0,0.45)] transition-transform hover:-translate-y-0.5"
+            style={{ background: 'radial-gradient(circle at 85% 15%, rgba(16,163,127,0.35), transparent 45%), linear-gradient(135deg, rgba(255,255,255,0.06), rgba(16,163,127,0.14) 60%, rgba(0,0,0,0.6))' }}
           >
-            <span className="inline-flex rounded px-2 py-1 text-[10px] font-black italic text-white" style={{ backgroundColor: hot }}>TEST STUDIO</span>
-            <div className="mt-7 max-w-[300px] text-3xl font-black uppercase leading-[1.02] tracking-tight text-white sm:text-4xl">
-              Make every launch look expensive
+            <span className="inline-flex rounded px-2 py-1 text-[10px] font-black italic text-black" style={{ backgroundColor: '#10a37f' }}>MCP LIVE</span>
+            <div className="mt-5 text-2xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-3xl">
+              Use DeHub inside ChatGPT
             </div>
-            <p className="mt-4 max-w-[270px] text-sm text-white/70">Posters, promos, thumbnails and launch cards using the DeHub brand system.</p>
-            <div className="absolute bottom-4 left-4 rounded-xl bg-white px-6 py-3 text-sm font-black text-black">Make DeHub Poster</div>
-            <div className="absolute bottom-6 right-4 h-36 w-32 rotate-6 rounded-xl border border-white/20 bg-black/70 p-3 shadow-2xl">
-              <div className="mb-3 h-3 w-16 rounded-full" style={metallicStyle} />
-              <div className="h-16 rounded-lg bg-white/15" />
-              <div className="mt-3 h-2 w-full rounded-full bg-white/30" />
-              <div className="mt-2 h-2 w-2/3 rounded-full bg-white/20" />
+            <p className="mt-3 max-w-[380px] text-sm text-white/70">
+              Add DeHub as a connector in ChatGPT (Pro/Team/Enterprise) and let it fetch posts, profiles and trends for you.
+            </p>
+            <div className="mt-4 rounded-lg border border-white/10 bg-black/50 p-3 font-mono text-[11px] text-white/80 break-all">
+              https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/mcp
             </div>
-          </button>
+            <p className="mt-2 text-[11px] text-white/50">
+              ChatGPT → Settings → Connectors → Create → paste URL above.
+            </p>
+            <ArrowUpRight className="absolute right-4 top-4 h-5 w-5 text-white/40 transition-colors group-hover:text-white" />
+          </a>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+          <a
+            href="https://claude.ai/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group relative min-h-[220px] overflow-hidden rounded-2xl border border-white/10 p-5 text-left shadow-[0_24px_80px_rgba(0,0,0,0.45)] transition-transform hover:-translate-y-0.5"
+            style={{ background: 'radial-gradient(circle at 85% 15%, rgba(217,119,87,0.38), transparent 45%), linear-gradient(135deg, rgba(255,255,255,0.06), rgba(217,119,87,0.14) 60%, rgba(0,0,0,0.6))' }}
+          >
+            <span className="inline-flex rounded px-2 py-1 text-[10px] font-black italic text-black" style={{ backgroundColor: '#d97757' }}>MCP LIVE</span>
+            <div className="mt-5 text-2xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-3xl">
+              Use DeHub inside Claude
+            </div>
+            <p className="mt-3 max-w-[380px] text-sm text-white/70">
+              Add DeHub as a custom connector in Claude (Pro/Team). Ask it to pull DeHub content directly.
+            </p>
+            <div className="mt-4 rounded-lg border border-white/10 bg-black/50 p-3 font-mono text-[11px] text-white/80 break-all">
+              https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/mcp
+            </div>
+            <p className="mt-2 text-[11px] text-white/50">
+              Claude → Settings → Connectors → Add custom → paste URL above.
+            </p>
+            <ArrowUpRight className="absolute right-4 top-4 h-5 w-5 text-white/40 transition-colors group-hover:text-white" />
+          </a>
+        </section>
+
+        <section className="px-3 pb-6 sm:px-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+
             {visibleTools.map((tool) => {
               const Icon = tool.icon;
               return (
