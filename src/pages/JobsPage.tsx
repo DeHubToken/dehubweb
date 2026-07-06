@@ -90,7 +90,52 @@ export default function JobsPage() {
 
   return (
     <div className="min-h-screen bg-black text-white relative overflow-hidden">
-      <SEOHead title="Careers at DeHub — Join the Team" description="Join the DeHub team — open positions in business development, marketing and more." url="https://dehub.io/jobs" />
+      <SEOHead
+        title="Careers at DeHub — Join the Team"
+        description="Join the DeHub team — open positions in business development, marketing and more."
+        url="https://dehub.io/jobs"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@graph': [
+            {
+              '@type': 'JobPosting',
+              title: 'Business Development Manager',
+              description:
+                'As a Business Development Manager at DeHub, you drive partnerships, onboard creators and communities, and grow the DeHub ecosystem across Web3 and mainstream markets.',
+              datePosted: '2026-01-01',
+              employmentType: ['FULL_TIME', 'CONTRACTOR'],
+              hiringOrganization: {
+                '@type': 'Organization',
+                name: 'DeHub',
+                sameAs: 'https://dehub.io',
+                logo: 'https://dehub.io/lovable-uploads/a8b1baf2-99f3-4ff3-b2b5-4575f4ba8ace.png',
+              },
+              jobLocationType: 'TELECOMMUTE',
+              applicantLocationRequirements: { '@type': 'Country', name: 'Worldwide' },
+              directApply: true,
+              url: 'https://dehub.io/jobs',
+            },
+            {
+              '@type': 'JobPosting',
+              title: 'Brand Ambassador',
+              description:
+                'DeHub Brand Ambassadors are the face and voice of the platform in their community — hosting events, growing local reach and championing DeHub across social channels.',
+              datePosted: '2026-01-01',
+              employmentType: ['PART_TIME', 'CONTRACTOR'],
+              hiringOrganization: {
+                '@type': 'Organization',
+                name: 'DeHub',
+                sameAs: 'https://dehub.io',
+                logo: 'https://dehub.io/lovable-uploads/a8b1baf2-99f3-4ff3-b2b5-4575f4ba8ace.png',
+              },
+              jobLocationType: 'TELECOMMUTE',
+              applicantLocationRequirements: { '@type': 'Country', name: 'Worldwide' },
+              directApply: true,
+              url: 'https://dehub.io/jobs',
+            },
+          ],
+        }}
+      />
       {/* Background particles */}
       <div className="absolute inset-0 pointer-events-none">
         {Array.from({ length: 60 }).map((_, i) => (
