@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { isValidAffiliateCode, setAffiliateRef } from "@/lib/affiliateRef";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
-import { BadgeIcon } from "@/components/app/BadgeIcon";
+import { getBadgeUrl, getBadgeName } from "@/lib/staking-badges";
 
 
 const SITE = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
@@ -115,23 +115,27 @@ export default function ReferralLanding() {
               <h1 className="text-4xl md:text-6xl font-bold leading-tight flex flex-col items-center gap-4">
                 {inviterLoaded ? (
                   <span className="inline-flex items-center justify-center gap-3 flex-wrap">
-                    {inviter ? (
-                      <>
-                        <span className="relative inline-block pr-2">
-                          <span>{inviter}</span>
-                          {(inviterBadgeBalance !== null || inviterUsername) && (
-                            <span className="absolute -top-1 -right-1 md:-top-2 md:-right-2">
-                              <BadgeIcon
-                                badgeBalance={inviterBadgeBalance ?? undefined}
-                                username={inviterUsername}
-                                className="w-3 h-3 md:w-4 md:h-4"
+                    {inviter ? (() => {
+                      const badgeUrl = getBadgeUrl(inviterBadgeBalance ?? undefined, inviterUsername);
+                      const badgeName = getBadgeName(inviterBadgeBalance ?? undefined, inviterUsername);
+                      return (
+                        <>
+                          <span className="relative inline-block">
+                            <span>{inviter}</span>
+                            {badgeUrl && (
+                              <img
+                                src={badgeUrl}
+                                alt={badgeName || "Badge"}
+                                width={16}
+                                height={16}
+                                className="absolute -top-1 -right-3 md:-top-2 md:-right-4 w-3 h-3 md:w-4 md:h-4 brightness-0 invert pointer-events-none select-none"
                               />
-                            </span>
-                          )}
-                        </span>
-                        <span>invited you to</span>
-                      </>
-                    ) : (
+                            )}
+                          </span>
+                          <span>invited you to</span>
+                        </>
+                      );
+                    })() : (
                       <span>You've been invited to</span>
                     )}
                   </span>
