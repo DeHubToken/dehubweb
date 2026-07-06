@@ -5,6 +5,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { PricingSection } from '@/components/pricing/PricingSection';
 import SwipeableCarousel from '@/components/app/SwipeableCarousel';
 import { CreatorComposerBar } from '@/components/app/creator/CreatorComposerBar';
+import { ModelMarquee } from '@/components/app/creator/ModelMarquee';
 import dehubIcon from '@/assets/dehub-icon.png.asset.json';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import showcaseImage from '@/assets/creator-studio-showcase.jpg';
@@ -366,7 +367,12 @@ export default function CreatorPage() {
           </SwipeableCarousel>
         </section>
 
+        <section className="px-3 pb-4 sm:px-4">
+          <ModelMarquee />
+        </section>
+
         <section className="grid gap-3 px-3 pb-4 sm:px-4 md:grid-cols-2">
+
           <Link
             to="/connect/chatgpt"
             className="group relative min-h-[220px] overflow-hidden rounded-2xl border border-white/10 p-5 text-left shadow-[0_24px_80px_rgba(0,0,0,0.45)] transition-transform hover:-translate-y-0.5"
