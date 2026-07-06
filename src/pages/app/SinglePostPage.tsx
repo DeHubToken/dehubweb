@@ -994,9 +994,9 @@ export default function SinglePostPage() {
       {!hideHeader && (
         <PageHeader showBack={onBack ? true : hasHistory} onBack={onBack} innerClassName="max-w-2xl mx-auto w-full" />
       )}
-      <div className="px-3 sm:px-4 pb-8 pt-2">
+      <div className="px-3 sm:px-4 pb-8">
         <div className="max-w-2xl mx-auto">
-          <div data-feed-item className="lg:rounded-xl lg:border lg:border-white/[0.12] lg:bg-white/[0.03] lg:p-3">
+          <div data-feed-item>
             {renderContent()}
             {!isTextPost && id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
           </div>
