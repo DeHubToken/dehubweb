@@ -206,7 +206,7 @@ export const FuturisticAlienHero = () => {
           "absolute top-4 right-4 z-20 p-2 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all duration-200 group",
           isCloseButtonGlitching && "animate-close-button-glitch"
         )}
-        aria-label="Enter App"
+        aria-label="Enter DeHub App"
         style={isCloseButtonGlitching ? {
           boxShadow: '0 0 20px rgba(255, 255, 255, 0.6), 0 0 40px rgba(139, 92, 246, 0.4), 0 0 60px rgba(139, 92, 246, 0.2)',
           borderColor: 'rgba(255, 255, 255, 0.5)',

@@ -728,7 +728,7 @@ const GuidePage: React.FC = () => {
             <ArrowLeft className="w-5 h-5" />
             <span className="text-sm font-medium hidden sm:inline">Back to App</span>
           </Link>
-          <h1 className="text-lg font-bold hidden sm:block">DeHub User Guide</h1>
+          <div className="text-lg font-bold hidden sm:block">DeHub User Guide</div>
           
           {/* Search bar */}
           <div className="relative flex-1 max-w-xs mx-3 sm:mx-0 sm:flex-none sm:w-64">
@@ -819,7 +819,7 @@ const GuidePage: React.FC = () => {
           {!isSearching && (
             <div className="bg-gradient-to-br from-white/5 to-white/[0.02] border border-white/10 rounded-2xl p-6 md:p-10 mb-2">
               <h1 className="text-3xl md:text-4xl font-bold mb-3">
-                Welcome to DeHub
+                DeHub User Guide & Documentation
               </h1>
               <p className="text-white/60 text-lg leading-relaxed max-w-2xl">
                 Your complete guide to using DeHub — the decentralized social media platform.
