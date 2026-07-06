@@ -1,4 +1,20 @@
 import { cn } from '@/lib/utils';
+import alibabaLogo from '@/assets/ai-logos/alibaba.png.asset.json';
+import anthropicLogo from '@/assets/ai-logos/anthropic.png.asset.json';
+import blackForestLabsLogo from '@/assets/ai-logos/black-forest-labs.png.asset.json';
+import bytedanceLogo from '@/assets/ai-logos/bytedance.png.asset.json';
+import elevenlabsLogo from '@/assets/ai-logos/elevenlabs.png.asset.json';
+import googleLogo from '@/assets/ai-logos/google.png.asset.json';
+import ideogramLogo from '@/assets/ai-logos/ideogram.png.asset.json';
+import klingLogo from '@/assets/ai-logos/kling.png.asset.json';
+import lumaLogo from '@/assets/ai-logos/luma.png.asset.json';
+import microsoftLogo from '@/assets/ai-logos/microsoft.png.asset.json';
+import minimaxLogo from '@/assets/ai-logos/minimax.png.asset.json';
+import openaiLogo from '@/assets/ai-logos/openai.png.asset.json';
+import pikaLogo from '@/assets/ai-logos/pika.png.asset.json';
+import recraftLogo from '@/assets/ai-logos/recraft.png.asset.json';
+import runwayLogo from '@/assets/ai-logos/runway.png.asset.json';
+import sunoLogo from '@/assets/ai-logos/suno.png.asset.json';
 
 type ModelChip = {
   name: string;
@@ -43,61 +59,45 @@ const MODELS: ModelChip[] = [
   { name: 'Trellis 3D', vendor: 'Microsoft', kind: '3D' },
 ];
 
-// Vendor -> { simple-icons slug or null, official brand color hex }
-const vendorMeta: Record<string, { slug: string | null; color: string }> = {
-  Google: { slug: 'google', color: '#4285F4' },
-  OpenAI: { slug: 'openai', color: '#10A37F' },
-  Anthropic: { slug: 'claude', color: '#D97757' },
-  ByteDance: { slug: 'bytedance', color: '#3C8CFF' },
-  ElevenLabs: { slug: 'elevenlabs', color: '#FFFFFF' },
-  Alibaba: { slug: 'alibabacloud', color: '#FF6A00' },
-  Microsoft: { slug: 'microsoft', color: '#00A4EF' },
-  Kling: { slug: 'kuaishou', color: '#FF4906' },
-  MiniMax: { slug: 'minimax', color: '#F23A5D' },
-  Suno: { slug: 'suno', color: '#FFFFFF' },
-  'Black Forest Labs': { slug: null, color: '#DD0031' },
-  Runway: { slug: null, color: '#00FF88' },
-  Ideogram: { slug: null, color: '#F5A623' },
-  Recraft: { slug: null, color: '#E5484D' },
-  Luma: { slug: null, color: '#FDB813' },
-  Pika: { slug: null, color: '#FF3366' },
+const vendorMeta: Record<string, { logo: string; color: string }> = {
+  Google: { logo: googleLogo.url, color: '#4285F4' },
+  OpenAI: { logo: openaiLogo.url, color: '#10A37F' },
+  Anthropic: { logo: anthropicLogo.url, color: '#D97757' },
+  ByteDance: { logo: bytedanceLogo.url, color: '#111111' },
+  ElevenLabs: { logo: elevenlabsLogo.url, color: '#FFFFFF' },
+  Alibaba: { logo: alibabaLogo.url, color: '#FF6A00' },
+  Microsoft: { logo: microsoftLogo.url, color: '#00A4EF' },
+  Kling: { logo: klingLogo.url, color: '#FF4906' },
+  MiniMax: { logo: minimaxLogo.url, color: '#F23A5D' },
+  Suno: { logo: sunoLogo.url, color: '#FFFFFF' },
+  'Black Forest Labs': { logo: blackForestLabsLogo.url, color: '#DD0031' },
+  Runway: { logo: runwayLogo.url, color: '#00FF88' },
+  Ideogram: { logo: ideogramLogo.url, color: '#F5A623' },
+  Recraft: { logo: recraftLogo.url, color: '#E5484D' },
+  Luma: { logo: lumaLogo.url, color: '#FDB813' },
+  Pika: { logo: pikaLogo.url, color: '#FF3366' },
 };
 
 function VendorLogo({ vendor }: { vendor: string }) {
-  const meta = vendorMeta[vendor] ?? { slug: null, color: '#ffffff' };
-  if (meta.slug) {
-    const url = `https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/${meta.slug}.svg`;
-    // mask-image lets us recolor a monochrome SVG with the vendor's brand hex.
-    return (
-      <span
-        aria-hidden
-        className="h-4 w-4 shrink-0"
-        style={{
-          backgroundColor: meta.color,
-          WebkitMaskImage: `url(${url})`,
-          maskImage: `url(${url})`,
-          WebkitMaskRepeat: 'no-repeat',
-          maskRepeat: 'no-repeat',
-          WebkitMaskPosition: 'center',
-          maskPosition: 'center',
-          WebkitMaskSize: 'contain',
-          maskSize: 'contain',
-          filter: `drop-shadow(0 0 4px ${meta.color}66)`,
-        }}
-      />
-    );
-  }
-  // Monogram fallback in brand color
+  const meta = vendorMeta[vendor];
   return (
     <span
-      className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[8px] font-black"
+      className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/95 p-0.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.55)]"
       style={{
-        backgroundColor: meta.color,
-        color: '#0a0a0a',
-        boxShadow: `0 0 6px ${meta.color}66`,
+        boxShadow: `inset 0 1px 0 rgba(255,255,255,0.55), 0 0 10px ${meta?.color ?? '#ffffff'}66`,
       }}
     >
-      {vendor.charAt(0)}
+      {meta ? (
+        <img
+          src={meta.logo}
+          alt=""
+          className="h-full w-full object-contain"
+          draggable={false}
+          loading="lazy"
+        />
+      ) : (
+        <span className="text-[9px] font-black text-black">{vendor.charAt(0)}</span>
+      )}
     </span>
   );
 }
