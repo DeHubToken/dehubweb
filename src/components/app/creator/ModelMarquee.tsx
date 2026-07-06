@@ -51,6 +51,52 @@ const kindStyles: Record<ModelChip['kind'], { dot: string; glow: string }> = {
   '3D': { dot: '#fbbf24', glow: 'rgba(251,191,36,0.35)' },
 };
 
+// Vendor -> simple-icons slug (via jsdelivr CDN). null = no logo available, use monogram fallback.
+const vendorLogo: Record<string, string | null> = {
+  Google: 'google',
+  OpenAI: 'openai',
+  Anthropic: 'anthropic',
+  ByteDance: 'bytedance',
+  ElevenLabs: 'elevenlabs',
+  Alibaba: 'alibabacloud',
+  Microsoft: 'microsoft',
+  Kling: 'kuaishou',
+  MiniMax: 'minimax',
+  Suno: 'suno',
+  'Black Forest Labs': 'flux',
+  Runway: null,
+  Ideogram: null,
+  Recraft: null,
+  Luma: null,
+  Pika: null,
+};
+
+function VendorLogo({ vendor, glow }: { vendor: string; glow: string }) {
+  const slug = vendorLogo[vendor];
+  if (slug) {
+    return (
+      <img
+        src={`https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/${slug}.svg`}
+        alt=""
+        loading="lazy"
+        className="h-4 w-4 shrink-0"
+        style={{
+          filter: `brightness(0) invert(1) drop-shadow(0 0 4px ${glow})`,
+        }}
+      />
+    );
+  }
+  // Monogram fallback
+  return (
+    <span
+      className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-white/20 text-[8px] font-bold text-white"
+      style={{ boxShadow: `0 0 6px ${glow}` }}
+    >
+      {vendor.charAt(0)}
+    </span>
+  );
+}
+
 function Chip({ model }: { model: ModelChip }) {
   const s = kindStyles[model.kind];
   return (
@@ -58,10 +104,7 @@ function Chip({ model }: { model: ModelChip }) {
       className="flex shrink-0 items-center gap-2 rounded-xl border border-white/10 bg-black/60 px-3 py-2 backdrop-blur-[24px]"
       style={{ boxShadow: `inset 0 1px 0 rgba(255,255,255,0.06), 0 0 24px ${s.glow}` }}
     >
-      <span
-        className="h-2 w-2 shrink-0 rounded-full"
-        style={{ backgroundColor: s.dot, boxShadow: `0 0 8px ${s.dot}` }}
-      />
+      <VendorLogo vendor={model.vendor} glow={s.glow} />
       <div className="flex flex-col leading-none">
         <span className="text-[11px] font-bold uppercase tracking-tight text-white">
           {model.name}
