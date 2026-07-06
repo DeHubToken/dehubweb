@@ -46,11 +46,38 @@ Examples of correct translation:
 
 Rule of thumb: if the theme suggests a color, **replace that color with its metallic-monochrome equivalent** (gold → chrome, red → polished obsidian with silver rim, green → brushed dark steel with cool white glow, warm light → cool near-white light). If the user explicitly requests a color or colored accent, allow only that requested color as a restrained accent while keeping the DeHub logo white/near-white and the scene mostly black, silver, chrome, and glass. If in doubt, ask yourself: "would this look at home in an Apple keynote?" If no, tighten the prompt.
 
+## Design-system anchors — use when the user is vague
 
+DeHub ships an official design system (see `assets/reference/template-signup.png` and `assets/reference/template-affiliates.png` in this skill folder — study them before generating anything ambiguous). When the user's prompt is loose ("make a dehub poster", "announcement graphic", "some content for X"), do not invent a random monolith — pull the scene's **background, texture, and typographic furniture** directly from the design system so the output looks like it came out of the DeHub brand kit.
 
+**Core design-system motifs to inherit (in this priority order):**
 
+1. **Machined graphite canvas.** Near-black canvas `#0a0b0d` sitting on a deeper vignette `#060708` — always a radial vignette (`radial-gradient(120% 90% at 50% -10%, #15181e, #0a0b0d 55%, #060708)`), never flat black. This is the base of every DeHub surface.
+2. **Blueprint dot grid.** A faint white dot pattern (`rgba(255,255,255,0.05)` dots at ~28px spacing) laid over the vignette — the "digital blueprint" motif. Use as the background pattern whenever the scene doesn't already have a strong physical texture. Prompt language: `"faint blueprint dot-grid pattern at ~28px spacing, dots barely visible at 5% white opacity, laid over a deep charcoal radial vignette"`.
+3. **Embossed graphite panels.** Any framed element (a card, a plaque, a browser window) should have a graphite gradient face (`#20232a → #15171c`), a 1px translucent-white border (~10% white), and a machined edge = subtle top highlight + darker bottom recess. Corners 16px (panels), 12px (controls), 22–28px (large tiles). Never pillowy, never sharp.
+4. **Chrome / brushed-metal display type.** Big DeHub headlines are filled with a vertical brushed-metal gradient (`white 0% → #e6e9ed 38% → #9aa0a9 62% → #c4c9d0 100%`), Exo 800, UPPERCASE, wide tracking (0.04–0.06em). This is *the* DeHub display treatment — when the composition includes rendered display text, it should read as polished steel, not flat white.
+5. **`//` mono annotation stamps.** JetBrains Mono, small, uppercase or sentence case, prefixed with `//`. Used as eyebrows and metadata stamps in the corners: `// JOIN NOW`, `// type = "affiliate"`, `// dehub.io`, `// file_type = image`. This is a brand signature — sprinkle sparingly in slide/poster corners when text is welcome.
+6. **Glass over media.** When media (photo, video still, mock) appears, wrap it in a rounded panel with a 1px border and place a frosted-glass mono tag in a corner (`file_type = image`, blurred `rgba(16,18,22,0.72)` behind).
+7. **Trident U mark + wordmark.** The alternative logo (`assets/dehub-logo-alternative.png`) is the trident "U" brandmark — use it as a compact standalone icon. The primary logo (`assets/dehub-logo-primary.png`) is the full wordmark — use it for the main lockup.
+8. **QR corners.** A monochrome QR block in a slide corner is a valid DeHub motif for anything referral / share / affiliate related.
+9. **Functional color = status only.** The only colors ever allowed on top of the monochrome base are the four status signals, and only when semantically justified: live-green `#34e0a1`, warn-amber `#ffc043`, alert-red `#ff5468`, info-blue `#5b9dff`. Live-green with a glow (`0 0 12px rgba(52,224,161,0.55)`) is the classic "live now in beta" pill accent.
 
+**When the user is vague, default to one of two proven templates:**
 
+- **"Statement" template** (like a keynote title slide) — thin rounded outer frame on the vignette+dot-grid canvas, oversized chrome UPPERCASE headline centered or upper-left, small `// eyebrow` above it, wordmark bottom-left, `// dehub.io` chip bottom-right. Reference: `assets/reference/template-signup.png` for structure.
+- **"Media / feature" template** — split layout: left column has a live-green status pill, chrome UPPERCASE headline, one clause of body copy in muted grey; right column has a rounded embossed media panel with a glass `file_type = image` tag in the corner. Wordmark + trident bottom-left, `// type = "..."` chip bottom-right. Reference: `assets/reference/template-affiliates.png`.
+
+Both templates share: dot-grid canvas, thin rounded outer frame (24px radius, 18px inset), chrome headline in Exo 800 uppercase, mono `//` chips in the footer corners, and the wordmark or trident in the opposite corner.
+
+**How to bake this into the Nano Banana 2 prompt.** When the scene brief is loose, describe the canvas + frame + dot-grid + logo-host surface in the step-1 prompt so the scene *is* a DeHub layout, not a generic monolith. Example scaffold override for a vague brief:
+
+```
+A 16:9 DeHub marketing surface: deep charcoal radial vignette background (#0a0b0d fading to #060708 at the edges) overlaid with a faint blueprint dot-grid pattern — barely visible white dots at ~5% opacity spaced ~28px apart. A thin 1px translucent-white rounded frame (24px radius) insets 18px from the edges. Composition centered on an embossed graphite panel (graphite gradient face, 1px translucent-white border, subtle top highlight and darker bottom recess, 16px radius) that will host the DeHub wordmark. Small monospace `//` annotation stamp in the bottom-right corner reserved but currently blank. Strict monochrome — blacks, charcoals, silvers, chromes, cool off-whites only. Cinematic key light from upper-left, soft rim light, deep shadow falloff into the vignette corners. Machined, technical, Apple-keynote-meets-blueprint feel. Absolutely NO color hues, no lens flares, no neon.
+```
+
+If the user asked for `"live"`, `"beta launch"`, `"new"` framing, you may add one **live-green** pill accent (`#34e0a1` dot with soft glow) — but nothing else colored.
+
+**Never hallucinate design-system elements.** The `//` stamps, mono chip text, and any rendered "DeHub" lettering must be added via a step-2 composite pass or via the real logo PNG — Nano Banana 2 will typo `dehub` half the time if left to render it raw. Reserve blank areas for text in step 1; drop the real logo in via `imagegen--edit_image` in step 2.
 
 
 ## Brand assets
