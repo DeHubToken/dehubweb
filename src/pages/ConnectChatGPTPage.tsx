@@ -2,6 +2,8 @@ import { ArrowLeft, ArrowUpRight, Check } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
 import ogImage from "@/assets/og-chatgpt.jpg";
+import dehubLogo from "@/assets/dehub-logo-white.png";
+import openaiLogo from "@/assets/ai-logos/openai.png";
 
 const APP_URL =
   "https://chatgpt.com/apps#settings/Connectors?connector=asdk_app_6a4962fb2cdc8191afcda7ca74b6082c";
@@ -109,12 +111,14 @@ export default function ConnectChatGPTPage() {
           aria-hidden="true"
         />
 
-        <span
-          className="inline-flex rounded px-2 py-1 text-[10px] font-black italic text-black"
-          style={{ backgroundColor: "#10a37f" }}
-        >
-          MCP LIVE
-        </span>
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 backdrop-blur-[24px]">
+          <img src={dehubLogo} alt="DeHub" className="h-4 w-4 object-contain" />
+          <span className="text-white/40">×</span>
+          <img src={openaiLogo} alt="ChatGPT" className="h-4 w-4 object-contain" />
+          <span className="ml-1 text-[10px] font-black italic tracking-wider text-white">
+            MCP LIVE
+          </span>
+        </div>
 
         <h1 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">
           Use DeHub inside ChatGPT
@@ -129,9 +133,9 @@ export default function ConnectChatGPTPage() {
           href={APP_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-8 inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold text-black transition-transform hover:-translate-y-0.5"
-          style={{ backgroundColor: "#10a37f" }}
+          className="mt-8 inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-black/60 px-5 py-3 text-sm font-bold text-white shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-[24px] transition-transform hover:-translate-y-0.5"
         >
+          <img src={openaiLogo} alt="" className="h-4 w-4 object-contain" />
           Open DeHub in ChatGPT
           <ArrowUpRight className="h-4 w-4" />
         </a>
@@ -193,9 +197,9 @@ export default function ConnectChatGPTPage() {
             href={APP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold text-black"
-            style={{ backgroundColor: "#10a37f" }}
+            className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-black/60 px-5 py-3 text-sm font-bold text-white shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-[24px]"
           >
+            <img src={openaiLogo} alt="" className="h-4 w-4 object-contain" />
             Open DeHub in ChatGPT
             <ArrowUpRight className="h-4 w-4" />
           </a>
