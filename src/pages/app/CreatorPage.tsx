@@ -375,17 +375,33 @@ export default function CreatorPage() {
 
           <Link
             to="/connect/chatgpt"
-            className="group relative min-h-[220px] overflow-hidden rounded-2xl border border-white/10 p-5 text-left shadow-[0_24px_80px_rgba(0,0,0,0.45)] transition-transform hover:-translate-y-0.5"
-            style={{ background: 'radial-gradient(circle at 85% 15%, rgba(16,163,127,0.35), transparent 45%), linear-gradient(135deg, rgba(255,255,255,0.06), rgba(16,163,127,0.14) 60%, rgba(0,0,0,0.6))' }}
+            className="group relative min-h-[220px] overflow-hidden rounded-2xl border border-white/10 bg-black/60 p-5 text-left shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-[24px] transition-transform hover:-translate-y-0.5 hover:bg-black/70"
           >
-            <span className="inline-flex rounded px-2 py-1 text-[10px] font-black italic text-black" style={{ backgroundColor: '#10a37f' }}>MCP LIVE</span>
-            <div className="mt-5 text-2xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-3xl">
+            <div className="flex items-center gap-2">
+              <span
+                aria-hidden
+                className="h-7 w-7 shrink-0"
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  WebkitMaskImage: 'url(https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/openai.svg)',
+                  maskImage: 'url(https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/openai.svg)',
+                  WebkitMaskRepeat: 'no-repeat',
+                  maskRepeat: 'no-repeat',
+                  WebkitMaskPosition: 'center',
+                  maskPosition: 'center',
+                  WebkitMaskSize: 'contain',
+                  maskSize: 'contain',
+                }}
+              />
+              <span className="inline-flex rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-black italic tracking-wider text-white">MCP LIVE</span>
+            </div>
+            <div className="mt-4 text-2xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-3xl">
               Use DeHub inside ChatGPT
             </div>
             <p className="mt-3 max-w-[380px] text-sm text-white/70">
               DeHub is a native ChatGPT app. See how to enable the connector and start prompting.
             </p>
-            <div className="mt-4 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/50 px-3 py-2 text-sm font-semibold text-white transition-colors group-hover:bg-black/60">
+            <div className="mt-4 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-white transition-colors group-hover:bg-white/10">
               Read the ChatGPT guide
               <ArrowUpRight className="h-4 w-4 text-white/60 transition-colors group-hover:text-white" />
             </div>
@@ -394,17 +410,33 @@ export default function CreatorPage() {
 
           <Link
             to="/connect/claude"
-            className="group relative min-h-[220px] overflow-hidden rounded-2xl border border-white/10 p-5 text-left shadow-[0_24px_80px_rgba(0,0,0,0.45)] transition-transform hover:-translate-y-0.5"
-            style={{ background: 'radial-gradient(circle at 85% 15%, rgba(217,119,87,0.38), transparent 45%), linear-gradient(135deg, rgba(255,255,255,0.06), rgba(217,119,87,0.14) 60%, rgba(0,0,0,0.6))' }}
+            className="group relative min-h-[220px] overflow-hidden rounded-2xl border border-white/10 bg-black/60 p-5 text-left shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-[24px] transition-transform hover:-translate-y-0.5 hover:bg-black/70"
           >
-            <span className="inline-flex rounded px-2 py-1 text-[10px] font-black italic text-black" style={{ backgroundColor: '#d97757' }}>MCP LIVE</span>
-            <div className="mt-5 text-2xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-3xl">
+            <div className="flex items-center gap-2">
+              <span
+                aria-hidden
+                className="h-7 w-7 shrink-0"
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  WebkitMaskImage: 'url(https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/claude.svg)',
+                  maskImage: 'url(https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/claude.svg)',
+                  WebkitMaskRepeat: 'no-repeat',
+                  maskRepeat: 'no-repeat',
+                  WebkitMaskPosition: 'center',
+                  maskPosition: 'center',
+                  WebkitMaskSize: 'contain',
+                  maskSize: 'contain',
+                }}
+              />
+              <span className="inline-flex rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-black italic tracking-wider text-white">MCP LIVE</span>
+            </div>
+            <div className="mt-4 text-2xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-3xl">
               Use DeHub inside Claude
             </div>
             <p className="mt-3 max-w-[380px] text-sm text-white/70">
               DeHub is a native Claude connector. Learn how to enable it and pull DeHub content live.
             </p>
-            <div className="mt-4 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/50 px-3 py-2 text-sm font-semibold text-white transition-colors group-hover:bg-black/60">
+            <div className="mt-4 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm font-semibold text-white transition-colors group-hover:bg-white/10">
               Read the Claude guide
               <ArrowUpRight className="h-4 w-4 text-white/60 transition-colors group-hover:text-white" />
             </div>

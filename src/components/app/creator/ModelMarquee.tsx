@@ -43,54 +43,59 @@ const MODELS: ModelChip[] = [
   { name: 'Trellis 3D', vendor: 'Microsoft', kind: '3D' },
 ];
 
-const kindStyles: Record<ModelChip['kind'], { dot: string; glow: string }> = {
-  Image: { dot: '#f472b6', glow: 'rgba(244,114,182,0.35)' },
-  Video: { dot: '#60a5fa', glow: 'rgba(96,165,250,0.35)' },
-  Audio: { dot: '#a78bfa', glow: 'rgba(167,139,250,0.35)' },
-  Text: { dot: '#34d399', glow: 'rgba(52,211,153,0.35)' },
-  '3D': { dot: '#fbbf24', glow: 'rgba(251,191,36,0.35)' },
+// Vendor -> { simple-icons slug or null, official brand color hex }
+const vendorMeta: Record<string, { slug: string | null; color: string }> = {
+  Google: { slug: 'google', color: '#4285F4' },
+  OpenAI: { slug: 'openai', color: '#10A37F' },
+  Anthropic: { slug: 'claude', color: '#D97757' },
+  ByteDance: { slug: 'bytedance', color: '#3C8CFF' },
+  ElevenLabs: { slug: 'elevenlabs', color: '#FFFFFF' },
+  Alibaba: { slug: 'alibabacloud', color: '#FF6A00' },
+  Microsoft: { slug: 'microsoft', color: '#00A4EF' },
+  Kling: { slug: 'kuaishou', color: '#FF4906' },
+  MiniMax: { slug: 'minimax', color: '#F23A5D' },
+  Suno: { slug: 'suno', color: '#FFFFFF' },
+  'Black Forest Labs': { slug: null, color: '#DD0031' },
+  Runway: { slug: null, color: '#00FF88' },
+  Ideogram: { slug: null, color: '#F5A623' },
+  Recraft: { slug: null, color: '#E5484D' },
+  Luma: { slug: null, color: '#FDB813' },
+  Pika: { slug: null, color: '#FF3366' },
 };
 
-// Vendor -> simple-icons slug (via jsdelivr CDN). null = no logo available, use monogram fallback.
-const vendorLogo: Record<string, string | null> = {
-  Google: 'google',
-  OpenAI: 'openai',
-  Anthropic: 'anthropic',
-  ByteDance: 'bytedance',
-  ElevenLabs: 'elevenlabs',
-  Alibaba: 'alibabacloud',
-  Microsoft: 'microsoft',
-  Kling: 'kuaishou',
-  MiniMax: 'minimax',
-  Suno: 'suno',
-  'Black Forest Labs': 'flux',
-  Runway: null,
-  Ideogram: null,
-  Recraft: null,
-  Luma: null,
-  Pika: null,
-};
-
-function VendorLogo({ vendor, glow }: { vendor: string; glow: string }) {
-  const slug = vendorLogo[vendor];
-  if (slug) {
+function VendorLogo({ vendor }: { vendor: string }) {
+  const meta = vendorMeta[vendor] ?? { slug: null, color: '#ffffff' };
+  if (meta.slug) {
+    const url = `https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/${meta.slug}.svg`;
+    // mask-image lets us recolor a monochrome SVG with the vendor's brand hex.
     return (
-      <img
-        src={`https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/${slug}.svg`}
-        alt=""
-        loading="lazy"
+      <span
+        aria-hidden
         className="h-4 w-4 shrink-0"
         style={{
-          filter: `brightness(0) invert(1) drop-shadow(0 0 4px ${glow})`,
+          backgroundColor: meta.color,
+          WebkitMaskImage: `url(${url})`,
+          maskImage: `url(${url})`,
+          WebkitMaskRepeat: 'no-repeat',
+          maskRepeat: 'no-repeat',
+          WebkitMaskPosition: 'center',
+          maskPosition: 'center',
+          WebkitMaskSize: 'contain',
+          maskSize: 'contain',
+          filter: `drop-shadow(0 0 4px ${meta.color}66)`,
         }}
       />
     );
   }
-  // Monogram fallback
+  // Monogram fallback in brand color
   return (
     <span
-      className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-white/20 text-[8px] font-bold text-white"
-      style={{ boxShadow: `0 0 6px ${glow}` }}
+      className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[8px] font-black"
+      style={{
+        backgroundColor: meta.color,
+        color: '#0a0a0a',
+        boxShadow: `0 0 6px ${meta.color}66`,
+      }}
     >
       {vendor.charAt(0)}
     </span>
@@ -98,13 +103,14 @@ function VendorLogo({ vendor, glow }: { vendor: string; glow: string }) {
 }
 
 function Chip({ model }: { model: ModelChip }) {
-  const s = kindStyles[model.kind];
+  const meta = vendorMeta[model.vendor] ?? { color: '#ffffff' };
+  const glow = `${meta.color}40`; // ~25% opacity glow
   return (
     <div
       className="flex shrink-0 items-center gap-2 rounded-xl border border-white/10 bg-black/60 px-3 py-2 backdrop-blur-[24px]"
-      style={{ boxShadow: `inset 0 1px 0 rgba(255,255,255,0.06), 0 0 24px ${s.glow}` }}
+      style={{ boxShadow: `inset 0 1px 0 rgba(255,255,255,0.06), 0 0 24px ${glow}` }}
     >
-      <VendorLogo vendor={model.vendor} glow={s.glow} />
+      <VendorLogo vendor={model.vendor} />
       <div className="flex flex-col leading-none">
         <span className="text-[11px] font-bold uppercase tracking-tight text-white">
           {model.name}
@@ -118,7 +124,6 @@ function Chip({ model }: { model: ModelChip }) {
 }
 
 export function ModelMarquee() {
-  // Duplicate list for a seamless infinite loop.
   const doubled = [...MODELS, ...MODELS];
 
   return (
