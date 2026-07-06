@@ -89,52 +89,49 @@ serve(async (req) => {
         formatHint = 'square social post (1:1), think Instagram feed / album cover';
       }
 
-      // ── Template library: 15 proven marketing poster archetypes. One is picked at
-      //    random per request so the same brief yields different stunning results, and
-      //    outputs feel like real campaign work — not a repetitive "brand system" look.
+      // ── DeHub brand archetype library: all strictly monochrome, all material-first,
+      //    all built around a real physical LOGO HOST SURFACE the wordmark can be
+      //    engraved / embossed / backlit / projected into. No cyberpunk/rave/vaporwave
+      //    clichés — those produced colored, chaotic posters. One is picked per request
+      //    so outputs feel like real campaign work, on-brand every time.
       const TEMPLATES = [
-        'Apple keynote hero: single ultra-detailed hero product/subject floating dead-center on infinite black, dramatic top rim light, hard shadow beneath, wide margins, one bold headline word optional.',
-        'A24 film poster: cinematic character or object photograph, film-grain, muted teal-magenta duotone accents on black, tiny credits-block treatment near the bottom edge.',
-        'Cyberpunk street: rain-slick night alley, neon reflections in puddles, atmospheric haze, blade-runner depth, lone silhouetted figure or object as focal point.',
-        'Nike sportswear campaign: dynamic action pose, motion blur, bold cropping, high-contrast lighting, negative space top-left for headline.',
-        'Off-White / Virgil fashion editorial: raw industrial textures, exposed grid lines, quotation-mark UI accents, subject centered, deadstock zine energy.',
-        'Cosmic scale: astronaut / planet / nebula scene, tiny human silhouette for scale, deep space blacks, muted violet-cyan ambient glow, awe-inspiring vastness.',
-        'Liquid glass hero: translucent frosted-glass geometric slab tumbling through dark void, refracted light caustics, ultra-premium fintech energy.',
-        'Underground rave flyer: distorted photocopy grain, high-contrast subject, warped type block area, magenta / cyan spot color on charcoal.',
-        'Luxury watch ad: macro product photography aesthetic, precision detail, single-source rim light, deep shadow falloff, obsidian background.',
-        'Vaporwave sunset: distant chrome-mirror horizon, sun/grid vanishing point, retrofuturist geometry, muted magenta afterglow, dead-center symmetry.',
-        'Brutalist typography poster: massive negative space, tiny detail object in one corner, giant implied text-block zone reserved, Swiss-grid discipline.',
-        'Sci-fi keyart: single monolithic architectural structure or artifact under an alien sky, tiny scale figure at base, cinematic anamorphic lens flare.',
-        'Editorial magazine cover: portrait-style hero shot with shallow depth of field, cover-line block reserved along left margin, high-fashion lighting.',
-        'Product launch teaser: single glowing object emerging from pure black, volumetric god-rays, particulate atmosphere, "the reveal" energy.',
-        'Concert tour poster: subject in mid-motion under stage haze, high-contrast spotlight, dust particles, gritty concert photography grain, one-headline slot.',
+        'Monolithic obsidian pavilion floating over a mirror-black lake in charcoal mist, cool silver rim light from upper-left; its centered vertical face is a polished obsidian slab with a subtly recessed rectangular panel — the LOGO HOST SURFACE.',
+        'Cantilevered brushed-steel platform in volumetric charcoal fog, cool key light raking from upper-right; a large brushed-aluminum plaque tilted on the platform catches the light — the LOGO HOST SURFACE.',
+        'Backlit smoked-glass gateway suspended in cold mist, faint cool-white internal glow, deep shadow falloff; a frosted-glass panel at eye level with a soft internal luminance — the LOGO HOST SURFACE.',
+        'Chrome monolith rising from a black marble floor, top-down cool key light and long cast shadow; the mirror-chrome vertical face oriented squarely toward camera — the LOGO HOST SURFACE.',
+        'Liquid mercury pool on polished obsidian, silver rim highlight rippling across the surface; a raised mercury relief zone waits mid-frame — the LOGO HOST SURFACE.',
+        'Weightless silver ring hovering over a chrome disc in charcoal atmosphere, soft caustic reflections; the disc face oriented to camera — the LOGO HOST SURFACE.',
+        'A single smoked-crystal card levitating in cold fog, cool rim light catching its bevelled edges; the card face reads camera-forward — the LOGO HOST SURFACE.',
+        'Monochrome mountain range under cold moonlight, mist rolling through the valley; a floating volumetric slab of cool-white light hovers in the middle distance — the LOGO HOST SURFACE (a light projection panel).',
+        'Endless mirror-black lake with faint silver mist and a single obsidian shard rising vertically; the shard\'s polished face turned to camera — the LOGO HOST SURFACE.',
+        'Lone hooded silhouette (no visible face) facing a floating brushed-steel monolith in charcoal mist, cool silver rim light; the monolith face oriented to camera — the LOGO HOST SURFACE.',
       ];
       const templatePick = TEMPLATES[Math.floor(Math.random() * TEMPLATES.length)];
-      console.log('[dehub-poster] Template pick:', templatePick.split(':')[0], '| Size:', posterSize);
+      console.log('[dehub-poster] Template pick:', templatePick.substring(0, 60), '| Size:', posterSize);
+
 
       // ── Auto-enhance: rewrite the short user brief into a senior-marketing-director
       //    grade visual prompt. Silent, server-side, hard timeout + fallback.
       let enhancedUserRequest = prompt;
       if (lovableApiKey) {
         try {
-          const directorSystem = `You are a senior creative director at a top ad agency (think Wieden+Kennedy, Mother, Anomaly) writing the visual brief for a STUNNING promotional marketing poster for DeHub — a decentralized social platform. Output ONE dense paragraph, 140–200 words, no lists, no preamble, no quotes.
+          const directorSystem = `You are a senior creative director writing the visual brief for a STUNNING promotional poster for DeHub (a decentralized creator platform). Output ONE dense paragraph, 120–180 words, no lists, no preamble, no quotes.
 
-This is a PROMO ASSET meant to hype, sell, and stop the scroll — not a brand-guidelines diagram. Think campaign artwork you'd see on a billboard or in a magazine, not a corporate slide.
+This is CAMPAIGN artwork — cinematic, editorial, premium (Apple keynote × A24 × Zaha Hadid × Blade Runner 2049 interiors). Never a "brand-guidelines diagram", never generic AI stock.
 
-FORMAT: ${formatHint}. Compose specifically for this shape.
+FORMAT: ${formatHint}. Compose for this shape.
 
-TEMPLATE ARCHETYPE for this piece: ${templatePick}
-Adapt the user's subject into that archetype — don't just describe the archetype generically.
+SCENE ARCHETYPE (adapt the user's subject into THIS scene — don't just describe the archetype generically): ${templatePick}
 
-Rules:
-- Lead with a hero subject that dramatizes the user's brief. Real photography feel, cinematic depth, editorial polish.
-- Then: environment, lighting (specify direction and quality: rim / key / backlight / god-rays / neon reflection), materials & textures, camera/lens feel (specify: anamorphic / macro / wide / shallow DOF), mood, composition, negative space reserved for a logo lockup in a specific named region.
-- Palette: deep black/charcoal (#000–#0a0a0a), white, subtle white-opacity accents, optional muted neon glow (magenta/violet/cyan). NEVER blue.
-- Add craft specifics: film grain, subtle chromatic aberration, atmospheric haze, dust particulates, depth cues.
-- Reserve a named clear region for the logo (e.g. "bottom-center third", "upper-right quadrant") — do NOT draw a logo or wordmark text yourself.
-- No stock-AI clichés (purple/indigo gradients on white, floating 3D blobs, generic hero-with-arms-up). No emoji.
-- Never invent facts (dates, prices, names, quotes) the user didn't state. If no headline is warranted, say "no additional text".
-- End with: "4k, campaign quality, editorial polish, poster-grade detail."`;
+Rules (non-negotiable):
+- STRICT MONOCHROME: blacks, charcoals, silvers, chromes, brushed steels, cool off-whites, pure white. NO color hues at all — no red, orange, yellow, magenta, purple, violet, green, blue, teal, pastel, neon glow. Any ambient light must be a cool near-white (saturation under 10%). The ONLY exception is if the user's brief literally names a color; if it does, honor it as a restrained accent while keeping the scene mostly monochrome. If in doubt, kill the color.
+- MATERIALS: liquid glass, frosted glass, polished chrome, brushed aluminum, obsidian, mercury, smoked crystal, wet volcanic stone. Real reflections, refractions, subsurface scattering, subtle caustics. Backgrounds must have texture/depth (mist, marble veining, brushed metal, silk drapery) — NEVER flat black.
+- LIGHTING: one cinematic key light with named direction (upper-left / upper-right / rim / backlight / god-ray), soft rim on subject edges, deep shadow falloff into negative space.
+- LOGO HOST SURFACE: describe it explicitly — its material, position, orientation, and that its face is CURRENTLY BLANK. This is where the real DeHub wordmark gets composited afterward. Do NOT draw the wordmark, letters, or the word "DeHub".
+- No emoji. No purple/indigo gradients. No rainbow. No lens flares. No cyberpunk neon. No "hero with arms up". No motion-blur action shots. No hooded figures unless the archetype names one.
+- If the user asked for a headline, name it in one short display phrase (max 5 words). If not, say "no headline".
+- End with: "Shot on Hasselblad, 85mm, f/2.8, gallery quality, campaign polish."`;
+
           const ctrl = new AbortController();
           const timer = setTimeout(() => ctrl.abort(), 4000);
           const rewriteRes = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
@@ -172,10 +169,12 @@ Rules:
 Format: ${formatHint}. Compose for this aspect ratio.
 
 Non-negotiable brand rules (violating these ruins the piece):
-- PALETTE: dominant deep black / charcoal (#000000–#0a0a0a). Accent color is PURE WHITE only. Subtle muted neon ambient glow (magenta, violet, cyan, warm amber) is allowed ONLY as atmospheric lighting on a black scene. ABSOLUTELY NO blue (no navy, no cobalt, no cyan-blue, no indigo, no periwinkle). NO purple/indigo gradient on white. NO pastel palettes.
-- LOGO: Reserve a clean, empty, calm region (roughly 20-25% of canvas width, min 8% clear space on every side) — typically bottom-center third, upper-left quadrant, or upper-right — where the real DeHub wordmark will be composited later. DO NOT DRAW A LOGO OR WORDMARK YOURSELF. Do not write "DEHUB", "DeHub", or any variant. Leave that region visually calm.
-- TYPOGRAPHY (if the user requested a headline/tagline): Exo / Exo 2 geometric technical sans-serif ONLY (fallback Eurostile / Michroma / Rajdhani). Pure white. Generous letter-spacing. Never serifs, script, or humanist sans (Inter, Poppins, DM Sans, Helvetica Neue).
-- NO emoji. NO glossy 3D blobs. NO generic-AI stock look (hero-with-arms-up, purple/indigo gradient on white, floating chrome spheres).
+- STRICT MONOCHROME PALETTE: blacks, charcoals, silvers, chromes, brushed steels, cool off-whites, pure white ONLY. ABSOLUTELY NO color hues — no red, orange, yellow, magenta, purple, violet, green, blue, teal, indigo, cyan, pastel, neon glow. Any ambient light must be a cool near-white (saturation under 10%). If the ART DIRECTION below literally names a color, honor it as a restrained accent; otherwise, kill every hue.
+- BACKGROUND MUST HAVE DEPTH: silk drapery, brushed metal, black marble veining, volumetric mist, obsidian, mercury — never a flat #000 wall.
+- MATERIALS: liquid glass, frosted crystal, polished chrome, brushed aluminum, obsidian, smoked crystal, mercury. Real reflections, refractions, subsurface scattering, subtle caustics.
+- LOGO HOST SURFACE: the scene MUST include the specific physical surface named in the ART DIRECTION (e.g. an obsidian slab, brushed-aluminum plaque, backlit smoked-glass panel, chrome monolith face). That surface must be a real object in the scene, angled/lit to match, and its face must be perfectly BLANK — do NOT draw a logo, the word "DeHub", letters, glyphs, placeholder marks, icons, or any text on it. The real DeHub wordmark will be composited onto that exact blank surface afterward. Size the blank area for a wordmark lockup roughly 20-30% of canvas width with min 8% clear space on every side.
+- TYPOGRAPHY: only if the ART DIRECTION names a short display headline, render it in Exo / Exo 2 geometric technical sans-serif, thin uniform strokes, sharp corners, wide letter-spacing, pure white. Never serifs, script, humanist sans (Inter, Poppins, DM Sans, Helvetica Neue).
+- NO emoji. NO purple/indigo gradients. NO rainbow. NO cyberpunk neon. NO glossy 3D blobs. NO generic AI clichés (hero-with-arms-up, purple gradient on white, floating chrome spheres in empty voids). NO motion-blur action shots.
 
 ART DIRECTION: ${enhancedUserRequest}`;
 
@@ -317,10 +316,10 @@ ART DIRECTION: ${enhancedUserRequest}`;
           model = 'gemini-3.1-flash-image';
           isGrokModel = false;
           contextualPrompt = `DEHUB BRAND SYSTEM (mandatory):
-- The attached image is the official DeHub wordmark. Composite it PROMINENTLY, UNALTERED, PURE WHITE into the final image with clear space around it (min 8% of canvas). Do NOT recolor, gradient-fill, distort, or redraw the logo — use the attached pixels.
-- Palette: deep black / charcoal background (#000–#0a0a0a), white text, subtle white-opacity accents. NEVER use blue anywhere. Muted neon (magenta/violet/cyan) ambient glow is OK.
-- Aesthetic: liquid glass, frosted blur, cinematic, premium, decentralized-tech. Lots of negative space. Strong focal hierarchy.
-- Typography (if any): Exo / Exo 2, white, minimal, generous letter-spacing. No emoji. No generic AI clichés.
+- The attached image is the official DeHub wordmark. Composite it PROMINENTLY, UNALTERED, PURE WHITE into the final image with clear space around it (min 8% of canvas), integrated into the physical logo-host surface described in the ART DIRECTION (engraved / embossed / backlit / projected — not floating flat). Do NOT recolor, gradient-fill, distort, or redraw the logo — use the attached pixels.
+- STRICT MONOCHROME palette: blacks, charcoals, silvers, chromes, brushed steels, cool off-whites, pure white ONLY. NO color hues — no red, orange, yellow, magenta, purple, violet, green, blue, teal, cyan, indigo, pastel, neon glow. Any ambient light must be cool near-white (saturation under 10%). Only exception: if the ART DIRECTION literally names a color, honor it as a restrained accent.
+- Aesthetic: liquid glass, frosted blur, obsidian, mercury, brushed metal, cinematic, premium, Apple keynote × A24. Backgrounds must have texture/depth — never flat black.
+- Typography (only if the ART DIRECTION names a short display headline): Exo / Exo 2 geometric technical sans-serif, pure white, generous letter-spacing. No emoji. No generic AI clichés.
 
 ART DIRECTION: ${enhancedUserRequest}`;
         }
