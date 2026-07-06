@@ -262,6 +262,7 @@ function buildSvg(opts: {
   username: string | null;
   avatarDataUri: string | null;
   bannerDataUri: string | null;
+  badgeDataUri: string | null;
   qrPath: string;
   qrCount: number;
   width: number;
