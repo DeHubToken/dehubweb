@@ -74,6 +74,23 @@ export default function ReferralLanding() {
     return () => { cancelled = true; };
   }, [code, valid]);
 
+  // Preload the share image so the whole lander reveals at once
+  useEffect(() => {
+    if (!valid || !inviterLoaded) return;
+    let cancelled = false;
+    const img = new Image();
+    img.onload = () => { if (!cancelled) setImgLoaded(true); };
+    img.onerror = () => {
+      if (cancelled) return;
+      if (imgRetry < 3) setTimeout(() => setImgRetry((n) => n + 1), 600 * (imgRetry + 1));
+      else setImgLoaded(true);
+    };
+    img.src = shareImage;
+    return () => { cancelled = true; };
+  }, [shareImage, valid, inviterLoaded, imgRetry]);
+
+  const ready = !valid || (inviterLoaded && imgLoaded);
+
   const title = useMemo(
     () => (valid && inviter ? `${inviter} invited you to DeHub — earn, post & build on-chain` : "DeHub — the decentralised creator network"),
     [inviter, valid],
