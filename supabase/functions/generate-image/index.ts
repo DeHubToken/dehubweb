@@ -89,28 +89,26 @@ serve(async (req) => {
         formatHint = 'square social post (1:1), think Instagram feed / album cover';
       }
 
-      // ── Template library: 15 proven marketing poster archetypes. One is picked at
-      //    random per request so the same brief yields different stunning results, and
-      //    outputs feel like real campaign work — not a repetitive "brand system" look.
+      // ── DeHub brand archetype library: all strictly monochrome, all material-first,
+      //    all built around a real physical LOGO HOST SURFACE the wordmark can be
+      //    engraved / embossed / backlit / projected into. No cyberpunk/rave/vaporwave
+      //    clichés — those produced colored, chaotic posters. One is picked per request
+      //    so outputs feel like real campaign work, on-brand every time.
       const TEMPLATES = [
-        'Apple keynote hero: single ultra-detailed hero product/subject floating dead-center on infinite black, dramatic top rim light, hard shadow beneath, wide margins, one bold headline word optional.',
-        'A24 film poster: cinematic character or object photograph, film-grain, muted teal-magenta duotone accents on black, tiny credits-block treatment near the bottom edge.',
-        'Cyberpunk street: rain-slick night alley, neon reflections in puddles, atmospheric haze, blade-runner depth, lone silhouetted figure or object as focal point.',
-        'Nike sportswear campaign: dynamic action pose, motion blur, bold cropping, high-contrast lighting, negative space top-left for headline.',
-        'Off-White / Virgil fashion editorial: raw industrial textures, exposed grid lines, quotation-mark UI accents, subject centered, deadstock zine energy.',
-        'Cosmic scale: astronaut / planet / nebula scene, tiny human silhouette for scale, deep space blacks, muted violet-cyan ambient glow, awe-inspiring vastness.',
-        'Liquid glass hero: translucent frosted-glass geometric slab tumbling through dark void, refracted light caustics, ultra-premium fintech energy.',
-        'Underground rave flyer: distorted photocopy grain, high-contrast subject, warped type block area, magenta / cyan spot color on charcoal.',
-        'Luxury watch ad: macro product photography aesthetic, precision detail, single-source rim light, deep shadow falloff, obsidian background.',
-        'Vaporwave sunset: distant chrome-mirror horizon, sun/grid vanishing point, retrofuturist geometry, muted magenta afterglow, dead-center symmetry.',
-        'Brutalist typography poster: massive negative space, tiny detail object in one corner, giant implied text-block zone reserved, Swiss-grid discipline.',
-        'Sci-fi keyart: single monolithic architectural structure or artifact under an alien sky, tiny scale figure at base, cinematic anamorphic lens flare.',
-        'Editorial magazine cover: portrait-style hero shot with shallow depth of field, cover-line block reserved along left margin, high-fashion lighting.',
-        'Product launch teaser: single glowing object emerging from pure black, volumetric god-rays, particulate atmosphere, "the reveal" energy.',
-        'Concert tour poster: subject in mid-motion under stage haze, high-contrast spotlight, dust particles, gritty concert photography grain, one-headline slot.',
+        'Monolithic obsidian pavilion floating over a mirror-black lake in charcoal mist, cool silver rim light from upper-left; its centered vertical face is a polished obsidian slab with a subtly recessed rectangular panel — the LOGO HOST SURFACE.',
+        'Cantilevered brushed-steel platform in volumetric charcoal fog, cool key light raking from upper-right; a large brushed-aluminum plaque tilted on the platform catches the light — the LOGO HOST SURFACE.',
+        'Backlit smoked-glass gateway suspended in cold mist, faint cool-white internal glow, deep shadow falloff; a frosted-glass panel at eye level with a soft internal luminance — the LOGO HOST SURFACE.',
+        'Chrome monolith rising from a black marble floor, top-down cool key light and long cast shadow; the mirror-chrome vertical face oriented squarely toward camera — the LOGO HOST SURFACE.',
+        'Liquid mercury pool on polished obsidian, silver rim highlight rippling across the surface; a raised mercury relief zone waits mid-frame — the LOGO HOST SURFACE.',
+        'Weightless silver ring hovering over a chrome disc in charcoal atmosphere, soft caustic reflections; the disc face oriented to camera — the LOGO HOST SURFACE.',
+        'A single smoked-crystal card levitating in cold fog, cool rim light catching its bevelled edges; the card face reads camera-forward — the LOGO HOST SURFACE.',
+        'Monochrome mountain range under cold moonlight, mist rolling through the valley; a floating volumetric slab of cool-white light hovers in the middle distance — the LOGO HOST SURFACE (a light projection panel).',
+        'Endless mirror-black lake with faint silver mist and a single obsidian shard rising vertically; the shard\'s polished face turned to camera — the LOGO HOST SURFACE.',
+        'Lone hooded silhouette (no visible face) facing a floating brushed-steel monolith in charcoal mist, cool silver rim light; the monolith face oriented to camera — the LOGO HOST SURFACE.',
       ];
       const templatePick = TEMPLATES[Math.floor(Math.random() * TEMPLATES.length)];
-      console.log('[dehub-poster] Template pick:', templatePick.split(':')[0], '| Size:', posterSize);
+      console.log('[dehub-poster] Template pick:', templatePick.substring(0, 60), '| Size:', posterSize);
+
 
       // ── Auto-enhance: rewrite the short user brief into a senior-marketing-director
       //    grade visual prompt. Silent, server-side, hard timeout + fallback.
