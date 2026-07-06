@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Download, Image as ImageIcon, FileText, Package, Palette } from 'lucide-react';
+import { Download, Image as ImageIcon, FileText, Package, Palette, ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import designSystemZip from '@/assets/design-system/dehub-design-system.zip.asset.json';
 import wordmarkWhite from '@/assets/design-system/wordmark-white.png.asset.json';
@@ -219,7 +219,17 @@ const BrandAssets = () => {
             Editable Figma templates for social posts, banners and campaigns.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
+          <Button variant="outline" asChild className="flex items-center gap-2 w-full sm:w-auto">
+            <a
+              href="https://www.figma.com/design/BjnSoqSIFYXL73yz4svKLh/Dehub-SM-Template-2.0--Copy-"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <ExternalLink className="w-4 h-4" />
+              Copy and edit
+            </a>
+          </Button>
           <div className="w-full rounded-lg overflow-hidden border border-border bg-black">
             <iframe
               title="DeHub Social Media Templates"
