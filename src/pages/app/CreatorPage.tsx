@@ -176,14 +176,16 @@ const tools: Tool[] = [
     action: { kind: 'navigate', to: '/app/settings?tab=characters' },
   },
   {
-    id: 'subtitles',
-    name: 'Subtitles',
-    label: 'Video',
-    description: 'Caption and translate videos across the full language stack.',
+    id: 'automations-placeholder-removed',
+    name: '',
+    label: '',
+    description: '',
     icon: Languages,
     category: 'Video',
     action: { kind: 'navigate', to: '/app/tv' },
-  },
+    hidden: true,
+  } as any,
+
   {
     id: 'editor',
     name: 'Video Editor',
