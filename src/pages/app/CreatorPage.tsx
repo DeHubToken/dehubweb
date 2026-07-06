@@ -6,10 +6,10 @@ import { PricingSection } from '@/components/pricing/PricingSection';
 import SwipeableCarousel from '@/components/app/SwipeableCarousel';
 import { CreatorComposerBar } from '@/components/app/creator/CreatorComposerBar';
 import { ModelMarquee } from '@/components/app/creator/ModelMarquee';
-import anthropicLogo from '@/assets/ai-logos/anthropic.png.asset.json';
+import anthropicLogo from '@/assets/ai-logos/anthropic.png';
 import dehubIcon from '@/assets/dehub-icon.png.asset.json';
 import dehubLogo from '@/assets/dehub-logo-white.png';
-import openaiLogo from '@/assets/ai-logos/openai.png.asset.json';
+import openaiLogo from '@/assets/ai-logos/openai.png';
 import showcaseImage from '@/assets/creator-studio-showcase.jpg';
 import dehubOriginals from '@/assets/dehub-originals.webp.asset.json';
 import {
@@ -381,7 +381,7 @@ export default function CreatorPage() {
           >
             <div className="flex items-center gap-3">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/95 p-1.5 shadow-[0_0_28px_rgba(255,255,255,0.14)]">
-                <img src={openaiLogo.url} alt="OpenAI logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
+                <img src={openaiLogo} alt="OpenAI logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
               </span>
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/10 p-1.5 shadow-[0_0_28px_rgba(255,255,255,0.12)]">
                 <img src={dehubIcon.url} alt="DeHub logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
@@ -407,7 +407,7 @@ export default function CreatorPage() {
           >
             <div className="flex items-center gap-3">
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/95 p-1.5 shadow-[0_0_28px_rgba(255,255,255,0.14)]">
-                <img src={anthropicLogo.url} alt="Anthropic logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
+                <img src={anthropicLogo} alt="Anthropic logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
               </span>
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/10 p-1.5 shadow-[0_0_28px_rgba(255,255,255,0.12)]">
                 <img src={dehubIcon.url} alt="DeHub logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
