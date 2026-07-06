@@ -1,4 +1,20 @@
 import { cn } from '@/lib/utils';
+import alibabaLogo from '@/assets/ai-logos/alibaba.png';
+import anthropicLogo from '@/assets/ai-logos/anthropic.png';
+import blackForestLabsLogo from '@/assets/ai-logos/black-forest-labs.png';
+import bytedanceLogo from '@/assets/ai-logos/bytedance.png';
+import elevenlabsLogo from '@/assets/ai-logos/elevenlabs.png';
+import googleLogo from '@/assets/ai-logos/google.png';
+import ideogramLogo from '@/assets/ai-logos/ideogram.png';
+import klingLogo from '@/assets/ai-logos/kling.png';
+import lumaLogo from '@/assets/ai-logos/luma.png';
+import microsoftLogo from '@/assets/ai-logos/microsoft.png';
+import minimaxLogo from '@/assets/ai-logos/minimax.png';
+import openaiLogo from '@/assets/ai-logos/openai.png';
+import pikaLogo from '@/assets/ai-logos/pika.png';
+import recraftLogo from '@/assets/ai-logos/recraft.png';
+import runwayLogo from '@/assets/ai-logos/runway.png';
+import sunoLogo from '@/assets/ai-logos/suno.png';
 
 type ModelChip = {
   name: string;
@@ -43,61 +59,45 @@ const MODELS: ModelChip[] = [
   { name: 'Trellis 3D', vendor: 'Microsoft', kind: '3D' },
 ];
 
-// Vendor -> { simple-icons slug or null, official brand color hex }
-const vendorMeta: Record<string, { slug: string | null; color: string }> = {
-  Google: { slug: 'google', color: '#4285F4' },
-  OpenAI: { slug: 'openai', color: '#10A37F' },
-  Anthropic: { slug: 'claude', color: '#D97757' },
-  ByteDance: { slug: 'bytedance', color: '#3C8CFF' },
-  ElevenLabs: { slug: 'elevenlabs', color: '#FFFFFF' },
-  Alibaba: { slug: 'alibabacloud', color: '#FF6A00' },
-  Microsoft: { slug: 'microsoft', color: '#00A4EF' },
-  Kling: { slug: 'kuaishou', color: '#FF4906' },
-  MiniMax: { slug: 'minimax', color: '#F23A5D' },
-  Suno: { slug: 'suno', color: '#FFFFFF' },
-  'Black Forest Labs': { slug: null, color: '#DD0031' },
-  Runway: { slug: null, color: '#00FF88' },
-  Ideogram: { slug: null, color: '#F5A623' },
-  Recraft: { slug: null, color: '#E5484D' },
-  Luma: { slug: null, color: '#FDB813' },
-  Pika: { slug: null, color: '#FF3366' },
+const vendorMeta: Record<string, { logo: string; color: string }> = {
+  Google: { logo: googleLogo, color: '#4285F4' },
+  OpenAI: { logo: openaiLogo, color: '#10A37F' },
+  Anthropic: { logo: anthropicLogo, color: '#D97757' },
+  ByteDance: { logo: bytedanceLogo, color: '#111111' },
+  ElevenLabs: { logo: elevenlabsLogo, color: '#FFFFFF' },
+  Alibaba: { logo: alibabaLogo, color: '#FF6A00' },
+  Microsoft: { logo: microsoftLogo, color: '#00A4EF' },
+  Kling: { logo: klingLogo, color: '#FF4906' },
+  MiniMax: { logo: minimaxLogo, color: '#F23A5D' },
+  Suno: { logo: sunoLogo, color: '#FFFFFF' },
+  'Black Forest Labs': { logo: blackForestLabsLogo, color: '#DD0031' },
+  Runway: { logo: runwayLogo, color: '#00FF88' },
+  Ideogram: { logo: ideogramLogo, color: '#F5A623' },
+  Recraft: { logo: recraftLogo, color: '#E5484D' },
+  Luma: { logo: lumaLogo, color: '#FDB813' },
+  Pika: { logo: pikaLogo, color: '#FF3366' },
 };
 
 function VendorLogo({ vendor }: { vendor: string }) {
-  const meta = vendorMeta[vendor] ?? { slug: null, color: '#ffffff' };
-  if (meta.slug) {
-    const url = `https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/${meta.slug}.svg`;
-    // mask-image lets us recolor a monochrome SVG with the vendor's brand hex.
-    return (
-      <span
-        aria-hidden
-        className="h-4 w-4 shrink-0"
-        style={{
-          backgroundColor: meta.color,
-          WebkitMaskImage: `url(${url})`,
-          maskImage: `url(${url})`,
-          WebkitMaskRepeat: 'no-repeat',
-          maskRepeat: 'no-repeat',
-          WebkitMaskPosition: 'center',
-          maskPosition: 'center',
-          WebkitMaskSize: 'contain',
-          maskSize: 'contain',
-          filter: `drop-shadow(0 0 4px ${meta.color}66)`,
-        }}
-      />
-    );
-  }
-  // Monogram fallback in brand color
+  const meta = vendorMeta[vendor];
   return (
     <span
-      className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full text-[8px] font-black"
+      className="flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-white/10 bg-white/95 p-0.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.55)]"
       style={{
-        backgroundColor: meta.color,
-        color: '#0a0a0a',
-        boxShadow: `0 0 6px ${meta.color}66`,
+        boxShadow: `inset 0 1px 0 rgba(255,255,255,0.55), 0 0 10px ${meta?.color ?? '#ffffff'}66`,
       }}
     >
-      {vendor.charAt(0)}
+      {meta ? (
+        <img
+          src={meta.logo}
+          alt=""
+          className="h-full w-full object-contain"
+          draggable={false}
+          loading="lazy"
+        />
+      ) : (
+        <span className="text-[9px] font-black text-black">{vendor.charAt(0)}</span>
+      )}
     </span>
   );
 }

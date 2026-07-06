@@ -6,8 +6,10 @@ import { PricingSection } from '@/components/pricing/PricingSection';
 import SwipeableCarousel from '@/components/app/SwipeableCarousel';
 import { CreatorComposerBar } from '@/components/app/creator/CreatorComposerBar';
 import { ModelMarquee } from '@/components/app/creator/ModelMarquee';
-import dehubIcon from '@/assets/dehub-icon.png.asset.json';
+import anthropicLogo from '@/assets/ai-logos/anthropic.png';
+import dehubIcon from '@/assets/dehub-logo-compact.png';
 import dehubLogo from '@/assets/dehub-logo-white.png';
+import openaiLogo from '@/assets/ai-logos/openai.png';
 import showcaseImage from '@/assets/creator-studio-showcase.jpg';
 import dehubOriginals from '@/assets/dehub-originals.webp.asset.json';
 import {
@@ -272,8 +274,8 @@ export default function CreatorPage() {
                   className="h-5 w-5 bg-cover bg-center bg-no-repeat transition-transform duration-200 group-hover:scale-105"
                   style={{
                     backgroundImage: metallicBg,
-                    maskImage: `url(${dehubIcon.url})`,
-                    WebkitMaskImage: `url(${dehubIcon.url})`,
+                    maskImage: `url(${dehubIcon})`,
+                    WebkitMaskImage: `url(${dehubIcon})`,
                     maskSize: 'contain',
                     WebkitMaskSize: 'contain',
                     maskRepeat: 'no-repeat',
@@ -377,22 +379,13 @@ export default function CreatorPage() {
             to="/connect/chatgpt"
             className="group relative min-h-[220px] overflow-hidden rounded-2xl border border-white/10 bg-black/60 p-5 text-left shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-[24px] transition-transform hover:-translate-y-0.5 hover:bg-black/70"
           >
-            <div className="flex items-center gap-2">
-              <span
-                aria-hidden
-                className="h-7 w-7 shrink-0"
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  WebkitMaskImage: 'url(https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/openai.svg)',
-                  maskImage: 'url(https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/openai.svg)',
-                  WebkitMaskRepeat: 'no-repeat',
-                  maskRepeat: 'no-repeat',
-                  WebkitMaskPosition: 'center',
-                  maskPosition: 'center',
-                  WebkitMaskSize: 'contain',
-                  maskSize: 'contain',
-                }}
-              />
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/95 p-1.5 shadow-[0_0_28px_rgba(255,255,255,0.14)]">
+                <img src={openaiLogo} alt="OpenAI logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
+              </span>
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/10 p-1.5 shadow-[0_0_28px_rgba(255,255,255,0.12)]">
+                <img src={dehubIcon} alt="DeHub logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
+              </span>
               <span className="inline-flex rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-black italic tracking-wider text-white">MCP LIVE</span>
             </div>
             <div className="mt-4 text-2xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-3xl">
@@ -412,22 +405,13 @@ export default function CreatorPage() {
             to="/connect/claude"
             className="group relative min-h-[220px] overflow-hidden rounded-2xl border border-white/10 bg-black/60 p-5 text-left shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-[24px] transition-transform hover:-translate-y-0.5 hover:bg-black/70"
           >
-            <div className="flex items-center gap-2">
-              <span
-                aria-hidden
-                className="h-7 w-7 shrink-0"
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  WebkitMaskImage: 'url(https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/claude.svg)',
-                  maskImage: 'url(https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/claude.svg)',
-                  WebkitMaskRepeat: 'no-repeat',
-                  maskRepeat: 'no-repeat',
-                  WebkitMaskPosition: 'center',
-                  maskPosition: 'center',
-                  WebkitMaskSize: 'contain',
-                  maskSize: 'contain',
-                }}
-              />
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/95 p-1.5 shadow-[0_0_28px_rgba(255,255,255,0.14)]">
+                <img src={anthropicLogo} alt="Anthropic logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
+              </span>
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/10 p-1.5 shadow-[0_0_28px_rgba(255,255,255,0.12)]">
+                <img src={dehubIcon} alt="DeHub logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
+              </span>
               <span className="inline-flex rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-black italic tracking-wider text-white">MCP LIVE</span>
             </div>
             <div className="mt-4 text-2xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-3xl">
