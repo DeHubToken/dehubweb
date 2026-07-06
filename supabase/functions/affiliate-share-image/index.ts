@@ -213,6 +213,7 @@ async function fetchProfile(code: string) {
   let coverPath: string | null = null;
   let displayName: string | null = null;
   let username: string | null = null;
+  let badgeBalance: number | null = null;
   if (address) {
     try {
       const r = await fetch(`${API}/api/account_info/${address}`);
@@ -224,6 +225,8 @@ async function fetchProfile(code: string) {
         const apiDisplay = (u?.displayName || "").trim() || null;
         const apiUser = (u?.username || "").trim() || null;
         username = apiUser;
+        const bb = Number(u?.badgeBalance);
+        badgeBalance = Number.isFinite(bb) ? bb : null;
         // Prefer API displayName. Fall back to shareName only if it differs from username.
         const sn = (shareName || "").trim() || null;
         displayName = apiDisplay || (sn && sn.toLowerCase() !== (apiUser || "").toLowerCase() ? sn : null) || apiUser;
@@ -237,7 +240,7 @@ async function fetchProfile(code: string) {
     displayName = shareName;
   }
 
-  return { address, displayName, username, avatarPath, coverPath };
+  return { address, displayName, username, avatarPath, coverPath, badgeBalance };
 }
 
 async function buildQrSvgInner(text: string): Promise<{ path: string; count: number }> {
