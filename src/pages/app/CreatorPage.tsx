@@ -7,7 +7,7 @@ import SwipeableCarousel from '@/components/app/SwipeableCarousel';
 import { CreatorComposerBar } from '@/components/app/creator/CreatorComposerBar';
 import { ModelMarquee } from '@/components/app/creator/ModelMarquee';
 import anthropicLogo from '@/assets/ai-logos/anthropic.png';
-import dehubIcon from '@/assets/dehub-icon.png.asset.json';
+import dehubIcon from '@/assets/dehub-logo-compact.png';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import openaiLogo from '@/assets/ai-logos/openai.png';
 import showcaseImage from '@/assets/creator-studio-showcase.jpg';
@@ -384,7 +384,7 @@ export default function CreatorPage() {
                 <img src={openaiLogo} alt="OpenAI logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
               </span>
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/10 p-1.5 shadow-[0_0_28px_rgba(255,255,255,0.12)]">
-                <img src={dehubIcon.url} alt="DeHub logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
+                <img src={dehubIcon} alt="DeHub logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
               </span>
               <span className="inline-flex rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-black italic tracking-wider text-white">MCP LIVE</span>
             </div>
@@ -410,7 +410,7 @@ export default function CreatorPage() {
                 <img src={anthropicLogo} alt="Anthropic logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
               </span>
               <span className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/10 p-1.5 shadow-[0_0_28px_rgba(255,255,255,0.12)]">
-                <img src={dehubIcon.url} alt="DeHub logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
+                <img src={dehubIcon} alt="DeHub logo" className="h-full w-full object-contain" loading="lazy" draggable={false} />
               </span>
               <span className="inline-flex rounded-lg border border-white/10 bg-white/5 px-2 py-1 text-[10px] font-black italic tracking-wider text-white">MCP LIVE</span>
             </div>
