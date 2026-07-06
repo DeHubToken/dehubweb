@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { SEOHead } from "@/components/SEOHead";
 import ogImage from "@/assets/og-claude.jpg";
 import dehubLogo from "@/assets/dehub-logo-white.png";
+import dehubIcon from "@/assets/dehub-logo.png";
 import anthropicLogo from "@/assets/ai-logos/anthropic.png";
 
 const APP_URL =
@@ -110,12 +111,14 @@ export default function ConnectClaudePage() {
           aria-hidden="true"
         />
 
-        <span
-          className="inline-flex rounded px-2 py-1 text-[10px] font-black italic text-black"
-          style={{ backgroundColor: "#d97757" }}
-        >
-          MCP LIVE
-        </span>
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/60 px-3 py-1.5 backdrop-blur-[24px]">
+          <img src={dehubIcon} alt="DeHub" className="h-4 w-4 object-contain" />
+          <span className="text-white/40">×</span>
+          <img src={anthropicLogo} alt="Claude" className="h-4 w-4 object-contain" />
+          <span className="ml-1 text-[10px] font-black italic tracking-wider text-white">
+            MCP LIVE
+          </span>
+        </div>
 
         <h1 className="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">
           Use DeHub inside Claude
@@ -130,12 +133,20 @@ export default function ConnectClaudePage() {
           href={APP_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-8 inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold text-black transition-transform hover:-translate-y-0.5"
-          style={{ backgroundColor: "#d97757" }}
+          className="mt-8 inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-black/60 px-5 py-3 text-sm font-bold text-white shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-[24px] transition-transform hover:-translate-y-0.5"
         >
+          <img src={anthropicLogo} alt="" className="h-4 w-4 object-contain" />
           Open DeHub in Claude
           <ArrowUpRight className="h-4 w-4" />
         </a>
+
+        <div className="mt-10 rounded-2xl border border-white/10 bg-black/60 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-[24px]">
+          <div className="flex items-center justify-center gap-5 sm:gap-8">
+            <img src={dehubLogo} alt="DeHub" className="h-9 w-auto max-w-[44%] object-contain sm:h-11" />
+            <span className="text-xl font-light text-white/35">×</span>
+            <img src={anthropicLogo} alt="Claude" className="h-12 w-12 rounded-xl bg-white p-2 object-contain sm:h-14 sm:w-14" />
+          </div>
+        </div>
 
         <section className="mt-14">
           <h2 className="text-xl font-bold md:text-2xl">Setup in 3 steps</h2>
@@ -194,9 +205,9 @@ export default function ConnectClaudePage() {
             href={APP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold text-black"
-            style={{ backgroundColor: "#d97757" }}
+            className="inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-black/60 px-5 py-3 text-sm font-bold text-white shadow-[0_24px_80px_rgba(0,0,0,0.45)] backdrop-blur-[24px]"
           >
+            <img src={anthropicLogo} alt="" className="h-4 w-4 object-contain" />
             Open DeHub in Claude
             <ArrowUpRight className="h-4 w-4" />
           </a>
