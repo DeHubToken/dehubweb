@@ -74,6 +74,23 @@ export default function ReferralLanding() {
     return () => { cancelled = true; };
   }, [code, valid]);
 
+  // Preload the share image so the whole lander reveals at once
+  useEffect(() => {
+    if (!valid || !inviterLoaded) return;
+    let cancelled = false;
+    const img = new Image();
+    img.onload = () => { if (!cancelled) setImgLoaded(true); };
+    img.onerror = () => {
+      if (cancelled) return;
+      if (imgRetry < 3) setTimeout(() => setImgRetry((n) => n + 1), 600 * (imgRetry + 1));
+      else setImgLoaded(true);
+    };
+    img.src = shareImage;
+    return () => { cancelled = true; };
+  }, [shareImage, valid, inviterLoaded, imgRetry]);
+
+  const ready = !valid || (inviterLoaded && imgLoaded);
+
   const title = useMemo(
     () => (valid && inviter ? `${inviter} invited you to DeHub — earn, post & build on-chain` : "DeHub — the decentralised creator network"),
     [inviter, valid],
@@ -108,78 +125,58 @@ export default function ReferralLanding() {
       </Helmet>
 
       <main className="min-h-screen bg-black text-white flex items-center justify-center px-6 py-16">
-        <div className="max-w-3xl w-full text-center space-y-8">
+        {!ready ? (
+          <div className="flex flex-col items-center justify-center gap-4" role="status" aria-label="Loading">
+            <div className="relative w-12 h-12">
+              <span className="absolute inset-0 rounded-full border-2 border-white/10" />
+              <span className="absolute inset-0 rounded-full border-2 border-white border-t-transparent border-r-transparent animate-spin" />
+            </div>
+            <span className="text-xs uppercase tracking-[0.3em] text-white/40">Loading</span>
+          </div>
+        ) : (
+        <div className="max-w-3xl w-full text-center space-y-8 animate-in fade-in duration-500">
           {valid ? (
             <>
               <p className="text-sm uppercase tracking-[0.3em] text-white/50">You've been invited</p>
               <h1 className="text-4xl md:text-6xl font-bold leading-tight flex flex-col items-center gap-4">
-                {inviterLoaded ? (
-                  <span className="inline-flex items-center justify-center gap-3 flex-wrap">
-                    {inviter ? (() => {
-                      const badgeUrl = getBadgeUrl(inviterBadgeBalance ?? undefined, inviterUsername);
-                      const badgeName = getBadgeName(inviterBadgeBalance ?? undefined, inviterUsername);
-                      return (
-                        <>
-                          <span className="relative inline-block">
-                            <span>{inviter}</span>
-                            {badgeUrl && (
-                              <img
-                                src={badgeUrl}
-                                alt={badgeName || "Badge"}
-                                width={16}
-                                height={16}
-                                className="absolute -top-1 -right-3 md:-top-2 md:-right-4 w-3 h-3 md:w-4 md:h-4 brightness-0 invert pointer-events-none select-none"
-                              />
-                            )}
-                          </span>
-                          <span>invited you to</span>
-                        </>
-                      );
-                    })() : (
-                      <span>You've been invited to</span>
-                    )}
-                  </span>
-                ) : (
-                  <span className="inline-block h-10 md:h-14 w-64 md:w-96 rounded-xl bg-white/[0.06] relative overflow-hidden">
-                    <span className="absolute inset-0 animate-pulse bg-white/[0.04]" />
-                    <span
-                      className="absolute inset-y-0 -left-full w-1/2 bg-gradient-to-r from-transparent via-white/15 to-transparent"
-                      style={{ animation: "shimmer-sweep 1.6s linear infinite" }}
-                    />
-                  </span>
-                )}
-
+                <span className="inline-flex items-center justify-center gap-3 flex-wrap">
+                  {inviter ? (() => {
+                    const badgeUrl = getBadgeUrl(inviterBadgeBalance ?? undefined, inviterUsername);
+                    const badgeName = getBadgeName(inviterBadgeBalance ?? undefined, inviterUsername);
+                    return (
+                      <>
+                        <span className="relative inline-block">
+                          <span>{inviter}</span>
+                          {badgeUrl && (
+                            <img
+                              src={badgeUrl}
+                              alt={badgeName || "Badge"}
+                              width={16}
+                              height={16}
+                              className="absolute -top-1 -right-3 md:-top-2 md:-right-4 w-3 h-3 md:w-4 md:h-4 brightness-0 invert pointer-events-none select-none"
+                            />
+                          )}
+                        </span>
+                        <span>invited you to</span>
+                      </>
+                    );
+                  })() : (
+                    <span>You've been invited to</span>
+                  )}
+                </span>
                 <span className="text-white">DeHub</span>
               </h1>
               <p className="text-lg text-white/70">
                 Join with code <span className="font-mono font-bold tracking-[0.3em] text-white">{code}</span>
               </p>
               <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] aspect-[1200/630] relative">
-                {inviterLoaded && (
-                  <img
-                    src={shareImage}
-                    alt={inviter ? `${inviter} invited you to DeHub` : "DeHub invite"}
-                    width={1200}
-                    height={630}
-                    onLoad={() => setImgLoaded(true)}
-                    onError={() => {
-                      if (imgRetry < 3) {
-                        setTimeout(() => setImgRetry((n) => n + 1), 600 * (imgRetry + 1));
-                      }
-                    }}
-                    className={`absolute inset-0 w-full h-full block transition-opacity duration-500 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
-                  />
-                )}
-                {(!inviterLoaded || !imgLoaded) && (
-                  <div className="absolute inset-0 overflow-hidden flex items-center justify-center">
-                    <div className="absolute inset-0 bg-white/[0.04] animate-pulse" />
-                    <div
-                      className="absolute inset-y-0 -left-full w-1/2 bg-gradient-to-r from-transparent via-white/10 to-transparent"
-                      style={{ animation: "shimmer-sweep 1.6s linear infinite" }}
-                    />
-                    <span className="relative text-sm md:text-base text-white/80 font-medium tracking-wide">Checking for updates…</span>
-                  </div>
-                )}
+                <img
+                  src={shareImage}
+                  alt={inviter ? `${inviter} invited you to DeHub` : "DeHub invite"}
+                  width={1200}
+                  height={630}
+                  className="absolute inset-0 w-full h-full block"
+                />
               </div>
               <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
                 <Button asChild size="lg">
@@ -198,8 +195,6 @@ export default function ReferralLanding() {
                   </Button>
                 )}
               </div>
-              
-              
             </>
           ) : (
             <>
@@ -209,6 +204,7 @@ export default function ReferralLanding() {
             </>
           )}
         </div>
+        )}
       </main>
     </>
   );
