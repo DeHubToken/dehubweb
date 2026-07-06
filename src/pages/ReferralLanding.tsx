@@ -117,10 +117,10 @@ export default function ReferralLanding() {
                   <span className="inline-flex items-center justify-center gap-3 flex-wrap">
                     {inviter ? (
                       <>
-                        <span className="relative inline-block">
+                        <span className="relative inline-block pr-2">
                           <span>{inviter}</span>
                           {(inviterBadgeBalance !== null || inviterUsername) && (
-                            <span className="absolute -top-1 -right-3 md:-top-2 md:-right-4">
+                            <span className="absolute -top-1 -right-1 md:-top-2 md:-right-2">
                               <BadgeIcon
                                 badgeBalance={inviterBadgeBalance ?? undefined}
                                 username={inviterUsername}

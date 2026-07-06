@@ -326,7 +326,7 @@ function buildSvg(opts: {
       const fs = H * 0.085;
       const approxNameW = opts.name.length * fs * 0.55;
       const badgeSize = fs * 0.55;
-      const bx = textX + approxNameW + fs * 0.15;
+      const bx = textX + approxNameW + fs * 0.28;
       const by = H * 0.46 - fs * 0.95;
       return `<image href="${opts.badgeDataUri}" x="${bx}" y="${by}" width="${badgeSize}" height="${badgeSize}" preserveAspectRatio="xMidYMid meet"/>`;
     })() : ""}
