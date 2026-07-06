@@ -384,6 +384,7 @@ async function buildSvgFor(rawCode: string, width: number, height: number): Prom
   let username: string | null = null;
   let avatarPath: string | null = null;
   let coverPath: string | null = null;
+  let badgeBalance: number | null = null;
   if (rawCode) {
     const p = await fetchProfile(rawCode);
     address = p.address;
@@ -391,6 +392,7 @@ async function buildSvgFor(rawCode: string, width: number, height: number): Prom
     username = p.username;
     avatarPath = p.avatarPath;
     coverPath = p.coverPath;
+    badgeBalance = p.badgeBalance;
   }
 
   const [avatarDataUri, coverDataUri] = await Promise.all([
@@ -400,6 +402,7 @@ async function buildSvgFor(rawCode: string, width: number, height: number): Prom
   const bannerDataUri = coverDataUri || (await fetchAsDataUri(pickDefaultBanner(address)));
   const shareUrl = rawCode ? `${SITE}/r/${rawCode}` : SITE;
   const { path: qrPath, count: qrCount } = await buildQrSvgInner(shareUrl);
+  const badgeDataUri = resolveBadgeDataUri(badgeBalance, username);
 
   const svg = buildSvg({
     code: rawCode,
@@ -407,6 +410,7 @@ async function buildSvgFor(rawCode: string, width: number, height: number): Prom
     username,
     avatarDataUri,
     bannerDataUri,
+    badgeDataUri,
     qrPath,
     qrCount,
     width,
@@ -415,6 +419,7 @@ async function buildSvgFor(rawCode: string, width: number, height: number): Prom
 
   return svg;
 }
+
 
 async function buildPngFor(rawCode: string, width: number, height: number): Promise<{ png: Uint8Array | null; svg: string }> {
   const svg = await buildSvgFor(rawCode, width, height);
