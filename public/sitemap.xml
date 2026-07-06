@@ -1,136 +1,1147 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-  <!-- Main Pages -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://dehub.io/</loc>
-    <lastmod>2025-01-07T16:00:00+00:00</lastmod>
+    <lastmod>2026-07-06T02:05:04.589Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://dehub.io/docs</loc>
-    <lastmod>2025-01-07T16:00:00+00:00</lastmod>
+    <lastmod>2026-07-06T02:05:04.589Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://dehub.io/docs/blog</loc>
-    <lastmod>2025-01-07T16:00:00+00:00</lastmod>
+    <lastmod>2026-07-06T02:05:04.589Z</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
-  
-  <!-- Documentation Pages -->
   <url>
     <loc>https://dehub.io/docs/overview</loc>
-    <lastmod>2025-01-07T16:00:00+00:00</lastmod>
+    <lastmod>2026-07-06T02:05:04.589Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dehub.io/docs/quick-start</loc>
-    <lastmod>2025-01-07T16:00:00+00:00</lastmod>
+    <lastmod>2026-07-06T02:05:04.589Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dehub.io/docs/installation</loc>
-    <lastmod>2025-01-07T16:00:00+00:00</lastmod>
+    <lastmod>2026-07-06T02:05:04.589Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://dehub.io/docs/token-economics</loc>
-    <lastmod>2025-01-07T16:00:00+00:00</lastmod>
+    <lastmod>2026-07-06T02:05:04.589Z</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://dehub.io/docs/advertising</loc>
-    <lastmod>2025-01-07T16:00:00+00:00</lastmod>
+    <lastmod>2026-07-06T02:05:04.589Z</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
-  
-  <!-- Blog Posts -->
   <url>
-    <loc>https://dehub.io/guides/leading-the-way-dehub-founders-official-tiktok-partner-agency-becomes-uk-1-with-1000-streamers</loc>
-    <lastmod>2024-11-22T12:00:00+00:00</lastmod>
+    <loc>https://dehub.io/docs/team</loc>
+    <lastmod>2026-07-06T02:05:04.589Z</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/roadmap</loc>
+    <lastmod>2026-07-06T02:05:04.589Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/faq</loc>
+    <lastmod>2026-07-06T02:05:04.589Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/docs/contact</loc>
+    <lastmod>2026-07-06T02:05:04.589Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/best-decentralized-social-media</loc>
+    <lastmod>2026-07-06T02:05:04.589Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/jobs</loc>
+    <lastmod>2026-07-06T02:05:04.589Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/were-finally-here-a-major-dehub-update</loc>
+    <lastmod>2026-02-14T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
     <image:image>
-      <image:loc>https://dehub.io/lovable-uploads/13d7ca20-9fba-4ea4-963d-3b95ec9be963.png</image:loc>
-      <image:title>Mike Hales at TikTok Live Fest event</image:title>
+      <image:loc>https://dehub.io/lovable-uploads/town-hall-feb-2026-banner.png</image:loc>
+      <image:title>DeHub Town Hall Overview February 2026 - A Major DeHub Update</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dehub.io/guides/strategic-shift-discontinuing-ethereum-mainnet-support-for-dhb</loc>
-    <lastmod>2025-01-07T12:00:00+00:00</lastmod>
+    <loc>https://dehub.io/guides/google-play-store-listing-confirmed</loc>
+    <lastmod>2025-12-01T00:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
     <image:image>
-      <image:loc>https://dehub.io/lovable-uploads/e66cc5a1-ea1a-4e5b-8760-490c174f0b24.png</image:loc>
-      <image:title>Strategic Shift: DHB moves to Base L2</image:title>
+      <image:loc>https://dehub.io/lovable-uploads/google-playstore-banner.png</image:loc>
+      <image:title>DeHub Google Play Store listing announcement banner</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/privacy-first-open-source-e2ee-dehub</loc>
+    <lastmod>2025-10-22T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/e2ee-banner.png</image:loc>
+      <image:title>DeHub End-to-End Encryption Banner - Privacy First Technology</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/building-the-dream-dehubs-core-team-assembled---a-dehub-milestone-from-q1-2021</loc>
+    <lastmod>2021-01-01T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2021 update: Building the Dream: DeHub&apos;s Core Team Assembled</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/early-traction-dehubs-beta-app-hits-2000-daus---a-dehub-milestone-from-q1-2021</loc>
+    <lastmod>2021-01-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2021 update: Early Traction: DeHub&apos;s Beta App Hits 2,000 DAUs</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/listening-to-our-users-50-interviews-shape-dehub---a-dehub-milestone-from-q1-2021</loc>
+    <lastmod>2021-01-03T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2021 update: Listening to Our Users: 50+ Interviews Shape DeHub</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/safe-spaces-dehubs-initial-content-moderation-framework---a-dehub-milestone-from-q1-2021</loc>
+    <lastmod>2021-01-04T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2021 update: Safe Spaces: DeHub&apos;s Initial Content Moderation Framework</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/the-genesis-dehubs-v1-token-launch---a-dehub-milestone-from-q2-2021</loc>
+    <lastmod>2021-04-01T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2021 update: The Genesis: DeHub&apos;s V1 Token Launch</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/power-to-the-people-community-governed-listings---a-dehub-milestone-from-q2-2021</loc>
+    <lastmod>2021-04-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2021 update: Power to the People: Community Governed Listings</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/diving-in-first-dehub-liquidity-pools-on-pancake-swap---a-dehub-milestone-from-q2-2021</loc>
+    <lastmod>2021-04-03T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2021 update: Diving In: First DeHub Liquidity Pools on Pancake Swap</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/growing-together-dehubs-early-adopter-community-surpasses-2000---a-dehub-milestone-from-q2-2021</loc>
+    <lastmod>2021-04-04T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2021 update: Growing Together: DeHub&apos;s Early Adopter Community Surpasses 2,000</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/a-voice-for-all-dehubs-basic-governance-voting-arrives---a-dehub-milestone-from-q2-2021</loc>
+    <lastmod>2021-04-05T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2021 update: A Voice for All: DeHub&apos;s Basic Governance Voting Arrives</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/navigating-challenges-addressing-a-v1-smart-contract-security-issue---a-dehub-milestone-from-q2-2021</loc>
+    <lastmod>2021-04-06T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2021 update: Navigating Challenges: Addressing a V1 Smart Contract Security Issue</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/a-new-era-the-rebranding-to-dehub---a-dehub-milestone-from-q3-2021</loc>
+    <lastmod>2021-07-01T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q3 2021 update: A New Era: The Rebranding to DeHub</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/building-for-all-app-rebuild-with-react-native---a-dehub-milestone-from-q3-2021</loc>
+    <lastmod>2021-07-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q3 2021 update: Building for All: App Rebuild with React Native</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/rewarding-loyalty-automatic-airdrop-for-all-holders---a-dehub-milestone-from-q3-2021</loc>
+    <lastmod>2021-07-03T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q3 2021 update: Rewarding Loyalty: Automatic Airdrop for All Holders</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/fortifying-our-walls-v1-security-hardened-with-certik-audit---a-dehub-milestone-from-q3-2021</loc>
+    <lastmod>2021-07-04T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q3 2021 update: Fortifying Our Walls: V1 Security Hardened with Certik Audit</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/global-reach-dehub-team-grows-to-15-strong---a-dehub-milestone-from-q3-2021</loc>
+    <lastmod>2021-07-05T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q3 2021 update: Global Reach: DeHub Team Grows to 15 Strong</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/game-on-dehub-launches-prediction-and-raffle-games---a-dehub-milestone-from-q4-2021</loc>
+    <lastmod>2021-10-01T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q4 2021 update: Game On: DeHub Launches Prediction and Raffle Games</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/to-the-moon-gateio-listing-and-10m-lp-milestone---a-dehub-milestone-from-q4-2021</loc>
+    <lastmod>2021-10-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q4 2021 update: To the Moon: Gate.io Listing and $10M LP Milestone</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/trials-and-tribulations-the-gateio-listing-agent-incident---a-dehub-milestone-from-q4-2021</loc>
+    <lastmod>2021-10-03T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q4 2021 update: Trials and Tribulations: The Gate.io Listing Agent Incident</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/fair-play-provably-fair-randomization-in-dehub-games---a-dehub-milestone-from-q4-2021</loc>
+    <lastmod>2021-10-04T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q4 2021 update: Fair Play: Provably Fair Randomization in DeHub Games</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/strength-in-numbers-dehub-community-exceeds-8000-active-members---a-dehub-milestone-from-q4-2021</loc>
+    <lastmod>2021-10-05T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q4 2021 update: Strength in Numbers: DeHub Community Exceeds 8,000 Active Members</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/level-up-dehub-arcade-launches-with-5-games--predictions---a-dehub-milestone-from-q1-2022</loc>
+    <lastmod>2022-01-01T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2022 update: Level Up: DeHub Arcade Launches with 5 Games &amp; Predictions</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/high-score-dehub-gaming-hits-5000-monthly-active-users---a-dehub-milestone-from-q1-2022</loc>
+    <lastmod>2022-01-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2022 update: High Score: DeHub Gaming Hits 5,000+ Monthly Active Users</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/on-chain-glory-blockchain-leaderboards-and-rewards-in-dehub-arcade---a-dehub-milestone-from-q1-2022</loc>
+    <lastmod>2022-01-03T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2022 update: On-Chain Glory: Blockchain Leaderboards and Rewards in DeHub Arcade</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/challenge-accepted-social-features-and-friend-challenges-arrive---a-dehub-milestone-from-q1-2022</loc>
+    <lastmod>2022-01-04T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2022 update: Challenge Accepted: Social Features and Friend Challenges Arrive</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/powering-play-dehubs-custom-mobile-game-engine---a-dehub-milestone-from-q1-2022</loc>
+    <lastmod>2022-01-05T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2022 update: Powering Play: DeHub&apos;s Custom Mobile Game Engine</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/crystal-clear-dehub-stream-app-with-4k-support--high-uptime---a-dehub-milestone-from-q2-2022</loc>
+    <lastmod>2022-04-01T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2022 update: Crystal Clear: DeHub Stream App with 4K Support &amp; High Uptime</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/lights-camera-blockchain-dehubs-first-tokenized-documentary---a-dehub-milestone-from-q2-2022</loc>
+    <lastmod>2022-04-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2022 update: Lights, Camera, Blockchain: DeHub&apos;s First Tokenized Documentary</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/the-chads-arrive-genesis-mint-of-the-chads-nft-collection---a-dehub-milestone-from-q2-2022</loc>
+    <lastmod>2022-04-03T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2022 update: The Chads Arrive: Genesis Mint of the Chads NFT Collection</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/building-bridges-philippine-sec-registration-secured---a-dehub-milestone-from-q2-2022</loc>
+    <lastmod>2022-04-04T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2022 update: Building Bridges: Philippine SEC Registration Secured</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/efficient-streaming-advanced-video-compression-reduces-costs---a-dehub-milestone-from-q2-2022</loc>
+    <lastmod>2022-04-05T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2022 update: Efficient Streaming: Advanced Video Compression Reduces Costs</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/empowering-creators-dehub-nft-marketplace-with-royalties---a-dehub-milestone-from-q2-2022</loc>
+    <lastmod>2022-04-06T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2022 update: Empowering Creators: DeHub NFT Marketplace with Royalties</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/official-standing-delabs-ltd-incorporated---a-dehub-milestone-from-q3-2022</loc>
+    <lastmod>2022-07-01T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q3 2022 update: Official Standing: DeLabs LTD Incorporated</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/dream-big-the-1m-home-crypto-raffle-by-dehub---a-dehub-milestone-from-q3-2022</loc>
+    <lastmod>2022-07-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q3 2022 update: Dream Big: The $1M Home Crypto Raffle by DeHub</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/ambitious-ventures-the-palawan-real-estate-tokenization-attempt---a-dehub-milestone-from-q3-2022</loc>
+    <lastmod>2022-07-03T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q3 2022 update: Ambitious Ventures: The Palawan Real Estate Tokenization Attempt</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/strategic-alliances-partnering-with-real-estate-and-legal-experts---a-dehub-milestone-from-q3-2022</loc>
+    <lastmod>2022-07-04T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q3 2022 update: Strategic Alliances: Partnering with Real Estate and Legal Experts</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/trust-and-transparency-on-chain-verified-raffle-mechanics---a-dehub-milestone-from-q3-2022</loc>
+    <lastmod>2022-07-05T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q3 2022 update: Trust and Transparency: On-Chain Verified Raffle Mechanics</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/the-unforeseen-navigating-a-contract-malfunction-and-v2-relaunch---a-dehub-milestone-from-q4-2022</loc>
+    <lastmod>2022-10-01T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q4 2022 update: The Unforeseen: Navigating a Contract Malfunction and V2 Relaunch</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/moving-forward-successful-migration-of-25000-holders-to-v2---a-dehub-milestone-from-q4-2022</loc>
+    <lastmod>2022-10-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q4 2022 update: Moving Forward: Successful Migration of 25,000+ Holders to V2</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/stability-first-adopting-standard-erc20-tokenomics---a-dehub-milestone-from-q4-2022</loc>
+    <lastmod>2022-10-03T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q4 2022 update: Stability First: Adopting Standard ERC20 Tokenomics</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/the-vision-unfolds-alpha-launch-of-dehubs-integrated-dapp---a-dehub-milestone-from-q1-2023</loc>
+    <lastmod>2023-01-01T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2023 update: The Vision Unfolds: Alpha Launch of DeHub&apos;s Integrated D&apos;App</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/creator-economy-reimagined-tokenized-uploads--90-ad-revenue-share---a-dehub-milestone-from-q1-2023</loc>
+    <lastmod>2023-01-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2023 update: Creator Economy Reimagined: Tokenized Uploads &amp; 90% Ad Revenue Share</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/insights-for-creators-advanced-analytics-dashboard-development-begins---a-dehub-milestone-from-q1-2023</loc>
+    <lastmod>2023-01-03T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2023 update: Insights for Creators: Advanced Analytics Dashboard Development Begins</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/back-in-action-dehub-v2-trading-resumes-on-gateio---a-dehub-milestone-from-q1-2023</loc>
+    <lastmod>2023-01-04T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2023 update: Back in Action: DeHub V2 Trading Resumes on Gate.io</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/innovation-recognized-dehub-wins-corporate-livewire-award---a-dehub-milestone-from-q2-2023</loc>
+    <lastmod>2023-04-01T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2023 update: Innovation Recognized: DeHub Wins Corporate Livewire Award</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/in-the-spotlight-dehub-featured-in-techcrunch-and-venturebeat---a-dehub-milestone-from-q2-2023</loc>
+    <lastmod>2023-04-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2023 update: In the Spotlight: DeHub Featured in TechCrunch and VentureBeat</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/protecting-innovation-patent-applications-for-streaming--watch2earn-tech---a-dehub-milestone-from-q2-2023</loc>
+    <lastmod>2023-04-03T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2023 update: Protecting Innovation: Patent Applications for Streaming &amp; Watch2Earn Tech</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/expanding-horizons-partner-airdrop-for-fansite-bj-fork---a-dehub-milestone-from-q3-2023</loc>
+    <lastmod>2023-11-21T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q3 2023 update: Expanding Horizons: Partner Airdrop for Fan.site (BJ Fork)</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/supporting-growth-knowledge-transfer-to-fansite-team---a-dehub-milestone-from-q3-2023</loc>
+    <lastmod>2023-07-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q3 2023 update: Supporting Growth: Knowledge Transfer to Fan.site Team</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/decentralization-in-practice-the-fansite-fork-story---a-dehub-milestone-from-q3-2023</loc>
+    <lastmod>2023-07-03T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q3 2023 update: Decentralization in Practice: The Fan.site Fork Story</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/paving-the-way-framework-for-community-driven-forks---a-dehub-milestone-from-q3-2023</loc>
+    <lastmod>2023-07-04T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q3 2023 update: Paving the Way: Framework for Community-Driven Forks</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/prioritizing-principles-voluntary-delisting-from-gateio-for-decentralization---a-dehub-milestone-from-q4-2023</loc>
+    <lastmod>2023-10-01T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q4 2023 update: Prioritizing Principles: Voluntary Delisting from Gate.io for Decentralization</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/open-and-clear-dex-policy-implementation-and-transparency-commitment---a-dehub-milestone-from-q4-2023</loc>
+    <lastmod>2023-10-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q4 2023 update: Open and Clear: DEX Policy Implementation and Transparency Commitment</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/smarter-liquidity-automated-liquidity-provision-on-dexs---a-dehub-milestone-from-q4-2023</loc>
+    <lastmod>2023-10-03T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q4 2023 update: Smarter Liquidity: Automated Liquidity Provision on DEXs</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/full-disclosure-dehubs-comprehensive-transparency-reports---a-dehub-milestone-from-q4-2023</loc>
+    <lastmod>2023-10-04T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/131924d4-97f2-468e-9b52-cbf384e718ea.png</image:loc>
+      <image:title>Bird&apos;s Eye Overview</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/expanding-reach-dhb-lists-on-ethereum-mainnet---a-dehub-milestone-from-q1-2024</loc>
+    <lastmod>2024-01-01T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2024 update: Expanding Reach: DHB Lists on Ethereum Mainnet</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/fueling-growth-1m-raised-for-fansite-bj-fork---a-dehub-milestone-from-q1-2024</loc>
+    <lastmod>2024-01-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2024 update: Fueling Growth: $1M Raised for Fan.site (BJ Fork)</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/q1-overview-a-birds-eye-view</loc>
+    <lastmod>2024-02-06T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/ed0c4e36-5a13-4043-9c5f-725f4985cc91.png</image:loc>
+      <image:title>Q1 Overview: A Bird&apos;s Eye View</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/layer-2-expansion-sdhb-lists-on-base---a-dehub-milestone-from-q2-2024</loc>
+    <lastmod>2024-04-01T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2024 update: Layer 2 Expansion: SDHB Lists on Base</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/global-footprint-dehub-expands-middle-east-presence-via-dubai-event---a-dehub-milestone-from-q2-2024</loc>
+    <lastmod>2024-04-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2024 update: Global Footprint: DeHub Expands Middle East Presence via Dubai Event</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/entrepreneurial-spirit-co-founders-launch-tiktok-agency---a-dehub-milestone-from-q2-2024</loc>
+    <lastmod>2024-04-03T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2024 update: Entrepreneurial Spirit: Co-Founders Launch TikTok Agency</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/worldwide-creators-partnerships-spanning-15-countries---a-dehub-milestone-from-q2-2024</loc>
+    <lastmod>2024-04-04T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2024 update: Worldwide Creators: Partnerships Spanning 15 Countries</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/leveling-up-major-app-upgrade-earns-95-positive-feedback---a-dehub-milestone-from-q3-2024</loc>
+    <lastmod>2024-07-01T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q3 2024 update: Leveling Up: Major App Upgrade Earns 95% Positive Feedback</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/faster-and-sleeker-ui-overhaul-and-200-backend-speed-boost---a-dehub-milestone-from-q3-2024</loc>
+    <lastmod>2024-07-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q3 2024 update: Faster and Sleeker: UI Overhaul and 200% Backend Speed Boost</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/revolutionizing-access-on-chain-tradable-subscriptions-launch---a-dehub-milestone-from-q4-2024</loc>
+    <lastmod>2024-10-01T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q4 2024 update: Revolutionizing Access: On-Chain Tradable Subscriptions Launch</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/the-hype-is-real-last-chad-standing-teaser-hits-1m-views---a-dehub-milestone-from-q4-2024</loc>
+    <lastmod>2024-10-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q4 2024 update: The Hype is Real: Last Chad Standing Teaser Hits 1M+ Views</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/leading-the-way-dehub-agency-becomes-uk-1-with-1000-streamers---a-dehub-milestone-from-q4-2024</loc>
+    <lastmod>2024-10-03T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q4 2024 update: Leading the Way: DeHub Agency Becomes UK #1 with 1,000 Streamers</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/the-future-of-infrastructure-depin-phase-1-goes-live---a-dehub-milestone-from-q4-2024</loc>
+    <lastmod>2024-10-04T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q4 2024 update: The Future of Infrastructure: DePIN Phase 1 Goes Live</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/developments-overview</loc>
+    <lastmod>2024-09-26T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/0932e5d5-086f-4e27-aa97-7f5bdcfd31de.png</image:loc>
+      <image:title>DeHub Developments Overview</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/town-hall-ama-october-2024</loc>
+    <lastmod>2024-10-11T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/ea33e3a2-72d6-4be8-8648-07293e8b806f.png</image:loc>
+      <image:title>DeHub Town Hall &amp; AMA banner</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/1-million-dollar-raise-completed</loc>
+    <lastmod>2024-03-08T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>$1,000,000 raise for fan.site</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/1-year-review-a-quick-look-back</loc>
+    <lastmod>2024-11-12T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/ffb3a54c-cb66-4856-b9ff-491567ce3324.png</image:loc>
+      <image:title>A Look Back In Time</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/interactive-streaming-on-chain-live-streams-with-animated-tips---a-dehub-milestone-from-q1-2025</loc>
+    <lastmod>2025-01-01T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2025 update: Interactive Streaming: On-Chain Live Streams with Animated Tips</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/scaling-new-heights-livepeer-integration-for-50k-concurrent-viewers---a-dehub-milestone-from-q1-2025</loc>
+    <lastmod>2025-01-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2025 update: Scaling New Heights: Livepeer Integration for 50k+ Concurrent Viewers</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/speed-of-light-custom-cdn-achieves-sub-200ms-global-latency---a-dehub-milestone-from-q1-2025</loc>
+    <lastmod>2025-01-03T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2025 update: Speed of Light: Custom CDN Achieves Sub-200ms Global Latency</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/reliability-perfected-9999-uptime-for-dehub-streaming---a-dehub-milestone-from-q1-2025</loc>
+    <lastmod>2025-01-04T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2025 update: Reliability Perfected: 99.99% Uptime for DeHub Streaming</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/strategic-shift-discontinuing-ethereum-mainnet-support-for-dhb---a-dehub-milestone-from-q1-2025</loc>
+    <lastmod>2025-01-05T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2025 update: Strategic Shift: Discontinuing Ethereum Mainnet Support for DHB</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/connect-and-converse-advanced-messaging-system-with-paidfree-dms---a-dehub-milestone-from-q1-2025</loc>
+    <lastmod>2025-01-06T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2025 update: Connect and Converse: Advanced Messaging System with Paid/Free DMs</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/main-event-ready-last-chad-standing-full-trailer-gains-mma-promoter-attention---a-dehub-milestone-from-q1-2025</loc>
+    <lastmod>2025-01-07T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q1 2025 update: Main Event Ready: Last Chad Standing Full Trailer Gains MMA Promoter Attention</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/community-champions-ugc-ambassadorship-program-launched---a-dehub-milestone-from-q2-2025</loc>
+    <lastmod>2025-04-01T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2025 update: Community Champions: UGC Ambassadorship Program Launched</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/empowering-talent-comprehensive-creator-education-curriculum-rolls-out---a-dehub-milestone-from-q2-2025</loc>
+    <lastmod>2025-04-02T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2025 update: Empowering Talent: Comprehensive Creator Education Curriculum Rolls Out</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/transparency-hub-dhbscancom-launches-for-contract-activity-tracking---a-dehub-milestone-from-q2-2025</loc>
+    <lastmod>2025-04-03T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2025 update: Transparency Hub: dhbscan.com Launches for Contract Activity Tracking</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/fresh-experience-revamped-app-feed-with-audio-replies--live-talk-spaces---a-dehub-milestone-from-q2-2025</loc>
+    <lastmod>2025-04-04T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2025 update: Fresh Experience: Revamped App Feed with Audio Replies &amp; Live Talk Spaces</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/get-ready-players-final-snapshot-for-last-chad-standing-airdrop---a-dehub-milestone-from-q2-2025</loc>
+    <lastmod>2025-04-05T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&amp;fit=crop&amp;w=1200&amp;h=600&amp;q=80</image:loc>
+      <image:title>DeHub Q2 2025 update: Get Ready Players: Final Snapshot for Last Chad Standing Airdrop</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/development-update-dehub-era-starts-final-updates-bug-fixes</loc>
+    <lastmod>2026-02-02T14:22:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/dev-update-jan-2026-banner.png</image:loc>
+      <image:title>DeHub Development Update January 2026 - The DeHub Era Starts</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/town-hall-200k-private-sale-partner-tge-march-2026</loc>
+    <lastmod>2026-01-28T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/town-hall-jan-2026-banner.png</image:loc>
+      <image:title>DeHub Town Hall January 2026 - $200K Private Sale Complete and TGE Announcement</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/yearly-wrap-up-2025-and-2026-roadmap</loc>
+    <lastmod>2025-12-31T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/yearly-wrap-up-2025-banner.png</image:loc>
+      <image:title>DeHub 2025 Yearly Wrap Up and 2026 Roadmap - fireworks celebration</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/countdown-begins-dehub-app-store-launch</loc>
+    <lastmod>2025-11-17T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/countdown-clock-banner.png</image:loc>
+      <image:title>Countdown clock for DeHub app store launch</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/dehub-massive-week-bnb-recognition-first-class-partnership-app-store-launch</loc>
+    <lastmod>2025-11-07T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/town-hall-ama-banner-new.png</image:loc>
+      <image:title>DeHub Town Hall and AMA Highlights showcasing major announcements</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/leading-the-way-dehub-founders-official-tiktok-partner-agency-becomes-uk-1-with-1000-streamers</loc>
+    <lastmod>2024-11-22T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/13d7ca20-9fba-4ea4-963d-3b95ec9be963.png</image:loc>
+      <image:title>Mike Hales at TikTok Live Fest event, representing Team First Class Agency&apos;s official partnership with TikTok</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://dehub.io/guides/off-ramp-service-revealed-dehub-card-coming-soon</loc>
-    <lastmod>2024-12-15T12:00:00+00:00</lastmod>
+    <lastmod>2025-06-18T12:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
     <image:image>
-      <image:loc>https://dehub.io/lovable-uploads/82928389-9659-4117-8bbe-351a68241694.png</image:loc>
-      <image:title>DeHub Card premium payment solution</image:title>
+      <image:loc>https://dehub.io/lovable-uploads/bde80bf2-8f1d-4c14-9938-1a3080777203.png</image:loc>
+      <image:title>DeHub Cards in premium gold finish showcasing modern crypto payment solution</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dehub.io/guides/dehub-flagship-game-launch-partner-airdrop</loc>
-    <lastmod>2024-11-30T12:00:00+00:00</lastmod>
+    <loc>https://dehub.io/guides/fresh-experience-revamped-app-feed-with-audio-replies-live-talk-spaces</loc>
+    <lastmod>2025-05-03T00:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
     <image:image>
-      <image:loc>https://dehub.io/lovable-uploads/79082851-6427-4cc2-847b-a7780deb8f44.png</image:loc>
-      <image:title>Last Chad Standing game airdrop calculator</image:title>
+      <image:loc>https://dehub.io/lovable-uploads/09f2fe60-c820-4be4-b638-67f3c04a9fd4.png</image:loc>
+      <image:title>DeHub&apos;s new revamped app interface showing dark theme, navigation sidebar, content feed, and trending sections</image:title>
     </image:image>
   </url>
   <url>
     <loc>https://dehub.io/guides/interactive-streaming-on-chain-live-streams-with-animated-tip</loc>
-    <lastmod>2024-03-10T12:00:00+00:00</lastmod>
+    <lastmod>2024-03-10T12:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.6</priority>
     <image:image>
       <image:loc>https://dehub.io/lovable-uploads/e0c268eb-4499-4b2a-8a02-850ea7d6f7ec.png</image:loc>
-      <image:title>Interactive live streaming with animated tips</image:title>
+      <image:title>Interactive live streaming with animated tips - DeHub&apos;s revolutionary approach to on-chain content creation</image:title>
     </image:image>
   </url>
   <url>
-    <loc>https://dehub.io/guides/award-winning-innovation-dehub-wins-corporate-livewire-tech-innovator-award</loc>
-    <lastmod>2024-07-15T12:00:00+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dehub.io/guides/tokenised-uploads-seamless-content-sharing-with-smart-contract-integration</loc>
-    <lastmod>2024-10-20T12:00:00+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://dehub.io/guides/dubai-crypto-event-dehub-co-founder-speaks-at-mena-summit</loc>
-    <lastmod>2024-09-10T12:00:00+00:00</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://dehub.io/guides/2022-wrap-up</loc>
-    <lastmod>2022-12-31T12:00:00+00:00</lastmod>
-    <changefreq>yearly</changefreq>
+    <lastmod>2023-01-04T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/4476fbc3-58ec-467b-8c1b-30570349940c.png</image:loc>
+      <image:title>2022 Wrap Up - DeHub year in review with fireworks celebration</image:title>
+    </image:image>
   </url>
   <url>
-    <loc>https://dehub.io/guides/dream-big-the-1m-home-crypto-raffle-by-dehub---a-dehub-milestone-from-q3-2022</loc>
-    <lastmod>2022-07-11T12:00:00+00:00</lastmod>
-    <changefreq>yearly</changefreq>
+    <loc>https://dehub.io/guides/tokenised-uploads-are-here</loc>
+    <lastmod>2023-06-10T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/b515dd9f-ca7e-4264-a177-0ead5c2d55c6.png</image:loc>
+      <image:title>A glowing DeHub token representing tokenized uploads.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/award-winning-innovation-dehub-recognised</loc>
+    <lastmod>2023-04-20T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/b4d253e4-ae5a-4160-96bd-7c691a56e2f9.png</image:loc>
+      <image:title>Corporate LiveWire Innovation &amp; Excellence Awards 2023 Winner badge.</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/global-footprint-dehub-expands-middle-east-presence-via-dubai-event</loc>
+    <lastmod>2024-04-10T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/2dc5ff27-15fe-4181-b199-8f6941fa3913.png</image:loc>
+      <image:title>DeHub DeTour Dubai event banner</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/base-pool-going-live-soon</loc>
+    <lastmod>2024-05-14T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/068250b6-b4b6-42fc-8633-f686a94990c7.png</image:loc>
+      <image:title>DeHub launching on Base network announcement banner</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/dehub-takeover</loc>
+    <lastmod>2024-08-22T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/aea0cba3-d4b8-4f90-bfc3-4758f35c38b8.png</image:loc>
+      <image:title>DeHub Takeover announcement banner</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/new-multi-year-sponsorship-crusaders</loc>
+    <lastmod>2024-06-30T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/c9da2b1e-9e88-4ac5-a1ae-589e990027ea.png</image:loc>
+      <image:title>DeHub announces new multi-year sponsorship with North Wales Crusaders rugby team</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/public-beta-dapp-report</loc>
+    <lastmod>2023-03-25T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/c799219d-e9da-43e4-938f-54cfbc3a242f.png</image:loc>
+      <image:title>DeHub Beta Overview banner</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/dehub-flagship-game-launch-partner-airdrop</loc>
+    <lastmod>2025-07-04T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/f8cf3fce-cacb-4696-b06d-8b1e2a5d170a.png</image:loc>
+      <image:title>Military helicopter in flight representing the flagship game launch and strategic partnerships</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/dhb-now-trading-on-coinbase</loc>
+    <lastmod>2025-08-19T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/coinbase-dhb-banner.png</image:loc>
+      <image:title>$DHB now trading on Coinbase - DeHub leads the decentralized trading revolution</image:title>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://dehub.io/guides/bnb-pool-update-recovery-876-bnb-stuck-2022-pool</loc>
+    <lastmod>2025-09-14T12:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://dehub.io/lovable-uploads/bnb-pool-update-banner-new.png</image:loc>
+      <image:title>BNB Pool Update - DeHub&apos;s journey to recover 876 BNB stuck from 2022 contract issue</image:title>
+    </image:image>
   </url>
 </urlset>
