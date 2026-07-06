@@ -316,10 +316,10 @@ ART DIRECTION: ${enhancedUserRequest}`;
           model = 'gemini-3.1-flash-image';
           isGrokModel = false;
           contextualPrompt = `DEHUB BRAND SYSTEM (mandatory):
-- The attached image is the official DeHub wordmark. Composite it PROMINENTLY, UNALTERED, PURE WHITE into the final image with clear space around it (min 8% of canvas). Do NOT recolor, gradient-fill, distort, or redraw the logo — use the attached pixels.
-- Palette: deep black / charcoal background (#000–#0a0a0a), white text, subtle white-opacity accents. NEVER use blue anywhere. Muted neon (magenta/violet/cyan) ambient glow is OK.
-- Aesthetic: liquid glass, frosted blur, cinematic, premium, decentralized-tech. Lots of negative space. Strong focal hierarchy.
-- Typography (if any): Exo / Exo 2, white, minimal, generous letter-spacing. No emoji. No generic AI clichés.
+- The attached image is the official DeHub wordmark. Composite it PROMINENTLY, UNALTERED, PURE WHITE into the final image with clear space around it (min 8% of canvas), integrated into the physical logo-host surface described in the ART DIRECTION (engraved / embossed / backlit / projected — not floating flat). Do NOT recolor, gradient-fill, distort, or redraw the logo — use the attached pixels.
+- STRICT MONOCHROME palette: blacks, charcoals, silvers, chromes, brushed steels, cool off-whites, pure white ONLY. NO color hues — no red, orange, yellow, magenta, purple, violet, green, blue, teal, cyan, indigo, pastel, neon glow. Any ambient light must be cool near-white (saturation under 10%). Only exception: if the ART DIRECTION literally names a color, honor it as a restrained accent.
+- Aesthetic: liquid glass, frosted blur, obsidian, mercury, brushed metal, cinematic, premium, Apple keynote × A24. Backgrounds must have texture/depth — never flat black.
+- Typography (only if the ART DIRECTION names a short display headline): Exo / Exo 2 geometric technical sans-serif, pure white, generous letter-spacing. No emoji. No generic AI clichés.
 
 ART DIRECTION: ${enhancedUserRequest}`;
         }
