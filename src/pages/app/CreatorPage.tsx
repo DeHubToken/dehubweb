@@ -5,6 +5,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { PricingSection } from '@/components/pricing/PricingSection';
 import SwipeableCarousel from '@/components/app/SwipeableCarousel';
 import { CreatorComposerBar } from '@/components/app/creator/CreatorComposerBar';
+import { ModelMarquee } from '@/components/app/creator/ModelMarquee';
 import dehubIcon from '@/assets/dehub-icon.png.asset.json';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import showcaseImage from '@/assets/creator-studio-showcase.jpg';
