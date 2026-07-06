@@ -5,7 +5,7 @@ const Index = () => {
   return (
     <>
       <SEOHead
-        title="Open Source Social Media"
+        title="DeHub — Open Source Social Media"
         description="DeHub is open source, user owned and censorship resistant media. Join the decentralized future of social."
         url="https://dehub.io"
         jsonLd={{
