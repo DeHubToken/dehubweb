@@ -169,10 +169,12 @@ Rules (non-negotiable):
 Format: ${formatHint}. Compose for this aspect ratio.
 
 Non-negotiable brand rules (violating these ruins the piece):
-- PALETTE: dominant deep black / charcoal (#000000–#0a0a0a). Accent color is PURE WHITE only. Subtle muted neon ambient glow (magenta, violet, cyan, warm amber) is allowed ONLY as atmospheric lighting on a black scene. ABSOLUTELY NO blue (no navy, no cobalt, no cyan-blue, no indigo, no periwinkle). NO purple/indigo gradient on white. NO pastel palettes.
-- LOGO: Reserve a clean, empty, calm region (roughly 20-25% of canvas width, min 8% clear space on every side) — typically bottom-center third, upper-left quadrant, or upper-right — where the real DeHub wordmark will be composited later. DO NOT DRAW A LOGO OR WORDMARK YOURSELF. Do not write "DEHUB", "DeHub", or any variant. Leave that region visually calm.
-- TYPOGRAPHY (if the user requested a headline/tagline): Exo / Exo 2 geometric technical sans-serif ONLY (fallback Eurostile / Michroma / Rajdhani). Pure white. Generous letter-spacing. Never serifs, script, or humanist sans (Inter, Poppins, DM Sans, Helvetica Neue).
-- NO emoji. NO glossy 3D blobs. NO generic-AI stock look (hero-with-arms-up, purple/indigo gradient on white, floating chrome spheres).
+- STRICT MONOCHROME PALETTE: blacks, charcoals, silvers, chromes, brushed steels, cool off-whites, pure white ONLY. ABSOLUTELY NO color hues — no red, orange, yellow, magenta, purple, violet, green, blue, teal, indigo, cyan, pastel, neon glow. Any ambient light must be a cool near-white (saturation under 10%). If the ART DIRECTION below literally names a color, honor it as a restrained accent; otherwise, kill every hue.
+- BACKGROUND MUST HAVE DEPTH: silk drapery, brushed metal, black marble veining, volumetric mist, obsidian, mercury — never a flat #000 wall.
+- MATERIALS: liquid glass, frosted crystal, polished chrome, brushed aluminum, obsidian, smoked crystal, mercury. Real reflections, refractions, subsurface scattering, subtle caustics.
+- LOGO HOST SURFACE: the scene MUST include the specific physical surface named in the ART DIRECTION (e.g. an obsidian slab, brushed-aluminum plaque, backlit smoked-glass panel, chrome monolith face). That surface must be a real object in the scene, angled/lit to match, and its face must be perfectly BLANK — do NOT draw a logo, the word "DeHub", letters, glyphs, placeholder marks, icons, or any text on it. The real DeHub wordmark will be composited onto that exact blank surface afterward. Size the blank area for a wordmark lockup roughly 20-30% of canvas width with min 8% clear space on every side.
+- TYPOGRAPHY: only if the ART DIRECTION names a short display headline, render it in Exo / Exo 2 geometric technical sans-serif, thin uniform strokes, sharp corners, wide letter-spacing, pure white. Never serifs, script, humanist sans (Inter, Poppins, DM Sans, Helvetica Neue).
+- NO emoji. NO purple/indigo gradients. NO rainbow. NO cyberpunk neon. NO glossy 3D blobs. NO generic AI clichés (hero-with-arms-up, purple gradient on white, floating chrome spheres in empty voids). NO motion-blur action shots.
 
 ART DIRECTION: ${enhancedUserRequest}`;
 
