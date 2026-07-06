@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { SEOHead } from '@/components/SEOHead';
 import { PricingSection } from '@/components/pricing/PricingSection';
@@ -367,10 +367,8 @@ export default function CreatorPage() {
         </section>
 
         <section className="grid gap-3 px-3 pb-4 sm:px-4 md:grid-cols-2">
-          <a
-            href="https://chatgpt.com/apps#settings/Connectors?connector=asdk_app_6a4962fb2cdc8191afcda7ca74b6082c"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            to="/connect/chatgpt"
             className="group relative min-h-[220px] overflow-hidden rounded-2xl border border-white/10 p-5 text-left shadow-[0_24px_80px_rgba(0,0,0,0.45)] transition-transform hover:-translate-y-0.5"
             style={{ background: 'radial-gradient(circle at 85% 15%, rgba(16,163,127,0.35), transparent 45%), linear-gradient(135deg, rgba(255,255,255,0.06), rgba(16,163,127,0.14) 60%, rgba(0,0,0,0.6))' }}
           >
@@ -379,19 +377,17 @@ export default function CreatorPage() {
               Use DeHub inside ChatGPT
             </div>
             <p className="mt-3 max-w-[380px] text-sm text-white/70">
-              DeHub is already added as a ChatGPT app. Open it to ask about posts, profiles and trends.
+              DeHub is a native ChatGPT app. See how to enable the connector and start prompting.
             </p>
             <div className="mt-4 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/50 px-3 py-2 text-sm font-semibold text-white transition-colors group-hover:bg-black/60">
-              Open DeHub in ChatGPT
+              Read the ChatGPT guide
               <ArrowUpRight className="h-4 w-4 text-white/60 transition-colors group-hover:text-white" />
             </div>
             <ArrowUpRight className="absolute right-4 top-4 h-5 w-5 text-white/40 transition-colors group-hover:text-white" />
-          </a>
+          </Link>
 
-          <a
-            href="https://claude.ai/new#settings/customize-connectors/10c6ee66-064b-4d66-b544-139cdc732b0f"
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            to="/connect/claude"
             className="group relative min-h-[220px] overflow-hidden rounded-2xl border border-white/10 p-5 text-left shadow-[0_24px_80px_rgba(0,0,0,0.45)] transition-transform hover:-translate-y-0.5"
             style={{ background: 'radial-gradient(circle at 85% 15%, rgba(217,119,87,0.38), transparent 45%), linear-gradient(135deg, rgba(255,255,255,0.06), rgba(217,119,87,0.14) 60%, rgba(0,0,0,0.6))' }}
           >
@@ -400,14 +396,14 @@ export default function CreatorPage() {
               Use DeHub inside Claude
             </div>
             <p className="mt-3 max-w-[380px] text-sm text-white/70">
-              DeHub is already added as a Claude connector. Open it to pull DeHub content directly.
+              DeHub is a native Claude connector. Learn how to enable it and pull DeHub content live.
             </p>
             <div className="mt-4 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/50 px-3 py-2 text-sm font-semibold text-white transition-colors group-hover:bg-black/60">
-              Open DeHub in Claude
+              Read the Claude guide
               <ArrowUpRight className="h-4 w-4 text-white/60 transition-colors group-hover:text-white" />
             </div>
             <ArrowUpRight className="absolute right-4 top-4 h-5 w-5 text-white/40 transition-colors group-hover:text-white" />
-          </a>
+          </Link>
         </section>
 
         <section className="px-3 pb-6 sm:px-4">
