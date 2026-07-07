@@ -374,6 +374,7 @@ export default function CreatorPage() {
           <ModelMarquee />
         </section>
 
+        <MountOnVisible minHeight={240} rootMargin="800px">
         <section className="grid gap-3 px-3 pb-4 sm:px-4 md:grid-cols-2">
 
           <Link
@@ -428,7 +429,9 @@ export default function CreatorPage() {
             <ArrowUpRight className="absolute right-4 top-4 h-5 w-5 text-white/40 transition-colors group-hover:text-white" />
           </Link>
         </section>
+        </MountOnVisible>
 
+        <MountOnVisible minHeight={320} rootMargin="800px">
         <section className="px-3 pb-6 sm:px-4">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 
@@ -466,7 +469,9 @@ export default function CreatorPage() {
             })}
           </div>
         </section>
+        </MountOnVisible>
 
+        <MountOnVisible minHeight={480} rootMargin="800px">
         <section className="px-3 pb-4 sm:px-4">
           <div className="mb-4 flex gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {categories.map((category) => (
@@ -494,6 +499,8 @@ export default function CreatorPage() {
               alt="DeHub creator studio interface inside a laptop display"
               width={1920}
               height={1080}
+              loading="lazy"
+              decoding="async"
               className="h-[420px] w-full object-cover object-center opacity-90 transition-transform duration-500 group-hover:scale-[1.015] sm:h-[560px] lg:h-[680px]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent" />
@@ -508,16 +515,23 @@ export default function CreatorPage() {
             </div>
           </button>
         </section>
+        </MountOnVisible>
 
-        <CommunityGallery />
+        <MountOnVisible minHeight={520} rootMargin="800px">
+          <CommunityGallery />
+        </MountOnVisible>
 
-        <PricingSection />
+        <MountOnVisible minHeight={600} rootMargin="800px">
+          <PricingSection />
+        </MountOnVisible>
 
+        <MountOnVisible minHeight={200} rootMargin="600px">
         <section className="grid gap-3 px-3 pb-10 sm:px-4 lg:grid-cols-3">
           <FeatureStrip icon={Crown} title="Premium campaigns" copy="Poster, video, image and audio assets built around the same idea." />
           <FeatureStrip icon={Sparkles} title="Creator memory" copy="Characters, skills and brand rules stay available across prompts." />
           <FeatureStrip icon={ArrowUpRight} title="Connected to DeHub" copy="Jump from a tool into assistant, editor, TV, agents or settings." />
         </section>
+        </MountOnVisible>
         <CreatorComposerBar />
       </main>
     </>
