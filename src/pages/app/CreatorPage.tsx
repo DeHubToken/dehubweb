@@ -832,7 +832,7 @@ function CommunityGallery() {
 
       {!inView || loading ? (
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-          {Array.from({ length: 12 }).map((_, i) => (
+          {Array.from({ length: Math.ceil(getGalleryColumns() * 1.5) }).map((_, i) => (
             <div key={i} className="aspect-square animate-pulse rounded-lg bg-white/5" />
           ))}
         </div>
