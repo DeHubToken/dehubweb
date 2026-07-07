@@ -719,7 +719,7 @@ function CommunityGallery() {
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(() => getGalleryColumns() * 4);
+  const [visibleCount, setVisibleCount] = useState(() => Math.ceil(getGalleryColumns() * 1.5));
   const [lightbox, setLightbox] = useState<GalleryItem | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -774,7 +774,7 @@ function CommunityGallery() {
     return () => io.disconnect();
   }, [items.length]);
 
-  // Compute the 2.5-row window height from the current tile size.
+  // Compute the 1.5-row window height from the current tile size.
   // Tiles are aspect-square, so row height = (gridWidth - (cols-1)*gap) / cols.
   useEffect(() => {
     const GAP = 8; // gap-2 = 0.5rem = 8px
@@ -785,8 +785,8 @@ function CommunityGallery() {
       const width = el.clientWidth;
       if (width <= 0) return;
       const tile = (width - GAP * (cols - 1)) / cols;
-      // 2 full rows + half of a third row + gaps between them
-      const h = tile * 2.5 + GAP * 2;
+      // 1 full row + half of a second row + gap between them
+      const h = tile * 1.5 + GAP * 1;
       setWindowHeight(Math.max(200, Math.round(h)));
     };
     compute();
@@ -832,7 +832,7 @@ function CommunityGallery() {
 
       {!inView || loading ? (
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-          {Array.from({ length: 12 }).map((_, i) => (
+          {Array.from({ length: Math.ceil(getGalleryColumns() * 1.5) }).map((_, i) => (
             <div key={i} className="aspect-square animate-pulse rounded-lg bg-white/5" />
           ))}
         </div>
