@@ -30,6 +30,7 @@ import {
   Wand2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { MountOnVisible } from '@/components/util/MountOnVisible';
 
 const accent = '#e5e7eb';
 const hot = '#ff2c91';
