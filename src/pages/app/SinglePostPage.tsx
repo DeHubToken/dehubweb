@@ -831,9 +831,8 @@ export default function SinglePostPage() {
           </Drawer>
         )}
         
-        {/* Desktop: Standard layout with header */}
+        {/* Desktop: flush layout — top nav bar handles chrome, no floating back-button bento */}
         <div className="hidden lg:flex lg:flex-col">
-          <PageHeader showBack={hasHistory} innerClassName="max-w-2xl mx-auto w-full" />
           <div className="px-3 sm:px-4 pb-8">
             <div className="max-w-2xl mx-auto">
               {/* Creator info for desktop */}
@@ -990,10 +989,7 @@ export default function SinglePostPage() {
 
   const renderPostContent = (onBack?: () => void, hideHeader = false) => (
     <>
-      {/* Mobile: header hidden — top nav bar provides the back button. Desktop: only show if there's history */}
-      {!hideHeader && (
-        <PageHeader showBack={onBack ? true : hasHistory} onBack={onBack} innerClassName="max-w-2xl mx-auto w-full" />
-      )}
+      {/* Header removed — top nav bar provides chrome; no floating back-button bento on any breakpoint */}
       <div className="px-3 sm:px-4 pb-8">
         <div className="max-w-2xl mx-auto">
           <div data-feed-item>
