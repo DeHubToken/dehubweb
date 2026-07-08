@@ -85,7 +85,7 @@ export function LiveCard({ stream }: LiveCardProps) {
           creatorId={stream.creatorId}
           creatorUsername={stream.creatorUsername}
         />
-        <div className="flex items-center gap-1">
+        <div className="flex items-start gap-1">
           <motion.button
             onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
             className="text-zinc-400 hover:text-white transition-colors"
@@ -93,12 +93,12 @@ export function LiveCard({ stream }: LiveCardProps) {
             whileTap={{ scale: 0.95 }}
             aria-label="Ask AI about this stream"
           >
-            <Sparkles className="w-5 h-5" />
+            <Sparkles className="w-[23.5px] h-[23.5px]" />
           </motion.button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
-                <MoreVertical className="w-5 h-5" />
+                <MoreVertical className="w-[23.5px] h-[23.5px]" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
