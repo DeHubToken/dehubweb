@@ -4,10 +4,10 @@ import { Button } from '@/components/ui/button';
 import { Download, Image as ImageIcon, FileText, Package, Palette, ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import designSystemZip from '@/assets/design-system/dehub-design-system.zip.asset.json';
-import wordmarkWhite from '@/assets/design-system/wordmark-white.png.asset.json';
-import wordmarkBlack from '@/assets/design-system/wordmark-black.png.asset.json';
-import markWhite from '@/assets/design-system/mark-white.png.asset.json';
-import markBlack from '@/assets/design-system/mark-black.png.asset.json';
+const wordmarkWhite = { url: '/brand/wordmark-white.png' };
+const wordmarkBlack = { url: '/brand/wordmark-black.png' };
+const markWhite = { url: '/brand/mark-white.png' };
+const markBlack = { url: '/brand/mark-black.png' };
 
 type LogoAsset = {
   id: string;
