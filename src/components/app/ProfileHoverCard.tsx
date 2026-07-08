@@ -166,7 +166,7 @@ export function ProfileHoverCard({
       >
         {isLoading ? (
           <div className="flex items-center justify-center py-8">
-            <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
+            <Loader2 className="w-5 h-5 animate-spin text-white/60" />
           </div>
         ) : profile ? (
           <div className="p-4">
