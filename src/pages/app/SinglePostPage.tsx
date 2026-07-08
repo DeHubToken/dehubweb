@@ -990,7 +990,7 @@ export default function SinglePostPage() {
   const renderPostContent = (onBack?: () => void, hideHeader = false) => (
     <>
       {/* Header removed — top nav bar provides chrome; no floating back-button bento on any breakpoint */}
-      <div className="px-3 sm:px-4 pt-3 sm:pt-4 pb-8">
+      <div className="px-3 sm:px-4 pt-6 sm:pt-8 pb-8">
         <div className="max-w-2xl mx-auto">
           <div data-feed-item>
             {renderContent()}
