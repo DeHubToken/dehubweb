@@ -12,7 +12,7 @@ import {
 import { Download, Image as ImageIcon, FileText, Package, Palette, ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import designSystemZip from '@/assets/design-system/dehub-design-system.zip.asset.json';
-import figmaDuplicateInstruction from '@/assets/docs/figma-duplicate-instruction.png.asset.json';
+const figmaDuplicateInstruction = { url: '/docs/figma-duplicate-instruction.png' };
 const wordmarkWhite = { url: '/brand/wordmark-white.png' };
 const wordmarkBlack = { url: '/brand/wordmark-black.png' };
 const markWhite = { url: '/brand/mark-white.png' };
