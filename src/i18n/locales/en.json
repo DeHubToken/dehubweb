@@ -985,7 +985,7 @@
     "failedSubmit": "Failed to submit application. Please try again."
   },
   "loginModal": {
-    "title": "Log in",
+    "title": "Log in / Sign up",
     "continueEmail": "Continue with Email",
     "continueSMS": "Continue with SMS",
     "continueGoogle": "Continue with Google",
