@@ -768,7 +768,7 @@ serve(async (req) => {
             "bridge":      "https://dehub.io/__l5e/assets-v1/f1d02806-409b-498e-8c59-ff44b17ecd90/bridge.png",
             "guides/best-decentralized-social-media": "https://dehub.io/__l5e/assets-v1/c2d40758-fdae-4b6f-9f93-080061013b7a/guides-best-decentralized-social-media.png",
         };
-        const DEFAULT_OG_IMAGE = "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo//Screenshot%202026-03-20%20225233.png";
+        const DEFAULT_OG_IMAGE = "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo//new_logo_Dehub.jpg";
 
         const rawKey = cleanPath.replace(/^\/+|\/+$/g, "").toLowerCase();
         // Product pages live under /app/*; accept both `/slug` and `/app/slug`.
@@ -802,7 +802,7 @@ serve(async (req) => {
             title: "DeHub — Open Source, User Owned & Censorship Resistant Media",
             description:
                 "dehub.io is open source, user owned and censorship resistant media. Join the future of free speech and reach.",
-            image: "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo//Screenshot%202026-03-20%20225233.png",
+            image: "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo//new_logo_Dehub.jpg",
             url: canonicalUrl,
             twitterCard: "summary_large_image",
             imageWidth: 1200,
