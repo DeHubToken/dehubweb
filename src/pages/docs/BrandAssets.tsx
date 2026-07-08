@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Download, Image as ImageIcon, FileText, Package, Palette, ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import designSystemZip from '@/assets/design-system/dehub-design-system.zip.asset.json';
+import figmaDuplicateInstruction from '@/assets/docs/figma-duplicate-instruction.png.asset.json';
 const wordmarkWhite = { url: '/brand/wordmark-white.png' };
 const wordmarkBlack = { url: '/brand/wordmark-black.png' };
 const markWhite = { url: '/brand/mark-white.png' };
