@@ -249,19 +249,21 @@ function MobileCreatorInfo({
             </div>
           )}
           
-          <button
-            onClick={onAIClick}
-            className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
-            aria-label="Ask AI about this video"
-          >
-            <Sparkles className="w-5 h-5" />
-          </button>
-          <button 
-            onClick={onMenuClick}
-            className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
-          >
-            <MoreVertical className="w-5 h-5" />
-          </button>
+          <div className="flex items-start gap-0.5">
+            <button
+              onClick={onAIClick}
+              className="w-8 h-[37.5px] flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white transition-colors"
+              aria-label="Ask AI about this video"
+            >
+              <Sparkles className="w-[23.5px] h-[23.5px]" />
+            </button>
+            <button 
+              onClick={onMenuClick}
+              className="w-8 h-[37.5px] flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white transition-colors"
+            >
+              <MoreVertical className="w-[23.5px] h-[23.5px]" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -1151,7 +1153,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             creatorUsername={video.creatorUsername}
             badgeBalance={video.creatorBadgeBalance}
           />
-          <div className="flex items-center gap-1">
+          <div className="flex items-start gap-1">
             <motion.button
               onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
               className="text-zinc-400 hover:text-white transition-colors"
@@ -1159,12 +1161,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               whileTap={{ scale: 0.95 }}
               aria-label="Ask AI about this video"
             >
-              <Sparkles className="w-5 h-5" />
+              <Sparkles className="w-[23.5px] h-[23.5px]" />
             </motion.button>
             <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
               <DrawerTrigger asChild>
               <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); openLoginModal(); return; } setShowOptionsDrawer(true); }} className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
-                <MoreVertical className="w-5 h-5" />
+                <MoreVertical className="w-[23.5px] h-[23.5px]" />
                 </button>
               </DrawerTrigger>
               <DrawerContent glass className="px-4 pb-6">

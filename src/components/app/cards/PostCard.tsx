@@ -245,19 +245,19 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
       />
 
       {/* AI Button and Options Drawer - positioned in header area */}
-      <div className="absolute top-0 right-0 z-10 flex items-center gap-2">
+      <div className="absolute top-0 right-0 z-10 flex items-start gap-2">
         <button
           onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowAIChat(true); }}
           className="text-zinc-400 hover:text-white transition-colors active:scale-95"
           aria-label="Ask AI about this post"
         >
-          <Sparkles className="w-5 h-5" />
+          <Sparkles className="w-[23.5px] h-[23.5px]" />
         </button>
         
         <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
           <DrawerTrigger asChild>
             <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); openLoginModal(); } }} className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
-              <MoreVertical className="w-5 h-5" />
+              <MoreVertical className="w-[23.5px] h-[23.5px]" />
             </button>
           </DrawerTrigger>
           <DrawerContent glass className="px-4 pb-6">

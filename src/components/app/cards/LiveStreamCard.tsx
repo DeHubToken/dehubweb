@@ -354,7 +354,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
           creatorId={stream.creatorId}
           creatorUsername={stream.creatorUsername}
         />
-        <div className="flex items-center gap-1 pr-3">
+        <div className="flex items-start gap-1 pr-3">
           {/* Like button */}
           {!streamEnded && (
             <motion.button
@@ -387,12 +387,12 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
             whileTap={{ scale: 0.95 }}
             aria-label="Ask AI about this stream"
           >
-            <Sparkles className="w-5 h-5" />
+            <Sparkles className="w-[23.5px] h-[23.5px]" />
           </motion.button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} className="w-8 h-8 rounded-xl flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
-                <MoreVertical className="w-5 h-5" />
+              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} className="w-8 h-[37.5px] rounded-xl flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors">
+                <MoreVertical className="w-[23.5px] h-[23.5px]" />
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-zinc-800 border-zinc-700">
