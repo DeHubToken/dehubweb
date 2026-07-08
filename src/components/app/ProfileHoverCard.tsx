@@ -194,7 +194,7 @@ export function ProfileHoverCard({
                 />
               )}
               {!profile.isOwnProfile && profile.isFollowing && (
-                <span className="px-3.5 py-1.5 rounded-xl text-xs font-medium text-zinc-400 bg-white/5 border border-white/10">
+                <span className="px-3.5 py-1.5 rounded-xl text-xs font-medium text-white/80 bg-white/5 border border-white/10">
                   Following ✓
                 </span>
               )}
