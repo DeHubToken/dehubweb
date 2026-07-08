@@ -161,7 +161,7 @@ function ImageCarousel({
   const hasMultiple = images.length > 1;
   
   return (
-    <div data-media-full className="relative rounded-md overflow-hidden" onWheel={handleWheel} data-no-navigate>
+    <div data-media-full className="relative rounded-2xl overflow-hidden" onWheel={handleWheel} data-no-navigate>
       {/* Carousel container */}
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
@@ -659,7 +659,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         {isComboLocked ? (
           <>
             {/* Combo PPV + Holdings Locked: blurred image with dual icons */}
-            <div className="relative rounded-md overflow-hidden">
+            <div className="relative rounded-2xl overflow-hidden">
               <img src={images[0]} alt="" className="w-full max-h-[600px] object-cover blur-lg" loading="lazy" />
               <div 
                 className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
@@ -693,7 +693,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         ) : isPPV ? (
           <>
             {/* PPV only: blurred image with ticket overlay */}
-            <div className="relative rounded-md overflow-hidden">
+            <div className="relative rounded-2xl overflow-hidden">
               <img src={images[0]} alt="" className="w-full max-h-[600px] object-cover blur-lg" loading="lazy" />
               <div 
                 className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"
@@ -721,7 +721,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         ) : isLocked ? (
           <>
             {/* Holdings Locked: blurred image with lock icon overlay */}
-            <div className="relative rounded-md overflow-hidden">
+            <div className="relative rounded-2xl overflow-hidden">
               <img src={images[0]} alt="" className="w-full max-h-[600px] object-cover blur-lg" loading="lazy" />
               <div
                 className="absolute inset-0 flex flex-col items-center justify-center bg-black/30 cursor-pointer"

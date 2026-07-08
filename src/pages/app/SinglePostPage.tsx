@@ -833,7 +833,7 @@ export default function SinglePostPage() {
         
         {/* Desktop: flush layout — top nav bar handles chrome, no floating back-button bento */}
         <div className="hidden lg:flex lg:flex-col">
-          <div className="px-3 sm:px-4 pb-8">
+          <div className="px-3 sm:px-4 pt-3 sm:pt-4 pb-8">
             <div className="max-w-2xl mx-auto">
               {/* Creator info for desktop */}
               <DesktopCreatorInfo
@@ -845,7 +845,7 @@ export default function SinglePostPage() {
                 onAIClick={() => setShowDesktopAIChat(true)}
                 onMenuClick={() => setShowDesktopOptionsDrawer(true)}
               />
-              <div data-feed-item className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+              <div data-feed-item className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3">
                 {renderContent()}
                 {id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
               </div>
@@ -990,7 +990,7 @@ export default function SinglePostPage() {
   const renderPostContent = (onBack?: () => void, hideHeader = false) => (
     <>
       {/* Header removed — top nav bar provides chrome; no floating back-button bento on any breakpoint */}
-      <div className="px-3 sm:px-4 pb-8">
+      <div className="px-3 sm:px-4 pt-3 sm:pt-4 pb-8">
         <div className="max-w-2xl mx-auto">
           <div data-feed-item>
             {renderContent()}
