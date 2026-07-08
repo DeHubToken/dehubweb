@@ -1,9 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Download, Image as ImageIcon, FileText, Package, Palette, ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import designSystemZip from '@/assets/design-system/dehub-design-system.zip.asset.json';
+const figmaDuplicateInstruction = { url: '/docs/figma-duplicate-instruction.png' };
 const wordmarkWhite = { url: '/brand/wordmark-white.png' };
 const wordmarkBlack = { url: '/brand/wordmark-black.png' };
 const markWhite = { url: '/brand/mark-white.png' };
@@ -233,16 +242,43 @@ const BrandAssets = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Button variant="outline" asChild className="flex items-center gap-2 w-full sm:w-auto">
-            <a
-              href="https://www.figma.com/design/BjnSoqSIFYXL73yz4svKLh/Dehub-SM-Template-2.0--Copy-"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <ExternalLink className="w-4 h-4" />
-              Copy and edit
-            </a>
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="flex items-center gap-2 w-full sm:w-auto">
+                <ExternalLink className="w-4 h-4" />
+                Copy and edit
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle className="text-white">Edit & Copy in Figma</DialogTitle>
+                <DialogDescription className="text-white/70">
+                  Using Figma's free account tier, you can duplicate this file and edit as you please!
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4">
+                <img
+                  src={figmaDuplicateInstruction.url}
+                  alt="Right-click a Figma file thumbnail and choose Duplicate"
+                  className="w-full rounded-xl border border-white/10"
+                  loading="lazy"
+                />
+                <p className="text-sm text-white/80">
+                  Simply right click on any file thumbnail in your recent or shared tabs then hit duplicate.
+                </p>
+                <Button asChild className="w-full rounded-2xl flex items-center gap-2">
+                  <a
+                    href="https://www.figma.com/design/BjnSoqSIFYXL73yz4svKLh/Dehub-SM-Template-2.0--Copy-"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Continue to Figma
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
           <div className="w-full rounded-lg overflow-hidden border border-border bg-black">
             <iframe
               title="DeHub Social Media Templates"
