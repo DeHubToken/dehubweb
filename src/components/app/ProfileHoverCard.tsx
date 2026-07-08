@@ -216,7 +216,7 @@ export function ProfileHoverCard({
                 {profile.verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0 ml-1" />}
               </div>
               {profile.username && (
-                <p className="text-zinc-500 text-xs mt-0.5">
+                <p className="text-white/60 text-xs mt-0.5">
                   @{profile.username.replace('@', '')}
                 </p>
               )}
@@ -224,7 +224,7 @@ export function ProfileHoverCard({
 
             {/* Bio */}
             {profile.bio && (
-              <p className="text-zinc-300 text-xs leading-relaxed mt-2 line-clamp-2">
+              <p className="text-white/80 text-xs leading-relaxed mt-2 line-clamp-2">
                 {profile.bio}
               </p>
             )}
@@ -233,11 +233,11 @@ export function ProfileHoverCard({
             <div className="flex items-center gap-4 mt-3">
               <span className="text-xs">
                 <span className="text-white font-semibold">{formatCount(profile.following)}</span>
-                <span className="text-zinc-500 ml-1">Following</span>
+                <span className="text-white/60 ml-1">Following</span>
               </span>
               <span className="text-xs">
                 <span className="text-white font-semibold">{formatCount(profile.followers)}</span>
-                <span className="text-zinc-500 ml-1">Followers</span>
+                <span className="text-white/60 ml-1">Followers</span>
               </span>
             </div>
           </div>
