@@ -3,7 +3,6 @@ import { useLocation, useNavigate, NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { PenSquare, Sparkles, LogIn, Menu } from 'lucide-react';
-import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { SidebarNavItem } from './SidebarNavItem';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
@@ -208,15 +207,15 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
 
         {/* Post / Login Button */}
         <div className="mt-3 flex items-center justify-center lg:block px-1">
-          <LiquidGlassBubble
-            shimmer={false}
-            noBorder
+          <button
+            type="button"
             className={cn(
-              "cursor-pointer w-full box-border rounded-2xl [&>div]:bg-zinc-900/90 [&>div]:bg-none [&>div]:shadow-none [&>div]:before:bg-none [&>div]:after:bg-none",
+              "cursor-pointer w-full box-border rounded-2xl bg-zinc-900/90 hover:bg-zinc-800/90 transition-colors overflow-hidden shadow-none",
               isMinimal ? "border border-zinc-700" : "border border-white/30",
               isConnecting && "opacity-70 pointer-events-none"
             )}
             onClick={handlePostClick}
+            disabled={isConnecting}
           >
             <div className={cn(
               "flex items-center gap-2 font-semibold text-white justify-center",
@@ -244,7 +243,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 </>
               )}
             </div>
-          </LiquidGlassBubble>
+          </button>
         </div>
       </aside>
 
