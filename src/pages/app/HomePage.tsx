@@ -27,6 +27,7 @@ import { useFeedPrefetch, clearPrefetchState } from '@/hooks/use-feed-prefetch';
 import { clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
 import { SORT_OPTIONS } from '@/lib/feed-utils';
 import { SEOHead } from '@/components/SEOHead';
+import { useGlobalFeedNav } from '@/contexts/GlobalFeedNavContext';
 
 
 // Feed components
