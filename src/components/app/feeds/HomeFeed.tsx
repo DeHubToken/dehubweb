@@ -676,7 +676,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         isDisliked: (item as any).isDisliked ?? voteType === 'against',
       };
     });
-  }, [scrollFeed.data]);
+  }, [scrollFeed.data, shortsEnabled]);
 
   // Fetch curated radio stations for carousel
   const { data: radioStations = [] } = useQuery({
