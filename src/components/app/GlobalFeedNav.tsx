@@ -188,6 +188,8 @@ export function GlobalFeedNav() {
     }
   }, [isHomePage, navigate, activeTab, isDragging, applyTab]);
 
+  const { setFiltersPortalElement } = useGlobalFeedNav() ?? {};
+
   const handleSettingsClick = useCallback(() => {
     if (isHomePage) {
       window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }));
