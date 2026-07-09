@@ -1034,14 +1034,25 @@ html[data-theme="minimal"] [data-side-panel] .tab-hover-bg {
  * Minimal theme: file-system style feed tab nav
  * ==========================================================================
  * In minimal mode the top feed nav (GlobalFeedNav + HomePage in-page tabs)
- * drops the sliding glass indicator and instead behaves like an OS/file
- * system tab strip: solid black background with a filled dark rectangle
- * around the active tab. Squared corners are already handled globally by
- * the minimal theme's "square everything" rule, so we only override the
- * container background and per-tab active state here.
+ * behaves like an OS file tab strip: a single white baseline runs across the
+ * bar, the active tab lifts off that line with a top + side border, and the
+ * active tab's black background masks the baseline so the line breaks cleanly.
  */
 html[data-theme="minimal"] [data-feed-nav] {
+  position: relative;
   background-color: #000 !important;
+}
+
+/* One continuous white baseline across the whole nav bar */
+html[data-theme="minimal"] [data-feed-nav]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: #fff;
+  pointer-events: none;
 }
 
 html[data-theme="minimal"] [data-feed-nav] [data-glass-indicator] {
@@ -1061,8 +1072,9 @@ html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn]:hover {
   color: #fff;
 }
 
+/* Active tab: black fill so the shared baseline is hidden behind it */
 html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn][data-active="true"] {
-  background-color: transparent !important;
+  background-color: #000 !important;
   color: #fff;
 }
 
@@ -1075,18 +1087,6 @@ html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn][data-active="true
   right: 12px;
   bottom: 0;
   box-shadow: inset 0 1px 0 0 #fff, inset 1px 0 0 0 #fff, inset -1px 0 0 0 #fff;
-  pointer-events: none;
-}
-
-/* Inactive tabs: thin bottom underline only */
-html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn]:not([data-active="true"])::after {
-  content: "";
-  position: absolute;
-  left: 12px;
-  right: 12px;
-  bottom: 0;
-  height: 1px;
-  background-color: rgba(255, 255, 255, 0.2);
   pointer-events: none;
 }
 
