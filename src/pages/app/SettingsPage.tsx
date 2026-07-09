@@ -1720,11 +1720,11 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
           <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
             {[
               { value: 'system', icon: Monitor, labelKey: 'settings.system', available: true, badge: null },
+              { value: 'light', icon: Sun, labelKey: 'settings.light', available: true, badge: 'New' },
               { value: 'minimal', icon: Minus, labelKey: 'settings.minimal', available: true, badge: 'New' },
               { value: 'cosmic', icon: Orbit, labelKey: 'settings.cosmic', available: true, badge: 'Test' },
               { value: 'hazy', icon: CloudMoon, labelKey: 'settings.hazy', available: true, badge: 'New' },
               { value: 'swarms', icon: Bug, labelKey: 'settings.swarms', available: true, badge: 'New' },
-              { value: 'light', icon: Sun, labelKey: 'settings.light', available: true, badge: 'New' },
               { value: 'winter', icon: Snowflake, labelKey: 'settings.winter', available: true, badge: 'Test' },
               { value: 'island', icon: Palmtree, labelKey: 'settings.island', available: false, badge: null },
               { value: 'hacker', icon: Terminal, labelKey: 'settings.hacker', available: false, badge: null },
