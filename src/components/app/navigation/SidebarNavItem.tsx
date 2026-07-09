@@ -110,7 +110,8 @@ export function SidebarNavItem({
         rel="noopener noreferrer"
         onClick={onNavigate}
         className={cn(
-          'relative flex items-center rounded-2xl transition-colors text-white text-[15px]',
+          'relative flex items-center rounded-2xl transition-colors text-[15px]',
+          isDesktop ? 'text-black dark:text-white' : 'text-white',
           isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
           !isActive && (variant === 'mobile' ? 'hover:bg-zinc-700/50' : 'hover:bg-zinc-800/50')
         )}
@@ -142,7 +143,8 @@ export function SidebarNavItem({
           onNavigate?.();
         }}
         className={cn(
-          'relative flex items-center rounded-2xl transition-colors text-white text-[15px] w-full text-left',
+          'relative flex items-center rounded-2xl transition-colors text-[15px] w-full text-left',
+          isDesktop ? 'text-black dark:text-white' : 'text-white',
           isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
           !isActive && (variant === 'mobile' ? 'hover:bg-zinc-700/50' : 'hover:bg-zinc-800/50')
         )}
@@ -170,7 +172,8 @@ export function SidebarNavItem({
       to={item.path}
       onClick={handleClick}
       className={cn(
-        'relative flex items-center rounded-2xl transition-colors text-white text-[15px]',
+        'relative flex items-center rounded-2xl transition-colors text-[15px]',
+        isDesktop ? 'text-black dark:text-white' : 'text-white',
         isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
         isActive ? 'font-semibold' : '',
         !isActive && (variant === 'mobile' ? 'hover:bg-zinc-700/50' : 'hover:bg-zinc-800/50')
