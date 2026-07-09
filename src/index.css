@@ -1151,20 +1151,23 @@ html[data-theme="light"] .text-zinc-600 {
   color: #707070 !important;
 }
 
-/* Restore white text ONLY on the exact element that carries a dark surface
-   class (or explicit opt-in). Descendant-cascading was whitewashing feed
-   usernames, sidebar nav items, badges, action-bar icons, etc. */
+/* Restore white text only on ACTUAL dark button chips (button / [role=button]
+   with a dark zinc bg) or explicit opt-in via [data-keep-dark]. Inputs and
+   textareas that share the same bg-zinc-800 utility get remapped to paper
+   below, so their text stays dark ink. */
 html[data-theme="light"] [data-keep-dark],
 html[data-theme="light"] [data-keep-dark] *,
-html[data-theme="light"] .bg-zinc-800.text-white,
-html[data-theme="light"] .bg-zinc-700.text-white,
-html[data-theme="light"] .bg-zinc-600.text-white {
+html[data-theme="light"] button.bg-zinc-800.text-white,
+html[data-theme="light"] button.bg-zinc-700.text-white,
+html[data-theme="light"] button.bg-zinc-600.text-white,
+html[data-theme="light"] [role="button"].bg-zinc-800.text-white,
+html[data-theme="light"] [role="button"].bg-zinc-700.text-white,
+html[data-theme="light"] [role="button"].bg-zinc-600.text-white {
   color: #ffffff !important;
 }
 
 /* Root backgrounds: remap black/zinc-9xx surfaces to paper.
-   Note we DO remap .bg-zinc-800 too because DesktopSidebar's nav panel uses it
-   as a big surface; genuine dark button chips can opt-out with data-keep-dark. */
+   Genuine dark button chips opt-out with data-keep-dark. */
 html[data-theme="light"] .bg-black:not([data-keep-dark]),
 html[data-theme="light"] .bg-zinc-950:not([data-keep-dark]),
 html[data-theme="light"] .bg-zinc-900:not([data-keep-dark]),
@@ -1178,7 +1181,8 @@ html[data-theme="light"] .bg-zinc-800\/50,
 html[data-theme="light"] .bg-zinc-800\/60,
 html[data-theme="light"] .bg-zinc-800\/90,
 html[data-theme="light"] .bg-zinc-700\/50,
-html[data-theme="light"] .bg-zinc-700\/60 {
+html[data-theme="light"] .bg-zinc-700\/60,
+html[data-theme="light"] .bg-zinc-800\/30 {
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
 
@@ -1195,10 +1199,41 @@ html[data-theme="light"] .bg-white:not([data-keep-white]) .text-zinc-950 {
   color: #ffffff !important;
 }
 
-/* Desktop sidebar logo (white PNG on dark) -> invert on paper. */
+/* Desktop / mobile brand logos are white PNGs — invert on paper. */
 html[data-theme="light"] img[alt="dehub"][src*="dehub-header-logo"],
 html[data-theme="light"] img[alt="dehub"][src*="dehub-logo-compact"] {
   filter: invert(1) hue-rotate(180deg) brightness(0.9);
+}
+
+/* Avatar fallback: on paper the muted zinc-100 blends into background. Force
+   a dark grey chip so silhouettes stay visible. */
+html[data-theme="light"] [data-radix-avatar-fallback],
+html[data-theme="light"] .bg-muted {
+  background-color: #52525b !important; /* zinc-600 */
+  color: #ffffff !important;
+}
+
+/* Primary CTA (create-post / log-in) uses bg-zinc-900/90 — keep it black. */
+html[data-theme="light"] .bg-zinc-900\/90,
+html[data-theme="light"] .bg-zinc-900\/80 {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+html[data-theme="light"] .bg-zinc-900\/90 *,
+html[data-theme="light"] .bg-zinc-900\/80 * {
+  color: #ffffff !important;
+}
+html[data-theme="light"] .hover\:bg-zinc-800\/90:hover {
+  background-color: #1a1a1a !important;
+}
+
+/* Chevrons and select-arrow icons in light mode — make them full ink for
+   contrast on paper instead of muted zinc-400 grey. */
+html[data-theme="light"] button .lucide-chevron-down,
+html[data-theme="light"] [role="button"] .lucide-chevron-down,
+html[data-theme="light"] button .lucide-chevrons-up-down,
+html[data-theme="light"] [role="button"] .lucide-chevrons-up-down {
+  color: var(--ink) !important;
 }
 
 /* ==========================================================================
