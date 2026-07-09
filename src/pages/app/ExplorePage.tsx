@@ -873,7 +873,7 @@ export default function ExplorePage() {
           
           {/* Tabs - toggle bar */}
           <div className="mt-3 -mx-1">
-            <div className="bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+            <div className="bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '24px' }}>
               <div ref={exploreTabLayerRef} className="relative overflow-visible">
                 <GlassIndicator ref={exploreIndicatorRef} rect={exploreTabRect} borderRadius="0.75rem" layoutKey={`explore-nav-${activeTab}`} enableTransition={!isExploreDragging && enableExploreTransition} fixedHeightPx={35} />
                 {exploreTabRect.ready && (
