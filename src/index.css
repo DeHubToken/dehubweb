@@ -1201,7 +1201,14 @@ html[data-theme="light"] .bg-white\/90:not([data-keep-white]) .text-zinc-900,
 html[data-theme="light"] .bg-white\/90:not([data-keep-white]) .text-zinc-950,
 html[data-theme="light"] .bg-white\/80:not([data-keep-white]) .text-black,
 html[data-theme="light"] .bg-white\/80:not([data-keep-white]) .text-zinc-900,
-html[data-theme="light"] .bg-white\/80:not([data-keep-white]) .text-zinc-950 {
+html[data-theme="light"] .bg-white\/80:not([data-keep-white]) .text-zinc-950,
+/* Same-element case: text-black on a bg-white* pill (e.g. Test badge). */
+html[data-theme="light"] .bg-white.text-black:not([data-keep-white]),
+html[data-theme="light"] .bg-white\/90.text-black:not([data-keep-white]),
+html[data-theme="light"] .bg-white\/80.text-black:not([data-keep-white]),
+html[data-theme="light"] .bg-white.text-zinc-900:not([data-keep-white]),
+html[data-theme="light"] .bg-white\/90.text-zinc-900:not([data-keep-white]),
+html[data-theme="light"] .bg-white\/80.text-zinc-900:not([data-keep-white]) {
   color: #ffffff !important;
 }
 
@@ -1302,7 +1309,8 @@ html[data-theme="light"] [class*="to-zinc-950\\/"] {
  * ========================================================================== */
 html[data-theme="light"] header.lg\:hidden.fixed.top-0 {
   background-color: var(--paper) !important;
-  border-bottom: 1px solid var(--hairline);
+  border-bottom: 0 !important;
+  box-shadow: none !important;
 }
 html[data-theme="light"] header.lg\:hidden.fixed.top-0 img[alt="dehub"] {
   filter: invert(1) hue-rotate(180deg) brightness(0.9);
