@@ -65,6 +65,8 @@ export function SidebarNavItem({
   const itemRef = useRef<HTMLAnchorElement | HTMLButtonElement | null>(null);
   const isDesktop = variant === 'desktop';
   const desktopTextColor = getDesktopTextColor(theme);
+  const isLightTheme = theme === 'light';
+  const desktopHoverClass = isLightTheme ? 'hover:font-semibold' : 'hover:bg-zinc-800/50';
 
   useEffect(() => {
     if (isDesktop && isActive && registerActiveRef) {
