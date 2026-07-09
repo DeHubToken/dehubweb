@@ -1148,29 +1148,30 @@ html[data-theme="light"] .text-zinc-600 {
   color: #707070 !important;
 }
 
-/* Restore button text to white so they stay white-on-grey. */
-html[data-theme="light"] button.text-white,
-html[data-theme="light"] [role="button"].text-white,
+/* Restore button text to white so they stay white-on-grey.
+   Tab buttons (data-tab-btn / data-feed-tab-btn) are not treated as buttons. */
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).text-white,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]).text-white,
 html[data-theme="light"] .button.text-white,
 html[data-theme="light"] .btn.text-white,
-html[data-theme="light"] button .text-white,
-html[data-theme="light"] [role="button"] .text-white,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .text-white,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]) .text-white,
 html[data-theme="light"] .button .text-white,
 html[data-theme="light"] .btn .text-white,
-html[data-theme="light"] button.text-zinc-50,
-html[data-theme="light"] button .text-zinc-50,
-html[data-theme="light"] button.text-zinc-100,
-html[data-theme="light"] button .text-zinc-100,
-html[data-theme="light"] button.text-zinc-200,
-html[data-theme="light"] button .text-zinc-200,
-html[data-theme="light"] button.text-zinc-300,
-html[data-theme="light"] button .text-zinc-300,
-html[data-theme="light"] button.text-zinc-400,
-html[data-theme="light"] button .text-zinc-400,
-html[data-theme="light"] button.text-zinc-500,
-html[data-theme="light"] button .text-zinc-500,
-html[data-theme="light"] button.text-zinc-600,
-html[data-theme="light"] button .text-zinc-600 {
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).text-zinc-50,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .text-zinc-50,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).text-zinc-100,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .text-zinc-100,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).text-zinc-200,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .text-zinc-200,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).text-zinc-300,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .text-zinc-300,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).text-zinc-400,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .text-zinc-400,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).text-zinc-500,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .text-zinc-500,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).text-zinc-600,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .text-zinc-600 {
   color: #ffffff !important;
 }
 
