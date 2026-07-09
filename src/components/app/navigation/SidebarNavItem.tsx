@@ -47,10 +47,20 @@ export function SidebarNavItem({
   avatarFallback,
   notificationCount,
   layoutId = 'sidebar-nav',
+  registerActiveRef,
 }: SidebarNavItemProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const translatedLabel = t(NAV_LABEL_KEYS[item.label] || item.label);
+  const itemRef = useRef<HTMLAnchorElement | HTMLButtonElement | null>(null);
+  const isDesktop = variant === 'desktop';
+
+  useEffect(() => {
+    if (isDesktop && isActive && registerActiveRef) {
+      registerActiveRef(itemRef.current);
+      return () => registerActiveRef(null);
+    }
+  }, [isDesktop, isActive, registerActiveRef]);
   
   const handleClick = (e: React.MouseEvent) => {
     onClick?.(e);
