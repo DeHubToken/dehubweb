@@ -57,6 +57,7 @@ import {
   Minus,
   Ban,
   Bot,
+  Film,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
