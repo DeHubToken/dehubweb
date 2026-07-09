@@ -1250,7 +1250,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           {/* Only render beforeShorts separately if we actually split for shorts */}
           {shouldSplitForShorts && beforeShorts.length > 0 && renderMasonryGrid(
             beforeShorts.map((item, i) => renderFeedItem(item, i)),
-            beforeShorts
+            beforeShorts,
+            shorts.length > 0
           )}
           {shouldSplitForShorts && shorts.length > 0 && (
             <div className={cn('my-3', isCollapsed && 'mt-5')}>
@@ -1260,13 +1261,15 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           {segments.map((seg, segIdx) => {
             // When not splitting for shorts, render ShortsReel before the first fullWidthInsert (after first segment)
             const showShortsHere = !shouldSplitForShorts && shorts.length > 0 && segIdx === 0;
+            const hasInsertAfter = showShortsHere || (segIdx < fullWidthInserts.length && !!fullWidthInserts[segIdx]);
             return (
               <div key={`multi-seg-${segIdx}`}>
                 {seg.items.length > 0 && (
                   <div className="mt-3">
                     {renderMasonryGrid(
                       seg.items.map((item, i) => renderFeedItem(item, seg.startIndex + i)),
-                      seg.items
+                      seg.items,
+                      hasInsertAfter
                     )}
                   </div>
                 )}
@@ -1279,6 +1282,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               </div>
             );
           })}
+
         </>
       );
     }
