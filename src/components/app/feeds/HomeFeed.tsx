@@ -251,6 +251,8 @@ function SortFilterSection({
             items={DATE_FILTER_OPTIONS.map((o) => ({ key: o.value, label: o.label }))}
             activeKey={selectedDate.value}
             onSelect={(key) => { const o = DATE_FILTER_OPTIONS.find(x => x.value === key); if (o) onDateSelect(o); }}
+            borderRadius="0.75rem"
+            buttonClassName="px-3 py-2 rounded-xl text-sm"
           />
         </div>
       </div>
