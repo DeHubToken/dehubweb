@@ -20,6 +20,7 @@ import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
+import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { toast } from 'sonner';
 import { 
