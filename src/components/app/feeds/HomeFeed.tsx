@@ -1158,24 +1158,24 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     if (colCount <= 1) {
       return <div className="space-y-3">{nodes}</div>;
     }
-    // Only append "Your advert here" placeholder cards at the END of a segment
-    // when it's followed by a full-width insert (carousel). This fills the
-    // ragged bottom-column gap caused by fitting the carousel in without
-    // scattering ads through the feed.
+    // Only add "Your advert here" cards to fill ACTUAL bottom-column gaps left
+    // before a full-width insert (carousel). We estimate per-column shortfall
+    // and add at most one small ad per short column — never stack ads on top
+    // of each other, never take space from content when columns are balanced.
     const withAds: ReactNode[] = [...nodes];
-    if (padEnd && nodes.length > 0) {
-      const adVariants: Array<'sm' | 'md' | 'lg'> = ['sm', 'md', 'lg'];
-      // Add up to (colCount - 1) tail ads so shorter columns can catch up.
-      const tailCount = Math.max(1, colCount - 1);
-      for (let i = 0; i < tailCount; i++) {
-        withAds.push(
-          <AdSlotCard key={`ad-slot-tail-${i}`} variant={adVariants[i % adVariants.length]} />
-        );
+    if (padEnd && feedItems && feedItems.length >= colCount) {
+      const weights = calculateColumnWeights(feedItems, colCount);
+      const maxW = Math.max(...weights);
+      // Only fill columns that are meaningfully short (~1 post gap)
+      const GAP_THRESHOLD = 1.2;
+      const shortColumns = weights.filter((w) => maxW - w >= GAP_THRESHOLD).length;
+      const adsToAdd = Math.min(shortColumns, colCount - 1);
+      for (let i = 0; i < adsToAdd; i++) {
+        withAds.push(<AdSlotCard key={`ad-slot-tail-${i}`} variant="sm" />);
       }
     }
 
     // Use CSS multi-column layout for true browser-balanced masonry
-    // The browser knows actual rendered heights, eliminating gaps from weight estimates
     return (
       <div style={{ columnCount: colCount, columnGap: '0.75rem' }}>
         {withAds.map((node, i) => (
