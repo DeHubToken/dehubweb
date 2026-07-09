@@ -1670,6 +1670,13 @@ html[data-theme="light"] [data-side-panel] .tab-hover-bg {
   background-image: linear-gradient(to bottom, var(--tab-hover-wash), transparent) !important;
 }
 
+/* Side panel active tab: only a bottom line, no top shadowing. */
+html[data-theme="light"] [data-side-panel] [data-active-tab-indicator] {
+  background: transparent !important;
+  background-image: none !important;
+  border-bottom: 1px solid var(--ink) !important;
+}
+
 /* File-system style feed tab nav. */
 html[data-theme="light"] [data-feed-nav] {
   position: relative;
