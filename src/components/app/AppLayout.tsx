@@ -203,7 +203,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
             {/* Global feed nav — keep mounted and animate in/out to avoid rigid multi-step jumps */}
             <div
               className={cn(
-                'hidden lg:block motion-reduce:transition-none',
+                'hidden lg:block motion-reduce:transition-none sticky top-0 z-50',
                 isCollapsed
                   ? 'h-12 opacity-100 transition-[height,opacity] duration-500 ease-in-out'
                   : 'h-0 opacity-0 pointer-events-none transition-[height] duration-500 ease-in-out transition-opacity duration-150'
@@ -212,6 +212,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
             >
               <GlobalFeedNav />
             </div>
+
             {/* Persistent page cache — all visited pages stay mounted */}
             <PersistentPageCache keepHomeVisible={showHomePagePersisted} />
           </GlobalFeedNavProvider>

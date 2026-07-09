@@ -1154,31 +1154,25 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     return columns;
   };
 
-  const renderMasonryGrid = (nodes: ReactNode[], feedItems?: FeedItemType[]) => {
+  const renderMasonryGrid = (nodes: ReactNode[], feedItems?: FeedItemType[], padEnd = false) => {
     if (colCount <= 1) {
       return <div className="space-y-3">{nodes}</div>;
     }
-    // Interleave "Your advert here" placeholder cards so the masonry can pack
-    // them into the empty spaces at the bottom of columns on full screen /
-    // collapsed sidebar layouts. Cadence + varied heights lets the browser
-    // slot them into gaps naturally.
-    const adVariants: Array<'sm' | 'md' | 'lg'> = ['sm', 'md', 'lg'];
-    const AD_EVERY = colCount === 3 ? 7 : 6;
-    const withAds: ReactNode[] = [];
-    let adIdx = 0;
-    nodes.forEach((node, i) => {
-      withAds.push(node);
-      if (nodes.length > AD_EVERY && (i + 1) % AD_EVERY === 0 && i !== nodes.length - 1) {
+    // Only append "Your advert here" placeholder cards at the END of a segment
+    // when it's followed by a full-width insert (carousel). This fills the
+    // ragged bottom-column gap caused by fitting the carousel in without
+    // scattering ads through the feed.
+    const withAds: ReactNode[] = [...nodes];
+    if (padEnd && nodes.length > 0) {
+      const adVariants: Array<'sm' | 'md' | 'lg'> = ['sm', 'md', 'lg'];
+      // Add up to (colCount - 1) tail ads so shorter columns can catch up.
+      const tailCount = Math.max(1, colCount - 1);
+      for (let i = 0; i < tailCount; i++) {
         withAds.push(
-          <AdSlotCard key={`ad-slot-${i}`} variant={adVariants[adIdx % adVariants.length]} />
+          <AdSlotCard key={`ad-slot-tail-${i}`} variant={adVariants[i % adVariants.length]} />
         );
-        adIdx += 1;
       }
-    });
-    // Always cap the grid with an ad so trailing column gaps get filled too.
-    withAds.push(
-      <AdSlotCard key="ad-slot-tail" variant={adVariants[adIdx % adVariants.length]} />
-    );
+    }
 
     // Use CSS multi-column layout for true browser-balanced masonry
     // The browser knows actual rendered heights, eliminating gaps from weight estimates
@@ -1192,6 +1186,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       </div>
     );
   };
+
 
 
   // Render feed items with shorts and radio carousels inserted
@@ -1255,7 +1250,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           {/* Only render beforeShorts separately if we actually split for shorts */}
           {shouldSplitForShorts && beforeShorts.length > 0 && renderMasonryGrid(
             beforeShorts.map((item, i) => renderFeedItem(item, i)),
-            beforeShorts
+            beforeShorts,
+            shorts.length > 0
           )}
           {shouldSplitForShorts && shorts.length > 0 && (
             <div className={cn('my-3', isCollapsed && 'mt-5')}>
@@ -1265,13 +1261,15 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           {segments.map((seg, segIdx) => {
             // When not splitting for shorts, render ShortsReel before the first fullWidthInsert (after first segment)
             const showShortsHere = !shouldSplitForShorts && shorts.length > 0 && segIdx === 0;
+            const hasInsertAfter = showShortsHere || (segIdx < fullWidthInserts.length && !!fullWidthInserts[segIdx]);
             return (
               <div key={`multi-seg-${segIdx}`}>
                 {seg.items.length > 0 && (
                   <div className="mt-3">
                     {renderMasonryGrid(
                       seg.items.map((item, i) => renderFeedItem(item, seg.startIndex + i)),
-                      seg.items
+                      seg.items,
+                      hasInsertAfter
                     )}
                   </div>
                 )}
@@ -1284,6 +1282,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               </div>
             );
           })}
+
         </>
       );
     }
