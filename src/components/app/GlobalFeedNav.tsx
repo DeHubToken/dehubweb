@@ -260,6 +260,10 @@ export function GlobalFeedNav() {
             })}
           </div>
         </div>
+        {/* Filter panel portal target — rendered here so the dropdown stays
+            visible below the global nav even when the home page tab bar is
+            hidden (collapsed desktop mode). */}
+        <div ref={setFiltersPortalElement} className="contents" data-global-feed-filters-portal />
       </div>
     </div>
   );
