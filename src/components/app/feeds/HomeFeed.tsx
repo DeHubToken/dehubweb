@@ -177,8 +177,6 @@ function SortFilterSection({
     return filtered;
   }, [categories, categorySearch]);
 
-  const activeFilterClass = 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]';
-  const inactiveFilterClass = 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700';
   const rowFadeMask = '[mask-image:linear-gradient(to_right,black_calc(100%_-_24px),transparent)] [-webkit-mask-image:linear-gradient(to_right,black_calc(100%_-_24px),transparent)]';
 
   return (
@@ -207,38 +205,22 @@ function SortFilterSection({
           className="w-full px-3 py-1.5 rounded-lg text-xs bg-zinc-800 text-zinc-200 placeholder-zinc-500 border border-zinc-700 focus:border-zinc-500 focus:outline-none transition-colors mb-1"
         />
         <div className="relative">
-          <div className={cn('flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1', rowFadeMask)} style={{ touchAction: 'pan-x' }}>
-            <button
-              onClick={() => { onCategoryClear(); setCategorySearch(''); }}
-              className={cn(
-                'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                selectedCategories.length === 0
-                  ? activeFilterClass
-                  : inactiveFilterClass
-              )}
-            >
-              {t('filters.all')}
-            </button>
-            {filteredCategories.map((cat) => {
-              const isActive = selectedCategories.includes(cat.id);
-              return (
-                <button
-                  key={cat.id}
-                  onClick={() => { onCategoryToggle(cat.id); setCategorySearch(''); }}
-                  className={cn(
-                    'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                    isActive ? activeFilterClass : inactiveFilterClass
-                  )}
-                >
-                  {cat.name}
-                  {isActive && <span className="ml-1 text-white/50">✓</span>}
-                </button>
-              );
-            })}
-            {filteredCategories.length === 0 && categorySearch.trim() && (
-              <span className="text-xs text-zinc-500 py-1.5">{t('filters.noMatches')}</span>
-            )}
-          </div>
+          <GlassFilterRow
+            className={rowFadeMask}
+            items={[
+              { key: 'all', label: t('filters.all') },
+              ...filteredCategories.map((cat) => ({ key: cat.id, label: cat.name })),
+            ]}
+            activeKeys={selectedCategories.length === 0 ? ['all'] : selectedCategories}
+            onSelect={(key) => {
+              if (key === 'all') {
+                onCategoryClear();
+              } else {
+                onCategoryToggle(key);
+              }
+              setCategorySearch('');
+            }}
+          />
         </div>
       </div>
       
@@ -272,22 +254,12 @@ function SortFilterSection({
       <div className="flex flex-col gap-2">
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.contentAccess')}</span>
         <div className="relative">
-          <div className={cn('flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1', rowFadeMask)} style={{ touchAction: 'pan-x' }}>
-            {CONTENT_TYPE_FILTERS.map((filter) => (
-              <button
-                key={filter.value}
-                onClick={() => onContentFilterToggle(filter.value)}
-                className={cn(
-                  'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                  contentFilters[filter.value]
-                    ? activeFilterClass
-                    : inactiveFilterClass
-                )}
-              >
-                {t(`filters.${filter.value === 'w2e' ? 'bounty' : filter.value}`, filter.label)}
-              </button>
-            ))}
-          </div>
+          <GlassFilterRow
+            className={rowFadeMask}
+            items={CONTENT_TYPE_FILTERS.map((filter) => ({ key: filter.value, label: t(`filters.${filter.value === 'w2e' ? 'bounty' : filter.value}`, filter.label) }))}
+            activeKeys={CONTENT_TYPE_FILTERS.filter((filter) => contentFilters[filter.value]).map((filter) => filter.value)}
+            onSelect={(key) => onContentFilterToggle(key as keyof ContentTypeFilters)}
+          />
         </div>
       </div>
 
