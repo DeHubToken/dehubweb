@@ -1044,7 +1044,8 @@ html[data-theme="minimal"] [data-feed-nav] {
 }
 
 /* One continuous white baseline across the whole nav bar */
-html[data-theme="minimal"] [data-feed-nav]::after {
+/* Baseline sits under the tabs row only, not under expanded filter menu */
+html[data-theme="minimal"] [data-feed-nav] > div:first-child::after {
   content: "";
   position: absolute;
   left: 0;
@@ -1053,6 +1054,7 @@ html[data-theme="minimal"] [data-feed-nav]::after {
   height: 1px;
   background-color: rgba(255, 255, 255, 0.69);
   pointer-events: none;
+  z-index: 25;
 }
 
 html[data-theme="minimal"] [data-feed-nav] [data-glass-indicator] {
