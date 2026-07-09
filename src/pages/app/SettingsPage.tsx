@@ -231,7 +231,6 @@ export default function SettingsPage() {
                     settingsTabPositions.current[tab.value] = el;
                   }}
                   onClick={() => setActiveTab(tab.value)}
-                  data-keep-dark={activeTab === tab.value ? '' : undefined}
                   className={`relative z-40 p-[11px] sm:p-3 rounded-xl transition-colors ${
                     activeTab === tab.value
                       ? 'text-white'
