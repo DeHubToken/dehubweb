@@ -231,6 +231,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   notificationCount={isNotificationsItem ? totalNotifUnread : isCommunitiesItem ? communityActivityUnread : isMessagesItem ? dmUnread : undefined}
                   layoutId={isCollapsed ? 'sidebar-nav-collapsed' : 'sidebar-nav-expanded'}
                   registerActiveRef={isActive ? setActiveItemEl : undefined}
+                  theme={theme}
                 />
                 {isAssistantAnchor && (
                 <NavLink
