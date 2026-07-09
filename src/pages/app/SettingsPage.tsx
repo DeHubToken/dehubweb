@@ -55,6 +55,7 @@ import {
   Skull,
   Orbit,
   CloudMoon,
+  Bug,
   Minus,
   Ban,
   Bot,
