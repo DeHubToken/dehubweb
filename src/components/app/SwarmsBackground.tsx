@@ -1,10 +1,13 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { useAppTheme } from '@/contexts/ThemeContext';
 
 /**
- * Globally rendered "Swarms" shader background — only active when the
- * appearance theme is set to "swarms". Sits behind all app content.
+ * Globally rendered "Swarms" background — interactive particle nebula.
+ * Only active when appearance theme is "swarms". Sits behind app content.
  */
 export function SwarmsBackground() {
   const { theme } = useAppTheme();
@@ -16,168 +19,240 @@ export function SwarmsBackground() {
       className="fixed inset-0 pointer-events-none"
       style={{ zIndex: 0 }}
     >
-      <CelestialSphere hue={110} speed={0.5} zoom={1.8} particleSize={3.0} />
+      <GenerativeArtSceneV3 />
     </div>
   );
 }
 
-interface CelestialSphereProps {
-  hue?: number;
-  speed?: number;
-  zoom?: number;
-  particleSize?: number;
-}
+const config = {
+  particles: {
+    count: 50000,
+    size: 0.02,
+    boxSize: 5,
+  },
+  colors: {
+    baseHue: 200,
+    hueVariance: 20,
+  },
+  simulation: {
+    noiseSpeed: 0.1,
+    noiseScale: 1.2,
+    mouseRepulsion: 0.005,
+    friction: 0.95,
+  },
+  bloom: {
+    strength: 0.6,
+    radius: 0.4,
+    threshold: 0.1,
+  },
+  camera: {
+    initialDistance: 5,
+    parallaxIntensity: 0.005,
+  },
+};
 
-function CelestialSphere({
-  hue = 110,
-  speed = 0.5,
-  zoom = 1.8,
-  particleSize = 3.0,
-}: CelestialSphereProps) {
+function GenerativeArtSceneV3() {
   const mountRef = useRef<HTMLDivElement>(null);
+  const mouseRef = useRef(new THREE.Vector2(0, 0));
 
   useEffect(() => {
-    if (!mountRef.current) return;
     const currentMount = mountRef.current;
-
-    const mouse = new THREE.Vector2(0.5, 0.5);
-
-    const vertexShader = `
-      varying vec2 vUv;
-      void main() {
-        vUv = uv;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-      }
-    `;
-
-    const fragmentShader = `
-      precision highp float;
-      varying vec2 vUv;
-      uniform vec2 u_resolution;
-      uniform float u_time;
-      uniform vec2 u_mouse;
-      uniform float u_hue;
-      uniform float u_zoom;
-      uniform float u_particle_size;
-
-      vec3 hsl2rgb(vec3 c) {
-        vec3 rgb = clamp(abs(mod(c.x*6.0+vec3(0.0,4.0,2.0), 6.0)-3.0)-1.0, 0.0, 1.0);
-        return c.z * mix(vec3(1.0), rgb, c.y);
-      }
-
-      float random(vec2 st) {
-        return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
-      }
-
-      float noise(vec2 st) {
-        vec2 i = floor(st);
-        vec2 f = fract(st);
-        float a = random(i);
-        float b = random(i + vec2(1.0, 0.0));
-        float c = random(i + vec2(0.0, 1.0));
-        float d = random(i + vec2(1.0, 1.0));
-        vec2 u = f * f * (3.0 - 2.0 * f);
-        return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.y * u.x;
-      }
-
-      float fbm(vec2 st) {
-        float value = 0.0;
-        float amplitude = 0.5;
-        for (int i = 0; i < 6; i++) {
-          value += amplitude * noise(st);
-          st *= 2.0;
-          amplitude *= 0.5;
-        }
-        return value;
-      }
-
-      void main() {
-        vec2 uv = (gl_FragCoord.xy - 0.5 * u_resolution.xy) / min(u_resolution.y, u_resolution.x);
-        uv *= u_zoom;
-
-        vec2 mouse_normalized = u_mouse / u_resolution;
-        uv += (mouse_normalized - 0.5) * 0.8;
-
-        float f = fbm(uv + vec2(u_time * 0.1, u_time * 0.05));
-        float t = fbm(uv + f + vec2(u_time * 0.05, u_time * 0.02));
-
-        float nebula = pow(t, 2.0);
-        vec3 color = hsl2rgb(vec3(u_hue / 360.0 + nebula * 0.2, 0.7, 0.5));
-        color *= nebula * 2.5;
-
-        float star_val = random(vUv * 500.0);
-        if (star_val > 0.998) {
-          float star_brightness = (star_val - 0.998) / 0.002;
-          color += vec3(star_brightness * u_particle_size);
-        }
-
-        gl_FragColor = vec4(color, 1.0);
-      }
-    `;
+    if (!currentMount) return;
 
     const scene = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const camera = new THREE.PerspectiveCamera(
+      75,
+      currentMount.clientWidth / currentMount.clientHeight,
+      0.1,
+      1000,
+    );
+    camera.position.z = config.camera.initialDistance;
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(currentMount.clientWidth, currentMount.clientHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
     currentMount.appendChild(renderer.domElement);
 
-    const material = new THREE.ShaderMaterial({
-      vertexShader,
-      fragmentShader,
+    const renderPass = new RenderPass(scene, camera);
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(currentMount.clientWidth, currentMount.clientHeight),
+      config.bloom.strength,
+      config.bloom.radius,
+      config.bloom.threshold,
+    );
+    const composer = new EffectComposer(renderer);
+    composer.addPass(renderPass);
+    composer.addPass(bloomPass);
+
+    const particleCount = config.particles.count;
+    const positions = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
+    const velocities = new Float32Array(particleCount * 3);
+    const baseColor = new THREE.Color();
+
+    for (let i = 0; i < particleCount; i++) {
+      const i3 = i * 3;
+      positions[i3] = (Math.random() - 0.5) * config.particles.boxSize;
+      positions[i3 + 1] = (Math.random() - 0.5) * config.particles.boxSize;
+      positions[i3 + 2] = (Math.random() - 0.5) * config.particles.boxSize;
+
+      const hue =
+        (config.colors.baseHue + (Math.random() - 0.5) * config.colors.hueVariance) / 360;
+      baseColor.setHSL(hue, 1.0, 0.6);
+      colors[i3] = baseColor.r;
+      colors[i3 + 1] = baseColor.g;
+      colors[i3 + 2] = baseColor.b;
+    }
+
+    const particleGeometry = new THREE.BufferGeometry();
+    particleGeometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    particleGeometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+    const particleMaterial = new THREE.ShaderMaterial({
       uniforms: {
-        u_time: { value: 0.0 },
-        u_resolution: { value: new THREE.Vector2() },
-        u_mouse: { value: new THREE.Vector2() },
-        u_hue: { value: hue },
-        u_zoom: { value: zoom },
-        u_particle_size: { value: particleSize },
+        u_pointSize: { value: config.particles.size * renderer.getPixelRatio() },
       },
+      vertexShader: `
+        attribute vec3 color;
+        varying vec3 vColor;
+        uniform float u_pointSize;
+        void main() {
+          vColor = color;
+          vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+          gl_PointSize = u_pointSize * (10.0 / -mvPosition.z);
+          gl_Position = projectionMatrix * mvPosition;
+        }
+      `,
+      fragmentShader: `
+        varying vec3 vColor;
+        void main() {
+          float strength = distance(gl_PointCoord, vec2(0.5));
+          strength = 1.0 - step(0.5, strength);
+          if (strength < 0.01) discard;
+          gl_FragColor = vec4(vColor, strength);
+        }
+      `,
+      transparent: true,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
     });
 
-    const geometry = new THREE.PlaneGeometry(2, 2);
-    const mesh = new THREE.Mesh(geometry, material);
-    scene.add(mesh);
+    const particleSystem = new THREE.Points(particleGeometry, particleMaterial);
+    scene.add(particleSystem);
 
-    const resize = () => {
-      const { clientWidth, clientHeight } = currentMount;
-      renderer.setSize(clientWidth, clientHeight);
-      material.uniforms.u_resolution.value.set(clientWidth, clientHeight);
-      camera.updateProjectionMatrix();
+    const clock = new THREE.Clock();
+
+    const curlNoiseFn = (px: number, py: number, pz: number, speed: number, scale: number, out: THREE.Vector3) => {
+      out.set(
+        Math.sin(py * scale + speed),
+        Math.cos(pz * scale + speed),
+        Math.sin(px * scale + speed),
+      );
+      return out.normalize();
     };
 
-    const onMouseMove = (event: MouseEvent) => {
-      const rect = currentMount.getBoundingClientRect();
-      mouse.x = event.clientX - rect.left;
-      mouse.y = event.clientY - rect.top;
-      material.uniforms.u_mouse.value.set(mouse.x, currentMount.clientHeight - mouse.y);
-    };
+    const tmpCurl = new THREE.Vector3();
+    const tmpMouse = new THREE.Vector3();
+    const tmpP = new THREE.Vector3();
+    const tmpForce = new THREE.Vector3();
 
-    window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', onMouseMove);
-    resize();
-
-    let animationFrameId = 0;
+    let frameId = 0;
     const animate = () => {
-      material.uniforms.u_time.value += 0.005 * speed;
-      renderer.render(scene, camera);
-      animationFrameId = requestAnimationFrame(animate);
+      const elapsedTime = clock.getElapsedTime();
+      const posAttr = particleSystem.geometry.attributes.position;
+      const arr = posAttr.array as Float32Array;
+
+      const mx = mouseRef.current.x * (config.particles.boxSize / 2);
+      const my = mouseRef.current.y * (config.particles.boxSize / 2);
+      tmpMouse.set(mx, my, 0);
+
+      const speedTime = elapsedTime * config.simulation.noiseSpeed;
+      const scale = config.simulation.noiseScale;
+      const friction = config.simulation.friction;
+      const repulsion = config.simulation.mouseRepulsion;
+      const half = config.particles.boxSize / 2;
+
+      for (let i = 0; i < particleCount; i++) {
+        const i3 = i * 3;
+        const px = arr[i3];
+        const py = arr[i3 + 1];
+        const pz = arr[i3 + 2];
+
+        const curl = curlNoiseFn(px, py, pz, speedTime, scale, tmpCurl);
+
+        tmpP.set(px, py, pz);
+        const dx = px - tmpMouse.x;
+        const dy = py - tmpMouse.y;
+        const dz = pz - tmpMouse.z;
+        const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        let fx = 0, fy = 0, fz = 0;
+        if (dist < 2) {
+          const inv = 1 / (dist + 0.1) / (dist || 1);
+          fx = dx * inv;
+          fy = dy * inv;
+          fz = dz * inv;
+        }
+
+        velocities[i3] = (velocities[i3] + curl.x * 0.001 + fx * repulsion) * friction;
+        velocities[i3 + 1] = (velocities[i3 + 1] + curl.y * 0.001 + fy * repulsion) * friction;
+        velocities[i3 + 2] = (velocities[i3 + 2] + curl.z * 0.001 + fz * repulsion) * friction;
+
+        let nx = px + velocities[i3];
+        let ny = py + velocities[i3 + 1];
+        let nz = pz + velocities[i3 + 2];
+
+        if (Math.abs(nx) > half) nx *= -1;
+        if (Math.abs(ny) > half) ny *= -1;
+        if (Math.abs(nz) > half) nz *= -1;
+
+        arr[i3] = nx;
+        arr[i3 + 1] = ny;
+        arr[i3 + 2] = nz;
+      }
+      posAttr.needsUpdate = true;
+
+      camera.position.x +=
+        (mouseRef.current.x * config.camera.parallaxIntensity - camera.position.x) * 0.02;
+      camera.position.y +=
+        (-mouseRef.current.y * config.camera.parallaxIntensity - camera.position.y) * 0.02;
+      camera.lookAt(scene.position);
+
+      composer.render();
+      frameId = requestAnimationFrame(animate);
+      // silence unused
+      void tmpForce;
     };
     animate();
 
+    const handleResize = () => {
+      const w = currentMount.clientWidth;
+      const h = currentMount.clientHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+      composer.setSize(w, h);
+    };
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouseRef.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    };
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('mousemove', handleMouseMove);
+
     return () => {
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', onMouseMove);
-      cancelAnimationFrame(animationFrameId);
+      cancelAnimationFrame(frameId);
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('mousemove', handleMouseMove);
       if (renderer.domElement.parentNode === currentMount) {
         currentMount.removeChild(renderer.domElement);
       }
-      geometry.dispose();
-      material.dispose();
+      particleGeometry.dispose();
+      particleMaterial.dispose();
       renderer.dispose();
     };
-  }, [hue, speed, zoom, particleSize]);
+  }, []);
 
-  return <div ref={mountRef} className="w-full h-full" />;
+  return <div ref={mountRef} className="absolute inset-0 w-full h-full" />;
 }
 
 export default SwarmsBackground;
