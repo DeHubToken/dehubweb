@@ -773,6 +773,20 @@ html[data-theme="swarms"] #app-root > div > main {
   background-color: transparent !important;
 }
 
+/* Hazy / Swarms: remove the dark square box behind the top feed nav bar
+   so the active glass pill and tab icons float over the shader background. */
+html[data-theme="hazy"] [data-feed-nav-outer],
+html[data-theme="swarms"] [data-feed-nav-outer] {
+  background-color: transparent !important;
+}
+
+html[data-theme="hazy"] [data-feed-nav],
+html[data-theme="swarms"] [data-feed-nav] {
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
 /* Equal spacing around feed divider lines: the space between the divider and the
    post above it (bottom padding) should match the space between the divider and
    the post below it (gap + top padding of the next item). */

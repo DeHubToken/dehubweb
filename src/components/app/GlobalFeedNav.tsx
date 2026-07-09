@@ -194,7 +194,7 @@ export function GlobalFeedNav() {
   }, [isHomePage, activeTab]);
 
   return (
-    <div className={cn(
+    <div data-feed-nav-outer className={cn(
       "sticky top-0 bg-black z-50 p-2 sm:p-3 pb-2 sm:pb-2",
       "transition-transform duration-300 ease-in-out",
       !navVisible && "-translate-y-full lg:translate-y-0"
