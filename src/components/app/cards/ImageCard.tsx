@@ -170,37 +170,13 @@ function ImageCarousel({
         <div className="flex">
           {images.map((img, idx) => (
             <div key={idx} className="flex-[0_0_100%] min-w-0">
-              <div
-                className="relative cursor-pointer max-h-[600px] overflow-hidden"
-                style={{ minHeight: '200px' }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onImageClick(idx);
-                }}
-              >
-                {/* Blurred background fill — skipped on above-fold cards so it
-                    never delays LCP (background-image is an LCP candidate in Chrome 96+) */}
-                {!(aboveFold && idx === 0) && (
-                  <div
-                    className="absolute inset-0 scale-110 blur-[24px] saturate-[180%] opacity-60"
-                    style={{ backgroundImage: `url(${img})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
-                    aria-hidden="true"
-                  />
-                )}
-                <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
-                {/* Actual image — first few feed items load eagerly for LCP */}
-                <img
-                  src={img}
-                  alt=""
-                  className="relative w-full max-h-[600px] object-contain"
-                  loading={aboveFold && idx === 0 ? 'eager' : 'lazy'}
-                  fetchPriority={aboveFold && idx === 0 ? 'high' : 'auto'}
-                  decoding={aboveFold && idx === 0 ? 'sync' : 'async'}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                  }}
-                />
-              </div>
+              <ImageSlide
+                img={img}
+                idx={idx}
+                aboveFold={aboveFold}
+                postId={postId}
+                onImageClick={onImageClick}
+              />
             </div>
           ))}
         </div>
