@@ -1344,6 +1344,48 @@ html[data-theme="light"] [data-login-modal] .bg-white\/80.text-black {
   color: #000000 !important;
 }
 
+/* Staking badge silhouettes: white in dark mode via `brightness-0 invert`.
+   On paper, drop the invert so they render as black ink silhouettes. */
+html[data-theme="light"] img[data-badge-icon] {
+  filter: brightness(0) !important;
+}
+html[data-theme="light"] img[data-badge-icon]:hover {
+  filter: brightness(0) drop-shadow(0 0 4px rgba(0, 0, 0, 0.4)) !important;
+}
+
+/* Prompt landing page (/prompt): dark logo + dark ink copy on paper. */
+html[data-theme="light"] [data-prompt-landing] {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-prompt-landing] img[alt="DeHub"] {
+  filter: invert(1) hue-rotate(180deg) brightness(0.9);
+}
+html[data-theme="light"] [data-prompt-landing] h1,
+html[data-theme="light"] [data-prompt-landing] p,
+html[data-theme="light"] [data-prompt-landing] textarea,
+html[data-theme="light"] [data-prompt-landing] button {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-prompt-landing] .text-white\/50,
+html[data-theme="light"] [data-prompt-landing] .text-white\/70,
+html[data-theme="light"] [data-prompt-landing] .text-white\/40 {
+  color: var(--ink-muted) !important;
+}
+html[data-theme="light"] [data-prompt-landing] textarea::placeholder {
+  color: rgba(0, 0, 0, 0.35) !important;
+}
+html[data-theme="light"] [data-prompt-landing] textarea {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+html[data-theme="light"] [data-prompt-landing] .bg-white\/5 {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+html[data-theme="light"] [data-prompt-landing] .hover\:bg-white\/10:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+
 
 /* Side panels: transparent with no bento rounding. */
 html[data-theme="light"] [data-side-panel] {
