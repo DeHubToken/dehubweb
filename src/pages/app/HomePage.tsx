@@ -718,7 +718,7 @@ export default function HomePage() {
         className={cn("sticky top-11 lg:top-0 bg-black z-[110] px-2 sm:px-3 pt-1 pb-2 sm:pt-1 sm:pb-3 lg:px-3 lg:pt-2 lg:mt-0 transition-transform duration-300 ease-in-out", isCollapsed && "lg:pl-2 lg:pr-0", isCollapsed && "lg:hidden")}
         style={{ transform: (isMobile && !navVisible && !(showHomeFilters && deferredTab === 'home')) ? 'translateY(calc(-100% - 3rem))' : 'translateY(0)', willChange: 'transform' }}
       >
-        <div className="bg-zinc-900 overflow-visible rounded-xl">
+        <div data-feed-nav className="bg-zinc-900 overflow-visible rounded-xl">
 
           <div ref={homeTabLayerRef} className="relative overflow-visible">
             <GlassIndicator ref={homeIndicatorRef} rect={homeTabRect} borderRadius="0.75rem" layoutKey={`home-${isCollapsed}-${activeTab}`} enableTransition={!isHomeDragging && enableHomeTransition} fixedHeightPx={35} />
