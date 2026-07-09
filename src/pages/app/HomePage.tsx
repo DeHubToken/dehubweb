@@ -714,6 +714,7 @@ export default function HomePage() {
       <h1 className="sr-only">Your Decentralized Social Feed</h1>
       {/* Tab Navigation */}
       <div
+        data-feed-nav-outer
         data-home-tabs
         className={cn("sticky top-11 lg:top-0 bg-black z-[110] px-2 sm:px-3 pt-1 pb-2 sm:pt-1 sm:pb-3 lg:px-3 lg:pt-2 lg:mt-0 transition-transform duration-300 ease-in-out", isCollapsed && "lg:pl-2 lg:pr-0", isCollapsed && "lg:hidden")}
         style={{ transform: (isMobile && !navVisible && !(showHomeFilters && deferredTab === 'home')) ? 'translateY(calc(-100% - 3rem))' : 'translateY(0)', willChange: 'transform' }}
