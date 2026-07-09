@@ -85,6 +85,7 @@ import { useDmSettings } from '@/hooks/use-dm-settings';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { useAutoplay } from '@/contexts/AutoplayContext';
 import { useAnimations } from '@/contexts/AnimationsContext';
+import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useBrowserNotifications, requestNotificationPermission } from '@/hooks/use-browser-notifications';
 import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
 import { FollowRequestsDrawer } from '@/components/app/profile/FollowRequestsDrawer';
