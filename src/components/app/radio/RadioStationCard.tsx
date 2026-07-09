@@ -69,10 +69,10 @@ export function RadioStationCard({ station }: RadioStationCardProps) {
     <button
       onClick={handleClick}
       className={cn(
-        'w-full bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10',
+        'w-full bg-white/5 backdrop-blur-[24px] saturate-[180%] border border-white/10',
         'rounded-2xl p-3 sm:p-4 flex gap-3 sm:gap-4 items-center',
-        'hover:bg-white/5 transition-all duration-200 cursor-pointer text-left',
-        isCurrentStation && 'ring-1 ring-white/20 bg-white/5'
+        'hover:bg-white/10 transition-all duration-200 cursor-pointer text-left',
+        isCurrentStation && 'ring-1 ring-white/20 bg-white/10'
       )}
     >
       {/* Station Logo */}
