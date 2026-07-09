@@ -266,6 +266,8 @@ function SortFilterSection({
             items={POST_TYPE_FILTERS.map((o) => ({ key: o.value, label: t(`filters.${o.value === 'all' ? 'all' : o.value === 'video' ? 'videos' : o.value === 'feed-images' ? 'images' : o.value === 'feed-audio' ? 'audio' : 'text'}`, o.label) }))}
             activeKey={selectedPostType}
             onSelect={(key) => onPostTypeSelect(key as PostTypeFilterValue)}
+            borderRadius="0.75rem"
+            buttonClassName="px-3 py-2 rounded-xl text-sm"
           />
         </div>
       </div>
