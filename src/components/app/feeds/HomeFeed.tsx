@@ -281,6 +281,8 @@ function SortFilterSection({
             items={CONTENT_TYPE_FILTERS.map((filter) => ({ key: filter.value, label: t(`filters.${filter.value === 'w2e' ? 'bounty' : filter.value}`, filter.label) }))}
             activeKeys={CONTENT_TYPE_FILTERS.filter((filter) => contentFilters[filter.value]).map((filter) => filter.value)}
             onSelect={(key) => onContentFilterToggle(key as keyof ContentTypeFilters)}
+            borderRadius="0.75rem"
+            buttonClassName="px-3 py-2 rounded-xl text-sm"
           />
         </div>
       </div>
