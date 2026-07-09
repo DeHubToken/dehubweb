@@ -63,15 +63,15 @@ export function GlassFilterRow<T extends string>({
   }, [update]);
 
   return (
-    <div className={cn('relative', className)} style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
-      {/* Overlay layer for indicator - overflow visible so spring bounce isn't clipped */}
-      <div ref={layerRef} className="absolute inset-0 overflow-visible pointer-events-none z-10">
+    <div className={cn('relative overflow-visible', className)}>
+      {/* Overlay layer for indicator - sits above scroll row so shadow is never clipped */}
+      <div ref={layerRef} className="absolute inset-0 overflow-visible pointer-events-none z-30">
         <GlassIndicator rect={rect} borderRadius={borderRadius} />
       </div>
       {/* Scrollable button row */}
       <div
         ref={scrollRef}
-        className="relative z-20 flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1"
+        className="relative z-20 flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap px-2 py-1"
         style={{ touchAction: 'pan-x' }}
       >
         {items.map((item) => {
@@ -83,7 +83,7 @@ export function GlassFilterRow<T extends string>({
               onClick={() => onSelect(item.key)}
               className={cn(
                 'relative flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-                isActive ? 'text-white' : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700',
+                isActive ? 'text-white' : 'bg-transparent text-zinc-400 hover:text-white',
                 buttonClassName,
               )}
             >
