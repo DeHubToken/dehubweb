@@ -104,6 +104,7 @@ export function SidebarNavItem({
   if (item.external) {
     return (
       <a
+        ref={itemRef as React.Ref<HTMLAnchorElement>}
         href={item.path}
         target="_blank"
         rel="noopener noreferrer"
