@@ -9,6 +9,7 @@ import { CoinPlacementProvider } from '@/hooks/use-coin-placement';
 import { SidebarCollapseProvider, useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { AutoplayProvider } from '@/contexts/AutoplayContext';
 import { AnimationsProvider } from '@/contexts/AnimationsContext';
+import { ShortsEnabledProvider } from '@/contexts/ShortsEnabledContext';
 import { PiPProvider } from '@/contexts/PiPContext';
 import { ChartPiPProvider } from '@/contexts/ChartPiPContext';
 import { FloatingPiPOverlay } from '@/components/app/tv/FloatingPiPOverlay';
