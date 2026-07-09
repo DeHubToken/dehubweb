@@ -229,6 +229,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
           return (
             <button
               type="button"
+              data-tab-btn
               key={tab}
               onClick={() => handleMainTabChange(tab)}
               className={`relative flex-1 py-3 flex flex-col items-center justify-center transition-colors ${
