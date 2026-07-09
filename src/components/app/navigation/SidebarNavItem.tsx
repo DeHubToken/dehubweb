@@ -32,6 +32,14 @@ interface SidebarNavItemProps {
   layoutId?: string;
   /** Optional callback to register the active desktop nav item DOM node for an overlay indicator */
   registerActiveRef?: (el: HTMLElement | null) => void;
+  /** App theme so light and minimal can be styled independently */
+  theme?: string;
+}
+
+function getDesktopTextColor(theme?: string) {
+  // Light theme uses black text on light surfaces; minimal/dark/system use white.
+  if (theme === 'light') return 'text-black';
+  return 'text-white';
 }
 
 export function SidebarNavItem({ 
