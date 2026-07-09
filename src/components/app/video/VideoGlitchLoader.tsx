@@ -92,7 +92,7 @@ export const VideoGlitchLoader = memo(function VideoGlitchLoader({
           {/* Horizontal glitch slice */}
           <div
             className="absolute left-0 right-0 h-[6%] bg-white/10 backdrop-invert"
-            style={{ animation: 'video-glitch-slice 2.4s steps(1) infinite' }}
+            style={{ animation: 'video-glitch-slice 1.2s steps(1) infinite' }}
           />
           {/* Vignette darken */}
           <div className="absolute inset-0 bg-black/25" />
