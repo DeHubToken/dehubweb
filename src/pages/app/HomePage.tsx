@@ -130,6 +130,9 @@ export default function HomePage() {
   }, [shortsEnabled, activeTab]);
   const homeIsDraggingRef = useRef(false);
   const homeFiltersRef = useRef<HTMLDivElement>(null);
+  const globalFeedNav = useGlobalFeedNav();
+  const filtersPortalRef = useRef<HTMLElement | null>(null);
+  filtersPortalRef.current = isCollapsed && globalFeedNav?.filtersPortalElement ? globalFeedNav.filtersPortalElement : homeFiltersRef.current;
   const { layerRef: homeTabLayerRef, setRef: setHomeTabRef, rect: homeTabRect, onScroll: onHomeTabScroll } = useTabIndicator(activeTab, isCollapsed, homeIsDraggingRef, 5);
 
   // Deferred tab value: tab indicator moves instantly, content swap is deferred
