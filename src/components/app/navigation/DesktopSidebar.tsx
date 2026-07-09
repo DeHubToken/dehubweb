@@ -41,6 +41,45 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const { unreadCount: communityActivityUnread } = useCommunityActivityUnreadCount();
   const dmUnread = useTotalUnreadCount();
 
+  // Desktop sidebar active item overlay indicator refs/state
+  const sidePanelRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeItemEl, setActiveItemEl] = useState<HTMLElement | null>(null);
+  const [indicatorRect, setIndicatorRect] = useState({ x: 0, y: 0, width: 0, height: 0, ready: false });
+
+  const updateIndicator = useCallback(() => {
+    const panel = sidePanelRef.current;
+    const active = activeItemEl;
+    if (!panel || !active) {
+      setIndicatorRect(r => ({ ...r, ready: false }));
+      return;
+    }
+    const panelRect = panel.getBoundingClientRect();
+    const activeRect = active.getBoundingClientRect();
+    setIndicatorRect({
+      x: activeRect.left - panelRect.left,
+      y: activeRect.top - panelRect.top,
+      width: activeRect.width,
+      height: activeRect.height,
+      ready: true,
+    });
+  }, [activeItemEl]);
+
+  useEffect(() => { updateIndicator(); }, [updateIndicator, isCollapsed]);
+
+  useEffect(() => {
+    window.addEventListener('resize', updateIndicator);
+    return () => window.removeEventListener('resize', updateIndicator);
+  }, [updateIndicator]);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const handleScroll = () => requestAnimationFrame(updateIndicator);
+    el.addEventListener('scroll', handleScroll, { passive: true });
+    return () => el.removeEventListener('scroll', handleScroll);
+  }, [updateIndicator]);
+
   // Get balance from user or default to 0
   const coinBalance = 0; // TODO: Get from user wallet
 
