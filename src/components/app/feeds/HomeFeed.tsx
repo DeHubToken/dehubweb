@@ -640,7 +640,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   // Shorts carousel on Home feed
   const shorts = useMemo((): ShortVideo[] => {
-    if (!scrollFeed.data?.pages) return [];
+    if (!shortsEnabled) return [];
     if (!scrollFeed.data?.pages) return [];
     const allItems = scrollFeed.data.pages.flatMap(page => page.items || []);
     // Exclude PPV content from shorts carousels
