@@ -29,6 +29,8 @@ interface SidebarNavItemProps {
   notificationCount?: number;
   /** Layout group for smooth sliding indicator */
   layoutId?: string;
+  /** Optional callback to register the active desktop nav item DOM node for an overlay indicator */
+  registerActiveRef?: (el: HTMLElement | null) => void;
 }
 
 export function SidebarNavItem({ 
