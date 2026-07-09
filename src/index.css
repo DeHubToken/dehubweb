@@ -1180,8 +1180,68 @@ html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .te
 
 /* Root backgrounds: black/zinc-950/zinc-900 become paper, but leave grey buttons alone. */
 html[data-theme="light"] .bg-black,
-html[data-theme="light"] .bg-zinc-950 {
+html[data-theme="light"] .bg-zinc-950,
+html[data-theme="light"] .bg-zinc-900 {
   background-color: var(--paper) !important;
+}
+
+/* Invert grey surfaces on paper (nav icons, chips, etc.) while keeping buttons dark. */
+html[data-theme="light"] .bg-zinc-800,
+html[data-theme="light"] .bg-zinc-700,
+html[data-theme="light"] .bg-zinc-600 {
+  background-color: #e0ddd6 !important;
+}
+html[data-theme="light"] .bg-zinc-800\/50,
+html[data-theme="light"] .bg-zinc-800\/60,
+html[data-theme="light"] .bg-zinc-800\/90,
+html[data-theme="light"] .bg-zinc-700\/50,
+html[data-theme="light"] .bg-zinc-700\/60 {
+  background-color: rgba(224, 221, 214, 0.5) !important;
+}
+html[data-theme="light"] .hover\:bg-zinc-800:hover,
+html[data-theme="light"] .hover\:bg-zinc-700:hover,
+html[data-theme="light"] .hover\:bg-zinc-600:hover {
+  background-color: #d4d0c8 !important;
+}
+
+/* Restore grey surfaces on actual buttons. */
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).bg-zinc-800,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]).bg-zinc-800,
+html[data-theme="light"] .button.bg-zinc-800,
+html[data-theme="light"] .btn.bg-zinc-800,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .bg-zinc-800,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]) .bg-zinc-800,
+html[data-theme="light"] .button .bg-zinc-800,
+html[data-theme="light"] .btn .bg-zinc-800,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).bg-zinc-700,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]).bg-zinc-700,
+html[data-theme="light"] .button.bg-zinc-700,
+html[data-theme="light"] .btn.bg-zinc-700,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .bg-zinc-700,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]) .bg-zinc-700,
+html[data-theme="light"] .button .bg-zinc-700,
+html[data-theme="light"] .btn .bg-zinc-700 {
+  background-color: #27272a !important;
+}
+
+/* Restore hover greys on buttons. */
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).hover\:bg-zinc-800:hover,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]).hover\:bg-zinc-800:hover,
+html[data-theme="light"] .button.hover\:bg-zinc-800:hover,
+html[data-theme="light"] .btn.hover\:bg-zinc-800:hover,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .hover\:bg-zinc-800:hover,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]) .hover\:bg-zinc-800:hover,
+html[data-theme="light"] .button .hover\:bg-zinc-800:hover,
+html[data-theme="light"] .btn .hover\:bg-zinc-800:hover,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).hover\:bg-zinc-700:hover,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]).hover\:bg-zinc-700:hover,
+html[data-theme="light"] .button.hover\:bg-zinc-700:hover,
+html[data-theme="light"] .btn.hover\:bg-zinc-700:hover,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .hover\:bg-zinc-700:hover,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]) .hover\:bg-zinc-700:hover,
+html[data-theme="light"] .button .hover\:bg-zinc-700:hover,
+html[data-theme="light"] .btn .hover\:bg-zinc-700:hover {
+  background-color: #3f3f46 !important;
 }
 
 /* Side panels: transparent with no bento rounding. */
