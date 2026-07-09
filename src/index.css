@@ -1291,6 +1291,12 @@ html[data-theme="light"] [class*="to-zinc-950\\/"] {
   --tw-gradient-to: rgba(245,242,235,0.75) var(--tw-gradient-to-position) !important;
 }
 
+/* Profile tabs: in light mode drop the glass indicator pill so icons render
+   as pure backgroundless icons, matching the rest of the light aesthetic. */
+html[data-theme="light"] [data-profile-tabs] [data-glass-indicator] {
+  display: none !important;
+}
+
 /* ==========================================================================
  * Mobile top header + drawer: paper background, dark ink icons and logo.
  * ========================================================================== */

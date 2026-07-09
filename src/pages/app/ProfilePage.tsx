@@ -467,7 +467,7 @@ export default function ProfilePage() {
         />
 
         {/* Profile Tabs Bento */}
-        <div className="bg-zinc-900 rounded-xl relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+        <div data-profile-tabs className="bg-zinc-900 rounded-xl relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
           <div ref={tabsIndicatorLayerRef} className="relative overflow-visible">
             <GlassIndicator rect={profileDragDisplayRect} borderRadius="0.75rem" enableTransition={!isProfileDragging && tabTransition} />
             {/* Drag handle overlay */}
