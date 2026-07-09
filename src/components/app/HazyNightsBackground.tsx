@@ -166,12 +166,6 @@ function CelestialSphere({
       camera.updateProjectionMatrix();
     };
 
-    const onMouseMove = (event: MouseEvent) => {
-      const rect = currentMount.getBoundingClientRect();
-      mouse.x = event.clientX - rect.left;
-      mouse.y = event.clientY - rect.top;
-      material.uniforms.u_mouse.value.set(mouse.x, currentMount.clientHeight - mouse.y);
-    };
 
     const onMouseMove = (event: MouseEvent) => {
       const rect = currentMount.getBoundingClientRect();
