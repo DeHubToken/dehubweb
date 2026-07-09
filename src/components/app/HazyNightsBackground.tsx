@@ -41,6 +41,7 @@ function CelestialSphere({
     const currentMount = mountRef.current;
 
     const mouse = new THREE.Vector2(0.5, 0.5);
+    const mouseTarget = new THREE.Vector2(0.5, 0.5);
 
     const vertexShader = `
       varying vec2 vUv;
