@@ -1599,8 +1599,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           </div>
         );
 
-        if (filtersPortalRef?.current) {
-          return createPortal(chipsBar, filtersPortalRef.current);
+        if (portalTarget) {
+          return createPortal(chipsBar, portalTarget);
         }
         return chipsBar;
       })()}
