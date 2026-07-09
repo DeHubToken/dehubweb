@@ -13,6 +13,7 @@ import { useRef, useCallback, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Settings2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
+import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { cn } from '@/lib/utils';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
