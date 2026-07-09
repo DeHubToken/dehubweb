@@ -1366,6 +1366,14 @@ html[data-theme="light"] img[data-badge-icon] {
 html[data-theme="light"] img[data-badge-icon]:hover {
   filter: brightness(0) drop-shadow(0 0 4px rgba(0, 0, 0, 0.4)) !important;
 }
+/* Exception: badges rendered over dark video/media surfaces stay white so
+   they remain visible against the grey/black backdrop. */
+html[data-theme="light"] .bg-black img[data-badge-icon],
+html[data-theme="light"] [data-video-card] img[data-badge-icon],
+html[data-theme="light"] [data-media-overlay] img[data-badge-icon],
+html[data-theme="light"] video ~ * img[data-badge-icon] {
+  filter: brightness(0) invert(1) !important;
+}
 
 /* Prompt landing page (/prompt): dark logo + dark ink copy on paper. */
 html[data-theme="light"] [data-prompt-landing] {

@@ -1135,6 +1135,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   
   return (
     <div 
+      data-video-card
       onClick={isImmersive ? undefined : handleCardClick}
       className={isImmersive 
         ? "bg-black overflow-hidden isolate" 
