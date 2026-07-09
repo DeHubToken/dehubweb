@@ -1495,87 +1495,98 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       })()}
 
       {/* Active filter chips bar (sort, date, content access, categories) */}
-      {(optimisticSort.value !== 'latest' || optimisticDate.value !== 'all' || optimisticContentFilters.ppv || optimisticContentFilters.w2e || optimisticContentFilters.locked || optimisticCategories.length > 0) && (
-        <div className="flex items-center gap-1.5 flex-wrap px-1">
-          {optimisticSort.value !== 'latest' && (
-            <button
-              onClick={() => setSelectedSort(DEFAULT_HOME_SORT)}
-              className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
-            >
-              <span className="leading-[1]">{optimisticSort.label}</span>
-              <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
-            </button>
-          )}
-          {optimisticDate.value !== 'all' && (
-            <button
-              onClick={() => setSelectedDate(DATE_FILTER_OPTIONS[0])}
-              className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
-            >
-              <span className="leading-[1]">{optimisticDate.label}</span>
-              <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
-            </button>
-          )}
-          {optimisticContentFilters.ppv && (
-            <button
-              onClick={() => toggleContentFilter('ppv')}
-              className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
-            >
-              <span className="leading-[1]">PPV</span>
-              <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
-            </button>
-          )}
-          {optimisticContentFilters.w2e && (
-            <button
-              onClick={() => toggleContentFilter('w2e')}
-              className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
-            >
-              <span className="leading-[1]">Bounty</span>
-              <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
-            </button>
-          )}
-          {optimisticContentFilters.locked && (
-            <button
-              onClick={() => toggleContentFilter('locked')}
-              className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
-            >
-              <span className="leading-[1]">Gated</span>
-              <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
-            </button>
-          )}
-          {optimisticCategories.map((rawCatId, index) => {
-            const catId = typeof rawCatId === 'string'
-              ? rawCatId
-              : (rawCatId && typeof rawCatId === 'object' && 'categoryId' in rawCatId && typeof (rawCatId as { categoryId?: unknown }).categoryId === 'string')
-                ? ((rawCatId as { categoryId: string }).categoryId)
-                : null;
+      {(() => {
+        const hasChips = optimisticSort.value !== 'latest' || optimisticDate.value !== 'all' || optimisticContentFilters.ppv || optimisticContentFilters.w2e || optimisticContentFilters.locked || optimisticCategories.length > 0;
+        if (!hasChips) return null;
 
-            if (!catId) return null;
-
-            const catObj = categories.find(c => c.id === catId);
-            return (
+        const chipsBar = (
+          <div className="flex items-center gap-1.5 flex-wrap px-1 pt-1 pb-2">
+            {optimisticSort.value !== 'latest' && (
               <button
-                key={`${catId}-${index}`}
-                onClick={() => setSelectedCategories(prev => prev.filter(c => c !== catId))}
+                onClick={() => setSelectedSort(DEFAULT_HOME_SORT)}
                 className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
               >
-                <span className="leading-[1]">{catObj?.name || catId}</span>
+                <span className="leading-[1]">{optimisticSort.label}</span>
                 <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
               </button>
-            );
-          })}
-          <button
-            onClick={() => {
-              setSelectedSort(DEFAULT_HOME_SORT);
-              setSelectedDate(DATE_FILTER_OPTIONS[0]);
-              resetContentFilters();
-              setSelectedCategories([]);
-            }}
-            className="px-2 py-1 rounded-lg text-[10px] text-zinc-500 hover:text-white transition-colors"
-          >
-            Clear all
-          </button>
-        </div>
-      )}
+            )}
+            {optimisticDate.value !== 'all' && (
+              <button
+                onClick={() => setSelectedDate(DATE_FILTER_OPTIONS[0])}
+                className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
+              >
+                <span className="leading-[1]">{optimisticDate.label}</span>
+                <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
+              </button>
+            )}
+            {optimisticContentFilters.ppv && (
+              <button
+                onClick={() => toggleContentFilter('ppv')}
+                className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
+              >
+                <span className="leading-[1]">PPV</span>
+                <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
+              </button>
+            )}
+            {optimisticContentFilters.w2e && (
+              <button
+                onClick={() => toggleContentFilter('w2e')}
+                className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
+              >
+                <span className="leading-[1]">Bounty</span>
+                <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
+              </button>
+            )}
+            {optimisticContentFilters.locked && (
+              <button
+                onClick={() => toggleContentFilter('locked')}
+                className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
+              >
+                <span className="leading-[1]">Gated</span>
+                <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
+              </button>
+            )}
+            {optimisticCategories.map((rawCatId, index) => {
+              const catId = typeof rawCatId === 'string'
+                ? rawCatId
+                : (rawCatId && typeof rawCatId === 'object' && 'categoryId' in rawCatId && typeof (rawCatId as { categoryId?: unknown }).categoryId === 'string')
+                  ? ((rawCatId as { categoryId: string }).categoryId)
+                  : null;
+
+              if (!catId) return null;
+
+              const catObj = categories.find(c => c.id === catId);
+              return (
+                <button
+                  key={`${catId}-${index}`}
+                  onClick={() => setSelectedCategories(prev => prev.filter(c => c !== catId))}
+                  className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
+                >
+                  <span className="leading-[1]">{catObj?.name || catId}</span>
+                  <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
+                </button>
+              );
+            })}
+            <button
+              onClick={() => {
+                setSelectedSort(DEFAULT_HOME_SORT);
+                setSelectedDate(DATE_FILTER_OPTIONS[0]);
+                resetContentFilters();
+                setSelectedCategories([]);
+              }}
+              className="px-2 py-1 rounded-lg text-[10px] text-zinc-500 hover:text-white transition-colors"
+            >
+              Clear all
+            </button>
+          </div>
+        );
+
+        if (filtersPortalRef?.current) {
+          return createPortal(chipsBar, filtersPortalRef.current);
+        }
+        return chipsBar;
+      })()}
+
 
       {(isLoadingState || isAutoRetrying) ? (
         <FeedCardSkeletonList count={6} />
