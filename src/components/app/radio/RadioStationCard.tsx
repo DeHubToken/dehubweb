@@ -121,13 +121,12 @@ export function RadioStationCard({ station }: RadioStationCardProps) {
               {tags.join(', ')}
             </span>
           )}
-          {bitrate && (
-            <>
-              <span className="text-zinc-600 text-xs flex-shrink-0">•</span>
-              <span className="text-zinc-500 text-xs flex-shrink-0">{bitrate}</span>
-            </>
-          )}
         </div>
+        {bitrate && (
+          <div className="flex items-center gap-1.5 mt-1 text-zinc-500 text-xs">
+            <span>{bitrate}</span>
+          </div>
+        )}
       </div>
       
       {/* Play/Pause Button */}
