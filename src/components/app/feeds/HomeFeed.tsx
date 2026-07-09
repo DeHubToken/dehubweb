@@ -1492,10 +1492,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           </motion.div>
         );
 
-        if (filtersPortalRef?.current) {
+        if (portalTarget) {
           return showFilters ? createPortal(
             <AnimatePresence mode="wait">{filterPanel}</AnimatePresence>,
-            filtersPortalRef.current
+            portalTarget
           ) : null;
         }
 
