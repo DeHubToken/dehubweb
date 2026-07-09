@@ -826,7 +826,7 @@ export default function ExplorePage() {
   });
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen" data-explore-page>
       <SEOHead title="Explore - Trending Creators, Posts & Topics" description="Discover trending posts, top creators and popular topics on DeHub — open source, user owned, censorship resistant social media." url="https://dehub.io/app/explore" jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Explore DeHub', url: 'https://dehub.io/app/explore', description: 'Discover trending content, creators and topics on DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">Explore DeHub — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Search Header - Bento Style */}
