@@ -1101,4 +1101,33 @@ html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn][data-active="true
   opacity: 1;
 }
 
+/* Video first-frame glitch loader */
+@keyframes video-glitch-r {
+  0%, 100% { transform: translate(0, 0); }
+  8%       { transform: translate(2px, -1px); }
+  18%      { transform: translate(-3px, 1px); }
+  32%      { transform: translate(1px, 2px); }
+  46%      { transform: translate(-2px, 0); }
+  60%      { transform: translate(3px, -1px); }
+  74%      { transform: translate(-1px, 1px); }
+  88%      { transform: translate(2px, 0); }
+}
+@keyframes video-glitch-c {
+  0%, 100% { transform: translate(0, 0); }
+  8%       { transform: translate(-2px, 1px); }
+  18%      { transform: translate(3px, -1px); }
+  32%      { transform: translate(-1px, -2px); }
+  46%      { transform: translate(2px, 0); }
+  60%      { transform: translate(-3px, 1px); }
+  74%      { transform: translate(1px, -1px); }
+  88%      { transform: translate(-2px, 0); }
+}
+@keyframes video-glitch-slice {
+  0%, 6%   { top: 12%; opacity: 0.65; transform: translateX(-4px); }
+  7%, 14%  { top: 12%; opacity: 0; }
+  20%, 26% { top: 48%; opacity: 0.5; transform: translateX(6px); }
+  27%, 40% { opacity: 0; }
+  55%, 62% { top: 74%; opacity: 0.7; transform: translateX(-8px); }
+  63%, 100%{ opacity: 0; }
+}
 

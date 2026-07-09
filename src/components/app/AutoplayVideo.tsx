@@ -9,6 +9,7 @@
 
 import { useRef, useEffect, useState, memo } from 'react';
 import { cn } from '@/lib/utils';
+import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoader';
 
 interface AutoplayVideoProps {
   src: string;
@@ -101,11 +102,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
       {/* Skeleton shimmer — visible until video has loaded data */}
       {!hasLoaded && (
         <div className="absolute inset-0 z-[1]">
-          {poster ? (
-            <img src={poster} alt="" className="w-full h-full object-cover rounded-lg" />
-          ) : (
-            <div className="w-full h-full animate-pulse bg-white/[0.06]" />
-          )}
+          <VideoGlitchLoader poster={poster} />
         </div>
       )}
       <video

@@ -61,6 +61,7 @@ import {
 } from '@/components/ui/drawer';
 import type { VideoItem } from '@/types/feed.types';
 import { VideoSubtitleOverlay } from '@/components/app/video/VideoSubtitleOverlay';
+import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoader';
 
 // Use lg breakpoint (1024px) to determine if we show drawer vs inline
 function useIsTabletOrMobile() {
@@ -1455,11 +1456,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         
         {/* Video controls - hidden when PPV locked */}
         {!isContentGated && <>
-        {/* Loading spinner */}
+        {/* First-frame glitch loader */}
         {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-            <div className="w-10 h-10 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-          </div>
+          <VideoGlitchLoader poster={video.thumbnail} />
         )}
         
         {/* Center flash indicator removed — play/pause now in progress bar */}
