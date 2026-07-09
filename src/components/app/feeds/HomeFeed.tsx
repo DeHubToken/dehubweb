@@ -1543,6 +1543,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             )}
             {optimisticContentFilters.locked && (
               <button
+                data-filter-chip
                 onClick={() => toggleContentFilter('locked')}
                 className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
               >
@@ -1562,6 +1563,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               const catObj = categories.find(c => c.id === catId);
               return (
                 <button
+                  data-filter-chip
                   key={`${catId}-${index}`}
                   onClick={() => setSelectedCategories(prev => prev.filter(c => c !== catId))}
                   className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
