@@ -2,16 +2,20 @@
  * VideoGlitchLoader
  * -----------------
  * Loading state for videos: renders the poster/first-frame with an
- * RGB-split glitch + scanline effect instead of a plain spinner.
- * Falls back to a subtle animated dark surface when no poster is provided.
+ * RGB-split glitch + scanline effect and flickers between overlay frames.
  */
 import { memo } from 'react';
 import { cn } from '@/lib/utils';
+import glitch0 from '@/assets/glitch/glitch-0.svg.asset.json';
+import glitch1 from '@/assets/glitch/glitch-1.svg.asset.json';
+import glitch2 from '@/assets/glitch/glitch-2.svg.asset.json';
+import glitch3 from '@/assets/glitch/glitch-3.svg.asset.json';
+
+const GLITCH_FRAMES = [glitch0.url, glitch1.url, glitch2.url, glitch3.url];
 
 interface VideoGlitchLoaderProps {
   poster?: string;
   className?: string;
-  /** Rounded corners to match the underlying video */
   rounded?: string;
 }
 
@@ -61,6 +65,20 @@ export const VideoGlitchLoader = memo(function VideoGlitchLoader({
             }}
             draggable={false}
           />
+          {/* Flickering glitch overlay frames */}
+          {GLITCH_FRAMES.map((src, i) => (
+            <img
+              key={src}
+              src={src}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover mix-blend-screen pointer-events-none"
+              style={{
+                animation: `video-glitch-frame-${i} 1.2s steps(1) infinite`,
+                opacity: 0,
+              }}
+              draggable={false}
+            />
+          ))}
           {/* Scanlines */}
           <div
             className="absolute inset-0"
