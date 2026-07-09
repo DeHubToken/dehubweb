@@ -75,7 +75,6 @@ export function SidebarNavItem({
     onNavigate?.();
   };
 
-  const isDesktop = variant === 'desktop';
   const showAvatar = avatarUrl !== undefined;
   
   const isForceCollapsed = forceCollapsed;
