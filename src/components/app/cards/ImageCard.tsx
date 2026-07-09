@@ -783,7 +783,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           </>
         ) : (
           <SwipeableCarousel>
-            <ImageCarousel images={images} onImageClick={handleImageClick} onIndexChange={setActiveImageIndex} aboveFold={aboveFold} />
+            <ImageCarousel images={images} onImageClick={handleImageClick} onIndexChange={setActiveImageIndex} aboveFold={aboveFold} postId={post.id} />
           </SwipeableCarousel>
         )}
 
