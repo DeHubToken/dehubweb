@@ -46,10 +46,11 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
         {tabs.map((tab) => {
           const Icon = tab.icon;
           return (
-            <button
-              type="button"
-              key={tab.id}
-              onClick={() => handleTabClick(tab.id)}
+          <button
+            type="button"
+            data-tab-btn
+            key={tab.id}
+            onClick={() => handleTabClick(tab.id)}
               className={`relative flex-1 py-3 flex flex-col items-center justify-center transition-colors ${
                 effectiveTab === tab.id
                   ? 'text-white'
