@@ -1503,6 +1503,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           <div className="flex items-center gap-1.5 flex-wrap px-1 pt-1 pb-2">
             {optimisticSort.value !== 'latest' && (
               <button
+                data-filter-chip
                 onClick={() => setSelectedSort(DEFAULT_HOME_SORT)}
                 className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
               >
@@ -1512,6 +1513,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             )}
             {optimisticDate.value !== 'all' && (
               <button
+                data-filter-chip
                 onClick={() => setSelectedDate(DATE_FILTER_OPTIONS[0])}
                 className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
               >
@@ -1521,6 +1523,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             )}
             {optimisticContentFilters.ppv && (
               <button
+                data-filter-chip
                 onClick={() => toggleContentFilter('ppv')}
                 className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
               >
@@ -1530,6 +1533,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             )}
             {optimisticContentFilters.w2e && (
               <button
+                data-filter-chip
                 onClick={() => toggleContentFilter('w2e')}
                 className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
               >
