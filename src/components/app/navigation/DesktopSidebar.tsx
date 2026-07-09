@@ -139,7 +139,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             <button
               onClick={toggleCollapse}
               className={cn(
-                "flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-lg hover:bg-zinc-800 transition-colors relative -top-[1.5px]",
+                "flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors relative -top-[1.5px]",
                 isCollapsed ? "hidden" : "hidden lg:flex mr-1.5"
               )}
               aria-label="Toggle sidebar"
@@ -167,7 +167,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             {isCollapsed && (
               <button
                 onClick={toggleCollapse}
-                className="flex-shrink-0 w-5 h-5 ml-1 flex items-center justify-center rounded-md hover:bg-zinc-800 transition-colors"
+                className="flex-shrink-0 w-5 h-5 ml-1 flex items-center justify-center rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
                 aria-label="Expand sidebar"
               >
                 <Menu className="w-[14px] h-[14px] text-zinc-400" />
