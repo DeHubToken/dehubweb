@@ -42,6 +42,8 @@ export function GlobalFeedNav() {
 
   const [activeTab, setActiveTab] = useState(() => isHomePage ? getPersistedTab() : '');
   const [enableTransition, setEnableTransition] = useState(false);
+  const { shortsEnabled } = useShortsEnabled();
+  const feedTabs = shortsEnabled ? FEED_TABS : FEED_TABS.filter(t => t.value !== 'shorts');
 
   // Keep a ref in sync so drag handlers avoid stale activeTab closures.
   const activeTabRef = useRef(activeTab);
