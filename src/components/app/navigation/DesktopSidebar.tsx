@@ -238,7 +238,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   ref={isAIActive ? setActiveItemEl : undefined}
                   to="/app/assistant"
                   className={cn(
-                    'relative flex items-center rounded-2xl text-left transition-colors text-[15px] text-black dark:text-white',
+                    'relative flex items-center rounded-2xl text-left transition-colors text-[15px]',
+                    desktopNavTextColor,
                     isCollapsed ? 'w-9 h-9 justify-center' : 'w-9 h-9 lg:w-full lg:h-auto justify-center lg:justify-start lg:px-2.5 lg:py-2.5 lg:gap-3',
                     isAIActive ? 'font-semibold' : 'hover:bg-zinc-800/50'
                   )}
