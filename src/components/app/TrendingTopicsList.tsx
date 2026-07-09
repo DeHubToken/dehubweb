@@ -128,6 +128,7 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
       <div className="flex mb-2">
         {TOPIC_PERIODS.map(p => (
           <button
+            data-tab-btn
             key={p.value}
             onClick={() => handlePeriodChange(p.value)}
             className={cn(
