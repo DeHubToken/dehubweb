@@ -65,6 +65,8 @@ export function SidebarNavItem({
   const itemRef = useRef<HTMLAnchorElement | HTMLButtonElement | null>(null);
   const isDesktop = variant === 'desktop';
   const desktopTextColor = getDesktopTextColor(theme);
+  const isLightTheme = theme === 'light';
+  const desktopHoverClass = isLightTheme ? 'hover:font-semibold' : 'hover:bg-zinc-800/50';
 
   useEffect(() => {
     if (isDesktop && isActive && registerActiveRef) {
@@ -120,10 +122,11 @@ export function SidebarNavItem({
         rel="noopener noreferrer"
         onClick={onNavigate}
         className={cn(
-          'relative flex items-center rounded-2xl transition-colors text-[15px]',
+          'relative flex items-center rounded-2xl text-[15px]',
+          isLightTheme ? 'transition-[font-weight]' : 'transition-colors',
           isDesktop ? desktopTextColor : 'text-white',
           isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
-          !isActive && (variant === 'mobile' ? 'hover:bg-zinc-700/50' : 'hover:bg-zinc-800/50')
+          !isActive && isDesktop && desktopHoverClass
         )}
       >
         {glassIndicator}
@@ -153,10 +156,11 @@ export function SidebarNavItem({
           onNavigate?.();
         }}
         className={cn(
-          'relative flex items-center rounded-2xl transition-colors text-[15px] w-full text-left',
+          'relative flex items-center rounded-2xl text-[15px] w-full text-left',
+          isLightTheme ? 'transition-[font-weight]' : 'transition-colors',
           isDesktop ? desktopTextColor : 'text-white',
           isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
-          !isActive && (variant === 'mobile' ? 'hover:bg-zinc-700/50' : 'hover:bg-zinc-800/50')
+          !isActive && isDesktop && desktopHoverClass
         )}
       >
         {glassIndicator}
@@ -182,11 +186,12 @@ export function SidebarNavItem({
       to={item.path}
       onClick={handleClick}
       className={cn(
-        'relative flex items-center rounded-2xl transition-colors text-[15px]',
+        'relative flex items-center rounded-2xl text-[15px]',
+        isLightTheme ? 'transition-[font-weight]' : 'transition-colors',
         isDesktop ? desktopTextColor : 'text-white',
         isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
         isActive ? 'font-semibold' : '',
-        !isActive && (variant === 'mobile' ? 'hover:bg-zinc-700/50' : 'hover:bg-zinc-800/50')
+        !isActive && isDesktop && desktopHoverClass
       )}
     >
       {glassIndicator}
