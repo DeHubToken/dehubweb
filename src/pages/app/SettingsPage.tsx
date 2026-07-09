@@ -1694,6 +1694,9 @@ function ShortsEnabledToggle() {
       <Switch checked={shortsEnabled} onCheckedChange={setShortsEnabled} />
     </div>
   );
+}
+
+
 
 function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: string) => void }) {
   const { t } = useTranslation();
