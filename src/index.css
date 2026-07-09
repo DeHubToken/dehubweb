@@ -1151,31 +1151,25 @@ html[data-theme="light"] .text-zinc-600 {
   color: #707070 !important;
 }
 
-/* Restore white text ONLY on elements that actually carry a dark surface class
-   (or explicit opt-in). This keeps CTA/liquid-glass buttons white-on-grey while
-   letting usernames, badges, action-bar icons, translate buttons etc. read as
-   dark ink on paper. */
+/* Restore white text ONLY on the exact element that carries a dark surface
+   class (or explicit opt-in). Descendant-cascading was whitewashing feed
+   usernames, sidebar nav items, badges, action-bar icons, etc. */
 html[data-theme="light"] [data-keep-dark],
 html[data-theme="light"] [data-keep-dark] *,
-html[data-theme="light"] .bg-black.text-white,
-html[data-theme="light"] .bg-zinc-950.text-white,
-html[data-theme="light"] .bg-zinc-900.text-white,
 html[data-theme="light"] .bg-zinc-800.text-white,
 html[data-theme="light"] .bg-zinc-700.text-white,
-html[data-theme="light"] .bg-zinc-600.text-white,
-html[data-theme="light"] .bg-black .text-white,
-html[data-theme="light"] .bg-zinc-950 .text-white,
-html[data-theme="light"] .bg-zinc-900 .text-white,
-html[data-theme="light"] .bg-zinc-800 .text-white,
-html[data-theme="light"] .bg-zinc-700 .text-white,
-html[data-theme="light"] .bg-zinc-600 .text-white {
+html[data-theme="light"] .bg-zinc-600.text-white {
   color: #ffffff !important;
 }
 
-/* Root backgrounds: black/zinc-950/zinc-900 become paper, but leave grey buttons alone. */
+/* Root backgrounds: remap black/zinc-9xx surfaces to paper.
+   Note we DO remap .bg-zinc-800 too because DesktopSidebar's nav panel uses it
+   as a big surface; genuine dark button chips can opt-out with data-keep-dark. */
 html[data-theme="light"] .bg-black:not([data-keep-dark]),
 html[data-theme="light"] .bg-zinc-950:not([data-keep-dark]),
-html[data-theme="light"] .bg-zinc-900:not([data-keep-dark]) {
+html[data-theme="light"] .bg-zinc-900:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-800:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-theme="light"] .bg-zinc-700:not([data-keep-dark]):not(button):not([role="button"]) {
   background-color: var(--paper) !important;
 }
 
@@ -1186,6 +1180,25 @@ html[data-theme="light"] .bg-zinc-800\/90,
 html[data-theme="light"] .bg-zinc-700\/50,
 html[data-theme="light"] .bg-zinc-700\/60 {
   background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Active-state pills / indicators that use bg-white in dark mode read as
+   invisible on paper. Flip them to ink so the active tab is legible. */
+html[data-theme="light"] .bg-white:not([data-keep-white]),
+html[data-theme="light"] .bg-white\/90:not([data-keep-white]),
+html[data-theme="light"] .bg-white\/80:not([data-keep-white]) {
+  background-color: var(--ink) !important;
+}
+html[data-theme="light"] .bg-white:not([data-keep-white]) .text-black,
+html[data-theme="light"] .bg-white:not([data-keep-white]) .text-zinc-900,
+html[data-theme="light"] .bg-white:not([data-keep-white]) .text-zinc-950 {
+  color: #ffffff !important;
+}
+
+/* Desktop sidebar logo (white PNG on dark) -> invert on paper. */
+html[data-theme="light"] img[alt="dehub"][src*="dehub-header-logo"],
+html[data-theme="light"] img[alt="dehub"][src*="dehub-logo-compact"] {
+  filter: invert(1) hue-rotate(180deg) brightness(0.9);
 }
 
 /* ==========================================================================
