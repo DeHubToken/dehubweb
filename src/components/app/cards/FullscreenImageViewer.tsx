@@ -231,22 +231,7 @@ export function FullscreenImageViewer({
           >
             <div className="flex h-full">
               {images.map((img, idx) => (
-                <div 
-                  key={idx} 
-                  className="flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
-                  onClick={onClose}
-                >
-                  <img
-                    src={img}
-                    alt=""
-                    className="max-w-full max-h-full object-contain select-none"
-                    draggable={false}
-                    onClick={(e) => e.stopPropagation()}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/placeholder.svg';
-                    }}
-                  />
-                </div>
+                <FullscreenSlide key={idx} img={img} onClose={onClose} postId={postId} />
               ))}
             </div>
           </motion.div>
