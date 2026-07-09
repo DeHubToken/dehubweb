@@ -16,6 +16,7 @@ import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { useCommunityActivityUnreadCount } from '@/hooks/use-community-activity-unread';
 import { useTotalUnreadCount } from '@/hooks/use-messages';
 import dehubLogoCompact from '@/assets/dehub-logo-compact.png';
+import dehubMarkBlack from '@/assets/design-system/mark-black.png.asset.json';
 import { cn } from '@/lib/utils';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
@@ -149,7 +150,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             <button onClick={handleLogoClick} className="block cursor-pointer">
               {isCollapsed ? (
                 <img
-                  src={dehubLogoCompact}
+                  src={isMinimal ? dehubMarkBlack.url : dehubLogoCompact}
                   alt="dehub"
                   className="h-[22px] w-auto object-contain"
                   decoding="async"
@@ -183,7 +184,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             <motion.div
               data-sidebar-active-indicator
               className={cn(
-                "pointer-events-none absolute z-30 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]",
+                "pointer-events-none absolute z-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]",
                 isCollapsed ? 'rounded-xl' : 'rounded-2xl'
               )}
               initial={false}
@@ -230,15 +231,15 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   registerActiveRef={isActive ? setActiveItemEl : undefined}
                 />
                 {isAssistantAnchor && (
-                  <NavLink
-                    ref={isAIActive ? setActiveItemEl : undefined}
-                    to="/app/assistant"
-                    className={cn(
-                      'relative flex items-center rounded-2xl text-left transition-colors text-[15px] text-white',
-                      isCollapsed ? 'w-9 h-9 justify-center' : 'w-9 h-9 lg:w-full lg:h-auto justify-center lg:justify-start lg:px-2.5 lg:py-2.5 lg:gap-3',
-                      isAIActive ? 'font-semibold' : 'hover:bg-zinc-800/50'
-                    )}
-                  >
+                <NavLink
+                  ref={isAIActive ? setActiveItemEl : undefined}
+                  to="/app/assistant"
+                  className={cn(
+                    'relative flex items-center rounded-2xl text-left transition-colors text-[15px] text-black dark:text-white',
+                    isCollapsed ? 'w-9 h-9 justify-center' : 'w-9 h-9 lg:w-full lg:h-auto justify-center lg:justify-start lg:px-2.5 lg:py-2.5 lg:gap-3',
+                    isAIActive ? 'font-semibold' : 'hover:bg-zinc-800/50'
+                  )}
+                >
                     <div className={cn(
                       "relative z-10 w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
                       isAIActive ? "bg-transparent" : isCollapsed ? "bg-transparent" : "lg:bg-zinc-800 bg-transparent"
