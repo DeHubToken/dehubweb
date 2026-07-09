@@ -54,8 +54,8 @@ export const RightSidebar = memo(function RightSidebar({ showSearch = true }: Ri
       )}
       <div className={cn("space-y-4", isCollapsed ? "mt-[8px]" : "mt-[11px]")}>
         <TabbedSidePanel />
-        <div className="h-px bg-zinc-800/50" />
-        <div className="-mt-[4.2px]">
+        <div className="relative -mt-[4.2px]">
+          <div className="absolute -top-[6px] left-0 right-0 h-px bg-zinc-800/50" />
           <WhatsHappening />
         </div>
       </div>
