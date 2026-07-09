@@ -22,6 +22,7 @@ import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
 
 import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
 import { GlobalFeedNav } from './GlobalFeedNav';
+import { GlobalFeedNavProvider } from '@/contexts/GlobalFeedNavContext';
 import { cn } from '@/lib/utils';
 import SinglePostPage from '@/pages/app/SinglePostPage';
 
