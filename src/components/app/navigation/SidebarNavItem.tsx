@@ -154,7 +154,7 @@ export function SidebarNavItem({
         }}
         className={cn(
           'relative flex items-center rounded-2xl transition-colors text-[15px] w-full text-left',
-          isDesktop ? 'text-black dark:text-white' : 'text-white',
+          isDesktop ? desktopTextColor : 'text-white',
           isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
           !isActive && (variant === 'mobile' ? 'hover:bg-zinc-700/50' : 'hover:bg-zinc-800/50')
         )}
