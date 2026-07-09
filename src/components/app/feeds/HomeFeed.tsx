@@ -1031,15 +1031,13 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             See all <ChevronRight className="w-4 h-4" />
           </button>
         </div>
-        <div className="relative">
-          <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
-            {radioStations.slice(0, 10).map((station) => (
-              <div key={station.stationuuid} className="flex-shrink-0 w-[280px]">
-                <RadioStationCard station={station} />
-              </div>
-            ))}
-          </SwipeableCarousel>
-        </div>
+        <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
+          {radioStations.slice(0, 10).map((station) => (
+            <div key={station.stationuuid} className="flex-shrink-0 w-[280px]">
+              <RadioStationCard station={station} />
+            </div>
+          ))}
+        </SwipeableCarousel>
       </div>
     );
   };
