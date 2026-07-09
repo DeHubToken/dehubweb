@@ -200,18 +200,24 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           "flex-1 min-h-screen pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black pt-11 relative"
         )}>
           <GlobalFeedNavProvider>
-            {/* Global feed nav — keep mounted and animate in/out to avoid rigid multi-step jumps */}
-            <div
-              className={cn(
-                'hidden lg:block motion-reduce:transition-none sticky top-0 z-50',
-                isCollapsed
-                  ? 'h-12 opacity-100 transition-[height,opacity] duration-500 ease-in-out'
-                  : 'h-0 opacity-0 pointer-events-none transition-[height] duration-500 ease-in-out transition-opacity duration-150'
-              )}
-              style={!isCollapsed ? { transitionProperty: 'height, opacity', transitionDuration: '500ms, 150ms' } : undefined}
-            >
-              <GlobalFeedNav />
-            </div>
+            {/* Global feed nav — only shown on the home feed. Other pages
+                (Explore, Bookmarks, etc.) have their own headers. */}
+            {(() => {
+              const isHome = location.pathname === '/app' || location.pathname === '/app/';
+              return (
+                <div
+                  className={cn(
+                    'hidden lg:block motion-reduce:transition-none sticky top-0 z-50',
+                    isCollapsed && isHome
+                      ? 'h-12 opacity-100 transition-[height,opacity] duration-500 ease-in-out'
+                      : 'h-0 opacity-0 pointer-events-none transition-[height] duration-500 ease-in-out transition-opacity duration-150'
+                  )}
+                  style={!(isCollapsed && isHome) ? { transitionProperty: 'height, opacity', transitionDuration: '500ms, 150ms' } : undefined}
+                >
+                  <GlobalFeedNav />
+                </div>
+              );
+            })()}
 
             {/* Persistent page cache — all visited pages stay mounted */}
             <PersistentPageCache keepHomeVisible={showHomePagePersisted} />
