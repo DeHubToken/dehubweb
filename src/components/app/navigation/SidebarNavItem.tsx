@@ -186,11 +186,12 @@ export function SidebarNavItem({
       to={item.path}
       onClick={handleClick}
       className={cn(
-        'relative flex items-center rounded-2xl transition-[font-weight] text-[15px]',
+        'relative flex items-center rounded-2xl text-[15px]',
+        isLightTheme ? 'transition-[font-weight]' : 'transition-colors',
         isDesktop ? desktopTextColor : 'text-white',
         isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
         isActive ? 'font-semibold' : '',
-        isDesktop && !isActive && 'hover:font-semibold'
+        !isActive && isDesktop && desktopHoverClass
       )}
     >
       {glassIndicator}
