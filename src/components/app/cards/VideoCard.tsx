@@ -1518,7 +1518,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
         {/* Progress bar at bottom */}
         {duration > 0 && showControls && (
-          <div className="absolute bottom-0 left-0 right-0 px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent z-10">
+          <div data-video-controls className="absolute bottom-0 left-0 right-0 px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent z-10">
+
             <div className="flex items-center gap-2">
               <button
                 onClick={(e) => { e.stopPropagation(); handlePlayClick(); }}
