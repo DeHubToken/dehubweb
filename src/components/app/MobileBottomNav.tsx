@@ -134,15 +134,6 @@ export function MobileBottomNav() {
 
   return (
     <>
-      {/* Bottom blur gradient overlay */}
-      <div
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-40 pointer-events-none h-[60px] transition-transform duration-300 ease-in-out"
-        style={{
-          background: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.05) 15%, rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.6) 70%, rgba(0,0,0,0.85) 90%, rgba(0,0,0,0.95) 100%)',
-          transform: navVisible ? 'translateY(0)' : 'translateY(110%)',
-          willChange: 'transform',
-        }}
-      />
       <div
         className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2 transition-transform duration-300 ease-in-out"
         style={{ transform: navVisible ? 'translateY(0)' : 'translateY(110%)', willChange: 'transform' }}
