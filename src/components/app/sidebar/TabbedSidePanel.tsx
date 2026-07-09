@@ -49,6 +49,7 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
           <button
             type="button"
             data-tab-btn
+            data-tab-active={effectiveTab === tab.id}
             key={tab.id}
             onClick={() => handleTabClick(tab.id)}
               className={`relative flex-1 py-3 flex flex-col items-center justify-center transition-colors ${
@@ -58,7 +59,7 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
               }`}
             >
               {effectiveTab === tab.id ? (
-                <div className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
+                <div data-active-tab-indicator className="absolute inset-0 bg-gradient-to-b from-zinc-800/60 to-transparent" />
               ) : (
                 <div className="tab-hover-bg absolute inset-0 bg-gradient-to-b from-zinc-800/40 to-transparent opacity-0 transition-opacity" />
               )}
