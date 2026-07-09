@@ -1795,4 +1795,97 @@ html[data-theme="light"] [data-feed-nav] [data-feed-tab-btn][data-active="true"]
   84%, 100%{ opacity: 0; }
 }
 
+/* ==========================================================================
+ * Light theme — extra coverage for surfaces that still shipped dark in v1.
+ * Applies to Music (radio carousel cards), Assistant (dropdowns, buttons,
+ * chat bubbles), Leaderboard and Command Centre child components.
+ * ========================================================================== */
+
+/* Translucent black surfaces (bg-black/30, bg-black/40, bg-black/50, ...)
+   are used all over "liquid glass" cards. On paper they become dark
+   rectangles with remapped ink text on top → invisible. Remap them to a
+   subtle black wash so the card is legible. Keep chip/button surfaces,
+   login modal, video controls and country-block drawer opted out. */
+html[data-theme="light"] [class*="bg-black\/"]:not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *):not([data-country-block-drawer]):not([data-country-block-drawer] *) {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html[data-theme="light"] [class*="hover\:bg-black\/"]:hover:not(button):not([role="button"]):not([data-keep-dark]) {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Slate scale mirror the zinc remap so components using text-slate-* stay
+   legible on paper. */
+html[data-theme="light"] .text-slate-50,
+html[data-theme="light"] .text-slate-100,
+html[data-theme="light"] .text-slate-200,
+html[data-theme="light"] .text-slate-300 {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] .text-slate-400,
+html[data-theme="light"] .text-slate-500 {
+  color: var(--ink-muted) !important;
+}
+
+/* Translucent white text (text-white/60, /70, /80, /90) used inside dark
+   glass cards. Once the card wash flips to paper, the text needs to flip
+   to ink so it doesn't disappear. Skip surfaces that legitimately stay
+   dark (buttons/chips, login modal, video controls, kept-dark opt-outs). */
+html[data-theme="light"] :not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *) > .text-white\/40,
+html[data-theme="light"] :not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *) > .text-white\/50,
+html[data-theme="light"] :not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *) > .text-white\/60,
+html[data-theme="light"] :not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *) > .text-white\/70,
+html[data-theme="light"] :not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *) > .text-white\/80,
+html[data-theme="light"] :not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *) > .text-white\/90 {
+  color: var(--ink-muted) !important;
+}
+
+/* Assistant page: neutralise the heavy black drop-shadows used on chat
+   bubbles / send buttons so the surface reads as light. Also flip the
+   ultra-translucent white washes (bg-white/[0.03]/[0.05]/[0.08]) to a
+   soft ink wash and keep the model-picker dropdown legible on paper. */
+html[data-theme="light"] [data-assistant-page] [class*="shadow-\["] {
+  box-shadow: none !important;
+}
+html[data-theme="light"] [data-assistant-page] .bg-white\/\[0\.03\],
+html[data-theme="light"] [data-assistant-page] .bg-white\/\[0\.05\],
+html[data-theme="light"] [data-assistant-page] .bg-white\/\[0\.08\],
+html[data-theme="light"] [data-assistant-page] .bg-white\/5,
+html[data-theme="light"] [data-assistant-page] .bg-white\/10,
+html[data-theme="light"] [data-assistant-page] .bg-white\/20 {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-theme="light"] [data-assistant-page] .border-white\/\[0\.08\],
+html[data-theme="light"] [data-assistant-page] .border-white\/\[0\.12\],
+html[data-theme="light"] [data-assistant-page] .border-white\/10,
+html[data-theme="light"] [data-assistant-page] .border-white\/20 {
+  border-color: var(--hairline-strong) !important;
+}
+html[data-theme="light"] [data-assistant-page] .text-white,
+html[data-theme="light"] [data-assistant-page] .text-white\/60,
+html[data-theme="light"] [data-assistant-page] .text-white\/70,
+html[data-theme="light"] [data-assistant-page] .text-white\/80 {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-assistant-page] .text-white\/25,
+html[data-theme="light"] [data-assistant-page] .text-white\/30,
+html[data-theme="light"] [data-assistant-page] .text-white\/40,
+html[data-theme="light"] [data-assistant-page] .text-white\/50 {
+  color: var(--ink-muted) !important;
+}
+/* Model-picker / dropdown panels on the assistant use raw bg-black/95 —
+   render them as opaque paper with a hairline instead. */
+html[data-theme="light"] [data-assistant-page] .bg-black\/95,
+html[data-theme="light"] [data-assistant-page] .bg-black\/90,
+html[data-theme="light"] [data-assistant-page] .bg-black\/80,
+html[data-theme="light"] [data-assistant-page] .bg-black\/70,
+html[data-theme="light"] [data-assistant-page] .bg-black\/60 {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline-strong) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+
 

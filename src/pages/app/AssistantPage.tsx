@@ -1858,6 +1858,7 @@ export default function AssistantPage() {
 
   return (
     <div 
+      data-assistant-page
       className="flex flex-col h-full lg:h-screen relative overflow-hidden"
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
