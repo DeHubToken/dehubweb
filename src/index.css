@@ -1051,6 +1051,13 @@ html[data-theme="minimal"] [data-side-panel] .tab-hover-bg {
   background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.08), transparent) !important;
 }
 
+/* Only show the horizontal separator between the two right-panel bento cards
+   for the flat light and minimal themes; other themes render the cards as
+   glass bentos so the line is redundant. */
+html:not([data-theme="light"]):not([data-theme="minimal"]) [data-right-sidebar-separator] {
+  display: none !important;
+}
+
 
 
 
