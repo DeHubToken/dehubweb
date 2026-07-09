@@ -183,16 +183,13 @@ function RadioCarousel({ stations, onSeeAll }: { stations: RadioStation[]; onSee
   return (
     <div>
       <SectionHeader icon={Radio} title="Radio Stations" onSeeAll={onSeeAll} />
-      <div className="relative">
-        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black to-transparent pointer-events-none z-10" />
-        <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
-          {stations.slice(0, 10).map((station) => (
-            <div key={station.stationuuid} className="flex-shrink-0 w-[280px]">
-              <RadioStationCard station={station} />
-            </div>
-          ))}
-        </SwipeableCarousel>
-      </div>
+      <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
+        {stations.slice(0, 10).map((station) => (
+          <div key={station.stationuuid} className="flex-shrink-0 w-[280px]">
+            <RadioStationCard station={station} />
+          </div>
+        ))}
+      </SwipeableCarousel>
     </div>
   );
 }
