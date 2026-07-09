@@ -759,6 +759,13 @@ html[data-theme="cosmic"] #app-root > div > main {
   background-color: transparent !important;
 }
 
+/* Hazy Nights theme — let the global HazyNightsBackground canvas show through. */
+html[data-theme="hazy"] body,
+html[data-theme="hazy"] #app-root,
+html[data-theme="hazy"] #app-root > div > main {
+  background-color: transparent !important;
+}
+
 /* Equal spacing around feed divider lines: the space between the divider and the
    post above it (bottom padding) should match the space between the divider and
    the post below it (gap + top padding of the next item). */
