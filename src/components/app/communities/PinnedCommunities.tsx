@@ -95,7 +95,7 @@ function PinnedCommunityCard({ community, onClick, isOwnProfile, onManagePins }:
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-white truncate">{community.name}</p>
           {community.description && (
-            <p className="text-xs truncate mt-0.5 text-primary-foreground">{community.description}</p>
+            <p className="text-xs truncate mt-0.5 text-black dark:text-white">{community.description}</p>
           )}
           <div className="flex items-center gap-1.5 mt-1">
             <Users className="w-3 h-3 text-zinc-500" />
