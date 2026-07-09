@@ -230,6 +230,7 @@ export function PostModal({ isOpen, onClose, initialFiles, onFilesProcessed, ini
         <DrawerContent 
           glass 
           hideHandle 
+          data-post-modal
           className={cn(
             "max-h-[90vh] max-h-[90dvh]",
             state.isCameraModalOpen && "invisible pointer-events-none"

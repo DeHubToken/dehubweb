@@ -1344,6 +1344,45 @@ html[data-theme="light"] [role="button"] .lucide-chevrons-up-down {
   color: var(--ink) !important;
 }
 
+/* Post modal composer: white text and translucent surfaces become invisible on
+   the light paper background. Force all text, placeholders, caret and toggle
+   track surfaces to ink so the composer stays readable. */
+html[data-theme="light"] [data-post-modal] .text-white,
+html[data-theme="light"] [data-post-modal] .text-white\/50,
+html[data-theme="light"] [data-post-modal] .text-white\/70,
+html[data-theme="light"] [data-post-modal] .text-white\/80,
+html[data-theme="light"] [data-post-modal] .hover\:text-white:hover,
+html[data-theme="light"] [data-post-modal] .text-zinc-400,
+html[data-theme="light"] [data-post-modal] .text-zinc-500 {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-post-modal] .placeholder\:text-white\/50::placeholder,
+html[data-theme="light"] [data-post-modal] .placeholder\:text-white\/70::placeholder,
+html[data-theme="light"] [data-post-modal] .sm\:placeholder\:text-white\/70::placeholder {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-post-modal] .empty\:before\:text-white\/50:empty::before,
+html[data-theme="light"] [data-post-modal] .empty\:before\:text-white\/70:empty::before,
+html[data-theme="light"] [data-post-modal] .sm\:empty\:before\:text-white\/70:empty::before {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-post-modal] .caret-white,
+html[data-theme="light"] [data-post-modal] [style*="caret-color: white"] {
+  caret-color: var(--ink) !important;
+}
+html[data-theme="light"] [data-post-modal] .bg-white\/10,
+html[data-theme="light"] [data-post-modal] .bg-white\/20,
+html[data-theme="light"] [data-post-modal] .bg-white\/30,
+html[data-theme="light"] [data-post-modal] .bg-white\/50,
+html[data-theme="light"] [data-post-modal] .bg-white\/80 {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
+html[data-theme="light"] [data-post-modal] .border-white\/10,
+html[data-theme="light"] [data-post-modal] .border-white\/20,
+html[data-theme="light"] [data-post-modal] .border-white\/30 {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+
 /* ==========================================================================
  * Light-mode carousel / gradient fades: black or zinc-9xx tailwind gradient
  * stops remap to the paper colour so overlays match the background/texture.
