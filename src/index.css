@@ -1297,6 +1297,24 @@ html[data-theme="light"] [data-profile-tabs] [data-glass-indicator] {
   display: none !important;
 }
 
+/* Broad remap for translucent white text (text-white/70, /60, /50 etc.) which
+   otherwise stays white and vanishes on paper. Falls back to ink with alpha. */
+html[data-theme="light"] [class*="text-white\/"] {
+  color: rgba(26, 26, 26, 0.72) !important;
+}
+
+/* Broad remap for translucent white surfaces (bg-white/10, /20, /30 etc.)
+   used as pills, chips, hover washes. Flip to an ink wash so they remain
+   visible on paper. Explicit opt-out via [data-keep-white]. */
+html[data-theme="light"] [class*="bg-white\/"]:not([data-keep-white]):not(.bg-white\/90):not(.bg-white\/80) {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+/* Text inside those translucent chips: force ink so labels/icons read. */
+html[data-theme="light"] [class*="bg-white\/"]:not([data-keep-white]):not(.bg-white\/90):not(.bg-white\/80) .text-white,
+html[data-theme="light"] [class*="bg-white\/"]:not([data-keep-white]):not(.bg-white\/90):not(.bg-white\/80) [class*="text-white\/"] {
+  color: var(--ink) !important;
+}
+
 /* ==========================================================================
  * Mobile top header + drawer: paper background, dark ink icons and logo.
  * ========================================================================== */
