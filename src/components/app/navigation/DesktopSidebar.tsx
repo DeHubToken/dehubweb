@@ -34,8 +34,9 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   
   const { isCollapsed, toggleCollapse } = useSidebarCollapse();
   const { theme } = useAppTheme();
-  const isLightTheme = theme === 'light' || theme === 'minimal';
+  const isLightTheme = theme === 'light';
   const isMinimal = theme === 'minimal';
+  const desktopNavTextColor = isLightTheme ? 'text-black' : 'text-white';
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const { data: unreadCount } = useUnreadNotificationCount();
   const { data: customUnread } = useCustomUnreadCount();
