@@ -20,6 +20,7 @@ const EXTRA_PERKS = [
   { icon: Crown, label: 'Animated Extra badge', detail: 'Plus gradient username + 3 profile themes' },
   { icon: Palette, label: 'Custom themes', detail: 'Pick from curated themes — soon, build your own with a simple text-based theme builder' },
   { icon: Eye, label: 'Profile insights', detail: 'See who visits your profile and when' },
+  { icon: Heart, label: 'Follower engagement insights', detail: 'See which followers engage with you most and how — likes, reposts, comments, tips' },
   { icon: Lock, label: '10 exclusive sneak peeks / mo', detail: 'Peek into gated content feeds you don\'t hold' },
   { icon: Rocket, label: 'Timeline boost', detail: 'Your posts get seen by more of the right people' },
   { icon: MessageSquare, label: '500 Assistant messages / mo', detail: '10× the free tier' },
