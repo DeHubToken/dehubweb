@@ -2513,6 +2513,7 @@ function GeoBlockingSelector() {
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(true)}
+        data-keep-dark
         className="w-full flex items-center justify-between px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white hover:bg-zinc-700 transition-colors"
       >
         <div className="flex items-center gap-2">
