@@ -1049,14 +1049,31 @@ html[data-theme="minimal"] [data-feed-nav] [data-glass-indicator] {
 }
 
 html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn] {
-  transition: background-color 120ms ease;
+  transition: color 120ms ease;
+  background-color: transparent !important;
+  position: relative;
+  border-radius: 0 !important;
+  color: rgb(161 161 170); /* zinc-400 */
 }
 
 html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn]:hover {
-  background-color: rgb(39 39 42 / 0.6); /* zinc-800/60 */
+  background-color: transparent !important;
+  color: #fff;
 }
 
 html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn][data-active="true"] {
-  background-color: rgb(39 39 42); /* zinc-800 */
+  background-color: transparent !important;
   color: #fff;
 }
+
+html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn][data-active="true"]::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  height: 1px;
+  background-color: #fff;
+  pointer-events: none;
+}
+
