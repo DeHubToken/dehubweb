@@ -231,7 +231,6 @@ export default function SettingsPage() {
                     settingsTabPositions.current[tab.value] = el;
                   }}
                   onClick={() => setActiveTab(tab.value)}
-                  data-keep-dark={activeTab === tab.value ? '' : undefined}
                   className={`relative z-40 p-[11px] sm:p-3 rounded-xl transition-colors ${
                     activeTab === tab.value
                       ? 'text-white'
@@ -1738,10 +1737,12 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
                       toast.info(t('settings.comingSoon', 'Coming soon'));
                     }
                   }}
+                  data-theme-option
+                  data-active={theme === option.value ? 'true' : 'false'}
                   className={`relative flex flex-col items-center gap-2 p-4 rounded-xl transition-colors flex-shrink-0 min-w-[100px] ${
                     option.available
                       ? theme === option.value
-                        ? 'bg-zinc-800 border-2 border-white'
+                        ? 'bg-zinc-800/50 border-2 border-white'
                         : 'bg-zinc-800/50 border-2 border-transparent hover:bg-zinc-800'
                       : 'bg-zinc-800/30 border-2 border-transparent opacity-40 cursor-not-allowed'
                   }`}
