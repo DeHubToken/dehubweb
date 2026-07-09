@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, Crown, Sparkles, Users, Zap, Shield, PlayCircle, ImageIcon, Video, MessageSquare, Palette, Eye, Lock, Rocket, Infinity as InfinityIcon } from 'lucide-react';
+import { Check, Crown, Sparkles, Users, Zap, Shield, PlayCircle, ImageIcon, Video, MessageSquare, Palette, Eye, Lock, Rocket, Heart, Infinity as InfinityIcon } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import {
   Accordion,
