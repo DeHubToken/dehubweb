@@ -260,20 +260,22 @@ export function AppLayout({ children }: AppLayoutProps) {
     <SidebarCollapseProvider>
       <AutoplayProvider>
         <AnimationsProvider>
-          <PiPProvider>
-            <ChartPiPProvider>
-              <RadioPlayerProvider>
-                <CoinPlacementProvider>
-                  <GlobalDropZoneProvider>
-                    <AppLayoutContent>{children}</AppLayoutContent>
-                    <FloatingPiPOverlay />
-                    <FloatingChartPiPOverlay />
-                    <UserFeedbackSurvey />
-                  </GlobalDropZoneProvider>
-                </CoinPlacementProvider>
-              </RadioPlayerProvider>
-            </ChartPiPProvider>
-          </PiPProvider>
+          <ShortsEnabledProvider>
+            <PiPProvider>
+              <ChartPiPProvider>
+                <RadioPlayerProvider>
+                  <CoinPlacementProvider>
+                    <GlobalDropZoneProvider>
+                      <AppLayoutContent>{children}</AppLayoutContent>
+                      <FloatingPiPOverlay />
+                      <FloatingChartPiPOverlay />
+                      <UserFeedbackSurvey />
+                    </GlobalDropZoneProvider>
+                  </CoinPlacementProvider>
+                </RadioPlayerProvider>
+              </ChartPiPProvider>
+            </PiPProvider>
+          </ShortsEnabledProvider>
         </AnimationsProvider>
       </AutoplayProvider>
     </SidebarCollapseProvider>
