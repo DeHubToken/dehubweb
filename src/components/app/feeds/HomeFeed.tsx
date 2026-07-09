@@ -103,8 +103,19 @@ interface HomeFeedProps {
   showFilters?: boolean;
   /** Optional post ID to pin at the top of the feed */
   pinnedPostId?: string;
-  /** DOM node to render the filter panel into; when omitted, the panel renders in-flow */
-  filtersPortalRef?: React.RefObject<HTMLElement | null>;
+  /** DOM node or ref to render the filter panel into; when omitted, the panel renders in-flow */
+  filtersPortalRef?: React.RefObject<HTMLElement | null> | HTMLElement | null;
+}
+
+// ============================================================================
+// HELPERS
+// ============================================================================
+
+/** Resolve a portal target prop that may be a ref object or a DOM node. */
+function resolvePortalTarget(target?: React.RefObject<HTMLElement | null> | HTMLElement | null): HTMLElement | null {
+  if (!target) return null;
+  if (typeof target === 'object' && 'current' in target) return target.current;
+  return target;
 }
 
 // ============================================================================
