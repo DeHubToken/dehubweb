@@ -1445,14 +1445,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className={cn("overflow-y-clip overflow-x-visible", filtersPortalRef?.current && "mt-2")}
+            className={cn("overflow-y-clip overflow-x-visible", portalTarget && "mt-2")}
           >
             <div
               ref={bentoRef}
               data-no-swipe
               className={cn(
                 "rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-2 sm:px-3 py-3 space-y-4",
-                filtersPortalRef?.current && "max-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-visible scrollbar-hide"
+                portalTarget && "max-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-visible scrollbar-hide"
               )}
             >
               <SortFilterSection
