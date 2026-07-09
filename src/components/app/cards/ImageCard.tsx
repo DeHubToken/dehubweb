@@ -86,11 +86,13 @@ function ImageCarousel({
   onImageClick,
   onIndexChange,
   aboveFold = false,
+  postId,
 }: {
   images: string[];
   onImageClick: (index: number) => void;
   onIndexChange?: (index: number) => void;
   aboveFold?: boolean;
+  postId?: string;
 }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
   const [currentIndex, setCurrentIndex] = useState(0);
