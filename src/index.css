@@ -766,6 +766,13 @@ html[data-theme="hazy"] #app-root > div > main {
   background-color: transparent !important;
 }
 
+/* Swarms theme — let the global SwarmsBackground canvas show through. */
+html[data-theme="swarms"] body,
+html[data-theme="swarms"] #app-root,
+html[data-theme="swarms"] #app-root > div > main {
+  background-color: transparent !important;
+}
+
 /* Equal spacing around feed divider lines: the space between the divider and the
    post above it (bottom padding) should match the space between the divider and
    the post below it (gap + top padding of the next item). */
