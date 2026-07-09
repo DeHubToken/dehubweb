@@ -13,12 +13,15 @@ import { X, ChevronLeft, ChevronRight, Languages } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ImageTranslationSheet } from './ImageTranslationSheet';
 import { useImageTranslation } from '@/hooks/use-image-translation';
+import { useDoubleTapLike } from '@/hooks/use-double-tap-like';
 
 interface FullscreenImageViewerProps {
   images: string[];
   initialIndex: number;
   isOpen: boolean;
   onClose: () => void;
+  /** Post ID — enables double-tap-to-like on the fullscreen image */
+  postId?: string;
 }
 
 const SWIPE_DOWN_THRESHOLD = 100;
@@ -27,7 +30,8 @@ export function FullscreenImageViewer({
   images, 
   initialIndex, 
   isOpen, 
-  onClose 
+  onClose,
+  postId,
 }: FullscreenImageViewerProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: false, 
