@@ -54,6 +54,7 @@ import {
   Terminal,
   Skull,
   Orbit,
+  CloudMoon,
   Minus,
   Ban,
   Bot,
