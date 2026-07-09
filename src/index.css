@@ -1195,7 +1195,13 @@ html[data-theme="light"] .bg-white\/80:not([data-keep-white]) {
 }
 html[data-theme="light"] .bg-white:not([data-keep-white]) .text-black,
 html[data-theme="light"] .bg-white:not([data-keep-white]) .text-zinc-900,
-html[data-theme="light"] .bg-white:not([data-keep-white]) .text-zinc-950 {
+html[data-theme="light"] .bg-white:not([data-keep-white]) .text-zinc-950,
+html[data-theme="light"] .bg-white\/90:not([data-keep-white]) .text-black,
+html[data-theme="light"] .bg-white\/90:not([data-keep-white]) .text-zinc-900,
+html[data-theme="light"] .bg-white\/90:not([data-keep-white]) .text-zinc-950,
+html[data-theme="light"] .bg-white\/80:not([data-keep-white]) .text-black,
+html[data-theme="light"] .bg-white\/80:not([data-keep-white]) .text-zinc-900,
+html[data-theme="light"] .bg-white\/80:not([data-keep-white]) .text-zinc-950 {
   color: #ffffff !important;
 }
 
