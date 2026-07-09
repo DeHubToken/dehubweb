@@ -59,6 +59,7 @@ export const GlassIndicator = forwardRef<HTMLDivElement, GlassIndicatorProps>(
   return (
     <div
       ref={ref}
+      data-glass-indicator
       className={`${GLASS_CLASSES} ${className ?? ''}`}
       style={{
         borderRadius,
