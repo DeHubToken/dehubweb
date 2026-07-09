@@ -1200,6 +1200,13 @@ html[data-theme="light"] .text-zinc-600 {
   color: #707070 !important;
 }
 
+/* Active filter chip close icon: white/40 is invisible on light paper; use ink
+   so the ✕ is readable next to the chip label. */
+html[data-theme="light"] [data-filter-chip] .text-white\/40,
+html[data-theme="light"] [data-filter-chip] .hover\:text-white:hover {
+  color: var(--ink) !important;
+}
+
 /* Restore white text only on ACTUAL dark button chips (button / [role=button]
    with a dark zinc bg) or explicit opt-in via [data-keep-dark]. Inputs and
    textareas that share the same bg-zinc-800 utility get remapped to paper
