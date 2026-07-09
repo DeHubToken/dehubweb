@@ -1166,6 +1166,18 @@ html[data-theme="light"] [role="button"].bg-zinc-600.text-white {
   color: #ffffff !important;
 }
 
+/* Icons (chevrons, arrows, glyphs) inside those dark button chips must stay
+   white too — otherwise .text-zinc-400/500 remaps to dark ink and disappears
+   against the black chip background. */
+html[data-theme="light"] button.bg-zinc-800 svg,
+html[data-theme="light"] button.bg-zinc-700 svg,
+html[data-theme="light"] button.bg-zinc-600 svg,
+html[data-theme="light"] [role="button"].bg-zinc-800 svg,
+html[data-theme="light"] [role="button"].bg-zinc-700 svg,
+html[data-theme="light"] [role="button"].bg-zinc-600 svg {
+  color: #ffffff !important;
+}
+
 /* Root backgrounds: remap black/zinc-9xx surfaces to paper.
    Genuine dark button chips opt-out with data-keep-dark. */
 html[data-theme="light"] .bg-black:not([data-keep-dark]),
