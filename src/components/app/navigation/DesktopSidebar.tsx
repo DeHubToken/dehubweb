@@ -80,6 +80,15 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     return () => el.removeEventListener('scroll', handleScroll);
   }, [updateIndicator]);
 
+  // Preload both logo variants so collapse/expand swaps are instant
+  useEffect(() => {
+    [dehubLogoCompact, dehubMarkBlack.url, '/dehub-header-logo.png'].forEach((src) => {
+      const img = new Image();
+      img.decoding = 'async';
+      img.src = src;
+    });
+  }, []);
+
   // Get balance from user or default to 0
   const coinBalance = 0; // TODO: Get from user wallet
 
