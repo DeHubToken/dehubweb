@@ -327,6 +327,7 @@ const App = () => (
                 <OptimisticPostsProvider>
                   <TooltipProvider>
                     <CosmicBackground />
+                    <HazyNightsBackground />
                     <WinterSnow />
 
                     <AppContent />
