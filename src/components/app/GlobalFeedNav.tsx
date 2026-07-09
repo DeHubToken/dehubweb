@@ -239,6 +239,8 @@ export function GlobalFeedNav() {
                 <button
                   key={tab.value}
                   data-feed-tab={tab.value}
+                  data-feed-tab-btn
+                  data-active={isActive ? 'true' : undefined}
                   ref={(el) => {
                     setRef(tab.value)(el);
                     tabButtonPositions.current[tab.value] = el;
