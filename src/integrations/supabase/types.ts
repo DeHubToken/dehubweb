@@ -2638,6 +2638,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_display_preferences: {
+        Row: {
+          created_at: string
+          shorts_enabled: boolean
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          shorts_enabled?: boolean
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          shorts_enabled?: boolean
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       user_feedback_surveys: {
         Row: {
           age_range: string | null
