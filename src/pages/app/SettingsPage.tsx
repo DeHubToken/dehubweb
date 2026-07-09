@@ -1405,7 +1405,7 @@ function PrivacySettings() {
           {/* Message Fee */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Coins className="w-5 h-5 text-zinc-500" />
+              <img src={dehubCoin} alt="DHB" className="w-6 h-6" />
               <div>
                 <p className="text-white font-medium">{t('settings.messageFee', 'Message fee')}</p>
                 <p className="text-zinc-500 text-sm">{t('settings.messageFeeDesc', 'Require a minimum token amount')}</p>
