@@ -1408,7 +1408,7 @@ function PrivacySettings() {
               <Coins className="w-5 h-5 text-zinc-500" />
               <div>
                 <p className="text-white font-medium">{t('settings.messageFee', 'Message fee')}</p>
-                <p className="text-zinc-500 text-sm">{t('settings.messageFeeDesc', 'Require a minimum DHB tip to message you')}</p>
+                <p className="text-zinc-500 text-sm">{t('settings.messageFeeDesc', 'Require a minimum token amount')}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -1428,7 +1428,7 @@ function PrivacySettings() {
                 className="w-24 h-9 rounded-xl bg-zinc-800 border-zinc-700 text-white text-right"
                 disabled={isDmUpdating}
               />
-              <span className="text-zinc-400 text-sm">DHB</span>
+              <span className="text-zinc-400 text-sm">{"\n"}</span>
               {feeInput !== '' && parseFloat(feeInput) !== messageFee && (
                 <Button
                   size="sm"
