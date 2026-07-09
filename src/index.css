@@ -1744,6 +1744,18 @@ html[data-theme="light"] [data-feed-nav] [data-feed-tab-btn][data-active="true"]
   opacity: 1;
 }
 
+/* Shared glass toggle active labels/icons need to sit black on the light
+   glass indicator. Covers leaderboards, command centre filters, radio genre
+   pills, and other GlassFilterRow consumers. */
+html[data-theme="light"] [data-glass-toggle-button][data-active="true"],
+html[data-theme="light"] [data-glass-toggle-button][data-active="true"] * {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-glass-toggle-button][data-active="true"] svg {
+  color: var(--ink) !important;
+  stroke: currentColor !important;
+}
+
 /* Video first-frame glitch loader */
 @keyframes video-glitch-r {
   0%, 100% { transform: translate(0, 0); }

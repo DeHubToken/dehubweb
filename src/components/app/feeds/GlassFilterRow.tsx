@@ -71,7 +71,7 @@ export function GlassFilterRow<T extends string>({
       {/* Scrollable button row */}
       <div
         ref={scrollRef}
-        className="relative z-20 flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap px-2 py-1"
+        className="relative z-40 flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap px-2 py-1"
         style={{ touchAction: 'pan-x' }}
       >
         {items.map((item) => {
@@ -79,6 +79,8 @@ export function GlassFilterRow<T extends string>({
           return (
             <button
               key={item.key}
+              data-glass-toggle-button
+              data-active={isActive ? 'true' : undefined}
               ref={(el) => { btnRefs.current[item.key] = el; }}
               onClick={() => onSelect(item.key)}
               className={cn(
