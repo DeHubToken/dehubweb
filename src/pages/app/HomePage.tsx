@@ -788,6 +788,8 @@ export default function HomePage() {
                 return (
                   <button
                     key={tab.value}
+                    data-feed-tab-btn
+                    data-active={isActive ? 'true' : undefined}
                     ref={(el) => {
                       setHomeTabRef(tab.value)(el);
                       homeTabButtonPositions.current[tab.value] = el;
