@@ -1466,7 +1466,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
         {/* Top-aligned video controls (volume, PiP & fullscreen) - liquid glass */}
         {showControls && (
-          <div className="absolute top-2 right-2 flex items-center gap-2 z-10">
+          <div data-video-controls className="absolute top-2 right-2 flex items-center gap-2 z-10">
+
             <button
               className="h-8 w-[52px] bg-black/40 backdrop-blur-[24px] saturate-[180%] text-white rounded-xl flex items-center justify-center border border-white/10 text-xs font-medium"
               onClick={cyclePlaybackRate}
@@ -1517,7 +1518,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
 
         {/* Progress bar at bottom */}
         {duration > 0 && showControls && (
-          <div className="absolute bottom-0 left-0 right-0 px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent z-10">
+          <div data-video-controls className="absolute bottom-0 left-0 right-0 px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent z-10">
+
             <div className="flex items-center gap-2">
               <button
                 onClick={(e) => { e.stopPropagation(); handlePlayClick(); }}
