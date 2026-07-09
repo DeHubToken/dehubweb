@@ -1807,6 +1807,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
         <div className="space-y-4">
           <AutoPlayToggle />
           <ShowAnimationsToggle />
+          <ShortsEnabledToggle />
         </div>
       </div>
 
