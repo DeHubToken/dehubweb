@@ -200,19 +200,20 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           "flex-1 min-h-screen pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black pt-11 relative"
         )}>
           <GlobalFeedNavProvider>
-            {/* Global feed nav — only shown on the home feed. Other pages
-                (Explore, Bookmarks, etc.) have their own headers. */}
+            {/* Global feed nav — only shown on the home feed in collapsed mode.
+                Other pages have their own headers, so we unmount entirely to
+                avoid any flash/animation when navigating away. */}
             {(() => {
               const isHome = location.pathname === '/app' || location.pathname === '/app/';
+              if (!isHome) return null;
               return (
                 <div
                   className={cn(
                     'hidden lg:block motion-reduce:transition-none sticky top-0 z-50',
-                    isCollapsed && isHome
+                    isCollapsed
                       ? 'h-12 opacity-100 transition-[height,opacity] duration-500 ease-in-out'
-                      : 'h-0 opacity-0 pointer-events-none transition-[height] duration-500 ease-in-out transition-opacity duration-150'
+                      : 'h-0 opacity-0 pointer-events-none'
                   )}
-                  style={!(isCollapsed && isHome) ? { transitionProperty: 'height, opacity', transitionDuration: '500ms, 150ms' } : undefined}
                 >
                   <GlobalFeedNav />
                 </div>
