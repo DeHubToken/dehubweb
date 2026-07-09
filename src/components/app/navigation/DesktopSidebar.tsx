@@ -180,11 +180,32 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         </div>
 
         {/* Navigation Bento - scrollable */}
-        <motion.div data-side-panel layoutRoot className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0">
-          <div className={cn(
-            "p-1 space-y-2 flex flex-col items-center overflow-y-auto overflow-x-hidden scrollbar-invisible h-full",
-            !isCollapsed && "lg:p-2.5 lg:space-y-[2px] lg:items-stretch"
-          )}>
+        <motion.div ref={sidePanelRef} data-side-panel layoutRoot className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0">
+          {/* Active glass overlay indicator - sits above scroll container so shadow is never clipped */}
+          {indicatorRect.ready && (
+            <motion.div
+              data-sidebar-active-indicator
+              className={cn(
+                "pointer-events-none absolute z-30 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]",
+                isCollapsed ? 'rounded-xl' : 'rounded-2xl'
+              )}
+              initial={false}
+              animate={{
+                x: indicatorRect.x,
+                y: indicatorRect.y,
+                width: indicatorRect.width,
+                height: indicatorRect.height,
+              }}
+              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+            />
+          )}
+          <div
+            ref={scrollRef}
+            className={cn(
+              "p-1 space-y-2 flex flex-col items-center overflow-y-auto overflow-x-hidden scrollbar-invisible h-full",
+              !isCollapsed && "lg:p-2.5 lg:space-y-[2px] lg:items-stretch"
+            )}
+          >
           {navItemsWithoutAI.map((item) => {
             const isActive = !item.external && !item.action && location.pathname.startsWith(item.path);
             const isProfileItem = item.label === 'Profile';
@@ -209,9 +230,11 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   avatarFallback={isProfileItem && isAuthenticated ? displayName.charAt(0).toUpperCase() : undefined}
                   notificationCount={isNotificationsItem ? totalNotifUnread : isCommunitiesItem ? communityActivityUnread : isMessagesItem ? dmUnread : undefined}
                   layoutId={isCollapsed ? 'sidebar-nav-collapsed' : 'sidebar-nav-expanded'}
+                  registerActiveRef={isActive ? setActiveItemEl : undefined}
                 />
                 {isAssistantAnchor && (
                   <NavLink
+                    ref={isAIActive ? setActiveItemEl : undefined}
                     to="/app/assistant"
                     className={cn(
                       'relative flex items-center rounded-2xl text-left transition-colors text-[15px] text-white',
@@ -219,14 +242,6 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                       isAIActive ? 'font-semibold' : 'hover:bg-zinc-800/50'
                     )}
                   >
-                    {isAIActive && (
-                      <motion.div
-                        key={isCollapsed ? 'sidebar-nav-collapsed' : 'sidebar-nav-expanded'}
-                        layoutId={isCollapsed ? 'sidebar-nav-collapsed' : 'sidebar-nav-expanded'}
-                        className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
-                        transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                      />
-                    )}
                     <div className={cn(
                       "relative z-10 w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
                       isAIActive ? "bg-transparent" : isCollapsed ? "bg-transparent" : "lg:bg-zinc-800 bg-transparent"
