@@ -297,6 +297,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const { t } = useI18n();
   const loaderRef = useRef<HTMLDivElement>(null);
   const bentoRef = useRef<HTMLDivElement>(null);
+  const portalTarget = resolvePortalTarget(filtersPortalRef);
   const { isCollapsed } = useSidebarCollapse();
   const { shortsEnabled } = useShortsEnabled();
   const queryClient = useQueryClient();
