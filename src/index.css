@@ -1197,37 +1197,60 @@ html[data-theme="light"] [data-side-panel] > * {
 /* Strip grey/zinc shading inside side panels, map to paper. */
 html[data-theme="light"] [data-side-panel] :where(
   [class*="bg-zinc-900"],
+  [class*="bg-zinc-800"],
+  [class*="bg-zinc-700"],
   [class*="bg-zinc-950"],
   [class*="from-zinc-900"],
+  [class*="from-zinc-800"],
+  [class*="from-zinc-700"],
   [class*="from-zinc-950"],
   [class*="to-zinc-900"],
+  [class*="to-zinc-800"],
+  [class*="to-zinc-700"],
   [class*="to-zinc-950"],
   [class*="via-zinc-900"],
+  [class*="via-zinc-800"],
+  [class*="via-zinc-700"],
   [class*="via-zinc-950"]
 ),
 html[data-theme="light"] [data-side-panel] :where(
   [class*="bg-zinc-900"],
+  [class*="bg-zinc-800"],
+  [class*="bg-zinc-700"],
   [class*="bg-zinc-950"],
   [class*="from-zinc-900"],
+  [class*="from-zinc-800"],
+  [class*="from-zinc-700"],
   [class*="from-zinc-950"],
   [class*="to-zinc-900"],
+  [class*="to-zinc-800"],
+  [class*="to-zinc-700"],
   [class*="to-zinc-950"],
   [class*="via-zinc-900"],
+  [class*="via-zinc-800"],
+  [class*="via-zinc-700"],
   [class*="via-zinc-950"]
 )::before,
 html[data-theme="light"] [data-side-panel] :where(
   [class*="bg-zinc-900"],
+  [class*="bg-zinc-800"],
+  [class*="bg-zinc-700"],
   [class*="bg-zinc-950"],
   [class*="from-zinc-900"],
+  [class*="from-zinc-800"],
+  [class*="from-zinc-700"],
   [class*="from-zinc-950"],
   [class*="to-zinc-900"],
+  [class*="to-zinc-800"],
+  [class*="to-zinc-700"],
   [class*="to-zinc-950"],
   [class*="via-zinc-900"],
+  [class*="via-zinc-800"],
+  [class*="via-zinc-700"],
   [class*="via-zinc-950"]
 )::after {
   background-color: var(--paper) !important;
-  background-image: url('./assets/textures/paper-texture.png') !important;
-  background-size: 256px 256px !important;
+  background-image: none !important;
 }
 
 /* Page-level bento squares become transparent cards with a thin dark border. */
