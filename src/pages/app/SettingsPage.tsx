@@ -1677,6 +1677,24 @@ function ShowAnimationsToggle() {
   );
 }
 
+function ShortsEnabledToggle() {
+  const { t } = useTranslation();
+  const { shortsEnabled, setShortsEnabled } = useShortsEnabled();
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <Film className="w-5 h-5 text-zinc-500" />
+        <div>
+          <p className="text-white font-medium">{t('settings.shortsEnabled', 'Shorts')}</p>
+          <p className="text-zinc-500 text-sm">
+            {t('settings.shortsEnabledDesc', 'Show the Shorts feed tab and Shorts carousels on Home.')}
+          </p>
+        </div>
+      </div>
+      <Switch checked={shortsEnabled} onCheckedChange={setShortsEnabled} />
+    </div>
+  );
+
 function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: string) => void }) {
   const { t } = useTranslation();
   const { isCollapsed, setCollapsed } = useSidebarCollapse();
