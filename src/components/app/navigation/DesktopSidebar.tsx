@@ -34,6 +34,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   
   const { isCollapsed, toggleCollapse } = useSidebarCollapse();
   const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light' || theme === 'minimal';
   const isMinimal = theme === 'minimal';
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
   const { data: unreadCount } = useUnreadNotificationCount();
@@ -135,7 +136,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         isCollapsed ? "w-[60px] pt-[16.5px]" : "w-[60px] pt-[2px] lg:w-[231px] lg:px-[18px] lg:items-stretch lg:pt-0 lg:-mt-[3px]"
       )}>
         {/* Logo & Coin Balance */}
-        <div className={cn("flex items-center justify-between w-full", isCollapsed ? "mb-[14px]" : "mb-[14px] lg:mb-[15px]")}>
+        <div className={cn("relative z-10 flex items-center justify-between w-full", isCollapsed ? "mb-[14px]" : "mb-[14px] lg:mb-[15px]")}>
           <div className={cn("flex items-center", isCollapsed ? "mt-[0.5px] mx-auto" : "mt-[9px] mx-auto lg:mx-0")}>
             <button
               onClick={toggleCollapse}
@@ -150,7 +151,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             <button onClick={handleLogoClick} className="block cursor-pointer">
               {isCollapsed ? (
                 <img
-                  src={isMinimal ? dehubMarkBlack.url : dehubLogoCompact}
+                  src={isLightTheme ? dehubMarkBlack.url : dehubLogoCompact}
                   alt="dehub"
                   className="h-[22px] w-auto object-contain"
                   decoding="async"
