@@ -1,3 +1,4 @@
+import { useRef, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
@@ -29,6 +30,8 @@ interface SidebarNavItemProps {
   notificationCount?: number;
   /** Layout group for smooth sliding indicator */
   layoutId?: string;
+  /** Optional callback to register the active desktop nav item DOM node for an overlay indicator */
+  registerActiveRef?: (el: HTMLElement | null) => void;
 }
 
 export function SidebarNavItem({ 
@@ -45,10 +48,20 @@ export function SidebarNavItem({
   avatarFallback,
   notificationCount,
   layoutId = 'sidebar-nav',
+  registerActiveRef,
 }: SidebarNavItemProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const translatedLabel = t(NAV_LABEL_KEYS[item.label] || item.label);
+  const itemRef = useRef<HTMLAnchorElement | HTMLButtonElement | null>(null);
+  const isDesktop = variant === 'desktop';
+
+  useEffect(() => {
+    if (isDesktop && isActive && registerActiveRef) {
+      registerActiveRef(itemRef.current);
+      return () => registerActiveRef(null);
+    }
+  }, [isDesktop, isActive, registerActiveRef]);
   
   const handleClick = (e: React.MouseEvent) => {
     onClick?.(e);
@@ -62,7 +75,6 @@ export function SidebarNavItem({
     onNavigate?.();
   };
 
-  const isDesktop = variant === 'desktop';
   const showAvatar = avatarUrl !== undefined;
   
   const isForceCollapsed = forceCollapsed;
@@ -77,7 +89,7 @@ export function SidebarNavItem({
   // Use smaller radius in collapsed mode so 36×36 icons don't look circular
   const indicatorRadius = (collapsed && !isForceCollapsed) ? 'rounded-2xl lg:rounded-2xl' : isForceCollapsed ? 'rounded-xl' : 'rounded-2xl';
   const isCollapsedSquare = isDesktop && (isForceCollapsed || (collapsed));
-  const glassIndicator = isActive && (
+  const glassIndicator = isActive && !isDesktop && (
     <motion.div
       key={layoutId}
       layoutId={layoutId}
@@ -92,6 +104,7 @@ export function SidebarNavItem({
   if (item.external) {
     return (
       <a
+        ref={itemRef as React.Ref<HTMLAnchorElement>}
         href={item.path}
         target="_blank"
         rel="noopener noreferrer"
@@ -123,6 +136,7 @@ export function SidebarNavItem({
   if (item.action) {
     return (
       <button
+        ref={itemRef as React.Ref<HTMLButtonElement>}
         onClick={(e) => {
           onClick?.(e);
           onNavigate?.();
@@ -152,6 +166,7 @@ export function SidebarNavItem({
 
   return (
     <NavLink
+      ref={itemRef as React.Ref<HTMLAnchorElement>}
       to={item.path}
       onClick={handleClick}
       className={cn(
