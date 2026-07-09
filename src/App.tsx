@@ -329,6 +329,7 @@ const App = () => (
                   <TooltipProvider>
                     <CosmicBackground />
                     <HazyNightsBackground />
+                    <SwarmsBackground />
                     <WinterSnow />
 
                     <AppContent />
