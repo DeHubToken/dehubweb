@@ -161,6 +161,7 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
 
                 return (
                   <button
+                    data-tab-btn
                     key={`${cat.name}-${i}`}
                     onClick={() => !isPlaceholder && handleCategoryClick(cat.name)}
                     disabled={isPlaceholder}
