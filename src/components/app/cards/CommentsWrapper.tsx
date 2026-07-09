@@ -67,7 +67,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab }: Com
       <Drawer
         open={open}
         onOpenChange={onOpenChange}
-        modal={true}
+        modal={false}
         dismissible={true}
       >
         <DrawerContent
