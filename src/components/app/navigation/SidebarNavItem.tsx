@@ -120,10 +120,10 @@ export function SidebarNavItem({
         rel="noopener noreferrer"
         onClick={onNavigate}
         className={cn(
-          'relative flex items-center rounded-2xl transition-colors text-[15px]',
+          'relative flex items-center rounded-2xl transition-[font-weight] text-[15px]',
           isDesktop ? desktopTextColor : 'text-white',
           isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
-          !isActive && (variant === 'mobile' ? 'hover:bg-zinc-700/50' : 'hover:bg-zinc-800/50')
+          isDesktop && 'hover:font-semibold'
         )}
       >
         {glassIndicator}
