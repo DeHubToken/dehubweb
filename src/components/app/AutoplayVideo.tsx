@@ -9,6 +9,7 @@
 
 import { useRef, useEffect, useState, memo } from 'react';
 import { cn } from '@/lib/utils';
+import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoader';
 
 interface AutoplayVideoProps {
   src: string;
