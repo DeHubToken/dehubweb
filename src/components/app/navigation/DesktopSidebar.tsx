@@ -210,37 +210,38 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           <button
             type="button"
             className={cn(
-              "cursor-pointer w-full box-border rounded-2xl bg-zinc-900/90 hover:bg-zinc-800/90 transition-colors overflow-hidden shadow-none",
+              "cursor-pointer box-border rounded-2xl bg-zinc-900/90 hover:bg-zinc-800/90 transition-colors overflow-hidden shadow-none flex items-center justify-center",
               isMinimal ? "border border-zinc-700" : "border border-white/30",
-              isConnecting && "opacity-70 pointer-events-none"
+              isConnecting && "opacity-70 pointer-events-none",
+              isCollapsed ? "w-[32px] h-[32px] p-[7px]" : "w-full"
             )}
             onClick={handlePostClick}
             disabled={isConnecting}
           >
             <div className={cn(
               "flex items-center gap-2 font-semibold text-white justify-center",
-              isCollapsed ? "py-[7px] text-[13.5px]" : "py-[7px] lg:py-3 text-[13.5px]"
+              isCollapsed ? "text-[13.5px]" : "py-[7px] lg:py-3 text-[13.5px]"
             )}>
               {isAuthenticated ? (
-                <>
-                   <PenSquare className="w-[18px] h-[18px] flex-shrink-0" />
-                   <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.create')}</span>
-                </>
+                 <>
+                    <PenSquare className="w-[18px] h-[18px] flex-shrink-0" />
+                    <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.create')}</span>
+                 </>
               ) : isConnecting ? (
-                <>
-                   <span className="w-[18px] h-[18px] border-2 border-white/30 border-t-white rounded-full animate-spin flex-shrink-0" />
-                   <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.connecting')}</span>
-                </>
+                 <>
+                    <span className="w-[18px] h-[18px] border-2 border-white/30 border-t-white rounded-full animate-spin flex-shrink-0" />
+                    <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.connecting')}</span>
+                 </>
               ) : needsSignature ? (
-                <>
-                   <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
-                   <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.signMessage')}</span>
-                </>
+                 <>
+                    <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
+                    <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.signMessage')}</span>
+                 </>
               ) : (
-                <>
-                   <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
-                   <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.login')}</span>
-                </>
+                 <>
+                    <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
+                    <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.login')}</span>
+                 </>
               )}
             </div>
           </button>
