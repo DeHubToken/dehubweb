@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode, type HTMLElement } from 'react';
+import { createContext, useContext, useState, type ReactNode } from 'react';
 
 interface GlobalFeedNavContextValue {
   filtersPortalElement: HTMLElement | null;
