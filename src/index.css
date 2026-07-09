@@ -1837,6 +1837,38 @@ html[data-theme="light"] [data-glass-toggle-button][data-active="true"] svg {
   stroke: currentColor !important;
 }
 
+/* Explore page: inactive category chips, filter toggle, and recent-search
+   buttons currently render as dark grey chips on the light paper background.
+   Make them transparent outlined pills with ink text/icons, matching the
+   leaderboards/bookmarks glass-toggle treatment. */
+html[data-theme="light"] [data-explore-page] button.bg-zinc-800,
+html[data-theme="light"] [data-explore-page] [role="button"].bg-zinc-800,
+html[data-theme="light"] [data-explore-page] .bg-zinc-800 {
+  background-color: transparent !important;
+  color: var(--ink-muted) !important;
+  border: 1px solid var(--hairline) !important;
+}
+html[data-theme="light"] [data-explore-page] button.bg-zinc-800:hover,
+html[data-theme="light"] [data-explore-page] [role="button"].bg-zinc-800:hover,
+html[data-theme="light"] [data-explore-page] .bg-zinc-800:hover,
+html[data-theme="light"] [data-explore-page] .hover\:bg-zinc-700:hover,
+html[data-theme="light"] [data-explore-page] .hover\:bg-zinc-800:hover {
+  background-color: var(--hover-wash) !important;
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-explore-page] button.bg-zinc-800 svg,
+html[data-theme="light"] [data-explore-page] [role="button"].bg-zinc-800 svg,
+html[data-theme="light"] [data-explore-page] .bg-zinc-800 svg {
+  color: var(--ink-muted) !important;
+}
+html[data-theme="light"] [data-explore-page] button.bg-zinc-800:hover svg,
+html[data-theme="light"] [data-explore-page] [role="button"].bg-zinc-800:hover svg,
+html[data-theme="light"] [data-explore-page] .bg-zinc-800:hover svg,
+html[data-theme="light"] [data-explore-page] .hover\:bg-zinc-700:hover svg,
+html[data-theme="light"] [data-explore-page] .hover\:bg-zinc-800:hover svg {
+  color: var(--ink) !important;
+}
+
 /* Video first-frame glitch loader */
 @keyframes video-glitch-r {
   0%, 100% { transform: translate(0, 0); }
