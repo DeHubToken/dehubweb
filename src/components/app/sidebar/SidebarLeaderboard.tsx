@@ -255,6 +255,7 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
       <div className="flex px-4 pt-0 pb-1">
         {PERIODS.map((period) => (
           <button
+            data-tab-btn
             key={period}
             onClick={() => handlePeriodClick(period)}
             className={`flex-1 text-xs font-semibold transition-colors duration-150 text-center py-1 ${
