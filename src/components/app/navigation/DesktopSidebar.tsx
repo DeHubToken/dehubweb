@@ -50,10 +50,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const updateIndicator = useCallback(() => {
     const panel = sidePanelRef.current;
     const active = activeItemEl;
-    if (!panel || !active) {
-      setIndicatorRect(r => ({ ...r, ready: false }));
-      return;
-    }
+    if (!panel || !active) return;
     const panelRect = panel.getBoundingClientRect();
     const activeRect = active.getBoundingClientRect();
     setIndicatorRect({
