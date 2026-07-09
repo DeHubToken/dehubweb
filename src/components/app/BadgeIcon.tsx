@@ -28,6 +28,7 @@ export function BadgeIcon({ badgeBalance, username, src, className = 'w-[9px] h-
     <Tooltip>
       <TooltipTrigger asChild>
         <img
+          data-badge-icon
           src={resolvedUrl}
           alt={resolvedName || 'Badge'}
           width={9}
