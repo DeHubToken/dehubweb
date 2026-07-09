@@ -1158,20 +1158,27 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     if (colCount <= 1) {
       return <div className="space-y-3">{nodes}</div>;
     }
-    // Only add "Your advert here" cards to fill ACTUAL bottom-column gaps left
-    // before a full-width insert (carousel). We estimate per-column shortfall
-    // and add at most one small ad per short column — never stack ads on top
-    // of each other, never take space from content when columns are balanced.
+    // Fill ragged bottom-column gaps with ads sized to the actual shortfall.
+    // Ads pick the shortest column (via multi-column layout) and their size
+    // (sm≈1, md≈2, lg≈3 weight) is chosen to match the remaining gap so we
+    // fully close the empty space without stacking oversized ads.
     const withAds: ReactNode[] = [...nodes];
     if (padEnd && feedItems && feedItems.length >= colCount) {
       const weights = calculateColumnWeights(feedItems, colCount);
       const maxW = Math.max(...weights);
-      // Only fill columns that are meaningfully short (~1 post gap)
-      const GAP_THRESHOLD = 1.2;
-      const shortColumns = weights.filter((w) => maxW - w >= GAP_THRESHOLD).length;
-      const adsToAdd = Math.min(shortColumns, colCount - 1);
-      for (let i = 0; i < adsToAdd; i++) {
-        withAds.push(<AdSlotCard key={`ad-slot-tail-${i}`} variant="sm" />);
+      // Iteratively fill the shortest column until it (roughly) matches maxW
+      let safety = colCount * 2;
+      while (safety-- > 0) {
+        let minIdx = 0;
+        for (let c = 1; c < weights.length; c++) if (weights[c] < weights[minIdx]) minIdx = c;
+        const gap = maxW - weights[minIdx];
+        if (gap < 0.6) break;
+        const variant: 'sm' | 'md' | 'lg' = gap >= 2.5 ? 'lg' : gap >= 1.5 ? 'md' : 'sm';
+        const weight = variant === 'lg' ? 3 : variant === 'md' ? 2 : 1;
+        withAds.push(
+          <AdSlotCard key={`ad-slot-tail-${withAds.length}`} variant={variant} />
+        );
+        weights[minIdx] += weight;
       }
     }
 
