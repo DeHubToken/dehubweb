@@ -219,7 +219,12 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             )}
           >
           {navItemsWithoutAI.map((item) => {
-            const isActive = !item.external && !item.action && location.pathname.startsWith(item.path);
+            const isHomeItem = item.path === '/app';
+            const isActive = !item.external && !item.action && (
+              isHomeItem
+                ? location.pathname === '/app'
+                : location.pathname.startsWith(item.path)
+            );
             const isProfileItem = item.label === 'Profile';
             const isNotificationsItem = item.label === 'Notifications';
             const isCommunitiesItem = item.label === 'Communities';
@@ -232,7 +237,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 <SidebarNavItem
                   item={item}
                   isActive={isActive}
-                  isHome={false}
+                  isHome={isHomeItem}
                   currentPath={location.pathname}
                   variant="desktop"
                   collapsed={true}
