@@ -1066,14 +1066,27 @@ html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn][data-active="true
   color: #fff;
 }
 
-html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn][data-active="true"]::after {
+/* Active tab: top + side lines like a folder tab sticking out */
+html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn][data-active="true"]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 12px;
+  right: 12px;
+  bottom: 0;
+  box-shadow: inset 0 1px 0 0 #fff, inset 1px 0 0 0 #fff, inset -1px 0 0 0 #fff;
+  pointer-events: none;
+}
+
+/* Inactive tabs: thin bottom underline only */
+html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn]:not([data-active="true"])::after {
   content: "";
   position: absolute;
   left: 12px;
   right: 12px;
   bottom: 0;
   height: 1px;
-  background-color: #fff;
+  background-color: rgba(255, 255, 255, 0.2);
   pointer-events: none;
 }
 
