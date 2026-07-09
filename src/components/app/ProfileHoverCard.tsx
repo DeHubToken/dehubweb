@@ -162,6 +162,7 @@ export function ProfileHoverCard({
         side="bottom"
         align="start"
         sideOffset={8}
+        data-profile-hover-card
         className="w-72 rounded-2xl p-0 bg-white/[0.06] backdrop-blur-[28px] backdrop-saturate-150 border border-white/15 shadow-[0_8px_32px_rgba(0,0,0,0.45)]"
       >
         {isLoading ? (
@@ -183,15 +184,20 @@ export function ProfileHoverCard({
                 </Avatar>
               </button>
               {!profile.isOwnProfile && !profile.isFollowing && (
-                <LiquidGlassBubble2
-                  label="Follow"
-                  icon={isFollowLoading ? undefined : <UserPlus className="w-3.5 h-3.5" />}
-                  loading={isFollowLoading}
+                <button
+                  type="button"
                   onClick={handleFollow}
-                  width="auto"
-                  height="28px"
-                  className="[&>div]:!rounded-lg [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent"
-                />
+                  disabled={isFollowLoading}
+                  data-follow-btn
+                  className="inline-flex items-center gap-1.5 px-3 h-7 rounded-lg text-xs font-medium bg-white/10 hover:bg-white/15 text-white border border-white/15 transition-colors disabled:opacity-60"
+                >
+                  {isFollowLoading ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <UserPlus className="w-3.5 h-3.5" />
+                  )}
+                  Follow
+                </button>
               )}
               {!profile.isOwnProfile && profile.isFollowing && (
                 <span className="px-3.5 py-1.5 rounded-xl text-xs font-medium text-white/80 bg-white/5 border border-white/10">
