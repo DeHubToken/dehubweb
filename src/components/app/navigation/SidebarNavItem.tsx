@@ -136,6 +136,7 @@ export function SidebarNavItem({
   if (item.action) {
     return (
       <button
+        ref={itemRef as React.Ref<HTMLButtonElement>}
         onClick={(e) => {
           onClick?.(e);
           onNavigate?.();
