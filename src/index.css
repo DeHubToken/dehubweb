@@ -916,8 +916,9 @@ html[data-theme="minimal"] [data-sidebar-fade] {
   html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] {
     margin-left: calc(-0.75rem - 0.5rem - 1px) !important;
     margin-right: calc(-0.75rem - 0.5rem - 1px) !important;
-    border-radius: 0 !important;
+    width: calc(100% + 2.5rem + 2px) !important;
     max-width: none !important;
+    border-radius: 0 !important;
   }
 
   /* Full-width post separator line in minimal mode on mobile */
@@ -940,9 +941,11 @@ html[data-theme="minimal"] [data-sidebar-fade] {
   html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] {
     margin-left: calc(-0.75rem - 0.75rem - 1px) !important;
     margin-right: calc(-0.75rem - 0.75rem - 1px) !important;
-    border-radius: 0 !important;
+    width: calc(100% + 3rem + 2px) !important;
     max-width: none !important;
+    border-radius: 0 !important;
   }
+
 
   /* Full-width post separator line in minimal mode on tablet */
   html[data-theme="minimal"] [data-feed-root] [data-feed-item] {
