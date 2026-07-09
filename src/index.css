@@ -1344,6 +1344,33 @@ html[data-theme="light"] [role="button"] .lucide-chevrons-up-down {
   color: var(--ink) !important;
 }
 
+/* Profile hover card: liquid-glass panel needs paper-mode text/button styling.
+   Text defaults to white in dark mode; on paper, flip name/handle/bio/stats to
+   ink and remap the Follow button from glass-on-black to an outline chip. */
+html[data-theme="light"] [data-profile-hover-card] {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  border-color: var(--hairline-strong) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+}
+html[data-theme="light"] [data-profile-hover-card] .text-white,
+html[data-theme="light"] [data-profile-hover-card] .text-white\/80,
+html[data-theme="light"] [data-profile-hover-card] .text-white\/60 {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-profile-hover-card] .text-white\/60 {
+  color: var(--ink-muted) !important;
+}
+html[data-theme="light"] [data-profile-hover-card] [data-follow-btn] {
+  background-color: transparent !important;
+  color: var(--ink) !important;
+  border-color: var(--hairline-strong) !important;
+  box-shadow: none !important;
+}
+html[data-theme="light"] [data-profile-hover-card] [data-follow-btn]:hover {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+
 /* Post modal composer: white text and translucent surfaces become invisible on
    the light paper background. Force all text, placeholders, caret and toggle
    track surfaces to ink so the composer stays readable. */
