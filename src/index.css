@@ -1321,6 +1321,30 @@ html[data-theme="light"] [data-vaul-drawer] .text-zinc-300 {
   color: var(--ink) !important;
 }
 
+/* Login modal: dark glass surface with white text/icons even in light mode. */
+html[data-theme="light"] [data-login-modal] {
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  background-image: none !important;
+}
+html[data-theme="light"] [data-login-modal] .text-white,
+html[data-theme="light"] [data-login-modal] .text-zinc-50,
+html[data-theme="light"] [data-login-modal] .text-zinc-100,
+html[data-theme="light"] [data-login-modal] .text-zinc-200,
+html[data-theme="light"] [data-login-modal] .text-zinc-300,
+html[data-theme="light"] [data-login-modal] .text-zinc-400,
+html[data-theme="light"] [data-login-modal] .text-zinc-500,
+html[data-theme="light"] [data-login-modal] svg,
+html[data-theme="light"] [data-login-modal] [data-radix-dialog-title] {
+  color: #ffffff !important;
+}
+/* Keep the white accent CTA button readable (dark text on white background). */
+html[data-theme="light"] [data-login-modal] .bg-white.text-black,
+html[data-theme="light"] [data-login-modal] .bg-white\/90.text-black,
+html[data-theme="light"] [data-login-modal] .bg-white\/80.text-black {
+  color: #000000 !important;
+}
+
+
 /* Side panels: transparent with no bento rounding. */
 html[data-theme="light"] [data-side-panel] {
   background-color: transparent !important;
