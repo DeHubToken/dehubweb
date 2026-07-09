@@ -73,7 +73,7 @@ export default function PromptLanding() {
   };
 
   return (
-    <div className="h-[100dvh] w-full bg-black text-white flex flex-col items-center justify-center px-6 relative overflow-hidden overscroll-none">
+    <div data-prompt-landing className="h-[100dvh] w-full bg-black text-white flex flex-col items-center justify-center px-6 relative overflow-hidden overscroll-none">
       <SEOHead title={t('prompt.seoTitle', 'Prompt your feed — DeHub')} description={t('prompt.seoDescription', "Tell DeHub what you want to see and we'll tune your timeline.")} />
 
       <NebulaBackground />
