@@ -156,10 +156,11 @@ export function SidebarNavItem({
           onNavigate?.();
         }}
         className={cn(
-          'relative flex items-center rounded-2xl transition-[font-weight] text-[15px] w-full text-left',
+          'relative flex items-center rounded-2xl text-[15px] w-full text-left',
+          isLightTheme ? 'transition-[font-weight]' : 'transition-colors',
           isDesktop ? desktopTextColor : 'text-white',
           isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
-          isDesktop && 'hover:font-semibold'
+          !isActive && isDesktop && desktopHoverClass
         )}
       >
         {glassIndicator}
