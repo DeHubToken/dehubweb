@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Check, Crown, Sparkles, Users, Zap, Shield, PlayCircle, ImageIcon, Video, MessageSquare, Palette, Eye, Lock, Rocket, Infinity as InfinityIcon } from 'lucide-react';
+import { Check, Crown, Sparkles, Users, Zap, Shield, PlayCircle, ImageIcon, Video, MessageSquare, Palette, Eye, Lock, Rocket, Heart, Infinity as InfinityIcon } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import {
   Accordion,
@@ -20,6 +20,7 @@ const EXTRA_PERKS = [
   { icon: Crown, label: 'Animated Extra badge', detail: 'Plus gradient username + 3 profile themes' },
   { icon: Palette, label: 'Custom themes', detail: 'Pick from curated themes — soon, build your own with a simple text-based theme builder' },
   { icon: Eye, label: 'Profile insights', detail: 'See who visits your profile and when' },
+  { icon: Heart, label: 'Follower engagement insights', detail: 'See which followers engage with you most and how — likes, reposts, comments, tips' },
   { icon: Lock, label: '10 exclusive sneak peeks / mo', detail: 'Peek into gated content feeds you don\'t hold' },
   { icon: Rocket, label: 'Timeline boost', detail: 'Your posts get seen by more of the right people' },
   { icon: MessageSquare, label: '500 Assistant messages / mo', detail: '10× the free tier' },
@@ -40,6 +41,7 @@ const XL_PERKS = [
   { icon: Lock, label: 'Unlimited sneak peeks', detail: 'Peek into every gated feed, no monthly cap' },
   { icon: Palette, label: 'All themes + early access', detail: 'Every custom theme, first dibs on the theme builder' },
   { icon: Eye, label: 'Pro profile insights', detail: 'Full visitor history, sources and trends' },
+  { icon: Heart, label: 'Pro follower engagement insights', detail: 'Full breakdown of your top engagers, engagement types and trends over time' },
 ];
 
 
