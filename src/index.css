@@ -1131,3 +1131,25 @@ html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn][data-active="true
   63%, 100%{ opacity: 0; }
 }
 
+/* Flickering overlay frames — each frame flashes briefly at a different time */
+@keyframes video-glitch-frame-0 {
+  0%, 4%   { opacity: 0.55; }
+  5%, 100% { opacity: 0; }
+}
+@keyframes video-glitch-frame-1 {
+  0%, 27%  { opacity: 0; }
+  28%, 31% { opacity: 0.5; }
+  32%, 100%{ opacity: 0; }
+}
+@keyframes video-glitch-frame-2 {
+  0%, 54%  { opacity: 0; }
+  55%, 59% { opacity: 0.6; }
+  60%, 100%{ opacity: 0; }
+}
+@keyframes video-glitch-frame-3 {
+  0%, 78%  { opacity: 0; }
+  79%, 83% { opacity: 0.5; }
+  84%, 100%{ opacity: 0; }
+}
+
+
