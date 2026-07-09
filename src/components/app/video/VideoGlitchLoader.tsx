@@ -73,7 +73,7 @@ export const VideoGlitchLoader = memo(function VideoGlitchLoader({
               alt=""
               className="absolute inset-0 w-full h-full object-cover mix-blend-screen pointer-events-none"
               style={{
-                animation: `video-glitch-frame-${i} 1.2s steps(1) infinite`,
+                animation: `video-glitch-frame-${i} 0.6s steps(1) infinite`,
                 opacity: 0,
               }}
               draggable={false}
