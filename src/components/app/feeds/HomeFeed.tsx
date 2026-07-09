@@ -312,6 +312,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const loaderRef = useRef<HTMLDivElement>(null);
   const bentoRef = useRef<HTMLDivElement>(null);
   const { isCollapsed } = useSidebarCollapse();
+  const { shortsEnabled } = useShortsEnabled();
   const queryClient = useQueryClient();
 
   // Clear persisted filters on fresh page load (not in-app navigation)
