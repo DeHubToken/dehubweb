@@ -346,7 +346,7 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
                   <Share2 className="w-4 h-4" />
                 </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="min-w-[160px]">
+              <DropdownMenuContent align="start" data-comments-dropdown className="min-w-[160px]">
                 <DropdownMenuItem
                   onClick={() => {
                     const url = `${window.location.origin}/app/post/${tokenId}?comment=${comment.id}`;
@@ -928,6 +928,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
 
   return (
     <motion.div
+      data-comments-section
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
@@ -1388,6 +1389,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
               />
               <button
                 onClick={removeCommentImage}
+                data-keep-dark
                 className="absolute top-1 right-1 w-6 h-6 bg-black/60 rounded-lg flex items-center justify-center text-white hover:bg-black/80 transition-colors"
               >
                 <X className="w-3.5 h-3.5" />

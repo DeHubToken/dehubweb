@@ -1913,5 +1913,82 @@ html[data-theme="light"] [data-assistant-page] .bg-black\/60 {
   -webkit-backdrop-filter: none !important;
 }
 
+/* ==========================================================================
+ * Comments section — light theme cleanup.
+ * The desktop wrapper uses bg-zinc-900/80 and the section uses hardcoded
+ * dark zinc / white-wash surfaces. Flip them to paper-friendly light surfaces
+ * and ink text/icons in light mode.
+ * ========================================================================== */
+html[data-theme="light"] [data-comments-wrapper] {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline-strong) !important;
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-comments-wrapper] .text-white,
+html[data-theme="light"] [data-comments-wrapper] .text-zinc-300,
+html[data-theme="light"] [data-comments-wrapper] .text-zinc-400,
+html[data-theme="light"] [data-comments-wrapper] .text-zinc-500 {
+  color: var(--ink) !important;
+}
 
+/* Translucent white washes and hardcoded zinc surfaces inside comments. */
+html[data-theme="light"] [data-comments-section] [class*="bg-white\/"],
+html[data-theme="light"] [data-comments-section] .bg-zinc-800,
+html[data-theme="light"] [data-comments-section] .bg-zinc-800\/80,
+html[data-theme="light"] [data-comments-section] .bg-zinc-700,
+html[data-theme="light"] [data-comments-section] .bg-zinc-700\/50,
+html[data-theme="light"] [data-comments-section] .bg-zinc-900,
+html[data-theme="light"] [data-comments-section] .bg-zinc-900\/80,
+html[data-theme="light"] [data-comments-section] .bg-zinc-900\/70 {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-theme="light"] [data-comments-section] [class*="hover\:bg-white\/"]:hover,
+html[data-theme="light"] [data-comments-section] .hover\:bg-zinc-700:hover,
+html[data-theme="light"] [data-comments-section] .hover\:bg-zinc-800:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Text and icons in the comments section. */
+html[data-theme="light"] [data-comments-section] :not([data-keep-dark]).text-white,
+html[data-theme="light"] [data-comments-section] .text-zinc-100,
+html[data-theme="light"] [data-comments-section] .text-zinc-200,
+html[data-theme="light"] [data-comments-section] .text-zinc-300,
+html[data-theme="light"] [data-comments-section] .text-zinc-400 {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-comments-section] .text-zinc-500,
+html[data-theme="light"] [data-comments-section] .placeholder\:text-zinc-500::placeholder {
+  color: var(--ink-muted) !important;
+}
+html[data-theme="light"] [data-comments-section] :not([data-keep-dark]).hover\:text-white:hover,
+html[data-theme="light"] [data-comments-section] .hover\:text-zinc-200:hover,
+html[data-theme="light"] [data-comments-section] .hover\:text-zinc-400:hover {
+  color: var(--ink) !important;
+}
+
+/* Hairline borders used on dark glass surfaces. */
+html[data-theme="light"] [data-comments-section] [class*="border-white\/"],
+html[data-theme="light"] [data-comments-section] .border-zinc-700,
+html[data-theme="light"] [data-comments-section] .border-zinc-800 {
+  border-color: var(--hairline-strong) !important;
+}
+
+/* Share dropdown inside comments — rendered in a portal, so scope by data attr. */
+html[data-theme="light"] [data-comments-dropdown] {
+  background-color: var(--paper) !important;
+  color: var(--ink) !important;
+  border-color: var(--hairline-strong) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html[data-theme="light"] [data-comments-dropdown] .text-white,
+html[data-theme="light"] [data-comments-dropdown] .text-zinc-300,
+html[data-theme="light"] [data-comments-dropdown] .focus\:text-white:focus,
+html[data-theme="light"] [data-comments-dropdown] .focus\:text-white[data-highlighted] {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-comments-dropdown] [class*="focus\:bg-"]:focus,
+html[data-theme="light"] [data-comments-dropdown] [class*="focus\:bg-"][data-highlighted] {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
 

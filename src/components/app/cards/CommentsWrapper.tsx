@@ -72,6 +72,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab }: Com
       >
         <DrawerContent
           glass
+          data-comments-wrapper
           className="flex flex-col overflow-hidden !bg-black/60 !backdrop-blur-[24px] border border-white/[0.08]"
           style={{
             height: adaptiveDrawerHeight,
@@ -103,7 +104,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab }: Com
           transition={{ duration: 0.3, ease: 'easeInOut' }}
           className="overflow-hidden"
         >
-          <div className={`bg-zinc-900/80 backdrop-blur-2xl rounded-2xl border border-white/10 mt-3 overflow-y-auto ${
+          <div data-comments-wrapper className={`bg-black/60 backdrop-blur-2xl rounded-2xl border border-white/10 mt-3 overflow-y-auto ${
             isCompact ? 'px-2 pb-2 pt-1 max-h-[40vh] text-sm' : 'px-4 pb-4 pt-2 max-h-[70vh]'
           }`}>
             <CommentsSection
