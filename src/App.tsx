@@ -17,6 +17,7 @@ import { HomeShellSkeleton } from "@/components/app/PageSkeletons";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { CosmicBackground } from "@/components/app/CosmicBackground";
 import { HazyNightsBackground } from "@/components/app/HazyNightsBackground";
+import { SwarmsBackground } from "@/components/app/SwarmsBackground";
 import { WinterSnow } from "@/components/app/WinterSnow";
 
 // Wallet/Auth providers — lazy loaded to keep them out of the main bundle.
