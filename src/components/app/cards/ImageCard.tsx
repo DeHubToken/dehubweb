@@ -38,6 +38,7 @@ import { TipModal } from '../modals/TipModal';
 import { SwipeableCarousel } from '../SwipeableCarousel';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { isWithinTabSwitchCooldown } from '@/lib/gesture-state';
+import { useDoubleTapLike } from '@/hooks/use-double-tap-like';
 import { FullscreenImageViewer } from './FullscreenImageViewer';
 import { ImageTranslationSheet } from './ImageTranslationSheet';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
