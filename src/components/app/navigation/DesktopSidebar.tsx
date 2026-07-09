@@ -49,6 +49,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [activeItemEl, setActiveItemEl] = useState<HTMLElement | null>(null);
   const [indicatorRect, setIndicatorRect] = useState({ x: 0, y: 0, width: 0, height: 0, ready: false });
+  const [renderCompactLogo, setRenderCompactLogo] = useState(isCollapsed);
+  const logoRevealTimerRef = useRef<number | null>(null);
 
   const updateIndicator = useCallback(() => {
     const panel = sidePanelRef.current;
@@ -66,6 +68,30 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   }, [activeItemEl]);
 
   useEffect(() => { updateIndicator(); }, [updateIndicator, isCollapsed]);
+
+  useEffect(() => {
+    if (logoRevealTimerRef.current !== null) {
+      window.clearTimeout(logoRevealTimerRef.current);
+      logoRevealTimerRef.current = null;
+    }
+
+    if (isCollapsed) {
+      setRenderCompactLogo(true);
+      return;
+    }
+
+    logoRevealTimerRef.current = window.setTimeout(() => {
+      setRenderCompactLogo(false);
+      logoRevealTimerRef.current = null;
+    }, 500);
+
+    return () => {
+      if (logoRevealTimerRef.current !== null) {
+        window.clearTimeout(logoRevealTimerRef.current);
+        logoRevealTimerRef.current = null;
+      }
+    };
+  }, [isCollapsed]);
 
   useEffect(() => {
     window.addEventListener('resize', updateIndicator);
@@ -107,6 +133,13 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
     } else {
       navigate('/app');
     }
+  };
+
+  const handleToggleCollapse = () => {
+    if (!isCollapsed) {
+      setRenderCompactLogo(true);
+    }
+    toggleCollapse();
   };
 
   const handlePostClick = async () => {
@@ -152,7 +185,10 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         <div className={cn("relative z-10 flex items-center justify-between w-full", isCollapsed ? "mb-[14px]" : "mb-[14px] lg:mb-[15px]")}>
           <div className={cn("flex items-center", isCollapsed ? "mt-[0.5px] mx-auto" : "mt-[9px] mx-auto lg:mx-0")}>
             <button
-              onClick={toggleCollapse}
+              onPointerDown={() => {
+                if (!isCollapsed) setRenderCompactLogo(true);
+              }}
+              onClick={handleToggleCollapse}
               className={cn(
                 "flex-shrink-0 w-7 h-7 flex items-center justify-center rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors relative -top-[1.5px]",
                 isCollapsed ? "hidden" : "hidden lg:flex mr-1.5"
@@ -161,27 +197,30 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             >
               <Menu className="w-[18px] h-[18px] text-zinc-400" />
             </button>
-            <button onClick={handleLogoClick} className="block cursor-pointer">
-              {isCollapsed ? (
-                <img
-                  src={isLightTheme ? dehubMarkBlack.url : dehubLogoCompact}
-                  alt="dehub"
-                  className="h-[22px] w-auto object-contain"
-                  decoding="async"
-                />
-              ) : (
-                <img
-                  src="/dehub-header-logo.png"
-                  alt="dehub"
-                  className="h-[40.6px] w-auto object-contain relative -top-[3px]"
-                  fetchPriority="high"
-                  decoding="async"
-                />
+            <button
+              onClick={handleLogoClick}
+              className={cn(
+                "cursor-pointer flex items-center justify-center overflow-hidden",
+                renderCompactLogo ? "w-[28px] h-[24px]" : "w-[135px] h-[42px]"
               )}
+            >
+              <img
+                src={isLightTheme ? dehubMarkBlack.url : dehubLogoCompact}
+                alt="dehub"
+                className={cn("h-[22px] w-[22px] object-contain", !renderCompactLogo && "hidden")}
+                decoding="async"
+              />
+              <img
+                src="/dehub-header-logo.png"
+                alt="dehub"
+                className={cn("h-[40.6px] w-[135px] object-contain relative -top-[3px]", renderCompactLogo && "hidden")}
+                fetchPriority="high"
+                decoding="async"
+              />
             </button>
             {isCollapsed && (
               <button
-                onClick={toggleCollapse}
+                onClick={handleToggleCollapse}
                 className="flex-shrink-0 w-5 h-5 ml-1 flex items-center justify-center rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
                 aria-label="Expand sidebar"
               >
