@@ -38,6 +38,7 @@ import { TipModal } from '../modals/TipModal';
 import { SwipeableCarousel } from '../SwipeableCarousel';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { isWithinTabSwitchCooldown } from '@/lib/gesture-state';
+import { useDoubleTapLike } from '@/hooks/use-double-tap-like';
 import { FullscreenImageViewer } from './FullscreenImageViewer';
 import { ImageTranslationSheet } from './ImageTranslationSheet';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
@@ -78,6 +79,63 @@ interface ImageCardProps {
 }
 
 /**
+ * Single slide inside the Instagram-style carousel. Extracted so we can
+ * safely call the double-tap-to-like hook per-image (hooks may not run
+ * inside a .map callback).
+ */
+function ImageSlide({
+  img,
+  idx,
+  aboveFold,
+  postId,
+  onImageClick,
+}: {
+  img: string;
+  idx: number;
+  aboveFold: boolean;
+  postId?: string;
+  onImageClick: (index: number) => void;
+}) {
+  const { onClick } = useDoubleTapLike({
+    postId,
+    onSingleTap: () => onImageClick(idx),
+  });
+  return (
+    <div
+      className="relative cursor-pointer max-h-[600px] overflow-hidden select-none"
+      style={{ minHeight: '200px' }}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick(e);
+      }}
+    >
+      {/* Blurred background fill — skipped on above-fold cards so it
+          never delays LCP (background-image is an LCP candidate in Chrome 96+) */}
+      {!(aboveFold && idx === 0) && (
+        <div
+          className="absolute inset-0 scale-110 blur-[24px] saturate-[180%] opacity-60"
+          style={{ backgroundImage: `url(${img})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+          aria-hidden="true"
+        />
+      )}
+      <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
+      <img
+        src={img}
+        alt=""
+        className="relative w-full max-h-[600px] object-contain"
+        loading={aboveFold && idx === 0 ? 'eager' : 'lazy'}
+        fetchPriority={aboveFold && idx === 0 ? 'high' : 'auto'}
+        decoding={aboveFold && idx === 0 ? 'sync' : 'async'}
+        draggable={false}
+        onError={(e) => {
+          (e.target as HTMLImageElement).style.display = 'none';
+        }}
+      />
+    </div>
+  );
+}
+
+/**
  * Instagram-style image carousel component
  * Supports swipe navigation with dot indicators
  */
@@ -86,11 +144,13 @@ function ImageCarousel({
   onImageClick,
   onIndexChange,
   aboveFold = false,
+  postId,
 }: {
   images: string[];
   onImageClick: (index: number) => void;
   onIndexChange?: (index: number) => void;
   aboveFold?: boolean;
+  postId?: string;
 }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -167,37 +227,13 @@ function ImageCarousel({
         <div className="flex">
           {images.map((img, idx) => (
             <div key={idx} className="flex-[0_0_100%] min-w-0">
-              <div
-                className="relative cursor-pointer max-h-[600px] overflow-hidden"
-                style={{ minHeight: '200px' }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onImageClick(idx);
-                }}
-              >
-                {/* Blurred background fill — skipped on above-fold cards so it
-                    never delays LCP (background-image is an LCP candidate in Chrome 96+) */}
-                {!(aboveFold && idx === 0) && (
-                  <div
-                    className="absolute inset-0 scale-110 blur-[24px] saturate-[180%] opacity-60"
-                    style={{ backgroundImage: `url(${img})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
-                    aria-hidden="true"
-                  />
-                )}
-                <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
-                {/* Actual image — first few feed items load eagerly for LCP */}
-                <img
-                  src={img}
-                  alt=""
-                  className="relative w-full max-h-[600px] object-contain"
-                  loading={aboveFold && idx === 0 ? 'eager' : 'lazy'}
-                  fetchPriority={aboveFold && idx === 0 ? 'high' : 'auto'}
-                  decoding={aboveFold && idx === 0 ? 'sync' : 'async'}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).style.display = 'none';
-                  }}
-                />
-              </div>
+              <ImageSlide
+                img={img}
+                idx={idx}
+                aboveFold={aboveFold}
+                postId={postId}
+                onImageClick={onImageClick}
+              />
             </div>
           ))}
         </div>
@@ -747,7 +783,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           </>
         ) : (
           <SwipeableCarousel>
-            <ImageCarousel images={images} onImageClick={handleImageClick} onIndexChange={setActiveImageIndex} aboveFold={aboveFold} />
+            <ImageCarousel images={images} onImageClick={handleImageClick} onIndexChange={setActiveImageIndex} aboveFold={aboveFold} postId={post.id} />
           </SwipeableCarousel>
         )}
 
@@ -879,6 +915,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         initialIndex={fullscreenIndex}
         isOpen={fullscreenOpen}
         onClose={() => setFullscreenOpen(false)}
+        postId={post.id}
       />
 
       {/* Image Translation Sheet */}

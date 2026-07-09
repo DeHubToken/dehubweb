@@ -13,12 +13,15 @@ import { X, ChevronLeft, ChevronRight, Languages } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
 import { ImageTranslationSheet } from './ImageTranslationSheet';
 import { useImageTranslation } from '@/hooks/use-image-translation';
+import { useDoubleTapLike } from '@/hooks/use-double-tap-like';
 
 interface FullscreenImageViewerProps {
   images: string[];
   initialIndex: number;
   isOpen: boolean;
   onClose: () => void;
+  /** Post ID — enables double-tap-to-like on the fullscreen image */
+  postId?: string;
 }
 
 const SWIPE_DOWN_THRESHOLD = 100;
@@ -27,7 +30,8 @@ export function FullscreenImageViewer({
   images, 
   initialIndex, 
   isOpen, 
-  onClose 
+  onClose,
+  postId,
 }: FullscreenImageViewerProps) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: false, 
@@ -227,22 +231,7 @@ export function FullscreenImageViewer({
           >
             <div className="flex h-full">
               {images.map((img, idx) => (
-                <div 
-                  key={idx} 
-                  className="flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
-                  onClick={onClose}
-                >
-                  <img
-                    src={img}
-                    alt=""
-                    className="max-w-full max-h-full object-contain select-none"
-                    draggable={false}
-                    onClick={(e) => e.stopPropagation()}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = '/placeholder.svg';
-                    }}
-                  />
-                </div>
+                <FullscreenSlide key={idx} img={img} onClose={onClose} postId={postId} />
               ))}
             </div>
           </motion.div>
@@ -310,5 +299,47 @@ export function FullscreenImageViewer({
       )}
     </AnimatePresence>,
     document.body
+  );
+}
+
+/**
+ * Single fullscreen slide — image sits inside a padded container.
+ * Double-tapping the image likes the post; single tap on empty area closes.
+ */
+function FullscreenSlide({
+  img,
+  onClose,
+  postId,
+}: {
+  img: string;
+  onClose: () => void;
+  postId?: string;
+}) {
+  const { onClick } = useDoubleTapLike({
+    postId,
+    onSingleTap: () => {
+      /* single-tap on the image itself is a no-op (closing happens on the
+         surrounding padded area). */
+    },
+  });
+  return (
+    <div
+      className="flex-[0_0_100%] min-w-0 h-full flex items-center justify-center p-4"
+      onClick={onClose}
+    >
+      <img
+        src={img}
+        alt=""
+        className="max-w-full max-h-full object-contain select-none"
+        draggable={false}
+        onClick={(e) => {
+          e.stopPropagation();
+          onClick(e);
+        }}
+        onError={(e) => {
+          (e.target as HTMLImageElement).src = '/placeholder.svg';
+        }}
+      />
+    </div>
   );
 }

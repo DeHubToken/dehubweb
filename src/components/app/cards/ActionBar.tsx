@@ -27,6 +27,7 @@ import { useTogglePin } from '@/hooks/use-pins';
 import { getVoteCache, setVoteCache, patchFeedCaches } from '@/lib/vote-cache';
 import { isPostReposted, markReposted, unmarkReposted } from '@/lib/repost-cache';
 import { getCommentCountDelta } from '@/lib/comment-count-cache';
+import { DOUBLE_TAP_LIKE_EVENT, type DoubleTapLikeEventDetail } from '@/hooks/use-double-tap-like';
 import { Gem } from 'lucide-react';
 import {
   Drawer,
@@ -348,6 +349,22 @@ export function ActionBar({
       setIsVoting(false);
     }
   }, [postId, isVoting, externalDisabled, isLiked, isDisliked, localLikeCount, localDislikeCount, isAuthenticated, queryClient, onLike, onDislike]);
+
+  // Listen for double-tap-to-like events dispatched by photo thumbnails / fullscreen viewer.
+  // Instagram-style: double-tap always likes (never unlikes) and only for this post's ID.
+  const handleVoteRef = useRef(handleVote);
+  useEffect(() => { handleVoteRef.current = handleVote; }, [handleVote]);
+  useEffect(() => {
+    if (!postId) return;
+    const listener = (e: Event) => {
+      const detail = (e as CustomEvent<DoubleTapLikeEventDetail>).detail;
+      if (!detail || String(detail.postId) !== String(postId)) return;
+      if (isLiked) return; // already liked — don't toggle off on double-tap
+      handleVoteRef.current(true);
+    };
+    window.addEventListener(DOUBLE_TAP_LIKE_EVENT, listener as EventListener);
+    return () => window.removeEventListener(DOUBLE_TAP_LIKE_EVENT, listener as EventListener);
+  }, [postId, isLiked]);
 
   const hasVoted = isLiked || isDisliked;
 
