@@ -233,6 +233,8 @@ function SortFilterSection({
               }
               setCategorySearch('');
             }}
+            borderRadius="0.75rem"
+            buttonClassName="px-3 py-2 rounded-xl text-sm"
           />
           {filteredCategories.length === 0 && categorySearch.trim() && (
             <span className="text-xs text-zinc-500 py-1.5">{t('filters.noMatches')}</span>
