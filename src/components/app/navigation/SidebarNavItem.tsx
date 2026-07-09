@@ -57,12 +57,14 @@ export function SidebarNavItem({
   notificationCount,
   layoutId = 'sidebar-nav',
   registerActiveRef,
+  theme,
 }: SidebarNavItemProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const translatedLabel = t(NAV_LABEL_KEYS[item.label] || item.label);
   const itemRef = useRef<HTMLAnchorElement | HTMLButtonElement | null>(null);
   const isDesktop = variant === 'desktop';
+  const desktopTextColor = getDesktopTextColor(theme);
 
   useEffect(() => {
     if (isDesktop && isActive && registerActiveRef) {
