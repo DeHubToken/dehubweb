@@ -96,10 +96,10 @@ export function CommunityCard({ community, isMember, role, unreadCount, onClick 
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={e => e.stopPropagation()}
-                className="flex items-center gap-1 text-[11px] text-blue-400 hover:text-blue-300 transition-colors truncate max-w-[140px]"
+                className="flex items-center gap-1 text-[11px] text-zinc-700 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-white transition-colors truncate max-w-[140px]"
               >
-                <LinkIcon className="w-3 h-3 shrink-0" />
-                <span className="truncate">{cleanUrl(url)}</span>
+                <LinkIcon className="w-3 h-3 shrink-0 text-zinc-700 dark:text-zinc-300" />
+                <span className="truncate text-zinc-700 dark:text-zinc-300">{cleanUrl(url)}</span>
               </a>
             ))}
           </div>
