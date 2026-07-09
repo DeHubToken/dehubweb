@@ -41,6 +41,7 @@ const XL_PERKS = [
   { icon: Lock, label: 'Unlimited sneak peeks', detail: 'Peek into every gated feed, no monthly cap' },
   { icon: Palette, label: 'All themes + early access', detail: 'Every custom theme, first dibs on the theme builder' },
   { icon: Eye, label: 'Pro profile insights', detail: 'Full visitor history, sources and trends' },
+  { icon: Heart, label: 'Pro follower engagement insights', detail: 'Full breakdown of your top engagers, engagement types and trends over time' },
 ];
 
 
