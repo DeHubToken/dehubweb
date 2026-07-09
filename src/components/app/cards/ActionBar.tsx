@@ -27,6 +27,7 @@ import { useTogglePin } from '@/hooks/use-pins';
 import { getVoteCache, setVoteCache, patchFeedCaches } from '@/lib/vote-cache';
 import { isPostReposted, markReposted, unmarkReposted } from '@/lib/repost-cache';
 import { getCommentCountDelta } from '@/lib/comment-count-cache';
+import { DOUBLE_TAP_LIKE_EVENT, type DoubleTapLikeEventDetail } from '@/hooks/use-double-tap-like';
 import { Gem } from 'lucide-react';
 import {
   Drawer,
