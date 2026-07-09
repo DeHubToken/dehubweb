@@ -166,6 +166,7 @@ export function SidebarNavItem({
 
   return (
     <NavLink
+      ref={itemRef as React.Ref<HTMLAnchorElement>}
       to={item.path}
       onClick={handleClick}
       className={cn(
