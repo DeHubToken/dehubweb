@@ -28,7 +28,7 @@ export function DescriptionWithLinks({ text }: { text: string }) {
   return (
     <div className="space-y-1.5">
       {descWithoutLinks && (
-        <p className="text-zinc-400 text-sm whitespace-pre-wrap">{descWithoutLinks}</p>
+        <p className="text-zinc-600 dark:text-zinc-400 text-sm whitespace-pre-wrap">{descWithoutLinks}</p>
       )}
       {links.slice(0, 3).map((url, i) => (
         <a
@@ -36,11 +36,11 @@ export function DescriptionWithLinks({ text }: { text: string }) {
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-1.5 text-xs text-primary hover:underline truncate text-primary-foreground max-w-[250px]"
+          className="flex items-center gap-1.5 text-xs text-zinc-700 dark:text-zinc-300 hover:underline truncate max-w-[250px]"
           onClick={e => e.stopPropagation()}
         >
-          <LinkIcon className="lucide lucide-link w-3 h-3 shrink-0 border-primary-foreground text-primary-foreground" />
-          <span className="truncate text-primary-foreground">{cleanUrl(url)}</span>
+          <LinkIcon className="lucide lucide-link w-3 h-3 shrink-0 text-zinc-700 dark:text-zinc-300" />
+          <span className="truncate text-zinc-700 dark:text-zinc-300">{cleanUrl(url)}</span>
         </a>
       ))}
     </div>
