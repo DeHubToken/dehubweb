@@ -50,7 +50,7 @@ export const VideoGlitchLoader = memo(function VideoGlitchLoader({
             className="absolute inset-0 w-full h-full object-cover mix-blend-screen opacity-70"
             style={{
               filter: 'brightness(1.1) contrast(1.05) drop-shadow(2px 0 0 rgba(255,0,64,0.9))',
-              animation: 'video-glitch-r 1.8s steps(1) infinite',
+              animation: 'video-glitch-r 0.9s steps(1) infinite',
             }}
             draggable={false}
           />
