@@ -27,6 +27,7 @@ import { useFeedPrefetch, clearPrefetchState } from '@/hooks/use-feed-prefetch';
 import { clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
 import { SORT_OPTIONS } from '@/lib/feed-utils';
 import { SEOHead } from '@/components/SEOHead';
+import { useGlobalFeedNav } from '@/contexts/GlobalFeedNavContext';
 
 
 // Feed components
@@ -129,6 +130,7 @@ export default function HomePage() {
   }, [shortsEnabled, activeTab]);
   const homeIsDraggingRef = useRef(false);
   const homeFiltersRef = useRef<HTMLDivElement>(null);
+  const globalFeedNav = useGlobalFeedNav();
   const { layerRef: homeTabLayerRef, setRef: setHomeTabRef, rect: homeTabRect, onScroll: onHomeTabScroll } = useTabIndicator(activeTab, isCollapsed, homeIsDraggingRef, 5);
 
   // Deferred tab value: tab indicator moves instantly, content swap is deferred
@@ -874,7 +876,7 @@ export default function HomePage() {
             their own props change, not when activeTab/deferredTab changes. */}
         {visitedTabs.has('home') && (
           <div style={{ display: deferredTab === 'home' ? 'block' : 'none' }}>
-            <MemoHomeFeed key={refreshKey} shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters && deferredTab === 'home'} pinnedPostId={pinnedPostId} filtersPortalRef={homeFiltersRef} />
+            <MemoHomeFeed key={refreshKey} shuffleKey={refreshKey} isRefreshing={isRefreshing} showFilters={showHomeFilters && deferredTab === 'home'} pinnedPostId={pinnedPostId} filtersPortalRef={isCollapsed && globalFeedNav?.filtersPortalElement ? globalFeedNav.filtersPortalElement : homeFiltersRef} />
           </div>
         )}
         {visitedTabs.has('videos') && (

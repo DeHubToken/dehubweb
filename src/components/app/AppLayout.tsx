@@ -22,6 +22,7 @@ import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
 
 import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
 import { GlobalFeedNav } from './GlobalFeedNav';
+import { GlobalFeedNavProvider } from '@/contexts/GlobalFeedNavContext';
 import { cn } from '@/lib/utils';
 import SinglePostPage from '@/pages/app/SinglePostPage';
 
@@ -198,20 +199,22 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
          <main className={cn(
           "flex-1 min-h-screen pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black pt-11 relative"
         )}>
-          {/* Global feed nav — keep mounted and animate in/out to avoid rigid multi-step jumps */}
-          <div
-            className={cn(
-              'hidden lg:block overflow-hidden motion-reduce:transition-none',
-              isCollapsed
-                ? 'h-12 opacity-100 transition-[height,opacity] duration-500 ease-in-out'
-                : 'h-0 opacity-0 pointer-events-none transition-[height] duration-500 ease-in-out transition-opacity duration-150'
-            )}
-            style={!isCollapsed ? { transitionProperty: 'height, opacity', transitionDuration: '500ms, 150ms' } : undefined}
-          >
-            <GlobalFeedNav />
-          </div>
-          {/* Persistent page cache — all visited pages stay mounted */}
-          <PersistentPageCache keepHomeVisible={showHomePagePersisted} />
+          <GlobalFeedNavProvider>
+            {/* Global feed nav — keep mounted and animate in/out to avoid rigid multi-step jumps */}
+            <div
+              className={cn(
+                'hidden lg:block motion-reduce:transition-none',
+                isCollapsed
+                  ? 'h-12 opacity-100 transition-[height,opacity] duration-500 ease-in-out'
+                  : 'h-0 opacity-0 pointer-events-none transition-[height] duration-500 ease-in-out transition-opacity duration-150'
+              )}
+              style={!isCollapsed ? { transitionProperty: 'height, opacity', transitionDuration: '500ms, 150ms' } : undefined}
+            >
+              <GlobalFeedNav />
+            </div>
+            {/* Persistent page cache — all visited pages stay mounted */}
+            <PersistentPageCache keepHomeVisible={showHomePagePersisted} />
+          </GlobalFeedNavProvider>
           
           {/* Post overlay — renders on top when viewing a post from home.
               Positioned absolutely so it visually covers the home feed content,

@@ -14,6 +14,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { Settings2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
+import { useGlobalFeedNav } from '@/contexts/GlobalFeedNavContext';
 import { cn } from '@/lib/utils';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
@@ -187,6 +188,8 @@ export function GlobalFeedNav() {
     }
   }, [isHomePage, navigate, activeTab, isDragging, applyTab]);
 
+  const { setFiltersPortalElement } = useGlobalFeedNav() ?? {};
+
   const handleSettingsClick = useCallback(() => {
     if (isHomePage) {
       window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }));
@@ -257,6 +260,10 @@ export function GlobalFeedNav() {
             })}
           </div>
         </div>
+        {/* Filter panel portal target — rendered here so the dropdown stays
+            visible below the global nav even when the home page tab bar is
+            hidden (collapsed desktop mode). */}
+        <div ref={setFiltersPortalElement} className="contents" data-global-feed-filters-portal />
       </div>
     </div>
   );

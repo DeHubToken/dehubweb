@@ -103,8 +103,19 @@ interface HomeFeedProps {
   showFilters?: boolean;
   /** Optional post ID to pin at the top of the feed */
   pinnedPostId?: string;
-  /** DOM node to render the filter panel into; when omitted, the panel renders in-flow */
-  filtersPortalRef?: React.RefObject<HTMLElement | null>;
+  /** DOM node or ref to render the filter panel into; when omitted, the panel renders in-flow */
+  filtersPortalRef?: React.RefObject<HTMLElement | null> | HTMLElement | null;
+}
+
+// ============================================================================
+// HELPERS
+// ============================================================================
+
+/** Resolve a portal target prop that may be a ref object or a DOM node. */
+function resolvePortalTarget(target?: React.RefObject<HTMLElement | null> | HTMLElement | null): HTMLElement | null {
+  if (!target) return null;
+  if (typeof target === 'object' && 'current' in target) return target.current;
+  return target;
 }
 
 // ============================================================================
@@ -190,6 +201,8 @@ function SortFilterSection({
             items={SORT_OPTIONS.map((o) => ({ key: o.label, label: t(`filters.${o.value === 'most-viewed' ? 'mostViewed' : o.value === 'most-liked' ? 'mostLiked' : o.value === 'most-comments' ? 'mostComments' : o.value}`, o.label) }))}
             activeKey={selectedSort.label}
             onSelect={(key) => { const o = SORT_OPTIONS.find(x => x.label === key); if (o) onSortSelect(o); }}
+            borderRadius="0.75rem"
+            buttonClassName="px-3 py-2 rounded-xl text-sm"
           />
         </div>
       </div>
@@ -220,6 +233,8 @@ function SortFilterSection({
               }
               setCategorySearch('');
             }}
+            borderRadius="0.75rem"
+            buttonClassName="px-3 py-2 rounded-xl text-sm"
           />
           {filteredCategories.length === 0 && categorySearch.trim() && (
             <span className="text-xs text-zinc-500 py-1.5">{t('filters.noMatches')}</span>
@@ -236,6 +251,8 @@ function SortFilterSection({
             items={DATE_FILTER_OPTIONS.map((o) => ({ key: o.value, label: o.label }))}
             activeKey={selectedDate.value}
             onSelect={(key) => { const o = DATE_FILTER_OPTIONS.find(x => x.value === key); if (o) onDateSelect(o); }}
+            borderRadius="0.75rem"
+            buttonClassName="px-3 py-2 rounded-xl text-sm"
           />
         </div>
       </div>
@@ -249,6 +266,8 @@ function SortFilterSection({
             items={POST_TYPE_FILTERS.map((o) => ({ key: o.value, label: t(`filters.${o.value === 'all' ? 'all' : o.value === 'video' ? 'videos' : o.value === 'feed-images' ? 'images' : o.value === 'feed-audio' ? 'audio' : 'text'}`, o.label) }))}
             activeKey={selectedPostType}
             onSelect={(key) => onPostTypeSelect(key as PostTypeFilterValue)}
+            borderRadius="0.75rem"
+            buttonClassName="px-3 py-2 rounded-xl text-sm"
           />
         </div>
       </div>
@@ -262,6 +281,8 @@ function SortFilterSection({
             items={CONTENT_TYPE_FILTERS.map((filter) => ({ key: filter.value, label: t(`filters.${filter.value === 'w2e' ? 'bounty' : filter.value}`, filter.label) }))}
             activeKeys={CONTENT_TYPE_FILTERS.filter((filter) => contentFilters[filter.value]).map((filter) => filter.value)}
             onSelect={(key) => onContentFilterToggle(key as keyof ContentTypeFilters)}
+            borderRadius="0.75rem"
+            buttonClassName="px-3 py-2 rounded-xl text-sm"
           />
         </div>
       </div>
@@ -286,6 +307,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const { t } = useI18n();
   const loaderRef = useRef<HTMLDivElement>(null);
   const bentoRef = useRef<HTMLDivElement>(null);
+  const portalTarget = resolvePortalTarget(filtersPortalRef);
   const { isCollapsed } = useSidebarCollapse();
   const { shortsEnabled } = useShortsEnabled();
   const queryClient = useQueryClient();
@@ -1433,14 +1455,14 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className={cn("overflow-y-clip overflow-x-visible", filtersPortalRef?.current && "mt-2")}
+            className={cn("overflow-y-clip overflow-x-visible", portalTarget && "mt-2")}
           >
             <div
               ref={bentoRef}
               data-no-swipe
               className={cn(
                 "rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-2 sm:px-3 py-3 space-y-4",
-                filtersPortalRef?.current && "max-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-visible scrollbar-hide"
+                portalTarget && "max-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-visible scrollbar-hide"
               )}
             >
               <SortFilterSection
@@ -1480,10 +1502,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           </motion.div>
         );
 
-        if (filtersPortalRef?.current) {
+        if (portalTarget) {
           return showFilters ? createPortal(
             <AnimatePresence mode="wait">{filterPanel}</AnimatePresence>,
-            filtersPortalRef.current
+            portalTarget
           ) : null;
         }
 
@@ -1587,8 +1609,8 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
           </div>
         );
 
-        if (filtersPortalRef?.current) {
-          return createPortal(chipsBar, filtersPortalRef.current);
+        if (portalTarget) {
+          return createPortal(chipsBar, portalTarget);
         }
         return chipsBar;
       })()}
