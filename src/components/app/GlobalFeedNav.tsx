@@ -13,6 +13,7 @@ import { useRef, useCallback, useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Settings2 } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
+import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { cn } from '@/lib/utils';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
@@ -41,6 +42,8 @@ export function GlobalFeedNav() {
 
   const [activeTab, setActiveTab] = useState(() => isHomePage ? getPersistedTab() : '');
   const [enableTransition, setEnableTransition] = useState(false);
+  const { shortsEnabled } = useShortsEnabled();
+  const feedTabs = shortsEnabled ? FEED_TABS : FEED_TABS.filter(t => t.value !== 'shorts');
 
   // Keep a ref in sync so drag handlers avoid stale activeTab closures.
   const activeTabRef = useRef(activeTab);
@@ -97,7 +100,7 @@ export function GlobalFeedNav() {
     const layerRect = layer.getBoundingClientRect();
     let nearest = activeTabRef.current;
     let minDist = Infinity;
-    for (const tab of FEED_TABS) {
+    for (const tab of feedTabs) {
       const el = tabButtonPositions.current[tab.value];
       if (!el) continue;
       const br = el.getBoundingClientRect();
@@ -230,7 +233,7 @@ export function GlobalFeedNav() {
                 <Settings2 className="relative z-10 w-4 h-4" />
               </button>
             )}
-            {FEED_TABS.map((tab) => {
+            {feedTabs.map((tab) => {
               const isActive = activeTab === tab.value;
               return (
                 <button

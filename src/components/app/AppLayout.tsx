@@ -9,6 +9,7 @@ import { CoinPlacementProvider } from '@/hooks/use-coin-placement';
 import { SidebarCollapseProvider, useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { AutoplayProvider } from '@/contexts/AutoplayContext';
 import { AnimationsProvider } from '@/contexts/AnimationsContext';
+import { ShortsEnabledProvider } from '@/contexts/ShortsEnabledContext';
 import { PiPProvider } from '@/contexts/PiPContext';
 import { ChartPiPProvider } from '@/contexts/ChartPiPContext';
 import { FloatingPiPOverlay } from '@/components/app/tv/FloatingPiPOverlay';
@@ -259,20 +260,22 @@ export function AppLayout({ children }: AppLayoutProps) {
     <SidebarCollapseProvider>
       <AutoplayProvider>
         <AnimationsProvider>
-          <PiPProvider>
-            <ChartPiPProvider>
-              <RadioPlayerProvider>
-                <CoinPlacementProvider>
-                  <GlobalDropZoneProvider>
-                    <AppLayoutContent>{children}</AppLayoutContent>
-                    <FloatingPiPOverlay />
-                    <FloatingChartPiPOverlay />
-                    <UserFeedbackSurvey />
-                  </GlobalDropZoneProvider>
-                </CoinPlacementProvider>
-              </RadioPlayerProvider>
-            </ChartPiPProvider>
-          </PiPProvider>
+          <ShortsEnabledProvider>
+            <PiPProvider>
+              <ChartPiPProvider>
+                <RadioPlayerProvider>
+                  <CoinPlacementProvider>
+                    <GlobalDropZoneProvider>
+                      <AppLayoutContent>{children}</AppLayoutContent>
+                      <FloatingPiPOverlay />
+                      <FloatingChartPiPOverlay />
+                      <UserFeedbackSurvey />
+                    </GlobalDropZoneProvider>
+                  </CoinPlacementProvider>
+                </RadioPlayerProvider>
+              </ChartPiPProvider>
+            </PiPProvider>
+          </ShortsEnabledProvider>
         </AnimationsProvider>
       </AutoplayProvider>
     </SidebarCollapseProvider>

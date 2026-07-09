@@ -18,6 +18,7 @@ import { useSearchParams, useNavigationType, useLocation, useNavigate, useMatch 
 import { useQueryClient } from '@tanstack/react-query';
 import { Settings2, ArrowLeft } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
+import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
@@ -117,6 +118,15 @@ export default function HomePage() {
   
   // Tab state - initialized from sessionStorage for back navigation
   const [activeTab, setActiveTab] = useState(getInitialTab);
+  const { shortsEnabled } = useShortsEnabled();
+  const feedTabs = shortsEnabled ? FEED_TABS : FEED_TABS.filter(t => t.value !== 'shorts');
+
+  // If Shorts gets disabled while active, fall back to Home
+  useEffect(() => {
+    if (!shortsEnabled && activeTab === 'shorts') {
+      setActiveTab('home');
+    }
+  }, [shortsEnabled, activeTab]);
   const homeIsDraggingRef = useRef(false);
   const homeFiltersRef = useRef<HTMLDivElement>(null);
   const { layerRef: homeTabLayerRef, setRef: setHomeTabRef, rect: homeTabRect, onScroll: onHomeTabScroll } = useTabIndicator(activeTab, isCollapsed, homeIsDraggingRef, 5);
@@ -585,7 +595,7 @@ export default function HomePage() {
       const isLeftSwipe = deltaX > 0;
       const isRightSwipe = deltaX < 0;
       
-      const tabValues = FEED_TABS.map(tab => tab.value);
+      const tabValues = feedTabs.map(tab => tab.value);
       const currentIndex = tabValues.indexOf(activeTab);
       
       // Mark gesture as triggered - one swipe = one action
@@ -628,7 +638,7 @@ export default function HomePage() {
     
     // Single event threshold check - no accumulation
     if (absDeltaX > TRACKPAD_THRESHOLD) {
-      const tabValues = FEED_TABS.map(tab => tab.value);
+      const tabValues = feedTabs.map(tab => tab.value);
       const currentIndex = tabValues.indexOf(activeTab);
       
       if (e.deltaX > 0 && currentIndex < tabValues.length - 1) {
@@ -663,7 +673,7 @@ export default function HomePage() {
     tabRect: homeTabRect,
     tabLayerRef: homeTabLayerRef,
     tabButtonPositions: homeTabButtonPositions,
-    tabValues: FEED_TABS.map(t => t.value),
+    tabValues: feedTabs.map(t => t.value),
     activeTab,
     onTabChange: (tab) => {
       setActiveTab(tab);
@@ -773,7 +783,7 @@ export default function HomePage() {
                 </AnimatePresence>
               </button>
 
-              {FEED_TABS.map((tab) => {
+              {feedTabs.map((tab) => {
                 const isActive = activeTab === tab.value;
                 return (
                   <button

@@ -57,6 +57,7 @@ import {
   Minus,
   Ban,
   Bot,
+  Film,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
@@ -84,6 +85,7 @@ import { useDmSettings } from '@/hooks/use-dm-settings';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { useAutoplay } from '@/contexts/AutoplayContext';
 import { useAnimations } from '@/contexts/AnimationsContext';
+import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { useBrowserNotifications, requestNotificationPermission } from '@/hooks/use-browser-notifications';
 import { WalletMenuContent } from '@/components/app/CoinBalanceMenu';
 import { FollowRequestsDrawer } from '@/components/app/profile/FollowRequestsDrawer';
@@ -1675,6 +1677,27 @@ function ShowAnimationsToggle() {
   );
 }
 
+function ShortsEnabledToggle() {
+  const { t } = useTranslation();
+  const { shortsEnabled, setShortsEnabled } = useShortsEnabled();
+  return (
+    <div className="flex items-center justify-between">
+      <div className="flex items-center gap-3">
+        <Film className="w-5 h-5 text-zinc-500" />
+        <div>
+          <p className="text-white font-medium">{t('settings.shortsEnabled', 'Shorts')}</p>
+          <p className="text-zinc-500 text-sm">
+            {t('settings.shortsEnabledDesc', 'Show the Shorts feed tab and Shorts carousels on Home.')}
+          </p>
+        </div>
+      </div>
+      <Switch checked={shortsEnabled} onCheckedChange={setShortsEnabled} />
+    </div>
+  );
+}
+
+
+
 function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: string) => void }) {
   const { t } = useTranslation();
   const { isCollapsed, setCollapsed } = useSidebarCollapse();
@@ -1784,6 +1807,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
         <div className="space-y-4">
           <AutoPlayToggle />
           <ShowAnimationsToggle />
+          <ShortsEnabledToggle />
         </div>
       </div>
 

@@ -20,6 +20,7 @@ import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
+import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { toast } from 'sonner';
 import { 
@@ -311,6 +312,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const loaderRef = useRef<HTMLDivElement>(null);
   const bentoRef = useRef<HTMLDivElement>(null);
   const { isCollapsed } = useSidebarCollapse();
+  const { shortsEnabled } = useShortsEnabled();
   const queryClient = useQueryClient();
 
   // Clear persisted filters on fresh page load (not in-app navigation)
@@ -638,7 +640,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   // Shorts carousel on Home feed
   const shorts = useMemo((): ShortVideo[] => {
-    if (!scrollFeed.data?.pages) return [];
+    if (!shortsEnabled) return [];
     if (!scrollFeed.data?.pages) return [];
     const allItems = scrollFeed.data.pages.flatMap(page => page.items || []);
     // Exclude PPV content from shorts carousels
@@ -674,7 +676,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         isDisliked: (item as any).isDisliked ?? voteType === 'against',
       };
     });
-  }, [scrollFeed.data]);
+  }, [scrollFeed.data, shortsEnabled]);
 
   // Fetch curated radio stations for carousel
   const { data: radioStations = [] } = useQuery({
