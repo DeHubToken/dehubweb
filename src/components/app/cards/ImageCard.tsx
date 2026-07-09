@@ -915,6 +915,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         initialIndex={fullscreenIndex}
         isOpen={fullscreenOpen}
         onClose={() => setFullscreenOpen(false)}
+        postId={post.id}
       />
 
       {/* Image Translation Sheet */}
