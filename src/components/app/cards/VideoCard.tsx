@@ -61,6 +61,7 @@ import {
 } from '@/components/ui/drawer';
 import type { VideoItem } from '@/types/feed.types';
 import { VideoSubtitleOverlay } from '@/components/app/video/VideoSubtitleOverlay';
+import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoader';
 
 // Use lg breakpoint (1024px) to determine if we show drawer vs inline
 function useIsTabletOrMobile() {
