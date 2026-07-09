@@ -6,21 +6,22 @@
  * removed from the Home feed.
  *
  * Persistence:
- *  - Signed-in users: stored on their DeHub profile under `customs.shortsEnabled`
- *    ('true' | 'false') so the preference follows the account across devices.
- *  - localStorage is used only as an instant-paint cache to avoid a flicker
- *    while the profile query hydrates, and as a fallback for signed-out users.
+ *  - Signed-in wallets: hard-saved to `user_display_preferences.shorts_enabled`
+ *    (Supabase, wallet-scoped RLS) so the preference follows the account.
+ *  - localStorage mirrors the value for instant paint on next load and as a
+ *    fallback for signed-out users.
+ *
+ * The toggle updates the UI OPTIMISTICALLY — the switch flips the moment it's
+ * clicked and only rolls back if the server save actually fails.
  */
 
 import { createContext, useContext, useState, useCallback, useEffect, useRef, type ReactNode } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { useDeHubProfile } from '@/hooks/use-dehub-profile';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { updateProfile } from '@/lib/api/dehub';
+import { supabase } from '@/integrations/supabase/client';
+import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { toast } from 'sonner';
 
 const CACHE_KEY = 'shorts-enabled';
-const CUSTOMS_KEY = 'shortsEnabled';
 
 interface ShortsEnabledContextType {
   shortsEnabled: boolean;
@@ -49,55 +50,77 @@ function writeCache(value: boolean) {
 
 export function ShortsEnabledProvider({ children }: { children: ReactNode }) {
   const { walletAddress, isAuthenticated } = useAuth();
-  const queryClient = useQueryClient();
 
   const [shortsEnabled, setShortsState] = useState<boolean>(readCache);
+  const [isUpdating, setIsUpdating] = useState(false);
 
-  const { data: profile } = useDeHubProfile({
-    userId: walletAddress || undefined,
-    enabled: !!walletAddress && isAuthenticated,
-  });
-
-  // Hydrate from server preference once the profile loads. Server wins.
-  const hydratedRef = useRef(false);
+  // Hydrate from server once we know the wallet. Server wins over cache.
   useEffect(() => {
-    if (!profile) return;
-    const raw = (profile.customs as Record<string, string> | undefined)?.[CUSTOMS_KEY];
-    const serverValue = raw === undefined ? true : raw !== 'false';
-    hydratedRef.current = true;
-    setShortsState(serverValue);
-    writeCache(serverValue);
-  }, [profile]);
+    let cancelled = false;
+    if (!walletAddress || !isAuthenticated) return;
+    (async () => {
+      try {
+        const { data, error } = await withWalletHeader(
+          supabase
+            .from('user_display_preferences')
+            .select('shorts_enabled')
+            .eq('wallet_address', walletAddress.toLowerCase())
+            .maybeSingle(),
+          walletAddress
+        );
+        if (cancelled) return;
+        if (error) return;
+        if (data && typeof (data as any).shorts_enabled === 'boolean') {
+          const serverValue = (data as any).shorts_enabled as boolean;
+          setShortsState(serverValue);
+          writeCache(serverValue);
+        }
+      } catch { /* ignore */ }
+    })();
+    return () => { cancelled = true; };
+  }, [walletAddress, isAuthenticated]);
 
-  const mutation = useMutation({
-    mutationFn: async (value: boolean) => {
-      const existing = (profile?.customs ?? {}) as Record<string, string>;
-      await updateProfile({
-        customs: { ...existing, [CUSTOMS_KEY]: String(value) },
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
-    },
-    onError: (err, value) => {
-      console.error('Failed to save Shorts preference:', err);
-      toast.error('Failed to save Shorts preference');
-      // Roll back to previous server value if we have one, else previous cache.
-      const raw = (profile?.customs as Record<string, string> | undefined)?.[CUSTOMS_KEY];
-      const prev = raw === undefined ? !value : raw !== 'false';
-      setShortsState(prev);
-      writeCache(prev);
-    },
-  });
+  // Prevent rapid-fire clicks from racing each other.
+  const pendingRef = useRef<Promise<unknown> | null>(null);
+
+  const persist = useCallback(async (value: boolean) => {
+    if (!walletAddress) return;
+    const addr = walletAddress.toLowerCase();
+    const { error } = await withWalletHeader(
+      supabase
+        .from('user_display_preferences')
+        .upsert(
+          { wallet_address: addr, shorts_enabled: value },
+          { onConflict: 'wallet_address' }
+        ),
+      walletAddress
+    );
+    if (error) throw error;
+  }, [walletAddress]);
 
   const setShortsEnabled = useCallback((value: boolean) => {
-    // Optimistic local update + cache for instant paint on next load.
+    const previous = shortsEnabled;
+    // Optimistic: flip UI + cache instantly.
     setShortsState(value);
     writeCache(value);
-    if (isAuthenticated && walletAddress) {
-      mutation.mutate(value);
-    }
-  }, [isAuthenticated, walletAddress, mutation]);
+
+    if (!isAuthenticated || !walletAddress) return;
+
+    setIsUpdating(true);
+    const run = (async () => {
+      try {
+        await persist(value);
+      } catch (err) {
+        console.error('Failed to save Shorts preference:', err);
+        toast.error('Failed to save Shorts preference');
+        setShortsState(previous);
+        writeCache(previous);
+      } finally {
+        if (pendingRef.current === run) setIsUpdating(false);
+      }
+    })();
+    pendingRef.current = run;
+  }, [shortsEnabled, isAuthenticated, walletAddress, persist]);
 
   // Cross-tab sync of cached value.
   useEffect(() => {
@@ -111,7 +134,7 @@ export function ShortsEnabledProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <ShortsEnabledContext.Provider value={{ shortsEnabled, setShortsEnabled, isUpdating: mutation.isPending }}>
+    <ShortsEnabledContext.Provider value={{ shortsEnabled, setShortsEnabled, isUpdating }}>
       {children}
     </ShortsEnabledContext.Provider>
   );
