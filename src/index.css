@@ -1119,14 +1119,17 @@ html[data-theme="light"] {
   --tab-hover-wash: rgba(0, 0, 0, 0.06);
 }
 
-html[data-theme="light"] body,
+html[data-theme="light"] body {
+  background-color: var(--paper) !important;
+  background-image: url('./assets/textures/paper-texture.png') !important;
+  background-size: 256px 256px !important;
+  color: var(--ink) !important;
+}
 html[data-theme="light"] #app-root,
 html[data-theme="light"] #app-root > div,
 html[data-theme="light"] #app-root > div > main,
 html[data-theme="light"] #app-root > div > main > div {
   background-color: var(--paper) !important;
-  background-image: url('./assets/textures/paper-texture.png') !important;
-  background-size: 256px 256px !important;
   color: var(--ink) !important;
 }
 
