@@ -18,6 +18,7 @@ import { useSearchParams, useNavigationType, useLocation, useNavigate, useMatch 
 import { useQueryClient } from '@tanstack/react-query';
 import { Settings2, ArrowLeft } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
+import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
 import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
