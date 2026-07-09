@@ -5,13 +5,14 @@
  * so the spring bounce animation is never clipped by scroll containers.
  */
 
-import { useRef, useState, useCallback, useLayoutEffect, useEffect } from 'react';
+import { useRef, useState, useCallback, useLayoutEffect, useEffect, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { GlassIndicator } from './GlassIndicator';
 
 interface GlassFilterRowProps<T extends string> {
   items: { key: T; label: React.ReactNode }[];
-  activeKey: T;
+  activeKey?: T;
+  activeKeys?: T[];
   onSelect: (key: T) => void;
   className?: string;
   buttonClassName?: string;
@@ -21,6 +22,7 @@ interface GlassFilterRowProps<T extends string> {
 export function GlassFilterRow<T extends string>({
   items,
   activeKey,
+  activeKeys,
   onSelect,
   className,
   buttonClassName,
@@ -31,9 +33,12 @@ export function GlassFilterRow<T extends string>({
   const scrollRef = useRef<HTMLDivElement>(null);
   const [rect, setRect] = useState({ x: 0, y: 0, width: 0, height: 0, ready: false });
 
+  const activeSet = useMemo(() => new Set(activeKeys ?? (activeKey != null ? [activeKey] : [])), [activeKey, activeKeys]);
+  const indicatorKey = activeKeys?.[0] ?? activeKey;
+
   const update = useCallback(() => {
     const layer = layerRef.current;
-    const btn = btnRefs.current[activeKey];
+    const btn = indicatorKey != null ? btnRefs.current[indicatorKey] : null;
     if (!layer || !btn) return;
     const lr = layer.getBoundingClientRect();
     const br = btn.getBoundingClientRect();
@@ -44,7 +49,7 @@ export function GlassFilterRow<T extends string>({
       height: br.height,
       ready: true,
     });
-  }, [activeKey]);
+  }, [indicatorKey]);
 
   useLayoutEffect(() => { update(); }, [update]);
 
@@ -75,7 +80,7 @@ export function GlassFilterRow<T extends string>({
         style={{ touchAction: 'pan-x' }}
       >
         {items.map((item) => {
-          const isActive = activeKey === item.key;
+          const isActive = activeSet.has(item.key);
           return (
             <button
               key={item.key}
