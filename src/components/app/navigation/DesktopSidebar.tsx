@@ -230,15 +230,15 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   registerActiveRef={isActive ? setActiveItemEl : undefined}
                 />
                 {isAssistantAnchor && (
-                  <NavLink
-                    ref={isAIActive ? setActiveItemEl : undefined}
-                    to="/app/assistant"
-                    className={cn(
-                      'relative flex items-center rounded-2xl text-left transition-colors text-[15px] text-white',
-                      isCollapsed ? 'w-9 h-9 justify-center' : 'w-9 h-9 lg:w-full lg:h-auto justify-center lg:justify-start lg:px-2.5 lg:py-2.5 lg:gap-3',
-                      isAIActive ? 'font-semibold' : 'hover:bg-zinc-800/50'
-                    )}
-                  >
+                <NavLink
+                  ref={isAIActive ? setActiveItemEl : undefined}
+                  to="/app/assistant"
+                  className={cn(
+                    'relative flex items-center rounded-2xl text-left transition-colors text-[15px] text-black dark:text-white',
+                    isCollapsed ? 'w-9 h-9 justify-center' : 'w-9 h-9 lg:w-full lg:h-auto justify-center lg:justify-start lg:px-2.5 lg:py-2.5 lg:gap-3',
+                    isAIActive ? 'font-semibold' : 'hover:bg-zinc-800/50'
+                  )}
+                >
                     <div className={cn(
                       "relative z-10 w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors",
                       isAIActive ? "bg-transparent" : isCollapsed ? "bg-transparent" : "lg:bg-zinc-800 bg-transparent"
