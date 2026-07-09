@@ -173,12 +173,22 @@ function CelestialSphere({
       material.uniforms.u_mouse.value.set(mouse.x, currentMount.clientHeight - mouse.y);
     };
 
+    const onMouseMove = (event: MouseEvent) => {
+      const rect = currentMount.getBoundingClientRect();
+      mouseTarget.x = event.clientX - rect.left;
+      mouseTarget.y = currentMount.clientHeight - (event.clientY - rect.top);
+    };
+
     window.addEventListener('resize', resize);
     window.addEventListener('mousemove', onMouseMove);
     resize();
 
     let animationFrameId = 0;
     const animate = () => {
+      // ease mouse toward cursor for a wafting, cloud-like response
+      mouse.x += (mouseTarget.x - mouse.x) * 0.04;
+      mouse.y += (mouseTarget.y - mouse.y) * 0.04;
+      material.uniforms.u_mouse.value.set(mouse.x, mouse.y);
       material.uniforms.u_time.value += 0.005 * speed;
       renderer.render(scene, camera);
       animationFrameId = requestAnimationFrame(animate);
