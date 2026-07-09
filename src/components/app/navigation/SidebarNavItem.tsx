@@ -89,7 +89,7 @@ export function SidebarNavItem({
   // Use smaller radius in collapsed mode so 36×36 icons don't look circular
   const indicatorRadius = (collapsed && !isForceCollapsed) ? 'rounded-2xl lg:rounded-2xl' : isForceCollapsed ? 'rounded-xl' : 'rounded-2xl';
   const isCollapsedSquare = isDesktop && (isForceCollapsed || (collapsed));
-  const glassIndicator = isActive && (
+  const glassIndicator = isActive && !isDesktop && (
     <motion.div
       key={layoutId}
       layoutId={layoutId}
