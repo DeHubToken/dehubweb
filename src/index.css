@@ -1104,6 +1104,419 @@ html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn][data-active="true
   opacity: 1;
 }
 
+/* ==========================================================================
+ * Light theme — minimal aesthetic inverted onto a soft paper surface.
+ * Buttons keep their dark grey / white styling unchanged.
+ * ========================================================================== */
+html[data-theme="light"] {
+  --paper: #f5f2eb;
+  --paper-deep: #e8e4db;
+  --ink: #1a1a1a;
+  --ink-muted: #5a5a5a;
+  --hairline: rgba(0, 0, 0, 0.08);
+  --hairline-strong: rgba(0, 0, 0, 0.12);
+  --hover-wash: rgba(0, 0, 0, 0.05);
+  --tab-hover-wash: rgba(0, 0, 0, 0.06);
+}
+
+html[data-theme="light"] body {
+  background-color: var(--paper) !important;
+  background-image: url('./assets/textures/paper-texture.png') !important;
+  background-size: 256px 256px !important;
+  color: var(--ink) !important;
+}
+html[data-theme="light"] #app-root,
+html[data-theme="light"] #app-root > div,
+html[data-theme="light"] #app-root > div > main,
+html[data-theme="light"] #app-root > div > main > div {
+  background-color: var(--paper) !important;
+  color: var(--ink) !important;
+}
+
+/* Invert common text colours on paper, but keep buttons white-on-grey. */
+html[data-theme="light"] .text-white,
+html[data-theme="light"] .text-zinc-50,
+html[data-theme="light"] .text-zinc-100 {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] .text-zinc-200,
+html[data-theme="light"] .text-zinc-300 {
+  color: #2e2e2e !important;
+}
+html[data-theme="light"] .text-zinc-400,
+html[data-theme="light"] .text-zinc-500 {
+  color: var(--ink-muted) !important;
+}
+html[data-theme="light"] .text-zinc-600 {
+  color: #707070 !important;
+}
+
+/* Restore button text to white so they stay white-on-grey.
+   Tab buttons (data-tab-btn / data-feed-tab-btn) are not treated as buttons. */
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).text-white,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]).text-white,
+html[data-theme="light"] .button.text-white,
+html[data-theme="light"] .btn.text-white,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .text-white,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]) .text-white,
+html[data-theme="light"] .button .text-white,
+html[data-theme="light"] .btn .text-white,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).text-zinc-50,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .text-zinc-50,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).text-zinc-100,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .text-zinc-100,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).text-zinc-200,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .text-zinc-200,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).text-zinc-300,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .text-zinc-300,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).text-zinc-400,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .text-zinc-400,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).text-zinc-500,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .text-zinc-500,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).text-zinc-600,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .text-zinc-600 {
+  color: #ffffff !important;
+}
+
+/* Root backgrounds: black/zinc-950/zinc-900 become paper, but leave grey buttons alone. */
+html[data-theme="light"] .bg-black,
+html[data-theme="light"] .bg-zinc-950,
+html[data-theme="light"] .bg-zinc-900 {
+  background-color: var(--paper) !important;
+}
+
+/* Invert grey surfaces on paper (nav icons, chips, etc.) while keeping buttons dark. */
+html[data-theme="light"] .bg-zinc-800,
+html[data-theme="light"] .bg-zinc-700,
+html[data-theme="light"] .bg-zinc-600 {
+  background-color: #e0ddd6 !important;
+}
+html[data-theme="light"] .bg-zinc-800\/50,
+html[data-theme="light"] .bg-zinc-800\/60,
+html[data-theme="light"] .bg-zinc-800\/90,
+html[data-theme="light"] .bg-zinc-700\/50,
+html[data-theme="light"] .bg-zinc-700\/60 {
+  background-color: rgba(224, 221, 214, 0.5) !important;
+}
+html[data-theme="light"] .hover\:bg-zinc-800:hover,
+html[data-theme="light"] .hover\:bg-zinc-700:hover,
+html[data-theme="light"] .hover\:bg-zinc-600:hover {
+  background-color: #d4d0c8 !important;
+}
+
+/* Restore grey surfaces on actual buttons. */
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).bg-zinc-800,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]).bg-zinc-800,
+html[data-theme="light"] .button.bg-zinc-800,
+html[data-theme="light"] .btn.bg-zinc-800,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .bg-zinc-800,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]) .bg-zinc-800,
+html[data-theme="light"] .button .bg-zinc-800,
+html[data-theme="light"] .btn .bg-zinc-800,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).bg-zinc-700,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]).bg-zinc-700,
+html[data-theme="light"] .button.bg-zinc-700,
+html[data-theme="light"] .btn.bg-zinc-700,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .bg-zinc-700,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]) .bg-zinc-700,
+html[data-theme="light"] .button .bg-zinc-700,
+html[data-theme="light"] .btn .bg-zinc-700 {
+  background-color: #27272a !important;
+}
+
+/* Restore hover greys on buttons. */
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).hover\:bg-zinc-800:hover,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]).hover\:bg-zinc-800:hover,
+html[data-theme="light"] .button.hover\:bg-zinc-800:hover,
+html[data-theme="light"] .btn.hover\:bg-zinc-800:hover,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .hover\:bg-zinc-800:hover,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]) .hover\:bg-zinc-800:hover,
+html[data-theme="light"] .button .hover\:bg-zinc-800:hover,
+html[data-theme="light"] .btn .hover\:bg-zinc-800:hover,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]).hover\:bg-zinc-700:hover,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]).hover\:bg-zinc-700:hover,
+html[data-theme="light"] .button.hover\:bg-zinc-700:hover,
+html[data-theme="light"] .btn.hover\:bg-zinc-700:hover,
+html[data-theme="light"] button:not([data-tab-btn]):not([data-feed-tab-btn]) .hover\:bg-zinc-700:hover,
+html[data-theme="light"] [role="button"]:not([data-tab-btn]):not([data-feed-tab-btn]) .hover\:bg-zinc-700:hover,
+html[data-theme="light"] .button .hover\:bg-zinc-700:hover,
+html[data-theme="light"] .btn .hover\:bg-zinc-700:hover {
+  background-color: #3f3f46 !important;
+}
+
+/* Side panels: transparent with no bento rounding. */
+html[data-theme="light"] [data-side-panel] {
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+html[data-theme="light"] [data-side-panel] > * {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Strip grey/zinc shading inside side panels, map to paper. */
+html[data-theme="light"] [data-side-panel] :where(
+  [class*="bg-zinc-900"],
+  [class*="bg-zinc-800"],
+  [class*="bg-zinc-700"],
+  [class*="bg-zinc-950"],
+  [class*="from-zinc-900"],
+  [class*="from-zinc-800"],
+  [class*="from-zinc-700"],
+  [class*="from-zinc-950"],
+  [class*="to-zinc-900"],
+  [class*="to-zinc-800"],
+  [class*="to-zinc-700"],
+  [class*="to-zinc-950"],
+  [class*="via-zinc-900"],
+  [class*="via-zinc-800"],
+  [class*="via-zinc-700"],
+  [class*="via-zinc-950"]
+),
+html[data-theme="light"] [data-side-panel] :where(
+  [class*="bg-zinc-900"],
+  [class*="bg-zinc-800"],
+  [class*="bg-zinc-700"],
+  [class*="bg-zinc-950"],
+  [class*="from-zinc-900"],
+  [class*="from-zinc-800"],
+  [class*="from-zinc-700"],
+  [class*="from-zinc-950"],
+  [class*="to-zinc-900"],
+  [class*="to-zinc-800"],
+  [class*="to-zinc-700"],
+  [class*="to-zinc-950"],
+  [class*="via-zinc-900"],
+  [class*="via-zinc-800"],
+  [class*="via-zinc-700"],
+  [class*="via-zinc-950"]
+)::before,
+html[data-theme="light"] [data-side-panel] :where(
+  [class*="bg-zinc-900"],
+  [class*="bg-zinc-800"],
+  [class*="bg-zinc-700"],
+  [class*="bg-zinc-950"],
+  [class*="from-zinc-900"],
+  [class*="from-zinc-800"],
+  [class*="from-zinc-700"],
+  [class*="from-zinc-950"],
+  [class*="to-zinc-900"],
+  [class*="to-zinc-800"],
+  [class*="to-zinc-700"],
+  [class*="to-zinc-950"],
+  [class*="via-zinc-900"],
+  [class*="via-zinc-800"],
+  [class*="via-zinc-700"],
+  [class*="via-zinc-950"]
+)::after {
+  background-color: var(--paper) !important;
+  background-image: none !important;
+}
+
+/* Page-level bento squares become transparent cards with a thin dark border. */
+html[data-theme="light"] [data-page-bento] {
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 1px solid var(--hairline) !important;
+}
+html[data-theme="light"] [data-page-bento]:hover {
+  background-color: transparent !important;
+}
+
+/* Theme picker horizontal scroll fade. */
+html[data-theme="light"] [data-theme-picker-fade] {
+  background-image: linear-gradient(to left, var(--paper) 0%, transparent 100%) !important;
+}
+
+/* Feed items: transparent with hairline separators. */
+html[data-theme="light"] [data-feed-item] {
+  background-color: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  border-bottom: 1px solid var(--hairline) !important;
+}
+html[data-theme="light"] [data-feed-item]:last-child {
+  border-bottom: 0 !important;
+}
+
+/* Strip view-all bubble. */
+html[data-theme="light"] [data-view-all],
+html[data-theme="light"] [data-view-all] * {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+html[data-theme="light"] [data-view-all] *::before,
+html[data-theme="light"] [data-view-all] *::after {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  display: none !important;
+}
+
+/* Square everything off, same as minimal. */
+html[data-theme="light"] *:not([data-keep-round]) {
+  border-radius: 0 !important;
+}
+html[data-theme="light"] *:not([data-keep-round])::before,
+html[data-theme="light"] *:not([data-keep-round])::after {
+  border-radius: 0 !important;
+}
+
+/* Wide-screen collapsed sidebar: grid square around posts. */
+html[data-theme="light"][data-sidebar-collapsed="true"] [data-feed-item] {
+  border: 1px solid var(--hairline) !important;
+  border-radius: 0 !important;
+  padding: 0.75rem !important;
+  margin-bottom: -1px;
+}
+html[data-theme="light"][data-sidebar-collapsed="true"] [data-feed-item]:last-child {
+  border-bottom: 1px solid var(--hairline) !important;
+}
+
+/* Sidebar bottom fade. */
+html[data-theme="light"] [data-sidebar-fade] {
+  background: linear-gradient(to top, var(--paper) 0%, rgba(245, 242, 235, 0.6) 40%, transparent 100%) !important;
+  background-image: linear-gradient(to top, var(--paper) 0%, rgba(245, 242, 235, 0.6) 40%, transparent 100%) !important;
+}
+
+/* Full-width media on mobile/tablet. */
+@media (max-width: 639px) {
+  html[data-theme="light"] [data-feed-root] [data-feed-item] [data-media-full] {
+    margin-left: calc(-0.75rem - 0.5rem - 1px) !important;
+    margin-right: calc(-0.75rem - 0.5rem - 1px) !important;
+    width: calc(100% + 2.5rem + 2px) !important;
+    max-width: none !important;
+    border-radius: 0 !important;
+  }
+  html[data-theme="light"] [data-feed-root] [data-feed-item] {
+    position: relative;
+    border-bottom: 0 !important;
+  }
+  html[data-theme="light"] [data-feed-root] [data-feed-item]::after {
+    content: "";
+    position: absolute;
+    left: -0.5rem;
+    right: -0.5rem;
+    bottom: 0;
+    height: 1px;
+    background: var(--hairline);
+    pointer-events: none;
+  }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  html[data-theme="light"] [data-feed-root] [data-feed-item] [data-media-full] {
+    margin-left: calc(-0.75rem - 0.75rem - 1px) !important;
+    margin-right: calc(-0.75rem - 0.75rem - 1px) !important;
+    width: calc(100% + 3rem + 2px) !important;
+    max-width: none !important;
+    border-radius: 0 !important;
+  }
+  html[data-theme="light"] [data-feed-root] [data-feed-item] {
+    position: relative;
+    border-bottom: 0 !important;
+  }
+  html[data-theme="light"] [data-feed-root] [data-feed-item]::after {
+    content: "";
+    position: absolute;
+    left: -0.75rem;
+    right: -0.75rem;
+    bottom: 0;
+    height: 1px;
+    background: var(--hairline);
+    pointer-events: none;
+  }
+}
+
+/* Hide full-width separator on last feed item. */
+html[data-theme="light"] [data-feed-root] [data-feed-item]:last-child::after {
+  display: none;
+}
+
+/* Full-width top nav tabs on mobile/tablet. */
+@media (max-width: 1023px) {
+  html[data-theme="light"] [data-home-tabs] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  html[data-theme="light"] [data-home-tabs] > div:first-child {
+    border-radius: 0 !important;
+  }
+}
+
+/* Hover states for side panel rows/tabs. */
+html[data-theme="light"] [data-side-panel] [class*="hover:bg-zinc-"]:hover {
+  background-color: var(--hover-wash) !important;
+}
+html[data-theme="light"] [data-side-panel] [class*="hover:text-zinc-"]:hover {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-side-panel] .tab-hover-bg {
+  background-image: linear-gradient(to bottom, var(--tab-hover-wash), transparent) !important;
+}
+
+/* File-system style feed tab nav. */
+html[data-theme="light"] [data-feed-nav] {
+  position: relative;
+  background-color: var(--paper) !important;
+}
+html[data-theme="light"] [data-feed-nav] > div:first-child::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: var(--hairline-strong);
+  pointer-events: none;
+  z-index: 1;
+}
+html[data-theme="light"] [data-feed-nav] [data-glass-indicator] {
+  display: none !important;
+}
+html[data-theme="light"] [data-feed-nav] [data-feed-tab-btn] {
+  transition: color 220ms ease;
+  background-color: transparent !important;
+  position: relative;
+  border-radius: 0 !important;
+  color: var(--ink-muted);
+}
+html[data-theme="light"] [data-feed-nav] [data-feed-tab-btn]:hover {
+  background-color: transparent !important;
+  color: var(--ink);
+}
+html[data-theme="light"] [data-feed-nav] [data-feed-tab-btn][data-active="true"] {
+  background-color: var(--paper) !important;
+  color: var(--ink);
+}
+html[data-theme="light"] [data-feed-nav] [data-feed-tab-btn]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow:
+    inset 0 1px 0 0 var(--hairline-strong),
+    inset 1px 0 0 0 var(--hairline-strong),
+    inset -1px 0 0 0 var(--hairline-strong);
+  opacity: 0;
+  transition: opacity 220ms ease;
+  pointer-events: none;
+}
+html[data-theme="light"] [data-feed-nav] [data-feed-tab-btn][data-active="true"]::before {
+  opacity: 1;
+}
+
 /* Video first-frame glitch loader */
 @keyframes video-glitch-r {
   0%, 100% { transform: translate(0, 0); }
