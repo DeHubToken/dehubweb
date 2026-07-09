@@ -151,7 +151,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             <button onClick={handleLogoClick} className="block cursor-pointer">
               {isCollapsed ? (
                 <img
-                  src={isMinimal ? dehubMarkBlack.url : dehubLogoCompact}
+                  src={isLightTheme ? dehubMarkBlack.url : dehubLogoCompact}
                   alt="dehub"
                   className="h-[22px] w-auto object-contain"
                   decoding="async"
