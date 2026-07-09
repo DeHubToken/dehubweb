@@ -346,6 +346,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
           <div className="flex mb-2">
             {TICKER_PERIODS.map(p => (
               <button
+                data-tab-btn
                 key={p.value}
                 onClick={() => handleTickerPeriodChange(p.value)}
                 className={cn(
