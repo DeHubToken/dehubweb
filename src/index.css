@@ -1054,7 +1054,7 @@ html[data-theme="minimal"] [data-feed-nav] > div:first-child::after {
   height: 1px;
   background-color: rgba(255, 255, 255, 0.69);
   pointer-events: none;
-  z-index: 25;
+  z-index: 1;
 }
 
 html[data-theme="minimal"] [data-feed-nav] [data-glass-indicator] {
