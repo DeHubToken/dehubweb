@@ -1182,6 +1182,20 @@ html[data-theme="light"] .text-zinc-400,
 html[data-theme="light"] .text-zinc-500 {
   color: var(--ink-muted) !important;
 }
+
+/* Sonner toasts: hardcoded white text/icons become invisible on the light
+   paper background. Flip title, icons, actions, and loader to ink while
+   keeping descriptions/cancel buttons muted. */
+html[data-theme="light"] .toaster .toast,
+html[data-theme="light"] .toaster .toast .actionButton,
+html[data-theme="light"] .toaster .toast .loader,
+html[data-theme="light"] .toaster .toast svg {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] .toaster .toast .description,
+html[data-theme="light"] .toaster .toast .cancelButton {
+  color: var(--ink-muted) !important;
+}
 html[data-theme="light"] .text-zinc-600 {
   color: #707070 !important;
 }
