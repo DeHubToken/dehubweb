@@ -32,6 +32,14 @@ interface SidebarNavItemProps {
   layoutId?: string;
   /** Optional callback to register the active desktop nav item DOM node for an overlay indicator */
   registerActiveRef?: (el: HTMLElement | null) => void;
+  /** App theme so light and minimal can be styled independently */
+  theme?: string;
+}
+
+function getDesktopTextColor(theme?: string) {
+  // Light theme uses black text on light surfaces; minimal/dark/system use white.
+  if (theme === 'light') return 'text-black';
+  return 'text-white';
 }
 
 export function SidebarNavItem({ 
@@ -49,12 +57,14 @@ export function SidebarNavItem({
   notificationCount,
   layoutId = 'sidebar-nav',
   registerActiveRef,
+  theme,
 }: SidebarNavItemProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const translatedLabel = t(NAV_LABEL_KEYS[item.label] || item.label);
   const itemRef = useRef<HTMLAnchorElement | HTMLButtonElement | null>(null);
   const isDesktop = variant === 'desktop';
+  const desktopTextColor = getDesktopTextColor(theme);
 
   useEffect(() => {
     if (isDesktop && isActive && registerActiveRef) {
@@ -111,7 +121,7 @@ export function SidebarNavItem({
         onClick={onNavigate}
         className={cn(
           'relative flex items-center rounded-2xl transition-colors text-[15px]',
-          isDesktop ? 'text-black dark:text-white' : 'text-white',
+          isDesktop ? desktopTextColor : 'text-white',
           isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
           !isActive && (variant === 'mobile' ? 'hover:bg-zinc-700/50' : 'hover:bg-zinc-800/50')
         )}
@@ -144,7 +154,7 @@ export function SidebarNavItem({
         }}
         className={cn(
           'relative flex items-center rounded-2xl transition-colors text-[15px] w-full text-left',
-          isDesktop ? 'text-black dark:text-white' : 'text-white',
+          isDesktop ? desktopTextColor : 'text-white',
           isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
           !isActive && (variant === 'mobile' ? 'hover:bg-zinc-700/50' : 'hover:bg-zinc-800/50')
         )}
@@ -173,7 +183,7 @@ export function SidebarNavItem({
       onClick={handleClick}
       className={cn(
         'relative flex items-center rounded-2xl transition-colors text-[15px]',
-        isDesktop ? 'text-black dark:text-white' : 'text-white',
+        isDesktop ? desktopTextColor : 'text-white',
         isDesktop ? collapsedItemClass : 'gap-3.5 px-3 py-3',
         isActive ? 'font-semibold' : '',
         !isActive && (variant === 'mobile' ? 'hover:bg-zinc-700/50' : 'hover:bg-zinc-800/50')
