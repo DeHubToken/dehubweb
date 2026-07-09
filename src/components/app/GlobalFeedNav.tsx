@@ -100,7 +100,7 @@ export function GlobalFeedNav() {
     const layerRect = layer.getBoundingClientRect();
     let nearest = activeTabRef.current;
     let minDist = Infinity;
-    for (const tab of FEED_TABS) {
+    for (const tab of feedTabs) {
       const el = tabButtonPositions.current[tab.value];
       if (!el) continue;
       const br = el.getBoundingClientRect();
@@ -233,7 +233,7 @@ export function GlobalFeedNav() {
                 <Settings2 className="relative z-10 w-4 h-4" />
               </button>
             )}
-            {FEED_TABS.map((tab) => {
+            {feedTabs.map((tab) => {
               const isActive = activeTab === tab.value;
               return (
                 <button
