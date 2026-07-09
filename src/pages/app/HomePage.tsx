@@ -118,6 +118,15 @@ export default function HomePage() {
   
   // Tab state - initialized from sessionStorage for back navigation
   const [activeTab, setActiveTab] = useState(getInitialTab);
+  const { shortsEnabled } = useShortsEnabled();
+  const feedTabs = shortsEnabled ? FEED_TABS : FEED_TABS.filter(t => t.value !== 'shorts');
+
+  // If Shorts gets disabled while active, fall back to Home
+  useEffect(() => {
+    if (!shortsEnabled && activeTab === 'shorts') {
+      setActiveTab('home');
+    }
+  }, [shortsEnabled, activeTab]);
   const homeIsDraggingRef = useRef(false);
   const homeFiltersRef = useRef<HTMLDivElement>(null);
   const { layerRef: homeTabLayerRef, setRef: setHomeTabRef, rect: homeTabRect, onScroll: onHomeTabScroll } = useTabIndicator(activeTab, isCollapsed, homeIsDraggingRef, 5);
