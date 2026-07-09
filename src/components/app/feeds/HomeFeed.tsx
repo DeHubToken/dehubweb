@@ -221,6 +221,9 @@ function SortFilterSection({
               setCategorySearch('');
             }}
           />
+          {filteredCategories.length === 0 && categorySearch.trim() && (
+            <span className="text-xs text-zinc-500 py-1.5">{t('filters.noMatches')}</span>
+          )}
         </div>
       </div>
       
