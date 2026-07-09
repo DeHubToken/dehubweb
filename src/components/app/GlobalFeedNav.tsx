@@ -199,7 +199,7 @@ export function GlobalFeedNav() {
       "transition-transform duration-300 ease-in-out",
       !navVisible && "-translate-y-full lg:translate-y-0"
     )}>
-      <div className="bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+      <div data-feed-nav className="bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
         <div ref={layerRef} className="relative overflow-visible">
           <GlassIndicator rect={dragDisplayRect} borderRadius="0.75rem" layoutKey={`global-nav-${activeTab}`} enableTransition={!isDragging && enableTransition} fixedHeightPx={35} />
           {/* Drag handle overlay */}
@@ -239,6 +239,8 @@ export function GlobalFeedNav() {
                 <button
                   key={tab.value}
                   data-feed-tab={tab.value}
+                  data-feed-tab-btn
+                  data-active={isActive ? 'true' : undefined}
                   ref={(el) => {
                     setRef(tab.value)(el);
                     tabButtonPositions.current[tab.value] = el;
