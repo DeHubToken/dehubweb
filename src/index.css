@@ -1166,6 +1166,45 @@ html[data-theme="light"] [role="button"].bg-zinc-600.text-white {
   color: #ffffff !important;
 }
 
+/* Icons (chevrons, arrows, glyphs) inside those dark button chips must stay
+   white too — otherwise .text-zinc-400/500 remaps to dark ink and disappears
+   against the black chip background. */
+html[data-theme="light"] button.bg-zinc-800 svg,
+html[data-theme="light"] button.bg-zinc-700 svg,
+html[data-theme="light"] button.bg-zinc-600 svg,
+html[data-theme="light"] [role="button"].bg-zinc-800 svg,
+html[data-theme="light"] [role="button"].bg-zinc-700 svg,
+html[data-theme="light"] [role="button"].bg-zinc-600 svg {
+  color: #ffffff !important;
+}
+
+/* Country-block drawer (settings > privacy): render on paper with soft
+   shadow instead of the default dark glass. */
+html[data-theme="light"] [data-country-block-drawer] {
+  background-color: var(--paper) !important;
+  background-image: url('./assets/textures/paper-texture.png') !important;
+  background-size: 256px 256px !important;
+  color: var(--ink) !important;
+  border-top: 1px solid var(--hairline-strong) !important;
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.12) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html[data-theme="light"] [data-country-block-drawer] .text-white {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-country-block-drawer] input {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  border-color: var(--hairline-strong) !important;
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-country-block-drawer] button:hover {
+  background-color: var(--hover-wash) !important;
+}
+html[data-theme="light"] [data-country-block-drawer] .border-white\/10 {
+  border-color: var(--hairline) !important;
+}
+
 /* Root backgrounds: remap black/zinc-9xx surfaces to paper.
    Genuine dark button chips opt-out with data-keep-dark. */
 html[data-theme="light"] .bg-black:not([data-keep-dark]),

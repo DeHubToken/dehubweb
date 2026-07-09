@@ -2535,7 +2535,7 @@ function GeoBlockingSelector() {
 
       {/* Drawer */}
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
-        <DrawerContent glass className="max-h-[70vh]">
+        <DrawerContent glass data-country-block-drawer className="max-h-[70vh]">
           <DrawerHeader className="border-b border-white/10">
             <DrawerTitle className="text-white">{t('settings.blockCountries')}</DrawerTitle>
           </DrawerHeader>
