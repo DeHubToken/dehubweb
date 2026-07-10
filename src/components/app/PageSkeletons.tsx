@@ -442,47 +442,53 @@ export function NotificationsSkeleton() {
 
 /** Leaderboard skeleton — header bento with trophy + filter pills + search + table rows */
 export function LeaderboardSkeleton() {
+  const { theme } = useAppTheme();
+  const isLight = theme === 'light';
+  const bentoClass = isLight ? 'bg-white border border-black/10' : 'bg-zinc-900';
+  const rowBorder = isLight ? 'border-black/5' : 'border-zinc-800/50';
+  const sk = isLight ? 'bg-black/10' : SK;
+
   return (
     <div className="min-h-screen p-3 sm:p-4">
       {/* Header Bento */}
-      <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 mb-4">
+      <div className={cn('rounded-2xl p-4 sm:p-6 mb-4', bentoClass)}>
         <div className="flex items-center gap-4 mb-4">
-          <Skeleton className={`w-14 h-14 rounded-full ${SK}`} />
+          <Skeleton className={cn('w-14 h-14 rounded-full', sk)} />
           <div className="space-y-2">
-            <Skeleton className={`h-5 w-32 ${SK}`} />
-            <Skeleton className={`h-4 w-48 ${SK}`} />
+            <Skeleton className={cn('h-5 w-32', sk)} />
+            <Skeleton className={cn('h-4 w-48', sk)} />
           </div>
         </div>
         {/* Category filter pills */}
         <div className="flex gap-1.5 overflow-hidden mb-3">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Skeleton key={i} className={`h-9 rounded-xl flex-shrink-0 ${SK} ${i === 0 ? 'w-24' : 'w-20'}`} />
+            <Skeleton key={i} className={cn('h-9 rounded-xl flex-shrink-0', i === 0 ? 'w-24' : 'w-20', sk)} />
           ))}
         </div>
         {/* Time period pills + sort */}
         <div className="flex items-center gap-2 mb-4">
           <div className="flex gap-1.5 flex-1 overflow-hidden">
             {Array.from({ length: 4 }).map((_, i) => (
-              <Skeleton key={i} className={`h-8 w-12 rounded-lg flex-shrink-0 ${SK}`} />
+              <Skeleton key={i} className={cn('h-8 w-12 rounded-lg flex-shrink-0', sk)} />
             ))}
           </div>
-          <Skeleton className={`w-8 h-8 rounded-lg ${SK}`} />
+          <Skeleton className={cn('w-8 h-8 rounded-lg', sk)} />
         </div>
         {/* Search bar */}
-        <Skeleton className={`h-10 w-full rounded-xl ${SK}`} />
+        <Skeleton className={cn('h-10 w-full rounded-xl', sk)} />
       </div>
 
       {/* Table Bento */}
-      <div className="bg-zinc-900 rounded-2xl overflow-hidden">
+      <div className={cn('rounded-2xl overflow-hidden', bentoClass)}>
         {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="flex items-center gap-3 px-4 sm:px-6 py-3 border-b border-zinc-800/50 last:border-b-0">
-            <Skeleton className={`w-7 h-7 rounded-lg ${SK}`} />
-            <Skeleton className={`w-10 h-10 rounded-md ${SK}`} />
+          <div key={i} className={cn('flex items-center gap-3 px-4 sm:px-6 py-3 last:border-b-0 border-b', rowBorder)}>
+            <Skeleton className={cn('w-7 h-7 rounded-lg', sk)} />
+            <Skeleton className={cn('w-10 h-10 rounded-md', sk)} />
             <div className="flex-1 space-y-1.5">
-              <Skeleton className={`h-4 w-28 ${SK}`} />
-              <Skeleton className={`h-3 w-20 ${SK}`} />
+              <Skeleton className={cn('h-4 w-28', sk)} />
+              <Skeleton className={cn('h-3 w-20', sk)} />
             </div>
-            <Skeleton className={`h-4 w-16 ${SK}`} />
+            <Skeleton className={cn('h-4 w-16', sk)} />
           </div>
         ))}
       </div>
