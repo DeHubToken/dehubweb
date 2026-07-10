@@ -23,6 +23,8 @@ import { UserAvatar } from '@/components/app/UserAvatar';
 import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ActionBar } from '@/components/app/cards/ActionBar';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
@@ -826,6 +828,8 @@ function InfiniteScrollSentinel({ onIntersect, isFetching }: { onIntersect: () =
 export default function FeaturesPage() {
   const { t } = useI18n();
   const { isAuthenticated, openLoginModal } = useAuth();
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState<PageTab>('requests');
   const [sort, setSort] = useState<FeatureSort>('most_voted');
@@ -918,9 +922,13 @@ export default function FeaturesPage() {
         <div className="relative flex gap-1 bg-zinc-800/40 rounded-xl p-1 mb-3">
           {/* Sliding liquid glass indicator */}
           <div
-            className={`absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)] transition-transform duration-300 ease-out ${
+            className={cn(
+              "absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 transition-transform duration-300 ease-out",
+              isLightTheme
+                ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2)]"
+                : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)]",
               activeTab === 'shipped' ? 'translate-x-[calc(100%+4px)]' : 'translate-x-0'
-            }`}
+            )}
           />
           <button
             type="button"

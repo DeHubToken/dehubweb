@@ -1,4 +1,6 @@
 import { useEffect, forwardRef } from 'react';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 
 interface GlassIndicatorProps {
   rect: { x: number; y: number; width: number; height: number; ready: boolean };
@@ -15,7 +17,7 @@ interface GlassIndicatorProps {
   fixedHeightPx?: number;
 }
 
-const GLASS_CLASSES = 'pointer-events-none absolute bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]';
+const GLASS_CLASSES = 'pointer-events-none absolute bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30';
 
 // Cache indicator positions so returning to a page renders instantly
 const positionCache = new Map<string, { x: number; y: number; width: number; height: number }>();
@@ -30,6 +32,8 @@ const positionCache = new Map<string, { x: number; y: number; width: number; hei
  */
 export const GlassIndicator = forwardRef<HTMLDivElement, GlassIndicatorProps>(
   function GlassIndicator({ rect, borderRadius = '0.75rem', className, layoutKey, enableTransition = false, fixedHeightPx }, ref) {
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
   // Cache every stable rect position
   useEffect(() => {
     if (rect.ready && layoutKey) {
@@ -60,7 +64,13 @@ export const GlassIndicator = forwardRef<HTMLDivElement, GlassIndicatorProps>(
     <div
       ref={ref}
       data-glass-indicator
-      className={`${GLASS_CLASSES} ${className ?? ''}`}
+      className={cn(
+        GLASS_CLASSES,
+        isLightTheme
+          ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-1px_0_rgba(255,255,255,0.05)]"
+          : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]",
+        className
+      )}
       style={{
         borderRadius,
         transform: `translate(${displayRect.x}px, ${displayY}px)`,

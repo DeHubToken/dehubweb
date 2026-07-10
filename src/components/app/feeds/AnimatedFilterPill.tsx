@@ -8,6 +8,7 @@
  */
 
 import { motion } from 'framer-motion';
+import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 
 const INACTIVE_CLASS = 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700';
@@ -32,6 +33,8 @@ export function AnimatedFilterPill({
   children,
   className,
 }: AnimatedFilterPillProps) {
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
   return (
     <button
       onClick={onClick}
@@ -44,7 +47,12 @@ export function AnimatedFilterPill({
       {isActive && (
         <motion.div
           layoutId={layoutId}
-          className="absolute inset-0 rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+          className={cn(
+            "absolute inset-0 rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30",
+            isLightTheme
+              ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-1px_0_rgba(255,255,255,0.05)]"
+              : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+          )}
           transition={{ type: 'spring', stiffness: 400, damping: 30 }}
         />
       )}

@@ -19,6 +19,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { Settings2, ArrowLeft } from 'lucide-react';
 import { FEED_TABS } from '@/constants/app.constants';
 import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
+import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
@@ -77,6 +78,8 @@ export default function HomePage() {
   const queryClient = useQueryClient();
   const [searchParams, setSearchParams] = useSearchParams();
   const { isCollapsed } = useSidebarCollapse();
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
   const navVisible = useScrollDirection();
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1024);
   useEffect(() => {
@@ -757,7 +760,12 @@ export default function HomePage() {
                 aria-label={isPostOverlayActive ? "Back to feed" : "Feed settings"}
               >
                 {hasActiveFilters && !isPostOverlayActive && (
-                  <div className="absolute inset-0 translate-y-[0.6px] lg:translate-y-[0.25px] rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]" />
+                  <div className={cn(
+                    "absolute inset-0 translate-y-[0.6px] lg:translate-y-[0.25px] rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30",
+                    isLightTheme
+                      ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-1px_0_rgba(255,255,255,0.05)]"
+                      : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+                  )} />
                 )}
                 <AnimatePresence mode="wait" initial={false}>
                   {isPostOverlayActive ? (
