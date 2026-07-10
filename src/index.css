@@ -773,13 +773,16 @@ html[data-theme="swarms"] #app-root > div > main {
   background-color: transparent !important;
 }
 
-/* Hazy / Swarms: remove the dark square box behind the top feed nav bar
-   so the active glass pill and tab icons float over the shader background. */
+/* Cosmic / Hazy / Swarms: remove the dark square box behind the top feed nav
+   bar so the active glass pill and tab icons float over the shader/canvas
+   background. */
+html[data-theme="cosmic"] [data-feed-nav-outer],
 html[data-theme="hazy"] [data-feed-nav-outer],
 html[data-theme="swarms"] [data-feed-nav-outer] {
   background-color: transparent !important;
 }
 
+html[data-theme="cosmic"] [data-feed-nav],
 html[data-theme="hazy"] [data-feed-nav],
 html[data-theme="swarms"] [data-feed-nav] {
   background-color: transparent !important;
@@ -1168,6 +1171,14 @@ html[data-theme="light"] #app-root > div > main > div {
   color: var(--ink) !important;
 }
 
+/* <html> and #root are forced #000 by the Web3Auth gap fallbacks (~L576);
+   only body/#app-root were overridden here, so overscroll rubber-banding and
+   routes outside the app shell flashed black edges on paper. */
+html[data-theme="light"],
+html[data-theme="light"] #root {
+  background-color: var(--paper) !important;
+}
+
 /* Subtle soft grain overlay across the whole light-mode UI. */
 html[data-theme="light"] body::after {
   content: "";
@@ -1211,6 +1222,14 @@ html[data-theme="light"] .toaster .toast .description,
 html[data-theme="light"] .toaster .toast .cancelButton {
   color: var(--ink-muted) !important;
 }
+/* The toast surface itself keeps its dark-glass bg-white/10 + border-white/20
+   classes, which are a barely-visible ghost on paper — give it an opaque
+   paper panel with a hairline and soft shadow instead. */
+html[data-theme="light"] .toaster .toast {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline-strong) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+}
 html[data-theme="light"] .text-zinc-600 {
   color: #707070 !important;
 }
@@ -1246,6 +1265,24 @@ html[data-theme="light"] button.bg-zinc-600 svg,
 html[data-theme="light"] [role="button"].bg-zinc-800 svg,
 html[data-theme="light"] [role="button"].bg-zinc-700 svg,
 html[data-theme="light"] [role="button"].bg-zinc-600 svg {
+  color: #ffffff !important;
+}
+
+/* Buttons on translucent black glass chips (bg-black/40..80): the wash remap
+   below (~L2119) skips buttons, so the chip surface stays dark — but the
+   global .text-white → ink remap still applied, leaving ink-on-dark invisible
+   labels/icons (feed-card AI button, fullscreen viewer controls, carousel
+   arrows). Keep their text and icons white, same reasoning as the zinc chips
+   above. The svg rule also rescues icon-only buttons whose muted text-white/NN
+   class sits on the button element itself. */
+html[data-theme="light"] button[class*="bg-black\/"],
+html[data-theme="light"] button[class*="bg-black\/"] *,
+html[data-theme="light"] [role="button"][class*="bg-black\/"],
+html[data-theme="light"] [role="button"][class*="bg-black\/"] * {
+  color: #ffffff !important;
+}
+html[data-theme="light"] button[class*="bg-black\/"] svg,
+html[data-theme="light"] [role="button"][class*="bg-black\/"] svg {
   color: #ffffff !important;
 }
 
@@ -1362,12 +1399,14 @@ html[data-theme="light"] .hover\:bg-zinc-800\/90:hover {
  * Login / Sign-up modal — light mode
  * Paper surface, ink text, dark primary CTA. Applies to the desktop and
  * mobile Drawer (both carry data-login-modal on their content root).
- * The modal background matches the app background exactly on light mode.
+ * The backdrop blurs the app behind a light paper wash (the light-theme
+ * counterpart of the dark bg-black/40 + blur overlay) so attention
+ * concentrates on the login flow in every theme.
  * ========================================================================== */
 html[data-theme="light"] .login-modal-overlay {
-  background-color: transparent !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+  background-color: rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: blur(24px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(120%) !important;
 }
 
 /* Center toasts fired during the login flow (modal open, connecting, or

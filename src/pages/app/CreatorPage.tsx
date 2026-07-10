@@ -707,7 +707,7 @@ function GalleryTile({ item, onOpen }: { item: GalleryItem; onOpen: (i: GalleryI
         />
       ))}
       {isVideo && (
-        <span className="absolute right-1.5 top-1.5 rounded bg-black/70 px-1.5 py-0.5 text-[9px] font-black uppercase text-white backdrop-blur">
+        <span data-keep-dark className="absolute right-1.5 top-1.5 rounded bg-black/70 px-1.5 py-0.5 text-[9px] font-black uppercase text-white backdrop-blur">
           Video
         </span>
       )}

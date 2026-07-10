@@ -308,7 +308,7 @@ export function PromptFlowModal({ open, onOpenChange, categories, initialPrompt 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md bg-black/80 backdrop-blur-2xl border border-white/10 text-white rounded-2xl p-6">
+      <DialogContent data-keep-dark className="max-w-md bg-black/80 backdrop-blur-2xl border border-white/10 text-white rounded-2xl p-6">
         {body}
       </DialogContent>
     </Dialog>

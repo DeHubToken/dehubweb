@@ -336,7 +336,7 @@ function InlineVideoCard({ video, onSeeAll }: { video: VideoItem; onSeeAll: () =
 
         {/* Duration badge */}
         {!isPlaying && video.duration && (
-          <div className="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/70 rounded text-xs text-white">
+          <div data-keep-dark className="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/70 rounded text-xs text-white">
             {video.duration}
           </div>
         )}
