@@ -93,6 +93,8 @@ function ContentTypeFilterSection({
   onToggle: (filter: keyof ContentTypeFilters) => void 
 }) {
   const { t } = useI18n();
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
   return (
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.contentType')}</span>
