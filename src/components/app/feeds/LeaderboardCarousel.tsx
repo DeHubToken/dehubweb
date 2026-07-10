@@ -8,6 +8,8 @@ import { memo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Trophy, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 import { getLeaderboard, type LeaderboardEntry } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getBadgeUrl } from '@/lib/staking-badges';
