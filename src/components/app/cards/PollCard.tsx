@@ -88,7 +88,7 @@ export function PollCard({ tokenId }: PollCardProps) {
   };
 
   return (
-    <div className="rounded-xl bg-white/5 border border-white/10 p-4 space-y-3 mt-2" data-no-navigate onClick={e => e.stopPropagation()}>
+    <div data-poll-card className="rounded-xl bg-white/5 border border-white/10 p-4 space-y-3 mt-2" data-no-navigate onClick={e => e.stopPropagation()}>
       <div className="flex items-start justify-between gap-2">
         <p className="text-white font-medium text-sm leading-snug">
           {poll.question}

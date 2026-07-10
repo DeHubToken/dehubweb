@@ -2093,6 +2093,36 @@ html[data-theme="light"] [data-explore-page] .hover\:bg-zinc-800:hover svg {
   color: var(--ink) !important;
 }
 
+/* Poll cards (PollCard): built from white-glass utilities that are invisible
+   on paper — checkbox/radio outlines (border-white/30), option-row washes
+   (bg-white/10), post-vote result bars (bg-white/40 voted, bg-white/20
+   others), and the card surface (bg-white/5). Remap them to ink washes.
+   The selected checkbox already flips correctly via the global bg-white →
+   ink and bg-black → paper remaps. */
+html[data-theme="light"] [data-poll-card] {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+  border-color: var(--hairline-strong) !important;
+}
+html[data-theme="light"] [data-poll-card] .border-white\/30 {
+  border-color: rgba(0, 0, 0, 0.4) !important;
+}
+html[data-theme="light"] [data-poll-card] .border-white {
+  border-color: var(--ink) !important;
+}
+html[data-theme="light"] [data-poll-card] .bg-white\/10 {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-theme="light"] [data-poll-card] .bg-white\/40 {
+  background-color: rgba(0, 0, 0, 0.26) !important;
+}
+html[data-theme="light"] [data-poll-card] .bg-white\/20 {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
+html[data-theme="light"] [data-poll-card] .hover\:bg-white\/5:hover,
+html[data-theme="light"] [data-poll-card] .hover\:bg-white\/20:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
 /* Video first-frame glitch loader */
 @keyframes video-glitch-r {
   0%, 100% { transform: translate(0, 0); }
