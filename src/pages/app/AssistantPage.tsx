@@ -20,6 +20,8 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useUserLanguage } from '@/hooks/use-user-language';
 import { useMention } from '@/hooks/use-mention';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import dehubLogoPrimary from '@/assets/dehub-logo-primary.png.asset.json';
 import dehubLogoIcon from '@/assets/dehub-logo-icon.png.asset.json';
@@ -417,6 +419,14 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
 export default function AssistantPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
+  const actionBubbleClass = cn(
+    "shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs",
+    isLightTheme
+      ? "[&>div]:!bg-white/90 [&>div]:!bg-none [&>div]:!border-black/10 [&>div]:!shadow-[0_2px_8px_rgba(0,0,0,0.08)] [&_span]:!text-black"
+      : "[&>div]:from-zinc-900/90 [&>div]:to-white/5"
+  );
   // Slash-command skill picker
   const [slashOpen, setSlashOpen] = useState(false);
   const [slashQuery, setSlashQuery] = useState('');
@@ -2582,7 +2592,7 @@ export default function AssistantPage() {
                         onClick={() => setSkillsHubOpen(true)}
                         width="auto"
                         height="32px"
-                        className="[&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                        className={actionBubbleClass}
                       />
                       <span className="pointer-events-none absolute -top-1.5 -right-1.5 text-[8px] font-bold tracking-wider bg-white text-black rounded px-1 py-[1px] leading-none">TEST</span>
                     </div>
@@ -2595,7 +2605,7 @@ export default function AssistantPage() {
                         }}
                         width="auto"
                         height="32px"
-                        className="[&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                        className={actionBubbleClass}
                       />
                       <span className="pointer-events-none absolute -top-1.5 -right-1.5 text-[8px] font-bold tracking-wider bg-white text-black rounded px-1 py-[1px] leading-none">TEST</span>
                     </div>
@@ -2609,14 +2619,14 @@ export default function AssistantPage() {
                       }}
                       width="auto"
                       height="32px"
-                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                      className={actionBubbleClass}
                     />
                     <LiquidGlassBubble2
                       label={`✏️ ${t('assistant.editImage')}`}
                       onClick={() => fileInputRef.current?.click()}
                       width="auto"
                       height="32px"
-                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                      className={actionBubbleClass}
                     />
                     <LiquidGlassBubble2
                       label={`🎥 ${t('assistant.generateVideo')}`}
@@ -2628,7 +2638,7 @@ export default function AssistantPage() {
                       }}
                       width="auto"
                       height="32px"
-                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                      className={actionBubbleClass}
                     />
                     <LiquidGlassBubble2
                       label="🎵 Create a song"
@@ -2638,7 +2648,7 @@ export default function AssistantPage() {
                       }}
                       width="auto"
                       height="32px"
-                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                      className={actionBubbleClass}
                     />
                   </div>
                 </motion.div>
