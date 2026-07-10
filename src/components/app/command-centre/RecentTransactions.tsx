@@ -313,6 +313,9 @@ export function RecentTransactions() {
     return filtered.slice(0, 15);
   }, [dpayTxs, ppvPurchases, tipRecords, onchainTransfers, tipNotifications, walletAddress, activeFilter, usernameMap, t]);
 
+  const dividerClass = isLightTheme ? "divide-y divide-black/5" : "divide-y divide-zinc-800";
+  const rowHoverClass = isLightTheme ? "hover:bg-black/[0.03]" : "hover:bg-zinc-800/50";
+
   return (
     <div className={cardClass}>
       <div className="flex items-center justify-between mb-3">
@@ -340,7 +343,7 @@ export function RecentTransactions() {
           {t('commandCentre.noTransactionsYet')}
         </div>
       ) : (
-        <div className="space-y-0 divide-y divide-zinc-800">
+        <div className={cn("space-y-0", dividerClass)}>
           {recent.map((tx) => {
             const dateStr = format(new Date(tx.createdAt), 'dd MMM');
             const explorerUrl = tx.txHash
@@ -349,7 +352,13 @@ export function RecentTransactions() {
             return (
               <div
                 key={tx.id}
-                className={`flex items-center justify-between py-3 ${explorerUrl ? 'cursor-pointer hover:bg-zinc-800/50 -mx-2 px-2 rounded-xl transition-colors' : ''}`}
+                className={cn(
+                  "flex items-center justify-between py-3",
+                  explorerUrl && [
+                    "cursor-pointer -mx-2 px-2 rounded-xl transition-colors",
+                    rowHoverClass
+                  ]
+                )}
                 onClick={() => explorerUrl && window.open(explorerUrl, '_blank')}
               >
                 <div className="flex items-center gap-2 min-w-0">
