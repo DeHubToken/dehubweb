@@ -188,6 +188,7 @@ export function FullscreenImageViewer({
           {/* Close button */}
           <button
             onClick={onClose}
+            data-keep-dark
             className="absolute top-4 right-4 z-10 w-10 h-10 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
             aria-label="Close fullscreen"
           >
@@ -200,6 +201,7 @@ export function FullscreenImageViewer({
               e.stopPropagation();
               handleTranslateImage();
             }}
+            data-keep-dark
             className="absolute top-4 right-16 z-10 w-10 h-10 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 flex items-center justify-center text-white hover:bg-black/80 transition-colors"
             aria-label="Translate image text"
           >
@@ -208,7 +210,7 @@ export function FullscreenImageViewer({
 
           {/* Image counter */}
           {hasMultiple && (
-            <div className="absolute top-4 left-1/2 -translate-x-1/2 z-10 px-3 py-1.5 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 text-white text-sm font-medium">
+            <div data-keep-dark className="absolute top-4 left-1/2 -translate-x-1/2 z-10 px-3 py-1.5 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 text-white text-sm font-medium">
               {currentIndex + 1} / {images.length}
             </div>
           )}
@@ -245,6 +247,7 @@ export function FullscreenImageViewer({
                     e.stopPropagation();
                     scrollPrev();
                   }}
+                  data-keep-dark
                   className="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 items-center justify-center text-white hover:bg-black/80 transition-colors"
                   aria-label="Previous image"
                 >
@@ -257,6 +260,7 @@ export function FullscreenImageViewer({
                     e.stopPropagation();
                     scrollNext();
                   }}
+                  data-keep-dark
                   className="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-xl bg-black/60 backdrop-blur-[24px] saturate-[180%] border border-white/20 items-center justify-center text-white hover:bg-black/80 transition-colors"
                   aria-label="Next image"
                 >
