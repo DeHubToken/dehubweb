@@ -231,8 +231,13 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
         </div>
 
         {/* Navigation Bento - scrollable */}
-        <motion.div ref={sidePanelRef} data-side-panel layoutRoot className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0">
-          {/* Active glass overlay indicator - sits above scroll container so shadow is never clipped */}
+        <motion.div ref={sidePanelRef} data-side-panel layoutRoot className="relative -mt-[8.5px] bg-zinc-900 rounded-2xl flex-1 min-h-0 overflow-hidden">
+          {/* Active glass overlay indicator - tracks the active item's on-screen
+              position (via getBoundingClientRect, which is always current, so it
+              naturally follows scrolling). Clipped at this panel's own edges —
+              matching where the scrollable list visually starts/ends — so it cuts
+              off at top/bottom like the text instead of floating past it, while
+              still bleeding freely around each item mid-list for the shadow. */}
           {indicatorRect.ready && (
             <motion.div
               data-sidebar-active-indicator
