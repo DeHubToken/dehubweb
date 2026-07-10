@@ -3198,6 +3198,7 @@ export default function AssistantPage() {
             <button
               onClick={(e) => { e.stopPropagation(); setLightboxImage(null); }}
               aria-label="Close"
+              data-keep-dark
               className="absolute top-4 right-4 flex items-center justify-center w-11 h-11 rounded-xl text-white bg-white/10 hover:bg-white/20 backdrop-blur-xl border border-white/20 transition-all"
             >
               <X className="w-5 h-5" />
