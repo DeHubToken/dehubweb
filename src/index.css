@@ -1243,8 +1243,9 @@ html[data-theme="light"] [role="button"].bg-zinc-600 svg {
    shadow instead of the default dark glass. */
 html[data-theme="light"] [data-country-block-drawer] {
   background-color: var(--paper) !important;
-  background-image: url('./assets/textures/paper-texture.png') !important;
-  background-size: 256px 256px !important;
+  background-image: var(--noise-svg), url('./assets/textures/paper-texture.png') !important;
+  background-size: 200px 200px, 256px 256px !important;
+  background-blend-mode: normal, normal !important;
   color: var(--ink) !important;
   border-top: 1px solid var(--hairline-strong) !important;
   box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.12) !important;
