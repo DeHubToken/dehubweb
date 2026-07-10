@@ -11,6 +11,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { subHours, subDays, subWeeks, subMonths } from 'date-fns';
 import dehubCoin from '@/assets/dehub-coin.png';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 
@@ -81,6 +83,15 @@ function buildBreakdown(transactions: DPayTransaction[]) {
 export function TransactionsTab() {
   const [activeFilter, setActiveFilter] = useState('1m');
   const { isAuthenticated, walletAddress } = useAuth();
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
+
+  const cardClass = cn(
+    "rounded-2xl p-5",
+    isLightTheme
+      ? "bg-white/80 shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
+      : "bg-zinc-900 border border-zinc-800"
+  );
 
   const { data: dpayTxs = [], isLoading: txLoading, isError: txError } = useQuery({
     queryKey: ['dpay', 'transactions'],
