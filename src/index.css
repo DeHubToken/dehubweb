@@ -1144,8 +1144,8 @@ html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn][data-active="true
  * Buttons keep their dark grey / white styling unchanged.
  * ========================================================================== */
 html[data-theme="light"] {
-  --paper: #f5f2eb;
-  --paper-deep: #e8e4db;
+  --paper: #f9f8f4;
+  --paper-deep: #ece8df;
   --ink: #1a1a1a;
   --ink-muted: #5a5a5a;
   --hairline: rgba(0, 0, 0, 0.08);
