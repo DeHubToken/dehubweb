@@ -1277,7 +1277,9 @@ html[data-theme="light"] .bg-zinc-800\/60,
 html[data-theme="light"] .bg-zinc-800\/90,
 html[data-theme="light"] .bg-zinc-700\/50,
 html[data-theme="light"] .bg-zinc-700\/60,
-html[data-theme="light"] .bg-zinc-800\/30 {
+html[data-theme="light"] .bg-zinc-800\/30,
+html[data-theme="light"] .hover\:bg-zinc-800\/50:hover,
+html[data-theme="light"] .hover\:bg-zinc-700\/50:hover {
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
 
