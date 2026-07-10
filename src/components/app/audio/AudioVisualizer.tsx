@@ -321,7 +321,12 @@ export function AudioVisualizer({
                   {style === s.value && (
                     <motion.div
                       layoutId="audio-style-indicator"
-                      className="absolute inset-0 rounded-lg bg-gradient-to-br from-white/25 via-white/15 to-white/8 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)]"
+                      className={cn(
+                        "absolute inset-0 rounded-lg bg-gradient-to-br from-white/25 via-white/15 to-white/8 backdrop-blur-xl border border-white/30",
+                        isLightTheme
+                          ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.15)]"
+                          : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)]"
+                      )}
                       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     />
                   )}
