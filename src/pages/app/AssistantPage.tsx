@@ -2592,7 +2592,7 @@ export default function AssistantPage() {
                         onClick={() => setSkillsHubOpen(true)}
                         width="auto"
                         height="32px"
-                        className="[&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                        className={actionBubbleClass}
                       />
                       <span className="pointer-events-none absolute -top-1.5 -right-1.5 text-[8px] font-bold tracking-wider bg-white text-black rounded px-1 py-[1px] leading-none">TEST</span>
                     </div>
@@ -2605,7 +2605,7 @@ export default function AssistantPage() {
                         }}
                         width="auto"
                         height="32px"
-                        className="[&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                        className={actionBubbleClass}
                       />
                       <span className="pointer-events-none absolute -top-1.5 -right-1.5 text-[8px] font-bold tracking-wider bg-white text-black rounded px-1 py-[1px] leading-none">TEST</span>
                     </div>
@@ -2619,14 +2619,14 @@ export default function AssistantPage() {
                       }}
                       width="auto"
                       height="32px"
-                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                      className={actionBubbleClass}
                     />
                     <LiquidGlassBubble2
                       label={`✏️ ${t('assistant.editImage')}`}
                       onClick={() => fileInputRef.current?.click()}
                       width="auto"
                       height="32px"
-                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                      className={actionBubbleClass}
                     />
                     <LiquidGlassBubble2
                       label={`🎥 ${t('assistant.generateVideo')}`}
@@ -2638,7 +2638,7 @@ export default function AssistantPage() {
                       }}
                       width="auto"
                       height="32px"
-                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                      className={actionBubbleClass}
                     />
                     <LiquidGlassBubble2
                       label="🎵 Create a song"
@@ -2648,7 +2648,7 @@ export default function AssistantPage() {
                       }}
                       width="auto"
                       height="32px"
-                      className="shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:from-zinc-900/90 [&>div]:to-white/5 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs"
+                      className={actionBubbleClass}
                     />
                   </div>
                 </motion.div>
