@@ -5,12 +5,30 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
 import { useMySubscriptions, useCreatorPlans } from '@/hooks/use-subscriptions';
 import { isPast } from 'date-fns';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 
 export function SubscriptionsSummary() {
   const { isAuthenticated, walletAddress } = useAuth();
   const { t } = useTranslation();
   const { subscriptions, isLoading: subsLoading } = useMySubscriptions();
   const { plans, isLoading: plansLoading } = useCreatorPlans(walletAddress || undefined);
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
+
+  const cardClass = cn(
+    "rounded-2xl p-5 max-h-[420px] overflow-y-auto",
+    isLightTheme
+      ? "bg-white/80 shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
+      : "bg-zinc-900 border border-zinc-800"
+  );
+
+  const statBoxClass = cn(
+    "rounded-xl",
+    isLightTheme
+      ? "bg-white/50 p-3"
+      : "bg-zinc-800/50 p-3"
+  );
 
   const isLoading = subsLoading || plansLoading;
 
@@ -26,14 +44,14 @@ export function SubscriptionsSummary() {
 
   if (!isAuthenticated) {
     return (
-      <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800 flex items-center justify-center h-64">
+      <div className={cn(cardClass, "flex items-center justify-center h-64")}>
         <p className="text-zinc-500 text-sm">{t('commandCentre.signInSubscriptions')}</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800 max-h-[420px] overflow-y-auto">
+    <div className={cardClass}>
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-white font-semibold">{t('commandCentre.subscriptionsSummary')}</h3>
         <Button variant="glass" size="sm" className="text-xs h-8 rounded-xl">
@@ -49,22 +67,22 @@ export function SubscriptionsSummary() {
         <>
           {/* Stats Grid */}
           <div className="grid grid-cols-3 gap-2 mb-4">
-            <div className="bg-zinc-800/50 rounded-xl p-3">
+            <div className={statBoxClass}>
               <span className="text-zinc-500 text-xs">{t('commandCentre.active')}</span>
               <p className="text-white text-xl font-bold">{activeSubscriptions.length}</p>
             </div>
-            <div className="bg-zinc-800/50 rounded-xl p-3">
+            <div className={statBoxClass}>
               <span className="text-zinc-500 text-xs">{t('commandCentre.total')}</span>
               <p className="text-white text-xl font-bold">{subscriptions.length}</p>
             </div>
-            <div className="bg-zinc-800/50 rounded-xl p-3">
+            <div className={statBoxClass}>
               <span className="text-zinc-500 text-xs">Plans</span>
               <p className="text-white text-xl font-bold">{plans.length}</p>
             </div>
           </div>
 
           {/* Monthly Spend */}
-          <div className="bg-zinc-800/50 rounded-xl p-4">
+          <div className={cn(statBoxClass, "p-4")}>
             <div className="flex items-center justify-between mb-2">
               <span className="text-zinc-400 text-sm">{t('commandCentre.estMonthlySpend')}</span>
               {activeSubscriptions.length > 0 && (

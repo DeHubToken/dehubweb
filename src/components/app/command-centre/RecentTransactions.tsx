@@ -12,6 +12,8 @@ import { getNotifications } from '@/lib/api/dehub/notifications';
 import { format, subHours, subDays, subWeeks, subMonths } from 'date-fns';
 import { useState, useMemo } from 'react';
 import { useOnchainDHBTransfers } from '@/hooks/use-onchain-dhb-transfers';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 
@@ -64,6 +66,15 @@ export function RecentTransactions() {
   const { isAuthenticated, walletAddress } = useAuth();
   const [activeFilter, setActiveFilter] = useState('1m');
   const { t } = useTranslation();
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
+
+  const cardClass = cn(
+    "rounded-2xl p-5 max-h-[420px] overflow-y-auto",
+    isLightTheme
+      ? "bg-white/80 shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
+      : "bg-zinc-900 border border-zinc-800"
+  );
 
   const { data: dpayTxs = [], isLoading: dpayLoading } = useQuery({
     queryKey: ['dpay', 'transactions'],
@@ -302,8 +313,11 @@ export function RecentTransactions() {
     return filtered.slice(0, 15);
   }, [dpayTxs, ppvPurchases, tipRecords, onchainTransfers, tipNotifications, walletAddress, activeFilter, usernameMap, t]);
 
+  const dividerClass = isLightTheme ? "divide-y divide-black/5" : "divide-y divide-zinc-800";
+  const rowHoverClass = isLightTheme ? "hover:bg-black/[0.03]" : "hover:bg-zinc-800/50";
+
   return (
-    <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800 max-h-[420px] overflow-y-auto">
+    <div className={cardClass}>
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-white font-semibold">{t('commandCentre.recentTransactions')}</h3>
         <Button variant="glass" size="sm" className="text-xs h-8 rounded-xl">
@@ -329,7 +343,7 @@ export function RecentTransactions() {
           {t('commandCentre.noTransactionsYet')}
         </div>
       ) : (
-        <div className="space-y-0 divide-y divide-zinc-800">
+        <div className={cn("space-y-0", dividerClass)}>
           {recent.map((tx) => {
             const dateStr = format(new Date(tx.createdAt), 'dd MMM');
             const explorerUrl = tx.txHash
@@ -338,7 +352,13 @@ export function RecentTransactions() {
             return (
               <div
                 key={tx.id}
-                className={`flex items-center justify-between py-3 ${explorerUrl ? 'cursor-pointer hover:bg-zinc-800/50 -mx-2 px-2 rounded-xl transition-colors' : ''}`}
+                className={cn(
+                  "flex items-center justify-between py-3",
+                  explorerUrl && [
+                    "cursor-pointer -mx-2 px-2 rounded-xl transition-colors",
+                    rowHoverClass
+                  ]
+                )}
                 onClick={() => explorerUrl && window.open(explorerUrl, '_blank')}
               >
                 <div className="flex items-center gap-2 min-w-0">

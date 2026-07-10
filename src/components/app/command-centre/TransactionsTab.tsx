@@ -11,6 +11,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { subHours, subDays, subWeeks, subMonths } from 'date-fns';
 import dehubCoin from '@/assets/dehub-coin.png';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 
@@ -81,6 +83,18 @@ function buildBreakdown(transactions: DPayTransaction[]) {
 export function TransactionsTab() {
   const [activeFilter, setActiveFilter] = useState('1m');
   const { isAuthenticated, walletAddress } = useAuth();
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
+
+  const cardClass = cn(
+    "rounded-2xl p-5",
+    isLightTheme
+      ? "bg-white/80 shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
+      : "bg-zinc-900 border border-zinc-800"
+  );
+
+  const dividerClass = isLightTheme ? "divide-y divide-black/5" : "divide-y divide-zinc-800";
+  const rowHoverClass = isLightTheme ? "hover:bg-black/[0.03]" : "hover:bg-zinc-800/50";
 
   const { data: dpayTxs = [], isLoading: txLoading, isError: txError } = useQuery({
     queryKey: ['dpay', 'transactions'],
@@ -157,7 +171,7 @@ export function TransactionsTab() {
       {/* Top Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Total Transactions Card */}
-        <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
+        <div className={cardClass}>
           <div className="flex items-start justify-between mb-2">
             <div>
               <div className="flex items-center gap-2 mb-1">
@@ -252,7 +266,7 @@ export function TransactionsTab() {
         </div>
 
         {/* Transaction Breakdown Card */}
-        <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
+        <div className={cardClass}>
           <div className="flex items-start justify-between mb-4">
             <div>
               <span className="text-zinc-400 text-sm">Transaction breakdown</span>
@@ -306,7 +320,7 @@ export function TransactionsTab() {
       </div>
 
       {/* Transaction List */}
-      <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
+      <div className={cardClass}>
         <div className="flex items-center justify-between mb-4">
           <span className="text-white font-semibold">Recent</span>
           <span className="text-xs text-zinc-500">
@@ -330,7 +344,7 @@ export function TransactionsTab() {
               : 'No transactions in this time period.'}
           </div>
         ) : (
-          <div className="divide-y divide-zinc-800">
+          <div className={cn("divide-y", dividerClass)}>
             {filteredTransactions.map((tx) => {
               const date = new Date(tx.createdAt);
               const dateStr = date.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -339,7 +353,13 @@ export function TransactionsTab() {
               const label = tx.type === 'buy' ? 'Coin Purchase' : (tx.type as string) === 'ppv' ? 'PPV Unlock' : tx.type === 'sell' ? 'Coin Sale' : 'Transfer';
 
               const row = (
-                <div key={tx.id} className={`flex items-center justify-between py-3 ${explorerUrl ? 'cursor-pointer hover:bg-zinc-800/50 -mx-2 px-2 rounded-xl transition-colors' : ''}`}>
+                <div key={tx.id} className={cn(
+                  "flex items-center justify-between py-3",
+                  explorerUrl && [
+                    "cursor-pointer -mx-2 px-2 rounded-xl transition-colors",
+                    rowHoverClass
+                  ]
+                )}>
                   <div className="min-w-0">
                     <span className="text-sm text-zinc-300 block">
                       {label}: <span className={isCredit ? 'text-emerald-400' : 'text-red-400'}>${tx.amount.toLocaleString()}</span>

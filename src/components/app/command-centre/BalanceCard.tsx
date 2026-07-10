@@ -11,6 +11,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 
 const OTHER_SYMBOLS = ['ETH', 'BTC', 'USDT'] as const;
 const LOGOS: Record<string, string> = { ETH: ethLogo, BTC: btcLogo, USDT: usdtLogo };
@@ -20,6 +22,15 @@ export function BalanceCard() {
   const { walletAddress, isAuthenticated } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
+
+  const cardClass = cn(
+    "rounded-2xl p-5",
+    isLightTheme
+      ? "bg-white/80 shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
+      : "bg-zinc-900 border border-zinc-800"
+  );
 
   // DHB balance from API profile (no edge function needed)
   const { data: profile, isLoading: badgeLoading } = useDeHubProfile({ userId: walletAddress || undefined, enabled: !!walletAddress });
@@ -58,14 +69,14 @@ export function BalanceCard() {
 
   if (!isAuthenticated) {
     return (
-      <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800 flex items-center justify-center h-64">
+      <div className={cn(cardClass, "flex items-center justify-center h-64")}>
         <p className="text-zinc-500 text-sm">{t('commandCentre.signInBalance')}</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800 flex flex-col">
+    <div className={cn(cardClass, "flex flex-col")}>
       {/* Header */}
       <div className="mb-4">
         <div className="flex items-center gap-2 mt-1">
