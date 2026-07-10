@@ -168,7 +168,7 @@ export function TransactionsTab() {
       {/* Top Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Total Transactions Card */}
-        <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
+        <div className={cardClass}>
           <div className="flex items-start justify-between mb-2">
             <div>
               <div className="flex items-center gap-2 mb-1">
@@ -263,7 +263,7 @@ export function TransactionsTab() {
         </div>
 
         {/* Transaction Breakdown Card */}
-        <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
+        <div className={cardClass}>
           <div className="flex items-start justify-between mb-4">
             <div>
               <span className="text-zinc-400 text-sm">Transaction breakdown</span>
@@ -317,7 +317,7 @@ export function TransactionsTab() {
       </div>
 
       {/* Transaction List */}
-      <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
+      <div className={cardClass}>
         <div className="flex items-center justify-between mb-4">
           <span className="text-white font-semibold">Recent</span>
           <span className="text-xs text-zinc-500">
