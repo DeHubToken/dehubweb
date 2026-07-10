@@ -63,6 +63,8 @@ export function AudioVisualizer({
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
   const animationRef = useRef<number | null>(null);
   const isConnectedRef = useRef(false);
   
