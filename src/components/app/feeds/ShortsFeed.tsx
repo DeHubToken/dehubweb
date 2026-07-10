@@ -251,7 +251,7 @@ function CategoryFilterSection({
           {selectedObj && (
             <button
               onClick={() => { onSelect(null); setSearch(''); }}
-              className={cn("flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all", ACTIVE_FILTER_CLASS)}
+              className={cn("flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all", useActiveFilterClass())}
             >
               {selectedObj.name}
               <span className="ml-0.5 text-white/50 hover:text-white">✕</span>
@@ -261,7 +261,7 @@ function CategoryFilterSection({
             onClick={() => { onSelect(null); setSearch(''); }}
             className={cn(
               'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-              selectedCategory === null ? ACTIVE_FILTER_CLASS : INACTIVE_FILTER_CLASS
+              selectedCategory === null ? useActiveFilterClass() : INACTIVE_FILTER_CLASS
             )}
           >
             {t('filters.all')}
@@ -272,7 +272,7 @@ function CategoryFilterSection({
               onClick={() => { onSelect(cat.id); setSearch(''); }}
               className={cn(
                 'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                selectedCategory === cat.id ? ACTIVE_FILTER_CLASS : INACTIVE_FILTER_CLASS
+                selectedCategory === cat.id ? useActiveFilterClass() : INACTIVE_FILTER_CLASS
               )}
             >
               {cat.name}
