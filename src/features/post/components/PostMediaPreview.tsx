@@ -828,7 +828,7 @@ export function PostMediaPreview({
                       
                       {/* Duration badge */}
                       {m.duration && (
-                        <div className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-xs text-white pointer-events-none">
+                        <div data-keep-dark className="absolute bottom-2 left-2 bg-black/70 px-2 py-0.5 rounded text-xs text-white pointer-events-none">
                           {Math.floor(m.duration / 60)}:{String(Math.floor(m.duration % 60)).padStart(2, '0')}
                           {m.duration < 90 && <span className="ml-1 text-emerald-400">• Short</span>}
                         </div>
@@ -918,7 +918,7 @@ export function PostMediaPreview({
                       )}
                       {/* Label */}
                       <div className="absolute bottom-2 left-2">
-                        <span className="text-xs text-white/70 font-medium bg-black/60 px-2 py-1 rounded-lg">Thumbnail</span>
+                        <span data-keep-dark className="text-xs text-white/70 font-medium bg-black/60 px-2 py-1 rounded-lg">Thumbnail</span>
                       </div>
                     </div>
                     
@@ -1107,7 +1107,7 @@ export function PostMediaPreview({
             </motion.div>
 
             {/* Image counter */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white text-sm">
+            <div data-keep-dark className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 px-4 py-2 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] border border-white/10 text-white text-sm">
               {fullscreenPreview.index + 1} / {media.length}
             </div>
           </motion.div>

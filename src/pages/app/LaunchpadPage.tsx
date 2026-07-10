@@ -96,7 +96,7 @@ export default function LaunchpadPage() {
           {isLoading
             ? <div className="text-white/50 text-sm">Loading…</div>
             : filtered.length === 0
-              ? <div className="rounded-2xl bg-black/60 backdrop-blur-[24px] border border-white/10 p-10 text-center text-white/60">
+              ? <div data-keep-dark className="rounded-2xl bg-black/60 backdrop-blur-[24px] border border-white/10 p-10 text-center text-white/60">
                   No coins yet. <Link to={`${base}/create`} className="text-white underline">Be the first.</Link>
                 </div>
               : <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

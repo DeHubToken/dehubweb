@@ -70,7 +70,7 @@ export default function LaunchpadCoinPage() {
           </div>
 
           {token.description && (
-            <div className="rounded-2xl bg-black/60 backdrop-blur-[24px] border border-white/10 p-4 text-white/80 text-sm">
+            <div data-keep-dark className="rounded-2xl bg-black/60 backdrop-blur-[24px] border border-white/10 p-4 text-white/80 text-sm">
               {token.description}
             </div>
           )}
