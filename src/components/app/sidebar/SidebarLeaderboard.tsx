@@ -147,7 +147,10 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
           <div
             key={entry.account}
             onClick={() => !isPlaceholder && handleUserClick(entry)}
-            className={`flex items-center gap-3 py-2 px-4 transition-colors ${isPlaceholder ? 'opacity-40' : 'hover:bg-zinc-800/50 cursor-pointer'}`}
+            className={cn(
+              "flex items-center gap-3 py-2 px-4 transition-colors",
+              isPlaceholder ? 'opacity-40' : cn('cursor-pointer', isLightTheme ? 'hover:bg-black/5' : 'hover:bg-zinc-800/50')
+            )}
           >
             {/* Rank */}
             <div className="w-7 flex-shrink-0 flex items-center justify-center">
