@@ -488,7 +488,12 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent data-login-modal onOpenAutoFocus={(e) => e.preventDefault()} aria-describedby={undefined} overlayClassName="z-[200] login-modal-overlay" className="bg-black/40 backdrop-blur-2xl saturate-[180%] border border-white/10 max-w-sm p-0 gap-0 rounded-2xl overflow-hidden [&>button]:hidden z-[200]">
+      {/* Desktop: the backdrop is clipped to the middle panel's live bounds
+          (--app-main-left/--app-main-width, measured in AppLayout) so the
+          drawer opens in the gap between the sidebars rather than over the
+          whole viewport. Falls back to full-viewport when those vars are
+          unset (e.g. routes without the app shell/sidebars). */}
+      <DialogContent data-login-modal onOpenAutoFocus={(e) => e.preventDefault()} aria-describedby={undefined} overlayClassName="z-[200] login-modal-overlay inset-y-0 left-[var(--app-main-left,0px)] w-[var(--app-main-width,100vw)] right-auto" className="bg-black/40 backdrop-blur-2xl saturate-[180%] border border-white/10 max-w-sm p-0 gap-0 rounded-2xl overflow-hidden [&>button]:hidden z-[200] sm:left-[var(--app-main-center-x,50%)]">
         <DialogHeader className="px-6 pt-6 pb-4">
           {headerContent}
           <DialogTitle className="text-base font-medium text-white mt-4 text-center">

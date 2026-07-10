@@ -154,8 +154,18 @@ function HeroRoute() {
  * Only mounted after user has passed the hero (or is a returning user).
  */
 function AppContent() {
-  const { isLoginModalOpen, closeLoginModal, user, walletAddress } = useAuth();
+  const { isLoginModalOpen, closeLoginModal, user, walletAddress, isConnecting, isProcessingRedirect } = useAuth();
   usePreloadIcons();
+
+  // While the login flow is active (modal open, or a connect/redirect in
+  // flight just after it closes), center toasts in the middle app panel —
+  // matching the login drawer's position — instead of the full viewport.
+  // See --app-main-center-x, measured in AppLayout, and the matching
+  // [data-login-active] rule in index.css.
+  useEffect(() => {
+    const active = isLoginModalOpen || isConnecting || isProcessingRedirect;
+    document.documentElement.toggleAttribute('data-login-active', active);
+  }, [isLoginModalOpen, isConnecting, isProcessingRedirect]);
 
   // Capture ?ref=CODE / ?aff=CODE on first load (first-touch wins, 90-day cookie).
   useEffect(() => {
