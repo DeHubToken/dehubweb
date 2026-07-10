@@ -36,6 +36,15 @@ export function IncomeChart() {
   const [activeFilter, setActiveFilter] = useState('1m');
   const { isAuthenticated, walletAddress } = useAuth();
   const { t } = useTranslation();
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
+
+  const cardClass = cn(
+    "rounded-2xl p-5",
+    isLightTheme
+      ? "bg-white/80 shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
+      : "bg-zinc-900 border border-zinc-800"
+  );
 
   // Fetch tips received
   const { data: tipRecords = [], isLoading: tipsLoading } = useQuery({
@@ -130,7 +139,7 @@ export function IncomeChart() {
   }, [tipRecords, ppvRecords, onchainTransfers, activeFilter]);
 
   return (
-    <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
+    <div className={cardClass}>
       <div className="flex flex-wrap items-center gap-2 mb-4">
         <div className="flex items-center gap-2 mr-auto">
           <span className="text-white font-semibold">{t('commandCentre.incomeChart')}</span>
