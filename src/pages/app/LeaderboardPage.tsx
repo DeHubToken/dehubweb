@@ -119,6 +119,8 @@ export default function LeaderboardPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { isAuthenticated, walletAddress } = useAuth();
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
   const { isOpen: isAuthOpen, requireAuth, close: closeAuth } = useAuthPrompt();
 
   // Map category to API sort mode
