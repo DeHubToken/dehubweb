@@ -18,7 +18,7 @@ function formatDuration(days: number): string {
   return `${days} days`;
 }
 
-function SubscriptionRow({ sub, index }: { sub: Subscription; index: number }) {
+function SubscriptionRow({ sub, index, isLightTheme }: { sub: Subscription; index: number; isLightTheme: boolean }) {
   const isExpired = isPast(new Date(sub.endDate));
   const daysLeft = differenceInDays(new Date(sub.endDate), new Date());
   const planName = sub.plan?.name || 'Plan';
@@ -29,7 +29,7 @@ function SubscriptionRow({ sub, index }: { sub: Subscription; index: number }) {
     : 'Unknown';
 
   return (
-    <tr className="text-zinc-400 hover:bg-white/[0.02] transition-colors">
+    <tr className={cn("text-zinc-400 transition-colors", isLightTheme ? "hover:bg-black/[0.03]" : "hover:bg-white/[0.02]")}>
       <td className="py-4 text-zinc-500">{String(index + 1).padStart(2, '0')}</td>
       <td className="py-4">
         <div className="flex items-center gap-3">
@@ -100,6 +100,9 @@ export function SubscriptionsTab() {
       ? "bg-white/80 shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
       : "bg-zinc-900 border border-zinc-800"
   );
+
+  const tableHeaderBorder = isLightTheme ? "border-b border-black/5" : "border-b border-zinc-800";
+  const tableDivider = isLightTheme ? "divide-y divide-black/5" : "divide-y divide-zinc-800";
 
   const activeSubscriptions = subscriptions.filter(s => s.isActive && !isPast(new Date(s.endDate)));
   const expiredSubscriptions = subscriptions.filter(s => !s.isActive || isPast(new Date(s.endDate)));
@@ -184,7 +187,7 @@ export function SubscriptionsTab() {
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-zinc-500 text-xs border-b border-zinc-800">
+                <tr className={cn("text-zinc-500 text-xs", tableHeaderBorder)}>
                   <th className="text-left font-normal pb-3">#</th>
                   <th className="text-left font-normal pb-3">Creator</th>
                   <th className="text-left font-normal pb-3">Plan</th>
@@ -194,9 +197,9 @@ export function SubscriptionsTab() {
                   <th className="text-left font-normal pb-3">Remaining</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-800">
+              <tbody className={tableDivider}>
                 {subscriptions.map((sub, index) => (
-                  <SubscriptionRow key={sub._id || sub.id || index} sub={sub} index={index} />
+                  <SubscriptionRow key={sub._id || sub.id || index} sub={sub} index={index} isLightTheme={isLightTheme} />
                 ))}
               </tbody>
             </table>
