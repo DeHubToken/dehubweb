@@ -433,7 +433,10 @@ export default function LeaderboardPage() {
                 <div
                   key={entry.account}
                   onClick={() => handleUserClick(entry)}
-                  className="grid grid-cols-12 gap-2 sm:gap-4 px-4 sm:px-6 py-4 hover:bg-zinc-800/50 transition-colors items-center cursor-pointer"
+                  className={cn(
+                    "grid grid-cols-12 gap-2 sm:gap-4 px-4 sm:px-6 py-4 transition-colors items-center cursor-pointer",
+                    isLightTheme ? "hover:bg-black/5" : "hover:bg-zinc-800/50"
+                  )}
                 >
                   {/* Rank */}
                   <div className="col-span-2 sm:col-span-1 flex items-center justify-center -ml-[5.5px]">
