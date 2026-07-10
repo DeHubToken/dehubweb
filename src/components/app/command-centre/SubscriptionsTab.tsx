@@ -7,6 +7,8 @@ import { useMySubscriptions, useCreatorPlans } from '@/hooks/use-subscriptions';
 import { getMediaUrl, type Subscription } from '@/lib/api/dehub';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { format, isPast, differenceInDays } from 'date-fns';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 
 function formatDuration(days: number): string {
   if (days === 7) return '1 week';

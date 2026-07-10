@@ -12,6 +12,8 @@ import { getNotifications } from '@/lib/api/dehub/notifications';
 import { format, subHours, subDays, subWeeks, subMonths } from 'date-fns';
 import { useState, useMemo } from 'react';
 import { useOnchainDHBTransfers } from '@/hooks/use-onchain-dhb-transfers';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 

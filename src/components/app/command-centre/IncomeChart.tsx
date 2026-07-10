@@ -8,6 +8,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { subHours, subDays, subWeeks, subMonths } from 'date-fns';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { useOnchainDHBTransfers } from '@/hooks/use-onchain-dhb-transfers';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
 

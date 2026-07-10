@@ -5,6 +5,8 @@ import dehubCoin from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
 import { useMySubscriptions, useCreatorPlans } from '@/hooks/use-subscriptions';
 import { isPast } from 'date-fns';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 
 export function SubscriptionsSummary() {
   const { isAuthenticated, walletAddress } = useAuth();

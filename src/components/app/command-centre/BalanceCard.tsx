@@ -11,6 +11,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 
 const OTHER_SYMBOLS = ['ETH', 'BTC', 'USDT'] as const;
 const LOGOS: Record<string, string> = { ETH: ethLogo, BTC: btcLogo, USDT: usdtLogo };
