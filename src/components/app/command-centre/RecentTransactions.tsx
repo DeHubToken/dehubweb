@@ -66,6 +66,15 @@ export function RecentTransactions() {
   const { isAuthenticated, walletAddress } = useAuth();
   const [activeFilter, setActiveFilter] = useState('1m');
   const { t } = useTranslation();
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
+
+  const cardClass = cn(
+    "rounded-2xl p-5 max-h-[420px] overflow-y-auto",
+    isLightTheme
+      ? "bg-white/80 shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
+      : "bg-zinc-900 border border-zinc-800"
+  );
 
   const { data: dpayTxs = [], isLoading: dpayLoading } = useQuery({
     queryKey: ['dpay', 'transactions'],
@@ -305,7 +314,7 @@ export function RecentTransactions() {
   }, [dpayTxs, ppvPurchases, tipRecords, onchainTransfers, tipNotifications, walletAddress, activeFilter, usernameMap, t]);
 
   return (
-    <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800 max-h-[420px] overflow-y-auto">
+    <div className={cardClass}>
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-white font-semibold">{t('commandCentre.recentTransactions')}</h3>
         <Button variant="glass" size="sm" className="text-xs h-8 rounded-xl">
