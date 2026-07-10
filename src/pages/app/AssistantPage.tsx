@@ -420,6 +420,12 @@ export default function AssistantPage() {
   const [input, setInput] = useState('');
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
+  const actionBubbleClass = cn(
+    "shrink-0 [&>div]:!py-1 [&>div]:!px-3 [&>div]:before:from-transparent [&>div]:after:from-transparent [&_span]:!text-xs",
+    isLightTheme
+      ? "[&>div]:!bg-white/90 [&>div]:!bg-none [&>div]:!border-black/10 [&>div]:!shadow-[0_2px_8px_rgba(0,0,0,0.08)] [&_span]:!text-black"
+      : "[&>div]:from-zinc-900/90 [&>div]:to-white/5"
+  );
   // Slash-command skill picker
   const [slashOpen, setSlashOpen] = useState(false);
   const [slashQuery, setSlashQuery] = useState('');
