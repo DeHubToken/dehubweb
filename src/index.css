@@ -1349,7 +1349,7 @@ html[data-theme="light"] .hover\:bg-zinc-800\/90:hover {
  * and mobile Drawer (both carry data-login-modal on their content root).
  * The modal background matches the app background exactly on light mode.
  * ========================================================================== */
-html[data-theme="light"] [data-login-modal-overlay] {
+html[data-theme="light"] .login-modal-overlay {
   background-color: transparent !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
