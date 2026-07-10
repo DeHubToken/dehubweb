@@ -2092,7 +2092,7 @@ html[data-theme="light"] [data-explore-page] .hover\:bg-zinc-800:hover svg {
    rectangles with remapped ink text on top → invisible. Remap them to a
    subtle black wash so the card is legible. Keep chip/button surfaces,
    login modal, video controls and country-block drawer opted out. */
-html[data-theme="light"] [class*="bg-black\/"]:not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *):not([data-country-block-drawer]):not([data-country-block-drawer] *) {
+html[data-theme="light"] [class*="bg-black\/"]:not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *):not([data-country-block-drawer]):not([data-country-block-drawer] *):not(.login-modal-overlay) {
   background-color: rgba(0, 0, 0, 0.05) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
