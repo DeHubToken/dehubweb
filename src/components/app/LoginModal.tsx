@@ -486,12 +486,13 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           !isMobile && "left-[var(--app-main-left,0px)] right-auto w-[var(--app-main-width,100vw)]",
         )}
         overlayClassName={cn(
-          "z-[200] login-modal-overlay",
           // Unlike the drawer sheet itself (clipped to the middle panel
           // above), the backdrop spans the full viewport — including both
-          // sidebars — so everything outside the login flow blurs, pulling
-          // full attention onto it.
-          !isMobile && "bg-black/40 backdrop-blur-xl",
+          // sidebars — and blurs everything outside the login flow to pull
+          // full attention onto it (mobile keeps its darker bg-black/80
+          // dim from DrawerOverlay's base classes).
+          "z-[200] login-modal-overlay backdrop-blur-xl",
+          !isMobile && "bg-black/40",
         )}
       >
         <DrawerHeader className="px-6 pt-6 pb-4">

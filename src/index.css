@@ -1362,12 +1362,14 @@ html[data-theme="light"] .hover\:bg-zinc-800\/90:hover {
  * Login / Sign-up modal — light mode
  * Paper surface, ink text, dark primary CTA. Applies to the desktop and
  * mobile Drawer (both carry data-login-modal on their content root).
- * The modal background matches the app background exactly on light mode.
+ * The backdrop blurs the app behind a light paper wash (the light-theme
+ * counterpart of the dark bg-black/40 + blur overlay) so attention
+ * concentrates on the login flow in every theme.
  * ========================================================================== */
 html[data-theme="light"] .login-modal-overlay {
-  background-color: transparent !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
+  background-color: rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: blur(24px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(120%) !important;
 }
 
 /* Center toasts fired during the login flow (modal open, connecting, or
