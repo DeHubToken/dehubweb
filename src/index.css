@@ -1363,8 +1363,9 @@ html[data-theme="light"] .login-modal-overlay {
 
 html[data-theme="light"] [data-login-modal] {
   background-color: var(--paper) !important;
-  background-image: url('./assets/textures/paper-texture.png') !important;
-  background-size: 256px 256px !important;
+  background-image: var(--noise-svg), url('./assets/textures/paper-texture.png') !important;
+  background-size: 200px 200px, 256px 256px !important;
+  background-blend-mode: normal, normal !important;
   color: var(--ink) !important;
   border-color: var(--hairline-strong) !important;
   box-shadow: none !important;
