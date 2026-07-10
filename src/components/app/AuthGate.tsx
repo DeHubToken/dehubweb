@@ -33,7 +33,7 @@ export function AuthGate({ description: _description }: { description?: string }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center h-full lg:h-screen p-8 -mt-[30px] lg:-mt-[50px]">
+    <div data-auth-gate className="flex flex-col items-center justify-center h-full lg:h-screen p-8 -mt-[30px] lg:-mt-[50px]">
       {/* Hidden image to preload */}
       <img 
         src={assistantAvatar} 
@@ -60,8 +60,10 @@ export function AuthGate({ description: _description }: { description?: string }
             onClick={handleLogin}
             disabled={isConnecting}
             variant="glass"
+            data-primary-cta
             className="rounded-xl font-semibold px-6 min-w-[120px]"
           >
+
             {isConnecting ? (
               <span className="flex items-center gap-2">
                 <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
