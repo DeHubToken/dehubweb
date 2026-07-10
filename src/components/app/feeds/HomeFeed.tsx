@@ -1466,6 +1466,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             <div
               ref={bentoRef}
               data-no-swipe
+              data-feed-filter-panel
               className={cn(
                 "rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-2 sm:px-3 py-3 space-y-4",
                 portalTarget && "max-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-visible scrollbar-hide"

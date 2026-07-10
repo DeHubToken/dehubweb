@@ -314,6 +314,8 @@ function ContentTypeFilterSection({
           {CONTENT_TYPE_FILTERS.map((filter) => (
             <button
               key={filter.value}
+              data-feed-filter-button
+              data-active={filters[filter.value] ? 'true' : undefined}
               onClick={() => onToggle(filter.value)}
               className={cn(
                 'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
@@ -390,6 +392,8 @@ function CategoryFilterSection({
         <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
           {selectedObj && (
             <button
+              data-feed-filter-button
+              data-active="true"
               onClick={() => { onSelect(null); setSearch(''); }}
               className={cn("flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all", useActiveFilterClass())}
             >
@@ -398,6 +402,8 @@ function CategoryFilterSection({
             </button>
           )}
           <button
+            data-feed-filter-button
+            data-active={selectedCategory === null ? 'true' : undefined}
             onClick={() => { onSelect(null); setSearch(''); }}
             className={cn(
               'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
@@ -409,6 +415,8 @@ function CategoryFilterSection({
           {filtered.map((cat) => (
             <button
               key={cat.id}
+              data-feed-filter-button
+              data-active={selectedCategory === cat.id ? 'true' : undefined}
               onClick={() => { onSelect(cat.id); setSearch(''); }}
               className={cn(
                 'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
@@ -731,7 +739,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
             transition={{ duration: 0.25, ease: 'easeOut' }}
             className="overflow-y-clip overflow-x-visible"
           >
-            <div data-no-swipe className="relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-2 sm:px-3 py-3 space-y-4">
+            <div data-no-swipe data-feed-filter-panel className="relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-2 sm:px-3 py-3 space-y-4">
               <SortFilterSection selected={selectedSort} onSelect={handleSortSelect} />
               <CategoryFilterSection 
                 categories={categories} 
