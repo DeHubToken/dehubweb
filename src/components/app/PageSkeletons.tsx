@@ -7,8 +7,12 @@
  */
 
 import { Skeleton } from '@/components/ui/skeleton';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 
 const SK = "bg-white/[0.06]";
+const SK_LIGHT = "bg-black/10";
+
 
 // ─── Home Feed ──────────────────────────────────────────────────────────────
 
