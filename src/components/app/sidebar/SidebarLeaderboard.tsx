@@ -54,6 +54,8 @@ export interface SidebarLeaderboardHandle {
 /** Renders a single period's leaderboard list — always mounted, visibility toggled by parent */
 const PeriodList = memo(function PeriodList({ period, isActive }: { period: string; isActive: boolean }) {
   const navigate = useNavigate();
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
   const apiPeriod = PERIOD_MAP[period] || 'all';
 
   const { data, isLoading } = useQuery({
