@@ -1,6 +1,8 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { Play, Pause } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 import { Slider } from '@/components/ui/slider';
 import {
   VisualizerStyle,
