@@ -1370,6 +1370,15 @@ html[data-theme="light"] .login-modal-overlay {
   -webkit-backdrop-filter: none !important;
 }
 
+/* Center toasts fired during the login flow (modal open, connecting, or
+   processing a redirect) in the middle app panel — the gap between the
+   left/right sidebars — instead of the full viewport, so they align with
+   the login drawer. --app-main-center-x is measured live in AppLayout;
+   falls back to true viewport-center when unset (routes without sidebars). */
+html[data-login-active] [data-sonner-toaster][data-x-position="center"] {
+  left: var(--app-main-center-x, 50%);
+}
+
 html[data-theme="light"] [data-login-modal] {
   background-color: var(--paper) !important;
   background-image: url('./assets/textures/paper-texture.png') !important;

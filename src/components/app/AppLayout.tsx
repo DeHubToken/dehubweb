@@ -40,6 +40,39 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   const { isPostModalOpen, closePostModal, pendingFiles, clearPendingFiles, initialText, clearInitialText, initialCategory, clearInitialCategory } = useGlobalDropZone();
   const { isCollapsed } = useSidebarCollapse();
   const location = useLocation();
+  const mainRef = useRef<HTMLElement | null>(null);
+
+  // Expose the middle panel's live bounds (the gap between the left/right
+  // sidebars) as CSS vars so anything mounted outside AppLayout — the login
+  // modal, login-flow toasts — can center itself in that zone instead of
+  // the full viewport. ResizeObserver on <main> already catches width
+  // changes from a sidebar collapse toggle, so no extra dependency is
+  // needed. Vars are removed on unmount so they don't go stale on routes
+  // without this layout (those fall back to viewport-wide CSS defaults).
+  useLayoutEffect(() => {
+    const mainEl = mainRef.current;
+    if (!mainEl || typeof ResizeObserver === 'undefined') return;
+
+    const root = document.documentElement.style;
+    const updateBounds = () => {
+      const rect = mainEl.getBoundingClientRect();
+      root.setProperty('--app-main-left', `${rect.left}px`);
+      root.setProperty('--app-main-width', `${rect.width}px`);
+      root.setProperty('--app-main-center-x', `${rect.left + rect.width / 2}px`);
+    };
+
+    updateBounds();
+    const observer = new ResizeObserver(updateBounds);
+    observer.observe(mainEl);
+    window.addEventListener('resize', updateBounds);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('resize', updateBounds);
+      root.removeProperty('--app-main-left');
+      root.removeProperty('--app-main-width');
+      root.removeProperty('--app-main-center-x');
+    };
+  }, []);
   // Disable browser's automatic scroll restoration globally
   useEffect(() => {
     if ('scrollRestoration' in history) {
@@ -196,7 +229,7 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
       >
         <AppSidebar isOpen={sidebarOpen} onToggle={toggleSidebar} />
         
-         <main className={cn(
+         <main ref={mainRef} className={cn(
           "flex-1 min-h-screen pb-16 lg:pt-0 lg:pb-0 min-w-0 w-full bg-black pt-11 relative"
         )}>
           <GlobalFeedNavProvider>
