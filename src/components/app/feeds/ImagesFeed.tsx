@@ -518,7 +518,7 @@ export function ImagesFeed({
             transition={{ duration: 0.2 }}
             className="overflow-y-clip overflow-x-visible"
           >
-            <div className="relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-2 sm:px-3 py-3 space-y-4">
+            <div data-feed-filter-panel className="relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-2 sm:px-3 py-3 space-y-4">
               <SortFilterSection 
                 selected={selectedSort} 
                 onSelect={handleSortSelect} 
