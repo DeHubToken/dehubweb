@@ -1,6 +1,7 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { ShimmerHoverEffect } from "./shimmer-hover-effect";
+import { useAppTheme } from "@/contexts/ThemeContext";
 
 export interface LiquidGlassBubbleProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Chat tail direction: 'right' for user messages, 'left' for others, 'none' for no tail */
@@ -34,6 +35,9 @@ const LiquidGlassBubble = React.forwardRef<HTMLDivElement, LiquidGlassBubbleProp
       none: 'rounded-2xl'
     };
 
+    const { theme } = useAppTheme();
+    const isLightTheme = theme === 'light';
+
     return (
       <div ref={ref} className={cn("relative group", className)} {...props}>
         {/* Main liquid glass bubble */}
@@ -47,10 +51,12 @@ const LiquidGlassBubble = React.forwardRef<HTMLDivElement, LiquidGlassBubbleProp
             "backdrop-blur-xl",
             // Border
             noBorder ? "" : "border border-white/30",
-            // Complex shadow for depth
+            // Complex shadow for depth (lighter on light mode)
             noBorder
-              ? "shadow-[0_8px_32px_rgba(0,0,0,0.2)]"
-              : "shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]",
+              ? (isLightTheme ? "shadow-[0_4px_16px_rgba(0,0,0,0.1)]" : "shadow-[0_8px_32px_rgba(0,0,0,0.2)]")
+              : (isLightTheme
+                  ? "shadow-[0_4px_16px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-1px_0_rgba(255,255,255,0.05)]"
+                  : "shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"),
             // Top shine overlay (before pseudo-element styles)
             "before:absolute before:inset-0",
             tail === 'left' ? "before:rounded-2xl before:rounded-bl-md" : 
