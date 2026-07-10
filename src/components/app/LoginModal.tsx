@@ -10,12 +10,12 @@ import React, { useState, useEffect } from 'react';
 import { useAccount } from 'wagmi';
 import { useTranslation } from 'react-i18next';
 import { Mail, Wallet, Loader2, ChevronRight, Smartphone } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
+import { cn } from '@/lib/utils';
 import { getWalletDeepLink, isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
 import { WalletButton } from '@rainbow-me/rainbowkit';
 import dehubLogo from '@/assets/dehub-logo-white.png';
@@ -470,39 +470,35 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     </>
   );
 
-  if (isMobile) {
-    return (
-      <Drawer open={open} onOpenChange={handleClose}>
-        <DrawerContent data-login-modal className="bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-hidden z-[200]" overlayClassName="z-[200] login-modal-overlay" hideHandle>
-          <DrawerHeader className="px-6 pt-6 pb-4">
-            {headerContent}
-            <DrawerTitle className="text-base font-medium text-white mt-4 text-center">
-              {titleText}
-            </DrawerTitle>
-          </DrawerHeader>
-          {bodyContent}
-        </DrawerContent>
-      </Drawer>
-    );
-  }
-
+  // Both mobile and desktop use the same bottom-sheet Drawer. On desktop the
+  // overlay and sheet are clipped to the middle panel's live bounds
+  // (--app-main-left/--app-main-width, measured in AppLayout) so it opens as
+  // a drawer in the gap between the sidebars instead of spanning the full
+  // viewport. Falls back to full-viewport when those vars are unset (e.g.
+  // routes without the app shell/sidebars).
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
-      {/* Desktop: the backdrop is clipped to the middle panel's live bounds
-          (--app-main-left/--app-main-width, measured in AppLayout) so the
-          drawer opens in the gap between the sidebars rather than over the
-          whole viewport. Falls back to full-viewport when those vars are
-          unset (e.g. routes without the app shell/sidebars). */}
-      <DialogContent data-login-modal onOpenAutoFocus={(e) => e.preventDefault()} aria-describedby={undefined} overlayClassName="z-[200] login-modal-overlay inset-y-0 left-[var(--app-main-left,0px)] w-[var(--app-main-width,100vw)] right-auto" className="bg-black/40 backdrop-blur-2xl saturate-[180%] border border-white/10 max-w-sm p-0 gap-0 rounded-2xl overflow-hidden [&>button]:hidden z-[200] sm:left-[var(--app-main-center-x,50%)]">
-        <DialogHeader className="px-6 pt-6 pb-4">
+    <Drawer open={open} onOpenChange={handleClose}>
+      <DrawerContent
+        data-login-modal
+        hideHandle
+        className={cn(
+          "bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-hidden z-[200]",
+          !isMobile && "left-[var(--app-main-left,0px)] right-auto w-[var(--app-main-width,100vw)]",
+        )}
+        overlayClassName={cn(
+          "z-[200] login-modal-overlay",
+          !isMobile && "bg-black/40 backdrop-blur-xl inset-y-0 left-[var(--app-main-left,0px)] w-[var(--app-main-width,100vw)] right-auto",
+        )}
+      >
+        <DrawerHeader className="px-6 pt-6 pb-4">
           {headerContent}
-          <DialogTitle className="text-base font-medium text-white mt-4 text-center">
+          <DrawerTitle className="text-base font-medium text-white mt-4 text-center">
             {titleText}
-          </DialogTitle>
-        </DialogHeader>
+          </DrawerTitle>
+        </DrawerHeader>
         {bodyContent}
-      </DialogContent>
-    </Dialog>
+      </DrawerContent>
+    </Drawer>
   );
 }
 
