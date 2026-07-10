@@ -93,6 +93,9 @@ export function TransactionsTab() {
       : "bg-zinc-900 border border-zinc-800"
   );
 
+  const dividerClass = isLightTheme ? "divide-y divide-black/5" : "divide-y divide-zinc-800";
+  const rowHoverClass = isLightTheme ? "hover:bg-black/[0.03]" : "hover:bg-zinc-800/50";
+
   const { data: dpayTxs = [], isLoading: txLoading, isError: txError } = useQuery({
     queryKey: ['dpay', 'transactions'],
     queryFn: getDPayTransactions,
@@ -341,7 +344,7 @@ export function TransactionsTab() {
               : 'No transactions in this time period.'}
           </div>
         ) : (
-          <div className="divide-y divide-zinc-800">
+          <div className={cn("divide-y", dividerClass)}>
             {filteredTransactions.map((tx) => {
               const date = new Date(tx.createdAt);
               const dateStr = date.toLocaleDateString('en-US', { day: '2-digit', month: 'short', year: 'numeric' });
@@ -350,7 +353,13 @@ export function TransactionsTab() {
               const label = tx.type === 'buy' ? 'Coin Purchase' : (tx.type as string) === 'ppv' ? 'PPV Unlock' : tx.type === 'sell' ? 'Coin Sale' : 'Transfer';
 
               const row = (
-                <div key={tx.id} className={`flex items-center justify-between py-3 ${explorerUrl ? 'cursor-pointer hover:bg-zinc-800/50 -mx-2 px-2 rounded-xl transition-colors' : ''}`}>
+                <div key={tx.id} className={cn(
+                  "flex items-center justify-between py-3",
+                  explorerUrl && [
+                    "cursor-pointer -mx-2 px-2 rounded-xl transition-colors",
+                    rowHoverClass
+                  ]
+                )}>
                   <div className="min-w-0">
                     <span className="text-sm text-zinc-300 block">
                       {label}: <span className={isCredit ? 'text-emerald-400' : 'text-red-400'}>${tx.amount.toLocaleString()}</span>
