@@ -312,6 +312,7 @@ export function ImagesFeed({
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
   const hasAnimated = useRef(false);
+  const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
   
   // Filter states - default to "Latest" - persisted to sessionStorage
