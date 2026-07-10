@@ -488,7 +488,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent data-login-modal onOpenAutoFocus={(e) => e.preventDefault()} aria-describedby={undefined} overlayClassName="z-[200] data-login-modal-overlay" className="bg-black/40 backdrop-blur-2xl saturate-[180%] border border-white/10 max-w-sm p-0 gap-0 rounded-2xl overflow-hidden [&>button]:hidden z-[200]" data-login-modal-content>
+      <DialogContent data-login-modal onOpenAutoFocus={(e) => e.preventDefault()} aria-describedby={undefined} overlayClassName="z-[200] login-modal-overlay" className="bg-black/40 backdrop-blur-2xl saturate-[180%] border border-white/10 max-w-sm p-0 gap-0 rounded-2xl overflow-hidden [&>button]:hidden z-[200]">
         <DialogHeader className="px-6 pt-6 pb-4">
           {headerContent}
           <DialogTitle className="text-base font-medium text-white mt-4 text-center">
