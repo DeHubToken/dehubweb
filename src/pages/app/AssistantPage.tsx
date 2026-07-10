@@ -21,6 +21,7 @@ import { useUserLanguage } from '@/hooks/use-user-language';
 import { useMention } from '@/hooks/use-mention';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import dehubLogoPrimary from '@/assets/dehub-logo-primary.png.asset.json';
 import dehubLogoIcon from '@/assets/dehub-logo-icon.png.asset.json';
