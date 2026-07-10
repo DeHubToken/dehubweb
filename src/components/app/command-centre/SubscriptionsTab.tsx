@@ -91,6 +91,15 @@ export function SubscriptionsTab() {
   const { isAuthenticated, walletAddress } = useAuth();
   const { subscriptions, isLoading: isLoadingSubs } = useMySubscriptions();
   const { plans: myPlans, isLoading: isLoadingPlans } = useCreatorPlans(walletAddress || undefined);
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
+
+  const cardClass = cn(
+    "rounded-2xl p-5",
+    isLightTheme
+      ? "bg-white/80 shadow-[0_2px_12px_rgba(0,0,0,0.06)]"
+      : "bg-zinc-900 border border-zinc-800"
+  );
 
   const activeSubscriptions = subscriptions.filter(s => s.isActive && !isPast(new Date(s.endDate)));
   const expiredSubscriptions = subscriptions.filter(s => !s.isActive || isPast(new Date(s.endDate)));
@@ -131,7 +140,7 @@ export function SubscriptionsTab() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Active count */}
-        <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
+        <div className={cardClass}>
           <span className="text-zinc-400 text-sm">Active Subscriptions</span>
           <div className="flex items-baseline gap-2 mt-2">
             <span className="text-3xl font-bold text-white">{activeSubscriptions.length}</span>
@@ -140,7 +149,7 @@ export function SubscriptionsTab() {
         </div>
 
         {/* Monthly spend */}
-        <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
+        <div className={cardClass}>
           <span className="text-zinc-400 text-sm">Est. Monthly Spend</span>
           <div className="flex items-center gap-2 mt-2">
             <span className="text-3xl font-bold text-white">{Math.round(totalMonthlySpend)}</span>
@@ -149,7 +158,7 @@ export function SubscriptionsTab() {
         </div>
 
         {/* My plans count */}
-        <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
+        <div className={cardClass}>
           <span className="text-zinc-400 text-sm">Your Plans (as creator)</span>
           <div className="flex items-baseline gap-2 mt-2">
             <span className="text-3xl font-bold text-white">{myPlans.length}</span>
@@ -160,13 +169,13 @@ export function SubscriptionsTab() {
 
       {/* Subscription List */}
       {subscriptions.length === 0 ? (
-        <div className="bg-zinc-900 rounded-2xl p-8 border border-zinc-800 text-center">
+        <div className={cn(cardClass, "p-8 text-center")}>
           <Star className="w-12 h-12 text-zinc-600 mb-3 mx-auto" />
           <p className="text-zinc-400 text-lg font-medium">No subscriptions yet</p>
           <p className="text-zinc-500 text-sm mt-1">Subscribe to creators to see your activity here</p>
         </div>
       ) : (
-        <div className="bg-zinc-900 rounded-2xl p-5 border border-zinc-800">
+        <div className={cardClass}>
           <div className="flex items-center justify-between mb-4">
             <span className="text-white font-semibold">Subscription list</span>
             <span className="text-zinc-500 text-sm">{subscriptions.length} total</span>
