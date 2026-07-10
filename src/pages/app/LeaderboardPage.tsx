@@ -435,7 +435,7 @@ export default function LeaderboardPage() {
                   onClick={() => handleUserClick(entry)}
                   className={cn(
                     "grid grid-cols-12 gap-2 sm:gap-4 px-4 sm:px-6 py-4 transition-colors items-center cursor-pointer",
-                    isLightTheme ? "hover:bg-black/5" : "hover:bg-zinc-800/50"
+                    isLightTheme ? "hover:bg-zinc-100" : "hover:bg-zinc-800/50"
                   )}
                 >
                   {/* Rank */}
