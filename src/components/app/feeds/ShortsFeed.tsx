@@ -250,6 +250,8 @@ function CategoryFilterSection({
         <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={{ touchAction: 'pan-x' }}>
           {selectedObj && (
             <button
+              data-feed-filter-button
+              data-active="true"
               onClick={() => { onSelect(null); setSearch(''); }}
               className={cn("flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all", useActiveFilterClass())}
             >
@@ -258,6 +260,8 @@ function CategoryFilterSection({
             </button>
           )}
           <button
+            data-feed-filter-button
+            data-active={selectedCategory === null ? 'true' : undefined}
             onClick={() => { onSelect(null); setSearch(''); }}
             className={cn(
               'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
@@ -269,6 +273,8 @@ function CategoryFilterSection({
           {filtered.map((cat) => (
             <button
               key={cat.id}
+              data-feed-filter-button
+              data-active={selectedCategory === cat.id ? 'true' : undefined}
               onClick={() => { onSelect(cat.id); setSearch(''); }}
               className={cn(
                 'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
