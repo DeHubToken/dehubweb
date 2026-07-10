@@ -60,7 +60,7 @@ const LeaderboardCard = memo(function LeaderboardCard({
       className={cn(
         "flex-shrink-0 w-[160px] rounded-xl p-3 cursor-pointer transition-colors",
         isLightTheme
-          ? "bg-black/[0.04] border border-black/[0.08] hover:bg-black/[0.08]"
+          ? "bg-zinc-100 border border-zinc-200 hover:bg-zinc-200"
           : "bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08]"
       )}
     >
