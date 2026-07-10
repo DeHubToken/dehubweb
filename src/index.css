@@ -1277,7 +1277,9 @@ html[data-theme="light"] .bg-zinc-800\/60,
 html[data-theme="light"] .bg-zinc-800\/90,
 html[data-theme="light"] .bg-zinc-700\/50,
 html[data-theme="light"] .bg-zinc-700\/60,
-html[data-theme="light"] .bg-zinc-800\/30 {
+html[data-theme="light"] .bg-zinc-800\/30,
+html[data-theme="light"] .hover\:bg-zinc-800\/50:hover,
+html[data-theme="light"] .hover\:bg-zinc-700\/50:hover {
   background-color: rgba(0, 0, 0, 0.05) !important;
 }
 
@@ -1319,6 +1321,12 @@ html[data-theme="light"] [data-radix-avatar-fallback],
 html[data-theme="light"] .bg-muted {
   background-color: #52525b !important; /* zinc-600 */
   color: #ffffff !important;
+}
+
+/* Skeleton pulses: keep the loading wash light on paper instead of the dark
+   avatar-fallback remap above. */
+html[data-theme="light"] .animate-pulse.bg-muted {
+  background-color: #e4e4e7 !important; /* zinc-200 */
 }
 
 /* Primary CTA (create-post / log-in) uses bg-zinc-900/90 — keep it black. */

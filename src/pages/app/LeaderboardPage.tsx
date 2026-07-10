@@ -25,6 +25,8 @@ import medal10 from '@/assets/medal-10.png';
 
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 import { useAuthPrompt, AuthPrompt } from '@/components/app/AuthPrompt';
 import { supabase } from '@/integrations/supabase/client';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
@@ -117,6 +119,8 @@ export default function LeaderboardPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { isAuthenticated, walletAddress } = useAuth();
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
   const { isOpen: isAuthOpen, requireAuth, close: closeAuth } = useAuthPrompt();
 
   // Map category to API sort mode
@@ -429,7 +433,10 @@ export default function LeaderboardPage() {
                 <div
                   key={entry.account}
                   onClick={() => handleUserClick(entry)}
-                  className="grid grid-cols-12 gap-2 sm:gap-4 px-4 sm:px-6 py-4 hover:bg-zinc-800/50 transition-colors items-center cursor-pointer"
+                  className={cn(
+                    "grid grid-cols-12 gap-2 sm:gap-4 px-4 sm:px-6 py-4 transition-colors items-center cursor-pointer",
+                    isLightTheme ? "hover:bg-zinc-100" : "hover:bg-zinc-800/50"
+                  )}
                 >
                   {/* Rank */}
                   <div className="col-span-2 sm:col-span-1 flex items-center justify-center -ml-[5.5px]">

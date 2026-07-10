@@ -6,6 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
 import { Button } from '@/components/ui/button';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 import { getLeaderboard, type LeaderboardEntry, type LeaderboardPeriod } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getBadgeUrl } from '@/lib/staking-badges';
@@ -52,6 +54,8 @@ export interface SidebarLeaderboardHandle {
 /** Renders a single period's leaderboard list — always mounted, visibility toggled by parent */
 const PeriodList = memo(function PeriodList({ period, isActive }: { period: string; isActive: boolean }) {
   const navigate = useNavigate();
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
   const apiPeriod = PERIOD_MAP[period] || 'all';
 
   const { data, isLoading } = useQuery({
@@ -143,7 +147,10 @@ const PeriodList = memo(function PeriodList({ period, isActive }: { period: stri
           <div
             key={entry.account}
             onClick={() => !isPlaceholder && handleUserClick(entry)}
-            className={`flex items-center gap-3 py-2 px-4 transition-colors ${isPlaceholder ? 'opacity-40' : 'hover:bg-zinc-800/50 cursor-pointer'}`}
+            className={cn(
+              "flex items-center gap-3 py-2 px-4 transition-colors",
+              isPlaceholder ? 'opacity-40' : cn('cursor-pointer', isLightTheme ? 'hover:bg-zinc-100' : 'hover:bg-zinc-800/50')
+            )}
           >
             {/* Rank */}
             <div className="w-7 flex-shrink-0 flex items-center justify-center">

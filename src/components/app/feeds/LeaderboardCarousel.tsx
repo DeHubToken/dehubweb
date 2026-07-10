@@ -8,6 +8,8 @@ import { memo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Trophy, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 import { getLeaderboard, type LeaderboardEntry } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getBadgeUrl } from '@/lib/staking-badges';
@@ -43,6 +45,8 @@ const LeaderboardCard = memo(function LeaderboardCard({
   rank: number;
   onClick: () => void;
 }) {
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
   const avatarUrl = entry.avatarUrl && entry.account
     ? buildAvatarUrl(entry.account, entry.avatarUrl)
     : null;
@@ -53,7 +57,12 @@ const LeaderboardCard = memo(function LeaderboardCard({
   return (
     <div
       onClick={onClick}
-      className="flex-shrink-0 w-[160px] bg-white/[0.04] border border-white/[0.08] rounded-xl p-3 cursor-pointer hover:bg-white/[0.08] transition-colors"
+      className={cn(
+        "flex-shrink-0 w-[160px] rounded-xl p-3 cursor-pointer transition-colors",
+        isLightTheme
+          ? "bg-zinc-100 border border-zinc-200 hover:bg-zinc-200"
+          : "bg-white/[0.04] border border-white/[0.08] hover:bg-white/[0.08]"
+      )}
     >
       {/* Rank + Name */}
       <div className="flex items-center gap-2 mb-2">
