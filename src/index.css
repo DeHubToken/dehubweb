@@ -1360,8 +1360,8 @@ html[data-theme="light"] .hover\:bg-zinc-800\/90:hover {
 
 /* ==========================================================================
  * Login / Sign-up modal — light mode
- * Paper surface, ink text, dark primary CTA. Applies to the desktop Dialog
- * and mobile Drawer (both carry data-login-modal on their content root).
+ * Paper surface, ink text, dark primary CTA. Applies to the desktop and
+ * mobile Drawer (both carry data-login-modal on their content root).
  * The modal background matches the app background exactly on light mode.
  * ========================================================================== */
 html[data-theme="light"] .login-modal-overlay {
