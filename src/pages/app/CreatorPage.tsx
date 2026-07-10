@@ -872,6 +872,7 @@ function CommunityGallery() {
           <button
             type="button"
             aria-label="Close"
+            data-keep-dark
             onClick={() => setLightbox(null)}
             className="absolute right-4 top-4 rounded-full border border-white/15 bg-black/60 px-3 py-1.5 text-xs font-bold uppercase text-white hover:bg-white/10"
           >
