@@ -25,6 +25,8 @@ import medal10 from '@/assets/medal-10.png';
 
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 import { useAuthPrompt, AuthPrompt } from '@/components/app/AuthPrompt';
 import { supabase } from '@/integrations/supabase/client';
 import { LeaderboardUserAvatar } from '@/components/app/LeaderboardUserAvatar';
