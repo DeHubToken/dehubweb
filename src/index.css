@@ -1876,8 +1876,8 @@ html[data-theme="light"] [data-glass-toggle-button][data-active="true"] svg {
    hover and active state should be purely a font-weight change — no extra
    background or color shifts. This keeps the glass indicator as the only
    visual selection marker while giving the user clear text feedback. */
-html[data-theme="light"] [data-feed-filter-panel] [data-glass-toggle-button]:hover,
-html[data-theme="light"] [data-feed-filter-panel] [data-glass-toggle-button][data-active="true"] {
+html[data-theme="light"] [data-feed-filter-panel] button:hover,
+html[data-theme="light"] [data-feed-filter-panel] button[data-active="true"] {
   font-weight: 700;
 }
 
