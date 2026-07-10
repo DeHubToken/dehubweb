@@ -418,6 +418,8 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
 export default function AssistantPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
   // Slash-command skill picker
   const [slashOpen, setSlashOpen] = useState(false);
   const [slashQuery, setSlashQuery] = useState('');
