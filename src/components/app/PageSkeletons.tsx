@@ -444,9 +444,9 @@ export function NotificationsSkeleton() {
 export function LeaderboardSkeleton() {
   const { theme } = useAppTheme();
   const isLight = theme === 'light';
-  const bentoClass = isLight ? 'bg-white border border-black/10' : 'bg-zinc-900';
-  const rowBorder = isLight ? 'border-black/5' : 'border-zinc-800/50';
-  const sk = isLight ? 'bg-black/10' : SK;
+  const bentoClass = isLight ? 'bg-zinc-50 border border-zinc-200' : 'bg-zinc-900';
+  const rowBorder = isLight ? 'border-zinc-200' : 'border-zinc-800/50';
+  const sk = isLight ? 'bg-zinc-200' : SK;
 
   return (
     <div className="min-h-screen p-3 sm:p-4">
