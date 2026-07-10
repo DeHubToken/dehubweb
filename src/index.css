@@ -1323,6 +1323,12 @@ html[data-theme="light"] .bg-muted {
   color: #ffffff !important;
 }
 
+/* Skeleton pulses: keep the loading wash light on paper instead of the dark
+   avatar-fallback remap above. */
+html[data-theme="light"] .animate-pulse.bg-muted {
+  background-color: #e4e4e7 !important; /* zinc-200 */
+}
+
 /* Primary CTA (create-post / log-in) uses bg-zinc-900/90 — keep it black. */
 html[data-theme="light"] .bg-zinc-900\/90,
 html[data-theme="light"] .bg-zinc-900\/80 {
