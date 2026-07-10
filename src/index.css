@@ -1167,6 +1167,9 @@ html[data-theme="light"] #app-root > div,
 html[data-theme="light"] #app-root > div > main,
 html[data-theme="light"] #app-root > div > main > div {
   background-color: var(--paper) !important;
+  background-image: var(--noise-svg), url('./assets/textures/paper-texture.png') !important;
+  background-size: 200px 200px, 256px 256px !important;
+  background-blend-mode: normal, normal !important;
   color: var(--ink) !important;
 }
 
