@@ -23,6 +23,7 @@ import { useUnifiedFeed } from '@/hooks/use-unified-feed';
 import { getMediaUrl, getCategories, type DeHubCategory, type DeHubNFT } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAppTheme } from '@/contexts/ThemeContext';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { SORT_OPTIONS, DATE_FILTER_OPTIONS, applySorting, filterByDate, getApiSortMode, type SortOption, type DateFilterOption } from '@/lib/feed-utils';
 import type { ShortVideo } from '@/types/feed.types';
@@ -59,7 +60,12 @@ const FALLBACK_CATEGORIES: DeHubCategory[] = [
 type DurationFilter = typeof DURATION_FILTERS[number];
 
 // Shared filter pill styles
-const ACTIVE_FILTER_CLASS = 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]';
+function useActiveFilterClass() {
+  const { theme } = useAppTheme();
+  return theme === 'light'
+    ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-1px_0_rgba(255,255,255,0.05)]'
+    : 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]';
+}
 const INACTIVE_FILTER_CLASS = 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700';
 
 // ============================================================================
@@ -245,7 +251,7 @@ function CategoryFilterSection({
           {selectedObj && (
             <button
               onClick={() => { onSelect(null); setSearch(''); }}
-              className={cn("flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all", ACTIVE_FILTER_CLASS)}
+              className={cn("flex-shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-medium transition-all", useActiveFilterClass())}
             >
               {selectedObj.name}
               <span className="ml-0.5 text-white/50 hover:text-white">✕</span>
@@ -255,7 +261,7 @@ function CategoryFilterSection({
             onClick={() => { onSelect(null); setSearch(''); }}
             className={cn(
               'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-              selectedCategory === null ? ACTIVE_FILTER_CLASS : INACTIVE_FILTER_CLASS
+              selectedCategory === null ? useActiveFilterClass() : INACTIVE_FILTER_CLASS
             )}
           >
             {t('filters.all')}
@@ -266,7 +272,7 @@ function CategoryFilterSection({
               onClick={() => { onSelect(cat.id); setSearch(''); }}
               className={cn(
                 'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
-                selectedCategory === cat.id ? ACTIVE_FILTER_CLASS : INACTIVE_FILTER_CLASS
+                selectedCategory === cat.id ? useActiveFilterClass() : INACTIVE_FILTER_CLASS
               )}
             >
               {cat.name}

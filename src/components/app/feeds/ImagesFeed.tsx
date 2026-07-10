@@ -19,6 +19,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { ImageCard } from '@/components/app/cards';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAppTheme } from '@/contexts/ThemeContext';
 import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters } from '@/lib/feed-utils';
 import { usePersistedFeedFilter, usePersistedContentFilters } from '@/hooks/use-persisted-feed-filter';
 
@@ -92,6 +93,8 @@ function ContentTypeFilterSection({
   onToggle: (filter: keyof ContentTypeFilters) => void 
 }) {
   const { t } = useI18n();
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
   return (
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.contentType')}</span>
@@ -104,7 +107,12 @@ function ContentTypeFilterSection({
               className={cn(
                 'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
                 filters[filter.value]
-                  ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]'
+                  ? cn(
+                      'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white',
+                      isLightTheme
+                        ? 'shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-1px_0_rgba(255,255,255,0.05)]'
+                        : 'shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]'
+                    )
                   : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
               )}
             >
@@ -308,6 +316,8 @@ export function ImagesFeed({
   onBackToCollage,
 }: ImagesFeedProps) {
   const { t } = useI18n();
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
   const hasAnimated = useRef(false);
   const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
@@ -528,7 +538,12 @@ export function ImagesFeed({
                         className={cn(
                           'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
                           contentFilters[filter.value]
-                            ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]'
+                            ? cn(
+                                'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white',
+                                isLightTheme
+                                  ? 'shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-1px_0_rgba(255,255,255,0.05)]'
+                                  : 'shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]'
+                              )
                             : 'bg-zinc-800 text-zinc-300 hover:bg-zinc-700'
                         )}
                       >

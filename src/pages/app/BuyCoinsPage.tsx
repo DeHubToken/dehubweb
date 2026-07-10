@@ -5,6 +5,8 @@ import { ArrowLeft, CreditCard, Wallet, Loader2, Check, AlertCircle, Zap, CheckC
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
 import { AuthGate } from '@/components/app/AuthGate';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -44,6 +46,8 @@ export default function BuyCoinsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
   const { isAuthenticated, walletAddress } = useAuth();
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
   const [selectedAmount, setSelectedAmount] = useState<number>(50);
   const [customAmount, setCustomAmount] = useState('');
   const [selectedToken] = useState<DPayToken | null>(null);
@@ -360,7 +364,12 @@ export default function BuyCoinsPage() {
                   {isActive && (
                     <motion.div
                       layoutId="buy-amount-toggle"
-                      className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+                      className={cn(
+                        "absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30",
+                        isLightTheme
+                          ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-1px_0_rgba(255,255,255,0.05)]"
+                          : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+                      )}
                       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
                     />
                   )}

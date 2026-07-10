@@ -21,6 +21,7 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAppTheme } from '@/contexts/ThemeContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { 
   useDeHubSearch, 
@@ -104,23 +105,31 @@ const FilterPill = ({
   label: string; 
   active: boolean; 
   onClick: () => void;
-  layoutId?: string;
-}) => (
-  <button
-    onClick={onClick}
-    className={cn(
-      'relative px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
-      active
-        ? 'text-white'
-        : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
-    )}
-  >
-    {active ? (
-      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]" />
-    ) : null}
-    <span className="relative z-10">{label}</span>
-  </button>
-);
+}) => {
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
+  return (
+    <button
+      onClick={onClick}
+      className={cn(
+        'relative px-3 py-1.5 rounded-full text-sm font-medium transition-colors',
+        active
+          ? 'text-white'
+          : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
+      )}
+    >
+      {active ? (
+        <div className={cn(
+          "absolute inset-0 rounded-full bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30",
+          isLightTheme
+            ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-1px_0_rgba(255,255,255,0.05)]"
+            : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+        )} />
+      ) : null}
+      <span className="relative z-10">{label}</span>
+    </button>
+  );
+};
 
 const FilterDropdown = ({
   label,
@@ -331,6 +340,8 @@ const UserResultCard = ({
 
 export default function ExplorePage() {
   const { t } = useTranslation();
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
   const [searchParams, setSearchParams] = useSearchParams();
   const { walletAddress, isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -862,7 +873,12 @@ export default function ExplorePage() {
               )}
             >
               {(showFilters || activeFilterCount > 0) && (
-                <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]" />
+                <div className={cn(
+                  "absolute inset-0 rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30",
+                  isLightTheme
+                    ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-1px_0_rgba(255,255,255,0.05)]"
+                    : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]"
+                )} />
               )}
               <SlidersHorizontal className="relative z-10 w-5 h-5" />
               {activeFilterCount > 0 && (
@@ -1111,7 +1127,12 @@ export default function ExplorePage() {
                       className={cn(
                         'flex-shrink-0 px-4 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap',
                         !exploreCategoryId
-                          ? 'text-white bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)]'
+                          ? cn(
+                              'text-white bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30',
+                              isLightTheme
+                                ? 'shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2)]'
+                                : 'shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)]'
+                            )
                           : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
                       )}
                     >
@@ -1127,7 +1148,12 @@ export default function ExplorePage() {
                         className={cn(
                           'flex-shrink-0 px-4 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap',
                           exploreCategoryId === cat.id
-                            ? 'text-white bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)]'
+                            ? cn(
+                                'text-white bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30',
+                                isLightTheme
+                                  ? 'shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2)]'
+                                  : 'shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)]'
+                              )
                             : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
                         )}
                       >

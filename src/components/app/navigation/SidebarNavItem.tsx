@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
+import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import type { NavItem } from '@/types/app.types';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
@@ -32,8 +33,6 @@ interface SidebarNavItemProps {
   layoutId?: string;
   /** Optional callback to register the active desktop nav item DOM node for an overlay indicator */
   registerActiveRef?: (el: HTMLElement | null) => void;
-  /** App theme so light and minimal can be styled independently */
-  theme?: string;
 }
 
 function getDesktopTextColor(theme?: string) {
@@ -57,10 +56,10 @@ export function SidebarNavItem({
   notificationCount,
   layoutId = 'sidebar-nav',
   registerActiveRef,
-  theme,
 }: SidebarNavItemProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { theme } = useAppTheme();
   const translatedLabel = t(NAV_LABEL_KEYS[item.label] || item.label);
   const itemRef = useRef<HTMLAnchorElement | HTMLButtonElement | null>(null);
   const isDesktop = variant === 'desktop';
@@ -106,7 +105,10 @@ export function SidebarNavItem({
       key={layoutId}
       layoutId={layoutId}
       className={cn(
-        "absolute inset-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]",
+        "absolute inset-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30",
+        isLightTheme
+          ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-1px_0_rgba(255,255,255,0.05)]"
+          : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)]",
         isCollapsedSquare ? 'rounded-xl' : 'rounded-2xl'
       )}
       transition={{ type: 'spring', stiffness: 400, damping: 30 }}
