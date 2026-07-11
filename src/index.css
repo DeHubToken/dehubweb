@@ -1596,7 +1596,8 @@ html[data-theme="light"] [data-post-modal] .text-zinc-500 {
 }
 html[data-theme="light"] [data-post-modal] .placeholder\:text-white\/50::placeholder,
 html[data-theme="light"] [data-post-modal] .placeholder\:text-white\/70::placeholder,
-html[data-theme="light"] [data-post-modal] .sm\:placeholder\:text-white\/70::placeholder {
+html[data-theme="light"] [data-post-modal] .sm\:placeholder\:text-white\/70::placeholder,
+html[data-theme="light"] [data-assistant-input] textarea::placeholder {
   color: var(--ink) !important;
 }
 html[data-theme="light"] [data-post-modal] .empty\:before\:text-white\/50:empty::before,
