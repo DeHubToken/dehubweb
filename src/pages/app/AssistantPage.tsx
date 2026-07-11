@@ -2700,11 +2700,14 @@ export default function AssistantPage() {
               
               {/* Clean input row with auto-expanding textarea */}
               {/* Glow effect wrapper */}
-              <div className={`relative flex flex-col lg:flex-row lg:items-end gap-0 lg:gap-2 bg-zinc-900/10 backdrop-blur-2xl rounded-2xl px-3 py-2 border shadow-xl transition-all duration-500 ${
-                inputGlow 
-                  ? 'border-white/60 shadow-[0_0_20px_rgba(255,255,255,0.3)]' 
-                  : 'border-white/10'
-              }`}>
+              <div
+                data-assistant-input
+                className={`relative flex flex-col lg:flex-row lg:items-end gap-0 lg:gap-2 bg-zinc-900/10 backdrop-blur-2xl rounded-2xl px-3 py-2 border shadow-xl transition-all duration-500 ${
+                  inputGlow
+                    ? 'border-white/60 shadow-[0_0_20px_rgba(255,255,255,0.3)]'
+                    : 'border-white/10'
+                }`}
+              >
                 {/* Hidden file input */}
                 <input
                   ref={fileInputRef}
