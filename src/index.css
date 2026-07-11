@@ -1586,7 +1586,9 @@ html[data-theme="light"] [data-profile-hover-card] [data-follow-btn]:hover {
    the light paper background. Force all text, placeholders, caret and toggle
    track surfaces to ink so the composer stays readable. */
 html[data-theme="light"] [data-post-modal] .text-white,
+html[data-theme="light"] [data-post-modal] .text-white\/40,
 html[data-theme="light"] [data-post-modal] .text-white\/50,
+html[data-theme="light"] [data-post-modal] .text-white\/60,
 html[data-theme="light"] [data-post-modal] .text-white\/70,
 html[data-theme="light"] [data-post-modal] .text-white\/80,
 html[data-theme="light"] [data-post-modal] .hover\:text-white:hover,
@@ -1608,6 +1610,7 @@ html[data-theme="light"] [data-post-modal] .caret-white,
 html[data-theme="light"] [data-post-modal] [style*="caret-color: white"] {
   caret-color: var(--ink) !important;
 }
+html[data-theme="light"] [data-post-modal] .bg-white\/5,
 html[data-theme="light"] [data-post-modal] .bg-white\/10,
 html[data-theme="light"] [data-post-modal] .bg-white\/20,
 html[data-theme="light"] [data-post-modal] .bg-white\/30,
@@ -2211,8 +2214,11 @@ html[data-theme="light"] [data-poll-card] .hover\:bg-white\/20:hover {
    are used all over "liquid glass" cards. On paper they become dark
    rectangles with remapped ink text on top → invisible. Remap them to a
    subtle black wash so the card is legible. Keep chip/button surfaces,
-   login modal, video controls and country-block drawer opted out. */
-html[data-theme="light"] [class*="bg-black\/"]:not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *):not([data-country-block-drawer]):not([data-country-block-drawer] *):not(.login-modal-overlay) {
+   login modal, video controls, country-block drawer, portaled popper
+   panels, and AI chat panels opted out (the last two get opaque paper
+   surfaces below — a translucent wash on a floating panel lets the page
+   behind bleed through). */
+html[data-theme="light"] [class*="bg-black\/"]:not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *):not([data-country-block-drawer]):not([data-country-block-drawer] *):not(.login-modal-overlay):not([data-radix-popper-content-wrapper] *):not([data-ai-chat]):not([data-ai-chat] *) {
   background-color: rgba(0, 0, 0, 0.05) !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
@@ -2370,5 +2376,54 @@ html[data-theme="light"] [data-comments-dropdown] .focus\:text-white[data-highli
 html[data-theme="light"] [data-comments-dropdown] [class*="focus\:bg-"]:focus,
 html[data-theme="light"] [data-comments-dropdown] [class*="focus\:bg-"][data-highlighted] {
   background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* ==========================================================================
+ * Portaled Radix popper panels — Select, DropdownMenu, Popover, Tooltip.
+ * These render into document.body portals, so page scopes like
+ * [data-post-modal] never reach them: the shared panels keep dark-glass
+ * classes (bg-zinc-900/70 text-white) whose text remaps to ink → unreadable,
+ * and flow-specific panels passing bg-black/N got the translucent wash remap
+ * → the page bled through behind the menu. Render every popper panel as an
+ * opaque paper card with ink text; panels that must stay dark opt out with
+ * data-keep-dark, and the profile hover card keeps its own styling.
+ * ========================================================================== */
+html[data-theme="light"] [data-radix-popper-content-wrapper] > :not([data-profile-hover-card]):not([data-keep-dark]):not([data-comments-dropdown]) {
+  background-color: var(--paper) !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--hairline-strong) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+/* Item hover/selection highlight (Radix sets data-highlighted on focus). */
+html[data-theme="light"] [data-radix-popper-content-wrapper] [data-highlighted],
+html[data-theme="light"] [data-radix-popper-content-wrapper] [data-state="checked"] {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+  color: var(--ink) !important;
+}
+
+/* ==========================================================================
+ * AI chat panels — GeneralAIChat (desktop Dialog + mobile Drawer), PostAIChat.
+ * Portaled, so outside every page scope. The desktop dialog's bg-black/40
+ * glass became a see-through wash; bubbles/inputs/hairlines use white washes
+ * that ghost out on paper. Opaque paper panel + ink equivalents.
+ * ========================================================================== */
+html[data-theme="light"] [data-ai-chat] {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline-strong) !important;
+  color: var(--ink) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html[data-theme="light"] [data-ai-chat] [class*="bg-white/"] {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+html[data-theme="light"] [data-ai-chat] [class*="border-white/"] {
+  border-color: var(--hairline-strong) !important;
+}
+html[data-theme="light"] [data-ai-chat] input::placeholder,
+html[data-theme="light"] [data-ai-chat] textarea::placeholder {
+  color: var(--ink-muted) !important;
 }
 

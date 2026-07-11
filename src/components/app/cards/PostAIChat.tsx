@@ -486,7 +486,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
   if (isMobile) {
     return (
       <Drawer open={isOpen && !isThisMinimized} dismissible={false}>
-        <DrawerContent glass className="h-[85vh]">
+        <DrawerContent data-ai-chat glass className="h-[85vh]">
           <DrawerHeader className="border-b border-white/10 pb-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
