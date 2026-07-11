@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { motion } from 'framer-motion';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
+import { preloadRoute } from '@/lib/route-preload';
 import type { NavItem } from '@/types/app.types';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 
@@ -187,6 +188,9 @@ export function SidebarNavItem({
       ref={itemRef as React.Ref<HTMLAnchorElement>}
       to={item.path}
       onClick={handleClick}
+      onPointerEnter={() => preloadRoute(item.path)}
+      onTouchStart={() => preloadRoute(item.path)}
+      onFocus={() => preloadRoute(item.path)}
       className={cn(
         'relative flex items-center rounded-2xl text-[15px]',
         isLightTheme ? 'transition-[font-weight]' : 'transition-colors',

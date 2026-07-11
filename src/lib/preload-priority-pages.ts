@@ -31,4 +31,15 @@ export function preloadPriorityPages(): void {
       preload(() => import('@/pages/app/FullWalletPage'));
     });
   }, 6000);
+
+  // Batch 3 — 10s after mount: common bottom-nav scroll destinations, so
+  // taps on them are warm even without hover/touch intent preloading.
+  setTimeout(() => {
+    idle(() => {
+      preload(() => import('@/pages/app/StakingPage'));
+      preload(() => import('@/pages/app/CommunitiesPage'));
+      preload(() => import('@/pages/app/EventsPage'));
+      preload(() => import('@/pages/app/LeaderboardPage'));
+    });
+  }, 10000);
 }

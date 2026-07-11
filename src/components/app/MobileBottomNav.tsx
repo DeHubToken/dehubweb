@@ -3,6 +3,7 @@ import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck, Scroll, Map, Wand2, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { preloadRoute } from '@/lib/route-preload';
 import { PostModal } from './PostModal';
 import { AuthPrompt } from './AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
@@ -160,6 +161,8 @@ export function MobileBottomNav() {
                     key={item.path}
                     to={item.path}
                     onClick={(e) => handleNavClick(e, item.path)}
+                    onTouchStart={() => preloadRoute(item.path)}
+                    onPointerEnter={() => preloadRoute(item.path)}
                     className={cn(
                       'relative flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white',
                       index === 0 && 'rounded-l-2xl'
@@ -228,6 +231,8 @@ export function MobileBottomNav() {
                   <NavLink
                     key={item.path}
                     to={item.path}
+                    onTouchStart={() => preloadRoute(item.path)}
+                    onPointerEnter={() => preloadRoute(item.path)}
                     className="flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white"
                   >
                       <item.icon 
@@ -246,6 +251,8 @@ export function MobileBottomNav() {
               {/* Search Link */}
               <NavLink
                 to="/app/explore"
+                onTouchStart={() => preloadRoute('/app/explore')}
+                onPointerEnter={() => preloadRoute('/app/explore')}
                 className="flex items-center justify-center h-12 md:h-14 flex-1 transition-all duration-200 text-white rounded-r-2xl"
               >
                   <Search 
@@ -297,6 +304,8 @@ export function MobileBottomNav() {
                   key={item.path}
                   to={item.path}
                   onClick={(e) => handleProtectedNavClick(e, item.path, (item as any).requiresAuth)}
+                  onTouchStart={() => preloadRoute(item.path)}
+                  onPointerEnter={() => preloadRoute(item.path)}
                   className="relative flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-all duration-200 text-white"
                   style={{ width: 'calc((50% - 24px) / 2)' }}
                 >
