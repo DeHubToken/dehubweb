@@ -1707,6 +1707,17 @@ html[data-theme="light"] [data-vaul-drawer] .text-zinc-300 {
   color: var(--ink) !important;
 }
 
+/* Single-post pages open as a full-height vaul drawer on mobile, so the
+   generic textured-paper drawer surface above made the post/feed background
+   a visibly different shade than the flat-paper pages and header around it.
+   (Video posts hid it behind a flat inner div; text posts didn't — hence the
+   intermittent mismatch.) Force the same flat paper as every other page.
+   Must come after the [data-vaul-drawer] rule to win the specificity tie. */
+html[data-theme="light"] [data-post-drawer] {
+  background-color: var(--paper) !important;
+  background-image: none !important;
+}
+
 /* Mobile bottom nav: the wrapper stays transparent (excluded from the
    #app-root > div paper remap above) so only the glass pill paints. The
    centre create button hardcodes a white + on white glass via inline

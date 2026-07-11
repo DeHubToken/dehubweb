@@ -813,6 +813,7 @@ export default function SinglePostPage() {
         {isMobileView && (
           <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} modal={false} dismissible>
             <DrawerContent
+              data-post-drawer
               hideHandle
               noOverlay
               className="!h-[calc(100dvh-2.75rem)] !max-h-[calc(100dvh-2.75rem)] !mt-11 !rounded-t-none !border-0 !shadow-none !bg-black top-11"
@@ -1032,6 +1033,7 @@ export default function SinglePostPage() {
       {isMobileView ? (
         <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} modal={false} dismissible>
           <DrawerContent
+            data-post-drawer
             hideHandle
             noOverlay
             className="!h-[calc(100dvh-2.75rem)] !max-h-[calc(100dvh-2.75rem)] !mt-11 !rounded-t-none !border-0 !shadow-none !bg-black top-11"
