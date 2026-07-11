@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Repeat2 } from 'lucide-react';
 import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info, CornerDownRight, Image, Play, Pencil, Trash2, Pin } from 'lucide-react';
@@ -37,6 +37,30 @@ import imageFrame3dIcon from '@/assets/icons/image-frame-3d-icon.png';
 import lock3dIcon from '@/assets/lock-3d.png';
 import home3dIcon from '@/assets/icons/home-3d-icon.png';
 import comment3dIcon from '@/assets/icons/comment-3d-icon.png';
+
+// Lazy tab panel: keeps visited panels mounted (hidden) so switching back is
+// instant. Must live at module scope — the previous version was defined
+// inside the component with useCallback([activeTab]), which minted a new
+// component type on every tab switch and forced React to unmount and remount
+// every panel's whole subtree each time (re-running effects, re-decoding
+// images) — the tabs felt dead on slow devices/networks because of it.
+function TabPanel({ tab, activeTab, visitedTabs, children }: {
+  tab: TabValue;
+  activeTab: TabValue;
+  visitedTabs: Set<TabValue>;
+  children: React.ReactNode;
+}) {
+  const isActive = activeTab === tab;
+  if (!isActive && !visitedTabs.has(tab)) return null;
+  return (
+    <div
+      style={isActive ? undefined : { visibility: 'hidden', height: 0, overflow: 'hidden', position: 'absolute', width: '100%' }}
+      aria-hidden={!isActive}
+    >
+      {children}
+    </div>
+  );
+}
 
 interface ProfileTabContentProps {
   activeTab: TabValue;
@@ -113,21 +137,6 @@ export function ProfileTabContent({
   const visitedTabs = useRef(new Set<TabValue>([activeTab]));
   visitedTabs.current.add(activeTab);
 
-  // Lazy tab panel: only mounts content once the tab has been visited
-  const TabPanel = useCallback(({ tab, children }: { tab: TabValue; children: React.ReactNode }) => {
-    const isActive = activeTab === tab;
-    const hasBeenVisited = visitedTabs.current.has(tab);
-    if (!isActive && !hasBeenVisited) return null;
-    return (
-      <div
-        style={isActive ? undefined : { visibility: 'hidden', height: 0, overflow: 'hidden', position: 'absolute', width: '100%' }}
-        aria-hidden={!isActive}
-      >
-        {children}
-      </div>
-    );
-  }, [activeTab]);
-
   // Private account gate - shown instead of all tabs
   if (isTargetPrivate && !isFollowing && !isViewingOwnProfile) {
     return (
@@ -156,7 +165,7 @@ export function ProfileTabContent({
       )}
 
       {/* HOME TAB */}
-      <TabPanel tab="home">
+      <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="home">
         <HomeTabPanel
           ALL_CONTENT={ALL_CONTENT}
           isViewingOwnProfile={isViewingOwnProfile}
@@ -166,7 +175,7 @@ export function ProfileTabContent({
       </TabPanel>
 
       {/* POSTS TAB */}
-      <TabPanel tab="posts">
+      <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="posts">
         <PostsTabPanel
           PROFILE_POSTS={PROFILE_POSTS}
           allComments={allComments}
@@ -182,7 +191,7 @@ export function ProfileTabContent({
       </TabPanel>
 
       {/* IMAGES TAB */}
-      <TabPanel tab="images">
+      <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="images">
         {showLoading ? null : PROFILE_IMAGES.length === 0 ? (
           <ProfileEmptyState iconSrc={imageFrame3dIcon} iconAlt="Images" title="No images yet" subtitle="Image posts will appear here" />
         ) : PROFILE_IMAGES.length >= 4 ? (
@@ -199,7 +208,7 @@ export function ProfileTabContent({
       </TabPanel>
 
       {/* VIDEOS TAB */}
-      <TabPanel tab="videos">
+      <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="videos">
         {showLoading ? null : ALL_PROFILE_VIDEOS.length === 0 ? (
           <ProfileEmptyState iconSrc={filmstrip3dIcon} iconAlt="Videos" title="No videos yet" subtitle="Video posts will appear here" />
         ) : (
@@ -214,7 +223,7 @@ export function ProfileTabContent({
       </TabPanel>
 
       {/* SUBSCRIBERS TAB */}
-      <TabPanel tab="subscribers">
+      <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="subscribers">
         <SubscribersTabPanel
           isLoadingPlans={isLoadingPlans}
           isViewingOwnProfile={isViewingOwnProfile}
@@ -228,22 +237,22 @@ export function ProfileTabContent({
       </TabPanel>
 
       {/* SONGS TAB */}
-      <TabPanel tab="songs">
+      <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="songs">
         <ProfileEmptyState iconSrc={audio3dIcon} iconAlt="Audio" title="No audio yet" subtitle="Audio tracks will appear here" />
       </TabPanel>
 
       {/* LIVE TAB */}
-      <TabPanel tab="live">
+      <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="live">
         <ProfileEmptyState iconSrc={live3dIcon} iconAlt="Live" title="No live streams yet" subtitle="Live content will appear here" />
       </TabPanel>
 
       {/* FRACTIONS TAB */}
-      <TabPanel tab="fractions">
+      <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="fractions">
         <ProfileEmptyState iconSrc={fractions3dIcon} iconAlt="Fractions" title="No fractions yet" subtitle="Fraction holdings will appear here" />
       </TabPanel>
 
       {/* PINNED TAB (#17) */}
-      <TabPanel tab="pinned">
+      <TabPanel activeTab={activeTab} visitedTabs={visitedTabs.current} tab="pinned">
         <PinnedTabPanel profileAddress={profileAddress} />
       </TabPanel>
     </div>

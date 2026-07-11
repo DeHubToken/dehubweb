@@ -816,7 +816,7 @@ export default function SinglePostPage() {
               data-post-drawer
               hideHandle
               noOverlay
-              className="!h-[calc(100dvh-2.75rem)] !max-h-[calc(100dvh-2.75rem)] !mt-11 !rounded-t-none !border-0 !shadow-none !bg-black top-11"
+              className="!h-[calc(100dvh-2.75rem)] !max-h-[calc(100dvh-2.75rem)] !mt-11 !rounded-t-none !border-0 !shadow-none bg-black top-11"
             >
               <div
                 ref={mobileScrollContainerRef}
@@ -1036,7 +1036,7 @@ export default function SinglePostPage() {
             data-post-drawer
             hideHandle
             noOverlay
-            className="!h-[calc(100dvh-2.75rem)] !max-h-[calc(100dvh-2.75rem)] !mt-11 !rounded-t-none !border-0 !shadow-none !bg-black top-11"
+            className="!h-[calc(100dvh-2.75rem)] !max-h-[calc(100dvh-2.75rem)] !mt-11 !rounded-t-none !border-0 !shadow-none bg-black top-11"
           >
             <div
               className={`flex flex-col h-full overflow-y-auto ${isLivePost ? 'bg-black' : ''}`}
