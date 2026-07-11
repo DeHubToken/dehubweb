@@ -61,7 +61,10 @@ const WorkPostPage = React.lazy(() => import("./pages/app/WorkPostPage"));
 const WorkJobDetailPage = React.lazy(() => import("./pages/app/WorkJobDetailPage"));
 const WorkDisputesPage = React.lazy(() => import("./pages/app/WorkDisputesPage"));
 const CreatorEditorHost = React.lazy(() => import("./pages/CreatorEditorHost"));
-const ReferralLanding = React.lazy(() => import("./pages/ReferralLanding"));
+// Eager import — the referral lander is a new user's first touch of DeHub and
+// must paint instantly; it renders outside WalletProviders (see App below) so
+// it never waits on the ~1.5 MB wallet chunk either.
+import ReferralLanding from "./pages/ReferralLanding";
 const PremiumPage = React.lazy(() => import("./pages/Premium"));
 const PricingPage = React.lazy(() => import("./pages/PricingPage"));
 const ConnectPage = React.lazy(() => import("./pages/ConnectPage"));
@@ -211,7 +214,7 @@ function AppContent() {
           <Route path="/skill.md" element={<SkillPage />} />
           <Route path="/editor" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
           <Route path="/creator" element={<Suspense fallback={<PageLoader />}><CreatorEditorHost /></Suspense>} />
-          <Route path="/r/:code" element={<Suspense fallback={<PageLoader />}><ReferralLanding /></Suspense>} />
+          {/* /r/:code renders in the top-level Routes (outside WalletProviders) — see App below */}
           <Route path="/prompt" element={<Suspense fallback={<PageLoader />}><PromptLanding /></Suspense>} />
           <Route path="/premium" element={<Suspense fallback={<PageLoader />}><PremiumPage /></Suspense>} />
           <Route path="/pricing" element={<Suspense fallback={<PageLoader />}><PricingPage /></Suspense>} />
@@ -332,22 +335,35 @@ const App = () => (
            * from `/` to `/app` happens inside AppContent's <Routes>, so HeroRoute
            * never mounts on initial load.
            */}
-          <Suspense fallback={<WalletLoader />}>
-            <WalletProviders>
-              <ThemeProvider>
-                <OptimisticPostsProvider>
-                  <TooltipProvider>
-                    <CosmicBackground />
-                    <HazyNightsBackground />
-                    <SwarmsBackground />
-                    <WinterSnow />
+          <Routes>
+            {/*
+             * Referral lander — a new user's first touch of DeHub. Mounted
+             * OUTSIDE WalletProviders (it uses no auth/wallet state) so it
+             * paints without waiting for the ~1.5 MB wallet chunk.
+             */}
+            <Route path="/r/:code" element={<ReferralLanding />} />
+            <Route
+              path="*"
+              element={
+                <Suspense fallback={<WalletLoader />}>
+                  <WalletProviders>
+                    <ThemeProvider>
+                      <OptimisticPostsProvider>
+                        <TooltipProvider>
+                          <CosmicBackground />
+                          <HazyNightsBackground />
+                          <SwarmsBackground />
+                          <WinterSnow />
 
-                    <AppContent />
-                  </TooltipProvider>
-                </OptimisticPostsProvider>
-              </ThemeProvider>
-            </WalletProviders>
-          </Suspense>
+                          <AppContent />
+                        </TooltipProvider>
+                      </OptimisticPostsProvider>
+                    </ThemeProvider>
+                  </WalletProviders>
+                </Suspense>
+              }
+            />
+          </Routes>
         </BrowserRouter>
       </QueryClientProvider>
     </I18nextProvider>

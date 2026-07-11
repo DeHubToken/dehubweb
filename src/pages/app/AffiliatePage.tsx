@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { Share2, Users, Wallet, Sparkles, RefreshCw, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
@@ -34,8 +34,18 @@ export default function AffiliatePage() {
   const username = (user as { username?: string | null } | null)?.username ?? null;
   const badgeBalance = (user as { badgeBalance?: number | null } | null)?.badgeBalance ?? null;
 
-  const [stats, setStats] = useState<AffiliateStats | null>(null);
-  const [loading, setLoading] = useState(true);
+  // Hydrate instantly from the last known stats for this wallet; the real
+  // numbers refresh in the background (stale-while-revalidate).
+  const [stats, setStats] = useState<AffiliateStats | null>(() => {
+    if (typeof window === "undefined" || !wallet) return null;
+    try {
+      const cached = window.localStorage.getItem(`affiliate-stats:${wallet.toLowerCase()}`);
+      return cached ? (JSON.parse(cached) as AffiliateStats) : null;
+    } catch { return null; }
+  });
+  const [loading, setLoading] = useState(!stats);
+  const statsRef = useRef(stats);
+  useEffect(() => { statsRef.current = stats; }, [stats]);
   // Stable per-code version stored in localStorage. Only bumped when user clicks Refresh,
   // so the browser HTTP cache hits instantly on revisits.
   const versionKey = stats?.code ? `affiliate-img-v:${stats.code}` : null;
@@ -65,11 +75,14 @@ export default function AffiliatePage() {
 
   const load = useCallback(async (opts?: { refreshImage?: boolean }) => {
     if (!wallet) { setLoading(false); return; }
-    setLoading(true);
+    // Only show skeletons when there's nothing to show — cached stats stay
+    // visible while fresh numbers load in the background.
+    if (!statsRef.current) setLoading(true);
     try {
       const fallbackName = wallet ? `${wallet.slice(0, 6)}…${wallet.slice(-4)}` : null;
       const s = await loadAffiliateStats(wallet, displayName ?? fallbackName);
       setStats(s);
+      try { window.localStorage.setItem(`affiliate-stats:${wallet.toLowerCase()}`, JSON.stringify(s)); } catch { /* ignore */ }
       if (opts?.refreshImage && s?.code) {
         const next = String(Date.now());
         setImgVersion(next);

@@ -125,29 +125,30 @@ export type AffiliateStats = {
 
 export async function loadAffiliateStats(ownerAddress: string, shareName?: string | null): Promise<AffiliateStats> {
   const addr = ownerAddress.toLowerCase();
-  const codeRes = await getOrCreateAffiliateCode(addr, shareName);
-  const code = codeRes?.code ?? null;
 
-  // @ts-ignore
-  const refRes = await supabase
-    .from("affiliate_referrals" as never)
-    .select("id", { count: "exact", head: true })
-    .ilike("owner_address", addr) as unknown as { count: number | null };
-
-  // @ts-ignore
-  const l2RefRes = await supabase
-    .from("affiliate_referrals" as never)
-    .select("id", { count: "exact", head: true })
-    .ilike("l2_owner_address", addr) as unknown as { count: number | null };
-
-  // @ts-ignore
-  const earnRes = await withWalletHeader(
+  // All four queries only depend on the address — run them in parallel
+  // (this used to be four serial round-trips and made the page feel slow).
+  const [codeRes, refRes, l2RefRes, earnRes] = await Promise.all([
+    getOrCreateAffiliateCode(addr, shareName),
     // @ts-ignore
     supabase
-      .from("affiliate_earnings" as never)
-      .select("commission_cents,currency,tier"),
-    addr,
-  ) as unknown as { data: Array<{ commission_cents: number; currency: string; tier: number }> | null };
+      .from("affiliate_referrals" as never)
+      .select("id", { count: "exact", head: true })
+      .ilike("owner_address", addr) as unknown as Promise<{ count: number | null }>,
+    // @ts-ignore
+    supabase
+      .from("affiliate_referrals" as never)
+      .select("id", { count: "exact", head: true })
+      .ilike("l2_owner_address", addr) as unknown as Promise<{ count: number | null }>,
+    withWalletHeader(
+      // @ts-ignore
+      supabase
+        .from("affiliate_earnings" as never)
+        .select("commission_cents,currency,tier"),
+      addr,
+    ) as unknown as Promise<{ data: Array<{ commission_cents: number; currency: string; tier: number }> | null }>,
+  ]);
+  const code = codeRes?.code ?? null;
 
   const rows = earnRes.data ?? [];
   const l1EarnedCents = rows.filter(r => r.tier !== 2).reduce((s, r) => s + (r.commission_cents ?? 0), 0);

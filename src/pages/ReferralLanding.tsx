@@ -19,7 +19,6 @@ export default function ReferralLanding() {
   const [inviter, setInviter] = useState<string | null>(null);
   const [inviterUsername, setInviterUsername] = useState<string | null>(null);
   const [inviterBadgeBalance, setInviterBadgeBalance] = useState<number | null>(null);
-  const [inviterLoaded, setInviterLoaded] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
   const [imgRetry, setImgRetry] = useState(0);
 
@@ -68,17 +67,15 @@ export default function ReferralLanding() {
         if (sn) resolved = sn;
         else if (data?.owner_address) resolved = `${data.owner_address.slice(0, 6)}…${data.owner_address.slice(-4)}`;
       }
-      if (!cancelled) {
-        if (resolved) setInviter(resolved);
-        setInviterLoaded(true);
-      }
+      if (!cancelled && resolved) setInviter(resolved);
     })();
     return () => { cancelled = true; };
   }, [code, valid]);
 
-  // Preload the share image so the whole lander reveals at once
+  // Preload the share image immediately — its URL only depends on the code,
+  // so it downloads in parallel with the inviter lookup instead of after it.
   useEffect(() => {
-    if (!valid || !inviterLoaded) return;
+    if (!valid) return;
     let cancelled = false;
     const img = new Image();
     img.onload = () => { if (!cancelled) setImgLoaded(true); };
@@ -89,9 +86,7 @@ export default function ReferralLanding() {
     };
     img.src = shareImage;
     return () => { cancelled = true; };
-  }, [shareImage, valid, inviterLoaded, imgRetry]);
-
-  const ready = !valid || (inviterLoaded && imgLoaded);
+  }, [shareImage, valid, imgRetry]);
 
   const title = useMemo(
     () => (valid && inviter ? `${inviter} invited you to DeHub — earn, post & build on-chain` : "DeHub — the decentralised creator network"),
@@ -126,16 +121,10 @@ export default function ReferralLanding() {
         
       </Helmet>
 
+      {/* No loading gate — the page shell (headline, code, CTAs) paints
+          instantly; the inviter's name and share image fade in as their
+          fetches resolve. This is a new user's first touch of DeHub. */}
       <main className="min-h-screen bg-black text-white flex items-center justify-center px-6 py-16">
-        {!ready ? (
-          <div className="flex flex-col items-center justify-center gap-4" role="status" aria-label="Loading">
-            <div className="relative w-12 h-12">
-              <span className="absolute inset-0 rounded-full border-2 border-white/10" />
-              <span className="absolute inset-0 rounded-full border-2 border-white border-t-transparent border-r-transparent animate-spin" />
-            </div>
-            <span className="text-xs uppercase tracking-[0.3em] text-white/40">Loading</span>
-          </div>
-        ) : (
         <div className="max-w-3xl w-full text-center space-y-8 animate-in fade-in duration-500">
           {valid ? (
             <>
@@ -169,12 +158,13 @@ export default function ReferralLanding() {
                 Join with code <span className="font-mono font-bold tracking-[0.3em] text-white">{code}</span>
               </p>
               <div className="mx-auto max-w-2xl overflow-hidden rounded-2xl border border-white/10 bg-white/[0.02] aspect-[1200/630] relative">
+                {!imgLoaded && <div className="absolute inset-0 animate-pulse bg-white/[0.04]" aria-hidden="true" />}
                 <img
                   src={shareImage}
                   alt={inviter ? `${inviter} invited you to DeHub` : "DeHub invite"}
                   width={1200}
                   height={630}
-                  className="absolute inset-0 w-full h-full block"
+                  className={`absolute inset-0 w-full h-full block transition-opacity duration-500 ${imgLoaded ? "opacity-100" : "opacity-0"}`}
                 />
               </div>
               <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
@@ -203,7 +193,6 @@ export default function ReferralLanding() {
             </>
           )}
         </div>
-        )}
       </main>
     </>
   );
