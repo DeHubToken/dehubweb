@@ -135,6 +135,7 @@ export function MobileBottomNav() {
   return (
     <>
       <div
+        data-bottom-nav
         className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2 transition-transform duration-300 ease-in-out"
         style={{ transform: navVisible ? 'translateY(0)' : 'translateY(110%)', willChange: 'transform' }}
       >

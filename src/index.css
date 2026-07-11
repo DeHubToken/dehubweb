@@ -1163,8 +1163,11 @@ html[data-theme="light"] body {
   background-size: 256px 256px !important;
   color: var(--ink) !important;
 }
+/* Note: #app-root > div also matches floating direct children (the mobile
+   bottom nav wrapper), which must stay transparent — hence the
+   [data-bottom-nav] exclusion; only the glass pill inside it paints. */
 html[data-theme="light"] #app-root,
-html[data-theme="light"] #app-root > div,
+html[data-theme="light"] #app-root > div:not([data-bottom-nav]),
 html[data-theme="light"] #app-root > div > main,
 html[data-theme="light"] #app-root > div > main > div {
   background-color: var(--paper) !important;
@@ -1702,6 +1705,19 @@ html[data-theme="light"] [data-vaul-drawer] .text-zinc-100,
 html[data-theme="light"] [data-vaul-drawer] .text-zinc-200,
 html[data-theme="light"] [data-vaul-drawer] .text-zinc-300 {
   color: var(--ink) !important;
+}
+
+/* Mobile bottom nav: the wrapper stays transparent (excluded from the
+   #app-root > div paper remap above) so only the glass pill paints. The
+   centre create button hardcodes a white + on white glass via inline
+   styles — flip the glyph and its bubble ring to ink so it reads on paper
+   (!important beats the inline styles). */
+html[data-theme="light"] [data-bottom-nav] .lucide-plus {
+  color: var(--ink) !important;
+  stroke: var(--ink) !important;
+}
+html[data-theme="light"] [data-bottom-nav] .border-white\/30 {
+  border-color: rgba(0, 0, 0, 0.25) !important;
 }
 
 /* Login modal light-mode overrides live above (~L1351). Do NOT reintroduce
