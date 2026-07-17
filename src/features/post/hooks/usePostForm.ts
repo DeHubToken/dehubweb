@@ -1,0 +1,1591 @@
+import { useState, useRef, useCallback, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
+import { dhbText } from '@/lib/dhb-toast';
+import { createLogger } from '@/lib/logger';
+
+const mintLogger = createLogger('PostForm.handlePost');
+import { mintPost, createPoll, type StreamInfo } from '@/lib/api/dehub';
+// NOTE: mint/bounty helpers reach wallet/contract code (wagmi + web3auth).
+// usePostForm is reachable from eager UI (PostModal is used by the sidebar /
+// bottom nav / feed), so those helpers are dynamically imported inside
+// handlePost to keep the wallet stack out of the entry bundle
+// (scripts/check-entry-bundle.mjs fails the build otherwise). Only the light
+// chain-config constants are imported statically.
+import { getChainConfig, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
+import { isSolanaChain, findLockToken, isValidEvmAddress } from '@/lib/chains/constants';
+import { connectSolanaWallet, isValidSolanaAddress } from '@/lib/solana/wallet';
+import { broadcastSolanaMint } from '@/lib/solana/mint';
+import { confirmEvmMint } from '@/lib/api/dehub/solana';
+import { extractAvatarPath, buildAvatarUrl } from '@/lib/media-url';
+import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
+import { useAuth } from '@/contexts/AuthContext';
+import type { MediaFile, Currency, PostFormState, PostFormActions, PostFormComputed, AudioFile, LiveMode, PollData } from '../types';
+import type { FilterSettings, CropSettings } from '../types/filters';
+import type { Draft } from '../components/DraftsSheet';
+import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
+import type { PostChainId } from '@/components/app/ChainSelector';
+
+// Storage key for drafts
+const DRAFTS_STORAGE_KEY = 'post_drafts';
+const ACTIVE_DRAFT_KEY = 'post_active_draft';
+
+interface ActiveDraft {
+  text: string;
+  description: string;
+  showDescription: boolean;
+  titleText: string;
+  showTitle: boolean;
+  selectedCategory: string;
+  isSubscribersOnly: boolean;
+  isPPV: boolean;
+  ppvAmount: string;
+  ppvCurrency: Currency;
+  isWatch2Earn: boolean;
+  w2eViews: string;
+  w2eComments: string;
+  w2eTotal: string;
+  w2eCurrency: Currency;
+  isTokenGated: boolean;
+  tokenContract: string;
+  tokenSymbol: string;
+  tokenAmount: string;
+}
+
+function loadActiveDraft(): ActiveDraft | null {
+  try {
+    const stored = localStorage.getItem(ACTIVE_DRAFT_KEY);
+    if (stored) return JSON.parse(stored);
+  } catch {}
+  return null;
+}
+
+function saveActiveDraft(draft: ActiveDraft): void {
+  try { localStorage.setItem(ACTIVE_DRAFT_KEY, JSON.stringify(draft)); } catch {}
+}
+
+function clearActiveDraft(): void {
+  try { localStorage.removeItem(ACTIVE_DRAFT_KEY); } catch {}
+}
+
+// Load drafts from localStorage (sync fallback for initial render)
+const loadDraftsLocal = (): Draft[] => {
+  try {
+    const stored = localStorage.getItem(DRAFTS_STORAGE_KEY);
+    if (stored) {
+      const drafts = JSON.parse(stored);
+      return drafts.map((d: any) => ({ ...d, createdAt: new Date(d.createdAt) }));
+    }
+  } catch (e) {
+    console.error('Failed to load drafts:', e);
+  }
+  return [];
+};
+
+// Save drafts to localStorage (backup)
+const saveDraftsLocal = (drafts: Draft[]) => {
+  try {
+    localStorage.setItem(DRAFTS_STORAGE_KEY, JSON.stringify(drafts));
+  } catch (e) {
+    console.error('Failed to save drafts:', e);
+  }
+};
+
+// Load drafts from Supabase
+const loadDraftsFromDb = async (walletAddress: string): Promise<Draft[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('post_drafts')
+      .select('*')
+      .eq('wallet_address', walletAddress)
+      .order('created_at', { ascending: false })
+      .limit(10);
+    if (error) throw error;
+    if (data && data.length > 0) {
+      return data.map((d: any) => ({
+        id: d.id,
+        text: d.text || '',
+        createdAt: new Date(d.created_at),
+        hasImage: d.has_image || false,
+        hasVideo: d.has_video || false,
+        hasAudio: (d.metadata as any)?.hasAudio || false,
+      }));
+    }
+  } catch (e) {
+    console.error('Failed to load drafts from DB:', e);
+  }
+  return [];
+};
+
+// Save a single draft to Supabase
+const saveDraftToDb = async (walletAddress: string, draft: Draft): Promise<string | null> => {
+  try {
+    const { data, error } = await supabase
+      .from('post_drafts')
+      .insert({
+        wallet_address: walletAddress,
+        text: draft.text,
+        has_image: draft.hasImage,
+        has_video: draft.hasVideo,
+        metadata: { hasAudio: draft.hasAudio },
+      })
+      .select('id')
+      .single();
+    if (error) throw error;
+    return data?.id || null;
+  } catch (e) {
+    console.error('Failed to save draft to DB:', e);
+    return null;
+  }
+};
+
+// Delete a draft from Supabase
+const deleteDraftFromDb = async (id: string) => {
+  try {
+    await supabase.from('post_drafts').delete().eq('id', id);
+  } catch (e) {
+    console.error('Failed to delete draft from DB:', e);
+  }
+};
+
+interface UsePostFormReturn {
+  state: PostFormState & {
+    scheduledDate: Date | null;
+    drafts: Draft[];
+    isRecording: boolean;
+    recordingTime: number;
+    chainId: PostChainId;
+    isCameraModalOpen: boolean;
+    selectedCategory: string;
+    showTitle: boolean;
+    titleText: string;
+  };
+  actions: PostFormActions & {
+    setScheduledDate: (date: Date | null) => void;
+    saveDraft: () => void;
+    loadDraft: (draft: Draft) => void;
+    deleteDraft: (id: string) => void;
+    startRecording: () => void;
+    stopRecording: () => void;
+    setChainId: (chainId: PostChainId) => void;
+    setSelectedCategory: (category: string) => void;
+    setShowTitle: (show: boolean) => void;
+    setTitleText: (text: string) => void;
+    insertEmoji: (emoji: string) => void;
+    insertGif: (gifUrl: string) => void;
+    openCameraCapture: () => void;
+    closeCameraCapture: () => void;
+    handleCameraVideoRecorded: (videoBlob: Blob) => void;
+    handleCameraPhotoCaptured: (imageBlob: Blob) => void;
+  };
+  computed: PostFormComputed;
+  refs: {
+    imageInputRef: React.RefObject<HTMLInputElement>;
+    videoInputRef: React.RefObject<HTMLInputElement>;
+    audioInputRef: React.RefObject<HTMLInputElement>;
+    editorRef: React.RefObject<HTMLDivElement>;
+  };
+}
+
+export function usePostForm(onClose: () => void): UsePostFormReturn {
+  const navigate = useNavigate();
+  const { addOptimisticPost } = useOptimisticPosts();
+  const { user, connectionSource } = useAuth();
+  
+  // Restore active draft from localStorage
+  const savedDraft = useRef(loadActiveDraft());
+  const d = savedDraft.current;
+
+  // Form state — initialize from saved draft if available
+  const [text, setText] = useState(d?.text ?? '');
+  const [description, setDescription] = useState(d?.description ?? '');
+  const [showDescription, setShowDescription] = useState(d?.showDescription ?? false);
+  const [media, setMedia] = useState<MediaFile[]>([]);
+  const [isSubscribersOnly, setIsSubscribersOnly] = useState(d?.isSubscribersOnly ?? false);
+  const [isPPV, setIsPPV] = useState(d?.isPPV ?? false);
+  const [ppvAmount, setPpvAmount] = useState(d?.ppvAmount ?? '');
+  const [ppvCurrency, setPpvCurrency] = useState<Currency>(d?.ppvCurrency ?? 'USD');
+  const [isWatch2Earn, setIsWatch2Earn] = useState(d?.isWatch2Earn ?? false);
+  const [w2eViews, setW2eViews] = useState(d?.w2eViews ?? '');
+  const [w2eComments, setW2eComments] = useState(d?.w2eComments ?? '');
+  const [w2eTotal, setW2eTotal] = useState(d?.w2eTotal ?? '');
+  const [w2eCurrency, setW2eCurrency] = useState<Currency>(d?.w2eCurrency ?? 'USD');
+  const [isTokenGated, setIsTokenGated] = useState(d?.isTokenGated ?? false);
+  const [tokenContract, setTokenContract] = useState(d?.tokenContract ?? '');
+  const [tokenSymbol, setTokenSymbol] = useState(d?.tokenSymbol ?? 'DHB');
+  const [tokenAmount, setTokenAmount] = useState(d?.tokenAmount ?? '');
+  const [liveMode, setLiveMode] = useState<LiveMode>(null);
+  const [poll, setPoll] = useState<PollData | null>(null);
+  const [isEnhancing, setIsEnhancing] = useState(false);
+  const [isPosting, setIsPosting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  
+  const [scheduledDate, setScheduledDate] = useState<Date | null>(null);
+  const [drafts, setDrafts] = useState<Draft[]>(loadDraftsLocal);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const [chainId, setChainId] = useState<PostChainId>(BASE_CHAIN_ID as PostChainId);
+  const [selectedCategory, setSelectedCategory] = useState<string>(() => {
+    // Active draft category takes priority, then saved defaults
+    if (d?.selectedCategory) return d.selectedCategory;
+    try { return localStorage.getItem('post_default_categories') || ''; } catch { return ''; }
+  });
+  const categorySavedRef = useRef(false);
+  const [showTitle, setShowTitle] = useState(() => {
+    if (d?.showTitle != null) return d.showTitle;
+    try { return localStorage.getItem('post_show_title') === 'true'; } catch { return false; }
+  });
+  const [titleText, setTitleText] = useState(d?.titleText ?? '');
+
+  // Persist title toggle preference
+  const handleSetShowTitle = useCallback((value: boolean) => {
+    setShowTitle(value);
+    try { localStorage.setItem('post_show_title', String(value)); } catch {}
+  }, []);
+  const [isGeneratingThumbnail, setIsGeneratingThumbnail] = useState(false);
+
+  // Auto-save active draft to localStorage whenever text fields change
+  useEffect(() => {
+    const draft: ActiveDraft = {
+      text, description, showDescription, titleText, showTitle,
+      selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
+      isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
+      isTokenGated, tokenContract, tokenSymbol, tokenAmount,
+    };
+    // Only save if there's meaningful content
+    const hasContent = text.trim() || description.trim() || titleText.trim() ||
+      selectedCategory || isPPV || isWatch2Earn || isTokenGated || isSubscribersOnly;
+    if (hasContent) {
+      saveActiveDraft(draft);
+    } else {
+      clearActiveDraft();
+    }
+  }, [text, description, showDescription, titleText, showTitle,
+    selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
+    isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
+    isTokenGated, tokenContract, tokenSymbol, tokenAmount]);
+
+  // Refs
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const videoInputRef = useRef<HTMLInputElement>(null);
+  const audioInputRef = useRef<HTMLInputElement>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const recordingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Computed values
+  const hasVideo = media.some(m => m.type === 'video');
+  const hasImage = media.some(m => m.type === 'image');
+  const hasAudio = media.some(m => m.type === 'audio');
+  const isShort = hasVideo && media.some(m => m.type === 'video' && m.duration && m.duration < 90);
+  const hasMusicVideo = media.some(m => m.type === 'video' && m.isMusicVideo);
+  const isLive = liveMode !== null;
+
+  const getPostDestinations = useCallback(() => {
+    const destinations: string[] = ['Home'];
+    if (hasImage) destinations.push('Images');
+    if (hasAudio) destinations.push('Music');
+    if (hasVideo) {
+      destinations.push('Videos');
+      if (isShort) destinations.push('Shorts');
+      if (hasMusicVideo) destinations.push('Music');
+    }
+    if (isLive) destinations.push('Live');
+    // Remove duplicate Music entries
+    return [...new Set(destinations)];
+  }, [hasImage, hasAudio, hasVideo, isShort, hasMusicVideo, isLive]);
+
+  const destinations = getPostDestinations();
+  const pollIsValid = poll !== null && poll.question.trim().length > 0 && poll.options.filter(o => o.text.trim()).length >= 2;
+  const canPost = Boolean((text.trim() || media.length > 0 || isLive || pollIsValid) && !isGeneratingThumbnail);
+
+  // Actions
+  const handleImageSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
+    processImageFiles(Array.from(files));
+    e.target.value = '';
+  }, []);
+
+  const processImageFiles = useCallback((files: File[]) => {
+    // Can't add images if there's already a video
+    if (hasVideo) {
+      toast.error('Remove the video first to add images');
+      return;
+    }
+
+    const currentImageCount = media.filter(m => m.type === 'image').length;
+    const availableSlots = 4 - currentImageCount;
+    
+    if (availableSlots <= 0) {
+      toast.error('Maximum 4 images allowed');
+      return;
+    }
+
+    const filesToAdd = files.filter(f => f.type.startsWith('image/')).slice(0, availableSlots);
+    
+    if (files.length > availableSlots) {
+      toast.info(`Only ${availableSlots} image${availableSlots > 1 ? 's' : ''} added (max 4)`);
+    }
+
+    filesToAdd.forEach(file => {
+      const preview = URL.createObjectURL(file);
+      setMedia(prev => [...prev, { file, preview, type: 'image' }]);
+    });
+  }, [hasVideo, media]);
+    
+  const handleVideoSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    await processVideoFile(files[0]);
+    e.target.value = '';
+  }, []);
+
+  const processVideoFile = useCallback(async (file: File) => {
+    // Can't add video if there are already images
+    if (hasImage) {
+      toast.error('Remove images first to add a video');
+      return;
+    }
+
+    // Can't add more than 1 video
+    if (hasVideo) {
+      toast.error('Only 1 video allowed per post');
+      return;
+    }
+
+    const preview = URL.createObjectURL(file);
+
+    // Move existing text to title field when adding video
+    if (text.trim() && !titleText.trim()) {
+      setTitleText(text.trim().slice(0, 140));
+      setText('');
+      if (editorRef.current) {
+        editorRef.current.innerText = '';
+      }
+    }
+    
+    // Instantly show the video in the media list with a loading state
+    // This makes the UI feel fast while heavy thumbnail generation runs in background
+    setMedia([{ 
+      file, 
+      preview, 
+      type: 'video', 
+    }]);
+
+    setIsGeneratingThumbnail(true);
+
+    // Background: load metadata + generate thumbnail, then update the entry
+    const video = document.createElement('video');
+    video.preload = 'auto';
+    video.muted = true;
+    video.playsInline = true;
+    video.setAttribute('webkit-playsinline', '');
+    // NOTE: do NOT set crossOrigin on blob URLs — it taints the canvas on some mobile browsers
+    video.src = preview;
+
+    try {
+      // Wait for video metadata — 15s timeout for slow mobile devices
+      const duration = await new Promise<number>((resolve, reject) => {
+        const timeout = setTimeout(() => reject(new Error('Metadata load timeout')), 15000);
+        video.onloadedmetadata = () => { clearTimeout(timeout); resolve(video.duration); };
+        video.onerror = () => { clearTimeout(timeout); reject(new Error('Failed to load video')); };
+        video.load(); // ensure loading starts on mobile
+      });
+
+      // Generate thumbnail from video frame
+      let thumbnailUrl: string | undefined;
+      let thumbnailBlob: Blob | undefined;
+
+      try {
+        const seekTime = Math.min(1, duration * 0.1);
+
+        // Timeout for seek — mobile browsers sometimes never fire onseeked
+        await new Promise<void>((resolve) => {
+          const timeout = setTimeout(resolve, 5000); // resolve anyway after 5s
+          video.onseeked = () => { clearTimeout(timeout); resolve(); };
+          video.currentTime = seekTime;
+        });
+
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth || 640;
+        canvas.height = video.videoHeight || 360;
+        const ctx = canvas.getContext('2d');
+
+        if (ctx && canvas.width > 0 && canvas.height > 0) {
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+          const blob = await new Promise<Blob | null>((resolve) => {
+            canvas.toBlob(resolve, 'image/jpeg', 0.85);
+          });
+
+          // Only store if blob is valid and non-empty
+          if (blob && blob.size > 0) {
+            thumbnailBlob = blob;
+            thumbnailUrl = URL.createObjectURL(blob);
+            console.log('[Video] Auto-generated thumbnail:', { width: canvas.width, height: canvas.height, size: blob.size });
+          } else {
+            console.warn('[Video] canvas.toBlob returned empty blob — skipping auto thumbnail');
+          }
+        }
+      } catch (err) {
+        console.warn('[Video] Failed to generate thumbnail:', err);
+        toast.error('Could not generate thumbnail automatically. You can add one manually.');
+      }
+
+      // Update the media entry with duration + thumbnail
+      setMedia(prev => prev.map(m => 
+        m.file === file ? { 
+          ...m, 
+          duration,
+          thumbnail: thumbnailUrl,
+          thumbnailBlob,
+          isAutoThumbnail: !!thumbnailUrl,
+        } : m
+      ));
+    } catch (err) {
+      console.warn('[Video] Failed to load video metadata:', err);
+      toast.error('Could not process video. Try a different file.');
+    } finally {
+      setIsGeneratingThumbnail(false);
+    }
+  }, [hasImage, hasVideo, text, titleText, editorRef]);
+
+  const removeMedia = useCallback((index: number) => {
+    setMedia(prev => {
+      const item = prev[index];
+      URL.revokeObjectURL(item.preview);
+      if (item.audio) URL.revokeObjectURL(item.audio.url);
+      if (item.thumbnail) URL.revokeObjectURL(item.thumbnail);
+      return prev.filter((_, i) => i !== index);
+    });
+  }, []);
+
+  const processAudioFile = useCallback((file: File) => {
+    const url = URL.createObjectURL(file);
+
+    // Move existing text to title field when adding audio
+    if (text.trim() && !titleText.trim()) {
+      setTitleText(text.trim().slice(0, 140));
+      setText('');
+      if (editorRef.current) {
+        editorRef.current.innerText = '';
+      }
+    }
+    
+    // Create audio element to get duration
+    const audioEl = new Audio(url);
+    audioEl.onloadedmetadata = () => {
+      const duration = Math.round(audioEl.duration);
+      
+      if (hasImage) {
+        // Add audio to all images
+        setMedia(prev => prev.map(m => 
+          m.type === 'image' ? { ...m, audio: { blob: file, url, duration } } : m
+        ));
+        toast.success('Audio added to images');
+      } else {
+        // Standalone audio post
+        setMedia(prev => [...prev, { file, preview: url, type: 'audio', duration }]);
+        toast.success('Audio uploaded');
+      }
+    };
+  }, [hasImage, text, titleText, editorRef]);
+
+  const handleFileDrop = useCallback((files: FileList) => {
+    const fileArray = Array.from(files);
+    
+    // Separate files by type
+    const imageFiles = fileArray.filter(f => f.type.startsWith('image/'));
+    const videoFiles = fileArray.filter(f => f.type.startsWith('video/'));
+    const audioFiles = fileArray.filter(f => f.type.startsWith('audio/'));
+    
+    // Process based on what was dropped
+    if (videoFiles.length > 0) {
+      processVideoFile(videoFiles[0]);
+    } else if (imageFiles.length > 0) {
+      processImageFiles(imageFiles);
+    }
+    
+    // Audio can be added alongside images
+    if (audioFiles.length > 0 && (hasImage || imageFiles.length > 0)) {
+      // Wait a tick for images to be added first
+      setTimeout(() => processAudioFile(audioFiles[0]), 100);
+    } else if (audioFiles.length > 0 && !hasVideo && !videoFiles.length) {
+      processAudioFile(audioFiles[0]);
+    }
+  }, [processVideoFile, processImageFiles, processAudioFile, hasImage, hasVideo]);
+
+  const addAudioToMedia = useCallback((index: number, audio: AudioFile) => {
+    setMedia(prev => prev.map((m, i) => 
+      i === index ? { ...m, audio } : m
+    ));
+  }, []);
+
+  const removeAudioFromMedia = useCallback((index: number) => {
+    setMedia(prev => prev.map((m, i) => {
+      if (i === index && m.audio) {
+        URL.revokeObjectURL(m.audio.url);
+        return { ...m, audio: undefined };
+      }
+      return m;
+    }));
+  }, []);
+
+  const toggleMusicVideo = useCallback((index: number) => {
+    setMedia(prev => prev.map((m, i) => 
+      i === index && m.type === 'video' ? { ...m, isMusicVideo: !m.isMusicVideo } : m
+    ));
+  }, []);
+
+  const addThumbnailToMedia = useCallback(async (index: number, thumbnailUrl: string) => {
+    // Fetch the blob from URL for upload and create a NEW blob URL
+    let thumbnailBlob: Blob | undefined;
+    let newThumbnailUrl = thumbnailUrl;
+    
+    try {
+      const response = await fetch(thumbnailUrl);
+      thumbnailBlob = await response.blob();
+      newThumbnailUrl = URL.createObjectURL(thumbnailBlob);
+    } catch (err) {
+      console.warn('[Thumbnail] Failed to fetch blob:', err);
+    }
+    
+    setMedia(prev => prev.map((m, i) => {
+      if (i === index && (m.type === 'video' || m.type === 'audio')) {
+        // Only revoke if we have a previous thumbnail that we created
+        if (m.thumbnail && m.thumbnailBlob) {
+          URL.revokeObjectURL(m.thumbnail);
+        }
+        return { 
+          ...m, 
+          thumbnail: newThumbnailUrl, 
+          thumbnailBlob,
+          isAutoThumbnail: false,
+        };
+      }
+      return m;
+    }));
+  }, []);
+
+  const removeThumbnailFromMedia = useCallback((index: number) => {
+    setMedia(prev => prev.map((m, i) => {
+      if (i === index && m.thumbnail) {
+        URL.revokeObjectURL(m.thumbnail);
+        return { ...m, thumbnail: undefined, thumbnailBlob: undefined, isAutoThumbnail: false };
+      }
+      return m;
+    }));
+  }, []);
+
+  const applyFilterToMedia = useCallback((index: number, settings: FilterSettings, presetId?: string) => {
+    setMedia(prev => prev.map((m, i) => 
+      i === index ? { ...m, filterSettings: settings, filterPresetId: presetId } : m
+    ));
+  }, []);
+
+  const clearFilterFromMedia = useCallback((index: number) => {
+    setMedia(prev => prev.map((m, i) => 
+      i === index ? { ...m, filterSettings: undefined, filterPresetId: undefined } : m
+    ));
+  }, []);
+
+  const applyCropToMedia = useCallback((index: number, settings: CropSettings) => {
+    setMedia(prev => prev.map((m, i) => 
+      i === index ? { ...m, cropSettings: settings } : m
+    ));
+  }, []);
+
+  const clearCropFromMedia = useCallback((index: number) => {
+    setMedia(prev => prev.map((m, i) => 
+      i === index ? { ...m, cropSettings: undefined } : m
+    ));
+  }, []);
+
+  const applyTrimToMedia = useCallback((index: number, trimStart: number, trimEnd: number) => {
+    setMedia(prev => prev.map((m, i) => 
+      i === index ? { ...m, trimStart, trimEnd } : m
+    ));
+  }, []);
+
+  const handleAudioSelect = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    processAudioFile(files[0]);
+    e.target.value = '';
+  }, [processAudioFile]);
+
+  const handleEnhanceWithAI = useCallback(async (mode: 'spellcheck' | 'grammar' | 'style' = 'spellcheck', style?: string) => {
+    if (!text.trim()) {
+      toast.error('Enter some text first');
+      return;
+    }
+    setIsEnhancing(true);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('enhance-text', {
+        body: { text: text.trim(), mode, style }
+      });
+
+      if (error) {
+        console.error('Enhancement error:', error);
+        toast.error(error.message || 'Failed to process text');
+        return;
+      }
+
+      if (data?.enhancedText) {
+        setText(data.enhancedText);
+        // Update the editor content as well
+        if (editorRef.current) {
+          editorRef.current.innerText = data.enhancedText;
+        }
+        toast.success(mode === 'spellcheck' ? 'Spell checked!' : 'Style applied!');
+      } else if (data?.error) {
+        toast.error(data.error);
+      }
+    } catch (err) {
+      console.error('Enhancement error:', err);
+      toast.error('Failed to process text');
+    } finally {
+      setIsEnhancing(false);
+    }
+  }, [text]);
+
+  const insertFormatting = useCallback((format: 'bold' | 'italic' | 'mention') => {
+    const editor = editorRef.current;
+    if (!editor) return;
+
+    // Focus the editor first
+    editor.focus();
+
+    // Use execCommand for WYSIWYG formatting
+    switch (format) {
+      case 'bold':
+        document.execCommand('bold', false);
+        break;
+      case 'italic':
+        document.execCommand('italic', false);
+        break;
+      case 'mention':
+        document.execCommand('insertText', false, '@');
+        break;
+    }
+
+    // Update the text state with plain text
+    const plainText = editor.innerText;
+    setText(plainText);
+  }, []);
+
+  const insertEmoji = useCallback((emoji: string) => {
+    const editor = editorRef.current;
+    if (!editor) {
+      // Fallback: just append to text
+      setText(prev => prev + emoji);
+      return;
+    }
+
+    // Focus and insert at cursor position
+    editor.focus();
+    document.execCommand('insertText', false, emoji);
+
+    // Update the text state
+    const plainText = editor.innerText;
+    setText(plainText);
+  }, []);
+
+  const insertGif = useCallback((gifUrl: string) => {
+    // For now, GIFs can be added as media attachments
+    // We'll create a temporary image file from the GIF URL
+    toast.info('GIF support coming soon!');
+    // TODO: Download GIF and add as media
+  }, []);
+
+  // Camera modal state
+  const [isCameraModalOpen, setIsCameraModalOpen] = useState(false);
+
+  const openCameraCapture = useCallback(() => {
+    setIsCameraModalOpen(true);
+  }, []);
+
+  const closeCameraCapture = useCallback(() => {
+    setIsCameraModalOpen(false);
+  }, []);
+
+  const handleCameraVideoRecorded = useCallback(async (videoBlob: Blob) => {
+    // Create a File from the blob for processVideoFile
+    const videoFile = new File([videoBlob], `camera-recording-${Date.now()}.webm`, { 
+      type: videoBlob.type || 'video/webm' 
+    });
+    await processVideoFile(videoFile);
+  }, [processVideoFile]);
+
+  const handleCameraPhotoCaptured = useCallback((imageBlob: Blob) => {
+    // Create a File from the blob for processImageFiles
+    const imageFile = new File([imageBlob], `camera-photo-${Date.now()}.png`, { 
+      type: 'image/png' 
+    });
+    processImageFiles([imageFile]);
+  }, [processImageFiles]);
+
+  const resetForm = useCallback(() => {
+    setText('');
+    setDescription('');
+    setShowDescription(false);
+    setMedia([]);
+    setIsSubscribersOnly(false);
+    setIsPPV(false);
+    setPpvAmount('');
+    setPpvCurrency('USD');
+    setIsWatch2Earn(false);
+    setW2eViews('');
+    setW2eComments('');
+    setW2eTotal('');
+    setW2eCurrency('USD');
+    setIsTokenGated(false);
+    setTokenContract('');
+    setTokenSymbol('DHB');
+    setTokenAmount('');
+    setLiveMode(null);
+    setPoll(null);
+    setScheduledDate(null);
+    setChainId(BASE_CHAIN_ID as PostChainId);
+    setTitleText('');
+    // Only persist category if user explicitly saved defaults
+    if (!categorySavedRef.current) {
+      setSelectedCategory('');
+      try { localStorage.removeItem('post_default_categories'); } catch {}
+    }
+    categorySavedRef.current = false;
+    // Clear persisted active draft
+    clearActiveDraft();
+  }, []);
+
+  // Load drafts from DB on mount
+  useEffect(() => {
+    if (!user?.address) return;
+    loadDraftsFromDb(user.address).then((dbDrafts) => {
+      if (dbDrafts.length > 0) {
+        setDrafts(dbDrafts);
+        saveDraftsLocal(dbDrafts); // sync to localStorage as backup
+      }
+    });
+  }, [user?.address]);
+
+  // Drafts actions
+  const saveDraft = useCallback(() => {
+    const newDraft: Draft = {
+      id: Date.now().toString(),
+      text,
+      createdAt: new Date(),
+      hasImage: hasImage,
+      hasVideo: hasVideo,
+      hasAudio: hasAudio,
+    };
+    const updatedDrafts = [newDraft, ...drafts].slice(0, 10);
+    setDrafts(updatedDrafts);
+    saveDraftsLocal(updatedDrafts);
+    // Persist to DB
+    if (user?.address) {
+      saveDraftToDb(user.address, newDraft).then((dbId) => {
+        if (dbId) {
+          // Update local draft with DB id for proper deletion later
+          setDrafts(prev => prev.map(d => d.id === newDraft.id ? { ...d, id: dbId } : d));
+        }
+      });
+    }
+  }, [text, hasImage, hasVideo, hasAudio, drafts, user?.address]);
+
+  const loadDraft = useCallback((draft: Draft) => {
+    setText(draft.text);
+    if (editorRef.current) {
+      editorRef.current.innerText = draft.text;
+    }
+  }, []);
+
+  const deleteDraft = useCallback((id: string) => {
+    const updatedDrafts = drafts.filter(d => d.id !== id);
+    setDrafts(updatedDrafts);
+    saveDraftsLocal(updatedDrafts);
+    deleteDraftFromDb(id); // Remove from DB
+  }, [drafts]);
+
+  // Audio recording functions
+  const startRecording = useCallback(async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        const audioUrl = URL.createObjectURL(audioBlob);
+        
+        // Create audio element to get duration
+        const audioEl = new Audio(audioUrl);
+        audioEl.onloadedmetadata = () => {
+          const duration = Math.round(audioEl.duration);
+          
+          if (hasImage) {
+            // Add audio to all images
+            setMedia(prev => prev.map(m => 
+              m.type === 'image' ? { ...m, audio: { blob: audioBlob, url: audioUrl, duration } } : m
+            ));
+            toast.success('Audio added to images');
+          } else {
+            // Standalone audio post - create a File from the blob
+            const audioFile = new File([audioBlob], `recording-${Date.now()}.webm`, { type: 'audio/webm' });
+            setMedia(prev => [...prev, { file: audioFile, preview: audioUrl, type: 'audio', duration }]);
+            toast.success('Audio recorded');
+          }
+        };
+
+        // Stop all tracks
+        stream.getTracks().forEach(track => track.stop());
+
+        // Clear recording interval
+        if (recordingIntervalRef.current) {
+          clearInterval(recordingIntervalRef.current);
+          recordingIntervalRef.current = null;
+        }
+        setRecordingTime(0);
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+
+      // Start timer
+      recordingIntervalRef.current = setInterval(() => {
+        setRecordingTime(prev => prev + 1);
+      }, 1000);
+
+      toast.success('Recording started');
+    } catch (err) {
+      console.error('Failed to start recording:', err);
+      toast.error('Could not access microphone. Please check permissions.');
+    }
+  }, [hasImage]);
+
+  const stopRecording = useCallback(() => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+  }, []);
+
+  const handlePost = useCallback(async (extra?: { soundtrackTag?: string }) => {
+    if (isPosting) return;
+
+    // Validate required fields
+    if (!text.trim() && media.length === 0 && !liveMode && !pollIsValid) {
+      toast.error('Add some content first');
+      return;
+    }
+
+    setIsPosting(true);
+    
+    try {
+      // Determine post type based on media
+      let postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio' = 'feed-simple';
+      if (liveMode) {
+        postType = 'live';
+      } else if (hasVideo) {
+        postType = 'video';
+      } else if (hasAudio && !hasImage) {
+        // Standalone audio post (no images attached)
+        postType = 'audio';
+      } else if (hasImage) {
+        postType = 'feed-images';
+      }
+
+      const postingOnSolana = isSolanaChain(chainId);
+
+      if (postingOnSolana && (isWatch2Earn || isSubscribersOnly)) {
+        toast.error('Bounty and subscribers are not available on Solana');
+        setIsPosting(false);
+        return;
+      }
+
+      // Wallet/contract modules load on demand (see import note at top).
+      const [
+        { getWeb3AuthSigner, mintOnChain },
+        { mintWithBounty, calculateTotalBounty, getDHBBalance },
+      ] = await Promise.all([
+        import('@/lib/contracts/stream-collection'),
+        import('@/lib/contracts/stream-controller'),
+      ]);
+
+      // Wallet for minting: Solana = Phantom; EVM = Web3Auth/wagmi
+      let minterAddress: string;
+      if (postingOnSolana) {
+        minterAddress = await connectSolanaWallet();
+      } else {
+        minterAddress = await getWeb3AuthSigner();
+      }
+      console.log('[Mint] Minter address:', minterAddress, 'chainId:', chainId);
+
+      const evmChainConfig = !postingOnSolana ? getChainConfig(chainId as import('@/components/app/ChainSelector').ChainId) : null;
+
+      // Build streamInfo for monetization
+      const streamInfo: StreamInfo = {
+        isLockContent: false,
+        isPayPerView: false,
+        isAddBounty: false,
+      };
+
+      const applyLockContent = (contract: string, symbol: string, lockChainId: number) => {
+        streamInfo.isLockContent = true;
+        streamInfo.lockContentContractAddress = contract;
+        streamInfo.lockContentTokenSymbol = symbol;
+        streamInfo.lockContentChainIds = [lockChainId];
+      };
+
+      // Token-gated content (any supported or custom token on active chain)
+      if (isTokenGated && tokenAmount) {
+        const amount = parseFloat(tokenAmount);
+        if (amount > 0) {
+          let contract = tokenContract.trim();
+          let symbol = tokenSymbol.trim() || 'TOKEN';
+          if (!contract) {
+            const known = findLockToken(symbol, chainId);
+            if (!known) {
+              toast.error('Select a valid token for token gating');
+              setIsPosting(false);
+              return;
+            }
+            contract = known.address;
+            symbol = known.symbol;
+          } else if (postingOnSolana) {
+            if (!isValidSolanaAddress(contract)) {
+              toast.error('Invalid Solana token mint address for token gating');
+              setIsPosting(false);
+              return;
+            }
+          } else if (!isValidEvmAddress(contract)) {
+            toast.error('Invalid token contract address for token gating');
+            setIsPosting(false);
+            return;
+          }
+          applyLockContent(contract, symbol, chainId);
+          streamInfo.lockContentAmount = amount;
+        }
+      } else if (isSubscribersOnly && evmChainConfig?.dhbToken) {
+        applyLockContent(evmChainConfig.dhbToken, 'DHB', chainId);
+      }
+
+      // PPV settings
+      if (isPPV && ppvAmount) {
+        const ppvValue = parseFloat(ppvAmount);
+        if (ppvValue > 0) {
+          streamInfo.isPayPerView = true;
+          streamInfo.payPerViewTokenSymbol = ppvCurrency;
+          streamInfo.payPerViewAmount = ppvValue;
+          if (ppvCurrency === 'DHB' && evmChainConfig?.dhbToken) {
+            streamInfo.payPerViewContractAddress = evmChainConfig.dhbToken;
+            streamInfo.payPerViewChainIds = [chainId];
+          }
+        }
+      }
+
+      // Bounty (W2E) — DHB on selected EVM chain
+      const hasBounty = !postingOnSolana && isWatch2Earn && w2eTotal && w2eViews;
+      if (hasBounty && evmChainConfig) {
+        const bountyAmount = parseFloat(w2eTotal);
+        const viewerCount = w2eViews.trim() !== '' ? parseInt(w2eViews) : 10;
+        const commentCount = w2eComments.trim() !== '' ? parseInt(w2eComments) : 0;
+        
+        if (bountyAmount > 0 && (viewerCount > 0 || commentCount > 0)) {
+          const totalBounty = calculateTotalBounty(bountyAmount, viewerCount, commentCount);
+          const balance = await getDHBBalance(minterAddress, chainId as import('@/components/app/ChainSelector').ChainId);
+          const balanceNum = Number(balance) / 1e18;
+          
+          if (balanceNum < totalBounty) {
+            toast.error(dhbText(`Insufficient DHB balance. Need ${totalBounty} DHB but have ${balanceNum.toFixed(2)} DHB`));
+            setIsPosting(false);
+            return;
+          }
+          
+          streamInfo.isAddBounty = true;
+          streamInfo.addBountyTokenSymbol = 'DHB';
+          streamInfo.addBountyAmount = bountyAmount;
+          streamInfo.addBountyFirstXViewers = viewerCount;
+          streamInfo.addBountyFirstXComments = commentCount;
+          streamInfo.addBountyChainId = chainId;
+        }
+      }
+
+      // Get media files
+      const files = media.map(m => m.file);
+      
+      // Get thumbnail for video and audio posts - use stored blob if available
+      let thumbnail: Blob | undefined;
+      const needsThumbnail = hasVideo || (postType === 'audio');
+      const thumbnailSource = hasVideo ? media[0] : media.find(m => m.type === 'audio');
+      
+      if (needsThumbnail && thumbnailSource) {
+        if (thumbnailSource.thumbnailBlob && thumbnailSource.thumbnailBlob.size > 0) {
+          thumbnail = thumbnailSource.thumbnailBlob;
+        } else if (thumbnailSource.thumbnail) {
+          // Fallback: convert thumbnail URL to blob
+          try {
+            const thumbResponse = await fetch(thumbnailSource.thumbnail);
+            const fetchedBlob = await thumbResponse.blob();
+            if (fetchedBlob.size > 0) thumbnail = fetchedBlob;
+          } catch (err) {
+            console.warn('[Mint] Failed to fetch thumbnail blob:', err);
+          }
+        }
+
+        // Last-resort: generate thumbnail on-the-fly if still missing (video only)
+        if (!thumbnail && hasVideo && thumbnailSource.file) {
+          console.warn('[Mint] No thumbnail available, attempting last-resort generation');
+          try {
+            const video = document.createElement('video');
+            video.preload = 'auto';
+            video.muted = true;
+            video.playsInline = true;
+            video.setAttribute('webkit-playsinline', '');
+            video.src = thumbnailSource.preview;
+            video.load();
+            await new Promise<void>((resolve, reject) => {
+              const timeout = setTimeout(() => reject(new Error('Video load timeout')), 12000);
+              video.onloadeddata = () => { clearTimeout(timeout); resolve(); };
+              video.onerror = () => { clearTimeout(timeout); reject(new Error('Failed to load video')); };
+            });
+            const seekTime = Math.min(1, (video.duration || 0) * 0.1);
+            video.currentTime = seekTime;
+            await new Promise<void>((resolve) => {
+              const timeout = setTimeout(resolve, 4000);
+              video.onseeked = () => { clearTimeout(timeout); resolve(); };
+            });
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 360;
+            const ctx = canvas.getContext('2d');
+            if (ctx) {
+              ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+              const blob = await new Promise<Blob | null>((resolve) => {
+                canvas.toBlob(resolve, 'image/jpeg', 0.85);
+              });
+              if (blob && blob.size > 0) {
+                thumbnail = blob;
+                console.log('[Mint] Last-resort thumbnail generated:', blob.size);
+              }
+            }
+          } catch (err) {
+            console.error('[Mint] Last-resort thumbnail generation failed:', err);
+          }
+        }
+
+        // Video posts MUST have a thumbnail; audio posts can optionally have one
+        if (!thumbnail && hasVideo) {
+          toast.error('Could not generate thumbnail. Please add a custom thumbnail and try again.');
+          setIsPosting(false);
+          return;
+        }
+      }
+
+      console.log('[Mint] Minting post:', {
+        name: text.trim().slice(0, 100) || '',
+        description: description.trim(),
+        postType,
+        streamInfo,
+        filesCount: files.length,
+        hasThumbnail: !!thumbnail,
+        hasBounty,
+        minterAddress,
+      });
+
+      // Step 1: Call the mint API to get signature
+      // Dismiss any existing toast to avoid overlap
+      toast.dismiss('mint-progress');
+      toast.loading('Uploading content', { id: 'mint-progress', duration: Infinity });
+      setUploadProgress(5);
+      
+      // Determine title and description based on post type
+      let postTitle = '';
+      let postDescription = '';
+
+      if (postType === 'video' || postType === 'audio') {
+        // Video/Audio: use explicit title field, fallback to description as title
+        if (titleText.trim()) {
+          postTitle = titleText.trim().slice(0, 100);
+          postDescription = text.trim();
+        } else {
+          // No title provided — use description text as title, leave description empty
+          postTitle = text.trim().slice(0, 100) || ' ';
+          postDescription = '';
+        }
+      } else if (showTitle && titleText.trim()) {
+        // Text/Image posts with explicit title
+        postTitle = titleText.trim().slice(0, 100);
+        postDescription = text.trim();
+      } else {
+        // Image/Text posts: no title, everything goes to description
+        postTitle = ' ';
+        postDescription = text.trim();
+      }
+
+      // Append soundtrack tag if provided (image/video posts with attached sound)
+      if (extra?.soundtrackTag && !postDescription.includes('[soundtrack:')) {
+        postDescription = postDescription
+          ? `${postDescription}\n${extra.soundtrackTag}`
+          : extra.soundtrackTag;
+      }
+
+      // Extract hashtags from description and title, use as augmented categories
+      const hashtagRegex = /#([A-Za-z][A-Za-z0-9_]{0,49})/g;
+      const extractedTags = new Set<string>();
+      for (const match of (postDescription.matchAll(hashtagRegex))) {
+        extractedTags.add(match[1]);
+      }
+      for (const match of (postTitle.matchAll(hashtagRegex))) {
+        extractedTags.add(match[1]);
+      }
+
+      // Strip hashtags from the text sent to API
+      const cleanDescription = postDescription.replace(hashtagRegex, '').replace(/[^\S\n]{2,}/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
+      const cleanTitle = postTitle.replace(hashtagRegex, '').replace(/[^\S\n]{2,}/g, ' ').replace(/\n{3,}/g, '\n\n').trim() || postTitle;
+
+      // Merge extracted hashtags into categories
+      const baseCategories = selectedCategory ? selectedCategory.split('|||').filter(Boolean) : ['General'];
+      const hashtagCategories = Array.from(extractedTags).map(t => t.charAt(0).toUpperCase() + t.slice(1).toLowerCase());
+      const mergedCategories = [...new Set([...baseCategories, ...hashtagCategories])];
+
+      const mintResponse = await mintPost(
+        {
+          name: cleanTitle,
+          description: cleanDescription,
+          postType,
+          chainId,
+          category: mergedCategories,
+          streamInfo,
+          files: files.length > 0 ? files : undefined,
+          thumbnail,
+          minterAddress,
+        },
+        (percent) => setUploadProgress(Math.round(percent * 0.6)) // XHR bytes map to 0-60%
+      );
+
+      console.log('[Mint] API response:', JSON.stringify(mintResponse, null, 2));
+
+      if (!mintResponse.createdTokenId) {
+        console.error('[Mint] Missing token ID in API response');
+        throw new Error('Invalid response from backend - missing token ID');
+      }
+
+      const isSolanaMint = !!(mintResponse.isSolana && mintResponse.transaction && mintResponse.mintAddress);
+
+      if (postingOnSolana && !isSolanaMint) {
+        throw new Error(
+          mintResponse.isSolana
+            ? 'Solana mint data incomplete from server. Please try again.'
+            : 'Solana minting is not enabled on the server. Contact support or try an EVM chain.',
+        );
+      }
+
+      if (!isSolanaMint && (!mintResponse.v || !mintResponse.r || !mintResponse.s)) {
+        console.error('[Mint] Missing signature components in API response');
+        throw new Error('Invalid signature data from backend - missing v, r, or s');
+      }
+
+      // Handle scheduled posts (skip on-chain minting)
+      if (scheduledDate) {
+        toast.success(`Post scheduled for ${scheduledDate.toLocaleString()}`, { id: 'mint-progress' });
+        resetForm();
+        onClose();
+        return;
+      }
+
+      // Step 2: Execute on-chain minting
+      setUploadProgress(65);
+      toast.loading('Publishing to decentralized database', { id: 'mint-progress', duration: Infinity });
+      
+      // Slowly creep progress from 69→99% while waiting for chain confirmation
+      // Faster initially, then decelerates as it approaches 99%
+      let simulatedProgress = 69;
+      const progressInterval = setInterval(() => {
+        const remaining = 99 - simulatedProgress;
+        // Exponential deceleration: move a fraction of remaining distance
+        const step = remaining > 4
+          ? Math.random() * 3 + 1.5   // 1.5-4.5% per tick when far from 99
+          : Math.random() * 0.3 + 0.1; // 0.1-0.4% per tick near 95-99%
+        simulatedProgress += step;
+        if (simulatedProgress >= 99) {
+          simulatedProgress = 99;
+          clearInterval(progressInterval);
+        }
+        setUploadProgress(Math.round(simulatedProgress));
+      }, 1200);
+
+      let txHash: string | undefined;
+      let mintConfirmed: Promise<string> | undefined;
+      
+      try {
+        if (isSolanaMint) {
+          toast.loading('Sign with Phantom to publish', { id: 'mint-progress', duration: Infinity });
+          const solResult = await broadcastSolanaMint({
+            transactionBase64: mintResponse.transaction!,
+            mintAddress: mintResponse.mintAddress!,
+            tokenId: mintResponse.createdTokenId,
+            chainId,
+            walletAddress: minterAddress,
+          });
+          txHash = solResult.signature;
+          if (solResult.confirmWarning) {
+            toast.warning(solResult.confirmWarning, { duration: 10000 });
+          }
+        } else if (hasBounty) {
+          toast.loading('Approving tokens', { id: 'mint-progress', duration: Infinity });
+          
+          txHash = await mintWithBounty({
+            tokenId: mintResponse.createdTokenId,
+            timestamp: mintResponse.timestamp!,
+            v: mintResponse.v!,
+            r: mintResponse.r!,
+            s: mintResponse.s!,
+            bountyAmount: parseFloat(w2eTotal),
+            countOfViewers: w2eViews.trim() !== '' ? parseInt(w2eViews) : 10,
+            countOfCommentors: w2eComments.trim() !== '' ? parseInt(w2eComments) : 0,
+            chainId: chainId as import('@/components/app/ChainSelector').ChainId,
+          });
+        } else {
+          const mintResult = await mintOnChain({
+            tokenId: mintResponse.createdTokenId,
+            timestamp: mintResponse.timestamp!,
+            v: mintResponse.v!,
+            r: mintResponse.r!,
+            s: mintResponse.s!,
+            chainId: chainId as import('@/components/app/ChainSelector').ChainId,
+          });
+          txHash = mintResult.hash;
+          mintConfirmed = mintResult.confirmed;
+        }
+      } finally {
+        clearInterval(progressInterval);
+      }
+
+      // Fire-and-forget: EVM confirmation + backend polling
+      if (mintConfirmed && txHash) {
+        mintConfirmed
+          .then((confirmedHash) =>
+            confirmEvmMint({
+              tokenId: mintResponse.createdTokenId,
+              txHash: confirmedHash,
+              chainId: chainId as number,
+            }),
+          )
+          .catch((err) => {
+            console.error('[Mint] Background confirmation failed:', err);
+            toast.error('Post submitted but confirmation failed. It may still appear shortly.');
+          });
+      } else if (!isSolanaMint && txHash) {
+        confirmEvmMint({
+          tokenId: mintResponse.createdTokenId,
+          txHash,
+          chainId: chainId as number,
+        }).catch((err) => console.warn('[Mint] confirm-mint queue failed:', err));
+      }
+
+      console.log('[Mint] Transaction hash:', txHash);
+
+      setUploadProgress(100);
+      toast.dismiss('mint-progress');
+      toast.success('Posted successfully');
+      
+      // Create optimistic post using the real token ID so it matches the API feed item
+      const optimisticId = String(mintResponse.createdTokenId);
+      const username = user?.username || user?.displayName || 'You';
+      // Use proper avatar resolution - extract path from all possible fields and build CDN URL
+      // This matches the exact pattern used in ProfilePage and other components
+      const rawAvatarPath = extractAvatarPath(user as Record<string, any>);
+      const avatar = buildAvatarUrl(user?.address || '', rawAvatarPath);
+      
+      if (hasVideo && media[0]) {
+        // Video post
+        const videoPost: VideoItem = {
+          id: optimisticId,
+          type: 'video',
+          thumbnail: media[0].thumbnail || media[0].preview,
+          videoUrl: media[0].preview,
+          duration: media[0].duration ? `${Math.floor(media[0].duration / 60)}:${String(Math.floor(media[0].duration % 60)).padStart(2, '0')}` : '0:00',
+          title: titleText.trim() || text.trim().split('\n')[0] || '',
+          description: text.trim(),
+          channel: username,
+          channelAvatar: avatar || '', // Must be string for VideoItem type
+          verified: false,
+          views: '0',
+          uploadedAgo: 'Just now',
+          creatorId: user?.address,
+          creatorUsername: username,
+          createdAt: new Date().toISOString(),
+          isLiked: false,
+          likeCount: 0,
+          dislikeCount: 0,
+          commentCount: 0,
+          isOptimistic: true,
+        };
+        addOptimisticPost({ id: optimisticId, type: 'video', data: videoPost, createdAt: new Date() });
+      } else if (hasImage && media[0]) {
+        // Image post
+        const imagePost: ImagePost = {
+          id: optimisticId,
+          type: 'image',
+          username,
+          verified: false,
+          avatar: avatar || '', // Must be string for ImagePost type
+          image: media[0].preview,
+          imageUrls: media.filter(m => m.type === 'image').map(m => m.preview),
+          title: titleText.trim() || text.trim().split('\n')[0] || '',
+          description: text.trim(),
+          likes: 0,
+          caption: text.trim(),
+          comments: 0,
+          views: '0',
+          timeAgo: 'Just now',
+          creatorId: user?.address,
+          creatorUsername: username,
+          isLiked: false,
+          createdAt: new Date().toISOString(),
+          isOptimistic: true,
+        };
+        addOptimisticPost({ id: optimisticId, type: 'image', data: imagePost, createdAt: new Date() });
+      } else {
+        // Text post
+        const textPost: TextPost = {
+          id: optimisticId,
+          type: 'post',
+          author: {
+            id: user?.address || '',
+            name: user?.displayName || username,
+            handle: `@${username}`,
+            verified: false,
+            avatarSeed: avatar || undefined,
+          },
+          content: text.trim(),
+          views: '0',
+          createdAt: new Date().toISOString(),
+          stats: {
+            comments: 0,
+            reposts: 0,
+            likes: 0,
+          },
+          isOptimistic: true,
+        };
+        addOptimisticPost({ id: optimisticId, type: 'post', data: textPost, createdAt: new Date() });
+      }
+      
+      if (poll && pollIsValid) {
+        try {
+          const validOptions = poll.options.filter(o => o.text.trim()).map(o => o.text.trim());
+          const expiresAt = new Date(Date.now() + (poll.duration ?? 24) * 3600 * 1000).toISOString();
+          await createPoll({
+            tokenId: typeof mintResponse.createdTokenId === 'string' ? parseInt(mintResponse.createdTokenId, 10) : mintResponse.createdTokenId,
+            question: poll.question.trim(),
+            options: validOptions,
+            expiresAt,
+            isMultipleChoice: poll.isMultipleChoice ?? false,
+          });
+        } catch (pollErr) {
+          console.warn('[Mint] Poll creation failed:', pollErr);
+        }
+      }
+
+      resetForm();
+
+      // Increment trending category counts in DB
+      try {
+        const catsToIncrement = mergedCategories.filter(c => c.toLowerCase() !== 'general' && c.trim() !== '');
+        for (const cat of catsToIncrement) {
+          await supabase.rpc('increment_category_count', { p_name: cat });
+        }
+      } catch (catErr) {
+        console.warn('[Mint] Failed to increment category counts:', catErr);
+      }
+      onClose();
+      
+      // Navigate to home to show the new post
+      navigate('/app');
+    } catch (error) {
+      console.error('[Mint] Failed to mint post:', error);
+      try { console.error('[Mint] Error details:', JSON.stringify(error, null, 2)); } catch {}
+      toast.dismiss('mint-progress');
+      // Extract nested error messages from wallet/provider errors
+      let errorMsg = 'Unknown error';
+      let stackTrace: string | undefined;
+      if (error instanceof Error) {
+        errorMsg = error.message;
+        stackTrace = error.stack;
+      } else if (typeof error === 'string') {
+        errorMsg = error;
+      } else if (error && typeof error === 'object') {
+        const e = error as Record<string, any>;
+        errorMsg = e.message || e.shortMessage || e.reason || 
+                   e.error?.message || e.data?.message || 
+                   (() => { try { return JSON.stringify(error).slice(0, 200); } catch { return 'Unknown error'; } })();
+        stackTrace = e.stack;
+      }
+      // Log mint failure to backend for debugging
+      mintLogger.error(errorMsg, {
+        postType: hasVideo ? 'video' : hasAudio ? 'audio' : hasImage ? 'feed-images' : 'feed-simple',
+        chainId,
+        hadBounty: !!(isWatch2Earn && w2eTotal && w2eViews),
+      }, error instanceof Error ? error : undefined);
+
+      // "No wallet connected" after a wagmi session means the WalletConnect/injected
+      // connection dropped (e.g. wallet app was closed mid-flow). Show a targeted message
+      // with a reconnect action instead of the raw technical error.
+      const isWalletGone = errorMsg.toLowerCase().includes('no wallet connected') ||
+        errorMsg.toLowerCase().includes('please sign in first');
+      const isSolanaWalletIssue =
+        isSolanaChain(chainId) ||
+        errorMsg.toLowerCase().includes('phantom') ||
+        errorMsg.toLowerCase().includes('solana');
+      const isGasFunds = !isSolanaWalletIssue && (
+        errorMsg === 'INSUFFICIENT_GAS_FUNDS' ||
+        errorMsg.toLowerCase().includes('insufficient funds') ||
+        errorMsg.toLowerCase().includes('insufficient balance') ||
+        errorMsg.toLowerCase().includes('gas required exceeds allowance')
+      );
+
+      if (isGasFunds && connectionSource === 'wagmi') {
+        const gasName = chainId === 56 ? 'BNB' : 'ETH';
+        const chainName = chainId === 56 ? 'BNB' : chainId === 1 ? 'Ethereum' : 'Base';
+        toast.error(`Post failed: Insufficient ${gasName} for gas on ${chainName}. Add ${gasName} to your wallet and try again.`);
+      } else if (isWalletGone && connectionSource === 'wagmi') {
+        // Wallet connection dropped mid-session. The silent reconnect effect in AuthContext
+        // will have already triggered a logout with a toast. Just silently swallow this error
+        // to avoid showing a second confusing toast on top of the logout one.
+        console.warn('[Post] Wallet gone during post attempt — auth context handling logout');
+      } else {
+        toast.error(`Post failed: ${errorMsg}`);
+      }
+    } finally {
+      setIsPosting(false);
+      setUploadProgress(0);
+    }
+  }, [
+    text, description, media, isSubscribersOnly, isPPV, ppvAmount,
+    isWatch2Earn, w2eViews, w2eComments, w2eTotal,
+    isTokenGated, tokenContract, tokenSymbol, tokenAmount, liveMode, scheduledDate,
+    hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user,
+    showTitle, titleText, connectionSource, poll, pollIsValid, chainId
+  ]);
+
+  return {
+    state: {
+      text,
+      description,
+      showDescription,
+      media,
+      isSubscribersOnly,
+      isPPV,
+      ppvAmount,
+      ppvCurrency,
+      isWatch2Earn,
+      w2eViews,
+      w2eComments,
+      w2eTotal,
+      w2eCurrency,
+      isTokenGated,
+      tokenContract,
+      tokenSymbol,
+      tokenAmount,
+      liveMode,
+      poll,
+      isEnhancing,
+      isPosting,
+      uploadProgress,
+
+      scheduledDate,
+      drafts,
+      isRecording,
+      recordingTime,
+      chainId,
+      isCameraModalOpen,
+      selectedCategory,
+      showTitle,
+      titleText,
+    },
+    actions: {
+      setText,
+      setDescription,
+      setShowDescription,
+      setMedia,
+      setIsSubscribersOnly,
+      setIsPPV,
+      setPpvAmount,
+      setPpvCurrency,
+      setIsWatch2Earn,
+      setW2eViews,
+      setW2eComments,
+      setW2eTotal,
+      setW2eCurrency,
+      setIsTokenGated,
+      setTokenContract,
+      setTokenSymbol,
+      setTokenAmount,
+      setLiveMode,
+      setPoll,
+      handleImageSelect,
+      handleVideoSelect,
+      handleFileDrop,
+      removeMedia,
+      handleAudioSelect,
+      addAudioToMedia,
+      removeAudioFromMedia,
+      toggleMusicVideo,
+      addThumbnailToMedia,
+      removeThumbnailFromMedia,
+      applyFilterToMedia,
+      clearFilterFromMedia,
+      applyCropToMedia,
+      clearCropFromMedia,
+      applyTrimToMedia,
+      handleEnhanceWithAI,
+      insertFormatting,
+      handlePost,
+      resetForm,
+      setScheduledDate,
+      saveDraft,
+      loadDraft,
+      deleteDraft,
+      startRecording,
+      stopRecording,
+      setChainId,
+      setSelectedCategory,
+      markCategorySaved: () => { categorySavedRef.current = true; },
+      setShowTitle: handleSetShowTitle,
+      setTitleText,
+      insertEmoji,
+      insertGif,
+      openCameraCapture,
+      closeCameraCapture,
+      handleCameraVideoRecorded,
+      handleCameraPhotoCaptured,
+    },
+    computed: {
+      hasVideo,
+      hasImage,
+      hasAudio,
+      isShort,
+      destinations,
+      canPost,
+    },
+    refs: {
+      imageInputRef,
+      videoInputRef,
+      audioInputRef,
+      editorRef,
+    },
+  };
+}

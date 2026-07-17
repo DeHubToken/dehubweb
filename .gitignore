@@ -1,0 +1,68 @@
+# Env files — never commit, even publishable keys
+.env
+.env.*
+!.env.example
+
+# Untracked local artifacts (removed from repo pre-open-source)
+/e.js
+/live.js
+/docsroutes.js
+perf-trace*.json.gz
+AUTH-CHANGES-REPORT.md
+.lovable/plan.md
+.lovable/unused-endpoints.md
+CLOUDFLARE_DNS_SETUP.md
+CLOUDFLARE_SETUP_GUIDE.md
+QUICK_DEPLOY.md
+NETLIFY_SSR_SETUP_GUIDE.md
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+ponzi
+node_modules
+dist
+dist-ssr
+*.local
+cosmic-echo-hero-main
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+dehub-nx
+
+# ── Local / unpushed tooling (not pushed to GitHub) ─────────────────────────
+# code-review-graph + Claude Code / Cursor MCP & injected rules
+.code-review-graph/
+.claude/
+.cursor/
+.mcp.json
+.cursorrules
+.windsurfrules
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+
+# Root scratch & notes (keep out of repo)
+AuthContext.tsx
+chat-system.md
+doc.md
+# scripts/ holds local scratch, EXCEPT build-time scripts which must ship —
+# `npm run build` runs them on Netlify (a bare `scripts/` dir rule can't be
+# negated, hence the `scripts/*` form). generate-blog-manifest.mjs was once
+# written without this exception and silently never shipped, freezing the
+# bot-visible blog at Feb 2026 — keep every build-referenced script negated.
+scripts/*
+!scripts/check-entry-bundle.mjs
+!scripts/generate-blog-manifest.mjs

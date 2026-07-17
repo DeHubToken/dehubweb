@@ -1,0 +1,1 @@
+ALTER TABLE public.communities ADD CONSTRAINT communities_slug_unique UNIQUE (slug);

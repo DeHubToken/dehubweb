@@ -1,0 +1,456 @@
+import { useMemo, useEffect, useRef, useCallback, useState } from 'react';
+import { useSearchParams, useParams, useNavigate } from 'react-router-dom';
+import { Home, MessageSquare, Image, Film, Star, Play, Radio, PieChart, Pin } from 'lucide-react';
+import { useQuery, useInfiniteQuery as useInfiniteQueryTQ, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '@/contexts/AuthContext';
+import { useDeHubProfile, useDeHubUserContent, separateUserContent } from '@/hooks/use-dehub-profile';
+import { useCreatorPlans, useIsSubscribed } from '@/hooks/use-subscriptions';
+import { parseVisibility } from '@/hooks/use-privacy-settings';
+import { useReauthHandler } from '@/hooks/use-reauth-handler';
+
+import { getBadgeUrl } from '@/lib/staking-badges';
+import { useStories, useWatchedStories } from '@/hooks/use-stories';
+import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
+import { useUserPins } from '@/hooks/use-pins';
+import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
+import { getUserComments, blockUser, unblockUser, getUserReposts, getNFTInfo } from '@/lib/api/dehub';
+import { toast } from 'sonner';
+import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
+import type { TabValue } from '@/components/app/profile/ProfileConstants';
+
+const PULL_THRESHOLD = 80;
+
+export function useProfilePage() {
+  const [searchParams] = useSearchParams();
+  const { username: routeUsername } = useParams<{ username: string }>();
+  const navigate = useNavigate();
+  const userId = searchParams.get('id');
+  const { user: currentUser, walletAddress: currentWalletAddress, isAuthenticated, isLoading: isAuthLoading } = useAuth();
+
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [translatedBio, setTranslatedBio] = useState<string | null>(null);
+  const [isBlockLoading, setIsBlockLoading] = useState(false);
+  const profileContainerRef = useRef<HTMLDivElement>(null);
+  const queryClient = useQueryClient();
+
+  // Reset scroll position on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+    setTranslatedBio(null);
+  }, [routeUsername, userId]);
+
+  // Determine lookup method
+  const lookupUsername = routeUsername;
+  const lookupUserId = userId || (!routeUsername ? (currentUser?.address || currentWalletAddress || undefined) : undefined);
+
+  // Fetch profile
+  const {
+    data: apiProfile,
+    isLoading: isLoadingProfile,
+    isError: isProfileError,
+    isFetchingProfile,
+    setFollowStatus,
+    refetch: refetchProfile,
+  } = useDeHubProfile({
+    userId: lookupUserId,
+    username: lookupUsername,
+    address: currentWalletAddress || undefined,
+    enabled: !!(lookupUserId || lookupUsername),
+  });
+
+  // If the URL contains a wallet address but the profile has a username, replace the URL
+  useEffect(() => {
+    if (apiProfile?.handle) {
+      const cleanHandle = apiProfile.handle.replace('@', '');
+      if (!cleanHandle) return;
+
+      // Route like /0xABC... → /username
+      if (routeUsername && /^0x[a-fA-F0-9]{40}$/i.test(routeUsername)) {
+        if (cleanHandle.toLowerCase() !== routeUsername.toLowerCase()) {
+          navigate(`/${cleanHandle}`, { replace: true });
+        }
+      }
+      // Route like /sableraven_9847 where canonical is /SableRaven_9847 → normalize casing
+      else if (routeUsername && cleanHandle.toLowerCase() === routeUsername.toLowerCase() && cleanHandle !== routeUsername) {
+        navigate(`/${cleanHandle}`, { replace: true });
+      }
+      // Route like /app/profile?id=0xABC... → /username
+      else if (userId && !routeUsername) {
+        navigate(`/${cleanHandle}`, { replace: true });
+      }
+    }
+  }, [routeUsername, userId, apiProfile?.handle, navigate]);
+
+  // If the URL lookup key is already a wallet address, we can start fetching content
+  // immediately without waiting for the profile query to resolve first.
+  const lookupIsAddress = !!(lookupUserId && /^0x[a-fA-F0-9]{40}$/i.test(lookupUserId));
+  const contentUserId = apiProfile?.walletAddress ?? (lookupIsAddress ? lookupUserId : undefined);
+
+  // Fetch user content — small first page for fast initial paint, then auto-fetch rest
+  const {
+    data: userContentData,
+    isLoading: isLoadingContent,
+    fetchNextPage: fetchNextContentPage,
+    hasNextPage: hasNextContentPage,
+    isFetchingNextPage: isFetchingNextContentPage,
+  } = useDeHubUserContent({
+    userId: contentUserId,
+    viewerAddress: currentWalletAddress || undefined,
+    enabled: !!contentUserId,
+  });
+
+  // Prefetch ONLY page 2 in the background after first paint. The old
+  // version cascaded through EVERY page (fetching a user's entire content
+  // history on profile open) — remaining pages now load on scroll via the
+  // sentinel in ProfileTabContent.
+  useEffect(() => {
+    if (userContentData?.pages?.length === 1 && hasNextContentPage && !isFetchingNextContentPage) {
+      const timer = setTimeout(() => {
+        fetchNextContentPage();
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [userContentData?.pages?.length, hasNextContentPage, isFetchingNextContentPage, fetchNextContentPage]);
+
+  // Defer reposts slightly so the user's own first content page wins the wire
+  // on slow connections — reposts merge into the "All" tab a beat later instead
+  // of competing with the initial posts fetch (and its quote-post enrichment).
+  const [repostsEnabled, setRepostsEnabled] = useState(false);
+  useEffect(() => {
+    if (!apiProfile?.walletAddress) { setRepostsEnabled(false); return; }
+    const timer = setTimeout(() => setRepostsEnabled(true), 700);
+    return () => clearTimeout(timer);
+  }, [apiProfile?.walletAddress]);
+
+  // Fetch user reposts (and enrich quote posts with quoted post data)
+  // Capped at 5 concurrent getNFTInfo calls to avoid N+1 API floods
+  const { data: repostsData } = useQuery({
+    queryKey: ['user-reposts', apiProfile?.walletAddress],
+    queryFn: async () => {
+      if (!apiProfile?.walletAddress) throw new Error('No address');
+      const res = await getUserReposts(apiProfile.walletAddress, 1, 50);
+      const items = res.result || [];
+      
+      // Separate items that need enrichment vs those that don't
+      const needsEnrich: { idx: number; item: any }[] = [];
+      const result = [...items];
+      
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        if (item.isQuotePost && item.quotedTokenId && !item.quotedPost) {
+          needsEnrich.push({ idx: i, item });
+        }
+      }
+      
+      // Process in batches of 5
+      const BATCH_SIZE = 5;
+      for (let b = 0; b < needsEnrich.length; b += BATCH_SIZE) {
+        const batch = needsEnrich.slice(b, b + BATCH_SIZE);
+        const settled = await Promise.allSettled(
+          batch.map(({ item }) => getNFTInfo(String(item.quotedTokenId)))
+        );
+        settled.forEach((outcome, i) => {
+          if (outcome.status === 'fulfilled' && outcome.value) {
+            result[batch[i].idx] = { ...batch[i].item, quotedPost: outcome.value };
+          }
+        });
+      }
+      
+      return result;
+    },
+    enabled: repostsEnabled && !!apiProfile?.walletAddress,
+    staleTime: 2 * 60 * 1000,
+  });
+
+  const profile = apiProfile;
+  const isOwnProfile = !routeUsername && (!userId || (currentUser?.address === userId) || (currentWalletAddress === userId));
+  const isViewingOwnProfile = isOwnProfile || (apiProfile?.walletAddress && apiProfile.walletAddress.toLowerCase() === currentWalletAddress?.toLowerCase());
+
+  // Badge — use API-provided value instead of edge function
+  const badgeBalance = apiProfile?.badgeBalance;
+  const badgeUrl = getBadgeUrl(badgeBalance, apiProfile?.handle || routeUsername);
+
+  // Content separation
+  const { PROFILE_POSTS, PROFILE_IMAGES, ALL_PROFILE_VIDEOS, ALL_CONTENT } = useMemo(() => {
+    if (!userContentData?.pages) {
+      return { PROFILE_POSTS: [], PROFILE_IMAGES: [], ALL_PROFILE_VIDEOS: [], ALL_CONTENT: [] };
+    }
+    const allNFTs = userContentData.pages.flatMap(page => page.data || []);
+    const separated = separateUserContent(allNFTs);
+
+    const unified: Array<{ type: 'post' | 'image' | 'video'; data: TextPost | ImagePost | VideoItem; createdAt: string; isRepost?: boolean; repostedAt?: string }> = [
+      ...separated.posts.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '' })),
+      ...separated.images.map(i => ({ type: 'image' as const, data: i, createdAt: i.createdAt || '' })),
+      ...separated.videos.map(v => ({ type: 'video' as const, data: v, createdAt: v.createdAt || '' })),
+    ];
+
+    // Merge reposts into the unified feed
+    if (repostsData?.length) {
+      const repostItems = separateUserContent(repostsData as any);
+      const repostUnified = [
+        ...repostItems.posts.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '', isRepost: true, repostedAt: (repostsData as any[]).find(r => String(r.tokenId) === String(p.id?.replace('text-', '')))?.repostedAt || p.createdAt || '' })),
+        ...repostItems.images.map(i => ({ type: 'image' as const, data: i, createdAt: i.createdAt || '', isRepost: true, repostedAt: (repostsData as any[]).find(r => String(r.tokenId) === String(i.id?.replace('image-', '')))?.repostedAt || i.createdAt || '' })),
+        ...repostItems.videos.map(v => ({ type: 'video' as const, data: v, createdAt: v.createdAt || '', isRepost: true, repostedAt: (repostsData as any[]).find(r => String(r.tokenId) === String(v.id?.replace('video-', '')))?.repostedAt || v.createdAt || '' })),
+      ];
+      // Use repostedAt for sorting reposts, not original createdAt
+      repostUnified.forEach(item => {
+        if (item.repostedAt) {
+          item.createdAt = item.repostedAt;
+        }
+      });
+      // Add reposts, deduplicating by ID
+      const existingIds = new Set(unified.map(u => u.data.id));
+      repostUnified.forEach(r => {
+        if (!existingIds.has(r.data.id)) {
+          unified.push(r);
+        }
+      });
+    }
+
+    unified.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+    return {
+      PROFILE_POSTS: separated.posts,
+      PROFILE_IMAGES: separated.images,
+      ALL_PROFILE_VIDEOS: separated.videos,
+      ALL_CONTENT: unified,
+    };
+  }, [userContentData, repostsData]);
+
+  // Comment count — lazy-loaded after a short delay to avoid blocking initial paint
+  const [commentCountEnabled, setCommentCountEnabled] = useState(false);
+  useEffect(() => {
+    if (!apiProfile?.walletAddress) return;
+    const timer = setTimeout(() => setCommentCountEnabled(true), 500);
+    return () => clearTimeout(timer);
+  }, [apiProfile?.walletAddress]);
+
+  const { data: commentCountData } = useQuery({
+    queryKey: ['user-comments-count', apiProfile?.walletAddress],
+    queryFn: () => getUserComments(apiProfile!.walletAddress, 1, 1), // fetch only 1 item, we just need .total
+    enabled: commentCountEnabled && !!apiProfile?.walletAddress,
+    staleTime: 5 * 60 * 1000,
+  });
+  const commentCount = commentCountData?.total || commentCountData?.data?.length || 0;
+
+  const { data: pinsData } = useUserPins(contentUserId || '');
+  const pinnedCount = pinsData?.items?.length ?? 0;
+
+  // True total from the API's pagination metadata — not the number of pages
+  // loaded so far. Keeps the "All" badge accurate without downloading everything.
+  const contentTotal = (userContentData?.pages?.[0] as { total?: number } | undefined)?.total ?? 0;
+
+  const PROFILE_TABS: { icon: typeof Home; label: string; value: TabValue; count: number }[] = useMemo(() => {
+    const homeTab = { icon: Home, label: 'All', value: 'home' as TabValue, count: Math.max(contentTotal, ALL_CONTENT.length) };
+    const restTabs = [
+      { icon: MessageSquare, label: 'Posts', value: 'posts' as TabValue, count: PROFILE_POSTS.length + commentCount },
+      { icon: Image, label: 'Images', value: 'images' as TabValue, count: PROFILE_IMAGES.length },
+      { icon: Film, label: 'Videos', value: 'videos' as TabValue, count: ALL_PROFILE_VIDEOS.length },
+      { icon: Star, label: 'Subs', value: 'subscribers' as TabValue, count: 0 },
+      { icon: Play, label: 'Audio', value: 'songs' as TabValue, count: 0 },
+      { icon: Radio, label: 'Live', value: 'live' as TabValue, count: 0 },
+      { icon: PieChart, label: 'Fractions', value: 'fractions' as TabValue, count: 0 },
+      { icon: Pin, label: 'Pinned', value: 'pinned' as TabValue, count: pinnedCount },
+    ].sort((a, b) => b.count - a.count);
+    return [homeTab, ...restTabs];
+  }, [contentTotal, ALL_CONTENT.length, PROFILE_POSTS.length, PROFILE_IMAGES.length, ALL_PROFILE_VIDEOS.length, commentCount, pinnedCount]);
+
+  // Subscriptions — deferred slightly so profile + first content page win the
+  // wire on the (slow) API; the header Subscribe button pops in right after.
+  const [secondaryEnabled, setSecondaryEnabled] = useState(false);
+  useEffect(() => {
+    if (!apiProfile?.walletAddress) return;
+    const timer = setTimeout(() => setSecondaryEnabled(true), 800);
+    return () => clearTimeout(timer);
+  }, [apiProfile?.walletAddress]);
+
+  const { plans, isLoading: isLoadingPlans, hasPlans, isOwnPlans } = useCreatorPlans(apiProfile?.walletAddress, secondaryEnabled);
+  const { isSubscribed, isLoading: isLoadingSubscription } = useIsSubscribed(
+    !isViewingOwnProfile ? apiProfile?.walletAddress : undefined,
+    secondaryEnabled
+  );
+
+  // Optimistic posts
+  const { optimisticPosts, clearOptimisticPosts } = useOptimisticPosts();
+
+  // Privacy — parse straight off the profile we already fetched.
+  // (useUserPrivacySettings re-fetched the same profile keyed by wallet
+  // address — a fully redundant round-trip on every profile view.)
+  const { showFollowersFollowing, hideFollowerCounts } = parseVisibility(
+    (apiProfile?.customs as Record<string, unknown> | undefined)?.followVisibility
+  );
+
+  // Re-auth
+  const { handleApiError } = useReauthHandler();
+
+  // Stories — skip the N-account_info avatar-enrichment pass here; the profile
+  // page only needs the story ring + viewer, and stories carry their own avatar.
+  const { stories: allStories } = useStories({ enrichAvatars: false });
+  const { isWatched, markWatched } = useWatchedStories();
+
+  const profileStories = useMemo(() => {
+    if (!profile?.walletAddress || !allStories.length) return [];
+    return allStories.filter(
+      s => s.wallet_address.toLowerCase() === profile.walletAddress.toLowerCase()
+    );
+  }, [allStories, profile?.walletAddress]);
+
+  const hasStories = profileStories.length > 0;
+  const hasUnwatchedStories = hasStories && profileStories.some(s => !isWatched(s.id));
+
+  const profileStoryStartIndex = useMemo(() => {
+    if (!hasStories) return 0;
+    const idx = allStories.findIndex(
+      s => s.wallet_address.toLowerCase() === profile?.walletAddress?.toLowerCase()
+    );
+    return idx >= 0 ? idx : 0;
+  }, [allStories, profile?.walletAddress, hasStories]);
+
+  // Follow status
+  const isFollowing = apiProfile?.isFollowing ?? false;
+  const isPending = apiProfile?.isPending ?? false;
+  const isTargetPrivate = apiProfile?.isPrivate ?? false;
+
+  // Block status - use account_info data (youBlocked/blockedYou) as primary source
+  // The dedicated /api/block/status/ endpoint is unreliable, so we use it only
+  // for optimistic updates after block/unblock actions
+  const { data: blockStatusOverride } = useQuery<{ isBlocked: boolean; isBlockedBy: boolean }>({
+    queryKey: ['block-status', apiProfile?.walletAddress],
+    queryFn: () => ({ isBlocked: false, isBlockedBy: false }), // dummy, only used for optimistic setQueryData
+    enabled: false, // never auto-fetch; only populated via setQueryData
+    staleTime: Infinity,
+  });
+
+  // Prefer optimistic override (set after block/unblock action), then account_info data
+  const isBlocked = blockStatusOverride?.isBlocked ?? apiProfile?.youBlocked ?? false;
+  const isBlockedBy = blockStatusOverride?.isBlockedBy ?? apiProfile?.blockedYou ?? false;
+
+  const handleBlock = useCallback(async () => {
+    if (!apiProfile?.walletAddress || isBlockLoading) return;
+    setIsBlockLoading(true);
+    const newBlocked = !isBlocked;
+    try {
+      if (isBlocked) {
+        await unblockUser(apiProfile.walletAddress);
+        toast.success(`Unblocked ${apiProfile.name || apiProfile.handle || 'user'}`);
+      } else {
+        await blockUser(apiProfile.walletAddress);
+        toast.success(`Blocked ${apiProfile.name || apiProfile.handle || 'user'}`);
+      }
+      // Optimistic: set block status immediately so UI updates
+      queryClient.setQueryData(['block-status', apiProfile.walletAddress], {
+        isBlocked: newBlocked,
+        isBlockedBy: isBlockedBy,
+      });
+      queryClient.invalidateQueries({ queryKey: ['block-list'] });
+      // Also refresh the profile so account_info youBlocked stays in sync
+      queryClient.invalidateQueries({ queryKey: ['dehub-profile'] });
+    } catch (error) {
+      // Revert optimistic update on failure
+      queryClient.setQueryData(['block-status', apiProfile.walletAddress], {
+        isBlocked: isBlocked,
+        isBlockedBy: isBlockedBy,
+      });
+      handleApiError(error, `Failed to ${isBlocked ? 'unblock' : 'block'} user`);
+    } finally {
+      setIsBlockLoading(false);
+    }
+  }, [apiProfile, isBlocked, isBlockedBy, isBlockLoading, queryClient, handleApiError]);
+  // Pull-to-refresh
+  const triggerRefresh = useCallback(() => {
+    if (isRefreshing) return;
+    setIsRefreshing(true);
+    if (isViewingOwnProfile) {
+      clearOptimisticPosts();
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      setIsRefreshing(false);
+    }, 1000);
+  }, [isRefreshing, isViewingOwnProfile, clearOptimisticPosts]);
+
+  const { pullDistance, isPulling, isHoldingAtThreshold, holdProgress, handlers: pullHandlers } = usePullToRefresh({
+    pullThreshold: PULL_THRESHOLD,
+    onRefresh: triggerRefresh,
+    isRefreshing,
+    containerRef: profileContainerRef,
+  });
+
+  return {
+    // Route info
+    routeUsername,
+    userId,
+    // Auth
+    isAuthenticated,
+    isAuthLoading,
+    currentWalletAddress,
+    // Profile
+    profile,
+    apiProfile,
+    isLoadingProfile,
+    isFetchingProfile,
+    isProfileError,
+    refetchProfile,
+    isOwnProfile,
+    isViewingOwnProfile,
+    setFollowStatus,
+    // Badge
+    badgeUrl,
+    // Content
+    PROFILE_POSTS,
+    PROFILE_IMAGES,
+    ALL_PROFILE_VIDEOS,
+    ALL_CONTENT,
+    PROFILE_TABS,
+    userContentData,
+    isLoadingContent,
+    fetchNextContentPage,
+    hasNextContentPage,
+    isFetchingNextContentPage,
+    // Subscriptions
+    plans,
+    isLoadingPlans,
+    hasPlans,
+    isOwnPlans,
+    isSubscribed,
+    isLoadingSubscription,
+    // Optimistic
+    optimisticPosts,
+    // Privacy
+    showFollowersFollowing,
+    hideFollowerCounts,
+    // Re-auth
+    handleApiError,
+    // Stories
+    allStories,
+    profileStories,
+    hasStories,
+    hasUnwatchedStories,
+    profileStoryStartIndex,
+    markWatched,
+    isWatched,
+    // Follow
+    isFollowing,
+    isPending,
+    isTargetPrivate,
+    // Block
+    isBlocked,
+    isBlockedBy,
+    isBlockLoading,
+    handleBlock,
+    // Pull-to-refresh
+    profileContainerRef,
+    pullDistance,
+    isPulling,
+    isHoldingAtThreshold,
+    holdProgress,
+    pullHandlers,
+    isRefreshing,
+    PULL_THRESHOLD,
+    // Bio translation
+    translatedBio,
+    setTranslatedBio,
+  };
+}

@@ -1,0 +1,3383 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 
+================================================================================
+DEHUB DESIGN SYSTEM RULES - MUST FOLLOW FOR ALL COMPONENTS
+================================================================================
+
+1. BUTTONS: All buttons must match our existing liquid glass style:
+   - Use: bg-white/10 backdrop-blur-xl border border-white/20
+   - Hover: hover:bg-white/20 hover:border-white/40 hover:scale-105
+   - Active state: bg-white/20 border-white/40
+   - NO GRADIENTS on buttons (no bg-gradient-to-*)
+   - NO colored backgrounds (no bg-cyan-500, bg-purple-500, etc.)
+
+2. COLORS: Black and white palette only:
+   - Primary colors: black (#000), white (#fff), and shades of gray
+   - Use zinc scale for grays: zinc-50 through zinc-950
+   - Text: text-white, text-zinc-300, text-zinc-400, text-zinc-500
+   - Backgrounds: bg-black, bg-zinc-900, bg-zinc-950, bg-white/5, bg-white/10
+   - NO colored accents (cyan, purple, blue, etc.) except for specific brand elements
+
+3. LIQUID GLASS STYLE for all interactive elements:
+   - Popups/Modals: bg-zinc-950/90 backdrop-blur-xl border border-white/10
+   - Tooltips: bg-black/90 backdrop-blur-sm border border-white/10
+   - Buttons: bg-white/10 backdrop-blur-xl border border-white/20
+   - Cards: bg-white/5 backdrop-blur-sm border border-white/10
+   - Shadows: shadow-[0_8px_32px_rgba(0,0,0,0.3)]
+   - Inset highlights: inset_0_1px_0_rgba(255,255,255,0.1)
+
+4. SELECTION/ACTIVE STATES:
+   - Use white borders: ring-2 ring-white/60 or border-white/40
+   - Use white text: text-white (not colored text)
+   - Subtle white glow: shadow-[0_0_12px_rgba(255,255,255,0.2)]
+
+================================================================================
+*/
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  * {
+    font-family: 'Exo', sans-serif;
+  }
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  /* GLOBAL RULE: Hide ALL scrollbars on ALL screen sizes while preserving scroll functionality */
+  * {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  *::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hide number input spinners globally */
+  input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  html, body {
+    height: 100%;
+    width: 100%;
+    background-color: black;
+    overscroll-behavior: none;
+    overscroll-behavior-y: none;
+    touch-action: manipulation;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  body {
+    @apply text-foreground;
+    background-color: black;
+    overflow-x: hidden;
+    overscroll-behavior-y: none;
+    touch-action: manipulation;
+  }
+
+  #root {
+    min-height: 100vh;
+    width: 100%;
+    background-color: black;
+  }
+}
+
+@layer utilities {
+  /* Scrollbar Hide */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Marquee auto-scroll */
+  .trending-marquee {
+    animation: trending-scroll 40s linear infinite;
+  }
+
+  @keyframes trending-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Invisible Scrollbar - still scrollable but hidden */
+  .scrollbar-invisible {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .scrollbar-invisible::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    display: none;
+  }
+
+  /* Glitch Animations */
+  @keyframes glitch-rgb {
+    0% {
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.7), 
+                   0 0 15px rgba(255, 255, 255, 0.5), 
+                   0 0 25px rgba(255, 255, 255, 0.5);
+      transform: translate(0);
+    }
+    20% {
+      text-shadow: -2px 0 rgba(255, 0, 0, 0.8),
+                   2px 0 rgba(0, 0, 255, 0.8),
+                   0 0 8px rgba(255, 255, 255, 0.7);
+      transform: translate(1px, 0);
+    }
+    40% {
+      text-shadow: 2px 0 rgba(255, 0, 0, 0.8),
+                   -2px 0 rgba(0, 255, 0, 0.8),
+                   0 0 8px rgba(255, 255, 255, 0.7);
+      transform: translate(-1px, 0);
+    }
+    60% {
+      text-shadow: -1px 0 rgba(0, 255, 0, 0.8),
+                   1px 0 rgba(0, 0, 255, 0.8),
+                   0 0 8px rgba(255, 255, 255, 0.7);
+      transform: translate(0, 1px);
+    }
+    80% {
+      text-shadow: 1px 0 rgba(255, 0, 0, 0.8),
+                   -1px 0 rgba(0, 0, 255, 0.8),
+                   0 0 8px rgba(255, 255, 255, 0.7);
+      transform: translate(0, -1px);
+    }
+    100% {
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.7), 
+                   0 0 15px rgba(255, 255, 255, 0.5), 
+                   0 0 25px rgba(255, 255, 255, 0.5);
+      transform: translate(0);
+    }
+  }
+
+  @keyframes scanlines {
+    0% {
+      transform: translateY(-100%);
+    }
+    100% {
+      transform: translateY(100%);
+    }
+  }
+
+  /* Scanline overlay */
+  .scanline-overlay::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.03) 0px,
+      rgba(0, 0, 0, 0.05) 1px,
+      rgba(255, 255, 255, 0.03) 2px
+    );
+    pointer-events: none;
+    z-index: 50;
+    animation: scanlines 8s linear infinite;
+  }
+
+  /* Glitch classes */
+  .glitch-active {
+    animation: glitch-rgb 0.2s ease-in-out;
+  }
+
+@keyframes corruption-flicker {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.7; }
+}
+
+.pixel-corruption {
+  animation: corruption-flicker 0.05s infinite;
+}
+}
+
+/* Prevent horizontal overflow on mobile */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Prevent layout shift when modals/drawers open (scrollbar compensation) */
+html {
+  scrollbar-gutter: stable;
+}
+
+/* Prevent vaul drawer from shifting page */
+[vaul-drawer-wrapper] {
+  transform: none !important;
+}
+
+/* Shimmer animation for loading states */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes shimmer-sweep {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(400%); }
+}
+
+/* Medal shine animation for leaderboard */
+.medal-shine-container {
+  position: relative;
+  display: inline-block;
+}
+
+.medal-shine-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 35%,
+    rgba(255, 255, 255, 0.5) 45%,
+    rgba(255, 255, 255, 0.7) 50%,
+    rgba(255, 255, 255, 0.5) 55%,
+    transparent 65%,
+    transparent 100%
+  );
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  opacity: 0;
+  animation: medal-sweep 1s ease-in-out 0.3s;
+  pointer-events: none;
+  -webkit-mask-image: var(--medal-mask);
+  mask-image: var(--medal-mask);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+@keyframes medal-sweep {
+  0% {
+    opacity: 1;
+    background-position: 100% 0;
+  }
+  80% {
+    opacity: 1;
+    background-position: -100% 0;
+  }
+  100% {
+    opacity: 0;
+    background-position: -100% 0;
+  }
+}
+
+/* ================================================================================
+   WEB3AUTH MODAL - Black Liquid Glass Effect
+   ================================================================================ */
+
+/* Modal backdrop */
+#w3a-modal {
+  --w3a-background-color: rgba(0, 0, 0, 0.9) !important;
+}
+
+/* Main modal card - liquid glass effect */
+.w3a-modal__card {
+  background: rgba(10, 10, 10, 0.95) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 24px !important;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+}
+
+/* Inner content styling */
+.w3a-modal__content {
+  background: transparent !important;
+}
+
+.w3a-modal__header {
+  background: transparent !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Buttons within modal */
+.w3a-button {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 12px !important;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease !important;
+}
+
+.w3a-button:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  transform: scale(1.02) !important;
+}
+
+/* Mobile: Slide up from bottom like a proper full-width drawer */
+@media (max-width: 768px) {
+  #w3a-modal {
+    align-items: flex-end !important;
+    justify-content: flex-end !important;
+    padding: 0 !important;
+  }
+
+  .w3a-modal__card {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    transform: none !important;
+    border-radius: 24px 24px 0 0 !important;
+    max-height: 90vh !important;
+    animation: w3aSlideUp 0.3s ease-out !important;
+    box-sizing: border-box !important;
+  }
+
+  .w3a-modal__card .w3a-modal__content {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+@keyframes w3aSlideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Hide powered by / footer text */
+.w3a-modal__footer,
+.w3a-footer,
+[class*="footer"],
+[class*="powered"],
+[class*="Powered"] {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Fix Web3Auth container causing layout gaps in MetaMask browser */
+/* The injected container has position: relative which can push content down */
+#w3a-parent-container,
+.w3a-parent-container {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+}
+
+/* Re-enable pointer events only when modal is actually open */
+#w3a-parent-container:has(.w3a-modal),
+.w3a-parent-container:has(.w3a-modal) {
+  position: fixed !important;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: auto !important;
+}
+
+/* Collapsed state fix for w3a overlay elements */
+.w3a--fixed.w3a--w-0.w3a--h-0 {
+  display: none !important;
+}
+
+/* Hide the Web3Auth floating wallet button completely */
+.w3a-wallet-button,
+[class*="wallet-button"],
+.w3a--wallet-btn,
+#w3a-wallet-widget,
+[id*="wallet-widget"],
+button[class*="w3a"][class*="wallet"] {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Fix Web3Auth injected iframes causing layout gaps on MetaMask Mobile */
+/* These iframes have position: fixed; top: 0 which pushes content down */
+iframe[id*="auth-iframe"],
+iframe[id*="walletIframe"],
+iframe[id*="web3auth"],
+iframe[src*="web3auth"],
+#w3a-container {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  border: none !important;
+  pointer-events: none !important;
+  background: transparent !important;
+}
+
+/* W3A parent/injected elements — hide but don't block scroll */
+[id^="w3a-"]:not(#w3a-modal) {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 0 !important;
+  height: 0 !important;
+  overflow: hidden !important;
+  border: none !important;
+  pointer-events: none !important;
+  background: transparent !important;
+}
+
+/* Only show iframes when they contain visible content */
+iframe[id*="auth-iframe"][style*="display: block"],
+iframe[id*="walletIframe"][style*="display: block"],
+iframe[id*="web3auth"][style*="display: block"],
+iframe[src*="web3auth"][style*="display: block"] {
+  position: fixed !important;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: auto !important;
+}
+
+/* Ensure Web3Auth injected elements never block page scroll */
+body:has([id^="w3a-"]) {
+  overflow: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Fallback: ensure any injected elements at top of page match background */
+html, body {
+  background-color: #000 !important;
+}
+
+/* Extra fallback: force black background on root and any gaps */
+#root {
+  background-color: #000;
+}
+
+/* Hide any fixed-position empty elements that might cause gaps */
+body > iframe:not([src]),
+body > iframe[style*="height: 0"],
+body > div[style*="position: fixed"][style*="height: 0"] {
+  display: none !important;
+}
+
+/* Immersive video mode - hide mobile header and remove top padding */
+body.immersive-video-mode header.lg\\:hidden {
+  display: none !important;
+}
+
+body.immersive-video-mode main {
+  padding-top: 0 !important;
+}
+
+/* Shorts fullscreen viewer open — drop the top nav bars beneath the viewer
+   (z-[60]) so its backdrop-blur frosts them, instead of the sharp home tab bar
+   (z-[110]) / mobile header (z-[60]) poking through the overlay. */
+body.shorts-viewer-open [data-home-tabs],
+body.shorts-viewer-open [data-mobile-header] {
+  z-index: 40 !important;
+}
+
+/* Story shimmer border — rotating conic-gradient light sweep */
+@keyframes story-shimmer-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes story-shimmer-pulse {
+  0%   { opacity: 0; }
+  10%  { opacity: 0.8; }
+  35%  { opacity: 0.8; }
+  50%  { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+.story-shimmer-border {
+  position: relative;
+  overflow: hidden;
+}
+
+.story-shimmer-border::before {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 42deg,
+    rgba(255, 255, 255, 0.3) 70deg,
+    rgba(255, 255, 255, 0.5) 110deg,
+    rgba(255, 255, 255, 0.7) 180deg,
+    rgba(255, 255, 255, 0.5) 250deg,
+    rgba(255, 255, 255, 0.3) 290deg,
+    transparent 318deg,
+    transparent 360deg
+  );
+  animation:
+    story-shimmer-rotate 3s linear infinite,
+    story-shimmer-pulse 5s ease-in-out infinite;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+.story-shimmer-border:hover::before {
+  opacity: 1;
+  animation-name: story-shimmer-rotate;
+}
+
+.story-shimmer-border > *:first-child {
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================================
+   REDUCE MOTION — toggled via .reduce-motion on <html>
+   Disables all CSS animations, transitions, and transforms.
+   ============================================================ */
+html.reduce-motion *,
+html.reduce-motion *::before,
+html.reduce-motion *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+html.reduce-motion .hover-scale {
+  transform: none !important;
+}
+
+/* Glass morph-in transition for hero buttons */
+.glass-morph-in > div {
+  backdrop-filter: blur(0px) !important;
+  -webkit-backdrop-filter: blur(0px) !important;
+  background: transparent !important;
+  border-color: rgba(255, 255, 255, 0) !important;
+  box-shadow: none !important;
+  transition: backdrop-filter 1.8s cubic-bezier(0.23, 0.86, 0.39, 0.96),
+              -webkit-backdrop-filter 1.8s cubic-bezier(0.23, 0.86, 0.39, 0.96),
+              background 1.8s cubic-bezier(0.23, 0.86, 0.39, 0.96),
+              border-color 1.8s cubic-bezier(0.23, 0.86, 0.39, 0.96),
+              box-shadow 1.8s cubic-bezier(0.23, 0.86, 0.39, 0.96);
+}
+
+.glass-morph-in.morphed > div {
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  background: linear-gradient(to bottom right, rgba(255,255,255,0.04), rgba(255,255,255,0.02), transparent) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2) !important;
+}
+
+/* Bottom nav carousel spin-in animation */
+@keyframes navCarouselSpin {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) rotateX(-90deg) scale(0.6);
+    filter: blur(4px);
+  }
+  30% {
+    opacity: 0.4;
+    transform: translateY(18px) rotateX(-40deg) scale(0.85);
+    filter: blur(2px);
+  }
+  60% {
+    opacity: 0.85;
+    transform: translateY(4px) rotateX(-8deg) scale(0.97);
+    filter: blur(0.5px);
+  }
+  80% {
+    opacity: 1;
+    transform: translateY(-2px) rotateX(2deg) scale(1.01);
+    filter: blur(0px);
+  }
+  90% {
+    transform: translateY(1px) rotateX(-1deg) scale(1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) rotateX(0deg) scale(1);
+    filter: blur(0px);
+  }
+}
+
+/* Stage floating reactions */
+@keyframes float-up-reaction {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  70% {
+    opacity: 0.8;
+    transform: translateY(-120px) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-160px) scale(0.8);
+  }
+}
+
+.animate-float-up {
+  animation: float-up-reaction 2s ease-out forwards;
+}
+
+/* Custom square cursor for hero/landing */
+.cursor-square {
+  cursor: url("data:image/svg+xml,%3Csvg width='12' height='12' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='12' height='12' fill='white' fill-opacity='0.9' /%3E%3C/svg%3E") 6 6, auto;
+}
+.cursor-square a:hover,
+.cursor-square button:hover,
+a.cursor-square-item:hover,
+button.cursor-square-item:hover {
+  cursor: url("data:image/svg+xml,%3Csvg width='14' height='14' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='14' height='14' fill='white' fill-opacity='0.9' /%3E%3C/svg%3E") 7 7, auto;
+}
+
+/* ==========================================================================
+   Dim Lights — blue-light filter (works on every theme).
+   A fixed warm amber sheet multiplied over the whole app, f.lux-style: the
+   multiply blend crushes the blue channel (x0.16) and trims green (x0.58)
+   while red passes through untouched. Drawn as a root pseudo-element above
+   every stacking context (portals, modals, canvases) — pointer-transparent,
+   zero layout impact. A filter on the root would break position:fixed
+   descendants; this does not.
+   ========================================================================== */
+html[data-dim-lights="true"]::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  pointer-events: none;
+  background: rgb(255 147 41);
+  mix-blend-mode: multiply;
+  opacity: var(--dim-lights-opacity, 0.42);
+  transition: opacity 0.2s ease;
+}
+
+/* Cosmic theme — let the global NebulaBackground canvas show through. */
+html[data-theme="cosmic"] body,
+html[data-theme="cosmic"] #app-root,
+html[data-theme="cosmic"] #app-root > div > main {
+  background-color: transparent !important;
+}
+
+/* Hazy Nights theme — let the global HazyNightsBackground canvas show through. */
+html[data-theme="hazy"] body,
+html[data-theme="hazy"] #app-root,
+html[data-theme="hazy"] #app-root > div > main {
+  background-color: transparent !important;
+}
+
+/* Swarms theme — let the global SwarmsBackground canvas show through. */
+html[data-theme="swarms"] body,
+html[data-theme="swarms"] #app-root,
+html[data-theme="swarms"] #app-root > div > main {
+  background-color: transparent !important;
+}
+
+/* Lava Lamp theme — let the global LavaLampBackground canvas show through. */
+html[data-theme="lavalamp"] body,
+html[data-theme="lavalamp"] #app-root,
+html[data-theme="lavalamp"] #app-root > div > main {
+  background-color: transparent !important;
+}
+
+/* Winter theme — the snow overlay sits on top of the UI (z-9998), there is
+   no canvas behind content. Give the glass a cold night-sky backdrop to
+   refract instead: near-black slate with a faint moonlight glow. */
+html[data-theme="winter"] body,
+html[data-theme="winter"] #app-root,
+html[data-theme="winter"] #app-root > div > main {
+  background-color: transparent !important;
+}
+html[data-theme="winter"] {
+  background-color: #05070a;
+  background-image:
+    radial-gradient(120rem 60rem at 85% -20%, rgb(164 196 228 / 0.10), transparent 55%),
+    radial-gradient(90rem 50rem at 0% 115%, rgb(164 196 228 / 0.05), transparent 60%);
+  background-attachment: fixed;
+}
+
+/* Canvas themes: remove the dark square box behind the top feed nav bar so
+   the active glass pill and tab icons float over the shader/canvas
+   background. */
+html[data-theme="cosmic"] [data-feed-nav-outer],
+html[data-theme="hazy"] [data-feed-nav-outer],
+html[data-theme="swarms"] [data-feed-nav-outer],
+html[data-theme="lavalamp"] [data-feed-nav-outer],
+html[data-theme="winter"] [data-feed-nav-outer] {
+  /* Fully invisible — no tint, no blur. The rounded pill inside is the ONLY
+     glass surface; any background or backdrop-filter here paints a full-width
+     box around the pill, which this design forbids. Content shows crisply in
+     the padding gaps around the pill and the pill's own top edge is the
+     visual cut-off line. */
+  background-color: transparent !important;
+}
+
+/* ==========================================================================
+   Cosmic / Hazy Nights / Swarms / Winter — liquid glass surfaces.
+   Post bentos, side panels and page bentos float over the animated canvas as
+   frosted smoked glass (backdrop-filter approximation) instead of a mix of
+   opaque zinc slabs and naked transparency. Tint stays monochrome per the
+   design-system rules above — the colour comes from the canvas showing
+   through the glass.
+   ========================================================================== */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) {
+  /* Safety net: body/main are transparent under these themes, so if the lazy
+     canvas chunk hasn't painted yet the page must not fall back to browser
+     white behind white text. (Winter sets its own night-sky backdrop above.) */
+  background-color: #050507;
+
+  --glass-tint: 9 9 11;   /* zinc-950 smoke */
+  --glass-thin: 0.50;     /* post bentos — content-first, canvas clearly visible */
+  --glass-regular: 0.60;  /* side panels / page bentos — denser copy, more smoke */
+  --glass-raised: 0.68;   /* hover state on interactive bentos */
+  --glass-blur: blur(24px) saturate(150%);
+  /* Faint top-left sheen so the surface reads as lit glass, not a grey wash. */
+  --glass-highlight: linear-gradient(
+    160deg,
+    rgb(255 255 255 / 0.07) 0%,
+    rgb(255 255 255 / 0.02) 38%,
+    rgb(255 255 255 / 0.04) 100%
+  );
+  /* 1px ring drawn as an inset shadow (no layout shift on borderless panels),
+     top edge highlight for the refraction feel, soft ambient drop shadow. */
+  --glass-edge:
+    inset 0 0 0 1px rgb(255 255 255 / 0.10),
+    inset 0 1.5px 0 rgb(255 255 255 / 0.08),
+    0 8px 32px rgb(0 0 0 / 0.30);
+  /* Same glass ring + top sheen but WITHOUT the ambient drop shadow. Post
+     bentos sit flush in the scrolling feed, so the 0 8px 32px halo just reads
+     as an ugly soft square behind every card. Side panels/page bentos keep the
+     full --glass-edge because they genuinely float over the canvas. */
+  --glass-edge-flat:
+    inset 0 0 0 1px rgb(255 255 255 / 0.10),
+    inset 0 1.5px 0 rgb(255 255 255 / 0.08);
+}
+
+/* Post bentos — thin glass. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-feed-item] {
+  background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-thin)) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border-color: transparent !important; /* the --glass-edge ring replaces border-white/[0.12] */
+  box-shadow: var(--glass-edge-flat) !important; /* no ambient drop shadow — see --glass-edge-flat */
+}
+
+/* Side panels and page bentos — regular glass. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) :is([data-side-panel], [data-page-bento]) {
+  background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-regular)) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border-color: transparent !important;
+  box-shadow: var(--glass-edge) !important;
+}
+
+/* Interactive bentos (music rows, placeholder tiles) keep hover feedback by
+   raising the smoke — their zinc hover washes are overridden above. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-page-bento].cursor-pointer:hover {
+  background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-raised)) !important;
+}
+
+/* Right-sidebar search — the tagged wrapper is exactly the input's box, so
+   round the glass to the input's radius and let the input itself go clear. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-search-bento] {
+  border-radius: 0.75rem;
+}
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-search-bento] input {
+  background-color: transparent !important;
+}
+
+/* Feed nav pill — the ONLY glass surface in the top nav. Thin smoke + blur:
+   posts sliding behind the pill bleed through and re-tint it as the feed
+   scrolls, while icons stay legible. The outer wrapper stays fully invisible
+   (no box around the pill). */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-feed-nav] {
+  background: rgb(var(--glass-tint) / 0.40) !important;
+  backdrop-filter: blur(20px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+  /* Same ambient drop shadow the desktop glass panels cast below the logo,
+     so the pill reads as the one lifted surface on mobile too. */
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.08),
+    0 8px 32px rgb(0 0 0 / 0.30) !important;
+}
+
+/* System (default) theme — same top-nav treatment as the canvas themes: the
+   full-width black box behind the nav disappears, the pill becomes a floating
+   glass surface, and the feed is swallowed at the pill's top edge (clip logic
+   in HomePage). Posts sliding behind the pill bleed through the blur exactly
+   as they do on cosmic/hazy/swarms. */
+html[data-theme="system"] [data-feed-nav-outer] {
+  background-color: transparent !important;
+}
+/* Lag-free leak guard (system only). The swallow-clip is set on the main
+   thread via rAF, so a hard fling scrolls the compositor faster than the clip
+   can follow and a post's top edge briefly appears in the padding gap above
+   the pill. On the canvas themes that flash lands over the animated canvas and
+   is invisible; on system's solid-black background it reads as a stark colour
+   flash. Cover the gap with a black strip anchored to the sticky (therefore
+   lag-free) nav wrapper: black-on-black so it's invisible at rest, tall enough
+   to cover the gap on every breakpoint, and sitting BEHIND the pill (z-index
+   -1) so the pill's see-through glass and the rounded swallow cut below it are
+   both untouched. Scoped to system — no other theme is affected. */
+html[data-theme="system"] [data-feed-nav-outer]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: #000;
+  z-index: -1;
+  pointer-events: none;
+}
+/* Not on the docs surface. Docs paints paper on the non-canvas themes, so the
+   black strip would show as dark shoulders behind the blog search pill's
+   rounded corners. Docs doesn't need it: the blog's swallow-clip runs with
+   allThemes (Blog.tsx), so the feed is hard-cut at the pill's top edge on
+   every theme — no painted cover, nothing to colour-match against the docs
+   background. */
+html[data-theme="system"][data-docs-open] [data-feed-nav-outer]::before {
+  content: none;
+}
+html[data-theme="system"] [data-feed-nav] {
+  background: rgb(9 9 11 / 0.40) !important;
+  backdrop-filter: blur(20px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.08),
+    0 8px 32px rgb(0 0 0 / 0.30) !important;
+}
+/* Mobile top bar — same transparent-at-top / frost-on-scroll treatment as the
+   canvas themes. Without this the opaque black header lets a post's top edge
+   pop as a hard bright sliver above the pill during a momentum-scroll clip lag;
+   the frosted glass dissolves that sliver into blur so the swallow reads clean.
+   Invisible at rest (nothing scrolled behind it = transparent shows page black). */
+html[data-theme="system"] [data-mobile-header] {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  transition: background-color 0.25s ease;
+}
+html[data-theme="system"] [data-mobile-header][data-scrolled="true"] {
+  background: rgb(9 9 11 / 0.55) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+}
+html[data-theme="system"] [data-mobile-header] :is(img, svg) {
+  filter: drop-shadow(0 6px 18px rgb(0 0 0 / 0.9)) drop-shadow(0 2px 5px rgb(0 0 0 / 0.75));
+}
+
+/* Mobile top bar — invisible at the top of the page (wordmark and icons
+   float directly over the canvas, matching the desktop logo zone), then
+   frosts back to the liquid-glass toolbar as soon as content scrolls
+   underneath so posts never clash with the logo and buttons. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-mobile-header] {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  transition: background-color 0.25s ease;
+}
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-mobile-header][data-scrolled="true"] {
+  background: rgb(var(--glass-tint) / 0.55) !important;
+  backdrop-filter: blur(20px) saturate(150%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
+}
+/* Logo and toolbar icons float on bare canvas now — soft ambient shadow
+   below them (the desktop glass-edge shadow, 0 8px 32px family) keeps them
+   legible when bright post media scrolls behind. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-mobile-header] :is(img, svg) {
+  /* Strong enough to read over the bright nebula/canvas colours — a 45%
+     black halo disappears against the dark canvas entirely. */
+  filter: drop-shadow(0 6px 18px rgb(0 0 0 / 0.9)) drop-shadow(0 2px 5px rgb(0 0 0 / 0.75));
+}
+
+/* Full-screen page wrappers that shipped opaque black (creators application,
+   post info, stage deep-link) — let the canvas through; their inner cards are
+   already glass. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-glass-page] {
+  background-color: transparent !important;
+}
+
+/* Dedicated post page (home → post overlay). The wrapper ships opaque black
+   because it must hide the still-mounted home feed beneath it; on canvas
+   themes that paints a solid black column through the glass layout. Let the
+   canvas through instead, and hide the home feed itself so it doesn't bleed
+   into the post content — except its tab bar, which hosts the back toggle
+   and must keep peeking above the overlay. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-post-overlay] {
+  background-color: transparent !important;
+}
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) main:has([data-post-overlay]) [data-cached-page="home"] {
+  visibility: hidden;
+}
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) main:has([data-post-overlay]) [data-cached-page="home"] [data-feed-nav-outer] {
+  visibility: visible;
+}
+
+/* Mobile single-post drawer: same flat black surface over the canvas.
+   Immersive video and live posts keep their own inner bg-black so media
+   viewing stays dark. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-post-drawer] {
+  background-color: transparent !important;
+}
+
+/* Feed chrome strips (music sub-tab filters, radio search/genre bar) shipped
+   opaque black behind their glass pills — same treatment as the feed nav. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-feed-chrome] {
+  background-color: transparent !important;
+}
+
+/* Carousel edge fades: the painted gradient overlays (to zinc-900/black)
+   read as shadows over the dynamic canvas. Hide them and instead dissolve
+   the scrolling content itself to transparent with a mask on the wrapper,
+   so the glass and canvas stay visible through the fade. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) .absolute.pointer-events-none[class*="bg-gradient-to-l"][class*="to-transparent"] {
+  display: none !important;
+}
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) *:has(> .absolute.pointer-events-none[class*="bg-gradient-to-l"][class*="to-transparent"]) {
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 2.5rem), transparent 100%);
+  mask-image: linear-gradient(to right, black calc(100% - 2.5rem), transparent 100%);
+}
+
+/* Same for the vertical zinc-900 fades above "view all" footers and at the
+   sidebar nav's bottom: dissolve the list rows instead of painting smoke. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) .absolute.pointer-events-none[class*="bg-gradient-to-t"][class*="from-zinc-900"][class*="to-transparent"] {
+  display: none !important;
+}
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) *:has(+ * > .absolute.pointer-events-none[class*="bg-gradient-to-t"][class*="from-zinc-900"]),
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-side-panel] > *:has(+ [data-sidebar-fade]) {
+  -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 2.25rem), transparent 100%);
+  mask-image: linear-gradient(to bottom, black calc(100% - 2.25rem), transparent 100%);
+}
+
+/* Opt-in edge dissolve for carousels that never had an overlay fade (e.g.
+   the explore category pills): content fades to transparent at the right
+   edge, same as the converted fades above. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-fade-edges] {
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 2.5rem), transparent 100%);
+  mask-image: linear-gradient(to right, black calc(100% - 2.5rem), transparent 100%);
+}
+
+/* Side panel tabs: the active/hover states were dark zinc top-glows, which
+   read as shadows on glass — flip them to faint white glass glows. Radial
+   from top-centre so the glow fades on every side instead of filling the
+   button as a squared-off block. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-side-panel-tabs] [data-active-tab-indicator] {
+  background: radial-gradient(140% 120% at 50% 0%, rgb(255 255 255 / 0.07), transparent 70%) !important;
+}
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-side-panel-tabs] .tab-hover-bg {
+  background: radial-gradient(140% 120% at 50% 0%, rgb(255 255 255 / 0.04), transparent 70%) !important;
+}
+
+/* Solid zinc-800 chips inside glass surfaces read as slabs — frost them to
+   the white-wash the design system uses for chips. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) :is([data-feed-item], [data-side-panel], [data-page-bento]) .bg-zinc-800 {
+  background-color: rgb(255 255 255 / 0.08) !important;
+}
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) :is([data-feed-item], [data-side-panel], [data-page-bento]) .hover\:bg-zinc-800:hover {
+  background-color: rgb(255 255 255 / 0.12) !important;
+}
+
+/* Near-opaque zinc-900/90 and /80 cards (sidebar assistant CTA, "view all"
+   footers, comments wrapper) — thin them to smoke so they sit in the same
+   material family. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) :is(.bg-zinc-900\/90, .bg-zinc-900\/80) {
+  background-color: rgb(var(--glass-tint) / 0.55) !important;
+}
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) .hover\:bg-zinc-800\/90:hover {
+  background-color: rgb(39 39 42 / 0.60) !important;
+}
+
+/* Right-panel "View all" liquid-glass bubble. Match the mobile create (+) button:
+   a see-through white glass wash with a hairline white border, so the canvas reads
+   clearly through it instead of a heavy grey/50%-white chip. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-side-panel] [data-view-all] .backdrop-blur-xl {
+  background-image: none !important;
+  background-color: rgb(255 255 255 / 0.18) !important;
+  border: 1px solid rgb(255 255 255 / 0.30) !important;
+  box-shadow:
+    inset 0 1px 1px rgb(255 255 255 / 0.20),
+    0 2px 8px rgb(0 0 0 / 0.30) !important;
+}
+
+/* Side-panel text legibility on glass. The moving, colourful canvas bleeds
+   through the frosted bentos and washes out the mid-grey zinc text (usernames,
+   chat messages, "type a message" placeholders). Bump every muted step ~2
+   notches brighter INSIDE side panels only — hierarchy is preserved (username
+   → message → timestamp), the feed and page bentos are untouched. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-side-panel] .text-zinc-200 {
+  color: #fafafa !important; /* list usernames (leaderboard, trending) — was zinc-200 */
+}
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-side-panel] .text-zinc-300 {
+  color: #f4f4f5 !important; /* chat/message body — was zinc-300 */
+}
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-side-panel] .text-zinc-400 {
+  color: #e4e4e7 !important; /* secondary rows, reactions, "view all" — was zinc-400 */
+}
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-side-panel] .text-zinc-500 {
+  color: #d4d4d8 !important; /* labels, inactive tab icons, search glyph — was zinc-500 */
+}
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-side-panel] .text-zinc-600 {
+  color: #a1a1aa !important; /* timestamps, tertiary hints — was zinc-600 */
+}
+
+/* Action-text placeholders in side-panel inputs ("Search…", "Type a message…"). */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-side-panel] input::placeholder,
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-side-panel] textarea::placeholder {
+  color: #d4d4d8 !important; /* was zinc-500 */
+}
+
+/* Keep hover feedback: the brightened resting colours above would otherwise
+   win over the components' hover:/group-hover: text utilities. Force those
+   interactive rows/buttons/tabs to pure white on hover. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-side-panel] [class*="hover:text-white"]:hover,
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-side-panel] [class*="hover:text-zinc-"]:hover,
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-side-panel] .group:hover [class*="group-hover:text-white"] {
+  color: #ffffff !important;
+}
+
+/* --------------------------------------------------------------------------
+   Page-content legibility on glass (profiles + every /app page). body, #app-root
+   and <main> are all transparent under these themes, so page content that isn't
+   wrapped in a frosted bento — profile header / @handle / bio / stats / tab bar,
+   page headings, list rows, empty states — sits DIRECTLY on the moving canvas
+   and its muted zinc text washes out. Brighten the muted steps the same way the
+   side panels were, scoped to `#app-root main` so the portalled overlays
+   (modals, toasts, dropdowns, tooltips — rendered at <body>, outside #app-root)
+   keep their own tuned styling. Card text inside main gets the same bump; bare
+   text additionally gets a soft shadow (further below) to read over bright
+   canvas regions like the lava lamp. The right/left sidebars live outside
+   <main> and are handled by the [data-side-panel] block above.
+   -------------------------------------------------------------------------- */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) #app-root main .text-zinc-300 {
+  color: #f4f4f5 !important; /* body copy, bios — was zinc-300 */
+}
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) #app-root main .text-zinc-400 {
+  color: #e4e4e7 !important; /* secondary text, stat labels, tab labels — was zinc-400 */
+}
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) #app-root main .text-zinc-500 {
+  color: #d4d4d8 !important; /* @handle, joined date, meta, glyphs — was zinc-500 */
+}
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) #app-root main .text-zinc-600 {
+  color: #a1a1aa !important; /* timestamps, tertiary hints — was zinc-600 */
+}
+
+/* Page-content input placeholders (explore search, settings + form fields). */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) #app-root main input::placeholder,
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) #app-root main textarea::placeholder {
+  color: #d4d4d8 !important; /* was zinc-500 */
+}
+
+/* Preserve hover feedback (the brightened resting colours above would otherwise
+   win over hover:/group-hover: text utilities). */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) #app-root main [class*="hover:text-white"]:hover,
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) #app-root main [class*="hover:text-zinc-"]:hover,
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) #app-root main .group:hover [class*="group-hover:text-white"] {
+  color: #ffffff !important;
+}
+
+/* Bare text (NOT inside a frosted surface) sits on the raw canvas — give it a
+   soft dark halo so white and light-grey text reads over bright canvas regions.
+   Frosted descendants (bento / feed item / side panel / glass page) already have
+   a dark backing and stay crisp; media overlays keep their own treatment. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) #app-root main
+  :is(.text-white, [class*="text-white/"], [class*="text-zinc-2"], [class*="text-zinc-3"], [class*="text-zinc-4"], [class*="text-zinc-5"], [class*="text-zinc-6"]):not(:where(
+    [data-side-panel] *, [data-page-bento] *, [data-feed-item] *, [data-glass-page] *,
+    [data-feed-nav] *, [data-mobile-header] *,
+    [data-video-controls], [data-video-controls] *, [data-media-full] *
+  )) {
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.6), 0 0 8px rgb(0 0 0 / 0.35);
+}
+
+/* Frosting unavailable → nearly-solid smoke so text stays readable over the
+   moving canvas. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) :is([data-feed-item], [data-side-panel], [data-page-bento], [data-feed-nav], [data-mobile-header][data-scrolled="true"]) {
+    background: rgb(24 24 27 / 0.94) !important;
+  }
+  html[data-theme="system"] :is([data-feed-nav], [data-mobile-header][data-scrolled="true"]) {
+    background: rgb(24 24 27 / 0.94) !important;
+  }
+}
+
+/* Respect reduced transparency: solid panels, no frosting. */
+@media (prefers-reduced-transparency: reduce) {
+  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) :is([data-feed-item], [data-side-panel], [data-page-bento], [data-feed-nav], [data-mobile-header][data-scrolled="true"]) {
+    background: rgb(24 24 27) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  html[data-theme="system"] :is([data-feed-nav], [data-mobile-header][data-scrolled="true"]) {
+    background: rgb(24 24 27) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+/* Equal spacing around feed divider lines: the space between the divider and the
+   post above it (bottom padding) should match the space between the divider and
+   the post below it (gap + top padding of the next item). */
+[data-feed-root] > [data-feed-item] {
+  padding-bottom: 1.5rem !important;
+}
+
+/* ==========================================================================
+   Minimalistic theme — replaces bento panels with thin white grid lines
+   and swaps per-post borders for a hairline horizontal separator.
+   ========================================================================== */
+html[data-theme="minimal"] [data-side-panel] {
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Pull inner content flush to the left so text aligns cleanly without the bento frame */
+html[data-theme="minimal"] [data-side-panel] > * {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Remove grey/zinc shading inside side panels (tabs, view-all buttons, fades, hover states) */
+html[data-theme="minimal"] [data-side-panel] :where(
+  [class*="bg-zinc-900"],
+  [class*="bg-zinc-800"],
+  [class*="bg-zinc-700"],
+  [class*="from-zinc-900"],
+  [class*="from-zinc-800"],
+  [class*="from-zinc-700"],
+  [class*="to-zinc-900"],
+  [class*="to-zinc-800"],
+  [class*="to-zinc-700"],
+  [class*="via-zinc-900"],
+  [class*="via-zinc-800"],
+  [class*="via-zinc-700"]
+),
+html[data-theme="minimal"] [data-side-panel] :where(
+  [class*="bg-zinc-900"],
+  [class*="bg-zinc-800"],
+  [class*="bg-zinc-700"],
+  [class*="from-zinc-900"],
+  [class*="from-zinc-800"],
+  [class*="from-zinc-700"],
+  [class*="to-zinc-900"],
+  [class*="to-zinc-800"],
+  [class*="to-zinc-700"],
+  [class*="via-zinc-900"],
+  [class*="via-zinc-800"],
+  [class*="via-zinc-700"]
+)::before,
+html[data-theme="minimal"] [data-side-panel] :where(
+  [class*="bg-zinc-900"],
+  [class*="bg-zinc-800"],
+  [class*="bg-zinc-700"],
+  [class*="from-zinc-900"],
+  [class*="from-zinc-800"],
+  [class*="from-zinc-700"],
+  [class*="to-zinc-900"],
+  [class*="to-zinc-800"],
+  [class*="to-zinc-700"],
+  [class*="via-zinc-900"],
+  [class*="via-zinc-800"],
+  [class*="via-zinc-700"]
+)::after {
+  background-color: black !important;
+  background-image: none !important;
+}
+
+/* Page-level bento squares dissolve into the black canvas entirely — no box,
+   no border, no hover wash, just content on the page. Rows/tiles that are
+   clickable carry their own per-element hover; the container never lights up. */
+html[data-theme="minimal"] [data-page-bento]:not([data-keep-dark]) {
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Row dividers (divide-y divide-zinc-800/700, divide-white/x, divide-black/x)
+   and stray card borders (border-zinc-800/700) show up outside data-page-bento
+   too — Command Centre transactions, drawers, spec lists. Recolour them to
+   the same faint hairline used everywhere else in minimal instead of leaving
+   raw dark-grey lines on the black canvas. */
+html[data-theme="minimal"] [class*="divide-zinc-800"] > :not([hidden]) ~ :not([hidden]),
+html[data-theme="minimal"] [class*="divide-zinc-700"] > :not([hidden]) ~ :not([hidden]),
+html[data-theme="minimal"] [class*="divide-white"] > :not([hidden]) ~ :not([hidden]),
+html[data-theme="minimal"] [class*="divide-black"] > :not([hidden]) ~ :not([hidden]) {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+html[data-theme="minimal"] .border-zinc-700,
+html[data-theme="minimal"] .border-zinc-800 {
+  border-color: rgba(255, 255, 255, 0.10) !important;
+}
+
+/* Notification rows carry hardcoded zinc slabs (bg-zinc-900/50 read,
+   bg-zinc-800/80 unread) that read as ugly grey boxes on minimal's black
+   canvas. Strip the slab entirely — read rows sit flat on the page (row
+   dividers already give separation); only unread rows keep a faint white
+   wash to mark them as new. Clickable rows get a subtle hover either way. */
+html[data-theme="minimal"] [data-notification-row] {
+  background-color: transparent !important;
+}
+html[data-theme="minimal"] [data-notification-row]:hover {
+  background-color: rgba(255, 255, 255, 0.04) !important;
+}
+html[data-theme="minimal"] [data-notification-row][data-unread] {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+html[data-theme="minimal"] [data-notification-row][data-unread]:hover {
+  background-color: rgba(255, 255, 255, 0.10) !important;
+}
+
+/* Minimal blackens the search field's zinc bg — restore a hairline outline so the
+   input reads as an input on the black canvas. */
+html[data-theme="minimal"] [data-search-bento] input {
+  border: 1px solid hsl(0 0% 100% / 0.10) !important;
+}
+
+/* Theme picker horizontal scroll fade — black in minimal mode (bg is black, not zinc-900) */
+html[data-theme="minimal"] [data-theme-picker-fade] {
+  background-image: linear-gradient(to left, #000 0%, transparent 100%) !important;
+}
+
+
+
+html[data-theme="minimal"] [data-feed-item] {
+  background-color: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+html[data-theme="minimal"] [data-feed-item]:last-child {
+  border-bottom: 0 !important;
+}
+
+/* Strip the "View all" bubble in side panels — leave text only */
+html[data-theme="minimal"] [data-view-all],
+html[data-theme="minimal"] [data-view-all] * {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+html[data-theme="minimal"] [data-view-all] *::before,
+html[data-theme="minimal"] [data-view-all] *::after {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  display: none !important;
+}
+
+/* Square off EVERYTHING in minimal mode — including avatars and circular dots.
+   Only opt-outs marked with [data-keep-round] stay round. */
+html[data-theme="minimal"] *:not([data-keep-round]) {
+  border-radius: 0 !important;
+}
+html[data-theme="minimal"] *:not([data-keep-round])::before,
+html[data-theme="minimal"] *:not([data-keep-round])::after {
+  border-radius: 0 !important;
+}
+
+/* Wide-screen collapsed sidebar: draw a grid square around every post */
+html[data-theme="minimal"][data-sidebar-collapsed="true"] [data-feed-item] {
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 0 !important;
+  padding: 0.75rem !important;
+  margin-bottom: -1px; /* collapse borders so it reads as a grid */
+}
+html[data-theme="minimal"][data-sidebar-collapsed="true"] [data-feed-item]:last-child {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10) !important;
+}
+
+/* Restore the sidebar bottom fade in minimal mode (background is black, not zinc-900) */
+html[data-theme="minimal"] [data-sidebar-fade] {
+  background: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.6) 40%, transparent 100%) !important;
+  background-image: linear-gradient(to top, #000 0%, rgba(0, 0, 0, 0.6) 40%, transparent 100%) !important;
+}
+
+/* Full-width media (images/videos) on mobile/tablet — MINIMAL THEME ONLY.
+   Text/avatars/actions keep the bento card's padding — only the media
+   bleeds past the card's border + the feed's outer padding to reach the
+   screen edges. Values below sum: feed-root padding + feed-item p-3 (12px)
+   + 1px card border. */
+@media (max-width: 639px) {
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] {
+    margin-left: calc(-0.75rem - 0.5rem - 1px) !important;
+    margin-right: calc(-0.75rem - 0.5rem - 1px) !important;
+    width: calc(100% + 2.5rem + 2px) !important;
+    max-width: none !important;
+    border-radius: 0 !important;
+  }
+
+  /* Full-width post separator line in minimal mode on mobile */
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] {
+    position: relative;
+    border-bottom: 0 !important;
+  }
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item]::after {
+    content: "";
+    position: absolute;
+    left: -0.5rem;
+    right: -0.5rem;
+    bottom: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+  }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] {
+    margin-left: calc(-0.75rem - 0.75rem - 1px) !important;
+    margin-right: calc(-0.75rem - 0.75rem - 1px) !important;
+    width: calc(100% + 3rem + 2px) !important;
+    max-width: none !important;
+    border-radius: 0 !important;
+  }
+
+
+  /* Full-width post separator line in minimal mode on tablet */
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] {
+    position: relative;
+    border-bottom: 0 !important;
+  }
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item]::after {
+    content: "";
+    position: absolute;
+    left: -0.75rem;
+    right: -0.75rem;
+    bottom: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+  }
+}
+
+/* Minimal theme: media bleeds to screen edges on mobile/tablet, but overlay
+   controls (fullscreen, timers, badges, arrows) need extra horizontal inset
+   so they don't hug the screen edge. Bumps common Tailwind edge offsets by
+   ~8px on the horizontal axis only. */
+@media (max-width: 1023px) {
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] > .absolute.left-2,
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] .absolute.left-2 {
+    left: 0.75rem !important;
+  }
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] > .absolute.right-2,
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] .absolute.right-2 {
+    right: 0.75rem !important;
+  }
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] > .absolute.left-8,
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] .absolute.left-8 {
+    left: 1.25rem !important;
+  }
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] > .absolute.right-8,
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] .absolute.right-8 {
+    right: 1.25rem !important;
+  }
+  /* Bottom gradient bar padding for controls (play/scrubber) */
+  html[data-theme="minimal"] [data-feed-root] [data-feed-item] [data-media-full] .absolute.bottom-0.left-0.right-0 {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+}
+
+
+/* Hide the full-width separator on the last feed item in minimal mode */
+html[data-theme="minimal"] [data-feed-root] [data-feed-item]:last-child::after {
+  display: none;
+}
+
+/* Minimal theme: full-width top nav tabs on mobile/tablet.
+   Non-minimal themes keep the bento card inset to match the feed below. */
+@media (max-width: 1023px) {
+  html[data-theme="minimal"] [data-home-tabs] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  html[data-theme="minimal"] [data-home-tabs] > div:first-child {
+    border-radius: 0 !important;
+  }
+}
+
+/* Minimal theme: restore hover states for side panel menu items.
+   The zinc-removal rules above strip the default grey hover backgrounds;
+   replace them with a subtle white wash so rows/tabs feel interactive. */
+html[data-theme="minimal"] [data-side-panel] [class*="hover:bg-zinc-"]:hover {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+html[data-theme="minimal"] [data-side-panel] [class*="hover:text-zinc-"]:hover {
+  color: #ffffff !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* ==========================================================================
+ * Minimal theme: file-system style feed tab nav
+ * ==========================================================================
+ * In minimal mode the top feed nav (GlobalFeedNav + HomePage in-page tabs)
+ * behaves like an OS file tab strip: a single white baseline runs across the
+ * bar, the active tab lifts off that line with a top + side border, and the
+ * active tab's black background masks the baseline so the line breaks cleanly.
+ */
+html[data-theme="minimal"] [data-feed-nav] {
+  position: relative;
+  background-color: #000 !important;
+}
+
+/* One continuous white baseline across the whole nav bar */
+/* Baseline sits under the tabs row only, not under expanded filter menu */
+html[data-theme="minimal"] [data-feed-nav] > div:first-child::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.69);
+  pointer-events: none;
+  z-index: 1;
+}
+
+html[data-theme="minimal"] [data-feed-nav] [data-glass-indicator] {
+  display: none !important;
+}
+
+html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn] {
+  transition: color 220ms ease;
+  background-color: transparent !important;
+  position: relative;
+  border-radius: 0 !important;
+  color: rgb(161 161 170); /* zinc-400 */
+}
+
+html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn]:hover {
+  background-color: transparent !important;
+  color: #fff;
+}
+
+/* Active tab: black fill so the shared baseline is hidden behind it */
+html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn][data-active="true"] {
+  background-color: #000 !important;
+  color: #fff;
+}
+
+/* Folder-tab border on every tab; fades in only when active for smooth toggling */
+html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.69),
+    inset 1px 0 0 0 rgba(255, 255, 255, 0.69),
+    inset -1px 0 0 0 rgba(255, 255, 255, 0.69);
+  opacity: 0;
+  transition: opacity 220ms ease;
+  pointer-events: none;
+}
+
+html[data-theme="minimal"] [data-feed-nav] [data-feed-tab-btn][data-active="true"]::before {
+  opacity: 1;
+}
+
+/* ==========================================================================
+ * Minimal theme: file-system style tabs on the right side panels
+ * (TabbedSidePanel + WhatsHappening icon switchers; WhatsHappening also
+ * renders on the Explore page). Same treatment as the feed nav above: one
+ * shared baseline, the active tab lifts off with a top+side outline and
+ * masks the baseline with a fill matching the page background.
+ * ========================================================================== */
+html[data-theme="minimal"] [data-side-panel-tabs] {
+  position: relative;
+}
+html[data-theme="minimal"] [data-side-panel-tabs]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.69);
+  pointer-events: none;
+  z-index: 1;
+}
+/* The gradient active/hover washes are replaced by the file-tab treatment */
+html[data-theme="minimal"] [data-side-panel-tabs] [data-active-tab-indicator],
+html[data-theme="minimal"] [data-side-panel-tabs] .tab-hover-bg {
+  display: none !important;
+}
+html[data-theme="minimal"] [data-side-panel-tabs] [data-tab-btn] {
+  position: relative;
+  z-index: 2; /* above the baseline so the active fill can break it */
+  border-radius: 0 !important;
+  background-color: transparent !important;
+}
+html[data-theme="minimal"] [data-side-panel-tabs] [data-tab-btn][data-tab-active="true"] {
+  background-color: #000 !important; /* masks the baseline segment */
+}
+html[data-theme="minimal"] [data-side-panel-tabs] [data-tab-btn]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.69),
+    inset 1px 0 0 0 rgba(255, 255, 255, 0.69),
+    inset -1px 0 0 0 rgba(255, 255, 255, 0.69);
+  opacity: 0;
+  transition: opacity 220ms ease;
+  pointer-events: none;
+}
+html[data-theme="minimal"] [data-side-panel-tabs] [data-tab-btn][data-tab-active="true"]::before {
+  opacity: 1;
+}
+/* Edge tabs sit flush against the panel wall — drop the outline edge on the
+   outer side so the tab flows off the panel instead of drawing a double wall */
+html[data-theme="minimal"] [data-side-panel-tabs] [data-tab-btn]:first-child::before {
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.69),
+    inset -1px 0 0 0 rgba(255, 255, 255, 0.69);
+}
+html[data-theme="minimal"] [data-side-panel-tabs] [data-tab-btn]:last-child::before {
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.69),
+    inset 1px 0 0 0 rgba(255, 255, 255, 0.69);
+}
+
+/* ==========================================================================
+ * Light theme — minimal aesthetic inverted onto a soft paper surface.
+ * Buttons keep their dark grey / white styling unchanged.
+ * ========================================================================== */
+html[data-theme="light"] {
+  --paper: #f9f8f4;
+  --paper-deep: #ece8df;
+  --ink: #1a1a1a;
+  --ink-muted: #5a5a5a;
+  --hairline: rgba(0, 0, 0, 0.08);
+  --hairline-strong: rgba(0, 0, 0, 0.12);
+  --hover-wash: rgba(0, 0, 0, 0.05);
+  --tab-hover-wash: rgba(0, 0, 0, 0.06);
+}
+
+html[data-theme="light"] body {
+  background-color: var(--paper) !important;
+  background-image: url('./assets/textures/paper-texture.png') !important;
+  background-size: 256px 256px !important;
+  color: var(--ink) !important;
+}
+/* Note: #app-root > div also matches floating direct children (the mobile
+   bottom nav wrapper), which must stay transparent — hence the
+   [data-bottom-nav] exclusion; only the glass pill inside it paints. */
+html[data-theme="light"] #app-root,
+html[data-theme="light"] #app-root > div:not([data-bottom-nav]),
+html[data-theme="light"] #app-root > div > main,
+html[data-theme="light"] #app-root > div > main > div {
+  background-color: var(--paper) !important;
+  color: var(--ink) !important;
+}
+
+/* <html> and #root are forced #000 by the Web3Auth gap fallbacks (~L576);
+   only body/#app-root were overridden here, so overscroll rubber-banding and
+   routes outside the app shell flashed black edges on paper. */
+html[data-theme="light"],
+html[data-theme="light"] #root {
+  background-color: var(--paper) !important;
+}
+
+/* Subtle soft grain overlay across the whole light-mode UI. */
+html[data-theme="light"] body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.05;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22512%22%20height%3D%22512%22%3E%3Cfilter%20id%3D%22n%22%20x%3D%220%22%20y%3D%220%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.75%22%20numOctaves%3D%224%22%20stitchTiles%3D%22stitch%22%2F%3E%3CfeColorMatrix%20type%3D%22saturate%22%20values%3D%220%22%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url(%23n)%22%2F%3E%3C%2Fsvg%3E");
+  background-size: 256px 256px;
+  background-repeat: repeat;
+}
+
+
+/* Invert common text colours on paper, but keep buttons white-on-grey. */
+html[data-theme="light"] .text-white,
+html[data-theme="light"] .text-zinc-50,
+html[data-theme="light"] .text-zinc-100 {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] .text-zinc-200,
+html[data-theme="light"] .text-zinc-300 {
+  color: #2e2e2e !important;
+}
+html[data-theme="light"] .text-zinc-400,
+html[data-theme="light"] .text-zinc-500 {
+  color: var(--ink-muted) !important;
+}
+
+/* Radix switches are styled dark-first (white track, near-black thumb),
+   which disappears on paper. Remap: unchecked track = visible grey wash,
+   checked track = ink, thumb = paper in both states. */
+html[data-theme="light"] button[role="switch"][data-state="unchecked"] {
+  background-color: rgba(0, 0, 0, 0.18) !important;
+}
+html[data-theme="light"] button[role="switch"][data-state="checked"] {
+  background-color: var(--ink) !important;
+}
+html[data-theme="light"] button[role="switch"] > span {
+  background-color: var(--paper) !important;
+}
+
+/* Sonner toasts: hardcoded white text/icons become invisible on the light
+   paper background. Flip title, icons, actions, and loader to ink while
+   keeping descriptions/cancel buttons muted. */
+html[data-theme="light"] .toaster .toast,
+html[data-theme="light"] .toaster .toast .actionButton,
+html[data-theme="light"] .toaster .toast .loader,
+html[data-theme="light"] .toaster .toast svg {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] .toaster .toast .description,
+html[data-theme="light"] .toaster .toast .cancelButton {
+  color: var(--ink-muted) !important;
+}
+/* The toast surface itself keeps its dark-glass bg-white/10 + border-white/20
+   classes, which are a barely-visible ghost on paper — give it an opaque
+   paper panel with a hairline and soft shadow instead. */
+html[data-theme="light"] .toaster .toast {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline-strong) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+}
+html[data-theme="light"] .text-zinc-600 {
+  color: #707070 !important;
+}
+
+/* Active filter chip close icon: white/40 is invisible on light paper; use ink
+   so the ✕ is readable next to the chip label. */
+html[data-theme="light"] [data-filter-chip] .text-white\/40,
+html[data-theme="light"] [data-filter-chip] .hover\:text-white:hover {
+  color: var(--ink) !important;
+}
+
+/* Restore white text only on ACTUAL dark button chips (button / [role=button]
+   with a dark zinc bg) or explicit opt-in via [data-keep-dark]. Inputs and
+   textareas that share the same bg-zinc-800 utility get remapped to paper
+   below, so their text stays dark ink. */
+html[data-theme="light"] [data-keep-dark],
+html[data-theme="light"] [data-keep-dark] *,
+html[data-theme="light"] button.bg-zinc-800.text-white,
+html[data-theme="light"] button.bg-zinc-700.text-white,
+html[data-theme="light"] button.bg-zinc-600.text-white,
+html[data-theme="light"] [role="button"].bg-zinc-800.text-white,
+html[data-theme="light"] [role="button"].bg-zinc-700.text-white,
+html[data-theme="light"] [role="button"].bg-zinc-600.text-white {
+  color: #ffffff !important;
+}
+
+/* Icons (chevrons, arrows, glyphs) inside those dark button chips must stay
+   white too — otherwise .text-zinc-400/500 remaps to dark ink and disappears
+   against the black chip background. */
+html[data-theme="light"] button.bg-zinc-800 svg,
+html[data-theme="light"] button.bg-zinc-700 svg,
+html[data-theme="light"] button.bg-zinc-600 svg,
+html[data-theme="light"] [role="button"].bg-zinc-800 svg,
+html[data-theme="light"] [role="button"].bg-zinc-700 svg,
+html[data-theme="light"] [role="button"].bg-zinc-600 svg {
+  color: #ffffff !important;
+}
+
+/* Buttons on translucent black glass chips (bg-black/40..80): the wash remap
+   below (~L2119) skips buttons, so the chip surface stays dark — but the
+   global .text-white → ink remap still applied, leaving ink-on-dark invisible
+   labels/icons (feed-card AI button, fullscreen viewer controls, carousel
+   arrows). Keep their text and icons white, same reasoning as the zinc chips
+   above. The svg rule also rescues icon-only buttons whose muted text-white/NN
+   class sits on the button element itself. */
+html[data-theme="light"] button[class*="bg-black\/"],
+html[data-theme="light"] button[class*="bg-black\/"] *,
+html[data-theme="light"] [role="button"][class*="bg-black\/"],
+html[data-theme="light"] [role="button"][class*="bg-black\/"] * {
+  color: #ffffff !important;
+}
+html[data-theme="light"] button[class*="bg-black\/"] svg,
+html[data-theme="light"] [role="button"][class*="bg-black\/"] svg {
+  color: #ffffff !important;
+}
+
+/* Country-block drawer (settings > privacy): render on paper with soft
+   shadow instead of the default dark glass. */
+html[data-theme="light"] [data-country-block-drawer] {
+  background-color: var(--paper) !important;
+  background-image: url('./assets/textures/paper-texture.png') !important;
+  background-size: 256px 256px !important;
+  color: var(--ink) !important;
+  border-top: 1px solid var(--hairline-strong) !important;
+  box-shadow: 0 -12px 40px rgba(0, 0, 0, 0.12) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html[data-theme="light"] [data-country-block-drawer] .text-white {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-country-block-drawer] input {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  border-color: var(--hairline-strong) !important;
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-country-block-drawer] button:hover {
+  background-color: var(--hover-wash) !important;
+}
+html[data-theme="light"] [data-country-block-drawer] .border-white\/10 {
+  border-color: var(--hairline) !important;
+}
+
+/* Root backgrounds: remap black/zinc-9xx surfaces to paper.
+   Genuine dark button chips opt-out with data-keep-dark. */
+html[data-theme="light"] .bg-black:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-950:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-900:not([data-keep-dark]),
+html[data-theme="light"] .bg-zinc-800:not([data-keep-dark]):not(button):not([role="button"]),
+html[data-theme="light"] .bg-zinc-700:not([data-keep-dark]):not(button):not([role="button"]) {
+  background-color: var(--paper) !important;
+}
+
+/* Translucent zinc surfaces -> subtle ink wash on paper. */
+html[data-theme="light"] .bg-zinc-800\/50,
+html[data-theme="light"] .bg-zinc-800\/60,
+html[data-theme="light"] .bg-zinc-800\/90,
+html[data-theme="light"] .bg-zinc-700\/50,
+html[data-theme="light"] .bg-zinc-700\/60,
+html[data-theme="light"] .bg-zinc-800\/30,
+html[data-theme="light"] .hover\:bg-zinc-800\/50:hover,
+html[data-theme="light"] .hover\:bg-zinc-700\/50:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Active-state pills / indicators that use bg-white in dark mode read as
+   invisible on paper. Flip them to ink so the active tab is legible. */
+html[data-theme="light"] .bg-white:not([data-keep-white]),
+html[data-theme="light"] .bg-white\/90:not([data-keep-white]),
+html[data-theme="light"] .bg-white\/80:not([data-keep-white]) {
+  background-color: var(--ink) !important;
+}
+html[data-theme="light"] .bg-white:not([data-keep-white]) .text-black,
+html[data-theme="light"] .bg-white:not([data-keep-white]) .text-zinc-900,
+html[data-theme="light"] .bg-white:not([data-keep-white]) .text-zinc-950,
+html[data-theme="light"] .bg-white\/90:not([data-keep-white]) .text-black,
+html[data-theme="light"] .bg-white\/90:not([data-keep-white]) .text-zinc-900,
+html[data-theme="light"] .bg-white\/90:not([data-keep-white]) .text-zinc-950,
+html[data-theme="light"] .bg-white\/80:not([data-keep-white]) .text-black,
+html[data-theme="light"] .bg-white\/80:not([data-keep-white]) .text-zinc-900,
+html[data-theme="light"] .bg-white\/80:not([data-keep-white]) .text-zinc-950,
+/* Same-element case: text-black on a bg-white* pill (e.g. Test badge). */
+html[data-theme="light"] .bg-white.text-black:not([data-keep-white]),
+html[data-theme="light"] .bg-white\/90.text-black:not([data-keep-white]),
+html[data-theme="light"] .bg-white\/80.text-black:not([data-keep-white]),
+html[data-theme="light"] .bg-white.text-zinc-900:not([data-keep-white]),
+html[data-theme="light"] .bg-white\/90.text-zinc-900:not([data-keep-white]),
+html[data-theme="light"] .bg-white\/80.text-zinc-900:not([data-keep-white]) {
+  color: #ffffff !important;
+}
+
+/* Desktop / mobile brand logos are white PNGs — invert on paper. */
+html[data-theme="light"] img[alt="dehub"][src*="dehub-header-logo"],
+html[data-theme="light"] img[alt="dehub"][src*="dehub-logo-compact"] {
+  filter: invert(1) hue-rotate(180deg) brightness(0.9);
+}
+
+/* Avatar fallback: on paper the muted zinc-100 blends into background. Force
+   a dark grey chip so silhouettes stay visible. */
+html[data-theme="light"] [data-radix-avatar-fallback],
+html[data-theme="light"] .bg-muted {
+  background-color: #52525b !important; /* zinc-600 */
+  color: #ffffff !important;
+}
+
+/* Skeleton pulses: keep the loading wash light on paper instead of the dark
+   avatar-fallback remap above. */
+html[data-theme="light"] .animate-pulse.bg-muted {
+  background-color: #e4e4e7 !important; /* zinc-200 */
+}
+
+/* Primary CTA (create-post / log-in) uses bg-zinc-900/90 — keep it black. */
+html[data-theme="light"] .bg-zinc-900\/90,
+html[data-theme="light"] .bg-zinc-900\/80 {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+html[data-theme="light"] .bg-zinc-900\/90 *,
+html[data-theme="light"] .bg-zinc-900\/80 * {
+  color: #ffffff !important;
+}
+html[data-theme="light"] .hover\:bg-zinc-800\/90:hover {
+  background-color: #1a1a1a !important;
+}
+
+/* ==========================================================================
+ * Login / Sign-up modal — light mode
+ * Paper surface, ink text, dark primary CTA. Applies to the desktop and
+ * mobile Drawer (both carry data-login-modal on their content root).
+ * The backdrop blurs the app behind a light paper wash (the light-theme
+ * counterpart of the dark bg-black/40 + blur overlay) so attention
+ * concentrates on the login flow in every theme.
+ * ========================================================================== */
+html[data-theme="light"] .login-modal-overlay {
+  background-color: rgba(255, 255, 255, 0.35) !important;
+  backdrop-filter: blur(24px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(120%) !important;
+}
+
+/* Center toasts fired during the login flow (modal open, connecting, or
+   processing a redirect) in the middle app panel — the gap between the
+   left/right sidebars — instead of the full viewport, so they align with
+   the login drawer. --app-main-center-x is measured live in AppLayout;
+   falls back to true viewport-center when unset (routes without sidebars). */
+html[data-login-active] [data-sonner-toaster][data-x-position="center"] {
+  left: var(--app-main-center-x, 50%);
+}
+
+html[data-theme="light"] [data-login-modal] {
+  background-color: var(--paper) !important;
+  background-image: url('./assets/textures/paper-texture.png') !important;
+  background-size: 256px 256px !important;
+  color: var(--ink) !important;
+  border-color: var(--hairline-strong) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* All text inside the modal reads as ink instead of white. */
+html[data-theme="light"] [data-login-modal],
+html[data-theme="light"] [data-login-modal] .text-white,
+html[data-theme="light"] [data-login-modal] .text-white\/60,
+html[data-theme="light"] [data-login-modal] .text-white\/40 {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-login-modal] .text-white\/40 {
+  color: var(--ink-muted) !important;
+}
+
+/* Provider option buttons: paper background w/ hairline border, dark ink text. */
+html[data-theme="light"] [data-login-modal] button.bg-white\/10,
+html[data-theme="light"] [data-login-modal] button.hover\:bg-white\/15:hover,
+html[data-theme="light"] [data-login-modal] .bg-white\/10 {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline-strong) !important;
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-login-modal] button.bg-white\/10:hover,
+html[data-theme="light"] [data-login-modal] button.hover\:bg-white\/15:hover {
+  background-color: var(--paper-deep) !important;
+}
+html[data-theme="light"] [data-login-modal] button svg {
+  color: var(--ink) !important;
+}
+/* Keep brand-colored provider icons (Google, X, Discord, wallet logos) intact. */
+html[data-theme="light"] [data-login-modal] button svg[viewBox="0 0 24 24"] path[fill],
+html[data-theme="light"] [data-login-modal] button img {
+  color: unset !important;
+}
+/* X (Twitter) glyph uses .fill-white — swap to ink on paper. */
+html[data-theme="light"] [data-login-modal] button svg.fill-white path {
+  fill: var(--ink) !important;
+}
+
+/* Primary CTA (Continue button on email / SMS step): dark ink chip. */
+html[data-theme="light"] [data-login-modal] button.bg-white {
+  background-color: var(--ink) !important;
+  color: #ffffff !important;
+}
+html[data-theme="light"] [data-login-modal] button.bg-white:hover,
+html[data-theme="light"] [data-login-modal] button.hover\:bg-white\/90:hover {
+  background-color: #000000 !important;
+  color: #ffffff !important;
+}
+html[data-theme="light"] [data-login-modal] button.bg-white * {
+  color: #ffffff !important;
+}
+
+/* Wallet connect outline button. */
+html[data-theme="light"] [data-login-modal] button.bg-transparent {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline-strong) !important;
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-login-modal] button.bg-transparent:hover,
+html[data-theme="light"] [data-login-modal] button.hover\:bg-white\/5:hover {
+  background-color: var(--paper-deep) !important;
+}
+
+/* Inputs: paper background with ink text. */
+html[data-theme="light"] [data-login-modal] input {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline-strong) !important;
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-login-modal] input::placeholder {
+  color: var(--ink-muted) !important;
+}
+
+/* Separators + hairlines. */
+html[data-theme="light"] [data-login-modal] [role="separator"],
+html[data-theme="light"] [data-login-modal] .border-white\/10 {
+  border-color: var(--hairline) !important;
+}
+html[data-theme="light"] [data-login-modal] [data-orientation="horizontal"][role="separator"],
+html[data-theme="light"] [data-login-modal] hr {
+  background-color: var(--hairline-strong) !important;
+}
+
+/* Footer strip (terms / privacy) — same paper background as the modal. */
+html[data-theme="light"] [data-login-modal] .bg-black\/20 {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline) !important;
+}
+
+/* DeHub wordmark in the modal header is a white PNG — invert it on paper. */
+html[data-theme="light"] [data-login-modal] img[alt="DeHub"] {
+  filter: invert(1) hue-rotate(180deg) brightness(0.9);
+}
+
+/* Back-arrow chevron button in the header. */
+html[data-theme="light"] [data-login-modal] button.hover\:bg-white\/10:hover {
+  background-color: var(--paper-deep) !important;
+}
+
+/* AuthGate login trigger: heading + button on paper. */
+html[data-theme="light"] [data-auth-gate] h2 {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-auth-gate] [data-primary-cta] {
+  background-color: var(--ink) !important;
+  color: #ffffff !important;
+  border-color: transparent !important;
+}
+html[data-theme="light"] [data-auth-gate] [data-primary-cta]:hover {
+  background-color: #000000 !important;
+}
+html[data-theme="light"] [data-auth-gate] [data-primary-cta] * {
+  color: #ffffff !important;
+}
+
+
+/* Chevrons and select-arrow icons in light mode — make them full ink for
+   contrast on paper instead of muted zinc-400 grey. */
+html[data-theme="light"] button .lucide-chevron-down,
+html[data-theme="light"] [role="button"] .lucide-chevron-down,
+html[data-theme="light"] button .lucide-chevrons-up-down,
+html[data-theme="light"] [role="button"] .lucide-chevrons-up-down {
+  color: var(--ink) !important;
+}
+
+/* Profile hover card: liquid-glass panel needs paper-mode text/button styling.
+   Text defaults to white in dark mode; on paper, flip name/handle/bio/stats to
+   ink and remap the Follow button from glass-on-black to an outline chip. */
+html[data-theme="light"] [data-profile-hover-card] {
+  background-color: rgba(255, 255, 255, 0.7) !important;
+  border-color: var(--hairline-strong) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+}
+html[data-theme="light"] [data-profile-hover-card] .text-white,
+html[data-theme="light"] [data-profile-hover-card] .text-white\/80,
+html[data-theme="light"] [data-profile-hover-card] .text-white\/60 {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-profile-hover-card] .text-white\/60 {
+  color: var(--ink-muted) !important;
+}
+html[data-theme="light"] [data-profile-hover-card] [data-follow-btn] {
+  background-color: transparent !important;
+  color: var(--ink) !important;
+  border-color: var(--hairline-strong) !important;
+  box-shadow: none !important;
+}
+html[data-theme="light"] [data-profile-hover-card] [data-follow-btn]:hover {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+
+/* Post modal composer: white text and translucent surfaces become invisible on
+   the light paper background. Force all text, placeholders, caret and toggle
+   track surfaces to ink so the composer stays readable. */
+html[data-theme="light"] [data-post-modal] .text-white,
+html[data-theme="light"] [data-post-modal] .text-white\/40,
+html[data-theme="light"] [data-post-modal] .text-white\/50,
+html[data-theme="light"] [data-post-modal] .text-white\/60,
+html[data-theme="light"] [data-post-modal] .text-white\/70,
+html[data-theme="light"] [data-post-modal] .text-white\/80,
+html[data-theme="light"] [data-post-modal] .hover\:text-white:hover,
+html[data-theme="light"] [data-post-modal] .text-zinc-400,
+html[data-theme="light"] [data-post-modal] .text-zinc-500 {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-post-modal] .placeholder\:text-white\/50::placeholder,
+html[data-theme="light"] [data-post-modal] .placeholder\:text-white\/70::placeholder,
+html[data-theme="light"] [data-post-modal] .sm\:placeholder\:text-white\/70::placeholder,
+html[data-theme="light"] [data-assistant-input] textarea::placeholder {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-post-modal] .empty\:before\:text-white\/50:empty::before,
+html[data-theme="light"] [data-post-modal] .empty\:before\:text-white\/70:empty::before,
+html[data-theme="light"] [data-post-modal] .sm\:empty\:before\:text-white\/70:empty::before {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-post-modal] .caret-white,
+html[data-theme="light"] [data-post-modal] [style*="caret-color: white"] {
+  caret-color: var(--ink) !important;
+}
+html[data-theme="light"] [data-post-modal] .bg-white\/5,
+html[data-theme="light"] [data-post-modal] .bg-white\/10,
+html[data-theme="light"] [data-post-modal] .bg-white\/20,
+html[data-theme="light"] [data-post-modal] .bg-white\/30,
+html[data-theme="light"] [data-post-modal] .bg-white\/50,
+html[data-theme="light"] [data-post-modal] .bg-white\/80 {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
+html[data-theme="light"] [data-post-modal] .border-white\/10,
+html[data-theme="light"] [data-post-modal] .border-white\/20,
+html[data-theme="light"] [data-post-modal] .border-white\/30 {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+
+/* ==========================================================================
+ * Light-mode carousel / gradient fades: black or zinc-9xx tailwind gradient
+ * stops remap to the paper colour so overlays match the background/texture.
+ * ========================================================================== */
+html[data-theme="light"] .from-black {
+  --tw-gradient-from: var(--paper) var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgba(245,242,235,0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+html[data-theme="light"] .via-black {
+  --tw-gradient-to: rgba(245,242,235,0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--paper) var(--tw-gradient-via-position), var(--tw-gradient-to) !important;
+}
+html[data-theme="light"] .to-black {
+  --tw-gradient-to: var(--paper) var(--tw-gradient-to-position) !important;
+}
+html[data-theme="light"] .from-zinc-950,
+html[data-theme="light"] .from-zinc-900,
+html[data-theme="light"] .from-zinc-800 {
+  --tw-gradient-from: var(--paper) var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgba(245,242,235,0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+html[data-theme="light"] .via-zinc-950,
+html[data-theme="light"] .via-zinc-900,
+html[data-theme="light"] .via-zinc-800 {
+  --tw-gradient-to: rgba(245,242,235,0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--paper) var(--tw-gradient-via-position), var(--tw-gradient-to) !important;
+}
+html[data-theme="light"] .to-zinc-950,
+html[data-theme="light"] .to-zinc-900,
+html[data-theme="light"] .to-zinc-800 {
+  --tw-gradient-to: var(--paper) var(--tw-gradient-to-position) !important;
+}
+
+/* Alpha variants (from-black/60, to-zinc-900/80 etc.) */
+html[data-theme="light"] [class*="from-black\\/"],
+html[data-theme="light"] [class*="from-zinc-900\\/"],
+html[data-theme="light"] [class*="from-zinc-950\\/"] {
+  --tw-gradient-from: rgba(245,242,235,0.75) var(--tw-gradient-from-position) !important;
+  --tw-gradient-to: rgba(245,242,235,0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+}
+html[data-theme="light"] [class*="via-black\\/"],
+html[data-theme="light"] [class*="via-zinc-900\\/"],
+html[data-theme="light"] [class*="via-zinc-950\\/"] {
+  --tw-gradient-to: rgba(245,242,235,0) var(--tw-gradient-to-position) !important;
+  --tw-gradient-stops: var(--tw-gradient-from), rgba(245,242,235,0.55) var(--tw-gradient-via-position), var(--tw-gradient-to) !important;
+}
+html[data-theme="light"] [class*="to-black\\/"],
+html[data-theme="light"] [class*="to-zinc-900\\/"],
+html[data-theme="light"] [class*="to-zinc-950\\/"] {
+  --tw-gradient-to: rgba(245,242,235,0.75) var(--tw-gradient-to-position) !important;
+}
+
+/* ==========================================================================
+ * Mobile top header + drawer: paper background, dark ink icons and logo.
+ * ========================================================================== */
+html[data-theme="light"] header.lg\:hidden.fixed.top-0 {
+  background-color: var(--paper) !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+html[data-theme="light"] header.lg\:hidden.fixed.top-0 img[alt="dehub"] {
+  filter: invert(1) hue-rotate(180deg) brightness(0.9);
+}
+html[data-theme="light"] header.lg\:hidden.fixed.top-0 svg,
+html[data-theme="light"] header.lg\:hidden.fixed.top-0 button .text-white {
+  color: var(--ink) !important;
+}
+
+/* Mobile drawer menu (vaul): paper surface, dark ink. */
+html[data-theme="light"] [data-vaul-drawer] {
+  background-color: var(--paper) !important;
+  background-image: url('./assets/textures/paper-texture.png') !important;
+  background-size: 256px 256px !important;
+  border-color: var(--hairline) !important;
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-vaul-drawer] .text-white,
+html[data-theme="light"] [data-vaul-drawer] .text-zinc-100,
+html[data-theme="light"] [data-vaul-drawer] .text-zinc-200,
+html[data-theme="light"] [data-vaul-drawer] .text-zinc-300 {
+  color: var(--ink) !important;
+}
+
+/* Single-post pages open as a full-height vaul drawer on mobile, so the
+   generic textured-paper drawer surface above made the post/feed background
+   a visibly different shade than the flat-paper pages and header around it.
+   (Video posts hid it behind a flat inner div; text posts didn't — hence the
+   intermittent mismatch.) Force the same flat paper as every other page.
+   Must come after the [data-vaul-drawer] rule to win the specificity tie. */
+html[data-theme="light"] [data-post-drawer] {
+  background-color: var(--paper) !important;
+  background-image: none !important;
+}
+
+/* Mobile bottom nav: the wrapper stays transparent (excluded from the
+   #app-root > div paper remap above) so only the glass pill paints. The
+   centre create button hardcodes a white + on white glass via inline
+   styles — flip the glyph and its bubble ring to ink so it reads on paper
+   (!important beats the inline styles). */
+html[data-theme="light"] [data-bottom-nav] .lucide-plus {
+  color: var(--ink) !important;
+  stroke: var(--ink) !important;
+}
+html[data-theme="light"] [data-bottom-nav] .border-white\/30 {
+  border-color: rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Login modal light-mode overrides live above (~L1351). Do NOT reintroduce
+   dark-glass styling here — the modal must be paper/ink on light theme. */
+
+/* Staking badge silhouettes: white in dark mode via `brightness-0 invert`.
+   On paper, drop the invert so they render as black ink silhouettes. */
+html[data-theme="light"] img[data-badge-icon] {
+  filter: brightness(0) !important;
+}
+html[data-theme="light"] img[data-badge-icon]:hover {
+  filter: brightness(0) drop-shadow(0 0 4px rgba(0, 0, 0, 0.4)) !important;
+}
+/* Video hover playback controls: chips have a translucent black background,
+   so their icons and text must stay white on light mode (otherwise .text-white
+   remaps to ink and disappears against the dark chip). */
+html[data-theme="light"] [data-video-controls],
+html[data-theme="light"] [data-video-controls] *,
+html[data-theme="light"] [data-video-controls] .text-white,
+html[data-theme="light"] [data-video-controls] svg {
+  color: #ffffff !important;
+}
+
+
+/* Prompt landing page (/prompt): dark logo + dark ink copy on paper. */
+html[data-theme="light"] [data-prompt-landing] {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-prompt-landing] img[alt="DeHub"] {
+  filter: invert(1) hue-rotate(180deg) brightness(0.9);
+}
+html[data-theme="light"] [data-prompt-landing] h1,
+html[data-theme="light"] [data-prompt-landing] p,
+html[data-theme="light"] [data-prompt-landing] textarea,
+html[data-theme="light"] [data-prompt-landing] button {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-prompt-landing] .text-white\/50,
+html[data-theme="light"] [data-prompt-landing] .text-white\/70,
+html[data-theme="light"] [data-prompt-landing] .text-white\/40 {
+  color: var(--ink-muted) !important;
+}
+html[data-theme="light"] [data-prompt-landing] textarea::placeholder {
+  color: rgba(0, 0, 0, 0.35) !important;
+}
+html[data-theme="light"] [data-prompt-landing] textarea {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+}
+html[data-theme="light"] [data-prompt-landing] .bg-white\/5 {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+html[data-theme="light"] [data-prompt-landing] .hover\:bg-white\/10:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+
+
+/* Side panels: transparent with no bento rounding. */
+html[data-theme="light"] [data-side-panel] {
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+html[data-theme="light"] [data-side-panel] > * {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+/* Strip grey/zinc shading inside side panels, map to paper. */
+html[data-theme="light"] [data-side-panel] :where(
+  [class*="bg-zinc-900"],
+  [class*="bg-zinc-800"],
+  [class*="bg-zinc-700"],
+  [class*="bg-zinc-950"],
+  [class*="from-zinc-900"],
+  [class*="from-zinc-800"],
+  [class*="from-zinc-700"],
+  [class*="from-zinc-950"],
+  [class*="to-zinc-900"],
+  [class*="to-zinc-800"],
+  [class*="to-zinc-700"],
+  [class*="to-zinc-950"],
+  [class*="via-zinc-900"],
+  [class*="via-zinc-800"],
+  [class*="via-zinc-700"],
+  [class*="via-zinc-950"]
+),
+html[data-theme="light"] [data-side-panel] :where(
+  [class*="bg-zinc-900"],
+  [class*="bg-zinc-800"],
+  [class*="bg-zinc-700"],
+  [class*="bg-zinc-950"],
+  [class*="from-zinc-900"],
+  [class*="from-zinc-800"],
+  [class*="from-zinc-700"],
+  [class*="from-zinc-950"],
+  [class*="to-zinc-900"],
+  [class*="to-zinc-800"],
+  [class*="to-zinc-700"],
+  [class*="to-zinc-950"],
+  [class*="via-zinc-900"],
+  [class*="via-zinc-800"],
+  [class*="via-zinc-700"],
+  [class*="via-zinc-950"]
+)::before,
+html[data-theme="light"] [data-side-panel] :where(
+  [class*="bg-zinc-900"],
+  [class*="bg-zinc-800"],
+  [class*="bg-zinc-700"],
+  [class*="bg-zinc-950"],
+  [class*="from-zinc-900"],
+  [class*="from-zinc-800"],
+  [class*="from-zinc-700"],
+  [class*="from-zinc-950"],
+  [class*="to-zinc-900"],
+  [class*="to-zinc-800"],
+  [class*="to-zinc-700"],
+  [class*="to-zinc-950"],
+  [class*="via-zinc-900"],
+  [class*="via-zinc-800"],
+  [class*="via-zinc-700"],
+  [class*="via-zinc-950"]
+)::after {
+  background-color: var(--paper) !important;
+  background-image: none !important;
+}
+
+/* Page-level bento squares dissolve into the paper canvas entirely — no box,
+   no border, no hover wash, just content on the page. Rows/tiles that are
+   clickable carry their own per-element hover; the container never lights up.
+   The :not([data-keep-dark]) also lifts specificity above the generic
+   .bg-zinc-900 -> --paper remap, so bento fills that ship as bg-zinc-900
+   (e.g. the notifications list) actually go transparent instead of paper. */
+html[data-theme="light"] [data-page-bento]:not([data-keep-dark]) {
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Row dividers (divide-y divide-zinc-800/700, divide-white/x, divide-black/x)
+   and stray card borders (border-zinc-800/700) show up outside data-page-bento
+   too — Command Centre transactions, drawers, spec lists. Recolour them to
+   the same hairline used everywhere else in light instead of leaving raw
+   dark-grey lines on the paper canvas. */
+html[data-theme="light"] [class*="divide-zinc-800"] > :not([hidden]) ~ :not([hidden]),
+html[data-theme="light"] [class*="divide-zinc-700"] > :not([hidden]) ~ :not([hidden]),
+html[data-theme="light"] [class*="divide-white"] > :not([hidden]) ~ :not([hidden]),
+html[data-theme="light"] [class*="divide-black"] > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--hairline) !important;
+}
+html[data-theme="light"] .border-zinc-700,
+html[data-theme="light"] .border-zinc-800 {
+  border-color: var(--hairline-strong) !important;
+}
+
+/* Theme picker horizontal scroll fade. */
+html[data-theme="light"] [data-theme-picker-fade] {
+  background-image: linear-gradient(to left, var(--paper) 0%, transparent 100%) !important;
+}
+
+/* Feed items: transparent with hairline separators. */
+html[data-theme="light"] [data-feed-item] {
+  background-color: transparent !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  border-bottom: 1px solid var(--hairline) !important;
+}
+html[data-theme="light"] [data-feed-item]:last-child {
+  border-bottom: 0 !important;
+}
+
+/* Strip view-all bubble. */
+html[data-theme="light"] [data-view-all],
+html[data-theme="light"] [data-view-all] * {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+html[data-theme="light"] [data-view-all] *::before,
+html[data-theme="light"] [data-view-all] *::after {
+  background: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  display: none !important;
+}
+
+/* Square everything off, same as minimal. */
+html[data-theme="light"] *:not([data-keep-round]) {
+  border-radius: 0 !important;
+}
+html[data-theme="light"] *:not([data-keep-round])::before,
+html[data-theme="light"] *:not([data-keep-round])::after {
+  border-radius: 0 !important;
+}
+
+/* Wide-screen collapsed sidebar: grid square around posts. */
+html[data-theme="light"][data-sidebar-collapsed="true"] [data-feed-item] {
+  border: 1px solid var(--hairline) !important;
+  border-radius: 0 !important;
+  padding: 0.75rem !important;
+  margin-bottom: -1px;
+}
+html[data-theme="light"][data-sidebar-collapsed="true"] [data-feed-item]:last-child {
+  border-bottom: 1px solid var(--hairline) !important;
+}
+
+/* Sidebar bottom fade. */
+html[data-theme="light"] [data-sidebar-fade] {
+  background: linear-gradient(to top, var(--paper) 0%, rgba(245, 242, 235, 0.6) 40%, transparent 100%) !important;
+  background-image: linear-gradient(to top, var(--paper) 0%, rgba(245, 242, 235, 0.6) 40%, transparent 100%) !important;
+}
+
+/* Full-width media on mobile/tablet. */
+@media (max-width: 639px) {
+  html[data-theme="light"] [data-feed-root] [data-feed-item] [data-media-full] {
+    margin-left: calc(-0.75rem - 0.5rem - 1px) !important;
+    margin-right: calc(-0.75rem - 0.5rem - 1px) !important;
+    width: calc(100% + 2.5rem + 2px) !important;
+    max-width: none !important;
+    border-radius: 0 !important;
+  }
+  html[data-theme="light"] [data-feed-root] [data-feed-item] {
+    position: relative;
+    border-bottom: 0 !important;
+  }
+  html[data-theme="light"] [data-feed-root] [data-feed-item]::after {
+    content: "";
+    position: absolute;
+    left: -0.5rem;
+    right: -0.5rem;
+    bottom: 0;
+    height: 1px;
+    background: var(--hairline);
+    pointer-events: none;
+  }
+}
+@media (min-width: 640px) and (max-width: 1023px) {
+  html[data-theme="light"] [data-feed-root] [data-feed-item] [data-media-full] {
+    margin-left: calc(-0.75rem - 0.75rem - 1px) !important;
+    margin-right: calc(-0.75rem - 0.75rem - 1px) !important;
+    width: calc(100% + 3rem + 2px) !important;
+    max-width: none !important;
+    border-radius: 0 !important;
+  }
+  html[data-theme="light"] [data-feed-root] [data-feed-item] {
+    position: relative;
+    border-bottom: 0 !important;
+  }
+  html[data-theme="light"] [data-feed-root] [data-feed-item]::after {
+    content: "";
+    position: absolute;
+    left: -0.75rem;
+    right: -0.75rem;
+    bottom: 0;
+    height: 1px;
+    background: var(--hairline);
+    pointer-events: none;
+  }
+}
+
+/* Hide full-width separator on last feed item. */
+html[data-theme="light"] [data-feed-root] [data-feed-item]:last-child::after {
+  display: none;
+}
+
+/* Full-width top nav tabs on mobile/tablet. */
+@media (max-width: 1023px) {
+  html[data-theme="light"] [data-home-tabs] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  html[data-theme="light"] [data-home-tabs] > div:first-child {
+    border-radius: 0 !important;
+  }
+}
+
+/* Hover states for side panel rows/tabs. */
+html[data-theme="light"] [data-side-panel] [class*="hover:bg-zinc-"]:hover {
+  background-color: var(--hover-wash) !important;
+}
+html[data-theme="light"] [data-side-panel] [class*="hover:text-zinc-"]:hover {
+  color: var(--ink) !important;
+}
+/* Side panel icon tabs (TabbedSidePanel + WhatsHappening, also on Explore):
+   file-system style, same treatment as the feed nav. One shared baseline;
+   the active tab lifts off with a top+side outline and masks the baseline
+   with a paper fill. Icon colors come from the global text remaps. */
+html[data-theme="light"] [data-side-panel-tabs] {
+  position: relative;
+}
+html[data-theme="light"] [data-side-panel-tabs]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: var(--hairline-strong);
+  pointer-events: none;
+  z-index: 1;
+}
+/* The gradient active/hover washes are replaced by the file-tab treatment */
+html[data-theme="light"] [data-side-panel-tabs] [data-active-tab-indicator],
+html[data-theme="light"] [data-side-panel-tabs] .tab-hover-bg {
+  display: none !important;
+}
+html[data-theme="light"] [data-side-panel-tabs] [data-tab-btn] {
+  position: relative;
+  z-index: 2; /* above the baseline so the active fill can break it */
+  border-radius: 0 !important;
+  background-color: transparent !important;
+}
+html[data-theme="light"] [data-side-panel-tabs] [data-tab-btn][data-tab-active="true"] {
+  background-color: var(--paper) !important; /* masks the baseline segment */
+}
+html[data-theme="light"] [data-side-panel-tabs] [data-tab-btn]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow:
+    inset 0 1px 0 0 var(--hairline-strong),
+    inset 1px 0 0 0 var(--hairline-strong),
+    inset -1px 0 0 0 var(--hairline-strong);
+  opacity: 0;
+  transition: opacity 220ms ease;
+  pointer-events: none;
+}
+html[data-theme="light"] [data-side-panel-tabs] [data-tab-btn][data-tab-active="true"]::before {
+  opacity: 1;
+}
+/* Edge tabs sit flush against the panel wall — drop the outline edge on the
+   outer side so the tab flows off the panel instead of drawing a double wall */
+html[data-theme="light"] [data-side-panel-tabs] [data-tab-btn]:first-child::before {
+  box-shadow:
+    inset 0 1px 0 0 var(--hairline-strong),
+    inset -1px 0 0 0 var(--hairline-strong);
+}
+html[data-theme="light"] [data-side-panel-tabs] [data-tab-btn]:last-child::before {
+  box-shadow:
+    inset 0 1px 0 0 var(--hairline-strong),
+    inset 1px 0 0 0 var(--hairline-strong);
+}
+
+/* File-system style feed tab nav. */
+html[data-theme="light"] [data-feed-nav] {
+  position: relative;
+  background-color: var(--paper) !important;
+}
+html[data-theme="light"] [data-feed-nav] > div:first-child::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: var(--hairline-strong);
+  pointer-events: none;
+  z-index: 1;
+}
+html[data-theme="light"] [data-feed-nav] [data-glass-indicator] {
+  display: none !important;
+}
+html[data-theme="light"] [data-feed-nav] [data-feed-tab-btn] {
+  transition: color 220ms ease;
+  background-color: transparent !important;
+  position: relative;
+  border-radius: 0 !important;
+  color: var(--ink-muted);
+}
+html[data-theme="light"] [data-feed-nav] [data-feed-tab-btn]:hover {
+  background-color: transparent !important;
+  color: var(--ink);
+}
+html[data-theme="light"] [data-feed-nav] [data-feed-tab-btn][data-active="true"] {
+  background-color: var(--paper) !important;
+  color: var(--ink);
+}
+html[data-theme="light"] [data-feed-nav] [data-feed-tab-btn]::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow:
+    inset 0 1px 0 0 var(--hairline-strong),
+    inset 1px 0 0 0 var(--hairline-strong),
+    inset -1px 0 0 0 var(--hairline-strong);
+  opacity: 0;
+  transition: opacity 220ms ease;
+  pointer-events: none;
+}
+html[data-theme="light"] [data-feed-nav] [data-feed-tab-btn][data-active="true"]::before {
+  opacity: 1;
+}
+
+/* Shared glass toggle active labels/icons need to sit black on the light
+   glass indicator. Covers leaderboards, command centre filters, radio genre
+   pills, and other GlassFilterRow consumers. */
+html[data-theme="light"] [data-glass-toggle-button][data-active="true"],
+html[data-theme="light"] [data-glass-toggle-button][data-active="true"] * {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-glass-toggle-button][data-active="true"] svg {
+  color: var(--ink) !important;
+  stroke: currentColor !important;
+}
+
+/* Feed filter panels (Home / Videos / Images / Shorts): in light mode, the
+   hover and active state should be purely a font-weight change — no extra
+   background or color shifts. This keeps the glass indicator as the only
+   visual selection marker while giving the user clear text feedback. */
+html[data-theme="light"] [data-feed-filter-panel] button:hover,
+html[data-theme="light"] [data-feed-filter-panel] button[data-active="true"] {
+  font-weight: 700;
+}
+
+/* Explore page: inactive category chips, filter toggle, and recent-search
+   buttons currently render as dark grey chips on the light paper background.
+   Make them transparent outlined pills with ink text/icons, matching the
+   leaderboards/bookmarks glass-toggle treatment. */
+html[data-theme="light"] [data-explore-page] button.bg-zinc-800,
+html[data-theme="light"] [data-explore-page] [role="button"].bg-zinc-800,
+html[data-theme="light"] [data-explore-page] .bg-zinc-800 {
+  background-color: transparent !important;
+  color: var(--ink-muted) !important;
+  border: 1px solid var(--hairline) !important;
+}
+html[data-theme="light"] [data-explore-page] button.bg-zinc-800:hover,
+html[data-theme="light"] [data-explore-page] [role="button"].bg-zinc-800:hover,
+html[data-theme="light"] [data-explore-page] .bg-zinc-800:hover,
+html[data-theme="light"] [data-explore-page] .hover\:bg-zinc-700:hover,
+html[data-theme="light"] [data-explore-page] .hover\:bg-zinc-800:hover {
+  background-color: var(--hover-wash) !important;
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-explore-page] button.bg-zinc-800 svg,
+html[data-theme="light"] [data-explore-page] [role="button"].bg-zinc-800 svg,
+html[data-theme="light"] [data-explore-page] .bg-zinc-800 svg {
+  color: var(--ink-muted) !important;
+}
+html[data-theme="light"] [data-explore-page] button.bg-zinc-800:hover svg,
+html[data-theme="light"] [data-explore-page] [role="button"].bg-zinc-800:hover svg,
+html[data-theme="light"] [data-explore-page] .bg-zinc-800:hover svg,
+html[data-theme="light"] [data-explore-page] .hover\:bg-zinc-700:hover svg,
+html[data-theme="light"] [data-explore-page] .hover\:bg-zinc-800:hover svg {
+  color: var(--ink) !important;
+}
+
+/* Poll cards (PollCard): built from white-glass utilities that are invisible
+   on paper — checkbox/radio outlines (border-white/30), option-row washes
+   (bg-white/10), post-vote result bars (bg-white/40 voted, bg-white/20
+   others), and the card surface (bg-white/5). Remap them to ink washes.
+   The selected checkbox already flips correctly via the global bg-white →
+   ink and bg-black → paper remaps. */
+html[data-theme="light"] [data-poll-card] {
+  background-color: rgba(0, 0, 0, 0.03) !important;
+  border-color: var(--hairline-strong) !important;
+}
+html[data-theme="light"] [data-poll-card] .border-white\/30 {
+  border-color: rgba(0, 0, 0, 0.4) !important;
+}
+html[data-theme="light"] [data-poll-card] .border-white {
+  border-color: var(--ink) !important;
+}
+html[data-theme="light"] [data-poll-card] .bg-white\/10 {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-theme="light"] [data-poll-card] .bg-white\/40 {
+  background-color: rgba(0, 0, 0, 0.26) !important;
+}
+html[data-theme="light"] [data-poll-card] .bg-white\/20 {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
+html[data-theme="light"] [data-poll-card] .hover\:bg-white\/5:hover,
+html[data-theme="light"] [data-poll-card] .hover\:bg-white\/20:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Video first-frame glitch loader */
+@keyframes video-glitch-r {
+  0%, 100% { transform: translate(0, 0); }
+  8%       { transform: translate(2px, -1px); }
+  18%      { transform: translate(-3px, 1px); }
+  32%      { transform: translate(1px, 2px); }
+  46%      { transform: translate(-2px, 0); }
+  60%      { transform: translate(3px, -1px); }
+  74%      { transform: translate(-1px, 1px); }
+  88%      { transform: translate(2px, 0); }
+}
+@keyframes video-glitch-c {
+  0%, 100% { transform: translate(0, 0); }
+  8%       { transform: translate(-2px, 1px); }
+  18%      { transform: translate(3px, -1px); }
+  32%      { transform: translate(-1px, -2px); }
+  46%      { transform: translate(2px, 0); }
+  60%      { transform: translate(-3px, 1px); }
+  74%      { transform: translate(1px, -1px); }
+  88%      { transform: translate(-2px, 0); }
+}
+/* Tracking band rolls down the frame at constant speed like a CRT sync bar
+   (starts/ends off-frame; the loader's overflow-hidden clips it). The band
+   itself never moves horizontally — it must always span the full frame
+   width; only its noise texture jitters (video-glitch-line-static). */
+@keyframes video-glitch-slice {
+  0%   { top: -10%; }
+  100% { top: 110%; }
+}
+
+/* Tracking-line snow: re-samples the noise tile every step so the line's
+   speckles re-randomize like analog snow (~28fps at 0.14s / 4 steps),
+   with the density flickering frame to frame. Runs alongside the slice
+   roll animation on the same element (different properties). */
+@keyframes video-glitch-line-static {
+  0%   { background-position: 0 0;         opacity: 0.9;  }
+  25%  { background-position: -37px 11px;  opacity: 0.6;  }
+  50%  { background-position: 29px -23px;  opacity: 1;    }
+  75%  { background-position: -12px -41px; opacity: 0.75; }
+  100% { background-position: 43px 27px;   opacity: 0.9;  }
+}
+
+/* TV static: the noise tile jumps position and flickers intensity in
+   discrete steps — no drift, just re-randomized frames like analog snow */
+@keyframes video-glitch-static {
+  0%   { background-position: 0 0;         opacity: 0.10; }
+  20%  { background-position: -28px 18px;  opacity: 0.16; }
+  40%  { background-position: 22px -30px;  opacity: 0.09; }
+  60%  { background-position: -46px -12px; opacity: 0.17; }
+  80%  { background-position: 16px 34px;   opacity: 0.12; }
+  100% { background-position: 0 0;         opacity: 0.10; }
+}
+
+/* Full-strength "no signal" TV snow — used as the standalone fallback for an
+   ended live post that has no cover image. Re-randomizes the noise tile
+   position each step (~22fps) at full opacity so it reads as a real static
+   screen rather than a faint overlay. */
+@keyframes tv-static-snow {
+  0%   { background-position: 0 0; }
+  20%  { background-position: -34px 22px; }
+  40%  { background-position: 26px -28px; }
+  60%  { background-position: -18px -40px; }
+  80%  { background-position: 40px 16px; }
+  100% { background-position: 0 0; }
+}
+
+/* ==========================================================================
+ * Light theme — extra coverage for surfaces that still shipped dark in v1.
+ * Applies to Music (radio carousel cards), Assistant (dropdowns, buttons,
+ * chat bubbles), Leaderboard and Command Centre child components.
+ * ========================================================================== */
+
+/* Translucent black surfaces (bg-black/30, bg-black/40, bg-black/50, ...)
+   are used all over "liquid glass" cards. On paper they become dark
+   rectangles with remapped ink text on top → invisible. Remap them to a
+   subtle black wash so the card is legible. Keep chip/button surfaces,
+   login modal, video controls, country-block drawer, portaled popper
+   panels, and AI chat panels opted out (the last two get opaque paper
+   surfaces below — a translucent wash on a floating panel lets the page
+   behind bleed through). */
+html[data-theme="light"] [class*="bg-black\/"]:not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *):not([data-country-block-drawer]):not([data-country-block-drawer] *):not(.login-modal-overlay):not([data-radix-popper-content-wrapper] *):not([data-ai-chat]):not([data-ai-chat] *) {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html[data-theme="light"] [class*="hover\:bg-black\/"]:hover:not(button):not([role="button"]):not([data-keep-dark]) {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Slate scale mirror the zinc remap so components using text-slate-* stay
+   legible on paper. */
+html[data-theme="light"] .text-slate-50,
+html[data-theme="light"] .text-slate-100,
+html[data-theme="light"] .text-slate-200,
+html[data-theme="light"] .text-slate-300 {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] .text-slate-400,
+html[data-theme="light"] .text-slate-500 {
+  color: var(--ink-muted) !important;
+}
+
+/* Translucent white text (text-white/60, /70, /80, /90) used inside dark
+   glass cards. Once the card wash flips to paper, the text needs to flip
+   to ink so it doesn't disappear. Skip surfaces that legitimately stay
+   dark (buttons/chips, login modal, video controls, kept-dark opt-outs). */
+html[data-theme="light"] :not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *) > .text-white\/40,
+html[data-theme="light"] :not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *) > .text-white\/50,
+html[data-theme="light"] :not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *) > .text-white\/60,
+html[data-theme="light"] :not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *) > .text-white\/70,
+html[data-theme="light"] :not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *) > .text-white\/80,
+html[data-theme="light"] :not(button):not([role="button"]):not([data-keep-dark]):not([data-video-controls]):not([data-video-controls] *):not([data-login-modal]):not([data-login-modal] *) > .text-white\/90 {
+  color: var(--ink-muted) !important;
+}
+
+/* Assistant page: neutralise the heavy black drop-shadows used on chat
+   bubbles / send buttons so the surface reads as light. Also flip the
+   ultra-translucent white washes (bg-white/[0.03]/[0.05]/[0.08]) to a
+   soft ink wash and keep the model-picker dropdown legible on paper. */
+html[data-theme="light"] [data-assistant-page] [class*="shadow-\["] {
+  box-shadow: none !important;
+}
+html[data-theme="light"] [data-assistant-page] .bg-white\/\[0\.03\],
+html[data-theme="light"] [data-assistant-page] .bg-white\/\[0\.05\],
+html[data-theme="light"] [data-assistant-page] .bg-white\/\[0\.08\],
+html[data-theme="light"] [data-assistant-page] .bg-white\/5,
+html[data-theme="light"] [data-assistant-page] .bg-white\/10,
+html[data-theme="light"] [data-assistant-page] .bg-white\/20 {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-theme="light"] [data-assistant-page] .border-white\/\[0\.08\],
+html[data-theme="light"] [data-assistant-page] .border-white\/\[0\.12\],
+html[data-theme="light"] [data-assistant-page] .border-white\/10,
+html[data-theme="light"] [data-assistant-page] .border-white\/20 {
+  border-color: var(--hairline-strong) !important;
+}
+html[data-theme="light"] [data-assistant-page] .text-white,
+html[data-theme="light"] [data-assistant-page] .text-white\/60,
+html[data-theme="light"] [data-assistant-page] .text-white\/70,
+html[data-theme="light"] [data-assistant-page] .text-white\/80 {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-assistant-page] .text-white\/25,
+html[data-theme="light"] [data-assistant-page] .text-white\/30,
+html[data-theme="light"] [data-assistant-page] .text-white\/40,
+html[data-theme="light"] [data-assistant-page] .text-white\/50 {
+  color: var(--ink-muted) !important;
+}
+/* Model-picker / dropdown panels on the assistant use raw bg-black/95 —
+   render them as opaque paper with a hairline instead. */
+html[data-theme="light"] [data-assistant-page] .bg-black\/95,
+html[data-theme="light"] [data-assistant-page] .bg-black\/90,
+html[data-theme="light"] [data-assistant-page] .bg-black\/80,
+html[data-theme="light"] [data-assistant-page] .bg-black\/70,
+html[data-theme="light"] [data-assistant-page] .bg-black\/60 {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline-strong) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* ==========================================================================
+ * Comments section — light theme cleanup.
+ * The desktop wrapper uses bg-zinc-900/80 and the section uses hardcoded
+ * dark zinc / white-wash surfaces. Flip them to paper-friendly light surfaces
+ * and ink text/icons in light mode.
+ * ========================================================================== */
+html[data-theme="light"] [data-comments-wrapper] {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline-strong) !important;
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-comments-wrapper] .text-white,
+html[data-theme="light"] [data-comments-wrapper] .text-zinc-300,
+html[data-theme="light"] [data-comments-wrapper] .text-zinc-400,
+html[data-theme="light"] [data-comments-wrapper] .text-zinc-500 {
+  color: var(--ink) !important;
+}
+
+/* Translucent white washes and hardcoded zinc surfaces inside comments. */
+html[data-theme="light"] [data-comments-section] [class*="bg-white\/"],
+html[data-theme="light"] [data-comments-section] .bg-zinc-800,
+html[data-theme="light"] [data-comments-section] .bg-zinc-800\/80,
+html[data-theme="light"] [data-comments-section] .bg-zinc-700,
+html[data-theme="light"] [data-comments-section] .bg-zinc-700\/50,
+html[data-theme="light"] [data-comments-section] .bg-zinc-900,
+html[data-theme="light"] [data-comments-section] .bg-zinc-900\/80,
+html[data-theme="light"] [data-comments-section] .bg-zinc-900\/70 {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-theme="light"] [data-comments-section] [class*="hover\:bg-white\/"]:hover,
+html[data-theme="light"] [data-comments-section] .hover\:bg-zinc-700:hover,
+html[data-theme="light"] [data-comments-section] .hover\:bg-zinc-800:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* Text and icons in the comments section. */
+html[data-theme="light"] [data-comments-section] :not([data-keep-dark]).text-white,
+html[data-theme="light"] [data-comments-section] .text-zinc-100,
+html[data-theme="light"] [data-comments-section] .text-zinc-200,
+html[data-theme="light"] [data-comments-section] .text-zinc-300,
+html[data-theme="light"] [data-comments-section] .text-zinc-400 {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-comments-section] .text-zinc-500,
+html[data-theme="light"] [data-comments-section] .placeholder\:text-zinc-500::placeholder {
+  color: var(--ink-muted) !important;
+}
+html[data-theme="light"] [data-comments-section] :not([data-keep-dark]).hover\:text-white:hover,
+html[data-theme="light"] [data-comments-section] .hover\:text-zinc-200:hover,
+html[data-theme="light"] [data-comments-section] .hover\:text-zinc-400:hover {
+  color: var(--ink) !important;
+}
+
+/* Hairline borders used on dark glass surfaces. */
+html[data-theme="light"] [data-comments-section] [class*="border-white\/"],
+html[data-theme="light"] [data-comments-section] .border-zinc-700,
+html[data-theme="light"] [data-comments-section] .border-zinc-800 {
+  border-color: var(--hairline-strong) !important;
+}
+
+/* Share dropdown inside comments — rendered in a portal, so scope by data attr. */
+html[data-theme="light"] [data-comments-dropdown] {
+  background-color: var(--paper) !important;
+  color: var(--ink) !important;
+  border-color: var(--hairline-strong) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html[data-theme="light"] [data-comments-dropdown] .text-white,
+html[data-theme="light"] [data-comments-dropdown] .text-zinc-300,
+html[data-theme="light"] [data-comments-dropdown] .focus\:text-white:focus,
+html[data-theme="light"] [data-comments-dropdown] .focus\:text-white[data-highlighted] {
+  color: var(--ink) !important;
+}
+html[data-theme="light"] [data-comments-dropdown] [class*="focus\:bg-"]:focus,
+html[data-theme="light"] [data-comments-dropdown] [class*="focus\:bg-"][data-highlighted] {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+
+/* ==========================================================================
+ * Portaled Radix popper panels — Select, DropdownMenu, Popover, Tooltip.
+ * These render into document.body portals, so page scopes like
+ * [data-post-modal] never reach them: the shared panels keep dark-glass
+ * classes (bg-zinc-900/70 text-white) whose text remaps to ink → unreadable,
+ * and flow-specific panels passing bg-black/N got the translucent wash remap
+ * → the page bled through behind the menu. Render every popper panel as an
+ * opaque paper card with ink text; panels that must stay dark opt out with
+ * data-keep-dark, and the profile hover card keeps its own styling.
+ * ========================================================================== */
+html[data-theme="light"] [data-radix-popper-content-wrapper] > :not([data-profile-hover-card]):not([data-keep-dark]):not([data-comments-dropdown]) {
+  background-color: var(--paper) !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--hairline-strong) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+/* Item hover/selection highlight (Radix sets data-highlighted on focus). */
+html[data-theme="light"] [data-radix-popper-content-wrapper] [data-highlighted],
+html[data-theme="light"] [data-radix-popper-content-wrapper] [data-state="checked"] {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+  color: var(--ink) !important;
+}
+
+/* ==========================================================================
+ * AI chat panels — GeneralAIChat (desktop Dialog + mobile Drawer), PostAIChat.
+ * Portaled, so outside every page scope. The desktop dialog's bg-black/40
+ * glass became a see-through wash; bubbles/inputs/hairlines use white washes
+ * that ghost out on paper. Opaque paper panel + ink equivalents.
+ * ========================================================================== */
+html[data-theme="light"] [data-ai-chat] {
+  background-color: var(--paper) !important;
+  border-color: var(--hairline-strong) !important;
+  color: var(--ink) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html[data-theme="light"] [data-ai-chat] [class*="bg-white/"] {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+html[data-theme="light"] [data-ai-chat] [class*="border-white/"] {
+  border-color: var(--hairline-strong) !important;
+}
+html[data-theme="light"] [data-ai-chat] input::placeholder,
+html[data-theme="light"] [data-ai-chat] textarea::placeholder {
+  color: var(--ink-muted) !important;
+}
+
+/* ==========================================================================
+ * Notifications — light mode
+ * Rows and chips keep their dark-first zinc/white-wash classes; remap them
+ * to paper surfaces with ink washes so nothing renders as a dark block or
+ * dark hover on paper. data-notifications-page sits on the page root AND on
+ * the portaled settings sheet / actors + posts drawers (portals escape the
+ * page subtree, so each content root carries the attribute itself).
+ * ========================================================================== */
+/* Read rows sit flat on paper; unread rows get a subtle ink wash. */
+html[data-theme="light"] [data-notifications-page] .bg-zinc-900\/50 {
+  background-color: transparent !important;
+}
+html[data-theme="light"] [data-notifications-page] .bg-zinc-800\/80 {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+/* Hovers: deepen the ink wash instead of going dark zinc. */
+html[data-theme="light"] [data-notifications-page] .hover\:bg-zinc-800:hover,
+html[data-theme="light"] [data-notifications-page] .hover\:bg-zinc-700:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+/* White-wash chips (mark-read buttons, settings rows) are invisible on
+   paper — flip to ink washes, hovers one step deeper. */
+html[data-theme="light"] [data-notifications-page] .bg-white\/5 {
+  background-color: rgba(0, 0, 0, 0.04) !important;
+}
+html[data-theme="light"] [data-notifications-page] .bg-white\/10 {
+  background-color: rgba(0, 0, 0, 0.06) !important;
+}
+html[data-theme="light"] [data-notifications-page] .hover\:bg-white\/5:hover {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-theme="light"] [data-notifications-page] .hover\:bg-white\/10:hover,
+html[data-theme="light"] [data-notifications-page] .hover\:bg-white\/15:hover {
+  background-color: rgba(0, 0, 0, 0.09) !important;
+}
+html[data-theme="light"] [data-notifications-page] .hover\:bg-white\/20:hover {
+  background-color: rgba(0, 0, 0, 0.12) !important;
+}
+/* Avatar-stack rings and hairlines. */
+html[data-theme="light"] [data-notifications-page] .ring-zinc-800 {
+  --tw-ring-color: var(--hairline-strong) !important;
+}
+html[data-theme="light"] [data-notifications-page] .border-zinc-800,
+html[data-theme="light"] [data-notifications-page] [class*="border-white/"] {
+  border-color: var(--hairline-strong) !important;
+}
+/* Portaled surfaces (settings sheet, actors/posts drawers): dark glass ->
+   opaque paper with ink text. */
+html[data-theme="light"] [data-notifications-page][class*="bg-black/"],
+html[data-theme="light"] [data-notifications-page].bg-zinc-950 {
+  background-color: var(--paper) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html[data-theme="light"] [data-notifications-page] .text-white\/50 {
+  color: var(--ink-muted) !important;
+}
+
+/* ==========================================================================
+ * Wallet page — light theme cleanup.
+ * Balance card, drawers and token rows use ultra-translucent white washes
+ * (bg-white/[0.06], border-white/10) and black glass dialogs designed for
+ * the dark canvas — nearly invisible on paper, which made Buy/Swap/Import
+ * buttons and the chain-picker rows read as unstyled, unclickable text.
+ * data-wallet-page sits on the page root AND on every portaled Send/Receive/
+ * Buy/Import dialog and drawer, since portals escape this subtree.
+ * ========================================================================== */
+html[data-theme="light"] [data-wallet-page] [class*="bg-white\/"]:not([data-keep-white]) {
+  background-color: rgba(0, 0, 0, 0.05) !important;
+}
+html[data-theme="light"] [data-wallet-page] [class*="hover\:bg-white\/"]:hover {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+html[data-theme="light"] [data-wallet-page] [class*="border-white\/"] {
+  border-color: var(--hairline-strong) !important;
+}
+html[data-theme="light"] [data-wallet-page] .text-white\/30,
+html[data-theme="light"] [data-wallet-page] .text-white\/40,
+html[data-theme="light"] [data-wallet-page] .text-white\/50 {
+  color: var(--ink-muted) !important;
+}
+
+/* ==========================================================================
+ * Skeleton preloaders — light mode
+ * Feed/page skeletons shimmer with white washes (bg-white/[0.06] pulses in
+ * border-white/[0.08|0.12] cards) that are invisible on paper, so first-time
+ * feed-tab switches showed no preloader at all in light mode. Remap the
+ * PULSING washes to ink so loading states are visible; scoping to
+ * .animate-pulse (and :has(.animate-pulse) wrappers) leaves static
+ * liquid-glass surfaces untouched.
+ * ========================================================================== */
+html[data-theme="light"] .animate-pulse.bg-white\/\[0\.06\],
+html[data-theme="light"] .animate-pulse .bg-white\/\[0\.06\] {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+}
+/* Skeleton card shells: hairline border + faint ink fill while they contain
+   a pulsing shimmer. (:has() is unsupported below Safari 15.4 — those
+   browsers just keep the borderless shell; the shimmer above still shows.) */
+html[data-theme="light"] [class*="bg-white/[0.03]"]:has(.animate-pulse) {
+  background-color: rgba(0, 0, 0, 0.02) !important;
+}
+html[data-theme="light"] [class*="border-white/[0.08]"]:has(.animate-pulse),
+html[data-theme="light"] [class*="border-white/[0.12]"]:has(.animate-pulse) {
+  border-color: var(--hairline-strong) !important;
+}
+
+
+/* ==========================================================================
+ * Docs light mode — match the app's light theme (paper + ink).
+ * ==========================================================================
+ * The docs site has its own light/dark system (next-themes, `.dark` class on
+ * <html>, storageKey dehub-docs-theme) built on shadcn tokens. In light mode
+ * we re-point the tokens at the app's paper/ink palette and neutralise the
+ * blue/purple decorative tints the pages hardcode, so every docs page reads
+ * as ink-on-paper like the app. Semantic colour pairs keep their colour:
+ * HTTP method / status chips (bg-*-100 + dark text) and light text on dark
+ * code blocks (bg-slate-900 + text-slate-300/400) are contrast-safe and
+ * meaningful. Dark mode (.dark) is untouched.
+ * ========================================================================== */
+/* ==========================================================================
+ * DeHub brand-blue docs tokens. Global defaults are the real brand blues (they
+ * back the app flowcharts, advertising accents and legacy blog markup that use
+ * text-royal-blue / bg-sky-blue / from-middle-blue etc.). Inside .docs-root they
+ * resolve to theme-appropriate reading tones: ink on paper, light on dark/glass.
+ * ========================================================================== */
+:root {
+  --docs-royal: 222 89% 45%;
+  --docs-middle: 210 88% 52%;
+  --docs-sky: 199 89% 58%;
+  --docs-ink: 0 0% 8%;
+  --docs-paper: 0 0% 100%;
+}
+html:not(.dark) .docs-root {
+  --docs-royal: 0 0% 13%;
+  --docs-middle: 0 0% 34%;
+  --docs-sky: 0 0% 46%;
+  --docs-ink: 0 0% 10%;
+  --docs-paper: 0 0% 100%;
+}
+html.dark .docs-root {
+  --docs-royal: 0 0% 92%;
+  --docs-middle: 0 0% 82%;
+  --docs-sky: 0 0% 82%;
+  --docs-ink: 0 0% 95%;
+  --docs-paper: 0 0% 100%;
+}
+
+html:not(.dark) .docs-root {
+  --background: 48 31% 96.7%;        /* paper #f9f8f4 */
+  --foreground: 0 0% 10%;            /* ink #1a1a1a */
+  --card: 48 31% 96.7%;
+  --card-foreground: 0 0% 10%;
+  --popover: 48 31% 96.7%;
+  --popover-foreground: 0 0% 10%;
+  --primary: 0 0% 10%;
+  --primary-foreground: 48 31% 96.7%;
+  --secondary: 42 25% 90%;           /* paper-deep #ece8df */
+  --secondary-foreground: 0 0% 10%;
+  --muted: 42 25% 90%;
+  --muted-foreground: 0 0% 35%;      /* ink-muted #5a5a5a */
+  --accent: 42 25% 90%;
+  --accent-foreground: 0 0% 10%;
+  --border: 45 6% 85%;               /* hairline on paper */
+  --input: 45 6% 85%;
+  --ring: 0 0% 10%;
+
+  background-color: hsl(var(--background));
+  background-image: url('./assets/textures/paper-texture.png');
+  background-size: 256px 256px;
+}
+
+/* Near-black text tints → ink */
+html:not(.dark) .docs-root .text-slate-900,
+html:not(.dark) .docs-root .text-slate-800,
+html:not(.dark) .docs-root .text-blue-900,
+html:not(.dark) .docs-root .text-purple-900,
+html:not(.dark) .docs-root .text-blue-800,
+html:not(.dark) .docs-root .text-purple-800,
+html:not(.dark) .docs-root .text-indigo-800 {
+  color: #1a1a1a;
+}
+
+/* Mid-tone emphasis tints → strong muted ink */
+html:not(.dark) .docs-root .text-slate-700,
+html:not(.dark) .docs-root .text-gray-700,
+html:not(.dark) .docs-root .text-blue-700,
+html:not(.dark) .docs-root .text-purple-700,
+html:not(.dark) .docs-root .text-indigo-700 {
+  color: #2e2e2e;
+}
+
+/* Secondary text tints → muted ink */
+html:not(.dark) .docs-root .text-slate-600,
+html:not(.dark) .docs-root .text-gray-600,
+html:not(.dark) .docs-root .text-slate-500,
+html:not(.dark) .docs-root .text-gray-500,
+html:not(.dark) .docs-root .text-blue-600,
+html:not(.dark) .docs-root .text-purple-600,
+html:not(.dark) .docs-root .text-blue-500 {
+  color: #5a5a5a;
+}
+
+/* Pastel info-box tints → paper-deep wash */
+html:not(.dark) .docs-root .bg-blue-50,
+html:not(.dark) .docs-root .bg-purple-50,
+html:not(.dark) .docs-root .bg-indigo-50,
+html:not(.dark) .docs-root .bg-slate-50,
+html:not(.dark) .docs-root .bg-gray-100 {
+  background-color: #efece4;
+}
+
+/* Pastel gradient washes → flat paper-deep */
+html:not(.dark) .docs-root .from-blue-50,
+html:not(.dark) .docs-root .from-purple-50,
+html:not(.dark) .docs-root .from-indigo-50,
+html:not(.dark) .docs-root .from-plain-white,
+html:not(.dark) .docs-root .to-blue-50,
+html:not(.dark) .docs-root .to-purple-50,
+html:not(.dark) .docs-root .to-indigo-50,
+html:not(.dark) .docs-root .to-gray-50 {
+  background-image: none;
+  background-color: #efece4;
+}
+
+/* Hardcoded white cards → paper */
+html:not(.dark) .docs-root .bg-white {
+  background-color: hsl(var(--background));
+}
+
+/* Pastel borders → hairline */
+html:not(.dark) .docs-root .border-blue-200,
+html:not(.dark) .docs-root .border-blue-300,
+html:not(.dark) .docs-root .border-blue-400,
+html:not(.dark) .docs-root .border-purple-200,
+html:not(.dark) .docs-root .border-purple-400,
+html:not(.dark) .docs-root .border-indigo-200,
+html:not(.dark) .docs-root .border-slate-200,
+html:not(.dark) .docs-root .border-slate-100,
+html:not(.dark) .docs-root .border-gray-200 {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Typography plugin (prose-slate) → ink scale */
+html:not(.dark) .docs-root .prose {
+  --tw-prose-body: #2e2e2e;
+  --tw-prose-headings: #1a1a1a;
+  --tw-prose-links: #1a1a1a;
+  --tw-prose-bold: #1a1a1a;
+  --tw-prose-bullets: #5a5a5a;
+  --tw-prose-counters: #5a5a5a;
+  --tw-prose-captions: #5a5a5a;
+  --tw-prose-quotes: #2e2e2e;
+  --tw-prose-hr: rgba(0, 0, 0, 0.1);
+  --tw-prose-th-borders: rgba(0, 0, 0, 0.12);
+  --tw-prose-td-borders: rgba(0, 0, 0, 0.08);
+}
+
+/* ==========================================================================
+ * Theme color hue slider (Settings → Appearance, Hazy Nights / Swarms).
+ * Native range input restyled as a full-spectrum hue track. Only rendered
+ * under the dark WebGL themes, so no light-theme remap is needed.
+ * ========================================================================== */
+input[data-hue-slider] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 0.625rem;
+  border-radius: 9999px;
+  background: linear-gradient(
+    to right,
+    hsl(0, 100%, 50%),
+    hsl(60, 100%, 50%),
+    hsl(120, 100%, 50%),
+    hsl(180, 100%, 50%),
+    hsl(240, 100%, 50%),
+    hsl(300, 100%, 50%),
+    hsl(360, 100%, 50%)
+  );
+  outline: none;
+  cursor: pointer;
+}
+input[data-hue-slider]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 9999px;
+  background: #fff;
+  border: 2px solid rgba(0, 0, 0, 0.35);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  cursor: grab;
+}
+input[data-hue-slider]::-webkit-slider-thumb:active {
+  cursor: grabbing;
+}
+input[data-hue-slider]::-moz-range-thumb {
+  width: 1.125rem;
+  height: 1.125rem;
+  border-radius: 9999px;
+  background: #fff;
+  border: 2px solid rgba(0, 0, 0, 0.35);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+  cursor: grab;
+}
+input[data-hue-slider]:focus-visible {
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.6);
+}

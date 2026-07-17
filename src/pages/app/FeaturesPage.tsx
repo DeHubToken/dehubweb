@@ -1,0 +1,1128 @@
+/**
+ * Feature Requests Page
+ * =====================
+ * Community-driven feature request board.
+ * Users can submit ideas and vote on existing ones.
+ * Feature cards use the same UI pattern as text posts (ActionBar + CommentsWrapper).
+ */
+
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { useTranslation as useI18n } from 'react-i18next';
+import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
+import { useSearchParams } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTabIndicator } from '@/hooks/use-tab-indicator';
+import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
+import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2, MoreVertical, Pencil, ImagePlus } from 'lucide-react';
+import featuresLightbulb from '@/assets/features-lightbulb.png';
+import { TranslatableText, SharedTranslationProvider, useSharedTranslationControl } from '@/components/app/TranslatableText';
+import { PostMetadata } from '@/components/app/cards/PostMetadata';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { UserAvatar } from '@/components/app/UserAvatar';
+import { CardHeader } from '@/components/app/cards/CardHeader';
+import { ActionBar } from '@/components/app/cards/ActionBar';
+import { useAuth } from '@/contexts/AuthContext';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { cn } from '@/lib/utils';
+import { buildAvatarUrl } from '@/lib/media-url';
+import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
+import { supabase } from '@/integrations/supabase/client';
+import {
+  useFeatureRequests,
+  useShippedFeatures,
+  useUserVotes,
+  useTotalFeatureCount,
+  useSubmitFeatureRequest,
+  useVoteFeatureRequest,
+  useEditFeatureRequest,
+  useDeleteFeatureRequest,
+  CATEGORY_LABELS,
+  type FeatureCategory,
+  type FeatureSort,
+  type FeatureRequest,
+} from '@/hooks/use-feature-requests';
+import { z } from 'zod';
+import { useFeatureRequestComments, useSubmitComment, useDeleteComment } from '@/hooks/use-feature-request-comments';
+import { UserMentionDropdown } from '@/components/app/mentions';
+import { useMention } from '@/hooks/use-mention';
+import { SEOHead } from '@/components/SEOHead';
+
+const featureSchema = z.object({
+  title: z.string().trim().min(1, 'Title is required').max(100, 'Title must be under 100 characters'),
+  description: z.string().trim().min(1, 'Description is required').max(1000, 'Description must be under 1,000 characters'),
+  category: z.enum(['ui_ux', 'performance', 'new_feature', 'bug_fix', 'integration', 'other']),
+});
+
+const CATEGORIES: { id: FeatureCategory | 'all'; labelKey: string }[] = [
+  { id: 'all', labelKey: 'features.all' },
+  { id: 'ui_ux', labelKey: 'features.uiUx' },
+  { id: 'performance', labelKey: 'features.performance' },
+  { id: 'new_feature', labelKey: 'features.newFeature' },
+  { id: 'bug_fix', labelKey: 'features.bugFix' },
+  { id: 'integration', labelKey: 'features.integration' },
+  { id: 'other', labelKey: 'features.other' },
+];
+
+type PageTab = 'requests' | 'shipped';
+
+const SORTS: { id: FeatureSort; labelKey: string }[] = [
+  { id: 'most_voted', labelKey: 'features.mostVoted' },
+  { id: 'newest', labelKey: 'features.newest' },
+];
+
+// Status type kept for data model but no badge displayed on cards
+
+function formatTimeAgo(dateStr: string): string {
+  const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
+  if (seconds < 60) return 'just now';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 30) return `${days}d ago`;
+  const months = Math.floor(days / 30);
+  return `${months}mo ago`;
+}
+
+// ──────────────────────────────────────────────────
+// Feature Card Component (PostCard-style UI)
+// ──────────────────────────────────────────────────
+function FeatureCard({
+  feature,
+  currentVote,
+  onVote,
+  voteDisabled,
+}: {
+  feature: FeatureRequest;
+  currentVote: number | undefined;
+  onVote: (featureId: string, voteType: 1 | -1, currentVote: number | undefined) => void;
+  voteDisabled: boolean;
+}) {
+  const { t } = useI18n();
+  const { isTranslated, isLoading: isTranslateLoading, error: translateError, handleTranslate, handleShowOriginal } = useSharedTranslationControl();
+  const [showComments, setShowComments] = useState(false);
+  const [commentText, setCommentText] = useState('');
+  const [showMenu, setShowMenu] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState(feature.title);
+  const [editDescription, setEditDescription] = useState(feature.description);
+  const [editCategory, setEditCategory] = useState<FeatureCategory>(feature.category);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const commentInputRef = useRef<HTMLInputElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const { isAuthenticated, openLoginModal, walletAddress } = useAuth();
+
+  const editMutation = useEditFeatureRequest();
+  const deleteMutation = useDeleteFeatureRequest();
+
+  const isAuthor = walletAddress && feature.author_wallet_address.toLowerCase() === walletAddress.toLowerCase();
+
+  const mention = useMention({
+    inputRef: commentInputRef,
+    onMentionInsert: (_user, newText) => setCommentText(newText.slice(0, 500)),
+  });
+
+  const { data: comments, isLoading: commentsLoading } = useFeatureRequestComments(showComments ? feature.id : null);
+  const submitComment = useSubmitComment();
+  const deleteComment = useDeleteComment();
+
+  const dbAvatarUrl = feature.author_avatar
+    ? buildAvatarUrl(feature.author_wallet_address, feature.author_avatar)
+    : undefined;
+  const walletAvatarUrl = useProfileAvatar(feature.author_wallet_address, dbAvatarUrl);
+  const usernameAvatarUrl = useProfileAvatar(
+    feature.author_username && feature.author_username.toLowerCase() !== feature.author_wallet_address.toLowerCase()
+      ? feature.author_username
+      : undefined
+  );
+  const avatarUrl = walletAvatarUrl ?? usernameAvatarUrl ?? dbAvatarUrl ?? null;
+
+  const displayName = feature.author_username || feature.author_wallet_address.slice(0, 6);
+  const handle = feature.author_username ? `@${feature.author_username}` : `${feature.author_wallet_address.slice(0, 6)}...${feature.author_wallet_address.slice(-4)}`;
+
+  // Determine like/dislike state from currentVote
+  const isLiked = currentVote === 1;
+  const isDisliked = currentVote === -1;
+
+  const handleLike = useCallback(() => {
+    onVote(feature.id, 1, currentVote);
+  }, [feature.id, currentVote, onVote]);
+
+  const handleDislike = useCallback(() => {
+    onVote(feature.id, -1, currentVote);
+  }, [feature.id, currentVote, onVote]);
+
+  const handleSubmitComment = (e: React.FormEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isAuthenticated) { openLoginModal(); return; }
+    if (!commentText.trim()) return;
+    submitComment.mutate(
+      { featureRequestId: feature.id, content: commentText },
+      { onSuccess: () => setCommentText('') }
+    );
+  };
+
+  const handleEdit = () => {
+    setEditTitle(feature.title);
+    setEditDescription(feature.description);
+    setEditCategory(feature.category);
+    setIsEditing(true);
+    setShowMenu(false);
+  };
+
+  const handleSaveEdit = () => {
+    if (!editTitle.trim() || !editDescription.trim()) return;
+    editMutation.mutate(
+      { id: feature.id, title: editTitle, description: editDescription, category: editCategory },
+      { onSuccess: () => setIsEditing(false) }
+    );
+  };
+
+  const handleDelete = () => {
+    setShowMenu(false);
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = () => {
+    deleteMutation.mutate(feature.id, {
+      onSuccess: () => setShowDeleteConfirm(false),
+    });
+  };
+
+  // Close menu on outside click
+  useEffect(() => {
+    if (!showMenu) return;
+    const handler = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setShowMenu(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [showMenu]);
+
+  return (
+    <div className="overflow-visible relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3">
+      {/* Header with three-dot menu */}
+      <div className="flex items-start">
+        <CardHeader
+          username={displayName}
+          handle={handle}
+          avatarSeed={avatarUrl || ''}
+          verified={false}
+          contentType="post"
+          creatorId={feature.author_wallet_address}
+          creatorUsername={feature.author_username || undefined}
+          timestamp={formatTimeAgo(feature.created_at)}
+        />
+        {isAuthor && (
+          <div className="relative shrink-0" ref={menuRef}>
+            <button
+              type="button"
+              onClick={() => setShowMenu(prev => !prev)}
+              className="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-500 hover:text-white hover:bg-white/10 transition-colors"
+            >
+              <MoreVertical className="w-4 h-4" />
+            </button>
+            {showMenu && (
+              <div className="absolute right-0 top-9 z-50 w-36 rounded-xl border border-white/10 bg-zinc-900/95 backdrop-blur-xl shadow-xl overflow-hidden">
+                <button
+                  type="button"
+                  onClick={handleEdit}
+                  className="flex items-center gap-2 w-full px-3 py-2.5 text-sm text-zinc-300 hover:bg-white/10 hover:text-white transition-colors"
+                >
+                  <Pencil className="w-3.5 h-3.5" />
+                  Edit
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDelete}
+                  className="flex items-center gap-2 w-full px-3 py-2.5 text-sm text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-colors"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  Delete
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Delete confirmation */}
+      {showDeleteConfirm && (
+        <div className="mb-3 p-3 rounded-lg border border-red-500/20 bg-red-500/5">
+          <p className="text-sm text-zinc-300 mb-2">Are you sure you want to delete this feature request?</p>
+          <div className="flex gap-2">
+            <Button
+              size="sm"
+              variant="destructive"
+              onClick={confirmDelete}
+              disabled={deleteMutation.isPending}
+              className="rounded-lg text-xs"
+            >
+              {deleteMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Delete'}
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => setShowDeleteConfirm(false)}
+              className="rounded-lg text-xs text-zinc-400"
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Content — editable or read-only */}
+      <div className="pt-1 space-y-2">
+        {isEditing ? (
+          <div className="space-y-3">
+            <div>
+              <label className="text-zinc-500 text-xs mb-1 block">Title</label>
+              <Input
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                maxLength={100}
+                className="bg-zinc-800/50 border-white/10 text-white rounded-lg text-sm"
+              />
+            </div>
+            <div>
+              <label className="text-zinc-500 text-xs mb-1 block">Description</label>
+              <textarea
+                value={editDescription}
+                onChange={(e) => setEditDescription(e.target.value)}
+                maxLength={1000}
+                rows={3}
+                className="w-full bg-zinc-800/50 border border-white/10 text-white rounded-lg text-sm p-2.5 resize-none focus:outline-none focus:ring-1 focus:ring-white/20"
+              />
+            </div>
+            <div>
+              <label className="text-zinc-500 text-xs mb-1 block">Category</label>
+              <select
+                value={editCategory}
+                onChange={(e) => setEditCategory(e.target.value as FeatureCategory)}
+                className="w-full bg-zinc-800/50 border border-white/10 text-white rounded-lg text-sm p-2 focus:outline-none focus:ring-1 focus:ring-white/20"
+              >
+                {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
+                  <option key={key} value={key}>{label}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant="glass"
+                onClick={handleSaveEdit}
+                disabled={editMutation.isPending || !editTitle.trim() || !editDescription.trim()}
+                className="rounded-lg text-xs"
+              >
+                {editMutation.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Save'}
+              </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setIsEditing(false)}
+                className="rounded-lg text-xs text-zinc-400"
+              >
+                Cancel
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <TranslatableText text={feature.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
+            <TranslatableText text={feature.description} className="text-zinc-400 text-sm leading-relaxed" as="p" />
+
+            {/* Attached media */}
+            {feature.image_url && (
+              <div className="rounded-xl overflow-hidden border border-white/10">
+                {feature.image_url.match(/\.(mp4|mov|webm|ogg)$/i) ? (
+                  <video src={feature.image_url} className="w-full max-h-64 object-contain bg-black" controls />
+                ) : (
+                  <img src={feature.image_url} alt="Attachment" className="w-full max-h-64 object-contain bg-black/30" loading="lazy" />
+                )}
+              </div>
+            )}
+
+        {/* Category badge - liquid glass style */}
+        <div className="flex items-center gap-2">
+          <span className="text-zinc-300 text-[10px] font-medium px-2 py-0.5 rounded-lg bg-gradient-to-br from-white/15 via-white/8 to-white/3 backdrop-blur-xl border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.3)]">
+            {CATEGORY_LABELS[feature.category]}
+          </span>
+        </div>
+
+        {/* Translate control */}
+        <PostMetadata
+          timestamp={feature.created_at}
+          translateControl={{
+            isTranslated,
+            isLoading: isTranslateLoading,
+            error: translateError,
+            onTranslate: handleTranslate,
+            onShowOriginal: handleShowOriginal,
+          }}
+        />
+
+        <div className="pt-1">
+          <ActionBar
+            postId={feature.id}
+            className="p-0"
+            onComment={() => setShowComments(prev => !prev)}
+            onLike={handleLike}
+            onDislike={handleDislike}
+            isLiked={isLiked}
+            isDisliked={isDisliked}
+            likeCount={feature.like_count ?? 0}
+            dislikeCount={feature.dislike_count ?? 0}
+            commentCount={feature.comment_count}
+          />
+        </div>
+          </>
+        )}
+
+        {/* Comments Section */}
+        <AnimatePresence>
+          {showComments && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="border-t border-white/5 pt-3 mt-1">
+                {commentsLoading ? (
+                  <div className="flex justify-center py-3">
+                    <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
+                  </div>
+                ) : comments && comments.length > 0 ? (
+                  <div className="space-y-2.5 mb-3 max-h-60 overflow-y-auto scrollbar-invisible">
+                    {comments.map((comment) => {
+                      const commentAvatar = comment.avatar && comment.wallet_address
+                        ? buildAvatarUrl(comment.wallet_address, comment.avatar)
+                        : null;
+                      const commentName = comment.username
+                        ? `@${comment.username}`
+                        : `${comment.wallet_address.slice(0, 6)}...${comment.wallet_address.slice(-4)}`;
+                      const isOwn = walletAddress?.toLowerCase() === comment.wallet_address.toLowerCase();
+
+                      return (
+                        <div key={comment.id} className="flex gap-2 group">
+                          <UserAvatar
+                            name={comment.username || comment.wallet_address.slice(0, 6)}
+                            handle={comment.username || comment.wallet_address}
+                            avatarUrl={commentAvatar}
+                            size="sm"
+                            className="w-6 h-6 shrink-0 mt-0.5"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-zinc-400 text-[11px] font-medium">{commentName}</span>
+                              <span className="text-zinc-500 text-[10px]">{formatTimeAgo(comment.created_at)}</span>
+                              {isOwn && (
+                                <button
+                                  type="button"
+                                  onClick={() => deleteComment.mutate({ commentId: comment.id, featureRequestId: feature.id })}
+                                  className="opacity-0 group-hover:opacity-100 transition-opacity ml-auto"
+                                >
+                                  <Trash2 className="w-3 h-3 text-zinc-500 hover:text-red-400" />
+                                </button>
+                              )}
+                            </div>
+                            <TranslatableText text={comment.content} className="text-zinc-300 text-xs leading-relaxed" as="p" />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="text-zinc-500 text-xs text-center py-2 mb-2">{t('features.noComments')}</p>
+                )}
+
+                {/* Comment input */}
+                <form onSubmit={handleSubmitComment} className="relative flex gap-2">
+                  <Input
+                    ref={commentInputRef}
+                    value={commentText}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setCommentText(val);
+                      mention.handleInput(val, e.target.selectionStart ?? val.length);
+                    }}
+                    onKeyDown={(e) => {
+                      if (mention.isOpen) {
+                        const handled = mention.handleKeyDown(e);
+                        if (handled) {
+                          if (e.key === 'Enter' || e.key === 'Tab') {
+                            e.preventDefault();
+                            const liveResults = (window as any).__mentionResults || [];
+                            if (liveResults[mention.selectedIndex]) {
+                              mention.handleSelect(liveResults[mention.selectedIndex]);
+                            }
+                          }
+                          return;
+                        }
+                      }
+                    }}
+                    placeholder={t('features.addComment')}
+                    maxLength={500}
+                    className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-zinc-600 rounded-xl text-xs h-8"
+                  />
+                  <UserMentionDropdown
+                    query={mention.query}
+                    isOpen={mention.isOpen}
+                    position={mention.position}
+                    selectedIndex={mention.selectedIndex}
+                    onSelectedIndexChange={mention.setSelectedIndex}
+                    onSelect={mention.handleSelect}
+                    onClose={mention.handleClose}
+                  />
+                  <button
+                    type="submit"
+                    disabled={!commentText.trim() || submitComment.isPending}
+                    className="w-8 h-8 flex items-center justify-center rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white disabled:opacity-30 transition-opacity"
+                  >
+                    {submitComment.isPending ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    ) : (
+                      <Send className="w-3.5 h-3.5" />
+                    )}
+                  </button>
+                </form>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────
+// Submit Feature Drawer
+// ──────────────────────────────────────────────────
+function SubmitFeatureDrawer({
+  open,
+  onOpenChange,
+  initialCategory,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  initialCategory?: FeatureCategory;
+}) {
+  const { t } = useI18n();
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [deviceDetails, setDeviceDetails] = useState('');
+  const [category, setCategory] = useState<FeatureCategory>(initialCategory || 'new_feature');
+  const [mediaFile, setMediaFile] = useState<File | null>(null);
+  const [mediaPreview, setMediaPreview] = useState<string | null>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Sync category when the drawer opens based on whether a bug category is requested
+  useEffect(() => {
+    if (open) {
+      setCategory(initialCategory || 'new_feature');
+    }
+  }, [open, initialCategory]);
+
+  const submitMutation = useSubmitFeatureRequest();
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    // Max 20MB
+    if (file.size > 20 * 1024 * 1024) {
+      setErrors(prev => ({ ...prev, media: 'File must be under 20MB' }));
+      return;
+    }
+    setMediaFile(file);
+    setMediaPreview(URL.createObjectURL(file));
+    setErrors(prev => { const { media, ...rest } = prev; return rest; });
+  };
+
+  const removeMedia = () => {
+    setMediaFile(null);
+    if (mediaPreview) URL.revokeObjectURL(mediaPreview);
+    setMediaPreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleSubmit = () => {
+    const result = featureSchema.safeParse({ title, description, category });
+    if (!result.success) {
+      const fieldErrors: Record<string, string> = {};
+      for (const issue of result.error.issues) {
+        fieldErrors[issue.path[0] as string] = issue.message;
+      }
+      setErrors(fieldErrors);
+      return;
+    }
+    setErrors({});
+    const fullDescription = deviceDetails.trim()
+      ? `${result.data.description}\n\n📱 Device & OS: ${deviceDetails.trim()}`
+      : result.data.description;
+    submitMutation.mutate(
+      { title: result.data.title, description: fullDescription, category: result.data.category as FeatureCategory, mediaFile },
+      {
+        onSuccess: () => {
+          setTitle('');
+          setDescription('');
+          setDeviceDetails('');
+          setCategory('new_feature');
+          removeMedia();
+          onOpenChange(false);
+        },
+      }
+    );
+  };
+
+  return (
+    <Drawer open={open} onOpenChange={onOpenChange}>
+      <DrawerContent className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[85vh]">
+        <DrawerHeader className="relative">
+          <DrawerTitle className="text-white text-lg font-bold">{t('features.submitDrawerTitle')}</DrawerTitle>
+          <button
+            type="button"
+            onClick={() => onOpenChange(false)}
+            className="absolute right-4 top-4 w-8 h-8 flex items-center justify-center rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-400 hover:text-white transition-colors"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </DrawerHeader>
+
+        <div className="px-4 pb-6 space-y-4 overflow-y-auto overscroll-contain flex-1">
+          {/* Title */}
+          <div>
+            <label className="text-zinc-400 text-xs font-medium mb-1 block">{t('features.titleLabel')}</label>
+            <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder={t('features.titlePlaceholder')}
+              maxLength={100}
+              className="bg-zinc-900 border-zinc-800 text-white placeholder:text-zinc-600 rounded-xl"
+            />
+            <div className="flex justify-between mt-1">
+              {errors.title && <span className="text-red-400 text-[11px]">{errors.title}</span>}
+              <span className="text-zinc-500 text-[11px] ml-auto">{title.length}/100</span>
+            </div>
+          </div>
+
+          {/* Description */}
+          <div>
+            <label className="text-zinc-400 text-xs font-medium mb-1 block">{t('features.descriptionLabel')}</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder={t('features.descriptionPlaceholder')}
+              maxLength={1000}
+              rows={4}
+              className="w-full bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent"
+            />
+            <div className="flex justify-between mt-1">
+              {errors.description && <span className="text-red-400 text-[11px]">{errors.description}</span>}
+              <span className="text-zinc-500 text-[11px] ml-auto">{description.length}/1000</span>
+            </div>
+          </div>
+
+          {/* Device & OS Details */}
+          <div>
+            <label className="text-zinc-400 text-xs font-medium mb-1 block">Device & OS Details (optional)</label>
+            <textarea
+              value={deviceDetails}
+              onChange={(e) => setDeviceDetails(e.target.value)}
+              placeholder="e.g. iPhone 15 Pro, iOS 18.2 / Samsung S24, Android 15 / MacBook Pro, Chrome 124..."
+              maxLength={300}
+              rows={2}
+              className="w-full bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent"
+            />
+            <span className="text-zinc-500 text-[11px] ml-auto block text-right mt-1">{deviceDetails.length}/300</span>
+          </div>
+          <div>
+            <label className="text-zinc-400 text-xs font-medium mb-2 block">{t('features.categoryLabel')}</label>
+            <div className="flex flex-wrap gap-2">
+              {CATEGORIES.filter((c) => c.id !== 'all').map((cat) => (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setCategory(cat.id as FeatureCategory)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
+                    category === cat.id
+                      ? 'bg-white text-black'
+                      : 'bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-white'
+                  }`}
+                >
+                  {t(cat.labelKey)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Media Upload */}
+          <div>
+            <label className="text-zinc-400 text-xs font-medium mb-1 block">Attach Image or Video (optional)</label>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*,video/*"
+              onChange={handleFileChange}
+              className="hidden"
+            />
+            {mediaPreview ? (
+              <div className="relative rounded-xl overflow-hidden border border-white/10 bg-zinc-900">
+                {mediaFile?.type.startsWith('video/') ? (
+                  <video src={mediaPreview} className="w-full max-h-48 object-contain" controls />
+                ) : (
+                  <img src={mediaPreview} alt="Preview" className="w-full max-h-48 object-contain" />
+                )}
+                <button
+                  type="button"
+                  onClick={removeMedia}
+                  className="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full h-24 rounded-xl border border-dashed border-white/10 bg-zinc-900/50 flex flex-col items-center justify-center gap-1.5 text-zinc-500 hover:text-zinc-300 hover:border-white/20 transition-colors"
+              >
+                <ImagePlus className="w-5 h-5" />
+                <span className="text-xs">Click to upload</span>
+              </button>
+            )}
+            {errors.media && <span className="text-red-400 text-[11px] mt-1 block">{errors.media}</span>}
+          </div>
+
+          {/* Submit */}
+          <Button
+            onClick={handleSubmit}
+            disabled={submitMutation.isPending}
+            variant="glass"
+            className="w-full rounded-xl font-semibold"
+          >
+            {submitMutation.isPending ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <>
+                <Sparkles className="w-4 h-4" />
+                {t('features.submitRequest')}
+              </>
+            )}
+          </Button>
+        </div>
+      </DrawerContent>
+    </Drawer>
+  );
+}
+
+// ──────────────────────────────────────────────────
+// Skeleton Loader
+// ──────────────────────────────────────────────────
+function FeatureSkeletons() {
+  return (
+    <div className="space-y-3">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <div key={i} className="bg-zinc-900 rounded-2xl p-4 flex gap-3 animate-pulse">
+          <div className="flex flex-col items-center gap-1 min-w-[40px]">
+            <div className="w-8 h-8 rounded-lg bg-zinc-800" />
+            <div className="w-5 h-4 rounded bg-zinc-800" />
+            <div className="w-8 h-8 rounded-lg bg-zinc-800" />
+          </div>
+          <div className="flex-1 space-y-2">
+            <div className="h-4 w-3/4 rounded bg-zinc-800" />
+            <div className="h-3 w-full rounded bg-zinc-800" />
+            <div className="h-3 w-1/2 rounded bg-zinc-800" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────
+// Shipped Feature Card (simpler, no voting)
+// ──────────────────────────────────────────────────
+function ShippedCard({ feature }: { feature: FeatureRequest }) {
+  const { t } = useI18n();
+  const { isTranslated: isShippedTranslated, isLoading: isShippedTranslateLoading, error: shippedTranslateError, handleTranslate: handleShippedTranslate, handleShowOriginal: handleShippedShowOriginal } = useSharedTranslationControl();
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div
+      className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3 flex gap-3 cursor-pointer hover:bg-white/[0.05] transition-colors"
+      onClick={() => setExpanded(!expanded)}
+    >
+      <div className="flex flex-col items-center justify-center min-w-[40px]">
+        <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+          <CheckCircle2 className="w-4 h-4 text-white/70" />
+        </div>
+      </div>
+
+      <div className="flex-1 min-w-0">
+        <div className="flex items-start gap-2 mb-1.5">
+          <TranslatableText text={feature.title} className="text-white font-semibold text-sm leading-tight flex-1 min-w-0" as="h3" hideControls />
+          <span className="text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 bg-white/10 text-white/70">
+            {t('features.shippedBadge')}
+          </span>
+        </div>
+
+        <TranslatableText text={feature.description} className={`text-zinc-400 text-xs leading-relaxed mb-2 ${expanded ? '' : 'line-clamp-2'}`} as="p" />
+
+        {/* Translate control */}
+        <PostMetadata
+          timestamp={feature.updated_at}
+          translateControl={{
+            isTranslated: isShippedTranslated,
+            isLoading: isShippedTranslateLoading,
+            error: shippedTranslateError,
+            onTranslate: handleShippedTranslate,
+            onShowOriginal: handleShippedShowOriginal,
+          }}
+        />
+
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className="text-zinc-400 bg-zinc-800 px-2 py-0.5 rounded-lg text-[10px] font-medium">
+            {CATEGORY_LABELS[feature.category]}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────
+// Infinite Scroll Sentinel
+// ──────────────────────────────────────────────────
+function InfiniteScrollSentinel({ onIntersect, isFetching }: { onIntersect: () => void; isFetching: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting && !isFetching) onIntersect(); },
+      { rootMargin: '200px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [onIntersect, isFetching]);
+
+  return (
+    <div ref={ref} className="flex justify-center py-4">
+      {isFetching && <Loader2 className="w-5 h-5 animate-spin text-zinc-500" />}
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────
+// Main Page
+// ──────────────────────────────────────────────────
+export default function FeaturesPage() {
+  const { t } = useI18n();
+  const { isAuthenticated, openLoginModal } = useAuth();
+  const { theme } = useAppTheme();
+  const isLightTheme = theme === 'light';
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState<PageTab>('requests');
+  const [sort, setSort] = useState<FeatureSort>('most_voted');
+  const [category, setCategory] = useState<FeatureCategory | 'all'>('all');
+  const { layerRef: featuresCatLayerRef, setRef: setFeaturesCatRef, rect: featuresCatRect, onScroll: onFeaturesCatScroll } = useTabIndicator(category);
+  const { layerRef: featuresSortLayerRef, setRef: setFeaturesSortRef, rect: featuresSortRect, onScroll: onFeaturesSortScroll } = useTabIndicator(sort);
+  const [searchInput, setSearchInput] = useState('');
+  const search = useDebouncedValue(searchInput, 300);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [initialCategory, setInitialCategory] = useState<FeatureCategory | undefined>(undefined);
+
+  // Handle deep-link from "Report a Bug" buttons: open the bug-fix category
+  // and pre-populate the submit drawer with the bug_fix category.
+  useEffect(() => {
+    const report = searchParams.get('report');
+    if (report === 'bug') {
+      setActiveTab('requests');
+      setCategory('bug_fix');
+      setInitialCategory('bug_fix');
+      setDrawerOpen(true);
+      setSearchParams({}, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
+
+  const { data: featuresData, isLoading, isError, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeatureRequests(sort, category, search);
+  const features = useMemo(() => featuresData?.pages.flat() ?? [], [featuresData]);
+  const { data: shippedFeatures, isLoading: isLoadingShipped } = useShippedFeatures();
+  const { data: userVotes } = useUserVotes();
+  const voteMutation = useVoteFeatureRequest();
+
+  const handleVote = useCallback(
+    (featureId: string, voteType: 1 | -1, currentVote: number | undefined) => {
+      if (!isAuthenticated) {
+        openLoginModal();
+        return;
+      }
+      voteMutation.mutate({ featureRequestId: featureId, voteType, currentVote });
+    },
+    [isAuthenticated, openLoginModal, voteMutation]
+  );
+
+  const handleSubmitClick = () => {
+    if (!isAuthenticated) {
+      openLoginModal();
+      return;
+    }
+    setDrawerOpen(true);
+  };
+
+  const { data: totalCount = features.length } = useTotalFeatureCount();
+  const shippedCount = shippedFeatures?.length ?? 0;
+  // Remaining (open) requests = everything not yet shipped/completed.
+  const remainingCount = Math.max(0, totalCount - shippedCount);
+
+  // Swallow the feature-request list at the sticky header bento's top edge under
+  // the glass themes, exactly like the home feed cuts at its nav pill.
+  const contentRef = useRef<HTMLDivElement>(null);
+  useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
+
+  return (
+    <div className="min-h-screen">
+      <SEOHead title="Features — Submit & Vote on Ideas" description="Submit feature requests, vote on community ideas, and help shape DeHub's roadmap. Your voice drives the platform's development." url="https://dehub.io/app/features" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Feature Requests', url: 'https://dehub.io/app/features', description: 'Submit and vote on feature requests to shape DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+      <h1 className="sr-only">DeHub Features — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
+      {/* Sticky nav pill */}
+      <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
+        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-3">
+            <img src={featuresLightbulb} alt="Features" className="w-12 h-12 object-contain" />
+            <div>
+              <h1 className="text-xl font-bold text-white">{t('features.title')}</h1>
+              <p className="text-zinc-500 text-sm">{totalCount === 1 ? t('features.ideaSubmitted') : t('features.ideasSubmitted', { count: totalCount })}</p>
+            </div>
+          </div>
+          <Button
+            onClick={handleSubmitClick}
+            variant="glass"
+            className="rounded-xl font-semibold text-sm"
+            size="sm"
+          >
+            <Plus className="w-4 h-4" />
+            <span className="hidden sm:inline">{t('features.submit')}</span>
+          </Button>
+        </div>
+
+        {/* Search */}
+        <div className="relative mb-3">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+          <Input
+            placeholder={t('features.searchPlaceholder')}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
+          />
+        </div>
+
+        {/* Page Tabs: Requests / Shipped */}
+        <div className="relative flex gap-1 bg-zinc-800/40 rounded-xl p-1 mb-3">
+          {/* Sliding liquid glass indicator */}
+          <div
+            className={cn(
+              "absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 transition-transform duration-300 ease-out",
+              isLightTheme
+                ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2)]"
+                : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)]",
+              activeTab === 'shipped' ? 'translate-x-[calc(100%+4px)]' : 'translate-x-0'
+            )}
+          />
+          <button
+            type="button"
+            onClick={() => setActiveTab('requests')}
+            className={`relative z-10 flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
+              activeTab === 'requests' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
+            }`}
+          >
+            {t('features.requests')}
+            {remainingCount > 0 && (
+              <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
+                {remainingCount}
+              </span>
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('shipped')}
+            className={`relative z-10 flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
+              activeTab === 'shipped' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
+            }`}
+          >
+            <CheckCircle2 className="w-3.5 h-3.5" />
+            {t('features.shipped')}
+            {shippedCount > 0 && (
+              <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
+                {shippedCount}
+              </span>
+            )}
+          </button>
+        </div>
+
+        {/* Filters (only shown on requests tab) */}
+        {activeTab === 'requests' && (
+          <>
+            {/* Category Pills */}
+            <div className="relative mb-3">
+              <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
+              <div ref={featuresCatLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+                <GlassIndicator rect={featuresCatRect} borderRadius="0.5rem" />
+                <div className="relative z-20 flex gap-2 overflow-x-auto scrollbar-invisible pb-1" onScroll={onFeaturesCatScroll}>
+                  {CATEGORIES.map((cat) => (
+                    <button
+                      key={cat.id}
+                      ref={setFeaturesCatRef(cat.id)}
+                      type="button"
+                      onClick={() => setCategory(cat.id)}
+                      className={`relative z-40 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors duration-200 ${
+                        category === cat.id
+                          ? 'text-white'
+                          : 'text-zinc-400 hover:text-white'
+                      }`}
+                    >
+                      <span className="relative z-10">{t(cat.labelKey)}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Sort Tabs */}
+            <div ref={featuresSortLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+              <GlassIndicator rect={featuresSortRect} borderRadius="0.5rem" />
+              <div className="relative z-20 flex gap-1.5 overflow-x-auto scrollbar-invisible" onScroll={onFeaturesSortScroll}>
+                {SORTS.map((s) => {
+                  const isActive = sort === s.id;
+                  return (
+                    <button
+                      key={s.id}
+                      ref={setFeaturesSortRef(s.id)}
+                      type="button"
+                      onClick={() => setSort(s.id)}
+                      className={`relative z-40 px-3 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
+                        isActive ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
+                      }`}
+                    >
+                      <span className="relative z-10">{t(s.labelKey)}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </>
+        )}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div ref={contentRef} className="px-2 sm:px-3 pt-2 pb-3">
+      {/* Feature List (Requests Tab) */}
+      {activeTab === 'requests' && (
+        <>
+          {isLoading ? (
+            <FeatureSkeletons />
+          ) : isError ? (
+            <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
+              <h3 className="text-white font-semibold mb-1">{t('features.loadFailed', "Couldn't load requests")}</h3>
+              <Button
+                onClick={() => refetch()}
+                variant="glass"
+                className="rounded-xl font-semibold mt-3"
+              >
+                {t('common.retry', 'Retry')}
+              </Button>
+            </div>
+          ) : features.length > 0 ? (
+            <div className="space-y-3">
+              {features.map((feature) => (
+                <SharedTranslationProvider key={feature.id}>
+                  <FeatureCard
+                    feature={feature}
+                    currentVote={userVotes?.[feature.id]}
+                    onVote={handleVote}
+                    voteDisabled={voteMutation.isPending}
+                  />
+                </SharedTranslationProvider>
+              ))}
+              {/* Infinite scroll sentinel */}
+              {hasNextPage && (
+                <InfiniteScrollSentinel
+                  onIntersect={fetchNextPage}
+                  isFetching={isFetchingNextPage}
+                />
+              )}
+            </div>
+          ) : (
+            <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
+              <div className="w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                <img src={featuresLightbulb} alt="No features yet" className="w-16 h-16 object-contain opacity-40" />
+              </div>
+              <h3 className="text-white font-semibold mb-1">{t('features.noRequestsYet')}</h3>
+              <p className="text-zinc-500 text-sm mb-4">{t('features.beFirstIdea')}</p>
+              <Button
+                onClick={handleSubmitClick}
+                variant="glass"
+                className="rounded-xl font-semibold"
+              >
+                <Plus className="w-4 h-4" />
+                {t('features.submitFeatureRequest')}
+              </Button>
+            </div>
+          )}
+        </>
+      )}
+
+      {/* Shipped Features Tab */}
+      {activeTab === 'shipped' && (
+        <>
+          {isLoadingShipped ? (
+            <FeatureSkeletons />
+          ) : shippedFeatures && shippedFeatures.length > 0 ? (
+            <div className="space-y-3">
+              {shippedFeatures.map((feature) => (
+                <SharedTranslationProvider key={feature.id}>
+                  <FeatureCard
+                    feature={feature}
+                    currentVote={userVotes?.[feature.id]}
+                    onVote={handleVote}
+                    voteDisabled={voteMutation.isPending}
+                  />
+                </SharedTranslationProvider>
+              ))}
+            </div>
+          ) : (
+            <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
+              <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mx-auto mb-4">
+                <CheckCircle2 className="w-8 h-8 text-zinc-600" />
+              </div>
+              <h3 className="text-white font-semibold mb-1">{t('features.noShippedYet')}</h3>
+              <p className="text-zinc-500 text-sm">{t('features.shippedAppearHere')}</p>
+            </div>
+          )}
+        </>
+      )}
+      </div>
+
+      {/* Submit Drawer */}
+      <SubmitFeatureDrawer
+        open={drawerOpen}
+        onOpenChange={(open) => {
+          setDrawerOpen(open);
+          if (!open) setInitialCategory(undefined);
+        }}
+        initialCategory={initialCategory}
+      />
+    </div>
+  );
+}

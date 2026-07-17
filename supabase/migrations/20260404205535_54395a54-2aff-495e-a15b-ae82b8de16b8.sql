@@ -1,0 +1,1 @@
+ALTER TABLE public.community_chat_messages ADD COLUMN badge_balance numeric DEFAULT NULL;

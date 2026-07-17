@@ -1,0 +1,1737 @@
+/**
+ * Home Feed Component
+ * ===================
+ * Mixed content feed with custom content ordering pattern.
+ * Fetches videos, images, and text posts separately then interleaves
+ * according to a 50-item repeating pattern.
+ * 
+ * @module components/app/feeds/HomeFeed
+ */
+
+import { useEffect, useRef, useMemo, useCallback, useState, useDeferredValue, startTransition, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
+import { getDeletedPostIds } from '@/lib/deleted-posts-store';
+import { useTranslation as useI18n } from 'react-i18next';
+import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { RefreshCw, Radio, ChevronRight } from 'lucide-react';
+import { FeedBodySkeleton } from '@/components/app/PageSkeletons';
+import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
+import { AnimatePresence, motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
+import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
+import { useShortsEnabled } from '@/contexts/ShortsEnabledContext';
+import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
+import { toast } from 'sonner';
+import { 
+  SORT_OPTIONS, 
+  DATE_FILTER_OPTIONS, 
+  CONTENT_TYPE_FILTERS, 
+  POST_TYPE_FILTERS, 
+  formatCount, 
+  formatViews, 
+  formatDuration, 
+  formatTimeAgo, 
+  CONTENT_PATTERN,
+  interleaveByPattern,
+  
+  type SortOption, 
+  type DateFilterOption, 
+  type ContentTypeFilters, 
+  type PostTypeFilterValue 
+} from '@/lib/feed-utils';
+
+// Card components
+import {
+  PostCard,
+  VideoCard,
+  ImageCard,
+  ShortsReel,
+  StoriesBar,
+  LiveCard,
+} from '@/components/app/cards';
+import { MasonrySegment } from '@/components/app/feeds/MasonrySegment';
+
+
+import { 
+  useUnifiedFeed, 
+  mapToVideoItem, 
+  mapToImagePost, 
+  mapToTextPost,
+} from '@/hooks/use-unified-feed';
+import { useDeHubStoryUsers, useDeHubLive, DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, mapApiLiveStreamToLocal } from '@/hooks/use-dehub-feed';
+import { usePersistedFeedFilter, usePersistedContentFilters, clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
+import { getMediaUrl, getNFTInfo, getCategories } from '@/lib/api/dehub';
+import type { DeHubCategory } from '@/lib/api/dehub';
+import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
+import { useAuth } from '@/contexts/AuthContext';
+import { useOptimisticPosts } from '@/hooks/use-optimistic-posts';
+import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
+import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
+import { MobileWhoToFollowCarousel } from '@/components/app/mobile';
+import { LeaderboardCarousel } from '@/components/app/feeds/LeaderboardCarousel';
+import { FriendsOnStageBar } from '@/components/app/feeds/FriendsOnStageBar';
+import { PromptFlowModal } from '@/components/app/feeds/PromptFlowModal';
+
+import type { VideoItem, ImagePost, TextPost, ShortVideo } from '@/types/feed.types';
+import type { ServedAd } from '@/lib/ads/povr';
+import { useServedAds } from '@/hooks/use-ad-serving';
+import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
+
+// ============================================================================
+// TYPES & CONSTANTS
+// ============================================================================
+
+type FeedItemType =
+  | { type: 'post'; data: TextPost }
+  | { type: 'video'; data: VideoItem }
+  | { type: 'image'; data: ImagePost }
+  | { type: 'shorts'; data: ShortVideo[] }
+  | { type: 'ad'; data: ServedAd };
+
+const PAGE_SIZE = 20;
+const SHORTS_INSERT_INTERVAL = 5;
+const RADIO_INSERT_AFTER = 8;
+const LEADERBOARD_INSERT_AFTER_LIVE_OFFSET = 10;
+/** A served (paid) ad card is spliced in after every N organic items. */
+const AD_INSERT_INTERVAL = 8;
+
+/** Default home sort is chronological latest; "For You" remains available as a filter option. */
+const DEFAULT_HOME_SORT = SORT_OPTIONS.find(o => o.value === 'latest') || SORT_OPTIONS[0];
+
+/** Insert an all-time most-liked post every N items in trending feed */
+const CLASSIC_INSERT_INTERVAL = 6;
+
+interface HomeFeedProps {
+  shuffleKey: number;
+  isRefreshing: boolean;
+  showFilters?: boolean;
+  /** Optional post ID to pin at the top of the feed */
+  pinnedPostId?: string;
+  /** DOM node or ref to render the filter panel into; when omitted, the panel renders in-flow */
+  filtersPortalRef?: React.RefObject<HTMLElement | null> | HTMLElement | null;
+}
+
+// ============================================================================
+// HELPERS
+// ============================================================================
+
+/** Resolve a portal target prop that may be a ref object or a DOM node. */
+function resolvePortalTarget(target?: React.RefObject<HTMLElement | null> | HTMLElement | null): HTMLElement | null {
+  if (!target) return null;
+  if (typeof target === 'object' && 'current' in target) return target.current;
+  return target;
+}
+
+// ============================================================================
+// HELPERS
+// ============================================================================
+
+
+/**
+ * Map date filter to API range parameter
+ */
+function getDateRange(dateValue: string): 'day' | 'week' | 'month' | 'year' | undefined {
+  switch (dateValue) {
+    case 'today':
+      return 'day';
+    case 'week':
+      return 'week';
+    case 'month':
+      return 'month';
+    case 'year':
+      return 'year';
+    default:
+      return undefined; // all time
+  }
+}
+
+// ============================================================================
+// FILTER SECTION COMPONENT
+// ============================================================================
+
+interface FilterSectionProps {
+  selectedSort: SortOption;
+  onSortSelect: (o: SortOption) => void;
+  selectedCategories: string[];
+  onCategoryToggle: (category: string) => void;
+  onCategoryClear: () => void;
+  categories: DeHubCategory[];
+  selectedDate: DateFilterOption;
+  onDateSelect: (o: DateFilterOption) => void;
+  selectedPostType: PostTypeFilterValue;
+  onPostTypeSelect: (v: PostTypeFilterValue) => void;
+  contentFilters: ContentTypeFilters;
+  onContentFilterToggle: (filter: keyof ContentTypeFilters) => void;
+  onReset: () => void;
+}
+
+function SortFilterSection({ 
+  selectedSort, 
+  onSortSelect,
+  selectedCategories,
+  onCategoryToggle,
+  onCategoryClear,
+  categories,
+  selectedDate, 
+  onDateSelect,
+  selectedPostType,
+  onPostTypeSelect,
+  contentFilters,
+  onContentFilterToggle,
+  onReset,
+}: FilterSectionProps) {
+  const { t } = useI18n();
+  const [categorySearch, setCategorySearch] = useState('');
+
+  const filteredCategories = useMemo(() => {
+    let filtered = categories;
+    if (categorySearch.trim()) {
+      const q = categorySearch.toLowerCase();
+      filtered = categories.filter(cat => cat.name.toLowerCase().includes(q));
+    }
+    return filtered;
+  }, [categories, categorySearch]);
+
+  const rowFadeMask = '[mask-image:linear-gradient(to_right,black_calc(100%_-_24px),transparent)] [-webkit-mask-image:linear-gradient(to_right,black_calc(100%_-_24px),transparent)]';
+
+  return (
+    <div className="relative flex flex-col gap-4">
+      {/* Sort Options */}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.sort')}</span>
+        <div className="relative">
+          <GlassFilterRow
+            className={rowFadeMask}
+            items={SORT_OPTIONS.map((o) => ({ key: o.label, label: t(`filters.${o.value === 'most-viewed' ? 'mostViewed' : o.value === 'most-liked' ? 'mostLiked' : o.value === 'most-comments' ? 'mostComments' : o.value}`, o.label) }))}
+            activeKey={selectedSort.label}
+            onSelect={(key) => { const o = SORT_OPTIONS.find(x => x.label === key); if (o) onSortSelect(o); }}
+            borderRadius="0.75rem"
+            buttonClassName="px-3 py-2 rounded-xl text-sm"
+          />
+        </div>
+      </div>
+
+      {/* Category Filter */}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.category')}</span>
+        <input
+          type="text"
+          value={categorySearch}
+          onChange={e => setCategorySearch(e.target.value)}
+          placeholder={t('filters.searchCategories')}
+          className="w-full px-3 py-1.5 rounded-lg text-xs bg-zinc-800 text-zinc-200 placeholder-zinc-500 border border-zinc-700 focus:border-zinc-500 focus:outline-none transition-colors mb-1"
+        />
+        <div className="relative">
+          <GlassFilterRow
+            className={rowFadeMask}
+            items={[
+              { key: 'all', label: t('filters.all') },
+              ...filteredCategories.map((cat) => ({ key: cat.id, label: cat.name })),
+            ]}
+            activeKeys={selectedCategories.length === 0 ? ['all'] : selectedCategories}
+            onSelect={(key) => {
+              if (key === 'all') {
+                onCategoryClear();
+              } else {
+                onCategoryToggle(key);
+              }
+              setCategorySearch('');
+            }}
+            borderRadius="0.75rem"
+            buttonClassName="px-3 py-2 rounded-xl text-sm"
+          />
+          {filteredCategories.length === 0 && categorySearch.trim() && (
+            <span className="text-xs text-zinc-500 py-1.5">{t('filters.noMatches')}</span>
+          )}
+        </div>
+      </div>
+      
+      {/* Date Filter Options */}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.uploadDate')}</span>
+        <div className="relative">
+          <GlassFilterRow
+            className={rowFadeMask}
+            items={DATE_FILTER_OPTIONS.map((o) => ({ key: o.value, label: o.label }))}
+            activeKey={selectedDate.value}
+            onSelect={(key) => { const o = DATE_FILTER_OPTIONS.find(x => x.value === key); if (o) onDateSelect(o); }}
+            borderRadius="0.75rem"
+            buttonClassName="px-3 py-2 rounded-xl text-sm"
+          />
+        </div>
+      </div>
+
+      {/* Post Type Filter */}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.postType')}</span>
+        <div className="relative">
+          <GlassFilterRow
+            className={rowFadeMask}
+            items={POST_TYPE_FILTERS.map((o) => ({ key: o.value, label: t(`filters.${o.value === 'all' ? 'all' : o.value === 'video' ? 'videos' : o.value === 'feed-images' ? 'images' : o.value === 'feed-audio' ? 'audio' : 'text'}`, o.label) }))}
+            activeKey={selectedPostType}
+            onSelect={(key) => onPostTypeSelect(key as PostTypeFilterValue)}
+            borderRadius="0.75rem"
+            buttonClassName="px-3 py-2 rounded-xl text-sm"
+          />
+        </div>
+      </div>
+
+      {/* Content Type Filters */}
+      <div className="flex flex-col gap-2">
+        <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.contentAccess')}</span>
+        <div className="relative">
+          <GlassFilterRow
+            className={rowFadeMask}
+            items={CONTENT_TYPE_FILTERS.map((filter) => ({ key: filter.value, label: t(`filters.${filter.value === 'w2e' ? 'bounty' : filter.value}`, filter.label) }))}
+            activeKeys={CONTENT_TYPE_FILTERS.filter((filter) => contentFilters[filter.value]).map((filter) => filter.value)}
+            onSelect={(key) => onContentFilterToggle(key as keyof ContentTypeFilters)}
+            borderRadius="0.75rem"
+            buttonClassName="px-3 py-2 rounded-xl text-sm"
+          />
+        </div>
+      </div>
+
+      {/* Reset filters - bottom right */}
+      <button
+        onClick={onReset}
+        className="absolute bottom-0 right-0 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
+        aria-label={t('filters.resetFilters')}
+      >
+        <RefreshCw className="w-3.5 h-3.5" />
+      </button>
+    </div>
+  );
+}
+
+// ============================================================================
+// MAIN COMPONENT
+// ============================================================================
+
+export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinnedPostId, filtersPortalRef }: HomeFeedProps) {
+  const { t } = useI18n();
+  const loaderRef = useRef<HTMLDivElement>(null);
+  const bentoRef = useRef<HTMLDivElement>(null);
+  const portalTarget = resolvePortalTarget(filtersPortalRef);
+  const { isCollapsed } = useSidebarCollapse();
+  const { shortsEnabled } = useShortsEnabled();
+  const queryClient = useQueryClient();
+
+  // Clear persisted filters on fresh page load (not in-app navigation)
+  useEffect(() => {
+    const isNewPageLoad = !sessionStorage.getItem('feed-session-active');
+    if (isNewPageLoad) {
+      clearPersistedFeedFilters();
+      sessionStorage.setItem('feed-session-active', 'true');
+    }
+  }, []);
+
+  // Native touch event listeners on bento wrapper to reliably block propagation
+  useEffect(() => {
+    const el = bentoRef.current;
+    if (!el) return;
+
+    const stop = (e: TouchEvent) => {
+      e.stopPropagation();
+      e.stopImmediatePropagation();
+    };
+
+    el.addEventListener('touchstart', stop, { passive: true });
+    el.addEventListener('touchmove', stop, { passive: true });
+    el.addEventListener('touchend', stop, { passive: true });
+
+    return () => {
+      el.removeEventListener('touchstart', stop);
+      el.removeEventListener('touchmove', stop);
+      el.removeEventListener('touchend', stop);
+    };
+  }, [showFilters]);
+  const isFetchingRef = useRef(false);
+  
+  // Default to Latest (chronological) — persisted to sessionStorage. "For You" remains a filter option.
+  const [selectedSort, setSelectedSortRaw] = usePersistedFeedFilter<SortOption>('home', 'sort', DEFAULT_HOME_SORT);
+  const [selectedDate, setSelectedDateRaw] = usePersistedFeedFilter<DateFilterOption>('home', 'date', DATE_FILTER_OPTIONS[0]);
+  const [selectedPostType, setSelectedPostTypeRaw] = usePersistedFeedFilter<PostTypeFilterValue>('home', 'postType', 'all');
+  const [contentFilters, toggleContentFilterRaw, resetContentFiltersRaw] = usePersistedContentFilters('home');
+  const [selectedCategories, setSelectedCategoriesRaw] = usePersistedFeedFilter<string[]>('home', 'categories', []);
+
+  // Optimistic mirror state — chips flip active instantly on tap while heavy
+  // downstream re-render (feed refetch, list re-render) runs at lower priority
+  // via startTransition. Prevents 1-2s lag on slow devices/networks where the
+  // synchronous re-render used to block paint of the active state.
+  const [optimisticSort, setOptimisticSort] = useState(selectedSort);
+  const [optimisticDate, setOptimisticDate] = useState(selectedDate);
+  const [optimisticPostType, setOptimisticPostType] = useState(selectedPostType);
+  const [optimisticCategories, setOptimisticCategories] = useState(selectedCategories);
+  const [optimisticContentFilters, setOptimisticContentFilters] = useState(contentFilters);
+  useEffect(() => { setOptimisticSort(selectedSort); }, [selectedSort]);
+  useEffect(() => { setOptimisticDate(selectedDate); }, [selectedDate]);
+  useEffect(() => { setOptimisticPostType(selectedPostType); }, [selectedPostType]);
+  useEffect(() => { setOptimisticCategories(selectedCategories); }, [selectedCategories]);
+  useEffect(() => { setOptimisticContentFilters(contentFilters); }, [contentFilters]);
+
+  const setSelectedSort = useCallback((value: SortOption | ((prev: SortOption) => SortOption)) => {
+    setOptimisticSort(prev => (typeof value === 'function' ? (value as (p: SortOption) => SortOption)(prev) : value));
+    startTransition(() => setSelectedSortRaw(value));
+  }, [setSelectedSortRaw]);
+  const setSelectedDate = useCallback((value: DateFilterOption | ((prev: DateFilterOption) => DateFilterOption)) => {
+    setOptimisticDate(prev => (typeof value === 'function' ? (value as (p: DateFilterOption) => DateFilterOption)(prev) : value));
+    startTransition(() => setSelectedDateRaw(value));
+  }, [setSelectedDateRaw]);
+  const setSelectedPostType = useCallback((value: PostTypeFilterValue | ((prev: PostTypeFilterValue) => PostTypeFilterValue)) => {
+    setOptimisticPostType(prev => (typeof value === 'function' ? (value as (p: PostTypeFilterValue) => PostTypeFilterValue)(prev) : value));
+    startTransition(() => setSelectedPostTypeRaw(value));
+  }, [setSelectedPostTypeRaw]);
+  const setSelectedCategories = useCallback((value: string[] | ((prev: string[]) => string[])) => {
+    setOptimisticCategories(prev => (typeof value === 'function' ? (value as (p: string[]) => string[])(prev) : value));
+    startTransition(() => setSelectedCategoriesRaw(value));
+  }, [setSelectedCategoriesRaw]);
+  const toggleContentFilter = useCallback((filter: 'ppv' | 'w2e' | 'locked') => {
+    setOptimisticContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
+    startTransition(() => toggleContentFilterRaw(filter));
+  }, [toggleContentFilterRaw]);
+  const resetContentFilters = useCallback(() => {
+    setOptimisticContentFilters({ ppv: false, w2e: false, locked: false });
+    startTransition(() => resetContentFiltersRaw());
+  }, [resetContentFiltersRaw]);
+
+  // Listen for external category changes (e.g. from Talk of the Town sidebar)
+  // Set a transitioning flag so we force skeleton state (bypasses placeholderData)
+  const [isCategoryTransitioning, setIsCategoryTransitioning] = useState(false);
+
+  useEffect(() => {
+    const getCategoryId = (detail: unknown): string | null => {
+      if (typeof detail === 'string') return detail.toLowerCase();
+      if (detail && typeof detail === 'object' && 'categoryId' in detail) {
+        const value = (detail as { categoryId?: unknown }).categoryId;
+        return typeof value === 'string' ? value.toLowerCase() : null;
+      }
+      return null;
+    };
+
+    const handler = (e: Event) => {
+      const categoryId = getCategoryId((e as CustomEvent).detail);
+      if (!categoryId) return;
+
+      // Invalidate instead of removing — keeps existing data visible during refetch
+      queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+      // Add category to selection (toggle if already present)
+      setSelectedCategories(prev => {
+        if (prev.includes(categoryId)) return prev;
+        const next = [...prev, categoryId];
+        // Only show skeleton when switching to a single server-filtered category
+        if (next.length === 1) setIsCategoryTransitioning(true);
+        return next;
+      });
+      window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+    };
+
+    window.addEventListener('category-filter-changed', handler);
+    return () => window.removeEventListener('category-filter-changed', handler);
+  }, [setSelectedCategories, queryClient]);
+
+  // Safety: normalize any legacy/corrupted persisted category entries (e.g. { categoryId: 'music' })
+  useEffect(() => {
+    const normalized = Array.from(new Set(
+      (selectedCategories as unknown[])
+        .map((cat) => {
+          if (typeof cat === 'string') return cat.toLowerCase();
+          if (cat && typeof cat === 'object' && 'categoryId' in cat) {
+            const value = (cat as { categoryId?: unknown }).categoryId;
+            return typeof value === 'string' ? value.toLowerCase() : null;
+          }
+          return null;
+        })
+        .filter((cat): cat is string => Boolean(cat))
+    ));
+
+    const isSame =
+      normalized.length === selectedCategories.length &&
+      normalized.every((cat, index) => cat === selectedCategories[index]);
+
+    if (!isSame) {
+      setSelectedCategories(normalized);
+    }
+  }, [selectedCategories, setSelectedCategories]);
+
+  // Non-critical rail queries (categories, live carousel, shorts strip) are held
+  // back until the primary feed's first page settles, so the content request wins
+  // the boot network race instead of losing it to sidebar chrome (LCP audit 7/14).
+  // A safety-net timer flips the gate regardless so a stalled feed can't blank the rails.
+  const [railsEnabled, setRailsEnabled] = useState(false);
+
+  // Fetch categories
+  const { data: categories = [] } = useQuery({
+    queryKey: ['dehub-categories'],
+    queryFn: getCategories,
+    staleTime: 5 * 60 * 1000,
+    enabled: railsEnabled,
+  });
+
+  const { walletAddress, isAuthenticated } = useAuth();
+  const { optimisticPosts, clearOptimisticPosts, removeOptimisticPost } = useOptimisticPosts();
+
+  // Fetch story users from API
+  const { storyUsers } = useDeHubStoryUsers(10);
+
+  // Same query key as Live tab + prefetch (DEFAULT_DEHUB_LIVE_QUERY_OPTIONS); slice below for carousel width.
+  // enabled is stripped from the key inside useDeHubLive, so the shared cache entry is preserved.
+  const { data: liveData } = useDeHubLive({ ...DEFAULT_DEHUB_LIVE_QUERY_OPTIONS, enabled: railsEnabled });
+  const liveNowStreams = useMemo(() => {
+    if (!liveData?.pages) return [];
+    const allStreams = liveData.pages.flatMap(page => page.data || []);
+    return allStreams.slice(0, 10).map((stream, index) => mapApiLiveStreamToLocal(stream, index));
+  }, [liveData]);
+
+  // "Following" mode is handled server-side via followingOnly=true API param
+  const isFollowingMode = selectedSort.value === 'following';
+
+
+  // Prompt flow modal state
+  const [promptModalOpen, setPromptModalOpen] = useState(false);
+  const [initialPromptText, setInitialPromptText] = useState('');
+
+  // Auto-open from /prompt landing redirect (?prompt=…)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const p = params.get('prompt');
+    if (p) {
+      setInitialPromptText(p);
+      setPromptModalOpen(true);
+      // clean URL
+      const url = new URL(window.location.href);
+      url.searchParams.delete('prompt');
+      window.history.replaceState({}, '', url.toString());
+    }
+  }, []);
+
+  // Handle sort selection with special logic for "Subscribed" (coming soon)
+  const handleSortSelect = useCallback((option: SortOption) => {
+    if (option.value === 'subscribed') {
+      toast.info('Subscribed feed coming soon!');
+      return;
+    }
+    if (option.value === 'following' && !isAuthenticated) {
+      toast.info('Log in to see followed creators');
+      return;
+    }
+    if (option.value === 'prompt') {
+      setInitialPromptText('');
+      setPromptModalOpen(true);
+      return;
+    }
+    setSelectedSort(option);
+  }, [isAuthenticated]);
+
+  // Defer heavy filter-derived values so chip clicks paint instantly.
+  // The chip buttons read `selectedSort`/`selectedCategories`/etc. directly (urgent),
+  // while query params derive from the deferred copies (non-urgent commit).
+  const deferredSort = useDeferredValue(selectedSort);
+  const deferredDate = useDeferredValue(selectedDate);
+  const deferredPostType = useDeferredValue(selectedPostType);
+  const deferredCategories = useDeferredValue(selectedCategories);
+  const deferredContentFilters = useDeferredValue(contentFilters);
+
+  // Build API params from filters
+  // For trending, we fetch by recency (last month) then sort client-side
+  const sortBy = useMemo(() => {
+    switch (deferredSort.value) {
+      case 'for-you':
+      case 'prompt':
+      case 'discovery':
+        return 'score' as const;
+      case 'following': // Following uses latest sort, filtered client-side
+        return 'createdAt' as const;
+      case 'most-liked':
+        return 'likes' as const;
+      case 'most-viewed':
+        return 'views' as const;
+      case 'most-comments':
+        return 'comments' as const;
+      case 'random':
+        return 'random' as const;
+      case 'latest':
+      default:
+        return 'createdAt' as const;
+    }
+  }, [deferredSort.value]);
+
+  const sortOrder: 'asc' | 'desc' = 'desc'; // Always sort descending (highest first)
+  
+  // For following and random, don't limit range
+  const range = useMemo(() => {
+    if (
+      deferredSort.value === 'for-you' ||
+      deferredSort.value === 'prompt' ||
+      deferredSort.value === 'discovery' ||
+      deferredSort.value === 'following' ||
+      deferredSort.value === 'random'
+    ) {
+      return undefined; // Algorithm + following/random use full catalog
+    }
+    return getDateRange(deferredDate.value);
+  }, [deferredSort.value, deferredDate.value]);
+
+  // Common API params for all three feeds
+  const commonParams = useMemo(() => ({
+    limit: PAGE_SIZE,
+    sortBy,
+    sortOrder,
+    range,
+    status: 'minted' as const,
+    // Single category → pass to API; multiple → fetch all, filter client-side
+    category: deferredCategories.length === 1 ? deferredCategories[0] : undefined,
+    isPPV: deferredContentFilters.ppv ? true : undefined,
+    hasBounty: deferredContentFilters.w2e ? true : undefined,
+    isLocked: deferredContentFilters.locked ? true : undefined,
+    followingOnly: deferredSort.value === 'following' ? true : undefined,
+  }), [sortBy, sortOrder, range, deferredCategories, deferredContentFilters, deferredSort.value]);
+
+  // ============================================================================
+  // THREE SEPARATE FEED QUERIES
+  // ============================================================================
+
+  // For "Most Liked", "Trending", "Following", "Random", or default "Latest" sorting, we need global ranking across all types
+  // So we use a single unified feed instead of three separate type feeds
+  // "Latest" must also use a single feed to maintain true chronological order across all post types
+  const useSingleFeedForGlobalSort =
+    deferredSort.value === 'for-you' ||
+    deferredSort.value === 'prompt' ||
+    deferredSort.value === 'discovery' ||
+    deferredSort.value === 'latest' ||
+    deferredSort.value === 'most-liked' ||
+    deferredSort.value === 'most-viewed' ||
+    deferredSort.value === 'most-comments' ||
+    deferredSort.value === 'following' ||
+    deferredSort.value === 'random';
+  const hasContentFilter = deferredContentFilters.ppv || deferredContentFilters.w2e || deferredContentFilters.locked;
+  const useInterleavedFeed = deferredPostType === 'all' && !useSingleFeedForGlobalSort && !hasContentFilter;
+
+  // Fetch videos
+  const videosFeed = useUnifiedFeed({
+    ...commonParams,
+    postType: 'video',
+    enabled: useInterleavedFeed,
+  });
+
+  // Fetch images
+  const imagesFeed = useUnifiedFeed({
+    ...commonParams,
+    postType: 'feed-images',
+    enabled: useInterleavedFeed,
+  });
+
+  // Fetch text posts
+  const textsFeed = useUnifiedFeed({
+    ...commonParams,
+    postType: 'feed-simple',
+    enabled: useInterleavedFeed,
+  });
+
+  // Fallback: single unified feed when post type filter is active OR using global sort
+  const singleFeed = useUnifiedFeed({
+    ...commonParams,
+    postType: deferredPostType === 'all' ? undefined : deferredPostType,
+    enabled: !useInterleavedFeed,
+  });
+
+  // Classics feed no longer needed (trending removed)
+  const classicsFeed = { data: undefined } as any;
+
+  // Fetch latest videos for the Scroll carousel using unified feed.
+  // Gated: this is a SECOND /api/feed that used to race the primary feed at boot
+  // (LCP audit 7/14), and it's dead weight entirely when shorts are disabled.
+  const scrollFeed = useUnifiedFeed({
+    limit: 10,
+    postType: 'video',
+    sortBy: 'createdAt',
+    sortOrder: 'desc',
+    status: 'minted',
+    enabled: shortsEnabled && railsEnabled,
+  });
+
+  // Flip the rails gate once the primary feed's first page settles (data or error).
+  const primaryFeedSettled = useInterleavedFeed
+    ? (!!videosFeed.data || videosFeed.isError)
+    : (!!singleFeed.data || singleFeed.isError);
+  useEffect(() => {
+    if (primaryFeedSettled) setRailsEnabled(true);
+  }, [primaryFeedSettled]);
+  // Safety net: a stalled/offline feed must never keep the rails blank forever.
+  useEffect(() => {
+    const t = setTimeout(() => setRailsEnabled(true), 4000);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Shorts carousel on Home feed
+  const shorts = useMemo((): ShortVideo[] => {
+    if (!shortsEnabled) return [];
+    if (!scrollFeed.data?.pages) return [];
+    const allItems = scrollFeed.data.pages.flatMap(page => page.items || []);
+    // Exclude PPV content from shorts carousels
+    const nonPPV = allItems.filter(item => !item.streamInfo?.isPayPerView);
+    return nonPPV.slice(0, 10).map((item) => {
+      const id = String(item.tokenId);
+      const minterAddress = item.minter || '';
+      const voteType = (item as any).voteType ?? (item as any).userVote ?? (item as any).myVote ?? null;
+      const avatarUrl = item.minterAvatarUrl
+        ? (item.minterAvatarUrl.startsWith('http') ? item.minterAvatarUrl : buildAvatarUrl(minterAddress, item.minterAvatarUrl))
+        : undefined;
+
+      return {
+        id,
+        type: 'short' as const,
+        username: item.minterDisplayName || item.minterUsername || 'user',
+        verified: (item as any).minterUser?.isVerified || false,
+        avatar: avatarUrl || undefined,
+        likes: String(item.totalVotes?.for || 0),
+        thumbnail: getMediaUrl(item.imageUrl) || '',
+        videoUrl: item.videoUrl
+          ? (item.videoUrl.startsWith('http') ? item.videoUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${item.videoUrl}`)
+          : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4`,
+        description: item.description || item.name || '',
+        sound: 'Original Sound',
+        comments: formatCount(item.commentCount || 0),
+        shares: '0',
+        repostCount: ((item as any).totalReposts || (item as any).reposts || 0) + ((item as any).quotes || 0),
+        views: formatCount(item.views || 0),
+        creatorUsername: item.minterUsername || 'user',
+        creatorId: minterAddress,
+        displayName: item.minterDisplayName || undefined,
+        isLiked: (item as any).isLiked ?? voteType === 'for',
+        isDisliked: (item as any).isDisliked ?? voteType === 'against',
+      };
+    });
+  }, [scrollFeed.data, shortsEnabled]);
+
+  // Fetch curated radio stations for carousel
+  const { data: radioStations = [] } = useQuery({
+    queryKey: ['radio-stations-curated'],
+    queryFn: () => getCuratedCarouselStations(),
+    staleTime: 10 * 60 * 1000,
+  });
+
+  // Fetch pinned post if provided
+  const { data: pinnedPost, isLoading: isPinnedLoading } = useQuery({
+    queryKey: ['pinned-post', pinnedPostId],
+    queryFn: () => getNFTInfo(pinnedPostId!),
+    enabled: !!pinnedPostId,
+    staleTime: 5 * 60 * 1000,
+  });
+
+  // Convert pinned post (DeHubNFT) to feed item format
+  const pinnedItem = useMemo((): FeedItemType | null => {
+    if (!pinnedPost) return null;
+    
+    const id = String(pinnedPost.tokenId);
+    const views = pinnedPost.views || pinnedPost.view_count || 0;
+    const timeAgo = pinnedPost.createdAt ? formatTimeAgo(pinnedPost.createdAt) : 'Just now';
+    
+    const nftPostType = pinnedPost.postType || 'video';
+    
+    if (nftPostType === 'image' || (pinnedPost.imageUrls && pinnedPost.imageUrls.length > 0 && !pinnedPost.videoUrl)) {
+      const imageUrls = buildFeedImageUrls(pinnedPost.imageUrls);
+      const image = imageUrls?.[0] || buildImageUrl(pinnedPost.tokenId, pinnedPost.imageUrl);
+      const avatar = pinnedPost.minterAvatarUrl 
+        ? buildAvatarUrl(pinnedPost.minter, pinnedPost.minterAvatarUrl) || 'user'
+        : 'user';
+      
+      const imagePost: ImagePost = {
+        id,
+        type: 'image',
+        username: pinnedPost.minterDisplayName || pinnedPost.mintername || 'unknown',
+        verified: false,
+        avatar,
+        image,
+        imageUrls,
+        title: pinnedPost.name,
+        description: pinnedPost.description,
+        likes: pinnedPost.totalVotes?.for || pinnedPost.like_count || 0,
+        caption: pinnedPost.description || pinnedPost.name || '',
+        comments: pinnedPost.commentCount || pinnedPost.comment_count || 0,
+        views: formatViews(views),
+        timeAgo,
+        creatorId: pinnedPost.minter,
+        creatorUsername: pinnedPost.mintername,
+        isLiked: pinnedPost.isLiked ?? false,
+      };
+      return { type: 'image', data: imagePost };
+    } else if (pinnedPost.videoUrl || pinnedPost.media_url) {
+      const thumbnail = buildImageUrl(pinnedPost.tokenId, pinnedPost.imageUrl);
+      const videoUrl = buildVideoUrl(pinnedPost.tokenId);
+      const channelAvatar = pinnedPost.minterAvatarUrl 
+        ? buildAvatarUrl(pinnedPost.minter, pinnedPost.minterAvatarUrl) || 'user'
+        : 'user';
+      
+      const videoItem: VideoItem = {
+        id,
+        type: 'video',
+        thumbnail,
+        videoUrl,
+        duration: formatDuration(pinnedPost.videoDuration || pinnedPost.duration || 0),
+        title: pinnedPost.name || pinnedPost.description?.split('\n')[0] || '',
+        channel: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown Creator',
+        channelAvatar,
+        verified: false,
+        views: formatViews(views),
+        uploadedAgo: timeAgo,
+        creatorId: pinnedPost.minter,
+        creatorUsername: pinnedPost.mintername,
+        isLiked: pinnedPost.isLiked ?? false,
+        likeCount: pinnedPost.totalVotes?.for || pinnedPost.like_count || 0,
+        dislikeCount: pinnedPost.totalVotes?.against || pinnedPost.dislike_count || 0,
+        commentCount: pinnedPost.commentCount || pinnedPost.comment_count || 0,
+        isPPV: pinnedPost.is_ppv ?? false,
+        isW2E: pinnedPost.is_w2e ?? false,
+        isLocked: pinnedPost.is_locked ?? false,
+      };
+      return { type: 'video', data: videoItem };
+    } else {
+      const avatarUrl = pinnedPost.minterAvatarUrl 
+        ? buildAvatarUrl(pinnedPost.minter, pinnedPost.minterAvatarUrl) || pinnedPost.minter
+        : pinnedPost.minter;
+      
+      const textPost: TextPost = {
+        id,
+        type: 'post',
+        author: {
+          id: pinnedPost.minter,
+          name: pinnedPost.minterDisplayName || pinnedPost.mintername || 'Unknown',
+          handle: pinnedPost.mintername || pinnedPost.minter,
+          avatarSeed: avatarUrl,
+          verified: false,
+        },
+        content: pinnedPost.description || pinnedPost.name || '',
+        createdAt: timeAgo,
+        views: formatViews(views),
+        stats: {
+          comments: pinnedPost.commentCount || pinnedPost.comment_count || 0,
+          reposts: (pinnedPost.totalReposts || pinnedPost.reposts || 0) + (pinnedPost.quotes || 0),
+          likes: pinnedPost.totalVotes?.for || pinnedPost.like_count || 0,
+        },
+      };
+      return { type: 'post', data: textPost };
+    }
+  }, [pinnedPost]);
+
+  // ============================================================================
+  // INTERLEAVED ITEMS (from three separate feeds)
+  // ============================================================================
+
+  const interleavedItems = useMemo((): FeedItemType[] => {
+    if (!useInterleavedFeed) return [];
+    
+    // Extract all items from each feed
+    const allVideos = videosFeed.data?.pages.flatMap(page => page.items || []) || [];
+    const allImages = imagesFeed.data?.pages.flatMap(page => page.items || []) || [];
+    const allTexts = textsFeed.data?.pages.flatMap(page => page.items || []) || [];
+    
+    // Filter out pinned post from all feeds
+    const filterPinned = (items: any[]) => 
+      pinnedPostId ? items.filter(item => String(item.tokenId) !== String(pinnedPostId)) : items;
+    
+    const filteredVideos = filterPinned(allVideos);
+    const filteredImages = filterPinned(allImages);
+    const filteredTexts = filterPinned(allTexts);
+    
+    // Map to component types
+    const mappedVideos = filteredVideos.map((item, i) => mapToVideoItem(item, i));
+    const mappedImages = filteredImages.map((item, i) => mapToImagePost(item, i));
+    const mappedTexts = filteredTexts.map((item, i) => mapToTextPost(item, i));
+    
+    // Interleave according to pattern
+    const interleaved = interleaveByPattern(mappedVideos, mappedImages, mappedTexts, CONTENT_PATTERN);
+    
+    // Convert to FeedItemType
+    return interleaved.map(item => {
+      switch (item.type) {
+        case 'video':
+          return { type: 'video' as const, data: item.data };
+        case 'image':
+          return { type: 'image' as const, data: item.data };
+        case 'text':
+          return { type: 'post' as const, data: item.data };
+      }
+    });
+  }, [useInterleavedFeed, videosFeed.data, imagesFeed.data, textsFeed.data, pinnedPostId]);
+
+  // ============================================================================
+  // SINGLE FEED ITEMS (when post type filter is active OR global sort mode)
+  // ============================================================================
+
+  const singleFeedItems = useMemo((): FeedItemType[] => {
+    if (useInterleavedFeed || !singleFeed.data?.pages) return [];
+    
+    let allItems = singleFeed.data.pages.flatMap(page => page.items || []);
+    
+    // Filter out pinned post
+    const filteredItems = pinnedPostId 
+      ? allItems.filter(item => String(item.tokenId) !== String(pinnedPostId))
+      : allItems;
+    
+    // Map to feed item types
+    const mapItem = (item: any, index: number): FeedItemType => {
+      const inferredType = item.postType || (
+        item.videoUrl ? 'video' :
+        (item.imageUrls && item.imageUrls.length > 0) ? 'feed-images' :
+        'feed-simple'
+      );
+      
+      switch (inferredType) {
+        case 'feed-images':
+          return { type: 'image', data: mapToImagePost(item, index) };
+        case 'feed-simple':
+          return { type: 'post', data: mapToTextPost(item, index) };
+        case 'live':
+        case 'video':
+        default:
+          return { type: 'video', data: mapToVideoItem(item, index) };
+      }
+    };
+    
+    return filteredItems.map(mapItem);
+  }, [useInterleavedFeed, singleFeed.data, pinnedPostId, selectedSort.value]);
+
+  // Final items to render with creator diversity limiting
+  const rawItems = useInterleavedFeed ? interleavedItems : singleFeedItems;
+
+  // Client-side multi-category filtering (when >1 category selected, API returns all)
+  const organicItems = useMemo(() => {
+    const deletedIds = getDeletedPostIds();
+    let filtered = deletedIds.size > 0
+      ? rawItems.filter(item => !deletedIds.has(String((item.data as any)?.id)))
+      : rawItems;
+    if (selectedCategories.length <= 1) return filtered; // 0 = all, 1 = API-filtered
+    const catSet = new Set(selectedCategories.map(c => c.toLowerCase()));
+    return filtered.filter(item => {
+      const itemCats: string[] = (item.data as any)?.category || (item.data as any)?.categories || [];
+      if (!itemCats.length) return false;
+      return itemCats.some(c => catSet.has(String(c).toLowerCase()));
+    });
+  }, [rawItems, selectedCategories]);
+
+  // Served POVR ads spliced in after every AD_INSERT_INTERVAL organic items.
+  // Ad serving failures return [] so the feed is never blocked by ads.
+  const { data: servedAds = [] } = useServedAds('home', {
+    count: 4,
+    categories: selectedCategories,
+    enabled: organicItems.length > 0,
+  });
+  const items = useMemo((): FeedItemType[] => {
+    if (servedAds.length === 0 || organicItems.length < AD_INSERT_INTERVAL) return organicItems;
+    const withAds: FeedItemType[] = [];
+    let adIdx = 0;
+    organicItems.forEach((item, i) => {
+      withAds.push(item);
+      if ((i + 1) % AD_INSERT_INTERVAL === 0 && adIdx < servedAds.length) {
+        withAds.push({ type: 'ad', data: servedAds[adIdx] });
+        adIdx++;
+      }
+    });
+    return withAds;
+  }, [organicItems, servedAds]);
+
+  // Auto-remove optimistic posts once their real counterpart appears in the feed
+  useEffect(() => {
+    if (optimisticPosts.length === 0 || items.length === 0) return;
+    const feedIds = new Set(items.map(item => String((item.data as any)?.id)));
+    optimisticPosts.forEach(op => {
+      if (feedIds.has(op.id)) {
+        removeOptimisticPost(op.id);
+      }
+    });
+  }, [items, optimisticPosts, removeOptimisticPost]);
+
+  // ============================================================================
+  // INFINITE SCROLL
+  // ============================================================================
+
+  // Determine if any feed has more content
+  const hasNextPage = useInterleavedFeed 
+    ? (videosFeed.hasNextPage || imagesFeed.hasNextPage || textsFeed.hasNextPage)
+    : singleFeed.hasNextPage;
+
+  const isFetchingNextPage = useInterleavedFeed
+    ? (videosFeed.isFetchingNextPage || imagesFeed.isFetchingNextPage || textsFeed.isFetchingNextPage)
+    : singleFeed.isFetchingNextPage;
+
+  const isLoading = useInterleavedFeed
+    ? (videosFeed.isLoading || imagesFeed.isLoading || textsFeed.isLoading)
+    : singleFeed.isLoading;
+
+  // Background fetching (filter switches with cached/previous data) — used to show a
+  // non-blocking progress shimmer so the UI never feels frozen while requests run.
+  const isFetching = useInterleavedFeed
+    ? (videosFeed.isFetching || imagesFeed.isFetching || textsFeed.isFetching)
+    : singleFeed.isFetching;
+
+  const isError = useInterleavedFeed
+    ? (videosFeed.isError || imagesFeed.isError || textsFeed.isError)
+    : singleFeed.isError;
+
+  const refetch = useCallback(() => {
+    if (useInterleavedFeed) {
+      videosFeed.refetch();
+      imagesFeed.refetch();
+      textsFeed.refetch();
+    } else {
+      singleFeed.refetch();
+    }
+  }, [useInterleavedFeed, videosFeed, imagesFeed, textsFeed, singleFeed]);
+
+  // Fetch next page from all feeds that have more content
+  const fetchNextPage = useCallback(() => {
+    const promises: Promise<any>[] = [];
+    
+    if (useInterleavedFeed) {
+      if (videosFeed.hasNextPage && !videosFeed.isFetchingNextPage) {
+        promises.push(videosFeed.fetchNextPage());
+      }
+      if (imagesFeed.hasNextPage && !imagesFeed.isFetchingNextPage) {
+        promises.push(imagesFeed.fetchNextPage());
+      }
+      if (textsFeed.hasNextPage && !textsFeed.isFetchingNextPage) {
+        promises.push(textsFeed.fetchNextPage());
+      }
+    } else {
+      if (singleFeed.hasNextPage && !singleFeed.isFetchingNextPage) {
+        promises.push(singleFeed.fetchNextPage());
+      }
+    }
+    
+    return Promise.all(promises);
+  }, [useInterleavedFeed, videosFeed, imagesFeed, textsFeed, singleFeed]);
+
+  // Infinite scroll observer
+  useEffect(() => {
+    if (!loaderRef.current || !hasNextPage) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage && !isFetchingRef.current) {
+          isFetchingRef.current = true;
+          fetchNextPage().finally(() => {
+            isFetchingRef.current = false;
+          });
+        }
+      },
+      { threshold: 0.1, rootMargin: '600px' }
+    );
+
+    observer.observe(loaderRef.current);
+    return () => observer.disconnect();
+  }, [hasNextPage, fetchNextPage]);
+
+  // ============================================================================
+  // RENDER HELPERS
+  // ============================================================================
+
+  const renderFeedItem = (item: FeedItemType, index: number) => {
+    const card = (() => {
+      switch (item.type) {
+        case 'post':
+          return <PostCard key={`post-${item.data.id}`} post={item.data} />;
+        case 'video':
+          return <VideoCard key={`video-${item.data.id}`} video={item.data} aboveFold={index < 3} />;
+        case 'image':
+          return <ImageCard key={`image-${item.data.id}`} post={item.data} aboveFold={index < 3} />;
+        case 'shorts':
+          return <ShortsReel key={`shorts-${index}`} shorts={item.data} />;
+        case 'ad':
+          return <SponsoredAdCard key={`ad-${item.data.serveId}`} ad={item.data} />;
+        default:
+          return null;
+      }
+    })();
+
+    // Wrap non-shorts items in a bento container
+    if (item.type === 'shorts' || !card) return card;
+
+    const key = item.type === 'post' ? `bento-post-${item.data.id}`
+              : item.type === 'video' ? `bento-video-${(item.data as VideoItem).id}`
+              : item.type === 'ad' ? `bento-ad-${(item.data as ServedAd).serveId}`
+              : `bento-image-${(item.data as ImagePost).id}`;
+
+    // `auto <length>` fallback only applies before a card's first render; once
+    // rendered, the browser remembers the card's real size and reuses it as the
+    // skipped-state placeholder, so scrolling a card off and back never snaps it
+    // to a wrong fixed height and shifts everything below it.
+    const intrinsicH = item.type === 'video' ? '520px' : item.type === 'image' ? '640px' : item.type === 'ad' ? '420px' : '320px';
+    return (
+      <div
+        key={key}
+        data-feed-item
+        className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3"
+        style={index >= 3 ? { contentVisibility: 'auto', containIntrinsicSize: `auto 0 auto ${intrinsicH}` } : undefined}
+      >
+        {card}
+      </div>
+    );
+  };
+
+  // Radio carousel component for home feed
+  const RadioCarouselSection = () => {
+    if (radioStations.length === 0) return null;
+    
+    return (
+      <div className="bg-black/50 backdrop-blur-[24px] saturate-[180%] border border-white/[0.12] rounded-xl p-3">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-bold text-white flex items-center gap-2">
+            <Radio className="w-5 h-5" />
+            Radio Stations
+            <span className="text-zinc-500 font-normal text-sm">(50K)</span>
+          </h3>
+          <button className="text-zinc-400 text-sm hover:text-white flex items-center gap-1">
+            See all <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+        <SwipeableCarousel className="flex gap-3 overflow-x-auto scrollbar-hide pr-8">
+          {radioStations.slice(0, 10).map((station) => (
+            <div key={station.stationuuid} className="flex-shrink-0 w-[280px]">
+              <RadioStationCard station={station} />
+            </div>
+          ))}
+        </SwipeableCarousel>
+      </div>
+    );
+  };
+
+  // Live carousel insert position: 4 posts after the radio carousel
+  const LIVE_INSERT_AFTER = RADIO_INSERT_AFTER + 4;
+  // Leaderboard carousel: 10 posts after the live streams carousel
+  const LEADERBOARD_INSERT_AFTER = LIVE_INSERT_AFTER + LEADERBOARD_INSERT_AFTER_LIVE_OFFSET;
+
+  // Detect number of masonry columns based on viewport + sidebar state
+  // Multi-column masonry only when sidebar is collapsed; standard mode is always 1 column
+  const [colCount, setColCount] = useState(1);
+  const colChangeTimer = useRef<ReturnType<typeof setTimeout>>();
+  useEffect(() => {
+    // Clear any pending deferred update
+    if (colChangeTimer.current) clearTimeout(colChangeTimer.current);
+
+    const computeCols = () => {
+      if (!isCollapsed) return 1;
+      // Always 3 columns in collapsed desktop mode — content scales down at narrower widths
+      return 3;
+    };
+
+    // Defer column change by 500ms so masonry doesn't re-layout during the width animation
+    colChangeTimer.current = setTimeout(() => {
+      setColCount(computeCols());
+    }, 500);
+
+    const onResize = () => setColCount(computeCols());
+    window.addEventListener('resize', onResize);
+    return () => {
+      if (colChangeTimer.current) clearTimeout(colChangeTimer.current);
+      window.removeEventListener('resize', onResize);
+    };
+  }, [isCollapsed]);
+
+  // Estimate height weight for a feed item to balance columns
+  const getItemWeight = (item: FeedItemType): number => {
+    switch (item.type) {
+      case 'video': return 2;    // videos are medium height
+      case 'image': return 3;    // images tend to be tallest
+      case 'post': return 1;     // text posts are shortest
+      case 'shorts': return 2;
+      case 'ad': return 2;       // sponsored cards sit between post and image
+      default: return 1.5;
+    }
+  };
+
+  const calculateColumnWeights = (feedItems: FeedItemType[], cols: number): number[] => {
+    const weights = new Array(cols).fill(0);
+    feedItems.forEach((item) => {
+      let minIdx = 0;
+      for (let c = 1; c < cols; c++) {
+        if (weights[c] < weights[minIdx]) minIdx = c;
+      }
+      weights[minIdx] += getItemWeight(item);
+    });
+    return weights;
+  };
+
+  const getWeightSpread = (weights: number[]): number => {
+    if (weights.length === 0) return 0;
+    return Math.max(...weights) - Math.min(...weights);
+  };
+
+  // Pick a flexible shorts insertion point that minimizes visible column imbalance
+  const getAdaptiveShortsInsertIndex = (feedItems: FeedItemType[], cols: number): number | null => {
+    if (cols <= 1 || feedItems.length < cols * 2) return null;
+
+    const targetIndex = Math.min(feedItems.length, 8);
+    const minInsert = Math.min(feedItems.length, Math.max(cols * 2, 5));
+    const maxInsert = Math.min(feedItems.length, Math.max(minInsert, targetIndex + cols * 4));
+
+    let best: { index: number; score: number } | null = null;
+
+    for (let index = minInsert; index <= maxInsert; index++) {
+      const before = feedItems.slice(0, index);
+      const after = feedItems.slice(index);
+      if (before.length < cols) continue;
+
+      const beforeSpread = getWeightSpread(calculateColumnWeights(before, cols));
+      const afterSpread = after.length >= cols
+        ? getWeightSpread(calculateColumnWeights(after, cols))
+        : 0;
+
+      const distancePenalty = Math.abs(index - targetIndex) * 0.12;
+      const shortTailPenalty = after.length > 0 && after.length < cols ? 2 : 0;
+      const score = beforeSpread * 1.6 + afterSpread * 0.7 + distancePenalty + shortTailPenalty;
+
+      if (!best || score < best.score) {
+        best = { index, score };
+      }
+    }
+
+    if (!best) return null;
+
+    // If no balanced split exists, keep masonry continuous and place shorts after the grid
+    const maxAcceptableScore = cols === 3 ? 3.6 : 3.0;
+    if (best.score > maxAcceptableScore) return feedItems.length;
+
+    return best.index;
+  };
+
+  // Distribute items into columns using shortest-column-first (height-balanced)
+  const distributeToColumns = (nodes: ReactNode[], cols: number, feedItems?: FeedItemType[]): ReactNode[][] => {
+    if (cols <= 1) return [nodes];
+    const columns: ReactNode[][] = Array.from({ length: cols }, () => []);
+    const colWeights = new Array(cols).fill(0);
+    nodes.forEach((node, i) => {
+      // Find the column with the lowest accumulated weight
+      let minIdx = 0;
+      for (let c = 1; c < cols; c++) {
+        if (colWeights[c] < colWeights[minIdx]) minIdx = c;
+      }
+      columns[minIdx].push(node);
+      colWeights[minIdx] += feedItems ? getItemWeight(feedItems[i]) : 1.5;
+    });
+    return columns;
+  };
+
+  const renderMasonryGrid = (nodes: ReactNode[], feedItems?: FeedItemType[], padEnd = false) => {
+    if (colCount <= 1) {
+      return <div className="space-y-3">{nodes}</div>;
+    }
+    // Measured masonry: items are packed shortest-column-first by their real
+    // rendered heights, so bottoms stay as even as the content allows. Any
+    // residual hole before a following carousel (padEnd) is covered by ads
+    // sized to the exact gap; adjacent short columns share one wide ad.
+    const estimatePx = (item?: FeedItemType): number => {
+      switch (item?.type) {
+        case 'video': return 520;
+        case 'image': return 640;
+        case 'post': return 320;
+        case 'ad': return 420;
+        default: return 380;
+      }
+    };
+    return (
+      <MasonrySegment
+        items={nodes}
+        estimates={nodes.map((_, i) => estimatePx(feedItems?.[i]))}
+        colCount={colCount}
+        padEnd={padEnd}
+      />
+    );
+  };
+
+
+
+  // Render feed items with shorts and radio carousels inserted
+  // Segments feed into alternating masonry containers and full-width inserts
+  const renderFeedWithShorts = () => {
+    const isMultiCol = colCount > 1;
+
+    // --- MULTI-COLUMN: adaptive shorts placement with masonry-safe fallback ---
+    if (isMultiCol) {
+      const adaptiveShortsIndex = shorts.length > 0
+        ? (getAdaptiveShortsInsertIndex(items, colCount) ?? items.length)
+        : items.length;
+
+      const shouldSplitForShorts = shorts.length > 0 && adaptiveShortsIndex > 0 && adaptiveShortsIndex < items.length;
+      const beforeShorts = shouldSplitForShorts ? items.slice(0, adaptiveShortsIndex) : items;
+      // When no shorts split, treat ALL items as afterShorts so carousels still get interleaved
+      const afterShorts = shouldSplitForShorts ? items.slice(adaptiveShortsIndex) : items;
+      const afterShortsBase = shouldSplitForShorts ? adaptiveShortsIndex : 0;
+
+      // Generous spacing: ~16 items (3-col) or ~12 items (2-col) between each carousel
+      const MIN_ITEMS_BETWEEN = colCount === 3 ? 16 : 12;
+      // First carousel after a decent chunk of content
+      const firstOffset = Math.min(afterShorts.length, MIN_ITEMS_BETWEEN);
+      const secondOffset = Math.min(afterShorts.length, firstOffset + MIN_ITEMS_BETWEEN);
+      const thirdOffset = Math.min(afterShorts.length, secondOffset + MIN_ITEMS_BETWEEN);
+
+      // Build segments: chunks of afterShorts items with full-width inserts between them
+      const splitPoints = [firstOffset, secondOffset, thirdOffset].filter((p, i, arr) => p > 0 && p < afterShorts.length && (i === 0 || p > arr[i - 1]));
+      const segments: { items: typeof afterShorts; startIndex: number }[] = [];
+      let lastSplit = 0;
+      for (const sp of splitPoints) {
+        segments.push({ items: afterShorts.slice(lastSplit, sp), startIndex: afterShortsBase + lastSplit });
+        lastSplit = sp;
+      }
+      segments.push({ items: afterShorts.slice(lastSplit), startIndex: afterShortsBase + lastSplit });
+
+      const fullWidthInserts: (ReactNode | null)[] = [
+        radioStations.length > 0 ? <div key="radio-carousel" className="my-3"><RadioCarouselSection /></div> : null,
+        liveNowStreams.length > 0 ? (
+          <div key="live-now" className="my-3 space-y-2">
+            <div className="flex items-center gap-2 px-1">
+              <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+              <h3 className="text-white font-semibold text-sm">Livestreams</h3>
+            </div>
+            <SwipeableCarousel>
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-4">
+                {liveNowStreams.map((stream) => (
+                  <div key={stream.id} className="flex-shrink-0 w-72 sm:w-80">
+                    <LiveCard stream={stream} />
+                  </div>
+                ))}
+              </div>
+            </SwipeableCarousel>
+          </div>
+        ) : null,
+        <div key="leaderboard-carousel" className="my-3"><LeaderboardCarousel /></div>,
+      ];
+
+      return (
+        <>
+          {/* Only render beforeShorts separately if we actually split for shorts */}
+          {shouldSplitForShorts && beforeShorts.length > 0 && renderMasonryGrid(
+            beforeShorts.map((item, i) => renderFeedItem(item, i)),
+            beforeShorts,
+            shorts.length > 0
+          )}
+          {shouldSplitForShorts && shorts.length > 0 && (
+            <div className={cn('my-3', isCollapsed && 'mt-5')}>
+              <ShortsReel shorts={shorts} />
+            </div>
+          )}
+          {segments.map((seg, segIdx) => {
+            // When not splitting for shorts, render ShortsReel before the first fullWidthInsert (after first segment)
+            const showShortsHere = !shouldSplitForShorts && shorts.length > 0 && segIdx === 0;
+            const hasInsertAfter = showShortsHere || (segIdx < fullWidthInserts.length && !!fullWidthInserts[segIdx]);
+            return (
+              <div key={`multi-seg-${segIdx}`}>
+                {seg.items.length > 0 && (
+                  <div className="mt-3">
+                    {renderMasonryGrid(
+                      seg.items.map((item, i) => renderFeedItem(item, seg.startIndex + i)),
+                      seg.items,
+                      hasInsertAfter
+                    )}
+                  </div>
+                )}
+                {showShortsHere && (
+                  <div className={cn('my-3', isCollapsed && 'mt-5')}>
+                    <ShortsReel shorts={shorts} />
+                  </div>
+                )}
+                {segIdx < fullWidthInserts.length && fullWidthInserts[segIdx]}
+              </div>
+            );
+          })}
+
+        </>
+      );
+    }
+
+    // --- SINGLE COLUMN: keep full-width inserts inline as before ---
+    type Segment = { type: 'cards'; items: ReactNode[] } | { type: 'fullwidth'; node: ReactNode };
+    const segments: Segment[] = [];
+    let currentCards: ReactNode[] = [];
+    let shortsInserted = false;
+    let leaderboardInserted = false;
+    let radioInserted = false;
+    let liveInserted = false;
+    let whoToFollowInserted = false;
+
+    const flushCards = () => {
+      if (currentCards.length > 0) {
+        segments.push({ type: 'cards', items: [...currentCards] });
+        currentCards = [];
+      }
+    };
+
+    const addFullWidth = (node: ReactNode) => {
+      flushCards();
+      segments.push({ type: 'fullwidth', node });
+    };
+
+    items.forEach((item, index) => {
+      currentCards.push(renderFeedItem(item, index));
+
+      if ((index + 1) === 3 && !whoToFollowInserted) {
+        addFullWidth(<div key={`who-to-follow-${index}`}><MobileWhoToFollowCarousel /></div>);
+        whoToFollowInserted = true;
+      }
+
+      if ((index + 1) % SHORTS_INSERT_INTERVAL === 0 && shorts.length > 0 && !shortsInserted) {
+        addFullWidth(<div key={`shorts-carousel-${index}`}><ShortsReel shorts={shorts} /></div>);
+        shortsInserted = true;
+      }
+
+      if ((index + 1) === RADIO_INSERT_AFTER && radioStations.length > 0 && !radioInserted) {
+        addFullWidth(<div key={`radio-carousel-${index}`}><RadioCarouselSection /></div>);
+        radioInserted = true;
+      }
+
+      if ((index + 1) === LIVE_INSERT_AFTER && liveNowStreams.length > 0 && !liveInserted) {
+        addFullWidth(
+          <div key={`live-now-${index}`} className="space-y-2">
+            <div className="flex items-center gap-2 px-1">
+              <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+              <h3 className="text-white font-semibold text-sm">Livestreams</h3>
+            </div>
+            <SwipeableCarousel>
+              <div className="flex gap-3 overflow-x-auto scrollbar-hide pr-4">
+                {liveNowStreams.map((stream) => (
+                  <div key={stream.id} className="flex-shrink-0 w-72 sm:w-80">
+                    <LiveCard stream={stream} />
+                  </div>
+                ))}
+              </div>
+            </SwipeableCarousel>
+          </div>
+        );
+        liveInserted = true;
+      }
+
+      if ((index + 1) === LEADERBOARD_INSERT_AFTER && !leaderboardInserted) {
+        addFullWidth(<div key={`leaderboard-carousel-${index}`}><LeaderboardCarousel /></div>);
+        leaderboardInserted = true;
+      }
+    });
+
+    if (items.length > 0 && items.length < SHORTS_INSERT_INTERVAL && shorts.length > 0 && !shortsInserted) {
+      currentCards.push(<div key="shorts-carousel-end"><ShortsReel shorts={shorts} /></div>);
+    }
+
+    flushCards();
+
+    return (
+      <>
+        {segments.map((seg, i) => {
+          if (seg.type === 'fullwidth') {
+            return <div key={`fw-${i}`} className="mb-3">{seg.node}</div>;
+          }
+          return (
+            <div key={`cols-${i}`} className="mb-3">
+              {renderMasonryGrid(seg.items)}
+            </div>
+          );
+        })}
+      </>
+    );
+  };
+
+  // Determine loading state
+  const hasQueryData = useInterleavedFeed
+    ? (videosFeed.data?.pages?.length || imagesFeed.data?.pages?.length || textsFeed.data?.pages?.length)
+    : (singleFeed.data?.pages?.length);
+  const hasCachedData = hasQueryData && items.length > 0;
+  const isLoadingState = isCategoryTransitioning || (!hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading)));
+
+  // Clear transitioning flag once new data has arrived (even if 0 results)
+  useEffect(() => {
+    if (isCategoryTransitioning && (hasQueryData || (!isLoading && !isFetchingNextPage))) {
+      setIsCategoryTransitioning(false);
+    }
+  }, [isCategoryTransitioning, hasQueryData, isLoading, isFetchingNextPage]);
+
+  const { isAutoRetrying, retriesExhausted } = useAutoRetryFeed({
+    itemCount: items.length,
+    isLoading: isLoadingState,
+    isError,
+    refetch,
+  });
+
+  // Boot shell removal is now handled by AppLayout on mount, not gated on feed data.
+
+  const EmptyState = () => {
+    // Custom message for Following feed
+    const isFollowingEmpty = selectedSort.value === 'following';
+    
+    let title = 'No Content Yet';
+    let description = (isError || retriesExhausted)
+      ? 'Unable to load feed. Please try again.'
+      : 'Be the first to share something amazing!';
+    
+    if (isFollowingEmpty) {
+      title = 'No Posts Yet';
+      description = 'Follow some creators to see their posts here!';
+    }
+    
+    return (
+      <div className="flex flex-col items-center justify-center py-20 text-center">
+        <div className="w-16 h-16 rounded-xl bg-zinc-800 flex items-center justify-center mb-4">
+          <RefreshCw className="w-8 h-8 text-zinc-500" />
+        </div>
+        <h3 className="text-white font-semibold text-lg mb-2">{title}</h3>
+        <p className="text-zinc-400 text-sm max-w-xs mb-4">{description}</p>
+        <button 
+          onClick={refetch}
+          className="px-4 py-2 rounded-full bg-white/10 text-white text-sm hover:bg-white/20 transition-colors"
+        >
+          Refresh
+        </button>
+      </div>
+    );
+  };
+
+  // Show a non-blocking top progress bar whenever something is loading in the background
+  // (filter switches, pagination, refetch). Filters stay clickable; existing items remain visible.
+  const showTopProgress = (isFetching || isAutoRetrying) && !isLoadingState;
+
+  return (
+    <div data-feed-root className={cn("relative p-2 sm:p-3 pt-0 sm:pt-0 space-y-3", isCollapsed && "pt-2 sm:pt-2")}>
+      {showTopProgress && (
+        <div
+          aria-hidden
+          className="pointer-events-none sticky top-0 z-30 -mx-2 sm:-mx-3 h-[2px] overflow-hidden"
+        >
+          <div className="h-full w-1/3 bg-gradient-to-r from-transparent via-white/70 to-transparent animate-[shimmer-sweep_1.2s_linear_infinite]" />
+        </div>
+      )}
+      {/* Filters - ALWAYS accessible so users can change settings even when feed is empty/retrying.
+          When a portal target is provided, render the panel into the sticky tab bar so it stays
+          visible while scrolling; otherwise fall back to the in-flow panel. */}
+      {(() => {
+        const filterPanel = (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className={cn("overflow-y-clip overflow-x-visible", portalTarget && "mt-2")}
+          >
+            <div
+              ref={bentoRef}
+              data-no-swipe
+              data-feed-filter-panel
+              className={cn(
+                "rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-2 sm:px-3 py-3 space-y-4",
+                portalTarget && "max-h-[calc(100vh-12rem)] overflow-y-auto overflow-x-visible scrollbar-hide"
+              )}
+            >
+              <SortFilterSection
+                selectedSort={optimisticSort}
+                onSortSelect={handleSortSelect}
+                selectedCategories={optimisticCategories}
+                onCategoryToggle={(cat) => {
+                  setSelectedCategories(prev =>
+                    prev.includes(cat) ? prev.filter(c => c !== cat) : [...prev, cat]
+                  );
+                }}
+                onCategoryClear={() => setSelectedCategories([])}
+                categories={categories}
+                selectedDate={optimisticDate}
+                onDateSelect={setSelectedDate}
+                selectedPostType={optimisticPostType}
+                onPostTypeSelect={(v) => {
+                  if (v === 'video') {
+                    window.dispatchEvent(new CustomEvent('switch-home-tab', { detail: 'videos' }));
+                  } else if (v === 'feed-images') {
+                    window.dispatchEvent(new CustomEvent('switch-home-tab', { detail: 'images' }));
+                  } else {
+                    setSelectedPostType(v);
+                  }
+                }}
+                contentFilters={optimisticContentFilters}
+                onContentFilterToggle={toggleContentFilter}
+                onReset={() => {
+                  setSelectedSort(DEFAULT_HOME_SORT);
+                  setSelectedCategories([]);
+                  setSelectedDate(DATE_FILTER_OPTIONS[0]);
+                  setSelectedPostType('all');
+                  resetContentFilters();
+                }}
+              />
+            </div>
+          </motion.div>
+        );
+
+        if (portalTarget) {
+          return showFilters ? createPortal(
+            <AnimatePresence mode="wait">{filterPanel}</AnimatePresence>,
+            portalTarget
+          ) : null;
+        }
+
+        return (
+          <AnimatePresence mode="wait">
+            {showFilters && filterPanel}
+          </AnimatePresence>
+        );
+      })()}
+
+      {/* Active filter chips bar (sort, date, content access, categories) */}
+      {(() => {
+        const hasChips = optimisticSort.value !== 'latest' || optimisticDate.value !== 'all' || optimisticContentFilters.ppv || optimisticContentFilters.w2e || optimisticContentFilters.locked || optimisticCategories.length > 0;
+        if (!hasChips) return null;
+
+        const chipsBar = (
+          <div className="flex items-center gap-1.5 flex-wrap px-1 pt-1 pb-2">
+            {optimisticSort.value !== 'latest' && (
+              <button
+                data-filter-chip
+                onClick={() => setSelectedSort(DEFAULT_HOME_SORT)}
+                className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
+              >
+                <span className="leading-[1]">{optimisticSort.label}</span>
+                <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
+              </button>
+            )}
+            {optimisticDate.value !== 'all' && (
+              <button
+                data-filter-chip
+                onClick={() => setSelectedDate(DATE_FILTER_OPTIONS[0])}
+                className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
+              >
+                <span className="leading-[1]">{optimisticDate.label}</span>
+                <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
+              </button>
+            )}
+            {optimisticContentFilters.ppv && (
+              <button
+                data-filter-chip
+                onClick={() => toggleContentFilter('ppv')}
+                className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
+              >
+                <span className="leading-[1]">PPV</span>
+                <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
+              </button>
+            )}
+            {optimisticContentFilters.w2e && (
+              <button
+                data-filter-chip
+                onClick={() => toggleContentFilter('w2e')}
+                className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
+              >
+                <span className="leading-[1]">Bounty</span>
+                <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
+              </button>
+            )}
+            {optimisticContentFilters.locked && (
+              <button
+                data-filter-chip
+                onClick={() => toggleContentFilter('locked')}
+                className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
+              >
+                <span className="leading-[1]">Gated</span>
+                <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
+              </button>
+            )}
+            {optimisticCategories.map((rawCatId, index) => {
+              const catId = typeof rawCatId === 'string'
+                ? rawCatId
+                : (rawCatId && typeof rawCatId === 'object' && 'categoryId' in rawCatId && typeof (rawCatId as { categoryId?: unknown }).categoryId === 'string')
+                  ? ((rawCatId as { categoryId: string }).categoryId)
+                  : null;
+
+              if (!catId) return null;
+
+              const catObj = categories.find(c => c.id === catId);
+              return (
+                <button
+                  data-filter-chip
+                  key={`${catId}-${index}`}
+                  onClick={() => setSelectedCategories(prev => prev.filter(c => c !== catId))}
+                  className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
+                >
+                  <span className="leading-[1]">{catObj?.name || catId}</span>
+                  <span className="text-white/40 hover:text-white text-[10px] leading-[1] -mt-px">✕</span>
+                </button>
+              );
+            })}
+            <button
+              onClick={() => {
+                setSelectedSort(DEFAULT_HOME_SORT);
+                setSelectedDate(DATE_FILTER_OPTIONS[0]);
+                resetContentFilters();
+                setSelectedCategories([]);
+              }}
+              className="px-2 py-1 rounded-lg text-[10px] text-zinc-500 hover:text-white transition-colors"
+            >
+              Clear all
+            </button>
+          </div>
+        );
+
+        if (portalTarget) {
+          return createPortal(chipsBar, portalTarget);
+        }
+        return chipsBar;
+      })()}
+
+
+      {(isLoadingState || isAutoRetrying) ? (
+        <FeedCardSkeletonList count={6} />
+      ) : (
+        <>
+          {/* Stories carousel hidden for now */}
+          {/* <div className={cn(isCollapsed && 'mt-1.5')}>
+            <StoriesBar users={storyUsers} isLoading={isLoadingState} shorts={shorts} />
+          </div> */}
+
+      {/* Friends on Stage notification */}
+      <FriendsOnStageBar />
+
+          {items.length === 0 && !pinnedItem && optimisticPosts.length === 0 && !hasQueryData ? (
+            <EmptyState />
+          ) : (
+            <div key={`${selectedSort.value}-${selectedDate.value}-${selectedPostType}`}>
+              {/* Render optimistic posts */}
+              {optimisticPosts.filter(op => !getDeletedPostIds().has(op.id)).length > 0 && (
+                <div className="mb-3">
+                  {renderMasonryGrid(optimisticPosts.filter(op => !getDeletedPostIds().has(op.id)).map((op) => {
+                    const feedItem: FeedItemType = { type: op.type, data: op.data as any };
+                    return renderFeedItem(feedItem, -999);
+                  }), optimisticPosts.filter(op => !getDeletedPostIds().has(op.id)).map((op) => ({ type: op.type, data: op.data as any })))}
+                </div>
+              )}
+              
+              {/* Render pinned post */}
+              {pinnedItem && (
+                <div className="mb-3">
+                  {renderMasonryGrid([renderFeedItem(pinnedItem, -1)], [pinnedItem])}
+                </div>
+              )}
+              
+              {/* Rest of the feed */}
+              {renderFeedWithShorts()}
+              
+              {/* Infinite scroll loader */}
+              <div ref={loaderRef} className="py-4 flex justify-center">
+                {isFetchingNextPage && (
+                  <div className="flex items-center gap-2 text-zinc-400">
+                    <div className="w-5 h-5 border-2 border-zinc-500 border-t-white rounded-full animate-spin" />
+                    <span className="text-sm">{t('common.loadingMore')}</span>
+                  </div>
+                )}
+                {!hasNextPage && items.length > 0 && (
+                  <p className="text-zinc-500 text-sm">You've reached the end 🎉</p>
+                )}
+              </div>
+            </div>
+          )}
+        </>
+      )}
+      <PromptFlowModal
+        open={promptModalOpen}
+        onOpenChange={setPromptModalOpen}
+        categories={categories}
+        initialPrompt={initialPromptText}
+        onSave={(catIds) => {
+          setSelectedCategories(catIds);
+          setSelectedSort(SORT_OPTIONS.find(o => o.value === 'prompt') || DEFAULT_HOME_SORT);
+        }}
+      />
+    </div>
+  );
+}

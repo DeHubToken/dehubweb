@@ -1,0 +1,552 @@
+// Dynamic per-affiliate DeHub share image.
+// Default: PNG (Facebook/Telegram/WhatsApp/LinkedIn/Discord reject SVG OG images).
+// Use ?format=svg for in-app lightweight preview.
+
+import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import QRCode from "https://esm.sh/qrcode@1.5.4";
+import { encode as encodeB64 } from "https://deno.land/std@0.190.0/encoding/base64.ts";
+import { Resvg, initWasm } from "https://esm.sh/@resvg/resvg-wasm@2.6.2";
+import { DEHUB_LOGO_DATA_URI } from "./logo.ts";
+import { BADGE_DATA_URIS } from "./badges.ts";
+
+// Staking badge tiers — mirror of src/lib/staking-badges.ts.
+const BADGE_LEVELS: { name: string; min: number }[] = [
+  { name: "Crab", min: 10000 },
+  { name: "Lobster", min: 25000 },
+  { name: "Piranha", min: 50000 },
+  { name: "Tortoise", min: 100000 },
+  { name: "Cobra", min: 250000 },
+  { name: "Octopus", min: 500000 },
+  { name: "Crocodite", min: 1000000 },
+  { name: "Dolphin", min: 2000000 },
+  { name: "Tiger Shark", min: 3000000 },
+  { name: "Killer Whale", min: 5000000 },
+  { name: "Great White Shark", min: 10000000 },
+  { name: "Blue Whale", min: 25000000 },
+  { name: "Meglodon", min: 50000000 },
+];
+const USERNAME_BADGE_OVERRIDES: Record<string, string> = {
+  "maldoteth": "Meglodon",
+  "mal": "Meglodon",
+  "aaron": "Meglodon",
+};
+function resolveBadgeDataUri(badgeBalance: number | null, username: string | null): string | null {
+  if (username) {
+    const key = username.replace(/^@+/, "").toLowerCase();
+    const override = USERNAME_BADGE_OVERRIDES[key];
+    if (override && BADGE_DATA_URIS[override]) return BADGE_DATA_URIS[override];
+  }
+  if (badgeBalance === null || !Number.isFinite(badgeBalance) || badgeBalance < 10000) return null;
+  let current: string | null = null;
+  for (const b of BADGE_LEVELS) {
+    if (badgeBalance >= b.min) current = b.name;
+    else break;
+  }
+  return current ? BADGE_DATA_URIS[current] || null : null;
+}
+
+let resvgReady: Promise<void> | null = null;
+function ensureResvg(): Promise<void> {
+  if (!resvgReady) {
+    resvgReady = initWasm(fetch("https://esm.sh/@resvg/resvg-wasm@2.6.2/index_bg.wasm"));
+  }
+  return resvgReady;
+}
+
+// Fonts: resvg-wasm has no system fonts — text is invisible without explicit buffers.
+const FONT_URLS = [
+  "https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_nVMrMxCp50ojIw2-cD-AU.woff2",
+  "https://fonts.gstatic.com/s/inter/v13/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIw2-cD-AU.woff2",
+  "https://fonts.gstatic.com/s/robotomono/v23/L0xuDF4xlVMF-BfR8bXMIhJHg45mwgGEFl0_3vqPQA.woff2",
+];
+let fontBuffers: Uint8Array[] | null = null;
+async function loadFonts(): Promise<Uint8Array[]> {
+  if (fontBuffers) return fontBuffers;
+  // Prefer TTF directly to avoid woff2 decode requirements in resvg-wasm.
+  const ttfs = [
+    "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-700-normal.ttf",
+    "https://cdn.jsdelivr.net/fontsource/fonts/inter@latest/latin-400-normal.ttf",
+  ];
+  const out: Uint8Array[] = [];
+  for (const u of ttfs) {
+    try {
+      const r = await fetch(u, { redirect: "follow" });
+      if (r.ok) {
+        const buf = new Uint8Array(await r.arrayBuffer());
+        if (buf.byteLength > 1000) out.push(buf);
+      }
+    } catch { /* ignore */ }
+  }
+  fontBuffers = out;
+  return out;
+}
+
+const LOGO_ASPECT = 1752 / 417; // width / height of the wordmark PNG
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+};
+
+const SITE = "https://dehub.io";
+const CDN = "https://dehubcdn.ams3.cdn.digitaloceanspaces.com/";
+const API = "https://api.dehub.io";
+const VALID_CODE = /^[A-Z0-9_-]{3,40}$/;
+
+const DEFAULT_BANNERS = [
+  "https://dehub.io/__l5e/assets-v1/cd209550-77ef-4c95-b16a-d83ad3adc7ea/default-banner-1.png",
+  "https://dehub.io/__l5e/assets-v1/4be06f0a-849c-44c4-bdc2-7c5f0a261b6c/default-banner-2.png",
+  "https://dehub.io/__l5e/assets-v1/fa63c89b-9a94-4f94-98f3-8eb5e8289350/default-banner-3.png",
+  "https://dehub.io/__l5e/assets-v1/2362a631-0fc5-4a89-8e6b-bf6be734f67b/default-banner-4.png",
+  "https://dehub.io/__l5e/assets-v1/bd3416e0-f49a-4bc6-a758-7443d9dbcd87/default-banner-5.png",
+  "https://dehub.io/__l5e/assets-v1/d3b70189-d07f-43f5-b901-ef4f9aeb24c6/default-banner-6.png",
+  "https://dehub.io/__l5e/assets-v1/fcfba189-8e23-45a0-a96f-bd865f11eb88/default-banner-7.png",
+  "https://dehub.io/__l5e/assets-v1/11cfc96b-88ac-4745-adc1-4ba16c47c0a9/default-banner-8.png",
+  "https://dehub.io/__l5e/assets-v1/fb0303c4-fe1a-4742-93a7-5c612166d7b2/default-banner-9.png",
+];
+
+function pickDefaultBanner(address: string | null): string {
+  if (!address) return DEFAULT_BANNERS[0];
+  let h = 0;
+  for (let i = 0; i < address.length; i++) h = (h * 31 + address.charCodeAt(i)) >>> 0;
+  return DEFAULT_BANNERS[h % DEFAULT_BANNERS.length];
+}
+
+async function fetchWithTimeout(url: string, ms = 3500): Promise<Response | null> {
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), ms);
+    const r = await fetch(url, { signal: ctrl.signal, redirect: "follow" });
+    clearTimeout(t);
+    return r;
+  } catch {
+    return null;
+  }
+}
+
+async function fetchAsDataUri(url: string): Promise<string | null> {
+  const r = await fetchWithTimeout(url);
+  if (!r || !r.ok) return null;
+  const ct = r.headers.get("content-type") || "image/png";
+  if (!ct.startsWith("image/")) return null;
+  try {
+    const buf = new Uint8Array(await r.arrayBuffer());
+    if (buf.byteLength < 200) return null;
+    return `data:${ct};base64,${encodeB64(buf)}`;
+  } catch {
+    return null;
+  }
+}
+
+async function fetchCoverDataUri(address: string | null, apiCoverPath: string | null): Promise<string | null> {
+  const candidates: string[] = [];
+  if (apiCoverPath) {
+    if (apiCoverPath.startsWith("http")) candidates.push(apiCoverPath);
+    else candidates.push(`${CDN}${apiCoverPath.replace(/^\/+/, "").replace(/^statics\//, "")}`);
+  }
+  if (address) {
+    for (const ext of ["jpg", "png", "jpeg", "webp"]) {
+      candidates.push(`${CDN}covers/${address.toLowerCase()}.${ext}`);
+    }
+  }
+  for (const url of candidates) {
+    const data = await fetchAsDataUri(url);
+    if (data) return data;
+  }
+  return null;
+}
+
+function escapeXml(value: string) {
+  return value.replace(/[<>&"']/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&apos;" }[c] as string));
+}
+
+function cleanName(raw: string | null | undefined): string {
+  const cleaned = (raw || "").trim().replace(/^@+/, "");
+  if (!cleaned) return "a creator";
+  return cleaned.slice(0, 28);
+}
+
+async function fetchAvatarDataUri(address: string | null, apiAvatarPath: string | null): Promise<string | null> {
+  const candidates: string[] = [];
+  if (apiAvatarPath) {
+    if (apiAvatarPath.startsWith("http")) candidates.push(apiAvatarPath);
+    else candidates.push(`${CDN}${apiAvatarPath.replace(/^\/+/, "").replace(/^statics\//, "")}`);
+  }
+  if (address) {
+    for (const ext of ["jpg", "png", "jpeg", "webp", "gif"]) {
+      candidates.push(`${CDN}avatars/${address.toLowerCase()}.${ext}`);
+    }
+  }
+  for (const url of candidates) {
+    const r = await fetchWithTimeout(url);
+    if (!r || !r.ok) continue;
+    const ct = r.headers.get("content-type") || "image/jpeg";
+    if (!ct.startsWith("image/")) continue;
+    try {
+      const buf = new Uint8Array(await r.arrayBuffer());
+      if (buf.byteLength < 200) continue;
+      return `data:${ct};base64,${encodeB64(buf)}`;
+    } catch { /* try next */ }
+  }
+  return null;
+}
+
+async function fetchProfile(code: string) {
+  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  let address: string | null = null;
+  let shareName: string | null = null;
+  if (supabaseUrl && serviceKey) {
+    const admin = createClient(supabaseUrl, serviceKey);
+    const { data } = await admin
+      .from("affiliate_codes")
+      .select("share_name,owner_address,active")
+      .eq("code", code)
+      .maybeSingle();
+    if (data?.active !== false) {
+      address = (data?.owner_address as string | null) ?? null;
+      shareName = (data?.share_name as string | null) ?? null;
+    }
+  }
+  let avatarPath: string | null = null;
+  let coverPath: string | null = null;
+  let displayName: string | null = null;
+  let username: string | null = null;
+  let badgeBalance: number | null = null;
+  if (address) {
+    try {
+      const r = await fetch(`${API}/api/account_info/${address}`);
+      if (r.ok) {
+        const j = await r.json();
+        const u = j?.result || j;
+        avatarPath = u?.avatarImageUrl || u?.avatarUrl || null;
+        coverPath = u?.coverImageUrl || u?.coverUrl || null;
+        const apiDisplay = (u?.displayName || "").trim() || null;
+        const apiUser = (u?.username || "").trim() || null;
+        username = apiUser;
+        const bb = Number(u?.badgeBalance);
+        badgeBalance = Number.isFinite(bb) ? bb : null;
+        // Prefer API displayName. Fall back to shareName only if it differs from username.
+        const sn = (shareName || "").trim() || null;
+        displayName = apiDisplay || (sn && sn.toLowerCase() !== (apiUser || "").toLowerCase() ? sn : null) || apiUser;
+      } else {
+        displayName = shareName;
+      }
+    } catch {
+      displayName = shareName;
+    }
+  } else {
+    displayName = shareName;
+  }
+
+  return { address, displayName, username, avatarPath, coverPath, badgeBalance };
+}
+
+async function buildQrSvgInner(text: string): Promise<{ path: string; count: number }> {
+  const qr = QRCode.create(text, { errorCorrectionLevel: "M" });
+  const modules = qr.modules;
+  const count = modules.size;
+  let path = "";
+  for (let y = 0; y < count; y++) {
+    for (let x = 0; x < count; x++) {
+      if (modules.get(x, y)) path += `M${x},${y}h1v1h-1z`;
+    }
+  }
+  return { path, count };
+}
+
+function buildSvg(opts: {
+  code: string;
+  name: string;
+  username: string | null;
+  avatarDataUri: string | null;
+  bannerDataUri: string | null;
+  badgeDataUri: string | null;
+  qrPath: string;
+  qrCount: number;
+  width: number;
+  height: number;
+}) {
+  const W = opts.width;
+  const H = opts.height;
+  const name = escapeXml(opts.name);
+  const showHandle = Boolean(opts.username);
+  const handle = showHandle ? escapeXml(`@${opts.username}`) : "";
+  const code = escapeXml(opts.code || "INVITE");
+  const portraitR = Math.min(W, H) * 0.22;
+  const portraitCX = W * 0.30;
+  const portraitCY = H * 0.50;
+  const portraitSize = portraitR * 2;
+  const portraitX = portraitCX - portraitR;
+  const portraitY = portraitCY - portraitR;
+  const qrSize = Math.min(W, H) * 0.20;
+  const qrX = W - qrSize - W * 0.06;
+  const qrY = H - qrSize - H * 0.10;
+  const qrScale = qrSize / opts.qrCount;
+  const textX = W * 0.50;
+
+  const avatarHref = opts.avatarDataUri ?? "";
+  const hasAvatar = Boolean(opts.avatarDataUri);
+  const bannerHref = opts.bannerDataUri ?? "";
+  const hasBanner = Boolean(opts.bannerDataUri);
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Inter, sans-serif">
+  <defs>
+    <clipPath id="avatarClip"><rect x="${portraitX}" y="${portraitY}" width="${portraitSize}" height="${portraitSize}" rx="${portraitR * 0.22}"/></clipPath>
+    <clipPath id="bgClip"><rect width="${W}" height="${H}"/></clipPath>
+    <filter id="bgBlur" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="18"/></filter>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="10"/></filter>
+    <radialGradient id="vignette" cx="50%" cy="50%" r="75%"><stop offset="55%" stop-color="#000" stop-opacity="0"/><stop offset="100%" stop-color="#000" stop-opacity="0.85"/></radialGradient>
+    <linearGradient id="scrim" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity="0.25"/><stop offset="1" stop-color="#000" stop-opacity="0.85"/></linearGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffffff" stop-opacity="0.9"/><stop offset="1" stop-color="#ffffff" stop-opacity="0.25"/></linearGradient>
+  </defs>
+
+  <rect width="${W}" height="${H}" fill="#0a0a0b"/>
+  <g clip-path="url(#bgClip)">
+    <image href="${bannerHref}" x="0" y="0" width="${W}" height="${H}" preserveAspectRatio="xMidYMid slice" filter="${hasBanner ? "url(#bgBlur)" : "none"}" opacity="0.9"/>
+  </g>
+  <rect width="${W}" height="${H}" fill="url(#scrim)"/>
+  <rect width="${W}" height="${H}" fill="url(#vignette)"/>
+
+  <g>
+    <rect x="${portraitX - 14}" y="${portraitY - 14}" width="${portraitSize + 28}" height="${portraitSize + 28}" rx="${(portraitR + 14) * 0.22}" fill="#fff" opacity="0.08" filter="url(#softGlow)"/>
+    <rect x="${portraitX - 6}" y="${portraitY - 6}" width="${portraitSize + 12}" height="${portraitSize + 12}" rx="${(portraitR + 6) * 0.22}" fill="none" stroke="url(#ring)" stroke-width="3"/>
+    ${hasAvatar ? `<image href="${avatarHref}" x="${portraitX}" y="${portraitY}" width="${portraitSize}" height="${portraitSize}" preserveAspectRatio="xMidYMid slice" clip-path="url(#avatarClip)"/>` : `
+      <rect x="${portraitX}" y="${portraitY}" width="${portraitSize}" height="${portraitSize}" rx="${portraitR * 0.22}" fill="#1f2026"/>
+      <text x="${portraitCX}" y="${portraitCY + portraitR * 0.22}" fill="#fff" font-size="${portraitR}" font-weight="800" text-anchor="middle">${escapeXml((opts.name[0] || "D").toUpperCase())}</text>
+    `}
+  </g>
+
+  <g text-anchor="start">
+    <text x="${textX}" y="${H * 0.46}" fill="#fff" font-size="${H * 0.085}" font-weight="800" letter-spacing="-1">${name}</text>
+    ${opts.badgeDataUri ? (() => {
+      // Approximate rendered width of the name to anchor a superscript badge at its top-right.
+      const fs = H * 0.085;
+      const approxNameW = opts.name.length * fs * 0.55;
+      const badgeSize = fs * 0.55;
+      const bx = textX + approxNameW + fs * 0.28;
+      const by = H * 0.46 - fs * 0.95;
+      return `<image href="${opts.badgeDataUri}" x="${bx}" y="${by}" width="${badgeSize}" height="${badgeSize}" preserveAspectRatio="xMidYMid meet"/>`;
+    })() : ""}
+    ${handle ? `<text x="${textX}" y="${H * 0.535}" fill="#ffffff" fill-opacity="0.55" font-size="${H * 0.034}" font-weight="500">${handle}</text>` : ""}
+    <text x="${textX}" y="${handle ? H * 0.585 : H * 0.575}" fill="#ffffff" fill-opacity="0.92" font-size="${H * 0.042}" font-weight="500">invites you to join DeHub.</text>
+    <g transform="translate(${W * 0.04}, ${H * 0.85})">
+      <rect width="${H * 0.15}" height="${H * 0.072}" rx="${H * 0.014}" fill="#fff"/>
+      <text x="${H * 0.075}" y="${H * 0.05}" fill="#0a0a0b" font-size="${H * 0.034}" font-weight="800" text-anchor="middle" letter-spacing="1">JOIN</text>
+      <text x="${H * 0.17}" y="${H * 0.05}" fill="#ffffff" fill-opacity="0.85" font-size="${H * 0.030}" font-weight="600" font-family="ui-monospace, SFMono-Regular, Menlo, monospace">dehub.io/r/${code}</text>
+    </g>
+  </g>
+
+
+  <g transform="translate(${qrX - 18}, ${qrY - 18})">
+    <rect width="${qrSize + 36}" height="${qrSize + 36}" rx="18" fill="#ffffff"/>
+    <g transform="translate(18, 18) scale(${qrScale})" fill="#0a0a0b"><path d="${opts.qrPath}"/></g>
+    <text x="${(qrSize + 36) / 2}" y="${qrSize + 32}" fill="#0a0a0b" font-size="14" font-weight="700" text-anchor="middle" letter-spacing="2">SCAN TO JOIN</text>
+  </g>
+
+  ${(() => {
+    const tlW = W * 0.18;
+    const tlH = tlW / LOGO_ASPECT;
+    return `<image href="${DEHUB_LOGO_DATA_URI}" x="${W - tlW - W * 0.05}" y="${H * 0.06}" width="${tlW}" height="${tlH}" preserveAspectRatio="xMidYMid meet"/>`;
+  })()}
+</svg>`;
+}
+
+// In-memory PNG + SVG cache + in-flight dedup (per worker). Survives between requests.
+const PNG_CACHE = new Map<string, Uint8Array>();
+const PNG_INFLIGHT = new Map<string, Promise<Uint8Array>>();
+const SVG_CACHE = new Map<string, string>();
+const SVG_INFLIGHT = new Map<string, Promise<string>>();
+const PNG_CACHE_MAX = 200;
+const SVG_CACHE_MAX = 400;
+
+function cachePng(key: string, png: Uint8Array) {
+  if (PNG_CACHE.size >= PNG_CACHE_MAX) {
+    const firstKey = PNG_CACHE.keys().next().value;
+    if (firstKey) PNG_CACHE.delete(firstKey);
+  }
+  PNG_CACHE.set(key, png);
+}
+
+function cacheSvg(key: string, svg: string) {
+  if (SVG_CACHE.size >= SVG_CACHE_MAX) {
+    const firstKey = SVG_CACHE.keys().next().value;
+    if (firstKey) SVG_CACHE.delete(firstKey);
+  }
+  SVG_CACHE.set(key, svg);
+}
+
+async function buildSvgFor(rawCode: string, width: number, height: number): Promise<string> {
+  let address: string | null = null;
+  let displayName: string | null = null;
+  let username: string | null = null;
+  let avatarPath: string | null = null;
+  let coverPath: string | null = null;
+  let badgeBalance: number | null = null;
+  if (rawCode) {
+    const p = await fetchProfile(rawCode);
+    address = p.address;
+    displayName = p.displayName;
+    username = p.username;
+    avatarPath = p.avatarPath;
+    coverPath = p.coverPath;
+    badgeBalance = p.badgeBalance;
+  }
+
+  const [avatarDataUri, coverDataUri] = await Promise.all([
+    fetchAvatarDataUri(address, avatarPath),
+    fetchCoverDataUri(address, coverPath),
+  ]);
+  const bannerDataUri = coverDataUri || (await fetchAsDataUri(pickDefaultBanner(address)));
+  const shareUrl = rawCode ? `${SITE}/r/${rawCode}` : SITE;
+  const { path: qrPath, count: qrCount } = await buildQrSvgInner(shareUrl);
+  const badgeDataUri = resolveBadgeDataUri(badgeBalance, username);
+
+  const svg = buildSvg({
+    code: rawCode,
+    name: cleanName(displayName || username),
+    username,
+    avatarDataUri,
+    bannerDataUri,
+    badgeDataUri,
+    qrPath,
+    qrCount,
+    width,
+    height,
+  });
+
+  return svg;
+}
+
+
+async function buildPngFor(rawCode: string, width: number, height: number): Promise<{ png: Uint8Array | null; svg: string }> {
+  const svg = await buildSvgFor(rawCode, width, height);
+
+  try {
+    await ensureResvg();
+    const fonts = await loadFonts();
+    const resvg = new Resvg(svg, {
+      fitTo: { mode: "width", value: width },
+      font: { fontBuffers: fonts, loadSystemFonts: false, defaultFontFamily: "Inter" },
+    });
+    const png = resvg.render().asPng();
+    return { png, svg };
+  } catch (e) {
+    console.error("[affiliate-share-image] rasterize failed", e);
+    return { png: null, svg };
+  }
+}
+
+serve(async (req) => {
+  if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
+  try {
+    const url = new URL(req.url);
+    const rawCode = (url.searchParams.get("code") || "").trim().toUpperCase();
+    const width = Math.min(1920, Math.max(600, Number(url.searchParams.get("width")) || 1200));
+    const height = Math.min(1080, Math.max(315, Number(url.searchParams.get("height")) || 630));
+    const format = (url.searchParams.get("format") || "png").toLowerCase() === "svg" ? "svg" : "png";
+    const noCache = url.searchParams.has("v") || url.searchParams.has("nocache");
+    if (rawCode && !VALID_CODE.test(rawCode)) {
+      return new Response("invalid code", { status: 400, headers: corsHeaders });
+    }
+
+    const cacheKey = `${format}:${rawCode}:${width}x${height}`;
+
+    if (format === "png" && !noCache) {
+      const cached = PNG_CACHE.get(cacheKey);
+      if (cached) {
+        return new Response(cached, {
+          status: 200,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "image/png",
+            "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800",
+            "X-Cache": "HIT",
+          },
+        });
+      }
+    }
+
+    if (format === "png") {
+      let inflight = PNG_INFLIGHT.get(cacheKey);
+      if (!inflight) {
+        inflight = (async () => {
+          const { png, svg } = await buildPngFor(rawCode, width, height);
+          if (png) cachePng(cacheKey, png);
+          // If raster failed, throw a tagged error carrying svg so caller can fallback.
+          if (!png) throw Object.assign(new Error("raster_failed"), { svg });
+          return png;
+        })();
+        PNG_INFLIGHT.set(cacheKey, inflight);
+        inflight.finally(() => PNG_INFLIGHT.delete(cacheKey));
+      }
+      try {
+        const png = await inflight;
+        return new Response(png, {
+          status: 200,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "image/png",
+            "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=604800",
+            "X-Cache": "MISS",
+          },
+        });
+      } catch (e) {
+        const svg = (e as { svg?: string }).svg;
+        if (svg) {
+          return new Response(svg, {
+            status: 200,
+            headers: {
+              ...corsHeaders,
+              "Content-Type": "image/svg+xml; charset=utf-8",
+              "Cache-Control": "public, s-maxage=3600",
+              "X-Fallback": "svg",
+            },
+          });
+        }
+        throw e;
+      }
+    }
+
+    // SVG path — cache + in-flight dedup so repeat visits are instant.
+    if (!noCache) {
+      const cachedSvg = SVG_CACHE.get(cacheKey);
+      if (cachedSvg) {
+        return new Response(cachedSvg, {
+          status: 200,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "image/svg+xml; charset=utf-8",
+            "Cache-Control": "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800, immutable",
+            "X-Cache": "HIT",
+          },
+        });
+      }
+    }
+    let svgInflight = SVG_INFLIGHT.get(cacheKey);
+    if (!svgInflight) {
+      svgInflight = (async () => {
+        const svg = await buildSvgFor(rawCode, width, height);
+        cacheSvg(cacheKey, svg);
+        return svg;
+      })();
+      SVG_INFLIGHT.set(cacheKey, svgInflight);
+      svgInflight.finally(() => SVG_INFLIGHT.delete(cacheKey));
+    }
+    const svg = await svgInflight;
+    return new Response(svg, {
+      status: 200,
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "image/svg+xml; charset=utf-8",
+        "Cache-Control": "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800, immutable",
+        "X-Cache": "MISS",
+      },
+    });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return new Response(`error: ${message}`, { status: 500, headers: corsHeaders });
+  }
+});

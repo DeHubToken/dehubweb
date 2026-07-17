@@ -1,0 +1,1 @@
+ALTER TABLE public.communities ADD COLUMN ticker_symbol text DEFAULT NULL;

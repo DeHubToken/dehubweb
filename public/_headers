@@ -1,0 +1,11 @@
+/*
+  Cross-Origin-Opener-Policy: unsafe-none
+  Cross-Origin-Embedder-Policy: unsafe-none
+  Cross-Origin-Resource-Policy: cross-origin
+  X-Frame-Options: SAMEORIGIN
+
+# The service worker must never be long-cached, or clients get stuck on an old
+# SW that can't pick up new caching logic. Always revalidate. Scope stays root.
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate
+  Service-Worker-Allowed: /

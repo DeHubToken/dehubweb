@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <script type="module">
+      import { Buffer } from 'buffer'
+      import process from 'process'
+      window.Buffer = Buffer
+      window.process = process
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DeHub — Open Source, User Owned Social Media</title>
+    <meta name="description" content="DeHub is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities.">
+    <meta name="author" content="DeHub" />
+    <meta name="robots" content="index, follow">
+    <!-- Mirror hosts (cosmic-echo-hero.lovable.app etc.) serve this same build
+         outside our Netlify edge, so they can't get an X-Robots-Tag header;
+         flip robots to noindex client-side so rendered crawls never index a
+         duplicate of dehub.io. -->
+    <script>
+      if (location.hostname !== "dehub.io" && location.hostname !== "localhost" && location.hostname !== "127.0.0.1") {
+        var dhRobots = document.querySelector('meta[name="robots"]');
+        if (dhRobots) dhRobots.setAttribute("content", "noindex, nofollow");
+      }
+    </script>
+    <meta name="google-site-verification" content="fCbsM2lCr6JdQuMh1uHAHwzbLC1OoXzvK-VKFnkbZnQ" />
+    <!-- Canonical set per-route via Helmet (SEOHead) so each leaf route self-references -->
+
+    <!-- Organization entity: one canonical identity + sameAs graph so Google can
+         reconcile the DeHub brand across properties. Keep this list in sync with
+         ORG_SAME_AS in netlify/edge-functions/ssr-seo.js. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "DeHub",
+      "url": "https://dehub.io",
+      "logo": "https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo//new_logo_Dehub.jpg",
+      "description": "DeHub is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities.",
+      "sameAs": [
+        "https://www.wikidata.org/wiki/Q140518527",
+        "https://x.com/dehub_official",
+        "https://github.com/DeHubToken",
+        "https://www.linkedin.com/company/dehub-dao",
+        "https://t.me/dehub_dhb",
+        "https://play.google.com/store/apps/details?id=io.dehub.mobile",
+        "https://www.coingecko.com/en/coins/dehub",
+        "https://coinmarketcap.com/currencies/dehub/"
+      ]
+    }
+    </script>
+
+    <!-- WebSite entity: reinforces dehub.io as the canonical DeHub site (distinct
+         from the DePaul/Rowan "DeHUB" university portals) for the brand term. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "DeHub",
+      "alternateName": "DeHub — Decentralised Social Network",
+      "url": "https://dehub.io",
+      "publisher": { "@type": "Organization", "name": "DeHub", "url": "https://dehub.io" }
+    }
+    </script>
+
+    <!-- SoftwareApplication entity: tells Google/AI that DeHub is a free social
+         networking app (not a university portal), and links the Google Play app. -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "DeHub",
+      "applicationCategory": "SocialNetworkingApplication",
+      "operatingSystem": "Android, Web",
+      "url": "https://dehub.io",
+      "downloadUrl": "https://play.google.com/store/apps/details?id=io.dehub.mobile",
+      "publisher": { "@type": "Organization", "name": "DeHub", "url": "https://dehub.io" },
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "description": "DeHub is an open-source, user-owned, censorship-resistant decentralised social network for Web3 creators and communities, with watch-to-earn, tokenised on-chain subscriptions, live streaming and play-to-earn."
+    }
+    </script>
+
+    <!-- Open Graph — generic brand fallback; per-route tags override via Helmet -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="DeHub" />
+    
+    
+    <meta property="og:image" content="https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo//new_logo_Dehub.jpg">
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="628" />
+    <meta property="og:url" content="https://dehub.io/" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@dehub_official" />
+    
+    
+    <meta name="twitter:image" content="https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo//new_logo_Dehub.jpg">
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="icon" type="image/png" href="/dehub-icon.png">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/manifest.json">
+
+    <!-- Always-used origins (every route, incl. light landing pages like /prompt):
+         Supabase (edge fns / i18n / storage) and Google Fonts (the Exo file + its
+         CSS). These stay as static <link>s so the preload scanner finds them at
+         the earliest possible moment. -->
+    <link rel="preconnect" href="https://aigxuutjaqsywioxjefr.supabase.co" crossorigin>
+    <!-- fonts.gstatic.com serves the actual Exo font file (preloaded below) —
+         a full preconnect here shaves a DNS+TLS round-trip off heading paint -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- fonts.googleapis.com serves the Exo @font-face CSS (preloaded below) -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+
+    <!-- Route-aware boot warming + feed prefetch.
+         api.dehub.io (feed API, CORS fetch) and the DO Spaces CDN (post media) are
+         contacted ONLY inside the app tree ("/" and "/app/*"). Warming them on
+         light landing routes like /prompt, /docs or the SEO pages just opens
+         sockets that are never used (DebugBear "resource hint not used" 7/15).
+         Emitting the hints from this inline head script — which the parser runs
+         before <body> — keeps them nearly as early as a static <link> on the
+         routes that DO need them, and skips them everywhere else. Wallet origins
+         (web3auth / web3modal / walletconnect) are warmed separately, on login
+         intent (warmWalletOrigins in AuthProvider), so they no longer sit unused
+         here either. Lovable mirror hosts strip inline scripts — the app's hooks
+         then connect normally, so the only loss is the head-start, never correctness. -->
+    <script>
+      (function () {
+        try {
+          var p = location.pathname;
+          var isApp = p === "/" || p === "/app" || p.indexOf("/app/") === 0;
+
+          if (isApp) {
+            var head = document.head;
+            var hint = function (rel, href, cors) {
+              var l = document.createElement("link");
+              l.rel = rel;
+              l.href = href;
+              if (cors) l.crossOrigin = "anonymous";
+              head.appendChild(l);
+            };
+            // Feed API is hit at boot via fetch() (CORS) — the warmed socket is
+            // reused only when the preconnect is crossorigin (DebugBear 7/14).
+            hint("preconnect", "https://api.dehub.io", true);
+            // Posters + avatars stream from DO Spaces via Cloudflare as plain
+            // <img> (non-CORS) — no crossorigin, or the socket wouldn't be reused.
+            hint("preconnect", "https://dehubcdn.ams3.cdn.digitaloceanspaces.com", false);
+            hint("dns-prefetch", "https://dehubcdn.ams3.cdn.digitaloceanspaces.com", false);
+          }
+
+          // Boot feed fetch: start the page-1 /api/feed request at parse time,
+          // long before the entry bundle downloads and React mounts (LCP audit
+          // 7/14: the hook-issued request didn't hit the wire until ~1.8s). The
+          // promise is adopted by fetchUnifiedFeedFromAPI (use-unified-feed.ts)
+          // only when the params match this exact default request; any mismatch,
+          // error, or non-OK response resolves null and the hook fetches normally.
+          // Gated to the default-feed routes only (deep /app/* routes request
+          // different params, so they can't adopt this promise anyway).
+          if (p === "/" || p === "/app" || p === "/app/") {
+            var h = { "Accept": "application/json", "Content-Type": "application/json" };
+            var t = localStorage.getItem("dehub_token");
+            if (t) h["Authorization"] = "Bearer " + t;
+            window.__DEHUB_FEED__ = fetch(
+              "https://api.dehub.io/api/feed?page=1&limit=20&sortBy=createdAt&sortOrder=desc&status=minted",
+              { headers: h }
+            ).then(function (r) { return r.ok ? r.json() : null; })
+             .catch(function () { return null; });
+          }
+        } catch (e) { /* never block boot */ }
+      })();
+    </script>
+
+    <!-- LCP: header logo — same URL as DesktopSidebar / MobileHeader so browser discovers early -->
+    <link rel="preload" as="image" href="/dehub-header-logo.png" fetchpriority="high">
+
+    <!-- Exo font: non-blocking load (avoids @import in index.css blocking Tailwind parse / main thread) -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700;900&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700;900&display=swap" />
+    </noscript>
+
+    <!-- Critical CSS — prevents white flash -->
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      html, body { height: 100%; width: 100%; background-color: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+      #root { height: 100%; min-height: 100dvh; }
+    </style>
+  
+  
+  
+  
+  <meta property="og:title" content="DeHub — Open Source, User Owned Social Media">
+  <meta name="twitter:title" content="DeHub — Open Source, User Owned Social Media">
+  <meta property="og:description" content="DeHub is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities.">
+  <meta name="twitter:description" content="DeHub is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities.">
+</head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,114 @@
+# Netlify Configuration for DeHub
+# This file configures build settings, redirects, and edge functions
+
+[build]
+  # Build command
+  command = "npm run build"
+  
+  # Output directory
+  publish = "dist"
+  
+  # Functions directory (if using serverless functions)
+  functions = "netlify/functions"
+
+# Edge Functions Configuration
+[[edge_functions]]
+  # Function name (matches the file in netlify/edge-functions/)
+  function = "ssr-seo"
+  
+  # Path pattern to match (all routes)
+  path = "/*"
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Security headers
+    # NOTE: X-Frame-Options set to SAMEORIGIN (not DENY) because Web3Auth
+    # uses iframes for session management. DENY blocks those iframes.
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+    # Cross-Origin policies for Web3Auth compatibility
+    # unsafe-none allows Web3Auth's cross-origin popup/redirect communication
+    Cross-Origin-Opener-Policy = "unsafe-none"
+    Cross-Origin-Embedder-Policy = "unsafe-none"
+    Cross-Origin-Resource-Policy = "cross-origin"
+
+    # CORS headers (adjust as needed)
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, PUT, DELETE, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
+
+# index.html must NEVER be cached: a stale HTML pins references to old hashed
+# chunks that no longer exist after a deploy (lazyWithRetry papers over the
+# resulting 404s with a reload, but revalidation avoids them entirely).
+# Netlify defaults to this behavior; making it explicit protects against
+# default changes and any CDN in front.
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Cache static assets
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# LCP logo lives at site root (not hashed) — long cache; change filename when asset changes
+[[headers]]
+  for = "/dehub-header-logo.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Sitemap tree — proxy to Supabase edge functions so URLs stay on dehub.io.
+# These MUST come before the SPA fallback (Netlify uses first match).
+#
+# WARNING: do NOT re-add a public/_redirects file. Rules in _redirects are
+# processed before every rule in this file, so its `/* /index.html 200`
+# catch-all served SPA HTML at /sitemap.xml and broke Google's sitemap
+# ingestion (July 2026 rankings drop). The ssr-seo edge function also proxies
+# these paths as a first line of defense; the rules below are its backup.
+[[redirects]]
+  from = "/sitemap.xml"
+  to = "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/sitemap-index"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/sitemap-posts-:page.xml"
+  to = "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/sitemap-posts?page=:page"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/sitemap-profiles-:page.xml"
+  to = "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/sitemap-profiles?page=:page"
+  status = 200
+  force = true
+
+# SPA fallback - redirect all routes to index.html.
+# Netlify serves real files first, so no conditions are needed here.
+# (A previous `conditions = {Role = ["user"]}` line was JWT role-gating
+# syntax that Netlify happened to ignore — do not re-add it.)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Environment variables
+[build.environment]
+  NPM_FLAGS = "--legacy-peer-deps"
+  NODE_OPTIONS = "--max-old-space-size=4096"
+
+# Plugin configuration (optional)
+# [[plugins]]
+#   package = "@netlify/plugin-lighthouse"

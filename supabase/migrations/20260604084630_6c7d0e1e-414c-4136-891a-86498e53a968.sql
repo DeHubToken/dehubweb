@@ -1,0 +1,1 @@
+DELETE FROM public.video_transcripts WHERE token_id = 4475;

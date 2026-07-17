@@ -1,0 +1,171 @@
+/**
+ * Card Header Component
+ * =====================
+ * Universal header for all feed card types.
+ * Displays avatar with gradient ring, username, verified badge, and content type label.
+ * Clickable to navigate to creator's profile.
+ * Badge is fetched on-chain via useBadgeBalance hook.
+ */
+
+import { useState } from 'react';
+import { CheckCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { getAgentAvatarFallback } from '@/constants/agent-avatars.constants';
+import { getBadgeUrl } from '@/lib/staking-badges';
+import { BadgeIcon } from '@/components/app/BadgeIcon';
+import { seedProfileCache } from '@/lib/profile-cache-seed';
+import { ProfileHoverCard } from '@/components/app/ProfileHoverCard';
+import { useAuth } from '@/contexts/AuthContext';
+
+import type { ContentType } from '@/types/feed.types';
+
+interface CardHeaderProps {
+  /** Display name or username */
+  username: string;
+  /** @handle for the user (optional, shown greyed next to username) */
+  handle?: string;
+  /** Seed for generating avatar image or actual avatar URL */
+  avatarSeed: string;
+  /** Whether user is verified */
+  verified?: boolean;
+  /** Type of content for badge display */
+  contentType: ContentType;
+  /** Whether this is a live stream (shows pulsing indicator) */
+  isLive?: boolean;
+  /** Creator's user ID for navigation */
+  creatorId?: string;
+  /** Creator's username for URL-based navigation */
+  creatorUsername?: string;
+  /** Timestamp to show next to username (e.g., "2h") */
+  timestamp?: string;
+  /** View count to show next to timestamp */
+  viewCount?: string | number;
+  /** Badge balance from API data (avoids edge function call) */
+  badgeBalance?: number;
+}
+
+/**
+ * Badge configuration for each content type
+ */
+const CONTENT_BADGES: Record<ContentType, { label: string; className: string }> = {
+  post: { label: 'Post', className: 'bg-zinc-500/20 text-zinc-400' },
+  video: { label: 'Video', className: 'bg-zinc-500/20 text-zinc-300' },
+  image: { label: 'Image', className: 'bg-purple-500/20 text-purple-400' },
+  live: { label: 'LIVE', className: 'bg-red-500 text-white' },
+  short: { label: 'Short', className: 'bg-pink-500/20 text-pink-400' },
+};
+
+export function CardHeader({ 
+  username, 
+  handle,
+  avatarSeed, 
+  verified = false, 
+  contentType,
+  isLive = false,
+  creatorId,
+  creatorUsername,
+  timestamp,
+  viewCount,
+  badgeBalance,
+}: CardHeaderProps) {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { walletAddress: viewerAddress } = useAuth();
+  const [imageError, setImageError] = useState(false);
+  const badge = CONTENT_BADGES[contentType];
+
+  // Use feed-provided avatar directly — no extra API call needed
+  const agentFallback = getAgentAvatarFallback(creatorId);
+  
+  // Use badge balance from API data directly — with username override support
+  const badgeUrl = getBadgeUrl(badgeBalance, handle || username);
+  
+  // Only use avatarSeed as image source if it's a real URL and hasn't errored
+  const hasRealAvatar = avatarSeed && avatarSeed.startsWith('http') && !imageError;
+  const avatarSrc = hasRealAvatar ? avatarSeed : agentFallback;
+
+  const handleProfileClick = () => {
+    // Seed profile cache with data we already have from the feed card
+    const cleanUsername = creatorUsername?.replace('@', '');
+    if (cleanUsername || creatorId) {
+      seedProfileCache(queryClient, {
+        address: creatorId,
+        username: cleanUsername,
+        displayName: username,
+        avatarUrl: hasRealAvatar ? avatarSeed : undefined,
+        badgeBalance,
+      }, viewerAddress || undefined);
+    }
+
+    // Prefer username-based navigation, fallback to ID
+    if (creatorUsername) {
+      navigate(`/${cleanUsername}`);
+    } else if (creatorId) {
+      navigate(`/app/profile?id=${creatorId}`);
+    }
+  };
+
+  const isClickable = !!(creatorId || creatorUsername);
+  
+  // Format handle to ensure it starts with @
+  const formattedHandle = handle ? (handle.startsWith('@') ? handle : `@${handle}`) : null;
+
+  // Prevent focus scroll-into-view on click (which causes the feed to jump to top)
+  const handleProfileMouseDown = (e: React.MouseEvent) => {
+    e.preventDefault();
+  };
+
+  return (
+    <div className="flex items-center gap-3 pb-3 pr-3 flex-1 min-w-0">
+      <ProfileHoverCard
+        creatorId={creatorId}
+        creatorUsername={creatorUsername}
+        displayName={username}
+        avatarUrl={hasRealAvatar ? avatarSeed : undefined}
+        verified={verified}
+        badgeBalance={badgeBalance}
+      >
+        <button
+          onClick={handleProfileClick}
+          onMouseDown={handleProfileMouseDown}
+          disabled={!isClickable}
+          className={`shrink-0 ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
+        >
+          <Avatar className="w-9 h-9 rounded-md">
+            {avatarSrc && <AvatarImage src={avatarSrc} onError={() => setImageError(true)} className="rounded-md" />}
+            <AvatarFallback className="bg-zinc-700 text-white font-medium rounded-md">{username[0]?.toUpperCase()}</AvatarFallback>
+          </Avatar>
+        </button>
+      </ProfileHoverCard>
+      <button
+        onClick={handleProfileClick}
+        onMouseDown={handleProfileMouseDown}
+        disabled={!isClickable}
+        className={`flex flex-col min-w-0 text-left ${isClickable ? 'cursor-pointer' : 'cursor-default'}`}
+      >
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className={`relative inline-flex items-baseline shrink min-w-0${badgeUrl ? ' pr-3' : ''}`}>
+            <span className="font-semibold text-white text-sm truncate max-w-[160px] sm:max-w-none leading-tight">{username}</span>
+            <BadgeIcon badgeBalance={badgeBalance} username={handle || username} className="w-[9px] h-[9px] absolute -top-0.5 right-0" />
+          </span>
+          {verified && <CheckCircle className="w-3.5 h-3.5 text-white shrink-0" />}
+        </div>
+        {(formattedHandle || timestamp) && (
+          <div className="flex items-center gap-1 min-w-0">
+            {formattedHandle && (
+              <span className="text-zinc-500 text-xs truncate max-w-[160px] sm:max-w-none">{formattedHandle}</span>
+            )}
+            {timestamp && (
+              <>
+                <span className="text-zinc-600 text-xs">·</span>
+                <span className="text-zinc-500 text-xs shrink-0">{timestamp}</span>
+              </>
+            )}
+          </div>
+        )}
+      </button>
+    </div>
+  );
+}
