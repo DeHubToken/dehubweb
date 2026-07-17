@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.89.0";
+import { rateLimitByIp } from "../_shared/auth.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -16,6 +17,9 @@ serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
   }
+
+  const limited = await rateLimitByIp(req, 'community-admin-chat', { limit: 20, windowMs: 60 * 60 * 1000 });
+  if (limited) return limited;
 
   try {
     const { communityId, prompt, askerName } = await req.json();

@@ -4,6 +4,7 @@ import {
   extractQuotedHeadline,
   pickLayoutForFormat,
 } from '../_shared/dehub-brand-composite.ts';
+import { rateLimitByIp } from '../_shared/auth.ts';
 
 const serve = (handler: (req: Request) => Response | Promise<Response>) => Deno.serve(handler);
 
@@ -29,6 +30,9 @@ serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
+
+  const limited = await rateLimitByIp(req, 'generate-image', { limit: 30, windowMs: 60 * 60 * 1000 });
+  if (limited) return limited;
 
   try {
     let { prompt, sourceImage, logoImage, conversationHistory = [], model = 'gemini-2.5-flash' } = await req.json() as GenerateImageRequest;
