@@ -1199,6 +1199,27 @@ export type Database = {
         }
         Relationships: []
       }
+      edge_rate_limits: {
+        Row: {
+          action_type: string
+          bucket_key: string
+          count: number
+          window_start: string
+        }
+        Insert: {
+          action_type: string
+          bucket_key: string
+          count?: number
+          window_start?: string
+        }
+        Update: {
+          action_type?: string
+          bucket_key?: string
+          count?: number
+          window_start?: string
+        }
+        Relationships: []
+      }
       editor_assets: {
         Row: {
           created_at: string
