@@ -6,6 +6,7 @@
  */
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { rateLimitByIp } from "../_shared/auth.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -272,6 +273,9 @@ serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
+
+  const limited = await rateLimitByIp(req, 'translate-text', { limit: 300, windowMs: 60 * 60 * 1000 });
+  if (limited) return limited;
 
   try {
     const { text, targetLang, sourceLang }: TranslateRequest = await req.json();
