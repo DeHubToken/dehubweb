@@ -1,0 +1,1 @@
+ALTER TABLE public.video_transcripts ADD COLUMN IF NOT EXISTS overview text;

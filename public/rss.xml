@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>DeHub Blog</title>
+    <description>News, product updates and Web3 guides from DeHub — the open source, user-owned social platform.</description>
+    <link>https://dehub.io/docs/blog</link>
+    <atom:link href="https://dehub.io/rss.xml" rel="self" type="application/rss+xml"/>
+    <language>en-US</language>
+    <copyright>Copyright 2026 DeHub</copyright>
+    <managingEditor>team@dehub.io (DeHub Team)</managingEditor>
+    <webMaster>team@dehub.io (DeHub Team)</webMaster>
+    <lastBuildDate>Tue, 14 Jul 2026 09:00:00 GMT</lastBuildDate>
+    <item>
+      <title>DeHub vs DePaul DeHUB vs Rowan DEHub: Which One Are You Looking For?</title>
+      <description>Three different things share the name dehub. Here is how to tell the DeHub Web3 social network apart from DePaul and Rowan university portals.</description>
+      <link>https://dehub.io/guides/dehub-vs-depaul-dehub-vs-rowan-dehub</link>
+      <guid>https://dehub.io/guides/dehub-vs-depaul-dehub-vs-rowan-dehub</guid>
+      <pubDate>Tue, 14 Jul 2026 09:00:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>DHB Token Explained + How to Buy DeHub in the UK (Step-by-Step)</title>
+      <description>How to buy DHB token in the UK, explained clearly: what $DHB does, which chains it runs on, where it trades, and a careful step-by-step for UK buyers.</description>
+      <link>https://dehub.io/guides/how-to-buy-dhb-token-uk</link>
+      <guid>https://dehub.io/guides/how-to-buy-dhb-token-uk</guid>
+      <pubDate>Fri, 03 Jul 2026 11:30:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>What is DeHub?</title>
+      <description>DeHub is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities. Who we are, how it works, the DHB token, and how creators earn.</description>
+      <link>https://dehub.io/guides/what-is-dehub</link>
+      <guid>https://dehub.io/guides/what-is-dehub</guid>
+      <pubDate>Tue, 23 Jun 2026 10:30:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>What Is Watch-to-Earn? How DeHub Actually Pays You to Watch (2026)</title>
+      <description>What is watch to earn? A plain-English guide to how watch-to-earn works, why it exists, honest earnings caveats, and how DeHub pays you to watch on-chain.</description>
+      <link>https://dehub.io/guides/what-is-watch-to-earn</link>
+      <guid>https://dehub.io/guides/what-is-watch-to-earn</guid>
+      <pubDate>Fri, 12 Jun 2026 14:00:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>Best Watch-to-Earn Platforms 2026 (Honest, Tested for Real Payouts)</title>
+      <description>An honest ranking of the best watch to earn platforms 2026: which watch-to-earn apps pay real money, which have quietly pivoted, and which to avoid.</description>
+      <link>https://dehub.io/guides/best-watch-to-earn-platforms-2026</link>
+      <guid>https://dehub.io/guides/best-watch-to-earn-platforms-2026</guid>
+      <pubDate>Sun, 31 May 2026 09:45:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>Is Watch-to-Earn Legit? How Much You Can Really Earn (Honest 2026 Data)</title>
+      <description>Is watch to earn legit or a scam? An honest 2026 breakdown of realistic earnings, the red flags to avoid, and a checklist to vet any platform before you sign up.</description>
+      <link>https://dehub.io/guides/is-watch-to-earn-legit</link>
+      <guid>https://dehub.io/guides/is-watch-to-earn-legit</guid>
+      <pubDate>Thu, 21 May 2026 16:20:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>Cheelee Alternative: DeHub vs Cheelee vs Theta.tv vs XCAD (2026)</title>
+      <description>Looking for a Cheelee alternative? Compare DeHub vs Cheelee, Theta.tv and XCAD Network on cost, payouts and features to pick the best watch-to-earn app in 2026.</description>
+      <link>https://dehub.io/guides/dehub-vs-cheelee-theta-xcad-watch-to-earn</link>
+      <guid>https://dehub.io/guides/dehub-vs-cheelee-theta-xcad-watch-to-earn</guid>
+      <pubDate>Tue, 12 May 2026 10:00:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>Tokenised Subscriptions Explained: On-Chain Memberships You Can Resell for Royalties</title>
+      <description>Tokenised subscriptions are on-chain memberships you own, resell on a secondary market, and that pay the creator a royalty on every resale. Here is how they work.</description>
+      <link>https://dehub.io/guides/tokenized-subscriptions-explained</link>
+      <guid>https://dehub.io/guides/tokenized-subscriptions-explained</guid>
+      <pubDate>Sat, 02 May 2026 13:15:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>The UK Creator Guide to Leaving TikTok for a Platform You Own (2026)</title>
+      <description>Looking for a TikTok alternative UK creators actually own? See how a 90% revenue-share, crypto-paying Web3 platform beats TikTok Creator Rewards in 2026.</description>
+      <link>https://dehub.io/guides/uk-creators-guide-leaving-tiktok</link>
+      <guid>https://dehub.io/guides/uk-creators-guide-leaving-tiktok</guid>
+      <pubDate>Thu, 23 Apr 2026 11:00:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>Free Play-to-Earn Games With No Investment (2026): Including a Crypto MMA Battle Royale</title>
+      <description>The honest 2026 guide to play to earn games without investment: which free P2E titles actually pay, which hide NFT gates, and how to start earning with no deposit.</description>
+      <link>https://dehub.io/guides/free-play-to-earn-games-no-investment-2026</link>
+      <guid>https://dehub.io/guides/free-play-to-earn-games-no-investment-2026</guid>
+      <pubDate>Mon, 13 Apr 2026 15:30:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>Last Chad Standing: Inside the World-First MMA Play-to-Earn Game</title>
+      <description>Last Chad Standing is the MMA play to earn game from DeHub: a licensed-fighter battle royale where you earn $DHB on Base. How it works and how to play.</description>
+      <link>https://dehub.io/guides/last-chad-standing-mma-battle-royale-play-to-earn</link>
+      <guid>https://dehub.io/guides/last-chad-standing-mma-battle-royale-play-to-earn</guid>
+      <pubDate>Fri, 03 Apr 2026 10:15:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>Watch-to-Earn vs Play-to-Earn vs Move-to-Earn: The 2026 X-to-Earn Explainer</title>
+      <description>Watch to earn vs play to earn vs move-to-earn, explained. What x-to-earn means in 2026, the honest pros, cons and which models actually last.</description>
+      <link>https://dehub.io/guides/watch-to-earn-vs-play-to-earn-vs-move-to-earn</link>
+      <guid>https://dehub.io/guides/watch-to-earn-vs-play-to-earn-vs-move-to-earn</guid>
+      <pubDate>Wed, 25 Mar 2026 12:40:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>Decentralised Social Media Explained: A British Guide (2026)</title>
+      <description>What is decentralised social media, how does it work, and why it matters for UK creators in 2026. A plain-English guide to user-owned, Web3 social media.</description>
+      <link>https://dehub.io/guides/decentralised-social-media-explained-uk</link>
+      <guid>https://dehub.io/guides/decentralised-social-media-explained-uk</guid>
+      <pubDate>Mon, 16 Mar 2026 09:30:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>Best Decentralised Social Media Platforms 2026: DeHub vs Bluesky, Farcaster, Lens &amp; Mastodon</title>
+      <description>The best decentralized social media platforms of 2026 compared: Bluesky, Mastodon, Farcaster, Lens and DeHub. Which decentralised network actually pays creators?</description>
+      <link>https://dehub.io/guides/best-decentralised-social-media-platforms-2026</link>
+      <guid>https://dehub.io/guides/best-decentralised-social-media-platforms-2026</guid>
+      <pubDate>Fri, 06 Mar 2026 14:50:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>Web3 Live Streaming: The Decentralised Twitch Alternative That Pays Creators</title>
+      <description>A web3 live streaming platform lets creators own their channel, take on-chain tips and avoid sudden demonetisation. How the decentralised Twitch alternative works.</description>
+      <link>https://dehub.io/guides/web3-live-streaming-decentralised-twitch-alternative</link>
+      <guid>https://dehub.io/guides/web3-live-streaming-decentralised-twitch-alternative</guid>
+      <pubDate>Thu, 26 Feb 2026 11:20:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>Play-to-Earn in the UK 2026: Games, Real Earnings &amp; HMRC Tax Explained</title>
+      <description>Play to earn UK 2026: is it legal, which games actually pay British players, and how HMRC taxes crypto gaming rewards. A practical, hedged guide from DeHub.</description>
+      <link>https://dehub.io/guides/play-to-earn-uk-2026-earnings-hmrc-tax</link>
+      <guid>https://dehub.io/guides/play-to-earn-uk-2026-earnings-hmrc-tax</guid>
+      <pubDate>Thu, 19 Feb 2026 10:00:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>We're Finally Here — A Major DeHub Update</title>
+      <description>After 5 years of development, DeHub is ready to challenge legacy media. Web app launch, fighter battle royale, airdrops, and the flywheel begins.</description>
+      <link>https://dehub.io/guides/were-finally-here-a-major-dehub-update</link>
+      <guid>https://dehub.io/guides/were-finally-here-a-major-dehub-update</guid>
+      <pubDate>Sat, 14 Feb 2026 12:00:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>Development Update: The DeHub Era Starts - Final Updates and Bug Fixes Shipping in Coming Days</title>
+      <description>DeHub development update — final updates and bug fixes shipping soon as we begin app promotions. Web app and Google Play updates coming in days, with Apple listing to follow.</description>
+      <link>https://dehub.io/guides/development-update-dehub-era-starts-final-updates-bug-fixes</link>
+      <guid>https://dehub.io/guides/development-update-dehub-era-starts-final-updates-bug-fixes</guid>
+      <pubDate>Mon, 02 Feb 2026 14:22:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>Town Hall Overview: $200,000 Private Sale Complete, Partner TGE March, New Pools, Added LP and More!</title>
+      <description>DeHub Town Hall recap — $200,000 private sale complete, TGE timeline confirmed for March 2026, new liquidity pools, public sale mechanics, and an accelerated growth strategy.</description>
+      <link>https://dehub.io/guides/town-hall-200k-private-sale-partner-tge-march-2026</link>
+      <guid>https://dehub.io/guides/town-hall-200k-private-sale-partner-tge-march-2026</guid>
+      <pubDate>Wed, 28 Jan 2026 12:00:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+    <item>
+      <title>Yearly Wrap Up and 2026 Roadmap</title>
+      <description>DeHub's 2025 year in review — from Coinbase listing and Google Play launch to BNB Chain recognition — plus the full 2026 roadmap including Last Chad Standing, Apple App Store, DePIN, and more.</description>
+      <link>https://dehub.io/guides/yearly-wrap-up-2025-and-2026-roadmap</link>
+      <guid>https://dehub.io/guides/yearly-wrap-up-2025-and-2026-roadmap</guid>
+      <pubDate>Wed, 31 Dec 2025 12:00:00 GMT</pubDate>
+      <dc:creator>DeHub Team</dc:creator>
+    </item>
+  </channel>
+</rss>

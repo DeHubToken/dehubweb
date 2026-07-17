@@ -1,0 +1,1969 @@
+DEHUB DOCUMENTATION - FULL TEXT CONTENT
+========================================
+
+================================================================================
+OVERVIEW
+================================================================================
+
+DeHub: A Decentralised, User Owned Alternative To Legacy Media Apps.
+Resist censorship & live forever onchain.
+
+Imagine a world where creators own their audience data, control their content distribution, and never fear censorship or demonetization. DeHub makes this a reality as a decentralised and user owned alternative to apps such as YouTube, X, Rumble, Twitch and Patreon. Powered by its own utility token and cutting-edge DePIN infrastructure that's reshaping how content is hosted, transcoded, and delivered globally.
+
+Built by gamers & streamers, we've solved the crypto complexity problem. Our platform delivers a seamless Web2 experience while everything runs on-chain with full transparency—no wallet setup, no technical barriers. Gas fees are fully sponsored for users who sign up with socials, email, or SMS. Wallet users pay standard ETH or BNB gas. Just pure creative freedom with blockchain-verified earnings visible on our public leaderboards.
+
+Launch PPV events, monetise with subscriptions or paid messages, create Watch2Earn experiences to grow an audience or reward existing communities, or distribute exclusive token-gated content—all without traditional banking or KYC processes. Your content, your rules, your revenue. Direct creator-to-fan relationships in a censorship-resistant ecosystem where your success is entirely in your hands.
+
+Join millions of creators already building the user-owned economy of tomorrow across decentralised apps, where value flows directly to those who create it—completely free from corporate gatekeepers and algorithmic manipulation.
+
+Our journey began as Futurov (FTV), where we built a thriving community of streamers and gamers who loved our Web2 app and gave us incredible reviews on Google Play Store. Now we're taking everything they loved and making it unstoppable.
+
+Ready to see how we're revolutionizing digital content? Dive into our technical infrastructure and discover the dApps powering this creator renaissance.
+
+Important Notice (Disclaimer):
+DeHub tokens serve as utility tokens within our ecosystem, similar to in-game currencies, and are not investment vehicles. While our blockchain infrastructure provides unprecedented transparency and verifiable on-chain data for educational purposes, all markets carry inherent risks. You could lose your entire investment due to market volatility, technical issues, security breaches, or unforeseen circumstances. Only participate with funds you can afford to lose completely. DeHub and its affiliates assume no responsibility for any financial losses incurred.
+
+================================================================================
+TOKEN ECONOMICS & EMISSIONS
+================================================================================
+
+Supply Distribution:
+Total: 8,000,000,000 $DHB
+- Community Sales & Airdrops: 42%
+- Burn: 42%
+- Team: 8%
+- Operations: 8%
+
+Dilution/Emission Schedule:
+All supply is fully diluted, unlocked or burned from TGE apart from team wallets which are not permitted to liquidate any tokens past rewards and should never go below original balance barring un-staking fees. In theory, we are already at a fully diluted valuation (FDV) as team wallets are staked to accrue rewards, not locked.
+
+Sales:
+100% of liquidity raised was locked into pools for traders. No pre sale events or investment where raised to fund development and DeHub launched as FTV with a fully built app on the google play store prior to any token release or fundraise. Only liquidity generation events (LGE) on behalf of the community to facilitate trading occurred. BNB, therefore DeHub can only be acquired via KYCd wallets meaning we did not need extra layers for our own sales.
+
+Disclaimer:
+DeHub tokens are strictly for utility purposes in the same way that any in-game or in-app digital tokens or currencies except where as ours operate on-chain, we can offer added utility as well as unprecedented levels of verifiable transparency. The above data is solely compiled for transparency, educational and informative purposes only. DeHub and all affiliates hold no liability for financial losses incurred from purchasing any tokens or NFTs we release. Markets are highly volatile. You could also lose all your money due to any unforseen events such as hacks, competency failures or technical errors. Therefore, you should only ever invest what you can afford to lose.
+
+================================================================================
+STAKING
+================================================================================
+
+Stake to access different club tiers the enhanced features across all d'apps and provide your computing power or storage space from with little as a mobile to mine your share of protocol revenue.
+
+As further allocations will now be dynamic, dependant on protocol fees, designations will be subject to requirements at any given moment ensuring the protocol needs are at the forefront at all times. The staking protocol is also being upgraded currently with release on Base soon.
+
+Technicals:
+Joining clubs also unlocks badges that are displayed on your dehub.io profile, comments, uploads and live chat communications.
+Beyond the perks for the amount of $DHB staked, there are also three pre-defined tiers determined by stake duration which define user rewards.
+
+Staking Tiers:
+- Tier 1: Stake 1 to 2 quarters, and share 25% of rewards
+- Tier 2: Stake 3 to 4 quarters, and share 25% of rewards  
+- Tier 3: Stake 5+ quarters, and share 50% of rewards
+
+Staking User Flow:
+• Users stake $DHB tokens in staking pool, and choose one of 3 tiers to stake in a reward period. Users can't stake multiple tiers in the same reward period.
+• Users can see their current shares on the tier which they have chosen to stake and total unlocked amount, as well as the token unlock date.
+• Prior to the unlock date, the users can unstake only 88% of their staked tokens. Once they reach the unlock date, they can choose to unstake or restake free of fees.
+• When users unstake, they receive back their original $DHB token allocation.
+• Users can automatically restake or manually restake. Restaking starts from the time users confirm the Restake button. When restaking, users can change their original tier.
+• DeHub team funds reward anytime, users get reward immediately.
+• Users can claim their rewards anytime without unstaking if they have any to.
+• Users can increase their staked amount in the current reward period, but this is only available for Tier 3 stakers.
+
+Reward Calculation:
+DeHub team funds reward at variable times dependant on protocol fees, with announcements to the community.
+Users might get rewards immediately from staking, or they might have to wait for injections depending on when they staked.
+
+Calculation Formula:
+- Locking percent = 100% * (Now - Staking start time) / Staking period
+- Staking amount = Current locked amount * Locking percent
+- Staking share of user = 100% * Staking amount
+- Rewards = Staking share * Funded rewards * Tier percent
+
+Restake Rules:
+Users can choose either automatic or manual restaking, during harvest. For automatic restaking, simply click the restake button and watch as the magic unfolds on chain. For the manual process, simply unstake, play about with your metamask for a while then follow the original staking process.
+
+Important Notes:
+• Restaking means unstake all the unlocked/locked tokens and stake again
+• Users can use the automatic restake button before they reach the unlock date yet this comes at a 12% fee, outside of harvest dates
+• When automatically restake, users can change locking period
+• If users force to restake locked tokens manually, only 88% of total amount will stake in the pool and 12% will be transferred to the dev wallet
+
+How to Stake:
+1. Connect Wallet
+2. Click "Stake" Button
+3. Input Amount & Duration
+4. Confirm Transaction
+
+Note: during the first transaction you will have to approve the staking contract first. This will happen only once.
+
+How Staking Rewards are Generated:
+Staking rewards are generated from all fees taken by the network's streams of revenue as well as a base allocation from initial injection.
+
+Fee Sources:
+• Fees from in app services like subscriptions, PPV, Watch2Earn, paid DMs and more.
+• DeHub premium: ad free usage & access to AI toolkits via monthly / annual fees.
+• Token & NFT primary sales & secondary trading fees.
+• Advertising across video, lives & scroll feeds.
+• Partner launches and airdrops.
+
+================================================================================
+D'APP - A COMPLETE ECOSYSTEM
+================================================================================
+
+DeHub is a censorship resistant, open source alternative to legacy media platforms servicing the content creation, streaming and gaming industries. An ecosystem where anyone can monetise from the first view, without fear of being deplatformed, shadow banned, silenced or manipulated in anyway to be anything but their true self. To speak and think free, away from the hive mind, express as desired.
+
+The app is scaled via a decentralized miner network, providing shared computing power to host, transcode, and deliver content that by design, should live forever.
+
+As the first protocol to tokenise content back in 2023, we've built a sustainable socialfi solution that empowers creators and consumers with a plethora of tools. Features include encrypted private communications, on-chain PPV releases, tradable subscriptions, paid DMs, unlockable content, shared ad revenue and many more.
+
+Sign up with socials or email and have a wallet generated for you in a few clicks. No private key management or custody, you are in full control of your assets and we never access your funds.
+
+Given that data is the new oil, it may be wise to build your core community base here and utilise your existing social media apps to funnel users in to grow your own valuable database and ensure you remain censorship resistant. No matter what happens, never lose touch with your audience, fans, community or customers.
+
+Microtransactions are the solution coming to all social platforms eventually, so get ahead of the curve with DeHub. The only app in the world where anyone can monetize pay-per-view (PPV) without a bank or KYC. Try it today on Google Play, and soon on Apple's App Store!
+
+Upload Features:
+On the user upload dashboard, anyone can instantly upload content and in a few clicks enable the following:
+• Watch2earn: every token now has sustainable watch2earn utility at the click of a button
+• Token gated content: stream or upload content locked behind any token contract viewers must hold
+• PPV events: charge any token for a pay-per-view or live stream
+• NFT collectables: every post mints an NFT that earns the lifetime royalty attached to the video
+• Earn: DeHub tokens via tips through supporters and rise up on the leaderboards for larger shares of ad revenue
+• Subscribers: Upload or stream content exclusively for your subscribers
+
+Tokenised Content & Fractionalised Ownership:
+Revolutionary ERC-1155 Content Tokenisation - Every upload and livestream on DeHub automatically mints an ERC-1155 NFT fractionalised into exactly 1,000 pieces. Creators have complete control over how many fractions to sell or keep, creating a novel monetisation model where fans can invest in content they believe will succeed - essentially "betting" on the future of potential stars through a revolutionary form of fan tokens.
+
+Key Benefits:
+• Automatic Fractionalisation: Every upload/stream mints ERC-1155 NFT, automatically split into 1,000 fractions
+• Creator Control: Choose how many fractions to sell, retain control over distribution, set custom pricing
+• Eternal Revenue: Content earns ad revenue for life, permissionless residual income, censorship-resistant earnings
+
+Revolutionary Fan Investment Model:
+DeHub creates the first platform where fans can financially invest in creators they believe will become successful. By purchasing fractions of content NFTs, supporters become stakeholders in a creator's journey, earning returns when their chosen creators achieve success through ad revenue, tips, and other monetisation streams.
+
+The Key Difference - Residual vs. Active Value Creation:
+Unlike other SocialFi platforms where creators must continuously add value for their tokens, shares, or keys to maintain worth, DeHub content generates residual income for life. Once created, content earns ad revenue permanently - providing passive, permissionless, censorship-resistant income for all eternity without requiring ongoing creator effort.
+
+DeHub Unique Advantages:
+• Set and Forget: Content earns revenue forever without additional work
+• Fan Investment: Supporters financially benefit from creator success
+• Automatic Tokenisation: Every upload becomes a tradeable asset
+• Censorship Resistance: Sustained by shared computing power globally
+• Creator Control: Full control over token distribution strategy
+• Permissionless: No platform dependency for earnings
+
+Top Up Tokens In 2 Clicks:
+DeHub has an in-app currency called DHB tokens (shown as gold coins). DHB tokens are used for premium services such as tips, subscriptions & more. Posting and browsing are completely free. Gas is sponsored for social/email/SMS signups; wallet users pay ETH or BNB gas. Top up directly with Stripe at dehub.io/dpay.
+
+Badge of Honour Model:
+The more $DHB tokens you hold, the more rewarding it is. This includes the Badge of Honour system that unlocks improved cosmetics on your public profile as well as further enhanced, premium features.
+
+Badge Tiers & Fee Reductions:
+- No Badge (< 10,000 $DHB): 10.00% fee
+- Crab Badge (10,000+ $DHB): 9.31% fee
+- Lobster Badge (25k+ $DHB): 8.62% fee
+- Piranha Badge (50k+ $DHB): 7.93% fee
+- Tortoise Badge (100k+ $DHB): 7.24% fee
+- Cobra Badge (250k+ $DHB): 6.55% fee
+- Octopus Badge (500k+ $DHB): 5.86% fee
+- Crocodile Badge (1m+ $DHB): 5.17% fee
+- Dolphin Badge (2m+ $DHB): 4.48% fee
+- Tiger Shark Badge (3m+ $DHB): 3.79% fee
+- Killer Whale Badge (5m+ $DHB): 3.10% fee
+- Great White Shark Badge (10m+ $DHB): 2.41% fee
+- Blue Whale Badge (25m+ $DHB): 1.72% fee
+- Megalodon Badge (50m+ $DHB): 1.00% fee
+
+Tipping:
+Integrated tipping services across all uploads and live streams only come with a 10% fee, compared to the usual 60% charged by the likes of TikTok and other industry leaders while also having the ability to vote on video cancellations putting the power back into the viewer's hands.
+
+Tips received for creators and tips given by viewers are logged in separate leaderboards along with viewer counts and subscribers that determine shares in ad revenue.
+
+Content Moderation:
+Decentralised moderation mining and revenue share model. Only the core team or top tier badge holders will have the power to instantly remove a video by burning the NFT associated. Subsequently, all the ad revenue generated and any play to earn bounties strapped to the video will be shared with all voting wallets to further deter bad actors and incentivise an engaged community.
+
+Governance + Moderation System Design:
+Token Utility Design - The native governance token $DHB enables:
+• Moderation staking
+• Voting on content disputes and platform rules
+• Curation and promotion of content
+
+Key Principle: More tokens = more influence, but influence ≠ unchecked power.
+
+Quadratic Voting - To reduce whale dominance:
+• Uses quadratic voting for key moderation decisions
+• Voting power = √(tokens staked)
+• Example: staking 100 tokens = 10 votes, 10,000 tokens = 100 votes (not 10,000 votes)
+
+Anti-Manipulation Measures:
+• Sybil resistance: Require staking + reputation for key votes
+• Multi-signature council fallback: In case of DAO malfunction (only for emergencies)
+• Transparent moderation history: Every decision logged on-chain
+
+Live Streaming:
+Platform leverages Livepeer for video streaming infrastructure, powered by a Next.js backend and frontend. Every livestream is permissionless and censorship resistant.
+
+Key Features:
+• NFT-backed livestreams minted on BNB or Base chain
+• Integrated tipping with visual effects and tiers
+• Token-gated access for exclusive content
+• Pay-per-view and bounty reward systems
+• Real-time chat and engagement metrics
+• Support for OBS/Streamlabs integration
+
+Supported Tokens: DHB, FLOKI, USDC, USDT, BNB, ETH, PEPE, DOGE
+
+Subscriptions:
+DeHub is the first protocol to release fully on-chain subscriptions. The subscription system combines the benefits of traditional creator subscriptions with the power of blockchain technology, creating tradeable subscription NFTs and unprecedented creator-subscriber relationships.
+
+Messaging:
+Features include direct & group messaging, privacy controls, monetized messaging (paid DMs), and paywall protected content. All messages are encrypted end-to-end, ensuring only you and your intended recipients can read your conversations.
+
+SuperPowers:
+App super powers provide users with hacks to boost engagement or raise awareness. Paid in DHB tokens:
+1. Trend Jacker - Have your desired topic appear on the trending list
+2. Timeline Bomber - Appear on the timeline of all profiles you follow
+3. Precision Strike - Appear on the timeline of users following accounts you target
+4. Harpoon - Appear on the timeline of selected badge holders
+
+================================================================================
+GAMES
+================================================================================
+
+At the ever intertwining intersection of gaming and streaming.
+
+As a team full of gamers & streamers, we built and released a number of fun, free arcade games and are working towards our first flagship game, Last Chad Standing, the first ever MMA Battle Royale, with a team of devs from the likes of Ubisoft as well as a founding team heavily involved with UFC, Oktagon and PFL stars, having filmed documentaries with champs like Jorge Masvidal, and trained under Conor Mcgregor's Coach Kavannah.
+
+A play and earn model sustained entirely on fee generation ensuring no dilution or inflation is needed to incentivise engagement, positive feedback loops & general growth.
+
+Upcoming Releases:
+Last Chad Standing - Hyper realistic and gory battle royale featuring top UFC stars, game developers from Ubisoft and leading memes with their own skins.
+Website: lastchadstanding.com
+
+Released Games:
+• Whack A Schifff - Whack Peter Schiff on the head every time he squirms out his mole hole to rack up points while avoiding the bombs
+• Gas Guzzler - Keep your ETH gas topped up while collecting dehub coins and avoiding other moon boys in their Lambos
+• Rocket Blaster - Avoid those cursed laser beams on your 100km mission back to the moon
+• Street Slayer - Rid the streets of the greedy banking mafia and save the club at all cost
+
+Play all games at: arcade.dehub.net
+
+Key Features:
+• Barrier free play and win to earn
+• Classic arcade mini games, tournaments & top tier independent/indi games
+• Stream gaming content directly on our streaming app
+• Build decentralised guilds and e-sports divisions with existing pro gamers
+
+================================================================================
+ADVERTISING - POVR: Proof of View & Rank
+================================================================================
+
+Our ad-tech solution is unlike anything else seen across legacy or blockchain markets, and serves a unique purpose within our own app.
+
+"Proof of View" is one dimensional and beyond identification, adds little benefit for users or holders.
+
+What if you could prove viewers were real without wasting block space or gas? What if you could leverage each wallet's financial data, not just for saving costs, but also to maximise ROI for your campaigns? Don't just save more money, make more too!
+
+Our software, with patents pending, does this via an unprecedented 13-tier ranking system combined with our verification badges.
+
+We are calling it "proof-of-view-and-rank" or "POVR".
+
+The Problem:
+Ad fraud costs businesses billions annually, with estimates for 2023-2024 ranging from $84 billion to over $125 billion per year, projected to rise to $170 billion by 2028. Fraudsters use sophisticated bots and tactics to steal ad spend, impacting metrics and ROI, with ~20-30% of digital spend often wasted on fake traffic.
+
+Key Figures & Trends:
+• 2023 Costs: Around $84 billion to $88 billion
+• 2024 Projections: Potentially reaching $125 billion to $140 billion
+• Future Growth: Expected to hit $170 billion by 2028
+• Spend Lost: Globally, 20-30% of digital ad spend is lost to fraud in 2025
+
+How POVR Works:
+The higher your total holdings, the higher-ranking badge you unlock, the more you earn from ads, the more companies pay to advertise to you.
+
+This way benefits the whole ecosystem and not just a single party. Content creators, consumers, holders & companies advertising on the platform all reap more rewards.
+
+Financial data is the most lucrative, and ours is uniquely combined into one system advertisers can use to target audiences. This isn't even something you can do off-chain, as bank statements are private whereas the blockchain is public.
+
+How does this prevent fraud?
+Botting becomes less profitable while activity is trackable on-chain, easily connecting bad actors & eventually curating the entire user base. Advertisers target higher ranks, leaving minimal extractable value at the bottom layer, where any remaining fraud remains.
+
+================================================================================
+DePIN (Decentralised Physical Infrastructure Network)
+================================================================================
+
+A Decentralised Physical Infrastructure Network (DePIN) of Shared Computing Power For True Censorship Resistance
+
+Abstract:
+This whitepaper introduces a DePIN designed to scale and sustain DeHub. The system leverages shared computing power from a network of miners who contribute resources for data hosting, transcoding, and delivery. Miners are rewarded directly from application revenue and token transaction fees, ensuring a sustainable, inflation-free model.
+
+System Architecture:
+DeHub Application ↔ DePIN Coordinator ↔ Miners (Mobile/PC/Server) ↔ Hosting/Transcode/Deliver
+
+Challenges in Streaming and Gaming Platforms:
+Centralised infrastructure for streaming and gaming platforms faces challenges such as high operational costs, scalability limits, and susceptibility to censorship or outages.
+
+Solution - Shared Computing DePIN:
+By decentralising the infrastructure, DeHub can tap into a distributed network of computing power to address these challenges:
+• Cost Efficiency: Lower hosting and delivery costs by using shared resources
+• Scalability: Dynamically grow the network as demand increases
+• Sustainability: Reward contributors directly from app revenues without token inflation
+
+Core Components:
+• Contributors (Miners): Individuals providing computing resources via devices such as mobile phones, PCs, or dedicated servers
+• DePIN Coordinator: A data encryption, decryption and smart contract system managing miner rewards, resource allocation, and task distribution
+• DeHub Application: The streaming and gaming app interfacing with the DePIN to request and deliver data
+• Clients (End Users): Users consuming content via DeHub
+
+Workflow:
+1. Resource Sharing: Contributors register and allocate resources
+2. Task Assignment: The DePIN Coordinator assigns tasks such as hosting, transcoding, or delivery based on contributor capacity
+3. Revenue Sharing: Miners are compensated from a revenue pool funded by in-app revenue and token transaction fees
+4. Verification: Proof-of-computation mechanisms validate miners' contributions
+
+Incentive Model - Revenue Pool:
+• In-App Revenue: A percentage of subscription fees, ad revenue, and in-app purchases
+• Token Transaction Fees: A share of transaction fees from the $DHB token
+
+Distribution Mechanism:
+• Rewards are distributed based on the volume and quality of contributions
+• Miners earn proportionally higher rewards for tasks requiring more resources or bandwidth
+
+Participation Requirements - Minimum Hardware:
+• Mobile Phones (Quad-core CPU, 4GB RAM): Hosting tasks, 100,000 $DHB stake
+• PCs/Laptops (4-core CPU, 8GB RAM, GPU): Transcoding, Hosting, Delivery, 1,000,000 $DHB stake
+• Dedicated Servers (8-core CPU, 16GB RAM, SSD): High-volume Hosting, Delivery, 10,000,000 $DHB stake
+
+Scalability and Security:
+• Dynamic Task Allocation based on current demand, contributor capacity, and proximity to end users
+• Proof-of-Computation: A lightweight proof-of-computation mechanism ensures tasks are completed reliably
+
+Conclusion:
+The proposed DePIN enables truly decentralised, censorship resistant, limitlessly scalable, and cost-efficient infrastructure for DeHub. By leveraging shared computing power and rewarding miners directly from revenue, the system avoids inflation and ensures long-term sustainability.
+
+================================================================================
+END-TO-END ENCRYPTION (E2EE)
+================================================================================
+
+Military-grade privacy protection for your conversations
+
+At DeHub, we've implemented military-grade End-to-End Encryption (E2EE) to ensure your conversations remain completely private. When you send a message, only you and your recipient can read it—not even DeHub's servers have access to your decrypted messages.
+
+What Makes Our E2EE Secure?
+
+Zero-Trust Architecture:
+We use audited, zero-dependency cryptographic libraries from the @noble suite:
+• @noble/ciphers - For authenticated encryption
+• @noble/curves - For elliptic curve cryptography
+• @noble/hashes - For cryptographic hashing
+
+Battle-Tested Encryption Algorithms:
+• XChaCha20-Poly1305 (Message Encryption): Modern authenticated encryption used by Signal, WhatsApp, and secure messaging apps
+• X25519 ECDH (Key Exchange): Elliptic Curve Diffie-Hellman for secure key agreement, provides Perfect Forward Secrecy
+• HKDF-SHA256 (Key Derivation): Industry-standard key derivation from shared secrets
+
+How It Works:
+
+Phase 1 - One-Time Setup:
+1. Wallet Signature Request: You sign a message to enable E2EE, wallet produces unique cryptographic signature
+2. Private Key Generation: Derived from your wallet signature, never transmitted to servers
+3. Public Key Creation: Mathematically linked to your private key, safe to share publicly
+
+What Gets Stored:
+• On Your Device (IndexedDB): Private key, session keys (24-hour cache)
+• On DeHub Servers: Public key, E2EE enabled status, key creation timestamp
+
+Phase 2 - Starting a Conversation:
+Your Private Key + Their Public Key → [X25519 ECDH] → Shared Secret → [HKDF] → Session Key
+
+Key Features:
+• Perfect Forward Secrecy - Each conversation has a unique session key
+• Performance Optimization - Session keys are cached for 24 hours
+• Both Parties Get the Same Key - Even though derived independently
+
+Phase 3 - Sending a Message:
+Message → UTF-8 encoding → Plaintext bytes + Session Key + Random Nonce → XChaCha20-Poly1305 encryption → Ciphertext + Authentication Tag → Base64 encoding → Ready for servers
+
+Phase 4 - Receiving a Message:
+Fetch encrypted content → Retrieve session key → XChaCha20-Poly1305 decryption → Plaintext message
+
+Security Verification:
+• Authenticity Verified - The authentication tag proves the message wasn't tampered with
+• Correct Sender - Only someone with the sender's private key could create this ciphertext
+• Replay Protection - Unique nonce prevents old messages from being replayed
+
+What E2EE Protects:
+✅ Fully Protected:
+• Message Content - Completely encrypted before leaving your device
+• Message Integrity - Cannot be altered without detection
+• Private Keys - Never leave your device, never transmitted
+• Forward Secrecy - Unique keys per conversation
+• Authenticity - Guaranteed sender identity
+
+⚠️ Metadata (Visible to DeHub):
+• Who you're messaging (sender/recipient addresses)
+• When messages are sent (timestamps)
+• How many messages exchanged (message count)
+• Message type (text/image/voice—but not the content)
+
+Why This Matters - DeHub can never:
+• Read your messages
+• Access your private keys
+• Decrypt your conversations
+• Share your message content with anyone
+
+Even if:
+• DeHub's servers are hacked
+• We're served a government warrant
+• A rogue employee tries to access data
+
+Your messages remain encrypted and unreadable. That's the power of true end-to-end encryption.
+
+Current Status - Live Now:
+• Wallet-based key generation (no passwords!)
+• Automatic DM encryption/decryption
+• Session key caching
+• Perfect forward secrecy
+• E2EE status badges
+• Backward compatibility with unencrypted messages
+
+Coming Soon:
+• Group message encryption
+• Media encryption (Images, GIFs, voice messages)
+• Key verification with QR codes
+• Key backup & recovery
+• Multi-device sync
+
+================================================================================
+ROADMAP
+================================================================================
+
+From humble beginnings to a complete platform - our journey through the ups and downs.
+
+2021 - Foundation Year:
+
+Q1 2021 (Completed):
+• Assembled core development team
+• Launched first beta app on App Store with 500+ initial testers and 2,000 DAUs before token release
+• Conducted 50+ user interviews to validate product-market fit
+• Established basic content moderation framework
+
+Q2 2021 (Completed):
+• Launched v1 token
+• Community governed listing chain, price / market cap
+• Established first liquidity pools on Pancake Swap
+• Built community of 2,000+ early adopters
+• Implemented basic governance voting mechanism
+• Smart contract security issue discovered
+
+Q3 2021 (Completed):
+• Rebranded to DeHub
+• Started full app rebuild using React Native for better cross-platform support
+• Airdropped all holders automatically
+• Addressed security vulnerabilities from v1 with full Certik Audit
+• Expanded team to 15 members across 3 time zones
+
+Q4 2021 (Completed):
+• Released prediction and raffle games
+• Listed on Gate.io after a near 1000x price surge, with close to $10m in our LP
+• Discovered listing agent was fraudulent, stole our fundraise and dumped our chart
+• Implemented game mechanics with provably fair randomization
+• Community grew to 8,000+ active members
+
+2022 - Expansion & Innovation:
+
+Q1 2022 (Completed):
+• Released arcade with 5 initial games including Super Robin Hood and Tomb Runner
+• Achieved 5,000+ monthly active gamers
+• Implemented blockchain-based leaderboards and rewards
+• Introduced social features allowing friend challenges
+• Built custom game engine optimized for mobile devices
+
+Q2 2022 (Completed):
+• Released stream app supporting 4K content with 99.9% uptime
+• Produced first tokenised documentary featuring Jorge Masvidal, Brad Pickett & more
+• Genesis mint for Chads collection
+• Secured SEC registration with the Philippine Government for real estate services
+• Implemented advanced video compression reducing bandwidth costs by 60%
+• Built NFT marketplace with royalty distribution system
+
+Q3 2022 (Completed):
+• Incorporated DeLabs LTD with proper legal structure and compliance
+• Acquired $1,000,000 home for largest crypto raffle ever (15,000+ participants)
+• Secured power of attorney for multiple islands worth over $15,000,000 in Palawan
+• Created transparent raffle mechanics with on-chain verification
+
+Q4 2022 (Completed):
+• Contract tax triggers malfunctioned, freezing the token and our LP, forced to relaunch v2
+• Migrated 25,000+ token holders to new improved contract
+• Implemented standard ERC20 tokenomics to avoid future issues
+
+2023 - Recognition & Decentralization:
+
+Q1 2023 (Completed):
+• Alpha launch of complete d'app integrating all ecosystem components
+• Released tokenised uploads with onchain ad revenue sharing (creators earning 90%)
+• Commenced advanced analytics dashboard for creators
+• Recommenced trading of DeHub v2 on Gate.io
+
+Q2 2023 (Completed):
+• Won most innovative company award at UK's Corporate Livewire, competing against 900+ companies
+• Featured in major tech publications including TechCrunch and VentureBeat
+• Patent applications commenced for core streaming technology and watch2earn mechanics
+
+Q3 2023 (Completed):
+• Announced partner airdrop for BJ (now fan.site), the adult fork of DeHub
+• Facilitated knowledge transfer and technical support to fork team
+• Demonstrated true decentralization principles in action
+• Established framework for future community-driven forks
+
+Q4 2023 (Completed):
+• Voluntary delisting from Gate.io to prioritize decentralization
+• Commitment to transparency with all DEX policy implementation
+• Implemented automated liquidity provision strategies
+• Published full transparency reports showing all protocol metrics
+
+2024 - Scale & Professional Growth:
+
+Q1 2024 (Completed):
+• Listed DHB on Eth mainnet
+• Raised $1,000,000 for adult fork BJ (now fan.site) from VCs, Launchpads & Public Sales
+
+Q2 2024 (Completed):
+• Listed SDHB on Base L2
+• Dubai event expanded Middle East presence
+• Co-Founders opened TikTok agency in partnership with TikTok execs
+• Established creator partnerships in 15 countries
+
+Q3 2024 (Completed):
+• Completed major app upgrade with 95% positive user feedback
+• Overhauled user interface & improved back end speed by 200%
+
+Q4 2024 (Completed):
+• Released onchain tradable subscriptions
+• Released teaser for Last Chad Standing with 1M+ views
+• Agency grew to UK #1 with 1,000 live streamers signed exclusively
+• Released DePIN Phase 1
+• End-to-end encrypted privacy chat features
+
+2025 - Current Year - Live & Interactive:
+
+Q1 2025 (Completed):
+• Released onchain live streams with real-time tip animations
+• Implemented Livepeer infrastructure supporting 50,000+ concurrent viewers
+• Built custom CDN reducing latency to sub-200ms globally
+• Achieved 99.99% uptime across all streaming services
+• Discontinue Ethereum Mainnet support
+• Completed messaging system with paid or free DMs and unlockable chat content
+• Released full trailer for Last Chad Standing
+
+Q2 2025 (Completed):
+• Launched UGC ambassadorship program with 50 vacancies
+• Implemented comprehensive creator education curriculum
+• Released dhbscan.com for users to track activity across all DHB contracts
+• Revamped main app feed, revealed audio replies and live talk spaces
+• Final snapshot for Last Chad Standing game airdrop
+
+Q3 2025 (Completed):
+• Release live stream keys for multi-app streaming
+• Released fiat onramp with Stripe integration for 130+ currencies
+• Begin Solana, Hyperliquid and Sui integrations for in-app use
+
+Q4 2025 (Planned):
+• App store re-listings
+• Release multi-account access and delegation features
+• Deploy comprehensive CRM system for agency management
+• Open source the entire DeHub protocol
+• Last Chad Standing release schedule begins
+
+2026 - Future Vision:
+
+Q1 2026 (Planned):
+• Integrate AI toolkits for automation
+• Custom advertising stack with advanced user targeting
+• DePIN phase 2
+
+2026 and Beyond (Planned):
+• Launch fiat off-ramp functionality
+• Launch comprehensive SDKs for third-party developers
+• Multi-posting software for all major web2+3 socials
+• Establish developer marketplace
+• Leading licensing partners, latest blockbusters and major PPVs
+• Commercial integrations with existing streaming and home entertainment brands
+• Aggregation of All APIs of current web2+3 Streaming Platforms
+• TV & game console apps
+• V/AR profile hub & consumer data metrics
+• Educational AI integrations
+• Creator and viewer tools utilising AI and blockchain technology
+• Integration with IoT devices and smart home systems
+• Blockchain-based content verification and anti-piracy measures
+
+================================================================================
+FAQ - FREQUENTLY ASKED QUESTIONS
+================================================================================
+
+What is DeHub?
+DeHub is a decentralised user owned alternative to legacy media apps such as X, Facebook, YouTube and Rumble, that utilises the advancements in blockchain technology to offer users a whole new world of possibilities.
+
+What is the DHB token used for?
+DHB tokens provide utility across the entire DeHub ecosystem including access to games and content, global transactions, tipping creators, purchasing on the NFT marketplace, governance voting, staking for rewards, and network security.
+
+How does DeHub's governance system work?
+DeHub uses a novel fair voting logic where stakeholder weight is multiplied by limited amounts to prevent whale manipulation. Each vote requires burning 50 DHB tokens to discourage bad actors while incentivizing meaningful participation.
+
+Where can I buy DHB tokens?
+DHB tokens are available on various exchanges. Check our 'Where to Buy' section for the most up-to-date list of supported exchanges and trading pairs.
+
+How do I bridge DHB tokens?
+You can bridge DHB tokens between BASE and BNB chains using our token bridge. Visit the Token Bridge section in our documentation for detailed instructions.
+
+Can I stake DHB tokens?
+Yes, you can stake DHB tokens to earn real yield from protocol revenue buybacks and x-2-earn rewards. Staking also helps secure the network and provides enhanced rights within the ecosystem.
+
+What games are available on DeHub?
+DeHub offers various blockchain-integrated games where you can earn rewards, compete in tournaments, and use DHB tokens for in-game purchases and enhanced features.
+
+How does the DePIN infrastructure work?
+DeHub's DePIN (Decentralized Physical Infrastructure Network) allows users to contribute computing resources and earn rewards while helping to build a decentralized infrastructure network.
+
+What are DeHub's AI Toolkits?
+Our AI Toolkits provide developers and users with advanced AI-powered tools and services integrated into the DeHub ecosystem, enhancing functionality across d'Apps and games.
+
+How does advertising work on DeHub?
+DeHub offers a decentralized advertising platform where advertisers can create campaigns, target specific audiences, and pay with DHB tokens. Content creators can earn rewards for displaying relevant ads.
+
+Is DeHub secure?
+Yes, DeHub has undergone security audits by Certik and maintains a bug bounty program. We prioritize security across all our smart contracts and infrastructure.
+
+What is the total supply of DHB tokens?
+DeHub follows a carefully designed tokenomics model with controlled emissions and buyback mechanisms. Check our Token Economics section for detailed supply information.
+
+How can I participate in DeHub governance?
+DHB token holders can participate in governance by voting on protocol decisions, content productions, and Hub Improvement Proposals (HIPs). Each vote requires burning 50 DHB tokens.
+
+What are the benefits of holding DHB tokens?
+Benefits include access to enhanced features, global transactions, creator tipping, NFT marketplace purchases, governance rights, staking rewards, network security participation, and future utility expansions.
+
+Can I tip content creators on DeHub?
+Yes, you can tip creators and reward viewers by attaching bounties to published or token-locked content using DHB tokens.
+
+What is the Phygital NFT Marketplace?
+Our marketplace allows users to purchase digital collectibles, physical assets, and services using DHB tokens, bridging the gap between physical and digital ownership.
+
+How do I access DeHub's d'Apps?
+You can access DeHub's d'Apps through our main platform. DHB token holders get enhanced features and functionality across all current and future d'Apps.
+
+What is DeHub's roadmap?
+Our roadmap includes expanding the d'App ecosystem, launching new games, enhancing DePIN infrastructure, developing AI toolkits, and officially launching governance in early 2026.
+
+How can I contact the DeHub team?
+You can reach us through our official channels: tech@dehub.net for technical issues, or follow us on Twitter and Instagram @dehub_official for updates and community engagement.
+
+Are DHB tokens an investment?
+No, DHB tokens are strictly for utility purposes within the DeHub ecosystem, similar to in-game or in-app digital currencies. They are not investment instruments and markets are highly volatile.
+
+How does content moderation work on DeHub?
+DeHub uses a decentralized content moderation system where community members can participate in dispute management and content moderation to earn rewards while maintaining platform quality.
+
+================================================================================
+TEAM
+================================================================================
+
+Malik Jan - Co-Founder
+Founder of U.K registered Web3 developers DeLabs LTD and Co-founder of Puso group, a SEC licensed construction & development company in the Philippines.
+
+Experience:
+• Guide Dogs: Raised >$1m as fundraising manager with a team of 5-10 across multiple sectors
+• Randstad: Senior consultant at $8bn dollar market cap and world's largest agency
+• Blue Arrow: Biggest biller & award winning consultant at UK's largest agency with >600 staff & 70 offices nationwide. Producing personal net margins in excess of $10,000 per week
+• ITS Construction: Sussex Regional Manager at leading UK construction agency
+
+Mike Hales - Co-Founder
+Founder and CEO of Rapz, a notable high end MMA fightwear brand backed by top UFC and boxing stars, with exclusive supplier rights to BKFC. Founder of First Class, the UK's largest TikTok partner agency working directly for TikTok at the UK HQ.
+
+Experience:
+• Selected by TikTok executives after 10 months of leading the UK charts with his live streams
+• Digital and mixed martial artist behind the Lean Chad Fight Club and Rapz Sport
+• Owner of the UK's leading cobra bag provider
+• Exclusive fight gear supplier to BKFC, owned by Connor Mcgregor, trained under coach John Kavanagh
+
+Indi Jay Cammish - Co-Founder
+Social media, content & dance expert overseeing communications & corporate relations. Co-founder of First Class, the UK's largest TikTok partner agency.
+
+Experience:
+• Highly experienced working directly alongside global stars such as Mabel on long term world tours
+• Performed at the Platinum Party at The Palace event for her majesty, the Queen of England in 2022
+• Co-founder of First Class, the UK's largest TikTok partner agency
+
+Bailey Young - Co-Founder
+Operational powerhouse and former pro-gamer heavily connected across the gaming, music & entertainment scene.
+
+Experience:
+• Investments and tokenomics expert who played an instrumental role in the astronomical growth of DeHub in 2021
+• Oversaw the Blocjerk fundraise of $1,000,000 in 2023 which gave a peak ROI of 1,000%
+• Former professional gamer, ranking globally in the top 3 COD MW2 and top 100 on Warzone
+
+================================================================================
+CONTACT
+================================================================================
+
+Quick Contact Options:
+• Telegram: https://t.me/dehub_dhb
+• Discord: https://discord.gg/dehub
+• Direct Message (coming soon in app)
+
+Community Channels:
+• Turkish: https://t.me/Dehub_Turkish
+• Arabic: https://t.me/Dehub_Arabic
+• Holders: Exclusive channel for token holders
+• Whales: For holders over 10m DHB tokens
+
+Email Contacts:
+• Technical Support: tech@dehub.net
+• Marketing: marketing@dehub.net
+• Human Resources: hr@dehub.net
+
+================================================================================
+PRIVACY POLICY
+================================================================================
+
+Last updated: December 2, 2024
+
+Decentralized Privacy Commitment:
+DeHub is built as a decentralized application that prioritizes user privacy and data sovereignty.
+
+Core Principle: We do not store, collect, or process personal data on centralized servers.
+
+What We Don't Collect:
+• Personal identification information
+• Email addresses or contact information
+• Browsing history or behavioral data
+• Location data
+• Device fingerprinting information
+• Centralized user accounts or profiles
+
+Blockchain Data:
+Your interactions with DeHub may be recorded on public blockchains. This data is:
+• Publicly accessible by nature of blockchain technology
+• Pseudonymous (linked to wallet addresses, not personal identity)
+• Immutable and permanent
+• Not controlled or stored by DeHub
+
+Local Storage:
+Some application preferences may be stored locally in your browser. This data:
+• Remains on your device only
+• Is never transmitted to external servers
+• Can be cleared by you at any time
+
+Third-Party Services:
+DeHub may integrate with third-party services:
+• Wallet Providers: MetaMask, WalletConnect, etc.
+• Blockchain Networks: Transaction data is public on respective blockchains
+• IPFS/Decentralized Storage: Content stored on distributed networks
+
+Your Rights & Control:
+• You maintain full control over your data
+• No central authority can access your private information
+• You can discontinue use at any time
+• Your wallet and keys remain under your sole control
+
+Blockchain Considerations:
+• Blockchain transactions cannot be deleted or modified
+• Public blockchain data remains permanently accessible
+• Consider privacy implications before making transactions
+
+Important Notice:
+DeHub operates as a decentralized protocol. While we strive to protect user privacy, the decentralized nature means that interactions may be visible on public blockchains.
+
+================================================================================
+LEGAL DISCLAIMER
+================================================================================
+
+Last updated: September 22, 2022
+Effective: July 15, 2021
+
+DeHub is a protocol built and managed by DeLabs LTD (14204474) office 4, 219 Kensington Highstreet, London, UK, W86BD.
+
+All information provided directly or indirectly by the DeHub team, community or affiliates is for general information purposes or promotions only. It does not constitute investment or financial advice, recommendations or any form of solicitation.
+
+There is no presale or premine of the DeHub Tokens and only liquidity generation events (LGEs) where all funds raised are added to liquidity pools to facilitate trading.
+
+DeHub expressly denies any ability of the DeHub token to represent or confer any ownership right or stake, share, security, or equivalent rights, or any right to receive future revenue shares, intellectual property rights or any other form of participation.
+
+DeHub tokens are created as decentralised smart contracts, and in no way are meant to be a security, commodity or any kind of financial instrument.
+
+To the fullest extent permitted by applicable law, DeHub tokens are airdropped on an "as is" and "as available" basis without warranties of any kind.
+
+Digital assets are a new frontier and technical innovation so come with volatility and unpredictability. Only part ways with what you can afford to lose.
+
+All DeHub recipients are responsible for implementing reasonable measures for securing their own wallet. DeHub will never hold custody of funds or your seed phrase nor would we ever ask you for this information under any circumstance.
+
+Important Notice:
+DeHub tokens are strictly for utility purposes in the same way that any in-game or in-app digital tokens or currencies and strictly not an investment. Markets are highly volatile. You could also lose all your money due to any unforeseen errors such as competency failures, technical error, hacks and so on. Therefore, you should only ever spend what you can afford to lose.
+
+================================================================================
+BLOG POSTS - COMPLETE ARCHIVE
+================================================================================
+
+--------------------------------------------------------------------------------
+GOOGLE PLAY STORE LISTING CONFIRMED
+Published: December 1, 2025
+Tags: Announcement, App Store, Google Play, Milestone, 2025
+--------------------------------------------------------------------------------
+
+Today marks a monumental moment in DeHub's history. After years of persistence and determination, we are thrilled to announce that DeHub is officially back on the Google Play Store. For those who have been with us from the beginning, you know this hasn't been an easy journey. Crypto and decentralized applications have faced significant hurdles when it comes to app store listings, with regulatory uncertainty and restrictive policies making it incredibly difficult for projects like ours to maintain a presence on mainstream platforms. This year, however, brought welcome changes to those policies, and we seized the opportunity to push forward with renewed vigour.
+
+Apple App Store on the Horizon:
+While we celebrate this Google Play milestone, we want to keep our community informed about our progress on the Apple front. Our developer account has been confirmed, and we're currently in the process of converting to a business account. This ensures that when DeHub appears on the App Store, it will be listed under our company name—exactly as it should be for a project of this scale. We don't anticipate any issues with the approval process, but rest assured, if any arise, we'll address them swiftly. The Apple App Store listing is on track, and we're confident it won't be far behind.
+
+What Comes Next - A Serious Marketing Push:
+With app store presence secured, we're now gearing up for what will be one of the largest marketing campaigns in DeHub's history. Our co-founders, Mike and Indy, have already announced a strategic partnership with one of the biggest TikTok agencies in the world—a powerhouse with access to over 1,200 streamers. This isn't just any partnership; we're talking about an agency that reports directly to TikTok executives, hosts talks for major stakeholders, and runs events at TikTok headquarters. This is serious business, and it signals exactly where DeHub is headed. We're not here to play small—we're here to revolutionize decentralized media, and we have the partnerships and infrastructure to make it happen.
+
+Download DeHub: https://play.google.com/store/apps/details?id=io.dehub.mobile
+
+--------------------------------------------------------------------------------
+PRIVACY FIRST: OPEN SOURCE E2EE ON DEHUB
+Published: October 22, 2025
+Tags: Privacy, Security, Encryption, Technology, E2EE
+--------------------------------------------------------------------------------
+
+Military-Grade Privacy Protection:
+At DeHub, we've implemented military-grade End-to-End Encryption (E2EE) to ensure your conversations remain completely private. When you send a message, only you and your recipient can read it—not even DeHub's servers have access to your decrypted messages.
+
+What Makes Our E2EE Secure - Zero-Trust Architecture:
+We use audited, zero-dependency cryptographic libraries from the @noble suite—the same cryptographic foundation trusted by security experts worldwide:
+• @noble/ciphers - For authenticated encryption
+• @noble/curves - For elliptic curve cryptography
+• @noble/hashes - For cryptographic hashing
+
+Battle-Tested Encryption Algorithms:
+• XChaCha20-Poly1305 - Message Encryption: Modern authenticated encryption used by Signal, WhatsApp, and secure messaging apps. Provides both confidentiality (messages can't be read) and authenticity (messages can't be tampered with). Lightning-fast performance even on mobile devices.
+• X25519 ECDH - Key Exchange: Elliptic Curve Diffie-Hellman for secure key agreement. Provides Perfect Forward Secrecy—each conversation uses unique session keys. Based on Curve25519, offering 128-bit security level.
+• HKDF-SHA256 - Key Derivation: Industry-standard key derivation from shared secrets. Ensures cryptographic separation between different conversations. Deterministic yet secure key generation.
+
+How It Works - The Complete Flow:
+
+Phase 1: One-Time Setup (Enable E2EE)
+When you enable E2EE in DeHub:
+1. Wallet Signature Request - You're asked to sign a message: "Enable E2EE for Holder Chat". Your wallet produces a unique cryptographic signature. This signature never leaves your device.
+2. Private Key Generation - Your Wallet Signature → [SHA-256 hash] → 32-byte seed → [HKDF derivation] → Your Private Key (32 bytes). Your private key is derived from your wallet signature. Never transmitted to DeHub servers. Never stored anywhere except your device.
+3. Public Key Creation - Private Key → [X25519 operation] → Public Key (32 bytes) → [Base64 encoding] → Uploaded to DeHub database. Your public key is mathematically linked to your private key. Safe to share publicly—it's used by others to encrypt messages for you. Stored in DeHub's database so others can find it.
+
+What Gets Stored:
+• On Your Device (IndexedDB): Private key, session keys (24-hour cache)
+• On DeHub Servers: Public key, E2EE enabled status, key creation timestamp
+
+Phase 2: Starting a Conversation
+When you chat with someone who also has E2EE enabled:
+Your Private Key (from your device) + Their Public Key (from DeHub database) → [X25519 ECDH Magic] → Shared Secret (32 bytes) → [HKDF with conversation context] → Session Key (32 bytes)
+
+Key Features:
+• Perfect Forward Secrecy - Each conversation has a unique session key
+• Performance Optimization - Session keys are cached for 24 hours
+• Both Parties Get the Same Key - Even though derived independently!
+
+Phase 3: Sending a Message
+When you type and send "Hello, world!":
+1. Message Preparation: "Hello, world!" → [UTF-8 encoding] → Plaintext bytes: [72, 101, 108, 108, 111, ...]
+2. Encryption: Plaintext bytes + Session Key + Random Nonce (24 bytes, freshly generated) → [XChaCha20-Poly1305 encryption] → Ciphertext + Authentication Tag (16 bytes) → [Base64 encoding] → Ready for DeHub servers
+3. Storage - DeHub's database stores: Who sent it (your address), Who receives it (recipient's address), When it was sent (timestamp), Encrypted gibberish (the ciphertext). NOT what it says (completely unreadable)
+
+What DeHub Sees: We can see metadata (who, when, message count) but never the actual content—it's just encrypted gibberish to us!
+
+Phase 4: Receiving a Message
+When someone sends you an encrypted message:
+1. Fetch from Database - DeHub retrieves: encrypted_content + nonce + version
+2. Session Key Retrieval - Check cache → If found, use it. If not found → Derive fresh session key using ECDH (same as Phase 2)
+3. Decryption - Ciphertext + Authentication Tag + Nonce + Session Key → [XChaCha20-Poly1305 decryption] → Plaintext bytes (authentication verified!) → [UTF-8 decoding] → "Hello, world!" appears on your screen
+
+Security Verification:
+✅ Authenticity Verified - The authentication tag proves the message wasn't tampered with
+✅ Correct Sender - Only someone with the sender's private key could create this ciphertext
+✅ Replay Protection - Unique nonce prevents old messages from being replayed
+
+What E2EE Protects vs. What It Doesn't:
+
+✅ Fully Protected:
+• Message Content - Completely encrypted before leaving your device
+• Message Integrity - Cannot be altered without detection
+• Private Keys - Never leave your device, never transmitted
+• Forward Secrecy - Unique keys per conversation
+• Authenticity - Guaranteed sender identity
+
+⚠️ Metadata (Visible to DeHub):
+Like all E2EE systems (Signal, WhatsApp, etc.), some metadata must be visible for the app to function:
+• Who you're messaging (sender/recipient addresses)
+• When messages are sent (timestamps)
+• How many messages exchanged (message count)
+• Message type (text/image/voice—but not the content)
+
+Why? This metadata is necessary for message routing and delivery. Without it, we couldn't deliver your messages!
+
+Current Status & Roadmap:
+
+✅ Live Now:
+✅ Wallet-based key generation (no passwords!)
+✅ Automatic DM encryption/decryption
+✅ Session key caching
+✅ Perfect forward secrecy
+✅ E2EE status badges
+✅ Backward compatibility with unencrypted messages
+
+🚧 Coming Soon:
+🔜 Group message encryption - Encrypted group chats
+🔜 Media encryption - Images, GIFs, voice messages
+🔜 Key verification - Verify your contact's identity with QR codes
+🔜 Key backup & recovery - Safely backup your encryption keys
+🔜 Multi-device sync - Use E2EE across devices
+
+Why This Matters:
+DeHub can never: Read your messages, Access your private keys, Decrypt your conversations, Share your message content with anyone
+
+Even if: DeHub's servers are hacked, We're served a government warrant, A rogue employee tries to access data
+
+Your messages remain encrypted and unreadable. That's the power of true end-to-end encryption.
+
+DeHub's Commitment to Privacy:
+At DeHub, we believe privacy is a fundamental right. Our E2EE implementation ensures that your conversations are truly private—protected by mathematics, not just policies. We've chosen industry-leading cryptographic libraries and algorithms to give you the same level of security used by Signal, WhatsApp, and other privacy-focused messaging platforms.
+
+Your messages. Your privacy. Always.
+
+--------------------------------------------------------------------------------
+DHB TRADABLE ON COINBASE
+Published: December 15, 2024
+Tags: DHB Token, Coinbase, Exchange, Trading, Cryptocurrency
+--------------------------------------------------------------------------------
+
+We are thrilled to announce that $DHB token has been confirmed to be available directly on Coinbase CEX, one of the world's largest and most trusted cryptocurrency exchanges.
+
+What This Means for DeHub:
+This listing represents a major milestone for the DeHub ecosystem and significantly increases accessibility for users worldwide to participate in our decentralized infrastructure project.
+
+Enhanced Accessibility:
+With DHB now available on Coinbase, users can easily buy, sell, and trade DHB tokens using the platform's intuitive interface and robust security features.
+
+This is just the beginning of DeHub's expansion into mainstream cryptocurrency trading platforms. Stay tuned for more exciting developments!
+
+--------------------------------------------------------------------------------
+THE COUNTDOWN BEGINS
+Published: November 17, 2025
+Tags: App Store, Launch, Milestone, Google Play, iOS
+--------------------------------------------------------------------------------
+
+The extraordinary four-year journey for the DeHub team, building a platform to revolutionize and democratize media, is nearly complete. The team believes fixing the monetary system was the first major hurdle which Bitcoin achieved. The next crucial step in this revolution is media. It is a difficult path, with crypto apps historically facing significant app store approval challenges. Stringent cryptocurrency application policies from Apple and Google mean many promising projects never make it past the approval stage. DeHub, however, persisted, refined our approach, and remained committed to delivering something truly exceptional.
+
+The 2023 web app release was not just a soft launch; it was the crucial test phase allowing us to fine-tune features, gather invaluable user feedback, and prove our concept in a real-world environment. Although small in scope, it served its' purpose perfectly, preparing us for the main event. Always vocal about the official app store launch being the biggest catalyst in DeHub's history, that moment is now upon us.
+
+The countdown is now live on dehub.io and set to end on the last day of the app store approval window. If the process goes smoothly as expected, then this countdown remains valid, and we will be live on stores when it hits 0. If edits are required, the countdown will be updated accordingly.
+
+This is not just another milestone; it is THE milestone. After years of development, testing, and refinement, DeHub is about to land in the hands of millions through the world's most trusted app distribution platforms. The countdown on dehub.io represents more than just a time clock; it represents the culmination of countless hours of work, dedication, and unwavering belief in our vision.
+
+The wait is almost over. Visit dehub.io to see the countdown and be part of this historic moment. The future starts now!
+
+--------------------------------------------------------------------------------
+DEHUB'S SPECIAL WEEK: BNB RECOGNITION, FIRST CLASS PARTNERSHIP, APP STORE LAUNCH
+Published: November 7, 2025
+Tags: BNB Chain, First Class Agency, App Store, TikTok, Partnerships, DePIN, VR Streaming
+--------------------------------------------------------------------------------
+
+Enjoy a transcript of the recent spaces held by Rayn, head of game development for DeHub Games.
+
+BNB Chain Recognition: We're Officially on Binance's Radar
+
+Big News! First and foremost, what a week! We finally got some serious recognition from BNB Chain. DeHub was tweeted out and introduced to the entire BNB community. We're incredibly proud to have been approved and now on Binance's radar.
+
+The Elephant in the Room: The LP
+The elephant in the room is the LP—I know, I know. Over $1M is now in our old LP, and it looks like it may not be stuck forever anymore. Our team has done all they can with the BNB team. We were given the first steps: DApp Bay integration and the intro tweet, to be introduced to the BNB ecosystem. Everyone at BNB said they want to help, and now we just wait and see. Everything has been done on our end that's been asked, and the team will confirm either way sooner or later. No guarantees as we always said, but given all the work BNB has done with traders who lost money, charity initiatives, supporting builders and grants—we're going to knock on the door until it opens.
+
+That was the big news for this week we were waiting to announce and the reason the spaces was pushed back. We got the tweet from BNB, so we're super proud to keep building on this chain.
+
+First Class Partnership Goes Official: The Gaming Division
+Another big bit of news that dropped this week was the partnership with First Class being made official. There has been lots of talk in the community—every day as Mike and Indi's agency grows, with over 1,200 TikTok live streamers now, the question burned: wen DeHub?
+
+The Joint Venture Structure:
+The new gaming division of First Class was set up by DeHub and First Class as a joint venture. It's our way to introduce streamers to DeHub while still servicing TikTok.
+
+Weekly Tournaments and Onboarding:
+We will be hosting weekly tournaments on TikTok and DeHub with the agency streamers, including many top 100 Fortnite gamers and top TikTok streamers. All will be required to sign up and stream on DeHub too, as well as participate in clip sharing contests on DeHub. Over 100 of the 1,200 agency streamers have been confirmed already.
+
+App Store Submission: Going Live in Weeks
+We are submitting the app to stores as I speak. That's why I'm hosting the spaces today and Mal is busy with the devs finalizing everything. It's being submitted as we speak. Which means we will be live on the Play Store and App Store in the coming weeks, with the first tournament already scheduled for November 15.
+
+Branded Streaming Integration:
+We've designed fully custom branded streaming banners and overlays that will be showing DeHub to millions of people every month. With current reach of First Class being over 20 million impressions per month across all streamers, 10% of that is now expected to directly funnel to DeHub.
+
+Dev Update: The Pipeline Ahead
+Besides all the news we've already shared for the app, there are some features that will be going live after the store releases:
+
+1. VR Streaming - We've been working on an epic VR streaming platform, on an entirely different level to anything YouTube or any other streaming app offers. With full VR features going live in-app at some point next year.
+
+2. TV & Console Apps - We've found a way to link accounts that's both simple and secure, so users of DeHub can sign up and use the app on any Smart TV, Xbox, and PS5 consoles. This is an essential step in mass adoption and something also set to go live next year.
+
+3. DePIN Mining - You will soon be able to mine DHB from as little as a mobile, with our next DePIN test release scheduled for early Q1. This is what fully decentralizes DeHub and ensures content is truly censorship-resistant.
+
+4. AI Toolkits - Our AI toolkits recently started integrating x402 standards, allowing any bots using DeHub to chat to each other and pay each other over HTTPS, the existing internet security protocol. Expected release before end of year.
+
+Final Thoughts: After 4 Years, We're Here
+So there you have it folks—what a huge pipeline of catalysts, plans, and execution. After 4 long years, we're finally here, back on the app stores with a fully built app ready to promote to the world. In that time, our team has built one of the largest streamer networks in the world, with 1,200 TikTok live streamers exclusively signed, working directly for the TikTok execs in their London HQ.
+
+Have an amazing night, DeHub family. The best is yet to come.
+
+--------------------------------------------------------------------------------
+TEAM FIRST CLASS AGENCY - UK #1 WITH 1,000 STREAMERS
+Published: November 22, 2024
+Tags: TikTok, Live Streaming, Agency, Mike Hales, Indi Jay Cammish, Creators
+--------------------------------------------------------------------------------
+
+From Vision to Victory: The Rise of Team First Class Agency
+
+From a bold idea to a national force in livestreaming, Team First Class Agency has officially hit a milestone worth celebrating. Co-founded by Mike Hales and Indi Jay Cammish, the TikTok official partner agency has now grown to over 1,000 active live streamers—making it the #1 TikTok agency in the UK.
+
+A Diverse Network of Digital Stars:
+What started as a passion project quickly turned into a powerhouse operation. Representing a vibrant mix of talent, from top-tier gamers and musicians to fashion influencers, lifestyle creators, and even beloved pet accounts, Team First Class has built a diverse, loyal, and ever-growing network of content creators.
+
+Official Partnership Excellence:
+Operating directly within TikTok's In-House Agency Programme, the agency works closely with TikTok executives to scout, support, and scale some of the platform's most promising talent. Their official partnership status isn't just a title—it's a commitment to creator excellence and innovation that's delivering real results.
+
+This exclusive partnership means Team First Class Agency has direct access to:
+- Advanced creator tools and beta features
+- Priority support from TikTok's technical teams
+- Exclusive monetization opportunities
+- Data insights that drive strategic growth
+- First access to new platform initiatives
+
+The Leadership Behind the Success:
+This milestone also highlights the creative leadership of DeHub's own Mike Hales, whose vision for empowering digital creators continues to push boundaries. Alongside Indi Jay Cammish, the duo has shaped a creator-first culture that's redefining what it means to build community, influence, and impact on the world's fastest-growing platform.
+
+Numbers That Speak Volumes:
+Reaching 1,000 active streamers represents:
+- Thousands of hours of live content created monthly
+- Millions of viewers engaged across the network
+- Countless success stories of creators achieving their dreams
+- A thriving ecosystem that benefits everyone involved
+
+A Creator-First Philosophy:
+What sets Team First Class Agency apart is their unwavering commitment to putting creators first. This philosophy extends to:
+- Transparent Revenue Sharing: Creators know exactly how much they earn and when
+- Comprehensive Support: From technical assistance to creative guidance
+- Growth Opportunities: Regular collaborations and cross-promotion within the network
+- Educational Resources: Workshops, training sessions, and one-on-one mentoring
+
+DeHub's Proud Moment:
+We couldn't be prouder of our co-founders and their ongoing mission to make content creation accessible, scalable, and world-class. This achievement perfectly aligns with DeHub's own vision of empowering creators through innovative technology and decentralized platforms.
+
+Follow the journey: @teamfirstclassagency on TikTok
+
+--------------------------------------------------------------------------------
+INTERACTIVE STREAMING: ON-CHAIN LIVE STREAMS WITH ANIMATED TIPS
+Published: March 10, 2024
+Tags: Live Streaming, Blockchain, Interactive, Tips, Q1 2025
+--------------------------------------------------------------------------------
+
+The Future of Live Streaming is Here
+
+The digital content landscape is evolving rapidly, and live streaming has become the cornerstone of real-time audience engagement. At DeHub, we're taking this revolution one step further by introducing Interactive On-Chain Live Streaming - a groundbreaking feature that combines the immediacy of live content with the transparency and ownership benefits of blockchain technology.
+
+What Makes DeHub Live Streaming Revolutionary?
+Traditional live streaming platforms operate on centralized models where creators are subject to arbitrary policy changes, revenue sharing modifications, and platform dependency. DeHub's approach fundamentally changes this dynamic by leveraging blockchain technology to create a decentralized streaming ecosystem.
+
+Real-Time Animated Tips: Bringing Engagement to Life
+One of the most exciting innovations in our live streaming platform is the Real-Time Animated Tips system. When viewers send tips to their favorite creators, these contributions don't just appear as static notifications - they come alive with dynamic animations that enhance the viewing experience for everyone.
+
+- Visual Impact: Tips trigger customizable animations that appear on the live stream
+- Instant Gratification: Both creators and viewers see immediate visual feedback
+- Gamification Elements: Different tip amounts can trigger different animation styles
+- Community Building: Animated tips create shared moments of excitement
+
+Text-to-Voice Generation: Accessibility Meets Innovation
+Our live streaming platform includes advanced Text-to-Voice Generation technology that automatically converts chat messages and comments into spoken audio during live streams.
+
+On-Chain Integration: Transparency and Ownership
+Every aspect of the live streaming experience that involves value exchange is recorded on the blockchain:
+- Immutable Revenue Records: All tips, subscriptions, and monetization are recorded on-chain
+- Instant Payments: Cryptocurrency-based tips and payments are processed instantly
+- Global Accessibility: Creators can receive support from viewers worldwide
+- Ownership Rights: Content metadata and engagement metrics are stored on-chain
+
+Monetization Revolution: Beyond Traditional Models
+Traditional platforms take 30-50% of creator earnings. DeHub's approach is fundamentally different:
+- Direct Creator Payments: Tips go directly to creators' wallets
+- Subscription NFTs: Tradeable passes for exclusive content
+- Revenue Sharing Through Tokens: Platform token holders receive advertising revenue share
+- Creator Token Economy: Creators can launch their own tokens
+
+--------------------------------------------------------------------------------
+TOKENISED UPLOADS ARE HERE
+Published: June 10, 2023
+Tags: Tokenomics, NFT, Feature, Update, ERC1155
+--------------------------------------------------------------------------------
+
+Introducing a New Era of Content Monetization
+
+How have we built in a seamless & unique fan token experience into our content app? We are incredibly excited to announce a groundbreaking feature on the DeHub platform: Tokenised Uploads!
+
+This innovation fundamentally changes how creators and fans interact with content, creating a shared economy where everyone can participate and benefit.
+
+How Tokenised Uploads Work:
+The magic behind this feature lies in blockchain technology, specifically with Non-Fungible Tokens (NFTs):
+
+• NFT Creation: Every time a creator uploads a new piece of content, it is automatically minted as an ERC-1155 NFT on the blockchain. This makes each upload a unique, verifiable digital asset.
+• Fractionalisation: Every upload's ERC1155 (NFT) now fractionalises by 1000. To make ownership accessible to everyone, these fractions act as "shares" of the content.
+• Revenue Sharing: Ad revenue generated by the content is shared evenly between each fraction. The more you keep, the more you earn. The more you sell, the more your fans earn.
+
+A Win-Win for Creators and Fans:
+This system creates a powerful, symbiotic relationship:
+
+For Creators: You retain initial ownership of all fractions, giving you a new way to monetize your work. You can hold onto them to earn from your own ad revenue, or sell them to your community, creating an instant income stream. The more engaged your community is, the more valuable your content fractions become.
+
+For Fans: You can now directly invest in the creators and content you love. By purchasing fractions, you're not just donating; you're acquiring a stake in the content's success. As the content generates revenue, so do you.
+
+We believe Tokenised Uploads are the future of the creator economy. It's a system built on transparency, ownership, and shared success. Start exploring this new feature today and be a part of the revolution!
+
+--------------------------------------------------------------------------------
+AWARD WINNING INNOVATION - CORPORATE LIVEWIRE 2023
+Published: April 20, 2023
+Tags: Award, Innovation, Gaming, Corporate LiveWire
+--------------------------------------------------------------------------------
+
+DeHub Wins Corporate LiveWire's 2023 Innovation & Excellence Award
+
+It brings us great pride to inform you all that after 27,000 votes over the last 12 months of nominations and judge scoring, DeHub is officially Corporate LiveWire's 2023 Innovation and Excellence Winner, coming in first place under the "Gaming" category.
+
+A Prestigious, Merit-Based Award:
+Corporate LiveWire is one of the more prestigious and rigorously scored awards for the UK business and finance sectors, noted by some of the largest companies in the world. We were nominated by a member of the public and then given first place for our free-to-play-and-earn gaming arcade and streaming protocol.
+
+The scoring took into account a number of key variables, including customer service, community feedback, and social engagement—all the things we take pride in. This is a stringent, merit-based system, not one you can "pay to play." The Innovation and Excellence award is for startups and businesses pioneering new technology.
+
+Spreading the Word:
+With over 70,000 subscribers across physical and digital channels, this award gives DeHub incredible exposure to a business-oriented, off-chain audience. We will be attending Corporate LiveWire events in Dubai, Central London, and South East UK. Once all winners have been announced on their website, we will commence press releases to make sure the world knows that our little crypto project is winning reputable awards and rubbing shoulders with some of the biggest names in the UK business and finance sector.
+
+The London awards ceremony is on the 27th of August, and we'd like to extend an invitation to whoever nominated us for this amazing prize. Please reach out to us via any social media, community group, or by direct email to marketing@dehub.net.
+
+--------------------------------------------------------------------------------
+GLOBAL FOOTPRINT: DEHUB EXPANDS MIDDLE EAST PRESENCE - DUBAI EVENT
+Published: April 10, 2024
+Tags: DeHub Journey, Roadmap, Q22024, Events, Dubai
+--------------------------------------------------------------------------------
+
+A Landmark Quarter for DeHub in the Middle East
+
+Hard work and innovation deserve to be recognized. We were incredibly honored in Q2 2024 when DeHub achieved a significant external milestone, expanding our global footprint into the Middle East with a strong presence at multiple key events in Dubai.
+
+Our team was on the ground, connecting with industry leaders, showcasing our technology, and forging new partnerships. This expansion represents a major step in our mission to build a decentralized future, and we were thrilled by the incredible reception we received.
+
+DeHub's Dubai Event Schedule:
+Our tour of Dubai was packed with premier blockchain and web3 conferences:
+• April 16: Blockchain Life
+• April 17: Global Blockchain Show
+• April 19: Token2049
+• April 21: ETH Dubai
+• April 22: World Blockchain Summit
+• April 26: 13th Global Blockchain Congress
+• April 29: Web 3 Dubai
+
+This was more than just a trip; it was a statement. DeHub is a global project, and our presence in Dubai has solidified our position in one of the world's most dynamic tech hubs. Thank you to everyone who connected with us. The future is bright, and we're just getting started!
+
+--------------------------------------------------------------------------------
+2022 WRAP UP
+Published: January 4, 2023
+Tags: Year Review, 2022, Roadmap, Milestones, Community
+--------------------------------------------------------------------------------
+
+Diving back through the year just passed as well as into the one ahead.
+
+Thanks to each and every one of the team, community and contributors we have been ploughing through our roadmap and setting ourself up for the biggest year yet.
+
+We started 2022 with:
+❌ No games or arcade d'app
+❌ No streaming d'app or documentaries
+❌ No marketplace d'app or NFTs minted
+❌ No staking d'app
+
+We've sustained plenty of hopes, dreams and bear market battle wounds yet through thick and thin we've prevailed. We had a plan and like-minded individuals who were all aligned to the same goal.
+
+We now end 2022 with:
+✅ Streaming d'app for stakers with 2 original productions released, including the exclusive feature from Jorge Masvidal and more pipelined for 2023
+✅ Gaming arcade with 3 custom play and win to earn games, including Whack a Schiff and Gas Guzzler which is set for app & play store debut imminently
+✅ Our own marketplace with epic partners and products including Raceline in Bristol amongst more to be announced in 2023
+✅ Staking d'app with 100m+ tokens in rewards successfully claimed by holders
+✅ The free mint for LCFC picking up steam with the game set for imminent release with officially licensed fighters
+✅ Our new company registered in the UK with the BDM team set up, targeting businesses and consumers
+
+We enter 2023 with our streaming and marketplace d'app upgrades set for imminent release and currently being tested by users. This includes a permission-less deposit and spend contract that allows for instant fiat onboarding, with 0 wallet knowledge and email/password access. Transactions occur instantly and direct on d'app with 0 gas fees.
+
+It's clear to see we've been building and now we enter 2023 prepared to scale. We've laid the foundations and all of our core d'apps are coming to fruition, entering their later development phases. Development wise we're in our strongest position so far.
+
+2023 must be better, 2023 must be bigger, 2023 must be $DHB.
+
+Chronological condensed highlights:
+
+January 4: LCFC started revealing art and onboarding notable club members including Lerone Murphy, Kane Mousah, Kelvin Gastelum, Mark Diakese, Brad Pickett and many more.
+
+January 12: DeHub community successfully raised over $2,000 to assist long term and value adding community member Skeksis who had just been beaten up and robbed.
+
+January 20: Partnered with and integrated fiat on-ramp for users to buy DeHub tokens direct on our d'app via credit or debit cards.
+
+January 24: Released staking whitepaper and technical specification as well as a hackathon bounty which was never cracked.
+
+January 27: Staking d'app launched on our own custom built contract for our previous tokenomics including reflections and rewards.
+
+February 22: Scheduled launch of our stake-to-access streaming d'app including licensed films, tv shows and documentaries as well as our own productions.
+
+February 25: Malik, Mike and Indi interview and review by Entrepreneur.com released.
+
+February 27: DeHub production & Vida Entertainment team flew out to Prague to film our genesis original production, following the emotional Oktagon return of war veteran Jay Cuciniello.
+
+March 1: Official release of first original production trailer for Way of The Warrior series and featured in BigFish Boxing.
+
+March 14: Way of the Warrior pilot released onto our own custom streaming d'app for stakers.
+
+March 22: Genesis mints for LCFC commenced with floor price currently 0.3E on a free collection.
+
+March 26: Puso Group, the company part owned by Malik and overseeing initial development of the d'app officially receives SEC licenses & registration in the Philippines.
+
+April 1: Genesis rewards unlocked from V1 staking with over 50,000,000 in DeHub tokens distributed to all stakers.
+
+April 7: Completed OTC deal with North Equities for $100,000 marketing campaign.
+
+April 19: Play and win to earn arcade made its debut with classic arcade games available and users airdropped 10,000 tokens for participating.
+
+May 6: Released first custom game, Super Robin Hood, onto our arcade.
+
+May 9: DeHub production team linked up with Jorge Masvidal to film content and a trailer for episode 2 of our original series, Way of the Warrior featuring a deep dive into the groundbreaking career of UFC legend Brad Pickett.
+
+May 27: Partnership secured with Raceline bringing Lamborghinis and a host of other super cars onto our marketplace.
+
+June 6: Marketplace goes live on mainnet, and with it DeHub officially becomes the world's first dedicated phygital NFT marketplace with a transaction on chain.
+
+June 15: Released "Whack A Schiff" onto our arcade.
+
+June 29: DeLabs LTD is registered in the UK and given registration 14204474.
+
+July 14: Way of the Warrior Episode 2 featuring Jorge Masvidal and Brad Pickett released to rave reviews.
+
+July 8: The team attend Binance's 5th birthday celebrations in Paris and connect with key members of the Binance ecosystem.
+
+July 25: DeLabs LTD acquired $1,000,000 UK home and put it up for raffle on DeHub's provably fair and random NFT raffle protocol.
+
+August 10: First tax halving commenced and reducing the protocol's transaction tax from 12% to 6%.
+
+August 12: DeHub officially partners with Travladd, bringing the growing influencer on board our marketing advisory team.
+
+August 15: Partnered with Lawrence Choto, TikTok star with over 1m followers.
+
+August 17: New play and win to earn model released with hackathon.
+
+August 31: LCFC full art reveal and token-gated Discord groups go live.
+
+September 3: The tax halving caused trigger calibration issues with the contract.
+
+September 7: Contract upgrade announced and notice given to traders on gate.io.
+
+September 24: Private LGE (liquidity generation event) for existing holders commences.
+
+September 25: Private sale is sold out and over subscribed by 50%.
+
+October 10: New whitepaper released including key updates on tokenomics and technical changes.
+
+October 25: On-chain referral and rewards system went live.
+
+October 31: Public LGE goes live for 11 days.
+
+November 11: Official release of Gas Guzzler.
+
+Nov 18: Banking on Zero (BOZ) trailer goes live and promises to be the most uncensored deep dive into the FTX saga.
+
+November 23: Malik's younger brother and team member in our gaming division secures dream job at Binance.
+
+November 25: Released first gameplay teasers for LCFC's genesis 2D game "Street Slayer".
+
+December 2: Streaming d'app upgrade whitepaper release and technical reveal.
+
+December 16: Private beta goes live on testnet to outstanding reviews and feedback.
+
+December 27: We closed the year with key updates on our latest test d'app, new token listing and marketing partner update.
+
+Bring on 2023.
+
+--------------------------------------------------------------------------------
+FRESH EXPERIENCE: REVAMPED APP FEED
+Published: May 3, 2025
+Tags: UI/UX, Product Update, Features, Interface, User Experience
+--------------------------------------------------------------------------------
+
+We're thrilled to unveil a brand new user interface that brings clarity, performance, and creativity to the forefront of your DeHub experience. Whether you're discovering content, connecting with creators, or keeping tabs on the latest trends in crypto and digital art — our redesigned dashboard makes it all seamless.
+
+What's new:
+
+🔍 A Smarter, Centralized Search & Discovery Hub
+At the top of the interface, our new global search bar ensures you can find what you love, faster. Filter by "For you", "Subscribed", "Followed", "Liked", or "Saved" content tabs.
+
+🏠 Navigation, Reimagined
+On the left-hand side, our revamped vertical navigation menu keeps everything within easy reach. From your dashboard and wallet to collaborative features and live streams.
+
+🧠 AI-Powered Content Feeds
+Right in the main panel, discover tailor-made content feeds optimized for engagement. Each post now displays:
+- Author verification badges
+- Real-time like and comment counts
+- One-click share, save, and react buttons
+
+🎯 Contextual Ads that Work for You
+We know creators care about tools that help them grow. Smart promotions for creator utilities.
+
+📈 Real-Time Trends & Creator Spotlights
+Stay ahead of the curve with our updated right sidebar featuring trending topics and creator spotlights.
+
+🔗 Connect Seamlessly
+At the top-right of the dashboard, find the new "Connect" button — making it easier than ever to link wallets, verify accounts, or integrate third-party platforms.
+
+What's Next?
+This is just the beginning. We're planning updates to include:
+- Live creator collabs
+- Reward integrations
+- Decentralized content moderation tools
+
+Your feedback drives this platform — so let us know what you love (or want improved) and help us shape the next generation of decentralized content discovery.
+
+--------------------------------------------------------------------------------
+OFF-RAMP SERVICE REVEALED: DEHUB CARD COMING SOON
+Published: June 18, 2025
+Tags: DeHub Card, Off-ramp, Fintech, Crypto Payments, Financial Services
+--------------------------------------------------------------------------------
+
+The Future of Crypto Spending is Here
+
+With our on-ramp service now live and thoroughly tested on mainnet, users have been asking the obvious next question: when is off-ramp coming?
+
+We're excited to announce that we've found what we believe is the best solution for our users - and it's not what you might expect.
+
+Rather than following the traditional route of bank transfers or centralized exchange withdrawals, we're introducing something revolutionary: the DeHub Card.
+
+Why We're Avoiding Traditional Off-Ramps:
+I've personally experienced the frustration that comes with traditional banking when dealing with crypto transactions. Over the years, I've had numerous bank accounts frozen or shut down - sometimes over just a few thousand dollars, often with no clear explanation or recourse.
+
+Instead of forcing our users through the traditional banking gauntlet, we're launching the DeHub Card - a direct spending solution that bypasses banks and centralized exchanges entirely.
+
+Card Variants:
+The DeHub Card will be available in three premium finishes:
+- Black - Sleek and professional
+- Silver - Classic and versatile
+- Gold - Premium and distinctive
+
+The DeHub Card connects directly to your DeHub wallet, allowing you to:
+- Spend crypto anywhere that accepts card payments
+- Avoid bank complications and account freezes
+- Maintain privacy without traditional banking scrutiny
+- Access funds instantly without waiting for bank transfers
+- Enjoy global acceptance at millions of merchants worldwide
+
+Revolutionary Solution for Content Creators:
+The DeHub Card represents a game-changing advancement for content creators compared to traditional platforms like YouTube, Twitch, and Rumble.
+
+Instant Access to Earnings: While creators on YouTube must wait 30+ days for ad revenue payments, and Twitch requires a $100 minimum before payout, DeHub creators can spend their earnings immediately.
+
+No Payment Processing Delays: Traditional platforms process payments through complex banking systems with multiple intermediaries. The DeHub Card eliminates these delays entirely.
+
+Global Accessibility Without Banking Requirements: Many creators worldwide are excluded from monetization on traditional platforms due to banking restrictions or unsupported countries. The DeHub Card works globally without requiring traditional banking relationships.
+
+Higher Revenue Retention: Traditional platforms take significant cuts - YouTube takes 45% of ad revenue, Twitch takes 50% of subscription fees. DeHub's decentralized model allows creators to keep more of their earnings.
+
+Key Benefits:
+• No More Frozen Accounts
+• Instant Access - no 3-5 business day waits
+• Global Reach - use anywhere cards are accepted
+• Privacy Protection - no justifying transactions to banks
+
+Coming Soon:
+More comprehensive details about the DeHub Card service will be revealed soon, including launch dates, fee structure, supported cryptocurrencies, and rewards program details.
+
+--------------------------------------------------------------------------------
+DEHUB'S FLAG SHIP GAME LAUNCH & PARTNER AIRDROP
+Published: July 4, 2025
+Tags: Gaming, Airdrop, Last Chad Standing, LCS, Partnership
+--------------------------------------------------------------------------------
+
+DeHub's Flag Ship Game Launch & Partner Airdrop
+
+We're thrilled to officially confirm the airdrop allocation for our flagship game, Last Chad Standing (LCS) and our most anticipated partner launch yet.
+
+DeHub: The Home of Last Chad Standing
+DeHub will serve as the central hub for all things LCS, from exclusive livestreams and high-stakes tournaments to wild community showdowns.
+
+Taking the World by Storm:
+Our global launch campaign is about to hit full throttle. We're going beyond Web3, tapping into legacy media platforms and teaming up with stars from the UFC, Bellator, Oktagon, and more to ensure everyone hears about Last Chad Standing.
+
+The First-Ever MMA Battle Royale:
+Last Chad Standing (LCS) isn't just another fighting game—it's a groundbreaking experience that's redefining what combat sports gaming can be. As the first-ever MMA Battle Royale, LCS breaks new ground in both the fighting game genre and the battle royale space.
+
+This is the only modern MMA game on PC that delivers authentic mixed martial arts combat in a battle royale format. It's the only pure fighter battle royale ever created - no firearms, no gimmicks, just raw fighting skill and strategy.
+
+Stay updated at lastchadstanding.com
+
+DeHub Airdrop Allocation:
+Total DeHub Allocation: 10% of total supply (10,000,000,000 tokens)
+
+Pool Allocation:
+- Stakers: 7.5% (7.5B tokens)
+- Holders: 2.5% (2.5B tokens)
+
+Bonus Breakdown:
+- OG Bonus (Staked since protocol launch): 2x multiplier
+- Veteran Bonus (Staked before Nov 16, 2024): 1.3x multiplier
+Important: Bonuses are mutually exclusive. No stacking.
+
+Token Generation Event (TGE) Estimates:
+Estimated TGE Price: $0.0002
+Total DHB Staked: 1,792,474,753
+Total DHB Holdings: 2,903,416,217
+
+Check your allocations: https://lastchadstanding.com/docs#airdrop-calculator
+
+--------------------------------------------------------------------------------
+$DHB NOW TRADING ON COINBASE
+Published: August 19, 2025
+Tags: Coinbase, DHB, DEX, Decentralized Trading, Base, DeFi
+--------------------------------------------------------------------------------
+
+A New Era of Decentralized Trading Begins
+
+Today marks a watershed moment for DeHub and the entire decentralized finance ecosystem. $DHB is now officially trading on Coinbase, the world's leading cryptocurrency exchange, giving our community direct access to hundreds of millions of potential investors and traders worldwide.
+
+The Coinbase DEX Integration: Industry Game-Changer
+Coinbase's decision to list all Base ecosystem tokens, including $DHB, signals a fundamental shift in how major exchanges approach decentralized assets. This integration provides:
+
+- Massive Liquidity Access: Direct connection to Coinbase's vast user base of over 100 million verified users
+- Institutional Credibility: Coinbase's rigorous listing standards provide institutional-grade validation
+- Global Reach: Access to markets in over 100 countries
+- Seamless User Experience: Integration with Coinbase's intuitive interface
+
+Leading the Decentralized Revolution:
+As bastions of the decentralized future, DeHub has consistently chosen the path of transparency and user empowerment over centralized control. Our listing on Coinbase through their DEX integration perfectly aligns with this philosophy.
+
+Strategic Evolution: From Gate.io to Full DEX
+Earlier this year, DeHub made the bold decision to voluntarily delist from Gate.io and commit fully to decentralized exchange trading.
+
+Why we chose the DEX-first approach:
+- Complete Transparency: Every transaction visible on-chain
+- User Control: Traders maintain complete custody of assets
+- Censorship Resistance: No single entity can freeze accounts or halt trading
+- Global Accessibility: Available 24/7 to anyone with internet connection
+
+Trust Through Transparency:
+Your Keys, Your Coins: Users always maintain full control
+Open Source Verification: Smart contracts are publicly auditable
+Real-Time Transparency: All market activity visible on-chain
+No Hidden Fees: Transaction costs are transparent and predictable
+
+Access to Institutional Capital:
+With this integration, $DHB gains exposure to:
+- Institutional Investors: Pension funds, endowments, corporate treasuries
+- Professional Traders: Advanced trading tools and infrastructure
+- Retail Adoption: Millions of everyday users
+- Global Liquidity: World's largest cryptocurrency trading volumes
+
+The future of finance is decentralized, transparent, and community-controlled. The revolution is here. The future is decentralized. And $DHB is leading the way.
+
+--------------------------------------------------------------------------------
+BNB POOL UPDATE: RECOVERING 876 BNB
+Published: September 14, 2025
+Tags: BNB, Pool Recovery, Binance, Community, Governance
+--------------------------------------------------------------------------------
+
+The Road to Recovery: Our 876 BNB Journey
+
+Back in 2022, we overcame a contract issue which resulted in 876 BNB being stuck in our old pool. What started as a technical setback became a testament to our community's resilience and our team's unwavering determination to never give up on our holders.
+
+Although we successfully migrated and relaunched, it was largely due to our incredibly supportive community and the team's relentless dedication.
+
+The Technical Context: What "Unlocked" Really Means
+The 876 BNB is now officially "unlocked" from a technical standpoint. However, the funds are still stuck as our contract won't let us withdraw, though the pool is unlocked. Recovering these funds requires coordination with the broader Binance ecosystem and their quarterly burn processes.
+
+Building Bridges: Our Partnership Journey
+We've met with numerous members of the BNB / Binance / Labs team over the years, who agreed it was fair to give us our BNB from Binance's quarterly burns, considering our pool as burned.
+
+The Conversations That Matter:
+- BNB Chain technical teams who understand the contract mechanics
+- Binance Labs representatives who recognize our ecosystem value
+- Strategic partners within the Binance ecosystem
+- Key decision makers who have the authority to facilitate recovery
+
+Recognition of DeHub's Impact:
+As one of the top performing assets of the last cycle, growing from 0 to hundreds of millions, driving well over $30m in total volume on BNB, giving back over $1m to tens of thousands of holders, few better communities deserve assistance.
+
+The Scale of Support: Putting 876 BNB in Perspective
+Every quarter, Binance burns roughly 1m BNB on average, with less than 1/1000th required to make DeHub whole again.
+
+The Math That Matters:
+- Quarterly Burn Volume: ~1,000,000 BNB
+- DeHub Recovery Amount: 876 BNB
+- Percentage of Burn: Less than 0.1%
+- Impact on Process: Negligible effect on overall burn mechanics
+
+Advanced Discussions: Where We Stand Today
+We are in advanced meetings with the BNB / Binance / Labs team as we try and recover the LP.
+
+What Next? Community-Driven Decision Making:
+
+If the BNB is Recovered:
+We will open a governance poll on dehub.io to decide as a community what to do with the funds to maximize growth, users and revenue.
+
+Potential options:
+- Liquidity Enhancement
+- Development Funding
+- Marketing Expansion
+- Community Rewards
+- Strategic Partnerships
+- Innovation Investment
+
+If the BNB is Not Recovered:
+It's business as usual and we continue strongly, as we have for the past 3+ years, never slowing down, never quitting.
+
+The story of our 876 BNB recovery is still being written. DeHub will continue to thrive, grow, and serve our community regardless of the outcome.
+
+--------------------------------------------------------------------------------
+MULTI-YEAR SPONSORSHIP WITH NORTH WALES CRUSADERS
+Published: June 30, 2024
+Tags: Sponsorship, Rugby, Community, Wales
+--------------------------------------------------------------------------------
+
+DeHub Announces Multi-Year Sponsorship with North Wales Crusaders
+
+We're delighted to reveal a multi-year sponsorship agreement with the only Rugby League club in Wales, The North Wales Crusaders. Rugby is the most participated sport in the country, with the Encyclopedia of Wales stating that the sport is "seen by many as a symbol of Welsh identity and an expression of national consciousness".
+
+What this partnership means:
+As part of our commitment, DeHub has secured the following for every home game across the next two seasons:
+• The official match ball sponsorship
+• An advertising board in the stadium
+• The "Man of the Match" award will be presented as the "DeHub Man of the Match"
+
+Stay tuned for more details on how we're reaching their 15,000 capacity stadium full of fans on a weekly basis!
+
+--------------------------------------------------------------------------------
+PUBLIC BETA D'APP REPORT
+Published: March 25, 2023
+Tags: DApp, Beta, Update, Roadmap, Community
+--------------------------------------------------------------------------------
+
+Our Vision for the DeHub D'app
+
+DeHub at the core is, and always was, a streaming app with our own marketplace and games complimenting the main hub. When going on dehub.net in future, you will be met with the streaming app.
+
+Products & games can now be streamed and traded directly on one platform. Our blockchain integrations offer pioneering solutions to problems caused by the incumbent and ageing social media platforms of today, built for the next generation's ideals.
+
+We've updated all the contracts after the expected bugs and exploits were resolved. We are going to start onboarding our first creators from April and hope to have many celebrating our official 2nd Birthday this April 20th.
+
+Public Testing Review:
+The core functions worked near enough perfectly, with minor bugs and logic issues resolved already.
+• PPV: create your own PPV in DHB, USDC or USDT
+• W2E / Bounty post: Create your own watch-to-earn and reward your community
+• Gated/Locked Content: Upload a post locked behind token holdings
+
+Upcoming Features:
+• Community live chat
+• Leaderboards for tips given, tips received, likes, followers and views
+• Explore feed with featured posts and endless scrolling
+• Profile following and monthly subscriptions
+• Minting on Polygon and Ethereum
+• Video analytics and data extraction
+• Live Streaming with interactive tip animations
+• Fiat gateway for non-crypto natives
+
+User Acquisition & Growth:
+We're one of the very few streaming apps in the entire space, with a now fully functioning and feature packed product that quite frankly puts industry leaders to shame.
+
+How many of you would buy a token or use an app because some shill on the internet told you it was the next best thing? Not many, these days.
+
+Now, how many of you would buy a token or use an app because your favourite influencer was now making content on that platform? Drastically more.
+
+Once this flywheel spins, it won't stop.
+
+--------------------------------------------------------------------------------
+BASE POOL GOING LIVE SOON
+Published: August 22, 2024
+Tags: Base, Uniswap, Liquidity, Bridge, L2
+--------------------------------------------------------------------------------
+
+The Next Chapter: DeHub is Launching on Base!
+
+Get ready, DeHubbers! The moment many of you have been waiting for is almost here. We are thrilled to announce that DeHub will be deploying on Uniswap on the Base network imminently.
+
+This strategic move marks a significant milestone for our project, opening up a world of possibilities within Base's fast, low-cost, and developer-friendly Ethereum L2 ecosystem.
+
+What This Means For You:
+By launching on Base, we are aligning DeHub with one of the most promising and rapidly growing L2 networks. This transition will bring:
+• Lower Transaction Costs
+• Faster Speeds
+• Broader Ecosystem Access
+• A Fresh LP Opportunity
+
+Bridging Your Tokens - Completely Free!
+We will be providing our holders with free bridging from all chains directly to Base. Details on the bridging process, including step-by-step guides, will be released very soon.
+
+The Token Contract:
+DeHub's new token contract on Base is verified and ready. You can view it on Basescan. Please always verify official contract addresses through our official channels to avoid scams!
+
+What's Next?
+• Official Bridging Portal Launch announcement
+• Uniswap Pool goes LIVE
+• LP Farming opportunities to be revealed
+
+This is a new chapter for DeHub. Stay tuned and get ready!
+
+--------------------------------------------------------------------------------
+TOWN HALL & AMA - OCTOBER 2024
+Published: October 11, 2024
+Tags: Town Hall, AMA, Community, Update, Roadmap, 2024
+--------------------------------------------------------------------------------
+
+We're right on schedule to meet our target for the major overhaul of both the front and back ends. The front will have a sleeker, more streamlined design, while the back end will be significantly faster. We're now holding our own against top providers.
+
+When the countdown hits zero, you'll experience a brand-new DeHub. Your content and profile will remain untouched. Along with the launch, many new features will go live, plus a detailed roadmap with clear target dates.
+
+Q&A Summary:
+
+1. Can we get a roadmap with exact release dates?
+We regularly provide release dates for imminent updates. We'll provide a more detailed roadmap with the release of the next upgrade.
+
+2. What happened to the gold tick on X (Twitter)?
+We lost the gold tick while switching account tiers. We're awaiting a refund and customer support. As a UK-registered company meeting all gold tick criteria, we're determined to get it back.
+
+3. Will DeHub return to the BNB Chain?
+If we redeploy on BNB, it'll be on opBNB, which is built specifically for scalable apps like ours.
+
+4. What's the latest on LCFC and the gaming arcade?
+We're gearing up for the launch of our 3D hyperrealistic Battle Royale, Last Chad Standing (LCS).
+
+5. Are Mike and Indi still involved?
+Of course! They're still very much involved. During the bear market, they built one of the most successful TikTok agencies worldwide, now managing nearly 1,000 streamers.
+
+6. What are the major upcoming releases?
+The imminent major upgrade plus exciting developments underway.
+
+7. Can you tell us about Malik's business background?
+During my time as fundraising manager at Guide Dogs, my team raised over seven figures. A career highlight was becoming the top-billing agent at Blue Arrow, the UK's largest recruitment agency.
+
+8. When is live streaming expected?
+We're aiming for this quarter, though it's a complex build.
+
+9. Do you care about the token price?
+We absolutely care but must be cautious discussing it publicly for legal reasons.
+
+10. Will you list on CEXs again?
+We're only interested in top-tier CEXs like Binance, Coinbase, and other leading platforms.
+
+11. Are there expected delays after the countdown?
+No delays expected. The major overhaul is ready for rollout.
+
+--------------------------------------------------------------------------------
+$1,000,000 RAISE COMPLETED
+Published: March 8, 2024
+Tags: Fundraising, Fan.site, Investment, 2024, Ecosystem
+--------------------------------------------------------------------------------
+
+A New Chapter: $1,000,000 Raised for DeHub's Ecosystem Fork, Fan.site
+
+We are thrilled to announce a monumental milestone: our strategic ecosystem fork, Fan.site (formerly Blocjerk), has successfully completed a $1,000,000 funding round.
+
+This raise was backed by a formidable group of strategic investors:
+• Homeless Ventures: Investors working with zkSync, ANKR & other leading projects
+• Brian D Evans: Founder of BDE Ventures, Inc. 500 entrepreneur and Forbes 40 under 40
+• Jett: President of Hourglass and partner at Apexblock Capital
+• The Gem Hunters: Leading blockchain investment community
+• Shiney D: Respected investor & content creator
+• Dark Gandalf: Influential investor & content creator
+• Ferrum's TDI: The Decentralised Incubator
+
+Several launchpads sold out completely, complemented by a highly successful public sale.
+
+The 'Why' Behind the Fork:
+A collection of large, long-term DeHub holders identified a significant opportunity in the adult entertainment market. Rather than integrating this content into the primary DeHub application, we believe it is far better to separate markets and communities.
+
+From Straight-to-Listing to a Strategic War Chest:
+By securing a $1,000,000 war chest, we have provided the project with a multi-year runway.
+
+Fueling the DeHub Engine:
+A remarkable 10% of all revenue generated by Fan.site will be used to systematically buy back $DHB on the open market and distribute it directly to all stakers.
+
+This is more than just a fundraise; it's the dawn of a new era for DeHub. We are not just building an app; we are building a decentralized powerhouse.
+
+We are together, forever.
+
+--------------------------------------------------------------------------------
+1 YEAR REVIEW: GATE.IO DELISTING
+Published: November 12, 2024
+Tags: Gate.io, Delisting, DEX, Transparency, Strategy, 2024
+--------------------------------------------------------------------------------
+
+A year ago, we took a bold step and decided to delist ourself from gate.io after they ended UK support. At this stage, our multi-million dollar liquidity pool (LP) was relentlessly drained by arb bots and questionable activity for years.
+
+After almost a year of withdrawals, over 120,000,000 still remained on Gate, almost exactly as predicted in our article last year.
+
+As we prepare to redeploy capital back to BNB and to protect our upcoming LP, all tokens left on gate.io have been burned again, barring ~1m for small left over withdrawals.
+
+Why did it take so long to redeploy to BNB?
+After we announced our plans, Gate couldn't provide the wallet address data that would have allowed us to verify holders for airdrops during our migration. They informed us their systems don't allow this.
+
+Conclusion:
+This all fully affirms our decision to delist ourself, go all DEX and stay true to the values that make this industry so great.
+
+While crypto is an unregulated cesspit of scammers, grifters and chancers, the lack of regulation is exactly what makes it so beautiful at the same time. Untamed innovation, true capitalism. For "every action has an equal an opposite reaction" — Newton's Third Law.
+
+Thank you for trusting and supporting us through these unprecedented actions.
+
+--------------------------------------------------------------------------------
+Q1 2024 OVERVIEW: A BIRD'S EYE VIEW
+Published: February 6, 2024
+Tags: Q1 2024, Roadmap, Update, Marketing, Ecosystem
+--------------------------------------------------------------------------------
+
+Given all that's going on with launches and listings, this Q1 overview is a marketing schedule to keep you all in the loop.
+
+Calendar:
+February 5th: BJ announced in Ferrum Network's TDI as the latest private sale
+February 6th: Snapshot for TDI DAO members
+February 7th: $200,000 allocated to TDI DAO members
+February 7th: All bundle buyers airdropped
+February 8th — 10pm UTC: DeHub's Uniswap listing & Layer Zero bridge release
+February 9th: Second private sale announcement for $BJ on DeHub's marketplace
+February 14th: $BJ private sale commences, $100,000 allocated to DeHub holders
+February 14–28th: Remaining Blocjerk IDOs and launchpads conclude
+Early March: BJ listing & APK release
+Late March: DeHub App Store listings target date
+Early April: $BJ Partnership Airdrop after 1 month cliff
+Late April: Next DeHub partner launch reveal
+
+We're building an entire ecosystem here and all launches drive revenue back to DeHub, which has a 100% profit buy back system laid out in the whitepaper.
+
+--------------------------------------------------------------------------------
+DEVELOPMENTS OVERVIEW - SEPTEMBER 2024
+Published: September 26, 2024
+Tags: Update, Roadmap, Development, Community, 2024
+--------------------------------------------------------------------------------
+
+TLDR:
+- 30 day countdown appearing on dehub.io imminently
+- Taxes on BASE set to 0 tomorrow at midnight
+- Join volume, LP and community/marketing initiatives
+
+The Major Upgrade - Overview of Upcoming Enhancements:
+We are undergoing a complete front-end overhaul, with a modernized, sleek interface. Users will have Dark Mode and Light Mode options.
+
+Performance improvements will make everything faster, and we've begun integrating the Graph Protocol to further decentralize our backend.
+
+The debut of our fiat gateway will mark the completion of full user account abstraction. Anyone will be able to create wallets, purchase tokens, utilize them in-app, and cash out—all without wallet management.
+
+We are launching on-chain subscriptions with 1, 3, 6-month passes, annual and lifetime plans. Creators control pricing and availability; holders can resell passes.
+
+Direct Messaging (free and paid) and social feeds for text and photo uploads will be introduced.
+
+Volume Initiative - Base Taxes Removal:
+Effective tomorrow at midnight, BASE taxes will be set to 0 until further notice to drive trading volume. We're introducing a claim form for traders offering slippage rebates.
+
+Liquidity Pool Initiative:
+We will be adding a V3 liquidity pool, funded by accumulated taxes, to increase liquidity for buyers.
+
+Community and Marketing Initiative:
+We are finalizing recruitment of 10 full-time staff for 24/7 voice chats, community activities, and dedicated support.
+
+Future Plans:
+- TV and console apps
+- AI-driven tools for thumbnail and description generation
+- AI video generators
+- Entertainment and hospitality partnerships
+
+--------------------------------------------------------------------------------
+WHAT'S IN STORE FOR END OF 2023
+Published: Q4 2023
+Tags: Roadmap, Update, 2023
+--------------------------------------------------------------------------------
+
+What's in store for the end of the year?
+
+2023 has quickly flashed before our eyes, but we still have many exciting updates coming before yearend.
+
+Streaming:
+All features are scheduled to be complete and launched on stores by yearend. Given our expertise and proven track record off-chain, there is no doubt users and creators are coming.
+
+Arcade:
+The new user interface will be complete along with at least two more custom mini games for festive activities. Street Slayer will have some overpowered combos nerfed before tournaments. The trailer for "Last Chad Standing" is set for December 18th.
+
+Shop:
+Landing soon is our fiat on/off ramp to purchase items and bundles. A refund is coming for all house raffle purchases.
+
+General Operations:
+The highly anticipated partner airdrop reveal is coming on November 21st.
+
+We will be going after Rumble, Kick, YouTube, Twitch, and any other competitors the same way they go after each other today. Remember "Stream Wars"… controversial, headline grabbing, internet breaking publicity stunts.
+
+--------------------------------------------------------------------------------
+PARTNER AIRDROP FOR FAN.SITE
+Published: November 21, 2023
+Tags: Airdrop, Fan.site, Partnership, Staking
+--------------------------------------------------------------------------------
+
+All the ins and outs for the second airdrop revealed!
+
+Airdrops have been part of our utility since the first whitepaper in 2021. Expect the pace for new airdrops to accelerate as more brands build on top of the DeHub platform.
+
+A collection of large and long term DeHub holders made the decision to fork the DeHub app and target the vast adult market. All interested DeHub stakers can claim a portion of the token supply through the upcoming airdrop.
+
+Rather than having adult content on the DeHub app, it's far better to separate markets and communities for obvious reasons.
+
+Key Points / Changes:
+Original plans were straight to listing. However, we secured the team behind a number of instant sell outs and they are confident we can raise $600,000.
+
+We have secured the marketing team working with $PAAL, a solid advisory board, and incubators connected to all the top exchanges and launchpads. We have also confirmed agreements with some of the biggest KOLs and influencers in the cryptosphere.
+
+The new token generation event is scheduled before Christmas. Your snapshots are final, so remain staked until your airdrops are complete.
+
+--------------------------------------------------------------------------------
+GATE.IO VOLUNTARY DELISTING
+Published: Q4 2023
+Tags: Gate.io, DEX, Decentralization, Strategy
+--------------------------------------------------------------------------------
+
+TLDR:
+- $DHB has delisted from Gate.io and all their tokens have been burnt
+- Three-week recovery period for Gate.io token holders
+- Conversion of entire tech stack and new token integration
+- Target date for launch set to January 22nd-29th (confirmed Feb 8th)
+
+In Detail:
+My initial fascination with crypto stemmed from its immutability, transparency, decentralization and permissionlessness.
+
+Immutability means for the first time in history, humans can record data which can never be altered or removed.
+
+Open-source code is the only thing in this world that cannot lie to you.
+
+All of these factors are eliminated by centralized exchanges (CEX). Anyone who participated in our early town halls will recall my attitude towards all of them apart from Binance.
+
+CEXs are broken, encompassing everything blockchains strive not to be. They go against all core values instilled during the birth of this wonderful industry.
+
+XT still owes us nearly six figures in unpaid tax revenue. We all know what happened on Gate as we approached 1000x ROI. Two of our founders have been locked out of their accounts for nearly a year. Gate is no longer servicing the UK.
+
+So, this was never just a migration. We are going to de-list and burn all Gate tokens to protect holders from any malpractice.
+
+We are THE decentralized entertainment hub. We never needed a centralized exchange, and we never will again.
+
+================================================================================
+ROADMAP MILESTONE POSTS (Q1 2021 - Q2 2025)
+================================================================================
+
+Q1 2021 Milestones:
+• Assembled core development team
+• Launched first beta app on App Store with 500+ initial testers and 2,000 DAUs before token release
+• Conducted 50+ user interviews to validate product-market fit
+• Established basic content moderation framework
+
+Q2 2021 Milestones:
+• Launched v1 token
+• Community governed listing chain, price / market cap
+• Established first liquidity pools on Pancake Swap
+• Built community of 2,000+ early adopters
+• Implemented basic governance voting mechanism
+• Smart contract security issue discovered
+
+Q3 2021 Milestones:
+• Rebranded to DeHub
+• Started full app rebuild using React Native for better cross-platform support
+• Airdropped all holders automatically
+• Addressed security vulnerabilities from v1 with full Certik Audit
+• Expanded team to 15 members across 3 time zones
+
+Q4 2021 Milestones:
+• Released prediction and raffle games
+• Listed on Gate.io after a near 1000x price surge, with close to $10m in our LP
+• Discovered listing agent was fraudulent, stole our fundraise and dumped our chart instead of airdropping Gate users
+• Implemented game mechanics with provably fair randomization
+• Community grew to 8,000+ active members
+
+Q1 2022 Milestones:
+• Released arcade with 5 initial games including Super Robin Hood and Tomb Runner and predictions
+• Achieved 5,000+ monthly active gamers
+• Implemented blockchain-based leaderboards and rewards
+• Introduced social features allowing friend challenges
+• Built custom game engine optimized for mobile devices
+
+Q2 2022 Milestones:
+• Released stream app supporting 4K content with 99.9% uptime
+• Produced first tokenised documentary featuring Jorge Masvidal, Brad Pickett & more by Luke Barnatt
+• Genesis mint for Chads collection
+• Secured SEC registration with the Philippine Government for real estate, construction and brokerage services
+• Implemented advanced video compression reducing bandwidth costs by 60%
+• Built NFT marketplace with royalty distribution system
+
+Q3 2022 Milestones:
+• Incorporated DeLabs LTD with proper legal structure and compliance
+• Acquired $1,000,000 home for largest crypto raffle ever (15,000+ participants)
+• Secured power of attorney for multiple islands and sea front strip in Palawan worth over $15,000,000
+• Established partnerships with real estate and legal firms
+• Created transparent raffle mechanics with on-chain verification
+
+Q4 2022 Milestones:
+• Contract tax triggers malfunctioned, freezing the token and our LP, forced to relaunch v2
+• Migrated 25,000+ token holders to new improved contract
+• Implemented standard ERC20 tokenomics to avoid future issues
+
+Q1 2023 Milestones:
+• Alpha launch of complete d'app integrating all ecosystem components
+• Released tokenised uploads with onchain ad revenue sharing (creators earning 90%)
+• Commenced advanced analytics dashboard for creators
+• Recommenced trading of DeHub v2 on Gate.io
+
+Q2 2023 Milestones:
+• Won most innovative company award at UK's Corporate Livewire, competing against 900+ companies in a vote based system backed by Sony, Samsung and other industry giants
+• Featured in major tech publications including TechCrunch and VentureBeat
+• Patent applications commenced for core streaming technology and watch2earn mechanics
+
+Q3 2023 Milestones:
+• Announced partner airdrop for BJ (now fan.site), the adult fork of DeHub
+• Facilitated knowledge transfer and technical support to fork team
+• Demonstrated true decentralization principles in action
+• Established framework for future community-driven forks
+
+Q4 2023 Milestones:
+• Voluntary delisting from Gate.io to prioritize decentralization
+• Commitment to transparency with all DEX policy implementation
+• Implemented automated liquidity provision strategies
+• Published full transparency reports showing all protocol metrics
+
+Q1 2024 Milestones:
+• Listed DHB on Eth mainnet
+• Raised $1,000,000 for adult fork BJ (now fan.site) from VCs, Launchpads & Public Sales
+
+Q2 2024 Milestones:
+• Listed SDHB on Base L2
+• Dubai event expanded Middle East presence
+• Co-Founders Mike Hales & Indi Cammish Opened TikTok agency in partnership with TikTok execs
+• Established creator partnerships in 15 countries
+
+Q3 2024 Milestones:
+• Completed major app upgrade with 95% positive user feedback
+• Overhauled user interface & improved back end speed by 200%
+
+Q4 2024 Milestones:
+• Released onchain tradable subscriptions
+• Released teaser for Last Chad Standing (first ever MMA battle royale) with 1M+ views
+• Agency grew to UK #1 with 1,000 live streamers signed exclusively
+• Released DePIN Phase 1
+
+Q1 2025 Milestones:
+• Released onchain live streams with real-time tip animations
+• Implemented Livepeer infrastructure supporting 50,000+ concurrent viewers
+• Built custom CDN reducing latency to sub-200ms globally
+• Achieved 99.99% uptime across all streaming services
+• Discontinue Ethereum Mainnet support
+• Completed messaging system with paid or free DMs and unlockable chat content
+• Released full trailer for Last Chad Standing, picked up by major MMA promoters
+
+Q2 2025 Milestones:
+• Launched UGC ambassadorship program with 50 vacancies
+• Implemented comprehensive creator education curriculum
+• Released dhbscan.com for users to track activity across all DHB contracts
+• Revamped main app feed, revealed audio replies and live talk spaces
+• Final snapshot for Last Chad Standing game airdrop, for both holders and stakers
+
+================================================================================
+END OF COMPLETE DOCUMENTATION
+================================================================================

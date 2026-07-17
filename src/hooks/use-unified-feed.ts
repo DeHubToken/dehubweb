@@ -1,0 +1,620 @@
+/**
+ * Unified Feed Hook
+ * =================
+ * Fetches mixed content (videos, images, text posts) from the unified /api/feed endpoint.
+ * All feed loads go directly to the DeHub API. TanStack Query handles client-side caching.
+ * 
+ * @module hooks/use-unified-feed
+ */
+
+import { useMemo } from 'react';
+import { useInfiniteQuery, useQuery, keepPreviousData, type QueryClient } from '@tanstack/react-query';
+import { getAuthToken, DEHUB_CDN_BASE, type DeHubNFT, getBlockList, getNFTInfo } from '@/lib/api/dehub';
+import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, extractAvatarPath } from '@/lib/media-url';
+import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
+import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
+import { BLOCKED_POST_IDS } from '@/constants/post.constants';
+import { useAuth } from '@/contexts/AuthContext';
+
+const DEHUB_API_BASE = "https://api.dehub.io";
+
+/** Parse [soundtrack:tokenId:title:creator:audioPath?] tag from a description string */
+export function parseSoundtrackTag(description?: string): { soundtrackUrl?: string; soundtrackTitle?: string; soundtrackCreator?: string } {
+  if (!description) return {};
+  // Supports both old format (4 fields) and new format (5 fields with audioPath)
+  const m = description.match(/\[soundtrack:(\d+):([^:]*):([^:\]]*):?([^\]]*)\]/);
+  if (!m) return {};
+  const tokenId = m[1];
+  const audioPath = m[4]?.trim();
+  return {
+    soundtrackUrl: audioPath
+      ? `${DEHUB_CDN_BASE}${audioPath}`
+      : `${DEHUB_CDN_BASE}feed-audio/${tokenId}-audio.mp3`,
+    soundtrackTitle: m[2] || 'Sound',
+    soundtrackCreator: m[3] || '',
+  };
+}
+
+// ===========================================================================
+// TYPES
+// ===========================================================================
+
+export interface UnifiedFeedParams {
+  page?: number;
+  limit?: number;
+  sortBy?: 'views' | 'likes' | 'createdAt' | 'tips' | 'comments' | 'random' | 'score';
+  sortOrder?: 'asc' | 'desc';
+  postType?: 'all' | 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio' | 'feed-audio';
+  status?: 'minted' | 'signed' | 'all' | 'pending' | 'failed';
+  search?: string;
+  owner?: string;
+  category?: string;
+  minter?: string;
+  /** @deprecated Viewer context is now extracted from JWT Bearer token */
+  address?: string;
+  isPPV?: boolean;
+  isLocked?: boolean;
+  hasBounty?: boolean;
+  hasPlans?: boolean;
+  range?: 'day' | 'week' | 'month' | 'year';
+  from?: string;
+  to?: string;
+  shuffleSeed?: string;
+  maxPerCreator?: number;
+  /** When true, only returns content from accounts the authenticated user follows. Requires JWT. */
+  followingOnly?: boolean;
+}
+
+export interface UnifiedFeedItem {
+  tokenId: number;
+  name: string;
+  description?: string;
+  imageUrl: string;
+  imageUrls?: string[];
+  videoUrl?: string;
+  minter: string;
+  owner?: string;
+  postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio' | 'feed-audio';
+  status?: string;
+  category?: string[];
+  views: number;
+  totalVotes?: {
+    for: number;
+    against: number;
+  };
+  likes?: number;
+  dislikes?: number;
+  commentCount: number;
+  videoDuration?: number;
+  minterUsername?: string;
+  /** Some API responses use 'mintername' instead of 'minterUsername' */
+  mintername?: string;
+  minterDisplayName?: string;
+  minterAvatarUrl?: string;
+  minterAboutMe?: string;
+  minterStaked?: number;
+  streamInfo?: {
+    isLockContent: boolean;
+    lockContentAmount?: number;
+    lockContentTokenSymbol?: string;
+    isPayPerView: boolean;
+    payPerViewAmount?: number;
+    isAddBounty: boolean;
+    addBountyFirstXViewers?: number | string;
+    addBountyFirstXComments?: number | string;
+    addBountyAmount?: number;
+    addBountyTokenSymbol?: string;
+    addBountyChainId?: number;
+  };
+  plansDetails?: Array<{
+    id: number;
+    title: string;
+    price: number;
+    alreadySubscribed?: boolean;
+  }>;
+  isLiked?: boolean;
+  isDisliked?: boolean;
+  isSaved?: boolean;
+  isOwner?: boolean;
+  isUnlocked?: boolean;
+  isReposted?: boolean;
+  minterUser?: {
+    address?: string;
+    username?: string;
+    displayName?: string;
+    avatarImageUrl?: string;
+    isVerified?: boolean;
+    badgeBalance?: number;
+  };
+  minterFollowers?: number;
+  minterFollowings?: number;
+  stream?: {
+    _id?: string;
+    streamId?: string;
+    playbackId?: string;
+    streamKey?: string;
+    status?: string;
+    isActive?: boolean;
+    viewerCount?: number;
+    title?: string;
+    category?: string;
+    playbackUrl?: string;
+  };
+  createdAt: string;
+  updatedAt?: string;
+  audioUrl?: string;
+  audioDuration?: number;
+  totalReposts?: number;
+  reposts?: number;
+  quotes?: number;
+  ppvBuyerCount?: number;
+}
+
+export interface UnifiedFeedResponse {
+  status: boolean;
+  result: UnifiedFeedItem[];
+  pagination: {
+    page: number;
+    limit: number;
+    totalCount: number;
+    totalPages: number;
+    hasMore: boolean;
+  };
+  shuffleSeed?: string;
+}
+
+// ===========================================================================
+// BLOCKLIST
+// ===========================================================================
+
+/** Hardcoded fallback usernames/display names to filter out from feeds */
+const BLOCKED_CREATORS_FALLBACK = [
+  'monkey d luffy',
+  'monkey d. luffy',
+  'monkeydluffy',
+  'monkey_d_luffy',
+];
+
+function isBlockedCreator(item: UnifiedFeedItem, dynamicBlockedAddresses?: Set<string>): boolean {
+  if (dynamicBlockedAddresses && dynamicBlockedAddresses.has(item.minter?.toLowerCase())) {
+    return true;
+  }
+  const displayName = (item.minterDisplayName || '').toLowerCase();
+  const username = (item.minterUsername || '').toLowerCase();
+  return BLOCKED_CREATORS_FALLBACK.some(blocked => 
+    displayName.includes(blocked) || username.includes(blocked)
+  );
+}
+
+function isBlockedPost(item: UnifiedFeedItem): boolean {
+  return BLOCKED_POST_IDS.includes(item.tokenId);
+}
+
+// ===========================================================================
+// MAPPERS
+// ===========================================================================
+
+/**
+ * Map unified feed item to VideoItem
+ */
+export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem {
+  const id = String(item.tokenId);
+  
+  const thumbnail = buildImageUrl(item.tokenId, item.imageUrl);
+
+  const isAudioPost = item.postType === 'audio' || item.postType === 'feed-audio';
+  const videoUrl = item.postType === 'live'
+    ? undefined
+    : isAudioPost
+      ? undefined
+      : (item.videoUrl?.startsWith('http') ? item.videoUrl : buildVideoUrl(item.tokenId));
+  
+  // Build audio URL from API audioUrl field, fallback to videoUrl for audio posts
+  const rawAudioSource = item.audioUrl || (isAudioPost ? item.videoUrl : undefined);
+  const audioUrl = isAudioPost && rawAudioSource
+    ? (rawAudioSource.startsWith('http') ? rawAudioSource : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${rawAudioSource.replace(/^\/+/, '')}`)
+    : undefined;
+  const rawAvatarPath = extractAvatarPath(item);
+  const channelAvatar = rawAvatarPath 
+    ? buildAvatarUrl(item.minter, rawAvatarPath) || 'user'
+    : 'user';
+  
+  const isPPV = item.streamInfo?.isPayPerView ?? false;
+  const isW2E = item.streamInfo?.isAddBounty ?? false;
+  const isLocked = item.streamInfo?.isLockContent ?? false;
+  
+  return {
+    id,
+    type: 'video',
+    thumbnail,
+    videoUrl,
+    audioUrl,
+    audioDuration: isAudioPost ? item.audioDuration : undefined,
+    isAudio: isAudioPost,
+    duration: formatDuration(isAudioPost ? item.audioDuration : item.videoDuration),
+    durationSeconds: (isAudioPost ? item.audioDuration : item.videoDuration) || 0,
+    title: item.name || item.description?.split('\n')[0] || '',
+    description: item.description,
+    channel: item.minterDisplayName || item.minterUsername || item.mintername || 'Unknown Creator',
+    channelAvatar,
+    verified: false,
+    views: formatViews(item.views),
+    uploadedAgo: formatTimeAgo(item.createdAt),
+    status: item.status,
+    creatorId: item.minter,
+    creatorUsername: item.minterUsername || item.mintername,
+    creatorBadgeBalance: item.minterUser?.badgeBalance,
+    isLiked: item.isLiked ?? false,
+    isDisliked: item.isDisliked ?? false,
+    likeCount: item.likes ?? item.totalVotes?.for ?? 0,
+    dislikeCount: item.dislikes ?? item.totalVotes?.against ?? 0,
+    commentCount: item.commentCount || 0,
+    ppvBuyerCount: item.ppvBuyerCount || 0,
+    isPPV,
+    ppvPrice: item.streamInfo?.payPerViewAmount,
+    ppvCurrency: 'DHB',
+    isW2E,
+    isLocked,
+    lockedPrice: item.streamInfo?.lockContentAmount,
+    lockedCurrency: item.streamInfo?.lockContentTokenSymbol || 'DHB',
+    bountyViews: Number(item.streamInfo?.addBountyFirstXViewers) || undefined,
+    bountyComments: Number(item.streamInfo?.addBountyFirstXComments) || undefined,
+    bountyAmount: item.streamInfo?.addBountyAmount,
+    bountyCurrency: item.streamInfo?.addBountyTokenSymbol || 'DHB',
+    createdAt: item.createdAt,
+    isOwner: item.isOwner ?? false,
+    isUnlocked: item.isUnlocked ?? false,
+    repostCount: (item.totalReposts || item.reposts || 0) + (item.quotes || 0),
+    isReposted: item.isReposted ?? false,
+    categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
+    isLivePost: item.postType === 'live',
+    liveStatus: item.stream?.status,
+    liveIsActive: item.stream?.isActive,
+    livePlaybackId: item.stream?.playbackId,
+    livePlaybackUrl: item.stream?.playbackUrl,
+    liveStreamId: item.stream?._id || item.stream?.streamId,
+  };
+}
+
+/**
+ * Map unified feed item to ImagePost
+ */
+export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost {
+  const id = String(item.tokenId);
+  
+  const imageUrls = buildFeedImageUrls(item.imageUrls);
+  const image = imageUrls?.[0] || buildImageUrl(item.tokenId, item.imageUrl);
+  
+  const rawAvatarPath = extractAvatarPath(item);
+  const avatar = rawAvatarPath 
+    ? buildAvatarUrl(item.minter, rawAvatarPath) || 'user'
+    : 'user';
+  
+  const soundtrack = parseSoundtrackTag(item.description);
+  const cleanDescription = item.description?.replace(/\[soundtrack:[^\]]*\]/, '').trim() || undefined;
+
+  return {
+    id,
+    type: 'image',
+    username: item.minterUsername || item.mintername || item.minterDisplayName || 'unknown',
+    verified: false,
+    avatar,
+    image,
+    imageUrls,
+    title: item.name,
+    description: cleanDescription,
+    ...soundtrack,
+    likes: item.likes ?? item.totalVotes?.for ?? 0,
+    caption: item.description || item.name || '',
+    comments: item.commentCount || 0,
+    views: formatViews(item.views).replace(' views', ''),
+    timeAgo: formatTimeAgo(item.createdAt),
+    status: item.status,
+    creatorId: item.minter,
+    creatorUsername: item.minterUsername || item.mintername,
+    creatorBadgeBalance: item.minterUser?.badgeBalance,
+    isLiked: item.isLiked ?? false,
+    isDisliked: item.isDisliked ?? false,
+    ppvBuyerCount: item.ppvBuyerCount || 0,
+    createdAt: item.createdAt,
+    isPPV: item.streamInfo?.isPayPerView ?? false,
+    ppvPrice: item.streamInfo?.payPerViewAmount,
+    ppvCurrency: 'DHB',
+    isW2E: item.streamInfo?.isAddBounty ?? false,
+    isLocked: item.streamInfo?.isLockContent ?? false,
+    lockedPrice: item.streamInfo?.lockContentAmount,
+    lockedCurrency: item.streamInfo?.lockContentTokenSymbol || 'DHB',
+    bountyViews: Number(item.streamInfo?.addBountyFirstXViewers) || undefined,
+    bountyComments: Number(item.streamInfo?.addBountyFirstXComments) || undefined,
+    bountyAmount: item.streamInfo?.addBountyAmount,
+    bountyCurrency: item.streamInfo?.addBountyTokenSymbol || 'DHB',
+    isOwner: item.isOwner ?? false,
+    isUnlocked: item.isUnlocked ?? false,
+    repostCount: (item.totalReposts || item.reposts || 0) + (item.quotes || 0),
+    isReposted: item.isReposted ?? false,
+    categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
+    isQuotePost: !!(item as any).isQuotePost,
+    quotedPost: (item as any).quotedPost || null,
+  };
+}
+
+/**
+ * Map unified feed item to TextPost
+ */
+export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
+  const id = String(item.tokenId);
+  
+  const rawAvatarPath = extractAvatarPath(item);
+  const avatarUrl = rawAvatarPath 
+    ? buildAvatarUrl(item.minter, rawAvatarPath) || item.minter
+    : item.minter;
+  
+  // Determine if the name is a meaningful title (not empty/whitespace/placeholder)
+  const rawName = item.name || '';
+  const rawDescription = item.description || '';
+  const trimmedName = rawName.trim();
+  const trimmedDesc = rawDescription.trim();
+  // Title is meaningful only if it exists, differs from description, and isn't just the
+  // start of the description (API often copies the first line of description into name).
+  const hasMeaningfulTitle = trimmedName.length > 0 
+    && trimmedName !== trimmedDesc 
+    && !trimmedDesc.startsWith(trimmedName);
+
+  return {
+    id,
+    type: 'post',
+    author: {
+      id: item.minter,
+      name: item.minterDisplayName || item.minterUsername || item.mintername || 'Unknown',
+      handle: item.minterUsername || item.mintername || item.minter,
+      avatarSeed: avatarUrl,
+      verified: false,
+      badgeBalance: item.minterUser?.badgeBalance,
+    },
+    title: hasMeaningfulTitle ? trimmedName : undefined,
+    content: trimmedDesc || (hasMeaningfulTitle ? '' : trimmedName) || '',
+    rawName,
+    rawDescription,
+    createdAt: item.createdAt,
+    views: formatViews(item.views).replace(' views', ''),
+    status: item.status,
+    stats: {
+      comments: item.commentCount || 0,
+      reposts: (item.totalReposts || item.reposts || 0) + (item.quotes || 0),
+      likes: item.likes ?? item.totalVotes?.for ?? 0,
+    },
+    isLiked: item.isLiked ?? false,
+    isDisliked: item.isDisliked ?? false,
+    isReposted: item.isReposted ?? false,
+    isQuotePost: !!(item as any).isQuotePost,
+    quotedPost: (item as any).quotedPost || null,
+    categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
+  };
+}
+
+// ===========================================================================
+// API CALL
+// ===========================================================================
+
+/**
+ * True when `params` describe exactly the request the index.html boot script
+ * issued (page=1&limit=20&sortBy=createdAt&sortOrder=desc&status=minted, no
+ * other filters). Must stay in lockstep with the inline <script> in index.html.
+ */
+function isBootDefaultFeedParams(params: UnifiedFeedParams): boolean {
+  return (
+    params.page === 1 &&
+    params.limit === 20 &&
+    params.sortBy === 'createdAt' &&
+    params.sortOrder === 'desc' &&
+    params.status === 'minted' &&
+    (params.postType === undefined || params.postType === 'all') &&
+    !params.minter && !params.search && !params.owner && !params.category &&
+    params.isPPV === undefined && params.isLocked === undefined &&
+    params.hasBounty === undefined && params.hasPlans === undefined &&
+    !params.range && !params.from && !params.to &&
+    !params.shuffleSeed && params.maxPerCreator === undefined &&
+    !params.followingOnly
+  );
+}
+
+async function fetchUnifiedFeedFromAPI(params: UnifiedFeedParams = {}): Promise<UnifiedFeedResponse> {
+  // Adopt the boot-time feed fetch from index.html (started at HTML-parse time,
+  // ~1.5s before React mounts — LCP audit 7/14) for the first default page-1
+  // request. One-shot: on param mismatch, HTTP error, or stripped inline script
+  // (Lovable mirrors) the promise is null/absent and we fall through to fetch.
+  if (typeof window !== 'undefined') {
+    const boot = (window as unknown as { __DEHUB_FEED__?: Promise<UnifiedFeedResponse | null> }).__DEHUB_FEED__;
+    if (boot && isBootDefaultFeedParams(params)) {
+      (window as unknown as { __DEHUB_FEED__?: Promise<UnifiedFeedResponse | null> | null }).__DEHUB_FEED__ = null;
+      const bootResponse = await boot.catch(() => null);
+      if (bootResponse) return bootResponse;
+    }
+  }
+
+  const url = new URL('/api/feed', DEHUB_API_BASE);
+  
+  if (params.page !== undefined) url.searchParams.set('page', String(params.page));
+  if (params.limit !== undefined) url.searchParams.set('limit', String(params.limit));
+  if (params.sortBy) url.searchParams.set('sortBy', params.sortBy);
+  if (params.sortOrder) url.searchParams.set('sortOrder', params.sortOrder);
+  if (params.postType && params.postType !== 'all') url.searchParams.set('postType', params.postType);
+  if (params.status) url.searchParams.set('status', params.status);
+  if (params.minter) url.searchParams.set('minter', params.minter);
+  if (params.search) url.searchParams.set('search', params.search);
+  if (params.owner) url.searchParams.set('owner', params.owner);
+  if (params.category) url.searchParams.set('category', params.category);
+  if (params.isPPV !== undefined) url.searchParams.set('isPPV', String(params.isPPV));
+  if (params.isLocked !== undefined) url.searchParams.set('isLocked', String(params.isLocked));
+  if (params.hasBounty !== undefined) url.searchParams.set('hasBounty', String(params.hasBounty));
+  if (params.hasPlans !== undefined) url.searchParams.set('hasPlans', String(params.hasPlans));
+  if (params.range) url.searchParams.set('range', params.range);
+  if (params.from) url.searchParams.set('from', params.from);
+  if (params.to) url.searchParams.set('to', params.to);
+  if (params.shuffleSeed) url.searchParams.set('shuffleSeed', params.shuffleSeed);
+  if (params.maxPerCreator !== undefined) url.searchParams.set('maxPerCreator', String(params.maxPerCreator));
+  if (params.followingOnly) url.searchParams.set('followingOnly', 'true');
+  
+  const token = getAuthToken();
+  const headers: HeadersInit = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  
+  const response = await fetch(url.toString(), { headers });
+  
+  if (!response.ok) {
+    throw new Error(`Feed API error: ${response.status}`);
+  }
+  
+  return response.json();
+}
+
+// ===========================================================================
+// HOOK
+// ===========================================================================
+
+interface UseUnifiedFeedOptions extends Omit<UnifiedFeedParams, 'page'> {
+  enabled?: boolean;
+}
+
+/**
+ * Core page loader shared by useUnifiedFeed and prefetchUnifiedFeed so the
+ * boot-time prefetch caches exactly what the hook would fetch.
+ */
+async function loadUnifiedFeedPage(args: {
+  params: Omit<UnifiedFeedParams, 'page' | 'limit'>;
+  limit: number;
+  pageParam: number;
+  blockedAddresses?: Set<string>;
+  shuffleSeedRef?: { current: string };
+}) {
+  const { params, limit, pageParam, blockedAddresses, shuffleSeedRef } = args;
+
+  // For random sort: reuse the seed from the first page response for stable pagination
+  const queryParams = { ...params };
+  if (params.sortBy === 'random' && pageParam > 1 && shuffleSeedRef?.current) {
+    queryParams.shuffleSeed = shuffleSeedRef.current;
+  }
+
+  const response = await fetchUnifiedFeedFromAPI({
+    ...queryParams,
+    page: pageParam,
+    limit,
+  });
+
+  // Store the shuffleSeed from the first page for subsequent pages
+  if (params.sortBy === 'random' && response.shuffleSeed && pageParam === 1 && shuffleSeedRef) {
+    shuffleSeedRef.current = response.shuffleSeed;
+  }
+
+  // Filter out blocked creators and ended live streams (live content is shown in the carousel instead)
+  // Normalize timestamp fields so downstream mappers/cache always get a real ISO date.
+  const filteredItems = (response.result || [])
+    .map(item => ({
+      ...item,
+      createdAt: item.createdAt || item.updatedAt || (item as any).created_at || (item as any).updated_at || '',
+    }))
+    .filter(item => !isBlockedCreator(item, blockedAddresses) && !isBlockedPost(item) && item.postType !== 'live');
+
+  // Enrich quote posts that are missing their quotedPost data
+  const needsEnrich: { idx: number; item: any }[] = [];
+  for (let i = 0; i < filteredItems.length; i++) {
+    const item = filteredItems[i];
+    const raw = item as any;
+    if (raw.isQuotePost && raw.quotedTokenId && !raw.quotedPost) {
+      needsEnrich.push({ idx: i, item: raw });
+    }
+  }
+  if (needsEnrich.length > 0) {
+    const BATCH_SIZE = 5;
+    for (let b = 0; b < needsEnrich.length; b += BATCH_SIZE) {
+      const batch = needsEnrich.slice(b, b + BATCH_SIZE);
+      const settled = await Promise.allSettled(
+        batch.map(({ item }) => getNFTInfo(String(item.quotedTokenId)))
+      );
+      settled.forEach((outcome, i) => {
+        if (outcome.status === 'fulfilled' && outcome.value) {
+          filteredItems[batch[i].idx] = { ...batch[i].item, quotedPost: outcome.value };
+        }
+      });
+    }
+  }
+
+  return {
+    items: filteredItems,
+    pagination: response.pagination,
+    page: pageParam,
+    shuffleSeed: response.shuffleSeed,
+  };
+}
+
+/**
+ * Warm the feed cache before React mounts (called from App.tsx module scope
+ * on cold loads of / and /app). Mirrors useUnifiedFeed's option
+ * normalization so the queryKey hashes identically; staleTime matches the
+ * hook, so the mounted hook adopts the prefetched page instead of refetching.
+ */
+export function prefetchUnifiedFeed(queryClient: QueryClient, options: UseUnifiedFeedOptions = {}) {
+  const { enabled: _enabled = true, limit = 20, ...params } = options;
+  return queryClient.prefetchInfiniteQuery({
+    queryKey: ['unified-feed', params, limit],
+    queryFn: ({ pageParam = 1 }) => loadUnifiedFeedPage({ params, limit, pageParam }),
+    initialPageParam: 1,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+  });
+}
+
+/**
+ * Hook to fetch unified feed with infinite scroll
+ */
+export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
+  const { enabled = true, limit = 20, ...params } = options;
+  const { isAuthenticated, walletAddress } = useAuth();
+  
+  // Fetch dynamic block list for authenticated users
+  const { data: blockList } = useQuery({
+    queryKey: ['block-list'],
+    queryFn: getBlockList,
+    enabled: isAuthenticated,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+  });
+
+  const blockedAddresses = useMemo(() => {
+    if (!blockList?.length) return undefined;
+    return new Set(blockList.map(u => u.address.toLowerCase()));
+  }, [blockList]);
+  
+  // Track shuffleSeed across pages for random sort stable pagination
+  const shuffleSeedRef = { current: '' };
+
+  return useInfiniteQuery({
+    queryKey: ['unified-feed', params, limit],
+    queryFn: ({ pageParam = 1 }) =>
+      loadUnifiedFeedPage({ params, limit, pageParam, blockedAddresses, shuffleSeedRef }),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.pagination?.hasMore === true) {
+        return lastPage.page + 1;
+      }
+      if (lastPage.pagination?.hasMore === false) {
+        return undefined;
+      }
+      const itemCount = lastPage.items?.length || 0;
+      return itemCount >= limit ? lastPage.page + 1 : undefined;
+    },
+    initialPageParam: 1,
+    enabled,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 30,
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
+    refetchOnReconnect: true,
+    retry: 2,
+    placeholderData: keepPreviousData,
+  });
+}

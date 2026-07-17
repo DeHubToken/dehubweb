@@ -1,0 +1,37 @@
+# DeHub
+
+> Open source, user owned and censorship resistant social media. Web3 native, with built-in payments, staking, governance, communities, music, TV and live streams.
+
+DeHub is a decentralized social platform where users own their content, identity and rewards. It combines feeds, messaging, communities, an AI assistant, a wallet, governance and creator monetization (PPV, W2E, tipping) in one app.
+
+## Pages
+
+- [Home](/app): Main feed of posts, videos and trending content.
+- [Explore](/app/explore): Trending creators, posts, topics and tokens.
+- [Communities](/app/communities): User-run communities and group chats.
+- [Messages](/app/messages): Direct messages and tipped chats.
+- [Assistant](/app/assistant): AI assistant for content, search and on-chain actions.
+- [Notifications](/app/notifications): Activity, follows, tips and mentions.
+- [Wallet](/app/wallet): Multi-chain wallet for DHB and supported tokens.
+- [Bridge](/app/bridge): Cross-chain transfers between Base and BNB.
+- [Buy](/app/buy): Buy DHB and other tokens with card or crypto.
+- [Staking](/app/stake): Stake DHB to earn rewards and unlock badges.
+- [Governance](/app/governance): Vote on proposals and shape the platform.
+- [Leaderboard](/app/leaderboard): Top stakers and contributors.
+- [Command Centre](/app/command-centre): Dashboard for personal stats and activity.
+- [Music](/app/music): Decentralized music and radio.
+- [TV](/app/tv): Live streams and on-demand video.
+- [Events](/app/events): Discover and RSVP to community events.
+- [Stores](/app/stores): Peer-to-peer marketplace paid in DHB.
+- [Bookmarks](/app/bookmarks): Saved posts and purchases.
+- [Top 100](/app/top-100): Top cryptocurrencies by market cap.
+- [Agents](/app/agents): Create and manage AI agents.
+- [Glossary](/app/glossary): Web3 and DeHub terminology.
+- [Creators](/creators): Creator program overview.
+- [Jobs](/jobs): Open roles at DeHub.
+- [Guide](/guide): Visual walkthrough of the app.
+- [Docs](/docs): Full documentation.
+
+## Optional
+
+- [Delete Account](/delete-account): Account deletion request.
