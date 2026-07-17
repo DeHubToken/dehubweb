@@ -1,7 +1,10 @@
-# Env files — never commit, even publishable keys
-.env
+# .env holds ONLY publishable VITE_* client keys (Supabase anon, WalletConnect
+# project id) — these ship in the browser bundle by design, so it is committed so
+# CI/Netlify builds are self-contained. Real secrets live in Supabase/Netlify env,
+# never in the repo. .env.development (Stripe TEST key) stays ignored.
 .env.*
 !.env.example
+!.env.development.example
 
 # Untracked local artifacts (removed from repo pre-open-source)
 /e.js
