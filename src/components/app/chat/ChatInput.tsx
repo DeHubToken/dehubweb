@@ -294,7 +294,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
             });
           }}
           onKeyDown={handleKeyDown}
-          className="min-h-[40px] max-h-32 resize-none bg-transparent border-none text-white placeholder:text-zinc-500 p-0 pt-1 pr-1 focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="min-h-[40px] max-h-32 resize-none bg-transparent border-none text-base md:text-sm text-white placeholder:text-zinc-500 p-0 pt-1 pr-1 focus-visible:ring-0 focus-visible:ring-offset-0"
           rows={1}
         />
 
@@ -415,6 +415,9 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
             variant="ghost"
             size="icon"
             className={`h-8 w-8 ${sendDisabled ? 'text-zinc-600 cursor-not-allowed' : 'text-zinc-400 hover:text-white hover:bg-zinc-700'}`}
+            // Don't steal focus from the textarea — keeps the on-screen
+            // keyboard open across sends instead of collapsing every tap.
+            onMouseDown={(e) => e.preventDefault()}
             onClick={handleSend}
             disabled={sendDisabled || isSendingFee || (!message.trim() && !imageFile && !audioPreview)}
             title={sendDisabled ? sendDisabledReason : undefined}

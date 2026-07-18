@@ -171,7 +171,12 @@ All colors MUST be HSL.
   body {
     @apply text-foreground;
     background-color: black;
+    /* `hidden` still allows programmatic horizontal scrolling — focusing the
+       chat composer made the browser scroll-into-view sideways when any
+       element overflowed the viewport. `clip` forbids scrolling entirely
+       (older browsers keep the `hidden` fallback). */
     overflow-x: hidden;
+    overflow-x: clip;
     overscroll-behavior-y: none;
     touch-action: manipulation;
   }
