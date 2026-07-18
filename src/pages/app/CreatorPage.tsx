@@ -96,6 +96,16 @@ const heroCards = [
 
 const tools: Tool[] = [
   {
+    id: 'builder',
+    name: 'Builder',
+    label: 'Apps',
+    description: 'Describe an app and get it live — AI builds it, DeHub hosts it, you share the link.',
+    icon: PanelsTopLeft,
+    category: 'Studio',
+    badge: 'NEW',
+    action: { kind: 'navigate', to: '/app/builder' },
+  },
+  {
     id: 'poster',
     name: 'DeHub Poster',
     label: 'Brand',

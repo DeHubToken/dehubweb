@@ -127,3 +127,9 @@ verify_jwt = false
 
 [functions.ads-admin]
 verify_jwt = false
+
+[functions.builder-api]
+verify_jwt = false
+
+[functions.builder-serve]
+verify_jwt = false
