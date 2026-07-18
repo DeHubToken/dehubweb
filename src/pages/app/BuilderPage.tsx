@@ -50,7 +50,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/u
 import dehubIcon from '@/assets/dehub-logo-compact.png';
 import {
   BUSY_STATUSES,
-  builderPreviewUrl,
+  builderShareUrl,
   createBuilderProject,
   fetchBuilderAllowance,
   getBuilderProject,
@@ -62,6 +62,7 @@ import {
   type BuilderModel,
   type BuilderProject,
 } from '@/lib/builder/api';
+import { loadBuilderAppHtml, BUILDER_IFRAME_SANDBOX } from '@/lib/builder/render';
 
 // ---------------------------------------------------------------------------
 // Rilable theme, translated (Theme.swift → hex)
@@ -321,18 +322,32 @@ export default function BuilderPage() {
   const busy = !!project && BUSY_STATUSES.has(project.status);
   const live = project?.status === 'live';
 
-  const previewUrl = useMemo(
-    () => (selectedId ? builderPreviewUrl(selectedId, project?.version) : ''),
-    [selectedId, project?.version],
-  );
+  const shareUrl = useMemo(() => (selectedId ? builderShareUrl(selectedId) : ''), [selectedId]);
 
-  // Reload the preview when a new version goes live, and refresh the drawer list.
+  // The generated app renders from a sandboxed srcdoc (Supabase serves the raw
+  // file as text/plain, so a direct src never renders). Fetch + wrap on load and
+  // whenever a new version ships.
+  const [appSrcDoc, setAppSrcDoc] = useState<string | null>(null);
+  const [appLoadError, setAppLoadError] = useState(false);
   const liveVersion = live ? project!.version : 0;
   useEffect(() => {
-    if (liveVersion > 0) {
-      setIframeNonce((n) => n + 1);
-      queryClient.invalidateQueries({ queryKey: ['builder-projects'] });
+    if (!selectedId || liveVersion <= 0) {
+      setAppSrcDoc(null);
+      return;
     }
+    let cancelled = false;
+    setAppLoadError(false);
+    loadBuilderAppHtml(selectedId, liveVersion)
+      .then((html) => !cancelled && setAppSrcDoc(html))
+      .catch(() => !cancelled && setAppLoadError(true));
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedId, liveVersion, iframeNonce]);
+
+  // Refresh the drawer list when a new version goes live.
+  useEffect(() => {
+    if (liveVersion > 0) queryClient.invalidateQueries({ queryKey: ['builder-projects'] });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [liveVersion]);
 
@@ -400,7 +415,7 @@ export default function BuilderPage() {
 
   const copyLink = async () => {
     try {
-      await navigator.clipboard.writeText(previewUrl);
+      await navigator.clipboard.writeText(shareUrl);
       toast.success('App link copied — anyone can open it');
     } catch {
       toast.error('Could not copy the link');
@@ -410,7 +425,7 @@ export default function BuilderPage() {
   const shareLink = async () => {
     if (navigator.share && project) {
       try {
-        await navigator.share({ title: project.name, url: previewUrl });
+        await navigator.share({ title: project.name, url: shareUrl });
         return;
       } catch {
         /* fall through to copy */
@@ -418,6 +433,8 @@ export default function BuilderPage() {
     }
     copyLink();
   };
+
+  const openInTab = () => window.open(shareUrl, '_blank', 'noopener');
 
   const firstName = (user?.displayName || user?.username || 'legend').replace(/^@/, '').split(' ')[0];
   const allowance = allowanceQuery.data;
@@ -662,7 +679,7 @@ export default function BuilderPage() {
                 <div className={cn('absolute left-0 top-7 z-50 rounded-2xl border p-1.5 min-w-[210px]', 'bg-[#1c1c1e]', STROKE)}>
                   {[
                     { label: 'Copy link', icon: LinkIcon, run: copyLink },
-                    { label: 'Open in browser', icon: Compass, run: () => window.open(previewUrl, '_blank', 'noopener') },
+                    { label: 'Open in browser', icon: Compass, run: openInTab },
                     { label: 'Rebuild from scratch', icon: RefreshCw, run: () => sendToProject('Rebuild this app from scratch with the same idea, but better.') },
                     { label: 'Delete build', icon: Trash2, run: () => handleDelete(project.id, project.name), danger: true },
                   ].map(({ label, icon: Icon, run, danger }) => (
@@ -847,7 +864,7 @@ export default function BuilderPage() {
       <div className="flex items-center gap-3 px-4 py-3">
         <div className="flex-1 min-w-0">
           <p className="text-[17px] font-bold text-[#fff] truncate leading-tight">{project.name}</p>
-          <p className={cn('text-[12px] truncate', TEXT_DIM)}>{previewUrl.replace(/^https?:\/\//, '')}</p>
+          <p className={cn('text-[12px] truncate', TEXT_DIM)}>{shareUrl.replace(/^https?:\/\//, '')}</p>
         </div>
         <button
           onClick={() => setIframeNonce((n) => n + 1)}
@@ -856,14 +873,22 @@ export default function BuilderPage() {
           Reload
         </button>
         <button
-          onClick={() => window.open(previewUrl, '_blank', 'noopener')}
+          onClick={openInTab}
           className="rounded-full bg-[#fff] text-[#000] px-4 py-2 text-[15px] font-semibold shrink-0 active:scale-95 transition-transform"
         >
           Open
         </button>
       </div>
 
-      {files.length === 0 ? (
+      {appLoadError ? (
+        <div className="flex-1 grid place-items-center px-6 text-center">
+          <div>
+            <div className="text-3xl mb-2">😵</div>
+            <p className="text-[#fff] text-sm font-medium">Couldn’t load the preview</p>
+            <p className={cn('text-xs mt-1', TEXT_DIM)}>{project.error || 'Try reloading in a moment.'}</p>
+          </div>
+        </div>
+      ) : !appSrcDoc ? (
         <div className="flex-1 grid place-items-center">
           <div className="flex items-center gap-2.5">
             <Loader2 className="w-5 h-5 animate-spin text-[#3f7aff]" />
@@ -873,10 +898,10 @@ export default function BuilderPage() {
       ) : (
         <iframe
           key={`${selectedId}-${iframeNonce}`}
-          src={previewUrl}
+          srcDoc={appSrcDoc}
           title={project.name}
           className="flex-1 w-full bg-[#fff] rounded-[10px]"
-          sandbox="allow-scripts allow-same-origin allow-forms allow-modals allow-popups"
+          sandbox={BUILDER_IFRAME_SANDBOX}
         />
       )}
 
@@ -892,7 +917,7 @@ export default function BuilderPage() {
           <CircleButton onClick={() => setIframeNonce((n) => n + 1)} title="Reload" className="w-12 h-12 bg-[#1c1c1e]">
             <RefreshCw className="w-5 h-5" />
           </CircleButton>
-          <CircleButton onClick={() => window.open(previewUrl, '_blank', 'noopener')} title="Open in browser" className="w-12 h-12 bg-[#1c1c1e]">
+          <CircleButton onClick={openInTab} title="Open in browser" className="w-12 h-12 bg-[#1c1c1e]">
             <Compass className="w-5 h-5" />
           </CircleButton>
           <CircleButton onClick={shareLink} title="Share" className="w-12 h-12 bg-[#1c1c1e]">
@@ -918,7 +943,7 @@ export default function BuilderPage() {
             className={cn('w-full flex items-center gap-3 rounded-2xl px-4 py-3.5 mb-3 transition-colors', SURFACE, 'hover:bg-[#2c2c2e]')}
           >
             <LinkIcon className="w-4 h-4 text-[#3f7aff] shrink-0" />
-            <span className={cn('flex-1 text-left text-[13px] truncate', TEXT_DIM)}>{previewUrl}</span>
+            <span className={cn('flex-1 text-left text-[13px] truncate', TEXT_DIM)}>{shareUrl}</span>
             <span className="text-[14px] font-semibold text-[#fff]">Copy</span>
           </button>
           {files.length === 0 && <p className={cn('text-center text-[15px] py-6', TEXT_DIM)}>No files yet</p>}
