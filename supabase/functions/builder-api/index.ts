@@ -15,6 +15,7 @@ import {
   jsonResponse,
   requireDeHubAuth,
   checkRateLimit,
+  rateLimitByIp,
   serviceClient,
 } from "../_shared/auth.ts";
 
@@ -440,6 +441,14 @@ Deno.serve(async (req) => {
         if (!prompt) return jsonResponse({ error: "Tell me what to build first." }, 400);
         if (prompt.length > 2000) return jsonResponse({ error: "Prompt too long (2000 chars max)." }, 400);
 
+        // Defense in depth: the per-wallet allowance already caps builds, but
+        // requireDeHubAuth cannot currently distinguish spoofed wallets
+        // (api.dehub.io accepts any token — platform-wide, see July audit), so
+        // an attacker could rotate wallets for 3 free gateway builds each. Cap
+        // the actual expensive path per IP too.
+        const ipLimited = await rateLimitByIp(req, "builder_build", { limit: 12, windowMs: 60 * 60 * 1000 });
+        if (ipLimited) return ipLimited;
+
         const allowance = await loadAllowance(db, wallet, token);
         if (allowance.used >= allowance.limit) {
           return jsonResponse(
@@ -473,6 +482,9 @@ Deno.serve(async (req) => {
         const content = (body.content ?? "").trim();
         if (!projectId || !content) return jsonResponse({ error: "projectId and content required" }, 400);
         if (content.length > 2000) return jsonResponse({ error: "Message too long (2000 chars max)." }, 400);
+
+        const ipLimited = await rateLimitByIp(req, "builder_build", { limit: 12, windowMs: 60 * 60 * 1000 });
+        if (ipLimited) return ipLimited;
 
         const { data: project } = await db
           .from("builder_projects")
