@@ -56,9 +56,25 @@ export const BUSY_STATUSES: ReadonlySet<string> = new Set([
   "updating",
 ]);
 
+/** Canonical public host URL (302-redirects to the Storage object). */
 export function builderPreviewUrl(projectId: string, version?: number): string {
   const bust = version ? `?v=${version}` : "";
   return `${SUPABASE_URL}/functions/v1/builder-serve/${projectId}/${bust}`;
+}
+
+/** Public Storage directory the generated files live in (trailing slash). */
+export function builderStorageBase(projectId: string): string {
+  return `${SUPABASE_URL}/storage/v1/object/public/builder-apps/${projectId}/`;
+}
+
+/**
+ * A dehub.io link that RENDERS the app for anyone (the raw storage URL serves
+ * text/plain, so it can't be opened directly — this route fetches + renders it
+ * in a sandboxed iframe). This is what "copy link" / "open" should share.
+ */
+export function builderShareUrl(projectId: string): string {
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
+  return `${origin}/app/builder/preview/${projectId}`;
 }
 
 export type BuilderModel = "best" | "fast";

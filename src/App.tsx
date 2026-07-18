@@ -104,6 +104,7 @@ const PostInfoPage = React.lazy(() => import("./pages/app/PostInfoPage"));
 const SinglePostPage = React.lazy(() => import("./pages/app/SinglePostPage"));
 const GovernanceProposalPage = React.lazy(() => import("./pages/app/GovernanceProposalPage"));
 const BuilderPage = React.lazy(() => import("./pages/app/BuilderPage"));
+const BuilderPreviewPage = React.lazy(() => import("./pages/app/BuilderPreviewPage"));
 const StageDeepLinkPage = React.lazy(() => import("./pages/app/StageDeepLinkPage"));
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
@@ -289,6 +290,17 @@ function AppContent() {
               <ErrorBoundary compact label="Builder">
                 <Suspense fallback={null}>
                   <BuilderPage />
+                </Suspense>
+              </ErrorBoundary>
+            }
+          />
+          {/* Public, auth-free renderer for a built app — the shareable link. */}
+          <Route
+            path="/app/builder/preview/:id"
+            element={
+              <ErrorBoundary compact label="Builder preview">
+                <Suspense fallback={null}>
+                  <BuilderPreviewPage />
                 </Suspense>
               </ErrorBoundary>
             }
