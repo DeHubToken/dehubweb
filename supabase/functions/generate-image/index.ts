@@ -4,6 +4,7 @@ import {
   extractQuotedHeadline,
   pickLayoutForFormat,
 } from '../_shared/dehub-brand-composite.ts';
+import { DEHUB_LOGO_DATA_URI } from '../_shared/dehub-logo.ts';
 import { rateLimitByIp } from '../_shared/auth.ts';
 
 const serve = (handler: (req: Request) => Response | Promise<Response>) => Deno.serve(handler);
@@ -22,6 +23,7 @@ interface GenerateImageRequest {
   prompt: string;
   sourceImage?: string;
   logoImage?: string; // Explicit brand-logo channel (Poster Studio). Triggers two-step: GPT scene → Gemini logo composite.
+  headline?: string; // Explicit headline channel (Poster Studio tagline). Empty string = user chose no headline.
   conversationHistory?: ConversationMessage[];
   model?: string;
 }
@@ -35,7 +37,7 @@ serve(async (req) => {
   if (limited) return limited;
 
   try {
-    let { prompt, sourceImage, logoImage, conversationHistory = [], model = 'gemini-2.5-flash' } = await req.json() as GenerateImageRequest;
+    let { prompt, sourceImage, logoImage, headline: requestHeadline, conversationHistory = [], model = 'gemini-2.5-flash' } = await req.json() as GenerateImageRequest;
 
     if (!prompt) {
       throw new Error('Prompt is required');
@@ -190,8 +192,13 @@ ART DIRECTION: ${enhancedUserRequest}`;
       // its hardcoded canonical DeHub wordmark data URI. We no longer fetch
       // dehub.io/__l5e/... here because that path returns SPA HTML in
       // production and silently broke the composite step.
-      const compositeLogo: string | undefined = logoImage;
+      // Reject non-image "logos" outright: the dehub.io /__l5e/assets-v1 paths
+      // 200 with SPA HTML in production, and clients that fetched them sent us
+      // data:text/html blobs that silently killed every composite path.
+      const compositeLogo: string | undefined =
+        logoImage && logoImage.startsWith('data:image/') ? logoImage : undefined;
       if (compositeLogo) console.log('[dehub-poster] Using client-supplied logo image');
+      else if (logoImage) console.warn('[dehub-poster] Client logoImage is not an image data URL (SPA HTML fallback?) — using hardcoded canonical wordmark');
       else console.log('[dehub-poster] No client logo — composite will use hardcoded canonical wordmark');
 
       // Try GPT-image-2 (medium) first — dramatically better typography than Gemini
@@ -228,7 +235,13 @@ ART DIRECTION: ${enhancedUserRequest}`;
               //    hallucinated by a diffusion model. Also renders a
               //    crisp headline when the user explicitly quoted one.
               const [posterW, posterH] = posterSize.split('x').map(Number);
-              const headline = extractQuotedHeadline(prompt);
+              // Explicit headline from the Poster Studio wins; an empty string
+              // means the user chose no headline, so never regex-mine the prompt
+              // in that case (that's how "WITH SOCIALS" ended up on posters).
+              const explicitHeadline = typeof requestHeadline === 'string' ? requestHeadline.trim() : undefined;
+              const headline = explicitHeadline !== undefined
+                ? (explicitHeadline || null)
+                : extractQuotedHeadline(prompt);
               const layout = pickLayoutForFormat(posterSize);
               try {
                 console.log('[dehub-poster] GPT scene ok — deterministic SVG composite (logo + headline)', { headline, layout });
@@ -256,7 +269,8 @@ ART DIRECTION: ${enhancedUserRequest}`;
               //    the Gemini image-edit composite. Kept only as a safety
               //    net; the deterministic path above is the source of
               //    truth for brand-accurate logos.
-              if (compositeLogo) {
+              const geminiCompositeLogo = compositeLogo ?? DEHUB_LOGO_DATA_URI;
+              if (geminiCompositeLogo) {
                 try {
                   const compositePrompt = `Take the first image (a finished DeHub marketing scene) and place the second image (the official DeHub white wordmark, transparent PNG) onto it as a logo lockup.
 - Position the wordmark in the pre-reserved empty area of the scene. Do not cover the hero subject.
@@ -272,7 +286,7 @@ ART DIRECTION: ${enhancedUserRequest}`;
                         role: 'user',
                         content: [
                           { type: 'image_url', image_url: { url: sceneDataUrl } },
-                          { type: 'image_url', image_url: { url: compositeLogo } },
+                          { type: 'image_url', image_url: { url: geminiCompositeLogo } },
                           { type: 'text', text: compositePrompt },
                         ],
                       }],
@@ -311,9 +325,9 @@ ART DIRECTION: ${enhancedUserRequest}`;
         }
       }
 
-      // Gemini fallback: reuse the pre-fetched compositeLogo (guaranteed above)
+      // Gemini fallback: use the validated client logo, else the hardcoded canonical wordmark
       try {
-        const logoDataUrl = compositeLogo;
+        const logoDataUrl = compositeLogo ?? DEHUB_LOGO_DATA_URI;
         if (logoDataUrl) {
 
           sourceImage = logoDataUrl;

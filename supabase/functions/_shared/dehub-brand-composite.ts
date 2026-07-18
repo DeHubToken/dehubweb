@@ -119,7 +119,14 @@ export async function compositeDeHubBranding(
   const { sceneDataUrl, width: W, height: H } = opts;
   const layout: BrandLayout = opts.layout ?? "bottom-center";
 
-  const logoDataUri = opts.logoDataUrl ?? (await fetchLogoDataUri());
+  // A client-supplied logo must actually be an image — the dehub.io
+  // /__l5e/assets-v1 paths 200 with SPA HTML in production, and an HTML
+  // "logo" makes resvg silently drop the wordmark from the poster.
+  const clientLogo =
+    opts.logoDataUrl && opts.logoDataUrl.startsWith("data:image/")
+      ? opts.logoDataUrl
+      : null;
+  const logoDataUri = clientLogo ?? (await fetchLogoDataUri());
   if (!logoDataUri) return null;
 
   // Logo lockup sizing — the wordmark is very wide (~4.2:1), so size by
@@ -200,7 +207,14 @@ export async function compositeDeHubBranding(
  * never invent copy the user didn't write.
  */
 export function extractQuotedHeadline(prompt: string): string | null {
-  const m = prompt.match(/["“”'']([^"“”'']{2,60})["“”'']/);
+  // Client wrappers prepend brand-system boilerplate before a
+  // `USER REQUEST:` marker. Only the user's own words may contain a
+  // headline — matching the full prompt used to pick up quoted examples
+  // from the boilerplate (every poster got a literal "WITH SOCIALS"
+  // headline). Scope the search to the user request when the marker exists.
+  const marker = prompt.lastIndexOf("USER REQUEST:");
+  const scope = marker >= 0 ? prompt.slice(marker + "USER REQUEST:".length) : prompt;
+  const m = scope.match(/["“”'']([^"“”'']{2,60})["“”'']/);
   if (!m) return null;
   const t = m[1].trim();
   if (!t) return null;

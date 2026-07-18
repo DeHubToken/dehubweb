@@ -252,7 +252,7 @@ function buildFinalPrompt(cfg: Omit<PosterConfig, 'finalPrompt'>, userPrompt: st
     parts.push(`Spotlight DeHub feature(s): ${featureLabels.join('; ')}.`);
   }
 
-  if (cfg.tagline) parts.push(`Include the tagline: "${cfg.tagline}" — rendered in Exo, pure white.`);
+  if (cfg.tagline) parts.push(`Reserve clean negative space above the bottom logo area for a short headline — do NOT render any headline text yourself; the real headline is composited afterward.`);
 
   const linkBits: string[] = [];
   if (cfg.includeWebsite) linkBits.push('dehub.io');
