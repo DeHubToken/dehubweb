@@ -12,7 +12,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation as useI18n } from 'react-i18next';
-import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX, LayoutDashboard, Check, XCircle, Lock, Zap, History, AudioLines } from 'lucide-react';
+import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX, LayoutDashboard, Check, XCircle, Lock, Zap, History, AudioLines, Blocks } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { useVoiceChat } from '@/hooks/use-voice-chat';
@@ -620,6 +621,7 @@ export default function AssistantPage() {
   const pendingVoiceRef = useRef(false); // Track if last input was voice
 
   const { isAuthenticated, walletAddress, user } = useAuth();
+  const navigate = useNavigate();
   const isMobile = useIsMobile();
   const { language: userLanguage } = useUserLanguage();
   const { t } = useI18n();
@@ -1909,6 +1911,17 @@ export default function AssistantPage() {
         </button>
 
         <div className="flex items-center gap-4">
+          {/* Builder launch — build a live mini-app from a prompt */}
+          <button
+            onClick={() => navigate('/app/builder')}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/15 text-white text-xs font-medium transition-colors"
+            title="Builder — describe an app and get it live"
+          >
+            <Blocks className="w-4 h-4" />
+            <span className="hidden sm:inline">Build something</span>
+            <span className="sm:hidden">Build</span>
+          </button>
+
           {/* New Chat Button */}
           <button
             onClick={() => {

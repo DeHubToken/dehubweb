@@ -103,6 +103,7 @@ const ProfilePage = React.lazy(() => import("./pages/app/ProfilePage"));
 const PostInfoPage = React.lazy(() => import("./pages/app/PostInfoPage"));
 const SinglePostPage = React.lazy(() => import("./pages/app/SinglePostPage"));
 const GovernanceProposalPage = React.lazy(() => import("./pages/app/GovernanceProposalPage"));
+const BuilderPage = React.lazy(() => import("./pages/app/BuilderPage"));
 const StageDeepLinkPage = React.lazy(() => import("./pages/app/StageDeepLinkPage"));
 const MobilePreview = React.lazy(() => import("./pages/MobilePreview"));
 const GuidePage = React.lazy(() => import("./pages/GuidePage"));
@@ -327,6 +328,7 @@ function AppContent() {
               <Route path="notifications" element={null} />
               <Route path="messages" element={null} />
               <Route path="assistant" element={null} />
+              <Route path="builder" element={<Suspense fallback={<PageLoader />}><BuilderPage /></Suspense>} />
               <Route path="leaderboard" element={null} />
               <Route path="bookmarks" element={null} />
               <Route path="settings" element={null} />
