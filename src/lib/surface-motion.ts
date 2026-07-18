@@ -26,14 +26,18 @@
 import { useSyncExternalStore } from 'react';
 import type { Variants } from 'framer-motion';
 
-export type Surface = 'app' | 'docs';
+export type Surface = 'app' | 'docs' | 'builder';
 
 /**
  * Docs and the community blog (both /docs/* and the canonical /guides/* blog
- * URLs) are the full-page "docs" surface; everything else is the app shell.
+ * URLs) are the full-page "docs" surface; the Builder (/app/builder) is its own
+ * full-page surface too; everything else is the app shell. Crossing ANY surface
+ * boundary plays the same choreographed slide (the panels' variants are keyed
+ * by label, not by destination).
  */
 export function getSurface(pathname: string): Surface {
   if (pathname.startsWith('/docs') || pathname.startsWith('/guides')) return 'docs';
+  if (pathname.startsWith('/app/builder')) return 'builder';
   return 'app';
 }
 

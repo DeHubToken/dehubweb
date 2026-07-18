@@ -20,8 +20,15 @@ import {
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 const GATEWAY_URL = "https://ai.gateway.lovable.dev/v1/chat/completions";
-// Strongest gateway model — app generation is a hard codegen task.
-const BUILD_MODEL = "google/gemini-2.5-pro";
+// Model picker: "best" (default) for the hard codegen path, "fast" for quick edits.
+const BUILD_MODELS: Record<string, string> = {
+  best: "google/gemini-2.5-pro",
+  fast: "google/gemini-2.5-flash",
+};
+
+function resolveModel(key: string | undefined): string {
+  return BUILD_MODELS[key ?? "best"] ?? BUILD_MODELS.best;
+}
 
 // ---------------------------------------------------------------------------
 // Build allowance — DHB staking badge → builds per day.
@@ -122,7 +129,21 @@ type GeneratedApp = {
   files: AppFile[];
 };
 
-function parseGeneration(text: string): GeneratedApp {
+/**
+ * Defensive cleanup before parsing: some gateway models wrap the whole output
+ * (or individual files) in markdown code fences despite the format contract.
+ * Fence lines are never valid content on their own line in our protocol, so
+ * dropping them is safe.
+ */
+function stripFences(text: string): string {
+  return text
+    .split("\n")
+    .filter((line) => !/^\s*```[a-zA-Z0-9_-]*\s*$/.test(line))
+    .join("\n");
+}
+
+function parseGeneration(raw: string): GeneratedApp {
+  const text = stripFences(raw);
   const name = /^APP_NAME:\s*(.+)$/m.exec(text)?.[1]?.trim() ?? "Untitled App";
   const emoji = /^APP_EMOJI:\s*(\S+)/m.exec(text)?.[1]?.trim() ?? "✨";
   const summary = /^SUMMARY:\s*(.+)$/m.exec(text)?.[1]?.trim() ?? "";
@@ -156,7 +177,7 @@ function editUserPrompt(
   return `CURRENT FILES:\n${fileBlock}\n\nRECENT CONVERSATION:\n${convo}\n\nCHANGE REQUEST: ${request}`;
 }
 
-async function callGateway(system: string, user: string): Promise<string> {
+async function callGateway(system: string, user: string, model: string): Promise<string> {
   const key = Deno.env.get("LOVABLE_API_KEY");
   if (!key) throw new Error("LOVABLE_API_KEY not configured");
   const res = await fetch(GATEWAY_URL, {
@@ -166,7 +187,7 @@ async function callGateway(system: string, user: string): Promise<string> {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      model: BUILD_MODEL,
+      model,
       messages: [
         { role: "system", content: system },
         { role: "user", content: user },
@@ -218,11 +239,11 @@ function errorMessage(err: unknown): string {
 // Build runners (fire-and-forget via EdgeRuntime.waitUntil; client polls `get`)
 // ---------------------------------------------------------------------------
 
-async function runBuild(db: Db, projectId: string, prompt: string) {
+async function runBuild(db: Db, projectId: string, prompt: string, model: string) {
   try {
     await setStatus(db, projectId, "generating", "The AI is designing your app");
     await log(db, projectId, "🧠 Writing your app…");
-    const raw = await callGateway(GENERATE_SYSTEM, `Build this web app: ${prompt}`);
+    const raw = await callGateway(GENERATE_SYSTEM, `Build this web app: ${prompt}`, model);
     const app = parseGeneration(raw);
     await saveFiles(db, projectId, app.files);
     await log(
@@ -268,7 +289,7 @@ async function runBuild(db: Db, projectId: string, prompt: string) {
   }
 }
 
-async function runEdit(db: Db, projectId: string, request: string) {
+async function runEdit(db: Db, projectId: string, request: string, model: string) {
   const { data: project } = await db
     .from("builder_projects")
     .select("name, emoji, version")
@@ -291,7 +312,7 @@ async function runEdit(db: Db, projectId: string, request: string) {
 
     await setStatus(db, projectId, "updating", "The AI is applying your changes");
     await log(db, projectId, "🛠️ Updating your app…");
-    const raw = await callGateway(EDIT_SYSTEM, editUserPrompt(files, conversation, request));
+    const raw = await callGateway(EDIT_SYSTEM, editUserPrompt(files, conversation, request), model);
     const app = parseGeneration(raw);
     await saveFiles(db, projectId, app.files);
     await db
@@ -389,6 +410,7 @@ Deno.serve(async (req) => {
     projectId?: string;
     prompt?: string;
     content?: string;
+    model?: string;
     isPublic?: boolean;
   };
   try {
@@ -439,7 +461,7 @@ Deno.serve(async (req) => {
         await bumpUsage(db, wallet);
 
         // @ts-ignore - EdgeRuntime is provided by Supabase
-        EdgeRuntime.waitUntil(runBuild(db, project.id, prompt));
+        EdgeRuntime.waitUntil(runBuild(db, project.id, prompt, resolveModel(body.model)));
         return jsonResponse({
           projectId: project.id,
           allowance: { ...allowance, used: allowance.used + 1 },
@@ -454,7 +476,7 @@ Deno.serve(async (req) => {
 
         const { data: project } = await db
           .from("builder_projects")
-          .select("id, status")
+          .select("id, status, prompt")
           .eq("id", projectId)
           .eq("wallet", wallet)
           .maybeSingle();
@@ -477,6 +499,7 @@ Deno.serve(async (req) => {
         await log(db, projectId, content, "user");
         await bumpUsage(db, wallet);
 
+        const model = resolveModel(body.model);
         const isRetry = project.status === "error";
         if (isRetry) {
           const { data: files } = await db
@@ -485,14 +508,17 @@ Deno.serve(async (req) => {
             .eq("project_id", projectId)
             .limit(1);
           if ((files ?? []).length === 0) {
-            // Nothing generated yet — rebuild from scratch with the new request.
+            // Nothing was ever generated — rebuild from scratch. Build from the
+            // project's ORIGINAL prompt plus the follow-up so a bare "try again"
+            // doesn't become the app spec.
+            const rebuildPrompt = `${project.prompt}\n\nAdditional note from the user: ${content}`;
             // @ts-ignore - EdgeRuntime is provided by Supabase
-            EdgeRuntime.waitUntil(runBuild(db, projectId, content));
+            EdgeRuntime.waitUntil(runBuild(db, projectId, rebuildPrompt, model));
             return jsonResponse({ ok: true, allowance: { ...allowance, used: allowance.used + 1 } });
           }
         }
         // @ts-ignore - EdgeRuntime is provided by Supabase
-        EdgeRuntime.waitUntil(runEdit(db, projectId, content));
+        EdgeRuntime.waitUntil(runEdit(db, projectId, content, model));
         return jsonResponse({ ok: true, allowance: { ...allowance, used: allowance.used + 1 } });
       }
 

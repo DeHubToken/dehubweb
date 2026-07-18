@@ -61,11 +61,14 @@ export function builderPreviewUrl(projectId: string, version?: number): string {
   return `${SUPABASE_URL}/functions/v1/builder-serve/${projectId}/${bust}`;
 }
 
+export type BuilderModel = "best" | "fast";
+
 interface InvokeOptions {
   action: string;
   projectId?: string;
   prompt?: string;
   content?: string;
+  model?: BuilderModel;
 }
 
 async function invokeBuilder<T>(body: InvokeOptions): Promise<T> {
@@ -105,15 +108,17 @@ export function listBuilderProjects(): Promise<{ projects: BuilderProject[] }> {
 
 export function createBuilderProject(
   prompt: string,
+  model: BuilderModel = "best",
 ): Promise<{ projectId: string; allowance: BuilderAllowance }> {
-  return invokeBuilder({ action: "create", prompt });
+  return invokeBuilder({ action: "create", prompt, model });
 }
 
 export function sendBuilderMessage(
   projectId: string,
   content: string,
+  model: BuilderModel = "best",
 ): Promise<{ ok: boolean; allowance: BuilderAllowance }> {
-  return invokeBuilder({ action: "send", projectId, content });
+  return invokeBuilder({ action: "send", projectId, content, model });
 }
 
 export function getBuilderProject(projectId: string): Promise<{

@@ -280,6 +280,20 @@ function AppContent() {
             <Route path="/guides/*" element={null} />
           </Route>
 
+          {/* Builder — its own full-page surface like docs: mounted OUTSIDE
+              AppLayout so no app chrome renders, and getSurface('/app/builder')
+              plays the same panel slide-off when entering/leaving. */}
+          <Route
+            path="/app/builder"
+            element={
+              <ErrorBoundary compact label="Builder">
+                <Suspense fallback={null}>
+                  <BuilderPage />
+                </Suspense>
+              </ErrorBoundary>
+            }
+          />
+
           <Route path="/delete-account" element={<DeleteAccount />} />
 
           {/* Admin panel — email/password auth, separate from user wallet session */}
@@ -328,7 +342,6 @@ function AppContent() {
               <Route path="notifications" element={null} />
               <Route path="messages" element={null} />
               <Route path="assistant" element={null} />
-              <Route path="builder" element={<Suspense fallback={<PageLoader />}><BuilderPage /></Suspense>} />
               <Route path="leaderboard" element={null} />
               <Route path="bookmarks" element={null} />
               <Route path="settings" element={null} />
