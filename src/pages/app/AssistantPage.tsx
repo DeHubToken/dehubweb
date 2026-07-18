@@ -24,8 +24,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import dehubLogo from '@/assets/dehub-logo-white.png';
-import dehubLogoPrimary from '@/assets/dehub-logo-primary.png.asset.json';
-import dehubLogoIcon from '@/assets/dehub-logo-icon.png.asset.json';
+import dehubLogoCompact from '@/assets/dehub-logo-compact.png';
 import assistantAvatar from '@/assets/ai-assistant-avatar.png';
 import aiSparkleIcon from '@/assets/icons/ai-sparkle-icon.png';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -177,7 +176,7 @@ OFFICIAL DEHUB LINKS (render ONLY if the user explicitly asks for socials, links
 - Telegram (main): t.me/dehub_dhb
 - Discord: discord.gg/dehub
 - Regional Telegrams: Turkish t.me/Dehub_Turkish · Arabic t.me/Dehub_Arabic · Hindi t.me/dehub_hindi · China t.me/dehub_china · Indonesia t.me/dehub_indonesia · Germany t.me/dehub_dach · Vietnam t.me/dehub_vietnam · Philippines t.me/DeHub_Philippines
-When rendering links: pure white, Exo / Exo 2 (Light or Regular), small size, bottom of composition, generous letter-spacing, no icons unless requested. Only include the specific links the user asked for (e.g. "with socials" = X + Telegram + Discord + Website; "with website" = just dehub.io).
+When rendering links: pure white, Exo / Exo 2 (Light or Regular), small size, bottom of composition, generous letter-spacing, no icons unless requested. Only include the specific links the user asked for (socials means X + Telegram + Discord + Website; website means just dehub.io).
 
 USER REQUEST: ${userRequest}`;
 }
@@ -205,6 +204,11 @@ function isCreativeLogoRequest(message: string): boolean {
 async function imageUrlToBase64(url: string): Promise<string> {
   const response = await fetch(url);
   const blob = await response.blob();
+  // CDN pointer paths can 200 with the SPA HTML fallback; passing that through
+  // as a data URL silently breaks the logo composite downstream.
+  if (!response.ok || !blob.type.startsWith('image/')) {
+    throw new Error(`Expected an image from ${url}, got ${blob.type || 'unknown content type'}`);
+  }
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onloadend = () => resolve(reader.result as string);
@@ -1222,12 +1226,13 @@ export default function AssistantPage() {
   };
 
   // Handle image generation after payment confirmation
-  const handleImageGenerationConfirm = async (override?: { prompt: string; model: string; sourceImage?: string; logoImage?: string }) => {
+  const handleImageGenerationConfirm = async (override?: { prompt: string; model: string; sourceImage?: string; logoImage?: string; headline?: string }) => {
     const req = override ?? pendingImageRequest;
     if (!req) return;
 
     const { prompt, model, sourceImage } = req;
     const logoImage = override?.logoImage;
+    const headline = override?.headline;
     const imageModel = IMAGE_MODELS[model];
 
     // User message was already added by handleSend before paywall opened
@@ -1247,6 +1252,9 @@ export default function AssistantPage() {
           prompt,
           sourceImage: sourceImage || undefined,
           logoImage: logoImage || undefined,
+          // Explicit headline channel (Poster Studio tagline). Empty string means
+          // "user chose no headline" — the server must not regex-mine one from the prompt.
+          headline,
           conversationHistory,
           model
         }
@@ -3115,16 +3123,16 @@ export default function AssistantPage() {
         onConfirm={async (cfg: PosterConfig) => {
           setPosterConfigOpen(false);
           try {
-            // Pick the right source logo based on user's variant choice
-            const logoUrl =
-              cfg.logoVariant === 'icon' ? dehubLogoIcon.url
-              : cfg.logoVariant === 'both' ? dehubLogoPrimary.url // primary wordmark; "both" is expressed in the prompt
-              : dehubLogoPrimary.url;
+            // Pick the right source logo based on user's variant choice.
+            // Bundled assets only — the CDN pointer paths (__l5e/assets-v1)
+            // return SPA HTML in production, not the PNG.
+            const logoUrl = cfg.logoVariant === 'icon' ? dehubLogoCompact : dehubLogo;
             const logoBase64 = await imageUrlToBase64(logoUrl).catch(() => imageUrlToBase64(dehubLogo));
             await handleImageGenerationConfirm({
               prompt: buildDeHubBrandPrompt(cfg.finalPrompt),
               model: DEHUB_BRAND_IMAGE_MODEL,
               logoImage: logoBase64,
+              headline: cfg.tagline.trim(),
             });
           } catch (err) {
             console.error('Poster generation error:', err);
