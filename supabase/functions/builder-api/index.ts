@@ -225,11 +225,71 @@ async function log(db: Db, projectId: string, content: string, role = "log") {
   await db.from("builder_messages").insert({ project_id: projectId, role, content });
 }
 
+// The generated app is ALSO written to a public Storage bucket, because the
+// functions origin force-downgrades text/html → text/plain (Supabase
+// anti-phishing), so raw HTML never renders there. Storage honors the object's
+// content-type, so the app renders both in the preview iframe and at its public
+// share link (builder-serve 302-redirects to these objects). This is the
+// equivalent of Rilable's Daytona static host.
+export const BUILDER_BUCKET = "builder-apps";
+
+const STORAGE_CONTENT_TYPES: Record<string, string> = {
+  html: "text/html; charset=utf-8",
+  htm: "text/html; charset=utf-8",
+  js: "text/javascript; charset=utf-8",
+  mjs: "text/javascript; charset=utf-8",
+  css: "text/css; charset=utf-8",
+  json: "application/json; charset=utf-8",
+  svg: "image/svg+xml",
+  txt: "text/plain; charset=utf-8",
+};
+
+function storageContentType(path: string): string {
+  const ext = path.split(".").pop()?.toLowerCase() ?? "";
+  return STORAGE_CONTENT_TYPES[ext] ?? "text/plain; charset=utf-8";
+}
+
+async function ensureBucket(db: Db) {
+  // Idempotent: ignores the "already exists" error on every call after the first.
+  await db.storage.createBucket(BUILDER_BUCKET, { public: true }).catch(() => {});
+}
+
 async function saveFiles(db: Db, projectId: string, files: AppFile[]) {
+  // 1) Source of truth for the code view + edit loop.
   await db.from("builder_files").delete().eq("project_id", projectId);
   await db.from("builder_files").insert(
     files.map((f) => ({ project_id: projectId, path: f.path, content: f.content })),
   );
+
+  // 2) Rendered host. Replace the whole prefix so deleted files don't linger.
+  await ensureBucket(db);
+  const prefix = `${projectId}/`;
+  const { data: existing } = await db.storage.from(BUILDER_BUCKET).list(projectId, { limit: 100 });
+  if (existing?.length) {
+    await db.storage
+      .from(BUILDER_BUCKET)
+      .remove(existing.map((o: { name: string }) => `${prefix}${o.name}`))
+      .catch(() => {});
+  }
+  await Promise.all(
+    files.map((f) =>
+      db.storage.from(BUILDER_BUCKET).upload(`${prefix}${f.path}`, new Blob([f.content]), {
+        contentType: storageContentType(f.path),
+        cacheControl: "0",
+        upsert: true,
+      }),
+    ),
+  );
+}
+
+async function removeStorage(db: Db, projectId: string) {
+  const { data: existing } = await db.storage.from(BUILDER_BUCKET).list(projectId, { limit: 100 });
+  if (existing?.length) {
+    await db.storage
+      .from(BUILDER_BUCKET)
+      .remove(existing.map((o: { name: string }) => `${projectId}/${o.name}`))
+      .catch(() => {});
+  }
 }
 
 function errorMessage(err: unknown): string {
@@ -561,6 +621,15 @@ Deno.serve(async (req) => {
       case "remove": {
         const projectId = body.projectId ?? "";
         if (!projectId) return jsonResponse({ error: "projectId required" }, 400);
+        // Verify ownership before touching storage.
+        const { data: owned } = await db
+          .from("builder_projects")
+          .select("id")
+          .eq("id", projectId)
+          .eq("wallet", wallet)
+          .maybeSingle();
+        if (!owned) return jsonResponse({ error: "Project not found" }, 404);
+        await removeStorage(db, projectId);
         await db.from("builder_projects").delete().eq("id", projectId).eq("wallet", wallet);
         return jsonResponse({ ok: true });
       }
