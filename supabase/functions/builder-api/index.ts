@@ -272,13 +272,17 @@ async function saveFiles(db: Db, projectId: string, files: AppFile[]) {
       .catch(() => {});
   }
   await Promise.all(
-    files.map((f) =>
-      db.storage.from(BUILDER_BUCKET).upload(`${prefix}${f.path}`, new Blob([f.content]), {
-        contentType: storageContentType(f.path),
+    files.map((f) => {
+      const type = storageContentType(f.path);
+      // The Blob MUST carry the type: with a typeless Blob the storage client
+      // ignores the contentType option and the object is served as
+      // text/plain / octet-stream, so the app won't render.
+      return db.storage.from(BUILDER_BUCKET).upload(`${prefix}${f.path}`, new Blob([f.content], { type }), {
+        contentType: type,
         cacheControl: "0",
         upsert: true,
-      }),
-    ),
+      });
+    }),
   );
 }
 
