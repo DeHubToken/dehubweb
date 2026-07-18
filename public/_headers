@@ -9,3 +9,14 @@
 /sw.js
   Cache-Control: public, max-age=0, must-revalidate
   Service-Worker-Allowed: /
+
+# Hashed build chunks are content-addressed — cache for a year. Without this
+# every repeat visit revalidates each chunk (ported from netlify.toml; was
+# lost in the Cloudflare migration and live assets served max-age=0).
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# LCP logo lives at site root (not hashed) — long cache; change filename when
+# the asset changes.
+/dehub-header-logo.png
+  Cache-Control: public, max-age=31536000, immutable

@@ -676,6 +676,13 @@ async function handleRequest(request, env) {
   // guard() can still stamp mirror hosts.
   const redirect301 = (to) => guard(new Response(null, { status: 301, headers: { Location: to } }));
 
+  // www → apex, path + query preserved. The www DNS record still points at the
+  // retired Netlify origin; the wrangler.jsonc route binds www to this worker
+  // so that origin is never contacted (safe to cancel Netlify).
+  if (url.hostname === 'www.dehub.io') {
+    return redirect301(`https://dehub.io${url.pathname}${url.search}`);
+  }
+
   // URL-space hygiene (all UAs — these paths have no content in the SPA
   // either): bare /guides has no route, /app twins of the blog duplicate it.
   const trimmedPath = pathname.replace(/\/+$/, '') || '/';

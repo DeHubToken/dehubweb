@@ -2,6 +2,12 @@
   "name": "dehub-migration",
   "main": "./CLOUDFLARE_WORKER_SEO.js",
   "compatibility_date": "2026-07-18",
+  // Bind www to the worker so the www→apex 301 is served here and the old
+  // Netlify origin behind the www DNS record is never contacted. The apex
+  // stays on its dashboard-configured custom domain; this is additive.
+  "routes": [
+    { "pattern": "www.dehub.io/*", "zone_name": "dehub.io" }
+  ],
   "assets": {
     "binding": "ASSETS",
     "directory": "./dist",
