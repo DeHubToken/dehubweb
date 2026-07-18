@@ -1,5 +1,6 @@
 import React, { Suspense, useState, useRef, useEffect, useMemo } from 'react';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
+import { useKeyboardOpen } from '@/hooks/use-keyboard-open';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
 import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck, Scroll, Map, Wand2, Loader2 } from 'lucide-react';
@@ -66,6 +67,9 @@ export function MobileBottomNav() {
   const totalNotifUnread = (unreadCount?.total ?? 0) + (customUnread ?? 0);
   const { unreadCount: communityActivityUnread } = useCommunityActivityUnreadCount();
   const navVisible = useScrollDirection();
+  // On-screen keyboard up → hide the nav entirely; typing surfaces (chat)
+  // reclaim its space so the screen splits between messages and composer.
+  const keyboardOpen = useKeyboardOpen();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   // Mount on first open, keep mounted afterwards (close animation).
   const [postModalMounted, setPostModalMounted] = useState(false);
@@ -157,7 +161,7 @@ export function MobileBottomNav() {
       <div
         data-bottom-nav
         className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2 transition-transform duration-300 ease-in-out"
-        style={{ transform: navVisible ? 'translateY(0)' : 'translateY(110%)', willChange: 'transform' }}
+        style={{ transform: navVisible && !keyboardOpen ? 'translateY(0)' : 'translateY(110%)', willChange: 'transform' }}
       >
         <nav
           className="relative bg-zinc-900/10 backdrop-blur-2xl border border-white/10 rounded-2xl mx-auto max-w-[72%] md:max-w-md shadow-xl transition-all duration-1000"

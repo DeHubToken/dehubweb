@@ -737,6 +737,31 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
     prevMessagesLenRef.current = messages.length;
   }, [messages.length, markAsRead]);
 
+  // Keep the newest messages pinned above the on-screen keyboard. With
+  // `interactive-widget=resizes-content` the layout (and this flex column)
+  // shrinks from the bottom when the keyboard opens, which would otherwise
+  // leave the latest messages hidden until the user scrolls.
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    let lastHeight = vv.height;
+    const onResize = () => {
+      const delta = lastHeight - vv.height; // >0 → viewport shrank (keyboard opened)
+      lastHeight = vv.height;
+      if (delta < 50) return;
+      const container = scrollContainerRef.current;
+      if (!container) return;
+      // The container already lost ~delta px when this fires, so treat anyone
+      // who was within delta+150px of the bottom as "at the bottom".
+      const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+      if (distanceFromBottom <= delta + 150) {
+        requestAnimationFrame(() => bottomRef.current?.scrollIntoView({ behavior: 'auto', block: 'end' }));
+      }
+    };
+    vv.addEventListener('resize', onResize);
+    return () => vv.removeEventListener('resize', onResize);
+  }, []);
+
   // If createAndStart failed and conversation ID is still virtual, resolve it from incoming messages
   useEffect(() => {
     if (!resolvedConversationId.startsWith('new_')) return;
@@ -1219,7 +1244,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             placeholder="Search messages..."
-            className="flex-1 bg-transparent text-sm text-white placeholder:text-zinc-500 outline-none"
+            className="flex-1 bg-transparent text-base md:text-sm text-white placeholder:text-zinc-500 outline-none"
           />
           {searchQuery && (
             <button onClick={() => setSearchQuery('')} className="text-zinc-500 hover:text-white">
