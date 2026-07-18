@@ -61,6 +61,13 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
     onMentionInsert: (_user, newText) => setMessage(newText),
   });
 
+  // The auto-grown textarea height is set imperatively on input, so clearing
+  // the value alone leaves a tall empty composer covering the last messages.
+  const resetComposerHeight = () => {
+    const ta = textareaRef.current;
+    if (ta) ta.style.height = 'auto';
+  };
+
   const handleSend = () => {
     if (sendDisabled || isSendingFee) return;
     if (audioPreview) {
@@ -72,6 +79,7 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
       });
       setAudioPreview(null);
       setMessage('');
+      resetComposerHeight();
       return;
     }
 
@@ -83,12 +91,14 @@ export function ChatInput({ onSendMessage, onTipClick, sendDisabled, sendDisable
       });
       clearImage();
       setMessage('');
+      resetComposerHeight();
       return;
     }
 
     if (!message.trim()) return;
     onSendMessage({ content: message.trim(), type: 'msg' });
     setMessage('');
+    resetComposerHeight();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {

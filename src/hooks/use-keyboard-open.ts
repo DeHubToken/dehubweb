@@ -42,3 +42,48 @@ export function useKeyboardOpen() {
 
   return open;
 }
+
+/**
+ * Blur the focused editable so the on-screen keyboard dismisses — chat
+ * surfaces call this from a tap on the messages area.
+ */
+export function dismissKeyboard() {
+  const el = document.activeElement;
+  if (
+    el instanceof HTMLElement &&
+    (el.tagName === 'TEXTAREA' || el.tagName === 'INPUT' || el.isContentEditable)
+  ) {
+    el.blur();
+  }
+}
+
+/**
+ * Live height of the visual viewport — the area actually visible above the
+ * on-screen keyboard — while `enabled`. Android resizes the layout viewport
+ * for the keyboard (interactive-widget=resizes-content) so dvh tracks it,
+ * but iOS never does; measuring visualViewport is the only signal that is
+ * correct on both. Returns null until a measurement exists.
+ */
+export function useVisualViewportHeight(enabled: boolean) {
+  const [height, setHeight] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (!enabled) {
+      setHeight(null);
+      return;
+    }
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const update = () => setHeight(Math.round(vv.height));
+    update();
+    vv.addEventListener('resize', update);
+    // iOS pans the visual viewport instead of resizing — 'scroll' fires then.
+    vv.addEventListener('scroll', update);
+    return () => {
+      vv.removeEventListener('resize', update);
+      vv.removeEventListener('scroll', update);
+    };
+  }, [enabled]);
+
+  return enabled ? height : null;
+}

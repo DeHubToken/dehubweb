@@ -20,6 +20,7 @@ import { BuyAlertCard } from './BuyAlertCard';
 import { AssistantReplyCard } from './AssistantReplyCard';
 import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
 import { useAssistantReplies, useAssistantReplyEngine } from '@/hooks/use-assistant-replies';
+import { dismissKeyboard } from '@/hooks/use-keyboard-open';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -386,8 +387,9 @@ export function PublicChat({ onBack }: PublicChatProps) {
       {/* Messages Area */}
       <SharedTranslationContext.Provider value={{ translateSignal, originalSignal, requestTranslate: () => setTranslateSignal(s => s + 1), requestOriginal: () => setOriginalSignal(s => s + 1) }}>
       <div className="relative flex-1">
-        <div 
+        <div
           ref={scrollContainerRef}
+          onPointerDown={dismissKeyboard}
           className="absolute inset-0 overflow-y-auto py-2"
         >
           {roomsError ? (

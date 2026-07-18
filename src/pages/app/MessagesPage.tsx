@@ -18,7 +18,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useDMRealtime } from '@/hooks/use-dm-realtime';
-import { useKeyboardOpen } from '@/hooks/use-keyboard-open';
+import { useKeyboardOpen, useVisualViewportHeight } from '@/hooks/use-keyboard-open';
 import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
 import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
 import messagesBubbleIcon from '@/assets/icons/messages-3d-icon.png';
@@ -138,6 +138,11 @@ export default function MessagesPage() {
   // the screen splits between messages and composer.
   const keyboardOpen = useKeyboardOpen();
   const mobileChatHeight = keyboardOpen ? 'h-[calc(100dvh-44px)]' : 'h-[calc(100dvh-120px)]';
+  // dvh only tracks the keyboard on Android (interactive-widget) — iOS keeps
+  // the layout viewport full-size and just covers it. Sizing to the measured
+  // visual viewport keeps the composer above the keyboard on both.
+  const vvHeight = useVisualViewportHeight(keyboardOpen);
+  const keyboardStyle = keyboardOpen && vvHeight ? { height: vvHeight - 44 } : undefined;
   const [selectedConversation, setSelectedConversation] = useState<DeHubConversation | null>(null);
   const [showPublicChat, setShowPublicChat] = useState(false);
   const [showMessageSelector, setShowMessageSelector] = useState(false);
@@ -325,7 +330,7 @@ export default function MessagesPage() {
   // If Public Chat is open, show full-screen chat
   if (showPublicChat) {
     return (
-      <div className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 overflow-x-hidden`}>
+      <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 overflow-x-hidden`}>
           <PublicChat
             onBack={() => setShowPublicChat(false)}
           />
@@ -336,7 +341,7 @@ export default function MessagesPage() {
   // If a DM conversation is selected, show it
   if (selectedConversation) {
     return (
-      <div className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 overflow-x-hidden`}>
+      <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 overflow-x-hidden`}>
         <DirectMessageChat
           key={selectedConversation.id}
           conversation={selectedConversation}
@@ -351,7 +356,7 @@ export default function MessagesPage() {
     <div className="h-full px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 overflow-hidden">
       <SEOHead title="Messages — Direct & Group Chat" description="Send direct messages, create group chats, and connect with other users privately on DeHub. End-to-end encrypted, decentralized messaging." url="https://dehub.io/app/messages" />
       <h1 className="sr-only">DeHub Messages — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
-      <div className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] max-h-full`}>
+      <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] max-h-full`}>
         {/* Full Width Messages Panel */}
         <div data-page-bento className="w-full h-full bg-zinc-900 rounded-2xl flex flex-col">
           {/* Header */}

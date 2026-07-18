@@ -65,6 +65,7 @@ import { ForwardMessageDialog } from './ForwardMessageDialog';
 import { DmVoiceCallButton } from '@/components/app/chat/calls/DmVoiceCallButton';
 import { DmVideoCallButton } from '@/components/app/chat/calls/DmVideoCallButton';
 import { useCall } from '@/contexts/CallContext';
+import { dismissKeyboard } from '@/hooks/use-keyboard-open';
 
 interface DirectMessageChatProps {
   conversation: DeHubConversation;
@@ -755,7 +756,13 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
       // who was within delta+150px of the bottom as "at the bottom".
       const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
       if (distanceFromBottom <= delta + 150) {
-        requestAnimationFrame(() => bottomRef.current?.scrollIntoView({ behavior: 'auto', block: 'end' }));
+        // Scroll ONLY this container — scrollIntoView also scrolls the page,
+        // which shoved the composer down behind the keyboard. Double rAF so
+        // React has applied the keyboard-open height before we measure.
+        requestAnimationFrame(() => requestAnimationFrame(() => {
+          const c = scrollContainerRef.current;
+          if (c) c.scrollTop = c.scrollHeight;
+        }));
       }
     };
     vv.addEventListener('resize', onResize);
@@ -1303,6 +1310,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
         <div
           ref={scrollContainerRef}
           onScroll={handleScroll}
+          onPointerDown={dismissKeyboard}
           className="flex-1 overflow-y-auto px-4"
         >
           {isFetchingNextPage && (
