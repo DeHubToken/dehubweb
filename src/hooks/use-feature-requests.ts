@@ -235,7 +235,8 @@ export function useUnnotifiedShippedFeatures() {
             .in('status', ['completed', 'shipped']),
           shippedNotifications()
             .select('feature_request_id')
-            .eq('wallet_address', wallet),
+            .eq('wallet_address', wallet)
+            .setHeader('x-wallet-address', wallet),
         ]);
 
         if (shippedRes.error || notifiedRes.error) return [];
