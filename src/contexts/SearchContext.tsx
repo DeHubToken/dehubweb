@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import Fuse from 'fuse.js';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { getAllBlogListPosts } from '@/utils/blogUtils';
 
 export interface SearchResult {
   id: string;
@@ -29,9 +30,7 @@ interface SearchContextType {
   query: string;
   setQuery: (query: string) => void;
   results: SearchResult[];
-  isLoading: boolean;
   recentSearches: string[];
-  highlightedIndex: number;
   navigateToResult: (result: SearchResult, searchTerm?: string) => void;
   saveRecentSearch: (searchTerm: string) => void;
   clearRecentSearches: () => void;
@@ -40,6 +39,32 @@ interface SearchContextType {
 const SearchContext = createContext<SearchContextType | undefined>(undefined);
 
 const RECENT_SEARCHES_KEY = 'recent-searches';
+
+// Flatten post markdown to plain searchable text (headings, links, images,
+// emphasis, code fences stripped so matches land on the words, not syntax).
+const stripMarkdown = (md: string): string =>
+  md
+    .replace(/```[\s\S]*?```/g, ' ')
+    .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/^#{1,6}\s+/gm, '')
+    .replace(/[*_`>~]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+// Every published blog post, straight from the same corpus the /docs/blog list
+// renders (see getAllBlogListPosts) — so every post is findable from the docs
+// search and every result path (/guides/<slug>) is guaranteed to resolve.
+const createBlogIndex = (): SearchIndex[] =>
+  getAllBlogListPosts().map(post => ({
+    id: `blog-${post.slug}`,
+    title: post.title,
+    content: `${post.excerpt} ${stripMarkdown(post.content)}`.slice(0, 5000),
+    path: `/guides/${post.slug}`,
+    category: 'Blog',
+    type: 'blog' as const,
+    keywords: post.tags,
+  }));
 
 // Comprehensive content index for all documentation
 const createSearchIndex = (): SearchIndex[] => {
@@ -202,7 +227,7 @@ const createSearchIndex = (): SearchIndex[] => {
       id: 'e2ee',
       title: 'End-to-End Encryption',
       content: 'End-to-end encryption, E2EE, secure messaging, privacy, encrypted communication, data protection, cryptography',
-      path: '/docs/e2ee',
+      path: '/docs/e2e-encryption',
       category: 'Main',
       type: 'page',
       keywords: ['e2ee', 'encryption', 'end-to-end', 'privacy', 'secure', 'messaging', 'encrypted', 'cryptography']
@@ -351,88 +376,6 @@ const createSearchIndex = (): SearchIndex[] => {
       type: 'page',
       keywords: ['faq', 'questions', 'help', 'troubleshooting', 'support', 'answers']
     },
-    // Blog posts
-    {
-      id: 'blog-coinbase',
-      title: 'Coinbase DHB Listing',
-      content: 'Coinbase listing for DHB token, exchange listing, trading, centralized exchange',
-      path: '/guides/coinbase-dhb',
-      category: 'Blog',
-      type: 'blog',
-      keywords: ['coinbase', 'listing', 'exchange', 'dhb', 'trading']
-    },
-    {
-      id: 'blog-e2ee',
-      title: 'E2EE Announcement',
-      content: 'End-to-end encryption launch, secure messaging feature, privacy update',
-      path: '/guides/e2ee',
-      category: 'Blog',
-      type: 'blog',
-      keywords: ['e2ee', 'encryption', 'privacy', 'secure', 'messaging']
-    },
-    {
-      id: 'blog-google-play',
-      title: 'Google Play Store Launch',
-      content: 'DeHub app on Google Play Store, Android app, mobile download, app launch',
-      path: '/guides/google-play-store',
-      category: 'Blog',
-      type: 'blog',
-      keywords: ['google play', 'android', 'app', 'mobile', 'download', 'play store']
-    },
-    {
-      id: 'blog-dev-update',
-      title: 'Developer Update January 2026',
-      content: 'Development update, new features, improvements, technical progress, changelog',
-      path: '/guides/dev-update-jan-2026',
-      category: 'Blog',
-      type: 'blog',
-      keywords: ['dev update', 'development', 'features', 'improvements', 'changelog']
-    },
-    {
-      id: 'blog-town-hall',
-      title: 'Town Hall AMA January 2026',
-      content: 'Town hall meeting, AMA session, community questions, answers, live event',
-      path: '/guides/town-hall-jan-2026',
-      category: 'Blog',
-      type: 'blog',
-      keywords: ['town hall', 'ama', 'community', 'meeting', 'questions', 'live']
-    },
-    {
-      id: 'blog-yearly-wrap',
-      title: 'Yearly Wrap Up 2025',
-      content: 'Year in review 2025, annual summary, achievements, milestones, yearly recap',
-      path: '/guides/yearly-wrap-up-2025',
-      category: 'Blog',
-      type: 'blog',
-      keywords: ['yearly', 'wrap up', 'review', '2025', 'annual', 'recap', 'summary']
-    },
-    {
-      id: 'blog-dubai',
-      title: 'Dubai Event',
-      content: 'DeHub Dubai event, blockchain conference, crypto event, networking, partnership',
-      path: '/guides/dubai-event',
-      category: 'Blog',
-      type: 'blog',
-      keywords: ['dubai', 'event', 'conference', 'blockchain', 'networking']
-    },
-    {
-      id: 'blog-award',
-      title: 'Award-Winning Innovation',
-      content: 'DeHub award winning innovation, recognition, blockchain award, technology prize',
-      path: '/guides/award-winning-innovation',
-      category: 'Blog',
-      type: 'blog',
-      keywords: ['award', 'innovation', 'winning', 'recognition', 'prize']
-    },
-    {
-      id: 'blog-tokenised-uploads',
-      title: 'Tokenised Uploads',
-      content: 'Tokenised uploads feature, content tokenisation, upload rewards, NFT content',
-      path: '/guides/tokenised-uploads',
-      category: 'Blog',
-      type: 'blog',
-      keywords: ['tokenised', 'uploads', 'content', 'nft', 'tokenization']
-    },
     // Sub-topic sections for better discoverability
     {
       id: 'ad-badge-targeting',
@@ -478,19 +421,19 @@ const createSearchIndex = (): SearchIndex[] => {
       category: 'Main',
       type: 'section',
       keywords: ['social', 'messaging', 'chat', 'groups', 'channels', 'feed', 'posts', 'sharing', 'community']
-    }
+    },
+    ...createBlogIndex()
   ];
 };
+
+const MAX_RESULTS = 50;
 
 export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResult[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
-  const [highlightedIndex, setHighlightedIndex] = useState(-1);
-  
-  const location = useLocation();
+
   const navigate = useNavigate();
 
   // Initialize search index
@@ -500,12 +443,16 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const fuse = useMemo(() => {
     const options = {
       keys: [
-        { name: 'title', weight: 0.4 },
-        { name: 'content', weight: 0.3 },
-        { name: 'keywords', weight: 0.2 },
-        { name: 'category', weight: 0.1 }
+        { name: 'title', weight: 0.45 },
+        { name: 'keywords', weight: 0.25 },
+        { name: 'content', weight: 0.25 },
+        { name: 'category', weight: 0.05 }
       ],
       threshold: 0.3,
+      // Score a match wherever it occurs — without this Fuse only credits
+      // matches near the start of a field, which buries hits that live deep
+      // inside long blog-post content.
+      ignoreLocation: true,
       includeMatches: true,
       includeScore: true,
       minMatchCharLength: 2,
@@ -525,42 +472,28 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   }, []);
 
-  // Debounced search function
-  const performSearch = useCallback(
-    (searchQuery: string) => {
-      if (!searchQuery.trim()) {
-        setResults([]);
-        return;
-      }
-
-      setIsLoading(true);
-      
-      // Simulate slight delay for better UX
-      setTimeout(() => {
-        const searchResults = fuse.search(searchQuery);
-        const formattedResults: SearchResult[] = searchResults.map((result, index) => ({
-          id: result.item.id,
-          title: result.item.title,
-          content: result.item.content,
-          path: result.item.path,
-          category: result.item.category,
-          type: result.item.type,
-          matches: result.matches ? [...result.matches] : undefined,
-          score: result.score
-        }));
-        
-        setResults(formattedResults);
-        setIsLoading(false);
-        setHighlightedIndex(-1);
-      }, 100);
-    },
-    [fuse]
-  );
-
-  // Handle search query changes
+  // Instant, synchronous search — the whole index lives in memory, so results
+  // update on every keystroke with no artificial delay or loading state.
   useEffect(() => {
-    performSearch(query);
-  }, [query, performSearch]);
+    if (!query.trim()) {
+      setResults([]);
+      return;
+    }
+
+    const searchResults = fuse.search(query, { limit: MAX_RESULTS });
+    setResults(
+      searchResults.map(result => ({
+        id: result.item.id,
+        title: result.item.title,
+        content: result.item.content,
+        path: result.item.path,
+        category: result.item.category,
+        type: result.item.type,
+        matches: result.matches ? [...result.matches] : undefined,
+        score: result.score
+      }))
+    );
+  }, [query, fuse]);
 
   // Save search to recent searches
   const saveRecentSearch = useCallback((searchTerm: string) => {
@@ -602,35 +535,8 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     navigate(result.path);
   }, [navigate, saveRecentSearch]);
 
-  // Keyboard navigation handlers
-  const handleKeyDown = useCallback((e: KeyboardEvent) => {
-    if (!isOpen) return;
-
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault();
-        setHighlightedIndex(prev => 
-          prev < results.length - 1 ? prev + 1 : prev
-        );
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        setHighlightedIndex(prev => prev > 0 ? prev - 1 : -1);
-        break;
-      case 'Enter':
-        e.preventDefault();
-        if (highlightedIndex >= 0 && results[highlightedIndex]) {
-          navigateToResult(results[highlightedIndex], query);
-        }
-        break;
-      case 'Escape':
-        setIsOpen(false);
-        setQuery('');
-        break;
-    }
-  }, [isOpen, results, highlightedIndex, navigateToResult, query]);
-
-  // Global keyboard shortcut (Cmd/Ctrl + K)
+  // Global keyboard shortcut (Cmd/Ctrl + K). Arrow/Enter/Escape navigation
+  // inside the dialog is handled natively by cmdk — no duplicate handlers.
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
@@ -643,14 +549,6 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     return () => document.removeEventListener('keydown', handleGlobalKeyDown);
   }, []);
 
-  // Add keyboard navigation when modal is open
-  useEffect(() => {
-    if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-      return () => document.removeEventListener('keydown', handleKeyDown);
-    }
-  }, [isOpen, handleKeyDown]);
-
   const clearRecentSearches = useCallback(() => {
     setRecentSearches([]);
     localStorage.removeItem(RECENT_SEARCHES_KEY);
@@ -662,9 +560,7 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     query,
     setQuery,
     results,
-    isLoading,
     recentSearches,
-    highlightedIndex,
     navigateToResult,
     saveRecentSearch,
     clearRecentSearches

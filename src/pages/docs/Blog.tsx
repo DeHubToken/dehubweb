@@ -3,18 +3,14 @@ import React, { useRef, useEffect, useLayoutEffect } from 'react';
 import SEO from '@/components/SEO';
 import { BlogSEOHelper } from '@/components/blog/BlogSEOHelper';
 import { BlogHeader } from '@/components/blog/sections/BlogHeader';
-import { BlogSearchAndFilter } from '@/components/blog/sections/BlogSearchAndFilter';
 import { BlogFeaturedSection } from '@/components/blog/sections/BlogFeaturedSection';
 import { BlogAllPostsSection } from '@/components/blog/sections/BlogAllPostsSection';
 import { BlogPopularTags } from '@/components/blog/sections/BlogPopularTags';
 import { useBlogData } from '@/hooks/useBlogData';
 import { useTextHighlight } from '@/hooks/useTextHighlight';
-import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 
 const Blog = () => {
   const {
-    searchQuery,
-    setSearchQuery,
     selectedTag,
     setSelectedTag,
     featuredPosts,
@@ -51,16 +47,8 @@ const Blog = () => {
     window.scrollTo(0, 0);
   }, [selectedTag]);
 
-  // Swallow the post feed at the sticky search pill's top edge — on the glass
-  // themes content bleeds through the frosted pill as it scrolls, and on every
-  // theme it is cut at the pill's rounded top and never re-emerges above it
-  // (see the /swallowingpill skill + use-feed-swallow-clip). allThemes because
-  // this pill floats 8px below the docs header: on the paper themes an opaque
-  // pill alone would let the feed slide past it into that gap and ghost
-  // through the semi-transparent docs header above.
-  const feedRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(feedRef, '[data-feed-nav-outer] [data-blog-search-nav]', [], { allThemes: true });
-
+  // Post search lives in the docs header search (⌘K / top-right), which
+  // indexes every blog post — the old in-page search pill is gone.
   return (
     <>
       <SEO
@@ -72,44 +60,23 @@ const Blog = () => {
       <div className="space-y-12">
         <BlogHeader />
 
-        {/* Sticky glass search pill. Pins 8px below the 64px docs header
-            (top-16 = 64px + 0.5rem) so a tad of breathing space stays between
-            the pill and the header as the feed is swallowed at its top edge,
-            rather than butting flush against it. The swallow-clip above runs
-            on ALL themes here, so the feed is hard-cut at the pill's top
-            edge everywhere; the wrapper also carries the docs frosted lag
-            guard (index.css [data-docs-open] ::before) that dissolves the
-            1-frame compositor flash a hard fling can push into this gap.
-            The wrapper itself stays transparent. */}
-        <div data-feed-nav-outer className="sticky top-[4.5rem] z-30">
-          <BlogSearchAndFilter
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            selectedTag={selectedTag}
-            setSelectedTag={setSelectedTag}
-            allTags={allTags}
-          />
-        </div>
+        <BlogFeaturedSection
+          featuredPosts={featuredPosts}
+          shouldShow={!selectedTag}
+        />
 
-        {/* The scroll feed that gets swallowed at the pill's top edge. */}
-        <div ref={feedRef} className="space-y-12">
-          <BlogFeaturedSection
-            featuredPosts={featuredPosts}
-            shouldShow={!searchQuery && !selectedTag}
-          />
+        <BlogAllPostsSection
+          filteredPosts={filteredPosts}
+          searchQuery=""
+          selectedTag={selectedTag}
+          onClearFilter={() => setSelectedTag('')}
+        />
 
-          <BlogAllPostsSection
-            filteredPosts={filteredPosts}
-            searchQuery={searchQuery}
-            selectedTag={selectedTag}
-          />
-
-          <BlogPopularTags
-            allTags={allTags}
-            setSelectedTag={setSelectedTag}
-            shouldShow={!searchQuery && !selectedTag}
-          />
-        </div>
+        <BlogPopularTags
+          allTags={allTags}
+          setSelectedTag={setSelectedTag}
+          shouldShow={!selectedTag}
+        />
       </div>
     </>
   );

@@ -105,20 +105,6 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   border-color: rgb(255 255 255 / 0.14) !important;
 }
 
-/* Community Blog — the sticky search bar is the one glass pill the post feed is
-   swallowed under (see the /swallowingpill skill + use-feed-swallow-clip). It
-   carries `bg-plain-white` for the paper/system docs themes (opaque, so scrolled
-   posts can't bleed through the sticky bar where the swallow-clip is a no-op);
-   here we swap it to the same liquid glass as every other canvas-theme bento so
-   the feed shows through the frosted pill and is cut at its rounded top edge. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]).dark .docs-root [data-blog-search-nav] {
-  background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-regular)) !important;
-  -webkit-backdrop-filter: var(--glass-blur) !important;
-  backdrop-filter: var(--glass-blur) !important;
-  border-color: transparent !important;
-  box-shadow: var(--glass-edge) !important;
-}
-
 /* Faint light hairlines instead of the dark-theme gray dividers. */
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]).dark .docs-root :is([class*="border-t"], [class*="border-b"], [class*="border-border"], hr) {
   border-color: rgb(255 255 255 / 0.12) !important;

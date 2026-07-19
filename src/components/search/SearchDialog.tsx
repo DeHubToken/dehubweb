@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Search, Clock, Hash, FileText, Book, ArrowRight } from 'lucide-react';
 import {
   CommandDialog,
@@ -18,9 +18,7 @@ export const SearchDialog = () => {
     query,
     setQuery,
     results,
-    isLoading,
     recentSearches,
-    highlightedIndex,
     navigateToResult,
     clearRecentSearches
   } = useDocsSearch();
@@ -38,12 +36,15 @@ export const SearchDialog = () => {
 
   const highlightText = (text: string, highlight: string) => {
     if (!highlight.trim()) return text;
-    
+
     const regex = new RegExp(`(${highlight.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
     const parts = text.split(regex);
-    
-    return parts.map((part, index) => 
-      regex.test(part) ? (
+
+    // split() with a capture group alternates non-match / match — odd indices
+    // are the matches. (Testing each part against a stateful /g regex here
+    // mis-highlighted every other occurrence via lastIndex carry-over.)
+    return parts.map((part, index) =>
+      index % 2 === 1 ? (
         <mark key={index} className="bg-yellow-200 dark:bg-yellow-800 px-1 rounded">
           {part}
         </mark>
@@ -58,16 +59,21 @@ export const SearchDialog = () => {
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open);
+    if (!open) setQuery('');
   };
 
+  // Group by category while preserving Fuse's relevance order: categories
+  // appear in the order of their best-ranked result.
+  const categories = Array.from(new Set(results.map(r => r.category)));
+
   return (
-    <CommandDialog 
-      open={isOpen} 
-      onOpenChange={handleOpenChange} 
-      
+    <CommandDialog
+      open={isOpen}
+      onOpenChange={handleOpenChange}
+      shouldFilter={false}
     >
       <CommandInput
-        placeholder="Search documentation..."
+        placeholder="Search docs & blog..."
         value={query}
         onValueChange={setQuery}
       />
@@ -76,9 +82,10 @@ export const SearchDialog = () => {
         {!query && recentSearches.length > 0 && (
           <>
             <CommandGroup heading="Recent Searches">
-              {recentSearches.map((search, index) => (
+              {recentSearches.map(search => (
                 <CommandItem
                   key={search}
+                  value={`recent-${search}`}
                   onSelect={() => setQuery(search)}
                   className="cursor-pointer"
                 >
@@ -87,6 +94,7 @@ export const SearchDialog = () => {
                 </CommandItem>
               ))}
               <CommandItem
+                value="recent-clear"
                 onSelect={clearRecentSearches}
                 className="cursor-pointer text-muted-foreground"
               >
@@ -99,35 +107,16 @@ export const SearchDialog = () => {
 
         {!query && !recentSearches.length && (
           <CommandGroup heading="Popular Searches">
-            <CommandItem onSelect={() => setQuery('token economics')}>
-              <Hash className="mr-2 h-4 w-4 text-muted-foreground" />
-              <span>Token Economics</span>
-            </CommandItem>
-            <CommandItem onSelect={() => setQuery('staking')}>
-              <Hash className="mr-2 h-4 w-4 text-muted-foreground" />
-              <span>Staking</span>
-            </CommandItem>
-            <CommandItem onSelect={() => setQuery('depin')}>
-              <Hash className="mr-2 h-4 w-4 text-muted-foreground" />
-              <span>DePIN</span>
-            </CommandItem>
-            <CommandItem onSelect={() => setQuery('governance')}>
-              <Hash className="mr-2 h-4 w-4 text-muted-foreground" />
-              <span>Governance</span>
-            </CommandItem>
+            {['Token Economics', 'Staking', 'Watch to Earn', 'DePIN', 'Governance'].map(term => (
+              <CommandItem key={term} value={`popular-${term}`} onSelect={() => setQuery(term.toLowerCase())}>
+                <Hash className="mr-2 h-4 w-4 text-muted-foreground" />
+                <span>{term}</span>
+              </CommandItem>
+            ))}
           </CommandGroup>
         )}
 
-        {query && isLoading && (
-          <CommandEmpty>
-            <div className="flex items-center justify-center py-6">
-              <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
-              <span className="ml-2">Searching...</span>
-            </div>
-          </CommandEmpty>
-        )}
-
-        {query && !isLoading && results.length === 0 && (
+        {query && results.length === 0 && (
           <CommandEmpty>
             <div className="py-6 text-center">
               <Search className="mx-auto h-10 w-10 text-muted-foreground mb-2" />
@@ -141,58 +130,49 @@ export const SearchDialog = () => {
           </CommandEmpty>
         )}
 
-        {query && !isLoading && results.length > 0 && (
-          <>
-            {['Main', 'Token', 'Development', 'Blog', 'Legal', 'Brand', 'Support'].map(category => {
-              const categoryResults = results.filter(result => result.category === category);
-              if (categoryResults.length === 0) return null;
+        {query && results.length > 0 && categories.map(category => {
+          const categoryResults = results.filter(result => result.category === category);
 
-              return (
-                <CommandGroup key={category} heading={category}>
-                  {categoryResults.map((result, index) => {
-                    const globalIndex = results.findIndex(r => r.id === result.id);
-                    const isHighlighted = globalIndex === highlightedIndex;
-                    
-                    return (
-                      <CommandItem
-                        key={result.id}
-                        onSelect={() => navigateToResult(result, query)}
-                        className={`cursor-pointer p-3 ${isHighlighted ? 'bg-accent' : ''}`}
-                      >
-                        <div className="flex items-start w-full">
-                          <div className="mr-3 mt-0.5 flex-shrink-0">
-                            {getIconForType(result.type)}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between">
-                              <h4 className="text-sm font-medium truncate">
-                                {highlightText(result.title, query)}
-                              </h4>
-                              <ArrowRight className="h-3 w-3 text-muted-foreground ml-2 flex-shrink-0" />
-                            </div>
-                            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                              {highlightText(truncateContent(result.content), query)}
-                            </p>
-                            <div className="flex items-center mt-2 text-xs text-muted-foreground">
-                              <span className="bg-muted px-2 py-0.5 rounded text-xs">
-                                {result.category}
-                              </span>
-                              {result.score && (
-                                <span className="ml-2">
-                                  {Math.round((1 - result.score) * 100)}% match
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </CommandItem>
-                    );
-                  })}
-                </CommandGroup>
-              );
-            })}
-          </>
-        )}
+          return (
+            <CommandGroup key={category} heading={category}>
+              {categoryResults.map(result => (
+                <CommandItem
+                  key={result.id}
+                  value={result.id}
+                  onSelect={() => navigateToResult(result, query)}
+                  className="cursor-pointer p-3"
+                >
+                  <div className="flex items-start w-full">
+                    <div className="mr-3 mt-0.5 flex-shrink-0">
+                      {getIconForType(result.type)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <h4 className="text-sm font-medium truncate">
+                          {highlightText(result.title, query)}
+                        </h4>
+                        <ArrowRight className="h-3 w-3 text-muted-foreground ml-2 flex-shrink-0" />
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                        {highlightText(truncateContent(result.content), query)}
+                      </p>
+                      <div className="flex items-center mt-2 text-xs text-muted-foreground">
+                        <span className="bg-muted px-2 py-0.5 rounded text-xs">
+                          {result.type === 'blog' && result.category === 'Blog' ? 'Blog post' : result.category}
+                        </span>
+                        {typeof result.score === 'number' && (
+                          <span className="ml-2">
+                            {Math.round((1 - result.score) * 100)}% match
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          );
+        })}
       </CommandList>
 
       <div className="border-t px-3 py-2 text-xs text-muted-foreground">
