@@ -171,6 +171,11 @@ function MessageBubble({
     (message.sender?.address
       ? `${message.sender.address.slice(0, 6)}...${message.sender.address.slice(-4)}`
       : 'User');
+  const senderProfilePath = message.sender?.username
+    ? `/${message.sender.username}`
+    : message.sender?.address
+      ? `/${message.sender.address}`
+      : null;
 
   const primaryMediaUrl = message.mediaUrls?.[0]?.url;
 
@@ -179,7 +184,10 @@ function MessageBubble({
   const postTokenId = message.msgType === 'msg' ? extractPostTokenId(message.content) : null;
   const isPostShare = !!postTokenId;
 
-  const textContent = message.content || '';
+  // Post shares translate their caption (link stripped) — feeding the raw URL to the
+  // translator garbles it and previously the translate control was hidden entirely.
+  const shareCaption = isPostShare ? stripPostLinks(message.content || '') : '';
+  const textContent = isPostShare ? shareCaption : (message.content || '');
   const {
     isTranslated,
     translatedText,
@@ -220,14 +228,26 @@ function MessageBubble({
           )}
         </div>
       )}
-      {!isOwnMessage && (
-        <Avatar className="w-8 h-8 flex-shrink-0">
-          {avatarUrl && <AvatarImage src={avatarUrl} />}
-          <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
-            {(displayName.startsWith('0x') ? displayName.charAt(2) : displayName.charAt(0)).toUpperCase()}
-          </AvatarFallback>
-        </Avatar>
-      )}
+      {!isOwnMessage && (() => {
+        const avatar = (
+          <Avatar className="w-8 h-8 flex-shrink-0">
+            {avatarUrl && <AvatarImage src={avatarUrl} />}
+            <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
+              {(displayName.startsWith('0x') ? displayName.charAt(2) : displayName.charAt(0)).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+        );
+        return senderProfilePath ? (
+          <Link
+            to={senderProfilePath}
+            className="flex-shrink-0 self-start"
+            aria-label={`View ${displayName}'s profile`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {avatar}
+          </Link>
+        ) : avatar;
+      })()}
 
       <div className={`flex-1 min-w-0 max-w-[75%] ${isOwnMessage ? 'text-right' : ''}`}>
         {/* Reply preview */}
@@ -265,18 +285,15 @@ function MessageBubble({
             {message.msgType === 'msg' && (
               isPostShare ? (
                 <div className={`flex flex-col gap-1.5 ${isOwnMessage ? 'items-end' : 'items-start'}`}>
-                  {(() => {
-                    const caption = stripPostLinks(message.content || '');
-                    return caption ? (
-                      <p dir="auto" className={`text-sm break-words whitespace-pre-wrap text-left rounded-2xl px-4 py-2 ${
-                        isOwnMessage
-                          ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white'
-                          : 'bg-zinc-800 text-white'
-                      }`}>
-                        {caption}
-                      </p>
-                    ) : null;
-                  })()}
+                  {shareCaption ? (
+                    <p dir="auto" className={`text-sm break-words whitespace-pre-wrap text-left rounded-2xl px-4 py-2 ${
+                      isOwnMessage
+                        ? 'bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white'
+                        : 'bg-zinc-800 text-white'
+                    }`}>
+                      {isTranslated ? translatedText : shareCaption}
+                    </p>
+                  ) : null}
                   <SharedPostEmbed tokenId={postTokenId!} />
                 </div>
               ) : (
@@ -355,20 +372,20 @@ function MessageBubble({
 
         <div className={`text-xs text-zinc-500 mt-1 flex items-center gap-1 ${isOwnMessage ? 'justify-end' : ''}`}>
           <span>{formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}</span>
-          {!isTooShort && message.msgType === 'msg' && !message.isDeleted && !isPostShare && (
+          {!isTooShort && message.msgType === 'msg' && !message.isDeleted && (
             <button
               type="button"
               onClick={isTranslated ? handleShowOriginal : handleTranslate}
               disabled={isTranslating}
-              className="inline-flex items-center gap-0.5 text-zinc-500 hover:text-zinc-300 transition-colors disabled:opacity-50"
+              className="inline-flex items-center gap-0.5 p-1.5 -m-1 text-zinc-500 hover:text-zinc-300 transition-colors disabled:opacity-50"
               title={isTranslated ? 'Show original' : 'Translate'}
             >
               {isTranslating ? (
-                <Loader2 className="w-3 h-3 animate-spin" />
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
               ) : isTranslated ? (
-                <RotateCcw className="w-3 h-3" />
+                <RotateCcw className="w-3.5 h-3.5" />
               ) : (
-                <Languages className="w-3 h-3" />
+                <Languages className="w-3.5 h-3.5" />
               )}
             </button>
           )}
