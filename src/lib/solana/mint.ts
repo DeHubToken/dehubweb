@@ -2,7 +2,10 @@
  * Solana SPL mint broadcast — signs partially-signed tx from backend as fee payer.
  */
 
-import { Connection, Transaction } from '@solana/web3.js';
+// Type-only: the @solana/web3.js runtime (~350 kB raw) loads dynamically
+// inside broadcastSolanaMint so it never rides in eager chunks — minting a
+// Solana post is a rare user action.
+import type { Transaction } from '@solana/web3.js';
 import { connectSolanaWallet, getSolanaProvider } from './wallet';
 import { confirmSolanaMint } from '@/lib/api/dehub/solana';
 import { SOLANA_MAINNET_CHAIN_ID } from '@/lib/chains/constants';
@@ -28,12 +31,6 @@ export interface SolanaMintResult {
   confirmWarning?: string;
 }
 
-function getConnection(chainId: number): Connection {
-  // Devnet fallback for testing
-  const rpc = chainId === 103 ? 'https://api.devnet.solana.com' : SOLANA_RPC;
-  return new Connection(rpc, 'confirmed');
-}
-
 /**
  * Sign (fee payer) and broadcast a partially-signed Solana mint transaction,
  * then notify the backend via POST /solana/confirm-mint.
@@ -44,9 +41,13 @@ export async function broadcastSolanaMint(params: SolanaMintParams): Promise<Sol
     throw new Error('Phantom wallet required for Solana posts. Please install Phantom.');
   }
 
+  const { Connection, Transaction } = await import('@solana/web3.js');
+
   const walletAddress = params.walletAddress ?? await connectSolanaWallet();
   const chainId = params.chainId ?? SOLANA_MAINNET_CHAIN_ID;
-  const connection = getConnection(chainId);
+  // Devnet fallback for testing
+  const rpc = chainId === 103 ? 'https://api.devnet.solana.com' : SOLANA_RPC;
+  const connection = new Connection(rpc, 'confirmed');
 
   let tx: Transaction;
   try {

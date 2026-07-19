@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { ArrowLeft, CreditCard, Wallet, Loader2, Check, AlertCircle, Zap, CheckCircle2, XCircle, TrendingUp, Activity, Package, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -106,13 +106,17 @@ export default function BuyCoinsPage() {
     staleTime: 5 * 60_000,
   });
 
+  // This page never unmounts (PersistentPageCache) — only poll supply/price
+  // while it's the active route.
+  const isBuyRouteActive = useLocation().pathname === '/app/buy';
+
   // Pre-fetch token supply so we can validate before checkout (prevents 406)
   const { data: availableSupply } = useQuery({
     queryKey: ['dpay', 'supply', 'DHB'],
     queryFn: () => getTokenAvailableSupply('DHB'),
     enabled: isAuthenticated,
     staleTime: 2 * 60 * 1000,
-    refetchInterval: 5 * 60 * 1000,
+    refetchInterval: isBuyRouteActive ? 5 * 60 * 1000 : false,
   });
 
   // Fetch chain-specific price
@@ -121,7 +125,7 @@ export default function BuyCoinsPage() {
     queryFn: () => getDPayPriceByChain(selectedChainId),
     enabled: isAuthenticated,
     staleTime: 2 * 60 * 1000,
-    refetchInterval: 2 * 60 * 1000,
+    refetchInterval: isBuyRouteActive ? 2 * 60 * 1000 : false,
   });
 
   // Fallback to general price if chain price fails

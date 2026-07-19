@@ -4,6 +4,7 @@
  */
 
 import { useEffect, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { getAllTokenBalances, type WalletToken } from '@/lib/wallet/tokens';
@@ -29,12 +30,19 @@ export function useWalletTokens(chainId: ChainId = BASE_CHAIN_ID) {
     });
   }, [walletAddress, isAuthenticated]); // only on mount / auth change
 
+  // Consumers live in persistent pages that never unmount — only poll the
+  // per-token balanceOf RPC batch while a wallet surface is actually shown.
+  const { pathname } = useLocation();
+  const isWalletSurfaceActive =
+    pathname === '/app/wallet' || pathname === '/app/buy' ||
+    pathname === '/app/stake' || pathname === '/stake';
+
   const { data: rawTokens = [], isLoading, isFetching, refetch } = useQuery<WalletToken[]>({
     queryKey: ['wallet-tokens', walletAddress?.toLowerCase(), chainId],
     queryFn: () => getAllTokenBalances(walletAddress!, chainId),
     enabled: !!walletAddress && isAuthenticated,
     staleTime: 5 * 60_000,
-    refetchInterval: 5 * 60_000,
+    refetchInterval: isWalletSurfaceActive ? 5 * 60_000 : false,
     refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
   });

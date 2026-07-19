@@ -160,7 +160,12 @@ export function RecentTransactions() {
     staleTime: 5 * 60_000,
   });
 
-  const isLoading = dpayLoading || ppvLoading || tipsLoading || onchainLoading || tipNotisLoading;
+  // Show rows as soon as the FIRST source lands — the on-chain getLogs scan
+  // (43k blocks) used to gate the whole list behind a spinner while the fast
+  // Supabase/DPay rows sat ready. Late sources append via the merge memo.
+  const isLoading = dpayLoading && ppvLoading && tipsLoading && onchainLoading && tipNotisLoading;
+  const isPartiallyLoading =
+    !isLoading && (dpayLoading || ppvLoading || tipsLoading || onchainLoading || tipNotisLoading);
 
   const recent = useMemo(() => {
     const unified: UnifiedTransaction[] = [];
@@ -325,7 +330,7 @@ export function RecentTransactions() {
         />
       </div>
 
-      {isLoading ? (
+      {isLoading || (recent.length === 0 && isPartiallyLoading) ? (
         <div className="flex items-center justify-center py-8">
           <Loader2 className="w-5 h-5 animate-spin text-zinc-400" />
         </div>
@@ -360,6 +365,12 @@ export function RecentTransactions() {
               </div>
             );
           })}
+          {isPartiallyLoading && (
+            <div className="flex items-center gap-2 py-3 text-zinc-500 text-xs">
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              {t('commandCentre.loadingMore', 'Loading on-chain activity…')}
+            </div>
+          )}
         </div>
       )}
     </div>

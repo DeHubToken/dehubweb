@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Copy, CheckCircle, Terminal, Code, Zap } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -56,9 +56,9 @@ console.log(data);`;
           <h3 className="text-lg font-semibold text-blue-900">{t('quickStart.prerequisites')}</h3>
         </div>
         <ul className="space-y-2 text-blue-800">
-          <li>â€¢ Node.js 16+ or Python 3.8+</li>
-          <li>â€¢ A valid API key (sign up for free)</li>
-          <li>â€¢ Basic knowledge of REST APIs</li>
+          <li>• Node.js 16+ or Python 3.8+</li>
+          <li>• A valid API key (sign up for free)</li>
+          <li>• Basic knowledge of REST APIs</li>
         </ul>
       </div>
 

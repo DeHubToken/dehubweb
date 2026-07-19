@@ -1,108 +1,9 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+// English stays static — it's the default and the fallback for missing keys.
+// Every OTHER locale is loaded on demand (see localeLoaders below): the 104
+// static imports that used to live here made the DocsSurface chunk ~4.3 MB
+// raw / 1.7 MB gz, downloaded by every organic /guides/* visitor.
 import { en } from '@/i18n/en';
-import { ar } from '@/i18n/ar';
-import { zh } from '@/i18n/zh';
-import { zh_tw } from '@/i18n/zh_tw';
-import { tr } from '@/i18n/tr';
-import { es } from '@/i18n/es';
-import { de } from '@/i18n/de';
-import { fr } from '@/i18n/fr';
-import { bn } from '@/i18n/bn';
-import { ru } from '@/i18n/ru';
-import { pt } from '@/i18n/pt';
-import { hi } from '@/i18n/hi';
-import { ja } from '@/i18n/ja';
-import { ko } from '@/i18n/ko';
-import { id } from '@/i18n/id';
-import { it } from '@/i18n/it';
-import { nl } from '@/i18n/nl';
-import { pl } from '@/i18n/pl';
-import { vi } from '@/i18n/vi';
-import { th } from '@/i18n/th';
-import { uk } from '@/i18n/uk';
-import { sw } from '@/i18n/sw';
-import { ms } from '@/i18n/ms';
-import { fa } from '@/i18n/fa';
-import { ta } from '@/i18n/ta';
-import { ur } from '@/i18n/ur';
-import { tl } from '@/i18n/tl';
-import { ro } from '@/i18n/ro';
-import { cs } from '@/i18n/cs';
-import { el } from '@/i18n/el';
-import { hu } from '@/i18n/hu';
-import { gsw } from '@/i18n/gsw';
-import { hr } from '@/i18n/hr';
-import { sv } from '@/i18n/sv';
-import { no } from '@/i18n/no';
-import { da } from '@/i18n/da';
-import { fi } from '@/i18n/fi';
-import { he } from '@/i18n/he';
-import { zu } from '@/i18n/zu';
-import { qu } from '@/i18n/qu';
-import { ht } from '@/i18n/ht';
-import { yo } from '@/i18n/yo';
-import { am } from '@/i18n/am';
-import { ig } from '@/i18n/ig';
-import { ha } from '@/i18n/ha';
-import { ka } from '@/i18n/ka';
-import { uz } from '@/i18n/uz';
-import { kk } from '@/i18n/kk';
-import { om } from '@/i18n/om';
-import { my } from '@/i18n/my';
-import { si } from '@/i18n/si';
-import { be } from '@/i18n/be';
-import { km } from '@/i18n/km';
-import { ne } from '@/i18n/ne';
-import { pa } from '@/i18n/pa';
-import { te } from '@/i18n/te';
-import { mr } from '@/i18n/mr';
-import { sr } from '@/i18n/sr';
-import { bg } from '@/i18n/bg';
-import { sk } from '@/i18n/sk';
-import { lo } from '@/i18n/lo';
-import { cjy } from '@/i18n/cjy';
-import { aec } from '@/i18n/aec';
-import { mag } from '@/i18n/mag';
-import { skr } from '@/i18n/skr';
-import { hne } from '@/i18n/hne';
-import { acm } from '@/i18n/acm';
-import { tts } from '@/i18n/tts';
-import { acw } from '@/i18n/acw';
-import { ctg } from '@/i18n/ctg';
-import { dcc } from '@/i18n/dcc';
-import { dyu } from '@/i18n/dyu';
-import { sck } from '@/i18n/sck';
-import { wes } from '@/i18n/wes';
-import { syl } from '@/i18n/syl';
-import { ajp } from '@/i18n/ajp';
-import { ayn } from '@/i18n/ayn';
-import { mnp } from '@/i18n/mnp';
-import { pbt } from '@/i18n/pbt';
-import { rkt } from '@/i18n/rkt';
-import { mn } from '@/i18n/mn';
-import { bo } from '@/i18n/bo';
-import { lv } from '@/i18n/lv';
-import { et } from '@/i18n/et';
-import { lt } from '@/i18n/lt';
-import { mi } from '@/i18n/mi';
-import { ca } from '@/i18n/ca';
-import { az } from '@/i18n/az';
-import { ku } from '@/i18n/ku';
-import { jv } from '@/i18n/jv';
-import { so } from '@/i18n/so';
-import { af } from '@/i18n/af';
-import { kn } from '@/i18n/kn';
-import { yue } from '@/i18n/yue';
-import { wuu } from '@/i18n/wuu';
-import { ti } from '@/i18n/ti';
-import { bho } from '@/i18n/bho';
-import { arz } from '@/i18n/arz';
-import { apd } from '@/i18n/apd';
-import { ary } from '@/i18n/ary';
-import { pcm } from '@/i18n/pcm';
-import { ceb } from '@/i18n/ceb';
-import { ml } from '@/i18n/ml';
-import { sd } from '@/i18n/sd';
 
 export type Language = 'en' | 'ar' | 'zh' | 'zh_tw' | 'tr' | 'es' | 'de' | 'fr' | 'bn' | 'ru' | 'pt' | 'hi' | 'ja' | 'ko' | 'id' | 'it' | 'nl' | 'pl' | 'vi' | 'th' | 'uk' | 'sw' | 'ms' | 'fa' | 'ta' | 'ur' | 'tl' | 'ro' | 'cs' | 'el' | 'hu' | 'gsw' | 'hr' | 'sv' | 'no' | 'da' | 'fi' | 'he' | 'zu' | 'qu' | 'ht' | 'yo' | 'am' | 'ig' | 'ha' | 'ka' | 'uz' | 'kk' | 'om' | 'my' | 'si' | 'be' | 'km' | 'ne' | 'pa' | 'te' | 'mr' | 'sr' | 'bg' | 'sk' | 'lo' | 'cjy' | 'aec' | 'mag' | 'skr' | 'hne' | 'acm' | 'tts' | 'acw' | 'ctg' | 'dcc' | 'dyu' | 'sck' | 'wes' | 'syl' | 'ajp' | 'ayn' | 'mnp' | 'pbt' | 'rkt' | 'mn' | 'bo' | 'lv' | 'et' | 'lt' | 'mi' | 'ca' | 'az' | 'ku' | 'jv' | 'so' | 'af' | 'kn' | 'yue' | 'wuu' | 'ti' | 'bho' | 'arz' | 'apd' | 'ary' | 'pcm' | 'ceb' | 'ml' | 'sd';
 
@@ -222,8 +123,118 @@ export const languages: LanguageOption[] = [
 
 type Translations = typeof en;
 type PartialTranslations = { [K in keyof Translations]?: Partial<Translations[K]> };
+type LocaleModule = Translations | PartialTranslations;
 
-const translationMap: Record<Language, Translations | PartialTranslations> = { en, ar, zh, zh_tw, tr, es, de, fr, bn, ru, pt, hi, ja, ko, id, it, nl, pl, vi, th, uk, sw, ms, fa, ta, ur, tl, ro, cs, el, hu, gsw, hr, sv, no, da, fi, he, zu, qu, ht, yo, am, ig, ha, ka, uz, kk, om, my, si, be, km, ne, pa, te, mr, sr, bg, sk, lo, cjy, aec, mag, skr, hne, acm, tts, acw, ctg, dcc, dyu, sck, wes, syl, ajp, ayn, mnp, pbt, rkt, mn, bo, lv, et, lt, mi, ca, az, ku, jv, so, af, kn, yue, wuu, ti, bho, arz, apd, ary, pcm, ceb, ml, sd };
+// Per-locale lazy chunks. Each entry's import specifier matches the module's
+// own export name (every locale file exports its code, e.g. `export const ar`).
+const localeLoaders: Record<Exclude<Language, 'en'>, () => Promise<LocaleModule>> = {
+  ar: () => import('@/i18n/ar').then(m => m.ar),
+  zh: () => import('@/i18n/zh').then(m => m.zh),
+  zh_tw: () => import('@/i18n/zh_tw').then(m => m.zh_tw),
+  tr: () => import('@/i18n/tr').then(m => m.tr),
+  es: () => import('@/i18n/es').then(m => m.es),
+  de: () => import('@/i18n/de').then(m => m.de),
+  fr: () => import('@/i18n/fr').then(m => m.fr),
+  bn: () => import('@/i18n/bn').then(m => m.bn),
+  ru: () => import('@/i18n/ru').then(m => m.ru),
+  pt: () => import('@/i18n/pt').then(m => m.pt),
+  hi: () => import('@/i18n/hi').then(m => m.hi),
+  ja: () => import('@/i18n/ja').then(m => m.ja),
+  ko: () => import('@/i18n/ko').then(m => m.ko),
+  id: () => import('@/i18n/id').then(m => m.id),
+  it: () => import('@/i18n/it').then(m => m.it),
+  nl: () => import('@/i18n/nl').then(m => m.nl),
+  pl: () => import('@/i18n/pl').then(m => m.pl),
+  vi: () => import('@/i18n/vi').then(m => m.vi),
+  th: () => import('@/i18n/th').then(m => m.th),
+  uk: () => import('@/i18n/uk').then(m => m.uk),
+  sw: () => import('@/i18n/sw').then(m => m.sw),
+  ms: () => import('@/i18n/ms').then(m => m.ms),
+  fa: () => import('@/i18n/fa').then(m => m.fa),
+  ta: () => import('@/i18n/ta').then(m => m.ta),
+  ur: () => import('@/i18n/ur').then(m => m.ur),
+  tl: () => import('@/i18n/tl').then(m => m.tl),
+  ro: () => import('@/i18n/ro').then(m => m.ro),
+  cs: () => import('@/i18n/cs').then(m => m.cs),
+  el: () => import('@/i18n/el').then(m => m.el),
+  hu: () => import('@/i18n/hu').then(m => m.hu),
+  gsw: () => import('@/i18n/gsw').then(m => m.gsw),
+  hr: () => import('@/i18n/hr').then(m => m.hr),
+  sv: () => import('@/i18n/sv').then(m => m.sv),
+  no: () => import('@/i18n/no').then(m => m.no),
+  da: () => import('@/i18n/da').then(m => m.da),
+  fi: () => import('@/i18n/fi').then(m => m.fi),
+  he: () => import('@/i18n/he').then(m => m.he),
+  zu: () => import('@/i18n/zu').then(m => m.zu),
+  qu: () => import('@/i18n/qu').then(m => m.qu),
+  ht: () => import('@/i18n/ht').then(m => m.ht),
+  yo: () => import('@/i18n/yo').then(m => m.yo),
+  am: () => import('@/i18n/am').then(m => m.am),
+  ig: () => import('@/i18n/ig').then(m => m.ig),
+  ha: () => import('@/i18n/ha').then(m => m.ha),
+  ka: () => import('@/i18n/ka').then(m => m.ka),
+  uz: () => import('@/i18n/uz').then(m => m.uz),
+  kk: () => import('@/i18n/kk').then(m => m.kk),
+  om: () => import('@/i18n/om').then(m => m.om),
+  my: () => import('@/i18n/my').then(m => m.my),
+  si: () => import('@/i18n/si').then(m => m.si),
+  be: () => import('@/i18n/be').then(m => m.be),
+  km: () => import('@/i18n/km').then(m => m.km),
+  ne: () => import('@/i18n/ne').then(m => m.ne),
+  pa: () => import('@/i18n/pa').then(m => m.pa),
+  te: () => import('@/i18n/te').then(m => m.te),
+  mr: () => import('@/i18n/mr').then(m => m.mr),
+  sr: () => import('@/i18n/sr').then(m => m.sr),
+  bg: () => import('@/i18n/bg').then(m => m.bg),
+  sk: () => import('@/i18n/sk').then(m => m.sk),
+  lo: () => import('@/i18n/lo').then(m => m.lo),
+  cjy: () => import('@/i18n/cjy').then(m => m.cjy),
+  aec: () => import('@/i18n/aec').then(m => m.aec),
+  mag: () => import('@/i18n/mag').then(m => m.mag),
+  skr: () => import('@/i18n/skr').then(m => m.skr),
+  hne: () => import('@/i18n/hne').then(m => m.hne),
+  acm: () => import('@/i18n/acm').then(m => m.acm),
+  tts: () => import('@/i18n/tts').then(m => m.tts),
+  acw: () => import('@/i18n/acw').then(m => m.acw),
+  ctg: () => import('@/i18n/ctg').then(m => m.ctg),
+  dcc: () => import('@/i18n/dcc').then(m => m.dcc),
+  dyu: () => import('@/i18n/dyu').then(m => m.dyu),
+  sck: () => import('@/i18n/sck').then(m => m.sck),
+  wes: () => import('@/i18n/wes').then(m => m.wes),
+  syl: () => import('@/i18n/syl').then(m => m.syl),
+  ajp: () => import('@/i18n/ajp').then(m => m.ajp),
+  ayn: () => import('@/i18n/ayn').then(m => m.ayn),
+  mnp: () => import('@/i18n/mnp').then(m => m.mnp),
+  pbt: () => import('@/i18n/pbt').then(m => m.pbt),
+  rkt: () => import('@/i18n/rkt').then(m => m.rkt),
+  mn: () => import('@/i18n/mn').then(m => m.mn),
+  bo: () => import('@/i18n/bo').then(m => m.bo),
+  lv: () => import('@/i18n/lv').then(m => m.lv),
+  et: () => import('@/i18n/et').then(m => m.et),
+  lt: () => import('@/i18n/lt').then(m => m.lt),
+  mi: () => import('@/i18n/mi').then(m => m.mi),
+  ca: () => import('@/i18n/ca').then(m => m.ca),
+  az: () => import('@/i18n/az').then(m => m.az),
+  ku: () => import('@/i18n/ku').then(m => m.ku),
+  jv: () => import('@/i18n/jv').then(m => m.jv),
+  so: () => import('@/i18n/so').then(m => m.so),
+  af: () => import('@/i18n/af').then(m => m.af),
+  kn: () => import('@/i18n/kn').then(m => m.kn),
+  yue: () => import('@/i18n/yue').then(m => m.yue),
+  wuu: () => import('@/i18n/wuu').then(m => m.wuu),
+  ti: () => import('@/i18n/ti').then(m => m.ti),
+  bho: () => import('@/i18n/bho').then(m => m.bho),
+  arz: () => import('@/i18n/arz').then(m => m.arz),
+  apd: () => import('@/i18n/apd').then(m => m.apd),
+  ary: () => import('@/i18n/ary').then(m => m.ary),
+  pcm: () => import('@/i18n/pcm').then(m => m.pcm),
+  ceb: () => import('@/i18n/ceb').then(m => m.ceb),
+  ml: () => import('@/i18n/ml').then(m => m.ml),
+  sd: () => import('@/i18n/sd').then(m => m.sd),
+};
+
+// Already-loaded locales, so switching back is synchronous (no English flash).
+const loadedLocales = new Map<Language, LocaleModule>([['en', en]]);
 
 interface LanguageContextType {
   language: Language;
@@ -245,6 +256,27 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     localStorage.setItem('docs-language', lang);
   }, []);
 
+  // Active locale object. English (or a previously loaded locale) is available
+  // synchronously; a fresh locale loads async and English shows until it lands.
+  const [translations, setTranslations] = useState<LocaleModule>(
+    () => loadedLocales.get(language) ?? en
+  );
+  useEffect(() => {
+    const cached = loadedLocales.get(language);
+    if (cached) {
+      setTranslations(cached);
+      return;
+    }
+    let cancelled = false;
+    localeLoaders[language as Exclude<Language, 'en'>]?.()
+      .then(mod => {
+        loadedLocales.set(language, mod);
+        if (!cancelled) setTranslations(mod);
+      })
+      .catch(() => { /* keep English fallback on a failed chunk load */ });
+    return () => { cancelled = true; };
+  }, [language]);
+
   const dir = languages.find(l => l.code === language)?.dir || 'ltr';
 
   useEffect(() => {
@@ -253,22 +285,21 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, [language, dir]);
 
   const t = useCallback((key: string): any => {
-    const translations = translationMap[language];
     const keys = key.split('.');
     let value: any = translations;
     for (const k of keys) {
       value = value?.[k];
     }
     if (typeof value === 'string' || Array.isArray(value)) return value;
-    
+
     // Fallback to English
-    let fallback: any = translationMap.en;
+    let fallback: any = en;
     for (const k of keys) {
       fallback = fallback?.[k];
     }
     if (typeof fallback === 'string' || Array.isArray(fallback)) return fallback;
     return key;
-  }, [language]);
+  }, [translations]);
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, t, dir }}>

@@ -21,6 +21,7 @@ import { isFollowing as checkIsFollowing } from '@/lib/api/dehub/social';
 import { seedProfileCache } from '@/lib/profile-cache-seed';
 import { useAuth } from '@/contexts/AuthContext';
 import { useFollow } from '@/hooks/use-follow';
+import { mapUserToProfile } from '@/hooks/use-dehub-profile';
 import { toast } from 'sonner';
 import type { DeHubUser } from '@/lib/api/dehub/types';
 
@@ -115,6 +116,20 @@ export function ProfileHoverCard({
         isOwnProfile: walletAddress?.toLowerCase() === address.toLowerCase(),
       });
       fetchedRef.current = userId;
+
+      // Warm the profile PAGE's query cache with this fetch: hovering a user
+      // then clicking through to /:username used to redo the whole
+      // username→address lookup — now the page finds the profile already
+      // cached and goes straight to fetching content (2 hops → 1).
+      if (uname) {
+        try {
+          const mapped = mapUserToProfile(user);
+          queryClient.setQueryData(
+            ['dehub-profile', uname, walletAddress || undefined],
+            { ...mapped, isFollowing: following },
+          );
+        } catch { /* mapping is best-effort — the page falls back to its own fetch */ }
+      }
     } catch {
       // Silently fail — hover card just won't show data
     } finally {

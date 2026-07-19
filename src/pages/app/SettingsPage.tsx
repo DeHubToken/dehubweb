@@ -326,76 +326,77 @@ function ProfileSettings() {
   const [coverPreview, setCoverPreview] = useState<string | undefined>();
   const [avatarFile, setAvatarFile] = useState<File | undefined>();
   const [coverFile, setCoverFile] = useState<File | undefined>();
-  const [isLoading, setIsLoading] = useState(true);
   const [usernameAvailable, setUsernameAvailable] = useState<boolean | null>(null);
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
   const debouncedUsername = useDebouncedValue(username, 300);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
   
-  // Load profile data on mount or authUser change
+  // Load profile data via react-query so cached tab returns render instantly
+  const { data: profileData, error: profileError } = useQuery({
+    queryKey: ['settings-profile', authUser?.address],
+    queryFn: () => getAccountInfo(authUser!.address),
+    staleTime: 5 * 60_000,
+    enabled: !!authUser?.address,
+  });
+
   useEffect(() => {
-    async function loadProfile() {
-      if (!authUser?.address) return;
-      
-      try {
-        setIsLoading(true);
-        const userData = await getAccountInfo(authUser.address);
-        
-        const loadedDisplayName = userData.displayName || userData.display_name || '';
-        const loadedUsername = userData.username || '';
-        const loadedBio = userData.aboutMe || userData.bio || '';
-        
-        const customs = userData.customs as Record<string, string> | undefined;
-        const raw = userData as Record<string, unknown>;
-        // Check both top-level API fields and customs object (API may return either)
-        const loadedTwitter = (raw.twitterLink as string) || customs?.twitterLink || '';
-        const loadedDiscord = (raw.discordLink as string) || customs?.discordLink || '';
-        const loadedInstagram = (raw.instagramLink as string) || customs?.instagramLink || '';
-        const loadedTiktok = (raw.tiktokLink as string) || customs?.tiktokLink || '';
-        const loadedYoutube = (raw.youtubeLink as string) || customs?.youtubeLink || '';
-        const loadedTelegram = (raw.telegramLink as string) || customs?.telegramLink || '';
-        const loadedFacebook = (raw.facebookLink as string) || customs?.facebookLink || '';
-        
-        setDisplayName(loadedDisplayName);
-        setUsername(loadedUsername);
-        setBio(loadedBio);
-        setTwitterLink(loadedTwitter);
-        setDiscordLink(loadedDiscord);
-        setInstagramLink(loadedInstagram);
-        setTiktokLink(loadedTiktok);
-        setYoutubeLink(loadedYoutube);
-        setTelegramLink(loadedTelegram);
-        setFacebookLink(loadedFacebook);
-        
-        setOriginalValues({
-          displayName: loadedDisplayName,
-          username: loadedUsername,
-          bio: loadedBio,
-          twitterLink: loadedTwitter,
-          discordLink: loadedDiscord,
-          instagramLink: loadedInstagram,
-          tiktokLink: loadedTiktok,
-          youtubeLink: loadedYoutube,
-          telegramLink: loadedTelegram,
-          facebookLink: loadedFacebook,
-        });
-        
-        const address = userData.address || userData.wallet_address || '';
-        const rawAvatarUrl = userData.avatarImageUrl || userData.avatarUrl || userData.avatar_url;
-        const rawCoverUrl = userData.coverImageUrl || userData.coverUrl || userData.cover_url;
-        setAvatarPreview(buildAvatarUrl(address, rawAvatarUrl));
-        setCoverPreview(buildCoverUrl(address, rawCoverUrl));
-      } catch (error) {
-        console.error('Failed to load profile:', error);
-        toast.error(t('settings.failedLoadProfile'));
-      } finally {
-        setIsLoading(false);
-      }
+    if (profileError) {
+      console.error('Failed to load profile:', profileError);
+      toast.error(t('settings.failedLoadProfile'));
     }
-    
-    loadProfile();
-  }, [authUser?.address]);
+  }, [profileError, t]);
+
+  // Seed the form whenever fresh profile data arrives
+  useEffect(() => {
+    if (!profileData) return;
+    const userData = profileData;
+
+    const loadedDisplayName = userData.displayName || userData.display_name || '';
+    const loadedUsername = userData.username || '';
+    const loadedBio = userData.aboutMe || userData.bio || '';
+
+    const customs = userData.customs as Record<string, string> | undefined;
+    const raw = userData as Record<string, unknown>;
+    // Check both top-level API fields and customs object (API may return either)
+    const loadedTwitter = (raw.twitterLink as string) || customs?.twitterLink || '';
+    const loadedDiscord = (raw.discordLink as string) || customs?.discordLink || '';
+    const loadedInstagram = (raw.instagramLink as string) || customs?.instagramLink || '';
+    const loadedTiktok = (raw.tiktokLink as string) || customs?.tiktokLink || '';
+    const loadedYoutube = (raw.youtubeLink as string) || customs?.youtubeLink || '';
+    const loadedTelegram = (raw.telegramLink as string) || customs?.telegramLink || '';
+    const loadedFacebook = (raw.facebookLink as string) || customs?.facebookLink || '';
+
+    setDisplayName(loadedDisplayName);
+    setUsername(loadedUsername);
+    setBio(loadedBio);
+    setTwitterLink(loadedTwitter);
+    setDiscordLink(loadedDiscord);
+    setInstagramLink(loadedInstagram);
+    setTiktokLink(loadedTiktok);
+    setYoutubeLink(loadedYoutube);
+    setTelegramLink(loadedTelegram);
+    setFacebookLink(loadedFacebook);
+
+    setOriginalValues({
+      displayName: loadedDisplayName,
+      username: loadedUsername,
+      bio: loadedBio,
+      twitterLink: loadedTwitter,
+      discordLink: loadedDiscord,
+      instagramLink: loadedInstagram,
+      tiktokLink: loadedTiktok,
+      youtubeLink: loadedYoutube,
+      telegramLink: loadedTelegram,
+      facebookLink: loadedFacebook,
+    });
+
+    const address = userData.address || userData.wallet_address || '';
+    const rawAvatarUrl = userData.avatarImageUrl || userData.avatarUrl || userData.avatar_url;
+    const rawCoverUrl = userData.coverImageUrl || userData.coverUrl || userData.cover_url;
+    setAvatarPreview(buildAvatarUrl(address, rawAvatarUrl));
+    setCoverPreview(buildCoverUrl(address, rawCoverUrl));
+  }, [profileData]);
   
   // Check username availability
   useEffect(() => {
@@ -506,6 +507,9 @@ function ProfileSettings() {
       }
       if (authUser?.address) {
         const userData = await getAccountInfo(authUser.address);
+        // Mark the settings-profile cache stale without refetching now (the optimistic
+        // blob previews must survive) so the next tab return re-seeds the saved values
+        queryClient.invalidateQueries({ queryKey: ['settings-profile', authUser.address], refetchType: 'none' });
         const refreshedCustoms = userData.customs as Record<string, string> | undefined;
         const refreshedRaw = userData as Record<string, unknown>;
         const newOriginals = {
@@ -610,7 +614,8 @@ function ProfileSettings() {
     updateMutation.mutate(data);
   };
   
-  if (isLoading) {
+  // Only block the form on the first-ever load — cached tab returns render instantly
+  if (!profileData) {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="w-6 h-6 text-zinc-400 animate-spin" />
@@ -901,7 +906,9 @@ function NotificationSettings() {
     queryKey: ['push-preferences'],
     queryFn: () => import('@/lib/api/dehub').then(m => m.getPushPreferences()),
     enabled: isAuthenticated,
-    staleTime: 60_000,
+    // Mutations invalidate this key, so a long staleTime is safe — 60s was
+    // refetching on nearly every tab return.
+    staleTime: 5 * 60_000,
   });
 
   const queryClient = useQueryClient();
@@ -1592,7 +1599,8 @@ function BlockedUsersSection() {
     queryKey: ['block-list-settings'],
     queryFn: () => getBlockListPaginated(1, 50),
     enabled: isAuthenticated,
-    staleTime: 30 * 1000,
+    // Block/unblock actions invalidate this key, so a long staleTime is safe.
+    staleTime: 5 * 60_000,
   });
 
   const items = blockData?.items ?? [];
@@ -2265,26 +2273,29 @@ function ContentSettings() {
 function FreeAccessListSection() {
   const { t } = useTranslation();
   const { isAuthenticated } = useAuthContext();
-  const [freeAccessUsers, setFreeAccessUsers] = useState<Array<{ address: string; username?: string; displayName?: string; avatarImageUrl?: string }>>([]);
-  const [isLoadingList, setIsLoadingList] = useState(false);
+  const queryClient = useQueryClient();
   const [revokingAddress, setRevokingAddress] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!isAuthenticated) return;
-    setIsLoadingList(true);
-    import('@/lib/api/dehub').then(({ getFreeDmAccessList }) => {
-      getFreeDmAccessList()
-        .then(setFreeAccessUsers)
-        .finally(() => setIsLoadingList(false));
-    });
-  }, [isAuthenticated]);
+  // Cached: this section is conditionally mounted from two tabs, and the old
+  // raw fetch refired with a spinner on every tab return.
+  const { data: freeAccessUsers = [], isLoading: isLoadingList } = useQuery({
+    queryKey: ['free-dm-access'],
+    queryFn: async () => {
+      const { getFreeDmAccessList } = await import('@/lib/api/dehub');
+      return getFreeDmAccessList();
+    },
+    enabled: isAuthenticated,
+    staleTime: 5 * 60_000,
+  });
 
   const handleRevoke = async (address: string) => {
     setRevokingAddress(address);
     try {
       const { revokeFreeDmAccess } = await import('@/lib/api/dehub');
       await revokeFreeDmAccess(address);
-      setFreeAccessUsers(prev => prev.filter(u => u.address !== address));
+      queryClient.setQueryData<typeof freeAccessUsers>(['free-dm-access'], prev =>
+        (prev ?? []).filter(u => u.address !== address)
+      );
       toast.success('Free access revoked');
     } catch {
       toast.error('Failed to revoke access');

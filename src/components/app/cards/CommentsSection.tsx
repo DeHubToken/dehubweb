@@ -82,8 +82,6 @@ interface CommentsSectionProps {
 // formatTimeAgo is now imported from @/lib/feed-utils
 
 function mapApiComment(apiComment: ApiCommentResponse): Comment {
-  // Debug: log all keys of each comment to find GIF field
-  console.log('[Comment] raw keys:', apiComment.id, Object.keys(apiComment), 'imageUrl:', apiComment.imageUrl);
   const address = apiComment.address;
   // Use centralized utility for avatar field extraction
   const rawAvatarPath = extractAvatarPath(apiComment.writor);
@@ -113,11 +111,6 @@ function mapApiComment(apiComment: ApiCommentResponse): Comment {
       : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${rawImageUrl}`;
   }
   
-  // Debug: log comments that have any media-related fields
-  if (rawImageUrl || (apiComment as any).gifUrl || (apiComment as any).image || (apiComment as any).gif) {
-    console.log('[Comment] media fields:', { id: apiComment.id, imageUrl: apiComment.imageUrl, gifUrl: (apiComment as any).gifUrl, image: (apiComment as any).image, gif: (apiComment as any).gif, resolved: commentImageUrl });
-  }
-
   return {
     id: String(apiComment.id),
     username: apiComment.writor?.username || 'Anonymous',

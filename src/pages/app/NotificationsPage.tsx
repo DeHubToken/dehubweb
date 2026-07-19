@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { memo, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -629,18 +629,35 @@ function getNavigationLink(notification: DeHubNotification): string | null {
   }
 }
 
-function NotificationItem({ 
-  notification, 
+// Off-screen rows (index >= 6) get `content-visibility: auto` so the browser
+// skips their layout + paint until they scroll near the viewport — same
+// technique as offscreenCardStyle in ProfileTabContent / the home feed. The
+// `auto` keyword means once a row has rendered, the browser reuses its real
+// size as the placeholder. Constant object keeps the prop referentially
+// stable so it never defeats React.memo.
+const OFFSCREEN_ROW_STYLE: React.CSSProperties = { contentVisibility: 'auto', containIntrinsicSize: 'auto 80px' };
+function offscreenRowStyle(index: number): React.CSSProperties | undefined {
+  return index < 6 ? undefined : OFFSCREEN_ROW_STYLE;
+}
+
+// Memoized: the page stays mounted forever (PersistentPageCache), so any parent
+// re-render used to re-run every row's per-render work (canonical-actor
+// building, date formatting). All props are kept referentially stable in the
+// parent (memoized bundles/list, useCallback onMarkAsRead, constant style).
+const NotificationItem = memo(function NotificationItem({
+  notification,
   bundle,
   onMarkAsRead,
   isMarkingAsRead,
   enrichedAvatars,
-}: { 
+  style,
+}: {
   notification: DeHubNotification;
   bundle: BundledNotification;
   onMarkAsRead: (id: string) => void;
   isMarkingAsRead: boolean;
   enrichedAvatars: Map<string, EnrichedAvatar>;
+  style?: React.CSSProperties;
 }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -734,11 +751,13 @@ function NotificationItem({
       : null;
 
   const aggregatedActorNames = (notification as any).latestActorNames as string[] | undefined;
-  const canonicalActors = (() => {
+  // Memoized: walks the enrichedAvatars Map per actor — without the memo this
+  // re-ran for every row on every parent render.
+  const canonicalActors = useMemo(() => {
     const fromAggregated = buildCanonicalActors(aggregatedActorNames, undefined, undefined, enrichedAvatars);
     if (fromAggregated.length > 0) return fromAggregated;
     return buildCanonicalActors(undefined, notification.actorUsername, enriched?.username, enrichedAvatars);
-  })();
+  }, [aggregatedActorNames, notification.actorUsername, enriched?.username, enrichedAvatars]);
   const aggregatedCount = (notification as any).aggregatedCount || 1;
   const isBackendAggregatedMultiActor =
     canonicalActors.length >= 2 &&
@@ -840,6 +859,7 @@ function NotificationItem({
       onClick={handleClick}
       data-notification-row
       data-unread={isUnreadRow ? '' : undefined}
+      style={style}
       className={`flex items-start gap-3 p-4 transition-colors duration-300 cursor-pointer ${
         (notification.read || isClosing) ? 'bg-zinc-900/50' : 'bg-zinc-800/80 hover:bg-zinc-800'
       }`}
@@ -1104,7 +1124,7 @@ function NotificationItem({
       </Drawer>
     </div>
   );
-}
+});
 
 export default function NotificationsPage() {
   const { t } = useTranslation();
@@ -1315,35 +1335,49 @@ export default function NotificationsPage() {
       }
     });
     
-    // Incremental enrichment: update state as each fetch resolves individually
+    // Batched enrichment: the old per-fetch setState re-rendered this
+    // 1700-line page once per resolved actor (~30 renders on first open,
+    // each re-running the O(n²) bundling). Wait for ALL fetches, then apply
+    // ONE state update with the whole batch.
     const allFetches = [...addressFetches, ...usernameFetches];
-    for (const fetchPromise of allFetches) {
-      fetchPromise.then((value) => {
+    let cancelled = false;
+    Promise.allSettled(allFetches).then((outcomes) => {
+      if (cancelled) return;
+      const resolvedEntries: Array<{ key: string; info: EnrichedAvatar; extraKeys: string[] }> = [];
+      for (const outcome of outcomes) {
+        if (outcome.status !== 'fulfilled') continue;
+        const value = outcome.value;
         if (!value?.resolved) {
-          if ((value as any).attemptedKey) {
+          if ((value as any)?.attemptedKey) {
             moduleEnrichedKeys.delete((value as any).attemptedKey);
           }
-          return;
+          continue;
         }
-        if (!value.key || !value.info) return;
+        if (!value.key || !value.info) continue;
+        resolvedEntries.push({
+          key: value.key,
+          info: value.info as EnrichedAvatar,
+          extraKeys: (((value as any).extraKeys || []) as string[]).filter(Boolean),
+        });
+      }
+      if (resolvedEntries.length === 0) return;
 
-        setEnrichedAvatars(prev => {
-          const next = new Map(prev);
-          next.set(value.key!, value.info as EnrichedAvatar);
-          moduleEnrichedKeys.add(value.key!);
-
-          const extras = ((value as any).extraKeys || []).filter(Boolean);
-          for (const ek of extras) {
-            next.set(ek, value.info as EnrichedAvatar);
+      setEnrichedAvatars(prev => {
+        const next = new Map(prev);
+        for (const entry of resolvedEntries) {
+          next.set(entry.key, entry.info);
+          moduleEnrichedKeys.add(entry.key);
+          for (const ek of entry.extraKeys) {
+            next.set(ek, entry.info);
             moduleEnrichedKeys.add(ek);
           }
-
-          // Sync to module-level cache
-          moduleAvatarCache = next;
-          return next;
-        });
-      }).catch(() => { /* individual fetch failed, skip */ });
-    }
+        }
+        // Sync to module-level cache
+        moduleAvatarCache = next;
+        return next;
+      });
+    });
+    return () => { cancelled = true; };
   }, [allNotifications]);
 
   const [markingNotificationId, setMarkingNotificationId] = useState<string | null>(null);
@@ -1396,7 +1430,9 @@ export default function NotificationsPage() {
     }
   };
 
-  const handleMarkAsRead = (notificationId: string) => {
+  // useCallback: passed to every memoized NotificationItem row — a fresh
+  // function per render would defeat the memo. mutate fns are stable.
+  const handleMarkAsRead = useCallback((notificationId: string) => {
     setMarkingNotificationId(notificationId);
     if (notificationId.startsWith('custom_')) {
       markCustomAsRead.mutate(notificationId, {
@@ -1407,7 +1443,7 @@ export default function NotificationsPage() {
         onSettled: () => setMarkingNotificationId(null),
       });
     }
-  };
+  }, [markCustomAsRead.mutate, markAsRead.mutate]);
 
   // Filter notifications by selected tab type
   const notifications = activeTab === 'all'
@@ -1715,7 +1751,7 @@ export default function NotificationsPage() {
             </div>
           ) : (
             <div className="divide-y divide-zinc-800">
-              {bundledNotifications.map((bundle) => (
+              {bundledNotifications.map((bundle, index) => (
                 <NotificationItem
                   key={bundle.primary.id}
                   notification={bundle.primary}
@@ -1723,6 +1759,7 @@ export default function NotificationsPage() {
                   onMarkAsRead={handleMarkAsRead}
                   isMarkingAsRead={bundle.allIds.includes(markingNotificationId || '')}
                   enrichedAvatars={enrichedAvatars}
+                  style={offscreenRowStyle(index)}
                 />
               ))}
               

@@ -15,7 +15,9 @@ import {
 } from 'lucide-react';
 import { useTranslation as useI18n } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import Hls from 'hls.js';
+// Type-only: the hls.js runtime (~400 kB raw) loads dynamically at attach time
+// so it stays out of the eager feed-card path (see the playback effect below).
+import type Hls from 'hls.js';
 import { CardHeader } from './CardHeader';
 import { ActionBar } from './ActionBar';
 import { CommentsWrapper } from './CommentsWrapper';
@@ -132,6 +134,10 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
       currentUrl: currentUrl(),
     });
 
+    let disposed = false;
+    (async () => {
+    const { default: Hls } = await import('hls.js');
+    if (disposed) return;
     if (Hls.isSupported()) {
       const hls = new Hls({
         enableWorker: true,
@@ -223,6 +229,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = currentUrl();
     }
+    })();
 
     videoPlaybackManager.register(videoId, () => {
       video.pause();
@@ -230,6 +237,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
     });
 
     return () => {
+      disposed = true;
       hlsRef.current?.destroy();
       videoPlaybackManager.unregister(videoId);
     };

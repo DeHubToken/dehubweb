@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -19,7 +19,7 @@ const Advertising = () => {
         <p className="text-lg text-muted-foreground leading-relaxed">{t('advertising.subtitle')}</p>
       </div>
 
-      {/* Live product CTA â€” the self-serve POVR Ads Manager */}
+      {/* Live product CTA — the self-serve POVR Ads Manager */}
       <Card className="border-foreground/15 bg-foreground/[0.04]">
         <CardContent className="py-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -32,7 +32,7 @@ const Advertising = () => {
             to="/app/ads"
             className="inline-flex items-center justify-center px-5 py-2.5 rounded-xl text-sm font-medium bg-foreground/10 hover:bg-foreground/15 text-foreground border border-foreground/10 transition-colors shrink-0"
           >
-            Open Ads Manager â†’
+            Open Ads Manager →
           </Link>
         </CardContent>
       </Card>

@@ -98,8 +98,10 @@ export function useCommunityChat(communityId: string | undefined) {
           return { address: addr, displayName: null, username: null, avatarUrl: null };
         }
       },
-      staleTime: 5 * 60_000,
-      gcTime: 10 * 60_000,
+      // Sender profiles rarely change — long cache windows keep repeat
+      // community visits from refiring the whole per-sender fan-out.
+      staleTime: 30 * 60_000,
+      gcTime: 60 * 60_000,
       retry: 1,
     })),
   });

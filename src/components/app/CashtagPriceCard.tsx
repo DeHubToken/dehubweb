@@ -1,9 +1,15 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { DexPair } from '@/hooks/use-dexscreener';
 import type { CmcMarketData } from '@/hooks/use-cmc-market-cap';
 import { useTokenChart, type ChartTimeframe } from '@/hooks/use-token-chart';
-import { TokenPriceChart } from '@/components/app/TokenPriceChart';
+// Lazy: TokenPriceChart pulls recharts (+lodash, ~500 kB raw) — this card
+// renders in the eager feed path, so a static import would drag recharts into
+// the entry bundle. Fixed-height fallback prevents feed layout shift.
+const TokenPriceChart = lazy(() =>
+  import('@/components/app/TokenPriceChart').then(m => ({ default: m.TokenPriceChart }))
+);
+const CHART_FALLBACK = <div className="w-full h-[180px] bg-zinc-900/50" />;
 import { TrendingUp, TrendingDown, ClipboardCopy, Check, ChevronDown, ExternalLink, Globe, Twitter, MessageCircle, PictureInPicture2 } from 'lucide-react';
 import { QuickBuyButton } from '@/components/app/QuickBuyButton';
 import { useChartPiP } from '@/contexts/ChartPiPContext';
@@ -218,13 +224,15 @@ export function CashtagPriceCard({ pair, symbol, cmcData }: CashtagPriceCardProp
       </div>
 
       {/* Price Chart */}
-      <TokenPriceChart
-        data={chartData || []}
-        isLoading={isChartLoading}
-        timeframe={chartTimeframe}
-        onTimeframeChange={setChartTimeframe}
-        externalUrl={cmcData?.slug ? `https://coinmarketcap.com/currencies/${cmcData.slug}/` : undefined}
-      />
+      <Suspense fallback={CHART_FALLBACK}>
+        <TokenPriceChart
+          data={chartData || []}
+          isLoading={isChartLoading}
+          timeframe={chartTimeframe}
+          onTimeframeChange={setChartTimeframe}
+          externalUrl={cmcData?.slug ? `https://coinmarketcap.com/currencies/${cmcData.slug}/` : undefined}
+        />
+      </Suspense>
 
       {/* Stats row */}
       <div className="px-4 py-3 flex items-center gap-4 text-xs border-t border-zinc-700/50">
