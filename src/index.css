@@ -964,14 +964,34 @@ html[data-theme="system"] [data-feed-nav-outer]::before {
   z-index: -1;
   pointer-events: none;
 }
-/* Not on the docs surface. Docs paints paper on the non-canvas themes, so the
-   black strip would show as dark shoulders behind the blog search pill's
-   rounded corners. Docs doesn't need it: the blog's swallow-clip runs with
-   allThemes (Blog.tsx), so the feed is hard-cut at the pill's top edge on
-   every theme — no painted cover, nothing to colour-match against the docs
-   background. */
-html[data-theme="system"][data-docs-open] [data-feed-nav-outer]::before {
-  content: none;
+/* Docs-surface lag guard — FROSTED paper, not black, on every paper theme.
+   The blog feed is hard-cut by the swallow-clip on all themes (Blog.tsx
+   allThemes), but the clip is main-thread: a hard fling scrolls the
+   compositor ahead of it and content flashes for a frame in the 8px
+   breathing gap above the pill. The docs paper background is TEXTURED
+   (paper-texture image), so any flat painted cover reads as a mismatched
+   band — instead mirror the docs header's own frost (bg-card/90 +
+   backdrop-blur-sm): over the texture at rest the blur merely softens the
+   grain, and a transient flash behind it dissolves into the frost, same
+   trick as the system mobile header below. Anchored to the sticky wrapper,
+   so it can never lag the compositor. Extends 18px behind the opaque pill
+   to also frost the corner notches on themes that keep the pill rounded.
+   Canvas themes excluded — there the docs bg is the live shader canvas
+   (glass pill + canvas camouflage handle the flash) and this frost would
+   read as a solid smear over it. Overrides the system-only black strip
+   above on the docs surface (higher specificity). */
+html[data-docs-open]:not([data-theme="cosmic"]):not([data-theme="hazy"]):not([data-theme="swarms"]):not([data-theme="lavalamp"]):not([data-theme="winter"]) [data-feed-nav-outer]::before {
+  content: '';
+  position: absolute;
+  top: -0.5rem;
+  left: 0;
+  right: 0;
+  height: calc(0.5rem + 18px);
+  background: hsl(var(--card) / 0.9);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: -1;
+  pointer-events: none;
 }
 html[data-theme="system"] [data-feed-nav] {
   background: rgb(9 9 11 / 0.40) !important;
