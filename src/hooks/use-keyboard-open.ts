@@ -58,32 +58,47 @@ export function dismissKeyboard() {
 }
 
 /**
- * Live height of the visual viewport — the area actually visible above the
+ * Live box of the visual viewport — the area actually visible above the
  * on-screen keyboard — while `enabled`. Android resizes the layout viewport
- * for the keyboard (interactive-widget=resizes-content) so dvh tracks it,
- * but iOS never does; measuring visualViewport is the only signal that is
- * correct on both. Returns null until a measurement exists.
+ * for the keyboard (interactive-widget=resizes-content) so dvh tracks it and
+ * offsetTop stays 0. iOS ignores interactive-widget: the layout viewport keeps
+ * its size and Safari PANS the visual viewport to reveal the focused input, so
+ * offsetTop is how far the visible area has slid down past the layout origin.
+ * Consumers must compensate for that pan or their keyboard-sized container
+ * scrolls off-screen. Returns { height: null } until a measurement exists.
  */
-export function useVisualViewportHeight(enabled: boolean) {
-  const [height, setHeight] = useState<number | null>(null);
+export function useVisualViewportBox(enabled: boolean) {
+  const [box, setBox] = useState<{ height: number | null; offsetTop: number }>({
+    height: null,
+    offsetTop: 0,
+  });
 
   useEffect(() => {
     if (!enabled) {
-      setHeight(null);
+      setBox({ height: null, offsetTop: 0 });
       return;
     }
     const vv = window.visualViewport;
     if (!vv) return;
-    const update = () => setHeight(Math.round(vv.height));
+    const update = () => {
+      // Some iOS versions surface the keyboard pan as a window scroll instead
+      // of (or on top of) vv.offsetTop — undo it so offsetTop is the whole
+      // story. The chat layout fits inside the visual viewport, so there is
+      // nothing legitimate to scroll to while the keyboard is up.
+      if (window.scrollY > 0) window.scrollTo(0, 0);
+      setBox({ height: Math.round(vv.height), offsetTop: Math.round(vv.offsetTop) });
+    };
     update();
     vv.addEventListener('resize', update);
     // iOS pans the visual viewport instead of resizing — 'scroll' fires then.
     vv.addEventListener('scroll', update);
+    window.addEventListener('scroll', update);
     return () => {
       vv.removeEventListener('resize', update);
       vv.removeEventListener('scroll', update);
+      window.removeEventListener('scroll', update);
     };
   }, [enabled]);
 
-  return enabled ? height : null;
+  return enabled ? box : { height: null, offsetTop: 0 };
 }

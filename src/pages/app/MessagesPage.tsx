@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import { Search, Plus, MessageCircle, RefreshCw, Loader2 } from 'lucide-react';
@@ -18,7 +18,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useDMRealtime } from '@/hooks/use-dm-realtime';
-import { useKeyboardOpen, useVisualViewportHeight } from '@/hooks/use-keyboard-open';
+import { useKeyboardOpen, useVisualViewportBox } from '@/hooks/use-keyboard-open';
 import { emitSendMessage } from '@/lib/api/dehub/dm-socket';
 import chatBubbleIcon from '@/assets/icons/chat-bubble.png';
 import messagesBubbleIcon from '@/assets/icons/messages-3d-icon.png';
@@ -140,9 +140,19 @@ export default function MessagesPage() {
   const mobileChatHeight = keyboardOpen ? 'h-[calc(100dvh-44px)]' : 'h-[calc(100dvh-120px)]';
   // dvh only tracks the keyboard on Android (interactive-widget) — iOS keeps
   // the layout viewport full-size and just covers it. Sizing to the measured
-  // visual viewport keeps the composer above the keyboard on both.
-  const vvHeight = useVisualViewportHeight(keyboardOpen);
-  const keyboardStyle = keyboardOpen && vvHeight ? { height: vvHeight - 44 } : undefined;
+  // visual viewport keeps the composer above the keyboard on both. On iOS,
+  // Safari additionally PANS the page to chase the focused input (offsetTop
+  // > 0), shoving the chat off the top and leaving a dead gap above the
+  // keyboard — when that happens, pin the chat over the visible area instead:
+  // position:fixed anchors to the layout viewport, so top = offsetTop lands
+  // exactly on the visual viewport. Android never pans (offsetTop stays 0),
+  // so its in-flow layout is untouched.
+  const { height: vvHeight, offsetTop: vvOffsetTop } = useVisualViewportBox(keyboardOpen);
+  const keyboardStyle: CSSProperties | undefined = keyboardOpen && vvHeight
+    ? vvOffsetTop > 1
+      ? { position: 'fixed', top: vvOffsetTop, left: 0, right: 0, height: vvHeight, zIndex: 40, background: '#000' }
+      : { height: vvHeight - 44 }
+    : undefined;
   const [selectedConversation, setSelectedConversation] = useState<DeHubConversation | null>(null);
   const [showPublicChat, setShowPublicChat] = useState(false);
   const [showMessageSelector, setShowMessageSelector] = useState(false);
