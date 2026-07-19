@@ -21,12 +21,26 @@ export function useUserPins(address: string) {
 }
 
 export function useTogglePin() {
+  const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: togglePin,
     onSuccess: (data, tokenId) => {
-      queryClient.invalidateQueries({ queryKey: [PINS_KEY] });
+      // Patch this post's pin count in place instead of refetching every pin query
+      queryClient.setQueryData<number>([PINS_KEY, 'count', tokenId], (old) =>
+        old === undefined ? undefined : Math.max(0, old + (data.pinned ? 1 : -1)));
+      // Only this post's pinners list + the current user's own pins list are affected
+      queryClient.invalidateQueries({ queryKey: [PINS_KEY, 'users', tokenId] });
+      if (walletAddress) {
+        const me = walletAddress.toLowerCase();
+        queryClient.invalidateQueries({
+          predicate: (q) =>
+            q.queryKey[0] === PINS_KEY &&
+            typeof q.queryKey[1] === 'string' &&
+            q.queryKey[1].toLowerCase() === me,
+        });
+      }
       if (data.pinned) {
         toast.success('Post pinned');
       } else {

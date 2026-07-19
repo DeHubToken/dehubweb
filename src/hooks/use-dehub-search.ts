@@ -7,7 +7,7 @@
  * @module hooks/use-dehub-search
  */
 
-import { useInfiniteQuery, useQuery, useMutation } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery, useMutation, keepPreviousData } from '@tanstack/react-query';
 import { 
   universalSearch,
   getSearchSuggestions,
@@ -202,6 +202,9 @@ export function useDeHubSearch({
     enabled: shouldFetch,
     staleTime: 1000 * 60 * 2, // 2 minutes
     retry: 2,
+    // Keep the previous results on screen while the next query/tab loads —
+    // typing or switching result tabs used to wipe the list to a spinner.
+    placeholderData: keepPreviousData,
   });
 }
 

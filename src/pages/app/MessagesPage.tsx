@@ -284,11 +284,15 @@ export default function MessagesPage() {
     }
   }, [selectedConversation, conversations]);
 
-  // Refetch conversations more often when we have a virtual convo selected, to pick up real dmId from DeHub sooner
+  // Refetch conversations more often when we have a virtual convo selected, to pick up real dmId from DeHub sooner.
+  // Route-gated: this page stays mounted forever (PersistentPageCache), so
+  // without the pathname check the interval would poll for the whole session
+  // after the user navigates away mid-handshake.
   const hasVirtualSelected = selectedConversation &&
     (selectedConversation.id.startsWith('new_') || /^0x[0-9a-fA-F]{40}$/i.test(selectedConversation.id));
+  const isMessagesRouteActive = location.pathname === '/app/messages';
   useEffect(() => {
-    if (!hasVirtualSelected) return;
+    if (!hasVirtualSelected || !isMessagesRouteActive) return;
     // Poll at 1.5s for first 30s, then 5s
     const fast = setInterval(() => refetch(), 1500);
     let slowInterval: ReturnType<typeof setInterval>;
@@ -297,7 +301,7 @@ export default function MessagesPage() {
       slowInterval = setInterval(() => refetch(), 5000);
     }, 30000);
     return () => { clearInterval(fast); clearTimeout(slow); clearInterval(slowInterval); };
-  }, [hasVirtualSelected, refetch]);
+  }, [hasVirtualSelected, isMessagesRouteActive, refetch]);
 
   // Auto-send a queued invite/draft message once the selected conversation has a real dmId
   useEffect(() => {

@@ -43,11 +43,37 @@ export function useVoteOnPoll() {
   return useMutation({
     mutationFn: ({ tokenId, optionIndexes }: { tokenId: number; optionIndexes: number[] }) =>
       voteOnPoll(tokenId, optionIndexes),
-    onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: [POLLS_KEY, variables.tokenId] });
-      toast.success('Vote recorded');
+    // Optimistic: move the ballot the instant the user taps, reconcile with
+    // the server response in the background.
+    onMutate: async ({ tokenId, optionIndexes }) => {
+      await queryClient.cancelQueries({ queryKey: [POLLS_KEY, tokenId] });
+      const previous = queryClient.getQueryData<DeHubPoll | null>([POLLS_KEY, tokenId]);
+      if (previous) {
+        const prevIndexes = previous.userVote?.optionIndexes ?? [];
+        queryClient.setQueryData<DeHubPoll>([POLLS_KEY, tokenId], {
+          ...previous,
+          options: previous.options.map(opt => ({
+            ...opt,
+            voteCount:
+              opt.voteCount
+              - (prevIndexes.includes(opt.index) ? 1 : 0)
+              + (optionIndexes.includes(opt.index) ? 1 : 0),
+          })),
+          totalVotes: previous.totalVotes + (prevIndexes.length ? 0 : 1),
+          userVote: { optionIndexes, votedAt: new Date().toISOString() },
+        });
+      }
+      return { previous };
     },
-    onError: (err: any) => toast.error(err?.message || 'Failed to vote'),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: [POLLS_KEY, variables.tokenId] });
+    },
+    onError: (err: any, variables, context) => {
+      if (context?.previous !== undefined) {
+        queryClient.setQueryData([POLLS_KEY, variables.tokenId], context.previous);
+      }
+      toast.error(err?.message || 'Failed to vote');
+    },
   });
 }
 
@@ -56,11 +82,32 @@ export function useRemovePollVote() {
 
   return useMutation({
     mutationFn: removePollVote,
+    onMutate: async (tokenId) => {
+      await queryClient.cancelQueries({ queryKey: [POLLS_KEY, tokenId] });
+      const previous = queryClient.getQueryData<DeHubPoll | null>([POLLS_KEY, tokenId]);
+      if (previous?.userVote) {
+        const prevIndexes = previous.userVote.optionIndexes;
+        queryClient.setQueryData<DeHubPoll>([POLLS_KEY, tokenId], {
+          ...previous,
+          options: previous.options.map(opt => ({
+            ...opt,
+            voteCount: opt.voteCount - (prevIndexes.includes(opt.index) ? 1 : 0),
+          })),
+          totalVotes: Math.max(0, previous.totalVotes - 1),
+          userVote: null,
+        });
+      }
+      return { previous };
+    },
     onSuccess: (_data, tokenId) => {
       queryClient.invalidateQueries({ queryKey: [POLLS_KEY, tokenId] });
-      toast.success('Vote removed');
     },
-    onError: () => toast.error('Failed to remove vote'),
+    onError: (_err, tokenId, context) => {
+      if (context?.previous !== undefined) {
+        queryClient.setQueryData([POLLS_KEY, tokenId], context.previous);
+      }
+      toast.error('Failed to remove vote');
+    },
   });
 }
 

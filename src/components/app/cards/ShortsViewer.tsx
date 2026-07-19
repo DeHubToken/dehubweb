@@ -15,7 +15,8 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
-import { voteOnPost, getNFTComments, postComment, followUser, isFollowing as checkIsFollowing, updateTokenVisibility, type TokenVisibility, type ApiCommentResponse } from '@/lib/api/dehub';
+import { voteOnPost, getNFTComments, postComment, isFollowing as checkIsFollowing, updateTokenVisibility, type TokenVisibility, type ApiCommentResponse } from '@/lib/api/dehub';
+import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { toast } from 'sonner';
 import { CommentsSection } from './CommentsSection';
 import { TipModal } from '../modals/TipModal';
@@ -168,11 +169,13 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     onMentionInsert: (_user, newText) => setInlineCommentText(newText),
   });
   
-  // Follow state
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [isFollowLoading, setIsFollowLoading] = useState(false);
+  // Follow state — shared cross-surface overrides win over the local session set
   const [followedCreators, setFollowedCreators] = useState<Set<string>>(new Set());
   const [followCheckingCreators, setFollowCheckingCreators] = useState<Set<string>>(new Set());
+  const followOverrides = useFollowOverrides();
+  const isCreatorFollowed = useCallback((addr?: string | null) =>
+    !!addr && (followOverrides.get(addr.toLowerCase()) ?? followedCreators.has(addr)),
+  [followOverrides, followedCreators]);
   
   const containerRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
@@ -212,48 +215,41 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     }
   }, [currentShort?.creatorUsername, currentShort?.username, navigate, onClose]);
   
-  // Handle follow creator
-  const handleFollow = useCallback(async () => {
+  const queryClient = useQueryClient();
+
+  // Handle follow creator — optimistic: flips everywhere instantly, reverts on error
+  const handleFollow = useCallback(() => {
     const creatorAddress = currentShort?.creatorId;
     if (!creatorAddress) {
       toast.error('Unable to follow - creator not found');
       return;
     }
-    
+
     if (!isAuthenticated) {
       openLoginModal();
       return;
     }
-    
-    if (isFollowLoading || followedCreators.has(creatorAddress)) {
+
+    if (isCreatorFollowed(creatorAddress)) {
       return;
     }
-    
-    setIsFollowLoading(true);
-    try {
-      await followUser(creatorAddress);
-      setFollowedCreators(prev => new Set(prev).add(creatorAddress));
-      toast.success(`Following ${currentShort.displayName || currentShort.creatorUsername || currentShort.username}!`);
-    } catch (error: unknown) {
-      console.error('Failed to follow:', error);
-      // Check if error indicates already following
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      if (errorMessage.toLowerCase().includes('already') || errorMessage.toLowerCase().includes('following')) {
-        toast.info(`You're already following ${currentShort.displayName || currentShort.creatorUsername || 'this user'}`);
-        // Mark as followed to update UI
-        setFollowedCreators(prev => new Set(prev).add(creatorAddress));
-      } else {
+
+    setFollowedCreators(prev => new Set(prev).add(creatorAddress));
+    toggleFollowFor(queryClient, creatorAddress, false, {
+      name: currentShort.displayName || currentShort.creatorUsername || currentShort.username,
+      onError: () => {
+        setFollowedCreators(prev => {
+          const next = new Set(prev);
+          next.delete(creatorAddress);
+          return next;
+        });
         toast.error('Failed to follow user');
-      }
-    } finally {
-      setIsFollowLoading(false);
-    }
-  }, [currentShort, isAuthenticated, isFollowLoading, followedCreators]);
-  
+      },
+    });
+  }, [currentShort, isAuthenticated, openLoginModal, isCreatorFollowed, queryClient]);
+
   // Bookmark hook
   const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(currentShort?.id || '');
-  
-  const queryClient = useQueryClient();
   
   // Fetch inline comments
   const { data: inlineComments = [] } = useQuery({
@@ -618,15 +614,17 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     if (!id) return;
     const numericId = parseInt(id, 10);
     if (isNaN(numericId)) return;
+    // Optimistic: bump the counter + toast instantly, revert on failure.
+    setShareDelta(prev => prev + 1);
+    toast.success('Reposted!');
+    setShareSheetOpen(false);
     try {
       const { repostPost } = await import('@/lib/api/dehub');
       await repostPost(numericId);
-      setShareDelta(prev => prev + 1);
-      toast.success('Reposted!');
     } catch {
+      setShareDelta(prev => prev - 1);
       toast.error('Failed to repost');
     }
-    setShareSheetOpen(false);
   };
 
   const handleQuote = () => {
@@ -1089,12 +1087,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   Loading…
                 </div>
               ) : (
-                <button 
+                <button
                   onClick={handleFollow}
-                  disabled={isFollowLoading || (currentShort.creatorId ? followedCreators.has(currentShort.creatorId) : false)}
+                  disabled={isCreatorFollowed(currentShort.creatorId)}
                   className="w-full mt-3 bg-white/10 backdrop-blur-sm text-white text-xs lg:text-sm font-semibold px-4 py-2 rounded-xl border border-white/20 hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isFollowLoading ? 'Following...' : (currentShort.creatorId && followedCreators.has(currentShort.creatorId)) ? 'Following ✓' : 'Follow'}
+                  {isCreatorFollowed(currentShort.creatorId) ? 'Following ✓' : 'Follow'}
                 </button>
               )}
             </div>
@@ -1237,17 +1235,16 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             >
               <Quote className="w-5 h-5" /> Quote
             </button>
-            {!isOwnShort && currentShort?.creatorId && !followedCreators.has(currentShort.creatorId) && (
+            {!isOwnShort && currentShort?.creatorId && !isCreatorFollowed(currentShort.creatorId) && (
               <button
                 onClick={handleFollow}
-                disabled={isFollowLoading}
                 className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left disabled:opacity-50"
               >
-                {isFollowLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <UserPlus className="w-5 h-5" />}
+                <UserPlus className="w-5 h-5" />
                 Follow
               </button>
             )}
-            {!isOwnShort && currentShort?.creatorId && followedCreators.has(currentShort.creatorId) && (
+            {!isOwnShort && currentShort?.creatorId && isCreatorFollowed(currentShort.creatorId) && (
               <button
                 disabled
                 className="flex items-center gap-3 px-4 py-3 text-zinc-500 rounded-xl text-left cursor-default"

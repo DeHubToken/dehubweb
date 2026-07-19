@@ -11,10 +11,18 @@
  * PersistentPageCache.tsx / App.tsx exactly — Vite resolves them to the same
  * module, so this warms the very chunk the router will request; it never
  * creates extra bundles.
+ *
+ * List pages warm their detail-page chunk as a companion (second array entry):
+ * the only way to reach a detail page is through its list, so by the time the
+ * user clicks a card the detail chunk is already in cache — no double
+ * waterfall (chunk fetch → data fetch) on first open.
  */
 
-const PRELOADERS: Record<string, () => Promise<unknown>> = {
+type Preloader = () => Promise<unknown>;
+
+const PRELOADERS: Record<string, Preloader | Preloader[]> = {
   '/app/explore': () => import('@/pages/app/ExplorePage'),
+  '/explore': () => import('@/pages/app/ExplorePage'),
   '/app/profile': () => import('@/pages/app/ProfilePage'),
   '/app/notifications': () => import('@/pages/app/NotificationsPage'),
   '/app/messages': () => import('@/pages/app/MessagesPage'),
@@ -32,8 +40,14 @@ const PRELOADERS: Record<string, () => Promise<unknown>> = {
   '/app/agents': () => import('@/pages/app/AgentsPage'),
   '/app/features': () => import('@/pages/app/FeaturesPage'),
   '/features': () => import('@/pages/app/FeaturesPage'),
-  '/app/governance': () => import('@/pages/app/GovernancePage'),
-  '/governance': () => import('@/pages/app/GovernancePage'),
+  '/app/governance': [
+    () => import('@/pages/app/GovernancePage'),
+    () => import('@/pages/app/GovernanceProposalPage'),
+  ],
+  '/governance': [
+    () => import('@/pages/app/GovernancePage'),
+    () => import('@/pages/app/GovernanceProposalPage'),
+  ],
   '/app/jobs': () => import('@/pages/app/CareersPage'),
   '/jobs': () => import('@/pages/app/CareersPage'),
   '/app/glossary': () => import('@/pages/app/GlossaryPage'),
@@ -41,13 +55,44 @@ const PRELOADERS: Record<string, () => Promise<unknown>> = {
   '/app/stake': () => import('@/pages/app/StakingPage'),
   '/stake': () => import('@/pages/app/StakingPage'),
   '/app/bridge': () => import('@/pages/app/BridgePage'),
-  '/app/communities': () => import('@/pages/app/CommunitiesPage'),
-  '/communities': () => import('@/pages/app/CommunitiesPage'),
-  '/app/events': () => import('@/pages/app/EventsPage'),
-  '/app/stores': () => import('@/pages/app/StoresPage'),
-  '/app/work': () => import('@/pages/app/WorkPage'),
-  '/work': () => import('@/pages/app/WorkPage'),
+  '/app/communities': [
+    () => import('@/pages/app/CommunitiesPage'),
+    () => import('@/pages/app/CommunityPage'),
+  ],
+  '/communities': [
+    () => import('@/pages/app/CommunitiesPage'),
+    () => import('@/pages/app/CommunityPage'),
+  ],
+  '/app/events': [
+    () => import('@/pages/app/EventsPage'),
+    () => import('@/pages/EventPage'),
+  ],
+  '/app/stores': [
+    () => import('@/pages/app/StoresPage'),
+    () => import('@/pages/app/StoreDetailPage'),
+  ],
+  '/app/work': [
+    () => import('@/pages/app/WorkPage'),
+    () => import('@/pages/app/WorkJobDetailPage'),
+  ],
+  '/work': [
+    () => import('@/pages/app/WorkPage'),
+    () => import('@/pages/app/WorkJobDetailPage'),
+  ],
+  '/app/launchpad': [
+    () => import('@/pages/app/LaunchpadPage'),
+    () => import('@/pages/app/LaunchpadCoinPage'),
+  ],
+  '/launchpad': [
+    () => import('@/pages/app/LaunchpadPage'),
+    () => import('@/pages/app/LaunchpadCoinPage'),
+  ],
   '/app/affiliate': () => import('@/pages/app/AffiliatePage'),
+  '/affiliate': () => import('@/pages/app/AffiliatePage'),
+  '/app/top-100': () => import('@/pages/app/Top100CryptosPage'),
+  '/app/ads': () => import('@/pages/app/AdsPage'),
+  '/premium': () => import('@/pages/Premium'),
+  '/pricing': () => import('@/pages/PricingPage'),
   '/prompt': () => import('@/pages/PromptLanding'),
   '/guide': () => import('@/pages/GuidePage'),
   '/docs': () => import('@/pages/DocsSurface'),
@@ -68,7 +113,9 @@ export function preloadRoute(path: string | undefined): void {
   }
   if (!key || warmed.has(key)) return;
   warmed.add(key);
-  PRELOADERS[key]().catch(() => {
+  const loaders = PRELOADERS[key];
+  const list = Array.isArray(loaders) ? loaders : [loaders];
+  Promise.all(list.map(load => load())).catch(() => {
     // Network hiccup — allow a later intent to retry.
     warmed.delete(key);
   });

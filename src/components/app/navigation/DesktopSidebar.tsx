@@ -19,6 +19,7 @@ import { useTotalUnreadCount } from '@/hooks/use-messages';
 import dehubLogoCompact from '@/assets/dehub-logo-compact.png';
 import dehubMarkBlack from '@/assets/design-system/mark-black.png.asset.json';
 import { cn } from '@/lib/utils';
+import { preloadRoute } from '@/lib/route-preload';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { leftRailVariants } from '@/lib/surface-motion';
@@ -334,6 +335,9 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 <NavLink
                   ref={isAIActive ? setActiveItemEl : undefined}
                   to="/app/assistant"
+                  onPointerEnter={() => preloadRoute('/app/assistant')}
+                  onTouchStart={() => preloadRoute('/app/assistant')}
+                  onFocus={() => preloadRoute('/app/assistant')}
                   className={cn(
                     'relative flex items-center rounded-2xl text-left text-[15px]',
                     isLightTheme ? 'transition-[font-weight]' : 'transition-colors',

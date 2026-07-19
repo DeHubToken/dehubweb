@@ -22,7 +22,7 @@ import { motion } from 'framer-motion';
 import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import { getNFTInfo, getLiveStream, type DeHubNFT } from '@/lib/api/dehub';
-import { parseSoundtrackTag } from '@/hooks/use-unified-feed';
+import { parseSoundtrackTag, findCachedFeedPost } from '@/hooks/use-unified-feed';
 import { PollCard } from '@/components/app/cards/PollCard';
 import { useStreamLiveStatus } from '@/hooks/use-stream-live-status';
 
@@ -727,7 +727,12 @@ export default function SinglePostPage() {
     enabled: !!id,
     staleTime: 5 * 60 * 1000,
     retry: 1,
-    placeholderData: (previousData) => previousData,
+    // Instant open: if any feed cache already holds THIS post, paint it
+    // immediately while the authoritative getNFTInfo fetch runs behind it.
+    // Never fall back to previousData — that's the PREVIOUS post's content
+    // (navigating post A → post B used to flash A's body under B's URL).
+    placeholderData: () =>
+      findCachedFeedPost(queryClient, id!) as unknown as DeHubNFT | undefined,
     // Always overlay the vote cache so likes survive refetches
     select: (data) => {
       if (!data || !id) return data;

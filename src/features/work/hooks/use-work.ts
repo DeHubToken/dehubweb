@@ -3,7 +3,7 @@
  * Off-chain ledger + on-chain escrow via DeHubWork (best-effort; falls back
  * to off-chain when the contract address is the placeholder zero address).
  */
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -53,11 +53,17 @@ export function useBrowseJobs(filters?: {
       if (error) throw error;
       return (data || []) as unknown as WorkJob[];
     },
-    staleTime: 30_000,
+    // 5 min like the rest of the app — 30s meant nearly every return to /work
+    // refired the browse query.
+    staleTime: 5 * 60_000,
+    // Filter/search changes keep the previous list visible while the new one
+    // loads instead of flashing the skeleton grid on every keystroke.
+    placeholderData: keepPreviousData,
   });
 }
 
 export function useWorkJob(jobId: string | undefined) {
+  const queryClient = useQueryClient();
   return useQuery({
     queryKey: ['work-job', jobId],
     queryFn: async () => {
@@ -66,6 +72,17 @@ export function useWorkJob(jobId: string | undefined) {
       return data as unknown as WorkJob | null;
     },
     enabled: !!jobId,
+    // Instant open from the browse list: those rows are full `select('*')`
+    // WorkJob records, so paint the clicked job immediately while the
+    // authoritative fetch runs behind it.
+    placeholderData: () => {
+      for (const query of queryClient.getQueryCache().findAll({ queryKey: ['work-jobs-browse'] })) {
+        const rows = query.state.data as WorkJob[] | undefined;
+        const hit = rows?.find?.(j => j.id === jobId);
+        if (hit) return hit;
+      }
+      return undefined;
+    },
   });
 }
 

@@ -1,17 +1,17 @@
-import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useMemo, useCallback, useRef, useEffect } from 'react';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { UserPlus, Loader2, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { getSuggestedAccounts, getCachedSuggestedProfiles, followUser, type SuggestedAccount } from '@/lib/api/dehub';
+import { getSuggestedAccounts, getCachedSuggestedProfiles, type SuggestedAccount } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { useFollowedSuggestions } from '@/hooks/use-followed-suggestions';
-import { toast } from 'sonner';
+import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 
 const BATCH_SIZE = 10;
 const MAX_PAGES = 10;
@@ -20,8 +20,9 @@ export function WhoToFollow() {
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
   const { handleApiError } = useReauthHandler();
-  const { followedUsers, markFollowed } = useFollowedSuggestions();
-  const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
+  const { followedUsers, markFollowed, unmarkFollowed } = useFollowedSuggestions();
+  const followOverrides = useFollowOverrides();
+  const queryClient = useQueryClient();
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // For unauthenticated users, use cached profiles from the database
@@ -76,8 +77,8 @@ export function WhoToFollow() {
   }, [allSuggestions, followedUsers]);
 
   const isAlreadyFollowed = useCallback((user: SuggestedAccount) => {
-    return user.isFollowing === true;
-  }, []);
+    return followOverrides.get(user.address.toLowerCase()) ?? user.isFollowing === true;
+  }, [followOverrides]);
 
   // Infinite scroll handler
   const handleScroll = useCallback(() => {
@@ -134,7 +135,7 @@ export function WhoToFollow() {
     }
   };
 
-  const handleFollow = async (e: React.MouseEvent, user: SuggestedAccount) => {
+  const handleFollow = (e: React.MouseEvent, user: SuggestedAccount) => {
     e.stopPropagation();
 
     if (!isAuthenticated) {
@@ -142,31 +143,19 @@ export function WhoToFollow() {
       return;
     }
 
-    if (loadingUsers.has(user.address) || followedUsers.has(user.address)) {
+    if (followedUsers.has(user.address) || isAlreadyFollowed(user)) {
       return;
     }
 
-    setLoadingUsers(prev => new Set(prev).add(user.address));
-
-    try {
-      await followUser(user.address);
-      markFollowed(user.address);
-      toast.success(`Following ${getDisplayName(user)}!`);
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      if (errorMessage.toLowerCase().includes('already') || errorMessage.toLowerCase().includes('following')) {
-        toast.info(`You're already following ${getDisplayName(user)}`);
-        markFollowed(user.address);
-      } else {
+    // Optimistic: hide the suggestion instantly, revert if the API call fails
+    markFollowed(user.address);
+    toggleFollowFor(queryClient, user.address, false, {
+      name: getDisplayName(user),
+      onError: (error) => {
+        unmarkFollowed(user.address);
         handleApiError(error, 'Failed to follow user');
-      }
-    } finally {
-      setLoadingUsers(prev => {
-        const next = new Set(prev);
-        next.delete(user.address);
-        return next;
-      });
-    }
+      },
+    });
   };
 
 
@@ -231,20 +220,14 @@ export function WhoToFollow() {
             </div>
             <button
               onClick={(e) => handleFollow(e, user)}
-              disabled={loadingUsers.has(user.address) || isAlreadyFollowed(user)}
+              disabled={isAlreadyFollowed(user)}
               className={`h-6 min-w-0 w-auto px-2.5 text-[11px] font-semibold rounded-lg flex items-center justify-center transition-all duration-150 flex-shrink-0 ${
                 isAlreadyFollowed(user)
                   ? 'bg-white/10 text-white/40 cursor-default'
                   : 'bg-gradient-to-br from-white/15 via-white/8 to-white/4 backdrop-blur-xl border border-white/20 text-white/70 hover:from-white/25 hover:via-white/15 hover:to-white/10 hover:border-white/40 hover:text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.2)]'
               }`}
             >
-              {loadingUsers.has(user.address) ? (
-                <Loader2 className="w-2.5 h-2.5 animate-spin" />
-              ) : isAlreadyFollowed(user) ? (
-                'Following'
-              ) : (
-                'Follow'
-              )}
+              {isAlreadyFollowed(user) ? 'Following' : 'Follow'}
             </button>
           </div>
         ))}

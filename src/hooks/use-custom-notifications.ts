@@ -117,8 +117,34 @@ export function useMarkCustomNotificationAsRead() {
         .eq('id', dbId);
       if (error) throw error;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: customNotificationKeys.all });
+    onMutate: async (notificationId) => {
+      await queryClient.cancelQueries({ queryKey: customNotificationKeys.all });
+
+      const previousList = queryClient.getQueryData<DeHubNotification[]>(customNotificationKeys.list());
+      const previousCount = queryClient.getQueryData<number>(customNotificationKeys.unreadCount());
+      const target = previousList?.find((n) => n.id === notificationId);
+
+      // Optimistically flag the row as read and decrement the unread count
+      queryClient.setQueryData<DeHubNotification[]>(customNotificationKeys.list(), (old) =>
+        old?.map((n) => n.id === notificationId ? { ...n, read: true } : n));
+      if (target && !target.read && typeof previousCount === 'number') {
+        queryClient.setQueryData<number>(customNotificationKeys.unreadCount(), Math.max(0, previousCount - 1));
+      }
+
+      return { previousList, previousCount };
+    },
+    onError: (_err, _notificationId, context) => {
+      // Rollback on error
+      if (context?.previousList !== undefined) {
+        queryClient.setQueryData(customNotificationKeys.list(), context.previousList);
+      }
+      if (context?.previousCount !== undefined) {
+        queryClient.setQueryData(customNotificationKeys.unreadCount(), context.previousCount);
+      }
+    },
+    onSettled: () => {
+      // Caches already patched optimistically — mark stale without refetching
+      queryClient.invalidateQueries({ queryKey: customNotificationKeys.all, refetchType: 'none' });
     },
   });
 }
@@ -134,8 +160,31 @@ export function useMarkAllCustomNotificationsAsRead() {
         .eq('read', false);
       if (error) throw error;
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: customNotificationKeys.all });
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: customNotificationKeys.all });
+
+      const previousList = queryClient.getQueryData<DeHubNotification[]>(customNotificationKeys.list());
+      const previousCount = queryClient.getQueryData<number>(customNotificationKeys.unreadCount());
+
+      // Optimistically flag every row as read and zero the unread count
+      queryClient.setQueryData<DeHubNotification[]>(customNotificationKeys.list(), (old) =>
+        old?.map((n) => n.read ? n : { ...n, read: true }));
+      queryClient.setQueryData<number>(customNotificationKeys.unreadCount(), 0);
+
+      return { previousList, previousCount };
+    },
+    onError: (_err, _variables, context) => {
+      // Rollback on error
+      if (context?.previousList !== undefined) {
+        queryClient.setQueryData(customNotificationKeys.list(), context.previousList);
+      }
+      if (context?.previousCount !== undefined) {
+        queryClient.setQueryData(customNotificationKeys.unreadCount(), context.previousCount);
+      }
+    },
+    onSettled: () => {
+      // Caches already patched optimistically — mark stale without refetching
+      queryClient.invalidateQueries({ queryKey: customNotificationKeys.all, refetchType: 'none' });
     },
   });
 }

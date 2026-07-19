@@ -1,4 +1,5 @@
-import React from 'react';
+﻿import React from 'react';
+import { Link } from 'react-router-dom';
 import { Copy, CheckCircle, Terminal, Code, Zap } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -55,9 +56,9 @@ console.log(data);`;
           <h3 className="text-lg font-semibold text-blue-900">{t('quickStart.prerequisites')}</h3>
         </div>
         <ul className="space-y-2 text-blue-800">
-          <li>• Node.js 16+ or Python 3.8+</li>
-          <li>• A valid API key (sign up for free)</li>
-          <li>• Basic knowledge of REST APIs</li>
+          <li>â€¢ Node.js 16+ or Python 3.8+</li>
+          <li>â€¢ A valid API key (sign up for free)</li>
+          <li>â€¢ Basic knowledge of REST APIs</li>
         </ul>
       </div>
 
@@ -137,22 +138,22 @@ console.log(data);`;
       <div className="bg-white border border-slate-200 rounded-lg p-6">
         <h3 className="text-xl font-bold text-slate-900 mb-4">{t('quickStart.whatsNext')}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <a href="/docs/configuration" className="block p-4 border border-slate-200 rounded-lg hover:border-blue-300 transition-colors">
+          <Link to="/docs/configuration" className="block p-4 border border-slate-200 rounded-lg hover:border-blue-300 transition-colors">
             <h4 className="font-semibold text-slate-900 mb-2">{t('quickStart.configurationTitle')}</h4>
             <p className="text-slate-600 text-sm">{t('quickStart.configurationDesc')}</p>
-          </a>
-          <a href="/docs/endpoints" className="block p-4 border border-slate-200 rounded-lg hover:border-blue-300 transition-colors">
+          </Link>
+          <Link to="/docs/endpoints" className="block p-4 border border-slate-200 rounded-lg hover:border-blue-300 transition-colors">
             <h4 className="font-semibold text-slate-900 mb-2">{t('quickStart.apiReference')}</h4>
             <p className="text-slate-600 text-sm">{t('quickStart.apiReferenceDesc')}</p>
-          </a>
-          <a href="/docs/examples" className="block p-4 border border-slate-200 rounded-lg hover:border-blue-300 transition-colors">
+          </Link>
+          <Link to="/docs/examples" className="block p-4 border border-slate-200 rounded-lg hover:border-blue-300 transition-colors">
             <h4 className="font-semibold text-slate-900 mb-2">{t('quickStart.examples')}</h4>
             <p className="text-slate-600 text-sm">{t('quickStart.examplesDesc')}</p>
-          </a>
-          <a href="/docs/best-practices" className="block p-4 border border-slate-200 rounded-lg hover:border-blue-300 transition-colors">
+          </Link>
+          <Link to="/docs/best-practices" className="block p-4 border border-slate-200 rounded-lg hover:border-blue-300 transition-colors">
             <h4 className="font-semibold text-slate-900 mb-2">{t('quickStart.bestPractices')}</h4>
             <p className="text-slate-600 text-sm">{t('quickStart.bestPracticesDesc')}</p>
-          </a>
+          </Link>
         </div>
       </div>
     </div>

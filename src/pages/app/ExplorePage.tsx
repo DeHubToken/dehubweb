@@ -37,6 +37,7 @@ import {
 } from '@/hooks/use-dehub-search';
 import { useSearchHistory } from '@/hooks/use-search-history';
 import { useDeHubUserSearch } from '@/hooks/use-dehub-user-search';
+import { useFollow } from '@/hooks/use-follow';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getMediaUrl, getCategories, searchNFTs, type DeHubNFT, type DeHubCategory } from '@/lib/api/dehub';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
@@ -241,8 +242,10 @@ const UserResultCard = ({
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { walletAddress } = useAuth();
-  const [isFollowing, setIsFollowing] = useState(user.isFollowing ?? false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [localFollowing, setLocalFollowing] = useState(user.isFollowing ?? false);
+  // Shared optimistic override wins so this card agrees with every other surface
+  const { isFollowing: followOverride, toggleFollow } = useFollow(user.id);
+  const isFollowing = followOverride ?? localFollowing;
   const resolvedRef = useRef(false);
 
   // Resolve follow status when not provided by search results (e.g. creators from video/ticker results)
@@ -253,7 +256,7 @@ const UserResultCard = ({
     if (!cleanHandle || cleanHandle.startsWith('0x')) return;
     import('@/lib/api/dehub').then(({ getAccountByUsername }) => {
       getAccountByUsername(cleanHandle).then((info) => {
-        if (info?.isFollowing) setIsFollowing(true);
+        if (info?.isFollowing) setLocalFollowing(true);
       }).catch(() => {});
     });
   }, [user.isFollowing, user.id, user.handle, walletAddress]);
@@ -267,26 +270,17 @@ const UserResultCard = ({
     navigate(`/${cleanHandle}`);
   };
 
-  const handleFollow = async (e: React.MouseEvent) => {
+  const handleFollow = (e: React.MouseEvent) => {
     e.stopPropagation();
-    
+
     if (!walletAddress) {
       // Could show login modal here
       return;
     }
+    if (!user.id) return;
 
-    if (!user.id || isLoading) return;
-
-    setIsLoading(true);
-    try {
-      const { followUser } = await import('@/lib/api/dehub');
-      await followUser(user.id);
-      setIsFollowing(true);
-    } catch (error) {
-      console.error('Failed to follow:', error);
-    } finally {
-      setIsLoading(false);
-    }
+    // Optimistic: the button flips instantly; rollback + toast on failure.
+    toggleFollow(isFollowing, { name: user.name });
   };
   
   return (
@@ -319,16 +313,14 @@ const UserResultCard = ({
       {walletAddress?.toLowerCase() !== user.id?.toLowerCase() && (
         <button
           onClick={handleFollow}
-          disabled={isFollowing || isLoading || !walletAddress}
+          disabled={isFollowing || !walletAddress}
           className={`h-6 min-w-0 w-auto px-2.5 text-[11px] font-semibold rounded-lg flex items-center justify-center transition-all duration-150 flex-shrink-0 ml-2 ${
             isFollowing
               ? 'bg-white/10 text-white/40 cursor-default'
               : 'bg-gradient-to-br from-white/15 via-white/8 to-white/4 backdrop-blur-xl border border-white/20 text-white/70 hover:from-white/25 hover:via-white/15 hover:to-white/10 hover:border-white/40 hover:text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.2)]'
           }`}
         >
-          {isLoading ? (
-            <Loader2 className="w-2.5 h-2.5 animate-spin" />
-          ) : isFollowing ? (
+          {isFollowing ? (
             'Following'
           ) : (
             user.followsYou ? t('explorePage.followBack', 'Follow Back') : t('explorePage.follow')

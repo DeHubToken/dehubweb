@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { useInfiniteQuery, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getSavedPosts, getLikedPosts, getWatchHistory, clearWatchHistory, toggleSavePost, DeHubNFT, getMediaUrl, getNFTInfo } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
@@ -381,23 +382,28 @@ export function useBookmarkPost(tokenId: string | number) {
   });
 
   const allSaved = savedPages?.pages.flatMap(page => page.items) || [];
-  const isBookmarked = allSaved.some(
+  const derivedBookmarked = allSaved.some(
     (nft) => String(nft.tokenId) === String(tokenId)
   );
 
+  // Optimistic override: the icon flips the instant the user taps, while the
+  // server call + background list refresh happen behind it. Cleared once the
+  // refetched list agrees with the override.
+  const [override, setOverride] = useState<boolean | null>(null);
+  useEffect(() => {
+    if (override !== null && derivedBookmarked === override) setOverride(null);
+  }, [derivedBookmarked, override]);
+  const isBookmarked = override ?? derivedBookmarked;
+
   const toggleMutation = useMutation({
-    mutationFn: () => toggleSavePost(tokenId),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ['bookmarks'] });
-      // API returns message: "Feed saved" or "Feed unsaved"
-      const wasSaved = data.message?.toLowerCase().includes('unsaved') === false;
-      if (wasSaved) {
-        toast.success('Saved to bookmarks');
-      } else {
-        toast.success('Removed from bookmarks');
-      }
+    mutationFn: (_next: boolean) => toggleSavePost(tokenId),
+    onSuccess: () => {
+      // Background refresh of the saved lists only — liked/history/ppv are
+      // untouched by a save toggle, so don't tear those down.
+      queryClient.invalidateQueries({ queryKey: ['bookmarks', 'saved'] });
     },
-    onError: () => {
+    onError: (_err, next) => {
+      setOverride(!next);
       toast.error('Failed to update bookmark');
     },
   });
@@ -407,13 +413,18 @@ export function useBookmarkPost(tokenId: string | number) {
       toast.error('Please log in to bookmark');
       return;
     }
-    
-    toggleMutation.mutate();
+
+    const next = !isBookmarked;
+    setOverride(next);
+    toast.success(next ? 'Saved to bookmarks' : 'Removed from bookmarks');
+    toggleMutation.mutate(next);
   };
 
   return {
     isBookmarked,
-    isLoading: toggleMutation.isPending,
+    // Always false: the toggle is optimistic, so buttons should never dim or
+    // disable while the round-trip completes.
+    isLoading: false,
     toggleBookmark,
   };
 }

@@ -2,6 +2,7 @@
  * Hook for fetching staking page data
  */
 import { useQuery } from '@tanstack/react-query';
+import { useLocation } from 'react-router-dom';
 import { fetchStakingStats, getUserStakedBNB, getUserEarnedBNB, getStakingAllowance, getUserStakingTransfers } from '@/lib/contracts/staking';
 import { useTokenPrices } from './use-token-prices';
 import { supabase } from '@/integrations/supabase/client';
@@ -48,6 +49,7 @@ async function fetchUnstakeQueue(): Promise<UnstakeEvent[]> {
 }
 
 export function useStakingStats() {
+  const isStakeRouteActive = useIsStakeRouteActive();
   return useQuery({
     queryKey: ['staking-stats'],
     queryFn: async () => {
@@ -62,8 +64,16 @@ export function useStakingStats() {
       };
     },
     staleTime: 60_000,
-    refetchInterval: 120_000,
+    // Route-gated like useUserStakingData below — StakingPage never unmounts,
+    // so an unconditional interval would poll for the rest of the session.
+    refetchInterval: isStakeRouteActive ? 120_000 : false,
   });
+}
+
+/** True while the user is actually on the staking page (reactive). */
+function useIsStakeRouteActive(): boolean {
+  const { pathname } = useLocation();
+  return pathname === '/stake' || pathname === '/app/stake';
 }
 
 /**
@@ -115,6 +125,12 @@ export interface UserStakingData {
 
 export function useUserStakingData() {
   const { walletAddress, isAuthenticated } = useAuth();
+  // Reactive route check — the surfaces that display this data live at
+  // /stake, /app/stake and /app/wallet. useLocation re-renders on navigation,
+  // so the interval below flips on/off as the user moves around the app.
+  const { pathname } = useLocation();
+  const isStakingSurfaceActive =
+    pathname === '/stake' || pathname === '/app/stake' || pathname === '/app/wallet';
 
   return useQuery({
     queryKey: ['user-staking-data', walletAddress?.toLowerCase()],
@@ -210,16 +226,17 @@ export function useUserStakingData() {
       };
     },
     enabled: !!walletAddress && isAuthenticated,
-    // StakingPage stays mounted for the whole session (PersistentPageCache),
-    // so this interval runs forever once the page is visited — and each tick
-    // is multi-chain RPC reads. staleTime 0 + 15s was hammering the RPCs in
-    // the background; 30s keeps balances/rewards feeling live at half the
-    // cost, and stake/unstake flows still see instant updates via
-    // refetchOnMount:'always' + explicit invalidations.
+    // StakingPage/FullWalletPage stay mounted for the whole session
+    // (PersistentPageCache), so a bare interval here runs forever once either
+    // page is visited — and each tick is 8 parallel ops including FOUR
+    // full-range eth_getLogs scans across BNB+Base. Route-gate the interval:
+    // poll only while the user is actually LOOKING at stake/wallet; elsewhere
+    // it stops entirely. Returning to the page refetches immediately
+    // (staleTime 15s) and the interval restarts via the reactive pathname.
     staleTime: 15_000,
-    refetchInterval: 30_000,
+    refetchInterval: isStakingSurfaceActive ? 30_000 : false,
     refetchOnMount: 'always',
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: isStakingSurfaceActive,
   });
 }
 
@@ -240,11 +257,12 @@ export function useUserBNBStaking() {
 }
 
 export function useUnstakeQueue() {
+  const isStakeRouteActive = useIsStakeRouteActive();
   return useQuery({
     queryKey: ['unstake-queue'],
     queryFn: fetchUnstakeQueue,
     staleTime: 60_000,
-    refetchInterval: 120_000,
+    refetchInterval: isStakeRouteActive ? 120_000 : false,
   });
 }
 

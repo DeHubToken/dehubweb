@@ -6,7 +6,8 @@
  * Shows full CashtagPriceCard at top when a ticker is assigned.
  */
 
-import { useState, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { PenSquare } from 'lucide-react';
 import { searchNFTs } from '@/lib/api/dehub';
 import { mapNFTToFeedItem } from '@/lib/nft-to-feed-item';
@@ -42,8 +43,6 @@ function getCreatorId(post: FeedItem): string | undefined {
 }
 
 export function CommunityFeed({ communitySlug, memberAddresses, isMember, tickerSymbol, tickerContractAddress, tickerChainId, tickerPairAddress }: CommunityFeedProps) {
-  const [posts, setPosts] = useState<FeedItem[]>([]);
-  const [loading, setLoading] = useState(true);
   const { t } = useTranslation();
 
   const { data: dexPairs = [] } = useDexScreenerSearchMulti(
@@ -69,24 +68,19 @@ export function CommunityFeed({ communitySlug, memberAddresses, isMember, ticker
 
   const categoryTag = communitySlug;
 
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-
-    searchNFTs({ category: categoryTag, unit: 50, sortMode: 'new' })
-      .then(results => {
-        if (cancelled) return;
-        const mapped = (results.data || []).map(mapNFTToFeedItem).filter(Boolean) as FeedItem[];
-        setPosts(mapped);
-      })
-      .catch(e => {
-        if (cancelled) return;
-        console.error('[CommunityFeed] Error:', e);
-      })
-      .finally(() => { if (!cancelled) setLoading(false); });
-
-    return () => { cancelled = true; };
-  }, [categoryTag]);
+  // React Query instead of a raw fetch-in-effect: CommunityPage remounts on
+  // every navigation, and the old effect refired the search with a skeleton
+  // flash each time. Cached for 2 min, so bouncing between a community and
+  // the rest of the app re-renders instantly from cache.
+  const { data: posts = [], isLoading: loading } = useQuery({
+    queryKey: ['community-feed', categoryTag],
+    queryFn: async () => {
+      const results = await searchNFTs({ category: categoryTag, unit: 50, sortMode: 'new' });
+      return (results.data || []).map(mapNFTToFeedItem).filter(Boolean) as FeedItem[];
+    },
+    enabled: !!categoryTag,
+    staleTime: 2 * 60 * 1000,
+  });
 
   const memberPosts = useMemo(() => {
     return posts.filter(post => {

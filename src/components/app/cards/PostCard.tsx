@@ -13,7 +13,7 @@ import { useState, memo, useEffect, useCallback, useRef } from 'react';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, Loader2, BarChart2, Plus, X, Bookmark, Pin, Pencil } from 'lucide-react';
+import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, BarChart2, Plus, X, Bookmark, Pin, Pencil } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -38,7 +38,8 @@ import { TipModal } from '../modals/TipModal';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { useAuth } from '@/contexts/AuthContext';
-import { updateTokenVisibility, repostPost, followUser, isFollowing as checkIsFollowing, type TokenVisibility } from '@/lib/api/dehub';
+import { updateTokenVisibility, repostPost, isFollowing as checkIsFollowing, type TokenVisibility } from '@/lib/api/dehub';
+import { useFollow } from '@/hooks/use-follow';
 import { cacheTextPostForNavigation } from '@/lib/post-cache';
 import { useCreatePoll } from '@/hooks/use-polls';
 import { PollCard } from './PollCard';
@@ -112,34 +113,26 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const togglePinMutation = useTogglePin();
   const postTokenId = parseInt(post.id, 10) || undefined;
 
-  // Follow state for the post author
+  // Follow state for the post author — shared override wins over the lazy check
   const [isFollowingAuthor, setIsFollowingAuthor] = useState<boolean | null>(null);
-  const [isFollowLoading, setIsFollowLoading] = useState(false);
+  const { isFollowing: followOverride, toggleFollow } = useFollow(post.author.id);
+  const effectiveFollowingAuthor = followOverride ?? isFollowingAuthor;
 
   // Lazy: only check follow status when options drawer opens — avoids N API calls on feed mount
   useEffect(() => {
-    if (!showOptionsDrawer || !walletAddress || isOwnPost || !post.author.id || isFollowingAuthor !== null) return;
+    if (!showOptionsDrawer || !walletAddress || isOwnPost || !post.author.id || isFollowingAuthor !== null || followOverride !== undefined) return;
     let cancelled = false;
     checkIsFollowing(post.author.id).then((res) => {
       if (!cancelled) setIsFollowingAuthor(res);
     }).catch(() => {});
     return () => { cancelled = true; };
-  }, [showOptionsDrawer, walletAddress, isOwnPost, post.author.id, isFollowingAuthor]);
+  }, [showOptionsDrawer, walletAddress, isOwnPost, post.author.id, isFollowingAuthor, followOverride]);
 
-  const handleFollowFromMenu = useCallback(async () => {
+  const handleFollowFromMenu = useCallback(() => {
     if (!walletAddress) { openLoginModal(); return; }
     if (!post.author.id) return;
-    setIsFollowLoading(true);
-    try {
-      await followUser(post.author.id);
-      setIsFollowingAuthor(true);
-      toast.success(`Following ${post.author.name || post.author.handle || 'user'}!`);
-    } catch {
-      toast.error('Failed to follow');
-    } finally {
-      setIsFollowLoading(false);
-    }
-  }, [walletAddress, openLoginModal, post.author.id, post.author.name, post.author.handle]);
+    toggleFollow(false, { name: post.author.name || post.author.handle || 'user' });
+  }, [walletAddress, openLoginModal, post.author.id, post.author.name, post.author.handle, toggleFollow]);
   
   // View tracking - batches views when post is visible for 2+ seconds
   const viewRef = useFeedViewTracking(post.id);
@@ -183,8 +176,9 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
       // ActionBar already shows optimistic state for the (un)repost.
       queryClient.invalidateQueries({ queryKey: ['unified-feed'], refetchType: 'none' });
       queryClient.invalidateQueries({ queryKey: ['user-reposts'], refetchType: 'none' });
-    } catch {
+    } catch (err) {
       toast.error('Failed to repost');
+      throw err; // let ActionBar roll back its optimistic repost state
     }
   }, [post.id, walletAddress, openLoginModal, queryClient]);
 
@@ -326,17 +320,16 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
               >
                 <Repeat2 className="w-5 h-5" /> See Engagements
               </button>
-              {!isOwnPost && isFollowingAuthor === false && (
+              {!isOwnPost && effectiveFollowingAuthor === false && (
                 <button
                   onClick={handleFollowFromMenu}
-                  disabled={isFollowLoading}
                   className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                 >
-                  {isFollowLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <UserPlus className="w-5 h-5" />}
+                  <UserPlus className="w-5 h-5" />
                   Follow
                 </button>
               )}
-              {!isOwnPost && isFollowingAuthor === true && (
+              {!isOwnPost && effectiveFollowingAuthor === true && (
                 <button
                   disabled
                   className="flex items-center gap-3 px-4 py-3 text-zinc-500 rounded-xl text-left cursor-default"

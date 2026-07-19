@@ -549,8 +549,9 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
       // tears down the infinite-scroll list and snaps the user back to the top.
       queryClient.invalidateQueries({ queryKey: ['unified-feed'], refetchType: 'none' });
       queryClient.invalidateQueries({ queryKey: ['user-reposts'], refetchType: 'none' });
-    } catch {
+    } catch (err) {
       toast.error('Failed to repost');
+      throw err; // let ActionBar roll back its optimistic repost state
     }
   }, [post.id, walletAddress, openLoginModal, queryClient]);
 
