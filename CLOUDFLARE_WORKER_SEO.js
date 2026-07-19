@@ -676,10 +676,13 @@ async function handleRequest(request, env) {
   // guard() can still stamp mirror hosts.
   const redirect301 = (to) => guard(new Response(null, { status: 301, headers: { Location: to } }));
 
-  // www → apex, path + query preserved. The www DNS record still points at the
-  // retired Netlify origin; the wrangler.jsonc route binds www to this worker
-  // so that origin is never contacted (safe to cancel Netlify).
-  if (url.hostname === 'www.dehub.io') {
+  // Alias hosts → apex, path + query preserved; wrangler.jsonc routes bind
+  // these hosts to this worker so the 301 is served at the edge with no
+  // origin behind it. Covers www.dehub.io and every dehub.net host — the
+  // dehub.net zone moved into this Cloudflare account when its Netlify DNS
+  // died (July 2026), and these are the SEO domain-move redirects.
+  const aliasHost = url.hostname;
+  if (aliasHost === 'www.dehub.io' || aliasHost === 'dehub.net' || aliasHost.endsWith('.dehub.net')) {
     return redirect301(`https://dehub.io${url.pathname}${url.search}`);
   }
 
