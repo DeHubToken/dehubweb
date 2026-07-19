@@ -585,8 +585,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       // tears down the infinite-scroll list and snaps the user back to the top.
       queryClient.invalidateQueries({ queryKey: ['unified-feed'], refetchType: 'none' });
       queryClient.invalidateQueries({ queryKey: ['user-reposts'], refetchType: 'none' });
-    } catch {
+    } catch (err) {
       toast.error('Failed to repost');
+      throw err; // let ActionBar roll back its optimistic repost state
     }
   }, [video.id, walletAddress, openLoginModal, queryClient]);
 

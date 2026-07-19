@@ -1410,12 +1410,20 @@ export default function NotificationsPage() {
   };
 
   // Filter notifications by selected tab type
-  const notifications = activeTab === 'all' 
-    ? allNotifications 
+  const notifications = activeTab === 'all'
+    ? allNotifications
     : allNotifications.filter(n => {
         const allowedTypes = filterTypeMap[activeTab];
         return allowedTypes ? allowedTypes.includes(n.type) : true;
       });
+
+  // Bundling is O(n²) over ~130 rows; memoized so the avatar-enrichment
+  // drip (one state update per resolved actor) doesn't recompute it every
+  // render — it re-runs only when the list or avatar map actually changes.
+  const bundledNotifications = useMemo(
+    () => bundleNotifications(notifications.filter(n => n && n.id), enrichedAvatars),
+    [notifications, enrichedAvatars]
+  );
 
   // Get total unread count (DeHub + custom)
   const totalUnread = (unreadCount?.total ?? 0) + (customUnreadCount ?? 0);
@@ -1687,8 +1695,18 @@ export default function NotificationsPage() {
       <div ref={notifContentRef} className="px-2 sm:px-3 pt-2 pb-2">
         <div data-page-bento className="bg-zinc-900 rounded-2xl overflow-hidden">
           {isLoading ? (
-            <div className="flex justify-center py-12">
-              <Loader2 className="w-8 h-8 animate-spin text-zinc-500" />
+            // Row skeletons that mirror the real list layout — a lone spinner
+            // reads as "empty page" instead of "content on the way".
+            <div className="divide-y divide-zinc-800">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="flex items-center gap-3 p-4 animate-pulse">
+                  <div className="w-10 h-10 rounded-xl bg-zinc-800 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <div className="h-3.5 w-2/3 bg-zinc-800 rounded mb-2" />
+                    <div className="h-3 w-1/3 bg-zinc-800 rounded" />
+                  </div>
+                </div>
+              ))}
             </div>
           ) : notifications.length === 0 ? (
             <div className="p-8 flex flex-col items-center justify-center text-center">
@@ -1697,19 +1715,16 @@ export default function NotificationsPage() {
             </div>
           ) : (
             <div className="divide-y divide-zinc-800">
-              {(() => {
-                const bundled = bundleNotifications(notifications.filter(n => n && n.id), enrichedAvatars);
-                return bundled.map((bundle) => (
-                  <NotificationItem
-                    key={bundle.primary.id}
-                    notification={bundle.primary}
-                    bundle={bundle}
-                    onMarkAsRead={handleMarkAsRead}
-                    isMarkingAsRead={bundle.allIds.includes(markingNotificationId || '')}
-                    enrichedAvatars={enrichedAvatars}
-                  />
-                ));
-              })()}
+              {bundledNotifications.map((bundle) => (
+                <NotificationItem
+                  key={bundle.primary.id}
+                  notification={bundle.primary}
+                  bundle={bundle}
+                  onMarkAsRead={handleMarkAsRead}
+                  isMarkingAsRead={bundle.allIds.includes(markingNotificationId || '')}
+                  enrichedAvatars={enrichedAvatars}
+                />
+              ))}
               
               {/* Load More */}
               {hasNextPage && (

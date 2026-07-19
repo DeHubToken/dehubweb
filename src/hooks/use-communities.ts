@@ -115,6 +115,7 @@ export function useUserCommunities() {
 // ─── Fetch single community by slug ───────────────────────────────────────────
 
 export function useCommunity(slug: string | undefined) {
+  const queryClient = useQueryClient();
   return useQuery({
     queryKey: ['communities', 'slug', slug],
     queryFn: async () => {
@@ -128,6 +129,22 @@ export function useCommunity(slug: string | undefined) {
       return data as Community;
     },
     enabled: !!slug,
+    // Instant open from any list: discover holds full rows and the user's
+    // joined list embeds them — paint the clicked community immediately
+    // (which also unblocks the id-gated members/membership queries a full
+    // round-trip earlier) while the authoritative fetch runs behind it.
+    placeholderData: () => {
+      if (!slug) return undefined;
+      const discover = queryClient.getQueryData<Community[]>(['communities', 'discover']);
+      const fromDiscover = discover?.find(c => c.slug === slug);
+      if (fromDiscover) return fromDiscover;
+      for (const query of queryClient.getQueryCache().findAll({ queryKey: ['communities', 'user'] })) {
+        const rows = query.state.data as Array<{ communities?: Community }> | undefined;
+        const hit = rows?.find?.(m => m.communities?.slug === slug)?.communities;
+        if (hit) return hit;
+      }
+      return undefined;
+    },
   });
 }
 
@@ -210,8 +227,9 @@ export function useApproveMember() {
       );
       if (error) throw error;
     },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['communities'] });
+    onSuccess: (_data, { communityId }) => {
+      qc.invalidateQueries({ queryKey: ['communities', 'pending-members', communityId] });
+      qc.invalidateQueries({ queryKey: ['communities', 'members', communityId] });
       toast.success('Member approved');
     },
     onError: () => toast.error('Failed to approve'),
@@ -234,8 +252,8 @@ export function useRejectMember() {
       );
       if (error) throw error;
     },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['communities'] });
+    onSuccess: (_data, { communityId }) => {
+      qc.invalidateQueries({ queryKey: ['communities', 'pending-members', communityId] });
       toast.success('Request rejected');
     },
     onError: () => toast.error('Failed to reject'),
@@ -256,8 +274,9 @@ export function useBanMember() {
       );
       if (error) throw error;
     },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['communities'] });
+    onSuccess: (_data, { communityId }) => {
+      qc.invalidateQueries({ queryKey: ['communities', 'members', communityId] });
+      qc.invalidateQueries({ queryKey: ['communities', 'banned-members', communityId] });
       toast.success('Member banned from chat');
     },
     onError: () => toast.error('Failed to ban member'),
@@ -276,8 +295,9 @@ export function useUnbanMember() {
       );
       if (error) throw error;
     },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['communities'] });
+    onSuccess: (_data, { communityId }) => {
+      qc.invalidateQueries({ queryKey: ['communities', 'banned-members', communityId] });
+      qc.invalidateQueries({ queryKey: ['communities', 'members', communityId] });
       toast.success('Member unbanned');
     },
     onError: () => toast.error('Failed to unban member'),
@@ -296,8 +316,9 @@ export function useKickMember() {
       );
       if (error) throw error;
     },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['communities'] });
+    onSuccess: (_data, { communityId }) => {
+      qc.invalidateQueries({ queryKey: ['communities', 'members', communityId] });
+      qc.invalidateQueries({ queryKey: ['communities', 'pending-members', communityId] });
       toast.success('Member removed');
     },
     onError: () => toast.error('Failed to remove member'),
@@ -355,7 +376,8 @@ export function useCreateCommunity() {
       return data as Community;
     },
     onSuccess: () => {
-      qc.invalidateQueries({ queryKey: ['communities'] });
+      qc.invalidateQueries({ queryKey: ['communities', 'discover'] });
+      qc.invalidateQueries({ queryKey: ['communities', 'user'] });
       toast.success('Community created!');
     },
     onError: (e: any) => {
@@ -390,7 +412,9 @@ export function useUpdateCommunity() {
       return data as Community;
     },
     onSuccess: (data) => {
-      qc.invalidateQueries({ queryKey: ['communities'] });
+      // Patch the detail cache directly with the fresh row, refresh only the discover list
+      qc.setQueryData<Community>(['communities', 'slug', data.slug], data);
+      qc.invalidateQueries({ queryKey: ['communities', 'discover'] });
       qc.invalidateQueries({ queryKey: ['community'] });
       toast.success('Community updated');
     },
@@ -421,11 +445,49 @@ export function useJoinCommunity() {
       if (error) throw error;
       return { isPrivate };
     },
-    onSuccess: (result) => {
-      qc.invalidateQueries({ queryKey: ['communities'] });
+    onMutate: async ({ communityId, isPrivate }) => {
+      if (!walletAddress) return undefined;
+      await qc.cancelQueries({ queryKey: ['communities', 'membership', communityId] });
+
+      const prevMembership = qc.getQueriesData<CommunityMember | null>({ queryKey: ['communities', 'membership', communityId] });
+      const prevDiscover = qc.getQueryData<Community[]>(['communities', 'discover']);
+      const prevSlug = qc.getQueriesData<Community | null>({ queryKey: ['communities', 'slug'] });
+
+      // Flip the membership row that drives the Join/Leave button instantly
+      qc.setQueriesData<CommunityMember | null>({ queryKey: ['communities', 'membership', communityId] }, () => ({
+        id: `optimistic-${communityId}`,
+        community_id: communityId,
+        wallet_address: walletAddress,
+        role: 'member',
+        status: isPrivate ? 'pending' : 'active',
+        joined_at: new Date().toISOString(),
+      }));
+
+      // Bump member counts in cached community objects (public joins only)
+      if (!isPrivate) {
+        const bump = (c: Community) => c.id === communityId ? { ...c, member_count: c.member_count + 1 } : c;
+        qc.setQueryData<Community[]>(['communities', 'discover'], (old) => old?.map(bump));
+        qc.setQueriesData<Community | null>({ queryKey: ['communities', 'slug'] }, (old) => (old ? bump(old) : old));
+      }
+
+      return { prevMembership, prevDiscover, prevSlug };
+    },
+    onError: (_err, _vars, ctx) => {
+      ctx?.prevMembership?.forEach(([key, data]) => qc.setQueryData(key, data));
+      if (ctx?.prevDiscover) qc.setQueryData(['communities', 'discover'], ctx.prevDiscover);
+      ctx?.prevSlug?.forEach(([key, data]) => qc.setQueryData(key, data));
+      toast.error('Failed to join');
+    },
+    onSuccess: (result, { communityId }) => {
+      // Narrow refetches: real membership row (server id) + small per-community lists
+      qc.invalidateQueries({ queryKey: ['communities', 'membership', communityId] });
+      qc.invalidateQueries({ queryKey: ['communities', 'user'] });
+      qc.invalidateQueries({ queryKey: ['communities', 'members', communityId] });
+      // Counts were patched optimistically — mark stale without refetching
+      qc.invalidateQueries({ queryKey: ['communities', 'discover'], refetchType: 'none' });
+      qc.invalidateQueries({ queryKey: ['communities', 'slug'], refetchType: 'none' });
       toast.success(result?.isPrivate ? 'Join request sent!' : 'Joined community!');
     },
-    onError: () => toast.error('Failed to join'),
   });
 }
 
@@ -448,10 +510,52 @@ export function useLeaveCommunity() {
       );
       if (error) throw error;
     },
-    onSuccess: (_data, _vars, _ctx) => {
-      qc.invalidateQueries({ queryKey: ['communities'] });
+    onMutate: async (communityId) => {
+      await qc.cancelQueries({ queryKey: ['communities', 'membership', communityId] });
+
+      const prevMembership = qc.getQueriesData<CommunityMember | null>({ queryKey: ['communities', 'membership', communityId] });
+      const prevDiscover = qc.getQueryData<Community[]>(['communities', 'discover']);
+      const prevSlug = qc.getQueriesData<Community | null>({ queryKey: ['communities', 'slug'] });
+      const prevUser = qc.getQueriesData<(CommunityMember & { communities: Community })[]>({ queryKey: ['communities', 'user'] });
+      const prevMembers = qc.getQueryData<CommunityMember[]>(['communities', 'members', communityId]);
+
+      // Only an active member affects visible member counts (pending requests don't)
+      const wasActive = prevMembership.some(([, m]) => m?.status === 'active');
+
+      // Instantly clear the membership row that drives the Join/Leave button
+      qc.setQueriesData<CommunityMember | null>({ queryKey: ['communities', 'membership', communityId] }, () => null);
+      qc.setQueriesData<(CommunityMember & { communities: Community })[]>(
+        { queryKey: ['communities', 'user'] },
+        (old) => old?.filter(m => m.community_id !== communityId),
+      );
+      if (walletAddress) {
+        qc.setQueryData<CommunityMember[]>(['communities', 'members', communityId], (old) =>
+          old?.filter(m => m.wallet_address.toLowerCase() !== walletAddress.toLowerCase()));
+      }
+      if (wasActive) {
+        const drop = (c: Community) => c.id === communityId ? { ...c, member_count: Math.max(0, c.member_count - 1) } : c;
+        qc.setQueryData<Community[]>(['communities', 'discover'], (old) => old?.map(drop));
+        qc.setQueriesData<Community | null>({ queryKey: ['communities', 'slug'] }, (old) => (old ? drop(old) : old));
+      }
+
+      return { prevMembership, prevDiscover, prevSlug, prevUser, prevMembers, communityId };
     },
-    onError: () => toast.error('Failed to leave'),
+    onError: (_err, communityId, ctx) => {
+      ctx?.prevMembership?.forEach(([key, data]) => qc.setQueryData(key, data));
+      if (ctx?.prevDiscover) qc.setQueryData(['communities', 'discover'], ctx.prevDiscover);
+      ctx?.prevSlug?.forEach(([key, data]) => qc.setQueryData(key, data));
+      ctx?.prevUser?.forEach(([key, data]) => qc.setQueryData(key, data));
+      if (ctx?.prevMembers) qc.setQueryData(['communities', 'members', communityId], ctx.prevMembers);
+      toast.error('Failed to leave');
+    },
+    onSuccess: (_data, communityId) => {
+      // Caches already patched optimistically — mark the narrow keys stale without refetching
+      qc.invalidateQueries({ queryKey: ['communities', 'membership', communityId], refetchType: 'none' });
+      qc.invalidateQueries({ queryKey: ['communities', 'user'], refetchType: 'none' });
+      qc.invalidateQueries({ queryKey: ['communities', 'members', communityId], refetchType: 'none' });
+      qc.invalidateQueries({ queryKey: ['communities', 'discover'], refetchType: 'none' });
+      qc.invalidateQueries({ queryKey: ['communities', 'slug'], refetchType: 'none' });
+    },
   });
 }
 

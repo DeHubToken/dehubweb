@@ -6,6 +6,7 @@
  */
 
 import { useEffect, useRef, useReducer } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import {
@@ -197,6 +198,13 @@ export function useMessages(conversationId: string | null) {
   useEffect(() => { walletAddressRef.current = walletAddress?.toLowerCase(); }, [walletAddress]);
 
   const isVirtual = conversationId?.startsWith('new_') || (conversationId ? /^0x[0-9a-fA-F]{40}$/i.test(conversationId) : false);
+  // MessagesPage stays mounted forever (PersistentPageCache CSS-hides it), so
+  // polling must be tied to the ROUTE, not the mount — otherwise opening one
+  // DM leaves a 5s poll running for the rest of the session. useLocation makes
+  // this reactive: leaving /app/messages stops the interval, returning
+  // restarts it (and the stale query refetches immediately).
+  const { pathname } = useLocation();
+  const isMessagesRouteActive = pathname === '/app/messages';
   const query = useInfiniteQuery({
     queryKey: messagesKeys.messages(conversationId || ''),
     queryFn: async ({ pageParam = 0 }) => {
@@ -223,8 +231,9 @@ export function useMessages(conversationId: string | null) {
     initialPageParam: 0,
     enabled: isAuthenticated && !!conversationId,
     staleTime: 10 * 1000,
-    // Poll for new messages — backend doesn't reliably push socket events to recipient
-    refetchInterval: 5000,
+    // Poll for new messages — backend doesn't reliably push socket events to
+    // recipient. Route-gated (see isMessagesRouteActive above).
+    refetchInterval: isMessagesRouteActive ? 5000 : false,
   });
 
   // Flatten pages → single array, oldest first for chat display

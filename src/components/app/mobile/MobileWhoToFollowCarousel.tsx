@@ -1,14 +1,15 @@
-import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useMemo, useCallback, useRef, useEffect } from 'react';
+import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
 import { UserPlus, Loader2, ChevronRight, RefreshCw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { getSuggestedAccounts, getCachedSuggestedProfiles, followUser, type SuggestedAccount } from '@/lib/api/dehub';
+import { getSuggestedAccounts, getCachedSuggestedProfiles, type SuggestedAccount } from '@/lib/api/dehub';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { useFollowedSuggestions } from '@/hooks/use-followed-suggestions';
+import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { toast } from 'sonner';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 
@@ -19,8 +20,9 @@ export function MobileWhoToFollowCarousel() {
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress } = useAuth();
   const { handleApiError } = useReauthHandler();
-  const { followedUsers, markFollowed } = useFollowedSuggestions();
-  const [loadingUsers, setLoadingUsers] = useState<Set<string>>(new Set());
+  const { followedUsers, markFollowed, unmarkFollowed } = useFollowedSuggestions();
+  const followOverrides = useFollowOverrides();
+  const queryClient = useQueryClient();
 
   const {
     data,
@@ -110,7 +112,7 @@ export function MobileWhoToFollowCarousel() {
     }
   };
 
-  const handleFollow = async (e: React.MouseEvent, user: SuggestedAccount) => {
+  const handleFollow = (e: React.MouseEvent, user: SuggestedAccount) => {
     e.stopPropagation();
 
     if (!isAuthenticated) {
@@ -118,31 +120,19 @@ export function MobileWhoToFollowCarousel() {
       return;
     }
 
-    if (loadingUsers.has(user.address) || followedUsers.has(user.address)) {
+    if (followedUsers.has(user.address) || followOverrides.get(user.address.toLowerCase())) {
       return;
     }
 
-    setLoadingUsers(prev => new Set(prev).add(user.address));
-
-    try {
-      await followUser(user.address);
-      markFollowed(user.address);
-      toast.success(`Following ${getDisplayName(user)}!`);
-    } catch (error: unknown) {
-      const errorMessage = error instanceof Error ? error.message : String(error);
-      if (errorMessage.toLowerCase().includes('already') || errorMessage.toLowerCase().includes('following')) {
-        toast.info(`You're already following ${getDisplayName(user)}`);
-        markFollowed(user.address);
-      } else {
+    // Optimistic: hide the suggestion instantly, revert if the API call fails
+    markFollowed(user.address);
+    toggleFollowFor(queryClient, user.address, false, {
+      name: getDisplayName(user),
+      onError: (error) => {
+        unmarkFollowed(user.address);
         handleApiError(error, 'Failed to follow user');
-      }
-    } finally {
-      setLoadingUsers(prev => {
-        const next = new Set(prev);
-        next.delete(user.address);
-        return next;
-      });
-    }
+      },
+    });
   };
 
   if (!isAuthenticated) {
@@ -229,14 +219,9 @@ export function MobileWhoToFollowCarousel() {
                 size="sm"
                 variant="outline"
                 onClick={(e) => handleFollow(e, user)}
-                disabled={loadingUsers.has(user.address)}
                 className="w-24 h-7 text-[10px] font-semibold rounded-lg border-zinc-700 text-white hover:bg-zinc-800 bg-transparent flex items-center justify-center"
               >
-                {loadingUsers.has(user.address) ? (
-                  <Loader2 className="w-3 h-3 animate-spin" />
-                ) : (
-                  'Follow'
-                )}
+                Follow
               </Button>
             </div>
           </div>

@@ -115,8 +115,56 @@ export function useMarkNotificationAsRead() {
 
   return useMutation({
     mutationFn: (notificationId: string) => markNotificationAsRead(notificationId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: notificationKeys.all });
+    onMutate: async (notificationId) => {
+      await queryClient.cancelQueries({ queryKey: notificationKeys.all });
+
+      const previousLists = queryClient.getQueriesData<{ pages: { items: DeHubNotification[] }[] }>(
+        { queryKey: [...notificationKeys.all, 'list'] },
+      );
+      const previousCount = queryClient.getQueryData<UnreadNotificationCount>(notificationKeys.unreadCount());
+
+      // Locate the row so we only decrement the count when it was actually unread
+      let target: DeHubNotification | undefined;
+      for (const [, data] of previousLists) {
+        target = data?.pages?.flatMap((page) => page?.items || []).find((n) => n?.id === notificationId);
+        if (target) break;
+      }
+
+      // Optimistically flag the row as read in every cached list (all category filters)
+      queryClient.setQueriesData<{ pages: { items: DeHubNotification[] }[] }>(
+        { queryKey: [...notificationKeys.all, 'list'] },
+        (old) => old ? {
+          ...old,
+          pages: old.pages.map((page) => page ? {
+            ...page,
+            items: (page.items || []).map((n) => n?.id === notificationId ? { ...n, read: true } : n),
+          } : page),
+        } : old,
+      );
+
+      // Optimistically decrement the unread count for that notification's category
+      if (target && !target.read && previousCount) {
+        queryClient.setQueryData<UnreadNotificationCount>(notificationKeys.unreadCount(), {
+          total: Math.max(0, previousCount.total - 1),
+          byCategory: {
+            ...previousCount.byCategory,
+            [target.category]: Math.max(0, (previousCount.byCategory[target.category] || 0) - 1),
+          },
+        });
+      }
+
+      return { previousLists, previousCount };
+    },
+    onError: (_err, _notificationId, context) => {
+      // Rollback on error
+      context?.previousLists?.forEach(([key, data]) => queryClient.setQueryData(key, data));
+      if (context?.previousCount !== undefined) {
+        queryClient.setQueryData(notificationKeys.unreadCount(), context.previousCount);
+      }
+    },
+    onSettled: () => {
+      // Caches already patched optimistically — mark stale without refetching
+      queryClient.invalidateQueries({ queryKey: notificationKeys.all, refetchType: 'none' });
     },
   });
 }

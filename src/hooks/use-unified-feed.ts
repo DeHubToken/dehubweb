@@ -553,6 +553,29 @@ async function loadUnifiedFeedPage(args: {
 }
 
 /**
+ * Find a post in any already-cached unified-feed page (home, explore, profile
+ * tabs — every param variant of the ['unified-feed', …] infinite query).
+ * Lets detail views (SinglePostPage) paint instantly with the object the feed
+ * already holds while the authoritative fetch runs behind it.
+ */
+export function findCachedFeedPost(
+  queryClient: QueryClient,
+  tokenId: string | number,
+): UnifiedFeedItem | undefined {
+  const idNum = Number(tokenId);
+  if (!Number.isFinite(idNum)) return undefined;
+  for (const query of queryClient.getQueryCache().findAll({ queryKey: ['unified-feed'] })) {
+    const data = query.state.data as { pages?: Array<{ items?: UnifiedFeedItem[] }> } | undefined;
+    if (!data?.pages) continue;
+    for (const page of data.pages) {
+      const hit = page.items?.find(item => Number(item.tokenId) === idNum);
+      if (hit) return hit;
+    }
+  }
+  return undefined;
+}
+
+/**
  * Warm the feed cache before React mounts (called from App.tsx module scope
  * on cold loads of / and /app). Mirrors useUnifiedFeed's option
  * normalization so the queryKey hashes identically; staleTime matches the

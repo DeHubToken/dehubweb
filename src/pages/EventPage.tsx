@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { EventDetailDrawer } from '@/components/app/events/EventDetailDrawer';
 import type { CommunityEvent } from '@/hooks/use-events';
@@ -9,6 +9,7 @@ import { SEOHead } from '@/components/SEOHead';
 export default function EventPage() {
   const { eventNumber } = useParams<{ eventNumber: string }>();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const num = eventNumber ? parseInt(eventNumber, 10) : NaN;
 
   const { data: event, isLoading, isError } = useQuery({
@@ -23,6 +24,16 @@ export default function EventPage() {
       return data as CommunityEvent;
     },
     enabled: !isNaN(num),
+    // Instant open from the events list: the ['events', …] caches already hold
+    // the full row, so paint it immediately while the fetch runs behind it.
+    placeholderData: () => {
+      for (const query of queryClient.getQueryCache().findAll({ queryKey: ['events'] })) {
+        const rows = query.state.data as CommunityEvent[] | undefined;
+        const hit = rows?.find?.(e => e.event_number === num);
+        if (hit) return hit;
+      }
+      return undefined;
+    },
   });
 
   if (isLoading) {

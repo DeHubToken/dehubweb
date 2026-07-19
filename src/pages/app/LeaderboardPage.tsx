@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { useTranslation } from 'react-i18next';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { Search, Loader2, Wallet, ArrowUpRight, CreditCard, Users, Heart, UserCheck, ArrowDown, ArrowUp, RefreshCw, TrendingUp } from 'lucide-react';
 import { toast } from 'sonner';
 import trophyIcon from '@/assets/trophy-icon.png';
@@ -177,7 +177,13 @@ export default function LeaderboardPage() {
     staleTime: 60_000,
     gcTime: 2 * 60 * 60 * 1000,
     refetchOnMount: 'always',
-    refetchOnWindowFocus: 'always',
+    // 'always' here refired the fetch on every window focus even while this
+    // page sat hidden behind another route (it never unmounts). The 60s
+    // staleTime + mount refetch keep it fresh enough.
+    refetchOnWindowFocus: false,
+    // Switching period/category keeps the previous ranked list visible while
+    // the new one loads, instead of dropping the page to a spinner.
+    placeholderData: keepPreviousData,
   });
 
 

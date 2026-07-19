@@ -47,7 +47,7 @@ interface ActionBarProps {
   /** Handler for share action */
   onShare?: () => void;
   /** Handler for repost action */
-  onRepost?: () => void;
+  onRepost?: () => void | Promise<unknown>;
   /** Handler for quote action */
   onQuote?: () => void;
   /** Additional CSS classes */
@@ -433,7 +433,13 @@ export function ActionBar({
       setRepostDelta(prev => prev + 1);
       setIsReposted(true);
       if (postId) markReposted(postId);
-      onRepost();
+      // Roll back the optimistic +1 / filled icon if the card's API call
+      // rejects (cards rethrow after their own error toast).
+      Promise.resolve(onRepost()).catch(() => {
+        setRepostDelta(prev => prev - 1);
+        setIsReposted(false);
+        if (postId) unmarkReposted(postId);
+      });
       toast.success('Reposted!');
     } else {
       toast.info('Repost not available for this post');
@@ -446,7 +452,12 @@ export function ActionBar({
       setRepostDelta(prev => prev - 1);
       setIsReposted(false);
       if (postId) unmarkReposted(postId);
-      onRepost(); // Same API call toggles the repost off
+      // Same API call toggles the repost off; restore state if it rejects.
+      Promise.resolve(onRepost()).catch(() => {
+        setRepostDelta(prev => prev + 1);
+        setIsReposted(true);
+        if (postId) markReposted(postId);
+      });
       toast.success('Repost removed');
     }
     setSheetOpen(false);

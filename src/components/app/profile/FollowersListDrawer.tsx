@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import { Loader2, Users, UserPlus, UserMinus, Search, ArrowUpDown, X, Clock } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -12,7 +13,8 @@ import {
   DrawerTitle,
 } from '@/components/ui/drawer';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
-import { getFollowList, followUser, unfollowUser, isFollowing as checkIsFollowing, type FollowListItem } from '@/lib/api/dehub';
+import { getFollowList, followUser, isFollowing as checkIsFollowing, type FollowListItem } from '@/lib/api/dehub';
+import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
@@ -83,7 +85,8 @@ export function FollowersListDrawer({
   const [users, setUsers] = useState<UserListItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isResolvingStatus, setIsResolvingStatus] = useState(false);
-  const [loadingFollows, setLoadingFollows] = useState<Set<string>>(new Set());
+  const followOverrides = useFollowOverrides();
+  const queryClient = useQueryClient();
   const [error, setError] = useState<string | null>(null);
   const [sortOption, setSortOption] = useState<SortOption>('newest');
   const [searchQuery, setSearchQuery] = useState('');
@@ -321,68 +324,76 @@ export function FollowersListDrawer({
     }
   };
 
-  const handleFollowToggle = async (user: UserListItem, e: React.MouseEvent) => {
+  const handleFollowToggle = (user: UserListItem, e: React.MouseEvent) => {
     e.stopPropagation();
-    
+
     if (!isAuthenticated) {
       toast.error('Please log in first');
       return;
     }
 
-    setLoadingFollows(prev => new Set(prev).add(user.address));
+    const name = user.displayName || user.username || 'user';
 
-    try {
-      if (user.isFollowing) {
-        await unfollowUser(user.address);
-        followingSetRef.current?.delete(user.address.toLowerCase());
-        setUsers(prev => prev.map(u => 
-          u.address === user.address ? { ...u, isFollowing: false } : u
-        ));
-        toast.success(`Unfollowed ${user.displayName || user.username || 'user'}`);
-      } else {
-        await followUser(user.address);
-        if (user.isPrivate) {
-          // Private account: follow request sent, mark as pending
-          setUsers(prev => prev.map(u => 
-            u.address === user.address ? { ...u, isPending: true } : u
-          ));
-          toast.success(`Follow request sent to ${user.displayName || user.username || 'user'}`);
-        } else {
-          followingSetRef.current?.add(user.address.toLowerCase());
-          setUsers(prev => prev.map(u => 
-            u.address === user.address ? { ...u, isFollowing: true } : u
-          ));
-          toast.success(`Following ${user.displayName || user.username || 'user'}`);
-        }
-      }
-    } catch (error: any) {
-      const msg = error?.message || error?.error || String(error);
-      const msgLower = typeof msg === 'string' ? msg.toLowerCase() : '';
-      if (msgLower.includes('already pending')) {
-        setUsers(prev => prev.map(u => 
-          u.address === user.address ? { ...u, isPending: true } : u
-        ));
-        toast.info('Follow request already pending. Waiting for approval.');
-      } else if (msgLower.includes('already') || msgLower.includes('following')) {
-        followingSetRef.current?.add(user.address.toLowerCase());
-        setUsers(prev => prev.map(u => 
-          u.address === user.address ? { ...u, isFollowing: true } : u
-        ));
-        toast.info(`Already following ${user.displayName || user.username || 'user'}`);
-      } else {
-        handleApiError(error, 'Failed to update follow status');
-      }
-    } finally {
-      setLoadingFollows(prev => {
-        const next = new Set(prev);
-        next.delete(user.address);
-        return next;
-      });
+    // Private account (not yet followed): follow becomes a request — show
+    // "Requested" instantly, revert on error. Pending is not a boolean follow
+    // state, so it stays out of the shared override store.
+    if (!user.isFollowing && user.isPrivate) {
+      setUsers(prev => prev.map(u =>
+        u.address === user.address ? { ...u, isPending: true } : u
+      ));
+      followUser(user.address)
+        .then(() => {
+          toast.success(`Follow request sent to ${name}`);
+        })
+        .catch((error: any) => {
+          const msg = error?.message || error?.error || String(error);
+          const msgLower = typeof msg === 'string' ? msg.toLowerCase() : '';
+          if (msgLower.includes('already pending')) {
+            toast.info('Follow request already pending. Waiting for approval.');
+          } else if (msgLower.includes('already') || msgLower.includes('following')) {
+            followingSetRef.current?.add(user.address.toLowerCase());
+            setUsers(prev => prev.map(u =>
+              u.address === user.address ? { ...u, isPending: false, isFollowing: true } : u
+            ));
+            toast.info(`Already following ${name}`);
+          } else {
+            setUsers(prev => prev.map(u =>
+              u.address === user.address ? { ...u, isPending: false } : u
+            ));
+            handleApiError(error, 'Failed to update follow status');
+          }
+        });
+      return;
     }
+
+    // Optimistic flip via the shared store + local list state (instant, no spinner)
+    const wasFollowing = user.isFollowing === true;
+    if (wasFollowing) followingSetRef.current?.delete(user.address.toLowerCase());
+    else followingSetRef.current?.add(user.address.toLowerCase());
+    setUsers(prev => prev.map(u =>
+      u.address === user.address ? { ...u, isFollowing: !wasFollowing } : u
+    ));
+    toggleFollowFor(queryClient, user.address, wasFollowing, {
+      name,
+      onError: (error) => {
+        if (wasFollowing) followingSetRef.current?.add(user.address.toLowerCase());
+        else followingSetRef.current?.delete(user.address.toLowerCase());
+        setUsers(prev => prev.map(u =>
+          u.address === user.address ? { ...u, isFollowing: wasFollowing } : u
+        ));
+        handleApiError(error, 'Failed to update follow status');
+      },
+    });
   };
 
-  const isCurrentUser = (address: string) => 
+  const isCurrentUser = (address: string) =>
     currentUserAddress?.toLowerCase() === address.toLowerCase();
+
+  // Cross-surface follow overrides win over the fetched list state
+  const displayUsers = useMemo(() => users.map(u => {
+    const override = followOverrides.get(u.address.toLowerCase());
+    return override === undefined ? u : { ...u, isFollowing: override };
+  }), [users, followOverrides]);
 
   const titleWithCount = totalCount !== null && totalCount > 0
     ? `${title} (${totalCount})`
@@ -478,7 +489,7 @@ export function FollowersListDrawer({
             </div>
           ) : (
             <div className="space-y-2">
-              {users.map((user) => (
+              {displayUsers.map((user) => (
                 <button
                   key={user.address}
                   onClick={() => handleUserClick(user)}
@@ -520,7 +531,7 @@ export function FollowersListDrawer({
                       size="sm"
                       variant="ghost"
                       onClick={(e) => handleFollowToggle(user, e)}
-                      disabled={loadingFollows.has(user.address) || user.isPending || isResolvingStatus}
+                      disabled={user.isPending || isResolvingStatus}
                       className={cn(
                         "shrink-0 rounded-lg",
                         user.isFollowing
@@ -530,9 +541,7 @@ export function FollowersListDrawer({
                             : "bg-white/10 text-white hover:bg-white/20"
                       )}
                     >
-                      {loadingFollows.has(user.address) ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : user.isFollowing ? (
+                      {user.isFollowing ? (
                         <>
                           <UserMinus className="w-4 h-4 mr-1" />
                           Following

@@ -4,7 +4,7 @@
  * React Query hooks for stores, listings, and orders.
  */
 
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -69,6 +69,9 @@ export function useBrowseListings(category?: string, sort?: string, search?: str
       if (error) throw error;
       return data || [];
     },
+    // Category/sort/search changes keep the previous grid visible while the
+    // new results load instead of flashing skeletons.
+    placeholderData: keepPreviousData,
   });
 }
 
@@ -89,6 +92,7 @@ export function useStoreById(storeId: string | undefined) {
 }
 
 export function useStoreListing(listingId: string | undefined) {
+  const queryClient = useQueryClient();
   return useQuery({
     queryKey: ['store-listing', listingId],
     queryFn: async () => {
@@ -101,6 +105,16 @@ export function useStoreListing(listingId: string | undefined) {
       return data;
     },
     enabled: !!listingId,
+    // Instant open from Browse: those rows use the exact same select shape,
+    // so paint the clicked listing immediately while the fetch runs behind it.
+    placeholderData: () => {
+      for (const query of queryClient.getQueryCache().findAll({ queryKey: ['store-listings-browse'] })) {
+        const rows = query.state.data as Array<{ id: string }> | undefined;
+        const hit = rows?.find?.(l => l.id === listingId);
+        if (hit) return hit;
+      }
+      return undefined;
+    },
   });
 }
 

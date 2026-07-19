@@ -37,7 +37,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, recordCommentViews, getPostLikers, getPostQuotes, followUser, unfollowUser, type ApiCommentResponse } from '@/lib/api/dehub';
+import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, recordCommentViews, getPostLikers, getPostQuotes, type ApiCommentResponse } from '@/lib/api/dehub';
+import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { toast } from 'sonner';
 import { incrementCommentCount } from '@/lib/comment-count-cache';
 import { useMention } from '@/hooks/use-mention';
@@ -426,6 +427,10 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [optimisticComments, setOptimisticComments] = useState<Comment[]>([]);
+  // Optimistic delete/edit overlays — applied instantly in allComments below,
+  // reverted if the server call fails.
+  const [deletedCommentIds, setDeletedCommentIds] = useState<Set<string>>(new Set());
+  const [editOverrides, setEditOverrides] = useState<Map<string, string>>(new Map());
   // Track like/dislike state overrides for optimistic updates
   const [likeOverrides, setLikeOverrides] = useState<Map<string, { isLiked: boolean; isDisliked: boolean; likes: number }>>(new Map());
   
@@ -468,8 +473,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     staleTime: 30000,
   });
 
-  // Fetch reposters when tab is active
-  const [repostLoadingFollows, setRepostLoadingFollows] = useState<Set<string>>(new Set());
+  // Fetch reposters when tab is active. Follow buttons in the list use the
+  // shared optimistic override store — instant flip, cross-surface consistent.
+  const followOverrides = useFollowOverrides();
   const { data: repostersData, isLoading: isLoadingReposters } = useQuery({
     queryKey: ['post-reposters', tokenId],
     queryFn: () => getPostReposters(tokenId),
@@ -495,22 +501,26 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     retry: false,
   });
 
-  // Combine API comments with optimistic ones and apply like overrides
+  // Combine API comments with optimistic ones and apply like/edit/delete overrides
   const allComments = useMemo(() => {
     const mapped = apiComments?.map(mapApiComment) || [];
     const apiIds = new Set(mapped.map(c => c.id));
     const pending = optimisticComments.filter(c => !apiIds.has(c.id) && c.id.startsWith('temp-'));
     const combined = [...pending, ...mapped];
-    
-    // Apply like/dislike overrides
-    return combined.map(c => {
-      const override = likeOverrides.get(c.id);
-      if (override) {
-        return { ...c, ...override };
-      }
-      return c;
-    });
-  }, [apiComments, optimisticComments, likeOverrides]);
+
+    // Apply overrides: optimistic deletes hide rows instantly, optimistic
+    // edits swap text instantly — both reconcile with the background refetch.
+    return combined
+      .filter(c => !deletedCommentIds.has(c.id))
+      .map(c => {
+        const editedText = editOverrides.get(c.id);
+        const override = likeOverrides.get(c.id);
+        let result = c;
+        if (editedText !== undefined) result = { ...result, text: editedText };
+        if (override) result = { ...result, ...override };
+        return result;
+      });
+  }, [apiComments, optimisticComments, likeOverrides, deletedCommentIds, editOverrides]);
 
   // Record comment views when visible (#9)
   const viewedIdsRef = useRef(new Set<number>());
@@ -799,11 +809,17 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   };
 
   const handleDeleteComment = async (commentId: string) => {
+    // Optimistic: hide the row instantly, restore it if the server refuses.
+    setDeletedCommentIds(prev => new Set(prev).add(commentId));
     try {
       await deleteComment(commentId);
       queryClient.invalidateQueries({ queryKey: ['comments', tokenId] });
-      toast.success('Comment deleted');
     } catch (err) {
+      setDeletedCommentIds(prev => {
+        const next = new Set(prev);
+        next.delete(commentId);
+        return next;
+      });
       console.error('Delete comment error:', err);
       toast.error('Failed to delete comment');
     }
@@ -811,11 +827,17 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
 
   const handleEditComment = async (commentId: string, newContent: string) => {
     if (!newContent.trim()) return;
+    // Optimistic: swap the text instantly, revert if the server refuses.
+    setEditOverrides(prev => new Map(prev).set(commentId, newContent));
     try {
       await editComment({ commentId, content: newContent });
       queryClient.invalidateQueries({ queryKey: ['comments', tokenId] });
-      toast.success('Comment updated');
     } catch (err) {
+      setEditOverrides(prev => {
+        const next = new Map(prev);
+        next.delete(commentId);
+        return next;
+      });
       console.error('Edit comment error:', err);
       toast.error('Failed to edit comment');
     }
@@ -1229,42 +1251,31 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                           <span className="text-zinc-500 text-xs truncate block">@{user.username.replace('@', '')}</span>
                         )}
                       </div>
-                      {user.address?.toLowerCase() !== walletAddress?.toLowerCase() && (
-                        <button
-                          onClick={async (e) => {
-                            e.stopPropagation();
-                            if (!walletAddress) return;
-                            setRepostLoadingFollows(prev => new Set(prev).add(user.address));
-                            try {
-                              if (user.isFollowing) {
-                                await unfollowUser(user.address);
-                              } else {
-                                await followUser(user.address);
-                              }
-                              queryClient.invalidateQueries({ queryKey: ['post-reposters', tokenId] });
-                            } catch {
-                              toast.error('Action failed');
-                            } finally {
-                              setRepostLoadingFollows(prev => {
-                                const next = new Set(prev);
-                                next.delete(user.address);
-                                return next;
+                      {user.address?.toLowerCase() !== walletAddress?.toLowerCase() && (() => {
+                        const isUserFollowed =
+                          followOverrides.get(user.address?.toLowerCase() ?? '') ?? !!user.isFollowing;
+                        return (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              if (!walletAddress) return;
+                              // Optimistic flip via the shared store — no spinner,
+                              // no list refetch; rollback + toast handled inside.
+                              toggleFollowFor(queryClient, user.address, isUserFollowed, {
+                                silent: true,
                               });
-                            }
-                          }}
-                          disabled={repostLoadingFollows.has(user.address)}
-                          className={cn(
-                            "shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
-                            user.isFollowing
-                              ? "bg-zinc-800 text-white hover:bg-red-500/20 hover:text-red-400"
-                              : "bg-white/10 text-white hover:bg-white/20"
-                          )}
-                        >
-                          {repostLoadingFollows.has(user.address) ? (
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                          ) : user.isFollowing ? 'Following ✓' : 'Follow'}
-                        </button>
-                      )}
+                            }}
+                            className={cn(
+                              "shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors",
+                              isUserFollowed
+                                ? "bg-zinc-800 text-white hover:bg-red-500/20 hover:text-red-400"
+                                : "bg-white/10 text-white hover:bg-white/20"
+                            )}
+                          >
+                            {isUserFollowed ? 'Following ✓' : 'Follow'}
+                          </button>
+                        );
+                      })()}
                     </button>
                   );
                 })}

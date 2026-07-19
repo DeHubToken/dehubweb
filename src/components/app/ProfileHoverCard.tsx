@@ -17,9 +17,10 @@ import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getAccountInfo } from '@/lib/api/dehub/users';
-import { followUser, isFollowing as checkIsFollowing } from '@/lib/api/dehub/social';
+import { isFollowing as checkIsFollowing } from '@/lib/api/dehub/social';
 import { seedProfileCache } from '@/lib/profile-cache-seed';
 import { useAuth } from '@/contexts/AuthContext';
+import { useFollow } from '@/hooks/use-follow';
 import { toast } from 'sonner';
 import type { DeHubUser } from '@/lib/api/dehub/types';
 
@@ -68,8 +69,11 @@ export function ProfileHoverCard({
   const queryClient = useQueryClient();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [isFollowLoading, setIsFollowLoading] = useState(false);
   const fetchedRef = useRef<string | null>(null);
+
+  // Shared cross-surface follow state (optimistic override wins over fetched value)
+  const { isFollowing: followOverride, toggleFollow } = useFollow(profile?.address);
+  const effectiveFollowing = followOverride ?? profile?.isFollowing ?? false;
 
   const userId = creatorId || creatorUsername;
   const isOwnProfile = walletAddress && creatorId?.toLowerCase() === walletAddress.toLowerCase();
@@ -118,20 +122,20 @@ export function ProfileHoverCard({
     }
   }, [userId, walletAddress, creatorId, creatorUsername, displayName, verified, badgeBalance]);
 
-  const handleFollow = useCallback(async () => {
+  const handleFollow = useCallback(() => {
     if (!walletAddress) { openLoginModal(); return; }
     if (!profile?.address) return;
-    setIsFollowLoading(true);
-    try {
-      await followUser(profile.address);
-      setProfile(prev => prev ? { ...prev, isFollowing: true } : null);
-      toast.success(`Following ${profile.displayName || profile.username || 'user'}!`);
-    } catch {
-      toast.error('Failed to follow');
-    } finally {
-      setIsFollowLoading(false);
-    }
-  }, [walletAddress, openLoginModal, profile]);
+    // Optimistic: bump follower count locally, revert on error (button state
+    // itself comes from the shared override which flips instantly).
+    setProfile(prev => prev ? { ...prev, followers: prev.followers + 1 } : null);
+    toggleFollow(false, {
+      name: profile.displayName || profile.username || 'user',
+      onError: () => {
+        setProfile(prev => prev ? { ...prev, followers: Math.max(0, prev.followers - 1) } : null);
+        toast.error('Failed to follow');
+      },
+    });
+  }, [walletAddress, openLoginModal, profile, toggleFollow]);
 
   const handleNavigate = useCallback(() => {
     const cleanUsername = (profile?.username || creatorUsername)?.replace('@', '');
@@ -183,23 +187,18 @@ export function ProfileHoverCard({
                   </AvatarFallback>
                 </Avatar>
               </button>
-              {!profile.isOwnProfile && !profile.isFollowing && (
+              {!profile.isOwnProfile && !effectiveFollowing && (
                 <button
                   type="button"
                   onClick={handleFollow}
-                  disabled={isFollowLoading}
                   data-follow-btn
                   className="inline-flex items-center gap-1.5 px-3 h-7 rounded-lg text-xs font-medium bg-white/10 hover:bg-white/15 text-white border border-white/15 transition-colors disabled:opacity-60"
                 >
-                  {isFollowLoading ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  ) : (
-                    <UserPlus className="w-3.5 h-3.5" />
-                  )}
+                  <UserPlus className="w-3.5 h-3.5" />
                   Follow
                 </button>
               )}
-              {!profile.isOwnProfile && profile.isFollowing && (
+              {!profile.isOwnProfile && effectiveFollowing && (
                 <span className="px-3.5 py-1.5 rounded-xl text-xs font-medium text-white/80 bg-white/5 border border-white/10">
                   Following ✓
                 </span>

@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getNFTInfo, DeHubNFT, updateTokenVisibility, TokenVisibility } from '@/lib/api/dehub';
+import { findCachedFeedPost } from '@/hooks/use-unified-feed';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getTokenHolders, TOTAL_FRACTIONS, truncateAddress as truncateAddr } from '@/lib/api/token-holders';
 import { Progress } from '@/components/ui/progress';
@@ -527,6 +528,14 @@ export default function PostInfoPage() {
     enabled: !!postId,
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes in cache
+    // Instant paint: the user almost always arrives here FROM the post page,
+    // so the identical payload is already cached under ['single-post', id]
+    // (or sitting in a feed cache). Render it immediately — which also lets
+    // the token-holders query below start without waiting a round-trip —
+    // while the authoritative fetch runs behind it.
+    placeholderData: () =>
+      queryClient.getQueryData<DeHubNFT>(['single-post', postId]) ??
+      (findCachedFeedPost(queryClient, postId!) as unknown as DeHubNFT | undefined),
   });
   
   // Fetch token holders with React Query (cached for 5 minutes)

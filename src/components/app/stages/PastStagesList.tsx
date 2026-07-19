@@ -78,7 +78,7 @@ export function PastStagesList() {
   const forcingDurationRef = useRef(false);
   const endTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const { data: pastStages = [] } = useQuery({
+  const { data: pastStages = [], isLoading: isLoadingStages } = useQuery({
     queryKey: ['past-stages'],
     queryFn: async () => {
       const { data } = await supabase
@@ -89,7 +89,8 @@ export function PastStagesList() {
         .limit(20);
       return (data as AudioSpace[]) || [];
     },
-    staleTime: 30_000,
+    // 5 min like the app default — 30s meant most tab returns refetched.
+    staleTime: 5 * 60_000,
   });
 
   const stopPlayback = useCallback(() => {
@@ -337,6 +338,21 @@ export function PastStagesList() {
     },
     [playingStageId, stopPlayback, walletAddress, queryClient],
   );
+
+  // Skeleton rows while the first load is in flight — without this the list
+  // flashed the "No recorded stages yet" empty state before data arrived.
+  if (isLoadingStages) {
+    return (
+      <div className="space-y-2 sm:space-y-3">
+        {[0, 1, 2].map((i) => (
+          <div key={i} data-page-bento className="bg-zinc-900 rounded-2xl p-4 animate-pulse">
+            <div className="h-4 w-2/3 bg-zinc-800 rounded mb-2" />
+            <div className="h-3 w-1/3 bg-zinc-800 rounded" />
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   if (pastStages.length === 0) {
     return (
