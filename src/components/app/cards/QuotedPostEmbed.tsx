@@ -8,9 +8,10 @@
 import { memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { CheckCircle, Play, Images } from 'lucide-react';
+import { CheckCircle, Play, Images, Ticket, Lock } from 'lucide-react';
 import { getMediaUrl } from '@/lib/api/dehub/core';
 import { buildFeedImageUrls, buildImageUrl } from '@/lib/media-url';
+import { isTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import type { DeHubNFT } from '@/lib/api/dehub/types';
 
 interface QuotedPostEmbedProps {
@@ -37,6 +38,14 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
     ? (getMediaUrl(quotedPost.thumbnail_url) || buildImageUrl(quotedPost.tokenId, quotedPost.imageUrl))
     : firstImageUrl;
 
+  // Gated content must stay gated in embeds (quotes, DM shares) — otherwise a
+  // locked PPV post shared into a DM leaks its media as a free preview. Same
+  // bypass rules as the feed cards: owners and unlockers see it clear.
+  const isPPV = !!(quotedPost.is_ppv || quotedPost.streamInfo?.isPayPerView);
+  const isHoldLocked = !!(quotedPost.is_locked || quotedPost.streamInfo?.isLockContent);
+  const canBypassGating = !!(quotedPost.isOwner || quotedPost.isUnlocked) || isTokenUnlocked(String(quotedPost.tokenId));
+  const gated = (isPPV || isHoldLocked) && !canBypassGating;
+
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     navigate(`/app/post/${quotedPost.tokenId}`, { state: { fromFeed: true } });
@@ -49,21 +58,31 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
     >
       {/* Media thumbnail (top, like Twitter) */}
       {thumbnailUrl && (hasImage || hasVideo) && (
-        <div className="relative w-full aspect-video max-h-[200px] sm:max-h-[240px] bg-zinc-900">
+        <div className="relative w-full aspect-video max-h-[200px] sm:max-h-[240px] bg-zinc-900 overflow-hidden">
           <img
             src={thumbnailUrl}
             alt=""
-            className="w-full h-full object-cover rounded-lg"
+            className={`w-full h-full object-cover rounded-lg ${gated ? 'blur-2xl scale-110 select-none pointer-events-none' : ''}`}
             loading="lazy"
           />
-          {hasVideo && (
+          {gated && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40">
+              <div className="w-10 h-10 rounded-xl bg-black/40 backdrop-blur-[24px] saturate-[180%] flex items-center justify-center border border-white/10 mb-1.5">
+                {isPPV ? <Ticket className="w-5 h-5 text-white" /> : <Lock className="w-5 h-5 text-white" />}
+              </div>
+              <p className="text-white font-semibold text-xs">
+                {isPPV ? 'Pay-Per-View Content' : 'Locked Content'}
+              </p>
+            </div>
+          )}
+          {!gated && hasVideo && (
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-10 h-10 rounded-full bg-black/60 backdrop-blur-sm flex items-center justify-center">
                 <Play className="w-5 h-5 text-white fill-white ml-0.5" />
               </div>
             </div>
           )}
-          {hasImage && (resolvedImageUrls?.length ?? 0) > 1 && (
+          {!gated && hasImage && (resolvedImageUrls?.length ?? 0) > 1 && (
             <div className="absolute top-2 right-2 bg-black/60 backdrop-blur-sm rounded-lg px-2 py-1 flex items-center gap-1">
               <Images className="w-3.5 h-3.5 text-white" />
               <span className="text-xs text-white font-medium">{resolvedImageUrls!.length}</span>
