@@ -6,7 +6,7 @@
  */
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { Send, Users, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check, Search, Trash2 } from 'lucide-react';
+import { Send, Users, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check, Search, Trash2, ArrowDown } from 'lucide-react';
 import { VoiceRecorder } from '../chat/VoiceRecorder';
 import { VoiceWaveformPlayer } from '../chat/VoiceWaveformPlayer';
 import { supabase } from '@/integrations/supabase/client';
@@ -124,6 +124,8 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
   const [adminThinking, setAdminThinking] = useState(false);
   const PAGE_SIZE = 15;
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const [showJumpToLatest, setShowJumpToLatest] = useState(false);
+  const [newMessageCount, setNewMessageCount] = useState(0);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -185,6 +187,11 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
       requestAnimationFrame(() => {
         scrollContainer.scrollTop = scrollContainer.scrollHeight;
       });
+    } else {
+      // New message arrived while the user is scrolled up — surface the
+      // "jump to latest" button with an unread count (matches DM behaviour).
+      setNewMessageCount((c) => c + 1);
+      setShowJumpToLatest(true);
     }
   }, [lastMessageId]);
 
@@ -201,11 +208,21 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
 
   const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     const el = e.currentTarget;
+    const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    setShowJumpToLatest(distanceFromBottom > 100);
+    if (distanceFromBottom < 50) setNewMessageCount(0);
     if (el.scrollTop <= 0 && hasMore) {
       prevScrollHeightRef.current = el.scrollHeight;
       setVisibleCount((c) => c + PAGE_SIZE);
     }
   }, [hasMore]);
+
+  const scrollToBottom = useCallback(() => {
+    const el = scrollRef.current;
+    if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+    setNewMessageCount(0);
+    setShowJumpToLatest(false);
+  }, []);
 
   const handleSend = async () => {
     if (!isAuthenticated) { openLoginModal(); return; }
@@ -635,6 +652,19 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
             <div ref={bottomRef} />
 
           </div>
+
+          {/* Jump to latest — appears when scrolled up, like DMs */}
+          {(showJumpToLatest || newMessageCount > 0) && (
+            <button
+              onClick={scrollToBottom}
+              className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1 px-3 py-1.5 rounded-full bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-medium shadow-lg border border-white/10 transition-colors"
+            >
+              <ArrowDown className="w-3.5 h-3.5" />
+              {newMessageCount > 0
+                ? `${newMessageCount} new message${newMessageCount > 1 ? 's' : ''}`
+                : 'Jump to latest'}
+            </button>
+          )}
         </div>
       </SharedTranslationContext.Provider>
 
