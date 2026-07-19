@@ -15,7 +15,7 @@ import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
-import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Info, Trash2, Gem, Repeat, Music, X, Bookmark, Pin } from 'lucide-react';
+import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Info, Trash2, Gem, Repeat, Music, X, Bookmark, Pin, Pencil } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
@@ -37,6 +37,8 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
+import { EditPostModal } from '../modals/EditPostModal';
+import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { QuotePostModal } from '../modals/QuotePostModal';
 import { TipModal } from '../modals/TipModal';
 import { CommentsWrapper } from './CommentsWrapper';
@@ -489,6 +491,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const [showLockedDrawer, setShowLockedDrawer] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
@@ -1313,6 +1316,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     <>
                       <div className="border-t border-white/10 my-1" />
                       <button
+                        onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowEditModal(true), 300); }}
+                        className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                      >
+                        <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
+                      </button>
+                      <button
                         onClick={() => {
                           if (!videoTokenId || togglePinMutation.isPending) return;
                           togglePinMutation.mutate(videoTokenId, {
@@ -1952,6 +1961,12 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               <>
                 <div className="border-t border-white/10 my-1" />
                 <button
+                  onClick={() => { setShowOptionsDrawer(false); setShowEditModal(true); }}
+                  className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                >
+                  <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
+                </button>
+                <button
                   onClick={() => {
                     if (!videoTokenId || togglePinMutation.isPending) return;
                     togglePinMutation.mutate(videoTokenId, {
@@ -1987,6 +2002,19 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         onSuccess={() => {
           queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
           queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+        }}
+      />
+
+      {/* Edit Post Modal */}
+      <EditPostModal
+        open={showEditModal}
+        onOpenChange={setShowEditModal}
+        tokenId={video.id}
+        currentTitle={video.title}
+        currentDescription={video.description ?? ''}
+        currentCategories={video.categories ?? []}
+        onSuccess={(edited) => {
+          applyOptimisticEdit(queryClient, video.id, edited);
         }}
       />
 

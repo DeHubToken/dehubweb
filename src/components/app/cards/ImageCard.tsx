@@ -14,7 +14,7 @@ import { hasCommunityLink, stripCommunityLinks } from '@/components/app/communit
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Music, Pause, Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Info, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Bookmark, Pin } from 'lucide-react';
+import { Music, Pause, Eye, MoreVertical, Download, Flag, Ban, EyeOff, Sparkles, ChevronDown, ChevronUp, ChevronLeft, ChevronRight, Link2, MessageSquare, Languages, Globe, Info, Trash2, Ticket, Gift, Lock, MessageCircle, Gem, X, BarChart2, Plus, Bookmark, Pin, Pencil } from 'lucide-react';
 import { useCreatePoll } from '@/hooks/use-polls';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -33,6 +33,8 @@ import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
 
 import { DeletePostModal } from '../modals/DeletePostModal';
+import { EditPostModal } from '../modals/EditPostModal';
+import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { QuotePostModal } from '../modals/QuotePostModal';
 import { QuotedPostEmbed } from './QuotedPostEmbed';
 import { TipModal } from '../modals/TipModal';
@@ -390,6 +392,11 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  // caption holds the raw API description including any [soundtrack:...] tag
+  // that `description` strips for display — edit the raw text so saving
+  // doesn't silently drop the post's soundtrack.
+  const editDescription = /\[soundtrack:/.test(post.caption) ? post.caption : (post.description ?? '');
   const [showTranslationSheet, setShowTranslationSheet] = useState(false);
   const [visibility, setVisibility] = useState<TokenVisibility>('public');
   const [showPPVDrawer, setShowPPVDrawer] = useState(false);
@@ -692,6 +699,12 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                       className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
                     >
                       <BarChart2 className="w-5 h-5" /> Create Poll
+                    </button>
+                    <button
+                      onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowEditModal(true), 300); }}
+                      className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                    >
+                      <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
                     </button>
                     <button
                       onClick={() => {
@@ -1019,6 +1032,19 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         onSuccess={() => {
           queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
           queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+        }}
+      />
+
+      {/* Edit Post Modal */}
+      <EditPostModal
+        open={showEditModal}
+        onOpenChange={setShowEditModal}
+        tokenId={post.id}
+        currentTitle={post.title ?? ''}
+        currentDescription={editDescription}
+        currentCategories={post.categories ?? []}
+        onSuccess={(edited) => {
+          applyOptimisticEdit(queryClient, post.id, edited);
         }}
       />
 
