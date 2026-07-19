@@ -180,7 +180,7 @@ const sorted = [...posts].sort(
   (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
 );
 
-// 1. manifest (metadata only — shape consumed by netlify/edge-functions/ssr-seo.js)
+// 1. manifest (metadata only — shape consumed by CLOUDFLARE_WORKER_SEO.js)
 const manifest = sorted.map((p) => ({
   slug: p.slug,
   title: p.title,

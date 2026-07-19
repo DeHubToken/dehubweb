@@ -404,7 +404,7 @@ serve(async (req) => {
         }
 
         const userAgent = req.headers.get("user-agent") || "";
-        // X-Is-Bot header set by Netlify edge function (more reliable than UA sniffing here)
+        // X-Is-Bot header set by the Cloudflare worker (more reliable than UA sniffing here)
         // because the edge function always serves SSR HTML for shareable routes — it knows
         // whether the original requester was a bot and tells us via this header.
         const xIsBot = req.headers.get("x-is-bot");
