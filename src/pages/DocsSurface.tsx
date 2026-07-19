@@ -52,6 +52,7 @@ const ApiEndpoints = lazy(() => import("./docs/ApiEndpoints"));
 const Team = lazy(() => import("./docs/Team"));
 const BrandGuidelines = lazy(() => import("./docs/BrandGuidelines"));
 const BrandAssets = lazy(() => import("./docs/BrandAssets"));
+const FeaturedIn = lazy(() => import("./docs/FeaturedIn"));
 const Dapp = lazy(() => import("./docs/Dapp"));
 const Games = lazy(() => import("./docs/Games"));
 const TokenEconomics = lazy(() => import("./docs/TokenEconomics"));
@@ -149,6 +150,7 @@ export default function DocsSurface() {
             <Route path="/docs/terms-of-service" element={wrap(TermsOfService)} />
             <Route path="/docs/privacy" element={wrap(PrivacyPolicy)} />
             <Route path="/docs/brand-assets" element={wrap(BrandAssets)} />
+            <Route path="/docs/featured-in" element={wrap(FeaturedIn)} />
             <Route path="/docs/brand-guidelines" element={wrap(BrandGuidelines)} />
             <Route path="/docs/quickstart" element={wrap(QuickStart)} />
             <Route path="/docs/installation" element={wrap(Installation)} />

@@ -94,6 +94,10 @@ const getMenuItems = (t: (key: string) => string) => [{
     path: '/docs/brand-assets',
     icon: '🏷️'
   }, {
+    title: 'Featured In',
+    path: '/docs/featured-in',
+    icon: '📰'
+  }, {
     title: t('nav.legalDisclaimer'),
     path: '/docs/terms',
     icon: '⚖️'
