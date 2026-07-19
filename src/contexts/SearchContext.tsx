@@ -253,6 +253,15 @@ const createSearchIndex = (): SearchIndex[] => {
       keywords: ['brand', 'assets', 'logos', 'graphics', 'marketing', 'download']
     },
     {
+      id: 'featured-in',
+      title: 'Featured In',
+      content: 'DeHub in the press, media coverage, featured articles, US Weekly, Yahoo Finance, Entrepreneur, Investing.com, publications, press features',
+      path: '/docs/featured-in',
+      category: 'Brand',
+      type: 'page',
+      keywords: ['press', 'media', 'featured', 'news', 'articles', 'publications', 'us weekly', 'yahoo', 'entrepreneur', 'investing']
+    },
+    {
       id: 'contact',
       title: 'Contact',
       content: 'Contact DeHub team, support, partnerships, business inquiries, community, email, social media',
