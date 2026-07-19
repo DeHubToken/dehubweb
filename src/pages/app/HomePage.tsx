@@ -23,6 +23,7 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
+import { useAnyDrawerOpen } from '@/components/ui/drawer';
 import { setTabSwitchTime } from '@/lib/gesture-state';
 import { useFeedPrefetch, clearPrefetchState } from '@/hooks/use-feed-prefetch';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -91,6 +92,12 @@ export default function HomePage() {
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
   const navVisible = useScrollDirection();
+  // While any bottom sheet (share, post options, …) is open, the tab bar must
+  // get out of the way: it sits at z-110 (above the drawer scrim at z-100, so
+  // it can top the post overlay), which otherwise leaves it floating crisp
+  // above the sheet's dimmed backdrop. Mobile slides it away; desktop drops it
+  // under the scrim so it dims with the rest of the page.
+  const anyDrawerOpen = useAnyDrawerOpen();
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1024);
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1024);
@@ -801,8 +808,8 @@ export default function HomePage() {
       <div
         data-feed-nav-outer
         data-home-tabs
-        className={cn("sticky top-11 lg:top-0 bg-black z-[110] px-2 sm:px-3 pt-1 pb-2 sm:pt-1 sm:pb-3 lg:px-3 lg:pt-2 lg:mt-0 transition-transform duration-300 ease-in-out", isCollapsed && "lg:pl-2 lg:pr-0", isCollapsed && "lg:hidden")}
-        style={{ transform: (isMobile && !navVisible && !isPostOverlayActive && !(showHomeFilters && deferredTab === 'home')) ? 'translateY(calc(-100% - 3rem))' : 'translateY(0)', willChange: 'transform' }}
+        className={cn("sticky top-11 lg:top-0 bg-black px-2 sm:px-3 pt-1 pb-2 sm:pt-1 sm:pb-3 lg:px-3 lg:pt-2 lg:mt-0 transition-transform duration-300 ease-in-out", anyDrawerOpen ? "z-[90]" : "z-[110]", isCollapsed && "lg:pl-2 lg:pr-0", isCollapsed && "lg:hidden")}
+        style={{ transform: (isMobile && (anyDrawerOpen || (!navVisible && !isPostOverlayActive && !(showHomeFilters && deferredTab === 'home')))) ? 'translateY(calc(-100% - 3rem))' : 'translateY(0)', willChange: 'transform' }}
       >
         <div data-feed-nav className="bg-zinc-900 overflow-visible rounded-xl">
 

@@ -20,6 +20,7 @@ import { cn } from '@/lib/utils';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
+import { useAnyDrawerOpen } from '@/components/ui/drawer';
 
 const HOME_STATE_STORAGE_KEY = 'home-feed-state';
 const HOME_TAB_SWITCH_EVENT = 'switch-home-tab';
@@ -48,6 +49,11 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
   const location = useLocation();
   const navigate = useNavigate();
   const navVisible = useScrollDirection();
+  // Bottom sheets (share, post options, …) should own the screen on mobile —
+  // slide the nav pill away while one is open, matching the home tab bar.
+  // Desktop keeps the pill in place; it already sits below the drawer scrim
+  // (z-90/z-50 vs z-100) so the sheet dims it with the rest of the page.
+  const anyDrawerOpen = useAnyDrawerOpen();
   const isHomePage = isHomePath(location.pathname);
 
   const handleBack = useCallback(() => {
@@ -222,7 +228,7 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
         // along with the rest of the page instead of leaving it floating crisp.
         ? "top-11 lg:top-0 z-[90] px-2 sm:px-3 lg:px-3 pt-1 pb-2 sm:pt-1 sm:pb-3 lg:pt-2"
         : "top-0 z-50 p-2 sm:p-3 pb-2 sm:pb-2",
-      !navVisible && "-translate-y-full lg:translate-y-0"
+      (!navVisible || anyDrawerOpen) && "-translate-y-full lg:translate-y-0"
     )}>
       <div data-feed-nav className="bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
         <div ref={layerRef} className="relative overflow-visible">

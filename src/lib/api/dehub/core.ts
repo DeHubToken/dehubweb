@@ -115,6 +115,12 @@ export async function refreshTokenShared(): Promise<TokenRefreshResult | null> {
   const refreshToken = getRefreshToken();
   if (!refreshToken) return null;
 
+  // Captured BEFORE the refresh: whether the old access token was already dead.
+  // Any API fetch made in that window went out effectively anonymous, so
+  // per-user flags (isLiked, isSaved, isUnlocked…) cached from it are wrong for
+  // this user. Listeners (AuthProvider) use this to refetch those caches.
+  const wasExpired = isTokenExpired() || !getAuthToken();
+
   refreshInFlight = (async (): Promise<TokenRefreshResult | null> => {
     try {
       const response = await fetch(`${DEHUB_API_BASE}/api/auth/refresh`, {
@@ -148,6 +154,10 @@ export async function refreshTokenShared(): Promise<TokenRefreshResult | null> {
       setAuthToken(data.accessToken);
       if (data.refreshToken) setRefreshToken(data.refreshToken);
       if (data.expiresIn) setTokenExpiresAt(data.expiresIn);
+
+      try {
+        window.dispatchEvent(new CustomEvent('dehub:token-refreshed', { detail: { wasExpired } }));
+      } catch { /* SSR / test env — no window */ }
 
       return data as TokenRefreshResult;
     } catch (e) {

@@ -262,6 +262,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     prevWalletRef.current = curr;
   }, [walletAddress, queryClient]);
 
+  // When a silent token refresh revives an ALREADY-expired session (24h token
+  // died overnight / while the tab was backgrounded), every feed fetch made in
+  // the dead window — including the boot prefetch — went out effectively
+  // anonymous, caching isLiked/isSaved=false for posts this user liked, and
+  // staleTime keeps that "fresh" for minutes. walletAddress never changes on
+  // this path, so the wallet-change cleanup above doesn't fire; refetch the
+  // per-user-flag queries here instead. (Fixes "my likes look empty after
+  // logging back in, then fix themselves later".)
+  useEffect(() => {
+    const handler = (e: Event) => {
+      if (!(e as CustomEvent<{ wasExpired?: boolean }>).detail?.wasExpired) return;
+      for (const key of ['unified-feed', 'dehub-videos', 'dehub-images', 'profile-content', 'single-post', 'bookmarks']) {
+        queryClient.invalidateQueries({ queryKey: [key] });
+      }
+    };
+    window.addEventListener('dehub:token-refreshed', handler);
+    return () => window.removeEventListener('dehub:token-refreshed', handler);
+  }, [queryClient]);
+
   // Wagmi hooks
   const { address: wagmiAddress, isConnected: isWagmiConnected } = useAccount();
   const { signMessageAsync } = useSignMessage();
