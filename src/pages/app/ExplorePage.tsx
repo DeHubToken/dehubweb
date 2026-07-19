@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect, type CSSProperties } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { SEOHead } from '@/components/SEOHead';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
@@ -38,6 +38,13 @@ import {
 import { useSearchHistory } from '@/hooks/use-search-history';
 import { useDeHubUserSearch } from '@/hooks/use-dehub-user-search';
 import { useFollow } from '@/hooks/use-follow';
+
+// content-visibility for below-fold result cards — browser skips their
+// layout/paint until they approach the viewport (matches HomeFeed's pattern).
+const OFFSCREEN_RESULT_STYLE: CSSProperties = {
+  contentVisibility: 'auto',
+  containIntrinsicSize: 'auto 320px',
+};
 import { buildAvatarUrl } from '@/lib/media-url';
 import { getMediaUrl, getCategories, searchNFTs, type DeHubNFT, type DeHubCategory } from '@/lib/api/dehub';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
@@ -150,8 +157,9 @@ const FilterDropdown = ({
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const filteredOptions = options.filter(option =>
-    option.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredOptions = useMemo(
+    () => options.filter(option => option.toLowerCase().includes(searchQuery.toLowerCase())),
+    [options, searchQuery]
   );
 
   return (
@@ -245,21 +253,31 @@ const UserResultCard = ({
   const [localFollowing, setLocalFollowing] = useState(user.isFollowing ?? false);
   // Shared optimistic override wins so this card agrees with every other surface
   const { isFollowing: followOverride, toggleFollow } = useFollow(user.id);
-  const isFollowing = followOverride ?? localFollowing;
-  const resolvedRef = useRef(false);
 
-  // Resolve follow status when not provided by search results (e.g. creators from video/ticker results)
+  // Resolve follow status when not provided by search results (e.g. creators
+  // from video/ticker results). Cached query (was a raw per-card fetch that
+  // refired for every card instance on every search render).
+  const followStatusHandle = user.handle.replace('@', '');
+  const { data: resolvedFollowStatus } = useQuery({
+    queryKey: ['user-follow-status', followStatusHandle, walletAddress?.toLowerCase()],
+    queryFn: async () => {
+      const { getAccountByUsername } = await import('@/lib/api/dehub');
+      const info = await getAccountByUsername(followStatusHandle);
+      return !!info?.isFollowing;
+    },
+    enabled:
+      user.isFollowing === undefined &&
+      !!walletAddress &&
+      !!user.id &&
+      !!followStatusHandle &&
+      !followStatusHandle.startsWith('0x'),
+    staleTime: 5 * 60_000,
+    retry: false,
+  });
   useEffect(() => {
-    if (user.isFollowing !== undefined || resolvedRef.current || !walletAddress || !user.id) return;
-    resolvedRef.current = true;
-    const cleanHandle = user.handle.replace('@', '');
-    if (!cleanHandle || cleanHandle.startsWith('0x')) return;
-    import('@/lib/api/dehub').then(({ getAccountByUsername }) => {
-      getAccountByUsername(cleanHandle).then((info) => {
-        if (info?.isFollowing) setLocalFollowing(true);
-      }).catch(() => {});
-    });
-  }, [user.isFollowing, user.id, user.handle, walletAddress]);
+    if (resolvedFollowStatus) setLocalFollowing(true);
+  }, [resolvedFollowStatus]);
+  const isFollowing = followOverride ?? localFollowing;
   
   // user.avatar is already a fully built URL from mapAccountToCreator/extractUniqueCreators
   const avatarUrl = user.avatar;
@@ -1059,21 +1077,22 @@ export default function ExplorePage() {
                     {/* Feed Cards */}
                     <div className="space-y-4">
                       {mappedFeedItems.map((feedItem, index) => {
+                        // Off-screen results skip layout/paint until scrolled
+                        // near (same technique as the home feed).
+                        const cvStyle = index < 3 ? undefined : OFFSCREEN_RESULT_STYLE;
                         if (feedItem.type === 'video') {
                           const video = feedItem.item as VideoItem;
                           return (
-                            <VideoCard
-                              key={video.id}
-                              video={video}
-                            />
+                            <div key={video.id} style={cvStyle}>
+                              <VideoCard video={video} />
+                            </div>
                           );
                         } else {
                           const image = feedItem.item as ImagePost;
                           return (
-                            <ImageCard
-                              key={image.id}
-                              post={image}
-                            />
+                            <div key={image.id} style={cvStyle}>
+                              <ImageCard post={image} />
+                            </div>
                           );
                         }
                       })}
@@ -1184,13 +1203,14 @@ export default function ExplorePage() {
                     </div>
                   ) : (
                     <div className="space-y-4">
-                      {categoryFeedItems.map((feedItem) => {
+                      {categoryFeedItems.map((feedItem, index) => {
+                        const cvStyle = index < 3 ? undefined : OFFSCREEN_RESULT_STYLE;
                         if (feedItem.type === 'video') {
                           const video = feedItem.item as VideoItem;
-                          return <VideoCard key={video.id} video={video} />;
+                          return <div key={video.id} style={cvStyle}><VideoCard video={video} /></div>;
                         } else {
                           const image = feedItem.item as ImagePost;
-                          return <ImageCard key={image.id} post={image} />;
+                          return <div key={image.id} style={cvStyle}><ImageCard post={image} /></div>;
                         }
                       })}
                       <div ref={categoryLoaderRef} className="h-10 flex items-center justify-center">

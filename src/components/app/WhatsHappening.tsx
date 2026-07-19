@@ -124,6 +124,19 @@ interface WhatsHappeningProps {
 }
 
 export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector = false }: WhatsHappeningProps) {
+  // The RightSidebar instance is `hidden lg:block` — below 1024px it stays
+  // mounted but is never visible, so its polls/rotation are pure waste there.
+  // The Explore instance (showCountrySelector) is the one shown on mobile.
+  const [isDesktopViewport, setIsDesktopViewport] = useState(
+    () => typeof window === 'undefined' || window.matchMedia('(min-width: 1024px)').matches
+  );
+  useEffect(() => {
+    const mql = window.matchMedia('(min-width: 1024px)');
+    const onChange = () => setIsDesktopViewport(mql.matches);
+    mql.addEventListener('change', onChange);
+    return () => mql.removeEventListener('change', onChange);
+  }, []);
+  const isVisibleInstance = isDesktopViewport || showCountrySelector;
   const navigate = useNavigate();
   const { openModal: openStagesModal, joinSpace } = useStage();
   const { t } = useTranslation();
@@ -186,10 +199,12 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
     placeholderData: (previousData) => previousData,
   });
 
-  // Auto-rotate ticker periods every 5 seconds
+  // Auto-rotate ticker periods every 5 seconds (skips ticks while the browser
+  // tab is hidden or this instance is the CSS-hidden mobile sidebar copy)
   useEffect(() => {
-    if (!isTickerAutoRotating || activeTab !== 'tickers') return;
+    if (!isTickerAutoRotating || activeTab !== 'tickers' || !isVisibleInstance) return;
     const interval = setInterval(() => {
+      if (document.hidden) return;
       setTickerPeriod(prev => {
         const idx = TICKER_PERIODS.findIndex(p => p.value === prev);
         const next = TICKER_PERIODS[(idx + 1) % TICKER_PERIODS.length].value;
@@ -198,7 +213,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
       });
     }, 5000);
     return () => clearInterval(interval);
-  }, [isTickerAutoRotating, activeTab]);
+  }, [isTickerAutoRotating, activeTab, isVisibleInstance]);
 
   const handleTickerPeriodChange = useCallback((newPeriod: TickerPeriod) => {
     tickerDirRef.current = PERIOD_INDEX[newPeriod] - PERIOD_INDEX[tickerPeriod];
@@ -233,8 +248,9 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
     },
     // Powers the live badge on the stages tab; 60s latency on that badge is
     // fine and halves an always-on Supabase poll that ran on every page.
+    // Viewport-gated: no polling from the CSS-hidden mobile sidebar instance.
     staleTime: 30_000,
-    refetchInterval: 60_000,
+    refetchInterval: isVisibleInstance ? 60_000 : false,
   });
 
   return (

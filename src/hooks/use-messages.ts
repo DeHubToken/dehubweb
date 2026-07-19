@@ -940,12 +940,17 @@ export function useBlockUserInGroup() {
 
 export function useUserOnlineStatus(address: string | null) {
   const { isAuthenticated } = useAuth();
+  // Consumers are conversation rows in the forever-mounted MessagesPage —
+  // route-gate the poll like the message poll above (N conversations would
+  // otherwise each ping status every 3 min for the whole session).
+  const { pathname } = useLocation();
+  const isMessagesRouteActive = pathname === '/app/messages';
   return useQuery({
     queryKey: [...messagesKeys.all, 'userStatus', address],
     queryFn: () => getUserOnlineStatus(address!),
     enabled: isAuthenticated && !!address,
     staleTime: 2 * 60 * 1000,
-    refetchInterval: 3 * 60 * 1000,
+    refetchInterval: isMessagesRouteActive ? 3 * 60 * 1000 : false,
   });
 }
 

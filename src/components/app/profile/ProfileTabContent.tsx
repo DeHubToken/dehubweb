@@ -462,11 +462,14 @@ function PostsTabPanel({
     return map;
   }, [uniqueTokenIds, parentPostQueries]);
 
-  const mergedItems: Array<{ type: 'post' | 'comment'; data: TextPost | ApiCommentResponse; createdAt: string }> = [
-    ...PROFILE_POSTS.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '' })),
-    ...allComments.map(c => ({ type: 'comment' as const, data: c, createdAt: c.createdAt || '' })),
-  ];
-  mergedItems.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  const mergedItems = React.useMemo(() => {
+    const items: Array<{ type: 'post' | 'comment'; data: TextPost | ApiCommentResponse; createdAt: string }> = [
+      ...PROFILE_POSTS.map(p => ({ type: 'post' as const, data: p, createdAt: p.createdAt || '' })),
+      ...allComments.map(c => ({ type: 'comment' as const, data: c, createdAt: c.createdAt || '' })),
+    ];
+    items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    return items;
+  }, [PROFILE_POSTS, allComments]);
 
   const isLoadingAll = isLoadingComments && allComments.length === 0;
 

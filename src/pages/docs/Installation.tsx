@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { Package, Download, Settings, CheckCircle, AlertTriangle, Terminal } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -35,18 +35,18 @@ const Installation = () => {
           <div>
             <h4 className="font-medium text-blue-900 mb-2">{t('installation.nodeEnvironment')}</h4>
             <ul className="space-y-1 text-blue-800 text-sm">
-              <li>â€¢ Node.js 16.0.0 or higher</li>
-              <li>â€¢ npm 7.0.0 or higher</li>
-              <li>â€¢ TypeScript 4.5+ (optional)</li>
+              <li>• Node.js 16.0.0 or higher</li>
+              <li>• npm 7.0.0 or higher</li>
+              <li>• TypeScript 4.5+ (optional)</li>
             </ul>
           </div>
           <div>
             <h4 className="font-medium text-blue-900 mb-2">{t('installation.browserSupport')}</h4>
             <ul className="space-y-1 text-blue-800 text-sm">
-              <li>â€¢ Chrome 90+</li>
-              <li>â€¢ Firefox 88+</li>
-              <li>â€¢ Safari 14+</li>
-              <li>â€¢ Edge 90+</li>
+              <li>• Chrome 90+</li>
+              <li>• Firefox 88+</li>
+              <li>• Safari 14+</li>
+              <li>• Edge 90+</li>
             </ul>
           </div>
         </div>
@@ -134,7 +134,7 @@ const client = new YourPlatform({
   apiKey: process.env.YOURPLATFORM_API_KEY
 });
 
-console.log('âœ… Installation successful!');`}</code>
+console.log('✅ Installation successful!');`}</code>
           </pre>
         </div>
       </div>

@@ -1009,8 +1009,11 @@ function ImportTokenDialog({ open, onOpenChange, chainId: initialChainId, onImpo
       const { discoverAlchemyTokens } = await import('@/lib/wallet/alchemy-tokens');
       // Get ALL tokens (including defaults) for display
       const { getAllTokenBalances } = await import('@/lib/wallet/tokens');
-      const allKnown = await getAllTokenBalances(walletAddress!, chainId);
-      const discovered = await discoverAlchemyTokens(walletAddress!, chainId);
+      // Independent lookups — run in parallel
+      const [allKnown, discovered] = await Promise.all([
+        getAllTokenBalances(walletAddress!, chainId),
+        discoverAlchemyTokens(walletAddress!, chainId),
+      ]);
       // Merge: known tokens first, then discovered (no duplicates)
       const knownAddrs = new Set(allKnown.map(t => t.address.toLowerCase()));
       const extra = discovered.filter(t => !knownAddrs.has(t.address.toLowerCase()));

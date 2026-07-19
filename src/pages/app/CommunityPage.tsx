@@ -28,6 +28,14 @@ export default function CommunityPage() {
   const navigate = useNavigate();
   const { walletAddress, isAuthenticated, openLoginModal } = useAuth();
   const [tab, setTab] = useState<Tab>('posts');
+  // Lazy-mount-then-keep: only the Posts tab mounts on arrival; the others
+  // (chat = 200-message fetch + per-sender profile fan-out, events, members)
+  // mount on first activation and then stay mounted CSS-hidden as before.
+  const [visitedTabs, setVisitedTabs] = useState<Set<Tab>>(() => new Set<Tab>(['posts']));
+  const activateTab = (next: Tab) => {
+    setTab(next);
+    setVisitedTabs(prev => (prev.has(next) ? prev : new Set(prev).add(next)));
+  };
   const { t } = useTranslation();
 
   const { data: community, isLoading } = useCommunity(slug);
@@ -113,7 +121,7 @@ export default function CommunityPage() {
         ]).map(tItem => (
           <button
             key={tItem.key}
-            onClick={() => setTab(tItem.key)}
+            onClick={() => activateTab(tItem.key)}
             className={cn(
               'relative px-4 py-3 text-sm font-medium transition-colors border-b-2 -mb-[1px] whitespace-nowrap',
               tab === tItem.key
@@ -143,18 +151,26 @@ export default function CommunityPage() {
             tickerPairAddress={community.ticker_pair_address}
           />
         </div>
-        <div className={tab === 'chat' ? '' : 'hidden'}>
-          <CommunityChat communityId={community.id} isMember={isMember} canModerate={isOwner || membership?.role === 'admin'} />
-        </div>
-        <div className={tab === 'events' ? '' : 'hidden'}>
-          <CommunityEvents communityId={community.id} isMember={isMember} />
-        </div>
-        <div className={tab === 'members' ? '' : 'hidden'}>
-          <CommunityMembers members={members} communityId={community.id} isOwner={isOwner || membership?.role === 'admin'} />
-        </div>
-        <div className={tab === 'about' ? '' : 'hidden'}>
-          <CommunityAbout community={community} isOwner={isOwner} />
-        </div>
+        {visitedTabs.has('chat') && (
+          <div className={tab === 'chat' ? '' : 'hidden'}>
+            <CommunityChat communityId={community.id} isMember={isMember} canModerate={isOwner || membership?.role === 'admin'} />
+          </div>
+        )}
+        {visitedTabs.has('events') && (
+          <div className={tab === 'events' ? '' : 'hidden'}>
+            <CommunityEvents communityId={community.id} isMember={isMember} />
+          </div>
+        )}
+        {visitedTabs.has('members') && (
+          <div className={tab === 'members' ? '' : 'hidden'}>
+            <CommunityMembers members={members} communityId={community.id} isOwner={isOwner || membership?.role === 'admin'} />
+          </div>
+        )}
+        {visitedTabs.has('about') && (
+          <div className={tab === 'about' ? '' : 'hidden'}>
+            <CommunityAbout community={community} isOwner={isOwner} />
+          </div>
+        )}
       </div>
     </div>
   );

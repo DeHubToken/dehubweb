@@ -79,10 +79,12 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
     return () => observer.disconnect();
   }, [topicPeriod, hasMore]);
 
-  // Auto-rotate through periods every 5 seconds
+  // Auto-rotate through periods every 5 seconds (skip ticks while the browser
+  // tab is hidden — this list is mounted app-wide via the sidebar)
   useEffect(() => {
     if (!isAutoRotating) return;
     const interval = setInterval(() => {
+      if (document.hidden) return;
       setTopicPeriod(prev => {
         const idx = TOPIC_PERIODS.findIndex(p => p.value === prev);
         const next = TOPIC_PERIODS[(idx + 1) % TOPIC_PERIODS.length].value;

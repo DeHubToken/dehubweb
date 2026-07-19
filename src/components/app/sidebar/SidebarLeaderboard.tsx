@@ -242,10 +242,12 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
     },
   }), [activePeriod]);
 
-  // Auto-rotate through periods every 5 seconds
+  // Auto-rotate through periods every 5 seconds (skip ticks while the browser
+  // tab is hidden — this sidebar is mounted on every page, forever)
   useEffect(() => {
     if (!isAutoRotating) return;
     const interval = setInterval(() => {
+      if (document.hidden) return;
       setActivePeriod(prev => {
         const idx = PERIODS.indexOf(prev as typeof PERIODS[number]);
         return PERIODS[(idx + 1) % PERIODS.length];

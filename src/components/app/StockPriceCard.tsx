@@ -1,6 +1,9 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import type { StockQuote } from '@/hooks/use-stock-quote';
-import { TokenPriceChart } from '@/components/app/TokenPriceChart';
+// Lazy: keeps recharts out of the eager feed path (see CashtagPriceCard).
+const TokenPriceChart = lazy(() =>
+  import('@/components/app/TokenPriceChart').then(m => ({ default: m.TokenPriceChart }))
+);
 import { TrendingUp, TrendingDown, ExternalLink, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -151,7 +154,9 @@ export function StockPriceCard({ data }: StockPriceCardProps) {
       )}
 
       {/* Chart */}
-      <TokenPriceChart data={data.chartData || []} isLoading={false} />
+      <Suspense fallback={<div className="w-full h-[180px] bg-zinc-900/50" />}>
+        <TokenPriceChart data={data.chartData || []} isLoading={false} />
+      </Suspense>
 
       {/* Stats row */}
       <div className="px-4 py-3 flex items-center gap-4 text-xs border-t border-zinc-700/50">

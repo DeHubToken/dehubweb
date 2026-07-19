@@ -29,7 +29,9 @@ export function useCreatorPlans(creatorAddress?: string, enabled: boolean = true
     queryKey: ['plans', resolvedAddress?.toLowerCase() || 'self'],
     queryFn: () => resolvedAddress ? getPlans(resolvedAddress) : Promise.resolve([]),
     enabled: enabled && !!resolvedAddress,
-    staleTime: 5000,
+    // Plans change only via this user's own mutations (which invalidate) —
+    // 5s staleTime made every consumer remount refetch.
+    staleTime: 5 * 60_000,
   });
 
   return {

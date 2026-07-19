@@ -2,7 +2,10 @@
  * Phantom / Solana wallet helpers for Solana minting & SPL token-gating.
  */
 
-import { PublicKey } from '@solana/web3.js';
+// Type-only: keeps the ~350 kB @solana/web3.js runtime out of every chunk
+// that imports these helpers (the post composer path). Address validation
+// below uses a dependency-free base58 decode instead of `new PublicKey()`.
+import type { PublicKey } from '@solana/web3.js';
 
 export interface SolanaWalletProvider {
   isPhantom?: boolean;
@@ -27,13 +30,38 @@ export function getSolanaProvider(): SolanaWalletProvider | null {
   return provider;
 }
 
+const BASE58_ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+
+/**
+ * A Solana address is base58 text that decodes to exactly 32 bytes — the same
+ * check `new PublicKey()` performs, minus the web3.js dependency.
+ */
 export function isValidSolanaAddress(address: string): boolean {
-  try {
-    new PublicKey(address.trim());
-    return true;
-  } catch {
-    return false;
+  const trimmed = address.trim();
+  if (trimmed.length < 32 || trimmed.length > 44) return false;
+
+  const bytes: number[] = [];
+  for (const char of trimmed) {
+    const value = BASE58_ALPHABET.indexOf(char);
+    if (value === -1) return false;
+    let carry = value;
+    for (let i = 0; i < bytes.length; i++) {
+      carry += bytes[i] * 58;
+      bytes[i] = carry & 0xff;
+      carry >>= 8;
+    }
+    while (carry > 0) {
+      bytes.push(carry & 0xff);
+      carry >>= 8;
+    }
   }
+  // Leading '1' characters encode leading zero bytes
+  let leadingZeros = 0;
+  for (const char of trimmed) {
+    if (char !== '1') break;
+    leadingZeros++;
+  }
+  return leadingZeros + bytes.length === 32;
 }
 
 export async function connectSolanaWallet(): Promise<string> {

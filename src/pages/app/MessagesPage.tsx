@@ -215,6 +215,10 @@ export default function MessagesPage() {
   const [composerPrefill, setComposerPrefill] = useState<{ convId: string; text: string } | null>(null);
   const [pendingDmTrigger, setPendingDmTrigger] = useState(0);
   
+  // Account-info lookup fired the moment the "Message" navigation arrives so
+  // it overlaps the conversations load below (was a serial 3-round-trip chain).
+  const pendingUserPromiseRef = useRef<Promise<DeHubUser | null> | null>(null);
+
   useEffect(() => {
     const state = location.state as { openDmWith?: string; username?: string; autoSendBody?: string } | null;
     if (state?.openDmWith) {
@@ -222,6 +226,9 @@ export default function MessagesPage() {
       if (state.autoSendBody) {
         pendingAutoSendRef.current = { peerAddress: state.openDmWith.toLowerCase(), body: state.autoSendBody };
       }
+      // Start the _id lookup now — if an existing conversation is found the
+      // result is simply discarded.
+      pendingUserPromiseRef.current = getAccountInfo(state.openDmWith).catch(() => null);
       window.history.replaceState({}, document.title);
       setPendingDmTrigger(prev => prev + 1);
     }
@@ -239,28 +246,32 @@ export default function MessagesPage() {
     );
 
     if (existing) {
+      pendingUserPromiseRef.current = null;
       setSelectedConversation(existing);
     } else {
-      // Fetch account_info to get MongoDB _id — createAndStart requires _id, not just address
-      getAccountInfo(address)
-        .then((user: DeHubUser) =>
-          createConversation.mutateAsync({
-            recipientAddress: address,
-            recipientUser: {
-              _id: user._id || address,
-              address,
-              username: username ?? user.username,
-              displayName: user.displayName ?? user.display_name,
-              avatarImageUrl: user.avatarImageUrl ?? user.avatarUrl,
-              dmSettings: (user as any).dmSettings,
-            },
-          })
-        )
-        .catch(() =>
-          createConversation.mutateAsync({
-            recipientAddress: address,
-            recipientUser: { address, username } as Partial<DeHubUser>,
-          })
+      // The account_info lookup (for the MongoDB _id createAndStart requires)
+      // was fired when the navigation arrived — by now it has usually resolved
+      // in parallel with the conversations load.
+      const userPromise = pendingUserPromiseRef.current ?? getAccountInfo(address).catch(() => null);
+      pendingUserPromiseRef.current = null;
+      userPromise
+        .then((user: DeHubUser | null) =>
+          user
+            ? createConversation.mutateAsync({
+                recipientAddress: address,
+                recipientUser: {
+                  _id: user._id || address,
+                  address,
+                  username: username ?? user.username,
+                  displayName: user.displayName ?? user.display_name,
+                  avatarImageUrl: user.avatarImageUrl ?? user.avatarUrl,
+                  dmSettings: (user as any).dmSettings,
+                },
+              })
+            : createConversation.mutateAsync({
+                recipientAddress: address,
+                recipientUser: { address, username } as Partial<DeHubUser>,
+              })
         )
         .then((conv) => setSelectedConversation(conv))
         .catch(() => {});

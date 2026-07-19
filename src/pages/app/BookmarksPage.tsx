@@ -265,8 +265,14 @@ export default function BookmarksPage() {
         </div>
       ) : (
         <div className="space-y-4">
-          {bookmarks.map((item) => (
-            <FeedItemRenderer key={item.id} item={item} />
+          {bookmarks.map((item, index) => (
+            // Below-fold cards skip layout/paint until scrolled near
+            <div
+              key={item.id}
+              style={index < 3 ? undefined : { contentVisibility: 'auto', containIntrinsicSize: 'auto 320px' }}
+            >
+              <FeedItemRenderer item={item} />
+            </div>
           ))}
           
           {/* Infinite scroll trigger */}
