@@ -57,7 +57,11 @@ export function useFeedSwallowClip(
         if (cut) {
           if (cut !== cachedCut) {
             cachedCut = cut;
-            cachedRadius = parseFloat(getComputedStyle(cut).borderTopLeftRadius) || 12;
+            // NaN-check rather than `|| 12`: a genuine 0 radius (the light
+            // theme de-rounds the docs blog pill) must give a square cut,
+            // not the 12px fallback arc.
+            const parsed = parseFloat(getComputedStyle(cut).borderTopLeftRadius);
+            cachedRadius = Number.isNaN(parsed) ? 12 : parsed;
           }
           const pr = cut.getBoundingClientRect();
           const cr = el.getBoundingClientRect();

@@ -76,10 +76,11 @@ const Blog = () => {
             (top-16 = 64px + 0.5rem) so a tad of breathing space stays between
             the pill and the header as the feed is swallowed at its top edge,
             rather than butting flush against it. The swallow-clip above runs
-            on ALL themes here, so the feed is hard-cut at the pill's rounded
-            top edge everywhere — nothing shows in this 8px gap or behind the
-            docs header. The wrapper stays transparent; the pill inside is the
-            only surface. */}
+            on ALL themes here, so the feed is hard-cut at the pill's top
+            edge everywhere; the wrapper also carries the docs frosted lag
+            guard (index.css [data-docs-open] ::before) that dissolves the
+            1-frame compositor flash a hard fling can push into this gap.
+            The wrapper itself stays transparent. */}
         <div data-feed-nav-outer className="sticky top-[4.5rem] z-30">
           <BlogSearchAndFilter
             searchQuery={searchQuery}
