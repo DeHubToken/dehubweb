@@ -1,11 +1,11 @@
 /**
  * Cloudflare Worker for DeHub Dynamic SEO/SSR
  *
- * Port of netlify/edge-functions/ssr-seo.js — KEEP THE TWO IN SYNC.
- * Only platform differences: `context.next()` becomes `env.ASSETS.fetch()`
- * (static assets binding from wrangler.jsonc, with SPA fallback), and
- * same-origin asset JSON (blog manifest/content, docs content) is read via
- * the ASSETS binding so the worker never re-enters itself.
+ * CANONICAL implementation (the Netlify edge-function original was retired
+ * with the July 2026 Cloudflare migration). Static assets come from the
+ * ASSETS binding in wrangler.jsonc (with SPA fallback); same-origin asset
+ * JSON (blog manifest/content, docs content) is read via the ASSETS binding
+ * so the worker never re-enters itself.
  *
  * Serves pre-rendered HTML with OG meta tags to social crawlers (bots) for:
  *   - Root /
@@ -683,7 +683,10 @@ async function handleRequest(request, env) {
   // died (July 2026), and these are the SEO domain-move redirects.
   const aliasHost = url.hostname;
   if (aliasHost === 'www.dehub.io' || aliasHost === 'dehub.net' || aliasHost.endsWith('.dehub.net')) {
-    return redirect301(`https://dehub.io${url.pathname}${url.search}`);
+    // Plain 301 WITHOUT guard(): X-Robots-Tag noindex is for mirror hosts
+    // serving duplicate content, not for domain-move redirects — mixing
+    // noindex with an equity-passing 301 risks suppressing the transfer.
+    return new Response(null, { status: 301, headers: { Location: `https://dehub.io${url.pathname}${url.search}` } });
   }
 
   // URL-space hygiene (all UAs — these paths have no content in the SPA

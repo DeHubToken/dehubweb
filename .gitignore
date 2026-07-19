@@ -1,6 +1,6 @@
 # .env holds ONLY publishable VITE_* client keys (Supabase anon, WalletConnect
 # project id) — these ship in the browser bundle by design, so it is committed so
-# CI/Netlify builds are self-contained. Real secrets live in Supabase/Netlify env,
+# CI builds are self-contained. Real secrets live in Supabase/Cloudflare env,
 # never in the repo. .env.development (Stripe TEST key) stays ignored.
 .env.*
 !.env.example
@@ -62,7 +62,7 @@ AuthContext.tsx
 chat-system.md
 doc.md
 # scripts/ holds local scratch, EXCEPT build-time scripts which must ship —
-# `npm run build` runs them on Netlify (a bare `scripts/` dir rule can't be
+# `npm run build` runs them in CI (a bare `scripts/` dir rule can't be
 # negated, hence the `scripts/*` form). generate-blog-manifest.mjs was once
 # written without this exception and silently never shipped, freezing the
 # bot-visible blog at Feb 2026 — keep every build-referenced script negated.

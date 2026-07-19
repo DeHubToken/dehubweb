@@ -14,7 +14,7 @@
     <meta name="author" content="DeHub" />
     <meta name="robots" content="index, follow">
     <!-- Mirror hosts (cosmic-echo-hero.lovable.app etc.) serve this same build
-         outside our Netlify edge, so they can't get an X-Robots-Tag header;
+         outside our Cloudflare worker, so they can't get an X-Robots-Tag header;
          flip robots to noindex client-side so rendered crawls never index a
          duplicate of dehub.io. -->
     <script>
@@ -28,7 +28,7 @@
 
     <!-- Organization entity: one canonical identity + sameAs graph so Google can
          reconcile the DeHub brand across properties. Keep this list in sync with
-         ORG_SAME_AS in netlify/edge-functions/ssr-seo.js. -->
+         ORG_SAME_AS in CLOUDFLARE_WORKER_SEO.js. -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",

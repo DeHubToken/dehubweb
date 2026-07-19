@@ -93,7 +93,7 @@ compute + data), and public blockchains.
 
 ```mermaid
 flowchart TD
-    U[User's browser] --> SPA[DeHub SPA<br/>React + Vite on Netlify]
+    U[User's browser] --> SPA[DeHub SPA<br/>React + Vite on Cloudflare Workers]
     SPA -->|feed, auth, DMs, payments| API[Core API<br/>NestJS · api.dehub.io]
     SPA -->|AI, media, share images,<br/>sitemaps, webhooks| EF[Supabase Edge Functions<br/>Deno]
     SPA -->|reads/writes| DB[(Supabase Postgres)]
@@ -103,9 +103,10 @@ flowchart TD
     SPA -->|media| CDN[DigitalOcean Spaces via Cloudflare CDN]
 ```
 
-- **Frontend** — a Vite + React SPA deployed on Netlify, with a single edge function
-  (`ssr-seo`) that injects metadata for crawlers. The wallet stack is aggressively
-  code-split out of the entry bundle and lazy-loaded to keep first paint fast.
+- **Frontend** — a Vite + React SPA deployed as a Cloudflare Worker with static assets
+  (`CLOUDFLARE_WORKER_SEO.js` injects metadata for crawlers and serves the domain-move
+  301s for dehub.net and www). The wallet stack is aggressively code-split out of the
+  entry bundle and lazy-loaded to keep first paint fast.
 - **Core API (`api.dehub.io`)** — the primary social backend (feed, wallet auth, DMs over
   Socket.IO, payments). The SPA prefetches the feed at boot for a fast cold start.
 - **Supabase** — Postgres plus a large set of Deno **edge functions** for AI (chat, image,
@@ -134,11 +135,11 @@ flowchart TD
 │   │   └── _shared/        # Shared helpers (auth, CORS, rate limiting, branding)
 │   ├── migrations/         # SQL migrations
 │   └── config.toml
-├── netlify/edge-functions/ # ssr-seo (crawler metadata)
+├── CLOUDFLARE_WORKER_SEO.js # Edge worker: crawler metadata + alias-host 301s
 ├── contracts/              # Solidity (freelance work escrow)
 ├── scripts/                # Build helpers (bundle guard, blog manifest)
-├── public/                 # Static assets
-└── netlify.toml
+├── public/                 # Static assets (_headers = edge cache/security rules)
+└── wrangler.jsonc          # Cloudflare Workers config (assets binding, routes)
 ```
 
 ## Getting started
@@ -172,7 +173,7 @@ profiles) is served by the production core API, which restricts cross-origin req
 
 Copy `.env.example` to `.env` and fill in the values. All variables are **client-side
 (`VITE_*`) publishable keys** — they ship in the browser bundle by design and are safe to
-commit. Real secrets live in the Supabase/Netlify environment, never in the repo.
+commit. Real secrets live in the Supabase/Cloudflare environment, never in the repo.
 
 | Variable | Purpose |
 | --- | --- |
@@ -194,10 +195,11 @@ commit. Real secrets live in the Supabase/Netlify environment, never in the repo
 
 ## Deployment
 
-The app builds with `npm run build` and publishes the `dist/` directory. It is designed for
-Netlify (see `netlify.toml`), which handles the SPA fallback and the `ssr-seo` edge
-function, but any static host works. Supabase edge functions and database migrations live
-under `supabase/` and are deployed to the Supabase project separately from the frontend.
+The app builds with `npm run build` and deploys `dist/` as Cloudflare Worker static
+assets (see `wrangler.jsonc`; Workers Builds deploys on push to main). The worker handles
+the SPA fallback, crawler metadata, and alias-host 301s; `public/_headers` carries cache
+and security headers. Supabase edge functions and database migrations live under
+`supabase/` and are deployed to the Supabase project separately from the frontend.
 
 ## Contributing
 
