@@ -13,7 +13,7 @@ import { useState, memo, useEffect, useCallback, useRef } from 'react';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
-import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, Loader2, BarChart2, Plus, X, Bookmark, Pin } from 'lucide-react';
+import { Sparkles, MoreVertical, Link2, Flag, Ban, MessageSquare, Eye, EyeOff, Globe, Info, Trash2, Repeat2, UserPlus, UserCheck, Loader2, BarChart2, Plus, X, Bookmark, Pin, Pencil } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -31,6 +31,8 @@ import { PostAIChat } from './PostAIChat';
 import { buildPostShareImage } from '@/lib/build-post-share-image';
 import { ReportModal } from '../modals/ReportModal';
 import { DeletePostModal } from '../modals/DeletePostModal';
+import { EditPostModal } from '../modals/EditPostModal';
+import { applyOptimisticEdit } from '@/lib/optimistic-edit';
 import { QuotePostModal } from '../modals/QuotePostModal';
 import { TipModal } from '../modals/TipModal';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
@@ -79,6 +81,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
   const [showAIChat, setShowAIChat] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showOptionsDrawer, setShowOptionsDrawer] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [showTipModal, setShowTipModal] = useState(false);
@@ -354,6 +357,12 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
                     <BarChart2 className="w-5 h-5" /> Create Poll
                   </button>
                   <button
+                    onClick={() => { setShowOptionsDrawer(false); setTimeout(() => setShowEditModal(true), 300); }}
+                    className="flex items-center gap-3 px-4 py-3 text-white hover:bg-white/10 rounded-xl transition-colors text-left"
+                  >
+                    <Pencil className="w-5 h-5" /> {t('postOptions.editPost')}
+                  </button>
+                  <button
                     onClick={() => {
                       if (!postTokenId || togglePinMutation.isPending) return;
                       togglePinMutation.mutate(postTokenId, {
@@ -601,6 +610,19 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         tokenId={post.id}
         onSuccess={() => {
           queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+        }}
+      />
+
+      {/* Edit Post Modal */}
+      <EditPostModal
+        open={showEditModal}
+        onOpenChange={setShowEditModal}
+        tokenId={post.id}
+        currentTitle={post.rawName ?? post.title ?? ''}
+        currentDescription={post.rawDescription ?? post.content ?? ''}
+        currentCategories={post.categories ?? []}
+        onSuccess={(edited) => {
+          applyOptimisticEdit(queryClient, post.id, edited);
         }}
       />
 

@@ -541,8 +541,11 @@ export default function PostInfoPage() {
     gcTime: 30 * 60 * 1000, // 30 minutes in cache
   });
   
-  // Check if current user is the owner/minter
-  const isOwner = walletAddress && nftInfo?.minter?.toLowerCase() === walletAddress.toLowerCase();
+  // Check if current user is the owner/minter. The API also returns an
+  // authoritative `isOwner` flag on authenticated nft_info calls — trust
+  // either signal so owner controls survive a missing/stale wallet context.
+  const isOwner = nftInfo?.isOwner === true ||
+    !!(walletAddress && nftInfo?.minter?.toLowerCase() === walletAddress.toLowerCase());
   const [showEditModal, setShowEditModal] = useState(false);
   const shouldAutoOpenEdit = searchParams.get('edit') === '1';
 
@@ -876,6 +879,19 @@ export default function PostInfoPage() {
               </button>
             </div>
           </section>
+
+          {/* Edit Post - Only shown to owner */}
+          {isOwner && (
+            <section className="bg-white/5 rounded-xl p-4 border border-white/10">
+              <button
+                onClick={() => setShowEditModal(true)}
+                className="flex items-center gap-3 w-full text-left text-white hover:text-white/80 transition-colors"
+              >
+                <Pencil className="w-4 h-4" />
+                <span className="font-medium">{t('postOptions.editPost')}</span>
+              </button>
+            </section>
+          )}
 
           {/* Visibility Settings - Only shown to owner */}
           {isOwner && (
