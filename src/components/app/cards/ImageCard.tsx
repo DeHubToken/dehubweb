@@ -131,7 +131,7 @@ function ImageSlide({
   }, [img]);
   return (
     <div
-      className="relative cursor-pointer max-h-[600px] overflow-hidden select-none"
+      className="relative w-full cursor-pointer max-h-[600px] overflow-hidden select-none"
       style={{ minHeight: '200px', aspectRatio: ratio ? String(ratio) : undefined }}
       onClick={(e) => {
         e.stopPropagation();
