@@ -5,7 +5,7 @@
  */
 
 import { useState, useMemo, useCallback, useRef, useLayoutEffect, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { useTranslation } from 'react-i18next';
@@ -171,16 +171,26 @@ export default function LeaderboardPage() {
     });
   }, [refreshCooldown, isRefreshing, requireAuth, walletAddress, queryClient]);
 
+  // This page lives in PersistentPageCache (never unmounts), so
+  // refetchOnMount only ever fires once — the route gate below is the only
+  // automatic refresh path after the first visit.
+  const { pathname } = useLocation();
+  const isLeaderboardRouteActive = pathname === '/app/leaderboard';
+
   const { data, isLoading, error } = useQuery({
     queryKey: ['leaderboard', apiSortMode, timePeriod],
     queryFn: () => getLeaderboard(apiSortMode, timePeriod),
     staleTime: 60_000,
     gcTime: 2 * 60 * 60 * 1000,
     refetchOnMount: 'always',
-    // 'always' here refired the fetch on every window focus even while this
-    // page sat hidden behind another route (it never unmounts). The 60s
-    // staleTime + mount refetch keep it fresh enough.
-    refetchOnWindowFocus: false,
+    // Focus-refetch only while the leaderboard is actually on screen — an
+    // unconditional 'always' refired while hidden behind other routes, and an
+    // unconditional false left the list frozen after the first visit.
+    refetchOnWindowFocus: isLeaderboardRouteActive ? 'always' : false,
+    // Route-gated background refresh so revisits see fresh ranks even
+    // without a focus change (restarts on return because the gate is
+    // reactive route state).
+    refetchInterval: isLeaderboardRouteActive ? 2 * 60_000 : false,
     // Switching period/category keeps the previous ranked list visible while
     // the new one loads, instead of dropping the page to a spinner.
     placeholderData: keepPreviousData,

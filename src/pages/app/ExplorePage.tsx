@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect, type CSSProperties } from 'react';
+import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect, memo, startTransition, type CSSProperties } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { SEOHead } from '@/components/SEOHead';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
@@ -348,6 +348,61 @@ const UserResultCard = ({
     </div>
   );
 };
+
+/**
+ * Search input isolated from the page: it owns the text locally so each
+ * keystroke re-renders only this tiny component, and pushes the value up
+ * inside startTransition — the full-page derived re-render becomes
+ * interruptible instead of blocking typing on mid-range devices.
+ */
+const ExploreSearchInput = memo(function ExploreSearchInput({
+  value,
+  onChange,
+  placeholder,
+}: {
+  value: string;
+  onChange: (next: string) => void;
+  placeholder: string;
+}) {
+  const [local, setLocal] = useState(value);
+  const lastPushedRef = useRef(value);
+
+  // Adopt external changes (URL ?q= init, programmatic clears) without
+  // fighting our own in-flight transition pushes.
+  useEffect(() => {
+    if (value !== lastPushedRef.current) {
+      setLocal(value);
+      lastPushedRef.current = value;
+    }
+  }, [value]);
+
+  const push = (next: string) => {
+    setLocal(next);
+    lastPushedRef.current = next;
+    startTransition(() => onChange(next));
+  };
+
+  return (
+    <div className="relative flex-1">
+      <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+      <Input
+        value={local}
+        onChange={(e) => push(e.target.value)}
+        placeholder={placeholder}
+        aria-label={placeholder}
+        className="w-full pl-12 pr-4 h-[48px] bg-zinc-800 border-zinc-700 rounded-xl text-white placeholder:text-zinc-500 focus:border-zinc-600 text-sm sm:text-base"
+      />
+      {local && (
+        <button
+          onClick={() => push('')}
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      )}
+    </div>
+  );
+});
 
 export default function ExplorePage() {
   const { t } = useTranslation();
@@ -861,24 +916,11 @@ export default function ExplorePage() {
         {/* Search Input Bento */}
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-3 sm:p-4">
           <div className="relative flex gap-2">
-            <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
-              <Input
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={t('explorePage.searchPlaceholder')}
-                aria-label={t('explorePage.searchPlaceholder')}
-                className="w-full pl-12 pr-4 h-[48px] bg-zinc-800 border-zinc-700 rounded-xl text-white placeholder:text-zinc-500 focus:border-zinc-600 text-sm sm:text-base"
-              />
-              {searchQuery && (
-                <button
-                  onClick={() => setSearchQuery('')}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-white transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              )}
-            </div>
+            <ExploreSearchInput
+              value={searchQuery}
+              onChange={setSearchQuery}
+              placeholder={t('explorePage.searchPlaceholder')}
+            />
             <button
               onClick={() => setShowFilters(!showFilters)}
               className={cn(

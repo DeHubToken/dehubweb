@@ -1197,6 +1197,19 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     return best.index;
   };
 
+  // The O(items × candidate-range) balance scan above (two slices per
+  // candidate) only depends on the item list and layout — memoized so
+  // unrelated feed re-renders (query updates, bookmark churn) skip it.
+  const adaptiveShortsInsertIndex = useMemo(
+    () =>
+      shorts.length > 0 && colCount > 1
+        ? (getAdaptiveShortsInsertIndex(items, colCount) ?? items.length)
+        : items.length,
+    // getAdaptiveShortsInsertIndex is a pure helper recreated per render
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [items, colCount, shorts.length]
+  );
+
   // Distribute items into columns using shortest-column-first (height-balanced)
   const distributeToColumns = (nodes: ReactNode[], cols: number, feedItems?: FeedItemType[]): ReactNode[][] => {
     if (cols <= 1) return [nodes];
@@ -1250,9 +1263,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
     // --- MULTI-COLUMN: adaptive shorts placement with masonry-safe fallback ---
     if (isMultiCol) {
-      const adaptiveShortsIndex = shorts.length > 0
-        ? (getAdaptiveShortsInsertIndex(items, colCount) ?? items.length)
-        : items.length;
+      const adaptiveShortsIndex = adaptiveShortsInsertIndex;
 
       const shouldSplitForShorts = shorts.length > 0 && adaptiveShortsIndex > 0 && adaptiveShortsIndex < items.length;
       const beforeShorts = shouldSplitForShorts ? items.slice(0, adaptiveShortsIndex) : items;

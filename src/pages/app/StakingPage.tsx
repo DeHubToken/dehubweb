@@ -9,7 +9,7 @@ import { motion } from 'framer-motion';
 import { Interface, parseUnits } from 'ethers';
 import { Lock, TrendingUp, DollarSign, Activity, ExternalLink, RefreshCw, ArrowDownToLine, ArrowUpFromLine, Loader2, Clock, Gift, Wallet, AlertTriangle, Percent, Zap, Crown, Rocket, X, Copy } from 'lucide-react';
 import { BADGE_LEVELS, getBadgeUrl } from '@/lib/staking-badges';
-import { useStakingStats, useUnstakeQueue, useStakingTVL, useUserStakingData, getUserDHBBalance, type UnstakeEvent } from '@/hooks/use-staking-data';
+import { useStakingStats, useUnstakeQueue, useStakingTVL, useUserStakingData, useIsStakeRouteActive, getUserDHBBalance, type UnstakeEvent } from '@/hooks/use-staking-data';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { sendERC20Token } from '@/lib/wallet/send';
@@ -31,11 +31,16 @@ const UNSTAKE_COOLDOWN_MS = UNSTAKE_COOLDOWN_DAYS * 24 * 60 * 60 * 1000;
 
 function UnstakeCountdown({ timestamp }: { timestamp: number }) {
   const [now, setNow] = useState(Date.now());
+  // This page lives in PersistentPageCache — without the route gate every
+  // unstake row would tick a 1s re-render for the whole session while hidden.
+  const isStakeRouteActive = useIsStakeRouteActive();
 
   useEffect(() => {
+    if (!isStakeRouteActive) return;
+    setNow(Date.now());
     const interval = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isStakeRouteActive]);
 
   const createdAt = timestamp * 1000;
   const endTime = createdAt + UNSTAKE_COOLDOWN_MS;

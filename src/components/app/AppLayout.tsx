@@ -4,7 +4,10 @@ import { AppSidebar } from './AppSidebar';
 import { RightSidebar } from './RightSidebar';
 import { MobileBottomNav } from './MobileBottomNav';
 import { GlobalDropZoneProvider, useGlobalDropZone } from '@/hooks/use-global-drop-zone';
-import { RadioPlayerProvider } from '@/hooks';
+// Direct import, NOT the '@/hooks' barrel: the barrel re-exports every hook
+// (TV player, etc.), so importing it here would drag all of them — and their
+// dependencies — into the eager entry bundle. This once cost 540 kB of hls.js.
+import { RadioPlayerProvider } from '@/hooks/use-radio-player';
 import { CoinPlacementProvider } from '@/hooks/use-coin-placement';
 import { SidebarCollapseProvider, useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { AutoplayProvider } from '@/contexts/AutoplayContext';
@@ -146,29 +149,41 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
     document.body.scrollTop = value;
   };
   
-  // Save home scroll position continuously when on home page
+  // Save home scroll position continuously when on home page. The scroll
+  // handler only writes to a ref — sessionStorage.setItem is synchronous
+  // main-thread IO and would eat ~1ms of every scroll frame during a fling.
+  // The storage write happens on capture-phase click (fires before any
+  // navigation this position needs to survive), pagehide, and tab-hide.
   useEffect(() => {
     const isHome = isHomePath(location.pathname);
     if (!isHome) return;
-    
-    const saveScroll = () => {
-      const scrollPos = getScrollPosition();
-      sessionStorage.setItem(HOME_SCROLL_POSITION_KEY, String(scrollPos));
-      savedScrollRef.current = scrollPos;
+
+    const trackScroll = () => {
+      savedScrollRef.current = getScrollPosition();
     };
-    
-    saveScroll();
-    
-    window.addEventListener('scroll', saveScroll, { passive: true });
-    document.addEventListener('scroll', saveScroll, { passive: true });
-    
-    const handleClick = () => saveScroll();
-    document.addEventListener('click', handleClick, { capture: true, passive: true });
-    
+    const flushScroll = () => {
+      savedScrollRef.current = getScrollPosition();
+      sessionStorage.setItem(HOME_SCROLL_POSITION_KEY, String(savedScrollRef.current));
+    };
+
+    flushScroll();
+
+    window.addEventListener('scroll', trackScroll, { passive: true });
+    document.addEventListener('scroll', trackScroll, { passive: true });
+    document.addEventListener('click', flushScroll, { capture: true, passive: true });
+    window.addEventListener('pagehide', flushScroll);
+    document.addEventListener('visibilitychange', flushScroll);
+
     return () => {
-      window.removeEventListener('scroll', saveScroll);
-      document.removeEventListener('scroll', saveScroll);
-      document.removeEventListener('click', handleClick, { capture: true });
+      // Teardown runs after the route swap, when the window scroll may have
+      // already clamped to the new page — persist the last position tracked
+      // while home was actually visible, don't re-read the live scroll.
+      sessionStorage.setItem(HOME_SCROLL_POSITION_KEY, String(savedScrollRef.current));
+      window.removeEventListener('scroll', trackScroll);
+      document.removeEventListener('scroll', trackScroll);
+      document.removeEventListener('click', flushScroll, { capture: true });
+      window.removeEventListener('pagehide', flushScroll);
+      document.removeEventListener('visibilitychange', flushScroll);
     };
   }, [location.pathname]);
   

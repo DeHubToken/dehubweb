@@ -98,6 +98,7 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                     poster={short.thumbnail}
                     className="w-full h-full group-hover:scale-105 transition-transform duration-300"
                     threshold={0.3}
+                    playbackGroup="shorts-reel"
                   />
                 ) : (
                   <img

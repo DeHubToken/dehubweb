@@ -91,6 +91,8 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
           <img
             src={getBannerImage()}
             alt={post.bannerImageAlt}
+            loading="lazy"
+            decoding="async"
             className={`w-full object-cover transition-transform duration-200 group-hover:scale-105 ${featured ? 'h-48' : 'h-40'}`}
           />
           {post.featured && (

@@ -190,7 +190,7 @@ const DocsHome = () => {
                 <span className="inline-block bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">{t('home.latestFromBlog')}</span>
               </div>
               <Link to={`/guides/${latestPost.slug}`} className="w-full block">
-                <img src={bannerImage} alt={bannerImageAlt} className="w-full aspect-video object-cover rounded-xl hover:opacity-95 transition-opacity cursor-pointer" />
+                <img src={bannerImage} alt={bannerImageAlt} loading="lazy" decoding="async" className="w-full aspect-video object-cover rounded-xl hover:opacity-95 transition-opacity cursor-pointer" />
               </Link>
               <div className="text-center">
                 <div className="mb-4">

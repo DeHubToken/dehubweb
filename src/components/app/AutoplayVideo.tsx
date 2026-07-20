@@ -22,6 +22,44 @@ interface AutoplayVideoProps {
   rootMargin?: string;
   /** When true, video won't load or play regardless of visibility. Used for staged loading. */
   disabled?: boolean;
+  /**
+   * Opt-in concurrency cap: instances sharing a group name compete for
+   * playback and only the MAX_GROUP_PLAYING most-visible actually play —
+   * the rest hold a still frame. A strip of 10 looping shorts would
+   * otherwise run 3-5 simultaneous video decodes and tank mid-range
+   * mobile to ~30fps. Omit for the normal single-video behavior.
+   */
+  playbackGroup?: string;
+}
+
+// ─── Playback group arbiter (module-level) ──────────────────────────────────
+interface GroupMember {
+  ratio: number;
+  allowed: boolean;
+  setAllowed: (v: boolean) => void;
+}
+const playbackGroups = new Map<string, Set<GroupMember>>();
+const MAX_GROUP_PLAYING = 2;
+// Fine-grained thresholds so intersectionRatio updates as tiles scroll,
+// letting the arbiter track which tiles are most visible.
+const GROUP_THRESHOLDS = [0, 0.25, 0.5, 0.75, 1];
+
+function recomputeGroup(group: string) {
+  const members = playbackGroups.get(group);
+  if (!members) return;
+  const winners = new Set(
+    [...members]
+      .filter(m => m.ratio > 0)
+      .sort((a, b) => b.ratio - a.ratio)
+      .slice(0, MAX_GROUP_PLAYING)
+  );
+  members.forEach(m => {
+    const next = winners.has(m);
+    if (m.allowed !== next) {
+      m.allowed = next;
+      m.setAllowed(next);
+    }
+  });
 }
 
 export const AutoplayVideo = memo(function AutoplayVideo({
@@ -31,6 +69,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
   threshold = 0.5,
   rootMargin = '100px',
   disabled = false,
+  playbackGroup,
 }: AutoplayVideoProps) {
   // Shorts thumbnails may live at shorts/{id}.jpg instead of the mapped
   // images/{id}.jpg — resolve to whichever exists so the poster isn't a 403.
@@ -40,6 +79,33 @@ export const AutoplayVideo = memo(function AutoplayVideo({
   const [isVisible, setIsVisible] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
+  // Grouped instances start un-allowed until the arbiter grants a slot
+  const [groupAllowed, setGroupAllowed] = useState(!playbackGroup);
+  const memberRef = useRef<GroupMember | null>(null);
+
+  // Register with the playback group (if any)
+  useEffect(() => {
+    if (!playbackGroup) {
+      setGroupAllowed(true);
+      return;
+    }
+    const member: GroupMember = { ratio: 0, allowed: false, setAllowed: setGroupAllowed };
+    memberRef.current = member;
+    let members = playbackGroups.get(playbackGroup);
+    if (!members) {
+      members = new Set();
+      playbackGroups.set(playbackGroup, members);
+    }
+    members.add(member);
+    setGroupAllowed(false);
+    recomputeGroup(playbackGroup);
+    return () => {
+      members!.delete(member);
+      memberRef.current = null;
+      if (members!.size === 0) playbackGroups.delete(playbackGroup);
+      else recomputeGroup(playbackGroup);
+    };
+  }, [playbackGroup]);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -47,21 +113,30 @@ export const AutoplayVideo = memo(function AutoplayVideo({
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        setIsVisible(entry.isIntersecting);
+        if (playbackGroup) {
+          const ratio = entry.isIntersecting ? entry.intersectionRatio : 0;
+          if (memberRef.current) {
+            memberRef.current.ratio = ratio;
+            recomputeGroup(playbackGroup);
+          }
+          setIsVisible(entry.isIntersecting && ratio >= threshold);
+        } else {
+          setIsVisible(entry.isIntersecting);
+        }
       },
-      { threshold, rootMargin }
+      { threshold: playbackGroup ? GROUP_THRESHOLDS : threshold, rootMargin }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [threshold, rootMargin]);
+  }, [threshold, rootMargin, playbackGroup]);
 
-  // Play/pause based on visibility and disabled state
+  // Play/pause based on visibility, disabled state, and group slot
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    if (isVisible && !disabled) {
+    if (isVisible && !disabled && groupAllowed) {
       // Delay lets src settle after layout shifts (sidebar collapse etc.)
       const timer = setTimeout(async () => {
         try {
@@ -76,7 +151,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
     } else {
       video.pause();
     }
-  }, [isVisible, disabled, src]);
+  }, [isVisible, disabled, groupAllowed, src]);
 
   // Reset state when src changes or becomes disabled
   useEffect(() => {
@@ -118,7 +193,7 @@ export const AutoplayVideo = memo(function AutoplayVideo({
         muted
         playsInline
         {...{"webkit-playsinline": ""}}
-        preload={shouldLoad ? 'auto' : 'none'}
+        preload={shouldLoad ? (groupAllowed ? 'auto' : 'metadata') : 'none'}
         onLoadedData={() => setHasLoaded(true)}
         onError={() => setHasError(true)}
       />

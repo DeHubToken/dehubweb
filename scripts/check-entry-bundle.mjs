@@ -22,7 +22,7 @@ import { join } from 'node:path';
 
 const DIST = 'dist';
 const ASSETS = join(DIST, 'assets');
-const ENTRY_SIZE_CEILING = 3.0 * 1024 * 1024; // raw bytes, pre-gzip
+const ENTRY_SIZE_CEILING = 2.0 * 1024 * 1024; // raw bytes, pre-gzip
 
 // Strings that appear only inside wagmi / web3auth / walletconnect builds.
 const WALLET_MARKERS = [
@@ -30,6 +30,17 @@ const WALLET_MARKERS = [
   'relay.walletconnect',
   'WagmiProviderNotFoundError',
   'explorer-api.walletconnect',
+];
+
+// Other heavy libraries that have each leaked into the eager graph before
+// (hls.js via the hooks barrel in July 2026; recharts via always-mounted
+// overlays). Markers are library-internal strings, not package names.
+const HEAVY_MARKERS = [
+  // NOT 'fragLoadingTimeOut' — app code passes that as an Hls config key, so
+  // it appears in eager chunks legitimately. 'hlsMediaAttached' is an event
+  // name string that exists only inside the hls.js build itself.
+  { lib: 'hls.js', marker: 'hlsMediaAttached' },
+  { lib: 'recharts', marker: 'recharts_measurement_span' },
 ];
 
 const html = readFileSync(join(DIST, 'index.html'), 'utf8');
@@ -59,6 +70,17 @@ for (const rel of eagerFiles) {
       `  The wallet stack must stay behind the WalletProviders React.lazy boundary.\n` +
       `  Likely cause: a static import chain from App.tsx/main.tsx now reaches\n` +
       `  wagmi/web3auth/rainbowkit (check src/contexts/AuthContext.tsx stays type-only).`
+    );
+    failed = true;
+  }
+  const heavyHits = HEAVY_MARKERS.filter(({ marker }) => code.includes(marker));
+  if (heavyHits.length > 0) {
+    console.error(
+      `[check-entry-bundle] FAIL: ${rel} contains ${heavyHits.map(h => h.lib).join(', ')} ` +
+      `(markers: ${heavyHits.map(h => h.marker).join(', ')}).\n` +
+      `  These libraries must load via dynamic import()/React.lazy only.\n` +
+      `  Likely cause: a new static import, or an eager module importing the\n` +
+      `  '@/hooks' barrel (which re-exports the TV player).`
     );
     failed = true;
   }

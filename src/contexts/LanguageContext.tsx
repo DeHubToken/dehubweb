@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 // English stays static — it's the default and the fallback for missing keys.
 // Every OTHER locale is loaded on demand (see localeLoaders below): the 104
 // static imports that used to live here made the DocsSurface chunk ~4.3 MB
@@ -301,8 +301,13 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return key;
   }, [translations]);
 
+  const value = useMemo(
+    () => ({ language, setLanguage, t, dir }),
+    [language, setLanguage, t, dir]
+  );
+
   return (
-    <LanguageContext.Provider value={{ language, setLanguage, t, dir }}>
+    <LanguageContext.Provider value={value}>
       {children}
     </LanguageContext.Provider>
   );

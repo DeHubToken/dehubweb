@@ -33,6 +33,13 @@ interface AudioVisualizerProps {
   muted?: boolean;
   /** Seed for the static waveform style (e.g. post id). */
   seed?: string;
+  /**
+   * Gate for the full-track waveform decode: fetching + decodeAudioData on the
+   * whole file costs 10s of MB + ~50ms main-thread per file, so feed cards
+   * pass their near-viewport flag here. Until true, the seeded fallback
+   * pattern renders instead. Defaults to true for non-feed usages.
+   */
+  decodeEnabled?: boolean;
 }
 
 const STYLES: { value: VisualizerStyle; label: string }[] = [
@@ -57,6 +64,7 @@ export function AudioVisualizer({
   showStylePicker = true,
   muted = false,
   seed = 'default',
+  decodeEnabled = true,
 }: AudioVisualizerProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -79,12 +87,17 @@ export function AudioVisualizer({
     onPlayPauseRef.current = onPlayPause;
   }, [onPlayPause]);
 
-  // Decode the audio file to get full-track waveform peaks on mount
+  // Decode the audio file to get full-track waveform peaks — deferred until
+  // the card is near the viewport (or playing) so a feed of audio posts
+  // doesn't download + PCM-decode every track on mount.
   useEffect(() => {
+    if (!decodeEnabled && !isPlaying) return;
+    let stale = false;
     decodeAudioWaveform(audioUrl, STATIC_BAR_COUNT, (peaks) => {
-      setWaveformPeaks(peaks);
+      if (!stale) setWaveformPeaks(peaks);
     });
-  }, [audioUrl]);
+    return () => { stale = true; };
+  }, [audioUrl, decodeEnabled, isPlaying]);
 
   // Draw the idle waveform once peaks are available (before any playback)
   const peaksRef = useRef<number[] | null>(null);

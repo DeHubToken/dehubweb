@@ -5,7 +5,7 @@
  * Charts are stored in localStorage so they survive page reloads.
  */
 
-import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect, useMemo, ReactNode } from 'react';
 import { toast } from 'sonner';
 
 export interface ChartPiPItem {
@@ -88,8 +88,13 @@ export function ChartPiPProvider({ children }: { children: ReactNode }) {
     return chartPiPs.some(p => p.symbol.toUpperCase() === symbol.toUpperCase());
   }, [chartPiPs]);
 
+  const value = useMemo(
+    () => ({ chartPiPs, addChartPiP, removeChartPiP, updateChartPiP, isChartPiP }),
+    [chartPiPs, addChartPiP, removeChartPiP, updateChartPiP, isChartPiP]
+  );
+
   return (
-    <ChartPiPContext.Provider value={{ chartPiPs, addChartPiP, removeChartPiP, updateChartPiP, isChartPiP }}>
+    <ChartPiPContext.Provider value={value}>
       {children}
     </ChartPiPContext.Provider>
   );

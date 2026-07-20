@@ -11,7 +11,9 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { Tv, Volume2, VolumeX, Maximize, Minimize, Play, Pause, PictureInPicture2 } from 'lucide-react';
 import { usePiP } from '@/contexts/PiPContext';
 import { cn } from '@/lib/utils';
-import Hls from 'hls.js';
+// Type-only: the hls.js runtime (~540 kB raw) loads dynamically when the user
+// starts playback, so it stays out of the eager entry bundle.
+import type Hls from 'hls.js';
 import type { TVChannel } from '@/lib/api/live-tv';
 import { getCountryFlag } from '@/lib/api/live-tv';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
@@ -89,41 +91,54 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
     if (!video) return;
     if (!isPlaying) return;
 
-    if (Hls.isSupported()) {
-      const hls = new Hls({
-        enableWorker: false,
-        lowLatencyMode: true,
-        maxBufferLength: 5,
-        maxMaxBufferLength: 10,
-        fragLoadingTimeOut: 8000,
-        manifestLoadingTimeOut: 8000,
-      });
+    // hls.js loads dynamically at play time so the runtime stays out of the
+    // eager entry bundle. The disposed guard bails if the user stopped or the
+    // card unmounted while the chunk was in flight.
+    let disposed = false;
+    (async () => {
+      const { default: Hls } = await import('hls.js');
+      if (disposed) return;
 
-      logger.info('Initializing thumbnail player', { channel: channel.name, url: channel.streamUrl });
-      hls.loadSource(channel.streamUrl);
-      hls.attachMedia(video);
-
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        video.play().catch(() => {
-          // Normal for thumbnail to be blocked if not interaction
+      if (Hls.isSupported()) {
+        const hls = new Hls({
+          enableWorker: false,
+          lowLatencyMode: true,
+          maxBufferLength: 5,
+          maxMaxBufferLength: 10,
+          fragLoadingTimeOut: 8000,
+          manifestLoadingTimeOut: 8000,
         });
-      });
 
-      hls.on(Hls.Events.ERROR, (_, data) => {
-        if (data.fatal) {
-          logger.error('TV Preview Fatal Error', { channel: channel.name, type: data.type, details: data.details });
-          setIsPlaying(false);
-          destroyHls();
-        }
-      });
+        logger.info('Initializing thumbnail player', { channel: channel.name, url: channel.streamUrl });
+        hls.loadSource(channel.streamUrl);
+        hls.attachMedia(video);
 
-      hlsRef.current = hls;
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = channel.streamUrl;
-      video.play().catch(() => {});
-    }
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          video.play().catch(() => {
+            // Normal for thumbnail to be blocked if not interaction
+          });
+        });
+
+        hls.on(Hls.Events.ERROR, (_, data) => {
+          if (data.fatal) {
+            logger.error('TV Preview Fatal Error', { channel: channel.name, type: data.type, details: data.details });
+            setIsPlaying(false);
+            destroyHls();
+          }
+        });
+
+        hlsRef.current = hls;
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = channel.streamUrl;
+        video.play().catch(() => {});
+      }
+    })().catch(() => {
+      // hls.js chunk failed to load (flaky network / deploy skew)
+      setIsPlaying(false);
+    });
 
     return () => {
+      disposed = true;
       if (!isInPiP) {
         video.pause();
         destroyHls();

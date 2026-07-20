@@ -135,6 +135,17 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
     });
 
     let disposed = false;
+    // Retry timers must die with the effect — a timer firing after cleanup
+    // would call loadSource/startLoad on a destroyed hls instance.
+    const retryTimeouts = new Set<ReturnType<typeof setTimeout>>();
+    const scheduleRetry = (fn: () => void, delay: number) => {
+      const id = setTimeout(() => {
+        retryTimeouts.delete(id);
+        if (disposed) return;
+        fn();
+      }, delay);
+      retryTimeouts.add(id);
+    };
     (async () => {
     const { default: Hls } = await import('hls.js');
     if (disposed) return;
@@ -169,7 +180,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
               const delay = retryCount < 3 ? 3000 : retryCount < 10 ? 5000 : 10000;
               logger.info(`Network error, retrying in ${delay / 1000}s... (${retryCount + 1}/${maxRetriesPerUrl})`);
               setError('Connecting to stream...');
-              setTimeout(() => {
+              scheduleRetry(() => {
                 // Any manifest/level error = full source reload (not just resume)
                 // manifestParsingError: server returned non-HLS content (stream not ready yet)
                 // manifestLoadError / levelLoadError: HTTP-level failure
@@ -199,7 +210,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
               (hls as any)._networkRetryCount = 0;
               logger.info('All URLs exhausted on live stream, cycling back in 15s...');
               setError('Reconnecting...');
-              setTimeout(() => tryLoad(), 15000);
+              scheduleRetry(tryLoad, 15000);
             } else {
               // Ended/recording stream: give up
               setError('Stream unavailable');
@@ -217,7 +228,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
               // For live streams, try reloading the source instead of ending
               logger.warn('Non-network fatal error on live stream, reloading source...');
               setError('Reconnecting...');
-              setTimeout(() => hls.loadSource(currentUrl()), 5000);
+              scheduleRetry(() => hls.loadSource(currentUrl()), 5000);
             }
           }
         } else {
@@ -229,7 +240,10 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = currentUrl();
     }
-    })();
+    })().catch(() => {
+      // hls.js chunk failed to load (flaky network / deploy skew)
+      if (!disposed) setError('Stream unavailable');
+    });
 
     videoPlaybackManager.register(videoId, () => {
       video.pause();
@@ -238,6 +252,8 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
 
     return () => {
       disposed = true;
+      retryTimeouts.forEach(clearTimeout);
+      retryTimeouts.clear();
       hlsRef.current?.destroy();
       videoPlaybackManager.unregister(videoId);
     };

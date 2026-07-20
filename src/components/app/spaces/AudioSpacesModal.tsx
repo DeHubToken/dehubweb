@@ -26,7 +26,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
-import { useStage } from '@/contexts/StageContext';
+import { useStage, useStageVolumeLevel } from '@/contexts/StageContext';
 import { useAuth } from '@/contexts/AuthContext';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { StageSoundboard } from './StageSoundboard';
@@ -69,10 +69,11 @@ export function AudioSpacesModal() {
     approveSpeaker,
     removeSpeaker,
     inviteSpeaker,
-    volumeLevel,
     voiceEffect,
     setVoiceEffect,
   } = useStage();
+  // Subscribed separately so only this modal re-renders on Agora volume ticks
+  const volumeLevel = useStageVolumeLevel();
 
   const [view, setView] = useState<View>(initialModalView);
   const [title, setTitle] = useState('');

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
 import { followUser, unfollowUser } from '@/lib/api/dehub';
+import { setFollowOverride } from '@/hooks/use-follow';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 
 interface UseProfileFollowParams {
@@ -61,6 +62,10 @@ export function useProfileFollow({
     } else {
       setFollowStatus(true);
     }
+    // Keep the shared follow-override store (feed cards, hover cards, drawers)
+    // in sync — overrides there win over server values, so skipping this
+    // leaves every other surface showing stale follow state all session.
+    setFollowOverride(profile.walletAddress, true);
 
     try {
       await followUser(profile.walletAddress);
@@ -77,6 +82,7 @@ export function useProfileFollow({
         // Keep follow state as true since they're already following
       } else {
         setFollowStatus(false);
+        setFollowOverride(profile.walletAddress, false);
         handleApiError(error, 'Failed to follow. Please try again.');
       }
     } finally {
@@ -97,6 +103,8 @@ export function useProfileFollow({
 
     setIsFollowLoading(true);
     setFollowStatus(false);
+    // Sync the shared follow-override store — see handleFollow.
+    setFollowOverride(profile.walletAddress, false);
 
     try {
       await unfollowUser(profile.walletAddress);
@@ -104,6 +112,7 @@ export function useProfileFollow({
       invalidateProfileQueries();
     } catch (error) {
       setFollowStatus(true);
+      setFollowOverride(profile.walletAddress, true);
       handleApiError(error, 'Failed to unfollow. Please try again.');
     } finally {
       setIsFollowLoading(false);

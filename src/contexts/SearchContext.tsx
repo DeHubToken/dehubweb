@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useMemo, useCallback, useDeferredValue } from 'react';
 import Fuse from 'fuse.js';
 import { useNavigate } from 'react-router-dom';
 import { getAllBlogListPosts } from '@/utils/blogUtils';
@@ -472,15 +472,18 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }
   }, []);
 
-  // Instant, synchronous search — the whole index lives in memory, so results
-  // update on every keystroke with no artificial delay or loading state.
+  // Synchronous in-memory search, but keyed off a DEFERRED copy of the query:
+  // Fuse scans full blog bodies with ignoreLocation, which can cost 10s of ms
+  // per keystroke on low-end devices — deferring lets the input stay
+  // responsive and the results catch up a frame later.
+  const deferredQuery = useDeferredValue(query);
   useEffect(() => {
-    if (!query.trim()) {
+    if (!deferredQuery.trim()) {
       setResults([]);
       return;
     }
 
-    const searchResults = fuse.search(query, { limit: MAX_RESULTS });
+    const searchResults = fuse.search(deferredQuery, { limit: MAX_RESULTS });
     setResults(
       searchResults.map(result => ({
         id: result.item.id,
@@ -493,7 +496,7 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         score: result.score
       }))
     );
-  }, [query, fuse]);
+  }, [deferredQuery, fuse]);
 
   // Save search to recent searches
   const saveRecentSearch = useCallback((searchTerm: string) => {

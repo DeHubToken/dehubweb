@@ -160,6 +160,10 @@ const CachedPage = memo(function CachedPage({
               height: 0,
               overflow: 'hidden',
               position: 'absolute' as const,
+              // Skip style/layout for the whole hidden subtree — with ~30
+              // pages cached, this is the difference between the browser
+              // laying out one page or all of them on every style change.
+              contentVisibility: 'hidden' as const,
             }
       }
     >
@@ -174,6 +178,20 @@ const CachedPage = memo(function CachedPage({
       </ErrorBoundary>
     </div>
   );
+}, (prev, next) => {
+  if (
+    prev.config !== next.config ||
+    prev.isActive !== next.isActive ||
+    prev.forceVisible !== next.forceVisible
+  ) {
+    return false;
+  }
+  // resetToken is the pathname, which changes on EVERY navigation — letting it
+  // through unconditionally re-renders all ~30 cached pages per nav. Hidden
+  // pages ignore it; an errored hidden page still self-heals because becoming
+  // active re-renders it with the fresh token, resetting its ErrorBoundary.
+  const visible = next.isActive || next.forceVisible;
+  return !visible || prev.resetToken === next.resetToken;
 });
 
 // Pages that should always scroll to top when navigated to

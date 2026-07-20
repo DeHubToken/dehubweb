@@ -347,9 +347,15 @@ function ProfileSettings() {
     }
   }, [profileError, t]);
 
-  // Seed the form whenever fresh profile data arrives
+  // Seed the form ONCE per account from profile data. A background refetch
+  // (focus, staleTime expiry) must not re-seed — that would wipe whatever the
+  // user is currently typing into the form.
+  const seededForAddressRef = useRef<string | null>(null);
   useEffect(() => {
     if (!profileData) return;
+    const seedKey = authUser?.address || '';
+    if (seededForAddressRef.current === seedKey) return;
+    seededForAddressRef.current = seedKey;
     const userData = profileData;
 
     const loadedDisplayName = userData.displayName || userData.display_name || '';
@@ -396,7 +402,7 @@ function ProfileSettings() {
     const rawCoverUrl = userData.coverImageUrl || userData.coverUrl || userData.cover_url;
     setAvatarPreview(buildAvatarUrl(address, rawAvatarUrl));
     setCoverPreview(buildCoverUrl(address, rawCoverUrl));
-  }, [profileData]);
+  }, [profileData, authUser?.address]);
   
   // Check username availability
   useEffect(() => {
@@ -614,8 +620,10 @@ function ProfileSettings() {
     updateMutation.mutate(data);
   };
   
-  // Only block the form on the first-ever load — cached tab returns render instantly
-  if (!profileData) {
+  // Only block the form on the first-ever load — cached tab returns render
+  // instantly. On a load ERROR, fall through and render the (empty) form
+  // instead of spinning forever; the error toast above already fired.
+  if (!profileData && !profileError) {
     return (
       <div className="flex items-center justify-center py-12">
         <Loader2 className="w-6 h-6 text-zinc-400 animate-spin" />
