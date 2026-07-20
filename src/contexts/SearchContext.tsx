@@ -40,26 +40,16 @@ const SearchContext = createContext<SearchContextType | undefined>(undefined);
 
 const RECENT_SEARCHES_KEY = 'recent-searches';
 
-// Flatten post markdown to plain searchable text (headings, links, images,
-// emphasis, code fences stripped so matches land on the words, not syntax).
-const stripMarkdown = (md: string): string =>
-  md
-    .replace(/```[\s\S]*?```/g, ' ')
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, ' ')
-    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
-    .replace(/^#{1,6}\s+/gm, '')
-    .replace(/[*_`>~]/g, '')
-    .replace(/\s+/g, ' ')
-    .trim();
-
 // Every published blog post, straight from the same corpus the /docs/blog list
 // renders (see getAllBlogListPosts) — so every post is findable from the docs
 // search and every result path (/guides/<slug>) is guaranteed to resolve.
+// Bodies are no longer bundled (they're fetched on demand by the post page),
+// so the index covers title + excerpt + SEO description + tags.
 const createBlogIndex = (): SearchIndex[] =>
   getAllBlogListPosts().map(post => ({
     id: `blog-${post.slug}`,
     title: post.title,
-    content: `${post.excerpt} ${stripMarkdown(post.content)}`.slice(0, 5000),
+    content: `${post.excerpt} ${post.seoDescription || ''}`.trim().slice(0, 5000),
     path: `/guides/${post.slug}`,
     category: 'Blog',
     type: 'blog' as const,
@@ -473,9 +463,9 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, []);
 
   // Synchronous in-memory search, but keyed off a DEFERRED copy of the query:
-  // Fuse scans full blog bodies with ignoreLocation, which can cost 10s of ms
-  // per keystroke on low-end devices — deferring lets the input stay
-  // responsive and the results catch up a frame later.
+  // Fuse scans every doc page + blog excerpt with ignoreLocation, which can
+  // still cost ms per keystroke on low-end devices — deferring lets the input
+  // stay responsive and the results catch up a frame later.
   const deferredQuery = useDeferredValue(query);
   useEffect(() => {
     if (!deferredQuery.trim()) {

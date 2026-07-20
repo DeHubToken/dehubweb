@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -10,7 +10,31 @@ interface PollCardProps {
 }
 
 export function PollCard({ tokenId }: PollCardProps) {
-  const { data: poll, isLoading } = usePoll(tokenId);
+  // Defer the poll probe until the card nears the viewport — the feed API has
+  // no "has poll" flag, so without this every card fires a request on mount.
+  const observerRef = useRef<HTMLDivElement>(null);
+  const [nearViewport, setNearViewport] = useState(false);
+  useEffect(() => {
+    if (nearViewport) return;
+    const el = observerRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      setNearViewport(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setNearViewport(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: '600px' }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [nearViewport]);
+
+  const { data: poll, isLoading } = usePoll(tokenId, nearViewport);
   const { walletAddress } = useAuth();
   const voteMutation = useVoteOnPoll();
   const removeVoteMutation = useRemovePollVote();
@@ -27,7 +51,9 @@ export function PollCard({ tokenId }: PollCardProps) {
   });
   const [localVoteCounts, setLocalVoteCounts] = useState<Record<number, number> | null>(null);
 
-  if (isLoading || !poll) return null;
+  // Zero-height sentinel keeps the IntersectionObserver anchored while the
+  // probe is deferred or the post simply has no poll.
+  if (isLoading || !poll) return <div ref={observerRef} aria-hidden="true" />;
 
   const hasVoted = localVotedIndexes !== null || !!poll.userVote;
   const votedIndexes = localVotedIndexes ?? poll.userVote?.optionIndexes ?? [];

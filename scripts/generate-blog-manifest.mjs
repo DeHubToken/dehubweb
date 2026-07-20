@@ -3,13 +3,18 @@
  * ==========================
  * Runs at buildStart (vite.config.ts blogManifestPlugin) and regenerates every
  * bot-facing blog artifact from the single source of truth in src/data +
- * src/utils/blogUtils.ts:
+ * src/data/blogSource.ts (generator-only — article bodies never ship in the
+ * runtime JS bundle):
  *
  *   public/blog-manifest.json        — post metadata consumed by the ssr-seo
  *                                      edge function (title/excerpt/dates/banner)
- *   public/blog-content/<slug>.json  — per-post article body rendered to HTML;
- *                                      the edge fn inlines it so Googlebot gets
- *                                      the full text, not an OG stub
+ *   public/blog-content/<slug>.json  — per-post article body rendered to HTML
+ *                                      (`html`, inlined by the edge fn so
+ *                                      Googlebot gets the full text) PLUS the
+ *                                      raw markdown (`md`) the SPA fetches on
+ *                                      demand and renders client-side
+ *   src/data/blog-metadata.generated.ts — content-free post metadata arrays;
+ *                                      the ONLY blog data the runtime bundles
  *   public/sitemap-static.xml        — blog <url> entries refreshed with real
  *                                      lastmod dates (canonical /guides/<slug>)
  *   public/rss.xml                   — latest 20 posts
@@ -38,18 +43,21 @@ const STANDALONE_GUIDES = new Set([
 // `getNewPostBySlug(slug) || getPostBySlug(slug)`, so the manifest must be the
 // slug-level UNION of newPosts and blogUtils posts (newPosts win on collision).
 // Building from getPublishedPosts() alone 404'd 17 live newPosts articles.
-async function loadPosts() {
+async function loadBlogData() {
   const outfile = path.join(ROOT, 'node_modules', '.cache', 'dehub-blog-data.mjs');
   fs.mkdirSync(path.dirname(outfile), { recursive: true });
   await build({
     stdin: {
       contents: [
-        `import { getPublishedPosts } from '@/utils/blogUtils';`,
-        `import { newPosts } from '@/data/newPosts';`,
+        `import { getPublishedPosts, getLatestPost } from '@/data/blogSource';`,
+        `import { newPosts, excludedTitles } from '@/data/newPosts';`,
         `const bySlug = new Map();`,
         `for (const p of getPublishedPosts()) if (!p.status || p.status === 'published') bySlug.set(p.slug, p);`,
         `for (const p of newPosts) if (!p.status || p.status === 'published') bySlug.set(p.slug, p);`,
         `export const posts = [...bySlug.values()];`,
+        `export const publishedPosts = getPublishedPosts();`,
+        `export const latestPost = getLatestPost();`,
+        `export { newPosts, excludedTitles };`,
       ].join('\n'),
       resolveDir: ROOT,
       loader: 'ts',
@@ -62,9 +70,13 @@ async function loadPosts() {
     logLevel: 'silent',
   });
   const mod = await import(`${pathToFileURL(outfile).href}?t=${Date.now()}`);
+  return mod;
+}
+
+function applyManifestDisplayOverrides(posts) {
   // Display overrides applied by useBlogData.ts at runtime — keep titles/dates
   // in the manifest consistent with what users see in the SPA.
-  return mod.posts.map((p) => {
+  return posts.map((p) => {
     if (p.title === 'Entrepreneurial Spirit: Co-Founders Launch TikTok Agency') return { ...p, publishedAt: '2024-01-09T12:00:00.000Z' };
     if (p.title === 'Back in Action: DeHub V2 Trading Resumes on Gate.io') return { ...p, publishedAt: '2023-02-16T12:00:00.000Z' };
     if (p.title === 'Faster and Sleeker: UI Overhaul and 200% Backend Speed Boost') {
@@ -175,7 +187,8 @@ function mdToHtml(md) {
 }
 
 // --------------------------------------------------------------------- emit
-const posts = await loadPosts();
+const blogData = await loadBlogData();
+const posts = applyManifestDisplayOverrides(blogData.posts);
 const sorted = [...posts].sort(
   (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
 );
@@ -206,8 +219,55 @@ for (const p of sorted) {
   const wordCount = html.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
   fs.writeFileSync(
     path.join(contentDir, `${p.slug}.json`),
-    JSON.stringify({ slug: p.slug, title: p.title, html, wordCount })
+    // `html` feeds the SEO pipelines (ssr-seo edge fn + CF worker) — keep it
+    // exactly as before. `md` is the raw markdown (post-overrides, same string
+    // the SPA used to bundle) fetched on demand by BlogPost.tsx.
+    JSON.stringify({ slug: p.slug, title: p.title, html, md: p.content, wordCount })
   );
+}
+
+// 2a. runtime metadata module — every post object the SPA needs, with the
+//     bodies stripped (content: ''). This is the ONLY blog data the runtime
+//     bundles; article markdown is fetched from blog-content/<slug>.json.
+{
+  const stripContent = (p) => ({
+    ...p,
+    content: '',
+    excerpt: p.excerpt ?? '',
+    bannerImage: p.bannerImage ?? '',
+    bannerImageAlt: p.bannerImageAlt ?? '',
+    author: p.author ?? { name: 'DeHub Team' },
+    tags: Array.isArray(p.tags) ? p.tags : [],
+    readingTime: p.readingTime ?? 0,
+    featured: !!p.featured,
+  });
+  const ser = (v) => JSON.stringify(v, null, 2);
+  const metaTs = `// AUTO-GENERATED by scripts/generate-blog-manifest.mjs — DO NOT EDIT.
+// Regenerated at buildStart (vite.config.ts blogManifestPlugin) from the
+// generator-only full-content modules (src/data/blogSource.ts et al).
+// Every post here has content: '' — BlogPost.tsx fetches the markdown body
+// on demand from /blog-content/<slug>.json (md field).
+import type { BlogPost } from '@/types/blog';
+
+// getPublishedPosts() corpus: overrides applied, published only, newest first.
+export const blogPostsMetadata: BlogPost[] = ${ser(blogData.publishedPosts.map(stripContent))};
+
+// src/data/newPosts.ts array, source order preserved (getNewPostBySlug wins
+// over blogPostsMetadata on slug collisions — same as the old runtime).
+// The /docs/blog list corpus (getAllBlogListPosts) is combined from these two
+// arrays at runtime in blogUtils.ts — metadata-only logic, no third copy here.
+export const newPostsMetadata: BlogPost[] = ${ser(blogData.newPosts.map(stripContent))};
+
+// getLatestPost() result — docs home hero.
+export const latestPostMetadata: BlogPost | undefined = ${blogData.latestPost ? ser(stripContent(blogData.latestPost)) : 'undefined'};
+
+export const excludedTitles: string[] = ${ser(blogData.excludedTitles)};
+`;
+  const metaPath = path.join(ROOT, 'src', 'data', 'blog-metadata.generated.ts');
+  // Only rewrite when the content changes so the vite dev server doesn't see a
+  // touched module (and trigger a reload loop) on every start.
+  const prev = fs.existsSync(metaPath) ? fs.readFileSync(metaPath, 'utf8') : '';
+  if (prev !== metaTs) fs.writeFileSync(metaPath, metaTs);
 }
 
 // 2b. docs pages — public/dehub-docs-content.txt is the full docs text with
@@ -321,4 +381,4 @@ ${items}
 `;
 fs.writeFileSync(path.join(PUBLIC, 'rss.xml'), rss);
 
-console.log(`[blog-manifest] ${manifest.length} posts → manifest, blog-content/, sitemap-static.xml, rss.xml`);
+console.log(`[blog-manifest] ${manifest.length} posts → manifest, blog-content/ (html+md), blog-metadata.generated.ts, sitemap-static.xml, rss.xml`);
