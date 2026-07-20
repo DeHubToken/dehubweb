@@ -56,6 +56,9 @@ const STYLES: { value: VisualizerStyle; label: string }[] = [
 
 const STATIC_BAR_COUNT = 100;
 
+// Shared across all AudioVisualizer instances — see setupAudio for why.
+let sharedVisualizerContext: AudioContext | null = null;
+
 export function AudioVisualizer({
   audioUrl,
   isPlaying,
@@ -131,9 +134,15 @@ export function AudioVisualizer({
         });
       }
 
-      if (!audioContextRef.current) {
-        audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+      // ONE AudioContext shared by every visualizer instance: Chrome caps ~6
+      // live contexts per page, and feed cards live forever in persistent
+      // pages — per-card contexts exhausted the cap after a few audio posts,
+      // silently breaking later visualizers. Per-element sources/analysers
+      // still attach to the shared context (one source per element is fine).
+      if (!sharedVisualizerContext) {
+        sharedVisualizerContext = new (window.AudioContext || (window as any).webkitAudioContext)();
       }
+      audioContextRef.current = sharedVisualizerContext;
 
       const ctx = audioContextRef.current;
 
@@ -271,6 +280,13 @@ export function AudioVisualizer({
         audioRef.current.pause();
         audioRef.current = null;
       }
+      // Detach this card's nodes from the SHARED context (never close it —
+      // other visualizers may be using it).
+      sourceRef.current?.disconnect();
+      sourceRef.current = null;
+      analyserRef.current?.disconnect();
+      analyserRef.current = null;
+      audioContextRef.current = null;
       isConnectedRef.current = false;
       resetSpectrum();
       resetRings();

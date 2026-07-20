@@ -24,11 +24,13 @@
  * Bump VERSION to invalidate every cache on the next activate.
  */
 
-const VERSION = 'dehub-sw-v1';
+const VERSION = 'dehub-sw-v2';
 const SHELL_CACHE = `${VERSION}-shell`;
 const ASSET_CACHE = `${VERSION}-assets`;
 const MEDIA_CACHE = `${VERSION}-media`;
+const CONTENT_CACHE = `${VERSION}-content`;
 const MEDIA_MAX_ENTRIES = 250;
+const CONTENT_MAX_ENTRIES = 60;
 
 const CDN_HOST = 'dehubcdn.ams3.cdn.digitaloceanspaces.com';
 // Immutable image folders only. `videos/` is deliberately absent.
@@ -122,7 +124,30 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 4. Everything else falls through to the network untouched.
+  // 4. Blog article bodies (/blog-content/<slug>.json) → StaleWhileRevalidate.
+  //    Fetched on demand by the SPA since the bodies left the JS bundle;
+  //    articles change only on deploys, so serve cached instantly and refresh
+  //    in the background.
+  if (url.origin === self.location.origin && url.pathname.startsWith('/blog-content/')) {
+    event.respondWith(
+      caches.open(CONTENT_CACHE).then(async (cache) => {
+        const hit = await cache.match(req);
+        const network = fetch(req)
+          .then((res) => {
+            if (res && res.ok) {
+              cache.put(req, res.clone());
+              trimCache(CONTENT_CACHE, CONTENT_MAX_ENTRIES);
+            }
+            return res;
+          })
+          .catch(() => null);
+        return hit || network.then((res) => res || Response.error());
+      })
+    );
+    return;
+  }
+
+  // 5. Everything else falls through to the network untouched.
 });
 
 // Allow the page to trigger an immediate activation after an update.

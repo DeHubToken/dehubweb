@@ -245,22 +245,27 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
   }, []);
   const [isGeneratingThumbnail, setIsGeneratingThumbnail] = useState(false);
 
-  // Auto-save active draft to localStorage whenever text fields change
+  // Auto-save active draft to localStorage whenever text fields change.
+  // Debounced: JSON.stringify + synchronous localStorage.setItem on EVERY
+  // keystroke costs main-thread time exactly while the user is typing.
   useEffect(() => {
-    const draft: ActiveDraft = {
-      text, description, showDescription, titleText, showTitle,
-      selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
-      isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
-      isTokenGated, tokenContract, tokenSymbol, tokenAmount,
-    };
-    // Only save if there's meaningful content
-    const hasContent = text.trim() || description.trim() || titleText.trim() ||
-      selectedCategory || isPPV || isWatch2Earn || isTokenGated || isSubscribersOnly;
-    if (hasContent) {
-      saveActiveDraft(draft);
-    } else {
-      clearActiveDraft();
-    }
+    const timer = setTimeout(() => {
+      const draft: ActiveDraft = {
+        text, description, showDescription, titleText, showTitle,
+        selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
+        isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
+        isTokenGated, tokenContract, tokenSymbol, tokenAmount,
+      };
+      // Only save if there's meaningful content
+      const hasContent = text.trim() || description.trim() || titleText.trim() ||
+        selectedCategory || isPPV || isWatch2Earn || isTokenGated || isSubscribersOnly;
+      if (hasContent) {
+        saveActiveDraft(draft);
+      } else {
+        clearActiveDraft();
+      }
+    }, 500);
+    return () => clearTimeout(timer);
   }, [text, description, showDescription, titleText, showTitle,
     selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,

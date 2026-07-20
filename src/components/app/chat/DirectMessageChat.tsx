@@ -4,7 +4,7 @@
  * Full-screen 1:1 direct message chat view.
  */
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, memo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw, Pin, Phone, CornerUpRight } from 'lucide-react';
@@ -133,7 +133,11 @@ function VoiceMessagePlayer({
   );
 }
 
-function MessageBubble({
+// memo: every DirectMessageChat state change (scroll-position toggles, search
+// keystrokes, incoming messages) used to re-render EVERY bubble — each parsing
+// dates via formatDistanceToNow. Handler props are useCallback'd by the
+// parent, so only bubbles whose message/highlight actually changed re-render.
+const MessageBubble = memo(function MessageBubble({
   message,
   isOwnMessage,
   highlightText,
@@ -407,7 +411,7 @@ function MessageBubble({
       </div>
     </div>
   );
-}
+});
 
 function MessagesSkeleton() {
   return (

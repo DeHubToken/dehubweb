@@ -132,7 +132,11 @@ export function useOnchainDHBTransfers(walletAddress?: string | null) {
     queryKey: ['onchain-dhb-transfers', walletAddress?.toLowerCase()],
     queryFn: () => fetchRecentDHBTransfers(walletAddress!),
     enabled: !!walletAddress,
-    staleTime: 30_000,
+    // This scan is heavy: two full-range eth_getLogs over ~43k blocks plus a
+    // getBlock per unique block. 30s staleness meant nearly every Command
+    // Centre revisit refired the whole storm; 24h of history doesn't change
+    // meaningfully in 5 minutes.
+    staleTime: 5 * 60_000,
     refetchOnWindowFocus: false,
     retry: 1,
   });

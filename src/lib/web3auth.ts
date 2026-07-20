@@ -322,14 +322,43 @@ export function removeWeb3AuthWalletButton(): void {
 /**
  * Watch for Web3Auth injected wallet button and remove it immediately.
  * Uses MutationObserver so it catches async injections after login.
+ *
+ * The widget injects within moments of login, but an unbounded body-subtree
+ * observer would run the selector sweep on EVERY DOM mutation in this
+ * mutation-heavy feed app for the whole session. So: sweeps are coalesced to
+ * one per frame, and the observer self-disconnects after a generous window
+ * (re-armed by the next login).
  */
 let walletButtonObserver: MutationObserver | null = null;
+let walletButtonObserverTimeout: ReturnType<typeof setTimeout> | null = null;
+const WALLET_BUTTON_WATCH_MS = 60_000;
+
 export function startWalletButtonCleanup(): void {
-  if (typeof document === 'undefined' || walletButtonObserver) return;
-  walletButtonObserver = new MutationObserver(() => {
+  if (typeof document === 'undefined') return;
+  // Re-arm: reset the disconnect window on every (re)login
+  if (walletButtonObserverTimeout) clearTimeout(walletButtonObserverTimeout);
+
+  if (!walletButtonObserver) {
+    let sweepQueued = false;
+    walletButtonObserver = new MutationObserver(() => {
+      if (sweepQueued) return;
+      sweepQueued = true;
+      requestAnimationFrame(() => {
+        sweepQueued = false;
+        removeWeb3AuthWalletButton();
+      });
+    });
+    walletButtonObserver.observe(document.body, { childList: true, subtree: true });
+  }
+
+  walletButtonObserverTimeout = setTimeout(() => {
+    walletButtonObserver?.disconnect();
+    walletButtonObserver = null;
+    walletButtonObserverTimeout = null;
+    // Final sweep on the way out in case an injection landed late
     removeWeb3AuthWalletButton();
-  });
-  walletButtonObserver.observe(document.body, { childList: true, subtree: true });
+  }, WALLET_BUTTON_WATCH_MS);
+
   // Also clean up immediately
   removeWeb3AuthWalletButton();
 }

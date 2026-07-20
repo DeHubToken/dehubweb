@@ -12,7 +12,7 @@
  */
 
 import { useCallback, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Play, Square, Users, Clock, FileText, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -66,6 +66,7 @@ export function PastStagesList() {
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
+  const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
   const rafRef = useRef<number>(0);
   const pendingSeekRatioRef = useRef<number | null>(null);
@@ -101,6 +102,11 @@ export function PastStagesList() {
     cancelAnimationFrame(rafRef.current);
     audioRef.current?.pause();
     audioRef.current = null;
+    // Detach the WebAudio graph — a source/analyser pair is created per play
+    // and would otherwise accumulate on the shared AudioContext forever.
+    sourceRef.current?.disconnect();
+    sourceRef.current = null;
+    analyserRef.current?.disconnect();
     analyserRef.current = null;
     pendingSeekRatioRef.current = null;
     realDurationRef.current = 0;
@@ -110,6 +116,15 @@ export function PastStagesList() {
     setPlaybackProgress(0);
     setPlaybackTimeLeft('');
   }, []);
+
+  // /stages lives in PersistentPageCache — stop recorded playback when the
+  // user navigates away (there's no mini-player for recordings, so background
+  // audio here would be unstoppable without returning to the page).
+  const { pathname } = useLocation();
+  const isStagesRouteActive = pathname === '/app/stages' || pathname === '/stages';
+  useEffect(() => {
+    if (!isStagesRouteActive && playingStageId) stopPlayback();
+  }, [isStagesRouteActive, playingStageId, stopPlayback]);
 
   const startPlayback = useCallback(
     (space: AudioSpace) => {
@@ -214,6 +229,9 @@ export function PastStagesList() {
         endTimeoutRef.current = setTimeout(() => {
           endTimeoutRef.current = null;
           if (audioRef.current === audio) audioRef.current = null;
+          sourceRef.current?.disconnect();
+          sourceRef.current = null;
+          analyserRef.current?.disconnect();
           analyserRef.current = null;
           setPlayingStageId(null);
           setPlaybackProgress(0);
@@ -224,26 +242,39 @@ export function PastStagesList() {
       const ctx = audioCtxRef.current || new AudioContext();
       audioCtxRef.current = ctx;
       void ctx.resume();
+      // Previous play's graph must go before wiring a new one (see stopPlayback)
+      sourceRef.current?.disconnect();
+      analyserRef.current?.disconnect();
       const source = ctx.createMediaElementSource(audio);
       const analyser = ctx.createAnalyser();
       analyser.fftSize = 256;
       source.connect(analyser);
       analyser.connect(ctx.destination);
+      sourceRef.current = source;
       analyserRef.current = analyser;
 
+      // The pump RAF stays at frame rate for smooth audio analysis, but state
+      // writes are QUANTIZED (volume to 1/50ths at ~10Hz, progress to 0.1%)
+      // so React bails on identical values — the unquantized version
+      // re-rendered this whole 20-row list at 60fps for the entire playback.
       const dataArray = new Uint8Array(analyser.frequencyBinCount);
+      let lastVolumeAt = 0;
       const pump = () => {
-        analyser.getByteFrequencyData(dataArray);
-        let sum = 0;
-        for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
-        setPlaybackVolume(sum / dataArray.length / 255);
+        const now = performance.now();
+        if (now - lastVolumeAt >= 100) {
+          lastVolumeAt = now;
+          analyser.getByteFrequencyData(dataArray);
+          let sum = 0;
+          for (let i = 0; i < dataArray.length; i++) sum += dataArray[i];
+          setPlaybackVolume(Math.round((sum / dataArray.length / 255) * 50) / 50);
+        }
 
         // While the duration probe is seeking to the end, currentTime is bogus —
         // don't let it flash the waveform to 100%.
         const dur = resolveDuration();
         if (!forcingDurationRef.current && isFinite(dur) && dur > 0) {
           const t = audio.currentTime;
-          setPlaybackProgress(Math.min(1, Math.max(0, t / dur)));
+          setPlaybackProgress(Math.round(Math.min(1, Math.max(0, t / dur)) * 1000) / 1000);
           const remaining = Math.max(0, Math.ceil(dur - t));
           const m = Math.floor(remaining / 60);
           const s = remaining % 60;

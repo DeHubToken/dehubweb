@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, memo } from 'react';
 import { ShieldBan, ShieldCheck, MoreVertical, Loader2, RotateCcw, Languages, SmilePlus, Reply, CornerDownRight, X } from 'lucide-react';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -164,7 +164,9 @@ function ReactionBar({
   );
 }
 
-export function ChatMessage({
+// memo: the public-chat list re-renders on every incoming message / composer
+// keystroke in the parent — without this every visible message re-renders too.
+export const ChatMessage = memo(function ChatMessage({
   message,
   showActions,
   moderators,
@@ -459,4 +461,4 @@ export function ChatMessage({
       </div>
     </div>
   );
-}
+});

@@ -124,44 +124,50 @@ export function useCommunityChat(communityId: string | undefined) {
   // Overlay latest profile onto each message: current user from useAuth, others
   // from the cached DeHub profile lookup. Messages store a snapshot at insert
   // time, so this keeps display name / username / avatar fresh after renames.
-  const overlaidMessages: CommunityChatMessage[] = rawMessages.map(msg => {
-    const addr = msg.wallet_address?.toLowerCase();
-    if (myAddress && addr === myAddress) {
-      return {
-        ...msg,
-        display_name: myDisplayName ?? msg.display_name,
-        username: myUsername ?? msg.username,
-        avatar_url: myAvatarUrl ?? msg.avatar_url,
-      };
-    }
-    if (addr) {
-      const fresh = senderProfileMap.get(addr);
-      if (fresh) {
+  // Memoized: this double map (plus reply resolution below) used to rebuild
+  // 200 message objects on every render — including each composer keystroke.
+  const messages: CommunityChatMessage[] = useMemo(() => {
+    const overlaid = rawMessages.map(msg => {
+      const addr = msg.wallet_address?.toLowerCase();
+      if (myAddress && addr === myAddress) {
         return {
           ...msg,
-          display_name: fresh.displayName ?? msg.display_name,
-          username: fresh.username ?? msg.username,
-          avatar_url: fresh.avatarUrl ?? msg.avatar_url,
+          display_name: myDisplayName ?? msg.display_name,
+          username: myUsername ?? msg.username,
+          avatar_url: myAvatarUrl ?? msg.avatar_url,
         };
       }
-    }
-    return msg;
-  });
+      if (addr) {
+        const fresh = senderProfileMap.get(addr);
+        if (fresh) {
+          return {
+            ...msg,
+            display_name: fresh.displayName ?? msg.display_name,
+            username: fresh.username ?? msg.username,
+            avatar_url: fresh.avatarUrl ?? msg.avatar_url,
+          };
+        }
+      }
+      return msg;
+    });
 
-  // Resolve reply_to data client-side (using overlaid values for fresh names)
-  const messages: CommunityChatMessage[] = overlaidMessages.map(msg => {
-    if (!msg.reply_to_id) return msg;
-    const parent = overlaidMessages.find(m => m.id === msg.reply_to_id);
-    if (!parent) return msg;
-    return {
-      ...msg,
-      reply_to: {
-        id: parent.id,
-        content: parent.content || (parent.message_type === 'gif' ? 'GIF' : 'Media'),
-        sender_name: parent.display_name || parent.username || 'User',
-      },
-    };
-  });
+    // Resolve reply_to data client-side (using overlaid values for fresh
+    // names) — via an id map instead of a find() per reply (was O(n²)).
+    const byId = new Map(overlaid.map(m => [m.id, m]));
+    return overlaid.map(msg => {
+      if (!msg.reply_to_id) return msg;
+      const parent = byId.get(msg.reply_to_id);
+      if (!parent) return msg;
+      return {
+        ...msg,
+        reply_to: {
+          id: parent.id,
+          content: parent.content || (parent.message_type === 'gif' ? 'GIF' : 'Media'),
+          sender_name: parent.display_name || parent.username || 'User',
+        },
+      };
+    });
+  }, [rawMessages, senderProfileMap, myAddress, myDisplayName, myUsername, myAvatarUrl]);
 
   // Realtime subscription
   useEffect(() => {

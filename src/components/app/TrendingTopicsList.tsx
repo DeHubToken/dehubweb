@@ -45,6 +45,21 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
   const [isAutoRotating, setIsAutoRotating] = useState(true);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const loaderRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  // Instances of this list sit inside CSS-hidden cached pages (explore) and
+  // the sidebar — rotate only while THIS instance is actually on screen.
+  const [isOnScreen, setIsOnScreen] = useState(false);
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      setIsOnScreen(true);
+      return;
+    }
+    const io = new IntersectionObserver(([entry]) => setIsOnScreen(entry.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
 
   const { data: limitedCategories = [] } = useTrendingCategories(topicPeriod);
@@ -82,7 +97,7 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
   // Auto-rotate through periods every 5 seconds (skip ticks while the browser
   // tab is hidden — this list is mounted app-wide via the sidebar)
   useEffect(() => {
-    if (!isAutoRotating) return;
+    if (!isAutoRotating || !isOnScreen) return;
     const interval = setInterval(() => {
       if (document.hidden) return;
       setTopicPeriod(prev => {
@@ -93,7 +108,7 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
       });
     }, 5000);
     return () => clearInterval(interval);
-  }, [isAutoRotating]);
+  }, [isAutoRotating, isOnScreen]);
 
   const handlePeriodChange = useCallback((newPeriod: TopicPeriod) => {
     dirRef.current = PERIOD_INDEX[newPeriod] - PERIOD_INDEX[topicPeriod];
@@ -125,7 +140,7 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
   };
 
   return (
-    <div style={{ minHeight }} className="relative overflow-hidden">
+    <div ref={rootRef} style={{ minHeight }} className="relative overflow-hidden">
       {/* Period tabs */}
       <div className="flex mb-2">
         {TOPIC_PERIODS.map(p => (

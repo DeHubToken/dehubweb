@@ -11,6 +11,7 @@ import { PublicChat, DirectMessageChat, NewConversationModal, NewMessageSelector
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { useConversations, useUserOnlineStatus, useCreateConversation, useUserSearchForDM } from '@/hooks/use-messages';
+import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { getMediaUrl, getAccountInfo, type DeHubConversation, type DeHubUser } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatDistanceToNow } from 'date-fns';
@@ -160,22 +161,26 @@ export default function MessagesPage() {
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   
   const [searchQuery, setSearchQuery] = useState('');
+  // Both search-backed queries key on the query string — passing the raw
+  // input fired 2 network requests per KEYSTROKE (each prefix a fresh cache
+  // key). Debounce to one request pair per pause in typing.
+  const debouncedSearchQuery = useDebouncedValue(searchQuery, 300);
   const [readConvIds, setReadConvIds] = useState<Set<string>>(new Set());
   const { isAuthenticated, walletAddress } = useAuth();
-  
+
   // Subscribe to DM realtime updates only when on messages page
   useDMRealtime();
 
-  const{ 
-    conversations, 
-    isLoading, 
-    isError, 
-    refetch, 
+  const{
+    conversations,
+    isLoading,
+    isError,
+    refetch,
     isRefetching,
-  } = useConversations(searchQuery);
+  } = useConversations(debouncedSearchQuery);
 
   const createConversation = useCreateConversation();
-  const { data: userSearchResults, isLoading: isSearchingUsers } = useUserSearchForDM(searchQuery);
+  const { data: userSearchResults, isLoading: isSearchingUsers } = useUserSearchForDM(debouncedSearchQuery);
 
   // Get existing conversation addresses to filter search results
   const existingAddresses = new Set(

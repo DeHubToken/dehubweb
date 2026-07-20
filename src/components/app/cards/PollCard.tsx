@@ -52,8 +52,10 @@ export function PollCard({ tokenId }: PollCardProps) {
   const [localVoteCounts, setLocalVoteCounts] = useState<Record<number, number> | null>(null);
 
   // Zero-height sentinel keeps the IntersectionObserver anchored while the
-  // probe is deferred or the post simply has no poll.
-  if (isLoading || !poll) return <div ref={observerRef} aria-hidden="true" />;
+  // probe is deferred or the post simply has no poll. `absolute` takes it out
+  // of flow so parent space-y-* utilities don't count it as a child and add a
+  // phantom gap to every poll-less post — while staying intersectable.
+  if (isLoading || !poll) return <div ref={observerRef} className="absolute" aria-hidden="true" />;
 
   const hasVoted = localVotedIndexes !== null || !!poll.userVote;
   const votedIndexes = localVotedIndexes ?? poll.userVote?.optionIndexes ?? [];

@@ -8,6 +8,7 @@
  */
 
 import { useRef, useEffect, useState, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Tv, Volume2, VolumeX, Maximize, Minimize, Play, Pause, PictureInPicture2 } from 'lucide-react';
 import { usePiP } from '@/contexts/PiPContext';
 import { cn } from '@/lib/utils';
@@ -48,6 +49,18 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
       hlsRef.current = null;
     }
   }, []);
+
+  // /app/tv never unmounts (PersistentPageCache) — stop the preview stream
+  // when navigating away unless it was promoted to PiP.
+  const { pathname } = useLocation();
+  const isTvRouteActive = pathname === '/app/tv';
+  useEffect(() => {
+    if (isTvRouteActive || !isPlaying || isInPiP) return;
+    setIsPlaying(false);
+    setShowVideo(false);
+    if (videoRef.current) videoRef.current.pause();
+    destroyHls();
+  }, [isTvRouteActive, isPlaying, isInPiP, destroyHls]);
 
   // Register with playback manager so other videos can stop this one
   useEffect(() => {
@@ -90,6 +103,18 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
     const video = videoRef.current;
     if (!video) return;
     if (!isPlaying) return;
+
+    // iPhone Safari: native HLS, no MediaSource — play directly without
+    // downloading (or depending on) the hls.js chunk.
+    if (video.canPlayType('application/vnd.apple.mpegurl') && !('MediaSource' in window)) {
+      video.src = channel.streamUrl;
+      video.play().catch(() => {});
+      return () => {
+        if (!isInPiP) {
+          video.pause();
+        }
+      };
+    }
 
     // hls.js loads dynamically at play time so the runtime stays out of the
     // eager entry bundle. The disposed guard bails if the user stopped or the
@@ -138,8 +163,11 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
     });
 
     return () => {
-      disposed = true;
+      // Only mark the in-flight hls import stale when we're actually tearing
+      // down — during a PiP handoff the pending attach must still complete,
+      // otherwise the PiP window gets a dead video.
       if (!isInPiP) {
+        disposed = true;
         video.pause();
         destroyHls();
       }

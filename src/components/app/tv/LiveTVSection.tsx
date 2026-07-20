@@ -148,11 +148,17 @@ export function LiveTVSection({ showFilters = false }: LiveTVSectionProps) {
         </div>
       )}
       
-      {/* Channel Grid */}
+      {/* Channel Grid — 50 heavy glass cards mount at once; content-visibility
+          lets the browser skip style/layout/paint for the off-screen ones. */}
       {!isLoading && !error && channels.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {channels.map((channel) => (
-            <TVChannelCard key={channel.id} channel={channel} />
+          {channels.map((channel, index) => (
+            <div
+              key={channel.id}
+              style={index >= 4 ? { contentVisibility: 'auto', containIntrinsicSize: 'auto 320px' } : undefined}
+            >
+              <TVChannelCard channel={channel} />
+            </div>
           ))}
         </div>
       )}

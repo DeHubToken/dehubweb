@@ -232,8 +232,17 @@ export function useMessages(conversationId: string | null) {
     enabled: isAuthenticated && !!conversationId,
     staleTime: 10 * 1000,
     // Poll for new messages — backend doesn't reliably push socket events to
-    // recipient. Route-gated (see isMessagesRouteActive above).
-    refetchInterval: isMessagesRouteActive ? 5000 : false,
+    // recipient. Route-gated (see isMessagesRouteActive above). Each tick
+    // refetches EVERY loaded page (TanStack behavior), so once the user has
+    // scrolled deep into history the poll cost scales with page count — back
+    // off to 15s then. (maxPages would be wrong here: this query only pages
+    // forward, so v5 would evict the NEWEST page — where incoming messages
+    // land — when trimming.)
+    refetchInterval: (q) => {
+      if (!isMessagesRouteActive) return false;
+      const pageCount = q.state.data?.pages?.length ?? 0;
+      return pageCount > 4 ? 15_000 : 5000;
+    },
   });
 
   // Flatten pages → single array, oldest first for chat display

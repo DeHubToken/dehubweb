@@ -24,8 +24,11 @@ import { ShippedFeatureNotificationModal } from '@/components/app/ShippedFeature
 const PostModal = React.lazy(() =>
   import('@/features/post/PostModal').then(m => ({ default: m.PostModal }))
 );
-import { RadioMiniPlayer } from '@/components/app/radio';
-import { StageMiniPlayer, AudioSpacesModal } from '@/components/app/spaces';
+// Direct import, not the radio barrel — the barrel would drag the whole radio
+// suite (fullscreen visualizer, station cards, …) into the always-mounted chunk.
+import { RadioMiniPlayer } from '@/components/app/radio/RadioMiniPlayer';
+import { StageMiniPlayer } from '@/components/app/spaces/StageMiniPlayer';
+import { AudioSpacesModal } from '@/components/app/spaces/AudioSpacesModal';
 import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
 
 import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';

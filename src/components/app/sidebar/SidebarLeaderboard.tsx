@@ -229,6 +229,21 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
   const { t } = useTranslation();
   const [activePeriod, setActivePeriod] = useState<string>('All');
   const [isAutoRotating, setIsAutoRotating] = useState(true);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  // Rotate only while actually on screen (the panel can sit in a hidden tab
+  // of the side rail, and instances live inside CSS-hidden cached pages).
+  const [isOnScreen, setIsOnScreen] = useState(false);
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      setIsOnScreen(true);
+      return;
+    }
+    const io = new IntersectionObserver(([entry]) => setIsOnScreen(entry.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   useImperativeHandle(ref, () => ({
     swipePeriod(direction: 1 | -1): boolean {
@@ -245,7 +260,7 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
   // Auto-rotate through periods every 5 seconds (skip ticks while the browser
   // tab is hidden — this sidebar is mounted on every page, forever)
   useEffect(() => {
-    if (!isAutoRotating) return;
+    if (!isAutoRotating || !isOnScreen) return;
     const interval = setInterval(() => {
       if (document.hidden) return;
       setActivePeriod(prev => {
@@ -254,7 +269,7 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
       });
     }, 5000);
     return () => clearInterval(interval);
-  }, [isAutoRotating]);
+  }, [isAutoRotating, isOnScreen]);
 
   const handlePeriodClick = useCallback((period: string) => {
     setActivePeriod(period);
@@ -263,7 +278,7 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
   }, []);
 
   return (
-    <div className="flex flex-col h-full">
+    <div ref={rootRef} className="flex flex-col h-full">
       {/* Period filter row */}
       <div className="flex px-4 pt-3 pb-1">
         {PERIODS.map((period) => (

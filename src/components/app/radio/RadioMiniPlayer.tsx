@@ -11,7 +11,7 @@ import { Play, Pause, X, Radio, Volume2, VolumeX, Loader2, Maximize2, Minus, Gri
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { motion, AnimatePresence, useDragControls } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import { useRadioPlayer } from '@/hooks';
+import { useRadioPlayer } from '@/hooks/use-radio-player';
 import { Slider } from '@/components/ui/slider';
 import { getCountryFlag } from '@/lib/api/radio-browser';
 import { useState, useRef, useCallback, useEffect } from 'react';

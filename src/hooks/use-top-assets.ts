@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { useLocation } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 
 export interface TopAsset {
@@ -69,11 +70,19 @@ async function fetchTopAssets(): Promise<TopAsset[]> {
 }
 
 export function useTopAssets() {
+  // Top100CryptosPage lives in PersistentPageCache: refetchOnMount fires
+  // exactly once per session there, so without the route-gated interval the
+  // prices would freeze forever after the first visit (global
+  // refetchOnWindowFocus is off).
+  const { pathname } = useLocation();
+  const isTop100RouteActive = pathname === '/app/top-100';
   return useQuery({
     queryKey: ['top-assets', 'v6'],
     queryFn: fetchTopAssets,
     staleTime: 300_000,
     gcTime: 600_000,
     refetchOnMount: 'always',
+    refetchInterval: isTop100RouteActive ? 300_000 : false,
+    refetchOnWindowFocus: isTop100RouteActive ? 'always' : false,
   });
 }
