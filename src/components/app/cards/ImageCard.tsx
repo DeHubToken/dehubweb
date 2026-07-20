@@ -86,6 +86,13 @@ interface ImageCardProps {
 }
 
 /**
+ * Measured width/height ratio per image URL. The feed API sends no
+ * dimensions, so this is how repeat mounts reserve the right height
+ * before the image loads (CLS fix). Session-scoped, bounded by feed size.
+ */
+const imageAspectRatioCache = new Map<string, number>();
+
+/**
  * Single slide inside the Instagram-style carousel. Extracted so we can
  * safely call the double-tap-to-like hook per-image (hooks may not run
  * inside a .map callback).
@@ -111,10 +118,15 @@ function ImageSlide({
   // full-size image and runs a 24px blur+saturate composite per slide — wasted
   // GPU/decode on the low-end devices that usually pair with a slow connection.
   const { liteMode } = useConnectionQuality();
+  // Feed items carry no image dimensions, so first paint reserves minHeight and
+  // the card grows on load (CLS). Remembering the measured ratio per URL means
+  // every LATER mount (tab switch, feed revisit, carousel re-render) reserves
+  // the exact final height up front.
+  const [ratio, setRatio] = useState<number | undefined>(() => imageAspectRatioCache.get(img));
   return (
     <div
       className="relative cursor-pointer max-h-[600px] overflow-hidden select-none"
-      style={{ minHeight: '200px' }}
+      style={{ minHeight: '200px', aspectRatio: ratio ? String(ratio) : undefined }}
       onClick={(e) => {
         e.stopPropagation();
         onClick(e);
@@ -139,6 +151,14 @@ function ImageSlide({
         fetchPriority={aboveFold && idx === 0 ? 'high' : 'auto'}
         decoding={aboveFold && idx === 0 ? 'sync' : 'async'}
         draggable={false}
+        onLoad={(e) => {
+          const el = e.currentTarget;
+          if (el.naturalWidth > 0 && el.naturalHeight > 0) {
+            const measured = el.naturalWidth / el.naturalHeight;
+            imageAspectRatioCache.set(img, measured);
+            setRatio(prev => prev ?? measured);
+          }
+        }}
         onError={(e) => {
           (e.target as HTMLImageElement).style.display = 'none';
         }}

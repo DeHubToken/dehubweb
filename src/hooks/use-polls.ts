@@ -6,7 +6,7 @@ import type { DeHubPoll } from '@/lib/api/dehub';
 
 const POLLS_KEY = 'polls';
 
-export function usePoll(tokenId: number) {
+export function usePoll(tokenId: number, enabled = true) {
   return useQuery({
     queryKey: [POLLS_KEY, tokenId],
     queryFn: async () => {
@@ -18,7 +18,10 @@ export function usePoll(tokenId: number) {
         return null;
       }
     },
-    enabled: !!tokenId,
+    // The feed API has no "has poll" flag, so every card must probe — the
+    // `enabled` gate lets cards defer that probe until near the viewport
+    // instead of bursting one request per card on feed mount.
+    enabled: !!tokenId && enabled,
     staleTime: 5 * 60 * 1000,
     retry: false,
   });

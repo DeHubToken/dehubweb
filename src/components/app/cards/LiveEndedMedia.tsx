@@ -13,7 +13,7 @@
  * URI, so nothing here can 404 (no network → no broken-image icons). This is
  * what replaces the old empty/black placeholder that live posts used to show.
  */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Radio } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -33,15 +33,27 @@ interface LiveEndedMediaProps {
 
 /** Animated TV-snow screen shown when there's no usable cover image. */
 function TvStatic({ label }: { label: string }) {
+  // The snow is an infinite steps() animation — several of these can sit in a
+  // LiveFeed grid, repainting forever even when scrolled away or on a hidden
+  // cached page. Pause the animation whenever the element isn't on screen.
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [onScreen, setOnScreen] = useState(true);
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(([entry]) => setOnScreen(entry.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   return (
-    <div className="absolute inset-0 bg-black overflow-hidden" aria-hidden="true">
+    <div ref={rootRef} className="absolute inset-0 bg-black overflow-hidden" aria-hidden="true">
       {/* Snow — noise tile re-randomizes position each step */}
       <div
         className="absolute inset-0 opacity-90"
         style={{
           backgroundImage: `url("${NOISE_TEXTURE}")`,
           backgroundSize: '140px 140px',
-          animation: 'tv-static-snow 0.45s steps(1) infinite',
+          animation: onScreen ? 'tv-static-snow 0.45s steps(1) infinite' : 'none',
         }}
       />
       {/* Scanlines */}

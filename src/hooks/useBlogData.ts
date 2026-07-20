@@ -3,7 +3,9 @@ import { useState, useMemo, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getFeaturedPosts, getAllBlogListPosts } from '@/utils/blogUtils';
 import { BlogPost, BlogTag } from '@/types/blog';
-import { newPosts, excludedTitles } from '@/data/newPosts';
+// Content-free metadata (bodies are fetched on demand by BlogPost.tsx) — the
+// full-content modules in src/data are generator-only inputs now.
+import { newPostsMetadata as newPosts, excludedTitles } from '@/data/blog-metadata.generated';
 
 export const useBlogData = () => {
   const [searchQuery, setSearchQuery] = useState('');
