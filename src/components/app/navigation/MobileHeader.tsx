@@ -10,6 +10,7 @@ import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useCallback, useEffect, useRef, useState, memo } from 'react';
+import { useAnyOverlayOpen } from '@/lib/overlay-open';
 
 const HeaderLogo = memo(function HeaderLogo({ onClick }: { onClick: (e: React.MouseEvent) => void }) {
   return (
@@ -40,6 +41,10 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   const navType = useNavigationType();
   const { isAuthenticated, user, openLoginModal } = useAuth();
   
+  // Drop below every overlay scrim (dialog/sheet z-50, drawer z-100) while a
+  // sheet is open — at the usual z-60 the header floats crisp above dialog
+  // backdrops instead of dimming with the page (lib/overlay-open).
+  const anyOverlayOpen = useAnyOverlayOpen();
   const { data: unreadCount } = useUnreadNotificationCount();
   const { data: customUnread } = useCustomUnreadCount();
   const totalNotifUnread = (unreadCount?.total ?? 0) + (customUnread ?? 0);
@@ -106,7 +111,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   }, [navType, navigate]);
 
   return (
-    <header data-mobile-header data-scrolled={scrolled ? 'true' : 'false'} className={`lg:hidden fixed top-0 left-0 right-0 z-[60] px-4 h-11 flex items-center justify-between pointer-events-auto ${isOpen ? 'bg-transparent' : 'bg-black'}`}>
+    <header data-mobile-header data-scrolled={scrolled ? 'true' : 'false'} className={`lg:hidden fixed top-0 left-0 right-0 ${anyOverlayOpen ? 'z-[40]' : 'z-[60]'} px-4 h-11 flex items-center justify-between pointer-events-auto ${isOpen ? 'bg-transparent' : 'bg-black'}`}>
       <div className="flex items-center gap-3 ml-[-8px]">
         <HeaderLogo onClick={handleLogoClick} />
       </div>

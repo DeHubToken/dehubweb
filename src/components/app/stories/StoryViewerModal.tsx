@@ -29,6 +29,7 @@ import { StorySlide } from './StorySlide';
 import { StoryCommentsDrawer } from './StoryCommentsDrawer';
 import { UserMentionDropdown } from '@/components/app/mentions';
 import { useMention } from '@/hooks/use-mention';
+import { OverlayOpenTracker } from '@/lib/overlay-open';
 
 interface StoryViewerModalProps {
   isOpen: boolean;
@@ -377,6 +378,9 @@ export function StoryViewerModal({ isOpen, onClose, stories, initialIndex = 0, o
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
+      {/* Fullscreen at z-70 — below the sticky feed navs (z-110); register in
+          the overlay count so they hide instead of floating over the story. */}
+      <OverlayOpenTracker />
       {/* Main content area */}
       <div className={`relative flex items-center justify-center h-full ${isMobile ? 'w-full' : 'gap-4 px-4'}`}>
         
