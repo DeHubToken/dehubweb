@@ -3,6 +3,7 @@ import * as AlertDialogPrimitive from "@radix-ui/react-alert-dialog";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
+import { OverlayOpenTracker } from "@/lib/overlay-open";
 
 const AlertDialog = AlertDialogPrimitive.Root;
 
@@ -30,6 +31,8 @@ const AlertDialogContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content>
 >(({ className, ...props }, ref) => (
   <AlertDialogPortal>
+    {/* Register in the global overlay count so sticky navs hide (lib/overlay-open). */}
+    <OverlayOpenTracker />
     <AlertDialogOverlay />
     <AlertDialogPrimitive.Content
       ref={ref}

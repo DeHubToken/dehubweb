@@ -4,6 +4,7 @@ import { X } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
+import { OverlayOpenTracker } from "@/lib/overlay-open";
 
 const Sheet = SheetPrimitive.Root;
 
@@ -54,6 +55,8 @@ interface SheetContentProps
 const SheetContent = React.forwardRef<React.ElementRef<typeof SheetPrimitive.Content>, SheetContentProps>(
   ({ side = "right", className, children, ...props }, ref) => (
     <SheetPortal>
+      {/* Register in the global overlay count so sticky navs hide (lib/overlay-open). */}
+      <OverlayOpenTracker />
       <SheetOverlay />
       <SheetPrimitive.Content ref={ref} className={cn(sheetVariants({ side }), className)} {...props}>
         {children}

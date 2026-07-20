@@ -3,6 +3,7 @@ import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { OverlayOpenTracker } from "@/lib/overlay-open";
 
 const Dialog = DialogPrimitive.Root;
 
@@ -37,6 +38,10 @@ const DialogContent = React.forwardRef<
   DialogContentProps
 >(({ className, children, hideCloseButton, overlayClassName, ...props }, ref) => (
   <DialogPortal>
+    {/* Dialogs render as bottom sheets on mobile at z-50 — below the sticky
+        feed navs (z-110) and mobile header (z-60). Registering here lets that
+        chrome hide/dim while the dialog is open (lib/overlay-open). */}
+    <OverlayOpenTracker />
     <DialogOverlay className={overlayClassName} />
     <DialogPrimitive.Content
       ref={ref}

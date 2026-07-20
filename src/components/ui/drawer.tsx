@@ -2,6 +2,7 @@ import * as React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
 
 import { cn } from "@/lib/utils";
+import { OverlayOpenTracker } from "@/lib/overlay-open";
 
 // Shared guard against the vaul "ghost click": dismissing a sheet — tapping the
 // scrim, or an outside tap on a non-modal drawer — fires a synthesized click on
@@ -12,38 +13,6 @@ import { cn } from "@/lib/utils";
 let lastDrawerDismissAt = 0;
 export function wasDrawerJustDismissed(withinMs = 400) {
   return Date.now() - lastDrawerDismissAt < withinMs;
-}
-
-// Global open-drawer registry so page chrome (the sticky feed nav pills) can
-// slide away while any bottom sheet is up, instead of floating crisp above the
-// scrim (the share sheet sits at z-100 but the home tab bar at z-110).
-// DrawerOpenTracker mounts/unmounts with the portal contents, which only exist
-// while the drawer is open — so it counts controlled AND uncontrolled drawers
-// without relying on onOpenChange firing.
-let openDrawerCount = 0;
-const drawerOpenListeners = new Set<() => void>();
-function notifyDrawerOpenListeners() {
-  drawerOpenListeners.forEach((l) => l());
-}
-export function useAnyDrawerOpen(): boolean {
-  return React.useSyncExternalStore(
-    (cb) => {
-      drawerOpenListeners.add(cb);
-      return () => drawerOpenListeners.delete(cb);
-    },
-    () => openDrawerCount > 0,
-  );
-}
-function DrawerOpenTracker() {
-  React.useEffect(() => {
-    openDrawerCount++;
-    notifyDrawerOpenListeners();
-    return () => {
-      openDrawerCount--;
-      notifyDrawerOpenListeners();
-    };
-  }, []);
-  return null;
 }
 
 const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, ...props }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
@@ -82,7 +51,9 @@ const DrawerContent = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & { glass?: boolean; hideHandle?: boolean; noOverlay?: boolean; overlayClassName?: string }
 >(({ className, children, glass = false, hideHandle = true, noOverlay = false, overlayClassName, ...props }, ref) => (
   <DrawerPortal>
-    <DrawerOpenTracker />
+    {/* Registers this sheet in the global overlay count while open, so the
+        sticky feed navs / mobile header get out of the way (lib/overlay-open). */}
+    <OverlayOpenTracker />
     {!noOverlay && <DrawerOverlay className={cn(glass ? "bg-black/20 backdrop-blur-md" : undefined, overlayClassName)} />}
     <DrawerPrimitive.Content
       ref={ref}
