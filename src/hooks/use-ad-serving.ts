@@ -9,6 +9,7 @@
  */
 
 import { useCallback, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -68,11 +69,20 @@ export function useServedAds(surface: string, options: UseServedAdsOptions = {})
   const { walletAddress } = useAuth();
   const { count = 3, categories, enabled = true } = options;
 
+  // The consumer feed lives in PersistentPageCache — rotate inventory only
+  // while a feed surface is actually on screen, not while the user is parked
+  // on Messages/Settings with the feed CSS-hidden. Home feed tabs all render
+  // at '/', '/app', '/videos', '/shorts'.
+  const { pathname } = useLocation();
+  const isFeedSurfaceVisible =
+    pathname === '/' || pathname === '/app' || pathname === '/app/' ||
+    pathname === '/videos' || pathname === '/shorts';
+
   return useQuery({
     queryKey: ['served-ads', surface, walletAddress?.toLowerCase() ?? 'anon', count],
     enabled,
     staleTime: 120_000,
-    refetchInterval: 120_000,
+    refetchInterval: isFeedSurfaceVisible ? 120_000 : false,
     refetchOnWindowFocus: false,
     retry: 1,
     queryFn: async (): Promise<ServedAd[]> => {

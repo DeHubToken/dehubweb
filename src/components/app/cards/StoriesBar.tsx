@@ -51,6 +51,12 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
   const [showLiveOptions, setShowLiveOptions] = useState(false);
   const [isStoryRecorderOpen, setIsStoryRecorderOpen] = useState(false);
   const [isStoryViewerOpen, setIsStoryViewerOpen] = useState(false);
+  // Mount heavy modals on FIRST open, then keep mounted (close animations
+  // still play). Unconditional mounting made the story viewer fire its
+  // reactions/views/comments queries and PostModal fetch drafts on every
+  // home load, for UI nobody had opened.
+  const [storyViewerMounted, setStoryViewerMounted] = useState(false);
+  const [postModalMounted, setPostModalMounted] = useState(false);
   const [viewerStartIndex, setViewerStartIndex] = useState(0);
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   const [isShortsViewerOpen, setIsShortsViewerOpen] = useState(false);
@@ -66,6 +72,13 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
 
   // Show skeleton if external loading OR stories are loading
   const showSkeleton = externalLoading || storiesLoading;
+
+  useEffect(() => {
+    if (isStoryViewerOpen) setStoryViewerMounted(true);
+  }, [isStoryViewerOpen]);
+  useEffect(() => {
+    if (isPostModalOpen) setPostModalMounted(true);
+  }, [isPostModalOpen]);
 
   const handleGoLiveVideo = () => {
     logger.info('User clicked "Video Go Live" in StoriesBar');
@@ -265,20 +278,22 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
         onClose={() => setIsStoryRecorderOpen(false)}
         onStoryRecorded={handleStoryRecorded}
       />
-      <StoryViewerModal
-        isOpen={isStoryViewerOpen}
-        onClose={() => setIsStoryViewerOpen(false)}
-        stories={stories}
-        initialIndex={viewerStartIndex}
-        onStoryWatched={markWatched}
-        onSwitchToShorts={() => {
-          // Close stories and open shorts viewer
-          setIsStoryViewerOpen(false);
-          if (shorts.length > 0) {
-            setIsShortsViewerOpen(true);
-          }
-        }}
-      />
+      {storyViewerMounted && (
+        <StoryViewerModal
+          isOpen={isStoryViewerOpen}
+          onClose={() => setIsStoryViewerOpen(false)}
+          stories={stories}
+          initialIndex={viewerStartIndex}
+          onStoryWatched={markWatched}
+          onSwitchToShorts={() => {
+            // Close stories and open shorts viewer
+            setIsStoryViewerOpen(false);
+            if (shorts.length > 0) {
+              setIsShortsViewerOpen(true);
+            }
+          }}
+        />
+      )}
       
       {/* Shorts Viewer - opens when transitioning from stories */}
       <AnimatePresence>
@@ -291,10 +306,12 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
         )}
       </AnimatePresence>
       
-      <PostModal
-        isOpen={isPostModalOpen}
-        onClose={() => setIsPostModalOpen(false)}
-      />
+      {postModalMounted && (
+        <PostModal
+          isOpen={isPostModalOpen}
+          onClose={() => setIsPostModalOpen(false)}
+        />
+      )}
       <div className="text-center">
         <div className="relative">
           {/* Right fade gradient to signal more stories */}

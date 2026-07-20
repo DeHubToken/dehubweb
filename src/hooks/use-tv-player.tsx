@@ -119,6 +119,16 @@ export function TVPlayerProvider({ children }: TVPlayerProviderProps) {
       hlsRef.current = null;
     }
     
+    // iPhone Safari: native HLS, no MediaSource — play directly without
+    // downloading (or depending on) the hls.js chunk.
+    if (video.canPlayType('application/vnd.apple.mpegurl') && !('MediaSource' in window)) {
+      video.src = url;
+      video.play().catch(() => {
+        // Autoplay blocked
+      });
+      return;
+    }
+
     // hls.js loads dynamically at attach time so the runtime stays out of the
     // eager entry bundle. The seq/disposed guard bails if a newer setup, stop,
     // or unmount happened while the chunk was in flight.

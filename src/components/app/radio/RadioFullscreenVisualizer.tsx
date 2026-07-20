@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Minimize2, Palette, Radio, ChevronLeft, ChevronRight } from 'lucide-react';
 import lavaLampIcon from '@/assets/lava-lamp-icon.png';
 import { cn } from '@/lib/utils';
-import { useRadioPlayer } from '@/hooks';
+import { useRadioPlayer } from '@/hooks/use-radio-player';
 import { Slider } from '@/components/ui/slider';
 import {
   VisualizerStyle,

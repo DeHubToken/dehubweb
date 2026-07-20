@@ -13,7 +13,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation as useI18n } from 'react-i18next';
 import { Send, Sparkles, Loader2, ChevronDown, ImageIcon, X, Plus, Copy, Paperclip, Video, Settings, Download, Mic, Square, Volume2, VolumeX, LayoutDashboard, Check, XCircle, Lock, Zap, History, AudioLines, Blocks } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { toast } from 'sonner';
 import { useVoiceChat } from '@/hooks/use-voice-chat';
@@ -301,8 +301,13 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
     return () => clearTimeout(phaseTimer);
   }, []);
   
+  // This page never unmounts (PersistentPageCache) — a generation stuck in
+  // skeleton phase would otherwise animate at 10Hz forever, even hidden.
+  const { pathname: skeletonPathname } = useLocation();
+  const isAssistantVisible = skeletonPathname === '/app/assistant';
+
   useEffect(() => {
-    if (phase === 'skeleton') {
+    if (phase === 'skeleton' && isAssistantVisible) {
       // Continuously animate - never stops until component unmounts
       const interval = setInterval(() => {
         setProgress(prev => {
@@ -320,7 +325,7 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
       
       return () => clearInterval(interval);
     }
-  }, [phase]);
+  }, [phase, isAssistantVisible]);
   
   if (phase === 'spinner') {
     return (

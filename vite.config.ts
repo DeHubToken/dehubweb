@@ -63,6 +63,12 @@ export default defineConfig(({ mode }) => ({
   define: {
     global: 'globalThis',
   },
+  // Strip console.log/debug from production output (289 call sites, several in
+  // per-message/per-scroll hot paths like dm-socket + AuthProvider). `pure`
+  // drops only the listed calls — console.warn/error survive for diagnostics.
+  esbuild: mode === 'development' ? undefined : {
+    pure: ['console.log', 'console.debug'],
+  },
   build: {
     target: ['es2020', 'safari14'],
     chunkSizeWarningLimit: 1500,

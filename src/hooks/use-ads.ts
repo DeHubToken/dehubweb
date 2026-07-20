@@ -12,6 +12,7 @@
  */
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useLocation } from 'react-router-dom';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
@@ -321,13 +322,25 @@ export function useDeleteCreative() {
 // Stats
 // ---------------------------------------------------------------------------
 
+/**
+ * /app/ads lives in PersistentPageCache (never unmounts), so stats polling
+ * must stop when the user navigates away — otherwise one visit to the ads
+ * portal leaves 30s Supabase polls running for the whole session. Reactive:
+ * returning to the route restarts the interval.
+ */
+function useIsAdsRouteActive(): boolean {
+  const { pathname } = useLocation();
+  return pathname === '/app/ads';
+}
+
 export function useCampaignStats(campaignId: string | undefined) {
   const { walletAddress } = useAuth();
   const wallet = walletAddress?.toLowerCase() ?? null;
+  const isAdsRouteActive = useIsAdsRouteActive();
   return useQuery({
     queryKey: keys.stats(campaignId ?? 'none'),
     enabled: !!wallet && !!campaignId,
-    refetchInterval: 30_000,
+    refetchInterval: isAdsRouteActive ? 30_000 : false,
     queryFn: async (): Promise<AdDailyStat[]> => {
       const { data, error } = await withWalletHeader(
         adsDb.from('ad_daily_stats').select('*').eq('campaign_id', campaignId!).order('day'),
@@ -343,10 +356,11 @@ export function useCampaignStats(campaignId: string | undefined) {
 export function useAllCampaignStats(campaignIds: string[]) {
   const { walletAddress } = useAuth();
   const wallet = walletAddress?.toLowerCase() ?? null;
+  const isAdsRouteActive = useIsAdsRouteActive();
   return useQuery({
     queryKey: [...keys.allStats(wallet), campaignIds.join(',')],
     enabled: !!wallet && campaignIds.length > 0,
-    refetchInterval: 30_000,
+    refetchInterval: isAdsRouteActive ? 30_000 : false,
     queryFn: async (): Promise<AdDailyStat[]> => {
       const { data, error } = await withWalletHeader(
         adsDb.from('ad_daily_stats').select('*').in('campaign_id', campaignIds).order('day'),

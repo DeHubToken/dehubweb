@@ -11,6 +11,7 @@
  */
 
 import { useRef, useEffect, useState, useCallback } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Play, Pause, Tv, Loader2, Volume2, VolumeX, RotateCcw, Maximize, Minimize, PictureInPicture2 } from 'lucide-react';
 import { usePiP } from '@/contexts/PiPContext';
 import { cn } from '@/lib/utils';
@@ -116,6 +117,19 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     }
   }, [cardId]);
   
+  // /app/tv lives in PersistentPageCache and never unmounts — without this
+  // gate, a playing channel keeps downloading HLS segments and playing AUDIO
+  // behind a CSS-hidden page for the rest of the session. Intentional
+  // background playback goes through PiP instead.
+  const { pathname } = useLocation();
+  const isTvRouteActive = pathname === '/app/tv';
+  useEffect(() => {
+    if (isTvRouteActive) return;
+    if ((isPlaying || isPaused) && !isPiP(channel.id)) {
+      fullStop();
+    }
+  }, [isTvRouteActive, isPlaying, isPaused, isPiP, channel.id, fullStop]);
+
   // Register with VideoPlaybackManager — full stop when another video plays
   useEffect(() => {
     disposedRef.current = false;
@@ -157,6 +171,15 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     videoPlaybackManager.globalMuted = false;
     videoPlaybackManager.claimAudio(cardId);
     
+    // iPhone Safari has no MediaSource but plays HLS natively — short-circuit
+    // BEFORE the dynamic import so those devices neither download the ~540 kB
+    // hls.js chunk nor depend on that fetch succeeding to play at all.
+    if (video.canPlayType('application/vnd.apple.mpegurl') && !('MediaSource' in window)) {
+      video.src = channel.streamUrl;
+      video.play().catch(() => {});
+      return;
+    }
+
     // hls.js loads dynamically at attach time so the runtime stays out of the
     // eager entry bundle. The seq/disposed guard bails if a stop or unmount
     // happened while the chunk was in flight.
@@ -437,9 +460,11 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
         {!showVideo && (
           <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-zinc-800 to-zinc-900">
             {channel.logo ? (
-              <img 
-                src={channel.logo} 
+              <img
+                src={channel.logo}
                 alt={channel.name}
+                loading="lazy"
+                decoding="async"
                 className="w-20 h-20 object-contain"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
@@ -574,9 +599,11 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
         {/* Logo */}
         <div className="w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 bg-zinc-800">
           {channel.logo ? (
-            <img 
-              src={channel.logo} 
+            <img
+              src={channel.logo}
               alt={channel.name}
+              loading="lazy"
+              decoding="async"
               className="w-full h-full object-cover"
               onError={(e) => {
                 (e.target as HTMLImageElement).style.display = 'none';

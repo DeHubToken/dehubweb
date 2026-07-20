@@ -134,6 +134,19 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
       currentUrl: currentUrl(),
     });
 
+    // iPhone Safari: native HLS, no MediaSource — play directly without
+    // downloading (or depending on) the hls.js chunk.
+    if (video.canPlayType('application/vnd.apple.mpegurl') && !('MediaSource' in window)) {
+      video.src = urlsToTry[0];
+      videoPlaybackManager.register(videoId, () => {
+        video.pause();
+        setIsPlaying(false);
+      });
+      return () => {
+        videoPlaybackManager.unregister(videoId);
+      };
+    }
+
     let disposed = false;
     // Retry timers must die with the effect — a timer firing after cleanup
     // would call loadSource/startLoad on a destroyed hls instance.

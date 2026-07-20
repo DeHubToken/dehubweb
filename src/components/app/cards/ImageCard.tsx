@@ -123,6 +123,12 @@ function ImageSlide({
   // every LATER mount (tab switch, feed revisit, carousel re-render) reserves
   // the exact final height up front.
   const [ratio, setRatio] = useState<number | undefined>(() => imageAspectRatioCache.get(img));
+  // Slides are keyed by index, so the same mounted slide can receive a new
+  // image URL (post edit → refetch). Re-resolve instead of keeping the old
+  // image's ratio, which would letterbox/crop the replacement forever.
+  useEffect(() => {
+    setRatio(imageAspectRatioCache.get(img));
+  }, [img]);
   return (
     <div
       className="relative cursor-pointer max-h-[600px] overflow-hidden select-none"
@@ -156,7 +162,7 @@ function ImageSlide({
           if (el.naturalWidth > 0 && el.naturalHeight > 0) {
             const measured = el.naturalWidth / el.naturalHeight;
             imageAspectRatioCache.set(img, measured);
-            setRatio(prev => prev ?? measured);
+            setRatio(measured);
           }
         }}
         onError={(e) => {

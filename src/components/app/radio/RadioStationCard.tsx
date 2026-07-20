@@ -9,7 +9,7 @@
 
 import { Play, Pause, Radio, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useRadioPlayer } from '@/hooks';
+import { useRadioPlayer } from '@/hooks/use-radio-player';
 import type { RadioStation } from '@/lib/api/radio-browser';
 import { getCountryFlag, getPrimaryTags, formatBitrate } from '@/lib/api/radio-browser';
 
