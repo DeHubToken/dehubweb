@@ -1339,10 +1339,13 @@ export default function NotificationsPage() {
     // 1700-line page once per resolved actor (~30 renders on first open,
     // each re-running the O(n²) bundling). Wait for ALL fetches, then apply
     // ONE state update with the whole batch.
+    // No cancellation on effect re-run: the actor keys were already claimed in
+    // moduleEnrichedKeys above, so discarding an in-flight batch would lose
+    // those avatars for the whole session. Concurrent batches fetch disjoint
+    // keys and merge via the functional setState, so applying all is safe
+    // (this page lives in PersistentPageCache and never unmounts).
     const allFetches = [...addressFetches, ...usernameFetches];
-    let cancelled = false;
     Promise.allSettled(allFetches).then((outcomes) => {
-      if (cancelled) return;
       const resolvedEntries: Array<{ key: string; info: EnrichedAvatar; extraKeys: string[] }> = [];
       for (const outcome of outcomes) {
         if (outcome.status !== 'fulfilled') continue;
@@ -1377,7 +1380,6 @@ export default function NotificationsPage() {
         return next;
       });
     });
-    return () => { cancelled = true; };
   }, [allNotifications]);
 
   const [markingNotificationId, setMarkingNotificationId] = useState<string | null>(null);

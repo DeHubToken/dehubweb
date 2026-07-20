@@ -5,7 +5,7 @@
  * Native PiP only supports 1 window; this creates in-app floating players.
  */
 
-import { createContext, useContext, useState, useCallback, useRef, ReactNode } from 'react';
+import { createContext, useContext, useState, useCallback, useMemo, useRef, ReactNode } from 'react';
 import { toast } from 'sonner';
 
 export interface PiPChannel {
@@ -51,8 +51,13 @@ export function PiPProvider({ children }: { children: ReactNode }) {
     return pipChannels.some(c => c.id === channelId);
   }, [pipChannels]);
 
+  const value = useMemo(
+    () => ({ pipChannels, addPiP, removePiP, isPiP }),
+    [pipChannels, addPiP, removePiP, isPiP]
+  );
+
   return (
-    <PiPContext.Provider value={{ pipChannels, addPiP, removePiP, isPiP }}>
+    <PiPContext.Provider value={value}>
       {children}
     </PiPContext.Provider>
   );

@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { TabbedSidePanel } from './sidebar';
 import { WhatsHappening } from './WhatsHappening';
 import { useSearchHistory } from '@/hooks/use-search-history';
+import { useIsDesktopViewport } from '@/hooks/use-is-desktop';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { cn } from '@/lib/utils';
 import { rightRailVariants } from '@/lib/surface-motion';
@@ -47,6 +48,10 @@ function SearchBar({ compact }: { compact?: boolean }) {
 
 export const RightSidebar = memo(function RightSidebar({ showSearch = true }: RightSidebarProps) {
   const { isCollapsed } = useSidebarCollapse();
+  const isDesktop = useIsDesktopViewport();
+  // Below lg the rail is CSS-hidden anyway — skip mounting it entirely so its
+  // leaderboard/trending rotations, queries and polls never run on mobile.
+  if (!isDesktop) return null;
   return (
     // motion.aside inherits the surface transition label from SurfaceTransition:
     // the right bento column slides OFF to the right when opening docs and back

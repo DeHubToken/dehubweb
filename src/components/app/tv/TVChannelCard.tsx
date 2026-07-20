@@ -14,7 +14,9 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 import { Play, Pause, Tv, Loader2, Volume2, VolumeX, RotateCcw, Maximize, Minimize, PictureInPicture2 } from 'lucide-react';
 import { usePiP } from '@/contexts/PiPContext';
 import { cn } from '@/lib/utils';
-import Hls from 'hls.js';
+// Type-only: the hls.js runtime (~540 kB raw) loads dynamically at attach time
+// so it stays out of the eager entry bundle. See startPlayback below.
+import type Hls from 'hls.js';
 import { TVChannel } from '@/lib/api/live-tv';
 import { getCountryFlag, reportBrokenChannel } from '@/lib/api/live-tv';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
@@ -34,6 +36,12 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const hlsRef = useRef<Hls | null>(null);
   const isStoppingRef = useRef(false);
+  // Guards for the attach-time dynamic import of hls.js: a bumped sequence or
+  // set disposed flag means "a stop / unmount happened while the chunk was
+  // loading — don't attach a stale player".
+  const playSeqRef = useRef(0);
+  const disposedRef = useRef(false);
+  const retryTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cardId = `tv-${channel.id}`;
   const { addPiP, removePiP, isPiP } = usePiP();
   
@@ -67,6 +75,8 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
    */
   const fullStop = useCallback(() => {
     isStoppingRef.current = true;
+    // Invalidate any in-flight dynamic hls.js setup
+    playSeqRef.current++;
     if (hlsRef.current) {
       hlsRef.current.destroy();
       hlsRef.current = null;
@@ -108,11 +118,18 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
   
   // Register with VideoPlaybackManager — full stop when another video plays
   useEffect(() => {
+    disposedRef.current = false;
     videoPlaybackManager.register(cardId, () => {
       fullStop();
     });
-    
+
     return () => {
+      disposedRef.current = true;
+      playSeqRef.current++;
+      if (retryTimeoutRef.current) {
+        clearTimeout(retryTimeoutRef.current);
+        retryTimeoutRef.current = null;
+      }
       videoPlaybackManager.unregister(cardId);
       isStoppingRef.current = true;
       if (hlsRef.current) {
@@ -140,48 +157,62 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     videoPlaybackManager.globalMuted = false;
     videoPlaybackManager.claimAudio(cardId);
     
-    if (Hls.isSupported()) {
-      const hls = new Hls({
-        enableWorker: true,
-        lowLatencyMode: true,
-        backBufferLength: 90,
-        fragLoadingTimeOut: 10000,
-        manifestLoadingTimeOut: 10000,
-        levelLoadingTimeOut: 10000,
-      });
-      
-      console.log('[TVChannelCard] HLS supported, loading source...', channel.streamUrl);
-      hls.loadSource(channel.streamUrl);
-      hls.attachMedia(video);
-      
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        video.play().catch(() => {
-          logger.warn('Autoplay blocked by browser', { channel: channel.name });
+    // hls.js loads dynamically at attach time so the runtime stays out of the
+    // eager entry bundle. The seq/disposed guard bails if a stop or unmount
+    // happened while the chunk was in flight.
+    const seq = ++playSeqRef.current;
+    (async () => {
+      const { default: Hls } = await import('hls.js');
+      if (seq !== playSeqRef.current || disposedRef.current) return;
+
+      if (Hls.isSupported()) {
+        const hls = new Hls({
+          enableWorker: true,
+          lowLatencyMode: true,
+          backBufferLength: 90,
+          fragLoadingTimeOut: 10000,
+          manifestLoadingTimeOut: 10000,
+          levelLoadingTimeOut: 10000,
         });
-      });
-      
-      hls.on(Hls.Events.ERROR, (_, data) => {
-        logger.error('TV HLS Error', { channel: channel.name, type: data.type, details: data.details, fatal: data.fatal }, data);
-        if (isStoppingRef.current) return;
-        if (data.fatal) {
-          setHasError(true);
-          setIsLoading(false);
-          setIsPlaying(false);
-          if (retryCount >= MAX_RETRIES - 1) {
-            reportBrokenChannel(channel.id);
+
+        console.log('[TVChannelCard] HLS supported, loading source...', channel.streamUrl);
+        hls.loadSource(channel.streamUrl);
+        hls.attachMedia(video);
+
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          video.play().catch(() => {
+            logger.warn('Autoplay blocked by browser', { channel: channel.name });
+          });
+        });
+
+        hls.on(Hls.Events.ERROR, (_, data) => {
+          logger.error('TV HLS Error', { channel: channel.name, type: data.type, details: data.details, fatal: data.fatal }, data);
+          if (isStoppingRef.current) return;
+          if (data.fatal) {
+            setHasError(true);
+            setIsLoading(false);
+            setIsPlaying(false);
+            if (retryCount >= MAX_RETRIES - 1) {
+              reportBrokenChannel(channel.id);
+            }
           }
-        }
-      });
-      
-      hlsRef.current = hls;
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      video.src = channel.streamUrl;
-      video.play().catch(() => {});
-    } else {
+        });
+
+        hlsRef.current = hls;
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = channel.streamUrl;
+        video.play().catch(() => {});
+      } else {
+        setHasError(true);
+        setIsLoading(false);
+      }
+    })().catch(() => {
+      // hls.js chunk failed to load (flaky network / deploy skew)
       setHasError(true);
       setIsLoading(false);
-    }
-  }, [cardId, channel.streamUrl, channel.id, retryCount]);
+      setIsPlaying(false);
+    });
+  }, [cardId, channel.streamUrl, channel.id, channel.name, retryCount]);
   
   const handleClick = () => {
     if (hasError) {
@@ -203,7 +234,10 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
       setRetryCount(prev => prev + 1);
       setHasError(false);
       fullStop();
-      setTimeout(() => {
+      if (retryTimeoutRef.current) clearTimeout(retryTimeoutRef.current);
+      retryTimeoutRef.current = setTimeout(() => {
+        retryTimeoutRef.current = null;
+        if (disposedRef.current) return;
         startPlayback();
       }, 500);
     }

@@ -5,7 +5,7 @@
  * while in a live stage. Similar pattern to RadioPlayerProvider.
  */
 
-import { createContext, useContext, useState, useEffect, useCallback, useRef, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useRef, useSyncExternalStore, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -33,8 +33,6 @@ interface StageContextType {
   myRole: SpaceRole | null;
   hasRaisedHand: boolean;
   isModalOpen: boolean;
-  /** Aggregate audio volume level 0-1 from all speakers */
-  volumeLevel: number;
   /** Current voice effect */
   voiceEffect: VoiceEffectId;
   setVoiceEffect: (id: VoiceEffectId) => void;
@@ -77,6 +75,31 @@ export interface AudioInjectionSource {
 
 const StageContext = createContext<StageContextType | null>(null);
 
+// ─── Volume store ────────────────────────────────────────────────────────────
+// Agora's volume-indicator fires ~every 2s while in a stage. Keeping the level
+// OUT of the context value means the ~15 useStage() consumers (sidebar, bottom
+// nav, feed bars) don't re-render on every tick — only the waveform widgets
+// that subscribe via useStageVolumeLevel() do.
+
+let stageVolumeLevel = 0;
+const stageVolumeSubscribers = new Set<() => void>();
+
+function setStageVolumeLevel(level: number) {
+  if (level === stageVolumeLevel) return;
+  stageVolumeLevel = level;
+  stageVolumeSubscribers.forEach(cb => cb());
+}
+
+function subscribeStageVolume(cb: () => void) {
+  stageVolumeSubscribers.add(cb);
+  return () => stageVolumeSubscribers.delete(cb);
+}
+
+/** Aggregate audio volume level 0-1 from all speakers (live-updating). */
+export function useStageVolumeLevel(): number {
+  return useSyncExternalStore(subscribeStageVolume, () => stageVolumeLevel);
+}
+
 // ─── Provider ────────────────────────────────────────────────────────────────
 
 export function StageProvider({ children }: { children: ReactNode }) {
@@ -92,7 +115,6 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const [isMuted, setIsMuted] = useState(true);
   const [myRole, setMyRole] = useState<SpaceRole | null>(null);
   const [hasRaisedHand, setHasRaisedHand] = useState(false);
-  const [volumeLevel, setVolumeLevel] = useState(0);
   const [voiceEffect, setVoiceEffectState] = useState<VoiceEffectId>('none');
   const voiceEffectsHook = useVoiceEffects();
   const voiceEffectsHookRef = useRef(voiceEffectsHook);
@@ -291,12 +313,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
       client.enableAudioVolumeIndicator();
       client.on('volume-indicator', (volumes: any[]) => {
         if (!volumes || volumes.length === 0) {
-          setVolumeLevel(0);
+          setStageVolumeLevel(0);
           return;
         }
         const maxVol = Math.max(...volumes.map((v: any) => v.level || 0));
         // Agora levels are 0-100, normalize to 0-1
-        setVolumeLevel(maxVol / 100);
+        setStageVolumeLevel(maxVol / 100);
       });
 
       if (role === 'host' || role === 'speaker') {
@@ -1052,7 +1074,6 @@ export function StageProvider({ children }: { children: ReactNode }) {
         isMuted,
         myRole,
         hasRaisedHand,
-        volumeLevel,
         voiceEffect,
         setVoiceEffect,
         isModalOpen,

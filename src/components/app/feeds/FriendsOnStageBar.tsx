@@ -24,7 +24,9 @@ interface FriendOnStage {
   stage: AudioSpace;
 }
 
-const HOME_PATHS = new Set(['/', '/app', '/videos', '/shorts']);
+// Keep in sync with AppLayout's HOME_FEED_ROUTES — '/app/' (trailing slash)
+// also renders the home feed.
+const HOME_PATHS = new Set(['/', '/app', '/app/', '/videos', '/shorts']);
 
 export function FriendsOnStageBar() {
   const { walletAddress, isAuthenticated } = useAuth();

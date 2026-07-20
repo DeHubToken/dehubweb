@@ -1504,6 +1504,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     showStylePicker={true}
                     muted={isMuted}
                     seed={video.id}
+                    decodeEnabled={nearViewport}
                   />
                 </div>
               </div>

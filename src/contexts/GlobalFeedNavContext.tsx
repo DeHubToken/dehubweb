@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 
 interface GlobalFeedNavContextValue {
   filtersPortalElement: HTMLElement | null;
@@ -9,8 +9,12 @@ const GlobalFeedNavContext = createContext<GlobalFeedNavContextValue | null>(nul
 
 export function GlobalFeedNavProvider({ children }: { children: ReactNode }) {
   const [filtersPortalElement, setFiltersPortalElement] = useState<HTMLElement | null>(null);
+  const value = useMemo(
+    () => ({ filtersPortalElement, setFiltersPortalElement }),
+    [filtersPortalElement]
+  );
   return (
-    <GlobalFeedNavContext.Provider value={{ filtersPortalElement, setFiltersPortalElement }}>
+    <GlobalFeedNavContext.Provider value={value}>
       {children}
     </GlobalFeedNavContext.Provider>
   );

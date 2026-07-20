@@ -365,8 +365,11 @@ export function useBookmarkPost(tokenId: string | number) {
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
   
-  // Check if this post is in the bookmarks
-  const { data: savedPages } = useInfiniteQuery({
+  // Check if this post is in the bookmarks. Every card in every mounted feed
+  // shares this one query — `select` collapses it to a boolean per card, so a
+  // bookmark toggle only re-renders the cards whose boolean actually flipped
+  // instead of every card in the app.
+  const { data: derivedBookmarked = false } = useInfiniteQuery({
     queryKey: ['bookmarks', 'saved', 'all'],
     queryFn: async ({ pageParam = 1 }) => {
       const response = await getSavedPosts(pageParam, PAGE_SIZE);
@@ -379,12 +382,11 @@ export function useBookmarkPost(tokenId: string | number) {
     initialPageParam: 1,
     enabled: isAuthenticated,
     staleTime: 2 * 60 * 1000,
+    select: (data) =>
+      data.pages.some(page =>
+        page.items.some((nft: { tokenId: string | number }) => String(nft.tokenId) === String(tokenId))
+      ),
   });
-
-  const allSaved = savedPages?.pages.flatMap(page => page.items) || [];
-  const derivedBookmarked = allSaved.some(
-    (nft) => String(nft.tokenId) === String(tokenId)
-  );
 
   // Optimistic override: the icon flips the instant the user taps, while the
   // server call + background list refresh happen behind it. Cleared once the

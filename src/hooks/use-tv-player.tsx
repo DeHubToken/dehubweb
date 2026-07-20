@@ -17,7 +17,10 @@ import {
   useEffect, 
   type ReactNode 
 } from 'react';
-import Hls from 'hls.js';
+// Type-only: the hls.js runtime (~540 kB raw) loads dynamically at attach time
+// so it stays out of the eager entry bundle (this hook is re-exported by the
+// hooks barrel which eager AppLayout imports). See setupHLSPlayback below.
+import type Hls from 'hls.js';
 import type { TVChannel } from '@/lib/api/live-tv';
 import { toast } from '@/hooks/use-toast';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
@@ -77,7 +80,12 @@ export function TVPlayerProvider({ children }: TVPlayerProviderProps) {
   
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const hlsRef = useRef<Hls | null>(null);
-  
+  // Guards for the attach-time dynamic import of hls.js: a bumped sequence or
+  // set disposed flag means "a newer setup / stop / unmount happened while the
+  // chunk was loading — don't attach a stale player".
+  const setupSeqRef = useRef(0);
+  const disposedRef = useRef(false);
+
   // Register with VideoPlaybackManager
   useEffect(() => {
     videoPlaybackManager.register(TV_PLAYER_ID, () => {
@@ -93,7 +101,10 @@ export function TVPlayerProvider({ children }: TVPlayerProviderProps) {
   
   // Cleanup HLS on unmount
   useEffect(() => {
+    disposedRef.current = false;
     return () => {
+      disposedRef.current = true;
+      setupSeqRef.current++;
       if (hlsRef.current) {
         hlsRef.current.destroy();
         hlsRef.current = null;
@@ -108,71 +119,88 @@ export function TVPlayerProvider({ children }: TVPlayerProviderProps) {
       hlsRef.current = null;
     }
     
-    // Check if HLS.js is supported
-    if (Hls.isSupported()) {
-      const hls = new Hls({
-        enableWorker: true,
-        lowLatencyMode: true,
-        backBufferLength: 90,
-      });
-      
-      logger.info('HLS supported, loading source...', { url });
-      hls.loadSource(url);
-      hls.attachMedia(video);
-      
-      hls.on(Hls.Events.MANIFEST_PARSED, () => {
-        video.play().catch(() => {
-          logger.warn('Autoplay blocked by browser');
+    // hls.js loads dynamically at attach time so the runtime stays out of the
+    // eager entry bundle. The seq/disposed guard bails if a newer setup, stop,
+    // or unmount happened while the chunk was in flight.
+    const seq = ++setupSeqRef.current;
+    (async () => {
+      const { default: Hls } = await import('hls.js');
+      if (seq !== setupSeqRef.current || disposedRef.current) return;
+
+      // Check if HLS.js is supported
+      if (Hls.isSupported()) {
+        const hls = new Hls({
+          enableWorker: true,
+          lowLatencyMode: true,
+          backBufferLength: 90,
         });
-      });
-      
-      hls.on(Hls.Events.ERROR, (_, data) => {
-        logger.error('Global TV HLS Error', { type: data.type, details: data.details, fatal: data.fatal }, data);
-        if (data.fatal) {
-          switch (data.type) {
-            case Hls.ErrorTypes.NETWORK_ERROR:
-              // Try to recover
-              hls.startLoad();
-              break;
-            case Hls.ErrorTypes.MEDIA_ERROR:
-              hls.recoverMediaError();
-              break;
-            default:
-              setState(prev => ({ 
-                ...prev, 
-                error: 'Stream geo-blocked or unavailable',
-                isLoading: false,
-                isPlaying: false,
-              }));
-              toast({
-                title: 'Stream Error',
-                description: 'Unable to play this channel. Try another one.',
-                variant: 'destructive',
-              });
-              break;
+
+        logger.info('HLS supported, loading source...', { url });
+        hls.loadSource(url);
+        hls.attachMedia(video);
+
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          video.play().catch(() => {
+            logger.warn('Autoplay blocked by browser');
+          });
+        });
+
+        hls.on(Hls.Events.ERROR, (_, data) => {
+          logger.error('Global TV HLS Error', { type: data.type, details: data.details, fatal: data.fatal }, data);
+          if (data.fatal) {
+            switch (data.type) {
+              case Hls.ErrorTypes.NETWORK_ERROR:
+                // Try to recover
+                hls.startLoad();
+                break;
+              case Hls.ErrorTypes.MEDIA_ERROR:
+                hls.recoverMediaError();
+                break;
+              default:
+                setState(prev => ({
+                  ...prev,
+                  error: 'Stream geo-blocked or unavailable',
+                  isLoading: false,
+                  isPlaying: false,
+                }));
+                toast({
+                  title: 'Stream Error',
+                  description: 'Unable to play this channel. Try another one.',
+                  variant: 'destructive',
+                });
+                break;
+            }
           }
-        }
-      });
-      
-      hlsRef.current = hls;
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      // Native HLS support (Safari)
-      video.src = url;
-      video.play().catch(() => {
-        // Autoplay blocked
-      });
-    } else {
-      setState(prev => ({ 
-        ...prev, 
-        error: 'HLS not supported',
+        });
+
+        hlsRef.current = hls;
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        // Native HLS support (Safari)
+        video.src = url;
+        video.play().catch(() => {
+          // Autoplay blocked
+        });
+      } else {
+        setState(prev => ({
+          ...prev,
+          error: 'HLS not supported',
+          isLoading: false,
+        }));
+        toast({
+          title: 'Playback Error',
+          description: 'Your browser does not support HLS streaming.',
+          variant: 'destructive',
+        });
+      }
+    })().catch(() => {
+      // hls.js chunk failed to load (flaky network / deploy skew)
+      setState(prev => ({
+        ...prev,
+        error: 'Stream unavailable',
         isLoading: false,
+        isPlaying: false,
       }));
-      toast({
-        title: 'Playback Error',
-        description: 'Your browser does not support HLS streaming.',
-        variant: 'destructive',
-      });
-    }
+    });
   }, []);
   
   const play = useCallback((channel: TVChannel) => {
@@ -203,6 +231,8 @@ export function TVPlayerProvider({ children }: TVPlayerProviderProps) {
   }, []);
   
   const stop = useCallback(() => {
+    // Invalidate any in-flight dynamic hls.js setup
+    setupSeqRef.current++;
     if (hlsRef.current) {
       hlsRef.current.destroy();
       hlsRef.current = null;

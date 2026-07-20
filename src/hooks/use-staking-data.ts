@@ -71,7 +71,7 @@ export function useStakingStats() {
 }
 
 /** True while the user is actually on the staking page (reactive). */
-function useIsStakeRouteActive(): boolean {
+export function useIsStakeRouteActive(): boolean {
   const { pathname } = useLocation();
   return pathname === '/stake' || pathname === '/app/stake';
 }
