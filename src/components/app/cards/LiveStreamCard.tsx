@@ -134,9 +134,13 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
       currentUrl: currentUrl(),
     });
 
-    // iPhone Safari: native HLS, no MediaSource — play directly without
-    // downloading (or depending on) the hls.js chunk.
-    if (video.canPlayType('application/vnd.apple.mpegurl') && !('MediaSource' in window)) {
+    // Prefer native HLS wherever the browser provides it (Safari + every iOS
+    // browser): the hardware media pipeline runs far cooler than hls.js's
+    // software MSE, and it skips the ~540 kB hls.js download. iOS 17+ added
+    // MediaSource, so the old `!('MediaSource' in window)` guard wrongly routed
+    // modern iPhones through the hls.js decoder that was overheating them.
+    // Chrome/Firefox/Android return "" here and fall through to hls.js below.
+    if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = urlsToTry[0];
       videoPlaybackManager.register(videoId, () => {
         video.pause();
