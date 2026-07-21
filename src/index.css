@@ -3424,3 +3424,30 @@ input[data-hue-slider]::-moz-range-thumb {
 input[data-hue-slider]:focus-visible {
   box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.6);
 }
+
+/*
+================================================================================
+REDUCED MOTION — honour the OS "Reduce Motion" setting (iOS Settings ›
+Accessibility › Motion, and the equivalent on every platform).
+================================================================================
+The app had NO reduced-motion handling in CSS, so infinite ambient animations
+kept compositing forever for users who explicitly asked for stillness — the
+rotating story-shimmer rings, the trending ticker, scanlines, spinners, pulse
+skeletons, etc. Each is continuous GPU/compositor work and, on a phone, a
+needless source of heat and battery drain. This neutralises CSS keyframe and
+transition animations for those users (the canonical accessible pattern);
+JS/Web-Animations-driven motion, e.g. Framer Motion, is untouched by this and is
+handled separately in the render loops (the WebGL theme backgrounds already gate
+on prefers-reduced-motion). Placed last so it wins the cascade over equal-
+specificity animation declarations above.
+*/
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
