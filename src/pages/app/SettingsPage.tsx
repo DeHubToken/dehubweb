@@ -568,6 +568,15 @@ function ProfileSettings() {
     },
   });
   
+  // Preview state holds either the server URL or a local blob: URL — revoke
+  // only the latter when replacing, so re-picking images doesn't leak blobs.
+  const swapBlobPreview = (prev: string | undefined, file: File) => {
+    if (prev?.startsWith('blob:')) {
+      try { URL.revokeObjectURL(prev); } catch { /* noop */ }
+    }
+    return URL.createObjectURL(file);
+  };
+
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -576,7 +585,7 @@ function ProfileSettings() {
         return;
       }
       setAvatarFile(file);
-      setAvatarPreview(URL.createObjectURL(file));
+      setAvatarPreview(prev => swapBlobPreview(prev, file));
     }
   };
   
@@ -588,7 +597,7 @@ function ProfileSettings() {
         return;
       }
       setCoverFile(file);
-      setCoverPreview(URL.createObjectURL(file));
+      setCoverPreview(prev => swapBlobPreview(prev, file));
     }
   };
   
@@ -668,7 +677,7 @@ function ProfileSettings() {
               return;
             }
             setCoverFile(file);
-            setCoverPreview(URL.createObjectURL(file));
+            setCoverPreview(prev => swapBlobPreview(prev, file));
           }
         }}
       >
@@ -706,7 +715,7 @@ function ProfileSettings() {
                 return;
               }
               setAvatarFile(file);
-              setAvatarPreview(URL.createObjectURL(file));
+              setAvatarPreview(prev => swapBlobPreview(prev, file));
             }
           }}
         >

@@ -9,7 +9,24 @@
 import { useState, useEffect, memo } from 'react';
 
 // ─── Persistent thumbnail cache (survives component remounts / tab switches) ───
+// Bounded: each entry is a JPEG dataURL string held for the whole session, so
+// an unbounded map grows without limit as the user scrolls stories. Map keeps
+// insertion order → evict the oldest entry once full (simple FIFO ≈ LRU here,
+// since a cache hit means the component already has the string).
+const MAX_CACHED_THUMBNAILS = 100;
 const thumbnailCache = new Map<string, string>();
+function cacheThumbnail(url: string, dataUrl: string) {
+  if (thumbnailCache.size >= MAX_CACHED_THUMBNAILS) {
+    const oldest = thumbnailCache.keys().next().value;
+    if (oldest !== undefined) thumbnailCache.delete(oldest);
+  }
+  thumbnailCache.set(url, dataUrl);
+}
+
+// Thumbnails render small — capture at most 360px wide instead of the video's
+// native resolution (a 1080×1920 frame is ~10× the dataURL bytes for no
+// visible gain at thumbnail size).
+const MAX_THUMB_WIDTH = 360;
 
 interface VideoThumbnailProps {
   videoUrl: string;
@@ -79,14 +96,17 @@ export const VideoThumbnail = memo(function VideoThumbnail({
     video.onseeked = () => {
       try {
         const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth || 180;
-        canvas.height = video.videoHeight || 320;
+        const srcW = video.videoWidth || 180;
+        const srcH = video.videoHeight || 320;
+        const scale = Math.min(1, MAX_THUMB_WIDTH / srcW);
+        canvas.width = Math.round(srcW * scale);
+        canvas.height = Math.round(srcH * scale);
         const ctx = canvas.getContext('2d');
         if (ctx) {
           ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
           const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
           // Store in persistent cache
-          thumbnailCache.set(videoUrl, dataUrl);
+          cacheThumbnail(videoUrl, dataUrl);
           setThumbnailSrc(dataUrl);
           onReady?.();
         } else {

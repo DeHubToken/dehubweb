@@ -179,6 +179,19 @@ function deduplicateMessages(msgs: SupabaseLiveChatMessage[]): SupabaseLiveChatM
   );
 }
 
+/**
+ * Cap the retained history: an active room appends via socket forever, and
+ * every message stays in state, the module cache AND the DOM. Keep the newest
+ * MAX_LIVECHAT_MESSAGES (input is sorted oldest→newest) plus any pinned ones.
+ */
+const MAX_LIVECHAT_MESSAGES = 300;
+function capMessages(msgs: SupabaseLiveChatMessage[]): SupabaseLiveChatMessage[] {
+  if (msgs.length <= MAX_LIVECHAT_MESSAGES) return msgs;
+  const cut = msgs.length - MAX_LIVECHAT_MESSAGES;
+  const pinnedOverflow = msgs.slice(0, cut).filter((m) => m.is_pinned);
+  return [...pinnedOverflow, ...msgs.slice(cut)];
+}
+
 /** Module-level cache so remounts (auth flicker, navigate back) show last-known messages */
 const liveChatMessagesCache = new Map<string, SupabaseLiveChatMessage[]>();
 
@@ -238,7 +251,7 @@ export function useLiveChatMessages(roomId: string | null) {
                 real.content === temp.content && real.sender_address === temp.sender_address
             )
         );
-        const next = deduplicateMessages([...mapped, ...keepOptimistic]);
+        const next = capMessages(deduplicateMessages([...mapped, ...keepOptimistic]));
         liveChatMessagesCache.set(roomId, next);
         return next;
       });
@@ -297,7 +310,7 @@ export function useLiveChatMessages(roomId: string | null) {
           const withoutMatchingTemp = prev.filter(
             (x) => !(x.id.startsWith('temp-') && x.content === local.content && x.sender_address === local.sender_address)
           );
-          const next = deduplicateMessages([...withoutMatchingTemp.filter((x) => x.id !== local.id), local]);
+          const next = capMessages(deduplicateMessages([...withoutMatchingTemp.filter((x) => x.id !== local.id), local]));
           liveChatMessagesCache.set(roomId, next);
           return next;
         });

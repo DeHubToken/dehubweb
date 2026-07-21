@@ -48,6 +48,20 @@ import {
   type SendMessagePayload,
 } from '@/lib/api/dehub/dm-socket';
 
+/**
+ * Blob URL for an optimistic message with auto-revoke. The optimistic entry is
+ * replaced by the server copy (socket refetch, 2-3s) or rolled back on error,
+ * so revoking after 60s cannot blank a visible image but prevents the full
+ * photo/voice blob leaking for the rest of the session.
+ */
+export function createTransientBlobUrl(file: Blob, ttlMs = 60_000): string {
+  const url = URL.createObjectURL(file);
+  setTimeout(() => {
+    try { URL.revokeObjectURL(url); } catch { /* noop */ }
+  }, ttlMs);
+  return url;
+}
+
 // ─── Read-state persistence (survives refresh) ───────────────────────────────
 
 const READ_CONVOS_KEY_PREFIX = 'dehub-read-conversations';
@@ -703,7 +717,7 @@ export function useSendMessage(conversationId: string) {
         content,
         msgType: msgType || 'msg',
         mediaUrls: mediaFile
-          ? [{ url: URL.createObjectURL(mediaFile), type: msgType === 'voice' ? 'audio' : 'image', mimeType: mediaFile.type }]
+          ? [{ url: createTransientBlobUrl(mediaFile), type: msgType === 'voice' ? 'audio' : 'image', mimeType: mediaFile.type }]
           : gifUrl ? [{ url: gifUrl, type: 'image', mimeType: 'image/gif' }] : [],
         voiceDuration: voiceDuration ?? null,
         isRead: false,

@@ -750,7 +750,15 @@ export default function AssistantPage() {
       const audioBlob = await response.blob();
       const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioUrl);
-      await audio.play();
+      const release = () => URL.revokeObjectURL(audioUrl);
+      audio.addEventListener('ended', release, { once: true });
+      audio.addEventListener('error', release, { once: true });
+      try {
+        await audio.play();
+      } catch (playErr) {
+        release();
+        throw playErr;
+      }
     } catch (err) {
       console.error('ElevenLabs TTS error:', err);
       // Fallback to browser TTS

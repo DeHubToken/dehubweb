@@ -618,11 +618,24 @@ function LavaLampCanvas({ colorValue, brandColors = [] }: { colorValue: number; 
       updatePointerTarget();
       requestRender();
     };
+    // Scroll only shifts the canvas bounds relative to the pointer — no resize
+    // needed, and a synchronous getBoundingClientRect per scroll event (capture
+    // phase = every scroller in the app) forces layout mid-scroll. Coalesce to
+    // one measurement per frame.
+    let scrollRaf = 0;
+    const onScroll = () => {
+      if (scrollRaf !== 0) return;
+      scrollRaf = requestAnimationFrame(() => {
+        scrollRaf = 0;
+        bounds = canvas.getBoundingClientRect();
+        updatePointerTarget();
+      });
+    };
     window.addEventListener('resize', updateLayout);
     if (UNIFORMS.cursorEnabled && !prefersReducedMotion) {
       window.addEventListener('pointermove', onPointerMove, { passive: true });
       window.addEventListener('pointercancel', onPointerLeave);
-      window.addEventListener('scroll', updateLayout, true);
+      window.addEventListener('scroll', onScroll, { capture: true, passive: true });
       window.addEventListener('blur', onPointerLeave);
       document.documentElement.addEventListener('pointerleave', onPointerLeave);
     }
@@ -726,7 +739,8 @@ function LavaLampCanvas({ colorValue, brandColors = [] }: { colorValue: number; 
       if (UNIFORMS.cursorEnabled && !prefersReducedMotion) {
         window.removeEventListener('pointermove', onPointerMove);
         window.removeEventListener('pointercancel', onPointerLeave);
-        window.removeEventListener('scroll', updateLayout, true);
+        window.removeEventListener('scroll', onScroll, true);
+        if (scrollRaf !== 0) cancelAnimationFrame(scrollRaf);
         window.removeEventListener('blur', onPointerLeave);
         document.documentElement.removeEventListener(
           'pointerleave',

@@ -646,25 +646,48 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // Video load gate: only videos at/near the viewport are allowed to pull bytes.
   // Off-screen cards render preload="none" (poster only) so the initial feed
   // doesn't fire a metadata range-request at every one of the ~50MB clips down
-  // the list. One-way (once near, stays warm) to avoid preload thrash on
-  // scroll-back; aboveFold (LCP) videos are warm from the start.
+  // the list. Two-way with hysteresis: warm within 800px, and released again
+  // only once the card drifts beyond ~2500px — the gap avoids preload thrash
+  // on scroll-back while stopping a long session from accumulating hundreds of
+  // media elements holding decoded buffers (the long-scroll tab-kill on 4GB
+  // phones). aboveFold (LCP) videos are warm from the start and never release.
   const [nearViewport, setNearViewport] = useState(aboveFold);
   useEffect(() => {
-    if (aboveFold || nearViewport) return;
+    if (aboveFold) return;
     const el = containerRef.current;
     if (!el) return;
-    const obs = new IntersectionObserver(
+    const enterObs = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setNearViewport(true);
-          obs.disconnect();
-        }
+        if (entry.isIntersecting) setNearViewport(true);
       },
       { rootMargin: '800px 0px' },
     );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [aboveFold, nearViewport]);
+    const exitObs = new IntersectionObserver(
+      ([entry]) => {
+        // Never unload mid-playback (the visibility observer pauses at
+        // viewport exit anyway, so this only guards races).
+        if (!entry.isIntersecting && !isPlayingRef.current) setNearViewport(false);
+      },
+      { rootMargin: '2500px 0px' },
+    );
+    enterObs.observe(el);
+    exitObs.observe(el);
+    return () => {
+      enterObs.disconnect();
+      exitObs.disconnect();
+    };
+  }, [aboveFold]);
+
+  // Releasing the src attribute alone doesn't free the decoder/buffer — an
+  // explicit load() after React removes it does.
+  const mediaAttached = aboveFold || nearViewport;
+  useEffect(() => {
+    if (mediaAttached) return;
+    const vid = videoRef.current;
+    if (vid && !vid.getAttribute('src')) {
+      try { vid.load(); } catch { /* noop */ }
+    }
+  }, [mediaAttached]);
 
   // In Lite mode nothing preloads (tap-to-play still forces a load via play()).
   const videoPreload: 'none' | 'metadata' | 'auto' = liteMode
@@ -696,6 +719,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           } else if (entry.isIntersecting && autoplayEnabledRef.current && !liteModeRef.current && !disableAutoplay && !isPlayingRef.current && !(video.isPPV || video.isLocked) && !video.isAudio && video.videoUrl && !hasErrorRef.current) {
             const vid = videoRef.current;
             if (vid) {
+              // Fast fling race: the media-attach state may not have
+              // re-rendered yet — attach the src imperatively before play()
+              // (React reconciles to the same value on the next render).
+              if (!vid.getAttribute('src') && video.videoUrl) vid.src = video.videoUrl;
               // Ask manager if this video should own audio
               const ownsAudio = videoPlaybackManager.play(instanceId);
               const shouldMute = videoPlaybackManager.globalMuted || !ownsAudio;
@@ -808,6 +835,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       // Notify manager
       videoPlaybackManager.play(instanceId);
       setIsLoading(true);
+      // Attach src imperatively if the media-release gate detached it and the
+      // re-render hasn't landed yet (tap can beat the render).
+      const vidEl = videoRef.current;
+      if (vidEl && !vidEl.getAttribute('src') && video.videoUrl) vidEl.src = video.videoUrl;
       videoRef.current?.play().then(() => {
         isPlayingRef.current = true;
         setIsPlaying(true);
@@ -1514,7 +1545,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               ) :
               <video
                 ref={videoRef}
-                src={video.videoUrl}
+                src={mediaAttached ? video.videoUrl : undefined}
                 poster={thumbnail || undefined}
                 muted={isMuted}
                 playsInline
