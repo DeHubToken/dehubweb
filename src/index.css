@@ -611,58 +611,6 @@ body.shorts-viewer-open [data-mobile-header] {
   z-index: 40 !important;
 }
 
-/* Story shimmer border — rotating conic-gradient light sweep */
-@keyframes story-shimmer-rotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-@keyframes story-shimmer-pulse {
-  0%   { opacity: 0; }
-  10%  { opacity: 0.8; }
-  35%  { opacity: 0.8; }
-  50%  { opacity: 0; }
-  100% { opacity: 0; }
-}
-
-.story-shimmer-border {
-  position: relative;
-  overflow: hidden;
-}
-
-.story-shimmer-border::before {
-  content: '';
-  position: absolute;
-  inset: -50%;
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    transparent 42deg,
-    rgba(255, 255, 255, 0.3) 70deg,
-    rgba(255, 255, 255, 0.5) 110deg,
-    rgba(255, 255, 255, 0.7) 180deg,
-    rgba(255, 255, 255, 0.5) 250deg,
-    rgba(255, 255, 255, 0.3) 290deg,
-    transparent 318deg,
-    transparent 360deg
-  );
-  animation:
-    story-shimmer-rotate 3s linear infinite,
-    story-shimmer-pulse 5s ease-in-out infinite;
-  will-change: transform, opacity;
-  pointer-events: none;
-}
-
-.story-shimmer-border:hover::before {
-  opacity: 1;
-  animation-name: story-shimmer-rotate;
-}
-
-.story-shimmer-border > *:first-child {
-  position: relative;
-  z-index: 1;
-}
-
 /* ============================================================
    REDUCE MOTION — toggled via .reduce-motion on <html>
    Disables all CSS animations, transitions, and transforms.

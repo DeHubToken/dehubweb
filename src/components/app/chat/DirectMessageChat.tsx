@@ -16,7 +16,7 @@ import { SharedPostEmbed } from './SharedPostEmbed';
 import { extractPostTokenId, stripPostLinks } from '@/lib/post-link';
 import { TranslatableText } from '../TranslatableText';
 import { useTranslation } from '../TranslatableText';
-import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys, registerOpenConversation } from '@/hooks/use-messages';
+import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys, registerOpenConversation, createTransientBlobUrl } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
 import { useDmSettings } from '@/hooks/use-dm-settings';
 import { getMediaUrl, blockConversation, unblockConversation, getDMPlanSettings, grantFreeDmAccess, revokeFreeDmAccess, getAccountInfo, pinDmMessage, unpinDmMessage, type DeHubConversation, type DmMessage, type DmFee } from '@/lib/api/dehub';
@@ -942,7 +942,7 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
         content,
         msgType: type || 'msg',
         mediaUrls: mediaFile
-          ? [{ url: URL.createObjectURL(mediaFile), type: type === 'voice' ? 'audio' : 'image', mimeType: mediaFile.type }]
+          ? [{ url: createTransientBlobUrl(mediaFile, 5 * 60_000), type: type === 'voice' ? 'audio' : 'image', mimeType: mediaFile.type }]
           : gifUrl ? [{ url: gifUrl, type: 'image', mimeType: 'image/gif' }] : [],
         voiceDuration: duration ?? null,
         isRead: false,
