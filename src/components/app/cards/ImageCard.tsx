@@ -42,7 +42,6 @@ import { SwipeableCarousel } from '../SwipeableCarousel';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { isWithinTabSwitchCooldown } from '@/lib/gesture-state';
 import { useDoubleTapLike } from '@/hooks/use-double-tap-like';
-import { useConnectionQuality } from '@/hooks/use-connection-quality';
 import { FullscreenImageViewer } from './FullscreenImageViewer';
 import { ImageTranslationSheet } from './ImageTranslationSheet';
 import { useFeedViewTracking } from '@/hooks/use-view-tracking';
@@ -114,10 +113,6 @@ function ImageSlide({
     postId,
     onSingleTap: () => onImageClick(idx),
   });
-  // Data-Saver / slow network: drop the decorative blur-fill. It re-decodes the
-  // full-size image and runs a 24px blur+saturate composite per slide — wasted
-  // GPU/decode on the low-end devices that usually pair with a slow connection.
-  const { liteMode } = useConnectionQuality();
   // Feed items carry no image dimensions, so first paint reserves minHeight and
   // the card grows on load (CLS). Remembering the measured ratio per URL means
   // every LATER mount (tab switch, feed revisit, carousel re-render) reserves
@@ -131,28 +126,24 @@ function ImageSlide({
   }, [img]);
   return (
     <div
-      className="relative w-full cursor-pointer max-h-[600px] overflow-hidden select-none"
-      style={{ minHeight: '200px', aspectRatio: ratio ? String(ratio) : undefined }}
+      className="relative flex justify-start cursor-pointer select-none"
+      style={{ minHeight: ratio ? undefined : '200px' }}
       onClick={(e) => {
         e.stopPropagation();
         onClick(e);
       }}
     >
-      {/* Blurred background fill — skipped on above-fold cards so it
-          never delays LCP (background-image is an LCP candidate in Chrome 96+),
-          and skipped entirely in Lite mode to save the extra decode/blur. */}
-      {!liteMode && !(aboveFold && idx === 0) && (
-        <div
-          className="absolute inset-0 scale-110 blur-[24px] saturate-[180%] opacity-60"
-          style={{ backgroundImage: `url(${img})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
-          aria-hidden="true"
-        />
-      )}
-      <div className="absolute inset-0 bg-black/40" aria-hidden="true" />
+      {/* The image sizes itself: fills the card width when it's wide enough,
+          otherwise caps at 600px tall and shrinks its own width — so a narrow /
+          portrait image is just the image, hugged to the left, with no blurred
+          side-fill. width/height attrs (from the cached ratio) reserve the box
+          up front so there's no layout shift on load. */}
       <img
         src={img}
         alt=""
-        className="relative w-full max-h-[600px] object-contain"
+        width={ratio ? Math.round(ratio * 1000) : undefined}
+        height={ratio ? 1000 : undefined}
+        className="block w-auto h-auto max-w-full max-h-[600px] object-contain rounded-2xl"
         loading={aboveFold && idx === 0 ? 'eager' : 'lazy'}
         fetchPriority={aboveFold && idx === 0 ? 'high' : 'auto'}
         decoding={aboveFold && idx === 0 ? 'sync' : 'async'}
