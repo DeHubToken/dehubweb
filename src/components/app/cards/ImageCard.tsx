@@ -1049,7 +1049,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         tokenId={post.id}
         onSuccess={() => {
           queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-          queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+          queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
         }}
       />
 
@@ -1089,7 +1089,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
               setLocallyUnlocked(true);
               markTokenUnlocked(post.id);
               queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-              queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+              queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
               queryClient.invalidateQueries({ queryKey: ['nft-info', post.id] });
             }}
             formatCompact={formatCompact}
@@ -1187,7 +1187,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
                     setLocallyUnlocked(true);
                     markTokenUnlocked(post.id);
                     queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-                    queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+                    queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
                     queryClient.invalidateQueries({ queryKey: ['nft-info', post.id] });
                   }}
                 />

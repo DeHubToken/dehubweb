@@ -95,20 +95,26 @@ export function FloatingPiPPlayer({ channel, index, onClose }: FloatingPiPPlayer
     // software MSE decoder. iOS 17+ reports Hls.isSupported() (Managed Media
     // Source), so checking hls.js first wrongly ran the software path on modern
     // iPhones — a real overheating source. Native must be tried first.
+    let nativeErrorHandler: (() => void) | null = null;
     if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = channel.streamUrl;
       playWithUnmuteAttempt(video);
+      // Mirror the hls path's fatal-error behavior: a dead stream closes the
+      // PiP instead of leaving a stuck black floating box.
+      nativeErrorHandler = () => onClose(channel.id);
+      video.addEventListener('error', nativeErrorHandler);
     } else if (Hls.isSupported()) {
       initHls(video, channel.streamUrl, true);
     }
 
     return () => {
+      if (nativeErrorHandler) video.removeEventListener('error', nativeErrorHandler);
       if (hlsRef.current) {
         hlsRef.current.destroy();
         hlsRef.current = null;
       }
     };
-  }, [channel.streamUrl, initHls, playWithUnmuteAttempt]);
+  }, [channel.streamUrl, channel.id, initHls, playWithUnmuteAttempt, onClose]);
 
   // Keep muted state in sync
   useEffect(() => {

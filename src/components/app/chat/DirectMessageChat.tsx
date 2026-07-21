@@ -4,7 +4,7 @@
  * Full-screen 1:1 direct message chat view.
  */
 
-import { useState, useRef, useEffect, useCallback, memo } from 'react';
+import { useState, useRef, useEffect, useCallback, useReducer, memo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, MoreVertical, Loader2, ArrowDown, Trash2, ShieldBan, ShieldCheck, Settings, AlertCircle, RefreshCw, Play, Pause, Gift, Search, X, Gem, Languages, RotateCcw, Pin, Phone, CornerUpRight } from 'lucide-react';
@@ -141,7 +141,7 @@ const MessageBubble = memo(function MessageBubble({
   message,
   isOwnMessage,
   highlightText,
-  confirmedTxHashes,
+  txConfirmed = false,
   onPin,
   onForward,
   onOpenImage,
@@ -149,11 +149,30 @@ const MessageBubble = memo(function MessageBubble({
   message: DmMessage;
   isOwnMessage: boolean;
   highlightText?: string;
-  confirmedTxHashes: React.MutableRefObject<Set<string>>;
+  /** Locally-confirmed payment tx for this message (prop, not ref — memo-safe). */
+  txConfirmed?: boolean;
   onPin?: (messageId: string) => void;
   onForward?: (message: DmMessage) => void;
   onOpenImage?: (url: string) => void;
 }) {
+  // Payment-pending spinner: memo means no incidental re-renders, so the 90s
+  // "give up waiting" fallback schedules its own re-render at the boundary
+  // instead of relying on unrelated parent state changes to sweep it away.
+  const [, forcePendingTick] = useReducer((v: number) => v + 1, 0);
+  const pendingAgeMs = Date.now() - new Date(message.createdAt).getTime();
+  const showPaymentPending =
+    isOwnMessage &&
+    message.paymentStatus === 'pending' &&
+    !txConfirmed &&
+    pendingAgeMs < 90_000;
+  useEffect(() => {
+    if (!showPaymentPending) return;
+    const remaining = Math.max(250, 90_000 - pendingAgeMs);
+    const timer = setTimeout(forcePendingTick, remaining);
+    return () => clearTimeout(timer);
+    // pendingAgeMs is time-derived; the timer only needs scheduling while visible
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [showPaymentPending, message._id]);
   // Call message — detect by emoji prefix in content (📞/📹/📵)
   const isCallMessage = message.msgType === 'msg' && /^[📞📹📵]/.test(message.content || '');
   if (isCallMessage) {
@@ -394,15 +413,10 @@ const MessageBubble = memo(function MessageBubble({
             </button>
           )}
           {message.isEdited && <span className="text-zinc-600">· edited</span>}
-          {isOwnMessage && message.paymentStatus === 'pending' && 
-            !(message.paymentTxHash && confirmedTxHashes.current.has(message.paymentTxHash.toLowerCase())) &&
-            (Date.now() - new Date(message.createdAt).getTime() < 90_000) && (
+          {showPaymentPending && (
             <Loader2 className="w-3 h-3 animate-spin text-amber-500/70" />
           )}
-          {isOwnMessage &&
-            (message.paymentStatus !== 'pending' ||
-              (message.paymentTxHash && confirmedTxHashes.current.has(message.paymentTxHash.toLowerCase())) ||
-              (Date.now() - new Date(message.createdAt).getTime() >= 90_000)) && (
+          {isOwnMessage && !showPaymentPending && (
             <span className={message.isRead ? "text-white" : "text-zinc-500"}>
               {message.isRead ? "✓✓" : "✓"}
             </span>
@@ -536,6 +550,9 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
   const [isSendingFee, setIsSendingFee] = useState(false);
   // Track tx hashes we've confirmed on-chain so we can override 'pending' paymentStatus from API
   const confirmedTxHashes = useRef<Set<string>>(new Set());
+  // Version tick: incremented when a tx confirms so the (memoized) bubbles
+  // re-render and pick up the new txConfirmed prop.
+  const [, bumpTxConfirmations] = useReducer((v: number) => v + 1, 0);
 
   // Determine if fee is required
   const feeRequired = dmFee?.required && !dmFee.hasFreeAccess;
@@ -988,8 +1005,13 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
         });
         feeTxHash = tipResult.hash;
 
-        // Track this tx as locally confirmed so we don't show "confirming payment..." forever
-        if (feeTxHash) confirmedTxHashes.current.add(feeTxHash.toLowerCase());
+        // Track this tx as locally confirmed so we don't show "confirming payment..." forever.
+        // bump forces a render so the memoized bubble receives txConfirmed=true —
+        // a bare ref mutation is invisible to React.memo's prop compare.
+        if (feeTxHash) {
+          confirmedTxHashes.current.add(feeTxHash.toLowerCase());
+          bumpTxConfirmations();
+        }
 
         toast.success(dhbText(`Paid ${activeFee.toLocaleString()} DHB`), { id: 'dm-fee-send', duration: 2000 });
 
@@ -1391,7 +1413,10 @@ export function DirectMessageChat({ conversation, onBack, initialComposerText }:
                 message={message}
                 isOwnMessage={isOwnMessage}
                 highlightText={searchLower}
-                confirmedTxHashes={confirmedTxHashes}
+                txConfirmed={
+                  !!(message.paymentTxHash &&
+                    confirmedTxHashes.current.has(message.paymentTxHash.toLowerCase()))
+                }
                 onPin={handlePinMessage}
                 onForward={handleForward}
                 onOpenImage={setFullscreenImage}

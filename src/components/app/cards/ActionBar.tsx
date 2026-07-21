@@ -361,8 +361,7 @@ export function ActionBar({
         // Use a short delay so the backend has time to process the vote
         setTimeout(() => {
           queryClient.invalidateQueries({ queryKey: ['unified-feed'], refetchType: 'none' });
-          queryClient.invalidateQueries({ queryKey: ['dehub-videos'], refetchType: 'none' });
-          queryClient.invalidateQueries({ queryKey: ['dehub-images'], refetchType: 'none' });
+          queryClient.invalidateQueries({ queryKey: ['dehub-feed'], refetchType: 'none' });
           queryClient.invalidateQueries({ queryKey: ['profile-content'], refetchType: 'none' });
         }, 2000);
       }

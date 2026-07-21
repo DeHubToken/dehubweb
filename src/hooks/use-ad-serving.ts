@@ -71,12 +71,15 @@ export function useServedAds(surface: string, options: UseServedAdsOptions = {})
 
   // The consumer feed lives in PersistentPageCache — rotate inventory only
   // while a feed surface is actually on screen, not while the user is parked
-  // on Messages/Settings with the feed CSS-hidden. Home feed tabs all render
-  // at '/', '/app', '/videos', '/shorts'.
+  // on Messages/Settings with the feed CSS-hidden. Home feed tabs render at
+  // '/', '/app', '/videos', '/shorts'; the 'related' surface renders on the
+  // post/video detail routes (those unmount normally, but users can dwell).
   const { pathname } = useLocation();
+  const normalizedPath = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
   const isFeedSurfaceVisible =
-    pathname === '/' || pathname === '/app' || pathname === '/app/' ||
-    pathname === '/videos' || pathname === '/shorts';
+    normalizedPath === '/' || normalizedPath === '/app' ||
+    normalizedPath === '/videos' || normalizedPath === '/shorts' ||
+    normalizedPath.startsWith('/app/post/') || normalizedPath.startsWith('/app/video/');
 
   return useQuery({
     queryKey: ['served-ads', surface, walletAddress?.toLowerCase() ?? 'anon', count],

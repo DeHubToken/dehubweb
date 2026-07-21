@@ -1785,7 +1785,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               setLocallyUnlocked(true);
               markTokenUnlocked(video.id);
               queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-              queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+              queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
               queryClient.invalidateQueries({ queryKey: ['nft-info', video.id] });
             }}
           />
@@ -2003,7 +2003,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         tokenId={video.id}
         onSuccess={() => {
           queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-          queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+          queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
         }}
       />
 
@@ -2043,7 +2043,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               setLocallyUnlocked(true);
               markTokenUnlocked(video.id);
               queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-              queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+              queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
               queryClient.invalidateQueries({ queryKey: ['nft-info', video.id] });
             }}
             formatCompact={formatCompact}
@@ -2166,7 +2166,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                     setLocallyUnlocked(true);
                     markTokenUnlocked(video.id);
                     queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-                    queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
+                    queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
                     queryClient.invalidateQueries({ queryKey: ['nft-info', video.id] });
                   }}
                 />

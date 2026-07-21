@@ -53,11 +53,14 @@ export function clearAllVoteCaches(): void {
 // Feed-cache patching
 // ---------------------------------------------------------------------------
 
-/** Query key prefixes that hold paginated feed data with vote-able items */
+/** Query key prefixes that hold paginated feed data with vote-able items.
+ * NOTE: 'dehub-feed' is the real key family behind the Shorts/Images/Live
+ * tabs (use-dehub-feed.ts) — the old 'dehub-videos'/'dehub-images' names
+ * matched no query and silently patched nothing. Its pages carry `data`
+ * instead of `items`; the walker below handles both. */
 const FEED_KEYS: string[] = [
   'unified-feed',
-  'dehub-videos',
-  'dehub-images',
+  'dehub-feed',
   'profile-content',
 ];
 
@@ -81,15 +84,17 @@ export function patchFeedCaches(
   voteState: VoteState,
 ): void {
   for (const key of FEED_KEYS) {
-    queryClient.setQueriesData<InfiniteData<{ items: any[] }>>(
+    queryClient.setQueriesData<InfiniteData<{ items?: any[]; data?: any[] }>>(
       { queryKey: [key] },
       (oldData) => {
         if (!oldData?.pages) return oldData;
 
         let changed = false;
         const newPages = oldData.pages.map((page) => {
-          if (!page?.items) return page;
-          const newItems = page.items.map((item: any) => {
+          // unified-feed pages use `items`; dehub-feed pages use `data`
+          const listKey = page?.items ? 'items' : page?.data ? 'data' : null;
+          if (!listKey) return page;
+          const newItems = (page[listKey] as any[]).map((item: any) => {
             const itemId = String(item.id ?? item.tokenId ?? '');
             if (itemId !== String(postId)) return item;
             changed = true;
@@ -111,7 +116,7 @@ export function patchFeedCaches(
 
             return patched;
           });
-          return { ...page, items: newItems };
+          return { ...page, [listKey]: newItems };
         });
 
         return changed ? { ...oldData, pages: newPages } : oldData;

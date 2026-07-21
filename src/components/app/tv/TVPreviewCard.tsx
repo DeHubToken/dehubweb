@@ -50,17 +50,23 @@ export function TVPreviewCard({ channel }: TVPreviewCardProps) {
     }
   }, []);
 
-  // /app/tv never unmounts (PersistentPageCache) — stop the preview stream
-  // when navigating away unless it was promoted to PiP.
+  // This card renders on BOTH the TV page and the home feed's Live tab, and
+  // both live in PersistentPageCache (never unmount) — stop the preview
+  // stream when navigating away from EITHER host route, unless promoted to
+  // PiP. Trailing slashes normalized so '/app/tv/' doesn't read as "left".
   const { pathname } = useLocation();
-  const isTvRouteActive = pathname === '/app/tv';
+  const normalizedPath = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
+  const isHostRouteActive =
+    normalizedPath === '/app/tv' ||
+    normalizedPath === '/' || normalizedPath === '/app' ||
+    normalizedPath === '/videos' || normalizedPath === '/shorts';
   useEffect(() => {
-    if (isTvRouteActive || !isPlaying || isInPiP) return;
+    if (isHostRouteActive || !isPlaying || isInPiP) return;
     setIsPlaying(false);
     setShowVideo(false);
     if (videoRef.current) videoRef.current.pause();
     destroyHls();
-  }, [isTvRouteActive, isPlaying, isInPiP, destroyHls]);
+  }, [isHostRouteActive, isPlaying, isInPiP, destroyHls]);
 
   // Register with playback manager so other videos can stop this one
   useEffect(() => {

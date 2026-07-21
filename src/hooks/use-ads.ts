@@ -330,7 +330,7 @@ export function useDeleteCreative() {
  */
 function useIsAdsRouteActive(): boolean {
   const { pathname } = useLocation();
-  return pathname === '/app/ads';
+  return pathname.replace(/\/+$/, '') === '/app/ads';
 }
 
 export function useCampaignStats(campaignId: string | undefined) {

@@ -141,12 +141,53 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
     // modern iPhones through the hls.js decoder that was overheating them.
     // Chrome/Firefox/Android return "" here and fall through to hls.js below.
     if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      // Native playback has none of hls.js's built-in resilience, so re-create
+      // the essentials here: multi-CDN failover through urlsToTry, bounded
+      // reconnect attempts for live streams, and the error overlay.
+      let nativeUrlIndex = 0;
+      let nativeRetries = 0;
+      const nativeTimeouts = new Set<ReturnType<typeof setTimeout>>();
+      const scheduleNative = (fn: () => void, delay: number) => {
+        const id = setTimeout(() => {
+          nativeTimeouts.delete(id);
+          fn();
+        }, delay);
+        nativeTimeouts.add(id);
+      };
+      const loadCurrent = () => {
+        video.src = urlsToTry[nativeUrlIndex];
+        video.load();
+      };
+      const onNativeError = () => {
+        if (nativeUrlIndex < urlsToTry.length - 1) {
+          nativeUrlIndex++;
+          setError('Trying alternate source...');
+          loadCurrent();
+        } else if (stream.isLive && nativeRetries < 5) {
+          nativeRetries++;
+          nativeUrlIndex = 0;
+          setError('Reconnecting...');
+          scheduleNative(loadCurrent, 3000 * nativeRetries);
+        } else {
+          setError('Stream unavailable');
+          if (!stream.isLive) setStreamEnded(true);
+        }
+      };
+      const onNativePlaying = () => {
+        nativeRetries = 0;
+        setError(null);
+      };
+      video.addEventListener('error', onNativeError);
+      video.addEventListener('playing', onNativePlaying);
       video.src = urlsToTry[0];
       videoPlaybackManager.register(videoId, () => {
         video.pause();
         setIsPlaying(false);
       });
       return () => {
+        nativeTimeouts.forEach(clearTimeout);
+        video.removeEventListener('error', onNativeError);
+        video.removeEventListener('playing', onNativePlaying);
         videoPlaybackManager.unregister(videoId);
       };
     }
