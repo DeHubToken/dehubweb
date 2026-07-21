@@ -142,6 +142,12 @@ export function RadioPlayerProvider({ children }: RadioPlayerProviderProps) {
     };
     
     const handlePlaying = () => {
+      // The element can be resumed by paths that bypass our transport entirely
+      // (lock-screen media controls, Bluetooth play button, hardware media
+      // keys). Audio routes through the Web Audio graph, so a still-suspended
+      // context would play SILENCE while the UI claims it's playing — always
+      // un-park here. Idempotent: no-ops when the context is already running.
+      resumeAudioContext();
       setState(prev => ({ ...prev, isPlaying: true, isLoading: false, error: null }));
     };
     

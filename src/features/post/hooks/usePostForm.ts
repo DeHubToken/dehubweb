@@ -247,9 +247,12 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
 
   // Auto-save active draft to localStorage whenever text fields change.
   // Debounced: JSON.stringify + synchronous localStorage.setItem on EVERY
-  // keystroke costs main-thread time exactly while the user is typing.
+  // keystroke costs main-thread time exactly while the user is typing. An
+  // unmount-only flush (below) persists the tail of what was typed so a
+  // hard navigation within the 500ms window can't lose it.
+  const persistDraftRef = useRef<(() => void) | null>(null);
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const persistDraft = () => {
       const draft: ActiveDraft = {
         text, description, showDescription, titleText, showTitle,
         selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
@@ -264,12 +267,20 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       } else {
         clearActiveDraft();
       }
-    }, 500);
+    };
+    persistDraftRef.current = persistDraft;
+    const timer = setTimeout(persistDraft, 500);
+    // NOTE: this cleanup runs on every keystroke (dep change) — it must ONLY
+    // clear the timer here, never persist, or the debounce is defeated. The
+    // unmount-only flush lives in the effect below.
     return () => clearTimeout(timer);
   }, [text, description, showDescription, titleText, showTitle,
     selectedCategory, isSubscribersOnly, isPPV, ppvAmount, ppvCurrency,
     isWatch2Earn, w2eViews, w2eComments, w2eTotal, w2eCurrency,
     isTokenGated, tokenContract, tokenSymbol, tokenAmount]);
+
+  // Flush the latest pending draft exactly once, at unmount.
+  useEffect(() => () => { persistDraftRef.current?.(); }, []);
 
   // Refs
   const imageInputRef = useRef<HTMLInputElement>(null);

@@ -75,7 +75,7 @@ export function useTopAssets() {
   // prices would freeze forever after the first visit (global
   // refetchOnWindowFocus is off).
   const { pathname } = useLocation();
-  const isTop100RouteActive = pathname === '/app/top-100';
+  const isTop100RouteActive = pathname.replace(/\/+$/, '') === '/app/top-100';
   return useQuery({
     queryKey: ['top-assets', 'v6'],
     queryFn: fetchTopAssets,

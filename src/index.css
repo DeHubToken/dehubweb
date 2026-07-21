@@ -3450,4 +3450,14 @@ specificity animation declarations above.
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+
+  /* Loading spinners stay animated: a frozen spinner reads as a hang, and
+     "loading" is state information, not decoration. One slow spinner is
+     negligible GPU work next to the ambient animations killed above. */
+  .animate-spin,
+  .animate-spin::before,
+  .animate-spin::after {
+    animation-duration: 1.5s !important;
+    animation-iteration-count: infinite !important;
+  }
 }

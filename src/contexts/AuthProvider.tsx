@@ -255,8 +255,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       clearEngagementCaches();
       queryClient.removeQueries({ queryKey: ['single-post'] });
       queryClient.removeQueries({ queryKey: ['unified-feed'] });
-      queryClient.removeQueries({ queryKey: ['dehub-videos'] });
-      queryClient.removeQueries({ queryKey: ['dehub-images'] });
+      queryClient.removeQueries({ queryKey: ['dehub-feed'] });
       queryClient.removeQueries({ queryKey: ['profile-content'] });
     }
     prevWalletRef.current = curr;
@@ -273,7 +272,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const handler = (e: Event) => {
       if (!(e as CustomEvent<{ wasExpired?: boolean }>).detail?.wasExpired) return;
-      for (const key of ['unified-feed', 'dehub-videos', 'dehub-images', 'profile-content', 'single-post', 'bookmarks']) {
+      for (const key of ['unified-feed', 'dehub-feed', 'profile-content', 'single-post', 'bookmarks']) {
         queryClient.invalidateQueries({ queryKey: [key] });
       }
     };
@@ -324,6 +323,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setWagmiAuthIntentState(prev => (prev === value ? !prev : value));
   }, []);
 
+
+  // Web3Auth injects its wallet widget shortly after a connection is
+  // established — which can be well over 60s after the modal opened (email
+  // OTP, wallet-app round-trips) and also happens on session RESTORE, where
+  // the modal never opens at all. Re-arming on every wallet connection keeps
+  // the observer's 60s self-disconnect window anchored to injection time.
+  useEffect(() => {
+    if (walletAddress) startWalletButtonCleanup();
+  }, [walletAddress]);
 
   const openLoginModal = useCallback(() => {
     connectionAbortedRef.current = false;
@@ -895,8 +903,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-    queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
-    queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+    queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
 
     toast.success(authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!');
     console.log('[Auth] ✓ DeHub authentication complete (Wagmi)');
@@ -966,8 +973,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           setUser(normalizedUser);
           if (saAuthResponse.result?.isNewAccount) { setRequiresUsername(true); sessionStorage.setItem('dehub_is_new_account', 'true'); } else { sessionStorage.removeItem('dehub_is_new_account'); }
           queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-          queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
-          queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+          queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
           toast.success(saAuthResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: toastId });
           console.log('[Auth] ✓ DeHub authentication complete via Smart Account (Redirect Flow)');
           authLogger.info('Login success', { method: 'redirect-sa', address: saResult.address, username: normalizedUser.username, isNewAccount: !!saAuthResponse.result?.isNewAccount });
@@ -1059,8 +1065,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setUser(normalizedUser);
             if (saAuthResponse.result?.isNewAccount) { setRequiresUsername(true); sessionStorage.setItem('dehub_is_new_account', 'true'); } else { sessionStorage.removeItem('dehub_is_new_account'); }
             queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-            queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
-            queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+            queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
             toast.success(saAuthResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: toastId });
             console.log('[Auth] ✓ DeHub authentication complete via Smart Account (Popup Flow)');
             authLogger.info('Login success', { method: 'popup-sa', address: saResult.address, username: normalizedUser.username, isNewAccount: !!saAuthResponse.result?.isNewAccount });
@@ -1111,8 +1116,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-      queryClient.invalidateQueries({ queryKey: ['dehub-videos'] });
-      queryClient.invalidateQueries({ queryKey: ['dehub-images'] });
+      queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
 
       toast.success(authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: 'auth-popup' });
       console.log('[Auth] ✓ DeHub authentication complete (Popup Flow)');

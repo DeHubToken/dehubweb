@@ -84,8 +84,9 @@ export function applyOptimisticEdit(
   // Patch all infinite feed caches
   const feedKeys = [
     ['unified-feed'],
-    ['dehub-videos'],
-    ['dehub-images'],
+    // Real key family behind Shorts/Images/Live tabs (use-dehub-feed.ts) —
+    // the old 'dehub-videos'/'dehub-images' names matched no query.
+    ['dehub-feed'],
     ['dehub-shorts'],
     ['dehub-audio'],
     ['dehub-user-content'],

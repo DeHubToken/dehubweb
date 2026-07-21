@@ -119,16 +119,19 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
   
   // /app/tv lives in PersistentPageCache and never unmounts — without this
   // gate, a playing channel keeps downloading HLS segments and playing AUDIO
-  // behind a CSS-hidden page for the rest of the session. Intentional
-  // background playback goes through PiP instead.
+  // behind a CSS-hidden page for the rest of the session. Only NATIVE PiP
+  // (same video element, isInPiP) exempts the stop; the in-app PiP button
+  // spawns a separate FloatingPiPPlayer with its own stream, so keeping this
+  // card's (muted) stream alive alongside it would just double the download.
+  // Trailing slash normalized so '/app/tv/' doesn't read as "left".
   const { pathname } = useLocation();
-  const isTvRouteActive = pathname === '/app/tv';
+  const isTvRouteActive = pathname.replace(/\/+$/, '') === '/app/tv';
   useEffect(() => {
     if (isTvRouteActive) return;
-    if ((isPlaying || isPaused) && !isPiP(channel.id)) {
+    if ((isPlaying || isPaused) && !isInPiP) {
       fullStop();
     }
-  }, [isTvRouteActive, isPlaying, isPaused, isPiP, channel.id, fullStop]);
+  }, [isTvRouteActive, isPlaying, isPaused, isInPiP, fullStop]);
 
   // Register with VideoPlaybackManager — full stop when another video plays
   useEffect(() => {

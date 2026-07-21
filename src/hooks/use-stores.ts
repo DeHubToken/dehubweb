@@ -107,11 +107,14 @@ export function useStoreListing(listingId: string | undefined) {
     enabled: !!listingId,
     // Instant open from Browse: those rows use the exact same select shape,
     // so paint the clicked listing immediately while the fetch runs behind it.
-    placeholderData: () => {
+    // The `previous` parameter carries the query's data type, so the cache hit
+    // (same select shape at runtime) is returned as that type instead of
+    // collapsing TData to `{ id: string }` for every consumer.
+    placeholderData: (previous) => {
       for (const query of queryClient.getQueryCache().findAll({ queryKey: ['store-listings-browse'] })) {
         const rows = query.state.data as Array<{ id: string }> | undefined;
         const hit = rows?.find?.(l => l.id === listingId);
-        if (hit) return hit;
+        if (hit) return hit as typeof previous;
       }
       return undefined;
     },

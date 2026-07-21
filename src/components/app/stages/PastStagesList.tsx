@@ -11,7 +11,7 @@
  * the page never has to open the modal to listen back.
  */
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Play, Square, Users, Clock, FileText, Trash2 } from 'lucide-react';
