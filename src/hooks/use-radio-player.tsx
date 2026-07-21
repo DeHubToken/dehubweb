@@ -99,7 +99,27 @@ export function RadioPlayerProvider({ children }: RadioPlayerProviderProps) {
       console.error('Failed to setup audio analyser:', err);
     }
   }, []);
-  
+
+  // Park / un-park the Web Audio graph around idle periods. createMediaElementSource
+  // routes playback through ctx.destination, so a *running* AudioContext keeps the
+  // audio render thread (and the device's audio hardware) engaged even while the
+  // <audio> is paused — a needless, session-long battery/heat cost on mobile once
+  // radio has been played. Suspend when the user pauses/stops; resume before
+  // playback so audio is never routed through a parked context (which would be
+  // silent). Never close() it: a second MediaElementSource can't be attached to the
+  // same element, so the graph is built once and reused via suspend/resume. Resume
+  // is always called from a user-gesture stack (play/resume buttons), so iOS allows
+  // it. We only suspend on explicit pause/stop — never on tab-hidden — so radio
+  // keeps playing when backgrounded.
+  const resumeAudioContext = useCallback(() => {
+    const ctx = audioContextRef.current;
+    if (ctx && ctx.state === 'suspended') ctx.resume().catch(() => {});
+  }, []);
+  const suspendAudioContext = useCallback(() => {
+    const ctx = audioContextRef.current;
+    if (ctx && ctx.state === 'running') ctx.suspend().catch(() => {});
+  }, []);
+
   // Get analyser for visualizer components
   const getAnalyser = useCallback(() => {
     // Setup on first request if not already done
@@ -195,41 +215,47 @@ export function RadioPlayerProvider({ children }: RadioPlayerProviderProps) {
     
     audio.src = streamUrl;
     audio.load();
+    // Un-park a context parked by a previous pause() before audio produces sound
+    // (no-op on the very first play — the context is created in setupAnalyser).
+    resumeAudioContext();
     audio.play().then(() => {
       // Setup analyser after play starts (user interaction required for AudioContext)
       setupAnalyser();
     }).catch(() => {
       // Error handled by event listener
     });
-    
+
     // Register click for station analytics
     registerStationClick(station.stationuuid);
-  }, [setupAnalyser]);
-  
+  }, [setupAnalyser, resumeAudioContext]);
+
   const pause = useCallback(() => {
     audioRef.current?.pause();
-  }, []);
-  
+    suspendAudioContext();
+  }, [suspendAudioContext]);
+
   const resume = useCallback(() => {
+    resumeAudioContext();
     audioRef.current?.play().catch(() => {
       // Error handled by event listener
     });
-  }, []);
-  
+  }, [resumeAudioContext]);
+
   const stop = useCallback(() => {
     const audio = audioRef.current;
     if (audio) {
       audio.pause();
       audio.src = '';
     }
-    setState(prev => ({ 
-      ...prev, 
-      currentStation: null, 
+    suspendAudioContext();
+    setState(prev => ({
+      ...prev,
+      currentStation: null,
       isPlaying: false,
       isLoading: false,
       error: null,
     }));
-  }, []);
+  }, [suspendAudioContext]);
   
   const setVolume = useCallback((volume: number) => {
     const clampedVolume = Math.max(0, Math.min(1, volume));
