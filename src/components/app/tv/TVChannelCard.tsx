@@ -171,10 +171,13 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
     videoPlaybackManager.globalMuted = false;
     videoPlaybackManager.claimAudio(cardId);
     
-    // iPhone Safari has no MediaSource but plays HLS natively — short-circuit
-    // BEFORE the dynamic import so those devices neither download the ~540 kB
-    // hls.js chunk nor depend on that fetch succeeding to play at all.
-    if (video.canPlayType('application/vnd.apple.mpegurl') && !('MediaSource' in window)) {
+    // Prefer native HLS wherever the browser provides it (Safari + every iOS
+    // browser) — short-circuit BEFORE the dynamic import so those devices
+    // neither download the ~540 kB hls.js chunk nor run its software MSE decoder
+    // (far hotter than the hardware pipeline). iOS 17+ added MediaSource, so the
+    // old `!('MediaSource' in window)` guard wrongly pushed modern iPhones onto
+    // hls.js. Chrome/Firefox/Android return "" here and fall through below.
+    if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = channel.streamUrl;
       video.play().catch(() => {});
       return;

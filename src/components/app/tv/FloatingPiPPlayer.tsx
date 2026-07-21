@@ -90,11 +90,16 @@ export function FloatingPiPPlayer({ channel, index, onClose }: FloatingPiPPlayer
 
     workerRetried.current = false;
 
-    if (Hls.isSupported()) {
-      initHls(video, channel.streamUrl, true);
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+    // Prefer native HLS wherever the browser provides it (Safari + every iOS
+    // browser): its hardware media pipeline runs far cooler than hls.js's
+    // software MSE decoder. iOS 17+ reports Hls.isSupported() (Managed Media
+    // Source), so checking hls.js first wrongly ran the software path on modern
+    // iPhones — a real overheating source. Native must be tried first.
+    if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = channel.streamUrl;
       playWithUnmuteAttempt(video);
+    } else if (Hls.isSupported()) {
+      initHls(video, channel.streamUrl, true);
     }
 
     return () => {

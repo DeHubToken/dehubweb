@@ -119,9 +119,15 @@ export function TVPlayerProvider({ children }: TVPlayerProviderProps) {
       hlsRef.current = null;
     }
     
-    // iPhone Safari: native HLS, no MediaSource — play directly without
-    // downloading (or depending on) the hls.js chunk.
-    if (video.canPlayType('application/vnd.apple.mpegurl') && !('MediaSource' in window)) {
+    // Prefer native HLS wherever the browser provides it (Safari + every iOS
+    // browser). It runs on the device's hardware media pipeline — far cooler and
+    // more battery-efficient than hls.js's software MSE demux/buffering, and it
+    // skips the ~540 kB hls.js download entirely. iOS 17+ added MediaSource
+    // (Managed Media Source), so the old `!('MediaSource' in window)` guard here
+    // wrongly pushed modern iPhones (incl. the 15 Pro Max) onto the hls.js path
+    // — the software decoder that was overheating them. Chrome/Firefox/Android
+    // return "" from canPlayType and still fall through to hls.js below.
+    if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = url;
       video.play().catch(() => {
         // Autoplay blocked
