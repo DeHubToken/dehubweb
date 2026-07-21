@@ -686,7 +686,21 @@ async function handleRequest(request, env) {
     // Plain 301 WITHOUT guard(): X-Robots-Tag noindex is for mirror hosts
     // serving duplicate content, not for domain-move redirects — mixing
     // noindex with an equity-passing 301 risks suppressing the transfer.
-    return new Response(null, { status: 301, headers: { Location: `https://dehub.io${url.pathname}${url.search}` } });
+    let target = `${url.pathname}${url.search}`;
+    if (aliasHost !== 'www.dehub.io') {
+      // Legacy dehub.net URL spaces with no dehub.io equivalent (/web/app/*,
+      // /learn — pre-Angular site chrome still in Google's index). Path-
+      // preserving 301s landed these on the SPA's not-found screen (soft-404),
+      // burning the redirect's equity. Map them to real destinations; every
+      // other path (e.g. /guides/*) keeps the path-preserving redirect.
+      const p = url.pathname.replace(/\/+$/, '') || '/';
+      const legacy = p.match(/^\/web(?:\/app)?(\/.*)?$/);
+      const rest = legacy ? (legacy[1] || '/') : p;
+      if (legacy || rest === '/learn' || rest.startsWith('/learn/')) {
+        target = rest === '/learn' || rest.startsWith('/learn/') ? '/docs' : '/';
+      }
+    }
+    return new Response(null, { status: 301, headers: { Location: `https://dehub.io${target}` } });
   }
 
   // URL-space hygiene (all UAs — these paths have no content in the SPA
