@@ -137,11 +137,27 @@ export const VideoSlide = memo(function VideoSlide({
 
   // Use a ref to track seeking so native listeners always see latest value
   const isSeekingRef = useRef(false);
+  // The in-flight gesture that started inside the seek strip. We stay 'pending'
+  // until enough movement reveals whether it's a horizontal scrub or a vertical
+  // navigation swipe.
+  const gestureRef = useRef<{ x: number; y: number; id: number; mode: 'pending' | 'seek' | 'swipe' } | null>(null);
 
-  // Native DOM listeners on the progress bar to fully block framer-motion drag
+  // Native DOM listeners on the seek strip.
+  //
+  // The strip spans the bottom 15% of the frame full-width, so a big share of
+  // vertical navigation swipes — especially on large phones where the thumb
+  // rests low — actually *begin* here. The old code captured the pointer and
+  // disabled the carousel drag the instant a finger touched the strip, so those
+  // swipes did nothing at all ("scrolling up/down doesn't work"). Now we stay
+  // hands-off until the gesture reveals its direction: a horizontal drag scrubs
+  // the timeline; a vertical drag is left to bubble to the carousel's drag layer
+  // so it navigates next/prev; a stationary tap seeks to the tapped point.
   useEffect(() => {
     const bar = progressBarRef.current;
     if (!bar) return;
+
+    // Movement (px) required before we classify the gesture.
+    const DECIDE_PX = 10;
 
     const stopAll = (e: Event) => {
       e.stopPropagation();
@@ -149,51 +165,107 @@ export const VideoSlide = memo(function VideoSlide({
       e.preventDefault();
     };
 
-    const onDown = (e: PointerEvent) => {
-      stopAll(e);
+    const beginSeek = (e: PointerEvent) => {
       isSeekingRef.current = true;
       setIsSeeking(true);
       onSeekStart?.();
-      seekToPosition(e.clientX);
-      bar.setPointerCapture(e.pointerId);
-    };
-
-    const onMove = (e: PointerEvent) => {
-      if (!isSeekingRef.current) return;
-      stopAll(e);
+      try { bar.setPointerCapture(e.pointerId); } catch { /* capture may be unavailable */ }
       seekToPosition(e.clientX);
     };
 
-    const onUp = (e: PointerEvent) => {
-      if (!isSeekingRef.current) return;
-      stopAll(e);
+    const endSeek = (e: PointerEvent) => {
       isSeekingRef.current = false;
       setIsSeeking(false);
       onSeekEnd?.();
-      if (bar.hasPointerCapture(e.pointerId)) {
-        bar.releasePointerCapture(e.pointerId);
+      if (bar.hasPointerCapture?.(e.pointerId)) {
+        try { bar.releasePointerCapture(e.pointerId); } catch { /* already released */ }
       }
     };
 
-    // Block mouse/touch from reaching framer-motion
-    const blockMouse = (e: Event) => { e.stopPropagation(); e.stopImmediatePropagation(); };
+    const onDown = (e: PointerEvent) => {
+      // NB: do NOT capture / stop the event here — a vertical swipe that starts
+      // in this strip must still reach the carousel drag layer to navigate.
+      gestureRef.current = { x: e.clientX, y: e.clientY, id: e.pointerId, mode: 'pending' };
+    };
+
+    const onMove = (e: PointerEvent) => {
+      const g = gestureRef.current;
+      if (!g || g.id !== e.pointerId) return;
+
+      if (g.mode === 'pending') {
+        const dx = e.clientX - g.x;
+        const dy = e.clientY - g.y;
+        if (Math.abs(dx) < DECIDE_PX && Math.abs(dy) < DECIDE_PX) return;
+        if (Math.abs(dy) >= Math.abs(dx)) {
+          // Vertical → hand it to the carousel for navigation, stay out of it.
+          g.mode = 'swipe';
+          return;
+        }
+        // Horizontal → this is a timeline scrub.
+        g.mode = 'seek';
+        stopAll(e);
+        beginSeek(e);
+        return;
+      }
+
+      if (g.mode === 'seek') {
+        stopAll(e);
+        seekToPosition(e.clientX);
+      }
+    };
+
+    const onUp = (e: PointerEvent) => {
+      const g = gestureRef.current;
+      gestureRef.current = null;
+
+      if (g && g.mode === 'seek') {
+        stopAll(e);
+        endSeek(e);
+        return;
+      }
+
+      // A stationary tap inside the strip seeks to that position.
+      if (g && g.mode === 'pending') {
+        const dx = Math.abs(e.clientX - g.x);
+        const dy = Math.abs(e.clientY - g.y);
+        if (dx < DECIDE_PX && dy < DECIDE_PX) seekToPosition(e.clientX);
+      }
+      // 'swipe' → the carousel already handled it.
+
+      // Failsafe: never leave the carousel drag disabled.
+      if (isSeekingRef.current) endSeek(e);
+    };
+
+    // Belt-and-suspenders: if a scrub's pointerup/cancel is ever lost (iOS
+    // pointer-capture quirks), make sure isSeeking can't stick `true` and
+    // permanently freeze navigation for the whole viewer session.
+    const windowFailsafe = (e: PointerEvent) => {
+      if (!isSeekingRef.current) return;
+      const g = gestureRef.current;
+      if (g && g.id !== e.pointerId) return; // a different finger — leave the scrub alone
+      gestureRef.current = null;
+      endSeek(e);
+    };
+
+    // Swallow the ghost click that follows a scrub.
+    const blockClick = (e: Event) => { e.stopPropagation(); e.stopImmediatePropagation(); };
 
     bar.addEventListener('pointerdown', onDown, { capture: true });
     bar.addEventListener('pointermove', onMove, { capture: true });
     bar.addEventListener('pointerup', onUp, { capture: true });
     bar.addEventListener('pointercancel', onUp, { capture: true });
-    bar.addEventListener('mousedown', blockMouse, { capture: true });
-    bar.addEventListener('touchstart', blockMouse, { capture: true });
-    bar.addEventListener('click', blockMouse, { capture: true });
+    bar.addEventListener('click', blockClick, { capture: true });
+    window.addEventListener('pointerup', windowFailsafe);
+    window.addEventListener('pointercancel', windowFailsafe);
 
     return () => {
       bar.removeEventListener('pointerdown', onDown, { capture: true });
       bar.removeEventListener('pointermove', onMove, { capture: true });
       bar.removeEventListener('pointerup', onUp, { capture: true });
       bar.removeEventListener('pointercancel', onUp, { capture: true });
-      bar.removeEventListener('mousedown', blockMouse, { capture: true });
-      bar.removeEventListener('touchstart', blockMouse, { capture: true });
-      bar.removeEventListener('click', blockMouse, { capture: true });
+      bar.removeEventListener('click', blockClick, { capture: true });
+      window.removeEventListener('pointerup', windowFailsafe);
+      window.removeEventListener('pointercancel', windowFailsafe);
     };
   }, [seekToPosition, onSeekStart, onSeekEnd]);
 

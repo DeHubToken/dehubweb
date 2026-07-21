@@ -178,6 +178,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   [followOverrides, followedCreators]);
   
   const containerRef = useRef<HTMLDivElement>(null);
+  // Wheel/trackpad momentum lock — see the wheel effect below.
+  const wheelLockedRef = useRef(false);
+  const wheelAccumRef = useRef(0);
+  const wheelSettleTimer = useRef<ReturnType<typeof setTimeout>>();
   const isMobile = useIsMobile();
   const navigate = useNavigate();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
@@ -443,7 +447,23 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     }
   }, [currentIndex, isTransitioning]);
 
-  // Handle mouse wheel scrolling
+  // Keep the wheel effect mounted once (below) while always calling the latest
+  // navigation handlers. If the effect re-subscribed whenever goToNext/goToPrev
+  // changed identity (they depend on isTransitioning), its cleanup would clear
+  // the in-flight momentum "settle" timer and leave the lock stuck true.
+  const goToNextRef = useRef(goToNext);
+  const goToPrevRef = useRef(goToPrev);
+  goToNextRef.current = goToNext;
+  goToPrevRef.current = goToPrev;
+
+  // Handle mouse wheel / trackpad scrolling.
+  //
+  // Trackpads and the Magic Mouse fire a long *burst* of wheel events per
+  // physical flick (inertial momentum) that easily outlasts the 350ms slide
+  // transition — so guarding only on `isTransitioning` let a single flick
+  // advance two or more videos ("scrolls 2 at once"). Instead we lock on the
+  // first qualifying delta and only release once the wheel has gone quiet for a
+  // beat, so one gesture = exactly one video.
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
@@ -451,22 +471,34 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      
-      if (isTransitioning) return;
-      
-      const threshold = 50;
-      if (Math.abs(e.deltaY) < threshold) return;
 
-      if (e.deltaY > 0) {
-        goToNext();
-      } else {
-        goToPrev();
-      }
+      // Every event pushes the "settled" moment further out; the lock only
+      // clears after the momentum stream actually stops.
+      if (wheelSettleTimer.current) clearTimeout(wheelSettleTimer.current);
+      wheelSettleTimer.current = setTimeout(() => {
+        wheelLockedRef.current = false;
+        wheelAccumRef.current = 0;
+      }, 220);
+
+      if (wheelLockedRef.current) return;
+
+      wheelAccumRef.current += e.deltaY;
+      const threshold = 40;
+      if (Math.abs(wheelAccumRef.current) < threshold) return;
+
+      const direction = wheelAccumRef.current;
+      wheelLockedRef.current = true;
+      wheelAccumRef.current = 0;
+      if (direction > 0) goToNextRef.current();
+      else goToPrevRef.current();
     };
 
     container.addEventListener('wheel', handleWheel, { passive: false, capture: true });
-    return () => container.removeEventListener('wheel', handleWheel, { capture: true });
-  }, [goToNext, goToPrev, isTransitioning]);
+    return () => {
+      container.removeEventListener('wheel', handleWheel, { capture: true });
+      if (wheelSettleTimer.current) clearTimeout(wheelSettleTimer.current);
+    };
+  }, []);
 
   // Handle keyboard navigation
   useEffect(() => {
