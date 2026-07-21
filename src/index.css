@@ -885,6 +885,17 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   --glass-edge-flat:
     inset 0 0 0 1px rgb(255 255 255 / 0.10),
     inset 0 1.5px 0 rgb(255 255 255 / 0.08);
+  /* Side panels are tall, full-height columns, so the symmetric 32px ambient
+     halo of --glass-edge is never seen top/bottom (off-screen) — only its
+     left/right edges survive, reading as dark smudge strips down the gutters
+     between the panels and the feed (very visible against a bright canvas like
+     Lava Lamp). Keep the ring + top sheen, but replace the halo with a
+     tucked-in, mostly-downward shadow (heavy negative spread) so the panel
+     still lifts off the canvas without any sideways bleed. */
+  --glass-edge-panel:
+    inset 0 0 0 1px rgb(255 255 255 / 0.10),
+    inset 0 1.5px 0 rgb(255 255 255 / 0.08),
+    0 12px 24px -20px rgb(0 0 0 / 0.45);
 }
 
 /* Post bentos — thin glass. */
@@ -903,6 +914,13 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   -webkit-backdrop-filter: var(--glass-blur) !important;
   border-color: transparent !important;
   box-shadow: var(--glass-edge) !important;
+}
+
+/* Side panels only: swap the full ambient halo for the tucked-in panel shadow
+   so the tall columns don't smudge the gutters. Page bentos keep --glass-edge
+   above — they're normal-sized cards where the soft halo reads correctly. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]) [data-side-panel] {
+  box-shadow: var(--glass-edge-panel) !important;
 }
 
 /* Interactive bentos (music rows, placeholder tiles) keep hover feedback by
