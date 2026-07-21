@@ -1375,6 +1375,15 @@ export default function NotificationsPage() {
             moduleEnrichedKeys.add(ek);
           }
         }
+        // Cap: this page never unmounts (PersistentPageCache), so one entry
+        // per distinct actor accumulates for the whole session. Evict oldest
+        // (insertion order) past 600 — far above one screenful of actors.
+        while (next.size > 600) {
+          const oldest = next.keys().next().value;
+          if (oldest === undefined) break;
+          next.delete(oldest);
+          moduleEnrichedKeys.delete(oldest);
+        }
         // Sync to module-level cache
         moduleAvatarCache = next;
         return next;

@@ -54,8 +54,15 @@ if (!entryMatch) {
 const entryFile = entryMatch[1];
 eagerFiles.add(entryFile);
 
-for (const m of html.matchAll(/<link[^>]*rel="modulepreload"[^>]*href="\/(assets\/[^"]+\.js)"/g)) {
-  eagerFiles.add(m[1]);
+// Vite's own modulepreload links mirror the entry's static import graph, so
+// they're eagerly EXECUTED and must be scanned. Links tagged data-prefetch-only
+// (injected by preloadWalletChunkPlugin for the wallet graph) are fetch-ahead
+// hints for a React.lazy chunk that only executes on demand — skip those, or
+// the wallet chunk would (correctly!) match its own markers.
+for (const m of html.matchAll(/<link[^>]*rel="modulepreload"[^>]*>/g)) {
+  if (m[0].includes('data-prefetch-only')) continue;
+  const href = m[0].match(/href="\/(assets\/[^"]+\.js)"/);
+  if (href) eagerFiles.add(href[1]);
 }
 
 let failed = false;

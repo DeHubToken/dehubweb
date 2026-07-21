@@ -90,6 +90,14 @@ interface ImageCardProps {
  * before the image loads (CLS fix). Session-scoped, bounded by feed size.
  */
 const imageAspectRatioCache = new Map<string, number>();
+const MAX_RATIO_CACHE = 1000; // numbers are tiny; cap only guards multi-hour sessions
+function cacheAspectRatio(url: string, ratio: number) {
+  if (imageAspectRatioCache.size >= MAX_RATIO_CACHE) {
+    const oldest = imageAspectRatioCache.keys().next().value;
+    if (oldest !== undefined) imageAspectRatioCache.delete(oldest);
+  }
+  imageAspectRatioCache.set(url, ratio);
+}
 
 /**
  * Single slide inside the Instagram-style carousel. Extracted so we can
@@ -152,7 +160,7 @@ function ImageSlide({
           const el = e.currentTarget;
           if (el.naturalWidth > 0 && el.naturalHeight > 0) {
             const measured = el.naturalWidth / el.naturalHeight;
-            imageAspectRatioCache.set(img, measured);
+            cacheAspectRatio(img, measured);
             setRatio(measured);
           }
         }}

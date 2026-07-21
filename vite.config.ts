@@ -19,6 +19,59 @@ function blogManifestPlugin() {
 }
 
 
+/**
+ * Every route's first paint waits on the WalletProviders chunk (it wraps the
+ * whole tree), but its download only starts after the entry bundle has
+ * downloaded AND executed (the module-eval dynamic-import kick in App.tsx).
+ * Inject modulepreload links for the wallet chunk graph into index.html so the
+ * browser fetches it in parallel with the entry instead of serialized after
+ * it. modulepreload fetches at script priority by default — fetchpriority=low
+ * is set explicitly so the wallet graph yields bandwidth to the entry bundle
+ * and LCP media on slow connections.
+ */
+function preloadWalletChunkPlugin() {
+  return {
+    name: 'preload-wallet-chunk',
+    apply: 'build' as const,
+    transformIndexHtml: {
+      order: 'post' as const,
+      handler(html: string, ctx: { bundle?: Record<string, any> }) {
+        const bundle = ctx.bundle;
+        if (!bundle) return html;
+        const seen = new Set<string>();
+        const collect = (fileName: string) => {
+          if (seen.has(fileName)) return;
+          seen.add(fileName);
+          const chunk = bundle[fileName];
+          if (chunk && chunk.type === 'chunk') {
+            for (const imp of chunk.imports as string[]) collect(imp);
+          }
+        };
+        for (const [fileName, chunk] of Object.entries(bundle)) {
+          if (
+            (chunk as any).type === 'chunk' &&
+            (chunk as any).facadeModuleId?.replace(/\\/g, '/').endsWith('components/app/WalletProviders.tsx')
+          ) {
+            collect(fileName);
+          }
+        }
+        if (seen.size === 0) {
+          console.warn('[preload-wallet-chunk] WalletProviders chunk not found — no links injected');
+          return html;
+        }
+        // data-prefetch-only: tells scripts/check-entry-bundle.mjs these are
+        // fetch-ahead hints, NOT eagerly-executed modules — the wallet code
+        // still only runs when the React.lazy boundary resolves.
+        const links = [...seen]
+          .map((f) => `<link rel="modulepreload" data-prefetch-only fetchpriority="low" crossorigin href="/${f}">`)
+          .join('\n    ');
+        console.log(`[preload-wallet-chunk] injected ${seen.size} modulepreload links`);
+        return html.replace('</head>', `  ${links}\n  </head>`);
+      },
+    },
+  };
+}
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
@@ -38,6 +91,7 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     blogManifestPlugin(),
+    preloadWalletChunkPlugin(),
     mcpPlugin(),
     mode === "development" && componentTagger(),
   ].filter(Boolean),

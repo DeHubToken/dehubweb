@@ -241,8 +241,19 @@ export function renderTextWithLinks(text: string): ReactNode[] {
   return parts.length > 0 ? parts : [text];
 }
 
-// Translation cache to avoid repeat API calls
+// Translation cache to avoid repeat API calls. Capped: entries hold full
+// translated post bodies and the map lives for the session — unbounded it
+// grows with every translated post scrolled past (same idiom as
+// lib/language-detection-cache.ts).
+const MAX_TRANSLATION_CACHE = 500;
 const translationCache = new Map<string, { translated: string; sourceLang: string }>();
+function cacheTranslation(key: string, value: { translated: string; sourceLang: string }) {
+  if (translationCache.size >= MAX_TRANSLATION_CACHE) {
+    const oldest = translationCache.keys().next().value;
+    if (oldest !== undefined) translationCache.delete(oldest);
+  }
+  translationCache.set(key, value);
+}
 
 // Minimum text length for AI detection (avoid detecting single words)
 const MIN_TEXT_LENGTH_FOR_DETECTION = 15;
@@ -393,7 +404,7 @@ export function useTranslation(text: string) {
       const translated = data.translatedText;
       const detected = data.detectedLanguage?.language || 'unknown';
 
-      translationCache.set(cacheKey, { translated, sourceLang: detected });
+      cacheTranslation(cacheKey, { translated, sourceLang: detected });
 
       setTranslatedText(translated);
       setSourceLang(detected);

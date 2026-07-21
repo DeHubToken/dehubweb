@@ -16,7 +16,7 @@ const PostModal = React.lazy(() =>
   import('@/features/post/PostModal').then(m => ({ default: m.PostModal }))
 );
 import { useAuth } from '@/contexts/AuthContext';
-import { useStage } from '@/contexts/StageContext';
+import { openStageModal } from '@/contexts/StageContext';
 import { ChainSelector, type ChainId } from './ChainSelector';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import { useCommunityActivityUnreadCount } from '@/hooks/use-community-activity-unread';
@@ -29,7 +29,7 @@ interface AppSidebarProps {
 export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
   const location = useLocation();
   const { isAuthenticated, disconnect } = useAuth();
-  const { openModal: openStagesModal } = useStage();
+
   const { t } = useTranslation();
   const [isPostModalOpen, setIsPostModalOpen] = useState(false);
   // Mount on first open, keep mounted afterwards (close animation).
@@ -77,7 +77,7 @@ export function AppSidebar({ isOpen, onToggle }: AppSidebarProps) {
               isHome={item.path === '/app'}
               currentPath={location.pathname}
               onNavigate={onToggle}
-              onClick={item.action === 'open-stages' ? () => { onToggle(); openStagesModal(); } : undefined}
+              onClick={item.action === 'open-stages' ? () => { onToggle(); openStageModal(); } : undefined}
               variant="mobile"
               notificationCount={item.label === 'Communities' ? communityActivityUnread : undefined}
             />

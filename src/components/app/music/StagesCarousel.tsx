@@ -6,11 +6,9 @@
  * @module components/app/music/StagesCarousel
  */
 
-import { useEffect, useRef } from 'react';
 import { Mic2, Users, ChevronRight, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
+import { useLiveSpaces } from '@/contexts/StageContext';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import { cn } from '@/lib/utils';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
@@ -86,64 +84,14 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
   );
 }
 
-const STAGES_INSERT_REFETCH_DEBOUNCE_MS = 750;
-
 export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const insertRefetchDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Fetch live stages
-  const { data: liveSpaces = [], refetch } = useQuery({
-    queryKey: ['live-stages-carousel'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('audio_spaces')
-        .select('*')
-        .eq('status', 'live')
-        .order('started_at', { ascending: false });
-      
-      if (error) throw error;
-      return (data || []) as AudioSpace[];
-    },
-    staleTime: 60_000, // realtime subscription handles live updates; no need for frequent polling
-  });
-
-  // Realtime: remove ended stages instantly
-  useEffect(() => {
-    const channel = supabase
-      .channel('stages-carousel-realtime')
-      .on(
-        'postgres_changes',
-        { event: 'UPDATE', schema: 'public', table: 'audio_spaces' },
-        (payload) => {
-          const updated = payload.new as any;
-          if (updated.status === 'ended') {
-            // Immediately remove from cache
-            queryClient.setQueryData<AudioSpace[]>(['live-stages-carousel'], (old) =>
-              old ? old.filter(s => s.id !== updated.id) : []
-            );
-          }
-        }
-      )
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'audio_spaces' },
-        () => {
-          if (insertRefetchDebounceRef.current) clearTimeout(insertRefetchDebounceRef.current);
-          insertRefetchDebounceRef.current = setTimeout(() => {
-            insertRefetchDebounceRef.current = null;
-            refetch();
-          }, STAGES_INSERT_REFETCH_DEBOUNCE_MS);
-        }
-      )
-      .subscribe();
-
-    return () => {
-      if (insertRefetchDebounceRef.current) clearTimeout(insertRefetchDebounceRef.current);
-      supabase.removeChannel(channel);
-    };
-  }, [queryClient, refetch]);
+  // Live stages — shared from StageProvider's single fetch + realtime channel
+  // (this component previously ran its own query AND two realtime
+  // subscriptions against audio_spaces; the provider's debounced refresh
+  // covers insert/update/end within ~1s).
+  const liveSpaces = useLiveSpaces();
 
   return (
     <div>

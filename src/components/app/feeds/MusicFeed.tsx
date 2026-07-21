@@ -20,7 +20,7 @@ import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
 import { RadioSection } from '@/components/app/radio';
 import { StagesCarousel } from '@/components/app/music/StagesCarousel';
-import { useStage } from '@/contexts/StageContext';
+import { openStageModal } from '@/contexts/StageContext';
 
 import { RadioStationCard } from '@/components/app/radio/RadioStationCard';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
@@ -619,8 +619,13 @@ function MusicVideosSection({ walletAddress }: { walletAddress: string | null })
 
   return (
     <div data-feed-root className="space-y-3 pb-32">
-      {videos.map((video) => (
-        <div key={video.id} data-feed-item className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3">
+      {videos.map((video, index) => (
+        <div
+          key={video.id}
+          data-feed-item
+          className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3"
+          style={index >= 3 ? { contentVisibility: 'auto', containIntrinsicSize: 'auto 0 auto 520px' } : undefined}
+        >
           <VideoCard video={video} />
         </div>
       ))}
@@ -649,7 +654,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
   const [activeSubTab, setActiveSubTab] = useState<MusicSubTab>('all');
   const musicSubIsDraggingRef = useRef(false);
   const { layerRef: musicSubTabLayerRef, setRef: setMusicSubTabRef, rect: musicSubTabRect, onScroll: onMusicSubTabScroll } = useTabIndicator(activeSubTab, undefined, musicSubIsDraggingRef);
-  const { openModal: openStagesModal } = useStage();
+
   const { walletAddress, isAuthenticated } = useAuth();
 
   // Fetch dynamic block list for authenticated users
@@ -787,7 +792,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
             isLoadingAudio={isLoadingAudio}
             onGoToRadio={() => setActiveSubTab('radio')}
             onGoToVideos={() => setActiveSubTab('videos')}
-            onOpenStages={() => openStagesModal('browse')}
+            onOpenStages={() => openStageModal('browse')}
           />
         );
       case 'videos':
@@ -797,7 +802,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
       case 'stages':
         return (
           <div className="pb-32">
-            <StagesCarousel onOpenStages={() => openStagesModal('browse')} />
+            <StagesCarousel onOpenStages={() => openStageModal('browse')} />
           </div>
         );
       case 'tracks':

@@ -192,8 +192,23 @@ function capMessages(msgs: SupabaseLiveChatMessage[]): SupabaseLiveChatMessage[]
   return [...pinnedOverflow, ...msgs.slice(cut)];
 }
 
-/** Module-level cache so remounts (auth flicker, navigate back) show last-known messages */
+/**
+ * Module-level cache so remounts (auth flicker, navigate back) show last-known
+ * messages. Room-capped: each entry holds up to 300 messages forever, so
+ * browsing many live posts in a session would otherwise accumulate them all.
+ * Map preserves insertion order — delete+set keeps the active room newest.
+ */
+const MAX_CACHED_ROOMS = 8;
 const liveChatMessagesCache = new Map<string, SupabaseLiveChatMessage[]>();
+function cacheRoomMessages(roomId: string, msgs: SupabaseLiveChatMessage[]) {
+  if (liveChatMessagesCache.has(roomId)) {
+    liveChatMessagesCache.delete(roomId);
+  } else if (liveChatMessagesCache.size >= MAX_CACHED_ROOMS) {
+    const oldest = liveChatMessagesCache.keys().next().value;
+    if (oldest !== undefined) liveChatMessagesCache.delete(oldest);
+  }
+  liveChatMessagesCache.set(roomId, msgs);
+}
 
 /** Normalize socket message to our format */
 function socketMsgToLocal(msg: unknown, roomId: string): SupabaseLiveChatMessage | null {
@@ -252,7 +267,7 @@ export function useLiveChatMessages(roomId: string | null) {
             )
         );
         const next = capMessages(deduplicateMessages([...mapped, ...keepOptimistic]));
-        liveChatMessagesCache.set(roomId, next);
+        cacheRoomMessages(roomId, next);
         return next;
       });
     } catch (err) {
@@ -311,7 +326,7 @@ export function useLiveChatMessages(roomId: string | null) {
             (x) => !(x.id.startsWith('temp-') && x.content === local.content && x.sender_address === local.sender_address)
           );
           const next = capMessages(deduplicateMessages([...withoutMatchingTemp.filter((x) => x.id !== local.id), local]));
-          liveChatMessagesCache.set(roomId, next);
+          cacheRoomMessages(roomId, next);
           return next;
         });
       }
@@ -406,7 +421,7 @@ export function useLiveChatMessages(roomId: string | null) {
       };
       setMessages((prev) => {
         const next = [...prev, optimisticMsg];
-        if (roomId) liveChatMessagesCache.set(roomId, next);
+        if (roomId) cacheRoomMessages(roomId, next);
         return next;
       });
 
@@ -435,7 +450,7 @@ export function useLiveChatMessages(roomId: string | null) {
       } catch (err: any) {
         setMessages((prev) => {
           const next = prev.filter((m) => m.id !== optimisticId);
-          if (roomId) liveChatMessagesCache.set(roomId, next);
+          if (roomId) cacheRoomMessages(roomId, next);
           return next;
         });
         toast.error(`Failed to send: ${err?.message || 'Unknown error'}`);

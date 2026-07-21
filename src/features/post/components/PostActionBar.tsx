@@ -10,7 +10,7 @@ import { GLASS_STYLES } from '@/constants/app.constants';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { AI_STYLE_OPTIONS } from '@/constants/ai-styles.constants';
 import { GoLiveModal } from '@/components/app/modals';
-import { useStage } from '@/contexts/StageContext';
+import { openStageModal } from '@/contexts/StageContext';
 import { EmojiGifPicker } from '@/components/app/chat/EmojiGifPicker';
 import type { LiveMode } from '../types';
 import type { AttachedSound } from '../hooks/usePostSound';
@@ -89,7 +89,7 @@ export function PostActionBar({
   const [goLiveModalOpen, setGoLiveModalOpen] = useState(false);
   const navigate = useNavigate();
   const isLive = liveMode !== null;
-  const { openModal: openStagesModal } = useStage();
+
 
   const handleSelectLiveMode = (mode: LiveMode) => {
     setLiveMode(mode);
@@ -97,7 +97,7 @@ export function PostActionBar({
     if (mode === 'townhall') {
       // Close the post modal and open the Stages modal globally
       onCloseModal?.();
-      openStagesModal('create');
+      openStageModal('create');
     } else {
       setGoLiveModalOpen(true);
     }

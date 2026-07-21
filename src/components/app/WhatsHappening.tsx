@@ -17,9 +17,8 @@ import { cn } from '@/lib/utils';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { getTopTickers, type TickerPeriod } from '@/lib/ticker-search-tracker';
 import { TrendingTopicsList } from './TrendingTopicsList';
-import { supabase } from '@/integrations/supabase/client';
 import { formatTimeAgo } from '@/lib/feed-utils';
-import { useStage } from '@/contexts/StageContext';
+import { useStage, useLiveSpaces } from '@/contexts/StageContext';
 
 const COUNTRIES = [
   { code: 'global', flag: '🌍', name: 'Global' },
@@ -233,25 +232,9 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
 
   const tabIcons: Record<Tab, typeof Hash> = { posts: Hash, stages: Radio, tickers: Flame };
 
-  // Fetch live stages for the stages tab
-  const { data: liveStages = [] } = useQuery({
-    queryKey: ['sidebar-live-stages'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('audio_spaces')
-        .select('*')
-        .eq('status', 'live')
-        .order('started_at', { ascending: false })
-        .limit(10);
-      if (error) throw error;
-      return data || [];
-    },
-    // Powers the live badge on the stages tab; 60s latency on that badge is
-    // fine and halves an always-on Supabase poll that ran on every page.
-    // Viewport-gated: no polling from the CSS-hidden mobile sidebar instance.
-    staleTime: 30_000,
-    refetchInterval: isVisibleInstance ? 60_000 : false,
-  });
+  // Live stages for the stages tab — shared from StageProvider's single
+  // fetch + realtime channel (was a duplicate query + 60s poll here).
+  const liveStages = useLiveSpaces().slice(0, 10);
 
   return (
     <div data-side-panel className="bg-zinc-900 rounded-2xl overflow-hidden relative">

@@ -44,7 +44,18 @@ function getSnapshot(): AssistantReply[] {
 }
 
 function pushReply(r: AssistantReply) {
-  replies = [...replies, r];
+  // Session-capped: replies are local-only chat bubbles; keep the newest 50.
+  // respondedIds mirrors the trim so the Sets can't grow unbounded either
+  // (a trimmed source message can no longer re-trigger — its id ages out of
+  // the live-chat 300-message window long before this cap matters).
+  replies = [...replies, r].slice(-50);
+  if (respondedIds.size > 500) {
+    // Keep the newest half (Set preserves insertion order) — a full clear
+    // could let a still-visible mention re-trigger a duplicate reply.
+    const keep = [...respondedIds].slice(-250);
+    respondedIds.clear();
+    keep.forEach((id) => respondedIds.add(id));
+  }
   emit();
 }
 
