@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { createScene, createLighting, createResizeHandler, setupMouseInteraction, releaseContext, createRenderGate } from "@/lib/three/scene-helpers";
+import { createFrameThrottle } from "@/lib/raf-throttle";
 import { createNebula, animateNebula, disposeNebula, applyNebulaColor, type NebulaSystem } from "@/lib/three/nebula";
 import { useAppTheme, DEFAULT_THEME_HUES } from "@/contexts/ThemeContext";
 
@@ -85,6 +86,10 @@ export function NebulaBackground() {
     // off-screen, OR docs/blog is composited over the canvas (see
     // background-gate). A lost context also halts the loop instead of throwing.
     let gate: ReturnType<typeof createRenderGate> | null = null;
+    // Cap the ambient redraw at ~60fps. ProMotion (the 15 Pro Max is 120 Hz)
+    // fires rAF at 120/s; the extra frames aren't visible on this slow nebula
+    // drift but pay full shader fill-rate — a needless, continuous GPU load.
+    const shouldDraw = createFrameThrottle(60);
     const animate = () => {
       if (isDisposed) return;
       if (!gate || !gate.isActive() || gl.isContextLost()) {
@@ -92,7 +97,7 @@ export function NebulaBackground() {
         return;
       }
       animationFrameId = requestAnimationFrame(animate);
-      renderFrame();
+      if (shouldDraw(performance.now())) renderFrame();
     };
     const resume = () => {
       if (isDisposed || animationFrameId !== 0 || gl.isContextLost()) return;

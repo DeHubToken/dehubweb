@@ -6,6 +6,7 @@ import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPa
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { resolveThemeColor, type ThemeColorSpec } from '@/lib/theme-color';
 import { capPixelRatio, createRenderGate, releaseContext } from '@/lib/three/scene-helpers';
+import { createFrameThrottle } from '@/lib/raf-throttle';
 
 /**
  * Globally rendered "Swarms" background — interactive particle nebula.
@@ -248,11 +249,21 @@ function GenerativeArtSceneV3({ colorValue = config.colors.baseHue, brandColors 
     const tmpForce = new THREE.Vector3();
 
     let frameId = 0;
+    // Cap the ambient redraw at ~60fps. ProMotion (the 15 Pro Max is 120 Hz)
+    // fires rAF at 120/s, doubling the cost of the 50k-particle CPU sim + shader
+    // for frames no one can distinguish — a real source of device heat. As a
+    // bonus the sim now advances at the same rate on 60 Hz and 120 Hz panels.
+    const shouldDraw = createFrameThrottle(60);
     const animate = () => {
       // Pause the whole loop (incl. the 50k-particle CPU sim below) when the tab
       // is hidden or the canvas is off-screen; the gate restarts us on return.
       if (!prefersReducedMotion && !gate.isActive()) {
         frameId = 0;
+        return;
+      }
+      // Throttle to ~60fps: skip this tick's sim + render but keep the loop alive.
+      if (!prefersReducedMotion && !shouldDraw(performance.now())) {
+        frameId = requestAnimationFrame(animate);
         return;
       }
       const elapsedTime = clock.getElapsedTime();

@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { resolveThemeColor, type ThemeColorSpec } from '@/lib/theme-color';
 import { capPixelRatio, createRenderGate, releaseContext } from '@/lib/three/scene-helpers';
+import { createFrameThrottle } from '@/lib/raf-throttle';
 
 /**
  * Globally rendered "Hazy Nights" nebula shader background — only active
@@ -284,6 +285,12 @@ function CelestialSphere({
 
     let animationFrameId = 0;
     const clock = new THREE.Clock();
+    // Cap the ambient redraw at ~60fps. ProMotion (the 15 Pro Max is 120 Hz)
+    // fires rAF at 120/s; the extra frames aren't visible on this soft cloud
+    // field but pay full shader fill-rate — a needless, continuous GPU load.
+    // Drift stays wall-clock-correct: skipped frames just fold their elapsed
+    // time into the next clock.getDelta().
+    const shouldDraw = createFrameThrottle(60);
     const animate = () => {
       // Reduced motion: a single static frame, no loop.
       if (prefersReducedMotion) {
@@ -296,15 +303,17 @@ function CelestialSphere({
         animationFrameId = 0;
         return;
       }
-      // Delta-based so the drift speed is identical on 60Hz and 120Hz+
-      // displays; clamp so a backgrounded tab doesn't jump on return.
-      const delta = Math.min(clock.getDelta(), 0.1);
-      // ease mouse toward cursor for a wafting, cloud-like response
-      mouse.x += (mouseTarget.x - mouse.x) * 0.04;
-      mouse.y += (mouseTarget.y - mouse.y) * 0.04;
-      material.uniforms.u_mouse.value.set(mouse.x, mouse.y);
-      material.uniforms.u_time.value += delta * 0.3 * speed;
-      renderer.render(scene, camera);
+      if (shouldDraw(performance.now())) {
+        // Delta-based so the drift speed is identical on 60Hz and 120Hz+
+        // displays; clamp so a backgrounded tab doesn't jump on return.
+        const delta = Math.min(clock.getDelta(), 0.1);
+        // ease mouse toward cursor for a wafting, cloud-like response
+        mouse.x += (mouseTarget.x - mouse.x) * 0.04;
+        mouse.y += (mouseTarget.y - mouse.y) * 0.04;
+        material.uniforms.u_mouse.value.set(mouse.x, mouse.y);
+        material.uniforms.u_time.value += delta * 0.3 * speed;
+        renderer.render(scene, camera);
+      }
       animationFrameId = requestAnimationFrame(animate);
     };
     // Restart the loop when the tab/canvas becomes visible again.

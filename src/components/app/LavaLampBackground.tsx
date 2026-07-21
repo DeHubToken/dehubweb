@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { resolveThemeColor, hslToRgb, type ThemeColorSpec } from '@/lib/theme-color';
 import { isBackgroundPaused, subscribeBackgroundPaused } from '@/lib/background-gate';
+import { createFrameThrottle } from '@/lib/raf-throttle';
 
 /**
  * Globally rendered "Lava Lamp" shader background — only active when the
@@ -540,7 +541,17 @@ function LavaLampCanvas({ colorValue, brandColors = [] }: { colorValue: number; 
     let pausedByGate = isBackgroundPaused();
     let disposed = false;
     const start = performance.now();
-    const timeAnimated = Math.abs(UNIFORMS.timeScale) > 0.0001;
+    // Honour "Reduce Motion" (iOS Settings › Accessibility, or the OS toggle):
+    // paint a single static frame and never spin the shader loop. The other
+    // theme backgrounds (Cosmic/Hazy/Swarms) already do this; LavaLamp was the
+    // lone hold-out, animating its fbm+metaball shader forever even when the
+    // user asked for stillness — a needless, continuous GPU load.
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const timeAnimated = !prefersReducedMotion && Math.abs(UNIFORMS.timeScale) > 0.0001;
+    // Cap the ambient redraw at ~60fps. ProMotion (the 15 Pro Max is 120 Hz)
+    // fires rAF at 120/s, but this blurred-away background gains nothing visible
+    // from the extra frames while paying full 2 MP fragment-shader fill-rate.
+    const shouldDraw = createFrameThrottle(60);
 
     const resizeCanvas = () => {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -608,7 +619,7 @@ function LavaLampCanvas({ colorValue, brandColors = [] }: { colorValue: number; 
       requestRender();
     };
     window.addEventListener('resize', updateLayout);
-    if (UNIFORMS.cursorEnabled) {
+    if (UNIFORMS.cursorEnabled && !prefersReducedMotion) {
       window.addEventListener('pointermove', onPointerMove, { passive: true });
       window.addEventListener('pointercancel', onPointerLeave);
       window.addEventListener('scroll', updateLayout, true);
@@ -654,6 +665,12 @@ function LavaLampCanvas({ colorValue, brandColors = [] }: { colorValue: number; 
     function render(now: number) {
       raf = 0;
       if (disposed || !visible || !inView || pausedByGate) return;
+      // Too soon since the last drawn frame (ProMotion 120 Hz tick): skip the
+      // GPU work but keep the loop alive so we redraw on the next eligible tick.
+      if (!shouldDraw(now)) {
+        requestRender();
+        return;
+      }
       const dt = lastNow === null ? 0 : Math.min((now - lastNow) / 1000, 0.1);
       lastNow = now;
       const follow = 1 - Math.exp(-12 * dt);
@@ -706,7 +723,7 @@ function LavaLampCanvas({ colorValue, brandColors = [] }: { colorValue: number; 
       document.removeEventListener('visibilitychange', onVisibilityChange);
       unsubscribePause();
       window.removeEventListener('resize', updateLayout);
-      if (UNIFORMS.cursorEnabled) {
+      if (UNIFORMS.cursorEnabled && !prefersReducedMotion) {
         window.removeEventListener('pointermove', onPointerMove);
         window.removeEventListener('pointercancel', onPointerLeave);
         window.removeEventListener('scroll', updateLayout, true);
