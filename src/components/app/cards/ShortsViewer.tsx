@@ -761,6 +761,12 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       onSeekEnd={() => setIsTimelineSeeking(false)}
                       showPlayIndicator={isActive ? showPlayIndicator : null}
                       letterbox={!isMobile}
+                      // Buffer the current slide + the next one so a swipe lands
+                      // on an already-loaded video. The previous slide (offset
+                      // -1) is almost always still in the browser cache from
+                      // when it was watched, so keep it on metadata to avoid
+                      // three videos fighting for bandwidth on the active one.
+                      preload={offset === 0 || offset === 1 ? 'auto' : 'metadata'}
                     />
                   </motion.div>
                 );

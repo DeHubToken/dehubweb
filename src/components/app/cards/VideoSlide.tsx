@@ -31,6 +31,13 @@ interface VideoSlideProps {
    * by `object-cover`. Mobile stays full-bleed (phone-native) and leaves this off.
    */
   letterbox?: boolean;
+  /**
+   * Buffering hint for the underlying <video>. The viewer sets this to `'auto'`
+   * for the active slide *and the next one* so the neighbour is already buffered
+   * when you swipe to it (no cold-load lag on landing), and `'metadata'` for
+   * slides further out. Defaults to the old isActive-based behaviour.
+   */
+  preload?: 'auto' | 'metadata' | 'none';
 }
 
 export const VideoSlide = memo(function VideoSlide({
@@ -44,6 +51,7 @@ export const VideoSlide = memo(function VideoSlide({
   onSeekEnd,
   showPlayIndicator,
   letterbox = false,
+  preload,
 }: VideoSlideProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   // Shorts thumbnails may live at shorts/{id}.jpg instead of the mapped
@@ -308,7 +316,7 @@ export const VideoSlide = memo(function VideoSlide({
             {...{"webkit-playsinline": ""}}
             muted={isMuted}
             poster={thumbnail}
-            preload={isActive ? 'auto' : 'metadata'}
+            preload={preload ?? (isActive ? 'auto' : 'metadata')}
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}
             onCanPlay={handleCanPlay}
