@@ -9,7 +9,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useAuth } from '@/contexts/AuthContext';
-import { useStage } from '@/contexts/StageContext';
+import { useStage, useLiveSpaces } from '@/contexts/StageContext';
 import { getFollowList } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 
@@ -49,20 +49,9 @@ export function FriendsOnStageBar() {
     staleTime: 2 * 60 * 1000,
   });
 
-  // Fetch live stages
-  const { data: liveStages = [] } = useQuery({
-    queryKey: ['live-stages-for-bar'],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('audio_spaces')
-        .select('*')
-        .eq('status', 'live')
-        .order('started_at', { ascending: false });
-      return (data as AudioSpace[]) || [];
-    },
-    refetchInterval: isHomeActive ? 15_000 : false,
-    staleTime: 10_000,
-  });
+  // Live stages — shared from StageProvider's single fetch + realtime channel
+  // (was a duplicate 15s Supabase poll of the same table).
+  const liveStages = useLiveSpaces();
 
   // Fetch participants for live stages
   const stageIds = liveStages.map(s => s.id);

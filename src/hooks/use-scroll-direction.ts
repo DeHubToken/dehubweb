@@ -27,6 +27,10 @@ function attachListeners(): () => void {
     window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
 
   lastScrollY = getY();
+  // Re-seed visibility from the actual scroll position: if the last subscriber
+  // left while the nav was hidden, a fresh subscriber at the top of a new page
+  // must start visible (the old per-hook useState(true) gave this for free).
+  setVisible(lastScrollY <= TOP_THRESHOLD ? true : visible);
 
   // ── scroll events: attach to every possible container ──────────────────
   const onScroll = () => {

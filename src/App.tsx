@@ -441,7 +441,25 @@ function AppContent() {
 const WalletLoader = () => {
   const path = window.location.pathname;
   const isAppShellRoute = path === "/" || path === "/app" || path.startsWith("/app/");
-  return isAppShellRoute ? <HomeShellSkeleton /> : null;
+  if (isAppShellRoute) return <HomeShellSkeleton />;
+  // Docs/blog readers (SEO landings) used to get a BLANK page here while the
+  // wallet chunk loaded. Give them a neutral reading-page skeleton — plain
+  // divs only, theme-agnostic greys that read fine on light or dark.
+  if (path.startsWith("/docs") || path.startsWith("/guides")) {
+    return (
+      <div className="mx-auto max-w-3xl px-6 py-16 animate-pulse" aria-hidden="true">
+        <div className="h-8 w-2/3 rounded bg-zinc-500/20 mb-6" />
+        <div className="space-y-3">
+          <div className="h-4 w-full rounded bg-zinc-500/15" />
+          <div className="h-4 w-11/12 rounded bg-zinc-500/15" />
+          <div className="h-4 w-4/5 rounded bg-zinc-500/15" />
+          <div className="h-4 w-full rounded bg-zinc-500/15" />
+          <div className="h-4 w-3/4 rounded bg-zinc-500/15" />
+        </div>
+      </div>
+    );
+  }
+  return null;
 };
 
 const App = () => (

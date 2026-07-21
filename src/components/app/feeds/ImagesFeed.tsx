@@ -282,8 +282,13 @@ function EndlessScrollView({
       )}
       
       <div ref={scrollTargetRef} />
-      {orderedPosts.map((post) => (
-        <div key={post.id} data-feed-item className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+      {orderedPosts.map((post, index) => (
+        <div
+          key={post.id}
+          data-feed-item
+          className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3"
+          style={index >= 3 ? { contentVisibility: 'auto', containIntrinsicSize: 'auto 0 auto 640px' } : undefined}
+        >
           <ImageCard post={post} />
         </div>
       ))}

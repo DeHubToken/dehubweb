@@ -5,7 +5,7 @@
  * while in a live stage. Similar pattern to RadioPlayerProvider.
  */
 
-import { createContext, useContext, useState, useEffect, useCallback, useRef, useSyncExternalStore, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef, useSyncExternalStore, ReactNode } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -100,6 +100,45 @@ export function useStageVolumeLevel(): number {
   return useSyncExternalStore(subscribeStageVolume, () => stageVolumeLevel);
 }
 
+// ─── Live spaces store ──────────────────────────────────────────────────────
+// StageProvider already keeps the live-spaces list fresh (one fetch at boot +
+// one debounced realtime channel). Sidebar/carousel widgets used to run their
+// OWN queries and realtime channels against audio_spaces — a triple-fetch at
+// boot and duplicate subscriptions. They subscribe here instead; the store
+// updates whenever the provider refreshes, without making subscribers consume
+// the full (churny) stage context value.
+
+let liveSpacesStore: AudioSpace[] = [];
+const liveSpacesSubscribers = new Set<() => void>();
+
+function publishLiveSpaces(spaces: AudioSpace[]) {
+  liveSpacesStore = spaces;
+  liveSpacesSubscribers.forEach(cb => cb());
+}
+
+function subscribeLiveSpaces(cb: () => void) {
+  liveSpacesSubscribers.add(cb);
+  return () => liveSpacesSubscribers.delete(cb);
+}
+
+/** Live audio spaces list, shared from StageProvider's single fetch+realtime. */
+export function useLiveSpaces(): AudioSpace[] {
+  return useSyncExternalStore(subscribeLiveSpaces, () => liveSpacesStore);
+}
+
+// ─── Modal opener (subscription-free) ───────────────────────────────────────
+// Several widely-mounted components (PostActionBar renders once PER POST in
+// the feed) only ever need to OPEN the stages modal. Consuming the full stage
+// context for that re-renders them on every stage state change. This module
+// function routes to the provider without any context subscription.
+
+let stageModalOpener: ((view?: 'browse' | 'create' | 'live') => void) | null = null;
+
+/** Open the stages modal without subscribing to stage context state. */
+export function openStageModal(view: 'browse' | 'create' | 'live' = 'browse') {
+  stageModalOpener?.(view);
+}
+
 // ─── Provider ────────────────────────────────────────────────────────────────
 
 export function StageProvider({ children }: { children: ReactNode }) {
@@ -168,6 +207,12 @@ export function StageProvider({ children }: { children: ReactNode }) {
   const closeModal = useCallback(() => {
     setIsModalOpen(false);
   }, []);
+
+  // Feed the subscription-free module-level opener (see openStageModal above).
+  useEffect(() => {
+    stageModalOpener = openModal;
+    return () => { stageModalOpener = null; };
+  }, [openModal]);
 
   // ─── Recording helpers (host only) ──────────────────────────────────────
 
@@ -270,7 +315,9 @@ export function StageProvider({ children }: { children: ReactNode }) {
         .eq('status', 'live')
         .order('started_at', { ascending: false });
       if (error) throw error;
-      setLiveSpaces((data as AudioSpace[]) || []);
+      const spaces = (data as AudioSpace[]) || [];
+      setLiveSpaces(spaces);
+      publishLiveSpaces(spaces);
     } catch (err) {
       console.error('Error fetching stages:', err);
     }
@@ -1062,39 +1109,53 @@ export function StageProvider({ children }: { children: ReactNode }) {
     };
   }, [refreshSpaces]);
 
+  // Memoized: the provider re-renders on every participant/realtime event
+  // while a space is live — an inline value object handed every consumer a
+  // fresh reference each time, re-rendering all of them regardless of what
+  // actually changed.
+  const contextValue = useMemo(
+    () => ({
+      liveSpaces,
+      currentSpace,
+      participants,
+      handRequests,
+      isLoading,
+      isConnected,
+      isMuted,
+      myRole,
+      hasRaisedHand,
+      voiceEffect,
+      setVoiceEffect,
+      isModalOpen,
+      openModal,
+      closeModal,
+      initialModalView,
+      createSpace,
+      joinSpace,
+      leaveSpace,
+      endSpace,
+      toggleMute,
+      raiseHand,
+      lowerHand,
+      approveSpeaker,
+      removeSpeaker,
+      inviteSpeaker,
+      refreshSpaces,
+      injectAudio,
+      stopInject,
+    }),
+    [
+      liveSpaces, currentSpace, participants, handRequests, isLoading,
+      isConnected, isMuted, myRole, hasRaisedHand, voiceEffect, setVoiceEffect,
+      isModalOpen, openModal, closeModal, initialModalView, createSpace,
+      joinSpace, leaveSpace, endSpace, toggleMute, raiseHand, lowerHand,
+      approveSpeaker, removeSpeaker, inviteSpeaker, refreshSpaces, injectAudio,
+      stopInject,
+    ],
+  );
+
   return (
-    <StageContext.Provider
-      value={{
-        liveSpaces,
-        currentSpace,
-        participants,
-        handRequests,
-        isLoading,
-        isConnected,
-        isMuted,
-        myRole,
-        hasRaisedHand,
-        voiceEffect,
-        setVoiceEffect,
-        isModalOpen,
-        openModal,
-        closeModal,
-        initialModalView,
-        createSpace,
-        joinSpace,
-        leaveSpace,
-        endSpace,
-        toggleMute,
-        raiseHand,
-        lowerHand,
-        approveSpeaker,
-        removeSpeaker,
-        inviteSpeaker,
-        refreshSpaces,
-        injectAudio,
-        stopInject,
-      }}
-    >
+    <StageContext.Provider value={contextValue}>
       {children}
     </StageContext.Provider>
   );

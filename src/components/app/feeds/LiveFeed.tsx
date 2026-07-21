@@ -7,11 +7,11 @@
  * @module components/app/feeds/LiveFeed
  */
 
-import { useMemo, useState, useRef } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { RefreshCw, Radio, Eye, Tv, ChevronRight, Play, MicOff } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { LiveFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { cn } from '@/lib/utils';
 import { LiveCard } from '@/components/app/cards';
@@ -22,7 +22,7 @@ import { StagesCarousel } from '@/components/app/music/StagesCarousel';
 import { useQuery } from '@tanstack/react-query';
 import { getTVChannelsByCountry } from '@/lib/api/live-tv';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
-import { useStage } from '@/contexts/StageContext';
+import { openStageModal } from '@/contexts/StageContext';
 import { supabase } from '@/integrations/supabase/client';
 import type { AudioSpace } from '@/types/audio-spaces.types';
 
@@ -56,7 +56,7 @@ interface LiveFeedProps {
 }
 
 export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeedProps) {
-  const { openModal: openStagesModal } = useStage();
+
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const navigate = useNavigate();
 
@@ -178,7 +178,7 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
           </div>
 
           {/* Stages Carousel - between Streams and TV */}
-          <StagesCarousel onOpenStages={() => openStagesModal('browse')} />
+          <StagesCarousel onOpenStages={() => openStageModal('browse')} />
 
           {/* TV Carousel */}
           {tvChannels.length > 0 && (
@@ -260,6 +260,22 @@ export function LiveFeed({ isRefreshing = false, showFilters = false }: LiveFeed
 function PastStagesSection({ stages }: { stages: AudioSpace[] }) {
   const [playingId, setPlayingId] = useState<string | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Stop playback when the Live tab leaves the screen — this feed lives in
+  // PersistentPageCache, so without a route gate a playing recording keeps
+  // going (audibly!) behind every other page. Also release on unmount.
+  const { pathname } = useLocation();
+  const isLiveTabActive = pathname === '/' || pathname === '/app' || pathname === '/app/';
+  useEffect(() => {
+    if (!isLiveTabActive && audioRef.current) {
+      audioRef.current.pause();
+      setPlayingId(null);
+    }
+  }, [isLiveTabActive]);
+  useEffect(() => () => {
+    audioRef.current?.pause();
+    audioRef.current = null;
+  }, []);
 
   const handlePlay = (stage: AudioSpace) => {
     if (!stage.recording_url) return;

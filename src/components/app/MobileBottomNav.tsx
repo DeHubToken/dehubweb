@@ -14,7 +14,7 @@ const PostModal = React.lazy(() =>
 );
 import { AuthPrompt } from './AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
-import { useStage } from '@/contexts/StageContext';
+import { openStageModal } from '@/contexts/StageContext';
 import { useTotalUnreadCount } from '@/hooks/use-messages';
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
 import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
@@ -59,7 +59,7 @@ export function MobileBottomNav() {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
-  const { openModal: openStagesModal } = useStage();
+
   const dmUnread = useTotalUnreadCount();
   // Same badge sources as DesktopSidebar — keep the two navs in sync
   const { data: unreadCount } = useUnreadNotificationCount();
@@ -313,7 +313,7 @@ export function MobileBottomNav() {
                 return (
                   <button
                     key={item.label}
-                    onClick={() => openStagesModal()}
+                    onClick={() => openStageModal()}
                     className="flex items-center justify-center h-12 md:h-14 flex-shrink-0 transition-all duration-200 text-white"
                     style={{ width: 'calc((50% - 24px) / 2)' }}
                   >

@@ -9,7 +9,7 @@ import { SidebarNavItem } from './SidebarNavItem';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { AuthPrompt } from '../AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
-import { useStage } from '@/contexts/StageContext';
+import { openStageModal } from '@/contexts/StageContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 
 import { useUnreadNotificationCount } from '@/hooks/use-notifications';
@@ -33,7 +33,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { isAuthenticated, user, walletAddress, connect, isConnecting, needsSignature } = useAuth();
-  const { openModal: openStagesModal } = useStage();
+
   
   const { isCollapsed, toggleCollapse } = useSidebarCollapse();
   const { theme } = useAppTheme();
@@ -324,7 +324,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                   variant="desktop"
                   collapsed={true}
                   forceCollapsed={isCollapsed}
-                  onClick={isStagesItem ? () => openStagesModal() : isProfileItem ? handleProfileClick : undefined}
+                  onClick={isStagesItem ? () => openStageModal() : isProfileItem ? handleProfileClick : undefined}
                   avatarUrl={isProfileItem && isAuthenticated ? userAvatarUrl : undefined}
                   avatarFallback={isProfileItem && isAuthenticated ? displayName.charAt(0).toUpperCase() : undefined}
                   notificationCount={isNotificationsItem ? totalNotifUnread : isCommunitiesItem ? communityActivityUnread : isMessagesItem ? dmUnread : undefined}
