@@ -37,13 +37,13 @@ const getMenuItems = (t: (key: string) => string) => [{
       title: t('nav.overview'),
       path: '/docs/dapps'
     }, {
-      title: t('dapp.feedsTitle'),
+      title: t('dapp.tocFeeds'),
       path: '/docs/dapps#feeds'
     }, {
-      title: t('dapp.uploadTitle'),
+      title: t('dapp.tocUploading'),
       path: '/docs/dapps#uploading'
     }, {
-      title: t('dapp.tokenisedTitle'),
+      title: t('dapp.tocTokenised'),
       path: '/docs/dapps#tokenised-uploads'
     }, {
       title: t('dapp.liveStreamingTitle'),
@@ -64,10 +64,10 @@ const getMenuItems = (t: (key: string) => string) => [{
       title: t('dapp.tvRadioTitle'),
       path: '/docs/dapps#tv-radio'
     }, {
-      title: t('dapp.walletHubTitle'),
+      title: t('dapp.tocWallet'),
       path: '/docs/dapps#wallet'
     }, {
-      title: t('dapp.workTitle'),
+      title: t('dapp.tocBounties'),
       path: '/docs/dapps#work'
     }, {
       title: t('dapp.storesTitle'),
@@ -76,25 +76,25 @@ const getMenuItems = (t: (key: string) => string) => [{
       title: t('dapp.affiliateTitle'),
       path: '/docs/dapps#affiliate'
     }, {
-      title: t('dapp.aiSuiteTitle'),
+      title: t('dapp.tocAi'),
       path: '/docs/dapps#ai-suite'
     }, {
-      title: t('e2ee.title'),
+      title: t('dapp.tocEncryption'),
       path: '/docs/dapps#encryption'
     }, {
-      title: t('depin.title'),
+      title: t('dapp.tocDepin'),
       path: '/docs/dapps#depin'
     }, {
-      title: t('dapp.adsPortalTitle'),
+      title: t('dapp.tocAds'),
       path: '/docs/dapps#advertising'
     }, {
-      title: t('dapp.featureBoardTitle'),
+      title: t('dapp.tocRequests'),
       path: '/docs/dapps#feature-requests'
     }, {
-      title: t('dapp.connectTitle'),
+      title: t('dapp.tocConnect'),
       path: '/docs/dapps#connect'
     }, {
-      title: t('dapp.feeTierTitle'),
+      title: t('dapp.tocFees'),
       path: '/docs/dapps#fees'
     }]
   }, {
