@@ -186,10 +186,6 @@ const Dapp = () => {
             <img src="/lovable-uploads/docs-upload.png" alt="The post composer, with title, category, community and subscriber-only options" width={1440} height={940} loading="lazy" decoding="async" className="w-full h-auto rounded-lg border border-border shadow-sm" />
           </div>
           
-          <div className="my-6">
-            <img src="/lovable-uploads/3f101ce6-83a6-435b-8a41-58668a7fdb53.png" alt="Upload settings interface" className="w-full rounded-lg border border-border shadow-sm" />
-          </div>
-
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.uploadDesc')}</p>
           
           <ul className="list-disc pl-6 space-y-2 text-foreground/80 font-exo">
@@ -995,8 +991,6 @@ const Dapp = () => {
               <p className="text-foreground/80 leading-relaxed font-exo">{t('dapp.messagesDesc')}</p>
             </div>
 
-            <Shot src="/lovable-uploads/docs-messages.png" alt="Direct messages, with conversations, calls and post sharing built in." />
-
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
               <Card className="docs-glass">
                 <CardHeader className="pb-3">
@@ -1464,7 +1458,6 @@ const Dapp = () => {
         <section id="affiliate" className="scroll-mt-44">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.affiliateTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.affiliateDesc')}</p>
-          <Shot src="/lovable-uploads/docs-affiliate.png" alt="The Affiliate dashboard, tracking referral clicks, signups and earnings." />
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
             <li><strong>{t('dapp.affiliateB1')}</strong> {t('dapp.affiliateB1Desc')}</li>
             <li><strong>{t('dapp.affiliateB2')}</strong> {t('dapp.affiliateB2Desc')}</li>
