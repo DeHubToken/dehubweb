@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils';
 import { lazyWithRetry } from '@/lib/lazy-with-retry';
 import { preloadPriorityPages } from '@/lib/preload-priority-pages';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
 import HomePage from '@/pages/app/HomePage';
 import {
   FeedSkeleton,
@@ -173,7 +174,10 @@ const CachedPage = memo(function CachedPage({
           transient fault self-heal on the next navigation. */}
       <ErrorBoundary compact resetKey={resetToken} label={config.key}>
         <Suspense fallback={<SkeletonComponent />}>
-          <Component />
+          {/* Only the active page may write document metadata — see the context. */}
+          <CachedPageActiveContext.Provider value={shouldStayVisible}>
+            <Component />
+          </CachedPageActiveContext.Provider>
         </Suspense>
       </ErrorBoundary>
     </div>

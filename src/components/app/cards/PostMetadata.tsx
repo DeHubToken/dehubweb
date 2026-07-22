@@ -54,6 +54,7 @@ export function PostMetadata({ timestamp, viewCount, isAd, isAudio, translateCon
       <button
         onClick={translateControl.onTranslate}
         disabled={translateControl.isLoading}
+        aria-label="Translate this post"
         className={cn(
           "flex items-center gap-1 transition-colors",
           translateControl.error 

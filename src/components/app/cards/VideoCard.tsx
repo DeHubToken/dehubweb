@@ -267,7 +267,7 @@ function MobileCreatorInfo({
             >
               <Sparkles className="w-[23.5px] h-[23.5px]" />
             </button>
-            <button 
+            <button aria-label="Post options" 
               onClick={onMenuClick}
               className="w-8 h-[37.5px] flex items-start justify-center pt-[6.25px] text-zinc-400 hover:text-white transition-colors"
             >

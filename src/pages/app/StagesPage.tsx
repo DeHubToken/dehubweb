@@ -147,20 +147,38 @@ export default function StagesPage() {
     const hasAny = liveSpaces.length > 0 || !!resume;
 
     if (!hasAny) {
+      // Nothing live is the common case, so don't dead-end here: offer the
+      // create CTA and then fall back to recorded stages, which are always
+      // worth listening to.
       return (
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
-          <img src={stagesMicIcon} alt="" className="w-14 h-14 mx-auto mb-4 opacity-60 object-contain" />
-          <h2 className="text-white font-semibold">No live stages right now</h2>
-          <p className="text-zinc-500 text-sm mt-1 max-w-[320px] mx-auto">
-            Start a stage and go live with your audience, or check back soon.
-          </p>
-          <button
-            onClick={() => openModal('create')}
-            className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-800/60 hover:bg-zinc-700/60 text-white text-sm font-medium transition-colors"
-          >
-            <Plus className="w-4 h-4" />
-            Start a Stage
-          </button>
+        <div className="space-y-3">
+          <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
+            <img src={stagesMicIcon} alt="" className="w-14 h-14 mx-auto mb-4 opacity-60 object-contain" />
+            <h2 className="text-white font-semibold">No live stages right now</h2>
+            <p className="text-zinc-500 text-sm mt-1 max-w-[320px] mx-auto">
+              Start a stage and go live with your audience, or listen back to a recorded one below.
+            </p>
+            <button
+              onClick={() => openModal('create')}
+              className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-zinc-800/60 hover:bg-zinc-700/60 text-white text-sm font-medium transition-colors"
+            >
+              <Plus className="w-4 h-4" />
+              Start a Stage
+            </button>
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between px-1 mb-2">
+              <h3 className="text-white font-semibold text-sm">Recorded stages</h3>
+              <button
+                onClick={() => setActiveTab('recorded')}
+                className="text-zinc-400 hover:text-white text-sm transition-colors"
+              >
+                See all
+              </button>
+            </div>
+            <PastStagesList />
+          </div>
         </div>
       );
     }
