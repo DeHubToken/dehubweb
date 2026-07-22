@@ -1406,6 +1406,7 @@ const Dapp = () => {
             <li><strong>{t('dapp.workB3')}</strong> {t('dapp.workB3Desc')}</li>
             <li><strong>{t('dapp.workB4')}</strong> {t('dapp.workB4Desc')}</li>
             <li><strong>{t('dapp.workB5')}</strong> {t('dapp.workB5Desc')}</li>
+            <li><strong>{t('dapp.workB6')}</strong> {t('dapp.workB6Desc')}</li>
           </ul>
         </section>
 
