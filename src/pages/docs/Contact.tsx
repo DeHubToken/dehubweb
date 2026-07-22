@@ -52,7 +52,7 @@ const Contact = () => {
                 <CardContent className="p-6 text-center">
                   <div className={`w-16 h-16 bg-gradient-to-r ${option.color} rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-200`}>
                     {option.iconImage ? (
-                      <img src={option.iconImage} alt={option.title} className="w-8 h-8 filter brightness-0" />
+                      <img src={option.iconImage} alt={option.title} className="w-8 h-8 filter brightness-0 invert" />
                     ) : option.icon ? (
                       <option.icon className="w-8 h-8 text-plain-white" />
                     ) : null}
