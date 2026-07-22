@@ -56,7 +56,7 @@ export const RightSidebar = memo(function RightSidebar({ showSearch = true }: Ri
     // motion.aside inherits the surface transition label from SurfaceTransition:
     // the right bento column slides OFF to the right when opening docs and back
     // IN when returning. Desktop-only (`hidden lg:block`).
-    <motion.aside variants={rightRailVariants} className={cn("hidden lg:block w-72 xl:w-80 2xl:w-88 h-screen sticky top-0 pb-4 overflow-y-auto scrollbar-hide z-0 isolate transition-[padding] duration-500 ease-in-out motion-reduce:transition-none will-change-[padding]", isCollapsed ? "pl-0 pr-2 pt-[12px]" : "px-4 pt-[8px]")}>
+    <motion.aside variants={rightRailVariants} className={cn("hidden lg:block w-72 xl:w-80 2xl:w-88 h-screen sticky top-0 pb-4 overflow-y-auto overscroll-contain scrollbar-hide z-0 isolate transition-[padding] duration-500 ease-in-out motion-reduce:transition-none will-change-[padding]", isCollapsed ? "pl-0 pr-2 pt-[12px]" : "px-4 pt-[8px]")}>
       {showSearch && (
         <div data-side-panel data-search-bento>
           <SearchBar compact={isCollapsed} />

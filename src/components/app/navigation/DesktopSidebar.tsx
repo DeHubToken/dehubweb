@@ -296,7 +296,10 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           <div
             ref={scrollRef}
             className={cn(
-              "p-1 space-y-2 flex flex-col items-center overflow-y-auto overflow-x-hidden scrollbar-invisible h-full",
+              // overscroll-contain: without it, reaching the end of the nav list
+              // chains the wheel to the document and the feed scrolls out from
+              // under the cursor while the user is still working the sidebar.
+              "p-1 space-y-2 flex flex-col items-center overflow-y-auto overscroll-contain overflow-x-hidden scrollbar-invisible h-full",
               !isCollapsed && "lg:p-2.5 lg:space-y-[2px] lg:items-stretch"
             )}
           >

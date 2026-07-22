@@ -62,6 +62,29 @@ export function useBrowseJobs(filters?: {
   });
 }
 
+/**
+ * Recently completed bounties, used as a fallback when nothing is open so the
+ * board shows what bounties look like instead of dead-ending on an empty state.
+ * Only runs when `enabled` (i.e. the live browse came back empty).
+ */
+export function useRecentCompletedJobs(enabled: boolean) {
+  return useQuery({
+    queryKey: ['work-jobs-completed'],
+    enabled,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from(TBL_JOBS)
+        .select('*')
+        .eq('status', 'completed')
+        .order('created_at', { ascending: false })
+        .limit(6);
+      if (error) throw error;
+      return (data || []) as unknown as WorkJob[];
+    },
+    staleTime: 5 * 60_000,
+  });
+}
+
 export function useWorkJob(jobId: string | undefined) {
   const queryClient = useQueryClient();
   return useQuery({

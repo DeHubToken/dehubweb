@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import { getDocsSeoForPath } from "@/lib/docs/seo";
@@ -10,6 +11,23 @@ import { getDocsSeoForPath } from "@/lib/docs/seo";
 export function DocsSEO() {
   const { pathname } = useLocation();
   const { entry, canonical } = getDocsSeoForPath(pathname);
+
+  // Same reason as SEOHead: react-helmet-async (v3) emits nothing here, so every
+  // docs page sat on the static index.html title. Write it directly.
+  useEffect(() => {
+    document.title = entry.title;
+
+    let link = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!link) {
+      link = document.createElement("link");
+      link.rel = "canonical";
+      document.head.appendChild(link);
+    }
+    link.href = canonical;
+
+    const metaDesc = document.head.querySelector<HTMLMetaElement>('meta[name="description"]');
+    if (metaDesc) metaDesc.content = entry.description;
+  }, [entry.title, entry.description, canonical]);
 
   return (
     <Helmet>

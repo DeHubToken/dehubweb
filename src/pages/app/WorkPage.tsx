@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Briefcase, Scissors, MessageSquare, Search } from 'lucide-react';
-import { useBrowseJobs } from '@/features/work/hooks/use-work';
+import { useBrowseJobs, useRecentCompletedJobs } from '@/features/work/hooks/use-work';
 import { JobCard } from '@/features/work/components/JobCard';
 import type { WorkJobType, WorkCurrency } from '@/features/work/types';
 import { SEOHead } from '@/components/SEOHead';
@@ -29,6 +29,14 @@ export default function WorkPage() {
     sort,
     search: search.trim() || undefined,
   });
+
+  // An empty board is the common early state. If a filter caused it, say so and
+  // offer to clear it; if nothing is open at all, fall back to recently
+  // completed bounties so the page still shows what a bounty looks like.
+  const hasFilters = tab !== 'all' || currency !== 'all' || search.trim().length > 0;
+  const showCompletedFallback = !isLoading && jobs.length === 0 && !hasFilters;
+  const { data: completedJobs = [] } = useRecentCompletedJobs(showCompletedFallback);
+  const clearFilters = () => { setTab('all'); setCurrency('all'); setSearch(''); };
 
   // Swallow the job list at the sticky header bento's top edge under the glass
   // themes, exactly like the home feed cuts at its nav pill.
@@ -118,17 +126,42 @@ export default function WorkPage() {
             ))}
           </div>
         ) : jobs.length === 0 ? (
-          <div className="text-center py-16 text-white/50">
-            <Briefcase className="w-10 h-10 mx-auto mb-3 opacity-50" />
-            <p className="mb-4">No open bounties yet. Be the first to post one.</p>
-            <LiquidGlassBubble2
-              label="Post a Bounty"
-              icon={<Plus className="w-4 h-4" />}
-              onClick={() => navigate('/work/post')}
-              width="auto"
-              height="40px"
-              className="[&>div]:!rounded-xl"
-            />
+          <div>
+            <div className="text-center py-16 text-white/50">
+              <Briefcase className="w-10 h-10 mx-auto mb-3 opacity-50" />
+              <p className="mb-4">
+                {hasFilters
+                  ? 'No open bounties match these filters.'
+                  : 'No open bounties right now. Be the first to post one.'}
+              </p>
+              <div className="flex items-center justify-center gap-3">
+                <LiquidGlassBubble2
+                  label="Post a Bounty"
+                  icon={<Plus className="w-4 h-4" />}
+                  onClick={() => navigate('/work/post')}
+                  width="auto"
+                  height="40px"
+                  className="[&>div]:!rounded-xl"
+                />
+                {hasFilters && (
+                  <button
+                    onClick={clearFilters}
+                    className="px-4 h-10 rounded-xl bg-white/5 border border-white/10 text-white text-sm hover:bg-white/10 transition-colors"
+                  >
+                    Clear filters
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {showCompletedFallback && completedJobs.length > 0 && (
+              <div>
+                <h2 className="text-white font-semibold text-sm mb-3 px-1">Recently completed</h2>
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {completedJobs.map((j) => <JobCard key={j.id} job={j} />)}
+                </div>
+              </div>
+            )}
           </div>
         ) : (
           <div className="grid sm:grid-cols-2 gap-3">

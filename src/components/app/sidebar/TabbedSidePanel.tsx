@@ -75,18 +75,18 @@ export const TabbedSidePanel = memo(function TabbedSidePanel() {
       {/* Tab Content — show/hide for maximum browser compatibility */}
       <div className="h-[400px]">
         {/* Leaderboard panel */}
-        <div className={`h-full overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'leaderboard' ? '' : 'hidden'}`}>
+        <div className={`h-full overflow-y-auto overscroll-contain overflow-x-hidden scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'leaderboard' ? '' : 'hidden'}`}>
           <SidebarLeaderboard ref={leaderboardRef} />
         </div>
         {/* Follow panel - only rendered when authenticated */}
         {isAuthenticated && (
-          <div className={`h-full flex flex-col overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'follow' ? '' : 'hidden'}`}>
+          <div className={`h-full flex flex-col overflow-y-auto overscroll-contain scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'follow' ? '' : 'hidden'}`}>
             <WhoToFollow />
           </div>
         )}
         {/* Chat panel — pt-3 matches the buffer above WhatsHappening's period tabs.
             Mounted lazily on first open; stays mounted after so switching away keeps state. */}
-        <div className={`h-full pt-3 overflow-y-auto scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'chat' ? '' : 'hidden'}`}>
+        <div className={`h-full pt-3 overflow-y-auto overscroll-contain scrollbar-thin scrollbar-thumb-zinc-700 scrollbar-track-transparent ${effectiveTab === 'chat' ? '' : 'hidden'}`}>
           {chatOpened && <SidebarChat />}
         </div>
       </div>

@@ -106,7 +106,7 @@ export function LiveCard({ stream }: LiveCardProps) {
           </motion.button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
+              <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); e.stopPropagation(); openLoginModal(); } }} aria-label="Post options" className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
                 <MoreVertical className="w-[23.5px] h-[23.5px]" />
               </button>
             </DropdownMenuTrigger>
