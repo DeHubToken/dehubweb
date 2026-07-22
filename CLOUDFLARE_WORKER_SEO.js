@@ -106,11 +106,48 @@ const DOCS_PAGES = {
   'quickstart': { title: 'DeHub Quickstart — Get Started in Minutes', description: 'Create an account with email or socials, get a sponsored-gas wallet automatically, and publish your first on-chain post on DeHub.' },
   'installation': { title: 'Install DeHub — Web, Android & PWA', description: 'How to use DeHub on any device: the web app at dehub.io, the Android app on Google Play, and installing as a PWA.' },
   'advertising': { title: 'Advertising on DeHub — POVR Ad Tech', description: "DeHub's proof-of-view-and-rank (POVR) ad tech: on-chain verified audiences and revenue sharing for creators and holders." },
-  'depin': { title: 'DeHub DePIN — Decentralized Media Infrastructure', description: "DeHub's decentralized physical infrastructure network for hosting, transcoding and delivering content globally." },
-  'e2e-encryption': { title: 'End-to-End Encrypted Messaging — DeHub Docs', description: "How DeHub's open source end-to-end encrypted messaging works." },
-  'ai-toolkits': { title: 'DeHub AI Toolkits — DeHub Docs', description: 'AI tools built into DeHub for creators: assistants, content tooling and integrations.' },
   'security': { title: 'Security at DeHub — DeHub Docs', description: 'Audits, smart-contract security and platform hardening at DeHub.' },
-  'token': { title: 'The DHB Token — DeHub Docs', description: 'Everything about $DHB: utility, economics, staking, governance, bridging and where to buy.' },
+  // These ten are in sitemap-static.xml but had no entry here, so bots got the
+  // raw SPA shell — the homepage title/description with no canonical. Ten of
+  // the twenty-eight docs URLs we submit were presenting to Google as homepage
+  // duplicates, which is what poisoned the /docs cluster. No docs-content JSON
+  // exists for them yet (public/dehub-docs-content.txt is gone), so they fall
+  // back to the description-only body in buildDocsHtml — thin, but correctly
+  // titled, described and self-canonical, which a homepage clone never was.
+  'token/utility': { title: 'DHB Token Utility & Holder Benefits — DeHub Docs', description: 'What holding $DHB unlocks: badge tiers, tipping, staking rewards, governance rights and moderation power across DeHub.' },
+  'token/where-to-buy': { title: 'Where to Buy DHB — DeHub Docs', description: 'Where to buy the $DHB token: supported exchanges, DEX and CEX listings, trading pairs and liquidity.' },
+  'token/governance': { title: 'DeHub Governance — Voting & Proposals', description: 'How DeHub governance works: proposals, voting power, DAO structure and how holders steer the platform.' },
+  'token/bridge': { title: 'Bridge DHB Between BASE & BNB — DeHub Docs', description: 'How to move $DHB across chains with the DeHub bridge, between the BASE and BNB networks.' },
+  'endpoints': { title: 'DeHub API Endpoints — Developer Docs', description: 'DeHub API reference: REST endpoints, integration guide and how to build against the platform.' },
+  'featured-in': { title: 'DeHub in the Press — Featured In', description: 'Press and media coverage of DeHub, including US Weekly, Yahoo Finance, Entrepreneur, GQ South Africa and Investing.com.' },
+  'brand-assets': { title: 'DeHub Brand Assets — Logos & Downloads', description: 'Official DeHub brand assets: logos, icons, graphics and marketing materials available to download.' },
+  'brand-guidelines': { title: 'DeHub Brand Guidelines', description: 'How to use the DeHub brand: identity, logo usage, colour and design standards.' },
+  'donate': { title: 'Donate to DeHub', description: 'Support DeHub development through community donations and contributions.' },
+  'terms-of-service': { title: 'Terms of Service — DeHub', description: "DeHub's terms of service: the agreement, user responsibilities and platform rules." },
+};
+
+/** Legacy and typo'd /docs slugs Google still holds. `quick-start` (the real
+ *  route is /docs/quickstart) was serving 200 + homepage meta as a soft-404;
+ *  depin / e2e-encryption / ai-toolkits were standalone pages until the July
+ *  2026 restructure folded them into the /docs/dapps pillar. The SPA router
+ *  redirects all four identically (see DocsSurface), so these 301s match what
+ *  a human gets — no cloaking. */
+/** /docs routes that render a "Coming Soon" placeholder in the SPA (see
+ *  DocsSurface). They're content-free, so they must never enter the index —
+ *  but /docs/quickstart links to /docs/best-practices, so a 404 would surface
+ *  as a broken internal link in Search Console. noindex, follow is the honest
+ *  answer: the page really does exist, it just has nothing to rank. */
+const DOCS_COMING_SOON = new Set([
+  'website', 'app', 'dehub', 'x', 'instagram', 'architecture', 'configuration',
+  'data-models', 'auth', 'webhooks', 'best-practices', 'troubleshooting', 'examples',
+]);
+
+const DOCS_REDIRECTS = {
+  'quick-start': '/docs/quickstart',
+  'depin': '/docs/dapps#depin',
+  'e2e-encryption': '/docs/dapps#encryption',
+  'ai-toolkits': '/docs/dapps#ai-suite',
+  'token': '/docs/token/economics',
 };
 
 const _docsContentCache = new Map();
@@ -761,8 +798,25 @@ async function handleRequest(request, env) {
     return guardNext();
   }
 
+  // Everything reaching here without a per-route SSR handler gets the raw SPA
+  // shell — i.e. the HOMEPAGE title/description/og with `robots: index, follow`
+  // and no canonical. Google indexed that cluster (/app, /app/messages,
+  // /notifications, /settings, /app/wallet …) as near-duplicates of the
+  // homepage, and because the homepage is by far the strongest URL on the
+  // domain for the token "dehub", those clones outranked /docs for the query
+  // "dehub docs". Every genuinely indexable route already returns true from
+  // shouldServeSSR() (SECTION_PAGES, SSR_STATIC_ROUTES, posts, communities,
+  // profiles, blog, docs), so the residue is exactly the logged-in app chrome.
+  //
+  // noindex, FOLLOW — not Disallow. A robots.txt block would stop the recrawl
+  // that Google needs in order to *see* the noindex, freezing the clones in the
+  // index; and `follow` keeps internal link equity flowing to /docs.
+  // Static assets already returned above, so they never reach this branch.
   if (!shouldServeSSR(pathname)) {
-    return guardNext();
+    const resp = await guardNext();
+    const r = new Response(resp.body, resp);
+    r.headers.set('X-Robots-Tag', 'noindex, follow');
+    return r;
   }
 
   const userAgent = request.headers.get('User-Agent') || '';
@@ -893,6 +947,9 @@ async function handleRequest(request, env) {
   const docsMatch = cleanPath.match(/^\/docs\/(.+)$/);
   if (docsMatch) {
     const route = docsMatch[1].toLowerCase();
+    if (Object.hasOwn(DOCS_REDIRECTS, route)) {
+      return redirect301(`${APP_URL}${DOCS_REDIRECTS[route]}`);
+    }
     if (Object.hasOwn(DOCS_PAGES, route)) {
       const content = await getDocsContent(request, env, route);
       return guard(new Response(buildDocsHtml(route, DOCS_PAGES[route], content && content.html), {
@@ -900,8 +957,20 @@ async function handleRequest(request, env) {
         headers: blogHeaders,
       }));
     }
-    // Unknown docs subpage: fall through to the SPA shell (pre-existing behavior).
-    return guardNext();
+    if (DOCS_COMING_SOON.has(route)) {
+      const resp = await guardNext();
+      const r = new Response(resp.body, resp);
+      r.headers.set('X-Robots-Tag', 'noindex, follow');
+      return r;
+    }
+    // Unknown docs subpage: previously fell through to the SPA shell, which
+    // answered 200 with homepage meta — a soft-404 that let any typo'd URL mint
+    // another homepage duplicate (Google indexed /docs/quick-start this way).
+    // The SPA renders NotFound for these, so 404 is the honest, matching status.
+    return guard(new Response('Not found', {
+      status: 404,
+      headers: { 'Content-Type': 'text/plain; charset=utf-8', 'X-Robots-Tag': 'noindex' },
+    }));
   }
 
   // Feed section pages (/explore, /videos, /shorts). Accept the /app-prefixed

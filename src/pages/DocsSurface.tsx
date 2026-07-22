@@ -128,7 +128,9 @@ export default function DocsSurface() {
             <Route path="/docs/overview" element={wrap(Overview)} />
             <Route path="/docs/dapps" element={wrap(Dapp)} />
             <Route path="/docs/games" element={wrap(Games)} />
-            <Route path="/docs/token" element={<ComingSoonPage title="Token Documentation" description="Comprehensive information about DeHub tokens and tokenomics." />} />
+            {/* Was a "Coming Soon" stub while six real token pages sat beneath
+                it — a thin, indexable dead end. Send it to the first one. */}
+            <Route path="/docs/token" element={<Navigate to="/docs/token/economics" replace />} />
             <Route path="/docs/token/economics" element={wrap(TokenEconomics)} />
             <Route path="/docs/token/utility" element={wrap(TokenUtility)} />
             <Route path="/docs/token/where-to-buy" element={wrap(TokenWhereToBuy)} />
@@ -152,6 +154,9 @@ export default function DocsSurface() {
             <Route path="/docs/featured-in" element={wrap(FeaturedIn)} />
             <Route path="/docs/brand-guidelines" element={wrap(BrandGuidelines)} />
             <Route path="/docs/quickstart" element={wrap(QuickStart)} />
+            {/* Google indexed the hyphenated typo; it used to soft-404 into the
+                SPA shell. Kept in sync with DOCS_REDIRECTS in the SEO worker. */}
+            <Route path="/docs/quick-start" element={<Navigate to="/docs/quickstart" replace />} />
             <Route path="/docs/installation" element={wrap(Installation)} />
             <Route path="/docs/endpoints" element={wrap(ApiEndpoints)} />
             <Route path="/docs/blog" element={wrap(Blog)} />
