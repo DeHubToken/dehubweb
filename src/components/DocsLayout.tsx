@@ -3,7 +3,7 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { DocsSEO } from '@/components/DocsSEO';
 import { docsAsideVariants, docsContentVariants, useIsDesktop } from '@/lib/surface-motion';
-import { Book, ChevronRight, Menu, X, Search, FileText, Settings, Code, Database, Shield, Zap, Users, ExternalLink, ChevronDown, Coins, Github, Phone } from 'lucide-react';
+import { Book, ChevronRight, Menu, X, Search, FileText, Settings, Code, Database, Shield, Zap, Users, ExternalLink, ChevronDown, Coins, Github, Phone, Home, Monitor, Gamepad2, Tv, Lock, Map, Tag, Newspaper, Scale, PenLine, HelpCircle, Heart } from 'lucide-react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { SearchTrigger } from '@/components/search/SearchTrigger';
@@ -23,15 +23,15 @@ const getMenuItems = (t: (key: string) => string) => [{
   items: [{
     title: t('nav.home'),
     path: '/docs',
-    icon: '🏠'
+    iconComponent: Home
   }, {
     title: t('nav.overview'),
     path: '/docs/overview',
-    icon: '📋'
+    iconComponent: FileText
   }, {
     title: t('nav.dapp'),
     path: '/docs/dapps',
-    icon: '🖥️',
+    iconComponent: Monitor,
     hasSubmenu: true,
     submenuItems: [{
       title: t('nav.overview'),
@@ -70,8 +70,29 @@ const getMenuItems = (t: (key: string) => string) => [{
       title: t('dapp.workTitle'),
       path: '/docs/dapps#work'
     }, {
+      title: t('dapp.storesTitle'),
+      path: '/docs/dapps#stores'
+    }, {
+      title: t('dapp.affiliateTitle'),
+      path: '/docs/dapps#affiliate'
+    }, {
       title: t('dapp.aiSuiteTitle'),
       path: '/docs/dapps#ai-suite'
+    }, {
+      title: t('e2ee.title'),
+      path: '/docs/dapps#encryption'
+    }, {
+      title: t('depin.title'),
+      path: '/docs/dapps#depin'
+    }, {
+      title: t('dapp.adsPortalTitle'),
+      path: '/docs/dapps#advertising'
+    }, {
+      title: t('dapp.featureBoardTitle'),
+      path: '/docs/dapps#feature-requests'
+    }, {
+      title: t('dapp.connectTitle'),
+      path: '/docs/dapps#connect'
     }, {
       title: t('dapp.feeTierTitle'),
       path: '/docs/dapps#fees'
@@ -79,7 +100,7 @@ const getMenuItems = (t: (key: string) => string) => [{
   }, {
     title: t('nav.games'),
     path: '/docs/games',
-    icon: '🎮'
+    iconComponent: Gamepad2
   }, {
     title: t('nav.token'),
     path: '/docs/token',
@@ -106,53 +127,41 @@ const getMenuItems = (t: (key: string) => string) => [{
       path: '/docs/token/bridge'
     }]
   }, {
-    title: t('nav.depin'),
-    path: '/docs/depin',
-    icon: '🔧'
-  }, {
-    title: t('nav.e2eEncryption'),
-    path: '/docs/e2e-encryption',
-    icon: '🔐'
-  }, {
-    title: t('nav.aiToolkits'),
-    path: '/docs/ai-toolkits',
-    icon: '🤖'
-  }, {
     title: t('nav.advertising'),
     path: '/docs/advertising',
-    icon: '📺'
+    iconComponent: Tv
   }, {
     title: t('nav.team'),
     path: '/docs/team',
-    icon: '👥'
+    iconComponent: Users
   }, {
     title: t('nav.security'),
     path: '/docs/security',
-    icon: '🔒'
+    iconComponent: Lock
   }, {
     title: t('nav.roadmap'),
     path: '/docs/roadmap',
-    icon: '🗺️'
+    iconComponent: Map
   }, {
     title: t('nav.brandAssets'),
     path: '/docs/brand-assets',
-    icon: '🏷️'
+    iconComponent: Tag
   }, {
     title: 'Featured In',
     path: '/docs/featured-in',
-    icon: '📰'
+    iconComponent: Newspaper
   }, {
     title: t('nav.legalDisclaimer'),
     path: '/docs/terms',
-    icon: '⚖️'
+    iconComponent: Scale
   }, {
     title: t('nav.termsOfService'),
     path: '/docs/terms-of-service',
-    icon: '📋'
+    iconComponent: FileText
   }, {
     title: t('nav.privacyPolicy'),
     path: '/docs/privacy',
-    icon: '🔒'
+    iconComponent: Lock
   }, {
     title: t('nav.contact'),
     path: '/docs/contact',
@@ -207,17 +216,17 @@ const getMenuItems = (t: (key: string) => string) => [{
     {
       title: t('nav.blog'),
       path: '/docs/blog',
-      icon: '📝'
+      iconComponent: PenLine
     },
     {
       title: t('nav.faq'),
       path: '/docs/faq',
-      icon: '❓'
+      iconComponent: HelpCircle
     },
     {
       title: t('nav.donate'),
       path: '/docs/donate',
-      icon: '❤️'
+      iconComponent: Heart
     }
   ]
 }, {
@@ -272,6 +281,22 @@ const DocsLayoutContent = () => {
 
   const isActivePath = (path: string) => {
     return location.pathname === path;
+  };
+  // Submenu entries can be in-page anchors (`/docs/dapps#stages`). Compare against
+  // pathname + hash so exactly one is highlighted, and so the hash-less "Overview"
+  // entry stops looking active the moment you jump to a section.
+  const isActiveSubPath = (path: string) => {
+    const [subPath, subHash] = path.split('#');
+    if (location.pathname !== subPath) return false;
+    return subHash ? location.hash === `#${subHash}` : !location.hash;
+  };
+  // Anchor clicks must still scroll when the hash is unchanged (re-clicking the
+  // same entry) or absent (Overview returns to the top of the page).
+  const handleSubNavClick = (path: string) => {
+    const [subPath, subHash] = path.split('#');
+    if (location.pathname !== subPath) return;
+    if (subHash) document.getElementById(subHash)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    else window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   const toggleSubmenu = (itemTitle: string) => {
     setExpandedMenus(prev => ({
@@ -389,9 +414,9 @@ const DocsLayoutContent = () => {
                                     </button>
                                     {expandedMenus[item.title] && <ul className="ml-6 mt-1 space-y-1">
                                         {item.submenuItems.map(subItem => <li key={subItem.path}>
-                                            <Link to={subItem.path} onClick={closeSidebar} className={`
+                                            <Link to={subItem.path} onClick={() => { handleSubNavClick(subItem.path); closeSidebar(); }} className={`
                                                 flex items-center px-3 py-2 rounded-lg text-sm transition-all duration-200
-                                                ${isActivePath(subItem.path) ? 'bg-muted text-foreground font-medium' : 'text-muted-foreground hover:bg-muted hover:text-foreground'}
+                                                ${isActiveSubPath(subItem.path) ? 'bg-muted text-foreground font-medium' : 'text-muted-foreground hover:bg-muted hover:text-foreground'}
                                               `}>
                                               <span>{subItem.title}</span>
                                             </Link>

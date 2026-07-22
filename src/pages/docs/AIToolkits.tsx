@@ -15,27 +15,27 @@ const AIToolkits = () => {
         <p className="text-lg text-muted-foreground leading-relaxed">{t('aiToolkits.subtitle')}</p>
       </div>
 
-      <Card className="border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20">
+      <Card className="docs-glass">
         <CardHeader>
-          <CardTitle className="text-xl text-blue-800 dark:text-blue-200 flex items-center space-x-2">
-            <Bot className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+          <CardTitle className="text-xl text-foreground flex items-center space-x-2">
+            <Bot className="w-5 h-5 text-foreground" />
             <span>{t('aiToolkits.assistantTitle')}</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-blue-700 dark:text-blue-300 leading-relaxed mb-4">{t('aiToolkits.assistantDesc')}</p>
-          <div className="text-sm text-blue-600 dark:text-blue-400">{t('aiToolkits.featuresInclude')}</div>
+          <p className="text-muted-foreground leading-relaxed mb-4">{t('aiToolkits.assistantDesc')}</p>
+          <div className="text-sm text-muted-foreground">{t('aiToolkits.featuresInclude')}</div>
         </CardContent>
       </Card>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {[
-          { icon: MessageSquare, iconColor: 'text-green-500', title: t('aiToolkits.contentCreation'), desc: t('aiToolkits.contentCreationDesc') },
-          { icon: Bot, iconColor: 'text-blue-500', title: t('aiToolkits.automatedEngagement'), desc: t('aiToolkits.automatedEngagementDesc') },
-          { icon: DollarSign, iconColor: 'text-purple-500', title: t('aiToolkits.financeManagement'), desc: t('aiToolkits.financeManagementDesc') },
-          { icon: TrendingUp, iconColor: 'text-orange-500', title: t('aiToolkits.performanceAnalytics'), desc: t('aiToolkits.performanceAnalyticsDesc') },
-          { icon: Globe, iconColor: 'text-cyan-500', title: t('aiToolkits.globalTranslation'), desc: t('aiToolkits.globalTranslationDesc') },
-          { icon: Search, iconColor: 'text-indigo-500', title: t('aiToolkits.contentAnalysis'), desc: t('aiToolkits.contentAnalysisDesc') },
+          { icon: MessageSquare, iconColor: 'text-foreground', title: t('aiToolkits.contentCreation'), desc: t('aiToolkits.contentCreationDesc') },
+          { icon: Bot, iconColor: 'text-foreground', title: t('aiToolkits.automatedEngagement'), desc: t('aiToolkits.automatedEngagementDesc') },
+          { icon: DollarSign, iconColor: 'text-foreground', title: t('aiToolkits.financeManagement'), desc: t('aiToolkits.financeManagementDesc') },
+          { icon: TrendingUp, iconColor: 'text-foreground', title: t('aiToolkits.performanceAnalytics'), desc: t('aiToolkits.performanceAnalyticsDesc') },
+          { icon: Globe, iconColor: 'text-foreground', title: t('aiToolkits.globalTranslation'), desc: t('aiToolkits.globalTranslationDesc') },
+          { icon: Search, iconColor: 'text-foreground', title: t('aiToolkits.contentAnalysis'), desc: t('aiToolkits.contentAnalysisDesc') },
         ].map((item, i) => (
           <Card key={i}>
             <CardHeader>
@@ -51,12 +51,12 @@ const AIToolkits = () => {
         ))}
       </div>
 
-      <Card className="border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20">
+      <Card className="docs-glass">
         <CardHeader>
-          <CardTitle className="text-xl text-amber-800 dark:text-amber-200">{t('aiToolkits.comingSoon')}</CardTitle>
+          <CardTitle className="text-xl text-foreground">{t('aiToolkits.comingSoon')}</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-amber-700 dark:text-amber-300 leading-relaxed">{t('aiToolkits.comingSoonDesc')}</p>
+          <p className="text-muted-foreground leading-relaxed">{t('aiToolkits.comingSoonDesc')}</p>
         </CardContent>
       </Card>
     </div>

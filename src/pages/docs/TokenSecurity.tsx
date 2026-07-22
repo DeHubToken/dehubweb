@@ -20,7 +20,7 @@ const TokenSecurity = () => {
         <CardContent>
           <div className="space-y-6">
             <div className="flex items-start space-x-4 p-4 bg-muted rounded-lg border">
-              <Shield className="w-6 h-6 text-green-500 mt-1 flex-shrink-0" />
+              <Shield className="w-6 h-6 text-foreground mt-1 flex-shrink-0" />
               <div>
                 <h4 className="font-semibold text-foreground mb-1">{t('tokenSecurity.audit')}</h4>
                 <p className="text-muted-foreground">
@@ -32,7 +32,7 @@ const TokenSecurity = () => {
             </div>
 
             <div className="flex items-start space-x-4 p-4 bg-muted rounded-lg border">
-              <Bug className="w-6 h-6 text-blue-500 mt-1 flex-shrink-0" />
+              <Bug className="w-6 h-6 text-foreground mt-1 flex-shrink-0" />
               <div>
                 <h4 className="font-semibold text-foreground mb-1">{t('tokenSecurity.bugBounty')}</h4>
                 <p className="text-muted-foreground">
@@ -46,12 +46,12 @@ const TokenSecurity = () => {
         </CardContent>
       </Card>
 
-      <Card className="border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-800">
+      <Card className="docs-glass">
         <CardHeader>
-          <CardTitle className="text-xl text-yellow-800 dark:text-yellow-200">{t('tokenSecurity.disclaimer')}</CardTitle>
+          <CardTitle className="text-xl text-foreground">{t('tokenSecurity.disclaimer')}</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-yellow-700 dark:text-yellow-300 leading-relaxed text-sm">{t('tokenSecurity.disclaimerText')}</p>
+          <p className="text-muted-foreground leading-relaxed text-sm">{t('tokenSecurity.disclaimerText')}</p>
         </CardContent>
       </Card>
     </div>

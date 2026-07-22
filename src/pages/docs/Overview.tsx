@@ -42,14 +42,14 @@ const Overview = () => {
       </div>
 
       {/* Disclaimer */}
-      <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 rounded-xl p-6">
+      <div className="docs-glass rounded-xl p-6">
         <div className="flex items-start space-x-3">
-          <Shield className="w-6 h-6 text-amber-600 dark:text-amber-400 mt-1 flex-shrink-0" />
+          <Shield className="w-6 h-6 text-foreground mt-1 flex-shrink-0" />
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-amber-800 dark:text-amber-300 mb-3">
+            <h3 className="text-lg font-semibold text-foreground mb-3">
               {t('overview.disclaimerTitle')}
             </h3>
-            <p className="text-amber-700 dark:text-amber-400 text-sm leading-relaxed">
+            <p className="text-muted-foreground text-sm leading-relaxed">
               {t('overview.disclaimerText')}
             </p>
           </div>

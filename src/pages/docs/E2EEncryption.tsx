@@ -22,12 +22,12 @@ const E2EEncryption = () => {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-xl border border-green-200 dark:border-green-800">
-            <h3 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-3 flex items-center gap-2">
+          <div className="docs-glass p-6 rounded-xl">
+            <h3 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
               <Shield className="w-5 h-5" />
               {t('e2ee.militaryGrade')}
             </h3>
-            <p className="text-green-700 dark:text-green-300">{t('e2ee.militaryGradeDesc')}</p>
+            <p className="text-muted-foreground">{t('e2ee.militaryGradeDesc')}</p>
           </div>
         </CardContent>
       </Card>
@@ -54,25 +54,25 @@ const E2EEncryption = () => {
           <div>
             <h3 className="text-xl font-semibold text-foreground mb-4">{t('e2ee.battleTested')}</h3>
             <div className="space-y-4">
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-5 rounded-xl border border-blue-200 dark:border-blue-800">
-                <h4 className="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-2">{t('e2ee.xchachaTitle')}</h4>
-                <ul className="text-blue-700 dark:text-blue-300 space-y-1 ml-4 list-disc text-sm">
+              <div className="docs-glass p-5 rounded-xl">
+                <h4 className="text-lg font-semibold text-foreground mb-2">{t('e2ee.xchachaTitle')}</h4>
+                <ul className="text-muted-foreground space-y-1 ml-4 list-disc text-sm">
                   <li>{t('e2ee.xchacha1')}</li>
                   <li>{t('e2ee.xchacha2')}</li>
                   <li>{t('e2ee.xchacha3')}</li>
                 </ul>
               </div>
-              <div className="bg-purple-50 dark:bg-purple-900/20 p-5 rounded-xl border border-purple-200 dark:border-purple-800">
-                <h4 className="text-lg font-semibold text-purple-800 dark:text-purple-200 mb-2">{t('e2ee.x25519Title')}</h4>
-                <ul className="text-purple-700 dark:text-purple-300 space-y-1 ml-4 list-disc text-sm">
+              <div className="docs-glass p-5 rounded-xl">
+                <h4 className="text-lg font-semibold text-foreground mb-2">{t('e2ee.x25519Title')}</h4>
+                <ul className="text-muted-foreground space-y-1 ml-4 list-disc text-sm">
                   <li>{t('e2ee.x255191')}</li>
                   <li>{t('e2ee.x255192')}</li>
                   <li>{t('e2ee.x255193')}</li>
                 </ul>
               </div>
-              <div className="bg-cyan-50 dark:bg-cyan-900/20 p-5 rounded-xl border border-cyan-200 dark:border-cyan-800">
-                <h4 className="text-lg font-semibold text-cyan-800 dark:text-cyan-200 mb-2">{t('e2ee.hkdfTitle')}</h4>
-                <ul className="text-cyan-700 dark:text-cyan-300 space-y-1 ml-4 list-disc text-sm">
+              <div className="docs-glass p-5 rounded-xl">
+                <h4 className="text-lg font-semibold text-foreground mb-2">{t('e2ee.hkdfTitle')}</h4>
+                <ul className="text-muted-foreground space-y-1 ml-4 list-disc text-sm">
                   <li>{t('e2ee.hkdf1')}</li>
                   <li>{t('e2ee.hkdf2')}</li>
                   <li>{t('e2ee.hkdf3')}</li>
@@ -107,7 +107,7 @@ const E2EEncryption = () => {
               </div>
               <div className="bg-muted/50 p-4 rounded-lg border">
                 <h4 className="font-semibold text-foreground mb-2">{t('e2ee.privateKeyGen')}</h4>
-                <pre className="bg-slate-900 text-green-400 p-4 rounded-lg text-xs overflow-x-auto font-mono">
+                <pre className="bg-muted text-foreground p-4 rounded-lg text-xs overflow-x-auto font-mono">
                 {`Your Wallet Signature
      ↓ [SHA-256 hash]
 32-byte seed
@@ -122,7 +122,7 @@ Your Private Key (32 bytes)`}
               </div>
               <div className="bg-muted/50 p-4 rounded-lg border">
                 <h4 className="font-semibold text-foreground mb-2">{t('e2ee.publicKeyCreation')}</h4>
-                <pre className="bg-slate-900 text-green-400 p-4 rounded-lg text-xs overflow-x-auto font-mono">
+                <pre className="bg-muted text-foreground p-4 rounded-lg text-xs overflow-x-auto font-mono">
                 {`Private Key
      ↓ [X25519 operation]
 Public Key (32 bytes)
@@ -135,9 +135,9 @@ Uploaded to DeHub database`}
                   <li>{t('e2ee.publicKey3')}</li>
                 </ul>
               </div>
-              <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border border-amber-200 dark:border-amber-800">
-                <h4 className="font-semibold text-amber-800 dark:text-amber-200 mb-2">{t('e2ee.whatStored')}</h4>
-                <ul className="text-amber-700 dark:text-amber-300 space-y-1 ml-4 list-disc text-sm">
+              <div className="docs-glass p-4 rounded-lg">
+                <h4 className="font-semibold text-foreground mb-2">{t('e2ee.whatStored')}</h4>
+                <ul className="text-muted-foreground space-y-1 ml-4 list-disc text-sm">
                   <li><strong>{t('e2ee.storedDevice')}</strong> {t('e2ee.storedDeviceDesc')}</li>
                   <li><strong>{t('e2ee.storedServer')}</strong> {t('e2ee.storedServerDesc')}</li>
                 </ul>
@@ -149,7 +149,7 @@ Uploaded to DeHub database`}
           <div>
             <h3 className="text-xl font-semibold text-foreground mb-4">{t('e2ee.phase2Title')}</h3>
             <p className="text-muted-foreground mb-4">{t('e2ee.phase2Desc')}</p>
-            <pre className="bg-slate-900 text-green-400 p-4 rounded-lg text-sm overflow-x-auto font-mono">
+            <pre className="bg-muted text-foreground p-4 rounded-lg text-sm overflow-x-auto font-mono">
             {`Your Private Key (from your device)
     +
 Their Public Key (from DeHub database)
@@ -158,9 +158,9 @@ Shared Secret (32 bytes)
     ↓ [HKDF with conversation context]
 Session Key (32 bytes)`}
             </pre>
-            <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800 mt-4">
-              <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">{t('e2ee.keyFeatures')}</h4>
-              <ul className="text-green-700 dark:text-green-300 space-y-1 ml-4 list-disc text-sm">
+            <div className="docs-glass p-4 rounded-lg mt-4">
+              <h4 className="font-semibold text-foreground mb-2">{t('e2ee.keyFeatures')}</h4>
+              <ul className="text-muted-foreground space-y-1 ml-4 list-disc text-sm">
                 <li><strong>{t('e2ee.pfs')}</strong> - {t('e2ee.pfsDesc')}</li>
                 <li><strong>{t('e2ee.perfOpt')}</strong> - {t('e2ee.perfOptDesc')}</li>
                 <li><strong>{t('e2ee.sameKey')}</strong> - {t('e2ee.sameKeyDesc')}</li>
@@ -175,7 +175,7 @@ Session Key (32 bytes)`}
             <div className="space-y-4">
               <div className="bg-muted/50 p-4 rounded-lg border">
                 <h4 className="font-semibold text-foreground mb-2">{t('e2ee.msgPrep')}</h4>
-                <pre className="bg-slate-900 text-green-400 p-4 rounded-lg text-xs overflow-x-auto font-mono">
+                <pre className="bg-muted text-foreground p-4 rounded-lg text-xs overflow-x-auto font-mono">
                 {`"Hello, world!"
     ↓ [UTF-8 encoding]
 Plaintext bytes: [72, 101, 108, 108, 111, ...]`}
@@ -183,7 +183,7 @@ Plaintext bytes: [72, 101, 108, 108, 111, ...]`}
               </div>
               <div className="bg-muted/50 p-4 rounded-lg border">
                 <h4 className="font-semibold text-foreground mb-2">{t('e2ee.encryption')}</h4>
-                <pre className="bg-slate-900 text-green-400 p-4 rounded-lg text-xs overflow-x-auto font-mono">
+                <pre className="bg-muted text-foreground p-4 rounded-lg text-xs overflow-x-auto font-mono">
                 {`Plaintext bytes
     +
 Session Key
@@ -195,10 +195,10 @@ Ciphertext + Authentication Tag (16 bytes)
 Ready for DeHub servers`}
                 </pre>
               </div>
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
-                <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">{t('e2ee.storage')}</h4>
-                <p className="text-blue-700 dark:text-blue-300 mb-2 text-sm">{t('e2ee.storageDesc')}</p>
-                <ul className="text-blue-700 dark:text-blue-300 space-y-1 ml-4 text-sm">
+              <div className="docs-glass p-4 rounded-lg">
+                <h4 className="font-semibold text-foreground mb-2">{t('e2ee.storage')}</h4>
+                <p className="text-muted-foreground mb-2 text-sm">{t('e2ee.storageDesc')}</p>
+                <ul className="text-muted-foreground space-y-1 ml-4 text-sm">
                   <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4" />{t('e2ee.storeSender')}</li>
                   <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4" />{t('e2ee.storeRecipient')}</li>
                   <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4" />{t('e2ee.storeTimestamp')}</li>
@@ -206,9 +206,9 @@ Ready for DeHub servers`}
                   <li className="flex items-center gap-2"><XCircle className="w-4 h-4" />{t('e2ee.storeUnreadable')}</li>
                 </ul>
               </div>
-              <div className="bg-amber-50 dark:bg-amber-900/20 p-4 rounded-lg border border-amber-200 dark:border-amber-800">
-                <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 mb-2" />
-                <p className="text-amber-800 dark:text-amber-200 text-sm">
+              <div className="docs-glass p-4 rounded-lg">
+                <AlertTriangle className="w-5 h-5 text-foreground mb-2" />
+                <p className="text-foreground text-sm">
                   <strong>{t('e2ee.whatDehubSees')}</strong> {t('e2ee.whatDehubSeesDesc')}
                 </p>
               </div>
@@ -226,7 +226,7 @@ Ready for DeHub servers`}
               </div>
               <div className="bg-muted/50 p-4 rounded-lg border">
                 <h4 className="font-semibold text-foreground mb-2">{t('e2ee.sessionKeyRetrieval')}</h4>
-                <pre className="bg-slate-900 text-green-400 p-4 rounded-lg text-xs overflow-x-auto font-mono">
+                <pre className="bg-muted text-foreground p-4 rounded-lg text-xs overflow-x-auto font-mono">
                 {`Check cache → If found, use it
              ↓ If not found
 Derive fresh session key using ECDH (same as Phase 2)`}
@@ -234,7 +234,7 @@ Derive fresh session key using ECDH (same as Phase 2)`}
               </div>
               <div className="bg-muted/50 p-4 rounded-lg border">
                 <h4 className="font-semibold text-foreground mb-2">{t('e2ee.decryption')}</h4>
-                <pre className="bg-slate-900 text-green-400 p-4 rounded-lg text-xs overflow-x-auto font-mono">
+                <pre className="bg-muted text-foreground p-4 rounded-lg text-xs overflow-x-auto font-mono">
                 {`Ciphertext + Authentication Tag
     +
 Nonce
@@ -246,9 +246,9 @@ Plaintext bytes (authentication verified!)
 "Hello, world!" appears on your screen`}
                 </pre>
               </div>
-              <div className="bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
-                <h4 className="font-semibold text-green-800 dark:text-green-200 mb-2">{t('e2ee.securityVerification')}</h4>
-                <ul className="text-green-700 dark:text-green-300 space-y-1 ml-4 text-sm">
+              <div className="docs-glass p-4 rounded-lg">
+                <h4 className="font-semibold text-foreground mb-2">{t('e2ee.securityVerification')}</h4>
+                <ul className="text-muted-foreground space-y-1 ml-4 text-sm">
                   <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4" /><strong>{t('e2ee.authVerified')}</strong> - {t('e2ee.authVerifiedDesc')}</li>
                   <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4" /><strong>{t('e2ee.correctSender')}</strong> - {t('e2ee.correctSenderDesc')}</li>
                   <li className="flex items-center gap-2"><CheckCircle className="w-4 h-4" /><strong>{t('e2ee.replayProtection')}</strong> - {t('e2ee.replayProtectionDesc')}</li>
@@ -266,8 +266,8 @@ Plaintext bytes (authentication verified!)
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-xl border border-green-200 dark:border-green-800">
-              <h3 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-4 flex items-center gap-2">
+            <div className="docs-glass p-6 rounded-xl">
+              <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <CheckCircle className="w-5 h-5" />
                 {t('e2ee.fullyProtected')}
               </h3>
@@ -279,7 +279,7 @@ Plaintext bytes (authentication verified!)
                   [t('e2ee.forwardSecrecy'), t('e2ee.forwardSecrecyDesc')],
                   [t('e2ee.authenticity'), t('e2ee.authenticityDesc')],
                 ].map(([title, desc], i) => (
-                  <li key={i} className="text-green-700 dark:text-green-300 text-sm flex items-start gap-2">
+                  <li key={i} className="text-muted-foreground text-sm flex items-start gap-2">
                     <CheckCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
                     <div><strong>{title}</strong> - {desc}</div>
                   </li>
@@ -287,21 +287,21 @@ Plaintext bytes (authentication verified!)
               </ul>
             </div>
 
-            <div className="bg-amber-50 dark:bg-amber-900/20 p-6 rounded-xl border border-amber-200 dark:border-amber-800">
-              <h3 className="text-lg font-semibold text-amber-800 dark:text-amber-200 mb-4 flex items-center gap-2">
+            <div className="docs-glass p-6 rounded-xl">
+              <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5" />
                 {t('e2ee.metadataTitle')}
               </h3>
-              <p className="text-amber-700 dark:text-amber-300 text-sm mb-3">{t('e2ee.metadataDesc')}</p>
+              <p className="text-muted-foreground text-sm mb-3">{t('e2ee.metadataDesc')}</p>
               <ul className="space-y-2">
                 {[t('e2ee.metaWho'), t('e2ee.metaWhen'), t('e2ee.metaCount'), t('e2ee.metaType')].map((item, i) => (
-                  <li key={i} className="text-amber-700 dark:text-amber-300 text-sm flex items-start gap-2">
+                  <li key={i} className="text-muted-foreground text-sm flex items-start gap-2">
                     <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" />
                     <div>{item}</div>
                   </li>
                 ))}
               </ul>
-              <p className="text-amber-800 dark:text-amber-200 text-sm mt-3 italic">
+              <p className="text-foreground text-sm mt-3 italic">
                 <strong>{t('e2ee.metaWhy')}</strong> {t('e2ee.metaWhyDesc')}
               </p>
             </div>
@@ -316,14 +316,14 @@ Plaintext bytes (authentication verified!)
         </CardHeader>
         <CardContent>
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-xl border border-green-200 dark:border-green-800">
-              <h3 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-4 flex items-center gap-2">
+            <div className="docs-glass p-6 rounded-xl">
+              <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <CheckCircle className="w-5 h-5" />
                 {t('e2ee.liveNow')}
               </h3>
               <ul className="space-y-2">
                 {[t('e2ee.live1'), t('e2ee.live2'), t('e2ee.live3'), t('e2ee.live4'), t('e2ee.live5'), t('e2ee.live6')].map((item, i) => (
-                  <li key={i} className="text-green-700 dark:text-green-300 text-sm flex items-center gap-2">
+                  <li key={i} className="text-muted-foreground text-sm flex items-center gap-2">
                     <CheckCircle className="w-4 h-4 flex-shrink-0" />
                     {item}
                   </li>
@@ -331,8 +331,8 @@ Plaintext bytes (authentication verified!)
               </ul>
             </div>
 
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200 dark:border-blue-800">
-              <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-4 flex items-center gap-2">
+            <div className="docs-glass p-6 rounded-xl">
+              <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
                 <Clock className="w-5 h-5" />
                 {t('e2ee.comingSoon')}
               </h3>
@@ -344,7 +344,7 @@ Plaintext bytes (authentication verified!)
                   [Key, t('e2ee.coming4')],
                   [Zap, t('e2ee.coming5')],
                 ].map(([Icon, text], i) => (
-                  <li key={i} className="text-blue-700 dark:text-blue-300 text-sm flex items-center gap-2">
+                  <li key={i} className="text-muted-foreground text-sm flex items-center gap-2">
                     {React.createElement(Icon as any, { className: "w-4 h-4 flex-shrink-0" })}
                     {text as string}
                   </li>
@@ -361,11 +361,11 @@ Plaintext bytes (authentication verified!)
           <CardTitle className="text-2xl">{t('e2ee.whyMattersTitle')}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="bg-red-50 dark:bg-red-900/20 p-6 rounded-xl border border-red-200 dark:border-red-800 mb-6">
-            <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-3">{t('e2ee.dehubNever')}</h3>
+          <div className="docs-glass p-6 rounded-xl mb-6">
+            <h3 className="text-lg font-semibold text-foreground mb-3">{t('e2ee.dehubNever')}</h3>
             <ul className="space-y-2">
               {[t('e2ee.never1'), t('e2ee.never2'), t('e2ee.never3'), t('e2ee.never4')].map((item, i) => (
-                <li key={i} className="text-red-700 dark:text-red-300 text-sm flex items-center gap-2">
+                <li key={i} className="text-muted-foreground text-sm flex items-center gap-2">
                   <XCircle className="w-4 h-4 flex-shrink-0" />
                   {item}
                 </li>
@@ -373,17 +373,17 @@ Plaintext bytes (authentication verified!)
             </ul>
           </div>
 
-          <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-xl border border-green-200 dark:border-green-800">
-            <h3 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-3">{t('e2ee.evenIf')}</h3>
+          <div className="docs-glass p-6 rounded-xl">
+            <h3 className="text-lg font-semibold text-foreground mb-3">{t('e2ee.evenIf')}</h3>
             <ul className="space-y-2">
               {[t('e2ee.evenIf1'), t('e2ee.evenIf2'), t('e2ee.evenIf3')].map((item, i) => (
-                <li key={i} className="text-green-700 dark:text-green-300 text-sm flex items-center gap-2">
+                <li key={i} className="text-muted-foreground text-sm flex items-center gap-2">
                   <Shield className="w-4 h-4 flex-shrink-0" />
                   {item}
                 </li>
               ))}
             </ul>
-            <p className="text-green-800 dark:text-green-200 mt-4 font-medium">{t('e2ee.evenIfConclusion')}</p>
+            <p className="text-foreground mt-4 font-medium">{t('e2ee.evenIfConclusion')}</p>
           </div>
         </CardContent>
       </Card>
@@ -394,9 +394,9 @@ Plaintext bytes (authentication verified!)
           <CardTitle className="text-2xl">{t('e2ee.commitmentTitle')}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl border border-purple-200 dark:border-purple-800">
-            <p className="text-purple-900 dark:text-purple-200 leading-relaxed">{t('e2ee.commitmentDesc')}</p>
-            <p className="text-purple-900 dark:text-purple-200 font-semibold mt-4 text-center text-lg">{t('e2ee.commitmentSlogan')}</p>
+          <div className="docs-glass p-6 rounded-xl">
+            <p className="text-foreground leading-relaxed">{t('e2ee.commitmentDesc')}</p>
+            <p className="text-foreground font-semibold mt-4 text-center text-lg">{t('e2ee.commitmentSlogan')}</p>
           </div>
         </CardContent>
       </Card>

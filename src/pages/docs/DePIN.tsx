@@ -48,13 +48,13 @@ const DePIN = () => {
             <h3 className="text-xl font-semibold text-foreground/90 mb-3">{t('depin.challengesTitle')}</h3>
             <p className="text-lg leading-relaxed text-muted-foreground mb-6">{t('depin.challengesDesc')}</p>
 
-            <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-xl border border-green-200 dark:border-green-800 mb-6">
+            <div className="docs-glass p-6 rounded-xl mb-6">
               <div className="flex items-start space-x-3">
-                <Network className="w-6 h-6 text-green-600 dark:text-green-400 mt-1 flex-shrink-0" />
+                <Network className="w-6 h-6 text-foreground mt-1 flex-shrink-0" />
                 <div>
-                  <h3 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-2">{t('depin.solutionTitle')}</h3>
-                  <p className="text-green-700 dark:text-green-300 mb-3">{t('depin.solutionDesc')}</p>
-                  <ul className="text-green-700 dark:text-green-300 space-y-1 ml-4 list-disc">
+                  <h3 className="text-lg font-semibold text-foreground mb-2">{t('depin.solutionTitle')}</h3>
+                  <p className="text-muted-foreground mb-3">{t('depin.solutionDesc')}</p>
+                  <ul className="text-muted-foreground space-y-1 ml-4 list-disc">
                     <li><strong>{t('depin.costEfficiency')}</strong> {t('depin.costEfficiencyDesc')}</li>
                     <li><strong>{t('depin.scalability')}</strong> {t('depin.scalabilityDesc')}</li>
                     <li><strong>{t('depin.sustainability')}</strong> {t('depin.sustainabilityDesc')}</li>
@@ -67,21 +67,21 @@ const DePIN = () => {
           <section className="mb-12">
             <h2 className="text-2xl font-bold text-foreground mb-6">{t('depin.coreComponents')}</h2>
             <div className="grid md:grid-cols-2 gap-6 mb-8">
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200 dark:border-blue-800">
-                <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-2">{t('depin.contributors')}</h3>
-                <p className="text-blue-700 dark:text-blue-300">{t('depin.contributorsDesc')}</p>
+              <div className="docs-glass p-6 rounded-xl">
+                <h3 className="text-lg font-semibold text-foreground mb-2">{t('depin.contributors')}</h3>
+                <p className="text-muted-foreground">{t('depin.contributorsDesc')}</p>
               </div>
-              <div className="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl border border-purple-200 dark:border-purple-800">
-                <h3 className="text-lg font-semibold text-purple-800 dark:text-purple-200 mb-2">{t('depin.coordinator')}</h3>
-                <p className="text-purple-700 dark:text-purple-300">{t('depin.coordinatorDesc')}</p>
+              <div className="docs-glass p-6 rounded-xl">
+                <h3 className="text-lg font-semibold text-foreground mb-2">{t('depin.coordinator')}</h3>
+                <p className="text-muted-foreground">{t('depin.coordinatorDesc')}</p>
               </div>
-              <div className="bg-cyan-50 dark:bg-cyan-900/20 p-6 rounded-xl border border-cyan-200 dark:border-cyan-800">
-                <h3 className="text-lg font-semibold text-cyan-800 dark:text-cyan-200 mb-2">{t('depin.dehubApp')}</h3>
-                <p className="text-cyan-700 dark:text-cyan-300">{t('depin.dehubAppDesc')}</p>
+              <div className="docs-glass p-6 rounded-xl">
+                <h3 className="text-lg font-semibold text-foreground mb-2">{t('depin.dehubApp')}</h3>
+                <p className="text-muted-foreground">{t('depin.dehubAppDesc')}</p>
               </div>
-              <div className="bg-amber-50 dark:bg-amber-900/20 p-6 rounded-xl border border-amber-200 dark:border-amber-800">
-                <h3 className="text-lg font-semibold text-amber-800 dark:text-amber-200 mb-2">{t('depin.clients')}</h3>
-                <p className="text-amber-700 dark:text-amber-300">{t('depin.clientsDesc')}</p>
+              <div className="docs-glass p-6 rounded-xl">
+                <h3 className="text-lg font-semibold text-foreground mb-2">{t('depin.clients')}</h3>
+                <p className="text-muted-foreground">{t('depin.clientsDesc')}</p>
               </div>
             </div>
 
@@ -96,10 +96,10 @@ const DePIN = () => {
 
           <section className="mb-12">
             <h2 className="text-2xl font-bold text-foreground mb-6">{t('depin.incentiveModel')}</h2>
-            <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-xl border border-green-200 dark:border-green-800 mb-6">
-              <h3 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-3">{t('depin.revenuePool')}</h3>
-              <p className="text-green-700 dark:text-green-300 mb-3">{t('depin.revenuePoolDesc')}</p>
-              <ul className="text-green-700 dark:text-green-300 space-y-1 ml-4 list-disc">
+            <div className="docs-glass p-6 rounded-xl mb-6">
+              <h3 className="text-lg font-semibold text-foreground mb-3">{t('depin.revenuePool')}</h3>
+              <p className="text-muted-foreground mb-3">{t('depin.revenuePoolDesc')}</p>
+              <ul className="text-muted-foreground space-y-1 ml-4 list-disc">
                 <li><strong>{t('depin.inAppRevenue')}</strong> {t('depin.inAppRevenueDesc')}</li>
                 <li><strong>{t('depin.tokenFees')}</strong> {t('depin.tokenFeesDesc')}</li>
               </ul>
@@ -148,10 +148,10 @@ const DePIN = () => {
               </table>
             </div>
 
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200 dark:border-blue-800 mb-6">
-              <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-3">{t('depin.softwareSetup')}</h3>
-              <p className="text-blue-700 dark:text-blue-300">{t('depin.softwareSetupDesc')}</p>
-              <ul className="text-blue-700 dark:text-blue-300 space-y-1 ml-4 list-disc mt-2">
+            <div className="docs-glass p-6 rounded-xl mb-6">
+              <h3 className="text-lg font-semibold text-foreground mb-3">{t('depin.softwareSetup')}</h3>
+              <p className="text-muted-foreground">{t('depin.softwareSetupDesc')}</p>
+              <ul className="text-muted-foreground space-y-1 ml-4 list-disc mt-2">
                 <li>{t('depin.softwareSetup1')}</li>
                 <li>{t('depin.softwareSetup2')}</li>
                 <li>{t('depin.softwareSetup3')}</li>
@@ -162,13 +162,13 @@ const DePIN = () => {
           <section className="mb-12">
             <h2 className="text-2xl font-bold text-foreground mb-6">{t('depin.scalabilityAndSecurity')}</h2>
             <div className="grid md:grid-cols-2 gap-6 mb-6">
-              <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl border border-blue-200 dark:border-blue-800">
+              <div className="docs-glass p-6 rounded-xl">
                 <div className="flex items-start space-x-3">
-                  <Zap className="w-6 h-6 text-blue-600 dark:text-blue-400 mt-1 flex-shrink-0" />
+                  <Zap className="w-6 h-6 text-foreground mt-1 flex-shrink-0" />
                   <div>
-                    <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-200 mb-2">{t('depin.dynamicTaskAllocation')}</h3>
-                    <p className="text-blue-700 dark:text-blue-300 mb-2">{t('depin.dynamicTaskDesc')}</p>
-                    <ul className="text-blue-700 dark:text-blue-300 text-sm space-y-1 ml-4 list-disc">
+                    <h3 className="text-lg font-semibold text-foreground mb-2">{t('depin.dynamicTaskAllocation')}</h3>
+                    <p className="text-muted-foreground mb-2">{t('depin.dynamicTaskDesc')}</p>
+                    <ul className="text-muted-foreground text-sm space-y-1 ml-4 list-disc">
                       <li>{t('depin.dynamicTask1')}</li>
                       <li>{t('depin.dynamicTask2')}</li>
                       <li>{t('depin.dynamicTask3')}</li>
@@ -176,12 +176,12 @@ const DePIN = () => {
                   </div>
                 </div>
               </div>
-              <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-xl border border-green-200 dark:border-green-800">
+              <div className="docs-glass p-6 rounded-xl">
                 <div className="flex items-start space-x-3">
-                  <Shield className="w-6 h-6 text-green-600 dark:text-green-400 mt-1 flex-shrink-0" />
+                  <Shield className="w-6 h-6 text-foreground mt-1 flex-shrink-0" />
                   <div>
-                    <h3 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-2">{t('depin.proofOfComputation')}</h3>
-                    <p className="text-green-700 dark:text-green-300">{t('depin.proofOfComputationDesc')}</p>
+                    <h3 className="text-lg font-semibold text-foreground mb-2">{t('depin.proofOfComputation')}</h3>
+                    <p className="text-muted-foreground">{t('depin.proofOfComputationDesc')}</p>
                   </div>
                 </div>
               </div>

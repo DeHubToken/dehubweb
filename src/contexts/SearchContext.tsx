@@ -181,7 +181,7 @@ const createSearchIndex = (): SearchIndex[] => {
       id: 'depin',
       title: 'DePIN',
       content: 'Decentralized Physical Infrastructure Network, hardware nodes, network participation, rewards, mining',
-      path: '/docs/depin',
+      path: '/docs/dapps#depin',
       category: 'Main',
       type: 'page',
       keywords: ['depin', 'infrastructure', 'physical', 'nodes', 'hardware', 'mining', 'network']
@@ -190,7 +190,7 @@ const createSearchIndex = (): SearchIndex[] => {
       id: 'ai-toolkits',
       title: 'AI Toolkits',
       content: 'Artificial intelligence tools, machine learning, AI development, APIs, toolkits, chatbot, automation',
-      path: '/docs/ai-toolkits',
+      path: '/docs/dapps#ai-suite',
       category: 'Main',
       type: 'page',
       keywords: ['ai', 'artificial intelligence', 'machine learning', 'toolkits', 'chatbot', 'automation']
@@ -217,7 +217,7 @@ const createSearchIndex = (): SearchIndex[] => {
       id: 'e2ee',
       title: 'End-to-End Encryption',
       content: 'End-to-end encryption, E2EE, secure messaging, privacy, encrypted communication, data protection, cryptography',
-      path: '/docs/e2e-encryption',
+      path: '/docs/dapps#encryption',
       category: 'Main',
       type: 'page',
       keywords: ['e2ee', 'encryption', 'end-to-end', 'privacy', 'secure', 'messaging', 'encrypted', 'cryptography']

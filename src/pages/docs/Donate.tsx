@@ -36,38 +36,38 @@ const Donate = () => {
   return (
     <div className="space-y-8">
       <div className="text-center space-y-4">
-        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r from-royal-blue to-middle-blue mb-4">
-          <Heart className="w-8 h-8 text-red-500" />
+        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full docs-glass mb-4">
+          <Heart className="w-8 h-8 text-foreground" />
         </div>
-        <h1 className="text-4xl font-bold text-jet-black font-exo">{t('donate.title')}</h1>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+        <h1 className="text-4xl font-bold text-foreground font-exo">{t('donate.title')}</h1>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
           {t('donate.subtitle')}
         </p>
       </div>
 
-      <Card className="border-gray-200 bg-gradient-to-br from-plain-white to-gray-50">
+      <Card className="docs-glass">
         <CardHeader>
-          <CardTitle className="text-jet-black font-exo">{t('donate.aboutTitle')}</CardTitle>
+          <CardTitle className="text-foreground font-exo">{t('donate.aboutTitle')}</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4 text-gray-700">
+        <CardContent className="space-y-4 text-muted-foreground">
           <p>{t('donate.aboutP1')}</p>
           <p>{t('donate.aboutP2')}</p>
         </CardContent>
       </Card>
 
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-jet-black font-exo">{t('donate.donationAddresses')}</h2>
+        <h2 className="text-2xl font-bold text-foreground font-exo">{t('donate.donationAddresses')}</h2>
         <div className="grid gap-4">
           {addresses.map((item) => (
-            <Card key={item.network} className="border-gray-200 hover:border-royal-blue/30 transition-colors">
+            <Card key={item.network} className="border-border hover:border-primary/30 transition-colors">
               <CardContent className="p-6">
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
                     <span className="text-2xl">{item.icon}</span>
-                    <h3 className="font-semibold text-jet-black">{item.network}</h3>
+                    <h3 className="font-semibold text-foreground">{item.network}</h3>
                   </div>
                   <div className="flex items-center gap-2">
-                    <p className="font-mono text-sm text-gray-600 break-all bg-gray-100 p-3 rounded-lg flex-1">
+                    <p className="font-mono text-sm text-muted-foreground break-all bg-muted p-3 rounded-lg flex-1">
                       {item.address}
                     </p>
                     <Button
@@ -77,7 +77,7 @@ const Donate = () => {
                       className="shrink-0"
                     >
                       {copiedAddress === item.address ? (
-                        <Check className="w-4 h-4 text-green-500" />
+                        <Check className="w-4 h-4 text-foreground" />
                       ) : (
                         <Copy className="w-4 h-4" />
                       )}
@@ -90,10 +90,10 @@ const Donate = () => {
         </div>
       </div>
 
-      <Card className="border-royal-blue/20 bg-gradient-to-r from-royal-blue/5 to-middle-blue/5">
+      <Card className="docs-glass">
         <CardContent className="p-6 text-center">
-          <Heart className="w-8 h-8 text-red-500 mx-auto mb-3" />
-          <p className="text-gray-700">{t('donate.thankYou')}</p>
+          <Heart className="w-8 h-8 text-foreground mx-auto mb-3" />
+          <p className="text-muted-foreground">{t('donate.thankYou')}</p>
         </CardContent>
       </Card>
     </div>

@@ -133,9 +133,9 @@ const TokenStake = () => {
         <CardContent className="space-y-4">
           <p className="text-muted-foreground">{t('tokenStake.restakeDesc')}</p>
           
-          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 p-4 rounded-lg">
-            <h4 className="font-semibold text-yellow-800 dark:text-yellow-200 mb-2">{t('tokenStake.importantNotes')}</h4>
-            <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
+          <div className="docs-glass p-4 rounded-lg">
+            <h4 className="font-semibold text-foreground mb-2">{t('tokenStake.importantNotes')}</h4>
+            <ul className="text-sm text-muted-foreground space-y-1">
               <li>• {t('tokenStake.restakeNote1')}</li>
               <li>• {t('tokenStake.restakeNote2')}</li>
               <li>• {t('tokenStake.restakeNote3')}</li>
@@ -183,15 +183,15 @@ const TokenStake = () => {
         </CardContent>
       </Card>
 
-      <Card className="border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-800">
+      <Card className="docs-glass">
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2 text-yellow-800 dark:text-yellow-200">
+          <CardTitle className="flex items-center space-x-2 text-foreground">
             <Shield className="w-5 h-5" />
             <span>{t('tokenStake.disclaimer')}</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-yellow-700 dark:text-yellow-300 leading-relaxed">{t('tokenStake.disclaimerText')}</p>
+          <p className="text-sm text-muted-foreground leading-relaxed">{t('tokenStake.disclaimerText')}</p>
         </CardContent>
       </Card>
     </div>

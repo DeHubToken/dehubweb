@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import BadgeFlowchart from '../../components/BadgeFlowchart';
 import TippingFlowchart from '../../components/TippingFlowchart';
+// Folded in from their former standalone pages (/docs/depin, /docs/e2e-encryption,
+// /docs/ai-toolkits) so the whole dApp lives on one page. Those slugs now redirect
+// to the matching anchor below.
+import DePIN from './DePIN';
+import E2EEncryption from './E2EEncryption';
+import AIToolkits from './AIToolkits';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Video, Coins, Shield, Users, Settings, Eye, Zap, Crown, MessageCircle, Lock, Banknote, TrendingUp, Infinity, Percent, Vote, Scale, CheckCircle2, AlertTriangle, Layers, Network, ExternalLink, CreditCard } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -9,6 +15,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 const Dapp = () => {
   const { t } = useLanguage();
   const { hash } = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!hash) return;
@@ -40,6 +47,8 @@ const Dapp = () => {
     { id: 'stores', label: t('dapp.storesTitle') },
     { id: 'affiliate', label: t('dapp.affiliateTitle') },
     { id: 'ai-suite', label: t('dapp.aiSuiteTitle') },
+    { id: 'encryption', label: t('e2ee.title') },
+    { id: 'depin', label: t('depin.title') },
     { id: 'advertising', label: t('dapp.adsPortalTitle') },
     { id: 'feature-requests', label: t('dapp.featureBoardTitle') },
     { id: 'connect', label: t('dapp.connectTitle') },
@@ -52,20 +61,20 @@ const Dapp = () => {
   ];
 
   const feeReductions = [
-    { badgeKey: 'badgeNone', threshold: "< 10,000 $DHB", fee: "10.00%", color: "bg-gray-300", image: null },
-    { badgeKey: 'badgeCrab', threshold: "10,000+ $DHB", fee: "9.31%", color: "bg-orange-500", image: "/lovable-uploads/60bc125c-8efd-4058-9e12-7ca393df4fce.png" },
-    { badgeKey: 'badgeLobster', threshold: "25k+ $DHB", fee: "8.62%", color: "bg-red-500", image: "/lovable-uploads/2c7200c2-681e-4499-863b-ea24fdbdb70c.png" },
-    { badgeKey: 'badgePiranha', threshold: "50k+ $DHB", fee: "7.93%", color: "bg-purple-500", image: "/lovable-uploads/38387f75-fd38-4380-9588-1f19f68d8435.png" },
-    { badgeKey: 'badgeTortoise', threshold: "100k+ $DHB", fee: "7.24%", color: "bg-green-600", image: "/lovable-uploads/fc47a759-390a-4f41-ba96-5bc0066e82b9.png" },
-    { badgeKey: 'badgeCobra', threshold: "250k+ $DHB", fee: "6.55%", color: "bg-gray-800", image: "/lovable-uploads/b3306c99-31b8-4bfc-bc25-f73abc68fc38.png" },
-    { badgeKey: 'badgeOctopus', threshold: "500k+ $DHB", fee: "5.86%", color: "bg-blue-600", image: "/lovable-uploads/8fcbb3f6-223d-4e2f-9d82-30082a175491.png" },
-    { badgeKey: 'badgeCrocodile', threshold: "1m+ $DHB", fee: "5.17%", color: "bg-green-800", image: "/lovable-uploads/c84eee0a-97c7-4938-9b9c-c991c802593e.png" },
-    { badgeKey: 'badgeDolphin', threshold: "2m+ $DHB", fee: "4.48%", color: "bg-cyan-500", image: "/lovable-uploads/4558c158-75d9-40fc-adfa-41125344a48e.png" },
-    { badgeKey: 'badgeTigerShark', threshold: "3m+ $DHB", fee: "3.79%", color: "bg-slate-600", image: "/lovable-uploads/6be493f1-51b4-481b-9ca1-340c030b2ef8.png" },
-    { badgeKey: 'badgeKillerWhale', threshold: "5m+ $DHB", fee: "3.10%", color: "bg-gray-900", image: "/lovable-uploads/fcc288eb-67d7-49a0-b561-94bb5d1b8896.png" },
-    { badgeKey: 'badgeGreatWhiteShark', threshold: "10m+ $DHB", fee: "2.41%", color: "bg-blue-800", image: "/lovable-uploads/dfcc3420-f654-486b-bc94-f84f0209ba5c.png" },
-    { badgeKey: 'badgeBlueWhale', threshold: "25m+ $DHB", fee: "1.72%", color: "bg-indigo-700", image: "/lovable-uploads/bc6b4bb7-aa43-4015-adb0-194568cc0858.png" },
-    { badgeKey: 'badgeMegalodon', threshold: "50m+ $DHB", fee: "1.00%", color: "bg-purple-800", image: "/lovable-uploads/9282e1c6-fa68-4b7c-b3cd-22d860df35af.png" },
+    { badgeKey: 'badgeNone', threshold: "< 10,000 $DHB", fee: "10.00%", color: "bg-muted", image: null },
+    { badgeKey: 'badgeCrab', threshold: "10,000+ $DHB", fee: "9.31%", color: "bg-muted", image: "/lovable-uploads/60bc125c-8efd-4058-9e12-7ca393df4fce.png" },
+    { badgeKey: 'badgeLobster', threshold: "25k+ $DHB", fee: "8.62%", color: "bg-muted", image: "/lovable-uploads/2c7200c2-681e-4499-863b-ea24fdbdb70c.png" },
+    { badgeKey: 'badgePiranha', threshold: "50k+ $DHB", fee: "7.93%", color: "bg-muted", image: "/lovable-uploads/38387f75-fd38-4380-9588-1f19f68d8435.png" },
+    { badgeKey: 'badgeTortoise', threshold: "100k+ $DHB", fee: "7.24%", color: "bg-muted", image: "/lovable-uploads/fc47a759-390a-4f41-ba96-5bc0066e82b9.png" },
+    { badgeKey: 'badgeCobra', threshold: "250k+ $DHB", fee: "6.55%", color: "bg-muted", image: "/lovable-uploads/b3306c99-31b8-4bfc-bc25-f73abc68fc38.png" },
+    { badgeKey: 'badgeOctopus', threshold: "500k+ $DHB", fee: "5.86%", color: "bg-muted", image: "/lovable-uploads/8fcbb3f6-223d-4e2f-9d82-30082a175491.png" },
+    { badgeKey: 'badgeCrocodile', threshold: "1m+ $DHB", fee: "5.17%", color: "bg-muted", image: "/lovable-uploads/c84eee0a-97c7-4938-9b9c-c991c802593e.png" },
+    { badgeKey: 'badgeDolphin', threshold: "2m+ $DHB", fee: "4.48%", color: "bg-muted", image: "/lovable-uploads/4558c158-75d9-40fc-adfa-41125344a48e.png" },
+    { badgeKey: 'badgeTigerShark', threshold: "3m+ $DHB", fee: "3.79%", color: "bg-muted", image: "/lovable-uploads/6be493f1-51b4-481b-9ca1-340c030b2ef8.png" },
+    { badgeKey: 'badgeKillerWhale', threshold: "5m+ $DHB", fee: "3.10%", color: "bg-muted", image: "/lovable-uploads/fcc288eb-67d7-49a0-b561-94bb5d1b8896.png" },
+    { badgeKey: 'badgeGreatWhiteShark', threshold: "10m+ $DHB", fee: "2.41%", color: "bg-muted", image: "/lovable-uploads/dfcc3420-f654-486b-bc94-f84f0209ba5c.png" },
+    { badgeKey: 'badgeBlueWhale', threshold: "25m+ $DHB", fee: "1.72%", color: "bg-muted", image: "/lovable-uploads/bc6b4bb7-aa43-4015-adb0-194568cc0858.png" },
+    { badgeKey: 'badgeMegalodon', threshold: "50m+ $DHB", fee: "1.00%", color: "bg-muted", image: "/lovable-uploads/9282e1c6-fa68-4b7c-b3cd-22d860df35af.png" },
   ];
 
   return <div className="space-y-8">
@@ -89,10 +98,16 @@ const Dapp = () => {
               href={`#${item.id}`}
               onClick={e => {
                 e.preventDefault();
+                // Route through the router so the sidebar's active state stays in
+                // sync, then scroll (the hash may already match on a re-click).
+                navigate(`#${item.id}`, { replace: true });
                 document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                history.replaceState(null, '', `#${item.id}`);
               }}
-              className="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-exo bg-muted text-muted-foreground hover:bg-primary/10 hover:text-foreground transition-colors border border-border"
+              className={`shrink-0 whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-exo border transition-colors ${
+                hash === `#${item.id}`
+                  ? 'bg-foreground/10 text-foreground border-foreground/20 font-medium'
+                  : 'bg-muted text-muted-foreground border-border hover:bg-foreground/5 hover:text-foreground'
+              }`}
             >
               {item.label}
             </a>
@@ -117,6 +132,9 @@ const Dapp = () => {
         <section id="feeds" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.feedsTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.feedsDesc')}</p>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.feedsDesc2')}</p>
+          {/* TODO(screenshot): Home feed with format tabs — latest app version */}
+          <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.keyFeatures')}</h3>
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
             <li><strong>{t('dapp.feedsHome')}</strong> {t('dapp.feedsHomeDesc')}</li>
             <li><strong>{t('dapp.feedsShorts')}</strong> {t('dapp.feedsShortsDesc')}</li>
@@ -156,21 +174,21 @@ const Dapp = () => {
             {t('dapp.tokenisedTitle')}
           </h2>
           
-          <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30 p-6 rounded-lg border border-purple-200 dark:border-purple-800 mb-6">
+          <div className="docs-glass p-6 rounded-lg mb-6">
             <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.tokenisedSubtitle')}</h3>
             <p className="text-foreground/80 leading-relaxed font-exo">{t('dapp.tokenisedDesc')}</p>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
-            <Card className="border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/30">
+            <Card className="docs-glass">
               <CardHeader className="pb-3">
-                <CardTitle className="text-lg text-purple-800 dark:text-purple-300 font-exo flex items-center gap-2">
+                <CardTitle className="text-lg text-foreground font-exo flex items-center gap-2">
                   <TrendingUp className="w-4 h-4" />
                   {t('dapp.autoFractionalisation')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="text-sm text-purple-700 dark:text-purple-400 space-y-2 font-exo">
+                <ul className="text-sm text-muted-foreground space-y-2 font-exo">
                   <li>• {t('dapp.autoFrac1')}</li>
                   <li>• {t('dapp.autoFrac2')}</li>
                   <li>• {t('dapp.autoFrac3')}</li>
@@ -180,15 +198,15 @@ const Dapp = () => {
               </CardContent>
             </Card>
 
-            <Card className="border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30">
+            <Card className="docs-glass">
               <CardHeader className="pb-3">
-                <CardTitle className="text-lg text-blue-800 dark:text-blue-300 font-exo flex items-center gap-2">
+                <CardTitle className="text-lg text-foreground font-exo flex items-center gap-2">
                   <Coins className="w-4 h-4" />
                   {t('dapp.creatorControl')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="text-sm text-blue-700 dark:text-blue-400 space-y-2 font-exo">
+                <ul className="text-sm text-muted-foreground space-y-2 font-exo">
                   <li>• {t('dapp.creatorControl1')}</li>
                   <li>• {t('dapp.creatorControl2')}</li>
                   <li>• {t('dapp.creatorControl3')}</li>
@@ -198,15 +216,15 @@ const Dapp = () => {
               </CardContent>
             </Card>
 
-            <Card className="border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/30">
+            <Card className="docs-glass">
               <CardHeader className="pb-3">
-                <CardTitle className="text-lg text-green-800 dark:text-green-300 font-exo flex items-center gap-2">
+                <CardTitle className="text-lg text-foreground font-exo flex items-center gap-2">
                   <Infinity className="w-4 h-4" />
                   {t('dapp.eternalRevenue')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="text-sm text-green-700 dark:text-green-400 space-y-2 font-exo">
+                <ul className="text-sm text-muted-foreground space-y-2 font-exo">
                   <li>• {t('dapp.eternalRev1')}</li>
                   <li>• {t('dapp.eternalRev2')}</li>
                   <li>• {t('dapp.eternalRev3')}</li>
@@ -220,7 +238,7 @@ const Dapp = () => {
           <div className="space-y-6">
             <h3 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.fanInvestmentTitle')}</h3>
             
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 p-6 rounded-lg border border-green-200 dark:border-green-800 mb-6">
+            <div className="docs-glass p-6 rounded-lg mb-6">
               <h4 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.bettingTitle')}</h4>
               <p className="text-foreground/80 leading-relaxed font-exo">{t('dapp.bettingDesc')}</p>
             </div>
@@ -281,7 +299,7 @@ const Dapp = () => {
           <div className="mt-8">
             <h3 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.comparisonTitle')}</h3>
             
-            <div className="bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 p-6 rounded-lg border border-amber-200 dark:border-amber-800 mb-6">
+            <div className="docs-glass p-6 rounded-lg mb-6">
               <h4 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.comparisonSubtitle')}</h4>
               <p className="text-foreground/80 leading-relaxed font-exo">{t('dapp.comparisonDesc')}</p>
             </div>
@@ -301,35 +319,35 @@ const Dapp = () => {
                   <tr>
                     <td className="border border-border p-3 font-semibold text-foreground font-exo">DeHub</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.dehubModel')}</td>
-                    <td className="border border-border p-3 text-green-700 dark:text-green-400 font-exo font-semibold">{t('dapp.dehubValue')}</td>
+                    <td className="border border-border p-3 text-foreground font-exo font-semibold">{t('dapp.dehubValue')}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.dehubRevenue')}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.dehubOwnership')}</td>
                   </tr>
                   <tr>
                     <td className="border border-border p-3 font-semibold text-muted-foreground font-exo">Friend.tech</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.friendTechModel')}</td>
-                    <td className="border border-border p-3 text-red-700 dark:text-red-400 font-exo font-semibold">{t('dapp.friendTechValue')}</td>
+                    <td className="border border-border p-3 text-foreground font-exo font-semibold">{t('dapp.friendTechValue')}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.friendTechRevenue')}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.friendTechOwnership')}</td>
                   </tr>
                   <tr>
                     <td className="border border-border p-3 font-semibold text-muted-foreground font-exo">Lens Protocol</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.lensModel')}</td>
-                    <td className="border border-border p-3 text-red-700 dark:text-red-400 font-exo font-semibold">{t('dapp.lensValue')}</td>
+                    <td className="border border-border p-3 text-foreground font-exo font-semibold">{t('dapp.lensValue')}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.lensRevenue')}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.lensOwnership')}</td>
                   </tr>
                   <tr>
                     <td className="border border-border p-3 font-semibold text-muted-foreground font-exo">Zora</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.zoraModel')}</td>
-                    <td className="border border-border p-3 text-red-700 dark:text-red-400 font-exo font-semibold">{t('dapp.zoraValue')}</td>
+                    <td className="border border-border p-3 text-foreground font-exo font-semibold">{t('dapp.zoraValue')}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.zoraRevenue')}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.zoraOwnership')}</td>
                   </tr>
                   <tr>
                     <td className="border border-border p-3 font-semibold text-muted-foreground font-exo">Patreon</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.patreonModel')}</td>
-                    <td className="border border-border p-3 text-red-700 dark:text-red-400 font-exo font-semibold">{t('dapp.patreonValue')}</td>
+                    <td className="border border-border p-3 text-foreground font-exo font-semibold">{t('dapp.patreonValue')}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.patreonRevenue')}</td>
                     <td className="border border-border p-3 text-muted-foreground font-exo">{t('dapp.patreonOwnership')}</td>
                   </tr>
@@ -339,12 +357,12 @@ const Dapp = () => {
           </div>
 
           <div className="mt-8 grid gap-6 md:grid-cols-2">
-            <Card className="border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/30">
+            <Card className="docs-glass">
               <CardHeader>
-                <CardTitle className="text-green-800 dark:text-green-300 font-exo">{t('dapp.uniqueAdvantages')}</CardTitle>
+                <CardTitle className="text-foreground font-exo">{t('dapp.uniqueAdvantages')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="text-sm text-green-700 dark:text-green-400 space-y-2 font-exo">
+                <ul className="text-sm text-muted-foreground space-y-2 font-exo">
                    <li>• <strong>{t('dapp.labelSetAndForget')}</strong> {t('dapp.adv1')}</li>
                    <li>• <strong>{t('dapp.labelFanInvestment')}</strong> {t('dapp.adv2')}</li>
                    <li>• <strong>{t('dapp.labelAutoTokenisation')}</strong> {t('dapp.adv3')}</li>
@@ -355,12 +373,12 @@ const Dapp = () => {
               </CardContent>
             </Card>
 
-            <Card className="border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30">
+            <Card className="docs-glass">
               <CardHeader>
-                <CardTitle className="text-blue-800 dark:text-blue-300 font-exo">{t('dapp.revolutionaryUseCases')}</CardTitle>
+                <CardTitle className="text-foreground font-exo">{t('dapp.revolutionaryUseCases')}</CardTitle>
               </CardHeader>
               <CardContent>
-                <ul className="text-sm text-blue-700 dark:text-blue-400 space-y-2 font-exo">
+                <ul className="text-sm text-muted-foreground space-y-2 font-exo">
                    <li>• <strong>{t('dapp.labelEarlyTalent')}</strong> {t('dapp.useCase1')}</li>
                    <li>• <strong>{t('dapp.labelPortfolio')}</strong> {t('dapp.useCase2')}</li>
                    <li>• <strong>{t('dapp.labelCreatorFunding')}</strong> {t('dapp.useCase3')}</li>
@@ -372,7 +390,7 @@ const Dapp = () => {
             </Card>
           </div>
 
-          <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/30 dark:to-blue-950/30 p-6 rounded-lg border border-purple-200 dark:border-purple-800 mt-8">
+          <div className="docs-glass p-6 rounded-lg mt-8">
             <h4 className="font-semibold text-foreground font-exo mb-3 flex items-center gap-2">
               <Infinity className="w-5 h-5" />
               {t('dapp.futureTitle')}
@@ -412,40 +430,40 @@ const Dapp = () => {
                 </a>
 
                 <div className="grid md:grid-cols-3 gap-4">
-                  <div className="p-4 bg-green-50 dark:bg-green-950/30 rounded-lg border border-green-200 dark:border-green-800">
+                  <div className="p-4 docs-glass rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
-                      <Zap className="w-5 h-5 text-green-600 dark:text-green-400" />
-                      <h4 className="font-semibold text-green-800 dark:text-green-300 font-exo">{t('dapp.dehubTokenTitle')}</h4>
+                      <Zap className="w-5 h-5 text-foreground" />
+                      <h4 className="font-semibold text-foreground font-exo">{t('dapp.dehubTokenTitle')}</h4>
                     </div>
-                    <p className="text-green-700 dark:text-green-400 text-sm font-exo">{t('dapp.dehubTokenDesc')}</p>
+                    <p className="text-muted-foreground text-sm font-exo">{t('dapp.dehubTokenDesc')}</p>
                   </div>
 
-                  <div className="p-4 bg-blue-50 dark:bg-blue-950/30 rounded-lg border border-blue-200 dark:border-blue-800">
+                  <div className="p-4 docs-glass rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
-                      <CreditCard className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                      <h4 className="font-semibold text-blue-800 dark:text-blue-300 font-exo">{t('dapp.instantPayments')}</h4>
+                      <CreditCard className="w-5 h-5 text-foreground" />
+                      <h4 className="font-semibold text-foreground font-exo">{t('dapp.instantPayments')}</h4>
                     </div>
-                    <p className="text-blue-700 dark:text-blue-400 text-sm font-exo">{t('dapp.instantPaymentsDesc')}</p>
+                    <p className="text-muted-foreground text-sm font-exo">{t('dapp.instantPaymentsDesc')}</p>
                   </div>
 
-                  <div className="p-4 bg-purple-50 dark:bg-purple-950/30 rounded-lg border border-purple-200 dark:border-purple-800">
+                  <div className="p-4 docs-glass rounded-lg">
                     <div className="flex items-center gap-2 mb-2">
-                      <Shield className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                      <h4 className="font-semibold text-purple-800 dark:text-purple-300 font-exo">{t('dapp.secureGateway')}</h4>
+                      <Shield className="w-5 h-5 text-foreground" />
+                      <h4 className="font-semibold text-foreground font-exo">{t('dapp.secureGateway')}</h4>
                     </div>
-                    <p className="text-purple-700 dark:text-purple-400 text-sm font-exo">{t('dapp.secureGatewayDesc')}</p>
+                    <p className="text-muted-foreground text-sm font-exo">{t('dapp.secureGatewayDesc')}</p>
                   </div>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-6 mt-6 rounded-r-lg">
-            <h4 className="font-semibold text-amber-800 dark:text-amber-300 font-exo mb-3 flex items-center gap-2">
+          <div className="docs-glass p-6 mt-6 rounded-r-lg">
+            <h4 className="font-semibold text-foreground font-exo mb-3 flex items-center gap-2">
               <Shield className="w-5 h-5" />
               {t('dapp.importantNotice')}
             </h4>
-            <p className="text-amber-800/90 dark:text-amber-400 leading-relaxed font-exo">{t('dapp.tokenDisclaimer')}</p>
+            <p className="text-muted-foreground leading-relaxed font-exo">{t('dapp.tokenDisclaimer')}</p>
           </div>
         </section>
 
@@ -497,7 +515,7 @@ const Dapp = () => {
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.mineDesc2')}</p>
           <p className="italic text-muted-foreground font-exo text-base text-left py-0 my-[30px]">{t('dapp.mineDynamic')}</p>
 
-          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 dark:from-indigo-950/30 dark:to-purple-950/30 p-6 rounded-lg border border-indigo-200 dark:border-indigo-800 mb-6">
+          <div className="docs-glass p-6 rounded-lg mb-6">
             <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.govTitle')}</h3>
             <p className="text-foreground/80 leading-relaxed font-exo">{t('dapp.govDesc')}</p>
           </div>
@@ -511,8 +529,8 @@ const Dapp = () => {
                 <li>{t('dapp.tokenUtilityRole2')}</li>
                 <li>{t('dapp.tokenUtilityRole3')}</li>
               </ul>
-              <div className="bg-blue-50 dark:bg-blue-950/30 border-l-4 border-blue-400 p-4 mb-4">
-                 <p className="text-blue-800 dark:text-blue-300 font-medium font-exo">
+              <div className="docs-glass p-4 mb-4">
+                 <p className="text-foreground font-medium font-exo">
                    <strong>{t('dapp.labelKeyPrinciple')}</strong> {t('dapp.keyPrinciple')}
                 </p>
               </div>
@@ -536,8 +554,8 @@ const Dapp = () => {
                 <li>{t('dapp.modStaking3')}</li>
                 <li>{t('dapp.modStaking4')}</li>
               </ul>
-              <div className="bg-green-50 dark:bg-green-950/30 border-l-4 border-green-400 p-4 mb-4">
-                 <p className="text-green-800 dark:text-green-300 font-medium font-exo">
+              <div className="docs-glass p-4 mb-4">
+                 <p className="text-foreground font-medium font-exo">
                    <strong>{t('dapp.labelIncentive')}</strong> {t('dapp.modStakingIncentive')}
                 </p>
               </div>
@@ -588,8 +606,8 @@ const Dapp = () => {
                 <li>{t('dapp.flywheel3')}</li>
                 <li>{t('dapp.flywheel4')}</li>
               </ul>
-              <div className="bg-purple-50 dark:bg-purple-950/30 border-l-4 border-purple-400 p-4 mb-6">
-                <p className="text-purple-800 dark:text-purple-300 font-medium font-exo">{t('dapp.flywheelSummary')}</p>
+              <div className="docs-glass p-4 mb-6">
+                <p className="text-foreground font-medium font-exo">{t('dapp.flywheelSummary')}</p>
               </div>
             </div>
 
@@ -620,7 +638,7 @@ const Dapp = () => {
             {t('dapp.liveStreamingTitle')}
           </h2>
           
-          <div className="bg-gradient-to-r from-primary/10 to-accent/10 p-6 rounded-lg border border-border mb-6">
+          <div className="docs-glass p-6 rounded-lg mb-6">
             <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.liveStreamOverview')}</h3>
             <p className="text-foreground/80 leading-relaxed font-exo">{t('dapp.liveStreamDesc')}</p>
           </div>
@@ -667,15 +685,15 @@ const Dapp = () => {
             <h3 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.livestreamFeatures')}</h3>
             
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <Card className="border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/30">
+              <Card className="docs-glass">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-green-800 dark:text-green-300 font-exo flex items-center gap-2">
+                  <CardTitle className="text-lg text-foreground font-exo flex items-center gap-2">
                     <Zap className="w-4 h-4" />
                     {t('dapp.streamCreation')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="text-sm text-green-700 dark:text-green-400 space-y-1 font-exo">
+                  <ul className="text-sm text-muted-foreground space-y-1 font-exo">
                     <li>• {t('dapp.streamCreation1')}</li>
                     <li>• {t('dapp.streamCreation2')}</li>
                     <li>• {t('dapp.streamCreation3')}</li>
@@ -684,15 +702,15 @@ const Dapp = () => {
                 </CardContent>
               </Card>
 
-              <Card className="border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30">
+              <Card className="docs-glass">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-blue-800 dark:text-blue-300 font-exo flex items-center gap-2">
+                  <CardTitle className="text-lg text-foreground font-exo flex items-center gap-2">
                     <Coins className="w-4 h-4" />
                     {t('dapp.tippingSystem')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="text-sm text-blue-700 dark:text-blue-400 space-y-1 font-exo">
+                  <ul className="text-sm text-muted-foreground space-y-1 font-exo">
                     <li>• {t('dapp.tipping1')}</li>
                     <li>• {t('dapp.tipping2')}</li>
                     <li>• {t('dapp.tipping3')}</li>
@@ -701,15 +719,15 @@ const Dapp = () => {
                 </CardContent>
               </Card>
 
-              <Card className="border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/30">
+              <Card className="docs-glass">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-purple-800 dark:text-purple-300 font-exo flex items-center gap-2">
+                  <CardTitle className="text-lg text-foreground font-exo flex items-center gap-2">
                     <Shield className="w-4 h-4" />
                     {t('dapp.tokenGating')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="text-sm text-purple-700 dark:text-purple-400 space-y-1 font-exo">
+                  <ul className="text-sm text-muted-foreground space-y-1 font-exo">
                     <li>• {t('dapp.gating1')}</li>
                     <li>• {t('dapp.gating2')}</li>
                     <li>• {t('dapp.gating3')}</li>
@@ -718,15 +736,15 @@ const Dapp = () => {
                 </CardContent>
               </Card>
 
-              <Card className="border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-950/30">
+              <Card className="docs-glass">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-orange-800 dark:text-orange-300 font-exo flex items-center gap-2">
+                  <CardTitle className="text-lg text-foreground font-exo flex items-center gap-2">
                     <Users className="w-4 h-4" />
                     {t('dapp.ppvBounties')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="text-sm text-orange-700 dark:text-orange-400 space-y-1 font-exo">
+                  <ul className="text-sm text-muted-foreground space-y-1 font-exo">
                     <li>• {t('dapp.ppv1')}</li>
                     <li>• {t('dapp.ppv2')}</li>
                     <li>• {t('dapp.ppv3')}</li>
@@ -770,26 +788,26 @@ const Dapp = () => {
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-foreground/80 font-exo">{t('dapp.liveViewers')}</span>
-                    <span className="text-sm bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300 px-2 py-1 rounded font-exo">{t('dapp.realtime')}</span>
+                    <span className="text-sm bg-muted text-foreground px-2 py-1 rounded font-exo">{t('dapp.realtime')}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-foreground/80 font-exo">{t('dapp.tipsReceived')}</span>
-                    <span className="text-sm bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 px-2 py-1 rounded font-exo">{t('dapp.multiToken')}</span>
+                    <span className="text-sm bg-muted text-foreground px-2 py-1 rounded font-exo">{t('dapp.multiToken')}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-foreground/80 font-exo">{t('dapp.streamLikes')}</span>
-                    <span className="text-sm bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-300 px-2 py-1 rounded font-exo">{t('dapp.engagement')}</span>
+                    <span className="text-sm bg-muted text-foreground px-2 py-1 rounded font-exo">{t('dapp.engagement')}</span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-foreground/80 font-exo">{t('dapp.chatActivity')}</span>
-                    <span className="text-sm bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-300 px-2 py-1 rounded font-exo">{t('dapp.interactive')}</span>
+                    <span className="text-sm bg-muted text-foreground px-2 py-1 rounded font-exo">{t('dapp.interactive')}</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
           </div>
 
-          <Card className="mt-6 border-border bg-gradient-to-r from-accent/10 to-primary/10">
+          <Card className="mt-6 docs-glass">
             <CardHeader>
               <CardTitle className="text-foreground font-exo">{t('dapp.techInfrastructure')}</CardTitle>
             </CardHeader>
@@ -817,21 +835,21 @@ const Dapp = () => {
               {t('dapp.subscriptionsTitle')}
             </h2>
             
-            <div className="bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-950/30 dark:to-blue-950/30 p-6 rounded-lg border border-purple-200 dark:border-purple-800 mb-6">
+            <div className="docs-glass p-6 rounded-lg mb-6">
               <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.subsOverview')}</h3>
               <p className="text-foreground/80 leading-relaxed font-exo">{t('dapp.subsDesc')}</p>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
-              <Card className="border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/30">
+              <Card className="docs-glass">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-purple-800 dark:text-purple-300 font-exo flex items-center gap-2">
+                  <CardTitle className="text-lg text-foreground font-exo flex items-center gap-2">
                     <Crown className="w-4 h-4" />
                     {t('dapp.subsCreatorControl')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="text-sm text-purple-700 dark:text-purple-400 space-y-2 font-exo">
+                  <ul className="text-sm text-muted-foreground space-y-2 font-exo">
                     <li>• {t('dapp.subsCc1')}</li>
                     <li>• {t('dapp.subsCc2')}</li>
                     <li>• {t('dapp.subsCc3')}</li>
@@ -841,15 +859,15 @@ const Dapp = () => {
                 </CardContent>
               </Card>
 
-              <Card className="border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30">
+              <Card className="docs-glass">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-blue-800 dark:text-blue-300 font-exo flex items-center gap-2">
+                  <CardTitle className="text-lg text-foreground font-exo flex items-center gap-2">
                     <Zap className="w-4 h-4" />
                     {t('dapp.nftIntegration')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="text-sm text-blue-700 dark:text-blue-400 space-y-2 font-exo">
+                  <ul className="text-sm text-muted-foreground space-y-2 font-exo">
                     <li>• {t('dapp.nft1')}</li>
                     <li>• {t('dapp.nft2')}</li>
                     <li>• {t('dapp.nft3')}</li>
@@ -862,45 +880,45 @@ const Dapp = () => {
               <h3 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.communityFeatures')}</h3>
               
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <Card className="border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950/30">
+                <Card className="docs-glass">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-lg text-indigo-800 dark:text-indigo-300 font-exo flex items-center gap-2">
+                    <CardTitle className="text-lg text-foreground font-exo flex items-center gap-2">
                       <MessageCircle className="w-4 h-4" />
                       {t('dapp.tierBasedChats')}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-indigo-700 dark:text-indigo-400 font-exo">{t('dapp.tierChatsDesc')}</p>
+                    <p className="text-sm text-muted-foreground font-exo">{t('dapp.tierChatsDesc')}</p>
                   </CardContent>
                 </Card>
 
-                <Card className="border-pink-200 dark:border-pink-800 bg-pink-50 dark:bg-pink-950/30">
+                <Card className="docs-glass">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-lg text-pink-800 dark:text-pink-300 font-exo flex items-center gap-2">
+                    <CardTitle className="text-lg text-foreground font-exo flex items-center gap-2">
                       <Crown className="w-4 h-4" />
                       {t('dapp.premiumPerks')}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-pink-700 dark:text-pink-400 font-exo">{t('dapp.premiumPerksDesc')}</p>
+                    <p className="text-sm text-muted-foreground font-exo">{t('dapp.premiumPerksDesc')}</p>
                   </CardContent>
                 </Card>
 
-                <Card className="border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30">
+                <Card className="docs-glass">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-lg text-amber-800 dark:text-amber-300 font-exo flex items-center gap-2">
+                    <CardTitle className="text-lg text-foreground font-exo flex items-center gap-2">
                       <Eye className="w-4 h-4" />
                       {t('dapp.subscriberAnalytics')}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-sm text-amber-700 dark:text-amber-400 font-exo">{t('dapp.subscriberAnalyticsDesc')}</p>
+                    <p className="text-sm text-muted-foreground font-exo">{t('dapp.subscriberAnalyticsDesc')}</p>
                   </CardContent>
                 </Card>
               </div>
             </div>
 
-            <Card className="mt-6 border-purple-200 dark:border-purple-800 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30">
+            <Card className="mt-6 docs-glass">
               <CardHeader>
                 <CardTitle className="text-foreground font-exo">{t('dapp.subscriptionBenefits')}</CardTitle>
               </CardHeader>
@@ -937,21 +955,21 @@ const Dapp = () => {
               {t('dapp.messagesTitle')}
             </h2>
             
-            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30 p-6 rounded-lg border border-blue-200 dark:border-blue-800 mb-6">
+            <div className="docs-glass p-6 rounded-lg mb-6">
               <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.messagesOverview')}</h3>
               <p className="text-foreground/80 leading-relaxed font-exo">{t('dapp.messagesDesc')}</p>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
-              <Card className="border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30">
+              <Card className="docs-glass">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-blue-800 dark:text-blue-300 font-exo flex items-center gap-2">
+                  <CardTitle className="text-lg text-foreground font-exo flex items-center gap-2">
                     <MessageCircle className="w-4 h-4" />
                     {t('dapp.directGroupMessaging')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="text-sm text-blue-700 dark:text-blue-400 space-y-2 font-exo">
+                  <ul className="text-sm text-muted-foreground space-y-2 font-exo">
                     <li>• {t('dapp.msg1')}</li>
                     <li>• {t('dapp.msg2')}</li>
                     <li>• {t('dapp.msg3')}</li>
@@ -961,15 +979,15 @@ const Dapp = () => {
                 </CardContent>
               </Card>
 
-              <Card className="border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950/30">
+              <Card className="docs-glass">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-purple-800 dark:text-purple-300 font-exo flex items-center gap-2">
+                  <CardTitle className="text-lg text-foreground font-exo flex items-center gap-2">
                     <Shield className="w-4 h-4" />
                     {t('dapp.privacyControls')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="text-sm text-purple-700 dark:text-purple-400 space-y-2 font-exo">
+                  <ul className="text-sm text-muted-foreground space-y-2 font-exo">
                     <li>• {t('dapp.priv1')}</li>
                     <li>• {t('dapp.priv2')}</li>
                     <li>• {t('dapp.priv3')}</li>
@@ -979,15 +997,15 @@ const Dapp = () => {
                 </CardContent>
               </Card>
 
-              <Card className="border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/30">
+              <Card className="docs-glass">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-lg text-green-800 dark:text-green-300 font-exo flex items-center gap-2">
+                  <CardTitle className="text-lg text-foreground font-exo flex items-center gap-2">
                     <Coins className="w-4 h-4" />
                     {t('dapp.monetizedMessaging')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="text-sm text-green-700 dark:text-green-400 space-y-2 font-exo">
+                  <ul className="text-sm text-muted-foreground space-y-2 font-exo">
                     <li>• {t('dapp.mon1')}</li>
                     <li>• {t('dapp.mon2')}</li>
                     <li>• {t('dapp.mon3')}</li>
@@ -1058,12 +1076,12 @@ const Dapp = () => {
               <h3 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.messageTypes')}</h3>
               
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Card className="border-indigo-200 dark:border-indigo-800 bg-indigo-50 dark:bg-indigo-950/30">
+                <Card className="docs-glass">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-lg text-indigo-800 dark:text-indigo-300 font-exo">{t('dapp.standardMessages')}</CardTitle>
+                    <CardTitle className="text-lg text-foreground font-exo">{t('dapp.standardMessages')}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <ul className="text-sm text-indigo-700 dark:text-indigo-400 space-y-1 font-exo">
+                    <ul className="text-sm text-muted-foreground space-y-1 font-exo">
                       <li>• {t('dapp.std1')}</li>
                       <li>• {t('dapp.std2')}</li>
                       <li>• {t('dapp.std3')}</li>
@@ -1072,12 +1090,12 @@ const Dapp = () => {
                   </CardContent>
                 </Card>
 
-                <Card className="border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/30">
+                <Card className="docs-glass">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-lg text-amber-800 dark:text-amber-300 font-exo">{t('dapp.priorityMessages')}</CardTitle>
+                    <CardTitle className="text-lg text-foreground font-exo">{t('dapp.priorityMessages')}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <ul className="text-sm text-amber-700 dark:text-amber-400 space-y-1 font-exo">
+                    <ul className="text-sm text-muted-foreground space-y-1 font-exo">
                       <li>• {t('dapp.pri1')}</li>
                       <li>• {t('dapp.pri2')}</li>
                       <li>• {t('dapp.pri3')}</li>
@@ -1086,12 +1104,12 @@ const Dapp = () => {
                   </CardContent>
                 </Card>
 
-                <Card className="border-rose-200 dark:border-rose-800 bg-rose-50 dark:bg-rose-950/30">
+                <Card className="docs-glass">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-lg text-rose-800 dark:text-rose-300 font-exo">{t('dapp.premiumContent')}</CardTitle>
+                    <CardTitle className="text-lg text-foreground font-exo">{t('dapp.premiumContent')}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <ul className="text-sm text-rose-700 dark:text-rose-400 space-y-1 font-exo">
+                    <ul className="text-sm text-muted-foreground space-y-1 font-exo">
                       <li>• {t('dapp.prem1')}</li>
                       <li>• {t('dapp.prem2')}</li>
                       <li>• {t('dapp.prem3')}</li>
@@ -1100,12 +1118,12 @@ const Dapp = () => {
                   </CardContent>
                 </Card>
 
-                <Card className="border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-950/30">
+                <Card className="docs-glass">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-lg text-emerald-800 dark:text-emerald-300 font-exo">{t('dapp.groupFeatures')}</CardTitle>
+                    <CardTitle className="text-lg text-foreground font-exo">{t('dapp.groupFeatures')}</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <ul className="text-sm text-emerald-700 dark:text-emerald-400 space-y-1 font-exo">
+                    <ul className="text-sm text-muted-foreground space-y-1 font-exo">
                       <li>• {t('dapp.grp1')}</li>
                       <li>• {t('dapp.grp2')}</li>
                       <li>• {t('dapp.grp3')}</li>
@@ -1116,7 +1134,7 @@ const Dapp = () => {
               </div>
             </div>
 
-            <Card className="mt-6 border-cyan-200 dark:border-cyan-800 bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-950/30 dark:to-blue-950/30">
+            <Card className="mt-6 docs-glass">
               <CardHeader>
                 <CardTitle className="text-foreground font-exo">{t('dapp.commRevolution')}</CardTitle>
               </CardHeader>
@@ -1208,7 +1226,7 @@ const Dapp = () => {
           <section id="fees" className="mt-12 scroll-mt-32">
             <h2 className="text-3xl font-bold text-foreground mb-6 font-exo">{t('dapp.feeTierTitle')}</h2>
             
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 p-6 rounded-lg border border-green-200 dark:border-green-800 mb-6">
+            <div className="docs-glass p-6 rounded-lg mb-6">
               <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.feeTierSubtitle')}</h3>
               <p className="text-foreground/80 leading-relaxed font-exo">{t('dapp.feeTierDesc')}</p>
             </div>
@@ -1224,7 +1242,7 @@ const Dapp = () => {
                 <div className="grid gap-2">
                   {feeReductions.map((tier, index) => <div key={tier.badgeKey} className="flex items-center justify-between p-3 rounded-lg border bg-muted/20">
                       <div className="flex items-center gap-3">
-                        {tier.image ? <img src={tier.image} alt={t(`dapp.${tier.badgeKey}`)} className="w-8 h-8 object-contain dark:invert" /> : <div className="w-8 h-8 rounded-full bg-gray-300"></div>}
+                        {tier.image ? <img src={tier.image} alt={t(`dapp.${tier.badgeKey}`)} className="w-8 h-8 object-contain dark:invert" /> : <div className="w-8 h-8 rounded-full bg-muted border border-border"></div>}
                         <div className="flex flex-col">
                           <span className="font-medium">{t(`dapp.${tier.badgeKey}`)}</span>
                           <span className="text-sm text-muted-foreground">{tier.threshold}</span>
@@ -1240,12 +1258,12 @@ const Dapp = () => {
             </Card>
 
             <div className="grid gap-6 md:grid-cols-2">
-              <Card className="border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-950/30">
+              <Card className="docs-glass">
                 <CardHeader>
-                  <CardTitle className="text-green-800 dark:text-green-300 font-exo">{t('dapp.feeCalcBenefits')}</CardTitle>
+                  <CardTitle className="text-foreground font-exo">{t('dapp.feeCalcBenefits')}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="text-sm text-green-700 dark:text-green-400 space-y-2 font-exo">
+                  <ul className="text-sm text-muted-foreground space-y-2 font-exo">
                     <li>• {t('dapp.feeCalc1')}</li>
                     <li>• {t('dapp.feeCalc2')}</li>
                     <li>• {t('dapp.feeCalc3')}</li>
@@ -1255,12 +1273,12 @@ const Dapp = () => {
                 </CardContent>
               </Card>
 
-              <Card className="border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-950/30">
+              <Card className="docs-glass">
                 <CardHeader>
-                  <CardTitle className="text-blue-800 dark:text-blue-300 font-exo">{t('dapp.affectedTransactions')}</CardTitle>
+                  <CardTitle className="text-foreground font-exo">{t('dapp.affectedTransactions')}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="text-sm text-blue-700 dark:text-blue-400 space-y-2 font-exo">
+                  <ul className="text-sm text-muted-foreground space-y-2 font-exo">
                     <li>• {t('dapp.affected1')}</li>
                     <li>• {t('dapp.affected2')}</li>
                     <li>• {t('dapp.affected3')}</li>
@@ -1271,59 +1289,37 @@ const Dapp = () => {
               </Card>
             </div>
 
-            <div className="bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30 p-6 rounded-lg border border-purple-200 dark:border-purple-800 mt-6">
+            <div className="docs-glass p-6 rounded-lg mt-6">
               <h4 className="font-semibold text-foreground font-exo mb-3">{t('dapp.exampleSavings')}</h4>
               <div className="grid gap-4 md:grid-cols-3">
                  <div className="p-3 bg-card/50 rounded-lg">
                    <h5 className="font-medium text-foreground font-exo">$1,000 {t('dapp.exTransaction')}</h5>
                    <p className="text-sm text-muted-foreground font-exo">{t('dapp.exStandard')} $100</p>
                    <p className="text-sm text-muted-foreground font-exo">{t('dapp.exMegalodon')} $10</p>
-                   <p className="text-sm font-semibold text-green-700 dark:text-green-400 font-exo">{t('dapp.exSaves')} $90</p>
+                   <p className="text-sm font-semibold text-foreground font-exo">{t('dapp.exSaves')} $90</p>
                  </div>
                  <div className="p-3 bg-card/50 rounded-lg">
                    <h5 className="font-medium text-foreground font-exo">$10,000 {t('dapp.exTransaction')}</h5>
                    <p className="text-sm text-muted-foreground font-exo">{t('dapp.exStandard')} $1,000</p>
                    <p className="text-sm text-muted-foreground font-exo">{t('dapp.exMegalodon')} $100</p>
-                   <p className="text-sm font-semibold text-green-700 dark:text-green-400 font-exo">{t('dapp.exSaves')} $900</p>
+                   <p className="text-sm font-semibold text-foreground font-exo">{t('dapp.exSaves')} $900</p>
                  </div>
                  <div className="p-3 bg-card/50 rounded-lg">
                    <h5 className="font-medium text-foreground font-exo">$100,000 {t('dapp.exTransaction')}</h5>
                    <p className="text-sm text-muted-foreground font-exo">{t('dapp.exStandard')} $10,000</p>
                    <p className="text-sm text-muted-foreground font-exo">{t('dapp.exMegalodon')} $1,000</p>
-                   <p className="text-sm font-semibold text-green-700 dark:text-green-400 font-exo">{t('dapp.exSaves')} $9,000</p>
+                   <p className="text-sm font-semibold text-foreground font-exo">{t('dapp.exSaves')} $9,000</p>
                  </div>
               </div>
             </div>
 
-            <div className="bg-amber-50 dark:bg-amber-950/30 border-l-4 border-amber-400 p-6 mt-6 rounded-r-lg">
-              <h4 className="font-semibold text-amber-800 dark:text-amber-300 font-exo mb-3 flex items-center gap-2">
+            <div className="docs-glass p-6 mt-6 rounded-r-lg">
+              <h4 className="font-semibold text-foreground font-exo mb-3 flex items-center gap-2">
                 <Banknote className="w-5 h-5" />
                 {t('dapp.feeDisclaimer')}
               </h4>
-              <p className="text-amber-800/90 dark:text-amber-400 leading-relaxed font-exo">{t('dapp.feeDisclaimerDesc')}</p>
+              <p className="text-muted-foreground leading-relaxed font-exo">{t('dapp.feeDisclaimerDesc')}</p>
             </div>
-          </section>
-
-          {/* 2025 Shake Up */}
-          <section className="mt-8">
-            <Card>
-              <CardHeader>
-                <CardTitle>{t('dapp.shakeUpTitle')}</CardTitle>
-                <CardDescription>{t('dapp.shakeUpDesc')}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="w-full overflow-hidden rounded-lg">
-                  <iframe 
-                    style={{border: "1px solid rgba(0, 0, 0, 0.1)"}} 
-                    width="800" 
-                    height="450" 
-                    src="https://embed.figma.com/slides/22r8W9g98g3KZz5vUwqWND/Dehub-Product-Design?node-id=1-42&embed-host=share" 
-                    allowFullScreen={true} 
-                    className="w-full" 
-                  />
-                </div>
-              </CardContent>
-            </Card>
           </section>
         </section>
 
@@ -1333,6 +1329,9 @@ const Dapp = () => {
             {t('dapp.communitiesTitle')}
           </h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.communitiesDesc')}</p>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.communitiesDesc2')}</p>
+          {/* TODO(screenshot): Communities page — latest app version */}
+          <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.keyFeatures')}</h3>
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
             <li><strong>{t('dapp.communitiesB1')}</strong> {t('dapp.communitiesB1Desc')}</li>
             <li><strong>{t('dapp.communitiesB2')}</strong> {t('dapp.communitiesB2Desc')}</li>
@@ -1346,6 +1345,9 @@ const Dapp = () => {
             {t('dapp.stagesTitle')}
           </h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.stagesDesc')}</p>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.stagesDesc2')}</p>
+          {/* TODO(screenshot): Stages / live audio room — latest app version */}
+          <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.keyFeatures')}</h3>
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
             <li><strong>{t('dapp.stagesB1')}</strong> {t('dapp.stagesB1Desc')}</li>
             <li><strong>{t('dapp.stagesB2')}</strong> {t('dapp.stagesB2Desc')}</li>
@@ -1373,6 +1375,9 @@ const Dapp = () => {
             {t('dapp.walletHubTitle')}
           </h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.walletHubDesc')}</p>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.walletHubDesc2')}</p>
+          {/* TODO(screenshot): Wallet + Command Centre — latest app version */}
+          <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.keyFeatures')}</h3>
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
             <li><strong>{t('dapp.walletHubB1')}</strong> {t('dapp.walletHubB1Desc')}</li>
             <li><strong>{t('dapp.walletHubB2')}</strong> {t('dapp.walletHubB2Desc')}</li>
@@ -1392,21 +1397,38 @@ const Dapp = () => {
             {t('dapp.workTitle')}
           </h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.workDesc')}</p>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.workDesc2')}</p>
+          {/* TODO(screenshot): Bounty Hunting board — latest app version */}
+          <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.keyFeatures')}</h3>
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
             <li><strong>{t('dapp.workB1')}</strong> {t('dapp.workB1Desc')}</li>
             <li><strong>{t('dapp.workB2')}</strong> {t('dapp.workB2Desc')}</li>
             <li><strong>{t('dapp.workB3')}</strong> {t('dapp.workB3Desc')}</li>
+            <li><strong>{t('dapp.workB4')}</strong> {t('dapp.workB4Desc')}</li>
+            <li><strong>{t('dapp.workB5')}</strong> {t('dapp.workB5Desc')}</li>
           </ul>
         </section>
 
         <section id="stores" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.storesTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.storesDesc')}</p>
+          {/* TODO(screenshot): Stores / storefront page — latest app version */}
+          <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
+            <li><strong>{t('dapp.storesB1')}</strong> {t('dapp.storesB1Desc')}</li>
+            <li><strong>{t('dapp.storesB2')}</strong> {t('dapp.storesB2Desc')}</li>
+            <li><strong>{t('dapp.storesB3')}</strong> {t('dapp.storesB3Desc')}</li>
+          </ul>
         </section>
 
         <section id="affiliate" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.affiliateTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.affiliateDesc')}</p>
+          {/* TODO(screenshot): Affiliate dashboard — latest app version */}
+          <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
+            <li><strong>{t('dapp.affiliateB1')}</strong> {t('dapp.affiliateB1Desc')}</li>
+            <li><strong>{t('dapp.affiliateB2')}</strong> {t('dapp.affiliateB2Desc')}</li>
+            <li><strong>{t('dapp.affiliateB3')}</strong> {t('dapp.affiliateB3Desc')}</li>
+          </ul>
         </section>
 
         <section id="ai-suite" className="scroll-mt-32">
@@ -1420,11 +1442,20 @@ const Dapp = () => {
             <li><strong>{t('dapp.aiSuiteB2')}</strong> {t('dapp.aiSuiteB2Desc')}</li>
             <li><strong>{t('dapp.aiSuiteB3')}</strong> {t('dapp.aiSuiteB3Desc')}</li>
           </ul>
-          <p className="text-foreground/80 font-exo">
-            <Link to="/docs/ai-toolkits" className="text-primary hover:underline inline-flex items-center gap-1">
-              {t('dapp.aiSuiteLink')} <ExternalLink className="w-3.5 h-3.5" />
-            </Link>
-          </p>
+          {/* Full AI Toolkits reference, folded in from /docs/ai-toolkits */}
+          <div className="mt-8">
+            <AIToolkits />
+          </div>
+        </section>
+
+        <section id="encryption" className="scroll-mt-32">
+          {/* Folded in from /docs/e2e-encryption */}
+          <E2EEncryption />
+        </section>
+
+        <section id="depin" className="scroll-mt-32">
+          {/* Folded in from /docs/depin */}
+          <DePIN />
         </section>
 
         <section id="advertising" className="scroll-mt-32">

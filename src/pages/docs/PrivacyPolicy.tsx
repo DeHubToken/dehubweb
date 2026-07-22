@@ -99,14 +99,14 @@ const PrivacyPolicy = () => {
         <p className="mt-4">{t('privacyPolicy.contactNote')}</p>
       </Section>
 
-      <Card className="border-orange-200 bg-orange-50/50 dark:border-orange-800 dark:bg-orange-950/30">
+      <Card className="docs-glass">
         <CardHeader>
-          <CardTitle className="text-xl text-orange-800 dark:text-orange-300 font-exo flex items-center">
+          <CardTitle className="text-xl text-foreground font-exo flex items-center">
             <Shield className="w-5 h-5 mr-2" />
             {t('privacyPolicy.importantNotice')}
           </CardTitle>
         </CardHeader>
-        <CardContent className="text-orange-700 dark:text-orange-400 font-exo">
+        <CardContent className="text-muted-foreground font-exo">
           <p>{t('privacyPolicy.importantNoticeText')}</p>
         </CardContent>
       </Card>

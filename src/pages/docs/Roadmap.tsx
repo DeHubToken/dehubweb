@@ -15,21 +15,17 @@ interface QuarterData {
 const QuarterBlock = ({ quarter, t }: { quarter: QuarterData; t: (key: string) => any }) => {
   const isCompleted = quarter.status === 'completed';
   const isInProgress = quarter.status === 'inProgress';
-  const bgClass = isInProgress ? 'bg-blue-50/50 dark:bg-blue-900/10' : isCompleted ? 'bg-muted/50' : 'bg-muted/30';
+  const bgClass = isInProgress ? 'bg-muted/50' : isCompleted ? 'bg-muted/50' : 'bg-muted/30';
   const statusLabel = t(`roadmap.${quarter.status}`);
-  const statusClass = isCompleted
-    ? 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-300 dark:border-green-800'
-    : isInProgress
-    ? 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800'
-    : 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700';
+  const statusClass = 'bg-muted text-foreground border border-border';
 
   return (
     <div className={`flex items-start space-x-4 p-4 rounded-lg border ${bgClass}`}>
       <div className="flex-shrink-0">
         {isCompleted ? (
-          <CheckCircle className="w-6 h-6 text-green-500" />
+          <CheckCircle className="w-6 h-6 text-foreground" />
         ) : (
-          <Calendar className={`w-6 h-6 ${isInProgress ? 'text-blue-500' : 'text-gray-500'}`} />
+          <Calendar className={`w-6 h-6 ${isInProgress ? 'text-foreground' : 'text-muted-foreground'}`} />
         )}
       </div>
       <div className="flex-1 space-y-2">
@@ -144,12 +140,12 @@ const Roadmap = () => {
         ))}
       </Tabs>
 
-      <Card className="border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20">
+      <Card className="docs-glass">
         <CardHeader>
-          <CardTitle className="text-xl text-blue-800 dark:text-blue-200">{t('roadmap.lookingAhead')}</CardTitle>
+          <CardTitle className="text-xl text-foreground">{t('roadmap.lookingAhead')}</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-blue-700 dark:text-blue-300 leading-relaxed">{t('roadmap.lookingAheadDesc')}</p>
+          <p className="text-muted-foreground leading-relaxed">{t('roadmap.lookingAheadDesc')}</p>
         </CardContent>
       </Card>
     </div>
