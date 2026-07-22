@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation, Link } from 'react-router-dom';
 import BadgeFlowchart from '../../components/BadgeFlowchart';
 import TippingFlowchart from '../../components/TippingFlowchart';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,6 +8,42 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 const Dapp = () => {
   const { t } = useLanguage();
+  const { hash } = useLocation();
+
+  useEffect(() => {
+    if (!hash) return;
+    const el = document.getElementById(hash.slice(1));
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, [hash]);
+
+  const tocItems: Array<{ id: string; label: string }> = [
+    { id: 'getting-started', label: t('dapp.tocIntro') },
+    { id: 'feeds', label: t('dapp.feedsTitle') },
+    { id: 'uploading', label: t('dapp.uploadTitle') },
+    { id: 'tokenised-uploads', label: t('dapp.tokenisedTitle') },
+    { id: 'profile', label: t('dapp.profileTitle') },
+    { id: 'top-up', label: t('dapp.topUpTitle') },
+    { id: 'explore', label: t('dapp.exploreTitle') },
+    { id: 'badges', label: t('dapp.badgeTitle') },
+    { id: 'tipping', label: t('dapp.tipTitle') },
+    { id: 'governance', label: t('dapp.mineTitle') },
+    { id: 'live-streaming', label: t('dapp.liveStreamingTitle') },
+    { id: 'subscriptions', label: t('dapp.subscriptionsTitle') },
+    { id: 'messages', label: t('dapp.messagesTitle') },
+    { id: 'superpowers', label: t('dapp.superPowersTitle') },
+    { id: 'fees', label: t('dapp.feeTierTitle') },
+    { id: 'communities', label: t('dapp.communitiesTitle') },
+    { id: 'stages', label: t('dapp.stagesTitle') },
+    { id: 'tv-radio', label: t('dapp.tvRadioTitle') },
+    { id: 'wallet', label: t('dapp.walletHubTitle') },
+    { id: 'work', label: t('dapp.workTitle') },
+    { id: 'stores', label: t('dapp.storesTitle') },
+    { id: 'affiliate', label: t('dapp.affiliateTitle') },
+    { id: 'ai-suite', label: t('dapp.aiSuiteTitle') },
+    { id: 'advertising', label: t('dapp.adsPortalTitle') },
+    { id: 'feature-requests', label: t('dapp.featureBoardTitle') },
+    { id: 'connect', label: t('dapp.connectTitle') },
+  ];
 
   const badgeKeys = [
     'badgeNone', 'badgeCrab', 'badgeLobster', 'badgePiranha', 'badgeTortoise',
@@ -42,8 +79,29 @@ const Dapp = () => {
         <img src="/lovable-uploads/d06e2852-219e-4946-960f-0830ebb81716.png" alt="DeHub Games streaming platform interface showing video content grid with leaderboard" className="w-full rounded-lg border border-border shadow-sm" />
       </div>
       
+      {/* On-this-page quick nav */}
+      <nav aria-label={t('dapp.tocTitle')} className="sticky top-16 z-10 -mx-2 px-2 py-3 bg-background/85 backdrop-blur-md border-b border-border">
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 font-exo">{t('dapp.tocTitle')}</p>
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+          {tocItems.map(item => (
+            <a
+              key={item.id}
+              href={`#${item.id}`}
+              onClick={e => {
+                e.preventDefault();
+                document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                history.replaceState(null, '', `#${item.id}`);
+              }}
+              className="shrink-0 whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-exo bg-muted text-muted-foreground hover:bg-primary/10 hover:text-foreground transition-colors border border-border"
+            >
+              {item.label}
+            </a>
+          ))}
+        </div>
+      </nav>
+
       <div className="space-y-8">
-        <section>
+        <section id="getting-started" className="scroll-mt-32">
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.intro1')}</p>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.intro2')}</p>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.intro3')}</p>
@@ -56,7 +114,20 @@ const Dapp = () => {
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.intro4')}</p>
         </section>
 
-        <section>
+        <section id="feeds" className="scroll-mt-32">
+          <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.feedsTitle')}</h2>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.feedsDesc')}</p>
+          <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
+            <li><strong>{t('dapp.feedsHome')}</strong> {t('dapp.feedsHomeDesc')}</li>
+            <li><strong>{t('dapp.feedsShorts')}</strong> {t('dapp.feedsShortsDesc')}</li>
+            <li><strong>{t('dapp.feedsStories')}</strong> {t('dapp.feedsStoriesDesc')}</li>
+            <li><strong>{t('dapp.feedsPolls')}</strong> {t('dapp.feedsPollsDesc')}</li>
+            <li><strong>{t('dapp.feedsTabs')}</strong> {t('dapp.feedsTabsDesc')}</li>
+            <li><strong>{t('dapp.feedsBookmarks')}</strong> {t('dapp.feedsBookmarksDesc')}</li>
+          </ul>
+        </section>
+
+        <section id="uploading" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.uploadTitle')}</h2>
           
           <div className="my-6">
@@ -79,7 +150,7 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <section>
+        <section id="tokenised-uploads" className="scroll-mt-32">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
             <Layers className="w-8 h-8" />
             {t('dapp.tokenisedTitle')}
@@ -310,7 +381,7 @@ const Dapp = () => {
           </div>
         </section>
 
-        <section>
+        <section id="profile" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.profileTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-6 font-exo">{t('dapp.profileDesc')}</p>
           
@@ -319,7 +390,7 @@ const Dapp = () => {
           </div>
         </section>
 
-        <section>
+        <section id="top-up" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.topUpTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-6 font-exo">{t('dapp.topUpDesc')}</p>
           
@@ -378,7 +449,7 @@ const Dapp = () => {
           </div>
         </section>
 
-        <section>
+        <section id="explore" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.exploreTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.exploreDesc')}</p>
           
@@ -402,7 +473,7 @@ const Dapp = () => {
           <img src="/lovable-uploads/e66cc5a1-ea1a-4e5b-8760-490c174f0b24.png" alt="DeHub streaming platform interface" className="w-full rounded-lg border border-border shadow-sm" />
         </div>
 
-        <section>
+        <section id="badges" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.badgeTitle')}</h2>
           <h3 className="text-xl font-medium text-foreground mb-3 font-exo">{t('dapp.badgeSubtitle')}</h3>
           <p className="text-foreground/80 leading-relaxed mb-6 font-exo">{t('dapp.badgeDesc')}</p>
@@ -410,7 +481,7 @@ const Dapp = () => {
           <BadgeFlowchart />
         </section>
 
-        <section>
+        <section id="tipping" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.tipTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.tipDesc1')}</p>
           <p className="text-foreground/80 leading-relaxed mb-6 font-exo">{t('dapp.tipDesc2')}</p>
@@ -418,7 +489,7 @@ const Dapp = () => {
           <TippingFlowchart />
         </section>
 
-        <section>
+        <section id="governance" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.mineTitle')}</h2>
           <h3 className="text-xl font-medium text-foreground mb-3 font-exo">{t('dapp.mineSubtitle')}</h3>
           
@@ -543,7 +614,7 @@ const Dapp = () => {
           </div>
         </section>
 
-        <section>
+        <section id="live-streaming" className="scroll-mt-32">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
             <Video className="w-8 h-8" />
             {t('dapp.liveStreamingTitle')}
@@ -740,7 +811,7 @@ const Dapp = () => {
             </CardContent>
           </Card>
 
-          <section className="mt-12">
+          <section id="subscriptions" className="mt-12 scroll-mt-32">
             <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
               <Crown className="w-8 h-8" />
               {t('dapp.subscriptionsTitle')}
@@ -860,7 +931,7 @@ const Dapp = () => {
             </Card>
           </section>
 
-          <section className="mt-12">
+          <section id="messages" className="mt-12 scroll-mt-32">
             <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
               <MessageCircle className="w-8 h-8" />
               {t('dapp.messagesTitle')}
@@ -1076,7 +1147,7 @@ const Dapp = () => {
             </Card>
           </section>
 
-          <section className="mt-12">
+          <section id="superpowers" className="mt-12 scroll-mt-32">
             <h2 className="text-3xl font-bold text-foreground mb-6 font-exo">{t('dapp.superPowersTitle')}</h2>
             
             <div className="space-y-6">
@@ -1134,7 +1205,7 @@ const Dapp = () => {
             </div>
           </section>
 
-          <section className="mt-12">
+          <section id="fees" className="mt-12 scroll-mt-32">
             <h2 className="text-3xl font-bold text-foreground mb-6 font-exo">{t('dapp.feeTierTitle')}</h2>
             
             <div className="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30 p-6 rounded-lg border border-green-200 dark:border-green-800 mb-6">
@@ -1254,6 +1325,126 @@ const Dapp = () => {
               </CardContent>
             </Card>
           </section>
+        </section>
+
+        <section id="communities" className="scroll-mt-32">
+          <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
+            <Users className="w-8 h-8" />
+            {t('dapp.communitiesTitle')}
+          </h2>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.communitiesDesc')}</p>
+          <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
+            <li><strong>{t('dapp.communitiesB1')}</strong> {t('dapp.communitiesB1Desc')}</li>
+            <li><strong>{t('dapp.communitiesB2')}</strong> {t('dapp.communitiesB2Desc')}</li>
+            <li><strong>{t('dapp.communitiesB3')}</strong> {t('dapp.communitiesB3Desc')}</li>
+          </ul>
+        </section>
+
+        <section id="stages" className="scroll-mt-32">
+          <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
+            <MessageCircle className="w-8 h-8" />
+            {t('dapp.stagesTitle')}
+          </h2>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.stagesDesc')}</p>
+          <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
+            <li><strong>{t('dapp.stagesB1')}</strong> {t('dapp.stagesB1Desc')}</li>
+            <li><strong>{t('dapp.stagesB2')}</strong> {t('dapp.stagesB2Desc')}</li>
+            <li><strong>{t('dapp.stagesB3')}</strong> {t('dapp.stagesB3Desc')}</li>
+            <li><strong>{t('dapp.stagesB4')}</strong> {t('dapp.stagesB4Desc')}</li>
+          </ul>
+        </section>
+
+        <section id="tv-radio" className="scroll-mt-32">
+          <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
+            <Video className="w-8 h-8" />
+            {t('dapp.tvRadioTitle')}
+          </h2>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.tvRadioDesc')}</p>
+          <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
+            <li><strong>{t('dapp.tvRadioB1')}</strong> {t('dapp.tvRadioB1Desc')}</li>
+            <li><strong>{t('dapp.tvRadioB2')}</strong> {t('dapp.tvRadioB2Desc')}</li>
+            <li><strong>{t('dapp.tvRadioB3')}</strong> {t('dapp.tvRadioB3Desc')}</li>
+          </ul>
+        </section>
+
+        <section id="wallet" className="scroll-mt-32">
+          <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
+            <Banknote className="w-8 h-8" />
+            {t('dapp.walletHubTitle')}
+          </h2>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.walletHubDesc')}</p>
+          <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
+            <li><strong>{t('dapp.walletHubB1')}</strong> {t('dapp.walletHubB1Desc')}</li>
+            <li><strong>{t('dapp.walletHubB2')}</strong> {t('dapp.walletHubB2Desc')}</li>
+            <li><strong>{t('dapp.walletHubB3')}</strong> {t('dapp.walletHubB3Desc')}</li>
+            <li><strong>{t('dapp.walletHubB4')}</strong> {t('dapp.walletHubB4Desc')}</li>
+          </ul>
+          <p className="text-foreground/80 font-exo">
+            <Link to="/docs/token/utility" className="text-primary hover:underline inline-flex items-center gap-1">
+              {t('dapp.walletHubLink')} <ExternalLink className="w-3.5 h-3.5" />
+            </Link>
+          </p>
+        </section>
+
+        <section id="work" className="scroll-mt-32">
+          <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
+            <Scale className="w-8 h-8" />
+            {t('dapp.workTitle')}
+          </h2>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.workDesc')}</p>
+          <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
+            <li><strong>{t('dapp.workB1')}</strong> {t('dapp.workB1Desc')}</li>
+            <li><strong>{t('dapp.workB2')}</strong> {t('dapp.workB2Desc')}</li>
+            <li><strong>{t('dapp.workB3')}</strong> {t('dapp.workB3Desc')}</li>
+          </ul>
+        </section>
+
+        <section id="stores" className="scroll-mt-32">
+          <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.storesTitle')}</h2>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.storesDesc')}</p>
+        </section>
+
+        <section id="affiliate" className="scroll-mt-32">
+          <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.affiliateTitle')}</h2>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.affiliateDesc')}</p>
+        </section>
+
+        <section id="ai-suite" className="scroll-mt-32">
+          <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
+            <Zap className="w-8 h-8" />
+            {t('dapp.aiSuiteTitle')}
+          </h2>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.aiSuiteDesc')}</p>
+          <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
+            <li><strong>{t('dapp.aiSuiteB1')}</strong> {t('dapp.aiSuiteB1Desc')}</li>
+            <li><strong>{t('dapp.aiSuiteB2')}</strong> {t('dapp.aiSuiteB2Desc')}</li>
+            <li><strong>{t('dapp.aiSuiteB3')}</strong> {t('dapp.aiSuiteB3Desc')}</li>
+          </ul>
+          <p className="text-foreground/80 font-exo">
+            <Link to="/docs/ai-toolkits" className="text-primary hover:underline inline-flex items-center gap-1">
+              {t('dapp.aiSuiteLink')} <ExternalLink className="w-3.5 h-3.5" />
+            </Link>
+          </p>
+        </section>
+
+        <section id="advertising" className="scroll-mt-32">
+          <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.adsPortalTitle')}</h2>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.adsPortalDesc')}</p>
+          <p className="text-foreground/80 font-exo">
+            <Link to="/docs/advertising" className="text-primary hover:underline inline-flex items-center gap-1">
+              {t('dapp.adsPortalLink')} <ExternalLink className="w-3.5 h-3.5" />
+            </Link>
+          </p>
+        </section>
+
+        <section id="feature-requests" className="scroll-mt-32">
+          <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.featureBoardTitle')}</h2>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.featureBoardDesc')}</p>
+        </section>
+
+        <section id="connect" className="scroll-mt-32">
+          <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.connectTitle')}</h2>
+          <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.connectDesc')}</p>
         </section>
       </div>
     </div>;
