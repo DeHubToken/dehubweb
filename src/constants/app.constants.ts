@@ -51,7 +51,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Lightbulb, label: 'Feature Requests', path: '/features' },
   { icon: Vault, label: 'Staking', path: '/app/stake' },
   { icon: ShieldCheck, label: 'Governance', path: '/governance' },
-  { icon: Briefcase, label: 'Work', path: '/work' },
+  { icon: Briefcase, label: 'Bounties', path: '/work' },
   { icon: Users, label: 'Affiliate', path: '/affiliate' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
   { icon: Store, label: 'Stores', path: '/app/stores' },
