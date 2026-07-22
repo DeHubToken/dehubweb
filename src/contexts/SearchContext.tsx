@@ -97,6 +97,15 @@ const createSearchIndex = (): SearchIndex[] => {
       keywords: ['games', 'gaming', 'play-to-earn', 'nft', 'tournaments', 'raffle', 'lottery']
     },
     {
+      id: 'token-overview',
+      title: 'Currency Overview',
+      content: 'How the DHB currency works in-app, tipping creators, purchasing pay-per-view content, rewards currency, AI generation credits, stores and marketplace, fees and staking, profit share from protocol revenue, utility token pegged at $0.001, DEX listing and freely tradable, no guaranteed APY',
+      path: '/docs/token/overview',
+      category: 'Token',
+      type: 'page',
+      keywords: ['currency', 'overview', 'dhb', 'utility token', 'tipping', 'ai credits', 'profit share', 'peg', 'dex', 'apy', 'rewards']
+    },
+    {
       id: 'token-economics',
       title: 'Token Economics & Emissions',
       content: 'DHB token economics, emission schedule, tokenomics model, distribution, supply mechanics, burn, deflation',

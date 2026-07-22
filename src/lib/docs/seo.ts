@@ -35,6 +35,13 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
     description:
       "Everything about the DHB token: utility, economics, governance, staking, bridging and security.",
   },
+  "token/overview": {
+    title: "Currency Overview — DeHub Docs",
+    description:
+      "How the DHB currency works in-app: tipping, unlocking content, rewards, AI credits, profit share and the $0.001 peg ahead of DEX listing.",
+    keywords:
+      "DHB currency, utility token, tipping, pay-per-view, AI credits, profit share, staking rewards, DEX listing, token peg",
+  },
   "token/economics": {
     title: "Token Economics — DeHub Docs",
     description:
