@@ -108,6 +108,9 @@ const getMenuItems = (t: (key: string) => string) => [{
     isImage: true,
     hasSubmenu: true,
     submenuItems: [{
+      title: t('nav.overview'),
+      path: '/docs/token/overview'
+    }, {
       title: t('nav.tokenEconomics'),
       path: '/docs/token/economics'
     }, {

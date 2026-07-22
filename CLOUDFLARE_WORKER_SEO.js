@@ -95,6 +95,7 @@ const DOCS_PAGES = {
   'overview': { title: 'DeHub Docs — Overview', description: 'What DeHub is and how the user-owned, censorship-resistant media platform works: on-chain content, DePIN infrastructure, sponsored gas and creator monetization.' },
   'dapps': { title: "DeHub dApps — The Complete Ecosystem", description: "DeHub's decentralized apps: streaming, feed, messaging, staking, marketplace and games — how they fit together in one user-owned ecosystem." },
   'games': { title: 'DeHub Games — Play & Win On-Chain', description: "DeHub's gaming arm: the arcade, provably fair mechanics and Last Chad Standing, the fighter battle royale with licensed fighters." },
+  'token/overview': { title: 'DHB Currency Overview — DeHub Docs', description: 'How the $DHB currency works in-app: tipping, unlocking content, rewards, AI generation credits, profit share and the $0.001 peg ahead of DEX listing.' },
   'token/economics': { title: 'DHB Token Economics & Emissions — DeHub Docs', description: '$DHB supply distribution, emissions, burns and how value flows through the DeHub ecosystem.' },
   'token/stake': { title: 'Staking DHB — DeHub Docs', description: 'How DHB staking works: rewards, mechanics and what staking unlocks across DeHub.' },
   'roadmap': { title: 'DeHub Roadmap — DeHub Docs', description: "Where DeHub is headed: shipped milestones and what's next across the app, token and games." },
@@ -147,7 +148,7 @@ const DOCS_REDIRECTS = {
   'depin': '/docs/dapps#depin',
   'e2e-encryption': '/docs/dapps#encryption',
   'ai-toolkits': '/docs/dapps#ai-suite',
-  'token': '/docs/token/economics',
+  'token': '/docs/token/overview',
 };
 
 const _docsContentCache = new Map();

@@ -52,6 +52,7 @@ const BrandAssets = lazy(() => import("./docs/BrandAssets"));
 const FeaturedIn = lazy(() => import("./docs/FeaturedIn"));
 const Dapp = lazy(() => import("./docs/Dapp"));
 const Games = lazy(() => import("./docs/Games"));
+const TokenOverview = lazy(() => import("./docs/TokenOverview"));
 const TokenEconomics = lazy(() => import("./docs/TokenEconomics"));
 const TokenUtility = lazy(() => import("./docs/TokenUtility"));
 const TokenWhereToBuy = lazy(() => import("./docs/TokenWhereToBuy"));
@@ -130,7 +131,8 @@ export default function DocsSurface() {
             <Route path="/docs/games" element={wrap(Games)} />
             {/* Was a "Coming Soon" stub while six real token pages sat beneath
                 it — a thin, indexable dead end. Send it to the first one. */}
-            <Route path="/docs/token" element={<Navigate to="/docs/token/economics" replace />} />
+            <Route path="/docs/token" element={<Navigate to="/docs/token/overview" replace />} />
+            <Route path="/docs/token/overview" element={wrap(TokenOverview)} />
             <Route path="/docs/token/economics" element={wrap(TokenEconomics)} />
             <Route path="/docs/token/utility" element={wrap(TokenUtility)} />
             <Route path="/docs/token/where-to-buy" element={wrap(TokenWhereToBuy)} />

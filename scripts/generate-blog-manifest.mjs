@@ -278,6 +278,9 @@ const DOCS_SECTION_TO_ROUTE = {
   'OVERVIEW': 'overview',
   "D'APP - A COMPLETE ECOSYSTEM": 'dapps',
   'GAMES': 'games',
+  // No section exists for this in the source txt yet, so token-overview.json is
+  // hand-authored. Kept mapped so a regen warns instead of silently dropping it.
+  'CURRENCY OVERVIEW': 'token/overview',
   'TOKEN ECONOMICS & EMISSIONS': 'token/economics',
   'STAKING': 'token/stake',
   'ROADMAP': 'roadmap',
@@ -350,7 +353,7 @@ sm = sm.replace(/\s*<\/urlset>\s*$/, `\n${blogUrls}\n</urlset>\n`);
 //     redirect there; redirects don't belong in a sitemap.
 const DOCS_META_ONLY = [
   'overview', 'dapps', 'games',
-  'token/economics', 'token/utility', 'token/where-to-buy',
+  'token/overview', 'token/economics', 'token/utility', 'token/where-to-buy',
   'token/governance', 'token/stake', 'token/bridge',
   'advertising', 'team', 'security', 'roadmap', 'contact',
   'terms', 'terms-of-service', 'privacy',
