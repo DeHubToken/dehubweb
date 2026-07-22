@@ -7,9 +7,9 @@ const DePIN = () => {
 
   return (
     <div className="space-y-8">
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold text-foreground">{t('depin.title')}</h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t('depin.subtitle')}</p>
+      <div className="space-y-4">
+        <h2 className="text-3xl font-bold text-foreground font-exo">{t('depin.title')}</h2>
+        <p className="text-lg text-muted-foreground">{t('depin.subtitle')}</p>
       </div>
 
       <div className="bg-card rounded-2xl border p-8">
