@@ -638,9 +638,15 @@ const SSR_STATIC_ROUTES = new Set([
   'features', 'pricing', 'creator', 'editor', 'prompt', 'work',
   'affiliate', 'premium', 'governance', 'leaderboard', 'top-100',
   'music', 'radio', 'tv', 'glossary', 'bridge', 'agents',
-  'assistant', 'creators', 'jobs', 'delete-account',
+  'assistant', 'creators', 'jobs',
   // /guides/* is handled entirely at the edge (GUIDE_PAGES + blog manifest),
   // never proxied to the Supabase fn — its STATIC_ROUTES allowlist is stale.
+  //
+  // 'delete-account' is out for the same reason: the Supabase fn's STATIC_ROUTES
+  // never learned it, so proxying there answered 404 to every crawler while
+  // browsers saw the real React page. It's in SYSTEM_ROUTES, so dropping it here
+  // routes it to the SPA shell (200) instead. App-store and OAuth reviewers do
+  // check the account-deletion URL, and a 404 there fails review.
 ]);
 
 /** Canonical path: strip trailing slashes, and collapse the /app-prefixed
@@ -764,6 +770,23 @@ async function handleRequest(request, env) {
   // either): bare /guides has no route, /app twins of the blog duplicate it.
   const trimmedPath = pathname.replace(/\/+$/, '') || '/';
   if (trimmedPath === '/guides') return redirect301(`${APP_URL}/docs/blog`);
+
+  // The legal pages live at /docs/privacy and /docs/terms — the bare paths were
+  // never React routes. Browsers got the SPA catch-all (a soft 404 that looked
+  // like 200); crawlers got a hard 404, because SYSTEM_ROUTES doesn't list them
+  // so shouldServeSSR() classified /privacy as a *username* and the profile
+  // renderer 404'd on the missing user. Any reviewer checking the policy URL —
+  // Google OAuth verification included — saw a dead link. 301 to the real page.
+  const LEGAL_REDIRECTS = {
+    '/privacy': '/docs/privacy',
+    '/privacy-policy': '/docs/privacy',
+    '/terms': '/docs/terms',
+    '/terms-of-service': '/docs/terms',
+    '/legal': '/docs/terms',
+  };
+  const legalTarget = LEGAL_REDIRECTS[trimmedPath.toLowerCase()];
+  if (legalTarget) return redirect301(`${APP_URL}${legalTarget}`);
+
   const appTwin = trimmedPath.match(/^\/app\/(guides|docs\/blog)((?:\/.*)?)$/);
   if (appTwin) return redirect301(`${APP_URL}/${appTwin[1]}${appTwin[2] || ''}`);
   const guardNext = async () => {
