@@ -8,9 +8,9 @@ const E2EEncryption = () => {
 
   return (
     <div className="space-y-8">
-      <div className="text-center space-y-4">
-        <h1 className="text-4xl font-bold text-foreground">{t('e2ee.title')}</h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">{t('e2ee.subtitle')}</p>
+      <div className="space-y-4">
+        <h2 className="text-3xl font-bold text-foreground font-exo">{t('e2ee.title')}</h2>
+        <p className="text-lg text-muted-foreground">{t('e2ee.subtitle')}</p>
       </div>
 
       {/* How DeHub's E2EE Works */}
