@@ -48,98 +48,98 @@ const ApiEndpoints = () => {
 
   const getMethodColor = (method: string) => {
     switch (method) {
-      case 'GET': return 'bg-green-100 text-green-800 border-green-200';
-      case 'POST': return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'PUT': return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'DELETE': return 'bg-red-100 text-red-800 border-red-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+      case 'GET': return 'bg-muted text-foreground border-border';
+      case 'POST': return 'bg-muted text-foreground border-border';
+      case 'PUT': return 'bg-muted text-foreground border-border';
+      case 'DELETE': return 'bg-muted text-foreground border-border';
+      default: return 'bg-muted text-foreground border-border';
     }
   };
 
   return (
     <div className="max-w-4xl space-y-8">
       <div className="space-y-4">
-        <div className="flex items-center space-x-2 text-sm text-slate-500">
+        <div className="flex items-center space-x-2 text-sm text-muted-foreground">
           <span>{t('apiEndpoints.breadcrumbDocs')}</span>
           <span>/</span>
           <span>{t('apiEndpoints.breadcrumbApiRef')}</span>
           <span>/</span>
-          <span className="text-slate-900">{t('apiEndpoints.breadcrumbEndpoints')}</span>
+          <span className="text-foreground">{t('apiEndpoints.breadcrumbEndpoints')}</span>
         </div>
-        <h1 className="text-4xl font-bold text-slate-900">{t('apiEndpoints.title')}</h1>
-        <p className="text-xl text-slate-600">{t('apiEndpoints.subtitle')}</p>
+        <h1 className="text-4xl font-bold text-foreground">{t('apiEndpoints.title')}</h1>
+        <p className="text-xl text-muted-foreground">{t('apiEndpoints.subtitle')}</p>
       </div>
 
-      <div className="bg-slate-50 border border-slate-200 rounded-lg p-6">
+      <div className="docs-glass rounded-lg p-6">
         <div className="flex items-center mb-3">
-          <Globe className="w-5 h-5 text-slate-600 mr-2" />
-          <h3 className="text-lg font-semibold text-slate-900">{t('apiEndpoints.baseUrl')}</h3>
+          <Globe className="w-5 h-5 text-muted-foreground mr-2" />
+          <h3 className="text-lg font-semibold text-foreground">{t('apiEndpoints.baseUrl')}</h3>
         </div>
-        <div className="bg-slate-900 rounded p-3">
-          <code className="text-green-400 font-mono">https://api.yourplatform.com</code>
+        <div className="bg-muted rounded p-3">
+          <code className="text-foreground font-mono">https://api.yourplatform.com</code>
         </div>
       </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+      <div className="docs-glass rounded-lg p-6">
         <div className="flex items-center mb-3">
-          <Lock className="w-5 h-5 text-blue-600 mr-2" />
-          <h3 className="text-lg font-semibold text-blue-900">{t('apiEndpoints.authentication')}</h3>
+          <Lock className="w-5 h-5 text-foreground mr-2" />
+          <h3 className="text-lg font-semibold text-foreground">{t('apiEndpoints.authentication')}</h3>
         </div>
-        <p className="text-blue-800 mb-3">{t('apiEndpoints.authDesc')}</p>
-        <div className="bg-slate-900 rounded p-3">
-          <code className="text-green-400 font-mono text-sm">Authorization: Bearer YOUR_API_KEY</code>
+        <p className="text-muted-foreground mb-3">{t('apiEndpoints.authDesc')}</p>
+        <div className="bg-muted rounded p-3">
+          <code className="text-foreground font-mono text-sm">Authorization: Bearer YOUR_API_KEY</code>
         </div>
       </div>
 
       <div className="space-y-8">
-        <h2 className="text-2xl font-bold text-slate-900 flex items-center">
-          <Zap className="w-6 h-6 mr-3 text-blue-600" />
+        <h2 className="text-2xl font-bold text-foreground flex items-center">
+          <Zap className="w-6 h-6 mr-3 text-foreground" />
           {t('apiEndpoints.availableEndpoints')}
         </h2>
 
         {endpoints.map((endpoint, index) => (
-          <div key={index} className="bg-white border border-slate-200 rounded-lg overflow-hidden">
-            <div className="bg-slate-50 border-b border-slate-200 p-6">
+          <div key={index} className="docs-glass rounded-lg overflow-hidden">
+            <div className="bg-muted/40 border-b border-border p-6">
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center space-x-3">
                   <span className={`px-3 py-1 rounded-md text-sm font-medium border ${getMethodColor(endpoint.method)}`}>{endpoint.method}</span>
-                  <code className="text-lg font-mono text-slate-900">{endpoint.path}</code>
+                  <code className="text-lg font-mono text-foreground">{endpoint.path}</code>
                 </div>
                 {endpoint.auth && (
-                  <div className="flex items-center text-sm text-orange-600">
+                  <div className="flex items-center text-sm text-muted-foreground">
                     <Lock className="w-4 h-4 mr-1" />
                     {t('apiEndpoints.authRequired')}
                   </div>
                 )}
               </div>
-              <p className="text-slate-600">{endpoint.description}</p>
+              <p className="text-muted-foreground">{endpoint.description}</p>
             </div>
 
             <div className="p-6 space-y-6">
               {endpoint.parameters && endpoint.parameters.length > 0 && (
                 <div>
-                  <h4 className="text-lg font-semibold text-slate-900 mb-3">{t('apiEndpoints.parameters')}</h4>
+                  <h4 className="text-lg font-semibold text-foreground mb-3">{t('apiEndpoints.parameters')}</h4>
                   <div className="overflow-x-auto">
                     <table className="w-full text-sm">
                       <thead>
-                        <tr className="border-b border-slate-200">
-                          <th className="text-left py-2 font-medium text-slate-900">{t('apiEndpoints.name')}</th>
-                          <th className="text-left py-2 font-medium text-slate-900">{t('apiEndpoints.type')}</th>
-                          <th className="text-left py-2 font-medium text-slate-900">{t('apiEndpoints.required')}</th>
-                          <th className="text-left py-2 font-medium text-slate-900">{t('apiEndpoints.description')}</th>
+                        <tr className="border-b border-border">
+                          <th className="text-left py-2 font-medium text-foreground">{t('apiEndpoints.name')}</th>
+                          <th className="text-left py-2 font-medium text-foreground">{t('apiEndpoints.type')}</th>
+                          <th className="text-left py-2 font-medium text-foreground">{t('apiEndpoints.required')}</th>
+                          <th className="text-left py-2 font-medium text-foreground">{t('apiEndpoints.description')}</th>
                         </tr>
                       </thead>
                       <tbody>
                         {endpoint.parameters.map((param, paramIndex) => (
-                          <tr key={paramIndex} className="border-b border-slate-100">
-                            <td className="py-2 font-mono text-blue-600">{param.name}</td>
-                            <td className="py-2 text-slate-600">{param.type}</td>
+                          <tr key={paramIndex} className="border-b border-border/50">
+                            <td className="py-2 font-mono text-foreground">{param.name}</td>
+                            <td className="py-2 text-muted-foreground">{param.type}</td>
                             <td className="py-2">
-                              <span className={`px-2 py-1 rounded text-xs ${param.required ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-600'}`}>
+                              <span className={`px-2 py-1 rounded text-xs ${param.required ? 'bg-muted text-foreground border border-border' : 'bg-muted text-muted-foreground border border-border'}`}>
                                 {param.required ? t('apiEndpoints.required') : t('apiEndpoints.optional')}
                               </span>
                             </td>
-                            <td className="py-2 text-slate-600">{param.description}</td>
+                            <td className="py-2 text-muted-foreground">{param.description}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -149,33 +149,33 @@ const ApiEndpoints = () => {
               )}
 
               <div>
-                <h4 className="text-lg font-semibold text-slate-900 mb-3">{t('apiEndpoints.exampleRequest')}</h4>
-                <div className="bg-slate-900 rounded-lg p-4 relative">
+                <h4 className="text-lg font-semibold text-foreground mb-3">{t('apiEndpoints.exampleRequest')}</h4>
+                <div className="bg-muted rounded-lg p-4 relative">
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center space-x-2">
-                      <Code className="w-4 h-4 text-blue-400" />
-                      <span className="text-slate-300 text-sm">cURL</span>
+                      <Code className="w-4 h-4 text-muted-foreground" />
+                      <span className="text-foreground text-sm">cURL</span>
                     </div>
-                    <button onClick={() => copyToClipboard(endpoint.example, `example-${index}`)} className="flex items-center space-x-1 text-slate-400 hover:text-white transition-colors">
-                      {copiedCode === `example-${index}` ? <CheckCircle className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+                    <button onClick={() => copyToClipboard(endpoint.example, `example-${index}`)} className="flex items-center space-x-1 text-muted-foreground hover:text-foreground transition-colors">
+                      {copiedCode === `example-${index}` ? <CheckCircle className="w-4 h-4 text-foreground" /> : <Copy className="w-4 h-4" />}
                       <span className="text-sm">Copy</span>
                     </button>
                   </div>
-                  <pre className="text-slate-300 font-mono text-sm overflow-x-auto"><code>{endpoint.example}</code></pre>
+                  <pre className="text-foreground font-mono text-sm overflow-x-auto"><code>{endpoint.example}</code></pre>
                 </div>
               </div>
 
               <div>
-                <h4 className="text-lg font-semibold text-slate-900 mb-3">{t('apiEndpoints.exampleResponse')}</h4>
-                <div className="bg-slate-900 rounded-lg p-4 relative">
+                <h4 className="text-lg font-semibold text-foreground mb-3">{t('apiEndpoints.exampleResponse')}</h4>
+                <div className="bg-muted rounded-lg p-4 relative">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-slate-300 text-sm">JSON</span>
-                    <button onClick={() => copyToClipboard(endpoint.response, `response-${index}`)} className="flex items-center space-x-1 text-slate-400 hover:text-white transition-colors">
-                      {copiedCode === `response-${index}` ? <CheckCircle className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+                    <span className="text-foreground text-sm">JSON</span>
+                    <button onClick={() => copyToClipboard(endpoint.response, `response-${index}`)} className="flex items-center space-x-1 text-muted-foreground hover:text-foreground transition-colors">
+                      {copiedCode === `response-${index}` ? <CheckCircle className="w-4 h-4 text-foreground" /> : <Copy className="w-4 h-4" />}
                       <span className="text-sm">Copy</span>
                     </button>
                   </div>
-                  <pre className="text-slate-300 font-mono text-sm overflow-x-auto"><code>{endpoint.response}</code></pre>
+                  <pre className="text-foreground font-mono text-sm overflow-x-auto"><code>{endpoint.response}</code></pre>
                 </div>
               </div>
             </div>
@@ -183,18 +183,18 @@ const ApiEndpoints = () => {
         ))}
       </div>
 
-      <div className="bg-white border border-slate-200 rounded-lg p-6">
-        <h3 className="text-xl font-bold text-slate-900 mb-4">{t('apiEndpoints.commonErrorCodes')}</h3>
+      <div className="docs-glass rounded-lg p-6">
+        <h3 className="text-xl font-bold text-foreground mb-4">{t('apiEndpoints.commonErrorCodes')}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <div className="flex justify-between"><code className="text-red-600 font-mono">400</code><span className="text-slate-600">{t('apiEndpoints.badRequest')}</span></div>
-            <div className="flex justify-between"><code className="text-red-600 font-mono">401</code><span className="text-slate-600">{t('apiEndpoints.unauthorized')}</span></div>
-            <div className="flex justify-between"><code className="text-red-600 font-mono">403</code><span className="text-slate-600">{t('apiEndpoints.forbidden')}</span></div>
+            <div className="flex justify-between"><code className="text-foreground font-mono">400</code><span className="text-muted-foreground">{t('apiEndpoints.badRequest')}</span></div>
+            <div className="flex justify-between"><code className="text-foreground font-mono">401</code><span className="text-muted-foreground">{t('apiEndpoints.unauthorized')}</span></div>
+            <div className="flex justify-between"><code className="text-foreground font-mono">403</code><span className="text-muted-foreground">{t('apiEndpoints.forbidden')}</span></div>
           </div>
           <div className="space-y-2">
-            <div className="flex justify-between"><code className="text-red-600 font-mono">404</code><span className="text-slate-600">{t('apiEndpoints.notFound')}</span></div>
-            <div className="flex justify-between"><code className="text-red-600 font-mono">429</code><span className="text-slate-600">{t('apiEndpoints.rateLimited')}</span></div>
-            <div className="flex justify-between"><code className="text-red-600 font-mono">500</code><span className="text-slate-600">{t('apiEndpoints.serverError')}</span></div>
+            <div className="flex justify-between"><code className="text-foreground font-mono">404</code><span className="text-muted-foreground">{t('apiEndpoints.notFound')}</span></div>
+            <div className="flex justify-between"><code className="text-foreground font-mono">429</code><span className="text-muted-foreground">{t('apiEndpoints.rateLimited')}</span></div>
+            <div className="flex justify-between"><code className="text-foreground font-mono">500</code><span className="text-muted-foreground">{t('apiEndpoints.serverError')}</span></div>
           </div>
         </div>
       </div>

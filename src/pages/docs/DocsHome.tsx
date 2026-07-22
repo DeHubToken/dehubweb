@@ -162,8 +162,8 @@ const DocsHome = () => {
                 copyToClipboard(link.contractAddress!);
               }} className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors px-2 py-1 rounded hover:bg-muted">
                         {copiedAddress === link.contractAddress ? <>
-                            <Check className="w-3 h-3 text-green-500" />
-                            <span className="text-green-500">{t('common.copied')}</span>
+                            <Check className="w-3 h-3 text-foreground" />
+                            <span className="text-foreground">{t('common.copied')}</span>
                           </> : <>
                             <Copy className="w-3 h-3" />
                             <span>{t('common.copyCA')}</span>

@@ -82,7 +82,7 @@ const TippingFlowchart = () => {
       <CardContent>
         <div className="grid gap-3">
           {tippingTiers.map((tier, index) => (
-            <div key={tier.threshold} className="flex items-center justify-between p-4 rounded-lg border bg-muted/20">
+            <div key={tier.threshold} className="flex items-center justify-between p-4 rounded-lg docs-glass">
               <div className="flex items-center gap-4">
                 <div className="text-2xl">{tier.emoji}</div>
                 <div>

@@ -341,7 +341,22 @@ sm = sm.replace(/\s*<\/urlset>\s*$/, `\n${blogUrls}\n</urlset>\n`);
 //     (/docs/quick-start, /docs/token-economics) that don't exist in the SPA.
 //     Replace all /docs/* entries (except /docs and /docs/blog) with the real
 //     route list: extracted-content routes + curated meta-only routes.
-const DOCS_META_ONLY = ['quickstart', 'installation', 'advertising', 'depin', 'e2e-encryption', 'ai-toolkits', 'security', 'token'];
+// Every real, indexable /docs route, mirroring the route table in DocsSurface.tsx.
+// Deliberately excluded:
+//   - ComingSoonPage placeholders (token, website, app, dehub, x, instagram,
+//     architecture, configuration, data-models, auth, webhooks, best-practices,
+//     troubleshooting, examples) — no content to index.
+//   - depin / e2e-encryption / ai-toolkits — consolidated into /docs/dapps and now
+//     redirect there; redirects don't belong in a sitemap.
+const DOCS_META_ONLY = [
+  'overview', 'dapps', 'games',
+  'token/economics', 'token/utility', 'token/where-to-buy',
+  'token/governance', 'token/stake', 'token/bridge',
+  'advertising', 'team', 'security', 'roadmap', 'contact',
+  'terms', 'terms-of-service', 'privacy',
+  'brand-assets', 'brand-guidelines', 'featured-in',
+  'quickstart', 'installation', 'endpoints', 'faq', 'donate',
+];
 const allDocsRoutes = [...new Set([...docsRoutes, ...DOCS_META_ONLY])];
 sm = sm.replace(
   /\s*<url>\s*<loc>https:\/\/dehub\.io\/docs\/([^<]+)<\/loc>[\s\S]*?<\/url>/g,

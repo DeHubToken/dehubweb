@@ -147,6 +147,28 @@ All colors MUST be HSL.
     display: none;
   }
 
+  /* Docs brand surface: monochrome liquid-glass panel (frosted-glass web
+     approximation). Rides the theme HSL tokens so it adapts to every theme;
+     falls back to a solid card when transparency is reduced. */
+  .docs-glass {
+    background:
+      linear-gradient(135deg, hsl(var(--foreground) / 0.045), hsl(var(--foreground) / 0.015)),
+      hsl(var(--card) / 0.6);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid hsl(var(--border));
+    box-shadow:
+      inset 0 1px 0 hsl(var(--background) / 0.55),
+      0 8px 30px hsl(var(--foreground) / 0.05);
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .docs-glass {
+      background: hsl(var(--card));
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
   /* Hide number input spinners globally */
   input[type="number"] {
     -moz-appearance: textfield;

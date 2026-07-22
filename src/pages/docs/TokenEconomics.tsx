@@ -93,12 +93,12 @@ const TokenEconomics = () => {
           </CardContent>
         </Card>
 
-        <Card className="border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-800">
+        <Card className="docs-glass">
           <CardHeader>
-            <CardTitle className="text-xl text-yellow-800 dark:text-yellow-200">{t('tokenEconomics.disclaimer')}</CardTitle>
+            <CardTitle className="text-xl text-foreground">{t('tokenEconomics.disclaimer')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-yellow-700 dark:text-yellow-300 leading-relaxed text-sm">{t('tokenEconomics.disclaimerText')}</p>
+            <p className="text-muted-foreground leading-relaxed text-sm">{t('tokenEconomics.disclaimerText')}</p>
           </CardContent>
         </Card>
       </div>

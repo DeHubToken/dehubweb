@@ -14,7 +14,7 @@ const QuickStart = () => {
   };
 
   const apiBaseUrl = `https://api.dehub.io/api/docxx`;
-  
+
   const initCode = `// DeHub API Base URL
 const API_BASE = 'https://api.dehub.io/api/docxx';
 
@@ -39,23 +39,23 @@ console.log(data);`;
   return (
     <div className="max-w-4xl space-y-8">
       <div className="space-y-4">
-        <div className="flex items-center space-x-2 text-sm text-slate-500">
+        <div className="flex items-center space-x-2 text-sm text-muted-foreground">
           <span>{t('quickStart.breadcrumbDocs')}</span>
           <span>/</span>
           <span>{t('quickStart.breadcrumbGettingStarted')}</span>
           <span>/</span>
-          <span className="text-slate-900">{t('quickStart.title')}</span>
+          <span className="text-foreground">{t('quickStart.title')}</span>
         </div>
-        <h1 className="text-4xl font-bold text-slate-900">{t('quickStart.title')}</h1>
-        <p className="text-xl text-slate-600">{t('quickStart.subtitle')}</p>
+        <h1 className="text-4xl font-bold text-foreground">{t('quickStart.title')}</h1>
+        <p className="text-xl text-muted-foreground">{t('quickStart.subtitle')}</p>
       </div>
 
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+      <div className="docs-glass rounded-lg p-6">
         <div className="flex items-center mb-3">
-          <CheckCircle className="w-5 h-5 text-blue-600 mr-2" />
-          <h3 className="text-lg font-semibold text-blue-900">{t('quickStart.prerequisites')}</h3>
+          <CheckCircle className="w-5 h-5 text-foreground mr-2" />
+          <h3 className="text-lg font-semibold text-foreground">{t('quickStart.prerequisites')}</h3>
         </div>
-        <ul className="space-y-2 text-blue-800">
+        <ul className="space-y-2 text-muted-foreground">
           <li>• Node.js 16+ or Python 3.8+</li>
           <li>• A valid API key (sign up for free)</li>
           <li>• Basic knowledge of REST APIs</li>
@@ -63,96 +63,96 @@ console.log(data);`;
       </div>
 
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-slate-900 flex items-center">
+        <h2 className="text-2xl font-bold text-foreground flex items-center">
           <span className="bg-primary text-primary-foreground w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-3">1</span>
           {t('quickStart.apiBaseUrl')}
         </h2>
-        <p className="text-slate-600">{t('quickStart.apiBaseUrlDesc')}</p>
-        <div className="bg-slate-900 rounded-lg p-4 relative">
+        <p className="text-muted-foreground">{t('quickStart.apiBaseUrlDesc')}</p>
+        <div className="bg-muted border border-border rounded-lg p-4 relative">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-2">
-              <Terminal className="w-4 h-4 text-green-400" />
-              <span className="text-slate-300 text-sm">{t('quickStart.apiEndpoint')}</span>
+              <Terminal className="w-4 h-4 text-muted-foreground" />
+              <span className="text-muted-foreground text-sm">{t('quickStart.apiEndpoint')}</span>
             </div>
-            <button onClick={() => copyToClipboard(apiBaseUrl, 'api')} className="flex items-center space-x-1 text-slate-400 hover:text-white transition-colors">
-              {copiedCode === 'api' ? <CheckCircle className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+            <button onClick={() => copyToClipboard(apiBaseUrl, 'api')} className="flex items-center space-x-1 text-muted-foreground hover:text-foreground transition-colors">
+              {copiedCode === 'api' ? <CheckCircle className="w-4 h-4 text-foreground" /> : <Copy className="w-4 h-4" />}
               <span className="text-sm">{t('quickStart.copy')}</span>
             </button>
           </div>
-          <code className="text-green-400 font-mono text-sm">{apiBaseUrl}</code>
+          <code className="text-foreground font-mono text-sm">{apiBaseUrl}</code>
         </div>
       </div>
 
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-slate-900 flex items-center">
+        <h2 className="text-2xl font-bold text-foreground flex items-center">
           <span className="bg-primary text-primary-foreground w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-3">2</span>
           {t('quickStart.initializeClient')}
         </h2>
-        <p className="text-slate-600">{t('quickStart.initializeClientDesc')}</p>
-        <div className="bg-slate-900 rounded-lg p-4 relative">
+        <p className="text-muted-foreground">{t('quickStart.initializeClientDesc')}</p>
+        <div className="bg-muted border border-border rounded-lg p-4 relative">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-2">
-              <Code className="w-4 h-4 text-blue-400" />
-              <span className="text-slate-300 text-sm">JavaScript</span>
+              <Code className="w-4 h-4 text-muted-foreground" />
+              <span className="text-muted-foreground text-sm">JavaScript</span>
             </div>
-            <button onClick={() => copyToClipboard(initCode, 'init')} className="flex items-center space-x-1 text-slate-400 hover:text-white transition-colors">
-              {copiedCode === 'init' ? <CheckCircle className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+            <button onClick={() => copyToClipboard(initCode, 'init')} className="flex items-center space-x-1 text-muted-foreground hover:text-foreground transition-colors">
+              {copiedCode === 'init' ? <CheckCircle className="w-4 h-4 text-foreground" /> : <Copy className="w-4 h-4" />}
               <span className="text-sm">{t('quickStart.copy')}</span>
             </button>
           </div>
-          <pre className="text-slate-300 font-mono text-sm overflow-x-auto"><code>{initCode}</code></pre>
+          <pre className="text-foreground font-mono text-sm overflow-x-auto"><code>{initCode}</code></pre>
         </div>
       </div>
 
       <div className="space-y-4">
-        <h2 className="text-2xl font-bold text-slate-900 flex items-center">
+        <h2 className="text-2xl font-bold text-foreground flex items-center">
           <span className="bg-primary text-primary-foreground w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold mr-3">3</span>
           {t('quickStart.firstApiCall')}
         </h2>
-        <p className="text-slate-600">{t('quickStart.firstApiCallDesc')}</p>
-        <div className="bg-slate-900 rounded-lg p-4 relative">
+        <p className="text-muted-foreground">{t('quickStart.firstApiCallDesc')}</p>
+        <div className="bg-muted border border-border rounded-lg p-4 relative">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center space-x-2">
-              <Zap className="w-4 h-4 text-yellow-400" />
-              <span className="text-slate-300 text-sm">{t('quickStart.example')}</span>
+              <Zap className="w-4 h-4 text-muted-foreground" />
+              <span className="text-muted-foreground text-sm">{t('quickStart.example')}</span>
             </div>
-            <button onClick={() => copyToClipboard(exampleCode, 'example')} className="flex items-center space-x-1 text-slate-400 hover:text-white transition-colors">
-              {copiedCode === 'example' ? <CheckCircle className="w-4 h-4 text-green-400" /> : <Copy className="w-4 h-4" />}
+            <button onClick={() => copyToClipboard(exampleCode, 'example')} className="flex items-center space-x-1 text-muted-foreground hover:text-foreground transition-colors">
+              {copiedCode === 'example' ? <CheckCircle className="w-4 h-4 text-foreground" /> : <Copy className="w-4 h-4" />}
               <span className="text-sm">{t('quickStart.copy')}</span>
             </button>
           </div>
-          <pre className="text-slate-300 font-mono text-sm overflow-x-auto"><code>{exampleCode}</code></pre>
+          <pre className="text-foreground font-mono text-sm overflow-x-auto"><code>{exampleCode}</code></pre>
         </div>
       </div>
 
-      <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+      <div className="docs-glass rounded-lg p-6">
         <div className="flex items-center">
-          <CheckCircle className="w-6 h-6 text-green-600 mr-3" />
+          <CheckCircle className="w-6 h-6 text-foreground mr-3" />
           <div>
-            <h3 className="text-lg font-semibold text-green-900 mb-1">{t('quickStart.congratulations')}</h3>
-            <p className="text-green-800">{t('quickStart.congratulationsDesc')}</p>
+            <h3 className="text-lg font-semibold text-foreground mb-1">{t('quickStart.congratulations')}</h3>
+            <p className="text-muted-foreground">{t('quickStart.congratulationsDesc')}</p>
           </div>
         </div>
       </div>
 
-      <div className="bg-white border border-slate-200 rounded-lg p-6">
-        <h3 className="text-xl font-bold text-slate-900 mb-4">{t('quickStart.whatsNext')}</h3>
+      <div className="docs-glass rounded-lg p-6">
+        <h3 className="text-xl font-bold text-foreground mb-4">{t('quickStart.whatsNext')}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Link to="/docs/configuration" className="block p-4 border border-slate-200 rounded-lg hover:border-blue-300 transition-colors">
-            <h4 className="font-semibold text-slate-900 mb-2">{t('quickStart.configurationTitle')}</h4>
-            <p className="text-slate-600 text-sm">{t('quickStart.configurationDesc')}</p>
+          <Link to="/docs/configuration" className="block p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors">
+            <h4 className="font-semibold text-foreground mb-2">{t('quickStart.configurationTitle')}</h4>
+            <p className="text-muted-foreground text-sm">{t('quickStart.configurationDesc')}</p>
           </Link>
-          <Link to="/docs/endpoints" className="block p-4 border border-slate-200 rounded-lg hover:border-blue-300 transition-colors">
-            <h4 className="font-semibold text-slate-900 mb-2">{t('quickStart.apiReference')}</h4>
-            <p className="text-slate-600 text-sm">{t('quickStart.apiReferenceDesc')}</p>
+          <Link to="/docs/endpoints" className="block p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors">
+            <h4 className="font-semibold text-foreground mb-2">{t('quickStart.apiReference')}</h4>
+            <p className="text-muted-foreground text-sm">{t('quickStart.apiReferenceDesc')}</p>
           </Link>
-          <Link to="/docs/examples" className="block p-4 border border-slate-200 rounded-lg hover:border-blue-300 transition-colors">
-            <h4 className="font-semibold text-slate-900 mb-2">{t('quickStart.examples')}</h4>
-            <p className="text-slate-600 text-sm">{t('quickStart.examplesDesc')}</p>
+          <Link to="/docs/examples" className="block p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors">
+            <h4 className="font-semibold text-foreground mb-2">{t('quickStart.examples')}</h4>
+            <p className="text-muted-foreground text-sm">{t('quickStart.examplesDesc')}</p>
           </Link>
-          <Link to="/docs/best-practices" className="block p-4 border border-slate-200 rounded-lg hover:border-blue-300 transition-colors">
-            <h4 className="font-semibold text-slate-900 mb-2">{t('quickStart.bestPractices')}</h4>
-            <p className="text-slate-600 text-sm">{t('quickStart.bestPracticesDesc')}</p>
+          <Link to="/docs/best-practices" className="block p-4 border border-border rounded-lg hover:bg-muted/50 transition-colors">
+            <h4 className="font-semibold text-foreground mb-2">{t('quickStart.bestPractices')}</h4>
+            <p className="text-muted-foreground text-sm">{t('quickStart.bestPracticesDesc')}</p>
           </Link>
         </div>
       </div>

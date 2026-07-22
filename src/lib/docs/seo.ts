@@ -20,9 +20,11 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
       "High-level overview of DeHub: its mission, architecture and the decentralized social ecosystem.",
   },
   dapps: {
-    title: "dApps — DeHub Docs",
+    title: "The DeHub dApp — Complete Feature Guide",
     description:
-      "Explore decentralized applications built on DeHub and how to integrate them with your wallet.",
+      "Every DeHub feature in one guide: feeds, shorts, stories, communities, stages, TV and radio, wallet, bounty hunting, stores, AI toolkits, encryption and DePIN.",
+    keywords:
+      "DeHub dApp, web3 social app, decentralized social features, watch2earn, pay-per-view, live streaming, audio stages, creator wallet, DHB token, bounty hunting, end-to-end encryption, DePIN, AI toolkits",
   },
   games: {
     title: "Games — DeHub Docs",
@@ -63,21 +65,8 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
     description:
       "Bridge DHB across supported chains including BNB Chain and Base safely.",
   },
-  depin: {
-    title: "DePIN — DeHub Docs",
-    description:
-      "Decentralized physical infrastructure on DeHub: nodes, incentives and contribution.",
-  },
-  "e2e-encryption": {
-    title: "End-to-End Encryption — DeHub Docs",
-    description:
-      "How DeHub secures private messages and content with end-to-end encryption.",
-  },
-  "ai-toolkits": {
-    title: "AI Toolkits — DeHub Docs",
-    description:
-      "AI tools available to DeHub creators: assistants, image and video generation, characters and skills.",
-  },
+  // depin / e2e-encryption / ai-toolkits now redirect into /docs/dapps, so their
+  // metadata is folded into the dapps entry above rather than duplicated here.
   advertising: {
     title: "Advertising — DeHub Docs",
     description:

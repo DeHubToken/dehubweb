@@ -65,7 +65,7 @@ export default function Team() {
             <CardHeader className="text-center space-y-6 pb-6">
               <Avatar className="w-24 h-24 mx-auto">
                 {member.photo ? <AvatarImage src={member.photo} alt={member.name} className="object-cover" /> : null}
-                <AvatarFallback className="text-lg font-semibold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+                <AvatarFallback className="text-lg font-semibold bg-muted text-foreground border border-border">
                   {member.initials}
                 </AvatarFallback>
               </Avatar>

@@ -33,8 +33,8 @@ const TokenWhereToBuy = () => {
               </a>
             ))}
           </div>
-          <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-            <p className="text-blue-800 dark:text-blue-200 leading-relaxed">{t('tokenWhereToBuy.dexNote')}</p>
+          <div className="mt-6 p-4 docs-glass rounded-lg">
+            <p className="text-muted-foreground leading-relaxed">{t('tokenWhereToBuy.dexNote')}</p>
           </div>
         </CardContent>
       </Card>
@@ -88,40 +88,40 @@ const TokenWhereToBuy = () => {
             </a>
 
             <div className="grid md:grid-cols-3 gap-4">
-              <div className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-800">
+              <div className="p-4 docs-glass rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
-                  <Zap className="w-5 h-5 text-green-600 dark:text-green-400" />
-                  <h4 className="font-semibold text-green-800 dark:text-green-200">{t('tokenWhereToBuy.dehubToken')}</h4>
+                  <Zap className="w-5 h-5 text-foreground" />
+                  <h4 className="font-semibold text-foreground">{t('tokenWhereToBuy.dehubToken')}</h4>
                 </div>
-                <p className="text-green-700 dark:text-green-300 text-sm">{t('tokenWhereToBuy.dehubTokenDesc')}</p>
+                <p className="text-muted-foreground text-sm">{t('tokenWhereToBuy.dehubTokenDesc')}</p>
               </div>
 
-              <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+              <div className="p-4 docs-glass rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
-                  <CreditCard className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                  <h4 className="font-semibold text-blue-800 dark:text-blue-200">{t('tokenWhereToBuy.instantPayments')}</h4>
+                  <CreditCard className="w-5 h-5 text-foreground" />
+                  <h4 className="font-semibold text-foreground">{t('tokenWhereToBuy.instantPayments')}</h4>
                 </div>
-                <p className="text-blue-700 dark:text-blue-300 text-sm">{t('tokenWhereToBuy.instantPaymentsDesc')}</p>
+                <p className="text-muted-foreground text-sm">{t('tokenWhereToBuy.instantPaymentsDesc')}</p>
               </div>
 
-              <div className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-800">
+              <div className="p-4 docs-glass rounded-lg">
                 <div className="flex items-center gap-2 mb-2">
-                  <Shield className="w-5 h-5 text-purple-600 dark:text-purple-400" />
-                  <h4 className="font-semibold text-purple-800 dark:text-purple-200">{t('tokenWhereToBuy.secureGateway')}</h4>
+                  <Shield className="w-5 h-5 text-foreground" />
+                  <h4 className="font-semibold text-foreground">{t('tokenWhereToBuy.secureGateway')}</h4>
                 </div>
-                <p className="text-purple-700 dark:text-purple-300 text-sm">{t('tokenWhereToBuy.secureGatewayDesc')}</p>
+                <p className="text-muted-foreground text-sm">{t('tokenWhereToBuy.secureGatewayDesc')}</p>
               </div>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <Card className="border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-800">
+      <Card className="docs-glass">
         <CardHeader>
-          <CardTitle className="text-xl text-yellow-800 dark:text-yellow-200">{t('tokenWhereToBuy.disclaimer')}</CardTitle>
+          <CardTitle className="text-xl text-foreground">{t('tokenWhereToBuy.disclaimer')}</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-yellow-700 dark:text-yellow-300 leading-relaxed text-sm">{t('tokenWhereToBuy.disclaimerText')}</p>
+          <p className="text-muted-foreground leading-relaxed text-sm">{t('tokenWhereToBuy.disclaimerText')}</p>
         </CardContent>
       </Card>
     </div>

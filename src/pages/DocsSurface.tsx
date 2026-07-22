@@ -26,7 +26,7 @@
  * splat and are handled by their own routes).
  */
 import { Suspense, lazy, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import "@/styles/docs-dark.css";
 import "@/styles/docs-glass.css";
@@ -42,9 +42,6 @@ import { setBackgroundPaused, scheduleBackgroundResume } from "@/lib/background-
 
 const DocsHome = lazy(() => import("./docs/DocsHome"));
 const Overview = lazy(() => import("./docs/Overview"));
-const DePIN = lazy(() => import("./docs/DePIN"));
-const E2EEncryption = lazy(() => import("./docs/E2EEncryption"));
-const AIToolkits = lazy(() => import("./docs/AIToolkits"));
 const Advertising = lazy(() => import("./docs/Advertising"));
 const QuickStart = lazy(() => import("./docs/QuickStart"));
 const Installation = lazy(() => import("./docs/Installation"));
@@ -138,9 +135,11 @@ export default function DocsSurface() {
             <Route path="/docs/token/governance" element={wrap(TokenGovernance)} />
             <Route path="/docs/token/stake" element={wrap(TokenStake)} />
             <Route path="/docs/token/bridge" element={wrap(TokenBridge)} />
-            <Route path="/docs/depin" element={wrap(DePIN)} />
-            <Route path="/docs/e2e-encryption" element={wrap(E2EEncryption)} />
-            <Route path="/docs/ai-toolkits" element={wrap(AIToolkits)} />
+            {/* Consolidated into the dApp guide. Slugs stay alive and land on
+                the matching section so existing links and search results work. */}
+            <Route path="/docs/depin" element={<Navigate to="/docs/dapps#depin" replace />} />
+            <Route path="/docs/e2e-encryption" element={<Navigate to="/docs/dapps#encryption" replace />} />
+            <Route path="/docs/ai-toolkits" element={<Navigate to="/docs/dapps#ai-suite" replace />} />
             <Route path="/docs/advertising" element={wrap(Advertising)} />
             <Route path="/docs/team" element={wrap(Team)} />
             <Route path="/docs/security" element={wrap(TokenSecurity)} />

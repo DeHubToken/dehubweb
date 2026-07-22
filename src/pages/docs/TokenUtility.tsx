@@ -33,7 +33,7 @@ const TokenUtility = () => {
           <div className="space-y-4">
             {benefits.map((benefit, index) => (
               <div key={index} className="flex items-start space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="w-5 h-5 text-foreground mt-0.5 flex-shrink-0" />
                 <p className="text-muted-foreground leading-relaxed">{benefit}</p>
               </div>
             ))}
@@ -41,12 +41,12 @@ const TokenUtility = () => {
         </CardContent>
       </Card>
 
-      <Card className="border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20 dark:border-yellow-800">
+      <Card className="docs-glass">
         <CardHeader>
-          <CardTitle className="text-xl text-yellow-800 dark:text-yellow-200">{t('tokenUtility.disclaimer')}</CardTitle>
+          <CardTitle className="text-xl text-foreground">{t('tokenUtility.disclaimer')}</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-yellow-700 dark:text-yellow-300 leading-relaxed text-sm">{t('tokenUtility.disclaimerText')}</p>
+          <p className="text-muted-foreground leading-relaxed text-sm">{t('tokenUtility.disclaimerText')}</p>
         </CardContent>
       </Card>
     </div>

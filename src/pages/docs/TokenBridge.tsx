@@ -53,7 +53,7 @@ export default function TokenBridge() {
             >
               <span>{bridgeAddress}</span>
               {copiedAddress === bridgeAddress ? (
-                <Check className="h-4 w-4 text-green-500" />
+                <Check className="h-4 w-4 text-foreground" />
               ) : (
                 <Copy className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
               )}
@@ -69,14 +69,14 @@ export default function TokenBridge() {
             >
               <span>{bridgeAddress}</span>
               {copiedAddress === bridgeAddress ? (
-                <Check className="h-4 w-4 text-green-500" />
+                <Check className="h-4 w-4 text-foreground" />
               ) : (
                 <Copy className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
               )}
             </div>
           </div>
 
-          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
+          <div className="docs-glass rounded-lg p-6">
             <h3 className="text-lg font-semibold mb-2">{t('tokenBridge.processingTime')}</h3>
             <p className="mb-4">{t('tokenBridge.processingTimeDesc')}</p>
             <p className="text-sm text-muted-foreground">{t('tokenBridge.automatedBridge')}</p>
