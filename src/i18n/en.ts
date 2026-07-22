@@ -5,7 +5,7 @@ export const en = {
     overview: 'Overview',
     dapp: "d'App",
     games: 'Games',
-    token: 'Token',
+    token: 'Currency',
     tokenEconomics: 'Economics & Emissions',
     tokenUtility: 'Utility / Holder Benefits',
     tokenWhereToBuy: 'Where to Buy',
