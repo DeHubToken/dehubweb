@@ -193,16 +193,16 @@ const Dapp = () => {
           light docs surface is textured, so a solid fill reads as a grey slab
           laid over it. Sits flush under the header at top-16 so the two read as
           one chrome stack, and spans exactly the content column (no negative
-          margin) so the bar and the prose below share one left and right edge. */}
+          margin) so the bar and the prose below share one left and right edge.
+          The visible "On this page" label is gone — the chips say what they are,
+          and the row reads cleaner without it — but it stays as the nav's
+          aria-label so the landmark still announces itself. px-3 keeps the first
+          and last chip off the frosted edge now that nothing precedes them. */}
       <nav
         aria-label={t('dapp.tocTitle')}
         data-docs-subnav
-        className="sticky top-16 z-20 flex items-center gap-3 py-2 bg-card/90 backdrop-blur-sm border-b border-border"
+        className="sticky top-16 z-20 flex items-center px-3 py-2 bg-card/90 backdrop-blur-sm border-b border-border"
       >
-        <span className="hidden sm:block shrink-0 text-[11px] font-medium uppercase tracking-wide text-muted-foreground font-exo">
-          {t('dapp.tocTitle')}
-        </span>
-        <span aria-hidden className="hidden sm:block shrink-0 h-4 w-px bg-border" />
         <div
           ref={stripRef}
           onScroll={syncEdges}
