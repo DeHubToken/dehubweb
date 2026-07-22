@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import BadgeFlowchart from '../../components/BadgeFlowchart';
 import TippingFlowchart from '../../components/TippingFlowchart';
@@ -12,46 +12,79 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Video, Coins, Shield, Users, Settings, Eye, Zap, Crown, MessageCircle, Lock, Banknote, TrendingUp, Infinity, Percent, Vote, Scale, CheckCircle2, AlertTriangle, Layers, Network, ExternalLink, CreditCard } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
+/**
+ * Product screenshot with a caption. Lazy so a page this long stays cheap.
+ * Intrinsic size is the capture viewport (1440x940): without it the lazy images
+ * reserve no space, which both shifts layout and lands #anchor jumps off-target.
+ */
+const Shot = ({ src, alt }: { src: string; alt: string }) => (
+  <figure className="my-6">
+    <img
+      src={src}
+      alt={alt}
+      width={1440}
+      height={940}
+      loading="lazy"
+      decoding="async"
+      className="w-full h-auto rounded-lg border border-border shadow-sm"
+    />
+    <figcaption className="text-center text-sm text-muted-foreground mt-3 font-exo">{alt}</figcaption>
+  </figure>
+);
+
 const Dapp = () => {
   const { t } = useLanguage();
   const { hash } = useLocation();
   const navigate = useNavigate();
 
+  // Deep links (/docs/dapps#wallet) land on a page tall enough that a single
+  // scroll fires before the layout has settled and lands short. Re-assert the
+  // position a few times while lazy images resolve. In-page chip clicks scroll
+  // themselves smoothly, so this skips them via the ref below.
+  const chipScroll = useRef(false);
   useEffect(() => {
     if (!hash) return;
-    const el = document.getElementById(hash.slice(1));
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (chipScroll.current) { chipScroll.current = false; return; }
+    const id = hash.slice(1);
+    let tries = 0;
+    let timer = 0;
+    const settle = () => {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'auto', block: 'start' });
+      if (tries++ < 8) timer = window.setTimeout(settle, 120);
+    };
+    timer = window.setTimeout(settle, 60);
+    return () => window.clearTimeout(timer);
   }, [hash]);
 
   const tocItems: Array<{ id: string; label: string }> = [
     { id: 'getting-started', label: t('dapp.tocIntro') },
-    { id: 'feeds', label: t('dapp.feedsTitle') },
-    { id: 'uploading', label: t('dapp.uploadTitle') },
-    { id: 'tokenised-uploads', label: t('dapp.tokenisedTitle') },
-    { id: 'profile', label: t('dapp.profileTitle') },
-    { id: 'top-up', label: t('dapp.topUpTitle') },
-    { id: 'explore', label: t('dapp.exploreTitle') },
-    { id: 'badges', label: t('dapp.badgeTitle') },
-    { id: 'tipping', label: t('dapp.tipTitle') },
-    { id: 'governance', label: t('dapp.mineTitle') },
+    { id: 'feeds', label: t('dapp.tocFeeds') },
+    { id: 'uploading', label: t('dapp.tocUploading') },
+    { id: 'tokenised-uploads', label: t('dapp.tocTokenised') },
+    { id: 'profile', label: t('dapp.tocProfile') },
+    { id: 'top-up', label: t('dapp.tocTopUp') },
+    { id: 'explore', label: t('dapp.tocExplore') },
+    { id: 'badges', label: t('dapp.tocBadges') },
+    { id: 'tipping', label: t('dapp.tocTipping') },
+    { id: 'governance', label: t('dapp.tocGovernance') },
     { id: 'live-streaming', label: t('dapp.liveStreamingTitle') },
     { id: 'subscriptions', label: t('dapp.subscriptionsTitle') },
     { id: 'messages', label: t('dapp.messagesTitle') },
     { id: 'superpowers', label: t('dapp.superPowersTitle') },
-    { id: 'fees', label: t('dapp.feeTierTitle') },
+    { id: 'fees', label: t('dapp.tocFees') },
     { id: 'communities', label: t('dapp.communitiesTitle') },
     { id: 'stages', label: t('dapp.stagesTitle') },
     { id: 'tv-radio', label: t('dapp.tvRadioTitle') },
-    { id: 'wallet', label: t('dapp.walletHubTitle') },
-    { id: 'work', label: t('dapp.workTitle') },
+    { id: 'wallet', label: t('dapp.tocWallet') },
+    { id: 'work', label: t('dapp.tocBounties') },
     { id: 'stores', label: t('dapp.storesTitle') },
     { id: 'affiliate', label: t('dapp.affiliateTitle') },
-    { id: 'ai-suite', label: t('dapp.aiSuiteTitle') },
-    { id: 'encryption', label: t('e2ee.title') },
-    { id: 'depin', label: t('depin.title') },
-    { id: 'advertising', label: t('dapp.adsPortalTitle') },
-    { id: 'feature-requests', label: t('dapp.featureBoardTitle') },
-    { id: 'connect', label: t('dapp.connectTitle') },
+    { id: 'ai-suite', label: t('dapp.tocAi') },
+    { id: 'encryption', label: t('dapp.tocEncryption') },
+    { id: 'depin', label: t('dapp.tocDepin') },
+    { id: 'advertising', label: t('dapp.tocAds') },
+    { id: 'feature-requests', label: t('dapp.tocRequests') },
+    { id: 'connect', label: t('dapp.tocConnect') },
   ];
 
   const badgeKeys = [
@@ -100,6 +133,7 @@ const Dapp = () => {
                 e.preventDefault();
                 // Route through the router so the sidebar's active state stays in
                 // sync, then scroll (the hash may already match on a re-click).
+                chipScroll.current = true;
                 navigate(`#${item.id}`, { replace: true });
                 document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
               }}
@@ -116,7 +150,7 @@ const Dapp = () => {
       </nav>
 
       <div className="space-y-8">
-        <section id="getting-started" className="scroll-mt-32">
+        <section id="getting-started" className="scroll-mt-44">
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.intro1')}</p>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.intro2')}</p>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.intro3')}</p>
@@ -129,11 +163,11 @@ const Dapp = () => {
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.intro4')}</p>
         </section>
 
-        <section id="feeds" className="scroll-mt-32">
+        <section id="feeds" className="scroll-mt-44">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.feedsTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.feedsDesc')}</p>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.feedsDesc2')}</p>
-          {/* TODO(screenshot): Home feed with format tabs — latest app version */}
+          <Shot src="/lovable-uploads/docs-feed-home.png" alt="The DeHub home feed, with format tabs across the top and full post controls on every card." />
           <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.keyFeatures')}</h3>
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
             <li><strong>{t('dapp.feedsHome')}</strong> {t('dapp.feedsHomeDesc')}</li>
@@ -145,7 +179,7 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <section id="uploading" className="scroll-mt-32">
+        <section id="uploading" className="scroll-mt-44">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.uploadTitle')}</h2>
           
           <div className="my-6">
@@ -168,7 +202,7 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <section id="tokenised-uploads" className="scroll-mt-32">
+        <section id="tokenised-uploads" className="scroll-mt-44">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
             <Layers className="w-8 h-8" />
             {t('dapp.tokenisedTitle')}
@@ -399,17 +433,18 @@ const Dapp = () => {
           </div>
         </section>
 
-        <section id="profile" className="scroll-mt-32">
+        <section id="profile" className="scroll-mt-44">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.profileTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-6 font-exo">{t('dapp.profileDesc')}</p>
           
           <div className="my-6">
-            <img src="/lovable-uploads/05231fa1-3aa1-4ba6-973c-775c8e39c297.png" alt="User profile interface" className="w-full rounded-lg border border-border shadow-sm" />
+            <img src="/lovable-uploads/docs-profile.png" alt="A DeHub profile page" width={1440} height={940} loading="lazy" decoding="async" className="w-full h-auto rounded-lg border border-border shadow-sm" />
           </div>
         </section>
 
-        <section id="top-up" className="scroll-mt-32">
+        <section id="top-up" className="scroll-mt-44">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.topUpTitle')}</h2>
+          <Shot src="/lovable-uploads/docs-buy.png" alt="Buying DHB directly inside the app." />
           <p className="text-foreground/80 leading-relaxed mb-6 font-exo">{t('dapp.topUpDesc')}</p>
           
           <Card>
@@ -467,7 +502,7 @@ const Dapp = () => {
           </div>
         </section>
 
-        <section id="explore" className="scroll-mt-32">
+        <section id="explore" className="scroll-mt-44">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.exploreTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.exploreDesc')}</p>
           
@@ -488,10 +523,10 @@ const Dapp = () => {
         </section>
 
         <div className="my-6">
-          <img src="/lovable-uploads/e66cc5a1-ea1a-4e5b-8760-490c174f0b24.png" alt="DeHub streaming platform interface" className="w-full rounded-lg border border-border shadow-sm" />
+          <img src="/lovable-uploads/docs-explore.png" alt="The Explore page, searching people, posts and media across DeHub" width={1440} height={940} loading="lazy" decoding="async" className="w-full h-auto rounded-lg border border-border shadow-sm" />
         </div>
 
-        <section id="badges" className="scroll-mt-32">
+        <section id="badges" className="scroll-mt-44">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.badgeTitle')}</h2>
           <h3 className="text-xl font-medium text-foreground mb-3 font-exo">{t('dapp.badgeSubtitle')}</h3>
           <p className="text-foreground/80 leading-relaxed mb-6 font-exo">{t('dapp.badgeDesc')}</p>
@@ -499,7 +534,7 @@ const Dapp = () => {
           <BadgeFlowchart />
         </section>
 
-        <section id="tipping" className="scroll-mt-32">
+        <section id="tipping" className="scroll-mt-44">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.tipTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.tipDesc1')}</p>
           <p className="text-foreground/80 leading-relaxed mb-6 font-exo">{t('dapp.tipDesc2')}</p>
@@ -507,7 +542,7 @@ const Dapp = () => {
           <TippingFlowchart />
         </section>
 
-        <section id="governance" className="scroll-mt-32">
+        <section id="governance" className="scroll-mt-44">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.mineTitle')}</h2>
           <h3 className="text-xl font-medium text-foreground mb-3 font-exo">{t('dapp.mineSubtitle')}</h3>
           
@@ -632,7 +667,7 @@ const Dapp = () => {
           </div>
         </section>
 
-        <section id="live-streaming" className="scroll-mt-32">
+        <section id="live-streaming" className="scroll-mt-44">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
             <Video className="w-8 h-8" />
             {t('dapp.liveStreamingTitle')}
@@ -829,7 +864,7 @@ const Dapp = () => {
             </CardContent>
           </Card>
 
-          <section id="subscriptions" className="mt-12 scroll-mt-32">
+          <section id="subscriptions" className="mt-12 scroll-mt-44">
             <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
               <Crown className="w-8 h-8" />
               {t('dapp.subscriptionsTitle')}
@@ -949,7 +984,7 @@ const Dapp = () => {
             </Card>
           </section>
 
-          <section id="messages" className="mt-12 scroll-mt-32">
+          <section id="messages" className="mt-12 scroll-mt-44">
             <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
               <MessageCircle className="w-8 h-8" />
               {t('dapp.messagesTitle')}
@@ -959,6 +994,8 @@ const Dapp = () => {
               <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.messagesOverview')}</h3>
               <p className="text-foreground/80 leading-relaxed font-exo">{t('dapp.messagesDesc')}</p>
             </div>
+
+            <Shot src="/lovable-uploads/docs-messages.png" alt="Direct messages, with conversations, calls and post sharing built in." />
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 mb-8">
               <Card className="docs-glass">
@@ -1165,7 +1202,7 @@ const Dapp = () => {
             </Card>
           </section>
 
-          <section id="superpowers" className="mt-12 scroll-mt-32">
+          <section id="superpowers" className="mt-12 scroll-mt-44">
             <h2 className="text-3xl font-bold text-foreground mb-6 font-exo">{t('dapp.superPowersTitle')}</h2>
             
             <div className="space-y-6">
@@ -1223,7 +1260,7 @@ const Dapp = () => {
             </div>
           </section>
 
-          <section id="fees" className="mt-12 scroll-mt-32">
+          <section id="fees" className="mt-12 scroll-mt-44">
             <h2 className="text-3xl font-bold text-foreground mb-6 font-exo">{t('dapp.feeTierTitle')}</h2>
             
             <div className="docs-glass p-6 rounded-lg mb-6">
@@ -1323,14 +1360,14 @@ const Dapp = () => {
           </section>
         </section>
 
-        <section id="communities" className="scroll-mt-32">
+        <section id="communities" className="scroll-mt-44">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
             <Users className="w-8 h-8" />
             {t('dapp.communitiesTitle')}
           </h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.communitiesDesc')}</p>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.communitiesDesc2')}</p>
-          {/* TODO(screenshot): Communities page — latest app version */}
+          <Shot src="/lovable-uploads/docs-communities.png" alt="The Communities page, listing public communities with their member counts." />
           <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.keyFeatures')}</h3>
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
             <li><strong>{t('dapp.communitiesB1')}</strong> {t('dapp.communitiesB1Desc')}</li>
@@ -1339,14 +1376,14 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <section id="stages" className="scroll-mt-32">
+        <section id="stages" className="scroll-mt-44">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
             <MessageCircle className="w-8 h-8" />
             {t('dapp.stagesTitle')}
           </h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.stagesDesc')}</p>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.stagesDesc2')}</p>
-          {/* TODO(screenshot): Stages / live audio room — latest app version */}
+          <Shot src="/lovable-uploads/docs-stages.png" alt="The Stages page, with Live and Recorded tabs and a control to start a stage." />
           <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.keyFeatures')}</h3>
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
             <li><strong>{t('dapp.stagesB1')}</strong> {t('dapp.stagesB1Desc')}</li>
@@ -1356,7 +1393,7 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <section id="tv-radio" className="scroll-mt-32">
+        <section id="tv-radio" className="scroll-mt-44">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
             <Video className="w-8 h-8" />
             {t('dapp.tvRadioTitle')}
@@ -1367,16 +1404,19 @@ const Dapp = () => {
             <li><strong>{t('dapp.tvRadioB2')}</strong> {t('dapp.tvRadioB2Desc')}</li>
             <li><strong>{t('dapp.tvRadioB3')}</strong> {t('dapp.tvRadioB3Desc')}</li>
           </ul>
+          <Shot src="/lovable-uploads/docs-tv.png" alt="DeHub TV, with continuously running live channels." />
+          <Shot src="/lovable-uploads/docs-music.png" alt="The Music hub, covering tracks, videos, podcasts and radio stations." />
         </section>
 
-        <section id="wallet" className="scroll-mt-32">
+        <section id="wallet" className="scroll-mt-44">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
             <Banknote className="w-8 h-8" />
             {t('dapp.walletHubTitle')}
           </h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.walletHubDesc')}</p>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.walletHubDesc2')}</p>
-          {/* TODO(screenshot): Wallet + Command Centre — latest app version */}
+          <Shot src="/lovable-uploads/docs-wallet.png" alt="The built-in wallet, showing token balances and the Receive, Send, Buy, Stake, Bridge and Cash Out actions." />
+          <Shot src="/lovable-uploads/docs-command-centre.png" alt="The Command Centre, the creator finance dashboard for income and transactions." />
           <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.keyFeatures')}</h3>
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
             <li><strong>{t('dapp.walletHubB1')}</strong> {t('dapp.walletHubB1Desc')}</li>
@@ -1391,14 +1431,14 @@ const Dapp = () => {
           </p>
         </section>
 
-        <section id="work" className="scroll-mt-32">
+        <section id="work" className="scroll-mt-44">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
             <Scale className="w-8 h-8" />
             {t('dapp.workTitle')}
           </h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.workDesc')}</p>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.workDesc2')}</p>
-          {/* TODO(screenshot): Bounty Hunting board — latest app version */}
+          <Shot src="/lovable-uploads/docs-bounties.png" alt="The Bounties board, filterable by category and currency, with Post a Bounty." />
           <h3 className="text-xl font-semibold text-foreground mb-3 font-exo">{t('dapp.keyFeatures')}</h3>
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
             <li><strong>{t('dapp.workB1')}</strong> {t('dapp.workB1Desc')}</li>
@@ -1410,10 +1450,10 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <section id="stores" className="scroll-mt-32">
+        <section id="stores" className="scroll-mt-44">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.storesTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.storesDesc')}</p>
-          {/* TODO(screenshot): Stores / storefront page — latest app version */}
+          <Shot src="/lovable-uploads/docs-stores.png" alt="The Stores page, where creators and businesses run a native storefront." />
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
             <li><strong>{t('dapp.storesB1')}</strong> {t('dapp.storesB1Desc')}</li>
             <li><strong>{t('dapp.storesB2')}</strong> {t('dapp.storesB2Desc')}</li>
@@ -1421,10 +1461,10 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <section id="affiliate" className="scroll-mt-32">
+        <section id="affiliate" className="scroll-mt-44">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.affiliateTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.affiliateDesc')}</p>
-          {/* TODO(screenshot): Affiliate dashboard — latest app version */}
+          <Shot src="/lovable-uploads/docs-affiliate.png" alt="The Affiliate dashboard, tracking referral clicks, signups and earnings." />
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
             <li><strong>{t('dapp.affiliateB1')}</strong> {t('dapp.affiliateB1Desc')}</li>
             <li><strong>{t('dapp.affiliateB2')}</strong> {t('dapp.affiliateB2Desc')}</li>
@@ -1432,7 +1472,7 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <section id="ai-suite" className="scroll-mt-32">
+        <section id="ai-suite" className="scroll-mt-44">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
             <Zap className="w-8 h-8" />
             {t('dapp.aiSuiteTitle')}
@@ -1443,25 +1483,27 @@ const Dapp = () => {
             <li><strong>{t('dapp.aiSuiteB2')}</strong> {t('dapp.aiSuiteB2Desc')}</li>
             <li><strong>{t('dapp.aiSuiteB3')}</strong> {t('dapp.aiSuiteB3Desc')}</li>
           </ul>
+          <Shot src="/lovable-uploads/docs-assistant.png" alt="The AI Assistant, available to every account inside the app." />
           {/* Full AI Toolkits reference, folded in from /docs/ai-toolkits */}
           <div className="mt-8">
             <AIToolkits />
           </div>
         </section>
 
-        <section id="encryption" className="scroll-mt-32">
+        <section id="encryption" className="scroll-mt-44">
           {/* Folded in from /docs/e2e-encryption */}
           <E2EEncryption />
         </section>
 
-        <section id="depin" className="scroll-mt-32">
+        <section id="depin" className="scroll-mt-44">
           {/* Folded in from /docs/depin */}
           <DePIN />
         </section>
 
-        <section id="advertising" className="scroll-mt-32">
+        <section id="advertising" className="scroll-mt-44">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.adsPortalTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.adsPortalDesc')}</p>
+          <Shot src="/lovable-uploads/docs-ads.png" alt="The self-serve advertising portal for creating and funding campaigns." />
           <p className="text-foreground/80 font-exo">
             <Link to="/docs/advertising" className="text-primary hover:underline inline-flex items-center gap-1">
               {t('dapp.adsPortalLink')} <ExternalLink className="w-3.5 h-3.5" />
@@ -1469,14 +1511,16 @@ const Dapp = () => {
           </p>
         </section>
 
-        <section id="feature-requests" className="scroll-mt-32">
+        <section id="feature-requests" className="scroll-mt-44">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.featureBoardTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.featureBoardDesc')}</p>
+          <Shot src="/lovable-uploads/docs-features.png" alt="The feature request board, where the community submits and votes on ideas." />
         </section>
 
-        <section id="connect" className="scroll-mt-32">
+        <section id="connect" className="scroll-mt-44">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.connectTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.connectDesc')}</p>
+          <Shot src="/lovable-uploads/docs-connect.png" alt="The Connect page, for linking DeHub to ChatGPT or Claude over MCP." />
         </section>
       </div>
     </div>;
