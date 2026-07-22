@@ -118,7 +118,7 @@ const Dapp = () => {
       </div>
       
       <div className="my-6">
-        <img src="/lovable-uploads/d06e2852-219e-4946-960f-0830ebb81716.png" alt="DeHub Games streaming platform interface showing video content grid with leaderboard" className="w-full rounded-lg border border-border shadow-sm" />
+        <img src="/lovable-uploads/docs-hero-videos.png" alt="The DeHub video feed, with the format tabs, creator leaderboard and trending topics" width={1440} height={940} className="w-full h-auto rounded-lg border border-border shadow-sm" />
       </div>
       
       {/* On-this-page quick nav */}
@@ -156,7 +156,7 @@ const Dapp = () => {
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.intro3')}</p>
           
           <div className="my-6">
-            <img src="/lovable-uploads/49985a5d-354f-48c8-888c-516c56c41f51.png" alt="Connect a Wallet interface" className="w-full rounded-lg border border-border shadow-sm" />
+            <img src="/lovable-uploads/docs-connect-wallet.png" alt="Signing in to DeHub with email, SMS, Google, X or Discord, or by connecting a wallet" width={1440} height={940} loading="lazy" decoding="async" className="w-full h-auto rounded-lg border border-border shadow-sm" />
             <p className="text-center text-sm text-muted-foreground mt-3 italic font-exo">{t('dapp.walletCaption')}</p>
           </div>
           
@@ -183,7 +183,7 @@ const Dapp = () => {
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.uploadTitle')}</h2>
           
           <div className="my-6">
-            <img src="/lovable-uploads/c6d5f1cc-f829-445e-8a5d-c5ea9fa4c720.png" alt="Content uploading interface" className="w-full rounded-lg border border-border shadow-sm" />
+            <img src="/lovable-uploads/docs-upload.png" alt="The post composer, with title, category, community and subscriber-only options" width={1440} height={940} loading="lazy" decoding="async" className="w-full h-auto rounded-lg border border-border shadow-sm" />
           </div>
           
           <div className="my-6">
