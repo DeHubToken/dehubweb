@@ -31,7 +31,51 @@ const getMenuItems = (t: (key: string) => string) => [{
   }, {
     title: t('nav.dapp'),
     path: '/docs/dapps',
-    icon: '🖥️'
+    icon: '🖥️',
+    hasSubmenu: true,
+    submenuItems: [{
+      title: t('nav.overview'),
+      path: '/docs/dapps'
+    }, {
+      title: t('dapp.feedsTitle'),
+      path: '/docs/dapps#feeds'
+    }, {
+      title: t('dapp.uploadTitle'),
+      path: '/docs/dapps#uploading'
+    }, {
+      title: t('dapp.tokenisedTitle'),
+      path: '/docs/dapps#tokenised-uploads'
+    }, {
+      title: t('dapp.liveStreamingTitle'),
+      path: '/docs/dapps#live-streaming'
+    }, {
+      title: t('dapp.subscriptionsTitle'),
+      path: '/docs/dapps#subscriptions'
+    }, {
+      title: t('dapp.messagesTitle'),
+      path: '/docs/dapps#messages'
+    }, {
+      title: t('dapp.communitiesTitle'),
+      path: '/docs/dapps#communities'
+    }, {
+      title: t('dapp.stagesTitle'),
+      path: '/docs/dapps#stages'
+    }, {
+      title: t('dapp.tvRadioTitle'),
+      path: '/docs/dapps#tv-radio'
+    }, {
+      title: t('dapp.walletHubTitle'),
+      path: '/docs/dapps#wallet'
+    }, {
+      title: t('dapp.workTitle'),
+      path: '/docs/dapps#work'
+    }, {
+      title: t('dapp.aiSuiteTitle'),
+      path: '/docs/dapps#ai-suite'
+    }, {
+      title: t('dapp.feeTierTitle'),
+      path: '/docs/dapps#fees'
+    }]
   }, {
     title: t('nav.games'),
     path: '/docs/games',
