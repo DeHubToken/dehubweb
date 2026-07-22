@@ -204,6 +204,30 @@
 
   <body>
     <div id="root"></div>
+    <!-- No-JS fallback. The app is client-rendered, so anything that fetches
+         this page without executing JS previously saw an empty <div id="root">
+         and nothing else. The Cloudflare worker only prerenders for UAs matching
+         BOT_UA_PATTERN, which misses non-crawler fetchers — Google's OAuth
+         verification checker among them, which reported dehub.io as
+         unresponsive (July 2026). This block guarantees every no-JS fetch gets
+         the app name, what it does, and the policy links reviewers look for. -->
+    <noscript>
+      <div style="font-family: sans-serif; background: #000; color: #fff; min-height: 100vh; margin: 0; padding: 40px 20px; box-sizing: border-box;">
+        <div style="max-width: 720px; margin: 0 auto; text-align: center;">
+          <h1>DeHub — Open Source, User Owned Social Media</h1>
+          <p>DeHub is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities. Post, stream, message and earn on a network you own.</p>
+          <p>DeHub needs JavaScript to run. Please enable it, or open the app at <a href="https://dehub.io/" style="color:#9f9">dehub.io</a>.</p>
+          <nav style="margin-top: 24px; font-size: 14px;">
+            <a href="/app/explore" style="color:#aaa; margin:0 8px;">Explore</a>
+            <a href="/features" style="color:#aaa; margin:0 8px;">Features</a>
+            <a href="/docs" style="color:#aaa; margin:0 8px;">Docs</a>
+            <a href="/privacy" style="color:#aaa; margin:0 8px;">Privacy Policy</a>
+            <a href="/terms" style="color:#aaa; margin:0 8px;">Terms of Service</a>
+            <a href="/delete-account" style="color:#aaa; margin:0 8px;">Delete Account</a>
+          </nav>
+        </div>
+      </div>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

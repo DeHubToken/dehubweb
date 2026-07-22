@@ -620,7 +620,17 @@ const SYSTEM_ROUTES = [
 ];
 
 
-const BOT_UA_PATTERN = /bot|crawl|spider|facebook|twitter|linkedin|whatsapp|telegram|slack|discord|facebot|oggrabber/i;
+// `bot|crawl|spider` covers the crawlers that announce themselves. It does NOT
+// cover Google's own non-Googlebot tooling (Google-InspectionTool backs Search
+// Console's URL Inspection; GoogleOther backs assorted product checks including
+// the OAuth app-verification homepage fetch) nor plain HTTP clients. Those all
+// fell through to the SPA shell — an empty <div id="root"> — which is why OAuth
+// verification reported dehub.io as unresponsive in July 2026.
+//
+// Deliberately excludes headless-browser UAs: those execute JS and are better
+// served the real SPA. Every UA added here is a non-rendering fetcher, so the
+// prerendered HTML is strictly more than it could otherwise see.
+const BOT_UA_PATTERN = /bot|crawl|spider|facebook|twitter|linkedin|whatsapp|telegram|slack|discord|facebot|oggrabber|google-inspectiontool|googleother|apis-google|feedfetcher|curl|wget|python-requests|python-urllib|axios|node-fetch|got |okhttp|go-http-client|java\/|libwww-perl|ruby|postmanruntime|insomnia|httpie/i;
 
 // Static marketing/app routes that need per-route OG meta (bots only).
 // Kept in sync with the STATIC_ROUTES map inside supabase/functions/ssr-seo.
@@ -738,6 +748,16 @@ async function handleRequest(request, env) {
       }
     }
     return new Response(null, { status: 301, headers: { Location: `https://dehub.io${target}` } });
+  }
+
+  // Plain http:// served 200 at the apex instead of upgrading — the Workers
+  // custom domain answers on both schemes and the zone has no Always Use HTTPS
+  // rule. Checkers that probe http:// first (Google's OAuth verification among
+  // them) were reading an insecure origin. Placed AFTER the alias block on
+  // purpose: those hosts already 301 straight to an absolute https://dehub.io
+  // target, so upgrading first would cost them a second hop.
+  if (url.protocol === 'http:') {
+    return redirect301(`https://${url.host}${url.pathname}${url.search}`);
   }
 
   // URL-space hygiene (all UAs — these paths have no content in the SPA
