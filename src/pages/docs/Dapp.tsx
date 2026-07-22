@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import BadgeFlowchart from '../../components/BadgeFlowchart';
 import TippingFlowchart from '../../components/TippingFlowchart';
@@ -87,6 +87,73 @@ const Dapp = () => {
     { id: 'connect', label: t('dapp.tocConnect') },
   ];
 
+  // Scroll-spy for the on-this-page bar. IntersectionObserver rather than a
+  // scroll listener: this page is ~30 sections tall and a per-frame handler
+  // costs real frames on mobile. The band starts just below the sticky header
+  // + bar (109px) and ends a third down the viewport, so the highlighted chip
+  // is whatever section you are actually reading.
+  const [activeId, setActiveId] = useState(tocItems[0].id);
+  const stripRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const order = tocItems.map(i => i.id);
+    const visible = new Set<string>();
+    const io = new IntersectionObserver(
+      entries => {
+        for (const e of entries) {
+          if (e.isIntersecting) visible.add(e.target.id);
+          else visible.delete(e.target.id);
+        }
+        // First in document order wins, so back-scrolling picks the section
+        // whose heading you just re-entered, not the one below it.
+        const next = order.find(id => visible.has(id));
+        if (next) setActiveId(next);
+      },
+      { rootMargin: '-112px 0px -66% 0px' }
+    );
+    order.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) io.observe(el);
+    });
+    return () => io.disconnect();
+    // ids are static; only the labels change with language
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Keep the active chip inside the strip. scrollTo on the strip itself rather
+  // than scrollIntoView, which would also nudge the page vertically.
+  useEffect(() => {
+    const strip = stripRef.current;
+    const chip = strip?.querySelector<HTMLElement>(`[data-toc-chip="${activeId}"]`);
+    if (!strip || !chip) return;
+    const target = chip.offsetLeft - strip.clientWidth / 2 + chip.offsetWidth / 2;
+    if (Math.abs(target - strip.scrollLeft) < 8) return;
+    strip.scrollTo({
+      left: Math.max(0, target),
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
+    });
+  }, [activeId]);
+
+  // Fade only the edge that actually has more chips behind it, so the first and
+  // last chip stay fully legible at rest.
+  const [edges, setEdges] = useState({ start: false, end: false });
+  const syncEdges = () => {
+    const el = stripRef.current;
+    if (!el) return;
+    const max = el.scrollWidth - el.clientWidth;
+    setEdges(prev => {
+      const next = { start: el.scrollLeft > 4, end: el.scrollLeft < max - 4 };
+      return prev.start === next.start && prev.end === next.end ? prev : next;
+    });
+  };
+  useEffect(() => {
+    syncEdges();
+    window.addEventListener('resize', syncEdges);
+    return () => window.removeEventListener('resize', syncEdges);
+  }, []);
+  const tocFade = `linear-gradient(to right, ${
+    edges.start ? 'transparent 0, #000 28px' : '#000 0'
+  }, ${edges.end ? '#000 calc(100% - 28px), transparent 100%' : '#000 100%'})`;
+
   const badgeKeys = [
     'badgeNone', 'badgeCrab', 'badgeLobster', 'badgePiranha', 'badgeTortoise',
     'badgeCobra', 'badgeOctopus', 'badgeCrocodile', 'badgeDolphin', 'badgeTigerShark',
@@ -121,36 +188,62 @@ const Dapp = () => {
         <img src="/lovable-uploads/docs-hero-videos.png" alt="The DeHub video feed, with the format tabs, creator leaderboard and trending topics" width={1440} height={940} className="w-full h-auto rounded-lg border border-border shadow-sm" />
       </div>
       
-      {/* On-this-page quick nav */}
-      <nav aria-label={t('dapp.tocTitle')} className="sticky top-16 z-10 -mx-2 px-2 py-3 bg-background/85 backdrop-blur-md border-b border-border">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 font-exo">{t('dapp.tocTitle')}</p>
-        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
-          {tocItems.map(item => (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              onClick={e => {
-                e.preventDefault();
-                // Route through the router so the sidebar's active state stays in
-                // sync, then scroll (the hash may already match on a re-click).
-                chipScroll.current = true;
-                navigate(`#${item.id}`, { replace: true });
-                document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-              }}
-              className={`shrink-0 whitespace-nowrap px-3 py-1.5 rounded-full text-xs font-exo border transition-colors ${
-                hash === `#${item.id}`
-                  ? 'bg-foreground/10 text-foreground border-foreground/20 font-medium'
-                  : 'bg-muted text-muted-foreground border-border hover:bg-foreground/5 hover:text-foreground'
-              }`}
-            >
-              {item.label}
-            </a>
-          ))}
+      {/* On-this-page quick nav. Frosted with the docs header's own recipe
+          (bg-card/90 + backdrop-blur-sm + hairline) rather than flat paint: the
+          light docs surface is textured, so a solid fill reads as a grey slab
+          laid over it. Sits flush under the header at top-16 so the two read as
+          one chrome stack, and spans exactly the content column (no negative
+          margin) so the bar and the prose below share one left and right edge. */}
+      <nav
+        aria-label={t('dapp.tocTitle')}
+        data-docs-subnav
+        className="sticky top-16 z-20 flex items-center gap-3 py-2 bg-card/90 backdrop-blur-sm border-b border-border"
+      >
+        <span className="hidden sm:block shrink-0 text-[11px] font-medium uppercase tracking-wide text-muted-foreground font-exo">
+          {t('dapp.tocTitle')}
+        </span>
+        <span aria-hidden className="hidden sm:block shrink-0 h-4 w-px bg-border" />
+        <div
+          ref={stripRef}
+          onScroll={syncEdges}
+          className="relative flex min-w-0 flex-1 gap-1 overflow-x-auto scrollbar-hide"
+          style={{ maskImage: tocFade, WebkitMaskImage: tocFade }}
+        >
+          {tocItems.map(item => {
+            const isActive = activeId === item.id;
+            return (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                data-toc-chip={item.id}
+                aria-current={isActive ? 'location' : undefined}
+                onClick={e => {
+                  e.preventDefault();
+                  // Route through the router so the sidebar's active state stays in
+                  // sync, then scroll (the hash may already match on a re-click).
+                  chipScroll.current = true;
+                  navigate(`#${item.id}`, { replace: true });
+                  document.getElementById(item.id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }}
+                // bg-primary/text-primary-foreground rather than hand-rolled
+                // colours: docs-dark.css force-whitens every <a> in dark mode,
+                // and that pair is the one inverted-control vocabulary it
+                // already re-maps (and canvas themes inherit it for free).
+                className={`shrink-0 whitespace-nowrap px-2.5 py-1.5 rounded-md text-xs font-exo transition-colors ${
+                  isActive
+                    ? 'bg-primary text-primary-foreground font-medium'
+                    : 'text-muted-foreground hover:bg-foreground/[0.06] hover:text-foreground'
+                }`}
+              >
+                {item.label}
+              </a>
+            );
+          })}
         </div>
       </nav>
 
       <div className="space-y-8">
-        <section id="getting-started" className="scroll-mt-44">
+        <section id="getting-started" className="scroll-mt-32">
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.intro1')}</p>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.intro2')}</p>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.intro3')}</p>
@@ -163,7 +256,7 @@ const Dapp = () => {
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.intro4')}</p>
         </section>
 
-        <section id="feeds" className="scroll-mt-44">
+        <section id="feeds" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.feedsTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.feedsDesc')}</p>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.feedsDesc2')}</p>
@@ -179,7 +272,7 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <section id="uploading" className="scroll-mt-44">
+        <section id="uploading" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.uploadTitle')}</h2>
           
           <div className="my-6">
@@ -198,7 +291,7 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <section id="tokenised-uploads" className="scroll-mt-44">
+        <section id="tokenised-uploads" className="scroll-mt-32">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
             <Layers className="w-8 h-8" />
             {t('dapp.tokenisedTitle')}
@@ -429,7 +522,7 @@ const Dapp = () => {
           </div>
         </section>
 
-        <section id="profile" className="scroll-mt-44">
+        <section id="profile" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.profileTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-6 font-exo">{t('dapp.profileDesc')}</p>
           
@@ -438,7 +531,7 @@ const Dapp = () => {
           </div>
         </section>
 
-        <section id="top-up" className="scroll-mt-44">
+        <section id="top-up" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.topUpTitle')}</h2>
           <Shot src="/lovable-uploads/docs-buy.png" alt="Buying DHB directly inside the app." />
           <p className="text-foreground/80 leading-relaxed mb-6 font-exo">{t('dapp.topUpDesc')}</p>
@@ -498,7 +591,7 @@ const Dapp = () => {
           </div>
         </section>
 
-        <section id="explore" className="scroll-mt-44">
+        <section id="explore" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.exploreTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.exploreDesc')}</p>
           
@@ -522,7 +615,7 @@ const Dapp = () => {
           <img src="/lovable-uploads/docs-explore.png" alt="The Explore page, searching people, posts and media across DeHub" width={1440} height={940} loading="lazy" decoding="async" className="w-full h-auto rounded-lg border border-border shadow-sm" />
         </div>
 
-        <section id="badges" className="scroll-mt-44">
+        <section id="badges" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.badgeTitle')}</h2>
           <h3 className="text-xl font-medium text-foreground mb-3 font-exo">{t('dapp.badgeSubtitle')}</h3>
           <p className="text-foreground/80 leading-relaxed mb-6 font-exo">{t('dapp.badgeDesc')}</p>
@@ -530,7 +623,7 @@ const Dapp = () => {
           <BadgeFlowchart />
         </section>
 
-        <section id="tipping" className="scroll-mt-44">
+        <section id="tipping" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.tipTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.tipDesc1')}</p>
           <p className="text-foreground/80 leading-relaxed mb-6 font-exo">{t('dapp.tipDesc2')}</p>
@@ -538,7 +631,7 @@ const Dapp = () => {
           <TippingFlowchart />
         </section>
 
-        <section id="governance" className="scroll-mt-44">
+        <section id="governance" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.mineTitle')}</h2>
           <h3 className="text-xl font-medium text-foreground mb-3 font-exo">{t('dapp.mineSubtitle')}</h3>
           
@@ -663,7 +756,7 @@ const Dapp = () => {
           </div>
         </section>
 
-        <section id="live-streaming" className="scroll-mt-44">
+        <section id="live-streaming" className="scroll-mt-32">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
             <Video className="w-8 h-8" />
             {t('dapp.liveStreamingTitle')}
@@ -860,7 +953,7 @@ const Dapp = () => {
             </CardContent>
           </Card>
 
-          <section id="subscriptions" className="mt-12 scroll-mt-44">
+          <section id="subscriptions" className="mt-12 scroll-mt-32">
             <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
               <Crown className="w-8 h-8" />
               {t('dapp.subscriptionsTitle')}
@@ -980,7 +1073,7 @@ const Dapp = () => {
             </Card>
           </section>
 
-          <section id="messages" className="mt-12 scroll-mt-44">
+          <section id="messages" className="mt-12 scroll-mt-32">
             <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
               <MessageCircle className="w-8 h-8" />
               {t('dapp.messagesTitle')}
@@ -1196,7 +1289,7 @@ const Dapp = () => {
             </Card>
           </section>
 
-          <section id="superpowers" className="mt-12 scroll-mt-44">
+          <section id="superpowers" className="mt-12 scroll-mt-32">
             <h2 className="text-3xl font-bold text-foreground mb-6 font-exo">{t('dapp.superPowersTitle')}</h2>
             
             <div className="space-y-6">
@@ -1254,7 +1347,7 @@ const Dapp = () => {
             </div>
           </section>
 
-          <section id="fees" className="mt-12 scroll-mt-44">
+          <section id="fees" className="mt-12 scroll-mt-32">
             <h2 className="text-3xl font-bold text-foreground mb-6 font-exo">{t('dapp.feeTierTitle')}</h2>
             
             <div className="docs-glass p-6 rounded-lg mb-6">
@@ -1354,7 +1447,7 @@ const Dapp = () => {
           </section>
         </section>
 
-        <section id="communities" className="scroll-mt-44">
+        <section id="communities" className="scroll-mt-32">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
             <Users className="w-8 h-8" />
             {t('dapp.communitiesTitle')}
@@ -1370,7 +1463,7 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <section id="stages" className="scroll-mt-44">
+        <section id="stages" className="scroll-mt-32">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
             <MessageCircle className="w-8 h-8" />
             {t('dapp.stagesTitle')}
@@ -1387,7 +1480,7 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <section id="tv-radio" className="scroll-mt-44">
+        <section id="tv-radio" className="scroll-mt-32">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
             <Video className="w-8 h-8" />
             {t('dapp.tvRadioTitle')}
@@ -1402,7 +1495,7 @@ const Dapp = () => {
           <Shot src="/lovable-uploads/docs-music.png" alt="The Music hub, covering tracks, videos, podcasts and radio stations." />
         </section>
 
-        <section id="wallet" className="scroll-mt-44">
+        <section id="wallet" className="scroll-mt-32">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
             <Banknote className="w-8 h-8" />
             {t('dapp.walletHubTitle')}
@@ -1425,7 +1518,7 @@ const Dapp = () => {
           </p>
         </section>
 
-        <section id="work" className="scroll-mt-44">
+        <section id="work" className="scroll-mt-32">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
             <Scale className="w-8 h-8" />
             {t('dapp.workTitle')}
@@ -1444,7 +1537,7 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <section id="stores" className="scroll-mt-44">
+        <section id="stores" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.storesTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.storesDesc')}</p>
           <Shot src="/lovable-uploads/docs-stores.png" alt="The Stores page, where creators and businesses run a native storefront." />
@@ -1455,7 +1548,7 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <section id="affiliate" className="scroll-mt-44">
+        <section id="affiliate" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.affiliateTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.affiliateDesc')}</p>
           <ul className="list-disc list-inside text-foreground/80 space-y-2 mb-4 font-exo">
@@ -1465,7 +1558,7 @@ const Dapp = () => {
           </ul>
         </section>
 
-        <section id="ai-suite" className="scroll-mt-44">
+        <section id="ai-suite" className="scroll-mt-32">
           <h2 className="text-3xl font-bold text-foreground mb-6 font-exo flex items-center gap-3">
             <Zap className="w-8 h-8" />
             {t('dapp.aiSuiteTitle')}
@@ -1483,17 +1576,17 @@ const Dapp = () => {
           </div>
         </section>
 
-        <section id="encryption" className="scroll-mt-44">
+        <section id="encryption" className="scroll-mt-32">
           {/* Folded in from /docs/e2e-encryption */}
           <E2EEncryption />
         </section>
 
-        <section id="depin" className="scroll-mt-44">
+        <section id="depin" className="scroll-mt-32">
           {/* Folded in from /docs/depin */}
           <DePIN />
         </section>
 
-        <section id="advertising" className="scroll-mt-44">
+        <section id="advertising" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.adsPortalTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.adsPortalDesc')}</p>
           <Shot src="/lovable-uploads/docs-ads.png" alt="The self-serve advertising portal for creating and funding campaigns." />
@@ -1504,13 +1597,13 @@ const Dapp = () => {
           </p>
         </section>
 
-        <section id="feature-requests" className="scroll-mt-44">
+        <section id="feature-requests" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.featureBoardTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.featureBoardDesc')}</p>
           <Shot src="/lovable-uploads/docs-features.png" alt="The feature request board, where the community submits and votes on ideas." />
         </section>
 
-        <section id="connect" className="scroll-mt-44">
+        <section id="connect" className="scroll-mt-32">
           <h2 className="text-2xl font-semibold text-foreground mb-4 font-exo">{t('dapp.connectTitle')}</h2>
           <p className="text-foreground/80 leading-relaxed mb-4 font-exo">{t('dapp.connectDesc')}</p>
           <Shot src="/lovable-uploads/docs-connect.png" alt="The Connect page, for linking DeHub to ChatGPT or Claude over MCP." />

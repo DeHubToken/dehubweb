@@ -64,8 +64,17 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 /* Header + sidebar are thinner glass so page content reads as the primary
    surface; they also drop their `backdrop-blur-sm` default (replaced above). */
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]).dark .docs-root [data-docs-header],
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]).dark .docs-root [data-docs-sidebar] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]).dark .docs-root [data-docs-sidebar],
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]).dark .docs-root [data-docs-subnav] {
   background: var(--glass-highlight), rgb(var(--glass-tint) / 0.55) !important;
+}
+
+/* The on-this-page sub-nav stacks directly under the header, so it takes the
+   same thin glass above and only a hairline to separate the two. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"]).dark .docs-root [data-docs-subnav] {
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  border-bottom-color: rgb(255 255 255 / 0.12) !important;
 }
 
 /* 4. The blog reading panel — one big glass sheet for the raw-prose article
