@@ -37,18 +37,18 @@ export default function WorkPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title="Work — Paid Jobs, Clipping & Contracts | DeHub" description="Browse paid jobs on DeHub: comments & shill work, clipping bounties, and fixed-price contracts. Get paid in DHB or USDC." url="https://dehub.io/work" />
+      <SEOHead title="Bounties — Post & Hunt Paid Tasks | DeHub" description="Browse open bounties on DeHub: social media tasks, clipping bounties and fixed-price contracts. Claim a bounty as a hunter and get paid in DHB or USDC." url="https://dehub.io/work" />
       {/* Sticky nav pill */}
       <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2 max-w-6xl mx-auto">
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3 space-y-3">
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
             <div>
-              <h1 className="text-xl font-bold text-white">Work</h1>
-              <p className="text-sm text-white/60">Post jobs, complete bounties, get paid in DHB or USDC.</p>
+              <h1 className="text-xl font-bold text-white">Bounties</h1>
+              <p className="text-sm text-white/60">Post a bounty or hunt one down. Paid in DHB or USDC.</p>
             </div>
             <LiquidGlassBubble2
-              label="Post a Job"
+              label="Post a Bounty"
               icon={<Plus className="w-4 h-4" />}
               onClick={() => navigate('/work/post')}
               width="auto"
@@ -83,7 +83,7 @@ export default function WorkPage() {
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search jobs…"
+                placeholder="Search bounties…"
                 className="w-full pl-10 pr-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-white/30"
               />
             </div>
@@ -120,9 +120,9 @@ export default function WorkPage() {
         ) : jobs.length === 0 ? (
           <div className="text-center py-16 text-white/50">
             <Briefcase className="w-10 h-10 mx-auto mb-3 opacity-50" />
-            <p className="mb-4">No jobs yet — be the first to post one.</p>
+            <p className="mb-4">No open bounties yet. Be the first to post one.</p>
             <LiquidGlassBubble2
-              label="Post a Job"
+              label="Post a Bounty"
               icon={<Plus className="w-4 h-4" />}
               onClick={() => navigate('/work/post')}
               width="auto"

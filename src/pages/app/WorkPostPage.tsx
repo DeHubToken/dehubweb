@@ -55,16 +55,16 @@ export default function WorkPostPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6">
-      <SEOHead title="Post a Job — DeHub Work" description="Post a paid job on DeHub Work: comments & shills, clipping bounties, or fixed-price contracts paid in DHB or USDC." url="https://dehub.io/work/post" />
+      <SEOHead title="Post a Bounty — DeHub Bounties" description="Post a bounty on DeHub: social media tasks, clipping bounties, or fixed-price contracts paid in DHB or USDC." url="https://dehub.io/work/post" />
       <button
         onClick={() => navigate('/work')}
         className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white mb-4"
       >
-        <ArrowLeft className="w-4 h-4" /> Back to Work
+        <ArrowLeft className="w-4 h-4" /> Back to Bounties
       </button>
 
       <div className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl p-6">
-        <h1 className="text-xl font-bold text-white mb-1">Post a Job</h1>
+        <h1 className="text-xl font-bold text-white mb-1">Post a Bounty</h1>
         <p className="text-sm text-white/60 mb-6">Step {step} of 3</p>
 
         {step === 1 && (

@@ -119,7 +119,7 @@ const FEATURE_GROUPS: { group: string; items: { value: string; label: string; bl
     items: [
       { value: 'stores', label: '🛍️ DeHub Stores', blurb: 'P2P commerce on Base DHB' },
       { value: 'fractions', label: '🧩 Fractions', blurb: 'Fractional NFT marketplace' },
-      { value: 'work', label: '🧑‍💻 DeHub Work', blurb: 'Escrow jobs: shills, clips, contracts' },
+      { value: 'work', label: '🧑‍💻 DeHub Bounties', blurb: 'Escrow bounties: social, clips, contracts' },
       { value: 'tipping', label: '💸 Tipping', blurb: 'Reward creators on any post' },
       { value: 'premium', label: '👑 DeHub Extra', blurb: 'Premium tiers with cashback' },
     ],
