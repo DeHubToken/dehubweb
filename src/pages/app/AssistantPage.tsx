@@ -1239,13 +1239,15 @@ export default function AssistantPage() {
   };
 
   // Handle image generation after payment confirmation
-  const handleImageGenerationConfirm = async (override?: { prompt: string; model: string; sourceImage?: string; logoImage?: string; headline?: string }) => {
+  const handleImageGenerationConfirm = async (override?: { prompt: string; model: string; sourceImage?: string; logoImage?: string; headline?: string; bannerRenderer?: 'template' | 'scene'; bannerFormat?: 'landscape' | 'square' | 'portrait' }) => {
     const req = override ?? pendingImageRequest;
     if (!req) return;
 
     const { prompt, model, sourceImage } = req;
     const logoImage = override?.logoImage;
     const headline = override?.headline;
+    const bannerRenderer = override?.bannerRenderer;
+    const bannerFormat = override?.bannerFormat;
     const imageModel = IMAGE_MODELS[model];
 
     // User message was already added by handleSend before paywall opened
@@ -1268,6 +1270,11 @@ export default function AssistantPage() {
           // Explicit headline channel (Poster Studio tagline). Empty string means
           // "user chose no headline" — the server must not regex-mine one from the prompt.
           headline,
+          // Explicit renderer + format from the Poster dialog. 'template' forces the
+          // on-brand SM Template banner (blog-banner look) even though the brand
+          // wrapper prose contains "cinematic". Undefined = let the server decide.
+          bannerRenderer,
+          bannerFormat,
           conversationHistory,
           model
         }
@@ -3138,11 +3145,22 @@ export default function AssistantPage() {
             // return SPA HTML in production, not the PNG.
             const logoUrl = cfg.logoVariant === 'icon' ? dehubLogoCompact : dehubLogo;
             const logoBase64 = await imageUrlToBase64(logoUrl).catch(() => imageUrlToBase64(dehubLogo));
+            // Renderer choice: the on-brand SM Template banner (like our blog banners)
+            // is the default; an explicit cinematic style archetype opts into the
+            // diffusion "scene" pipeline instead.
+            const bannerRenderer: 'template' | 'scene' =
+              cfg.style === 'dehub-template' || cfg.style === 'auto' ? 'template' : 'scene';
+            const bannerFormat: 'landscape' | 'square' | 'portrait' =
+              cfg.dimension === 'landscape' ? 'landscape'
+              : cfg.dimension === 'square' ? 'square'
+              : 'portrait';
             await handleImageGenerationConfirm({
               prompt: buildDeHubBrandPrompt(cfg.finalPrompt),
               model: DEHUB_BRAND_IMAGE_MODEL,
               logoImage: logoBase64,
               headline: cfg.tagline.trim(),
+              bannerRenderer,
+              bannerFormat,
             });
           } catch (err) {
             console.error('Poster generation error:', err);
