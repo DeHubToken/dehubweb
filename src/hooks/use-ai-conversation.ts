@@ -73,6 +73,36 @@ export function useAIConversation() {
     }
   }, [walletAddress, isAuthenticated]);
 
+  // Upload a data: URL to storage and return its public URL. Non-data URLs pass through.
+  const persistMediaUrl = useCallback(async (
+    url: string | undefined | null,
+    kind: 'image' | 'video',
+  ): Promise<string | null> => {
+    if (!url) return null;
+    if (!url.startsWith('data:')) return url;
+    try {
+      const match = /^data:([^;]+);base64,(.*)$/.exec(url);
+      if (!match) return null;
+      const mime = match[1];
+      const b64 = match[2];
+      const bin = atob(b64);
+      const bytes = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      const ext = (mime.split('/')[1] || (kind === 'video' ? 'mp4' : 'png')).split('+')[0];
+      const path = `assistant/${crypto.randomUUID()}.${ext}`;
+      const up = await supabase.storage.from('ai-media-uploads').upload(path, bytes, {
+        contentType: mime,
+        upsert: false,
+      });
+      if (up.error) throw up.error;
+      const { data: pub } = supabase.storage.from('ai-media-uploads').getPublicUrl(path);
+      return pub.publicUrl;
+    } catch (e) {
+      console.error('[AI Conversation] Failed to upload data URL to storage:', e);
+      return null;
+    }
+  }, []);
+
   // Save a message to the conversation
   const saveMessage = useCallback(async (
     message: Message,
@@ -81,6 +111,11 @@ export function useAIConversation() {
     if (!walletAddress || !currentConversationId) return;
 
     try {
+      const [imageUrl, videoUrl] = await Promise.all([
+        persistMediaUrl(message.imageUrl, 'image'),
+        persistMediaUrl(message.videoUrl, 'video'),
+      ]);
+
       const { error } = await withWalletHeader(
         supabase
           .from('ai_messages')
@@ -88,13 +123,14 @@ export function useAIConversation() {
             conversation_id: currentConversationId,
             role: message.role,
             content: message.content || '(image)',
-            image_url: message.imageUrl || null,
-            video_url: message.videoUrl || null,
+            image_url: imageUrl,
+            video_url: videoUrl,
             attached_image: message.attachedImage || null,
             audio_url: (message as any).audioUrl || null,
           }),
         walletAddress
       );
+
 
       if (error) {
         console.error('[AI Conversation] Error saving message:', error);
@@ -114,7 +150,7 @@ export function useAIConversation() {
     } catch (error) {
       console.error('[AI Conversation] Error saving message:', error);
     }
-  }, [walletAddress]);
+  }, [walletAddress, persistMediaUrl]);
 
   // Process the save queue
   const processSaveQueue = useCallback(async () => {
