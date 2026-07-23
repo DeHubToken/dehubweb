@@ -205,7 +205,7 @@ function FeatureCard({
   }, [showMenu]);
 
   return (
-    <div className="overflow-visible relative rounded-xl border border-foreground/[0.12] bg-foreground/[0.04] backdrop-blur-[24px] p-3">
+    <div className="overflow-visible relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3">
       {/* Header with three-dot menu */}
       <div className="flex items-start">
         <CardHeader
@@ -223,16 +223,16 @@ function FeatureCard({
             <button
               type="button"
               onClick={() => setShowMenu(prev => !prev)}
-              className="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-500 hover:text-white hover:bg-foreground/10 transition-colors"
+              className="w-8 h-8 flex items-center justify-center rounded-lg text-zinc-500 hover:text-white hover:bg-white/10 transition-colors"
             >
               <MoreVertical className="w-4 h-4" />
             </button>
             {showMenu && (
-              <div className="absolute right-0 top-9 z-50 w-36 rounded-xl border border-foreground/10 bg-popover/95 backdrop-blur-xl shadow-xl overflow-hidden">
+              <div className="absolute right-0 top-9 z-50 w-36 rounded-xl border border-white/10 bg-zinc-900/95 backdrop-blur-xl shadow-xl overflow-hidden">
                 <button
                   type="button"
                   onClick={handleEdit}
-                  className="flex items-center gap-2 w-full px-3 py-2.5 text-sm text-zinc-300 hover:bg-foreground/10 hover:text-white transition-colors"
+                  className="flex items-center gap-2 w-full px-3 py-2.5 text-sm text-zinc-300 hover:bg-white/10 hover:text-white transition-colors"
                 >
                   <Pencil className="w-3.5 h-3.5" />
                   Edit
@@ -287,7 +287,7 @@ function FeatureCard({
                 value={editTitle}
                 onChange={(e) => setEditTitle(e.target.value)}
                 maxLength={100}
-                className="bg-zinc-800/50 border-foreground/10 text-white rounded-lg text-sm"
+                className="bg-zinc-800/50 border-white/10 text-white rounded-lg text-sm"
               />
             </div>
             <div>
@@ -297,7 +297,7 @@ function FeatureCard({
                 onChange={(e) => setEditDescription(e.target.value)}
                 maxLength={1000}
                 rows={3}
-                className="w-full bg-zinc-800/50 border border-foreground/10 text-white rounded-lg text-sm p-2.5 resize-none focus:outline-none focus:ring-1 focus:ring-foreground/20"
+                className="w-full bg-zinc-800/50 border border-white/10 text-white rounded-lg text-sm p-2.5 resize-none focus:outline-none focus:ring-1 focus:ring-white/20"
               />
             </div>
             <div>
@@ -305,7 +305,7 @@ function FeatureCard({
               <select
                 value={editCategory}
                 onChange={(e) => setEditCategory(e.target.value as FeatureCategory)}
-                className="w-full bg-zinc-800/50 border border-foreground/10 text-white rounded-lg text-sm p-2 focus:outline-none focus:ring-1 focus:ring-foreground/20"
+                className="w-full bg-zinc-800/50 border border-white/10 text-white rounded-lg text-sm p-2 focus:outline-none focus:ring-1 focus:ring-white/20"
               >
                 {Object.entries(CATEGORY_LABELS).map(([key, label]) => (
                   <option key={key} value={key}>{label}</option>
@@ -339,7 +339,7 @@ function FeatureCard({
 
             {/* Attached media */}
             {feature.image_url && (
-              <div className="rounded-xl overflow-hidden border border-foreground/10">
+              <div className="rounded-xl overflow-hidden border border-white/10">
                 {feature.image_url.match(/\.(mp4|mov|webm|ogg)$/i) ? (
                   <video src={feature.image_url} className="w-full max-h-64 object-contain bg-black" controls />
                 ) : (
@@ -350,7 +350,7 @@ function FeatureCard({
 
         {/* Category badge - liquid glass style */}
         <div className="flex items-center gap-2">
-          <span className="text-muted-foreground text-[10px] font-medium px-2 py-0.5 rounded-lg bg-foreground/[0.06] backdrop-blur-xl border border-foreground/[0.12]">
+          <span className="text-zinc-300 text-[10px] font-medium px-2 py-0.5 rounded-lg bg-gradient-to-br from-white/15 via-white/8 to-white/3 backdrop-blur-xl border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.3)]">
             {CATEGORY_LABELS[feature.category]}
           </span>
         </div>
@@ -395,7 +395,7 @@ function FeatureCard({
               className="overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="border-t border-foreground/10 pt-3 mt-1">
+              <div className="border-t border-white/5 pt-3 mt-1">
                 {commentsLoading ? (
                   <div className="flex justify-center py-3">
                     <Loader2 className="w-4 h-4 animate-spin text-zinc-500" />
@@ -471,7 +471,7 @@ function FeatureCard({
                     }}
                     placeholder={t('features.addComment')}
                     maxLength={500}
-                    className="flex-1 bg-foreground/5 border-foreground/10 text-foreground placeholder:text-muted-foreground rounded-xl text-xs h-8"
+                    className="flex-1 bg-white/5 border-white/10 text-white placeholder:text-zinc-600 rounded-xl text-xs h-8"
                   />
                   <UserMentionDropdown
                     query={mention.query}
@@ -485,7 +485,7 @@ function FeatureCard({
                   <button
                     type="submit"
                     disabled={!commentText.trim() || submitComment.isPending}
-                    className="w-8 h-8 flex items-center justify-center rounded-xl bg-foreground/[0.12] backdrop-blur-xl border border-foreground/20 text-foreground disabled:opacity-30 transition-opacity"
+                    className="w-8 h-8 flex items-center justify-center rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white disabled:opacity-30 transition-opacity"
                   >
                     {submitComment.isPending ? (
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
@@ -585,7 +585,7 @@ function SubmitFeatureDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
-      <DrawerContent className="bg-black/60 backdrop-blur-[24px] border-foreground/10 max-h-[85vh]">
+      <DrawerContent className="bg-black/60 backdrop-blur-[24px] border-white/10 max-h-[85vh]">
         <DrawerHeader className="relative">
           <DrawerTitle className="text-white text-lg font-bold">{t('features.submitDrawerTitle')}</DrawerTitle>
           <button
@@ -623,7 +623,7 @@ function SubmitFeatureDrawer({
               placeholder={t('features.descriptionPlaceholder')}
               maxLength={1000}
               rows={4}
-              className="w-full bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/20 focus:border-transparent"
+              className="w-full bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent"
             />
             <div className="flex justify-between mt-1">
               {errors.description && <span className="text-red-400 text-[11px]">{errors.description}</span>}
@@ -640,7 +640,7 @@ function SubmitFeatureDrawer({
               placeholder="e.g. iPhone 15 Pro, iOS 18.2 / Samsung S24, Android 15 / MacBook Pro, Chrome 124..."
               maxLength={300}
               rows={2}
-              className="w-full bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-foreground/20 focus:border-transparent"
+              className="w-full bg-zinc-900 border border-zinc-800 text-white placeholder:text-zinc-600 rounded-xl px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-white/20 focus:border-transparent"
             />
             <span className="text-zinc-500 text-[11px] ml-auto block text-right mt-1">{deviceDetails.length}/300</span>
           </div>
@@ -675,7 +675,7 @@ function SubmitFeatureDrawer({
               className="hidden"
             />
             {mediaPreview ? (
-              <div className="relative rounded-xl overflow-hidden border border-foreground/10 bg-zinc-900">
+              <div className="relative rounded-xl overflow-hidden border border-white/10 bg-zinc-900">
                 {mediaFile?.type.startsWith('video/') ? (
                   <video src={mediaPreview} className="w-full max-h-48 object-contain" controls />
                 ) : (
@@ -693,7 +693,7 @@ function SubmitFeatureDrawer({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="w-full h-24 rounded-xl border border-dashed border-foreground/10 bg-zinc-900/50 flex flex-col items-center justify-center gap-1.5 text-zinc-500 hover:text-zinc-300 hover:border-foreground/20 transition-colors"
+                className="w-full h-24 rounded-xl border border-dashed border-white/10 bg-zinc-900/50 flex flex-col items-center justify-center gap-1.5 text-zinc-500 hover:text-zinc-300 hover:border-white/20 transition-colors"
               >
                 <ImagePlus className="w-5 h-5" />
                 <span className="text-xs">Click to upload</span>
@@ -731,16 +731,16 @@ function FeatureSkeletons() {
   return (
     <div className="space-y-3">
       {Array.from({ length: 5 }).map((_, i) => (
-        <div key={i} className="rounded-2xl border border-foreground/[0.08] p-4 flex gap-3 animate-pulse">
+        <div key={i} className="bg-zinc-900 rounded-2xl p-4 flex gap-3 animate-pulse">
           <div className="flex flex-col items-center gap-1 min-w-[40px]">
-            <div className="w-8 h-8 rounded-lg bg-foreground/10" />
-            <div className="w-5 h-4 rounded bg-foreground/10" />
-            <div className="w-8 h-8 rounded-lg bg-foreground/10" />
+            <div className="w-8 h-8 rounded-lg bg-zinc-800" />
+            <div className="w-5 h-4 rounded bg-zinc-800" />
+            <div className="w-8 h-8 rounded-lg bg-zinc-800" />
           </div>
           <div className="flex-1 space-y-2">
-            <div className="h-4 w-3/4 rounded bg-foreground/10" />
-            <div className="h-3 w-full rounded bg-foreground/10" />
-            <div className="h-3 w-1/2 rounded bg-foreground/10" />
+            <div className="h-4 w-3/4 rounded bg-zinc-800" />
+            <div className="h-3 w-full rounded bg-zinc-800" />
+            <div className="h-3 w-1/2 rounded bg-zinc-800" />
           </div>
         </div>
       ))}
@@ -758,19 +758,19 @@ function ShippedCard({ feature }: { feature: FeatureRequest }) {
 
   return (
     <div
-      className="rounded-xl border border-foreground/[0.12] bg-foreground/[0.04] backdrop-blur-[24px] p-3 flex gap-3 cursor-pointer hover:bg-foreground/[0.06] transition-colors"
+      className="rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3 flex gap-3 cursor-pointer hover:bg-white/[0.05] transition-colors"
       onClick={() => setExpanded(!expanded)}
     >
       <div className="flex flex-col items-center justify-center min-w-[40px]">
-        <div className="w-8 h-8 rounded-lg bg-foreground/10 flex items-center justify-center">
-          <CheckCircle2 className="w-4 h-4 text-muted-foreground" />
+        <div className="w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center">
+          <CheckCircle2 className="w-4 h-4 text-white/70" />
         </div>
       </div>
 
       <div className="flex-1 min-w-0">
         <div className="flex items-start gap-2 mb-1.5">
           <TranslatableText text={feature.title} className="text-white font-semibold text-sm leading-tight flex-1 min-w-0" as="h3" hideControls />
-          <span className="text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 bg-foreground/10 text-muted-foreground">
+          <span className="text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 bg-white/10 text-white/70">
             {t('features.shippedBadge')}
           </span>
         </div>
@@ -894,12 +894,10 @@ export default function FeaturesPage() {
     <div className="min-h-screen">
       <SEOHead title="Features — Submit & Vote on Ideas" description="Submit feature requests, vote on community ideas, and help shape DeHub's roadmap. Your voice drives the platform's development." url="https://dehub.io/app/features" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Feature Requests', url: 'https://dehub.io/app/features', description: 'Submit and vote on feature requests to shape DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">DeHub Features — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
-      {/* Title row — NOT sticky: it scrolls away naturally on scroll-down (no JS,
-          no resize, so nothing fights the scroll engine or the swallow-clip),
-          and reappears as you scroll back up. The search + tabs + filters below
-          stay pinned. */}
-      <div className="bg-black px-2 pt-1 sm:px-3 lg:pt-2">
-        <div className="flex items-center justify-between px-2 sm:px-3 pt-2 pb-3">
+      {/* Sticky nav pill */}
+      <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
+        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+        <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <img src={featuresLightbulb} alt="Features" className="w-12 h-12 object-contain" />
             <div>
@@ -907,28 +905,10 @@ export default function FeaturesPage() {
               <p className="text-zinc-500 text-sm">{totalCount === 1 ? t('features.ideaSubmitted') : t('features.ideasSubmitted', { count: totalCount })}</p>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Sticky nav: search + tabs + filters pin to the top; the title above
-          scrolls away. */}
-      <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pb-0 sm:px-3 sm:pb-0">
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
-        {/* Search + Submit */}
-        <div className="relative flex items-center gap-2 mb-3">
-          <div className="relative flex-1 min-w-0">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-            <Input
-              placeholder={t('features.searchPlaceholder')}
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="pl-10 bg-foreground/[0.05] border-foreground/10 text-foreground placeholder:text-muted-foreground rounded-xl"
-            />
-          </div>
           <Button
             onClick={handleSubmitClick}
             variant="glass"
-            className="rounded-xl font-semibold text-sm shrink-0"
+            className="rounded-xl font-semibold text-sm"
             size="sm"
           >
             <Plus className="w-4 h-4" />
@@ -936,15 +916,26 @@ export default function FeaturesPage() {
           </Button>
         </div>
 
+        {/* Search */}
+        <div className="relative mb-3">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+          <Input
+            placeholder={t('features.searchPlaceholder')}
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
+          />
+        </div>
+
         {/* Page Tabs: Requests / Shipped */}
-        <div className="relative flex gap-1 bg-foreground/[0.06] rounded-xl p-1 mb-3">
+        <div className="relative flex gap-1 bg-zinc-800/40 rounded-xl p-1 mb-3">
           {/* Sliding liquid glass indicator */}
           <div
             className={cn(
-              "absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-lg bg-foreground/[0.12] backdrop-blur-xl border border-foreground/[0.08] transition-transform duration-300 ease-out",
+              "absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 transition-transform duration-300 ease-out",
               isLightTheme
-                ? "shadow-[0_1px_3px_rgba(0,0,0,0.12)]"
-                : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)]",
+                ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2)]"
+                : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)]",
               activeTab === 'shipped' ? 'translate-x-[calc(100%+4px)]' : 'translate-x-0'
             )}
           />
@@ -957,7 +948,7 @@ export default function FeaturesPage() {
           >
             {t('features.requests')}
             {remainingCount > 0 && (
-              <span className="text-[10px] bg-foreground/10 text-muted-foreground px-1.5 py-0.5 rounded-md font-semibold">
+              <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
                 {remainingCount}
               </span>
             )}
@@ -972,7 +963,7 @@ export default function FeaturesPage() {
             <CheckCircle2 className="w-3.5 h-3.5" />
             {t('features.shipped')}
             {shippedCount > 0 && (
-              <span className="text-[10px] bg-foreground/10 text-muted-foreground px-1.5 py-0.5 rounded-md font-semibold">
+              <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
                 {shippedCount}
               </span>
             )}
@@ -984,7 +975,7 @@ export default function FeaturesPage() {
           <>
             {/* Category Pills */}
             <div className="relative mb-3">
-              <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-background to-transparent pointer-events-none z-10" />
+              <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
               <div ref={featuresCatLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
                 <GlassIndicator rect={featuresCatRect} borderRadius="0.5rem" />
                 <div className="relative z-20 flex gap-2 overflow-x-auto scrollbar-invisible pb-1" onScroll={onFeaturesCatScroll}>
