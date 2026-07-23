@@ -232,8 +232,8 @@ Reply with ONLY the JSON object, no markdown.`;
 // ------------------------------------------------------------------ svg -----
 const DIMS: Record<BannerFormat, { W: number; H: number }> = {
   landscape: { W: 1200, H: 630 },
-  square: { W: 1080, H: 1080 },
-  portrait: { W: 1080, H: 1350 },
+  square: { W: 960, H: 960 },
+  portrait: { W: 960, H: 1200 },
 };
 
 function headlineBlock(lines: BannerSpec["headline"], x: number, topY: number, size: number, anchor: "start" | "middle"): string {
@@ -352,15 +352,15 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
     <pattern id="grainp" width="240" height="240" patternUnits="userSpaceOnUse">
       <image href="${uris.grain}" width="240" height="240"/>
     </pattern>
-    <filter id="hblur" x="-20%" y="-40%" width="140%" height="180%"><feGaussianBlur stdDeviation="6"/></filter>
-    <filter id="sblur" x="-20%" y="-40%" width="140%" height="180%"><feGaussianBlur stdDeviation="18"/></filter>
-    <filter id="pillglow" x="-60%" y="-120%" width="220%" height="340%"><feGaussianBlur stdDeviation="16"/></filter>
+    <filter id="hblur" x="-20%" y="-40%" width="140%" height="180%"><feGaussianBlur stdDeviation="5"/></filter>
+    <filter id="sblur" x="-20%" y="-40%" width="140%" height="180%"><feGaussianBlur stdDeviation="13"/></filter>
+    <filter id="pillglow" x="-60%" y="-120%" width="220%" height="340%"><feGaussianBlur stdDeviation="12"/></filter>
     <filter id="iconfx" x="-25%" y="-25%" width="150%" height="160%">
-      <feDropShadow dx="0" dy="26" stdDeviation="26" flood-color="#000000" flood-opacity="0.8"/>
+      <feDropShadow dx="0" dy="26" stdDeviation="16" flood-color="#000000" flood-opacity="0.8"/>
     </filter>
     <filter id="iconfxBright" x="-25%" y="-25%" width="150%" height="160%">
       <feComponentTransfer><feFuncR type="linear" slope="1.55"/><feFuncG type="linear" slope="1.55"/><feFuncB type="linear" slope="1.55"/></feComponentTransfer>
-      <feDropShadow dx="0" dy="26" stdDeviation="26" flood-color="#000000" flood-opacity="0.8"/>
+      <feDropShadow dx="0" dy="26" stdDeviation="16" flood-color="#000000" flood-opacity="0.8"/>
     </filter>
   </defs>`;
 
