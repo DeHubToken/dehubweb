@@ -8,35 +8,59 @@ import {
   Container,
   Head,
   Heading,
+  Hr,
   Html,
+  Link,
   Preview,
+  Section,
   Text,
 } from 'npm:@react-email/components@0.0.22'
 
 interface MagicLinkEmailProps {
   siteName: string
+  siteUrl?: string
   confirmationUrl: string
 }
 
 export const MagicLinkEmail = ({
-  siteName,
+  siteUrl = 'https://dehub.io',
   confirmationUrl,
 }: MagicLinkEmailProps) => (
   <Html lang="en" dir="ltr">
     <Head />
-    <Preview>Your login link for {siteName}</Preview>
+    <Preview>Your DeHub magic link — tap to log in</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Heading style={h1}>Your login link</Heading>
+        <Section style={brandRow}>
+          <Text style={brandMark}>DeHub</Text>
+        </Section>
+
+        <Heading style={h1}>Log in to DeHub</Heading>
         <Text style={text}>
-          Click the button below to log in to {siteName}. This link will expire
-          shortly.
+          Tap the button below to log in. No password needed — this is a
+          one-time magic link that expires shortly.
         </Text>
-        <Button style={button} href={confirmationUrl}>
-          Log In
-        </Button>
+
+        <Section style={buttonWrap}>
+          <Button style={button} href={confirmationUrl}>
+            Log in to DeHub
+          </Button>
+        </Section>
+
+        <Text style={smallMuted}>
+          Or paste this link into your browser:
+          <br />
+          <Link href={confirmationUrl} style={rawLink}>{confirmationUrl}</Link>
+        </Text>
+
+        <Hr style={hr} />
+
         <Text style={footer}>
-          If you didn't request this link, you can safely ignore this email.
+          If you didn't request this link, you can safely ignore this email —
+          your account stays secure.
+        </Text>
+        <Text style={footerBrand}>
+          <Link href={siteUrl} style={footerLink}>DeHub</Link> — the decentralized social network.
         </Text>
       </Container>
     </Body>
@@ -45,26 +69,60 @@ export const MagicLinkEmail = ({
 
 export default MagicLinkEmail
 
-const main = { backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }
-const container = { padding: '20px 25px' }
+const main = {
+  backgroundColor: '#ffffff',
+  fontFamily:
+    '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+  padding: '40px 0',
+}
+const container = {
+  maxWidth: '520px',
+  margin: '0 auto',
+  padding: '32px 32px 24px',
+  backgroundColor: '#f9f8f4',
+  borderRadius: '16px',
+}
+const brandRow = { marginBottom: '28px' }
+const brandMark = {
+  fontSize: '18px',
+  fontWeight: '700' as const,
+  letterSpacing: '-0.02em',
+  color: '#0a0a0a',
+  margin: 0,
+}
 const h1 = {
-  fontSize: '22px',
-  fontWeight: 'bold' as const,
-  color: '#000000',
-  margin: '0 0 20px',
+  fontSize: '26px',
+  fontWeight: '700' as const,
+  letterSpacing: '-0.02em',
+  color: '#0a0a0a',
+  margin: '0 0 16px',
 }
 const text = {
-  fontSize: '14px',
-  color: '#55575d',
-  lineHeight: '1.5',
-  margin: '0 0 25px',
+  fontSize: '15px',
+  color: '#2a2a2a',
+  lineHeight: '1.55',
+  margin: '0 0 24px',
 }
+const buttonWrap = { margin: '8px 0 24px' }
 const button = {
-  backgroundColor: '#000000',
+  backgroundColor: '#0a0a0a',
   color: '#ffffff',
-  fontSize: '14px',
-  borderRadius: '8px',
-  padding: '12px 20px',
+  fontSize: '15px',
+  fontWeight: '600' as const,
+  borderRadius: '12px',
+  padding: '14px 24px',
   textDecoration: 'none',
+  display: 'inline-block',
 }
-const footer = { fontSize: '12px', color: '#999999', margin: '30px 0 0' }
+const smallMuted = {
+  fontSize: '12px',
+  color: '#6b6b6b',
+  lineHeight: '1.5',
+  margin: '0 0 8px',
+  wordBreak: 'break-all' as const,
+}
+const rawLink = { color: '#6b6b6b', textDecoration: 'underline' }
+const hr = { borderColor: '#e6e2d8', margin: '28px 0 16px' }
+const footer = { fontSize: '12px', color: '#7a7a7a', margin: '0 0 8px', lineHeight: '1.5' }
+const footerBrand = { fontSize: '12px', color: '#7a7a7a', margin: 0 }
+const footerLink = { color: '#0a0a0a', textDecoration: 'none', fontWeight: '600' as const }
