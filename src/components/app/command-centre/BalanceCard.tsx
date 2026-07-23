@@ -11,6 +11,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { useDeHubProfile } from '@/hooks/use-dehub-profile';
 import { useAllChainsTokens } from '@/hooks/use-wallet-tokens';
+import { getGiveawayPrizeFor } from '@/lib/worldCupGiveaway';
 import { cn } from '@/lib/utils';
 
 const OTHER_SYMBOLS = ['ETH', 'BTC', 'USDT'] as const;
@@ -55,7 +56,10 @@ export function BalanceCard() {
     });
   }, [allTokens]);
 
-  const rawBalance = badgeBalance ?? 0;
+  // Include the World Cup giveaway credit (custodial; transfers when the DHB
+  // contract goes live) so the balance reads normally for winners.
+  const giveawayBal = getGiveawayPrizeFor(walletAddress)?.amount ?? 0;
+  const rawBalance = (badgeBalance ?? 0) + giveawayBal;
   const formattedBalance = rawBalance === 0 ? '0' : rawBalance > 0 && rawBalance < 0.01 ? '<0.01' : Math.round(rawBalance).toLocaleString();
   const isLoading = badgeLoading || tokensLoading;
 
