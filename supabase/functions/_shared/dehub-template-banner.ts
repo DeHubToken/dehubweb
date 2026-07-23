@@ -355,13 +355,12 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
     <filter id="hblur" x="-20%" y="-40%" width="140%" height="180%"><feGaussianBlur stdDeviation="5"/></filter>
     <filter id="sblur" x="-20%" y="-40%" width="140%" height="180%"><feGaussianBlur stdDeviation="13"/></filter>
     <filter id="pillglow" x="-60%" y="-120%" width="220%" height="340%"><feGaussianBlur stdDeviation="12"/></filter>
-    <filter id="iconfx" x="-25%" y="-25%" width="150%" height="160%">
-      <feDropShadow dx="0" dy="26" stdDeviation="16" flood-color="#000000" flood-opacity="0.8"/>
-    </filter>
     <filter id="iconfxBright" x="-25%" y="-25%" width="150%" height="160%">
       <feComponentTransfer><feFuncR type="linear" slope="1.55"/><feFuncG type="linear" slope="1.55"/><feFuncB type="linear" slope="1.55"/></feComponentTransfer>
-      <feDropShadow dx="0" dy="26" stdDeviation="16" flood-color="#000000" flood-opacity="0.8"/>
     </filter>
+    <radialGradient id="heroShadow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#000000" stop-opacity="0.65"/><stop offset="1" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
   </defs>`;
 
   const body: string[] = [];
@@ -372,7 +371,11 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
   body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" fill="url(#dots)" opacity="0.10"/>`);
   body.push(marks(W, H, seed));
 
-  const iconFilter = (e?: { dark?: boolean }) => (e?.dark ? "url(#iconfxBright)" : "url(#iconfx)");
+  // Gaussian drop-shadows on 500px+ hero layers blow the edge worker CPU budget
+  // on square/portrait canvases — a gradient ellipse under the icon reads the same.
+  const heroImg = (x: number, y: number, box: number, uri: string, e?: { dark?: boolean }) =>
+    `<ellipse cx="${x + box / 2}" cy="${y + box * 0.94}" rx="${Math.round(box * 0.4)}" ry="${Math.round(box * 0.08)}" fill="url(#heroShadow)"/>` +
+    `<image x="${x}" y="${y}" width="${box}" height="${box}" preserveAspectRatio="xMidYMid meet" href="${uri}"${e?.dark ? ' filter="url(#iconfxBright)"' : ""}/>`;
 
   if (spec.format === "landscape") {
     if (spec.layout === "wordmark") {
@@ -383,8 +386,8 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
     } else {
       const heroBox = 470;
       body.push(`<ellipse cx="${W - 90 - heroBox / 2}" cy="${H * 0.5}" rx="${heroBox * 0.62}" ry="${heroBox * 0.55}" fill="url(#glow)"/>`);
-      if (uris.icon) body.push(`<image x="${W - 100 - heroBox}" y="${(H - heroBox) / 2 - 10}" width="${heroBox}" height="${heroBox}" preserveAspectRatio="xMidYMid meet" href="${uris.icon}" filter="${iconFilter(iconEntry)}"/>`);
-      if (uris.icon2) body.push(`<image x="${W - 70 - 220}" y="${H - 110 - 220}" width="220" height="220" preserveAspectRatio="xMidYMid meet" href="${uris.icon2}" filter="${iconFilter(icon2Entry)}"/>`);
+      if (uris.icon) body.push(heroImg(W - 100 - heroBox, (H - heroBox) / 2 - 10, heroBox, uris.icon, iconEntry));
+      if (uris.icon2) body.push(heroImg(W - 70 - 220, H - 110 - 220, 220, uris.icon2, icon2Entry));
       const maxLen = Math.max(...spec.headline.map((l) => l.text.length));
       const size = Math.max(88, Math.min(158, Math.round(600 / (maxLen * 0.56))));
       const blockH = spec.headline.length * size * 0.94;
@@ -399,8 +402,8 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
     if (spec.layout === "wordmark" && uris.wordmarkWhite) {
       body.push(`<image x="${W / 2 - 235}" y="${H * 0.42 - 60}" width="470" height="120" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkWhite}"/>`);
     } else if (uris.icon) {
-      body.push(`<image x="${W - 60 - heroBox}" y="${heroY}" width="${heroBox}" height="${heroBox}" preserveAspectRatio="xMidYMid meet" href="${uris.icon}" filter="${iconFilter(iconEntry)}"/>`);
-      if (uris.icon2) body.push(`<image x="${60}" y="${heroY + heroBox - 230}" width="230" height="230" preserveAspectRatio="xMidYMid meet" href="${uris.icon2}" filter="${iconFilter(icon2Entry)}"/>`);
+      body.push(heroImg(W - 60 - heroBox, heroY, heroBox, uris.icon, iconEntry));
+      if (uris.icon2) body.push(heroImg(60, heroY + heroBox - 230, 230, uris.icon2, icon2Entry));
     }
     const maxLen = Math.max(...spec.headline.map((l) => l.text.length));
     const size = Math.max(84, Math.min(150, Math.round((W - 130) / (maxLen * 0.56))));
@@ -408,7 +411,9 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
     body.push(subRow(spec, 66, 150 + spec.headline.length * size * 0.94 + 64, 32, "start"));
   }
 
-  body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" fill="url(#grainp)" opacity="0.5"/>`);
+  if (spec.format === "landscape") {
+    body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" fill="url(#grainp)" opacity="0.5"/>`);
+  }
   body.push(hudChrome(spec, W, H, uris));
   body.push(`</g>`);
   body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" rx="${rx}" fill="none" stroke="rgba(255,255,255,0.06)"/>`);
