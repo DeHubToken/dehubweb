@@ -112,34 +112,65 @@ export async function attributeReferralIfPending(referredAddress: string) {
   );
 }
 
+/** A single account you referred — the "who", not just the count. */
+export type AffiliateReferralEntry = {
+  address: string;         // referred wallet address
+  createdAt: string | null; // when they were attributed to you
+  code: string | null;     // the invite code they came through
+};
+
 export type AffiliateStats = {
   code: string | null;
   shareName: string | null;
   referrals: number;        // L1 — directly invited
   l2Referrals: number;      // L2 — invited by your L1s
+  l1List: AffiliateReferralEntry[]; // the accounts behind the L1 count
+  l2List: AffiliateReferralEntry[]; // the accounts behind the L2 count
   totalEarnedCents: number;
   l1EarnedCents: number;
   l2EarnedCents: number;
   currency: string;
 };
 
+// Most-recent referrals returned for the "who" list. The exact total still
+// comes from the query's count, so the counter stays accurate past this cap.
+const REFERRAL_LIST_CAP = 500;
+
+type ReferralRow = { referred_address: string | null; created_at: string | null; code: string | null };
+
+function mapReferralRows(rows: ReferralRow[] | null): AffiliateReferralEntry[] {
+  return (rows ?? [])
+    .filter((r): r is ReferralRow & { referred_address: string } => !!r.referred_address)
+    .map(r => ({
+      address: r.referred_address.toLowerCase(),
+      createdAt: r.created_at ?? null,
+      code: r.code ?? null,
+    }));
+}
+
 export async function loadAffiliateStats(ownerAddress: string, shareName?: string | null): Promise<AffiliateStats> {
   const addr = ownerAddress.toLowerCase();
 
   // All four queries only depend on the address — run them in parallel
   // (this used to be four serial round-trips and made the page feel slow).
+  // The referral queries now select the actual rows with an exact count, so a
+  // single round-trip yields both the "who" list and the counter total.
   const [codeRes, refRes, l2RefRes, earnRes] = await Promise.all([
     getOrCreateAffiliateCode(addr, shareName),
     // @ts-ignore
     supabase
       .from("affiliate_referrals" as never)
-      .select("id", { count: "exact", head: true })
-      .ilike("owner_address", addr) as unknown as Promise<{ count: number | null }>,
+      .select("referred_address,created_at,code", { count: "exact" })
+      .ilike("owner_address", addr)
+      .order("created_at", { ascending: false })
+      .limit(REFERRAL_LIST_CAP) as unknown as Promise<{ data: ReferralRow[] | null; count: number | null }>,
     // @ts-ignore
     supabase
       .from("affiliate_referrals" as never)
-      .select("id", { count: "exact", head: true })
-      .ilike("l2_owner_address", addr) as unknown as Promise<{ count: number | null }>,
+      .select("referred_address,created_at,code", { count: "exact" })
+      .ilike("l2_owner_address", addr)
+      .order("created_at", { ascending: false })
+      .limit(REFERRAL_LIST_CAP) as unknown as Promise<{ data: ReferralRow[] | null; count: number | null }>,
     withWalletHeader(
       // @ts-ignore
       supabase
@@ -150,6 +181,9 @@ export async function loadAffiliateStats(ownerAddress: string, shareName?: strin
   ]);
   const code = codeRes?.code ?? null;
 
+  const l1List = mapReferralRows(refRes.data);
+  const l2List = mapReferralRows(l2RefRes.data);
+
   const rows = earnRes.data ?? [];
   const l1EarnedCents = rows.filter(r => r.tier !== 2).reduce((s, r) => s + (r.commission_cents ?? 0), 0);
   const l2EarnedCents = rows.filter(r => r.tier === 2).reduce((s, r) => s + (r.commission_cents ?? 0), 0);
@@ -159,8 +193,12 @@ export async function loadAffiliateStats(ownerAddress: string, shareName?: strin
   return {
     code,
     shareName: codeRes?.share_name ?? null,
-    referrals: refRes.count ?? 0,
-    l2Referrals: l2RefRes.count ?? 0,
+    // Prefer the exact server count; fall back to the fetched rows so a missing
+    // count header never silently collapses the counter to zero.
+    referrals: refRes.count ?? l1List.length,
+    l2Referrals: l2RefRes.count ?? l2List.length,
+    l1List,
+    l2List,
     totalEarnedCents,
     l1EarnedCents,
     l2EarnedCents,
