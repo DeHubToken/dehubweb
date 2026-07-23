@@ -7,10 +7,13 @@ import { AuthGate } from "@/components/app/AuthGate";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
 import { SEOHead } from "@/components/SEOHead";
 import { BadgeIcon } from "@/components/app/BadgeIcon";
-import { AFFILIATE_COMMISSION_PCT, AFFILIATE_L1_COMMISSION_PCT, AFFILIATE_L2_COMMISSION_PCT, loadAffiliateStats, type AffiliateStats } from "@/lib/affiliate";
+import { VerifiedBadge } from "@/components/app/VerifiedBadge";
+import { useDeHubProfile } from "@/hooks/use-dehub-profile";
+import { AFFILIATE_COMMISSION_PCT, AFFILIATE_L1_COMMISSION_PCT, AFFILIATE_L2_COMMISSION_PCT, loadAffiliateStats, type AffiliateStats, type AffiliateReferralEntry } from "@/lib/affiliate";
 import { getAffiliateShareImageUrl } from "@/lib/affiliateShareImage";
 
 const SITE = typeof window !== "undefined" ? window.location.origin : "https://dehub.io";
@@ -197,6 +200,16 @@ export default function AffiliatePage() {
             />
           </div>
 
+          {/* Who your affiliates are */}
+          <AffiliatesList
+            l1={stats?.l1List ?? []}
+            l2={stats?.l2List ?? []}
+            l1Count={stats?.referrals ?? 0}
+            l2Count={stats?.l2Referrals ?? 0}
+            viewerWallet={wallet}
+            loading={loading}
+          />
+
           {/* Share section */}
           <Card className="border-white/10 bg-white/[0.03] backdrop-blur">
             <CardContent className="p-5 md:p-6 space-y-5">
@@ -299,5 +312,177 @@ function Step({ n, title, body }: { n: number; title: string; body: string }) {
       <h3 className="text-white font-medium">{title}</h3>
       <p className="text-sm text-white/60">{body}</p>
     </div>
+  );
+}
+
+const truncateAddress = (address: string) =>
+  address.length <= 10 ? address : `${address.slice(0, 6)}…${address.slice(-4)}`;
+
+function formatReferralDate(iso: string | null): string | null {
+  if (!iso) return null;
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return null;
+  try {
+    return d.toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" });
+  } catch {
+    return null;
+  }
+}
+
+const AFFILIATES_PAGE_SIZE = 12;
+
+/**
+ * Lists the actual accounts behind the referral counters. Direct (L1) are the
+ * people you invited; Secondary (L2) are the people they invited. Each row
+ * resolves its own profile so the list paints instantly from addresses and
+ * enriches with names/avatars as they load.
+ */
+function AffiliatesList({
+  l1,
+  l2,
+  l1Count,
+  l2Count,
+  viewerWallet,
+  loading,
+}: {
+  l1: AffiliateReferralEntry[];
+  l2: AffiliateReferralEntry[];
+  l1Count: number;
+  l2Count: number;
+  viewerWallet: string | null;
+  loading: boolean;
+}) {
+  const [tab, setTab] = useState<"direct" | "secondary">("direct");
+  const [visible, setVisible] = useState(AFFILIATES_PAGE_SIZE);
+  const hasSecondary = l2.length > 0 || l2Count > 0;
+  const list = tab === "direct" ? l1 : l2;
+
+  useEffect(() => { setVisible(AFFILIATES_PAGE_SIZE); }, [tab]);
+
+  const shown = list.slice(0, visible);
+  // A positive count with no rows means the list is still hydrating (fresh load
+  // or a pre-upgrade cached stats blob) — show skeletons, not an empty state.
+  const activeCount = tab === "direct" ? l1Count : l2Count;
+  const hydrating = list.length === 0 && (loading || activeCount > 0);
+
+  return (
+    <Card className="border-white/10 bg-white/[0.03] backdrop-blur">
+      <CardContent className="p-5 md:p-6 space-y-4">
+        <div className="flex items-center justify-between gap-3 flex-wrap">
+          <div>
+            <h2 className="text-lg font-semibold text-white inline-flex items-center gap-2">
+              <Users className="w-4 h-4" /> Your affiliates
+            </h2>
+            <p className="text-sm text-white/60">The accounts you’ve referred to DeHub.</p>
+          </div>
+          {hasSecondary && (
+            <div className="inline-flex rounded-full bg-white/[0.06] p-0.5 text-sm">
+              <button
+                type="button"
+                onClick={() => setTab("direct")}
+                className={`px-3 py-1.5 rounded-full transition-colors ${tab === "direct" ? "bg-white/15 text-white" : "text-white/60 hover:text-white"}`}
+              >
+                Direct ({l1Count})
+              </button>
+              <button
+                type="button"
+                onClick={() => setTab("secondary")}
+                className={`px-3 py-1.5 rounded-full transition-colors ${tab === "secondary" ? "bg-white/15 text-white" : "text-white/60 hover:text-white"}`}
+              >
+                Secondary ({l2Count})
+              </button>
+            </div>
+          )}
+        </div>
+
+        {hydrating ? (
+          <div className="space-y-2">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03]">
+                <Skeleton className="w-10 h-10 rounded-full" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-3 w-24" />
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : list.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-10 text-center">
+            <Users className="w-10 h-10 text-white/25 mb-3" />
+            <p className="text-white/70 font-medium">
+              {tab === "direct" ? "No affiliates yet" : "No secondary affiliates yet"}
+            </p>
+            <p className="text-white/40 text-sm mt-1">
+              {tab === "direct"
+                ? "Share your invite link — everyone who joins through it shows up here."
+                : "When your affiliates invite their own friends, they’ll appear here."}
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {shown.map((entry) => (
+              <AffiliateRow key={entry.address} entry={entry} viewerWallet={viewerWallet} />
+            ))}
+            {visible < list.length && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full text-white/70 hover:text-white"
+                onClick={() => setVisible((v) => v + AFFILIATES_PAGE_SIZE)}
+              >
+                Show more ({list.length - visible})
+              </Button>
+            )}
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+function AffiliateRow({ entry, viewerWallet }: { entry: AffiliateReferralEntry; viewerWallet: string | null }) {
+  const { data: profile, isLoading } = useDeHubProfile({
+    userId: entry.address,
+    address: viewerWallet || undefined,
+  });
+
+  const username = profile?.handle && profile.handle !== "@unknown"
+    ? profile.handle.replace(/^@/, "")
+    : null;
+  const name = profile?.name && profile.name !== "Unknown User" ? profile.name : truncateAddress(entry.address);
+  const to = username ? `/${username}` : `/profile?id=${entry.address}`;
+  const joined = formatReferralDate(entry.createdAt);
+
+  return (
+    <Link
+      to={to}
+      className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] transition-colors"
+    >
+      <Avatar className="w-10 h-10 rounded-full shrink-0">
+        {profile?.avatarUrl ? <AvatarImage src={profile.avatarUrl} alt={name} /> : null}
+        <AvatarFallback className="bg-white/10 text-white text-sm">
+          {(name || "?")[0]?.toUpperCase()}
+        </AvatarFallback>
+      </Avatar>
+
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-1.5">
+          {isLoading && !profile ? (
+            <Skeleton className="h-4 w-28" />
+          ) : (
+            <span className="font-medium text-white truncate">{name}</span>
+          )}
+          {profile?.verified && <VerifiedBadge className="w-3.5 h-3.5 shrink-0" />}
+          <BadgeIcon badgeBalance={profile?.badgeBalance ?? undefined} username={username} className="w-3 h-3" />
+        </div>
+        <div className="text-xs text-white/45 truncate">
+          {username ? `@${username}` : truncateAddress(entry.address)}
+          {joined ? <span className="text-white/30"> · joined {joined}</span> : null}
+        </div>
+      </div>
+
+      <ExternalLink className="w-3.5 h-3.5 text-white/30 shrink-0" />
+    </Link>
   );
 }
