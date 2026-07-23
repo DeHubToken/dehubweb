@@ -11,7 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import { Download, Image as ImageIcon, FileText, Package, Palette, ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import designSystemZip from '@/assets/design-system/dehub-design-system.zip.asset.json';
+const designSystemZip = { url: '/brand/dehub-design-system.zip' };
 const figmaDuplicateInstruction = { url: '/docs/figma-duplicate-instruction.png' };
 const wordmarkWhite = { url: '/brand/wordmark-white.png' };
 const wordmarkBlack = { url: '/brand/wordmark-black.png' };

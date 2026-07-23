@@ -17,7 +17,7 @@ import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { useCommunityActivityUnreadCount } from '@/hooks/use-community-activity-unread';
 import { useTotalUnreadCount } from '@/hooks/use-messages';
 import dehubLogoCompact from '@/assets/dehub-logo-compact.png';
-import dehubMarkBlack from '@/assets/design-system/mark-black.png.asset.json';
+const dehubMarkBlack = '/brand/mark-black.png';
 import { cn } from '@/lib/utils';
 import { preloadRoute } from '@/lib/route-preload';
 import { buildAvatarUrl } from '@/lib/media-url';
@@ -133,7 +133,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
 
   // Preload both logo variants so collapse/expand swaps are instant
   useEffect(() => {
-    [dehubLogoCompact, dehubMarkBlack.url, '/dehub-header-logo.png'].forEach((src) => {
+    [dehubLogoCompact, dehubMarkBlack, '/dehub-header-logo.png'].forEach((src) => {
       const img = new Image();
       img.decoding = 'async';
       img.src = src;
@@ -237,7 +237,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               )}
             >
               <img
-                src={isLightTheme ? dehubMarkBlack.url : dehubLogoCompact}
+                src={isLightTheme ? dehubMarkBlack : dehubLogoCompact}
                 alt="dehub"
                 className={cn("h-[22px] w-[22px] object-contain", !renderCompactLogo && "hidden")}
                 decoding="async"

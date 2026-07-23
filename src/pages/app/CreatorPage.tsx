@@ -11,7 +11,7 @@ import dehubIcon from '@/assets/dehub-logo-compact.png';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import openaiLogo from '@/assets/ai-logos/openai.png';
 import showcaseImage from '@/assets/creator-studio-showcase.jpg';
-import dehubOriginals from '@/assets/dehub-originals.webp.asset.json';
+import dehubOriginals from '@/assets/dehub-originals.webp';
 import {
   ArrowUpRight,
   Blocks,
@@ -553,7 +553,7 @@ function MediaCardVisual({ kind }: { kind: string }) {
     return (
       <div className="relative h-[288px] overflow-hidden rounded-lg border border-white/10 bg-black">
         <img
-          src={dehubOriginals.url}
+          src={dehubOriginals}
           alt="DeHub Originals — cinematic post-apocalyptic wasteland with the DeHub wordmark"
           className="h-full w-full object-cover object-center"
           loading="lazy"
