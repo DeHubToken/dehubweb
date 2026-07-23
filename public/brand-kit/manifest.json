@@ -1,0 +1,403 @@
+{
+  "version": 1,
+  "icons": [
+    {
+      "key": "globe",
+      "file": "icons/globe.png",
+      "tags": [
+        "social",
+        "network",
+        "global",
+        "decentralised",
+        "web3"
+      ]
+    },
+    {
+      "key": "gift",
+      "file": "icons/gift.png",
+      "tags": [
+        "giveaway",
+        "reward",
+        "airdrop",
+        "prize"
+      ]
+    },
+    {
+      "key": "gamepad",
+      "file": "icons/gamepad.png",
+      "tags": [
+        "gaming",
+        "play2earn",
+        "games",
+        "esports"
+      ]
+    },
+    {
+      "key": "play",
+      "file": "icons/play.png",
+      "tags": [
+        "video",
+        "watch2earn",
+        "streaming",
+        "content"
+      ]
+    },
+    {
+      "key": "pickaxe",
+      "file": "icons/pickaxe.png",
+      "tags": [
+        "mining",
+        "earning",
+        "work"
+      ]
+    },
+    {
+      "key": "mic",
+      "file": "icons/mic.png",
+      "tags": [
+        "podcast",
+        "stages",
+        "audio",
+        "creator",
+        "live"
+      ]
+    },
+    {
+      "key": "megaphone",
+      "file": "icons/megaphone.png",
+      "tags": [
+        "announcement",
+        "marketing",
+        "voice",
+        "social"
+      ]
+    },
+    {
+      "key": "vault",
+      "file": "icons/vault.png",
+      "tags": [
+        "security",
+        "staking",
+        "safe",
+        "custody"
+      ]
+    },
+    {
+      "key": "chain",
+      "file": "icons/chain.png",
+      "tags": [
+        "blockchain",
+        "onchain",
+        "link",
+        "connection"
+      ]
+    },
+    {
+      "key": "sparkle",
+      "file": "icons/sparkle.png",
+      "tags": [
+        "ai",
+        "magic",
+        "new"
+      ],
+      "dark": true
+    },
+    {
+      "key": "handshake",
+      "file": "icons/handshake.png",
+      "tags": [
+        "partnership",
+        "deal",
+        "collab"
+      ]
+    },
+    {
+      "key": "folder-star",
+      "file": "icons/folder-star.png",
+      "tags": [
+        "files",
+        "collection",
+        "favorites"
+      ]
+    },
+    {
+      "key": "coins-falling",
+      "file": "icons/coins-falling.png",
+      "tags": [
+        "money",
+        "earnings",
+        "rewards",
+        "tokens"
+      ]
+    },
+    {
+      "key": "coin",
+      "file": "icons/coin.png",
+      "tags": [
+        "token",
+        "dhb",
+        "crypto",
+        "price"
+      ]
+    },
+    {
+      "key": "coin-bag",
+      "file": "icons/coin-bag.png",
+      "tags": [
+        "earnings",
+        "treasury",
+        "savings"
+      ]
+    },
+    {
+      "key": "clock",
+      "file": "icons/clock.png",
+      "tags": [
+        "time",
+        "countdown",
+        "deadline",
+        "schedule"
+      ]
+    },
+    {
+      "key": "chart-pie",
+      "file": "icons/chart-pie.png",
+      "tags": [
+        "stats",
+        "tokenomics",
+        "analytics"
+      ]
+    },
+    {
+      "key": "wallet",
+      "file": "icons/wallet.png",
+      "tags": [
+        "wallet",
+        "buy",
+        "payments",
+        "assets"
+      ]
+    },
+    {
+      "key": "card",
+      "file": "icons/card.png",
+      "tags": [
+        "subscription",
+        "membership",
+        "payment",
+        "pass"
+      ],
+      "dark": true
+    },
+    {
+      "key": "camera",
+      "file": "icons/camera.png",
+      "tags": [
+        "creator",
+        "video",
+        "content",
+        "film"
+      ]
+    },
+    {
+      "key": "calendar",
+      "file": "icons/calendar.png",
+      "tags": [
+        "event",
+        "date",
+        "schedule",
+        "ama"
+      ]
+    },
+    {
+      "key": "sparkles-duo",
+      "file": "icons/sparkles-duo.png",
+      "tags": [
+        "ai",
+        "assistant",
+        "magic"
+      ],
+      "dark": true
+    },
+    {
+      "key": "suitcase",
+      "file": "icons/suitcase.png",
+      "tags": [
+        "travel",
+        "move",
+        "migration",
+        "journey"
+      ]
+    },
+    {
+      "key": "thumbs-up",
+      "file": "icons/thumbs-up.png",
+      "tags": [
+        "like",
+        "social",
+        "approval",
+        "chad",
+        "community"
+      ],
+      "dark": true
+    },
+    {
+      "key": "star",
+      "file": "icons/star.png",
+      "tags": [
+        "best",
+        "ranking",
+        "quality",
+        "featured"
+      ],
+      "dark": true
+    },
+    {
+      "key": "shield",
+      "file": "icons/shield.png",
+      "tags": [
+        "security",
+        "legit",
+        "trust",
+        "verified",
+        "safety"
+      ]
+    },
+    {
+      "key": "rocket",
+      "file": "icons/rocket.png",
+      "tags": [
+        "launch",
+        "growth",
+        "release"
+      ]
+    },
+    {
+      "key": "rocket-2",
+      "file": "icons/rocket-2.png",
+      "tags": [
+        "launch",
+        "boost",
+        "upgrade"
+      ]
+    }
+  ],
+  "backgrounds": [
+    {
+      "key": "bg-01",
+      "file": "bg/bg-01.jpg"
+    },
+    {
+      "key": "bg-03",
+      "file": "bg/bg-03.jpg"
+    },
+    {
+      "key": "bg-04",
+      "file": "bg/bg-04.jpg"
+    },
+    {
+      "key": "bg-05",
+      "file": "bg/bg-05.jpg"
+    },
+    {
+      "key": "bg-07",
+      "file": "bg/bg-07.jpg"
+    },
+    {
+      "key": "bg-10",
+      "file": "bg/bg-10.jpg"
+    },
+    {
+      "key": "bg-11",
+      "file": "bg/bg-11.jpg"
+    },
+    {
+      "key": "bg-12",
+      "file": "bg/bg-12.jpg"
+    },
+    {
+      "key": "bg-13",
+      "file": "bg/bg-13.jpg"
+    },
+    {
+      "key": "bg-14",
+      "file": "bg/bg-14.jpg"
+    },
+    {
+      "key": "bg-16",
+      "file": "bg/bg-16.jpg"
+    },
+    {
+      "key": "bg-18",
+      "file": "bg/bg-18.jpg"
+    },
+    {
+      "key": "bg-19",
+      "file": "bg/bg-19.jpg"
+    },
+    {
+      "key": "bg-20",
+      "file": "bg/bg-20.jpg"
+    },
+    {
+      "key": "bg-21",
+      "file": "bg/bg-21.jpg"
+    },
+    {
+      "key": "bg-22",
+      "file": "bg/bg-22.jpg"
+    },
+    {
+      "key": "bg-23",
+      "file": "bg/bg-23.jpg"
+    },
+    {
+      "key": "bg-25",
+      "file": "bg/bg-25.jpg"
+    },
+    {
+      "key": "bg-26",
+      "file": "bg/bg-26.jpg"
+    },
+    {
+      "key": "bg-27",
+      "file": "bg/bg-27.jpg"
+    },
+    {
+      "key": "bg-28",
+      "file": "bg/bg-28.jpg"
+    },
+    {
+      "key": "bg-30",
+      "file": "bg/bg-30.jpg"
+    },
+    {
+      "key": "bg-35",
+      "file": "bg/bg-35.jpg"
+    },
+    {
+      "key": "bg-37",
+      "file": "bg/bg-37.jpg"
+    },
+    {
+      "key": "bg-38",
+      "file": "bg/bg-38.jpg"
+    },
+    {
+      "key": "bg-40",
+      "file": "bg/bg-40.jpg"
+    },
+    {
+      "key": "bg-41",
+      "file": "bg/bg-41.jpg"
+    },
+    {
+      "key": "bg-42",
+      "file": "bg/bg-42.jpg"
+    },
+    {
+      "key": "bg-43",
+      "file": "bg/bg-43.jpg"
+    }
+  ]
+}

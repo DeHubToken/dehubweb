@@ -6,6 +6,7 @@ import {
 } from '../_shared/dehub-brand-composite.ts';
 import { DEHUB_LOGO_DATA_URI } from '../_shared/dehub-logo.ts';
 import { rateLimitByIp } from '../_shared/auth.ts';
+import { buildSpecFromPrompt, renderTemplateBanner, formatFromPosterSize } from '../_shared/dehub-template-banner.ts';
 
 const serve = (handler: (req: Request) => Response | Promise<Response>) => Deno.serve(handler);
 
@@ -93,6 +94,34 @@ serve(async (req) => {
       } else if (/\b(square|1:1|instagram post|feed post)\b/.test(p)) {
         posterSize = '1024x1024';
         formatHint = 'square social post (1:1), think Instagram feed / album cover';
+      }
+
+      // ── SM Template 2.0 path (DEFAULT for brand requests): renders the official
+      //    banner template deterministically from the brand kit at /brand-kit/ —
+      //    silk bg + chrome 3D icon hero + silver Exo headline + HUD chrome. The
+      //    LLM only fills a small validated spec, so output is always exactly
+      //    on-brand. The diffusion "scene" archetypes below remain for Poster
+      //    Studio (explicit logoImage) and requests that ask for a photo/scene.
+      const sceneKeywordHit = /\b(photo|photoreal|realistic|cinematic|scene|3d|render(?:ed|ing)?|mockup|billboard|monolith|obsidian|product shot|people|person|human|character|silhouette)\b/i.test(prompt);
+      if (!logoImage && !sourceImage && !sceneKeywordHit) {
+        try {
+          const format = formatFromPosterSize(posterSize);
+          const spec = await buildSpecFromPrompt({
+            prompt,
+            headlineOverride: typeof requestHeadline === 'string' && requestHeadline.trim() ? requestHeadline.trim() : undefined,
+            history: conversationHistory,
+            apiKey: lovableApiKey ?? '',
+            format,
+          });
+          const templUrl = await renderTemplateBanner(spec);
+          console.log('[dehub-template] SM Template 2.0 render success', { format, icon: spec.icon, layout: spec.layout });
+          return new Response(
+            JSON.stringify({ imageUrl: templUrl, text: '', success: true }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        } catch (e) {
+          console.warn('[dehub-template] template path failed — falling back to scene pipeline:', (e as Error).message);
+        }
       }
 
       // ── DeHub brand archetype library: all strictly monochrome, all material-first,
