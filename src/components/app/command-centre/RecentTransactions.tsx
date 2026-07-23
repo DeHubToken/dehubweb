@@ -12,6 +12,7 @@ import { getNotifications } from '@/lib/api/dehub/notifications';
 import { format, subHours, subDays, subWeeks, subMonths } from 'date-fns';
 import { useState, useMemo } from 'react';
 import { useOnchainDHBTransfers } from '@/hooks/use-onchain-dhb-transfers';
+import { getGiveawayPrizeFor, formatPrizeAmount } from '@/lib/worldCupGiveaway';
 import { cn } from '@/lib/utils';
 
 const timeFilters = ['1h', '1d', '1w', '1m', 'Max'];
@@ -66,6 +67,9 @@ export function RecentTransactions() {
   const { isAuthenticated, walletAddress } = useAuth();
   const [activeFilter, setActiveFilter] = useState('1m');
   const { t } = useTranslation();
+
+  // Twitter World Cup giveaway prize (pending on-chain credit) — pinned for winners.
+  const giveawayPrize = getGiveawayPrizeFor(walletAddress);
 
   const { data: dpayTxs = [], isLoading: dpayLoading } = useQuery({
     queryKey: ['dpay', 'transactions'],
@@ -329,6 +333,19 @@ export function RecentTransactions() {
           onSelect={(key) => setActiveFilter(key)}
         />
       </div>
+
+      {/* Giveaway credit — pinned so it always shows for winners */}
+      {giveawayPrize && (
+        <div className="flex items-center justify-between py-3 border-b border-zinc-800">
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0 bg-emerald-400" />
+            <p className="text-sm text-zinc-400 truncate">
+              🏆 Won {formatPrizeAmount(giveawayPrize.amount)} {giveawayPrize.token} — {giveawayPrize.campaign}
+            </p>
+          </div>
+          <span className="text-zinc-500 text-sm whitespace-nowrap ml-4">Credited</span>
+        </div>
+      )}
 
       {isLoading || (recent.length === 0 && isPartiallyLoading) ? (
         <div className="flex items-center justify-center py-8">

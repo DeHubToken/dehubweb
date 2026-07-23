@@ -30,6 +30,7 @@ import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import bnbLogo from '@/assets/bnb-logo.png';
 import { SEOHead } from '@/components/SEOHead';
+import { getGiveawayPrizeFor } from '@/lib/worldCupGiveaway';
 import ethLogo from '@/assets/eth-logo.png';
 import usdtLogo from '@/assets/usdt-logo.png';
 import usdcLogo from '@/assets/usdc-logo.png';
@@ -95,6 +96,11 @@ export default function FullWalletPage() {
 
   const { allTokens, isLoading } = useAllChainsTokens();
   const { data: userStakingData } = useUserStakingData();
+
+  // Twitter World Cup giveaway credit — folded into the DHB balance for winners
+  // (shown like staked DHB: part of the total, itemised as a locked line in the
+  // breakdown). Held custodially; transfers once the DHB contract goes live.
+  const giveaway = getGiveawayPrizeFor(walletAddress);
 
   // Collect auto-detected tokens (not in TOKEN_ICONS) for dynamic price lookups
   const extraTokensForPricing = useMemo(() => {
@@ -236,7 +242,8 @@ export default function FullWalletPage() {
                   const dhb = groupedTokens.find(t => t.symbol === 'DHB');
                   const walletBal = dhb ? parseFloat(dhb.totalFormattedBalance) : 0;
                   const stakedBal = userStakingData?.totalStaked ?? 0;
-                  const total = walletBal + stakedBal;
+                  const giveawayBal = giveaway?.amount ?? 0;
+                  const total = walletBal + stakedBal + giveawayBal;
                   return isNaN(total) ? '0' : Math.floor(total).toLocaleString();
                 })()}
               </p>
@@ -282,6 +289,12 @@ export default function FullWalletPage() {
                     <span className="text-zinc-500">Staked</span>
                     <span className="text-white font-medium">{Math.floor(stakedVal).toLocaleString()} DHB</span>
                   </div>
+                  {giveaway && (
+                    <div className="flex justify-between text-xs">
+                      <span className="text-zinc-500">Giveaway (locked)</span>
+                      <span className="text-white font-medium">{Math.floor(giveaway.amount).toLocaleString()} DHB</span>
+                    </div>
+                  )}
                 </>
               );
             })()}

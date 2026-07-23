@@ -6,6 +6,7 @@ import { OptimisticPostsProvider } from "@/hooks/use-optimistic-posts";
 // Direct import (not the modals barrel) so the barrel's other modals stay out
 // of the entry bundle.
 import { UsernameRequiredModal } from "@/components/app/modals/UsernameRequiredModal";
+import { GiveawayPrizeModal } from "@/components/app/GiveawayPrizeModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { prefetchUnifiedFeed } from "@/hooks/use-unified-feed";
@@ -252,6 +253,7 @@ function AppContent() {
   return (
     <>
       <UsernameRequiredModal />
+      <GiveawayPrizeModal />
       {loginModalMounted && (
         <Suspense fallback={null}>
           <LoginModal open={isLoginModalOpen} onOpenChange={closeLoginModal} />
