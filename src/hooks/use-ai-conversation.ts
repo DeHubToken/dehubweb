@@ -150,7 +150,7 @@ export function useAIConversation() {
     } catch (error) {
       console.error('[AI Conversation] Error saving message:', error);
     }
-  }, [walletAddress]);
+  }, [walletAddress, persistMediaUrl]);
 
   // Process the save queue
   const processSaveQueue = useCallback(async () => {
