@@ -13,10 +13,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
-import { Search, Plus, Sparkles, Trash2, Wand2, Loader2, ArrowLeft } from 'lucide-react';
+import { Search, Plus, Wand2, Loader2, ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
+import { SkillCard } from '@/components/app/skills/SkillCard';
 import {
   useUserSkills,
   useCreateSkill,
@@ -72,9 +73,6 @@ export function SkillsHubModal({ open, onOpenChange, onUseSkill }: SkillsHubModa
     );
   }, [skills, tab, query, wallet]);
 
-  const featured = useMemo(() => filtered.filter(s => s.is_featured), [filtered]);
-  const community = useMemo(() => filtered.filter(s => !s.is_featured), [filtered]);
-
   const resetForm = () => setForm({
     name: '', description: '', kind: 'chat', model: 'google/gemini-2.5-flash',
     triggers: '', systemPrompt: '', assetUrls: '',
@@ -103,60 +101,12 @@ export function SkillsHubModal({ open, onOpenChange, onUseSkill }: SkillsHubModa
     }
   };
 
-  const renderSkill = (s: UserSkill) => {
-    const isMine = s.creator_wallet_address === wallet;
-    return (
-      <div
-        key={s.id}
-        className="group rounded-2xl border border-white/10 bg-white/[0.03] hover:bg-white/[0.06] backdrop-blur-xl p-4 transition-colors"
-      >
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2 mb-1">
-              {s.is_featured && <Sparkles className="w-3.5 h-3.5 text-white/80 shrink-0" />}
-              <h4 className="text-sm font-semibold text-white truncate">{s.name}</h4>
-              <span className="text-[10px] uppercase tracking-wider text-white/40 px-1.5 py-0.5 rounded bg-white/5 border border-white/10">
-                {s.kind}
-              </span>
-            </div>
-            <p className="text-xs text-white/60 line-clamp-2 mb-2">{s.description}</p>
-            {s.trigger_phrases.length > 0 && (
-              <div className="flex flex-wrap gap-1">
-                {s.trigger_phrases.slice(0, 4).map(t => (
-                  <span key={t} className="text-[10px] text-white/50 px-1.5 py-0.5 rounded bg-white/5">
-                    /{t}
-                  </span>
-                ))}
-              </div>
-            )}
-            <div className="mt-2 text-[10px] text-white/30">
-              {s.creator_username ? `@${s.creator_username}` : `${s.creator_wallet_address.slice(0, 6)}…`}
-              {' · '}{s.usage_count} uses
-            </div>
-          </div>
-          <div className="flex flex-col gap-1 shrink-0">
-            <button
-              onClick={() => { onUseSkill(s); onOpenChange(false); }}
-              className="text-xs text-white bg-white/10 hover:bg-white/20 rounded-lg px-3 py-1.5 transition-colors"
-            >
-              Use
-            </button>
-            {isMine && (
-              <button
-                onClick={async () => {
-                  if (!confirm(`Delete "${s.name}"?`)) return;
-                  try { await deleteSkill.mutateAsync(s.id); toast.success('Deleted'); }
-                  catch (e: any) { toast.error(e?.message || 'Failed'); }
-                }}
-                className="text-xs text-white/50 hover:text-red-400 rounded-lg px-2 py-1 transition-colors flex items-center justify-center"
-              >
-                <Trash2 className="w-3 h-3" />
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    );
+  const handleUse = (s: UserSkill) => { onUseSkill(s); onOpenChange(false); };
+
+  const handleDelete = async (s: UserSkill) => {
+    if (!confirm(`Delete "${s.name}"?`)) return;
+    try { await deleteSkill.mutateAsync(s.id); toast.success('Deleted'); }
+    catch (e: any) { toast.error(e?.message || 'Failed'); }
   };
 
   return (
@@ -223,26 +173,16 @@ export function SkillsHubModal({ open, onOpenChange, onUseSkill }: SkillsHubModa
                   No skills yet. <button className="underline hover:text-white" onClick={() => setTab('create')}>Create the first one</button>.
                 </div>
               ) : (
-                <>
-                  {featured.length > 0 && (
-                    <div>
-                      <div className="text-[10px] uppercase tracking-wider text-white/40 mb-2 px-1">Featured</div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {featured.map(renderSkill)}
-                      </div>
-                    </div>
-                  )}
-                  {community.length > 0 && (
-                    <div>
-                      <div className="text-[10px] uppercase tracking-wider text-white/40 mb-2 px-1 mt-4">
-                        {tab === 'mine' ? 'Your skills' : 'Community'}
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {community.map(renderSkill)}
-                      </div>
-                    </div>
-                  )}
-                </>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {filtered.map(s => (
+                    <SkillCard
+                      key={s.id}
+                      skill={s}
+                      onClick={() => handleUse(s)}
+                      onDelete={s.creator_wallet_address === wallet ? () => handleDelete(s) : undefined}
+                    />
+                  ))}
+                </div>
               )}
             </div>
           </>
