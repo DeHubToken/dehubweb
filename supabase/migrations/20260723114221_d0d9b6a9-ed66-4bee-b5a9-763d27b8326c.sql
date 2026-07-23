@@ -1,0 +1,1 @@
+UPDATE public.feature_requests SET status = 'shipped', updated_at = NOW() WHERE id IN ('94aefcb4-ce2f-4665-bfd1-385575257d4e', '764f0f34-5ea9-42ca-b8cc-641424b54576', '1bbc7657-30cb-44b1-b282-d14064007f5c');
