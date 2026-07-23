@@ -233,7 +233,7 @@ Reply with ONLY the JSON object, no markdown.`;
 const DIMS: Record<BannerFormat, { W: number; H: number }> = {
   landscape: { W: 1200, H: 630 },
   square: { W: 960, H: 960 },
-  portrait: { W: 960, H: 1200 },
+  portrait: { W: 864, H: 1080 },
 };
 
 function headlineBlock(lines: BannerSpec["headline"], x: number, topY: number, size: number, anchor: "start" | "middle"): string {
@@ -396,7 +396,7 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
     }
   } else {
     // square / portrait: headline upper-left, hero lower-right, sub above bottom HUD
-    const heroBox = spec.format === "square" ? 560 : 620;
+    const heroBox = spec.format === "square" ? 560 : 520;
     const heroY = H - heroBox - 140;
     body.push(`<ellipse cx="${W - 80 - heroBox / 2}" cy="${heroY + heroBox / 2}" rx="${heroBox * 0.6}" ry="${heroBox * 0.55}" fill="url(#glow)"/>`);
     if (spec.layout === "wordmark" && uris.wordmarkWhite) {
