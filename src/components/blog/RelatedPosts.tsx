@@ -35,7 +35,7 @@ export const RelatedPosts: React.FC<RelatedPostsProps> = ({ currentPost, allPost
               <OptimizedImage
                 src={post.bannerImage}
                 alt={post.bannerImageAlt}
-                className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-200"
+                className="w-full h-full object-cover object-bottom group-hover:scale-105 transition-transform duration-200"
               />
             </div>
             <div className="p-4">

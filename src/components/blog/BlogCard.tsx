@@ -93,7 +93,7 @@ const BlogCard: React.FC<BlogCardProps> = ({ post, featured = false }) => {
             alt={post.bannerImageAlt}
             loading="lazy"
             decoding="async"
-            className={`w-full object-cover transition-transform duration-200 group-hover:scale-105 ${featured ? 'h-48' : 'h-40'}`}
+            className={`w-full object-cover object-bottom transition-transform duration-200 group-hover:scale-105 ${featured ? 'h-48' : 'h-40'}`}
           />
           {post.featured && (
           <span className="absolute top-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-full text-sm font-semibold">
