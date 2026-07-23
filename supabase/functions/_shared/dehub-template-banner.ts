@@ -108,26 +108,45 @@ function esc(v: string): string {
 const snake = (v: string) =>
   v.toLowerCase().replace(/['’]/g, "").replace(/[^a-z0-9£$?+]+/g, "_").replace(/^_+|_+$/g, "").slice(0, 30);
 
+// LLM outputs are shapes-of-many-kinds: strings, {text: "..."} objects, numbers,
+// nested arrays. Coerce defensively — String({}) === "[object Object]" burned us.
+function coerceStr(v: unknown): string {
+  if (typeof v === "string") return v;
+  if (typeof v === "number") return String(v);
+  if (v && typeof v === "object") {
+    const o = v as Record<string, unknown>;
+    for (const k of ["text", "value", "label", "content"]) {
+      if (typeof o[k] === "string") return o[k] as string;
+    }
+  }
+  return "";
+}
+
 function clampSpec(raw: Partial<BannerSpec>, manifest: KitManifest, format: BannerFormat): BannerSpec {
   const iconKeys = new Set(manifest.icons.map((i) => i.key));
-  const lines = (Array.isArray(raw.headline) ? raw.headline : [])
+  const rawLines = Array.isArray(raw.headline)
+    ? raw.headline
+    : coerceStr(raw.headline) ? [{ text: coerceStr(raw.headline), blurTail: 2 }] : [];
+  const lines = rawLines
     .map((l) => ({
-      text: String(l?.text ?? "").toUpperCase().replace(/[^\x20-\x7E£]/g, "").trim().slice(0, 14),
-      blurTail: Math.max(0, Math.min(4, Number(l?.blurTail) || 0)),
+      text: (typeof l === "string" ? l : coerceStr(l?.text ?? l)).toUpperCase().replace(/[^\x20-\x7E£]/g, "").trim().slice(0, 14),
+      blurTail: Math.max(0, Math.min(4, Number((l as Record<string, unknown>)?.blurTail) || 0)),
     }))
     .filter((l) => l.text)
     .slice(0, 2);
   if (!lines.length) lines.push({ text: "DEHUB", blurTail: 0 });
-  const icon = raw.icon && iconKeys.has(raw.icon) ? raw.icon : undefined;
-  const icon2 = raw.icon2 && iconKeys.has(raw.icon2) && raw.icon2 !== icon ? raw.icon2 : undefined;
-  const bg = manifest.backgrounds.some((b) => b.key === raw.bg) ? raw.bg : undefined;
+  const iconRaw = coerceStr(raw.icon), icon2Raw = coerceStr(raw.icon2);
+  const icon = iconKeys.has(iconRaw) ? iconRaw : undefined;
+  const icon2 = iconKeys.has(icon2Raw) && icon2Raw !== icon ? icon2Raw : undefined;
+  const bgRaw = coerceStr(raw.bg);
+  const bg = manifest.backgrounds.some((b) => b.key === bgRaw) ? bgRaw : undefined;
   return {
     format,
     layout: raw.layout === "wordmark" ? "wordmark" : "hero",
     headline: lines,
-    subtitle: snake(String(raw.subtitle ?? "")) || "the_decentralised_hub",
-    extra: raw.extra ? snake(String(raw.extra)).slice(0, 22) : undefined,
-    typeTag: snake(String(raw.typeTag ?? "graphic")).slice(0, 16) || "graphic",
+    subtitle: snake(coerceStr(raw.subtitle)) || "the_decentralised_hub",
+    extra: coerceStr(raw.extra) ? snake(coerceStr(raw.extra)).slice(0, 22) : undefined,
+    typeTag: snake(coerceStr(raw.typeTag) || "graphic").slice(0, 16) || "graphic",
     icon,
     icon2,
     bg,
@@ -169,6 +188,7 @@ export async function buildSpecFromPrompt(opts: {
 - icon: the ONE key whose meaning best matches the CONTENT (never a money icon for non-money topics). icon2: optional supporting key, only if it clearly adds meaning.
 - layout: "wordmark" ONLY for pure brand/logo cards; otherwise "hero".
 Icon inventory: ${inventory}.
+Shape (exact — subtitle/extra/typeTag/icon are PLAIN STRINGS, never objects): {"layout":"hero","headline":[{"text":"GO","blurTail":0},{"text":"LIVE","blurTail":1}],"subtitle":"web3_streaming","extra":"2026","typeTag":"product","icon":"mic","icon2":""}
 Reply with ONLY the JSON object, no markdown.`;
   const user = `Request: ${opts.prompt}${opts.headlineOverride ? `\nRequired headline text: "${opts.headlineOverride}"` : ""}`;
   try {
