@@ -9,8 +9,9 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
+import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useSearchParams } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2, MoreVertical, Pencil, ImagePlus } from 'lucide-react';
@@ -890,6 +891,18 @@ export default function FeaturesPage() {
   const contentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
 
+  // Condense the sticky header on scroll-down to just the search bar, expand it
+  // back on scroll-up — the same shared scroll-direction store that hides/shows
+  // the home feed's bottom nav (forced visible within 60px of the top). The
+  // bento's top edge is sticky-fixed, so collapsing its height from the bottom
+  // leaves the swallow-clip line untouched.
+  const navVisible = useScrollDirection();
+  const prefersReducedMotion = useReducedMotion();
+  const collapsed = !navVisible;
+  const collapseTransition = prefersReducedMotion
+    ? { duration: 0 }
+    : { duration: 0.3, ease: [0.4, 0, 0.2, 1] as const };
+
   return (
     <div className="min-h-screen">
       <SEOHead title="Features — Submit & Vote on Ideas" description="Submit feature requests, vote on community ideas, and help shape DeHub's roadmap. Your voice drives the platform's development." url="https://dehub.io/app/features" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Feature Requests', url: 'https://dehub.io/app/features', description: 'Submit and vote on feature requests to shape DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
@@ -897,36 +910,76 @@ export default function FeaturesPage() {
       {/* Sticky nav pill */}
       <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <img src={featuresLightbulb} alt="Features" className="w-12 h-12 object-contain" />
-            <div>
-              <h1 className="text-xl font-bold text-white">{t('features.title')}</h1>
-              <p className="text-zinc-500 text-sm">{totalCount === 1 ? t('features.ideaSubmitted') : t('features.ideasSubmitted', { count: totalCount })}</p>
+        {/* Title + Submit — collapses away on scroll-down, leaving the search bar */}
+        <motion.div
+          initial={false}
+          animate={{ height: collapsed ? 0 : 'auto', opacity: collapsed ? 0 : 1 }}
+          transition={collapseTransition}
+          className="overflow-hidden"
+          aria-hidden={collapsed}
+        >
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <img src={featuresLightbulb} alt="Features" className="w-12 h-12 object-contain" />
+              <div>
+                <h1 className="text-xl font-bold text-white">{t('features.title')}</h1>
+                <p className="text-zinc-500 text-sm">{totalCount === 1 ? t('features.ideaSubmitted') : t('features.ideasSubmitted', { count: totalCount })}</p>
+              </div>
             </div>
+            <Button
+              onClick={handleSubmitClick}
+              variant="glass"
+              className="rounded-xl font-semibold text-sm"
+              size="sm"
+            >
+              <Plus className="w-4 h-4" />
+              <span className="hidden sm:inline">{t('features.submit')}</span>
+            </Button>
           </div>
-          <Button
-            onClick={handleSubmitClick}
-            variant="glass"
-            className="rounded-xl font-semibold text-sm"
-            size="sm"
-          >
-            <Plus className="w-4 h-4" />
-            <span className="hidden sm:inline">{t('features.submit')}</span>
-          </Button>
+        </motion.div>
+
+        {/* Search — always visible; gains a compact submit button once condensed */}
+        <div className={cn('relative flex items-center gap-2', collapsed ? 'mb-0' : 'mb-3')}>
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
+            <Input
+              placeholder={t('features.searchPlaceholder')}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
+            />
+          </div>
+          <AnimatePresence initial={false}>
+            {collapsed && (
+              <motion.div
+                initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.8, width: 0, marginLeft: -8 }}
+                animate={{ opacity: 1, scale: 1, width: 40, marginLeft: 0 }}
+                exit={prefersReducedMotion ? undefined : { opacity: 0, scale: 0.8, width: 0, marginLeft: -8 }}
+                transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+                className="shrink-0 overflow-hidden"
+              >
+                <Button
+                  onClick={handleSubmitClick}
+                  variant="glass"
+                  size="icon"
+                  className="rounded-xl h-10 w-10"
+                  aria-label={t('features.submit')}
+                >
+                  <Plus className="w-4 h-4" />
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
-        {/* Search */}
-        <div className="relative mb-3">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
-          <Input
-            placeholder={t('features.searchPlaceholder')}
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            className="pl-10 bg-zinc-800 border-zinc-700 text-white placeholder:text-zinc-500 rounded-xl"
-          />
-        </div>
-
+        {/* Tabs + filters — collapse together on scroll-down */}
+        <motion.div
+          initial={false}
+          animate={{ height: collapsed ? 0 : 'auto', opacity: collapsed ? 0 : 1 }}
+          transition={collapseTransition}
+          className="overflow-hidden"
+          aria-hidden={collapsed}
+        >
         {/* Page Tabs: Requests / Shipped */}
         <div className="relative flex gap-1 bg-zinc-800/40 rounded-xl p-1 mb-3">
           {/* Sliding liquid glass indicator */}
@@ -1022,6 +1075,7 @@ export default function FeaturesPage() {
             </div>
           </>
         )}
+        </motion.div>
         </div>
       </div>
 
