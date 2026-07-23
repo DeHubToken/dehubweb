@@ -890,77 +890,32 @@ export default function FeaturesPage() {
   const contentRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(contentRef, '[data-feed-nav-outer] > [data-page-bento]');
 
-  // Condense the sticky header on scroll-down to just the search bar, expand it
-  // back on scroll-up. The toggle is INSTANT (no height transition): an animated
-  // collapse reflows the content below every frame, and the swallow-clip's rAF
-  // has to chase that moving top edge — on a slow scroll it lags a frame and
-  // content peeks above the pill's corners (the bleed) while the motion
-  // stutters. Snapping the height in one frame lets the clip re-solve once,
-  // cleanly. Hysteresis (accumulate net travel, reset on direction flip) stops
-  // micro-scrolls near the threshold from thrashing the state open/closed.
-  const [collapsed, setCollapsed] = useState(false);
-  useEffect(() => {
-    const getY = () =>
-      window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
-    let lastY = getY();
-    let acc = 0;
-    const TOGGLE = 44; // px of net travel in one direction before flipping
-    const TOP = 80;    // always fully expanded this close to the top
-    const onScroll = () => {
-      const y = getY();
-      const diff = y - lastY;
-      lastY = y;
-      if (y <= TOP) { acc = 0; setCollapsed(false); return; }
-      if (Math.sign(diff) !== Math.sign(acc)) acc = 0; // reversed direction → reset
-      acc += diff;
-      if (acc > TOGGLE) setCollapsed(true);
-      else if (acc < -TOGGLE) setCollapsed(false);
-    };
-    // Feed scrolls on document.body; scroll events don't bubble, so capture on
-    // both window and document (same plumbing as the swallow-clip hook).
-    const targets: EventTarget[] = [window, document];
-    targets.forEach(t => t.addEventListener('scroll', onScroll, { passive: true, capture: true }));
-    return () => targets.forEach(t => t.removeEventListener('scroll', onScroll, { capture: true } as EventListenerOptions));
-  }, []);
-
   return (
     <div className="min-h-screen">
       <SEOHead title="Features — Submit & Vote on Ideas" description="Submit feature requests, vote on community ideas, and help shape DeHub's roadmap. Your voice drives the platform's development." url="https://dehub.io/app/features" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'DeHub Feature Requests', url: 'https://dehub.io/app/features', description: 'Submit and vote on feature requests to shape DeHub.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">DeHub Features — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
-      {/* Sticky nav pill */}
-      <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
-        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
-        {/* Title + Submit — snaps away instantly on scroll-down (no height
-            transition, so the swallow-clip never has to chase a moving edge). */}
-        <div
-          className="grid"
-          style={{ gridTemplateRows: collapsed ? '0fr' : '1fr', opacity: collapsed ? 0 : 1 }}
-          aria-hidden={collapsed}
-        >
-         <div className="overflow-hidden min-h-0">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <img src={featuresLightbulb} alt="Features" className="w-12 h-12 object-contain" />
-              <div>
-                <h1 className="text-xl font-bold text-white">{t('features.title')}</h1>
-                <p className="text-zinc-500 text-sm">{totalCount === 1 ? t('features.ideaSubmitted') : t('features.ideasSubmitted', { count: totalCount })}</p>
-              </div>
+      {/* Title row — NOT sticky: it scrolls away naturally on scroll-down (no JS,
+          no resize, so nothing fights the scroll engine or the swallow-clip),
+          and reappears as you scroll back up. The search + tabs + filters below
+          stay pinned. */}
+      <div className="bg-black px-2 pt-1 sm:px-3 lg:pt-2">
+        <div className="flex items-center justify-between px-2 sm:px-3 pt-2 pb-3">
+          <div className="flex items-center gap-3">
+            <img src={featuresLightbulb} alt="Features" className="w-12 h-12 object-contain" />
+            <div>
+              <h1 className="text-xl font-bold text-white">{t('features.title')}</h1>
+              <p className="text-zinc-500 text-sm">{totalCount === 1 ? t('features.ideaSubmitted') : t('features.ideasSubmitted', { count: totalCount })}</p>
             </div>
-            <Button
-              onClick={handleSubmitClick}
-              variant="glass"
-              className="rounded-xl font-semibold text-sm"
-              size="sm"
-            >
-              <Plus className="w-4 h-4" />
-              <span className="hidden sm:inline">{t('features.submit')}</span>
-            </Button>
           </div>
-         </div>
         </div>
+      </div>
 
-        {/* Search — always visible; gains a compact submit button once condensed. */}
-        <div className={cn('relative flex items-center gap-2', collapsed ? 'mb-0' : 'mb-3')}>
+      {/* Sticky nav: search + tabs + filters pin to the top; the title above
+          scrolls away. */}
+      <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pb-0 sm:px-3 sm:pb-0">
+        <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+        {/* Search + Submit */}
+        <div className="relative flex items-center gap-2 mb-3">
           <div className="relative flex-1 min-w-0">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500" />
             <Input
@@ -970,33 +925,17 @@ export default function FeaturesPage() {
               className="pl-10 bg-foreground/[0.05] border-foreground/10 text-foreground placeholder:text-muted-foreground rounded-xl"
             />
           </div>
-          <div
-            className={cn(
-              'shrink-0 overflow-hidden',
-              collapsed ? 'w-10 opacity-100 ml-0' : 'w-0 opacity-0 -ml-2 pointer-events-none'
-            )}
-            aria-hidden={!collapsed}
+          <Button
+            onClick={handleSubmitClick}
+            variant="glass"
+            className="rounded-xl font-semibold text-sm shrink-0"
+            size="sm"
           >
-            <Button
-              onClick={handleSubmitClick}
-              variant="glass"
-              size="icon"
-              className="rounded-xl h-10 w-10"
-              aria-label={t('features.submit')}
-              tabIndex={collapsed ? 0 : -1}
-            >
-              <Plus className="w-4 h-4" />
-            </Button>
-          </div>
+            <Plus className="w-4 h-4" />
+            <span className="hidden sm:inline">{t('features.submit')}</span>
+          </Button>
         </div>
 
-        {/* Tabs + filters — snap away together on scroll-down. */}
-        <div
-          className="grid"
-          style={{ gridTemplateRows: collapsed ? '0fr' : '1fr', opacity: collapsed ? 0 : 1 }}
-          aria-hidden={collapsed}
-        >
-        <div className="overflow-hidden min-h-0">
         {/* Page Tabs: Requests / Shipped */}
         <div className="relative flex gap-1 bg-foreground/[0.06] rounded-xl p-1 mb-3">
           {/* Sliding liquid glass indicator */}
@@ -1092,8 +1031,6 @@ export default function FeaturesPage() {
             </div>
           </>
         )}
-        </div>
-        </div>
         </div>
       </div>
 
