@@ -27,6 +27,13 @@ interface GenerateImageRequest {
   headline?: string; // Explicit headline channel (Poster Studio tagline). Empty string = user chose no headline.
   conversationHistory?: ConversationMessage[];
   model?: string;
+  // Explicit renderer choice from the client — wins over English keyword heuristics.
+  // 'template' = deterministic SM Template 2.0 banner (the blog-banner look);
+  // 'scene' = the diffusion "cinematic scene" pipeline. Needed because the client
+  // brand wrapper injects the word "cinematic", which would otherwise mis-route
+  // every poster to the scene pipeline.
+  bannerRenderer?: 'template' | 'scene';
+  bannerFormat?: 'landscape' | 'square' | 'portrait';
 }
 
 serve(async (req) => {
@@ -38,7 +45,7 @@ serve(async (req) => {
   if (limited) return limited;
 
   try {
-    let { prompt, sourceImage, logoImage, headline: requestHeadline, conversationHistory = [], model = 'gemini-2.5-flash' } = await req.json() as GenerateImageRequest;
+    let { prompt, sourceImage, logoImage, headline: requestHeadline, conversationHistory = [], model = 'gemini-2.5-flash', bannerRenderer, bannerFormat } = await req.json() as GenerateImageRequest;
 
     if (!prompt) {
       throw new Error('Prompt is required');
@@ -102,10 +109,15 @@ serve(async (req) => {
       //    LLM only fills a small validated spec, so output is always exactly
       //    on-brand. The diffusion "scene" archetypes below remain for Poster
       //    Studio (explicit logoImage) and requests that ask for a photo/scene.
-      const sceneKeywordHit = /\b(photo|photoreal|realistic|cinematic|scene|3d|render(?:ed|ing)?|mockup|billboard|monolith|obsidian|product shot|people|person|human|character|silhouette)\b/i.test(prompt);
-      if (!logoImage && !sourceImage && !sceneKeywordHit) {
+      // Keyword heuristic is only a fallback for organic requests with no explicit
+      // client signal. NOTE: the client brand wrapper injects "cinematic", so we do
+      // NOT let that alone force a scene — an explicit bannerRenderer always wins.
+      const sceneKeywordHit = /\b(photo|photoreal|realistic|scene|3d|render(?:ed|ing)?|mockup|monolith|obsidian|product shot|people|person|human|character|silhouette)\b/i.test(prompt);
+      const useTemplate = bannerRenderer === 'template'
+        || (bannerRenderer !== 'scene' && !sourceImage && !sceneKeywordHit);
+      if (useTemplate && !sourceImage) {
         try {
-          const format = formatFromPosterSize(posterSize);
+          const format = bannerFormat ?? formatFromPosterSize(posterSize);
           const spec = await buildSpecFromPrompt({
             prompt,
             headlineOverride: typeof requestHeadline === 'string' && requestHeadline.trim() ? requestHeadline.trim() : undefined,

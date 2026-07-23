@@ -44,6 +44,7 @@ const DIMENSIONS: { value: PosterConfig['dimension']; label: string; hint: strin
 
 // ─── Style archetypes (matches server templates, but user-facing labels) ───
 const STYLES: { value: string; label: string; desc: string }[] = [
+  { value: 'dehub-template', label: '🎯 DeHub Banner', desc: 'On-brand chrome icon + silver headline (like our blog banners)' },
   { value: 'auto', label: '🎲 Surprise me', desc: 'Random top-tier archetype' },
   { value: 'apple-keynote', label: '🍎 Apple Keynote', desc: 'Minimal product hero, dramatic lighting' },
   { value: 'a24-film', label: '🎞️ A24 Film Poster', desc: 'Cinematic, grainy, moody' },
@@ -185,7 +186,9 @@ function detectStyle(prompt: string): string {
   if (/\bvaporwave|retro|80s|synthwave\b/.test(lower)) return 'vaporwave';
   if (/\bproduct|launch|teaser|reveal\b/.test(lower)) return 'product-teaser';
   if (/\bconcert|tour|stage\b/.test(lower)) return 'concert-tour';
-  return 'auto';
+  // Default to the on-brand DeHub template banner unless the user explicitly asked
+  // for one of the cinematic scene archetypes above.
+  return 'dehub-template';
 }
 
 function detectFeatures(prompt: string): string[] {
@@ -239,7 +242,7 @@ function buildFinalPrompt(cfg: Omit<PosterConfig, 'finalPrompt'>, userPrompt: st
       : 'Reserve clear negative space for the DeHub long-form wordmark logo.';
   parts.push(logoNote);
 
-  if (cfg.style && cfg.style !== 'auto') {
+  if (cfg.style && cfg.style !== 'auto' && cfg.style !== 'dehub-template') {
     const style = STYLES.find(s => s.value === cfg.style);
     if (style) parts.push(`Style archetype: ${style.label.replace(/^[^\w]+/, '')} — ${style.desc}.`);
   }
@@ -268,7 +271,7 @@ function buildFinalPrompt(cfg: Omit<PosterConfig, 'finalPrompt'>, userPrompt: st
 
 export function PosterConfigDialog({ open, onOpenChange, userPrompt, onConfirm }: PosterConfigDialogProps) {
   const [dimension, setDimension] = useState<PosterConfig['dimension']>('portrait');
-  const [style, setStyle] = useState('auto');
+  const [style, setStyle] = useState('dehub-template');
   const [features, setFeatures] = useState<string[]>([]);
   const [tagline, setTagline] = useState('');
   const [includeSocials, setIncludeSocials] = useState(false);
