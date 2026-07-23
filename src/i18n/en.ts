@@ -2,7 +2,7 @@ export const en = {
   nav: {
     main: 'Main',
     home: 'Home',
-    overview: 'Overview',
+    overview: 'Abstract',
     dapp: "d'App",
     games: 'Games',
     token: 'Currency',
