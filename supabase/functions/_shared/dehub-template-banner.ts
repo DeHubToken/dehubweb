@@ -185,8 +185,8 @@ export async function buildSpecFromPrompt(opts: {
 - headline: 1-2 lines, UPPERCASE, punchy marketing copy, max 12 chars per line (hard limit 14). blurTail = 1-3 trailing letters to motion-blur on the LAST line, 0 on the first.
 - subtitle: short snake_case descriptor (e.g. get_paid_to_watch). extra: optional tiny snake_case fact (e.g. 2026, no_investment).
 - typeTag: one snake word categorizing it (guide, game, ranking, announcement, product, reward, brand, explainer...).
-- icon: the ONE key whose meaning best matches the CONTENT (never a money icon for non-money topics). icon2: optional supporting key, only if it clearly adds meaning.
-- layout: "wordmark" ONLY for pure brand/logo cards; otherwise "hero".
+- icon: the ONE key whose meaning best matches the CONTENT (never a money icon for non-money topics). The "coin" icon carries the DeHub logo mark — use it ONLY for token / price / buy / staking topics, otherwise it duplicates the brand logo. icon2: usually leave EMPTY; set it only when a second object genuinely adds meaning (it clutters otherwise).
+- layout: "wordmark" ONLY for a pure brand/logo card with no other subject; otherwise "hero".
 Icon inventory: ${inventory}.
 Shape (exact — subtitle/extra/typeTag/icon are PLAIN STRINGS, never objects): {"layout":"hero","headline":[{"text":"GO","blurTail":0},{"text":"LIVE","blurTail":1}],"subtitle":"web3_streaming","extra":"2026","typeTag":"product","icon":"mic","icon2":""}
 Reply with ONLY the JSON object, no markdown.`;
@@ -250,8 +250,53 @@ function headlineBlock(lines: BannerSpec["headline"], x: number, topY: number, s
   return out;
 }
 
-function subRow(spec: BannerSpec, x: number, y: number, size: number, anchor: "start" | "middle"): string {
+// Width of one Exo-700 uppercase glyph as a fraction of font-size (measured empirically).
+const CHARW = 0.62;
+
+function splitHeadline(line: { text: string; blurTail: number }): { text: string; blurTail: number }[] {
+  const t = line.text.trim();
+  if (!t.includes(" ")) return [line];
+  const mid = t.length / 2;
+  let best = -1;
+  for (let i = 0; i < t.length; i++) {
+    if (t[i] === " " && (best === -1 || Math.abs(i - mid) < Math.abs(best - mid))) best = i;
+  }
+  if (best <= 0) return [line];
+  return [
+    { text: t.slice(0, best).trim(), blurTail: 0 },
+    { text: t.slice(best + 1).trim(), blurTail: line.blurTail || 2 },
+  ];
+}
+
+// Choose line breaks + a font size so the headline fits BOTH the width column and
+// the height budget — the single source of truth that keeps headlines off the hero.
+function fitHeadline(
+  raw: { text: string; blurTail: number }[],
+  colW: number,
+  colH: number,
+  maxSize: number,
+): { lines: { text: string; blurTail: number }[]; size: number } {
+  let lines = raw;
+  // Wrap an over-long single line so it uses vertical space instead of overrunning.
+  if (lines.length === 1 && lines[0].text.length > 7 && lines[0].text.includes(" ")) {
+    lines = splitHeadline(lines[0]);
+  }
+  const maxLen = Math.max(...lines.map((l) => l.text.length), 1);
+  const widthFit = colW / (maxLen * CHARW);
+  const heightFit = colH / (lines.length * 0.98);
+  const size = Math.max(42, Math.min(maxSize, Math.floor(Math.min(widthFit, heightFit))));
+  return { lines, size };
+}
+
+// Fit a plain string's size to a width budget.
+function fitSize(text: string, colW: number, maxSize: number, k = 0.58): number {
+  return Math.max(16, Math.min(maxSize, Math.floor(colW / Math.max(1, text.length * k))));
+}
+
+function subRow(spec: BannerSpec, x: number, y: number, size: number, anchor: "start" | "middle", maxW?: number): string {
   const subTxt = `//${spec.subtitle}`;
+  // Shrink to fit the reserved column (leave ~20% for the extra + × glyph).
+  if (maxW) size = Math.min(size, fitSize(subTxt, maxW * 0.82, size, 0.58));
   let out = `<text x="${x}" y="${y}" font-family="Exo" font-weight="500" font-size="${size}" text-anchor="${anchor}" fill="url(#silverdim)">${esc(subTxt.toUpperCase())}</text>`;
   const approxW = subTxt.length * size * 0.58;
   const ex = anchor === "middle" ? x + approxW / 2 + 40 : x + approxW + 44;
@@ -262,16 +307,19 @@ function subRow(spec: BannerSpec, x: number, y: number, size: number, anchor: "s
   return out;
 }
 
-function hudChrome(spec: BannerSpec, W: number, H: number, uris: Record<string, string>): string {
+function hudChrome(spec: BannerSpec, W: number, H: number, uris: Record<string, string>, showPill = true): string {
   const mono = (t: string) => esc(t);
   const parts: string[] = [];
-  // pill logo — ALWAYS top-left (blog/social crops cut tops, pill hides on cards)
-  const pw = 172, ph = 52;
-  parts.push(
-    `<rect x="40" y="36" width="${pw}" height="${ph}" rx="14" fill="#ffffff" opacity="0.5" filter="url(#pillglow)"/>`,
-    `<rect x="40" y="36" width="${pw}" height="${ph}" rx="14" fill="#f4f4f2"/>`,
-    `<image x="${40 + 26}" y="${36 + 13}" width="${pw - 52}" height="${ph - 26}" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkBlack}"/>`,
-  );
+  // pill logo — top-left. Suppressed on wordmark layouts (the big wordmark IS the
+  // logo, so the pill would just repeat it).
+  if (showPill) {
+    const pw = 172, ph = 52;
+    parts.push(
+      `<rect x="40" y="36" width="${pw}" height="${ph}" rx="14" fill="#ffffff" opacity="0.5" filter="url(#pillglow)"/>`,
+      `<rect x="40" y="36" width="${pw}" height="${ph}" rx="14" fill="#f4f4f2"/>`,
+      `<image x="${40 + 26}" y="${36 + 13}" width="${pw - 52}" height="${ph - 26}" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkBlack}"/>`,
+    );
+  }
   // type tag — top-right
   const tag = `// type = "${spec.typeTag}"`;
   const tw = tag.length * 10.6 + 30;
@@ -293,7 +341,9 @@ function hudChrome(spec: BannerSpec, W: number, H: number, uris: Record<string, 
 }
 
 function marks(W: number, H: number, seed: number): string {
-  const pos: [number, number][] = [[6, 16], [22, 8], [47, 12], [70, 9], [88, 18], [9, 52], [90, 48], [14, 84], [38, 90], [63, 86], [84, 80], [52, 46]];
+  // Edge-biased only — nothing in the central band (28–74% x, 26–66% y) where the
+  // headline + hero live, so the marks never sit on top of type or the icon.
+  const pos: [number, number][] = [[6, 16], [22, 8], [80, 9], [92, 20], [8, 44], [93, 52], [12, 86], [40, 92], [66, 90], [88, 82]];
   return pos.map(([px, py], i) => {
     const g = (i + seed) % 3 === 0 ? "×" : (i + seed) % 3 === 1 ? "+" : "·";
     const o = (0.12 + ((i * 7 + seed * 13) % 10) / 50).toFixed(2);
@@ -377,52 +427,56 @@ export async function buildSvg(spec: BannerSpec): Promise<string> {
     `<ellipse cx="${x + box / 2}" cy="${y + box * 0.94}" rx="${Math.round(box * 0.4)}" ry="${Math.round(box * 0.08)}" fill="url(#heroShadow)"/>` +
     `<image x="${x}" y="${y}" width="${box}" height="${box}" preserveAspectRatio="xMidYMid meet" href="${uri}"${e?.dark ? ' filter="url(#iconfxBright)"' : ""}/>`;
 
+  const isWordmark = spec.layout === "wordmark";
   if (spec.format === "landscape") {
-    if (spec.layout === "wordmark") {
-      body.push(`<ellipse cx="${W / 2}" cy="${H * 0.44}" rx="300" ry="180" fill="url(#glow)"/>`);
-      body.push(`<image x="${W / 2 - 235}" y="${H * 0.44 - 60}" width="470" height="120" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkWhite}" filter="url(#sblur)" opacity="0.75"/>`);
-      body.push(`<image x="${W / 2 - 235}" y="${H * 0.44 - 60}" width="470" height="120" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkWhite}"/>`);
-      body.push(subRow(spec, W / 2, H * 0.66, 30, "middle"));
+    if (isWordmark) {
+      // Brand card: the wordmark IS the logo — centered, glowing, no pill (see hud).
+      body.push(`<ellipse cx="${W / 2}" cy="${H * 0.46}" rx="320" ry="190" fill="url(#glow)"/>`);
+      body.push(`<image x="${W / 2 - 250}" y="${H * 0.46 - 64}" width="500" height="128" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkWhite}" filter="url(#sblur)" opacity="0.7"/>`);
+      body.push(`<image x="${W / 2 - 250}" y="${H * 0.46 - 64}" width="500" height="128" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkWhite}"/>`);
+      body.push(subRow(spec, W / 2, H * 0.68, 30, "middle"));
     } else {
-      const heroBox = 470;
-      body.push(`<ellipse cx="${W - 90 - heroBox / 2}" cy="${H * 0.5}" rx="${heroBox * 0.62}" ry="${heroBox * 0.55}" fill="url(#glow)"/>`);
-      if (uris.icon) body.push(heroImg(W - 100 - heroBox, (H - heroBox) / 2 - 10, heroBox, uris.icon, iconEntry));
-      if (uris.icon2) body.push(heroImg(W - 70 - 220, H - 110 - 220, 220, uris.icon2, icon2Entry));
-      const maxLen = Math.max(...spec.headline.map((l) => l.text.length));
-      const size = Math.max(88, Math.min(158, Math.round(600 / (maxLen * 0.56))));
-      const blockH = spec.headline.length * size * 0.94;
-      headlineTop(body, spec, 64, (H - blockH) / 2 - 18, size);
-      body.push(subRow(spec, 66, H * 0.79, 34, "start"));
+      // Hero right, headline in a reserved left column with a clean gutter.
+      const heroBox = 460;
+      const heroLeft = W - 84 - heroBox;
+      const heroCy = H / 2;
+      body.push(`<ellipse cx="${heroLeft + heroBox / 2}" cy="${heroCy}" rx="${heroBox * 0.6}" ry="${heroBox * 0.52}" fill="url(#glow)"/>`);
+      if (uris.icon) body.push(heroImg(heroLeft, heroCy - heroBox / 2, heroBox, uris.icon, iconEntry));
+      if (uris.icon2) body.push(heroImg(heroLeft + heroBox - 150, H - 150 - 180, 180, uris.icon2, icon2Entry));
+      const colW = heroLeft - 64 - 44; // gutter before hero
+      const { lines, size } = fitHeadline(spec.headline, colW, H * 0.5, 150);
+      const blockH = lines.length * size * 0.94;
+      const topY = (H - blockH) / 2 - 22;
+      body.push(headlineBlock(lines, 64, topY, size, "start"));
+      body.push(subRow(spec, 66, topY + blockH + 48, 30, "start", colW));
     }
   } else {
-    // square / portrait: headline upper-left, hero lower-right, sub above bottom HUD
-    const heroBox = spec.format === "square" ? 560 : 520;
-    const heroY = H - heroBox - 140;
-    body.push(`<ellipse cx="${W - 80 - heroBox / 2}" cy="${heroY + heroBox / 2}" rx="${heroBox * 0.6}" ry="${heroBox * 0.55}" fill="url(#glow)"/>`);
-    if (spec.layout === "wordmark" && uris.wordmarkWhite) {
-      body.push(`<image x="${W / 2 - 235}" y="${H * 0.42 - 60}" width="470" height="120" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkWhite}"/>`);
+    // square / portrait: headline + sub in a clean TOP band, hero fills the bottom.
+    const heroBox = Math.min(Math.round(H * 0.5), W - 120);
+    const heroY = H - heroBox - 96;
+    body.push(`<ellipse cx="${W - 70 - heroBox / 2}" cy="${heroY + heroBox / 2}" rx="${heroBox * 0.58}" ry="${heroBox * 0.52}" fill="url(#glow)"/>`);
+    if (isWordmark && uris.wordmarkWhite) {
+      body.push(`<image x="${W / 2 - 240}" y="${heroY + heroBox / 2 - 60}" width="480" height="120" preserveAspectRatio="xMidYMid meet" href="${uris.wordmarkWhite}"/>`);
     } else if (uris.icon) {
-      body.push(heroImg(W - 60 - heroBox, heroY, heroBox, uris.icon, iconEntry));
-      if (uris.icon2) body.push(heroImg(60, heroY + heroBox - 230, 230, uris.icon2, icon2Entry));
+      body.push(heroImg(W - 56 - heroBox, heroY, heroBox, uris.icon, iconEntry));
+      if (uris.icon2) body.push(heroImg(56, heroY + heroBox - 210, 210, uris.icon2, icon2Entry));
     }
-    const maxLen = Math.max(...spec.headline.map((l) => l.text.length));
-    const size = Math.max(84, Math.min(150, Math.round((W - 130) / (maxLen * 0.56))));
-    headlineTop(body, spec, 64, 150, size);
-    body.push(subRow(spec, 66, 150 + spec.headline.length * size * 0.94 + 64, 32, "start"));
+    const topY = 150;
+    const bandBottom = heroY - 24; // keep type clear of the hero
+    const { lines, size } = fitHeadline(spec.headline, W - 128, bandBottom - topY - 58, 150);
+    const blockH = lines.length * size * 0.94;
+    body.push(headlineBlock(lines, 64, topY, size, "start"));
+    body.push(subRow(spec, 66, topY + blockH + 46, 30, "start", W - 128));
   }
 
   if (spec.format === "landscape") {
     body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" fill="url(#grainp)" opacity="0.5"/>`);
   }
-  body.push(hudChrome(spec, W, H, uris));
+  body.push(hudChrome(spec, W, H, uris, !isWordmark));
   body.push(`</g>`);
   body.push(`<rect x="${inset}" y="${inset}" width="${CW}" height="${CH}" rx="${rx}" fill="none" stroke="rgba(255,255,255,0.06)"/>`);
 
   return `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">${defs}${body.join("")}</svg>`;
-
-  function headlineTop(bodyArr: string[], s: BannerSpec, x: number, topY: number, size: number) {
-    bodyArr.push(headlineBlock(s.headline, x, topY, size, "start"));
-  }
 }
 
 // ---------------------------------------------------------------- render ----
