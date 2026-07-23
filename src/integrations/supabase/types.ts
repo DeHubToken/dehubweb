@@ -3324,69 +3324,6 @@ export type Database = {
         }
         Relationships: []
       }
-      user_wallet_recovery: {
-        Row: {
-          created_at: string
-          encrypted_seed: string
-          iv: string
-          kdf_iterations: number
-          salt: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          encrypted_seed: string
-          iv: string
-          kdf_iterations?: number
-          salt: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          encrypted_seed?: string
-          iv?: string
-          kdf_iterations?: number
-          salt?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      user_wallets: {
-        Row: {
-          created_at: string
-          encrypted_seed: string
-          eth_address: string
-          iv: string
-          kdf_iterations: number
-          salt: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          created_at?: string
-          encrypted_seed: string
-          eth_address: string
-          iv: string
-          kdf_iterations?: number
-          salt: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          created_at?: string
-          encrypted_seed?: string
-          eth_address?: string
-          iv?: string
-          kdf_iterations?: number
-          salt?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       video_transcripts: {
         Row: {
           chunks_done: number | null
