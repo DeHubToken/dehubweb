@@ -67,25 +67,28 @@ export async function fetchWallet(userId: string): Promise<StoredWallet | null> 
 }
 
 /**
- * Persist a freshly created/imported wallet. The recovery row is saved FIRST
- * and treated as fatal on failure — a wallet must never exist without a
- * working password-reset path (Pixcellor invariant).
+ * Persist a freshly created/imported wallet. recoveryPayload is optional —
+ * new wallets no longer generate a recovery code (export-private-key from
+ * Settings is the supported backup path); pre-existing recovery rows for
+ * wallets created before this change keep working via fetchRecoveryPayload.
  */
 export async function saveWallet(
   userId: string,
   ethAddress: string,
   payload: EncryptedPayload,
-  recoveryPayload: EncryptedPayload,
+  recoveryPayload?: EncryptedPayload,
 ): Promise<void> {
-  const { error: recErr } = await db().from("user_wallet_recovery").upsert({
-    user_id: userId,
-    encrypted_seed: recoveryPayload.ciphertext,
-    salt: recoveryPayload.salt,
-    iv: recoveryPayload.iv,
-    kdf_iterations: recoveryPayload.iterations,
-  });
-  if (recErr) {
-    throw new Error("Couldn't set up wallet recovery — nothing was saved. Please try again.");
+  if (recoveryPayload) {
+    const { error: recErr } = await db().from("user_wallet_recovery").upsert({
+      user_id: userId,
+      encrypted_seed: recoveryPayload.ciphertext,
+      salt: recoveryPayload.salt,
+      iv: recoveryPayload.iv,
+      kdf_iterations: recoveryPayload.iterations,
+    });
+    if (recErr) {
+      throw new Error("Couldn't set up wallet recovery — nothing was saved. Please try again.");
+    }
   }
 
   const { error: insertErr } = await db().from("user_wallets").upsert({

@@ -89,6 +89,7 @@ import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
+import { useWalletUnlockInterval, type WalletUnlockIntervalOption } from '@/hooks/use-wallet-unlock-interval';
 import { PROFILE_TAB_OPTIONS } from '@/components/app/profile/ProfileConstants';
 import { useDmSettings } from '@/hooks/use-dm-settings';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
@@ -1220,6 +1221,7 @@ function PrivacySettings() {
   const { t } = useTranslation();
   const { showFollowersFollowing, hideFollowerCounts, isPrivate, defaultPostVisibility, updateSettings, isUpdating, isLoading } = usePrivacySettings();
   const { whoCanMessage, messageFee, doNotDisturb, isUpdating: isDmUpdating, updateWhoCanMessage, updateMessageFee, updateDoNotDisturb } = useDmSettings();
+  const { option: walletUnlockInterval, setOption: setWalletUnlockInterval } = useWalletUnlockInterval();
   const [feeInput, setFeeInput] = useState('');
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
   const { user } = useAuthContext();
@@ -1526,6 +1528,27 @@ function PrivacySettings() {
             <Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-md" onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))}>
               {t('settings.enable')}
             </Button>
+          </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Shield className="w-5 h-5 text-zinc-500" />
+              <div>
+                <p className="text-white font-medium">{t('settings.walletUnlockInterval', 'Wallet password prompt')}</p>
+                <p className="text-zinc-500 text-sm">{t('settings.walletUnlockIntervalDesc', "Only asked for wallet actions like tipping or transfers — never just to log in")}</p>
+              </div>
+            </div>
+            <SettingDrawerSelect
+              value={walletUnlockInterval}
+              onValueChange={(value) => setWalletUnlockInterval(value as WalletUnlockIntervalOption)}
+              title={t('settings.walletUnlockInterval', 'Wallet password prompt')}
+              options={[
+                { value: 'never', label: t('settings.walletUnlockNever', 'Never (until you log out)') },
+                { value: '15m', label: t('settings.walletUnlock15m', 'After 15 minutes') },
+                { value: '1h', label: t('settings.walletUnlock1h', 'After 1 hour') },
+                { value: '6h', label: t('settings.walletUnlock6h', 'After 6 hours') },
+                { value: '24h', label: t('settings.walletUnlock24h', 'After 24 hours (standard)') },
+              ]}
+            />
           </div>
         </div>
       </div>
