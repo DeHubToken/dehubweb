@@ -9,6 +9,29 @@
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content" />
+    <!-- Apply the saved theme (+ dim settings) to <html> synchronously, during
+         head parse — before the render-blocking stylesheet is matched and long
+         before React mounts. ThemeContext also sets data-theme, but only in a
+         PASSIVE effect that React defers under load, so a light-theme reload
+         painted the dark default first: the sidebar's bg-zinc-* tiles flashed
+         as ugly black boxes until the effect ran. Must be a classic (non-module)
+         script so it runs inline at parse time, not deferred. Keys/migration/
+         defaults mirror ThemeContext.tsx — keep them in sync. -->
+    <script>
+      (function () {
+        try {
+          var d = document.documentElement;
+          var t = localStorage.getItem('dehub.theme') || 'system';
+          if (t === 'christmas') t = 'winter'; // legacy name migration
+          d.dataset.theme = t;
+          d.dataset.dimLights = localStorage.getItem('dehub.dimLights') === '1' ? 'true' : 'false';
+          var s = Number(localStorage.getItem('dehub.dimStrength'));
+          if (!(s > 0)) s = 50;
+          s = Math.min(100, s);
+          d.style.setProperty('--dim-lights-opacity', (0.12 + 0.6 * (s / 100)).toFixed(3));
+        } catch (e) { /* never block boot */ }
+      })();
+    </script>
     <title>DeHub — Open Source, User Owned Social Media</title>
     <meta name="description" content="DeHub is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities.">
     <meta name="author" content="DeHub" />
