@@ -44,6 +44,7 @@ export interface AuthContextType {
   // Social / email login (Supabase Auth)
   connectWithProvider: (provider: SocialProvider) => Promise<void>;
   connectWithEmail: (email: string) => Promise<void>;
+  cancelEmailMagicLink: () => void;
   verifyEmailOtp: (email: string, code: string) => Promise<void>;
   connectWithSMS: (phone: string) => Promise<void>;
   verifyPhoneOtp: (phone: string, code: string) => Promise<void>;
