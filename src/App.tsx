@@ -310,6 +310,7 @@ function AppContent() {
           />
 
           <Route path="/delete-account" element={<DeleteAccount />} />
+          <Route path="/auth/confirm" element={<Suspense fallback={<PageLoader />}><AuthConfirm /></Suspense>} />
 
           {/* Admin panel — email/password auth, separate from user wallet session */}
           <Route path="/admin/login" element={<Suspense fallback={<PageLoader />}><AdminLoginPage /></Suspense>} />
