@@ -4,7 +4,7 @@
  * Ported from the Pixcellor CreateWalletDialog; keys are encrypted client-side
  * before anything leaves the device.
  */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Loader2, AlertTriangle, Copy, CheckCircle2, ArrowDownToLine } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,6 +17,7 @@ import { generateRecoveryCode, encryptSeedWithRecoveryCode } from '@/lib/wallet-
 import { assessPassword, MIN_PASSWORD_LENGTH } from '@/lib/wallet-core/passwordStrength';
 import { copyThenClear } from '@/lib/wallet-core/clipboard';
 import { saveWallet } from '@/lib/wallet-core/store';
+import { hasLegacyBrowserResidue, checkLegacyAccount, type LegacyAccountHint } from '@/lib/wallet-core/legacy-detect';
 import { PasswordStrengthMeter } from './PasswordStrengthMeter';
 
 interface WalletCreateStepProps {
@@ -47,6 +48,33 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
   const [migratedKey, setMigratedKey] = useState<string | null>(null);
   const [migrateEmail, setMigrateEmail] = useState('');
   const [migrateBusy, setMigrateBusy] = useState<string | null>(null);
+  // Returning-user detection: backend email lookup + old Web3Auth storage on
+  // this origin. Only auto-selects the Migrate tab until the user picks a tab
+  // themselves (userChoseModeRef) — never fights an explicit choice.
+  const [backendHint, setBackendHint] = useState<LegacyAccountHint | null>(null);
+  const [residueDetected, setResidueDetected] = useState(false);
+  const userChoseModeRef = useRef(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (hasLegacyBrowserResidue()) {
+      setResidueDetected(true);
+      if (!userChoseModeRef.current) setMode('migrate');
+    }
+    checkLegacyAccount().then((hint) => {
+      if (cancelled) return;
+      setBackendHint(hint);
+      if (hint.exists === true) {
+        // Wallet-signup users don't migrate — they just reconnect the same
+        // wallet — so don't steer them into the Web3Auth migrate flow.
+        if (hint.signupMethod !== 'wallet' && !userChoseModeRef.current) setMode('migrate');
+        if (hint.signupMethod === 'email' && hint.email) {
+          setMigrateEmail((prev) => prev || hint.email!);
+        }
+      }
+    });
+    return () => { cancelled = true; };
+  }, []);
 
   // Resume the mobile/redirect leg of a legacy migration. Flags are checked
   // BEFORE importing the legacy module so the ~1 MB Web3Auth chunk only loads
@@ -256,6 +284,10 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
     );
   }
 
+  // Provider the backend says the old account used — highlighted so the user
+  // re-authenticates with the SAME method (Web3Auth keys are per-provider).
+  const oldLoginMethod = backendHint?.exists === true ? backendHint.signupMethod : undefined;
+
   const migrateProviderButton = (
     provider: 'google' | 'twitter' | 'discord' | 'apple',
     label: string,
@@ -265,17 +297,52 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       variant="outline"
       disabled={!!migrateBusy}
       onClick={() => handleLegacyLogin(provider)}
-      className="w-full h-11 bg-white/10 hover:bg-white/15 text-white rounded-xl border-white/10"
+      className={`w-full h-11 bg-white/10 hover:bg-white/15 text-white rounded-xl border-white/10 ${
+        oldLoginMethod === provider ? 'ring-1 ring-green-400/50 bg-white/15' : ''
+      }`}
     >
       {migrateBusy === provider ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
       {label}
+      {oldLoginMethod === provider && (
+        <span className="ml-2 text-[10px] uppercase tracking-wide bg-green-400/15 text-green-300 rounded-full px-2 py-0.5">
+          Your old login
+        </span>
+      )}
     </Button>
   );
 
   const showPasswordFields = mode !== 'migrate' || !!migratedKey;
 
+  const OLD_LOGIN_LABELS: Record<string, string> = {
+    google: 'Google', apple: 'Apple', twitter: 'X (Twitter)', discord: 'Discord', email: 'email', github: 'GitHub',
+  };
+
   return (
     <div className="space-y-4">
+      {/* Returning-user detection banners (hidden once the old key is retrieved) */}
+      {!migratedKey && backendHint?.exists === true && backendHint.signupMethod === 'wallet' && (
+        <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
+          <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
+          <p>Welcome back! Your old DeHub account signed in with a crypto wallet — close this and use <span className="font-semibold">Connect wallet</span> with that same wallet to keep your account. No migration needed.</p>
+        </div>
+      )}
+      {!migratedKey && backendHint?.exists === true && backendHint.signupMethod !== 'wallet' && (
+        <div className="flex items-start gap-2 rounded-xl border border-green-400/40 bg-green-400/10 p-3 text-sm text-white">
+          <CheckCircle2 className="w-4 h-4 mt-0.5 text-green-400 shrink-0" />
+          <p>
+            Welcome back! We found your existing DeHub account
+            {oldLoginMethod && OLD_LOGIN_LABELS[oldLoginMethod] ? <> (old login: <span className="font-semibold">{OLD_LOGIN_LABELS[oldLoginMethod]}</span>)</> : null}
+            . Sign in with it below to keep your wallet, balance, and profile.
+          </p>
+        </div>
+      )}
+      {!migratedKey && backendHint?.exists !== true && residueDetected && (
+        <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
+          <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
+          <p>Looks like this browser has signed in to DeHub before. If that was you, use <span className="font-semibold">Migrate</span> below so you keep your old wallet and balance.</p>
+        </div>
+      )}
+
       <p className="text-white/60 text-sm">
         {mode === 'migrate'
           ? 'Had a DeHub account before? Sign in with your OLD login below to bring over your existing wallet, balance, and profile.'
@@ -287,13 +354,24 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
           <button
             key={m}
             type="button"
-            onClick={() => { setMode(m); setError(null); }}
+            onClick={() => { userChoseModeRef.current = true; setMode(m); setError(null); }}
             className={`flex-1 h-9 rounded-lg text-sm transition-colors ${mode === m ? 'bg-white/15 text-white' : 'text-white/50 hover:text-white'}`}
           >
             {label}
           </button>
         ))}
       </div>
+
+      {/* Guarantee the migrate path can't be missed, even when detection is unavailable */}
+      {mode === 'new' && (
+        <button
+          type="button"
+          onClick={() => { userChoseModeRef.current = true; setMode('migrate'); setError(null); }}
+          className="w-full text-left text-xs text-white/50 hover:text-white/80 transition-colors"
+        >
+          Used DeHub before? <span className="underline">Migrate your old account</span> to keep your wallet and balance →
+        </button>
+      )}
 
       {mode === 'import' && (
         <Textarea
@@ -323,7 +401,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
                   placeholder="Old account email"
                   value={migrateEmail}
                   onChange={(e) => setMigrateEmail(e.target.value)}
-                  className={`${inputClass} h-11 flex-1`}
+                  className={`${inputClass} h-11 flex-1 ${oldLoginMethod === 'email' ? 'ring-1 ring-green-400/50' : ''}`}
                 />
                 <Button
                   variant="outline"
