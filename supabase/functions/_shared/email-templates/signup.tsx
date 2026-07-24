@@ -62,7 +62,7 @@ export const SignupEmail = ({
           request it, you can safely ignore this email.
         </Text>
         <Text style={footerBrand}>
-          <Link href={siteUrl} style={footerLink}>DeHub</Link> — the decentralized social network.
+          DeHub — Open source. Censorship resistant. User owned.
         </Text>
       </Container>
     </Body>

@@ -59,7 +59,7 @@ export const MagicLinkEmail = ({
           your account stays secure.
         </Text>
         <Text style={footerBrand}>
-          <Link href={siteUrl} style={footerLink}>DeHub</Link> — the decentralized social network.
+          DeHub — Open source. Censorship resistant. User owned.
         </Text>
       </Container>
     </Body>
