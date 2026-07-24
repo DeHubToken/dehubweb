@@ -237,17 +237,6 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         </Button>
 
         <Button
-          disabled
-          className="w-full h-12 bg-white/5 text-white/40 rounded-xl flex items-center justify-center gap-3 border border-white/10 cursor-not-allowed"
-        >
-          <Phone className="w-5 h-5" />
-          <span>{t('loginModal.continuePhone', 'Continue with phone')}</span>
-          <span className="text-[10px] uppercase tracking-wide bg-white/10 text-white/50 rounded-full px-2 py-0.5">
-            {t('loginModal.comingSoon', 'Coming soon')}
-          </span>
-        </Button>
-
-        <Button
           onClick={() => handleSocialLogin('google')}
           disabled={isConnecting}
           className="w-full h-12 bg-white/10 hover:bg-white/15 text-white rounded-xl flex items-center justify-center gap-3 border border-white/10"
@@ -258,6 +247,17 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
             <GoogleIcon />
           )}
           <span>{t('loginModal.continueGoogle')}</span>
+        </Button>
+
+        <Button
+          disabled
+          className="w-full h-12 bg-white/5 text-white/40 rounded-xl flex items-center justify-center gap-3 border border-white/10 cursor-not-allowed"
+        >
+          <Phone className="w-5 h-5" />
+          <span>{t('loginModal.continuePhone', 'Continue with phone')}</span>
+          <span className="text-[10px] uppercase tracking-wide bg-white/10 text-white/50 rounded-full px-2 py-0.5">
+            {t('loginModal.comingSoon', 'Coming soon')}
+          </span>
         </Button>
 
         <Button
