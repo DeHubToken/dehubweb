@@ -27,16 +27,21 @@ import { PasswordStrengthMeter } from './PasswordStrengthMeter';
 interface WalletUnlockStepProps {
   userId: string;
   onComplete: (privKeyHex: string) => Promise<void>;
+  /** Sign out of the current identity and return to the login options.
+   *  Gives a user who can't unlock (wrong account / lost password AND
+   *  recovery code) a way out instead of a dead-end. */
+  onLogout?: () => void | Promise<void>;
 }
 
 type Phase = 'unlock' | 'recover' | 'recover-new-code';
 
 const inputClass = 'h-12 bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl';
 
-export function WalletUnlockStep({ userId, onComplete }: WalletUnlockStepProps) {
+export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockStepProps) {
   const [phase, setPhase] = useState<Phase>('unlock');
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
   const [error, setError] = useState<string | null>(null);
   // Recovery flow state
   const [recoveryInput, setRecoveryInput] = useState('');
@@ -128,6 +133,16 @@ export function WalletUnlockStep({ userId, onComplete }: WalletUnlockStepProps) 
       /* toast shown upstream */
     } finally {
       setBusy(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    if (!onLogout) return;
+    setLoggingOut(true);
+    try {
+      await onLogout();
+    } finally {
+      setLoggingOut(false);
     }
   };
 
@@ -238,13 +253,32 @@ export function WalletUnlockStep({ userId, onComplete }: WalletUnlockStepProps) 
           {busy ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Unlocking…</span> : 'Unlock wallet'}
         </Button>
       </form>
-      <button
-        type="button"
-        onClick={() => { setPhase('recover'); setError(null); }}
-        className="w-full text-center text-xs text-white/40 hover:text-white/70 transition-colors"
-      >
-        Forgot password? Use recovery code
-      </button>
+      <div className="space-y-3 pt-1">
+        <button
+          type="button"
+          onClick={() => { setPhase('recover'); setError(null); }}
+          disabled={busy || loggingOut}
+          className="w-full text-center text-xs text-white/40 hover:text-white/70 transition-colors disabled:opacity-50"
+        >
+          Forgot password? Use recovery code
+        </button>
+        {onLogout && (
+          <button
+            type="button"
+            onClick={handleLogout}
+            disabled={busy || loggingOut}
+            className="w-full text-center text-xs text-white/50 hover:text-white/80 transition-colors border-t border-white/10 pt-3 disabled:opacity-50"
+          >
+            {loggingOut ? (
+              <span className="inline-flex items-center justify-center gap-2">
+                <Loader2 className="w-3.5 h-3.5 animate-spin" /> Logging out…
+              </span>
+            ) : (
+              'Log out'
+            )}
+          </button>
+        )}
+      </div>
     </div>
   );
 }
