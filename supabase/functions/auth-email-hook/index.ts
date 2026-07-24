@@ -45,7 +45,7 @@ const FROM_DOMAIN = "notify.dehub.io" // Domain shown in From address (may be ro
 // The auth payload currently gives us the long one-time token inside
 // `data.url` as `?token=...&type=...`, not as `token_hash`. We pass that value
 // to the app as `token_hash` so /auth/confirm can call verifyOtp() client-side.
-// Falls back to the original URL only if the token/type cannot be found.
+// Never expose the raw backend URL in customer-facing email links.
 function buildBrandedConfirmationUrl(data: any): string {
   try {
     const sourceUrl = typeof data?.url === 'string' ? new URL(data.url) : null
@@ -58,12 +58,11 @@ function buildBrandedConfirmationUrl(data: any): string {
       data?.email_action_type ||
       data?.action_type ||
       sourceUrl?.searchParams.get('type')
-    if (!tokenHash || !actionType) return data?.url || ''
+    if (!tokenHash || !actionType) return `https://${ROOT_DOMAIN}/auth/confirm?error=missing_link`
     const params = new URLSearchParams({ token_hash: tokenHash, type: actionType })
     // Preserve extra query params from the caller's redirect_to (e.g. the
-    // cross-device magic-link `sync` nonce). If redirect_to is a full URL we
-    // merge its search params onto our branded URL; if it's a bare path we
-    // pass it through as `next` for post-verify navigation.
+    // cross-device magic-link `sync` nonce). The clicked browser now stays on a
+    // confirmed page, so no post-verify navigation path is needed.
     const rt = (data?.redirect_to || sourceUrl?.searchParams.get('redirect_to')) as string | undefined
     if (rt) {
       try {
@@ -71,15 +70,13 @@ function buildBrandedConfirmationUrl(data: any): string {
         u.searchParams.forEach((v, k) => {
           if (k !== 'token_hash' && k !== 'type') params.set(k, v)
         })
-        // Keep same-origin path as `next` for navigation.
-        params.set('next', u.pathname + (u.search ? '' : ''))
       } catch {
-        params.set('next', rt)
+        // Ignore invalid redirect values; only the sync nonce matters here.
       }
     }
     return `https://${ROOT_DOMAIN}/auth/confirm?${params.toString()}`
   } catch {
-    return data?.url || ''
+    return `https://${ROOT_DOMAIN}/auth/confirm?error=missing_link`
   }
 }
 
@@ -245,7 +242,7 @@ async function handleWebhook(req: Request): Promise<Response> {
   // The email action type is in payload.data.action_type (e.g., "signup", "recovery")
   // payload.type is the hook event type ("auth")
   const emailType = payload.data.action_type
-  console.log('Received auth event', { emailType, email: payload.data.email, run_id, dataKeys: Object.keys(payload.data || {}), dataSample: JSON.stringify(payload.data).slice(0, 800) })
+  console.log('Received auth event', { emailType, run_id })
 
   const EmailTemplate = EMAIL_TEMPLATES[emailType]
   if (!EmailTemplate) {
