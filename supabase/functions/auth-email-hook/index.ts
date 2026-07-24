@@ -36,17 +36,30 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 }
 
 // Configuration
-const SITE_NAME = "cosmic-echo-hero"
+const SITE_NAME = "DeHub"
 const SENDER_DOMAIN = "notify.dehub.io"
 const ROOT_DOMAIN = "dehub.io"
 const FROM_DOMAIN = "notify.dehub.io" // Domain shown in From address (may be root or sender subdomain)
 
+// Rewrite the Supabase-hosted confirmation URL into a branded dehub.io link.
+// We keep the token_hash/type/redirect_to so /auth/confirm can call
+// supabase.auth.verifyOtp() client-side. Falls back to the original URL if
+// anything is missing (defensive — never break the email).
+function buildBrandedConfirmationUrl(data: any): string {
+  try {
+    const tokenHash = data?.token_hash || data?.token_hash_new
+    const actionType = data?.email_action_type || data?.action_type
+    if (!tokenHash || !actionType) return data?.url || ''
+    const params = new URLSearchParams({ token_hash: tokenHash, type: actionType })
+    if (data?.redirect_to) params.set('next', data.redirect_to)
+    return `https://${ROOT_DOMAIN}/auth/confirm?${params.toString()}`
+  } catch {
+    return data?.url || ''
+  }
+}
+
 // Sample data for preview mode ONLY (not used in actual email sending).
-// URLs are baked in at scaffold time from the project's real data.
-// The sample email uses a fixed placeholder (RFC 6761 .test TLD) so the Go backend
-// can always find-and-replace it with the actual recipient when sending test emails,
-// even if the project's domain has changed since the template was scaffolded.
-const SAMPLE_PROJECT_URL = "https://cosmic-echo-hero.lovable.app"
+const SAMPLE_PROJECT_URL = "https://dehub.io"
 const SAMPLE_EMAIL = "user@example.test"
 const SAMPLE_DATA: Record<string, object> = {
   signup: {
@@ -223,7 +236,7 @@ async function handleWebhook(req: Request): Promise<Response> {
     siteName: SITE_NAME,
     siteUrl: `https://${ROOT_DOMAIN}`,
     recipient: payload.data.email,
-    confirmationUrl: payload.data.url,
+    confirmationUrl: buildBrandedConfirmationUrl(payload.data),
     token: payload.data.token,
     email: payload.data.email,
     oldEmail: payload.data.old_email,

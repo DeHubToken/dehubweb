@@ -86,6 +86,7 @@ function ThemedBackgrounds() {
 
 // Pages — lazy loaded
 const DeleteAccount = React.lazy(() => import("./pages/DeleteAccount"));
+const AuthConfirm = React.lazy(() => import("./pages/AuthConfirm"));
 const CreatorsPage = React.lazy(() => import("./pages/app/CreatorsPage"));
 const SkillPage = React.lazy(() => import("./pages/SkillPage"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
@@ -309,6 +310,7 @@ function AppContent() {
           />
 
           <Route path="/delete-account" element={<DeleteAccount />} />
+          <Route path="/auth/confirm" element={<Suspense fallback={<PageLoader />}><AuthConfirm /></Suspense>} />
 
           {/* Admin panel — email/password auth, separate from user wallet session */}
           <Route path="/admin/login" element={<Suspense fallback={<PageLoader />}><AdminLoginPage /></Suspense>} />
