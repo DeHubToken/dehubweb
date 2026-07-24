@@ -5,8 +5,8 @@
  * implementation lives in ./AuthProvider (loaded inside the lazy
  * WalletProviders chunk).
  *
- * IMPORTANT: keep this file free of runtime imports of wagmi / web3auth /
- * rainbowkit (type-only imports are fine — they are erased at build time).
+ * IMPORTANT: keep this file free of runtime imports of wagmi / rainbowkit /
+ * wallet SDKs (type-only imports are fine — they are erased at build time).
  * ~180 components import useAuth from here; any heavy runtime import added
  * here lands in the entry bundle and defeats the wallet code split.
  * scripts/check-entry-bundle.mjs fails the build if that happens.
@@ -14,10 +14,17 @@
 
 import { createContext, useContext } from 'react';
 import type { DeHubUser } from '@/lib/api/dehub';
-import type { Web3Auth } from '@web3auth/modal';
 
 export type SocialProvider = 'google' | 'twitter' | 'telegram' | 'apple' | 'discord' | 'github';
 export type WalletProvider = 'metamask' | 'phantom' | 'trust';
+
+/**
+ * Smart-wallet setup phase (social/email logins only):
+ *  - 'none'    — no wallet step pending
+ *  - 'create'  — Supabase-authed but no wallet row: show create flow
+ *  - 'unlock'  — wallet exists: show password unlock
+ */
+export type WalletPhase = 'none' | 'create' | 'unlock';
 
 export interface AuthContextType {
   user: DeHubUser | null;
@@ -28,15 +35,26 @@ export interface AuthContextType {
   isProcessingRedirect: boolean;
   requiresUsername: boolean;
   needsSignature: boolean;
-  web3auth: Web3Auth | null;
   connectionSource: 'web3auth' | 'wagmi' | null;
-  // Legacy connect method (opens default modal)
+  // Smart-wallet (Supabase identity) state
+  walletPhase: WalletPhase;
+  supabaseUserId: string | null;
+  // Legacy connect method (opens login modal)
   connect: () => Promise<void>;
-  // New custom UI methods
+  // Social / email login (Supabase Auth)
   connectWithProvider: (provider: SocialProvider) => Promise<void>;
   connectWithEmail: (email: string) => Promise<void>;
+  verifyEmailOtp: (email: string, code: string) => Promise<void>;
   connectWithSMS: (phone: string) => Promise<void>;
+  verifyPhoneOtp: (phone: string, code: string) => Promise<void>;
   connectWithWallet: (wallet: WalletProvider) => Promise<boolean>;
+  /**
+   * Final step of the smart-wallet login: called by the login modal once the
+   * wallet key is available (created, imported, or unlocked). Activates the
+   * key, derives the Safe smart account, signs the DeHub auth message, and
+   * establishes the DeHub session.
+   */
+  completeSmartWalletLogin: (privKeyHex: string) => Promise<void>;
   disconnect: () => Promise<void>;
   refreshUser: () => Promise<void>;
   patchUser: (patch: Partial<DeHubUser>) => void;
