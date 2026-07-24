@@ -869,11 +869,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const refresh_token = payload.refresh_token as string | undefined;
         if (!access_token || !refresh_token) return;
         try {
-          await supabase.auth.setSession({ access_token, refresh_token });
+          supaLoginHandledRef.current = true;
+          setIsProcessingRedirect(true);
+          const { data, error } = await supabase.auth.setSession({ access_token, refresh_token });
+          if (error) throw error;
+          const uid = data?.session?.user?.id;
+          if (uid) await proceedToWalletPhase(uid);
           toast.success('Signed in — link confirmed on another device');
         } catch (err) {
           console.error('Cross-device session hydrate failed:', err);
         } finally {
+          setIsProcessingRedirect(false);
+          supaLoginHandledRef.current = false;
           try { await supabase.removeChannel(channel); } catch { /* ignore */ }
           emailSyncCleanupRef.current = null;
         }
