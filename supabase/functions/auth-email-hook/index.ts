@@ -236,7 +236,7 @@ async function handleWebhook(req: Request): Promise<Response> {
     siteName: SITE_NAME,
     siteUrl: `https://${ROOT_DOMAIN}`,
     recipient: payload.data.email,
-    confirmationUrl: payload.data.url,
+    confirmationUrl: buildBrandedConfirmationUrl(payload.data),
     token: payload.data.token,
     email: payload.data.email,
     oldEmail: payload.data.old_email,
