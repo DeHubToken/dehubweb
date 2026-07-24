@@ -86,6 +86,7 @@ function ThemedBackgrounds() {
 
 // Pages — lazy loaded
 const DeleteAccount = React.lazy(() => import("./pages/DeleteAccount"));
+const AuthConfirm = React.lazy(() => import("./pages/AuthConfirm"));
 const CreatorsPage = React.lazy(() => import("./pages/app/CreatorsPage"));
 const SkillPage = React.lazy(() => import("./pages/SkillPage"));
 const NotFound = React.lazy(() => import("./pages/NotFound"));
