@@ -125,7 +125,9 @@ export default function AuthConfirm() {
         }
       }
 
-      await authVerifier.auth.signOut({ scope: "local" }).catch(() => undefined);
+      // Do not call signOut here: even with persistSession disabled, Supabase
+      // logout revokes the just-verified refresh token before the original
+      // browser can hydrate it from the realtime broadcast.
       setState("confirmed");
     })();
   }, [params, authVerifier]);
