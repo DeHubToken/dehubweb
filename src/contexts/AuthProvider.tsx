@@ -245,6 +245,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Guards double-processing of a landed Supabase session (OAuth return fires
   // both INITIAL_SESSION and SIGNED_IN).
   const supaLoginHandledRef = useRef(false);
+  // Cleanup for the cross-device magic-link realtime channel (see connectWithEmail).
+  const emailSyncCleanupRef = useRef<null | (() => void)>(null);
 
   const isAuthenticated = !!user && !!walletAddress && (
     isLoading ||
