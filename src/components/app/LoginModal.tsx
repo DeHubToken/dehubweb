@@ -125,7 +125,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     setActiveProvider('email');
     try {
       await connectWithEmail(email);
-      setStep('email-code');
+      setStep('email-waiting');
     } catch (error) {
       console.error('Email login failed:', error);
     } finally {
@@ -133,24 +133,6 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     }
   };
 
-  const handleEmailCodeSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setEmailError('');
-    if (!/^\d{6}$/.test(emailCode.trim())) {
-      setEmailError(t('loginModal.invalidCode', 'Enter the 6-digit code from your email'));
-      return;
-    }
-    setActiveProvider('email');
-    try {
-      await verifyEmailOtp(email, emailCode);
-      // verifyEmailOtp resolves the wallet phase; the effect above advances the step.
-    } catch (error: any) {
-      console.error('OTP verification failed:', error);
-      setEmailError(error?.message || 'Invalid code. Please try again.');
-    } finally {
-      setActiveProvider(null);
-    }
-  };
 
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
