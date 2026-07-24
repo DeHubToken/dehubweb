@@ -3,6 +3,7 @@
   Cross-Origin-Embedder-Policy: unsafe-none
   Cross-Origin-Resource-Policy: cross-origin
   X-Frame-Options: SAMEORIGIN
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' https: blob: data:; worker-src 'self' blob:; frame-src 'self' https://verify.walletconnect.com https://verify.walletconnect.org; base-uri 'self'; form-action 'self'; object-src 'none'; connect-src 'self' https://aigxuutjaqsywioxjefr.supabase.co wss://aigxuutjaqsywioxjefr.supabase.co https://api.dehub.io wss://api.dehub.io https://*.publicnode.com https://bsc-dataseed.binance.org https://bsc-dataseed1.binance.org https://data-seed-prebsc-1-s2.binance.org https://api.pimlico.io https://api.bscscan.com https://testnet.bscscan.com https://s2.coinmarketcap.com https://dehubcdn.ams3.cdn.digitaloceanspaces.com https://cdn.dehub.io https://*.walletconnect.com https://*.walletconnect.org
 
 # The service worker must never be long-cached, or clients get stuck on an old
 # SW that can't pick up new caching logic. Always revalidate. Scope stays root.

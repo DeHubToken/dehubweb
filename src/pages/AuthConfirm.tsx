@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -11,18 +11,27 @@ const SUPA_LOGIN_PENDING_KEY = "dehub_supa_login_pending";
  * instead of the raw Supabase verify URL. We verify the OTP client-side
  * (verifyOtp with token_hash) and then bounce into the app.
  *
- * Cross-device sync: when the originating device passed a `sync` nonce via
- * emailRedirectTo, we broadcast the freshly-minted session tokens on the
- * matching realtime channel so the other browser/device that requested the
- * link also gets signed in automatically.
+ * IMPORTANT: this device (the one that clicked the link) ALWAYS signs itself
+ * in with the verified session — that is the common case (mobile: request
+ * the email and tap the link in the SAME browser). A previous version of
+ * this page verified with an isolated, non-persisting client and relied
+ * entirely on broadcasting the session to the device that requested the
+ * link. That breaks the moment the requesting tab isn't alive to receive
+ * the broadcast — e.g. a mobile browser tab backgrounded while the user is
+ * in their mail app, which is the normal case, not an edge case. The
+ * broadcast below is a best-effort ADDITION for the true cross-device case
+ * (request on desktop, confirm on phone), never the only path to a session.
  */
 export default function AuthConfirm() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
   const [state, setState] = useState<"verifying" | "error">("verifying");
   const [error, setError] = useState<string>("");
+  const hasVerifiedRef = useRef(false);
 
   useEffect(() => {
+    if (hasVerifiedRef.current) return;
+
     const tokenHash = params.get("token_hash");
     const type = params.get("type") as
       | "signup"
@@ -41,6 +50,8 @@ export default function AuthConfirm() {
       return;
     }
 
+    hasVerifiedRef.current = true;
+
     (async () => {
       // Ensure this device also runs the wallet phase (see AuthProvider auth
       // state listener) — SIGNED_IN only fires proceedToWalletPhase when the
@@ -58,8 +69,9 @@ export default function AuthConfirm() {
         return;
       }
 
-      // Broadcast the session to the originating device (best-effort — never
-      // block navigation on it).
+      // Best-effort cross-device sync: if a DIFFERENT browser/device requested
+      // this link (desktop waiting, phone confirming), hand it the session
+      // too. Never required for THIS device — that's handled above already.
       if (sync && data?.session?.access_token && data?.session?.refresh_token) {
         try {
           const channel = supabase.channel(`auth-sync-${sync}`, {

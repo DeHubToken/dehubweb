@@ -1,21 +1,20 @@
 /**
  * Wallet creation flow (embedded in the LoginModal drawer).
- * password → recovery phrase (show once) → persist → recovery code (show once)
+ * password → persist → signed in. No recovery-phrase/recovery-code step —
+ * export-private-key from Settings is the supported backup path, so signup
+ * is a single step instead of a three-screen flow.
  * Ported from the Pixcellor CreateWalletDialog; keys are encrypted client-side
  * before anything leaves the device.
  */
 import { useEffect, useRef, useState } from 'react';
-import { Loader2, AlertTriangle, Copy, CheckCircle2, ArrowDownToLine } from 'lucide-react';
+import { Loader2, AlertTriangle, CheckCircle2, ArrowDownToLine } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { generateMnemonic12, deriveFromSecret, isValidMnemonic, isRawPrivateKey } from '@/lib/wallet-core/derive';
 import { encryptString } from '@/lib/wallet-core/crypto';
-import { generateRecoveryCode, encryptSeedWithRecoveryCode } from '@/lib/wallet-core/recovery';
 import { assessPassword, MIN_PASSWORD_LENGTH } from '@/lib/wallet-core/passwordStrength';
-import { copyThenClear } from '@/lib/wallet-core/clipboard';
 import { saveWallet } from '@/lib/wallet-core/store';
 import { hasLegacyBrowserResidue, checkLegacyAccount, type LegacyAccountHint } from '@/lib/wallet-core/legacy-detect';
 import { PasswordStrengthMeter } from './PasswordStrengthMeter';
@@ -26,24 +25,17 @@ interface WalletCreateStepProps {
   onComplete: (privKeyHex: string) => Promise<void>;
 }
 
-type Phase = 'password' | 'phrase' | 'recovery-code';
 type Mode = 'new' | 'import' | 'migrate';
 
 const inputClass = 'h-12 bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl';
 
 export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) {
   const [mode, setMode] = useState<Mode>('new');
-  const [phase, setPhase] = useState<Phase>('password');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
-  const [mnemonic, setMnemonic] = useState('');
   const [importPhrase, setImportPhrase] = useState('');
-  const [saved, setSaved] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [recoveryCode, setRecoveryCode] = useState<string | null>(null);
-  const [recoveryAck, setRecoveryAck] = useState(false);
-  const [pendingPrivKey, setPendingPrivKey] = useState<string | null>(null);
   // Key recovered from the old Web3Auth account (one-time migration)
   const [migratedKey, setMigratedKey] = useState<string | null>(null);
   const [migrateEmail, setMigrateEmail] = useState('');
@@ -152,8 +144,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
     }
 
     if (mode === 'new') {
-      setMnemonic(generateMnemonic12());
-      setPhase('phrase');
+      void persist(generateMnemonic12());
     } else if (mode === 'migrate') {
       if (!migratedKey) {
         setError('Sign in with your old account first');
@@ -176,113 +167,14 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
     try {
       const derived = deriveFromSecret(secret);
       const encrypted = await encryptString(derived.secret, password);
-
-      // Recovery code: a second password the seed is encrypted under, so a
-      // forgotten wallet password never means a lost wallet.
-      const code = generateRecoveryCode();
-      const recoveryPayload = await encryptSeedWithRecoveryCode(derived.secret, code);
-
-      await saveWallet(userId, derived.ethAddress, encrypted, recoveryPayload);
-
-      setPendingPrivKey(derived.ethPrivateKey);
-      setRecoveryCode(code);
-      setPhase('recovery-code');
+      await saveWallet(userId, derived.ethAddress, encrypted);
+      await onComplete(derived.ethPrivateKey);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create wallet');
     } finally {
       setBusy(false);
     }
   };
-
-  const copyPhrase = async () => {
-    await copyThenClear(mnemonic);
-    toast.success('Recovery phrase copied — clipboard clears in 30s');
-  };
-
-  const copyRecoveryCode = async () => {
-    if (!recoveryCode) return;
-    await copyThenClear(recoveryCode);
-    toast.success('Recovery code copied — clipboard clears in 30s');
-  };
-
-  const handleFinish = async () => {
-    if (!pendingPrivKey) return;
-    setBusy(true);
-    try {
-      await onComplete(pendingPrivKey);
-    } catch {
-      // completeSmartWalletLogin surfaces its own toast; stay on this screen
-    } finally {
-      setBusy(false);
-    }
-  };
-
-  if (phase === 'recovery-code' && recoveryCode) {
-    return (
-      <div className="space-y-4">
-        <div className="flex items-start gap-2 rounded-xl border border-red-400/40 bg-red-400/10 p-3 text-sm text-white">
-          <AlertTriangle className="w-4 h-4 mt-0.5 text-red-400 shrink-0" />
-          <p>Save this recovery code somewhere safe. If you forget your wallet password, it is the ONLY way to restore access. We cannot show it again.</p>
-        </div>
-        <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-white break-words select-all">
-          {recoveryCode}
-        </div>
-        <Button variant="outline" onClick={copyRecoveryCode} className="w-full h-12 bg-transparent hover:bg-white/5 text-white rounded-xl border-white/10">
-          <Copy className="w-4 h-4 mr-2" /> Copy recovery code
-        </Button>
-        <label className="flex items-start gap-2 text-sm text-white">
-          <Checkbox checked={recoveryAck} onCheckedChange={(v) => setRecoveryAck(v === true)} className="mt-0.5" />
-          <span>I have saved my recovery code somewhere safe</span>
-        </label>
-        <Button
-          disabled={!recoveryAck || busy}
-          onClick={handleFinish}
-          className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
-        >
-          {busy ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Signing you in…</span> : 'Finish & sign in'}
-        </Button>
-      </div>
-    );
-  }
-
-  if (phase === 'phrase') {
-    return (
-      <div className="space-y-4">
-        <div className="flex items-start gap-2 rounded-xl border border-red-400/40 bg-red-400/10 p-3 text-sm text-white">
-          <AlertTriangle className="w-4 h-4 mt-0.5 text-red-400 shrink-0" />
-          <p>Write this down and store it offline. Anyone with this phrase owns your funds. We cannot show it again.</p>
-        </div>
-        <div className="grid grid-cols-3 gap-2 rounded-xl border border-white/10 bg-white/5 p-3">
-          {mnemonic.split(' ').map((word, i) => (
-            <div key={i} className="rounded bg-black/40 px-2 py-1 text-sm text-white">
-              <span className="text-white/40 mr-1">{i + 1}.</span>
-              {word}
-            </div>
-          ))}
-        </div>
-        <Button variant="outline" onClick={copyPhrase} className="w-full h-12 bg-transparent hover:bg-white/5 text-white rounded-xl border-white/10">
-          <Copy className="w-4 h-4 mr-2" /> Copy phrase
-        </Button>
-        <label className="flex items-start gap-2 text-sm text-white">
-          <Checkbox checked={saved} onCheckedChange={(v) => setSaved(v === true)} className="mt-0.5" />
-          <span>I have saved my recovery phrase somewhere safe</span>
-        </label>
-        {error && <p className="text-sm text-red-400">{error}</p>}
-        <div className="flex gap-2">
-          <Button variant="ghost" onClick={() => setPhase('password')} className="flex-1 h-12 text-white/60 hover:text-white rounded-xl">
-            Back
-          </Button>
-          <Button
-            disabled={!saved || busy}
-            onClick={() => persist(mnemonic)}
-            className="flex-1 h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
-          >
-            {busy ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Encrypting…</span> : 'Create wallet'}
-          </Button>
-        </div>
-      </div>
-    );
-  }
 
   // Provider the backend says the old account used — highlighted so the user
   // re-authenticates with the SAME method (Web3Auth keys are per-provider).
@@ -346,7 +238,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       <p className="text-white/60 text-sm">
         {mode === 'migrate'
           ? 'Had a DeHub account before? Sign in with your OLD login below to bring over your existing wallet, balance, and profile.'
-          : "Your keys are encrypted in this browser before anything leaves the device. You'll also get a recovery code in case you forget your password."}
+          : "Your keys are encrypted in this browser before anything leaves the device. You can export your private key anytime from Settings as a backup."}
       </p>
 
       <div className="flex rounded-xl bg-white/5 p-1 gap-1">
@@ -463,8 +355,8 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
           className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
         >
           {busy
-            ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Working…</span>
-            : mode === 'new' ? 'Continue' : mode === 'migrate' ? 'Finish migration' : 'Import wallet'}
+            ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Signing you in…</span>
+            : mode === 'new' ? 'Create wallet' : mode === 'migrate' ? 'Finish migration' : 'Import wallet'}
         </Button>
       )}
     </div>

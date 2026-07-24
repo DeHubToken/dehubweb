@@ -86,6 +86,7 @@ export const clearAuthSession = () => {
   localStorage.removeItem("dehub_token_expires_at");
   localStorage.removeItem("dehub_refresh_token");
   localStorage.removeItem("dehub_wallet");
+  localStorage.removeItem("dehub_supabase_uid");
 };
 
 // ── Shared Token Refresh (single-flight, shared across every caller) ──

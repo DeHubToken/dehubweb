@@ -15,7 +15,13 @@ export function PasswordStrengthMeter({ password }: { password: string }) {
   const a = useMemo(() => assessLocal(password), [password]);
   if (!password) return null;
   return (
-    <div className="space-y-1" aria-live="polite">
+    // translate="no": this text changes on every keystroke. If the browser's
+    // own page-translate feature (Chrome/Edge auto-translate) has wrapped
+    // these text nodes, React's next update tries to remove a node that's no
+    // longer where it left it and throws "Failed to execute 'removeChild'".
+    // Excluding this subtree from translation stops the browser from
+    // touching it at all.
+    <div className="space-y-1 notranslate" translate="no" aria-live="polite">
       <div className="flex gap-1">
         {[0, 1, 2, 3].map((i) => (
           <div

@@ -19,10 +19,14 @@ import { argon2id } from "hash-wasm";
 // PBKDF2 legacy default (OWASP 2023 baseline for SHA-256).
 const PBKDF2_ITERATIONS_DEFAULT = 600_000;
 
-// Argon2id defaults: OWASP 2023 recommended minimum profile.
-// m=19 MiB, t=2, p=1 — ~150-300ms on a modern laptop, GPU-hostile.
-const ARGON2_MEMORY_KIB = 19_456; // 19 MiB
-const ARGON2_ITERATIONS = 2;
+// Argon2id defaults: above the OWASP 2023 minimum (m=19 MiB, t=2). A wallet
+// unlock is infrequent and latency-tolerant, so we spend more to raise the
+// offline brute-force cost on a stolen/breached encrypted_seed. Parameters
+// are stored per-payload in the v2 header, so this needs no migration —
+// existing wallets keep decrypting with whatever params they were created
+// with; only NEW wallets get the higher cost.
+const ARGON2_MEMORY_KIB = 65_536; // 64 MiB
+const ARGON2_ITERATIONS = 3;
 const ARGON2_PARALLELISM = 1;
 
 const SALT_BYTES = 16;

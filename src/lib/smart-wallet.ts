@@ -12,14 +12,20 @@
  * The Smart Account address is identical to the old flow for the same key
  * (same EOA → same Safe), and the DeHub backend auth contract is unchanged.
  *
- * Key material lives in memory + sessionStorage (tab-scoped, cleared on tab
- * close/logout). The encrypted seed at rest is protected by Argon2id + the
- * user's wallet password.
+ * Decrypted key material lives ONLY in this module's in-memory variable —
+ * never in sessionStorage/localStorage. Any script running on this origin
+ * (a compromised npm dependency, an XSS payload) can read sessionStorage
+ * directly, so a plaintext key there is a single point of failure; keeping
+ * it JS-memory-only means it's gone the instant the page navigates or
+ * reloads, at the cost of needing a fresh unlock after a refresh. The
+ * encrypted seed at rest is protected by Argon2id + the user's wallet
+ * password.
  */
 
 import type { IProvider } from "@web3auth/base";
 import type { AccountAbstractionProvider } from "@web3auth/account-abstraction-provider";
 import { supabase } from "@/integrations/supabase/client";
+import { getWalletUnlockIntervalMs } from "@/hooks/use-wallet-unlock-interval";
 
 const CHAIN_NAMESPACES = { EIP155: "eip155" } as const;
 
@@ -73,7 +79,9 @@ const AA_CHAIN_CONFIGS: Record<number, {
 const BASE_CHAIN = AA_CHAIN_CONFIGS[8453];
 
 // ── Module state ────────────────────────────────────────────────────────────
-const SESSION_KEY = "dehub_wallet_session"; // sessionStorage: hex privkey (tab-scoped)
+// The decrypted key itself is intentionally NOT in this list — it lives only
+// in the sessionPrivKey variable below, never in Web Storage.
+const UNLOCKED_AT_KEY = "dehub_wallet_unlocked_at"; // sessionStorage: ms timestamp of last unlock, no secret
 
 let sessionPrivKey: string | null = null; // hex, no 0x prefix
 let eoaProvider: IProvider | null = null;
@@ -160,22 +168,45 @@ async function buildProviderFromPrivKey(privKeyNo0x: string): Promise<IProvider>
 
 /**
  * Activate a wallet session from a decrypted private key (post-unlock/create).
- * Builds the EOA provider and persists the key in sessionStorage so page
- * refreshes within the tab don't force a re-unlock.
+ * Builds the EOA provider and keeps the key in memory ONLY — a page refresh
+ * clears it, same as closing the tab, and the user unlocks again on demand.
  */
 export async function activateWalletKey(privKey: string): Promise<IProvider> {
   const hex = normalizePrivKey(privKey);
   sessionPrivKey = hex;
-  try { sessionStorage.setItem(SESSION_KEY, hex); } catch { /* private mode */ }
+  // Only a timestamp, never the key itself — sessionStorage is world-readable
+  // to any script on the origin, so the raw key must never land there.
+  try { sessionStorage.setItem(UNLOCKED_AT_KEY, String(Date.now())); } catch { /* private mode */ }
   eoaProvider = await buildProviderFromPrivKey(hex);
   eoaProviderPromise = null;
   return eoaProvider;
 }
 
-/** True when a decrypted key is available (memory or this tab's session). */
+/**
+ * True when a decrypted key is available AND the user's configured
+ * wallet-unlock interval (Settings → Account Security) hasn't elapsed since
+ * they last entered their wallet password. Logging into DeHub never needs
+ * this — only signing a wallet action (tip, transfer) does. Past the
+ * configured window, auto-locks and returns false so the existing
+ * dehub:wallet-unlock-required flow re-prompts for the password.
+ */
 export function isWalletUnlocked(): boolean {
-  if (sessionPrivKey) return true;
-  try { return !!sessionStorage.getItem(SESSION_KEY); } catch { return false; }
+  if (!sessionPrivKey) return false;
+
+  const intervalMs = getWalletUnlockIntervalMs();
+  if (intervalMs === null) return true; // "Never" — no auto-lock timer
+
+  let unlockedAt: number | null = null;
+  try {
+    const raw = sessionStorage.getItem(UNLOCKED_AT_KEY);
+    unlockedAt = raw ? parseInt(raw, 10) : null;
+  } catch { /* ignore */ }
+
+  if (unlockedAt === null || Date.now() - unlockedAt > intervalMs) {
+    lockWallet();
+    return false;
+  }
+  return true;
 }
 
 /** Synchronous accessor — null until activateWalletKey/restore has run. */
@@ -184,30 +215,15 @@ export function getEoaProvider(): IProvider | null {
 }
 
 /**
- * Restore the wallet session from sessionStorage (page refresh within a tab).
- * Returns the EOA provider or null when the wallet is locked.
+ * Return the live EOA provider if this page load already unlocked one.
+ * There is no cross-refresh restoration anymore — the key never persists
+ * outside JS memory, so a refresh always comes back locked (null) and the
+ * caller falls back to the existing dehub:wallet-unlock-required prompt.
  */
 export async function restoreWalletSession(): Promise<IProvider | null> {
   if (eoaProvider) return eoaProvider;
   if (eoaProviderPromise) return eoaProviderPromise;
-
-  let stored: string | null = null;
-  try { stored = sessionStorage.getItem(SESSION_KEY); } catch { /* ignore */ }
-  if (!stored) return null;
-
-  eoaProviderPromise = (async () => {
-    sessionPrivKey = normalizePrivKey(stored!);
-    eoaProvider = await buildProviderFromPrivKey(sessionPrivKey);
-    return eoaProvider;
-  })().finally(() => { eoaProviderPromise = null; });
-
-  try {
-    return await eoaProviderPromise;
-  } catch (e) {
-    console.warn("[SmartWallet] Session restore failed:", e);
-    lockWallet();
-    return null;
-  }
+  return null;
 }
 
 /** Wipe all key material and providers (logout / lock). */
@@ -218,7 +234,7 @@ export function lockWallet(): void {
   storedAAProvider = null;
   pendingAASetupPromise = null;
   storedChainAAProviders.clear();
-  try { sessionStorage.removeItem(SESSION_KEY); } catch { /* ignore */ }
+  try { sessionStorage.removeItem(UNLOCKED_AT_KEY); } catch { /* ignore */ }
 }
 
 // ── AA provider (Safe Smart Account via Pimlico) ────────────────────────────

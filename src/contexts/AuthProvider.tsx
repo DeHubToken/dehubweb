@@ -404,10 +404,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (event !== 'SIGNED_IN' && event !== 'INITIAL_SESSION') return;
       if (supaLoginHandledRef.current) return;
       if (!localStorage.getItem(SUPA_LOGIN_PENDING_KEY)) return;
-      // Already fully logged in? Nothing to resume.
-      if (getAuthToken() && !isTokenExpired() && localStorage.getItem('dehub_wallet')) {
+
+      // "Already fully logged in, nothing to resume" is only true if the
+      // cached DeHub session belongs to THIS Supabase user. Without this
+      // check, a cross-device magic-link confirmation (or any SIGNED_IN for
+      // a different account on a browser that still has an old, unexpired
+      // DeHub session) would silently keep the OLD account on screen while
+      // the underlying Supabase session had already switched users.
+      const cachedUid = localStorage.getItem('dehub_supabase_uid');
+      const sameIdentity = !!cachedUid && cachedUid === session.user.id;
+      if (sameIdentity && getAuthToken() && !isTokenExpired() && localStorage.getItem('dehub_wallet')) {
         localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
         return;
+      }
+      // A different (or unknown) identity just signed in — drop the stale
+      // DeHub-level session so proceedToWalletPhase runs clean for them,
+      // instead of a leftover walletAddress tripping the "address changed"
+      // guard in signAndAuthenticateSmartWallet.
+      if (!sameIdentity && (getAuthToken() || localStorage.getItem('dehub_wallet'))) {
+        clearAuthSession();
+        localStorage.removeItem('dehub_user');
+        setUser(null);
+        setWalletAddress(null);
       }
       supaLoginHandledRef.current = true;
       setIsProcessingRedirect(true);
@@ -757,6 +775,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('dehub_wallet', address);
     localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
     localStorage.setItem('dehub_connection_source', 'web3auth');
+    // Tag this DeHub session with the Supabase identity that produced it, so
+    // a LATER sign-in as a DIFFERENT Supabase user (e.g. via the cross-device
+    // magic-link sync) can tell "still me, just refreshing" apart from
+    // "someone else signed in on this browser" instead of silently keeping
+    // this account's data on screen.
+    if (supabaseUserId) localStorage.setItem('dehub_supabase_uid', supabaseUserId);
     setConnectionSource('web3auth');
     setWalletAddress(address);
     setUser(normalizedUser);
@@ -869,16 +893,34 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const refresh_token = payload.refresh_token as string | undefined;
         if (!access_token || !refresh_token) return;
         try {
-          await supabase.auth.setSession({ access_token, refresh_token });
+          supaLoginHandledRef.current = true;
+          setIsProcessingRedirect(true);
+          const { data, error } = await supabase.auth.setSession({ access_token, refresh_token });
+          if (error) throw error;
+          const uid = data?.session?.user?.id;
+          if (uid) await proceedToWalletPhase(uid);
           toast.success('Signed in — link confirmed on another device');
         } catch (err) {
           console.error('Cross-device session hydrate failed:', err);
         } finally {
+          setIsProcessingRedirect(false);
+          supaLoginHandledRef.current = false;
           try { await supabase.removeChannel(channel); } catch { /* ignore */ }
           emailSyncCleanupRef.current = null;
         }
       });
-      channel.subscribe();
+      // Wait for the channel to actually be SUBSCRIBED before sending the
+      // magic link. Without this, signInWithOtp could fire (and the user
+      // could tap the email link) before this tab's realtime subscription
+      // was live on the server — the broadcast would be sent to no one and
+      // silently lost. This only affects the cross-device path above; this
+      // device's own sign-in in AuthConfirm.tsx never depends on it.
+      await new Promise<void>((resolve) => {
+        let settled = false;
+        const finish = () => { if (settled) return; settled = true; resolve(); };
+        channel.subscribe((status) => { if (status === 'SUBSCRIBED') finish(); });
+        setTimeout(finish, 2500);
+      });
       emailSyncCleanupRef.current = () => {
         try { supabase.removeChannel(channel); } catch { /* ignore */ }
       };
