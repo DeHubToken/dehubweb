@@ -41,21 +41,30 @@ const SENDER_DOMAIN = "notify.dehub.io"
 const ROOT_DOMAIN = "dehub.io"
 const FROM_DOMAIN = "notify.dehub.io" // Domain shown in From address (may be root or sender subdomain)
 
-// Rewrite the Supabase-hosted confirmation URL into a branded dehub.io link.
-// We keep the token_hash/type/redirect_to so /auth/confirm can call
-// supabase.auth.verifyOtp() client-side. Falls back to the original URL if
-// anything is missing (defensive — never break the email).
+// Rewrite the backend-hosted confirmation URL into a branded dehub.io link.
+// The auth payload currently gives us the long one-time token inside
+// `data.url` as `?token=...&type=...`, not as `token_hash`. We pass that value
+// to the app as `token_hash` so /auth/confirm can call verifyOtp() client-side.
+// Falls back to the original URL only if the token/type cannot be found.
 function buildBrandedConfirmationUrl(data: any): string {
   try {
-    const tokenHash = data?.token_hash || data?.token_hash_new
-    const actionType = data?.email_action_type || data?.action_type
+    const sourceUrl = typeof data?.url === 'string' ? new URL(data.url) : null
+    const tokenHash =
+      data?.token_hash ||
+      data?.token_hash_new ||
+      sourceUrl?.searchParams.get('token_hash') ||
+      sourceUrl?.searchParams.get('token')
+    const actionType =
+      data?.email_action_type ||
+      data?.action_type ||
+      sourceUrl?.searchParams.get('type')
     if (!tokenHash || !actionType) return data?.url || ''
     const params = new URLSearchParams({ token_hash: tokenHash, type: actionType })
     // Preserve extra query params from the caller's redirect_to (e.g. the
     // cross-device magic-link `sync` nonce). If redirect_to is a full URL we
     // merge its search params onto our branded URL; if it's a bare path we
     // pass it through as `next` for post-verify navigation.
-    const rt = data?.redirect_to as string | undefined
+    const rt = (data?.redirect_to || sourceUrl?.searchParams.get('redirect_to')) as string | undefined
     if (rt) {
       try {
         const u = new URL(rt)
