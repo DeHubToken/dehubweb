@@ -287,24 +287,34 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
               {migrateProviderButton('apple', 'Old account: Apple')}
               {migrateProviderButton('twitter', 'Old account: X (Twitter)')}
               {migrateProviderButton('discord', 'Old account: Discord')}
-              <div className="flex gap-2">
-                <Input
-                  type="email"
-                  placeholder="Old account email"
-                  value={migrateEmail}
-                  onChange={(e) => setMigrateEmail(e.target.value)}
-                  className={`${inputClass} h-11 flex-1 ${oldLoginMethod === 'email' ? 'ring-1 ring-green-400/50' : ''}`}
-                />
-                <Button
-                  variant="outline"
-                  disabled={!!migrateBusy || !migrateEmail}
-                  onClick={() => handleLegacyLogin('email_passwordless')}
-                  className="h-11 bg-white/10 hover:bg-white/15 text-white rounded-xl border-white/10 shrink-0"
-                >
-                  {migrateBusy === 'email_passwordless'
-                    ? <Loader2 className="w-4 h-4 animate-spin" />
-                    : <ArrowDownToLine className="w-4 h-4" />}
-                </Button>
+              <div className="space-y-1.5">
+                <p className={`text-xs px-1 ${oldLoginMethod === 'email' ? 'text-green-300' : 'text-white/50'}`}>
+                  Old account: Email
+                  {oldLoginMethod === 'email' && (
+                    <span className="ml-2 text-[10px] uppercase tracking-wide bg-green-400/15 text-green-300 rounded-full px-2 py-0.5">
+                      Your old login
+                    </span>
+                  )}
+                </p>
+                <div className="flex gap-2">
+                  <Input
+                    type="email"
+                    placeholder="Old account email"
+                    value={migrateEmail}
+                    onChange={(e) => setMigrateEmail(e.target.value)}
+                    className={`${inputClass} h-11 flex-1 ${oldLoginMethod === 'email' ? 'ring-1 ring-green-400/50' : ''}`}
+                  />
+                  <Button
+                    variant="outline"
+                    disabled={!!migrateBusy || !migrateEmail}
+                    onClick={() => handleLegacyLogin('email_passwordless')}
+                    className="h-11 bg-white/10 hover:bg-white/15 text-white rounded-xl border-white/10 shrink-0"
+                  >
+                    {migrateBusy === 'email_passwordless'
+                      ? <Loader2 className="w-4 h-4 animate-spin" />
+                      : <ArrowDownToLine className="w-4 h-4" />}
+                  </Button>
+                </div>
               </div>
               <p className="text-white/40 text-xs">
                 A one-time sign-in retrieves your wallet key securely in this browser — it never touches our servers.
