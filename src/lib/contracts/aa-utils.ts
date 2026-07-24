@@ -60,11 +60,11 @@ async function getActiveProvider(chainId?: number): Promise<{ provider: any; isW
     return { provider: web3authProvider, isWeb3Auth: true };
   }
 
-  // Last resort: Web3Auth instance exists in storage but provider not loaded yet
+  // Last resort: restore the smart-wallet key session (page refresh in-tab)
   try {
     const w3a = await getOrInitWeb3Auth();
     if (w3a.connected && w3a.provider) {
-      console.log('[AA] Re-init Web3Auth — setting up AA on-demand...');
+      console.log('[AA] Restored wallet session — setting up AA on-demand...');
       const onDemandAA = await setupAAProvider(w3a.provider);
       if (onDemandAA) {
         setAAProvider(onDemandAA);
@@ -73,6 +73,13 @@ async function getActiveProvider(chainId?: number): Promise<{ provider: any; isW
       return { provider: w3a.provider, isWeb3Auth: true };
     }
   } catch { /* ignore */ }
+
+  // Smart-wallet session exists but the key is locked (new tab / browser
+  // restart) — ask the auth provider to open the unlock dialog.
+  if (localStorage.getItem('dehub_connection_source') === 'web3auth') {
+    window.dispatchEvent(new Event('dehub:wallet-unlock-required'));
+    throw new Error('Your wallet is locked. Please unlock it and try again.');
+  }
 
   throw new Error('No wallet connected. Please sign in first.');
 }
