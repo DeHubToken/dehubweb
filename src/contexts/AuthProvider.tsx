@@ -885,7 +885,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           emailSyncCleanupRef.current = null;
         }
       });
-      channel.subscribe();
+      await new Promise<void>((resolve) => {
+        let settled = false;
+        const finish = () => {
+          if (settled) return;
+          settled = true;
+          resolve();
+        };
+        channel.subscribe((status) => {
+          if (status === 'SUBSCRIBED') finish();
+        });
+        setTimeout(finish, 2500);
+      });
       emailSyncCleanupRef.current = () => {
         try { supabase.removeChannel(channel); } catch { /* ignore */ }
       };
