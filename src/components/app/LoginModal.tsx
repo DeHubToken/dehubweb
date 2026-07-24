@@ -603,7 +603,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   const bodyContent = (
     <>
-      <div className="px-6 pb-6">
+      <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 pb-6">
         {step === 'main' && renderMainStep()}
         {step === 'email' && renderEmailStep()}
         {step === 'email-code' && renderEmailCodeStep()}
@@ -617,7 +617,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           <WalletUnlockStep userId={supabaseUserId} onComplete={completeSmartWalletLogin} />
         )}
       </div>
-      <div className="px-6 py-4 bg-black/20 border-t border-white/10">
+      <div className="shrink-0 px-6 py-4 bg-black/20 border-t border-white/10 pb-[calc(1rem+env(safe-area-inset-bottom))]">
         <p className="text-xs text-white/40 text-center">
           By continuing, you agree to our{' '}
           <a href="https://dehub.io/terms" target="_blank" rel="noopener noreferrer" className="underline hover:text-white/60 transition-colors">
@@ -644,7 +644,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         data-login-modal
         hideHandle
         className={cn(
-          "bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-hidden z-[200]",
+          "bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-hidden z-[200] flex flex-col max-h-[90dvh]",
           !isMobile && "left-[var(--app-main-left,0px)] right-auto w-[var(--app-main-width,100vw)]",
         )}
         overlayClassName={cn(
@@ -657,7 +657,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           !isMobile && "bg-black/40",
         )}
       >
-        <DrawerHeader className="px-6 pt-6 pb-4">
+        <DrawerHeader className="px-6 pt-6 pb-4 shrink-0">
           {headerContent}
           <DrawerTitle className="text-base font-medium text-white mt-4 text-center">
             {titleText}
