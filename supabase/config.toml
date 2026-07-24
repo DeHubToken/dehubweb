@@ -59,6 +59,8 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.get-web3auth-config]
     verify_jwt = false
+  [functions.legacy-account-check]
+    verify_jwt = true
   [functions.mark-stream-live]
     verify_jwt = false
   [functions.og-image]
