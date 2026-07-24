@@ -51,7 +51,23 @@ function buildBrandedConfirmationUrl(data: any): string {
     const actionType = data?.email_action_type || data?.action_type
     if (!tokenHash || !actionType) return data?.url || ''
     const params = new URLSearchParams({ token_hash: tokenHash, type: actionType })
-    if (data?.redirect_to) params.set('next', data.redirect_to)
+    // Preserve extra query params from the caller's redirect_to (e.g. the
+    // cross-device magic-link `sync` nonce). If redirect_to is a full URL we
+    // merge its search params onto our branded URL; if it's a bare path we
+    // pass it through as `next` for post-verify navigation.
+    const rt = data?.redirect_to as string | undefined
+    if (rt) {
+      try {
+        const u = new URL(rt)
+        u.searchParams.forEach((v, k) => {
+          if (k !== 'token_hash' && k !== 'type') params.set(k, v)
+        })
+        // Keep same-origin path as `next` for navigation.
+        params.set('next', u.pathname + (u.search ? '' : ''))
+      } catch {
+        params.set('next', rt)
+      }
+    }
     return `https://${ROOT_DOMAIN}/auth/confirm?${params.toString()}`
   } catch {
     return data?.url || ''
