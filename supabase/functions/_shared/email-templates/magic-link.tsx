@@ -27,7 +27,12 @@ export const MagicLinkEmail = ({
   confirmationUrl,
 }: MagicLinkEmailProps) => (
   <Html lang="en" dir="ltr">
-    <Head />
+    <Head>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Exo:wght@400;600;700&display=swap"
+      />
+    </Head>
     <Preview>Your DeHub magic link — tap to log in</Preview>
     <Body style={main}>
       <Container style={container}>
