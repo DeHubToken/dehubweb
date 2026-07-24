@@ -60,7 +60,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const {
     connectWithProvider, connectWithEmail, cancelEmailMagicLink, connectWithSMS, verifyPhoneOtp,
     connectWithWallet, completeSmartWalletLogin, setWagmiAuthIntent, isConnecting,
-    walletPhase, supabaseUserId,
+    walletPhase, supabaseUserId, disconnect,
   } = useAuth();
   const { isConnected: isWagmiAlreadyConnected, address: wagmiCurrentAddress } = useAccount();
   const { t } = useTranslation();
@@ -99,6 +99,21 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     setPhoneError('');
     setActiveProvider(null);
     onOpenChange(false);
+  };
+
+  // Escape hatch from the wallet-unlock/create dead-end: sign out of the
+  // half-established identity (clears the Supabase session + pending flag so it
+  // doesn't loop back to unlock) and return to the login options, modal open.
+  const handleWalletLogout = async () => {
+    await disconnect();
+    setStep('main');
+    setEmail('');
+    setEmailCode('');
+    setEmailError('');
+    setPhone('');
+    setPhoneCode('');
+    setPhoneError('');
+    setActiveProvider(null);
   };
 
   const handleSocialLogin = async (provider: 'google' | 'apple') => {
@@ -580,7 +595,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
           <WalletCreateStep userId={supabaseUserId} onComplete={completeSmartWalletLogin} />
         )}
         {step === 'wallet-unlock' && supabaseUserId && (
-          <WalletUnlockStep userId={supabaseUserId} onComplete={completeSmartWalletLogin} />
+          <WalletUnlockStep userId={supabaseUserId} onComplete={completeSmartWalletLogin} onLogout={handleWalletLogout} />
         )}
       </div>
       <div className="shrink-0 px-6 py-4 bg-black/20 border-t border-white/10 pb-[calc(1rem+env(safe-area-inset-bottom))]">
