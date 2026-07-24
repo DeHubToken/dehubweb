@@ -1199,6 +1199,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     connect,
     connectWithProvider,
     connectWithEmail,
+    cancelEmailMagicLink,
     verifyEmailOtp,
     connectWithSMS,
     verifyPhoneOtp,
