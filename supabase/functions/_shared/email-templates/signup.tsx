@@ -29,7 +29,12 @@ export const SignupEmail = ({
   confirmationUrl,
 }: SignupEmailProps) => (
   <Html lang="en" dir="ltr">
-    <Head />
+    <Head>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Exo:wght@400;600;700&display=swap"
+      />
+    </Head>
     <Preview>Your DeHub magic link — tap to finish signing up</Preview>
     <Body style={main}>
       <Container style={container}>
@@ -69,7 +74,7 @@ export default SignupEmail
 const main = {
   backgroundColor: '#ffffff',
   fontFamily:
-    '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+    '"Exo", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
   padding: '40px 0',
 }
 const container = {
@@ -83,22 +88,28 @@ const brandRow = { marginBottom: '28px' }
 const brandMark = {
   fontSize: '18px',
   fontWeight: '700' as const,
-  letterSpacing: '-0.02em',
+  letterSpacing: '-0.01em',
   color: '#0a0a0a',
   margin: 0,
+  textTransform: 'none' as const,
+  fontFamily: '"Exo", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
 }
 const h1 = {
   fontSize: '26px',
   fontWeight: '700' as const,
-  letterSpacing: '-0.02em',
+  letterSpacing: '-0.01em',
   color: '#0a0a0a',
   margin: '0 0 16px',
+  textTransform: 'none' as const,
+  fontFamily: '"Exo", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
 }
 const text = {
   fontSize: '15px',
   color: '#2a2a2a',
   lineHeight: '1.55',
   margin: '0 0 24px',
+  textTransform: 'none' as const,
+  fontFamily: '"Exo", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
 }
 const link = { color: '#0a0a0a', textDecoration: 'underline' }
 const buttonWrap = { margin: '8px 0 24px' }
