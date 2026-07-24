@@ -54,11 +54,11 @@ interface LoginModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-type LoginStep = 'main' | 'email' | 'email-code' | 'phone' | 'phone-code' | 'wallets' | 'wallet-create' | 'wallet-unlock';
+type LoginStep = 'main' | 'email' | 'email-waiting' | 'phone' | 'phone-code' | 'wallets' | 'wallet-create' | 'wallet-unlock';
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const {
-    connectWithProvider, connectWithEmail, verifyEmailOtp, connectWithSMS, verifyPhoneOtp,
+    connectWithProvider, connectWithEmail, cancelEmailMagicLink, connectWithSMS, verifyPhoneOtp,
     connectWithWallet, completeSmartWalletLogin, setWagmiAuthIntent, isConnecting,
     walletPhase, supabaseUserId,
   } = useAuth();
@@ -125,7 +125,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     setActiveProvider('email');
     try {
       await connectWithEmail(email);
-      setStep('email-code');
+      setStep('email-waiting');
     } catch (error) {
       console.error('Email login failed:', error);
     } finally {
@@ -133,24 +133,6 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     }
   };
 
-  const handleEmailCodeSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setEmailError('');
-    if (!/^\d{6}$/.test(emailCode.trim())) {
-      setEmailError(t('loginModal.invalidCode', 'Enter the 6-digit code from your email'));
-      return;
-    }
-    setActiveProvider('email');
-    try {
-      await verifyEmailOtp(email, emailCode);
-      // verifyEmailOtp resolves the wallet phase; the effect above advances the step.
-    } catch (error: any) {
-      console.error('OTP verification failed:', error);
-      setEmailError(error?.message || 'Invalid code. Please try again.');
-    } finally {
-      setActiveProvider(null);
-    }
-  };
 
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -434,56 +416,40 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     </div>
   );
 
-  const renderEmailCodeStep = () => (
-    <div className="space-y-4">
-      <form onSubmit={handleEmailCodeSubmit} className="space-y-4">
-        <p className="text-white/60 text-sm text-center">
-          {t('loginModal.codeSentTo', 'Enter the 6-digit code sent to')}{' '}
-          <span className="text-white">{email}</span>
+  const renderEmailWaitingStep = () => (
+    <div className="space-y-5">
+      <div className="mx-auto w-14 h-14 rounded-full bg-white/10 border border-white/10 flex items-center justify-center">
+        <Mail className="w-6 h-6 text-white" />
+      </div>
+      <div className="space-y-2 text-center">
+        <p className="text-white text-sm">
+          {t('loginModal.magicLinkSentTo', 'We sent a magic link to')}{' '}
+          <span className="font-medium">{email}</span>
         </p>
-        <div className="space-y-2">
-          <Input
-            type="text"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            maxLength={6}
-            placeholder="123456"
-            value={emailCode}
-            onChange={(e) => setEmailCode(e.target.value.replace(/\D/g, ''))}
-            disabled={isConnecting}
-            className="h-12 bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl text-center text-lg tracking-[0.5em]"
-            autoFocus
-          />
-          {emailError && (
-            <p className="text-red-400 text-sm">{emailError}</p>
+        <p className="text-white/50 text-xs leading-relaxed">
+          {t(
+            'loginModal.magicLinkWaiting',
+            'Open the email on any device and tap the button — you\'ll be signed in here automatically, plus on the device where you opened the link.'
           )}
-        </div>
+        </p>
+      </div>
 
-        <Button
-          type="submit"
-          disabled={isConnecting || emailCode.length !== 6}
-          className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
-        >
-          {activeProvider === 'email' ? (
-            <span className="flex items-center gap-2">
-              <Loader2 className="w-4 h-4 animate-spin" />
-              {t('loginModal.verifying', 'Verifying…')}
-            </span>
-          ) : (
-            t('loginModal.continue')
-          )}
-        </Button>
+      <div className="flex items-center justify-center gap-2 text-white/50 text-xs">
+        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+        {t('loginModal.waitingForLink', 'Waiting for you to confirm…')}
+      </div>
 
-        <button
-          type="button"
-          onClick={() => { setEmailCode(''); setStep('email'); }}
-          className="w-full text-center text-xs text-white/40 hover:text-white/70 transition-colors"
-        >
-          {t('loginModal.resendCode', 'Wrong email or no code? Go back')}
-        </button>
-      </form>
+      <button
+        type="button"
+        onClick={() => { cancelEmailMagicLink(); setStep('email'); }}
+        className="w-full text-center text-xs text-white/40 hover:text-white/70 transition-colors"
+      >
+        {t('loginModal.wrongEmailGoBack', 'Wrong email? Go back')}
+      </button>
     </div>
   );
+
+
 
   const renderPhoneStep = () => (
     <div className="space-y-4">
@@ -594,7 +560,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   const titleText = step === 'main' ? t('loginModal.title')
     : step === 'email' ? t('loginModal.continueEmail')
-    : step === 'email-code' ? t('loginModal.enterCode', 'Enter verification code')
+    : step === 'email-waiting' ? t('loginModal.checkYourEmail', 'Check your email')
     : step === 'phone' ? t('loginModal.continuePhone', 'Continue with phone')
     : step === 'phone-code' ? t('loginModal.enterCode', 'Enter verification code')
     : step === 'wallet-create' ? t('loginModal.createWallet', 'Create your wallet')
@@ -606,7 +572,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 pb-6">
         {step === 'main' && renderMainStep()}
         {step === 'email' && renderEmailStep()}
-        {step === 'email-code' && renderEmailCodeStep()}
+        {step === 'email-waiting' && renderEmailWaitingStep()}
         {step === 'phone' && renderPhoneStep()}
         {step === 'phone-code' && renderPhoneCodeStep()}
         {step === 'wallets' && renderWalletsStep()}
