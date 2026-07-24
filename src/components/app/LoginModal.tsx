@@ -560,7 +560,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
 
   const titleText = step === 'main' ? t('loginModal.title')
     : step === 'email' ? t('loginModal.continueEmail')
-    : step === 'email-code' ? t('loginModal.enterCode', 'Enter verification code')
+    : step === 'email-waiting' ? t('loginModal.checkYourEmail', 'Check your email')
     : step === 'phone' ? t('loginModal.continuePhone', 'Continue with phone')
     : step === 'phone-code' ? t('loginModal.enterCode', 'Enter verification code')
     : step === 'wallet-create' ? t('loginModal.createWallet', 'Create your wallet')
@@ -572,7 +572,7 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
       <div className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-6 pb-6">
         {step === 'main' && renderMainStep()}
         {step === 'email' && renderEmailStep()}
-        {step === 'email-code' && renderEmailCodeStep()}
+        {step === 'email-waiting' && renderEmailWaitingStep()}
         {step === 'phone' && renderPhoneStep()}
         {step === 'phone-code' && renderPhoneCodeStep()}
         {step === 'wallets' && renderWalletsStep()}
