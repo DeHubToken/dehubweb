@@ -100,9 +100,11 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
       console.log('[QuotePost] Tx submitted:', txHash);
 
       // Background confirmation — don't block UI
+      // Best-effort: the indexer picks the quote up from the chain regardless, so a
+      // timed-out confirmation must NOT surface a user-facing error after the quote
+      // already landed and "Quote posted!" was shown.
       mintResult.confirmed.catch((err) => {
-        console.error('[QuotePost] Background confirmation failed:', err);
-        toast.error('Quote submitted but confirmation failed. It may still appear shortly.');
+        console.warn('[QuotePost] Background confirmation failed (quote still lands):', err);
       });
 
       clearCreepInterval();

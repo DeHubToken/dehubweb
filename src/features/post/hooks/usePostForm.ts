@@ -1301,8 +1301,12 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
             }),
           )
           .catch((err) => {
-            console.error('[Mint] Background confirmation failed:', err);
-            toast.error('Post submitted but confirmation failed. It may still appear shortly.');
+            // Best-effort nudge only: the backend indexer picks the post up from
+            // the chain regardless, so a timed-out wait(1) or a non-2xx confirm-mint
+            // must NOT surface a user-facing error — the post has already landed and
+            // "Posted successfully" was already shown. Matches the silent sibling
+            // branch below. See usePostForm confirm-mint notes.
+            console.warn('[Mint] Background confirmation failed (post still lands):', err);
           });
       } else if (!isSolanaMint && txHash) {
         confirmEvmMint({
