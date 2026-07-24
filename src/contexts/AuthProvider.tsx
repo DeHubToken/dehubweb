@@ -845,28 +845,76 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('dehub_connection_source', 'web3auth');
     localStorage.setItem(SUPA_LOGIN_PENDING_KEY, '1');
 
+    // Generate a per-request nonce for cross-device sync. The initiating
+    // device (this one) subscribes to a realtime channel keyed by the nonce
+    // and passes it through the magic link via emailRedirectTo. When the
+    // link is opened on any device, /auth/confirm broadcasts the session
+    // tokens back here and this tab hydrates via setSession() — so the user
+    // ends up signed in on both browsers/devices.
+    const syncNonce = crypto.randomUUID();
     try {
+      // Tear down any previous sync channel from an earlier attempt.
+      if (emailSyncCleanupRef.current) {
+        try { emailSyncCleanupRef.current(); } catch { /* ignore */ }
+        emailSyncCleanupRef.current = null;
+      }
+      const channel = supabase.channel(`auth-sync-${syncNonce}`, {
+        config: { broadcast: { self: false, ack: false } },
+      });
+      channel.on('broadcast', { event: 'session' }, async (msg) => {
+        const payload = (msg as any)?.payload || {};
+        const access_token = payload.access_token as string | undefined;
+        const refresh_token = payload.refresh_token as string | undefined;
+        if (!access_token || !refresh_token) return;
+        try {
+          await supabase.auth.setSession({ access_token, refresh_token });
+          toast.success('Signed in — link confirmed on another device');
+        } catch (err) {
+          console.error('Cross-device session hydrate failed:', err);
+        } finally {
+          try { await supabase.removeChannel(channel); } catch { /* ignore */ }
+          emailSyncCleanupRef.current = null;
+        }
+      });
+      channel.subscribe();
+      emailSyncCleanupRef.current = () => {
+        try { supabase.removeChannel(channel); } catch { /* ignore */ }
+      };
+
       try {
         await wagmiDisconnect();
         clearWagmiStorage();
       } catch { /* ignore */ }
 
+      const redirectTo = `${window.location.origin}/auth/confirm?sync=${syncNonce}`;
       const { error } = await supabase.auth.signInWithOtp({
         email,
-        options: { shouldCreateUser: true },
+        options: { shouldCreateUser: true, emailRedirectTo: redirectTo },
       });
       if (error) throw error;
-      toast.success('Verification code sent — check your email');
+      toast.success('Magic link sent — check your email');
     } catch (error: any) {
       console.error('Email login error:', error);
-      toast.error(error?.message || 'Failed to send verification code. Please try again.');
+      toast.error(error?.message || 'Failed to send magic link. Please try again.');
       localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
       setConnectionSource(null);
       localStorage.removeItem('dehub_connection_source');
+      if (emailSyncCleanupRef.current) {
+        try { emailSyncCleanupRef.current(); } catch { /* ignore */ }
+        emailSyncCleanupRef.current = null;
+      }
       throw error;
     } finally {
       setIsConnecting(false);
     }
+  };
+
+  const cancelEmailMagicLink = () => {
+    if (emailSyncCleanupRef.current) {
+      try { emailSyncCleanupRef.current(); } catch { /* ignore */ }
+      emailSyncCleanupRef.current = null;
+    }
+    localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
   };
 
   /**
