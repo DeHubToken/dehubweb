@@ -27,6 +27,7 @@ export default function AuthConfirm() {
 
     return createClient(url, key, {
       auth: {
+        storageKey: "dehub-auth-confirm-verifier",
         persistSession: false,
         autoRefreshToken: false,
         detectSessionInUrl: false,
