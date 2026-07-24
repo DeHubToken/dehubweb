@@ -50,12 +50,6 @@ export const SignupEmail = ({
           </Button>
         </Section>
 
-        <Text style={smallMuted}>
-          Or paste this link into your browser:
-          <br />
-          <Link href={confirmationUrl} style={rawLink}>{confirmationUrl}</Link>
-        </Text>
-
         <Hr style={hr} />
 
         <Text style={footer}>
@@ -118,14 +112,6 @@ const button = {
   textDecoration: 'none',
   display: 'inline-block',
 }
-const smallMuted = {
-  fontSize: '12px',
-  color: '#6b6b6b',
-  lineHeight: '1.5',
-  margin: '0 0 8px',
-  wordBreak: 'break-all' as const,
-}
-const rawLink = { color: '#6b6b6b', textDecoration: 'underline' }
 const hr = { borderColor: '#e6e2d8', margin: '28px 0 16px' }
 const footer = { fontSize: '12px', color: '#7a7a7a', margin: '0 0 8px', lineHeight: '1.5' }
 const footerBrand = { fontSize: '12px', color: '#7a7a7a', margin: 0 }
