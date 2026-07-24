@@ -54,11 +54,11 @@ interface LoginModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
-type LoginStep = 'main' | 'email' | 'email-code' | 'phone' | 'phone-code' | 'wallets' | 'wallet-create' | 'wallet-unlock';
+type LoginStep = 'main' | 'email' | 'email-waiting' | 'phone' | 'phone-code' | 'wallets' | 'wallet-create' | 'wallet-unlock';
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const {
-    connectWithProvider, connectWithEmail, verifyEmailOtp, connectWithSMS, verifyPhoneOtp,
+    connectWithProvider, connectWithEmail, cancelEmailMagicLink, connectWithSMS, verifyPhoneOtp,
     connectWithWallet, completeSmartWalletLogin, setWagmiAuthIntent, isConnecting,
     walletPhase, supabaseUserId,
   } = useAuth();
