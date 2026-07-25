@@ -20,7 +20,7 @@ import { deriveFromSecret } from '@/lib/wallet-core/derive';
 import { assessPassword, MIN_PASSWORD_LENGTH } from '@/lib/wallet-core/passwordStrength';
 import { copyThenClear } from '@/lib/wallet-core/clipboard';
 import { PasswordStrengthMeter } from '@/components/app/wallet-setup/PasswordStrengthMeter';
-import { checkLegacyAccount } from '@/lib/wallet-core/legacy-detect';
+import { checkLegacyAccount, type LegacyAccountMatch } from '@/lib/wallet-core/legacy-detect';
 
 const inputClass = 'h-12 bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl';
 
@@ -108,6 +108,11 @@ function ExportPrivateKeyDialog({ open, onOpenChange }: { open: boolean; onOpenC
 
 // ── Switch to a different old account ───────────────────────────────────────
 
+const OLD_LOGIN_LABELS: Record<string, string> = {
+  google: 'Google', apple: 'Apple', twitter: 'X (Twitter)', discord: 'Discord',
+  email: 'Email', email_passwordless: 'Email',
+};
+
 function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
   const { switchActiveWallet, walletAddress } = useAuth();
   const [migratedKey, setMigratedKey] = useState<string | null>(null);
@@ -118,10 +123,32 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
   const [ack, setAck] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [knownAccounts, setKnownAccounts] = useState<LegacyAccountMatch[]>([]);
+
+  // Preview what's on each old account BEFORE the user picks a login — the
+  // login step itself can't be skipped (it's what proves ownership and lets
+  // Web3Auth reconstruct the key), but which button to click shouldn't be a
+  // blind guess.
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
+    checkLegacyAccount().then((hint) => {
+      if (cancelled) return;
+      if (hint.exists === true && hint.accounts?.length) {
+        setKnownAccounts(hint.accounts);
+        const emailAccount = hint.accounts.find((a) => a.signupMethod === 'email' || a.signupMethod === 'email_passwordless');
+        if (emailAccount && hint.email) setMigrateEmail((prev) => prev || hint.email!);
+      }
+    });
+    return () => { cancelled = true; };
+  }, [open]);
+
+  const accountFor = (provider: string) => knownAccounts.find((a) => a.signupMethod === provider);
 
   const reset = () => {
     setMigratedKey(null); setMigrateEmail(''); setMigrateBusy(null);
     setPassword(''); setConfirm(''); setAck(false); setBusy(false); setError(null);
+    setKnownAccounts([]);
   };
   const close = (v: boolean) => { if (!v) reset(); onOpenChange(v); };
 
@@ -182,25 +209,36 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
                 <p className="text-white/60 text-sm flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Retrieving old wallet…</p>
               ) : (
                 <div className="space-y-2">
-                  {(['google', 'apple', 'twitter', 'discord'] as const).map((p) => (
-                    <Button
-                      key={p}
-                      variant="outline"
-                      disabled={!!migrateBusy}
-                      onClick={() => handleLegacyLogin(p)}
-                      className="w-full h-11 bg-white/10 hover:bg-white/15 text-white rounded-xl border-white/10"
-                    >
-                      {migrateBusy === p ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
-                      Old account: {p === 'twitter' ? 'X (Twitter)' : p[0].toUpperCase() + p.slice(1)}
-                    </Button>
-                  ))}
+                  {(['google', 'apple', 'twitter', 'discord'] as const).map((p) => {
+                    const known = accountFor(p);
+                    return (
+                      <Button
+                        key={p}
+                        variant="outline"
+                        disabled={!!migrateBusy}
+                        onClick={() => handleLegacyLogin(p)}
+                        className={`w-full h-auto min-h-11 py-2.5 bg-white/10 hover:bg-white/15 text-white rounded-xl border-white/10 flex items-center justify-between ${known ? 'ring-1 ring-green-400/50 bg-white/15' : ''}`}
+                      >
+                        <span className="flex items-center">
+                          {migrateBusy === p ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                          Old account: {OLD_LOGIN_LABELS[p]}
+                        </span>
+                        {known && (
+                          <span className="text-[10px] text-green-300 text-right">
+                            {known.username ? `@${known.username}` : ''}
+                            {typeof known.badgeBalance === 'number' ? ` · ${known.badgeBalance.toLocaleString()} DHB` : ''}
+                          </span>
+                        )}
+                      </Button>
+                    );
+                  })}
                   <div className="flex gap-2">
                     <Input
                       type="email"
                       placeholder="Old account email"
                       value={migrateEmail}
                       onChange={(e) => setMigrateEmail(e.target.value)}
-                      className={`${inputClass} h-11 flex-1`}
+                      className={`${inputClass} h-11 flex-1 ${accountFor('email') || accountFor('email_passwordless') ? 'ring-1 ring-green-400/50' : ''}`}
                     />
                     <Button
                       variant="outline"
@@ -211,6 +249,15 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
                       {migrateBusy === 'email_passwordless' ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowDownToLine className="w-4 h-4" />}
                     </Button>
                   </div>
+                  {(() => {
+                    const emailAcc = accountFor('email') ?? accountFor('email_passwordless');
+                    return emailAcc ? (
+                      <p className="text-[10px] text-green-300 px-1">
+                        {emailAcc.username ? `@${emailAcc.username}` : ''}
+                        {typeof emailAcc.badgeBalance === 'number' ? ` · ${emailAcc.badgeBalance.toLocaleString()} DHB` : ''}
+                      </p>
+                    ) : null;
+                  })()}
                 </div>
               )}
               {error && <p className="text-sm text-red-400">{error}</p>}
