@@ -90,6 +90,7 @@ import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
 import { useWalletUnlockInterval, type WalletUnlockIntervalOption } from '@/hooks/use-wallet-unlock-interval';
+import { WalletRecoveryTools } from '@/components/app/settings/WalletRecoveryTools';
 import { PROFILE_TAB_OPTIONS } from '@/components/app/profile/ProfileConstants';
 import { useDmSettings } from '@/hooks/use-dm-settings';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
@@ -1550,6 +1551,7 @@ function PrivacySettings() {
               ]}
             />
           </div>
+          <WalletRecoveryTools />
         </div>
       </div>
 

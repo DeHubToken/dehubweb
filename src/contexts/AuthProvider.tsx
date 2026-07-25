@@ -48,7 +48,9 @@ import {
   clearAAProvider,
   getAAProvider,
 } from '@/lib/smart-wallet';
-import { fetchWallet, clearWalletCache } from '@/lib/wallet-core/store';
+import { fetchWallet, saveWallet, clearWalletCache } from '@/lib/wallet-core/store';
+import { deriveFromSecret } from '@/lib/wallet-core/derive';
+import { encryptString, decryptString } from '@/lib/wallet-core/crypto';
 import { isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
 import { AuthContext, type SocialProvider, type WalletProvider, type WalletPhase } from './AuthContext';
 
@@ -800,6 +802,56 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
+   * Decrypt and return the raw private key for the CURRENT wallet — the
+   * supported backup path (we don't generate recovery phrases/codes for new
+   * wallets anymore). Always re-asks the wallet password, even if already
+   * unlocked in this tab — exporting the key is sensitive enough to
+   * re-verify, and it works whether or not a live session exists yet.
+   */
+  const exportPrivateKey = async (password: string): Promise<string> => {
+    if (!supabaseUserId) throw new Error('Not signed in');
+    const wallet = await fetchWallet(supabaseUserId);
+    if (!wallet) throw new Error('No wallet found for this account.');
+    const secret = await decryptString(wallet.payload, password);
+    return deriveFromSecret(secret).ethPrivateKey;
+  };
+
+  /**
+   * Replace the active wallet with a DIFFERENT one — e.g. a second old
+   * Web3Auth-era account under the same email (Supabase links Google/Email
+   * logins that share a verified email into one identity, so only one
+   * wallet can be active at a time; this lets the user swap which one that
+   * is). Re-encrypts `secret` under `password` and overwrites the
+   * user_wallets row. The PREVIOUS wallet's encrypted seed is gone once this
+   * completes — callers must have the user export/back it up first.
+   */
+  const switchActiveWallet = async (secret: string, password: string) => {
+    if (!supabaseUserId) throw new Error('Not signed in');
+    const toastId = 'auth-switch-wallet';
+    setIsConnecting(true);
+    try {
+      const derived = deriveFromSecret(secret);
+      const encrypted = await encryptString(derived.secret, password);
+      await saveWallet(supabaseUserId, derived.ethAddress, encrypted);
+      clearWalletCache();
+      lockWallet();
+      // Drop the stale address so signAndAuthenticateSmartWallet's "address
+      // changed" guard (meant to catch accidental switches during a session
+      // refresh) doesn't block this INTENTIONAL switch.
+      setWalletAddress(null);
+      await activateWalletKey(derived.ethPrivateKey);
+      await signAndAuthenticateSmartWallet(toastId);
+      toast.success('Switched to the other wallet', { id: toastId });
+    } catch (err: any) {
+      console.error('[Auth] Wallet switch failed:', err);
+      toast.error(err?.message || 'Failed to switch wallet', { id: toastId });
+      throw err;
+    } finally {
+      setIsConnecting(false);
+    }
+  };
+
+  /**
    * Final step of the smart-wallet login flow — called by the login modal
    * after the wallet was created/unlocked and the private key is available.
    */
@@ -1247,6 +1299,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     verifyPhoneOtp,
     connectWithWallet,
     completeSmartWalletLogin,
+    exportPrivateKey,
+    switchActiveWallet,
     disconnect,
     refreshUser,
     refreshSession,
