@@ -56,6 +56,10 @@ export interface AuthContextType {
    * establishes the DeHub session.
    */
   completeSmartWalletLogin: (privKeyHex: string) => Promise<void>;
+  /** Decrypt and return the current wallet's raw private key (Settings export). */
+  exportPrivateKey: (password: string) => Promise<string>;
+  /** Replace the active wallet with a different old account's key. */
+  switchActiveWallet: (secret: string, password: string) => Promise<void>;
   disconnect: () => Promise<void>;
   refreshUser: () => Promise<void>;
   patchUser: (patch: Partial<DeHubUser>) => void;

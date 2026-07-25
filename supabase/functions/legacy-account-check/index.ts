@@ -2,8 +2,14 @@
  * legacy-account-check
  * ====================
  * Tells the wallet-create step whether the CURRENT user's verified email
- * belongs to a pre-migration (Web3Auth-era) DeHub account, so the UI can
- * auto-select the Migrate tab instead of letting them create a fresh wallet.
+ * belongs to pre-migration (Web3Auth-era) DeHub account(s), so the UI can
+ * auto-select the Migrate tab and preview what's known about them, instead
+ * of the user blind-guessing which old login to use.
+ *
+ * A person can have MORE than one old account for the same email: Supabase
+ * links Google/Email logins that share a verified email into ONE new
+ * identity, but on the old system each login method could be its own
+ * separate account with its own balance/profile. This returns ALL matches.
  *
  * Security model:
  * - verify_jwt = true (config.toml): only authenticated Supabase users reach
@@ -11,21 +17,11 @@
  * - The email is resolved SERVER-SIDE from the caller's JWT — it is never a
  *   request parameter, so this cannot be used to enumerate other people's
  *   accounts.
- * - The upstream lookup on api.dehub.io is gated by a shared secret
- *   (DEHUB_INTERNAL_SECRET) so only this function can call it.
  *
- * Graceful degradation: any missing config / upstream failure returns
- * { exists: null } — the client treats that as "unknown" and behaves as
- * before. Deploying this function before the backend endpoint exists is safe.
- *
- * ── Required NestJS endpoint on api.dehub.io (to be added) ─────────────────
- *   GET /api/internal/legacy-account?email=<lowercased email>
- *   Header: x-internal-secret: <DEHUB_INTERNAL_SECRET>   (401 otherwise)
- *   200 → { "exists": boolean, "signupMethod"?: "google" | "apple" |
- *           "twitter" | "discord" | "email" | "wallet" | "github" }
- *   The user collection already stores email + signupMethod (the admin
- *   users list filters on both), so this is an indexed findOne on email.
- * ────────────────────────────────────────────────────────────────────────────
+ * Data source: public.legacy_accounts — a ONE-TIME, static import of the old
+ * MongoDB backend's accounts (email -> signup method + wallet address +
+ * username + badge balance). Old accounts don't change going forward
+ * (Web3Auth is being retired), so this is a snapshot, not a live sync.
  */
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -64,34 +60,28 @@ serve(async (req) => {
       return json({ exists: null, reason: 'no-email' });
     }
 
-    const secret = Deno.env.get('DEHUB_INTERNAL_SECRET');
-    if (!secret) {
-      // Backend lookup not wired up yet — report "unknown", never guess.
-      return json({ exists: null, reason: 'not-configured' });
-    }
+    const { data, error } = await admin
+      .from('legacy_accounts')
+      .select('signup_method, eth_address, username, badge_balance')
+      .ilike('email', email);
 
-    const apiBase = Deno.env.get('DEHUB_API_BASE') || 'https://api.dehub.io';
-    const upstream = await fetch(
-      `${apiBase}/api/internal/legacy-account?email=${encodeURIComponent(email)}`,
-      {
-        headers: { 'x-internal-secret': secret, 'Accept': 'application/json' },
-        signal: AbortSignal.timeout(8000),
-      },
-    );
-    if (!upstream.ok) {
-      console.warn('[legacy-account-check] upstream status', upstream.status);
-      return json({ exists: null, reason: `upstream-${upstream.status}` });
+    if (error) {
+      console.error('[legacy-account-check] Query error:', error);
+      return json({ exists: null, reason: 'query-error' });
     }
-
-    const body = await upstream.json().catch(() => null);
-    if (!body || typeof body.exists !== 'boolean') {
-      return json({ exists: null, reason: 'bad-upstream' });
+    if (!data || data.length === 0) {
+      return json({ exists: false, email });
     }
 
     return json({
-      exists: body.exists,
-      signupMethod: typeof body.signupMethod === 'string' ? body.signupMethod : null,
+      exists: true,
       email,
+      accounts: data.map((row) => ({
+        signupMethod: row.signup_method ?? undefined,
+        ethAddress: row.eth_address,
+        username: row.username ?? undefined,
+        badgeBalance: row.badge_balance ?? undefined,
+      })),
     });
   } catch (error: unknown) {
     console.error('[legacy-account-check] Error:', error);

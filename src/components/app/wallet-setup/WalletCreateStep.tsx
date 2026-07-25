@@ -56,11 +56,10 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
     checkLegacyAccount().then((hint) => {
       if (cancelled) return;
       setBackendHint(hint);
-      if (hint.exists === true) {
-        // Wallet-signup users don't migrate — they just reconnect the same
-        // wallet — so don't steer them into the Web3Auth migrate flow.
-        if (hint.signupMethod !== 'wallet' && !userChoseModeRef.current) setMode('migrate');
-        if (hint.signupMethod === 'email' && hint.email) {
+      if (hint.exists === true && hint.accounts?.length) {
+        if (!userChoseModeRef.current) setMode('migrate');
+        const emailAccount = hint.accounts.find((a) => a.signupMethod === 'email' || a.signupMethod === 'email_passwordless');
+        if (emailAccount && hint.email) {
           setMigrateEmail((prev) => prev || hint.email!);
         }
       }
@@ -176,9 +175,16 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
     }
   };
 
-  // Provider the backend says the old account used — highlighted so the user
-  // re-authenticates with the SAME method (Web3Auth keys are per-provider).
-  const oldLoginMethod = backendHint?.exists === true ? backendHint.signupMethod : undefined;
+  // Providers the backend says old accounts used — highlighted so the user
+  // re-authenticates with a matching method (Web3Auth keys are per-provider).
+  // A person can have MORE than one old account for this email (Supabase
+  // links Google/Email logins with the same verified email into one new
+  // identity, but each was its own separate old account) — highlight ALL of
+  // them, not just one, and preview what's on each before they pick.
+  const foundAccounts = backendHint?.exists === true ? (backendHint.accounts ?? []) : [];
+  const oldLoginMethods = new Set(foundAccounts.map((a) => a.signupMethod).filter((m): m is string => !!m));
+  const hasMultipleOldAccounts = foundAccounts.length > 1;
+  const hasOldEmailLogin = oldLoginMethods.has('email') || oldLoginMethods.has('email_passwordless');
 
   const migrateProviderButton = (
     provider: 'google' | 'twitter' | 'discord' | 'apple',
@@ -190,12 +196,12 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       disabled={!!migrateBusy}
       onClick={() => handleLegacyLogin(provider)}
       className={`w-full h-11 bg-white/10 hover:bg-white/15 text-white rounded-xl border-white/10 ${
-        oldLoginMethod === provider ? 'ring-1 ring-green-400/50 bg-white/15' : ''
+        oldLoginMethods.has(provider) ? 'ring-1 ring-green-400/50 bg-white/15' : ''
       }`}
     >
       {migrateBusy === provider ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
       {label}
-      {oldLoginMethod === provider && (
+      {oldLoginMethods.has(provider) && (
         <span className="ml-2 text-[10px] uppercase tracking-wide bg-green-400/15 text-green-300 rounded-full px-2 py-0.5">
           Your old login
         </span>
@@ -206,24 +212,37 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
   const showPasswordFields = mode !== 'migrate' || !!migratedKey;
 
   const OLD_LOGIN_LABELS: Record<string, string> = {
-    google: 'Google', apple: 'Apple', twitter: 'X (Twitter)', discord: 'Discord', email: 'email', github: 'GitHub',
+    google: 'Google', apple: 'Apple', twitter: 'X (Twitter)', discord: 'Discord',
+    email: 'Email', email_passwordless: 'Email',
   };
 
   return (
     <div className="space-y-4">
       {/* Returning-user detection banners (hidden once the old key is retrieved) */}
-      {!migratedKey && backendHint?.exists === true && backendHint.signupMethod === 'wallet' && (
-        <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
-          <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
-          <p>Welcome back! Your old DeHub account signed in with a crypto wallet — close this and use <span className="font-semibold">Connect wallet</span> with that same wallet to keep your account. No migration needed.</p>
+      {!migratedKey && hasMultipleOldAccounts && (
+        <div className="rounded-xl border border-green-400/40 bg-green-400/10 p-3 text-sm text-white space-y-2">
+          <div className="flex items-start gap-2">
+            <CheckCircle2 className="w-4 h-4 mt-0.5 text-green-400 shrink-0" />
+            <p>We found <span className="font-semibold">{foundAccounts.length} old accounts</span> for this email. Pick which one to bring over below — you can switch later from Settings.</p>
+          </div>
+          <div className="space-y-1 pl-6">
+            {foundAccounts.map((a, i) => (
+              <div key={i} className="flex items-center justify-between text-xs text-white/70 bg-black/20 rounded-lg px-2.5 py-1.5">
+                <span>{a.signupMethod ? OLD_LOGIN_LABELS[a.signupMethod] ?? a.signupMethod : 'Unknown login'}{a.username ? ` — @${a.username}` : ''}</span>
+                {typeof a.badgeBalance === 'number' && (
+                  <span className="text-white/50">{a.badgeBalance.toLocaleString()} DHB</span>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       )}
-      {!migratedKey && backendHint?.exists === true && backendHint.signupMethod !== 'wallet' && (
+      {!migratedKey && !hasMultipleOldAccounts && backendHint?.exists === true && foundAccounts[0] && (
         <div className="flex items-start gap-2 rounded-xl border border-green-400/40 bg-green-400/10 p-3 text-sm text-white">
           <CheckCircle2 className="w-4 h-4 mt-0.5 text-green-400 shrink-0" />
           <p>
             Welcome back! We found your existing DeHub account
-            {oldLoginMethod && OLD_LOGIN_LABELS[oldLoginMethod] ? <> (old login: <span className="font-semibold">{OLD_LOGIN_LABELS[oldLoginMethod]}</span>)</> : null}
+            {foundAccounts[0].signupMethod && OLD_LOGIN_LABELS[foundAccounts[0].signupMethod] ? <> (old login: <span className="font-semibold">{OLD_LOGIN_LABELS[foundAccounts[0].signupMethod]}</span>)</> : null}
             . Sign in with it below to keep your wallet, balance, and profile.
           </p>
         </div>
@@ -288,9 +307,9 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
               {migrateProviderButton('twitter', 'Old account: X (Twitter)')}
               {migrateProviderButton('discord', 'Old account: Discord')}
               <div className="space-y-1.5">
-                <p className={`text-xs px-1 ${oldLoginMethod === 'email' ? 'text-green-300' : 'text-white/50'}`}>
+                <p className={`text-xs px-1 ${hasOldEmailLogin ? 'text-green-300' : 'text-white/50'}`}>
                   Old account: Email
-                  {oldLoginMethod === 'email' && (
+                  {hasOldEmailLogin && (
                     <span className="ml-2 text-[10px] uppercase tracking-wide bg-green-400/15 text-green-300 rounded-full px-2 py-0.5">
                       Your old login
                     </span>
@@ -302,7 +321,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
                     placeholder="Old account email"
                     value={migrateEmail}
                     onChange={(e) => setMigrateEmail(e.target.value)}
-                    className={`${inputClass} h-11 flex-1 ${oldLoginMethod === 'email' ? 'ring-1 ring-green-400/50' : ''}`}
+                    className={`${inputClass} h-11 flex-1 ${hasOldEmailLogin ? 'ring-1 ring-green-400/50' : ''}`}
                   />
                   <Button
                     variant="outline"
