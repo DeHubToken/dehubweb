@@ -2236,6 +2236,36 @@ export type Database = {
         }
         Relationships: []
       }
+      legacy_accounts: {
+        Row: {
+          badge_balance: number | null
+          email: string
+          eth_address: string
+          id: number
+          imported_at: string
+          signup_method: string | null
+          username: string | null
+        }
+        Insert: {
+          badge_balance?: number | null
+          email: string
+          eth_address: string
+          id?: number
+          imported_at?: string
+          signup_method?: string | null
+          username?: string | null
+        }
+        Update: {
+          badge_balance?: number | null
+          email?: string
+          eth_address?: string
+          id?: number
+          imported_at?: string
+          signup_method?: string | null
+          username?: string | null
+        }
+        Relationships: []
+      }
       live_stream_sessions: {
         Row: {
           address: string
