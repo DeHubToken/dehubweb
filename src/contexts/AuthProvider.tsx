@@ -281,8 +281,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   /**
    * After a Supabase session exists: look up the wallet row and route the
    * login modal to the create or unlock step.
+   *
+   * Every caller (the SIGNED_IN listener, verifyEmailOtp, verifyPhoneOtp,
+   * OAuth redirect return) converges here, so the stale-identity check lives
+   * HERE rather than being duplicated per caller. Without it, a browser that
+   * still has a valid cached DeHub session (dehub_token/dehub_wallet/user)
+   * from a DIFFERENT account keeps showing that account's data on screen
+   * while this new identity's wallet flow runs underneath in the modal.
    */
   const proceedToWalletPhase = useCallback(async (userId: string) => {
+    const cachedUid = localStorage.getItem('dehub_supabase_uid');
+    if (cachedUid && cachedUid !== userId && (getAuthToken() || localStorage.getItem('dehub_wallet'))) {
+      clearAuthSession();
+      localStorage.removeItem('dehub_user');
+      setUser(null);
+      setWalletAddress(null);
+    }
     setSupabaseUserId(userId);
     setConnectionSource('web3auth');
     localStorage.setItem('dehub_connection_source', 'web3auth');
@@ -419,16 +433,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
         return;
       }
-      // A different (or unknown) identity just signed in — drop the stale
-      // DeHub-level session so proceedToWalletPhase runs clean for them,
-      // instead of a leftover walletAddress tripping the "address changed"
-      // guard in signAndAuthenticateSmartWallet.
-      if (!sameIdentity && (getAuthToken() || localStorage.getItem('dehub_wallet'))) {
-        clearAuthSession();
-        localStorage.removeItem('dehub_user');
-        setUser(null);
-        setWalletAddress(null);
-      }
+      // A different (or unknown) identity just signed in — proceedToWalletPhase
+      // itself drops any stale DeHub-level session for the OLD identity before
+      // routing this one, so it can't leave a leftover walletAddress tripping
+      // the "address changed" guard in signAndAuthenticateSmartWallet.
       supaLoginHandledRef.current = true;
       setIsProcessingRedirect(true);
       // Defer so this runs outside the auth-state callback (supabase-js
