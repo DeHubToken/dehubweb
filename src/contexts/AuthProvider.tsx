@@ -30,7 +30,7 @@ import {
   clearAuthSession,
   isTokenExpired,
   apiCall,
-  refreshAccessToken,
+  refreshAccessTokenDetailed,
   logoutFromServer,
   type DeHubUser,
   type Web3AuthMeta,
@@ -373,8 +373,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         } else if (token && isTokenExpired()) {
           console.log('[Auth] Token expired on mount, attempting silent refresh...');
-          const refreshed = await refreshAccessToken();
-          if (refreshed && savedWallet) {
+          const outcome = await refreshAccessTokenDetailed();
+          if (outcome.ok && savedWallet) {
             try {
               const userData = await getAccountInfo(savedWallet);
               const normalizedUser = normalizeUser(userData, savedWallet);
@@ -392,7 +392,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 } catch { /* ignore */ }
               }
             }
+          } else if (outcome.ok) {
+            // Refresh worked but there is no saved wallet to rehydrate from.
+            // The session itself is fine — leave it alone.
+          } else if (outcome.reason === 'transient' || outcome.reason === 'malformed') {
+            // Reachability problem, not a dead session. Keep the cached
+            // session and let the proactive refresh below retry: booting
+            // offline (or before the radio is up) must not sign the user out.
+            console.warn('[Auth] Silent refresh failed transiently on mount — keeping cached session');
+            const cachedUser = localStorage.getItem('dehub_user');
+            if (cachedUser && savedWallet) {
+              try {
+                setUser(JSON.parse(cachedUser));
+                setWalletAddress(savedWallet);
+              } catch { /* ignore */ }
+            }
           } else {
+            // 'revoked' or 'no-refresh-token' — genuinely unrecoverable.
             clearAuthSession();
             localStorage.removeItem('dehub_user');
             setUser(null);
@@ -516,17 +532,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (timeUntilExpiry < 5 * 60 * 1000) {
-        const result = await refreshAccessToken();
-        if (result) {
+        const outcome = await refreshAccessTokenDetailed();
+        if (outcome.ok) {
           console.log('[Auth] ✓ Proactive token refresh succeeded');
-        } else if (timeUntilExpiry < 0) {
-          console.warn('[Auth] Token expired and refresh failed — clearing session');
+        } else if (outcome.reason === 'transient' || outcome.reason === 'malformed') {
+          // This runs on an interval AND on every visibilitychange, so it is
+          // the most likely place to catch a phone waking from sleep with the
+          // radio still down. Clearing here — even past nominal expiry — turns
+          // "unlocked my phone" into "logged out". The refresh token is still
+          // valid; the next tick (or the next 401) will recover.
+          console.warn('[Auth] Proactive refresh failed transiently — keeping session, will retry');
+        } else {
+          // 'revoked' or 'no-refresh-token' — the session really is over.
+          console.warn('[Auth] Refresh token rejected — clearing session');
           clearAuthSession();
           localStorage.removeItem('dehub_user');
           setUser(null);
           setWalletAddress(null);
-        } else {
-          console.warn('[Auth] Proactive refresh failed — will retry or fall back on next 401');
         }
       }
     };
@@ -1241,9 +1263,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // ── Step 1: refresh token (no wallet interaction needed) ──
     const rt = getRefreshToken();
     if (rt) {
-      const result = await refreshAccessToken();
-      if (result) return true;
-      console.warn('[Auth] Refresh token failed, falling back to wallet re-sign');
+      const outcome = await refreshAccessTokenDetailed();
+      if (outcome.ok) return true;
+      if (outcome.reason === 'transient' || outcome.reason === 'malformed') {
+        // Escalating to a wallet signature prompt here would ask the user to
+        // approve a signature over the same connection that just failed —
+        // it cannot succeed, and it trains people to re-sign constantly.
+        console.warn('[Auth] Refresh failed transiently — not escalating to wallet re-sign');
+        return false;
+      }
+      console.warn('[Auth] Refresh token rejected, falling back to wallet re-sign');
     }
 
     // ── Step 2: wallet re-sign ──
@@ -1329,6 +1358,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return stable;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Central recovery for auth failures raised anywhere in the app (dispatched
+  // by the QueryClient's MutationCache in App.tsx). Tries a silent refresh
+  // first and only asks the user to sign in when that genuinely fails —
+  // otherwise a single expired token turns into a manual sign-out/sign-in.
+  const authRecoveryInFlight = useRef(false);
+  useEffect(() => {
+    const handler = async () => {
+      // A batch of mutations failing together must produce one recovery
+      // attempt and one toast, not one per mutation.
+      if (authRecoveryInFlight.current) return;
+      authRecoveryInFlight.current = true;
+
+      const toastId = toast.loading('Session expired — restoring…');
+      try {
+        const recovered = await stableCallbacks.refreshSession();
+        toast.dismiss(toastId);
+        if (recovered) {
+          toast.success('Session restored — please try again.');
+        } else {
+          toast.error('Session expired', {
+            description: 'Please sign in again to continue',
+            action: { label: 'Sign in', onClick: stableCallbacks.openLoginModal },
+            duration: 8000,
+          });
+        }
+      } catch {
+        toast.dismiss(toastId);
+      } finally {
+        authRecoveryInFlight.current = false;
+      }
+    };
+
+    window.addEventListener('dehub:auth-expired', handler);
+    return () => window.removeEventListener('dehub:auth-expired', handler);
+  }, [stableCallbacks]);
 
   const value = React.useMemo(() => ({
     user,

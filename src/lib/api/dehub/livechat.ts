@@ -1,4 +1,4 @@
-import { apiCall, getAuthToken, DEHUB_API_BASE } from './core';
+import { apiCall, authedUpload } from './core';
 
 export interface LiveChatRoom {
   id: string;
@@ -316,27 +316,12 @@ export async function updateLiveChatRoomSettings(
  * POST /api/livechat/upload-voice — upload a voice message to the CDN
  */
 export async function uploadLiveChatVoice(audioBlob: Blob, filename = 'voice.webm'): Promise<{ url: string; duration: number }> {
-  const token = getAuthToken();
   const formData = new FormData();
   formData.append('audio', audioBlob, filename);
 
-  const headers: HeadersInit = {};
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
-  const response = await fetch(`${DEHUB_API_BASE}/api/livechat/upload-voice`, {
-    method: 'POST',
-    headers,
-    body: formData,
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || errorData.error || `Failed to upload voice note: ${response.status}`);
-  }
-
-  const data = await response.json();
-  return data;
+  return authedUpload<{ url: string; duration: number }>(
+    '/api/livechat/upload-voice',
+    formData,
+  );
 }
 
