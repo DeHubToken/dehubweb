@@ -225,7 +225,7 @@ describe('authedUpload', () => {
     withValidSession();
     MockXhr.queue.push({ status: 413, body: JSON.stringify({ message: 'File too large' }) });
 
-    const err = await authedUpload('/api/user_mint', new FormData()).catch((e) => e);
+    const err = (await authedUpload('/api/user_mint', new FormData()).catch((e) => e)) as Error;
     expect(err).not.toBeInstanceOf(AuthenticationError);
     expect(err.message).toContain('File too large');
   });
@@ -234,7 +234,7 @@ describe('authedUpload', () => {
     withValidSession();
     MockXhr.networkError = true;
 
-    const err = await authedUpload('/api/user_mint', new FormData()).catch((e) => e);
+    const err = (await authedUpload('/api/user_mint', new FormData()).catch((e) => e)) as Error;
     expect(err).not.toBeInstanceOf(AuthenticationError);
     expect(err.message).toMatch(/connection/i);
   });
