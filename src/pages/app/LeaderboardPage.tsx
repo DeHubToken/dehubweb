@@ -36,6 +36,7 @@ import { buildAvatarUrl } from '@/lib/media-url';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { SEOHead } from '@/components/SEOHead';
+import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 
 
 type CategoryType = 'holdings' | 'sentTips' | 'receivedTips' | 'followers' | 'likes' | 'subscribers';
@@ -426,9 +427,7 @@ export default function LeaderboardPage() {
 
         {/* Loading State */}
         {isLoading && (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="w-8 h-8 text-zinc-500 animate-spin" />
-          </div>
+          <DeHubPageLoader minHeight="40vh" />
         )}
 
         {/* Error State */}

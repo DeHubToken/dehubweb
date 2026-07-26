@@ -3397,6 +3397,44 @@ input[data-hue-slider]:focus-visible {
 
 /*
 ================================================================================
+DEHUB PRELOADER — the animated DeHub mark used for page-level waits.
+================================================================================
+See components/app/DeHubLoader.tsx. Two things the component can't express
+inline:
+
+1. Colour. The GIF is white-on-transparent, which is invisible on the light
+   surfaces. Inverting it (white → black, transparent stays transparent) is
+   exact for pure monochrome art, so one filter covers every light surface:
+   the app's `light` theme, and the docs surface, which next-themes pins to
+   `html.light` for both the `light` and `minimal` app themes (lib/docs-theme.ts).
+   `minimal` itself is a DARK app theme — it must NOT invert.
+
+2. Flash guard. A route chunk that resolves in 80 ms should show no loading
+   stage at all, so the mark holds at opacity 0 for 250 ms first (`both` keeps
+   the from-state during the delay), then fades in. Under reduce-motion the
+   blanket rule below collapses the fade to ~0 s; the delay still applies, so
+   the behaviour is "nothing, then it's just there" — which is the point.
+*/
+html[data-theme="light"] [data-dehub-loader],
+html.light [data-dehub-loader] {
+  filter: invert(1);
+}
+
+.dehub-loader-mark {
+  animation: dehub-loader-in 200ms ease-out 250ms both;
+}
+
+@keyframes dehub-loader-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/*
+================================================================================
 REDUCED MOTION — honour the OS "Reduce Motion" setting (iOS Settings ›
 Accessibility › Motion, and the equivalent on every platform).
 ================================================================================
