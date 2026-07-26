@@ -273,6 +273,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const closeLoginModal = useCallback(() => {
     connectionAbortedRef.current = true;
     setIsLoginModalOpen(false);
+    // Dismissing the modal abandons the login. The pending flag must go with
+    // it: it was only ever removed on a COMPLETED login, so walking away at the
+    // "create/unlock your wallet" step left it set forever. Every later page
+    // load then saw a pending login, re-entered proceedToWalletPhase, and (now
+    // that an untagged session counts as a different identity) would tear down
+    // a perfectly healthy session the user never asked to end.
+    localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
     if (isConnecting && !walletAddress) {
       setIsConnecting(false);
     }
@@ -290,8 +297,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * while this new identity's wallet flow runs underneath in the modal.
    */
   const proceedToWalletPhase = useCallback(async (userId: string) => {
+    // An ABSENT tag means "unknown", which must be treated as "not this user" —
+    // not as "same user, carry on". dehub_supabase_uid is written in exactly one
+    // place (signAndAuthenticateSmartWallet, below), so every external-wallet
+    // (wagmi) session and every session predating the tag has no tag at all.
+    // Requiring a known-and-different uid here let those sessions survive a
+    // sign-in as somebody else: account A stayed on screen while account B's
+    // wallet flow ran in the modal, and because walletAddress was still A's
+    // EOA, the address guard in signAndAuthenticateSmartWallet then threw
+    // "Wallet address changed during session refresh" on every attempt —
+    // making social login unreachable for anyone who had used a wallet first.
+    //
+    // Clearing an untagged session is safe: a genuine same-user return always
+    // carries the tag, and a first-ever login has neither token nor wallet, so
+    // the second half of the condition makes this a no-op.
     const cachedUid = localStorage.getItem('dehub_supabase_uid');
-    if (cachedUid && cachedUid !== userId && (getAuthToken() || localStorage.getItem('dehub_wallet'))) {
+    const identityIsUnknownOrDifferent = !cachedUid || cachedUid !== userId;
+    if (identityIsUnknownOrDifferent && (getAuthToken() || localStorage.getItem('dehub_wallet'))) {
       clearAuthSession();
       localStorage.removeItem('dehub_user');
       setUser(null);
@@ -1256,9 +1278,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const refreshSession = async (): Promise<boolean> => {
+  /**
+   * Re-establish a usable DeHub session.
+   *
+   * `force` skips the "the token still looks fine locally" shortcut. Callers
+   * reacting to a REJECTED request must pass it: expiry here is pure arithmetic
+   * on the device clock (isTokenExpired), so a token the server has revoked —
+   * or one whose real expiry disagrees with ours because the clock drifted, the
+   * account was suspended, or a deploy rotated the signing secret — still looks
+   * valid locally. Returning true in that state made every recovery path report
+   * "Session restored — please try again", let the user retry, fail identically,
+   * and loop forever with no way out but a manual sign-out.
+   */
+  const refreshSession = async (force = false): Promise<boolean> => {
     const token = getAuthToken();
-    if (token && !isTokenExpired()) return true;
+    if (!force && token && !isTokenExpired()) return true;
 
     // ── Step 1: refresh token (no wallet interaction needed) ──
     const rt = getRefreshToken();
@@ -1373,11 +1407,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       const toastId = toast.loading('Session expired — restoring…');
       try {
-        const recovered = await stableCallbacks.refreshSession();
+        // force: we are here because the server rejected a request, so the
+        // local expiry arithmetic cannot be trusted to decide whether to try.
+        const recovered = await stableCallbacks.refreshSession(true);
         toast.dismiss(toastId);
         if (recovered) {
           toast.success('Session restored — please try again.');
         } else {
+          // Bring React in line with storage — but ONLY when the credentials
+          // are genuinely gone. clearAuthSession runs down in the transport
+          // layer, which cannot touch React state, so after a real revocation
+          // the app keeps rendering a signed-in header, avatar and feed over a
+          // session that no longer exists.
+          //
+          // The narrow condition matters: refreshSession also returns false
+          // when it merely dispatched dehub:wallet-unlock-required and is
+          // waiting for the user to type their wallet password. Tearing down
+          // there would cancel the very flow that recovers them.
+          const credentialsGone = !getAuthToken() && !getRefreshToken();
+          if (credentialsGone) {
+            localStorage.removeItem('dehub_user');
+            setUser(null);
+            setWalletAddress(null);
+          }
           toast.error('Session expired', {
             description: 'Please sign in again to continue',
             action: { label: 'Sign in', onClick: stableCallbacks.openLoginModal },
