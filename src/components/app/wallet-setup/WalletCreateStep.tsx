@@ -38,6 +38,11 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
   const [error, setError] = useState<string | null>(null);
   // Key recovered from the old Web3Auth account (one-time migration)
   const [migratedKey, setMigratedKey] = useState<string | null>(null);
+  // Require an explicit look at the derived address before persisting it —
+  // Migrate retrieves whichever account the login used actually belongs to,
+  // which is NOT always the one the user meant to reach (e.g. someone else's
+  // real account, if a shared login was used). Resets on every new retrieval.
+  const [addressConfirmed, setAddressConfirmed] = useState(false);
   const [migrateEmail, setMigrateEmail] = useState('');
   const [migrateBusy, setMigrateBusy] = useState<string | null>(null);
   // Returning-user detection: backend email lookup + old Web3Auth storage on
@@ -83,8 +88,9 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       .then(m => m.resumeLegacyMigration())
       .then((key) => {
         if (key) {
+          setAddressConfirmed(false);
           setMigratedKey(key);
-          toast.success('Old wallet retrieved — set a password to finish');
+          toast.success('Old wallet retrieved — check the address before continuing');
         }
       })
       .catch((e) => {
@@ -107,8 +113,9 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
         provider,
         provider === 'email_passwordless' ? migrateEmail : undefined,
       );
+      setAddressConfirmed(false);
       setMigratedKey(key);
-      toast.success('Old wallet retrieved — set a password to finish');
+      toast.success('Old wallet retrieved — check the address before continuing');
     } catch (e) {
       console.error('[Migrate] Legacy login failed:', e);
       setError(e instanceof Error ? e.message : 'Could not retrieve your old wallet. Please try again.');
@@ -209,7 +216,8 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
     </Button>
   );
 
-  const showPasswordFields = mode !== 'migrate' || !!migratedKey;
+  const migratedAddress = migratedKey ? deriveFromSecret(migratedKey).ethAddress : null;
+  const showPasswordFields = mode !== 'migrate' || (!!migratedKey && addressConfirmed);
 
   const OLD_LOGIN_LABELS: Record<string, string> = {
     google: 'Google', apple: 'Apple', twitter: 'X (Twitter)', discord: 'Discord',
@@ -343,10 +351,50 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
         </div>
       )}
 
-      {mode === 'migrate' && migratedKey && (
+      {mode === 'migrate' && migratedKey && !addressConfirmed && migratedAddress && (() => {
+        const matched = foundAccounts.find((a) => a.ethAddress.toLowerCase() === migratedAddress.toLowerCase());
+        return (
+          <div className="space-y-3">
+            <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
+              <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
+              <p>This retrieved a real wallet — double check it's actually yours before continuing. This can't be undone once you set a password.</p>
+            </div>
+            <div className="rounded-xl border border-white/10 bg-white/5 p-3 text-xs text-white space-y-1">
+              <p className="text-white/50">Retrieved address</p>
+              <p className="break-all">{migratedAddress}</p>
+              {matched && (
+                <>
+                  <p className="text-white/50 pt-1">Known as</p>
+                  <p>
+                    {matched.username ? `@${matched.username}` : 'Unknown username'}
+                    {typeof matched.badgeBalance === 'number' ? ` — ${matched.badgeBalance.toLocaleString()} DHB` : ''}
+                  </p>
+                </>
+              )}
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                onClick={() => { setMigratedKey(null); setAddressConfirmed(false); }}
+                className="flex-1 h-11 text-white/60 hover:text-white rounded-xl"
+              >
+                Try a different login
+              </Button>
+              <Button
+                onClick={() => setAddressConfirmed(true)}
+                className="flex-1 h-11 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
+              >
+                Yes, this is mine
+              </Button>
+            </div>
+          </div>
+        );
+      })()}
+
+      {mode === 'migrate' && migratedKey && addressConfirmed && (
         <p className="text-sm text-green-400 flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
-          Old wallet retrieved. Set a password to finish the migration.
+          Confirmed. Set a password to finish the migration.
         </p>
       )}
 
