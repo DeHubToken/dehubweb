@@ -216,8 +216,27 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
     </Button>
   );
 
-  const migratedAddress = migratedKey ? deriveFromSecret(migratedKey).ethAddress : null;
-  const showPasswordFields = mode !== 'migrate' || (!!migratedKey && addressConfirmed);
+  // deriveFromSecret throws on a key it cannot parse, and legacy Web3Auth keys
+  // are not always well-formed (leading zeros stripped to 63 hex chars, or not
+  // a valid secp256k1 scalar). Unguarded, that throw happens DURING RENDER, the
+  // moment setMigratedKey lands — React unmounts the whole subtree to the error
+  // boundary and the login modal vanishes right as the user is told their old
+  // wallet was retrieved. Degrade to an inline error instead.
+  let migratedAddress: string | null = null;
+  let migratedKeyError: string | null = null;
+  if (migratedKey) {
+    try {
+      migratedAddress = deriveFromSecret(migratedKey).ethAddress;
+    } catch (e) {
+      console.error('[WalletCreate] Could not derive an address from the migrated key:', e);
+      migratedKeyError = 'We could not read that old wallet key. Please try another login method, or contact support.';
+    }
+  }
+  // Never advance to the password step on a key we could not parse — the
+  // confirmation UI has no address to show and saving would store a wallet the
+  // user never verified.
+  const showPasswordFields =
+    mode !== 'migrate' || (!!migratedKey && !migratedKeyError && addressConfirmed);
 
   const OLD_LOGIN_LABELS: Record<string, string> = {
     google: 'Google', apple: 'Apple', twitter: 'X (Twitter)', discord: 'Discord',
@@ -348,6 +367,22 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
               </p>
             </>
           )}
+        </div>
+      )}
+
+      {mode === 'migrate' && migratedKey && migratedKeyError && (
+        <div className="space-y-3">
+          <div className="flex items-start gap-2 rounded-xl border border-red-400/40 bg-red-400/10 p-3 text-sm text-white">
+            <AlertTriangle className="w-4 h-4 mt-0.5 text-red-400 shrink-0" />
+            <p>{migratedKeyError}</p>
+          </div>
+          <Button
+            variant="ghost"
+            onClick={() => { setMigratedKey(null); setAddressConfirmed(false); }}
+            className="w-full"
+          >
+            Try a different login
+          </Button>
         </div>
       )}
 
