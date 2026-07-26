@@ -138,6 +138,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { useAppTheme, DEFAULT_THEME_HUES } from '@/contexts/ThemeContext';
 import { THEME_COLOR, isSpecialThemeColor } from '@/lib/theme-color';
 import { extractBrandColors } from '@/lib/brand-colors';
+import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
@@ -634,9 +635,7 @@ function ProfileSettings() {
   // instead of spinning forever; the error toast above already fired.
   if (!profileData && !profileError) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <Loader2 className="w-6 h-6 text-zinc-400 animate-spin" />
-      </div>
+      <DeHubPageLoader minHeight="40vh" />
     );
   }
 

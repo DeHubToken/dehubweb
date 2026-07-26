@@ -18,6 +18,7 @@ import i18nInstance from "@/i18n";
 import { HelmetProvider } from "react-helmet-async";
 import { SEOHead } from "@/components/SEOHead";
 import { HomeShellSkeleton } from "@/components/app/PageSkeletons";
+import { DeHubPageLoader } from "@/components/app/DeHubLoader";
 import { ThemeProvider, useAppTheme } from "@/contexts/ThemeContext";
 import { UserPreferencesProvider } from "@/contexts/UserPreferencesContext";
 import { lazyWithRetry } from "@/lib/lazy-with-retry";
@@ -134,9 +135,11 @@ const ConnectClaudePage = React.lazy(() => import("./pages/ConnectClaudePage"));
 
 
 
-// Empty fallback — the HTML boot shell (outside #root) handles first-paint visuals,
-// so React's Suspense fallback should be invisible to avoid a second loading stage.
-const PageLoader = () => null;
+// Route-chunk fallback. Was `null`, which meant a slow chunk (cold cache, bad
+// connection) showed a blank page for as long as it took. The DeHub mark fades
+// in on a 250 ms delay (see .dehub-loader-mark in index.css), so a fast chunk
+// still shows no loading stage — the original reason this was empty.
+const PageLoader = () => <DeHubPageLoader fullScreen />;
 
 /**
  * One-time cache migration for existing testers.
@@ -461,7 +464,9 @@ const WalletLoader = () => {
       </div>
     );
   }
-  return null;
+  // Everything else (marketing/standalone routes) used to get a blank screen
+  // for the whole wallet-chunk fetch.
+  return <DeHubPageLoader fullScreen />;
 };
 
 const App = () => (
