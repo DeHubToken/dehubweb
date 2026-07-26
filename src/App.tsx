@@ -1,6 +1,7 @@
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { MutationCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthenticationError } from "@/lib/api/dehub";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { OptimisticPostsProvider } from "@/hooks/use-optimistic-posts";
 // Direct import (not the modals barrel) so the barrel's other modals stay out
@@ -172,12 +173,29 @@ if (typeof window !== 'undefined') {
 }
 
 const queryClient = new QueryClient({
+  // Every write in the app funnels through a mutation, but only a handful of
+  // call sites ever checked for AuthenticationError. Everywhere else an
+  // expired session surfaced as a generic red toast in whichever component
+  // happened to catch it, leaving "sign out and back in" as the only fix the
+  // user could discover. This is the one place that catches all of them.
+  mutationCache: new MutationCache({
+    onError: (error) => {
+      if (error instanceof AuthenticationError) {
+        // Dispatched rather than handled here: this runs outside React, so it
+        // cannot touch auth context directly. AuthProvider listens.
+        window.dispatchEvent(new CustomEvent('dehub:auth-expired'));
+      }
+    },
+  }),
   defaultOptions: {
     queries: {
       staleTime: 5 * 60 * 1000,
       gcTime: 15 * 60 * 1000,
       refetchOnWindowFocus: false,
-      retry: 1,
+      // Retrying an auth failure just burns a round trip — apiCall has already
+      // tried to refresh by the time it throws AuthenticationError.
+      retry: (failureCount, error) =>
+        !(error instanceof AuthenticationError) && failureCount < 1,
     },
   },
 });

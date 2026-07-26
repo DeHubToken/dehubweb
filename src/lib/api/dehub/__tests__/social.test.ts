@@ -265,19 +265,24 @@ describe('follow request management', () => {
 // ──────────────────────────────────────────────
 
 describe('auth requirement', () => {
-  it('followUser throws when no token', async () => {
+  // These now reject with AuthenticationError rather than a plain
+  // Error('Authentication required'): the error type is what lets the UI offer
+  // a re-auth prompt instead of a dead-end toast.
+  it('followUser throws AuthenticationError when no session', async () => {
     localStorage.clear();
     mockFetch({});
     const { followUser } = await import('@/lib/api/dehub/social');
+    const { AuthenticationError } = await import('@/lib/api/dehub/core');
 
-    await expect(followUser('0x1')).rejects.toThrow('Authentication required');
+    await expect(followUser('0x1')).rejects.toThrow(AuthenticationError);
   });
 
-  it('voteOnPost throws when no token', async () => {
+  it('voteOnPost throws AuthenticationError when no session', async () => {
     localStorage.clear();
     mockFetch({});
     const { voteOnPost } = await import('@/lib/api/dehub/social');
+    const { AuthenticationError } = await import('@/lib/api/dehub/core');
 
-    await expect(voteOnPost({ tokenId: 1, voteType: 'for' })).rejects.toThrow('Authentication required');
+    await expect(voteOnPost({ tokenId: 1, voteType: 'for' })).rejects.toThrow(AuthenticationError);
   });
 });

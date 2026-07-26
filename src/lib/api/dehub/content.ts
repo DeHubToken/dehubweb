@@ -1,4 +1,4 @@
-import { DEHUB_API_BASE, apiCall, getAuthToken } from './core';
+import { apiCall, authedUpload } from './core';
 import type { DeHubNFT } from './types';
 
 export interface StreamInfo {
@@ -53,11 +53,11 @@ export async function mintPost(
   params: MintPostParams,
   onProgress?: (percent: number) => void
 ): Promise<MintResponse> {
-  const token = getAuthToken();
-  if (!token) {
-    throw new Error("Authentication required");
-  }
-
+  // No token snapshot and no early bail here: authedUpload() below refreshes a
+  // stale token before sending and replays once on a 401. Reading the token at
+  // this point instead meant a session that expired while the user was
+  // composing produced "Mint failed (HTTP 401)" with no way to recover short
+  // of signing out and back in.
   const formData = new FormData();
   formData.append('name', params.name);
   formData.append('description', params.description);
@@ -89,43 +89,11 @@ export async function mintPost(
     formData.append('file', params.thumbnail, 'thumbnail.jpg');
   }
 
-  return new Promise<MintResponse>((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
-
-    // Track upload progress (bytes sent to server)
-    xhr.upload.onprogress = (event) => {
-      if (event.lengthComputable && onProgress) {
-        const percent = Math.round((event.loaded / event.total) * 100);
-        onProgress(percent);
-      }
-    };
-
-    xhr.onload = () => {
-      if (xhr.status >= 200 && xhr.status < 300) {
-        try {
-          const data = JSON.parse(xhr.responseText);
-          resolve(data.result ?? data);
-        } catch {
-          reject(new Error('Invalid response from server'));
-        }
-      } else {
-        let errorData: Record<string, string> = {};
-        try { errorData = JSON.parse(xhr.responseText); } catch { /* ignore */ }
-        const msg = errorData.message || errorData.error || 'Unknown error';
-        console.error(`[MintPost] HTTP ${xhr.status} — ${msg}`, { responseText: xhr.responseText });
-        reject(new Error(`Mint failed (HTTP ${xhr.status}): ${msg}`));
-      }
-    };
-
-    xhr.onerror = () => reject(new Error('Upload failed — please check your connection and try again'));
-    xhr.ontimeout = () => reject(new Error('Upload timed out — your video may be too large or connection too slow'));
-
+  return authedUpload<MintResponse>('/api/user_mint', formData, {
+    onProgress,
     // 8-minute timeout for large video files on slow mobile connections
-    xhr.timeout = 8 * 60 * 1000;
-
-    xhr.open('POST', `${DEHUB_API_BASE}/api/user_mint`);
-    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-    xhr.send(formData);
+    timeoutMs: 8 * 60 * 1000,
+    unwrapResult: true,
   });
 }
 
@@ -201,34 +169,21 @@ export async function updateTokenVisibility(
   tokenId: number | string,
   visibility: TokenVisibility
 ): Promise<TokenVisibilityResponse> {
-  const token = getAuthToken();
-  
-  if (!token) {
-    throw new Error("Authentication required");
-  }
-
   const visibilityToStatus: Record<TokenVisibility, number> = {
     'public': 0,
     'private': 1,
     'unlisted': 2,
   };
 
-  const response = await fetch(`${DEHUB_API_BASE}/api/token_visibility`, {
+  // Routed through apiCall (was a hand-rolled fetch with a snapshotted token)
+  // so an expired session refreshes and retries instead of surfacing a raw
+  // "Failed to update visibility: 401".
+  return apiCall<TokenVisibilityResponse>('/api/token_visibility', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
-    },
-    body: JSON.stringify({
+    requiresAuth: true,
+    body: {
       tokenId: Number(tokenId),
       status: visibilityToStatus[visibility],
-    }),
+    },
   });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || errorData.error || `Failed to update visibility: ${response.status}`);
-  }
-
-  return response.json();
 }

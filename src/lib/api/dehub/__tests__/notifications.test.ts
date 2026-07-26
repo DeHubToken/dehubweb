@@ -145,10 +145,13 @@ describe('markAllNotificationsAsRead', () => {
 // ── Auth requirement ──
 
 describe('auth requirement', () => {
-  it('getNotifications throws without token', async () => {
+  it('getNotifications throws AuthenticationError without a session', async () => {
     localStorage.clear();
     mockFetch({});
     const { getNotifications } = await import('@/lib/api/dehub/notifications');
-    await expect(getNotifications()).rejects.toThrow('Authentication required');
+    const { AuthenticationError } = await import('@/lib/api/dehub/core');
+    // Typed error, not a plain Error('Authentication required'), so callers
+    // can distinguish "sign in again" from a generic request failure.
+    await expect(getNotifications()).rejects.toThrow(AuthenticationError);
   });
 });

@@ -1,4 +1,4 @@
-import { DEHUB_API_BASE, apiCall, getAuthToken } from './core';
+import { apiCall, authedUpload } from './core';
 import type { DeHubUser, DeHubNFT, PaginatedResponse } from './types';
 import type { ApiCommentResponse } from './comments';
 
@@ -97,12 +97,6 @@ export interface UpdateProfileData {
 }
 
 export async function updateProfile(data: UpdateProfileData): Promise<{ result: boolean }> {
-  const token = getAuthToken();
-  
-  if (!token) {
-    throw new Error("Authentication required");
-  }
-
   const formData = new FormData();
 
   if (data.username !== undefined) formData.append("username", data.username);
@@ -140,21 +134,7 @@ export async function updateProfile(data: UpdateProfileData): Promise<{ result: 
   formData.forEach((_, key) => keys.push(key));
   console.log('[updateProfile] FormData keys:', keys);
 
-  const response = await fetch(`${DEHUB_API_BASE}/api/update_profile`, {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${token}`,
-    },
-    body: formData,
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    console.error('[updateProfile] API error:', response.status, errorData);
-    throw new Error(errorData.message || errorData.error || `API error: ${response.status}`);
-  }
-
-  const result = await response.json();
+  const result = await authedUpload<{ result: boolean }>('/api/update_profile', formData);
   console.log('[updateProfile] API response:', JSON.stringify(result));
   return result;
 }

@@ -6,7 +6,7 @@ import { dhbText } from '@/lib/dhb-toast';
 import { createLogger } from '@/lib/logger';
 
 const mintLogger = createLogger('PostForm.handlePost');
-import { mintPost, createPoll, type StreamInfo } from '@/lib/api/dehub';
+import { mintPost, createPoll, AuthenticationError, type StreamInfo } from '@/lib/api/dehub';
 // NOTE: mint/bounty helpers reach wallet/contract code (wagmi + web3auth).
 // usePostForm is reachable from eager UI (PostModal is used by the sidebar /
 // bottom nav / feed), so those helpers are dynamically imported inside
@@ -191,7 +191,7 @@ interface UsePostFormReturn {
 export function usePostForm(onClose: () => void): UsePostFormReturn {
   const navigate = useNavigate();
   const { addOptimisticPost } = useOptimisticPosts();
-  const { user, connectionSource } = useAuth();
+  const { user, connectionSource, refreshSession, openLoginModal } = useAuth();
   
   // Restore active draft from localStorage
   const savedDraft = useRef(loadActiveDraft());
@@ -1486,6 +1486,26 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         // will have already triggered a logout with a toast. Just silently swallow this error
         // to avoid showing a second confusing toast on top of the logout one.
         console.warn('[Post] Wallet gone during post attempt — auth context handling logout');
+      } else if (error instanceof AuthenticationError) {
+        // The session died while the user was composing. Recover it in place:
+        // showing "Post failed: …" here is what forced people to sign out and
+        // back in just to publish, and it discards the draft in the process.
+        const toastId = toast.loading('Session expired — restoring…');
+        const recovered = await refreshSession();
+        toast.dismiss(toastId);
+
+        if (recovered) {
+          toast.error('Session restored — tap Post to try again.', {
+            description: 'Your draft is still here.',
+            duration: 8000,
+          });
+        } else {
+          toast.error('Please sign in again to post', {
+            description: 'Your draft is still here.',
+            action: { label: 'Sign in', onClick: openLoginModal },
+            duration: 10000,
+          });
+        }
       } else {
         toast.error(`Post failed: ${errorMsg}`);
       }
@@ -1498,7 +1518,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     isWatch2Earn, w2eViews, w2eComments, w2eTotal,
     isTokenGated, tokenContract, tokenSymbol, tokenAmount, liveMode, scheduledDate,
     hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user,
-    showTitle, titleText, connectionSource, poll, pollIsValid, chainId
+    showTitle, titleText, connectionSource, poll, pollIsValid, chainId,
+    refreshSession, openLoginModal
   ]);
 
   return {
