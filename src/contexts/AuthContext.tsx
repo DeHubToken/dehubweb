@@ -63,7 +63,13 @@ export interface AuthContextType {
   disconnect: () => Promise<void>;
   refreshUser: () => Promise<void>;
   patchUser: (patch: Partial<DeHubUser>) => void;
-  refreshSession: () => Promise<boolean>;
+  /**
+   * Re-establish a usable DeHub session. Pass `force` when reacting to a
+   * request the server actually rejected — without it, a token that only looks
+   * valid against the local clock short-circuits to `true` and the caller
+   * reports a success that never happened.
+   */
+  refreshSession: (force?: boolean) => Promise<boolean>;
   setRequiresUsername: (value: boolean) => void;
   setWagmiAuthIntent: (value: boolean) => void;
   // Login modal state
