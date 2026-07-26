@@ -1466,6 +1466,12 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       // with a reconnect action instead of the raw technical error.
       const isWalletGone = errorMsg.toLowerCase().includes('no wallet connected') ||
         errorMsg.toLowerCase().includes('please sign in first');
+      // aa-utils throws this after dispatching dehub:wallet-unlock-required, so
+      // the unlock modal is already opening. The smart-wallet key only lives in
+      // memory, so this fires on the first post after any page refresh — i.e.
+      // constantly. A red "Post failed" on top of the unlock prompt reads as
+      // "you were signed out", which is exactly what it isn't.
+      const isWalletLocked = errorMsg.toLowerCase().includes('wallet is locked');
       const isSolanaWalletIssue =
         isSolanaChain(chainId) ||
         errorMsg.toLowerCase().includes('phantom') ||
@@ -1481,6 +1487,13 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         const gasName = chainId === 56 ? 'BNB' : 'ETH';
         const chainName = chainId === 56 ? 'BNB' : chainId === 1 ? 'Ethereum' : 'Base';
         toast.error(`Post failed: Insufficient ${gasName} for gas on ${chainName}. Add ${gasName} to your wallet and try again.`);
+      } else if (isWalletLocked) {
+        // Not a failure the user caused, and not a sign-out. The unlock dialog
+        // is already on screen; tell them what it's for and that nothing was lost.
+        toast.info('Unlock your wallet to finish posting', {
+          description: 'Your draft is still here — tap Post again once unlocked.',
+          duration: 8000,
+        });
       } else if (isWalletGone && connectionSource === 'wagmi') {
         // Wallet connection dropped mid-session. The silent reconnect effect in AuthContext
         // will have already triggered a logout with a toast. Just silently swallow this error
@@ -1491,7 +1504,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         // showing "Post failed: …" here is what forced people to sign out and
         // back in just to publish, and it discards the draft in the process.
         const toastId = toast.loading('Session expired — restoring…');
-        const recovered = await refreshSession();
+        const recovered = await refreshSession(true);
         toast.dismiss(toastId);
 
         if (recovered) {
