@@ -1,0 +1,144 @@
+/* ==========================================================================
+   WAR - brand mark and menu glyph treatment
+   ==========================================================================
+
+   Phosphor-green holographic glow for the DeHub mark and the menu glyphs that
+   sit beside it, across all three places the mark appears: the desktop sidebar
+   (full wordmark and the collapsed compact mark), the mobile header, and the
+   collapsed/fullscreen states that reuse those same nodes.
+
+   WHY GREEN, when the rest of the theme is cyan:
+   The theme rule elsewhere is one accent, deliberately. The brand mark is the
+   single sanctioned exception: night-vision phosphor green against HUD cyan is
+   a real tactical pairing (NVG tube vs glass readout), so the mark reads as a
+   physically different light source rather than a second UI accent. Nothing
+   else in the theme may use these tokens.
+
+   WHY ATTRIBUTE SELECTORS INSTEAD OF data-* HOOKS:
+   `alt="dehub"` (lowercase) is carried by exactly the three nav brand marks and
+   nothing else. The coin glyphs elsewhere use `alt="DeHub"` (capital H) and are
+   deliberately NOT matched here, since a glowing currency icon would read as a
+   status indicator. Attribute selectors are case-sensitive in the value, which
+   is what makes that distinction hold.
+
+   Loaded after war-theme.css so it wins on the shared filter property, which
+   the canvas-theme block in index.css also sets on mobile-header images.
+   ========================================================================== */
+
+html[data-theme='war'] {
+  /* Phosphor tube green. Scoped to the brand mark only. */
+  --war-phosphor: 62 245 143;
+  --war-phosphor-dim: 32 156 92;
+  /* Faint cyan fringe. Borrowed from the HUD accent so the holographic split
+     ties back to the rest of the theme instead of inventing a third colour. */
+  --war-fringe: 79 227 224;
+}
+
+/* --------------------------------------------------------------------------
+   The mark itself.
+
+   The source PNGs are white, so the green comes from a tint chain rather than
+   a recolour: sepia lays down a neutral warm base that hue-rotate can steer
+   (hue-rotate alone does nothing to pure white, which has no hue to rotate).
+   The tint is kept mild and paired with a bright bloom so the mark keeps a
+   near-white core, which is what makes it read as an emissive display rather
+   than a flat green sticker.
+
+   The two offset drop-shadows at opposing sub-pixel offsets in green and cyan
+   are the "holographic" part: a chromatic split too small to read as a blur,
+   large enough to suggest the mark is being projected.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] img[alt='dehub'] {
+  filter:
+    sepia(0.55) hue-rotate(72deg) saturate(2.1) brightness(1.06)
+    drop-shadow(-0.5px 0 0.5px rgb(var(--war-fringe) / 0.5))
+    drop-shadow(0.5px 0 0.5px rgb(var(--war-phosphor) / 0.5))
+    drop-shadow(0 0 5px rgb(var(--war-phosphor) / 0.55))
+    drop-shadow(0 0 14px rgb(var(--war-phosphor-dim) / 0.45));
+  animation: war-phosphor-breathe 5.5s ease-in-out infinite;
+  will-change: filter;
+}
+
+/* --------------------------------------------------------------------------
+   Menu glyphs.
+
+   The burger sits directly beside the mark in both the desktop sidebar and the
+   mobile header, so leaving it plain white breaks the pair. These are
+   `currentColor` SVGs rather than images, so the colour is set directly and
+   only the bloom needs a filter.
+
+   Targeted by aria-label because these buttons carry no data hook. Four labels
+   cover every burger in the app: the sidebar toggle, the mobile drawer trigger,
+   the logged-out variant, and the drawer's own close affordance.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] :is(
+    [aria-label='Toggle sidebar'],
+    [aria-label='Toggle menu'],
+    [aria-label='Log in']
+  ) > svg {
+  color: rgb(var(--war-phosphor));
+  filter:
+    drop-shadow(0 0 4px rgb(var(--war-phosphor) / 0.55))
+    drop-shadow(0 0 11px rgb(var(--war-phosphor-dim) / 0.4));
+  transition: color 160ms linear, filter 160ms linear;
+}
+
+html[data-theme='war'] :is(
+    [aria-label='Toggle sidebar'],
+    [aria-label='Toggle menu'],
+    [aria-label='Log in']
+  ):hover > svg {
+  color: rgb(var(--war-phosphor) / 1);
+  filter:
+    drop-shadow(0 0 6px rgb(var(--war-phosphor) / 0.8))
+    drop-shadow(0 0 18px rgb(var(--war-phosphor-dim) / 0.55));
+}
+
+/* The canvas-theme block in index.css puts a heavy black drop-shadow on every
+   image and svg in the mobile header so they survive a bright nebula. War's
+   backdrop is near-black, so that halo does nothing but mute the phosphor
+   bloom. Re-assert the glow for the mark specifically; the other header icons
+   keep the black halo, which they still need. */
+html[data-theme='war'] [data-mobile-header] img[alt='dehub'] {
+  filter:
+    sepia(0.55) hue-rotate(72deg) saturate(2.1) brightness(1.06)
+    drop-shadow(-0.5px 0 0.5px rgb(var(--war-fringe) / 0.5))
+    drop-shadow(0.5px 0 0.5px rgb(var(--war-phosphor) / 0.5))
+    drop-shadow(0 0 5px rgb(var(--war-phosphor) / 0.6))
+    drop-shadow(0 0 15px rgb(var(--war-phosphor-dim) / 0.5));
+}
+
+/* Breathing is a slow bloom swell, not a colour or position change, so it
+   cannot cause layout work and stays cheap enough to run indefinitely. */
+@keyframes war-phosphor-breathe {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme='war'] img[alt='dehub'] {
+    animation: none;
+  }
+}
+
+/* With transparency reduced the bloom is the first thing to go: keep the tint
+   so the mark still reads as phosphor, drop the halo that depends on it. */
+@media (prefers-reduced-transparency: reduce) {
+  html[data-theme='war'] img[alt='dehub'],
+  html[data-theme='war'] [data-mobile-header] img[alt='dehub'] {
+    filter: sepia(0.55) hue-rotate(72deg) saturate(2.1) brightness(1.06);
+    animation: none;
+  }
+  html[data-theme='war'] :is(
+      [aria-label='Toggle sidebar'],
+      [aria-label='Toggle menu'],
+      [aria-label='Log in']
+    ) > svg {
+    filter: none;
+  }
+}
