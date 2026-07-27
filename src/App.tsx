@@ -73,6 +73,9 @@ const WarBackground = React.lazy(() =>
 const WarPreloader = React.lazy(() =>
   import("@/components/app/WarPreloader").then(m => ({ default: m.WarPreloader }))
 );
+const WarGameLauncher = React.lazy(() =>
+  import("@/components/app/war/WarGameLauncher").then(m => ({ default: m.WarGameLauncher }))
+);
 
 function ThemedBackgrounds() {
   const { theme } = useAppTheme();
@@ -90,6 +93,7 @@ function ThemedBackgrounds() {
       {theme === "lavalamp" && <LavaLampBackground />}
       {theme === "war" && <WarBackground />}
       {theme === "war" && <WarPreloader />}
+      {theme === "war" && <WarGameLauncher />}
     </Suspense>
   );
 }

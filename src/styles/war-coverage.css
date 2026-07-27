@@ -328,6 +328,149 @@ html[data-theme='war'] .fixed.inset-0 > :is(.bg-zinc-900, .bg-zinc-950) {
     0 18px 60px rgb(0 0 0 / 0.6) !important;
 }
 
+/* --------------------------------------------------------------------------
+   9. Game launcher.
+
+   The deploy prompt sits above the app but below the boot sequence, and never
+   takes pointer events away from the page it covers: it is an offer, not a
+   modal, so the feed stays fully usable while it is on screen.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [data-war-deploy-prompt] {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 9000;
+  width: min(300px, calc(100vw - 40px));
+  padding: 14px 16px 16px;
+  background: rgb(var(--war-gunmetal) / 0.96);
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.55),
+    0 0 26px rgb(var(--war-hud) / 0.18),
+    0 18px 50px rgb(0 0 0 / 0.6);
+  clip-path: polygon(
+    12px 0,
+    100% 0,
+    100% calc(100% - 12px),
+    calc(100% - 12px) 100%,
+    0 100%,
+    0 12px
+  );
+  animation: war-deploy-in 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes war-deploy-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+html[data-theme='war'] [data-war-deploy-kicker] {
+  font-family: var(--war-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgb(var(--war-sand) / 0.75);
+}
+
+html[data-theme='war'] [data-war-deploy-title] {
+  font-family: var(--war-mono);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(var(--war-hud));
+  margin-top: 6px;
+  text-shadow: 0 0 10px rgb(var(--war-hud) / 0.5);
+}
+
+html[data-theme='war'] [data-war-deploy-actions] {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+html[data-theme='war'] [data-war-deploy-actions] > button {
+  flex: 1;
+  padding: 8px 6px;
+  font-family: var(--war-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgb(var(--war-hud));
+  background: rgb(var(--war-hud) / 0.12);
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.45);
+  transition: background 140ms linear, box-shadow 140ms linear;
+}
+
+html[data-theme='war'] [data-war-deploy-actions] > button:last-child {
+  color: rgb(var(--war-sand) / 0.8);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-sand) / 0.28);
+}
+
+html[data-theme='war'] [data-war-deploy-actions] > button:hover {
+  background: rgb(var(--war-hud) / 0.24);
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.9);
+}
+
+/* The game surface itself takes the whole viewport. */
+html[data-theme='war'] [data-war-game-overlay] {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  background: rgb(var(--war-void));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+html[data-theme='war'] [data-war-game-frame] {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+html[data-theme='war'] [data-war-game-exit] {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  padding: 8px 12px;
+  font-family: var(--war-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: rgb(var(--war-hud));
+  background: rgb(var(--war-gunmetal) / 0.9);
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.5);
+}
+
+html[data-theme='war'] [data-war-game-missing] {
+  max-width: 420px;
+  padding: 28px;
+  text-align: center;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.35);
+}
+
+html[data-theme='war'] [data-war-game-missing] > p:last-child {
+  margin-top: 10px;
+  font-family: var(--war-mono);
+  font-size: 11px;
+  line-height: 1.6;
+  color: rgb(var(--war-sand) / 0.75);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme='war'] [data-war-deploy-prompt] {
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-transparency: reduce) {
   html[data-theme='war'] :is(
       [role='dialog'],
