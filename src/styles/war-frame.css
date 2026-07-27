@@ -1,0 +1,1070 @@
+/* ==========================================================================
+   WAR - core HUD frame system
+   ==========================================================================
+
+   This file is the vocabulary. war-theme.css is the binding.
+
+   Everything here is a primitive: a token, or a drawing system exposed as a
+   data-* hook. Nothing here decides which surface gets which treatment, and
+   nothing here sets a panel fill. That separation is deliberate. The shipped
+   first pass failed because decoration was inlined per surface, so every new
+   surface meant new bespoke CSS and the theme could never get denser without
+   a rewrite. Here each motif is one rule block, reused N times.
+
+   LOAD ORDER (main.tsx):
+     index.css  ->  war-frame.css  ->  war-theme.css
+   war-frame.css must come after index.css so its token redefinitions win the
+   tie against the shared canvas-theme block (both score 0,1,1), and before
+   war-theme.css so the bindings can consume the tokens.
+
+   THE HOOKS
+
+     [data-war-cut]        chamfered corners. Safe on containers that overflow,
+                           contain sticky children, or carry backdrop-filter.
+     [data-war-cut~=clip]  chamfered corners via clip-path. Leaf elements only.
+     [data-war-frame]      full 1px hairline outline (chamfered if combined
+                           with [data-war-cut], rectangular on its own).
+     [data-war-brackets]   four corner brackets, the targeting-frame motif.
+     [data-war-ruler]      tick-mark ruler along one edge, instrument bezel.
+     [data-war-chip]       angled-end banner chip.
+     [data-war-meter]      segmented progress / level meter.
+     [data-war-label]      dense mono caps kicker.
+     [data-war-readout]    mono numerics, never case-transformed.
+     [data-war-glow]       opt-in stroke bloom.
+
+   TWO PSEUDO-ELEMENTS, TWO JOBS. Every primitive shares one layout so they
+   compose instead of fighting over the same slot:
+     ::before  the OVERLAY layer  - brackets and rulers (annotation)
+     ::after   the FRAME layer    - the chamfered hairline (outline)
+   A surface can therefore carry a chamfer, a bracket set and a ruler at once.
+   That is the ceiling the first pass hit: it spent both slots on two corner
+   ticks and had nothing left.
+
+   PALETTE LOCK. One accent, --war-hud. --war-alert is not a second accent; it
+   is reserved for genuine live/recording state and the only primitive allowed
+   to reach for it is [data-war-chip~='hazard'].
+
+   CLIP-PATH RULE. clip-path clips everything the element paints, including
+   box-shadow, overflowing children, and any absolutely-positioned popover
+   anchored inside it. Use it only where the element is a leaf whose children
+   can never escape its box: chips, badges, buttons, meter fills. For panels,
+   navs and anything with a dropdown inside, use the pseudo-element chamfer.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Animatable custom properties.
+
+   Registration has to happen at the top level, so these three names are
+   global rather than theme-scoped. They are war-prefixed and read by nothing
+   outside this file, so the only cost is three entries in the property
+   registry. The win is that --war-cut and --war-bracket-len become real
+   interpolable lengths, which is what turns a bracket set into a lock-on
+   animation instead of a snap. inherits:true is mandatory: pseudo-elements
+   read these off their originating element.
+   -------------------------------------------------------------------------- */
+@property --war-cut {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 10px;
+}
+@property --war-bracket-len {
+  syntax: '<length>';
+  inherits: true;
+  initial-value: 14px;
+}
+@property --war-meter-fill {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+/* ==========================================================================
+   1. TOKENS
+   ==========================================================================
+   Single source of truth. war-theme.css consumes these and must not redeclare
+   them, or the two files will drift the way the canvas cyan and the CSS cyan
+   already did.
+   ========================================================================== */
+
+html[data-theme='war'] {
+  /* -- palette ----------------------------------------------------------- */
+  --war-hud: 79 227 224; /* the single accent */
+  --war-hud-dim: 44 132 131; /* inactive frames, secondary strokes */
+  --war-olive: 47 58 36; /* olive drab wash over panel fills */
+  --war-gunmetal: 14 20 18; /* panel fill */
+  --war-void: 6 10 9; /* page backdrop */
+  --war-sand: 197 186 156; /* readout text */
+
+  /* SEMANTIC ONLY. Live, recording, destructive-confirm. Never decoration,
+     never a status colour for "down 3%", never an unread count. */
+  --war-alert: 214 68 52;
+  /* Same hue lifted until 10px caps clear 4.5:1 on the panel fill (about
+     5.5:1). The base --war-alert measures 4.29:1 as text, which fails, so it
+     is a fill/stroke value only. This is not a second accent; it is the same
+     one at a legible luminance. */
+  --war-alert-hot: 236 92 74;
+
+  /* -- type -------------------------------------------------------------- */
+  /* System mono, not a webfont. The app already pays for one Google Fonts
+     request (Exo); a second one for chrome text is not worth the LCP cost,
+     and mono caps at wide tracking carry the readout feel on their own. */
+  --war-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
+    'Liberation Mono', monospace;
+
+  /* Three type roles, applied by role and never by taste. The label is the
+     dense kicker the reference sheet gets most of its texture from; the
+     readout is for numbers, handles and timestamps and is deliberately NOT
+     uppercased, because text-transform is locale-sensitive (Turkish dotted
+     and dotless i) and destroys the readability of user-authored strings. */
+  --war-label-size: 10px;
+  --war-label-track: 0.22em;
+  --war-readout-size: 11px;
+  --war-readout-track: 0.06em;
+  --war-heading-track: 0.1em;
+
+  /* Text colours, measured against the panel fill (gunmetal at --glass-regular
+     over the void). Do not go below --war-text-faint: 0.62 alpha is roughly
+     4.6:1 and is the AA floor for normal-size text. 0.5, which the first pass
+     used for placeholders, measures 3.3:1 and fails. */
+  --war-text: rgb(var(--war-sand) / 0.94);
+  --war-text-muted: rgb(var(--war-sand) / 0.78);
+  --war-text-faint: rgb(var(--war-sand) / 0.62);
+  --war-text-hud: rgb(var(--war-hud));
+
+  /* -- strokes ----------------------------------------------------------- */
+  /* Everything in the reference sheet is a 1px stroke. Keep the weight fixed
+     and vary alpha, not width: a 2px HUD line reads as a border, not a HUD. */
+  --war-line-w: 1px;
+  --war-line: rgb(var(--war-hud) / 0.45);
+  --war-line-hot: rgb(var(--war-hud) / 0.85);
+  --war-line-dim: rgb(var(--war-hud-dim) / 0.6);
+
+  /* Panel ring. Raised from the shipped 0.18: cyan at 0.18 over a near-black
+     fill is invisible on a typical laptop panel, which left the theme with no
+     stroke for the glow to attach to. */
+  --war-edge:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.32),
+    inset 0 1px 0 rgb(var(--war-hud) / 0.14);
+  --war-edge-hot:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.55),
+    inset 0 1px 0 rgb(var(--war-hud) / 0.2);
+
+  --war-focus: 2px solid rgb(var(--war-hud) / 0.9);
+
+  /* -- glow -------------------------------------------------------------- */
+  /* The bloom is why the sheet reads as an emissive display rather than a
+     print diagram, so this theme gets glow where the base design system would
+     not. It needs a hard budget or it becomes 2013 sci-fi:
+       - attaches to cyan strokes and cyan-on-dark labels only
+       - never to white or sand body copy
+       - never a blur radius above 8px
+       - never two glow layers on one element
+       - never on [data-feed-item]: it repeats 30 times per screen
+     --war-glow-drop defaults to none because filter forces an offscreen pass
+     per element. It is opt-in via [data-war-glow] and on by default only for
+     bracket sets, which are chrome-only and sparse by contract. */
+  --war-glow: 0 0 6px rgb(var(--war-hud) / 0.18);
+  --war-glow-text: 0 0 8px rgb(var(--war-hud) / 0.22);
+  --war-glow-drop-on: drop-shadow(0 0 3px rgb(var(--war-hud) / 0.28));
+  --war-glow-drop: none;
+
+  /* -- geometry ---------------------------------------------------------- */
+  --war-cut: 10px;
+  --war-bracket-len: 14px;
+  --war-bracket-w: 1px;
+  --war-ruler-h: 6px; /* major tick height */
+  --war-ruler-minor-h: 3px;
+  --war-ruler-step: 8px; /* minor tick pitch */
+  --war-ruler-major-step: 40px;
+
+  --war-meter-h: 8px;
+  --war-meter-seg: 6px; /* lit cell */
+  --war-meter-gap: 3px; /* dead space between cells */
+
+  /* -- timing ------------------------------------------------------------ */
+  /* HUD controls snap. They do not squash, and they do not ease in over
+     200ms; 60ms linear is the difference between a switch and a bubble. */
+  --war-snap: 60ms linear;
+  --war-lock: 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  --war-fade: 240ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* -- overlay film ------------------------------------------------------ */
+  /* 45 sits above page content and below every portalled surface: Radix
+     dialogs, menus and tooltips are z-50, the mobile bottom nav is z-50,
+     vaul drawers are z-100, Sonner sets its own. The shipped value of 60 was
+     above dialogs but below drawers, so the film covered half the overlays
+     and vanished on the other half. */
+  --war-film-z: 45;
+  --war-film-opacity: 1;
+
+  /* -- bridge to the shared glass tokens ---------------------------------
+     War joined every canvas-theme :is() list in index.css and docs-glass.css,
+     which means it inherits rules built on these names. The first pass
+     redefined the fill tokens but not the edge tokens, so /docs, /blog and
+     every shared glass rule kept painting a white 160deg sheen and a white
+     hairline on gunmetal. Redefining all of them here fixes those surfaces
+     without a single new selector. */
+  --glass-tint: var(--war-gunmetal);
+  --glass-thin: 0.72;
+  --glass-regular: 0.82;
+  --glass-raised: 0.9;
+  --glass-blur: blur(10px) saturate(115%);
+  --glass-highlight: linear-gradient(
+    178deg,
+    rgb(var(--war-olive) / 0.24) 0%,
+    rgb(var(--war-gunmetal) / 0) 42%
+  );
+  --glass-edge: var(--war-edge), 0 8px 32px rgb(0 0 0 / 0.42);
+  --glass-edge-flat: var(--war-edge);
+  --glass-edge-panel: var(--war-edge), 0 12px 24px -20px rgb(0 0 0 / 0.55);
+}
+
+/* --------------------------------------------------------------------------
+   Backdrop.
+
+   #root carries background-color:black from the base layer, which sat on top
+   of the theme's own void and made the documented "the CSS layer already
+   paints an olive backdrop" WebGL fallback a lie: a blocked or lost context
+   left the user on pure #000 with no sign the theme had loaded. Clearing it
+   lets the root background through.
+
+   The vignette and the olive ground haze sit on body::before rather than on
+   the root background, because background-attachment:fixed on the root is
+   unreliable (iOS Safari has historically resolved it against the document
+   box, which on a long feed would stretch the gradient to nothing). A
+   position:fixed pseudo is deterministic everywhere.
+
+   It lands in the same layer as the WebGL canvas and paints under it: both
+   are fixed at z-index 0, and body::before precedes #root in tree order, so
+   it resolves below the canvas and below every app surface. That is the point
+   of putting it there rather than over the top. A vignette that veils content
+   costs contrast on posts near the screen edge; a vignette under the canvas
+   only darkens the backdrop, and it doubles as the still-image fallback when
+   the WebGL context is blocked or lost.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] {
+  background-color: rgb(var(--war-void));
+}
+
+html[data-theme='war'] #root {
+  background-color: transparent;
+}
+
+html[data-theme='war'] body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(130% 90% at 50% 44%, transparent 42%, rgb(0 0 0 / 0.5) 100%),
+    radial-gradient(
+      70rem 46rem at 50% 64%,
+      rgb(var(--war-olive) / 0.3),
+      transparent 72%
+    ),
+    rgb(var(--war-void));
+}
+
+/* ==========================================================================
+   2. SQUARE GEOMETRY
+   ==========================================================================
+   One rule, complete coverage, honouring the documented opt-out. The first
+   pass squared a hand-picked list of nine hooks plus every <button>, which
+   was simultaneously too narrow (416 rounded-full elements, every portalled
+   dropdown, Avatar, Badge, Switch, Slider and Progress all survived) and too
+   broad (it squared circular avatar buttons and the create FAB, the one
+   category that has to stay round). minimal and light both solve this with
+   the pattern below, and both honour [data-keep-round]; War now does too.
+
+   Chamfered elements are excluded rather than overridden: the blanket rule
+   scores (0,3,1) with its two :not() arguments, which beats any reasonable
+   chamfer selector, so exclusion is the only way the two systems coexist.
+
+   NOTE for the binding pass: [data-keep-round] currently has zero call sites
+   in src, so honouring it is free today but does nothing until it is added to
+   the avatar wrapper, the mobile create FAB and the spinner rings.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] *:not([data-keep-round]):not([data-war-cut]) {
+  border-radius: 0 !important;
+}
+html[data-theme='war'] *:not([data-keep-round]):not([data-war-cut])::before,
+html[data-theme='war'] *:not([data-keep-round]):not([data-war-cut])::after {
+  border-radius: 0 !important;
+}
+
+/* ==========================================================================
+   3. SHARED PSEUDO SCAFFOLD
+   ==========================================================================
+   position:relative is set at zero specificity through :where() so that any
+   element already carrying .sticky, .absolute or .fixed keeps its own
+   position. Forcing relative on a sticky nav would silently unstick it, and
+   these hooks are meant to be droppable onto existing markup without reading
+   it first.
+   ========================================================================== */
+:where(html[data-theme='war'])
+  :where(
+    [data-war-cut],
+    [data-war-frame],
+    [data-war-brackets],
+    [data-war-ruler],
+    [data-war-chip],
+    [data-war-meter]
+  ) {
+  position: relative;
+}
+
+/* ==========================================================================
+   4. CHAMFER
+   ==========================================================================
+   Cut corners are the load-bearing motif of the reference sheet, and the
+   detail that makes them read is the bright hairline running ALONG the
+   diagonal. The shipped implementation cut the corner with clip-path and then
+   drew the ring with inset box-shadow, which clip-path immediately clipped
+   away, so the cuts were bare notches with no stroke on them at all.
+
+   Two variants:
+
+   [data-war-cut]         SAFE. Fill geometry comes from corner-shape where
+                          the browser has it, the stroke always comes from a
+                          pseudo-element. Nothing clips children, so sticky
+                          descendants, overflow-visible drag handles and
+                          absolutely-positioned popovers anchored inside all
+                          survive. Use for panels, navs, modals, drawers,
+                          anything with content that can escape its box.
+
+   [data-war-cut~='clip'] clip-path on the element itself. Genuinely cuts the
+                          fill in every browser, but clips children and drops
+                          any outer box-shadow. Use only for leaves: chips,
+                          badges, buttons, tiles.
+
+   Per-corner control is exposed so a surface can be cut where the layout
+   justifies it. The bottom nav, for example, sits flush against the physical
+   screen edge, so it takes top cuts only; that asymmetry is earned, unlike
+   the shipped nav's single diagonal pair which read as a rendering accident.
+
+     [data-war-cut]              all four corners
+     [data-war-cut~='top']       top two
+     [data-war-cut~='bottom']    bottom two
+     [data-war-cut~='diag']      top-left and bottom-right
+     [data-war-cut~='sm|lg']     6px / 16px instead of 10px
+   ========================================================================== */
+
+/* The frame layer. One pseudo carries eight background layers: four corner
+   diagonals and four edge runs. The edge runs default to transparent because
+   most surfaces already have their own ring from --war-edge and two parallel
+   hairlines a pixel apart read as a fat double border. [data-war-frame] turns
+   them on for surfaces that have no ring of their own. */
+html[data-theme='war'] :is([data-war-cut], [data-war-frame])::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* No z-index on purpose. A positioned pseudo already paints above the
+     element's in-flow content by tree order, and giving it a number would
+     promote it into the nearest ancestor stacking context, where it could
+     paint over a neighbouring panel entirely if this element happens not to
+     be a stacking context itself. */
+  --war-cut-tl: 0px;
+  --war-cut-tr: 0px;
+  --war-cut-br: 0px;
+  --war-cut-bl: 0px;
+  --war-frame-line: var(--war-line);
+  --war-frame-edge: transparent;
+  /* Painted outside the diagonal in the no-corner-shape fallback, see below. */
+  --war-frame-mask: transparent;
+
+  /* Each corner gradient runs its axis INWARD, so the 50% stop lands exactly
+     on the chamfer line and the 1px band sits just inside it. That keeps the
+     stroke fully visible under the clip variant, where anything straddling
+     the boundary would lose half its width. */
+  background-image:
+    linear-gradient(
+      135deg,
+      var(--war-frame-mask) 0 50%,
+      var(--war-frame-line) 50% calc(50% + var(--war-line-w)),
+      transparent 0
+    ),
+    linear-gradient(
+      225deg,
+      var(--war-frame-mask) 0 50%,
+      var(--war-frame-line) 50% calc(50% + var(--war-line-w)),
+      transparent 0
+    ),
+    linear-gradient(
+      315deg,
+      var(--war-frame-mask) 0 50%,
+      var(--war-frame-line) 50% calc(50% + var(--war-line-w)),
+      transparent 0
+    ),
+    linear-gradient(
+      45deg,
+      var(--war-frame-mask) 0 50%,
+      var(--war-frame-line) 50% calc(50% + var(--war-line-w)),
+      transparent 0
+    ),
+    linear-gradient(var(--war-frame-edge) 0 0),
+    linear-gradient(var(--war-frame-edge) 0 0),
+    linear-gradient(var(--war-frame-edge) 0 0),
+    linear-gradient(var(--war-frame-edge) 0 0);
+  background-size:
+    var(--war-cut-tl) var(--war-cut-tl),
+    var(--war-cut-tr) var(--war-cut-tr),
+    var(--war-cut-br) var(--war-cut-br),
+    var(--war-cut-bl) var(--war-cut-bl),
+    max(0px, 100% - var(--war-cut-tl) - var(--war-cut-tr)) var(--war-line-w),
+    var(--war-line-w) max(0px, 100% - var(--war-cut-tr) - var(--war-cut-br)),
+    max(0px, 100% - var(--war-cut-bl) - var(--war-cut-br)) var(--war-line-w),
+    var(--war-line-w) max(0px, 100% - var(--war-cut-tl) - var(--war-cut-bl));
+  background-position:
+    top left,
+    top right,
+    bottom right,
+    bottom left,
+    var(--war-cut-tl) top,
+    right var(--war-cut-tr),
+    var(--war-cut-bl) bottom,
+    left var(--war-cut-tl);
+  background-repeat: no-repeat;
+  /* drop-shadow rather than box-shadow so the bloom follows the drawn shape,
+     including the diagonals. Defaults to none, see the glow budget. */
+  filter: var(--war-glow-drop);
+}
+
+html[data-theme='war'] [data-war-cut]::after {
+  --war-cut-tl: var(--war-cut);
+  --war-cut-tr: var(--war-cut);
+  --war-cut-br: var(--war-cut);
+  --war-cut-bl: var(--war-cut);
+}
+
+/* Size modifiers. Set --war-cut inline for anything in between. */
+html[data-theme='war'] [data-war-cut~='sm'] {
+  --war-cut: 6px;
+}
+html[data-theme='war'] [data-war-cut~='lg'] {
+  --war-cut: 16px;
+}
+
+/* Corner selection. */
+html[data-theme='war'] [data-war-cut~='top']::after {
+  --war-cut-br: 0px;
+  --war-cut-bl: 0px;
+}
+html[data-theme='war'] [data-war-cut~='bottom']::after {
+  --war-cut-tl: 0px;
+  --war-cut-tr: 0px;
+}
+html[data-theme='war'] [data-war-cut~='diag']::after {
+  --war-cut-tr: 0px;
+  --war-cut-bl: 0px;
+}
+
+/* Full outline: turn the four edge runs on. On its own this is a plain
+   rectangular hairline, which is the right treatment for portalled surfaces
+   that arrive with no ring at all. */
+html[data-theme='war'] [data-war-frame]::after {
+  --war-frame-edge: var(--war-frame-line);
+}
+html[data-theme='war'] [data-war-frame~='hot']::after {
+  --war-frame-line: var(--war-line-hot);
+}
+html[data-theme='war'] [data-war-frame~='dim']::after {
+  --war-frame-line: var(--war-line-dim);
+}
+
+/* Where corner-shape exists, the element's own background, backdrop-filter
+   region and inset ring are all beveled to match the drawn diagonal, so the
+   fill is genuinely cut and the pseudo stroke lands exactly on the bevel.
+   Unlike clip-path this is a border-box shape, so overflow:visible children
+   still escape and sticky descendants still stick.
+
+   !important is required: it has to beat inline border-radius (GlassIndicator
+   sets 0.75rem in a style attribute) as well as any Tailwind rounded-*. */
+@supports (corner-shape: bevel) {
+  html[data-theme='war'] [data-war-cut]:not([data-war-cut~='clip']) {
+    border-radius: var(--war-cut) !important;
+    corner-shape: bevel;
+  }
+  html[data-theme='war'] [data-war-cut~='top']:not([data-war-cut~='clip']) {
+    border-radius: var(--war-cut) var(--war-cut) 0 0 !important;
+  }
+  html[data-theme='war'] [data-war-cut~='bottom']:not([data-war-cut~='clip']) {
+    border-radius: 0 0 var(--war-cut) var(--war-cut) !important;
+  }
+  html[data-theme='war'] [data-war-cut~='diag']:not([data-war-cut~='clip']) {
+    border-radius: var(--war-cut) 0 var(--war-cut) 0 !important;
+  }
+}
+
+/* Fallback for engines without corner-shape (Firefox at time of writing).
+   The fill stays a rectangle, so without help the square corner pokes out
+   past the diagonal. Knocking that triangle back toward the backdrop colour
+   costs nothing: it is a stop in a gradient layer that is already being
+   painted. Surfaces with no fill of their own should opt out with
+   --war-frame-mask: transparent. */
+@supports not (corner-shape: bevel) {
+  html[data-theme='war'] [data-war-cut]::after {
+    --war-frame-mask: rgb(var(--war-void) / 0.82);
+  }
+}
+
+/* The clip variant. Genuinely cuts the fill everywhere, at the cost of
+   clipping children and swallowing any outer box-shadow, which is why it is
+   restricted to leaves. */
+html[data-theme='war'] [data-war-cut~='clip'] {
+  clip-path: polygon(
+    var(--war-cut) 0,
+    calc(100% - var(--war-cut)) 0,
+    100% var(--war-cut),
+    100% calc(100% - var(--war-cut)),
+    calc(100% - var(--war-cut)) 100%,
+    var(--war-cut) 100%,
+    0 calc(100% - var(--war-cut)),
+    0 var(--war-cut)
+  );
+}
+html[data-theme='war'] [data-war-cut~='clip'][data-war-cut~='top'] {
+  clip-path: polygon(
+    var(--war-cut) 0,
+    calc(100% - var(--war-cut)) 0,
+    100% var(--war-cut),
+    100% 100%,
+    0 100%,
+    0 var(--war-cut)
+  );
+}
+html[data-theme='war'] [data-war-cut~='clip'][data-war-cut~='diag'] {
+  clip-path: polygon(
+    var(--war-cut) 0,
+    100% 0,
+    100% calc(100% - var(--war-cut)),
+    calc(100% - var(--war-cut)) 100%,
+    0 100%,
+    0 var(--war-cut)
+  );
+}
+
+/* ==========================================================================
+   5. CORNER BRACKETS
+   ==========================================================================
+   The targeting frame. All four corners, always: the symmetry is what makes
+   it read as a lock rather than a stray border, and the shipped version's two
+   opposite ticks read as an unfinished box.
+
+   Eight background layers on ONE pseudo, which leaves ::after free for the
+   chamfer and keeps --war-bracket-len animatable for the lock-on gesture.
+
+   Sparingly. The reference sheet uses brackets on outer frames only, and a
+   bracket set on every card in a scrolling column is 120 decorative marks on
+   one screen. Bind this to [data-side-panel], [data-search-bento] and the
+   active feed-tab indicator; never to [data-feed-item], and never to a bento
+   nested inside another bento.
+   ========================================================================== */
+html[data-theme='war'] :is([data-war-brackets], [data-war-ruler])::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none; /* z-index omitted, see the frame layer above */
+  --war-bracket-line: transparent;
+  --war-ruler-dir: to right;
+  --war-ruler-minor: none;
+  --war-ruler-major: none;
+  --war-ruler-pos: bottom left;
+  --war-ruler-size-minor: 100% var(--war-ruler-minor-h);
+  --war-ruler-size-major: 100% var(--war-ruler-h);
+
+  background-image:
+    linear-gradient(var(--war-bracket-line) 0 0),
+    linear-gradient(var(--war-bracket-line) 0 0),
+    linear-gradient(var(--war-bracket-line) 0 0),
+    linear-gradient(var(--war-bracket-line) 0 0),
+    linear-gradient(var(--war-bracket-line) 0 0),
+    linear-gradient(var(--war-bracket-line) 0 0),
+    linear-gradient(var(--war-bracket-line) 0 0),
+    linear-gradient(var(--war-bracket-line) 0 0),
+    var(--war-ruler-minor),
+    var(--war-ruler-major);
+  background-size:
+    var(--war-bracket-len) var(--war-bracket-w),
+    var(--war-bracket-w) var(--war-bracket-len),
+    var(--war-bracket-len) var(--war-bracket-w),
+    var(--war-bracket-w) var(--war-bracket-len),
+    var(--war-bracket-len) var(--war-bracket-w),
+    var(--war-bracket-w) var(--war-bracket-len),
+    var(--war-bracket-len) var(--war-bracket-w),
+    var(--war-bracket-w) var(--war-bracket-len),
+    var(--war-ruler-size-minor),
+    var(--war-ruler-size-major);
+  background-position:
+    top left,
+    top left,
+    top right,
+    top right,
+    bottom left,
+    bottom left,
+    bottom right,
+    bottom right,
+    var(--war-ruler-pos),
+    var(--war-ruler-pos);
+  background-repeat: no-repeat;
+  transition: --war-bracket-len var(--war-lock);
+}
+
+/* The transition is declared on the element as well as the pseudo. The hover
+   rules below change --war-bracket-len on the element and the pseudo reads it
+   by inheritance, so animating it in both places is what keeps the arms
+   moving smoothly instead of snapping on engines that do not interpolate an
+   inherited registered property for a pseudo on its own. */
+html[data-theme='war'] [data-war-brackets] {
+  transition: --war-bracket-len var(--war-lock);
+}
+
+html[data-theme='war'] [data-war-brackets]::before {
+  --war-bracket-line: rgb(var(--war-hud) / 0.72);
+  /* Brackets are the one primitive that glows by default. They are chrome
+     only and there is at most one set per viewport by contract, so the
+     offscreen filter pass is affordable here and nowhere else. */
+  filter: var(--war-glow-drop-on);
+}
+
+html[data-theme='war'] [data-war-brackets~='sm'] {
+  --war-bracket-len: 9px;
+}
+html[data-theme='war'] [data-war-brackets~='lg'] {
+  --war-bracket-len: 22px;
+  --war-bracket-w: 1.5px;
+}
+html[data-theme='war'] [data-war-brackets~='dim']::before {
+  --war-bracket-line: rgb(var(--war-hud-dim) / 0.8);
+  filter: none;
+}
+
+/* Lock-on. The bracket set starts oversized and snaps inward on hover or
+   keyboard focus, which is the acquire gesture from the sheet. It costs one
+   interpolated length and no layout. */
+html[data-theme='war'] [data-war-brackets~='lock'] {
+  --war-bracket-len: 20px;
+}
+html[data-theme='war'] [data-war-brackets~='lock']:hover,
+html[data-theme='war'] [data-war-brackets~='lock']:focus-within {
+  --war-bracket-len: 12px;
+}
+html[data-theme='war'] [data-war-brackets~='lock']:hover::before,
+html[data-theme='war'] [data-war-brackets~='lock']:focus-within::before {
+  --war-bracket-line: rgb(var(--war-hud) / 0.95);
+}
+
+/* ==========================================================================
+   6. TICK RULER
+   ==========================================================================
+   Two stacked repeating gradients, zero DOM, no per-element cost beyond the
+   layers already allocated on the overlay pseudo. This is what makes a panel
+   edge read as an instrument bezel instead of a hairline.
+
+   One edge per surface, and only on surfaces that frame something: the bottom
+   of the feed nav, the inner edge of a side panel. A ruler on every card is a
+   picket fence.
+
+     [data-war-ruler]           bottom edge
+     [data-war-ruler='top']     etc.
+   ========================================================================== */
+html[data-theme='war'] [data-war-ruler]::before {
+  --war-ruler-minor: repeating-linear-gradient(
+    var(--war-ruler-dir),
+    rgb(var(--war-hud) / 0.42) 0 1px,
+    transparent 1px var(--war-ruler-step)
+  );
+  --war-ruler-major: repeating-linear-gradient(
+    var(--war-ruler-dir),
+    rgb(var(--war-hud) / 0.72) 0 1px,
+    transparent 1px var(--war-ruler-major-step)
+  );
+}
+
+html[data-theme='war'] [data-war-ruler='top']::before {
+  --war-ruler-pos: top left;
+}
+html[data-theme='war'] [data-war-ruler='left']::before {
+  --war-ruler-dir: to bottom;
+  --war-ruler-pos: left top;
+  --war-ruler-size-minor: var(--war-ruler-minor-h) 100%;
+  --war-ruler-size-major: var(--war-ruler-h) 100%;
+}
+html[data-theme='war'] [data-war-ruler='right']::before {
+  --war-ruler-dir: to bottom;
+  --war-ruler-pos: right top;
+  --war-ruler-size-minor: var(--war-ruler-minor-h) 100%;
+  --war-ruler-size-major: var(--war-ruler-h) 100%;
+}
+
+/* ==========================================================================
+   7. TYPE ROLES
+   ==========================================================================
+   Applied by role, on the label element itself. Never on a container: setting
+   text-transform on [data-mobile-header] or [data-feed-nav] uppercases every
+   descendant that will ever render inside it, including usernames, handles
+   and unread counts, and 0.1em tracking on a fixed-width numeric badge pushes
+   the last digit off centre.
+   ========================================================================== */
+html[data-theme='war'] [data-war-label] {
+  font-family: var(--war-mono);
+  font-size: var(--war-label-size);
+  font-weight: 500;
+  letter-spacing: var(--war-label-track);
+  text-transform: uppercase;
+  color: var(--war-text-muted);
+  line-height: 1.4;
+}
+html[data-theme='war'] [data-war-label~='hud'] {
+  color: var(--war-text-hud);
+  text-shadow: var(--war-glow-text);
+}
+
+/* Numerics, handles, timestamps, addresses. Mono for the alignment, tabular
+   figures so a live counter does not jitter, and explicitly no case
+   transform: this role exists precisely to carry strings that must not be
+   rewritten. */
+html[data-theme='war'] [data-war-readout] {
+  font-family: var(--war-mono);
+  font-size: var(--war-readout-size);
+  letter-spacing: var(--war-readout-track);
+  text-transform: none;
+  font-variant-numeric: tabular-nums;
+  color: var(--war-text-muted);
+}
+html[data-theme='war'] [data-war-readout~='hud'] {
+  color: var(--war-text-hud);
+}
+
+/* ==========================================================================
+   8. CHIPS AND BANNERS
+   ==========================================================================
+   The angled-end banner from the sheet. clip-path is correct here and only
+   here in the frame system: a chip is a leaf, its children are one icon and
+   one short string, and nothing inside it can ever need to escape the box.
+   That distinction is the whole rule for when clip-path is allowed.
+
+     [data-war-chip]             outlined cyan
+     [data-war-chip~='solid']    filled cyan, dark text, for banners
+     [data-war-chip~='caution']  sand. Non-semantic warnings live here.
+     [data-war-chip~='hazard']   --war-alert. LIVE AND RECORDING ONLY.
+     [data-war-chip~='both']     arrow cap on both ends (ribbon)
+     [data-war-chip~='count']    square, no cap, tabular numerals
+   ========================================================================== */
+html[data-theme='war'] [data-war-chip] {
+  --war-chip-cap: 7px;
+  --war-chip-ink: rgb(var(--war-hud));
+  --war-chip-fill: rgb(var(--war-hud) / 0.14);
+  --war-chip-stroke: rgb(var(--war-hud) / 0.5);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  padding-right: calc(10px + var(--war-chip-cap));
+  font-family: var(--war-mono);
+  font-size: var(--war-label-size);
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--war-chip-ink);
+  background: var(--war-chip-fill);
+  box-shadow: inset 0 0 0 1px var(--war-chip-stroke);
+  clip-path: polygon(
+    0 0,
+    calc(100% - var(--war-chip-cap)) 0,
+    100% 50%,
+    calc(100% - var(--war-chip-cap)) 100%,
+    0 100%
+  );
+}
+
+html[data-theme='war'] [data-war-chip~='both'] {
+  padding-left: calc(10px + var(--war-chip-cap));
+  clip-path: polygon(
+    var(--war-chip-cap) 0,
+    calc(100% - var(--war-chip-cap)) 0,
+    100% 50%,
+    calc(100% - var(--war-chip-cap)) 100%,
+    var(--war-chip-cap) 100%,
+    0 50%
+  );
+}
+
+html[data-theme='war'] [data-war-chip~='solid'] {
+  --war-chip-fill: rgb(var(--war-hud));
+  --war-chip-ink: rgb(var(--war-void));
+  --war-chip-stroke: transparent;
+}
+
+/* Caution is the decorative warning colour. Anything that is merely "heads
+   up" belongs here, so that red keeps meaning what it says. */
+html[data-theme='war'] [data-war-chip~='caution'] {
+  --war-chip-ink: rgb(var(--war-sand));
+  --war-chip-fill: rgb(var(--war-sand) / 0.12);
+  --war-chip-stroke: rgb(var(--war-sand) / 0.5);
+}
+
+/* HAZARD. The only place in the theme allowed to paint --war-alert. Use it
+   for a live broadcast, an active recording, or a destructive confirmation
+   and for nothing else: the moment it appears on a price delta or an unread
+   count the palette lock is gone and red becomes the theme's second accent,
+   which is exactly what happened to the shipped pass. */
+html[data-theme='war'] [data-war-chip~='hazard'] {
+  --war-chip-ink: rgb(var(--war-alert-hot));
+  --war-chip-fill: rgb(var(--war-alert) / 0.16);
+  --war-chip-stroke: rgb(var(--war-alert-hot) / 0.65);
+}
+html[data-theme='war'] [data-war-chip~='hazard']::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  flex: none;
+  background: rgb(var(--war-alert-hot));
+  /* Ends on the visible frame, so when the global reduced-motion reset
+     collapses the duration the dot freezes lit rather than dimmed. */
+  animation: war-live-pulse 1.1s ease-in-out infinite alternate;
+}
+
+@keyframes war-live-pulse {
+  from {
+    opacity: 0.3;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Counters. Square, capped, no arrow: a count is data, not a banner, and the
+   arrow cap on a two-digit badge just pushes the digits off centre. */
+html[data-theme='war'] [data-war-chip~='count'] {
+  --war-chip-cap: 0px;
+  padding: 2px 5px;
+  min-width: 18px;
+  justify-content: center;
+  letter-spacing: normal;
+  font-variant-numeric: tabular-nums;
+  clip-path: none;
+}
+
+/* ==========================================================================
+   9. SEGMENTED METER
+   ==========================================================================
+   The sheet's progress and level bar: a dim segmented track, a lit segmented
+   fill, and a bright leading cell at the head of the fill. The app already
+   has three places this maps onto exactly (poll results, the video scrubber,
+   upload progress), all of which currently render as smooth rounded white
+   bars while the only segmented meter in the theme is trapped in the two
+   second boot screen.
+
+   Drive it either way:
+     --war-meter-fill: 0.62      registered as a number, so it interpolates
+     style="width: 62%"          inline width wins, for existing markup
+
+     [data-war-meter~='thin']    3px, for a scrubber
+     [data-war-meter~='tall']    14px
+   ========================================================================== */
+html[data-theme='war'] [data-war-meter] {
+  display: block;
+  height: var(--war-meter-h);
+  overflow: hidden;
+  background: repeating-linear-gradient(
+    to right,
+    rgb(var(--war-hud) / 0.1) 0 var(--war-meter-seg),
+    transparent var(--war-meter-seg)
+      calc(var(--war-meter-seg) + var(--war-meter-gap))
+  );
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.2);
+}
+html[data-theme='war'] [data-war-meter~='thin'] {
+  --war-meter-h: 3px;
+  --war-meter-seg: 5px;
+  --war-meter-gap: 2px;
+}
+html[data-theme='war'] [data-war-meter~='tall'] {
+  --war-meter-h: 14px;
+  --war-meter-seg: 8px;
+}
+
+html[data-theme='war'] [data-war-meter-fill] {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: calc(var(--war-meter-fill) * 100%);
+  background: repeating-linear-gradient(
+    to right,
+    rgb(var(--war-hud) / 0.85) 0 var(--war-meter-seg),
+    transparent var(--war-meter-seg)
+      calc(var(--war-meter-seg) + var(--war-meter-gap))
+  );
+  /* The bright leading edge. Inset rather than an outer shadow so the track's
+     overflow:hidden cannot clip it off at 100%. */
+  box-shadow: inset -2px 0 0 rgb(var(--war-hud));
+  transition: width var(--war-fade);
+}
+
+/* Two-tone variant for a poll: the winning option runs hot, the rest dim. */
+html[data-theme='war'] [data-war-meter-fill~='dim'] {
+  background: repeating-linear-gradient(
+    to right,
+    rgb(var(--war-hud) / 0.4) 0 var(--war-meter-seg),
+    transparent var(--war-meter-seg)
+      calc(var(--war-meter-seg) + var(--war-meter-gap))
+  );
+  box-shadow: inset -2px 0 0 rgb(var(--war-hud) / 0.7);
+}
+
+/* ==========================================================================
+   10. GLOW
+   ==========================================================================
+   Opt-in, one layer, capped radius. See the budget on --war-glow above.
+   ========================================================================== */
+html[data-theme='war'] [data-war-glow] {
+  --war-glow-drop: var(--war-glow-drop-on);
+}
+html[data-theme='war'] [data-war-glow~='ring'] {
+  box-shadow: var(--war-edge-hot), var(--war-glow);
+}
+html[data-theme='war'] [data-war-glow~='text'] {
+  text-shadow: var(--war-glow-text);
+}
+
+/* ==========================================================================
+   11. SCANLINE FILM AND VIGNETTE
+   ==========================================================================
+   Three fixes over the shipped film.
+
+   Stacking: it lives on the root rather than on body, at z-index 45, so it is
+   uniformly above page content and uniformly below every portalled surface.
+   The shipped z-60 was above Radix dialogs and the bottom nav but below vaul
+   drawers and Sonner, so it covered half the overlays and vanished on the
+   rest. It has to be html::before specifically, because html::after is
+   already owned by the dim-lights sheet at index.css and a second rule on the
+   same pseudo would silently disable that feature for War users.
+
+   Blending: mix-blend-mode is gone. position:fixed prevents layout and hit
+   testing work but not compositing, and a blend group whose backdrop is the
+   root forces the browser to re-rasterise and re-blend the full viewport
+   whenever anything underneath changes, which is every scroll frame. The
+   alpha is baked into the gradient instead; at 4.5% the visual result is
+   indistinguishable and the backdrop readback disappears.
+
+   Quantisation: the period is 1px on, 3px off. The shipped 1px/2px period
+   lands on half pixels at 2x DPR and crawls as a moire over scrolling text; a
+   4px period divides cleanly at both 1x and 2x.
+   ========================================================================== */
+html[data-theme='war']::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: var(--war-film-z);
+  pointer-events: none;
+  opacity: var(--war-film-opacity);
+  background: repeating-linear-gradient(
+    to bottom,
+    rgb(var(--war-hud) / 0.045) 0 1px,
+    transparent 1px 4px
+  );
+}
+
+/* ==========================================================================
+   12. DEGRADATION
+   ========================================================================== */
+
+/* The global reduced-motion reset at the end of index.css already neutralises
+   every transition and animation in this file with !important, so repeating
+   those declarations here would be dead code (the shipped boot-panel rule
+   was). What is left is the film: it does not animate, but a 1px stripe grid
+   sitting over scrolling text is a shimmer source for exactly the users this
+   query is for, so it comes down to a whisper. */
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme='war'] {
+    --war-film-opacity: 0.4;
+  }
+}
+
+/* Reduced transparency means the user has asked for less visual complexity,
+   not just for opaque panels: the film goes entirely, the glow budget drops
+   to zero, and the surfaces go solid.
+
+   The surface selector below is written to score (0,3,1). index.css's own
+   reduced-transparency rule scores (0,3,1) through the
+   [data-mobile-header][data-scrolled="true"] argument in its :is() list and
+   carries !important, so the shipped War override at (0,2,1) lost to it and
+   every War panel repainted as shared zinc-900. Matching the specificity and
+   arriving later in the cascade is what makes the gunmetal actually ship. */
+@media (prefers-reduced-transparency: reduce) {
+  html[data-theme='war'] {
+    --glass-blur: none;
+    --glass-thin: 0.97;
+    --glass-regular: 0.97;
+    --glass-raised: 1;
+    /* Zeroed rather than set to none: these tokens are substituted into
+       box-shadow and text-shadow lists, and `none` is only legal as the sole
+       value of those properties, so `inset 0 0 0 1px cyan, none` would drop
+       the entire declaration and take the panel ring with it. */
+    --war-glow: 0 0 0 rgb(var(--war-hud) / 0);
+    --war-glow-text: 0 0 0 rgb(var(--war-hud) / 0);
+    --war-glow-drop-on: none;
+  }
+  html[data-theme='war']::before {
+    display: none;
+  }
+  html[data-theme='war']
+    :is(
+      [data-feed-item],
+      [data-side-panel],
+      [data-page-bento],
+      [data-feed-nav],
+      [data-mobile-header][data-scrolled='true']
+    ) {
+    background: rgb(var(--war-gunmetal) / 0.97) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+/* Same story for engines without backdrop-filter. index.css falls those
+   surfaces back to rgb(24 24 27), the shared glass grey, which erases the
+   theme's entire surface colour and leaves only the cyan brackets behind,
+   reading as broken rather than degraded. */
+@supports not (
+  (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))
+) {
+  html[data-theme='war']
+    :is(
+      [data-feed-item],
+      [data-side-panel],
+      [data-page-bento],
+      [data-feed-nav],
+      [data-mobile-header][data-scrolled='true']
+    ) {
+    background: rgb(var(--war-gunmetal) / 0.97) !important;
+  }
+}
+
+/* Forced colours: hand the whole thing back to the OS. Every motif in this
+   file is painted with background-image or box-shadow, both of which are
+   dropped in forced-colors mode, so the frames would otherwise disappear and
+   leave unexplained empty space where the chrome used to be. */
+@media (forced-colors: active) {
+  html[data-theme='war']::before,
+  html[data-theme='war'] body::before {
+    display: none;
+  }
+  html[data-theme='war'] :is([data-war-cut], [data-war-frame])::after,
+  html[data-theme='war'] :is([data-war-brackets], [data-war-ruler])::before {
+    display: none;
+  }
+  html[data-theme='war'] [data-war-frame],
+  html[data-theme='war'] [data-war-chip],
+  html[data-theme='war'] [data-war-meter] {
+    border: 1px solid CanvasText;
+  }
+  html[data-theme='war'] [data-war-cut~='clip'],
+  html[data-theme='war'] [data-war-chip] {
+    clip-path: none;
+  }
+}
