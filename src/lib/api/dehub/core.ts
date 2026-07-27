@@ -103,18 +103,68 @@ export interface TokenRefreshResult {
   expiresIn: number;
 }
 
-let refreshInFlight: Promise<TokenRefreshResult | null> | null = null;
+/**
+ * Why a refresh attempt did not produce a new access token.
+ *
+ * The distinction is the whole point: only `revoked` proves the session is
+ * actually dead. Every other reason is a temporary condition — the radio is
+ * down, the server hiccuped, the request timed out — where the stored refresh
+ * token is still perfectly good. A caller that ends the session on anything
+ * but `revoked` logs the user out on a network blip, which is the single most
+ * common cause of "I keep getting randomly logged out".
+ */
+export type TokenRefreshFailure =
+  /** Server definitively rejected the refresh token (401). Session is dead. */
+  | 'revoked'
+  /** No refresh token stored — nothing to refresh with. */
+  | 'no-refresh-token'
+  /** Network error, timeout, offline, or 5xx/429. Session is probably fine. */
+  | 'transient'
+  /** 2xx response that carried no access token. Server bug, not a dead session. */
+  | 'malformed';
 
 /**
- * Refresh the access token using the stored refresh token. Concurrent callers
- * (from this file or auth.ts) share the same in-flight request instead of
- * each firing their own. Updates localStorage on success.
+ * The `?: never` fillers are load-bearing. This project compiles with
+ * `strictNullChecks: false`, and under that setting TypeScript does not narrow
+ * a union by a boolean discriminant — `if (outcome.ok)` leaves the type as the
+ * full union, so reading `.reason` in the else branch is a compile error.
+ * Declaring both keys on both members keeps the access legal while the literal
+ * `ok` types still document which fields are actually populated.
  */
-export async function refreshTokenShared(): Promise<TokenRefreshResult | null> {
+export type TokenRefreshOutcome =
+  | { ok: true; tokens: TokenRefreshResult; reason?: never }
+  | { ok: false; reason: TokenRefreshFailure; tokens?: never };
+
+let refreshInFlight: Promise<TokenRefreshOutcome> | null = null;
+
+/**
+ * Build an abort signal that fires after `ms`.
+ *
+ * AbortSignal.timeout() is missing in Safari < 16, older Firefox, and jsdom.
+ * Calling it unguarded throws a TypeError *before* fetch is even attempted, so
+ * on those browsers every refresh failed instantly and the session could never
+ * be renewed — the user just got logged out and had no way to prevent it.
+ */
+function timeoutSignal(ms: number): { signal: AbortSignal; cancel: () => void } {
+  if (typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function') {
+    return { signal: AbortSignal.timeout(ms), cancel: () => { /* self-clearing */ } };
+  }
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), ms);
+  return { signal: controller.signal, cancel: () => clearTimeout(id) };
+}
+
+/**
+ * Refresh the access token using the stored refresh token, reporting *why* it
+ * failed so callers can tell a revoked session apart from a flaky network.
+ * Concurrent callers (from this file or auth.ts) share the same in-flight
+ * request instead of each firing their own. Updates localStorage on success.
+ */
+export async function refreshTokenSharedDetailed(): Promise<TokenRefreshOutcome> {
   if (refreshInFlight) return refreshInFlight;
 
   const refreshToken = getRefreshToken();
-  if (!refreshToken) return null;
+  if (!refreshToken) return { ok: false, reason: 'no-refresh-token' };
 
   // Captured BEFORE the refresh: whether the old access token was already dead.
   // Any API fetch made in that window went out effectively anonymous, so
@@ -122,17 +172,18 @@ export async function refreshTokenShared(): Promise<TokenRefreshResult | null> {
   // this user. Listeners (AuthProvider) use this to refetch those caches.
   const wasExpired = isTokenExpired() || !getAuthToken();
 
-  refreshInFlight = (async (): Promise<TokenRefreshResult | null> => {
+  refreshInFlight = (async (): Promise<TokenRefreshOutcome> => {
+    // Without a timeout, a stalled request never settles, and the
+    // single-flight promise above never resolves — every subsequent
+    // caller awaiting it (or gated behind isRefreshing) hangs forever,
+    // requiring a full page reload to recover.
+    const timeout = timeoutSignal(10000);
     try {
       const response = await fetch(`${DEHUB_API_BASE}/api/auth/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refreshToken }),
-        // Without a timeout, a stalled request never settles, and the
-        // single-flight promise above never resolves — every subsequent
-        // caller awaiting it (or gated behind isRefreshing) hangs forever,
-        // requiring a full page reload to recover.
-        signal: AbortSignal.timeout(10000),
+        signal: timeout.signal,
       });
 
       if (!response.ok) {
@@ -143,14 +194,17 @@ export async function refreshTokenShared(): Promise<TokenRefreshResult | null> {
         if (response.status === 401) {
           console.warn('[Auth] Refresh token rejected (401), clearing session');
           clearAuthSession();
-        } else {
-          console.warn('[Auth] Token refresh failed (non-401, treating as transient):', response.status);
+          return { ok: false, reason: 'revoked' };
         }
-        return null;
+        console.warn('[Auth] Token refresh failed (non-401, treating as transient):', response.status);
+        return { ok: false, reason: 'transient' };
       }
 
       const data = await response.json();
-      if (!data.accessToken) return null;
+      if (!data.accessToken) {
+        console.warn('[Auth] Refresh returned 2xx with no access token');
+        return { ok: false, reason: 'malformed' };
+      }
 
       setAuthToken(data.accessToken);
       if (data.refreshToken) setRefreshToken(data.refreshToken);
@@ -160,16 +214,53 @@ export async function refreshTokenShared(): Promise<TokenRefreshResult | null> {
         window.dispatchEvent(new CustomEvent('dehub:token-refreshed', { detail: { wasExpired } }));
       } catch { /* SSR / test env — no window */ }
 
-      return data as TokenRefreshResult;
+      return { ok: true, tokens: data as TokenRefreshResult };
     } catch (e) {
+      // AbortError (the 10s timeout above), TypeError (offline, DNS, CORS) —
+      // none of these are evidence that the refresh token is invalid.
       console.error('[Auth] Token refresh network error:', e);
-      return null;
+      return { ok: false, reason: 'transient' };
+    } finally {
+      timeout.cancel();
     }
   })().finally(() => {
     refreshInFlight = null;
   });
 
   return refreshInFlight;
+}
+
+/**
+ * Back-compat wrapper returning tokens-or-null.
+ *
+ * Prefer refreshTokenSharedDetailed() anywhere the caller decides whether to
+ * end the session: this signature collapses "the server revoked you" and
+ * "your train went into a tunnel" into the same `null`, and cannot express
+ * "try again later".
+ */
+export async function refreshTokenShared(): Promise<TokenRefreshResult | null> {
+  const outcome = await refreshTokenSharedDetailed();
+  return outcome.ok ? outcome.tokens : null;
+}
+
+/**
+ * Ensure a usable access token exists before making an authenticated request.
+ *
+ * Throws AuthenticationError only when the session is genuinely unrecoverable.
+ * A transient failure throws a plain Error instead, so the UI shows a
+ * connection problem rather than falsely telling the user to sign in again.
+ */
+export async function ensureFreshToken(): Promise<string> {
+  const existing = getAuthToken();
+  if (existing && !isTokenExpired()) return existing;
+
+  const outcome = await refreshTokenSharedDetailed();
+  if (outcome.ok) return outcome.tokens.accessToken;
+
+  if (outcome.reason === 'transient' || outcome.reason === 'malformed') {
+    throw new Error('Could not verify your session — please check your connection and try again.');
+  }
+  throw new AuthenticationError('Session expired. Please sign in again.');
 }
 
 // Base API call function - calls DeHub API directly
@@ -192,10 +283,16 @@ export async function apiCall<T>(
     }
   });
 
-  const token = getAuthToken();
+  let token = getAuthToken();
 
-  if (requiresAuth && !token) {
-    throw new Error("Authentication required");
+  // For an endpoint that requires auth, establish a valid session up front
+  // rather than spending a guaranteed-401 round trip on a token we already
+  // know is dead. Failing here throws AuthenticationError (not a plain
+  // Error), so callers can offer re-auth instead of showing a dead-end
+  // "Authentication required" toast that the user can only escape by
+  // manually signing out and back in.
+  if (requiresAuth && (!token || isTokenExpired())) {
+    token = await ensureFreshToken();
   }
 
   const headers: HeadersInit = {
@@ -218,23 +315,35 @@ export async function apiCall<T>(
     const errorData = await response.json().catch(() => ({}));
     
     const errorMessage = (errorData.message || errorData.error || '').toLowerCase();
-    
-    // Only attempt refresh on explicit "access token expired" 401s
-    const isExpiredToken =
-      response.status === 401 &&
-      errorMessage.includes('access token expired');
 
-    // Auto-retry on expired token using refresh token
-    // Skip if: already retried, refresh endpoint itself, or not an expiry error
-    if (isExpiredToken && !_retry && !endpoint.includes('/api/auth/refresh')) {
+    // Attempt a refresh on ANY 401, not just ones whose body happens to say
+    // "access token expired".
+    //
+    // Matching that exact phrase made the entire recovery path depend on the
+    // server's error wording: a 401 saying "Unauthorized", a bodyless 401 from
+    // a CDN or proxy, or any rephrasing on the API side silently disabled
+    // refresh-and-retry, and the user got signed out for no reason. A refresh
+    // attempt on a non-expiry 401 costs one request and then fails closed
+    // below, so the broad trigger is the safe direction to err in.
+    const shouldTryRefresh = response.status === 401 && !!getRefreshToken();
+
+    // Skip if: already retried, or this IS the refresh endpoint.
+    if (shouldTryRefresh && !_retry && !endpoint.includes('/api/auth/refresh')) {
       // refreshTokenShared() is single-flight — a concurrent call from here
       // and one from auth.ts's refreshAccessToken() (or another apiCall 401)
       // all await the same in-flight request instead of racing.
-      const refreshed = await refreshTokenShared();
+      const outcome = await refreshTokenSharedDetailed();
 
-      if (refreshed) {
+      if (outcome.ok) {
         // Retry the original request with the new token and _retry flag
         return apiCall<T>(endpoint, { ...options, _retry: true });
+      }
+
+      // A refresh that failed on a network blip must not masquerade as an
+      // expired session — that wording pushes the user to sign out and back
+      // in when simply retrying would have worked.
+      if (outcome.reason === 'transient' || outcome.reason === 'malformed') {
+        throw new Error('Could not verify your session — please check your connection and try again.');
       }
       throw new AuthenticationError('Session expired. Please sign in again.');
     }
@@ -255,4 +364,139 @@ export async function apiCall<T>(
   }
 
   return response.json();
+}
+
+// ── Authenticated multipart uploads ──
+// FormData bodies cannot go through apiCall() (which JSON-encodes), and
+// fetch() cannot report upload progress. Both facts pushed every upload path
+// onto a hand-rolled XMLHttpRequest that carried a snapshotted token and had
+// no 401 handling — so a post whose token expired during composition failed
+// with a bare "HTTP 401" while the rest of the app still looked signed in.
+// The helpers below give uploads the same session lifecycle as apiCall().
+
+export interface AuthedUploadOptions {
+  method?: "POST" | "PUT" | "PATCH";
+  onProgress?: (percent: number) => void;
+  timeoutMs?: number;
+  /** Unwrap `{ result: … }` envelopes returned by some endpoints. */
+  unwrapResult?: boolean;
+}
+
+interface XhrOutcome<T> {
+  ok: boolean;
+  status: number;
+  data?: T;
+  message?: string;
+}
+
+function sendAuthedXhr<T>(
+  url: string,
+  formData: FormData,
+  token: string,
+  opts: {
+    method: string;
+    timeoutMs: number;
+    unwrapResult: boolean;
+    onProgress?: (percent: number) => void;
+  },
+): Promise<XhrOutcome<T>> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+
+    // Track upload progress (bytes sent to server)
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable && opts.onProgress) {
+        opts.onProgress(Math.round((event.loaded / event.total) * 100));
+      }
+    };
+
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          const parsed = JSON.parse(xhr.responseText);
+          resolve({
+            ok: true,
+            status: xhr.status,
+            data: (opts.unwrapResult ? parsed.result ?? parsed : parsed) as T,
+          });
+        } catch {
+          reject(new Error("Invalid response from server"));
+        }
+        return;
+      }
+
+      let errorData: Record<string, string> = {};
+      try { errorData = JSON.parse(xhr.responseText); } catch { /* ignore */ }
+      resolve({
+        ok: false,
+        status: xhr.status,
+        message: errorData.message || errorData.error || "Unknown error",
+      });
+    };
+
+    xhr.onerror = () => reject(new Error("Upload failed — please check your connection and try again"));
+    xhr.ontimeout = () => reject(new Error("Upload timed out — your file may be too large or your connection too slow"));
+
+    xhr.timeout = opts.timeoutMs;
+    xhr.open(opts.method, url);
+    xhr.setRequestHeader("Authorization", `Bearer ${token}`);
+    xhr.send(formData);
+  });
+}
+
+/**
+ * Send FormData to an authenticated endpoint, with upload-progress reporting
+ * and the same auth lifecycle as apiCall(): refresh a dead token before
+ * sending, refresh-and-replay once on a 401, and surface AuthenticationError
+ * (not a raw HTTP string) when the session is genuinely unrecoverable.
+ */
+export async function authedUpload<T>(
+  endpoint: string,
+  formData: FormData,
+  options: AuthedUploadOptions = {},
+): Promise<T> {
+  const {
+    method = "POST",
+    onProgress,
+    timeoutMs = 8 * 60 * 1000,
+    unwrapResult = false,
+  } = options;
+
+  const url = new URL(endpoint, DEHUB_API_BASE).toString();
+  const xhrOpts = { method, timeoutMs, unwrapResult, onProgress };
+
+  // Refresh up front when the token is already dead, so a large upload is not
+  // pushed over the wire with a doomed token and then repeated in full.
+  const token = await ensureFreshToken();
+
+  let result = await sendAuthedXhr<T>(url, formData, token, xhrOpts);
+
+  // A 401 here means the token died mid-flight, or the server disagreed with
+  // us about its expiry. Refresh once and replay before giving up.
+  if (!result.ok && result.status === 401) {
+    const outcome = await refreshTokenSharedDetailed();
+    if (!outcome.ok) {
+      if (outcome.reason === "transient" || outcome.reason === "malformed") {
+        throw new Error("Could not verify your session — please check your connection and try again.");
+      }
+      throw new AuthenticationError("Session expired. Please sign in again.");
+    }
+    result = await sendAuthedXhr<T>(url, formData, outcome.tokens.accessToken, xhrOpts);
+  }
+
+  if (result.ok) return result.data as T;
+
+  const message = (result.message || "").toLowerCase();
+  const isAuthError =
+    result.status === 401 ||
+    message.includes("unauthorized") ||
+    message.includes("invalid token") ||
+    message.includes("token expired") ||
+    message.includes("jwt");
+
+  if (result.status === 401 || (result.status === 403 && isAuthError)) {
+    throw new AuthenticationError("Session expired. Please sign in again.");
+  }
+
+  throw new Error(`Upload failed (HTTP ${result.status}): ${result.message}`);
 }

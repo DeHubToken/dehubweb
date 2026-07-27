@@ -1,5 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
-import { apiCall, getAuthToken, DEHUB_API_BASE } from './core';
+import { apiCall, getAuthToken, authedUpload, ensureFreshToken } from './core';
 import { getAccountInfo } from './users';
 import type { DeHubUser, DeHubNFT } from './types';
 
@@ -585,9 +585,6 @@ export async function uploadAndSendMedia(
 ): Promise<DmMessage> {
   console.log('[DM API] uploadAndSendMedia called', { fileName: file.name, size: file.size, conversationId });
 
-  const token = getAuthToken();
-  if (!token) throw new Error('Authentication required');
-
   const formData = new FormData();
   formData.append('file', file, file.name);
   formData.append('conversationId', conversationId);
@@ -598,21 +595,9 @@ export async function uploadAndSendMedia(
   if (opts?.replyTo) formData.append('replyTo', opts.replyTo);
   if (opts?.txHash) formData.append('txHash', opts.txHash);
 
-  const response = await fetch(`${DEHUB_API_BASE}/api/dm/upload`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    body: formData,
+  const raw = await authedUpload<Record<string, unknown>>('/api/dm/upload', formData, {
+    unwrapResult: true,
   });
-
-  if (!response.ok) {
-    const errData = await response.json().catch(() => ({}));
-    throw new Error(errData.message || errData.error || `Upload failed: ${response.status}`);
-  }
-
-  const data = await response.json();
-  const raw = data?.result || data;
   const myAddress = localStorage.getItem('dehub_wallet')?.toLowerCase() || '';
   return parseDmMessage(raw, myAddress);
 }
@@ -623,8 +608,10 @@ export async function uploadAndSendMedia(
  * @deprecated For DM images, prefer uploadAndSendMedia instead.
  */
 export async function uploadChatImage(file: File): Promise<{ url: string }> {
-  const token = getAuthToken();
-  if (!token) throw new Error('Authentication required');
+  // Goes through a Supabase edge function rather than the DeHub API, so it
+  // cannot use authedUpload — but it still needs a live token rather than
+  // whatever happens to be in localStorage.
+  const token = await ensureFreshToken();
 
   const walletAddress = localStorage.getItem('dehub_wallet');
   if (!walletAddress) throw new Error('Wallet address not found');

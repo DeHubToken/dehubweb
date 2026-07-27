@@ -6,7 +6,7 @@ import { dhbText } from '@/lib/dhb-toast';
 import { createLogger } from '@/lib/logger';
 
 const mintLogger = createLogger('PostForm.handlePost');
-import { mintPost, createPoll, type StreamInfo } from '@/lib/api/dehub';
+import { mintPost, createPoll, AuthenticationError, type StreamInfo } from '@/lib/api/dehub';
 // NOTE: mint/bounty helpers reach wallet/contract code (wagmi + web3auth).
 // usePostForm is reachable from eager UI (PostModal is used by the sidebar /
 // bottom nav / feed), so those helpers are dynamically imported inside
@@ -191,7 +191,7 @@ interface UsePostFormReturn {
 export function usePostForm(onClose: () => void): UsePostFormReturn {
   const navigate = useNavigate();
   const { addOptimisticPost } = useOptimisticPosts();
-  const { user, connectionSource } = useAuth();
+  const { user, connectionSource, refreshSession, openLoginModal } = useAuth();
   
   // Restore active draft from localStorage
   const savedDraft = useRef(loadActiveDraft());
@@ -1466,6 +1466,12 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       // with a reconnect action instead of the raw technical error.
       const isWalletGone = errorMsg.toLowerCase().includes('no wallet connected') ||
         errorMsg.toLowerCase().includes('please sign in first');
+      // aa-utils throws this after dispatching dehub:wallet-unlock-required, so
+      // the unlock modal is already opening. The smart-wallet key only lives in
+      // memory, so this fires on the first post after any page refresh — i.e.
+      // constantly. A red "Post failed" on top of the unlock prompt reads as
+      // "you were signed out", which is exactly what it isn't.
+      const isWalletLocked = errorMsg.toLowerCase().includes('wallet is locked');
       const isSolanaWalletIssue =
         isSolanaChain(chainId) ||
         errorMsg.toLowerCase().includes('phantom') ||
@@ -1481,11 +1487,38 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         const gasName = chainId === 56 ? 'BNB' : 'ETH';
         const chainName = chainId === 56 ? 'BNB' : chainId === 1 ? 'Ethereum' : 'Base';
         toast.error(`Post failed: Insufficient ${gasName} for gas on ${chainName}. Add ${gasName} to your wallet and try again.`);
+      } else if (isWalletLocked) {
+        // Not a failure the user caused, and not a sign-out. The unlock dialog
+        // is already on screen; tell them what it's for and that nothing was lost.
+        toast.info('Unlock your wallet to finish posting', {
+          description: 'Your draft is still here — tap Post again once unlocked.',
+          duration: 8000,
+        });
       } else if (isWalletGone && connectionSource === 'wagmi') {
         // Wallet connection dropped mid-session. The silent reconnect effect in AuthContext
         // will have already triggered a logout with a toast. Just silently swallow this error
         // to avoid showing a second confusing toast on top of the logout one.
         console.warn('[Post] Wallet gone during post attempt — auth context handling logout');
+      } else if (error instanceof AuthenticationError) {
+        // The session died while the user was composing. Recover it in place:
+        // showing "Post failed: …" here is what forced people to sign out and
+        // back in just to publish, and it discards the draft in the process.
+        const toastId = toast.loading('Session expired — restoring…');
+        const recovered = await refreshSession(true);
+        toast.dismiss(toastId);
+
+        if (recovered) {
+          toast.error('Session restored — tap Post to try again.', {
+            description: 'Your draft is still here.',
+            duration: 8000,
+          });
+        } else {
+          toast.error('Please sign in again to post', {
+            description: 'Your draft is still here.',
+            action: { label: 'Sign in', onClick: openLoginModal },
+            duration: 10000,
+          });
+        }
       } else {
         toast.error(`Post failed: ${errorMsg}`);
       }
@@ -1498,7 +1531,8 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     isWatch2Earn, w2eViews, w2eComments, w2eTotal,
     isTokenGated, tokenContract, tokenSymbol, tokenAmount, liveMode, scheduledDate,
     hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user,
-    showTitle, titleText, connectionSource, poll, pollIsValid, chainId
+    showTitle, titleText, connectionSource, poll, pollIsValid, chainId,
+    refreshSession, openLoginModal
   ]);
 
   return {
