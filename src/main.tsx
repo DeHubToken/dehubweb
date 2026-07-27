@@ -22,6 +22,13 @@ import "./index.css";
 // var(--war-*) unresolved.
 import "./styles/war-frame.css";
 import "./styles/war-theme.css";
+import "./styles/war-nav.css";
+// Closes the portal gap (modals/drawers/dropdowns/toasts sit outside #app-root)
+// and binds the war-frame primitives onto real app surfaces.
+import "./styles/war-coverage.css";
+// Last: the brand mark's phosphor treatment overrides the shared canvas-theme
+// filter that index.css puts on mobile-header images.
+import "./styles/war-logo.css";
 
 clearChunkReloadFlag();
 installSupabaseInterceptor();
