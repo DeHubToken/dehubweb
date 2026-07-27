@@ -65,6 +65,8 @@ import {
   Film,
   Paintbrush,
   Gauge,
+  LifeBuoy,
+  Trash2,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
@@ -92,6 +94,7 @@ import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
 import { useWalletUnlockInterval, type WalletUnlockIntervalOption } from '@/hooks/use-wallet-unlock-interval';
 import { WalletRecoveryTools } from '@/components/app/settings/WalletRecoveryTools';
+import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
 import { PROFILE_TAB_OPTIONS } from '@/components/app/profile/ProfileConstants';
 import { useDmSettings } from '@/hooks/use-dm-settings';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
@@ -120,6 +123,7 @@ const TAB_KEYS: Record<string, string> = {
   assets: 'settings.assets',
   skills: 'settings.skills',
   characters: 'settings.characters',
+  support: 'settings.support',
 };
 
 const tabs = [
@@ -132,6 +136,7 @@ const tabs = [
   { icon: Wallet, value: 'assets', label: 'settings.assets' },
   { icon: Sparkles, value: 'skills', label: 'settings.skills' },
   { icon: Users, value: 'characters', label: 'settings.characters' },
+  { icon: LifeBuoy, value: 'support', label: 'settings.support' },
 ];
 
 import { SkillsLibrary } from '@/components/app/skills/SkillsLibrary';
@@ -282,6 +287,7 @@ export default function SettingsPage() {
         {activeTab === 'assets' && <AssetsSettings />}
         {activeTab === 'skills' && <SkillsLibrary />}
         {activeTab === 'characters' && <CharactersLibrary />}
+        {activeTab === 'support' && <SupportSettings />}
       </div>
       </div>
     </div>
@@ -879,39 +885,81 @@ function ProfileSettings() {
         </div>
       </div>
 
-      {/* Support / Bug Report */}
-      <BugReportSection username={authUser?.username || 'Anonymous'} />
     </div>
   );
 }
 
-function BugReportSection({ username }: { username: string }) {
+/**
+ * Support tab — mirrors mobile's Support panel
+ * (`screens/AccountSettingsScreen.tsx` supportPanel). Report a Bug moved here
+ * from the Profile tab so both clients group support in the same place.
+ *
+ * Mobile's "Rate & Review" row is deliberately not ported: it opens the native
+ * app-store review sheet, which has no web equivalent.
+ */
+function SupportSettings() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { user: authUser } = useAuthContext();
+  const username = authUser?.username || 'Anonymous';
 
-  const handleReportBug = () => {
-    navigate(`/app/features?report=bug&reporter=${encodeURIComponent(username)}`);
-  };
+  const rowClass =
+    'w-full flex items-center justify-between p-4 bg-zinc-800 rounded-xl hover:bg-zinc-750 transition-colors group text-left';
 
   return (
-    <div>
-      <h3 className="font-medium text-zinc-400 text-sm mb-4">Support</h3>
-      <div className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
-        <div className="flex items-center gap-3">
-          <Terminal className="w-5 h-5 text-zinc-500" />
-          <div>
-            <p className="text-white font-medium">Report a Bug</p>
-            <p className="text-zinc-500 text-sm">Help us fix issues by reporting bugs</p>
-          </div>
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          className="bg-zinc-700 border-zinc-600 text-white hover:bg-zinc-600 rounded-lg"
-          onClick={handleReportBug}
+    <div className="space-y-6">
+      <div className="flex items-center gap-3 mb-6">
+        <LifeBuoy className="w-5 h-5 text-zinc-400" />
+        <h2 className="text-lg font-semibold text-white">{t('settings.support', 'Support')}</h2>
+      </div>
+
+      <div className="space-y-3">
+        <button
+          className={rowClass}
+          onClick={() => navigate(`/app/features?report=bug&reporter=${encodeURIComponent(username)}`)}
         >
-          Report
-        </Button>
+          <div className="flex items-center gap-3">
+            <Bug className="w-5 h-5 text-zinc-500" />
+            <div>
+              <p className="text-white font-medium">{t('settings.reportBug', 'Report a Bug')}</p>
+              <p className="text-zinc-500 text-sm">
+                {t('settings.reportBugDesc', 'Help us fix issues by reporting bugs')}
+              </p>
+            </div>
+          </div>
+          <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
+        </button>
+
+        <button className={rowClass} onClick={() => navigate('/docs/terms-of-service')}>
+          <div className="flex items-center gap-3">
+            <FileText className="w-5 h-5 text-zinc-500" />
+            <p className="text-white font-medium">{t('settings.termsOfService', 'Terms of Service')}</p>
+          </div>
+          <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
+        </button>
+
+        <button className={rowClass} onClick={() => navigate('/docs/privacy')}>
+          <div className="flex items-center gap-3">
+            <Shield className="w-5 h-5 text-zinc-500" />
+            <p className="text-white font-medium">{t('settings.privacyPolicy', 'Privacy Policy')}</p>
+          </div>
+          <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
+        </button>
+
+        <button className={rowClass} onClick={() => navigate('/delete-account')}>
+          <div className="flex items-center gap-3">
+            <Trash2 className="w-5 h-5 text-red-500/70" />
+            <div>
+              <p className="text-white font-medium">
+                {t('settings.deleteAccountData', 'Delete account or data')}
+              </p>
+              <p className="text-zinc-500 text-sm">
+                {t('settings.deleteAccountDataDesc', 'Request removal of your account or your data')}
+              </p>
+            </div>
+          </div>
+          <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
+        </button>
       </div>
     </div>
   );
@@ -1555,6 +1603,9 @@ function PrivacySettings() {
           <WalletRecoveryTools />
         </div>
       </div>
+
+      {/* Active Sessions */}
+      <ActiveSessions />
 
       {/* Extract Data */}
       <div>
