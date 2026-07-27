@@ -1,0 +1,340 @@
+/* ==========================================================================
+   WAR - surface coverage
+   ==========================================================================
+
+   Closes the two structural holes a full audit of the theme turned up.
+
+   HOLE 1: PORTALS.
+   Large parts of war-theme.css are scoped `html[data-theme='war'] #app-root`.
+   Radix and vaul mount their content on <body>, outside #app-root, so every
+   modal, drawer, dropdown, popover, select, tooltip and toast, and the entire
+   post composer, silently missed those rules and kept its stock white liquid
+   glass. Rather than rewrite 1600 lines in place, this file re-states the
+   affected treatments against a selector that also matches portal roots.
+
+   HOLE 2: THE PRIMITIVES WERE NEVER BOUND.
+   war-frame.css defines a full HUD vocabulary (notched frames, brackets,
+   rulers, chips, meters, glow), but grepping data-war-* across the app found
+   consumers only inside WarPreloader. Every page therefore got a recolour and
+   border-radius:0 and nothing else, which is precisely the "quite basic"
+   result reported. This file binds that vocabulary onto the real surfaces.
+
+   WHY !important APPEARS HERE MORE THAN USUAL:
+   Several controls set their fill, ring and even glyph colour through INLINE
+   styles (the create-post FAB sets `color:#ffffff; stroke:#ffffff` inline).
+   A stylesheet declaration cannot beat an inline style by specificity at all;
+   `!important` is the only mechanism that does. Every use below is either
+   beating an inline style or beating an existing `!important` in war-theme.css.
+
+   Loaded after war-theme.css and war-nav.css. Scoped entirely to
+   html[data-theme='war'].
+   ========================================================================== */
+
+/* Portal roots. Everything Radix/vaul/sonner mounts outside #app-root, plus
+   #app-root itself, so a single selector covers in-tree and portalled UI. */
+html[data-theme='war'] :is(
+    #app-root,
+    [role='dialog'],
+    [role='alertdialog'],
+    [data-vaul-drawer],
+    [data-radix-popper-content-wrapper],
+    [data-sonner-toaster]
+  ) {
+  --war-portal: 1;
+}
+
+/* --------------------------------------------------------------------------
+   1. Liquid-glass surfaces, everywhere.
+
+   LiquidGlassBubble renders a plain <div>, not a button, so war-theme's
+   glass-button rule (which requires :is(button, a, [role='button'])) never
+   matched any of its 93 render sites. Match on the gradient signature instead,
+   which is what actually identifies the surface.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [class*='from-white/'],
+html[data-theme='war'] [class*='bg-white/1'],
+html[data-theme='war'] [class*='border-white/3'] {
+  background-image: none !important;
+  background-color: rgb(var(--war-gunmetal) / 0.82) !important;
+  border-color: rgb(var(--war-hud) / 0.3) !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.22),
+    inset 0 1px 0 rgb(var(--war-hud) / 0.1) !important;
+  border-radius: 0 !important;
+}
+
+/* The active state of the primary action primitive forces `!bg-white` on its
+   inner div, which turned selected Stores/Work tabs into solid white pills. */
+html[data-theme='war'] [class*='from-white/'].bg-white,
+html[data-theme='war'] .bg-white > svg,
+html[data-theme='war'] [class*='!bg-white'] {
+  background-color: rgb(var(--war-hud) / 0.22) !important;
+  color: rgb(var(--war-hud)) !important;
+}
+
+/* --------------------------------------------------------------------------
+   2. The create-post control. The user named this one twice.
+
+   Desktop sidebar button, mobile bottom-nav FAB, and the FAB's glyph. The
+   glyph carries an inline white fill and stroke, so it needs !important.
+
+   Treatment is the sheet's notched icon button: cut corners, olive-to-cyan
+   fill, bright hairline, and a real bloom so it reads as the primary action.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [data-bottom-nav] button > div,
+html[data-theme='war'] [data-primary-cta] {
+  background: linear-gradient(
+      158deg,
+      rgb(var(--war-hud) / 0.26) 0%,
+      rgb(var(--war-olive) / 0.6) 55%,
+      rgb(var(--war-gunmetal) / 0.95) 100%
+    )
+    !important;
+  border-radius: 0 !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.7),
+    0 0 14px rgb(var(--war-hud) / 0.3) !important;
+  clip-path: polygon(
+    8px 0,
+    100% 0,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    0 100%,
+    0 8px
+  );
+  backdrop-filter: blur(10px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(120%) !important;
+}
+
+/* The glyph. Inline `color`/`stroke` on the icon is why nothing reached it. */
+html[data-theme='war'] [data-bottom-nav] button > div svg,
+html[data-theme='war'] [data-primary-cta] svg {
+  color: rgb(var(--war-hud)) !important;
+  stroke: rgb(var(--war-hud)) !important;
+  filter: drop-shadow(0 0 5px rgb(var(--war-hud) / 0.75));
+}
+
+html[data-theme='war'] :is([data-bottom-nav] button, [data-primary-cta]):hover > div {
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud)),
+    0 0 22px rgb(var(--war-hud) / 0.5) !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. Portalled panels: modals, drawers, popovers, selects, toasts.
+
+   These kept stock zinc/slate cards. Give them the sheet's panel frame: a
+   bright hairline, a notched top-left corner and a tick ruler down the top
+   edge, so an open dialog reads as a HUD readout rather than a grey card.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] :is(
+    [role='dialog'],
+    [role='alertdialog'],
+    [data-vaul-drawer],
+    [data-radix-popper-content-wrapper] > *,
+    [data-sonner-toaster] [data-sonner-toast]
+  ) {
+  border-radius: 0 !important;
+  background:
+    linear-gradient(
+      172deg,
+      rgb(var(--war-olive) / 0.2) 0%,
+      rgb(var(--war-gunmetal) / 0) 40%
+    ),
+    rgb(var(--war-gunmetal) / 0.95) !important;
+  border-color: rgb(var(--war-hud) / 0.32) !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.3),
+    inset 0 1px 0 rgb(var(--war-hud) / 0.16),
+    0 18px 60px rgb(0 0 0 / 0.6) !important;
+}
+
+/* Tick ruler along the top edge of any portalled panel. Drawn on the panel
+   itself with a gradient rather than a pseudo-element, because several of
+   these components already own ::before/::after for their own chrome. */
+html[data-theme='war'] :is([role='dialog'], [data-vaul-drawer]) {
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      rgb(var(--war-hud) / 0.55) 0px,
+      rgb(var(--war-hud) / 0.55) 1px,
+      transparent 1px,
+      transparent 9px
+    ),
+    linear-gradient(
+      172deg,
+      rgb(var(--war-olive) / 0.2) 0%,
+      rgb(var(--war-gunmetal) / 0) 40%
+    ) !important;
+  background-size: 100% 3px, 100% 100%;
+  background-repeat: no-repeat, no-repeat;
+  background-position: 0 0, 0 0;
+}
+
+/* Buttons inside portals. war-theme de-glasses these only under #app-root. */
+html[data-theme='war'] :is(
+    [role='dialog'],
+    [role='alertdialog'],
+    [data-vaul-drawer],
+    [data-radix-popper-content-wrapper],
+    [data-sonner-toaster]
+  )
+  :is(button, a[role='button']) {
+  border-radius: 0 !important;
+}
+
+/* Dropdown / select / context-menu rows. */
+html[data-theme='war'] :is(
+    [role='menuitem'],
+    [role='option'],
+    [role='menuitemcheckbox'],
+    [role='menuitemradio']
+  ) {
+  border-radius: 0 !important;
+  font-family: var(--war-mono);
+  letter-spacing: 0.04em;
+}
+
+html[data-theme='war'] :is([role='menuitem'], [role='option']):is(:hover, [data-highlighted]) {
+  background: rgb(var(--war-hud) / 0.16) !important;
+  color: rgb(var(--war-hud)) !important;
+  box-shadow: inset 2px 0 0 rgb(var(--war-hud));
+}
+
+/* --------------------------------------------------------------------------
+   4. Form fields.
+
+   war-theme only squared these; they kept `bg-white/5` or the shadcn
+   slate token fill. SelectTrigger is a button[role='combobox'], so the
+   element-name selector never reached it either.
+   -------------------------------------------------------------------------- */
+html[data-theme='war']
+  :is(
+    input:not([type='checkbox']):not([type='radio']):not([type='range']),
+    textarea,
+    select,
+    [role='combobox']
+  ) {
+  border-radius: 0 !important;
+  background: rgb(var(--war-void) / 0.7) !important;
+  border-color: rgb(var(--war-hud) / 0.28) !important;
+  color: rgb(var(--war-sand)) !important;
+  font-family: var(--war-mono);
+  letter-spacing: 0.03em;
+}
+
+html[data-theme='war']
+  :is(input, textarea, [role='combobox']):focus-visible {
+  border-color: rgb(var(--war-hud) / 0.8) !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.6),
+    0 0 12px rgb(var(--war-hud) / 0.25) !important;
+  outline: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. Post engagement row.
+
+   Like / comment / share / tip / dislike are bare text buttons with no
+   background utility, so no control rule could match them, and an engaged
+   post looked identical to an unengaged one. Counts become mono readouts.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [data-feed-item] button > svg {
+  color: rgb(var(--war-sand) / 0.62);
+  transition: color 140ms linear, filter 140ms linear;
+}
+
+html[data-theme='war'] [data-feed-item] button:hover > svg {
+  color: rgb(var(--war-hud));
+  filter: drop-shadow(0 0 5px rgb(var(--war-hud) / 0.5));
+}
+
+/* Engaged state is expressed as `fill-current`, which is the only signal
+   available without a data hook. */
+html[data-theme='war'] [data-feed-item] button > svg.fill-current {
+  color: rgb(var(--war-hud)) !important;
+  filter: drop-shadow(0 0 6px rgb(var(--war-hud) / 0.65));
+}
+
+html[data-theme='war'] [data-feed-item] button > span {
+  font-family: var(--war-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
+}
+
+/* --------------------------------------------------------------------------
+   6. The sliding active-nav indicator.
+
+   The hook existed in the markup but no stylesheet in any theme referenced
+   it, so it stayed white glass on every desktop route.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [data-sidebar-active-indicator] {
+  background: linear-gradient(
+      160deg,
+      rgb(var(--war-hud) / 0.2) 0%,
+      rgb(var(--war-hud) / 0.06) 100%
+    )
+    !important;
+  border-radius: 0 !important;
+  border-color: transparent !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.55),
+    inset 3px 0 0 rgb(var(--war-hud)),
+    0 0 16px rgb(var(--war-hud) / 0.2) !important;
+  backdrop-filter: blur(8px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(120%) !important;
+}
+
+/* --------------------------------------------------------------------------
+   7. Section headings become HUD labels.
+
+   This is the cheapest single change that moves the whole app from "recoloured"
+   toward the reference sheet: dense mono caps with wide tracking and a hairline
+   lead-in, applied to the headings that already exist on every page.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] :is([data-side-panel], [data-page-bento]) :is(h2, h3) {
+  font-family: var(--war-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.78em;
+  color: rgb(var(--war-hud) / 0.9);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+html[data-theme='war'] :is([data-side-panel], [data-page-bento]) :is(h2, h3)::before {
+  content: '';
+  width: 10px;
+  height: 1px;
+  flex: none;
+  background: rgb(var(--war-hud) / 0.8);
+  box-shadow: 0 0 6px rgb(var(--war-hud) / 0.6);
+}
+
+/* --------------------------------------------------------------------------
+   8. Hand-rolled modals that sit outside every hook.
+
+   Four components mount their own fixed scrim and card as siblings of the app
+   root with no role="dialog". They are matched by shape: a fixed full-bleed
+   layer, and a zinc card inside it.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] .fixed.inset-0 > :is(.bg-zinc-900, .bg-zinc-950) {
+  border-radius: 0 !important;
+  background: rgb(var(--war-gunmetal) / 0.96) !important;
+  border-color: rgb(var(--war-hud) / 0.32) !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.3),
+    0 18px 60px rgb(0 0 0 / 0.6) !important;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  html[data-theme='war'] :is(
+      [role='dialog'],
+      [data-vaul-drawer],
+      [data-sidebar-active-indicator]
+    ) {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
