@@ -483,9 +483,7 @@ export async function quotePost(params: {
   content: string;
   category?: string;
 }): Promise<QuotePostMintResponse> {
-  const { DEHUB_API_BASE, getAuthToken } = await import('./core');
-  const token = getAuthToken();
-  if (!token) throw new Error('Authentication required');
+  const { authedUpload } = await import('./core');
 
   // Extract hashtags from content as augmented categories
   const hashtagRegex = /#([A-Za-z][A-Za-z0-9_]{0,49})/g;
@@ -503,22 +501,10 @@ export async function quotePost(params: {
   formData.append('chainId', '8453');
   formData.append('streamInfo', JSON.stringify({}));
 
-  const response = await fetch(`${DEHUB_API_BASE}/api/quote_post`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-    },
-    body: formData,
+  const result = await authedUpload<QuotePostMintResponse>('/api/quote_post', formData, {
+    unwrapResult: true,
   });
 
-  if (!response.ok) {
-    const err = await response.json().catch(() => ({}));
-    throw new Error(err.message || err.error || `Quote post failed: ${response.status}`);
-  }
-
-  const data = await response.json();
-  const result = data.result ?? data;
-  
   // Validate mint signature
   if (!result.r || !result.s || !result.v || !result.createdTokenId) {
     throw new Error('Invalid mint signature from backend');

@@ -1,4 +1,5 @@
-import { DEHUB_API_BASE, setAuthToken, setRefreshToken, setTokenExpiresAt, getRefreshToken, getAuthToken, refreshTokenShared } from './core';
+import { DEHUB_API_BASE, setAuthToken, setRefreshToken, setTokenExpiresAt, getRefreshToken, getAuthToken, refreshTokenShared, refreshTokenSharedDetailed } from './core';
+import type { TokenRefreshOutcome } from './core';
 import type { AuthResponse } from './types';
 
 export interface UsernameCheckResponse {
@@ -111,6 +112,18 @@ export async function authenticateWallet(
  */
 export async function refreshAccessToken(): Promise<RefreshTokenResponse | null> {
   return refreshTokenShared();
+}
+
+/**
+ * Same refresh, but reporting *why* it failed.
+ *
+ * Callers that decide whether to end the session must use this: the null
+ * returned above cannot distinguish "the server revoked this token" from
+ * "the request timed out", and treating the second as the first is what
+ * signs people out mid-session on a flaky connection.
+ */
+export async function refreshAccessTokenDetailed(): Promise<TokenRefreshOutcome> {
+  return refreshTokenSharedDetailed();
 }
 
 /**

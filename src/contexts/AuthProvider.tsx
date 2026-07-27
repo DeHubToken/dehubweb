@@ -30,7 +30,7 @@ import {
   clearAuthSession,
   isTokenExpired,
   apiCall,
-  refreshAccessToken,
+  refreshAccessTokenDetailed,
   logoutFromServer,
   type DeHubUser,
   type Web3AuthMeta,
@@ -273,6 +273,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const closeLoginModal = useCallback(() => {
     connectionAbortedRef.current = true;
     setIsLoginModalOpen(false);
+    // Dismissing the modal abandons the login. The pending flag must go with
+    // it: it was only ever removed on a COMPLETED login, so walking away at the
+    // "create/unlock your wallet" step left it set forever. Every later page
+    // load then saw a pending login, re-entered proceedToWalletPhase, and (now
+    // that an untagged session counts as a different identity) would tear down
+    // a perfectly healthy session the user never asked to end.
+    localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
     if (isConnecting && !walletAddress) {
       setIsConnecting(false);
     }
@@ -290,8 +297,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * while this new identity's wallet flow runs underneath in the modal.
    */
   const proceedToWalletPhase = useCallback(async (userId: string) => {
+    // An ABSENT tag means "unknown", which must be treated as "not this user" —
+    // not as "same user, carry on". dehub_supabase_uid is written in exactly one
+    // place (signAndAuthenticateSmartWallet, below), so every external-wallet
+    // (wagmi) session and every session predating the tag has no tag at all.
+    // Requiring a known-and-different uid here let those sessions survive a
+    // sign-in as somebody else: account A stayed on screen while account B's
+    // wallet flow ran in the modal, and because walletAddress was still A's
+    // EOA, the address guard in signAndAuthenticateSmartWallet then threw
+    // "Wallet address changed during session refresh" on every attempt —
+    // making social login unreachable for anyone who had used a wallet first.
+    //
+    // Clearing an untagged session is safe: a genuine same-user return always
+    // carries the tag, and a first-ever login has neither token nor wallet, so
+    // the second half of the condition makes this a no-op.
     const cachedUid = localStorage.getItem('dehub_supabase_uid');
-    if (cachedUid && cachedUid !== userId && (getAuthToken() || localStorage.getItem('dehub_wallet'))) {
+    const identityIsUnknownOrDifferent = !cachedUid || cachedUid !== userId;
+    if (identityIsUnknownOrDifferent && (getAuthToken() || localStorage.getItem('dehub_wallet'))) {
       clearAuthSession();
       localStorage.removeItem('dehub_user');
       setUser(null);
@@ -373,8 +395,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         } else if (token && isTokenExpired()) {
           console.log('[Auth] Token expired on mount, attempting silent refresh...');
-          const refreshed = await refreshAccessToken();
-          if (refreshed && savedWallet) {
+          const outcome = await refreshAccessTokenDetailed();
+          if (outcome.ok && savedWallet) {
             try {
               const userData = await getAccountInfo(savedWallet);
               const normalizedUser = normalizeUser(userData, savedWallet);
@@ -392,7 +414,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 } catch { /* ignore */ }
               }
             }
+          } else if (outcome.ok) {
+            // Refresh worked but there is no saved wallet to rehydrate from.
+            // The session itself is fine — leave it alone.
+          } else if (outcome.reason === 'transient' || outcome.reason === 'malformed') {
+            // Reachability problem, not a dead session. Keep the cached
+            // session and let the proactive refresh below retry: booting
+            // offline (or before the radio is up) must not sign the user out.
+            console.warn('[Auth] Silent refresh failed transiently on mount — keeping cached session');
+            const cachedUser = localStorage.getItem('dehub_user');
+            if (cachedUser && savedWallet) {
+              try {
+                setUser(JSON.parse(cachedUser));
+                setWalletAddress(savedWallet);
+              } catch { /* ignore */ }
+            }
           } else {
+            // 'revoked' or 'no-refresh-token' — genuinely unrecoverable.
             clearAuthSession();
             localStorage.removeItem('dehub_user');
             setUser(null);
@@ -516,17 +554,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (timeUntilExpiry < 5 * 60 * 1000) {
-        const result = await refreshAccessToken();
-        if (result) {
+        const outcome = await refreshAccessTokenDetailed();
+        if (outcome.ok) {
           console.log('[Auth] ✓ Proactive token refresh succeeded');
-        } else if (timeUntilExpiry < 0) {
-          console.warn('[Auth] Token expired and refresh failed — clearing session');
+        } else if (outcome.reason === 'transient' || outcome.reason === 'malformed') {
+          // This runs on an interval AND on every visibilitychange, so it is
+          // the most likely place to catch a phone waking from sleep with the
+          // radio still down. Clearing here — even past nominal expiry — turns
+          // "unlocked my phone" into "logged out". The refresh token is still
+          // valid; the next tick (or the next 401) will recover.
+          console.warn('[Auth] Proactive refresh failed transiently — keeping session, will retry');
+        } else {
+          // 'revoked' or 'no-refresh-token' — the session really is over.
+          console.warn('[Auth] Refresh token rejected — clearing session');
           clearAuthSession();
           localStorage.removeItem('dehub_user');
           setUser(null);
           setWalletAddress(null);
-        } else {
-          console.warn('[Auth] Proactive refresh failed — will retry or fall back on next 401');
         }
       }
     };
@@ -1234,16 +1278,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const refreshSession = async (): Promise<boolean> => {
+  /**
+   * Re-establish a usable DeHub session.
+   *
+   * `force` skips the "the token still looks fine locally" shortcut. Callers
+   * reacting to a REJECTED request must pass it: expiry here is pure arithmetic
+   * on the device clock (isTokenExpired), so a token the server has revoked —
+   * or one whose real expiry disagrees with ours because the clock drifted, the
+   * account was suspended, or a deploy rotated the signing secret — still looks
+   * valid locally. Returning true in that state made every recovery path report
+   * "Session restored — please try again", let the user retry, fail identically,
+   * and loop forever with no way out but a manual sign-out.
+   */
+  const refreshSession = async (force = false): Promise<boolean> => {
     const token = getAuthToken();
-    if (token && !isTokenExpired()) return true;
+    if (!force && token && !isTokenExpired()) return true;
 
     // ── Step 1: refresh token (no wallet interaction needed) ──
     const rt = getRefreshToken();
     if (rt) {
-      const result = await refreshAccessToken();
-      if (result) return true;
-      console.warn('[Auth] Refresh token failed, falling back to wallet re-sign');
+      const outcome = await refreshAccessTokenDetailed();
+      if (outcome.ok) return true;
+      if (outcome.reason === 'transient' || outcome.reason === 'malformed') {
+        // Escalating to a wallet signature prompt here would ask the user to
+        // approve a signature over the same connection that just failed —
+        // it cannot succeed, and it trains people to re-sign constantly.
+        console.warn('[Auth] Refresh failed transiently — not escalating to wallet re-sign');
+        return false;
+      }
+      console.warn('[Auth] Refresh token rejected, falling back to wallet re-sign');
     }
 
     // ── Step 2: wallet re-sign ──
@@ -1329,6 +1392,60 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return stable;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Central recovery for auth failures raised anywhere in the app (dispatched
+  // by the QueryClient's MutationCache in App.tsx). Tries a silent refresh
+  // first and only asks the user to sign in when that genuinely fails —
+  // otherwise a single expired token turns into a manual sign-out/sign-in.
+  const authRecoveryInFlight = useRef(false);
+  useEffect(() => {
+    const handler = async () => {
+      // A batch of mutations failing together must produce one recovery
+      // attempt and one toast, not one per mutation.
+      if (authRecoveryInFlight.current) return;
+      authRecoveryInFlight.current = true;
+
+      const toastId = toast.loading('Session expired — restoring…');
+      try {
+        // force: we are here because the server rejected a request, so the
+        // local expiry arithmetic cannot be trusted to decide whether to try.
+        const recovered = await stableCallbacks.refreshSession(true);
+        toast.dismiss(toastId);
+        if (recovered) {
+          toast.success('Session restored — please try again.');
+        } else {
+          // Bring React in line with storage — but ONLY when the credentials
+          // are genuinely gone. clearAuthSession runs down in the transport
+          // layer, which cannot touch React state, so after a real revocation
+          // the app keeps rendering a signed-in header, avatar and feed over a
+          // session that no longer exists.
+          //
+          // The narrow condition matters: refreshSession also returns false
+          // when it merely dispatched dehub:wallet-unlock-required and is
+          // waiting for the user to type their wallet password. Tearing down
+          // there would cancel the very flow that recovers them.
+          const credentialsGone = !getAuthToken() && !getRefreshToken();
+          if (credentialsGone) {
+            localStorage.removeItem('dehub_user');
+            setUser(null);
+            setWalletAddress(null);
+          }
+          toast.error('Session expired', {
+            description: 'Please sign in again to continue',
+            action: { label: 'Sign in', onClick: stableCallbacks.openLoginModal },
+            duration: 8000,
+          });
+        }
+      } catch {
+        toast.dismiss(toastId);
+      } finally {
+        authRecoveryInFlight.current = false;
+      }
+    };
+
+    window.addEventListener('dehub:auth-expired', handler);
+    return () => window.removeEventListener('dehub:auth-expired', handler);
+  }, [stableCallbacks]);
 
   const value = React.useMemo(() => ({
     user,
