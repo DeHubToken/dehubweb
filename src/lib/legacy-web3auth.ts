@@ -177,13 +177,28 @@ async function cleanupLegacySession(web3auth: any | null): Promise<void> {
   }
 }
 
+/**
+ * Any popup-lifecycle failure that a full-page redirect reliably works
+ * around: blocked before it opens, or Web3Auth deciding it was "closed"
+ * before completing. The latter ("user closed wallet"/"user closed the
+ * modal") doesn't always mention "popup" in the message — X/Twitter's OAuth
+ * flow in particular seems to close+reopen its own window in a way that
+ * races Web3Auth's popup-closed detection, throwing this even though the
+ * user never touched anything. Matching only on "popup" + "closed"/"blocked"
+ * missed that phrasing entirely, so affected users got a hard failure
+ * instead of the redirect fallback.
+ */
 function isPopupBlockedError(err: unknown): boolean {
   const combined = String(err).toLowerCase() +
     (err instanceof Error ? " " + String((err as any).cause).toLowerCase() : "");
   return (
     (combined.includes("popup") && (combined.includes("blocked") || combined.includes("closed"))) ||
     combined.includes("allow-popups") ||
-    combined.includes("coop")
+    combined.includes("coop") ||
+    combined.includes("user closed") ||
+    combined.includes("closed wallet") ||
+    combined.includes("closed the wallet") ||
+    combined.includes("closed the modal")
   );
 }
 
