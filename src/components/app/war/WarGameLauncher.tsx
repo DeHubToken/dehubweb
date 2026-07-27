@@ -187,20 +187,24 @@ function LauncherInner() {
   );
 }
 
+/** Vendored build under public/. See public/war-game/README.md for provenance. */
+const BUNDLED_GAME_URL = '/war-game/index.html';
+
 /**
  * The game surface itself.
  *
- * Deliberately a seam rather than an implementation: the game is a separate
- * ~55k line Vite app, and whether it is served from its own origin in an iframe
- * or bundled into this app changes only what mounts here. Nothing else in the
- * launcher, the trigger or the styling depends on that decision.
+ * Defaults to the vendored build served from this app's own origin, which means
+ * the game works out of the box with no extra deploy. VITE_WAR_GAME_URL
+ * overrides that to point at a standalone deploy instead.
  *
- * VITE_WAR_GAME_URL points at the deployed game. When it is unset the overlay
- * says so plainly instead of rendering a broken frame, which is what happens on
- * any environment where the game has not been deployed yet.
+ * Either way it loads in an iframe rather than being imported: the game is a
+ * separate ~55k line Vite app on Three.js r180 while this app is on 0.181, so
+ * an iframe keeps the two dependency trees from ever meeting and keeps 1.6 MB
+ * of game code out of the entry bundle until a player actually deploys.
  */
 function WarGameOverlay({ onExit }: { onExit: () => void }) {
-  const gameUrl = import.meta.env.VITE_WAR_GAME_URL as string | undefined;
+  const gameUrl =
+    (import.meta.env.VITE_WAR_GAME_URL as string | undefined) || BUNDLED_GAME_URL;
 
   useEffect(() => {
     // The game takes over the viewport, so stop the feed scrolling behind it.
@@ -225,29 +229,20 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
         EXTRACT / ESC
       </button>
 
-      {gameUrl ? (
-        <iframe
-          src={gameUrl}
-          title="Claude of Duty"
-          data-war-game-frame
-          // The game needs pointer lock for mouse look and fullscreen for
-          // immersion. Nothing else is granted.
-          allow="pointer-lock; fullscreen; gamepad; autoplay"
-          // Same-origin is withheld: the game is third party code (MIT, from
-          // mshumer/Claude-of-Duty) and has no reason to touch this app's
-          // storage, cookies or DOM.
-          sandbox="allow-scripts allow-pointer-lock allow-fullscreen"
-        />
-      ) : (
-        <div data-war-game-missing>
-          <p data-war-deploy-kicker>NO SIGNAL</p>
-          <p data-war-deploy-title>COMBAT ZONE NOT DEPLOYED</p>
-          <p>
-            Set VITE_WAR_GAME_URL to the deployed game origin to bring this
-            surface online.
-          </p>
-        </div>
-      )}
+      <iframe
+        src={gameUrl}
+        title="Claude of Duty"
+        data-war-game-frame
+        // The game needs pointer lock for mouse look and fullscreen for
+        // immersion. Nothing else is granted.
+        allow="pointer-lock; fullscreen; gamepad; autoplay"
+        // allow-same-origin is deliberately withheld. The vendored build is
+        // third party code (MIT, mshumer/Claude-of-Duty) and is served from
+        // this app's own origin, so without this the iframe would inherit real
+        // same-origin access to storage, cookies and the parent DOM. Omitting
+        // it forces an opaque origin and keeps the game sandboxed.
+        sandbox="allow-scripts allow-pointer-lock allow-fullscreen"
+      />
     </div>
   );
 }

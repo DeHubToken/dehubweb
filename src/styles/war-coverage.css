@@ -450,20 +450,7 @@ html[data-theme='war'] [data-war-game-exit] {
   box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.5);
 }
 
-html[data-theme='war'] [data-war-game-missing] {
-  max-width: 420px;
-  padding: 28px;
-  text-align: center;
-  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.35);
-}
 
-html[data-theme='war'] [data-war-game-missing] > p:last-child {
-  margin-top: 10px;
-  font-family: var(--war-mono);
-  font-size: 11px;
-  line-height: 1.6;
-  color: rgb(var(--war-sand) / 0.75);
-}
 
 @media (prefers-reduced-motion: reduce) {
   html[data-theme='war'] [data-war-deploy-prompt] {
