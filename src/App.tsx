@@ -65,6 +65,14 @@ const WinterSnow = React.lazy(() =>
 const LavaLampBackground = React.lazy(() =>
   import("@/components/app/LavaLampBackground").then(m => ({ default: m.LavaLampBackground }))
 );
+const WarBackground = React.lazy(() =>
+  import("@/components/app/WarBackground").then(m => ({ default: m.WarBackground }))
+);
+// The War boot sequence is its own chunk from the background: it renders once
+// per session and must not keep the terrain scene's code in memory afterwards.
+const WarPreloader = React.lazy(() =>
+  import("@/components/app/WarPreloader").then(m => ({ default: m.WarPreloader }))
+);
 
 function ThemedBackgrounds() {
   const { theme } = useAppTheme();
@@ -80,6 +88,8 @@ function ThemedBackgrounds() {
       {theme === "swarms" && <SwarmsBackground />}
       {theme === "winter" && <WinterSnow />}
       {theme === "lavalamp" && <LavaLampBackground />}
+      {theme === "war" && <WarBackground />}
+      {theme === "war" && <WarPreloader />}
     </Suspense>
   );
 }
