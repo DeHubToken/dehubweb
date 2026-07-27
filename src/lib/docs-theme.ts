@@ -11,7 +11,7 @@
  * - light / minimal → pinned `light` (clean paper)
  * - system → `undefined` (the docs light/dark toggle stays live, unchanged)
  */
-export const DOCS_CANVAS_THEMES = ['cosmic', 'hazy', 'swarms', 'lavalamp', 'winter'] as const;
+export const DOCS_CANVAS_THEMES = ['cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war'] as const;
 
 export function isDocsCanvasTheme(appTheme: string | undefined): boolean {
   return !!appTheme && (DOCS_CANVAS_THEMES as readonly string[]).includes(appTheme);
