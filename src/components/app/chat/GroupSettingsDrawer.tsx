@@ -24,7 +24,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { getGroupInfo, updateGroup, leaveGroup, blockUserInGroup, joinGroup, getMediaUrl, searchUsersForDM, type GroupInfo, type DeHubUser } from '@/lib/api/dehub';
+import { getGroupInfo, updateGroup, leaveGroup, blockUserInGroup, joinGroup, searchUsersForDM, type GroupInfo, type DeHubUser } from '@/lib/api/dehub';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -302,7 +302,10 @@ export function GroupSettingsDrawer({ open, onOpenChange, groupId, onLeft, onUpd
                         {searchResults.map((user: any) => {
                           const addr = user.address || user._id || '';
                           const userName = user.displayName || user.username || addr.slice(0, 10);
-                          const userAvatar = user.avatarImageUrl ? getMediaUrl(user.avatarImageUrl) : undefined;
+                          // Same treatment as the member list below (buildAvatarUrl,
+                          // not getMediaUrl) — getMediaUrl leaves a "statics/" prefix
+                          // in place, which 403s and drops the user to a grey initial.
+                          const userAvatar = buildAvatarUrl(addr, extractAvatarPath(user));
                           const alreadyMember = info.members?.some(m =>
                             (m.address || m._id || '').toLowerCase() === addr.toLowerCase()
                           );
