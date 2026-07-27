@@ -22,6 +22,7 @@ export * from './livechat';
 export * from './leaderboard';
 export * from './blocks';
 export * from './push';
+export * from './sessions';
 export * from './payments';
 export * from './bookmarks';
 export * from './pins';
