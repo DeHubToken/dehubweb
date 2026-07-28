@@ -97,6 +97,8 @@ export function WarLogo({ src, alt, className }: WarLogoProps) {
   // Any failure path (no WebGL, texture blocked, context lost) falls back to
   // the untouched image rather than leaving a hole where the brand should be.
   const [failed, setFailed] = useState(false);
+  // Bumped when a hidden host gains a box, to re-run the effect and build then.
+  const [revealed, setRevealed] = useState(0);
 
   const [reduced] = useState(
     () =>
@@ -109,6 +111,25 @@ export function WarLogo({ src, alt, className }: WarLogoProps) {
     if (reduced || failed) return;
     const host = hostRef.current;
     if (!host) return;
+
+    // The desktop sidebar renders BOTH marks and hides one with `display:none`,
+    // swapping which as the rail collapses. Creating the scene regardless would
+    // burn a GPU context and an rAF loop on something invisible, and contexts
+    // are the scarce resource this theme has to budget (background, logo, boot
+    // sequence and game all want one). So nothing is built until the host
+    // actually has a box, and a hidden mark costs nothing at all.
+    if (host.clientWidth === 0 || host.clientHeight === 0) {
+      // A hidden element still reports a resize when it is revealed, which is
+      // the signal to build. Re-running the effect is how that happens.
+      const gate = new ResizeObserver(() => {
+        if (host.clientWidth > 0 && host.clientHeight > 0) {
+          gate.disconnect();
+          setRevealed((n) => n + 1);
+        }
+      });
+      gate.observe(host);
+      return () => gate.disconnect();
+    }
 
     let renderer: THREE.WebGLRenderer;
     try {
@@ -209,7 +230,7 @@ export function WarLogo({ src, alt, className }: WarLogoProps) {
       releaseContext(renderer);
       renderer.domElement.remove();
     };
-  }, [src, reduced, failed]);
+  }, [src, reduced, failed, revealed]);
 
   // Reduced motion, or anything that went wrong: the plain mark, unfiltered.
   if (reduced || failed) {
