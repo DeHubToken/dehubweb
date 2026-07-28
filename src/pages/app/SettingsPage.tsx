@@ -1154,6 +1154,15 @@ function NotificationSettings() {
             onCheckedChange={handleToggle('milestones')}
             disabled={isDisabled}
           />
+          {/* Key name matches mobile's `accountAlerts` (services/push/push.service.ts). */}
+          <SettingToggle
+            icon={Shield}
+            title="Account Alerts"
+            description="Security and account activity you should know about"
+            defaultChecked={pushPrefs?.accountAlerts ?? true}
+            onCheckedChange={handleToggle('accountAlerts')}
+            disabled={isDisabled}
+          />
           <SettingToggle
             icon={Bell}
             title="Announcements"

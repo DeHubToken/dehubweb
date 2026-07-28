@@ -17,6 +17,8 @@ export interface PushPreferences {
   liveStreams: boolean;
   tips: boolean;
   subscriptions: boolean;
+  /** Matches mobile's `accountAlerts` key (services/push/push.service.ts). */
+  accountAlerts: boolean;
   [key: string]: boolean;
 }
 
