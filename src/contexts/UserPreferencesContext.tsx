@@ -24,8 +24,12 @@
  *   - on change → optimistic in-memory update + per-wallet localStorage mirror
  *                 for instant paint, then a debounced upsert to Supabase.
  *
- * A logged-OUT visitor is left alone — their last local look persists via each
- * context's own localStorage; nothing is reset until a different account signs in.
+ * On sign-OUT, preferences registered with `resetOnLogout` (the appearance set:
+ * theme, dim lights, theme hues, brand colours) go back to their defaults, so a
+ * signed-out visitor always sees the stock system look instead of the last
+ * account's skin. The account's values live on the server and come back on the
+ * next sign-in. Everything else (language, playback, layout) is left alone —
+ * those aren't identity-revealing and resetting them would just be annoying.
  *
  * Individual contexts keep their own synchronous localStorage init for instant
  * first paint; they just register with `useSyncedPreference` so the server value
@@ -72,6 +76,12 @@ interface Registration {
   read: () => unknown;
   /** Reset the host to its own default value. */
   reset: () => void;
+  /**
+   * Reset this preference to its default when the user signs out, instead of
+   * leaving the last account's value on screen. Used for the appearance set —
+   * see the sign-out note in the file header.
+   */
+  resetOnLogout?: boolean;
 }
 
 interface UserPreferencesContextValue {
@@ -126,6 +136,11 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
   // Whether inbound sync is authoritative for the current account yet. Late
   // registrants only get reconciled once this is true.
   const readyRef = useRef(false);
+  // True once auth has RESOLVED to "nobody signed in" — i.e. the appearance
+  // prefs have been reset and any late registrant must be reset too. Stays
+  // false while auth is still loading so a restoring session never flashes
+  // defaults over the look it is about to hydrate.
+  const signedOutRef = useRef(false);
 
   /** Apply a blob: present keys → their value; absent keys → default iff resetAbsent. */
   const applyBlob = useCallback((blob: PrefBlob, resetAbsent: boolean) => {
@@ -139,8 +154,29 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  /** Send every `resetOnLogout` preference back to its default. */
+  const resetAppearance = useCallback(() => {
+    registry.current.forEach((reg) => {
+      if (!reg.resetOnLogout) return;
+      try {
+        reg.reset();
+      } catch {
+        /* one applier throwing must not break the others */
+      }
+    });
+  }, []);
+
   const register = useCallback((key: string, reg: Registration) => {
     registry.current.set(key, reg);
+    // Signed out: an appearance context that mounts now (route-level provider,
+    // remount, …) seeded itself from localStorage, so send it to its default.
+    if (signedOutRef.current && reg.resetOnLogout) {
+      try {
+        reg.reset();
+      } catch {
+        /* ignore */
+      }
+    }
     // Reconcile a late-registering context against the authoritative blob.
     if (readyRef.current) {
       try {
@@ -200,15 +236,28 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
     walletRef.current = addr;
 
     if (!addr) {
-      // Logged out. Don't touch the visuals — the last local look persists via
-      // each context's own storage. We KEEP prevWalletRef (the last account) so
-      // that an in-session log-out-of-A then log-into-B is still detected as an
-      // account switch and B's residue-clear happens instantly.
+      // Logged out. The appearance prefs go back to their defaults (stock
+      // system theme, no dim, no hue/brand overrides) so the signed-out app
+      // never wears the last account's skin; each reset also rewrites that
+      // context's own localStorage key, so the pre-React inline theme script in
+      // index.html paints the default on the next load too. The account's saved
+      // values are untouched on the server (and in its per-wallet mirror) and
+      // return on the next sign-in. Non-appearance prefs are left alone.
+      //
+      // We KEEP prevWalletRef (the last account) so that an in-session
+      // log-out-of-A then log-into-B is still detected as an account switch and
+      // B's residue-clear happens instantly.
       readyRef.current = false;
       blobRef.current = {};
       setHydrated(false);
+      if (!signedOutRef.current) {
+        signedOutRef.current = true;
+        resetAppearance();
+      }
       return;
     }
+
+    signedOutRef.current = false;
 
     if (prev === addr && readyRef.current) return; // already synced this account
 
@@ -269,7 +318,7 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [walletAddress, isAuthenticated, isLoading, applyBlob]);
+  }, [walletAddress, isAuthenticated, isLoading, applyBlob, resetAppearance]);
 
   // ---- Public setters ----------------------------------------------------
 
@@ -388,6 +437,9 @@ function LocalStoragePrefBridge() {
  * @param apply         Applies an inbound synced value to the host (set state +
  *                      write its local key). Should coerce/validate the raw value.
  * @param defaultValue  The host's default; applied when resetting on account switch.
+ * @param options       `resetOnLogout` also applies the default when the user
+ *                      signs out — set it for appearance preferences so a
+ *                      signed-out visitor gets the stock look back.
  * @returns push(value) — persist a local change (optimistic + debounced) — and
  *          pushImmediate(value) — persist and await (use before a reload).
  *
@@ -398,12 +450,14 @@ export function useSyncedPreference<T>(
   currentValue: T,
   apply: (value: unknown) => void,
   defaultValue: T,
+  options?: { resetOnLogout?: boolean },
 ) {
   const ctx = useContext(UserPreferencesContext);
   const applyRef = useRef(apply);
   applyRef.current = apply;
   const currentRef = useRef<T>(currentValue);
   currentRef.current = currentValue;
+  const resetOnLogout = options?.resetOnLogout ?? false;
 
   useEffect(() => {
     if (!ctx) return;
@@ -411,10 +465,11 @@ export function useSyncedPreference<T>(
       apply: (v) => applyRef.current(v),
       read: () => currentRef.current,
       reset: () => applyRef.current(defaultValue),
+      resetOnLogout,
     });
     // defaultValue is a stable primitive/const per call site.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ctx, key]);
+  }, [ctx, key, resetOnLogout]);
 
   const push = useCallback(
     (value: unknown) => {
