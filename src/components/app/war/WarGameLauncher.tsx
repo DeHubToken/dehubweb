@@ -275,6 +275,47 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
   // context on every re-render.
   const [cap] = useState(checkCapability);
 
+  // The game generates all of its assets at boot, which measured roughly 25 to
+  // 60 seconds depending on the machine, and it renders black throughout with
+  // no loading UI of its own. Without a readout that is indistinguishable from
+  // a crash, which is exactly how it was first reported. The vendored
+  // index.html mirrors the engine's console.info progress to us over
+  // postMessage; see public/war-game/README.md.
+  const [status, setStatus] = useState('ESTABLISHING LINK');
+  const [ready, setReady] = useState(false);
+  const [stalled, setStalled] = useState(false);
+
+  useEffect(() => {
+    const onMessage = (e: MessageEvent) => {
+      const d = e.data as { source?: string; type?: string; text?: string } | null;
+      if (!d || d.source !== 'war-game') return;
+      if (d.type === 'ready') {
+        setReady(true);
+        return;
+      }
+      if (d.type === 'error') {
+        setStatus(`FAULT: ${d.text ?? 'unknown'}`);
+        return;
+      }
+      if (d.text) {
+        // The engine's lines look like "[world] built in 47982ms - ...".
+        // Show the subsystem and drop the metrics, which are noise here.
+        const label = d.text.replace(/^\[([a-z]+)\]\s*/i, (_m, sub) => `${String(sub).toUpperCase()} / `);
+        setStatus(label.slice(0, 64).toUpperCase());
+      }
+    };
+    window.addEventListener('message', onMessage);
+    return () => window.removeEventListener('message', onMessage);
+  }, []);
+
+  // If nothing has arrived at all after 15s the bridge is not reporting, so
+  // say so rather than showing a spinner that will never resolve.
+  useEffect(() => {
+    if (ready) return;
+    const t = window.setTimeout(() => setStalled(true), 15000);
+    return () => window.clearTimeout(t);
+  }, [ready]);
+
   useEffect(() => {
     // The game takes over the viewport, so stop the feed scrolling behind it.
     const previous = document.body.style.overflow;
@@ -332,6 +373,24 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
         // it forces an opaque origin and keeps the game sandboxed.
         sandbox="allow-scripts allow-pointer-lock allow-fullscreen"
       />
+      )}
+
+      {/* Boot readout. Sits over the frame until the engine reports ready, so
+          the long procedural bake reads as work in progress rather than a
+          hang. Pointer events pass through to the game underneath. */}
+      {cap.ok && !ready && (
+        <div data-war-game-boot role="status" aria-live="polite">
+          <p data-war-deploy-kicker>GENERATING COMBAT ZONE</p>
+          <p data-war-deploy-title>{status}</p>
+          <div data-war-game-boot-bar aria-hidden="true">
+            <span />
+          </div>
+          <p data-war-game-boot-note>
+            {stalled
+              ? 'Taking longer than usual. Every texture, mesh and particle atlas is generated on this machine, with no downloaded art. On slower hardware the first build can exceed a minute.'
+              : 'All terrain and materials are generated on this machine. First build takes 25 to 60 seconds.'}
+          </p>
+        </div>
       )}
     </div>
   );
