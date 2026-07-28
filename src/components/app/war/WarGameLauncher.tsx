@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppTheme } from '@/contexts/ThemeContext';
+import { scheduleBackgroundResume, setBackgroundPaused } from '@/lib/background-gate';
 
 /**
  * War theme game launcher.
@@ -190,6 +191,71 @@ function LauncherInner() {
 /** Vendored build under public/. See public/war-game/README.md for provenance. */
 const BUNDLED_GAME_URL = '/war-game/index.html';
 
+interface Capability {
+  ok: boolean;
+  reason: string;
+  detail: string;
+}
+
+/**
+ * Preflight the GPU before handing the viewport to the game.
+ *
+ * The game is WebGL2 only and generates all of its geometry, textures and audio
+ * at runtime. When WebGL2 is missing, or present but backed by a software
+ * rasteriser, it does not fail loudly: it shows a black canvas or crawls at a
+ * few frames per second, which is indistinguishable from "it does not load".
+ * Checking first means the overlay can say what is actually wrong.
+ *
+ * Note RAM is not among the checks, deliberately. A build like this holds a few
+ * hundred MB of JS heap at most; machines that cannot run it are almost always
+ * limited by the GPU, the driver, or hardware acceleration being switched off,
+ * not by system memory.
+ */
+function checkCapability(): Capability {
+  if (typeof document === 'undefined') {
+    return { ok: true, reason: '', detail: '' };
+  }
+
+  const canvas = document.createElement('canvas');
+  const gl = canvas.getContext('webgl2') as WebGL2RenderingContext | null;
+
+  if (!gl) {
+    const gl1 = canvas.getContext('webgl');
+    return {
+      ok: false,
+      reason: 'WEBGL2 UNAVAILABLE',
+      detail: gl1
+        ? 'This browser reports WebGL 1 only. The game requires WebGL 2. Updating the browser or the graphics driver usually resolves it.'
+        : 'No WebGL context at all. Hardware acceleration is most likely disabled in the browser settings.',
+    };
+  }
+
+  // Unmasked renderer is the only reliable way to spot a software fallback.
+  // It is gated behind an extension and some browsers withhold it, in which
+  // case the check simply passes rather than blocking a machine that may
+  // actually be fine.
+  let renderer = '';
+  const info = gl.getExtension('WEBGL_debug_renderer_info');
+  if (info) {
+    renderer = String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL) ?? '');
+  }
+
+  // Free the probe context immediately: contexts are a scarce resource and the
+  // game is about to ask for its own.
+  gl.getExtension('WEBGL_lose_context')?.loseContext();
+
+  const soft = /swiftshader|llvmpipe|software|basic render|microsoft basic/i;
+  if (renderer && soft.test(renderer)) {
+    return {
+      ok: false,
+      reason: 'SOFTWARE RENDERING',
+      detail: `The GPU is not being used (${renderer}). The game would run at a few frames per second. Enable hardware acceleration in the browser settings, then restart it.`,
+    };
+  }
+
+  return { ok: true, reason: '', detail: renderer };
+}
+
 /**
  * The game surface itself.
  *
@@ -205,6 +271,9 @@ const BUNDLED_GAME_URL = '/war-game/index.html';
 function WarGameOverlay({ onExit }: { onExit: () => void }) {
   const gameUrl =
     (import.meta.env.VITE_WAR_GAME_URL as string | undefined) || BUNDLED_GAME_URL;
+  // Probed once on mount. Running it during render would create a throwaway GL
+  // context on every re-render.
+  const [cap] = useState(checkCapability);
 
   useEffect(() => {
     // The game takes over the viewport, so stop the feed scrolling behind it.
@@ -212,6 +281,19 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
     document.body.style.overflow = 'hidden';
     return () => {
       document.body.style.overflow = previous;
+    };
+  }, []);
+
+  useEffect(() => {
+    // Park the tactical-map background for the duration. It is a full-screen
+    // shader that would otherwise keep burning fill rate underneath an opaque
+    // full-screen game, on the exact frame budget the game needs. The game is
+    // the heaviest thing this app ever runs, so it gets the GPU to itself.
+    setBackgroundPaused(true);
+    return () => {
+      // Deferred, so the terrain spins back up as the overlay unmounts rather
+      // than competing with the game's teardown.
+      scheduleBackgroundResume();
     };
   }, []);
 
@@ -229,6 +311,13 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
         EXTRACT / ESC
       </button>
 
+      {!cap.ok ? (
+        <div data-war-game-missing>
+          <p data-war-deploy-kicker>{cap.reason}</p>
+          <p data-war-deploy-title>CANNOT DEPLOY</p>
+          <p>{cap.detail}</p>
+        </div>
+      ) : (
       <iframe
         src={gameUrl}
         title="Claude of Duty"
@@ -243,6 +332,7 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
         // it forces an opaque origin and keeps the game sandboxed.
         sandbox="allow-scripts allow-pointer-lock allow-fullscreen"
       />
+      )}
     </div>
   );
 }

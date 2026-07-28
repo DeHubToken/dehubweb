@@ -27,14 +27,30 @@
    because the chip has fixed dimensions and holds nothing but a centred icon,
    so there is no overflow to clip and no sticky descendant to break.
    -------------------------------------------------------------------------- */
+/* The notch lives on a ::before layer, NOT on the chip itself.
+   clip-path on the chip would clip everything it paints INCLUDING its
+   children, and these chips carry absolutely positioned overflow badges at
+   -top-1 -right-1 (the unread count, and the "Test" pill on Prompt / Work /
+   Stores). Clipping the chip cut those badges in half at exactly the notched
+   corner. Painting the notched surface on a pseudo-element keeps the chip
+   itself unclipped, so the badges overflow freely. */
 html[data-theme='war'] [data-side-panel] :is(a, button) > div:has(> svg) {
+  position: relative;
   border-radius: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+
+html[data-theme='war'] [data-side-panel] :is(a, button) > div:has(> svg)::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
   background: linear-gradient(
-      168deg,
-      rgb(var(--war-olive) / 0.5) 0%,
-      rgb(var(--war-gunmetal) / 0.9) 60%
-    )
-    !important;
+    168deg,
+    rgb(var(--war-olive) / 0.5) 0%,
+    rgb(var(--war-gunmetal) / 0.9) 60%
+  );
   box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.22);
   /* Top-left and bottom-right notched, matching the sheet's icon buttons. */
   clip-path: polygon(
@@ -59,13 +75,12 @@ html[data-theme='war'] [data-side-panel] :is(a, button) > div > svg {
 /* --------------------------------------------------------------------------
    Hover: the chip lights up and the hairline strengthens.
    -------------------------------------------------------------------------- */
-html[data-theme='war'] [data-side-panel] :is(a, button):hover > div:has(> svg) {
+html[data-theme='war'] [data-side-panel] :is(a, button):hover > div:has(> svg)::before {
   background: linear-gradient(
-      168deg,
-      rgb(var(--war-olive) / 0.75) 0%,
-      rgb(var(--war-gunmetal) / 0.95) 60%
-    )
-    !important;
+    168deg,
+    rgb(var(--war-olive) / 0.75) 0%,
+    rgb(var(--war-gunmetal) / 0.95) 60%
+  );
   box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.55);
 }
 
@@ -81,13 +96,12 @@ html[data-theme='war'] [data-side-panel] :is(a, button):hover > div > svg {
    `aria-current="page"` is what NavLink sets, so this needs no new hook and
    cannot drift out of sync with the router.
    -------------------------------------------------------------------------- */
-html[data-theme='war'] [data-side-panel] a[aria-current='page'] > div:has(> svg) {
+html[data-theme='war'] [data-side-panel] a[aria-current='page'] > div:has(> svg)::before {
   background: linear-gradient(
-      168deg,
-      rgb(var(--war-hud) / 0.2) 0%,
-      rgb(var(--war-gunmetal) / 0.95) 65%
-    )
-    !important;
+    168deg,
+    rgb(var(--war-hud) / 0.2) 0%,
+    rgb(var(--war-gunmetal) / 0.95) 65%
+  );
   box-shadow:
     inset 0 0 0 1px rgb(var(--war-hud) / 0.75),
     inset 3px 0 0 rgb(var(--war-hud));
