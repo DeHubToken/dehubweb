@@ -114,7 +114,15 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       await onComplete(derived.ethPrivateKey);
     } catch (err) {
       if (err instanceof PasskeyCancelledError) return; // dismissed — not a failure
-      setError(err instanceof Error ? err.message : 'Biometric unlock failed');
+      const message = err instanceof Error ? err.message : 'Biometric unlock failed';
+      // The passkey layer states the failure but not the remedy, because only
+      // here do we know whether this wallet has a password to fall back to.
+      // Telling a biometrics-only user to "use your password" is a dead end.
+      setError(
+        hasPasswordWrap
+          ? `${message} Use your wallet password instead.`
+          : `${message} This wallet has no password yet — sign in on a device where biometrics work and add one from Settings → Account Security.`,
+      );
     } finally {
       setBusy(false);
     }
@@ -153,7 +161,13 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
     }
   };
 
-  /** Enrol from the post-password offer, then finish signing in either way. */
+  /**
+   * Enrol from the post-password offer, then finish signing in either way.
+   *
+   * Enrolment and sign-in are caught separately on purpose: they used to share
+   * one try/catch, so a sign-in failure was reported as an enrolment failure
+   * AND retried a second time from the catch block.
+   */
   const handleEnrollOffer = async () => {
     if (!pendingSecret || !pendingPrivKey) return;
     setBusy(true);
@@ -161,18 +175,21 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
     try {
       await enrollBiometricUnlock(userId, pendingSecret);
       toast.success('Biometric unlock is on — no password next time');
-      setPendingSecret(null);
-      await onComplete(pendingPrivKey);
     } catch (err) {
       if (err instanceof PasskeyCancelledError) {
         setBusy(false);
         return; // stay on the offer; they can skip or retry
       }
-      // Enrolment is a convenience, never a gate on signing in.
+      // Enrolment is a convenience, never a gate on signing in — fall through.
       console.warn('[WalletUnlock] Biometric enrolment failed:', err);
       toast.error(err instanceof Error ? err.message : 'Could not turn on biometric unlock');
-      setPendingSecret(null);
+    }
+
+    setPendingSecret(null);
+    try {
       await onComplete(pendingPrivKey);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to sign in');
     } finally {
       setBusy(false);
     }

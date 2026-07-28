@@ -300,7 +300,9 @@ export async function decryptStringWithKeyMaterial(
   try {
     return await aesDecrypt(key, iv, ct);
   } catch {
-    throw new Error("This passkey can't unlock this wallet. Try your password instead.");
+    // Deliberately says nothing about what to do next: only the caller knows
+    // whether this wallet even has a password to fall back to.
+    throw new Error("This passkey can't unlock this wallet.");
   }
 }
 
