@@ -95,6 +95,50 @@ const langNameMap: Record<string, string> = {
   ig: 'Igbo',
   zu: 'Zulu',
   xh: 'Xhosa',
+  // The rest of the codes the apps' language pickers can actually produce.
+  // Anything missing here used to be silently rewritten to English.
+  arz: 'Egyptian Arabic',
+  ary: 'Moroccan Arabic (Darija)',
+  acm: 'Arabic, Mesopotamian Spoken',
+  acw: 'Arabic, Hijazi Spoken',
+  aec: "Arabic, Sa'idi Spoken",
+  ajp: 'Arabic, South Levantine Spoken',
+  ayn: 'Arabic, Sanaani Spoken',
+  apd: 'Arabic, Sudanese Spoken',
+  be: 'Belarusian',
+  bho: 'Bhojpuri',
+  cjy: 'Chinese, Jinyu',
+  mnp: 'Chinese, Min Bei',
+  yue: 'Cantonese',
+  wuu: 'Wu Chinese',
+  ctg: 'Chittagonian',
+  hne: 'Chhattisgarhi',
+  dcc: 'Deccan',
+  dyu: 'Jula',
+  gsw: 'Swiss German',
+  ha: 'Hausa',
+  jv: 'Javanese',
+  ku: 'Kurdish',
+  ky: 'Kyrgyz',
+  mag: 'Magahi',
+  mi: 'Maori',
+  om: 'Oromo',
+  or: 'Odia',
+  pbt: 'Pashto, Southern',
+  pcm: 'Nigerian Pidgin',
+  qu: 'Quechua',
+  rkt: 'Rangpuri',
+  sd: 'Sindhi',
+  sdr: 'Sadri',
+  skr: 'Saraiki',
+  so: 'Somali',
+  syl: 'Sylheti',
+  tg: 'Tajik',
+  ti: 'Tigrinya',
+  tk: 'Turkmen',
+  tts: 'Thai, Northeastern',
+  ug: 'Uyghur',
+  wes: 'Pidgin, Cameroon',
 };
 
 // Simple in-memory cache with LRU eviction
@@ -171,7 +215,15 @@ serve(async (req) => {
       );
     }
 
-    const targetLangName = langNameMap[targetLang] || 'English';
+    // Falling back to English here is what made an unmapped code look like a
+    // broken feature: the sheet reported "Translated from English" and handed
+    // back the original text. Pass the raw code through instead — the model
+    // handles ISO 639 codes far better than it handles being told the wrong
+    // target language.
+    const targetLangName = langNameMap[targetLang] || targetLang;
+    if (!langNameMap[targetLang]) {
+      console.warn('Unmapped target language, passing code through:', targetLang);
+    }
 
     // Single API call: Extract + Detect Language + Translate
     const prompt = `Analyze this image and perform the following tasks:
