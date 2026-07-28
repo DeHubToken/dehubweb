@@ -38,49 +38,65 @@ const FRAG = /* glsl */ `
   uniform sampler2D u_map;
   uniform float u_time;
   uniform vec2 u_texel;
+  uniform vec2 u_fit;
   uniform vec3 u_phosphor;
   uniform vec3 u_fringe;
 
   varying vec2 v_uv;
 
   void main() {
+    // Aspect correction, equivalent to the object-contain the original <img>
+    // used. Without it the quad stretches the mark across whatever box the
+    // sidebar gives it, which distorted the wordmark and squashed the compact
+    // mark into its 22px square. u_fit expands the sampled region on the axis
+    // with slack, and anything landing outside the texture is dropped rather
+    // than smeared by clamping.
+    vec2 uv = (v_uv - 0.5) * u_fit + 0.5;
+    if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) discard;
+
     // Chromatic split: red and blue sampled a texel either side of green. Tiny
     // enough to read as refraction rather than a blur, and it is what makes the
     // mark look projected instead of printed.
     float shift = u_texel.x * 1.6;
-    float r = texture2D(u_map, v_uv + vec2(shift, 0.0)).a;
-    float g = texture2D(u_map, v_uv).a;
-    float b = texture2D(u_map, v_uv - vec2(shift, 0.0)).a;
+    float r = texture2D(u_map, uv + vec2(shift, 0.0)).a;
+    float g = texture2D(u_map, uv).a;
+    float b = texture2D(u_map, uv - vec2(shift, 0.0)).a;
     float alpha = max(g, max(r, b));
 
     // Rim light from an alpha gradient. Sampling the neighbourhood and
     // subtracting the centre isolates the glyph edge, so the glow follows the
     // outline of the artwork and never bleeds into a rectangle.
     float ring = 0.0;
-    ring = max(ring, texture2D(u_map, v_uv + vec2(u_texel.x * 2.0, 0.0)).a);
-    ring = max(ring, texture2D(u_map, v_uv - vec2(u_texel.x * 2.0, 0.0)).a);
-    ring = max(ring, texture2D(u_map, v_uv + vec2(0.0, u_texel.y * 2.0)).a);
-    ring = max(ring, texture2D(u_map, v_uv - vec2(0.0, u_texel.y * 2.0)).a);
+    ring = max(ring, texture2D(u_map, uv + vec2(u_texel.x * 2.0, 0.0)).a);
+    ring = max(ring, texture2D(u_map, uv - vec2(u_texel.x * 2.0, 0.0)).a);
+    ring = max(ring, texture2D(u_map, uv + vec2(0.0, u_texel.y * 2.0)).a);
+    ring = max(ring, texture2D(u_map, uv - vec2(0.0, u_texel.y * 2.0)).a);
     float edge = clamp(ring - g, 0.0, 1.0);
 
-    // Core stays near white so the mark reads as emissive rather than dyed;
-    // the phosphor colour arrives through the fringe, the rim and the sweep.
-    vec3 col = mix(u_phosphor, vec3(1.0), 0.62 * g);
+    // Core is essentially white. An earlier mix sat at 62 percent white and
+    // read as a dim green smudge at 22px, which is the size the collapsed rail
+    // actually uses. The phosphor identity comes from the rim, the fringe and
+    // the sweep, not from dyeing the mark itself.
+    vec3 col = mix(u_phosphor, vec3(1.0), 0.88 * g);
     col += u_fringe * (r - b) * 0.9;
-    col += u_phosphor * edge * 1.5;
+    col += u_phosphor * edge * 1.6;
 
     // Scan band travelling up the mark, and a slow brightness sway. Both are
-    // multiplied into the alpha-masked colour, never added as a backdrop.
-    float band = smoothstep(0.035, 0.0, abs(fract(u_time * 0.16) - v_uv.y));
-    col += u_phosphor * band * 0.55;
-    col *= 0.92 + 0.08 * sin(u_time * 1.7);
+    // multiplied into the alpha-masked colour, never added as a backdrop. The
+    // sway floor is high enough that the mark never dips toward unreadable.
+    float band = smoothstep(0.035, 0.0, abs(fract(u_time * 0.16) - uv.y));
+    col += u_phosphor * band * 0.5;
+    col *= 0.97 + 0.03 * sin(u_time * 1.7);
 
     // Horizontal tear lines: a couple of scanlines of the classic unstable
     // projection, kept subtle enough to survive at 22px tall.
-    float tear = step(0.997, fract(sin(floor(v_uv.y * 90.0 + u_time * 6.0)) * 43758.5453));
-    col += u_phosphor * tear * 0.2;
+    float tear = step(0.997, fract(sin(floor(uv.y * 90.0 + u_time * 6.0)) * 43758.5453));
+    col += u_phosphor * tear * 0.18;
 
-    float a = alpha + edge * 0.55 + band * alpha * 0.3;
+    // Alpha tracks the artwork's own coverage. Opacity was previously lost to
+    // the same dimming that washed the colour out, which is why the collapsed
+    // mark was hard to see at all.
+    float a = alpha + edge * 0.5;
     gl_FragColor = vec4(col, clamp(a, 0.0, 1.0));
   }
 `;
@@ -148,6 +164,10 @@ export function WarLogo({ src, alt, className }: WarLogoProps) {
       u_map: { value: null as THREE.Texture | null },
       u_time: { value: 0 },
       u_texel: { value: new THREE.Vector2(1 / 512, 1 / 512) },
+      // Aspect fit, recomputed whenever the texture arrives or the host
+      // resizes. 1,1 means "fill", which is only correct when the box and the
+      // artwork happen to share an aspect ratio.
+      u_fit: { value: new THREE.Vector2(1, 1) },
       u_phosphor: { value: new THREE.Color(0.24, 0.96, 0.56) },
       u_fringe: { value: new THREE.Color(0.31, 0.89, 0.88) },
     };
@@ -172,11 +192,33 @@ export function WarLogo({ src, alt, className }: WarLogoProps) {
     let disposed = false;
     let texture: THREE.Texture | null = null;
 
+    // Texture dimensions, once known. Kept out here so both the resize handler
+    // and the texture callback can recompute the fit from whichever arrives
+    // second.
+    let texW = 0;
+    let texH = 0;
+
+    const applyFit = () => {
+      const w = Math.max(1, host.clientWidth);
+      const h = Math.max(1, host.clientHeight);
+      if (!texW || !texH) return;
+      const boxAspect = w / h;
+      const texAspect = texW / texH;
+      // Expand the sampled region on whichever axis has slack, so the mark is
+      // letterboxed inside its box rather than stretched to fill it.
+      if (texAspect > boxAspect) {
+        uniforms.u_fit.value.set(1, texAspect / boxAspect);
+      } else {
+        uniforms.u_fit.value.set(boxAspect / texAspect, 1);
+      }
+    };
+
     const resize = () => {
       const w = Math.max(1, host.clientWidth);
       const h = Math.max(1, host.clientHeight);
       renderer.setSize(w, h, false);
       capPixelRatio(renderer, w, h, 400_000, 2);
+      applyFit();
     };
 
     const observer = new ResizeObserver(resize);
@@ -198,10 +240,13 @@ export function WarLogo({ src, alt, className }: WarLogoProps) {
         tex.generateMipmaps = false;
         texture = tex;
         uniforms.u_map.value = tex;
+        texW = tex.image.width || 0;
+        texH = tex.image.height || 0;
         uniforms.u_texel.value.set(
-          1 / Math.max(1, tex.image.width),
-          1 / Math.max(1, tex.image.height),
+          1 / Math.max(1, texW),
+          1 / Math.max(1, texH),
         );
+        applyFit();
       },
       undefined,
       () => setFailed(true),
