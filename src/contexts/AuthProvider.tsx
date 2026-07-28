@@ -215,7 +215,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       queryClient.removeQueries({ queryKey: ['single-post'] });
       queryClient.removeQueries({ queryKey: ['unified-feed'] });
       queryClient.removeQueries({ queryKey: ['dehub-feed'] });
-      queryClient.removeQueries({ queryKey: ['profile-content'] });
+      queryClient.removeQueries({ queryKey: ['dehub-user-content'] });
     }
     prevWalletRef.current = curr;
   }, [walletAddress, queryClient]);
@@ -225,7 +225,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const handler = (e: Event) => {
       if (!(e as CustomEvent<{ wasExpired?: boolean }>).detail?.wasExpired) return;
-      for (const key of ['unified-feed', 'dehub-feed', 'profile-content', 'single-post', 'bookmarks']) {
+      for (const key of ['unified-feed', 'dehub-feed', 'dehub-user-content', 'single-post', 'bookmarks']) {
         queryClient.invalidateQueries({ queryKey: [key] });
       }
     };

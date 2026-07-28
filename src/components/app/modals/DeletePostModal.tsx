@@ -43,7 +43,7 @@ export function DeletePostModal({
       if (result.result) {
         markPostDeleted(tokenId);
         queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-        queryClient.invalidateQueries({ queryKey: ['profile-content'] });
+        queryClient.invalidateQueries({ queryKey: ['dehub-user-content'] });
         toast.success('Post deleted');
         onSuccess?.();
         onOpenChange(false);

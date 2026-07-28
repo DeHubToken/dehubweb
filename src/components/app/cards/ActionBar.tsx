@@ -362,7 +362,7 @@ export function ActionBar({
         setTimeout(() => {
           queryClient.invalidateQueries({ queryKey: ['unified-feed'], refetchType: 'none' });
           queryClient.invalidateQueries({ queryKey: ['dehub-feed'], refetchType: 'none' });
-          queryClient.invalidateQueries({ queryKey: ['profile-content'], refetchType: 'none' });
+          queryClient.invalidateQueries({ queryKey: ['dehub-user-content'], refetchType: 'none' });
         }, 2000);
       }
     } catch (error: unknown) {
