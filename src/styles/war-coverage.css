@@ -188,6 +188,7 @@ html[data-theme='war'] [data-primary-cta]::before {
   position: absolute;
   inset: 0;
   pointer-events: none;
+  z-index: -1;
   background: linear-gradient(
     158deg,
     rgb(var(--war-hud) / 0.26) 0%,
