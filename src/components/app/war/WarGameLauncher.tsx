@@ -191,6 +191,36 @@ function LauncherInner() {
 /** Vendored build under public/. See public/war-game/README.md for provenance. */
 const BUNDLED_GAME_URL = '/war-game/index.html';
 
+/**
+ * Pick the engine's quality preset.
+ *
+ * The game reads `?q=` and defaults to "ultra" when it is absent: 4x2048 shadow
+ * cascades, TAA, GTAO, SSR, volumetrics, motion blur and a 24000 particle
+ * budget. Every one of those assets is generated in JavaScript at boot, so
+ * ultra is what made first load take the better part of a minute and then sit
+ * on a black screen. "low" turns the expensive passes off, halves the shadow
+ * maps and cuts the particle budget to 2000.
+ *
+ * Defaulting to "high" rather than ultra keeps it looking like a real game
+ * while removing the worst of the bake, and anything that looks like a phone,
+ * a small viewport or a low core count drops to "low". This is a load-time
+ * decision, not a frame-rate one: the presets change how much has to be built
+ * before anything can be shown at all.
+ */
+function pickQuality(): string {
+  if (typeof navigator === 'undefined') return 'high';
+
+  const cores = navigator.hardwareConcurrency ?? 4;
+  const coarse =
+    typeof window.matchMedia === 'function' &&
+    window.matchMedia('(pointer: coarse)').matches;
+  const small = Math.min(window.innerWidth, window.innerHeight) < 700;
+
+  if (coarse || small || cores <= 4) return 'low';
+  if (cores <= 8) return 'medium';
+  return 'high';
+}
+
 interface Capability {
   ok: boolean;
   reason: string;
@@ -269,8 +299,14 @@ function checkCapability(): Capability {
  * of game code out of the entry bundle until a player actually deploys.
  */
 function WarGameOverlay({ onExit }: { onExit: () => void }) {
-  const gameUrl =
-    (import.meta.env.VITE_WAR_GAME_URL as string | undefined) || BUNDLED_GAME_URL;
+  // Resolved once: re-picking on a re-render would reload the iframe and
+  // restart the bake from zero.
+  const [gameUrl] = useState(() => {
+    const base =
+      (import.meta.env.VITE_WAR_GAME_URL as string | undefined) || BUNDLED_GAME_URL;
+    const sep = base.includes('?') ? '&' : '?';
+    return `${base}${sep}q=${pickQuality()}`;
+  });
   // Probed once on mount. Running it during render would create a throwaway GL
   // context on every re-render.
   const [cap] = useState(checkCapability);
@@ -329,24 +365,15 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
   useEffect(() => {
     if (ready) return;
 
-    const cap = window.setTimeout(() => setReady(true), 120000);
-
-    let armed = false;
-    const arm = window.setTimeout(() => {
-      armed = true;
-    }, 15000);
-    const dismissOnInput = () => {
-      if (armed) setReady(true);
-    };
-
-    window.addEventListener('pointerdown', dismissOnInput);
-    window.addEventListener('keydown', dismissOnInput);
-    return () => {
-      window.clearTimeout(cap);
-      window.clearTimeout(arm);
-      window.removeEventListener('pointerdown', dismissOnInput);
-      window.removeEventListener('keydown', dismissOnInput);
-    };
+    // Hard cap only. An earlier version also retired the panel on any pointer
+    // or key input after 15 seconds, which was a mistake: the bake routinely
+    // runs past a minute, so a player clicking on the frame (the natural thing
+    // to do) tore away the only feedback and left them staring at black,
+    // convinced it had crashed. Interaction is not evidence the game is ready.
+    // The panel is pointer-events:none, so it never blocks anything while it
+    // waits, and there is an explicit control to hide it.
+    const cap = window.setTimeout(() => setReady(true), 180000);
+    return () => window.clearTimeout(cap);
   }, [ready]);
 
   useEffect(() => {
@@ -423,9 +450,12 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
           </div>
           <p data-war-game-boot-note>
             {stalled
-              ? 'Taking longer than usual. Every texture, mesh and particle atlas is generated on this machine, with no downloaded art. On slower hardware the first build can exceed a minute.'
-              : 'All terrain and materials are generated on this machine. First build takes 25 to 60 seconds.'}
+              ? 'Still building. Every texture, mesh and particle atlas is generated on this machine, with no downloaded art, so this is work rather than a hang. Clicking will not speed it up.'
+              : 'All terrain and materials are generated on this machine. Nothing is downloaded.'}
           </p>
+          <button type="button" data-war-game-boot-hide onClick={() => setReady(true)}>
+            HIDE READOUT
+          </button>
         </div>
       )}
     </div>
