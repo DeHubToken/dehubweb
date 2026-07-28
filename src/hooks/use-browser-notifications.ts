@@ -6,6 +6,7 @@
  */
 
 import { useState, useCallback, useRef } from 'react';
+import { isQuietNow } from '@/lib/quiet-hours';
 
 const STORAGE_KEY = 'dehub_browser_notifications';
 const LAST_SEEN_KEY = 'dehub_notifications_last_seen';
@@ -52,6 +53,9 @@ export function useBrowserNotifications() {
     // Only show when tab is not focused, permission granted, and feature enabled
     if (!document.hidden) return;
     if (!getStoredEnabled()) return;
+    // Quiet hours were written to localStorage but never read until now, so
+    // this setting had no effect on delivery at all.
+    if (isQuietNow()) return;
     if (typeof Notification === 'undefined') return;
     if (Notification.permission !== 'granted') return;
     if (id && shownRef.current.has(id)) return;
