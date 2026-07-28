@@ -110,6 +110,58 @@ html[data-theme='war']
   color: inherit !important;
 }
 
+/* ARBITRARY VARIANTS. `[&>div]:!text-black` compiles to a single escaped class
+   token that sits on the PARENT while declaring colour on the CHILD. The
+   literal `.text-black` selector above can never match that token, and because
+   the child carries its own `!important` declaration, nothing inherited from
+   the parent can override it either. Both facts have to be worked around at
+   once: match the parent by substring, then reach the child structurally.
+
+   Confirmed live on the Launchpad Buy/Sell tabs, the Chain and Curve selectors
+   on the create flow, and several subscription and pricing CTAs. Section 1 had
+   already rewritten those fills to gunmetal, so the labels were black on
+   near-black at roughly 1.2:1.
+
+   Deleting the class in the components was considered and rejected: it is
+   correct under the other eight themes, where the pill genuinely is white. */
+html[data-theme='war'] [class*='!text-black'] > div,
+html[data-theme='war'] [class*='!text-black'] > div :is(span, svg, p, strong),
+html[data-theme='war'] [class*='!text-zinc-900'] > div,
+html[data-theme='war'] [class*='!text-zinc-900'] > div :is(span, svg, p, strong) {
+  color: rgb(var(--war-hud)) !important;
+}
+
+/* Selection then rests on colour alone, because the unselected sibling takes
+   the same gunmetal fill from section 1. Give the active one an edge back. */
+html[data-theme='war'] [class*='!bg-white'] > div {
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.7) !important;
+}
+
+/* PLAIN WHITE SURFACES. Badges, ribbons and pills authored as a white chip with
+   dark text: the "Test" nav pills, draft counts, "Featured" and "Best value"
+   ribbons, leaderboard rank medallions. Section 1 only matches the /10 and /5
+   opacity variants, so an unqualified .bg-white slipped through and kept a
+   white fill, which is glaring on this theme even before the text is read. */
+html[data-theme='war'] :is(.bg-white, .bg-zinc-50, .bg-neutral-50) {
+  background-color: rgb(var(--war-hud) / 0.16) !important;
+  color: rgb(var(--war-hud)) !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.55);
+}
+
+/* METALLIC CHIPS. A hand-rolled silver gradient applied through an inline
+   `style` attribute, paired with dark text. Inline styles cannot be beaten by
+   specificity at all, only by `!important`, and there is no hook to target, so
+   the selector keys on the combination that identifies them: an inline style
+   AND a dark-text utility. Narrow enough not to catch ordinary styled elements,
+   since almost nothing else pairs those two. */
+html[data-theme='war'] [style][class*='text-black'],
+html[data-theme='war'] [style][class*='text-zinc-900'] {
+  background-image: none !important;
+  background-color: rgb(var(--war-olive) / 0.55) !important;
+  color: rgb(var(--war-hud)) !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.5);
+}
+
 /* --------------------------------------------------------------------------
    2. The create-post control. The user named this one twice.
 
