@@ -245,7 +245,12 @@ html[data-theme='war'] [data-feed-nav-outer] {
 }
 
 html[data-theme='war'] [data-feed-nav] {
-  position: relative;
+  /* NOT `position: relative`. This element is `sticky` in the markup, and
+     overriding the position dropped it out of the sticky flow so the feed nav
+     scrolled away with the content instead of pinning. `isolation` alone gives
+     the stacking context the decoration needs, without touching positioning.
+     Same mistake as the drawer rule below: assuming a positioned ancestor has
+     to be created, when the component already established one. */
   isolation: isolate;
   border-radius: 0 !important;
   background: transparent !important;
@@ -622,11 +627,19 @@ html[data-theme='war']
   border-radius: 0 !important;
 }
 
-/* Corner brackets on the two portals that read as framed panels. */
-html[data-theme='war'] [data-login-modal],
-html[data-theme='war'] [data-post-modal] {
-  position: relative;
-}
+/* Corner brackets on the two portals that read as framed panels.
+ *
+ * DO NOT set `position: relative` here. Both of these are vaul drawer content,
+ * which ships `position: fixed` (fixed inset-x-0 bottom-0 z-[100]) and is
+ * opened by animating a transform against the viewport. Forcing `relative`
+ * dropped them out of viewport positioning into normal document flow, so the
+ * post composer opened somewhere useless and the login modal never appeared at
+ * all. Both were reported as "does not open".
+ *
+ * The rule existed to give the ::after brackets a containing block, which was
+ * never needed: `position: fixed` is already a positioned ancestor, so an
+ * absolutely positioned pseudo-element resolves against it correctly.
+ */
 html[data-theme='war'] [data-login-modal]::after,
 html[data-theme='war'] [data-post-modal]::after {
   content: '';
