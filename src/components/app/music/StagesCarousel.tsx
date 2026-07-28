@@ -6,6 +6,7 @@
  * @module components/app/music/StagesCarousel
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { Mic2, Users, ChevronRight, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLiveSpaces } from '@/contexts/StageContext';
@@ -98,7 +99,7 @@ export function StagesCarousel({ onOpenStages }: StagesCarouselProps) {
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <h2 className="font-bold text-white flex items-center gap-2">
-          <img src={stagesMicIcon} alt="" className="w-5 h-5 object-contain" />
+          <BrandIcon src={stagesMicIcon} alt="" className="w-5 h-5 object-contain" />
           Stages
           {liveSpaces.length > 0 && (
             <span className="text-zinc-500 font-normal text-sm">({liveSpaces.length})</span>

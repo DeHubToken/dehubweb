@@ -9,6 +9,7 @@
  * to ensure proper formatting (bold, italic, lists, etc.)
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -1934,7 +1935,7 @@ export default function AssistantPage() {
           }}
           className="flex items-center gap-3 group"
         >
-          <img src={aiSparkleIcon} alt="Assistant" className="w-10 h-10 object-contain group-hover:scale-110 transition-transform" />
+          <BrandIcon src={aiSparkleIcon} alt="Assistant" className="w-10 h-10 object-contain group-hover:scale-110 transition-transform" />
           <h1 className="text-lg font-semibold text-white leading-none mt-0.5">{t('assistant.title')}</h1>
         </button>
 

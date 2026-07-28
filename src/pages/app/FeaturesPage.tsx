@@ -6,6 +6,7 @@
  * Feature cards use the same UI pattern as text posts (ActionBar + CommentsWrapper).
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -899,7 +900,7 @@ export default function FeaturesPage() {
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <img src={featuresLightbulb} alt="Features" className="w-12 h-12 object-contain" />
+            <BrandIcon src={featuresLightbulb} alt="Features" className="w-12 h-12 object-contain" />
             <div>
               <h1 className="text-xl font-bold text-white">{t('features.title')}</h1>
               <p className="text-zinc-500 text-sm">{totalCount === 1 ? t('features.ideaSubmitted') : t('features.ideasSubmitted', { count: totalCount })}</p>
@@ -1066,7 +1067,7 @@ export default function FeaturesPage() {
           ) : (
             <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
               <div className="w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <img src={featuresLightbulb} alt="No features yet" className="w-16 h-16 object-contain opacity-40" />
+                <BrandIcon src={featuresLightbulb} alt="No features yet" className="w-16 h-16 object-contain opacity-40" />
               </div>
               <h3 className="text-white font-semibold mb-1">{t('features.noRequestsYet')}</h3>
               <p className="text-zinc-500 text-sm mb-4">{t('features.beFirstIdea')}</p>

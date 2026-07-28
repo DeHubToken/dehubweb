@@ -1,3 +1,4 @@
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect, memo, startTransition, type CSSProperties } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { SEOHead } from '@/components/SEOHead';
@@ -1275,7 +1276,7 @@ export default function ExplorePage() {
                   <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
                     <div className="flex items-center justify-between mb-4">
                         <h2 className="text-lg sm:text-xl font-bold text-white flex items-center gap-2">
-                        <img src={search3dIcon} alt="Search explore icon" className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
+                        <BrandIcon src={search3dIcon} alt="Search explore icon" className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
                         {t('explorePage.searchHistory')}
                       </h2>
                       {recentSearches.length > 0 && (

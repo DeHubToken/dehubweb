@@ -3,6 +3,7 @@
  * Joins the stage and opens the AudioSpacesModal.
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useStage } from '@/contexts/StageContext';
@@ -52,7 +53,7 @@ export default function StageDeepLinkPage() {
 
   return (
     <div data-glass-page className="min-h-screen bg-black flex flex-col items-center justify-center gap-4 text-white">
-      <img src={stagesMicIcon} alt="" className="w-16 h-16 object-contain opacity-80" />
+      <BrandIcon src={stagesMicIcon} alt="" className="w-16 h-16 object-contain opacity-80" />
       <div className="flex items-center gap-2 text-white/60">
         <Loader2 className="w-5 h-5 animate-spin" />
         <span>Joining stage...</span>

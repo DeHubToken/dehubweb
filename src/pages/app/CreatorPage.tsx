@@ -1,3 +1,4 @@
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -552,7 +553,7 @@ function MediaCardVisual({ kind }: { kind: string }) {
   if (kind === 'originals') {
     return (
       <div className="relative h-[288px] overflow-hidden rounded-lg border border-white/10 bg-black">
-        <img
+        <BrandIcon
           src={dehubOriginals}
           alt="DeHub Originals — cinematic post-apocalyptic wasteland with the DeHub wordmark"
           className="h-full w-full object-cover object-center"

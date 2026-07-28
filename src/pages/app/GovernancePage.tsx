@@ -5,6 +5,7 @@
  * Mirrors the Feature Requests UI pattern but without categories.
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import governanceShieldIcon from '@/assets/governance-shield.png';
 
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
@@ -714,7 +715,7 @@ export default function GovernancePage() {
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <img src={governanceShieldIcon} alt="Governance" className="w-12 h-12 object-contain brightness-75" />
+            <BrandIcon src={governanceShieldIcon} alt="Governance" className="w-12 h-12 object-contain brightness-75" />
             <div>
               <h1 className="text-xl font-bold text-white">{t('governance.title')}</h1>
               <p className="text-zinc-500 text-sm">{t('governance.proposalCount', { count: totalCount })}</p>
