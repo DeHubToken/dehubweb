@@ -16,6 +16,7 @@ import {
   type AdminUserStatus,
 } from '@/lib/api/dehub/admin';
 import { cn } from '@/lib/utils';
+import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 
 const JOINED_OPTIONS: { value: AdminJoinedWithin; label: string }[] = [
   { value: 'all', label: 'All time' },
@@ -239,9 +240,7 @@ export default function AdminUsersPage() {
         </div>
 
         {isLoading ? (
-          <div className="flex justify-center py-16">
-            <Loader2 className="w-8 h-8 animate-spin text-white/40" />
-          </div>
+          <DeHubPageLoader minHeight="40vh" />
         ) : isError ? (
           <div className="px-4 py-10 text-center">
             <p className="text-sm text-red-300 mb-3">

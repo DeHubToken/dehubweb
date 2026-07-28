@@ -39,6 +39,7 @@ import ComingSoonPage from "@/components/ComingSoonPage";
 import { useAppTheme } from "@/contexts/ThemeContext";
 import { getDocsForcedTheme } from "@/lib/docs-theme";
 import { setBackgroundPaused, scheduleBackgroundResume } from "@/lib/background-gate";
+import { DeHubPageLoader } from "@/components/app/DeHubLoader";
 
 const DocsHome = lazy(() => import("./docs/DocsHome"));
 const Overview = lazy(() => import("./docs/Overview"));
@@ -70,14 +71,10 @@ const BlogPost = lazy(() => import("./docs/BlogPost"));
 const FAQ = lazy(() => import("./docs/FAQ"));
 const Donate = lazy(() => import("./docs/Donate"));
 
-const PageLoader = () => (
-  <div className="flex items-center justify-center min-h-[400px]">
-    <div className="flex flex-col items-center space-y-4">
-      <div className="w-8 h-8 border-4 border-gray-200 border-t-gray-600 rounded-full animate-spin"></div>
-      <p className="text-gray-700 text-sm">Loading...</p>
-    </div>
-  </div>
-);
+// The DeHub mark inverts to black under `html.light`, which next-themes pins
+// for the light/minimal app themes — so this reads on paper docs and on the
+// dark/glass ones without a per-theme branch here.
+const PageLoader = () => <DeHubPageLoader minHeight="400px" />;
 
 const wrap = (El: React.ComponentType) => (
   <Suspense fallback={<PageLoader />}>
