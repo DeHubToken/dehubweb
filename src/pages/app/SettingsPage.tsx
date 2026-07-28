@@ -97,6 +97,7 @@ import { useWalletUnlockInterval, type WalletUnlockIntervalOption } from '@/hook
 import { WalletRecoveryTools } from '@/components/app/settings/WalletRecoveryTools';
 import { BiometricUnlockSettings } from '@/components/app/settings/BiometricUnlockSettings';
 import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
+import { getQuietHours, QH_ENABLED_KEY, QH_START_KEY, QH_END_KEY } from '@/lib/quiet-hours';
 import { PROFILE_TAB_OPTIONS } from '@/components/app/profile/ProfileConstants';
 import { useDmSettings } from '@/hooks/use-dm-settings';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
@@ -1193,30 +1194,26 @@ const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
 function QuietHoursSection() {
   const { t } = useTranslation();
-  const [enabled, setEnabled] = useState(() => {
-    try { return localStorage.getItem('dehub_qh_enabled') === 'true'; } catch { return false; }
-  });
-  const [start, setStart] = useState<number>(() => {
-    try { return parseInt(localStorage.getItem('dehub_qh_start') || '22', 10); } catch { return 22; }
-  });
-  const [end, setEnd] = useState<number>(() => {
-    try { return parseInt(localStorage.getItem('dehub_qh_end') || '8', 10); } catch { return 8; }
-  });
+  // Reads/writes go through @/lib/quiet-hours so this control and the delivery
+  // check in use-browser-notifications can never drift apart on key names.
+  const [enabled, setEnabled] = useState(() => getQuietHours().enabled);
+  const [start, setStart] = useState<number>(() => getQuietHours().start);
+  const [end, setEnd] = useState<number>(() => getQuietHours().end);
 
   const handleToggle = (checked: boolean) => {
     setEnabled(checked);
-    try { localStorage.setItem('dehub_qh_enabled', String(checked)); } catch {}
+    try { localStorage.setItem(QH_ENABLED_KEY, String(checked)); } catch {}
     toast.success(checked ? 'Quiet hours enabled' : 'Quiet hours disabled');
   };
 
   const handleStartChange = (h: number) => {
     setStart(h);
-    try { localStorage.setItem('dehub_qh_start', String(h)); } catch {}
+    try { localStorage.setItem(QH_START_KEY, String(h)); } catch {}
   };
 
   const handleEndChange = (h: number) => {
     setEnd(h);
-    try { localStorage.setItem('dehub_qh_end', String(h)); } catch {}
+    try { localStorage.setItem(QH_END_KEY, String(h)); } catch {}
   };
 
   const fmt = (h: number) => `${String(h).padStart(2, '0')}:00`;
