@@ -321,8 +321,9 @@ export async function evaluatePrf(refs: PasskeyRef[]): Promise<PrfEvaluation> {
 
   const keyMaterial = firstPrfBytes(readPrfOutput(assertion));
   if (!keyMaterial) {
+    // No fallback advice here — only the caller knows what this account has.
     throw new PasskeyUnsupportedError(
-      "This device unlocked the passkey but wouldn't release the wallet key. Use your password instead.",
+      "This device unlocked the passkey but wouldn't release the wallet key.",
     );
   }
 
