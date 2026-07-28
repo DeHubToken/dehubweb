@@ -5,6 +5,38 @@ import { componentTagger } from "lovable-tagger";
 import { mcpPlugin } from "@lovable.dev/mcp-js/stacks/supabase/vite";
 import { execSync } from "child_process";
 
+/**
+ * Serve /war-game/* with `Access-Control-Allow-Origin: *` in dev and preview.
+ *
+ * Production gets this from public/_headers, which Cloudflare applies but which
+ * Vite's own servers ignore entirely. Without it the game is broken locally in
+ * a way that looks nothing like a CORS problem: it runs in a sandboxed iframe
+ * with no allow-same-origin, so the frame has an opaque origin, and its
+ * `<script type="module">` entry is fetched in CORS mode with `Origin: null`.
+ * No matching header comes back, the browser drops the script with no error,
+ * and all anyone sees is a black canvas.
+ *
+ * Keeping dev and production in step here matters more than usual, because the
+ * failure is completely silent and cost several rounds of misdiagnosis.
+ */
+function warGameCorsPlugin() {
+  const cors = (req, res, next) => {
+    if (req.url && req.url.startsWith("/war-game/")) {
+      res.setHeader("Access-Control-Allow-Origin", "*");
+    }
+    next();
+  };
+  return {
+    name: "war-game-cors",
+    configureServer(server) {
+      server.middlewares.use(cors);
+    },
+    configurePreviewServer(server) {
+      server.middlewares.use(cors);
+    },
+  };
+}
+
 function blogManifestPlugin() {
   return {
     name: 'blog-manifest',
@@ -92,6 +124,7 @@ export default defineConfig(({ mode }) => ({
     react(),
     blogManifestPlugin(),
     preloadWalletChunkPlugin(),
+    warGameCorsPlugin(),
     mcpPlugin(),
     mode === "development" && componentTagger(),
   ].filter(Boolean),

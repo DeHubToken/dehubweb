@@ -21,3 +21,19 @@
 # the asset changes.
 /dehub-header-logo.png
   Cache-Control: public, max-age=31536000, immutable
+
+# The War theme's game runs in a sandboxed iframe WITHOUT allow-same-origin, so
+# the frame has an opaque origin. Its entry is a `<script type="module">`, and
+# module scripts are always fetched in CORS mode, so the request goes out with
+# `Origin: null`. Without a matching Access-Control-Allow-Origin the browser
+# drops the script silently: no error, no console output, just a black canvas.
+# That is exactly how this failed in testing, twice.
+#
+# Granting the frame allow-same-origin would also fix it, but the game is served
+# from this origin, so that would hand third party code real access to app
+# storage, cookies and the parent DOM. This header keeps the sandbox strict
+# instead. It is safe here because these are public static game assets with no
+# credentials and nothing user specific.
+/war-game/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=31536000, immutable
