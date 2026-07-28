@@ -36,13 +36,17 @@ and an in-browser video editor — all in a single React application. It powers
 
 DeHub is a single-page web application that gives creators an identity, an audience, and
 a wallet in one place. Authentication is **wallet-native** — users sign in with a social,
-email, or SMS login that provisions a self-custodial wallet (via account abstraction), so
-there is no traditional username/password account for the core product. Content can be
-tokenized, monetized, and rewarded on-chain, while everyday social interactions (feed,
-comments, DMs, communities, live rooms) stay fast and familiar.
+email, or SMS login and DeHub provisions a **self-custodial wallet in the browser**: a
+BIP-39 seed generated on the device, encrypted client-side with AES-256-GCM behind an
+Argon2id-derived key, and paired with a Safe smart account. No third-party key custodian
+is involved, and no plaintext key ever reaches a DeHub server. Content can be tokenized,
+monetized, and rewarded on-chain, while everyday social interactions (feed, comments, DMs,
+communities, live rooms) stay fast and familiar.
 
-The web app is the frontend of a larger system: it talks to a core social API, a suite of
-serverless functions for AI/compute/payments, and several EVM chains plus Solana.
+The web app is the frontend of a larger system: it talks to a core social API running on
+decentralized compute, a suite of serverless functions for AI/compute/payments, and
+several EVM chains plus Solana. **Post text lives on-chain** — permanently, immutably, and
+beyond the reach of any single host or takedown request.
 
 ## Features
 
@@ -79,28 +83,34 @@ serverless functions for AI/compute/payments, and several EVM chains plus Solana
 | Framework | React 18, Vite 5, TypeScript 5, React Router 6 |
 | Styling / UI | Tailwind CSS 3, shadcn/ui on Radix UI, Framer Motion, lucide-react |
 | State / data | TanStack Query, Zustand, React Hook Form + Zod |
-| Web3 | wagmi, viem, RainbowKit, ethers, Web3Auth, account abstraction (Pimlico/permissionless), MetaMask & Coinbase & WalletConnect SDKs, Solana web3.js |
+| Web3 | wagmi, viem, RainbowKit, ethers, in-house self-custody wallet (BIP-39 + AES-256-GCM/Argon2id), account abstraction (Safe via Pimlico/permissionless), MetaMask & Coinbase & WalletConnect SDKs, Solana web3.js |
 | Backend SDKs | Supabase JS (data, storage, edge functions) |
 | Realtime / media | Socket.IO, Agora RTC, hls.js, mp4-muxer / webm-muxer, Three.js |
 | Payments | Stripe |
 | i18n / content | i18next, react-markdown, react-helmet-async |
 | Tooling | ESLint 9, Vitest, Testing Library |
+| Infrastructure | Cloudflare Workers (SPA edge), Cloudflare R2 + CDN (media, zero egress), Akash Network (decentralized compute for the core API), DeHub DePIN nodes (storage/transcode/delivery) |
 
 ## Architecture
 
-DeHub's web app is a client to three backends: a core social API, Supabase (serverless
-compute + data), and public blockchains.
+DeHub's web app is a client to three backends: a core social API on decentralized compute,
+Supabase (serverless compute + data), and public blockchains. Nothing in the stack depends
+on a centralized cloud provider for the parts that matter — compute runs on Akash, media
+has a DePIN copy behind the CDN, and post text is written to chain.
 
 ```mermaid
 flowchart TD
     U[User's browser] --> SPA[DeHub SPA<br/>React + Vite on Cloudflare Workers]
-    SPA -->|feed, auth, DMs, payments| API[Core API<br/>NestJS · api.dehub.io]
+    SPA -->|feed, auth, DMs, payments| API[Core API<br/>NestJS · api.dehub.io<br/>on Akash Network]
     SPA -->|AI, media, share images,<br/>sitemaps, webhooks| EF[Supabase Edge Functions<br/>Deno]
     SPA -->|reads/writes| DB[(Supabase Postgres)]
-    SPA -->|wallet ops, swaps, staking| CHAIN[EVM chains: Base · BNB · Ethereum<br/>+ Solana]
-    SPA -->|login → self-custodial wallet| W3A[Web3Auth + account abstraction]
+    SPA -->|wallet ops, swaps, staking,<br/>post text| CHAIN[EVM chains: Base · BNB · Ethereum<br/>+ Solana]
+    SPA -->|login → in-browser<br/>self-custody wallet| WALLET[DeHub wallet core<br/>BIP-39 · AES-256-GCM · Argon2id<br/>+ Safe smart account]
     EF --> DB
-    SPA -->|media| CDN[DigitalOcean Spaces via Cloudflare CDN]
+    API --> CHAIN
+    SPA -->|media| CDN[Cloudflare CDN + R2<br/>zero egress fees]
+    CDN -.->|replicated backup| DEPIN[(DeHub DePIN storage nodes)]
+    CHAIN --> TEXT[Post text: permanent,<br/>immutable, uncensorable]
 ```
 
 - **Frontend** — a Vite + React SPA deployed as a Cloudflare Worker with static assets
@@ -108,14 +118,34 @@ flowchart TD
   301s for dehub.net and www). The wallet stack is aggressively code-split out of the
   entry bundle and lazy-loaded to keep first paint fast.
 - **Core API (`api.dehub.io`)** — the primary social backend (feed, wallet auth, DMs over
-  Socket.IO, payments). The SPA prefetches the feed at boot for a fast cold start.
+  Socket.IO, payments), deployed to **Akash Network** decentralized compute (it previously
+  ran on DigitalOcean droplets). The SPA prefetches the feed at boot for a fast cold start.
 - **Supabase** — Postgres plus a large set of Deno **edge functions** for AI (chat, image,
   video, music, voice, translation, transcription), payments (Stripe), ads, on-chain data
   sync, share-image rendering, sitemaps, and MCP.
-- **Identity** — wallet-native via Web3Auth and account abstraction; the core API issues a
-  short-lived token stored client-side. Supabase Auth is **not** the user identity system.
+- **Identity & keys** — DeHub runs its **own** wallet/encryption stack (`src/lib/wallet-core`,
+  `src/lib/smart-wallet`); **Web3Auth is no longer part of the login path**. Login identity
+  comes from Supabase Auth (email OTP / social OAuth), and the wallet itself is derived from
+  a BIP-39 seed generated on-device, sealed with AES-256-GCM under an Argon2id key
+  (64 MiB, t=3 — well above the OWASP baseline, and stronger than the PBKDF2 wallets it
+  replaced), and only ever stored as ciphertext. Decrypted key material lives in JS memory
+  only — never in localStorage or sessionStorage. The derived EOA drives a Safe smart
+  account, and the core API issues a short-lived session token. The legacy Web3Auth SDK is
+  retained solely for a one-time key export so pre-migration users can import the same key
+  and keep the same address (`src/lib/legacy-web3auth.ts`).
 - **Chains** — EVM (Base, BNB Chain, Ethereum) and Solana. DHB is DeHub's native token.
-- **Media & CDN** — user media is served from DigitalOcean Spaces via Cloudflare CDN.
+- **Text content is on-chain** — post bodies, comments and other text are written to chain
+  as part of the tokenized post, so they are **permanent, immutable and impossible to
+  censor**: no DeHub server, host, or CDN can edit or remove them, and the content survives
+  even if every DeHub-operated service disappears. Off-chain databases hold only indexes
+  and caches of that canonical on-chain text.
+- **Media, CDN & storage** — user media is served through **Cloudflare CDN backed by
+  Cloudflare R2**, chosen because R2 has **no egress fees** (video-heavy traffic on
+  per-GB-egress object storage was the single largest infra cost). Every object is also
+  **replicated to DeHub's DePIN storage nodes** as an independent backup, so the platform
+  keeps a decentralized copy of all media rather than trusting one provider. Some older
+  asset URLs still resolve through the previous object-storage host while the back catalog
+  finishes migrating.
 
 ## Project structure
 
@@ -125,7 +155,8 @@ flowchart TD
 │   ├── components/         # UI — app/ (feeds, video, chat, wallet, editor…), ui/ (shadcn), admin/…
 │   ├── pages/              # Route pages (app/, admin/, docs/, marketing)
 │   ├── hooks/              # Custom React hooks (feed, auth, staking, on-chain…)
-│   ├── lib/                # Non-UI logic: api/, chains/, contracts/, solana/, editor/, wagmi, web3auth
+│   ├── lib/                # Non-UI logic: api/, chains/, contracts/, solana/, editor/, wagmi,
+│   │                       #   wallet-core/ (seed derivation + AES-256-GCM/Argon2id), smart-wallet
 │   ├── contexts/           # React providers (Auth, Theme, Call, Search, Language…)
 │   ├── integrations/       # Supabase client + generated types
 │   ├── constants/          # Nav/tabs + AI model catalogs and pricing
@@ -200,6 +231,10 @@ assets (see `wrangler.jsonc`; Workers Builds deploys on push to main). The worke
 the SPA fallback, crawler metadata, and alias-host 301s; `public/_headers` carries cache
 and security headers. Supabase edge functions and database migrations live under
 `supabase/` and are deployed to the Supabase project separately from the frontend.
+
+The rest of the platform deploys outside this repo: the core API ships as a container to
+**Akash Network**, media lands in **Cloudflare R2** (fronted by the CDN, replicated to the
+DePIN storage nodes), and post text is committed on-chain by the tokenized-post contracts.
 
 ## Contributing
 
