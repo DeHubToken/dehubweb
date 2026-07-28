@@ -412,6 +412,12 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const isMobile = useIsMobile();
   
   const [activeTab, setActiveTab] = useState<'replies' | 'quotes' | 'reposts' | 'likers' | 'search'>(initialTab ?? 'replies');
+  // The mount-time initial value alone doesn't cover a section that's already
+  // open: tapping the like count while comments are expanded changes initialTab
+  // without remounting, and the tab has to follow.
+  useEffect(() => {
+    if (initialTab) setActiveTab(initialTab);
+  }, [initialTab]);
   const commentsIsDraggingRef = useRef(false);
   const { layerRef: commentsTabLayerRef, setRef: setCommentsTabRef, rect: commentsTabRect } = useTabIndicator(activeTab, undefined, commentsIsDraggingRef);
   const [searchQuery, setSearchQuery] = useState('');

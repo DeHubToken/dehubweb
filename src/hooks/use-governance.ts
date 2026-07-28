@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { getBadgeName, BADGE_LEVELS } from '@/lib/staking-badges';
+import { escapeFilterValue } from '@/lib/postgrest-filter';
 import { Interface } from 'ethers';
 import {
   writeContractAA,
@@ -85,7 +86,8 @@ export function useGovernanceProposals(sort: GovernanceSort, search: string) {
         .neq('status', 'completed');
 
       if (search.trim()) {
-        query = query.or(`title.ilike.%${search.trim()}%,description.ilike.%${search.trim()}%`);
+        const pattern = escapeFilterValue(`%${search.trim()}%`);
+        query = query.or(`title.ilike.${pattern},description.ilike.${pattern}`);
       }
 
       switch (sort) {
