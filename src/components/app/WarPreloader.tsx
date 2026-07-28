@@ -468,7 +468,16 @@ function WarBootSequence() {
         <h1 data-war-boot-title>ESTABLISHING SECURE LINK</h1>
         <p data-war-boot-sub>STAND BY FOR OPERATOR CLEARANCE</p>
 
-        <div data-war-boot-bar data-war-meter ref={meterRef}>
+        {/* Deliberately NOT also tagged data-war-meter. That primitive models a
+            single track with a [data-war-meter-fill] child and declares
+            display:block, a fixed 8px height and overflow:hidden at (0,2,1).
+            This bar is a flex row of 28 cells declared at (0,1,0), so the
+            primitive won the display property, the cells stayed inline, and
+            flex:1 / height:10px never applied to them. The meter therefore sat
+            permanently empty while the percentage counted to 100, which reads
+            as a hung boot. Two primitives on one element, incompatible
+            contracts. */}
+        <div data-war-boot-bar ref={meterRef}>
           {METER_CELLS.map((cell) => (
             <span
               key={cell}

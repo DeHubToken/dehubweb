@@ -424,16 +424,33 @@ html[data-theme='war'] :is([data-side-panel], [data-page-bento]) :is(h2, h3) {
   letter-spacing: 0.14em;
   font-size: 0.78em;
   color: rgb(var(--war-hud) / 0.9);
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  /* NO display / align-items / gap here, deliberately.
+   *
+   * An earlier version set `display: flex` to lay out the lead-in dash. That
+   * changes the layout mode of headings this theme did not author, and two
+   * Tailwind utilities depend on the original mode:
+   *   .truncate      needs a block container, or text-overflow stops applying
+   *                  and long titles hard-clip mid-glyph with no ellipsis
+   *   .line-clamp-*  needs to keep display:-webkit-box, which flex overrides
+   *                  outright, so clamped titles render at full height
+   *
+   * Seen on MusicPage track titles (clipped, no ellipsis) and the Stages grid
+   * (cards grew past their siblings, leaving ragged rows). The selector scores
+   * (0,2,2) and beat both utilities without needing !important, which is
+   * exactly why it failed silently.
+   */
 }
 
+/* The lead-in is an inline-block rather than a flex item, so the heading keeps
+   whatever display mode its own utilities want. `margin-right` does what `gap`
+   was doing. */
 html[data-theme='war'] :is([data-side-panel], [data-page-bento]) :is(h2, h3)::before {
   content: '';
+  display: inline-block;
+  vertical-align: middle;
   width: 10px;
   height: 1px;
-  flex: none;
+  margin-right: 8px;
   background: rgb(var(--war-hud) / 0.8);
   box-shadow: 0 0 6px rgb(var(--war-hud) / 0.6);
 }

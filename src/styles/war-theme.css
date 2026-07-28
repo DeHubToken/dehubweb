@@ -842,8 +842,17 @@ html[data-theme='war'] #app-root
   transform: none !important;
 }
 
-/* Filter chips get the sheet's arrow-ended banner. clip-path is safe here
-   precisely because a chip has no overflowing children (house rule 3). */
+/* Filter chips get the sheet's arrow-ended banner.
+ *
+ * The old note here claimed clip-path was safe "because a chip has no
+ * overflowing children". That reasoning was incomplete: clip-path clips
+ * everything the element PAINTS, and an outline is painted entirely outside
+ * the border box. These are real focusable <button>s, so the clip was silently
+ * erasing their focus ring and leaving keyboard users with no visible focus at
+ * all. Children were never the only thing at risk.
+ *
+ * The focus ring is restored below by re-drawing it inside the clipped region
+ * as an inset shadow, which survives the clip. */
 html[data-theme='war'] [data-filter-chip] {
   border-radius: 0 !important;
   background: rgb(var(--war-hud) / 0.14) !important;
@@ -861,6 +870,18 @@ html[data-theme='war'] [data-filter-chip] {
 }
 html[data-theme='war'] [data-filter-chip]:hover {
   background: rgb(var(--war-hud) / 0.24) !important;
+}
+
+/* Focus ring, drawn INSIDE the clipped region. The global focus-visible rule
+   uses `outline` with an offset, which sits outside the border box and is
+   therefore removed entirely by the clip-path above. An inset shadow is inside
+   the shape, so it survives, and the outline is suppressed so the two do not
+   both try to indicate focus. */
+html[data-theme='war'] [data-filter-chip]:focus-visible {
+  outline: none !important;
+  box-shadow:
+    inset 0 0 0 2px rgb(var(--war-hud)),
+    inset 0 0 0 4px rgb(var(--war-void)) !important;
 }
 html[data-theme='war'] [data-filter-chip] :is(span, svg) {
   color: rgb(var(--war-hud)) !important;
@@ -971,13 +992,33 @@ html[data-theme='war'] :has(> [role='slider']) > span:not([role='slider']) > spa
   ) !important;
   box-shadow: inset -2px 0 0 rgb(var(--war-hud));
 }
+/* Thumb. It READS as a 4px blade, but the element keeps its real hit box.
+ *
+ * Radix ships a 14x14 thumb; shrinking the element itself to 4px left a drag
+ * handle a third of its intended width, which is a genuine pointer-target
+ * failure and far worse on touch. The element therefore stays 14px and goes
+ * transparent, with the blade painted as a centred background stripe inside
+ * it. Identical appearance, hit box intact.
+ *
+ * The glow moved off box-shadow too: Radix draws its focus ring with a
+ * box-shadow, and this rule outranked it, so the thumb had no focus indicator
+ * at all. Using `outline` means the two can never compete.
+ */
 html[data-theme='war'] [role='slider'] {
   border-radius: 0 !important;
-  width: 4px !important;
+  width: 14px !important;
   height: 14px !important;
-  background-color: rgb(var(--war-hud)) !important;
-  border-color: rgb(var(--war-hud)) !important;
-  box-shadow: 0 0 6px rgb(var(--war-hud) / 0.35);
+  background-color: transparent !important;
+  border-color: transparent !important;
+  background-image: linear-gradient(rgb(var(--war-hud)) 0 0) !important;
+  background-size: 4px 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+html[data-theme='war'] [role='slider']:focus-visible {
+  outline: 2px solid rgb(var(--war-hud)) !important;
+  outline-offset: 3px;
 }
 
 /* Progress: segmented meter, not a smooth pill. */
