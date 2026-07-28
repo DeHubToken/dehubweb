@@ -11,20 +11,29 @@ import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useCallback, useEffect, useRef, useState, memo } from 'react';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { WarLogo } from '@/components/app/war/WarLogo';
 
 const HeaderLogo = memo(function HeaderLogo({ onClick }: { onClick: (e: React.MouseEvent) => void }) {
+  const { theme } = useAppTheme();
   return (
     <button onClick={onClick} className="block cursor-pointer">
-      <img
-        src="/dehub-header-logo.png"
-        alt="dehub"
-        className="h-7 md:h-7 w-auto"
-        loading="eager"
-        decoding="async"
-        fetchPriority="high"
-        width={93}
-        height={28}
-      />
+      {theme === 'war' ? (
+        // Fixed width here rather than w-auto: the hologram is a canvas, which
+        // has no intrinsic aspect ratio to derive a width from.
+        <WarLogo src="/dehub-header-logo.png" alt="dehub" className="h-7 w-[93px]" />
+      ) : (
+        <img
+          src="/dehub-header-logo.png"
+          alt="dehub"
+          className="h-7 md:h-7 w-auto"
+          loading="eager"
+          decoding="async"
+          fetchPriority="high"
+          width={93}
+          height={28}
+        />
+      )}
     </button>
   );
 });
