@@ -5,6 +5,7 @@
  * Draggable, similar to RadioMiniPlayer.
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { Mic, MicOff, X, Maximize2, Users, Volume2 } from 'lucide-react';
 import { motion, useDragControls } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -69,7 +70,7 @@ export function StageMiniPlayer() {
             <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500" />
           </span>
 
-          <img src={stagesMicIcon} alt="" className="w-4 h-4 object-contain shrink-0" />
+          <BrandIcon src={stagesMicIcon} alt="" className="w-4 h-4 object-contain shrink-0" />
 
           <span className="text-white text-xs font-medium truncate max-w-[120px]">
             {currentSpace.title}

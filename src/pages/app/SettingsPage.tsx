@@ -1,3 +1,4 @@
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef, useEffect, useCallback, useMemo, type CSSProperties } from 'react';
 import { cn } from '@/lib/utils';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
@@ -208,7 +209,7 @@ export default function SettingsPage() {
       <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
-            <img src={settingsIcon} alt="Settings" className="w-10 h-10 object-contain" />
+            <BrandIcon src={settingsIcon} alt="Settings" className="w-10 h-10 object-contain" />
             <div>
               <h1 className="text-xl font-bold text-white">{t('settings.title')}</h1>
               <p className="text-zinc-500 text-sm">{t('settings.manageAccount')}</p>

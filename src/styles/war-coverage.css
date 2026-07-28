@@ -450,6 +450,88 @@ html[data-theme='war'] [data-war-game-frame] {
   display: block;
 }
 
+/* --------------------------------------------------------------------------
+   10. HUD page and tab icons.
+
+   Replaces the generated glossy 3D artwork under War with a stroked glyph in a
+   bracket frame. The frame is the sheet's bracket-only motif: corner ticks with
+   the edges left open, so the glyph sits inside a targeting reticle rather than
+   a box.
+
+   The glow is a drop-shadow on the stroke, which traces the glyph outline
+   rather than the element box. That distinction is the whole reason the first
+   logo treatment looked stuck on.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [data-war-hud-icon] {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(var(--war-hud));
+  flex: none;
+}
+
+html[data-theme='war'] [data-war-hud-icon] > svg {
+  width: 55%;
+  height: 55%;
+  filter: drop-shadow(0 0 5px rgb(var(--war-hud) / 0.6));
+}
+
+/* Bracket reticle. Two pseudo-elements, each drawing one diagonal pair of
+   corners, so four ticks cost no extra DOM. */
+html[data-theme='war'] [data-war-hud-icon]::before,
+html[data-theme='war'] [data-war-hud-icon]::after {
+  content: '';
+  position: absolute;
+  width: 32%;
+  height: 32%;
+  border: 1px solid rgb(var(--war-hud) / 0.65);
+  pointer-events: none;
+}
+
+html[data-theme='war'] [data-war-hud-icon]::before {
+  top: 0;
+  left: 0;
+  border-width: 1px 0 0 1px;
+  box-shadow: -1px -1px 6px -2px rgb(var(--war-hud) / 0.8);
+}
+
+html[data-theme='war'] [data-war-hud-icon]::after {
+  right: 0;
+  bottom: 0;
+  border-width: 0 1px 1px 0;
+  box-shadow: 1px 1px 6px -2px rgb(var(--war-hud) / 0.8);
+}
+
+/* Empty states are a moment of nothing, so the reticle idles rather than
+   sitting dead. Opacity only: no layout, no repaint of the glyph. */
+html[data-theme='war'] [data-war-hud-icon]::before,
+html[data-theme='war'] [data-war-hud-icon]::after {
+  animation: war-reticle-idle 3.2s ease-in-out infinite;
+}
+
+html[data-theme='war'] [data-war-hud-icon]::after {
+  animation-delay: 1.6s;
+}
+
+@keyframes war-reticle-idle {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme='war'] [data-war-hud-icon]::before,
+  html[data-theme='war'] [data-war-hud-icon]::after {
+    animation: none;
+    opacity: 0.8;
+  }
+}
+
 /* GPU preflight failure panel. Shown instead of the frame when WebGL2 is
    missing or the context is software backed, so the game reports why it will
    not run rather than presenting a black rectangle. */

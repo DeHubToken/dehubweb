@@ -1,3 +1,6 @@
+import { useAppTheme } from '@/contexts/ThemeContext';
+import { WarHudIcon, resolveWarGlyph } from '@/components/app/war/WarHudIcon';
+
 interface ProfileEmptyStateProps {
   iconSrc: string;
   iconAlt: string;
@@ -13,9 +16,18 @@ interface ProfileEmptyStateProps {
  * so we render immediately — no loading gate needed.
  */
 export function ProfileEmptyState({ iconSrc, iconAlt, title, subtitle, iconClassName }: ProfileEmptyStateProps) {
+  const { theme } = useAppTheme();
+  // Only swap when the asset is one we have a glyph for; anything unmapped
+  // keeps its original artwork rather than rendering an empty frame.
+  const useHud = theme === 'war' && resolveWarGlyph(iconSrc) !== null;
+
   return (
     <div className="flex flex-col items-center justify-center py-12 text-center">
-      <img src={iconSrc} alt={iconAlt} decoding="sync" fetchPriority="high" className={`w-16 h-16 mb-3 ${iconClassName ?? ''}`} />
+      {useHud ? (
+        <WarHudIcon src={iconSrc} alt={iconAlt} className="w-16 h-16 mb-3" />
+      ) : (
+        <img src={iconSrc} alt={iconAlt} decoding="sync" fetchPriority="high" className={`w-16 h-16 mb-3 ${iconClassName ?? ''}`} />
+      )}
       <p className="text-white text-lg font-medium">{title}</p>
       <p className="text-white/70 text-sm mt-1">{subtitle}</p>
     </div>

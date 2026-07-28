@@ -4,6 +4,7 @@
  * Displays top DHB token holders and tippers from the DeHub API.
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useMemo, useCallback, useRef, useLayoutEffect, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
@@ -348,7 +349,7 @@ export default function LeaderboardPage() {
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         <div className="flex items-center gap-4 mb-4">
           <div className="w-14 h-14 rounded-full flex items-center justify-center overflow-hidden">
-            <img src={trophyIcon} alt="Trophy" className="w-11 h-11 object-contain" />
+            <BrandIcon src={trophyIcon} alt="Trophy" className="w-11 h-11 object-contain" />
           </div>
           <div>
             <h1 className="text-xl font-bold text-white">{t('leaderboard.title')}</h1>
