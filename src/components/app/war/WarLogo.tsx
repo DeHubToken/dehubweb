@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { createFrameThrottle } from '@/lib/raf-throttle';
 import { capPixelRatio, releaseContext } from '@/lib/three/scene-helpers';
+import { isBackgroundPaused } from '@/lib/background-gate';
 
 /**
  * War theme brand mark, rendered as a hologram.
@@ -258,6 +259,12 @@ export function WarLogo({ src, alt, className }: WarLogoProps) {
     const animate = (now: number) => {
       raf = requestAnimationFrame(animate);
       if (!uniforms.u_map.value) return;
+      // Yield entirely while a heavy full-screen surface is up. The game is the
+      // case that matters: it is a second WebGL context on the same GPU, and on
+      // integrated parts sharing system memory (Iris Xe, UHD, Adreno, Mali)
+      // that contention is not academic. A logo nobody can see is not worth a
+      // single frame of it.
+      if (isBackgroundPaused()) return;
       if (!throttle(now)) return;
       if (renderer.getContext().isContextLost()) return;
       uniforms.u_time.value = clock.getElapsedTime();

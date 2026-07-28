@@ -207,18 +207,79 @@ const BUNDLED_GAME_URL = '/war-game/index.html';
  * decision, not a frame-rate one: the presets change how much has to be built
  * before anything can be shown at all.
  */
-function pickQuality(): string {
-  if (typeof navigator === 'undefined') return 'high';
+/**
+ * Read the GPU's unmasked renderer string, or '' when the browser withholds it.
+ *
+ * Costs a throwaway GL context, so callers should do this once.
+ */
+function readRenderer(): string {
+  if (typeof document === 'undefined') return '';
+  try {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+    if (!gl) return '';
+    const info = gl.getExtension('WEBGL_debug_renderer_info');
+    const name = info
+      ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL) ?? '')
+      : '';
+    (gl.getExtension('WEBGL_lose_context') as { loseContext(): void } | null)?.loseContext();
+    return name;
+  } catch {
+    return '';
+  }
+}
 
-  const cores = navigator.hardwareConcurrency ?? 4;
+/**
+ * Integrated graphics, by renderer string.
+ *
+ * These share system memory and have a fraction of a discrete card's fill rate,
+ * which is exactly what this game leans on: roughly 1.8M triangles, shadow
+ * cascades and a full post chain.
+ */
+function isIntegratedGpu(renderer: string): boolean {
+  return /iris|uhd graphics|hd graphics|intel\(r\) graphics|vega \d|radeon graphics|adreno|mali|apple gpu|llvmpipe|swiftshader/i.test(
+    renderer,
+  );
+}
+
+/**
+ * Pick the engine's quality preset.
+ *
+ * The game reads ?q= and defaults to "ultra" when absent: renderScale 1.0,
+ * 4x4096 shadow cascades, TAA, GTAO, SSR, volumetrics, motion blur and a 24000
+ * particle budget, all generated in JavaScript at boot.
+ *
+ * THE GPU DECIDES, NOT THE CPU.
+ * An earlier version keyed off navigator.hardwareConcurrency alone, which is a
+ * bad proxy on laptops and got a real machine badly wrong: an i7-1360P reports
+ * 16 logical cores, so it was classed as powerful and handed "high", while its
+ * actual GPU is integrated Iris Xe sharing system memory. The result was a game
+ * that ran, and crawled. Core count now only refines a decision the GPU has
+ * already made.
+ */
+function pickQuality(): string {
+  if (typeof navigator === 'undefined') return 'medium';
+
   const coarse =
     typeof window.matchMedia === 'function' &&
     window.matchMedia('(pointer: coarse)').matches;
   const small = Math.min(window.innerWidth, window.innerHeight) < 700;
+  if (coarse || small) return 'low';
 
-  if (coarse || small || cores <= 4) return 'low';
+  const renderer = readRenderer();
+  // Integrated graphics get the cheapest preset regardless of core count. It is
+  // the only tier that turns off SSR, GTAO, volumetrics and motion blur and
+  // drops renderScale to 0.72, which is what these parts actually need.
+  if (renderer && isIntegratedGpu(renderer)) return 'low';
+
+  const cores = navigator.hardwareConcurrency ?? 4;
+  if (cores <= 4) return 'low';
   if (cores <= 8) return 'medium';
-  return 'high';
+
+  // Unknown GPU (the browser withheld the renderer string) lands on medium
+  // rather than high: guessing low costs some fidelity, guessing high costs
+  // playability, and the failure is not symmetric.
+  return renderer ? 'high' : 'medium';
 }
 
 interface Capability {
