@@ -34,6 +34,9 @@ import { getWalletProtection, loadWalletOrCached } from '@/lib/wallet-core/prote
 import {
   enrollBiometricUnlock,
   unlockWithBiometrics,
+  hasDeclinedBiometricOffer,
+  declineBiometricOffer,
+  clearBiometricOfferDecline,
   PasskeyCancelledError,
   type PasskeyWrap,
 } from '@/lib/wallet-core/biometric-unlock';
@@ -145,8 +148,9 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
         });
       }
       // The one moment we hold the plaintext seed with the user's attention:
-      // offer to make the next unlock a fingerprint instead of this.
-      if (biometricAvailable === true && wraps.length === 0) {
+      // offer to make the next unlock a fingerprint instead of this. Asked once
+      // per device — someone who said no must not be asked at every login.
+      if (biometricAvailable === true && wraps.length === 0 && !hasDeclinedBiometricOffer(userId)) {
         setPendingSecret(derived.secret);
         setPendingPrivKey(derived.ethPrivateKey);
         setPassword('');
@@ -174,6 +178,7 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
     setError(null);
     try {
       await enrollBiometricUnlock(userId, pendingSecret);
+      clearBiometricOfferDecline(userId);
       toast.success('Biometric unlock is on — no password next time');
     } catch (err) {
       if (err instanceof PasskeyCancelledError) {
@@ -199,6 +204,8 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
     if (!pendingPrivKey) return;
     setBusy(true);
     try {
+      // Remember the "no" so this is a one-time question, not a login tax.
+      declineBiometricOffer(userId);
       setPendingSecret(null);
       await onComplete(pendingPrivKey);
     } finally {
@@ -310,7 +317,8 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
           <p className="text-white text-sm font-medium">Skip the password next time?</p>
           <p className="text-white/50 text-xs leading-relaxed">
             Unlock with your fingerprint or face on this device instead. Your wallet password keeps
-            working — it stays your backup on devices that can’t do this.
+            working — it stays your backup on devices that can’t do this. You can turn this on later
+            from Settings → Account Security.
           </p>
         </div>
         <Button

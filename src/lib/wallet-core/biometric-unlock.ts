@@ -102,3 +102,43 @@ export async function unlockWithBiometrics(
 export async function removeBiometricUnlock(userId: string, credentialId: string): Promise<void> {
   await deletePasskeyWrap(userId, credentialId);
 }
+
+// ── "Not now" memory ────────────────────────────────────────────────────────
+// The unlock screen offers enrolment after a successful password unlock. That
+// offer must be asked once, not on every login: re-prompting someone who
+// already said no is exactly the friction this feature exists to remove.
+// Kept per-user and device-local (a decision on one device says nothing about
+// another), and capped so a shared browser can't grow it without bound.
+// Settings always shows the option regardless of what's recorded here.
+
+const OFFER_DECLINED_KEY = "dehub_biometric_offer_declined";
+const MAX_REMEMBERED_USERS = 10;
+
+function readDeclined(): string[] {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(OFFER_DECLINED_KEY) || "[]");
+    return Array.isArray(parsed) ? parsed.filter((v): v is string => typeof v === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+export function hasDeclinedBiometricOffer(userId: string): boolean {
+  return readDeclined().includes(userId);
+}
+
+export function declineBiometricOffer(userId: string): void {
+  try {
+    const next = [...new Set([...readDeclined(), userId])].slice(-MAX_REMEMBERED_USERS);
+    localStorage.setItem(OFFER_DECLINED_KEY, JSON.stringify(next));
+  } catch { /* private mode — worst case they're asked again */ }
+}
+
+/** Forget a past decline, e.g. once the user has actually enrolled. */
+export function clearBiometricOfferDecline(userId: string): void {
+  try {
+    const next = readDeclined().filter((id) => id !== userId);
+    if (next.length) localStorage.setItem(OFFER_DECLINED_KEY, JSON.stringify(next));
+    else localStorage.removeItem(OFFER_DECLINED_KEY);
+  } catch { /* ignore */ }
+}
