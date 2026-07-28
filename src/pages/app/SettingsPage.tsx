@@ -1,4 +1,4 @@
-import { BrandIcon } from '@/components/app/war/WarHudIcon';
+﻿import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef, useEffect, useCallback, useMemo, type CSSProperties } from 'react';
 import { cn } from '@/lib/utils';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
@@ -97,6 +97,7 @@ import { useWalletUnlockInterval, type WalletUnlockIntervalOption } from '@/hook
 import { WalletRecoveryTools } from '@/components/app/settings/WalletRecoveryTools';
 import { BiometricUnlockSettings } from '@/components/app/settings/BiometricUnlockSettings';
 import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
+import { getPref, CATEGORY_OF, type NotificationKey } from '@/lib/api/dehub';
 import { getQuietHours, QH_ENABLED_KEY, QH_START_KEY, QH_END_KEY } from '@/lib/quiet-hours';
 import { PROFILE_TAB_OPTIONS } from '@/components/app/profile/ProfileConstants';
 import { useDmSettings } from '@/hooks/use-dm-settings';
@@ -984,12 +985,18 @@ function NotificationSettings() {
   const queryClient = useQueryClient();
 
   const updatePrefMutation = useMutation({
-    mutationFn: (prefs: Record<string, boolean>) =>
-      import('@/lib/api/dehub').then(m => m.updatePushPreferences(prefs)),
-    onMutate: async (newPrefs) => {
+    mutationFn: ({ key, value }: { key: NotificationKey; value: boolean }) =>
+      import('@/lib/api/dehub').then(m => m.updatePushPreferences(m.buildPrefPatch(key, value))),
+    onMutate: async ({ key, value }) => {
       await queryClient.cancelQueries({ queryKey: ['push-preferences'] });
       const prev = queryClient.getQueryData(['push-preferences']);
-      queryClient.setQueryData(['push-preferences'], (old: any) => ({ ...old, ...newPrefs }));
+      // Merge into the right category rather than spreading a flat key over the
+      // top of the object, which never matched the server's shape.
+      const cat = CATEGORY_OF[key];
+      queryClient.setQueryData(['push-preferences'], (old: any) => ({
+        ...old,
+        [cat]: { ...(old?.[cat] ?? {}), [key]: value },
+      }));
       return { prev };
     },
     onError: (_err, _vars, context) => {
@@ -999,8 +1006,8 @@ function NotificationSettings() {
     onSettled: () => queryClient.invalidateQueries({ queryKey: ['push-preferences'] }),
   });
 
-  const handleToggle = (key: string) => (checked: boolean) => {
-    updatePrefMutation.mutate({ [key]: checked });
+  const handleToggle = (key: NotificationKey) => (checked: boolean) => {
+    updatePrefMutation.mutate({ key, value: checked });
   };
 
   const isDisabled = prefsLoading || updatePrefMutation.isPending;
@@ -1057,7 +1064,7 @@ function NotificationSettings() {
             icon={ThumbsUp}
             title={t('settings.likes')}
             description={t('settings.likesDesc')}
-            defaultChecked={pushPrefs?.likes ?? true}
+            defaultChecked={getPref(pushPrefs, 'likes')}
             onCheckedChange={handleToggle('likes')}
             disabled={isDisabled}
           />
@@ -1065,7 +1072,7 @@ function NotificationSettings() {
             icon={MessageSquare}
             title={t('settings.comments')}
             description={t('settings.commentsDesc')}
-            defaultChecked={pushPrefs?.comments ?? true}
+            defaultChecked={getPref(pushPrefs, 'comments')}
             onCheckedChange={handleToggle('comments')}
             disabled={isDisabled}
           />
@@ -1073,23 +1080,23 @@ function NotificationSettings() {
             icon={Users}
             title={t('settings.newFollowers')}
             description={t('settings.newFollowersDesc')}
-            defaultChecked={pushPrefs?.follows ?? true}
-            onCheckedChange={handleToggle('follows')}
+            defaultChecked={getPref(pushPrefs, 'newFollowers')}
+            onCheckedChange={handleToggle('newFollowers')}
             disabled={isDisabled}
           />
-          <SettingToggle
-            icon={MessageSquare}
-            title={t('settings.directMessages')}
-            description={t('settings.directMessagesDesc')}
-            defaultChecked={pushPrefs?.directMessages ?? true}
-            onCheckedChange={handleToggle('directMessages')}
-            disabled={isDisabled}
-          />
+          {/*
+            No Direct Messages row here on purpose. The preferences API models
+            engagement / social / monetization / content / system and has no
+            `directMessages` key anywhere, so this toggle wrote to a field the
+            server does not store and read back a value that never existed —
+            it always displayed ON and did nothing. Removed rather than left
+            lying to users. Restore it the moment the API grows the key.
+          */}
           <SettingToggle
             icon={MessageSquare}
             title="Comment Replies"
             description="When someone replies to your comment"
-            defaultChecked={pushPrefs?.commentReplies ?? true}
+            defaultChecked={getPref(pushPrefs, 'commentReplies')}
             onCheckedChange={handleToggle('commentReplies')}
             disabled={isDisabled}
           />
@@ -1097,7 +1104,7 @@ function NotificationSettings() {
             icon={AtSign}
             title="Mentions"
             description="When someone mentions you in a post or comment"
-            defaultChecked={pushPrefs?.mentions ?? true}
+            defaultChecked={getPref(pushPrefs, 'mentions')}
             onCheckedChange={handleToggle('mentions')}
             disabled={isDisabled}
           />
@@ -1112,7 +1119,7 @@ function NotificationSettings() {
             icon={Coins}
             title="Tips Received"
             description="When someone sends you a DHB tip"
-            defaultChecked={pushPrefs?.tips ?? true}
+            defaultChecked={getPref(pushPrefs, 'tips')}
             onCheckedChange={handleToggle('tips')}
             disabled={isDisabled}
           />
@@ -1120,7 +1127,7 @@ function NotificationSettings() {
             icon={Handshake}
             title="New Subscribers"
             description="When someone subscribes to your plan"
-            defaultChecked={pushPrefs?.subscriptions ?? true}
+            defaultChecked={getPref(pushPrefs, 'subscriptions')}
             onCheckedChange={handleToggle('subscriptions')}
             disabled={isDisabled}
           />
@@ -1128,7 +1135,7 @@ function NotificationSettings() {
             icon={Coins}
             title="PPV Purchases"
             description="When someone purchases your pay-per-view content"
-            defaultChecked={pushPrefs?.ppvPurchases ?? true}
+            defaultChecked={getPref(pushPrefs, 'ppvPurchases')}
             onCheckedChange={handleToggle('ppvPurchases')}
             disabled={isDisabled}
           />
@@ -1143,7 +1150,7 @@ function NotificationSettings() {
             icon={Play}
             title="Livestream Start"
             description="When someone you follow starts a livestream"
-            defaultChecked={pushPrefs?.livestreamStart ?? true}
+            defaultChecked={getPref(pushPrefs, 'livestreamStart')}
             onCheckedChange={handleToggle('livestreamStart')}
             disabled={isDisabled}
           />
@@ -1151,7 +1158,7 @@ function NotificationSettings() {
             icon={Sparkles}
             title="Milestones"
             description="When you reach a follower or engagement milestone"
-            defaultChecked={pushPrefs?.milestones ?? true}
+            defaultChecked={getPref(pushPrefs, 'milestones')}
             onCheckedChange={handleToggle('milestones')}
             disabled={isDisabled}
           />
@@ -1160,7 +1167,7 @@ function NotificationSettings() {
             icon={Shield}
             title="Account Alerts"
             description="Security and account activity you should know about"
-            defaultChecked={pushPrefs?.accountAlerts ?? true}
+            defaultChecked={getPref(pushPrefs, 'accountAlerts')}
             onCheckedChange={handleToggle('accountAlerts')}
             disabled={isDisabled}
           />
@@ -1168,7 +1175,7 @@ function NotificationSettings() {
             icon={Bell}
             title="Announcements"
             description="Platform updates and important announcements"
-            defaultChecked={pushPrefs?.announcements ?? true}
+            defaultChecked={getPref(pushPrefs, 'announcements')}
             onCheckedChange={handleToggle('announcements')}
             disabled={isDisabled}
           />
