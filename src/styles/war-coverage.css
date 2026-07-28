@@ -671,6 +671,113 @@ html[data-theme='war'] [data-war-hud-icon]::after {
   justify-content: space-between;
 }
 
+/* --------------------------------------------------------------------------
+   12. Prompt landing.
+
+   The page was only getting the generic surface recolour, so it still read as
+   rounded glass: a pill textarea, soft glass buttons and rounded suggestion
+   chips. It is the first screen a logged-out visitor sees, so it carrying no
+   theme character at all is the worst place for it.
+
+   The composer becomes a HUD input: squared, olive-black, cyan hairline, with a
+   tick ruler along its top edge drawn as a background gradient. A textarea
+   cannot host pseudo-elements, which is why the ruler is painted rather than
+   drawn as a child.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [data-prompt-landing] textarea {
+  border-radius: 0 !important;
+  background-color: rgb(var(--war-void) / 0.82) !important;
+  background-image: repeating-linear-gradient(
+    to right,
+    rgb(var(--war-hud) / 0.5) 0px,
+    rgb(var(--war-hud) / 0.5) 1px,
+    transparent 1px,
+    transparent 10px
+  ) !important;
+  background-size: 100% 2px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  border-color: rgb(var(--war-hud) / 0.35) !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.14) !important;
+  backdrop-filter: blur(8px) saturate(115%) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(115%) !important;
+  font-family: var(--war-mono);
+  letter-spacing: 0.02em;
+  color: rgb(var(--war-sand)) !important;
+}
+
+html[data-theme='war'] [data-prompt-landing] textarea:focus {
+  border-color: rgb(var(--war-hud) / 0.85) !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.5),
+    0 0 18px rgb(var(--war-hud) / 0.18) !important;
+}
+
+html[data-theme='war'] [data-prompt-landing] textarea::placeholder {
+  color: rgb(var(--war-sand) / 0.45) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.85em;
+}
+
+/* Send and mic. Both are the shared action primitive, which renders its shell
+   as a div, so the notch goes on the shell and the label sits above it. Safe to
+   clip here: these buttons hold a centred icon and label and nothing that
+   overflows. */
+html[data-theme='war'] [data-prompt-landing] [aria-label] > div {
+  border-radius: 0 !important;
+  clip-path: polygon(
+    9px 0,
+    100% 0,
+    100% calc(100% - 9px),
+    calc(100% - 9px) 100%,
+    0 100%,
+    0 9px
+  );
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.55),
+    0 0 14px rgb(var(--war-hud) / 0.16) !important;
+}
+
+html[data-theme='war'] [data-prompt-landing] [aria-label]:hover > div {
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.95),
+    0 0 22px rgb(var(--war-hud) / 0.35) !important;
+}
+
+/* Suggestion chips: squared, olive, hairlined. */
+html[data-theme='war'] [data-prompt-landing] button[class*='rounded-lg'] {
+  border-radius: 0 !important;
+  background: rgb(var(--war-olive) / 0.35) !important;
+  border-color: rgb(var(--war-hud) / 0.28) !important;
+  color: rgb(var(--war-sand) / 0.85) !important;
+  font-family: var(--war-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html[data-theme='war'] [data-prompt-landing] button[class*='rounded-lg']:hover {
+  background: rgb(var(--war-olive) / 0.6) !important;
+  border-color: rgb(var(--war-hud) / 0.7) !important;
+  color: rgb(var(--war-hud)) !important;
+}
+
+/* --------------------------------------------------------------------------
+   13. The shared action primitive's label, everywhere.
+
+   LiquidGlassBubble2 is the app's primary action control: login, send, deposit,
+   withdraw, claim, tab toggles. Its shell was already being recoloured by
+   section 1, but the label kept the app's default sans, so the buttons read as
+   ordinary UI wearing a dark skin. Mono caps is what makes them read as HUD
+   controls rather than just dark buttons.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [class*='from-white/'] > span,
+html[data-theme='war'] [aria-label] > div > span {
+  font-family: var(--war-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
 /* GPU preflight failure panel. Shown instead of the frame when WebGL2 is
    missing or the context is software backed, so the game reports why it will
    not run rather than presenting a black rectangle. */
