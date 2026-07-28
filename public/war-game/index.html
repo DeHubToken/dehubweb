@@ -49,34 +49,30 @@
 
         /* NOTE ON AN APPROACH THAT WAS TRIED AND REMOVED.
          * An earlier version wrapped console.log/info/debug to mirror the
-         * engine's bracketed progress lines, so the host could name the stage
-         * currently building. It was dropped: with the wrapper installed the
-         * engine stopped producing any output at all, which points at the
-         * patch interfering with module execution. A cosmetic stage label is
-         * not worth monkey-patching globals that third party code depends on,
-         * so everything below is passive and touches nothing the game owns.
+         * engine's progress lines so the host could name the stage currently
+         * building. Dropped on risk grounds: monkey-patching globals that third
+         * party code depends on is not worth a cosmetic label. Everything here
+         * is passive and owns nothing the game touches.
          *
          * 1. Readiness.
-         * The engine builds its HUD into #ui once every subsystem is up, so the
-         * first child appearing there is a structural signal that does not
-         * depend on logging surviving an upstream change. */
-        function watchUi() {
+         * src/main.js sets window.__READY__ once the engine has initialised and
+         * pumped its warmup frames. That is the engine's own signal, authored
+         * upstream for exactly this purpose, so it beats anything inferred from
+         * the DOM. Polled rather than observed, because a plain property
+         * assignment fires no event. #ui gaining a child stays as a backstop in
+         * case a future upstream build stops setting the flag. */
+        var poll = setInterval(function () {
+          if (done) return clearInterval(poll);
+          if (window.__READY__ === true) {
+            clearInterval(poll);
+            return finish('engine ready');
+          }
           var ui = document.getElementById('ui');
-          if (!ui) return;
-          if (ui.children.length > 0) return finish('ui populated');
-          var mo = new MutationObserver(function () {
-            if (ui.children.length > 0) {
-              mo.disconnect();
-              finish('ui populated');
-            }
-          });
-          mo.observe(ui, { childList: true });
-        }
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', watchUi);
-        } else {
-          watchUi();
-        }
+          if (ui && ui.children.length > 0) {
+            clearInterval(poll);
+            finish('ui populated');
+          }
+        }, 250);
 
         /* 3. A heartbeat regardless.
          * Whatever else happens, the host gets an elapsed count every second so
