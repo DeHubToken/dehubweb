@@ -326,6 +326,27 @@ html[data-theme='war']
   color: rgb(var(--war-sand)) !important;
   font-family: var(--war-mono);
   letter-spacing: 0.03em;
+  /* Padding floor.
+   *
+   * Most of these fields are authored as pills, where the rounded ends do a lot
+   * of the visual insetting and the declared padding is tuned to sit inside
+   * that curve. Squaring the corners takes that away, so the caret and the
+   * first glyph end up hard against the border: reported on the comment box as
+   * the text being "attached" to the edge.
+   *
+   * A minimum rather than a fixed value, so fields that already declare roomier
+   * padding keep it. Mono is also slightly wider than the app's sans, which
+   * makes the tightness read worse than the numbers suggest. */
+  padding-inline: max(0.75rem, var(--war-field-pad, 0px));
+  padding-block: max(0.5rem, var(--war-field-pad-y, 0px));
+}
+
+/* Textareas carry more text and wrap, so they want a little more room than a
+   single-line input, and the extra top padding keeps the first line clear of
+   any ruler or hairline drawn on the top edge. */
+html[data-theme='war'] textarea {
+  padding-inline: max(0.9rem, var(--war-field-pad, 0px));
+  padding-block: max(0.7rem, var(--war-field-pad-y, 0px));
 }
 
 html[data-theme='war']
