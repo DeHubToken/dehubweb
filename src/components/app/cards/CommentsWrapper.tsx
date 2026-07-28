@@ -19,7 +19,7 @@ interface CommentsWrapperProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   tokenId: string;
-  initialTab?: 'replies' | 'quotes' | 'reposts' | 'search';
+  initialTab?: 'replies' | 'quotes' | 'reposts' | 'likers' | 'search';
   /**
    * Fullscreen surfaces (shorts, immersive video) where the comments must
    * overlay as a bottom-sheet drawer because there is no post bento to expand.
