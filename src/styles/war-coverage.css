@@ -73,6 +73,44 @@ html[data-theme='war'] [class*='!bg-white'] {
 }
 
 /* --------------------------------------------------------------------------
+   1b. Dark text, after the backgrounds beneath it went dark.
+
+   Section 1 rewrites light surfaces to gunmetal but says nothing about their
+   text, so anything authored as "light surface, dark label" turned into
+   dark-on-dark and vanished. The login button is the reported case:
+   LoginModal.tsx uses bg-white with text-black, so under War the label
+   disappeared entirely and the sign-in flow looked broken.
+
+   War is dark end to end and has no light surfaces at all, so dark text is
+   never correct in it. That makes a blanket remap safe here in a way it would
+   not be in a theme that mixes light and dark regions.
+
+   `!important` because these are utilities on the element itself, which
+   otherwise tie on specificity and win on source order.
+   -------------------------------------------------------------------------- */
+html[data-theme='war']
+  :is(
+    .text-black,
+    .text-zinc-900,
+    .text-zinc-800,
+    .text-neutral-900,
+    .text-neutral-800,
+    .text-slate-900,
+    .text-gray-900
+  ) {
+  color: rgb(var(--war-hud)) !important;
+}
+
+/* Same problem one level down: a dark-text button often wraps its label or an
+   icon in a child that inherits, and SVGs painted with currentColor follow the
+   same path. */
+html[data-theme='war']
+  :is(.text-black, .text-zinc-900, .text-neutral-900, .text-slate-900)
+  :is(span, svg, p, strong) {
+  color: inherit !important;
+}
+
+/* --------------------------------------------------------------------------
    2. The create-post control. The user named this one twice.
 
    Desktop sidebar button, mobile bottom-nav FAB, and the FAB's glyph. The
@@ -530,6 +568,107 @@ html[data-theme='war'] [data-war-hud-icon]::after {
     animation: none;
     opacity: 0.8;
   }
+}
+
+/* --------------------------------------------------------------------------
+   11. Boot sequence text that nothing was styling.
+
+   WarPreloader emits around thirty data-war-* hooks; the component and the
+   stylesheets were authored separately and never reconciled, so a dozen
+   text-bearing hooks had no colour rule anywhere and fell back to whatever the
+   cascade gave them. On the boot backdrop that reads as near-black on
+   near-black. data-war-boot-sub is the reported unreadable line.
+
+   Colour follows role rather than taste: cyan for anything the operator is
+   meant to read as live state, sand for labels and supporting text, dim sand
+   for scaffolding like leader dots.
+   -------------------------------------------------------------------------- */
+[data-war-boot] :is([data-war-readout-label], [data-war-log-label]) {
+  font-family: var(--war-mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgb(var(--war-sand) / 0.7);
+}
+
+[data-war-boot] :is([data-war-readout-value], [data-war-log-value]) {
+  font-family: var(--war-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: rgb(var(--war-hud) / 0.95);
+}
+
+/* The reported line. Sits directly under the title, so it carries real weight
+   rather than being a whisper. */
+[data-war-boot] [data-war-boot-sub] {
+  font-family: var(--war-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgb(var(--war-sand) / 0.9);
+  margin-top: 8px;
+}
+
+[data-war-boot] [data-war-boot-status] {
+  font-family: var(--war-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: rgb(var(--war-hud) / 0.9);
+}
+
+[data-war-boot] :is([data-war-track-id], [data-war-track-bearing]) {
+  font-family: var(--war-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: rgb(var(--war-sand) / 0.8);
+}
+
+/* Track state is the one genuinely live readout in the panel, so it gets the
+   accent at full strength. */
+[data-war-boot] [data-war-track-state] {
+  font-family: var(--war-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: rgb(var(--war-hud));
+}
+
+/* Leader dots between a log label and its value. Deliberately the dimmest
+   thing here: it is scaffolding, and competing with the text either side would
+   make the column harder to scan, not easier. */
+[data-war-boot] [data-war-log-dots] {
+  flex: 1;
+  align-self: center;
+  height: 1px;
+  min-width: 12px;
+  margin: 0 8px;
+  background-image: linear-gradient(
+    to right,
+    rgb(var(--war-sand) / 0.35) 0 2px,
+    transparent 2px 5px
+  );
+  background-size: 5px 1px;
+  background-repeat: repeat-x;
+}
+
+/* Keycap hint on the skip control. */
+[data-war-boot] [data-war-key] {
+  display: inline-block;
+  padding: 1px 5px;
+  font-family: var(--war-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: rgb(var(--war-hud));
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.5);
+}
+
+[data-war-boot] :is([data-war-readout], [data-war-track], [data-war-boot-line]) {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+[data-war-boot] [data-war-boot-line] {
+  justify-content: space-between;
 }
 
 /* GPU preflight failure panel. Shown instead of the frame when WebGL2 is
