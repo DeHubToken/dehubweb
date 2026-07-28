@@ -1,3 +1,4 @@
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { memo, useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -1495,7 +1496,7 @@ export default function NotificationsPage() {
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <img src={notificationsIcon} alt="Notifications" className="w-9 h-9 object-contain" />
+              <BrandIcon src={notificationsIcon} alt="Notifications" className="w-9 h-9 object-contain" />
               <h1 className="font-bold text-white text-lg">{t('notifications.title')}</h1>
               {totalUnread > 0 && (
                 <span className="px-2 py-0.5 text-xs font-medium bg-red-500 text-white rounded-lg">

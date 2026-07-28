@@ -1,3 +1,4 @@
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowUp, Mic, MicOff } from 'lucide-react';
@@ -98,7 +99,10 @@ export default function PromptLanding() {
           <LiquidGlassBubble2
             label={isConnecting ? t('nav.connecting') : needsSignature ? t('nav.signMessage') : t('nav.login')}
             onClick={() => openLoginModal()}
-            width="110px"
+            // 110px fitted "Log in" but not the actual label, which is
+            // "Log in / Sign up", so it wrapped to two lines. Sized for the
+            // longest of the three states this button shows.
+            width="152px"
             height="40px"
             disabled={isConnecting}
           />
@@ -107,7 +111,7 @@ export default function PromptLanding() {
 
 
       <div className="relative w-full max-w-2xl flex flex-col items-center gap-6 mt-16 sm:mt-0">
-        <img src={wandUrl} alt="" width={64} height={64} loading="eager" decoding="async" fetchPriority="high" className="w-16 h-16 object-contain drop-shadow-[0_4px_18px_rgba(255,255,255,0.15)]" />
+        <BrandIcon src={wandUrl} alt="" width={64} height={64} loading="eager" decoding="async" fetchPriority="high" className="w-16 h-16 object-contain drop-shadow-[0_4px_18px_rgba(255,255,255,0.15)]" />
         <h1 className="text-4xl md:text-5xl font-semibold text-center tracking-tight">
           <span className="sm:hidden">{t('prompt.headlineShort', 'What do you want?')}</span>
           <span className="hidden sm:inline">{t('prompt.headline', 'What do you want to see?')}</span>

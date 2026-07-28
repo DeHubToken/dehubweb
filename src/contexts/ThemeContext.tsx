@@ -114,20 +114,24 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   // Each `apply` reconciles an inbound synced value onto local state + the local
   // localStorage key (instant paint). Each setter calls `push*` to persist the
   // change to the signed-in account. See UserPreferencesContext.
+  //
+  // All five are registered with `resetOnLogout`: the look belongs to the
+  // account, so signing out drops back to the default system theme (no dim, no
+  // hue/brand overrides) and signing back in restores the saved look.
   const applyTheme = useCallback((v: unknown) => {
     let val = typeof v === 'string' && v ? v : 'system';
     if (val === 'christmas') val = 'winter';
     setThemeState(val);
     try { window.localStorage.setItem(THEME_STORAGE_KEY, val); } catch { /* ignore */ }
   }, []);
-  const { push: pushTheme } = useSyncedPreference('theme', theme, applyTheme, 'system');
+  const { push: pushTheme } = useSyncedPreference('theme', theme, applyTheme, 'system', { resetOnLogout: true });
 
   const applyDimLights = useCallback((v: unknown) => {
     const val = v === true || v === '1' || v === 1;
     setDimLightsState(val);
     try { window.localStorage.setItem(DIM_LIGHTS_STORAGE_KEY, val ? '1' : '0'); } catch { /* ignore */ }
   }, []);
-  const { push: pushDimLights } = useSyncedPreference('dimLights', dimLights, applyDimLights, false);
+  const { push: pushDimLights } = useSyncedPreference('dimLights', dimLights, applyDimLights, false, { resetOnLogout: true });
 
   const applyDimStrength = useCallback((v: unknown) => {
     const n = Number(v);
@@ -135,7 +139,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setDimStrengthState(val);
     try { window.localStorage.setItem(DIM_STRENGTH_STORAGE_KEY, String(val)); } catch { /* ignore */ }
   }, []);
-  const { push: pushDimStrength } = useSyncedPreference('dimStrength', dimStrength, applyDimStrength, DEFAULT_DIM_STRENGTH);
+  const { push: pushDimStrength } = useSyncedPreference('dimStrength', dimStrength, applyDimStrength, DEFAULT_DIM_STRENGTH, { resetOnLogout: true });
 
   const applyThemeHues = useCallback((v: unknown) => {
     const out: Record<string, number> = {};
@@ -147,7 +151,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setHueOverrides(out);
     try { window.localStorage.setItem(THEME_HUES_STORAGE_KEY, JSON.stringify(out)); } catch { /* ignore */ }
   }, []);
-  const { push: pushThemeHues } = useSyncedPreference('themeHues', hueOverrides, applyThemeHues, {});
+  const { push: pushThemeHues } = useSyncedPreference('themeHues', hueOverrides, applyThemeHues, {}, { resetOnLogout: true });
 
   const applyBrandColors = useCallback((v: unknown) => {
     const clean = Array.isArray(v)
@@ -156,7 +160,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setBrandColorsState(clean);
     try { window.localStorage.setItem(BRAND_COLORS_STORAGE_KEY, JSON.stringify(clean)); } catch { /* ignore */ }
   }, []);
-  const { push: pushBrandColors } = useSyncedPreference('brandColors', brandColors, applyBrandColors, []);
+  const { push: pushBrandColors } = useSyncedPreference('brandColors', brandColors, applyBrandColors, [], { resetOnLogout: true });
 
   const setTheme = useCallback((value: string) => {
     setThemeState(value);

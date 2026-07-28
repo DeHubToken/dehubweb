@@ -30,7 +30,7 @@ import {
   clearAuthSession,
   isTokenExpired,
   apiCall,
-  refreshAccessToken,
+  refreshAccessTokenDetailed,
   logoutFromServer,
   type DeHubUser,
   type Web3AuthMeta,
@@ -48,7 +48,11 @@ import {
   clearAAProvider,
   getAAProvider,
 } from '@/lib/smart-wallet';
-import { fetchWallet, clearWalletCache } from '@/lib/wallet-core/store';
+import { fetchWallet, saveWallet, clearWalletCache } from '@/lib/wallet-core/store';
+import { unlockWithBiometrics } from '@/lib/wallet-core/biometric-unlock';
+import { clearPasskeyCache, deleteAllPasskeyWraps } from '@/lib/wallet-core/passkey-store';
+import { deriveFromSecret } from '@/lib/wallet-core/derive';
+import { encryptString, decryptString } from '@/lib/wallet-core/crypto';
 import { isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
 import { AuthContext, type SocialProvider, type WalletProvider, type WalletPhase } from './AuthContext';
 
@@ -213,7 +217,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       queryClient.removeQueries({ queryKey: ['single-post'] });
       queryClient.removeQueries({ queryKey: ['unified-feed'] });
       queryClient.removeQueries({ queryKey: ['dehub-feed'] });
-      queryClient.removeQueries({ queryKey: ['profile-content'] });
+      queryClient.removeQueries({ queryKey: ['dehub-user-content'] });
     }
     prevWalletRef.current = curr;
   }, [walletAddress, queryClient]);
@@ -223,7 +227,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const handler = (e: Event) => {
       if (!(e as CustomEvent<{ wasExpired?: boolean }>).detail?.wasExpired) return;
-      for (const key of ['unified-feed', 'dehub-feed', 'profile-content', 'single-post', 'bookmarks']) {
+      for (const key of ['unified-feed', 'dehub-feed', 'dehub-user-content', 'single-post', 'bookmarks']) {
         queryClient.invalidateQueries({ queryKey: [key] });
       }
     };
@@ -245,6 +249,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Guards double-processing of a landed Supabase session (OAuth return fires
   // both INITIAL_SESSION and SIGNED_IN).
   const supaLoginHandledRef = useRef(false);
+  // Cleanup for the cross-device magic-link realtime channel (see connectWithEmail).
+  const emailSyncCleanupRef = useRef<null | (() => void)>(null);
 
   const isAuthenticated = !!user && !!walletAddress && (
     isLoading ||
@@ -269,6 +275,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const closeLoginModal = useCallback(() => {
     connectionAbortedRef.current = true;
     setIsLoginModalOpen(false);
+    // Dismissing the modal abandons the login. The pending flag must go with
+    // it: it was only ever removed on a COMPLETED login, so walking away at the
+    // "create/unlock your wallet" step left it set forever. Every later page
+    // load then saw a pending login, re-entered proceedToWalletPhase, and (now
+    // that an untagged session counts as a different identity) would tear down
+    // a perfectly healthy session the user never asked to end.
+    localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
     if (isConnecting && !walletAddress) {
       setIsConnecting(false);
     }
@@ -277,8 +290,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   /**
    * After a Supabase session exists: look up the wallet row and route the
    * login modal to the create or unlock step.
+   *
+   * Every caller (the SIGNED_IN listener, verifyEmailOtp, verifyPhoneOtp,
+   * OAuth redirect return) converges here, so the stale-identity check lives
+   * HERE rather than being duplicated per caller. Without it, a browser that
+   * still has a valid cached DeHub session (dehub_token/dehub_wallet/user)
+   * from a DIFFERENT account keeps showing that account's data on screen
+   * while this new identity's wallet flow runs underneath in the modal.
    */
   const proceedToWalletPhase = useCallback(async (userId: string) => {
+    // An ABSENT tag means "unknown", which must be treated as "not this user" —
+    // not as "same user, carry on". dehub_supabase_uid is written in exactly one
+    // place (signAndAuthenticateSmartWallet, below), so every external-wallet
+    // (wagmi) session and every session predating the tag has no tag at all.
+    // Requiring a known-and-different uid here let those sessions survive a
+    // sign-in as somebody else: account A stayed on screen while account B's
+    // wallet flow ran in the modal, and because walletAddress was still A's
+    // EOA, the address guard in signAndAuthenticateSmartWallet then threw
+    // "Wallet address changed during session refresh" on every attempt —
+    // making social login unreachable for anyone who had used a wallet first.
+    //
+    // Clearing an untagged session is safe: a genuine same-user return always
+    // carries the tag, and a first-ever login has neither token nor wallet, so
+    // the second half of the condition makes this a no-op.
+    const cachedUid = localStorage.getItem('dehub_supabase_uid');
+    const identityIsUnknownOrDifferent = !cachedUid || cachedUid !== userId;
+    if (identityIsUnknownOrDifferent && (getAuthToken() || localStorage.getItem('dehub_wallet'))) {
+      clearAuthSession();
+      localStorage.removeItem('dehub_user');
+      setUser(null);
+      setWalletAddress(null);
+    }
     setSupabaseUserId(userId);
     setConnectionSource('web3auth');
     localStorage.setItem('dehub_connection_source', 'web3auth');
@@ -355,8 +397,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         } else if (token && isTokenExpired()) {
           console.log('[Auth] Token expired on mount, attempting silent refresh...');
-          const refreshed = await refreshAccessToken();
-          if (refreshed && savedWallet) {
+          const outcome = await refreshAccessTokenDetailed();
+          if (outcome.ok && savedWallet) {
             try {
               const userData = await getAccountInfo(savedWallet);
               const normalizedUser = normalizeUser(userData, savedWallet);
@@ -374,7 +416,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 } catch { /* ignore */ }
               }
             }
+          } else if (outcome.ok) {
+            // Refresh worked but there is no saved wallet to rehydrate from.
+            // The session itself is fine — leave it alone.
+          } else if (outcome.reason === 'transient' || outcome.reason === 'malformed') {
+            // Reachability problem, not a dead session. Keep the cached
+            // session and let the proactive refresh below retry: booting
+            // offline (or before the radio is up) must not sign the user out.
+            console.warn('[Auth] Silent refresh failed transiently on mount — keeping cached session');
+            const cachedUser = localStorage.getItem('dehub_user');
+            if (cachedUser && savedWallet) {
+              try {
+                setUser(JSON.parse(cachedUser));
+                setWalletAddress(savedWallet);
+              } catch { /* ignore */ }
+            }
           } else {
+            // 'revoked' or 'no-refresh-token' — genuinely unrecoverable.
             clearAuthSession();
             localStorage.removeItem('dehub_user');
             setUser(null);
@@ -402,11 +460,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (event !== 'SIGNED_IN' && event !== 'INITIAL_SESSION') return;
       if (supaLoginHandledRef.current) return;
       if (!localStorage.getItem(SUPA_LOGIN_PENDING_KEY)) return;
-      // Already fully logged in? Nothing to resume.
-      if (getAuthToken() && !isTokenExpired() && localStorage.getItem('dehub_wallet')) {
+
+      // "Already fully logged in, nothing to resume" is only true if the
+      // cached DeHub session belongs to THIS Supabase user. Without this
+      // check, a cross-device magic-link confirmation (or any SIGNED_IN for
+      // a different account on a browser that still has an old, unexpired
+      // DeHub session) would silently keep the OLD account on screen while
+      // the underlying Supabase session had already switched users.
+      const cachedUid = localStorage.getItem('dehub_supabase_uid');
+      const sameIdentity = !!cachedUid && cachedUid === session.user.id;
+      if (sameIdentity && getAuthToken() && !isTokenExpired() && localStorage.getItem('dehub_wallet')) {
         localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
         return;
       }
+      // A different (or unknown) identity just signed in — proceedToWalletPhase
+      // itself drops any stale DeHub-level session for the OLD identity before
+      // routing this one, so it can't leave a leftover walletAddress tripping
+      // the "address changed" guard in signAndAuthenticateSmartWallet.
       supaLoginHandledRef.current = true;
       setIsProcessingRedirect(true);
       // Defer so this runs outside the auth-state callback (supabase-js
@@ -486,17 +556,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       if (timeUntilExpiry < 5 * 60 * 1000) {
-        const result = await refreshAccessToken();
-        if (result) {
+        const outcome = await refreshAccessTokenDetailed();
+        if (outcome.ok) {
           console.log('[Auth] ✓ Proactive token refresh succeeded');
-        } else if (timeUntilExpiry < 0) {
-          console.warn('[Auth] Token expired and refresh failed — clearing session');
+        } else if (outcome.reason === 'transient' || outcome.reason === 'malformed') {
+          // This runs on an interval AND on every visibilitychange, so it is
+          // the most likely place to catch a phone waking from sleep with the
+          // radio still down. Clearing here — even past nominal expiry — turns
+          // "unlocked my phone" into "logged out". The refresh token is still
+          // valid; the next tick (or the next 401) will recover.
+          console.warn('[Auth] Proactive refresh failed transiently — keeping session, will retry');
+        } else {
+          // 'revoked' or 'no-refresh-token' — the session really is over.
+          console.warn('[Auth] Refresh token rejected — clearing session');
           clearAuthSession();
           localStorage.removeItem('dehub_user');
           setUser(null);
           setWalletAddress(null);
-        } else {
-          console.warn('[Auth] Proactive refresh failed — will retry or fall back on next 401');
         }
       }
     };
@@ -755,6 +831,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('dehub_wallet', address);
     localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
     localStorage.setItem('dehub_connection_source', 'web3auth');
+    // Tag this DeHub session with the Supabase identity that produced it, so
+    // a LATER sign-in as a DIFFERENT Supabase user (e.g. via the cross-device
+    // magic-link sync) can tell "still me, just refreshing" apart from
+    // "someone else signed in on this browser" instead of silently keeping
+    // this account's data on screen.
+    if (supabaseUserId) localStorage.setItem('dehub_supabase_uid', supabaseUserId);
     setConnectionSource('web3auth');
     setWalletAddress(address);
     setUser(normalizedUser);
@@ -771,6 +853,87 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     toast.success(authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: toastId });
     authLogger.info('Login success', { method: flow.toLowerCase(), address, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
+  };
+
+  /**
+   * Decrypt and return the raw private key for the CURRENT wallet — the
+   * supported backup path (we don't generate recovery phrases/codes for new
+   * wallets anymore). Always re-asks the wallet password, even if already
+   * unlocked in this tab — exporting the key is sensitive enough to
+   * re-verify, and it works whether or not a live session exists yet.
+   */
+  const exportPrivateKey = async (password: string): Promise<string> => {
+    if (!supabaseUserId) throw new Error('Not signed in');
+    const wallet = await fetchWallet(supabaseUserId);
+    if (!wallet) throw new Error('No wallet found for this account.');
+    if (!wallet.payload) {
+      throw new Error('This wallet has no password — export it with biometrics instead.');
+    }
+    const secret = await decryptString(wallet.payload, password);
+    return deriveFromSecret(secret).ethPrivateKey;
+  };
+
+  /**
+   * Export via biometrics. Deliberately re-verifies with the authenticator
+   * rather than reusing the unlocked session key: revealing the private key is
+   * sensitive enough to demand a fresh user-presence check, matching how the
+   * password path always re-asks.
+   */
+  const exportPrivateKeyWithBiometrics = async (): Promise<string> => {
+    if (!supabaseUserId) throw new Error('Not signed in');
+    const secret = await unlockWithBiometrics(supabaseUserId);
+    return deriveFromSecret(secret).ethPrivateKey;
+  };
+
+  /**
+   * Replace the active wallet with a DIFFERENT one — e.g. a second old
+   * Web3Auth-era account under the same email (Supabase links Google/Email
+   * logins that share a verified email into one identity, so only one
+   * wallet can be active at a time; this lets the user swap which one that
+   * is). Re-encrypts `secret` under `password` and overwrites the
+   * user_wallets row. The PREVIOUS wallet's encrypted seed is gone once this
+   * completes — callers must have the user export/back it up first.
+   */
+  const switchActiveWallet = async (secret: string, password: string) => {
+    if (!supabaseUserId) throw new Error('Not signed in');
+    const toastId = 'auth-switch-wallet';
+    setIsConnecting(true);
+    try {
+      const derived = deriveFromSecret(secret);
+      const encrypted = await encryptString(derived.secret, password);
+      await saveWallet(supabaseUserId, derived.ethAddress, encrypted);
+      // Every biometric wrap still holds the PREVIOUS wallet's seed, so they
+      // would now unlock the wrong wallet. Drop them all — the user re-enrols
+      // from Settings — rather than leave credentials that silently disagree
+      // with the active wallet.
+      //
+      // Best-effort by design: the switch itself already succeeded above, so
+      // throwing here would report a completed switch as a failure. If cleanup
+      // does fail, biometric unlock refuses any wrap whose address doesn't
+      // match the wallet row, so the worst case is a clear error rather than
+      // signing in to the wrong wallet.
+      try {
+        await deleteAllPasskeyWraps(supabaseUserId);
+      } catch (e) {
+        console.warn('[Auth] Could not clear biometric wraps after wallet switch:', e);
+      }
+      clearWalletCache();
+      clearPasskeyCache();
+      lockWallet();
+      // Drop the stale address so signAndAuthenticateSmartWallet's "address
+      // changed" guard (meant to catch accidental switches during a session
+      // refresh) doesn't block this INTENTIONAL switch.
+      setWalletAddress(null);
+      await activateWalletKey(derived.ethPrivateKey);
+      await signAndAuthenticateSmartWallet(toastId);
+      toast.success('Switched to the other wallet', { id: toastId });
+    } catch (err: any) {
+      console.error('[Auth] Wallet switch failed:', err);
+      toast.error(err?.message || 'Failed to switch wallet', { id: toastId });
+      throw err;
+    } finally {
+      setIsConnecting(false);
+    }
   };
 
   /**
@@ -845,28 +1008,94 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('dehub_connection_source', 'web3auth');
     localStorage.setItem(SUPA_LOGIN_PENDING_KEY, '1');
 
+    // Generate a per-request nonce for cross-device sync. The initiating
+    // device (this one) subscribes to a realtime channel keyed by the nonce
+    // and passes it through the magic link via emailRedirectTo. When the
+    // link is opened on any device, /auth/confirm broadcasts the session
+    // tokens back here and this tab hydrates via setSession() — so the user
+    // ends up signed in on both browsers/devices.
+    const syncNonce = crypto.randomUUID();
     try {
+      // Tear down any previous sync channel from an earlier attempt.
+      if (emailSyncCleanupRef.current) {
+        try { emailSyncCleanupRef.current(); } catch { /* ignore */ }
+        emailSyncCleanupRef.current = null;
+      }
+      const channel = supabase.channel(`auth-sync-${syncNonce}`, {
+        config: { broadcast: { self: false, ack: false } },
+      });
+      channel.on('broadcast', { event: 'session' }, async (msg) => {
+        const payload = (msg as any)?.payload || {};
+        const access_token = payload.access_token as string | undefined;
+        const refresh_token = payload.refresh_token as string | undefined;
+        if (!access_token || !refresh_token) return;
+        try {
+          supaLoginHandledRef.current = true;
+          setIsProcessingRedirect(true);
+          const { data, error } = await supabase.auth.setSession({ access_token, refresh_token });
+          if (error) throw error;
+          const uid = data?.session?.user?.id;
+          if (uid) await proceedToWalletPhase(uid);
+          toast.success('Signed in — link confirmed on another device');
+        } catch (err) {
+          console.error('Cross-device session hydrate failed:', err);
+        } finally {
+          setIsProcessingRedirect(false);
+          supaLoginHandledRef.current = false;
+          try { await supabase.removeChannel(channel); } catch { /* ignore */ }
+          emailSyncCleanupRef.current = null;
+        }
+      });
+      // Wait for the channel to actually be SUBSCRIBED before sending the
+      // magic link. Without this, signInWithOtp could fire (and the user
+      // could tap the email link) before this tab's realtime subscription
+      // was live on the server — the broadcast would be sent to no one and
+      // silently lost. This only affects the cross-device path above; this
+      // device's own sign-in in AuthConfirm.tsx never depends on it.
+      await new Promise<void>((resolve) => {
+        let settled = false;
+        const finish = () => { if (settled) return; settled = true; resolve(); };
+        channel.subscribe((status) => { if (status === 'SUBSCRIBED') finish(); });
+        setTimeout(finish, 2500);
+      });
+      emailSyncCleanupRef.current = () => {
+        try { supabase.removeChannel(channel); } catch { /* ignore */ }
+      };
+
       try {
         await wagmiDisconnect();
         clearWagmiStorage();
       } catch { /* ignore */ }
 
+      const redirectTo = `${window.location.origin}/auth/confirm?sync=${syncNonce}`;
       const { error } = await supabase.auth.signInWithOtp({
         email,
-        options: { shouldCreateUser: true },
+        options: { shouldCreateUser: true, emailRedirectTo: redirectTo },
       });
       if (error) throw error;
-      toast.success('Verification code sent — check your email');
+      toast.success('Magic link sent — check your email');
     } catch (error: any) {
       console.error('Email login error:', error);
-      toast.error(error?.message || 'Failed to send verification code. Please try again.');
+      toast.error(error?.message || 'Failed to send magic link. Please try again.');
       localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
       setConnectionSource(null);
       localStorage.removeItem('dehub_connection_source');
+      if (emailSyncCleanupRef.current) {
+        try { emailSyncCleanupRef.current(); } catch { /* ignore */ }
+        emailSyncCleanupRef.current = null;
+      }
       throw error;
     } finally {
       setIsConnecting(false);
     }
+  };
+
+  const cancelEmailMagicLink = () => {
+    if (emailSyncCleanupRef.current) {
+      try { emailSyncCleanupRef.current(); } catch { /* ignore */ }
+      emailSyncCleanupRef.current = null;
+    }
+    localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
   };
 
   /**
@@ -1047,9 +1276,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (connectionSource === 'web3auth') {
         clearAAProvider();
         lockWallet();
-        // Encrypted-only cache; clearing avoids stale rows when a different
+        // Encrypted-only caches; clearing avoids stale rows when a different
         // user logs in on this device next.
         clearWalletCache();
+        clearPasskeyCache();
         try { sessionStorage.removeItem('dhb_approved_chains'); } catch { /* */ }
         supabase.auth.signOut().catch(() => {});
         clearWagmiStorage();
@@ -1082,16 +1312,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const refreshSession = async (): Promise<boolean> => {
+  /**
+   * Re-establish a usable DeHub session.
+   *
+   * `force` skips the "the token still looks fine locally" shortcut. Callers
+   * reacting to a REJECTED request must pass it: expiry here is pure arithmetic
+   * on the device clock (isTokenExpired), so a token the server has revoked —
+   * or one whose real expiry disagrees with ours because the clock drifted, the
+   * account was suspended, or a deploy rotated the signing secret — still looks
+   * valid locally. Returning true in that state made every recovery path report
+   * "Session restored — please try again", let the user retry, fail identically,
+   * and loop forever with no way out but a manual sign-out.
+   */
+  const refreshSession = async (force = false): Promise<boolean> => {
     const token = getAuthToken();
-    if (token && !isTokenExpired()) return true;
+    if (!force && token && !isTokenExpired()) return true;
 
     // ── Step 1: refresh token (no wallet interaction needed) ──
     const rt = getRefreshToken();
     if (rt) {
-      const result = await refreshAccessToken();
-      if (result) return true;
-      console.warn('[Auth] Refresh token failed, falling back to wallet re-sign');
+      const outcome = await refreshAccessTokenDetailed();
+      if (outcome.ok) return true;
+      if (outcome.reason === 'transient' || outcome.reason === 'malformed') {
+        // Escalating to a wallet signature prompt here would ask the user to
+        // approve a signature over the same connection that just failed —
+        // it cannot succeed, and it trains people to re-sign constantly.
+        console.warn('[Auth] Refresh failed transiently — not escalating to wallet re-sign');
+        return false;
+      }
+      console.warn('[Auth] Refresh token rejected, falling back to wallet re-sign');
     }
 
     // ── Step 2: wallet re-sign ──
@@ -1149,11 +1398,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     connect,
     connectWithProvider,
     connectWithEmail,
+    cancelEmailMagicLink,
     verifyEmailOtp,
     connectWithSMS,
     verifyPhoneOtp,
     connectWithWallet,
     completeSmartWalletLogin,
+    exportPrivateKey,
+    exportPrivateKeyWithBiometrics,
+    switchActiveWallet,
     disconnect,
     refreshUser,
     refreshSession,
@@ -1174,6 +1427,60 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return stable;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Central recovery for auth failures raised anywhere in the app (dispatched
+  // by the QueryClient's MutationCache in App.tsx). Tries a silent refresh
+  // first and only asks the user to sign in when that genuinely fails —
+  // otherwise a single expired token turns into a manual sign-out/sign-in.
+  const authRecoveryInFlight = useRef(false);
+  useEffect(() => {
+    const handler = async () => {
+      // A batch of mutations failing together must produce one recovery
+      // attempt and one toast, not one per mutation.
+      if (authRecoveryInFlight.current) return;
+      authRecoveryInFlight.current = true;
+
+      const toastId = toast.loading('Session expired — restoring…');
+      try {
+        // force: we are here because the server rejected a request, so the
+        // local expiry arithmetic cannot be trusted to decide whether to try.
+        const recovered = await stableCallbacks.refreshSession(true);
+        toast.dismiss(toastId);
+        if (recovered) {
+          toast.success('Session restored — please try again.');
+        } else {
+          // Bring React in line with storage — but ONLY when the credentials
+          // are genuinely gone. clearAuthSession runs down in the transport
+          // layer, which cannot touch React state, so after a real revocation
+          // the app keeps rendering a signed-in header, avatar and feed over a
+          // session that no longer exists.
+          //
+          // The narrow condition matters: refreshSession also returns false
+          // when it merely dispatched dehub:wallet-unlock-required and is
+          // waiting for the user to type their wallet password. Tearing down
+          // there would cancel the very flow that recovers them.
+          const credentialsGone = !getAuthToken() && !getRefreshToken();
+          if (credentialsGone) {
+            localStorage.removeItem('dehub_user');
+            setUser(null);
+            setWalletAddress(null);
+          }
+          toast.error('Session expired', {
+            description: 'Please sign in again to continue',
+            action: { label: 'Sign in', onClick: stableCallbacks.openLoginModal },
+            duration: 8000,
+          });
+        }
+      } catch {
+        toast.dismiss(toastId);
+      } finally {
+        authRecoveryInFlight.current = false;
+      }
+    };
+
+    window.addEventListener('dehub:auth-expired', handler);
+    return () => window.removeEventListener('dehub:auth-expired', handler);
+  }, [stableCallbacks]);
 
   const value = React.useMemo(() => ({
     user,

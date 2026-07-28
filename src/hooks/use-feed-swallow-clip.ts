@@ -1,7 +1,7 @@
 import { useEffect, type RefObject } from 'react';
 
 /** Themes whose sticky feed nav is a glass surface (pill or bento). */
-const GLASS_NAV_THEMES = ['cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'system'];
+const GLASS_NAV_THEMES = ['cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war', 'system'];
 
 /**
  * Swallow scrolled feed content at the top edge of a sticky glass nav surface.
@@ -45,6 +45,13 @@ export function useFeedSwallowClip(
     let lastEventAt = 0;
     let cachedCut: HTMLElement | null = null;
     let cachedRadius = 12;
+    // The radius cache is keyed on the theme as well as the element, because
+    // themes restyle the SAME node: minimal and light de-round surfaces, and
+    // war squares every bento outright. Keying on the element alone meant a
+    // theme switch kept the previous radius, so the clip carved a rounded arc
+    // at each top corner while the surface behind it was square, leaving two
+    // triangular gaps where content showed above the cut line.
+    let cachedTheme = '';
 
     const update = () => {
       const theme = document.documentElement.dataset.theme || '';
@@ -55,8 +62,9 @@ export function useFeedSwallowClip(
         const cut = Array.from(document.querySelectorAll<HTMLElement>(cutSelector))
           .find(p => p.offsetParent !== null);
         if (cut) {
-          if (cut !== cachedCut) {
+          if (cut !== cachedCut || theme !== cachedTheme) {
             cachedCut = cut;
+            cachedTheme = theme;
             // NaN-check rather than `|| 12`: a genuine 0 radius (the light
             // theme de-rounds the docs blog pill) must give a square cut,
             // not the 12px fallback arc.

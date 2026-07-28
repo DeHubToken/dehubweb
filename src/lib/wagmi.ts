@@ -6,16 +6,61 @@
  * Generic injected() for auto-connect in wallet in-app browsers.
  */
 
-import { http, createConfig } from 'wagmi'
+import { http, createConfig, createConnector } from 'wagmi'
 import { injected } from 'wagmi/connectors'
 import { base, bsc, mainnet } from 'wagmi/chains'
 import { connectorsForWallets } from '@rainbow-me/rainbowkit'
+import type { Wallet } from '@rainbow-me/rainbowkit'
 import {
   metaMaskWallet,
   phantomWallet,
   trustWallet,
   walletConnectWallet
 } from '@rainbow-me/rainbowkit/wallets'
+
+/**
+ * RainbowKit's phantomWallet()/trustWallet() resolve the injected provider
+ * ONCE, synchronously, when connectorsForWallets() runs at module load —
+ * before some extensions have finished injecting. With multiple wallet
+ * extensions installed, whichever hasn't injected yet at that instant loses
+ * the race, and RainbowKit's internal fallback (window.ethereum.providers[0])
+ * silently binds this button to a DIFFERENT wallet (e.g. clicking "Phantom"
+ * connects to Trust). Re-resolve lazily, at connect-click time, instead.
+ */
+function findTrustProvider(): any {
+  const eth = (window as any).ethereum
+  const providers = eth?.providers as any[] | undefined
+  const isTrust = (p: any) => !!p && (p.isTrustWallet || p.isTrust)
+  if (providers) return providers.find(isTrust)
+  return isTrust(eth) ? eth : undefined
+}
+
+function withLazyInjectedTarget(
+  wallet: Wallet,
+  resolve: () => any,
+): Wallet {
+  return {
+    ...wallet,
+    createConnector: (walletDetails) =>
+      createConnector((config) => ({
+        ...injected({ target: () => ({ id: wallet.id, name: wallet.name, provider: resolve() }) })(config),
+        ...walletDetails,
+      })),
+  }
+}
+
+function lazyPhantomWallet(): Wallet {
+  // phantomWallet() never falls back to WalletConnect — always safe to override.
+  return withLazyInjectedTarget(phantomWallet(), () => (window as any).phantom?.ethereum)
+}
+
+function lazyTrustWallet(params: { projectId: string }): Wallet {
+  const base = trustWallet(params)
+  // Only override when RainbowKit itself detected an injected Trust provider
+  // at call time — otherwise leave its WalletConnect/QR fallback untouched.
+  if (!base.installed) return base
+  return withLazyInjectedTarget(base, findTrustProvider)
+}
 
 const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || ''
 
@@ -59,8 +104,8 @@ const rainbowKitConnectors = connectorsForWallets(
       groupName: 'Popular',
       wallets: [
         metaMaskWallet,
-        phantomWallet,
-        trustWallet,
+        lazyPhantomWallet,
+        lazyTrustWallet,
         walletConnectWallet,
       ],
     },

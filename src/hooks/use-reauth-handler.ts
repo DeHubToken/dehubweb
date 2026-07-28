@@ -32,7 +32,9 @@ export function useReauthHandler() {
       // Try seamless refresh first
       const toastId = toast.loading('Refreshing session...');
       
-      const refreshed = await refreshSession();
+      // force: the server just rejected this request, so the local expiry
+      // check cannot be trusted to decide whether a refresh is needed.
+      const refreshed = await refreshSession(true);
       toast.dismiss(toastId);
       
       if (refreshed) {

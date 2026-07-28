@@ -5,6 +5,7 @@
  * Shows fee info, ranking explanation, and custom tip amount control.
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState } from 'react';
 import dehubCoin from '@/assets/dehub-coin.png';
 import padlockImg from '@/assets/padlock.png';
@@ -42,7 +43,7 @@ export function DmFeeInfoBanner({
       <div className="bg-zinc-800/60 border border-white/10 rounded-2xl p-4">
         <div className="flex items-start gap-3 mb-3">
           <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
-            <img src={padlockImg} alt="Lock" className="w-8 h-8 object-contain" />
+            <BrandIcon src={padlockImg} alt="Lock" className="w-8 h-8 object-contain" />
           </div>
           <div className="flex-1">
             <h3 className="text-white font-semibold text-sm mb-1">Tip to Message</h3>

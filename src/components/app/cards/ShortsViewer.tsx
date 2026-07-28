@@ -1122,7 +1122,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             <div className="bg-zinc-900/50 rounded-2xl p-3 lg:p-4 mb-3 relative">
               <div className="absolute top-3 right-3 lg:top-4 lg:right-4 flex items-center gap-1.5">
                 <motion.button
-                  onClick={toggleBookmark}
+                  onClick={() => toggleBookmark()}
                   disabled={isBookmarkLoading}
                   className="w-8 h-8 bg-white/[0.08] hover:bg-white/15 rounded-lg flex items-center justify-center transition-colors"
                   animate={isBookmarked ? { scale: [1, 1.2, 1] } : {}}

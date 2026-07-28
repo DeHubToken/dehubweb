@@ -7,6 +7,7 @@
  * @module components/app/modals/UsernameRequiredModal
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useEffect, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
@@ -215,7 +216,7 @@ export function UsernameRequiredModal() {
         hideCloseButton
       >
         <DialogHeader className="text-center">
-          <img 
+          <BrandIcon 
             src={profileIcon} 
             alt="Profile" 
             className="mx-auto mb-4 h-20 w-20 object-contain"

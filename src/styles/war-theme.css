@@ -1,0 +1,1677 @@
+/* ==========================================================================
+   WAR - tactical HUD theme :: COMPONENT COVERAGE
+   ==========================================================================
+
+   This file owns SURFACE COVERAGE: every themable surface in the app gets a
+   gunmetal fill, a cyan hairline and HUD-native states. It does NOT own the
+   design tokens or the reusable frame primitives - those live in
+   src/styles/war-frame.css, which MUST be imported BEFORE this file:
+
+       import "./styles/war-frame.css";   // tokens + primitives
+       import "./styles/war-theme.css";   // this file (surface coverage)
+
+   Consumed from war-frame.css (never redefined here):
+     --war-hud       HUD cyan, the single accent
+     --war-hud-dim   inactive / secondary STROKE colour (never used as text:
+                     it measures 4.26:1 on the panel fill, below AA)
+     --war-olive     olive drab wash
+     --war-gunmetal  panel fill
+     --war-void      page backdrop
+     --war-sand      secondary readout text
+     --war-alert     SEMANTIC ONLY - live / record / destructive state
+     --war-mono      readout type stack
+     --war-edge      1px cyan inset ring
+
+   Also owned by war-frame.css: the keep-round-safe global squaring rule
+   (`*:not([data-keep-round]) { border-radius: 0 !important }`), the scanline
+   film, and the glow tokens. This file still sets `border-radius: 0` on every
+   surface it repaints so the coverage is self-sufficient if the blanket rule
+   is ever scoped down.
+
+   HOUSE RULES ENFORCED HERE
+   ------------------------
+   1. PALETTE LOCK. One accent (--war-hud). --war-alert is never decoration.
+      Saturated Tailwind families are remapped (see "Palette lock" below).
+   2. CHROME GETS VOCABULARY, CONTENT GETS CALM. Brackets, chamfers and rulers
+      go on panels and navs. [data-feed-item] repeats ~30x per screen, so it
+      gets a hairline and a wash only - never brackets, chamfers or glow.
+   3. NO CLIP-PATH ON CONTAINERS WITH OVERFLOWING CHILDREN. Chamfers are drawn
+      on pseudo-elements. clip-path is only allowed on leaf chips.
+   4. CONTENT FIDELITY. [data-media-full], [data-video-controls] and
+      [data-keep-dark] are never tinted or recoloured.
+   5. AA CONTRAST. Every text value below was measured against the actual
+      composited surface. Panel fill resolves to ~rgb(13 18 16) (L 0.0056):
+        sand @ 0.72  -> 5.5:1     sand @ 0.86 -> 7.3:1
+        cyan @ 0.72  -> 6.6:1     cyan @ 1.0  -> 12.0:1
+        hud-dim      -> 4.3:1  (FAILS - strokes only, never text)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Bridge variables. These are the SHARED glass tokens from index.css, not War
+   tokens - remapping them here is what pulls every rule in index.css and
+   docs-glass.css that reads them into the War palette instead of white glass.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] {
+  --glass-tint: var(--war-gunmetal);
+  --glass-thin: 0.72;
+  --glass-regular: 0.82;
+  --glass-raised: 0.9;
+  --glass-blur: blur(10px) saturate(115%);
+
+  /* The white 160deg sheen becomes an olive top wash. */
+  --glass-highlight: linear-gradient(
+    178deg,
+    rgb(var(--war-olive) / 0.24) 0%,
+    rgb(var(--war-gunmetal) / 0) 42%
+  );
+  /* Every white hairline ring in the shared block becomes the cyan edge. */
+  --glass-edge: var(--war-edge), 0 8px 32px rgb(0 0 0 / 0.45);
+  --glass-edge-flat: var(--war-edge);
+  --glass-edge-panel: var(--war-edge), 0 12px 24px -20px rgb(0 0 0 / 0.55);
+
+  background-color: rgb(var(--war-void));
+}
+
+/* --------------------------------------------------------------------------
+   Canvas passthrough. #root ships `background-color: black` (index.css), which
+   permanently occludes the war-void backdrop - including on the no-WebGL
+   fallback path, where the olive backdrop is the ONLY thing the user sees.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] #root,
+html[data-theme='war'] body,
+html[data-theme='war'] #app-root,
+html[data-theme='war'] #app-root > div > main {
+  background-color: transparent !important;
+}
+
+/* ==========================================================================
+   1. CORE SURFACES
+   ========================================================================== */
+
+html[data-theme='war'] :is([data-side-panel], [data-page-bento], [data-search-bento]) {
+  position: relative;
+  border-radius: 0 !important;
+  background:
+    linear-gradient(
+      178deg,
+      rgb(var(--war-olive) / 0.24) 0%,
+      rgb(var(--war-gunmetal) / 0) 42%
+    ),
+    rgb(var(--war-gunmetal) / var(--glass-regular)) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border-color: transparent !important;
+  box-shadow: var(--war-edge) !important;
+}
+
+/* Feed items: hairline + wash only. See house rule 2 - these repeat ~30x per
+   scroll, so they carry a 2px cyan left rail as their entire HUD signature. */
+html[data-theme='war'] [data-feed-item] {
+  position: relative;
+  border-radius: 0 !important;
+  background:
+    linear-gradient(
+      178deg,
+      rgb(var(--war-olive) / 0.2) 0%,
+      rgb(var(--war-gunmetal) / 0) 46%
+    ),
+    rgb(var(--war-gunmetal) / var(--glass-thin)) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
+  border-color: transparent !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.22),
+    inset 2px 0 0 rgb(var(--war-hud) / 0.34) !important;
+}
+
+html[data-theme='war'] [data-page-bento].cursor-pointer:hover {
+  background:
+    linear-gradient(
+      178deg,
+      rgb(var(--war-olive) / 0.32) 0%,
+      rgb(var(--war-gunmetal) / 0) 42%
+    ),
+    rgb(var(--war-gunmetal) / var(--glass-raised)) !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.42),
+    inset 0 1px 0 rgb(var(--war-hud) / 0.18) !important;
+}
+
+/* Full-bleed page wrappers and the post overlay/drawer stay transparent (the
+   shared canvas block already does that) - they only need the geometry. */
+html[data-theme='war']
+  :is([data-glass-page], [data-post-overlay], [data-post-drawer], [data-feed-chrome]) {
+  border-radius: 0 !important;
+}
+
+/* --------------------------------------------------------------------------
+   Corner brackets. All four corners in ONE pseudo (8 background layers), so
+   ::before stays free for the ruler / chamfer on the same element. Drawn as
+   background-image rather than borders so `filter: drop-shadow` follows the
+   drawn ticks instead of the element box.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] :is([data-side-panel], [data-page-bento])::after,
+html[data-theme='war'] [data-profile-hover-card]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgb(var(--war-hud) / 0.6) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.6) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.6) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.6) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.6) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.6) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.6) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.6) 0 0);
+  background-size:
+    10px 1px, 1px 10px,
+    10px 1px, 1px 10px,
+    10px 1px, 1px 10px,
+    10px 1px, 1px 10px;
+  background-position:
+    top left, top left,
+    top right, top right,
+    bottom left, bottom left,
+    bottom right, bottom right;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 0 3px rgb(var(--war-hud) / 0.25));
+  transition: background-size 140ms linear;
+}
+
+/* Lock-on: the brackets snap outward when an interactive bento is hovered. */
+html[data-theme='war'] [data-page-bento].cursor-pointer:hover::after {
+  background-size:
+    14px 1px, 1px 14px,
+    14px 1px, 1px 14px,
+    14px 1px, 1px 14px,
+    14px 1px, 1px 14px;
+}
+
+/* Nested bentos would stack 8+ ticks in a stat grid - the reference sheet uses
+   brackets on outer frames only. Written as a reset rather than a complex
+   :not() so it never depends on Selectors-4 :not() support. */
+html[data-theme='war'] :is([data-side-panel], [data-page-bento]) [data-page-bento]::after {
+  display: none;
+}
+
+/* Tick ruler. Instrument bezel on the side panel's inner edge ONLY - a ruler
+   on every card is a picket fence. Zero DOM, two stacked gradients. */
+html[data-theme='war'] [data-side-panel]:not([data-search-bento])::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 6px;
+  z-index: 1;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      rgb(var(--war-hud) / 0.4) 0 1px,
+      transparent 1px 8px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgb(var(--war-hud) / 0.62) 0 1px,
+      transparent 1px 40px
+    );
+  background-size: 3px 100%, 6px 100%;
+  background-position: left top, left top;
+  background-repeat: repeat-y;
+}
+
+/* ==========================================================================
+   2. FEED NAV - the one chamfered surface, cut on the BOTTOM corners only.
+   ==========================================================================
+   Why bottom-only: use-feed-swallow-clip.ts traces the pill's TOP edge from
+   `borderTopLeftRadius`, which War forces to 0. A top chamfer would leave a
+   10x10 triangle where the pill does not paint but the feed is still cut, so
+   raw canvas shows through during momentum scrolls. Cutting the bottom corners
+   keeps the traced top edge and the painted silhouette in exact agreement, and
+   a symmetric pair reads as a system rather than an accident.
+
+   The chamfer is drawn on pseudo-elements, never as clip-path on the nav
+   itself: GlobalFeedNav sets `overflowClipMargin: 8px` and HomePage sets
+   `overflow-visible` precisely so the drag handle and the indicator can escape
+   the box. A container clip would amputate both, and would also swallow the
+   nav's own ambient drop shadow.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [data-feed-nav-outer] {
+  background-color: transparent !important;
+}
+
+html[data-theme='war'] [data-feed-nav] {
+  /* NOT `position: relative`. This element is `sticky` in the markup, and
+     overriding the position dropped it out of the sticky flow so the feed nav
+     scrolled away with the content instead of pinning. `isolation` alone gives
+     the stacking context the decoration needs, without touching positioning.
+     Same mistake as the drawer rule below: assuming a positioned ancestor has
+     to be created, when the component already established one. */
+  isolation: isolate;
+  border-radius: 0 !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+}
+
+/* Fill + blur, painted UNDER the in-flow tab row. */
+html[data-theme='war'] [data-feed-nav]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: rgb(var(--war-gunmetal) / 0.82);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+}
+
+/* The 1px ring, drawn so the stroke FOLLOWS the two diagonals - on the
+   reference sheet the chamfer only exists because a hairline runs along the
+   cut. Four straight edges plus two 10x10 diagonal tiles; the shared clip-path
+   trims the straight edges back out of the cut triangles. */
+html[data-theme='war'] [data-feed-nav]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgb(var(--war-hud) / 0.45) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.45) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.45) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.45) 0 0),
+    linear-gradient(
+      45deg,
+      transparent calc(50% - 0.5px),
+      rgb(var(--war-hud) / 0.45) calc(50% - 0.5px),
+      rgb(var(--war-hud) / 0.45) calc(50% + 0.5px),
+      transparent calc(50% + 0.5px)
+    ),
+    linear-gradient(
+      135deg,
+      transparent calc(50% - 0.5px),
+      rgb(var(--war-hud) / 0.45) calc(50% - 0.5px),
+      rgb(var(--war-hud) / 0.45) calc(50% + 0.5px),
+      transparent calc(50% + 0.5px)
+    );
+  background-size:
+    100% 1px,
+    100% 1px,
+    1px 100%,
+    1px 100%,
+    10px 10px,
+    10px 10px;
+  background-position:
+    top left,
+    bottom left,
+    top left,
+    top right,
+    bottom left,
+    bottom right;
+  background-repeat: no-repeat;
+  clip-path: polygon(
+    0 0,
+    100% 0,
+    100% calc(100% - 10px),
+    calc(100% - 10px) 100%,
+    10px 100%,
+    0 calc(100% - 10px)
+  );
+  filter: drop-shadow(0 0 4px rgb(var(--war-hud) / 0.2));
+}
+
+/* --------------------------------------------------------------------------
+   Active feed-tab indicator. GlassIndicator applies `borderRadius` as an
+   INLINE style, so !important is mandatory to reach it. Do not display:none it
+   - GlobalFeedNav's drag-to-reorder depends on the indicator rect being
+   visible. The second, hand-rolled pill on HomePage (the filter-settings slot)
+   is matched by the same white-glass gradient signature.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [data-feed-nav] [data-glass-indicator],
+html[data-theme='war'] [data-feed-nav] [class*="from-white/20"] {
+  border-radius: 0 !important;
+  background: rgb(var(--war-hud) / 0.14) !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.4),
+    inset 0 -2px 0 rgb(var(--war-hud) / 0.85) !important;
+}
+
+html[data-theme='war'] [data-feed-nav] [data-feed-tab-btn] {
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  color: rgb(var(--war-sand) / 0.78);
+}
+html[data-theme='war'] [data-feed-nav] [data-feed-tab-btn]:hover {
+  background-color: rgb(var(--war-hud) / 0.08) !important;
+  color: rgb(var(--war-hud) / 0.9);
+}
+html[data-theme='war'] [data-feed-nav] [data-feed-tab-btn][data-active='true'] {
+  color: rgb(var(--war-hud)) !important;
+}
+/* Icon-only tabs: colour the glyph, and keep numeric badges out of the
+   readout tracking so 2-digit counts stay centred. */
+html[data-theme='war'] [data-feed-nav] [data-feed-tab-btn][data-active='true'] svg {
+  color: rgb(var(--war-hud)) !important;
+  filter: drop-shadow(0 0 5px rgb(var(--war-hud) / 0.35));
+}
+
+/* ==========================================================================
+   3. TABS - side panels and home tabs
+   ========================================================================== */
+html[data-theme='war'] [data-side-panel-tabs] {
+  position: relative;
+}
+/* One cyan baseline across the strip. */
+html[data-theme='war'] [data-side-panel-tabs]::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: rgb(var(--war-hud) / 0.25);
+  pointer-events: none;
+  z-index: 1;
+}
+
+html[data-theme='war'] [data-side-panel-tabs] [data-active-tab-indicator] {
+  background: rgb(var(--war-hud) / 0.14) !important;
+  border-bottom: 2px solid rgb(var(--war-hud) / 0.85) !important;
+  border-radius: 0 !important;
+}
+/* The shared canvas block paints this a white radial bloom (index.css:1112). */
+html[data-theme='war'] [data-side-panel-tabs] .tab-hover-bg {
+  background: rgb(var(--war-hud) / 0.07) !important;
+}
+
+html[data-theme='war'] [data-tab-btn] {
+  position: relative;
+  z-index: 2;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  font-family: var(--war-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgb(var(--war-sand) / 0.76);
+}
+html[data-theme='war'] [data-tab-btn][data-tab-active='true'] {
+  color: rgb(var(--war-hud)) !important;
+  background-color: rgb(var(--war-hud) / 0.08) !important;
+}
+/* 2px cyan underline on the active tab, drawn on ::before so it breaks the
+   baseline above cleanly. */
+html[data-theme='war'] [data-tab-btn]::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background-color: rgb(var(--war-hud));
+  opacity: 0;
+  transition: opacity 180ms linear;
+  pointer-events: none;
+}
+html[data-theme='war'] [data-tab-btn][data-tab-active='true']::before {
+  opacity: 1;
+}
+
+html[data-theme='war'] [data-home-tabs] {
+  background-color: transparent !important;
+}
+
+/* Sidebar "View all" capsule. index.css:1138 actively paints this white at
+   0.18 with a white 0.30 hairline for every canvas theme - War opted into that
+   list, so this override is mandatory, not a fall-through. */
+html[data-theme='war'] [data-side-panel] [data-view-all] .backdrop-blur-xl {
+  background-image: none !important;
+  background-color: rgb(var(--war-hud) / 0.12) !important;
+  border: 1px solid rgb(var(--war-hud) / 0.45) !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+html[data-theme='war'] [data-view-all] {
+  font-family: var(--war-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 10px;
+}
+
+/* Chips inside War surfaces are washed white by index.css:1118. */
+html[data-theme='war']
+  :is([data-feed-item], [data-side-panel], [data-page-bento]) .bg-zinc-800 {
+  background-color: rgb(var(--war-hud) / 0.1) !important;
+}
+html[data-theme='war']
+  :is([data-feed-item], [data-side-panel], [data-page-bento]) .hover\:bg-zinc-800:hover {
+  background-color: rgb(var(--war-hud) / 0.16) !important;
+}
+
+/* ==========================================================================
+   4. MOBILE HEADER + BOTTOM NAV
+   ========================================================================== */
+html[data-theme='war'] [data-mobile-header] {
+  border-radius: 0 !important;
+}
+html[data-theme='war'] [data-mobile-header][data-scrolled='true'] {
+  background: rgb(var(--war-gunmetal) / 0.82) !important;
+  box-shadow: inset 0 -1px 0 rgb(var(--war-hud) / 0.28) !important;
+}
+
+/* Bottom nav is the entire chrome on phones. Chamfer the TOP two corners only
+   - the bottom edge is flush to the physical screen edge, which is what makes
+   the asymmetry legitimate here (unlike the feed nav). Its children are
+   NavLink <a> elements, so no button rule can reach them. */
+html[data-theme='war'] [data-bottom-nav] > nav {
+  position: relative;
+  isolation: isolate;
+  border-radius: 0 !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+html[data-theme='war'] [data-bottom-nav] > nav::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: rgb(var(--war-gunmetal) / 0.86);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  box-shadow: 0 -6px 22px rgb(0 0 0 / 0.5);
+  clip-path: polygon(
+    10px 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% 100%,
+    0 100%,
+    0 10px
+  );
+}
+html[data-theme='war'] [data-bottom-nav] > nav::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgb(var(--war-hud) / 0.4) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.4) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.4) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.4) 0 0),
+    linear-gradient(
+      135deg,
+      transparent calc(50% - 0.5px),
+      rgb(var(--war-hud) / 0.4) calc(50% - 0.5px),
+      rgb(var(--war-hud) / 0.4) calc(50% + 0.5px),
+      transparent calc(50% + 0.5px)
+    ),
+    linear-gradient(
+      45deg,
+      transparent calc(50% - 0.5px),
+      rgb(var(--war-hud) / 0.4) calc(50% - 0.5px),
+      rgb(var(--war-hud) / 0.4) calc(50% + 0.5px),
+      transparent calc(50% + 0.5px)
+    );
+  background-size:
+    100% 1px, 100% 1px, 1px 100%, 1px 100%, 10px 10px, 10px 10px;
+  background-position:
+    top left, bottom left, top left, top right, top left, top right;
+  background-repeat: no-repeat;
+  clip-path: polygon(
+    10px 0,
+    calc(100% - 10px) 0,
+    100% 10px,
+    100% 100%,
+    0 100%,
+    0 10px
+  );
+}
+
+/* The create (+) bubble and the active-link pill both key off border-white/30. */
+html[data-theme='war'] [data-bottom-nav] [class*="border-white/30"] {
+  border-radius: 0 !important;
+  border-color: rgb(var(--war-hud) / 0.6) !important;
+  background-color: rgb(var(--war-hud) / 0.14) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: inset 0 -2px 0 rgb(var(--war-hud) / 0.7) !important;
+}
+html[data-theme='war'] [data-bottom-nav] a[aria-current='page'] svg,
+html[data-theme='war'] [data-bottom-nav] a.active svg {
+  color: rgb(var(--war-hud)) !important;
+}
+
+/* Unread counters are a COUNT, not an alert - they resolve to the accent, not
+   to --war-alert. Reset the inherited readout tracking so digits stay centred
+   in the fixed-width badge. */
+html[data-theme='war']
+  :is([data-mobile-header], [data-bottom-nav]) :is(.bg-red-500, .bg-red-600) {
+  background-color: rgb(var(--war-hud)) !important;
+  color: rgb(var(--war-void)) !important;
+  border-radius: 0 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+}
+
+/* ==========================================================================
+   5. PORTALLED SURFACES
+   ==========================================================================
+   Dialogs, drawers, dropdowns, popovers, selects, context menus, tooltips,
+   hover cards and toasts all render through a React portal at <body> - OUTSIDE
+   #app-root. Every rule below is therefore scoped on html[data-theme='war']
+   only. Without this block the entire login flow, post composer, every confirm
+   and every menu render as rounded frosted white glass.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] :is([role='dialog'], [role='alertdialog']),
+html[data-theme='war'] [data-vaul-drawer],
+html[data-theme='war'] [data-radix-popper-content-wrapper] > :not([data-keep-dark]),
+html[data-theme='war'] :is([data-login-modal], [data-post-modal], [data-comments-wrapper]),
+html[data-theme='war'] :is([data-profile-hover-card], [data-ai-chat], [data-country-block-drawer]),
+html[data-theme='war'] [data-sonner-toaster] [data-sonner-toast],
+html[data-theme='war'] [data-sonner-toaster] .toast {
+  border-radius: 0 !important;
+  background:
+    linear-gradient(
+      178deg,
+      rgb(var(--war-olive) / 0.24) 0%,
+      rgb(var(--war-gunmetal) / 0) 42%
+    ),
+    rgb(var(--war-gunmetal) / 0.95) !important;
+  backdrop-filter: blur(12px) saturate(115%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(115%) !important;
+  border-color: transparent !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.3),
+    0 10px 40px rgb(0 0 0 / 0.6) !important;
+}
+
+/* Media viewers and anything explicitly opted out keep their dark shell. */
+html[data-theme='war'] :is([role='dialog'], [role='alertdialog'])[data-keep-dark] {
+  background: rgb(0 0 0 / 0.8) !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.22) !important;
+}
+
+/* Square everything inside a portal, honouring the documented opt-out. */
+html[data-theme='war']
+  :is(
+    [role='dialog'],
+    [role='alertdialog'],
+    [data-vaul-drawer],
+    [data-radix-popper-content-wrapper],
+    [data-sonner-toaster]
+  )
+  *:not([data-keep-round]) {
+  border-radius: 0 !important;
+}
+
+/* Corner brackets on the two portals that read as framed panels.
+ *
+ * DO NOT set `position: relative` here. Both of these are vaul drawer content,
+ * which ships `position: fixed` (fixed inset-x-0 bottom-0 z-[100]) and is
+ * opened by animating a transform against the viewport. Forcing `relative`
+ * dropped them out of viewport positioning into normal document flow, so the
+ * post composer opened somewhere useless and the login modal never appeared at
+ * all. Both were reported as "does not open".
+ *
+ * The rule existed to give the ::after brackets a containing block, which was
+ * never needed: `position: fixed` is already a positioned ancestor, so an
+ * absolutely positioned pseudo-element resolves against it correctly.
+ */
+html[data-theme='war'] [data-login-modal]::after,
+html[data-theme='war'] [data-post-modal]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgb(var(--war-hud) / 0.6) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.6) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.6) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.6) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.6) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.6) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.6) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.6) 0 0);
+  background-size:
+    12px 1px, 1px 12px, 12px 1px, 1px 12px,
+    12px 1px, 1px 12px, 12px 1px, 1px 12px;
+  background-position:
+    top left, top left, top right, top right,
+    bottom left, bottom left, bottom right, bottom right;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 0 3px rgb(var(--war-hud) / 0.25));
+}
+
+/* Menu / select / command rows: replace `focus:bg-accent` with a cyan armed
+   state plus the left rail that marks the active line on a HUD. */
+html[data-theme='war'] [data-radix-popper-content-wrapper] [data-highlighted],
+html[data-theme='war'] [data-radix-popper-content-wrapper] [data-state='checked'],
+html[data-theme='war'] [cmdk-item][data-selected='true'] {
+  background-color: rgb(var(--war-hud) / 0.16) !important;
+  color: rgb(var(--war-hud)) !important;
+  box-shadow: inset 2px 0 0 rgb(var(--war-hud)) !important;
+}
+
+/* Toast text and action buttons. */
+html[data-theme='war'] [data-sonner-toaster] :is([data-sonner-toast], .toast) {
+  font-family: var(--war-mono);
+  letter-spacing: 0.04em;
+  color: rgb(var(--war-sand) / 0.96) !important;
+}
+html[data-theme='war'] [data-sonner-toaster] [data-description] {
+  color: rgb(var(--war-sand) / 0.8) !important;
+}
+
+/* Vaul drag handle. */
+html[data-theme='war'] [data-vaul-drawer] .bg-white\/40 {
+  background-color: rgb(var(--war-hud) / 0.6) !important;
+}
+
+/* ==========================================================================
+   6. LIST ROWS, POLLS, COMMENTS
+   ========================================================================== */
+
+/* Notification rows ship literal zinc slabs (bg-zinc-900/50 read,
+   bg-zinc-800/80 unread) that the shared canvas remap never reaches. The 3px
+   cyan left rail is the HUD-native way to mark unread. */
+html[data-theme='war'] [data-notification-row] {
+  background-color: rgb(var(--war-gunmetal) / 0.55) !important;
+  box-shadow: inset 0 -1px 0 rgb(var(--war-hud) / 0.12);
+}
+html[data-theme='war'] [data-notification-row]:hover {
+  background-color: rgb(var(--war-gunmetal) / 0.72) !important;
+}
+html[data-theme='war'] [data-notification-row][data-unread] {
+  background:
+    linear-gradient(90deg, rgb(var(--war-hud) / 0.1), transparent 60%),
+    rgb(var(--war-gunmetal) / 0.66) !important;
+  box-shadow:
+    inset 3px 0 0 rgb(var(--war-hud) / 0.8),
+    inset 0 -1px 0 rgb(var(--war-hud) / 0.12);
+}
+html[data-theme='war'] [data-notification-row][data-unread]:hover {
+  background:
+    linear-gradient(90deg, rgb(var(--war-hud) / 0.16), transparent 60%),
+    rgb(var(--war-gunmetal) / 0.78) !important;
+}
+
+/* Poll cards. The reference sheet's segmented level meter maps to a poll
+   result bar exactly: dashed cells for the filled portion, a bright leading
+   edge on the right of the fill, a dim track behind. */
+html[data-theme='war'] [data-poll-card] {
+  border-radius: 0 !important;
+  background-color: rgb(var(--war-gunmetal) / 0.6) !important;
+  border-color: rgb(var(--war-hud) / 0.28) !important;
+}
+html[data-theme='war'] [data-poll-card] button {
+  border-radius: 0 !important;
+}
+/* Track */
+html[data-theme='war'] [data-poll-card] .absolute.inset-0.bg-white\/10 {
+  border-radius: 0 !important;
+  background-color: rgb(var(--war-hud) / 0.08) !important;
+}
+/* Fill - segmented, with the bright leading cell */
+html[data-theme='war'] [data-poll-card] .absolute.inset-y-0.left-0 {
+  border-radius: 0 !important;
+  background: repeating-linear-gradient(
+    90deg,
+    rgb(var(--war-hud) / 0.5) 0 6px,
+    transparent 6px 9px
+  ) !important;
+  box-shadow: inset -2px 0 0 rgb(var(--war-hud)) !important;
+}
+html[data-theme='war'] [data-poll-card] .absolute.inset-y-0.left-0.bg-white\/40 {
+  background: repeating-linear-gradient(
+    90deg,
+    rgb(var(--war-hud) / 0.68) 0 6px,
+    transparent 6px 9px
+  ) !important;
+}
+
+/* Comments. */
+html[data-theme='war'] [data-comments-section] :is([class*="bg-white/"], .bg-zinc-800, .bg-zinc-900) {
+  background-color: rgb(var(--war-hud) / 0.07) !important;
+}
+html[data-theme='war'] [data-comments-section] [class*="border-white/"] {
+  border-color: rgb(var(--war-hud) / 0.2) !important;
+}
+
+/* ==========================================================================
+   7. CONTROLS
+   ==========================================================================
+   The base design system's button variants are white glass with a scale
+   gesture. HUD controls snap: no scale, a cyan hairline at rest, a cyan wash
+   on hover, a hard fill on :active with a 60ms linear step.
+   -------------------------------------------------------------------------- */
+
+/* Primary actions. 79 hand-rolled `bg-white text-black` CTAs plus the tagged
+   hooks. Restricted to actual controls so `.bg-white` on a switch thumb or a
+   poll checkbox is not caught. */
+html[data-theme='war']
+  :is([data-primary-cta], [data-follow-btn]),
+html[data-theme='war']
+  :is(button, a, [role='button']):is(.bg-white, [class*="bg-white/9"]):not([data-keep-white]):not([data-keep-dark]) {
+  border-radius: 0 !important;
+  background: rgb(var(--war-hud) / 0.16) !important;
+  background-image: none !important;
+  color: rgb(var(--war-hud)) !important;
+  border-color: transparent !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.7) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  font-family: var(--war-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: background-color 60ms linear, box-shadow 60ms linear;
+}
+html[data-theme='war'] :is([data-primary-cta], [data-follow-btn]) *,
+html[data-theme='war']
+  :is(button, a, [role='button']):is(.bg-white, [class*="bg-white/9"]):not([data-keep-white]):not([data-keep-dark]) * {
+  color: rgb(var(--war-hud)) !important;
+}
+html[data-theme='war'] :is([data-primary-cta], [data-follow-btn]):hover,
+html[data-theme='war']
+  :is(button, a, [role='button']):is(.bg-white, [class*="bg-white/9"]):not([data-keep-white]):not([data-keep-dark]):hover {
+  background: rgb(var(--war-hud) / 0.26) !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud)),
+    0 0 6px rgb(var(--war-hud) / 0.18) !important;
+}
+html[data-theme='war'] :is([data-primary-cta], [data-follow-btn]):active {
+  background: rgb(var(--war-hud) / 0.34) !important;
+}
+
+/* The glass button variants (default / glass / secondary in ui/button.tsx) and
+   every hand-rolled copy of them. The three tagged roles are excluded because
+   this selector carries an ID and would otherwise outrank their own rules -
+   [data-primary-cta] in AuthGate is literally `variant="glass"`. */
+html[data-theme='war'] #app-root
+  :is(button, a, [role='button'])[class*="from-white/"]:not([data-glass-indicator]):not([data-keep-white]):not([data-primary-cta]):not([data-follow-btn]):not([data-filter-chip]) {
+  background: rgb(var(--war-gunmetal) / 0.5) !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.28) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  color: rgb(var(--war-sand) / 0.94) !important;
+  transition: background-color 60ms linear, box-shadow 60ms linear;
+}
+html[data-theme='war'] #app-root
+  :is(button, a, [role='button'])[class*="from-white/"]:not([data-glass-indicator]):not([data-keep-white]):not([data-primary-cta]):not([data-follow-btn]):not([data-filter-chip]):hover {
+  background: rgb(var(--war-hud) / 0.1) !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.6),
+    0 0 6px rgb(var(--war-hud) / 0.18) !important;
+  color: rgb(var(--war-hud)) !important;
+}
+
+/* Ghost / icon buttons: a bare cyan wash, no frost. */
+html[data-theme='war'] #app-root button:is(.hover\:bg-white\/10, .hover\:bg-white\/5):hover {
+  background-color: rgb(var(--war-hud) / 0.1) !important;
+}
+
+/* HUD controls snap - kill the squash. Scoped to the scale utilities
+   themselves so buttons positioned with a transform are untouched. */
+html[data-theme='war'] #app-root
+  :is(.hover\:scale-105, .hover\:scale-\[1\.02\], .active\:scale-\[0\.97\], .active\:scale-95):is(:hover, :active) {
+  transform: none !important;
+}
+
+/* Filter chips get the sheet's arrow-ended banner.
+ *
+ * The old note here claimed clip-path was safe "because a chip has no
+ * overflowing children". That reasoning was incomplete: clip-path clips
+ * everything the element PAINTS, and an outline is painted entirely outside
+ * the border box. These are real focusable <button>s, so the clip was silently
+ * erasing their focus ring and leaving keyboard users with no visible focus at
+ * all. Children were never the only thing at risk.
+ *
+ * The focus ring is restored below by re-drawing it inside the clipped region
+ * as an inset shadow, which survives the clip. */
+html[data-theme='war'] [data-filter-chip] {
+  border-radius: 0 !important;
+  background: rgb(var(--war-hud) / 0.14) !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  color: rgb(var(--war-hud)) !important;
+  font-family: var(--war-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding-right: 12px;
+  clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 50%, calc(100% - 7px) 100%, 0 100%);
+}
+html[data-theme='war'] [data-filter-chip]:hover {
+  background: rgb(var(--war-hud) / 0.24) !important;
+}
+
+/* Focus ring, drawn INSIDE the clipped region. The global focus-visible rule
+   uses `outline` with an offset, which sits outside the border box and is
+   therefore removed entirely by the clip-path above. An inset shadow is inside
+   the shape, so it survives, and the outline is suppressed so the two do not
+   both try to indicate focus. */
+html[data-theme='war'] [data-filter-chip]:focus-visible {
+  outline: none !important;
+  box-shadow:
+    inset 0 0 0 2px rgb(var(--war-hud)),
+    inset 0 0 0 4px rgb(var(--war-void)) !important;
+}
+html[data-theme='war'] [data-filter-chip] :is(span, svg) {
+  color: rgb(var(--war-hud)) !important;
+}
+
+/* Auth gate. */
+html[data-theme='war'] [data-auth-gate] {
+  border-radius: 0 !important;
+}
+html[data-theme='war'] [data-auth-gate] h2 {
+  font-family: var(--war-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+/* Feed filter panel. */
+html[data-theme='war'] [data-feed-filter-panel] {
+  border-radius: 0 !important;
+  background: rgb(var(--war-gunmetal) / 0.82) !important;
+  border-color: transparent !important;
+  box-shadow: var(--war-edge) !important;
+}
+html[data-theme='war'] [data-feed-filter-panel] button[data-active='true'] {
+  background-color: rgb(var(--war-hud) / 0.16) !important;
+  color: rgb(var(--war-hud)) !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.5) !important;
+}
+
+/* Badge icons. */
+html[data-theme='war'] img[data-badge-icon] {
+  border-radius: 0 !important;
+  filter: drop-shadow(0 0 4px rgb(var(--war-hud) / 0.3));
+}
+
+/* --------------------------------------------------------------------------
+   Form controls
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] :is(input, textarea, select) {
+  border-radius: 0 !important;
+}
+html[data-theme='war'] :is(input, textarea):focus-visible {
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.7) !important;
+}
+
+/* Placeholders. index.css:1210 (`#app-root main input::placeholder`) scores
+   (1,1,4) WITH !important, so the previous (1,1,3) rule never applied inside
+   <main>. Matched here at (1,1,4) and won on source order, plus the side-panel
+   and portal cases at their own specificity. sand @ 0.72 measures 5.2:1 over
+   a bg-white/5 input on the panel fill - AA for normal text. */
+html[data-theme='war'] #app-root main input::placeholder,
+html[data-theme='war'] #app-root main textarea::placeholder,
+html[data-theme='war'] [data-side-panel] input::placeholder,
+html[data-theme='war'] [data-side-panel] textarea::placeholder,
+html[data-theme='war'] [role='dialog'] input::placeholder,
+html[data-theme='war'] [role='dialog'] textarea::placeholder,
+html[data-theme='war'] [data-vaul-drawer] input::placeholder,
+html[data-theme='war'] [data-vaul-drawer] textarea::placeholder {
+  color: rgb(var(--war-sand) / 0.72) !important;
+  font-family: var(--war-mono);
+  letter-spacing: 0.06em;
+}
+
+/* Search bento input rides on the wrapper's glass. */
+html[data-theme='war'] [data-search-bento] input {
+  background-color: transparent !important;
+  font-family: var(--war-mono);
+  letter-spacing: 0.04em;
+}
+
+/* Assistant / AI chat input. */
+html[data-theme='war'] [data-assistant-input] {
+  border-radius: 0 !important;
+  background-color: rgb(var(--war-gunmetal) / 0.7) !important;
+  box-shadow: var(--war-edge) !important;
+}
+html[data-theme='war'] [data-assistant-input] textarea::placeholder {
+  color: rgb(var(--war-sand) / 0.72) !important;
+}
+
+/* Switch: a hard two-state toggle. Both track and thumb square (the thumb is a
+   non-button <span>, which a `button` rule can never reach). */
+html[data-theme='war'] [role='switch'] {
+  border-radius: 0 !important;
+  background-color: rgb(var(--war-hud) / 0.16) !important;
+}
+html[data-theme='war'] [role='switch'][data-state='checked'] {
+  background-color: rgb(var(--war-hud) / 0.85) !important;
+}
+html[data-theme='war'] [role='switch'] > span {
+  border-radius: 0 !important;
+  background-color: rgb(var(--war-void)) !important;
+}
+
+/* Slider. Anchored off the thumb (`[role='slider']`) rather than
+   `[data-orientation]`, which Radix also puts on separators, tab lists and
+   toggle groups. Track -> dim cyan channel, range -> segmented meter,
+   thumb -> a hard 4px cyan marker. */
+html[data-theme='war'] :has(> [role='slider']) > span:not([role='slider']) {
+  border-radius: 0 !important;
+  background-color: rgb(var(--war-hud) / 0.12) !important;
+}
+html[data-theme='war'] :has(> [role='slider']) > span:not([role='slider']) > span {
+  border-radius: 0 !important;
+  background: repeating-linear-gradient(
+    90deg,
+    rgb(var(--war-hud) / 0.75) 0 6px,
+    transparent 6px 9px
+  ) !important;
+  box-shadow: inset -2px 0 0 rgb(var(--war-hud));
+}
+/* Thumb. It READS as a 4px blade, but the element keeps its real hit box.
+ *
+ * Radix ships a 14x14 thumb; shrinking the element itself to 4px left a drag
+ * handle a third of its intended width, which is a genuine pointer-target
+ * failure and far worse on touch. The element therefore stays 14px and goes
+ * transparent, with the blade painted as a centred background stripe inside
+ * it. Identical appearance, hit box intact.
+ *
+ * The glow moved off box-shadow too: Radix draws its focus ring with a
+ * box-shadow, and this rule outranked it, so the thumb had no focus indicator
+ * at all. Using `outline` means the two can never compete.
+ */
+html[data-theme='war'] [role='slider'] {
+  border-radius: 0 !important;
+  width: 14px !important;
+  height: 14px !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+  background-image: linear-gradient(rgb(var(--war-hud)) 0 0) !important;
+  background-size: 4px 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+html[data-theme='war'] [role='slider']:focus-visible {
+  outline: 2px solid rgb(var(--war-hud)) !important;
+  outline-offset: 3px;
+}
+
+/* Progress: segmented meter, not a smooth pill. */
+html[data-theme='war'] [role='progressbar'] {
+  border-radius: 0 !important;
+  background-color: rgb(var(--war-hud) / 0.1) !important;
+}
+html[data-theme='war'] [role='progressbar'] > * {
+  border-radius: 0 !important;
+  background: repeating-linear-gradient(
+    90deg,
+    rgb(var(--war-hud) / 0.75) 0 6px,
+    transparent 6px 9px
+  ) !important;
+  box-shadow: inset -2px 0 0 rgb(var(--war-hud));
+}
+
+/* Focus ring. Scoped on html (NOT #app-root) so it also fires inside portals,
+   which is exactly where focus is confined. */
+html[data-theme='war'] :is(button, a, input, textarea, select, [role='button']):focus-visible {
+  outline: 2px solid rgb(var(--war-hud) / 0.9);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   8. SKELETONS - the first paint of every route
+   ========================================================================== */
+html[data-theme='war'] .animate-pulse,
+html[data-theme='war'] [class*="bg-white/[0.06]"],
+html[data-theme='war'] [class*="bg-white/[0.03]"] {
+  border-radius: 0 !important;
+}
+html[data-theme='war'] .animate-pulse {
+  background-color: rgb(var(--war-hud) / 0.07) !important;
+  background-image: none !important;
+}
+/* FeedTabBarSkeleton paints an opaque `bg-black` strip and a `bg-zinc-900`
+   pill where the chamfered nav belongs - let the terrain through instead. */
+html[data-theme='war'] .sticky.bg-black:has(.animate-pulse) {
+  background-color: transparent !important;
+}
+html[data-theme='war'] .bg-zinc-900.rounded-xl:has(.animate-pulse) {
+  background-color: rgb(var(--war-gunmetal) / 0.82) !important;
+  box-shadow: var(--war-edge);
+}
+
+/* ==========================================================================
+   9. MEDIA - content fidelity is protected (house rule 4)
+   ========================================================================== */
+html[data-theme='war'] [data-media-full] {
+  border-radius: 0 !important;
+  isolation: isolate;
+}
+/* Never tint, blend or recolour user media. */
+html[data-theme='war'] :is([data-media-full] img, [data-media-full] video, video) {
+  filter: none !important;
+  mix-blend-mode: normal !important;
+}
+
+html[data-theme='war'] [data-video-controls] {
+  font-family: var(--war-mono);
+  letter-spacing: 0.04em;
+}
+html[data-theme='war'] [data-video-controls] :is(button, span) {
+  border-radius: 0 !important;
+  border-color: rgb(var(--war-hud) / 0.28) !important;
+}
+/* The scrubber's fill is an INLINE linear-gradient carrying live progress, so
+   it is deliberately left intact - only the geometry and the thumb change. */
+html[data-theme='war'] [data-video-controls] input[type='range'] {
+  border-radius: 0 !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.35);
+}
+html[data-theme='war'] [data-video-controls] input[type='range']::-webkit-slider-thumb {
+  border-radius: 0 !important;
+  width: 4px !important;
+  height: 12px !important;
+  background: rgb(var(--war-hud)) !important;
+  box-shadow: 0 0 6px rgb(var(--war-hud) / 0.4) !important;
+}
+html[data-theme='war'] [data-video-controls] input[type='range']::-moz-range-thumb {
+  border-radius: 0 !important;
+  width: 4px !important;
+  height: 12px !important;
+  background: rgb(var(--war-hud)) !important;
+}
+
+/* ==========================================================================
+   10. THEME PICKER
+   ==========================================================================
+   The one screen where the user judges the theme must show it in its own
+   palette - a white 2px border on zinc-800 is the wrong material.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [data-theme-option] {
+  border-radius: 0 !important;
+  background-color: rgb(var(--war-gunmetal) / 0.7) !important;
+  border-color: rgb(var(--war-hud) / 0.2) !important;
+}
+html[data-theme='war'] [data-theme-option]:hover {
+  background-color: rgb(var(--war-gunmetal) / 0.9) !important;
+}
+html[data-theme='war'] [data-theme-option][data-active='true'] {
+  border-color: rgb(var(--war-hud)) !important;
+  background-color: rgb(var(--war-hud) / 0.1) !important;
+  box-shadow: 0 0 8px rgb(var(--war-hud) / 0.22);
+}
+html[data-theme='war'] [data-theme-option][data-active='true'] svg,
+html[data-theme='war'] [data-theme-option][data-active='true'] span {
+  color: rgb(var(--war-hud)) !important;
+}
+
+/* ==========================================================================
+   11. UNTAGGED PAGES - the safety net
+   ==========================================================================
+   21 of 46 app pages carry no surface hook at all (Staking, Creator, Bridge,
+   Launchpad, TV, Work*, Governance*, Command Centre, ...). Their cards fall
+   straight through to raw Tailwind. This catches the card signatures those
+   pages actually use so no route drops out of the theme. Tagging the real
+   containers with data-page-bento is still the better fix - see the notes.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] #app-root main
+  :is(
+    .bg-white\/5,
+    .bg-white\/\[0\.03\],
+    .bg-white\/\[0\.02\],
+    .bg-black\/60,
+    .bg-black\/40,
+    .bg-zinc-900,
+    .bg-zinc-900\/50,
+    .bg-zinc-800\/50
+  ):not([data-keep-dark]):not([data-media-full]):not([data-video-controls]):not([data-notification-row]):not(button):not([role='button']) {
+  background-color: rgb(var(--war-gunmetal) / 0.8) !important;
+  background-image: none !important;
+  border-color: transparent !important;
+  box-shadow: var(--war-edge) !important;
+}
+
+/* Dividers and stray card borders across those same pages. The tagged surfaces
+   are excluded: they already carry the inset cyan ring, and a border on top of
+   it would draw the hairline twice. */
+html[data-theme='war'] #app-root main :is(.border-zinc-700, .border-zinc-800),
+html[data-theme='war'] #app-root main
+  [class*="border-white/"]:not([data-keep-dark]):not([data-feed-item]):not([data-page-bento]):not([data-side-panel]) {
+  border-color: rgb(var(--war-hud) / 0.2) !important;
+}
+html[data-theme='war'] #app-root main [class*="divide-zinc-8"] > :not([hidden]) ~ :not([hidden]),
+html[data-theme='war'] #app-root main [class*="divide-white"] > :not([hidden]) ~ :not([hidden]) {
+  border-color: rgb(var(--war-hud) / 0.16) !important;
+}
+
+/* ==========================================================================
+   12. PALETTE LOCK
+   ==========================================================================
+   ~800 saturated Tailwind utilities ship across the app (bg-red-500 x164,
+   text-red-400 x188, text-emerald-400 x72, text-amber-400 x46 ...). Left
+   alone they make the theme's own "one accent" claim false. Remapped by ROLE:
+
+     positive / success  -> HUD cyan
+     neutral warning     -> sand
+     informational       -> cyan @ 0.72 (6.6:1, AA; --war-hud-dim would be
+                            4.3:1 and is therefore strokes-only)
+     destructive / live  -> --war-alert, lightened for text so it clears AA
+                            (raw --war-alert as text measures 4.26:1)
+
+   Media, video chrome and [data-keep-dark] are exempt (house rule 4).
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] #app-root
+  :is([class*="text-emerald-"], [class*="text-green-"], [class*="text-teal-"]):not([data-keep-dark]) {
+  color: rgb(var(--war-hud)) !important;
+}
+html[data-theme='war'] #app-root
+  :is([class*="bg-emerald-"], [class*="bg-green-"], [class*="bg-teal-"]):not([data-keep-dark]) {
+  background-color: rgb(var(--war-hud) / 0.16) !important;
+}
+html[data-theme='war'] #app-root
+  :is([class*="text-amber-"], [class*="text-yellow-"], [class*="text-orange-"]):not([data-keep-dark]) {
+  color: rgb(var(--war-sand)) !important;
+}
+html[data-theme='war'] #app-root
+  :is([class*="bg-amber-"], [class*="bg-yellow-"], [class*="bg-orange-"]):not([data-keep-dark]) {
+  background-color: rgb(var(--war-sand) / 0.2) !important;
+}
+html[data-theme='war'] #app-root
+  :is(
+    [class*="text-blue-"],
+    [class*="text-indigo-"],
+    [class*="text-violet-"],
+    [class*="text-purple-"],
+    [class*="text-pink-"],
+    [class*="text-cyan-"],
+    [class*="text-sky-"]
+  ):not([data-keep-dark]) {
+  color: rgb(var(--war-hud) / 0.72) !important;
+}
+html[data-theme='war'] #app-root
+  :is(
+    [class*="bg-blue-"],
+    [class*="bg-indigo-"],
+    [class*="bg-violet-"],
+    [class*="bg-purple-"],
+    [class*="bg-pink-"],
+    [class*="bg-cyan-"],
+    [class*="bg-sky-"]
+  ):not([data-keep-dark]) {
+  background-color: rgb(var(--war-hud) / 0.12) !important;
+}
+/* Destructive / live. rgb(255 138 122) is --war-alert lifted to 8.3:1 on the
+   panel fill; the raw token stays for fills and strokes. */
+html[data-theme='war'] #app-root
+  :is([class*="text-red-"], [class*="text-rose-"]):not([data-keep-dark]) {
+  color: rgb(255 138 122) !important;
+}
+html[data-theme='war'] #app-root
+  :is([class*="bg-red-"], [class*="bg-rose-"]):not([data-keep-dark]) {
+  background-color: rgb(var(--war-alert) / 0.85) !important;
+}
+html[data-theme='war'] #app-root
+  :is([class*="border-red-"], [class*="border-rose-"]):not([data-keep-dark]) {
+  border-color: rgb(var(--war-alert) / 0.6) !important;
+}
+/* Media pixels themselves are protected above (section 9): no filter, no blend,
+   no tint. Overlay CHIPS drawn on top of media still follow the palette, which
+   is what keeps a LIVE badge reading as --war-alert rather than Tailwind red. */
+
+/* ==========================================================================
+   13. READOUT TYPE
+   ==========================================================================
+   Three steps, applied BY ROLE:
+     label   - 10px / 0.22em / uppercase / sand 0.7 : section kickers, meta
+     readout - 11px mono / 0.06em / no transform    : counts, timestamps, IDs
+     heading - mono caps / 0.1em                    : h1-h4 in chrome + pages
+
+   text-transform is NEVER set on a container: it inherits into usernames,
+   handles and numeric badges, and it is locale-sensitive (Turkish dotted i).
+   User-authored strings are excluded explicitly below.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] #app-root main :is(h1, h2, h3, h4),
+html[data-theme='war'] [data-side-panel] :is(h1, h2, h3),
+html[data-theme='war'] [data-page-bento] :is(h1, h2, h3),
+html[data-theme='war'] [data-mobile-header] :is(h1, h2) {
+  font-family: var(--war-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Never case-transform user-authored content. */
+html[data-theme='war']
+  :is([data-feed-item], [data-post-modal], [data-comments-section], [data-ai-chat], [data-media-full])
+  :is(h1, h2, h3, h4, p, span, a) {
+  text-transform: none !important;
+}
+
+/* Section kickers / metadata labels. */
+html[data-theme='war'] [data-side-panel] h3,
+html[data-theme='war'] #app-root main [class*="uppercase"][class*="text-xs"],
+html[data-theme='war'] #app-root main [class*="uppercase"][class*="text-\[10px\]"] {
+  font-family: var(--war-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgb(var(--war-sand) / 0.7);
+}
+
+/* Counts, timestamps, addresses: mono WITHOUT uppercase - handles and hashes
+   must never be case-transformed. */
+html[data-theme='war'] :is(time, .tabular-nums, .font-mono) {
+  font-family: var(--war-mono);
+  letter-spacing: 0.06em;
+  text-transform: none;
+}
+
+/* ==========================================================================
+   14. TEXT COLOUR
+   ==========================================================================
+   The shared canvas block forces every muted zinc step to cool neutral greys
+   (index.css:1152-1166 and :1196-1207) for all canvas themes including War.
+   Overriding only two steps inverted the hierarchy - zinc-600 resolved to
+   #a1a1aa, brighter than the sand used for zinc-400. All five steps are
+   remapped together here, monotonically, and the dimmest still clears AA.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [data-side-panel] .text-zinc-200 {
+  color: rgb(var(--war-sand) / 0.98) !important;
+}
+html[data-theme='war'] [data-side-panel] .text-zinc-300 {
+  color: rgb(var(--war-sand) / 0.92) !important;
+}
+html[data-theme='war'] [data-side-panel] .text-zinc-400 {
+  color: rgb(var(--war-sand) / 0.86) !important;
+}
+html[data-theme='war'] [data-side-panel] .text-zinc-500 {
+  color: rgb(var(--war-sand) / 0.8) !important;
+}
+html[data-theme='war'] [data-side-panel] .text-zinc-600 {
+  color: rgb(var(--war-sand) / 0.74) !important;
+}
+
+/* Page content, all ~45 pages. Matches index.css's (1,2,2) and wins on source
+   order. Hover preservation at index.css:1217 scores (1,2,3) and still wins,
+   so `hover:text-white` keeps working. */
+html[data-theme='war'] #app-root main .text-zinc-300 {
+  color: rgb(var(--war-sand) / 0.92) !important;
+}
+html[data-theme='war'] #app-root main .text-zinc-400 {
+  color: rgb(var(--war-sand) / 0.86) !important;
+}
+html[data-theme='war'] #app-root main .text-zinc-500 {
+  color: rgb(var(--war-sand) / 0.8) !important;
+}
+html[data-theme='war'] #app-root main .text-zinc-600 {
+  color: rgb(var(--war-sand) / 0.74) !important;
+}
+
+/* ==========================================================================
+   15. ROUND SURVIVORS
+   ==========================================================================
+   The global squaring rule in war-frame.css exempts [data-keep-round]. These
+   two signatures are genuinely circular and predate that attribute, so they
+   are re-asserted at higher specificity: the Avatar primitive's root (which
+   always carries `shrink-0 overflow-hidden` plus its radius) and spinner
+   rings. Avatars must never become squares.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] .rounded-full.overflow-hidden.shrink-0,
+html[data-theme='war'] .rounded-full.overflow-hidden.shrink-0 > :is(img, span),
+html[data-theme='war'] .animate-spin.rounded-full,
+html[data-theme='war'] .rounded-full.animate-spin {
+  border-radius: 9999px !important;
+}
+
+/* ==========================================================================
+   16. DOCS + BLOG
+   ==========================================================================
+   .docs-root lives outside #app-root and docs-glass.css is injected by the
+   lazily-imported DocsSurface route, i.e. AFTER this file in source order.
+   Its surface rule scores (0,6,1) with !important, so the selectors below add
+   the same guards it uses to reach (0,7,1) and win outright.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'].dark .docs-root
+  :is(
+    .bg-card,
+    .bg-muted,
+    .bg-secondary,
+    .docs-glass,
+    [class*="Card"],
+    [data-docs-header],
+    [data-docs-sidebar],
+    [data-docs-subnav],
+    [data-docs-reading-panel]
+  ):not([data-docs-reading-panel] *):not([data-docs-solid]):not([data-keep-dark]) {
+  background:
+    linear-gradient(
+      178deg,
+      rgb(var(--war-olive) / 0.24) 0%,
+      rgb(var(--war-gunmetal) / 0) 42%
+    ),
+    rgb(var(--war-gunmetal) / 0.86) !important;
+  border-color: transparent !important;
+  box-shadow: var(--war-edge) !important;
+}
+
+html[data-theme='war'] .docs-root *:not([data-keep-round]) {
+  border-radius: 0 !important;
+}
+html[data-theme='war'] .docs-root [data-docs-reading-panel] {
+  border-radius: 0 !important;
+  position: relative;
+}
+/* Corner brackets on the reading panel - the one docs surface that reads as a
+   framed document rather than a list. */
+html[data-theme='war'] .docs-root [data-docs-reading-panel]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgb(var(--war-hud) / 0.55) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.55) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.55) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.55) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.55) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.55) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.55) 0 0),
+    linear-gradient(rgb(var(--war-hud) / 0.55) 0 0);
+  background-size:
+    12px 1px, 1px 12px, 12px 1px, 1px 12px,
+    12px 1px, 1px 12px, 12px 1px, 1px 12px;
+  background-position:
+    top left, top left, top right, top right,
+    bottom left, bottom left, bottom right, bottom right;
+  background-repeat: no-repeat;
+}
+
+/* Cyan hairlines replace the white dividers (docs-glass.css:118, (0,4,1)). */
+html[data-theme='war'].dark .docs-root
+  :is([class*="border-t"], [class*="border-b"], [class*="border-border"], hr):not([data-keep-dark]) {
+  border-color: rgb(var(--war-hud) / 0.2) !important;
+}
+html[data-theme='war'].dark .docs-root :is(pre, code):not([data-keep-dark]) {
+  background: rgb(var(--war-void) / 0.72) !important;
+  border-color: rgb(var(--war-hud) / 0.18) !important;
+  color: rgb(var(--war-sand) / 0.92) !important;
+}
+html[data-theme='war'].dark .docs-root :is(input, textarea, select):not([data-keep-dark]) {
+  background-color: rgb(var(--war-void) / 0.6) !important;
+  border-color: rgb(var(--war-hud) / 0.24) !important;
+}
+html[data-theme='war'] .docs-root :is(h1, h2, h3) {
+  font-family: var(--war-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+html[data-theme='war'] .docs-root :is(button, a):focus-visible {
+  outline: 2px solid rgb(var(--war-hud) / 0.9);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   17. DEGRADATION
+   ==========================================================================
+   index.css's reduced-transparency and @supports blocks score (0,3,1) with
+   !important via `[data-mobile-header][data-scrolled="true"]` inside their
+   :is() list, so the previous (0,2,1) War rules were dead and every panel
+   painted the shared zinc-900. Both blocks below are written as a single :is()
+   to reach (0,3,1) and win on source order.
+   -------------------------------------------------------------------------- */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  html[data-theme='war']
+    :is(
+      [data-feed-item],
+      [data-side-panel],
+      [data-page-bento],
+      [data-feed-nav],
+      [data-mobile-header][data-scrolled='true']
+    ) {
+    background: rgb(var(--war-gunmetal) / 0.97) !important;
+  }
+  html[data-theme='war'] [data-feed-nav]::before,
+  html[data-theme='war'] [data-bottom-nav] > nav::before {
+    background: rgb(var(--war-gunmetal) / 0.97);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  html[data-theme='war']
+    :is(
+      [data-feed-item],
+      [data-side-panel],
+      [data-page-bento],
+      [data-feed-nav],
+      [data-mobile-header][data-scrolled='true']
+    ) {
+    background: rgb(var(--war-gunmetal)) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  html[data-theme='war'] [data-feed-nav]::before,
+  html[data-theme='war'] [data-bottom-nav] > nav::before {
+    background: rgb(var(--war-gunmetal));
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  /* Glow is transparency-adjacent - drop every bloom. */
+  html[data-theme='war'] *::before,
+  html[data-theme='war'] *::after,
+  html[data-theme='war'] [role='slider'],
+  html[data-theme='war'] [data-theme-option][data-active='true'] {
+    filter: none !important;
+    box-shadow: none !important;
+  }
+  html[data-theme='war']
+    :is([role='dialog'], [data-vaul-drawer], [data-radix-popper-content-wrapper] > *) {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgb(var(--war-gunmetal)) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme='war'] :is([data-side-panel], [data-page-bento])::after,
+  html[data-theme='war'] [data-tab-btn]::before {
+    transition: none !important;
+  }
+}
+
+/* ==========================================================================
+   18. BOOT SEQUENCE (WarPreloader)
+   ==========================================================================
+   Chrome for src/components/app/WarPreloader.tsx. Tokens are inherited from
+   html[data-theme='war'] - the preloader only ever mounts under that theme.
+   ========================================================================== */
+[data-war-boot] {
+  background:
+    radial-gradient(70rem 50rem at 50% 45%, rgb(var(--war-olive) / 0.5), transparent 70%),
+    rgb(var(--war-void));
+  transition:
+    opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* The panel lifts and fades rather than cross-dissolving, so the handover to
+   the app reads as a shutter opening. pointer-events must drop immediately or
+   the invisible panel keeps swallowing clicks for the whole 620ms wipe. */
+[data-war-boot][data-leaving='true'] {
+  opacity: 0;
+  transform: translateY(-2%);
+  pointer-events: none;
+}
+
+[data-war-boot]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgb(var(--war-hud) / 0.05) 0px,
+    rgb(var(--war-hud) / 0.05) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+[data-war-bracket] {
+  position: absolute;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgb(var(--war-hud) / 0.5);
+  pointer-events: none;
+}
+[data-war-bracket='tl'] {
+  top: 22px;
+  left: 22px;
+  border-width: 1px 0 0 1px;
+}
+[data-war-bracket='tr'] {
+  top: 22px;
+  right: 22px;
+  border-width: 1px 1px 0 0;
+}
+[data-war-bracket='bl'] {
+  bottom: 22px;
+  left: 22px;
+  border-width: 0 0 1px 1px;
+}
+[data-war-bracket='br'] {
+  bottom: 22px;
+  right: 22px;
+  border-width: 0 1px 1px 0;
+}
+
+[data-war-boot-kicker] {
+  font-family: var(--war-mono);
+  font-size: 11px;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: rgb(var(--war-sand) / 0.75);
+  margin-bottom: 14px;
+}
+
+[data-war-boot-title] {
+  font-family: var(--war-mono);
+  font-size: clamp(18px, 4.5vw, 30px);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgb(var(--war-hud));
+  line-height: 1.2;
+}
+
+[data-war-boot-bar] {
+  display: flex;
+  gap: 3px;
+  margin: 26px auto 12px;
+  max-width: 380px;
+}
+[data-war-boot-bar] > span {
+  flex: 1;
+  height: 10px;
+  background: rgb(var(--war-hud) / 0.1);
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.2);
+  transition: background 180ms linear;
+}
+[data-war-boot-bar] > span[data-filled='true'] {
+  background: rgb(var(--war-hud) / 0.85);
+}
+
+[data-war-boot-pct] {
+  font-family: var(--war-mono);
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  color: rgb(var(--war-hud) / 0.9);
+}
+
+/* Skip control. Escape-only dismissal is undiscoverable and does not exist on
+   touch, so the panel needs a real focusable control. */
+[data-war-boot-skip] {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--war-mono);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgb(var(--war-sand) / 0.72);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.35);
+  padding: 8px 16px;
+  border-radius: 0;
+  transition: background-color 60ms linear, box-shadow 60ms linear;
+}
+[data-war-boot-skip]:hover {
+  background: rgb(var(--war-hud) / 0.12);
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.7);
+  color: rgb(var(--war-hud));
+}
+[data-war-boot-skip]:focus-visible {
+  outline: 2px solid rgb(var(--war-hud) / 0.9);
+  outline-offset: 2px;
+}
+
+[data-war-boot-log] {
+  margin-top: 26px;
+  display: grid;
+  gap: 5px;
+  text-align: left;
+  max-width: 380px;
+  margin-inline: auto;
+  min-height: 128px;
+}
+[data-war-boot-log] > li {
+  font-family: var(--war-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: rgb(var(--war-sand) / 0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  animation: war-log-in 240ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes war-log-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* NOTE: no bespoke prefers-reduced-motion block for the boot panel. The global
+   reset at index.css:3414 already forces `transition-duration: 0.01ms` and
+   `animation-duration: 0.01ms` with !important, so any non-important override
+   here would be dead code. */

@@ -3,6 +3,7 @@
  * Thin notification bar at top of home feed.
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -124,7 +125,7 @@ export function FriendsOnStageBar() {
       className="w-full flex items-center gap-2.5 px-3 py-2 mb-2 rounded-xl bg-white/[0.05] backdrop-blur-sm border border-white/[0.08] hover:bg-white/[0.08] transition-all group"
     >
       {/* Stage mic icon */}
-      <img src={stagesMicIcon} alt="" className="w-5 h-5 object-contain shrink-0" />
+      <BrandIcon src={stagesMicIcon} alt="" className="w-5 h-5 object-contain shrink-0" />
 
       {/* Host avatar */}
       <div className="flex -space-x-1.5 shrink-0">

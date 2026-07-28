@@ -36,17 +36,52 @@ const EMAIL_TEMPLATES: Record<string, React.ComponentType<any>> = {
 }
 
 // Configuration
-const SITE_NAME = "cosmic-echo-hero"
+const SITE_NAME = "DeHub"
 const SENDER_DOMAIN = "notify.dehub.io"
 const ROOT_DOMAIN = "dehub.io"
 const FROM_DOMAIN = "notify.dehub.io" // Domain shown in From address (may be root or sender subdomain)
 
+// Rewrite the backend-hosted confirmation URL into a branded dehub.io link.
+// The auth payload currently gives us the long one-time token inside
+// `data.url` as `?token=...&type=...`, not as `token_hash`. We pass that value
+// to the app as `token_hash` so /auth/confirm can call verifyOtp() client-side.
+// Never expose the raw backend URL in customer-facing email links.
+function buildBrandedConfirmationUrl(data: any): string {
+  try {
+    const sourceUrl = typeof data?.url === 'string' ? new URL(data.url) : null
+    const tokenHash =
+      data?.token_hash ||
+      data?.token_hash_new ||
+      sourceUrl?.searchParams.get('token_hash') ||
+      sourceUrl?.searchParams.get('token')
+    const actionType =
+      data?.email_action_type ||
+      data?.action_type ||
+      sourceUrl?.searchParams.get('type')
+    if (!tokenHash || !actionType) return `https://${ROOT_DOMAIN}/auth/confirm?error=missing_link`
+    const params = new URLSearchParams({ token_hash: tokenHash, type: actionType })
+    // Preserve extra query params from the caller's redirect_to (e.g. the
+    // cross-device magic-link `sync` nonce). The clicked browser now stays on a
+    // confirmed page, so no post-verify navigation path is needed.
+    const rt = (data?.redirect_to || sourceUrl?.searchParams.get('redirect_to')) as string | undefined
+    if (rt) {
+      try {
+        const u = new URL(rt)
+        u.searchParams.forEach((v, k) => {
+          if (k !== 'token_hash' && k !== 'type') params.set(k, v)
+        })
+      } catch {
+        // Ignore invalid redirect values; only the sync nonce matters here.
+      }
+    }
+    return `https://${ROOT_DOMAIN}/auth/confirm?${params.toString()}`
+  } catch {
+    return `https://${ROOT_DOMAIN}/auth/confirm?error=missing_link`
+  }
+}
+
 // Sample data for preview mode ONLY (not used in actual email sending).
-// URLs are baked in at scaffold time from the project's real data.
-// The sample email uses a fixed placeholder (RFC 6761 .test TLD) so the Go backend
-// can always find-and-replace it with the actual recipient when sending test emails,
-// even if the project's domain has changed since the template was scaffolded.
-const SAMPLE_PROJECT_URL = "https://cosmic-echo-hero.lovable.app"
+const SAMPLE_PROJECT_URL = "https://dehub.io"
 const SAMPLE_EMAIL = "user@example.test"
 const SAMPLE_DATA: Record<string, object> = {
   signup: {
@@ -207,7 +242,7 @@ async function handleWebhook(req: Request): Promise<Response> {
   // The email action type is in payload.data.action_type (e.g., "signup", "recovery")
   // payload.type is the hook event type ("auth")
   const emailType = payload.data.action_type
-  console.log('Received auth event', { emailType, email: payload.data.email, run_id })
+  console.log('Received auth event', { emailType, run_id })
 
   const EmailTemplate = EMAIL_TEMPLATES[emailType]
   if (!EmailTemplate) {
@@ -223,7 +258,7 @@ async function handleWebhook(req: Request): Promise<Response> {
     siteName: SITE_NAME,
     siteUrl: `https://${ROOT_DOMAIN}`,
     recipient: payload.data.email,
-    confirmationUrl: payload.data.url,
+    confirmationUrl: buildBrandedConfirmationUrl(payload.data),
     token: payload.data.token,
     email: payload.data.email,
     oldEmail: payload.data.old_email,
