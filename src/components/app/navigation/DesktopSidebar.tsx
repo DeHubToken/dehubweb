@@ -410,17 +410,17 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               ) : isConnecting ? (
                  <>
                     <span className="w-[18px] h-[18px] border-2 border-white/30 border-t-white rounded-full animate-spin flex-shrink-0" />
-                    <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.connecting')}</span>
+                    <span className={cn("whitespace-nowrap", isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.connecting')}</span>
                  </>
               ) : needsSignature ? (
                  <>
                     <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
-                    <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.signMessage')}</span>
+                    <span className={cn("whitespace-nowrap", isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.signMessage')}</span>
                  </>
               ) : (
                  <>
                     <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
-                    <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.login')}</span>
+                    <span className={cn("whitespace-nowrap", isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.login')}</span>
                  </>
               )}
             </div>
