@@ -9,7 +9,7 @@
 
 import { useMemo } from 'react';
 import { useInfiniteQuery, useQuery, keepPreviousData, type QueryClient } from '@tanstack/react-query';
-import { getAuthToken, DEHUB_CDN_BASE, type DeHubNFT, getBlockList, getNFTInfo } from '@/lib/api/dehub';
+import { getAuthToken, isTokenExpired, ensureFreshToken, DEHUB_CDN_BASE, type DeHubNFT, getBlockList, getNFTInfo } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
@@ -418,17 +418,54 @@ function isBootDefaultFeedParams(params: UnifiedFeedParams): boolean {
   );
 }
 
-async function fetchUnifiedFeedFromAPI(params: UnifiedFeedParams = {}): Promise<UnifiedFeedResponse> {
+/**
+ * The wallet whose engagement state a feed response describes. Read straight
+ * from localStorage (not React state) so boot-time prefetch and the mounted
+ * hook derive the same value and therefore the same query key.
+ */
+export function getFeedViewer(): string | null {
+  if (typeof window === 'undefined') return null;
+  return localStorage.getItem('dehub_wallet')?.toLowerCase() || null;
+}
+
+/**
+ * Per-viewer fields the API adds to every item once it recognises the caller.
+ * A response for a logged-in viewer carries at least one of these somewhere in
+ * the page; a response where none appears was served anonymously.
+ */
+const VIEWER_FIELDS = ['isLiked', 'isDisliked', 'isSaved', 'isReposted', 'isOwner', 'isUnlocked'] as const;
+
+function isAnonymousResponse(response: UnifiedFeedResponse): boolean {
+  const items = response?.result || [];
+  if (items.length === 0) return false;
+  return !items.some(item => VIEWER_FIELDS.some(field => field in (item as unknown as Record<string, unknown>)));
+}
+
+async function fetchUnifiedFeedFromAPI(
+  params: UnifiedFeedParams = {},
+  viewer: string | null = getFeedViewer(),
+): Promise<UnifiedFeedResponse> {
   // Adopt the boot-time feed fetch from index.html (started at HTML-parse time,
   // ~1.5s before React mounts — LCP audit 7/14) for the first default page-1
   // request. One-shot: on param mismatch, HTTP error, or stripped inline script
   // (Lovable mirrors) the promise is null/absent and we fall through to fetch.
   if (typeof window !== 'undefined') {
-    const boot = (window as unknown as { __DEHUB_FEED__?: Promise<UnifiedFeedResponse | null> }).__DEHUB_FEED__;
+    const w = window as unknown as {
+      __DEHUB_FEED__?: Promise<UnifiedFeedResponse | null> | null;
+      __DEHUB_FEED_VIEWER__?: string | null;
+    };
+    const boot = w.__DEHUB_FEED__;
     if (boot && isBootDefaultFeedParams(params)) {
-      (window as unknown as { __DEHUB_FEED__?: Promise<UnifiedFeedResponse | null> | null }).__DEHUB_FEED__ = null;
-      const bootResponse = await boot.catch(() => null);
-      if (bootResponse) return bootResponse;
+      w.__DEHUB_FEED__ = null;
+      // The boot script publishes the viewer its request was authenticated as.
+      // Adopting another viewer's page (usually the anonymous one, when the
+      // stored token had already expired) is how a logged-in user ends up with
+      // every post rendered unliked: /api/feed answers an unauthenticated
+      // caller with 200 and NO isLiked field, and the mappers read that as
+      // "not liked" while the counts stay correct.
+      const bootViewer = w.__DEHUB_FEED_VIEWER__ ?? null;
+      const bootResponse = bootViewer === viewer ? await boot.catch(() => null) : null;
+      if (bootResponse && !(viewer && isAnonymousResponse(bootResponse))) return bootResponse;
     }
   }
 
@@ -455,22 +492,45 @@ async function fetchUnifiedFeedFromAPI(params: UnifiedFeedParams = {}): Promise<
   if (params.maxPerCreator !== undefined) url.searchParams.set('maxPerCreator', String(params.maxPerCreator));
   if (params.followingOnly) url.searchParams.set('followingOnly', 'true');
   
-  const token = getAuthToken();
-  const headers: HeadersInit = {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
+  // /api/feed never 401s — an expired or revoked token is answered with 200 and
+  // a body stripped of every per-viewer field. Nothing downstream can tell that
+  // apart from "this user liked nothing", so the session has to be made good
+  // BEFORE the request goes out rather than repaired after a 401 that never
+  // comes. requestFeed() is the single retryable attempt.
+  const requestFeed = async (token: string | null): Promise<UnifiedFeedResponse> => {
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+    if (token) headers['Authorization'] = `Bearer ${token}`;
+
+    const response = await fetch(url.toString(), { headers });
+    if (!response.ok) {
+      throw new Error(`Feed API error: ${response.status}`);
+    }
+    return response.json();
   };
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
+
+  let token = getAuthToken();
+  if (token && isTokenExpired()) {
+    // Refresh failures (revoked session, offline) fall through as anonymous —
+    // the feed itself must still render.
+    token = await ensureFreshToken().catch(() => null);
   }
-  
-  const response = await fetch(url.toString(), { headers });
-  
-  if (!response.ok) {
-    throw new Error(`Feed API error: ${response.status}`);
+
+  const result = await requestFeed(token);
+
+  // Belt and braces: the client's expiry bookkeeping can disagree with the
+  // server (a login response without `expiresIn` leaves isTokenExpired() on a
+  // 24h guess). If we believed we were authenticated and the page came back
+  // with no viewer fields at all, the token was dead — refresh once and refetch
+  // so the cache never stores someone else's engagement state.
+  if (viewer && token && isAnonymousResponse(result)) {
+    const fresh = await ensureFreshToken().catch(() => null);
+    if (fresh && fresh !== token) return requestFeed(fresh);
   }
-  
-  return response.json();
+
+  return result;
 }
 
 // ===========================================================================
@@ -489,10 +549,11 @@ async function loadUnifiedFeedPage(args: {
   params: Omit<UnifiedFeedParams, 'page' | 'limit'>;
   limit: number;
   pageParam: number;
+  viewer?: string | null;
   blockedAddresses?: Set<string>;
   shuffleSeedRef?: { current: string };
 }) {
-  const { params, limit, pageParam, blockedAddresses, shuffleSeedRef } = args;
+  const { params, limit, pageParam, viewer = getFeedViewer(), blockedAddresses, shuffleSeedRef } = args;
 
   // For random sort: reuse the seed from the first page response for stable pagination
   const queryParams = { ...params };
@@ -504,7 +565,7 @@ async function loadUnifiedFeedPage(args: {
     ...queryParams,
     page: pageParam,
     limit,
-  });
+  }, viewer);
 
   // Store the shuffleSeed from the first page for subsequent pages
   if (params.sortBy === 'random' && response.shuffleSeed && pageParam === 1 && shuffleSeedRef) {
@@ -583,9 +644,12 @@ export function findCachedFeedPost(
  */
 export function prefetchUnifiedFeed(queryClient: QueryClient, options: UseUnifiedFeedOptions = {}) {
   const { enabled: _enabled = true, limit = 20, ...params } = options;
+  // AuthProvider seeds walletAddress from this same localStorage key, so the
+  // key computed here matches the one the mounted hook computes.
+  const viewer = getFeedViewer();
   return queryClient.prefetchInfiniteQuery({
-    queryKey: ['unified-feed', params, limit],
-    queryFn: ({ pageParam = 1 }) => loadUnifiedFeedPage({ params, limit, pageParam }),
+    queryKey: ['unified-feed', params, limit, viewer],
+    queryFn: ({ pageParam = 1 }) => loadUnifiedFeedPage({ params, limit, pageParam, viewer }),
     initialPageParam: 1,
     staleTime: 1000 * 60 * 5,
     gcTime: 1000 * 60 * 30,
@@ -616,10 +680,19 @@ export function useUnifiedFeed(options: UseUnifiedFeedOptions = {}) {
   // Track shuffleSeed across pages for random sort stable pagination
   const shuffleSeedRef = { current: '' };
 
+  // Per-viewer flags (isLiked, isSaved, isUnlocked…) are part of the response,
+  // so they are part of the cache identity. Without this, a page fetched while
+  // logged out — or with a token the server had already expired — stays cached
+  // under the same key after sign-in and renders the user's own likes as
+  // inactive, with the counts still correct. The profile tab has always keyed
+  // on the viewer (['dehub-user-content', userId, viewerAddress]), which is why
+  // the same post shows liked there and unliked here.
+  const viewer = walletAddress?.toLowerCase() || null;
+
   return useInfiniteQuery({
-    queryKey: ['unified-feed', params, limit],
+    queryKey: ['unified-feed', params, limit, viewer],
     queryFn: ({ pageParam = 1 }) =>
-      loadUnifiedFeedPage({ params, limit, pageParam, blockedAddresses, shuffleSeedRef }),
+      loadUnifiedFeedPage({ params, limit, pageParam, viewer, blockedAddresses, shuffleSeedRef }),
     getNextPageParam: (lastPage) => {
       if (lastPage.pagination?.hasMore === true) {
         return lastPage.page + 1;

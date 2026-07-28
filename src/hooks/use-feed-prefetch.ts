@@ -15,8 +15,9 @@
 
 import { useEffect, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { getAuthToken, searchNFTs, getLiveStreams } from '@/lib/api/dehub';
+import { getAuthToken, isTokenExpired, ensureFreshToken, searchNFTs, getLiveStreams } from '@/lib/api/dehub';
 import { DEFAULT_DEHUB_LIVE_QUERY_OPTIONS } from '@/hooks/use-dehub-feed';
+import { getFeedViewer } from '@/hooks/use-unified-feed';
 import { useAuth } from '@/contexts/AuthContext';
 import { getLiteMode } from '@/hooks/use-connection-quality';
 
@@ -49,7 +50,13 @@ async function fetchUnifiedFeed(params: {
   if (params.status) url.searchParams.set('status', params.status);
   // address param is deprecated - viewer context comes from JWT token
   
-  const token = getAuthToken();
+  // An expired token gets a 200 back with every per-viewer field (isLiked…)
+  // stripped, and this response is written straight into the feed cache — so
+  // refresh before asking rather than caching someone else's engagement state.
+  let token = getAuthToken();
+  if (token && isTokenExpired()) {
+    token = await ensureFreshToken().catch(() => null);
+  }
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -57,7 +64,7 @@ async function fetchUnifiedFeed(params: {
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
-  
+
   const response = await fetch(url.toString(), { headers });
   if (!response.ok) throw new Error(`Feed error: ${response.status}`);
   return response.json();
@@ -162,7 +169,9 @@ export async function prefetchAllFeeds(queryClient: ReturnType<typeof useQueryCl
       status: 'minted' as const,
     };
     queryClient.setQueryData(
-      ['unified-feed', videosParams, 12],
+      // Viewer suffix must match useUnifiedFeed's key, or this seed lands on a
+      // key nothing reads (see use-unified-feed.ts).
+      ['unified-feed', videosParams, 12, getFeedViewer()],
       {
         pages: [{
           items: response.result || [],
