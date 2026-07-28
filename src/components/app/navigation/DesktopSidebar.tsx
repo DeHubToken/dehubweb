@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { PenSquare, Sparkles, LogIn, Menu } from 'lucide-react';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { SidebarNavItem } from './SidebarNavItem';
+import { WarLogo } from '@/components/app/war/WarLogo';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { AuthPrompt } from '../AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
@@ -38,6 +39,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const { isCollapsed, toggleCollapse } = useSidebarCollapse();
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
+  const isWarTheme = theme === 'war';
   const isMinimal = theme === 'minimal';
   const desktopNavTextColor = isLightTheme ? 'text-black' : 'text-white';
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
@@ -236,19 +238,36 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 renderCompactLogo ? "w-[28px] h-[24px]" : "w-[135px] h-[42px]"
               )}
             >
-              <img
-                src={isLightTheme ? dehubMarkBlack : dehubLogoCompact}
-                alt="dehub"
-                className={cn("h-[22px] w-[22px] object-contain", !renderCompactLogo && "hidden")}
-                decoding="async"
-              />
-              <img
-                src="/dehub-header-logo.png"
-                alt="dehub"
-                className={cn("h-[40.6px] w-[135px] object-contain relative -top-[3px]", renderCompactLogo && "hidden")}
-                fetchPriority="high"
-                decoding="async"
-              />
+              {isWarTheme ? (
+                <>
+                  <WarLogo
+                    src={dehubLogoCompact}
+                    alt="dehub"
+                    className={cn("h-[22px] w-[22px]", !renderCompactLogo && "hidden")}
+                  />
+                  <WarLogo
+                    src="/dehub-header-logo.png"
+                    alt="dehub"
+                    className={cn("h-[40.6px] w-[135px] relative -top-[3px]", renderCompactLogo && "hidden")}
+                  />
+                </>
+              ) : (
+                <>
+                  <img
+                    src={isLightTheme ? dehubMarkBlack : dehubLogoCompact}
+                    alt="dehub"
+                    className={cn("h-[22px] w-[22px] object-contain", !renderCompactLogo && "hidden")}
+                    decoding="async"
+                  />
+                  <img
+                    src="/dehub-header-logo.png"
+                    alt="dehub"
+                    className={cn("h-[40.6px] w-[135px] object-contain relative -top-[3px]", renderCompactLogo && "hidden")}
+                    fetchPriority="high"
+                    decoding="async"
+                  />
+                </>
+              )}
             </button>
             {isCollapsed && (
               <button
