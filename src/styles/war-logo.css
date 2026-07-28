@@ -1,0 +1,137 @@
+/* ==========================================================================
+   WAR - brand mark and menu glyph treatment
+   ==========================================================================
+
+   Phosphor-green holographic glow for the DeHub mark and the menu glyphs that
+   sit beside it, across all three places the mark appears: the desktop sidebar
+   (full wordmark and the collapsed compact mark), the mobile header, and the
+   collapsed/fullscreen states that reuse those same nodes.
+
+   WHY GREEN, when the rest of the theme is cyan:
+   The theme rule elsewhere is one accent, deliberately. The brand mark is the
+   single sanctioned exception: night-vision phosphor green against HUD cyan is
+   a real tactical pairing (NVG tube vs glass readout), so the mark reads as a
+   physically different light source rather than a second UI accent. Nothing
+   else in the theme may use these tokens.
+
+   WHY ATTRIBUTE SELECTORS INSTEAD OF data-* HOOKS:
+   `alt="dehub"` (lowercase) is carried by exactly the three nav brand marks and
+   nothing else. The coin glyphs elsewhere use `alt="DeHub"` (capital H) and are
+   deliberately NOT matched here, since a glowing currency icon would read as a
+   status indicator. Attribute selectors are case-sensitive in the value, which
+   is what makes that distinction hold.
+
+   Loaded after war-theme.css so it wins on the shared filter property, which
+   the canvas-theme block in index.css also sets on mobile-header images.
+   ========================================================================== */
+
+html[data-theme='war'] {
+  /* Phosphor tube green. Scoped to the brand mark only. */
+  --war-phosphor: 62 245 143;
+  --war-phosphor-dim: 32 156 92;
+  /* Faint cyan fringe. Borrowed from the HUD accent so the holographic split
+     ties back to the rest of the theme instead of inventing a third colour. */
+  --war-fringe: 79 227 224;
+}
+
+/* --------------------------------------------------------------------------
+   The mark itself.
+
+   REPLACED APPROACH. The first version tinted the PNG with a sepia/hue-rotate
+   chain and stacked drop-shadows behind it. That was wrong for a transparent
+   mark: a drop-shadow is a blur of the element, so the bloom read as a glowing
+   slab sitting behind the artwork rather than the glyph itself emitting. It
+   looked stuck on rather than native.
+
+   The mark is now a WebGL surface (components/app/war/WarLogo.tsx) that uses
+   the PNG's own alpha channel as the hologram: chromatic split, rim light
+   derived from an alpha gradient, scan sweep and tear lines, every one of them
+   multiplied by that alpha so nothing is ever painted outside the silhouette.
+   There is no box because there is no filter.
+
+   Only layout belongs here now.
+   -------------------------------------------------------------------------- */
+/* `:not(.hidden)` is load bearing, not decoration.
+   The desktop sidebar renders BOTH marks and hides one with Tailwind's
+   `hidden` (`display:none`), swapping which as the rail collapses. A bare
+   `html[data-theme='war'] [data-war-logo]` rule scores 0,2,1 against
+   `.hidden`'s 0,1,0, so forcing `display:block` here beat the utility and
+   painted the compact mark and the full wordmark side by side. Scoping the
+   display to the visible one leaves `hidden` in charge of which shows. */
+html[data-theme='war'] [data-war-logo]:not(.hidden) {
+  display: block;
+  /* The canvas is absolutely sized by its host box, and the host must not
+     collapse before the texture resolves. */
+  line-height: 0;
+}
+
+html[data-theme='war'] [data-war-logo] > canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   Menu glyphs.
+
+   The burger sits directly beside the mark in both the desktop sidebar and the
+   mobile header, so leaving it plain white breaks the pair. These are
+   `currentColor` SVGs rather than images, so the colour is set directly and
+   only the bloom needs a filter.
+
+   Targeted by aria-label because these buttons carry no data hook. Four labels
+   cover every burger in the app: the sidebar toggle, the mobile drawer trigger,
+   the logged-out variant, and the drawer's own close affordance.
+   -------------------------------------------------------------------------- */
+/* `!important` on colour is deliberate. The sidebar burger ships
+   `text-zinc-400` directly on the svg, and the mobile one `text-white`; both
+   are utilities on the element itself, so they tie on specificity with a
+   descendant rule and win on source order once Tailwind's layer is emitted
+   after this file. The collapsed rail is exactly where the burger has to be
+   legible, so it cannot be left to chance.
+
+   The glow is also brighter here than elsewhere in the theme: at 18px, a
+   subtle bloom is invisible, and the collapsed rail gives these glyphs no
+   other chrome to sit against. */
+html[data-theme='war'] :is(
+    [aria-label='Toggle sidebar'],
+    [aria-label='Toggle menu'],
+    [aria-label='Log in']
+  ) > svg {
+  color: rgb(var(--war-phosphor)) !important;
+  opacity: 1 !important;
+  filter:
+    drop-shadow(0 0 5px rgb(var(--war-phosphor) / 0.75))
+    drop-shadow(0 0 14px rgb(var(--war-phosphor-dim) / 0.5));
+  transition: color 160ms linear, filter 160ms linear;
+}
+
+html[data-theme='war'] :is(
+    [aria-label='Toggle sidebar'],
+    [aria-label='Toggle menu'],
+    [aria-label='Log in']
+  ):hover > svg {
+  color: rgb(var(--war-phosphor) / 1);
+  filter:
+    drop-shadow(0 0 6px rgb(var(--war-phosphor) / 0.8))
+    drop-shadow(0 0 18px rgb(var(--war-phosphor-dim) / 0.55));
+}
+
+/* The canvas-theme block in index.css puts a heavy black drop-shadow on every
+   image and svg in the mobile header so they survive a bright nebula. The
+   hologram is a canvas rather than an img, but under reduced motion WarLogo
+   falls back to a plain <img> which that rule would then halo. War's backdrop
+   is near-black, so the halo only muddies the mark. */
+html[data-theme='war'] [data-mobile-header] :is(img[alt='dehub'], [data-war-logo]) {
+  filter: none;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  html[data-theme='war'] :is(
+      [aria-label='Toggle sidebar'],
+      [aria-label='Toggle menu'],
+      [aria-label='Log in']
+    ) > svg {
+    filter: none;
+  }
+}

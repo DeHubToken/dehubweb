@@ -1,3 +1,4 @@
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef, useEffect, useCallback, useMemo, type CSSProperties } from 'react';
 import { cn } from '@/lib/utils';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
@@ -52,6 +53,7 @@ import {
   Gift,
   Snowflake,
   Lamp,
+  Crosshair,
   Palmtree,
   Terminal,
   Skull,
@@ -64,6 +66,8 @@ import {
   Film,
   Paintbrush,
   Gauge,
+  LifeBuoy,
+  Trash2,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Input } from '@/components/ui/input';
@@ -89,6 +93,11 @@ import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
+import { useWalletUnlockInterval, type WalletUnlockIntervalOption } from '@/hooks/use-wallet-unlock-interval';
+import { WalletRecoveryTools } from '@/components/app/settings/WalletRecoveryTools';
+import { BiometricUnlockSettings } from '@/components/app/settings/BiometricUnlockSettings';
+import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
+import { getQuietHours, QH_ENABLED_KEY, QH_START_KEY, QH_END_KEY } from '@/lib/quiet-hours';
 import { PROFILE_TAB_OPTIONS } from '@/components/app/profile/ProfileConstants';
 import { useDmSettings } from '@/hooks/use-dm-settings';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
@@ -117,6 +126,7 @@ const TAB_KEYS: Record<string, string> = {
   assets: 'settings.assets',
   skills: 'settings.skills',
   characters: 'settings.characters',
+  support: 'settings.support',
 };
 
 const tabs = [
@@ -129,6 +139,7 @@ const tabs = [
   { icon: Wallet, value: 'assets', label: 'settings.assets' },
   { icon: Sparkles, value: 'skills', label: 'settings.skills' },
   { icon: Users, value: 'characters', label: 'settings.characters' },
+  { icon: LifeBuoy, value: 'support', label: 'settings.support' },
 ];
 
 import { SkillsLibrary } from '@/components/app/skills/SkillsLibrary';
@@ -201,7 +212,7 @@ export default function SettingsPage() {
       <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
-            <img src={settingsIcon} alt="Settings" className="w-10 h-10 object-contain" />
+            <BrandIcon src={settingsIcon} alt="Settings" className="w-10 h-10 object-contain" />
             <div>
               <h1 className="text-xl font-bold text-white">{t('settings.title')}</h1>
               <p className="text-zinc-500 text-sm">{t('settings.manageAccount')}</p>
@@ -280,6 +291,7 @@ export default function SettingsPage() {
         {activeTab === 'assets' && <AssetsSettings />}
         {activeTab === 'skills' && <SkillsLibrary />}
         {activeTab === 'characters' && <CharactersLibrary />}
+        {activeTab === 'support' && <SupportSettings />}
       </div>
       </div>
     </div>
@@ -875,39 +887,81 @@ function ProfileSettings() {
         </div>
       </div>
 
-      {/* Support / Bug Report */}
-      <BugReportSection username={authUser?.username || 'Anonymous'} />
     </div>
   );
 }
 
-function BugReportSection({ username }: { username: string }) {
+/**
+ * Support tab — mirrors mobile's Support panel
+ * (`screens/AccountSettingsScreen.tsx` supportPanel). Report a Bug moved here
+ * from the Profile tab so both clients group support in the same place.
+ *
+ * Mobile's "Rate & Review" row is deliberately not ported: it opens the native
+ * app-store review sheet, which has no web equivalent.
+ */
+function SupportSettings() {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { user: authUser } = useAuthContext();
+  const username = authUser?.username || 'Anonymous';
 
-  const handleReportBug = () => {
-    navigate(`/app/features?report=bug&reporter=${encodeURIComponent(username)}`);
-  };
+  const rowClass =
+    'w-full flex items-center justify-between p-4 bg-zinc-800 rounded-xl hover:bg-zinc-750 transition-colors group text-left';
 
   return (
-    <div>
-      <h3 className="font-medium text-zinc-400 text-sm mb-4">Support</h3>
-      <div className="flex items-center justify-between p-4 bg-zinc-800 rounded-xl">
-        <div className="flex items-center gap-3">
-          <Terminal className="w-5 h-5 text-zinc-500" />
-          <div>
-            <p className="text-white font-medium">Report a Bug</p>
-            <p className="text-zinc-500 text-sm">Help us fix issues by reporting bugs</p>
-          </div>
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          className="bg-zinc-700 border-zinc-600 text-white hover:bg-zinc-600 rounded-lg"
-          onClick={handleReportBug}
+    <div className="space-y-6">
+      <div className="flex items-center gap-3 mb-6">
+        <LifeBuoy className="w-5 h-5 text-zinc-400" />
+        <h2 className="text-lg font-semibold text-white">{t('settings.support', 'Support')}</h2>
+      </div>
+
+      <div className="space-y-3">
+        <button
+          className={rowClass}
+          onClick={() => navigate(`/app/features?report=bug&reporter=${encodeURIComponent(username)}`)}
         >
-          Report
-        </Button>
+          <div className="flex items-center gap-3">
+            <Bug className="w-5 h-5 text-zinc-500" />
+            <div>
+              <p className="text-white font-medium">{t('settings.reportBug', 'Report a Bug')}</p>
+              <p className="text-zinc-500 text-sm">
+                {t('settings.reportBugDesc', 'Help us fix issues by reporting bugs')}
+              </p>
+            </div>
+          </div>
+          <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
+        </button>
+
+        <button className={rowClass} onClick={() => navigate('/docs/terms-of-service')}>
+          <div className="flex items-center gap-3">
+            <FileText className="w-5 h-5 text-zinc-500" />
+            <p className="text-white font-medium">{t('settings.termsOfService', 'Terms of Service')}</p>
+          </div>
+          <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
+        </button>
+
+        <button className={rowClass} onClick={() => navigate('/docs/privacy')}>
+          <div className="flex items-center gap-3">
+            <Shield className="w-5 h-5 text-zinc-500" />
+            <p className="text-white font-medium">{t('settings.privacyPolicy', 'Privacy Policy')}</p>
+          </div>
+          <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
+        </button>
+
+        <button className={rowClass} onClick={() => navigate('/delete-account')}>
+          <div className="flex items-center gap-3">
+            <Trash2 className="w-5 h-5 text-red-500/70" />
+            <div>
+              <p className="text-white font-medium">
+                {t('settings.deleteAccountData', 'Delete account or data')}
+              </p>
+              <p className="text-zinc-500 text-sm">
+                {t('settings.deleteAccountDataDesc', 'Request removal of your account or your data')}
+              </p>
+            </div>
+          </div>
+          <ExternalLink className="w-4 h-4 text-zinc-600 group-hover:text-white transition-colors" />
+        </button>
       </div>
     </div>
   );
@@ -1101,6 +1155,15 @@ function NotificationSettings() {
             onCheckedChange={handleToggle('milestones')}
             disabled={isDisabled}
           />
+          {/* Key name matches mobile's `accountAlerts` (services/push/push.service.ts). */}
+          <SettingToggle
+            icon={Shield}
+            title="Account Alerts"
+            description="Security and account activity you should know about"
+            defaultChecked={pushPrefs?.accountAlerts ?? true}
+            onCheckedChange={handleToggle('accountAlerts')}
+            disabled={isDisabled}
+          />
           <SettingToggle
             icon={Bell}
             title="Announcements"
@@ -1130,30 +1193,26 @@ const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
 function QuietHoursSection() {
   const { t } = useTranslation();
-  const [enabled, setEnabled] = useState(() => {
-    try { return localStorage.getItem('dehub_qh_enabled') === 'true'; } catch { return false; }
-  });
-  const [start, setStart] = useState<number>(() => {
-    try { return parseInt(localStorage.getItem('dehub_qh_start') || '22', 10); } catch { return 22; }
-  });
-  const [end, setEnd] = useState<number>(() => {
-    try { return parseInt(localStorage.getItem('dehub_qh_end') || '8', 10); } catch { return 8; }
-  });
+  // Reads/writes go through @/lib/quiet-hours so this control and the delivery
+  // check in use-browser-notifications can never drift apart on key names.
+  const [enabled, setEnabled] = useState(() => getQuietHours().enabled);
+  const [start, setStart] = useState<number>(() => getQuietHours().start);
+  const [end, setEnd] = useState<number>(() => getQuietHours().end);
 
   const handleToggle = (checked: boolean) => {
     setEnabled(checked);
-    try { localStorage.setItem('dehub_qh_enabled', String(checked)); } catch {}
+    try { localStorage.setItem(QH_ENABLED_KEY, String(checked)); } catch {}
     toast.success(checked ? 'Quiet hours enabled' : 'Quiet hours disabled');
   };
 
   const handleStartChange = (h: number) => {
     setStart(h);
-    try { localStorage.setItem('dehub_qh_start', String(h)); } catch {}
+    try { localStorage.setItem(QH_START_KEY, String(h)); } catch {}
   };
 
   const handleEndChange = (h: number) => {
     setEnd(h);
-    try { localStorage.setItem('dehub_qh_end', String(h)); } catch {}
+    try { localStorage.setItem(QH_END_KEY, String(h)); } catch {}
   };
 
   const fmt = (h: number) => `${String(h).padStart(2, '0')}:00`;
@@ -1219,6 +1278,7 @@ function PrivacySettings() {
   const { t } = useTranslation();
   const { showFollowersFollowing, hideFollowerCounts, isPrivate, defaultPostVisibility, updateSettings, isUpdating, isLoading } = usePrivacySettings();
   const { whoCanMessage, messageFee, doNotDisturb, isUpdating: isDmUpdating, updateWhoCanMessage, updateMessageFee, updateDoNotDisturb } = useDmSettings();
+  const { option: walletUnlockInterval, setOption: setWalletUnlockInterval } = useWalletUnlockInterval();
   const [feeInput, setFeeInput] = useState('');
   const [isUpdatingVisibility, setIsUpdatingVisibility] = useState(false);
   const { user } = useAuthContext();
@@ -1526,8 +1586,34 @@ function PrivacySettings() {
               {t('settings.enable')}
             </Button>
           </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Shield className="w-5 h-5 text-zinc-500" />
+              <div>
+                <p className="text-white font-medium">{t('settings.walletUnlockInterval', 'Wallet unlock prompt')}</p>
+                <p className="text-zinc-500 text-sm">{t('settings.walletUnlockIntervalDesc', 'How long a wallet action like tipping or transferring stays unlocked before we ask again')}</p>
+              </div>
+            </div>
+            <SettingDrawerSelect
+              value={walletUnlockInterval}
+              onValueChange={(value) => setWalletUnlockInterval(value as WalletUnlockIntervalOption)}
+              title={t('settings.walletUnlockInterval', 'Wallet unlock prompt')}
+              options={[
+                { value: 'never', label: t('settings.walletUnlockNever', 'Never (until you log out)') },
+                { value: '15m', label: t('settings.walletUnlock15m', 'After 15 minutes') },
+                { value: '1h', label: t('settings.walletUnlock1h', 'After 1 hour') },
+                { value: '6h', label: t('settings.walletUnlock6h', 'After 6 hours') },
+                { value: '24h', label: t('settings.walletUnlock24h', 'After 24 hours (standard)') },
+              ]}
+            />
+          </div>
+          <BiometricUnlockSettings />
+          <WalletRecoveryTools />
         </div>
       </div>
+
+      {/* Active Sessions */}
+      <ActiveSessions />
 
       {/* Extract Data */}
       <div>
@@ -2071,6 +2157,7 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
               { value: 'swarms', icon: Bug, labelKey: 'settings.swarms', available: true },
               { value: 'lavalamp', icon: Lamp, labelKey: 'settings.lavalamp', available: true },
               { value: 'winter', icon: Snowflake, labelKey: 'settings.winter', available: true },
+              { value: 'war', icon: Crosshair, labelKey: 'settings.war', available: true },
               { value: 'island', icon: Palmtree, labelKey: 'settings.island', available: false },
               { value: 'hacker', icon: Terminal, labelKey: 'settings.hacker', available: false },
               { value: 'horror', icon: Skull, labelKey: 'settings.horror', available: false },

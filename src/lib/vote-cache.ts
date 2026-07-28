@@ -57,11 +57,15 @@ export function clearAllVoteCaches(): void {
  * NOTE: 'dehub-feed' is the real key family behind the Shorts/Images/Live
  * tabs (use-dehub-feed.ts) — the old 'dehub-videos'/'dehub-images' names
  * matched no query and silently patched nothing. Its pages carry `data`
- * instead of `items`; the walker below handles both. */
+ * instead of `items`; the walker below handles both.
+ * Same story for 'dehub-user-content' (use-dehub-profile.ts), which powers the
+ * profile tabs: it was listed here as 'profile-content', a key no query has
+ * ever used, so a vote cast on a profile never reached the home feed's cache
+ * and vice versa. */
 const FEED_KEYS: string[] = [
   'unified-feed',
   'dehub-feed',
-  'profile-content',
+  'dehub-user-content',
 ];
 
 interface VoteState {
@@ -108,6 +112,12 @@ export function patchFeedCaches(
 
             // ImagePost shape (likes field)
             if ('likes' in item && typeof item.likes === 'number') patched.likes = voteState.likeCount;
+
+            // Raw API item shape (dehub-feed / dehub-user-content pages hold
+            // unmapped NFTs, whose counts live under totalVotes)
+            if (item.totalVotes) {
+              patched.totalVotes = { ...item.totalVotes, for: voteState.likeCount, against: voteState.dislikeCount };
+            }
 
             // TextPost shape (stats.likes)
             if (item.stats && typeof item.stats.likes === 'number') {

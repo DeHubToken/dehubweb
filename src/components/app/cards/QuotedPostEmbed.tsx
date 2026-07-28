@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { CheckCircle, Play, Images, Ticket, Lock } from 'lucide-react';
 import { getMediaUrl } from '@/lib/api/dehub/core';
-import { buildFeedImageUrls, buildImageUrl } from '@/lib/media-url';
+import { buildAvatarUrl, extractAvatarPath, buildFeedImageUrls, buildImageUrl } from '@/lib/media-url';
 import { isTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import type { DeHubNFT } from '@/lib/api/dehub/types';
 
@@ -22,8 +22,19 @@ interface QuotedPostEmbedProps {
 export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, className }: QuotedPostEmbedProps) {
   const navigate = useNavigate();
 
-  const avatarPath = quotedPost.minterAvatarUrl || quotedPost.minterUser?.avatarImageUrl || quotedPost.creator?.avatarImageUrl;
-  const resolvedAvatar = getMediaUrl(avatarPath);
+  // Avatars must go through buildAvatarUrl, not getMediaUrl. getMediaUrl just
+  // prefixes the CDN base, which is wrong for the older upload format: the API
+  // still returns paths like "statics/avatars/0x….octet-stream", and
+  // CDN_BASE + "statics/avatars/…" 403s — the statics/ segment has to be
+  // stripped. Radix then fails to load the image and renders AvatarFallback, so
+  // the quoted author silently showed as a grey initial. buildAvatarUrl also
+  // adds the per-address cache-bust, so an avatar change shows up here too.
+  const avatarPath =
+    extractAvatarPath(quotedPost) ||
+    extractAvatarPath(quotedPost.minterUser) ||
+    extractAvatarPath(quotedPost.creator);
+  const avatarAddress = quotedPost.minter || quotedPost.minterUser?.address || '';
+  const resolvedAvatar = buildAvatarUrl(avatarAddress, avatarPath);
 
   const displayName = quotedPost.minterDisplayName || quotedPost.minterUsername || quotedPost.mintername || 'Unknown';
   const handle = quotedPost.minterUsername || quotedPost.mintername || quotedPost.minter?.slice(0, 8);

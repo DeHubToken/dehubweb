@@ -44,6 +44,7 @@ export interface AuthContextType {
   // Social / email login (Supabase Auth)
   connectWithProvider: (provider: SocialProvider) => Promise<void>;
   connectWithEmail: (email: string) => Promise<void>;
+  cancelEmailMagicLink: () => void;
   verifyEmailOtp: (email: string, code: string) => Promise<void>;
   connectWithSMS: (phone: string) => Promise<void>;
   verifyPhoneOtp: (phone: string, code: string) => Promise<void>;
@@ -55,10 +56,25 @@ export interface AuthContextType {
    * establishes the DeHub session.
    */
   completeSmartWalletLogin: (privKeyHex: string) => Promise<void>;
+  /** Decrypt and return the current wallet's raw private key (Settings export). */
+  exportPrivateKey: (password: string) => Promise<string>;
+  /**
+   * Same export, unlocked with biometrics — the only backup path available to
+   * a wallet created with biometrics and no password.
+   */
+  exportPrivateKeyWithBiometrics: () => Promise<string>;
+  /** Replace the active wallet with a different old account's key. */
+  switchActiveWallet: (secret: string, password: string) => Promise<void>;
   disconnect: () => Promise<void>;
   refreshUser: () => Promise<void>;
   patchUser: (patch: Partial<DeHubUser>) => void;
-  refreshSession: () => Promise<boolean>;
+  /**
+   * Re-establish a usable DeHub session. Pass `force` when reacting to a
+   * request the server actually rejected — without it, a token that only looks
+   * valid against the local clock short-circuits to `true` and the caller
+   * reports a success that never happened.
+   */
+  refreshSession: (force?: boolean) => Promise<boolean>;
   setRequiresUsername: (value: boolean) => void;
   setWagmiAuthIntent: (value: boolean) => void;
   // Login modal state

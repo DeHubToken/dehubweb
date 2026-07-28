@@ -68,7 +68,12 @@ const LiquidGlassBubble2 = React.forwardRef<HTMLDivElement, LiquidGlassBubble2Pr
         aria-label={label}
       >
         <span className={cn(
-          "flex items-center justify-center gap-2 text-sm font-medium h-full leading-none min-w-0",
+          // whitespace-nowrap: the button has a fixed width, so a label that
+          // does not fit wraps to a second line and blows out of the shell
+          // rather than being clipped. "Log in / Sign up" did exactly that.
+          // Keeping it on one line makes an undersized width obvious at the
+          // call site instead of silently deforming the control.
+          "flex items-center justify-center gap-2 text-sm font-medium h-full leading-none min-w-0 whitespace-nowrap",
           active ? "text-black" : "text-white"
         )}>
           {loading ? (

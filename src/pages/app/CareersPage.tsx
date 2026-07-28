@@ -6,6 +6,7 @@
  * the standalone JobsPage but adapted for the middle panel.
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -139,7 +140,7 @@ export default function CareersPage() {
       <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3">
           <div className="flex items-center gap-3">
-            <img src={careersBriefcase} alt={t('careers.title')} className="w-10 h-10 object-contain" />
+            <BrandIcon src={careersBriefcase} alt={t('careers.title')} className="w-10 h-10 object-contain" />
             <div>
               <h1 className="text-xl font-bold text-white">{t('careers.title')}</h1>
               <p className="text-zinc-500 text-sm">{t('careers.subtitle')}</p>

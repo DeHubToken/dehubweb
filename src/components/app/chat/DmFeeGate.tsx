@@ -6,6 +6,7 @@
  * Includes a message input so the user can pay + send their first message in one step.
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -109,7 +110,7 @@ export function DmFeeGate({
       {/* Header */}
       <div className="flex items-center gap-3 mb-4">
         <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
-          <img src={padlockImg} alt="Lock" className="w-8 h-8 object-contain" />
+          <BrandIcon src={padlockImg} alt="Lock" className="w-8 h-8 object-contain" />
         </div>
         <div>
           <h3 className="text-white font-semibold text-sm">Tip to Message</h3>

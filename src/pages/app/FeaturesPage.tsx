@@ -6,6 +6,7 @@
  * Feature cards use the same UI pattern as text posts (ActionBar + CommentsWrapper).
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -34,14 +35,16 @@ import {
   useFeatureRequests,
   useShippedFeatures,
   useUserVotes,
-  useTotalFeatureCount,
+  useFeatureCounts,
   useSubmitFeatureRequest,
   useVoteFeatureRequest,
   useEditFeatureRequest,
   useDeleteFeatureRequest,
   CATEGORY_LABELS,
+  STATUS_LABELS,
   type FeatureCategory,
   type FeatureSort,
+  type FeatureStatus,
   type FeatureRequest,
 } from '@/hooks/use-feature-requests';
 import { z } from 'zod';
@@ -73,7 +76,34 @@ const SORTS: { id: FeatureSort; labelKey: string }[] = [
   { id: 'newest', labelKey: 'features.newest' },
 ];
 
-// Status type kept for data model but no badge displayed on cards
+// Statuses worth surfacing on an open request. `open` is the default and adds
+// no information, and shipped/completed live on their own tab with their own
+// badge — so both are deliberately absent here and render nothing.
+//
+// Hues match mobile's STATUS_COLORS (dehub-mobile/hooks/useFeatureRequests.ts)
+// so the same request reads the same on both clients: amber = under review,
+// blue = planned, violet = in progress, red = declined.
+const STATUS_BADGE_STYLES: Partial<Record<FeatureStatus, string>> = {
+  under_review: 'bg-amber-400/15 text-amber-300/90 border-amber-300/25',
+  planned: 'bg-blue-400/15 text-blue-300/90 border-blue-300/25',
+  in_progress: 'bg-violet-400/15 text-violet-300/90 border-violet-300/25',
+  declined: 'bg-red-400/15 text-red-300/90 border-red-300/25',
+};
+
+function StatusBadge({ status }: { status: FeatureStatus }) {
+  const style = STATUS_BADGE_STYLES[status];
+  if (!style) return null;
+  return (
+    <span
+      className={cn(
+        'text-[10px] font-medium px-2 py-0.5 rounded-lg border backdrop-blur-xl whitespace-nowrap',
+        style
+      )}
+    >
+      {STATUS_LABELS[status]}
+    </span>
+  );
+}
 
 function formatTimeAgo(dateStr: string): string {
   const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
@@ -348,11 +378,12 @@ function FeatureCard({
               </div>
             )}
 
-        {/* Category badge - liquid glass style */}
-        <div className="flex items-center gap-2">
+        {/* Category + status badges - liquid glass style */}
+        <div className="flex items-center gap-2 flex-wrap">
           <span className="text-zinc-300 text-[10px] font-medium px-2 py-0.5 rounded-lg bg-gradient-to-br from-white/15 via-white/8 to-white/3 backdrop-blur-xl border border-white/20 shadow-[0_2px_8px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.3)]">
             {CATEGORY_LABELS[feature.category]}
           </span>
+          <StatusBadge status={feature.status} />
         </div>
 
         {/* Translate control */}
@@ -880,10 +911,12 @@ export default function FeaturesPage() {
     setDrawerOpen(true);
   };
 
-  const { data: totalCount = features.length } = useTotalFeatureCount();
+  // `open` is counted server-side with the same status filter the list uses, so
+  // the tab badge always matches the rows below it.
+  const { data: counts } = useFeatureCounts();
+  const totalCount = counts?.total ?? features.length;
+  const remainingCount = counts?.open ?? features.length;
   const shippedCount = shippedFeatures?.length ?? 0;
-  // Remaining (open) requests = everything not yet shipped/completed.
-  const remainingCount = Math.max(0, totalCount - shippedCount);
 
   // Swallow the feature-request list at the sticky header bento's top edge under
   // the glass themes, exactly like the home feed cuts at its nav pill.
@@ -899,7 +932,7 @@ export default function FeaturesPage() {
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <img src={featuresLightbulb} alt="Features" className="w-12 h-12 object-contain" />
+            <BrandIcon src={featuresLightbulb} alt="Features" className="w-12 h-12 object-contain" />
             <div>
               <h1 className="text-xl font-bold text-white">{t('features.title')}</h1>
               <p className="text-zinc-500 text-sm">{totalCount === 1 ? t('features.ideaSubmitted') : t('features.ideasSubmitted', { count: totalCount })}</p>
@@ -1066,7 +1099,7 @@ export default function FeaturesPage() {
           ) : (
             <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
               <div className="w-16 h-16 flex items-center justify-center mx-auto mb-4">
-                <img src={featuresLightbulb} alt="No features yet" className="w-16 h-16 object-contain opacity-40" />
+                <BrandIcon src={featuresLightbulb} alt="No features yet" className="w-16 h-16 object-contain opacity-40" />
               </div>
               <h3 className="text-white font-semibold mb-1">{t('features.noRequestsYet')}</h3>
               <p className="text-zinc-500 text-sm mb-4">{t('features.beFirstIdea')}</p>

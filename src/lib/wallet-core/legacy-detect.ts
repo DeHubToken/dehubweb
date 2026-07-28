@@ -19,11 +19,22 @@
  */
 import { supabase } from '@/integrations/supabase/client';
 
-export interface LegacyAccountHint {
-  /** true = old account found; false = none for this email; null = unknown (check unavailable). */
-  exists: boolean | null;
-  /** Provider the old account signed up with ('google' | 'apple' | 'twitter' | 'discord' | 'email' | 'wallet' | 'github'). */
+/** One pre-migration account found for the checked email. A person can have
+ * more than one — Supabase links Google/Email logins that share a verified
+ * email into ONE new identity, but on the old Web3Auth-era system each
+ * login method could be its own separate account with its own balance. */
+export interface LegacyAccountMatch {
   signupMethod?: string;
+  ethAddress: string;
+  username?: string;
+  badgeBalance?: number;
+}
+
+export interface LegacyAccountHint {
+  /** true = old account(s) found; false = none for this email; null = unknown (check unavailable). */
+  exists: boolean | null;
+  /** All old accounts found for this email (usually one; can be more). */
+  accounts?: LegacyAccountMatch[];
   /** The verified email that was checked (for prefilling the migrate email field). */
   email?: string;
 }
@@ -61,9 +72,19 @@ export async function checkLegacyAccount(): Promise<LegacyAccountHint> {
   try {
     const { data, error } = await supabase.functions.invoke('legacy-account-check');
     if (error || !data || typeof data.exists !== 'boolean') return { exists: null };
+    const accounts: LegacyAccountMatch[] = Array.isArray(data.accounts)
+      ? data.accounts
+          .filter((a: unknown) => !!a && typeof (a as any).ethAddress === 'string')
+          .map((a: any) => ({
+            signupMethod: typeof a.signupMethod === 'string' ? a.signupMethod : undefined,
+            ethAddress: a.ethAddress,
+            username: typeof a.username === 'string' ? a.username : undefined,
+            badgeBalance: typeof a.badgeBalance === 'number' ? a.badgeBalance : undefined,
+          }))
+      : [];
     return {
       exists: data.exists,
-      signupMethod: typeof data.signupMethod === 'string' ? data.signupMethod : undefined,
+      accounts,
       email: typeof data.email === 'string' ? data.email : undefined,
     };
   } catch {

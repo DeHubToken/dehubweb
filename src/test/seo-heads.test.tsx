@@ -154,7 +154,10 @@ vi.mock('@/hooks/use-feature-requests', () => ({
   useUserVotes: () => ({ data: {} }),
   useDeleteFeatureRequest: () => ({ mutateAsync: vi.fn() }),
   useUpdateFeatureRequest: () => ({ mutateAsync: vi.fn() }),
-  useTotalFeatureCount: () => ({ data: 0 }),
+  useEditFeatureRequest: () => ({ mutate: vi.fn(), isPending: false }),
+  useFeatureCounts: () => ({ data: { total: 0, open: 0 } }),
+  CATEGORY_LABELS: {},
+  STATUS_LABELS: {},
 }));
 vi.mock('@/hooks/use-feature-request-comments', () => ({
   useFeatureRequestComments: () => ({ data: [] }),

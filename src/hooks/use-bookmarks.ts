@@ -398,19 +398,26 @@ export function useBookmarkPost(tokenId: string | number) {
   const isBookmarked = override ?? derivedBookmarked;
 
   const toggleMutation = useMutation({
-    mutationFn: (_next: boolean) => toggleSavePost(tokenId),
-    onSuccess: () => {
+    mutationFn: (_vars: { next: boolean; onSaved?: () => void }) => toggleSavePost(tokenId),
+    onSuccess: (_data, { next, onSaved }) => {
       // Background refresh of the saved lists only — liked/history/ppv are
       // untouched by a save toggle, so don't tear those down.
       queryClient.invalidateQueries({ queryKey: ['bookmarks', 'saved'] });
+      // Only on the save half of the toggle — un-bookmarking shouldn't offer to
+      // file the post anywhere.
+      if (next) onSaved?.();
     },
-    onError: (_err, next) => {
+    onError: (_err, { next }) => {
       setOverride(!next);
       toast.error('Failed to update bookmark');
     },
   });
 
-  const toggleBookmark = () => {
+  /**
+   * @param onSaved Fired once the server confirms a *save* (never an un-save) —
+   *   used to open the "add to folder" drawer, matching mobile's FeedCard flow.
+   */
+  const toggleBookmark = (onSaved?: () => void) => {
     if (!isAuthenticated) {
       toast.error('Please log in to bookmark');
       return;
@@ -419,7 +426,7 @@ export function useBookmarkPost(tokenId: string | number) {
     const next = !isBookmarked;
     setOverride(next);
     toast.success(next ? 'Saved to bookmarks' : 'Removed from bookmarks');
-    toggleMutation.mutate(next);
+    toggleMutation.mutate({ next, onSaved });
   };
 
   return {

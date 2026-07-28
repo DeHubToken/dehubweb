@@ -1,0 +1,209 @@
+/* ==========================================================================
+   WAR - left sidebar navigation icons
+   ==========================================================================
+
+   The sidebar icons were left in their stock zinc chips, which is the single
+   most visible place the theme broke character: a column of soft grey rounded
+   squares running down the left of an otherwise hard-edged tactical HUD.
+
+   Treatment maps to the reference sheet's "square icon button" motif: a
+   notched, olive-filled chip with a cyan hairline, corner ticks on hover, and
+   a solid left edge bar plus full bracket on the active item.
+
+   SELECTOR FRAGILITY, stated plainly:
+   The icon chip is an unhooked <div> wrapper inside the nav link, so it is
+   reached structurally as `:is(a, button) > div` inside [data-side-panel]
+   rather than by a data attribute. If SidebarNavItem's markup gains another
+   direct-child div, this will over-match. The durable fix is a data hook on
+   the wrapper; this file is written to be replaced by that when it lands.
+   The `> svg` requirement keeps the blast radius to wrappers that actually
+   contain an icon.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   The icon chip.
+
+   Squared off, olive-filled, hairlined. The notch is drawn with a clip-path
+   because the chip has fixed dimensions and holds nothing but a centred icon,
+   so there is no overflow to clip and no sticky descendant to break.
+   -------------------------------------------------------------------------- */
+/* The notch lives on a ::before layer, NOT on the chip itself.
+   clip-path on the chip would clip everything it paints INCLUDING its
+   children, and these chips carry absolutely positioned overflow badges at
+   -top-1 -right-1 (the unread count, and the "Test" pill on Prompt / Work /
+   Stores). Clipping the chip cut those badges in half at exactly the notched
+   corner. Painting the notched surface on a pseudo-element keeps the chip
+   itself unclipped, so the badges overflow freely. */
+html[data-theme='war'] [data-side-panel] :is(a, button) > div:has(> svg) {
+  position: relative;
+  border-radius: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+}
+
+html[data-theme='war'] [data-side-panel] :is(a, button) > div:has(> svg)::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background: linear-gradient(
+    168deg,
+    rgb(var(--war-olive) / 0.5) 0%,
+    rgb(var(--war-gunmetal) / 0.9) 60%
+  );
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.22);
+  /* Top-left and bottom-right notched, matching the sheet's icon buttons. */
+  clip-path: polygon(
+    7px 0,
+    100% 0,
+    100% calc(100% - 7px),
+    calc(100% - 7px) 100%,
+    0 100%,
+    0 7px
+  );
+  transition: box-shadow 160ms linear, background 160ms linear;
+}
+
+/* The glyph. Cyan with a restrained bloom: enough to read as emissive, not so
+   much that a column of 15 icons turns into a light show. */
+html[data-theme='war'] [data-side-panel] :is(a, button) > div > svg {
+  color: rgb(var(--war-hud) / 0.82);
+  filter: drop-shadow(0 0 3px rgb(var(--war-hud) / 0.35));
+  transition: color 160ms linear, filter 160ms linear;
+}
+
+/* --------------------------------------------------------------------------
+   Hover: the chip lights up and the hairline strengthens.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [data-side-panel] :is(a, button):hover > div:has(> svg)::before {
+  background: linear-gradient(
+    168deg,
+    rgb(var(--war-olive) / 0.75) 0%,
+    rgb(var(--war-gunmetal) / 0.95) 60%
+  );
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.55);
+}
+
+html[data-theme='war'] [data-side-panel] :is(a, button):hover > div > svg {
+  color: rgb(var(--war-hud));
+  filter: drop-shadow(0 0 6px rgb(var(--war-hud) / 0.6));
+}
+
+/* --------------------------------------------------------------------------
+   Active: brightest state. A solid left edge bar reads as the selected track
+   on a readout, which is a stronger and cheaper signal than a fill change.
+
+   `aria-current="page"` is what NavLink sets, so this needs no new hook and
+   cannot drift out of sync with the router.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [data-side-panel] a[aria-current='page'] > div:has(> svg)::before {
+  background: linear-gradient(
+    168deg,
+    rgb(var(--war-hud) / 0.2) 0%,
+    rgb(var(--war-gunmetal) / 0.95) 65%
+  );
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.75),
+    inset 3px 0 0 rgb(var(--war-hud));
+}
+
+html[data-theme='war'] [data-side-panel] a[aria-current='page'] > div > svg {
+  color: rgb(var(--war-hud));
+  filter: drop-shadow(0 0 7px rgb(var(--war-hud) / 0.75));
+}
+
+/* Active label picks up the readout treatment so the row reads as one unit. */
+html[data-theme='war'] [data-side-panel] a[aria-current='page'] > span {
+  color: rgb(var(--war-hud)) !important;
+  letter-spacing: 0.06em;
+}
+
+/* --------------------------------------------------------------------------
+   Avatars stay round.
+
+   The profile nav row renders an Avatar rather than a lucide glyph. Squaring a
+   face is the one thing this treatment must not do, and the wrapper matches
+   the same structural selector, so it is excluded explicitly.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [data-side-panel] :is(a, button) > div:has([data-radix-avatar-fallback]),
+html[data-theme='war'] [data-side-panel] :is(a, button) > div:has(img) {
+  border-radius: 9999px !important;
+  clip-path: none;
+}
+
+/* ==========================================================================
+   Toggle bars and their active indicator
+
+   Covers the Explore page tab strip and every other bar built on
+   GlassIndicator (the feed nav, side panel tabs). These were still rendering
+   as a soft grey rounded rail with a frosted white pill, which is the stock
+   glass-theme look and reads as untouched next to the rest of War.
+
+   The indicator sets `border-radius` as an inline style, so squaring it needs
+   `!important`. That is not defensive over-reach: an inline style genuinely
+   cannot be beaten any other way.
+   ========================================================================== */
+
+/* The rail. Squared, olive, hairlined, so the strip reads as a housing rather
+   than a floating grey slab. */
+html[data-theme='war'] [data-explore-page] .bg-zinc-900.rounded-xl {
+  border-radius: 0 !important;
+  background: rgb(var(--war-gunmetal) / 0.85) !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.18);
+}
+
+/* The active indicator. A notched cyan-edged chip with a solid bottom rule:
+   the sheet uses an underscored bright segment to mark a selected channel, and
+   it survives being slid around by the drag handler better than a fill does. */
+html[data-theme='war'] [data-glass-indicator] {
+  border-radius: 0 !important;
+  background: rgb(var(--war-hud) / 0.16) !important;
+  backdrop-filter: blur(8px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(120%) !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.6),
+    inset 0 -2px 0 rgb(var(--war-hud)),
+    0 0 12px rgb(var(--war-hud) / 0.25) !important;
+  clip-path: polygon(
+    6px 0,
+    100% 0,
+    100% calc(100% - 6px),
+    calc(100% - 6px) 100%,
+    0 100%,
+    0 6px
+  );
+}
+
+/* Inactive tab glyphs sit dim; the eye should land on the active one first. */
+html[data-theme='war'] [data-explore-page] button > span > svg,
+html[data-theme='war'] [data-feed-nav] button svg {
+  color: rgb(var(--war-sand) / 0.55);
+  transition: color 160ms linear, filter 160ms linear;
+}
+
+html[data-theme='war'] [data-explore-page] button:hover > span > svg,
+html[data-theme='war'] [data-feed-nav] button:hover svg {
+  color: rgb(var(--war-hud) / 0.85);
+}
+
+/* Active tab. The stock markup signals active by swapping to `text-white`, so
+   that class is the only reliable hook here; there is no data attribute on
+   these buttons. Matching it keeps the active glyph in step with the indicator
+   without touching the component. */
+html[data-theme='war'] [data-explore-page] button.text-white > span > svg,
+html[data-theme='war'] [data-feed-nav] button.text-white svg {
+  color: rgb(var(--war-hud)) !important;
+  filter: drop-shadow(0 0 6px rgb(var(--war-hud) / 0.7));
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  html[data-theme='war'] [data-side-panel] :is(a, button) > div > svg {
+    filter: none;
+  }
+  html[data-theme='war'] [data-glass-indicator] {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    background: rgb(var(--war-hud) / 0.24) !important;
+  }
+}

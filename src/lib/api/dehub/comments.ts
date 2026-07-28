@@ -1,4 +1,4 @@
-import { apiCall, DEHUB_API_BASE, getAuthToken } from './core';
+import { apiCall, DEHUB_API_BASE, authedUpload } from './core';
 import type { DeHubUser } from './types';
 
 // API comment response from /api/nft/{tokenId}/comments
@@ -167,9 +167,6 @@ export async function addVoiceComment(params: {
   content?: string;
   parentId?: string;
 }): Promise<VoiceCommentResponse> {
-  const token = getAuthToken();
-  if (!token) throw new Error('Authentication required');
-
   const formData = new FormData();
   // Determine extension from blob type
   const ext = params.audioFile.type.includes('webm') ? 'webm' 
@@ -186,20 +183,7 @@ export async function addVoiceComment(params: {
     url.searchParams.set('commentId', params.parentId);
   }
 
-  const response = await fetch(url.toString(), {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-    },
-    body: formData,
-  });
-
-  if (!response.ok) {
-    const err = await response.json().catch(() => ({}));
-    throw new Error(err.message || err.error || `Voice comment failed: ${response.status}`);
-  }
-
-  return response.json();
+  return authedUpload<VoiceCommentResponse>(`${url.pathname}${url.search}`, formData);
 }
 
 export async function addGifComment(params: {

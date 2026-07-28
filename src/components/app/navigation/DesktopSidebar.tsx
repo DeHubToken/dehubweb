@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { PenSquare, Sparkles, LogIn, Menu } from 'lucide-react';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { SidebarNavItem } from './SidebarNavItem';
+import { WarLogo } from '@/components/app/war/WarLogo';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { AuthPrompt } from '../AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
@@ -38,6 +39,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
   const { isCollapsed, toggleCollapse } = useSidebarCollapse();
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
+  const isWarTheme = theme === 'war';
   const isMinimal = theme === 'minimal';
   const desktopNavTextColor = isLightTheme ? 'text-black' : 'text-white';
   const [showAuthPrompt, setShowAuthPrompt] = useState(false);
@@ -209,8 +211,14 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
       <motion.aside
         variants={leftRailVariants}
         className={cn(
-        "hidden lg:flex sticky top-0 h-screen px-2 pb-2 flex-col overflow-hidden items-center transition-[width,padding] duration-500 ease-in-out motion-reduce:transition-none z-0 isolate will-change-[width]",
-        isCollapsed ? "w-[60px] pt-[16.5px]" : "w-[60px] pt-[2px] lg:w-[231px] lg:px-[18px] lg:items-stretch lg:pt-0 lg:-mt-[3px]"
+        // items-stretch in BOTH modes: the nav bento and the post/login button
+        // below it must be exactly as wide as this rail's content box, so they
+        // line up on every theme. Under items-center the bento was shrink-to-fit
+        // instead, which made its width depend on its own inner padding — and
+        // light/minimal strip that padding from [data-side-panel] (index.css),
+        // so collapsed it measured 36px there vs 44px everywhere else.
+        "hidden lg:flex sticky top-0 h-screen px-2 pb-2 flex-col overflow-hidden items-stretch transition-[width,padding] duration-500 ease-in-out motion-reduce:transition-none z-0 isolate will-change-[width]",
+        isCollapsed ? "w-[60px] pt-[16.5px]" : "w-[60px] pt-[2px] lg:w-[231px] lg:px-[18px] lg:pt-0 lg:-mt-[3px]"
       )}>
         {/* Logo & Coin Balance */}
         <div className={cn("relative z-10 flex items-center justify-between w-full", isCollapsed ? "mb-[14px]" : "mb-[14px] lg:mb-[15px]")}>
@@ -236,19 +244,36 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                 renderCompactLogo ? "w-[28px] h-[24px]" : "w-[135px] h-[42px]"
               )}
             >
-              <img
-                src={isLightTheme ? dehubMarkBlack : dehubLogoCompact}
-                alt="dehub"
-                className={cn("h-[22px] w-[22px] object-contain", !renderCompactLogo && "hidden")}
-                decoding="async"
-              />
-              <img
-                src="/dehub-header-logo.png"
-                alt="dehub"
-                className={cn("h-[40.6px] w-[135px] object-contain relative -top-[3px]", renderCompactLogo && "hidden")}
-                fetchPriority="high"
-                decoding="async"
-              />
+              {isWarTheme ? (
+                <>
+                  <WarLogo
+                    src={dehubLogoCompact}
+                    alt="dehub"
+                    className={cn("h-[22px] w-[22px]", !renderCompactLogo && "hidden")}
+                  />
+                  <WarLogo
+                    src="/dehub-header-logo.png"
+                    alt="dehub"
+                    className={cn("h-[40.6px] w-[135px] relative -top-[3px]", renderCompactLogo && "hidden")}
+                  />
+                </>
+              ) : (
+                <>
+                  <img
+                    src={isLightTheme ? dehubMarkBlack : dehubLogoCompact}
+                    alt="dehub"
+                    className={cn("h-[22px] w-[22px] object-contain", !renderCompactLogo && "hidden")}
+                    decoding="async"
+                  />
+                  <img
+                    src="/dehub-header-logo.png"
+                    alt="dehub"
+                    className={cn("h-[40.6px] w-[135px] object-contain relative -top-[3px]", renderCompactLogo && "hidden")}
+                    fetchPriority="high"
+                    decoding="async"
+                  />
+                </>
+              )}
             </button>
             {isCollapsed && (
               <button
@@ -366,8 +391,10 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
           <div data-sidebar-fade className={cn("pointer-events-none absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent rounded-b-2xl z-10")} />
         </motion.div>
 
-        {/* Post / Login Button */}
-        <div className={cn("mt-3 flex items-center lg:block", isCollapsed ? "px-0 justify-center" : "px-1 justify-center")}>
+        {/* Post / Login Button — w-full with no side padding so the button's box
+            is the rail's content box, i.e. identical to the nav bento above it
+            in both collapsed and expanded mode, on every theme. */}
+        <div className="mt-3 w-full">
           <button
             type="button"
             className={cn(
@@ -391,17 +418,17 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
               ) : isConnecting ? (
                  <>
                     <span className="w-[18px] h-[18px] border-2 border-white/30 border-t-white rounded-full animate-spin flex-shrink-0" />
-                    <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.connecting')}</span>
+                    <span className={cn("whitespace-nowrap", isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.connecting')}</span>
                  </>
               ) : needsSignature ? (
                  <>
                     <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
-                    <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.signMessage')}</span>
+                    <span className={cn("whitespace-nowrap", isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.signMessage')}</span>
                  </>
               ) : (
                  <>
                     <LogIn className="w-[18px] h-[18px] flex-shrink-0" />
-                    <span className={cn(isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.login')}</span>
+                    <span className={cn("whitespace-nowrap", isCollapsed ? "hidden" : "hidden lg:inline")}>{t('nav.login')}</span>
                  </>
               )}
             </div>

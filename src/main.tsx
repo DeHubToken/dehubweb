@@ -12,6 +12,23 @@ import "./lib/toast-i18n-interceptor";
 import App from "./App.tsx";
 import "./i18n";
 import "./index.css";
+// War theme chrome. Imported after index.css so its square/olive HUD surfaces
+// win over the shared canvas-theme glass block. Scoped entirely to
+// html[data-theme="war"], so it is inert under every other theme.
+//
+// Order matters: war-frame.css owns the design tokens and the reusable HUD
+// primitives (chamfers, brackets, tick rulers, meters, badges); war-theme.css
+// consumes them to dress every app surface. Swapping these two leaves every
+// var(--war-*) unresolved.
+import "./styles/war-frame.css";
+import "./styles/war-theme.css";
+import "./styles/war-nav.css";
+// Closes the portal gap (modals/drawers/dropdowns/toasts sit outside #app-root)
+// and binds the war-frame primitives onto real app surfaces.
+import "./styles/war-coverage.css";
+// Last: the brand mark's phosphor treatment overrides the shared canvas-theme
+// filter that index.css puts on mobile-header images.
+import "./styles/war-logo.css";
 
 clearChunkReloadFlag();
 installSupabaseInterceptor();

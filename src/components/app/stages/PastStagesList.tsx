@@ -11,6 +11,7 @@
  * the page never has to open the modal to listen back.
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
@@ -388,7 +389,7 @@ export function PastStagesList() {
   if (pastStages.length === 0) {
     return (
       <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
-        <img src={stagesMicIcon} alt="" className="w-12 h-12 mx-auto mb-3 opacity-50 object-contain" />
+        <BrandIcon src={stagesMicIcon} alt="" className="w-12 h-12 mx-auto mb-3 opacity-50 object-contain" />
         <p className="text-white font-medium">No recorded stages yet</p>
         <p className="text-zinc-500 text-sm mt-1">Stages you host are recorded and show up here once they end.</p>
       </div>

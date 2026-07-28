@@ -1,0 +1,1015 @@
+/* ==========================================================================
+   WAR - surface coverage
+   ==========================================================================
+
+   Closes the two structural holes a full audit of the theme turned up.
+
+   HOLE 1: PORTALS.
+   Large parts of war-theme.css are scoped `html[data-theme='war'] #app-root`.
+   Radix and vaul mount their content on <body>, outside #app-root, so every
+   modal, drawer, dropdown, popover, select, tooltip and toast, and the entire
+   post composer, silently missed those rules and kept its stock white liquid
+   glass. Rather than rewrite 1600 lines in place, this file re-states the
+   affected treatments against a selector that also matches portal roots.
+
+   HOLE 2: THE PRIMITIVES WERE NEVER BOUND.
+   war-frame.css defines a full HUD vocabulary (notched frames, brackets,
+   rulers, chips, meters, glow), but grepping data-war-* across the app found
+   consumers only inside WarPreloader. Every page therefore got a recolour and
+   border-radius:0 and nothing else, which is precisely the "quite basic"
+   result reported. This file binds that vocabulary onto the real surfaces.
+
+   WHY !important APPEARS HERE MORE THAN USUAL:
+   Several controls set their fill, ring and even glyph colour through INLINE
+   styles (the create-post FAB sets `color:#ffffff; stroke:#ffffff` inline).
+   A stylesheet declaration cannot beat an inline style by specificity at all;
+   `!important` is the only mechanism that does. Every use below is either
+   beating an inline style or beating an existing `!important` in war-theme.css.
+
+   Loaded after war-theme.css and war-nav.css. Scoped entirely to
+   html[data-theme='war'].
+   ========================================================================== */
+
+/* Portal roots. Everything Radix/vaul/sonner mounts outside #app-root, plus
+   #app-root itself, so a single selector covers in-tree and portalled UI. */
+html[data-theme='war'] :is(
+    #app-root,
+    [role='dialog'],
+    [role='alertdialog'],
+    [data-vaul-drawer],
+    [data-radix-popper-content-wrapper],
+    [data-sonner-toaster]
+  ) {
+  --war-portal: 1;
+}
+
+/* --------------------------------------------------------------------------
+   1. Liquid-glass surfaces, everywhere.
+
+   LiquidGlassBubble renders a plain <div>, not a button, so war-theme's
+   glass-button rule (which requires :is(button, a, [role='button'])) never
+   matched any of its 93 render sites. Match on the gradient signature instead,
+   which is what actually identifies the surface.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [class*='from-white/'],
+html[data-theme='war'] [class*='bg-white/1'],
+html[data-theme='war'] [class*='border-white/3'] {
+  background-image: none !important;
+  background-color: rgb(var(--war-gunmetal) / 0.82) !important;
+  border-color: rgb(var(--war-hud) / 0.3) !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.22),
+    inset 0 1px 0 rgb(var(--war-hud) / 0.1) !important;
+  border-radius: 0 !important;
+}
+
+/* The active state of the primary action primitive forces `!bg-white` on its
+   inner div, which turned selected Stores/Work tabs into solid white pills. */
+html[data-theme='war'] [class*='from-white/'].bg-white,
+html[data-theme='war'] .bg-white > svg,
+html[data-theme='war'] [class*='!bg-white'] {
+  background-color: rgb(var(--war-hud) / 0.22) !important;
+  color: rgb(var(--war-hud)) !important;
+}
+
+/* --------------------------------------------------------------------------
+   1b. Dark text, after the backgrounds beneath it went dark.
+
+   Section 1 rewrites light surfaces to gunmetal but says nothing about their
+   text, so anything authored as "light surface, dark label" turned into
+   dark-on-dark and vanished. The login button is the reported case:
+   LoginModal.tsx uses bg-white with text-black, so under War the label
+   disappeared entirely and the sign-in flow looked broken.
+
+   War is dark end to end and has no light surfaces at all, so dark text is
+   never correct in it. That makes a blanket remap safe here in a way it would
+   not be in a theme that mixes light and dark regions.
+
+   `!important` because these are utilities on the element itself, which
+   otherwise tie on specificity and win on source order.
+   -------------------------------------------------------------------------- */
+html[data-theme='war']
+  :is(
+    .text-black,
+    .text-zinc-900,
+    .text-zinc-800,
+    .text-neutral-900,
+    .text-neutral-800,
+    .text-slate-900,
+    .text-gray-900
+  ) {
+  color: rgb(var(--war-hud)) !important;
+}
+
+/* Same problem one level down: a dark-text button often wraps its label or an
+   icon in a child that inherits, and SVGs painted with currentColor follow the
+   same path. */
+html[data-theme='war']
+  :is(.text-black, .text-zinc-900, .text-neutral-900, .text-slate-900)
+  :is(span, svg, p, strong) {
+  color: inherit !important;
+}
+
+/* ARBITRARY VARIANTS. `[&>div]:!text-black` compiles to a single escaped class
+   token that sits on the PARENT while declaring colour on the CHILD. The
+   literal `.text-black` selector above can never match that token, and because
+   the child carries its own `!important` declaration, nothing inherited from
+   the parent can override it either. Both facts have to be worked around at
+   once: match the parent by substring, then reach the child structurally.
+
+   Confirmed live on the Launchpad Buy/Sell tabs, the Chain and Curve selectors
+   on the create flow, and several subscription and pricing CTAs. Section 1 had
+   already rewritten those fills to gunmetal, so the labels were black on
+   near-black at roughly 1.2:1.
+
+   Deleting the class in the components was considered and rejected: it is
+   correct under the other eight themes, where the pill genuinely is white. */
+html[data-theme='war'] [class*='!text-black'] > div,
+html[data-theme='war'] [class*='!text-black'] > div :is(span, svg, p, strong),
+html[data-theme='war'] [class*='!text-zinc-900'] > div,
+html[data-theme='war'] [class*='!text-zinc-900'] > div :is(span, svg, p, strong) {
+  color: rgb(var(--war-hud)) !important;
+}
+
+/* Selection then rests on colour alone, because the unselected sibling takes
+   the same gunmetal fill from section 1. Give the active one an edge back. */
+html[data-theme='war'] [class*='!bg-white'] > div {
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.7) !important;
+}
+
+/* PLAIN WHITE SURFACES. Badges, ribbons and pills authored as a white chip with
+   dark text: the "Test" nav pills, draft counts, "Featured" and "Best value"
+   ribbons, leaderboard rank medallions. Section 1 only matches the /10 and /5
+   opacity variants, so an unqualified .bg-white slipped through and kept a
+   white fill, which is glaring on this theme even before the text is read. */
+html[data-theme='war'] :is(.bg-white, .bg-zinc-50, .bg-neutral-50) {
+  background-color: rgb(var(--war-hud) / 0.16) !important;
+  color: rgb(var(--war-hud)) !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.55);
+}
+
+/* METALLIC CHIPS. A hand-rolled silver gradient applied through an inline
+   `style` attribute, paired with dark text. Inline styles cannot be beaten by
+   specificity at all, only by `!important`, and there is no hook to target, so
+   the selector keys on the combination that identifies them: an inline style
+   AND a dark-text utility. Narrow enough not to catch ordinary styled elements,
+   since almost nothing else pairs those two. */
+html[data-theme='war'] [style][class*='text-black'],
+html[data-theme='war'] [style][class*='text-zinc-900'] {
+  background-image: none !important;
+  background-color: rgb(var(--war-olive) / 0.55) !important;
+  color: rgb(var(--war-hud)) !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.5);
+}
+
+/* --------------------------------------------------------------------------
+   2. The create-post control. The user named this one twice.
+
+   Desktop sidebar button, mobile bottom-nav FAB, and the FAB's glyph. The
+   glyph carries an inline white fill and stroke, so it needs !important.
+
+   Treatment is the sheet's notched icon button: cut corners, olive-to-cyan
+   fill, bright hairline, and a real bloom so it reads as the primary action.
+   -------------------------------------------------------------------------- */
+/* Notch on a ::before layer, never on the control itself. Bottom-nav items
+   carry absolutely positioned overflow badges (unread counts, "Test" pills)
+   and clip-path on the control clipped them at the notched corner. */
+html[data-theme='war'] [data-bottom-nav] button > div,
+html[data-theme='war'] [data-primary-cta] {
+  position: relative;
+  background: transparent !important;
+  border-radius: 0 !important;
+  overflow: visible !important;
+}
+
+html[data-theme='war'] [data-bottom-nav] button > div::before,
+html[data-theme='war'] [data-primary-cta]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: -1;
+  background: linear-gradient(
+    158deg,
+    rgb(var(--war-hud) / 0.26) 0%,
+    rgb(var(--war-olive) / 0.6) 55%,
+    rgb(var(--war-gunmetal) / 0.95) 100%
+  );
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.7),
+    0 0 14px rgb(var(--war-hud) / 0.3);
+  clip-path: polygon(
+    8px 0,
+    100% 0,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    0 100%,
+    0 8px
+  );
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+}
+
+/* The glyph. Inline `color`/`stroke` on the icon is why nothing reached it. */
+html[data-theme='war'] [data-bottom-nav] button > div svg,
+html[data-theme='war'] [data-primary-cta] svg {
+  color: rgb(var(--war-hud)) !important;
+  stroke: rgb(var(--war-hud)) !important;
+  filter: drop-shadow(0 0 5px rgb(var(--war-hud) / 0.75));
+}
+
+html[data-theme='war'] [data-bottom-nav] button:hover > div::before,
+html[data-theme='war'] [data-primary-cta]:hover::before {
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud)),
+    0 0 22px rgb(var(--war-hud) / 0.5);
+}
+
+/* --------------------------------------------------------------------------
+   3. Portalled panels: modals, drawers, popovers, selects, toasts.
+
+   These kept stock zinc/slate cards. Give them the sheet's panel frame: a
+   bright hairline, a notched top-left corner and a tick ruler down the top
+   edge, so an open dialog reads as a HUD readout rather than a grey card.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] :is(
+    [role='dialog'],
+    [role='alertdialog'],
+    [data-vaul-drawer],
+    [data-radix-popper-content-wrapper] > *,
+    [data-sonner-toaster] [data-sonner-toast]
+  ) {
+  border-radius: 0 !important;
+  background:
+    linear-gradient(
+      172deg,
+      rgb(var(--war-olive) / 0.2) 0%,
+      rgb(var(--war-gunmetal) / 0) 40%
+    ),
+    rgb(var(--war-gunmetal) / 0.95) !important;
+  border-color: rgb(var(--war-hud) / 0.32) !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.3),
+    inset 0 1px 0 rgb(var(--war-hud) / 0.16),
+    0 18px 60px rgb(0 0 0 / 0.6) !important;
+}
+
+/* Tick ruler along the top edge of any portalled panel. Drawn on the panel
+   itself with a gradient rather than a pseudo-element, because several of
+   these components already own ::before/::after for their own chrome. */
+html[data-theme='war'] :is([role='dialog'], [data-vaul-drawer]) {
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      rgb(var(--war-hud) / 0.55) 0px,
+      rgb(var(--war-hud) / 0.55) 1px,
+      transparent 1px,
+      transparent 9px
+    ),
+    linear-gradient(
+      172deg,
+      rgb(var(--war-olive) / 0.2) 0%,
+      rgb(var(--war-gunmetal) / 0) 40%
+    ) !important;
+  background-size: 100% 3px, 100% 100%;
+  background-repeat: no-repeat, no-repeat;
+  background-position: 0 0, 0 0;
+}
+
+/* Buttons inside portals. war-theme de-glasses these only under #app-root. */
+html[data-theme='war'] :is(
+    [role='dialog'],
+    [role='alertdialog'],
+    [data-vaul-drawer],
+    [data-radix-popper-content-wrapper],
+    [data-sonner-toaster]
+  )
+  :is(button, a[role='button']) {
+  border-radius: 0 !important;
+}
+
+/* Dropdown / select / context-menu rows. */
+html[data-theme='war'] :is(
+    [role='menuitem'],
+    [role='option'],
+    [role='menuitemcheckbox'],
+    [role='menuitemradio']
+  ) {
+  border-radius: 0 !important;
+  font-family: var(--war-mono);
+  letter-spacing: 0.04em;
+}
+
+html[data-theme='war'] :is([role='menuitem'], [role='option']):is(:hover, [data-highlighted]) {
+  background: rgb(var(--war-hud) / 0.16) !important;
+  color: rgb(var(--war-hud)) !important;
+  box-shadow: inset 2px 0 0 rgb(var(--war-hud));
+}
+
+/* --------------------------------------------------------------------------
+   4. Form fields.
+
+   war-theme only squared these; they kept `bg-white/5` or the shadcn
+   slate token fill. SelectTrigger is a button[role='combobox'], so the
+   element-name selector never reached it either.
+   -------------------------------------------------------------------------- */
+html[data-theme='war']
+  :is(
+    input:not([type='checkbox']):not([type='radio']):not([type='range']),
+    textarea,
+    select,
+    [role='combobox']
+  ) {
+  border-radius: 0 !important;
+  background: rgb(var(--war-void) / 0.7) !important;
+  border-color: rgb(var(--war-hud) / 0.28) !important;
+  color: rgb(var(--war-sand)) !important;
+  font-family: var(--war-mono);
+  letter-spacing: 0.03em;
+  /* Padding floor.
+   *
+   * Most of these fields are authored as pills, where the rounded ends do a lot
+   * of the visual insetting and the declared padding is tuned to sit inside
+   * that curve. Squaring the corners takes that away, so the caret and the
+   * first glyph end up hard against the border: reported on the comment box as
+   * the text being "attached" to the edge.
+   *
+   * A minimum rather than a fixed value, so fields that already declare roomier
+   * padding keep it. Mono is also slightly wider than the app's sans, which
+   * makes the tightness read worse than the numbers suggest. */
+  padding-inline: max(0.75rem, var(--war-field-pad, 0px));
+  padding-block: max(0.5rem, var(--war-field-pad-y, 0px));
+}
+
+/* Textareas carry more text and wrap, so they want a little more room than a
+   single-line input, and the extra top padding keeps the first line clear of
+   any ruler or hairline drawn on the top edge. */
+html[data-theme='war'] textarea {
+  padding-inline: max(0.9rem, var(--war-field-pad, 0px));
+  padding-block: max(0.7rem, var(--war-field-pad-y, 0px));
+}
+
+html[data-theme='war']
+  :is(input, textarea, [role='combobox']):focus-visible {
+  border-color: rgb(var(--war-hud) / 0.8) !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.6),
+    0 0 12px rgb(var(--war-hud) / 0.25) !important;
+  outline: none !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. Post engagement row.
+
+   Like / comment / share / tip / dislike are bare text buttons with no
+   background utility, so no control rule could match them, and an engaged
+   post looked identical to an unengaged one. Counts become mono readouts.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [data-feed-item] button > svg {
+  color: rgb(var(--war-sand) / 0.62);
+  transition: color 140ms linear, filter 140ms linear;
+}
+
+html[data-theme='war'] [data-feed-item] button:hover > svg {
+  color: rgb(var(--war-hud));
+  filter: drop-shadow(0 0 5px rgb(var(--war-hud) / 0.5));
+}
+
+/* Engaged state is expressed as `fill-current`, which is the only signal
+   available without a data hook. */
+html[data-theme='war'] [data-feed-item] button > svg.fill-current {
+  color: rgb(var(--war-hud)) !important;
+  filter: drop-shadow(0 0 6px rgb(var(--war-hud) / 0.65));
+}
+
+html[data-theme='war'] [data-feed-item] button > span {
+  font-family: var(--war-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
+}
+
+/* --------------------------------------------------------------------------
+   6. The sliding active-nav indicator.
+
+   The hook existed in the markup but no stylesheet in any theme referenced
+   it, so it stayed white glass on every desktop route.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [data-sidebar-active-indicator] {
+  background: linear-gradient(
+      160deg,
+      rgb(var(--war-hud) / 0.2) 0%,
+      rgb(var(--war-hud) / 0.06) 100%
+    )
+    !important;
+  border-radius: 0 !important;
+  border-color: transparent !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.55),
+    inset 3px 0 0 rgb(var(--war-hud)),
+    0 0 16px rgb(var(--war-hud) / 0.2) !important;
+  backdrop-filter: blur(8px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(120%) !important;
+}
+
+/* --------------------------------------------------------------------------
+   7. Section headings become HUD labels.
+
+   This is the cheapest single change that moves the whole app from "recoloured"
+   toward the reference sheet: dense mono caps with wide tracking and a hairline
+   lead-in, applied to the headings that already exist on every page.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] :is([data-side-panel], [data-page-bento]) :is(h2, h3) {
+  font-family: var(--war-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.78em;
+  color: rgb(var(--war-hud) / 0.9);
+  /* NO display / align-items / gap here, deliberately.
+   *
+   * An earlier version set `display: flex` to lay out the lead-in dash. That
+   * changes the layout mode of headings this theme did not author, and two
+   * Tailwind utilities depend on the original mode:
+   *   .truncate      needs a block container, or text-overflow stops applying
+   *                  and long titles hard-clip mid-glyph with no ellipsis
+   *   .line-clamp-*  needs to keep display:-webkit-box, which flex overrides
+   *                  outright, so clamped titles render at full height
+   *
+   * Seen on MusicPage track titles (clipped, no ellipsis) and the Stages grid
+   * (cards grew past their siblings, leaving ragged rows). The selector scores
+   * (0,2,2) and beat both utilities without needing !important, which is
+   * exactly why it failed silently.
+   */
+}
+
+/* The lead-in is an inline-block rather than a flex item, so the heading keeps
+   whatever display mode its own utilities want. `margin-right` does what `gap`
+   was doing. */
+html[data-theme='war'] :is([data-side-panel], [data-page-bento]) :is(h2, h3)::before {
+  content: '';
+  display: inline-block;
+  vertical-align: middle;
+  width: 10px;
+  height: 1px;
+  margin-right: 8px;
+  background: rgb(var(--war-hud) / 0.8);
+  box-shadow: 0 0 6px rgb(var(--war-hud) / 0.6);
+}
+
+/* --------------------------------------------------------------------------
+   8. Hand-rolled modals that sit outside every hook.
+
+   Four components mount their own fixed scrim and card as siblings of the app
+   root with no role="dialog". They are matched by shape: a fixed full-bleed
+   layer, and a zinc card inside it.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] .fixed.inset-0 > :is(.bg-zinc-900, .bg-zinc-950) {
+  border-radius: 0 !important;
+  background: rgb(var(--war-gunmetal) / 0.96) !important;
+  border-color: rgb(var(--war-hud) / 0.32) !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.3),
+    0 18px 60px rgb(0 0 0 / 0.6) !important;
+}
+
+/* --------------------------------------------------------------------------
+   9. Game launcher.
+
+   The deploy prompt sits above the app but below the boot sequence, and never
+   takes pointer events away from the page it covers: it is an offer, not a
+   modal, so the feed stays fully usable while it is on screen.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [data-war-deploy-prompt] {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 9000;
+  width: min(300px, calc(100vw - 40px));
+  padding: 14px 16px 16px;
+  background: rgb(var(--war-gunmetal) / 0.96);
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.55),
+    0 0 26px rgb(var(--war-hud) / 0.18),
+    0 18px 50px rgb(0 0 0 / 0.6);
+  clip-path: polygon(
+    12px 0,
+    100% 0,
+    100% calc(100% - 12px),
+    calc(100% - 12px) 100%,
+    0 100%,
+    0 12px
+  );
+  animation: war-deploy-in 220ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes war-deploy-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+html[data-theme='war'] [data-war-deploy-kicker] {
+  font-family: var(--war-mono);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgb(var(--war-sand) / 0.75);
+}
+
+html[data-theme='war'] [data-war-deploy-title] {
+  font-family: var(--war-mono);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(var(--war-hud));
+  margin-top: 6px;
+  text-shadow: 0 0 10px rgb(var(--war-hud) / 0.5);
+}
+
+html[data-theme='war'] [data-war-deploy-actions] {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+html[data-theme='war'] [data-war-deploy-actions] > button {
+  flex: 1;
+  padding: 8px 6px;
+  font-family: var(--war-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgb(var(--war-hud));
+  background: rgb(var(--war-hud) / 0.12);
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.45);
+  transition: background 140ms linear, box-shadow 140ms linear;
+}
+
+html[data-theme='war'] [data-war-deploy-actions] > button:last-child {
+  color: rgb(var(--war-sand) / 0.8);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-sand) / 0.28);
+}
+
+html[data-theme='war'] [data-war-deploy-actions] > button:hover {
+  background: rgb(var(--war-hud) / 0.24);
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.9);
+}
+
+/* The game surface itself takes the whole viewport. */
+html[data-theme='war'] [data-war-game-overlay] {
+  position: fixed;
+  inset: 0;
+  z-index: 9500;
+  background: rgb(var(--war-void));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+html[data-theme='war'] [data-war-game-frame] {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   10. HUD page and tab icons.
+
+   Replaces the generated glossy 3D artwork under War with a stroked glyph in a
+   bracket frame. The frame is the sheet's bracket-only motif: corner ticks with
+   the edges left open, so the glyph sits inside a targeting reticle rather than
+   a box.
+
+   The glow is a drop-shadow on the stroke, which traces the glyph outline
+   rather than the element box. That distinction is the whole reason the first
+   logo treatment looked stuck on.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [data-war-hud-icon] {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(var(--war-hud));
+  flex: none;
+}
+
+html[data-theme='war'] [data-war-hud-icon] > svg {
+  width: 55%;
+  height: 55%;
+  filter: drop-shadow(0 0 5px rgb(var(--war-hud) / 0.6));
+}
+
+/* Bracket reticle. Two pseudo-elements, each drawing one diagonal pair of
+   corners, so four ticks cost no extra DOM. */
+html[data-theme='war'] [data-war-hud-icon]::before,
+html[data-theme='war'] [data-war-hud-icon]::after {
+  content: '';
+  position: absolute;
+  width: 32%;
+  height: 32%;
+  border: 1px solid rgb(var(--war-hud) / 0.65);
+  pointer-events: none;
+}
+
+html[data-theme='war'] [data-war-hud-icon]::before {
+  top: 0;
+  left: 0;
+  border-width: 1px 0 0 1px;
+  box-shadow: -1px -1px 6px -2px rgb(var(--war-hud) / 0.8);
+}
+
+html[data-theme='war'] [data-war-hud-icon]::after {
+  right: 0;
+  bottom: 0;
+  border-width: 0 1px 1px 0;
+  box-shadow: 1px 1px 6px -2px rgb(var(--war-hud) / 0.8);
+}
+
+/* Empty states are a moment of nothing, so the reticle idles rather than
+   sitting dead. Opacity only: no layout, no repaint of the glyph. */
+html[data-theme='war'] [data-war-hud-icon]::before,
+html[data-theme='war'] [data-war-hud-icon]::after {
+  animation: war-reticle-idle 3.2s ease-in-out infinite;
+}
+
+html[data-theme='war'] [data-war-hud-icon]::after {
+  animation-delay: 1.6s;
+}
+
+@keyframes war-reticle-idle {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme='war'] [data-war-hud-icon]::before,
+  html[data-theme='war'] [data-war-hud-icon]::after {
+    animation: none;
+    opacity: 0.8;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   11. Boot sequence text that nothing was styling.
+
+   WarPreloader emits around thirty data-war-* hooks; the component and the
+   stylesheets were authored separately and never reconciled, so a dozen
+   text-bearing hooks had no colour rule anywhere and fell back to whatever the
+   cascade gave them. On the boot backdrop that reads as near-black on
+   near-black. data-war-boot-sub is the reported unreadable line.
+
+   Colour follows role rather than taste: cyan for anything the operator is
+   meant to read as live state, sand for labels and supporting text, dim sand
+   for scaffolding like leader dots.
+   -------------------------------------------------------------------------- */
+[data-war-boot] :is([data-war-readout-label], [data-war-log-label]) {
+  font-family: var(--war-mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgb(var(--war-sand) / 0.7);
+}
+
+[data-war-boot] :is([data-war-readout-value], [data-war-log-value]) {
+  font-family: var(--war-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: rgb(var(--war-hud) / 0.95);
+}
+
+/* The reported line. Sits directly under the title, so it carries real weight
+   rather than being a whisper. */
+[data-war-boot] [data-war-boot-sub] {
+  font-family: var(--war-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgb(var(--war-sand) / 0.9);
+  margin-top: 8px;
+}
+
+[data-war-boot] [data-war-boot-status] {
+  font-family: var(--war-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: rgb(var(--war-hud) / 0.9);
+}
+
+[data-war-boot] :is([data-war-track-id], [data-war-track-bearing]) {
+  font-family: var(--war-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: rgb(var(--war-sand) / 0.8);
+}
+
+/* Track state is the one genuinely live readout in the panel, so it gets the
+   accent at full strength. */
+[data-war-boot] [data-war-track-state] {
+  font-family: var(--war-mono);
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  color: rgb(var(--war-hud));
+}
+
+/* Leader dots between a log label and its value. Deliberately the dimmest
+   thing here: it is scaffolding, and competing with the text either side would
+   make the column harder to scan, not easier. */
+[data-war-boot] [data-war-log-dots] {
+  flex: 1;
+  align-self: center;
+  height: 1px;
+  min-width: 12px;
+  margin: 0 8px;
+  background-image: linear-gradient(
+    to right,
+    rgb(var(--war-sand) / 0.35) 0 2px,
+    transparent 2px 5px
+  );
+  background-size: 5px 1px;
+  background-repeat: repeat-x;
+}
+
+/* Keycap hint on the skip control. */
+[data-war-boot] [data-war-key] {
+  display: inline-block;
+  padding: 1px 5px;
+  font-family: var(--war-mono);
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  color: rgb(var(--war-hud));
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.5);
+}
+
+[data-war-boot] :is([data-war-readout], [data-war-track], [data-war-boot-line]) {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+[data-war-boot] [data-war-boot-line] {
+  justify-content: space-between;
+}
+
+/* --------------------------------------------------------------------------
+   12. Prompt landing.
+
+   The page was only getting the generic surface recolour, so it still read as
+   rounded glass: a pill textarea, soft glass buttons and rounded suggestion
+   chips. It is the first screen a logged-out visitor sees, so it carrying no
+   theme character at all is the worst place for it.
+
+   The composer becomes a HUD input: squared, olive-black, cyan hairline, with a
+   tick ruler along its top edge drawn as a background gradient. A textarea
+   cannot host pseudo-elements, which is why the ruler is painted rather than
+   drawn as a child.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [data-prompt-landing] textarea {
+  border-radius: 0 !important;
+  background-color: rgb(var(--war-void) / 0.82) !important;
+  background-image: repeating-linear-gradient(
+    to right,
+    rgb(var(--war-hud) / 0.5) 0px,
+    rgb(var(--war-hud) / 0.5) 1px,
+    transparent 1px,
+    transparent 10px
+  ) !important;
+  background-size: 100% 2px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+  border-color: rgb(var(--war-hud) / 0.35) !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.14) !important;
+  backdrop-filter: blur(8px) saturate(115%) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(115%) !important;
+  font-family: var(--war-mono);
+  letter-spacing: 0.02em;
+  color: rgb(var(--war-sand)) !important;
+}
+
+html[data-theme='war'] [data-prompt-landing] textarea:focus {
+  border-color: rgb(var(--war-hud) / 0.85) !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.5),
+    0 0 18px rgb(var(--war-hud) / 0.18) !important;
+}
+
+html[data-theme='war'] [data-prompt-landing] textarea::placeholder {
+  color: rgb(var(--war-sand) / 0.45) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.85em;
+}
+
+/* Send and mic. Both are the shared action primitive, which renders its shell
+   as a div, so the notch goes on the shell and the label sits above it. Safe to
+   clip here: these buttons hold a centred icon and label and nothing that
+   overflows. */
+html[data-theme='war'] [data-prompt-landing] [aria-label] > div {
+  border-radius: 0 !important;
+  clip-path: polygon(
+    9px 0,
+    100% 0,
+    100% calc(100% - 9px),
+    calc(100% - 9px) 100%,
+    0 100%,
+    0 9px
+  );
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.55),
+    0 0 14px rgb(var(--war-hud) / 0.16) !important;
+}
+
+html[data-theme='war'] [data-prompt-landing] [aria-label]:hover > div {
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.95),
+    0 0 22px rgb(var(--war-hud) / 0.35) !important;
+}
+
+/* Suggestion chips: squared, olive, hairlined. */
+html[data-theme='war'] [data-prompt-landing] button[class*='rounded-lg'] {
+  border-radius: 0 !important;
+  background: rgb(var(--war-olive) / 0.35) !important;
+  border-color: rgb(var(--war-hud) / 0.28) !important;
+  color: rgb(var(--war-sand) / 0.85) !important;
+  font-family: var(--war-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+html[data-theme='war'] [data-prompt-landing] button[class*='rounded-lg']:hover {
+  background: rgb(var(--war-olive) / 0.6) !important;
+  border-color: rgb(var(--war-hud) / 0.7) !important;
+  color: rgb(var(--war-hud)) !important;
+}
+
+/* --------------------------------------------------------------------------
+   13. The shared action primitive's label, everywhere.
+
+   LiquidGlassBubble2 is the app's primary action control: login, send, deposit,
+   withdraw, claim, tab toggles. Its shell was already being recoloured by
+   section 1, but the label kept the app's default sans, so the buttons read as
+   ordinary UI wearing a dark skin. Mono caps is what makes them read as HUD
+   controls rather than just dark buttons.
+   -------------------------------------------------------------------------- */
+html[data-theme='war'] [class*='from-white/'] > span,
+html[data-theme='war'] [aria-label] > div > span {
+  font-family: var(--war-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* GPU preflight failure panel. Shown instead of the frame when WebGL2 is
+   missing or the context is software backed, so the game reports why it will
+   not run rather than presenting a black rectangle. */
+html[data-theme='war'] [data-war-game-missing] {
+  max-width: 460px;
+  padding: 28px;
+  text-align: center;
+  background: rgb(var(--war-gunmetal) / 0.96);
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.4);
+}
+
+html[data-theme='war'] [data-war-game-missing] > p:last-child {
+  margin-top: 12px;
+  font-family: var(--war-mono);
+  font-size: 11px;
+  line-height: 1.7;
+  color: rgb(var(--war-sand) / 0.8);
+}
+
+/* Boot readout over the game frame. The game bakes every asset at runtime with
+   no loading UI of its own, so without this the screen is black for up to a
+   minute and reads as a crash. Pointer events pass through so the game can be
+   clicked into the moment it is live. */
+html[data-theme='war'] [data-war-game-boot] {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  transform: translateX(-50%);
+  width: min(440px, calc(100vw - 40px));
+  padding: 18px 20px;
+  text-align: center;
+  pointer-events: none;
+  background: rgb(var(--war-gunmetal) / 0.92);
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.45);
+  clip-path: polygon(
+    12px 0,
+    100% 0,
+    100% calc(100% - 12px),
+    calc(100% - 12px) 100%,
+    0 100%,
+    0 12px
+  );
+}
+
+html[data-theme='war'] [data-war-game-boot] [data-war-deploy-title] {
+  font-size: 12px;
+  min-height: 1.4em;
+}
+
+/* Indeterminate sweep: the engine reports which subsystem it is on but not a
+   percentage, so a real bar would be a lie. */
+html[data-theme='war'] [data-war-game-boot-bar] {
+  position: relative;
+  height: 3px;
+  margin: 14px 0 12px;
+  overflow: hidden;
+  background: rgb(var(--war-hud) / 0.12);
+}
+
+html[data-theme='war'] [data-war-game-boot-bar] > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 34%;
+  background: rgb(var(--war-hud));
+  box-shadow: 0 0 10px rgb(var(--war-hud) / 0.7);
+  animation: war-boot-sweep 1.5s ease-in-out infinite;
+}
+
+@keyframes war-boot-sweep {
+  0% {
+    transform: translateX(-110%);
+  }
+  100% {
+    transform: translateX(330%);
+  }
+}
+
+/* The one interactive control on the readout. The panel is pointer-events:none
+   so it never blocks the game underneath, which means this button has to opt
+   itself back in. */
+html[data-theme='war'] [data-war-game-boot-hide] {
+  pointer-events: auto;
+  margin-top: 12px;
+  padding: 6px 14px;
+  font-family: var(--war-mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: rgb(var(--war-sand) / 0.85);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-sand) / 0.3);
+}
+
+html[data-theme='war'] [data-war-game-boot-hide]:hover {
+  color: rgb(var(--war-hud));
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.7);
+}
+
+html[data-theme='war'] [data-war-game-boot-note] {
+  font-family: var(--war-mono);
+  font-size: 10px;
+  line-height: 1.6;
+  color: rgb(var(--war-sand) / 0.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme='war'] [data-war-game-boot-bar] > span {
+    animation: none;
+    width: 100%;
+    opacity: 0.5;
+  }
+}
+
+html[data-theme='war'] [data-war-game-exit] {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 2;
+  padding: 8px 12px;
+  font-family: var(--war-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  color: rgb(var(--war-hud));
+  background: rgb(var(--war-gunmetal) / 0.9);
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.5);
+}
+
+
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme='war'] [data-war-deploy-prompt] {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  html[data-theme='war'] :is(
+      [role='dialog'],
+      [data-vaul-drawer],
+      [data-sidebar-active-indicator]
+    ) {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
