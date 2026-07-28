@@ -7,6 +7,7 @@
  * @module components/app/radio/RadioFullscreenVisualizer
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useRef, useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Minimize2, Palette, Radio, ChevronLeft, ChevronRight } from 'lucide-react';
@@ -357,7 +358,7 @@ export function RadioFullscreenVisualizer({
                       : "bg-black/40 backdrop-blur-[24px] saturate-[180%] border-white/10 text-zinc-400 hover:text-white"
                   )}
                 >
-                  <img src={lavaLampIcon} alt="Lava mode" className="w-4 h-4 invert" />
+                  <BrandIcon src={lavaLampIcon} alt="Lava mode" className="w-4 h-4 invert" />
                 </button>
 
                 <Palette className="w-4 h-4 text-zinc-400" />

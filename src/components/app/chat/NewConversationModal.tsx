@@ -20,6 +20,7 @@
  *   4. Only then create the conversation
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useCallback, useEffect } from 'react';
 import { Search, Loader2, ArrowLeft, AlertCircle } from 'lucide-react';
 import dehubCoin from '@/assets/dehub-coin.png';
@@ -264,7 +265,7 @@ function FeePaymentStep({
       {/* Fee info */}
       <div className="flex items-center gap-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
         <div className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0">
-          <img src={padlockImg} alt="Lock" className="w-8 h-8 object-contain" />
+          <BrandIcon src={padlockImg} alt="Lock" className="w-8 h-8 object-contain" />
         </div>
         <div>
           <h3 className="text-white font-semibold text-sm">Tip to Message</h3>

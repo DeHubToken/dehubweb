@@ -1,3 +1,4 @@
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useEffect, useRef, type CSSProperties } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
@@ -393,7 +394,7 @@ export default function MessagesPage() {
           <div className="p-4">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <img src={messagesBubbleIcon} alt="Messages" className="w-10 h-10 object-contain" />
+                <BrandIcon src={messagesBubbleIcon} alt="Messages" className="w-10 h-10 object-contain" />
                 <h1 className="text-xl font-bold text-white">{t('messages.title')}</h1>
               </div>
               <Button
