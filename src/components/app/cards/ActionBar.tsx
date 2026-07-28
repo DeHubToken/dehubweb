@@ -86,6 +86,9 @@ interface ActionBarProps {
   onTip?: () => void;
   /** Handler for see engagements action */
   onSeeEngagements?: () => void;
+  /** Handler for tapping the like count — opens the likers list. Omit to render
+   *  the count as plain text (e.g. surfaces with no comments sheet to open). */
+  onShowLikers?: () => void;
   /** Whether voting buttons should be disabled (e.g. mutation pending) */
   disabled?: boolean;
   /** Handler for share-as-image action (text posts only) */
@@ -167,6 +170,7 @@ export function ActionBar({
   tipCount,
   onTip,
   onSeeEngagements,
+  onShowLikers,
   onShareAsImage,
   disabled: externalDisabled = false,
   tokenId,
@@ -611,21 +615,32 @@ export function ActionBar({
         <span className="text-xs text-zinc-400">{formatCount(commentCount)}</span>
       </button>
 
-      {/* Like — furthest right for easy thumb reach */}
-      <motion.button
-        onClick={() => handleVote(true)}
-        className={cn(
-          "flex items-center gap-0.5 transition-colors text-white",
-          isVoting && "opacity-50"
+      {/* Like — furthest right for easy thumb reach. The thumb votes; the count
+          beside it opens the likers list (it can't be nested inside the vote
+          button, so they're siblings in a wrapper that stays one flex item). */}
+      <span className={cn("flex items-center gap-0.5", isVoting && "opacity-50")}>
+        <motion.button
+          onClick={() => handleVote(true)}
+          className="flex items-center transition-colors text-white"
+          aria-label="Like"
+          disabled={isVoting}
+          animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+        >
+          <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />
+        </motion.button>
+        {onShowLikers ? (
+          <button
+            onClick={(e) => { e.stopPropagation(); onShowLikers(); }}
+            className="text-xs text-zinc-400 hover:text-white transition-colors"
+            aria-label="See who liked this"
+          >
+            {formatCount(localLikeCount)}
+          </button>
+        ) : (
+          <span className="text-xs text-zinc-400">{formatCount(localLikeCount)}</span>
         )}
-        aria-label="Like"
-        disabled={isVoting}
-        animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-      >
-        <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />
-        <span className="text-xs text-zinc-400">{formatCount(localLikeCount)}</span>
-      </motion.button>
+      </span>
     </>
   );
 
