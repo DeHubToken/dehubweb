@@ -18,6 +18,15 @@
    the wrapper; this file is written to be replaced by that when it lands.
    The `> svg` requirement keeps the blast radius to wrappers that actually
    contain an icon.
+
+   That fragility was not theoretical. The right-rail tab strip also lives
+   inside [data-side-panel], and WhatsHappening wraps its tab icon in
+   <div className="relative z-10"><Icon /></div>, which matches this shape
+   exactly. The result was a full notched olive chip painted over a 16px tab
+   glyph. Tab buttons carry [data-tab-btn], so every selector here now excludes
+   them. TabbedSidePanel happened to escape only because it renders its Icon as
+   a direct child of the button rather than inside a wrapper, which is luck
+   rather than design and is the whole argument for a real data hook.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -34,14 +43,14 @@
    Stores). Clipping the chip cut those badges in half at exactly the notched
    corner. Painting the notched surface on a pseudo-element keeps the chip
    itself unclipped, so the badges overflow freely. */
-html[data-theme='war'] [data-side-panel] :is(a, button) > div:has(> svg) {
+html[data-theme='war'] [data-side-panel] :is(a, button):not([data-tab-btn]) > div:has(> svg) {
   position: relative;
   border-radius: 0 !important;
   background: transparent !important;
   overflow: visible !important;
 }
 
-html[data-theme='war'] [data-side-panel] :is(a, button) > div:has(> svg)::before {
+html[data-theme='war'] [data-side-panel] :is(a, button):not([data-tab-btn]) > div:has(> svg)::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -67,7 +76,7 @@ html[data-theme='war'] [data-side-panel] :is(a, button) > div:has(> svg)::before
 
 /* The glyph. Cyan with a restrained bloom: enough to read as emissive, not so
    much that a column of 15 icons turns into a light show. */
-html[data-theme='war'] [data-side-panel] :is(a, button) > div > svg {
+html[data-theme='war'] [data-side-panel] :is(a, button):not([data-tab-btn]) > div > svg {
   color: rgb(var(--war-hud) / 0.82);
   filter: drop-shadow(0 0 3px rgb(var(--war-hud) / 0.35));
   transition: color 160ms linear, filter 160ms linear;
@@ -76,7 +85,7 @@ html[data-theme='war'] [data-side-panel] :is(a, button) > div > svg {
 /* --------------------------------------------------------------------------
    Hover: the chip lights up and the hairline strengthens.
    -------------------------------------------------------------------------- */
-html[data-theme='war'] [data-side-panel] :is(a, button):hover > div:has(> svg)::before {
+html[data-theme='war'] [data-side-panel] :is(a, button):not([data-tab-btn]):hover > div:has(> svg)::before {
   background: linear-gradient(
     168deg,
     rgb(var(--war-olive) / 0.75) 0%,
@@ -85,7 +94,7 @@ html[data-theme='war'] [data-side-panel] :is(a, button):hover > div:has(> svg)::
   box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.55);
 }
 
-html[data-theme='war'] [data-side-panel] :is(a, button):hover > div > svg {
+html[data-theme='war'] [data-side-panel] :is(a, button):not([data-tab-btn]):hover > div > svg {
   color: rgb(var(--war-hud));
   filter: drop-shadow(0 0 6px rgb(var(--war-hud) / 0.6));
 }
@@ -126,8 +135,8 @@ html[data-theme='war'] [data-side-panel] a[aria-current='page'] > span {
    face is the one thing this treatment must not do, and the wrapper matches
    the same structural selector, so it is excluded explicitly.
    -------------------------------------------------------------------------- */
-html[data-theme='war'] [data-side-panel] :is(a, button) > div:has([data-radix-avatar-fallback]),
-html[data-theme='war'] [data-side-panel] :is(a, button) > div:has(img) {
+html[data-theme='war'] [data-side-panel] :is(a, button):not([data-tab-btn]) > div:has([data-radix-avatar-fallback]),
+html[data-theme='war'] [data-side-panel] :is(a, button):not([data-tab-btn]) > div:has(img) {
   border-radius: 9999px !important;
   clip-path: none;
 }
@@ -198,7 +207,12 @@ html[data-theme='war'] [data-feed-nav] button.text-white svg {
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  html[data-theme='war'] [data-side-panel] :is(a, button) > div > svg {
+  /* Dropping the glow here is safe now. It was not always: while the notch
+     plate was a positioned ::before with no z-index, it painted OVER the glyph,
+     and the drop-shadow was the only thing making the icon readable through it.
+     The plate is now at z-index -1, so the glyph sits above it on its own and
+     losing the bloom costs nothing but the bloom. */
+  html[data-theme='war'] [data-side-panel] :is(a, button):not([data-tab-btn]) > div > svg {
     filter: none;
   }
   html[data-theme='war'] [data-glass-indicator] {

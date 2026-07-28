@@ -256,7 +256,16 @@ html[data-theme='war'] :is(
 
 /* Tick ruler along the top edge of any portalled panel. Drawn on the panel
    itself with a gradient rather than a pseudo-element, because several of
-   these components already own ::before/::after for their own chrome. */
+   these components already own ::before/::after for their own chrome.
+ *
+ * The three companion longhands need `!important` and it is not decoration.
+ * The rule above sets `background:` as a SHORTHAND carrying `!important`, and
+ * a shorthand resets every longhand it covers, so it was writing
+ * `background-size: auto !important` at the same weight. A plain declaration
+ * cannot beat that, so the ruler ignored its 3px height and painted the
+ * repeating gradient across the entire panel instead of a strip along its top
+ * edge. The `!important` here is matching the weight already in play, not
+ * escalating past anything. */
 html[data-theme='war'] :is([role='dialog'], [data-vaul-drawer]) {
   background-image:
     repeating-linear-gradient(
@@ -271,9 +280,9 @@ html[data-theme='war'] :is([role='dialog'], [data-vaul-drawer]) {
       rgb(var(--war-olive) / 0.2) 0%,
       rgb(var(--war-gunmetal) / 0) 40%
     ) !important;
-  background-size: 100% 3px, 100% 100%;
-  background-repeat: no-repeat, no-repeat;
-  background-position: 0 0, 0 0;
+  background-size: 100% 3px, 100% 100% !important;
+  background-repeat: no-repeat, no-repeat !important;
+  background-position: 0 0, 0 0 !important;
 }
 
 /* Buttons inside portals. war-theme de-glasses these only under #app-root. */
