@@ -609,6 +609,26 @@ html[data-theme='war'] [data-war-game-boot-bar] > span {
   }
 }
 
+/* The one interactive control on the readout. The panel is pointer-events:none
+   so it never blocks the game underneath, which means this button has to opt
+   itself back in. */
+html[data-theme='war'] [data-war-game-boot-hide] {
+  pointer-events: auto;
+  margin-top: 12px;
+  padding: 6px 14px;
+  font-family: var(--war-mono);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: rgb(var(--war-sand) / 0.85);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-sand) / 0.3);
+}
+
+html[data-theme='war'] [data-war-game-boot-hide]:hover {
+  color: rgb(var(--war-hud));
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.7);
+}
+
 html[data-theme='war'] [data-war-game-boot-note] {
   font-family: var(--war-mono);
   font-size: 10px;

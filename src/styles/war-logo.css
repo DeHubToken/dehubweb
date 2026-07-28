@@ -83,15 +83,26 @@ html[data-theme='war'] [data-war-logo] > canvas {
    cover every burger in the app: the sidebar toggle, the mobile drawer trigger,
    the logged-out variant, and the drawer's own close affordance.
    -------------------------------------------------------------------------- */
+/* `!important` on colour is deliberate. The sidebar burger ships
+   `text-zinc-400` directly on the svg, and the mobile one `text-white`; both
+   are utilities on the element itself, so they tie on specificity with a
+   descendant rule and win on source order once Tailwind's layer is emitted
+   after this file. The collapsed rail is exactly where the burger has to be
+   legible, so it cannot be left to chance.
+
+   The glow is also brighter here than elsewhere in the theme: at 18px, a
+   subtle bloom is invisible, and the collapsed rail gives these glyphs no
+   other chrome to sit against. */
 html[data-theme='war'] :is(
     [aria-label='Toggle sidebar'],
     [aria-label='Toggle menu'],
     [aria-label='Log in']
   ) > svg {
-  color: rgb(var(--war-phosphor));
+  color: rgb(var(--war-phosphor)) !important;
+  opacity: 1 !important;
   filter:
-    drop-shadow(0 0 4px rgb(var(--war-phosphor) / 0.55))
-    drop-shadow(0 0 11px rgb(var(--war-phosphor-dim) / 0.4));
+    drop-shadow(0 0 5px rgb(var(--war-phosphor) / 0.75))
+    drop-shadow(0 0 14px rgb(var(--war-phosphor-dim) / 0.5));
   transition: color 160ms linear, filter 160ms linear;
 }
 
