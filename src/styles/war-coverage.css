@@ -551,6 +551,79 @@ html[data-theme='war'] [data-war-game-missing] > p:last-child {
   color: rgb(var(--war-sand) / 0.8);
 }
 
+/* Boot readout over the game frame. The game bakes every asset at runtime with
+   no loading UI of its own, so without this the screen is black for up to a
+   minute and reads as a crash. Pointer events pass through so the game can be
+   clicked into the moment it is live. */
+html[data-theme='war'] [data-war-game-boot] {
+  position: absolute;
+  left: 50%;
+  bottom: 8%;
+  transform: translateX(-50%);
+  width: min(440px, calc(100vw - 40px));
+  padding: 18px 20px;
+  text-align: center;
+  pointer-events: none;
+  background: rgb(var(--war-gunmetal) / 0.92);
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.45);
+  clip-path: polygon(
+    12px 0,
+    100% 0,
+    100% calc(100% - 12px),
+    calc(100% - 12px) 100%,
+    0 100%,
+    0 12px
+  );
+}
+
+html[data-theme='war'] [data-war-game-boot] [data-war-deploy-title] {
+  font-size: 12px;
+  min-height: 1.4em;
+}
+
+/* Indeterminate sweep: the engine reports which subsystem it is on but not a
+   percentage, so a real bar would be a lie. */
+html[data-theme='war'] [data-war-game-boot-bar] {
+  position: relative;
+  height: 3px;
+  margin: 14px 0 12px;
+  overflow: hidden;
+  background: rgb(var(--war-hud) / 0.12);
+}
+
+html[data-theme='war'] [data-war-game-boot-bar] > span {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 34%;
+  background: rgb(var(--war-hud));
+  box-shadow: 0 0 10px rgb(var(--war-hud) / 0.7);
+  animation: war-boot-sweep 1.5s ease-in-out infinite;
+}
+
+@keyframes war-boot-sweep {
+  0% {
+    transform: translateX(-110%);
+  }
+  100% {
+    transform: translateX(330%);
+  }
+}
+
+html[data-theme='war'] [data-war-game-boot-note] {
+  font-family: var(--war-mono);
+  font-size: 10px;
+  line-height: 1.6;
+  color: rgb(var(--war-sand) / 0.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme='war'] [data-war-game-boot-bar] > span {
+    animation: none;
+    width: 100%;
+    opacity: 0.5;
+  }
+}
+
 html[data-theme='war'] [data-war-game-exit] {
   position: absolute;
   top: 14px;

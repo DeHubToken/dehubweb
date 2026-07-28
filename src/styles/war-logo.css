@@ -51,7 +51,14 @@ html[data-theme='war'] {
 
    Only layout belongs here now.
    -------------------------------------------------------------------------- */
-html[data-theme='war'] [data-war-logo] {
+/* `:not(.hidden)` is load bearing, not decoration.
+   The desktop sidebar renders BOTH marks and hides one with Tailwind's
+   `hidden` (`display:none`), swapping which as the rail collapses. A bare
+   `html[data-theme='war'] [data-war-logo]` rule scores 0,2,1 against
+   `.hidden`'s 0,1,0, so forcing `display:block` here beat the utility and
+   painted the compact mark and the full wordmark side by side. Scoping the
+   display to the visible one leaves `hidden` in charge of which shows. */
+html[data-theme='war'] [data-war-logo]:not(.hidden) {
   display: block;
   /* The canvas is absolutely sized by its host box, and the host must not
      collapse before the texture resolves. */
