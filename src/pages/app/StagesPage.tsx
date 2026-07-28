@@ -12,6 +12,7 @@
  * edge via useFeedSwallowClip (the "swallowing pill").
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useRef, useState } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
@@ -153,7 +154,7 @@ export default function StagesPage() {
       return (
         <div className="space-y-3">
           <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
-            <img src={stagesMicIcon} alt="" className="w-14 h-14 mx-auto mb-4 opacity-60 object-contain" />
+            <BrandIcon src={stagesMicIcon} alt="" className="w-14 h-14 mx-auto mb-4 opacity-60 object-contain" />
             <h2 className="text-white font-semibold">No live stages right now</h2>
             <p className="text-zinc-500 text-sm mt-1 max-w-[320px] mx-auto">
               Start a stage and go live with your audience, or listen back to a recorded one below.
@@ -257,7 +258,7 @@ export default function StagesPage() {
         <div data-page-bento className="bg-zinc-900 rounded-2xl p-2 sm:p-3 overflow-visible">
           <div className="flex items-center justify-between px-1 pt-0.5 pb-2">
             <h2 className="font-bold text-white flex items-center gap-2">
-              <img src={stagesMicIcon} alt="" className="w-6 h-6 sm:w-7 sm:h-7 object-contain" />
+              <BrandIcon src={stagesMicIcon} alt="" className="w-6 h-6 sm:w-7 sm:h-7 object-contain" />
               Stages
               {liveSpaces.length > 0 && (
                 <span className="text-zinc-500 font-normal text-sm">({liveSpaces.length} live)</span>

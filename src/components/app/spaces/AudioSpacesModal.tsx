@@ -10,6 +10,7 @@
  * - Minimize to floating StageMiniPlayer
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -404,7 +405,7 @@ export function AudioSpacesModal() {
             <div className="flex items-center justify-between">
               <DrawerTitle className="text-white flex items-center gap-2">
                 <>
-                  <img src={stagesMicIcon} alt="" className="w-7 h-7 object-contain" />
+                  <BrandIcon src={stagesMicIcon} alt="" className="w-7 h-7 object-contain" />
                   Stages
                 </>
               </DrawerTitle>
@@ -449,7 +450,7 @@ export function AudioSpacesModal() {
               <div className="space-y-2">
                 {liveSpaces.length === 0 ? (
                   <div className="text-center py-8 text-white/50">
-                    <img src={stagesMicIcon} alt="" className="w-12 h-12 mx-auto mb-3 opacity-50" />
+                    <BrandIcon src={stagesMicIcon} alt="" className="w-12 h-12 mx-auto mb-3 opacity-50" />
                     <p className="text-white">No stages</p>
                     <p className="text-sm text-white/50">Be the first to start one!</p>
                   </div>

@@ -5,6 +5,7 @@
  * Native-feeling page rendered inside the app layout.
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useEffect, useState, useMemo, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -268,7 +269,7 @@ export default function GlossaryPage() {
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3 space-y-3">
           {/* Header */}
           <div className="flex items-center gap-3">
-            <img src={glossaryIcon} alt="Glossary" className="w-10 h-10 object-contain brightness-75" />
+            <BrandIcon src={glossaryIcon} alt="Glossary" className="w-10 h-10 object-contain brightness-75" />
             <div>
               <h1 className="text-[1.1rem] sm:text-[1.32rem] font-bold text-white">{t('glossary.title', 'Glossary')}</h1>
               <p className="text-xs text-zinc-500">{t('glossary.subtitle', 'Learn what every icon and feature means')}</p>

@@ -1,3 +1,4 @@
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Repeat2 } from 'lucide-react';
@@ -208,7 +209,7 @@ export function ProfileTabContent({
   if (isTargetPrivate && !isFollowing && !isViewingOwnProfile) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
-        <img src={lock3dIcon} alt="Private" className="w-[80px] h-[80px] object-contain mb-4" />
+        <BrandIcon src={lock3dIcon} alt="Private" className="w-[80px] h-[80px] object-contain mb-4" />
         <p className="text-white text-lg font-semibold">This account is private</p>
         <p className="text-zinc-500 text-sm mt-1 max-w-xs">
           {isPending 
@@ -559,7 +560,7 @@ function SubscribersTabPanel({
   if (isViewingOwnProfile && !hasPlans) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
-        <img src={star3dIcon} alt="Star" className="w-16 h-16 object-contain mb-4" />
+        <BrandIcon src={star3dIcon} alt="Star" className="w-16 h-16 object-contain mb-4" />
         <h3 className="text-white font-bold text-xl mb-3">Subscriber Content</h3>
         <Button
           onClick={() => setCreatePlanModalOpen(true)}
@@ -603,7 +604,7 @@ function SubscribersTabPanel({
   if (!hasPlans) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
-        <img src={subs3dIcon} alt="Subs" className="w-16 h-16 mb-3" />
+        <BrandIcon src={subs3dIcon} alt="Subs" className="w-16 h-16 mb-3" />
         <p className="text-zinc-400 text-lg font-medium">No subscription plans</p>
         <p className="text-zinc-500 text-sm mt-1">{profile?.name || 'This creator'} hasn't set up any plans yet</p>
       </div>

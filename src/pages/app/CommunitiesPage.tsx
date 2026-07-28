@@ -4,6 +4,7 @@
  * Shows user's communities first (owned at top), then all communities sorted by member count.
  */
 
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useMemo, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Users, Plus, Search } from 'lucide-react';
@@ -139,7 +140,7 @@ export default function CommunitiesPage() {
           {/* Header */}
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
-              <img src={communitiesTitleIcon} alt="" className="w-9 h-9 shrink-0 object-contain" />
+              <BrandIcon src={communitiesTitleIcon} alt="" className="w-9 h-9 shrink-0 object-contain" />
               <h1 className="text-xl font-bold text-white truncate">{t('communities.title')}</h1>
             </div>
           </div>

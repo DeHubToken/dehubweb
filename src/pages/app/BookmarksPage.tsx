@@ -1,3 +1,4 @@
+import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { motion } from 'framer-motion';
@@ -149,7 +150,7 @@ export default function BookmarksPage() {
       <div data-page-bento className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-4">
-            <img src={bookmark3dIcon} alt={t('nav.bookmarks')} className="w-[52px] h-[52px] object-contain" />
+            <BrandIcon src={bookmark3dIcon} alt={t('nav.bookmarks')} className="w-[52px] h-[52px] object-contain" />
             <div>
               <h1 className="text-xl font-bold text-white">{t('bookmarks.title')}</h1>
               <p className="text-zinc-500 text-sm">
