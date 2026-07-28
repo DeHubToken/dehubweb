@@ -906,7 +906,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // would now unlock the wrong wallet. Drop them all — the user re-enrols
       // from Settings — rather than leave credentials that silently disagree
       // with the active wallet.
-      await deleteAllPasskeyWraps(supabaseUserId);
+      //
+      // Best-effort by design: the switch itself already succeeded above, so
+      // throwing here would report a completed switch as a failure. If cleanup
+      // does fail, biometric unlock refuses any wrap whose address doesn't
+      // match the wallet row, so the worst case is a clear error rather than
+      // signing in to the wrong wallet.
+      try {
+        await deleteAllPasskeyWraps(supabaseUserId);
+      } catch (e) {
+        console.warn('[Auth] Could not clear biometric wraps after wallet switch:', e);
+      }
       clearWalletCache();
       clearPasskeyCache();
       lockWallet();
