@@ -11,7 +11,7 @@
 
 import { useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Loader2, Check, X, RefreshCw, Megaphone } from 'lucide-react';
+import { Check, X, RefreshCw, Megaphone } from 'lucide-react';
 import { toast } from 'sonner';
 import { AdminShell } from '@/components/admin/AdminShell';
 import { Button } from '@/components/ui/button';
@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { getAdminToken } from '@/lib/api/dehub/admin';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
 import { formatUsd, tierLabel, type AdTargeting, type ServedAd } from '@/lib/ads/povr';
+import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 
 interface QueueCampaign {
   id: string;
@@ -124,7 +125,7 @@ export default function AdminAdsPage() {
         </div>
 
         {isLoading ? (
-          <div className="py-16 text-center"><Loader2 className="w-6 h-6 animate-spin text-white/40 mx-auto" /></div>
+          <DeHubPageLoader minHeight="40vh" />
         ) : campaigns.length === 0 && creatives.length === 0 ? (
           <div className="py-16 text-center space-y-2">
             <Megaphone className="w-8 h-8 text-white/25 mx-auto" />

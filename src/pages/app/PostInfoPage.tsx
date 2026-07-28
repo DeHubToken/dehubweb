@@ -51,6 +51,7 @@ import { sendERC20Token } from '@/lib/wallet/send';
 import { transferFractions } from '@/lib/contracts/fraction-transfer';
 import { DHB_TOKEN, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
+import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 
 // FractionMarketplace Component
 interface FractionMarketplaceProps {
@@ -693,7 +694,7 @@ export default function PostInfoPage() {
   if (isLoading) {
     return (
       <div data-glass-page className="min-h-screen bg-black flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-white animate-spin" />
+        <DeHubPageLoader minHeight="0" />
       </div>
     );
   }

@@ -8,9 +8,9 @@
  */
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Loader2 } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { loadBuilderAppHtml, BUILDER_IFRAME_SANDBOX } from '@/lib/builder/render';
+import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 
 export default function BuilderPreviewPage() {
   const { id } = useParams<{ id: string }>();
@@ -45,7 +45,7 @@ export default function BuilderPreviewPage() {
           {error ? (
             <p className="text-[#949499] text-sm px-6 text-center">{error}</p>
           ) : (
-            <Loader2 className="w-6 h-6 animate-spin text-[#3f7aff]" />
+            <DeHubPageLoader minHeight="0" />
           )}
         </div>
       )}

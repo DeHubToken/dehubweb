@@ -28,6 +28,7 @@ import { buildAvatarUrl } from '@/lib/media-url';
 import { useProfileAvatar } from '@/hooks/use-profile-avatar-cache';
 import { useMention } from '@/hooks/use-mention';
 import { UserMentionDropdown } from '@/components/app/mentions';
+import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 
 function formatTimeAgo(dateStr: string, t: (key: string, opts?: any) => string): string {
   const seconds = Math.floor((Date.now() - new Date(dateStr).getTime()) / 1000);
@@ -99,9 +100,7 @@ export default function GovernanceProposalPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-6 h-6 animate-spin text-zinc-500" />
-      </div>
+      <DeHubPageLoader fullScreen />
     );
   }
 

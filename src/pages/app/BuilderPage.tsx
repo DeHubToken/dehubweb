@@ -63,6 +63,7 @@ import {
   type BuilderProject,
 } from '@/lib/builder/api';
 import { loadBuilderAppHtml, BUILDER_IFRAME_SANDBOX } from '@/lib/builder/render';
+import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 
 // ---------------------------------------------------------------------------
 // Rilable theme, translated (Theme.swift → hex)
@@ -989,15 +990,11 @@ export default function BuilderPage() {
       {view === 'home' && home}
       {view === 'chat' &&
         (chat || (
-          <div className="min-h-[100dvh] grid place-items-center">
-            <Loader2 className="w-6 h-6 animate-spin text-[#3f7aff]" />
-          </div>
+          <DeHubPageLoader fullScreen />
         ))}
       {view === 'preview' &&
         (preview || (
-          <div className="min-h-[100dvh] grid place-items-center">
-            <Loader2 className="w-6 h-6 animate-spin text-[#3f7aff]" />
-          </div>
+          <DeHubPageLoader fullScreen />
         ))}
       {drawer}
       {details}
