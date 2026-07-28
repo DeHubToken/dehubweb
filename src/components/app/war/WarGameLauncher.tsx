@@ -305,7 +305,21 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
     const base =
       (import.meta.env.VITE_WAR_GAME_URL as string | undefined) || BUNDLED_GAME_URL;
     const sep = base.includes('?') ? '&' : '?';
-    return `${base}${sep}q=${pickQuality()}`;
+    // prewarm=0 is not an optimisation, it is a hang fix.
+    //
+    // src/main.js awaits prewarm(engine) near the end of module evaluation, and
+    // `window.__ENGINE__ = engine` is the statement immediately after it. On the
+    // reported machine the HUD, ammo readout and audio all came up while the
+    // scene stayed black: everything before the await had run, nothing after it
+    // had. Confirmed by probing the frame, where __ENGINE__ was undefined with
+    // the HUD already built, and became defined the moment prewarm was skipped.
+    //
+    // Prewarm compiles the shader set up front so early frames do not stutter.
+    // Skipping it moves that compilation to first use, which costs a few brief
+    // hitches in the opening seconds. That is a straightforward trade against a
+    // game that never renders at all, and there is no way to detect the stall
+    // from outside the frame to make it conditional.
+    return `${base}${sep}q=${pickQuality()}&prewarm=0`;
   });
   // Probed once on mount. Running it during render would create a throwaway GL
   // context on every re-render.
