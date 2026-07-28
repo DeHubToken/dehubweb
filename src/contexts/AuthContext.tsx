@@ -58,6 +58,11 @@ export interface AuthContextType {
   completeSmartWalletLogin: (privKeyHex: string) => Promise<void>;
   /** Decrypt and return the current wallet's raw private key (Settings export). */
   exportPrivateKey: (password: string) => Promise<string>;
+  /**
+   * Same export, unlocked with biometrics — the only backup path available to
+   * a wallet created with biometrics and no password.
+   */
+  exportPrivateKeyWithBiometrics: () => Promise<string>;
   /** Replace the active wallet with a different old account's key. */
   switchActiveWallet: (secret: string, password: string) => Promise<void>;
   disconnect: () => Promise<void>;

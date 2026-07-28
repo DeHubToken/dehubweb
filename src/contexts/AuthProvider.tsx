@@ -49,6 +49,8 @@ import {
   getAAProvider,
 } from '@/lib/smart-wallet';
 import { fetchWallet, saveWallet, clearWalletCache } from '@/lib/wallet-core/store';
+import { unlockWithBiometrics } from '@/lib/wallet-core/biometric-unlock';
+import { clearPasskeyCache, deleteAllPasskeyWraps } from '@/lib/wallet-core/passkey-store';
 import { deriveFromSecret } from '@/lib/wallet-core/derive';
 import { encryptString, decryptString } from '@/lib/wallet-core/crypto';
 import { isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
@@ -864,7 +866,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (!supabaseUserId) throw new Error('Not signed in');
     const wallet = await fetchWallet(supabaseUserId);
     if (!wallet) throw new Error('No wallet found for this account.');
+    if (!wallet.payload) {
+      throw new Error('This wallet has no password — export it with biometrics instead.');
+    }
     const secret = await decryptString(wallet.payload, password);
+    return deriveFromSecret(secret).ethPrivateKey;
+  };
+
+  /**
+   * Export via biometrics. Deliberately re-verifies with the authenticator
+   * rather than reusing the unlocked session key: revealing the private key is
+   * sensitive enough to demand a fresh user-presence check, matching how the
+   * password path always re-asks.
+   */
+  const exportPrivateKeyWithBiometrics = async (): Promise<string> => {
+    if (!supabaseUserId) throw new Error('Not signed in');
+    const secret = await unlockWithBiometrics(supabaseUserId);
     return deriveFromSecret(secret).ethPrivateKey;
   };
 
@@ -885,7 +902,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const derived = deriveFromSecret(secret);
       const encrypted = await encryptString(derived.secret, password);
       await saveWallet(supabaseUserId, derived.ethAddress, encrypted);
+      // Every biometric wrap still holds the PREVIOUS wallet's seed, so they
+      // would now unlock the wrong wallet. Drop them all — the user re-enrols
+      // from Settings — rather than leave credentials that silently disagree
+      // with the active wallet.
+      await deleteAllPasskeyWraps(supabaseUserId);
       clearWalletCache();
+      clearPasskeyCache();
       lockWallet();
       // Drop the stale address so signAndAuthenticateSmartWallet's "address
       // changed" guard (meant to catch accidental switches during a session
@@ -1243,9 +1266,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (connectionSource === 'web3auth') {
         clearAAProvider();
         lockWallet();
-        // Encrypted-only cache; clearing avoids stale rows when a different
+        // Encrypted-only caches; clearing avoids stale rows when a different
         // user logs in on this device next.
         clearWalletCache();
+        clearPasskeyCache();
         try { sessionStorage.removeItem('dhb_approved_chains'); } catch { /* */ }
         supabase.auth.signOut().catch(() => {});
         clearWagmiStorage();
@@ -1371,6 +1395,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     connectWithWallet,
     completeSmartWalletLogin,
     exportPrivateKey,
+    exportPrivateKeyWithBiometrics,
     switchActiveWallet,
     disconnect,
     refreshUser,

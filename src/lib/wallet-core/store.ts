@@ -10,7 +10,12 @@ import type { EncryptedPayload } from "./crypto";
 
 export interface StoredWallet {
   ethAddress: string;
-  payload: EncryptedPayload;
+  /**
+   * The password-encrypted seed, or null for a wallet that was created with
+   * biometrics and has no password backup yet. Callers that need a password
+   * must handle null rather than assuming a wrap exists.
+   */
+  payload: EncryptedPayload | null;
 }
 
 const CACHE_KEY = "dehub_wallet_enc";
@@ -27,8 +32,10 @@ export function getCachedWallet(): StoredWallet | null {
     const raw = localStorage.getItem(CACHE_KEY);
     if (!raw) return null;
     const parsed = JSON.parse(raw) as StoredWallet & { userId?: string };
-    if (!parsed?.ethAddress || !parsed?.payload?.ciphertext) return null;
-    return parsed;
+    if (!parsed?.ethAddress) return null;
+    // A cached entry with no usable password wrap is still worth returning —
+    // the address alone is what the biometric unlock path needs.
+    return { ...parsed, payload: parsed.payload?.ciphertext ? parsed.payload : null };
   } catch {
     return null;
   }
@@ -55,12 +62,14 @@ export async function fetchWallet(userId: string): Promise<StoredWallet | null> 
   if (!data) return null;
   const wallet: StoredWallet = {
     ethAddress: data.eth_address,
-    payload: {
-      ciphertext: data.encrypted_seed,
-      salt: data.salt,
-      iv: data.iv,
-      iterations: data.kdf_iterations,
-    },
+    payload: data.encrypted_seed
+      ? {
+          ciphertext: data.encrypted_seed,
+          salt: data.salt,
+          iv: data.iv,
+          iterations: data.kdf_iterations,
+        }
+      : null,
   };
   cacheWallet(wallet);
   return wallet;
@@ -71,11 +80,17 @@ export async function fetchWallet(userId: string): Promise<StoredWallet | null> 
  * new wallets no longer generate a recovery code (export-private-key from
  * Settings is the supported backup path); pre-existing recovery rows for
  * wallets created before this change keep working via fetchRecoveryPayload.
+ *
+ * `payload` may be null for a wallet protected only by biometrics: the row is
+ * then written WITHOUT the seed columns, which both leaves encrypted_seed NULL
+ * on insert and — because PostgREST's upsert only assigns the columns it was
+ * given — preserves an existing password wrap on update. Adding a password
+ * backup later simply calls this again with a real payload.
  */
 export async function saveWallet(
   userId: string,
   ethAddress: string,
-  payload: EncryptedPayload,
+  payload: EncryptedPayload | null,
   recoveryPayload?: EncryptedPayload,
 ): Promise<void> {
   if (recoveryPayload) {
@@ -94,14 +109,23 @@ export async function saveWallet(
   const { error: insertErr } = await db().from("user_wallets").upsert({
     user_id: userId,
     eth_address: ethAddress,
-    encrypted_seed: payload.ciphertext,
-    salt: payload.salt,
-    iv: payload.iv,
-    kdf_iterations: payload.iterations,
+    ...(payload
+      ? {
+          encrypted_seed: payload.ciphertext,
+          salt: payload.salt,
+          iv: payload.iv,
+          kdf_iterations: payload.iterations,
+        }
+      : {}),
   });
   if (insertErr) throw new Error(insertErr.message || "Failed to save wallet");
 
-  cacheWallet({ ethAddress, payload });
+  // Mirror the server-side semantics in the cache: a null payload must not
+  // erase a password wrap this browser already knows about for this address.
+  const previous = getCachedWallet();
+  const keptPayload = payload
+    ?? (previous?.ethAddress?.toLowerCase() === ethAddress.toLowerCase() ? previous.payload : null);
+  cacheWallet({ ethAddress, payload: keptPayload });
 }
 
 /** Fetch the recovery-encrypted seed (for the "forgot password" reset flow). */
