@@ -20,12 +20,15 @@
        * loading UI, so it paints pure black the whole time. That is
        * indistinguishable from a crash, and it is why the embed looked broken.
        *
-       * The engine already narrates its progress through console.info. This
-       * mirrors those lines to the parent frame so the host can render a real
-       * loading readout. The frame is sandboxed into an opaque origin, so
-       * postMessage is the only channel available, and the target is left as
-       * "*" because an opaque origin cannot name its parent. Nothing sensitive
-       * crosses: only the engine's own progress strings.
+       * This reports an elapsed heartbeat and a readiness signal to the parent
+       * frame so the host can render a real loading readout. The frame is
+       * sandboxed into an opaque origin, so postMessage is the only channel
+       * available, and the target is left as "*" because an opaque origin
+       * cannot name its parent. Nothing sensitive crosses: an integer count of
+       * seconds, and one "ready" notice.
+       *
+       * Everything here is PASSIVE. It reads the DOM the game builds and owns
+       * no globals the game touches, so it cannot alter engine behaviour.
        */
       (function () {
         var send = function (type, text) {
@@ -35,27 +38,55 @@
             /* no parent, or blocked: the game still runs */
           }
         };
-        // Hook every level the engine might narrate through. Which one it uses
-        // is an implementation detail of upstream and could change on an
-        // update, so mirroring all of them is the durable choice.
-        ['log', 'info', 'debug'].forEach(function (level) {
-          var original = console[level].bind(console);
-          console[level] = function () {
-            try {
-              var line = Array.prototype.join.call(arguments, ' ');
-              // Only the engine's own bracketed subsystem lines are of
-              // interest; anything else is noise for a loading readout.
-              if (line.charAt(0) === '[') {
-                send('progress', line);
-                // Logged once the last subsystem has finished initialising.
-                if (line.indexOf('[fx] atlases') !== -1) send('ready', line);
-              }
-            } catch (e) {
-              /* never let reporting break the game */
+        var started = Date.now();
+        var done = false;
+
+        function finish(why) {
+          if (done) return;
+          done = true;
+          send('ready', why);
+        }
+
+        /* NOTE ON AN APPROACH THAT WAS TRIED AND REMOVED.
+         * An earlier version wrapped console.log/info/debug to mirror the
+         * engine's bracketed progress lines, so the host could name the stage
+         * currently building. It was dropped: with the wrapper installed the
+         * engine stopped producing any output at all, which points at the
+         * patch interfering with module execution. A cosmetic stage label is
+         * not worth monkey-patching globals that third party code depends on,
+         * so everything below is passive and touches nothing the game owns.
+         *
+         * 1. Readiness.
+         * The engine builds its HUD into #ui once every subsystem is up, so the
+         * first child appearing there is a structural signal that does not
+         * depend on logging surviving an upstream change. */
+        function watchUi() {
+          var ui = document.getElementById('ui');
+          if (!ui) return;
+          if (ui.children.length > 0) return finish('ui populated');
+          var mo = new MutationObserver(function () {
+            if (ui.children.length > 0) {
+              mo.disconnect();
+              finish('ui populated');
             }
-            return original.apply(console, arguments);
-          };
-        });
+          });
+          mo.observe(ui, { childList: true });
+        }
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', watchUi);
+        } else {
+          watchUi();
+        }
+
+        /* 3. A heartbeat regardless.
+         * Whatever else happens, the host gets an elapsed count every second so
+         * the readout always shows honest movement rather than a dead spinner.
+         * This is the piece that makes a long procedural bake legible. */
+        var beat = setInterval(function () {
+          if (done) return clearInterval(beat);
+          send('tick', String(Math.round((Date.now() - started) / 1000)));
+        }, 1000);
+
         window.addEventListener('error', function (e) {
           send('error', (e && e.message) || 'unknown error');
         });
