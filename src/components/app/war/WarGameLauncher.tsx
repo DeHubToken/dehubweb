@@ -284,6 +284,9 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
   const [status, setStatus] = useState('ESTABLISHING LINK');
   const [ready, setReady] = useState(false);
   const [stalled, setStalled] = useState(false);
+  // Elapsed seconds from the game frame's heartbeat. Independent of the log
+  // interception, so the readout always moves even if no stage is ever named.
+  const [elapsed, setElapsed] = useState(0);
 
   useEffect(() => {
     const onMessage = (e: MessageEvent) => {
@@ -297,11 +300,13 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
         setStatus(`FAULT: ${d.text ?? 'unknown'}`);
         return;
       }
-      if (d.text) {
-        // The engine's lines look like "[world] built in 47982ms - ...".
-        // Show the subsystem and drop the metrics, which are noise here.
-        const label = d.text.replace(/^\[([a-z]+)\]\s*/i, (_m, sub) => `${String(sub).toUpperCase()} / `);
-        setStatus(label.slice(0, 64).toUpperCase());
+      if (d.type === 'tick') {
+        // The only progress signal there is. Naming the current subsystem
+        // would need the engine's own logs, and reading those meant patching
+        // console inside the frame, which stopped the engine running at all.
+        // An honest elapsed count beats a label that costs the game.
+        setElapsed(Number(d.text) || 0);
+        setStatus('BUILDING TERRAIN AND MATERIALS');
       }
     };
     window.addEventListener('message', onMessage);
@@ -314,6 +319,34 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
     if (ready) return;
     const t = window.setTimeout(() => setStalled(true), 15000);
     return () => window.clearTimeout(t);
+  }, [ready]);
+
+  // The readiness signal is the one part of the bridge that could not be
+  // verified end to end, and if it never fires the readout would sit over a
+  // playable game forever. So it is never the only way out: any interaction
+  // after 15s dismisses it, and a hard cap retires it regardless. The panel is
+  // pointer-events:none, so these listeners see the input the game also gets.
+  useEffect(() => {
+    if (ready) return;
+
+    const cap = window.setTimeout(() => setReady(true), 120000);
+
+    let armed = false;
+    const arm = window.setTimeout(() => {
+      armed = true;
+    }, 15000);
+    const dismissOnInput = () => {
+      if (armed) setReady(true);
+    };
+
+    window.addEventListener('pointerdown', dismissOnInput);
+    window.addEventListener('keydown', dismissOnInput);
+    return () => {
+      window.clearTimeout(cap);
+      window.clearTimeout(arm);
+      window.removeEventListener('pointerdown', dismissOnInput);
+      window.removeEventListener('keydown', dismissOnInput);
+    };
   }, [ready]);
 
   useEffect(() => {
@@ -380,7 +413,10 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
           hang. Pointer events pass through to the game underneath. */}
       {cap.ok && !ready && (
         <div data-war-game-boot role="status" aria-live="polite">
-          <p data-war-deploy-kicker>GENERATING COMBAT ZONE</p>
+          <p data-war-deploy-kicker>
+            GENERATING COMBAT ZONE
+            {elapsed > 0 ? ` / T+${String(elapsed).padStart(3, '0')}S` : ''}
+          </p>
           <p data-war-deploy-title>{status}</p>
           <div data-war-game-boot-bar aria-hidden="true">
             <span />
