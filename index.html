@@ -209,6 +209,22 @@
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Exo:wght@400;700;900&display=swap" />
     </noscript>
 
+    <!-- Noto Color Emoji: fills the gaps in the platform emoji font (Windows has
+         no flag glyphs, older Segoe UI Emoji misses recent codepoints). Google
+         serves it as ~10 unicode-range subsets, so a browser downloads only the
+         chunk for an emoji it can't already draw — and nothing at all on
+         Android/macOS, where the system font wins earlier in the stack. Same
+         non-blocking load as Exo. -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" />
+    </noscript>
+
     <!-- Critical CSS — prevents white flash -->
     <style>
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

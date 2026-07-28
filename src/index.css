@@ -42,8 +42,20 @@ All colors MUST be HSL.
 */
 
 @layer base {
+  /* Exo carries no emoji glyphs, so every emoji falls through to the next font
+     in the stack. Without emoji families listed here the browser hits its
+     platform last-resort: Windows has no flag glyphs at all (🇧🇷 degrades to the
+     "BR" regional-indicator letters) and an older Segoe UI Emoji renders newer
+     codepoints as tofu — the exact PC-vs-phone mismatch testers report. Android
+     never shows it because Noto Color Emoji is installed system-wide.
+     'Noto Color Emoji' is the webfont loaded in index.html and MUST sit ahead of
+     'Segoe UI Emoji': Segoe claims the regional-indicator codepoints (it draws
+     the letters, just never the flag ligature), so listing it first stops the
+     fallback chain there and flags stay broken. Android already has Noto
+     installed and macOS/iOS match Apple Color Emoji first, so neither downloads
+     anything — only Windows/Linux pull the (unicode-range subset) webfont. */
   * {
-    font-family: 'Exo', sans-serif;
+    font-family: 'Exo', 'Apple Color Emoji', 'Noto Color Emoji', 'Segoe UI Emoji', sans-serif;
   }
   :root {
     --background: 0 0% 100%;

@@ -26,6 +26,22 @@ interface UseImageTranslationReturn {
 // Client-side cache key prefix
 const CACHE_PREFIX = 'img-translate:';
 
+// Same key/order useUserLanguage resolves with, read directly so the hook stays
+// free of context. Browser locale is only the fallback: reading it first (as
+// this hook used to) meant a user browsing DeHub in Turkish on an English
+// Chrome got the OCR text handed back untranslated.
+const LANGUAGE_STORAGE_KEY = 'user-preferred-language';
+
+function resolveUserLanguage(): string {
+  try {
+    const stored = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    if (stored) return stored;
+  } catch {
+    // Private mode / storage disabled — fall through to the browser locale
+  }
+  return navigator.language?.split('-')[0] || 'en';
+}
+
 function getCacheKey(imageUrl: string, targetLang: string): string {
   // Use a hash-like approach for the URL to keep key short
   const urlHash = imageUrl.slice(-50).replace(/[^a-zA-Z0-9]/g, '_');
@@ -62,7 +78,7 @@ export function useImageTranslation(): UseImageTranslationReturn {
     targetLang?: string
   ): Promise<TranslationResult | null> => {
     // Get user's language preference
-    const userLang = targetLang || navigator.language.split('-')[0] || 'en';
+    const userLang = targetLang || resolveUserLanguage();
     
     // Check client cache first
     const cacheKey = getCacheKey(imageUrl, userLang);
