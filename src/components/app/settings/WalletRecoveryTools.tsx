@@ -9,7 +9,7 @@
  *    old account's key and swap to it — self-service, no support/SQL needed.
  */
 import { useState, useEffect } from 'react';
-import { Loader2, AlertTriangle, Copy, KeyRound, Repeat, ArrowDownToLine } from 'lucide-react';
+import { Loader2, AlertTriangle, Copy, KeyRound, Repeat, ArrowDownToLine, Fingerprint } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -21,33 +21,54 @@ import { assessPassword, MIN_PASSWORD_LENGTH } from '@/lib/wallet-core/passwordS
 import { copyThenClear } from '@/lib/wallet-core/clipboard';
 import { PasswordStrengthMeter } from '@/components/app/wallet-setup/PasswordStrengthMeter';
 import { checkLegacyAccount, type LegacyAccountMatch } from '@/lib/wallet-core/legacy-detect';
+import { getWalletProtection } from '@/lib/wallet-core/protection';
+import { PasskeyCancelledError } from '@/lib/wallet-core/biometric-unlock';
 
 const inputClass = 'h-12 bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl';
 
 // ── Export Private Key ──────────────────────────────────────────────────────
 
 function ExportPrivateKeyDialog({ open, onOpenChange }: { open: boolean; onOpenChange: (v: boolean) => void }) {
-  const { exportPrivateKey } = useAuth();
+  const { exportPrivateKey, exportPrivateKeyWithBiometrics, supabaseUserId } = useAuth();
   const [password, setPassword] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [revealedKey, setRevealedKey] = useState<string | null>(null);
+  // Which unlock methods this wallet + device actually support. A wallet with
+  // no password can only be exported with biometrics, so the dialog must not
+  // show a password box that cannot work.
+  const [hasPassword, setHasPassword] = useState(true);
+  const [canUseBiometrics, setCanUseBiometrics] = useState(false);
 
   const reset = () => { setPassword(''); setError(null); setRevealedKey(null); setBusy(false); };
   const close = (v: boolean) => { if (!v) reset(); onOpenChange(v); };
 
-  const handleExport = async () => {
+  useEffect(() => {
+    if (!open || !supabaseUserId) return;
+    let cancelled = false;
+    getWalletProtection(supabaseUserId).then((p) => {
+      if (cancelled) return;
+      setHasPassword(p.hasPassword);
+      setCanUseBiometrics(p.canUseBiometrics);
+    });
+    return () => { cancelled = true; };
+  }, [open, supabaseUserId]);
+
+  const runExport = async (fn: () => Promise<string>) => {
     setBusy(true);
     setError(null);
     try {
-      const key = await exportPrivateKey(password);
-      setRevealedKey(key);
+      setRevealedKey(await fn());
     } catch (err) {
+      if (err instanceof PasskeyCancelledError) return;
       setError(err instanceof Error ? err.message : 'Failed to export key');
     } finally {
       setBusy(false);
     }
   };
+
+  const handleExport = () => runExport(() => exportPrivateKey(password));
+  const handleBiometricExport = () => runExport(() => exportPrivateKeyWithBiometrics());
 
   return (
     <Drawer open={open} onOpenChange={close}>
@@ -79,25 +100,55 @@ function ExportPrivateKeyDialog({ open, onOpenChange }: { open: boolean; onOpenC
           ) : (
             <>
               <p className="text-white/60 text-sm flex items-center gap-2">
-                <KeyRound className="w-4 h-4 shrink-0" />
-                Enter your wallet password to reveal your private key.
+                {canUseBiometrics && !hasPassword
+                  ? <><Fingerprint className="w-4 h-4 shrink-0" /> Confirm with your fingerprint or face to reveal your private key.</>
+                  : <><KeyRound className="w-4 h-4 shrink-0" /> Enter your wallet password to reveal your private key.</>}
               </p>
-              <Input
-                type="password"
-                placeholder="Wallet password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className={inputClass}
-                autoFocus
-              />
+              {hasPassword && (
+                <Input
+                  type="password"
+                  placeholder="Wallet password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className={inputClass}
+                  autoFocus
+                />
+              )}
               {error && <p className="text-sm text-red-400">{error}</p>}
-              <Button
-                onClick={handleExport}
-                disabled={busy || !password}
-                className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
-              >
-                {busy ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Decrypting…</span> : 'Reveal private key'}
-              </Button>
+              {hasPassword && (
+                <Button
+                  onClick={handleExport}
+                  disabled={busy || !password}
+                  className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
+                >
+                  {busy ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Decrypting…</span> : 'Reveal private key'}
+                </Button>
+              )}
+              {canUseBiometrics && (
+                <Button
+                  onClick={handleBiometricExport}
+                  disabled={busy}
+                  variant={hasPassword ? 'outline' : 'default'}
+                  className={hasPassword
+                    ? 'w-full h-12 bg-transparent hover:bg-white/5 text-white rounded-xl border-white/10'
+                    : 'w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl'}
+                >
+                  {busy && !hasPassword
+                    ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Decrypting…</span>
+                    : (
+                      <span className="flex items-center gap-2">
+                        <Fingerprint className="w-4 h-4" />
+                        {hasPassword ? 'Use biometrics instead' : 'Reveal private key'}
+                      </span>
+                    )}
+                </Button>
+              )}
+              {!hasPassword && !canUseBiometrics && (
+                <div className="flex items-start gap-2 rounded-xl border border-amber-400/40 bg-amber-400/10 p-3 text-sm text-white">
+                  <AlertTriangle className="w-4 h-4 mt-0.5 text-amber-400 shrink-0" />
+                  <p>This wallet unlocks with biometrics, which aren’t available in this browser. Export it from the device you set it up on.</p>
+                </div>
+              )}
             </>
           )}
         </div>

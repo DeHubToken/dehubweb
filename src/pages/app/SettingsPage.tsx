@@ -95,6 +95,7 @@ import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
 import { useWalletUnlockInterval, type WalletUnlockIntervalOption } from '@/hooks/use-wallet-unlock-interval';
 import { WalletRecoveryTools } from '@/components/app/settings/WalletRecoveryTools';
+import { BiometricUnlockSettings } from '@/components/app/settings/BiometricUnlockSettings';
 import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
 import { PROFILE_TAB_OPTIONS } from '@/components/app/profile/ProfileConstants';
 import { useDmSettings } from '@/hooks/use-dm-settings';
@@ -1593,14 +1594,14 @@ function PrivacySettings() {
             <div className="flex items-center gap-3">
               <Shield className="w-5 h-5 text-zinc-500" />
               <div>
-                <p className="text-white font-medium">{t('settings.walletUnlockInterval', 'Wallet password prompt')}</p>
-                <p className="text-zinc-500 text-sm">{t('settings.walletUnlockIntervalDesc', "Only asked for wallet actions like tipping or transfers — never just to log in")}</p>
+                <p className="text-white font-medium">{t('settings.walletUnlockInterval', 'Wallet unlock prompt')}</p>
+                <p className="text-zinc-500 text-sm">{t('settings.walletUnlockIntervalDesc', 'How long a wallet action like tipping or transferring stays unlocked before we ask again')}</p>
               </div>
             </div>
             <SettingDrawerSelect
               value={walletUnlockInterval}
               onValueChange={(value) => setWalletUnlockInterval(value as WalletUnlockIntervalOption)}
-              title={t('settings.walletUnlockInterval', 'Wallet password prompt')}
+              title={t('settings.walletUnlockInterval', 'Wallet unlock prompt')}
               options={[
                 { value: 'never', label: t('settings.walletUnlockNever', 'Never (until you log out)') },
                 { value: '15m', label: t('settings.walletUnlock15m', 'After 15 minutes') },
@@ -1610,6 +1611,7 @@ function PrivacySettings() {
               ]}
             />
           </div>
+          <BiometricUnlockSettings />
           <WalletRecoveryTools />
         </div>
       </div>

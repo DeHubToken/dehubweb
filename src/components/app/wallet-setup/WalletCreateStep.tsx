@@ -1,13 +1,19 @@
 /**
  * Wallet creation flow (embedded in the LoginModal drawer).
- * password → persist → signed in. No recovery-phrase/recovery-code step —
+ * protect → persist → signed in. No recovery-phrase/recovery-code step —
  * export-private-key from Settings is the supported backup path, so signup
  * is a single step instead of a three-screen flow.
- * Ported from the Pixcellor CreateWalletDialog; keys are encrypted client-side
- * before anything leaves the device.
+ *
+ * Two ways to protect the new wallet:
+ *  - biometrics (default wherever WebAuthn PRF works) — one Face ID / Touch ID
+ *    prompt and nothing to type or remember;
+ *  - a wallet password — the automatic path on devices without PRF, and always
+ *    available as an explicit choice.
+ * Either way the seed is encrypted client-side before anything leaves the
+ * device. Ported from the Pixcellor CreateWalletDialog.
  */
 import { useEffect, useRef, useState } from 'react';
-import { Loader2, AlertTriangle, CheckCircle2, ArrowDownToLine } from 'lucide-react';
+import { Loader2, AlertTriangle, CheckCircle2, ArrowDownToLine, Fingerprint, KeyRound } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -15,6 +21,12 @@ import { toast } from 'sonner';
 import { generateMnemonic12, deriveFromSecret, isValidMnemonic, isRawPrivateKey } from '@/lib/wallet-core/derive';
 import { encryptString } from '@/lib/wallet-core/crypto';
 import { assessPassword, MIN_PASSWORD_LENGTH } from '@/lib/wallet-core/passwordStrength';
+import {
+  enrollBiometricUnlock,
+  isBiometricUnlockAvailable,
+  PasskeyCancelledError,
+  PasskeyUnsupportedError,
+} from '@/lib/wallet-core/biometric-unlock';
 import { saveWallet } from '@/lib/wallet-core/store';
 import { hasLegacyBrowserResidue, checkLegacyAccount, type LegacyAccountHint, type LegacyAccountMatch } from '@/lib/wallet-core/legacy-detect';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -27,6 +39,8 @@ interface WalletCreateStepProps {
 }
 
 type Mode = 'new' | 'import' | 'migrate';
+/** How the new wallet's seed will be protected. */
+type Protection = 'biometric' | 'password';
 
 const inputClass = 'h-12 bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl';
 
@@ -96,6 +110,23 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
   const [backendHint, setBackendHint] = useState<LegacyAccountHint | null>(null);
   const [residueDetected, setResidueDetected] = useState(false);
   const userChoseModeRef = useRef(false);
+  // null while probing — the protection UI waits rather than flashing the
+  // password form and then swapping it for the biometric button.
+  const [biometricAvailable, setBiometricAvailable] = useState<boolean | null>(null);
+  const [protection, setProtection] = useState<Protection>('password');
+  const userChoseProtectionRef = useRef(false);
+
+  // Prefer biometrics wherever the platform can do it, without overriding an
+  // explicit choice the user already made.
+  useEffect(() => {
+    let cancelled = false;
+    isBiometricUnlockAvailable().then((available) => {
+      if (cancelled) return;
+      setBiometricAvailable(available);
+      if (available && !userChoseProtectionRef.current) setProtection('biometric');
+    });
+    return () => { cancelled = true; };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -174,6 +205,27 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
     }
   };
 
+  /**
+   * The secret this wallet will be built from, per mode. Returns null and sets
+   * an inline error when the mode's input isn't usable yet.
+   */
+  const resolveSecret = (): string | null => {
+    if (mode === 'new') return generateMnemonic12();
+    if (mode === 'migrate') {
+      if (!migratedKey) {
+        setError('Sign in with your old account first');
+        return null;
+      }
+      return migratedKey;
+    }
+    const trimmed = importPhrase.trim();
+    if (!isValidMnemonic(trimmed) && !isRawPrivateKey(trimmed)) {
+      setError('Invalid recovery phrase or private key');
+      return null;
+    }
+    return trimmed;
+  };
+
   const handlePasswordNext = async () => {
     setError(null);
     if (password !== confirm) {
@@ -199,22 +251,8 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       setBusy(false);
     }
 
-    if (mode === 'new') {
-      void persist(generateMnemonic12());
-    } else if (mode === 'migrate') {
-      if (!migratedKey) {
-        setError('Sign in with your old account first');
-        return;
-      }
-      void persist(migratedKey);
-    } else {
-      const trimmed = importPhrase.trim();
-      if (!isValidMnemonic(trimmed) && !isRawPrivateKey(trimmed)) {
-        setError('Invalid recovery phrase or private key');
-        return;
-      }
-      void persist(trimmed);
-    }
+    const secret = resolveSecret();
+    if (secret) void persist(secret);
   };
 
   const persist = async (secret: string) => {
@@ -230,6 +268,49 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
     } finally {
       setBusy(false);
     }
+  };
+
+  /**
+   * Biometric path: enrol a passkey, wrap the seed under its PRF output, then
+   * write the wallet row.
+   *
+   * The wrap is stored BEFORE the wallet row on purpose. If the second write
+   * fails we're left with an unreferenced wrap — harmless, and the retry
+   * overwrites it — whereas the reverse order could leave a wallet row with no
+   * way at all to reach its seed.
+   */
+  const handleBiometricCreate = async () => {
+    setError(null);
+    const secret = resolveSecret();
+    if (!secret) return;
+
+    setBusy(true);
+    try {
+      const derived = deriveFromSecret(secret);
+      await enrollBiometricUnlock(userId, derived.secret);
+      await saveWallet(userId, derived.ethAddress, null);
+      await onComplete(derived.ethPrivateKey);
+    } catch (err) {
+      if (err instanceof PasskeyCancelledError) {
+        // Dismissing the OS sheet isn't a failure — no message, no state change.
+        return;
+      }
+      if (err instanceof PasskeyUnsupportedError) {
+        setBiometricAvailable(false);
+        setProtection('password');
+        setError(`${err.message} Set a wallet password instead.`);
+        return;
+      }
+      setError(err instanceof Error ? err.message : 'Failed to create wallet');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const chooseProtection = (next: Protection) => {
+    userChoseProtectionRef.current = true;
+    setProtection(next);
+    setError(null);
   };
 
   // Providers the backend says old accounts used — highlighted so the user
@@ -314,11 +395,13 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
     return () => { cancelled = true; };
   }, [matchedUsername, matchedEthAddress]);
 
-  // Never advance to the password step on a key we could not parse — the
+  // Never advance to the protection step on a key we could not parse — the
   // confirmation UI has no address to show and saving would store a wallet the
   // user never verified.
-  const showPasswordFields =
+  const showProtectionStep =
     mode !== 'migrate' || (!!migratedKey && !migratedKeyError && addressConfirmed);
+  const showPasswordFields = showProtectionStep && protection === 'password';
+  const showBiometricStep = showProtectionStep && protection === 'biometric';
 
   const OLD_LOGIN_LABELS: Record<string, string> = {
     google: 'Google', apple: 'Apple', twitter: 'X (Twitter)', discord: 'Discord',
@@ -366,7 +449,9 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       <p className="text-white/60 text-sm">
         {mode === 'migrate'
           ? 'Had a DeHub account before? Sign in with your OLD login below to bring over your existing wallet, balance, and profile.'
-          : "Your keys are encrypted in this browser before anything leaves the device. You can export your private key anytime from Settings as a backup."}
+          : protection === 'biometric'
+            ? 'Your keys are encrypted in this browser before anything leaves the device — unlocked with your fingerprint or face, so there’s no password to remember. You can export your private key anytime from Settings as a backup.'
+            : "Your keys are encrypted in this browser before anything leaves the device. You can export your private key anytime from Settings as a backup."}
       </p>
 
       <div className="flex rounded-xl bg-white/5 p-1 gap-1">
@@ -543,8 +628,29 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       {mode === 'migrate' && migratedKey && addressConfirmed && (
         <p className="text-sm text-green-400 flex items-center gap-2">
           <CheckCircle2 className="w-4 h-4 shrink-0" />
-          Confirmed. Set a password to finish the migration.
+          {protection === 'biometric'
+            ? 'Confirmed. Finish with your fingerprint or face.'
+            : 'Confirmed. Set a password to finish the migration.'}
         </p>
+      )}
+
+      {showProtectionStep && biometricAvailable === null && (
+        <p className="text-white/50 text-sm flex items-center gap-2">
+          <Loader2 className="w-4 h-4 animate-spin shrink-0" /> Checking what this device supports…
+        </p>
+      )}
+
+      {showBiometricStep && (
+        <div className="rounded-xl border border-white/10 bg-white/5 p-3 flex items-start gap-3">
+          <Fingerprint className="w-5 h-5 mt-0.5 text-white shrink-0" />
+          <div className="space-y-1">
+            <p className="text-white text-sm font-medium">Unlock with your fingerprint or face</p>
+            <p className="text-white/50 text-xs leading-relaxed">
+              Your device holds the key that unlocks this wallet. Nothing to type now or later —
+              and DeHub never sees it.
+            </p>
+          </div>
+        </div>
       )}
 
       {showPasswordFields && (
@@ -570,6 +676,24 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
         </>
       )}
       {error && <p className="text-sm text-red-400">{error}</p>}
+
+      {showBiometricStep && (
+        <Button
+          onClick={handleBiometricCreate}
+          disabled={busy || (mode === 'import' && !importPhrase.trim()) || (mode === 'migrate' && !migratedKey)}
+          className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
+        >
+          {busy
+            ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Signing you in…</span>
+            : (
+              <span className="flex items-center gap-2">
+                <Fingerprint className="w-4 h-4" />
+                {mode === 'new' ? 'Create wallet' : mode === 'migrate' ? 'Finish migration' : 'Import wallet'}
+              </span>
+            )}
+        </Button>
+      )}
+
       {showPasswordFields && (
         <Button
           onClick={handlePasswordNext}
@@ -584,6 +708,28 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
             ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Signing you in…</span>
             : mode === 'new' ? 'Create wallet' : mode === 'migrate' ? 'Finish migration' : 'Import wallet'}
         </Button>
+      )}
+
+      {/* Either choice stays reachable: biometrics is the default where it
+          works, a password is always an option, and it's the only option where
+          PRF is unavailable. */}
+      {showProtectionStep && biometricAvailable && (
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => chooseProtection(protection === 'biometric' ? 'password' : 'biometric')}
+          className="w-full text-center text-xs text-white/40 hover:text-white/70 transition-colors disabled:opacity-50 inline-flex items-center justify-center gap-1.5"
+        >
+          {protection === 'biometric'
+            ? <><KeyRound className="w-3.5 h-3.5" /> Use a wallet password instead</>
+            : <><Fingerprint className="w-3.5 h-3.5" /> Use fingerprint or face instead</>}
+        </button>
+      )}
+
+      {showPasswordFields && biometricAvailable === false && (
+        <p className="text-white/40 text-xs text-center">
+          This device can’t unlock wallets with biometrics. You can add it later from Settings on a device that can.
+        </p>
       )}
     </div>
   );

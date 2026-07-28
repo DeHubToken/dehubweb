@@ -1,11 +1,17 @@
 /**
  * Wallet-unlock interval preference.
  *
- * Controls how long the DECRYPTED wallet key stays usable for wallet
- * actions (tipping, transfers, etc.) before the wallet password is required
- * again. This is independent of the DeHub app session — logging in and
- * browsing never needs the wallet password; only signing an on-chain action
- * does. Enforced in lib/smart-wallet.ts's isWalletUnlocked().
+ * Controls how long the DECRYPTED wallet key stays usable for wallet actions
+ * (tipping, transfers, etc.) before an unlock is required again. Enforced in
+ * lib/smart-wallet.ts's isWalletUnlocked().
+ *
+ * Scope, precisely: this only suppresses RE-prompts inside a page session that
+ * already unlocked once. It cannot make signing in free of an unlock — the
+ * DeHub session token is minted by a wallet signature, so establishing a
+ * session needs the key by definition — and because the decrypted key is
+ * memory-only (see lib/smart-wallet.ts), a page reload always starts locked
+ * regardless of this setting. Biometric unlock is what makes those unavoidable
+ * prompts cheap; this setting decides how often they happen.
  */
 import { useState, useCallback } from 'react';
 
