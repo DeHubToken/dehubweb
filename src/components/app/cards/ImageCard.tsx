@@ -408,7 +408,7 @@ function FeedDescription({
 
 export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: ImageCardProps) {
   const [showComments, setShowComments] = useState(false);
-  const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
+  const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'likers' | 'search' | undefined>(undefined);
   useAutoOpenComments(setShowComments);
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
@@ -971,6 +971,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           onTip={() => setShowTipModal(true)}
           onSeeEngagements={() => {
             setCommentsInitialTab('reposts');
+            setShowComments(true);
+          }}
+          onShowLikers={() => {
+            setCommentsInitialTab('likers');
             setShowComments(true);
           }}
         />
