@@ -12,11 +12,46 @@ import { getWeb3AuthProvider, getAAProvider, getAAProviderForChain, setupAAProvi
 import { getAccount } from '@wagmi/core';
 import { sendTransaction, waitForTransactionReceipt, switchChain as wagmiSwitchChain } from '@wagmi/core';
 import { wagmiConfig } from '@/lib/wagmi';
+import { isSmartWalletSession } from '@/lib/connection-source';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { CHAIN_CONFIGS, BASE_CHAIN_ID, BNB_CHAIN_ID, initChainRpcUrls } from './dhb-token';
 
 // Hex type for AA transactions
 type Hex = `0x${string}`;
+
+/**
+ * Nothing can sign right now — say which kind of nothing it is.
+ *
+ * For a built-in-wallet session this is the ordinary case rather than a
+ * failure: the key only ever lives in memory, so it is absent after every
+ * reload, after every auto-lock, and — since login stopped unlocking the
+ * wallet on the way in — for most of a normal session. Telling someone who is
+ * demonstrably signed in to sign in is what turned this into support tickets.
+ * For an external wallet it really is a dropped connection, and the caller's
+ * own recovery (silent reconnect, then logout) is the right handler.
+ */
+function noSigningProviderMessage(): string {
+  return isSmartWalletSession()
+    ? 'Your wallet is locked. Please unlock it and try again.'
+    : 'No wallet connected. Please sign in first.';
+}
+
+/**
+ * As above, and additionally ask the auth provider to open the unlock dialog.
+ *
+ * Only for paths where the user asked for something that signs. Reads get the
+ * message on its own: StakingPage resolves the signer address from a mount
+ * effect, so raising the event there would put a password sheet in front of
+ * anyone who merely opened the staking page — worse than the wrong error it
+ * would be replacing. writeContractAA reaches getActiveProvider before it
+ * reads an address, so the signing flows still prompt.
+ */
+function requestUnlockForSigning(): Error {
+  if (isSmartWalletSession()) {
+    window.dispatchEvent(new Event('dehub:wallet-unlock-required'));
+  }
+  return new Error(noSigningProviderMessage());
+}
 
 /**
  * Get the active EIP-1193 provider - Web3Auth (social login) or wagmi (wallet).
@@ -74,14 +109,7 @@ async function getActiveProvider(chainId?: number): Promise<{ provider: any; isW
     }
   } catch { /* ignore */ }
 
-  // Smart-wallet session exists but the key is locked (new tab / browser
-  // restart) — ask the auth provider to open the unlock dialog.
-  if (localStorage.getItem('dehub_connection_source') === 'web3auth') {
-    window.dispatchEvent(new Event('dehub:wallet-unlock-required'));
-    throw new Error('Your wallet is locked. Please unlock it and try again.');
-  }
-
-  throw new Error('No wallet connected. Please sign in first.');
+  throw requestUnlockForSigning();
 }
 
 /**
@@ -271,7 +299,12 @@ export async function getWalletAddress(): Promise<string> {
   const account = getAccount(wagmiConfig);
   if (account.address) return account.address;
 
-  throw new Error('No wallet connected. Please sign in first.');
+  // Message only, no dialog — see requestUnlockForSigning. Tips, paywalls and
+  // fee gates read the signer address here before reaching writeContractAA, so
+  // leaving this raw meant they reported "No wallet connected" to someone who
+  // was signed in; they now say the wallet is locked, which is both true and
+  // something the user can act on from the wallet menu.
+  throw new Error(noSigningProviderMessage());
 }
 
 /**
