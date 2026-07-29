@@ -102,6 +102,71 @@ export async function authenticateWallet(
 }
 
 /**
+ * Thrown when the backend has no wallet linked to this Supabase identity yet.
+ * The caller must fall back to the signature flow, which is what creates the
+ * link — it is a normal state for a first-ever login, not an error to surface.
+ */
+export class WalletNotLinkedError extends Error {
+  constructor(message = 'No wallet is linked to this login yet.') {
+    super(message);
+    this.name = 'WalletNotLinkedError';
+  }
+}
+
+/**
+ * Exchange a Supabase access token for a DeHub session, with no wallet
+ * signature — so login can finish without unlocking the wallet.
+ *
+ * The wallet stays encrypted; anything that needs to sign triggers an unlock at
+ * that point (see the dehub:wallet-unlock-required flow). Requires the Supabase
+ * identity to already be linked, which the signature flow does on first login.
+ *
+ * @throws WalletNotLinkedError when no link exists yet (HTTP 409)
+ */
+export async function authenticateWithSupabaseSession(
+  supabaseAccessToken: string,
+): Promise<AuthResponse> {
+  const response = await fetch(`${DEHUB_API_BASE}/api/web/auth/supabase`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+      // Sent as a header rather than in the body so it does not land in request
+      // logs that record bodies.
+      Authorization: `Bearer ${supabaseAccessToken}`,
+    },
+    body: JSON.stringify({}),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({} as Record<string, unknown>));
+    const code = errorData.code as string | undefined;
+    // 409 means "not linked" or "linked ambiguously". Both are resolved by
+    // signing once, so both fall back rather than dead-ending the user.
+    if (response.status === 409 || code === 'WALLET_NOT_LINKED' || code === 'WALLET_LINK_AMBIGUOUS') {
+      throw new WalletNotLinkedError(
+        (errorData.message as string) || 'No wallet is linked to this login yet.',
+      );
+    }
+    // 503 (endpoint switched off server-side) is deliberately NOT special-cased
+    // here — the caller treats any non-409 failure as "fall back to signing",
+    // so a server without SUPABASE_JWT_SECRET simply keeps the old behaviour.
+    throw new Error(
+      (errorData.message as string) || (errorData.error as string) || 'Authentication failed',
+    );
+  }
+
+  const data: AuthResponse = await response.json();
+
+  if (data.token) setAuthToken(data.token);
+  if (data.refreshToken) setRefreshToken(data.refreshToken);
+  if (data.expiresIn) setTokenExpiresAt(data.expiresIn);
+  else localStorage.setItem('dehub_token_timestamp', String(Date.now()));
+
+  return data;
+}
+
+/**
  * Refresh the access token using the stored refresh token.
  * Returns the new token data, or null if refresh failed.
  *
