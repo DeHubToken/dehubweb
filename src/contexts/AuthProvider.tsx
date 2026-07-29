@@ -24,6 +24,8 @@ import { wagmiConfig, clearWagmiStorage } from '@/lib/wagmi';
 
 import {
   authenticateWallet,
+  authenticateWithSupabaseSession,
+  WalletNotLinkedError,
   getAccountInfo,
   getAuthToken,
   getRefreshToken,
@@ -34,6 +36,7 @@ import {
   logoutFromServer,
   type DeHubUser,
   type Web3AuthMeta,
+  type AuthResponse,
 } from '@/lib/api/dehub';
 import { disconnectDmSocket, reconnectDmSocket } from '@/lib/api/dehub/dm-socket';
 import { clearEngagementCaches } from '@/lib/clear-engagement-caches';
@@ -326,7 +329,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('dehub_connection_source', 'web3auth');
     try {
       const existing = await fetchWallet(userId);
-      setWalletPhase(existing ? 'unlock' : 'create');
+
+      if (existing) {
+        // A wallet already exists, so nothing here needs the seed: the address
+        // is stored in the clear and the DeHub session can be minted from the
+        // Supabase identity. Finish login with the wallet still locked, and let
+        // the first action that actually signs ask for the unlock. This is the
+        // difference between "log in, then immediately prove yourself again"
+        // and "log in".
+        if (await completeLoginWithoutUnlock(userId, existing.ethAddress)) {
+          return;
+        }
+        // Exchange unavailable (identity not linked yet, endpoint off, offline).
+        setWalletPhase('unlock');
+      } else {
+        setWalletPhase('create');
+      }
     } catch (e) {
       console.warn('[Auth] Wallet lookup failed, defaulting to create check on retry:', e);
       // Network hiccup — let the modal retry; default to unlock so we never
@@ -334,6 +352,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setWalletPhase('unlock');
     }
     openLoginModal();
+    // completeLoginWithoutUnlock is recreated each render but closes only over
+    // setters and refs; including it would rebuild this callback every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [openLoginModal]);
 
   // Check for existing DeHub session on mount
@@ -798,6 +819,110 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * (sponsored gas, same address as the old Web3Auth flow for the same key);
    * falls back to the EOA if Pimlico is unavailable.
    */
+  /**
+   * Apply a successful DeHub auth response to local state and storage.
+   *
+   * Shared by the two ways a session can be established — signing with the
+   * wallet, and exchanging a Supabase session (see completeLoginWithoutUnlock).
+   * Kept in one place deliberately: two copies of "what it means to be logged
+   * in" would drift, and a missing line here is a half-logged-in user.
+   *
+   * @param supabaseUid Passed explicitly rather than read from state, because
+   *   the Supabase path runs before setSupabaseUserId has been committed.
+   */
+  const applyAuthenticatedSession = (
+    authResponse: AuthResponse,
+    address: string,
+    supabaseUid: string | null,
+    flow: string,
+  ) => {
+    const normalizedUser = normalizeUser(authResponse.user, address);
+    localStorage.setItem('dehub_wallet', address);
+    localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
+    localStorage.setItem('dehub_connection_source', 'web3auth');
+    // Tag this DeHub session with the Supabase identity that produced it, so
+    // a LATER sign-in as a DIFFERENT Supabase user (e.g. via the cross-device
+    // magic-link sync) can tell "still me, just refreshing" apart from
+    // "someone else signed in on this browser" instead of silently keeping
+    // this account's data on screen.
+    if (supabaseUid) localStorage.setItem('dehub_supabase_uid', supabaseUid);
+    setConnectionSource('web3auth');
+    setWalletAddress(address);
+    setUser(normalizedUser);
+
+    if (authResponse.result?.isNewAccount) {
+      setRequiresUsername(true);
+      sessionStorage.setItem('dehub_is_new_account', 'true');
+    } else {
+      sessionStorage.removeItem('dehub_is_new_account');
+    }
+
+    queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
+    queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
+
+    authLogger.info('Login success', {
+      method: flow.toLowerCase(),
+      address,
+      username: normalizedUser.username,
+      isNewAccount: !!authResponse.result?.isNewAccount,
+    });
+
+    return normalizedUser;
+  };
+
+  /**
+   * Finish logging in WITHOUT unlocking the wallet, by exchanging the current
+   * Supabase session for a DeHub token.
+   *
+   * The whole point is that a returning user gets no password or biometric
+   * prompt on entry: their key stays encrypted until something actually needs a
+   * signature, at which point aa-utils raises dehub:wallet-unlock-required and
+   * they are asked then — in context, having chosen to do the thing.
+   *
+   * Returns false when the exchange is unavailable for any reason (identity not
+   * linked yet, endpoint switched off server-side, network failure). Every such
+   * case is non-fatal: the caller falls back to the unlock-and-sign flow, which
+   * is exactly the previous behaviour.
+   */
+  const completeLoginWithoutUnlock = async (
+    userId: string,
+    ethAddress: string,
+  ): Promise<boolean> => {
+    try {
+      const { data } = await supabase.auth.getSession();
+      const accessToken = data?.session?.access_token;
+      if (!accessToken) return false;
+
+      const authResponse = await authenticateWithSupabaseSession(accessToken);
+      const address = (authResponse.user?.address || ethAddress).toLowerCase();
+
+      // The backend resolves the address from the linked identity, so a
+      // mismatch here means this Supabase identity is linked to a DIFFERENT
+      // wallet than the one in user_wallets. Signing is the only safe way to
+      // resolve that, so fall back rather than adopting either address.
+      if (ethAddress && address !== ethAddress.toLowerCase()) {
+        authLogger.warn('Supabase session maps to a different wallet — falling back to signing', {
+          linked: address,
+          stored: ethAddress.toLowerCase(),
+        });
+        return false;
+      }
+
+      applyAuthenticatedSession(authResponse, address, userId, 'SUPABASE');
+      closeLoginModal();
+      return true;
+    } catch (e) {
+      if (e instanceof WalletNotLinkedError) {
+        authLogger.info('No wallet linked to this login yet — signing once to link it');
+      } else {
+        authLogger.warn('Supabase session exchange unavailable, falling back to signing', {
+          error: e instanceof Error ? e.message : String(e),
+        });
+      }
+      return false;
+    }
+  };
+
   const signAndAuthenticateSmartWallet = async (toastId: string) => {
     const timestamp = Math.floor(Date.now() / 1000);
     const displayedDate = new Date(timestamp * 1000);
@@ -827,32 +952,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     toast.loading('Signing in...', { id: toastId });
     const authResponse = await authenticateWallet(address, signature, timestamp, BASE_CHAIN_ID, meta);
 
-    const normalizedUser = normalizeUser(authResponse.user, address);
-    localStorage.setItem('dehub_wallet', address);
-    localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
-    localStorage.setItem('dehub_connection_source', 'web3auth');
-    // Tag this DeHub session with the Supabase identity that produced it, so
-    // a LATER sign-in as a DIFFERENT Supabase user (e.g. via the cross-device
-    // magic-link sync) can tell "still me, just refreshing" apart from
-    // "someone else signed in on this browser" instead of silently keeping
-    // this account's data on screen.
-    if (supabaseUserId) localStorage.setItem('dehub_supabase_uid', supabaseUserId);
-    setConnectionSource('web3auth');
-    setWalletAddress(address);
-    setUser(normalizedUser);
-
-    if (authResponse.result?.isNewAccount) {
-      setRequiresUsername(true);
-      sessionStorage.setItem('dehub_is_new_account', 'true');
-    } else {
-      sessionStorage.removeItem('dehub_is_new_account');
-    }
-
-    queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
-    queryClient.invalidateQueries({ queryKey: ['dehub-feed'] });
+    applyAuthenticatedSession(authResponse, address, supabaseUserId, flow);
 
     toast.success(authResponse.result?.isNewAccount ? 'Welcome to DeHub!' : 'Welcome back!', { id: toastId });
-    authLogger.info('Login success', { method: flow.toLowerCase(), address, username: normalizedUser.username, isNewAccount: !!authResponse.result?.isNewAccount });
   };
 
   /**
