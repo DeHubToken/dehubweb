@@ -264,7 +264,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       await saveWallet(userId, derived.ethAddress, encrypted);
       await onComplete(derived.ethPrivateKey);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create wallet');
+      setError(err instanceof Error ? err.message : 'Could not secure your account');
     } finally {
       setBusy(false);
     }
@@ -298,10 +298,10 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
       if (err instanceof PasskeyUnsupportedError) {
         setBiometricAvailable(false);
         setProtection('password');
-        setError(`${err.message} Set a wallet password instead.`);
+        setError(`${err.message} Set a password instead.`);
         return;
       }
-      setError(err instanceof Error ? err.message : 'Failed to create wallet');
+      setError(err instanceof Error ? err.message : 'Could not secure your account');
     } finally {
       setBusy(false);
     }
@@ -446,16 +446,29 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
         </div>
       )}
 
-      <p className="text-white/60 text-sm">
-        {mode === 'migrate'
-          ? 'Had a DeHub account before? Sign in with your OLD login below to bring over your existing wallet, balance, and profile.'
-          : protection === 'biometric'
-            ? 'Your keys are encrypted in this browser before anything leaves the device — unlocked with your fingerprint or face, so there’s no password to remember. You can export your private key anytime from Settings as a backup.'
-            : "Your keys are encrypted in this browser before anything leaves the device. You can export your private key anytime from Settings as a backup."}
-      </p>
+      {/* Lead with what this protects, not with what it is. Someone who came
+          here to post has no reason to care that a wallet is being created, but
+          every reason to care that only they can use the account. The mechanics
+          stay available underneath for people who do want them. */}
+      {mode === 'migrate' ? (
+        <p className="text-white/60 text-sm">
+          Had a DeHub account before? Sign in with your OLD login below to bring over your existing wallet, balance, and profile.
+        </p>
+      ) : (
+        <div className="space-y-1.5">
+          <p className="text-white/60 text-sm">
+            To ensure only you can post or transact in the app using this account, set a password or biometrics.
+          </p>
+          <p className="text-white/40 text-xs">
+            {protection === 'biometric'
+              ? 'Encrypted on this device before anything leaves it, and unlocked with your fingerprint or face — nothing to remember. You can export a backup key anytime from Settings.'
+              : 'Encrypted on this device before anything leaves it. You can export a backup key anytime from Settings.'}
+          </p>
+        </div>
+      )}
 
       <div className="flex rounded-xl bg-white/5 p-1 gap-1">
-        {([['new', 'New wallet'], ['import', 'Import'], ['migrate', 'Migrate']] as const).map(([m, label]) => (
+        {([['new', 'New account'], ['import', 'Import'], ['migrate', 'Migrate']] as const).map(([m, label]) => (
           <button
             key={m}
             type="button"
@@ -646,7 +659,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
           <div className="space-y-1">
             <p className="text-white text-sm font-medium">Unlock with your fingerprint or face</p>
             <p className="text-white/50 text-xs leading-relaxed">
-              Your device holds the key that unlocks this wallet. Nothing to type now or later —
+              Your device holds the key that unlocks this account. Nothing to type now or later —
               and DeHub never sees it.
             </p>
           </div>
@@ -658,7 +671,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
           <div className="space-y-2">
             <Input
               type="password"
-              placeholder={`Wallet password (min ${MIN_PASSWORD_LENGTH} chars)`}
+              placeholder={`Password (min ${MIN_PASSWORD_LENGTH} chars)`}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className={inputClass}
@@ -688,7 +701,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
             : (
               <span className="flex items-center gap-2">
                 <Fingerprint className="w-4 h-4" />
-                {mode === 'new' ? 'Create wallet' : mode === 'migrate' ? 'Finish migration' : 'Import wallet'}
+                {mode === 'new' ? 'Secure account' : mode === 'migrate' ? 'Finish migration' : 'Import wallet'}
               </span>
             )}
         </Button>
@@ -706,7 +719,7 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
         >
           {busy
             ? <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Signing you in…</span>
-            : mode === 'new' ? 'Create wallet' : mode === 'migrate' ? 'Finish migration' : 'Import wallet'}
+            : mode === 'new' ? 'Secure account' : mode === 'migrate' ? 'Finish migration' : 'Import wallet'}
         </Button>
       )}
 
@@ -721,14 +734,14 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
           className="w-full text-center text-xs text-white/40 hover:text-white/70 transition-colors disabled:opacity-50 inline-flex items-center justify-center gap-1.5"
         >
           {protection === 'biometric'
-            ? <><KeyRound className="w-3.5 h-3.5" /> Use a wallet password instead</>
+            ? <><KeyRound className="w-3.5 h-3.5" /> Use a password instead</>
             : <><Fingerprint className="w-3.5 h-3.5" /> Use fingerprint or face instead</>}
         </button>
       )}
 
       {showPasswordFields && biometricAvailable === false && (
         <p className="text-white/40 text-xs text-center">
-          This device can’t unlock wallets with biometrics. You can add it later from Settings on a device that can.
+          This device can’t use biometrics. You can add them later from Settings on a device that can.
         </p>
       )}
     </div>
