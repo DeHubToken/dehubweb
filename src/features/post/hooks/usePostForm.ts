@@ -1499,6 +1499,17 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         // will have already triggered a logout with a toast. Just silently swallow this error
         // to avoid showing a second confusing toast on top of the logout one.
         console.warn('[Post] Wallet gone during post attempt — auth context handling logout');
+      } else if (isWalletGone) {
+        // Neither a smart wallet that needs unlocking nor a wagmi session that
+        // dropped, so there is genuinely nothing to sign with. Say that in
+        // words the user can act on: the raw provider error that used to land
+        // here reads as "you are logged out" to someone whose name and avatar
+        // are still on screen, which is how this turned into support tickets.
+        toast.error('Please sign in again to post', {
+          description: 'Your draft is still here.',
+          action: { label: 'Sign in', onClick: openLoginModal },
+          duration: 10000,
+        });
       } else if (error instanceof AuthenticationError) {
         // The session died while the user was composing. Recover it in place:
         // showing "Post failed: …" here is what forced people to sign out and
