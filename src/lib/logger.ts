@@ -62,6 +62,24 @@ function ensureFlushTimer() {
     }
 }
 
+/**
+ * client_error_logs has a user_address column and, until now, nothing ever
+ * filled it: every caller goes through createLogger below, which has no way to
+ * pass one. So a support question as ordinary as "why can this specific wallet
+ * not post" could only be answered by matching timestamps by eye and hoping.
+ *
+ * The signed-in wallet is already sitting in localStorage, so read it here
+ * rather than asking two dozen call sites to remember. An explicit
+ * user_address on the entry still wins.
+ */
+function signedInWallet(): string | undefined {
+    try {
+        return localStorage.getItem('dehub_wallet') || undefined;
+    } catch {
+        return undefined;
+    }
+}
+
 // ============================================================================
 // PUBLIC API
 // ============================================================================
@@ -78,7 +96,7 @@ export async function logToBackend(data: LogData) {
     if (data.level === 'info' || data.level === 'debug') return;
 
     // Queue for batched flush
-    LOG_QUEUE.push(data);
+    LOG_QUEUE.push({ ...data, user_address: data.user_address ?? signedInWallet() });
     ensureFlushTimer();
 }
 

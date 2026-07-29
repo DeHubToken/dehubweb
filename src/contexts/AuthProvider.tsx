@@ -39,6 +39,14 @@ import {
   type AuthResponse,
 } from '@/lib/api/dehub';
 import { disconnectDmSocket, reconnectDmSocket } from '@/lib/api/dehub/dm-socket';
+import {
+  readConnectionSource,
+  writeConnectionSource,
+  clearConnectionSource,
+  restoreConnectionSource,
+  isSmartWalletSession,
+  healConnectionSource,
+} from '@/lib/connection-source';
 import { clearEngagementCaches } from '@/lib/clear-engagement-caches';
 import { supabase } from '@/integrations/supabase/client';
 import {
@@ -207,7 +215,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [walletPhase, setWalletPhase] = useState<WalletPhase>('none');
   const [supabaseUserId, setSupabaseUserId] = useState<string | null>(null);
   const [connectionSource, setConnectionSource] = useState<'web3auth' | 'wagmi' | null>(
-    (localStorage.getItem('dehub_connection_source') as 'web3auth' | 'wagmi' | null) || null
+    readConnectionSource
   );
 
   // Clear cached engagement state whenever the active wallet changes.
@@ -326,7 +334,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     setSupabaseUserId(userId);
     setConnectionSource('web3auth');
-    localStorage.setItem('dehub_connection_source', 'web3auth');
+    writeConnectionSource('web3auth');
     try {
       const existing = await fetchWallet(userId);
 
@@ -363,6 +371,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         const token = getAuthToken();
         const savedWallet = localStorage.getItem('dehub_wallet');
+
+        // Repair a live session whose connection-source tag went missing — a
+        // failed connect attempt used to delete it outright, leaving people
+        // signed in but unable to sign anything. Doing it here, once, fixes
+        // every reader of the tag rather than each of them separately, and it
+        // recovers already-stranded browsers on their next page load without
+        // asking anyone to sign out and back in.
+        if (token && savedWallet) {
+          const healed = healConnectionSource();
+          if (healed) setConnectionSource(healed);
+        }
 
         if (token && savedWallet && !isTokenExpired()) {
           try {
@@ -516,7 +535,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // key session is gone). Fired by aa-utils when no signing provider exists.
   useEffect(() => {
     const handler = async () => {
-      if (localStorage.getItem('dehub_connection_source') !== 'web3auth') return;
+      // Matches the condition aa-utils used to decide to raise this event at
+      // all; if the two ever disagree the dialog silently never opens and the
+      // action just fails.
+      if (!isSmartWalletSession()) return;
       const { data } = await supabase.auth.getSession();
       const uid = data?.session?.user?.id;
       if (!uid) {
@@ -642,7 +664,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         // CASE B: Already authed with DIFFERENT address
         if (walletAddress && walletAddress.toLowerCase() !== wagmiAddress.toLowerCase()) {
-            const savedSrc = localStorage.getItem('dehub_connection_source');
+            const savedSrc = readConnectionSource();
             // Smart-wallet sessions: SA address always differs from any external
             // wallet. Silently disconnect Wagmi — don't wipe the session.
             if (connectionSource === 'web3auth' || savedSrc === 'web3auth') {
@@ -658,7 +680,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
 
         // CASE C: Not authed -> Only start auth on explicit intent or returning wagmi user
-        const savedSource = localStorage.getItem('dehub_connection_source');
+        const savedSource = readConnectionSource();
         const hasUserIntent = wagmiAuthIntentRef.current;
         const hasToken = !!getAuthToken() && !isTokenExpired();
         const isReturningWagmiUser = savedSource === 'wagmi' && hasToken;
@@ -671,15 +693,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         try {
           setIsConnecting(true);
           setConnectionSource('wagmi');
-          localStorage.setItem('dehub_connection_source', 'wagmi');
+          writeConnectionSource('wagmi');
           await completeDeHubAuthWagmi(wagmiAddress);
           setWagmiAuthIntent(false);
           closeLoginModal();
         } catch (err) {
           console.error('[Auth] Wagmi auth failed:', err);
           setWagmiAuthIntent(false);
-          setConnectionSource(null);
-          localStorage.removeItem('dehub_connection_source');
+          setConnectionSource(savedSource);
+          restoreConnectionSource(savedSource);
         } finally {
           wagmiAuthInProgressRef.current = false;
           setIsConnecting(false);
@@ -839,7 +861,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const normalizedUser = normalizeUser(authResponse.user, address);
     localStorage.setItem('dehub_wallet', address);
     localStorage.setItem('dehub_user', JSON.stringify(normalizedUser));
-    localStorage.setItem('dehub_connection_source', 'web3auth');
+    writeConnectionSource('web3auth');
     // Tag this DeHub session with the Supabase identity that produced it, so
     // a LATER sign-in as a DIFFERENT Supabase user (e.g. via the cross-device
     // magic-link sync) can tell "still me, just refreshing" apart from
@@ -1070,9 +1092,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
+    // What the browser was tagged as before this attempt. Restored if the
+    // attempt fails: someone already signed in who tries a second login method
+    // and gives up must not lose the session they still have.
+    const previousSource = readConnectionSource();
+
     setIsConnecting(true);
     setConnectionSource('web3auth');
-    localStorage.setItem('dehub_connection_source', 'web3auth');
+    writeConnectionSource('web3auth');
     localStorage.setItem(SUPA_LOGIN_PENDING_KEY, '1');
 
     try {
@@ -1094,8 +1121,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error(`${provider} login error:`, error);
       toast.error(`Failed to connect with ${provider}. Please try again.`);
       localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
-      setConnectionSource(null);
-      localStorage.removeItem('dehub_connection_source');
+      setConnectionSource(previousSource);
+      restoreConnectionSource(previousSource);
       setIsConnecting(false);
     }
   };
@@ -1105,9 +1132,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * The login modal then shows the code-entry step and calls verifyEmailOtp.
    */
   const connectWithEmail = async (email: string) => {
+    const previousSource = readConnectionSource();
+
     setIsConnecting(true);
     setConnectionSource('web3auth');
-    localStorage.setItem('dehub_connection_source', 'web3auth');
+    writeConnectionSource('web3auth');
     localStorage.setItem(SUPA_LOGIN_PENDING_KEY, '1');
 
     // Generate a per-request nonce for cross-device sync. The initiating
@@ -1180,8 +1209,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Email login error:', error);
       toast.error(error?.message || 'Failed to send magic link. Please try again.');
       localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
-      setConnectionSource(null);
-      localStorage.removeItem('dehub_connection_source');
+      setConnectionSource(previousSource);
+      restoreConnectionSource(previousSource);
       if (emailSyncCleanupRef.current) {
         try { emailSyncCleanupRef.current(); } catch { /* ignore */ }
         emailSyncCleanupRef.current = null;
@@ -1233,9 +1262,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
    * must be configured in the Supabase dashboard — Twilio/MessageBird/etc).
    */
   const connectWithSMS = async (phone: string) => {
+    const previousSource = readConnectionSource();
+
     setIsConnecting(true);
     setConnectionSource('web3auth');
-    localStorage.setItem('dehub_connection_source', 'web3auth');
+    writeConnectionSource('web3auth');
     localStorage.setItem(SUPA_LOGIN_PENDING_KEY, '1');
 
     try {
@@ -1254,8 +1285,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Phone login error:', error);
       toast.error(error?.message || 'Failed to send verification code. Please try again.');
       localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
-      setConnectionSource(null);
-      localStorage.removeItem('dehub_connection_source');
+      setConnectionSource(previousSource);
+      restoreConnectionSource(previousSource);
       throw error;
     } finally {
       setIsConnecting(false);
@@ -1290,9 +1321,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // External wallet connect (wagmi) — unchanged.
   const connectWithWallet = async (wallet: WalletProvider): Promise<boolean> => {
+    // Tagged optimistically, before the connector has agreed to anything. This
+    // is the path that stranded people: a signed-in smart-wallet user who
+    // opened the modal, tapped MetaMask and dismissed its prompt had their
+    // 'web3auth' tag overwritten here and then deleted in the catch below,
+    // which left them signed in but unable to post, tip or stream.
+    const previousSource = readConnectionSource();
+
     setIsConnecting(true);
     setWagmiAuthIntent(true);
-    localStorage.setItem('dehub_connection_source', 'wagmi');
+    writeConnectionSource('wagmi');
 
     try {
       const walletMap: Record<string, string[]> = {
@@ -1335,7 +1373,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('[Auth] Wallet connection failed:', err);
       setIsConnecting(false);
       setWagmiAuthIntent(false);
-      localStorage.removeItem('dehub_connection_source');
+      restoreConnectionSource(previousSource);
 
       const fullError = (err.message || '').toLowerCase() + ' ' + (err.cause?.message || '').toLowerCase();
       if (fullError.includes('rejected') || fullError.includes('denied')) {
@@ -1356,7 +1394,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     clearAuthSession();
     localStorage.removeItem('dehub_user');
     localStorage.removeItem('dehub_wallet');
-    localStorage.removeItem('dehub_connection_source');
+    clearConnectionSource();
     localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
     clearEngagementCaches();
 
@@ -1447,12 +1485,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     // ── Step 2: wallet re-sign ──
     const walletBefore = walletAddress || localStorage.getItem('dehub_wallet');
-    const savedSource = localStorage.getItem('dehub_connection_source');
+    const savedSource = readConnectionSource();
 
     if ((connectionSource === 'wagmi' || savedSource === 'wagmi') && isWagmiConnected && wagmiAddress) {
       try {
         setConnectionSource('wagmi');
-        localStorage.setItem('dehub_connection_source', 'wagmi');
+        writeConnectionSource('wagmi');
         await completeDeHubAuthWagmi(wagmiAddress);
         const walletAfter = localStorage.getItem('dehub_wallet');
         if (walletBefore && walletAfter && walletBefore.toLowerCase() !== walletAfter.toLowerCase()) {
