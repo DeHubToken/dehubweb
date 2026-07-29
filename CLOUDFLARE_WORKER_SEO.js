@@ -24,6 +24,35 @@ const DEHUB_LOGO = 'https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/p
 const APP_URL = 'https://dehub.io';
 const BLOG_SHARE_IMAGE_BASE = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/blog-share-image';
 
+// Per-route share cards, built by scripts/generate-og-cards.mjs into public/og/
+// and served by the ASSETS binding — so a card ships with the same deploy as
+// the worker that names it.
+//
+// They replace https://dehub.io/__l5e/assets-v1/<uuid>/<name>.png, the asset
+// host the Lovable build wrote into the Supabase fn. That URL space is not in
+// dist/ after the July 2026 Cloudflare migration, and since every /_-prefixed
+// path goes to the ASSETS binding (which has SPA fallback), all of those URLs
+// answered 200 text/html with the app shell: 14 routes promised crawlers a PNG
+// and served an HTML document, so their cards rendered with no image at all.
+// Routes the fn has no image for got the square-ish brand logo instead, which
+// made a dozen product pages share as the same picture.
+//
+// The deployed fn still emits both, so the card is forced on over whatever it
+// returns rather than waiting on a Supabase redeploy.
+const ogCardUrl = (name) => `${APP_URL}/og/${name}.png`;
+const OG_CARD_ROUTES = new Set([
+  'features', 'pricing', 'creator', 'editor', 'prompt', 'work', 'affiliate',
+  'premium', 'governance', 'leaderboard', 'top-100', 'music', 'radio', 'tv',
+  'glossary', 'bridge', 'agents', 'assistant', 'creators', 'jobs',
+  'explore', 'videos', 'shorts',
+  'guides/best-decentralized-social-media',
+]);
+/** Card URL for a canonical path ('/work', '/guides/x'), or null. */
+function ogCardForPath(canonicalPath) {
+  const key = canonicalPath.replace(/^\/+|\/+$/g, '').toLowerCase();
+  return OG_CARD_ROUTES.has(key) ? ogCardUrl(key.replace(/\//g, '-')) : null;
+}
+
 // One canonical brand identity. Keep in sync with the Organization JSON-LD in
 // index.html and src/pages/Index.tsx. The deployed Supabase fn still emits a
 // dead sameAs (@DeHubApp does not exist), so the homepage handler below
@@ -461,15 +490,23 @@ function primaryNavHtml(currentPath = '') {
   return `<nav aria-label="DeHub sections"><h2 style="font-size:16px">Explore DeHub</h2><ul style="list-style:none;padding:0;margin:0">${items}</ul></nav>`;
 }
 
-// Feed section pages (/explore, /videos, /shorts). These are real SPA routes
-// that open the corresponding feed; bots get a self-contained page built here.
-// Like /guides and /docs, they're rendered entirely at the edge — the deployed
-// Supabase fn's STATIC_ROUTES allowlist doesn't know them, so proxying would
-// yield its generic homepage fallback (a soft-duplicate).
+// Pages rendered entirely at the edge: the feed sections (/explore, /videos,
+// /shorts) and the product pages the deployed Supabase fn's STATIC_ROUTES
+// allowlist predates (/pricing, /creator). All are real SPA routes; bots get a
+// self-contained page built here, the same way /guides and /docs are handled.
+//
+// For the feed sections, proxying would return the fn's generic homepage
+// fallback (a soft-duplicate). For /pricing and /creator it was worse: neither
+// is in SYSTEM_ROUTES, so the fn classified them as *usernames*, found no such
+// profile and answered 404 "Not Found — DeHub" — while browsers got the real
+// React page at 200. Two live marketing pages were served as dead to every
+// crawler, and the bot/browser split is exactly the divergence that gets a
+// domain treated as cloaking.
 const SECTION_PAGES = {
   explore: {
     title: 'Explore DeHub — Trending Creators, Videos & Communities',
     heading: 'Explore DeHub',
+    image: ogCardUrl('explore'),
     description: 'Discover what’s trending on DeHub: top creators, videos, music, live streams and communities on the open-source, user-owned social platform.',
     intro: 'Find trending creators, videos, shorts, music and communities across DeHub — the open source, user-owned social platform where every post is minted on-chain and creators earn natively.',
     bodyHtml: `<ul>
@@ -482,6 +519,7 @@ const SECTION_PAGES = {
   videos: {
     title: 'Video Feed — Watch On-Chain Videos on DeHub',
     heading: 'DeHub Video Feed',
+    image: ogCardUrl('videos'),
     description: 'Watch the latest on-chain videos from creators on DeHub: long-form uploads with pay-per-view, token-gated content and ad-revenue sharing on the user-owned video platform.',
     intro: 'Watch the newest videos from DeHub creators — long-form uploads minted on-chain, with pay-per-view, token-gated posts and ad-revenue sharing built in. No platform owns your reach; you do.',
     bodyHtml: `<p>DeHub’s video feed is chronological and creator-owned. Sign in with email or a social account, get a sponsored-gas wallet automatically, and start watching or uploading in minutes.</p>`,
@@ -489,9 +527,41 @@ const SECTION_PAGES = {
   shorts: {
     title: 'Shorts — Short-Form Videos on DeHub',
     heading: 'DeHub Shorts',
+    image: ogCardUrl('shorts'),
     description: 'Scroll the latest short-form videos on DeHub: a vertical, swipeable shorts feed on the open-source, user-owned social platform where creators own their content.',
     intro: 'Scroll a vertical feed of short-form videos from DeHub creators — quick, swipeable clips on the user-owned social platform. Every short is minted on-chain, so creators keep ownership and earn natively.',
     bodyHtml: `<p>Shorts sit alongside the full <a href="${APP_URL}/videos" style="color:#9f9">video feed</a> and <a href="${APP_URL}/music" style="color:#9f9">music</a> on DeHub — one open, censorship-resistant home for every format.</p>`,
+  },
+  // Copy mirrors the pricing/creator entries in supabase/functions/ssr-seo so
+  // the two agree if that fn is ever redeployed with an updated allowlist.
+  pricing: {
+    title: 'Pricing — DeHub Creator Studio',
+    heading: 'DeHub Creator Studio Pricing',
+    jsonLdType: 'WebPage',
+    image: ogCardUrl('pricing'),
+    description: 'DeHub Creator Studio pricing in GBP. Ultra, Team and Scale plans with monthly credits for AI image, video, music and poster generation.',
+    intro: 'DeHub Creator Studio is billed monthly in GBP. Each plan includes a pool of credits spendable on any AI tool — image, video, song, voice or poster generation — plus higher upload limits and priority queueing.',
+    bodyHtml: `<ul>
+<li><strong>Ultra</strong> — for solo creators who post daily. AI image generation, short-form video, songs and voiceovers.</li>
+<li><strong>Team</strong> — a shared workspace for small studios, with multi-seat access, brand kit sharing and higher video resolution.</li>
+<li><strong>Scale</strong> — the highest credit pool, long-form video, custom AI agents and priority support.</li>
+</ul>
+<p>Credits are consumed per generation: image and voice cost the least, long video renders the most. Unused credits roll over for one month. Every plan includes unlimited posting to the DeHub feed and unlimited use of the <a href="${APP_URL}/editor" style="color:#9f9">video editor</a>.</p>`,
+  },
+  creator: {
+    title: 'DeHub Creator Studio — AI Image, Video & Music',
+    heading: 'DeHub Creator Studio',
+    jsonLdType: 'WebPage',
+    image: ogCardUrl('creator'),
+    description: 'Generate images, videos, songs and branded posters with the DeHub Creator Studio. One workspace for every AI tool a modern creator needs.',
+    intro: 'The DeHub Creator Studio bundles image, video, music, voice and poster generation behind a single credit balance. Pick a model, describe what you want, and publish the result straight to the decentralized feed.',
+    bodyHtml: `<ul>
+<li>Image generation with FLUX, Ideogram, Recraft and Nano Banana.</li>
+<li>Video generation with Kling, Luma, Runway, Pika, Minimax and ByteDance.</li>
+<li>Song generation with Suno, plus voice cloning and text-to-speech with ElevenLabs.</li>
+<li>Branded poster templates built on the DeHub design system.</li>
+</ul>
+<p>Every generation is saved to your workspace, ready to remix, cut in the <a href="${APP_URL}/editor" style="color:#9f9">video editor</a> or publish as an on-chain post. See <a href="${APP_URL}/pricing" style="color:#9f9">plans and credits</a>.</p>`,
   },
 };
 
@@ -499,13 +569,16 @@ function buildSectionHtml(key, meta) {
   const canonicalUrl = `${APP_URL}/${key}`;
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'CollectionPage',
+    // Feed sections are CollectionPage; the product pages rendered through
+    // here (pricing, creator) are ordinary WebPages and say so.
+    '@type': meta.jsonLdType || 'CollectionPage',
     name: meta.title,
     description: meta.description,
     url: canonicalUrl,
     isPartOf: { '@type': 'WebSite', name: 'DeHub', url: APP_URL },
     publisher: ORG_JSONLD,
   };
+  const shareImage = meta.image || DEHUB_LOGO;
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -518,9 +591,13 @@ function buildSectionHtml(key, meta) {
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escHtml(meta.title)}">
 <meta property="og:description" content="${escHtml(meta.description)}">
-<meta property="og:image" content="${DEHUB_LOGO}">
+<meta property="og:image" content="${shareImage}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="${escHtml(meta.title)}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@dehub_official">
+<meta name="twitter:image" content="${shareImage}">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 </head>
 <body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
@@ -536,6 +613,7 @@ ${primaryNavHtml(`/${key}`)}
 
 function buildGuidePageHtml(slug, meta) {
   const canonicalUrl = `${APP_URL}/guides/${slug}`;
+  const shareImage = ogCardForPath(`/guides/${slug}`) || DEHUB_LOGO;
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -548,9 +626,13 @@ function buildGuidePageHtml(slug, meta) {
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escHtml(meta.title)}">
 <meta property="og:description" content="${escHtml(meta.description)}">
-<meta property="og:image" content="${DEHUB_LOGO}">
+<meta property="og:image" content="${shareImage}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="${escHtml(meta.title)}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@dehub_official">
+<meta name="twitter:image" content="${shareImage}">
 <script type="application/ld+json">${JSON.stringify({
   '@context': 'https://schema.org', '@type': 'Article',
   headline: meta.title, description: meta.description,
@@ -610,7 +692,10 @@ function buildFallbackHtml(pathname, canonicalUrl) {
 const SYSTEM_ROUTES = [
   'app', 'post', 'explore', 'notifications', 'messages', 'settings',
   'delete-account', 'creators', 'jobs', 'features', 'skill.md',
-  '_netlify', 'favicon.ico', 'assets', 'og-image.png',
+  '_netlify', 'favicon.ico', 'assets', 'og-image.png', 'og',
+  // Absent from this list, /pricing and /creator were classified as usernames
+  // and 404'd for every crawler while browsers saw the real page.
+  'pricing', 'creator',
   'radio', 'tv', 'governance', 'stake', 'leaderboard', 'music',
   'shorts', 'videos',
   'top-100', 'glossary', 'bridge', 'agents', 'assistant', 'buy',
@@ -1069,6 +1154,21 @@ async function handleRequest(request, env) {
       .replaceAll('content="@DeHubApp"', 'content="@dehub_official"')
       .replaceAll('x.com/DeHubApp', 'x.com/dehub_official')
       .replaceAll('twitter.com/DeHubApp', 'twitter.com/dehub_official');
+
+    // Force the route's own share card over whatever the deployed fn emitted —
+    // either a retired __l5e URL (now answering 200 text/html, so the card had
+    // no image at all) or the generic brand logo shared by a dozen pages.
+    // Anchoring the closing quote inside the property match is what keeps
+    // "og:image" from also matching og:image:width / :height / :alt.
+    const routeCard = ogCardForPath(canonicalizePath(pathname));
+    if (routeCard) {
+      html = html.replace(
+        /(<meta\s+(?:property|name)="(?:og:image|og:image:secure_url|twitter:image)"\s+content=")[^"]*(")/gi,
+        `$1${routeCard}$2`
+      );
+      // The cards are PNG; the fn hardcodes the logo's image/jpeg.
+      html = html.replace(/(<meta\s+property="og:image:type"\s+content=")[^"]*(")/i, '$1image/png$2');
+    }
 
     // Nonexistent entities must be real 404s. The deployed Supabase fn
     // answers 200 with a recognizable generic page for missing posts /
