@@ -22,6 +22,13 @@
 /dehub-header-logo.png
   Cache-Control: public, max-age=31536000, immutable
 
+# Per-route share cards (scripts/generate-og-cards.mjs). Filenames are stable
+# across regeneration, so no `immutable` here — a year-long pin would strand
+# crawlers on a stale card after a copy change. A week is long enough that
+# repeat scrapes are cheap and short enough that an edit lands on its own.
+/og/*
+  Cache-Control: public, max-age=604800
+
 # The War theme's game runs in a sandboxed iframe WITHOUT allow-same-origin, so
 # the frame has an opaque origin. Its entry is a `<script type="module">`, and
 # module scripts are always fetched in CORS mode, so the request goes out with
