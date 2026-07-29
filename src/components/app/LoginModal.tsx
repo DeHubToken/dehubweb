@@ -578,7 +578,11 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     : step === 'email-waiting' ? t('loginModal.checkYourEmail', 'Check your email')
     : step === 'phone' ? t('loginModal.continuePhone', 'Continue with phone')
     : step === 'phone-code' ? t('loginModal.enterCode', 'Enter verification code')
-    : step === 'wallet-create' ? t('loginModal.createWallet', 'Create your wallet')
+    // "Secure account", not "Create your wallet": this step is most people's
+    // first encounter with the wallet, and leading with crypto vocabulary puts
+    // off users who came for the app. What the step actually does — make the
+    // account only usable by them — is also the more accurate description.
+    : step === 'wallet-create' ? t('loginModal.secureAccount', 'Secure account')
     : step === 'wallet-unlock' ? t('loginModal.unlockWallet', 'Unlock your wallet')
     : t('loginModal.connectWallet');
 
