@@ -228,9 +228,25 @@ commit. Real secrets live in the Supabase/Cloudflare environment, never in the r
 
 The app builds with `npm run build` and deploys `dist/` as Cloudflare Worker static
 assets (see `wrangler.jsonc`; Workers Builds deploys on push to main). The worker handles
-the SPA fallback, crawler metadata, and alias-host 301s; `public/_headers` carries cache
-and security headers. Supabase edge functions and database migrations live under
-`supabase/` and are deployed to the Supabase project separately from the frontend.
+the SPA fallback, crawler metadata, alias-host 301s, and the `/api/stats` endpoint behind
+the live-stats page; `public/_headers` carries cache and security headers. Supabase edge
+functions and database migrations live under `supabase/` and are deployed to the Supabase
+project separately from the frontend.
+
+### Worker secret — live stats
+
+`/stats` reads real visitor numbers from Cloudflare's GraphQL Analytics API, which needs
+one API token on the worker:
+
+```
+wrangler secret put CF_ANALYTICS_TOKEN
+```
+
+Create the token in the Cloudflare dashboard with **Zone → Analytics → Read** on
+`dehub.io` (nothing else — it is only ever used for read-only aggregate queries). The
+zone tag is not a secret and is compiled in; override it with a `CF_ZONE_TAG` var if the
+zone ever changes. Until the token is set, `/api/stats` answers `501 {"ok":false,
+"reason":"unconfigured"}` and the page says so rather than displaying invented numbers.
 
 The rest of the platform deploys outside this repo: the core API ships as a container to
 **Akash Network**, media lands in **Cloudflare R2** (fronted by the CDN, replicated to the
