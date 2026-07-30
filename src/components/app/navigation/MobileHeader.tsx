@@ -1,5 +1,6 @@
-import { useLocation, useNavigate, useNavigationType } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
+import { useHistoryNavType } from '@/hooks/use-history-nav-type';
 import { Menu, Bell, ArrowLeft } from 'lucide-react';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
@@ -47,7 +48,10 @@ interface MobileHeaderProps {
 export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) {
   const location = useLocation();
   const navigate = useNavigate();
-  const navType = useNavigationType();
+  // NOT useNavigationType() — see use-history-nav-type: react-router reports
+  // POP for everything under App.tsx's `<Routes location>`, which would make the
+  // back button always jump to /app instead of stepping back through history.
+  const navType = useHistoryNavType();
   const { isAuthenticated, user, openLoginModal } = useAuth();
   
   // Drop below every overlay scrim (dialog/sheet z-50, drawer z-100) while a

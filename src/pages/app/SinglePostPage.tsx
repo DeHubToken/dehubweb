@@ -11,8 +11,10 @@
  * @module pages/app/SinglePostPage
  */
 
-import { useParams, useNavigationType, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { getVoteCache } from '@/lib/vote-cache';
+import { scrollDocumentTo } from '@/lib/document-scroll';
+import { cn } from '@/lib/utils';
 import { SEOHead } from '@/components/SEOHead';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLayoutEffect, useEffect, useState, useRef, useCallback } from 'react';
@@ -580,15 +582,24 @@ function DesktopCreatorInfo({
   );
 }
 
-export default function SinglePostPage() {
+interface SinglePostPageProps {
+  /**
+   * True when AppLayout renders this inside the from-feed post overlay. That
+   * layer is its own scroll container, so the page must not touch the document
+   * scroll — doing so would move the home feed mounted underneath and throw
+   * away the position the user comes back to.
+   */
+  inOverlay?: boolean;
+}
+
+export default function SinglePostPage({ inOverlay = false }: SinglePostPageProps = {}) {
   const { postId, tokenId } = useParams<{ postId?: string; tokenId?: string }>();
   const navigate = useNavigate();
   const { t } = useI18n();
   const id = postId || tokenId;
-  const navigationType = useNavigationType();
   const location = useLocation();
   
-  // Detect if opened from feed (overlay mode) — drawer should appear instantly
+  // Detect if opened from feed (overlay mode)
   const isFromFeed = !!(location.state as any)?.fromFeed;
   
   // Hide back button when there's no navigation history (direct URL access)
@@ -604,73 +615,49 @@ export default function SinglePostPage() {
   const { walletAddress } = useAuth();
   const queryClient = useQueryClient();
   
-  // Ref for mobile scroll container (needed for IntersectionObserver + the
-  // swallow clip). The drawer's scroller mounts inside a Vaul portal a tick
-  // after `drawerOpen` flips, so a plain ref would still be null when the clip
-  // effect first runs. A callback ref bumps `scrollerReady` the moment the node
-  // attaches, and that value is a dep of useFeedSwallowClip below so the clip
-  // re-attaches to the live element.
-  const mobileScrollContainerRef = useRef<HTMLDivElement>(null);
-  const [scrollerReady, setScrollerReady] = useState(0);
-  const setScrollerRef = useCallback((node: HTMLDivElement | null) => {
-    mobileScrollContainerRef.current = node;
-    if (node) setScrollerReady((n) => n + 1);
-  }, []);
-
-  // Mobile detection for drawer behavior
+  // Mobile/tablet vs desktop layout. The post used to open in a vaul bottom
+  // sheet on mobile; it is now the same page it is on desktop, so this only
+  // picks between the two layouts (immersive media on mobile, creator bar +
+  // card chrome on desktop) and — unlike the old branch, which rendered the
+  // desktop tree too and merely hid it with `lg:` classes — renders one, not
+  // both. That alone stops mobile mounting a second copy of every video.
   const [isMobileView, setIsMobileView] = useState(() =>
     typeof window !== 'undefined' && window.innerWidth < 1024
   );
   useEffect(() => {
     const onResize = () => setIsMobileView(window.innerWidth < 1024);
-    window.addEventListener('resize', onResize);
+    window.addEventListener('resize', onResize, { passive: true });
     return () => window.removeEventListener('resize', onResize);
   }, []);
 
-  // When from feed, start open immediately (no animation delay).
-  // When direct link, start closed and animate open via rAF.
-  const [drawerOpen, setDrawerOpen] = useState(isFromFeed);
-
-  useEffect(() => {
-    if (!isFromFeed) {
-      const raf = requestAnimationFrame(() => setDrawerOpen(true));
-      return () => cancelAnimationFrame(raf);
-    }
-  }, [isFromFeed]);
+  // Scrolling content root. Used for the swallow clip on the standalone route,
+  // where the page itself scrolls; in overlay mode AppLayout's fixed layer is
+  // the scroller and clips itself.
+  const postRootRef = useRef<HTMLDivElement>(null);
 
   const goBack = useCallback(() => {
     if (hasHistory) navigate(-1);
     else navigate('/app');
   }, [hasHistory, navigate]);
 
-  // vaul calls this when the dismiss gesture crosses the threshold.
-  // Navigate immediately — the component unmounts and the feed re-appears,
-  // which avoids the black-screen gap that a delayed navigate would cause.
-  const handleDrawerDismiss = (open: boolean) => {
-    if (!open) goBack();
-  };
-
-  // Back button: navigate directly instead of setDrawerOpen(false).
-  // Setting open=false hides the portal content immediately → empty page → black screen.
-  // Direct navigation lets React Router mount the feed before this component unmounts.
-  const handleMobileBack = () => goBack();
-
-  // Only scroll to top when PUSHING to the post page (not on back navigation)
-  // useLayoutEffect runs before paint to prevent flash at wrong position
+  // Open every post at its top.
+  //
+  // In overlay mode AppLayout's fixed layer is the scroller and resets itself,
+  // so there is nothing to do here — and touching the page scroll would drag
+  // the home feed underneath to the top and lose the user's place in it.
+  //
+  // On the standalone route the page itself scrolls, so reset it before paint.
+  // This used to be gated on `useNavigationType() === 'PUSH'`, which never
+  // matched: App.tsx renders `<Routes location={loc}>`, and react-router pins
+  // navigationType to POP for every consumer below an explicit location. The
+  // effect simply never ran, which is why a post opened at whatever offset the
+  // feed was scrolled to. Nothing here needs the navigation type: a fresh post
+  // id always starts at the top, and browser back/forward on a standalone post
+  // is a full page view whose own scroll the browser restores.
   useLayoutEffect(() => {
-    if (navigationType === 'PUSH') {
-      // Multi-target scroll for maximum cross-browser compatibility
-      const scrollToTop = () => {
-        window.scrollTo(0, 0);
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
-      };
-      
-      scrollToTop();
-      // Extra RAF attempt to override browser restoration
-      requestAnimationFrame(scrollToTop);
-    }
-  }, [id, navigationType]);
+    if (inOverlay) return;
+    scrollDocumentTo(0);
+  }, [id, inOverlay]);
 
   const { data: post, isLoading } = useQuery({
     queryKey: ['single-post', id],
@@ -784,12 +771,10 @@ export default function SinglePostPage() {
   const isTextPost = contentType === 'post' || contentType === null;
 
   // Swallow the post content at the sticky nav pill's top edge under the glass
-  // themes, exactly like the home feed. On mobile the post opens in a Vaul
-  // drawer whose own `overflow-y-auto` div is the scroll surface (not the body),
-  // so the clip is wired to that container — it re-attaches when the drawer
-  // opens and when the content type resolves (which swaps the scroll element).
-  // No-op on opaque-nav themes and when no pill is visible.
-  useFeedSwallowClip(mobileScrollContainerRef, '[data-feed-nav]', [scrollerReady, drawerOpen, isMobileView, contentType]);
+  // themes, exactly like the home feed. Only for the standalone route: in
+  // overlay mode the scroll surface is AppLayout's fixed layer, which runs its
+  // own clip. No-op on opaque-nav themes and when no pill is visible.
+  useFeedSwallowClip(postRootRef, '[data-feed-nav]', [inOverlay, isMobileView, contentType]);
 
   // Hide mobile header for video posts by adding a class to the body
   useEffect(() => {
@@ -801,27 +786,23 @@ export default function SinglePostPage() {
     };
   }, [isVideoPost]);
 
-  // Vaul drawer (used on mobile for post overlay) sets `body { pointer-events: none }`
-  // even when modal={false}, which blocks taps on the fixed MobileHeader / back button
-  // on some mobile browsers. Force body pointer-events auto while this page is mounted
-  // and keep it in sync via a MutationObserver in case Vaul re-applies it.
-  useEffect(() => {
-    const body = document.body;
-    const restore = body.style.pointerEvents;
-    const enforce = () => {
-      if (body.style.pointerEvents === 'none') {
-        body.style.pointerEvents = 'auto';
-      }
-    };
-    enforce();
-    const mo = new MutationObserver(enforce);
-    mo.observe(body, { attributes: true, attributeFilter: ['style'] });
-    return () => {
-      mo.disconnect();
-      body.style.pointerEvents = restore;
-    };
-  }, []);
-  
+  // (The `body { pointer-events: none }` guard that used to live here is gone
+  // with the sheet: vaul set it even at modal={false}, which blocked taps on the
+  // fixed mobile header, and undoing it needed a MutationObserver on the body
+  // for as long as the post was open. The post is a plain page now, so there is
+  // nothing to fight.)
+
+  // Clearance for the chrome floating above the post, and for the mobile bottom
+  // nav floating below it. In overlay mode the layer spans the whole viewport, so
+  // the post has to clear the mobile header (h-11) plus the home feed's nav pill
+  // — 5.5rem, the same resting offset the old bottom sheet had — and on desktop
+  // just the pill. On the standalone route that chrome is in normal flow above
+  // the content and needs none. Padding rather than an outer offset, so the post
+  // scrolls up *under* the pill and gets swallowed at its edge like the feed.
+  const chromeClearance = inOverlay
+    ? 'pt-[5.5rem] pb-24 lg:pt-14 lg:pb-8'
+    : 'pt-3 pb-8 lg:pt-0';
+
   // Determine content type and render appropriate card
   const renderContent = () => {
     // Only show loading if we have no data at all (not even cached)
@@ -884,52 +865,42 @@ export default function SinglePostPage() {
             publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },
           }}
         />
-        {/* Mobile/Tablet: Drawer opens just below the top nav bar (h-11 = 2.75rem) */}
-        {isMobileView && (
-          <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} modal={false} dismissible>
-            <DrawerContent
-              data-post-drawer
-              hideHandle
-              noOverlay
-              className="!h-[calc(100dvh-2.75rem)] !max-h-[calc(100dvh-2.75rem)] !mt-11 !rounded-t-none !border-0 !shadow-none bg-black top-11"
-            >
-              <div
-                ref={setScrollerRef}
-                className="flex flex-col h-full bg-black overflow-y-auto"
-                style={{ overscrollBehavior: 'contain', WebkitOverflowScrolling: 'touch' as any }}
-              >
-                <div className="relative">
+        {/* Mobile/tablet: a plain page, immersive media first, back button in the
+            top nav pill. This used to be a vaul bottom sheet, which brought a
+            portal, a transform animation, a body pointer-events fight and a
+            second scroll container that everything else had to be re-wired to. */}
+        {isMobileView ? (
+          <div ref={inOverlay ? undefined : postRootRef} className={cn('flex flex-col bg-black', chromeClearance)}>
+            <div className="relative">
+              {renderContent()}
+            </div>
+            {showRelated && id && <RelatedVideosFeed currentVideoId={id} />}
+          </div>
+        ) : (
+          /* Desktop: flush layout — top nav bar handles chrome, no floating back-button bento */
+          <div ref={inOverlay ? undefined : postRootRef} className="flex flex-col">
+            <div className={cn('px-2 sm:px-3', chromeClearance)}>
+              <div className="w-full">
+                {/* Creator info for desktop */}
+                <DesktopCreatorInfo
+                  channel={videoData.channel}
+                  channelAvatar={videoData.channelAvatar}
+                  creatorUsername={videoData.creatorUsername}
+                  creatorId={videoData.creatorId}
+                  verified={videoData.verified}
+                  onAIClick={() => setShowDesktopAIChat(true)}
+                  onMenuClick={() => setShowDesktopOptionsDrawer(true)}
+                />
+                <div data-feed-item className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3">
                   {renderContent()}
+                  {id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
                 </div>
-                {showRelated && id && <RelatedVideosFeed currentVideoId={id} scrollContainerRef={mobileScrollContainerRef} />}
+                {/* Related Videos Feed */}
+                {showRelated && id && <RelatedVideosFeed currentVideoId={id} />}
               </div>
-            </DrawerContent>
-          </Drawer>
-        )}
-        
-        {/* Desktop: flush layout — top nav bar handles chrome, no floating back-button bento */}
-        <div className="hidden lg:flex lg:flex-col">
-          <div className={`px-2 sm:px-3 pt-3 ${isFromFeed ? 'lg:pt-14' : 'lg:pt-0'} pb-8`}>
-            <div className="w-full">
-              {/* Creator info for desktop */}
-              <DesktopCreatorInfo
-                channel={videoData.channel}
-                channelAvatar={videoData.channelAvatar}
-                creatorUsername={videoData.creatorUsername}
-                creatorId={videoData.creatorId}
-                verified={videoData.verified}
-                onAIClick={() => setShowDesktopAIChat(true)}
-                onMenuClick={() => setShowDesktopOptionsDrawer(true)}
-              />
-              <div data-feed-item className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3">
-                {renderContent()}
-                {id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
-              </div>
-              {/* Related Videos Feed */}
-              {showRelated && id && <RelatedVideosFeed currentVideoId={id} />}
             </div>
           </div>
-        </div>
+        )}
 
         {/* Desktop AI Chat */}
         <PostAIChat
@@ -1052,10 +1023,10 @@ export default function SinglePostPage() {
   // Standard layout for other content types
   const isLivePost = contentType === 'live';
 
-  const renderPostContent = (onBack?: () => void, hideHeader = false) => (
+  const renderPostContent = () => (
     <>
       {/* Header removed — top nav bar provides chrome; no floating back-button bento on any breakpoint */}
-      <div className={`px-2 sm:px-3 pt-3 ${isFromFeed ? 'lg:pt-14' : 'lg:pt-0'} pb-8`}>
+      <div className={cn('px-2 sm:px-3', chromeClearance)}>
         <div className="w-full">
           <div data-feed-item className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3">
             {renderContent()}
@@ -1094,33 +1065,16 @@ export default function SinglePostPage() {
           publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },
         }}
       />
-      {isMobileView ? (
-        <Drawer open={drawerOpen} onOpenChange={handleDrawerDismiss} modal={false} dismissible>
-          <DrawerContent
-            data-post-drawer
-            hideHandle
-            noOverlay
-            className="!h-[calc(100dvh-2.75rem)] !max-h-[calc(100dvh-2.75rem)] !mt-0 !rounded-t-none !border-0 !shadow-none bg-black top-11"
-          >
-            {/* The nav pill's clearance is padding INSIDE the scroller (not an
-                outer margin) so post content scrolls up UNDER the sticky pill and
-                is swallowed at its rounded top edge on the glass themes — the
-                drawer now starts at the pill's top (top-11), and useFeedSwallowClip
-                (wired above on this ref) traces the pill. pt-11 keeps the resting
-                position identical to the previous mt-11 offset. */}
-            <div
-              ref={setScrollerRef}
-              className={`flex flex-col h-full overflow-y-auto pt-11 ${isLivePost ? 'bg-black' : ''}`}
-            >
-              {renderPostContent(handleMobileBack, true)}
-            </div>
-          </DrawerContent>
-        </Drawer>
-      ) : (
-        <div className={`flex flex-col ${isLivePost ? 'bg-black min-h-screen' : ''}`}>
-          {renderPostContent()}
-        </div>
-      )}
+      {/* One layout for every breakpoint. `chromeClearance` is padding INSIDE the
+          scrolling content (not an outer margin) so the post scrolls up UNDER the
+          sticky nav pill and is swallowed at its rounded top edge on the glass
+          themes, exactly like the home feed. */}
+      <div
+        ref={inOverlay ? undefined : postRootRef}
+        className={cn('flex flex-col', isLivePost && 'bg-black min-h-screen')}
+      >
+        {renderPostContent()}
+      </div>
     </>
   );
 }
