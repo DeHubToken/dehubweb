@@ -871,7 +871,10 @@
     "statusPlanned": "Planned",
     "statusInProgress": "In Progress",
     "statusCompleted": "Completed",
-    "statusDeclined": "Declined"
+    "statusDeclined": "Declined",
+    "shipping": "Shipping",
+    "noShippingYet": "Nothing in progress",
+    "shippingAppearHere": "Requests being built will appear here."
   },
   "auth": {
     "loginRequired": "Log in required"
