@@ -14,6 +14,8 @@ import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
 import { ThumbsUp, ThumbsDown, MessageSquare, RefreshCw, ImageIcon, Grid3x3, Loader2, Ticket } from 'lucide-react';
 import { ImagesFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
+import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
+import { useFeedFilterTransition } from '@/hooks/use-feed-filter-transition';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
@@ -333,7 +335,16 @@ export function ImagesFeed({
   const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('images', 'sort', SORT_OPTIONS[0]);
   const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('images', 'date', DATE_FILTER_OPTIONS[0]);
   const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('images');
-  
+
+  // Filter chips arm a loader on click so a sort switch never leaves the old
+  // results sitting there looking frozen (the feed query keeps previous data).
+  // The hook that owns it needs `isFetching` from the queries below, so a ref
+  // bridges the gap — a click can't land before the effect that fills it.
+  const beginFilterTransitionRef = useRef<() => void>(() => {});
+  const beginFilterTransition = useCallback(() => {
+    beginFilterTransitionRef.current();
+  }, []);
+
   
   // Get wallet address for authenticated requests
   const { walletAddress, isAuthenticated } = useAuth();
@@ -353,8 +364,27 @@ export function ImagesFeed({
       toast.info('Log in to see followed creators');
       return;
     }
+    // Re-tapping the active chip changes nothing, so it must not flash a loader.
+    if (option.value === selectedSort.value) return;
+    beginFilterTransition();
     setSelectedSort(option);
-  }, [isAuthenticated, setSelectedSort]);
+  }, [isAuthenticated, selectedSort.value, setSelectedSort, beginFilterTransition]);
+
+  // Every other chip row goes through these, so each one arms the loader.
+  const selectUploadDate = useCallback((value: DateFilterOption) => {
+    beginFilterTransition();
+    setSelectedUploadDate(value);
+  }, [setSelectedUploadDate, beginFilterTransition]);
+  const selectContentFilter = useCallback((value: 'ppv' | 'w2e' | 'locked') => {
+    beginFilterTransition();
+    toggleContentFilter(value);
+  }, [toggleContentFilter, beginFilterTransition]);
+  const resetAllFilters = useCallback(() => {
+    beginFilterTransition();
+    setSelectedSort(SORT_OPTIONS[0]);
+    setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
+    resetContentFilters();
+  }, [setSelectedSort, setSelectedUploadDate, resetContentFilters, beginFilterTransition]);
 
   // Fetch from DeHub API (default - no content filters)
   const {
@@ -363,6 +393,7 @@ export function ImagesFeed({
     hasNextPage: hasNextPageDefault,
     isFetchingNextPage: isFetchingNextPageDefault,
     isLoading: isApiLoadingDefault,
+    isFetching: isApiFetchingDefault,
     isError: isErrorDefault,
     refetch: refetchDefault,
   } = useDeHubImages({
@@ -377,6 +408,7 @@ export function ImagesFeed({
     hasNextPage: hasNextPageUnified,
     isFetchingNextPage: isFetchingNextPageUnified,
     isLoading: isApiLoadingUnified,
+    isFetching: isApiFetchingUnified,
     isError: isErrorUnified,
     refetch: refetchUnified,
   } = useUnifiedFeed({
@@ -397,8 +429,14 @@ export function ImagesFeed({
   const hasNextPage = useUnifiedSource ? hasNextPageUnified : hasNextPageDefault;
   const isFetchingNextPage = useUnifiedSource ? isFetchingNextPageUnified : isFetchingNextPageDefault;
   const isApiLoading = useUnifiedSource ? isApiLoadingUnified : isApiLoadingDefault;
+  const isApiFetching = useUnifiedSource ? isApiFetchingUnified : isApiFetchingDefault;
   const isError = useUnifiedSource ? isErrorUnified : isErrorDefault;
   const refetch = useUnifiedSource ? refetchUnified : refetchDefault;
+
+  const filterTransition = useFeedFilterTransition(isApiFetching);
+  useEffect(() => {
+    beginFilterTransitionRef.current = filterTransition.begin;
+  }, [filterTransition.begin]);
 
   // Refetch when refreshKey changes
   useEffect(() => {
@@ -496,7 +534,9 @@ export function ImagesFeed({
 
   const { isAutoRetrying } = useAutoRetryFeed({
     itemCount: imagePosts.length,
-    isLoading: isApiLoading,
+    // An in-flight filter switch is not an empty feed — without this the retry
+    // loop fires against the results the user is already waiting for.
+    isLoading: isApiLoading || filterTransition.active,
     isError,
     refetch,
   });
@@ -509,7 +549,9 @@ export function ImagesFeed({
     );
   }
 
-  if (imagePosts.length === 0) {
+  // An in-flight filter switch outranks "empty": bailing here would drop the
+  // filter panel and the loader both, and read as the feed vanishing.
+  if (imagePosts.length === 0 && !filterTransition.active) {
     return <EmptyState />;
   }
 
@@ -532,7 +574,7 @@ export function ImagesFeed({
               />
               <UploadDateFilterSection 
                 selected={selectedUploadDate} 
-                onSelect={setSelectedUploadDate} 
+                onSelect={selectUploadDate}
               />
               <div className="flex flex-col gap-2">
                 <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.contentType')}</span>
@@ -541,7 +583,7 @@ export function ImagesFeed({
                     {CONTENT_TYPE_FILTERS.map((filter) => (
                       <button
                         key={filter.value}
-                        onClick={() => toggleContentFilter(filter.value)}
+                        onClick={() => selectContentFilter(filter.value)}
                         className={cn(
                           'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
                           contentFilters[filter.value]
@@ -563,11 +605,7 @@ export function ImagesFeed({
               </div>
               {/* Reset filters - bottom right */}
               <button
-                onClick={() => {
-                  setSelectedSort(SORT_OPTIONS[0]);
-                  setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
-                  resetContentFilters();
-                }}
+                onClick={resetAllFilters}
                 className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
                 aria-label={t('filters.resetFilters')}
               >
@@ -578,8 +616,12 @@ export function ImagesFeed({
         )}
       </AnimatePresence>
 
-      {/* Content */}
-      {showFeedView ? (
+      {/* Content. The filter loader sits BELOW the filter panel, not in place of
+          the whole feed, so the chips the user is working with stay on screen
+          and clickable while the request runs. */}
+      {filterTransition.active ? (
+        <FeedFilterLoader className="mt-3" />
+      ) : showFeedView ? (
         <EndlessScrollView 
           posts={imagePosts} 
           loaderRef={loaderCallbackRef}

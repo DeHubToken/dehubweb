@@ -17,6 +17,8 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { RefreshCw, Radio, ChevronRight } from 'lucide-react';
 import { FeedBodySkeleton } from '@/components/app/PageSkeletons';
 import { FeedCardSkeletonList } from '@/components/app/cards/FeedCardSkeleton';
+import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
+import { useFeedFilterTransition } from '@/hooks/use-feed-filter-transition';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
@@ -371,35 +373,48 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   useEffect(() => { setOptimisticCategories(selectedCategories); }, [selectedCategories]);
   useEffect(() => { setOptimisticContentFilters(contentFilters); }, [contentFilters]);
 
+  // Arming the filter loader needs `isFetching`, which is only computed further
+  // down this component, while every chip handler is declared up here. A ref
+  // bridges the two — a click can never land before the effect that fills it.
+  const beginFilterTransitionRef = useRef<() => void>(() => {});
+  const beginFilterTransition = useCallback(() => {
+    beginFilterTransitionRef.current();
+  }, []);
+
   const setSelectedSort = useCallback((value: SortOption | ((prev: SortOption) => SortOption)) => {
+    beginFilterTransition();
     setOptimisticSort(prev => (typeof value === 'function' ? (value as (p: SortOption) => SortOption)(prev) : value));
     startTransition(() => setSelectedSortRaw(value));
-  }, [setSelectedSortRaw]);
+  }, [setSelectedSortRaw, beginFilterTransition]);
   const setSelectedDate = useCallback((value: DateFilterOption | ((prev: DateFilterOption) => DateFilterOption)) => {
+    beginFilterTransition();
     setOptimisticDate(prev => (typeof value === 'function' ? (value as (p: DateFilterOption) => DateFilterOption)(prev) : value));
     startTransition(() => setSelectedDateRaw(value));
-  }, [setSelectedDateRaw]);
+  }, [setSelectedDateRaw, beginFilterTransition]);
   const setSelectedPostType = useCallback((value: PostTypeFilterValue | ((prev: PostTypeFilterValue) => PostTypeFilterValue)) => {
+    beginFilterTransition();
     setOptimisticPostType(prev => (typeof value === 'function' ? (value as (p: PostTypeFilterValue) => PostTypeFilterValue)(prev) : value));
     startTransition(() => setSelectedPostTypeRaw(value));
-  }, [setSelectedPostTypeRaw]);
+  }, [setSelectedPostTypeRaw, beginFilterTransition]);
   const setSelectedCategories = useCallback((value: string[] | ((prev: string[]) => string[])) => {
+    beginFilterTransition();
     setOptimisticCategories(prev => (typeof value === 'function' ? (value as (p: string[]) => string[])(prev) : value));
     startTransition(() => setSelectedCategoriesRaw(value));
-  }, [setSelectedCategoriesRaw]);
+  }, [setSelectedCategoriesRaw, beginFilterTransition]);
   const toggleContentFilter = useCallback((filter: 'ppv' | 'w2e' | 'locked') => {
+    beginFilterTransition();
     setOptimisticContentFilters(prev => ({ ...prev, [filter]: !prev[filter] }));
     startTransition(() => toggleContentFilterRaw(filter));
-  }, [toggleContentFilterRaw]);
+  }, [toggleContentFilterRaw, beginFilterTransition]);
   const resetContentFilters = useCallback(() => {
+    beginFilterTransition();
     setOptimisticContentFilters({ ppv: false, w2e: false, locked: false });
     startTransition(() => resetContentFiltersRaw());
-  }, [resetContentFiltersRaw]);
+  }, [resetContentFiltersRaw, beginFilterTransition]);
 
-  // Listen for external category changes (e.g. from Talk of the Town sidebar)
-  // Set a transitioning flag so we force skeleton state (bypasses placeholderData)
-  const [isCategoryTransitioning, setIsCategoryTransitioning] = useState(false);
-
+  // Listen for external category changes (e.g. from Talk of the Town sidebar).
+  // setSelectedCategories arms the filter loader itself, so this path gets the
+  // same feedback as a chip tap without a second flag to keep in sync.
   useEffect(() => {
     const getCategoryId = (detail: unknown): string | null => {
       if (typeof detail === 'string') return detail.toLowerCase();
@@ -417,13 +432,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       // Invalidate instead of removing — keeps existing data visible during refetch
       queryClient.invalidateQueries({ queryKey: ['unified-feed'] });
       // Add category to selection (toggle if already present)
-      setSelectedCategories(prev => {
-        if (prev.includes(categoryId)) return prev;
-        const next = [...prev, categoryId];
-        // Only show skeleton when switching to a single server-filtered category
-        if (next.length === 1) setIsCategoryTransitioning(true);
-        return next;
-      });
+      setSelectedCategories(prev => (
+        prev.includes(categoryId) ? prev : [...prev, categoryId]
+      ));
       window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
     };
 
@@ -451,9 +462,12 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       normalized.every((cat, index) => cat === selectedCategories[index]);
 
     if (!isSame) {
-      setSelectedCategories(normalized);
+      // Raw setter on purpose: repairing corrupted storage is not a filter
+      // change the user made, so it must not arm the filter loader.
+      setOptimisticCategories(normalized);
+      setSelectedCategoriesRaw(normalized);
     }
-  }, [selectedCategories, setSelectedCategories]);
+  }, [selectedCategories, setSelectedCategoriesRaw]);
 
   // Non-critical rail queries (categories, live carousel, shorts strip) are held
   // back until the primary feed's first page settles, so the content request wins
@@ -522,8 +536,10 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       setPromptModalOpen(true);
       return;
     }
+    // Re-tapping the active chip changes nothing, so it must not flash a loader.
+    if (option.value === optimisticSort.value) return;
     setSelectedSort(option);
-  }, [isAuthenticated]);
+  }, [isAuthenticated, optimisticSort.value, setSelectedSort]);
 
   // Defer heavy filter-derived values so chip clicks paint instantly.
   // The chip buttons read `selectedSort`/`selectedCategories`/etc. directly (urgent),
@@ -966,6 +982,44 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
   const isFetching = useInterleavedFeed
     ? (videosFeed.isFetching || imagesFeed.isFetching || textsFeed.isFetching)
     : singleFeed.isFetching;
+
+  // ---- Filter loader ---------------------------------------------------------
+  // A chip tap is only "done" once BOTH halves have caught up: the deferred
+  // params have committed (they lag the tap by design, see useDeferredValue
+  // above) and the resulting request has settled. Comparing by value rather
+  // than by reference because every optimistic setter allocates a fresh array
+  // or object, so the identities never converge.
+  const filterSignature = useCallback(
+    (
+      sort: SortOption,
+      date: DateFilterOption,
+      postType: PostTypeFilterValue,
+      cats: string[],
+      content: ContentTypeFilters,
+    ) =>
+      [
+        sort.value,
+        date.value,
+        postType,
+        [...cats].sort().join(','),
+        `${content.ppv ? 1 : 0}${content.w2e ? 1 : 0}${content.locked ? 1 : 0}`,
+      ].join('|'),
+    [],
+  );
+
+  const requestedFilters = filterSignature(
+    optimisticSort, optimisticDate, optimisticPostType, optimisticCategories, optimisticContentFilters,
+  );
+  const appliedFilters = filterSignature(
+    deferredSort, deferredDate, deferredPostType, deferredCategories, deferredContentFilters,
+  );
+
+  const filterTransition = useFeedFilterTransition(
+    isFetching || requestedFilters !== appliedFilters,
+  );
+  useEffect(() => {
+    beginFilterTransitionRef.current = filterTransition.begin;
+  }, [filterTransition.begin]);
 
   const isError = useInterleavedFeed
     ? (videosFeed.isError || imagesFeed.isError || textsFeed.isError)
@@ -1446,18 +1500,15 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     ? (videosFeed.data?.pages?.length || imagesFeed.data?.pages?.length || textsFeed.data?.pages?.length)
     : (singleFeed.data?.pages?.length);
   const hasCachedData = hasQueryData && items.length > 0;
-  const isLoadingState = isCategoryTransitioning || (!hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading)));
-
-  // Clear transitioning flag once new data has arrived (even if 0 results)
-  useEffect(() => {
-    if (isCategoryTransitioning && (hasQueryData || (!isLoading && !isFetchingNextPage))) {
-      setIsCategoryTransitioning(false);
-    }
-  }, [isCategoryTransitioning, hasQueryData, isLoading, isFetchingNextPage]);
+  const isLoadingState = !hasQueryData && (isLoading || (pinnedPostId && isPinnedLoading));
+  /** A filter switch owns the column: cold boot still gets card skeletons. */
+  const showFilterLoader = filterTransition.active && !isLoadingState;
 
   const { isAutoRetrying, retriesExhausted } = useAutoRetryFeed({
     itemCount: items.length,
-    isLoading: isLoadingState,
+    // An in-flight filter switch is not an empty feed — without this the retry
+    // loop fires against the results the user is already waiting for.
+    isLoading: isLoadingState || filterTransition.active,
     isError,
     refetch,
   });
@@ -1497,7 +1548,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
 
   // Show a non-blocking top progress bar whenever something is loading in the background
   // (filter switches, pagination, refetch). Filters stay clickable; existing items remain visible.
-  const showTopProgress = (isFetching || isAutoRetrying) && !isLoadingState;
+  // Suppressed while the filter loader is up: it already says "working", and
+  // two loading affordances for one request read as two separate requests.
+  const showTopProgress = (isFetching || isAutoRetrying) && !isLoadingState && !showFilterLoader;
 
   return (
     <div data-feed-root className={cn("relative p-2 sm:p-3 pt-0 sm:pt-0 space-y-3", isCollapsed && "pt-2 sm:pt-2")}>
@@ -1681,7 +1734,9 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
       })()}
 
 
-      {(isLoadingState || isAutoRetrying) ? (
+      {showFilterLoader ? (
+        <FeedFilterLoader />
+      ) : (isLoadingState || isAutoRetrying) ? (
         <FeedCardSkeletonList count={6} />
       ) : (
         <>
