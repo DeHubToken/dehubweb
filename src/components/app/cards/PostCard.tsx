@@ -486,6 +486,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           onOpenChange={setShowComments}
           tokenId={post.id}
           initialTab={commentsInitialTab}
+          commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
         />
       </div>
 
