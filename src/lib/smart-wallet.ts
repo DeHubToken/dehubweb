@@ -179,7 +179,21 @@ export async function activateWalletKey(privKey: string): Promise<IProvider> {
   try { sessionStorage.setItem(UNLOCKED_AT_KEY, String(Date.now())); } catch { /* private mode */ }
   eoaProvider = await buildProviderFromPrivKey(hex);
   eoaProviderPromise = null;
+  announceLockChange();
   return eoaProvider;
+}
+
+/**
+ * Lock state lives in module memory, so nothing re-renders when it changes.
+ * Anything that wants to show a lock affordance — the wallet menu's "Unlock
+ * wallet" row, a composer button reading "Unlock to post" — has to hear about
+ * the transition rather than poll isWalletUnlocked() at render time.
+ */
+export const WALLET_LOCK_CHANGED_EVENT = 'dehub:wallet-lock-changed';
+
+function announceLockChange(): void {
+  if (typeof window === 'undefined') return;
+  window.dispatchEvent(new Event(WALLET_LOCK_CHANGED_EVENT));
 }
 
 /**
@@ -235,6 +249,7 @@ export function lockWallet(): void {
   pendingAASetupPromise = null;
   storedChainAAProviders.clear();
   try { sessionStorage.removeItem(UNLOCKED_AT_KEY); } catch { /* ignore */ }
+  announceLockChange();
 }
 
 // ── AA provider (Safe Smart Account via Pimlico) ────────────────────────────

@@ -191,7 +191,7 @@ interface UsePostFormReturn {
 export function usePostForm(onClose: () => void): UsePostFormReturn {
   const navigate = useNavigate();
   const { addOptimisticPost } = useOptimisticPosts();
-  const { user, connectionSource, refreshSession, openLoginModal } = useAuth();
+  const { user, connectionSource, refreshSession, openLoginModal, requestWalletUnlock } = useAuth();
   
   // Restore active draft from localStorage
   const savedDraft = useRef(loadActiveDraft());
@@ -1466,11 +1466,12 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
       // with a reconnect action instead of the raw technical error.
       const isWalletGone = errorMsg.toLowerCase().includes('no wallet connected') ||
         errorMsg.toLowerCase().includes('please sign in first');
-      // aa-utils throws this after dispatching dehub:wallet-unlock-required, so
-      // the unlock modal is already opening. The smart-wallet key only lives in
-      // memory, so this fires on the first post after any page refresh — i.e.
-      // constantly. A red "Post failed" on top of the unlock prompt reads as
-      // "you were signed out", which is exactly what it isn't.
+      // The built-in wallet's key only lives in memory, so this fires on the
+      // first post after any page refresh — i.e. constantly. A red "Post failed"
+      // reads as "you were signed out", which is exactly what it isn't.
+      // aa-utils normally has the unlock dialog opening by the time we get here;
+      // the toast carries its own Unlock action anyway, because a locked-wallet
+      // message with nothing to press is a dead end with no way out of it.
       const isWalletLocked = errorMsg.toLowerCase().includes('wallet is locked');
       const isSolanaWalletIssue =
         isSolanaChain(chainId) ||
@@ -1488,10 +1489,12 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
         const chainName = chainId === 56 ? 'BNB' : chainId === 1 ? 'Ethereum' : 'Base';
         toast.error(`Post failed: Insufficient ${gasName} for gas on ${chainName}. Add ${gasName} to your wallet and try again.`);
       } else if (isWalletLocked) {
-        // Not a failure the user caused, and not a sign-out. The unlock dialog
-        // is already on screen; tell them what it's for and that nothing was lost.
+        // Not a failure the user caused, and not a sign-out. Tell them what the
+        // prompt is for, that nothing was lost, and — the part that was missing
+        // — give them a way to open it if it did not appear on its own.
         toast.info('Unlock your wallet to finish posting', {
           description: 'Your draft is still here — tap Post again once unlocked.',
+          action: { label: 'Unlock', onClick: requestWalletUnlock },
           duration: 8000,
         });
       } else if (isWalletGone && connectionSource === 'wagmi') {
@@ -1543,7 +1546,7 @@ export function usePostForm(onClose: () => void): UsePostFormReturn {
     isTokenGated, tokenContract, tokenSymbol, tokenAmount, liveMode, scheduledDate,
     hasVideo, hasImage, hasAudio, isPosting, resetForm, onClose, navigate, addOptimisticPost, user,
     showTitle, titleText, connectionSource, poll, pollIsValid, chainId,
-    refreshSession, openLoginModal
+    refreshSession, openLoginModal, requestWalletUnlock
   ]);
 
   return {

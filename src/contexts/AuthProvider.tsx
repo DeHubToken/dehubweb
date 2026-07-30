@@ -293,10 +293,59 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // that an untagged session counts as a different identity) would tear down
     // a perfectly healthy session the user never asked to end.
     localStorage.removeItem(SUPA_LOGIN_PENDING_KEY);
+    // The phase has to go too. LoginModal mirrors it into local step state on a
+    // dependency change, so a phase left at 'unlock' after a dismissal both
+    // reopens unrelated "Sign in" taps straight onto the unlock step and, worse,
+    // makes the next genuine unlock request a no-op — neither dep changed, so
+    // the effect never re-runs and the step never appears.
+    setWalletPhase('none');
     if (isConnecting && !walletAddress) {
       setIsConnecting(false);
     }
   }, [isConnecting, walletAddress]);
+
+  /**
+   * Ask for the wallet password now.
+   *
+   * Renders without awaiting anything in the ordinary case. Looking the
+   * Supabase session up FIRST — as this flow used to — meant a slow lookup
+   * showed nothing at all, which is how a locked wallet became a dead end with
+   * no dialog and nothing to press.
+   *
+   * The identity still has to come from somewhere when the cached id is absent,
+   * though: sessions whose last full sign-in predates dehub_supabase_uid carry
+   * the connection-source tag without it, and opening the signed-out sheet in
+   * front of somebody who is demonstrably signed in is the other half of the
+   * same bug. So the live session is consulted only on that branch, where there
+   * is nothing to render yet anyway.
+   *
+   * Exposed on the context because until now the ONLY way to reach the unlock
+   * step was a window event nobody could call deliberately: no toast action, no
+   * menu item, no settings row could offer a way in.
+   */
+  const requestWalletUnlock = useCallback(() => {
+    const cachedUid = supabaseUserId ?? localStorage.getItem('dehub_supabase_uid');
+    if (cachedUid) {
+      setSupabaseUserId(cachedUid);
+      setWalletPhase('unlock');
+      openLoginModal();
+      return;
+    }
+
+    void supabase.auth
+      .getSession()
+      .then(({ data }) => {
+        const uid = data?.session?.user?.id;
+        if (uid) {
+          setSupabaseUserId(uid);
+          setWalletPhase('unlock');
+        }
+        // No Supabase session either — there is genuinely no identity to unlock
+        // against, and signing in is the right answer.
+        openLoginModal();
+      })
+      .catch(() => openLoginModal());
+  }, [supabaseUserId, openLoginModal]);
 
   /**
    * After a Supabase session exists: look up the wallet row and route the
@@ -531,27 +580,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => sub.subscription.unsubscribe();
   }, [proceedToWalletPhase]);
 
-  // Mid-session unlock requests (e.g. a tip attempted in a fresh tab where the
-  // key session is gone). Fired by aa-utils when no signing provider exists.
+  // Mid-session unlock requests — a post, tip or stream attempted with the key
+  // no longer in memory. Raised by aa-utils when no signing provider exists.
   useEffect(() => {
-    const handler = async () => {
+    const handler = () => {
       // Matches the condition aa-utils used to decide to raise this event at
       // all; if the two ever disagree the dialog silently never opens and the
       // action just fails.
       if (!isSmartWalletSession()) return;
-      const { data } = await supabase.auth.getSession();
-      const uid = data?.session?.user?.id;
-      if (!uid) {
-        openLoginModal();
-        return;
-      }
-      setSupabaseUserId(uid);
-      setWalletPhase('unlock');
-      openLoginModal();
+      requestWalletUnlock();
     };
     window.addEventListener('dehub:wallet-unlock-required', handler);
     return () => window.removeEventListener('dehub:wallet-unlock-required', handler);
-  }, [openLoginModal]);
+  }, [requestWalletUnlock]);
 
   // Reconnect DM socket when user logs in
   useEffect(() => {
@@ -1554,6 +1595,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setWagmiAuthIntent,
     openLoginModal,
     closeLoginModal,
+    requestWalletUnlock,
     patchUser,
   };
   const callbacksRef = useRef(latestCallbacks);

@@ -81,6 +81,18 @@ export interface AuthContextType {
   isLoginModalOpen: boolean;
   openLoginModal: () => void;
   closeLoginModal: () => void;
+  /**
+   * Ask for the wallet password now, for built-in-wallet sessions whose key is
+   * no longer in memory. Safe to call from anywhere: it renders synchronously,
+   * and falls back to the sign-in sheet only when there is no identity to
+   * unlock against.
+   *
+   * Use this wherever a locked wallet would otherwise be a dead end — an action
+   * on the "wallet is locked" toast, the wallet menu, Settings. Do NOT reach for
+   * openLoginModal instead: that shows sign-in options to somebody who is
+   * already signed in.
+   */
+  requestWalletUnlock: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
