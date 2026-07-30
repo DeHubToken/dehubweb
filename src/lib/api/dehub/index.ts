@@ -21,7 +21,18 @@ export * from './subscriptions';
 export * from './livechat';
 export * from './leaderboard';
 export * from './blocks';
-export * from './push';
+export {
+  NOTIFICATION_CATEGORIES,
+  CATEGORY_OF,
+  getPushPreferences,
+  updatePushPreferences,
+  resetPushPreferences,
+} from './push';
+export type {
+  NotificationKey,
+  PushPreferences,
+  NotificationCategory as PushNotificationCategory,
+} from './push';
 export * from './sessions';
 export * from './payments';
 export * from './bookmarks';

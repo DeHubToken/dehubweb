@@ -20,7 +20,7 @@ import { execSync } from "child_process";
  * failure is completely silent and cost several rounds of misdiagnosis.
  */
 function warGameCorsPlugin() {
-  const cors = (req, res, next) => {
+  const cors = (req: any, res: any, next: any) => {
     if (req.url && req.url.startsWith("/war-game/")) {
       res.setHeader("Access-Control-Allow-Origin", "*");
     }
@@ -28,10 +28,10 @@ function warGameCorsPlugin() {
   };
   return {
     name: "war-game-cors",
-    configureServer(server) {
+    configureServer(server: any) {
       server.middlewares.use(cors);
     },
-    configurePreviewServer(server) {
+    configurePreviewServer(server: any) {
       server.middlewares.use(cors);
     },
   };
