@@ -34,6 +34,8 @@ import { supabase } from '@/integrations/supabase/client';
 import {
   useFeatureRequests,
   useShippedFeatures,
+  useInProgressFeatures,
+
   useUserVotes,
   useFeatureCounts,
   useSubmitFeatureRequest,
