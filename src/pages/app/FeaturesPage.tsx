@@ -1142,6 +1142,37 @@ export default function FeaturesPage() {
         </>
       )}
 
+      {/* Shipping (In Progress) Tab */}
+      {activeTab === 'shipping' && (
+        <>
+          {isLoadingInProgress ? (
+            <FeatureSkeletons />
+          ) : inProgressFeatures && inProgressFeatures.length > 0 ? (
+            <div className="space-y-3">
+              {inProgressFeatures.map((feature) => (
+                <SharedTranslationProvider key={feature.id}>
+                  <FeatureCard
+                    feature={feature}
+                    currentVote={userVotes?.[feature.id]}
+                    onVote={handleVote}
+                    voteDisabled={voteMutation.isPending}
+                  />
+                </SharedTranslationProvider>
+              ))}
+            </div>
+          ) : (
+            <div data-page-bento className="bg-zinc-900 rounded-2xl p-8 text-center">
+              <div className="w-16 h-16 rounded-2xl bg-zinc-800 flex items-center justify-center mx-auto mb-4">
+                <Loader2 className="w-8 h-8 text-zinc-600" />
+              </div>
+              <h3 className="text-white font-semibold mb-1">{t('features.noShippingYet', 'Nothing in progress')}</h3>
+              <p className="text-zinc-500 text-sm">{t('features.shippingAppearHere', 'Requests being built will appear here.')}</p>
+            </div>
+          )}
+        </>
+      )}
+
+
       {/* Shipped Features Tab */}
       {activeTab === 'shipped' && (
         <>
