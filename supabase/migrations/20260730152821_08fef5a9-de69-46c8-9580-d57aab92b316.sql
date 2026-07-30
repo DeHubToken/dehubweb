@@ -1,0 +1,1 @@
+UPDATE public.feature_requests SET status = 'in_progress', updated_at = now() WHERE status = 'open';
