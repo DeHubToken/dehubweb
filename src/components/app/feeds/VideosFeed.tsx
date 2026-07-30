@@ -16,6 +16,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { RefreshCw, Video, Play, ChevronRight, Filter, Radio, Eye, Loader2 } from 'lucide-react';
 import { VideosFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
+import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
+import { useFeedFilterTransition } from '@/hooks/use-feed-filter-transition';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
@@ -456,6 +458,15 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
   const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false);
 
+  // Filter chips arm a loader on click so a sort switch never leaves the old
+  // results sitting there looking frozen (the feed query keeps previous data).
+  // The hook that owns it needs `isFetching` from the query below, so a ref
+  // bridges the gap — a click can't land before the effect that fills it.
+  const beginFilterTransitionRef = useRef<() => void>(() => {});
+  const beginFilterTransition = useCallback(() => {
+    beginFilterTransitionRef.current();
+  }, []);
+
   // Staged autoplay: first only 1 video, then expand to 3 after initial render
   const [autoplayLimit, setAutoplayLimit] = useState(1);
   useEffect(() => {
@@ -473,8 +484,37 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
       toast.info('Log in to see followed creators');
       return;
     }
+    // Re-tapping the active chip changes nothing, so it must not flash a loader.
+    if (option.value === selectedSort.value) return;
+    beginFilterTransition();
     setSelectedSort(option);
-  }, [isAuthenticated, setSelectedSort]);
+  }, [isAuthenticated, selectedSort.value, setSelectedSort, beginFilterTransition]);
+
+  // Every other chip row goes through these, so each one arms the loader.
+  const selectCategory = useCallback((value: string | null) => {
+    beginFilterTransition();
+    setSelectedCategory(value);
+  }, [setSelectedCategory, beginFilterTransition]);
+  const selectDuration = useCallback((value: typeof DURATION_FILTERS[number]) => {
+    beginFilterTransition();
+    setSelectedDuration(value);
+  }, [setSelectedDuration, beginFilterTransition]);
+  const selectUploadDate = useCallback((value: DateFilterOption) => {
+    beginFilterTransition();
+    setSelectedUploadDate(value);
+  }, [setSelectedUploadDate, beginFilterTransition]);
+  const selectContentFilter = useCallback((value: 'ppv' | 'w2e' | 'locked') => {
+    beginFilterTransition();
+    toggleContentFilter(value);
+  }, [toggleContentFilter, beginFilterTransition]);
+  const resetAllFilters = useCallback(() => {
+    beginFilterTransition();
+    setSelectedSort(SORT_OPTIONS[0]);
+    setSelectedCategory(null);
+    setSelectedDuration(DURATION_FILTERS[0]);
+    setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
+    resetContentFilters();
+  }, [setSelectedSort, setSelectedCategory, setSelectedDuration, setSelectedUploadDate, resetContentFilters, beginFilterTransition]);
 
   // Fetch categories from API
   const { data: apiCategories, isLoading: categoriesLoading } = useQuery({
@@ -510,6 +550,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     hasNextPage,
     isFetchingNextPage,
     isLoading: isApiLoading,
+    isFetching: isApiFetching,
     isError,
     refetch,
   } = useUnifiedFeed({
@@ -524,6 +565,11 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
     status: 'minted',
     followingOnly: selectedSort.value === 'following' ? true : undefined,
   });
+
+  const filterTransition = useFeedFilterTransition(isApiFetching);
+  useEffect(() => {
+    beginFilterTransitionRef.current = filterTransition.begin;
+  }, [filterTransition.begin]);
 
   // Fetch shorts for the carousel using unified feed (same approach as HomeFeed)
   const scrollFeed = useUnifiedFeed({
@@ -668,8 +714,8 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
 
   // Reset client-side filters to defaults
   const clearFilters = () => {
-    setSelectedDuration(DURATION_FILTERS[0]);
-    setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
+    selectDuration(DURATION_FILTERS[0]);
+    selectUploadDate(DATE_FILTER_OPTIONS[0]);
   };
 
   const EmptyState = () => (
@@ -714,7 +760,9 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
 
   const { isAutoRetrying } = useAutoRetryFeed({
     itemCount: allVideos.length,
-    isLoading: isApiLoading,
+    // An in-flight filter switch is not an empty feed — without this the retry
+    // loop fires against the results the user is already waiting for.
+    isLoading: isApiLoading || filterTransition.active,
     isError,
     refetch,
   });
@@ -745,11 +793,11 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
               <CategoryFilterSection 
                 categories={categories} 
                 selectedCategory={selectedCategory} 
-                onSelect={setSelectedCategory}
+                onSelect={selectCategory}
                 isLoading={categoriesLoading}
               />
-              <DurationFilterSection selected={selectedDuration} onSelect={setSelectedDuration} />
-              <UploadDateFilterSection selected={selectedUploadDate} onSelect={setSelectedUploadDate} />
+              <DurationFilterSection selected={selectedDuration} onSelect={selectDuration} />
+              <UploadDateFilterSection selected={selectedUploadDate} onSelect={selectUploadDate} />
               <div className="flex flex-col gap-2">
                 <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.contentType')}</span>
                 <div className="relative">
@@ -757,7 +805,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
                     {CONTENT_TYPE_FILTERS.map((filter) => (
                       <button
                         key={filter.value}
-                        onClick={() => toggleContentFilter(filter.value)}
+                        onClick={() => selectContentFilter(filter.value)}
                         className={cn(
                           'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
                           contentFilters[filter.value]
@@ -774,13 +822,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
               </div>
               {/* Reset filters - bottom right */}
               <button
-                onClick={() => {
-                  setSelectedSort(SORT_OPTIONS[0]);
-                  setSelectedCategory(null);
-                  setSelectedDuration(DURATION_FILTERS[0]);
-                  setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
-                  resetContentFilters();
-                }}
+                onClick={resetAllFilters}
                 className="absolute bottom-4 right-4 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
                 aria-label={t('filters.resetFilters')}
               >
@@ -793,8 +835,12 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
 
 
 
-      {/* Video Grid or Empty State */}
-      {allVideos.length === 0 ? (
+      {/* Video Grid, filter loader or Empty State. The loader sits BELOW the
+          filter panel, not in place of the whole feed, so the chips the user is
+          working with stay on screen and clickable while the request runs. */}
+      {filterTransition.active ? (
+        <FeedFilterLoader className="mt-3" />
+      ) : allVideos.length === 0 ? (
         <EmptyState />
       ) : videos.length === 0 && hasActiveFilters ? (
         <FilteredEmptyState />
