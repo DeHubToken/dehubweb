@@ -122,6 +122,9 @@ export interface EditPostParams {
   name?: string;
   description?: string;
   category?: string[];
+  /** true turns replies off. Existing comments are kept and stay readable —
+   *  only new ones are refused — so re-enabling restores the thread intact. */
+  commentsDisabled?: boolean;
 }
 
 export interface EditPostResponse {
