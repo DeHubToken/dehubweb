@@ -889,6 +889,8 @@ export default function FeaturesPage() {
   const { data: featuresData, isLoading, isError, refetch, fetchNextPage, hasNextPage, isFetchingNextPage } = useFeatureRequests(sort, category, search);
   const features = useMemo(() => featuresData?.pages.flat() ?? [], [featuresData]);
   const { data: shippedFeatures, isLoading: isLoadingShipped } = useShippedFeatures();
+  const { data: inProgressFeatures, isLoading: isLoadingInProgress } = useInProgressFeatures();
+
   const { data: userVotes } = useUserVotes();
   const voteMutation = useVoteFeatureRequest();
 
