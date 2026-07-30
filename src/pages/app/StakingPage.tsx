@@ -231,10 +231,15 @@ export default function StakingPage() {
     return t('staking.daysAgo', { count: Math.floor(diff / 86400) });
   }
 
+  // Nobody asked for anything here — this only populates a query filter — so it
+  // must neither raise the unlock dialog nor reject into the void. A locked
+  // wallet simply leaves currentWallet unset until something else unlocks it.
   useEffect(() => {
-    getWalletAddress().then(addr => {
-      if (addr) setCurrentWallet(addr.toLowerCase());
-    });
+    getWalletAddress({ silent: true })
+      .then(addr => {
+        if (addr) setCurrentWallet(addr.toLowerCase());
+      })
+      .catch(() => { /* locked or signed out — nothing to show */ });
   }, []);
 
   const handleRefresh = () => {
