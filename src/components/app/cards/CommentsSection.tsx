@@ -140,6 +140,24 @@ const SORT_OPTIONS = [
   { value: 'liked', label: 'Most Liked' },
 ];
 
+// Threading itself is unlimited — the server happily accepts a reply to a reply
+// at any depth. Only the visual indent is capped so a long chain doesn't walk
+// off the right edge on a narrow screen.
+const MAX_INDENT_DEPTH = 5;
+const INDENT_PX = 24;
+
+/** A reply plus how deep it sits under its root comment (1 = direct reply). */
+interface ThreadReply {
+  comment: Comment;
+  depth: number;
+}
+
+/** A root comment with every descendant flattened in reading order. */
+interface CommentThread {
+  comment: Comment;
+  replies: ThreadReply[];
+}
+
 // ============================================================================
 // SUB-COMPONENTS
 // ============================================================================
@@ -155,6 +173,8 @@ interface CommentItemProps {
   onDelete: (id: string) => void;
   onUserPress: (username: string) => void;
   isReply?: boolean;
+  /** Nesting depth: 0 = top-level, 1 = direct reply, 2 = reply-to-reply, … */
+  depth?: number;
   isOwnComment?: boolean;
 }
 
@@ -202,7 +222,7 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
   );
 }
 
-function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, onEdit, onDelete, onUserPress, isReply, isOwnComment }: CommentItemProps) {
+function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, onEdit, onDelete, onUserPress, isReply, depth = 0, isOwnComment }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
   const avatarUrl = comment.avatar;
@@ -214,7 +234,8 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={cn("flex items-start gap-3 py-3", isReply && "ml-8")}
+      className="flex items-start gap-3 py-3"
+      style={depth > 0 ? { marginLeft: Math.min(depth, MAX_INDENT_DEPTH) * INDENT_PX } : undefined}
       data-comment-id={comment.id}
     >
       <button onClick={() => onUserPress(comment.username)} className="flex-shrink-0">
@@ -308,15 +329,14 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
               <ThumbsUp className={cn("w-4 h-4", comment.isLiked && "fill-current")} />
               {comment.likes > 0 && <span className="text-xs">{comment.likes}</span>}
             </button>
-            {!isReply && (
-              <button
-                onClick={() => onReply(comment.id)}
-                className="text-white hover:text-zinc-400 transition-colors"
-                aria-label="Reply"
-              >
-                <MessageSquare className="w-4 h-4" />
-              </button>
-            )}
+            {/* Every comment is replyable, replies included — threads nest without limit. */}
+            <button
+              onClick={() => onReply(comment.id)}
+              className="text-white hover:text-zinc-400 transition-colors"
+              aria-label="Reply"
+            >
+              <MessageSquare className="w-4 h-4" />
+            </button>
             {isOwnComment && !isEditing && (
               <>
                 <button
@@ -551,20 +571,60 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     return () => observer.disconnect();
   }, [apiComments]);
 
-  // Group comments: top-level and replies
-  const groupedComments = useMemo(() => {
-    const topLevel = allComments.filter(c => !c.replyToId);
-    const repliesMap = new Map<string, Comment[]>();
-    
-    allComments.filter(c => c.replyToId).forEach(reply => {
-      const existing = repliesMap.get(reply.replyToId!) || [];
-      repliesMap.set(reply.replyToId!, [...existing, reply]);
+  // Group comments into threads. Nesting is unbounded: a reply can have replies,
+  // which can have replies, and so on — each root carries every descendant
+  // flattened in reading order with its depth, so the list renders in one pass.
+  const groupedComments = useMemo<CommentThread[]>(() => {
+    const byId = new Map(allComments.map(c => [c.id, c]));
+    const childrenOf = new Map<string, Comment[]>();
+    const roots: Comment[] = [];
+
+    allComments.forEach(c => {
+      const parentId = c.replyToId;
+      // A reply whose parent isn't in this page (the API returns a flat window of
+      // comments, so an ancestor can fall outside it) is promoted to a root
+      // rather than dropped — losing it would hide real replies entirely.
+      if (parentId && parentId !== c.id && byId.has(parentId)) {
+        const siblings = childrenOf.get(parentId);
+        if (siblings) siblings.push(c);
+        else childrenOf.set(parentId, [c]);
+      } else {
+        roots.push(c);
+      }
     });
-    
-    return topLevel.map(comment => ({
-      comment,
-      replies: repliesMap.get(comment.id) || [],
-    }));
+
+    // Oldest-first within a thread, so a conversation reads top to bottom.
+    childrenOf.forEach(children =>
+      children.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()),
+    );
+
+    const emitted = new Set<string>();
+    const collect = (parent: Comment, depth: number, out: ThreadReply[]) => {
+      for (const child of childrenOf.get(parent.id) || []) {
+        if (emitted.has(child.id)) continue; // guard against a malformed cycle
+        emitted.add(child.id);
+        out.push({ comment: child, depth });
+        collect(child, depth + 1, out);
+      }
+    };
+
+    const buildThread = (comment: Comment): CommentThread => {
+      emitted.add(comment.id);
+      const replies: ThreadReply[] = [];
+      collect(comment, 1, replies);
+      return { comment, replies };
+    };
+
+    const threads = roots.map(buildThread);
+
+    // Safety net: if bad data ever produced a parent cycle, none of its members
+    // would look like a root and the whole ring would disappear. Surface any
+    // comment the walk never reached as a top-level one instead of losing it.
+    allComments.forEach(c => {
+      if (!emitted.has(c.id)) threads.push(buildThread(c));
+    });
+
+    return threads;
   }, [allComments]);
 
   useEffect(() => {
@@ -684,10 +744,10 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = groupedComments.filter(
-        ({ comment, replies }) => 
-          comment.text.toLowerCase().includes(query) || 
+        ({ comment, replies }) =>
+          comment.text.toLowerCase().includes(query) ||
           comment.username.toLowerCase().includes(query) ||
-          replies.some(r => r.text.toLowerCase().includes(query) || r.username.toLowerCase().includes(query))
+          replies.some(({ comment: r }) => r.text.toLowerCase().includes(query) || r.username.toLowerCase().includes(query))
       );
     }
 
@@ -1086,19 +1146,20 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                         onUserPress={handleUserPress}
                         isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
                       />
-                      {replies.map(reply => (
-                        <CommentItem 
+                      {replies.map(({ comment: reply, depth }) => (
+                        <CommentItem
                           key={reply.id}
                           comment={reply}
                           tokenId={tokenId}
-                          onLike={handleLike} 
-                          onDislike={handleDislike} 
-                          onReply={handleReply} 
-                          onShare={() => {}} 
+                          onLike={handleLike}
+                          onDislike={handleDislike}
+                          onReply={handleReply}
+                          onShare={() => {}}
                           onEdit={handleEditComment}
                           onDelete={handleDeleteComment}
                           onUserPress={handleUserPress}
                           isReply
+                          depth={depth}
                           isOwnComment={reply.address?.toLowerCase() === walletAddress?.toLowerCase()}
                         />
                       ))}
@@ -1319,19 +1380,20 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                         onUserPress={handleUserPress}
                         isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
                       />
-                      {replies.map(reply => (
-                        <CommentItem 
+                      {replies.map(({ comment: reply, depth }) => (
+                        <CommentItem
                           key={reply.id}
                           comment={reply}
                           tokenId={tokenId}
-                          onLike={handleLike} 
-                          onDislike={handleDislike} 
-                          onReply={handleReply} 
-                          onShare={() => {}} 
+                          onLike={handleLike}
+                          onDislike={handleDislike}
+                          onReply={handleReply}
+                          onShare={() => {}}
                           onEdit={handleEditComment}
                           onDelete={handleDeleteComment}
                           onUserPress={handleUserPress}
                           isReply
+                          depth={depth}
                           isOwnComment={reply.address?.toLowerCase() === walletAddress?.toLowerCase()}
                         />
                       ))}
