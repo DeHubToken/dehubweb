@@ -738,8 +738,29 @@ function shouldServeSSR(pathname) {
 // "not configured" state rather than inventing numbers.
 const STATS_ZONE_TAG = 'bedbbcab93853fe4a11f9d004370c130'; // dehub.io
 const STATS_GRAPHQL_ENDPOINT = 'https://api.cloudflare.com/client/v4/graphql';
-const STATS_DAILY_DAYS = 30;
-const STATS_BREAKDOWN_DAYS = 7;
+// One response serves every range the page offers (24h / 3d / 7d / 30d / all):
+// it carries the widest window of each resolution and the page slices it. That
+// keeps range switching instant and costs the Analytics API one read per minute
+// no matter how many people are looking or which range they pick.
+//
+// The two ceilings below are Cloudflare's, not ours, and were measured against
+// this zone rather than assumed:
+//   * hourly buckets refuse any window wider than 3 days ("cannot request a
+//     time range wider than 3d"), so 72 buckets is the hard maximum and "all
+//     time" can never be hourly;
+//   * daily buckets accept a request up to a year wide (the API rejects
+//     anything over 52w1d1h) and simply return what they still retain — so
+//     asking wide IS the all-time query. 360 days sits comfortably under that
+//     ceiling, and since the span is measured to the hour, asking for a round
+//     365 would trip it.
+const STATS_ALLTIME_LOOKBACK_DAYS = 360;
+const STATS_HOURLY_HOURS = 72;
+const STATS_BREAKDOWN_DAYS = 30;
+// Per-day country/browser maps run ~77 and ~19 entries; trimming to these keeps
+// the whole month's breakdown near 17KB instead of 55KB, and nothing below the
+// cut would ever be rendered anyway.
+const STATS_COUNTRIES_PER_DAY = 20;
+const STATS_BROWSERS_PER_DAY = 10;
 // Cloudflare's analytics pipeline updates in ~minutes, so a 60s edge cache
 // costs no freshness worth having and keeps a traffic spike on /stats from
 // turning into a matching spike of Analytics API calls.
@@ -748,7 +769,7 @@ const STATS_CACHE_SECONDS = 60;
 const STATS_QUERY_DAILY = `query DeHubDailyVisitors($zoneTag: String!, $since: Date!, $until: Date!) {
   viewer {
     zones(filter: { zoneTag: $zoneTag }) {
-      httpRequests1dGroups(limit: 31, filter: { date_geq: $since, date_leq: $until }, orderBy: [date_ASC]) {
+      httpRequests1dGroups(limit: 400, filter: { date_geq: $since, date_leq: $until }, orderBy: [date_ASC]) {
         dimensions { date }
         sum { pageViews requests bytes }
         uniq { uniques }
@@ -760,7 +781,7 @@ const STATS_QUERY_DAILY = `query DeHubDailyVisitors($zoneTag: String!, $since: D
 const STATS_QUERY_HOURLY = `query DeHubHourlyVisitors($zoneTag: String!, $since: Time!, $until: Time!) {
   viewer {
     zones(filter: { zoneTag: $zoneTag }) {
-      httpRequests1hGroups(limit: 24, filter: { datetime_geq: $since, datetime_lt: $until }, orderBy: [datetime_ASC]) {
+      httpRequests1hGroups(limit: 80, filter: { datetime_geq: $since, datetime_lt: $until }, orderBy: [datetime_ASC]) {
         dimensions { datetime }
         sum { pageViews requests }
         uniq { uniques }
@@ -772,7 +793,7 @@ const STATS_QUERY_HOURLY = `query DeHubHourlyVisitors($zoneTag: String!, $since:
 const STATS_QUERY_BREAKDOWN = `query DeHubVisitorBreakdown($zoneTag: String!, $since: Date!, $until: Date!) {
   viewer {
     zones(filter: { zoneTag: $zoneTag }) {
-      httpRequests1dGroups(limit: 8, filter: { date_geq: $since, date_leq: $until }) {
+      httpRequests1dGroups(limit: 31, filter: { date_geq: $since, date_leq: $until }, orderBy: [date_ASC]) {
         dimensions { date }
         sum {
           requests
@@ -821,20 +842,17 @@ function statsZoneGroups(body, field) {
   return (zone && zone[field]) || [];
 }
 
-/** Collapse a per-day list of {key, value} maps into a sorted top-N. */
-function statsTopN(rows, keyField, valueField, limit) {
-  const totals = new Map();
-  for (const row of rows) {
-    for (const entry of row || []) {
-      const key = entry[keyField];
-      if (!key) continue;
-      totals.set(key, (totals.get(key) || 0) + (entry[valueField] || 0));
-    }
-  }
-  return Array.from(totals.entries())
-    .map(([key, value]) => ({ key, value }))
-    .sort((a, b) => b.value - a.value)
-    .slice(0, limit);
+/**
+ * Sort one day's map by its value and keep the top `limit`, renaming the fields
+ * to the shorter names the page uses. Kept per-day rather than pre-aggregated
+ * so the page can total whichever range the reader picks without a refetch.
+ */
+function statsTrimMap(rows, keyField, valueField, outKey, outValue, limit) {
+  return (rows || [])
+    .filter((entry) => entry && entry[keyField])
+    .sort((a, b) => (b[valueField] || 0) - (a[valueField] || 0))
+    .slice(0, limit)
+    .map((entry) => ({ [outKey]: entry[keyField], [outValue]: entry[valueField] || 0 }));
 }
 
 async function buildStatsPayload(env) {
@@ -846,14 +864,17 @@ async function buildStatsPayload(env) {
   const zoneTag = (env && env.CF_ZONE_TAG) || STATS_ZONE_TAG;
   const now = new Date();
   const until = statsDayString(now);
-  const since = statsDayString(new Date(now.getTime() - STATS_DAILY_DAYS * 86400000));
+  // Asking a year back is the all-time query: Cloudflare accepts the width and
+  // returns only what it still retains, which today is everything since the
+  // zone went live.
+  const since = statsDayString(new Date(now.getTime() - STATS_ALLTIME_LOOKBACK_DAYS * 86400000));
   const breakdownSince = statsDayString(new Date(now.getTime() - STATS_BREAKDOWN_DAYS * 86400000));
   // Hourly buckets are half-open [since, until): round the upper bound up to
   // the next hour so the bucket currently being filled is included.
   const hourUntil = new Date(now);
   hourUntil.setUTCMinutes(0, 0, 0);
   hourUntil.setUTCHours(hourUntil.getUTCHours() + 1);
-  const hourSince = new Date(hourUntil.getTime() - 24 * 3600000);
+  const hourSince = new Date(hourUntil.getTime() - STATS_HOURLY_HOURS * 3600000);
 
   const [daily, hourly, breakdown] = await Promise.all([
     statsGraphql(token, STATS_QUERY_DAILY, { zoneTag, since, until }),
@@ -884,74 +905,42 @@ async function buildStatsPayload(env) {
     requests: g.sum.requests,
   }));
 
-  const sumBy = (rows, field) => rows.reduce((acc, r) => acc + (r[field] || 0), 0);
-  const today = dailySeries.length ? dailySeries[dailySeries.length - 1] : null;
-
-  // `requests` is carried alongside the cached/encrypted counts so the page can
-  // express them as a share of the same rows — mixing windows here would put a
-  // 7-day numerator over a 30-day denominator and quietly understate caching.
-  const security = breakdownGroups.reduce(
-    (acc, g) => ({
-      requests: acc.requests + (g.sum.requests || 0),
-      cachedRequests: acc.cachedRequests + (g.sum.cachedRequests || 0),
-      encryptedRequests: acc.encryptedRequests + (g.sum.encryptedRequests || 0),
-      threats: acc.threats + (g.sum.threats || 0),
-    }),
-    { requests: 0, cachedRequests: 0, encryptedRequests: 0, threats: 0 },
-  );
+  // Per-day rows, not pre-totalled. The page picks a range and adds up the days
+  // inside it, so switching between 7d / 30d / all costs nothing and every
+  // figure on screen is derived from the same rows the reader can see.
+  const breakdownSeries = breakdownGroups.map((g) => ({
+    date: g.dimensions.date,
+    // `requests` rides along with the cached/encrypted counts so a share can
+    // always be taken over the same rows. Dividing a 7-day numerator by a
+    // 30-day denominator would quietly understate caching.
+    requests: g.sum.requests || 0,
+    cachedRequests: g.sum.cachedRequests || 0,
+    encryptedRequests: g.sum.encryptedRequests || 0,
+    threats: g.sum.threats || 0,
+    countries: statsTrimMap(g.sum.countryMap, 'clientCountryName', 'requests', 'code', 'requests', STATS_COUNTRIES_PER_DAY),
+    browsers: statsTrimMap(g.sum.browserMap, 'uaBrowserFamily', 'pageViews', 'name', 'pageViews', STATS_BROWSERS_PER_DAY),
+  }));
 
   const payload = {
     ok: true,
     fetchedAt: new Date().toISOString(),
     window: {
-      dailyDays: STATS_DAILY_DAYS,
-      breakdownDays: STATS_BREAKDOWN_DAYS,
-      hourlyHours: 24,
-      // Analytics only exists from the day the zone went live on Cloudflare,
-      // so the series is short by fact, not by choice. The page says so.
+      // What was actually returned, so the page can label ranges with real
+      // spans instead of the ones it asked for. Analytics only exists from the
+      // day the zone went live on Cloudflare, so the series is short by fact.
       firstDay: dailySeries.length ? dailySeries[0].date : null,
-    },
-    totals: {
-      // Daily uniques cannot be summed into a distinct-visitor count (the same
-      // person on two days counts twice), so this is deliberately named
-      // "visitorDays" rather than "visitors". Page views and requests do sum.
-      visitorDays: sumBy(dailySeries, 'visitors'),
-      pageViews: sumBy(dailySeries, 'pageViews'),
-      requests: sumBy(dailySeries, 'requests'),
-      bytes: sumBy(dailySeries, 'bytes'),
-      days: dailySeries.length,
-    },
-    today: today && {
-      date: today.date,
-      visitors: today.visitors,
-      pageViews: today.pageViews,
-      requests: today.requests,
-    },
-    last24h: {
-      // Named `visitorHours`, not `visitors`, for the same reason as
-      // `visitorDays` above: adding up 24 hourly unique counts counts one
-      // person once per hour they were active. Cloudflare's adaptive dataset
-      // has no `uniq` field, so no true rolling-24h distinct count exists to
-      // publish — better to name what this is than to imply what it isn't.
-      visitorHours: sumBy(hourlySeries, 'visitors'),
-      pageViews: sumBy(hourlySeries, 'pageViews'),
-      requests: sumBy(hourlySeries, 'requests'),
+      lastDay: dailySeries.length ? dailySeries[dailySeries.length - 1].date : null,
+      dailyDays: dailySeries.length,
+      hourlyHours: hourlySeries.length,
+      breakdownDays: breakdownSeries.length,
+      // Cloudflare's ceilings, surfaced so the page can explain why "all time"
+      // is never hourly and why the country breakdown stops at a month.
+      hourlyMaxHours: STATS_HOURLY_HOURS,
+      breakdownMaxDays: STATS_BREAKDOWN_DAYS,
     },
     daily: dailySeries,
     hourly: hourlySeries,
-    countries: statsTopN(
-      breakdownGroups.map((g) => g.sum.countryMap),
-      'clientCountryName',
-      'requests',
-      10,
-    ).map((e) => ({ code: e.key, requests: e.value })),
-    browsers: statsTopN(
-      breakdownGroups.map((g) => g.sum.browserMap),
-      'uaBrowserFamily',
-      'pageViews',
-      6,
-    ).map((e) => ({ name: e.key, pageViews: e.value })),
-    security,
+    breakdown: breakdownSeries,
     provenance: {
       source: 'Cloudflare GraphQL Analytics API',
       endpoint: STATS_GRAPHQL_ENDPOINT,
@@ -988,7 +977,7 @@ async function buildStatsRawPayload(env) {
   const zoneTag = (env && env.CF_ZONE_TAG) || STATS_ZONE_TAG;
   const now = new Date();
   const until = statsDayString(now);
-  const since = statsDayString(new Date(now.getTime() - STATS_DAILY_DAYS * 86400000));
+  const since = statsDayString(new Date(now.getTime() - STATS_ALLTIME_LOOKBACK_DAYS * 86400000));
   const daily = await statsGraphql(token, STATS_QUERY_DAILY, { zoneTag, since, until });
   return {
     status: 200,

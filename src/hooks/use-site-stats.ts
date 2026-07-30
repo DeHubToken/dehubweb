@@ -37,24 +37,38 @@ export interface SiteStatsProvenance {
   note: string;
 }
 
+/** One day's country/browser split, kept per-day so any range can be totalled. */
+export interface SiteStatsBreakdownDay {
+  date: string;
+  requests: number;
+  cachedRequests: number;
+  encryptedRequests: number;
+  threats: number;
+  countries: { code: string; requests: number }[];
+  browsers: { name: string; pageViews: number }[];
+}
+
+export interface SiteStatsWindow {
+  firstDay: string | null;
+  lastDay: string | null;
+  /** Counts actually returned, not requested — used to label ranges honestly. */
+  dailyDays: number;
+  hourlyHours: number;
+  breakdownDays: number;
+  /** Cloudflare's ceilings: hourly can't span more than 3 days on this plan. */
+  hourlyMaxHours: number;
+  breakdownMaxDays: number;
+}
+
 export interface SiteStats {
   ok: true;
   fetchedAt: string;
-  window: { dailyDays: number; breakdownDays: number; hourlyHours: number; firstDay: string | null };
-  totals: { visitorDays: number; pageViews: number; requests: number; bytes: number; days: number };
-  today: { date: string; visitors: number; pageViews: number; requests: number } | null;
-  /**
-   * `visitorHours` is the sum of per-hour unique counts, so someone browsing
-   * across three hours counts three times. It is NOT a distinct-visitor figure
-   * and must never be labelled as one — Cloudflare's adaptive dataset exposes
-   * no `uniq` field, so a true rolling-24h unique count isn't available at all.
-   */
-  last24h: { visitorHours: number; pageViews: number; requests: number };
+  window: SiteStatsWindow;
+  /** Every day Cloudflare still retains, oldest first. */
   daily: SiteStatsDay[];
+  /** Up to 72 hourly buckets — Cloudflare's hard limit for this resolution. */
   hourly: SiteStatsHour[];
-  countries: { code: string; requests: number }[];
-  browsers: { name: string; pageViews: number }[];
-  security: { requests: number; cachedRequests: number; encryptedRequests: number; threats: number };
+  breakdown: SiteStatsBreakdownDay[];
   provenance: SiteStatsProvenance;
 }
 
