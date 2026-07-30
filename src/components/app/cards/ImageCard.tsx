@@ -986,6 +986,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           onOpenChange={setShowComments}
           tokenId={post.id}
           initialTab={commentsInitialTab}
+          commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
         />
       </div>
 
