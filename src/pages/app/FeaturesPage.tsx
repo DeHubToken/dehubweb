@@ -69,7 +69,7 @@ const CATEGORIES: { id: FeatureCategory | 'all'; labelKey: string }[] = [
   { id: 'other', labelKey: 'features.other' },
 ];
 
-type PageTab = 'requests' | 'shipped';
+type PageTab = 'requests' | 'shipping' | 'shipped';
 
 const SORTS: { id: FeatureSort; labelKey: string }[] = [
   { id: 'most_voted', labelKey: 'features.mostVoted' },
