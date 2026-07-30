@@ -256,9 +256,9 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
             </span>
           </button>
           {comment.displayName && (
-            <span className="text-zinc-500 text-xs truncate max-w-[100px]">@{comment.username}</span>
+            <span data-war-readout className="text-zinc-500 text-xs truncate max-w-[100px]">@{comment.username}</span>
           )}
-          <span className="text-zinc-500 text-xs">{comment.timeAgo}</span>
+          <span data-war-readout className="text-zinc-500 text-xs">{comment.timeAgo}</span>
         </div>
         {isEditing ? (
           <div className="flex items-center gap-2 mt-1">
@@ -1028,7 +1028,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     >
 
       {/* Tab Switcher - Left: Replies, Quotes, Search, Sort | Right: Like, Dislike, Bookmark, Share (desktop/tablet only) */}
-      <div className={cn("flex justify-between items-center gap-1", isMobile ? "mb-3" : "mb-3")}>
+      <div data-comment-tabs className={cn("flex justify-between items-center gap-1", isMobile ? "mb-3" : "mb-3")}>
         {/* Mobile close button removed — drawer dismisses via drag-down or tapping overlay */}
         {false && (
           <button
@@ -1113,6 +1113,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           placeholder="Search comments & quotes..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          data-comment-search
           className="bg-white/[0.08] backdrop-blur-xl border-white/[0.12] text-white text-sm h-10 rounded-xl placeholder:text-zinc-500"
           autoFocus={activeTab === 'search'}
         />
@@ -1418,20 +1419,21 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             off. The list above stays as-is on purpose: disabling comments hides
             no history, it only stops new ones. */}
         {commentsDisabled ? (
-          <div className={cn("mt-auto", isMobile ? "pt-2 pb-1" : "pt-3")}>
+          <div data-comment-composer="off" className={cn("mt-auto", isMobile ? "pt-2 pb-1" : "pt-3")}>
             <div className="flex items-center justify-center gap-2 rounded-xl bg-white/[0.03] border border-white/10 px-4 py-3">
               <MessageSquare className="w-4 h-4 text-zinc-500 shrink-0" />
               <span className="text-sm text-zinc-400">Comments are turned off for this post</span>
             </div>
           </div>
         ) : (
-        <div className={cn(
+        <div data-comment-composer className={cn(
           "mt-auto",
           isMobile ? "pt-2 pb-1" : "pt-3"
         )}>
           {/* Reply indicator */}
           {replyTo && (
             <div
+              data-comment-reply-tag
               className={cn(
                 "flex items-center gap-1.5 px-3 bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-xl",
                 isMobile ? "mb-1 py-1.5" : "mb-2 py-2"
@@ -1506,7 +1508,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           <div className={cn("flex flex-col gap-1.5", isMobile ? "pb-0 mt-1" : "pb-1 mt-[18px]")}>
             {isRecording ? (
               /* Recording indicator */
-              <div className="flex-1 flex items-center gap-2 bg-red-500/10 rounded-xl px-4 h-10">
+              <div data-comment-recording className="flex-1 flex items-center gap-2 bg-red-500/10 rounded-xl px-4 h-10">
                 <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                 <span className="text-sm text-red-400 flex-1">{recordingTime}s / {MAX_VOICE_DURATION}s</span>
                 <button
@@ -1520,6 +1522,11 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             ) : (
             <div
                 data-vaul-no-drag
+                data-comment-field
+                data-expanded={isInputExpanded || undefined}
+                /* War dresses this as a chamfered HUD well; the hook is inert
+                   under every other theme. See war-comments.css section 2. */
+                data-war-cut="sm"
                 className={cn(
                   "flex-1 flex backdrop-blur-xl border rounded-xl relative transition-all duration-200",
                   isInputExpanded
@@ -1608,6 +1615,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 )}>
                   <button
                     onClick={() => imageInputRef.current?.click()}
+                    data-comment-tool="image"
                     className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors"
                     aria-label="Attach image"
                   >
@@ -1616,6 +1624,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                   {!voiceNote && (
                     <button
                       onClick={startRecording}
+                      data-comment-tool="mic"
                       className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-red-400 transition-colors"
                       aria-label="Record voice note"
                     >
@@ -1626,6 +1635,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                     type="button"
                     onClick={() => { if (canPost) handlePostComment(); }}
                     disabled={!canPost}
+                    data-comment-send
                     className="h-8 px-3 rounded-lg text-xs font-medium transition-colors flex-shrink-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10"
                   >
                     {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Post'}

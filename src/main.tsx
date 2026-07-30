@@ -26,6 +26,10 @@ import "./styles/war-nav.css";
 // Closes the portal gap (modals/drawers/dropdowns/toasts sit outside #app-root)
 // and binds the war-frame primitives onto real app surfaces.
 import "./styles/war-coverage.css";
+// Rebuilds the comments composer as a HUD console. Must load after
+// war-theme.css: several of its rules tie that file's section 6 on specificity
+// and win only on source order.
+import "./styles/war-comments.css";
 // Last: the brand mark's phosphor treatment overrides the shared canvas-theme
 // filter that index.css puts on mobile-header images.
 import "./styles/war-logo.css";
