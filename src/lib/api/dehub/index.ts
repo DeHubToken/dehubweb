@@ -21,18 +21,10 @@ export * from './subscriptions';
 export * from './livechat';
 export * from './leaderboard';
 export * from './blocks';
-export {
-  NOTIFICATION_CATEGORIES,
-  CATEGORY_OF,
-  getPushPreferences,
-  updatePushPreferences,
-  resetPushPreferences,
-} from './push';
-export type {
-  NotificationKey,
-  PushPreferences,
-  NotificationCategory as PushNotificationCategory,
-} from './push';
+export * from './push';
+// Both ./notifications and ./push declare NotificationCategory; the notifications
+// one is the canonical public type, so re-export it explicitly to disambiguate.
+export type { NotificationCategory } from './notifications';
 export * from './sessions';
 export * from './payments';
 export * from './bookmarks';
