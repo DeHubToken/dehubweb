@@ -184,7 +184,8 @@ export function useFeatureCounts() {
         supabase
           .from('feature_requests')
           .select('*', { count: 'exact', head: true })
-          .not('status', 'in', '("completed","shipped","declined")'),
+          .not('status', 'in', '("completed","shipped","declined","in_progress")'),
+
       ]);
       if (totalRes.error) throw totalRes.error;
       if (openRes.error) throw openRes.error;
