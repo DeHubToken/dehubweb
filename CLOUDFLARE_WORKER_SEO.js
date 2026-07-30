@@ -615,6 +615,9 @@ const SYSTEM_ROUTES = [
   'shorts', 'videos',
   'top-100', 'glossary', 'bridge', 'agents', 'assistant', 'buy',
   'docs', 'prompt', 'premium', 'affiliate', 'work', 'editor', 'guides',
+  // Without this, shouldServeSSR() reads /stats as a username and the profile
+  // renderer 404s the page for every crawler.
+  'stats',
   // 'blog' is reserved: a user registered that handle, and without this every
   // /blog/<anything> minted an indexable "Join @blog" profile page.
   'blog',
@@ -715,6 +718,330 @@ function shouldServeSSR(pathname) {
 }
 
 
+// ==========================================================================
+// Live visitor stats — /api/stats
+// ==========================================================================
+// Backs the /stats page. Numbers come from Cloudflare's own GraphQL Analytics
+// API for this zone, which counts requests at the edge — before they ever
+// reach the SPA. That matters for honesty: this is not a client-side counter
+// the page could inflate, and it is not a number anyone here typed. It is the
+// same aggregation the Cloudflare dashboard renders.
+//
+// The three queries below are echoed verbatim in the `provenance` block of
+// every response, and /api/stats/raw returns Cloudflare's untouched reply. The
+// query we publish is therefore, by construction, the query we ran — see the
+// "Where this comes from" panel on /stats.
+//
+// Requires one secret:  wrangler secret put CF_ANALYTICS_TOKEN
+// (a Cloudflare API token with Zone → Analytics → Read on dehub.io).
+// Without it the endpoint answers 501 and the page renders an honest
+// "not configured" state rather than inventing numbers.
+const STATS_ZONE_TAG = 'bedbbcab93853fe4a11f9d004370c130'; // dehub.io
+const STATS_GRAPHQL_ENDPOINT = 'https://api.cloudflare.com/client/v4/graphql';
+const STATS_DAILY_DAYS = 30;
+const STATS_BREAKDOWN_DAYS = 7;
+// Cloudflare's analytics pipeline updates in ~minutes, so a 60s edge cache
+// costs no freshness worth having and keeps a traffic spike on /stats from
+// turning into a matching spike of Analytics API calls.
+const STATS_CACHE_SECONDS = 60;
+
+const STATS_QUERY_DAILY = `query DeHubDailyVisitors($zoneTag: String!, $since: Date!, $until: Date!) {
+  viewer {
+    zones(filter: { zoneTag: $zoneTag }) {
+      httpRequests1dGroups(limit: 31, filter: { date_geq: $since, date_leq: $until }, orderBy: [date_ASC]) {
+        dimensions { date }
+        sum { pageViews requests bytes }
+        uniq { uniques }
+      }
+    }
+  }
+}`;
+
+const STATS_QUERY_HOURLY = `query DeHubHourlyVisitors($zoneTag: String!, $since: Time!, $until: Time!) {
+  viewer {
+    zones(filter: { zoneTag: $zoneTag }) {
+      httpRequests1hGroups(limit: 24, filter: { datetime_geq: $since, datetime_lt: $until }, orderBy: [datetime_ASC]) {
+        dimensions { datetime }
+        sum { pageViews requests }
+        uniq { uniques }
+      }
+    }
+  }
+}`;
+
+const STATS_QUERY_BREAKDOWN = `query DeHubVisitorBreakdown($zoneTag: String!, $since: Date!, $until: Date!) {
+  viewer {
+    zones(filter: { zoneTag: $zoneTag }) {
+      httpRequests1dGroups(limit: 8, filter: { date_geq: $since, date_leq: $until }) {
+        dimensions { date }
+        sum {
+          requests
+          cachedRequests
+          encryptedRequests
+          threats
+          countryMap { clientCountryName requests }
+          browserMap { uaBrowserFamily pageViews }
+        }
+      }
+    }
+  }
+}`;
+
+function statsDayString(date) {
+  return date.toISOString().slice(0, 10);
+}
+
+/** Run one named GraphQL query against Cloudflare's Analytics API. */
+async function statsGraphql(token, query, variables) {
+  const res = await fetch(STATS_GRAPHQL_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ query, variables }),
+  });
+  const body = await res.json();
+  // GraphQL answers 200 with an `errors` array on query failures, so HTTP
+  // status alone is not a success signal here.
+  if (!res.ok || (body && body.errors && body.errors.length)) {
+    const message = body && body.errors && body.errors.length
+      ? body.errors.map((e) => e.message).join('; ')
+      : `HTTP ${res.status}`;
+    const err = new Error(message);
+    err.cfRay = res.headers.get('cf-ray');
+    throw err;
+  }
+  return { body, cfRay: res.headers.get('cf-ray') };
+}
+
+function statsZoneGroups(body, field) {
+  const zones = body && body.data && body.data.viewer && body.data.viewer.zones;
+  const zone = Array.isArray(zones) ? zones[0] : null;
+  return (zone && zone[field]) || [];
+}
+
+/** Collapse a per-day list of {key, value} maps into a sorted top-N. */
+function statsTopN(rows, keyField, valueField, limit) {
+  const totals = new Map();
+  for (const row of rows) {
+    for (const entry of row || []) {
+      const key = entry[keyField];
+      if (!key) continue;
+      totals.set(key, (totals.get(key) || 0) + (entry[valueField] || 0));
+    }
+  }
+  return Array.from(totals.entries())
+    .map(([key, value]) => ({ key, value }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, limit);
+}
+
+async function buildStatsPayload(env) {
+  const token = env && env.CF_ANALYTICS_TOKEN;
+  if (!token) {
+    return { status: 501, payload: { ok: false, reason: 'unconfigured' } };
+  }
+
+  const zoneTag = (env && env.CF_ZONE_TAG) || STATS_ZONE_TAG;
+  const now = new Date();
+  const until = statsDayString(now);
+  const since = statsDayString(new Date(now.getTime() - STATS_DAILY_DAYS * 86400000));
+  const breakdownSince = statsDayString(new Date(now.getTime() - STATS_BREAKDOWN_DAYS * 86400000));
+  // Hourly buckets are half-open [since, until): round the upper bound up to
+  // the next hour so the bucket currently being filled is included.
+  const hourUntil = new Date(now);
+  hourUntil.setUTCMinutes(0, 0, 0);
+  hourUntil.setUTCHours(hourUntil.getUTCHours() + 1);
+  const hourSince = new Date(hourUntil.getTime() - 24 * 3600000);
+
+  const [daily, hourly, breakdown] = await Promise.all([
+    statsGraphql(token, STATS_QUERY_DAILY, { zoneTag, since, until }),
+    statsGraphql(token, STATS_QUERY_HOURLY, {
+      zoneTag,
+      since: hourSince.toISOString(),
+      until: hourUntil.toISOString(),
+    }),
+    statsGraphql(token, STATS_QUERY_BREAKDOWN, { zoneTag, since: breakdownSince, until }),
+  ]);
+
+  const dailyGroups = statsZoneGroups(daily.body, 'httpRequests1dGroups');
+  const hourlyGroups = statsZoneGroups(hourly.body, 'httpRequests1hGroups');
+  const breakdownGroups = statsZoneGroups(breakdown.body, 'httpRequests1dGroups');
+
+  const dailySeries = dailyGroups.map((g) => ({
+    date: g.dimensions.date,
+    visitors: g.uniq.uniques,
+    pageViews: g.sum.pageViews,
+    requests: g.sum.requests,
+    bytes: g.sum.bytes,
+  }));
+
+  const hourlySeries = hourlyGroups.map((g) => ({
+    hour: g.dimensions.datetime,
+    visitors: g.uniq.uniques,
+    pageViews: g.sum.pageViews,
+    requests: g.sum.requests,
+  }));
+
+  const sumBy = (rows, field) => rows.reduce((acc, r) => acc + (r[field] || 0), 0);
+  const today = dailySeries.length ? dailySeries[dailySeries.length - 1] : null;
+
+  // `requests` is carried alongside the cached/encrypted counts so the page can
+  // express them as a share of the same rows — mixing windows here would put a
+  // 7-day numerator over a 30-day denominator and quietly understate caching.
+  const security = breakdownGroups.reduce(
+    (acc, g) => ({
+      requests: acc.requests + (g.sum.requests || 0),
+      cachedRequests: acc.cachedRequests + (g.sum.cachedRequests || 0),
+      encryptedRequests: acc.encryptedRequests + (g.sum.encryptedRequests || 0),
+      threats: acc.threats + (g.sum.threats || 0),
+    }),
+    { requests: 0, cachedRequests: 0, encryptedRequests: 0, threats: 0 },
+  );
+
+  const payload = {
+    ok: true,
+    fetchedAt: new Date().toISOString(),
+    window: {
+      dailyDays: STATS_DAILY_DAYS,
+      breakdownDays: STATS_BREAKDOWN_DAYS,
+      hourlyHours: 24,
+      // Analytics only exists from the day the zone went live on Cloudflare,
+      // so the series is short by fact, not by choice. The page says so.
+      firstDay: dailySeries.length ? dailySeries[0].date : null,
+    },
+    totals: {
+      // Daily uniques cannot be summed into a distinct-visitor count (the same
+      // person on two days counts twice), so this is deliberately named
+      // "visitorDays" rather than "visitors". Page views and requests do sum.
+      visitorDays: sumBy(dailySeries, 'visitors'),
+      pageViews: sumBy(dailySeries, 'pageViews'),
+      requests: sumBy(dailySeries, 'requests'),
+      bytes: sumBy(dailySeries, 'bytes'),
+      days: dailySeries.length,
+    },
+    today: today && {
+      date: today.date,
+      visitors: today.visitors,
+      pageViews: today.pageViews,
+      requests: today.requests,
+    },
+    last24h: {
+      // Named `visitorHours`, not `visitors`, for the same reason as
+      // `visitorDays` above: adding up 24 hourly unique counts counts one
+      // person once per hour they were active. Cloudflare's adaptive dataset
+      // has no `uniq` field, so no true rolling-24h distinct count exists to
+      // publish — better to name what this is than to imply what it isn't.
+      visitorHours: sumBy(hourlySeries, 'visitors'),
+      pageViews: sumBy(hourlySeries, 'pageViews'),
+      requests: sumBy(hourlySeries, 'requests'),
+    },
+    daily: dailySeries,
+    hourly: hourlySeries,
+    countries: statsTopN(
+      breakdownGroups.map((g) => g.sum.countryMap),
+      'clientCountryName',
+      'requests',
+      10,
+    ).map((e) => ({ code: e.key, requests: e.value })),
+    browsers: statsTopN(
+      breakdownGroups.map((g) => g.sum.browserMap),
+      'uaBrowserFamily',
+      'pageViews',
+      6,
+    ).map((e) => ({ name: e.key, pageViews: e.value })),
+    security,
+    provenance: {
+      source: 'Cloudflare GraphQL Analytics API',
+      endpoint: STATS_GRAPHQL_ENDPOINT,
+      datasets: ['httpRequests1dGroups', 'httpRequests1hGroups'],
+      measuredAt: 'Cloudflare edge (server-side, before the page loads)',
+      zoneTag,
+      // Cloudflare stamps every API response with a unique ray ID. It ties this
+      // payload to a real call against their infrastructure at a real time.
+      cfRay: { daily: daily.cfRay, hourly: hourly.cfRay, breakdown: breakdown.cfRay },
+      queries: {
+        daily: STATS_QUERY_DAILY,
+        hourly: STATS_QUERY_HOURLY,
+        breakdown: STATS_QUERY_BREAKDOWN,
+      },
+      variables: { zoneTag, since, until, breakdownSince },
+      rawUrl: '/api/stats/raw',
+      // Stated plainly on the page too: this proves the numbers came from
+      // Cloudflare's aggregation rather than from application code, and that
+      // the published query is the one that ran. It does not make the endpoint
+      // trustless — only Cloudflare exposing a public read would do that.
+      note: 'Server-measured by Cloudflare. Not a client-side counter.',
+    },
+  };
+
+  return { status: 200, payload };
+}
+
+/** /api/stats/raw — Cloudflare's untouched GraphQL replies, for verification. */
+async function buildStatsRawPayload(env) {
+  const token = env && env.CF_ANALYTICS_TOKEN;
+  if (!token) {
+    return { status: 501, payload: { ok: false, reason: 'unconfigured' } };
+  }
+  const zoneTag = (env && env.CF_ZONE_TAG) || STATS_ZONE_TAG;
+  const now = new Date();
+  const until = statsDayString(now);
+  const since = statsDayString(new Date(now.getTime() - STATS_DAILY_DAYS * 86400000));
+  const daily = await statsGraphql(token, STATS_QUERY_DAILY, { zoneTag, since, until });
+  return {
+    status: 200,
+    payload: {
+      ok: true,
+      fetchedAt: new Date().toISOString(),
+      request: { endpoint: STATS_GRAPHQL_ENDPOINT, query: STATS_QUERY_DAILY, variables: { zoneTag, since, until } },
+      cfRay: daily.cfRay,
+      response: daily.body,
+    },
+  };
+}
+
+async function handleStatsRequest(request, env, isRaw) {
+  if (request.method !== 'GET' && request.method !== 'HEAD') {
+    return new Response(JSON.stringify({ ok: false, reason: 'method_not_allowed' }), {
+      status: 405,
+      headers: { 'Content-Type': 'application/json', Allow: 'GET, HEAD' },
+    });
+  }
+
+  const cache = caches.default;
+  const cacheKey = new Request(new URL(request.url).toString(), { method: 'GET' });
+  const cached = await cache.match(cacheKey);
+  if (cached) return cached;
+
+  let status;
+  let payload;
+  try {
+    ({ status, payload } = isRaw ? await buildStatsRawPayload(env) : await buildStatsPayload(env));
+  } catch (err) {
+    status = 502;
+    payload = { ok: false, reason: 'upstream_error', message: String((err && err.message) || err), cfRay: err && err.cfRay };
+  }
+
+  const response = new Response(JSON.stringify(payload), {
+    status,
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      // Anyone may read and re-check these numbers — that is the point of
+      // publishing them.
+      'Access-Control-Allow-Origin': '*',
+      'Cache-Control': status === 200
+        ? `public, max-age=${STATS_CACHE_SECONDS}, s-maxage=${STATS_CACHE_SECONDS}`
+        : 'no-store',
+      'X-Robots-Tag': 'noindex',
+    },
+  });
+
+  if (status === 200) await cache.put(cacheKey, response.clone());
+  return response;
+}
+
 async function handleRequest(request, env) {
   const url = new URL(request.url);
   const pathname = url.pathname;
@@ -765,6 +1092,13 @@ async function handleRequest(request, env) {
   // target, so upgrading first would cost them a second hop.
   if (url.protocol === 'http:') {
     return redirect301(`https://${url.host}${url.pathname}${url.search}`);
+  }
+
+  // Live visitor stats for the /stats page. Answered here at the edge, ahead
+  // of every SEO/SSR branch below — none of that applies to a JSON endpoint,
+  // and shouldServeSSR() would otherwise have to reason about it.
+  if (pathname === '/api/stats' || pathname === '/api/stats/raw') {
+    return handleStatsRequest(request, env, pathname.endsWith('/raw'));
   }
 
   // URL-space hygiene (all UAs — these paths have no content in the SPA

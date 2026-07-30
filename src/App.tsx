@@ -373,6 +373,7 @@ function AppContent() {
           {/* Single shared AppLayout — header/sidebar mount ONCE and persist across all app routes */}
           <Route element={<AppLayout />}>
             <Route path="/jobs" element={null} />
+            <Route path="/stats" element={null} />
             <Route path="/features" element={null} />
             <Route path="/governance" element={null} />
             <Route path="/stake" element={null} />
@@ -411,6 +412,7 @@ function AppContent() {
               <Route path="top-100" element={null} />
               <Route path="jobs" element={null} />
               <Route path="glossary" element={null} />
+              <Route path="stats" element={null} />
               <Route path="events" element={null} />
               <Route path="events/:eventNumber" element={<Suspense fallback={<PageLoader />}><EventPage /></Suspense>} />
               <Route path="communities" element={null} />
