@@ -43,15 +43,63 @@ import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import {
   useSiteStats,
   type SiteStats,
+  type SiteStatsBreakdownDay,
   type SiteStatsResponse,
   type SiteStatsUnavailable,
 } from '@/hooks/use-site-stats';
 import { cn } from '@/lib/utils';
 
-type Range = '24h' | '30d';
+type Range = '24h' | '3d' | '7d' | '30d' | 'all';
+
+/**
+ * The five ranges, and the resolution each one can actually be drawn at.
+ *
+ * Cloudflare refuses any hourly window wider than 3 days on this plan, so 24h
+ * and 3d are the only hourly views that can exist — everything longer is daily.
+ * `days: null` means all time: every day Cloudflare still retains.
+ */
+const RANGES: { key: Range; label: string; hourly: boolean; hours?: number; days?: number | null }[] = [
+  { key: '24h', label: '24 hours', hourly: true, hours: 24 },
+  { key: '3d', label: '3 days', hourly: true, hours: 72 },
+  { key: '7d', label: '7 days', hourly: false, days: 7 },
+  { key: '30d', label: '30 days', hourly: false, days: 30 },
+  { key: 'all', label: 'All time', hourly: false, days: null },
+];
 
 function isUnavailable(res: SiteStatsResponse | undefined): res is SiteStatsUnavailable {
   return !!res && res.ok === false;
+}
+
+/** Total a set of per-day breakdown rows into range-wide countries/browsers. */
+function aggregateBreakdown(rows: SiteStatsBreakdownDay[]) {
+  const countries = new Map<string, number>();
+  const browsers = new Map<string, number>();
+  let requests = 0;
+  let cachedRequests = 0;
+  let encryptedRequests = 0;
+  let threats = 0;
+
+  for (const row of rows) {
+    requests += row.requests;
+    cachedRequests += row.cachedRequests;
+    encryptedRequests += row.encryptedRequests;
+    threats += row.threats;
+    for (const c of row.countries) countries.set(c.code, (countries.get(c.code) ?? 0) + c.requests);
+    for (const b of row.browsers) browsers.set(b.name, (browsers.get(b.name) ?? 0) + b.pageViews);
+  }
+
+  return {
+    days: rows.length,
+    countries: [...countries.entries()]
+      .map(([code, requests]) => ({ code, requests }))
+      .sort((a, b) => b.requests - a.requests)
+      .slice(0, 10),
+    browsers: [...browsers.entries()]
+      .map(([name, pageViews]) => ({ name, pageViews }))
+      .sort((a, b) => b.pageViews - a.pageViews)
+      .slice(0, 6),
+    security: { requests, cachedRequests, encryptedRequests, threats },
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -156,10 +204,12 @@ function ShareRow({
     <div className="flex items-center gap-3 py-1.5">
       {leading && <span className="text-base leading-none w-5 shrink-0">{leading}</span>}
       <span className="text-sm text-white truncate flex-1 min-w-0">{label}</span>
-      <div className="w-20 sm:w-28 h-1.5 rounded-full bg-zinc-800/50 overflow-hidden shrink-0">
+      {/* The middle panel is narrow even on desktop, and the bar is decoration
+          while the label is the content — so the bar yields space first. */}
+      <div className="w-10 sm:w-20 lg:w-24 h-1.5 rounded-full bg-zinc-800/50 overflow-hidden shrink-0">
         <div className="h-full rounded-full bg-current opacity-50" style={{ width: `${pct}%` }} />
       </div>
-      <span className="text-xs text-zinc-400 tabular-nums w-14 text-right shrink-0">{formatted}</span>
+      <span className="text-xs text-zinc-400 tabular-nums w-12 text-right shrink-0">{formatted}</span>
     </div>
   );
 }
@@ -338,24 +388,60 @@ export default function StatsPage() {
   const stats: SiteStats | null = data && data.ok ? data : null;
   const unavailable: SiteStatsUnavailable | null = isUnavailable(data) ? data : null;
 
-  const chartData = useMemo(() => {
-    if (!stats) return [];
-    return range === '24h'
-      ? stats.hourly.map((h) => ({ label: formatHourLabel(h.hour), visitors: h.visitors, pageViews: h.pageViews }))
-      : stats.daily.map((d) => ({ label: formatDayLabel(d.date), visitors: d.visitors, pageViews: d.pageViews }));
+  /**
+   * Everything on the page below the header derives from the selected range,
+   * sliced out of the single payload the endpoint returns. No refetch on
+   * switch, and every figure comes from the rows the chart is drawing.
+   */
+  const view = useMemo(() => {
+    if (!stats) return null;
+    const cfg = RANGES.find((r) => r.key === range) ?? RANGES[0];
+    const sum = <T,>(rows: T[], pick: (row: T) => number) => rows.reduce((a, r) => a + pick(r), 0);
+
+    if (cfg.hourly) {
+      const buckets = stats.hourly.slice(-(cfg.hours ?? 24));
+      const peak = buckets.length
+        ? buckets.reduce((best, h) => (h.visitors > best.visitors ? h : best))
+        : null;
+      // Breakdown rows are daily, so an hourly range takes the days it spans.
+      const breakdownRows = stats.breakdown.slice(-Math.max(1, Math.ceil((cfg.hours ?? 24) / 24)));
+      return {
+        hourly: true,
+        buckets: buckets.length,
+        chart: buckets.map((h) => ({ label: formatHourLabel(h.hour), visitors: h.visitors, pageViews: h.pageViews })),
+        pageViews: sum(buckets, (h) => h.pageViews),
+        requests: sum(buckets, (h) => h.requests),
+        bytes: null as number | null,
+        peakLabel: 'hour',
+        peakValue: peak?.visitors ?? null,
+        peakWhen: peak ? formatHourLabel(peak.hour) : null,
+        breakdown: aggregateBreakdown(breakdownRows),
+      };
+    }
+
+    const days = cfg.days == null ? stats.daily : stats.daily.slice(-cfg.days);
+    const peak = days.length ? days.reduce((best, d) => (d.visitors > best.visitors ? d : best)) : null;
+    const breakdownRows = cfg.days == null ? stats.breakdown : stats.breakdown.slice(-cfg.days);
+    return {
+      hourly: false,
+      buckets: days.length,
+      chart: days.map((d) => ({ label: formatDayLabel(d.date), visitors: d.visitors, pageViews: d.pageViews })),
+      pageViews: sum(days, (d) => d.pageViews),
+      requests: sum(days, (d) => d.requests),
+      bytes: sum(days, (d) => d.bytes) as number | null,
+      peakLabel: 'day',
+      peakValue: peak?.visitors ?? null,
+      peakWhen: peak ? formatDayLabel(peak.date) : null,
+      breakdown: aggregateBreakdown(breakdownRows),
+    };
   }, [stats, range]);
 
-  /** Busiest single hour of the last 24 — a real per-bucket unique count. */
-  const peakHour = useMemo(() => {
-    if (!stats?.hourly.length) return null;
-    return stats.hourly.reduce((best, h) => (h.visitors > best.visitors ? h : best));
-  }, [stats]);
-
-  const maxCountry = stats?.countries[0]?.requests ?? 0;
-  const maxBrowser = stats?.browsers[0]?.pageViews ?? 0;
-  const cachedPct = stats && stats.security.requests > 0
-    ? Math.round((stats.security.cachedRequests / stats.security.requests) * 100)
+  const maxCountry = view?.breakdown.countries[0]?.requests ?? 0;
+  const maxBrowser = view?.breakdown.browsers[0]?.pageViews ?? 0;
+  const cachedPct = view && view.breakdown.security.requests > 0
+    ? Math.round((view.breakdown.security.cachedRequests / view.breakdown.security.requests) * 100)
     : null;
+  const today = stats?.daily.length ? stats.daily[stats.daily.length - 1] : null;
 
   return (
     <div className="min-h-screen">
@@ -411,10 +497,7 @@ export default function StatsPage() {
           </div>
 
           <GlassFilterRow
-            items={[
-              { key: '24h' as Range, label: t('stats.range24h', 'Last 24 hours') },
-              { key: '30d' as Range, label: t('stats.range30d', 'Last 30 days') },
-            ]}
+            items={RANGES.map((r) => ({ key: r.key, label: t(`stats.range.${r.key}`, r.label) }))}
             activeKey={range}
             onSelect={(key) => setRange(key as Range)}
           />
@@ -448,41 +531,53 @@ export default function StatsPage() {
           </div>
         )}
 
-        {stats && (
+        {stats && view && (
           <>
             {/* Headline numbers */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
               <StatTile
                 label={t('stats.tile.visitorsToday', 'Visitors today')}
-                value={formatCount(stats.today?.visitors)}
+                value={formatCount(today?.visitors)}
                 hint={t('stats.tile.soFarToday', 'so far today, UTC')}
               />
-              {/* Deliberately the busiest single hour rather than a "visitors,
-                  24h" figure: summing 24 hourly unique counts would count one
-                  person once per hour they were active, and Cloudflare offers
-                  no true rolling-24h unique count to use instead. */}
+              {/* The busiest single bucket, never a summed "visitors in range"
+                  figure: adding overlapping unique counts would count one person
+                  once per bucket they appeared in. This is a number Cloudflare
+                  actually measures. */}
               <StatTile
-                label={t('stats.tile.peakHour', 'Busiest hour')}
-                value={formatCount(peakHour?.visitors)}
+                label={
+                  view.hourly
+                    ? t('stats.tile.peakHour', 'Busiest hour')
+                    : t('stats.tile.peakDay', 'Busiest day')
+                }
+                value={formatCount(view.peakValue)}
                 hint={
-                  peakHour
-                    ? t('stats.tile.peakHourAt', 'at {{hour}} UTC', { hour: formatHourLabel(peakHour.hour) })
-                    : t('stats.tile.rollingWindow', 'last 24 hours')
+                  view.peakWhen
+                    ? view.hourly
+                      ? t('stats.tile.peakAtHour', 'at {{when}} UTC', { when: view.peakWhen })
+                      : t('stats.tile.peakOnDay', 'on {{when}}', { when: view.peakWhen })
+                    : t('stats.tile.inRange', 'in this range')
                 }
               />
-              {/* Labelled with the days actually returned, not the 30 requested.
-                  The zone is younger than the window, so a hardcoded "30d"
-                  would overstate the span these totals cover. */}
+              {/* Labelled with the buckets actually returned, not the ones
+                  requested — the zone is younger than the longer windows, so a
+                  hardcoded span would overstate what these totals cover. */}
               <StatTile
-                label={t('stats.tile.pageViews', 'Page views, {{days}}d', { days: stats.totals.days })}
-                value={formatCompact(stats.totals.pageViews)}
-                hint={formatCount(stats.totals.pageViews)}
+                label={t('stats.tile.pageViews', 'Page views')}
+                value={formatCompact(view.pageViews)}
+                hint={
+                  view.hourly
+                    ? t('stats.tile.overHours', 'over {{count}}h', { count: view.buckets })
+                    : view.buckets === 1
+                      ? t('stats.tile.overDay', 'over 1 day')
+                      : t('stats.tile.overDays', 'over {{count}} days', { count: view.buckets })
+                }
               />
               <StatTile
-                label={t('stats.tile.served', 'Served, {{days}}d', { days: stats.totals.days })}
-                value={formatBytes(stats.totals.bytes)}
+                label={view.bytes == null ? t('stats.tile.requestsLabel', 'Requests') : t('stats.tile.served', 'Served')}
+                value={view.bytes == null ? formatCompact(view.requests) : formatBytes(view.bytes)}
                 hint={t('stats.tile.requests', '{{requests}} requests', {
-                  requests: formatCompact(stats.totals.requests),
+                  requests: formatCompact(view.requests),
                 })}
               />
             </div>
@@ -493,25 +588,25 @@ export default function StatsPage() {
             <div data-page-bento className="rounded-2xl bg-zinc-900 border border-zinc-800 p-4">
               <div className="flex items-baseline justify-between mb-3">
                 <span className="text-sm font-semibold text-white">
-                  {range === '24h'
+                  {view.hourly
                     ? t('stats.chart.hourly', 'Visitors per hour')
                     : t('stats.chart.daily', 'Visitors per day')}
                 </span>
                 <span className="text-[11px] text-zinc-500">
-                  {range === '24h'
-                    ? t('stats.chart.hourlyHint', 'last 24 hours, UTC')
+                  {view.hourly
+                    ? t('stats.chart.hourlyHint', '{{count}} hourly buckets, UTC', { count: view.buckets })
                     : t('stats.chart.dailyHint', 'unique visitors per day')}
                 </span>
               </div>
 
-              {chartData.length === 0 ? (
+              {view.chart.length === 0 ? (
                 <div className="flex items-center justify-center h-44 text-zinc-500 text-sm">
                   {t('stats.chart.empty', 'No data for this window yet')}
                 </div>
               ) : (
                 <div className="text-white">
                   <ResponsiveContainer width="100%" height={180}>
-                    <AreaChart data={chartData} margin={{ top: 4, right: 4, left: -22, bottom: 0 }}>
+                    <AreaChart data={view.chart} margin={{ top: 4, right: 4, left: -22, bottom: 0 }}>
                       <defs>
                         <linearGradient id="statsVisitorsFill" x1="0" y1="0" x2="0" y2="1">
                           <stop offset="0%" stopColor="currentColor" stopOpacity={0.35} />
@@ -558,11 +653,13 @@ export default function StatsPage() {
                     {t('stats.countries.title', 'Top countries')}
                   </span>
                   <span className="text-[11px] text-zinc-500 ml-auto">
-                    {t('stats.countries.window', 'last {{days}} days', { days: stats.window.breakdownDays })}
+                    {view.breakdown.days === 1
+                      ? t('stats.countries.windowDay', 'last 24 hours')
+                      : t('stats.countries.window', 'last {{days}} days', { days: view.breakdown.days })}
                   </span>
                 </div>
                 <div className="text-white">
-                  {stats.countries.map((c) => (
+                  {view.breakdown.countries.map((c) => (
                     <ShareRow
                       key={c.code}
                       leading={countryFlag(c.code)}
@@ -586,7 +683,7 @@ export default function StatsPage() {
                   </span>
                 </div>
                 <div className="text-white">
-                  {stats.browsers.map((b) => (
+                  {view.breakdown.browsers.map((b) => (
                     <ShareRow
                       key={b.name}
                       label={b.name}
@@ -607,7 +704,9 @@ export default function StatsPage() {
                   {t('stats.edge.title', 'At the edge')}
                 </span>
                 <span className="text-[11px] text-zinc-500 ml-auto">
-                  {t('stats.edge.window', 'last {{days}} days', { days: stats.window.breakdownDays })}
+                  {view.breakdown.days === 1
+                    ? t('stats.edge.windowDay', 'last 24 hours')
+                    : t('stats.edge.window', 'last {{days}} days', { days: view.breakdown.days })}
                 </span>
               </div>
               <div className="grid grid-cols-3 gap-2">
@@ -618,11 +717,11 @@ export default function StatsPage() {
                   },
                   {
                     label: t('stats.edge.encrypted', 'Encrypted'),
-                    value: formatCompact(stats.security.encryptedRequests),
+                    value: formatCompact(view.breakdown.security.encryptedRequests),
                   },
                   {
                     label: t('stats.edge.threats', 'Threats blocked'),
-                    value: formatCount(stats.security.threats),
+                    value: formatCount(view.breakdown.security.threats),
                   },
                 ].map((item) => (
                   <div key={item.label} className="text-center">
@@ -665,17 +764,32 @@ export default function StatsPage() {
                   )}
                 </li>
                 <li>
-                  <span className="text-zinc-300">{t('stats.definitions.totalTerm', '30-day totals')}</span>{' '}
+                  <span className="text-zinc-300">{t('stats.definitions.totalTerm', 'Range totals')}</span>{' '}
                   {t(
                     'stats.definitions.total',
-                    '— page views and requests add up across days. Daily visitor counts deliberately are not summed into a headline "total visitors", because someone here on Monday and Tuesday would be counted twice.',
+                    '— page views and requests add up across the range. Visitor counts deliberately are not summed into a headline "total visitors", because someone here on Monday and Tuesday would be counted twice.',
                   )}
                 </li>
                 <li>
-                  <span className="text-zinc-300">{t('stats.definitions.peakTerm', 'Busiest hour')}</span>{' '}
+                  <span className="text-zinc-300">{t('stats.definitions.peakTerm', 'Busiest hour / day')}</span>{' '}
                   {t(
                     'stats.definitions.peak',
-                    '— the highest unique count in any single hour of the last 24, for the same reason: it is a figure Cloudflare actually measures, rather than one built by adding counts that overlap.',
+                    '— the highest unique count in any single bucket of the range, for the same reason: it is a figure Cloudflare actually measures, rather than one built by adding counts that overlap.',
+                  )}
+                </li>
+                <li>
+                  <span className="text-zinc-300">{t('stats.definitions.resolutionTerm', 'Hourly stops at 3 days')}</span>{' '}
+                  {t(
+                    'stats.definitions.resolution',
+                    '— that is Cloudflare\u2019s limit on this plan, not a choice: it refuses any hourly query wider than three days. The 24-hour and 3-day views are hourly; 7 days and longer are daily, and there is no way to draw an hourly all-time chart.',
+                  )}
+                </li>
+                <li>
+                  <span className="text-zinc-300">{t('stats.definitions.breakdownTerm', 'Countries and browsers')}</span>{' '}
+                  {t(
+                    'stats.definitions.breakdown',
+                    '— these follow the range you pick, but only back {{max}} days, which is as far as the per-day breakdown is kept. On longer ranges the chart covers more time than the country list does.',
+                    { max: stats.window.breakdownMaxDays },
                   )}
                 </li>
                 {stats.window.firstDay && (
@@ -683,8 +797,8 @@ export default function StatsPage() {
                     <span className="text-zinc-300">{t('stats.definitions.startTerm', 'History')}</span>{' '}
                     {t(
                       'stats.definitions.start',
-                      '— the series begins {{date}}, the day dehub.io moved onto Cloudflare. There is no earlier edge data to show.',
-                      { date: stats.window.firstDay },
+                      '— "all time" means every day Cloudflare still retains, which today is {{days}} days starting {{date}}, the day dehub.io moved onto Cloudflare. There is no earlier edge data to show, and older days drop off as Cloudflare ages them out.',
+                      { date: stats.window.firstDay, days: stats.window.dailyDays },
                     )}
                   </li>
                 )}
