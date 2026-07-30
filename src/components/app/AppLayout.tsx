@@ -284,9 +284,17 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
               {/* Opaque backing, deliberately a separate element from the scroller:
                   the swallow clip cuts the scroller at the nav pill's top edge, and
                   a clipped background takes the black with it — leaving the feed
-                  visible through the translucent header above the pill. */}
+                  visible through the translucent header above the pill.
+
+                  It carries its own data attribute rather than sharing
+                  `data-post-overlay` with the scroller: the canvas themes null
+                  this backing out entirely (they hide the feed instead, so the
+                  animated canvas shows through the post), and they must be able
+                  to target the painted element without also matching the
+                  scroller's `:has()`/visibility rules keyed on the overlay. */}
               <div
                 aria-hidden
+                data-post-overlay-backdrop
                 className="fixed top-0 bottom-0 z-10 bg-black"
                 style={{ left: POST_LAYER_LEFT, width: POST_LAYER_WIDTH }}
               />
