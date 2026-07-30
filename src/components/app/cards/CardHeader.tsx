@@ -18,6 +18,7 @@ import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { seedProfileCache } from '@/lib/profile-cache-seed';
 import { ProfileHoverCard } from '@/components/app/ProfileHoverCard';
 import { useAuth } from '@/contexts/AuthContext';
+import { useMergedViewCount } from '@/hooks/use-anon-view-counts';
 
 import type { ContentType } from '@/types/feed.types';
 
@@ -42,6 +43,11 @@ interface CardHeaderProps {
   timestamp?: string;
   /** View count to show next to timestamp */
   viewCount?: string | number;
+  /**
+   * Post token id. Supplying it folds views from signed-out visitors (recorded
+   * separately from the DeHub API) into the displayed count.
+   */
+  tokenId?: string | number;
   /** Badge balance from API data (avoids edge function call) */
   badgeBalance?: number;
 }
@@ -67,9 +73,11 @@ export function CardHeader({
   creatorId,
   creatorUsername,
   timestamp,
-  viewCount,
+  viewCount: baseViewCount,
+  tokenId,
   badgeBalance,
 }: CardHeaderProps) {
+  const viewCount = useMergedViewCount(tokenId, baseViewCount);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { walletAddress: viewerAddress } = useAuth();
