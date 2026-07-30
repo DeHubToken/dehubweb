@@ -921,6 +921,8 @@ export default function FeaturesPage() {
   const totalCount = counts?.total ?? features.length;
   const remainingCount = counts?.open ?? features.length;
   const shippedCount = shippedFeatures?.length ?? 0;
+  const inProgressCount = inProgressFeatures?.length ?? 0;
+
 
   // Swallow the feature-request list at the sticky header bento's top edge under
   // the glass themes, exactly like the home feed cuts at its nav pill.
