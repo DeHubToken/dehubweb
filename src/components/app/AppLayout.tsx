@@ -33,7 +33,7 @@ import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
 
 import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { isHomePath } from '@/lib/home-path';
+import { scrollDocumentTo } from '@/lib/document-scroll';
 import { GlobalFeedNav } from './GlobalFeedNav';
 import { GlobalFeedNavProvider } from '@/contexts/GlobalFeedNavContext';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -49,14 +49,19 @@ interface AppLayoutContentProps {
 
 // Session storage keys
 const POST_OVERLAY_ORIGIN_KEY = 'post-overlay-origin';
-const HOME_SCROLL_POSITION_KEY = 'home-scroll-position';
 
 // The home feed is reachable at /app and at the clean feed-tab URLs
 // (/videos, /shorts) — all backed by the same cached HomePage. Layout that's
 // specific to the home feed (full-bleed mosaic, collapsed-mode global nav)
 // must treat all of them the same.
 const HOME_FEED_ROUTES = new Set(['/', '/app', '/app/', '/videos', '/shorts']);
-const isHomeFeedRoute = (pathname: string) => HOME_FEED_ROUTES.has(pathname);
+const isHomeFeedRoute = (pathname: string | null | undefined) =>
+  !!pathname && HOME_FEED_ROUTES.has(pathname);
+
+// The post layer tracks <main>'s live box (the gap between the sidebars) via the
+// CSS vars published below — the same ones the login modal centers against.
+const POST_LAYER_LEFT = 'var(--app-main-left, 0px)';
+const POST_LAYER_WIDTH = 'var(--app-main-width, 100%)';
 
 function AppLayoutContent({ children }: AppLayoutContentProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -140,130 +145,53 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
     return sessionStorage.getItem(POST_OVERLAY_ORIGIN_KEY) === 'home';
   });
   const prevPathRef = useRef<string | null>(null);
-  const savedScrollRef = useRef<number>(0);
-  
-  const getScrollPosition = () => {
-    return window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
-  };
-  
-  const setScrollPosition = (value: number) => {
-    window.scrollTo(0, value);
-    document.documentElement.scrollTop = value;
-    document.body.scrollTop = value;
-  };
-  
-  // Save home scroll position continuously when on home page. The scroll
-  // handler only writes to a ref — sessionStorage.setItem is synchronous
-  // main-thread IO and would eat ~1ms of every scroll frame during a fling.
-  // The storage write happens on capture-phase click (fires before any
-  // navigation this position needs to survive), pagehide, and tab-hide.
-  useEffect(() => {
-    const isHome = isHomePath(location.pathname);
-    if (!isHome) return;
 
-    const trackScroll = () => {
-      savedScrollRef.current = getScrollPosition();
-    };
-    const flushScroll = () => {
-      savedScrollRef.current = getScrollPosition();
-      sessionStorage.setItem(HOME_SCROLL_POSITION_KEY, String(savedScrollRef.current));
-    };
-
-    flushScroll();
-
-    window.addEventListener('scroll', trackScroll, { passive: true });
-    document.addEventListener('scroll', trackScroll, { passive: true });
-    document.addEventListener('click', flushScroll, { capture: true, passive: true });
-    window.addEventListener('pagehide', flushScroll);
-    document.addEventListener('visibilitychange', flushScroll);
-
-    return () => {
-      // Teardown runs after the route swap, when the window scroll may have
-      // already clamped to the new page — persist the last position tracked
-      // while home was actually visible, don't re-read the live scroll.
-      sessionStorage.setItem(HOME_SCROLL_POSITION_KEY, String(savedScrollRef.current));
-      window.removeEventListener('scroll', trackScroll);
-      document.removeEventListener('scroll', trackScroll);
-      document.removeEventListener('click', flushScroll, { capture: true });
-      window.removeEventListener('pagehide', flushScroll);
-      document.removeEventListener('visibilitychange', flushScroll);
-    };
-  }, [location.pathname]);
-  
-  // Detect navigation from home to post
+  // Remember whether the open post was reached from the home feed, and forget it
+  // as soon as the user leaves the home↔post pair. Marking the origin is what
+  // decides between the overlay (home stays mounted and visible underneath) and
+  // a standalone post page, so a stale marker would stack home behind posts
+  // opened from a profile or a community.
+  //
+  // There is deliberately no scroll bookkeeping here any more. The overlay is a
+  // fixed layer with its own scroller (see below), so opening a post never moves
+  // the feed's scroll position and there is nothing to save or restore — the feed
+  // is simply still where the user left it when the overlay closes. The old
+  // save/restore pair fought the browser with three rAFs, six timeouts and a
+  // MutationObserver over the whole body for a full second after every back
+  // navigation, which is what made returning to the feed lurch.
   useEffect(() => {
     const currentPath = location.pathname;
     const prevPath = prevPathRef.current;
-    
-    if (isPostRoute && isHomePath(prevPath)) {
+    prevPathRef.current = currentPath;
+
+    if (isPostRoute && isHomeFeedRoute(prevPath)) {
       setCameFromHome(true);
       sessionStorage.setItem(POST_OVERLAY_ORIGIN_KEY, 'home');
+      return;
     }
-    
-    prevPathRef.current = currentPath;
+    if (!isPostRoute && !isHomeFeedRoute(currentPath)) {
+      setCameFromHome(false);
+      sessionStorage.removeItem(POST_OVERLAY_ORIGIN_KEY);
+    }
   }, [location.pathname, isPostRoute]);
-  
-  // Restore scroll position when returning to home from post overlay
-  useLayoutEffect(() => {
-    const isHomePage = isHomePath(location.pathname);
-    const wasInPostOverlay = sessionStorage.getItem(POST_OVERLAY_ORIGIN_KEY) === 'home';
-    
-    if (isHomePage && wasInPostOverlay) {
-      const savedScroll = sessionStorage.getItem(HOME_SCROLL_POSITION_KEY);
-      const scrollValue = savedScroll ? parseInt(savedScroll, 10) : savedScrollRef.current;
-      
-      if (scrollValue > 0) {
-        const attemptScroll = () => {
-          setScrollPosition(scrollValue);
-        };
-        
-        attemptScroll();
-        
-        requestAnimationFrame(() => {
-          attemptScroll();
-          requestAnimationFrame(attemptScroll);
-        });
-        
-        const attempts = [16, 50, 100, 200, 400, 800];
-        const timeouts = attempts.map(delay => 
-          setTimeout(attemptScroll, delay)
-        );
-        
-        const observer = new MutationObserver(attemptScroll);
-        observer.observe(document.body, { childList: true, subtree: true });
-        
-        const cleanupTimeout = setTimeout(() => {
-          observer.disconnect();
-          sessionStorage.removeItem(HOME_SCROLL_POSITION_KEY);
-          sessionStorage.removeItem(POST_OVERLAY_ORIGIN_KEY);
-          setCameFromHome(false);
-        }, 1000);
-        
-        return () => {
-          timeouts.forEach(clearTimeout);
-          clearTimeout(cleanupTimeout);
-          observer.disconnect();
-        };
-      }
-    }
-  }, [location.pathname]);
 
-  // Scroll to top when navigating between cached pages (not home overlay)
+  // Scroll to top when navigating between cached pages (not the home feed,
+  // which keeps its position). `window.scrollTo` alone is a no-op in this app —
+  // body is the scrolling element — hence the shared helper.
   const prevCachedPathRef = useRef(location.pathname);
   useEffect(() => {
     const prev = prevCachedPathRef.current;
     const curr = location.pathname;
     prevCachedPathRef.current = curr;
-    
-    if (prev !== curr && isCachedPageRoute(curr) && !isHomePath(curr)) {
-      // Don't scroll to top when returning to home (handled by scroll restoration)
-      window.scrollTo(0, 0);
+
+    if (prev !== curr && isCachedPageRoute(curr) && !isHomeFeedRoute(curr)) {
+      scrollDocumentTo(0);
     }
   }, [location.pathname]);
 
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   
-  const navigatingFromHomeToPost = isPostRoute && isHomePath(prevPathRef.current);
+  const navigatingFromHomeToPost = isPostRoute && isHomeFeedRoute(prevPathRef.current);
   // Only persist home behind the post when navigation actually originated from home.
   // Posts opened from communities/profiles/explore must not stack home underneath.
   const cameFromHomeOverlay = sessionStorage.getItem(POST_OVERLAY_ORIGIN_KEY) === 'home';
@@ -276,6 +204,15 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
   // standalone post route).
   const postOverlayRef = useRef<HTMLDivElement>(null);
   useFeedSwallowClip(postOverlayRef, '[data-feed-nav]', [showHomePagePersisted]);
+
+  // The overlay is its own scroll container, so it opens at the top by
+  // construction — no scroll-to-top race, and the feed's own scroll offset is
+  // never touched. Post → post (a related video, a quoted post) reuses the same
+  // layer, so reset it explicitly there, before paint.
+  const overlayPostId = postMatch?.params.postId ?? videoMatch?.params.tokenId ?? null;
+  useLayoutEffect(() => {
+    if (postOverlayRef.current) postOverlayRef.current.scrollTop = 0;
+  }, [overlayPostId, showHomePagePersisted]);
 
   const isCached = isCachedPageRoute(location.pathname);
   // Dynamic routes: post overlay, single post, post info, or username profiles
@@ -321,18 +258,55 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
             <PersistentPageCache keepHomeVisible={showHomePagePersisted} />
           </GlobalFeedNavProvider>
           
-          {/* Post overlay — renders on top when viewing a post from home.
-              Positioned absolutely so it visually covers the home feed content,
-              while the home page's sticky top tab bar (z-50) peeks above it —
-              the toggle in that bar swaps to a back button for a seamless feel. */}
+          {/* Post overlay — renders on top when viewing a post from home. The
+              home page's sticky tab bar peeks above it (z-110 vs z-10) and its
+              toggle swaps to a back button, which is what makes the transition
+              feel seamless.
+
+              This element IS the post view — a fixed layer pinned over the middle
+              column with its own scroller. That is the whole trick. An in-flow
+              (or absolutely positioned) overlay shares the page scroller with the
+              feed mounted underneath it, so it opened at whatever offset the feed
+              happened to be at and only snapped to the top afterwards — when a
+              scroll-to-top fired at all. Owning the scroll means the post is at
+              its top on the first paint, and the feed's position survives
+              untouched for the trip back.
+
+              It reaches to `top-0`, under the mobile header rather than below it:
+              that header is translucent glass, so whatever sits beneath shows
+              through it, and while you are reading a post that has to be the post
+              — starting the layer at `top-11` left the home feed's text bleeding
+              through the header. The post's own clearance padding keeps its
+              content below the nav pill, and scrolling slides it under the glass
+              exactly like the feed does. */}
           {showHomePagePersisted && (
-            <div ref={postOverlayRef} data-post-overlay className="absolute top-0 left-0 right-0 min-h-screen z-10 bg-black">
-              <ErrorBoundary compact resetKey={location.pathname} label="Post">
-                <Suspense fallback={null}>
-                  <SinglePostPage />
-                </Suspense>
-              </ErrorBoundary>
-            </div>
+            <>
+              {/* Opaque backing, deliberately a separate element from the scroller:
+                  the swallow clip cuts the scroller at the nav pill's top edge, and
+                  a clipped background takes the black with it — leaving the feed
+                  visible through the translucent header above the pill. */}
+              <div
+                aria-hidden
+                className="fixed top-0 bottom-0 z-10 bg-black"
+                style={{ left: POST_LAYER_LEFT, width: POST_LAYER_WIDTH }}
+              />
+              <div
+                ref={postOverlayRef}
+                data-post-overlay
+                className="fixed top-0 bottom-0 z-10 overflow-y-auto overscroll-contain"
+                style={{
+                  left: POST_LAYER_LEFT,
+                  width: POST_LAYER_WIDTH,
+                  WebkitOverflowScrolling: 'touch',
+                }}
+              >
+                <ErrorBoundary compact resetKey={location.pathname} label="Post">
+                  <Suspense fallback={null}>
+                    <SinglePostPage inOverlay />
+                  </Suspense>
+                </ErrorBoundary>
+              </div>
+            </>
           )}
 
           {/* Dynamic routes (post pages, username profiles, etc.) use Outlet.

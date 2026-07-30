@@ -15,17 +15,110 @@ export function wasDrawerJustDismissed(withinMs = 400) {
   return Date.now() - lastDrawerDismissAt < withinMs;
 }
 
-const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, ...props }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
-  <DrawerPrimitive.Root
-    shouldScaleBackground={shouldScaleBackground}
-    modal={modal}
-    onOpenChange={(open) => {
-      if (!open) lastDrawerDismissAt = Date.now();
-      onOpenChange?.(open);
-    }}
-    {...props}
-  />
-);
+/**
+ * vaul parts that only work inside a Root, because they read its context. If a
+ * sheet puts any of these outside its `DrawerContent`, its Root has to stay
+ * mounted; `DrawerContent` itself is exempt because a closed Root renders none
+ * of it anyway.
+ */
+const CONTEXT_BOUND_PARTS: ReadonlySet<unknown> = new Set([
+  DrawerPrimitive.Trigger,
+  DrawerPrimitive.Close,
+  DrawerPrimitive.Title,
+  DrawerPrimitive.Description,
+  DrawerPrimitive.Portal,
+  DrawerPrimitive.Overlay,
+]);
+
+/**
+ * Can this sheet be left unmounted until it first opens? Only if nothing outside
+ * its content needs the Root's context — most commonly a `DrawerTrigger`, which
+ * is the sheet's own opener and would vanish with it. Walks the literal JSX
+ * children (where every such part in this codebase is written), pruning at
+ * `DrawerContent` since that subtree is withheld anyway.
+ */
+function isDeferrable(node: React.ReactNode, DrawerContentType: unknown): boolean {
+  let ok = true;
+  React.Children.forEach(node, (child) => {
+    if (!ok || !React.isValidElement(child)) return;
+    if (child.type === DrawerContentType) return;
+    if (CONTEXT_BOUND_PARTS.has(child.type)) {
+      ok = false;
+      return;
+    }
+    const kids = (child.props as { children?: React.ReactNode } | null)?.children;
+    if (kids && !isDeferrable(kids, DrawerContentType)) ok = false;
+  });
+  return ok;
+}
+
+/** The children a closed, dormant sheet still has to render: everything but the sheet body. */
+function withoutContent(node: React.ReactNode, DrawerContentType: unknown): React.ReactNode {
+  return React.Children.map(node, (child) =>
+    React.isValidElement(child) && child.type === DrawerContentType ? null : child,
+  );
+}
+
+/**
+ * Every mounted vaul Root registers a `window` scroll listener for the lifetime
+ * of the component — `usePositionFixed` does it with an empty dep array, so it
+ * happens whether or not the sheet is open, and the handler reads
+ * `window.scrollY` (a layout-flushing read) on every scroll event. It exists
+ * only to restore position on iOS Safari; everywhere else it is pure cost.
+ *
+ * That cost is per sheet, and the feed mounts a handful of sheets per card:
+ * 20 posts on screen meant 185 window scroll listeners, 40 posts meant 365, and
+ * it kept climbing as the infinite feed grew — every one of them running on
+ * every scroll frame. It was the largest single JS cost while scrolling the feed.
+ *
+ * So keep the Root out of the tree until a sheet first opens, rendering its
+ * non-content children (openers and other markup) exactly as a closed Root
+ * would. Mounting then happens in two steps — Root closed first, real `open` on
+ * the next frame — because vaul renders an already-open Root at its final
+ * position with no transition, and a sheet that teleports in instead of sliding
+ * up would be a worse trade than the listener. Once live the Root stays mounted,
+ * so this costs one frame on a sheet's first open and nothing afterwards.
+ */
+const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, children, ...props }: React.ComponentProps<typeof DrawerPrimitive.Root>) => {
+  const canDeferRef = React.useRef<boolean | null>(null);
+  if (canDeferRef.current === null) {
+    canDeferRef.current =
+      !props.open && !props.defaultOpen && isDeferrable(children, DrawerContent);
+  }
+
+  const [phase, setPhase] = React.useState<"dormant" | "mounting" | "live">(
+    canDeferRef.current ? "dormant" : "live",
+  );
+
+  React.useEffect(() => {
+    if (phase === "dormant" && props.open) setPhase("mounting");
+  }, [phase, props.open]);
+
+  React.useEffect(() => {
+    if (phase !== "mounting") return;
+    const raf = requestAnimationFrame(() => setPhase("live"));
+    return () => cancelAnimationFrame(raf);
+  }, [phase]);
+
+  if (phase === "dormant") {
+    return <>{withoutContent(children, DrawerContent)}</>;
+  }
+
+  return (
+    <DrawerPrimitive.Root
+      shouldScaleBackground={shouldScaleBackground}
+      modal={modal}
+      onOpenChange={(open) => {
+        if (!open) lastDrawerDismissAt = Date.now();
+        onOpenChange?.(open);
+      }}
+      {...props}
+      open={phase === "mounting" ? false : props.open}
+    >
+      {children}
+    </DrawerPrimitive.Root>
+  );
+};
 Drawer.displayName = "Drawer";
 
 const DrawerTrigger = DrawerPrimitive.Trigger;
