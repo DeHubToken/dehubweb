@@ -3465,6 +3465,48 @@ export type Database = {
         }
         Relationships: []
       }
+      user_wallet_passkeys: {
+        Row: {
+          created_at: string
+          credential_id: string
+          encrypted_seed: string
+          id: string
+          iv: string
+          kdf_iterations: number
+          label: string | null
+          last_used_at: string | null
+          prf_salt: string
+          salt: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          credential_id: string
+          encrypted_seed: string
+          id?: string
+          iv: string
+          kdf_iterations?: number
+          label?: string | null
+          last_used_at?: string | null
+          prf_salt: string
+          salt: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          credential_id?: string
+          encrypted_seed?: string
+          id?: string
+          iv?: string
+          kdf_iterations?: number
+          label?: string | null
+          last_used_at?: string | null
+          prf_salt?: string
+          salt?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_wallet_recovery: {
         Row: {
           created_at: string
@@ -3498,31 +3540,31 @@ export type Database = {
       user_wallets: {
         Row: {
           created_at: string
-          encrypted_seed: string
+          encrypted_seed: string | null
           eth_address: string
-          iv: string
+          iv: string | null
           kdf_iterations: number
-          salt: string
+          salt: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           created_at?: string
-          encrypted_seed: string
+          encrypted_seed?: string | null
           eth_address: string
-          iv: string
+          iv?: string | null
           kdf_iterations?: number
-          salt: string
+          salt?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           created_at?: string
-          encrypted_seed?: string
+          encrypted_seed?: string | null
           eth_address?: string
-          iv?: string
+          iv?: string | null
           kdf_iterations?: number
-          salt?: string
+          salt?: string | null
           updated_at?: string
           user_id?: string
         }
