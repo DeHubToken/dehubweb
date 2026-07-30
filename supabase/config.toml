@@ -1,6 +1,8 @@
 project_id = "aigxuutjaqsywioxjefr"
 
 [functions]
+  [functions.anon-views]
+    verify_jwt = false
   [functions.ads-admin]
     verify_jwt = false
   [functions.ads-serve]
