@@ -151,8 +151,9 @@ export function useFeatureRequests(sort: FeatureSort, category: FeatureCategory 
       }
 
       // Exclude shipped/completed features from the main list — and declined
-      // ones, which are resolved too and would otherwise sit here forever.
-      query = query.not('status', 'in', '("completed","shipped","declined")');
+      // ones, which are resolved too. In-progress items live on the Shipping tab.
+      query = query.not('status', 'in', '("completed","shipped","declined","in_progress")');
+
 
       // Pagination
       query = query.range(pageParam, pageParam + PAGE_SIZE - 1);
