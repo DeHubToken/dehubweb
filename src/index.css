@@ -1063,6 +1063,13 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-post-overlay] {
   background-color: transparent !important;
 }
+/* The layer's opaque backing is a sibling of the scroller (it must survive the
+   nav-pill swallow clip that cuts the scroller), so clearing the scroller alone
+   left a solid black column over the canvas. Clear the backing too — the feed
+   underneath is hidden by the rule below, so nothing needs covering. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-post-overlay-backdrop] {
+  background-color: transparent !important;
+}
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) main:has([data-post-overlay]) [data-cached-page="home"] {
   visibility: hidden;
 }
