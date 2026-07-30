@@ -51,6 +51,7 @@ const GovernancePage = lazyWithRetry(() => import('@/pages/app/GovernancePage'))
 const FullWalletPage = lazyWithRetry(() => import('@/pages/app/FullWalletPage'));
 const CareersPage = lazyWithRetry(() => import('@/pages/app/CareersPage'));
 const GlossaryPage = lazyWithRetry(() => import('@/pages/app/GlossaryPage'));
+const StatsPage = lazyWithRetry(() => import('@/pages/app/StatsPage'));
 const StakingPage = lazyWithRetry(() => import('@/pages/app/StakingPage'));
 const BridgePage = lazyWithRetry(() => import('@/pages/app/BridgePage'));
 const Top100CryptosPage = lazyWithRetry(() => import('@/pages/app/Top100CryptosPage'));
@@ -93,6 +94,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'governance', path: ['/app/governance', '/governance'], component: GovernancePage, skeleton: FeaturesSkeleton },
   { key: 'careers', path: ['/app/jobs', '/jobs'], component: CareersPage, skeleton: GenericPageSkeleton },
   { key: 'glossary', path: ['/app/glossary', '/glossary'], component: GlossaryPage, skeleton: GenericPageSkeleton },
+  { key: 'stats', path: ['/stats', '/app/stats'], component: StatsPage, skeleton: GenericPageSkeleton },
   { key: 'stake', path: ['/app/stake', '/stake'], component: StakingPage, skeleton: GenericPageSkeleton },
   { key: 'bridge', path: '/app/bridge', component: BridgePage, skeleton: GenericPageSkeleton },
   { key: 'top-100', path: '/app/top-100', component: Top100CryptosPage, skeleton: LeaderboardSkeleton },
