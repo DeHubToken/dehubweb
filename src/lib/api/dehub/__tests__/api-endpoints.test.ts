@@ -104,13 +104,13 @@ describe("push.ts", () => {
     const { getPushPreferences } = await import("../push");
     mockOk({ result: { likes: true, comments: true, follows: true, mentions: true, directMessages: true, liveStreams: true, tips: true, subscriptions: true } });
     const res = await getPushPreferences();
-    expect(res.likes).toBe(true);
+    expect((res as any).likes).toBe(true);
   });
 
   it("updatePushPreferences calls POST /api/push/preferences", async () => {
     const { updatePushPreferences } = await import("../push");
     mockOk({ result: true });
-    await updatePushPreferences({ likes: false });
+    await updatePushPreferences({ likes: false } as any);
     expect(mockFetch.mock.calls[0][1].method).toBe("POST");
   });
 

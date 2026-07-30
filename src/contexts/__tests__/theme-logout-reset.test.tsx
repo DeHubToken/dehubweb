@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/dom';
 
 // ---- Auth: a mutable stand-in we flip between signed in / out --------------
 const authState = {
