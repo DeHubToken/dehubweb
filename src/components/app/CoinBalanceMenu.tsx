@@ -14,7 +14,32 @@ import { toast } from 'sonner';
 import dehubCoin from '@/assets/dehub-coin.png';
 import usdcLogo from '@/assets/usdc-logo.png';
 import { useAuth } from '@/contexts/AuthContext';
+import { useWalletLocked } from '@/hooks/use-wallet-locked';
 import { ChainSelector, type ChainId, type PostChainId } from './ChainSelector';
+
+/**
+ * Shown at the top of the wallet menu whenever the built-in wallet's key is not
+ * in memory. Opening the wallet is the moment a user is most likely to be about
+ * to do something that signs, and until this existed the lock state was
+ * invisible: the menu offered Buy / Send / Stake as normal and each one failed
+ * on a locked wallet with an error and nothing to press.
+ */
+function UnlockWalletRow({ onUnlock }: { onUnlock: () => void }) {
+  return (
+    <button
+      onClick={onUnlock}
+      className="w-full flex items-center gap-3 px-3 py-2.5 mb-1 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 hover:bg-white/15 transition-colors text-left"
+    >
+      <div className="w-8 h-8 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
+        <Lock className="w-4 h-4 text-white" />
+      </div>
+      <div>
+        <span className="text-white font-medium block">Unlock wallet</span>
+        <span className="text-zinc-400 text-xs">Needed to post, tip or send</span>
+      </div>
+    </button>
+  );
+}
 
 interface CoinBalanceMenuProps {
   balance: number;
@@ -49,7 +74,8 @@ const MOCK_TRANSACTIONS = [
 
 export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanceMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const { walletAddress } = useAuth();
+  const { walletAddress, requestWalletUnlock } = useAuth();
+  const walletLocked = useWalletLocked();
   const navigate = useNavigate();
 
   const handleOpenChange = (open: boolean) => {
@@ -177,6 +203,7 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
           <span className="text-zinc-400 font-medium">${dollarValue}</span>
         </div>
       </div>
+      {walletLocked && <UnlockWalletRow onUnlock={requestWalletUnlock} />}
       <button
         onClick={() => setMenuView('buy')}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
@@ -490,7 +517,8 @@ export function CoinBalanceMenu({ balance, variant, onAuthRequired }: CoinBalanc
 
 // Export standalone wallet menu content for use in other drawers
 export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) {
-  const { walletAddress } = useAuth();
+  const { walletAddress, requestWalletUnlock } = useAuth();
+  const walletLocked = useWalletLocked();
   const navigate = useNavigate();
   const [menuView, setMenuView] = useState<MenuView>('main');
   const [searchQuery, setSearchQuery] = useState('');
@@ -789,6 +817,7 @@ export function WalletMenuContent({ balance, onClose }: WalletMenuContentProps) 
           <span className="text-zinc-400 font-medium">${dollarValue}</span>
         </div>
       </div>
+      {walletLocked && <UnlockWalletRow onUnlock={requestWalletUnlock} />}
       <button
         onClick={() => setMenuView('buy')}
         className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"

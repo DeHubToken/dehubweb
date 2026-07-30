@@ -39,12 +39,17 @@ function noSigningProviderMessage(): string {
 /**
  * As above, and additionally ask the auth provider to open the unlock dialog.
  *
- * Only for paths where the user asked for something that signs. Reads get the
- * message on its own: StakingPage resolves the signer address from a mount
- * effect, so raising the event there would put a password sheet in front of
- * anyone who merely opened the staking page — worse than the wrong error it
- * would be replacing. writeContractAA reaches getActiveProvider before it
- * reads an address, so the signing flows still prompt.
+ * This is the default for anything that cannot proceed without a signature,
+ * including the address reads: posting resolves the minter address through
+ * getWalletAddress (via the getWeb3AuthSigner alias) BEFORE it ever reaches
+ * writeContractAA, and going live, tipping, paywalls and fee gates all do the
+ * same. A message with no dialog behind it is a dead end — the user is told the
+ * wallet is locked and given nothing to press, which is precisely the state
+ * this codebase shipped and had to be reported by hand.
+ *
+ * The opt-out exists for genuinely passive reads (see the silent option on
+ * getWalletAddress), because a password sheet must never appear just because
+ * someone opened a page.
  */
 function requestUnlockForSigning(): Error {
   if (isSmartWalletSession()) {
@@ -278,9 +283,21 @@ export async function isSmartAccountSession(): Promise<boolean> {
 }
 
 /**
- * Get the current wallet address from Web3Auth provider
+ * Get the address that would sign right now.
+ *
+ * Almost every caller is the first step of something the user just asked for —
+ * posting (via the getWeb3AuthSigner alias), going live, tipping, a paywall, a
+ * fee gate — so a locked built-in wallet raises the unlock dialog by default.
+ * Getting that wrong is not a cosmetic failure: this read runs before any
+ * signing path, so when it stayed silent the user got "your wallet is locked"
+ * with nothing to press and no way to continue.
+ *
+ * Pass `{ silent: true }` only where nobody asked for anything — a mount effect
+ * populating a query filter, or a spot that has already prompted (see
+ * writeContractAA). Callers that opt out must handle the rejection; an
+ * unhandled one is how a passive read becomes a console error.
  */
-export async function getWalletAddress(): Promise<string> {
+export async function getWalletAddress(opts?: { silent?: boolean }): Promise<string> {
   // Prefer AA provider (Smart Account address)
   const aaProvider = getAAProvider();
   if (aaProvider) {
@@ -299,12 +316,9 @@ export async function getWalletAddress(): Promise<string> {
   const account = getAccount(wagmiConfig);
   if (account.address) return account.address;
 
-  // Message only, no dialog — see requestUnlockForSigning. Tips, paywalls and
-  // fee gates read the signer address here before reaching writeContractAA, so
-  // leaving this raw meant they reported "No wallet connected" to someone who
-  // was signed in; they now say the wallet is locked, which is both true and
-  // something the user can act on from the wallet menu.
-  throw new Error(noSigningProviderMessage());
+  throw opts?.silent
+    ? new Error(noSigningProviderMessage())
+    : requestUnlockForSigning();
 }
 
 /**
@@ -469,7 +483,9 @@ export async function writeContractAA(
 
   // Encode the function call
   const data = contractInterface.encodeFunctionData(functionName, args) as Hex;
-  const fromAddress = await getWalletAddress();
+  // getActiveProvider above has already raised the unlock request if one was
+  // needed, so this read must not raise a second one.
+  const fromAddress = await getWalletAddress({ silent: true });
 
   // Estimate gas
   let gasLimit: Hex | undefined;
