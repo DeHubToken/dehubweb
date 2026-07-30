@@ -1902,6 +1902,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               onOpenChange={setShowComments}
               tokenId={video.id}
               initialTab={commentsInitialTab}
+              commentsDisabled={!!(video as { commentsDisabled?: boolean }).commentsDisabled}
               immersive={isImmersive}
             />
           </>

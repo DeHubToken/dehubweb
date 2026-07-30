@@ -77,6 +77,10 @@ interface CommentsSectionProps {
   onClose: () => void;
   initialTab?: 'replies' | 'quotes' | 'reposts' | 'likers' | 'search';
   embedded?: boolean;
+  /** Creator turned replies off. The composer is replaced with a notice, but
+   *  existing comments stay listed — the server refuses new ones either way
+   *  (requestCommentFunc), so this is presentation, not the enforcement. */
+  commentsDisabled?: boolean;
 }
 
 // formatTimeAgo is now imported from @/lib/feed-utils
@@ -405,7 +409,7 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
 // MAIN COMPONENT
 // ============================================================================
 
-export function CommentsSection({ tokenId, onClose, initialTab, embedded = false }: CommentsSectionProps) {
+export function CommentsSection({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false }: CommentsSectionProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user, isAuthenticated, walletAddress } = useAuth();
@@ -1348,7 +1352,17 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         )}
       </div>
 
-        {/* New Comment Input - sticky at bottom, optimized for mobile space */}
+        {/* Composer, or a notice in its place when the creator turned replies
+            off. The list above stays as-is on purpose: disabling comments hides
+            no history, it only stops new ones. */}
+        {commentsDisabled ? (
+          <div className={cn("mt-auto", isMobile ? "pt-2 pb-1" : "pt-3")}>
+            <div className="flex items-center justify-center gap-2 rounded-xl bg-white/[0.03] border border-white/10 px-4 py-3">
+              <MessageSquare className="w-4 h-4 text-zinc-500 shrink-0" />
+              <span className="text-sm text-zinc-400">Comments are turned off for this post</span>
+            </div>
+          </div>
+        ) : (
         <div className={cn(
           "mt-auto",
           isMobile ? "pt-2 pb-1" : "pt-3"
@@ -1559,6 +1573,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             )}
           </div>
         </div>
+        )}
     </motion.div>
   );
 }
