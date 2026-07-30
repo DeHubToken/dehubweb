@@ -224,6 +224,36 @@ export function useShippedFeatures() {
   });
 }
 
+// "Shipping" tab — work that's actively being built (status `in_progress`).
+export function useInProgressFeatures() {
+  return useQuery({
+    queryKey: ['feature-requests-in-progress'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('feature_requests')
+        .select('*')
+        .eq('status', 'in_progress')
+        .order('updated_at', { ascending: false });
+
+      if (error) throw error;
+      const result = normalizeRows((data || []) as FeatureRequest[]);
+      setSessionCache(IN_PROGRESS_CACHE_KEY, result);
+      return result;
+    },
+    initialData: () => getSessionCache<FeatureRequest[]>(IN_PROGRESS_CACHE_KEY),
+    initialDataUpdatedAt: () => {
+      try {
+        const raw = sessionStorage.getItem(IN_PROGRESS_CACHE_KEY);
+        if (raw) return JSON.parse(raw).ts;
+      } catch {}
+      return undefined;
+    },
+    staleTime: 60_000,
+    gcTime: 5 * 60_000,
+  });
+}
+
+
 export function useUserVotes() {
   const { walletAddress } = useAuth();
 
