@@ -966,16 +966,20 @@ export default function FeaturesPage() {
           />
         </div>
 
-        {/* Page Tabs: Requests / Shipped */}
+        {/* Page Tabs: Requests / Shipping / Shipped */}
         <div className="relative flex gap-1 bg-zinc-800/40 rounded-xl p-1 mb-3">
           {/* Sliding liquid glass indicator */}
           <div
             className={cn(
-              "absolute top-1 bottom-1 w-[calc(50%-4px)] rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 transition-transform duration-300 ease-out",
+              "absolute top-1 bottom-1 w-[calc(33.333%-4px)] rounded-lg bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 transition-transform duration-300 ease-out",
               isLightTheme
                 ? "shadow-[0_2px_8px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,0.2)]"
                 : "shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4)]",
-              activeTab === 'shipped' ? 'translate-x-[calc(100%+4px)]' : 'translate-x-0'
+              activeTab === 'shipped'
+                ? 'translate-x-[calc(200%+8px)]'
+                : activeTab === 'shipping'
+                  ? 'translate-x-[calc(100%+4px)]'
+                  : 'translate-x-0'
             )}
           />
           <button
@@ -989,6 +993,21 @@ export default function FeaturesPage() {
             {remainingCount > 0 && (
               <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
                 {remainingCount}
+              </span>
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('shipping')}
+            className={`relative z-10 flex-1 py-2 rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center gap-1.5 ${
+              activeTab === 'shipping' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
+            }`}
+          >
+            <Loader2 className="w-3.5 h-3.5" />
+            {t('features.shipping', 'Shipping')}
+            {inProgressCount > 0 && (
+              <span className="text-[10px] bg-white/10 text-white/70 px-1.5 py-0.5 rounded-md font-semibold">
+                {inProgressCount}
               </span>
             )}
           </button>
@@ -1008,6 +1027,7 @@ export default function FeaturesPage() {
             )}
           </button>
         </div>
+
 
         {/* Filters (only shown on requests tab) */}
         {activeTab === 'requests' && (
