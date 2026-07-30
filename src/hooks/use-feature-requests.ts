@@ -93,6 +93,8 @@ export { CATEGORY_LABELS, STATUS_LABELS };
 // Session-level cache for instant page loads
 const CACHE_KEY = 'feature-requests-cache';
 const SHIPPED_CACHE_KEY = 'feature-requests-shipped-cache';
+const IN_PROGRESS_CACHE_KEY = 'feature-requests-in-progress-cache';
+
 
 function getSessionCache<T>(key: string): T | undefined {
   try {
