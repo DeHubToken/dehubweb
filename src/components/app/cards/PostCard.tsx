@@ -49,7 +49,6 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
   wasDrawerJustDismissed,
 } from '@/components/ui/drawer';
 import type { TextPost } from '@/types/feed.types';
@@ -265,11 +264,17 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         </button>
         
         <Drawer open={showOptionsDrawer} onOpenChange={setShowOptionsDrawer}>
-          <DrawerTrigger asChild>
-            <button onClick={(e) => { if (!walletAddress) { e.preventDefault(); openLoginModal(); } }} aria-label="Post options" className="text-zinc-400 hover:text-white transition-colors -mr-0.5">
-              <MoreVertical className="w-[23.5px] h-[23.5px]" />
-            </button>
-          </DrawerTrigger>
+          {/* Opens via state, not DrawerTrigger: a trigger forces vaul's Root to
+              stay mounted, and each mounted Root holds a window scroll listener
+              for its lifetime. Times every card in an infinite feed, that was the
+              biggest cost of scrolling it. */}
+          <button
+            onClick={() => { if (!walletAddress) { openLoginModal(); return; } setShowOptionsDrawer(true); }}
+            aria-label="Post options"
+            className="text-zinc-400 hover:text-white transition-colors -mr-0.5"
+          >
+            <MoreVertical className="w-[23.5px] h-[23.5px]" />
+          </button>
           <DrawerContent glass className="px-4 pb-6">
             <DrawerHeader className="pb-2">
               <DrawerTitle className="text-white text-lg">{t('postOptions.options')}</DrawerTitle>
