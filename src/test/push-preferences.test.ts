@@ -91,7 +91,7 @@ describe('buildPrefPatch', () => {
 
 describe('category map', () => {
   it('covers every key the live response contains', () => {
-    const live = LIVE_RESPONSE.preferences as Record<string, Record<string, boolean>>;
+    const live = LIVE_RESPONSE.preferences as unknown as Record<string, Record<string, boolean>>;
     for (const cat of Object.keys(NOTIFICATION_CATEGORIES)) {
       for (const key of Object.keys(live[cat])) {
         expect(CATEGORY_OF[key as never]).toBe(cat);
@@ -100,7 +100,7 @@ describe('category map', () => {
   });
 
   it('declares no key the server does not have', () => {
-    const live = LIVE_RESPONSE.preferences as Record<string, Record<string, boolean>>;
+    const live = LIVE_RESPONSE.preferences as unknown as Record<string, Record<string, boolean>>;
     for (const [key, cat] of Object.entries(CATEGORY_OF)) {
       expect(live[cat]).toHaveProperty(key);
     }

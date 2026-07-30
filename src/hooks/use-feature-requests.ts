@@ -93,6 +93,8 @@ export { CATEGORY_LABELS, STATUS_LABELS };
 // Session-level cache for instant page loads
 const CACHE_KEY = 'feature-requests-cache';
 const SHIPPED_CACHE_KEY = 'feature-requests-shipped-cache';
+const IN_PROGRESS_CACHE_KEY = 'feature-requests-in-progress-cache';
+
 
 function getSessionCache<T>(key: string): T | undefined {
   try {
@@ -151,8 +153,9 @@ export function useFeatureRequests(sort: FeatureSort, category: FeatureCategory 
       }
 
       // Exclude shipped/completed features from the main list — and declined
-      // ones, which are resolved too and would otherwise sit here forever.
-      query = query.not('status', 'in', '("completed","shipped","declined")');
+      // ones, which are resolved too. In-progress items live on the Shipping tab.
+      query = query.not('status', 'in', '("completed","shipped","declined","in_progress")');
+
 
       // Pagination
       query = query.range(pageParam, pageParam + PAGE_SIZE - 1);
@@ -183,7 +186,8 @@ export function useFeatureCounts() {
         supabase
           .from('feature_requests')
           .select('*', { count: 'exact', head: true })
-          .not('status', 'in', '("completed","shipped","declined")'),
+          .not('status', 'in', '("completed","shipped","declined","in_progress")'),
+
       ]);
       if (totalRes.error) throw totalRes.error;
       if (openRes.error) throw openRes.error;
@@ -221,6 +225,36 @@ export function useShippedFeatures() {
     gcTime: 5 * 60_000,
   });
 }
+
+// "Shipping" tab — work that's actively being built (status `in_progress`).
+export function useInProgressFeatures() {
+  return useQuery({
+    queryKey: ['feature-requests-in-progress'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('feature_requests')
+        .select('*')
+        .eq('status', 'in_progress')
+        .order('updated_at', { ascending: false });
+
+      if (error) throw error;
+      const result = normalizeRows((data || []) as FeatureRequest[]);
+      setSessionCache(IN_PROGRESS_CACHE_KEY, result);
+      return result;
+    },
+    initialData: () => getSessionCache<FeatureRequest[]>(IN_PROGRESS_CACHE_KEY),
+    initialDataUpdatedAt: () => {
+      try {
+        const raw = sessionStorage.getItem(IN_PROGRESS_CACHE_KEY);
+        if (raw) return JSON.parse(raw).ts;
+      } catch {}
+      return undefined;
+    },
+    staleTime: 60_000,
+    gcTime: 5 * 60_000,
+  });
+}
+
 
 export function useUserVotes() {
   const { walletAddress } = useAuth();
