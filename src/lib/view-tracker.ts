@@ -6,10 +6,16 @@
  * - Videos: Fire-and-forget after watching to a threshold
  * - Feed items (images/posts): Batch after visibility duration, sent together
  * - Deduplication: 24-hour per-user-per-post via localStorage
- * - Only logged-in users can record views
+ *
+ * Signed-out visitors count too. The DeHub API requires a valid JWT on its view
+ * endpoints, so views from visitors with no session go to the `anon-views`
+ * Supabase edge function instead, which dedupes by (device id + IP) per post per
+ * UTC day. Each viewer only ever hits one of the two backends, so a person is
+ * never counted twice.
  */
 
 import { getAuthToken } from '@/lib/api/dehub';
+import { recordAnonViews, recordAnonViewsBeacon } from '@/lib/anon-views-api';
 
 const DEHUB_API_BASE = "https://api.dehub.io";
 const VIEWED_STORAGE_KEY = 'dehub_viewed_posts';
@@ -94,8 +100,17 @@ function markAsViewed(tokenIds: string[]): void {
 
 async function recordSingleView(tokenId: string): Promise<SingleViewResponse | null> {
   const token = getAuthToken();
-  if (!token) return null; // Not logged in
-  
+
+  // Signed out: the DeHub API rejects unauthenticated view calls outright, so
+  // route to the anonymous view backend instead of dropping the view.
+  if (!token) {
+    const result = await recordAnonViews([tokenId]);
+    if (!result?.success) return null;
+    // The anonymous backend reports how many views were new, not the post's
+    // running totals, so there are no counts to hand back here.
+    return { success: true, isNewView: result.recorded > 0, views: 0, totalImpressions: 0 };
+  }
+
   try {
     const response = await fetch(`${DEHUB_API_BASE}/api/record-view/${tokenId}`, {
       headers: {
@@ -120,8 +135,19 @@ async function recordSingleView(tokenId: string): Promise<SingleViewResponse | n
 
 async function recordBatchViews(tokenIds: number[]): Promise<BatchViewResponse | null> {
   const token = getAuthToken();
-  if (!token) return null; // Not logged in
-  
+
+  // Signed out: send the same batch to the anonymous view backend.
+  if (!token) {
+    const result = await recordAnonViews(tokenIds.map(String));
+    if (!result?.success) return null;
+    return {
+      success: true,
+      processed: result.submitted,
+      newUniqueViews: result.recorded,
+      rateLimited: result.submitted - result.recorded,
+    };
+  }
+
   try {
     const response = await fetch(`${DEHUB_API_BASE}/api/view/batch`, {
       method: 'POST',
@@ -296,18 +322,17 @@ class FeedViewTracker {
     }
   }
   
-  private async flushBatch(): Promise<void> {
+  /**
+   * @param unloading - true when called from a page-unload or tab-hide handler.
+   *   Signed-out batches then go out via sendBeacon, since a fetch started while
+   *   the document is going away is usually cancelled before it lands.
+   */
+  private async flushBatch(unloading = false): Promise<void> {
     // Check items still visible
     this.checkVisibleItems();
-    
+
     if (this.pendingViews.size === 0) return;
-    
-    // Not logged in - clear pending and skip
-    if (!getAuthToken()) {
-      this.pendingViews.clear();
-      return;
-    }
-    
+
     // Take up to MAX_BATCH_SIZE items
     const tokenIds = Array.from(this.pendingViews).slice(0, MAX_BATCH_SIZE);
     
@@ -322,20 +347,27 @@ class FeedViewTracker {
     
     // Send batch request
     const numericIds = tokenIds.map(id => parseInt(id, 10)).filter(n => !isNaN(n));
-    
+
     if (numericIds.length === 0) return;
-    
+
+    // Signed out and the page is going away: hand the batch to the browser to
+    // deliver after unload. Only fall through to a normal request if the beacon
+    // could not be queued.
+    if (unloading && !getAuthToken()) {
+      if (recordAnonViewsBeacon(numericIds.map(String))) return;
+    }
+
     const result = await recordBatchViews(numericIds);
     if (result?.success) {
       console.debug(`[ViewTracker] Batch views recorded:`, result);
     }
   }
-  
+
   /**
    * Force flush all pending views (e.g., on page unload)
    */
-  flush(): void {
-    this.flushBatch();
+  flush(unloading = false): void {
+    this.flushBatch(unloading);
   }
   
   /**
@@ -359,13 +391,13 @@ export const feedViewTracker = new FeedViewTracker();
 // Flush on page unload
 if (typeof window !== 'undefined') {
   window.addEventListener('beforeunload', () => {
-    feedViewTracker.flush();
+    feedViewTracker.flush(true);
   });
-  
+
   // Also flush on visibility change (tab hidden)
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
-      feedViewTracker.flush();
+      feedViewTracker.flush(true);
     }
   });
 }

@@ -937,8 +937,9 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         
         {/* Metadata: timestamp and views */}
         <PostMetadata 
-          timestamp={post.timeAgo} 
+          timestamp={post.timeAgo}
           viewCount={post.views}
+          tokenId={post.id}
           translateControl={{
             isTranslated,
             isLoading: isTranslateLoading,

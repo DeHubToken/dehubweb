@@ -440,6 +440,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         <PostMetadata
           timestamp={post.createdAt}
           viewCount={post.views}
+          tokenId={post.id}
           translateControl={{
             isTranslated,
             isLoading: isTranslateLoading,
