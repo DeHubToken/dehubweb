@@ -459,6 +459,15 @@ html[data-theme='osaka'] #app-root
   -webkit-backdrop-filter: var(--osaka-blur);
 }
 
+/* The main content column ships `bg-black` so it must be excluded from the
+   wholesale conversion above — the alley video lives behind it and should
+   show through. Inner cards/feed items still carry their own glass surfaces. */
+html[data-theme='osaka'] #app-root > div > main.bg-black.bg-black {
+  background-color: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
 /* The feed-nav wrapper is excluded above rather than merely re-declared
    transparent in section 2. This net is scoped under #app-root, so it carries
    an id and outranks the plain `html[data-theme] [data-feed-nav-outer]` rule
