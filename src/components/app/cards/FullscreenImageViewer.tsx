@@ -16,6 +16,7 @@ import { ActionBar } from './ActionBar';
 import { PostUtilityButtons } from './PostUtilityButtons';
 import { useImageTranslation } from '@/hooks/use-image-translation';
 import { useDoubleTapLike } from '@/hooks/use-double-tap-like';
+import type { PostReaction, ReactionCounts } from '@/lib/reactions';
 
 /**
  * Engagement data + handlers for the bottom action bar. When provided (along
@@ -27,6 +28,8 @@ import { useDoubleTapLike } from '@/hooks/use-double-tap-like';
 export interface FullscreenViewerActions {
   isLiked?: boolean;
   isDisliked?: boolean;
+  myReaction?: PostReaction | null;
+  reactionCounts?: ReactionCounts | null;
   hideDislike?: boolean;
   likeCount?: number;
   dislikeCount?: number;
@@ -359,6 +362,8 @@ export function FullscreenImageViewer({
                 enableDoubleTapLike={actions?.enableDoubleTapLike}
                 isLiked={actions?.isLiked}
                 isDisliked={actions?.isDisliked}
+                myReaction={actions?.myReaction}
+                reactionCounts={actions?.reactionCounts}
                 hideDislike={actions?.hideDislike}
                 likeCount={actions?.likeCount}
                 dislikeCount={actions?.dislikeCount}

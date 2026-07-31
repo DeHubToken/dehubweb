@@ -1,5 +1,6 @@
 import { apiCall } from './core';
 import type { DeHubUser, DeHubNFT } from './types';
+import type { PostReaction } from '@/lib/reactions';
 
 export type NotificationType =
   | 'like'
@@ -49,6 +50,12 @@ export interface DeHubNotification {
   currency?: string;
   actor?: DeHubUser;
   post?: DeHubNFT;
+  /**
+   * Which reaction produced a `like` notification. Absent when the actors in an
+   * aggregated row disagree (render it as a generic "reacted to"), and on rows
+   * written before multi-reaction shipped (render them as a plain like).
+   */
+  reaction?: PostReaction;
 }
 
 interface RawNotification {
@@ -77,6 +84,7 @@ interface RawNotification {
   postType?: NotificationPostType;
   aggregatedCount?: number;
   latestActorNames?: string[];
+  reaction?: PostReaction;
   amount?: number;
   currency?: string;
 }
