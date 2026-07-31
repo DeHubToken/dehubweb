@@ -836,7 +836,7 @@ html[data-theme="winter"] [data-feed-nav-outer] {
    design-system rules above — the colour comes from the canvas showing
    through the glass.
    ========================================================================== */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) {
   /* Safety net: body/main are transparent under these themes, so if the lazy
      canvas chunk hasn't painted yet the page must not fall back to browser
      white behind white text. (Winter sets its own night-sky backdrop above.) */
@@ -881,7 +881,7 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 }
 
 /* Post bentos — thin glass. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-feed-item] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-feed-item] {
   background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-thin)) !important;
   backdrop-filter: var(--glass-blur) !important;
   -webkit-backdrop-filter: var(--glass-blur) !important;
@@ -890,7 +890,7 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 }
 
 /* Side panels and page bentos — regular glass. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) :is([data-side-panel], [data-page-bento]) {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) :is([data-side-panel], [data-page-bento]) {
   background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-regular)) !important;
   backdrop-filter: var(--glass-blur) !important;
   -webkit-backdrop-filter: var(--glass-blur) !important;
@@ -901,22 +901,22 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 /* Side panels only: swap the full ambient halo for the tucked-in panel shadow
    so the tall columns don't smudge the gutters. Page bentos keep --glass-edge
    above — they're normal-sized cards where the soft halo reads correctly. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-side-panel] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-side-panel] {
   box-shadow: var(--glass-edge-panel) !important;
 }
 
 /* Interactive bentos (music rows, placeholder tiles) keep hover feedback by
    raising the smoke — their zinc hover washes are overridden above. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-page-bento].cursor-pointer:hover {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-page-bento].cursor-pointer:hover {
   background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-raised)) !important;
 }
 
 /* Right-sidebar search — the tagged wrapper is exactly the input's box, so
    round the glass to the input's radius and let the input itself go clear. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-search-bento] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-search-bento] {
   border-radius: 0.75rem;
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-search-bento] input {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-search-bento] input {
   background-color: transparent !important;
 }
 
@@ -924,7 +924,7 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    posts sliding behind the pill bleed through and re-tint it as the feed
    scrolls, while icons stay legible. The outer wrapper stays fully invisible
    (no box around the pill). */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-feed-nav] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-feed-nav] {
   background: rgb(var(--glass-tint) / 0.40) !important;
   backdrop-filter: blur(20px) saturate(160%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
@@ -980,7 +980,7 @@ html[data-theme="system"] [data-feed-nav-outer]::before {
    (glass pill + canvas camouflage handle the flash) and this frost would
    read as a solid smear over it. Overrides the system-only black strip
    above on the docs surface (higher specificity). */
-html[data-docs-open]:not([data-theme="cosmic"]):not([data-theme="hazy"]):not([data-theme="swarms"]):not([data-theme="lavalamp"]):not([data-theme="winter"]):not([data-theme="war"]) [data-feed-nav-outer]::before {
+html[data-docs-open]:not([data-theme="cosmic"]):not([data-theme="hazy"]):not([data-theme="swarms"]):not([data-theme="lavalamp"]):not([data-theme="winter"]):not([data-theme="war"]):not([data-theme="osaka"]) [data-feed-nav-outer]::before {
   content: '';
   position: absolute;
   top: -0.5rem;
@@ -1026,14 +1026,14 @@ html[data-theme="system"] [data-mobile-header] :is(img, svg) {
    float directly over the canvas, matching the desktop logo zone), then
    frosts back to the liquid-glass toolbar as soon as content scrolls
    underneath so posts never clash with the logo and buttons. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-mobile-header] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-mobile-header] {
   background: transparent !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   box-shadow: none !important;
   transition: background-color 0.25s ease;
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-mobile-header][data-scrolled="true"] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-mobile-header][data-scrolled="true"] {
   background: rgb(var(--glass-tint) / 0.55) !important;
   backdrop-filter: blur(20px) saturate(150%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(150%) !important;
@@ -1041,7 +1041,7 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 /* Logo and toolbar icons float on bare canvas now — soft ambient shadow
    below them (the desktop glass-edge shadow, 0 8px 32px family) keeps them
    legible when bright post media scrolls behind. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-mobile-header] :is(img, svg) {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-mobile-header] :is(img, svg) {
   /* Strong enough to read over the bright nebula/canvas colours — a 45%
      black halo disappears against the dark canvas entirely. */
   filter: drop-shadow(0 6px 18px rgb(0 0 0 / 0.9)) drop-shadow(0 2px 5px rgb(0 0 0 / 0.75));
@@ -1050,7 +1050,7 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 /* Full-screen page wrappers that shipped opaque black (creators application,
    post info, stage deep-link) — let the canvas through; their inner cards are
    already glass. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-glass-page] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-glass-page] {
   background-color: transparent !important;
 }
 
@@ -1060,33 +1060,33 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    canvas through instead, and hide the home feed itself so it doesn't bleed
    into the post content — except its tab bar, which hosts the back toggle
    and must keep peeking above the overlay. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-post-overlay] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-post-overlay] {
   background-color: transparent !important;
 }
 /* The layer's opaque backing is a sibling of the scroller (it must survive the
    nav-pill swallow clip that cuts the scroller), so clearing the scroller alone
    left a solid black column over the canvas. Clear the backing too — the feed
    underneath is hidden by the rule below, so nothing needs covering. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-post-overlay-backdrop] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-post-overlay-backdrop] {
   background-color: transparent !important;
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) main:has([data-post-overlay]) [data-cached-page="home"] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) main:has([data-post-overlay]) [data-cached-page="home"] {
   visibility: hidden;
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) main:has([data-post-overlay]) [data-cached-page="home"] [data-feed-nav-outer] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) main:has([data-post-overlay]) [data-cached-page="home"] [data-feed-nav-outer] {
   visibility: visible;
 }
 
 /* Mobile single-post drawer: same flat black surface over the canvas.
    Immersive video and live posts keep their own inner bg-black so media
    viewing stays dark. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-post-drawer] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-post-drawer] {
   background-color: transparent !important;
 }
 
 /* Feed chrome strips (music sub-tab filters, radio search/genre bar) shipped
    opaque black behind their glass pills — same treatment as the feed nav. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-feed-chrome] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-feed-chrome] {
   background-color: transparent !important;
 }
 
@@ -1094,21 +1094,21 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    read as shadows over the dynamic canvas. Hide them and instead dissolve
    the scrolling content itself to transparent with a mask on the wrapper,
    so the glass and canvas stay visible through the fade. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) .absolute.pointer-events-none[class*="bg-gradient-to-l"][class*="to-transparent"] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) .absolute.pointer-events-none[class*="bg-gradient-to-l"][class*="to-transparent"] {
   display: none !important;
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) *:has(> .absolute.pointer-events-none[class*="bg-gradient-to-l"][class*="to-transparent"]) {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) *:has(> .absolute.pointer-events-none[class*="bg-gradient-to-l"][class*="to-transparent"]) {
   -webkit-mask-image: linear-gradient(to right, black calc(100% - 2.5rem), transparent 100%);
   mask-image: linear-gradient(to right, black calc(100% - 2.5rem), transparent 100%);
 }
 
 /* Same for the vertical zinc-900 fades above "view all" footers and at the
    sidebar nav's bottom: dissolve the list rows instead of painting smoke. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) .absolute.pointer-events-none[class*="bg-gradient-to-t"][class*="from-zinc-900"][class*="to-transparent"] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) .absolute.pointer-events-none[class*="bg-gradient-to-t"][class*="from-zinc-900"][class*="to-transparent"] {
   display: none !important;
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) *:has(+ * > .absolute.pointer-events-none[class*="bg-gradient-to-t"][class*="from-zinc-900"]),
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-side-panel] > *:has(+ [data-sidebar-fade]) {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) *:has(+ * > .absolute.pointer-events-none[class*="bg-gradient-to-t"][class*="from-zinc-900"]),
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-side-panel] > *:has(+ [data-sidebar-fade]) {
   -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 2.25rem), transparent 100%);
   mask-image: linear-gradient(to bottom, black calc(100% - 2.25rem), transparent 100%);
 }
@@ -1116,7 +1116,7 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 /* Opt-in edge dissolve for carousels that never had an overlay fade (e.g.
    the explore category pills): content fades to transparent at the right
    edge, same as the converted fades above. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-fade-edges] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-fade-edges] {
   -webkit-mask-image: linear-gradient(to right, black calc(100% - 2.5rem), transparent 100%);
   mask-image: linear-gradient(to right, black calc(100% - 2.5rem), transparent 100%);
 }
@@ -1125,36 +1125,36 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    read as shadows on glass — flip them to faint white glass glows. Radial
    from top-centre so the glow fades on every side instead of filling the
    button as a squared-off block. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-side-panel-tabs] [data-active-tab-indicator] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-side-panel-tabs] [data-active-tab-indicator] {
   background: radial-gradient(140% 120% at 50% 0%, rgb(255 255 255 / 0.07), transparent 70%) !important;
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-side-panel-tabs] .tab-hover-bg {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-side-panel-tabs] .tab-hover-bg {
   background: radial-gradient(140% 120% at 50% 0%, rgb(255 255 255 / 0.04), transparent 70%) !important;
 }
 
 /* Solid zinc-800 chips inside glass surfaces read as slabs — frost them to
    the white-wash the design system uses for chips. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) :is([data-feed-item], [data-side-panel], [data-page-bento]) .bg-zinc-800 {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) :is([data-feed-item], [data-side-panel], [data-page-bento]) .bg-zinc-800 {
   background-color: rgb(255 255 255 / 0.08) !important;
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) :is([data-feed-item], [data-side-panel], [data-page-bento]) .hover\:bg-zinc-800:hover {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) :is([data-feed-item], [data-side-panel], [data-page-bento]) .hover\:bg-zinc-800:hover {
   background-color: rgb(255 255 255 / 0.12) !important;
 }
 
 /* Near-opaque zinc-900/90 and /80 cards (sidebar assistant CTA, "view all"
    footers, comments wrapper) — thin them to smoke so they sit in the same
    material family. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) :is(.bg-zinc-900\/90, .bg-zinc-900\/80) {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) :is(.bg-zinc-900\/90, .bg-zinc-900\/80) {
   background-color: rgb(var(--glass-tint) / 0.55) !important;
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) .hover\:bg-zinc-800\/90:hover {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) .hover\:bg-zinc-800\/90:hover {
   background-color: rgb(39 39 42 / 0.60) !important;
 }
 
 /* Right-panel "View all" liquid-glass bubble. Match the mobile create (+) button:
    a see-through white glass wash with a hairline white border, so the canvas reads
    clearly through it instead of a heavy grey/50%-white chip. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-side-panel] [data-view-all] .backdrop-blur-xl {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-side-panel] [data-view-all] .backdrop-blur-xl {
   background-image: none !important;
   background-color: rgb(255 255 255 / 0.18) !important;
   border: 1px solid rgb(255 255 255 / 0.30) !important;
@@ -1168,34 +1168,34 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    chat messages, "type a message" placeholders). Bump every muted step ~2
    notches brighter INSIDE side panels only — hierarchy is preserved (username
    → message → timestamp), the feed and page bentos are untouched. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-side-panel] .text-zinc-200 {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-side-panel] .text-zinc-200 {
   color: #fafafa !important; /* list usernames (leaderboard, trending) — was zinc-200 */
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-side-panel] .text-zinc-300 {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-side-panel] .text-zinc-300 {
   color: #f4f4f5 !important; /* chat/message body — was zinc-300 */
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-side-panel] .text-zinc-400 {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-side-panel] .text-zinc-400 {
   color: #e4e4e7 !important; /* secondary rows, reactions, "view all" — was zinc-400 */
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-side-panel] .text-zinc-500 {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-side-panel] .text-zinc-500 {
   color: #d4d4d8 !important; /* labels, inactive tab icons, search glyph — was zinc-500 */
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-side-panel] .text-zinc-600 {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-side-panel] .text-zinc-600 {
   color: #a1a1aa !important; /* timestamps, tertiary hints — was zinc-600 */
 }
 
 /* Action-text placeholders in side-panel inputs ("Search…", "Type a message…"). */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-side-panel] input::placeholder,
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-side-panel] textarea::placeholder {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-side-panel] input::placeholder,
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-side-panel] textarea::placeholder {
   color: #d4d4d8 !important; /* was zinc-500 */
 }
 
 /* Keep hover feedback: the brightened resting colours above would otherwise
    win over the components' hover:/group-hover: text utilities. Force those
    interactive rows/buttons/tabs to pure white on hover. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-side-panel] [class*="hover:text-white"]:hover,
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-side-panel] [class*="hover:text-zinc-"]:hover,
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) [data-side-panel] .group:hover [class*="group-hover:text-white"] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-side-panel] [class*="hover:text-white"]:hover,
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-side-panel] [class*="hover:text-zinc-"]:hover,
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) [data-side-panel] .group:hover [class*="group-hover:text-white"] {
   color: #ffffff !important;
 }
 
@@ -1212,30 +1212,30 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    canvas regions like the lava lamp. The right/left sidebars live outside
    <main> and are handled by the [data-side-panel] block above.
    -------------------------------------------------------------------------- */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) #app-root main .text-zinc-300 {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) #app-root main .text-zinc-300 {
   color: #f4f4f5 !important; /* body copy, bios — was zinc-300 */
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) #app-root main .text-zinc-400 {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) #app-root main .text-zinc-400 {
   color: #e4e4e7 !important; /* secondary text, stat labels, tab labels — was zinc-400 */
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) #app-root main .text-zinc-500 {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) #app-root main .text-zinc-500 {
   color: #d4d4d8 !important; /* @handle, joined date, meta, glyphs — was zinc-500 */
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) #app-root main .text-zinc-600 {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) #app-root main .text-zinc-600 {
   color: #a1a1aa !important; /* timestamps, tertiary hints — was zinc-600 */
 }
 
 /* Page-content input placeholders (explore search, settings + form fields). */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) #app-root main input::placeholder,
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) #app-root main textarea::placeholder {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) #app-root main input::placeholder,
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) #app-root main textarea::placeholder {
   color: #d4d4d8 !important; /* was zinc-500 */
 }
 
 /* Preserve hover feedback (the brightened resting colours above would otherwise
    win over hover:/group-hover: text utilities). */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) #app-root main [class*="hover:text-white"]:hover,
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) #app-root main [class*="hover:text-zinc-"]:hover,
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) #app-root main .group:hover [class*="group-hover:text-white"] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) #app-root main [class*="hover:text-white"]:hover,
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) #app-root main [class*="hover:text-zinc-"]:hover,
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) #app-root main .group:hover [class*="group-hover:text-white"] {
   color: #ffffff !important;
 }
 
@@ -1243,7 +1243,7 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    soft dark halo so white and light-grey text reads over bright canvas regions.
    Frosted descendants (bento / feed item / side panel / glass page) already have
    a dark backing and stay crisp; media overlays keep their own treatment. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) #app-root main
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) #app-root main
   :is(.text-white, [class*="text-white/"], [class*="text-zinc-2"], [class*="text-zinc-3"], [class*="text-zinc-4"], [class*="text-zinc-5"], [class*="text-zinc-6"]):not(:where(
     [data-side-panel] *, [data-page-bento] *, [data-feed-item] *, [data-glass-page] *,
     [data-feed-nav] *, [data-mobile-header] *,
@@ -1255,7 +1255,7 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 /* Frosting unavailable → nearly-solid smoke so text stays readable over the
    moving canvas. */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) :is([data-feed-item], [data-side-panel], [data-page-bento], [data-feed-nav], [data-mobile-header][data-scrolled="true"]) {
+  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) :is([data-feed-item], [data-side-panel], [data-page-bento], [data-feed-nav], [data-mobile-header][data-scrolled="true"]) {
     background: rgb(24 24 27 / 0.94) !important;
   }
   html[data-theme="system"] :is([data-feed-nav], [data-mobile-header][data-scrolled="true"]) {
@@ -1265,7 +1265,7 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 
 /* Respect reduced transparency: solid panels, no frosting. */
 @media (prefers-reduced-transparency: reduce) {
-  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"]) :is([data-feed-item], [data-side-panel], [data-page-bento], [data-feed-nav], [data-mobile-header][data-scrolled="true"]) {
+  html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) :is([data-feed-item], [data-side-panel], [data-page-bento], [data-feed-nav], [data-mobile-header][data-scrolled="true"]) {
     background: rgb(24 24 27) !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
