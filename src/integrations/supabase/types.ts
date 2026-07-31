@@ -4065,6 +4065,47 @@ export type Database = {
         }
         Returns: number
       }
+      pg_relpages:
+        | {
+            Args: { relname: unknown }
+            Returns: {
+              error: true
+            } & "Could not choose the best candidate function between: public.pg_relpages(relname => text), public.pg_relpages(relname => regclass). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+          }
+        | {
+            Args: { relname: string }
+            Returns: {
+              error: true
+            } & "Could not choose the best candidate function between: public.pg_relpages(relname => text), public.pg_relpages(relname => regclass). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+          }
+      pgstatginindex: {
+        Args: { relname: unknown }
+        Returns: Record<string, unknown>
+      }
+      pgstathashindex: {
+        Args: { relname: unknown }
+        Returns: Record<string, unknown>
+      }
+      pgstatindex:
+        | {
+            Args: { relname: unknown }
+            Returns: {
+              error: true
+            } & "Could not choose the best candidate function between: public.pgstatindex(relname => text), public.pgstatindex(relname => regclass). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+          }
+        | {
+            Args: { relname: string }
+            Returns: {
+              error: true
+            } & "Could not choose the best candidate function between: public.pgstatindex(relname => text), public.pgstatindex(relname => regclass). Try renaming the parameters or the function itself in the database so function overloading can be resolved"
+          }
+      pgstattuple:
+        | { Args: { relname: string }; Returns: Record<string, unknown> }
+        | { Args: { reloid: unknown }; Returns: Record<string, unknown> }
+      pgstattuple_approx: {
+        Args: { reloid: unknown }
+        Returns: Record<string, unknown>
+      }
       read_email_batch: {
         Args: { batch_size: number; queue_name: string; vt: number }
         Returns: {
