@@ -279,7 +279,7 @@ export default function Top100CryptosPage() {
       )}
 
       {!isLoading && visibleAssets.length > 0 && (
-        <div className="rounded-lg border border-white/10 overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+        <div data-page-bento className="rounded-lg border border-white/10 overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
           <table className="w-full min-w-[540px]">
             <thead>
               <tr className="border-b border-white/10 text-zinc-500 text-xs uppercase">

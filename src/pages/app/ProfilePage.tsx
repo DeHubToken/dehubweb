@@ -372,7 +372,8 @@ export default function ProfilePage() {
             </div>
             <Button
               onClick={() => setLoginModalOpen(true)}
-              className="h-12 px-8 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
+              data-primary-cta
+                    className="h-12 px-8 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
             >
               {t('profile.signUp')}
             </Button>
@@ -396,7 +397,8 @@ export default function ProfilePage() {
               <Button
                 onClick={() => data.refetchProfile?.()}
                 disabled={data.isFetchingProfile}
-                className="h-11 px-6 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
+                data-primary-cta
+                    className="h-11 px-6 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
               >
                 {data.isFetchingProfile ? t('common.loading') : t('common.tryAgain')}
               </Button>

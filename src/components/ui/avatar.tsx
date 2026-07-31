@@ -29,6 +29,11 @@ const AvatarFallback = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <AvatarPrimitive.Fallback
     ref={ref}
+    /* Initials tile. Callers pass their own `bg-zinc-700`-family fill, which no
+       theme's class net reaches (they all stop at zinc-800), so this is the
+       only place a theme can recolour the one element in a post header that
+       would otherwise stay a flat opaque grey square. */
+    data-avatar-fallback
     className={cn("flex h-full w-full items-center justify-center rounded-lg bg-muted", className)}
     {...props}
   />

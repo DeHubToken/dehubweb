@@ -53,7 +53,7 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    become one frosted-glass bento. Guarded so nothing nested inside the reading
    panel (or opted out via data-docs-solid) gets a second stacked blur. */
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]).dark .docs-root
-  :is(.bg-card, .bg-muted, .bg-secondary, [class*="Card"], [data-docs-header], [data-docs-sidebar], [data-docs-reading-panel]):not([data-docs-reading-panel] *):not([data-docs-solid]) {
+  :is(.bg-card, .bg-muted, .bg-secondary, .docs-glass, [class*="Card"], [data-docs-header], [data-docs-sidebar], [data-docs-reading-panel]):not([data-docs-reading-panel] *):not([data-docs-solid]):not([data-docs-header] *):not([data-docs-sidebar] *) {
   background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-regular)) !important;
   -webkit-backdrop-filter: var(--glass-blur) !important;
   backdrop-filter: var(--glass-blur) !important;

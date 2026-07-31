@@ -75,7 +75,7 @@ export default function PricingPage() {
           ],
         }}
       />
-      <div className="min-h-[100dvh] bg-black text-white">
+      <div data-glass-page className="min-h-[100dvh] bg-black text-white">
         <header className="flex items-center justify-between px-4 py-4 sm:px-8">
           <Link to="/" className="flex items-center gap-2">
             <img src={dehubLogo} alt="DeHub logo white" className="h-6 w-auto" />

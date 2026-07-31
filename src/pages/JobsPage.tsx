@@ -103,7 +103,7 @@ export default function JobsPage() {
   );
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+    <div data-glass-page className="min-h-screen bg-black text-white relative overflow-hidden">
       <SEOHead
         title="Careers at DeHub — Open Roles in Web3 Social Media"
         description="Join the DeHub team — open positions in business development, marketing and more."

@@ -83,6 +83,7 @@ export function PostUtilityButtons({
           isBookmarkLoading && 'opacity-50',
         )}
         aria-label={isBookmarked ? 'Remove bookmark' : 'Bookmark'}
+        data-engaged={isBookmarked ? 'bookmark' : undefined}
         disabled={isBookmarkLoading}
         animate={isBookmarked ? { scale: [1, 1.2, 1] } : {}}
         transition={{ duration: 0.2, ease: 'easeOut' }}
@@ -101,6 +102,7 @@ export function PostUtilityButtons({
           }}
           disabled={!tokenId || togglePinMutation.isPending}
           aria-label={isPinned ? 'Unpin post' : 'Pin post'}
+          data-engaged={isPinned ? 'pin' : undefined}
           className={cn(
             isChip
               ? cn(CHIP_BASE, isPinned && 'text-blue-400', 'disabled:opacity-40')
