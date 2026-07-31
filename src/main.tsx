@@ -34,6 +34,16 @@ import "./styles/war-comments.css";
 // filter that index.css puts on mobile-header images.
 import "./styles/war-logo.css";
 
+// Osaka theme chrome. Same two-file split as War, for the same reason:
+// osaka-frame.css owns the tokens and the wet-glass primitives (meniscus ring,
+// neon bleed, bloom, rain film); osaka-theme.css consumes them to dress every
+// app surface. Swapping these two leaves every var(--osaka-*) unresolved.
+// Scoped entirely to html[data-theme="osaka"], so both are inert under every
+// other theme, and independent of the War block above (mutually exclusive
+// scopes, so their relative order does not matter).
+import "./styles/osaka-frame.css";
+import "./styles/osaka-theme.css";
+
 clearChunkReloadFlag();
 installSupabaseInterceptor();
 

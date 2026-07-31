@@ -171,6 +171,7 @@
     "lavalamp": "Lava Lamp",
     "winter": "Winter Drops",
     "war": "War",
+    "osaka": "Osaka",
     "themeColor": "Theme Color",
     "themeColorDesc": "Pick a custom color for this theme",
     "themeColorReset": "Reset",
@@ -260,6 +261,11 @@
     "loginDescription": "Log in to access and manage your account settings.",
     "save": "Save",
     "saving": "Saving..."
+  },
+  "osaka": {
+    "trackTitle": "Raining in Osaka",
+    "ambienceOn": "Play ambience",
+    "ambienceOff": "Mute ambience"
   },
   "common": {
     "save": "Save",
