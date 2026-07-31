@@ -15,6 +15,14 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { getVoteCache } from '@/lib/vote-cache';
 import { scrollDocumentTo } from '@/lib/document-scroll';
 import { cn } from '@/lib/utils';
+import {
+  resolveLikeCount,
+  resolveDislikeCount,
+  resolveMyReaction,
+  resolveReactionCounts,
+  applyVoteStateToNFT,
+  mergeViewerState,
+} from '@/lib/engagement';
 import { SEOHead } from '@/components/SEOHead';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useLayoutEffect, useEffect, useState, useRef, useCallback } from 'react';
@@ -134,10 +142,13 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     status: nft.status,
     creatorId: resolvedAddress,
     creatorUsername: nft.minterUsername || nft.mintername || creatorObj?.username || ownerObj?.username,
-    isLiked: nft.isLiked,
-    isDisliked: nft.isDisliked,
-    likeCount: nft.totalVotes?.for || 0,
-    dislikeCount: nft.totalVotes?.against || 0,
+    isLiked: nft.isLiked ?? false,
+    isDisliked: nft.isDisliked ?? false,
+    myReaction: resolveMyReaction(nft),
+    reactionCounts: resolveReactionCounts(nft),
+    isReposted: nft.isReposted ?? false,
+    likeCount: resolveLikeCount(nft),
+    dislikeCount: resolveDislikeCount(nft),
     commentCount: nft.commentCount || nft.comment_count || 0,
     isPPV: nft.is_ppv || streamInfo?.isPayPerView || false,
     ppvPrice: nft.ppv_price || streamInfo?.payPerViewAmount,
@@ -192,7 +203,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     imageUrls,
     title,
     description,
-    likes: nft.totalVotes?.for || 0,
+    likes: resolveLikeCount(nft),
     caption: description || '',
     comments: nft.commentCount || nft.comment_count || 0,
     status: nft.status,
@@ -200,8 +211,11 @@ function toImagePost(nft: DeHubNFT): ImagePost {
     timeAgo: formatTimeAgo(timestamp),
     creatorId: resolvedAddress,
     creatorUsername: nft.minterUsername || nft.mintername || creatorObj?.username || ownerObj?.username,
-    isLiked: nft.isLiked,
-    isDisliked: nft.isDisliked,
+    isLiked: nft.isLiked ?? false,
+    isDisliked: nft.isDisliked ?? false,
+    myReaction: resolveMyReaction(nft),
+    reactionCounts: resolveReactionCounts(nft),
+    isReposted: nft.isReposted ?? false,
     isPPV: nft.is_ppv || streamInfo?.isPayPerView || false,
     ppvPrice: nft.ppv_price || streamInfo?.payPerViewAmount,
     ppvCurrency: nft.ppv_currency || 'DHB',
@@ -266,8 +280,19 @@ function toTextPost(nft: DeHubNFT): TextPost {
     stats: {
       comments: nft.commentCount || nft.comment_count || 0,
       reposts: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
-      likes: nft.totalVotes?.for || 0,
+      likes: resolveLikeCount(nft),
     },
+    // These three used to be missing here — the video and image mappers above
+    // both carry them, so only text posts lost their like/dislike/repost state
+    // when opened on their own page: PostCard got isLiked===undefined and the
+    // thumb rendered inactive even though the feed showed it lit. It looked
+    // fine for a few minutes only because ActionBar falls back to the
+    // in-memory vote cache, which expires.
+    isLiked: nft.isLiked ?? false,
+    isDisliked: nft.isDisliked ?? false,
+    myReaction: resolveMyReaction(nft),
+    reactionCounts: resolveReactionCounts(nft),
+    isReposted: nft.isReposted ?? false,
     isQuotePost: !!nft.isQuotePost,
     quotedPost: nft.quotedPost || null,
   };
@@ -349,7 +374,7 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     isLive: deriveIsLive(nft),
     creatorId: resolvedAddress,
     creatorUsername: nft.minterUsername || nft.mintername || creatorObj?.username || ownerObj?.username,
-    likeCount: nft.totalVotes?.for || 0,
+    likeCount: resolveLikeCount(nft),
     commentCount: nft.commentCount || nft.comment_count || 0,
     playbackUrl: buildLivePlaybackUrl(nft),
     playbackUrls: buildLivePlaybackUrls(nft),
@@ -662,6 +687,13 @@ export default function SinglePostPage({ inOverlay = false }: SinglePostPageProp
   const { data: post, isLoading } = useQuery({
     queryKey: ['single-post', id],
     queryFn: async () => {
+      // What we're already showing: the seed the feed card wrote on click, the
+      // last good fetch, or the feed item behind `placeholderData` below. Used
+      // to keep viewer flags when this response comes back anonymous.
+      const shown =
+        queryClient.getQueryData<DeHubNFT>(['single-post', id]) ??
+        (findCachedFeedPost(queryClient, id!) as unknown as DeHubNFT | undefined);
+
       // Try NFT info first (works for minted posts with tokenIds)
       try {
         const nft = await getNFTInfo(id!);
@@ -669,19 +701,26 @@ export default function SinglePostPage({ inOverlay = false }: SinglePostPageProp
           ...nft,
           createdAt: nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at || '',
         };
-        
+
+        // api.dehub.io answers a request carrying an expired token with 200 and
+        // NO viewer fields rather than 401. Replacing the seed wholesale with
+        // such a response is what flipped a liked post to unliked one second
+        // after opening it. Counts still come from the response; only the
+        // per-viewer flags are carried over.
+        const merged = mergeViewerState(normalizedNft, shown);
+
         // Enrich quote post if quotedPost data is missing
-        if (normalizedNft.isQuotePost && normalizedNft.quotedTokenId && !normalizedNft.quotedPost) {
+        if (merged.isQuotePost && merged.quotedTokenId && !merged.quotedPost) {
           try {
-            const quoted = await getNFTInfo(String(normalizedNft.quotedTokenId));
-            return { ...normalizedNft, quotedPost: quoted };
+            const quoted = await getNFTInfo(String(merged.quotedTokenId));
+            return { ...merged, quotedPost: quoted };
           } catch {
             // If we can't fetch the quoted post, still return the main post
-            return normalizedNft;
+            return merged;
           }
         }
-        
-        return normalizedNft;
+
+        return merged;
       } catch {
         // Fallback: try livestream API (stream IDs from /api/live are not NFT tokenIds)
         const liveRes = await getLiveStream(id!);
@@ -720,20 +759,13 @@ export default function SinglePostPage({ inOverlay = false }: SinglePostPageProp
     // (navigating post A → post B used to flash A's body under B's URL).
     placeholderData: () =>
       findCachedFeedPost(queryClient, id!) as unknown as DeHubNFT | undefined,
-    // Always overlay the vote cache so likes survive refetches
+    // Always overlay the vote cache so a vote cast seconds ago outranks a
+    // response that predates it (both counters are written, not just totalVotes).
     select: (data) => {
       if (!data || !id) return data;
       const cached = getVoteCache(id);
       if (!cached) return data;
-      return {
-        ...data,
-        isLiked: cached.isLiked,
-        isDisliked: cached.isDisliked,
-        totalVotes: {
-          for: cached.likeCount,
-          against: cached.dislikeCount,
-        },
-      };
+      return applyVoteStateToNFT(data, cached);
     },
   });
 

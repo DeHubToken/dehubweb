@@ -19,6 +19,7 @@ import {
   type SearchNFTsParams,
   type LiveStream as ApiLiveStream,
 } from '@/lib/api/dehub';
+import { resolveDislikeCount, resolveLikeCount, resolveMyReaction, resolveReactionCounts } from '@/lib/engagement';
 import { buildAvatarUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { parseSoundtrackTag } from '@/hooks/use-unified-feed';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
@@ -149,8 +150,8 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   const creatorUsername = nft.minterUsername || nft.mintername || nft.creator?.username;
 
   // Get stats
-  const likeCount = nft.likes ?? nft.totalVotes?.for ?? nft.like_count ?? 0;
-  const dislikeCount = nft.dislikes ?? nft.totalVotes?.against ?? nft.dislike_count ?? 0;
+  const likeCount = resolveLikeCount(nft);
+  const dislikeCount = resolveDislikeCount(nft);
   const commentCount = nft.commentCount || nft.comment_count || 0;
 
   // Map content access fields from API
@@ -193,6 +194,8 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     creatorUsername,
     isLiked: nft.isLiked ?? false,
     isDisliked: nft.isDisliked ?? false,
+    myReaction: resolveMyReaction(nft),
+    reactionCounts: resolveReactionCounts(nft),
     likeCount,
     dislikeCount,
     commentCount,
@@ -243,7 +246,7 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
   const verified = nft.creator?.is_verified || false;
 
   // Get stats
-  const likes = nft.likes ?? nft.totalVotes?.for ?? nft.like_count ?? 0;
+  const likes = resolveLikeCount(nft);
   const comments = nft.commentCount || nft.comment_count || 0;
   const viewCount = nft.views || nft.view_count || 0;
 
@@ -277,6 +280,8 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
     creatorUsername,
     isLiked: nft.isLiked ?? false,
     isDisliked: nft.isDisliked ?? false,
+    myReaction: resolveMyReaction(nft),
+    reactionCounts: resolveReactionCounts(nft),
     // PPV/Bounty/Locked fields
     isPPV: nft.is_ppv || nft.streamInfo?.isPayPerView || false,
     ppvPrice: nft.ppv_price || nft.streamInfo?.payPerViewAmount,

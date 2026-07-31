@@ -1870,6 +1870,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               className="p-0"
               isLiked={video.isLiked}
               isDisliked={video.isDisliked}
+              myReaction={video.myReaction}
+              reactionCounts={video.reactionCounts}
               onComment={() => {
                 setCommentsInitialTab(undefined);
                 setShowComments(!showComments);

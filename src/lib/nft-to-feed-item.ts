@@ -5,6 +5,7 @@
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { DeHubNFT } from '@/lib/api/dehub';
+import { resolveDislikeCount, resolveLikeCount, resolveMyReaction, resolveReactionCounts } from '@/lib/engagement';
 import type { VideoItem, ImagePost, TextPost, FeedItem } from '@/types/feed.types';
 
 function detectPostType(nft: DeHubNFT): 'video' | 'image' | 'text' {
@@ -39,8 +40,10 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     creatorId: nft.minter,
     creatorUsername: nft.minterUsername || nft.mintername,
     isLiked: nft.isLiked ?? false,
-    likeCount: nft.totalVotes?.for || nft.like_count || 0,
-    dislikeCount: nft.totalVotes?.against || 0,
+    myReaction: resolveMyReaction(nft),
+    reactionCounts: resolveReactionCounts(nft),
+    likeCount: resolveLikeCount(nft),
+    dislikeCount: resolveDislikeCount(nft),
     commentCount: nft.commentCount || nft.comment_count || 0,
     isPPV: nft.is_ppv ?? false,
     ppvPrice: nft.ppv_price,
@@ -75,7 +78,7 @@ function mapNFTToImagePost(nft: DeHubNFT): ImagePost {
     imageUrls,
     title: nft.name || nft.title,
     description: nft.description,
-    likes: nft.totalVotes?.for || nft.like_count || 0,
+    likes: resolveLikeCount(nft),
     caption: nft.description || nft.name || '',
     comments: nft.commentCount || nft.comment_count || 0,
     views: formatViews(nft.views || nft.view_count).replace(' views', ''),
@@ -83,6 +86,8 @@ function mapNFTToImagePost(nft: DeHubNFT): ImagePost {
     creatorId: nft.minter,
     creatorUsername: nft.minterUsername || nft.mintername,
     isLiked: nft.isLiked ?? false,
+    myReaction: resolveMyReaction(nft),
+    reactionCounts: resolveReactionCounts(nft),
     isPPV: nft.is_ppv || nft.streamInfo?.isPayPerView || false,
     ppvPrice: nft.ppv_price || nft.streamInfo?.payPerViewAmount,
     ppvCurrency: nft.ppv_currency || 'DHB',
@@ -124,8 +129,12 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
     stats: {
       comments: nft.commentCount || nft.comment_count || 0,
       reposts: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
-      likes: nft.totalVotes?.for || nft.like_count || 0,
+      likes: resolveLikeCount(nft),
     },
+    isLiked: nft.isLiked ?? false,
+    isDisliked: nft.isDisliked ?? false,
+    myReaction: resolveMyReaction(nft),
+    reactionCounts: resolveReactionCounts(nft),
     isReposted: nft.isReposted ?? false,
   };
 }

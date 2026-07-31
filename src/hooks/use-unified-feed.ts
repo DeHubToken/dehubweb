@@ -12,6 +12,7 @@ import { useInfiniteQuery, useQuery, keepPreviousData, type QueryClient } from '
 import { getAuthToken, isTokenExpired, ensureFreshToken, DEHUB_CDN_BASE, type DeHubNFT, getBlockList, getNFTInfo } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
+import { resolveLikeCount, resolveDislikeCount, resolveMyReaction, resolveReactionCounts } from '@/lib/engagement';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
 import { useAuth } from '@/contexts/AuthContext';
@@ -246,8 +247,10 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     creatorBadgeBalance: item.minterUser?.badgeBalance,
     isLiked: item.isLiked ?? false,
     isDisliked: item.isDisliked ?? false,
-    likeCount: item.likes ?? item.totalVotes?.for ?? 0,
-    dislikeCount: item.dislikes ?? item.totalVotes?.against ?? 0,
+    myReaction: resolveMyReaction(item),
+    reactionCounts: resolveReactionCounts(item),
+    likeCount: resolveLikeCount(item),
+    dislikeCount: resolveDislikeCount(item),
     commentCount: item.commentCount || 0,
     ppvBuyerCount: item.ppvBuyerCount || 0,
     isPPV,
@@ -304,7 +307,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     title: item.name,
     description: cleanDescription,
     ...soundtrack,
-    likes: item.likes ?? item.totalVotes?.for ?? 0,
+    likes: resolveLikeCount(item),
     caption: item.description || item.name || '',
     comments: item.commentCount || 0,
     views: formatViews(item.views).replace(' views', ''),
@@ -315,6 +318,8 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     creatorBadgeBalance: item.minterUser?.badgeBalance,
     isLiked: item.isLiked ?? false,
     isDisliked: item.isDisliked ?? false,
+    myReaction: resolveMyReaction(item),
+    reactionCounts: resolveReactionCounts(item),
     ppvBuyerCount: item.ppvBuyerCount || 0,
     createdAt: item.createdAt,
     isPPV: item.streamInfo?.isPayPerView ?? false,
@@ -381,10 +386,12 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     stats: {
       comments: item.commentCount || 0,
       reposts: (item.totalReposts || item.reposts || 0) + (item.quotes || 0),
-      likes: item.likes ?? item.totalVotes?.for ?? 0,
+      likes: resolveLikeCount(item),
     },
     isLiked: item.isLiked ?? false,
     isDisliked: item.isDisliked ?? false,
+    myReaction: resolveMyReaction(item),
+    reactionCounts: resolveReactionCounts(item),
     isReposted: item.isReposted ?? false,
     isQuotePost: !!(item as any).isQuotePost,
     quotedPost: (item as any).quotedPost || null,
