@@ -10,14 +10,14 @@
    1. PALETTE LOCK. One accent (--osaka-neon). --osaka-cyan is a stroke and
       state colour, --osaka-amber is warning/live, --osaka-alert is
       destructive. Saturated Tailwind families are remapped by ROLE (see
-      section 13), because ~800 of them ship across the app and left alone
+      section 12), because ~800 of them ship across the app and left alone
       they make the "one accent" claim false.
    2. CHROME GETS THE SIGN, CONTENT GETS THE CALM. Bloom, neon text and the
       meniscus ring go on panels, navs and primary actions. [data-feed-item]
       repeats ~30x per screen, so it gets a ring and a wash only. A glow that
       repeats thirty times is not a sign, it is a rash.
    3. NOTHING SQUARE. Osaka's whole material claim is water, and water has no
-      corners. One radius scale, applied by role (section 15).
+      corners. One radius scale, applied by role (section 14).
    4. CONTENT FIDELITY. [data-media-full], [data-video-controls] and
       [data-keep-dark] are never tinted, blurred or recoloured. A rainy theme
       does not get to put rain on someone's uploaded photo.
@@ -434,110 +434,7 @@ html[data-theme='osaka'] [data-theme-option][data-active='true'] {
 }
 
 /* ==========================================================================
-   11. AMBIENCE CONTROL
-   ==========================================================================
-   components/app/osaka/OsakaAmbience.tsx. A bead of wet glass with the track
-   name in it. It collapses to a circle on small viewports because the bottom
-   corners are crowded there (the Radio mini-player owns the opposite side).
-   ========================================================================== */
-
-html[data-theme='osaka'] [data-osaka-ambience] {
-  background:
-    var(--osaka-bleed),
-    rgb(var(--osaka-slate) / 0.72);
-  backdrop-filter: var(--osaka-blur);
-  -webkit-backdrop-filter: var(--osaka-blur);
-  box-shadow: var(--osaka-edge-lift);
-  color: rgb(var(--osaka-haze));
-}
-
-html[data-theme='osaka'] [data-osaka-ambience]:hover {
-  color: rgb(var(--osaka-mist));
-}
-
-html[data-theme='osaka'] [data-osaka-ambience][data-live='true'] {
-  color: rgb(var(--osaka-neon));
-  box-shadow:
-    var(--osaka-edge-lift),
-    0 0 14px rgb(var(--osaka-neon) / 0.2);
-}
-
-/* The label costs horizontal space the small viewports do not have. */
-html[data-theme='osaka'] [data-osaka-ambience-label] {
-  display: none;
-}
-@media (min-width: 768px) {
-  html[data-theme='osaka'] [data-osaka-ambience-label] {
-    display: inline;
-  }
-}
-
-/* Waiting on a gesture because the browser refused autoplay. A slow breath,
-   not a flash: this is an invitation, not an alert. */
-html[data-theme='osaka'] [data-osaka-ambience][data-armed='true'] {
-  animation: osaka-breathe 2.6s ease-in-out infinite;
-}
-
-@keyframes osaka-breathe {
-  0%,
-  100% {
-    box-shadow: var(--osaka-edge-lift);
-  }
-  50% {
-    box-shadow:
-      var(--osaka-edge-lift),
-      0 0 16px rgb(var(--osaka-neon) / 0.34);
-  }
-}
-
-/* Four bars, staggered. */
-html[data-theme='osaka'] [data-osaka-eq] {
-  display: inline-flex;
-  align-items: flex-end;
-  gap: 2px;
-  height: 14px;
-  width: 16px;
-}
-
-html[data-theme='osaka'] [data-osaka-eq] i {
-  display: block;
-  width: 2.5px;
-  border-radius: 2px;
-  background: currentColor;
-  transform-origin: bottom;
-  animation: osaka-eq 1.1s ease-in-out infinite;
-  height: 100%;
-}
-
-html[data-theme='osaka'] [data-osaka-eq] i:nth-child(1) { animation-delay: 0s; }
-html[data-theme='osaka'] [data-osaka-eq] i:nth-child(2) { animation-delay: 0.18s; }
-html[data-theme='osaka'] [data-osaka-eq] i:nth-child(3) { animation-delay: 0.36s; }
-html[data-theme='osaka'] [data-osaka-eq] i:nth-child(4) { animation-delay: 0.1s; }
-
-@keyframes osaka-eq {
-  0%,
-  100% {
-    transform: scaleY(0.28);
-  }
-  50% {
-    transform: scaleY(1);
-  }
-}
-
-/* Reduced motion: a static level meter still communicates "sound is on". */
-@media (prefers-reduced-motion: reduce) {
-  html[data-theme='osaka'] [data-osaka-ambience][data-armed='true'],
-  html[data-theme='osaka'] [data-osaka-eq] i {
-    animation: none !important;
-  }
-  html[data-theme='osaka'] [data-osaka-eq] i:nth-child(1) { transform: scaleY(0.45); }
-  html[data-theme='osaka'] [data-osaka-eq] i:nth-child(2) { transform: scaleY(0.8); }
-  html[data-theme='osaka'] [data-osaka-eq] i:nth-child(3) { transform: scaleY(0.6); }
-  html[data-theme='osaka'] [data-osaka-eq] i:nth-child(4) { transform: scaleY(0.35); }
-}
-
-/* ==========================================================================
-   12. UNTAGGED PAGES - the safety net
+   11. UNTAGGED PAGES - the safety net
    ==========================================================================
    Not every route carries a data-* hook. Anything still painting a raw zinc
    or neutral slab would punch an opaque hole in the alley, so those fills are
@@ -584,7 +481,7 @@ html[data-theme='osaka'] #app-root :is(hr, [role='separator']):not([data-keep-da
 }
 
 /* ==========================================================================
-   13. PALETTE LOCK
+   12. PALETTE LOCK
    ==========================================================================
    ~800 saturated Tailwind utilities ship across the app. Left alone they make
    the theme's "one accent" claim false. Remapped by ROLE:
@@ -657,7 +554,7 @@ html[data-theme='osaka'] #app-root
 }
 
 /* ==========================================================================
-   14. TEXT COLOUR
+   13. TEXT COLOUR
    ==========================================================================
    Two roles only. The app's neutral text scale is remapped onto them so copy
    sits at a measured contrast instead of whatever zinc step it happened to
@@ -683,7 +580,7 @@ html[data-theme='osaka'] #app-root
 }
 
 /* ==========================================================================
-   15. RADIUS LOCK (house rule 3)
+   14. RADIUS LOCK (house rule 3)
    ==========================================================================
    Osaka's material claim is water, so nothing is allowed to stay square. This
    is the mirror image of War's blanket squaring rule, and it carries the same
@@ -700,7 +597,7 @@ html[data-theme='osaka']
 }
 
 /* ==========================================================================
-   16. DOCS + BLOG
+   15. DOCS + BLOG
    ==========================================================================
    These routes composite a full-page surface over the canvas via
    docs-glass.css, which reads the same --glass-* bridge the app does. The
