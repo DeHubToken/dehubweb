@@ -72,6 +72,9 @@ export interface CountSource {
   reactionCounts?: ReactionCounts | null;
   /** The viewer's own reaction — a viewer field, absent on anonymous responses. */
   myReaction?: string | null;
+  /** Viewer polarity flags, absent on anonymous responses. */
+  isLiked?: boolean | null;
+  isDisliked?: boolean | null;
 }
 
 /** Legacy `likes` is a number on most rows and an array of voters on a few. */
@@ -100,7 +103,10 @@ export function resolveDislikeCount(source: CountSource | null | undefined): num
  * `likes`/`dislikes` mirrors are kept in sync only when the object already
  * carries them, so we never invent a legacy field.
  */
-export function applyVoteStateToNFT<T extends CountSource>(nft: T, state: VoteState): T {
+export function applyVoteStateToNFT<T extends CountSource>(
+  nft: T,
+  state: VoteState
+): T & { isLiked: boolean; isDisliked: boolean; myReaction?: PostReaction | null; reactionCounts?: ReactionCounts } {
   const patched: CountSource & Record<string, unknown> = {
     ...(nft as Record<string, unknown>),
     isLiked: state.isLiked,
@@ -114,7 +120,12 @@ export function applyVoteStateToNFT<T extends CountSource>(nft: T, state: VoteSt
   // Only written when the caller actually resolved a reaction — see VoteState.
   if ('myReaction' in state) patched.myReaction = state.myReaction ?? null;
   if (state.reactionCounts) patched.reactionCounts = state.reactionCounts;
-  return patched as T;
+  return patched as T & {
+    isLiked: boolean;
+    isDisliked: boolean;
+    myReaction?: PostReaction | null;
+    reactionCounts?: ReactionCounts;
+  };
 }
 
 /**
