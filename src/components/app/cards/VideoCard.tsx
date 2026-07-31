@@ -1846,8 +1846,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         </SharedTranslationProvider>
         <div className="mb-3">
           <PostMetadata 
-            timestamp={video.uploadedAgo} 
+            timestamp={video.uploadedAgo}
             viewCount={video.views?.replace(' views', '') || '0'}
+            tokenId={video.id}
             isAd={video.isAd}
             isAudio={video.isAudio}
             translateControl={{

@@ -3,11 +3,14 @@
  * ===================
  * React hooks for integrating view tracking into components.
  * Uses a shared IntersectionObserver singleton for performance.
+ *
+ * These hooks do not check auth. Signed-out visitors count too — view-tracker
+ * decides which backend a view goes to (the DeHub API when there is a session,
+ * the anon-views edge function when there is not).
  */
 
 import { useEffect, useRef, useCallback } from 'react';
 import { videoViewTracker, feedViewTracker } from '@/lib/view-tracker';
-import { useAuth } from '@/contexts/AuthContext';
 
 // ============================================================================
 // SHARED INTERSECTION OBSERVER SINGLETON
@@ -85,14 +88,11 @@ const sharedViewObserver = new SharedViewObserver();
  * ```
  */
 export function useVideoViewTracking(tokenId: string) {
-  const { isAuthenticated } = useAuth();
-  
   const onTimeUpdate = useCallback((currentTime: number, duration: number) => {
-    if (!isAuthenticated) return;
     if (!tokenId || !duration || duration <= 0) return;
-    
+
     videoViewTracker.updateProgress(tokenId, currentTime, duration);
-  }, [tokenId, isAuthenticated]);
+  }, [tokenId]);
   
   // Cleanup on unmount
   useEffect(() => {
@@ -125,13 +125,12 @@ export function useVideoViewTracking(tokenId: string) {
  * ```
  */
 export function useFeedViewTracking(tokenId: string) {
-  const { isAuthenticated } = useAuth();
   const elementRef = useRef<HTMLDivElement>(null);
   const observedRef = useRef(false);
-  
+
   useEffect(() => {
-    if (!isAuthenticated || !tokenId) return;
-    
+    if (!tokenId) return;
+
     const element = elementRef.current;
     if (!element) return;
     
@@ -145,8 +144,8 @@ export function useFeedViewTracking(tokenId: string) {
         observedRef.current = false;
       }
     };
-  }, [tokenId, isAuthenticated]);
-  
+  }, [tokenId]);
+
   return elementRef;
 }
 
@@ -165,7 +164,6 @@ export function useFeedViewTracking(tokenId: string) {
  * ```
  */
 export function useFeedViewTrackingCallback(tokenId: string) {
-  const { isAuthenticated } = useAuth();
   const currentElement = useRef<Element | null>(null);
   
   // Cleanup function
@@ -183,14 +181,14 @@ export function useFeedViewTrackingCallback(tokenId: string) {
       sharedViewObserver.unobserve(currentElement.current);
     }
     
-    if (!element || !isAuthenticated || !tokenId) {
+    if (!element || !tokenId) {
       currentElement.current = null;
       return;
     }
-    
+
     currentElement.current = element;
     sharedViewObserver.observe(element, tokenId);
-  }, [tokenId, isAuthenticated]);
+  }, [tokenId]);
   
   return refCallback;
 }

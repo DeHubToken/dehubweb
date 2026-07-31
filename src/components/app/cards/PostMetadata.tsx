@@ -7,10 +7,16 @@
 import { Eye, Headphones, RotateCcw, Loader2, Languages } from 'lucide-react';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { cn } from '@/lib/utils';
+import { useMergedViewCount } from '@/hooks/use-anon-view-counts';
 
 interface PostMetadataProps {
   timestamp?: string;
   viewCount?: string | number;
+  /**
+   * Post token id. Supplying it folds views from signed-out visitors (recorded
+   * separately from the DeHub API) into the displayed count.
+   */
+  tokenId?: string | number;
   /** Whether this is an ad/sponsored post */
   isAd?: boolean;
   /** Whether this is an audio post (shows "listens" instead of "views") */
@@ -25,7 +31,9 @@ interface PostMetadataProps {
   };
 }
 
-export function PostMetadata({ timestamp, viewCount, isAd, isAudio, translateControl }: PostMetadataProps) {
+export function PostMetadata({ timestamp, viewCount: baseViewCount, tokenId, isAd, isAudio, translateControl }: PostMetadataProps) {
+  const viewCount = useMergedViewCount(tokenId, baseViewCount);
+
   // Format timestamp - if it's an ISO string, convert to relative time
   const formattedTimestamp = timestamp ? (
     timestamp.includes('T') || timestamp.includes('-') 
