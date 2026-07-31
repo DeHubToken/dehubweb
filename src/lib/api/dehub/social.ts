@@ -1,5 +1,6 @@
 import { apiCall } from './core';
 import type { DeHubUser, DeHubNFT } from './types';
+import type { PostReaction, ReactionCounts } from '@/lib/reactions';
 
 export interface VoteResponse {
   success: boolean;
@@ -9,6 +10,28 @@ export interface VoteResponse {
     for: number;
     against: number;
   };
+}
+
+export interface ReactionResponse {
+  result: boolean;
+  action: 'added' | 'removed' | 'changed';
+  /** Polarity now in force: true = positive, false = negative, null = none. */
+  currentVote: boolean | null;
+  /** The reaction that was requested. */
+  reaction: PostReaction;
+  /** The reaction now in force — null when the request toggled it off. */
+  currentReaction: PostReaction | null;
+  previousReaction: PostReaction | null;
+}
+
+export interface PostReactionsResponse {
+  result: boolean;
+  tokenId: number;
+  counts: Record<PostReaction, number>;
+  /** Every reaction, both polarities. */
+  total: number;
+  topReaction: PostReaction | null;
+  myReaction: PostReaction | null;
 }
 
 export interface FollowResponse {
@@ -207,6 +230,44 @@ export async function voteOnPost(params: {
     return response.result;
   }
   return response as VoteResponse;
+}
+
+/**
+ * Cast one of the nine reactions on a post.
+ *
+ * Supersedes `voteOnPost`, which stays for callers that only ever mean a plain
+ * like/dislike. The server toggles: sending the reaction the user already holds
+ * removes it, and sending a different one swaps it (moving `totalVotes` only
+ * when the polarity actually changed).
+ */
+export async function reactToPost(params: {
+  tokenId: number;
+  reaction: PostReaction;
+}): Promise<ReactionResponse> {
+  const response = await apiCall<{ result: ReactionResponse } | ReactionResponse>('/api/request_reaction', {
+    method: 'POST',
+    // Mirrors voteOnPost: the backend's reqParam reads query OR body, and
+    // sending it both ways survives any middleware that drops one of them.
+    params: { reaction: params.reaction },
+    body: {
+      streamTokenId: params.tokenId,
+      reaction: params.reaction,
+    },
+    requiresAuth: true,
+  });
+  if (response && typeof response === 'object' && 'result' in response && typeof response.result === 'object') {
+    return response.result as ReactionResponse;
+  }
+  return response as ReactionResponse;
+}
+
+/** Per-reaction breakdown for a post, used by the reaction-detail sheet. */
+export async function getPostReactions(
+  tokenId: string | number,
+): Promise<PostReactionsResponse> {
+  return apiCall<PostReactionsResponse>('/api/post-reactions', {
+    params: { tokenId: String(tokenId) },
+  });
 }
 
 export async function toggleFollow(params: {
