@@ -108,7 +108,10 @@ function preloadWalletChunkPlugin() {
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
-    port: 8080,
+    // 8080 stays the default so nothing about the normal `npm run dev` changes.
+    // Honouring PORT lets a second checkout run alongside the first instead of
+    // failing on a busy port.
+    port: Number(process.env.PORT) || 8080,
     headers: {
       "Cross-Origin-Opener-Policy": "same-origin-allow-popups",
       "Cross-Origin-Embedder-Policy": "unsafe-none",
