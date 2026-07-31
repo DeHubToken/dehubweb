@@ -209,8 +209,7 @@ html[data-theme='osaka'] #app-root > div > main {
    The backplate and the soundtrack are deliberately NOT in the repo (see the
    Sources block at the top of components/app/OsakaBackground.tsx), so a fresh
    clone runs this theme with no video at all. That component flags the miss on
-   <html> and pulls its own canvas, leaving these three washes plus the rain
-   film below to carry it.
+   <html> and pulls its own canvas, leaving these three washes to carry it.
 
    Treated as a legitimate second look rather than an error state: sign glow
    bleeding up through a wet dark, warm low-right and sakura high-left, roughly
@@ -227,86 +226,7 @@ html[data-theme='osaka'][data-osaka-media='absent'] {
 }
 
 /* ==========================================================================
-   3. THE RAIN FILM
-   ==========================================================================
-   A fixed, pointer-events-none overlay carrying the on-CHROME rain: the drops
-   that read as being on the same pane as the UI, rather than out in the alley
-   (the canvas shader owns those). Two layers, both pure gradient, both
-   composited once by the compositor:
-
-     ::before  slow, wide, diagonal light streaks - the sheet of water.
-     ::after   a fine drift of small beads.
-
-   PERFORMANCE. This is fixed and pointer-events-none, so it never invalidates
-   during scroll and never participates in hit testing. It animates ONLY
-   background-position and opacity, so it stays on the compositor. It must
-   never be attached to a scrolling container: a repainting rain film over a
-   scrolling feed is exactly the pattern that destroys mobile frame rate.
-   ========================================================================== */
-
-html[data-theme='osaka'] body::before,
-html[data-theme='osaka'] body::after {
-  content: '';
-  position: fixed;
-  inset: -20% -20% -20% -20%;
-  pointer-events: none;
-  z-index: 1;
-  opacity: 0.5;
-}
-
-/* Sheet: long, soft, steeply-angled streaks. */
-html[data-theme='osaka'] body::before {
-  background-image: repeating-linear-gradient(
-    100deg,
-    transparent 0px,
-    transparent 34px,
-    rgb(var(--osaka-mist) / 0.045) 34px,
-    rgb(var(--osaka-mist) / 0.045) 35px,
-    transparent 36px,
-    transparent 78px,
-    rgb(var(--osaka-cyan) / 0.035) 78px,
-    rgb(var(--osaka-cyan) / 0.035) 79px,
-    transparent 80px
-  );
-  animation: osaka-sheet 3.1s linear infinite;
-}
-
-/* Beads: a finer, faster drift at a slightly different angle, so the two
-   layers never visibly march in step. */
-html[data-theme='osaka'] body::after {
-  background-image: repeating-linear-gradient(
-    96deg,
-    transparent 0px,
-    transparent 12px,
-    rgb(var(--osaka-neon) / 0.03) 12px,
-    rgb(var(--osaka-neon) / 0.03) 13px,
-    transparent 14px,
-    transparent 29px
-  );
-  animation: osaka-beads 1.9s linear infinite;
-  opacity: 0.36;
-}
-
-@keyframes osaka-sheet {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: -120px 620px;
-  }
-}
-
-@keyframes osaka-beads {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: -60px 420px;
-  }
-}
-
-/* ==========================================================================
-   4. PRIMITIVES
+   3. PRIMITIVES
    ========================================================================== */
 
 /* -- the meniscus ring ----------------------------------------------------
@@ -392,21 +312,11 @@ html[data-theme='osaka'] [data-osaka-bead]::before {
 }
 
 /* ==========================================================================
-   5. DEGRADATION
+   4. DEGRADATION
    ==========================================================================
    Three environments get a reduced build. Each removes a specific cost and
    keeps the theme legible rather than falling back to a different look.
    ========================================================================== */
-
-/* Reduced motion: the rain stops. The film stays (it is a texture, and a wet
-   pane is still wet when nothing is moving) but nothing animates, and the
-   equaliser flattens to a static level meter. */
-@media (prefers-reduced-motion: reduce) {
-  html[data-theme='osaka'] body::before,
-  html[data-theme='osaka'] body::after {
-    animation: none !important;
-  }
-}
 
 /* Reduced transparency: backdrop-filter is the single most expensive thing
    this theme asks for, and some users switch it off for legibility rather than
@@ -419,19 +329,11 @@ html[data-theme='osaka'] [data-osaka-bead]::before {
     --glass-blur: none;
     --osaka-blur: none;
   }
-  html[data-theme='osaka'] body::before,
-  html[data-theme='osaka'] body::after {
-    display: none;
-  }
 }
 
 /* Forced colours: hand the whole thing to the user agent. Every value in this
    file is decorative, and none of it should survive a high-contrast mode. */
 @media (forced-colors: active) {
-  html[data-theme='osaka'] body::before,
-  html[data-theme='osaka'] body::after {
-    display: none;
-  }
   html[data-theme='osaka'] [data-osaka-glow],
   html[data-theme='osaka'] [data-osaka-sign] {
     box-shadow: none;
