@@ -44,6 +44,7 @@ import { ImageCard } from '@/components/app/cards/ImageCard';
 import { PostCard } from '@/components/app/cards/PostCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { FeedItem } from '@/types/feed.types';
+import { REACTION_VERBS, reactionMeta, type PostReaction } from '@/lib/reactions';
 
 // ============================================================================
 // NotificationPostCards — fetches full NFT data and renders real feed cards
@@ -253,9 +254,16 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   livestreams: ['livestream_start'],
 };
 
-function getNotificationIcon(type: string) {
+function getNotificationIcon(type: string, reaction?: PostReaction) {
   switch (type) {
     case 'like':
+      // Every positive reaction arrives as a `like`; show which one it was.
+      // No reaction means either a plain thumbs-up or an aggregated row whose
+      // actors disagreed — the thumb is right for both.
+      if (reaction && reaction !== 'like') {
+        return <span className="text-sm leading-none" aria-hidden="true">{reactionMeta(reaction).emoji}</span>;
+      }
+      return <ThumbsUp className="w-4 h-4 text-white/70" />;
     case 'comment_like':
     case 'feature_request_like':
       return <ThumbsUp className="w-4 h-4 text-white/70" />;
@@ -537,6 +545,13 @@ function getNotificationContent(
 
   switch (notification.type) {
     case 'like':
+      // A plain thumbs-up keeps the translated copy. Anything else uses the
+      // reaction's own verb, which the API already put in `content` — reusing
+      // that is what keeps the two surfaces from drifting apart, and it's
+      // already localised-by-absence (there is no translation key per reaction).
+      if (notification.reaction && notification.reaction !== 'like') {
+        return notification.content || `${actorName} ${REACTION_VERBS[notification.reaction]} your post`;
+      }
       return tr('notifications.likedPost', { name: actorName });
     case 'comment':
       return tr('notifications.commentedPost', { name: actorName });
@@ -916,7 +931,7 @@ const NotificationItem = memo(function NotificationItem({
                   }}
                   title="View all"
                 >
-                  {getNotificationIcon(notification.type)}
+                  {getNotificationIcon(notification.type, notification.reaction)}
                 </button>
               </div>
             );
@@ -944,7 +959,7 @@ const NotificationItem = memo(function NotificationItem({
         {/* Type icon badge — only for single-actor notifications (aggregated ones render it inside) */}
         {!isBackendAggregatedMultiActor && (
           <div className="absolute -bottom-1 -right-1 p-1 rounded-lg bg-zinc-900 border border-zinc-800">
-            {getNotificationIcon(notification.type)}
+            {getNotificationIcon(notification.type, notification.reaction)}
           </div>
         )}
       </div>

@@ -8,6 +8,7 @@
  */
 
 import type { User } from './app.types';
+import type { PostReaction, ReactionCounts } from '@/lib/reactions';
 
 /**
  * Content type badge variants for universal card headers
@@ -58,6 +59,10 @@ export interface TextPost extends BaseFeedItem {
   isLiked?: boolean;
   /** Whether the current user has disliked this item */
   isDisliked?: boolean;
+  /** Which of the nine reactions the current user holds. isLiked/isDisliked are its polarity. */
+  myReaction?: PostReaction | null;
+  /** Per-reaction totals — the most-used one leads on the card. */
+  reactionCounts?: ReactionCounts | null;
   /** Whether the current user has reposted this item */
   isReposted?: boolean;
   /** Whether this is a quote post */
@@ -99,6 +104,10 @@ export interface VideoItem extends BaseFeedItem {
   isLiked?: boolean;
   /** Whether the current user has disliked this item */
   isDisliked?: boolean;
+  /** Which of the nine reactions the current user holds. isLiked/isDisliked are its polarity. */
+  myReaction?: PostReaction | null;
+  /** Per-reaction totals — the most-used one leads on the card. */
+  reactionCounts?: ReactionCounts | null;
   /** Number of likes */
   likeCount?: number;
   /** Number of dislikes */
@@ -206,6 +215,10 @@ export interface ImagePost extends BaseFeedItem {
   isLiked?: boolean;
   /** Whether the current user has disliked this item */
   isDisliked?: boolean;
+  /** Which of the nine reactions the current user holds. isLiked/isDisliked are its polarity. */
+  myReaction?: PostReaction | null;
+  /** Per-reaction totals — the most-used one leads on the card. */
+  reactionCounts?: ReactionCounts | null;
   /** Number of PPV buyers */
   ppvBuyerCount?: number;
   /** Whether content is pay-per-view */
@@ -313,6 +326,10 @@ export interface ShortVideo extends BaseFeedItem {
   isLiked?: boolean;
   /** Whether the current user has disliked this item */
   isDisliked?: boolean;
+  /** Which of the nine reactions the current user holds. isLiked/isDisliked are its polarity. */
+  myReaction?: PostReaction | null;
+  /** Per-reaction totals — the most-used one leads on the card. */
+  reactionCounts?: ReactionCounts | null;
 }
 
 /**

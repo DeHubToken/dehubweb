@@ -964,8 +964,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           }} 
           onRepost={handleRepost}
           onQuote={handleQuote}
-          isLiked={post.isLiked} 
+          isLiked={post.isLiked}
           isDisliked={post.isDisliked}
+          myReaction={post.myReaction}
+          reactionCounts={post.reactionCounts}
           likeCount={post.likes}
           commentCount={post.comments}
           repostCount={post.repostCount}
@@ -1018,6 +1020,8 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         actions={{
           isLiked: post.isLiked,
           isDisliked: post.isDisliked,
+          myReaction: post.myReaction,
+          reactionCounts: post.reactionCounts,
           likeCount: post.likes,
           commentCount: post.comments,
           repostCount: post.repostCount,
