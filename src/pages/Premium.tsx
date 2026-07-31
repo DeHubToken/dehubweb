@@ -114,7 +114,7 @@ export default function Premium() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white">
+    <div data-glass-page className="min-h-screen bg-[#0a0a0a] text-white">
       <SEOHead
         title="DeHub Premium — Extra, Family & Extra Large"
         description="Go ad-free, unlock background playback, custom themes, profile insights and more AI. Extra $4.99/mo, Family $11.99/mo, Extra Large $50/mo with 100% token cashback for first 50."

@@ -949,7 +949,7 @@ export default function ExplorePage() {
           {/* Tabs - toggle bar (flush with search bar above; no horizontal
               overhang so active indicator's drop shadow isn't clipped) */}
           <div className="mt-3">
-            <div className="bg-zinc-900 rounded-xl" style={{ overflow: 'visible' }}>
+            <div className="rounded-xl" style={{ overflow: 'visible' }}>
               <div ref={exploreTabLayerRef} className="relative overflow-visible">
                 <GlassIndicator ref={exploreIndicatorRef} rect={exploreTabRect} borderRadius="0.75rem" layoutKey={`explore-nav-${activeTab}`} enableTransition={!isExploreDragging && enableExploreTransition} fixedHeightPx={35} />
                 {exploreTabRect.ready && (

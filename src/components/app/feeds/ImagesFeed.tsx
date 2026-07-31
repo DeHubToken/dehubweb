@@ -108,6 +108,7 @@ function ContentTypeFilterSection({
               data-feed-filter-button
               data-active={filters[filter.value] ? 'true' : undefined}
               onClick={() => onToggle(filter.value)}
+              data-filter-chip
               className={cn(
                 'flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
                 filters[filter.value]

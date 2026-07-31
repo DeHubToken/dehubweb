@@ -338,7 +338,7 @@ export function GoLiveModal({ isOpen, onClose }: GoLiveModalProps) {
       <DrawerContent glass className="max-h-[90vh] px-4 pb-8">
         <DrawerHeader className="border-b border-white/10 mb-4 relative">
           <DrawerTitle className="text-white flex items-center gap-2">
-            <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
+            <div data-live-pulse className="w-3 h-3 bg-red-500 rounded-full animate-pulse" />
             {step === 'setup' ? 'Go Live' : 'Stream Ready'}
           </DrawerTitle>
           <DrawerDescription className="sr-only">

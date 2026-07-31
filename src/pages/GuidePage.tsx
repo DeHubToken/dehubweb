@@ -726,7 +726,7 @@ const GuidePage: React.FC = () => {
         description="A visual walkthrough of DeHub: feeds, messaging, wallet, staking, governance and more. See every screen and learn how the decentralized social platform works."
         url="https://dehub.io/guide"
       />
-    <div className="min-h-screen bg-black text-white">
+    <div data-glass-page className="min-h-screen bg-black text-white">
       {/* Sticky nav pill */}
       <div data-feed-nav-outer className="sticky top-0 z-50 bg-black px-4 md:px-8 pt-2 pb-0 max-w-7xl mx-auto">
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-3 md:px-4 py-2.5">

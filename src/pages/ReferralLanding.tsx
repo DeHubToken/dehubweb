@@ -124,7 +124,7 @@ export default function ReferralLanding() {
       {/* No loading gate — the page shell (headline, code, CTAs) paints
           instantly; the inviter's name and share image fade in as their
           fetches resolve. This is a new user's first touch of DeHub. */}
-      <main className="min-h-screen bg-black text-white flex items-center justify-center px-6 py-16">
+      <main data-glass-page className="min-h-screen bg-black text-white flex items-center justify-center px-6 py-16">
         <div className="max-w-3xl w-full text-center space-y-8 animate-in fade-in duration-500">
           {valid ? (
             <>

@@ -201,7 +201,7 @@ function LiveCategoriesCarousel() {
     <div>
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-bold text-white flex items-center gap-2">
-          <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+          <span data-live-pulse className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
           Live Categories
         </h3>
         <button className="text-red-400 text-sm hover:underline flex items-center gap-1">

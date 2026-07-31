@@ -233,6 +233,9 @@ export function ImageCollageSkeleton({ cols = 3 }: { cols?: number }) {
         return (
           <Skeleton 
             key={i} 
+            /* The collage it stands in for is edge-to-edge; a rounded
+               placeholder makes the grid visibly change shape on load. */
+            data-keep-square
             className={cn(
               "aspect-square rounded-none",
               isLarge && "col-span-2 row-span-2"
