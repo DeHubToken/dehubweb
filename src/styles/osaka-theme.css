@@ -453,7 +453,7 @@ html[data-theme='osaka'] #app-root
     [class*='bg-black']
   ):not([data-keep-dark]):not([data-media-full]):not([data-video-controls]):not(
     [data-primary-cta]
-  ):not([data-feed-nav-outer]) {
+  ):not([data-feed-nav-outer]):not([data-main-panel]) {
   background-color: rgb(var(--osaka-slate) / 0.6) !important;
   backdrop-filter: var(--osaka-blur);
   -webkit-backdrop-filter: var(--osaka-blur);
