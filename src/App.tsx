@@ -80,12 +80,6 @@ const WarGameLauncher = React.lazy(() =>
 const OsakaBackground = React.lazy(() =>
   import("@/components/app/OsakaBackground").then(m => ({ default: m.OsakaBackground }))
 );
-// The soundtrack is its own chunk from the rain scene: it is a small element
-// that must survive route changes, and it has no reason to keep the shader
-// code resident if WebGL ever fails to start.
-const OsakaAmbience = React.lazy(() =>
-  import("@/components/app/osaka/OsakaAmbience").then(m => ({ default: m.OsakaAmbience }))
-);
 
 function ThemedBackgrounds() {
   const { theme } = useAppTheme();
@@ -105,7 +99,6 @@ function ThemedBackgrounds() {
       {theme === "war" && <WarPreloader />}
       {theme === "war" && <WarGameLauncher />}
       {theme === "osaka" && <OsakaBackground />}
-      {theme === "osaka" && <OsakaAmbience />}
     </Suspense>
   );
 }

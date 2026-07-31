@@ -76,21 +76,25 @@ export function OsakaBackground() {
    Sources
    ==========================================================================
    The video is muted and playsInline, which is what makes autoplay legal on
-   every current mobile browser; the soundtrack is a separate <audio> element
-   owned by OsakaAmbience, because audio autoplay is NOT legal and needs a
-   gesture.
+   every current mobile browser. There is no audio anywhere in this theme, by
+   design: a social feed that starts playing music at you is a bad guest, and
+   the soundtrack it used to carry was also 18 MB of the payload.
 
-   NEITHER FILE IS IN THE REPO. Between them they are ~23 MB, which would make
-   the mp3 alone the largest blob in git history, permanently, for an opt-in
-   theme most clones never switch on. So they are gitignored and the base path
-   is configurable: point VITE_OSAKA_MEDIA_BASE at a CDN in deploys, drop the
-   files into public/osaka locally (see the README kept in that folder).
+   The backplate SHIPS IN THE REPO at public/osaka. It is 4.4 MB, which is in
+   line with what this repo already carries (public/santa-mix.mp3 is 3.2 MB,
+   public/sounds/ooh-ahh.wav is 9.7 MB), and shipping it is what makes the
+   theme work on a clone and on a deploy with no extra infrastructure. An
+   earlier revision gitignored it, and the result was a deployed site whose
+   video request got answered with the SPA's index.html.
 
-   Everything below therefore has to survive the files being ABSENT - a fresh
-   clone is the normal case, not the edge case. When the video 404s the WebGL
-   layer takes itself down and the CSS in osaka-frame.css paints the theme
-   instead: void backdrop, neon wash, rain film, all the chrome. That still
-   reads as a deliberate rainy-night theme rather than as a broken one.
+   VITE_OSAKA_MEDIA_BASE still overrides the location for anyone who would
+   rather serve it from a CDN, but it is an override and not a requirement.
+
+   Everything below still has to survive the file being ABSENT, because an
+   override can point somewhere wrong and a CDN can be down. When the video
+   fails the WebGL layer takes itself down and the CSS in osaka-frame.css
+   paints the theme instead: void backdrop, neon wash, all the chrome. That
+   still reads as a deliberate rainy-night theme rather than as a broken one.
    ========================================================================== */
 
 const MEDIA_BASE =
