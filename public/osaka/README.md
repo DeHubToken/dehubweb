@@ -4,7 +4,7 @@ One file, and it ships in the repo.
 
 | File | What it is | Spec | Size |
 | --- | --- | --- | --- |
-| `osaka-loop.mp4` | The alley backplate. Sampled as a `THREE.VideoTexture` and refracted through the rain shader. | H.264 high, 1920x1070, 24 fps, ~15 s, **no audio track**, `+faststart` | ~4.4 MB |
+| `osaka-loop.mp4` | The alley backplate. Sampled as a `THREE.VideoTexture` and refracted through the rain shader. | H.264 high, 1920x1070, 24 fps, ~3 s, **no audio track**, `+faststart` | ~1.0 MB |
 
 There is no soundtrack. The theme deliberately makes no sound: a social feed
 that starts playing music at you is a bad guest.
