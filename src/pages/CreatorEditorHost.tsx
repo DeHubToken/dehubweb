@@ -16,6 +16,7 @@ import { lazyWithRetry } from "@/lib/lazy-with-retry";
 import { SEOHead } from "@/components/SEOHead";
 import { emitSurfaceSwitch } from "@/hooks/use-surface-switch";
 import { useGenerationStore } from "@/store/generationStore";
+import { useAuth } from "@/contexts/AuthContext";
 
 const CreatorPage = lazyWithRetry(() => import("@/pages/app/CreatorPage"));
 const EditorPage = lazyWithRetry(() => import("@/pages/Editor"));
@@ -30,6 +31,7 @@ function PageLoader() {
 
 export default function CreatorEditorHost() {
   const { pathname } = useLocation();
+  const { walletAddress } = useAuth() as { walletAddress: string | null };
   const isEditor = pathname.startsWith("/editor");
   const isCreator = pathname.startsWith("/creator");
 
@@ -58,11 +60,21 @@ export default function CreatorEditorHost() {
   }, [isCreator, isEditor]);
 
   /**
-   * Rejoin any render that was still running when the tab was last closed. The
-   * DHB for it is already spent, so silently dropping it costs the creator real
-   * money. Runs once here rather than in either page, since both share the
-   * queue and either can be the one that loads first.
+   * Point the generation library at the signed-in wallet, and rejoin anything
+   * that wallet had still rendering when the tab was last closed. The DHB is
+   * already spent on those, so dropping them costs the creator real money.
+   *
+   * setScope also covers disconnect: it moves the library back to the anonymous
+   * key, so one person's prompts and results are not left on the page for
+   * whoever connects next on a shared machine.
+   *
+   * Runs here rather than in either page because both share the queue and
+   * either can be the one that loads first.
    */
+  useEffect(() => {
+    useGenerationStore.getState().setScope(walletAddress ?? null);
+  }, [walletAddress]);
+
   useEffect(() => {
     useGenerationStore.getState().resumeInterrupted();
   }, []);
