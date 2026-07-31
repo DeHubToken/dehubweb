@@ -34,7 +34,27 @@ interface GenerateImageRequest {
   // every poster to the scene pipeline.
   bannerRenderer?: 'template' | 'scene';
   bannerFormat?: 'landscape' | 'square' | 'portrait';
+  /** Requested framing, e.g. '16:9'. See ASPECT_FRAMING. */
+  aspectRatio?: string;
 }
+
+/**
+ * Neither the Gemini image models nor Grok Aurora expose an output-size
+ * parameter through this gateway, so framing is steered in the prompt. These
+ * are real instructions the models follow, which is what lets the studio's
+ * aspect control do something rather than sit there decoratively.
+ */
+const ASPECT_FRAMING: Record<string, string> = {
+  '1:1': 'Compose for a square 1:1 frame.',
+  '16:9': 'Compose for a wide 16:9 landscape frame, cinematic horizontal composition.',
+  '9:16': 'Compose for a tall 9:16 vertical frame, full-height mobile composition.',
+  '4:5': 'Compose for a 4:5 portrait frame, the standard social feed crop.',
+  '4:3': 'Compose for a 4:3 landscape frame.',
+  '3:4': 'Compose for a 3:4 portrait frame.',
+  '3:2': 'Compose for a 3:2 landscape frame, classic photographic proportions.',
+  '2:3': 'Compose for a 2:3 portrait frame, classic photographic proportions.',
+  '21:9': 'Compose for an ultra-wide 21:9 cinemascope frame.',
+};
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
@@ -45,7 +65,7 @@ serve(async (req) => {
   if (limited) return limited;
 
   try {
-    let { prompt, sourceImage, logoImage, headline: requestHeadline, conversationHistory = [], model = 'gemini-2.5-flash', bannerRenderer, bannerFormat } = await req.json() as GenerateImageRequest;
+    let { prompt, sourceImage, logoImage, headline: requestHeadline, conversationHistory = [], model = 'gemini-2.5-flash', bannerRenderer, bannerFormat, aspectRatio } = await req.json() as GenerateImageRequest;
 
     if (!prompt) {
       throw new Error('Prompt is required');
@@ -387,6 +407,10 @@ ART DIRECTION: ${enhancedUserRequest}`;
       }
     }
 
+
+    if (aspectRatio && ASPECT_FRAMING[aspectRatio]) {
+      contextualPrompt = `${contextualPrompt}\n\nFRAMING: ${ASPECT_FRAMING[aspectRatio]}`;
+    }
 
     const userContent = sourceImage ? [
       { type: 'image_url', image_url: { url: sourceImage } },

@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import { selectTimelineDuration, useEditorStore } from "@/store/editorStore";
 import type { Clip, MediaClip, TextClip } from "@/lib/editor/types";
 import { computeRenderOps, type RenderOp } from "@/lib/editor/transitions";
+import { useCloseOnSurfaceSwitch } from "@/hooks/use-surface-switch";
 import { computeClipAnimation } from "@/lib/editor/animationPresets";
 import { TEXT_DRAG_MIME, type TextPreset } from "@/lib/editor/textPresets";
 
@@ -243,28 +244,74 @@ export function Compositor() {
   // ── Layout: scale canvas to fit (sync initial measurement + observer) ──
   const [scale, setScale] = useState(0);
   const PAD = 24;
-  const measure = () => {
+  const retryRef = useRef<number | null>(null);
+
+  /**
+   * Returns true once a real box was measured.
+   *
+   * CreatorEditorHost preloads /editor while it is still hidden with
+   * `display: none`, so the first measurement finds a 0x0 wrapper. Bailing out
+   * left `scale` at 0 forever, and the stage rendered as a hidden 2x2 box: the
+   * editor looked like it had no canvas at all. A ResizeObserver is not enough
+   * on its own here, so a failed measurement keeps retrying each frame until
+   * the element actually has a box.
+   */
+  const measure = useCallback((): boolean => {
     const wrap = wrapRef.current;
-    if (!wrap) return;
+    if (!wrap) return false;
     const aw = Math.max(0, wrap.clientWidth - PAD * 2);
     const ah = Math.max(0, wrap.clientHeight - PAD * 2);
-    if (aw <= 0 || ah <= 0) return;
+    if (aw <= 0 || ah <= 0) return false;
     const s = Math.min(aw / settings.width, ah / settings.height);
     setScale(Math.max(0.01, s));
-  };
-  useLayoutEffect(() => {
-    measure();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return true;
   }, [settings.width, settings.height]);
+
+  const measureWhenVisible = useCallback(() => {
+    if (retryRef.current !== null) {
+      cancelAnimationFrame(retryRef.current);
+      retryRef.current = null;
+    }
+    // Bounded: while the editor is preloaded behind `display: none` the wrapper
+    // has no box and every attempt fails, so an unbounded loop would run for
+    // the whole session. A short burst covers the normal "one frame late" case;
+    // beyond that the ResizeObserver and the surface-switch hook take over,
+    // both of which fire exactly when a box appears.
+    let attemptsLeft = 30;
+    const attempt = () => {
+      if (measure() || attemptsLeft-- <= 0) {
+        retryRef.current = null;
+        return;
+      }
+      retryRef.current = requestAnimationFrame(attempt);
+    };
+    attempt();
+  }, [measure]);
+
+  useLayoutEffect(() => {
+    measureWhenVisible();
+    return () => {
+      if (retryRef.current !== null) cancelAnimationFrame(retryRef.current);
+      retryRef.current = null;
+    };
+  }, [measureWhenVisible]);
+
   useEffect(() => {
     const wrap = wrapRef.current;
     if (!wrap) return;
-    const ro = new ResizeObserver(() => measure());
+    const onChange = () => measure();
+    const ro = new ResizeObserver(onChange);
     ro.observe(wrap);
-    window.addEventListener("resize", measure);
-    return () => { ro.disconnect(); window.removeEventListener("resize", measure); };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [settings.width, settings.height]);
+    window.addEventListener("resize", onChange);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", onChange);
+    };
+  }, [measure]);
+
+  // The host reveals this surface by removing `display: none`, which does not
+  // reliably wake the ResizeObserver, so re-measure on every switch.
+  useCloseOnSurfaceSwitch(measureWhenVisible);
 
   // ── Canvas interactions: hit-test, click-select, drag, right-click, drop ──
   const trackZIndex = useCallback(
