@@ -51,6 +51,7 @@ type Mode = 'image' | 'video';
 
 const IMAGE_ASPECTS = ['1:1', '4:5', '16:9', '9:16', '3:2', '2:3', '21:9'] as const;
 const MAX_IMAGE_BATCH = 4;
+const MAX_REFERENCE_BYTES = 20 * 1024 * 1024;
 
 const MODES: { id: Mode; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'image', label: 'Image', icon: ImageIcon },
@@ -187,6 +188,13 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
   const attachFile = useCallback(async (file: File) => {
     if (!file.type.startsWith('image/')) {
       toast.error('Attach an image to use as a reference.');
+      return;
+    }
+    // Reject here rather than after payment: anything past this is staged in
+    // storage, and a 40 MB original is slow to upload and pointless as a
+    // reference at generation resolutions.
+    if (file.size > MAX_REFERENCE_BYTES) {
+      toast.error('That image is over 20 MB. Use a smaller version as the reference.');
       return;
     }
     setAttaching(true);
