@@ -24,7 +24,7 @@
  *    error/retry handling is a far better failure mode.
  */
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 /** Minimum time on screen, so a cached switch doesn't strobe. */
 const MIN_VISIBLE_MS = 420;
@@ -84,7 +84,10 @@ export function useFeedFilterTransition(busy: boolean): FeedFilterTransition {
     return () => window.clearTimeout(id);
   }, [active]);
 
-  return { active, begin };
+  // Memoised so the identity only moves when `active` flips, never on an
+  // unrelated re-render of the host feed. Consumers pass `begin` (stable) into
+  // their dep arrays rather than the object.
+  return useMemo(() => ({ active, begin }), [active, begin]);
 }
 
 export default useFeedFilterTransition;
