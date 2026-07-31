@@ -70,6 +70,24 @@ serve(async (req) => {
     
     if (mode === 'style' && style && STYLE_PROMPTS[style]) {
       systemPrompt = `${STYLE_PROMPTS[style]} Return ONLY the rewritten text, nothing else - no explanations, no quotes, no additional commentary.`;
+    } else if (mode === 'prompt-image') {
+      // Prompt assist for the Creator Studio composer. The subject the creator
+      // typed is sacred: this expands HOW it is rendered, never WHAT it is.
+      systemPrompt = [
+        'You turn a short idea into a single vivid prompt for an AI image model.',
+        "Keep the creator's subject exactly as they described it. Never swap it for a different subject, and never add named real people or brands.",
+        'Add only craft detail: lighting, lens and framing, materials and texture, colour treatment, mood, and level of finish.',
+        'Write one flowing sentence, two at most, under 60 words. No lists, no headings.',
+        'Return ONLY the prompt text, with no quotes, preamble or commentary.',
+      ].join(' ');
+    } else if (mode === 'prompt-video') {
+      systemPrompt = [
+        'You turn a short idea into a single vivid prompt for an AI video model.',
+        "Keep the creator's subject exactly as they described it. Never swap it for a different subject, and never add named real people or brands.",
+        'Describe the shot: what the subject does, how the camera moves, and the lighting and mood. Motion must be simple and physically plausible, in one continuous take.',
+        'Write two or three short sentences, under 70 words total. No lists, no shot-list formatting.',
+        'Return ONLY the prompt text, with no quotes, preamble or commentary.',
+      ].join(' ');
     } else if (mode === 'grammar') {
       systemPrompt = 'You are a grammar and punctuation expert. Fix grammar, capitalization, punctuation, and sentence structure to make the text read perfectly. Ensure proper capitalization at the start of sentences and for proper nouns. Add missing punctuation. Fix run-on sentences. Keep the original meaning and tone. Return ONLY the corrected text, nothing else.';
     } else {

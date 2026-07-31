@@ -246,14 +246,25 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  const limited = await rateLimitByIp(req, 'generate-video', { limit: 10, windowMs: 60 * 60 * 1000 });
-  if (limited) return limited;
-
   try {
     const body = await req.json();
 
     // ─── Status check ───
+    // Polling must not share the generation budget. This route serves two very
+    // different calls: starting a render (expensive, 10/hour is right) and
+    // asking whether it finished (cheap, and unavoidable — every provider here
+    // returns only a predictionId, so one 1-3 minute render needs dozens of
+    // polls). Charging both to the same bucket killed a render at roughly the
+    // tenth poll, about 50 seconds in, long before any real render completes
+    // and after the caller had already paid in DHB. Status checks get their
+    // own generous bucket.
     if (body.predictionId) {
+      const pollLimited = await rateLimitByIp(req, 'generate-video-status', {
+        limit: 600,
+        windowMs: 60 * 60 * 1000,
+      });
+      if (pollLimited) return pollLimited;
+
       const provider = body.provider || 'replicate';
 
       if (provider === 'fal') {
@@ -263,6 +274,9 @@ serve(async (req) => {
     }
 
     // ─── New generation ───
+    const limited = await rateLimitByIp(req, 'generate-video', { limit: 10, windowMs: 60 * 60 * 1000 });
+    if (limited) return limited;
+
     const { prompt, model, sourceImage, duration = '5s', aspectRatio = '16:9', negativePrompt, resolution, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed } = body as GenerateVideoRequest;
 
     if (!prompt) throw new Error('Prompt is required');

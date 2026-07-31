@@ -27,16 +27,22 @@ interface ImagePaywallModalProps {
   onModelChange: (modelKey: ImageModelKey) => void;
   onConfirm: () => void;
   isGenerating?: boolean;
+  /**
+   * How many images this run will produce. The studio composer lets creators
+   * batch up to 4, and each one costs a full generation, so the charge scales.
+   */
+  quantity?: number;
 }
 
-export function ImagePaywallModal({ 
-  open, 
-  onOpenChange, 
-  model, 
+export function ImagePaywallModal({
+  open,
+  onOpenChange,
+  model,
   selectedModelKey,
   onModelChange,
   onConfirm,
-  isGenerating = false 
+  isGenerating = false,
+  quantity = 1,
 }: ImagePaywallModalProps) {
   const [dhbPrice, setDhbPrice] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -75,8 +81,10 @@ export function ImagePaywallModal({
     }
   };
 
-  const costUsd = getImageCostUsd(model);
-  const costDhb = dhbPrice ? getImageCostDhb(model, dhbPrice) : 0;
+  const count = Math.max(1, Math.floor(quantity));
+  const unitCostUsd = getImageCostUsd(model);
+  const costUsd = unitCostUsd * count;
+  const costDhb = dhbPrice ? getImageCostDhb(model, dhbPrice) * count : 0;
   const isBalanceLoading = profileLoading;
   const hasEnoughBalance = userBalance >= costDhb;
 
@@ -128,7 +136,13 @@ export function ImagePaywallModal({
         [DEHUB_AI_TREASURY, amountWei],
         { context: 'AI image generation payment', chainId: payChainId }
       );
-      await result.wait(1);
+      // wait() resolves with status 0 for a REVERTED transaction rather than
+      // throwing, so ignoring the receipt would hand out a free generation
+      // whenever the transfer failed on chain.
+      const receipt = await result.wait(1);
+      if (receipt?.status !== 1) {
+        throw new Error('The DHB transfer did not go through. Nothing has been charged.');
+      }
       toast.success('Payment confirmed! Generating image...', { id: 'image-gen-payment' });
       onConfirm();
     } catch (err: unknown) {
@@ -142,7 +156,15 @@ export function ImagePaywallModal({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    // Locked while paying: dismissing mid-transfer cannot recall the on-chain
+    // transfer, and the generation would be lost with the money already gone.
+    <Dialog
+      open={open}
+      onOpenChange={(next) => {
+        if (!next && isPaying) return;
+        onOpenChange(next);
+      }}
+    >
       <DialogContent className="bg-black/60 backdrop-blur-[24px] border border-white/10 shadow-2xl max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-white">
@@ -178,8 +200,8 @@ export function ImagePaywallModal({
               <div className="absolute top-full left-0 right-0 mt-2 bg-zinc-800 border border-zinc-700 rounded-xl overflow-hidden z-10 max-h-64 overflow-y-auto">
                 {IMAGE_MODEL_OPTIONS.map((option) => {
                   const optionModel = IMAGE_MODELS[option.id as ImageModelKey];
-                  const optionCostUsd = getImageCostUsd(optionModel);
-                  const optionCostDhb = dhbPrice ? getImageCostDhb(optionModel, dhbPrice) : 0;
+                  const optionCostUsd = getImageCostUsd(optionModel) * count;
+                  const optionCostDhb = dhbPrice ? getImageCostDhb(optionModel, dhbPrice) * count : 0;
                   
                   return (
                     <button
@@ -214,7 +236,9 @@ export function ImagePaywallModal({
           {/* Cost Breakdown */}
           <div className="bg-zinc-800/50 rounded-xl p-4 space-y-3">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-zinc-400">Image Cost</span>
+              <span className="text-zinc-400">
+                {count > 1 ? `Image Cost (${count} × $${unitCostUsd.toFixed(2)})` : 'Image Cost'}
+              </span>
               <span className="text-zinc-300">${costUsd.toFixed(2)}</span>
             </div>
             <div className="flex items-center justify-between text-sm">
@@ -276,6 +300,13 @@ export function ImagePaywallModal({
             </div>
           </div>
 
+          {count > 1 && (
+            <p className="text-xs text-zinc-400 text-center">
+              All {count} images are charged now and generate independently. If one fails, the
+              others still run.
+            </p>
+          )}
+
           {!hasEnoughBalance && !loading && !isBalanceLoading && (
             <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-3">
               <p className="text-red-400 text-sm text-center">
@@ -291,7 +322,7 @@ export function ImagePaywallModal({
             variant="outline"
             className="flex-1 bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700"
             onClick={() => onOpenChange(false)}
-            disabled={isGenerating}
+            disabled={isGenerating || isPaying}
           >
             Cancel
           </Button>
