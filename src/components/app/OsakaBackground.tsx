@@ -755,14 +755,38 @@ function OsakaScene() {
     // layer down rather than leaving an opaque black canvas over the CSS that
     // is perfectly capable of carrying the theme on its own, and flag it on
     // <html> so osaka-frame.css can swap in its standalone backdrop.
+    // A backplate that is ABSENT is permanent; one that merely failed once is
+    // not. Committing to the fallback on the first error means a single
+    // dropped request during a cold load strands the theme in its CSS-only
+    // state for the entire session with no way back, which is a much worse
+    // outcome than waiting a beat. So: retry once, then commit.
     let mediaFailed = false;
-    const onVideoError = () => {
-      if (mediaFailed) return;
+    let retried = false;
+    let retryTimer: number | null = null;
+
+    const failMedia = () => {
       mediaFailed = true;
       document.documentElement.dataset.osakaMedia = 'absent';
       renderer.domElement.style.display = 'none';
       if (raf) cancelAnimationFrame(raf);
       raf = null;
+    };
+
+    const onVideoError = () => {
+      if (mediaFailed) return;
+      if (!retried) {
+        retried = true;
+        retryTimer = window.setTimeout(() => {
+          retryTimer = null;
+          // Cache-bust: browsers negatively-cache a 404, and retrying the same
+          // URL would just replay it out of cache without touching the network.
+          video.src = `${VIDEO_SRC}?retry=1`;
+          video.load();
+          void video.play().catch(() => {});
+        }, 1200);
+        return;
+      }
+      failMedia();
     };
     video.addEventListener('error', onVideoError);
 
@@ -946,6 +970,7 @@ function OsakaScene() {
       window.removeEventListener('keydown', onGesture);
       video.removeEventListener('loadedmetadata', onMeta);
       video.removeEventListener('error', onVideoError);
+      if (retryTimer !== null) clearTimeout(retryTimer);
       // The flag belongs to this mount, not to the document: leaving it behind
       // would keep the CSS fallback backdrop painted under the next theme.
       delete document.documentElement.dataset.osakaMedia;
