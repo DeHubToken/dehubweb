@@ -40,6 +40,13 @@ interface VideoPaywallModalProps {
   onModelChange: (modelKey: VideoModelKey) => void;
   onConfirm: (options?: VideoGenerationOptions) => void;
   isGenerating?: boolean;
+  /**
+   * Seed values from a caller that already collected them, so the Creator
+   * Studio's duration and resolution chips are not silently overwritten by
+   * this modal's own defaults. Omit to keep the model defaults.
+   */
+  initialDuration?: number;
+  initialResolution?: '480p' | '720p' | '1080p';
 }
 
 /** Upload a file to Supabase storage and return its public URL */
@@ -59,7 +66,9 @@ export function VideoPaywallModal({
   selectedModelKey,
   onModelChange,
   onConfirm,
-  isGenerating = false 
+  isGenerating = false,
+  initialDuration,
+  initialResolution,
 }: VideoPaywallModalProps) {
   const [dhbPrice, setDhbPrice] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
@@ -68,8 +77,8 @@ export function VideoPaywallModal({
   const [isPaying, setIsPaying] = useState(false);
 
   // Basic Seedance 2.0 options
-  const [duration, setDuration] = useState(model.defaultDuration || 5);
-  const [resolution, setResolution] = useState<'480p' | '720p' | '1080p'>('720p');
+  const [duration, setDuration] = useState(initialDuration ?? model.defaultDuration ?? 5);
+  const [resolution, setResolution] = useState<'480p' | '720p' | '1080p'>(initialResolution ?? '720p');
   const [negativePrompt, setNegativePrompt] = useState('');
 
   // Advanced Seedance 2.0 options
@@ -81,6 +90,17 @@ export function VideoPaywallModal({
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
+  // Mirrors of the staged attachments, so the unmount cleanup can revoke their
+  // preview URLs without re-running on every change.
+  const referenceImagesRef = useRef<{ file: File; preview: string }[]>([]);
+  const endFrameRef = useRef<{ file: File; preview: string } | null>(null);
+  useEffect(() => {
+    referenceImagesRef.current = referenceImages;
+  }, [referenceImages]);
+  useEffect(() => {
+    endFrameRef.current = endFrameFile;
+  }, [endFrameFile]);
+
   const refImageInputRef = useRef<HTMLInputElement>(null);
   const endFrameInputRef = useRef<HTMLInputElement>(null);
   const audioInputRef = useRef<HTMLInputElement>(null);
@@ -90,18 +110,48 @@ export function VideoPaywallModal({
   const { data: profile, isLoading: profileLoading } = useDeHubProfile({ userId: walletAddress || undefined, enabled: !!walletAddress });
   const userBalance = profile?.badgeBalance ?? 0;
 
-  // Reset options when model changes
+  // Reset options when model changes. Duration and resolution fall back to the
+  // caller's seed first, so a value the creator already chose upstream survives.
   useEffect(() => {
-    setDuration(model.defaultDuration || 5);
-    setResolution('720p');
+    const min = model.minDuration ?? 1;
+    const max = model.maxDuration ?? 60;
+    const seeded = initialDuration ?? model.defaultDuration ?? 5;
+    setDuration(Math.min(max, Math.max(min, seeded)));
+    setResolution(initialResolution ?? '720p');
     setNegativePrompt('');
-    setReferenceImages([]);
-    setEndFrameFile(null);
+    // Release the preview URLs before dropping the items, otherwise every
+    // model switch pins another set of image blobs for the page's lifetime.
+    setReferenceImages((prev) => {
+      for (const r of prev) {
+        try { URL.revokeObjectURL(r.preview); } catch { /* already revoked */ }
+      }
+      return [];
+    });
+    setEndFrameFile((prev) => {
+      if (prev) {
+        try { URL.revokeObjectURL(prev.preview); } catch { /* already revoked */ }
+      }
+      return null;
+    });
     setAudioFiles([]);
     setVideoFiles([]);
     setSeed('');
     setShowAdvanced(false);
-  }, [selectedModelKey]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedModelKey, initialDuration, initialResolution]);
+
+  // Same on unmount: the modal can close with attachments still staged.
+  useEffect(() => {
+    return () => {
+      for (const r of referenceImagesRef.current) {
+        try { URL.revokeObjectURL(r.preview); } catch { /* already revoked */ }
+      }
+      const end = endFrameRef.current;
+      if (end) {
+        try { URL.revokeObjectURL(end.preview); } catch { /* already revoked */ }
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (open) {
@@ -185,14 +235,66 @@ export function VideoPaywallModal({
     if (costDhb <= 0) return;
     setIsPaying(true);
     try {
+      // Uploads happen BEFORE the transfer. They used to run after it, inside
+      // the same try block, so a storage failure surfaced as "Payment failed"
+      // when the payment had in fact succeeded, and the paid-for generation was
+      // dropped. Nothing is charged until every asset is safely uploaded.
+      const options: VideoGenerationOptions = {};
+      if (model.minDuration && model.maxDuration) options.duration = duration;
+      if (model.supportsResolution) options.resolution = resolution;
+      if (model.supportsNegativePrompt && negativePrompt.trim()) options.negativePrompt = negativePrompt.trim();
+      if (model.supportsSeed && seed.trim()) options.seed = parseInt(seed.trim()) || undefined;
+
+      const hasUploads =
+        referenceImages.length > 0 || !!endFrameFile || audioFiles.length > 0 || videoFiles.length > 0;
+
+      if (hasUploads) {
+        setIsUploading(true);
+        try {
+          if (referenceImages.length > 0) {
+            toast.loading('Uploading reference images...', { id: 'video-gen-payment' });
+            options.referenceImageUrls = await Promise.all(
+              referenceImages.map((r) => uploadToStorage(r.file, 'video-ref-images')),
+            );
+          }
+          if (endFrameFile) {
+            toast.loading('Uploading end frame...', { id: 'video-gen-payment' });
+            options.endFrameUrl = await uploadToStorage(endFrameFile.file, 'video-end-frames');
+          }
+          if (audioFiles.length > 0) {
+            toast.loading('Uploading audio...', { id: 'video-gen-payment' });
+            options.audioUrls = await Promise.all(
+              audioFiles.map((f) => uploadToStorage(f, 'video-audio')),
+            );
+          }
+          if (videoFiles.length > 0) {
+            toast.loading('Uploading video references...', { id: 'video-gen-payment' });
+            options.videoUrls = await Promise.all(
+              videoFiles.map((f) => uploadToStorage(f, 'video-refs')),
+            );
+          }
+        } catch (uploadErr) {
+          console.error('[VideoPaywall] Upload failed before payment:', uploadErr);
+          toast.dismiss('video-gen-payment');
+          toast.error('Could not upload your attachments. Nothing has been charged.');
+          setIsUploading(false);
+          setIsPaying(false);
+          return;
+        }
+        setIsUploading(false);
+      }
+
       const signerAddress = await getWalletAddress();
       const amountWei = toWei(costDhb, DHB_TOKEN.decimals);
 
       const baseConfig = getChainConfig(BASE_CHAIN_ID);
       const bnbConfig = getChainConfig(BNB_CHAIN_ID);
+      // Treat a flaky RPC as a zero balance rather than aborting, matching
+      // ImagePaywallModal. Since the reorder, an abort here would strand
+      // attachments that have already been uploaded.
       const [baseBalance, bnbBalance] = await Promise.all([
-        getERC20Balance(baseConfig.dhbToken, signerAddress, BASE_CHAIN_ID),
-        getERC20Balance(bnbConfig.dhbToken, signerAddress, BNB_CHAIN_ID),
+        getERC20Balance(baseConfig.dhbToken, signerAddress, BASE_CHAIN_ID).catch(() => BigInt(0)),
+        getERC20Balance(bnbConfig.dhbToken, signerAddress, BNB_CHAIN_ID).catch(() => BigInt(0)),
       ]);
 
       let payChainId: ChainId;
@@ -203,6 +305,10 @@ export function VideoPaywallModal({
       } else {
         const baseDhb = Number(baseBalance) / 1e18;
         const bnbDhb = Number(bnbBalance) / 1e18;
+        // The upload phase claims this toast id and sonner loading toasts never
+        // auto-dismiss, so an early return has to clear it or a spinner is left
+        // running forever.
+        toast.dismiss('video-gen-payment');
         toast.error(`Insufficient DHB. Need ${formatDhb(costDhb)} DHB (Base: ${formatDhb(baseDhb)}, BNB: ${formatDhb(bnbDhb)})`);
         setIsPaying(false);
         return;
@@ -219,47 +325,14 @@ export function VideoPaywallModal({
         [DEHUB_AI_TREASURY, amountWei],
         { context: 'AI video generation payment', chainId: payChainId }
       );
-      await result.wait(1);
-      toast.success('Payment confirmed! Uploading assets...', { id: 'video-gen-payment' });
-
-      // Upload files if any
-      setIsUploading(true);
-      const options: VideoGenerationOptions = {};
-      if (model.minDuration && model.maxDuration) options.duration = duration;
-      if (model.supportsResolution) options.resolution = resolution;
-      if (model.supportsNegativePrompt && negativePrompt.trim()) options.negativePrompt = negativePrompt.trim();
-      if (model.supportsSeed && seed.trim()) options.seed = parseInt(seed.trim()) || undefined;
-
-      // Upload reference images
-      if (referenceImages.length > 0) {
-        toast.loading('Uploading reference images...', { id: 'video-gen-payment' });
-        const urls = await Promise.all(referenceImages.map(r => uploadToStorage(r.file, 'video-ref-images')));
-        options.referenceImageUrls = urls;
+      // wait() resolves with status 0 for a REVERTED transaction rather than
+      // throwing, so ignoring the receipt would hand out a free generation
+      // whenever the transfer failed on chain.
+      const receipt = await result.wait(1);
+      if (receipt?.status !== 1) {
+        throw new Error('The DHB transfer did not go through. Nothing has been charged.');
       }
-
-      // Upload end frame
-      if (endFrameFile) {
-        toast.loading('Uploading end frame...', { id: 'video-gen-payment' });
-        const url = await uploadToStorage(endFrameFile.file, 'video-end-frames');
-        options.endFrameUrl = url;
-      }
-
-      // Upload audio files
-      if (audioFiles.length > 0) {
-        toast.loading('Uploading audio...', { id: 'video-gen-payment' });
-        const urls = await Promise.all(audioFiles.map(f => uploadToStorage(f, 'video-audio')));
-        options.audioUrls = urls;
-      }
-
-      // Upload video files
-      if (videoFiles.length > 0) {
-        toast.loading('Uploading video references...', { id: 'video-gen-payment' });
-        const urls = await Promise.all(videoFiles.map(f => uploadToStorage(f, 'video-refs')));
-        options.videoUrls = urls;
-      }
-
-      setIsUploading(false);
-      toast.success('Generating video...', { id: 'video-gen-payment' });
+      toast.success('Payment confirmed! Generating video...', { id: 'video-gen-payment' });
       onConfirm(options);
     } catch (err: unknown) {
       console.error('[VideoPaywall] Payment failed:', err);
@@ -273,7 +346,16 @@ export function VideoPaywallModal({
   };
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
+    // Locked while uploading or paying: dismissing mid-transfer only unmounts
+    // the UI, it cannot recall the on-chain transfer, and the generation would
+    // be lost with the money already gone.
+    <Drawer
+      open={open}
+      onOpenChange={(next) => {
+        if (!next && (isPaying || isUploading)) return;
+        onOpenChange(next);
+      }}
+    >
       <DrawerContent glass hideHandle={false} className="max-h-[85vh]">
         <DrawerHeader className="text-left pb-2">
           <DrawerTitle className="flex items-center gap-2 text-white">
@@ -752,7 +834,7 @@ export function VideoPaywallModal({
             variant="outline"
             className="flex-1 bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 h-10"
             onClick={() => onOpenChange(false)}
-            disabled={isGenerating}
+            disabled={isGenerating || isPaying || isUploading}
           >
             Cancel
           </Button>

@@ -3,7 +3,8 @@ import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
 import { Button } from "@/components/ui/button";
 import { Save, Download, Undo2, Redo2, FilePlus2, Info, Sparkles } from "lucide-react";
 import { toast } from "sonner";
-import { useState, useEffect } from "react";
+import { useCallback, useState, useEffect } from "react";
+import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from "@/hooks/use-surface-switch";
 import { useNavigate } from "react-router-dom";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { listProjects, deleteProject, setLastProjectId } from "@/lib/editor/projectStore";
@@ -33,10 +34,21 @@ export function EditorTopBar() {
     listProjects().then(setProjects).catch(() => undefined);
   }, [open]);
 
+  // These are Radix portals, so they survive the host hiding /editor and would
+  // otherwise sit on top of /creator.
+  useCloseOnSurfaceSwitch(
+    useCallback(() => {
+      setOpen(false);
+      setExportOpen(false);
+      setAboutOpen(false);
+    }, []),
+  );
+  const surfaceEpoch = useSurfaceEpoch();
+
   return (
     <header className="flex h-14 shrink-0 items-center justify-between gap-3 border-b border-white/10 bg-black/60 px-4 backdrop-blur-[24px]">
       <div className="flex items-center gap-2">
-        <Popover open={open} onOpenChange={setOpen}>
+        <Popover key={surfaceEpoch} open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button size="sm" variant="ghost"
               className="h-8 rounded-md text-white/80 hover:bg-white/10 hover:text-white">
@@ -99,10 +111,11 @@ export function EditorTopBar() {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         aria-label="Project title"
-        className="mx-auto w-64 max-w-[40vw] rounded-md bg-transparent px-2 py-1 text-center text-sm text-white/90 outline-none ring-1 ring-transparent transition focus:bg-white/5 focus:ring-white/20"
+        className="mx-auto hidden w-64 max-w-[40vw] rounded-md bg-transparent px-2 py-1 text-center text-sm text-white/90 outline-none ring-1 ring-transparent transition focus:bg-white/5 focus:ring-white/20 sm:block"
       />
 
-      <div className="hidden items-center gap-1.5 md:flex sm:gap-2">
+      {/* Wide screens get the labelled glass bubbles. */}
+      <div className="hidden items-center gap-2 lg:flex">
         <LiquidGlassBubble2
           label="Save"
           icon={<Save className="h-4 w-4" />}
@@ -126,8 +139,29 @@ export function EditorTopBar() {
         />
         <PostToDeHub />
       </div>
-      <ExportDialog open={exportOpen} onOpenChange={setExportOpen} />
-      <AboutDialog open={aboutOpen} onOpenChange={setAboutOpen} />
+
+      {/* Below lg the same actions stay reachable as icons. Previously they
+          lived only in the phone bottom bar, which the rail replaced. */}
+      <div className="flex items-center gap-0.5 lg:hidden">
+        <Button size="icon" variant="ghost" onClick={() => toast.success("Project autosaved.")}
+          aria-label="Save project"
+          className="h-9 w-9 rounded-md text-white/80 hover:bg-white/10 hover:text-white">
+          <Save className="h-4 w-4" />
+        </Button>
+        <Button size="icon" variant="ghost" onClick={() => navigate('/creator')}
+          aria-label="Open the Creator studio"
+          className="h-9 w-9 rounded-md text-white/80 hover:bg-white/10 hover:text-white">
+          <Sparkles className="h-4 w-4" />
+        </Button>
+        <Button size="icon" variant="ghost" onClick={() => setExportOpen(true)}
+          aria-label="Export"
+          className="h-9 w-9 rounded-md text-white/80 hover:bg-white/10 hover:text-white">
+          <Download className="h-4 w-4" />
+        </Button>
+        <PostToDeHub iconOnly />
+      </div>
+      <ExportDialog key={`export-${surfaceEpoch}`} open={exportOpen} onOpenChange={setExportOpen} />
+      <AboutDialog key={`about-${surfaceEpoch}`} open={aboutOpen} onOpenChange={setAboutOpen} />
     </header>
   );
 }

@@ -6,6 +6,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { PricingSection } from '@/components/pricing/PricingSection';
 import SwipeableCarousel from '@/components/app/SwipeableCarousel';
 import { CreatorComposerBar } from '@/components/app/creator/CreatorComposerBar';
+import { CreatorStudio } from '@/components/app/creator/studio/CreatorStudio';
 import { ModelMarquee } from '@/components/app/creator/ModelMarquee';
 import anthropicLogo from '@/assets/ai-logos/anthropic.png';
 import dehubIcon from '@/assets/dehub-logo-compact.png';
@@ -239,22 +240,9 @@ export default function CreatorPage() {
 
   return (
     <>
-      <SEOHead
-        title="DeHub Creator Studio — AI Creative Tools"
-        description="DeHub Creator Studio brings image, video, posters, music, skills, characters and AI agents into one native creative landing page."
-        url="https://dehub.io/creator"
-        jsonLd={{
-          '@context': 'https://schema.org',
-          '@type': 'SoftwareApplication',
-          name: 'DeHub Creator Studio',
-          url: 'https://dehub.io/creator',
-          applicationCategory: 'MultimediaApplication',
-          operatingSystem: 'Web',
-          description: 'Native AI creator studio for DeHub image, video, music, posters, skills and agents.',
-          offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
-        }}
-      />
-
+      {/* Page metadata lives in CreatorEditorHost: /creator and /editor stay
+          co-mounted, so a Helmet here would keep applying while this page is
+          hidden and would overwrite the editor's title. */}
       <main className="min-h-screen text-white overflow-x-hidden" style={{ backgroundColor: '#090a0b' }}>
         <h1 className="sr-only">DeHub Creator Studio</h1>
 
@@ -361,6 +349,8 @@ export default function CreatorPage() {
             </div>
           </header>
         </div>
+
+        <CreatorStudio onOpenEditor={() => navigate('/editor')} />
 
         <section className="px-3 py-4 sm:px-4">
           <SwipeableCarousel className="flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory scroll-pl-3 scroll-pr-3">
@@ -657,7 +647,9 @@ function thumbUrl(url: string, width = 480): string {
       const sep = resized.includes('?') ? '&' : '?';
       return `${resized}${sep}width=${width}&quality=65&resize=cover`;
     }
-  } catch {}
+  } catch {
+    /* malformed URL: fall through and use it unchanged */
+  }
   return url;
 }
 

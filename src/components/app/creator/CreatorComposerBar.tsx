@@ -6,14 +6,17 @@
  * single textarea with attach / voice-record / send controls. Submitting
  * routes to /app/assistant with the chosen preset and the typed prompt
  * pre-filled via the hash contract (see AssistantPage `applyPreset`).
+ *
+ * Image, video and image-edit are deliberately absent: those are generated
+ * natively in the Creator Studio composer at the top of the page, and two
+ * prompt boxes competing for the same job is worse than one. What is left
+ * here are the tools that still live in the assistant.
  */
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Bot,
-  Clapperboard,
-  ImageIcon,
   Megaphone,
   Mic,
   Music2,
@@ -21,7 +24,6 @@ import {
   Send,
   Sparkles,
   Square,
-  Wand2,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -30,11 +32,8 @@ type Preset = 'chat' | 'image' | 'video' | 'song' | 'poster' | 'edit' | 'skills'
 
 const PRESETS: Array<{ id: Preset; label: string; icon: React.ComponentType<{ className?: string }> }> = [
   { id: 'chat', label: 'Ask', icon: Bot },
-  { id: 'image', label: 'Image', icon: ImageIcon },
-  { id: 'video', label: 'Video', icon: Clapperboard },
   { id: 'song', label: 'Song', icon: Music2 },
   { id: 'poster', label: 'Poster', icon: Megaphone },
-  { id: 'edit', label: 'Edit image', icon: Wand2 },
   { id: 'skills', label: 'Skills', icon: Sparkles },
 ];
 
