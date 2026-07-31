@@ -33,6 +33,10 @@ function renderTransition(initialBusy: boolean) {
     get active() {
       return box.current.active;
     },
+    /** The whole returned object, for identity assertions. */
+    get value() {
+      return box.current;
+    },
     begin: () => act(() => box.current.begin()),
     setBusy: (busy: boolean) =>
       act(() => {
@@ -116,6 +120,38 @@ describe('useFeedFilterTransition', () => {
     h.advance(200);
     expect(h.active).toBe(false);
     h.unmount();
+  });
+
+  it('keeps a stable identity across unrelated re-renders', () => {
+    // Regression: the returned object used to be a fresh literal every render.
+    // Consumers put it in useCallback deps, so every handler they passed to a
+    // memo()'d list got a new identity on each render of the host — which on
+    // mobile re-rendered all six pager lists on every fetch tick.
+    const seen: unknown[] = [];
+    const begins: unknown[] = [];
+    const { result, rerender } = (() => {
+      const h = renderTransition(false);
+      return {
+        result: h,
+        rerender: (busy: boolean) => h.setBusy(busy),
+      };
+    })();
+
+    seen.push(result.value);
+    begins.push(result.value.begin);
+    rerender(false);
+    seen.push(result.value);
+    begins.push(result.value.begin);
+    rerender(false);
+    seen.push(result.value);
+    begins.push(result.value.begin);
+
+    expect(seen[0]).toBe(seen[1]);
+    expect(seen[1]).toBe(seen[2]);
+    // begin() in particular must never move — it is what callers put in deps.
+    expect(begins[0]).toBe(begins[1]);
+    expect(begins[1]).toBe(begins[2]);
+    result.unmount();
   });
 
   it('releases the feed when the request stalls', () => {
