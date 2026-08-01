@@ -159,7 +159,6 @@ export default function SettingsPage() {
   // Swallow the settings content at the sticky header bento's top edge under
   // the glass themes, exactly like the bento feed pages (Notifications/Music).
   const settingsContentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(settingsContentRef, '[data-feed-nav-outer] > [data-page-bento]');
   const { theme, setTheme } = useAppTheme();
   const [selectedChainId, setSelectedChainId] = useState<ChainId>(() => {
     const stored = localStorage.getItem('preferred-chain-id');
@@ -170,6 +169,7 @@ export default function SettingsPage() {
     localStorage.setItem('preferred-chain-id', String(id));
   }, []);
   const { isAuthenticated, disconnect } = useAuth();
+  useFeedSwallowClip(settingsContentRef, '[data-feed-nav-outer] > [data-page-bento]', [isAuthenticated]);
 
   const { t } = useTranslation();
 
