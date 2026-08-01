@@ -180,7 +180,6 @@ export function FreeAssetsPanel() {
   const [items, setItems] = useState<FreeAsset[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
-  const [providers, setProviders] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -210,7 +209,6 @@ export function FreeAssetsPanel() {
       setItems((current) => append ? [...current, ...result.items.filter((asset) => !current.some((item) => item.id === asset.id))] : result.items);
       setPage(nextPage);
       setHasMore(result.hasMore);
-      setProviders(result.providers);
     } catch (cause) {
       if (signal?.aborted) return;
       console.error("[editor] free asset search failed", cause);
@@ -398,9 +396,6 @@ export function FreeAssetsPanel() {
         ) : null}
       </div>
 
-      <div className="shrink-0 border-t border-white/10 px-3 py-2 text-[9px] leading-relaxed text-white/35">
-        Free licences with source details included{providers.length ? `. Results from ${providers.join(", ")}.` : "."}
-      </div>
     </div>
   );
 }
