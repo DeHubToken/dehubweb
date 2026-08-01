@@ -797,34 +797,51 @@ html[data-theme='osaka'] #app-root [data-status-dot] {
    quiet, because a page where six things glow has no primary action.
    ========================================================================== */
 
+@property --osaka-cta-edge {
+  syntax: '<color>';
+  inherits: false;
+  initial-value: rgb(255 111 181);
+}
+
+@keyframes osaka-cta-edge-shift {
+  0%, 100% {
+    --osaka-cta-edge: rgb(255 111 181);
+  }
+  38% {
+    --osaka-cta-edge: rgb(111 227 255);
+  }
+  68% {
+    --osaka-cta-edge: rgb(207 164 255);
+  }
+}
+
 html[data-theme='osaka'] [data-primary-cta] {
+  --osaka-cta-edge: rgb(var(--osaka-neon));
   border-radius: var(--osaka-r-chip) !important;
-  isolation: isolate;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 18% -35%, rgb(var(--osaka-cyan) / 0.2), transparent 42%),
-    radial-gradient(circle at 82% 140%, rgb(var(--osaka-neon) / 0.18), transparent 45%),
-    linear-gradient(112deg, rgb(var(--osaka-mist) / 0.08), rgb(var(--osaka-slate) / 0.9) 44%, rgb(var(--osaka-cyan) / 0.08)),
-    rgb(var(--osaka-void) / 0.94) !important;
+  background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-regular)) !important;
+  backdrop-filter: var(--glass-blur) !important;
+  -webkit-backdrop-filter: var(--glass-blur) !important;
   color: rgb(var(--osaka-mist)) !important;
-  border-color: rgb(var(--osaka-neon) / 0.78) !important;
+  border-color: color-mix(in srgb, var(--osaka-cta-edge) 82%, transparent) !important;
   box-shadow:
     inset 0 0 0 1px rgb(var(--osaka-mist) / 0.1),
-    inset 0 1.5px 0 rgb(var(--osaka-mist) / 0.24),
-    inset 0 -1px 0 rgb(var(--osaka-neon) / 0.22),
-    0 0 7px rgb(var(--osaka-neon) / 0.34),
-    0 4px 12px rgb(var(--osaka-neon) / 0.12) !important;
+    inset 0 1.5px 0 rgb(var(--osaka-mist) / 0.16),
+    inset 0 -1px 0 color-mix(in srgb, var(--osaka-cta-edge) 20%, transparent),
+    0 0 8px color-mix(in srgb, var(--osaka-cta-edge) 42%, transparent),
+    0 8px 18px -12px color-mix(in srgb, var(--osaka-cta-edge) 34%, transparent) !important;
   text-shadow: 0 1px 3px rgb(var(--osaka-void) / 0.9) !important;
+  animation: osaka-cta-edge-shift 9s ease-in-out infinite;
 }
 
 html[data-theme='osaka'] [data-primary-cta]:hover {
-  border-color: rgb(var(--osaka-neon) / 0.96) !important;
+  border-color: color-mix(in srgb, var(--osaka-cta-edge) 96%, transparent) !important;
   box-shadow:
     inset 0 0 0 1px rgb(var(--osaka-mist) / 0.14),
-    inset 0 1.5px 0 rgb(var(--osaka-mist) / 0.3),
-    inset 0 -1px 0 rgb(var(--osaka-neon) / 0.28),
-    0 0 9px rgb(var(--osaka-neon) / 0.46),
-    0 5px 14px rgb(var(--osaka-neon) / 0.16) !important;
+    inset 0 1.5px 0 rgb(var(--osaka-mist) / 0.22),
+    inset 0 -1px 0 color-mix(in srgb, var(--osaka-cta-edge) 28%, transparent),
+    0 0 10px color-mix(in srgb, var(--osaka-cta-edge) 54%, transparent),
+    0 9px 20px -12px color-mix(in srgb, var(--osaka-cta-edge) 42%, transparent) !important;
 }
 
 /* Tactile press, per the app's existing interaction language. */
@@ -833,15 +850,21 @@ html[data-theme='osaka'] [data-primary-cta]:active {
 }
 
 html[data-theme='osaka'] [data-primary-cta]:disabled {
-  border-color: rgb(var(--osaka-neon) / 0.42) !important;
+  border-color: color-mix(in srgb, var(--osaka-cta-edge) 42%, transparent) !important;
   box-shadow:
     inset 0 0 0 1px rgb(var(--osaka-mist) / 0.07),
-    0 0 5px rgb(var(--osaka-neon) / 0.18) !important;
+    0 0 5px color-mix(in srgb, var(--osaka-cta-edge) 18%, transparent) !important;
 }
 
 @media (prefers-reduced-transparency: reduce) {
   html[data-theme='osaka'] [data-primary-cta] {
     background: rgb(var(--osaka-slate)) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme='osaka'] [data-primary-cta] {
+    animation: none;
   }
 }
 
@@ -2067,8 +2090,8 @@ html[data-theme='osaka'] #app-root
    CLASS and carries an id, while a role rule reads an ATTRIBUTE and mostly does
    not. The results were all in the same direction and all bad:
 
-     - [data-primary-cta] is a dark holographic surface with a neon edge. Its
-       label stays mist so the CTA remains readable over every foil frame.
+     - [data-primary-cta] shares the liquid-glass fill used by the bento above.
+       Its label stays mist so it remains readable as the edge colour changes.
      - [data-follow-btn] ships `text-white/70`, so the neon Follow label came
        out mist and the button read as a grey chip with a pink ring.
      - active tabs and active filter chips ship `text-white`, so the theme's
