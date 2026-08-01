@@ -417,19 +417,25 @@ const COMPOSITE_FRAG = /* glsl */ `
     float size = 0.038 + n * 0.03;
     float drop = smoothstep(size, size * 0.4, dr);
 
-    // The drop already disappears when phase wraps. Use only that existing
-    // end-of-life window for a quick surface-tension release: the bead fades
-    // into a thin expanding, slightly uneven rim instead of blinking out.
-    float popProgress = smoothstep(0.86, 1.0, phase);
-    float popEnvelope = smoothstep(0.84, 0.90, phase)
-      * (1.0 - smoothstep(0.95, 1.0, phase));
-    drop *= 1.0 - smoothstep(0.88, 0.97, phase);
-    float popRadius = mix(size * 0.75, size * 2.1, popProgress);
-    float popWidth = mix(size * 0.3, size * 0.12, popProgress);
-    float shell = abs(dr - popRadius);
-    float pop = (1.0 - smoothstep(popWidth * 0.35, popWidth, shell)) * popEnvelope;
-    float lobes = 0.72 + 0.28 * sin(atan(d.y, d.x) * 5.0 + n * 19.0);
-    pop *= lobes;
+    // Only the larger, visibly resetting droplets get a pop. The remaining
+    // three quarters keep their original wrap untouched, and pointer wiping
+    // never enters this path. A pop is three tiny displaced beads rather than
+    // a circular shockwave: a wet splash, not a radial light burst.
+    float popEligible = step(0.74, n);
+    float popProgress = smoothstep(0.88, 0.985, phase);
+    float popEnvelope = smoothstep(0.87, 0.91, phase)
+      * (1.0 - smoothstep(0.965, 1.0, phase)) * popEligible;
+    drop *= 1.0 - popEligible * smoothstep(0.91, 0.985, phase);
+
+    vec2 splashUv = d / max(size, 1e-5);
+    float spread = popProgress;
+    vec2 splashA = splashUv - vec2(-0.42 - spread * 0.72, 0.10 + spread * 0.42);
+    vec2 splashB = splashUv - vec2(0.38 + spread * 0.66, 0.18 + spread * 0.34);
+    vec2 splashC = splashUv - vec2((n - 0.5) * 0.3, 0.42 + spread * 0.78);
+    float beadA = 1.0 - smoothstep(0.11, 0.23, length(splashA * vec2(1.0, 1.4)));
+    float beadB = 1.0 - smoothstep(0.10, 0.21, length(splashB * vec2(1.0, 1.5)));
+    float beadC = 1.0 - smoothstep(0.08, 0.18, length(splashC * vec2(1.0, 1.7)));
+    float pop = max(beadA, max(beadB, beadC)) * popEnvelope;
 
     // Beads left in the drop's wake, only above its current height.
     float tx = (f.x - dropX) * cell.x;
@@ -444,7 +450,7 @@ const COMPOSITE_FRAG = /* glsl */ `
     // enough surface normal at this scale and costs no derivatives. The caller
     // must divide x by the aspect before using this as a UV offset.
     vec2 normal = d * drop + vec2(tx, 0.0) * trail * 1.2;
-    normal += normalize(d + vec2(1e-5)) * pop * size * 0.75;
+    normal += normalize(d + vec2(1e-5)) * pop * size * 0.22;
 
     OsakaRain result;
     result.normal = normal;
@@ -584,10 +590,9 @@ const COMPOSITE_FRAG = /* glsl */ `
     vec3 col = mix(glass, trailCol, clamp(trail, 0.0, 1.0));
     col = mix(col, sharp, clamp(drop, 0.0, 1.0));
 
-    // A restrained highlight on the expanding rim makes the release legible
-    // against both dark asphalt and bright signs without turning it into a
-    // particle burst.
-    col += mix(u_cool, u_neon, 0.58) * pop * 0.14;
+    // Just enough highlight for the three splash beads to survive over the
+    // footage; deliberately below the main bead's specular intensity.
+    col += mix(u_cool, u_neon, 0.58) * pop * 0.09;
 
     // Wiped glass returns toward the sharp frame too - that is what "clean"
     // looks like - but never fully, because a squeegeed pane is still wet.
