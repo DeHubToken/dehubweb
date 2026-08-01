@@ -736,14 +736,6 @@ html[data-theme='osaka']
 }
 html[data-theme='osaka']
   :is([role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-radix-popper-content-wrapper])
-  :is(input, textarea, select):not([data-keep-dark]):not(:where([class^='bg-transparent'], [class*=' bg-transparent'])):focus {
-  outline: none !important;
-  box-shadow:
-    inset 0 0 0 1px rgb(var(--osaka-neon) / 0.55),
-    0 0 0 3px rgb(var(--osaka-neon) / 0.14) !important;
-}
-html[data-theme='osaka']
-  :is([role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-radix-popper-content-wrapper])
   ::placeholder {
   color: rgb(var(--osaka-haze) / 0.75) !important;
 }
@@ -948,14 +940,12 @@ html[data-theme='osaka'] #app-root
   -webkit-backdrop-filter: none !important;
 }
 
+/* Text fields retain their resting bento edge while focused. The active neon
+   ring made every search and comment box look like a separate square panel. */
 html[data-theme='osaka'] #app-root
-  :is(input, textarea, select):not([data-keep-dark]):not(:where([class^='bg-transparent'], [class*=' bg-transparent'])):focus,
-html[data-theme='osaka'] #app-root
-  :is(input, textarea, select):not([data-keep-dark]):not(:where([class^='bg-transparent'], [class*=' bg-transparent'])):focus-visible {
+  :is(input, textarea, select):not([data-keep-dark]):not(:where([class^='bg-transparent'], [class*=' bg-transparent'])):is(:focus, :focus-visible) {
   outline: none !important;
-  box-shadow:
-    inset 0 0 0 1px rgb(var(--osaka-neon) / 0.55),
-    0 0 0 3px rgb(var(--osaka-neon) / 0.14) !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--osaka-mist) / 0.1) !important;
 }
 
 /* Fields whose WRAPPER is the box.
@@ -976,13 +966,6 @@ html[data-theme='osaka'] #app-root
   border-color: transparent !important;
   box-shadow: none !important;
   color: rgb(var(--osaka-mist)) !important;
-}
-
-/* …and the focus ring moves with it, onto the box the user actually sees. */
-html[data-theme='osaka'] #app-root [data-search-bento]:focus-within {
-  box-shadow:
-    inset 0 0 0 1px rgb(var(--osaka-neon) / 0.5),
-    0 0 0 3px rgb(var(--osaka-neon) / 0.12) !important;
 }
 
 /* ==========================================================================
@@ -1092,7 +1075,7 @@ html[data-theme='osaka'] #app-root ::placeholder {
 }
 
 /* Keyboard focus everywhere else. Never removed, only restyled. */
-html[data-theme='osaka'] #app-root *:focus-visible {
+html[data-theme='osaka'] #app-root *:focus-visible:not(input):not(textarea):not(select) {
   outline: 2px solid rgb(var(--osaka-neon) / 0.75) !important;
   outline-offset: 2px;
 }
