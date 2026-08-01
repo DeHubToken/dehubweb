@@ -369,16 +369,8 @@ const COMPOSITE_FRAG = /* glsl */ `
        - a column of small static beads sits above it, revealed only after the
          drop has passed that height. That is the trail, and it is the single
          detail that separates rain-on-glass from bubbles-on-glass. */
-  vec4 osakaDrops(vec2 uv, float t, float scale, float seed) {
-    vec2 grid = vec2(scale, scale * 0.62);
-    // Cell size in RAIN units. Every distance below is measured in this space
-    // rather than in cell-local space, because cells are about 1:1.8 and
-    // measuring inside them stretches every "round" drop by that same factor.
-    vec2 cell = 1.0 / grid;
-    vec2 gv = uv * grid;
-    vec2 id = floor(gv);
-    vec2 f = fract(gv) - 0.5;
-
+  vec4 osakaDropCell(vec2 gv, vec2 id, vec2 cell, float t, float seed) {
+    vec2 f = gv - id - 0.5;
     vec2 rnd = hash22(id + seed);
     float n = rnd.x;
 
@@ -416,6 +408,28 @@ const COMPOSITE_FRAG = /* glsl */ `
     vec2 normal = d * drop + vec2(tx, 0.0) * trail * 1.2;
 
     return vec4(normal, drop, trail);
+  }
+
+  vec4 mergeOsakaDrops(vec4 a, vec4 b) {
+    return vec4(a.xy + b.xy, max(a.z, b.z), max(a.w, b.w));
+  }
+
+  vec4 osakaDrops(vec2 uv, float t, float scale, float seed) {
+    vec2 grid = vec2(scale, scale * 0.62);
+    // Cell size in RAIN units. Every distance below is measured in this space
+    // rather than in cell-local space, because cells are about 1:1.8 and
+    // measuring inside them stretches every "round" drop by that same factor.
+    vec2 cell = 1.0 / grid;
+    vec2 gv = uv * grid;
+    vec2 id = floor(gv);
+
+    // Drops and their trails are taller than a grid cell near the end of a
+    // fall. Sample the adjacent rows as well so their masks continue across
+    // cell boundaries instead of being sliced by a horizontal screen seam.
+    vec4 rain = osakaDropCell(gv, id, cell, t, seed);
+    rain = mergeOsakaDrops(rain, osakaDropCell(gv, id + vec2(0.0, -1.0), cell, t, seed));
+    rain = mergeOsakaDrops(rain, osakaDropCell(gv, id + vec2(0.0, 1.0), cell, t, seed));
+    return rain;
   }
 
   void main() {

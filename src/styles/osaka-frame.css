@@ -115,12 +115,13 @@ html[data-theme='osaka'] {
     'Liberation Mono', monospace;
 
   /* -- shape ------------------------------------------------------------- */
-  /* ONE radius scale, applied by role. Mixed radii are the fastest way to
-     make a rounded theme look accidental. */
-  --osaka-r-panel: 18px;
-  --osaka-r-card: 14px;
-  --osaka-r-input: 12px;
-  --osaka-r-chip: 999px;
+  /* One universal bento radius. Osaka's chrome is rounded, but no structural
+     surface should turn into a capsule while its neighbours stay boxier. */
+  --osaka-radius: 16px;
+  --osaka-r-panel: var(--osaka-radius);
+  --osaka-r-card: var(--osaka-radius);
+  --osaka-r-input: var(--osaka-radius);
+  --osaka-r-chip: var(--osaka-radius);
 
   /* -- the meniscus ------------------------------------------------------ */
   /* The single most reused value in the theme. A 1px ring, plus a brighter
