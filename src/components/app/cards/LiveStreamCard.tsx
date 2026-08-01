@@ -550,7 +550,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
       </div>
 
       {/* Video Player or Stream Ended State */}
-      <div ref={containerRef} className={`aspect-video bg-black relative rounded-lg overflow-hidden${isFullscreen ? ' fixed inset-0 z-[9999] !aspect-auto w-screen h-screen rounded-none' : ''}`}>
+      <div ref={containerRef} data-media-full className={`aspect-video bg-black relative rounded-lg overflow-hidden${isFullscreen ? ' fixed inset-0 z-[9999] !aspect-auto w-screen h-screen rounded-none' : ''}`}>
         {streamEnded ? (
           /* Past live: show the stream's cover image if there is one,
              otherwise a staticy TV screen — never an empty black frame. */
@@ -590,7 +590,7 @@ export function LiveStreamCard({ stream }: LiveStreamCardProps) {
             <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-black/80 to-transparent opacity-0 hover:opacity-100 transition-opacity">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 bg-red-500 text-white text-xs font-semibold rounded">
+                  <span data-live-badge className="px-2 py-0.5 bg-red-500 text-white text-xs font-semibold rounded">
                     LIVE
                   </span>
                   <span className="text-white text-sm">{stream.viewers} tuned in</span>

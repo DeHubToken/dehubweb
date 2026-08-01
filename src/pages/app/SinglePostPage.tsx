@@ -902,7 +902,7 @@ export default function SinglePostPage({ inOverlay = false }: SinglePostPageProp
             portal, a transform animation, a body pointer-events fight and a
             second scroll container that everything else had to be re-wired to. */}
         {isMobileView ? (
-          <div ref={inOverlay ? undefined : postRootRef} className={cn('flex flex-col bg-black', chromeClearance)}>
+          <div data-glass-page ref={inOverlay ? undefined : postRootRef} className={cn('flex flex-col bg-black', chromeClearance)}>
             <div className="relative">
               {renderContent()}
             </div>
@@ -1103,7 +1103,8 @@ export default function SinglePostPage({ inOverlay = false }: SinglePostPageProp
           themes, exactly like the home feed. */}
       <div
         ref={inOverlay ? undefined : postRootRef}
-        className={cn('flex flex-col', isLivePost && 'bg-black min-h-screen')}
+        data-glass-page
+          className={cn('flex flex-col', isLivePost && 'bg-black min-h-screen')}
       >
         {renderPostContent()}
       </div>

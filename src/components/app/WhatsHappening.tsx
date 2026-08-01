@@ -264,7 +264,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
               <div className="relative z-10">
                 <Icon className="w-4 h-4" />
                 {isStagesLive && (
-                  <span className="absolute -top-1 -right-1.5 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                  <span data-live-pulse className="absolute -top-1 -right-1.5 w-2 h-2 rounded-full bg-red-500 animate-pulse" />
                 )}
               </div>
             </button>
@@ -320,7 +320,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
                         {(stage.speaker_count || 1) + (stage.listener_count || 0)}
                       </span>
                       <span className="flex items-center gap-0.5">
-                        <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                        <span data-live-pulse className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
                         Live
                       </span>
                     </div>
@@ -433,7 +433,7 @@ export const WhatsHappening = memo(function WhatsHappening({ showCountrySelector
             <ChevronDown className={cn('w-3 h-3 transition-transform', showCountryDropdown && 'rotate-180')} />
           </button>
           {showCountryDropdown && (
-            <div className="absolute left-0 right-0 bottom-full mb-1 w-48 mx-auto bg-zinc-800 border border-zinc-700/50 rounded-xl shadow-xl z-50 py-1 max-h-72 flex flex-col">
+            <div data-inline-popover className="absolute left-0 right-0 bottom-full mb-1 w-48 mx-auto bg-zinc-800 border border-zinc-700/50 rounded-xl shadow-xl z-50 py-1 max-h-72 flex flex-col">
               <div className="px-2 py-1.5 border-b border-zinc-700/50">
                 <div className="relative">
                   <Search className="absolute left-2 top-1/2 -translate-y-1/2 w-3 h-3 text-zinc-500" />

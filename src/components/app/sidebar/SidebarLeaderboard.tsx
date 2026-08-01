@@ -284,6 +284,10 @@ export const SidebarLeaderboard = forwardRef<SidebarLeaderboardHandle>(function 
         {PERIODS.map((period) => (
           <button
             data-tab-btn
+            /* The strip auto-rotates every 5s, so which period is showing has to
+               be legible at a glance. This is the attribute the theme layer
+               already reads for an active tab. */
+            data-active={activePeriod === period ? 'true' : undefined}
             key={period}
             onClick={() => handlePeriodClick(period)}
             className={`flex-1 text-xs font-semibold transition-colors duration-150 text-center py-1 ${

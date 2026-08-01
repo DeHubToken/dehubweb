@@ -170,7 +170,7 @@ export default function GovernanceProposalPage() {
                 <div className="bg-red-500 rounded-r-full transition-all duration-300" style={{ width: `${againstPct}%` }} />
               </>
             ) : (
-              <div className="bg-zinc-700 w-full rounded-full" />
+              <div className="bg-white/10 w-full rounded-full" />
             )}
           </div>
         </div>

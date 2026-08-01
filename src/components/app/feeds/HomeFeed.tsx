@@ -1347,7 +1347,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         liveNowStreams.length > 0 ? (
           <div key="live-now" className="my-3 space-y-2">
             <div className="flex items-center gap-2 px-1">
-              <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+              <span data-live-pulse className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
               <h3 className="text-white font-semibold text-sm">Livestreams</h3>
             </div>
             <SwipeableCarousel>
@@ -1450,7 +1450,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         addFullWidth(
           <div key={`live-now-${index}`} className="space-y-2">
             <div className="flex items-center gap-2 px-1">
-              <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+              <span data-live-pulse className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
               <h3 className="text-white font-semibold text-sm">Livestreams</h3>
             </div>
             <SwipeableCarousel>
@@ -1644,6 +1644,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             {optimisticSort.value !== 'latest' && (
               <button
                 data-filter-chip
+                data-active="true"
                 onClick={() => setSelectedSort(DEFAULT_HOME_SORT)}
                 className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
               >
@@ -1654,6 +1655,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             {optimisticDate.value !== 'all' && (
               <button
                 data-filter-chip
+                data-active="true"
                 onClick={() => setSelectedDate(DATE_FILTER_OPTIONS[0])}
                 className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
               >
@@ -1664,6 +1666,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             {optimisticContentFilters.ppv && (
               <button
                 data-filter-chip
+                data-active="true"
                 onClick={() => toggleContentFilter('ppv')}
                 className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
               >
@@ -1674,6 +1677,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             {optimisticContentFilters.w2e && (
               <button
                 data-filter-chip
+                data-active="true"
                 onClick={() => toggleContentFilter('w2e')}
                 className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
               >
@@ -1684,6 +1688,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             {optimisticContentFilters.locked && (
               <button
                 data-filter-chip
+                data-active="true"
                 onClick={() => toggleContentFilter('locked')}
                 className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"
               >
@@ -1704,6 +1709,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
               return (
                 <button
                   data-filter-chip
+                data-active="true"
                   key={`${catId}-${index}`}
                   onClick={() => setSelectedCategories(prev => prev.filter(c => c !== catId))}
                   className="inline-flex items-center gap-1.5 pl-2.5 pr-2 py-[5px] rounded-lg text-xs font-medium bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_2px_8px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.3)] transition-all hover:border-white/50"

@@ -17,6 +17,11 @@ interface ShimmerBorderProps {
 export function ShimmerBorder({ active, children, className = '' }: ShimmerBorderProps) {
   return (
     <div
+      /* The ring's two gradient stops are inline, so a theme can only reach it
+         through a hook plus !important. Without one it stays pure white on
+         every theme, including the ones built around a single accent. */
+      data-story-ring
+      data-active={active ? 'true' : undefined}
       className={`rounded-xl p-[2px] backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] ${className}`}
       style={{
         background: active

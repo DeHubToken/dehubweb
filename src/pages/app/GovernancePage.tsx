@@ -138,6 +138,7 @@ function GovernanceCard({
 
   return (
     <div
+      data-feed-item
       className="overflow-visible relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3 cursor-pointer hover:bg-white/[0.05] transition-colors"
       onClick={() => navigate(`/app/governance/${proposal.id}`)}
     >
@@ -173,11 +174,11 @@ function GovernanceCard({
               <div className="h-1.5 rounded-full bg-white/5 overflow-hidden flex">
                 {total > 0 ? (
                   <>
-                    <div className="bg-emerald-500 rounded-l-full transition-all duration-300" style={{ width: `${forPct}%` }} />
-                    <div className="bg-red-500 rounded-r-full transition-all duration-300" style={{ width: `${againstPct}%` }} />
+                    <div data-keep-dark className="bg-emerald-500 rounded-l-full transition-all duration-300" style={{ width: `${forPct}%` }} />
+                    <div data-keep-dark className="bg-red-500 rounded-r-full transition-all duration-300" style={{ width: `${againstPct}%` }} />
                   </>
                 ) : (
-                  <div className="bg-zinc-700 w-full rounded-full" />
+                  <div className="bg-white/10 w-full rounded-full" />
                 )}
               </div>
             </div>

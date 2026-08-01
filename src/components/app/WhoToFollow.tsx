@@ -221,6 +221,7 @@ export function WhoToFollow() {
             <button
               onClick={(e) => handleFollow(e, user)}
               disabled={isAlreadyFollowed(user)}
+              data-follow-btn
               className={`h-6 min-w-0 w-auto px-2.5 text-[11px] font-semibold rounded-lg flex items-center justify-center transition-all duration-150 flex-shrink-0 ${
                 isAlreadyFollowed(user)
                   ? 'bg-white/10 text-white/40 cursor-default'

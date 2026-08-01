@@ -12,8 +12,9 @@ const Slider = React.forwardRef<
     className={cn("relative flex w-full touch-none select-none items-center py-2 cursor-pointer", className)}
     {...props}
   >
-    <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-white/[0.08] before:absolute before:inset-x-0 before:-inset-y-2 before:content-['']">
+    <SliderPrimitive.Track data-slider-track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-white/[0.08] before:absolute before:inset-x-0 before:-inset-y-2 before:content-['']">
       <SliderPrimitive.Range
+        data-slider-range
         className={cn(
           "absolute h-full rounded-full",
           variant === "lava"
@@ -25,7 +26,7 @@ const Slider = React.forwardRef<
         } : undefined}
       />
     </SliderPrimitive.Track>
-    <SliderPrimitive.Thumb className={cn(
+    <SliderPrimitive.Thumb data-slider-thumb className={cn(
       "block h-3.5 w-3.5 rounded-full border-2 bg-background ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
       variant === "lava" ? "border-white/40" : "border-primary"
     )} />

@@ -293,17 +293,19 @@ function FractionMarketplace({ holders, nftInfo, truncateAddr }: FractionMarketp
       />
 
       <Tabs defaultValue="listings" className="w-full">
-        <TabsList className="w-full bg-transparent border-b border-white/10 rounded-none h-auto p-0">
+        <TabsList data-keep-square className="w-full bg-transparent border-b border-white/10 rounded-none h-auto p-0">
           <TabsTrigger 
             value="listings" 
-            className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent bg-transparent py-3 text-white/60 data-[state=active]:text-white"
+            data-keep-square
+            className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-white data-[state=active]:bg-transparent bg-transparent py-3 text-white/60 data-[state=active]:text-white"
           >
             <Tag className="w-4 h-4 mr-2" />
             Listings {listings.length > 0 && `(${listings.length})`}
           </TabsTrigger>
           <TabsTrigger 
             value="offers" 
-            className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent bg-transparent py-3 text-white/60 data-[state=active]:text-white"
+            data-keep-square
+            className="flex-1 rounded-none border-b-2 border-transparent data-[state=active]:border-white data-[state=active]:bg-transparent bg-transparent py-3 text-white/60 data-[state=active]:text-white"
           >
             <HandCoins className="w-4 h-4 mr-2" />
             Offers {offers.length > 0 && `(${offers.length})`}

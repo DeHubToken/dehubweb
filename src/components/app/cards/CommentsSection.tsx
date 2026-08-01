@@ -1065,6 +1065,8 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                   commentsTabPositions.current[tab] = el;
                 }}
                 type="button"
+                data-tab-btn
+                data-active={activeTab === tab ? 'true' : undefined}
                 onClick={() => setActiveTab(tab)}
                 className={cn(
                   "relative z-40 py-1.5 flex items-center justify-center transition-all rounded-xl text-zinc-400 hover:text-zinc-200",
@@ -1509,7 +1511,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             {isRecording ? (
               /* Recording indicator */
               <div data-comment-recording className="flex-1 flex items-center gap-2 bg-red-500/10 rounded-xl px-4 h-10">
-                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+                <div data-live-pulse className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                 <span className="text-sm text-red-400 flex-1">{recordingTime}s / {MAX_VOICE_DURATION}s</span>
                 <button
                   onClick={stopRecording}

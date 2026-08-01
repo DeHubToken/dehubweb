@@ -82,7 +82,7 @@ export default function ConnectClaudePage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div data-glass-page className="min-h-screen bg-black text-white">
       <SEOHead
         title="DeHub for Claude — Use DeHub inside Claude (MCP Connector)"
         description="Add DeHub to Claude in one click. Browse posts, look up profiles and pull trending topics from the DeHub decentralized social network directly inside Claude."

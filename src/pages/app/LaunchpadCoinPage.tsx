@@ -69,7 +69,7 @@ export default function LaunchpadCoinPage() {
         <div className="space-y-5">
           <div className="rounded-2xl bg-black/60 backdrop-blur-[24px] border border-white/10 p-5 h-64 flex items-end gap-1">
             {trades.slice().reverse().slice(-40).map((t, i) => (
-              <div key={t.id} className="flex-1 bg-white/60 rounded-sm" style={{
+              <div key={t.id} data-keep-square className="flex-1 bg-white/60 rounded-sm" style={{
                 height: `${Math.max(4, Math.min(100, (Number(t.price_per_token) / maxTradePrice) * 100))}%`,
                 opacity: 0.4 + (i / 40) * 0.6,
               }} />
@@ -78,7 +78,7 @@ export default function LaunchpadCoinPage() {
           </div>
 
           {token.description && (
-            <div data-keep-dark className="rounded-2xl bg-black/60 backdrop-blur-[24px] border border-white/10 p-4 text-white/80 text-sm">
+            <div className="rounded-2xl bg-black/60 backdrop-blur-[24px] border border-white/10 p-4 text-white/80 text-sm">
               {token.description}
             </div>
           )}

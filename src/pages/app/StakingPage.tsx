@@ -65,8 +65,8 @@ function UnstakeCountdown({ timestamp }: { timestamp: number }) {
     <span className="inline-flex sm:flex-col sm:items-center items-center gap-1.5 sm:gap-0.5 text-[11px] font-mono text-amber-400/80">
       <Clock className="w-3 h-3 shrink-0 sm:hidden" />
       <span>{days}d {String(hours).padStart(2, '0')}h {String(mins).padStart(2, '0')}m {String(secs).padStart(2, '0')}s</span>
-      <span className="w-12 h-1 rounded-full bg-white/10 overflow-hidden">
-        <span className="block h-full rounded-full bg-amber-400/60 transition-all" style={{ width: `${(progress * 100).toFixed(1)}%` }} />
+      <span role="progressbar" className="w-12 h-1 rounded-full bg-white/10 overflow-hidden">
+        <span data-progress-fill className="block h-full rounded-full bg-amber-400/60 transition-all" style={{ width: `${(progress * 100).toFixed(1)}%` }} />
       </span>
     </span>
   );

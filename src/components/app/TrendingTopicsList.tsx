@@ -146,6 +146,7 @@ export const TrendingTopicsList = memo(function TrendingTopicsList({
         {TOPIC_PERIODS.map(p => (
           <button
             data-tab-btn
+            data-active={topicPeriod === p.value ? 'true' : undefined}
             key={p.value}
             onClick={() => handlePeriodChange(p.value)}
             className={cn(

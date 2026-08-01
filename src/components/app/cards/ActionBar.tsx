@@ -723,6 +723,11 @@ export function ActionBar({
       {!hideDislike && (
         <motion.button
           onClick={() => handleVote(false)}
+          /* Theme hook for the engaged state. `fill-current` on the glyph is the
+             only other signal, and it can't cover repost (which changes stroke
+             weight instead) — so every engagement button carries the same
+             attribute and themes style one selector. */
+          data-engaged={isDisliked ? 'dislike' : undefined}
           className={cn(
             "flex items-center gap-0.5 transition-colors text-white",
             isVoting && "opacity-50"
@@ -757,6 +762,7 @@ export function ActionBar({
             setSheetOpen(true);
           }
         }}
+        data-engaged={isReposted ? 'repost' : undefined}
         className="flex items-center gap-0.5 text-white hover:text-zinc-400 transition-colors"
         aria-label="Share"
       >
@@ -803,6 +809,9 @@ export function ActionBar({
           onPointerCancel={cancelLongPress}
           // Holding an element on touch otherwise pops the OS text/callout menu.
           onContextMenu={(e) => { if (reactionsEnabled) e.preventDefault(); }}
+          /* Engaged whenever the viewer holds a POSITIVE reaction, not only a
+             plain 👍 — a post the viewer loved is still a post they liked. */
+          data-engaged={isLiked ? (myReaction && myReaction !== 'like' ? 'reaction' : 'like') : undefined}
           className="flex items-center transition-colors text-white select-none touch-none"
           aria-label={
             myReaction
@@ -817,6 +826,9 @@ export function ActionBar({
         >
           {leadReaction && leadReaction !== 'like' ? (
             <span
+              /* Marks the glyph so a theme can light the reaction without also
+                 lighting the count, which is a sibling span in the same row. */
+              data-engaged-glyph
               className="text-[1.05rem] leading-none w-5 h-5 flex items-center justify-center"
               aria-hidden="true"
             >

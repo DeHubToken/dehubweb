@@ -146,6 +146,7 @@ export function QuotePostModal({ open, onOpenChange, quotedPost }: QuotePostModa
           <button
             onClick={handleSubmit}
             disabled={isSubmitting || !content.trim()}
+            data-primary-cta
             className="px-4 py-1.5 rounded-full bg-white text-black font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-white/90 transition-colors"
           >
             {isSubmitting ? 'Posting...' : 'Post'}

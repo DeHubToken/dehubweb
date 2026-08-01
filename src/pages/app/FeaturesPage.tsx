@@ -371,7 +371,7 @@ function FeatureCard({
 
             {/* Attached media */}
             {feature.image_url && (
-              <div className="rounded-xl overflow-hidden border border-white/10">
+              <div data-media-full className="rounded-xl overflow-hidden border border-white/10">
                 {feature.image_url.match(/\.(mp4|mov|webm|ogg)$/i) ? (
                   <video src={feature.image_url} className="w-full max-h-64 object-contain bg-black" controls />
                 ) : (
@@ -684,6 +684,8 @@ function SubmitFeatureDrawer({
                 <button
                   key={cat.id}
                   type="button"
+                  data-filter-chip
+                  data-active={category === cat.id ? 'true' : undefined}
                   onClick={() => setCategory(cat.id as FeatureCategory)}
                   className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
                     category === cat.id
