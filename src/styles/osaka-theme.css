@@ -1612,6 +1612,15 @@ html[data-theme='osaka'] #app-root > div > main.bg-black.bg-black {
   -webkit-backdrop-filter: none !important;
 }
 
+/* Direct post routes must clear the middle column itself. The post-page marker
+   below covers the content root, but this is the full-height panel that can
+   otherwise keep a background shorthand behind the dedicated page. */
+html[data-theme='osaka'] #app-root main[data-main-panel][data-post-route] {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
 /* A post can arrive through the feed overlay or as a direct route. Keep the
    dedicated page surface explicit so either path exposes the alley instead of
    depending on a generic full-page selector to happen to clear its bg-black. */
