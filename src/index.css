@@ -2176,6 +2176,49 @@ html[data-theme="light"] [data-profile-hover-card] [data-follow-btn]:hover {
   background-color: rgba(0, 0, 0, 0.06) !important;
 }
 
+/* Reaction tray: the outer surface follows the app's bento/profile-card shape
+   language instead of turning the whole nine-item control into a pill. The
+   circular reaction targets stay nested inside this 16px liquid-glass panel. */
+[data-reaction-tray] {
+  background:
+    linear-gradient(
+      160deg,
+      rgba(255, 255, 255, 0.09) 0%,
+      rgba(255, 255, 255, 0.025) 42%,
+      rgba(255, 255, 255, 0.05) 100%
+    ),
+    rgba(9, 9, 11, 0.68) !important;
+}
+
+html[data-theme="light"] [data-reaction-tray] {
+  border-radius: 1rem !important;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.62)),
+    rgba(255, 255, 255, 0.72) !important;
+  border-color: var(--hairline-strong) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 8px 32px rgba(0, 0, 0, 0.12) !important;
+}
+html[data-theme="light"] [data-reaction-tray] [data-reaction-option]:hover,
+html[data-theme="light"] [data-reaction-tray] [data-reaction-option][data-active="true"] {
+  background-color: rgba(0, 0, 0, 0.07) !important;
+}
+html[data-theme="light"] [data-reaction-tray] [data-reaction-option][data-active="true"] {
+  --tw-ring-color: rgba(0, 0, 0, 0.22) !important;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  [data-reaction-tray] {
+    background: rgba(9, 9, 11, 0.96) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  html[data-theme="light"] [data-reaction-tray] {
+    background: rgba(255, 255, 255, 0.96) !important;
+  }
+}
+
 
 /* Post modal composer: white text and translucent surfaces become invisible on
    the light paper background. Force all text, placeholders, caret and toggle
