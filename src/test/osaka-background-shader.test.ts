@@ -11,11 +11,15 @@ describe('Osaka rain shader', () => {
     expect(SOURCE).toContain('mergeOsakaDrops');
   });
 
-  it('pops only during the existing end-of-life phase', () => {
+  it('gates a small splash to a sparse subset at the existing end-of-life phase', () => {
     expect(SOURCE).toContain('struct OsakaRain');
-    expect(SOURCE).toContain('float popEnvelope = smoothstep(0.84, 0.90, phase)');
-    expect(SOURCE).toContain('drop *= 1.0 - smoothstep(0.88, 0.97, phase)');
-    expect(SOURCE).toContain('float popRadius = mix(size * 0.75, size * 2.1, popProgress)');
+    expect(SOURCE).toContain('float popEligible = step(0.74, n)');
+    expect(SOURCE).toContain('drop *= 1.0 - popEligible * smoothstep(0.91, 0.985, phase)');
+    expect(SOURCE).toContain('vec2 splashA = splashUv');
+    expect(SOURCE).toContain('vec2 splashB = splashUv');
+    expect(SOURCE).toContain('vec2 splashC = splashUv');
+    expect(SOURCE).not.toContain('float popRadius');
+    expect(SOURCE).not.toContain('float shell = abs(dr - popRadius)');
     expect(SOURCE).toContain('pop *= wet');
   });
 
