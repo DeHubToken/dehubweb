@@ -212,6 +212,16 @@ html[data-theme='war'] [data-comments-section] [data-comment-field] textarea {
   caret-color: rgb(var(--war-hud));
 }
 
+/* The collapsed composer is a true one-line control. Keep its compact
+   padding explicit so later War coverage changes cannot reintroduce
+   multiline spacing into the 40px bar. */
+html[data-theme='war']
+  [data-comments-section]
+  [data-comment-field]:not([data-expanded])
+  textarea {
+  padding: 0 !important;
+}
+
 /* The well owns focus. Without this the textarea paints war-theme.css section
    7's inset ring and the global 2px focus outline a pixel or two inside the
    well's own ring - cause 3 of the doubled-box report. */
