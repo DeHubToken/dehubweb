@@ -40,6 +40,7 @@ export function useFeedSwallowClip(
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
+    const pageScope = el.closest<HTMLElement>('[data-cached-page]');
     let rafId: number | null = null;
     let lastClip = '';
     let lastEventAt = 0;
@@ -57,10 +58,15 @@ export function useFeedSwallowClip(
       const theme = document.documentElement.dataset.theme || '';
       let clip = '';
       if (opts.allThemes || GLASS_NAV_THEMES.includes(theme)) {
-        // Whichever matching surface is currently rendered (e.g. HomePage's
-        // pill is display:none when the collapsed GlobalFeedNav takes over).
-        const cut = Array.from(document.querySelectorAll<HTMLElement>(cutSelector))
-          .find(p => p.offsetParent !== null);
+        const findVisibleCut = (root: ParentNode) =>
+          Array.from(root.querySelectorAll<HTMLElement>(cutSelector))
+            .find(p => p.offsetParent !== null);
+        // PersistentPageCache hides inactive pages with visibility/content-
+        // visibility, which does not reliably null offsetParent. Prefer this
+        // container's own cached page so a hidden bento cannot become its cut.
+        // Fall back globally for the collapsed nav and post-overlay layouts,
+        // whose cut surface intentionally lives outside the content page.
+        const cut = (pageScope && findVisibleCut(pageScope)) || findVisibleCut(document);
         if (cut) {
           if (cut !== cachedCut || theme !== cachedTheme) {
             cachedCut = cut;
@@ -78,7 +84,14 @@ export function useFeedSwallowClip(
             // The cut follows the surface's silhouette: its top edge with the
             // surface's own corner rounding, then full width just below the
             // corner arcs — so nothing peeks out beside the rounded corners.
-            const r = Math.min(cachedRadius, pr.width / 2);
+            // CSS resolves very large/full radii (for example `rounded-full`)
+            // against both axes of the box. getComputedStyle still reports the
+            // declared pixel value, though, so capping only by width turns a
+            // short nav pill into a huge semicircular bite through the feed.
+            // Clamp by the surface height as well to match the radius the
+            // browser actually paints. This keeps pills, bento headers and
+            // post action surfaces on the same universal silhouette.
+            const r = Math.min(cachedRadius, pr.width / 2, pr.height / 2);
             const f = (n: number) => n.toFixed(2);
             const L = pr.left - cr.left;
             const R = pr.right - cr.left;
@@ -100,20 +113,27 @@ export function useFeedSwallowClip(
       lastEventAt = performance.now();
       if (rafId == null) rafId = requestAnimationFrame(update);
     };
+    const invalidateGeometry = () => {
+      cachedCut = null;
+      schedule();
+    };
 
     // The feed scrolls on document.body in this app; scroll events don't
     // bubble, so capture-phase listeners catch whichever element scrolls.
     const targets: EventTarget[] = [window, document];
     targets.forEach(t => t.addEventListener('scroll', schedule, { passive: true, capture: true }));
-    window.addEventListener('resize', schedule, { passive: true });
-    const themeObserver = new MutationObserver(schedule);
+    window.addEventListener('resize', invalidateGeometry, { passive: true });
+    const themeObserver = new MutationObserver(invalidateGeometry);
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    const pageObserver = pageScope ? new MutationObserver(invalidateGeometry) : null;
+    pageObserver?.observe(pageScope, { attributes: true, attributeFilter: ['style'] });
     schedule();
 
     return () => {
       targets.forEach(t => t.removeEventListener('scroll', schedule, { capture: true }));
-      window.removeEventListener('resize', schedule);
+      window.removeEventListener('resize', invalidateGeometry);
       themeObserver.disconnect();
+      pageObserver?.disconnect();
       if (rafId != null) cancelAnimationFrame(rafId);
       el.style.clipPath = '';
     };

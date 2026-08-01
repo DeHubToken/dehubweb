@@ -214,7 +214,11 @@ export default function ProfilePage() {
   // Swallow the tab content at the sticky tabs bento's top edge under the
   // glass themes, exactly like the home feed cuts at its nav pill.
   const profileContentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(profileContentRef, '[data-feed-nav-outer] > [data-page-bento]');
+  useFeedSwallowClip(
+    profileContentRef,
+    '[data-feed-nav-outer] > [data-page-bento]',
+    [!!data.profile, data.isAuthenticated],
+  );
 
   // Detect when the tabs pill is anchored to the top. Once stuck there's no
   // horizontal-scroll affordance to hint at, so we drop the right-edge fade —

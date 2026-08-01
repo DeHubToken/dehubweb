@@ -1148,11 +1148,12 @@ export default function NotificationsPage() {
   const [notifTabTransition, setNotifTabTransition] = useState(false);
   const isDraggingRef = useRef(false);
   const { layerRef: notifTabLayerRef, setRef: setNotifTabRef, rect: notifTabRect, onScroll: onNotifTabScroll } = useTabIndicator(activeTab, undefined, isDraggingRef);
+  const { isAuthenticated, walletAddress: pageWalletAddress } = useAuth();
 
   // Swallow the notifications list at the sticky header bento's top edge under
   // the glass themes, exactly like the home feed cuts at its nav pill.
   const notifContentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(notifContentRef, '[data-feed-nav-outer] > [data-page-bento]');
+  useFeedSwallowClip(notifContentRef, '[data-feed-nav-outer] > [data-page-bento]', [isAuthenticated]);
 
   // Drag-to-swipe state
   const tabButtonPositions = useRef<Partial<Record<NotificationTypeFilter, HTMLElement | null>>>({});
@@ -1173,7 +1174,6 @@ export default function NotificationsPage() {
     setActiveTab(tab);
     setTimeout(() => setNotifTabTransition(false), 450);
   }, [isDragging]);
-  const { isAuthenticated, walletAddress: pageWalletAddress } = useAuth();
   
   // Followers drawer state (opened inline from aggregated follow notifications)
   const [followDrawerOpen, setFollowDrawerOpen] = useState(false);

@@ -132,7 +132,7 @@ export default function BookmarksPage() {
   // Swallow the bookmarks feed at the sticky nav bento's top edge under the
   // glass themes, exactly like the home feed cuts at its nav pill.
   const bookmarksContentRef = useRef<HTMLDivElement>(null);
-  useFeedSwallowClip(bookmarksContentRef, '[data-feed-nav-outer] > [data-page-bento]');
+  useFeedSwallowClip(bookmarksContentRef, '[data-feed-nav-outer] > [data-page-bento]', [isAuthenticated]);
 
   // Block access for unauthenticated users
   if (!isAuthenticated) {
