@@ -7,6 +7,18 @@ import { openDB, type IDBPDatabase } from "idb";
 
 export type MediaKind = "video" | "audio" | "image";
 
+/** Licence and creator details retained when media comes from the free library. */
+export interface MediaProvenance {
+  source: string;
+  sourceUrl: string;
+  creator?: string;
+  creatorUrl?: string;
+  license: string;
+  licenseUrl?: string;
+  attributionRequired: boolean;
+  attributionText: string;
+}
+
 export interface StoredMedia {
   id: string;
   name: string;
@@ -17,11 +29,12 @@ export interface StoredMedia {
   width?: number;
   height?: number;
   thumbnail?: Blob; // small jpeg/png preview (videos + images)
+  provenance?: MediaProvenance;
   blob: Blob;
   createdAt: number;
 }
 
-export interface MediaMeta extends Omit<StoredMedia, "blob"> {}
+export type MediaMeta = Omit<StoredMedia, "blob">;
 
 const DB_NAME = "dehub-editor";
 const DB_VERSION = 1;

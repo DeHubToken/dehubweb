@@ -27,11 +27,20 @@ import { LibraryPanel } from './panels/LibraryPanel';
 const MediaPanel = lazy(() =>
   import('./MediaPanel').then((m) => ({ default: m.MediaPanel })),
 );
+const FreeAssetsPanel = lazy(() =>
+  import('./panels/FreeAssetsPanel').then((m) => ({ default: m.FreeAssetsPanel })),
+);
 
 export function PanelBody({ panel }: { panel: EditorPanel }) {
   switch (panel) {
     case 'design':
       return <DesignPanel />;
+    case 'assets':
+      return (
+        <Suspense fallback={<p className="p-4 text-[12px] text-white/40">Loading free assets...</p>}>
+          <FreeAssetsPanel />
+        </Suspense>
+      );
     case 'text':
       return <TextPanel />;
     case 'generate':

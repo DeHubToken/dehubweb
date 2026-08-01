@@ -42,6 +42,7 @@ async function cloudAssetToMediaItem(a: CloudAsset): Promise<MediaItem | null> {
       width: a.width ?? undefined,
       height: a.height ?? undefined,
       thumbnail: undefined,
+      provenance: a.provenance ?? undefined,
       createdAt: new Date(a.created_at).getTime(),
       url,
       thumbnailUrl,
