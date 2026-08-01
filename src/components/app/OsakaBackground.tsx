@@ -304,6 +304,7 @@ const WIPE_FRAG = /* glsl */ `
   uniform vec2 u_pointerPrev;
   uniform float u_active;     // 0 when the pointer has not moved recently
   uniform float u_decay;
+  uniform float u_streakDecay;
   uniform float u_aspect;
   uniform float u_radius;
 
@@ -319,7 +320,12 @@ const WIPE_FRAG = /* glsl */ `
   }
 
   void main() {
-    float prev = texture2D(u_prev, v_uv).r * u_decay;
+    // R keeps the broad cleared area; G keeps only the fine wipe grain. The
+    // grain dries more slowly, so it remains for a moment after the drops have
+    // been pushed away without requiring another render target or pass.
+    vec2 previous = texture2D(u_prev, v_uv).rg;
+    float prev = previous.r * u_decay;
+    float prevStreak = previous.g * u_streakDecay;
 
     vec2 p = vec2(v_uv.x * u_aspect, v_uv.y);
     vec2 a = vec2(u_pointer.x * u_aspect, u_pointer.y);
@@ -327,8 +333,20 @@ const WIPE_FRAG = /* glsl */ `
 
     float d = segDist(p, a, b);
     float stamp = (1.0 - smoothstep(0.0, u_radius, d)) * u_active;
+    vec2 segment = b - a;
+    float segmentLength = length(segment);
+    vec2 tangent = segment / max(segmentLength, 1e-5);
+    vec2 across = vec2(-tangent.y, tangent.x);
 
-    gl_FragColor = vec4(vec3(max(prev, stamp)), 1.0);
+    // Narrow bands parallel to the gesture read as the uneven moisture left
+    // by wiping a window. Stationary pointer stamps stay clean circles: only
+    // an actual moving segment can leave grain behind.
+    float crossStroke = dot(p - a, across) / max(u_radius, 1e-5);
+    float bands = pow(0.5 + 0.5 * cos(crossStroke * 18.0), 7.0);
+    float moving = smoothstep(0.0015, 0.008, segmentLength);
+    float streakStamp = stamp * bands * moving * 0.62;
+
+    gl_FragColor = vec4(max(prev, stamp), max(prevStreak, streakStamp), 0.0, 1.0);
   }
 `;
 
@@ -359,8 +377,14 @@ const COMPOSITE_FRAG = /* glsl */ `
 
   varying vec2 v_uv;
 
+  struct OsakaRain {
+    vec2 normal;
+    float drop;
+    float trail;
+    float pop;
+  };
+
   /* One layer of rain on the pane.
-     Returns: xy = refraction offset, z = drop mask, w = trail mask.
 
      The cell grid is deliberately TALLER than it is wide. Drops on a vertical
      pane do not scatter isotropically; they run, so the cell has to give them
@@ -369,7 +393,7 @@ const COMPOSITE_FRAG = /* glsl */ `
        - a column of small static beads sits above it, revealed only after the
          drop has passed that height. That is the trail, and it is the single
          detail that separates rain-on-glass from bubbles-on-glass. */
-  vec4 osakaDropCell(vec2 gv, vec2 id, vec2 cell, float t, float seed) {
+  OsakaRain osakaDropCell(vec2 gv, vec2 id, vec2 cell, float t, float seed) {
     vec2 f = gv - id - 0.5;
     vec2 rnd = hash22(id + seed);
     float n = rnd.x;
@@ -393,6 +417,20 @@ const COMPOSITE_FRAG = /* glsl */ `
     float size = 0.038 + n * 0.03;
     float drop = smoothstep(size, size * 0.4, dr);
 
+    // The drop already disappears when phase wraps. Use only that existing
+    // end-of-life window for a quick surface-tension release: the bead fades
+    // into a thin expanding, slightly uneven rim instead of blinking out.
+    float popProgress = smoothstep(0.86, 1.0, phase);
+    float popEnvelope = smoothstep(0.84, 0.90, phase)
+      * (1.0 - smoothstep(0.95, 1.0, phase));
+    drop *= 1.0 - smoothstep(0.88, 0.97, phase);
+    float popRadius = mix(size * 0.75, size * 2.1, popProgress);
+    float popWidth = mix(size * 0.3, size * 0.12, popProgress);
+    float shell = abs(dr - popRadius);
+    float pop = (1.0 - smoothstep(popWidth * 0.35, popWidth, shell)) * popEnvelope;
+    float lobes = 0.72 + 0.28 * sin(atan(d.y, d.x) * 5.0 + n * 19.0);
+    pop *= lobes;
+
     // Beads left in the drop's wake, only above its current height.
     float tx = (f.x - dropX) * cell.x;
     float colMask = smoothstep(size * 0.6, size * 0.18, abs(tx));
@@ -406,15 +444,26 @@ const COMPOSITE_FRAG = /* glsl */ `
     // enough surface normal at this scale and costs no derivatives. The caller
     // must divide x by the aspect before using this as a UV offset.
     vec2 normal = d * drop + vec2(tx, 0.0) * trail * 1.2;
+    normal += normalize(d + vec2(1e-5)) * pop * size * 0.75;
 
-    return vec4(normal, drop, trail);
+    OsakaRain result;
+    result.normal = normal;
+    result.drop = drop;
+    result.trail = trail;
+    result.pop = pop;
+    return result;
   }
 
-  vec4 mergeOsakaDrops(vec4 a, vec4 b) {
-    return vec4(a.xy + b.xy, max(a.z, b.z), max(a.w, b.w));
+  OsakaRain mergeOsakaDrops(OsakaRain a, OsakaRain b) {
+    OsakaRain result;
+    result.normal = a.normal + b.normal;
+    result.drop = max(a.drop, b.drop);
+    result.trail = max(a.trail, b.trail);
+    result.pop = max(a.pop, b.pop);
+    return result;
   }
 
-  vec4 osakaDrops(vec2 uv, float t, float scale, float seed) {
+  OsakaRain osakaDrops(vec2 uv, float t, float scale, float seed) {
     vec2 grid = vec2(scale, scale * 0.62);
     // Cell size in RAIN units. Every distance below is measured in this space
     // rather than in cell-local space, because cells are about 1:1.8 and
@@ -426,7 +475,7 @@ const COMPOSITE_FRAG = /* glsl */ `
     // Drops and their trails are taller than a grid cell near the end of a
     // fall. Sample the adjacent rows as well so their masks continue across
     // cell boundaries instead of being sliced by a horizontal screen seam.
-    vec4 rain = osakaDropCell(gv, id, cell, t, seed);
+    OsakaRain rain = osakaDropCell(gv, id, cell, t, seed);
     rain = mergeOsakaDrops(rain, osakaDropCell(gv, id + vec2(0.0, -1.0), cell, t, seed));
     rain = mergeOsakaDrops(rain, osakaDropCell(gv, id + vec2(0.0, 1.0), cell, t, seed));
     return rain;
@@ -446,26 +495,30 @@ const COMPOSITE_FRAG = /* glsl */ `
     vec2 refract = vec2(0.0);
     float drop = 0.0;
     float trail = 0.0;
+    float pop = 0.0;
 
     // Three layers at descending scale read as three depths of water on one
     // pane. Layer count is the tier dial.
-    vec4 l1 = osakaDrops(rain, t, 3.2, 0.0);
-    refract += l1.xy; drop = max(drop, l1.z); trail = max(trail, l1.w);
+    OsakaRain l1 = osakaDrops(rain, t, 3.2, 0.0);
+    refract += l1.normal; drop = max(drop, l1.drop); trail = max(trail, l1.trail); pop = max(pop, l1.pop);
 
     if (u_layers > 1.5) {
-      vec4 l2 = osakaDrops(rain * 1.75 + 3.1, t * 1.3, 3.2, 21.0);
-      refract += l2.xy * 0.6; drop = max(drop, l2.z * 0.85); trail = max(trail, l2.w * 0.7);
+      OsakaRain l2 = osakaDrops(rain * 1.75 + 3.1, t * 1.3, 3.2, 21.0);
+      refract += l2.normal * 0.6; drop = max(drop, l2.drop * 0.85); trail = max(trail, l2.trail * 0.7); pop = max(pop, l2.pop * 0.8);
     }
     if (u_layers > 2.5) {
-      vec4 l3 = osakaDrops(rain * 2.9 + 7.7, t * 1.7, 3.2, 47.0);
-      refract += l3.xy * 0.35; drop = max(drop, l3.z * 0.6); trail = max(trail, l3.w * 0.5);
+      OsakaRain l3 = osakaDrops(rain * 2.9 + 7.7, t * 1.7, 3.2, 47.0);
+      refract += l3.normal * 0.35; drop = max(drop, l3.drop * 0.6); trail = max(trail, l3.trail * 0.5); pop = max(pop, l3.pop * 0.6);
     }
 
     // The squeegee. Wiped areas lose their drops and their fog.
-    float wipe = texture2D(u_wipe, uv).r;
+    vec2 wipeField = texture2D(u_wipe, uv).rg;
+    float wipe = wipeField.r;
+    float wipeStreak = wipeField.g;
     float wet = 1.0 - smoothstep(0.05, 0.75, wipe);
     drop *= wet;
     trail *= wet;
+    pop *= wet;
     refract *= wet;
 
     // --- the two versions of the frame ---------------------------------
@@ -531,9 +584,21 @@ const COMPOSITE_FRAG = /* glsl */ `
     vec3 col = mix(glass, trailCol, clamp(trail, 0.0, 1.0));
     col = mix(col, sharp, clamp(drop, 0.0, 1.0));
 
+    // A restrained highlight on the expanding rim makes the release legible
+    // against both dark asphalt and bright signs without turning it into a
+    // particle burst.
+    col += mix(u_cool, u_neon, 0.58) * pop * 0.14;
+
     // Wiped glass returns toward the sharp frame too - that is what "clean"
     // looks like - but never fully, because a squeegeed pane is still wet.
     col = mix(col, texture2D(u_video, base).rgb, smoothstep(0.15, 0.95, wipe) * 0.72);
+
+    // Fine wipe grain briefly brings a little of the blurred pane back over
+    // the clear path. As G decays it looks like thin moisture marks drying,
+    // while R continues to control the original broad squeegee effect.
+    float dryingStreak = smoothstep(0.025, 0.55, wipeStreak);
+    vec3 streakGlass = glass * 1.055 + mix(u_cool, u_neon, 0.4) * 0.025;
+    col = mix(col, streakGlass, dryingStreak * 0.14);
 
     // --- grade -----------------------------------------------------------
     // Shadows fold toward the wet-asphalt violet, highlights toward sakura.
@@ -663,9 +728,9 @@ function OsakaScene() {
       h: Math.max(2, Math.floor(window.innerHeight / budget.wipeDiv)),
     });
 
-    let g0 = glassSize();
+    const g0 = glassSize();
     const glassRT = new THREE.WebGLRenderTarget(g0.w, g0.h, rtOpts);
-    let w0 = wipeSize();
+    const w0 = wipeSize();
     const wipeRT = [
       new THREE.WebGLRenderTarget(w0.w, w0.h, rtOpts),
       new THREE.WebGLRenderTarget(w0.w, w0.h, rtOpts),
@@ -713,6 +778,8 @@ function OsakaScene() {
       u_pointerPrev: { value: new THREE.Vector2(-1, -1) },
       u_active: { value: 0 },
       u_decay: { value: 0.94 },
+      // Roughly 97% gone after 3.2 seconds at every performance tier.
+      u_streakDecay: { value: Math.pow(0.03, 1 / (budget.fps * 3.2)) },
       u_aspect: { value: window.innerWidth / Math.max(1, window.innerHeight) },
       u_radius: { value: 0.075 },
     };
