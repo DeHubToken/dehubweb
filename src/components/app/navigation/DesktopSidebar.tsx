@@ -24,7 +24,6 @@ import { preloadRoute } from '@/lib/route-preload';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { leftRailVariants } from '@/lib/surface-motion';
-import { OsakaHolographicCtaSurface } from './OsakaHolographicCtaSurface';
 
 interface DesktopSidebarProps {
   onPostClick: () => void;
@@ -403,7 +402,7 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
                bento, at nearly the same width and the same fill. */
             data-primary-cta
             className={cn(
-              "relative isolate cursor-pointer box-border rounded-2xl bg-zinc-900/90 hover:bg-zinc-800/90 transition-colors overflow-hidden shadow-none flex items-center justify-center",
+              "cursor-pointer box-border rounded-2xl bg-zinc-900/90 hover:bg-zinc-800/90 transition-colors overflow-hidden shadow-none flex items-center justify-center",
               isMinimal ? "border border-zinc-700" : "border border-white/30",
               isConnecting && "opacity-70 pointer-events-none",
               isCollapsed ? "w-full h-[44px] p-[7px]" : "w-full"
@@ -411,9 +410,8 @@ export function DesktopSidebar({ onPostClick }: DesktopSidebarProps) {
             onClick={handlePostClick}
             disabled={isConnecting}
           >
-            <OsakaHolographicCtaSurface active={theme === 'osaka'} />
             <div className={cn(
-              "relative z-10 flex items-center gap-2 font-semibold text-white justify-center",
+              "flex items-center gap-2 font-semibold text-white justify-center",
               isCollapsed ? "text-[13.5px]" : "py-[7px] lg:py-3 text-[13.5px]"
             )}>
               {isAuthenticated ? (
