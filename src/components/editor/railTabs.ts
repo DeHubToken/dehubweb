@@ -2,10 +2,10 @@
  * Editor rail tabs.
  * =================
  * Shared by the docked rail and the phone bottom bar so both always offer the
- * same five tools in the same order. Kept in its own module so the rail file
+ * same tools in the same order. Kept in its own module so the rail file
  * only exports components and stays hot-reloadable.
  */
-import { ImagePlus, LayoutTemplate, SlidersHorizontal, Sparkles, Type, Wand2 } from 'lucide-react';
+import { ImagePlus, LayoutTemplate, LibraryBig, SlidersHorizontal, Sparkles, Type, Wand2 } from 'lucide-react';
 import type { EditorPanel } from '@/store/editorUiStore';
 
 export interface RailTab {
@@ -16,6 +16,7 @@ export interface RailTab {
 
 export const RAIL_TABS: RailTab[] = [
   { id: 'design', label: 'Design', icon: LayoutTemplate },
+  { id: 'assets', label: 'Assets', icon: LibraryBig },
   { id: 'media', label: 'Media', icon: ImagePlus },
   { id: 'text', label: 'Text', icon: Type },
   { id: 'generate', label: 'Generate', icon: Sparkles },

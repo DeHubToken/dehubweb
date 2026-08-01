@@ -149,9 +149,16 @@ export function DesignPanel() {
           <Film className="mx-auto h-5 w-5 text-white/25" />
           <p className="mt-2 text-[13px] font-medium text-white/70">The timeline is empty</p>
           <p className="mt-1 text-[11px] leading-relaxed text-white/40">
-            Bring in a file, generate something, or drop in a headline to get started.
+            Start with a free asset, bring in a file, generate something, or add a headline.
           </p>
           <div className="mt-3 grid gap-1.5">
+            <button
+              type="button"
+              onClick={() => setPanel('assets')}
+              className="rounded-lg border border-white/25 bg-white px-3 py-2 text-[12px] font-semibold text-black transition hover:bg-white/85 active:scale-[0.98]"
+            >
+              Browse free assets
+            </button>
             <button
               type="button"
               onClick={() => setPanel('media')}

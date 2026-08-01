@@ -1356,6 +1356,7 @@ export type Database = {
           name: string
           posted_post_id: string | null
           preserved: boolean
+          provenance: Json | null
           size_bytes: number
           storage_path: string
           thumbnail_path: string | null
@@ -1374,6 +1375,7 @@ export type Database = {
           name: string
           posted_post_id?: string | null
           preserved?: boolean
+          provenance?: Json | null
           size_bytes?: number
           storage_path: string
           thumbnail_path?: string | null
@@ -1392,6 +1394,7 @@ export type Database = {
           name?: string
           posted_post_id?: string | null
           preserved?: boolean
+          provenance?: Json | null
           size_bytes?: number
           storage_path?: string
           thumbnail_path?: string | null
