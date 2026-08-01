@@ -43,6 +43,8 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.fal-ai-tools]
     verify_jwt = false
+  [functions.free-stock-assets]
+    verify_jwt = false
   [functions.fetch-link-preview]
     verify_jwt = false
   [functions.general-ai-chat]

@@ -11,6 +11,7 @@ import {
   probeDuration,
   putMedia,
   type StoredMedia,
+  type MediaProvenance,
 } from "@/lib/editor/mediaStore";
 import { toMediaItem, useEditorStore } from "@/store/editorStore";
 import { uploadEditorAsset } from "@/lib/editor/cloudMedia";
@@ -32,6 +33,8 @@ export interface ImportContext {
   badgeBalance?: number | null;
   /** Optional username override for badge overrides. */
   username?: string | null;
+  /** Optional source and licence details for stock-library imports. */
+  provenance?: MediaProvenance;
 }
 
 /** Import a single file. Returns the media id when the import succeeded. */
@@ -82,6 +85,7 @@ export async function importOneFile(file: File, ctx: ImportContext = {}): Promis
       mimeType: file.type || "application/octet-stream",
       size: file.size, duration, width, height, thumbnail,
       blob: file, createdAt: Date.now(),
+      provenance: ctx.provenance,
     };
     await putMedia(row);
     useEditorStore.getState().addMedia(toMediaItem(row));
@@ -99,6 +103,7 @@ export async function importOneFile(file: File, ctx: ImportContext = {}): Promis
         width,
         height,
         thumbnail,
+        provenance: ctx.provenance,
       })
         .then(() => {
           window.dispatchEvent(new CustomEvent("editor:storage-usage-changed"));

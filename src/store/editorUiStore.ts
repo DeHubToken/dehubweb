@@ -6,7 +6,7 @@
  */
 import { create } from 'zustand';
 
-export type EditorPanel = 'design' | 'media' | 'text' | 'generate' | 'library' | 'inspector';
+export type EditorPanel = 'design' | 'assets' | 'media' | 'text' | 'generate' | 'library' | 'inspector';
 
 interface EditorUiState {
   /** Open panel, or null when the rail is collapsed to give the canvas room. */

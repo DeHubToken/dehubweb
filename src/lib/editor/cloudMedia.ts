@@ -5,6 +5,8 @@
  */
 import { supabase } from "@/integrations/supabase/client";
 import { withWalletHeader } from "@/lib/supabase-wallet-client";
+import type { MediaProvenance } from "@/lib/editor/mediaStore";
+import type { Json } from "@/integrations/supabase/types";
 
 const BUCKET = "editor-assets";
 
@@ -23,6 +25,7 @@ export interface CloudAsset {
   height: number | null;
   preserved: boolean;
   posted_post_id: string | null;
+  provenance: MediaProvenance | null;
   last_used_at: string;
   created_at: string;
 }
@@ -73,6 +76,7 @@ export interface UploadArgs {
   thumbnail?: Blob;
   preserved?: boolean;
   postedPostId?: string | null;
+  provenance?: MediaProvenance;
   onProgress?: (fraction: number) => void;
 }
 
@@ -123,6 +127,7 @@ export async function uploadEditorAsset(args: UploadArgs): Promise<CloudAsset> {
     height: args.height ?? null,
     preserved: !!args.preserved,
     posted_post_id: args.postedPostId ?? null,
+    provenance: (args.provenance ?? null) as unknown as Json,
     last_used_at: new Date().toISOString(),
   };
 

@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from "react";
-import { Upload, Trash2, Film, Music, Image as ImageIcon, Plus, HardDrive, Lock } from "lucide-react";
+import { Upload, Trash2, Film, Music, Image as ImageIcon, Plus, HardDrive, Lock, ExternalLink, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useEditorStore, type MediaItem } from "@/store/editorStore";
@@ -94,6 +94,24 @@ export function MediaPanel() {
     for (const id of Object.keys(cloudAssets)) if (cloudAssets[id].preserved) s.add(id);
     return s;
   }, [cloudAssets]);
+
+  const requiredCredits = useMemo(() => {
+    return Array.from(new Set(media.flatMap((item) =>
+      item.provenance?.attributionRequired ? [item.provenance.attributionText] : [],
+    )));
+  }, [media]);
+
+  const copyCredits = useCallback(async () => {
+    if (!requiredCredits.length) return;
+    try {
+      await navigator.clipboard.writeText(requiredCredits.join("\n"));
+      const { toast } = await import("sonner");
+      toast.success("Asset credits copied.");
+    } catch {
+      const { toast } = await import("sonner");
+      toast.error("Could not copy asset credits.");
+    }
+  }, [requiredCredits]);
 
   return (
     <div className="flex h-full w-full flex-col">
@@ -193,6 +211,19 @@ export function MediaPanel() {
                         {m.kind} · {formatDuration(m.duration)}
                         {isPreserved && <span className="ml-1.5 rounded-sm bg-white/10 px-1 py-[1px] text-[8px] uppercase tracking-wide text-white/80">Preserved</span>}
                       </p>
+                      {m.provenance ? (
+                        <a
+                          href={m.provenance.sourceUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          onClick={(event) => event.stopPropagation()}
+                          title={m.provenance.attributionText}
+                          className="mt-0.5 inline-flex max-w-full items-center gap-0.5 text-[9px] text-white/35 hover:text-white hover:underline"
+                        >
+                          <span className="truncate">{m.provenance.source} / {m.provenance.license}</span>
+                          <ExternalLink className="h-2.5 w-2.5 shrink-0" />
+                        </a>
+                      ) : null}
                     </div>
                     <button
                       type="button"
@@ -218,8 +249,17 @@ export function MediaPanel() {
         )}
       </div>
 
-      <div className="border-t border-white/10 px-3 py-2 text-[10px] text-white/40">
-        Drag a clip onto the timeline, double-click, or hit <kbd className="rounded bg-white/10 px-1">+</kbd>.
+      <div className="flex items-center gap-2 border-t border-white/10 px-3 py-2 text-[10px] text-white/40">
+        <span className="min-w-0 flex-1">Drag, double-click, or hit <kbd className="rounded bg-white/10 px-1">+</kbd> to add.</span>
+        {requiredCredits.length ? (
+          <button
+            type="button"
+            onClick={() => void copyCredits()}
+            className="inline-flex shrink-0 items-center gap-1 rounded-md border border-white/15 bg-white/[0.06] px-2 py-1 text-[9px] font-medium text-white/65 transition hover:bg-white/12 hover:text-white"
+          >
+            <Copy className="h-3 w-3" /> Copy credits
+          </button>
+        ) : null}
       </div>
     </div>
   );
