@@ -157,7 +157,7 @@ export function PollCard({ tokenId }: PollCardProps) {
                       'w-4 h-4 shrink-0 rounded border flex items-center justify-center',
                       isSelected ? 'bg-white border-white' : 'border-white/30',
                     )}>
-                      {isSelected && <span className="block w-2 h-2 rounded-sm bg-black" />}
+                      {isSelected && <span data-keep-dark data-keep-square className="block w-2 h-2 rounded-sm bg-black" />}
                     </span>
                   )}
                   {!poll.isMultipleChoice && !hasVoted && poll.isActive && (

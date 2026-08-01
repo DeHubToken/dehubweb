@@ -1,7 +1,7 @@
 import { useEffect, type RefObject } from 'react';
 
 /** Themes whose sticky feed nav is a glass surface (pill or bento). */
-const GLASS_NAV_THEMES = ['cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war', 'system'];
+const GLASS_NAV_THEMES = ['cosmic', 'hazy', 'swarms', 'lavalamp', 'winter', 'war', 'osaka', 'system'];
 
 /**
  * Swallow scrolled feed content at the top edge of a sticky glass nav surface.

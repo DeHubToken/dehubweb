@@ -13,7 +13,10 @@ const Command = React.forwardRef<
   <CommandPrimitive
     ref={ref}
     className={cn(
-      "flex h-full w-full flex-col overflow-hidden rounded-md bg-popover text-popover-foreground",
+      // bg-transparent, not bg-popover: this always fills a Dialog/Popover shell
+      // that has already painted itself, and an opaque token here covers whatever
+      // surface the active theme gave that shell.
+      "flex h-full w-full flex-col overflow-hidden rounded-md bg-transparent text-popover-foreground",
       className,
     )}
     {...props}

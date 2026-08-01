@@ -75,6 +75,10 @@ export function ReactionPicker({
           exit={{ opacity: 0, y: 8, scale: 0.9 }}
           transition={{ duration: 0.15, ease: 'easeOut' }}
           data-no-navigate
+          /* A floating menu, so it needs a menu's surface even though it is
+             absolutely positioned rather than portalled: nine emoji have to
+             read against whatever post is behind the card. */
+          data-reaction-tray
           onClick={(e) => e.stopPropagation()}
           onPointerDown={(e) => e.stopPropagation()}
           className={cn(

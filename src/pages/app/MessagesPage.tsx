@@ -90,11 +90,11 @@ function ConversationItem({
         </Avatar>
         {/* Online indicator */}
         {isOnline && (
-          <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-zinc-900" />
+          <div data-status-dot className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-zinc-900" />
         )}
         {/* Unread indicator on top-right of avatar */}
         {conversation.unreadCount > 0 && (
-          <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center border-2 border-zinc-900">
+          <div data-count-badge className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center border-2 border-zinc-900">
             <span className="text-white text-[10px] font-bold leading-none">
               {conversation.unreadCount > 9 ? '9+' : conversation.unreadCount}
             </span>

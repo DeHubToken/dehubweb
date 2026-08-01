@@ -139,7 +139,7 @@ export default function BestWeb3SocialMediaDapps() {
         type="article"
         jsonLd={jsonLd}
       />
-      <main className="min-h-screen bg-black text-white">
+      <main data-glass-page className="min-h-screen bg-black text-white">
         <article className="max-w-3xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
           <nav aria-label="Breadcrumb" className="text-xs text-zinc-500 mb-6">
             <Link to="/" className="hover:text-white">DeHub</Link>

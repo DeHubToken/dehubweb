@@ -793,6 +793,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      data-media-full
       className={cn("fixed inset-0 z-[60] flex items-center justify-center", isMobile ? "bg-black" : "bg-black/60 backdrop-blur-[24px]")}
       // `overscroll-behavior: contain` stops scroll-chaining/rubber-banding
       // without the `touch-action: none` that used to freeze the comments
@@ -833,6 +834,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             On mobile, when comments are open it shrinks to the top half so the
             comments panel below can take the bottom half (Instagram-style split). */}
         <motion.div
+          data-media-full
           className={cn(
             "relative overflow-hidden",
             isMobile

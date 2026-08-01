@@ -40,9 +40,19 @@
    the meniscus BOTTOM lip, and the off-frame sign wash on top.
    ========================================================================== */
 
-html[data-theme='osaka'] :is([data-side-panel], [data-page-bento], [data-search-bento]) {
+html[data-theme='osaka'] :is([data-side-panel], [data-page-bento]) {
   position: relative;
   border-radius: var(--osaka-r-panel) !important;
+}
+
+/* [data-search-bento] is not a panel — it is exactly the search input's own
+   box, wrapped so the glass can sit on the wrapper while the input goes clear.
+   Giving it the 18px PANEL radius while the input inside keeps the 12px INPUT
+   radius is what made the typing line read as off-register against the box
+   around it: two concentric rounded rectangles, 6px of disagreement at every
+   corner. One radius, on the wrapper, and the input inherits it (section 7). */
+html[data-theme='osaka'] [data-search-bento] {
+  border-radius: var(--osaka-r-input) !important;
 }
 
 /* Feed items: ring and wash only. See house rule 2. Their entire signature is
@@ -104,21 +114,39 @@ html[data-theme='osaka'] [data-feed-nav] {
     0 10px 34px rgb(4 2 10 / 0.5) !important;
 }
 
-/* The active tab is the one place in the nav that gets to be a sign. */
-html[data-theme='osaka'] :is([data-feed-tab-btn], [data-tab-btn])[data-active='true'] {
+/* The active tab is the one place in the nav that gets to be a sign.
+   Both spellings are accepted: the feed nav and the period strips publish
+   data-active, the side-panel tabs publish data-tab-active. Reading only one of
+   them left the leaderboard's auto-rotating 1D/1W/1M/1Y/All strip with no
+   active marker beyond a half-step of grey. */
+html[data-theme='osaka']
+  :is([data-feed-tab-btn], [data-tab-btn], [data-glass-toggle-button]):is(
+    [data-active='true'], [data-tab-active='true']
+  ) {
   color: rgb(var(--osaka-neon)) !important;
   text-shadow:
     0 0 8px rgb(var(--osaka-neon) / 0.4),
     0 0 20px rgb(var(--osaka-neon) / 0.18);
 }
 
-/* The sliding pill indicator behind the active tab. */
-html[data-theme='osaka'] [data-glass-indicator] {
+/* The sliding pill indicator behind the active tab — SCOPED TO THE NAV. The
+   component is generic chrome (comments tabs, filter rows) and sets its own
+   radius through an inline `style` prop; an author-important declaration
+   outranks a non-important inline style, so a blanket 999px here silently
+   discarded every caller's borderRadius and turned indicators that sit behind
+   `rounded-lg` buttons into full pills. */
+html[data-theme='osaka'] :is([data-feed-nav], [data-side-panel-tabs]) [data-glass-indicator] {
   border-radius: var(--osaka-r-chip) !important;
   background: rgb(var(--osaka-neon) / 0.14) !important;
   box-shadow:
     inset 0 0 0 1px rgb(var(--osaka-neon) / 0.3),
     0 0 12px rgb(var(--osaka-neon) / 0.2) !important;
+}
+
+/* Everywhere else: same accent, no bloom, and the caller keeps its shape. */
+html[data-theme='osaka'] [data-glass-indicator] {
+  background: rgb(var(--osaka-neon) / 0.12) !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--osaka-neon) / 0.26) !important;
 }
 
 /* ==========================================================================
@@ -145,10 +173,131 @@ html[data-theme='osaka'] [data-filter-chip][data-active='true'] {
     0 0 10px rgb(var(--osaka-neon) / 0.16) !important;
 }
 
+/* Side-panel tab strip. It is the full width of the panel's top edge, so a
+   fill and a ring on it read as a second box stacked on the panel — the panel
+   already IS the surface. A single hairline under the row is enough to say
+   "these are tabs", and the active tab says the rest. */
 html[data-theme='osaka'] [data-side-panel-tabs] {
-  border-radius: var(--osaka-r-chip) !important;
-  background: rgb(var(--osaka-void) / 0.5) !important;
-  box-shadow: inset 0 0 0 1px rgb(var(--osaka-mist) / 0.07) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: inset 0 -1px 0 rgb(var(--osaka-mist) / 0.08) !important;
+}
+
+/* The active/hover washes ship as `bg-gradient-to-b from-zinc-800/*`, which is
+   a dark grey block on glass. index.css flips them to a white radial for the
+   canvas themes; Osaka takes the accent instead, fading out on every side so
+   the tab never squares off. */
+html[data-theme='osaka'] [data-side-panel-tabs] [data-active-tab-indicator] {
+  background: radial-gradient(
+    140% 120% at 50% 0%,
+    rgb(var(--osaka-neon) / 0.16),
+    transparent 72%
+  ) !important;
+  box-shadow: inset 0 -2px 0 rgb(var(--osaka-neon) / 0.55) !important;
+}
+html[data-theme='osaka'] [data-side-panel-tabs] .tab-hover-bg {
+  background: radial-gradient(
+    140% 120% at 50% 0%,
+    rgb(var(--osaka-mist) / 0.07),
+    transparent 72%
+  ) !important;
+}
+html[data-theme='osaka'] [data-side-panel-tabs] [data-tab-btn][data-tab-active='true'] {
+  color: rgb(var(--osaka-neon)) !important;
+}
+
+/* ==========================================================================
+   3b. SIDE PANELS - the panel background is the surface
+   ==========================================================================
+   Reported as: "side panels are ugly and have blocks on the lists of names
+   when it should be clear and the side panel background is enough."
+
+   That is the correct instinct and it is also the shared design-system rule
+   the other canvas themes already follow: ONE frosted surface per column, and
+   everything inside it is type, avatars and hairlines. The section 11 net used
+   to reach inside and paint each row; now that it stops at the door, this
+   section keeps the inside honest.
+   ========================================================================== */
+
+/* Rows: no fill at rest, a faint accent wash on hover, nothing else. Covers
+   the leaderboard, who-to-follow, trending, chat and every "view all" row —
+   they are all `hover:bg-*` rows, so one rule reaches all of them. */
+html[data-theme='osaka'] #app-root [data-side-panel] :is(a, button, li, [role='listitem'])[class*=':bg-'] {
+  background-color: transparent !important;
+  background-image: none !important;
+  transition: background-color 160ms ease;
+}
+html[data-theme='osaka'] #app-root [data-side-panel] :is(a, button, li, [role='listitem'])[class*=':bg-']:hover {
+  background-color: rgb(var(--osaka-neon) / 0.08) !important;
+}
+
+/* Avatar fallbacks and rank chips ship solid zinc discs. On glass they read as
+   grey holes; the wash keeps them as placeholders without punching through. */
+html[data-theme='osaka'] #app-root
+  :is([data-side-panel], [data-mobile-header], [data-bottom-nav])
+  :is(
+    [class^='bg-zinc-7'], [class*=' bg-zinc-7'],
+    [class^='bg-zinc-6'], [class*=' bg-zinc-6']
+  ) {
+  background-color: rgb(var(--osaka-mist) / 0.1) !important;
+}
+
+/* The "view all" capsule. index.css paints it white-on-white glass for the
+   canvas themes, which is the one loud chip in an otherwise quiet column. */
+html[data-theme='osaka'] #app-root [data-side-panel] [data-view-all] .backdrop-blur-xl {
+  background-image: none !important;
+  background-color: rgb(var(--osaka-neon) / 0.12) !important;
+  border: 1px solid rgb(var(--osaka-neon) / 0.28) !important;
+  box-shadow: none !important;
+  color: rgb(var(--osaka-neon)) !important;
+}
+
+/* The left rail's nav icon tiles. Every row draws a `bg-zinc-800` (or
+   `lg:bg-zinc-800` when expanding) square behind its icon — twelve grey chips
+   stacked down a glass column, which is the left-hand half of the same report.
+   The active item already has its own indicator and the row already washes on
+   hover, so the tile has no work left to do: it goes away. */
+html[data-theme='osaka'] #app-root
+  [data-side-panel]
+  :is(a, button)
+  > :is(
+    [class^='bg-zinc-8'], [class*=' bg-zinc-8'], [class*='lg:bg-zinc-8'],
+    [class^='bg-zinc-7'], [class*=' bg-zinc-7']
+  ) {
+  background-color: transparent !important;
+}
+
+/* The active nav item's indicator ships as white glass
+   (`from-white/20 via-white/10 border-white/30`), which on this palette is the
+   one pure-white object on screen. Same shape, Osaka's sign colour. */
+html[data-theme='osaka'] #app-root [data-sidebar-active-indicator] {
+  background: rgb(var(--osaka-neon) / 0.14) !important;
+  border-color: rgb(var(--osaka-neon) / 0.32) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(var(--osaka-mist) / 0.18),
+    0 0 12px rgb(var(--osaka-neon) / 0.16) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Unread counters are a COUNT, not an alert, so they resolve to the accent
+   rather than to --osaka-alert — and they need a solid fill, because the
+   palette lock's translucent wash leaves a two-digit badge unreadable over
+   whatever is behind the panel. Near-void text, same reasoning as the CTA. */
+html[data-theme='osaka'] #app-root
+  :is([data-side-panel], [data-mobile-header], [data-bottom-nav])
+  :is(
+    [class^='bg-red-5'], [class*=' bg-red-5'],
+    [class^='bg-red-6'], [class*=' bg-red-6']
+  ):not([data-keep-dark]):not([data-media-full]):not(
+    /* An opacity modifier means a TINTED WELL, not a count chip: the live-stage
+       rows use `bg-red-500/20` behind a Radio glyph. Forcing those to a solid
+       accent square puts alert-red on sakura-pink at about 1.4:1 and lights up
+       a column the theme wants quiet. Solid steps only. */
+    :where([class*='bg-red-500/'], [class*='bg-red-600/'], [data-live-pulse])
+  ) {
+  background-color: rgb(var(--osaka-neon)) !important;
+  color: rgb(var(--osaka-void)) !important;
 }
 
 /* ==========================================================================
@@ -173,18 +322,67 @@ html[data-theme='osaka'] [data-mobile-header][data-scrolled='true'] {
   background: rgb(var(--osaka-void) / 0.9) !important;
 }
 
+/* [data-bottom-nav] is the FULL-WIDTH fixed wrapper (`left-0 right-0 p-2`), not
+   the pill — the pill is the `max-w-[72%] rounded-2xl` <nav> inside it. Painting
+   the wrapper drew an edge-to-edge slate bar across the bottom of every mobile
+   screen with a neon hairline running the whole viewport width, and left the
+   pill floating invisibly inside it on its own `bg-zinc-900/10`. Exactly the
+   mistake section 2 warns about for [data-feed-nav-outer], and the same split
+   war-theme.css makes. The wrapper stays invisible; the pill is the surface. */
 html[data-theme='osaka'] [data-bottom-nav] {
-  background: rgb(var(--osaka-slate) / 0.72) !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+
+html[data-theme='osaka'] [data-bottom-nav] > nav {
+  border-radius: var(--osaka-r-panel) !important;
+  background:
+    var(--osaka-bleed),
+    rgb(var(--osaka-slate) / 0.72) !important;
   backdrop-filter: var(--osaka-blur) !important;
   -webkit-backdrop-filter: var(--osaka-blur) !important;
   border-color: transparent !important;
   box-shadow:
-    inset 0 1px 0 rgb(var(--osaka-mist) / 0.12),
-    inset 0 2px 0 rgb(var(--osaka-neon) / 0.1) !important;
+    inset 0 0 0 1px rgb(var(--osaka-mist) / 0.1),
+    inset 0 1.5px 0 rgb(var(--osaka-mist) / 0.2),
+    inset 0 -1px 0 rgb(var(--osaka-neon) / 0.16),
+    0 10px 34px rgb(4 2 10 / 0.5) !important;
 }
 
-html[data-theme='osaka'] [data-bottom-nav] [data-active='true'] {
+/* The active tab. This used to key off [data-active='true'], which the bottom
+   nav never publishes — it was dead CSS, and the current page was marked only
+   by a hard-coded WHITE drop-shadow, the one pure-white object left in the
+   chrome of a pink-accent theme. NavLink emits aria-current, so read that. */
+html[data-theme='osaka'] [data-bottom-nav] :is([data-active='true'], a[aria-current='page']) {
   color: rgb(var(--osaka-neon)) !important;
+}
+html[data-theme='osaka'] [data-bottom-nav] a[aria-current='page'] svg {
+  color: rgb(var(--osaka-neon)) !important;
+  filter: drop-shadow(0 0 10px rgb(var(--osaka-neon) / 0.6)) !important;
+}
+html[data-theme='osaka'] [data-bottom-nav] a:not([aria-current='page']):hover svg {
+  filter: drop-shadow(0 0 8px rgb(var(--osaka-neon) / 0.35)) !important;
+}
+
+/* The create (+) bubble. Its white glass is set as an INLINE style
+   (backgroundColor + backdropFilter in MobileBottomNav), so a stylesheet can
+   only reach it with !important — which is why it stayed the one colourless
+   control in a bar the theme otherwise owns, sitting dead centre. */
+html[data-theme='osaka'] [data-bottom-nav]
+  :is([class^='border-white/30'], [class*=' border-white/30']) {
+  background-color: rgb(var(--osaka-neon) / 0.18) !important;
+  border-color: rgb(var(--osaka-neon) / 0.42) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(var(--osaka-mist) / 0.22),
+    0 0 12px rgb(var(--osaka-neon) / 0.22) !important;
+}
+/* The glyph's colour is inline too. */
+html[data-theme='osaka'] [data-bottom-nav] button[aria-label='Create post'] svg {
+  color: rgb(var(--osaka-mist)) !important;
+  stroke: rgb(var(--osaka-mist)) !important;
 }
 
 /* ==========================================================================
@@ -219,7 +417,18 @@ html[data-theme='osaka'] [data-vaul-drawer] {
   box-shadow: var(--osaka-edge-lift) !important;
 }
 
-html[data-theme='osaka'] :is([data-post-modal], [data-login-modal]) {
+/* Only two tagged modals were listed here, but ui/dialog.tsx ships every
+   generic dialog in the app as `bg-zinc-900/80 border-zinc-700/50` — grey, not
+   violet, with a visible grey hairline — and nothing reached it: the tag list
+   missed it and the #app-root rules cannot see a portal. So every confirm,
+   every picker and every sheet opened out of palette. The role list below is
+   the same one War settled on for this app. */
+html[data-theme='osaka']
+  :is(
+    [data-post-modal], [data-login-modal],
+    [data-comments-wrapper], [data-profile-hover-card],
+    [data-ai-chat], [data-country-block-drawer], [data-chart-pip]
+  ):not([data-keep-dark]) {
   border-radius: var(--osaka-r-panel) !important;
   background:
     var(--osaka-bleed),
@@ -228,6 +437,32 @@ html[data-theme='osaka'] :is([data-post-modal], [data-login-modal]) {
   -webkit-backdrop-filter: var(--osaka-blur) !important;
   border-color: transparent !important;
   box-shadow: var(--osaka-edge-lift) !important;
+}
+
+/* Generic Radix dialogs. Same paint, but the RADIUS IS LEFT ALONE: ui/dialog
+   is a bottom sheet below sm (`rounded-t-[20px]`, flush to the viewport floor)
+   and a centred card above it (`sm:rounded-2xl`). Both are already round, and
+   forcing one value on all four corners would put a visible notch under the
+   mobile sheet where it meets the bottom of the screen.
+   [data-vaul-drawer] also carries role=dialog and has its own rule above; this
+   would otherwise outrank it and square off its top-only radius. */
+html[data-theme='osaka']
+  :is([role='dialog'], [role='alertdialog']):not([data-keep-dark]):not([data-vaul-drawer]) {
+  background:
+    var(--osaka-bleed),
+    rgb(var(--osaka-slate) / 0.95) !important;
+  backdrop-filter: var(--osaka-blur) !important;
+  -webkit-backdrop-filter: var(--osaka-blur) !important;
+  border-color: transparent !important;
+  box-shadow: var(--osaka-edge-lift) !important;
+}
+
+/* Media viewers keep their dark shell — house rule 4. A photo opened full
+   screen does not get a violet frame and a neon lip. */
+html[data-theme='osaka'] :is([role='dialog'], [role='alertdialog'])[data-keep-dark] {
+  background: rgb(var(--osaka-void) / 0.86) !important;
+  border-color: transparent !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--osaka-mist) / 0.08) !important;
 }
 
 html[data-theme='osaka'] [data-sonner-toast] {
@@ -251,6 +486,255 @@ html[data-theme='osaka'] [data-vaul-overlay] {
   -webkit-backdrop-filter: blur(6px) !important;
 }
 
+/* --------------------------------------------------------------------------
+   5b. The palette does not stop at the portal boundary.
+
+   Sections 12, 13 and 14 are all scoped to `#app-root`, which is exactly what
+   a portal is NOT inside. So the shells above were themed while their contents
+   kept shipping raw Tailwind: a red destructive row in a dropdown, a green
+   "connected" pill in a dialog, a square-cornered menu item. The theme looked
+   finished until you opened something.
+
+   Same role mapping as section 12, same variant guards, one portal-root list.
+   -------------------------------------------------------------------------- */
+
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-sonner-toaster])
+  :is(
+    [class^='text-pink-'], [class*=' text-pink-'],
+    [class^='text-fuchsia-'], [class*=' text-fuchsia-'],
+    [class^='text-violet-'], [class*=' text-violet-'],
+    [class^='text-purple-'], [class*=' text-purple-']
+  ):not([data-keep-dark]) {
+  color: rgb(var(--osaka-neon)) !important;
+}
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-sonner-toaster])
+  :is(
+    [class^='text-emerald-'], [class*=' text-emerald-'],
+    [class^='text-green-'], [class*=' text-green-'],
+    [class^='text-teal-'], [class*=' text-teal-']
+  ):not([data-keep-dark]) {
+  color: rgb(var(--osaka-cyan)) !important;
+}
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-sonner-toaster])
+  :is(
+    [class^='text-blue-'], [class*=' text-blue-'],
+    [class^='text-indigo-'], [class*=' text-indigo-'],
+    [class^='text-cyan-'], [class*=' text-cyan-'],
+    [class^='text-sky-'], [class*=' text-sky-']
+  ):not([data-keep-dark]) {
+  color: rgb(var(--osaka-cyan) / 0.82) !important;
+}
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-sonner-toaster])
+  :is(
+    [class^='text-amber-'], [class*=' text-amber-'],
+    [class^='text-yellow-'], [class*=' text-yellow-'],
+    [class^='text-orange-'], [class*=' text-orange-']
+  ):not([data-keep-dark]) {
+  color: rgb(var(--osaka-amber)) !important;
+}
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-sonner-toaster])
+  :is(
+    [class^='text-red-'], [class*=' text-red-'],
+    [class^='text-rose-'], [class*=' text-rose-']
+  ):not([data-keep-dark]) {
+  color: rgb(var(--osaka-alert)) !important;
+}
+
+/* Neutral text inside portals, on the same two-role scale as section 13. */
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-sonner-toaster])
+  :is(
+    [class^='text-zinc-3'], [class*=' text-zinc-3'],
+    [class^='text-zinc-4'], [class*=' text-zinc-4'],
+    [class^='text-zinc-5'], [class*=' text-zinc-5']
+  ):not([data-keep-dark]) {
+  color: rgb(var(--osaka-haze)) !important;
+}
+
+/* The white-depth scale, ported into the portal scope. Section 13 owns it under
+   #app-root, which a portal is by definition not inside — so every drawer,
+   dialog and toast in the app was rendering `text-white/40` as full-strength
+   pure white while the copy beside it sat at mist. The floor is the same: below
+   60% the token stops clearing AA on this fill. */
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-sonner-toaster])
+  :is([class~='text-white']):not([data-keep-dark]) {
+  color: rgb(var(--osaka-mist)) !important;
+}
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-sonner-toaster])
+  :is([class~='text-white/90'], [class~='text-white/80']):not([data-keep-dark]) {
+  color: rgb(var(--osaka-mist) / 0.86) !important;
+}
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-sonner-toaster])
+  :is([class~='text-white/70'], [class~='text-white/60']):not([data-keep-dark]) {
+  color: rgb(var(--osaka-mist) / 0.72) !important;
+}
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-sonner-toaster])
+  :is(
+    [class~='text-white/50'], [class~='text-white/40'], [class~='text-white/30'],
+    [class~='text-white/20'], [class~='text-white/10']
+  ):not([data-keep-dark]) {
+  color: rgb(var(--osaka-mist) / 0.6) !important;
+}
+
+/* The background/border half of the palette lock. Section 12 is #app-root-only,
+   so a Delete confirm inside a drawer kept full-strength Tailwind red-600 while
+   the same button on a page was a wash — and a validity chip ended up with
+   osaka's salmon text on Tailwind red at 10% inside a red-500 stroke: three
+   unrelated reds in one 40px chip. */
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-sonner-toaster])
+  :is(
+    [class^='bg-red-'], [class*=' bg-red-'],
+    [class^='bg-rose-'], [class*=' bg-rose-']
+  ):not([data-keep-dark]):not([data-live-pulse]) {
+  background-color: rgb(var(--osaka-alert) / 0.2) !important;
+}
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-sonner-toaster])
+  :is(
+    [class^='border-red-'], [class*=' border-red-'],
+    [class^='border-rose-'], [class*=' border-rose-']
+  ):not([data-keep-dark]) {
+  border-color: rgb(var(--osaka-alert) / 0.45) !important;
+}
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-sonner-toaster])
+  :is(
+    [class^='bg-emerald-'], [class*=' bg-emerald-'],
+    [class^='bg-green-'], [class*=' bg-green-'],
+    [class^='bg-teal-'], [class*=' bg-teal-']
+  ):not([data-keep-dark]) {
+  background-color: rgb(var(--osaka-cyan) / 0.14) !important;
+}
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-sonner-toaster])
+  :is(
+    [class^='bg-pink-'], [class*=' bg-pink-'],
+    [class^='bg-fuchsia-'], [class*=' bg-fuchsia-'],
+    [class^='bg-violet-'], [class*=' bg-violet-'],
+    [class^='bg-purple-'], [class*=' bg-purple-']
+  ):not([data-keep-dark]):not([data-primary-cta]) {
+  background-color: rgb(var(--osaka-neon) / 0.16) !important;
+}
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-sonner-toaster])
+  :is(
+    [class^='bg-amber-'], [class*=' bg-amber-'],
+    [class^='bg-yellow-'], [class*=' bg-yellow-'],
+    [class^='bg-orange-'], [class*=' bg-orange-']
+  ):not([data-keep-dark]) {
+  background-color: rgb(var(--osaka-amber) / 0.16) !important;
+}
+
+/* Solid white controls inside a portal. There is no `bg-white` arm anywhere in
+   sections 11-13, so a selected filter chip, a calendar's selected day and any
+   hand-rolled `bg-white text-black` confirm all rendered as the single
+   brightest object on screen — louder than the theme's own primary action,
+   inside a violet drawer. `[class~=]` is a whole-token match, so `bg-white/10`
+   and friends keep their own alpha. */
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-sonner-toaster])
+  :is(button, a, [role='button'], [role='gridcell'])[class~='bg-white']:not([data-keep-dark]):not([data-keep-white]) {
+  background-color: rgb(var(--osaka-neon)) !important;
+  background-image: none !important;
+  color: rgb(var(--osaka-void)) !important;
+}
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-sonner-toaster])
+  :is(button, a, [role='button'], [role='gridcell'])[class~='bg-white']:not([data-keep-dark]):not([data-keep-white]) * {
+  color: rgb(var(--osaka-void)) !important;
+}
+
+/* Zinc slabs inside portals (menu separators, section headers, inset cards). */
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
+  :is(
+    [class^='bg-zinc-9'], [class*=' bg-zinc-9'],
+    [class^='bg-zinc-8'], [class*=' bg-zinc-8'],
+    /* zinc-7/6 are the avatar-initials step and zinc-5 the drag handle; without
+       them a recipient with no photo is a solid grey disc inside the share
+       sheet, which is the one thing the in-panel avatar wash exists to stop. */
+    [class^='bg-zinc-7'], [class*=' bg-zinc-7'],
+    [class^='bg-zinc-6'], [class*=' bg-zinc-6'],
+    [class^='bg-zinc-5'], [class*=' bg-zinc-5']
+  ):not(
+    :where(
+      [data-keep-dark], [data-keep-dark] *,
+      [data-media-full], [data-media-full] *,
+      /* Same tagged roles as the app-scoped net — a form lives in a dialog at
+         least as often as it lives in a page, and a switch thumb repainted to
+         6% white inside a drawer is a switch with no visible state. */
+      [data-switch-track], [data-switch-thumb], [data-select-trigger],
+      [data-slider-track], [data-slider-range], [data-slider-thumb],
+      [role='checkbox'], [role='radio']
+    )
+  ) {
+  background-color: rgb(var(--osaka-mist) / 0.06) !important;
+}
+
+/* House rule 3 reaches inside portals too — a square menu item inside a
+   round-cornered menu is the tell that the theme stopped at the shell. */
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer])
+  :is(
+    [class^='rounded-none'], [class*=' rounded-none'],
+    [class^='rounded-sm'], [class*=' rounded-sm']
+  ):not([data-keep-square]):not([data-media-full]) {
+  border-radius: var(--osaka-r-input) !important;
+}
+
+/* Menu / select / command rows: the armed state, in the accent. */
+html[data-theme='osaka'] [data-radix-popper-content-wrapper] [data-highlighted],
+html[data-theme='osaka'] [data-radix-popper-content-wrapper] [data-state='checked'],
+html[data-theme='osaka'] [cmdk-item][data-selected='true'] {
+  background-color: rgb(var(--osaka-neon) / 0.14) !important;
+  color: rgb(var(--osaka-neon)) !important;
+  border-radius: var(--osaka-r-input) !important;
+}
+
+/* Inputs inside portals never reached section 7 either — the login modal, the
+   composer and every confirm dialog were still shipping the base design
+   system's `bg-background` field. */
+html[data-theme='osaka']
+  :is([role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-radix-popper-content-wrapper])
+  :is(input, textarea, select):not([data-keep-dark]):not(
+    :where(
+      [class^='bg-transparent'], [class*=' bg-transparent'],
+      /* A validity border is information, not decoration — neutralising it to
+         transparent is how the username field lost its taken/available state. */
+      [class*='border-green-'], [class*='border-emerald-'],
+      [class*='border-red-'], [class*='border-rose-'], [class*='border-amber-']
+    )
+  ) {
+  border-radius: var(--osaka-r-input) !important;
+  background: rgb(var(--osaka-void) / 0.45) !important;
+  border-color: transparent !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--osaka-mist) / 0.1) !important;
+  color: rgb(var(--osaka-mist)) !important;
+}
+html[data-theme='osaka']
+  :is([role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-radix-popper-content-wrapper])
+  :is(input, textarea, select):not([data-keep-dark]):not(:where([class^='bg-transparent'], [class*=' bg-transparent'])):focus {
+  outline: none !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--osaka-neon) / 0.55),
+    0 0 0 3px rgb(var(--osaka-neon) / 0.14) !important;
+}
+html[data-theme='osaka']
+  :is([role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-radix-popper-content-wrapper])
+  ::placeholder {
+  color: rgb(var(--osaka-haze) / 0.75) !important;
+}
+
 /* ==========================================================================
    6. LIST ROWS, POLLS, COMMENTS
    ==========================================================================
@@ -265,9 +749,32 @@ html[data-theme='osaka'] :is([data-notification-row], [data-poll-card], [data-co
   box-shadow: inset 0 0 0 1px rgb(var(--osaka-mist) / 0.07) !important;
 }
 
-html[data-theme='osaka'] [data-notification-row][data-active='true'] {
+/* [data-unread], not [data-active]: the notifications page publishes the former
+   and nothing publishes the latter, so this was dead CSS and every row — read
+   and unread alike — rendered the identical slate/0.5, leaving the page with no
+   unread affordance at all. index.css and war-theme.css both read data-unread. */
+html[data-theme='osaka'] #app-root [data-notification-row][data-unread] {
   background: rgb(var(--osaka-neon) / 0.09) !important;
   box-shadow: inset 2px 0 0 rgb(var(--osaka-neon) / 0.5) !important;
+}
+html[data-theme='osaka'] #app-root [data-notification-row][data-unread]:hover {
+  background: rgb(var(--osaka-neon) / 0.14) !important;
+}
+
+/* Count badges and presence dots are semantic solids, not decoration — the
+   palette lock's 20% wash leaves a two-digit counter unreadable and a presence
+   dot indistinguishable from the row it sits on. */
+html[data-theme='osaka'] #app-root [data-count-badge] {
+  background-color: rgb(var(--osaka-neon)) !important;
+  border-color: transparent !important;
+}
+html[data-theme='osaka'] #app-root [data-count-badge] * {
+  color: rgb(var(--osaka-void)) !important;
+}
+html[data-theme='osaka'] #app-root [data-status-dot] {
+  background-color: rgb(var(--osaka-cyan)) !important;
+  border-color: transparent !important;
+  box-shadow: 0 0 6px rgb(var(--osaka-cyan) / 0.5) !important;
 }
 
 /* ==========================================================================
@@ -308,6 +815,30 @@ html[data-theme='osaka'] [data-primary-cta]:active {
   transform: translateY(1px);
 }
 
+/* Hand-rolled primary actions. Only two elements in the app carry
+   [data-primary-cta], but the pattern it exists for — `bg-white text-black` on
+   a button — ships on dozens of pages, and every one of them rendered as the
+   single loudest, whitest object in a theme whose whole claim is one neon
+   accent. Same narrow selector War settled on: real controls only, whole-token
+   match so `bg-white/10` glass keeps its alpha, and [data-keep-white] opts out.
+   Deliberately quieter than [data-primary-cta] itself — a tagged CTA still
+   outranks this and still gets the bloom. */
+html[data-theme='osaka'] #app-root
+  :is(button, a, [role='button']):is([class~='bg-white'], [class*=' bg-white/9'], [class^='bg-white/9']):not(
+    :where([data-keep-white], [data-keep-dark], [data-primary-cta], [data-switch-track], [data-glass-indicator])
+  ) {
+  background-color: rgb(var(--osaka-neon)) !important;
+  background-image: none !important;
+  color: rgb(var(--osaka-void)) !important;
+  border-color: transparent !important;
+}
+html[data-theme='osaka'] #app-root
+  :is(button, a, [role='button']):is([class~='bg-white'], [class*=' bg-white/9'], [class^='bg-white/9']):not(
+    :where([data-keep-white], [data-keep-dark], [data-primary-cta], [data-switch-track], [data-glass-indicator])
+  ) * {
+  color: rgb(var(--osaka-void)) !important;
+}
+
 html[data-theme='osaka'] [data-follow-btn] {
   border-radius: var(--osaka-r-chip) !important;
   border-color: transparent !important;
@@ -320,24 +851,185 @@ html[data-theme='osaka'] [data-follow-btn]:hover {
   background: rgb(var(--osaka-neon) / 0.22) !important;
 }
 
+/* "Following" is the same control in its done state, so it stays the same
+   shape and drops to a stroke: an accent chip that cannot be clicked reads as
+   a broken button. --osaka-veil is legal here — it is a disabled glyph, not
+   copy (see the contrast table in osaka-frame.css section 1). */
+html[data-theme='osaka'] #app-root [data-follow-btn][disabled] {
+  background: rgb(var(--osaka-mist) / 0.06) !important;
+  background-image: none !important;
+  color: rgb(var(--osaka-veil)) !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--osaka-mist) / 0.08) !important;
+}
+
 /* Inputs. The focus ring is the accent, and it is a ring rather than a glow:
-   a blooming input is genuinely harder to type in. */
-html[data-theme='osaka'] #app-root :is(input, textarea, select):not([data-keep-dark]) {
+   a blooming input is genuinely harder to type in.
+
+   ONE EXCLUSION, and it is the whole "the text line doesn't line up with the
+   box" bug: an input that is NOT its own box. Roughly 55 files ship a field as
+   `bg-transparent border-none p-0` inside a wrapper that draws the box — the
+   chat composer, the story caption, every search shell. Painting a second fill
+   and a second 12px ring inside a wrapper that already has its own radius and
+   its own padding puts a smaller rounded rectangle somewhere in the middle of
+   the visible field, offset from it on every side. Those fields stay clear and
+   the WRAPPER carries the theme (see the focus-within rule below). */
+html[data-theme='osaka'] #app-root
+  :is(input, textarea, select):not([data-keep-dark]):not(
+    :where(
+      [class^='bg-transparent'], [class*=' bg-transparent'],
+      /* A validity border is information, not decoration — neutralising it to
+         transparent is how the username field lost its taken/available state. */
+      [class*='border-green-'], [class*='border-emerald-'],
+      [class*='border-red-'], [class*='border-rose-'], [class*='border-amber-']
+    )
+  ) {
+  border-radius: var(--osaka-r-input) !important;
+  background: rgb(var(--osaka-void) / 0.45) !important;
+  border-color: transparent !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--osaka-mist) / 0.1) !important;
+  color: rgb(var(--osaka-mist)) !important;
+  /* A field is never its own glass surface. Without this the untagged-page net
+     leaves a blur(26px) on every input, so a nine-field form nests nine
+     compositing layers inside an already-frosted card and each one flattens. */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html[data-theme='osaka'] #app-root
+  :is(input, textarea, select):not([data-keep-dark]):not(:where([class^='bg-transparent'], [class*=' bg-transparent'])):focus,
+html[data-theme='osaka'] #app-root
+  :is(input, textarea, select):not([data-keep-dark]):not(:where([class^='bg-transparent'], [class*=' bg-transparent'])):focus-visible {
+  outline: none !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--osaka-neon) / 0.55),
+    0 0 0 3px rgb(var(--osaka-neon) / 0.14) !important;
+}
+
+/* Fields whose WRAPPER is the box.
+   [data-search-bento] is already glass from the shared block in index.css, and
+   index.css already clears the input inside it — but that rule carries no ID
+   and the block above does, so without this the theme re-painted the very
+   surface index.css had just cleared.
+
+   [data-search-bento] is repeated so this beats the block above on specificity
+   rather than on source order: the block above carries two :not()s, which puts
+   it at (1,3,2) against a single-attribute (1,2,2), and it would otherwise win
+   outright. Same doubling trick `main.bg-black.bg-black` uses in section 11. */
+html[data-theme='osaka'] #app-root [data-search-bento][data-search-bento] :is(input, textarea, select),
+html[data-theme='osaka'] #app-root
+  :is(input, textarea, select):is([class^='bg-transparent'], [class*=' bg-transparent']) {
+  background: transparent !important;
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  color: rgb(var(--osaka-mist)) !important;
+}
+
+/* …and the focus ring moves with it, onto the box the user actually sees. */
+html[data-theme='osaka'] #app-root [data-search-bento]:focus-within {
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--osaka-neon) / 0.5),
+    0 0 0 3px rgb(var(--osaka-neon) / 0.12) !important;
+}
+
+/* ==========================================================================
+   7c. FORM CONTROLS THAT SHIP shadcn SEMANTIC TOKENS
+   ==========================================================================
+   Input and Textarea use the zinc scale, so section 7 reaches them. Select,
+   Checkbox, Switch and Slider do not: they ship `bg-background`,
+   `border-input`, `bg-primary` — tokens whose values come from the base design
+   system and which no class net in this file has any arm for. With no `.dark`
+   on <html> those resolve to WHITE and near-black, so each of these rendered
+   as a light-mode control dropped into a violet night:
+
+     Select      an opaque white 6px slab beside two dark 12px fields
+     Checkbox    a near-black hairline on a near-black panel, about 1.2:1
+     Switch      a 6%-white thumb on a pure-white track — no on/off state
+     Slider      `bg-primary` fill DARKER than its own track, so the control
+                 reads inverted: full on the right, empty on the left
+
+   Each one now carries a hook, so the theme owns it outright instead of
+   guessing at its class list. Both scopes, because forms live in dialogs at
+   least as often as they live in pages.
+   ========================================================================== */
+
+html[data-theme='osaka'] #app-root [data-select-trigger],
+html[data-theme='osaka']
+  :is([role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-radix-popper-content-wrapper])
+  [data-select-trigger] {
   border-radius: var(--osaka-r-input) !important;
   background: rgb(var(--osaka-void) / 0.45) !important;
   border-color: transparent !important;
   box-shadow: inset 0 0 0 1px rgb(var(--osaka-mist) / 0.1) !important;
   color: rgb(var(--osaka-mist)) !important;
 }
-
-html[data-theme='osaka'] #app-root
-  :is(input, textarea, select):not([data-keep-dark]):focus,
-html[data-theme='osaka'] #app-root
-  :is(input, textarea, select):not([data-keep-dark]):focus-visible {
-  outline: none !important;
+html[data-theme='osaka'] #app-root [data-select-trigger]:focus,
+html[data-theme='osaka'] #app-root [data-select-trigger][data-state='open'] {
   box-shadow:
     inset 0 0 0 1px rgb(var(--osaka-neon) / 0.55),
     0 0 0 3px rgb(var(--osaka-neon) / 0.14) !important;
+}
+
+/* 5px, not the 12px input radius: on a 16px box the UA clamps 12px to 8px and
+   a checkbox becomes indistinguishable from the radio beside it. */
+html[data-theme='osaka'] #app-root [role='checkbox'],
+html[data-theme='osaka']
+  :is([role='dialog'], [role='alertdialog'], [data-vaul-drawer]) [role='checkbox'] {
+  border-radius: 5px !important;
+  border-color: rgb(var(--osaka-mist) / 0.35) !important;
+  background-color: transparent !important;
+}
+html[data-theme='osaka'] #app-root [role='checkbox'][data-state='checked'],
+html[data-theme='osaka']
+  :is([role='dialog'], [role='alertdialog'], [data-vaul-drawer]) [role='checkbox'][data-state='checked'] {
+  background-color: rgb(var(--osaka-neon)) !important;
+  border-color: rgb(var(--osaka-neon)) !important;
+  color: rgb(var(--osaka-void)) !important;
+}
+
+html[data-theme='osaka'] [data-switch-track] {
+  border-radius: var(--osaka-r-chip) !important;
+  background-color: rgb(var(--osaka-mist) / 0.14) !important;
+}
+html[data-theme='osaka'] [data-switch-track][data-state='checked'] {
+  background-color: rgb(var(--osaka-neon) / 0.6) !important;
+}
+html[data-theme='osaka'] [data-switch-thumb] {
+  border-radius: var(--osaka-r-chip) !important;
+  background-color: rgb(var(--osaka-mist)) !important;
+}
+html[data-theme='osaka'] [data-switch-track][data-state='checked'] [data-switch-thumb] {
+  background-color: rgb(var(--osaka-void)) !important;
+}
+
+/* The calendar's selected day hard-codes `!bg-white !text-black`, and the `!`
+   prefix means the token is literally `!bg-white` — so a whole-token match on
+   `bg-white` slides straight past it. Inside a popover that leaves a pure-white
+   disc as the loudest object on screen. */
+html[data-theme='osaka'] [data-calendar] [class*='!bg-white'] {
+  background-color: rgb(var(--osaka-neon)) !important;
+  color: rgb(var(--osaka-void)) !important;
+}
+
+html[data-theme='osaka'] [data-progress-rail] {
+  background-color: rgb(var(--osaka-mist) / 0.12) !important;
+}
+html[data-theme='osaka'] [data-progress-fill] {
+  background-color: rgb(var(--osaka-neon)) !important;
+}
+
+html[data-theme='osaka'] [data-slider-track] {
+  background-color: rgb(var(--osaka-mist) / 0.12) !important;
+}
+/* The lava variant paints its own rainbow through an inline background-image
+   and is left alone — it is the point of that variant. */
+html[data-theme='osaka'] [data-slider-range]:not([style*='linear-gradient']) {
+  background-color: rgb(var(--osaka-neon)) !important;
+}
+html[data-theme='osaka'] [data-slider-thumb] {
+  background-color: rgb(var(--osaka-mist)) !important;
+  border-color: rgb(var(--osaka-neon)) !important;
+  box-shadow: 0 0 8px rgb(var(--osaka-neon) / 0.35) !important;
 }
 
 /* Placeholder at 4.6:1 on the input fill. --osaka-veil would be 3.1:1 and is
@@ -353,13 +1045,146 @@ html[data-theme='osaka'] #app-root *:focus-visible {
 }
 
 /* ==========================================================================
+   7b. ENGAGED STATES - the sign lights up
+   ==========================================================================
+   Liked, disliked, reposted, bookmarked, pinned. War marks these with a hard
+   cyan and a fixed 6px halo; Osaka's whole palette is a wet street full of
+   signage, so its engaged glyph does what the signs in the reference photo do
+   — it sits in colour and the colour moves. The cycle runs the theme's own
+   three lit hues (neon → cyan → amber) and nothing else, so it can never
+   introduce a fourth colour into a palette-locked UI.
+
+   DELIBERATELY RESTRAINED, because this repeats on every card in the feed:
+     - only the ENGAGED glyph animates. An idle bar is completely still.
+     - 9s per revolution. Fast enough to read as alive on a card you are
+       looking at, slow enough that a screen of them is not a disco.
+     - a 5px core plus an 11px falloff, the same tight bloom [data-osaka-glow]
+       uses. A wide halo on a 20px icon just looks like a smudge.
+     - the count beside it does NOT animate. Numbers that change colour are
+       unreadable, and the glyph already carries the state.
+
+   The hook is [data-engaged], set by ActionBar and PostUtilityButtons. It
+   exists because `fill-current` — the only signal the markup had — cannot
+   express repost, which marks itself by stroke weight instead of by fill.
+   ========================================================================== */
+
+@keyframes osaka-engaged {
+  0%,
+  100% {
+    color: rgb(var(--osaka-neon));
+    filter:
+      drop-shadow(0 0 5px rgb(var(--osaka-neon) / 0.55))
+      drop-shadow(0 0 11px rgb(var(--osaka-neon) / 0.22));
+  }
+  33% {
+    color: rgb(var(--osaka-cyan));
+    filter:
+      drop-shadow(0 0 5px rgb(var(--osaka-cyan) / 0.55))
+      drop-shadow(0 0 11px rgb(var(--osaka-cyan) / 0.22));
+  }
+  66% {
+    color: rgb(var(--osaka-amber));
+    filter:
+      drop-shadow(0 0 5px rgb(var(--osaka-amber) / 0.55))
+      drop-shadow(0 0 11px rgb(var(--osaka-amber) / 0.22));
+  }
+}
+
+/* The GLYPH, never the button: dislike and repost both render their count as a
+   direct child <span> of the same button, and animating the row would drag the
+   number through the cycle too. `> svg` plus the explicitly tagged emoji glyph
+   reaches the icon and nothing else. */
+html[data-theme='osaka'] #app-root [data-engaged] > :is(svg, [data-engaged-glyph]) {
+  animation: osaka-engaged 9s ease-in-out infinite;
+  will-change: filter;
+}
+
+/* Negative delays start each role part-way into the cycle, so a card with four
+   things engaged reads as four separate signs rather than one four-glyph unit
+   flashing in step. Costs nothing — the animation is already running. */
+html[data-theme='osaka'] #app-root [data-engaged='repost'] > :is(svg, [data-engaged-glyph]) {
+  animation-delay: -1.6s;
+}
+html[data-theme='osaka'] #app-root [data-engaged='dislike'] > :is(svg, [data-engaged-glyph]) {
+  animation-delay: -3.2s;
+}
+html[data-theme='osaka'] #app-root [data-engaged='bookmark'] > :is(svg, [data-engaged-glyph]) {
+  animation-delay: -4.8s;
+}
+html[data-theme='osaka'] #app-root [data-engaged='pin'] > :is(svg, [data-engaged-glyph]) {
+  animation-delay: -6.4s;
+}
+html[data-theme='osaka'] #app-root [data-engaged='reaction'] > :is(svg, [data-engaged-glyph]) {
+  animation-delay: -0.8s;
+}
+
+/* `fill-current` follows `color`, so a liked thumb fills with whatever hue the
+   cycle is currently on rather than staying white inside a coloured outline. */
+html[data-theme='osaka'] #app-root [data-engaged] > svg.fill-current {
+  fill: currentColor;
+}
+
+/* An emoji carries its own colour, so the cycle reaches it as a halo only. */
+html[data-theme='osaka'] #app-root [data-engaged] > [data-engaged-glyph] {
+  color: inherit;
+}
+
+/* Untagged engaged glyphs elsewhere in the feed (comment likes, review votes)
+   still only have `fill-current` to go on. Same treatment, one selector. */
+html[data-theme='osaka'] #app-root
+  :is([data-feed-item], [data-comments-section], [data-post-modal])
+  button
+  > svg.fill-current:not([data-keep-dark]) {
+  animation: osaka-engaged 9s ease-in-out infinite;
+}
+
+/* A hover on an idle engagement button previews the sign without committing
+   to the cycle. */
+html[data-theme='osaka'] #app-root [data-feed-item] button:not([data-engaged]):hover > svg {
+  color: rgb(var(--osaka-neon)) !important;
+  filter: drop-shadow(0 0 5px rgb(var(--osaka-neon) / 0.35));
+  transition: color 140ms ease, filter 140ms ease;
+}
+
+/* Reduced motion keeps the state and drops the movement: it settles on the
+   accent, which is the hue the cycle spends most of its time near anyway. */
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme='osaka'] #app-root [data-engaged] > :is(svg, [data-engaged-glyph]),
+  html[data-theme='osaka'] #app-root
+    :is([data-feed-item], [data-comments-section], [data-post-modal])
+    button
+    > svg.fill-current {
+    animation: none !important;
+    color: rgb(var(--osaka-neon));
+    filter:
+      drop-shadow(0 0 5px rgb(var(--osaka-neon) / 0.55))
+      drop-shadow(0 0 11px rgb(var(--osaka-neon) / 0.22));
+  }
+}
+
+/* Forced colours: hand it all back to the user agent. */
+@media (forced-colors: active) {
+  html[data-theme='osaka'] #app-root [data-engaged] > :is(svg, [data-engaged-glyph]) {
+    animation: none !important;
+    filter: none !important;
+  }
+}
+
+/* ==========================================================================
    8. SKELETONS
    ==========================================================================
    The first paint of every route. A grey pulse under a neon theme reads as a
    broken image, so the shimmer travels in the accent instead.
    ========================================================================== */
 
-html[data-theme='osaka'] #app-root .animate-pulse,
+/* `.animate-pulse` is not only a skeleton: the right rail marks a live stage
+   with a pulsing red dot, and this rule was repainting it as a violet skeleton
+   shimmer — so the one element saying "someone is on air right now" said
+   "still loading" instead. Semantic dots are small, round and coloured; the
+   exclusions below let them keep their own pulse. */
+html[data-theme='osaka'] #app-root .animate-pulse:not([data-live-pulse]):not(
+    :where([class*='bg-red-'], [class*='bg-green-'], [class*='bg-emerald-'], [class*='bg-amber-'])
+  ),
 html[data-theme='osaka'] #app-root [class*='skeleton'] {
   background: linear-gradient(
     100deg,
@@ -368,8 +1193,32 @@ html[data-theme='osaka'] #app-root [class*='skeleton'] {
     rgb(var(--osaka-slate) / 0.6) 90%
   ) !important;
   background-size: 220% 100% !important;
-  border-radius: var(--osaka-r-card) !important;
-  animation: osaka-shimmer 1.8s ease-in-out infinite !important;
+  /* NO border-radius. A skeleton should take the shape of the thing it stands
+     in for; imposing 14px turned a grid of deliberately square collage tiles
+     into a grid of blobs that visibly changed shape the moment real images
+     loaded. Longhands, not the `animation` shorthand, because the shorthand
+     resets animation-delay to 0 with importance — which put the three bars of
+     the "now playing" equaliser into perfect lockstep, the one thing an
+     equaliser must never do. */
+  animation-name: osaka-shimmer !important;
+  animation-duration: 1.8s !important;
+  animation-timing-function: ease-in-out !important;
+  animation-iteration-count: infinite !important;
+}
+
+/* Bars INSIDE a skeleton card. They are not themselves `.animate-pulse`, so the
+   untagged-page net gave them the same slate/0.6 as the shimmer's own base —
+   identical colours, so for most of the sweep the placeholder was a blank slab
+   with no visible structure at all. */
+html[data-theme='osaka'] #app-root
+  .animate-pulse
+  :is(
+    [class^='bg-zinc-8'], [class*=' bg-zinc-8'],
+    [class^='bg-zinc-9'], [class*=' bg-zinc-9']
+  ) {
+  background-color: rgb(var(--osaka-mist) / 0.12) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 @keyframes osaka-shimmer {
@@ -382,7 +1231,7 @@ html[data-theme='osaka'] #app-root [class*='skeleton'] {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html[data-theme='osaka'] #app-root .animate-pulse,
+  html[data-theme='osaka'] #app-root .animate-pulse:not([data-live-pulse]),
   html[data-theme='osaka'] #app-root [class*='skeleton'] {
     animation: none !important;
   }
@@ -395,15 +1244,29 @@ html[data-theme='osaka'] #app-root [class*='skeleton'] {
    no blend mode, no tint, no rounding change that would crop someone's photo.
    ========================================================================== */
 
+/* The descendant arm is the ACTUAL PIXELS, not everything drawn over them. It
+   used to be `*`, which also caught the ~20 chips a media card layers on top —
+   carousel arrows, PPV/Locked badges, the soundtrack pill, the whole video
+   control bar. Every one of those is designed as blurred glass over a photo
+   (`backdrop-blur-[24px] saturate-[180%]`), and the exemption was stripping
+   exactly the blur that makes them readable. The rule exists to stop the theme
+   filtering someone's photo; a button sitting on the photo is not the photo. */
 html[data-theme='osaka'] :is([data-media-full], [data-video-controls], [data-keep-dark]),
-html[data-theme='osaka'] :is([data-media-full], [data-video-controls], [data-keep-dark]) * {
+html[data-theme='osaka']
+  :is([data-media-full], [data-video-controls], [data-keep-dark])
+  :is(img, video, canvas, picture, source, iframe, svg[data-media-glyph]) {
   filter: none !important;
   mix-blend-mode: normal !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
 }
 
-html[data-theme='osaka'] :is([data-media-full], [data-keep-dark]) {
+/* Only a MEDIA FRAME gets the opaque backing. [data-keep-dark] used to be in
+   here too, which made it useless as a general opt-out: the one hook available
+   for "don't theme me" turned every translucent overlay chip that used it into
+   a solid violet-black square over the user's photo, and killed its hover with
+   it. The hook now means what its name says and nothing more. */
+html[data-theme='osaka'] [data-media-full] {
   background-color: rgb(var(--osaka-void)) !important;
   box-shadow: none !important;
 }
@@ -438,25 +1301,270 @@ html[data-theme='osaka'] [data-theme-option][data-active='true'] {
    ==========================================================================
    Not every route carries a data-* hook. Anything still painting a raw zinc
    or neutral slab would punch an opaque hole in the alley, so those fills are
-   converted to the theme's glass wholesale. Scoped to #app-root and exempting
-   media, per house rule 4.
+   converted to the theme's glass. Scoped to #app-root and exempting media,
+   per house rule 4.
+
+   THIS IS A NET, NOT A PAINT ROLLER. Two constraints make the difference
+   between "the theme reaches the untagged routes" and "the theme puts a grey
+   block behind every name in the sidebar":
+
+   1. VARIANTS ARE NOT STATES. `[class*='bg-zinc-8']` is a substring match, so
+      it also matches `hover:bg-zinc-800/50`, `group-hover:bg-zinc-800`,
+      `focus:bg-black/40` and `lg:bg-zinc-900`. 63 elements ship
+      `hover:bg-zinc-8*` and 55 ship `hover:bg-black*` — every one of them is a
+      list row that is supposed to be INVISIBLE at rest and only wash on hover.
+      Painting them at rest is exactly the reported "blocks on the lists of
+      names".
+
+      THE MATCH USED HERE, everywhere in this file, is:
+
+          :is([class^='NAME'], [class*=' NAME'])
+
+      A class attribute is space-separated, so a RESTING token is either the
+      first one in the list or preceded by exactly one space. A variant token
+      never is — it is preceded by its `hover:` / `lg:` / `group-hover:` prefix.
+      Two attribute selectors is all it takes to tell them apart, and unlike a
+      `:not([class*=':bg-…'])` guard it stays correct for the 56 elements that
+      legitimately carry BOTH (`bg-zinc-800/50 hover:bg-zinc-800`): those have a
+      real resting fill and must still be caught.
+
+   2. NESTED GLASS IS NOT GLASS. The shared block in index.css already paints
+      [data-feed-item], [data-side-panel], [data-page-bento] and
+      [data-search-bento], and already frosts the chips inside them. Reaching
+      in to repaint their descendants stacks a second backdrop-filter inside an
+      already-frosted parent, which composites as a flat opaque rectangle —
+      the "it's all boxy" half of the same report. The net stops at the door of
+      every tagged surface.
    ========================================================================== */
 
+/* The surfaces this net must never touch. Held in :where() so it contributes
+   no specificity: the net stays weak enough for any real rule to outrank it. */
 html[data-theme='osaka'] #app-root
   :is(
-    [class*='bg-zinc-9'],
-    [class*='bg-zinc-8'],
-    [class*='bg-neutral-9'],
-    [class*='bg-neutral-8'],
-    [class*='bg-gray-9'],
-    [class*='bg-slate-9'],
-    [class*='bg-black']
-  ):not([data-keep-dark]):not([data-media-full]):not([data-video-controls]):not(
-    [data-primary-cta]
-  ):not([data-feed-nav-outer]):not([data-main-panel]) {
+    [class^='bg-zinc-9'], [class*=' bg-zinc-9'],
+    [class^='bg-zinc-8'], [class*=' bg-zinc-8'],
+    [class^='bg-neutral-9'], [class*=' bg-neutral-9'],
+    [class^='bg-neutral-8'], [class*=' bg-neutral-8'],
+    [class^='bg-gray-9'], [class*=' bg-gray-9'],
+    [class^='bg-slate-9'], [class*=' bg-slate-9'],
+    [class^='bg-black'], [class*=' bg-black'],
+    /* shadcn semantic tokens. Whole routes are built on these rather than on
+       the zinc scale — the Ads Manager is `bg-foreground/[0.03]` throughout —
+       and with no `.dark` on <html> they resolve to LIGHT values, so those
+       pages rendered as a light-mode surface dropped into a violet night. */
+    [class^='bg-foreground/'], [class*=' bg-foreground/'],
+    [class^='bg-card'], [class*=' bg-card'],
+    [class^='bg-muted'], [class*=' bg-muted'],
+    [class^='bg-popover'], [class*=' bg-popover']
+  ):not(
+    :where(
+      [data-keep-dark], [data-keep-dark] *,
+      [data-media-full], [data-media-full] *,
+      [data-video-controls], [data-video-controls] *,
+      [data-primary-cta], [data-feed-nav-outer], [data-main-panel], [data-glass-page],
+      /* Tagged roles own their own look; the net must not paint over them. */
+      [data-filter-chip], [data-follow-btn], [data-glass-indicator],
+      [data-inline-popover], [data-reaction-tray], [data-reaction-tray] *,
+      [data-comments-wrapper], [data-avatar-fallback], [data-live-badge],
+      [data-switch-track], [data-switch-thumb], [data-select-trigger],
+      [data-slider-track], [data-slider-range], [data-slider-thumb],
+      [role='checkbox'], [role='radio'],
+      [data-side-panel], [data-side-panel] *,
+      [data-feed-item], [data-feed-item] *,
+      [data-page-bento], [data-page-bento] *,
+      [data-search-bento], [data-search-bento] *,
+      [data-feed-nav], [data-feed-nav] *,
+      [data-mobile-header], [data-mobile-header] *,
+      [data-bottom-nav], [data-bottom-nav] *
+    )
+  ) {
   background-color: rgb(var(--osaka-slate) / 0.6) !important;
   backdrop-filter: var(--osaka-blur);
   -webkit-backdrop-filter: var(--osaka-blur);
+}
+
+/* House rule 3 applied to the same set: a converted slab that shipped no
+   rounded-* utility at all is still a hard rectangle floating in the alley.
+   Only fills the gap — anything with its own radius keeps it. */
+html[data-theme='osaka'] #app-root
+  :is(
+    [class^='bg-zinc-9'], [class*=' bg-zinc-9'],
+    [class^='bg-zinc-8'], [class*=' bg-zinc-8'],
+    [class^='bg-neutral-9'], [class*=' bg-neutral-9'],
+    [class^='bg-neutral-8'], [class*=' bg-neutral-8'],
+    [class^='bg-gray-9'], [class*=' bg-gray-9'],
+    [class^='bg-slate-9'], [class*=' bg-slate-9']
+  ):not([class*='rounded']):not(
+    :where(
+      [data-keep-square], [data-keep-dark], [data-keep-dark] *,
+      [data-media-full], [data-media-full] *,
+      [data-video-controls], [data-video-controls] *,
+      [data-primary-cta], [data-feed-nav-outer], [data-main-panel],
+      [data-side-panel], [data-side-panel] *,
+      [data-feed-item], [data-feed-item] *,
+      [data-page-bento], [data-page-bento] *,
+      [data-search-bento], [data-search-bento] *,
+      [data-feed-nav], [data-feed-nav] *,
+      [data-mobile-header], [data-mobile-header] *,
+      [data-bottom-nav], [data-bottom-nav] *,
+      table, thead, tbody, tr, th, td, hr
+    )
+  ) {
+  border-radius: var(--osaka-r-card);
+}
+
+/* Rows and chips INSIDE a tagged glass surface. The net above deliberately
+   stops at the door, so this is what replaces it: no second fill, no second
+   blur, no block — just the faint wash the shared block already uses, at
+   Osaka's tint. A list of names reads as names on the panel, which is the
+   whole point of the panel having a background in the first place. */
+html[data-theme='osaka'] #app-root
+  :is([data-side-panel], [data-feed-item], [data-page-bento])
+  :is(
+    [class^='bg-zinc-9'], [class*=' bg-zinc-9'],
+    [class^='bg-zinc-8'], [class*=' bg-zinc-8'],
+    [class^='bg-neutral-8'], [class*=' bg-neutral-8'],
+    [class^='bg-neutral-9'], [class*=' bg-neutral-9']
+  ):not(input):not(textarea):not(select):not(
+    :where(
+      [data-keep-dark], [data-keep-dark] *,
+      [data-media-full], [data-media-full] *,
+      /* A search field that happens to sit inside a page bento is still a
+         FIELD. Caught here it took a LIGHT 6% wash while keeping section 7's
+         dark-recess ring and neon focus, so the app's most prominent search box
+         read as a raised chip sitting on the panel — inverted against every
+         other input in the product. Section 7 owns fields, full stop. */
+      /* Floating menus and their own bound surfaces are not chips in a panel.
+         Left in, this rule dissolved the comments panel and the nine-emoji
+         reaction tray to a 6%-white wash with the blur switched off — both are
+         deliberately near-opaque precisely because arbitrary post content sits
+         behind them. */
+      [data-inline-popover], [data-notification-row],
+      [data-comments-wrapper], [data-comments-wrapper] *,
+      [data-reaction-tray], [data-reaction-tray] *,
+      [data-avatar-fallback]
+    )
+  ) {
+  background-color: rgb(var(--osaka-mist) / 0.06) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* `bg-black/*` inside a card is a different animal and must NOT get the light
+   wash above: it is almost always an overlay chip sitting ON media — a video
+   duration, a mute toggle, a LIVE pill. Those carry white text over whatever
+   the frame happens to be, so the only thing keeping them readable is that
+   they are dark. Tint them to the void instead of lightening them; the shared
+   canvas themes reach the same outcome by simply not touching bg-black. */
+html[data-theme='osaka'] #app-root
+  :is([data-side-panel], [data-feed-item], [data-page-bento])
+  :is(
+    [class^='bg-black'], [class*=' bg-black']
+  ):not(:where([data-keep-dark], [data-keep-dark] *, [data-media-full], [data-media-full] *)) {
+  background-color: rgb(var(--osaka-void) / 0.55) !important;
+}
+
+/* Hand-rolled popovers. Not every floating menu goes through Radix — the
+   right rail's country picker is plain absolutely-positioned JSX inside the
+   panel, so nothing in section 5 reached it and the in-panel chip rule below
+   treated it as a chip: a 6%-white, deliberately un-blurred popup floating over
+   both the trending list and the moving alley video, with its own border dimmed
+   to a hairline. It is a menu; it gets the menu's surface. */
+html[data-theme='osaka'] #app-root [data-inline-popover] {
+  border-radius: var(--osaka-r-card) !important;
+  background:
+    var(--osaka-bleed),
+    rgb(var(--osaka-slate) / 0.96) !important;
+  backdrop-filter: var(--osaka-blur) !important;
+  -webkit-backdrop-filter: var(--osaka-blur) !important;
+  border-color: transparent !important;
+  box-shadow: var(--osaka-edge-lift) !important;
+}
+
+/* The nine-emoji reaction tray. Not portalled — it is absolutely positioned
+   inside the card — so section 5 never saw it, and it is deliberately shipped
+   at 0.9 opacity with a blur because nine glyphs have to read against whatever
+   post is behind them. A floating menu is a portal-class surface even when it
+   is not literally in a portal. */
+html[data-theme='osaka'] #app-root [data-reaction-tray] {
+  background:
+    var(--osaka-bleed),
+    rgb(var(--osaka-slate) / 0.95) !important;
+  backdrop-filter: var(--osaka-blur) !important;
+  -webkit-backdrop-filter: var(--osaka-blur) !important;
+  border-color: transparent !important;
+  box-shadow: var(--osaka-edge-lift) !important;
+}
+
+/* Initial avatars. Every net in this file stops at zinc-800, and the app's
+   photo-less avatar is `bg-zinc-700` — so the one element in a post header that
+   was neither glass nor in the palette was a flat opaque grey tile, repeated in
+   every card, every comment row and every sidebar list. */
+html[data-theme='osaka'] #app-root [data-avatar-fallback] {
+  background-color: rgb(var(--osaka-neon) / 0.14) !important;
+  color: rgb(var(--osaka-neon)) !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--osaka-mist) / 0.1) !important;
+}
+
+/* A LIVE badge is the one place a solid semantic fill is the point. The palette
+   lock's 20% wash turned it into light-grey text floating on nothing over a
+   video scrim; amber is what osaka-frame.css designates for live/recording. */
+html[data-theme='osaka'] #app-root [data-live-badge] {
+  background-color: rgb(var(--osaka-amber)) !important;
+  color: rgb(var(--osaka-void)) !important;
+  border-radius: var(--osaka-r-chip) !important;
+}
+
+/* The unwatched-story ring hard-codes both of its gradient stops in an inline
+   `style`, so nothing in this file could reach it: under a theme built around
+   one neon accent the ring stayed pure white, sitting directly above a feed of
+   neon-railed violet cards. !important is the only thing that outranks an
+   inline style. */
+html[data-theme='osaka'] #app-root [data-story-ring][data-active='true'] {
+  background: linear-gradient(
+    135deg,
+    rgb(var(--osaka-neon) / 0.9),
+    rgb(var(--osaka-cyan) / 0.5)
+  ) !important;
+}
+html[data-theme='osaka'] #app-root [data-story-ring]:not([data-active='true']) {
+  background: linear-gradient(
+    135deg,
+    rgb(var(--osaka-mist) / 0.22),
+    rgb(var(--osaka-mist) / 0.08)
+  ) !important;
+}
+
+/* Live indicators. --osaka-amber is the theme's documented live/recording
+   colour, and a lit dot is the whole point of the element — so it keeps its own
+   pulse instead of inheriting the skeleton shimmer. */
+/* [data-live-pulse] means "this animation carries meaning, it is not a
+   skeleton" — that alone is what keeps the element out of section 8, so the
+   three-bar equaliser gets its own colour and its own staggered delays back.
+   Only the RED dots additionally move to the theme's live colour; a white
+   equaliser bar inside a white disc is already correct. */
+html[data-theme='osaka']
+  [data-live-pulse]:is([class^='bg-red-'], [class*=' bg-red-']) {
+  background: rgb(var(--osaka-amber)) !important;
+  background-image: none !important;
+  box-shadow: 0 0 6px rgb(var(--osaka-amber) / 0.65) !important;
+}
+
+/* Hover on those same rows: the wash the resting state was wrongly showing. */
+html[data-theme='osaka'] #app-root
+  :is([data-side-panel], [data-feed-item], [data-page-bento])
+  :is(
+    [class*=':bg-zinc-9'],
+    [class*=':bg-zinc-8'],
+    /* zinc-700 was the one step missing, and it is the step the stage chips in
+       the right rail hover to — without it their !important resting fill could
+       never be overcome and they had no hover feedback at all. */
+    [class*=':bg-zinc-7'],
+    [class*=':bg-neutral-8'],
+    [class*=':bg-black'],
+    [class*=':bg-white']
+  ):hover:not(:where([data-keep-dark], [data-media-full] *)) {
+  background-color: rgb(var(--osaka-neon) / 0.08) !important;
 }
 
 /* The main content column ships `bg-black` so it must be excluded from the
@@ -475,10 +1583,44 @@ html[data-theme='osaka'] #app-root > div > main.bg-black.bg-black {
    the floating nav pill: the one thing that layout explicitly forbids, and it
    would also give the feed swallow-clip a visible box to cut against. */
 
-/* Hairline borders across untagged pages. */
+/* Hairline borders across untagged pages. Resting tokens only, same reason as
+   the fill net above: `hover:border-white/40` is a hover state, and flattening
+   it to the hairline at rest removes the only feedback those buttons have.
+
+   TWO MORE EXCLUSIONS, both of them cases where the net was actively wrong:
+
+   - Surfaces that already own a ring. index.css sets `border-color: transparent`
+     on [data-feed-item] with the note "the --glass-edge ring replaces
+     border-white/[0.12]" — but this net carries an id and put the border back,
+     so every feed card drew a mist border AND the meniscus ring immediately
+     inside it. A doubled edge, thirty times per screen.
+   - One-sided accent borders. `border-color` is a SHORTHAND, so it writes
+     border-top-color too — and a ring spinner
+     (`border-2 border-zinc-500 border-t-white`) is nothing BUT its top colour.
+     Every infinite-scroll spinner in the feed collapsed to a uniform 10%-mist
+     circle: still rotating, nothing left to see rotate. */
 html[data-theme='osaka'] #app-root
-  :is([class*='border-zinc-'], [class*='border-neutral-'], [class*='border-white/']):not(
-    [data-keep-dark]
+  :is(
+    [class^='border-zinc-'], [class*=' border-zinc-'],
+    [class^='border-neutral-'], [class*=' border-neutral-'],
+    [class^='border-white/'], [class*=' border-white/'],
+    [class^='border-foreground/'], [class*=' border-foreground/'],
+    [class^='border-input'], [class*=' border-input'],
+    [class^='border-border'], [class*=' border-border']
+  ):not([class*='border-t-']):not([class*='border-b-']):not([class*='border-l-']):not([class*='border-r-']):not(
+    :where(
+      [data-feed-item], [data-side-panel], [data-page-bento], [data-search-bento],
+      [data-keep-dark], [data-keep-dark] *,
+      [data-media-full], [data-media-full] *,
+      [data-video-controls], [data-video-controls] *,
+      /* Accented strokes, all of which this net used to flatten back to a grey
+         hairline: the sidebar's active pill, the bottom-nav create bubble and
+         the three tagged control roles all key off border-white/*, and every
+         one of them is supposed to be the accent. */
+      [data-primary-cta], [data-follow-btn], [data-filter-chip],
+      [data-sidebar-active-indicator],
+      [data-bottom-nav] *, [data-feed-nav] *
+    )
   ) {
   border-color: rgb(var(--osaka-mist) / 0.1) !important;
 }
@@ -503,66 +1645,120 @@ html[data-theme='osaka'] #app-root :is(hr, [role='separator']):not([data-keep-da
      destructive / live  -> --osaka-alert
 
    Media, video chrome and [data-keep-dark] are exempt (house rule 4).
+
+   EVERY FAMILY PAIRS ITS MATCH WITH ITS OWN VARIANT GUARD, for the same reason
+   the section 11 net does: `[class*='text-red-']` also matches
+   `hover:text-red-400` (47 of those ship) and `[class*='bg-red-']` matches
+   `hover:bg-red-500/10` (61 of those). Locked at rest, a delete button that is
+   supposed to turn red only when you reach for it is red the whole time, and
+   the hover carries no information at all. The guard has to be per family, not
+   one guard for the group: an element that is `text-zinc-400 hover:text-red-400`
+   must keep its resting zinc AND get the red on hover.
+
+   Hover feedback is then re-attached explicitly at the bottom of the section,
+   in the theme's palette, so the interaction survives the lock.
    ========================================================================== */
 
+/* -- accent / brand -> neon ----------------------------------------------- */
 html[data-theme='osaka'] #app-root
-  :is([class*='text-pink-'], [class*='text-fuchsia-'], [class*='text-violet-'], [class*='text-purple-']):not(
-    [data-keep-dark]
-  ) {
+  :is(
+    [class^='text-pink-'], [class*=' text-pink-'],
+    [class^='text-fuchsia-'], [class*=' text-fuchsia-'],
+    [class^='text-violet-'], [class*=' text-violet-'],
+    [class^='text-purple-'], [class*=' text-purple-']
+  ):not([data-keep-dark]) {
   color: rgb(var(--osaka-neon)) !important;
 }
 html[data-theme='osaka'] #app-root
-  :is([class*='bg-pink-'], [class*='bg-fuchsia-'], [class*='bg-violet-'], [class*='bg-purple-']):not(
-    [data-keep-dark]
-  ):not([data-primary-cta]) {
+  :is(
+    [class^='bg-pink-'], [class*=' bg-pink-'],
+    [class^='bg-fuchsia-'], [class*=' bg-fuchsia-'],
+    [class^='bg-violet-'], [class*=' bg-violet-'],
+    [class^='bg-purple-'], [class*=' bg-purple-']
+  ):not([data-keep-dark]):not([data-primary-cta]) {
   background-color: rgb(var(--osaka-neon) / 0.16) !important;
 }
 
+/* -- positive / success -> cyan ------------------------------------------- */
 html[data-theme='osaka'] #app-root
-  :is([class*='text-emerald-'], [class*='text-green-'], [class*='text-teal-']):not([data-keep-dark]) {
+  :is(
+    [class^='text-emerald-'], [class*=' text-emerald-'],
+    [class^='text-green-'], [class*=' text-green-'],
+    [class^='text-teal-'], [class*=' text-teal-']
+  ):not([data-keep-dark]) {
   color: rgb(var(--osaka-cyan)) !important;
 }
 html[data-theme='osaka'] #app-root
-  :is([class*='bg-emerald-'], [class*='bg-green-'], [class*='bg-teal-']):not([data-keep-dark]) {
+  :is(
+    [class^='bg-emerald-'], [class*=' bg-emerald-'],
+    [class^='bg-green-'], [class*=' bg-green-'],
+    [class^='bg-teal-'], [class*=' bg-teal-']
+  ):not([data-keep-dark]) {
   background-color: rgb(var(--osaka-cyan) / 0.14) !important;
 }
 
+/* -- informational -> cyan @ 0.82 ----------------------------------------- */
 html[data-theme='osaka'] #app-root
-  :is([class*='text-blue-'], [class*='text-indigo-'], [class*='text-cyan-'], [class*='text-sky-']):not(
-    [data-keep-dark]
-  ) {
+  :is(
+    [class^='text-blue-'], [class*=' text-blue-'],
+    [class^='text-indigo-'], [class*=' text-indigo-'],
+    [class^='text-cyan-'], [class*=' text-cyan-'],
+    [class^='text-sky-'], [class*=' text-sky-']
+  ):not([data-keep-dark]) {
   color: rgb(var(--osaka-cyan) / 0.82) !important;
 }
 html[data-theme='osaka'] #app-root
-  :is([class*='bg-blue-'], [class*='bg-indigo-'], [class*='bg-cyan-'], [class*='bg-sky-']):not(
-    [data-keep-dark]
-  ) {
+  :is(
+    [class^='bg-blue-'], [class*=' bg-blue-'],
+    [class^='bg-indigo-'], [class*=' bg-indigo-'],
+    [class^='bg-cyan-'], [class*=' bg-cyan-'],
+    [class^='bg-sky-'], [class*=' bg-sky-']
+  ):not([data-keep-dark]) {
   background-color: rgb(var(--osaka-cyan) / 0.12) !important;
 }
 
+/* -- neutral warning -> amber --------------------------------------------- */
 html[data-theme='osaka'] #app-root
-  :is([class*='text-amber-'], [class*='text-yellow-'], [class*='text-orange-']):not([data-keep-dark]) {
+  :is(
+    [class^='text-amber-'], [class*=' text-amber-'],
+    [class^='text-yellow-'], [class*=' text-yellow-'],
+    [class^='text-orange-'], [class*=' text-orange-']
+  ):not([data-keep-dark]) {
   color: rgb(var(--osaka-amber)) !important;
 }
 html[data-theme='osaka'] #app-root
-  :is([class*='bg-amber-'], [class*='bg-yellow-'], [class*='bg-orange-']):not([data-keep-dark]) {
+  :is(
+    [class^='bg-amber-'], [class*=' bg-amber-'],
+    [class^='bg-yellow-'], [class*=' bg-yellow-'],
+    [class^='bg-orange-'], [class*=' bg-orange-']
+  ):not([data-keep-dark]) {
   background-color: rgb(var(--osaka-amber) / 0.16) !important;
 }
 
+/* -- destructive / live -> alert ------------------------------------------ */
 html[data-theme='osaka'] #app-root
-  :is([class*='text-red-'], [class*='text-rose-']):not([data-keep-dark]) {
+  :is(
+    [class^='text-red-'], [class*=' text-red-'],
+    [class^='text-rose-'], [class*=' text-rose-']
+  ):not([data-keep-dark]) {
   color: rgb(var(--osaka-alert)) !important;
 }
 html[data-theme='osaka'] #app-root
-  :is([class*='bg-red-'], [class*='bg-rose-']):not([data-keep-dark]) {
+  :is(
+    [class^='bg-red-'], [class*=' bg-red-'],
+    [class^='bg-rose-'], [class*=' bg-rose-']
+  ):not([data-keep-dark]):not([data-live-pulse]) {
   background-color: rgb(var(--osaka-alert) / 0.2) !important;
 }
 html[data-theme='osaka'] #app-root
-  :is([class*='border-red-'], [class*='border-rose-']):not([data-keep-dark]) {
+  :is(
+    [class^='border-red-'], [class*=' border-red-'],
+    [class^='border-rose-'], [class*=' border-rose-']
+  ):not([data-keep-dark]) {
   border-color: rgb(var(--osaka-alert) / 0.55) !important;
 }
-
 /* ==========================================================================
+
    13. TEXT COLOUR
    ==========================================================================
    Two roles only. The app's neutral text scale is remapped onto them so copy
@@ -571,24 +1767,86 @@ html[data-theme='osaka'] #app-root
    ========================================================================== */
 
 html[data-theme='osaka'] #app-root
-  :is([class*='text-zinc-1'], [class*='text-zinc-2'], [class*='text-white'], [class*='text-neutral-1']):not(
-    [data-keep-dark]
-  ) {
+  :is(
+    [class^='text-zinc-1'], [class*=' text-zinc-1'],
+    [class^='text-zinc-2'], [class*=' text-zinc-2'],
+    [class^='text-neutral-1'], [class*=' text-neutral-1'],
+    /* [class~=] is a WHOLE-TOKEN match, which is what this step actually wants:
+       the previous `[class^=]/[class*=' ']` pair plus a `:not([class*='text-white/'])`
+       guard was defeated by any element that also carried `hover:text-white/80`
+       — the guard saw the substring and bailed, so the resting glyph kept raw
+       #ffffff while everything around it sat at mist. */
+    [class~='text-white']
+  ):not([data-keep-dark]) {
   color: rgb(var(--osaka-mist)) !important;
 }
 
 html[data-theme='osaka'] #app-root
   :is(
-    [class*='text-zinc-3'],
-    [class*='text-zinc-4'],
-    [class*='text-zinc-5'],
-    [class*='text-neutral-4'],
-    [class*='text-gray-4']
+    [class^='text-zinc-3'], [class*=' text-zinc-3'],
+    [class^='text-zinc-4'], [class*=' text-zinc-4'],
+    [class^='text-zinc-5'], [class*=' text-zinc-5'],
+    [class^='text-neutral-4'], [class*=' text-neutral-4'],
+    [class^='text-gray-4'], [class*=' text-gray-4']
   ):not([data-keep-dark]) {
   color: rgb(var(--osaka-haze)) !important;
 }
 
+/* The design system's own two text roles, on the same two-step scale. Whole
+   routes use these instead of the zinc scale and had no mapping at all. */
+html[data-theme='osaka'] #app-root
+  :is([class~='text-foreground'], [class^='text-foreground/'], [class*=' text-foreground/']):not([data-keep-dark]) {
+  color: rgb(var(--osaka-mist)) !important;
+}
+html[data-theme='osaka'] #app-root
+  [class~='text-muted-foreground']:not([data-keep-dark]) {
+  color: rgb(var(--osaka-haze)) !important;
+}
+html[data-theme='osaka']
+  :is([data-radix-popper-content-wrapper], [role='dialog'], [role='alertdialog'], [data-vaul-drawer], [data-sonner-toaster])
+  [class~='text-muted-foreground']:not([data-keep-dark]) {
+  color: rgb(var(--osaka-haze)) !important;
+}
+
+/* `text-white/60` and friends are a DEPTH scale, not the primary text colour —
+   1463 of them ship. Flattening every one to solid mist erases the hierarchy
+   they exist to express (a caption under a title, a disabled glyph, a
+   watermark). Keep the alpha, move the hue onto the theme's white.
+
+   Every step is written in the same shape as the base, so all of them tie on
+   specificity and plain source order decides — the steps come after the base,
+   so the base only ever catches a step nobody enumerated. */
+html[data-theme='osaka'] #app-root
+  :is([class^='text-white/'], [class*=' text-white/']):not([data-keep-dark]) {
+  color: rgb(var(--osaka-mist) / 0.7) !important;
+}
+html[data-theme='osaka'] #app-root
+  [class~='text-white/90']:not([data-keep-dark]) {
+  color: rgb(var(--osaka-mist) / 0.92) !important;
+}
+html[data-theme='osaka'] #app-root
+  [class~='text-white/80']:not([data-keep-dark]) {
+  color: rgb(var(--osaka-mist) / 0.84) !important;
+}
+html[data-theme='osaka'] #app-root
+  [class~='text-white/70']:not([data-keep-dark]) {
+  color: rgb(var(--osaka-mist) / 0.76) !important;
+}
+html[data-theme='osaka'] #app-root
+  [class~='text-white/60']:not([data-keep-dark]) {
+  color: rgb(var(--osaka-mist) / 0.68) !important;
+}
+/* Below 60% the token would fall under AA on the panel fill, so the scale
+   floors here rather than continuing down to an unreadable 0.1. */
+html[data-theme='osaka'] #app-root
+  :is(
+    [class~='text-white/50'], [class~='text-white/40'], [class~='text-white/30'],
+    [class~='text-white/20'], [class~='text-white/10']
+  ):not([data-keep-dark]) {
+  color: rgb(var(--osaka-mist) / 0.6) !important;
+}
 /* ==========================================================================
+
    14. RADIUS LOCK (house rule 3)
    ==========================================================================
    Osaka's material claim is water, so nothing is allowed to stay square. This
@@ -599,11 +1857,30 @@ html[data-theme='osaka'] #app-root
 
 html[data-theme='osaka']
   #app-root
-  :is([class*='rounded-none'], [class*='rounded-sm']):not([data-keep-square]):not(
-    [data-media-full]
+  :is(
+    [class^='rounded-none'], [class*=' rounded-none'],
+    [class^='rounded-sm'], [class*=' rounded-sm']
+  ):not(
+    :where(
+      [data-keep-square],
+      [data-media-full], [data-media-full] *,
+      [data-video-controls], [data-video-controls] *,
+      /* A progress rail that deliberately ships square keeps its edge: at low
+         percentages a 12px radius eats the whole fill. Same for table cells,
+         which only look right sharing an edge with their neighbours. */
+      [role='progressbar'], [role='progressbar'] *,
+      [role='checkbox'], [role='radio'],
+      /* Replaced elements. A 16px chain logo clamps a 12px radius to 8px —
+         half the box — so the mark comes out a circle with its corners eaten. */
+      img, svg, video, canvas,
+      /* Chart geometry. A 3px-wide price bar with a 12px radius is a dot. */
+      [data-chart], [data-chart] *,
+      table, thead, tbody, tr, th, td
+    )
   ) {
   border-radius: var(--osaka-r-input) !important;
 }
+
 
 /* ==========================================================================
    15. DOCS + BLOG
@@ -614,17 +1891,199 @@ html[data-theme='osaka']
    binding, because docs ship their own link colour.
    ========================================================================== */
 
-html[data-theme='osaka'] .docs-root a:not([data-keep-dark]) {
+/* PROSE links only. Unqualified, this also caught anchors that are buttons —
+   painting a neon label onto a filled control — and, being !important, it
+   outranked docs-dark.css's own non-important hover, so every link on the docs
+   surface was the same colour at rest and under the cursor. */
+html[data-theme='osaka'] .docs-root a:not([data-keep-dark]):not([class*='bg-']) {
   color: rgb(var(--osaka-neon)) !important;
+}
+html[data-theme='osaka'] .docs-root a:not([data-keep-dark]):not([class*='bg-']):hover {
+  color: rgb(var(--osaka-mist)) !important;
+  text-decoration-color: rgb(var(--osaka-neon)) !important;
+}
+
+/* Anchors that are BUTTONS. The rule above is `.docs-root a`, and the docs hero
+   ships its primary action as an <a class="bg-primary text-primary-foreground">
+   — so the label was painted neon on top of a white fill, i.e. the one primary
+   action on the docs surface rendered as a mis-styled link at about 2:1. Same
+   treatment as [data-primary-cta] in section 7: neon fill, near-void label.
+   Written after the link rule deliberately — the two tie on specificity and
+   source order is what decides. */
+html[data-theme='osaka'] .docs-root
+  :is(a, button):is([class^='bg-primary'], [class*=' bg-primary']) {
+  background-color: rgb(var(--osaka-neon)) !important;
+  background-image: none !important;
+  color: rgb(var(--osaka-void)) !important;
+  border-radius: var(--osaka-r-chip) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.3),
+    0 0 14px rgb(var(--osaka-neon) / 0.3) !important;
+}
+html[data-theme='osaka'] .docs-root
+  :is(a, button):is([class^='bg-primary'], [class*=' bg-primary']):hover {
+  background-color: rgb(var(--osaka-neon) / 0.88) !important;
 }
 
 html[data-theme='osaka'] .docs-root :is(h1, h2, h3) {
   color: rgb(var(--osaka-mist)) !important;
 }
 
-html[data-theme='osaka'] .docs-root code:not(pre code) {
+/* `.dark` is not decoration here: it is what lifts this selector past
+   docs-glass.css's own !important code rule on specificity. Safe because osaka
+   is in DOCS_CANVAS_THEMES, so the docs surface is pinned to dark under it. */
+html[data-theme='osaka'].dark .docs-root code:not(pre code),
+html[data-theme='osaka'] .dark .docs-root code:not(pre code) {
   font-family: var(--osaka-mono);
   background: rgb(var(--osaka-neon) / 0.1) !important;
   color: rgb(var(--osaka-neon)) !important;
   border-radius: 6px;
+}
+
+/* ==========================================================================
+   16. THE STATE LAYER  -  must be last
+   ==========================================================================
+   Sections 12 and 13 lock every colour utility in the app to a role. That lock
+   applies at every moment — hover included, and, more awkwardly, ALSO to the
+   handful of elements whose colour is supposed to come from their ROLE rather
+   than from their class list. Both kinds of rule have to beat the lock, and
+   against the resting remaps neither wins on specificity alone: both sides land
+   on one id and the same handful of attribute selectors. Ties go to source
+   order, which is why this layer lives at the bottom of the file rather than
+   beside the rules it answers.
+
+   Every selector here also carries :not([data-keep-dark]), which is both a real
+   opt-out and what lifts these to (1,4,1) — one notch above the resting
+   remaps — so the ordering below is belt and braces rather than the only thing
+   holding the interaction together.
+
+   What this restores: 1525 `hover:` colour utilities, 34 `group-hover:` and 25
+   `focus:` ones. Without it every list row, link and destructive button in the
+   app has a hover state that changes nothing at all.
+   ========================================================================== */
+
+/* -- hover feedback, re-attached ------------------------------------------
+   The guards above hand every `hover:` colour utility back to Tailwind, which
+   would repaint it in a family the theme has locked out. These put the hover
+   back in the theme's palette, by the same role mapping, so a destructive
+   button still reddens under the cursor and a success link still goes cyan. */
+html[data-theme='osaka'] #app-root
+  :is([class*=':text-pink-'], [class*=':text-fuchsia-'], [class*=':text-violet-'], [class*=':text-purple-']):hover:not([data-keep-dark]) {
+  color: rgb(var(--osaka-neon)) !important;
+}
+html[data-theme='osaka'] #app-root
+  :is([class*=':text-emerald-'], [class*=':text-green-'], [class*=':text-teal-']):hover:not([data-keep-dark]) {
+  color: rgb(var(--osaka-cyan)) !important;
+}
+html[data-theme='osaka'] #app-root
+  :is([class*=':text-blue-'], [class*=':text-indigo-'], [class*=':text-cyan-'], [class*=':text-sky-']):hover:not([data-keep-dark]) {
+  color: rgb(var(--osaka-cyan) / 0.82) !important;
+}
+html[data-theme='osaka'] #app-root
+  :is([class*=':text-amber-'], [class*=':text-yellow-'], [class*=':text-orange-']):hover:not([data-keep-dark]) {
+  color: rgb(var(--osaka-amber)) !important;
+}
+html[data-theme='osaka'] #app-root
+  :is([class*=':text-red-'], [class*=':text-rose-']):hover:not([data-keep-dark]) {
+  color: rgb(var(--osaka-alert)) !important;
+}
+html[data-theme='osaka'] #app-root
+  :is([class*=':bg-red-'], [class*=':bg-rose-']):hover:not([data-keep-dark]) {
+  background-color: rgb(var(--osaka-alert) / 0.2) !important;
+}
+html[data-theme='osaka'] #app-root
+  :is([class*=':bg-pink-'], [class*=':bg-fuchsia-'], [class*=':bg-violet-'], [class*=':bg-purple-']):hover:not([data-keep-dark]) {
+  background-color: rgb(var(--osaka-neon) / 0.16) !important;
+}
+html[data-theme='osaka'] #app-root
+  :is([class*=':bg-emerald-'], [class*=':bg-green-'], [class*=':bg-teal-']):hover:not([data-keep-dark]) {
+  background-color: rgb(var(--osaka-cyan) / 0.14) !important;
+}
+html[data-theme='osaka'] #app-root
+  :is([class*=':bg-blue-'], [class*=':bg-indigo-'], [class*=':bg-cyan-'], [class*=':bg-sky-']):hover:not([data-keep-dark]) {
+  background-color: rgb(var(--osaka-cyan) / 0.12) !important;
+}
+html[data-theme='osaka'] #app-root
+  :is([class*=':bg-amber-'], [class*=':bg-yellow-'], [class*=':bg-orange-']):hover:not([data-keep-dark]) {
+  background-color: rgb(var(--osaka-amber) / 0.16) !important;
+}
+
+/* Hover feedback, re-attached. The remaps above carry an ID, so they outrank
+   index.css's own `hover:text-white` restoration for the canvas themes and
+   would otherwise leave every interactive row in the app with no hover at all
+   — the resting colour simply never changes. */
+html[data-theme='osaka'] #app-root :is([class*=':text-white'], [class*=':text-zinc-1'], [class*=':text-zinc-2']):hover,
+html[data-theme='osaka'] #app-root .group:hover [class*='group-hover:text-white'],
+html[data-theme='osaka'] #app-root .group:hover [class*='group-hover:text-zinc-1'],
+html[data-theme='osaka'] #app-root .group:hover [class*='group-hover:text-zinc-2'] {
+  color: rgb(var(--osaka-mist)) !important;
+}
+html[data-theme='osaka'] #app-root :is([class*=':text-zinc-3'], [class*=':text-zinc-4'], [class*=':text-zinc-5']):hover:not([data-keep-dark]) {
+  color: rgb(var(--osaka-haze)) !important;
+}
+
+/* Borders. Same story as the colour utilities: `hover:border-white/40` is the
+   only feedback a glass button has, and the hairline net in section 11 would
+   otherwise hold it at rest and at hover alike. */
+html[data-theme='osaka'] #app-root
+  :is([class*=':border-white/'], [class*=':border-zinc-'], [class*=':border-neutral-']):hover:not([data-keep-dark]) {
+  border-color: rgb(var(--osaka-neon) / 0.35) !important;
+}
+
+
+/* --------------------------------------------------------------------------
+   ROLE COLOURS. Six tagged roles set a colour in their own section, and every
+   one of them was being overruled by the text lock — because the lock reads a
+   CLASS and carries an id, while a role rule reads an ATTRIBUTE and mostly does
+   not. The results were all in the same direction and all bad:
+
+     - [data-primary-cta] paints itself near-void on neon (8.9:1, chosen over
+       white for exactly this reason) but its LABEL is a `text-white` span, so
+       the lock repainted the text mist and the app's one primary action landed
+       at about 2.1:1 — the classic unreadable neon CTA the section-7 comment
+       is about.
+     - [data-follow-btn] ships `text-white/70`, so the neon Follow label came
+       out mist and the button read as a grey chip with a pink ring.
+     - active tabs and active filter chips ship `text-white`, so the theme's
+       one "this is the current thing" sign never appeared at all.
+
+   Three :not()s each, all real opt-outs, which puts these a notch above the
+   lock rather than tied with it — so this block is correct even if someone
+   later moves it.
+   -------------------------------------------------------------------------- */
+
+html[data-theme='osaka'] #app-root
+  :is([data-primary-cta], [data-primary-cta] *):not([data-keep-dark]):not([data-media-full]):not([data-video-controls]) {
+  color: rgb(var(--osaka-void)) !important;
+}
+
+html[data-theme='osaka'] #app-root
+  :is([data-follow-btn], [data-follow-btn] *):not([data-keep-dark]):not([data-media-full]):not([data-video-controls]) {
+  color: rgb(var(--osaka-neon)) !important;
+}
+html[data-theme='osaka'] #app-root
+  :is([data-follow-btn][disabled], [data-follow-btn][disabled] *):not([data-keep-dark]):not([data-media-full]):not([data-video-controls]) {
+  color: rgb(var(--osaka-veil)) !important;
+}
+
+html[data-theme='osaka'] #app-root
+  :is(
+    :is([data-feed-tab-btn], [data-tab-btn], [data-glass-toggle-button]):is([data-active='true'], [data-tab-active='true']),
+    :is([data-feed-tab-btn], [data-tab-btn], [data-glass-toggle-button]):is([data-active='true'], [data-tab-active='true']) *,
+    [data-filter-chip][data-active='true'],
+    [data-filter-chip][data-active='true'] *,
+    [data-bottom-nav] a[aria-current='page'],
+    [data-bottom-nav] a[aria-current='page'] *
+  ):not([data-keep-dark]):not([data-media-full]):not([data-video-controls]) {
+  color: rgb(var(--osaka-neon)) !important;
+}
+
+/* The white arm. `bg-white/*` is how every glass button in the design system
+   paints itself, and the section-11 net freezes the resting fill with
+   !important — so `hover:bg-white/10` on a `variant="outline"` button could
+   never win and those buttons had no hover feedback anywhere outside a side
+   panel. This is the arm that was missing from the family list above. */
+html[data-theme='osaka'] #app-root
+  [class*=':bg-white']:hover:not([data-keep-dark]):not([data-primary-cta]) {
+  background-color: rgb(var(--osaka-mist) / 0.12) !important;
 }

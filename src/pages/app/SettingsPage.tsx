@@ -1658,7 +1658,7 @@ function PrivacySettings() {
       {/* Go Public Security Gate Modal */}
       {goPublicModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="bg-zinc-900 border border-white/10 rounded-2xl max-w-sm w-full p-6 space-y-4">
+          <div role="dialog" aria-modal="true" className="bg-zinc-900 border border-white/10 rounded-2xl max-w-sm w-full p-6 space-y-4">
             <div className="flex items-center justify-center w-14 h-14 rounded-full bg-amber-500/20 mx-auto">
               <Users className="w-7 h-7 text-amber-400" />
             </div>

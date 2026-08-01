@@ -23,7 +23,7 @@ export default function ConnectPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div data-glass-page className="min-h-screen bg-black text-white">
       <SEOHead
         title="Connect DeHub to your AI assistant"
         description="Connect ChatGPT, Claude, or any MCP-compatible assistant to DeHub with a single URL."
