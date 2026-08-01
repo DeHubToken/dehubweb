@@ -135,7 +135,8 @@ html[data-theme='osaka']
    outranks a non-important inline style, so a blanket 999px here silently
    discarded every caller's borderRadius and turned indicators that sit behind
    `rounded-lg` buttons into full pills. */
-html[data-theme='osaka'] :is([data-feed-nav], [data-side-panel-tabs]) [data-glass-indicator] {
+html[data-theme='osaka']
+  :is([data-feed-nav-indicator], [data-side-panel-tabs] [data-glass-indicator]) {
   border-radius: var(--osaka-r-chip) !important;
   background: rgb(var(--osaka-neon) / 0.14) !important;
   box-shadow:
@@ -171,6 +172,18 @@ html[data-theme='osaka'] [data-filter-chip][data-active='true'] {
   box-shadow:
     inset 0 0 0 1px rgb(var(--osaka-neon) / 0.34),
     0 0 10px rgb(var(--osaka-neon) / 0.16) !important;
+}
+
+/* The expanded feed controls are portalled inside the sticky nav, but remain
+   their own bento. Keep that surface on the same radius and wet edge as the
+   rest of Osaka rather than inheriting the nav indicator's treatment. */
+html[data-theme='osaka'] [data-feed-filter-panel] {
+  border-radius: var(--osaka-r-panel) !important;
+  background:
+    var(--osaka-bleed),
+    rgb(var(--osaka-slate) / 0.82) !important;
+  border-color: transparent !important;
+  box-shadow: var(--osaka-edge) !important;
 }
 
 /* Side-panel tab strip. It is the full width of the panel's top edge, so a
