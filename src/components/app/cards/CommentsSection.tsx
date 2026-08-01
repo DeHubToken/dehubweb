@@ -1530,7 +1530,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                    under every other theme. See war-comments.css section 2. */
                 data-war-cut="sm"
                 className={cn(
-                  "flex-1 flex backdrop-blur-xl border rounded-xl relative transition-all duration-200",
+                  "w-full flex backdrop-blur-xl border rounded-xl relative transition-all duration-200",
                   isInputExpanded
                     ? "items-start flex-col px-3"
                     : "items-center flex-row px-3 pr-1 gap-1.5",
@@ -1564,7 +1564,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                     "flex-1 bg-transparent text-white text-sm resize-none focus:outline-none placeholder:text-zinc-500 w-full",
                     isInputExpanded
                       ? cn("pt-2.5 pb-12 pr-1", isMobile ? "min-h-[72px] max-h-[144px]" : "min-h-[84px] max-h-[160px]")
-                      : "h-10 py-0 leading-10 overflow-hidden pr-0"
+                      : "self-center h-5 min-h-5 py-0 leading-5 overflow-hidden pr-0"
                   )}
                   rows={isInputExpanded ? 3 : 1}
                   onKeyDown={(e) => {
