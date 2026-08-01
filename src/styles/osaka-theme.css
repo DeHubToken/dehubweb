@@ -799,33 +799,50 @@ html[data-theme='osaka'] #app-root [data-status-dot] {
 
 html[data-theme='osaka'] [data-primary-cta] {
   border-radius: var(--osaka-r-chip) !important;
-  background: linear-gradient(
-    180deg,
-    rgb(var(--osaka-neon) / 0.95) 0%,
-    rgb(var(--osaka-neon) / 0.78) 100%
-  ) !important;
-  /* Near-void rather than white. Pink at this luminance takes dark text far
-     better: 8.9:1 here against 2.1:1 for white, and white-on-pink is the
-     classic unreadable neon CTA. */
-  color: rgb(var(--osaka-void)) !important;
-  border-color: transparent !important;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 18% -35%, rgb(var(--osaka-cyan) / 0.2), transparent 42%),
+    radial-gradient(circle at 82% 140%, rgb(var(--osaka-neon) / 0.18), transparent 45%),
+    linear-gradient(112deg, rgb(var(--osaka-mist) / 0.08), rgb(var(--osaka-slate) / 0.9) 44%, rgb(var(--osaka-cyan) / 0.08)),
+    rgb(var(--osaka-void) / 0.94) !important;
+  color: rgb(var(--osaka-mist)) !important;
+  border-color: rgb(var(--osaka-neon) / 0.78) !important;
   box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.3),
-    0 0 14px rgb(var(--osaka-neon) / 0.34),
-    0 4px 18px rgb(var(--osaka-neon) / 0.16) !important;
-  text-shadow: none !important;
+    inset 0 0 0 1px rgb(var(--osaka-mist) / 0.1),
+    inset 0 1.5px 0 rgb(var(--osaka-mist) / 0.24),
+    inset 0 -1px 0 rgb(var(--osaka-neon) / 0.22),
+    0 0 7px rgb(var(--osaka-neon) / 0.34),
+    0 4px 12px rgb(var(--osaka-neon) / 0.12) !important;
+  text-shadow: 0 1px 3px rgb(var(--osaka-void) / 0.9) !important;
 }
 
 html[data-theme='osaka'] [data-primary-cta]:hover {
+  border-color: rgb(var(--osaka-neon) / 0.96) !important;
   box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 0.38),
-    0 0 20px rgb(var(--osaka-neon) / 0.48),
-    0 6px 22px rgb(var(--osaka-neon) / 0.22) !important;
+    inset 0 0 0 1px rgb(var(--osaka-mist) / 0.14),
+    inset 0 1.5px 0 rgb(var(--osaka-mist) / 0.3),
+    inset 0 -1px 0 rgb(var(--osaka-neon) / 0.28),
+    0 0 9px rgb(var(--osaka-neon) / 0.46),
+    0 5px 14px rgb(var(--osaka-neon) / 0.16) !important;
 }
 
 /* Tactile press, per the app's existing interaction language. */
 html[data-theme='osaka'] [data-primary-cta]:active {
   transform: translateY(1px);
+}
+
+html[data-theme='osaka'] [data-primary-cta]:disabled {
+  border-color: rgb(var(--osaka-neon) / 0.42) !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--osaka-mist) / 0.07),
+    0 0 5px rgb(var(--osaka-neon) / 0.18) !important;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  html[data-theme='osaka'] [data-primary-cta] {
+    background: rgb(var(--osaka-slate)) !important;
+  }
 }
 
 /* Hand-rolled primary actions. Only two elements in the app carry
@@ -2050,11 +2067,8 @@ html[data-theme='osaka'] #app-root
    CLASS and carries an id, while a role rule reads an ATTRIBUTE and mostly does
    not. The results were all in the same direction and all bad:
 
-     - [data-primary-cta] paints itself near-void on neon (8.9:1, chosen over
-       white for exactly this reason) but its LABEL is a `text-white` span, so
-       the lock repainted the text mist and the app's one primary action landed
-       at about 2.1:1 — the classic unreadable neon CTA the section-7 comment
-       is about.
+     - [data-primary-cta] is a dark holographic surface with a neon edge. Its
+       label stays mist so the CTA remains readable over every foil frame.
      - [data-follow-btn] ships `text-white/70`, so the neon Follow label came
        out mist and the button read as a grey chip with a pink ring.
      - active tabs and active filter chips ship `text-white`, so the theme's
@@ -2067,7 +2081,7 @@ html[data-theme='osaka'] #app-root
 
 html[data-theme='osaka'] #app-root
   :is([data-primary-cta], [data-primary-cta] *):not([data-keep-dark]):not([data-media-full]):not([data-video-controls]) {
-  color: rgb(var(--osaka-void)) !important;
+  color: rgb(var(--osaka-mist)) !important;
 }
 
 html[data-theme='osaka'] #app-root
