@@ -902,7 +902,7 @@ export default function SinglePostPage({ inOverlay = false }: SinglePostPageProp
             portal, a transform animation, a body pointer-events fight and a
             second scroll container that everything else had to be re-wired to. */}
         {isMobileView ? (
-          <div data-glass-page ref={inOverlay ? undefined : postRootRef} className={cn('flex flex-col bg-black', chromeClearance)}>
+          <div data-post-page data-glass-page ref={inOverlay ? undefined : postRootRef} className={cn('flex flex-col bg-black', chromeClearance)}>
             <div className="relative">
               {renderContent()}
             </div>
@@ -910,7 +910,7 @@ export default function SinglePostPage({ inOverlay = false }: SinglePostPageProp
           </div>
         ) : (
           /* Desktop: flush layout — top nav bar handles chrome, no floating back-button bento */
-          <div ref={inOverlay ? undefined : postRootRef} className="flex flex-col">
+          <div data-post-page ref={inOverlay ? undefined : postRootRef} className="flex flex-col">
             <div className={cn('px-2 sm:px-3', chromeClearance)}>
               <div className="w-full">
                 {/* Creator info for desktop */}
@@ -1103,8 +1103,9 @@ export default function SinglePostPage({ inOverlay = false }: SinglePostPageProp
           themes, exactly like the home feed. */}
       <div
         ref={inOverlay ? undefined : postRootRef}
+        data-post-page
         data-glass-page
-          className={cn('flex flex-col', isLivePost && 'bg-black min-h-screen')}
+        className={cn('flex flex-col', isLivePost && 'bg-black min-h-screen')}
       >
         {renderPostContent()}
       </div>

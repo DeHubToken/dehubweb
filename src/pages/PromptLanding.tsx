@@ -6,6 +6,7 @@ import { SEOHead } from '@/components/SEOHead';
 import { NebulaBackground } from '@/components/ui/NebulaBackground';
 import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { useAuth } from '@/contexts/AuthContext';
+import { useAppTheme } from '@/contexts/ThemeContext';
 import { useTranslation } from 'react-i18next';
 import wandUrl from '@/assets/wand.png';
 
@@ -24,6 +25,7 @@ export default function PromptLanding() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { isAuthenticated, openLoginModal, isConnecting, needsSignature } = useAuth();
+  const { theme } = useAppTheme();
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const recognitionRef = useRef<any>(null);
 
@@ -77,7 +79,7 @@ export default function PromptLanding() {
     <div data-prompt-landing data-glass-page className="h-[100dvh] w-full bg-black text-white flex flex-col items-center justify-center px-6 relative overflow-hidden overscroll-none">
       <SEOHead title={t('prompt.seoTitle', 'Prompt your feed — DeHub')} description={t('prompt.seoDescription', "Tell DeHub what you want to see and we'll tune your timeline.")} />
 
-      <NebulaBackground />
+      {theme === 'system' && <NebulaBackground />}
 
       <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-4 sm:px-6 py-4">
         <button
