@@ -1629,6 +1629,13 @@ html[data-theme='osaka'] #app-root > div > main.bg-black.bg-black {
   -webkit-backdrop-filter: none !important;
 }
 
+/* A post can arrive through the feed overlay or as a direct route. Keep the
+   dedicated page surface explicit so either path exposes the alley instead of
+   depending on a generic full-page selector to happen to clear its bg-black. */
+html[data-theme='osaka'] #app-root [data-post-page] {
+  background-color: transparent !important;
+}
+
 /* The feed-nav wrapper is excluded above rather than merely re-declared
    transparent in section 2. This net is scoped under #app-root, so it carries
    an id and outranks the plain `html[data-theme] [data-feed-nav-outer]` rule
