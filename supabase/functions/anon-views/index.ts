@@ -49,20 +49,34 @@ function errorResponse(message: string, status = 400): Response {
 }
 
 /**
- * The client's IP, as seen through Supabase's edge proxy. x-forwarded-for is a
- * comma-separated chain appended to by each hop, so the original client is the
- * first entry — later entries are proxies and would collapse every visitor onto
- * one hash.
+ * The client's IP, as seen through Supabase's edge proxy.
+ *
+ * cf-connecting-ip is set by Cloudflare directly from the TCP connection and
+ * is stripped/overwritten on the way in, so a caller cannot forge it — prefer
+ * it whenever present.
+ *
+ * x-forwarded-for is attacker-controllable: a client can prepend any fake
+ * value to it before the request ever reaches a trusted proxy, so taking
+ * "the first entry" really means "whatever the caller put there." Trusting it
+ * would let a script rotate a fake IP on every request and, combined with a
+ * freely-rotatable deviceId, mint unlimited "new" viewer hashes and defeat the
+ * one-view-per-viewer-per-day dedup entirely. Only fall back to it as a
+ * last resort when no trusted header is present.
  */
 function getClientIp(req: Request): string {
+  const cfIp = req.headers.get('cf-connecting-ip');
+  if (cfIp) return cfIp;
+
+  const realIp = req.headers.get('x-real-ip');
+  if (realIp) return realIp;
+
   const forwarded = req.headers.get('x-forwarded-for');
   if (forwarded) {
     const first = forwarded.split(',')[0]?.trim();
     if (first) return first;
   }
-  return req.headers.get('cf-connecting-ip')
-    || req.headers.get('x-real-ip')
-    || 'unknown';
+
+  return 'unknown';
 }
 
 async function hashViewer(deviceId: string, ip: string): Promise<string> {
