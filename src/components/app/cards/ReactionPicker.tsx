@@ -16,7 +16,7 @@
  */
 
 import { useEffect, useRef } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { REACTION_LIST, type PostReaction } from '@/lib/reactions';
 
@@ -41,6 +41,7 @@ export function ReactionPicker({
   align = 'right',
 }: ReactionPickerProps) {
   const trayRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = useReducedMotion();
 
   // Dismiss on any press outside the tray, on scroll, and on Escape.
   useEffect(() => {
@@ -70,11 +71,12 @@ export function ReactionPicker({
           ref={trayRef}
           role="menu"
           aria-label="Pick a reaction"
-          initial={{ opacity: 0, y: 8, scale: 0.9 }}
+          initial={reduceMotion ? false : { opacity: 0, y: 6, scale: 0.96 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 8, scale: 0.9 }}
-          transition={{ duration: 0.15, ease: 'easeOut' }}
+          exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 6, scale: 0.96 }}
+          transition={{ duration: reduceMotion ? 0 : 0.16, ease: [0.16, 1, 0.3, 1] }}
           data-no-navigate
+          data-keep-round
           /* A floating menu, so it needs a menu's surface even though it is
              absolutely positioned rather than portalled: nine emoji have to
              read against whatever post is behind the card. */
@@ -82,9 +84,10 @@ export function ReactionPicker({
           onClick={(e) => e.stopPropagation()}
           onPointerDown={(e) => e.stopPropagation()}
           className={cn(
-            'absolute bottom-full mb-2 z-50 flex items-center gap-0.5 px-1.5 py-1.5',
-            'rounded-full bg-zinc-950/90 backdrop-blur-xl border border-white/10',
-            'shadow-[0_8px_32px_rgba(0,0,0,0.3)]',
+            'absolute bottom-full mb-2 z-50 isolate flex items-center gap-0.5 overflow-hidden px-1.5 py-1.5',
+            'rounded-2xl border border-white/15 bg-zinc-950/80',
+            'backdrop-blur-[28px] backdrop-saturate-150',
+            'shadow-[inset_0_1px_0_rgba(255,255,255,0.10),0_8px_32px_rgba(0,0,0,0.45)]',
             align === 'right' && 'right-0',
             align === 'left' && 'left-0',
             align === 'center' && 'left-1/2 -translate-x-1/2',
@@ -93,10 +96,14 @@ export function ReactionPicker({
           {REACTION_LIST.map((reaction) => (
             <button
               key={reaction.key}
-              role="menuitem"
+              role="menuitemradio"
+              aria-checked={current === reaction.key}
               type="button"
               aria-label={reaction.label}
               title={reaction.label}
+              data-reaction-option
+              data-keep-round
+              data-active={current === reaction.key ? 'true' : undefined}
               onClick={(e) => {
                 e.stopPropagation();
                 onSelect(reaction.key);
@@ -108,8 +115,9 @@ export function ReactionPicker({
               }}
               className={cn(
                 'group relative flex h-9 w-9 items-center justify-center rounded-full',
-                'text-lg leading-none transition-transform duration-150',
-                'hover:scale-125 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
+                'text-lg leading-none transition-[transform,background-color,box-shadow] duration-150 ease-out',
+                'hover:-translate-y-0.5 hover:scale-110 hover:bg-white/10 active:translate-y-0 active:scale-95',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
                 current === reaction.key && 'bg-white/15 ring-1 ring-white/40',
               )}
             >
