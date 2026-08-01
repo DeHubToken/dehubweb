@@ -231,9 +231,9 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
       (!navVisible || anyOverlayOpen) && "-translate-y-full lg:translate-y-0",
       anyOverlayOpen && "z-[40]"
     )}>
-      <div data-feed-nav className="bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
+      <div data-feed-nav className="flex flex-col bg-zinc-900 rounded-xl" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
         <div ref={layerRef} className="relative overflow-visible">
-          <GlassIndicator rect={dragDisplayRect} borderRadius="0.75rem" layoutKey={`global-nav-${activeTab}`} enableTransition={!isDragging && enableTransition} fixedHeightPx={35} />
+          <GlassIndicator rect={dragDisplayRect} borderRadius="0.75rem" layoutKey={`global-nav-${activeTab}`} enableTransition={!isDragging && enableTransition} fixedHeightPx={35} variant="nav" />
           {/* Drag handle overlay */}
           {dragDisplayRect.ready && (
             <div

@@ -1572,7 +1572,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className={cn("overflow-y-clip overflow-x-visible", portalTarget && "mt-2")}
+            className={cn("overflow-y-clip overflow-x-visible", portalTarget && "order-1 mt-2")}
           >
             <div
               ref={bentoRef}
@@ -1640,7 +1640,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         if (!hasChips) return null;
 
         const chipsBar = (
-          <div className="flex items-center gap-1.5 flex-wrap px-1 pt-1 pb-2">
+          <div className={cn("flex items-center gap-1.5 flex-wrap px-1 pt-1 pb-2", portalTarget && "order-2")}>
             {optimisticSort.value !== 'latest' && (
               <button
                 data-filter-chip
