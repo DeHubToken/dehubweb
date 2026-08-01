@@ -35,6 +35,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const RAW = readFileSync(resolve(__dirname, '../styles/osaka-theme.css'), 'utf8');
+const FRAME = readFileSync(resolve(__dirname, '../styles/osaka-frame.css'), 'utf8');
 /* Comments quote the very selectors this file bans, so they are blanked out
    (newlines kept, so reported line numbers still point at the real source). */
 const CSS = RAW.replace(/\/\*[\s\S]*?\*\//g, (c) => c.replace(/[^\n]/g, ' '));
@@ -89,6 +90,19 @@ function bareSubstringMatchers(): { token: string; line: number }[] {
 }
 
 describe('osaka-theme.css selector shapes', () => {
+  it('uses one universal radius token for Osaka chrome', () => {
+    expect(FRAME).toContain('--osaka-radius: 16px;');
+    for (const role of ['panel', 'card', 'input', 'chip']) {
+      expect(FRAME).toContain(`--osaka-r-${role}: var(--osaka-radius);`);
+    }
+    expect(FRAME).not.toContain('--osaka-r-chip: 999px;');
+  });
+
+  it('does not let the feed nav restyle nested filter indicators', () => {
+    expect(RAW).toContain('[data-feed-nav-indicator]');
+    expect(RAW).not.toMatch(/\[data-feed-nav\][^{]*\[data-glass-indicator\]/);
+  });
+
   it('never matches a themed utility with a bare substring selector', () => {
     // A bare [class*='bg-zinc-8'] also matches hover:bg-zinc-800, which paints
     // a hover-only row at rest — the "blocks on the lists of names" bug.

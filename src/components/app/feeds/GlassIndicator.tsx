@@ -15,6 +15,8 @@ interface GlassIndicatorProps {
    * (e.g. tab row is h-9 / 36px but the glass pill should be 35px.)
    */
   fixedHeightPx?: number;
+  /** Marks the primary feed-nav indicator for theme-specific chrome. */
+  variant?: 'nav';
 }
 
 const GLASS_CLASSES = 'pointer-events-none absolute bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30';
@@ -31,7 +33,7 @@ const positionCache = new Map<string, { x: number; y: number; width: number; hei
  * Supports forwardRef so parents can update transform directly during drag (bypassing React state).
  */
 export const GlassIndicator = forwardRef<HTMLDivElement, GlassIndicatorProps>(
-  function GlassIndicator({ rect, borderRadius = '0.75rem', className, layoutKey, enableTransition = false, fixedHeightPx }, ref) {
+  function GlassIndicator({ rect, borderRadius = '0.75rem', className, layoutKey, enableTransition = false, fixedHeightPx, variant }, ref) {
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
   // Cache every stable rect position
@@ -64,6 +66,7 @@ export const GlassIndicator = forwardRef<HTMLDivElement, GlassIndicatorProps>(
     <div
       ref={ref}
       data-glass-indicator
+      data-feed-nav-indicator={variant === 'nav' ? '' : undefined}
       className={cn(
         GLASS_CLASSES,
         isLightTheme
