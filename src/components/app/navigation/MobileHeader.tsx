@@ -12,6 +12,7 @@ import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { buildAvatarUrl } from '@/lib/media-url';
 import { useCallback, useEffect, useRef, useState, memo } from 'react';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
+import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { WarLogo } from '@/components/app/war/WarLogo';
 
@@ -58,6 +59,8 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   // sheet is open — at the usual z-60 the header floats crisp above dialog
   // backdrops instead of dimming with the page (lib/overlay-open).
   const anyOverlayOpen = useAnyOverlayOpen();
+  // Same hide-on-scroll-down / show-on-scroll-up behaviour as the mobile nav bars.
+  const navVisible = useScrollDirection();
   const { data: unreadCount } = useUnreadNotificationCount();
   const { data: customUnread } = useCustomUnreadCount();
   const totalNotifUnread = (unreadCount?.total ?? 0) + (customUnread ?? 0);
@@ -124,7 +127,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
   }, [navType, navigate]);
 
   return (
-    <header data-mobile-header data-scrolled={scrolled ? 'true' : 'false'} className={`lg:hidden fixed top-0 left-0 right-0 ${anyOverlayOpen ? 'z-[40]' : 'z-[60]'} px-4 h-11 flex items-center justify-between pointer-events-auto ${isOpen ? 'bg-transparent' : 'bg-black'}`}>
+    <header data-mobile-header data-scrolled={scrolled ? 'true' : 'false'} className={`lg:hidden fixed top-0 left-0 right-0 ${anyOverlayOpen ? 'z-[40]' : 'z-[60]'} px-4 h-11 flex items-center justify-between pointer-events-auto transition-transform duration-300 ease-in-out ${(!navVisible && !isOpen && !anyOverlayOpen) ? '-translate-y-full' : 'translate-y-0'} ${isOpen ? 'bg-transparent' : 'bg-black'}`}>
       <div className="flex items-center gap-3 ml-[-8px]">
         <HeaderLogo onClick={handleLogoClick} />
       </div>
