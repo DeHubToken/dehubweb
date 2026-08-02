@@ -55,21 +55,21 @@ html[data-theme='osaka'] [data-search-bento] {
   border-radius: var(--osaka-r-input) !important;
 }
 
-/* Feed items: ring and wash only. See house rule 2. Their entire signature is
-   a 2px neon rail down the left edge, which is enough to make the theme
-   present in the feed without lighting up thirty cards at once. */
+/* Feed items: ring and wash only. See house rule 2.
+
+   NO LEFT-EDGE RAIL. These used to carry a 2px neon rail down the left edge,
+   brightening on hover. Removed across every theme: a coloured bar on a card's
+   edge is the visual language of "selected / unread / errored", so putting one
+   on all thirty cards had every row claiming a state it did not have. The
+   meniscus ring carries the surface, and hover is the wash alone. */
 html[data-theme='osaka'] [data-feed-item] {
   position: relative;
   border-radius: var(--osaka-r-card) !important;
-  box-shadow:
-    var(--osaka-edge),
-    inset 2px 0 0 rgb(var(--osaka-neon) / 0.3) !important;
+  box-shadow: var(--osaka-edge) !important;
 }
 
 html[data-theme='osaka'] [data-feed-item]:hover {
-  box-shadow:
-    var(--osaka-edge),
-    inset 2px 0 0 rgb(var(--osaka-neon) / 0.55) !important;
+  box-shadow: var(--osaka-edge) !important;
 }
 
 /* Interactive bentos keep their hover feedback by raising the smoke. The

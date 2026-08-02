@@ -312,7 +312,6 @@ html[data-theme='war'] :is(
 html[data-theme='war'] :is([role='menuitem'], [role='option']):is(:hover, [data-highlighted]) {
   background: rgb(var(--war-hud) / 0.16) !important;
   color: rgb(var(--war-hud)) !important;
-  box-shadow: inset 2px 0 0 rgb(var(--war-hud));
 }
 
 /* --------------------------------------------------------------------------

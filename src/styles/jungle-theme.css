@@ -113,41 +113,28 @@ html[data-theme='jungle'] [data-feed-item] {
   position: relative;
   border-radius: var(--jungle-r-card) !important;
   background: var(--jungle-grain-soft), rgb(var(--jungle-bark) / var(--glass-thin)) !important;
-  box-shadow:
-    var(--jungle-edge),
-    inset 3px 0 0 rgb(var(--jungle-husk) / 0.42) !important;
+  /* NO LEFT-EDGE RAIL. A coloured bar on a card's edge is the visual language
+     of "selected / unread / errored", so spending it as decoration meant thirty
+     cards all claiming a state none of them had. Removed across every theme —
+     see the note in index.css. Hover is carried by the fill lifting alone. */
+  box-shadow: var(--jungle-edge) !important;
 }
 
 html[data-theme='jungle'] [data-feed-item]:hover {
   background: var(--jungle-grain-soft), rgb(var(--jungle-bark) / var(--glass-raised)) !important;
-  box-shadow:
-    var(--jungle-edge),
-    inset 3px 0 0 rgb(var(--jungle-leaf-c) / 0.62) !important;
+  box-shadow: var(--jungle-edge) !important;
 }
 
 /* -- nested surfaces ------------------------------------------------------
-   A decorated surface that CONTAINS another decorated surface is a layout
-   wrapper, not a card, so it drops its own material and lets the inner one
-   carry it.
+   Handled centrally in index.css, NOT here.
 
-   The dedicated post page is where this bites: SinglePostPage wraps its whole
-   column in a [data-feed-item] and then fills it with [data-page-bento]s. Both
-   used to get wood, so the page rendered a plank inside a plank — a second
-   background stacked in front of the forest for no reason, with two bevels and
-   two grains fighting at every edge.
-
-   Scoped tightly to the two hooks that are genuinely page-level. It must NOT
-   include [data-poll-card]: a normal home-feed card containing a poll would
-   then lose its own material, which is the opposite of what is wanted. */
-html[data-theme='jungle']
-  [data-feed-item]:has(:is([data-page-bento], [data-comments-section])),
-html[data-theme='jungle'] [data-page-bento]:has([data-page-bento]) {
-  background: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border-color: transparent !important;
-}
+   A first attempt put the rule in this file, which was wrong: the stacking is
+   created by the shared canvas-theme block in index.css, which paints
+   [data-feed-item], [data-side-panel] and [data-page-bento] for all eight
+   allowlisted themes. Fixing it per-theme means writing the same rule eight
+   times and re-introducing the bug with every new theme. It just happened to
+   be reported on jungle and osaka first because those have the most opaque
+   fills, so the stacked slab is most visible there. */
 
 /* Interactive bentos: pressing a wooden panel should read as the panel being
    lifted, not lit. Raised fill plus a warmer cut, no glow. */
