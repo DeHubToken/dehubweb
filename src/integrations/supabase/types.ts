@@ -641,6 +641,48 @@ export type Database = {
         }
         Relationships: []
       }
+      anonymous_post_view_totals: {
+        Row: {
+          token_id: string
+          updated_at: string
+          view_count: number
+        }
+        Insert: {
+          token_id: string
+          updated_at?: string
+          view_count?: number
+        }
+        Update: {
+          token_id?: string
+          updated_at?: string
+          view_count?: number
+        }
+        Relationships: []
+      }
+      anonymous_post_views: {
+        Row: {
+          created_at: string
+          id: number
+          token_id: string
+          view_date: string
+          viewer_hash: string
+        }
+        Insert: {
+          created_at?: string
+          id?: never
+          token_id: string
+          view_date?: string
+          viewer_hash: string
+        }
+        Update: {
+          created_at?: string
+          id?: never
+          token_id?: string
+          view_date?: string
+          viewer_hash?: string
+        }
+        Relationships: []
+      }
       audio_spaces: {
         Row: {
           channel_name: string
@@ -1356,7 +1398,6 @@ export type Database = {
           name: string
           posted_post_id: string | null
           preserved: boolean
-          provenance: Json | null
           size_bytes: number
           storage_path: string
           thumbnail_path: string | null
@@ -1375,7 +1416,6 @@ export type Database = {
           name: string
           posted_post_id?: string | null
           preserved?: boolean
-          provenance?: Json | null
           size_bytes?: number
           storage_path: string
           thumbnail_path?: string | null
@@ -1394,7 +1434,6 @@ export type Database = {
           name?: string
           posted_post_id?: string | null
           preserved?: boolean
-          provenance?: Json | null
           size_bytes?: number
           storage_path?: string
           thumbnail_path?: string | null
@@ -4009,6 +4048,7 @@ export type Database = {
         Args: { p_subscription_id: string; p_xl_price_id: string }
         Returns: boolean
       }
+      cleanup_old_anonymous_post_views: { Args: never; Returns: undefined }
       cleanup_old_client_error_logs: { Args: never; Returns: undefined }
       cleanup_old_leaderboard_snapshots: { Args: never; Returns: undefined }
       cleanup_old_story_views: { Args: never; Returns: undefined }
@@ -4020,6 +4060,13 @@ export type Database = {
       enqueue_email: {
         Args: { payload: Json; queue_name: string }
         Returns: number
+      }
+      get_anonymous_view_counts: {
+        Args: { p_token_ids: string[] }
+        Returns: {
+          token_id: string
+          view_count: number
+        }[]
       }
       get_community_role: {
         Args: { _community_id: string; _wallet_address: string }
@@ -4116,6 +4163,10 @@ export type Database = {
           msg_id: number
           read_ct: number
         }[]
+      }
+      record_anonymous_views: {
+        Args: { p_token_ids: string[]; p_viewer_hash: string }
+        Returns: number
       }
     }
     Enums: {
