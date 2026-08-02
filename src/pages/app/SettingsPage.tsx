@@ -102,7 +102,7 @@ import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
 import { getPref, CATEGORY_OF, type NotificationKey } from '@/lib/api/dehub';
 import { getQuietHours, QH_ENABLED_KEY, QH_START_KEY, QH_END_KEY } from '@/lib/quiet-hours';
 import { PROFILE_TAB_OPTIONS } from '@/components/app/profile/ProfileConstants';
-import { useDmSettings } from '@/hooks/use-dm-settings';
+import { useDmSettings, type WhoCanMessage } from '@/hooks/use-dm-settings';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { useAutoplay } from '@/contexts/AutoplayContext';
 import { useConnectionQuality, setLiteModePref } from '@/hooks/use-connection-quality';
@@ -131,6 +131,29 @@ const TAB_KEYS: Record<string, string> = {
   characters: 'settings.characters',
   support: 'settings.support',
 };
+
+/**
+ * DM access options, shared by the Privacy and Messages tabs so the two never
+ * drift. Mirrors mobile's three-state DM model (`DMSettingsSection`): open,
+ * existing-threads-only, and fully disabled.
+ */
+const DM_ACCESS_OPTIONS = (t: (key: string, fallback?: string) => string) => [
+  {
+    value: 'everyone',
+    label: t('settings.everyone', 'Everyone'),
+    description: t('settings.dmEveryoneHelp', 'Anyone on the platform can message you'),
+  },
+  {
+    value: 'no-new',
+    label: t('settings.noNewMessages', 'No new conversations'),
+    description: t('settings.noNewMessagesDesc', 'Keep your existing threads, but nobody new can start one'),
+  },
+  {
+    value: 'none',
+    label: t('settings.noOneClosed', 'No one'),
+    description: t('settings.noOneClosedDesc', 'Disable all incoming messages'),
+  },
+];
 
 const tabs = [
   { icon: User, value: 'profile', label: 'settings.profile' },
@@ -1511,13 +1534,10 @@ function PrivacySettings() {
             </div>
             <SettingDrawerSelect
               value={whoCanMessage}
-              onValueChange={(value) => updateWhoCanMessage(value as 'everyone' | 'none')}
+              onValueChange={(value) => updateWhoCanMessage(value as WhoCanMessage)}
               disabled={isDmUpdating}
               title={t('settings.whoCanMessage', 'Who can message you')}
-              options={[
-                { value: 'everyone', label: t('settings.everyone', 'Everyone'), description: t('settings.everyoneDesc', 'Anyone on the platform can message you') },
-                { value: 'none', label: t('settings.noOne', 'No one'), description: t('settings.noOneDesc', 'Disable all incoming messages') },
-              ]}
+              options={DM_ACCESS_OPTIONS(t)}
             />
           </div>
 
@@ -2733,13 +2753,10 @@ function MessagesSettings() {
             </div>
             <SettingDrawerSelect
               value={whoCanMessage}
-              onValueChange={(value) => updateWhoCanMessage(value as 'everyone' | 'none')}
+              onValueChange={(value) => updateWhoCanMessage(value as WhoCanMessage)}
               disabled={isDmUpdating}
               title={t('settings.allowDirectMessages', 'Allow direct messages')}
-              options={[
-                { value: 'everyone', label: t('settings.everyone', 'Everyone'), description: t('settings.dmEveryoneHelp', 'Anyone on the platform can message you') },
-                { value: 'none', label: t('settings.noOneClosed', 'No one'), description: t('settings.noOneClosedDesc', 'Disable all incoming messages') },
-              ]}
+              options={DM_ACCESS_OPTIONS(t)}
             />
           </div>
 
@@ -2800,8 +2817,10 @@ function MessagesSettings() {
           />
 
           <div className="bg-zinc-800/50 rounded-xl p-4 text-sm text-zinc-400">
+            {/* One line per state the API actually supports — "Followers" was
+                listed here but has never been a selectable option. */}
             <p className="mb-2"><strong className="text-white">{t('settings.everyone', 'Everyone')}:</strong> {t('settings.dmEveryoneHelp', 'Anyone on the platform can message you')}</p>
-            <p className="mb-2"><strong className="text-white">{t('settings.peopleIFollow', 'Followers')}:</strong> {t('settings.dmFollowingHelp', 'Only your followers can send you messages')}</p>
+            <p className="mb-2"><strong className="text-white">{t('settings.noNewMessages', 'No new conversations')}:</strong> {t('settings.dmNoNewHelp', 'Existing threads keep working; nobody new can start one')}</p>
             <p><strong className="text-white">{t('settings.noOneClosed', 'No one')}:</strong> {t('settings.dmClosedHelp', 'All incoming messages are disabled')}</p>
           </div>
         </div>
