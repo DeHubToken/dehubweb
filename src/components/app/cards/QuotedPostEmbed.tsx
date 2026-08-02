@@ -36,8 +36,22 @@ export const QuotedPostEmbed = memo(function QuotedPostEmbed({ quotedPost, class
   const avatarAddress = quotedPost.minter || quotedPost.minterUser?.address || '';
   const resolvedAvatar = buildAvatarUrl(avatarAddress, avatarPath);
 
-  const displayName = quotedPost.minterDisplayName || quotedPost.minterUsername || quotedPost.mintername || 'Unknown';
-  const handle = quotedPost.minterUsername || quotedPost.mintername || quotedPost.minter?.slice(0, 8);
+  // The API's inline `quotedPost` object only carries `minterUser {…}` — the
+  // flat `minter*` fields it has on top-level feed posts are absent here, so
+  // reading only those (as this used to) rendered "Unknown" / a raw address
+  // for every quote, same class of bug the avatar fix above already covers.
+  const displayName =
+    quotedPost.minterUser?.displayName ||
+    quotedPost.minterUser?.username ||
+    quotedPost.minterDisplayName ||
+    quotedPost.minterUsername ||
+    quotedPost.mintername ||
+    'Unknown';
+  const handle =
+    quotedPost.minterUser?.username ||
+    quotedPost.minterUsername ||
+    quotedPost.mintername ||
+    quotedPost.minter?.slice(0, 8);
   const content = quotedPost.description || quotedPost.name || '';
   const hasVideo = quotedPost.postType === 'video' && quotedPost.videoUrl;
   
