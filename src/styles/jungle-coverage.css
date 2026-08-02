@@ -191,11 +191,31 @@ html[data-theme='jungle'] [data-tab-active='true'] {
    reflow the feed underneath while it plays.
    ========================================================================== */
 
-html[data-theme='jungle'] #app-root > div > aside,
-html[data-theme='jungle'] #app-root > div > main,
-html[data-theme='jungle'] [data-feed-nav-outer],
-html[data-theme='jungle'] [data-mobile-header],
-html[data-theme='jungle'] [data-bottom-nav] {
+/* SCOPED TO THE CINEMATIC, AND THAT SCOPING IS LOAD-BEARING.
+   ---------------------------------------------------------
+   An earlier version declared this transition unconditionally, on every route,
+   for the whole session. `will-change: transform` makes an element a
+   CONTAINING BLOCK for its `position: fixed` descendants, so <main> and the
+   two rails silently became the reference frame for anything fixed inside
+   them — which reparents those elements from the viewport to a box that is
+   narrower than it and offset from it. On the dedicated post page that showed
+   up as the middle column no longer being centred and drifting right.
+
+   This repo already knows the trap and says so twice, in lib/surface-motion.ts
+   and in components/transitions/SurfaceTransition.tsx: the surface wrapper
+   animates OPACITY ONLY, "never transform", precisely so it can never become a
+   containing block for the fixed background canvas or the mini players. This
+   file broke that rule for the whole app to buy a one-second animation.
+
+   Gating on [data-jungle-phase] means the promotion exists only while the game
+   hand-off is actually running, which is the only moment anything here
+   animates. At rest there is no will-change, no containing block, and the
+   layout is exactly what every other theme gets. */
+html[data-jungle-phase] #app-root > div > aside,
+html[data-jungle-phase] #app-root > div > main,
+html[data-jungle-phase] [data-feed-nav-outer],
+html[data-jungle-phase] [data-mobile-header],
+html[data-jungle-phase] [data-bottom-nav] {
   /* The easing is the app's own EASE_IN_OUT (see lib/surface-motion.ts), so
      the game hand-off feels like the docs hand-off rather than like a second,
      unrelated animation system. */
