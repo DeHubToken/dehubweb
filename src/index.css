@@ -905,6 +905,42 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   box-shadow: var(--glass-edge-panel) !important;
 }
 
+/* ==========================================================================
+   NESTED SURFACES — a panel inside a panel is a layout wrapper, not a card.
+   ==========================================================================
+   THE RULE: no theme ever paints a second panel background on top of a panel
+   background. The inner surface carries the material; the outer one becomes a
+   plain container.
+
+   WHY THIS LIVES HERE AND NOT IN A THEME FILE. The three rules above paint
+   [data-feed-item], [data-side-panel] and [data-page-bento] for EVERY
+   allowlisted canvas theme, so the stacking is created here, once, for all of
+   them — not by any individual theme. Fixing it per-theme means fixing it
+   eight times and re-introducing it every time a ninth theme is added. It is
+   most visible on the themes with the most opaque fills (jungle, osaka), which
+   is why it reads as a bug there first, but it is present everywhere.
+
+   WHERE IT SHOWS: the dedicated post page. SinglePostPage wraps its whole
+   column in a [data-feed-item] and then fills it with [data-page-bento]s, so
+   the page rendered a slab inside a slab — two fills, two rings and two blurs
+   stacked in front of whatever the theme's actual background is.
+
+   SCOPE: deliberately narrow. The inner list is only the hooks that are
+   genuinely page-level structures. [data-poll-card] is NOT in it — a normal
+   feed card containing a poll must keep its own material, which is the
+   opposite of what is wanted here.
+
+   The :has() also raises specificity above the three rules above, so this wins
+   without needing to be more !important than they are. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"])
+  :is([data-feed-item], [data-page-bento]):has(:is([data-page-bento], [data-comments-section])) {
+  background: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  box-shadow: none !important;
+  border-color: transparent !important;
+}
+
 /* Interactive bentos (music rows, placeholder tiles) keep hover feedback by
    raising the smoke — their zinc hover washes are overridden above. */
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) [data-page-bento].cursor-pointer:hover {
