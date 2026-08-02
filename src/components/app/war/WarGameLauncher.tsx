@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { scheduleBackgroundResume, setBackgroundPaused } from '@/lib/background-gate';
+import { useBootProgress } from '@/lib/game-boot-progress';
 
 /**
  * War theme game launcher.
@@ -389,15 +390,18 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
   // The game generates all of its assets at boot, which measured roughly 25 to
   // 60 seconds depending on the machine, and it renders black throughout with
   // no loading UI of its own. Without a readout that is indistinguishable from
-  // a crash, which is exactly how it was first reported. The vendored
-  // index.html mirrors the engine's console.info progress to us over
-  // postMessage; see public/war-game/README.md.
-  const [status, setStatus] = useState('ESTABLISHING LINK');
+  // a crash, which is exactly how it was first reported.
   const [ready, setReady] = useState(false);
-  const [stalled, setStalled] = useState(false);
-  // Elapsed seconds from the game frame's heartbeat. Independent of the log
-  // interception, so the readout always moves even if no stage is ever named.
-  const [elapsed, setElapsed] = useState(0);
+  // Only surfaced if something actually breaks. A boot that is merely slow gets
+  // the percentage and nothing else to read.
+  const [fault, setFault] = useState('');
+  // Tau of 22s puts the bar past 60% at the fast end of the measured 25-60s
+  // bake and past 90% at the slow end. See lib/game-boot-progress.
+  //
+  // A failed capability check counts as done: there is no boot to track behind
+  // the "cannot deploy" panel, and this stops the timer running for three
+  // minutes under something that is never going to load.
+  const { pct, showBoot, dismiss } = useBootProgress(ready || !cap.ok, 22000);
 
   useEffect(() => {
     const onMessage = (e: MessageEvent) => {
@@ -408,29 +412,17 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
         return;
       }
       if (d.type === 'error') {
-        setStatus(`FAULT: ${d.text ?? 'unknown'}`);
-        return;
+        setFault(d.text ?? 'unknown');
       }
-      if (d.type === 'tick') {
-        // The only progress signal there is. Naming the current subsystem
-        // would need the engine's own logs, and reading those meant patching
-        // console inside the frame, which stopped the engine running at all.
-        // An honest elapsed count beats a label that costs the game.
-        setElapsed(Number(d.text) || 0);
-        setStatus('BUILDING TERRAIN AND MATERIALS');
-      }
+      // Any other type is ignored. The bridge used to heartbeat an elapsed
+      // second count for the readout to print; that is gone from both sides,
+      // because the bar now runs on this side's own clock. Unknown types are
+      // tolerated rather than asserted on so a stale vendored index.html
+      // cannot break the overlay.
     };
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
   }, []);
-
-  // If nothing has arrived at all after 15s the bridge is not reporting, so
-  // say so rather than showing a spinner that will never resolve.
-  useEffect(() => {
-    if (ready) return;
-    const t = window.setTimeout(() => setStalled(true), 15000);
-    return () => window.clearTimeout(t);
-  }, [ready]);
 
   // The readiness signal is the one part of the bridge that could not be
   // verified end to end, and if it never fires the readout would sit over a
@@ -512,23 +504,38 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
 
       {/* Boot readout. Sits over the frame until the engine reports ready, so
           the long procedural bake reads as work in progress rather than a
-          hang. Pointer events pass through to the game underneath. */}
-      {cap.ok && !ready && (
-        <div data-war-game-boot role="status" aria-live="polite">
-          <p data-war-deploy-kicker>
-            GENERATING COMBAT ZONE
-            {elapsed > 0 ? ` / T+${String(elapsed).padStart(3, '0')}S` : ''}
-          </p>
-          <p data-war-deploy-title>{status}</p>
-          <div data-war-game-boot-bar aria-hidden="true">
-            <span />
+          hang. Pointer events pass through to the game underneath.
+
+          It is a percentage and a bar and nothing else. What was here before —
+          a rotating status line and a paragraph explaining that the assets are
+          generated locally — answered a question nobody staring at a black
+          screen is asking. The only one they have is "how far along is this",
+          so that is the whole readout now.
+
+          It is also no longer a live region. role="status" was right when the
+          text inside changed a handful of times across a whole boot; a value
+          that moves every 120ms would have a screen reader read the panel over
+          and over. `progressbar` is the role built for this and it carries the
+          number, so the visible copy is hidden from the tree rather than being
+          announced twice. */}
+      {cap.ok && showBoot && (
+        <div data-war-game-boot>
+          <p data-war-deploy-kicker>GENERATING COMBAT ZONE</p>
+          <div
+            data-war-game-boot-bar
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={pct}
+            aria-label="Generating combat zone"
+          >
+            <span style={{ width: `${pct}%` }} />
           </div>
-          <p data-war-game-boot-note>
-            {stalled
-              ? 'Still building. Every texture, mesh and particle atlas is generated on this machine, with no downloaded art, so this is work rather than a hang. Clicking will not speed it up.'
-              : 'All terrain and materials are generated on this machine. Nothing is downloaded.'}
+          <p data-war-game-boot-pct aria-hidden="true">
+            {pct}%
           </p>
-          <button type="button" data-war-game-boot-hide onClick={() => setReady(true)}>
+          {fault && <p data-war-game-boot-note>FAULT: {fault}</p>}
+          <button type="button" data-war-game-boot-hide onClick={dismiss}>
             HIDE READOUT
           </button>
         </div>
