@@ -236,18 +236,20 @@ html[data-theme='jungle'] [data-side-panel-tabs] {
    edge.
    ========================================================================== */
 
+/* Transparent at rest (canvas shows through, no hairline), tinting back in
+   only once content scrolls underneath — same as the other canvas themes. */
 html[data-theme='jungle'] [data-mobile-header] {
-  background: var(--jungle-grain), rgb(var(--jungle-bark) / 0.92) !important;
+  background: transparent !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   border-color: transparent !important;
-  box-shadow:
-    inset 0 -1px 0 rgb(0 0 0 / 0.55),
-    inset 0 -2px 0 rgb(var(--jungle-husk) / 0.18) !important;
+  box-shadow: none !important;
 }
 
 html[data-theme='jungle'] [data-mobile-header][data-scrolled='true'] {
-  background: var(--jungle-grain), rgb(var(--jungle-bark)) !important;
+  background: var(--jungle-grain), rgb(var(--jungle-bark) / 0.88) !important;
+  backdrop-filter: blur(18px) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
 }
 
 html[data-theme='jungle'] [data-bottom-nav] {
@@ -651,7 +653,7 @@ html[data-theme='jungle'] #app-root
     [data-primary-cta]
   ):not([data-feed-nav-outer]):not(main):not([data-post-overlay]):not(
     [data-post-drawer]
-  ):not([data-glass-page]) {
+  ):not([data-glass-page]):not([data-mobile-header]) {
   background-color: rgb(var(--jungle-bark) / 0.92) !important;
   background-image: var(--jungle-grain-soft) !important;
   backdrop-filter: none !important;

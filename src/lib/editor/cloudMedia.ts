@@ -141,7 +141,7 @@ export async function uploadEditorAsset(args: UploadArgs): Promise<CloudAsset> {
     throw error;
   }
   args.onProgress?.(1);
-  return data as CloudAsset;
+  return data as unknown as CloudAsset;
 }
 
 export async function listEditorAssets(wallet: string): Promise<CloudAsset[]> {
@@ -154,7 +154,7 @@ export async function listEditorAssets(wallet: string): Promise<CloudAsset[]> {
     wallet,
   );
   if (error) throw error;
-  return (data ?? []) as CloudAsset[];
+  return (data ?? []) as unknown as CloudAsset[];
 }
 
 export async function deleteEditorAsset(wallet: string, asset: Pick<CloudAsset, "id" | "storage_path" | "thumbnail_path">): Promise<void> {
