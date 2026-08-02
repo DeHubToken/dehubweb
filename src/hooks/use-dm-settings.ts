@@ -4,7 +4,23 @@ import { useAuth } from '@/contexts/AuthContext';
 import { apiCall } from '@/lib/api/dehub/core';
 import { toast } from 'sonner';
 
-export type WhoCanMessage = 'everyone' | 'none';
+/**
+ * The three states the DM API actually models, matching mobile's
+ * `DMSettingsSection` (dehub-mobile components/Settings/DMSettingsSection.tsx):
+ *
+ *   'everyone' → ACTIVE_ALL  — anyone can start a conversation
+ *   'no-new'   → NEW_DM      — no new conversations; existing threads still work
+ *   'none'     → ALL         — every incoming message is disabled
+ *
+ * Web previously only had 'everyone' | 'none' and mapped 'none' to
+ * `NEW_DM/disable`, which is the middle state — so picking "No one" here left
+ * existing threads open, and the fully-disabled state was unreachable from web
+ * while mobile could set it (and web would then render it as "No one" anyway).
+ */
+export type WhoCanMessage = 'everyone' | 'no-new' | 'none';
+
+/** Shared with mobile's `DND_KEY`. */
+const DND_STORAGE_KEY = 'dehub_dm_dnd';
 
 interface DmStatusResponse {
   disables?: string[];
@@ -13,13 +29,14 @@ interface DmStatusResponse {
 }
 
 /**
- * Derives the WhoCanMessage value from the API's disables array.
+ * Derives the WhoCanMessage value from the API's disables array, using the
+ * same precedence mobile applies (ALL beats NEW_DM beats ACTIVE_ALL).
  */
 function deriveWhoCanMessage(disables?: string[]): WhoCanMessage {
   if (!disables || disables.length === 0) return 'everyone';
-  // ACTIVE_ALL means DMs are open; only treat as closed if a disable entry is present
-  const hasDisable = disables.some(d => !d.startsWith('ACTIVE'));
-  return hasDisable ? 'none' : 'everyone';
+  if (disables.includes('ALL')) return 'none';
+  if (disables.includes('NEW_DM')) return 'no-new';
+  return 'everyone';
 }
 
 /**
@@ -28,10 +45,12 @@ function deriveWhoCanMessage(disables?: string[]): WhoCanMessage {
 function toStatusPayload(value: WhoCanMessage): { status: string; action: string } {
   switch (value) {
     case 'none':
+      return { status: 'ALL', action: 'disable' };
+    case 'no-new':
       return { status: 'NEW_DM', action: 'disable' };
     case 'everyone':
     default:
-      return { status: 'NEW_DM', action: 'enable' };
+      return { status: 'ACTIVE_ALL', action: 'enable' };
   }
 }
 
@@ -61,9 +80,10 @@ export function useDmSettings() {
 
   const whoCanMessage = deriveWhoCanMessage(dmStatus?.disables);
   const messageFee = dmStatus?.perMessageFee ?? 0;
-  // Do Not Disturb is a local concept we can keep in localStorage
+  // Do Not Disturb is device-local on both clients. Key matches mobile's
+  // `DND_KEY` (components/Settings/DMSettingsSection.tsx) so the two agree.
   const [doNotDisturb, setDoNotDisturbLocal] = useState(() => {
-    try { return localStorage.getItem('dehub_dnd') === 'true'; } catch { return false; }
+    try { return localStorage.getItem(DND_STORAGE_KEY) === 'true'; } catch { return false; }
   });
 
   // Update DM status (who can message)
@@ -122,7 +142,7 @@ export function useDmSettings() {
     },
     updateDoNotDisturb: (enabled: boolean) => {
       setDoNotDisturbLocal(enabled);
-      try { localStorage.setItem('dehub_dnd', String(enabled)); } catch {}
+      try { localStorage.setItem(DND_STORAGE_KEY, String(enabled)); } catch {}
       toast.success('DM settings updated');
     },
   };
