@@ -434,13 +434,13 @@ html[data-theme='jungle'] [data-jungle-game-boot] {
   pointer-events: none;
 }
 
-html[data-theme='jungle'] [data-jungle-game-boot] [data-jungle-deploy-kicker] {
-  font-variant-numeric: tabular-nums;
-}
-
+/* Determinate fill. The width comes in inline from the launcher, which models
+   the bake against a clock rather than measuring it — the engine builds its
+   whole world inside one synchronous constructor and reports no progress.
+   See lib/game-boot-progress. */
 html[data-theme='jungle'] [data-jungle-game-bar] {
   height: 4px;
-  margin: 0.7rem 0 0.6rem;
+  margin: 0.7rem 0 0.55rem;
   overflow: hidden;
   border-radius: 2px;
   background: rgb(var(--jungle-loam));
@@ -448,29 +448,37 @@ html[data-theme='jungle'] [data-jungle-game-bar] {
 }
 html[data-theme='jungle'] [data-jungle-game-bar] > span {
   display: block;
-  width: 36%;
+  width: 0;
   height: 100%;
   border-radius: 2px;
-  background: linear-gradient(
-    90deg,
-    rgb(var(--jungle-leaf-c) / 0) 0%,
-    rgb(var(--jungle-leaf-c)) 50%,
-    rgb(var(--jungle-leaf-c) / 0) 100%
-  );
-  animation: jungle-bar 1.6s ease-in-out infinite;
+  background: rgb(var(--jungle-leaf-c));
+  /* Linear and slightly longer than the 120ms update, so consecutive steps
+     overlap into one continuous crawl instead of ticking. */
+  transition: width 200ms linear;
 }
 
-@keyframes jungle-bar {
-  from {
-    transform: translateX(-110%);
-  }
-  to {
-    transform: translateX(390%);
-  }
-}
-
-html[data-theme='jungle'] [data-jungle-game-boot-note] {
+/* The number is the readout now, so it is sized to be read at a glance rather
+   than tucked under the bar as a caption. */
+html[data-theme='jungle'] [data-jungle-game-pct] {
   margin: 0;
+  font-family: var(--jungle-mono);
+  font-size: 1.35rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: rgb(var(--jungle-bone));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The fill still has to move — it is the information. Only the tween goes,
+     so it steps rather than glides. */
+  html[data-theme='jungle'] [data-jungle-game-bar] > span {
+    transition: none;
+  }
+}
+
+/* Fault line only. Nothing is printed here during a normal walk-in. */
+html[data-theme='jungle'] [data-jungle-game-boot-note] {
+  margin: 0.6rem 0 0;
   font-size: 0.74rem;
   line-height: 1.45;
   color: rgb(var(--jungle-sand));

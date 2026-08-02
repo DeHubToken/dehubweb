@@ -57,7 +57,6 @@
 -->
 <script>
 (function () {
-  var t0 = Date.now();
   var done = false;
 
   function send(type, text) {
@@ -66,13 +65,16 @@
     } catch (e) { /* no parent, or a parent that will not take messages */ }
   }
 
-  /* Heartbeat. An honest elapsed count beats a fabricated percentage: the bake
-     has no reportable stages from out here, and a bar that claims 40% and then
-     sits there is worse than a number that visibly keeps moving. */
-  var beat = setInterval(function () {
-    if (done) return;
-    send('tick', String(Math.round((Date.now() - t0) / 1000)));
-  }, 1000);
+  /* NOTE ON THE HEARTBEAT THAT USED TO BE HERE.
+     This sent an elapsed second count every second, which the host rendered as
+     "T+012S". That is gone: the host now draws a percentage bar off its own
+     clock, so it needs nothing per-second from in here, and a timer that only
+     feeds a display nobody reads is just a wakeup. The bake still cannot be
+     measured from out here — it happens inside one synchronous constructor —
+     which is exactly why the host models it rather than reporting it.
+
+     What is left below is the part that could never be modelled: the moment the
+     engine is actually up, and any error that stops it getting there. */
 
   /* Ready = the engine has constructed itself AND started its loop AND removed
      its own boot card. All three, because `window.__game` is assigned before
@@ -83,7 +85,6 @@
     if (g && g.running && !document.getElementById('boot')) {
       done = true;
       clearInterval(poll);
-      clearInterval(beat);
       send('ready', '');
     }
   }, 250);
