@@ -389,9 +389,7 @@ html[data-theme='war'] [data-comments-section] [data-comment-id] {
 }
 html[data-theme='war'] [data-comments-section] [data-comment-id]:hover {
   background-color: rgb(var(--war-hud) / 0.05);
-  box-shadow:
-    inset 2px 0 0 rgb(var(--war-hud) / 0.55),
-    inset 0 -1px 0 rgb(var(--war-hud) / 0.1);
+  box-shadow: inset 0 -1px 0 rgb(var(--war-hud) / 0.1);
 }
 
 /* Quotes / likers / reposts rows. Section 6 flattened these to the same cyan
@@ -407,9 +405,7 @@ html[data-theme='war']
   [data-comments-section]
   button[class*='bg-white/5']:hover {
   background-color: rgb(var(--war-hud) / 0.08) !important;
-  box-shadow:
-    inset 2px 0 0 rgb(var(--war-hud) / 0.6),
-    inset 0 -1px 0 rgb(var(--war-hud) / 0.12) !important;
+  box-shadow: inset 0 -1px 0 rgb(var(--war-hud) / 0.12) !important;
 }
 
 /* Empty states. Mono and wide tracking only - war-theme.css section 11 sets
