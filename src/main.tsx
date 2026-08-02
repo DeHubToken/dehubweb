@@ -44,6 +44,24 @@ import "./styles/war-logo.css";
 import "./styles/osaka-frame.css";
 import "./styles/osaka-theme.css";
 
+// Jungle theme chrome. Same frame/theme split as War and Osaka, for the same
+// reason: jungle-frame.css owns the design tokens and the carved-wood
+// primitives (grain, routed bevels, engraving, knots, rope rules);
+// jungle-theme.css consumes them to dress every app surface. Swapping these two
+// leaves every var(--jungle-*) unresolved.
+//
+// jungle-coverage.css comes last of the three: it closes the portal gap
+// (modals/drawers/dropdowns sit outside #app-root), covers the routes that carry
+// no shared hook, and owns the cinematic hand-off into the game. Several of its
+// rules tie jungle-theme.css on specificity and win only on source order.
+//
+// All three are scoped entirely to html[data-theme="jungle"], so they are inert
+// under every other theme and independent of the War and Osaka blocks above
+// (mutually exclusive scopes, so their relative order does not matter).
+import "./styles/jungle-frame.css";
+import "./styles/jungle-theme.css";
+import "./styles/jungle-coverage.css";
+
 clearChunkReloadFlag();
 installSupabaseInterceptor();
 

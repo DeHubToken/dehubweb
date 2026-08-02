@@ -1,0 +1,512 @@
+/* ==========================================================================
+   JUNGLE - coverage, cinematic, and game chrome
+   ==========================================================================
+
+   Three jobs this file does that jungle-theme.css cannot:
+
+     1. COVERAGE. The surfaces that carry no shared hook and no glass-block
+        rule — the composer, the sidebar rail, dropdown items, the wallet and
+        notification pages, the AI chat. Left alone these are the routes where
+        a theme visibly runs out.
+     2. THE CINEMATIC. The establishing-shot hand-off into the game: the chrome
+        slides away and leaves the canopy, which is the same canvas that was
+        behind the feed a moment earlier. Driven entirely by
+        html[data-jungle-phase], written by lib/jungle-cinematic.ts.
+     3. GAME CHROME. The deploy prompt, the overlay, the boot readout.
+
+   LOAD ORDER: last of the three Jungle files. Several rules here deliberately
+   tie jungle-theme.css on specificity and win on source order.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. THE LEFT RAIL
+   ==========================================================================
+   DesktopSidebar's own panel already carries [data-side-panel], so it is
+   wood. What is not covered is the nav rail's active state and its bottom
+   fade, both of which ship zinc gradients that read as grey smoke on timber.
+   ========================================================================== */
+
+/* The sliding indicator behind the active nav item. Carved into the plank,
+   with the leaf marker riding on its left — the theme's active language,
+   identical to the feed nav and the filter chips. */
+html[data-theme='jungle'] [data-sidebar-active-indicator] {
+  border-radius: var(--jungle-r-card) !important;
+  background: rgb(var(--jungle-loam) / 0.75) !important;
+  box-shadow:
+    var(--jungle-edge-carved),
+    inset 3px 0 0 rgb(var(--jungle-leaf-c) / 0.7) !important;
+}
+
+/* The scroll fade at the bottom of the rail is a `from-zinc-900` gradient. */
+html[data-theme='jungle'] [data-sidebar-fade] {
+  background-image: linear-gradient(
+    to top,
+    rgb(var(--jungle-bark)) 0%,
+    rgb(var(--jungle-bark) / 0.7) 45%,
+    rgb(var(--jungle-bark) / 0) 100%
+  ) !important;
+}
+
+/* ==========================================================================
+   2. MENUS AND MENU ITEMS
+   ==========================================================================
+   jungle-theme.css section 5 paints the popper WRAPPER. The items inside it
+   have their own hover fills, which stay zinc without this.
+   ========================================================================== */
+
+html[data-theme='jungle'] :is([role='menuitem'], [role='option'], [role='tab']):is(
+    :hover,
+    [data-highlighted]
+  ) {
+  background-color: rgb(var(--jungle-timber)) !important;
+  color: rgb(var(--jungle-bone)) !important;
+}
+
+html[data-theme='jungle'] :is([role='menuitem'], [role='option'])[data-state='checked'],
+html[data-theme='jungle'] :is([role='menuitem'], [role='option'])[aria-selected='true'] {
+  color: rgb(var(--jungle-leaf-c)) !important;
+}
+
+/* Toasts are portalled into their own toaster root, which sets its own width
+   and can trap the plank's shadow. */
+html[data-theme='jungle'] [data-sonner-toaster] {
+  --normal-bg: rgb(var(--jungle-bark)) !important;
+  --normal-text: rgb(var(--jungle-bone)) !important;
+  --normal-border: rgb(0 0 0 / 0.5) !important;
+}
+
+/* ==========================================================================
+   3. COMPOSERS
+   ==========================================================================
+   The comment composer and the AI chat input are the two places a user types
+   the most, so they are the two places a half-finished theme is most obvious.
+   Both become routed troughs, matching every other input in section 7 of
+   jungle-theme.css.
+   ========================================================================== */
+
+html[data-theme='jungle'] [data-comment-composer] {
+  border-radius: var(--jungle-r-card) !important;
+  border-color: transparent !important;
+  background: rgb(var(--jungle-loam) / 0.72) !important;
+  box-shadow: var(--jungle-edge-carved) !important;
+}
+
+/* The tool row under the composer. Icons sit ON the wood, not in the trough,
+   so they get the raised treatment. */
+html[data-theme='jungle'] [data-comment-tool] {
+  color: rgb(var(--jungle-sand)) !important;
+  border-radius: var(--jungle-r-chip) !important;
+}
+html[data-theme='jungle'] [data-comment-tool]:hover {
+  color: rgb(var(--jungle-leaf-c)) !important;
+  background-color: rgb(var(--jungle-timber)) !important;
+}
+
+html[data-theme='jungle'] [data-ai-chat] {
+  border-radius: var(--jungle-r-panel) !important;
+  border-color: transparent !important;
+  background: var(--jungle-grain), rgb(var(--jungle-bark)) !important;
+  box-shadow: var(--jungle-edge-lift) !important;
+}
+
+/* ==========================================================================
+   4. PAGES WITH THEIR OWN SHELL
+   ==========================================================================
+   These routes build their own container rather than using [data-page-bento],
+   so the shared block never reaches them.
+   ========================================================================== */
+
+html[data-theme='jungle'] :is([data-wallet-page], [data-notifications-page], [data-builder-surface]) {
+  background-color: transparent !important;
+}
+
+html[data-theme='jungle'] [data-feed-filter-panel] {
+  border-radius: var(--jungle-r-panel) !important;
+  border-color: transparent !important;
+  background: var(--jungle-grain), rgb(var(--jungle-bark)) !important;
+  box-shadow: var(--jungle-edge-lift) !important;
+}
+
+/* Docs table-of-contents chips and "view all" links: small wooden tags. */
+html[data-theme='jungle'] [data-toc-chip] {
+  border-radius: var(--jungle-r-chip) !important;
+  border-color: transparent !important;
+  background: rgb(var(--jungle-timber) / 0.8) !important;
+  color: rgb(var(--jungle-sand)) !important;
+  box-shadow: var(--jungle-edge) !important;
+}
+html[data-theme='jungle'] [data-toc-chip][data-active='true'] {
+  color: rgb(var(--jungle-leaf-c)) !important;
+  background: rgb(var(--jungle-loam) / 0.85) !important;
+  box-shadow:
+    var(--jungle-edge-carved),
+    inset 0 0 0 1px rgb(var(--jungle-leaf-c) / 0.34) !important;
+}
+
+html[data-theme='jungle'] [data-view-all] {
+  color: rgb(var(--jungle-leaf-c)) !important;
+}
+
+/* The other sliding tab indicator in the app (profile/page tab bars). */
+html[data-theme='jungle'] [data-active-tab-indicator] {
+  background: rgb(var(--jungle-leaf-c) / 0.85) !important;
+  border-radius: 2px !important;
+  box-shadow: 0 0 8px rgb(var(--jungle-leaf-c) / 0.35) !important;
+}
+
+html[data-theme='jungle'] [data-tab-active='true'] {
+  color: rgb(var(--jungle-leaf-c)) !important;
+}
+
+/* ==========================================================================
+   5. THE CINEMATIC
+   ==========================================================================
+   "The jungle background is the first scene, so when someone starts the game
+   the side panels slide out and everything else slides up or down off the
+   screen, then it starts."
+
+   All of it is driven by ONE attribute on <html>, so there are no inline
+   styles to clean up and no per-element state to unwind if the user backs out
+   half way — removing the attribute reverses every transition below in place.
+
+   WHY STRUCTURAL SELECTORS FOR THE RAILS. The two rails are the first and last
+   `aside` in the layout row (AppSidebar renders a fragment whose DesktopSidebar
+   contributes the left `motion.aside`; RightSidebar contributes the right one).
+   Both already carry [data-side-panel] on their INNER panels, but that hook
+   cannot tell left from right, and the panels are not the elements that own the
+   column's box. Matching the asides by position is what lets each rail leave
+   toward its own edge of the screen instead of both sliding the same way.
+
+   TRANSFORM AND OPACITY ONLY. Nothing here animates width, height, margin or
+   display: a layout-animating cinematic on a low-end phone drops frames at
+   exactly the moment the theme is trying to look expensive, and it would also
+   reflow the feed underneath while it plays.
+   ========================================================================== */
+
+html[data-theme='jungle'] #app-root > div > aside,
+html[data-theme='jungle'] #app-root > div > main,
+html[data-theme='jungle'] [data-feed-nav-outer],
+html[data-theme='jungle'] [data-mobile-header],
+html[data-theme='jungle'] [data-bottom-nav] {
+  /* The easing is the app's own EASE_IN_OUT (see lib/surface-motion.ts), so
+     the game hand-off feels like the docs hand-off rather than like a second,
+     unrelated animation system. */
+  transition:
+    transform 720ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 520ms ease;
+  will-change: transform;
+}
+
+/* -- panels out ----------------------------------------------------------- */
+html[data-jungle-phase] #app-root > div > aside:first-of-type {
+  transform: translateX(-118%);
+  opacity: 0;
+}
+html[data-jungle-phase] #app-root > div > aside:last-of-type {
+  transform: translateX(118%);
+  opacity: 0;
+}
+
+/* -- content down --------------------------------------------------------- */
+html[data-jungle-phase] #app-root > div > main {
+  transform: translateY(26%);
+  opacity: 0;
+}
+
+/* -- chrome up / down ----------------------------------------------------- */
+html[data-jungle-phase] [data-feed-nav-outer],
+html[data-jungle-phase] [data-mobile-header] {
+  transform: translateY(-140%);
+  opacity: 0;
+}
+html[data-jungle-phase] [data-bottom-nav] {
+  transform: translateY(140%);
+  opacity: 0;
+}
+
+/* Everything that has left the screen must also stop taking input, or a user
+   can still tab into an invisible sidebar while the game has the viewport. */
+html[data-jungle-phase] #app-root {
+  pointer-events: none;
+}
+/* The toaster is portalled to <body>, so it is a sibling of #app-root and none
+   of the transforms above carry it away. A toast sliding in over the
+   establishing shot would be the one thing left on screen from the website. */
+html[data-jungle-phase] [data-sonner-toaster] {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms ease;
+}
+
+/* The page scroll is frozen for the duration by the launcher (body overflow),
+   but the canvas must keep painting — it IS the scene. */
+html[data-jungle-phase] {
+  overflow: hidden;
+}
+
+/* Reduced motion: the slide becomes a cut. The panels still leave (the game
+   genuinely needs the viewport) but nothing travels. */
+@media (prefers-reduced-motion: reduce) {
+  html[data-jungle-phase] #app-root > div > aside,
+  html[data-jungle-phase] #app-root > div > main,
+  html[data-jungle-phase] [data-feed-nav-outer],
+  html[data-jungle-phase] [data-mobile-header],
+  html[data-jungle-phase] [data-bottom-nav] {
+    transform: none;
+    opacity: 0;
+  }
+}
+
+/* ==========================================================================
+   6. THE DEPLOY PROMPT
+   ==========================================================================
+   A carved sign nailed to a tree. Same interaction contract as War's: an arrow
+   key OFFERS the game rather than launching it, so nothing is hijacked.
+   ========================================================================== */
+
+html[data-theme='jungle'] [data-jungle-deploy-prompt] {
+  position: fixed;
+  left: 50%;
+  bottom: clamp(1.25rem, 6vh, 4rem);
+  z-index: 9990;
+  width: min(24rem, calc(100vw - 2rem));
+  transform: translateX(-50%);
+  padding: 1rem 1.15rem 1.1rem;
+  border-radius: var(--jungle-r-panel);
+  background: var(--jungle-grain), rgb(var(--jungle-bark));
+  box-shadow: var(--jungle-edge-lift);
+  text-align: center;
+  animation: jungle-prompt-in 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes jungle-prompt-in {
+  from {
+    transform: translate(-50%, 1.5rem);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+html[data-theme='jungle'] [data-jungle-deploy-kicker] {
+  margin: 0 0 0.2rem;
+  font-family: var(--jungle-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  color: rgb(var(--jungle-gold));
+  text-shadow: 0 1px 0 rgb(0 0 0 / 0.6);
+}
+
+html[data-theme='jungle'] [data-jungle-deploy-title] {
+  margin: 0 0 0.85rem;
+  font-size: 1.02rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: rgb(var(--jungle-bone));
+  text-shadow:
+    0 -1px 0 rgb(0 0 0 / 0.7),
+    0 1px 0 rgb(var(--jungle-bone) / 0.08);
+}
+
+html[data-theme='jungle'] [data-jungle-deploy-actions] {
+  display: flex;
+  gap: 0.5rem;
+}
+
+html[data-theme='jungle'] [data-jungle-deploy-actions] button {
+  flex: 1;
+  /* Centred explicitly rather than inherited: these two buttons are the first
+     thing a player ever sees of this theme's controls. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.25rem;
+  padding: 0 0.75rem;
+  line-height: 1.2;
+  border: 0;
+  border-radius: var(--jungle-r-chip);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+/* Deploy is the hero: the gold plaque, matching [data-primary-cta] exactly. */
+html[data-theme='jungle'] [data-jungle-deploy-actions] button:first-child {
+  background: linear-gradient(
+    180deg,
+    rgb(var(--jungle-gold)) 0%,
+    rgb(var(--jungle-gold) / 0.82) 100%
+  );
+  color: rgb(var(--jungle-loam));
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.42),
+    0 2px 0 rgb(120 78 24 / 0.55);
+}
+html[data-theme='jungle'] [data-jungle-deploy-actions] button:first-child:active {
+  transform: translateY(2px);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3);
+}
+
+html[data-theme='jungle'] [data-jungle-deploy-actions] button:last-child {
+  background: rgb(var(--jungle-timber));
+  color: rgb(var(--jungle-sand));
+  box-shadow: var(--jungle-edge);
+}
+html[data-theme='jungle'] [data-jungle-deploy-actions] button:last-child:hover {
+  color: rgb(var(--jungle-bone));
+}
+
+/* ==========================================================================
+   7. THE GAME OVERLAY
+   ==========================================================================
+   Fades in only AFTER the chrome has left and the camera has finished its
+   push, so the transition reads as one continuous move into the scene rather
+   than as a panel appearing over a website.
+   ========================================================================== */
+
+html[data-theme='jungle'] [data-jungle-game-overlay] {
+  position: fixed;
+  inset: 0;
+  z-index: 9995;
+  background: transparent;
+}
+
+html[data-theme='jungle'] [data-jungle-game-frame] {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  opacity: 0;
+  /* Slow, because it is crossfading against a live canvas of the same scene.
+     A fast cut here is the one thing that would break the illusion. */
+  transition: opacity 900ms ease;
+}
+html[data-theme='jungle'] [data-jungle-game-frame][data-visible='true'] {
+  opacity: 1;
+}
+
+html[data-theme='jungle'] [data-jungle-game-exit] {
+  position: absolute;
+  top: max(0.75rem, env(safe-area-inset-top));
+  right: max(0.75rem, env(safe-area-inset-right));
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  padding: 0 0.8rem;
+  border: 0;
+  border-radius: var(--jungle-r-chip);
+  background: rgb(var(--jungle-bark) / 0.92);
+  color: rgb(var(--jungle-sand));
+  font-family: var(--jungle-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  line-height: 1.2;
+  cursor: pointer;
+  box-shadow: var(--jungle-edge-lift);
+}
+html[data-theme='jungle'] [data-jungle-game-exit]:hover {
+  color: rgb(var(--jungle-bone));
+}
+
+/* -- boot readout ---------------------------------------------------------
+   The vendored game generates every mesh, texture and sound on the device, so
+   there is a real wait with nothing on screen. Without a readout that is
+   indistinguishable from a crash — the exact failure the War launcher was
+   reported for. pointer-events:none throughout, so it never blocks the game
+   underneath it while it waits. */
+html[data-theme='jungle'] [data-jungle-game-boot] {
+  position: absolute;
+  left: 50%;
+  bottom: 12%;
+  z-index: 2;
+  width: min(30rem, calc(100vw - 2rem));
+  transform: translateX(-50%);
+  padding: 1.1rem 1.25rem;
+  border-radius: var(--jungle-r-panel);
+  background: var(--jungle-grain), rgb(var(--jungle-bark) / 0.94);
+  box-shadow: var(--jungle-edge-lift);
+  text-align: center;
+  pointer-events: none;
+}
+
+html[data-theme='jungle'] [data-jungle-game-boot] [data-jungle-deploy-kicker] {
+  font-variant-numeric: tabular-nums;
+}
+
+html[data-theme='jungle'] [data-jungle-game-bar] {
+  height: 4px;
+  margin: 0.7rem 0 0.6rem;
+  overflow: hidden;
+  border-radius: 2px;
+  background: rgb(var(--jungle-loam));
+  box-shadow: var(--jungle-edge-carved);
+}
+html[data-theme='jungle'] [data-jungle-game-bar] > span {
+  display: block;
+  width: 36%;
+  height: 100%;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    rgb(var(--jungle-leaf-c) / 0) 0%,
+    rgb(var(--jungle-leaf-c)) 50%,
+    rgb(var(--jungle-leaf-c) / 0) 100%
+  );
+  animation: jungle-bar 1.6s ease-in-out infinite;
+}
+
+@keyframes jungle-bar {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(390%);
+  }
+}
+
+html[data-theme='jungle'] [data-jungle-game-boot-note] {
+  margin: 0;
+  font-size: 0.74rem;
+  line-height: 1.45;
+  color: rgb(var(--jungle-sand));
+}
+
+html[data-theme='jungle'] [data-jungle-game-boot-hide] {
+  margin-top: 0.7rem;
+  padding: 0.3rem 0.7rem;
+  border: 0;
+  border-radius: var(--jungle-r-chip);
+  background: rgb(var(--jungle-timber));
+  color: rgb(var(--jungle-sand));
+  font-family: var(--jungle-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  /* The only interactive thing inside a pointer-events:none panel. */
+  pointer-events: auto;
+  box-shadow: var(--jungle-edge);
+}
+
+html[data-theme='jungle'] [data-jungle-game-missing] {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: min(30rem, calc(100vw - 2rem));
+  transform: translate(-50%, -50%);
+  padding: 1.4rem 1.5rem;
+  border-radius: var(--jungle-r-panel);
+  background: var(--jungle-grain), rgb(var(--jungle-bark));
+  box-shadow: var(--jungle-edge-lift);
+  text-align: center;
+}
+html[data-theme='jungle'] [data-jungle-game-missing] p:last-child {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: rgb(var(--jungle-sand));
+}
