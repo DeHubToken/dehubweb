@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { scheduleBackgroundResume, setBackgroundPaused } from '@/lib/background-gate';
 import { setJunglePhase, setJunglePush } from '@/lib/jungle-cinematic';
+import { useBootProgress } from '@/lib/game-boot-progress';
 
 /**
  * Jungle theme game launcher.
@@ -334,10 +335,17 @@ function JungleGameOverlay({ onExit }: { onExit: () => void }) {
   // context on every re-render.
   const [cap] = useState(checkCapability);
 
-  const [status, setStatus] = useState('PARTING THE LEAVES');
   const [ready, setReady] = useState(false);
-  const [stalled, setStalled] = useState(false);
-  const [elapsed, setElapsed] = useState(0);
+  // Only surfaced if something actually breaks. A walk-in that is merely slow
+  // gets the percentage and nothing else to read.
+  const [fault, setFault] = useState('');
+  // Tau of 12s: this bake is a good deal shorter than War's, so the same curve
+  // with a smaller constant. See lib/game-boot-progress.
+  //
+  // A failed capability check counts as done: there is no boot to track behind
+  // the "cannot walk in" panel, and this stops the timer running for three
+  // minutes under something that is never going to load.
+  const { pct, showBoot, dismiss } = useBootProgress(ready || !cap.ok, 12000);
 
   /* -- beat 1 + 2: chrome leaves, camera pushes ---------------------------- */
   useEffect(() => {
@@ -390,25 +398,17 @@ function JungleGameOverlay({ onExit }: { onExit: () => void }) {
         return;
       }
       if (d.type === 'error') {
-        setStatus(`FAULT: ${d.text ?? 'unknown'}`);
-        return;
+        setFault(d.text ?? 'unknown');
       }
-      if (d.type === 'tick') {
-        setElapsed(Number(d.text) || 0);
-        setStatus('GROWING THE FOREST');
-      }
+      /* Any other type is ignored. The bridge used to heartbeat an elapsed
+         second count for the readout to print; that is gone from both sides,
+         because the bar now runs on this side's own clock. Unknown types are
+         tolerated rather than asserted on so a stale vendored index.html
+         cannot break the overlay. */
     };
     window.addEventListener('message', onMessage);
     return () => window.removeEventListener('message', onMessage);
   }, []);
-
-  /* If nothing has arrived at all after 15s the bridge is not reporting, so say
-     so rather than showing a spinner that will never resolve. */
-  useEffect(() => {
-    if (ready) return;
-    const t = window.setTimeout(() => setStalled(true), 15000);
-    return () => window.clearTimeout(t);
-  }, [ready]);
 
   /* The readiness signal must never be the ONLY way out of the readout, or a
      bridge that fails to fire leaves it sitting over a playable game forever.
@@ -500,22 +500,48 @@ function JungleGameOverlay({ onExit }: { onExit: () => void }) {
 
       {/* Boot readout. Sits over the frame until the engine reports ready, so
           the long procedural bake reads as work in progress rather than a hang.
-          Pointer events pass through to the game underneath. */}
-      {cap.ok && !ready && (
-        <div data-jungle-game-boot role="status" aria-live="polite">
-          <p data-jungle-deploy-kicker>
-            {elapsed > 0 ? `T+${String(elapsed).padStart(3, '0')}S` : 'STARTING OUT'}
-          </p>
-          <p data-jungle-deploy-title>{status}</p>
-          <div data-jungle-game-bar aria-hidden="true">
-            <span />
+          Pointer events pass through to the game underneath.
+
+          It is a percentage and a bar and nothing else. What was here before —
+          a rotating status line and a paragraph about plants being grown on
+          this machine — answered a question nobody staring at a black screen is
+          asking. The only one they have is "how far along is this", so that is
+          the whole readout now.
+
+          It is also no longer a live region. role="status" was right when the
+          text inside changed a handful of times across a whole boot; a value
+          that moves every 120ms would have a screen reader read the panel over
+          and over. `progressbar` is the role built for this and it carries the
+          number, so the visible copy is hidden from the tree rather than being
+          announced twice. */}
+      {cap.ok && showBoot && (
+        <div data-jungle-game-boot>
+          <p data-jungle-deploy-title>Growing the forest</p>
+          <div
+            data-jungle-game-bar
+            role="progressbar"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={pct}
+            aria-label="Growing the forest"
+          >
+            <span style={{ width: `${pct}%` }} />
           </div>
-          <p data-jungle-game-boot-note>
-            {stalled
-              ? 'Still growing. Every plant, rock and sound is generated on this machine, with no downloaded art, so this is work rather than a hang. Clicking will not speed it up.'
-              : 'A hundred thousand plants are being grown on this machine. Nothing is downloaded.'}
+          <p data-jungle-game-pct aria-hidden="true">
+            {pct}%
           </p>
-          <button type="button" data-jungle-game-boot-hide onClick={() => setReady(true)}>
+          {fault && <p data-jungle-game-boot-note>Fault: {fault}</p>}
+          {/* Both, and in this order. `ready` is what uncovers the frame here
+              (it drives data-visible on the iframe), so hiding the readout
+              without it would leave the player looking at nothing at all. */}
+          <button
+            type="button"
+            data-jungle-game-boot-hide
+            onClick={() => {
+              setReady(true);
+              dismiss();
+            }}
+          >
             HIDE
           </button>
         </div>
