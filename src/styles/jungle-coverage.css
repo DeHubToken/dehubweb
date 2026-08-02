@@ -102,10 +102,16 @@ html[data-theme='jungle'] [data-comment-tool]:hover {
   background-color: rgb(var(--jungle-timber)) !important;
 }
 
+/* In-app panel, so it follows house rule 2 (jungle-theme.css): the bridge's
+   alpha plus the theme blur, NOT a solid fill. It reads the token rather than
+   pinning a number so the openness of the whole theme stays adjustable from
+   one place. */
 html[data-theme='jungle'] [data-ai-chat] {
   border-radius: var(--jungle-r-panel) !important;
   border-color: transparent !important;
-  background: var(--jungle-grain), rgb(var(--jungle-bark)) !important;
+  background: var(--jungle-grain), rgb(var(--jungle-bark) / var(--glass-regular)) !important;
+  backdrop-filter: var(--jungle-blur) !important;
+  -webkit-backdrop-filter: var(--jungle-blur) !important;
   box-shadow: var(--jungle-edge-lift) !important;
 }
 
@@ -123,7 +129,9 @@ html[data-theme='jungle'] :is([data-wallet-page], [data-notifications-page], [da
 html[data-theme='jungle'] [data-feed-filter-panel] {
   border-radius: var(--jungle-r-panel) !important;
   border-color: transparent !important;
-  background: var(--jungle-grain), rgb(var(--jungle-bark)) !important;
+  background: var(--jungle-grain), rgb(var(--jungle-bark) / var(--glass-regular)) !important;
+  backdrop-filter: var(--jungle-blur) !important;
+  -webkit-backdrop-filter: var(--jungle-blur) !important;
   box-shadow: var(--jungle-edge-lift) !important;
 }
 

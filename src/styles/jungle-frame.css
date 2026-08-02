@@ -5,77 +5,78 @@
    This file is the vocabulary. jungle-theme.css is the binding, and
    jungle-coverage.css closes the portal gap.
 
-   Everything here is a primitive: a token, or a drawing system exposed as a
-   data-* hook. Nothing here decides which surface gets which treatment. Same
-   separation War and Osaka use, for the same reason: decoration inlined per
-   surface means every new surface needs new bespoke CSS and the theme can
-   never get denser without a rewrite.
-
    LOAD ORDER (main.tsx):
      index.css -> jungle-frame.css -> jungle-theme.css -> jungle-coverage.css
    jungle-frame.css must come after index.css so its token redefinitions win
    the tie against the shared canvas-theme block (both score 0,1,1), and before
    the other two so their bindings can consume the tokens.
 
+   ==========================================================================
+   WHAT THE FIRST VERSION GOT WRONG
+   ==========================================================================
+
+   Worth writing down, because both mistakes are the kind a theme file invites.
+
+   1. IT HID THE SCENE. Wood is opaque, so v1 set the surfaces to 0.90-0.97
+      alpha and switched the blur off. Materially defensible, visually fatal:
+      the app is ~70% panel by area, so a fully opaque chrome means the
+      expensive animated jungle behind it is never actually seen. The picture
+      IS the theme. Panels now sit at 0.72-0.86 with a small blur, which is
+      enough to read as solid timber while the canopy still moves behind them
+      and light still changes at their edges.
+
+   2. THE GRAIN WAS STRIPES. v1 drew it with repeating-linear-gradient, which
+      is a comb: perfectly regular period, perfectly straight lines, identical
+      on every surface. That reads as corduroy. Real grain is FIBROUS and
+      irregular, so it is now an SVG feTurbulence noise, stretched hard along
+      one axis (baseFrequency '0.86 0.012' — high across the fibre, low along
+      it). Two passes, one dark and one light, at different seeds, so fibres
+      both cut into and catch the light. Regular gradients survive only as the
+      wide cathedral banding underneath, which is the part of wood that
+      genuinely is periodic.
+
+   ==========================================================================
    THE IDEA
+   ==========================================================================
 
-   Cosmic is glass over a nebula. Osaka is wet glass over neon. Jungle is not
-   glass at all, and that is the entire point of the theme: every bento, panel,
-   composer and text box in the app is a PLANK OF CARVED HARDWOOD nailed up in
-   front of the canopy.
+   Cosmic is glass over a nebula. Osaka is wet glass over neon. Jungle is
+   CARVED HARDWOOD hung in a rainforest hollow — every bento, panel, pill and
+   text box is a plank, and the light falling on it comes from the same place
+   the light in the canvas comes from: a bright misty gap, ahead and slightly
+   above.
 
-   Three consequences follow, and they are what the rest of these files
-   enforce:
+   That last part is the rule that makes the chrome and the canvas look like
+   one picture instead of two:
 
-     1. WOOD IS OPAQUE. The shared canvas-theme block paints app surfaces as
-        translucent smoked glass with a 24px backdrop blur. Jungle keeps the
-        block (it is the cheapest way to reach every surface at once) but
-        remaps the bridge so the fill is nearly solid and the blur is GONE.
-        That is a material decision first — you cannot see the jungle through a
-        plank — and a performance decision second, and the second one is large:
-        backdrop-filter on ~30 feed cards is the most expensive thing any theme
-        in this app does, and this is the only theme that pays none of it. The
-        brief asked for a theme that loads on a low-RAM phone; deleting every
-        backdrop-filter in the app is most of how that is achieved.
-
-     2. EVERY PLANK HAS GRAIN. Flat brown is not wood, it is cardboard. The
-        grain is a stack of repeating gradients (--jungle-grain), so it costs
-        no image, no request and no memory, and it composites in the same paint
-        the fill already needed.
-
-     3. EDGES ARE ROUTED, NOT DRAWN. A 1px hairline reads as a UI border. A
-        real carved edge is a bevel: the top lip catches the light coming down
-        through the canopy, the bottom sits in its own shadow. --jungle-edge is
-        that, and it is the single most reused value in the theme.
+     - TOP EDGES ARE WARM AND LIT. Not white — the gap is a pale warm grey, so
+       the lit lip is --jungle-glint, never rgb(255 255 255).
+     - BOTTOM EDGES POOL COOL SHADOW, tinted green-black like the forest floor,
+       never neutral black.
+     - RAISED SURFACES catch that light; RECESSED ones (inputs, troughs, active
+       tabs) invert it exactly. That inversion is the entire depth language.
 
    THE HOOKS
 
      [data-jungle-plank]   grain + routed bevel. The signature surface.
      [data-jungle-carve]   engraved text, cut INTO the wood.
-     [data-jungle-brand]   branded/burned text, for labels and kickers.
+     [data-jungle-brand]   branded/burned text, for kickers and labels.
      [data-jungle-knot]    a knot in the grain, for large panels.
+     [data-jungle-moss]    lichen creeping from a corner. Big surfaces only.
      [data-jungle-rope]    a braided rope rule, for dividers.
      [data-jungle-leaf]    a small leaf marker, for active/selected states.
      [data-jungle-readout] mono numerics. Never case-transformed.
 
-   TWO PSEUDO-ELEMENTS, TWO JOBS, so primitives compose instead of fighting:
-     ::before  the MATERIAL layer - grain and knots (paint)
+   THREE PSEUDO-ELEMENT SLOTS, so primitives compose instead of fighting:
+     ::before  the MATERIAL layer - grain, knots, moss (paint)
      ::after   the EDGE layer     - the routed bevel (outline)
+   Anything needing a third slot uses a child, not a fight over these two.
 
-   PALETTE LOCK. One accent, --jungle-leaf-c (canopy green). --jungle-gold is
-   sunlight: warnings, live states, and the ONE hero moment per screen.
-   --jungle-alert is destructive only. The canvas behind carries the full range
-   of greens; the chrome carries exactly one. Canvas gets the jungle, chrome
-   gets the lock — same rule Osaka states for neon, and it exists because a
-   busy backdrop plus a busy palette is unreadable.
+   PALETTE LOCK. One accent, --jungle-leaf-c. --jungle-gold is sunlight:
+   warnings, live states, and the ONE hero moment per screen. --jungle-alert is
+   destructive only. The canvas carries the full range of greens; the chrome
+   carries exactly one. Canvas gets the jungle, chrome gets the lock.
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   Animatable custom properties. Registration has to happen at the top level,
-   so these names are global rather than theme-scoped. They are jungle-prefixed
-   and read by nothing outside these three files. inherits:true is mandatory:
-   pseudo-elements read them off their originating element.
-   -------------------------------------------------------------------------- */
 @property --jungle-sunlit {
   syntax: '<number>';
   inherits: true;
@@ -85,199 +86,185 @@
 /* ==========================================================================
    1. TOKENS
    ==========================================================================
-   Single source of truth. jungle-theme.css and jungle-coverage.css consume
-   these and must not redeclare them, or the files will drift.
+   Single source of truth. The binding files consume these and must not
+   redeclare them, or the files will drift.
 
-   AA CONTRAST. Panel fill composites to about rgb(34 24 16) (L 0.0106).
-   Measured against that surface:
-     bone   -> 14.4:1     sand  -> 8.8:1
-     leaf-c -> 8.6:1      gold  -> 9.0:1      alert -> 5.3:1
-     husk   -> 3.9:1  (FAILS as text - strokes and disabled glyphs only)
+   AA CONTRAST. The panel fill composites over a dark canvas to roughly
+   rgb(38 28 19) (L 0.0125). Measured against that surface:
+     bone   -> 13.6:1     sand  -> 8.3:1
+     leaf-c -> 8.1:1      gold  -> 8.5:1      alert -> 5.0:1
+     husk   -> 3.7:1  (FAILS as text - strokes and disabled glyphs only)
    ========================================================================== */
 
 html[data-theme='jungle'] {
   /* -- palette ----------------------------------------------------------- */
 
-  /* THE accent. A lit leaf face with the sun behind it, which is the brightest
-     green the canvas actually produces. Named -c because `--jungle-leaf` is
-     already taken by the leaf-marker HOOK below, and a token and a hook
-     sharing a name is how these files start lying to each other. */
-  --jungle-leaf-c: 124 201 106;
+  /* THE accent: a leaf with the sun behind it, which is the brightest green
+     the canvas actually produces. Named -c because `--jungle-leaf` is the leaf
+     marker HOOK, and a token sharing a hook's name is how these files start
+     lying to each other. */
+  --jungle-leaf-c: 138 206 116;
 
-  /* Sunlight through the canopy gap. Warning, live, and the single hero
-     moment. NOT a second accent — see the palette lock in jungle-theme.css. */
-  --jungle-gold: 232 178 92;
-  /* Destructive only. Never "down 3%", never an unread count. Two warm
-     colours are needed rather than one because gold has to stay readable as
-     "attention" while red stays "this deletes something". */
-  --jungle-alert: 226 106 88;
+  /* Sunlight through the canopy gap. Warning, live, and the hero moment. */
+  --jungle-gold: 226 176 96;
+  /* Destructive only. */
+  --jungle-alert: 224 108 92;
 
-  /* -- the wood ---------------------------------------------------------- */
-  /* Forest floor in shadow. Page backdrop, and the recess colour inside a
-     carved groove. Deliberately not black: the canvas grades its darks toward
-     blue-green, and a pure-black chrome sitting on that reads as a hole. */
-  --jungle-loam: 20 14 10;
-  /* The plank. Every bento, panel and text box composites to about this. */
-  --jungle-bark: 34 24 16;
-  /* Raised/hover wood, and the face of anything sitting proud of a panel. */
-  --jungle-timber: 58 40 26;
+  /* -- the wood ----------------------------------------------------------
+     Four steps, not two. v1 had bark and timber and everything landed on one
+     of them, which is why the UI read as a single flat brown. A material needs
+     a value RANGE or every surface sits at the same depth. */
+  --jungle-loam: 22 17 12; /* page backdrop, and the floor of a routed groove */
+  --jungle-bark: 38 28 19; /* the plank — most surfaces */
+  --jungle-timber: 58 43 28; /* raised wood: hover, chips, controls */
+  --jungle-heart: 82 60 38; /* the lit edge of a cut, and small warm accents */
+
+  /* The light in the gap, reused wherever a surface catches it. Warm grey, NOT
+     white: a white specular on brown reads as plastic, every time. */
+  --jungle-glint: 255 246 226;
 
   /* -- type -------------------------------------------------------------- */
-  --jungle-bone: 244 237 222; /* primary text — bleached bone on dark wood */
-  --jungle-sand: 200 184 158; /* secondary text */
-  --jungle-husk: 138 118 94; /* strokes, disabled glyphs. NOT text. */
+  --jungle-bone: 246 240 227; /* primary text */
+  --jungle-sand: 198 182 158; /* secondary text */
+  --jungle-husk: 136 116 92; /* strokes, disabled glyphs. NOT text. */
 
   /* System mono, not a webfont. The app already pays for one Google Fonts
-     request (Exo); a second for chrome numerics is not worth the LCP cost, and
-     this theme's whole claim is that it loads fast. */
+     request; a second for chrome numerics is not worth the LCP cost. */
   --jungle-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
     'Liberation Mono', monospace;
 
-  /* -- shape ------------------------------------------------------------- */
-  /* ONE radius scale, applied by role. Wood carved by hand is softened, never
-     machined: nothing here is a pill and nothing is a hard corner. The values
-     are smaller than Osaka's for exactly that reason — a 999px radius on a
-     plank reads as plastic. */
+  /* -- shape -------------------------------------------------------------
+     Hand-cut, so softened but never a pill. One scale, applied by role. */
   --jungle-r-panel: 14px;
   --jungle-r-card: 11px;
   --jungle-r-input: 9px;
   --jungle-r-chip: 8px;
 
   /* -- the grain ---------------------------------------------------------
-     Three stacked layers, because real grain is not one frequency:
-       1. fine rings   - the close, tight lines
-       2. coarse rings - the wider bands the fine ones sit inside
-       3. a soft top-down light wash, so the plank has a lit face
+     Four layers, cheapest last:
 
-     Angled a few degrees off vertical so the lines run down the panel like
-     sawn stock, never perfectly square to the box (which reads as a texture
-     tile). This is a BACKGROUND value only — it can never affect layout, which
-     matters because it lands on every text container in the app. */
+       1. dark fibre  - SVG turbulence, stretched along the grain
+       2. light fibre - the same at a different seed, so fibres catch light
+       3. cathedral   - the wide, genuinely periodic banding
+       4. light wash  - the gap's light falling across the plank's face
+
+     The turbulence is a data URI, so there is no request and nothing to 404.
+     It is 200x200 and tiles; at this contrast the repeat is not findable by
+     eye, and one decoded bitmap is shared by every surface in the app.
+
+     baseFrequency is deliberately lopsided: 0.86 across the fibre, 0.012 along
+     it. Equal frequencies give sandpaper, which is the other way to get this
+     wrong. Rotated 93deg via the gradients rather than the SVG so the fibre
+     and the banding stay locked together. */
+  --jungle-fibre-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86 0.012' numOctaves='3' seed='7'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 -0.42'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23f)'/%3E%3C/svg%3E");
+  --jungle-fibre-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72 0.01' numOctaves='2' seed='19'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 1 0 0 0 0 0.96 0 0 0 0 0.88 0 0 0 1 -0.72'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23f)'/%3E%3C/svg%3E");
+
   --jungle-grain:
+    var(--jungle-fibre-dark),
+    var(--jungle-fibre-light),
     repeating-linear-gradient(
       93deg,
-      rgb(0 0 0 / 0.2) 0px,
-      rgb(0 0 0 / 0.2) 1px,
-      rgb(var(--jungle-bone) / 0.022) 1px,
-      rgb(var(--jungle-bone) / 0.022) 3px,
-      rgb(0 0 0 / 0.1) 3px,
-      rgb(0 0 0 / 0.1) 4px,
-      rgb(0 0 0 / 0) 4px,
-      rgb(0 0 0 / 0) 9px
-    ),
-    repeating-linear-gradient(
-      93deg,
-      rgb(0 0 0 / 0.14) 0px,
-      rgb(0 0 0 / 0.14) 2px,
-      rgb(0 0 0 / 0) 2px,
-      rgb(0 0 0 / 0) 27px
+      rgb(0 0 0 / 0.11) 0px,
+      rgb(0 0 0 / 0.11) 3px,
+      rgb(0 0 0 / 0) 3px,
+      rgb(0 0 0 / 0) 34px
     ),
     linear-gradient(
-      171deg,
-      rgb(var(--jungle-bone) / 0.075) 0%,
-      rgb(var(--jungle-bone) / 0.012) 34%,
-      rgb(0 0 0 / 0.1) 100%
+      168deg,
+      rgb(var(--jungle-glint) / 0.085) 0%,
+      rgb(var(--jungle-glint) / 0.015) 30%,
+      rgb(0 0 0 / 0.06) 72%,
+      rgb(0 0 0 / 0.13) 100%
     );
 
-  /* Same idea, quieter, for surfaces that repeat ~30x per screen (feed cards).
-     Full grain thirty times over is a pattern, not a material. */
+  /* Quieter, for surfaces that repeat ~30x per screen. Same fibre so the
+     material is consistent, but no banding and a flatter wash — full grain
+     thirty times over is a pattern, not a material. */
   --jungle-grain-soft:
-    repeating-linear-gradient(
-      93deg,
-      rgb(0 0 0 / 0.12) 0px,
-      rgb(0 0 0 / 0.12) 1px,
-      rgb(0 0 0 / 0) 1px,
-      rgb(0 0 0 / 0) 12px
-    ),
+    var(--jungle-fibre-dark),
     linear-gradient(
-      171deg,
-      rgb(var(--jungle-bone) / 0.055) 0%,
-      rgb(var(--jungle-bone) / 0.008) 40%,
-      rgb(0 0 0 / 0.08) 100%
+      168deg,
+      rgb(var(--jungle-glint) / 0.06) 0%,
+      rgb(var(--jungle-glint) / 0.01) 38%,
+      rgb(0 0 0 / 0.09) 100%
     );
 
   /* -- the routed edge ----------------------------------------------------
-     The single most reused value in the theme. Read from the top down:
-       a lit lip where the router rounded the top edge,
-       a dark groove all the way around (this is the "cut", not a border),
-       a shadow pooling along the bottom edge.
-     Drawn as insets so it never contributes to layout and never shifts text. */
+     The most reused value in the theme. Read top down:
+       a lit lip, warm, where the router rounded the top edge and the gap's
+         light lands on it,
+       a dark cut all the way around (this is the groove, not a border),
+       a green-black shadow pooling along the bottom.
+     All insets, so it never contributes to layout and never shifts text. */
   --jungle-edge:
-    inset 0 1px 0 rgb(var(--jungle-bone) / 0.14),
-    inset 0 0 0 1px rgb(0 0 0 / 0.5),
-    inset 0 -1px 0 rgb(0 0 0 / 0.42);
+    inset 0 1px 0 rgb(var(--jungle-glint) / 0.16),
+    inset 0 0 0 1px rgb(0 0 0 / 0.55),
+    inset 0 -1px 0 rgb(8 14 10 / 0.5);
 
-  /* The same cut, plus the shadow a plank casts on what is behind it. For
-     surfaces that genuinely float over the canvas. */
+  /* The same cut, plus the shadow a plank casts on the scene behind it. */
   --jungle-edge-lift:
     var(--jungle-edge),
-    0 10px 30px rgb(6 4 2 / 0.55);
+    0 12px 34px rgb(6 10 7 / 0.55);
 
-  /* Tall side columns: the symmetric halo above only ever shows its left and
-     right edges, which reads as smudge strips down the gutters. Heavy negative
-     spread tucks it under the panel instead. Same fix as --glass-edge-panel in
-     index.css, and as Osaka's --osaka-edge-column. */
+  /* Tall side columns: the symmetric halo only ever shows its left and right
+     edges, which reads as smudge strips down the gutters. Heavy negative
+     spread tucks it under the panel. Same fix as --glass-edge-panel. */
   --jungle-edge-column:
     var(--jungle-edge),
-    0 14px 26px -22px rgb(6 4 2 / 0.6);
+    0 16px 28px -24px rgb(6 10 7 / 0.6);
 
-  /* An engraved cut: the inverse light. Used for recesses — inputs, tab
-     troughs, progress rails — where the surface goes INTO the wood rather than
-     standing proud of it. Top dark, bottom lit, exactly reversed. */
+  /* An engraved cut: the light exactly inverted. For recesses — inputs,
+     troughs, active tabs, progress rails — where the surface goes INTO the
+     wood rather than standing proud of it. */
   --jungle-edge-carved:
-    inset 0 1px 2px rgb(0 0 0 / 0.55),
-    inset 0 0 0 1px rgb(0 0 0 / 0.4),
-    inset 0 -1px 0 rgb(var(--jungle-bone) / 0.08);
+    inset 0 2px 3px rgb(0 0 0 / 0.55),
+    inset 0 0 0 1px rgb(0 0 0 / 0.45),
+    inset 0 -1px 0 rgb(var(--jungle-glint) / 0.1);
+
+  /* Blur. Small and deliberate: enough to settle the canopy's high-frequency
+     leaf detail into a readable field behind text, not enough to make the
+     plank look like glass. See mistake 1 in the header. */
+  --jungle-blur: blur(9px) saturate(115%);
 }
 
 /* ==========================================================================
    2. BRIDGE
    ==========================================================================
    These are the SHARED glass tokens from index.css, not Jungle tokens.
-   Remapping them here is what pulls every rule in index.css and
-   docs-glass.css that reads them into the Jungle palette. It is the single
-   highest-leverage block in the theme: roughly every panel surface in the app
-   becomes a wooden plank from these nine lines, including routes that have no
-   Jungle-specific CSS at all.
-
-   The two that matter most:
-     --glass-blur: none        -> the material claim AND the performance claim
-     --glass-*: 0.88..0.96     -> wood is opaque; you do not see through a plank
+   Remapping them here pulls every rule in index.css and docs-glass.css that
+   reads them into the Jungle palette. It is the highest-leverage block in the
+   theme: roughly every panel in the app becomes a plank from these nine lines,
+   including routes that have no Jungle-specific CSS at all.
    ========================================================================== */
 
 html[data-theme='jungle'] {
   --glass-tint: var(--jungle-bark);
-  --glass-thin: 0.9; /* feed cards */
-  --glass-regular: 0.94; /* side panels / page bentos */
-  --glass-raised: 0.97; /* hover on interactive bentos */
-
-  /* No backdrop-filter anywhere in the app under this theme. See the note in
-     the header: it is both the correct material and the entire low-end budget.
-     `none` is a valid backdrop-filter value, so every index.css rule that
-     writes `backdrop-filter: var(--glass-blur)` becomes a no-op rather than
-     an invalid declaration. */
-  --glass-blur: none;
+  /* Opaque enough to read as timber, open enough that the canopy still moves
+     behind it. Feed cards are the most transparent because they repeat most
+     and stack vertically — 30 opaque cards is a wall. */
+  --glass-thin: 0.74;
+  --glass-regular: 0.84;
+  --glass-raised: 0.9;
+  --glass-blur: var(--jungle-blur);
 
   /* The grain rides in on --glass-highlight, which index.css already layers
-     ABOVE the tint on every glass surface (`background: var(--glass-highlight),
-     rgb(var(--glass-tint) / …)`). That is the whole trick: one token turns
-     every bento in the app into wood without touching a single selector. */
+     ABOVE the tint on every glass surface. One token turns every bento in the
+     app into wood without touching a single selector. */
   --glass-highlight: var(--jungle-grain);
 
   --glass-edge: var(--jungle-edge-lift);
   --glass-edge-flat: var(--jungle-edge);
   --glass-edge-panel: var(--jungle-edge-column);
 
-  /* !important is load-bearing, not laziness: index.css ships
+  /* !important is load-bearing: index.css ships
      `html, body { background-color: #000 !important }`, which otherwise wins
-     outright regardless of specificity. This backdrop is what the user sees on
-     the no-WebGL path and in the gap before the shader's first frame, so it
-     has to be forest floor rather than a black hole. */
+     regardless of specificity. This is what the user sees on the no-WebGL path
+     and before the scene's first frame, so it has to be forest floor. */
   background-color: rgb(var(--jungle-loam)) !important;
 }
 
 /* Canvas passthrough. #root ships `background-color: black` (index.css), which
-   would permanently occlude the canvas and the backdrop below it. */
+   would permanently occlude the scene and the backdrop below it. */
 html[data-theme='jungle'] #root,
 html[data-theme='jungle'] body,
 html[data-theme='jungle'] #app-root,
@@ -289,24 +276,19 @@ html[data-theme='jungle'] #app-root > div > main {
    No-WebGL fallback.
 
    JungleBackground sets html[data-jungle-gl='off'] when it cannot get a
-   context, when the shader will not compile, and when the context is lost
-   mid-session. All three are real on the hardware this theme is explicitly
-   meant to serve.
+   context, when a shader will not compile, and when the context is lost
+   mid-session. All three are real on the hardware this theme has to serve.
 
-   Treated as a legitimate second look rather than an error state: a canopy gap
-   burning down from the upper left, humid green depth through the middle, and
-   the floor falling into shadow — the same composition the shader paints,
-   drawn with three gradients. Someone whose device never gets WebGL should
-   read this as the theme, not as something broken.
-
-   NOTE these are the ONLY background-images on <html>, so they cost one paint
-   of one element and nothing per frame.
+   Painted as the same composition the scene draws — a bright gap up and left,
+   humid green depth through the middle, the floor falling into shadow — so
+   someone who never gets WebGL reads this as the theme rather than as
+   something broken. Three gradients on <html>: one paint, nothing per frame.
    -------------------------------------------------------------------------- */
 html[data-theme='jungle'][data-jungle-gl='off'] {
   background-image:
-    radial-gradient(46% 38% at 26% 22%, rgb(var(--jungle-gold) / 0.26) 0%, transparent 68%),
-    radial-gradient(70% 52% at 52% 40%, rgb(var(--jungle-leaf-c) / 0.16) 0%, transparent 76%),
-    radial-gradient(120% 70% at 50% 108%, rgb(6 12 8 / 0.85) 0%, transparent 62%);
+    radial-gradient(44% 36% at 30% 26%, rgb(var(--jungle-glint) / 0.3) 0%, transparent 66%),
+    radial-gradient(76% 54% at 50% 40%, rgb(var(--jungle-leaf-c) / 0.14) 0%, transparent 74%),
+    radial-gradient(130% 74% at 50% 112%, rgb(5 10 7 / 0.9) 0%, transparent 60%);
   background-attachment: fixed;
   background-repeat: no-repeat;
 }
@@ -318,12 +300,12 @@ html[data-theme='jungle'][data-jungle-gl='off'] {
 /* -- the plank ------------------------------------------------------------
    Grain on ::before so it composes with a bevel on ::after. Both are
    pointer-events:none and inherit the host radius, so one hook works on a
-   panel, a chip and a button alike, and neither can ever intercept a click or
-   move a single pixel of text. */
+   panel, a chip and a button alike, and neither can intercept a click or move
+   a pixel of text. */
 html[data-theme='jungle'] [data-jungle-plank] {
   position: relative;
   isolation: isolate;
-  background-color: rgb(var(--jungle-bark));
+  background-color: rgb(var(--jungle-bark) / 0.86);
 }
 html[data-theme='jungle'] [data-jungle-plank]::before {
   content: '';
@@ -344,52 +326,77 @@ html[data-theme='jungle'] [data-jungle-plank]::after {
 }
 
 /* -- engraved text --------------------------------------------------------
-   Text cut INTO the plank: a dark shadow up and left (the cut wall in shadow)
-   and a bone highlight down and right (the lit lower lip of the groove).
-
-   Deliberately NOT applied to body copy. A two-shadow treatment under a
-   paragraph destroys legibility at exactly the sizes where legibility matters
-   most; this is for headings, kickers and labels only, which is enforced by it
-   being an opt-in hook rather than a blanket rule. */
+   Cut INTO the plank: dark above (the cut wall in shadow), warm light below
+   (the lit lower lip). Opt-in, and never on body copy — a two-shadow
+   treatment destroys legibility at the sizes where it matters most. */
 html[data-theme='jungle'] [data-jungle-carve] {
   color: rgb(var(--jungle-sand));
   text-shadow:
-    0 -1px 0 rgb(0 0 0 / 0.75),
-    0 1px 0 rgb(var(--jungle-bone) / 0.1);
+    0 -1px 0 rgb(0 0 0 / 0.8),
+    0 1px 0 rgb(var(--jungle-glint) / 0.12);
 }
 
 /* -- branded text ---------------------------------------------------------
-   Burned into the wood with a hot iron: gold, tight tracking, and a faint
-   scorch halo. Reserved for kickers and the one hero label per screen. */
+   Burned in with a hot iron: gold, open tracking, a faint scorch halo.
+   Reserved for kickers and the one hero label per screen. */
 html[data-theme='jungle'] [data-jungle-brand] {
   color: rgb(var(--jungle-gold));
   letter-spacing: 0.09em;
   text-shadow:
-    0 0 10px rgb(var(--jungle-gold) / 0.22),
-    0 1px 0 rgb(0 0 0 / 0.6);
+    0 0 12px rgb(var(--jungle-gold) / 0.24),
+    0 1px 0 rgb(0 0 0 / 0.65);
 }
 
 /* -- a knot ---------------------------------------------------------------
-   For large panels only. A knot repeated on every card is a stain; on one tall
-   side panel it is the thing that makes the plank read as a specific piece of
-   wood rather than a texture. Positioned off-centre and clipped by the host. */
+   Large panels only. A knot on every card is a stain; on one tall column it is
+   what makes the plank read as a specific piece of wood. The dark ring plus
+   the warm inner core is what separates a knot from a smudge. */
 html[data-theme='jungle'] [data-jungle-knot] {
   position: relative;
+  isolation: isolate;
   overflow: hidden;
 }
 html[data-theme='jungle'] [data-jungle-knot]::before {
   content: '';
   position: absolute;
-  top: 12%;
-  right: -6%;
+  top: 11%;
+  right: -7%;
   width: 12rem;
   height: 7rem;
+  z-index: -1;
   pointer-events: none;
   border-radius: 50%;
-  background:
-    radial-gradient(closest-side, rgb(0 0 0 / 0.34) 0%, rgb(0 0 0 / 0.16) 42%, transparent 72%),
-    radial-gradient(closest-side, rgb(var(--jungle-bone) / 0.05) 0%, transparent 58%);
   transform: rotate(-14deg);
+  background:
+    radial-gradient(closest-side, rgb(0 0 0 / 0.4) 0%, rgb(0 0 0 / 0.15) 46%, transparent 74%),
+    radial-gradient(closest-side, rgb(var(--jungle-heart) / 0.5) 0%, transparent 40%);
+}
+
+/* -- moss -----------------------------------------------------------------
+   Lichen creeping in from a corner. This is the one place the canvas's green
+   is allowed onto the chrome, and it is what stops a screen of planks reading
+   as furniture rather than as wood left outside in a rainforest.
+
+   Big surfaces only, and always in a corner where no copy is laid out. */
+html[data-theme='jungle'] [data-jungle-moss] {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+html[data-theme='jungle'] [data-jungle-moss]::before {
+  content: '';
+  position: absolute;
+  left: -10%;
+  bottom: -14%;
+  width: 60%;
+  height: 42%;
+  z-index: -1;
+  pointer-events: none;
+  /* Two blobs at different scales read as a colony; one reads as a stain. */
+  background:
+    radial-gradient(closest-side, rgb(var(--jungle-leaf-c) / 0.14) 0%, transparent 70%),
+    radial-gradient(closest-side at 62% 38%, rgb(var(--jungle-leaf-c) / 0.09) 0%, transparent 66%);
+  filter: blur(6px);
 }
 
 /* -- rope rule ------------------------------------------------------------
@@ -402,20 +409,20 @@ html[data-theme='jungle'] [data-jungle-rope] {
   background-image:
     repeating-linear-gradient(
       68deg,
-      rgb(var(--jungle-husk) / 0.55) 0px,
-      rgb(var(--jungle-husk) / 0.55) 2px,
-      rgb(var(--jungle-husk) / 0.16) 2px,
-      rgb(var(--jungle-husk) / 0.16) 5px
+      rgb(var(--jungle-husk) / 0.6) 0px,
+      rgb(var(--jungle-husk) / 0.6) 2px,
+      rgb(var(--jungle-husk) / 0.14) 2px,
+      rgb(var(--jungle-husk) / 0.14) 5px
     ),
-    linear-gradient(180deg, rgb(var(--jungle-bone) / 0.1), rgb(0 0 0 / 0.4));
+    linear-gradient(180deg, rgb(var(--jungle-glint) / 0.12), rgb(0 0 0 / 0.45));
   border-radius: 2px;
 }
 
 /* -- leaf marker ----------------------------------------------------------
-   The active-state glyph for this theme. A leaf is a lens — the intersection
-   of two arcs — which in CSS is a square with two opposite corners fully
-   rounded and the other two square. Same shape the shader draws, so the chrome
-   and the canvas agree on what a leaf is. */
+   The active-state glyph. A leaf is a lens — two arcs meeting at points —
+   which in CSS is a box with two opposite corners fully rounded and the other
+   two square. The same shape the canvas draws, so chrome and scene agree on
+   what a leaf is. */
 html[data-theme='jungle'] [data-jungle-leaf] {
   position: relative;
 }
@@ -446,18 +453,24 @@ html[data-theme='jungle'] [data-jungle-readout] {
 
 /* ==========================================================================
    4. DEGRADATION
-   ==========================================================================
-   Two environments get a reduced build. Each removes a specific cost and keeps
-   the theme legible rather than falling back to a different look.
-
-   There is no `prefers-reduced-transparency` block here, unlike Osaka: this
-   theme is already opaque with no blur, so there is nothing for that query to
-   take away.
    ========================================================================== */
 
-/* Reduced motion. The canvas has its own handling (the shader keeps painting
-   but the launcher's dolly is skipped); this covers the CSS side — the
-   cinematic slide-out becomes an instant cut, and skeleton shimmer stops. */
+/* Reduced transparency: some users switch this on for legibility rather than
+   performance. Trade the blur and the openness for opacity — the palette and
+   the material survive, the cost and the see-through do not. */
+@media (prefers-reduced-transparency: reduce) {
+  html[data-theme='jungle'] {
+    --glass-thin: 0.95;
+    --glass-regular: 0.97;
+    --glass-raised: 0.99;
+    --glass-blur: none;
+    --jungle-blur: none;
+  }
+}
+
+/* Reduced motion. The canvas handles its own (the wind drops to a trace and
+   the scroll gust is disabled in JungleBackground); this covers the CSS side —
+   the cinematic slide becomes a cut and skeleton shimmer stops. */
 @media (prefers-reduced-motion: reduce) {
   html[data-theme='jungle'] * {
     animation-duration: 0.001ms !important;
@@ -467,11 +480,12 @@ html[data-theme='jungle'] [data-jungle-readout] {
 }
 
 /* Forced colours: hand the whole thing to the user agent. Every value in this
-   file is decorative, and none of it should survive a high-contrast mode. */
+   file is decorative and none of it should survive a high-contrast mode. */
 @media (forced-colors: active) {
   html[data-theme='jungle'] [data-jungle-plank]::before,
   html[data-theme='jungle'] [data-jungle-plank]::after,
-  html[data-theme='jungle'] [data-jungle-knot]::before {
+  html[data-theme='jungle'] [data-jungle-knot]::before,
+  html[data-theme='jungle'] [data-jungle-moss]::before {
     display: none;
   }
   html[data-theme='jungle'] [data-jungle-carve],
