@@ -1192,10 +1192,23 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             ) : quotesData?.result && quotesData.result.length > 0 ? (
               <div className="space-y-2">
                 {quotesData.result.map((post: any) => {
-                  const displayName = post.minterDisplayName || post.mintername || post.minter?.slice(0, 8) || 'Unknown';
-                  const avatarUrl = post.minterAvatarUrl
-                    ? (post.minterAvatarUrl.startsWith('http') ? post.minterAvatarUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${post.minterAvatarUrl}`)
-                    : undefined;
+                  // minterUsername/minterUser were never read here, so a quoter
+                  // with a username but no displayName fell through to their raw
+                  // address — same class of bug QuotedPostEmbed had. The avatar
+                  // was hand-built with a raw CDN prefix instead of
+                  // buildAvatarUrl/extractAvatarPath, which 403s on the older
+                  // "statics/avatars/…" upload path and silently falls back to
+                  // the initial.
+                  const displayName =
+                    post.minterUser?.displayName ||
+                    post.minterDisplayName ||
+                    post.minterUser?.username ||
+                    post.minterUsername ||
+                    post.mintername ||
+                    post.minter?.slice(0, 8) ||
+                    'Unknown';
+                  const avatarPath = extractAvatarPath(post) || extractAvatarPath(post.minterUser);
+                  const avatarUrl = buildAvatarUrl(post.minter || post.minterUser?.address || '', avatarPath);
                   const preview = (post.description || post.name || '').slice(0, 120);
                   return (
                     <button
