@@ -1208,15 +1208,31 @@ void main() {
     let lastScrollAt = 0;
 
     const onScroll = (e: Event) => {
-      const t = e.target as (HTMLElement & Document) | null;
+      /* Narrow from EventTarget rather than casting to it.
+         An earlier version wrote `e.target as (HTMLElement & Document)`, which
+         is not a type anything can have: once the document branch was excluded
+         the compiler correctly narrowed the rest to `never` and every property
+         access after it failed. The cast was inventing a union that does not
+         exist to paper over two genuinely different cases, so handle them as
+         two cases instead.
+
+         A document-level scroll reports `e.target === document`, which is a
+         Node but NOT an HTMLElement, so it falls through to the window branch
+         on its own. documentElement and body are named explicitly because some
+         engines report the scrolling element rather than the document. */
+      const t = e.target;
       let top = 0;
       let range = 1;
-      if (!t || t === (document as unknown as HTMLElement) || t === (document.documentElement as HTMLElement)) {
-        top = window.scrollY;
-        range = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-      } else if (t instanceof HTMLElement) {
+      if (
+        t instanceof HTMLElement &&
+        t !== document.documentElement &&
+        t !== document.body
+      ) {
         top = t.scrollTop;
         range = Math.max(1, t.scrollHeight - t.clientHeight);
+      } else {
+        top = window.scrollY;
+        range = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
       }
 
       const now = performance.now();
