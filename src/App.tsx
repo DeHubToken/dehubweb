@@ -80,6 +80,17 @@ const WarGameLauncher = React.lazy(() =>
 const OsakaBackground = React.lazy(() =>
   import("@/components/app/OsakaBackground").then(m => ({ default: m.OsakaBackground }))
 );
+// Jungle is the one canvas theme that does NOT pull vendor-three: it is a single
+// full-screen shader written against raw WebGL, so this ~15 KB chunk is the
+// whole theme. See the header of JungleBackground.tsx for why.
+const JungleBackground = React.lazy(() =>
+  import("@/components/app/JungleBackground").then(m => ({ default: m.JungleBackground }))
+);
+// Its own chunk, like War's: the launcher is only reachable by an explicit
+// opt-in and must not keep the game's iframe plumbing in the theme's payload.
+const JungleGameLauncher = React.lazy(() =>
+  import("@/components/app/jungle/JungleGameLauncher").then(m => ({ default: m.JungleGameLauncher }))
+);
 
 function ThemedBackgrounds() {
   const { theme } = useAppTheme();
@@ -99,6 +110,8 @@ function ThemedBackgrounds() {
       {theme === "war" && <WarPreloader />}
       {theme === "war" && <WarGameLauncher />}
       {theme === "osaka" && <OsakaBackground />}
+      {theme === "jungle" && <JungleBackground />}
+      {theme === "jungle" && <JungleGameLauncher />}
     </Suspense>
   );
 }

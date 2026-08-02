@@ -20,7 +20,7 @@
 /* The canvas-theme scope, repeated per rule for specificity control. */
 
 /* 1. Reveal the canvas: the opaque paper/black root goes transparent. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]) .docs-root {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) .docs-root {
   background: transparent !important;
   background-image: none !important;
 }
@@ -28,7 +28,7 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 /* 2. Light copy tuned for legibility over a busy background. The docs-dark
    blanket already forces most text white; we brighten secondary/muted text so
    it survives over the animated canvas showing through the glass. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]).dark .docs-root {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]).dark .docs-root {
   --foreground: 0 0% 97%;
   --muted-foreground: 0 0% 80%;
   --card-foreground: 0 0% 97%;
@@ -37,13 +37,13 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   --accent-foreground: 0 0% 97%;
   --sidebar-foreground: 0 0% 97%;
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]).dark .docs-root .text-muted-foreground {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]).dark .docs-root .text-muted-foreground {
   color: hsl(0 0% 80%) !important;
 }
 /* A soft ink halo keeps copy legible everywhere — including raw prose that sits
    directly on the canvas (pages without a card wrapper) where a bright patch of
    nebula would otherwise wash out white text. Cheap (no compositing layer). */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]).dark .docs-root
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]).dark .docs-root
   :is(h1, h2, h3, h4, h5, h6, p, li, a, span, strong, em, blockquote, td, th, label) {
   text-shadow: 0 1px 2px rgb(0 0 0 / 0.55);
 }
@@ -52,7 +52,7 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    panel / shadcn <Card> plus the tagged header, sidebar and blog reading panel
    become one frosted-glass bento. Guarded so nothing nested inside the reading
    panel (or opted out via data-docs-solid) gets a second stacked blur. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]).dark .docs-root
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]).dark .docs-root
   :is(.bg-card, .bg-muted, .bg-secondary, .docs-glass, [class*="Card"], [data-docs-header], [data-docs-sidebar], [data-docs-reading-panel]):not([data-docs-reading-panel] *):not([data-docs-solid]):not([data-docs-header] *):not([data-docs-sidebar] *) {
   background: var(--glass-highlight), rgb(var(--glass-tint) / var(--glass-regular)) !important;
   -webkit-backdrop-filter: var(--glass-blur) !important;
@@ -63,15 +63,15 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 
 /* Header + sidebar are thinner glass so page content reads as the primary
    surface; they also drop their `backdrop-blur-sm` default (replaced above). */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]).dark .docs-root [data-docs-header],
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]).dark .docs-root [data-docs-sidebar],
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]).dark .docs-root [data-docs-subnav] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]).dark .docs-root [data-docs-header],
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]).dark .docs-root [data-docs-sidebar],
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]).dark .docs-root [data-docs-subnav] {
   background: var(--glass-highlight), rgb(var(--glass-tint) / 0.55) !important;
 }
 
 /* The on-this-page sub-nav stacks directly under the header, so it takes the
    same thin glass above and only a hairline to separate the two. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]).dark .docs-root [data-docs-subnav] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]).dark .docs-root [data-docs-subnav] {
   -webkit-backdrop-filter: var(--glass-blur);
   backdrop-filter: var(--glass-blur);
   border-bottom-color: rgb(255 255 255 / 0.12) !important;
@@ -80,7 +80,7 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 /* 4. The blog reading panel — one big glass sheet for the raw-prose article
    body (which has no card wrapper), so the article is always legible over the
    canvas. `padding`/`radius` make it read as a page bento. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]).dark .docs-root [data-docs-reading-panel] {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]).dark .docs-root [data-docs-reading-panel] {
   border-radius: 1.25rem;
   padding: clamp(1.25rem, 3.5vw, 2.5rem);
   margin-top: 1rem;
@@ -90,31 +90,31 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    tables get a translucent dark tint for contrast, riding on the glass behind
    them. This is what keeps card-dense pages (e.g. Dapp) from stacking dozens of
    simultaneous backdrop-filters. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]).dark .docs-root :is(pre, code) {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]).dark .docs-root :is(pre, code) {
   background: rgb(0 0 0 / 0.34) !important;
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
   border: 1px solid rgb(255 255 255 / 0.08) !important;
   color: hsl(0 0% 90%) !important;
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]).dark .docs-root code {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]).dark .docs-root code {
   border-width: 0 !important;
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]).dark .docs-root :is(table, thead, tbody, tr, th, td) {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]).dark .docs-root :is(table, thead, tbody, tr, th, td) {
   background-color: rgb(0 0 0 / 0.22) !important;
   border-color: rgb(255 255 255 / 0.10) !important;
 }
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]).dark .docs-root :is(thead tr, th) {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]).dark .docs-root :is(thead tr, th) {
   background-color: rgb(0 0 0 / 0.34) !important;
 }
 
 /* Inputs / search on glass — translucent, not the opaque zinc slab. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]).dark .docs-root :is(input, textarea, select) {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]).dark .docs-root :is(input, textarea, select) {
   background-color: rgb(0 0 0 / 0.28) !important;
   border-color: rgb(255 255 255 / 0.14) !important;
 }
 
 /* Faint light hairlines instead of the dark-theme gray dividers. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"]).dark .docs-root :is([class*="border-t"], [class*="border-b"], [class*="border-border"], hr) {
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]).dark .docs-root :is([class*="border-t"], [class*="border-b"], [class*="border-border"], hr) {
   border-color: rgb(255 255 255 / 0.12) !important;
 }
