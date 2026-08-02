@@ -245,12 +245,10 @@ html[data-theme='war'] [data-feed-nav-outer] {
 }
 
 html[data-theme='war'] [data-feed-nav] {
-  /* NOT `position: relative`. This element is `sticky` in the markup, and
-     overriding the position dropped it out of the sticky flow so the feed nav
-     scrolled away with the content instead of pinning. `isolation` alone gives
-     the stacking context the decoration needs, without touching positioning.
-     Same mistake as the drawer rule below: assuming a positioned ancestor has
-     to be created, when the component already established one. */
+  /* Do NOT blanket-apply `position: relative` here: on pages where the tab row
+     itself is the sticky element, overriding position drops it out of the
+     sticky flow and the nav scrolls away with the feed. `isolation` gives the
+     stacking context the decoration needs without touching positioning. */
   isolation: isolate;
   border-radius: 0 !important;
   background: transparent !important;
@@ -258,6 +256,20 @@ html[data-theme='war'] [data-feed-nav] {
   -webkit-backdrop-filter: none !important;
   box-shadow: none !important;
 }
+
+/* When the nav is NOT the sticky element (home feed: `[data-feed-nav-outer]`
+   is the sticky, padded wrapper and the tab row sits inside it), the nav is
+   `static`, so the chamfer pseudo-elements below resolve `inset: 0` against
+   the SPREAD wrapper instead of the tab row. That painted the HUD box at the
+   wrapper's full-bleed width and its padded height — wider than the feed cards
+   underneath and taller than the search field beside it. Making the static
+   case `relative` snaps the chamfer onto the tab row itself, so it matches the
+   feed column width and the search field height exactly. The sticky case is
+   excluded so its pinning behaviour is untouched. */
+html[data-theme='war'] [data-feed-nav]:not(.sticky):not([class*='sticky']) {
+  position: relative;
+}
+
 
 /* Fill + blur, painted UNDER the in-flow tab row. */
 html[data-theme='war'] [data-feed-nav]::before {
