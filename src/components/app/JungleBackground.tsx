@@ -130,17 +130,28 @@ interface Budget {
   maxRatio: number;
 }
 
+/* DENSITY IS THE STYLE, not a performance dial.
+   The first pass was far too sparse — a scattering of trees over open ground,
+   which reads as a golf course with shrubs. The reference is a THICKET: canopy
+   overlapping canopy all the way to the treeline, with sky visible only in the
+   gaps between crowns. Tree count roughly doubles here and the placement radius
+   tightens (see the layout below), which is a much bigger visual change than
+   any amount of shader work.
+
+   The cost is affordable because these are ~80-triangle blobs merged into one
+   draw call: 70 trees at 4 blobs each is around 22k triangles, which is less
+   than a single character model in a normal game. */
 const BUDGETS: Record<Tier, Budget> = {
   low: {
-    trees: 14, bushes: 16, rocks: 14, grass: 2200, flowers: 40, clouds: 3,
+    trees: 30, bushes: 26, rocks: 18, grass: 5000, flowers: 45, clouds: 3,
     canopyDetail: 0, fps: 30, maxPixels: 1_000_000, maxRatio: 1.25,
   },
   mid: {
-    trees: 24, bushes: 30, rocks: 24, grass: 6000, flowers: 90, clouds: 4,
+    trees: 52, bushes: 44, rocks: 30, grass: 13000, flowers: 100, clouds: 4,
     canopyDetail: 1, fps: 60, maxPixels: 1_600_000, maxRatio: 1.5,
   },
   high: {
-    trees: 34, bushes: 44, rocks: 34, grass: 11000, flowers: 150, clouds: 5,
+    trees: 74, bushes: 62, rocks: 40, grass: 24000, flowers: 165, clouds: 5,
     canopyDetail: 1, fps: 60, maxPixels: 2_000_000, maxRatio: 1.5,
   },
 };
@@ -397,7 +408,11 @@ function JungleScene() {
     /* Down in the grass, looking very slightly up. This is the single most
        important framing decision: at standing height it reads as a diorama on
        a table, and at ground level it reads as being in a forest. */
-    const CAM_BASE = new THREE.Vector3(0, 1.15, 12);
+    /* DOWN IN THE GRASS. The reference is shot from roughly blade height, with
+       grass filling the bottom of the frame and the crowns overhead — it reads
+       as being inside the forest. The previous 1.15 was standing-ish, which
+       looks down onto the scene and turns it into a diorama on a table. */
+    const CAM_BASE = new THREE.Vector3(0, 0.62, 9);
     camera.position.copy(CAM_BASE);
 
     /* -- light ------------------------------------------------------------
@@ -526,22 +541,32 @@ void main() {
        not — a trunk that bends when you wave a mouse at it is instantly wrong,
        and the crown moving is what actually reads as disturbance.
 
-       Layout keeps the middle distance open so the sky and the far treeline
-       stay visible; a uniform scatter closes the frame into a hedge.
+       LAYOUT IS A THICKET, NOT A SCATTER. The reference has canopy overlapping
+       canopy all the way back, with sky showing only through the gaps between
+       crowns. The trees are therefore packed into a much tighter radius than
+       before (roughly 6-46 rather than 9-79) so that crowns genuinely intersect
+       in screen space. Depth comes from the overlap and from fog, not from
+       spreading things out.
+
+       Trees are also SHORTER now. At a camera height of well under a metre, a
+       16m tree puts its entire crown above the top of the frame and all you see
+       is bare trunk — which is exactly what "way off" looked like.
        ====================================================================== */
     const trunkMerger = new Merger();
     const canopyMerger = new Merger();
     for (let i = 0; i < budget.trees; i++) {
-      const near = i < budget.trees * 0.35;
+      const near = i < budget.trees * 0.3;
       const angle = rng() * Math.PI * 2;
-      const radius = near ? 9 + rng() * 12 : 24 + rng() * 55;
+      const radius = near ? 6 + rng() * 9 : 15 + rng() * 31;
       const x = Math.cos(angle) * radius;
-      const z = -Math.abs(Math.sin(angle) * radius) - (near ? 2 : 16);
+      const z = -Math.abs(Math.sin(angle) * radius) - (near ? 1 : 9);
       // Skip anything that would plant itself in the camera's lap.
-      if (z > 6 || (Math.abs(x) < 3 && z > -6)) continue;
+      if (z > 5 || (Math.abs(x) < 2.2 && z > -4)) continue;
 
-      const h = (near ? 9 : 12) + rng() * 9;
-      const trunkR = 0.22 + rng() * 0.2;
+      /* Crown height, not tree height: these are sized so the canopy sits in
+         the upper half of the frame from a low camera. */
+      const h = (near ? 4.6 : 6.5) + rng() * (near ? 3.2 : 5.5);
+      const trunkR = 0.14 + rng() * 0.16;
       const base = new THREE.Vector3(x, 0, z);
 
       const tg = trunkGeometry(trunkR, trunkR * 0.62, h, 5);
@@ -558,16 +583,20 @@ void main() {
       );
       tg.dispose();
 
-      /* Two to four blobs per crown, each its own green. Overlapping them is
-         what produces the clustered, lumpy silhouette in the reference — a
-         single sphere per tree looks like a lollipop. */
-      const blobs = 2 + Math.floor(rng() * 3);
+      /* THREE TO SIX blobs per crown, each its own green, deliberately WIDE and
+         SQUAT rather than spherical. In the reference a crown is a cluster of
+         broad angular slabs stacked and overlapping — closer to a pile of
+         boulders than to a ball of leaves. A round blob per tree reads as a
+         lollipop, and two round blobs read as two lollipops. */
+      const blobs = 3 + Math.floor(rng() * 4);
       const green = CANOPY[Math.floor(rng() * CANOPY.length)];
       for (let b = 0; b < blobs; b++) {
-        const r = (near ? 2.6 : 2.2) + rng() * 1.9;
-        const cx = x + (rng() - 0.5) * 3.2;
-        const cy = h * (0.82 + rng() * 0.26);
-        const cz = z + (rng() - 0.5) * 3.2;
+        const r = (near ? 2.2 : 1.9) + rng() * 1.5;
+        /* Spread across the crown is wider than it is tall, for the same
+           reason: crowns are broad, not columnar. */
+        const cx = x + (rng() - 0.5) * 4.2;
+        const cy = h * (0.72 + rng() * 0.34);
+        const cz = z + (rng() - 0.5) * 4.2;
         const anchor = new THREE.Vector3(cx, cy, cz);
         const bg = blobGeometry(r, budget.canopyDetail, rng);
         canopyMerger.add(
@@ -575,7 +604,9 @@ void main() {
           new THREE.Matrix4().compose(
             anchor,
             new THREE.Quaternion().setFromEuler(new THREE.Euler(rng() * 3, rng() * 3, rng() * 3)),
-            new THREE.Vector3(1, 0.82 + rng() * 0.3, 1),
+            /* Squashed on Y and stretched on X/Z: this single line does more
+               to match the reference silhouette than any lighting change. */
+            new THREE.Vector3(1.22 + rng() * 0.3, 0.58 + rng() * 0.22, 1.22 + rng() * 0.3),
           ),
           /* Blobs on the same tree step through neighbouring greens, which
              gives depth inside a crown without introducing a new hue. */
@@ -586,6 +617,45 @@ void main() {
         bg.dispose();
       }
     }
+    /* -- foreground framing ------------------------------------------------
+       Big, very dark blobs pushed right up against the camera at the left edge
+       and the bottom-right corner. The reference frames its shot with exactly
+       this: near foliage that is too close to be lit, reading as a soft dark
+       mask around a bright centre.
+
+       It does three jobs at once — it darkens the corners where the side panels
+       and the feed sit, so chrome stays legible; it gives the eye a near depth
+       plane to measure the rest against; and it hides the point where the grass
+       instances run out. Placed by hand rather than at random, because framing
+       is a composition decision and a random one is not framing. */
+    {
+      const framing: Array<[number, number, number, number]> = [
+        // x, y, z, radius
+        [-7.4, 3.2, 6.2, 3.6],
+        [-6.2, 0.7, 7.4, 2.4],
+        [8.2, 1.1, 6.6, 3.2],
+        [6.4, 3.6, 7.2, 2.6],
+      ];
+      for (const [fx, fy, fz, fr] of framing) {
+        const anchor = new THREE.Vector3(fx, fy, fz);
+        const bg = blobGeometry(fr, budget.canopyDetail, rng);
+        canopyMerger.add(
+          bg,
+          new THREE.Matrix4().compose(
+            anchor,
+            new THREE.Quaternion().setFromEuler(new THREE.Euler(rng() * 3, rng() * 3, rng() * 3)),
+            new THREE.Vector3(1.3, 0.72, 1.3),
+          ),
+          /* The darkest green in the palette, halved again. These are meant to
+             read as silhouette, not as foliage you can identify. */
+          CANOPY[4].clone().multiplyScalar(0.45),
+          anchor,
+          () => 1,
+        );
+        bg.dispose();
+      }
+    }
+
     {
       const geo = track(trunkMerger.build());
       const mat = track(new THREE.MeshLambertMaterial({ vertexColors: true, flatShading: true }));
@@ -687,12 +757,18 @@ void main() {
       const dummy = new THREE.Object3D();
       const tint = new THREE.Color();
       for (let i = 0; i < budget.grass; i++) {
-        /* sqrt() biases the distribution toward the camera. */
-        const d = Math.sqrt(rng()) * 64;
+        /* Concentrated into ~34 units rather than spread over 64. Beyond that
+           a blade is sub-pixel: it costs fill rate, aliases, and reads as
+           static rather than as grass. Density near the camera is what the
+           reference actually shows, and it is where the blades are legible. */
+        const d = Math.sqrt(rng()) * 34;
         const a = rng() * Math.PI * 2;
-        dummy.position.set(Math.cos(a) * d * 0.8, -0.2, 6 - Math.abs(Math.sin(a)) * d);
+        dummy.position.set(Math.cos(a) * d * 0.85, -0.2, 5 - Math.abs(Math.sin(a)) * d);
         dummy.rotation.set(0, rng() * Math.PI, (rng() - 0.5) * 0.34);
-        const hgt = 0.5 + rng() * 1.15;
+        /* SHORTER. The old 0.5-1.65 range put blades up around the rocks and
+           halfway up the bushes, so the ground read as long meadow grass. The
+           reference is a short, dense turf that the rocks sit proud of. */
+        const hgt = 0.3 + rng() * 0.55;
         dummy.scale.set(0.85 + rng() * 0.7, hgt, 1);
         dummy.updateMatrix();
         mesh.setMatrixAt(i, dummy.matrix);
@@ -857,7 +933,9 @@ void main() {
       camera.position.x = CAM_BASE.x + yaw * 5;
       camera.position.y = CAM_BASE.y - pitch * 1.6;
       camera.position.z = CAM_BASE.z - push * 18;
-      camera.lookAt(yaw * 3, 2.6 - pitch * 1.4, -26);
+      /* Looking slightly UP from blade height, so crowns fill the top of the
+         frame and the horizon sits low — the reference's framing. */
+      camera.lookAt(yaw * 3, 3.4 - pitch * 1.4, -24);
 
       renderer.render(scene, camera);
 
