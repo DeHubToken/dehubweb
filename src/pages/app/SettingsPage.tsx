@@ -116,6 +116,7 @@ import settingsIcon from '@/assets/icons/settings-icon.png';
 import { useUserLanguage } from '@/hooks/use-user-language';
 import { SUPPORTED_LANGUAGES } from '@/i18n';
 import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { ChainSelector, type ChainId } from '@/components/app/ChainSelector';
 import { BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 
@@ -137,7 +138,7 @@ const TAB_KEYS: Record<string, string> = {
  * drift. Mirrors mobile's three-state DM model (`DMSettingsSection`): open,
  * existing-threads-only, and fully disabled.
  */
-const DM_ACCESS_OPTIONS = (t: (key: string, fallback?: string) => string) => [
+const DM_ACCESS_OPTIONS = (t: TFunction) => [
   {
     value: 'everyone',
     label: t('settings.everyone', 'Everyone'),
