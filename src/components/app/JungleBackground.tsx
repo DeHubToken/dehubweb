@@ -294,10 +294,16 @@ uniform float uWind;
 uniform float uGust;
 
 /* Displace a point by the wind.
-   `h` is 0 at the anchor (root, or the branch the card hangs from) and 1 at the
+
+   NO BACKTICKS BELOW THIS LINE. Every shader in this file is a JS template
+   literal, so a backtick inside a GLSL comment ends the string and the parse
+   error lands on a line of GLSL, which reads as nonsense. This has now cost
+   two CI runs; the ban is cheaper than the habit.
+
+   h is 0 at the anchor (root, or the branch a card hangs from) and 1 at the
    free end — so everything pivots where it is actually attached instead of
    sliding sideways as a whole.
-   `phase` decorrelates neighbours; without it the entire forest breathes in
+   phase decorrelates neighbours; without it the entire forest breathes in
    unison, which is the single most artificial thing a wind system can do. */
 vec3 windOffset(vec3 pos, float h, float phase, float stiffness) {
   float w = h * h * stiffness;
