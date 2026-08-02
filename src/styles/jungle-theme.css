@@ -653,7 +653,7 @@ html[data-theme='jungle'] #app-root
     [data-primary-cta]
   ):not([data-feed-nav-outer]):not(main):not([data-post-overlay]):not(
     [data-post-drawer]
-  ):not([data-glass-page]) {
+  ):not([data-glass-page]):not([data-mobile-header]) {
   background-color: rgb(var(--jungle-bark) / 0.92) !important;
   background-image: var(--jungle-grain-soft) !important;
   backdrop-filter: none !important;
