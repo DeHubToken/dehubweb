@@ -31,11 +31,13 @@ Both are in `index.html` and both are commented in place:
    Same build (three 0.170.0), served from this origin — no third-party request
    from a user's session, and no CDN outage that can break the page. The version
    is pinned: the game targets r170 and the parent app is on 0.181.
-2. **A progress bridge.** The engine generates every mesh, texture and sound on
+2. **A readiness bridge.** The engine generates every mesh, texture and sound on
    the device before it renders anything, so the launcher needs to distinguish
-   "still building" from "dead". The bridge posts `ready` / `tick` / `error` to
-   the parent and only observes public DOM and globals — it patches nothing the
-   engine owns.
+   "still building" from "dead". The bridge posts `ready` / `error` to the parent
+   and only observes public DOM and globals — it patches nothing the engine owns.
+   It reports no progress, because there is none to report: the world is built
+   inside one synchronous constructor. The launcher's percentage bar is modelled
+   against a clock instead (`src/lib/game-boot-progress.ts`).
 
 Nothing under `src/` is modified. Re-vendoring is therefore a straight copy:
 
