@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '9'
+
+jobs:
+  typecheck:
+    name: Typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: pnpm
+
+      # pnpm with the hoisted node_modules layout the repo's .npmrc pins, so
+      # CI resolves the same "phantom" transitive imports the deploy build does.
+      #
+      # --no-frozen-lockfile, not --frozen-lockfile: pnpm-lock.yaml has drifted
+      # from package.json on main. wrangler, hash-wasm and @testing-library/dom
+      # are declared but absent from the lockfile, so a frozen install fails
+      # outright (ERR_PNPM_OUTDATED_LOCKFILE) — as it would for anyone cloning
+      # fresh. Regenerating the lockfile is a separate change; once it lands
+      # this should go back to --frozen-lockfile so CI is reproducible.
+      - name: Install dependencies
+        run: pnpm install --no-frozen-lockfile
+
+      # Both projects are checked explicitly. `tsc --noEmit -p tsconfig.json`
+      # looks like it works and silently checks NOTHING: the root config is
+      # solution-style (`"files": []` plus `references`), so it compiles zero
+      # files and exits 0. `tsc -b` isn't an option either — it requires
+      # `composite: true`, which the referenced projects don't set.
+      - name: Typecheck app (src)
+        run: pnpm exec tsc --noEmit -p tsconfig.app.json
+
+      - name: Typecheck node (vite.config.ts)
+        run: pnpm exec tsc --noEmit -p tsconfig.node.json
