@@ -58,7 +58,7 @@ type LoginStep = 'main' | 'email' | 'email-waiting' | 'phone' | 'phone-code' | '
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const {
-    connectWithProvider, connectWithEmail, cancelEmailMagicLink, connectWithSMS, verifyPhoneOtp,
+    connectWithProvider, connectWithEmail, cancelEmailMagicLink, verifyEmailOtp, connectWithSMS, verifyPhoneOtp,
     connectWithWallet, completeSmartWalletLogin, setWagmiAuthIntent, isConnecting,
     walletPhase, supabaseUserId, disconnect,
   } = useAuth();
