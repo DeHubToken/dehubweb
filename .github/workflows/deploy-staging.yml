@@ -1,0 +1,49 @@
+# Builds the `staging` branch and publishes it to https://staging.dehub.io.
+#
+# Production is never touched by this workflow: the deploy step pins
+# `-c wrangler.staging.jsonc`, which targets the `dehub-staging` worker. The
+# production worker (`dehub-migration`, wrangler.jsonc) has its own routes and
+# is only ever deployed from its own config.
+name: Deploy staging
+
+on:
+  push:
+    branches: [staging]
+  workflow_dispatch:
+
+# A push landing mid-build supersedes it — staging should track the tip of the
+# branch, not finish a queue of stale builds.
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      # pnpm, not npm: .npmrc pins node-linker=hoisted to keep the phantom
+      # transitive imports in the web3 stack resolvable, and the repo's
+      # lockfile is pnpm-lock.yaml.
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # No build secrets: .env is committed on purpose and holds only
+      # publishable VITE_* client keys (see the note atop .gitignore).
+      - run: pnpm run build
+
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: deploy -c wrangler.staging.jsonc
