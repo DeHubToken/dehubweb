@@ -923,7 +923,7 @@ export default function SinglePostPage({ inOverlay = false }: SinglePostPageProp
                   onAIClick={() => setShowDesktopAIChat(true)}
                   onMenuClick={() => setShowDesktopOptionsDrawer(true)}
                 />
-                <div data-feed-item className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3">
+                <div data-feed-item data-post-shell className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3">
                   {renderContent()}
                   {id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
                 </div>
@@ -1060,7 +1060,14 @@ export default function SinglePostPage({ inOverlay = false }: SinglePostPageProp
       {/* Header removed — top nav bar provides chrome; no floating back-button bento on any breakpoint */}
       <div className={cn('px-2 sm:px-3', chromeClearance)}>
         <div className="w-full">
-          <div data-feed-item className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3">
+          {/* data-post-shell marks this as the page's COLUMN wrapper, not a feed
+              card. It keeps data-feed-item for the spacing and typography hooks
+              that hang off it, and the canvas themes use the second hook to strip
+              its material — otherwise the shared glass block paints a full-height
+              slab down the middle column that the side panels don't have. The
+              rule used to infer this from the wrapper's contents, which stopped
+              matching once the column held a plain Video/Image/PostCard. */}
+          <div data-feed-item data-post-shell className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3">
             {renderContent()}
             {!isTextPost && id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
           </div>
