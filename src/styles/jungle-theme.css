@@ -687,6 +687,8 @@ html[data-theme='jungle'] #app-root
   ):not([data-keep-dark]):not([data-media-full]):not([data-video-controls]):not(
     [data-primary-cta]
   ):not([data-feed-nav-outer]):not(main):not([data-post-overlay]):not(
+    [data-post-overlay-backdrop]
+  ):not(
     [data-post-drawer]
   ):not([data-glass-page]) {
   background-color: rgb(var(--jungle-bark) / 0.86) !important;
@@ -699,13 +701,22 @@ html[data-theme='jungle'] #app-root
      - [data-feed-nav-outer] left in paints a full-width slab behind the
        floating nav bar: the one thing that layout explicitly forbids, and it
        would give the feed swallow-clip a visible box to cut against.
-     - <main>, the post overlay, the mobile post drawer and [data-glass-page]
-       all ship `bg-black` deliberately (they must hide whatever is mounted
-       beneath them on the opaque themes) and are all declared transparent
-       elsewhere with no id, so this net used to win and paint a full-height
-       column down the middle of every dedicated post page.
+     - <main>, the post overlay, its backdrop, the mobile post drawer and
+       [data-glass-page] all ship `bg-black` deliberately (they must hide
+       whatever is mounted beneath them on the opaque themes) and are all
+       declared transparent elsewhere with no id, so this net used to win and
+       paint a full-height column down the middle of every dedicated post page.
+
+       [data-post-overlay-backdrop] was the one still missing, and it is the
+       one that actually shows. It is `fixed top-0 bottom-0` and sized to the
+       middle column, so the net rendered it as a full-height plank behind
+       every bento on the post page. It exists only on the feed-overlay path,
+       which is how a post is normally opened — a direct visit to /app/post/:id
+       has no backdrop and looked correct, which is what made this read as
+       unfixable across several passes.
    The net is for untagged CONTENT slabs; page wrappers are not its business.
-   Both traps are documented in the Osaka file for the same reason. */
+   Any new element in the post layer must be added here AND to the Osaka list;
+   declaring it transparent in index.css alone cannot beat this net's id. */
 
 /* Hairline borders across untagged pages become the routed groove colour. */
 html[data-theme='jungle'] #app-root
