@@ -1117,12 +1117,26 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) [data-post-overlay] {
   background-color: transparent !important;
 }
-/* The layer's opaque backing is a sibling of the scroller (it must survive the
-   nav-pill swallow clip that cuts the scroller), so clearing the scroller alone
-   left a solid black column over the canvas. Clear the backing too — the feed
-   underneath is hidden by the rule below, so nothing needs covering. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) [data-post-overlay-backdrop] {
-  background-color: transparent !important;
+/* The post layer's backing is a sibling of the scroller (it must survive the
+   nav-pill swallow clip, which cuts the scroller). Its whole job is to be
+   whatever <main> would have been, so it takes exactly that and nothing else.
+   `inherit` resolves to <main>'s own background-color — black on the opaque
+   themes, paper on light, transparent on every canvas theme — which is correct
+   in all nine themes with no per-theme rule, and stays correct for a tenth.
+
+   THIS IS THE FIX FOR A BUG THAT CAME BACK THREE TIMES. The element used to
+   carry Tailwind's `bg-black`, and every theme's untagged-slab safety net
+   matches `[class*='bg-black']`. Those nets are scoped under #app-root, so they
+   carry an id and beat a plain `html[data-theme] [data-hook]` re-declaration
+   however many !importants it has — this element is `fixed`, full height and
+   sized to the middle column, so the net rendered it as a full-height frosted
+   panel behind the entire dedicated post page. Only Osaka and Jungle have such
+   a net, which is exactly why every other theme looked correct.
+
+   Do not give this element a colour utility class again. Class-free is what
+   makes it unreachable by those nets, permanently. */
+[data-post-overlay-backdrop] {
+  background-color: inherit;
 }
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) main:has([data-post-overlay]) [data-cached-page="home"] {
   visibility: hidden;
