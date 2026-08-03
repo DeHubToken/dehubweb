@@ -931,7 +931,25 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    opposite of what is wanted here.
 
    The :has() also raises specificity above the three rules above, so this wins
-   without needing to be more !important than they are. */
+   without needing to be more !important than they are.
+
+   THE :has() GUARD NEVER MATCHED THE POST PAGE. It was written for the case
+   described above and it does not catch it: the column is filled by a
+   VideoCard / ImageCard / PostCard, none of which carries [data-page-bento],
+   and [data-comments-section] only exists in the DOM while its drawer is open.
+   So the rule matched nothing at rest on the one page it was written for — and
+   had it matched, the column would have gained and lost its background as the
+   comments drawer opened, which is a worse bug than the one being fixed. The
+   column now says what it is with [data-post-shell] instead of being inferred
+   from its contents; the :has() arm stays for the genuine nested-bento case.
+
+   `:not([data-keep-dark])` on that arm is a specificity lift, not a filter —
+   same trick, and same reason, as the [data-page-bento] rules further down.
+   Without it the arm sits at (0,3,1) and loses to the @supports and
+   prefers-reduced-transparency blocks below, which re-assert a solid fill on
+   [data-feed-item] and would put the slab straight back. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"])
+  [data-feed-item][data-post-shell]:not([data-keep-dark]),
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"])
   :is([data-feed-item], [data-page-bento]):has(:is([data-page-bento], [data-comments-section])) {
   background: none !important;
@@ -1282,6 +1300,37 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) #app-root main
   :is(.text-white, [class*="text-white/"], [class*="text-zinc-2"], [class*="text-zinc-3"], [class*="text-zinc-4"], [class*="text-zinc-5"], [class*="text-zinc-6"]):not(:where(
     [data-side-panel] *, [data-page-bento] *, [data-feed-item] *, [data-glass-page] *,
+    [data-feed-nav] *, [data-mobile-header] *,
+    [data-video-controls], [data-video-controls] *, [data-media-full] *
+  )) {
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.6), 0 0 8px rgb(0 0 0 / 0.35);
+}
+
+/* Same halo inside the dedicated post page's column. [data-post-shell] keeps
+   [data-feed-item] for the spacing and typography hooks that hang off it, so
+   the `[data-feed-item] *` exclusion above assumes a frosted backing — and that
+   backing is exactly what the nested-surfaces rule now strips. Without this,
+   the post body would be the only bare copy in the app with neither a surface
+   nor a halo, sitting straight on the canvas. Surfaces nested inside the column
+   (poll card, comments, media) keep their own backing and their crisp text via
+   the :not() below.
+
+   Deliberately NOT scoped under `#app-root main` like the block above. On
+   mobile this page renders inside a Vaul drawer, which portals to <body> —
+   outside #app-root entirely — so a scoped rule would apply on desktop and
+   silently do nothing on the surface where the copy is largest and the canvas
+   is most of the screen. [data-post-shell] exists only on this page, so the
+   unscoped selector reaches nothing else.
+
+   `[data-glass-page] *` is also absent from the exclusion list below, and that
+   omission is load-bearing: the post page's own root carries [data-glass-page]
+   (SinglePostPage tags it so the safety nets leave its bg-black alone), so the
+   whole column is a [data-glass-page] descendant. Copying the list above
+   verbatim would have excluded every line of copy on the page and made this
+   rule a no-op — which is precisely the failure it exists to prevent. */
+html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) [data-post-shell]
+  :is(.text-white, [class*="text-white/"], [class*="text-zinc-2"], [class*="text-zinc-3"], [class*="text-zinc-4"], [class*="text-zinc-5"], [class*="text-zinc-6"]):not(:where(
+    [data-side-panel] *, [data-page-bento] *,
     [data-feed-nav] *, [data-mobile-header] *,
     [data-video-controls], [data-video-controls] *, [data-media-full] *
   )) {
