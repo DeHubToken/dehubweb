@@ -1,0 +1,32 @@
+{
+  "name": "dehub-staging",
+  "main": "./CLOUDFLARE_WORKER_SEO.js",
+  "compatibility_date": "2026-07-18",
+  // Staging twin of wrangler.jsonc: same worker, same SPA assets, one host.
+  //
+  // staging.dehub.io is the ONLY usable staging hostname. api.dehub.io answers
+  // on a strict CORS origin allowlist and already carries this host — it
+  // returns 200 + Access-Control-Allow-Origin for it, while every other
+  // candidate (*.workers.dev, *.pages.dev, dev.dehub.io, even www.dehub.io)
+  // gets a 500. On any other host the feed and every authed surface come up
+  // empty, which reads as "the app is broken" rather than "wrong URL".
+  //
+  // A route on the dehub.io zone, not a custom domain: staging.dehub.io
+  // already has a proxied DNS record, so a route claims the host without
+  // touching DNS (a custom domain would collide with the existing record).
+  // Nothing is behind that record — run_worker_first + the ASSETS binding
+  // mean the origin is never contacted, same as the alias hosts in
+  // wrangler.jsonc.
+  "routes": [
+    { "pattern": "staging.dehub.io/*", "zone_name": "dehub.io" }
+  ],
+  // No workers.dev twin — it would serve this same build on a host the API
+  // rejects, i.e. a second URL that looks broken for no reason.
+  "workers_dev": false,
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": true
+  }
+}
