@@ -412,7 +412,12 @@ function JungleScene() {
        grass filling the bottom of the frame and the crowns overhead — it reads
        as being inside the forest. The previous 1.15 was standing-ish, which
        looks down onto the scene and turns it into a diorama on a table. */
-    const CAM_BASE = new THREE.Vector3(0, 0.62, 9);
+    /* CAMERA HEIGHT IS A SAFETY CONSTRAINT, NOT JUST A FRAMING ONE.
+       0.62 put the lens below the terrain's high points and inside the near
+       trees. 1.85 is clear of the ground (max ~+0.3 after the flattening above)
+       and clear of the grass (max 0.85), while still being low enough to look
+       across the forest floor rather than down onto it. */
+    const CAM_BASE = new THREE.Vector3(0, 1.85, 9);
     camera.position.copy(CAM_BASE);
 
     /* -- light ------------------------------------------------------------
@@ -523,11 +528,33 @@ void main() {
       for (let i = 0; i < p.count; i++) {
         const x = p.getX(i);
         const y = p.getY(i);
-        p.setZ(i, Math.sin(x * 0.07) * 0.9 + Math.cos(y * 0.05) * 1.1 + (rng() - 0.5) * 0.35);
+        /* THE CAMERA MUST NEVER BE INSIDE THE TERRAIN.
+           This displacement used to reach +2.0 while the camera sat at y=0.62,
+           so the ground rose straight through the lens. A PlaneGeometry is
+           single-sided, so from underneath it is invisible — you saw the sky
+           through the floor, and the bottom third of the frame was pale blue.
+
+           Two independent guards now, because getting this wrong looks like a
+           renderer bug rather than a geometry mistake:
+             1. the amplitude is small (about +/-0.55), and
+             2. it is faded out entirely within ~16 units of the camera, so the
+                ground under the viewer is dead flat no matter what.
+           The camera also sits well above the remaining maximum. */
+        const nearCam = Math.max(0, 1 - Math.hypot(x, y + 35) / 16);
+        const roll = Math.sin(x * 0.07) * 0.32 + Math.cos(y * 0.05) * 0.38 + (rng() - 0.5) * 0.16;
+        p.setZ(i, roll * (1 - nearCam));
       }
       p.needsUpdate = true;
       geo.computeVertexNormals();
-      const mat = track(new THREE.MeshLambertMaterial({ color: GROUND, flatShading: true }));
+      const mat = track(
+        new THREE.MeshLambertMaterial({
+          color: GROUND,
+          flatShading: true,
+          /* Safety net for the same bug: if the viewer ever does end up under
+             the floor, they see ground rather than a hole into the skybox. */
+          side: THREE.DoubleSide,
+        }),
+      );
       const mesh = new THREE.Mesh(geo, mat);
       mesh.rotation.x = -Math.PI / 2;
       mesh.position.y = -0.25;
@@ -557,7 +584,10 @@ void main() {
     for (let i = 0; i < budget.trees; i++) {
       const near = i < budget.trees * 0.3;
       const angle = rng() * Math.PI * 2;
-      const radius = near ? 6 + rng() * 9 : 15 + rng() * 31;
+      /* Nothing closer than ~11 units. At 6 the near trees' crowns were
+         directly overhead and filled the top of the frame with foliage; a tree
+         needs distance before its silhouette is legible as a tree. */
+      const radius = near ? 11 + rng() * 10 : 20 + rng() * 30;
       const x = Math.cos(angle) * radius;
       const z = -Math.abs(Math.sin(angle) * radius) - (near ? 1 : 9);
       // Skip anything that would plant itself in the camera's lap.
@@ -617,44 +647,22 @@ void main() {
         bg.dispose();
       }
     }
-    /* -- foreground framing ------------------------------------------------
-       Big, very dark blobs pushed right up against the camera at the left edge
-       and the bottom-right corner. The reference frames its shot with exactly
-       this: near foliage that is too close to be lit, reading as a soft dark
-       mask around a bright centre.
+    /* NO FOREGROUND FRAMING BLOBS.
+       There were four large dark blobs here, placed 1.6-2.8 units in front of
+       the camera to frame the shot the way the reference does. Seen rendered,
+       they were a disaster: at that distance a 3.6-radius blob subtends most of
+       the viewport, so the top half of the frame became an undifferentiated
+       wall of dark green triangles with no readable silhouette at all.
 
-       It does three jobs at once — it darkens the corners where the side panels
-       and the feed sit, so chrome stays legible; it gives the eye a near depth
-       plane to measure the rest against; and it hides the point where the grass
-       instances run out. Placed by hand rather than at random, because framing
-       is a composition decision and a random one is not framing. */
-    {
-      const framing: Array<[number, number, number, number]> = [
-        // x, y, z, radius
-        [-7.4, 3.2, 6.2, 3.6],
-        [-6.2, 0.7, 7.4, 2.4],
-        [8.2, 1.1, 6.6, 3.2],
-        [6.4, 3.6, 7.2, 2.6],
-      ];
-      for (const [fx, fy, fz, fr] of framing) {
-        const anchor = new THREE.Vector3(fx, fy, fz);
-        const bg = blobGeometry(fr, budget.canopyDetail, rng);
-        canopyMerger.add(
-          bg,
-          new THREE.Matrix4().compose(
-            anchor,
-            new THREE.Quaternion().setFromEuler(new THREE.Euler(rng() * 3, rng() * 3, rng() * 3)),
-            new THREE.Vector3(1.3, 0.72, 1.3),
-          ),
-          /* The darkest green in the palette, halved again. These are meant to
-             read as silhouette, not as foliage you can identify. */
-          CANOPY[4].clone().multiplyScalar(0.45),
-          anchor,
-          () => 1,
-        );
-        bg.dispose();
-      }
-    }
+       The lesson is about scale, not about the idea. In the reference the
+       framing foliage is BEHIND the camera plane in effect — soft, out of focus
+       and occupying the outer 15% of the frame. There is no way to reproduce
+       that with sharp, flat-shaded geometry sitting on the near plane: with no
+       depth of field, near geometry is exactly as crisp as far geometry, so it
+       stops reading as a frame and starts reading as an obstruction.
+
+       The corner darkening those blobs were also providing is a job for the
+       screen-space vignette, which is where it belongs. */
 
     {
       const geo = track(trunkMerger.build());
@@ -757,13 +765,20 @@ void main() {
       const dummy = new THREE.Object3D();
       const tint = new THREE.Color();
       for (let i = 0; i < budget.grass; i++) {
-        /* Concentrated into ~34 units rather than spread over 64. Beyond that
-           a blade is sub-pixel: it costs fill rate, aliases, and reads as
-           static rather than as grass. Density near the camera is what the
-           reference actually shows, and it is where the blades are legible. */
-        const d = Math.sqrt(rng()) * 34;
+        /* A FULL DISC AROUND THE CAMERA, not a half-plane in front of it.
+           This used to be `z = 5 - abs(sin(a)) * d`, which only ever walks
+           BACKWARDS from z=5 — and the camera sits at z=9. The result was bare
+           ground for the whole near field, so the grass read as a band sitting
+           at the horizon rather than as turf underfoot, which is exactly how it
+           looked on the deploy.
+
+           Centred behind the camera and radius 32, so the disc spans roughly
+           z=-44..+20 and the viewer is comfortably inside it. sqrt() keeps the
+           density biased inward, where blades are actually legible; past ~34
+           units a blade is sub-pixel and only costs fill rate. */
+        const d = Math.sqrt(rng()) * 32;
         const a = rng() * Math.PI * 2;
-        dummy.position.set(Math.cos(a) * d * 0.85, -0.2, 5 - Math.abs(Math.sin(a)) * d);
+        dummy.position.set(Math.cos(a) * d, -0.2, -12 + Math.sin(a) * d);
         dummy.rotation.set(0, rng() * Math.PI, (rng() - 0.5) * 0.34);
         /* SHORTER. The old 0.5-1.65 range put blades up around the rocks and
            halfway up the bushes, so the ground read as long meadow grass. The
@@ -806,9 +821,12 @@ void main() {
       const mesh = new THREE.InstancedMesh(geo, mat, budget.flowers);
       const dummy = new THREE.Object3D();
       for (let i = 0; i < budget.flowers; i++) {
-        const d = Math.sqrt(rng()) * 34;
+        /* Same full-disc placement as the grass, and for the same reason — a
+           half-plane in front of the camera leaves the near field empty. Sat
+           low, just above blade height, so they peek out of the turf. */
+        const d = Math.sqrt(rng()) * 26;
         const a = rng() * Math.PI * 2;
-        dummy.position.set(Math.cos(a) * d * 0.8, 0.25 + rng() * 0.5, 5 - Math.abs(Math.sin(a)) * d);
+        dummy.position.set(Math.cos(a) * d, 0.12 + rng() * 0.3, -12 + Math.sin(a) * d);
         dummy.rotation.set(-Math.PI / 2 + (rng() - 0.5) * 0.8, 0, rng() * Math.PI);
         dummy.scale.setScalar(0.8 + rng() * 0.9);
         dummy.updateMatrix();
@@ -817,6 +835,58 @@ void main() {
       mesh.instanceMatrix.needsUpdate = true;
       mesh.frustumCulled = false;
       scene.add(mesh);
+    }
+
+    /* ======================================================================
+       9. VIGNETTE
+       ======================================================================
+       A screen-space quad drawn in a second pass after the scene.
+
+       This is doing legibility work, not mood. The scene is BRIGHT — saturated
+       greens under a blue sky — and the app's chrome is dark wood sitting on
+       top of it, with white copy in the middle of the frame. Without any
+       falloff, the corners where the side panels live are as loud as the
+       centre, and headline text sits on whatever happens to be behind it.
+
+       It also replaces the near-camera framing blobs that used to darken the
+       corners with geometry. A flat 2D falloff is strictly better for that job:
+       no geometry on the near plane, no occlusion, no cost beyond one blended
+       full-screen quad, and it cannot end up between the camera and the scene.
+
+       Drawn as its own pass with autoClear disabled rather than as an object in
+       the scene, because anything placed in front of the camera in world space
+       will eventually z-fight with the near geometry.
+       ====================================================================== */
+    const overlayScene = new THREE.Scene();
+    const overlayCam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+    {
+      const geo = track(new THREE.PlaneGeometry(2, 2));
+      const mat = track(
+        new THREE.ShaderMaterial({
+          transparent: true,
+          depthTest: false,
+          depthWrite: false,
+          vertexShader: `
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  gl_Position = vec4(position.xy, 0.0, 1.0);
+}`,
+          fragmentShader: `
+varying vec2 vUv;
+void main() {
+  vec2 p = (vUv - 0.5) * 2.0;
+  /* Wider than tall and biased downward: the forest floor in the lower corners
+     is the busiest part of the frame and the least important. */
+  float v = length(p * vec2(0.72, 0.86) + vec2(0.0, 0.1));
+  float a = smoothstep(0.66, 1.45, v) * 0.72;
+  /* Tinted to the canopy shadow rather than to black, so the darkening reads
+     as depth in the scene instead of as a filter over a photograph. */
+  gl_FragColor = vec4(vec3(0.035, 0.075, 0.043), a);
+}`,
+        }),
+      );
+      overlayScene.add(new THREE.Mesh(geo, mat));
     }
 
     /* ======================================================================
@@ -935,9 +1005,19 @@ void main() {
       camera.position.z = CAM_BASE.z - push * 18;
       /* Looking slightly UP from blade height, so crowns fill the top of the
          frame and the horizon sits low — the reference's framing. */
-      camera.lookAt(yaw * 3, 3.4 - pitch * 1.4, -24);
+      /* NEARLY LEVEL. Aiming at y=3.4 from a low camera pitched the view up
+         into the canopy, so the frame filled with leaves and the horizon fell
+         off the bottom — which is what put sky under the grass line. Looking at
+         roughly its own height puts the horizon just above centre, the forest
+         floor across the lower third, and the crowns in the upper third. */
+      camera.lookAt(yaw * 3, 2.15 - pitch * 1.4, -26);
 
       renderer.render(scene, camera);
+      /* Second pass for the vignette. autoClear off so it composites over the
+         frame just drawn rather than clearing it. */
+      renderer.autoClear = false;
+      renderer.render(overlayScene, overlayCam);
+      renderer.autoClear = true;
 
       /* Park the loop when nothing is moving: no wind, no camera easing, no
          cinematic. It restarts on any pointer move, resize or dolly. */
