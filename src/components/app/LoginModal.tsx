@@ -148,6 +148,26 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
     }
   };
 
+  const handleEmailCodeSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setEmailError('');
+    if (!/^\d{6}$/.test(emailCode.trim())) {
+      setEmailError(t('loginModal.invalidCode', 'Enter the 6-digit code from your email'));
+      return;
+    }
+    setActiveProvider('email-code');
+    try {
+      await verifyEmailOtp(email, emailCode.trim());
+    } catch (error: any) {
+      console.error('Email OTP verification failed:', error);
+      setEmailError(error?.message || 'Invalid code. Please try again.');
+    } finally {
+      setActiveProvider(null);
+    }
+  };
+
+
+
 
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
