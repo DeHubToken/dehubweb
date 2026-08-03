@@ -10,22 +10,20 @@ import {
   Heading,
   Hr,
   Html,
-  Link,
   Preview,
   Section,
   Text,
 } from 'npm:@react-email/components@0.0.22'
 
 interface SignupEmailProps {
-  siteName: string
-  siteUrl: string
-  recipient: string
+  siteName?: string
+  siteUrl?: string
+  recipient?: string
   confirmationUrl: string
   token?: string
 }
 
 export const SignupEmail = ({
-  siteUrl,
   recipient,
   confirmationUrl,
   token,
@@ -37,39 +35,44 @@ export const SignupEmail = ({
         href="https://fonts.googleapis.com/css2?family=Exo:wght@400;600;700&display=swap"
       />
     </Head>
-    <Preview>Your DeHub magic link — tap to finish signing up</Preview>
+    <Preview>Your DeHub sign-up code{token ? ` — ${token}` : ''}</Preview>
     <Body style={main}>
       <Container style={container}>
-        <Section style={brandRow}>
+        <Section style={card}>
           <Text style={brandMark}>DeHub</Text>
-        </Section>
 
-        <Heading style={h1}>Welcome to DeHub</Heading>
-        <Text style={text}>
-          Tap the button below to finish creating your account for{' '}
-          <Link href={`mailto:${recipient}`} style={link}>{recipient}</Link>.
-          No password needed — this is a one-time magic link.
-        </Text>
+          <Heading style={h1}>Welcome to DeHub</Heading>
+          <Text style={lede}>
+            Enter this one-time code in the app to finish creating your account
+            {recipient ? ` for ${recipient}` : ''}.
+          </Text>
 
-        <Section style={buttonWrap}>
-          <Button style={button} href={confirmationUrl}>
-            Sign up to DeHub
-          </Button>
-        </Section>
+          {token ? (
+            <Section style={codeWrap}>
+              <Text style={codeValue}>{token}</Text>
+              <Text style={codeHint}>Tap and hold to copy · expires shortly</Text>
+            </Section>
+          ) : null}
 
-        {token ? (
-          <Section style={codeWrap}>
-            <Text style={codeLabel}>Or enter this code in the app</Text>
-            <Text style={codeValue}>{token}</Text>
+          <Section style={dividerWrap}>
+            <Hr style={dividerLine} />
+            <Text style={dividerLabel}>or</Text>
           </Section>
-        ) : null}
 
+          <Section style={buttonWrap}>
+            <Button style={button} href={confirmationUrl}>
+              Sign up with one tap
+            </Button>
+          </Section>
 
-        <Hr style={hr} />
+          <Text style={fine}>
+            This link works once and only on this device's browser.
+          </Text>
+        </Section>
 
         <Text style={footer}>
-          This link expires shortly and can only be used once. If you didn't
-          request it, you can safely ignore this email.
+          Didn't request this? You can safely ignore this email — no account
+          will be created.
         </Text>
         <Text style={footerBrand}>
           DeHub — Open source. Censorship resistant. User owned.
@@ -81,81 +84,114 @@ export const SignupEmail = ({
 
 export default SignupEmail
 
+const FONT =
+  '"Exo", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif'
+const MONO = '"SFMono-Regular", Menlo, Consolas, "Courier New", monospace'
+
 const main = {
   backgroundColor: '#ffffff',
-  fontFamily:
-    '"Exo", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
-  padding: '40px 0',
+  fontFamily: FONT,
+  padding: '48px 16px',
 }
-const container = {
-  maxWidth: '520px',
-  margin: '0 auto',
-  padding: '32px 32px 24px',
+const container = { maxWidth: '520px', margin: '0 auto' }
+const card = {
+  padding: '40px 40px 36px',
   backgroundColor: '#f9f8f4',
-  borderRadius: '16px',
+  borderRadius: '20px',
+  border: '1px solid #ece8df',
 }
-const brandRow = { marginBottom: '28px' }
 const brandMark = {
-  fontSize: '18px',
+  fontSize: '15px',
   fontWeight: '700' as const,
-  letterSpacing: '-0.01em',
+  letterSpacing: '0.12em',
+  textTransform: 'uppercase' as const,
   color: '#0a0a0a',
-  margin: 0,
-  textTransform: 'none' as const,
-  fontFamily: '"Exo", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+  margin: '0 0 32px',
+  fontFamily: FONT,
 }
 const h1 = {
   fontSize: '26px',
+  lineHeight: '1.2',
   fontWeight: '700' as const,
-  letterSpacing: '-0.01em',
+  letterSpacing: '-0.015em',
   color: '#0a0a0a',
-  margin: '0 0 16px',
-  textTransform: 'none' as const,
-  fontFamily: '"Exo", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+  margin: '0 0 10px',
+  fontFamily: FONT,
 }
-const text = {
+const lede = {
   fontSize: '15px',
-  color: '#2a2a2a',
-  lineHeight: '1.55',
-  margin: '0 0 24px',
-  textTransform: 'none' as const,
-  fontFamily: '"Exo", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+  color: '#5d5b55',
+  lineHeight: '1.6',
+  margin: '0 0 28px',
+  fontFamily: FONT,
 }
-const link = { color: '#0a0a0a', textDecoration: 'underline' }
-const buttonWrap = { margin: '8px 0 24px' }
+const codeWrap = {
+  margin: '0 0 8px',
+  padding: '22px 16px 16px',
+  backgroundColor: '#ffffff',
+  border: '1px solid #e6e2d8',
+  borderRadius: '14px',
+  textAlign: 'center' as const,
+}
+const codeValue = {
+  fontSize: '34px',
+  lineHeight: '1.1',
+  fontWeight: '700' as const,
+  letterSpacing: '0.22em',
+  textIndent: '0.22em',
+  color: '#0a0a0a',
+  margin: '0 0 10px',
+  fontFamily: MONO,
+}
+const codeHint = {
+  fontSize: '11px',
+  letterSpacing: '0.04em',
+  color: '#9a978f',
+  margin: 0,
+  fontFamily: FONT,
+}
+const dividerWrap = { margin: '24px 0 20px', textAlign: 'center' as const }
+const dividerLine = { borderColor: '#e6e2d8', margin: '0 0 -10px' }
+const dividerLabel = {
+  display: 'inline-block',
+  backgroundColor: '#f9f8f4',
+  padding: '0 12px',
+  fontSize: '12px',
+  color: '#9a978f',
+  margin: 0,
+  fontFamily: FONT,
+}
+const buttonWrap = { margin: '0 0 20px', textAlign: 'center' as const }
 const button = {
   backgroundColor: '#0a0a0a',
   color: '#ffffff',
   fontSize: '15px',
   fontWeight: '600' as const,
   borderRadius: '12px',
-  padding: '14px 24px',
+  padding: '15px 28px',
   textDecoration: 'none',
-  display: 'inline-block',
-}
-const hr = { borderColor: '#e6e2d8', margin: '28px 0 16px' }
-const footer = { fontSize: '12px', color: '#7a7a7a', margin: '0 0 8px', lineHeight: '1.5' }
-const footerBrand = { fontSize: '12px', color: '#7a7a7a', margin: 0 }
-const footerLink = { color: '#0a0a0a', textDecoration: 'none', fontWeight: '600' as const }
-const codeWrap = {
-  margin: '0 0 24px',
-  padding: '16px 20px',
-  backgroundColor: '#ffffff',
-  border: '1px solid #e6e2d8',
-  borderRadius: '12px',
+  display: 'block',
   textAlign: 'center' as const,
+  fontFamily: FONT,
 }
-const codeLabel = {
+const fine = {
   fontSize: '12px',
-  color: '#7a7a7a',
-  margin: '0 0 8px',
-  fontFamily: '"Exo", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
-}
-const codeValue = {
-  fontSize: '30px',
-  fontWeight: '700' as const,
-  letterSpacing: '0.18em',
-  color: '#0a0a0a',
+  color: '#9a978f',
+  lineHeight: '1.5',
   margin: 0,
-  fontFamily: '"Exo", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+  textAlign: 'center' as const,
+  fontFamily: FONT,
+}
+const footer = {
+  fontSize: '12px',
+  color: '#9a978f',
+  margin: '24px 4px 6px',
+  lineHeight: '1.6',
+  fontFamily: FONT,
+}
+const footerBrand = {
+  fontSize: '12px',
+  color: '#9a978f',
+  margin: '0 4px',
+  fontFamily: FONT,
 }
