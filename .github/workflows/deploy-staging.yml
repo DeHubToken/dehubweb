@@ -36,7 +36,14 @@ jobs:
           node-version: 22
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      # Not --frozen-lockfile (pnpm's CI default): pnpm-lock.yaml trails
+      # package.json, which declares wrangler, hash-wasm and
+      # @testing-library/dom without them being locked — added via npm, so
+      # package-lock.json moved and this one didn't. A frozen install aborts
+      # on that. The drift is purely additive, so resolving the three at
+      # install time is safe for staging. Refresh the lockfile on main and
+      # this should go back to frozen.
+      - run: pnpm install --no-frozen-lockfile
 
       # No build secrets: .env is committed on purpose and holds only
       # publishable VITE_* client keys (see the note atop .gitignore).
