@@ -49,9 +49,29 @@ jobs:
       # publishable VITE_* client keys (see the note atop .gitignore).
       - run: pnpm run build
 
-      # No accountId passed: the API token resolves to a single account, so
-      # wrangler infers it. Supplying one only adds a value that can be
-      # malformed, which is exactly how this first failed.
+      # The account ID is derived rather than stored. A scoped API token can't
+      # call /accounts (that needs Account Settings: Read), so wrangler can't
+      # infer it — but the token must already reach the dehub.io zone to bind
+      # the staging route, and a zone record names the account that owns it.
+      # One lookup turns the token into the account ID, so there is no second
+      # secret to keep in sync or paste correctly.
+      - name: Resolve Cloudflare account ID
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_APITOKEN }}
+        run: |
+          RESP=$(curl -s -H "Authorization: Bearer $CF_TOKEN" \
+            "https://api.cloudflare.com/client/v4/zones?name=dehub.io")
+          ACCOUNT=$(printf '%s' "$RESP" | jq -r '.result[0].account.id // empty')
+          if [ -z "$ACCOUNT" ]; then
+            echo "Could not resolve the account from the dehub.io zone."
+            echo "The token likely lacks zone access — it needs Workers Routes:"
+            echo "Edit on dehub.io, which is required to bind the route anyway."
+            printf '%s' "$RESP" | jq -r '.errors // empty'
+            exit 1
+          fi
+          echo "Resolved account ${ACCOUNT:0:6}… from the dehub.io zone"
+          echo "CLOUDFLARE_ACCOUNT_ID=$ACCOUNT" >> "$GITHUB_ENV"
+
       - uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_APITOKEN }}
