@@ -20,11 +20,13 @@ interface MagicLinkEmailProps {
   siteName: string
   siteUrl?: string
   confirmationUrl: string
+  token?: string
 }
 
 export const MagicLinkEmail = ({
   siteUrl = 'https://dehub.io',
   confirmationUrl,
+  token,
 }: MagicLinkEmailProps) => (
   <Html lang="en" dir="ltr">
     <Head>
@@ -51,6 +53,14 @@ export const MagicLinkEmail = ({
             Log in to DeHub
           </Button>
         </Section>
+
+        {token ? (
+          <Section style={codeWrap}>
+            <Text style={codeLabel}>Or enter this code in the app</Text>
+            <Text style={codeValue}>{token}</Text>
+          </Section>
+        ) : null}
+
 
         <Hr style={hr} />
 
