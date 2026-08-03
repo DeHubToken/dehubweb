@@ -49,8 +49,10 @@ jobs:
       # publishable VITE_* client keys (see the note atop .gitignore).
       - run: pnpm run build
 
+      # No accountId passed: the API token resolves to a single account, so
+      # wrangler infers it. Supplying one only adds a value that can be
+      # malformed, which is exactly how this first failed.
       - uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_APITOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ID }}
           command: deploy -c wrangler.staging.jsonc
