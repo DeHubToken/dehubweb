@@ -21,12 +21,14 @@ interface SignupEmailProps {
   siteUrl: string
   recipient: string
   confirmationUrl: string
+  token?: string
 }
 
 export const SignupEmail = ({
   siteUrl,
   recipient,
   confirmationUrl,
+  token,
 }: SignupEmailProps) => (
   <Html lang="en" dir="ltr">
     <Head>
@@ -54,6 +56,14 @@ export const SignupEmail = ({
             Sign up to DeHub
           </Button>
         </Section>
+
+        {token ? (
+          <Section style={codeWrap}>
+            <Text style={codeLabel}>Or enter this code in the app</Text>
+            <Text style={codeValue}>{token}</Text>
+          </Section>
+        ) : null}
+
 
         <Hr style={hr} />
 
@@ -127,3 +137,25 @@ const hr = { borderColor: '#e6e2d8', margin: '28px 0 16px' }
 const footer = { fontSize: '12px', color: '#7a7a7a', margin: '0 0 8px', lineHeight: '1.5' }
 const footerBrand = { fontSize: '12px', color: '#7a7a7a', margin: 0 }
 const footerLink = { color: '#0a0a0a', textDecoration: 'none', fontWeight: '600' as const }
+const codeWrap = {
+  margin: '0 0 24px',
+  padding: '16px 20px',
+  backgroundColor: '#ffffff',
+  border: '1px solid #e6e2d8',
+  borderRadius: '12px',
+  textAlign: 'center' as const,
+}
+const codeLabel = {
+  fontSize: '12px',
+  color: '#7a7a7a',
+  margin: '0 0 8px',
+  fontFamily: '"Exo", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+}
+const codeValue = {
+  fontSize: '30px',
+  fontWeight: '700' as const,
+  letterSpacing: '0.18em',
+  color: '#0a0a0a',
+  margin: 0,
+  fontFamily: '"Exo", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+}
