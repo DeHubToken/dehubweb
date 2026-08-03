@@ -80,6 +80,18 @@ jobs:
           if [ "$(printf '%s' "$VERIFY" | jq -r '.success')" != "true" ]; then
             echo "The API token was rejected by Cloudflare:"
             printf '%s' "$VERIFY" | jq -r '.errors'
+            # Shape-only report on the stored value: a Cloudflare token is
+            # ~40 characters of [A-Za-z0-9_-]. Length and the offending byte
+            # codes say what was pasted (a URL, an email, a smart quote from
+            # a styled UI) without echoing the value itself.
+            echo "--- stored value, shape only ---"
+            echo "length: $(printf '%s' "$TOKEN" | wc -c)"
+            BAD=$(printf '%s' "$TOKEN" | tr -d 'A-Za-z0-9_-' | od -An -tx1 | tr -s ' ')
+            if [ -n "$(printf '%s' "$BAD" | tr -d ' ')" ]; then
+              echo "bytes outside [A-Za-z0-9_-]:$BAD"
+            else
+              echo "character set is valid; the token is well-formed but wrong"
+            fi
             echo "Create a token with Workers Scripts: Edit, plus Workers"
             echo "Routes: Edit on the dehub.io zone, and store it as"
             echo "CLOUDFLARE_APITOKEN."
