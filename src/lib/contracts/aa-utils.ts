@@ -74,9 +74,19 @@ async function getActiveProvider(chainId?: number): Promise<{ provider: any; isW
 
   // Check wagmi (external wallet) BEFORE falling back to raw Web3Auth provider.
   // External wallets use their own popups — that's expected and correct.
-  const account = getAccount(wagmiConfig);
-  if (account.address && (account.isConnected || account.status === 'reconnecting')) {
-    return { provider: null, isWeb3Auth: false };
+  //
+  // Only trust this for sessions that aren't backed by the built-in smart wallet.
+  // wagmi auto-reconnects on its own (reconnectOnMount), independent of DeHub's
+  // login method — a browser extension authorized in an earlier, unrelated
+  // session can report isConnected/reconnecting even though the current user
+  // logged in with email/social. Routing a smart-wallet session through wagmi
+  // here is exactly what pops the real "pay gas" wallet prompt for a user whose
+  // posts should be gasless via the AA/Pimlico path.
+  if (!isSmartWalletSession()) {
+    const account = getAccount(wagmiConfig);
+    if (account.address && (account.isConnected || account.status === 'reconnecting')) {
+      return { provider: null, isWeb3Auth: false };
+    }
   }
 
   // Web3Auth is connected but AA provider not set up yet (page restore race condition or
@@ -312,9 +322,14 @@ export async function getWalletAddress(opts?: { silent?: boolean }): Promise<str
     if (accounts?.length) return accounts[0];
   }
 
-  // Fall back to wagmi
-  const account = getAccount(wagmiConfig);
-  if (account.address) return account.address;
+  // Fall back to wagmi -- same guard as getActiveProvider: a smart-wallet
+  // (social-login) session must never resolve to a stale, auto-reconnected
+  // wagmi address just because the built-in wallet/AA provider isn't warmed
+  // up yet. Falling through to requestUnlockForSigning below is correct here.
+  if (!isSmartWalletSession()) {
+    const account = getAccount(wagmiConfig);
+    if (account.address) return account.address;
+  }
 
   throw opts?.silent
     ? new Error(noSigningProviderMessage())
