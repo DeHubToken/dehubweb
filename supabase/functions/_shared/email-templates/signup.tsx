@@ -21,12 +21,14 @@ interface SignupEmailProps {
   siteUrl: string
   recipient: string
   confirmationUrl: string
+  token?: string
 }
 
 export const SignupEmail = ({
   siteUrl,
   recipient,
   confirmationUrl,
+  token,
 }: SignupEmailProps) => (
   <Html lang="en" dir="ltr">
     <Head>
@@ -54,6 +56,14 @@ export const SignupEmail = ({
             Sign up to DeHub
           </Button>
         </Section>
+
+        {token ? (
+          <Section style={codeWrap}>
+            <Text style={codeLabel}>Or enter this code in the app</Text>
+            <Text style={codeValue}>{token}</Text>
+          </Section>
+        ) : null}
+
 
         <Hr style={hr} />
 
