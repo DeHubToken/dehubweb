@@ -77,6 +77,8 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.report-broken-channel]
     verify_jwt = false
+  [functions.send-sms-hook]
+    verify_jwt = false
   [functions.ssr-seo]
     verify_jwt = false
   [functions.stock-quote]
