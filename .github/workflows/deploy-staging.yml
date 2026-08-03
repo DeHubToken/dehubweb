@@ -49,30 +49,60 @@ jobs:
       # publishable VITE_* client keys (see the note atop .gitignore).
       - run: pnpm run build
 
-      # The account ID is derived rather than stored. A scoped API token can't
-      # call /accounts (that needs Account Settings: Read), so wrangler can't
-      # infer it — but the token must already reach the dehub.io zone to bind
-      # the staging route, and a zone record names the account that owns it.
-      # One lookup turns the token into the account ID, so there is no second
-      # secret to keep in sync or paste correctly.
-      - name: Resolve Cloudflare account ID
+      # Two things happen here, both to keep credentials out of the failure
+      # modes that cost the most time to diagnose.
+      #
+      # 1. The token is trimmed. Pasting into the secrets UI carries a
+      #    trailing newline when the copied text included a line break, and
+      #    the API rejects that as "Invalid format for Authorization header"
+      #    (6111) — which reads as a permissions problem and isn't one. The
+      #    trimmed value is re-masked before it enters the environment, since
+      #    the runner only auto-masks the literal stored secret.
+      #
+      # 2. The account ID is derived, not stored. A scoped token can't call
+      #    /accounts (that needs Account Settings: Read), so wrangler can't
+      #    infer it — but the token already reaches the dehub.io zone to bind
+      #    the route, and a zone record names the account that owns it. That
+      #    leaves one secret to get right instead of two.
+      - name: Prepare Cloudflare credentials
         env:
-          CF_TOKEN: ${{ secrets.CLOUDFLARE_APITOKEN }}
+          CF_TOKEN_RAW: ${{ secrets.CLOUDFLARE_APITOKEN }}
         run: |
-          RESP=$(curl -s -H "Authorization: Bearer $CF_TOKEN" \
+          TOKEN=$(printf '%s' "$CF_TOKEN_RAW" | tr -d '[:space:]' | tr -d '"'"'")
+          echo "::add-mask::$TOKEN"
+          if [ -z "$TOKEN" ]; then
+            echo "CLOUDFLARE_APITOKEN is empty after trimming."
+            exit 1
+          fi
+
+          VERIFY=$(curl -s -H "Authorization: Bearer $TOKEN" \
+            "https://api.cloudflare.com/client/v4/user/tokens/verify")
+          if [ "$(printf '%s' "$VERIFY" | jq -r '.success')" != "true" ]; then
+            echo "The API token was rejected by Cloudflare:"
+            printf '%s' "$VERIFY" | jq -r '.errors'
+            echo "Create a token with Workers Scripts: Edit, plus Workers"
+            echo "Routes: Edit on the dehub.io zone, and store it as"
+            echo "CLOUDFLARE_APITOKEN."
+            exit 1
+          fi
+          echo "Token verified: $(printf '%s' "$VERIFY" | jq -r '.result.status')"
+
+          ZONE=$(curl -s -H "Authorization: Bearer $TOKEN" \
             "https://api.cloudflare.com/client/v4/zones?name=dehub.io")
-          ACCOUNT=$(printf '%s' "$RESP" | jq -r '.result[0].account.id // empty')
+          ACCOUNT=$(printf '%s' "$ZONE" | jq -r '.result[0].account.id // empty')
           if [ -z "$ACCOUNT" ]; then
-            echo "Could not resolve the account from the dehub.io zone."
-            echo "The token likely lacks zone access — it needs Workers Routes:"
-            echo "Edit on dehub.io, which is required to bind the route anyway."
-            printf '%s' "$RESP" | jq -r '.errors // empty'
+            echo "Token is valid but cannot see the dehub.io zone, so the"
+            echo "account ID could not be derived. Add Workers Routes: Edit"
+            echo "on dehub.io — binding the staging route needs it regardless."
+            printf '%s' "$ZONE" | jq -r '.errors // empty'
             exit 1
           fi
           echo "Resolved account ${ACCOUNT:0:6}… from the dehub.io zone"
+
+          echo "CF_TOKEN=$TOKEN" >> "$GITHUB_ENV"
           echo "CLOUDFLARE_ACCOUNT_ID=$ACCOUNT" >> "$GITHUB_ENV"
 
       - uses: cloudflare/wrangler-action@v3
         with:
-          apiToken: ${{ secrets.CLOUDFLARE_APITOKEN }}
+          apiToken: ${{ env.CF_TOKEN }}
           command: deploy -c wrangler.staging.jsonc
