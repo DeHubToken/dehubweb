@@ -314,7 +314,28 @@ html[data-theme='jungle'] [data-radix-popper-content-wrapper] > * {
   color: rgb(var(--jungle-bone)) !important;
 }
 
-html[data-theme='jungle'] [data-vaul-drawer] {
+/* Sheets: option menus, comment sheets, the AI chat. NOT the dedicated post
+   page's drawer, which is a full-screen page surface rather than a sheet.
+
+   [data-post-drawer] and [data-vaul-drawer] are the SAME node — SinglePostPage
+   puts data-post-drawer on <DrawerContent>, ui/drawer.tsx spreads it onto
+   DrawerPrimitive.Content, and vaul stamps data-vaul-drawer on that element.
+   index.css declares that node transparent for every canvas theme, and that
+   rule and this one are an EXACT (0,2,1) !important tie, so import order alone
+   decides it: main.tsx pulls index.css first and this file after. Without the
+   exclusion this wins and paints a near-opaque, full-viewport plank behind the
+   entire post column on mobile — the middle panel the dedicated post page is
+   not supposed to have. It is also why only this theme and osaka showed it:
+   they are the only two that declare [data-vaul-drawer], so on the other
+   canvas themes nothing contests index.css.
+
+   Excluded rather than re-declared transparent: one token kills the fill, the
+   grain, the bevel and the rounded top together, and it also stops vaul's
+   injected `[data-vaul-drawer]::after { background: inherit }` extending the
+   same fill 200% below the sheet. index.css already had to fix this exact tie
+   once for the light theme — that fix does not generalise, so every theme
+   declaring [data-vaul-drawer] needs this. */
+html[data-theme='jungle'] [data-vaul-drawer]:not([data-post-drawer]) {
   border-radius: var(--jungle-r-panel) var(--jungle-r-panel) 0 0 !important;
   background: var(--jungle-grain), rgb(var(--jungle-bark) / 0.97) !important;
   border-color: transparent !important;
