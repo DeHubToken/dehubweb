@@ -281,21 +281,35 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
               exactly like the feed does. */}
           {showHomePagePersisted && (
             <>
-              {/* Opaque backing, deliberately a separate element from the scroller:
-                  the swallow clip cuts the scroller at the nav pill's top edge, and
-                  a clipped background takes the black with it — leaving the feed
-                  visible through the translucent header above the pill.
+              {/* Backing for the post layer, deliberately a separate element from
+                  the scroller: the swallow clip cuts the scroller at the nav
+                  pill's top edge, and a clipped background takes its fill with
+                  it — leaving the feed visible through the translucent header
+                  above the pill.
 
-                  It carries its own data attribute rather than sharing
-                  `data-post-overlay` with the scroller: the canvas themes null
-                  this backing out entirely (they hide the feed instead, so the
-                  animated canvas shows through the post), and they must be able
-                  to target the painted element without also matching the
-                  scroller's `:has()`/visibility rules keyed on the overlay. */}
+                  It is needed on every theme. The home feed stays MOUNTED AND
+                  VISIBLE underneath (PersistentPageCache keeps it that way so its
+                  sticky tab bar holds position), and it cannot be hidden with
+                  CSS: feed thumbnails carry `transition-all`, and a running CSS
+                  transition outranks even an `!important` visibility:hidden, so
+                  one thumbnail always survives the hide and floats over the post.
+
+                  NO COLOUR CLASS HERE — this is load-bearing. It shipped as
+                  `bg-black`, which every theme's untagged-slab safety net matches
+                  on `[class*='bg-black']`; those nets are scoped under #app-root,
+                  so they carry an id and beat any plain re-declaration no matter
+                  how many !importants it has. That turned this element — `fixed`,
+                  full height, sized to the middle column — into a full-height
+                  frosted panel behind the whole dedicated post page. The colour
+                  now comes from `background-color: inherit` in index.css, which
+                  resolves to <main>'s own background: black on the opaque themes,
+                  paper on light, transparent on every canvas theme, automatically
+                  and with no per-theme rule. Nothing class-based means no net can
+                  ever match it again. */}
               <div
                 aria-hidden
                 data-post-overlay-backdrop
-                className="fixed top-0 bottom-0 z-10 bg-black"
+                className="fixed top-0 bottom-0 z-10"
                 style={{ left: POST_LAYER_LEFT, width: POST_LAYER_WIDTH }}
               />
               <div
