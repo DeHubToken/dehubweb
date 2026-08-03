@@ -1423,6 +1423,17 @@ html[data-theme='osaka'] #app-root
       [data-media-full], [data-media-full] *,
       [data-video-controls], [data-video-controls] *,
       [data-primary-cta], [data-feed-nav-outer], [data-main-panel], [data-glass-page],
+      /* The post layer. All three ship `bg-black` deliberately — they exist to
+         hide whatever is mounted beneath them on the opaque themes — and all
+         three are declared transparent in index.css with no id, so this net
+         outranked those declarations and repainted them.
+         [data-post-overlay-backdrop] is the one that shows: it is `fixed top-0
+         bottom-0` and spans the middle column exactly, so the net turned it
+         into a full-height frosted panel behind every bento on the dedicated
+         post page. It only appears on the feed-overlay path — which is how a
+         post is normally opened — so a direct visit to /app/post/:id looks
+         fine, and only the two themes with an id-scoped net show it at all. */
+      [data-post-overlay], [data-post-overlay-backdrop], [data-post-drawer],
       /* Tagged roles own their own look; the net must not paint over them. */
       [data-filter-chip], [data-follow-btn], [data-glass-indicator],
       [data-inline-popover], [data-reaction-tray], [data-reaction-tray] *,
