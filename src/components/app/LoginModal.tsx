@@ -474,6 +474,46 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
         {t('loginModal.waitingForLink', 'Waiting for you to confirm…')}
       </div>
 
+      <div className="flex items-center gap-3">
+        <div className="h-px flex-1 bg-white/10" />
+        <span className="text-white/40 text-xs">{t('loginModal.or', 'or')}</span>
+        <div className="h-px flex-1 bg-white/10" />
+      </div>
+
+      <form onSubmit={handleEmailCodeSubmit} className="space-y-3">
+        <p className="text-white/50 text-xs text-center">
+          {t('loginModal.enterCodeFromEmail', 'Enter the 6-digit code from the email')}
+        </p>
+        <Input
+          type="text"
+          inputMode="numeric"
+          autoComplete="one-time-code"
+          maxLength={6}
+          placeholder="000000"
+          value={emailCode}
+          onChange={(e) => setEmailCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+          disabled={isConnecting}
+          className="h-12 text-center tracking-[0.4em] bg-white/10 border-white/10 text-white placeholder:text-white/30 rounded-xl"
+        />
+        {emailError && <p className="text-red-400 text-sm text-center">{emailError}</p>}
+        <Button
+          type="submit"
+          disabled={isConnecting || emailCode.length !== 6}
+          className="w-full h-12 bg-white hover:bg-white/90 text-black font-semibold rounded-xl"
+        >
+          {activeProvider === 'email-code' ? (
+            <span className="flex items-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              {t('loginModal.verifying', 'Verifying…')}
+            </span>
+          ) : (
+            t('loginModal.continue')
+          )}
+        </Button>
+      </form>
+
+
+
       <button
         type="button"
         onClick={() => { cancelEmailMagicLink(); setStep('email'); }}
