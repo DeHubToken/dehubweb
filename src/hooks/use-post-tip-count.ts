@@ -24,6 +24,9 @@ function flushTipCountBatch() {
     .from('tip_records')
     .select('token_id, amount')
     .in('token_id', ids)
+    // Comment tips carry the post's token_id for context but pay the comment's
+    // author, so they'd inflate this number if counted here.
+    .is('comment_id', null)
     .then(({ data, error }) => {
       const sums = new Map<string, number>();
       if (error) {

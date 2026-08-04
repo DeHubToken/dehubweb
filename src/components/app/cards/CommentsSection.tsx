@@ -18,9 +18,9 @@ import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { useNavigate } from 'react-router-dom';
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
-import { formatTimeAgo } from '@/lib/feed-utils';
+import { formatTimeAgo, formatCount } from '@/lib/feed-utils';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages } from 'lucide-react';
+import { X, Search, ThumbsUp, ThumbsDown, MessageSquare, Quote, ArrowUpDown, Mic, Square, Play, Pause, Trash2, Share2, Repeat2, Link, Loader2, Reply, Pencil, Check, ImagePlus, Languages, Gem } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -39,6 +39,8 @@ import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, recordCommentViews, getPostLikers, getPostQuotes, type ApiCommentResponse } from '@/lib/api/dehub';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
+import { useCommentTips } from '@/hooks/use-comment-tips';
+import { TipModal } from '@/components/app/modals/TipModal';
 import { toast } from 'sonner';
 import { incrementCommentCount } from '@/lib/comment-count-cache';
 import { useMention } from '@/hooks/use-mention';
@@ -171,6 +173,9 @@ interface CommentItemProps {
   onShare: (id: string) => void;
   onEdit: (id: string, newContent: string) => void;
   onDelete: (id: string) => void;
+  onTip: (id: string) => void;
+  /** DHB already tipped to this comment, shown beside the gem when > 0. */
+  tipTotal?: number;
   onUserPress: (username: string) => void;
   isReply?: boolean;
   /** Nesting depth: 0 = top-level, 1 = direct reply, 2 = reply-to-reply, … */
@@ -222,7 +227,7 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
   );
 }
 
-function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, onEdit, onDelete, onUserPress, isReply, depth = 0, isOwnComment }: CommentItemProps) {
+function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, onEdit, onDelete, onTip, tipTotal, onUserPress, isReply, depth = 0, isOwnComment }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
   const avatarUrl = comment.avatar;
@@ -337,6 +342,17 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
             >
               <MessageSquare className="w-4 h-4" />
             </button>
+            {/* Tip the comment's author. Rendered for own comments too so the
+                author sees what the comment has earned; the payment hook
+                already refuses self-tips. */}
+            <button
+              onClick={() => onTip(comment.id)}
+              className="flex items-center gap-1 text-white hover:text-zinc-400 transition-colors"
+              aria-label="Tip"
+            >
+              <Gem className="w-4 h-4" />
+              {(tipTotal ?? 0) > 0 && <span className="text-xs">{formatCount(tipTotal!)}</span>}
+            </button>
             {isOwnComment && !isEditing && (
               <>
                 <button
@@ -448,6 +464,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const [sortBy, setSortBy] = useState<'recent' | 'oldest' | 'liked'>('recent');
   const [newComment, setNewComment] = useState(() => loadDraft(tokenId));
   const [replyTo, setReplyTo] = useState<Comment | null>(null);
+  const [tipComment, setTipComment] = useState<Comment | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [optimisticComments, setOptimisticComments] = useState<Comment[]>([]);
   // Optimistic delete/edit overlays — applied instantly in allComments below,
@@ -871,6 +888,15 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     setNewComment('');
   };
 
+  const handleTip = (commentId: string) => {
+    const found = allComments.find(c => c.id === commentId);
+    if (found) setTipComment(found);
+  };
+
+  // One query for every loaded comment's tip total, fanned out per row below.
+  const allCommentIds = useMemo(() => allComments.map(c => c.id), [allComments]);
+  const { data: commentTips } = useCommentTips(tokenId, allCommentIds);
+
   const handleDeleteComment = async (commentId: string) => {
     // Optimistic: hide the row instantly, restore it if the server refuses.
     setDeletedCommentIds(prev => new Set(prev).add(commentId));
@@ -1146,6 +1172,8 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                         onShare={() => {}} 
                         onEdit={handleEditComment}
                         onDelete={handleDeleteComment}
+                        onTip={handleTip}
+                        tipTotal={commentTips?.[comment.id]}
                         onUserPress={handleUserPress}
                         isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
                       />
@@ -1160,6 +1188,8 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                           onShare={() => {}}
                           onEdit={handleEditComment}
                           onDelete={handleDeleteComment}
+                          onTip={handleTip}
+                          tipTotal={commentTips?.[reply.id]}
                           onUserPress={handleUserPress}
                           isReply
                           depth={depth}
@@ -1393,6 +1423,8 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                         onShare={() => {}} 
                         onEdit={handleEditComment}
                         onDelete={handleDeleteComment}
+                        onTip={handleTip}
+                        tipTotal={commentTips?.[comment.id]}
                         onUserPress={handleUserPress}
                         isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
                       />
@@ -1407,6 +1439,8 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                           onShare={() => {}}
                           onEdit={handleEditComment}
                           onDelete={handleDeleteComment}
+                          onTip={handleTip}
+                          tipTotal={commentTips?.[reply.id]}
                           onUserPress={handleUserPress}
                           isReply
                           depth={depth}
@@ -1661,6 +1695,17 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           </div>
         </div>
         )}
+
+        {/* Tip a comment's author. One modal for the whole section, aimed at
+            whichever comment's gem was tapped. */}
+        <TipModal
+          open={!!tipComment}
+          onOpenChange={(open) => { if (!open) setTipComment(null); }}
+          creatorAddress={tipComment?.address}
+          creatorName={tipComment ? (tipComment.displayName || tipComment.username) : undefined}
+          tokenId={tokenId}
+          commentId={tipComment?.id}
+        />
     </motion.div>
   );
 }
