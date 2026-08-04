@@ -21,6 +21,7 @@ import type Hls from 'hls.js';
 import { TVChannel } from '@/lib/api/live-tv';
 import { getCountryFlag, reportBrokenChannel } from '@/lib/api/live-tv';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
+import { TVChat } from './TVChat';
 import { getVideoPreferences, setPlaybackRate as vpSetPlaybackRate, PLAYBACK_RATES, formatRate } from '@/lib/video-preferences';
 import { createLogger } from '@/lib/logger';
 
@@ -638,6 +639,17 @@ export function TVChannelCard({ channel }: TVChannelCardProps) {
           </div>
         </div>
       </div>
+
+      {/* Live chat — one room per channel.
+          Mounted only while this card is the one playing: /app/tv renders up to
+          50 cards and never unmounts, so an always-on panel would hold 50
+          realtime subscriptions open for the rest of the session. Hidden in
+          fullscreen, where the video takes the whole viewport. */}
+      {isActive && !isFullscreen && (
+        <div className="px-3 pb-3 sm:px-4 sm:pb-4">
+          <TVChat channelId={channel.id} channelName={channel.name} enabled={isTvRouteActive} />
+        </div>
+      )}
     </div>
   );
 }
