@@ -68,6 +68,25 @@ export const DEFAULT_MEMBER_PERMISSIONS: Record<MemberRight, boolean> = {
 const MUTING_RIGHTS: CommunityRight[] = ['send_messages', 'send_media', 'embed_links'];
 
 /**
+ * A timed ban whose clock has run out is not a ban. Nothing sweeps those rows
+ * back to 'active', so the database resolves expiry on read — community_permission
+ * and community_is_active_member both special-case it, as does the rejoin policy.
+ * The client has to agree, or every duration in the ban picker means "forever".
+ */
+export function isEffectivelyActive(member: CommunityMember | null | undefined): boolean {
+  if (!member) return false;
+  if (member.status === 'active') return true;
+  if (member.status !== 'banned' || !member.banned_until) return false;
+  const until = new Date(member.banned_until).getTime();
+  return !Number.isNaN(until) && until <= Date.now();
+}
+
+/** True only while a ban is still running. */
+export function isActivelyBanned(member: CommunityMember | null | undefined): boolean {
+  return member?.status === 'banned' && !isEffectivelyActive(member);
+}
+
+/**
  * Client-side mirror of public.community_permission(). Kept deliberately in the
  * same order as the SQL so the two stay comparable when either changes.
  */
@@ -76,7 +95,7 @@ export function resolvePermission(
   member: CommunityMember | null | undefined,
   right: CommunityRight,
 ): boolean {
-  if (!member || member.status !== 'active') return false;
+  if (!isEffectivelyActive(member) || !member) return false;
   if (member.role === 'owner') return true;
 
   if (member.role === 'admin') {
@@ -129,7 +148,7 @@ export function useCommunityAbilities(
   membership: CommunityMember | null | undefined,
 ): CommunityAbilities {
   return useMemo(() => {
-    const role = (membership?.status === 'active' ? membership.role : null) as CommunityAbilities['role'];
+    const role = (isEffectivelyActive(membership) ? membership!.role : null) as CommunityAbilities['role'];
     const can = (right: CommunityRight) => resolvePermission(community, membership, right);
     const mutedUntil = membership?.muted_until ? new Date(membership.muted_until) : null;
     return {
