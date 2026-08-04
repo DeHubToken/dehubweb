@@ -8,6 +8,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { useAuth } from '@/contexts/AuthContext';
+import { adminErrorMessage } from '@/hooks/use-community-admin';
 import { toast } from 'sonner';
 
 export interface Community {
@@ -25,17 +26,33 @@ export interface Community {
   ticker_contract_address: string | null;
   ticker_chain_id: string | null;
   ticker_pair_address: string | null;
+  /** 0 = off. Owners and admins are exempt. */
+  slow_mode_seconds: number;
+  /** What a plain member may do; per-admin grants override it. */
+  default_permissions: Record<string, boolean> | null;
   created_at: string;
   updated_at: string;
 }
+
+export type CommunityRole = 'owner' | 'admin' | 'member';
+export type CommunityMemberStatus = 'active' | 'pending' | 'banned';
 
 export interface CommunityMember {
   id: string;
   community_id: string;
   wallet_address: string;
-  role: string;
-  status: string;
+  role: CommunityRole;
+  status: CommunityMemberStatus;
   joined_at: string;
+  /** Per-admin rights. Empty for owners (who hold everything) and for members. */
+  permissions: Record<string, boolean> | null;
+  custom_title: string | null;
+  muted_until: string | null;
+  ban_reason: string | null;
+  banned_until: string | null;
+  moderated_by: string | null;
+  moderated_at: string | null;
+  promoted_by: string | null;
 }
 
 export interface PinnedCommunity {
@@ -101,7 +118,7 @@ export function useUserCommunities() {
           .from('community_members')
           .select('*, communities(*)')
           .eq('status', 'active')
-          .ilike('wallet_address', walletAddress),
+          .eq('wallet_address', walletAddress.toLowerCase()),
         walletAddress
       );
       if (error) throw error;
@@ -150,17 +167,27 @@ export function useCommunity(slug: string | undefined) {
 
 // ─── Fetch members of a community ────────────────────────────────────────────
 
+// Every read below carries the wallet header. The roster is no longer world
+// readable — a private community's members are visible only to its members, and
+// the pending/banned lists only to moderators — so an unheadered request now
+// comes back empty instead of complete. The wallet is part of the query key for
+// the same reason: one account's RLS-filtered result must not be served to the
+// next.
 export function useCommunityMembers(communityId: string | undefined) {
+  const { walletAddress } = useAuth();
   return useQuery({
-    queryKey: ['communities', 'members', communityId],
+    queryKey: ['communities', 'members', communityId, walletAddress],
     queryFn: async () => {
       if (!communityId) return [];
-      const { data, error } = await supabase
-        .from('community_members')
-        .select('*')
-        .eq('community_id', communityId)
-        .eq('status', 'active')
-        .order('joined_at', { ascending: true });
+      const { data, error } = await withWalletHeader(
+        supabase
+          .from('community_members')
+          .select('*')
+          .eq('community_id', communityId)
+          .eq('status', 'active')
+          .order('joined_at', { ascending: true }),
+        walletAddress
+      );
       if (error) throw error;
       return (data ?? []) as CommunityMember[];
     },
@@ -171,159 +198,57 @@ export function useCommunityMembers(communityId: string | undefined) {
 // ─── Fetch pending members of a community ────────────────────────────────────
 
 export function usePendingCommunityMembers(communityId: string | undefined) {
+  const { walletAddress } = useAuth();
   return useQuery({
-    queryKey: ['communities', 'pending-members', communityId],
+    queryKey: ['communities', 'pending-members', communityId, walletAddress],
     queryFn: async () => {
       if (!communityId) return [];
-      const { data, error } = await supabase
-        .from('community_members')
-        .select('*')
-        .eq('community_id', communityId)
-        .eq('status', 'pending')
-        .order('joined_at', { ascending: true });
+      const { data, error } = await withWalletHeader(
+        supabase
+          .from('community_members')
+          .select('*')
+          .eq('community_id', communityId)
+          .eq('status', 'pending')
+          .order('joined_at', { ascending: true }),
+        walletAddress
+      );
       if (error) throw error;
       return (data ?? []) as CommunityMember[];
     },
-    enabled: !!communityId,
+    enabled: !!communityId && !!walletAddress,
   });
 }
 
 // ─── Fetch banned members ────────────────────────────────────────────────────
 
 export function useBannedCommunityMembers(communityId: string | undefined) {
+  const { walletAddress } = useAuth();
   return useQuery({
-    queryKey: ['communities', 'banned-members', communityId],
+    queryKey: ['communities', 'banned-members', communityId, walletAddress],
     queryFn: async () => {
       if (!communityId) return [];
-      const { data, error } = await supabase
-        .from('community_members')
-        .select('*')
-        .eq('community_id', communityId)
-        .eq('status', 'banned')
-        .order('joined_at', { ascending: true });
+      const { data, error } = await withWalletHeader(
+        supabase
+          .from('community_members')
+          .select('*')
+          .eq('community_id', communityId)
+          .eq('status', 'banned')
+          .order('joined_at', { ascending: true }),
+        walletAddress
+      );
       if (error) throw error;
       return (data ?? []) as CommunityMember[];
     },
-    enabled: !!communityId,
+    enabled: !!communityId && !!walletAddress,
   });
 }
 
 
-// ─── Approve / reject pending member ─────────────────────────────────────────
-
-export function useApproveMember() {
-  const { walletAddress } = useAuth();
-  const qc = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ memberId, communityId }: { memberId: string; communityId: string }) => {
-      if (!walletAddress) throw new Error('Not connected');
-      const { error } = await withWalletHeader(
-        supabase
-          .from('community_members')
-          .update({ status: 'active' })
-          .eq('id', memberId),
-        walletAddress
-      );
-      if (error) throw error;
-    },
-    onSuccess: (_data, { communityId }) => {
-      qc.invalidateQueries({ queryKey: ['communities', 'pending-members', communityId] });
-      qc.invalidateQueries({ queryKey: ['communities', 'members', communityId] });
-      toast.success('Member approved');
-    },
-    onError: () => toast.error('Failed to approve'),
-  });
-}
-
-export function useRejectMember() {
-  const { walletAddress } = useAuth();
-  const qc = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ memberId, communityId }: { memberId: string; communityId: string }) => {
-      if (!walletAddress) throw new Error('Not connected');
-      const { error } = await withWalletHeader(
-        supabase
-          .from('community_members')
-          .delete()
-          .eq('id', memberId),
-        walletAddress
-      );
-      if (error) throw error;
-    },
-    onSuccess: (_data, { communityId }) => {
-      qc.invalidateQueries({ queryKey: ['communities', 'pending-members', communityId] });
-      toast.success('Request rejected');
-    },
-    onError: () => toast.error('Failed to reject'),
-  });
-}
-
-// ─── Moderation: ban/unban/kick ──────────────────────────────────────────────
-
-export function useBanMember() {
-  const { walletAddress } = useAuth();
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async ({ memberId }: { memberId: string; communityId: string }) => {
-      if (!walletAddress) throw new Error('Not connected');
-      const { error } = await withWalletHeader(
-        supabase.from('community_members').update({ status: 'banned' }).eq('id', memberId),
-        walletAddress
-      );
-      if (error) throw error;
-    },
-    onSuccess: (_data, { communityId }) => {
-      qc.invalidateQueries({ queryKey: ['communities', 'members', communityId] });
-      qc.invalidateQueries({ queryKey: ['communities', 'banned-members', communityId] });
-      toast.success('Member banned from chat');
-    },
-    onError: () => toast.error('Failed to ban member'),
-  });
-}
-
-export function useUnbanMember() {
-  const { walletAddress } = useAuth();
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async ({ memberId }: { memberId: string; communityId: string }) => {
-      if (!walletAddress) throw new Error('Not connected');
-      const { error } = await withWalletHeader(
-        supabase.from('community_members').update({ status: 'active' }).eq('id', memberId),
-        walletAddress
-      );
-      if (error) throw error;
-    },
-    onSuccess: (_data, { communityId }) => {
-      qc.invalidateQueries({ queryKey: ['communities', 'banned-members', communityId] });
-      qc.invalidateQueries({ queryKey: ['communities', 'members', communityId] });
-      toast.success('Member unbanned');
-    },
-    onError: () => toast.error('Failed to unban member'),
-  });
-}
-
-export function useKickMember() {
-  const { walletAddress } = useAuth();
-  const qc = useQueryClient();
-  return useMutation({
-    mutationFn: async ({ memberId }: { memberId: string; communityId: string }) => {
-      if (!walletAddress) throw new Error('Not connected');
-      const { error } = await withWalletHeader(
-        supabase.from('community_members').delete().eq('id', memberId),
-        walletAddress
-      );
-      if (error) throw error;
-    },
-    onSuccess: (_data, { communityId }) => {
-      qc.invalidateQueries({ queryKey: ['communities', 'members', communityId] });
-      qc.invalidateQueries({ queryKey: ['communities', 'pending-members', communityId] });
-      toast.success('Member removed');
-    },
-    onError: () => toast.error('Failed to remove member'),
-  });
-}
+// ─── Moderation ──────────────────────────────────────────────────────────────
+// Approve, reject, ban, unban, kick, mute and role changes all live in
+// use-community-admin.ts now. They used to be direct table writes here, which
+// RLS silently filtered to zero rows while the mutation still reported success;
+// they go through SECURITY DEFINER RPCs that raise on refusal instead.
 
 // ─── Check if user is member ─────────────────────────────────────────────────
 
@@ -333,12 +258,15 @@ export function useIsCommunityMember(communityId: string | undefined) {
     queryKey: ['communities', 'membership', communityId, walletAddress],
     queryFn: async () => {
       if (!communityId || !walletAddress) return null;
-      const { data, error } = await supabase
-        .from('community_members')
-        .select('*')
-        .eq('community_id', communityId)
-        .ilike('wallet_address', walletAddress)
-        .maybeSingle();
+      const { data, error } = await withWalletHeader(
+        supabase
+          .from('community_members')
+          .select('*')
+          .eq('community_id', communityId)
+          .eq('wallet_address', walletAddress.toLowerCase())
+          .maybeSingle(),
+        walletAddress
+      );
       if (error) throw error;
       return data as CommunityMember | null;
     },
@@ -397,15 +325,13 @@ export function useUpdateCommunity() {
   const qc = useQueryClient();
 
   return useMutation({
+    // Direct UPDATE on communities is revoked — the RPC is the only writer, so
+    // that member_count and creator_wallet_address are not client-writable and
+    // so admins (not just the founder) can edit the community.
     mutationFn: async ({ id, ...updates }: Partial<Community> & { id: string }) => {
       if (!walletAddress) throw new Error('Not connected');
       const { data, error } = await withWalletHeader(
-        supabase
-          .from('communities')
-          .update(updates)
-          .eq('id', id)
-          .select()
-          .single(),
+        (supabase as any).rpc('community_update_settings', { _community_id: id, _patch: updates }),
         walletAddress
       );
       if (error) throw error;
@@ -418,7 +344,7 @@ export function useUpdateCommunity() {
       qc.invalidateQueries({ queryKey: ['community'] });
       toast.success('Community updated');
     },
-    onError: () => toast.error('Failed to update community'),
+    onError: (error) => toast.error(adminErrorMessage(error, 'Failed to update community')),
   });
 }
 
@@ -457,10 +383,18 @@ export function useJoinCommunity() {
       qc.setQueriesData<CommunityMember | null>({ queryKey: ['communities', 'membership', communityId] }, () => ({
         id: `optimistic-${communityId}`,
         community_id: communityId,
-        wallet_address: walletAddress,
+        wallet_address: walletAddress.toLowerCase(),
         role: 'member',
         status: isPrivate ? 'pending' : 'active',
         joined_at: new Date().toISOString(),
+        permissions: null,
+        custom_title: null,
+        muted_until: null,
+        ban_reason: null,
+        banned_until: null,
+        moderated_by: null,
+        moderated_at: null,
+        promoted_by: null,
       }));
 
       // Bump member counts in cached community objects (public joins only)
@@ -505,7 +439,7 @@ export function useLeaveCommunity() {
           .from('community_members')
           .delete()
           .eq('community_id', communityId)
-          .ilike('wallet_address', walletAddress),
+          .eq('wallet_address', walletAddress.toLowerCase()),
         walletAddress
       );
       if (error) throw error;
@@ -569,7 +503,7 @@ export function usePinnedCommunities(walletAddress: string | null | undefined) {
       const { data, error } = await supabase
         .from('pinned_communities')
         .select('*, communities(*)')
-        .ilike('wallet_address', walletAddress)
+        .eq('wallet_address', walletAddress.toLowerCase())
         .order('display_order', { ascending: true });
       if (error) throw error;
       return (data ?? []) as PinnedCommunity[];
@@ -618,7 +552,7 @@ export function useUnpinCommunity() {
           .from('pinned_communities')
           .delete()
           .eq('community_id', communityId)
-          .ilike('wallet_address', walletAddress),
+          .eq('wallet_address', walletAddress.toLowerCase()),
         walletAddress
       );
       if (error) throw error;
@@ -638,9 +572,12 @@ export async function uploadCommunityMedia(file: File, slug: string, type: 'avat
   // Use a unique path each time to bust CDN/browser cache
   const path = `${slug}/${type}_${Date.now()}.${ext}`;
   
+  // Not upsert: the path already carries a timestamp so it never collides, and
+  // storage UPDATE is no longer granted to anyone (it was the hole that let any
+  // visitor replace a community's branding).
   const { error } = await supabase.storage
     .from('community-media')
-    .upload(path, file, { upsert: true });
+    .upload(path, file, { upsert: false });
   if (error) throw error;
 
   const { data } = supabase.storage
