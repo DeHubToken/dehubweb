@@ -17,16 +17,17 @@ export function useCommentTips(tokenId: string, commentIds: string[]) {
     // confirmed tip, which catches every length variant.
     queryKey: ['comment-tips', tokenId, commentIds.length],
     queryFn: async (): Promise<Record<string, number>> => {
-      const { data, error } = await supabase
-        .from('tip_records')
+      // comment_id postdates the generated Supabase types, so the cast must
+      // happen at the builder — letting the typed client parse this select
+      // string sends its type-level parser into TS2589 recursion. The insert
+      // side (use-tip-payment) casts for the same reason.
+      const { data, error } = await (supabase.from('tip_records') as any)
         .select('comment_id, amount')
         .in('comment_id', commentIds);
 
       if (error) throw error;
 
-      // comment_id postdates the generated Supabase types, hence the cast —
-      // the insert side (use-tip-payment) does the same.
-      const rows = (data ?? []) as unknown as Array<{
+      const rows = (data ?? []) as Array<{
         comment_id: string | null;
         amount: number;
       }>;
