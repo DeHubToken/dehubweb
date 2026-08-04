@@ -31,6 +31,10 @@ interface UseTipPaymentOptions {
   creatorAddress?: string;
   chainId?: ChainId;
   tokenId?: string;
+  /** Set when tipping a comment's author rather than the post's creator.
+   *  Recorded on the tip row so the comment can show its own tip total;
+   *  rows with a comment_id are excluded from the post's tip count. */
+  commentId?: string;
   onSuccess?: () => void;
   /** Called after on-chain confirmation + DB save succeeds (background) */
   onConfirmed?: () => void;
@@ -48,6 +52,7 @@ async function persistTipRecord(
     chainId: ChainId;
     txHash: string;
     tokenId: string | null;
+    commentId: string | null;
   },
 ): Promise<boolean> {
   for (let attempt = 1; attempt <= MAX_DB_RETRIES; attempt++) {
@@ -59,6 +64,7 @@ async function persistTipRecord(
         chain_id: params.chainId,
         tx_hash: params.txHash,
         token_id: params.tokenId,
+        comment_id: params.commentId,
       } as any),
       params.walletAddress
     );
@@ -78,6 +84,7 @@ export function useTipPayment({
   creatorAddress,
   chainId = BASE_CHAIN_ID,
   tokenId,
+  commentId,
   onSuccess,
   onConfirmed,
 }: UseTipPaymentOptions) {
@@ -144,6 +151,7 @@ export function useTipPayment({
               chainId,
               txHash: confirmedTxHash,
               tokenId: confirmedTip.tokenId,
+              commentId: commentId ?? null,
             });
 
             if (!saved) {
@@ -172,7 +180,7 @@ export function useTipPayment({
         setIsTipping(false);
       }
     },
-    [walletAddress, creatorAddress, chainId, tokenId, openLoginModal, onSuccess, onConfirmed]
+    [walletAddress, creatorAddress, chainId, tokenId, commentId, openLoginModal, onSuccess, onConfirmed]
   );
 
   return { tip, isTipping };
