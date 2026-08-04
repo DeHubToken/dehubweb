@@ -147,6 +147,7 @@ const BestDecentralizedSocialMedia = React.lazy(() => import("./pages/BestDecent
 const BestWeb3SocialMediaDapps = React.lazy(() => import("./pages/BestWeb3SocialMediaDapps"));
 const PromptLanding = React.lazy(() => import("./pages/PromptLanding"));
 const CommunityPage = React.lazy(() => import("./pages/app/CommunityPage"));
+const CommunityInvitePage = React.lazy(() => import("./pages/app/CommunityInvitePage"));
 const EventPage = React.lazy(() => import("./pages/EventPage"));
 const StoreDetailPage = React.lazy(() => import("./pages/app/StoreDetailPage"));
 const LaunchpadPage = React.lazy(() => import("./pages/app/LaunchpadPage"));
@@ -395,6 +396,7 @@ function AppContent() {
             <Route path="/governance" element={null} />
             <Route path="/stake" element={null} />
             <Route path="/communities" element={null} />
+            <Route path="/communities/join/:code" element={<Suspense fallback={<PageLoader />}><CommunityInvitePage /></Suspense>} />
             <Route path="/communities/:slug" element={<Suspense fallback={<PageLoader />}><CommunityPage /></Suspense>} />
 
             {/* dehub.io root IS the home feed — rendered in place, no redirect.
@@ -441,6 +443,7 @@ function AppContent() {
               <Route path="work/disputes" element={<Suspense fallback={<PageLoader />}><WorkDisputesPage /></Suspense>} />
               <Route path="work/:jobId" element={<Suspense fallback={<PageLoader />}><WorkJobDetailPage /></Suspense>} />
 
+              <Route path="communities/join/:code" element={<Suspense fallback={<PageLoader />}><CommunityInvitePage /></Suspense>} />
               <Route path="communities/:slug" element={<Suspense fallback={<PageLoader />}><CommunityPage /></Suspense>} />
               <Route path="post/:postId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />
               <Route path="video/:tokenId" element={<Suspense fallback={<PageLoader />}><SinglePostPage /></Suspense>} />

@@ -3,10 +3,15 @@
  * ===============
  * Full chat UI for community members. Matches SidebarChat style exactly.
  * Supports text, emoji, GIF, replies, and reactions.
+ *
+ * Moderation state (pinning, delete rights, mutes, slow mode, media rights) is
+ * derived from useCommunityAbilities — a mirror of the server's rules, so every
+ * control the database would refuse simply does not render. The server stays
+ * the authority: nothing here is a security boundary.
  */
 
 import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
-import { Send, Users, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check, Search, Trash2, ArrowDown } from 'lucide-react';
+import { Send, Loader2, SmilePlus, Reply, CornerDownRight, X, MessageSquare, LogIn, Pencil, Check, Search, Trash2, ArrowDown, Pin, PinOff, MicOff, Ban } from 'lucide-react';
 import { VoiceRecorder } from '../chat/VoiceRecorder';
 import { VoiceWaveformPlayer } from '../chat/VoiceWaveformPlayer';
 import { supabase } from '@/integrations/supabase/client';
@@ -18,11 +23,23 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { EmojiGifPicker } from '../chat/EmojiGifPicker';
 import { formatTimeAgo } from '@/lib/feed-utils';
 import { useAuth } from '@/contexts/AuthContext';
 import { buildAvatarUrl, buildAvatarCdnFallbackUrl } from '@/lib/media-url';
 import { useCommunityChat, type CommunityChatMessage } from '@/hooks/use-community-chat';
+import { useCommunityAbilities } from '@/hooks/use-community-admin';
+import type { Community, CommunityMember } from '@/hooks/use-communities';
 import { useNavigate } from 'react-router-dom';
 import { Skeleton } from '@/components/ui/skeleton';
 import { replaceLinksWithEmoji, TranslatableText, SharedTranslationContext } from '../TranslatableText';
@@ -35,6 +52,19 @@ import { Sparkles } from 'lucide-react';
 
 
 const QUICK_EMOJIS = ['👍', '❤️', '😂', '🔥', '🚀', '👀', '💯', '🙏'];
+
+/** "Forever" mutes are stored as a date far in the future rather than as null. */
+const FOREVER_YEAR = 9000;
+
+/** mm:ss once we are past a minute, plain seconds below it. */
+function formatCountdown(seconds: number): string {
+  if (seconds >= 60) {
+    const mins = Math.floor(seconds / 60);
+    const rest = seconds % 60;
+    return `${mins}:${String(rest).padStart(2, '0')}`;
+  }
+  return `${seconds}s`;
+}
 
 // Buy alert card imported from shared component
 import { BuyAlertCard } from '../chat/BuyAlertCard';
@@ -110,11 +140,12 @@ function ChatReactions({
 
 interface CommunityChatProps {
   communityId: string;
+  community: Community;
+  membership: CommunityMember | null | undefined;
   isMember: boolean;
-  canModerate?: boolean;
 }
 
-export function CommunityChat({ communityId, isMember, canModerate = false }: CommunityChatProps) {
+export function CommunityChat({ communityId, community, membership, isMember }: CommunityChatProps) {
   const [newMessage, setNewMessage] = useState('');
   const [replyTo, setReplyTo] = useState<CommunityChatMessage | null>(null);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -126,12 +157,19 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [showJumpToLatest, setShowJumpToLatest] = useState(false);
   const [newMessageCount, setNewMessageCount] = useState(0);
+  const [highlight, setHighlight] = useState<{ id: string; nonce: number } | null>(null);
+  const [pinPendingId, setPinPendingId] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<CommunityChatMessage | null>(null);
+  const [deletePending, setDeletePending] = useState(false);
+  const [slowModeRemaining, setSlowModeRemaining] = useState(0);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const didInitialScrollRef = useRef(false);
   const prevScrollHeightRef = useRef<number | null>(null);
+  const messageRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const pendingJumpRef = useRef<string | null>(null);
   const navigate = useNavigate();
   const { isHidden: buyBotHidden, hide: hideBuyBot } = useBuyBotHidden();
   const { isAuthenticated, walletAddress, openLoginModal } = useAuth();
@@ -143,7 +181,109 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
     avatarUrl: user.avatarImageUrl || user.avatarUrl || user.avatar_url,
   } : null;
 
-  const { messages, isLoading, sendMessage, editMessage, deleteMessage, addReaction, removeReaction } = useCommunityChat(communityId);
+  const abilities = useCommunityAbilities(community, membership);
+  const canPinMessages = abilities.can('pin_messages');
+  const canDeleteAnyMessage = abilities.can('delete_messages');
+  const canSendMedia = abilities.can('send_media');
+  const canSendMessages = abilities.can('send_messages');
+
+  const {
+    messages,
+    pinnedMessage,
+    isLoading,
+    sendMessage,
+    editMessage,
+    deleteMessage,
+    setPinned,
+    addReaction,
+    removeReaction,
+  } = useCommunityChat(communityId, { isPrivate: community.is_private });
+
+  // ─── Slow mode ────────────────────────────────────────────────────────────
+  // Owners and admins are exempt server-side, so only plain members see this.
+  // The countdown is feedback only — the database raises slow_mode_active on
+  // its own clock, so the last-send stamp lives in localStorage purely to keep
+  // the timer honest across a reload rather than to gate anything.
+  const slowModeSeconds = community?.slow_mode_seconds ?? 0;
+  const slowModeApplies = slowModeSeconds > 0 && abilities.role === 'member';
+  const slowModeKey = walletAddress && communityId
+    ? `community-slow-mode:${communityId}:${walletAddress.toLowerCase()}`
+    : null;
+
+  const readSlowModeRemaining = useCallback(() => {
+    if (!slowModeApplies || !slowModeKey) return 0;
+    let raw: string | null = null;
+    try {
+      raw = window.localStorage.getItem(slowModeKey);
+    } catch {
+      return 0;
+    }
+    const lastSentAt = raw ? Number(raw) : 0;
+    if (!Number.isFinite(lastSentAt) || lastSentAt <= 0) return 0;
+    const elapsed = (Date.now() - lastSentAt) / 1000;
+    return Math.max(0, Math.min(slowModeSeconds, Math.ceil(slowModeSeconds - elapsed)));
+  }, [slowModeApplies, slowModeKey, slowModeSeconds]);
+
+  useEffect(() => {
+    if (!slowModeApplies) {
+      setSlowModeRemaining(0);
+      return;
+    }
+    setSlowModeRemaining(readSlowModeRemaining());
+    const timer = window.setInterval(() => {
+      setSlowModeRemaining(readSlowModeRemaining());
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [slowModeApplies, readSlowModeRemaining]);
+
+  const startSlowModeCountdown = useCallback(() => {
+    if (!slowModeApplies || !slowModeKey) return;
+    try {
+      window.localStorage.setItem(slowModeKey, String(Date.now()));
+    } catch {
+      // Private mode / storage disabled — the timer just won't survive a reload.
+    }
+    setSlowModeRemaining(slowModeSeconds);
+  }, [slowModeApplies, slowModeKey, slowModeSeconds]);
+
+  const humanisedInterval = useMemo(() => {
+    if (slowModeSeconds >= 3600) {
+      const hours = Math.round(slowModeSeconds / 3600);
+      return hours === 1
+        ? t('communities.chat.intervalHour', { defaultValue: '1 hour' })
+        : t('communities.chat.intervalHours', { defaultValue: '{{count}} hours', count: hours });
+    }
+    if (slowModeSeconds >= 60) {
+      const minutes = Math.round(slowModeSeconds / 60);
+      return minutes === 1
+        ? t('communities.chat.intervalMinute', { defaultValue: '1 minute' })
+        : t('communities.chat.intervalMinutes', { defaultValue: '{{count}} minutes', count: minutes });
+    }
+    return slowModeSeconds === 1
+      ? t('communities.chat.intervalSecond', { defaultValue: '1 second' })
+      : t('communities.chat.intervalSeconds', { defaultValue: '{{count}} seconds', count: slowModeSeconds });
+  }, [slowModeSeconds, t]);
+
+  // ─── Why the composer may be closed, in the order the server checks ───────
+  const mutedNotice = useMemo(() => {
+    const until = abilities.mutedUntil;
+    if (!until || until.getFullYear() >= FOREVER_YEAR) {
+      return t('communities.chat.muted', { defaultValue: 'You are muted' });
+    }
+    return t('communities.chat.mutedUntil', {
+      defaultValue: 'You are muted until {{until}}',
+      until: until.toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' }),
+    });
+  }, [abilities.mutedUntil, t]);
+
+  const composerNotice: { icon: React.ReactNode; text: React.ReactNode } | null = abilities.isMuted
+    ? { icon: <MicOff className="w-4 h-4" />, text: mutedNotice }
+    : !canSendMessages
+      ? {
+          icon: <Ban className="w-4 h-4" />,
+          text: t('communities.chat.postingDisabled', { defaultValue: 'Posting is disabled for members here' }),
+        }
+      : null;
 
   // Filter by search query (searches content + sender names)
   const filteredMessages = useMemo(() => {
@@ -206,6 +346,40 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
     }
   }, [visibleCount]);
 
+  // Jumping to the pinned message: if it sits above the paginated window we
+  // widen the window first and finish the jump once its node exists.
+  const jumpToMessage = useCallback((messageId: string) => {
+    const node = messageRefs.current[messageId];
+    if (node) {
+      node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      setHighlight({ id: messageId, nonce: Date.now() });
+      return;
+    }
+    pendingJumpRef.current = messageId;
+    setVisibleCount((c) => Math.max(c, messages.length));
+  }, [messages.length]);
+
+  useEffect(() => {
+    const pending = pendingJumpRef.current;
+    if (!pending) return;
+    const node = messageRefs.current[pending];
+    if (!node) {
+      // Already inside the rendered window but with no bubble of its own (bot
+      // cards) — drop the jump rather than leaving it armed forever.
+      if (displayedMessages.some(m => m.id === pending)) pendingJumpRef.current = null;
+      return;
+    }
+    pendingJumpRef.current = null;
+    node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setHighlight({ id: pending, nonce: Date.now() });
+  }, [displayedMessages]);
+
+  useEffect(() => {
+    if (!highlight) return;
+    const timer = window.setTimeout(() => setHighlight(null), 1500);
+    return () => window.clearTimeout(timer);
+  }, [highlight]);
+
   const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     const el = e.currentTarget;
     const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
@@ -224,8 +398,29 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
     setShowJumpToLatest(false);
   }, []);
 
+  const handleSetPinned = useCallback(async (messageId: string, pinned: boolean) => {
+    setPinPendingId(messageId);
+    try {
+      await setPinned(messageId, pinned);
+    } finally {
+      setPinPendingId(null);
+    }
+  }, [setPinned]);
+
+  const handleConfirmDelete = useCallback(async () => {
+    if (!deleteTarget) return;
+    setDeletePending(true);
+    try {
+      await deleteMessage(deleteTarget.id);
+      setDeleteTarget(null);
+    } finally {
+      setDeletePending(false);
+    }
+  }, [deleteTarget, deleteMessage]);
+
   const handleSend = async () => {
     if (!isAuthenticated) { openLoginModal(); return; }
+    if (slowModeRemaining > 0) return;
     const trimmed = newMessage.trim();
     if (!trimmed) return;
     const replyToId = replyTo?.id;
@@ -235,6 +430,7 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
     // Detect /admin command
     const adminMatch = trimmed.match(/^\/admin\b\s*(.*)$/i);
 
+    let sent = false;
     try {
       await sendMessage(trimmed, 'text', undefined, replyToId, {
         username: profileData?.handle || undefined,
@@ -242,9 +438,11 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
         avatarUrl: profileData?.avatarUrl || undefined,
         badgeBalance: user?.badgeBalance || undefined,
       });
+      sent = true;
     } catch {
       // Error handled in hook
     }
+    if (sent) startSlowModeCountdown();
 
     if (adminMatch) {
       const prompt = (adminMatch[1] || '').trim();
@@ -278,6 +476,7 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
 
   const handleGifSelect = async (gifUrl: string) => {
     if (!isAuthenticated) { openLoginModal(); return; }
+    if (slowModeRemaining > 0) return;
     const replyToId = replyTo?.id;
     setReplyTo(null);
     try {
@@ -287,6 +486,7 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
         avatarUrl: profileData?.avatarUrl || undefined,
         badgeBalance: user?.badgeBalance || undefined,
       });
+      startSlowModeCountdown();
     } catch {
       // Error handled in hook
     }
@@ -318,12 +518,13 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
         badgeBalance: user?.badgeBalance || undefined,
       });
       setReplyTo(null);
+      startSlowModeCountdown();
       toast.success('Voice note sent!', { id: toastId });
     } catch (err: any) {
       console.error('[CommunityChat] Voice upload failed:', err);
       toast.error(err?.message || 'Failed to send voice note', { id: toastId });
     }
-  }, [isAuthenticated, walletAddress, sendMessage, replyTo, profileData, user, openLoginModal]);
+  }, [isAuthenticated, walletAddress, sendMessage, replyTo, profileData, user, openLoginModal, startSlowModeCountdown]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -344,6 +545,20 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
       addReaction(messageId, emoji);
     }
   }, [isAuthenticated, walletAddress, messages, addReaction, removeReaction]);
+
+  const pinnedSenderName = pinnedMessage
+    ? pinnedMessage.display_name
+      || pinnedMessage.username
+      || (pinnedMessage.wallet_address
+        ? `${pinnedMessage.wallet_address.slice(0, 6)}...${pinnedMessage.wallet_address.slice(-4)}`
+        : 'Anon')
+    : '';
+  const pinnedPreview = pinnedMessage
+    ? (pinnedMessage.content
+      || (pinnedMessage.message_type === 'gif'
+        ? t('communities.chat.pinnedGif', { defaultValue: 'GIF' })
+        : t('communities.chat.pinnedMedia', { defaultValue: 'Media' })))
+    : '';
 
   const translateSignal = 0;
   const originalSignal = 0;
@@ -383,6 +598,39 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
         {/* Messages area */}
         <div className="relative flex-1">
           <div ref={scrollRef} onScroll={handleScroll} className="absolute inset-0 overflow-y-auto py-2 space-y-2">
+            {/* Pinned message banner */}
+            {pinnedMessage && (
+              <div className="sticky top-0 z-20 mx-3 flex items-center gap-2 rounded-xl border border-white/10 bg-zinc-900/85 backdrop-blur-xl px-2.5 py-1.5">
+                <Pin className="w-3.5 h-3.5 text-zinc-400 flex-shrink-0" />
+                <button
+                  onClick={() => jumpToMessage(pinnedMessage.id)}
+                  className="flex-1 min-w-0 text-left"
+                  title={t('communities.chat.jumpToPinned', { defaultValue: 'Jump to the pinned message' })}
+                >
+                  <span className="block text-[10px] text-zinc-500">
+                    {t('communities.chat.pinnedMessage', { defaultValue: 'Pinned message' })}
+                  </span>
+                  <span className="block truncate text-[11px] text-zinc-300">
+                    <span className="font-medium text-white">{pinnedSenderName}</span>
+                    {' '}
+                    {pinnedPreview}
+                  </span>
+                </button>
+                {canPinMessages && (
+                  <button
+                    onClick={() => handleSetPinned(pinnedMessage.id, false)}
+                    disabled={pinPendingId === pinnedMessage.id}
+                    className="p-1 rounded-lg text-zinc-500 hover:text-white hover:bg-white/[0.06] transition-colors flex-shrink-0 disabled:opacity-50"
+                    title={t('communities.chat.unpin', { defaultValue: 'Unpin' })}
+                    aria-label={t('communities.chat.unpin', { defaultValue: 'Unpin' })}
+                  >
+                    {pinPendingId === pinnedMessage.id
+                      ? <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      : <X className="w-3.5 h-3.5" />}
+                  </button>
+                )}
+              </div>
+            )}
             {isLoading ? (
               <div className="space-y-3 py-2 px-3">
                 {[...Array(5)].map((_, i) => (
@@ -474,9 +722,17 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
                 const name = msg.display_name || msg.username || msg.wallet_address?.slice(0, 8) || 'Anon';
                 const handle = msg.username;
                 const goToProfile = handle ? () => navigate(`/${handle}`) : undefined;
+                const isMine = !!walletAddress && msg.wallet_address?.toLowerCase() === walletAddress.toLowerCase();
+                const canDeleteThis = isMine || canDeleteAnyMessage;
+                const isPinned = !!msg.pinned_at;
+                const isHighlighted = highlight?.id === msg.id;
 
                 return (
-                  <div key={msg.id} className="group relative px-3">
+                  <div
+                    key={msg.id}
+                    ref={(node) => { messageRefs.current[msg.id] = node; }}
+                    className={`group relative px-3 py-0.5 rounded-xl transition-shadow duration-300 ${isHighlighted ? 'ring-1 ring-white/30' : ''}`}
+                  >
                     {msg.reply_to && (
                       <div className="flex items-center gap-1 text-[10px] text-zinc-500 ml-9 mb-0.5">
                         <CornerDownRight className="w-2.5 h-2.5" />
@@ -497,6 +753,14 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
                             <BadgeIcon badgeBalance={(msg as any).badge_balance} username={msg.username} className="w-[9px] h-[9px] absolute -top-0.5 -right-0" />
                           </span>
                           <span className="text-zinc-600 text-[10px]">{formatTimeAgo(msg.created_at)}</span>
+                          {isPinned && (
+                            <span
+                              className="inline-flex items-center text-zinc-500"
+                              title={t('communities.chat.pinnedMessage', { defaultValue: 'Pinned message' })}
+                            >
+                              <Pin className="w-2.5 h-2.5" />
+                            </span>
+                          )}
                         </span>
                         {msg.message_type === 'gif' && msg.image_url ? (
                           <img src={msg.image_url} alt="GIF" className="max-w-[280px] max-h-32 rounded mt-0.5" loading="lazy" />
@@ -548,13 +812,14 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
                         )}
                       </div>
                       {isAuthenticated && isMember && (
-                        <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-0.5 flex-shrink-0 mt-0.5">
-                          {walletAddress && msg.wallet_address.toLowerCase() === walletAddress.toLowerCase() && msg.message_type !== 'gif' && (
+                        <div className="opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity flex items-center gap-0.5 flex-shrink-0 mt-0.5">
+                          {isMine && msg.message_type !== 'gif' && (
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <button
                                   onClick={() => { setEditingId(msg.id); setEditText(msg.content); }}
                                   className="p-0.5 text-zinc-500 hover:text-white transition-colors rounded"
+                                  aria-label={t('communities.edit')}
                                 >
                                   <Pencil className="w-3.5 h-3.5" />
                                 </button>
@@ -562,26 +827,55 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
                               <TooltipContent side="top">{t('communities.edit')}</TooltipContent>
                             </Tooltip>
                           )}
-                          {(walletAddress && msg.wallet_address.toLowerCase() === walletAddress.toLowerCase()) || canModerate ? (
+                          {canPinMessages && (
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <button
-                                  onClick={() => {
-                                    if (confirm('Delete this message?')) deleteMessage(msg.id);
-                                  }}
+                                  onClick={() => handleSetPinned(msg.id, !isPinned)}
+                                  disabled={pinPendingId === msg.id}
+                                  className="p-0.5 text-zinc-500 hover:text-white transition-colors rounded disabled:opacity-50"
+                                  aria-label={isPinned
+                                    ? t('communities.chat.unpin', { defaultValue: 'Unpin' })
+                                    : t('communities.chat.pin', { defaultValue: 'Pin' })}
+                                >
+                                  {pinPendingId === msg.id ? (
+                                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                  ) : isPinned ? (
+                                    <PinOff className="w-3.5 h-3.5" />
+                                  ) : (
+                                    <Pin className="w-3.5 h-3.5" />
+                                  )}
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent side="top">
+                                {isPinned
+                                  ? t('communities.chat.unpin', { defaultValue: 'Unpin' })
+                                  : t('communities.chat.pin', { defaultValue: 'Pin' })}
+                              </TooltipContent>
+                            </Tooltip>
+                          )}
+                          {canDeleteThis && (
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <button
+                                  onClick={() => setDeleteTarget(msg)}
                                   className="p-0.5 text-zinc-500 hover:text-red-400 transition-colors rounded"
+                                  aria-label={t('communities.chat.delete', { defaultValue: 'Delete' })}
                                 >
                                   <Trash2 className="w-3.5 h-3.5" />
                                 </button>
                               </TooltipTrigger>
-                              <TooltipContent side="top">Delete</TooltipContent>
+                              <TooltipContent side="top">
+                                {t('communities.chat.delete', { defaultValue: 'Delete' })}
+                              </TooltipContent>
                             </Tooltip>
-                          ) : null}
+                          )}
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <button
                                 onClick={() => setReplyTo(msg)}
                                 className="p-0.5 text-zinc-500 hover:text-white transition-colors rounded"
+                                aria-label={t('communities.reply')}
                               >
                                 <Reply className="w-3.5 h-3.5" />
                               </button>
@@ -592,7 +886,10 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <PopoverTrigger asChild>
-                                  <button className="p-0.5 text-zinc-500 hover:text-white transition-colors rounded">
+                                  <button
+                                    className="p-0.5 text-zinc-500 hover:text-white transition-colors rounded"
+                                    aria-label={t('communities.react')}
+                                  >
                                     <SmilePlus className="w-3.5 h-3.5" />
                                   </button>
                                 </PopoverTrigger>
@@ -685,8 +982,33 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
       )}
 
       {/* Input area */}
-      {isMember ? (
+      {!isMember ? (
+        <div className="px-1 py-3">
+          <button
+            onClick={() => !isAuthenticated ? openLoginModal() : null}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-500 text-sm hover:text-white transition-colors"
+          >
+            <LogIn className="w-4 h-4" />
+            {t('communities.joinToChat')}
+          </button>
+        </div>
+      ) : composerNotice ? (
+        <div className="px-1 py-3">
+          <div className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-500 text-sm text-center px-3">
+            {composerNotice.icon}
+            <span>{composerNotice.text}</span>
+          </div>
+        </div>
+      ) : (
         <div className="px-1 py-2">
+          {slowModeApplies && (
+            <p className="text-zinc-500 text-xs px-1 pb-1">
+              {t('communities.chat.slowMode', {
+                defaultValue: 'Slow mode: one message every {{interval}}',
+                interval: humanisedInterval,
+              })}
+            </p>
+          )}
           <div className="rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2">
             <div className="relative">
               <span className="absolute top-1 right-0 text-[10px] text-zinc-600 z-10">{newMessage.length}/500</span>
@@ -731,38 +1053,67 @@ export function CommunityChat({ communityId, isMember, canModerate = false }: Co
                 >
                   <Sparkles className="w-5 h-5" />
                 </Button>
-                <EmojiGifPicker
-                  onEmojiSelect={handleEmojiSelect}
-                  onGifSelect={handleGifSelect}
-                />
-                <VoiceRecorder
-                  onRecordingComplete={handleVoiceRecordingComplete}
-                  disabled={!isAuthenticated}
-                />
+                {canSendMedia && (
+                  <>
+                    <EmojiGifPicker
+                      onEmojiSelect={handleEmojiSelect}
+                      onGifSelect={handleGifSelect}
+                    />
+                    <VoiceRecorder
+                      onRecordingComplete={handleVoiceRecordingComplete}
+                      disabled={!isAuthenticated}
+                    />
+                  </>
+                )}
                 <Button
                   variant="ghost"
                   size="icon"
                   onClick={handleSend}
-                  disabled={!newMessage.trim()}
-                  className="h-8 w-8 text-zinc-400 hover:text-white hover:bg-zinc-700"
+                  disabled={!newMessage.trim() || slowModeRemaining > 0}
+                  className={`h-8 text-zinc-400 hover:text-white hover:bg-zinc-700 ${slowModeRemaining > 0 ? 'w-auto min-w-8 px-1.5' : 'w-8'}`}
+                  title={slowModeRemaining > 0
+                    ? t('communities.chat.slowModeWait', {
+                        defaultValue: 'Slow mode — wait {{time}}',
+                        time: formatCountdown(slowModeRemaining),
+                      })
+                    : t('communities.chat.send', { defaultValue: 'Send' })}
+                  aria-label={t('communities.chat.send', { defaultValue: 'Send' })}
                 >
-                  <Send className="w-5 h-5" />
+                  {slowModeRemaining > 0
+                    ? <span className="text-[11px] tabular-nums">{formatCountdown(slowModeRemaining)}</span>
+                    : <Send className="w-5 h-5" />}
                 </Button>
               </div>
             </div>
           </div>
         </div>
-      ) : (
-        <div className="px-1 py-3">
-          <button
-            onClick={() => !isAuthenticated ? openLoginModal() : null}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-white/[0.08] bg-white/[0.03] text-zinc-500 text-sm hover:text-white transition-colors"
-          >
-            <LogIn className="w-4 h-4" />
-            {t('communities.joinToChat')}
-          </button>
-        </div>
       )}
+
+      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => { if (!open && !deletePending) setDeleteTarget(null); }}>
+        <AlertDialogContent className="bg-zinc-900 border-white/10">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-white">
+              {t('communities.chat.deleteMessageTitle', { defaultValue: 'Delete this message?' })}
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-zinc-400">
+              {t('communities.chat.deleteMessageBody', { defaultValue: 'This cannot be undone.' })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={deletePending} className="rounded-xl h-9 px-3">
+              {t('communities.chat.cancel', { defaultValue: 'Cancel' })}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => { e.preventDefault(); handleConfirmDelete(); }}
+              disabled={deletePending}
+              className="rounded-xl h-9 px-3 bg-transparent text-red-400 hover:bg-red-500/15 border border-white/[0.08] gap-1.5"
+            >
+              {deletePending && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+              {t('communities.chat.delete', { defaultValue: 'Delete' })}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
