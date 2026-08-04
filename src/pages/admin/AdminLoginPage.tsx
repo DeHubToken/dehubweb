@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useAdminAuth } from '@/hooks/use-admin-auth';
 import { getAdminToken } from '@/lib/api/dehub/admin';
+import { SEOHead } from '@/components/SEOHead';
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();
@@ -34,6 +35,7 @@ export default function AdminLoginPage() {
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
+      <SEOHead title="Admin Login — DeHub" description="DeHub admin panel sign-in." noindex />
       <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8">
         <div className="flex items-center gap-2 mb-6">
           <Shield className="w-6 h-6 text-white" />

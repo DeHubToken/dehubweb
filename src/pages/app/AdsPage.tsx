@@ -35,7 +35,7 @@ export default function AdsPage() {
     <div className="min-h-screen">
       <SEOHead
         title="Ads Manager | DeHub"
-        description="Launch POVR ad campaigns on DeHub: badge-tier targeting, transparent CPMs, real-time analytics, paid in DHB."
+        description="Launch POVR ad campaigns on DeHub: proof-of-view-and-rank advertising that targets verified badge holders, with campaigns paid in DHB."
       />
 
       {/* Sticky nav pill */}

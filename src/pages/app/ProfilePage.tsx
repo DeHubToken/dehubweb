@@ -427,18 +427,20 @@ export default function ProfilePage() {
       onMouseUp={data.pullHandlers.onMouseUp}
       onMouseLeave={data.pullHandlers.onMouseLeave}
     >
+      {/* Canonical uses the bare /handle form (no @) — the sitemap-profiles fn
+          and the worker's bot HTML both use it, and an @-prefixed canonical
+          split the signal between two URLs for every profile. */}
       <SEOHead
-        title={data.profile?.name || data.profile?.handle || 'Profile'}
+        title={(data.profile?.name || data.profile?.handle) ? `${data.profile?.name || data.profile?.handle} on DeHub — posts, videos & profile` : 'Profile on DeHub'}
         description={data.profile?.bio || `View ${data.profile?.name || data.profile?.handle || 'this profile'} on DeHub`}
-        url={`https://dehub.io/${data.profile?.handle || ''}`}
+        url={`https://dehub.io/${(data.profile?.handle || '').replace(/^@/, '')}`}
         jsonLd={{
           '@context': 'https://schema.org',
           '@type': 'Person',
           name: data.profile?.name || data.profile?.handle || 'DeHub User',
-          url: `https://dehub.io/${data.profile?.handle || ''}`,
+          url: `https://dehub.io/${(data.profile?.handle || '').replace(/^@/, '')}`,
           ...(data.profile?.bio && { description: data.profile.bio }),
           ...(data.profile?.avatarUrl && { image: data.profile.avatarUrl }),
-          sameAs: `https://dehub.io/${data.profile?.handle || ''}`,
         }}
       />
       {/* Pull-to-refresh indicator */}

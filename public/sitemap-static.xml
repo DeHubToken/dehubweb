@@ -67,6 +67,48 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://dehub.io/stages</loc>
+    <lastmod>2026-08-04T00:00:00.000Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/communities</loc>
+    <lastmod>2026-08-04T00:00:00.000Z</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/pricing</loc>
+    <lastmod>2026-08-04T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/connect</loc>
+    <lastmod>2026-08-04T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/connect/chatgpt</loc>
+    <lastmod>2026-08-04T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/connect/claude</loc>
+    <lastmod>2026-08-04T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://dehub.io/guide</loc>
+    <lastmod>2026-08-04T00:00:00.000Z</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://dehub.io/guides/dehub-vs-depaul-dehub-vs-rowan-dehub</loc>
     <lastmod>2026-07-14T09:00:00.000Z</lastmod>
     <changefreq>monthly</changefreq>
@@ -900,21 +942,6 @@
   </url>
   <url>
     <loc>https://dehub.io/docs/featured-in</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://dehub.io/docs/quickstart</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://dehub.io/docs/installation</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://dehub.io/docs/endpoints</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
