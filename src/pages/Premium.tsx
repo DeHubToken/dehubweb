@@ -116,7 +116,7 @@ export default function Premium() {
   return (
     <div data-glass-page className="min-h-screen bg-[#0a0a0a] text-white">
       <SEOHead
-        title="DeHub Premium — Extra, Family & Extra Large"
+        title="DeHub Extra — Premium Membership"
         description="Go ad-free, unlock background playback, custom themes, profile insights and more AI. Extra $4.99/mo, Family $11.99/mo, Extra Large $50/mo with 100% token cashback for first 50."
         url="https://dehub.io/premium"
       />
@@ -384,7 +384,15 @@ export default function Premium() {
       </section>
 
       <footer className="border-t border-white/5 py-8 text-center text-xs text-zinc-500">
-        © DeHub. Premium pricing and limits may change.
+        <p>© DeHub. Premium pricing and limits may change.</p>
+        {/* /premium (Extra membership) vs /pricing (Creator Studio AI plans) are
+            different products — disambiguate for both users and search. */}
+        <p className="mt-2">
+          Looking for Creator Studio AI plans?{' '}
+          <Link to="/pricing" className="text-zinc-300 underline underline-offset-4 hover:text-white">
+            See Creator Studio pricing
+          </Link>
+        </p>
       </footer>
 
       <PremiumCheckoutModal

@@ -8,8 +8,10 @@ import anthropicLogo from "@/assets/ai-logos/anthropic.png";
 
 const APP_URL =
   "https://claude.ai/new#settings/customize-connectors/10c6ee66-064b-4d66-b544-139cdc732b0f";
-const PAGE_URL = "https://cosmic-echo-hero.lovable.app/connect/claude";
-const OG_IMAGE = "https://cosmic-echo-hero.lovable.app" + ogImage;
+// Canonical + OG must live on dehub.io — pointing them at the Lovable mirror
+// told Google the staging host was the real page.
+const PAGE_URL = "https://dehub.io/connect/claude";
+const OG_IMAGE = "https://dehub.io" + ogImage;
 
 const steps = [
   {

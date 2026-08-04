@@ -8,6 +8,7 @@ import { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useStage } from '@/contexts/StageContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { SEOHead } from '@/components/SEOHead';
 import stagesMicIcon from '@/assets/icons/stages-mic-icon.png';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 
@@ -53,6 +54,15 @@ export default function StageDeepLinkPage() {
 
   return (
     <div data-glass-page className="min-h-screen bg-black flex flex-col items-center justify-center gap-4 text-white">
+      {/* Shared invite links land here — without a title of its own, the page
+          kept whatever document.title the previous route wrote. noindex to
+          match the edge (the worker noindexes /stage/*), self-canonical (a
+          cross-URL canonical alongside noindex is a mixed signal). */}
+      <SEOHead
+        title="Join a Live Stage — DeHub"
+        description="You've been invited to a live audio Stage on DeHub. Join the room, listen in and take the mic on the decentralized social platform."
+        noindex
+      />
       <BrandIcon src={stagesMicIcon} alt="" className="w-16 h-16 object-contain opacity-80" />
       <DeHubPageLoader size={48} minHeight="0" label="Joining stage..." />
     </div>

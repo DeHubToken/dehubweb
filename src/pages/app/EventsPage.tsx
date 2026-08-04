@@ -32,7 +32,15 @@ export default function EventsPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title="Events - DeHub" description="Discover and create events on DeHub" />
+      {/* noindex matches the edge: the worker classes /events as app chrome
+          (noindex, follow). If events should rank later, flip BOTH here and in
+          the worker (MARKETING_PAGES + sitemap) so the layers agree. */}
+      <SEOHead
+        title="Events — Meetups & Community Events on DeHub"
+        description="Browse upcoming DeHub community events, RSVP to meetups and host your own events on the decentralized, user-owned social platform."
+        url="https://dehub.io/events"
+        noindex
+      />
 
       {/* Sticky nav pill */}
       <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2 max-w-2xl mx-auto">

@@ -474,11 +474,28 @@ function AppContent() {
             {/* Clean, indexable section URLs (SEO sitelink targets). /explore
                 renders the Explore page; /videos and /shorts open the home feed
                 on the matching tab. All are managed by PersistentPageCache and
-                must sit BEFORE /:username so they aren't caught as profiles. */}
+                must sit BEFORE /:username so they aren't caught as profiles.
+                The bare forms below exist because the SEO worker canonicalizes
+                /app/<section> to /<section> and links the bare URLs in bot HTML
+                and the sitemap — without a matching SPA route, a human clicking
+                a search result landed on the /:username catch-all (dehub.io/music
+                rendered the empty profile of the user "@music"). */}
             <Route path="/explore" element={null} />
             <Route path="/stages" element={null} />
             <Route path="/videos" element={null} />
             <Route path="/shorts" element={null} />
+            <Route path="/music" element={null} />
+            <Route path="/tv" element={null} />
+            <Route path="/bridge" element={null} />
+            <Route path="/agents" element={null} />
+            <Route path="/assistant" element={null} />
+            <Route path="/top-100" element={null} />
+            <Route path="/leaderboard" element={null} />
+            <Route path="/events" element={null} />
+            {/* Radio is a tab of the Music page, not its own page — but the
+                worker advertises /radio to bots, so give humans a landing on
+                the canonical bare form (not the /app twin). */}
+            <Route path="/radio" element={<Navigate to="/music" replace />} />
 
             {/* Username profiles — inside shared layout so header never remounts */}
             <Route path="/:username" element={<Suspense fallback={<PageLoader />}><ProfilePage /></Suspense>} />

@@ -14,7 +14,12 @@ const corsHeaders = {
 
 async function getLatestPost(): Promise<{ maxId: number; lastmod: string }> {
   try {
-    const res = await fetch(`${DEHUB_API_BASE}/api/feed?limit=1&page=1`);
+    // Sort explicitly: the unsorted feed default returned an OLD post, so the
+    // index reported the posts sitemap as last modified in 2024 while its
+    // content actually updates daily — discouraging recrawl of fresh URLs.
+    const res = await fetch(
+      `${DEHUB_API_BASE}/api/feed?limit=1&page=1&sortBy=createdAt&sortOrder=desc&status=minted`,
+    );
     if (!res.ok) return { maxId: 0, lastmod: new Date().toISOString().split("T")[0] };
     const json = await res.json();
     const first = json?.result?.[0];
@@ -69,13 +74,21 @@ Deno.serve(async (req) => {
   const entries: string[] = [];
   entries.push(`  <sitemap><loc>${APP_URL}/sitemap-static.xml</loc><lastmod>${today}</lastmod></sitemap>`);
   for (let i = 1; i <= postChunks; i++) {
-    // Only the last (newest) chunk changes; older chunks are effectively frozen.
-    const lm = i === postChunks ? posts.lastmod : today;
-    entries.push(`  <sitemap><loc>${APP_URL}/sitemap-posts-${i}.xml</loc><lastmod>${lm}</lastmod></sitemap>`);
+    // Only the last (newest) chunk changes; older chunks are effectively
+    // frozen, so they carry NO lastmod (stamping them with today's date
+    // invited daily recrawls of dead chunks — lastmod is optional per spec).
+    if (i === postChunks) {
+      entries.push(`  <sitemap><loc>${APP_URL}/sitemap-posts-${i}.xml</loc><lastmod>${posts.lastmod}</lastmod></sitemap>`);
+    } else {
+      entries.push(`  <sitemap><loc>${APP_URL}/sitemap-posts-${i}.xml</loc></sitemap>`);
+    }
   }
   for (let i = 1; i <= profileChunks; i++) {
-    const lm = i === profileChunks ? profiles.lastmod : today;
-    entries.push(`  <sitemap><loc>${APP_URL}/sitemap-profiles-${i}.xml</loc><lastmod>${lm}</lastmod></sitemap>`);
+    if (i === profileChunks) {
+      entries.push(`  <sitemap><loc>${APP_URL}/sitemap-profiles-${i}.xml</loc><lastmod>${profiles.lastmod}</lastmod></sitemap>`);
+    } else {
+      entries.push(`  <sitemap><loc>${APP_URL}/sitemap-profiles-${i}.xml</loc></sitemap>`);
+    }
   }
 
 

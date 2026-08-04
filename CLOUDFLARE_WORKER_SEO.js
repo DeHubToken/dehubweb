@@ -55,9 +55,12 @@ const HOME_TITLE_LEGACY = 'DeHub — Open Source, User Owned & Censorship Resist
 // blog posts. Served meta directly at the edge — the deployed Supabase fn's
 // STATIC_ROUTES allowlist is stale and 404s the newer one.
 const GUIDE_PAGES = {
+  // Titles/descriptions mirror the React pages' own SEOHead strings — the two
+  // UA variants must never diverge, and body claims must not exceed what the
+  // human-visible page actually states.
   'best-decentralized-social-media': {
-    title: 'Best Decentralized Social Media Platforms (2026) — DeHub',
-    description: 'Compare the best decentralized social media platforms: ownership, censorship resistance, monetization and how DeHub stacks up against Farcaster, Lens and Bluesky.',
+    title: 'Best Decentralized Social Media 2026 — DeHub Guide',
+    description: 'Comparison guide of the best decentralized and Web3 social media platforms in 2026. DeHub, Mastodon, Bluesky, Farcaster and Lens — features, monetization, ownership and who each is for.',
     bodyHtml: `<p>Decentralized social media replaces the platform-owned model — where one company controls your account, reach and monetization — with protocols where users own their content and audience. This guide compares the leading options in 2026: <strong>DeHub, Mastodon, Bluesky, Farcaster and Lens Protocol</strong>, across ownership, censorship resistance, monetization and ease of use.</p>
 <h2>The short version</h2>
 <ul>
@@ -65,15 +68,15 @@ const GUIDE_PAGES = {
 <li><strong>Bluesky</strong> — the AT Protocol successor to Twitter's decentralization effort. Familiar feel and portable identity, but content isn't on-chain and monetization is early.</li>
 <li><strong>Farcaster</strong> — on-chain identity with off-chain content ("hubs"). Great crypto-native community; primarily text, and most activity flows through one client.</li>
 <li><strong>Lens Protocol</strong> — social graph as on-chain primitives on Lens Chain. Powerful for developers building social apps; less a destination app for creators.</li>
-<li><strong>DeHub</strong> — a full media platform (video, live streaming, posts, messaging) where every upload is minted on-chain, feeds are chronological, gas is sponsored for social-login users, and creators monetize natively via pay-per-view, token-gated content, tradable subscriptions and ad-revenue sharing.</li>
+<li><strong>DeHub</strong> — a full media platform (video, live streaming, posts, messaging) where uploads are minted on-chain and creators monetize natively via tips, pay-per-view, token-gated content, staking rewards and a 20% affiliate program, with an integrated AI creator studio.</li>
 </ul>
 <h2>How to choose</h2>
 <p>If you want a federated Twitter alternative, Mastodon or Bluesky fit. If you're building on a social graph, look at Lens or Farcaster. If you're a <strong>creator who wants YouTube/Twitch-style features with on-chain ownership and built-in monetization</strong>, that's the gap DeHub is built to fill.</p>
 <p><a href="${APP_URL}/guides/best-decentralized-social-media">Read the full interactive comparison</a> or <a href="${APP_URL}/">try DeHub free</a>.</p>`,
   },
   'best-web3-social-media-dapps': {
-    title: 'Best Web3 Social Media dApps (2026) — DeHub',
-    description: 'The best Web3 social media dApps ranked: creator monetization, on-chain content ownership, and where DeHub fits among the top decentralized apps.',
+    title: 'Best Web3 Social Media Dapps in 2026 — DeHub Guide',
+    description: 'Curated comparison of the best Web3 social media dapps in 2026 — DeHub, Farcaster, Lens, Friend.tech and Hive. Scored on monetization, censorship resistance and UX.',
     bodyHtml: `<p>Web3 social dApps put content, identity and payments on-chain so creators — not platforms — own the upside. This guide ranks the leading Web3 social media dApps of 2026 by creator monetization, content ownership, user experience and momentum.</p>
 <h2>What separates the leaders</h2>
 <ul>
@@ -82,7 +85,7 @@ const GUIDE_PAGES = {
 <li><strong>Web2-grade UX</strong> — social/email sign-in, sponsored gas, no seed-phrase wall in front of the first post.</li>
 <li><strong>Media depth</strong> — long-form video, live streaming and audio, not just microblogging.</li>
 </ul>
-<p><strong>DeHub</strong> scores across all four: uploads mint on-chain, subscriptions are tradable assets with resale royalties (live on Base, BNB Chain and Polygon), streaming runs on decentralized infrastructure that has scaled past 50,000 concurrent viewers, and ad revenue is shared with the ecosystem instead of kept by the house — while sign-up works with plain email or socials.</p>
+<p><strong>DeHub</strong> scores across all four: uploads mint on-chain across Base and BNB Chain, creators monetize natively through tips, pay-per-view and token-gated posts, and sign-up works with plain email or socials. The full guide compares DeHub with <strong>Farcaster, Lens, Friend.tech and Hive</strong> on monetization, censorship resistance and UX.</p>
 <p><a href="${APP_URL}/guides/best-web3-social-media-dapps">Read the full ranked comparison</a> or <a href="${APP_URL}/">explore DeHub</a>.</p>`,
   },
 };
@@ -92,22 +95,20 @@ const GUIDE_PAGES = {
 // dehub-docs-content.txt. Bots used to get the raw SPA shell (homepage meta,
 // no canonical) for the entire /docs section.
 const DOCS_PAGES = {
-  'overview': { title: 'DeHub Docs — Overview', description: 'What DeHub is and how the user-owned, censorship-resistant media platform works: on-chain content, DePIN infrastructure, sponsored gas and creator monetization.' },
-  'dapps': { title: "DeHub dApps — The Complete Ecosystem", description: "DeHub's decentralized apps: streaming, feed, messaging, staking, marketplace and games — how they fit together in one user-owned ecosystem." },
-  'games': { title: 'DeHub Games — Play & Win On-Chain', description: "DeHub's gaming arm: the arcade, provably fair mechanics and Last Chad Standing, the fighter battle royale with licensed fighters." },
-  'token/overview': { title: 'DHB Currency Overview — DeHub Docs', description: 'How the $DHB currency works in-app: tipping, unlocking content, rewards, AI generation credits, profit share and the $0.001 peg ahead of DEX listing.' },
-  'token/economics': { title: 'DHB Token Economics & Emissions — DeHub Docs', description: '$DHB supply distribution, emissions, burns and how value flows through the DeHub ecosystem.' },
+  'overview': { title: 'DeHub Docs — Overview', description: 'What DeHub is and how the user-owned, censorship-resistant media platform works: on-chain content, DePIN infrastructure and creator monetization.' },
+  'dapps': { title: "DeHub dApps — The Complete Ecosystem", description: "DeHub's decentralized apps: streaming, feed, messaging, communities, wallet and more — how they fit together in one user-owned ecosystem." },
+  'games': { title: 'DeHub Games — Play & Win On-Chain', description: "DeHub's gaming arm: the arcade and Last Chad Standing, the MMA battle-royale fighter built with top UFC stars." },
+  'token/overview': { title: 'DHB Currency Overview — DeHub Docs', description: 'How the $DHB currency works in-app: tipping, unlocking content, rewards, AI generation credits, profit share and the $0.001 in-app peg.' },
+  'token/economics': { title: 'DHB Token Economics — DeHub Docs', description: '$DHB tokenomics: the 8 billion supply, how it is distributed, and the fully-diluted-from-TGE model with no emissions.' },
   'token/stake': { title: 'Staking DHB — DeHub Docs', description: 'How DHB staking works: rewards, mechanics and what staking unlocks across DeHub.' },
   'roadmap': { title: 'DeHub Roadmap — DeHub Docs', description: "Where DeHub is headed: shipped milestones and what's next across the app, token and games." },
-  'faq': { title: 'DeHub FAQ — Frequently Asked Questions', description: 'Answers to the most common questions about DeHub, the DHB token, creator earnings, staking and the platform.' },
+  'faq': { title: 'DeHub FAQ — Frequently Asked Questions', description: 'Answers to the most common questions about DeHub, the DHB token, staking, governance and the platform.' },
   'team': { title: 'DeHub Team — DeHub Docs', description: 'The founders and team behind DeHub: backgrounds across social media, gaming, entertainment and Web3.' },
   'contact': { title: 'Contact DeHub — DeHub Docs', description: 'How to reach the DeHub team: support, partnerships, press and community channels.' },
   'privacy': { title: 'Privacy Policy — DeHub', description: "DeHub's privacy policy: what data the platform handles and how." },
   'terms': { title: 'Legal Disclaimer & Terms — DeHub', description: "DeHub's legal disclaimer and terms of use." },
-  'quickstart': { title: 'DeHub Quickstart — Get Started in Minutes', description: 'Create an account with email or socials, get a sponsored-gas wallet automatically, and publish your first on-chain post on DeHub.' },
-  'installation': { title: 'Install DeHub — Web, Android & PWA', description: 'How to use DeHub on any device: the web app at dehub.io, the Android app on Google Play, and installing as a PWA.' },
   'advertising': { title: 'Advertising on DeHub — POVR Ad Tech', description: "DeHub's proof-of-view-and-rank (POVR) ad tech: on-chain verified audiences and revenue sharing for creators and holders." },
-  'security': { title: 'Security at DeHub — DeHub Docs', description: 'Audits, smart-contract security and platform hardening at DeHub.' },
+  'security': { title: 'Security at DeHub — DeHub Docs', description: "The Certik audit of DeHub's smart contracts and how to report vulnerabilities to the team." },
   // These ten are in sitemap-static.xml but had no entry here, so bots got the
   // raw SPA shell — the homepage title/description with no canonical. Ten of
   // the twenty-eight docs URLs we submit were presenting to Google as homepage
@@ -115,12 +116,11 @@ const DOCS_PAGES = {
   // exists for them yet (public/dehub-docs-content.txt is gone), so they fall
   // back to the description-only body in buildDocsHtml — thin, but correctly
   // titled, described and self-canonical, which a homepage clone never was.
-  'token/utility': { title: 'DHB Token Utility & Holder Benefits — DeHub Docs', description: 'What holding $DHB unlocks: badge tiers, tipping, staking rewards, governance rights and moderation power across DeHub.' },
-  'token/where-to-buy': { title: 'Where to Buy DHB — DeHub Docs', description: 'Where to buy the $DHB token: supported exchanges, DEX and CEX listings, trading pairs and liquidity.' },
-  'token/governance': { title: 'DeHub Governance — Voting & Proposals', description: 'How DeHub governance works: proposals, voting power, DAO structure and how holders steer the platform.' },
-  'token/bridge': { title: 'Bridge DHB Between BASE & BNB — DeHub Docs', description: 'How to move $DHB across chains with the DeHub bridge, between the BASE and BNB networks.' },
-  'endpoints': { title: 'DeHub API Endpoints — Developer Docs', description: 'DeHub API reference: REST endpoints, integration guide and how to build against the platform.' },
-  'featured-in': { title: 'DeHub in the Press — Featured In', description: 'Press and media coverage of DeHub, including US Weekly, Yahoo Finance, Entrepreneur, GQ South Africa and Investing.com.' },
+  'token/utility': { title: 'DHB Token Utility & Holder Benefits — DeHub Docs', description: 'What holding $DHB unlocks: governance rights, staking rewards, moderation power and marketplace perks across DeHub.' },
+  'token/where-to-buy': { title: 'Where to Buy DHB — DeHub Docs', description: 'Where to buy the $DHB token: Uniswap on Base, PancakeSwap on BNB Chain, listed CEX venues and direct in-app purchase.' },
+  'token/governance': { title: 'DeHub Governance — Voting & Proposals', description: 'How DeHub governance works: proposals, burn-to-vote mechanics, whale prevention and how holders steer the platform.' },
+  'token/bridge': { title: 'Bridge DHB Between BASE & BNB — DeHub Docs', description: 'How to move $DHB between the BASE and BNB networks with the manual DeHub bridge, and what to expect while it processes.' },
+  'featured-in': { title: 'DeHub in the Press — Featured In', description: 'Press and media coverage of DeHub, including US Weekly, Yahoo Finance, Entrepreneur and Investing.com.' },
   'brand-assets': { title: 'DeHub Brand Assets — Logos & Downloads', description: 'Official DeHub brand assets: logos, icons, graphics and marketing materials available to download.' },
   'brand-guidelines': { title: 'DeHub Brand Guidelines', description: 'How to use the DeHub brand: identity, logo usage, colour and design standards.' },
   'donate': { title: 'Donate to DeHub', description: 'Support DeHub development through community donations and contributions.' },
@@ -137,10 +137,18 @@ const DOCS_PAGES = {
  *  DocsSurface). They're content-free, so they must never enter the index —
  *  but /docs/quickstart links to /docs/best-practices, so a 404 would surface
  *  as a broken internal link in Search Console. noindex, follow is the honest
- *  answer: the page really does exist, it just has nothing to rank. */
+ *  answer: the page really does exist, it just has nothing to rank.
+ *
+ *  quickstart / installation / endpoints sit here too: their pages are
+ *  developer-doc drafts still carrying template boilerplate (yourplatform.com
+ *  hosts, /api/v1 placeholder endpoints), while their old meta sold them as
+ *  real user-onboarding / API-reference pages — the worst kind of mismatch to
+ *  index. They come back out (with DOCS_PAGES entries and sitemap rows) when
+ *  the real developer docs land. */
 const DOCS_COMING_SOON = new Set([
   'website', 'app', 'dehub', 'x', 'instagram', 'architecture', 'configuration',
   'data-models', 'auth', 'webhooks', 'best-practices', 'troubleshooting', 'examples',
+  'quickstart', 'installation', 'endpoints',
 ]);
 
 const DOCS_REDIRECTS = {
@@ -534,6 +542,124 @@ ${primaryNavHtml(`/${key}`)}
 </html>`;
 }
 
+// Newer public marketing routes, rendered entirely at the edge. The deployed
+// Supabase fn's STATIC_ROUTES predates them, so proxying answered 404 — and the
+// worker passed that through, hard-404ing real pages (/connect, /pricing,
+// /communities, /stages, /guide) to every crawler while humans saw the React
+// page. Titles and descriptions mirror each page's SPA SEOHead strings exactly
+// so the two UA variants never diverge.
+const MARKETING_PAGES = {
+  'connect': {
+    title: 'Connect DeHub to your AI assistant',
+    description: 'Connect ChatGPT, Claude, or any MCP-compatible assistant to DeHub with a single URL.',
+    heading: 'Connect DeHub to your AI assistant',
+    bodyHtml: `<p>DeHub ships a Model Context Protocol (MCP) server, so any MCP-compatible AI assistant can browse public DeHub posts, search topics and look up creator profiles.</p>
+<ul>
+<li><a href="${APP_URL}/connect/chatgpt" style="color:#9f9">DeHub for ChatGPT</a> — add the connector to ChatGPT in one click.</li>
+<li><a href="${APP_URL}/connect/claude" style="color:#9f9">DeHub for Claude</a> — add the connector to Claude in one click.</li>
+<li><a href="${APP_URL}/skill.md" style="color:#9f9">skill.md</a> — the agent-readable spec for the DeHub MCP API.</li>
+</ul>`,
+  },
+  'connect/chatgpt': {
+    title: 'DeHub for ChatGPT — Use DeHub inside ChatGPT (MCP Connector)',
+    description: 'Add DeHub to ChatGPT in one click. Browse posts, look up profiles and pull trending topics from the DeHub decentralized social network directly inside ChatGPT.',
+    heading: 'Use DeHub inside ChatGPT',
+    bodyHtml: `<ol>
+<li><strong>Open the DeHub connector in ChatGPT</strong> — ChatGPT jumps straight to the DeHub connector inside Settings → Connectors.</li>
+<li><strong>Enable the connector</strong> — toggle DeHub on and approve access so ChatGPT can read public posts, profiles and trending topics.</li>
+<li><strong>Start a new chat</strong> — mention DeHub in your prompt and ChatGPT calls the connector automatically.</li>
+</ol>
+<h2>FAQ</h2>
+<p><strong>Is it free?</strong> The DeHub app is free to add; you need a ChatGPT plan that supports connectors (Plus, Pro, Team or Enterprise).</p>
+<p><strong>What can it do?</strong> Browse public DeHub posts, search topics and look up creator profiles via MCP. It does not post on your behalf.</p>
+<p><strong>Do I need a DeHub account?</strong> No — reading public content works without one.</p>`,
+  },
+  'connect/claude': {
+    title: 'DeHub for Claude — Use DeHub inside Claude (MCP Connector)',
+    description: 'Add DeHub to Claude in one click. Browse posts, look up profiles and pull trending topics from the DeHub decentralized social network directly inside Claude.',
+    heading: 'Use DeHub inside Claude',
+    bodyHtml: `<ol>
+<li><strong>Open the DeHub connector in Claude</strong> — Claude opens directly on the DeHub connector inside Settings → Connectors.</li>
+<li><strong>Enable the connector</strong> — turn DeHub on and approve access so Claude can browse public posts, profiles and trending topics.</li>
+<li><strong>Start a chat</strong> — mention DeHub in your message and Claude calls the connector automatically.</li>
+</ol>
+<h2>FAQ</h2>
+<p><strong>Is it free?</strong> The connector is free to add; you need a Claude plan that supports custom connectors (Pro, Team or Enterprise).</p>
+<p><strong>What can it do?</strong> Browse public DeHub posts, search topics and look up creator profiles via MCP. It does not post on your behalf.</p>
+<p><strong>Do I need a DeHub account?</strong> No — reading public content works without one.</p>`,
+  },
+  'pricing': {
+    title: 'Pricing — DeHub Creator Studio',
+    description: 'DeHub Creator Studio pricing in GBP. Ultra, Team and Scale plans with monthly credits for AI image, video, music and poster generation.',
+    heading: 'DeHub Creator Studio Pricing',
+    bodyHtml: `<ul>
+<li><strong>Ultra</strong> — £99/mo billed annually (£129 month-to-month): 3,500 credits/mo and access to all models including Seedance 2.0 and Nano Banana Pro.</li>
+<li><strong>Team</strong> — £65/seat/mo billed annually (£79 month-to-month): 2,500 shared credits/mo, 2–9 seats, shared workspace and priority support.</li>
+<li><strong>Scale</strong> — £150/seat/mo billed annually (£215 month-to-month): 15,000 credits/mo, 5–15 seats, SSO, priority queue and admin controls.</li>
+</ul>
+<p>Looking for the DeHub Extra social membership instead? <a href="${APP_URL}/premium" style="color:#9f9">See Premium</a>.</p>`,
+  },
+  'communities': {
+    title: 'Communities — Find Your People on DeHub',
+    description: 'Discover DeHub communities: join public groups, follow the topics you care about and build your own community on the decentralized, user-owned social platform.',
+    heading: 'DeHub Communities',
+    bodyHtml: `<p>Communities are public groups on DeHub — join the ones that match your interests, follow their feeds, or create your own and grow it with posts, events and stages.</p>
+<p><a href="${APP_URL}/communities" style="color:#9f9">Browse communities on DeHub</a>.</p>`,
+  },
+  'stages': {
+    title: 'Stages — Live Audio Rooms on DeHub',
+    description: 'Join live audio Stages, listen back to recorded conversations, and go live with your own room on DeHub — the decentralized, open source social platform.',
+    heading: 'DeHub Stages',
+    bodyHtml: `<p>Stages are live audio rooms on DeHub: join a conversation as a listener, come up on stage to speak, or host your own room. Finished stages stay available as recordings.</p>
+<p><a href="${APP_URL}/stages" style="color:#9f9">See live and recorded Stages</a>.</p>`,
+  },
+  'guide': {
+    title: 'DeHub Guide — Visual Walkthrough of the App',
+    description: 'A visual walkthrough of DeHub: feeds, messaging, wallet, staking, governance and more. See every screen and learn how the decentralized social platform works.',
+    heading: 'DeHub Guide',
+    bodyHtml: `<p>A screen-by-screen walkthrough of the DeHub app: the home feed, video and shorts, messaging, the wallet, staking, governance and the creator tools.</p>
+<p><a href="${APP_URL}/guide" style="color:#9f9">Open the full visual guide</a> or start with the <a href="${APP_URL}/docs" style="color:#9f9">documentation</a>.</p>`,
+  },
+};
+
+function buildMarketingHtml(key, meta) {
+  const canonicalUrl = `${APP_URL}/${key}`;
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: meta.title,
+    description: meta.description,
+    url: canonicalUrl,
+    isPartOf: { '@type': 'WebSite', name: 'DeHub', url: APP_URL },
+    publisher: ORG_JSONLD,
+  };
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>${escHtml(meta.title)}</title>
+<meta name="description" content="${escHtml(meta.description)}">
+<link rel="canonical" href="${canonicalUrl}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="DeHub">
+<meta property="og:url" content="${canonicalUrl}">
+<meta property="og:title" content="${escHtml(meta.title)}">
+<meta property="og:description" content="${escHtml(meta.description)}">
+<meta property="og:image" content="${DEHUB_LOGO}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@dehub_official">
+<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+</head>
+<body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
+<p><a href="${APP_URL}/" style="color:#9f9">DeHub</a> › ${escHtml(meta.heading)}</p>
+<h1>${escHtml(meta.heading)}</h1>
+${meta.bodyHtml || `<p>${escHtml(meta.description)}</p>`}
+${primaryNavHtml()}
+<p style="margin-top:24px"><a href="${canonicalUrl}" style="color:#9f9">Open ${escHtml(meta.heading)} on DeHub</a></p>
+</body>
+</html>`;
+}
+
 function buildGuidePageHtml(slug, meta) {
   const canonicalUrl = `${APP_URL}/guides/${slug}`;
   return `<!DOCTYPE html>
@@ -618,6 +744,13 @@ const SYSTEM_ROUTES = [
   // Without this, shouldServeSSR() reads /stats as a username and the profile
   // renderer 404s the page for every crawler.
   'stats',
+  // Same username-misread bug, batch two: every one of these is a real public
+  // route that was 404ing to every crawler ("/connect" looked like @connect).
+  // connect/pricing/communities/stages/guide get real edge pages
+  // (MARKETING_PAGES); launchpad/events/stage stay app chrome
+  // (noindex, follow shell).
+  'connect', 'pricing', 'communities', 'stages', 'guide', 'launchpad',
+  'events', 'stage',
   // 'blog' is reserved: a user registered that handle, and without this every
   // /blog/<anything> minted an indexable "Join @blog" profile page.
   'blog',
@@ -690,6 +823,8 @@ function shouldServeSSR(pathname) {
   // /shorts and /videos aren't mistaken for @shorts / @videos profiles.
   const sec = pathname.replace(/^\/app\//, '/').replace(/^\/+|\/+$/g, '').toLowerCase();
   if (Object.hasOwn(SECTION_PAGES, sec)) return true;
+  // Edge-rendered marketing pages (/connect, /pricing, /communities, …)
+  if (Object.hasOwn(MARKETING_PAGES, sec)) return true;
   // Always SSR for post pages
   if (pathname.includes('/post/')) return true;
   // Always SSR for community pages
@@ -1350,6 +1485,15 @@ async function handleRequest(request, env) {
     }));
   }
 
+  // Edge-rendered marketing pages — never proxied to the Supabase fn (its
+  // STATIC_ROUTES allowlist predates these routes and 404s them).
+  if (Object.hasOwn(MARKETING_PAGES, sectionKey)) {
+    return guard(new Response(buildMarketingHtml(sectionKey, MARKETING_PAGES[sectionKey]), {
+      status: 200,
+      headers: blogHeaders,
+    }));
+  }
+
   const ssrUrl = `${SUPABASE_FUNCTION_URL}?path=${encodeURIComponent(pathname)}&original_url=${encodeURIComponent(request.url)}`;
 
 
@@ -1407,10 +1551,30 @@ async function handleRequest(request, env) {
       pathname.includes('/post/') ||
       pathname.includes('/communities/') ||
       (firstSeg && !SYSTEM_ROUTES.includes(firstSeg) && !firstSeg.includes('.'));
+    const fnSaysNotFound =
+      response.status === 404 || response.headers.get('X-DeHub-NotFound') === '1';
+    // A 404 is only honored on ENTITY routes (posts / profiles / communities,
+    // where a miss really is a missing entity). On static marketing routes a
+    // fn 404 just means the deployed fn's allowlist is stale — passing it
+    // through is what de-indexed /pricing. Serve the branded fallback instead.
+    if (fnSaysNotFound && !isEntityRoute) {
+      // noindex: the fallback body carries the generic homepage title, and a
+      // 200 without it would mint exactly the homepage-duplicate cluster this
+      // worker exists to prevent. Crawlers retry noindexed 200s, so the page
+      // recovers as soon as the fn learns the route.
+      return guard(new Response(buildFallbackHtml(pathname, request.url), {
+        status: 200,
+        headers: {
+          'Content-Type': 'text/html; charset=utf-8',
+          'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
+          'Vary': 'User-Agent',
+          'X-Robots-Tag': 'noindex',
+        },
+      }));
+    }
     const looksNotFound =
-      response.status === 404 ||
-      response.headers.get('X-DeHub-NotFound') === '1' ||
-      (isEntityRoute && NOT_FOUND_TITLES.some((t) => html.includes(t)));
+      isEntityRoute &&
+      (fnSaysNotFound || NOT_FOUND_TITLES.some((t) => html.includes(t)));
     if (looksNotFound) {
       return guard(new Response(html, {
         status: 404,
