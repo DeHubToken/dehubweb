@@ -69,17 +69,22 @@ export function useCommunityChat(
       if (!communityId) return [];
       // A private community's history is no longer world-readable, so this read
       // has to identify the caller or it comes back empty for members too.
+      //
+      // Newest 200, then flipped back into reading order. Ordering ascending and
+      // limiting takes the OLDEST 200 -- a community past that many messages
+      // would open on its first ever conversation and never reach the current
+      // one, taking the pinned banner and reply resolution down with it.
       const { data, error } = await withWalletHeader(
         supabase
           .from('community_chat_messages')
           .select('*')
           .eq('community_id', communityId)
-          .order('created_at', { ascending: true })
+          .order('created_at', { ascending: false })
           .limit(200),
         walletAddress
       );
       if (error) throw error;
-      return (data || []) as CommunityChatMessage[];
+      return ((data || []) as CommunityChatMessage[]).slice().reverse();
     },
     enabled: !!communityId,
     staleTime: 30_000,
