@@ -37,6 +37,9 @@ interface TipModalProps {
   creatorName?: string;
   tokenId?: string;
   context?: string;
+  /** Tipping a comment's author: recorded on the tip so the comment shows its
+   *  own total, and kept out of the post's tip count. */
+  commentId?: string;
 }
 
 export function TipModal({
@@ -46,6 +49,7 @@ export function TipModal({
   creatorName,
   tokenId,
   context,
+  commentId,
 }: TipModalProps) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -60,8 +64,11 @@ export function TipModal({
     creatorAddress,
     chainId: tipChainId,
     tokenId: resolvedTokenId,
+    commentId,
     onSuccess: () => {
-      if (resolvedTokenId && lastTipAmount > 0) {
+      // Comment tips pay the comment's author, not the post — the post's
+      // counter must not move for them.
+      if (!commentId && resolvedTokenId && lastTipAmount > 0) {
         queryClient.cancelQueries({ queryKey: ['post-tip-count', resolvedTokenId] });
         queryClient.setQueryData(['post-tip-count', resolvedTokenId], (old: number | undefined) => (old || 0) + lastTipAmount);
         queryClient.invalidateQueries({ queryKey: ['post-tip-count', resolvedTokenId], refetchType: 'none' });
@@ -70,7 +77,9 @@ export function TipModal({
       onOpenChange(false);
     },
     onConfirmed: () => {
-      if (resolvedTokenId) {
+      if (commentId && resolvedTokenId) {
+        queryClient.invalidateQueries({ queryKey: ['comment-tips', resolvedTokenId] });
+      } else if (resolvedTokenId) {
         queryClient.invalidateQueries({ queryKey: ['post-tip-count', resolvedTokenId] });
       }
     },
