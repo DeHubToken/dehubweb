@@ -1,6 +1,6 @@
 import { useParams, Link, useLocation } from 'react-router-dom';
 import { getLaunchpadBase } from '@/lib/launchpad/base-path';
-import { Helmet } from 'react-helmet-async';
+import { SEOHead } from '@/components/SEOHead';
 import { ChevronLeft } from 'lucide-react';
 import { useLaunchpadToken } from '@/hooks/use-launchpad-tokens';
 import { useLaunchpadTrades } from '@/hooks/use-launchpad-trades';
@@ -36,10 +36,11 @@ export default function LaunchpadCoinPage() {
 
   return (
     <div className="min-h-screen px-4 md:px-6 py-6 max-w-6xl mx-auto">
-      <Helmet>
-        <title>{`$${token.symbol} ${token.name} — Launchpad`}</title>
-        <meta name="robots" content="noindex,nofollow" />
-      </Helmet>
+      <SEOHead
+        title={`$${token.symbol} ${token.name} — Launchpad`}
+        description={`Trade $${token.symbol} on the DeHub launchpad.`}
+        noindex
+      />
       <Link to={base} className="inline-flex items-center text-white/60 hover:text-white text-sm">
         <ChevronLeft className="h-4 w-4" /> Launchpad
       </Link>

@@ -1,6 +1,7 @@
 import { useContext, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { CachedPageActiveContext } from '@/contexts/CachedPageActiveContext';
+import { upsertCanonical, upsertMeta, upsertSocialMeta, setRobots, setJsonLd } from '@/lib/head-meta';
 
 interface SEOHeadProps {
   title?: string;
@@ -9,6 +10,10 @@ interface SEOHeadProps {
   url?: string;
   type?: string;
   jsonLd?: Record<string, unknown>;
+  /** Mark the page noindex. Written imperatively (the Helmet copy is inert),
+   *  and restored to the host-appropriate default when absent so a cached
+   *  noindexed page can't leak its robots tag onto the next route. */
+  noindex?: boolean;
 }
 
 const defaults = {
@@ -25,6 +30,7 @@ export function SEOHead({
   url,
   type = 'website',
   jsonLd,
+  noindex = false,
 }: SEOHeadProps) {
   // Hidden cached pages stay mounted; if they kept rendering Helmet, whichever
   // page happened to render last would own the tab title for every route.
@@ -41,24 +47,21 @@ export function SEOHead({
 
   // react-helmet-async (v3) renders nothing in this app: every route was left
   // on the static index.html title, so tabs and bookmarks were all identical.
-  // Write the document-level bits ourselves so the title is never at the mercy
-  // of the library. Only the active page may write — with ~30 pages held mounted
-  // by PersistentPageCache, hidden ones would otherwise stomp the real title.
+  // Write the document-level bits ourselves so the head is never at the mercy
+  // of the library — that includes og:/twitter:, robots and JSON-LD, which were
+  // previously Helmet-only and therefore never reached the DOM at all. Only the
+  // active page may write — with ~30 pages held mounted by PersistentPageCache,
+  // hidden ones would otherwise stomp the real tags.
+  const jsonLdString = jsonLd ? JSON.stringify(jsonLd) : null;
   useEffect(() => {
     if (!isActivePage) return;
     document.title = fullTitle;
-
-    let canonical = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
-    if (!canonical) {
-      canonical = document.createElement('link');
-      canonical.rel = 'canonical';
-      document.head.appendChild(canonical);
-    }
-    canonical.href = canonicalUrl;
-
-    const metaDesc = document.head.querySelector<HTMLMetaElement>('meta[name="description"]');
-    if (metaDesc) metaDesc.content = description;
-  }, [isActivePage, fullTitle, canonicalUrl, description]);
+    upsertCanonical(canonicalUrl);
+    upsertMeta('name', 'description', description);
+    upsertSocialMeta({ title: fullTitle, description, url: canonicalUrl, image, type });
+    setRobots(noindex);
+    setJsonLd(jsonLdString);
+  }, [isActivePage, fullTitle, canonicalUrl, description, image, type, noindex, jsonLdString]);
 
   if (!isActivePage) return null;
 

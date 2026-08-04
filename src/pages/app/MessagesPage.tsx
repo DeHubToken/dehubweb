@@ -385,7 +385,7 @@ export default function MessagesPage() {
 
   return (
     <div className="h-full px-2 pt-1 pb-2 sm:px-3 sm:pt-1 sm:pb-3 lg:pt-2 overflow-hidden">
-      <SEOHead title="Messages — Direct & Group Chat" description="Send direct messages, create group chats, and connect with other users privately on DeHub. End-to-end encrypted, decentralized messaging." url="https://dehub.io/app/messages" />
+      <SEOHead title="Messages — Direct & Group Chat" description="Send direct messages, create group chats, share media and connect with other users privately on DeHub — your inbox on the user-owned social platform." url="https://dehub.io/app/messages" />
       <h1 className="sr-only">DeHub Messages — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       <div style={keyboardStyle} className={`${mobileChatHeight} lg:h-[calc(100dvh-32px)] max-h-full`}>
         {/* Full Width Messages Panel */}

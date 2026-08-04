@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { LogOut, Users, Megaphone } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAdminAuth } from '@/hooks/use-admin-auth';
+import { SEOHead } from '@/components/SEOHead';
 
 interface AdminShellProps {
   title: string;
@@ -13,6 +14,9 @@ export function AdminShell({ title, children }: AdminShellProps) {
 
   return (
     <div className="min-h-screen bg-black text-white">
+      {/* Admin surfaces must never index — without meta of their own they
+          presented as homepage duplicates to JS-rendering crawlers. */}
+      <SEOHead title={`${title} — DeHub Admin`} description="DeHub admin panel." noindex />
       <header className="border-b border-white/10 bg-black/80 backdrop-blur-xl sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">

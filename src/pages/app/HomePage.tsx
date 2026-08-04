@@ -803,7 +803,19 @@ export default function HomePage() {
 
   return (
     <div>
-      <SEOHead title="DeHub - Home Feed" description="Censorship resistant and chronological, with no shady algorithm. Your feed on DeHub — the open source, user owned social media platform." url="https://dehub.io/app" jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Home Feed', url: 'https://dehub.io/app', description: 'Censorship resistant, chronological social media feed with no algorithm.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+      {/* One cached instance serves /, /app, /videos and /shorts — meta must
+          follow the URL (not tab state: a sessionStorage-restored tab on "/"
+          would otherwise declare /videos canonical for the root) or three
+          sitemap URLs share one identity and the root canonicalizes away from
+          itself. Titles match the worker's bot HTML for the same URLs so the
+          two UA variants never diverge. */}
+      {tabFromPathname(location.pathname) === 'videos' ? (
+        <SEOHead title="Video Feed — Watch On-Chain Videos on DeHub" description="Watch the latest on-chain videos from DeHub creators: long-form uploads with pay-per-view, token-gated content and native monetization on the user-owned video platform." url="https://dehub.io/videos" jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Video Feed', url: 'https://dehub.io/videos', description: 'The latest on-chain videos from DeHub creators.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+      ) : tabFromPathname(location.pathname) === 'shorts' ? (
+        <SEOHead title="Shorts — Short-Form Videos on DeHub" description="Scroll the latest short-form videos on DeHub: a vertical, swipeable shorts feed on the open-source, user-owned social platform where creators own their content." url="https://dehub.io/shorts" jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Shorts', url: 'https://dehub.io/shorts', description: 'Short-form videos from DeHub creators.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+      ) : (
+        <SEOHead title="DeHub — Open Source, User Owned Social Media" description="Censorship resistant and chronological, with no shady algorithm. Your feed on DeHub — the open source, user owned social media platform." url="https://dehub.io/" jsonLd={{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'DeHub Home Feed', url: 'https://dehub.io/', description: 'Censorship resistant, chronological social media feed with no algorithm.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+      )}
       <h1 className="sr-only">Your Decentralized Social Feed</h1>
       {/* Tab Navigation */}
       <div

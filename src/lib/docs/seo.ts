@@ -17,7 +17,7 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
   overview: {
     title: "Overview — DeHub Docs",
     description:
-      "High-level overview of DeHub: its mission, architecture and the decentralized social ecosystem.",
+      "High-level overview of DeHub: its mission, origins and the decentralized, user-owned social ecosystem.",
   },
   dapps: {
     title: "The DeHub dApp — Complete Feature Guide",
@@ -38,9 +38,9 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
   "token/overview": {
     title: "Currency Overview — DeHub Docs",
     description:
-      "How the DHB currency works in-app: tipping, unlocking content, rewards, AI credits, profit share and the $0.001 peg ahead of DEX listing.",
+      "How the DHB currency works in-app: tipping, unlocking content, rewards, AI credits, profit share and the $0.001 in-app peg.",
     keywords:
-      "DHB currency, utility token, tipping, pay-per-view, AI credits, profit share, staking rewards, DEX listing, token peg",
+      "DHB currency, utility token, tipping, pay-per-view, AI credits, profit share, staking rewards, token peg",
   },
   "token/economics": {
     title: "Token Economics — DeHub Docs",
@@ -50,7 +50,7 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
   "token/utility": {
     title: "Token Utility — DeHub Docs",
     description:
-      "How DHB is used across DeHub: payments, tipping, gated content, staking rewards and more.",
+      "What holding DHB unlocks: governance, staking rewards, moderation power and marketplace perks across DeHub.",
   },
   "token/where-to-buy": {
     title: "Where to Buy DHB — DeHub Docs",
@@ -70,14 +70,14 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
   "token/bridge": {
     title: "Token Bridge — DeHub Docs",
     description:
-      "Bridge DHB across supported chains including BNB Chain and Base safely.",
+      "How to move DHB between BNB Chain and Base with the manual DeHub bridge, and what to expect while it processes.",
   },
   // depin / e2e-encryption / ai-toolkits now redirect into /docs/dapps, so their
   // metadata is folded into the dapps entry above rather than duplicated here.
   advertising: {
     title: "Advertising — DeHub Docs",
     description:
-      "Run ads on DeHub: campaign setup, formats, targeting and creator monetization.",
+      "DeHub's POVR ad tech explained: proof-of-view-and-rank, fraud-resistant campaigns and revenue sharing for creators.",
   },
   team: {
     title: "Team — DeHub Docs",
@@ -86,7 +86,7 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
   security: {
     title: "Security — DeHub Docs",
     description:
-      "DeHub security model: audits, key management, custody and best practices for users.",
+      "DeHub contract security: the Certik audit and how to report vulnerabilities to the team.",
   },
   roadmap: {
     title: "Roadmap — DeHub Docs",
@@ -98,8 +98,8 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
     description: "Get in touch with the DeHub team for support, partnerships and press.",
   },
   terms: {
-    title: "Terms — DeHub Docs",
-    description: "Terms governing use of DeHub products and services.",
+    title: "Legal Disclaimer — DeHub Docs",
+    description: "DeHub's legal disclaimer: risk notices and terms of use for the platform and the DHB token.",
   },
   "terms-of-service": {
     title: "Terms of Service — DeHub Docs",
@@ -117,21 +117,29 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
   "brand-guidelines": {
     title: "Brand Guidelines — DeHub Docs",
     description:
-      "Official DeHub brand guidelines: logo usage, color palette, typography and tone.",
+      "The official DeHub brand guidelines deck: identity, logo usage and design standards for partners and press.",
   },
+  "featured-in": {
+    title: "Featured In — DeHub Press Coverage",
+    description:
+      "Press coverage of DeHub: US Weekly, Yahoo Finance, Entrepreneur and Investing.com on the user-owned social platform.",
+  },
+  // quickstart / installation / endpoints are developer-doc drafts that still
+  // carry placeholder content; the worker serves them noindex,follow until the
+  // real API docs land. Descriptions here describe what actually renders.
   quickstart: {
     title: "Quick Start — DeHub Docs",
     description:
-      "Get started on DeHub in minutes: create an account, connect a wallet and post your first content.",
+      "Developer quick start for the DeHub API: prerequisites, client setup and your first request. Full API docs are in progress.",
   },
   installation: {
     title: "Installation — DeHub Docs",
-    description: "Install DeHub on desktop and mobile and set up your developer environment.",
+    description: "Developer environment setup for building against DeHub. Full SDK docs are in progress.",
   },
   endpoints: {
     title: "API Endpoints — DeHub Docs",
     description:
-      "Reference for the DeHub REST and edge function endpoints used by clients and integrations.",
+      "DeHub API endpoint reference — full, versioned API documentation is in progress.",
   },
   blog: {
     title: "Blog — DeHub Docs",
@@ -143,7 +151,7 @@ export const DOCS_SEO: Record<string, DocsSeoEntry> = {
   },
   donate: {
     title: "Donate — DeHub Docs",
-    description: "Support DeHub development by donating to the public treasury.",
+    description: "Support DeHub development by donating directly to the team's EVM or BTC addresses.",
   },
   website: {
     title: "Website Guide — DeHub Docs",
@@ -206,23 +214,42 @@ export function getDocsSeoForPath(pathname: string): {
   canonical: string;
   slug: string;
 } {
-  // Normalize: strip /docs prefix and trailing slash
-  let p = pathname.replace(/^\/docs/, "").replace(/\/+$/, "");
-  if (p.startsWith("/")) p = p.slice(1);
+  const clean = pathname.replace(/\/+$/, "");
 
-  // Blog post fallback: /docs/blog/:slug
-  if (p.startsWith("blog/") && p !== "blog") {
-    const slug = p.slice("blog/".length);
+  // Bare /guides is the blog index's alias (the worker 301s direct loads to
+  // /docs/blog; in-app navigation can still land here) — without this it fell
+  // through to the generic entry with a canonical of /docs/guides, a 404.
+  if (clean === "/guides") {
+    return {
+      slug: "blog",
+      canonical: `${BASE_URL}/docs/blog`,
+      entry: DOCS_SEO["blog"],
+    };
+  }
+
+  // Blog posts: /guides/<slug> is canonical, /docs/blog/<slug> is the legacy
+  // twin. Both canonicalize to /guides — matching the worker, the sitemap and
+  // every share link. (Previously /guides/<slug> fell through to the generic
+  // docs entry with a canonical of /docs/guides/<slug>, a URL that does not
+  // exist.) This is only a pre-data fallback: BlogPost overwrites it with the
+  // post's real seoTitle/seoDescription once the post loads.
+  const blogMatch = clean.match(/^\/(?:guides|docs\/blog)\/([^/?#]+)$/);
+  if (blogMatch) {
+    const slug = blogMatch[1];
     const pretty = slug.replace(/[-_]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
     return {
-      slug: p,
-      canonical: `${BASE_URL}/docs/${p}`,
+      slug: `blog/${slug}`,
+      canonical: `${BASE_URL}/guides/${slug}`,
       entry: {
         title: `${pretty} — DeHub Blog`,
         description: `${pretty} — read the full post on the DeHub blog.`,
       },
     };
   }
+
+  // Normalize: strip /docs prefix and leading slash
+  let p = clean.replace(/^\/docs/, "");
+  if (p.startsWith("/")) p = p.slice(1);
 
   const entry = DOCS_SEO[p] ?? DOCS_SEO[""];
   return {

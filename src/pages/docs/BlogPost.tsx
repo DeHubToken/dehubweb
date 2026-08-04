@@ -4,7 +4,7 @@ import { useParams, Link, useLocation } from 'react-router-dom';
 import { ArrowLeft, RotateCw } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { getPostBySlug, getNewPostBySlug, excludedTitles, formatDate } from '@/utils/blogUtils';
-import SEO from '@/components/SEO';
+import { SEOHead } from '@/components/SEOHead';
 import { BlogSEOHelper } from '@/components/blog/BlogSEOHelper';
 import { BlogPostHeader } from '@/components/blog/BlogPostHeader';
 import { BlogPostBody } from '@/components/blog/BlogPostBody';
@@ -112,15 +112,27 @@ const BlogPost = () => {
 
   return (
     <>
-      <SEO
+      {/* SEOHead writes the head imperatively, so the post's real seoTitle/
+          seoDescription overwrite DocsSEO's slug-derived fallback once the post
+          loads. The old <SEO> here rode react-helmet-async, which renders
+          nothing in this app — every post kept the generic docs title. */}
+      <SEOHead
         title={post.seoTitle || post.title}
         description={post.seoDescription || post.excerpt}
         image={shareImage}
-        url={`/guides/${post.slug}`}
+        url={shareUrl}
         type="article"
-        publishedTime={post.publishedAt}
-        authorName={post.author.name}
-        tags={post.tags}
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'Article',
+          headline: post.seoTitle || post.title,
+          description: post.seoDescription || post.excerpt,
+          image: shareImage,
+          datePublished: post.publishedAt,
+          author: { '@type': 'Person', name: post.author.name },
+          publisher: { '@type': 'Organization', name: 'DeHub', url: 'https://dehub.io' },
+          mainEntityOfPage: { '@type': 'WebPage', '@id': shareUrl },
+        }}
       />
       <BlogSEOHelper />
       <div className="max-w-4xl mx-auto">

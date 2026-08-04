@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { SEOHead } from '@/components/SEOHead';
 import {
   Home, User, MessageSquare, Bell, Search, Settings, Bookmark,
   Trophy, Wallet, Music, Tv, Sparkles, LayoutDashboard, Vote,
@@ -99,6 +100,7 @@ export default function MobilePreview() {
 
   return (
     <div className="min-h-screen bg-zinc-950 flex">
+      <SEOHead title="Mobile Preview — DeHub" description="Internal preview of DeHub mobile screens." noindex />
       {/* Sidebar picker */}
       <aside className="w-64 flex-shrink-0 border-r border-white/10 bg-black/50 backdrop-blur-xl p-4 overflow-y-auto">
         <h1 className="text-white font-bold text-lg mb-1">Mobile Preview</h1>
