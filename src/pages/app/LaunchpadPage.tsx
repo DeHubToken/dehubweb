@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { getLaunchpadBase } from '@/lib/launchpad/base-path';
-import { Helmet } from 'react-helmet-async';
+import { SEOHead } from '@/components/SEOHead';
 import { Rocket, Search } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLaunchpadTokens, type LaunchpadFilter } from '@/hooks/use-launchpad-tokens';
@@ -39,10 +39,13 @@ export default function LaunchpadPage() {
 
   return (
     <div className="min-h-screen px-4 md:px-6 py-6 max-w-7xl mx-auto">
-      <Helmet>
-        <title>Launchpad — DeHub</title>
-        <meta name="robots" content="noindex,nofollow" />
-      </Helmet>
+      {/* SEOHead writes the head imperatively — the raw Helmet this replaces
+          rendered nothing, so the noindex never actually reached the DOM. */}
+      <SEOHead
+        title="Launchpad — DeHub"
+        description="Tokenise a business on the DeHub launchpad: browse live coins or create your own."
+        noindex
+      />
       <h1 className="sr-only">DeHub Launchpad</h1>
 
       {/* Hero */}

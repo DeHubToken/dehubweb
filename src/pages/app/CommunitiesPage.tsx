@@ -130,8 +130,17 @@ export default function CommunitiesPage() {
   return (
     <div className="min-h-screen">
       <SEOHead
-        title="Communities - DeHub"
-        description="Join and discover communities on DeHub"
+        title="Communities — Find Your People on DeHub"
+        description="Discover DeHub communities: join public groups, follow the topics you care about and build your own community on the decentralized, user-owned social platform."
+        url="https://dehub.io/communities"
+        jsonLd={{
+          '@context': 'https://schema.org',
+          '@type': 'CollectionPage',
+          name: 'DeHub Communities',
+          url: 'https://dehub.io/communities',
+          description: 'Public communities on the DeHub decentralized social platform.',
+          isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' },
+        }}
       />
 
       {/* Sticky nav pill */}

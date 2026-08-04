@@ -134,7 +134,10 @@ export default function CareersPage() {
 
   return (
     <div className="min-h-screen">
-      <SEOHead title="Careers — Join the DeHub Team" description="Join the team building the future of decentralized media. Explore open positions at DeHub and help shape Web3 social." url="https://dehub.io/app/careers" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Careers at DeHub', url: 'https://dehub.io/app/careers', description: 'Open positions at DeHub — building the future of decentralized media.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
+      {/* Canonical is /jobs — the route this page actually serves (and the one
+          in the sitemap). /app/careers was never a route: it canonicalized a
+          sitemapped page onto a 404. */}
+      <SEOHead title="Careers — Join the DeHub Team" description="Join the team building the future of decentralized media. Explore open positions at DeHub and help shape Web3 social." url="https://dehub.io/jobs" jsonLd={{ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Careers at DeHub', url: 'https://dehub.io/jobs', description: 'Open positions at DeHub — building the future of decentralized media.', isPartOf: { '@type': 'WebSite', name: 'DeHub', url: 'https://dehub.io' } }} />
       <h1 className="sr-only">DeHub Careers — Decentralised Social Media, Censorship Resistant & Freedom of Speech</h1>
       {/* Sticky nav pill */}
       <div data-feed-nav-outer className="sticky top-11 lg:top-0 z-50 bg-black px-2 pt-1 pb-0 sm:px-3 sm:pt-1 sm:pb-0 lg:pt-2">

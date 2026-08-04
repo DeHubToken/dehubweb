@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Helmet } from 'react-helmet-async';
+import { SEOHead } from '@/components/SEOHead';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -76,10 +76,11 @@ export default function LaunchpadCreatePage() {
 
   return (
     <>
-      <Helmet>
-        <title>Create coin — Launchpad</title>
-        <meta name="robots" content="noindex,nofollow" />
-      </Helmet>
+      <SEOHead
+        title="Create coin — Launchpad"
+        description="Create a coin on the DeHub launchpad."
+        noindex
+      />
 
 
       <Drawer open onOpenChange={(o) => { if (!o) close(); }}>

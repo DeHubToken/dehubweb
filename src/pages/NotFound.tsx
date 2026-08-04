@@ -8,7 +8,6 @@ import { WarningGraphic } from "@/components/ui/warning-graphic";
 import { LiquidGlassBubble2 } from "@/components/ui/liquid-glass-bubble-2";
 import { NebulaParticlesBg } from "@/components/ui/nebula-particles-bg";
 import { SEOHead } from "@/components/SEOHead";
-import { Helmet } from "react-helmet-async";
 import { Home } from "lucide-react";
 
 const NotFound = () => {
@@ -38,10 +37,8 @@ const NotFound = () => {
       <SEOHead
         title="Page Not Found — DeHub"
         description="The page you are looking for does not exist. Return to DeHub to explore open source, user-owned social media."
+        noindex
       />
-      <Helmet>
-        <meta name="robots" content="noindex, nofollow" />
-      </Helmet>
       <div data-glass-page className="relative h-screen w-full overflow-hidden bg-black">
       <NebulaParticlesBg />
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4">

@@ -164,7 +164,7 @@ export default function BestWeb3SocialMediaDapps() {
             <h2 className="text-2xl font-semibold mb-3">How we picked these dapps</h2>
             <p className="text-zinc-300 leading-relaxed">
               A Web3 social dapp puts identity, content or payments on a blockchain instead of a
-              single company\u2019s database. In 2026 the shortlist has narrowed to platforms that ship
+              single company&rsquo;s database. In 2026 the shortlist has narrowed to platforms that ship
               a real product, have active weekly users, and give creators a monetization path
               beyond ads. We compared each on three axes: <strong>monetization</strong>,
               <strong> censorship resistance</strong>, and <strong>UX</strong> for a non-crypto user.

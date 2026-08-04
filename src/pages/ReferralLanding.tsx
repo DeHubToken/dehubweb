@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
+import { SEOHead } from "@/components/SEOHead";
 import { Copy, ArrowRight, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -103,23 +103,18 @@ export default function ReferralLanding() {
 
   return (
     <>
-      <Helmet>
-        <title>{title}</title>
-        <meta name="description" content={description} />
-        <link rel="canonical" href={pageUrl} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={pageUrl} />
-        <meta property="og:title" content={title} />
-        <meta property="og:description" content={description} />
-        <meta property="og:image" content={ogImage} />
-        <meta property="og:image:width" content="1216" />
-        <meta property="og:image:height" content="640" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={title} />
-        <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={ogImage} />
-        
-      </Helmet>
+      {/* Referral landings are an unbounded set of near-identical URLs: noindex
+          in the browser too (the edge already noindexes them for bots), and pin
+          the canonical to dehub.io so a mirror-host load never self-canonicalizes.
+          SEOHead writes the head imperatively — the raw Helmet block this
+          replaces rendered nothing (react-helmet-async v3 is inert here). */}
+      <SEOHead
+        title={title}
+        description={description}
+        image={ogImage}
+        url={`https://dehub.io/r/${code}`}
+        noindex
+      />
 
       {/* No loading gate — the page shell (headline, code, CTAs) paints
           instantly; the inviter's name and share image fade in as their
