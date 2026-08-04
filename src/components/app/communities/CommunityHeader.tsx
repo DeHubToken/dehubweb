@@ -1,5 +1,5 @@
 import { useRef, useState, useCallback } from 'react';
-import { Users, LogIn, LogOut, Crown, Camera, Pin, PinOff, TrendingUp, X, Pencil, Check, Share2, Link2, FileText, Link as LinkIcon, Clock, Send } from 'lucide-react';
+import { Users, LogIn, LogOut, Crown, Camera, Pin, PinOff, TrendingUp, X, Pencil, Check, Share2, Link2, FileText, Link as LinkIcon, Clock, Send, Settings2 } from 'lucide-react';
 import { NewConversationModal } from '@/components/app/chat/NewConversationModal';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -18,7 +18,13 @@ interface CommunityHeaderProps {
   community: Community;
   isMember: boolean;
   isPendingMember: boolean;
+  /** Founder, or whoever ownership was transferred to. Only drives the join button. */
   isOwner: boolean;
+  /** Holds change_info — inline name/description/avatar/banner/ticker editing. */
+  canEdit: boolean;
+  /** Holds any moderation right — shows the Manage entry point. */
+  canManage: boolean;
+  onManage: () => void;
   isPending: boolean;
   onJoinLeave: () => void;
 }
@@ -38,7 +44,7 @@ function formatRelativeTime(dateString: string): string {
   return `${years}y`;
 }
 
-export function CommunityHeader({ community, isMember, isPendingMember, isOwner, isPending, onJoinLeave }: CommunityHeaderProps) {
+export function CommunityHeader({ community, isMember, isPendingMember, isOwner, canEdit, canManage, onManage, isPending, onJoinLeave }: CommunityHeaderProps) {
   const { walletAddress } = useAuth();
   const { openPostModal } = useGlobalDropZone();
   const bannerInputRef = useRef<HTMLInputElement>(null);
@@ -89,15 +95,15 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
       {/* Banner */}
       <div
         className="h-28 sm:h-36 rounded-xl bg-white/[0.04] overflow-hidden relative group"
-        onClick={isOwner ? () => bannerInputRef.current?.click() : undefined}
-        style={isOwner ? { cursor: 'pointer' } : undefined}
+        onClick={canEdit ? () => bannerInputRef.current?.click() : undefined}
+        style={canEdit ? { cursor: 'pointer' } : undefined}
       >
         {community.banner_url ? (
           <img src={community.banner_url} alt="" className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-white/[0.06] to-white/[0.02]" />
         )}
-        {isOwner && (
+        {canEdit && (
           <>
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
               <Camera className="w-6 h-6 text-white" />
@@ -126,15 +132,15 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
       <div className="flex items-start justify-between -mt-8">
         <div
           className="w-16 h-16 rounded-xl bg-black border-2 border-black flex items-center justify-center overflow-hidden flex-shrink-0 relative group"
-          onClick={isOwner ? () => avatarInputRef.current?.click() : undefined}
-          style={isOwner ? { cursor: 'pointer' } : undefined}
+          onClick={canEdit ? () => avatarInputRef.current?.click() : undefined}
+          style={canEdit ? { cursor: 'pointer' } : undefined}
         >
           {community.avatar_url ? (
             <img src={community.avatar_url} alt={community.name} className="w-full h-full object-cover" />
           ) : (
             <Users className="w-7 h-7 text-zinc-500" />
           )}
-          {isOwner && (
+          {canEdit && (
             <>
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <Camera className="w-4 h-4 text-white" />
@@ -159,6 +165,18 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
           )}
         </div>
         <div className="flex items-center gap-2 flex-shrink-0 pt-[39px]">
+          {canManage && (
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={onManage}
+              className="rounded-xl gap-1.5 h-9 px-3 bg-white/10 border border-white/20 text-white hover:bg-white/15"
+              title={t('communities.manage', { defaultValue: 'Manage' })}
+            >
+              <Settings2 className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">{t('communities.manage', { defaultValue: 'Manage' })}</span>
+            </Button>
+          )}
           {isMember && (
             <Button
               size="sm"
@@ -240,7 +258,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
 
       {/* Name + member count */}
       <div className="px-2 mt-2">
-        {isOwner && editingName ? (
+        {canEdit && editingName ? (
           <div className="flex items-center gap-1.5">
             <input
               value={nameInput}
@@ -262,7 +280,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
         ) : (
           <div className="flex items-center gap-1.5 group/name">
             <h1 className="text-lg font-bold text-white truncate">{community.name}</h1>
-            {isOwner && (
+            {canEdit && (
               <button onClick={() => setEditingName(true)} className="opacity-0 group-hover/name:opacity-100 text-zinc-500 hover:text-white transition-all">
                 <Pencil className="w-3 h-3" />
               </button>
@@ -273,7 +291,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
       </div>
 
       {/* Ticker */}
-      {isOwner && (
+      {canEdit && (
         <div className="px-2 mt-2">
           {community.ticker_symbol ? (
             <div className="flex items-center gap-2">
@@ -323,7 +341,7 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
         </div>
       )}
 
-      {isOwner && editingDesc ? (
+      {canEdit && editingDesc ? (
         <div className="px-2 mt-3 flex items-start gap-1.5">
           <textarea
             value={descInput}
@@ -343,10 +361,10 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
           {community.description ? (
             <DescriptionWithLinks text={community.description} />
           
-          ) : isOwner ? (
+          ) : canEdit ? (
             <p className="text-zinc-600 text-sm italic">{t('communities.addDescription')}</p>
           ) : null}
-          {isOwner && (
+          {canEdit && (
             <button onClick={() => setEditingDesc(true)} className="opacity-0 group-hover/desc:opacity-100 text-zinc-500 hover:text-white transition-all flex-shrink-0 mt-0.5">
               <Pencil className="w-3 h-3" />
             </button>

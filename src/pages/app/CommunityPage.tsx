@@ -10,6 +10,8 @@ import { Users, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCommunity, useCommunityMembers, useIsCommunityMember, useJoinCommunity, useLeaveCommunity } from '@/hooks/use-communities';
+import { useCommunityAbilities } from '@/hooks/use-community-admin';
+import { CommunityManageSheet } from '@/components/app/communities/manage/CommunityManageSheet';
 import { CommunityHeader } from '@/components/app/communities/CommunityHeader';
 import { CommunityFeed } from '@/components/app/communities/CommunityFeed';
 import { CommunityMembers } from '@/components/app/communities/CommunityMembers';
@@ -32,6 +34,7 @@ export default function CommunityPage() {
   // (chat = 200-message fetch + per-sender profile fan-out, events, members)
   // mount on first activation and then stay mounted CSS-hidden as before.
   const [visitedTabs, setVisitedTabs] = useState<Set<Tab>>(() => new Set<Tab>(['posts']));
+  const [manageOpen, setManageOpen] = useState(false);
   const activateTab = (next: Tab) => {
     setTab(next);
     setVisitedTabs(prev => (prev.has(next) ? prev : new Set(prev).add(next)));
@@ -46,9 +49,12 @@ export default function CommunityPage() {
 
   const isMember = !!membership && membership.status === 'active';
   const isPendingMember = !!membership && membership.status === 'pending';
-  const isOwner = membership?.role === 'owner';
+  const isBanned = !!membership && membership.status === 'banned';
+  // Role alone no longer decides what an admin may do -- each control asks the
+  // ability it actually needs, so a partially-privileged admin gets exactly the
+  // subset of the panel the server would let them use.
+  const abilities = useCommunityAbilities(community, membership);
   const memberAddresses = useMemo(() => new Set(members.map(m => m.wallet_address.toLowerCase())), [members]);
-  
 
   if (isLoading) {
     return (
@@ -72,8 +78,11 @@ export default function CommunityPage() {
 
   const handleJoinLeave = () => {
     if (!isAuthenticated) { openLoginModal(); return; }
+    if (isBanned) { toast.error(t('communities.bannedFromCommunity', { defaultValue: 'You are banned from this community' })); return; }
     if (isMember) {
-      if (isOwner) return;
+      // The owner has to transfer or delete rather than walk away -- the
+      // database refuses the delete, so do not offer it.
+      if (abilities.isOwner) return;
       leaveMutation.mutate(community.id, {
         onSuccess: () => { toast.success(t('communities.leftCommunity')); },
       });
@@ -105,10 +114,22 @@ export default function CommunityPage() {
         community={community}
         isMember={isMember}
         isPendingMember={isPendingMember}
-        isOwner={isOwner}
+        isOwner={abilities.isOwner}
+        canEdit={abilities.can('change_info')}
+        canManage={abilities.canManage}
+        onManage={() => setManageOpen(true)}
         isPending={joinMutation.isPending || leaveMutation.isPending}
         onJoinLeave={handleJoinLeave}
       />
+
+      {abilities.canManage && (
+        <CommunityManageSheet
+          community={community}
+          membership={membership}
+          open={manageOpen}
+          onOpenChange={setManageOpen}
+        />
+      )}
 
       {/* Tabs */}
       <div className="flex border-b border-white/[0.08] px-3">
@@ -153,7 +174,12 @@ export default function CommunityPage() {
         </div>
         {visitedTabs.has('chat') && (
           <div className={tab === 'chat' ? '' : 'hidden'}>
-            <CommunityChat communityId={community.id} isMember={isMember} canModerate={isOwner || membership?.role === 'admin'} />
+            <CommunityChat
+              communityId={community.id}
+              community={community}
+              membership={membership}
+              isMember={isMember}
+            />
           </div>
         )}
         {visitedTabs.has('events') && (
@@ -163,12 +189,17 @@ export default function CommunityPage() {
         )}
         {visitedTabs.has('members') && (
           <div className={tab === 'members' ? '' : 'hidden'}>
-            <CommunityMembers members={members} communityId={community.id} isOwner={isOwner || membership?.role === 'admin'} />
+            <CommunityMembers
+              members={members}
+              community={community}
+              membership={membership}
+              onManage={() => setManageOpen(true)}
+            />
           </div>
         )}
         {visitedTabs.has('about') && (
           <div className={tab === 'about' ? '' : 'hidden'}>
-            <CommunityAbout community={community} isOwner={isOwner} />
+            <CommunityAbout community={community} canManageSettings={abilities.canManageSettings} />
           </div>
         )}
       </div>

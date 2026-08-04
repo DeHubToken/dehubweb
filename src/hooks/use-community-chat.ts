@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import { getAccountInfo } from '@/lib/api/dehub';
+import { adminErrorMessage } from '@/hooks/use-community-admin';
 import { toast } from 'sonner';
 
 export interface CommunityChatMessage {
@@ -27,6 +28,9 @@ export interface CommunityChatMessage {
   reply_to_id: string | null;
   reactions: Record<string, string[]>;
   created_at: string;
+  pinned_at: string | null;
+  pinned_by: string | null;
+  edited_at: string | null;
   reply_to?: {
     id: string;
     content: string;
@@ -36,9 +40,19 @@ export interface CommunityChatMessage {
 
 const QUERY_KEY = 'community-chat-messages';
 
-export function useCommunityChat(communityId: string | undefined) {
+export function useCommunityChat(
+  communityId: string | undefined,
+  options?: { isPrivate?: boolean },
+) {
   const { walletAddress, user } = useAuth();
   const queryClient = useQueryClient();
+  const isPrivate = !!options?.isPrivate;
+  // The wallet is part of the key because the message SELECT policy filters by
+  // it — one account's visible history must not be served to the next.
+  const messagesKey = useMemo(
+    () => [QUERY_KEY, communityId, walletAddress] as const,
+    [communityId, walletAddress],
+  );
 
   // Latest profile fields for the current user — used to overlay onto their own
   // messages so display name / username / avatar updates reflect immediately
@@ -50,20 +64,29 @@ export function useCommunityChat(communityId: string | undefined) {
 
   // Fetch messages
   const { data: rawMessages = [], isLoading } = useQuery({
-    queryKey: [QUERY_KEY, communityId],
+    queryKey: messagesKey,
     queryFn: async () => {
       if (!communityId) return [];
-      const { data, error } = await supabase
-        .from('community_chat_messages')
-        .select('*')
-        .eq('community_id', communityId)
-        .order('created_at', { ascending: true })
-        .limit(200);
+      // A private community's history is no longer world-readable, so this read
+      // has to identify the caller or it comes back empty for members too.
+      const { data, error } = await withWalletHeader(
+        supabase
+          .from('community_chat_messages')
+          .select('*')
+          .eq('community_id', communityId)
+          .order('created_at', { ascending: true })
+          .limit(200),
+        walletAddress
+      );
       if (error) throw error;
       return (data || []) as CommunityChatMessage[];
     },
     enabled: !!communityId,
     staleTime: 30_000,
+    // Realtime replication evaluates the same SELECT policy but has no way to
+    // carry a request header, so a private community receives no live events at
+    // all. Poll there; public communities keep the socket and no polling.
+    refetchInterval: isPrivate ? 5_000 : false,
   });
 
   // Collect unique sender wallet addresses (excluding the current user — we
@@ -186,7 +209,7 @@ export function useCommunityChat(communityId: string | undefined) {
         (payload) => {
           if (payload.eventType === 'INSERT') {
             queryClient.setQueryData<CommunityChatMessage[]>(
-              [QUERY_KEY, communityId],
+              messagesKey,
               (old = []) => {
                 if (old.some(m => m.id === (payload.new as CommunityChatMessage).id)) return old;
                 return [...old, payload.new as CommunityChatMessage];
@@ -194,12 +217,12 @@ export function useCommunityChat(communityId: string | undefined) {
             );
           } else if (payload.eventType === 'UPDATE') {
             queryClient.setQueryData<CommunityChatMessage[]>(
-              [QUERY_KEY, communityId],
+              messagesKey,
               (old = []) => old.map(m => m.id === (payload.new as CommunityChatMessage).id ? { ...m, ...payload.new as CommunityChatMessage } : m)
             );
           } else if (payload.eventType === 'DELETE') {
             queryClient.setQueryData<CommunityChatMessage[]>(
-              [QUERY_KEY, communityId],
+              messagesKey,
               (old = []) => old.filter(m => m.id !== (payload.old as any).id)
             );
           }
@@ -210,7 +233,7 @@ export function useCommunityChat(communityId: string | undefined) {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [communityId, queryClient]);
+  }, [communityId, queryClient, messagesKey]);
 
   // Send message
   const sendMessage = useCallback(async (
@@ -245,7 +268,9 @@ export function useCommunityChat(communityId: string | undefined) {
 
     if (error) {
       console.error('[CommunityChat] Send error:', error);
-      toast.error('Failed to send message');
+      // Slow mode, mute and revoked send rights all land here as raised
+      // conditions -- say which one rather than a generic failure.
+      toast.error(adminErrorMessage(error, 'Failed to send message'));
       throw error;
     }
   }, [communityId, walletAddress]);
@@ -262,19 +287,25 @@ export function useCommunityChat(communityId: string | undefined) {
     reactions[emoji] = [...addresses, walletAddress.toLowerCase()];
 
     // Optimistic update
+    const prev = queryClient.getQueryData<CommunityChatMessage[]>(messagesKey);
     queryClient.setQueryData<CommunityChatMessage[]>(
-      [QUERY_KEY, communityId],
+      messagesKey,
       (old = []) => old.map(m => m.id === messageId ? { ...m, reactions } : m)
     );
 
-    await withWalletHeader(
+    const { error } = await withWalletHeader(
       supabase
         .from('community_chat_messages')
         .update({ reactions } as any)
         .eq('id', messageId),
       walletAddress
     );
-  }, [rawMessages, walletAddress, communityId, queryClient]);
+
+    if (error) {
+      toast.error(adminErrorMessage(error, 'Failed to react'));
+      if (prev) queryClient.setQueryData(messagesKey, prev);
+    }
+  }, [rawMessages, walletAddress, communityId, queryClient]); // messagesKey derives from these
 
   // Remove reaction
   const removeReaction = useCallback(async (messageId: string, emoji: string) => {
@@ -288,19 +319,25 @@ export function useCommunityChat(communityId: string | undefined) {
     if (reactions[emoji].length === 0) delete reactions[emoji];
 
     // Optimistic update
+    const prev = queryClient.getQueryData<CommunityChatMessage[]>(messagesKey);
     queryClient.setQueryData<CommunityChatMessage[]>(
-      [QUERY_KEY, communityId],
+      messagesKey,
       (old = []) => old.map(m => m.id === messageId ? { ...m, reactions } : m)
     );
 
-    await withWalletHeader(
+    const { error } = await withWalletHeader(
       supabase
         .from('community_chat_messages')
         .update({ reactions } as any)
         .eq('id', messageId),
       walletAddress
     );
-  }, [rawMessages, walletAddress, communityId, queryClient]);
+
+    if (error) {
+      toast.error(adminErrorMessage(error, 'Failed to remove reaction'));
+      if (prev) queryClient.setQueryData(messagesKey, prev);
+    }
+  }, [rawMessages, walletAddress, communityId, queryClient]); // messagesKey derives from these
 
   // Edit message
   const editMessage = useCallback(async (messageId: string, newContent: string) => {
@@ -310,7 +347,7 @@ export function useCommunityChat(communityId: string | undefined) {
 
     // Optimistic update
     queryClient.setQueryData<CommunityChatMessage[]>(
-      [QUERY_KEY, communityId],
+      messagesKey,
       (old = []) => old.map(m => m.id === messageId ? { ...m, content: trimmed } : m)
     );
 
@@ -326,35 +363,64 @@ export function useCommunityChat(communityId: string | undefined) {
     if (error) {
       console.error('[CommunityChat] Edit error:', error);
       toast.error('Failed to edit message');
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEY, communityId] });
+      queryClient.invalidateQueries({ queryKey: messagesKey });
     }
   }, [walletAddress, communityId, queryClient]);
 
-  // Delete message (own message, or moderator deleting any message)
+  // Delete message (own message, or a moderator deleting anyone's). Goes through
+  // the RPC so a refusal actually raises instead of matching zero rows.
   const deleteMessage = useCallback(async (messageId: string) => {
     if (!walletAddress || !communityId) return;
-    const prev = queryClient.getQueryData<CommunityChatMessage[]>([QUERY_KEY, communityId]);
+    const prev = queryClient.getQueryData<CommunityChatMessage[]>(messagesKey);
     queryClient.setQueryData<CommunityChatMessage[]>(
-      [QUERY_KEY, communityId],
+      messagesKey,
       (old = []) => old.filter(m => m.id !== messageId)
     );
     const { error } = await withWalletHeader(
-      supabase.from('community_chat_messages').delete().eq('id', messageId),
+      (supabase as any).rpc('community_delete_message', { _message_id: messageId }),
       walletAddress
     );
     if (error) {
       console.error('[CommunityChat] Delete error:', error);
-      toast.error('Failed to delete message');
-      if (prev) queryClient.setQueryData([QUERY_KEY, communityId], prev);
+      toast.error(adminErrorMessage(error, 'Failed to delete message'));
+      if (prev) queryClient.setQueryData(messagesKey, prev);
     }
   }, [walletAddress, communityId, queryClient]);
 
+  // Pin / unpin. Only ever reaches the server for someone holding pin_messages.
+  const setPinned = useCallback(async (messageId: string, pinned: boolean) => {
+    if (!walletAddress || !communityId) return;
+    const { error } = await withWalletHeader(
+      (supabase as any).rpc('community_pin_message', { _message_id: messageId, _pinned: pinned }),
+      walletAddress
+    );
+    if (error) {
+      toast.error(adminErrorMessage(error, pinned ? 'Failed to pin message' : 'Failed to unpin message'));
+      return;
+    }
+    queryClient.setQueryData<CommunityChatMessage[]>(
+      messagesKey,
+      (old = []) => old.map(m => m.id === messageId
+        ? { ...m, pinned_at: pinned ? new Date().toISOString() : null, pinned_by: pinned ? walletAddress.toLowerCase() : null }
+        : m),
+    );
+    toast.success(pinned ? 'Message pinned' : 'Message unpinned');
+  }, [walletAddress, communityId, queryClient]);
+
+  // Newest pin wins, matching the single-pin banner the chat renders.
+  const pinnedMessage = useMemo(
+    () => messages.filter(m => m.pinned_at).sort((a, b) => (b.pinned_at ?? '').localeCompare(a.pinned_at ?? ''))[0] ?? null,
+    [messages],
+  );
+
   return {
     messages,
+    pinnedMessage,
     isLoading,
     sendMessage,
     editMessage,
     deleteMessage,
+    setPinned,
     addReaction,
     removeReaction,
   };
