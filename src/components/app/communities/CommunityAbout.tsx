@@ -8,10 +8,15 @@ import { DescriptionWithLinks } from './DescriptionWithLinks';
 
 interface CommunityAboutProps {
   community: Community;
-  isOwner?: boolean;
+  /**
+   * Owner, or an admin holding change_info. The privacy switch below is a
+   * governance setting, not a cosmetic edit, so a plain member granted the
+   * "change info" member right must not see it — the RPC refuses it too.
+   */
+  canManageSettings?: boolean;
 }
 
-export function CommunityAbout({ community, isOwner = false }: CommunityAboutProps) {
+export function CommunityAbout({ community, canManageSettings: canEdit = false }: CommunityAboutProps) {
   const { t } = useTranslation();
   const rules = Array.isArray(community.rules) ? community.rules : [];
   const updateMutation = useUpdateCommunity();
@@ -36,7 +41,7 @@ export function CommunityAbout({ community, isOwner = false }: CommunityAboutPro
         </div>
       )}
 
-      {isOwner && (
+      {canEdit && (
         <div className="rounded-xl border border-white/10 bg-white/[0.04] p-3.5 space-y-3">
           <label className={`flex items-center justify-between gap-3 ${updateMutation.isPending ? '' : 'cursor-pointer'}`}>
             <div className="flex items-center gap-2 min-w-0">
@@ -96,7 +101,7 @@ export function CommunityAbout({ community, isOwner = false }: CommunityAboutPro
       )}
 
       <div className="space-y-2">
-        {!isOwner && (
+        {!canEdit && (
           <div className="flex items-center gap-2 text-zinc-400 text-sm">
             {community.is_private ? (
               <><Lock className="w-4 h-4" /> {t('communities.privateLabel')}</>
