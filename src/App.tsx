@@ -2,7 +2,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { MutationCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthenticationError } from "@/lib/api/dehub";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { OptimisticPostsProvider } from "@/hooks/use-optimistic-posts";
 // Direct import (not the modals barrel) so the barrel's other modals stay out
 // of the entry bundle.
@@ -13,7 +13,7 @@ import { usePreloadIcons } from "@/hooks/use-preload-icons";
 import { prefetchUnifiedFeed } from "@/hooks/use-unified-feed";
 import { restoreQueryCache, startQueryPersist } from "@/lib/query-persist";
 import { AppLayout } from "./components/app/AppLayout";
-import React, { Suspense, useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState, type ReactNode } from "react";
 import { I18nextProvider } from "react-i18next";
 import i18nInstance from "@/i18n";
 import { HelmetProvider } from "react-helmet-async";
@@ -545,6 +545,22 @@ const WalletLoader = () => {
   return <DeHubPageLoader fullScreen />;
 };
 
+/**
+ * Last-resort boundary for anything the contained per-surface boundaries don't
+ * cover — the providers, AppLayout's own chrome, and the standalone routes that
+ * render outside it (/premium, /pricing, /connect, NotFound, …).
+ *
+ * It has to live INSIDE BrowserRouter for the resetKey: catching unmounts the
+ * whole <Routes> subtree, so nothing below can navigate, and without a reset on
+ * the route the only ways out were a hard refresh or the fallback's Go Home
+ * button. With it, Back/Forward recovers too, and the boundary in main.tsx goes
+ * back to being what it should be — the net for a failure during boot itself.
+ */
+function RouteErrorBoundary({ children }: { children: ReactNode }) {
+  const location = useLocation();
+  return <ErrorBoundary resetKey={location.pathname}>{children}</ErrorBoundary>;
+}
+
 const App = () => (
   <HelmetProvider>
     <I18nextProvider i18n={i18nInstance}>
@@ -566,6 +582,7 @@ const App = () => (
            * All routes (including `/`) go through WalletProviders; the redirect
            * from `/` to `/app` happens inside AppContent's <Routes>.
            */}
+          <RouteErrorBoundary>
           <Routes>
             {/*
              * Referral lander — a new user's first touch of DeHub. Mounted
@@ -600,6 +617,7 @@ const App = () => (
               }
             />
           </Routes>
+          </RouteErrorBoundary>
         </BrowserRouter>
       </QueryClientProvider>
     </I18nextProvider>
