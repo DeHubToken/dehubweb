@@ -26,7 +26,7 @@ import type { ReactionData } from '../chat/ChatMessage';
 import { useBuyAlerts, type BuyAlertMessage } from '@/hooks/use-buy-alerts';
 import { BuyAlertCard } from '../chat/BuyAlertCard';
 import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
-import { useAssistantReplies, useAssistantReplyEngine, type AssistantReply } from '@/hooks/use-assistant-replies';
+import { isAssistantAddress } from '@/lib/assistant';
 import { Sparkles } from 'lucide-react';
 import assistantAvatar from '@/assets/ai-assistant-avatar.png';
 
@@ -132,23 +132,17 @@ export function SidebarChat() {
   const buyAlerts = useBuyAlerts();
   const { isHidden: buyBotHidden, hide: hideBuyBot } = useBuyBotHidden();
 
-  // Local-only @assistant replies (shared singleton — same as PublicChat)
-  useAssistantReplyEngine(messages);
-  const assistantReplies = useAssistantReplies();
-
-  // Merge livechat messages + buy alerts + assistant replies
+  // Merge livechat messages + buy alerts. Assistant replies are real chat
+  // messages from the API now, so they already arrive inside `messages`.
   type MergedItem =
     | { type: 'message'; data: typeof messages[0] }
-    | { type: 'buy_alert'; data: BuyAlertMessage }
-    | { type: 'assistant'; data: AssistantReply };
+    | { type: 'buy_alert'; data: BuyAlertMessage };
   const mergedItems: MergedItem[] = (() => {
     const items: MergedItem[] = [
       ...messages.map((m) => ({ type: 'message' as const, data: m })),
       ...buyAlerts.map((a) => ({ type: 'buy_alert' as const, data: a })),
-      ...assistantReplies.map((a) => ({ type: 'assistant' as const, data: a })),
     ];
-    const tsOf = (it: MergedItem) =>
-      it.type === 'assistant' ? it.data.timestamp.getTime() : new Date(it.data.created_at).getTime();
+    const tsOf = (it: MergedItem) => new Date(it.data.created_at).getTime();
     items.sort((a, b) => tsOf(a) - tsOf(b));
     return items;
   })();
@@ -332,11 +326,12 @@ export function SidebarChat() {
                   />
                 );
               }
-              if (item.type === 'assistant') {
+              if (isAssistantAddress(item.data.sender_address)) {
                 const r = item.data;
                 return (
                   <div
-                    key={`assistant-${r.id}`}
+                    key={r.id}
+                    data-message-id={r.id}
                     className="group relative"
                     style={{ paddingLeft: '10px', paddingRight: '10px' }}
                   >
@@ -348,10 +343,10 @@ export function SidebarChat() {
                         </AvatarFallback>
                       </Avatar>
                       <div className="min-w-0 flex-1">
-                        {r.replyToName && (
+                        {r.reply_to && (
                           <div className="flex items-center gap-1 text-[10px] text-zinc-500 mb-0.5">
                             <CornerDownRight className="w-2.5 h-2.5" />
-                            <span className="font-medium">{r.replyToName}</span>
+                            <span className="font-medium">{r.reply_to.sender_name}</span>
                           </div>
                         )}
                         <span className="inline-flex items-baseline gap-1.5">
@@ -359,7 +354,7 @@ export function SidebarChat() {
                           <span className="text-[8px] uppercase tracking-wide px-1 py-px rounded bg-primary/20 text-primary border border-primary/30">
                             AI
                           </span>
-                          <span className="text-zinc-600 text-[10px]">{formatTimeAgo(r.timestamp.toISOString())}</span>
+                          <span className="text-zinc-600 text-[10px]">{formatTimeAgo(r.created_at)}</span>
                         </span>
                         <p className="text-xs text-zinc-300 break-words whitespace-pre-wrap">{r.content}</p>
                       </div>

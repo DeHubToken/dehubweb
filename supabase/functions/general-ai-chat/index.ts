@@ -1,6 +1,8 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.89.0";
 import { rateLimitByIp } from "../_shared/auth.ts";
+import { agentConfigured, runAgentLoop, type AgentSurface } from "../_shared/assistant-agent.ts";
+import { streamAgentLoop, teeStreamText } from "../_shared/assistant-agent-stream.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -25,6 +27,42 @@ interface PostContext {
   activeImageIndex?: number;
   videoUrl?: string;
 }
+
+/**
+ * Appended to the system prompt whenever the tool loop is running.
+ *
+ * The tools are the difference between guessing and knowing, so the rules that
+ * matter most are: look it up rather than assume, and say plainly when a lookup
+ * came back empty instead of inventing a plausible number.
+ */
+const TOOL_USE_PROMPT = `
+
+## YOUR TOOLS — USE THEM
+You are connected live to DeHub's database. You are not working from memory.
+
+- Any question about a specific person, post, ranking, balance or platform number: LOOK IT UP FIRST. Never estimate, never guess, never reuse a number from earlier in the conversation if it might have changed.
+- You can call several tools at once, and you can call more after seeing results. If an answer needs three lookups, do three lookups.
+- If a lookup returns found:false, or private:true, or an error, SAY SO plainly. Do not fill the gap with a plausible-sounding answer. "I couldn't find a user called @x" is a good answer; a made-up profile is not.
+- Personal financial and account data tools only ever return the data of the person you are talking to. If someone asks you for another user's private information, tell them you can only see what is public on that person's profile.
+- Cite real numbers when you have them. "You are up 340 followers this month" beats "you are growing nicely".
+- Only use web_search for things outside DeHub. Everything about DeHub itself has a real tool.`;
+
+/**
+ * Prepended for the in-chat bot. A public room is a different medium from the
+ * assistant page: short, plain, one answer, no formatting the bubbles cannot
+ * render.
+ */
+const CHAT_SURFACE_PROMPT = (maxChars: number) => `You are @assistant, DeHub's AI, replying inside the public global chat room.
+
+## HOW TO REPLY IN CHAT
+- ONE short message, hard limit ${maxChars} characters. Shorter is better.
+- No markdown at all. No headers, no bold, no bullet lists, no [text](url) links — paste raw URLs.
+- Answer the actual question first. No preamble, no "great question", no sign-off.
+- Everyone in the room can read this. Never repeat someone's private data, even if they ask you to.
+- If someone is complaining, acknowledge it in a few words and give the concrete fix or next step. Do not be defensive about DeHub.
+- If you genuinely cannot help, say so in one sentence and point them somewhere that can.
+
+`;
 
 const PERSONALITY_STYLES: Record<string, string> = {
   'normal': '',
@@ -776,17 +814,32 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  const limited = await rateLimitByIp(req, 'general-ai-chat', { limit: 80, windowMs: 60 * 60 * 1000 });
-  if (limited) return limited;
+  // The @assistant chat bot calls this from the API server, so every request
+  // shares one IP and would trip the per-IP limit within minutes. It carries
+  // the service secret and does its own per-user and room-wide throttling, so
+  // it is exempt here.
+  const serviceSecret = Deno.env.get('ASSISTANT_SERVICE_SECRET');
+  const isServiceCall = !!serviceSecret && req.headers.get('x-assistant-secret') === serviceSecret;
+
+  if (!isServiceCall) {
+    const limited = await rateLimitByIp(req, 'general-ai-chat', { limit: 80, windowMs: 60 * 60 * 1000 });
+    if (limited) return limited;
+  }
 
   try {
-    const { messages, style = 'normal', postContext, model = 'auto', isAuthenticated = false, userLanguage, userContext, dehubToken, stream: streamRequested = false } = await req.json() as {
-      messages: Message[]; 
+    const { messages, style = 'normal', postContext, model = 'auto', isAuthenticated = false, userLanguage, userContext, dehubToken, stream: streamRequested = false, surface: requestedSurface = 'assistant', callerAddress, maxReplyChars } = await req.json() as {
+      messages: Message[];
       style?: string;
       postContext?: PostContext;
       model?: string;
       isAuthenticated?: boolean;
       userLanguage?: string;
+      /** Which product surface is asking — decides tool scope and answer length. */
+      surface?: AgentSurface;
+      /** Wallet of the asking user. Set server-side for the chat bot. */
+      callerAddress?: string;
+      /** Hard cap for the chat bot, whose bubbles are capped at 500 chars. */
+      maxReplyChars?: number;
       userContext?: {
         username?: string;
         displayName?: string;
@@ -1278,7 +1331,119 @@ IMPORTANT FORMATTING RULES:
     const apiMessages: any[] = [{ role: 'system', content: systemPrompt }];
     const hasImage = postContext?.imageUrl && postContext?.type === 'image';
     const hasVideo = !!(postContext?.videoUrl && postContext?.type === 'video');
-    
+
+    // ── Tool-calling agent ──────────────────────────────────────────
+    // The preferred path. The model gets DeHub's tool catalog and decides for
+    // itself what to look up, instead of relying on the keyword pre-fetch above
+    // to have guessed right. Everything below this block stays as the fallback
+    // for attachments and any failure in the loop.
+    const surface: AgentSurface = requestedSurface === 'chat' ? 'chat' : 'assistant';
+    const agentEligible = agentConfigured() && !hasImage && !hasVideo;
+
+    if (agentEligible) {
+      const agentModel =
+        surface === 'chat'
+          ? 'google/gemini-2.5-flash'
+          : isAutoMode
+            ? 'google/gemini-2.5-pro'
+            : effectiveModel === 'gpt-5-mini'
+              ? 'openai/gpt-5-mini'
+              : effectiveModel === 'gemini-2.5-pro'
+                ? 'google/gemini-2.5-pro'
+                : 'google/gemini-2.5-flash';
+
+      const caller = callerAddress || userContext?.walletAddress || null;
+      const agentPrompt = `${surface === 'chat' ? CHAT_SURFACE_PROMPT(maxReplyChars ?? 460) : ''}${systemPrompt}${TOOL_USE_PROMPT}`;
+      const agentMessages = messages.map((m) => ({
+        role: m.role,
+        content: typeof m.content === 'string'
+          ? m.content
+          : (m.content?.find((c) => c.type === 'text')?.text ?? ''),
+      }));
+
+      // Streaming path — the Assistant page. Tool rounds stream too, so a
+      // simple question is no slower than it was before the agent existed.
+      if (streamRequested) {
+        console.log(`[Agent] streaming ${surface} with ${agentModel}`);
+        const agentStream = streamAgentLoop({
+          messages: agentMessages,
+          systemPrompt: agentPrompt,
+          surface,
+          caller,
+          model: agentModel,
+          lovableApiKey,
+          perplexityKey: perplexityKey || undefined,
+        });
+
+        const withMemory = caller
+          ? teeStreamText(agentStream, (text) => {
+              const userTexts = messages
+                .filter((m) => m.role === 'user')
+                .map((m) => (typeof m.content === 'string' ? m.content : ''))
+                .filter(Boolean);
+              if (userTexts.length >= 2) {
+                EdgeRuntime.waitUntil(extractAndSaveMemories(caller, userTexts, text));
+              }
+            })
+          : agentStream;
+
+        return new Response(withMemory, {
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'text/event-stream',
+            'Cache-Control': 'no-cache',
+            Connection: 'keep-alive',
+          },
+        });
+      }
+
+      try {
+        const started = Date.now();
+        const agentResult = await runAgentLoop({
+          messages: agentMessages,
+          systemPrompt: agentPrompt,
+          surface,
+          caller,
+          model: agentModel,
+          lovableApiKey,
+          perplexityKey: perplexityKey || undefined,
+        });
+
+        if (agentResult.text) {
+          console.log(
+            `[Agent] ${surface} answered in ${Date.now() - started}ms | rounds=${agentResult.rounds} | tools=${agentResult.trace.map((t) => t.tool).join(',') || 'none'}`,
+          );
+
+          // Memory extraction is best-effort and must not delay the reply.
+          if (surface === 'assistant' && caller) {
+            const userTexts = messages
+              .filter((m) => m.role === 'user')
+              .map((m) => (typeof m.content === 'string' ? m.content : ''))
+              .filter(Boolean);
+            EdgeRuntime.waitUntil(extractAndSaveMemories(caller, userTexts, agentResult.text));
+          }
+
+          return new Response(
+            JSON.stringify({
+              response: agentResult.text,
+              modelUsed: agentResult.model,
+              modelTier: surface === 'chat' ? 'chat' : 'agent',
+              modelReason: agentResult.trace.length
+                ? `Used ${agentResult.trace.length} tool${agentResult.trace.length === 1 ? '' : 's'}`
+                : 'Answered directly',
+              toolTrace: agentResult.trace,
+              agentRounds: agentResult.rounds,
+            }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+          );
+        }
+        console.warn('[Agent] Returned empty text — falling back to single-shot');
+      } catch (agentError) {
+        console.error('[Agent] Loop failed, falling back to single-shot:', agentError);
+      }
+    }
+
+
     messages.forEach((msg, index) => {
       const isLastUser = msg.role === 'user' && index === messages.length - 1;
       if (isLastUser && (hasImage || hasVideo)) {
