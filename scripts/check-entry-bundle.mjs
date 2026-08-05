@@ -41,6 +41,14 @@ const HEAVY_MARKERS = [
   // name string that exists only inside the hls.js build itself.
   { lib: 'hls.js', marker: 'hlsMediaAttached' },
   { lib: 'recharts', marker: 'recharts_measurement_span' },
+  // three.js leaked in via WarLogo (Aug 2026): the War hologram mark was
+  // statically imported by DesktopSidebar + MobileHeader. Both only *render*
+  // it under the War theme, so it read as correctly gated — but a static
+  // import is a bundling decision, and it put vendor-three in the entry's
+  // eager modulepreload set for every visitor on every theme. Marker is a
+  // renderer error string; app code says `new THREE.WebGLRenderer(...)`,
+  // which compiles to a property access, never this literal.
+  { lib: 'three', marker: 'THREE.WebGLRenderer: WebGL' },
 ];
 
 const html = readFileSync(join(DIST, 'index.html'), 'utf8');

@@ -18,8 +18,22 @@ Avatar.displayName = AvatarPrimitive.Root.displayName;
 const AvatarImage = React.forwardRef<
   React.ElementRef<typeof AvatarPrimitive.Image>,
   React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
->(({ className, ...props }, ref) => (
-  <AvatarPrimitive.Image ref={ref} className={cn("aspect-square h-full w-full rounded-lg", className)} {...props} />
+>(({ className, loading, decoding, ...props }, ref) => (
+  <AvatarPrimitive.Image
+    ref={ref}
+    className={cn("aspect-square h-full w-full rounded-lg", className)}
+    /* Lazy + async by default. A signed-out load of dehub.io in Aug 2026 had
+       180 <img> elements, 73 of them offscreen AND eagerly fetched — mostly
+       avatars, because Radix forwards to a bare <img> whose default is
+       `loading="auto"`. Every one of those competes with the LCP element for
+       connections on the same origin. Defaults, not hard-codes: the header
+       avatar and anything else above the fold can still pass loading="eager",
+       and an in-viewport lazy image is fetched immediately anyway, so this is
+       inert for avatars that are actually visible. */
+    loading={loading ?? "lazy"}
+    decoding={decoding ?? "async"}
+    {...props}
+  />
 ));
 AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 

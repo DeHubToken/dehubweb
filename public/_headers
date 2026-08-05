@@ -22,6 +22,50 @@
 /dehub-header-logo.png
   Cache-Control: public, max-age=31536000, immutable
 
+# Same deal for the rest of the unhashed static art. Only /assets/* and the
+# header logo had a rule, so everything else in /public was served
+# `max-age=0, must-revalidate` and paid a revalidation round-trip on every
+# visit — measured live against dehub.io in Aug 2026 on /radio/*, /brand/*,
+# the icons and the loader GIF. None of these are content-hashed, so the
+# convention above applies: CHANGE THE FILENAME when the asset changes.
+/radio/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/brand/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/osaka/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/lovable-uploads/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Icons + install art. manifest.json deliberately stays short-lived: it is the
+# one file a PWA re-reads to notice icon/name changes.
+/favicon.ico
+  Cache-Control: public, max-age=604800
+
+/apple-touch-icon.png
+  Cache-Control: public, max-age=604800
+
+/dehub-icon.png
+  Cache-Control: public, max-age=604800
+
+/default-icon.png
+  Cache-Control: public, max-age=604800
+
+/default-icon-dark.png
+  Cache-Control: public, max-age=604800
+
+/og-image.png
+  Cache-Control: public, max-age=604800
+
+/dehub-loader.gif
+  Cache-Control: public, max-age=31536000, immutable
+
+/placeholder.svg
+  Cache-Control: public, max-age=31536000, immutable
+
 # The War theme's game runs in a sandboxed iframe WITHOUT allow-same-origin, so
 # the frame has an opaque origin. Its entry is a `<script type="module">`, and
 # module scripts are always fetched in CORS mode, so the request goes out with
