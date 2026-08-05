@@ -29,7 +29,14 @@ function ShortAvatar({ avatar, username }: { avatar?: string; username?: string 
   return (
     <div className="w-5 h-5 rounded-md bg-zinc-700 flex-shrink-0 overflow-hidden">
       {showImg ? (
-        <img src={avatar} alt="" className="w-full h-full object-cover" onError={() => setImgFailed(true)} />
+        <img
+          src={avatar}
+          alt=""
+          className="w-full h-full object-cover"
+          loading="lazy"
+          decoding="async"
+          onError={() => setImgFailed(true)}
+        />
       ) : (
         <span className="w-full h-full flex items-center justify-center text-white text-[8px] font-medium">
           {username?.[0]?.toUpperCase()}
@@ -105,6 +112,11 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                     src={short.thumbnail}
                     alt=""
                     className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
+                    /* The reel scrolls horizontally, so most of its tiles start
+                       outside the viewport — and every full-size thumbnail they
+                       pulled eagerly was competing with the LCP element. */
+                    loading="lazy"
+                    decoding="async"
                   />
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30" />

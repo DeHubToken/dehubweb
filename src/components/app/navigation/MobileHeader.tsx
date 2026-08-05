@@ -14,7 +14,7 @@ import { useCallback, useEffect, useRef, useState, memo } from 'react';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useAppTheme } from '@/contexts/ThemeContext';
-import { WarLogo } from '@/components/app/war/WarLogo';
+import { WarLogo } from '@/components/app/war/WarLogoLazy';
 
 const HeaderLogo = memo(function HeaderLogo({ onClick }: { onClick: (e: React.MouseEvent) => void }) {
   const { theme } = useAppTheme();

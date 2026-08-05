@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { PenSquare, Sparkles, LogIn, Menu } from 'lucide-react';
 import { NAV_ITEMS } from '@/constants/app.constants';
 import { SidebarNavItem } from './SidebarNavItem';
-import { WarLogo } from '@/components/app/war/WarLogo';
+import { WarLogo } from '@/components/app/war/WarLogoLazy';
 import { CoinBalanceMenu } from '../CoinBalanceMenu';
 import { AuthPrompt } from '../AuthPrompt';
 import { useAuth } from '@/contexts/AuthContext';
@@ -18,7 +18,11 @@ import { useCustomUnreadCount } from '@/hooks/use-custom-notifications';
 import { useCommunityActivityUnreadCount } from '@/hooks/use-community-activity-unread';
 import { useTotalUnreadCount } from '@/hooks/use-messages';
 import dehubLogoCompact from '@/assets/dehub-logo-compact.png';
-const dehubMarkBlack = '/brand/mark-black.png';
+// Derived from public/brand/mark-black.png, which stays full-resolution because
+// the docs Brand Assets page serves it as a download. The rail renders the mark
+// at 22x22, so pointing at the download asset shipped a 1920x1645 / 146 KB PNG
+// into a 22px box — and, being outside /assets/, without a long cache header.
+import dehubMarkBlack from '@/assets/dehub-mark-black.png';
 import { cn } from '@/lib/utils';
 import { preloadRoute } from '@/lib/route-preload';
 import { buildAvatarUrl } from '@/lib/media-url';
