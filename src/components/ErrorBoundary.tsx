@@ -15,7 +15,52 @@
 import { Component, type ReactNode, type ErrorInfo } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { isChunkLoadError, shouldReloadForChunkError } from '@/lib/lazy-with-retry';
 import assistantAvatar from '@/assets/ai-assistant-avatar.png';
+
+/**
+ * Signatures already reported this page load. Every page in the app stays
+ * mounted forever and they all re-render together on login/theme changes, so a
+ * single fault can be caught over and over — without this, one broken surface
+ * would write a row per re-render.
+ */
+const reportedErrors = new Set<string>();
+
+/**
+ * Ship the caught error to `client_error_logs`. Until now componentDidCatch
+ * only wrote to the console, so nothing about a real user's crash left their
+ * machine and there was no way to tell an occasional stale-deploy chunk miss
+ * from a genuine bug in page code.
+ *
+ * Fire-and-forget, and the supabase client is imported lazily so the error path
+ * costs the entry bundle nothing.
+ */
+function reportError(error: Error, errorInfo: ErrorInfo, label?: string): void {
+  if (!import.meta.env.PROD) return;
+  const signature = `${label ?? ''}:${error.name}:${error.message}`;
+  if (reportedErrors.has(signature)) return;
+  reportedErrors.add(signature);
+
+  import('@/integrations/supabase/client')
+    .then(({ supabase }) =>
+      supabase.from('client_error_logs').insert({
+        level: 'error',
+        message: `${error.name || 'Error'}: ${error.message || 'Unknown error'}`.slice(0, 500),
+        component: label ? `ErrorBoundary/${label}` : 'ErrorBoundary',
+        stack_trace: error.stack?.slice(0, 2000) ?? null,
+        metadata: {
+          path: window.location.pathname,
+          isChunkError: isChunkLoadError(error),
+          componentStack: errorInfo.componentStack?.slice(0, 1000),
+          userAgent: navigator.userAgent,
+        },
+        user_address: null,
+      }),
+    )
+    .catch(() => {
+      // Diagnostics must never be able to deepen an existing failure.
+    });
+}
 
 interface ErrorBoundaryProps {
   children: ReactNode;
@@ -71,24 +116,15 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
 
-    // Auto-reload on chunk load failures (stale deploys)
-    const isChunkError =
-      error.message?.includes('Loading chunk') ||
-      error.message?.includes('Failed to fetch dynamically imported module') ||
-      error.message?.includes('Importing a module script failed') ||
-      error.name === 'ChunkLoadError';
-
-    if (isChunkError) {
-      const alreadyReloaded = sessionStorage.getItem('chunk-reload-attempted');
-      if (!alreadyReloaded) {
-        sessionStorage.setItem('chunk-reload-attempted', 'true');
-        window.location.reload();
-        return;
-      }
-      // Already reloaded once — clear flag and show error screen
-      sessionStorage.removeItem('chunk-reload-attempted');
+    // Auto-reload on chunk load failures (stale deploys). Detection and the
+    // reload cooldown are shared with lazyWithRetry and main.tsx's
+    // vite:preloadError handler — see lib/lazy-with-retry.
+    if (isChunkLoadError(error) && shouldReloadForChunkError()) {
+      window.location.reload();
+      return;
     }
 
+    reportError(error, errorInfo, this.props.label);
     this.props.onError?.(error, errorInfo);
   }
 

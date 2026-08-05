@@ -1294,8 +1294,42 @@ async function handleRequest(request, env) {
     });
   }
 
+  // Build output must 404 when it is genuinely missing. `not_found_handling:
+  // "single-page-application"` (wrangler.jsonc) answers a chunk from a
+  // superseded deploy with index.html at 200 — and the assets layer stamps it
+  // `immutable, max-age=31536000`, because as far as it knows it just served a
+  // hashed asset. Three things go wrong downstream, none of which look like a
+  // missing file:
+  //
+  //   - The browser rejects the HTML at the module MIME check, so a routine
+  //     stale-deploy miss surfaces as "Failed to fetch dynamically imported
+  //     module" — an app crash, not a 404.
+  //   - That HTML is then cached under the chunk's URL for a year, so retrying
+  //     the import re-reads it and cannot recover.
+  //   - sw.js stores it too (CacheFirst treats 200 as truth), which outlives
+  //     the HTTP cache entirely.
+  //
+  // A hard 404 keeps every one of those caches clean and lets the app's
+  // stale-deploy reload path (lib/lazy-with-retry) do the job it was written
+  // for. Nothing under /assets/ is ever an HTML document, so content-type is a
+  // safe tell that the SPA fallback answered instead of a real file.
+  if (pathname.startsWith('/assets/')) {
+    const resp = await guardNext();
+    const contentType = (resp.headers.get('Content-Type') || '').toLowerCase();
+    if (contentType.startsWith('text/html')) {
+      return new Response('Not Found', {
+        status: 404,
+        headers: {
+          'Content-Type': 'text/plain; charset=utf-8',
+          'Cache-Control': 'no-store',
+        },
+      });
+    }
+    return resp;
+  }
+
   // Skip static assets immediately
-  if (pathname.startsWith('/assets/') || pathname.startsWith('/_') ||
+  if (pathname.startsWith('/_') ||
       (pathname.includes('.') && !pathname.includes('/post/'))) {
     return guardNext();
   }
