@@ -16,18 +16,18 @@ import { getCountryFlag, getPrimaryTags, formatBitrate } from '@/lib/api/radio-b
 // Radio station logos — served from /public/radio/ so they are NOT bundled into JS
 // and only fetched by the browser when an <img> renders them (lazy by default).
 const CUSTOM_LOGOS: Record<string, string> = {
-  'reyfm': '/radio/reyfm-logo.png',
-  'rey fm': '/radio/reyfm-logo.png',
-  'lofi 24': '/radio/lofi247-logo.png',
-  'lofi girl': '/radio/lofi247-logo.png',
-  'lofi hip hop': '/radio/lofi247-logo.png',
-  'moe wifi': '/radio/moewifi-logo.png',
-  'moewifi': '/radio/moewifi-logo.png',
-  'moe lofi': '/radio/moewifi-logo.png',
-  'nia radio': '/radio/nia-lofi-logo.png',
-  'nia lofi': '/radio/nia-lofi-logo.png',
-  'nightwave plaza': '/radio/nightwave-plaza-logo.png',
-  'nightwave': '/radio/nightwave-plaza-logo.png',
+  'reyfm': '/radio/reyfm-logo.jpg',
+  'rey fm': '/radio/reyfm-logo.jpg',
+  'lofi 24': '/radio/lofi247-logo.jpg',
+  'lofi girl': '/radio/lofi247-logo.jpg',
+  'lofi hip hop': '/radio/lofi247-logo.jpg',
+  'moe wifi': '/radio/moewifi-logo.jpg',
+  'moewifi': '/radio/moewifi-logo.jpg',
+  'moe lofi': '/radio/moewifi-logo.jpg',
+  'nia radio': '/radio/nia-lofi-logo.jpg',
+  'nia lofi': '/radio/nia-lofi-logo.jpg',
+  'nightwave plaza': '/radio/nightwave-plaza-logo.jpg',
+  'nightwave': '/radio/nightwave-plaza-logo.jpg',
 };
 
 function getCustomLogo(stationName: string): string | null {
