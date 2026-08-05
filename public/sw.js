@@ -24,7 +24,10 @@
  * Bump VERSION to invalidate every cache on the next activate.
  */
 
-const VERSION = 'dehub-sw-v2';
+// v3 flushes asset entries poisoned by the bug fixed below: a chunk from a
+// superseded deploy was answered by the SPA catch-all with index.html at 200,
+// and CacheFirst stored that HTML under the chunk's URL permanently.
+const VERSION = 'dehub-sw-v3';
 const SHELL_CACHE = `${VERSION}-shell`;
 const ASSET_CACHE = `${VERSION}-assets`;
 const MEDIA_CACHE = `${VERSION}-media`;
@@ -67,7 +70,12 @@ async function trimCache(name, max) {
   }
 }
 
-async function cacheFirst(req, cacheName, maxEntries) {
+/**
+ * `isCacheable` is an extra guard applied on top of the status check, for
+ * responses that are "successful" but still wrong to store. See the /assets/
+ * branch: a 200 is not proof the thing we asked for exists.
+ */
+async function cacheFirst(req, cacheName, maxEntries, isCacheable) {
   const cache = await caches.open(cacheName);
   const hit = await cache.match(req);
   if (hit) return hit;
@@ -75,7 +83,7 @@ async function cacheFirst(req, cacheName, maxEntries) {
     const res = await fetch(req);
     // Cache both CORS-ok and opaque (no-cors <img>) responses. Opaque is fine to
     // store & replay for image/poster paints.
-    if (res && (res.ok || res.type === 'opaque')) {
+    if (res && (res.ok || res.type === 'opaque') && (!isCacheable || isCacheable(res))) {
       cache.put(req, res.clone());
       if (maxEntries) trimCache(cacheName, maxEntries);
     }
@@ -83,6 +91,19 @@ async function cacheFirst(req, cacheName, maxEntries) {
   } catch (err) {
     return hit || Response.error();
   }
+}
+
+/**
+ * Nothing under /assets/ is ever an HTML document — it holds content-hashed JS,
+ * CSS, fonts and images. An HTML body there means the request missed and the
+ * SPA catch-all answered in its place, which the origin serves as 200 with
+ * `immutable, max-age=31536000`. Storing that is how a single stale-deploy miss
+ * became permanent: CacheFirst never revalidates, so if a later build re-emits
+ * the same content hash (a revert does exactly that) the shell would be served
+ * for a chunk that exists, and no amount of refreshing would fix it.
+ */
+function isRealAsset(res) {
+  return !(res.headers.get('Content-Type') || '').toLowerCase().startsWith('text/html');
 }
 
 self.addEventListener('fetch', (event) => {
@@ -112,9 +133,9 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // 2. Hashed build assets → CacheFirst.
+  // 2. Hashed build assets → CacheFirst, never storing an SPA-fallback shell.
   if (url.origin === self.location.origin && url.pathname.startsWith('/assets/')) {
-    event.respondWith(cacheFirst(req, ASSET_CACHE));
+    event.respondWith(cacheFirst(req, ASSET_CACHE, 0, isRealAsset));
     return;
   }
 
