@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Briefcase, Star, AlertTriangle, ExternalLink, Check, X } from 'lucide-react';
+import { ArrowLeft, Briefcase, Star, AlertTriangle, ExternalLink, Check, X, Pencil } from 'lucide-react';
 import {
   useWorkJob, useJobApplications, useJobSubmissions, useJobReviews,
   useApplyToJob, useAwardApplicant, useSubmitProof,
   useApproveSubmission, useRejectSubmission,
-  useLeaveReview, useOpenDispute, useMarkComplete,
+  useLeaveReview, useOpenDispute, useMarkComplete, isJobEditable,
 } from '@/features/work/hooks/use-work';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
@@ -59,17 +59,27 @@ export default function WorkJobDetailPage() {
 
       {/* Header */}
       <div className="bg-black/60 backdrop-blur-[24px] border border-white/10 rounded-2xl p-6 mb-4">
-        <div className="flex flex-wrap items-center gap-2 mb-3 text-xs">
-          <span className="px-2 py-0.5 rounded-md bg-white/10 text-white/80 inline-flex items-center gap-1">
-            <Briefcase className="w-3 h-3" /> {job.job_type}
-          </span>
-          {job.platform && <span className="px-2 py-0.5 rounded-md bg-white/5 text-white/60 uppercase">{job.platform}</span>}
-          <span className={`px-2 py-0.5 rounded-md ${
-            job.status === 'open' ? 'bg-emerald-500/20 text-emerald-300' :
-            job.status === 'disputed' ? 'bg-red-500/20 text-red-300' :
-            job.status === 'completed' ? 'bg-blue-500/20 text-blue-200' :
-            'bg-white/10 text-white/60'
-          }`}>{job.status}</span>
+        <div className="flex items-start justify-between gap-3 mb-3">
+          <div className="flex flex-wrap items-center gap-2 text-xs">
+            <span className="px-2 py-0.5 rounded-md bg-white/10 text-white/80 inline-flex items-center gap-1">
+              <Briefcase className="w-3 h-3" /> {job.job_type}
+            </span>
+            {job.platform && <span className="px-2 py-0.5 rounded-md bg-white/5 text-white/60 uppercase">{job.platform}</span>}
+            <span className={`px-2 py-0.5 rounded-md ${
+              job.status === 'open' ? 'bg-emerald-500/20 text-emerald-300' :
+              job.status === 'disputed' ? 'bg-red-500/20 text-red-300' :
+              job.status === 'completed' ? 'bg-blue-500/20 text-blue-200' :
+              'bg-white/10 text-white/60'
+            }`}>{job.status}</span>
+          </div>
+          {isPoster && isJobEditable(job) && (
+            <button
+              onClick={() => navigate(`/work/${job.id}/edit`)}
+              className="flex-shrink-0 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-white text-xs font-medium inline-flex items-center gap-1.5 transition-colors"
+            >
+              <Pencil className="w-3 h-3" /> Edit
+            </button>
+          )}
         </div>
         <h1 className="text-2xl font-bold text-white mb-2">{job.title}</h1>
         <p className="text-sm text-white/70 whitespace-pre-wrap mb-4">{job.description}</p>
