@@ -1,7 +1,7 @@
 import "./lib/canvas-polyfills"; // Must run before any canvas usage (Safari 15 compat)
 import { createRoot } from "react-dom/client";
 import { ErrorBoundary } from "./components/ErrorBoundary";
-import { clearChunkReloadFlag } from "./lib/lazy-with-retry";
+import { shouldReloadForChunkError } from "./lib/lazy-with-retry";
 import { registerServiceWorker } from "./lib/register-sw";
 import { installSupabaseInterceptor } from "./lib/supabase-interceptor";
 import "./lib/toast-i18n-interceptor";
@@ -62,7 +62,6 @@ import "./styles/jungle-frame.css";
 import "./styles/jungle-theme.css";
 import "./styles/jungle-coverage.css";
 
-clearChunkReloadFlag();
 installSupabaseInterceptor();
 
 // Mirror hosts (cosmic-echo-hero.lovable.app etc.) must never index as
@@ -81,15 +80,12 @@ if (dhHost !== "dehub.io" && dhHost !== "localhost" && dhHost !== "127.0.0.1") {
   dhRobots.setAttribute("content", "noindex, nofollow");
 }
 
-// Global handler for stale-deployment chunk failures.
+// Global handler for stale-deployment chunk failures. Shares the cooldown with
+// lazyWithRetry and the ErrorBoundary so the three paths can't reload over each
+// other — this one used to keep its own flag that was never cleared, so a
+// second stale deploy in the same session got no reload at all.
 window.addEventListener('vite:preloadError', () => {
-  const RELOAD_KEY = 'vite-preload-error-reload';
-  if (!sessionStorage.getItem(RELOAD_KEY)) {
-    sessionStorage.setItem(RELOAD_KEY, 'true');
-    window.location.reload();
-  } else {
-    sessionStorage.removeItem(RELOAD_KEY);
-  }
+  if (shouldReloadForChunkError()) window.location.reload();
 });
 
 createRoot(document.getElementById("root")!).render(
