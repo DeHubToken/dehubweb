@@ -571,6 +571,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     error: translateError,
     handleTranslate: handleVideoTranslate,
     handleShowOriginal: handleVideoShowOriginal,
+    isTooShort: nothingToTranslate,
   } = useTranslation(videoText);
 
   // Repost handler
@@ -1851,7 +1852,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
             tokenId={video.id}
             isAd={video.isAd}
             isAudio={video.isAudio}
-            translateControl={{
+            translateControl={nothingToTranslate ? undefined : {
               isTranslated: isVideoTranslated,
               isLoading: isTranslateLoading,
               error: translateError,

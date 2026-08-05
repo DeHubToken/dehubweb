@@ -17,15 +17,22 @@ const corsHeaders = {
 const translationCache = new Map<string, TranslateResponse>();
 const MAX_CACHE_SIZE = 500;
 
+// Key over the WHOLE text, never a prefix of it. Hashing only the first 200
+// characters made any two bodies that open the same way — templated AI-image
+// captions, reposted announcements, a shared boilerplate intro — collide in this
+// map, and the map is shared by every caller, so translating one post could hand
+// back somebody else's translation. Two independent hashes plus the length keep
+// accidental collisions negligible. A blank body also used to hash to 0 and put
+// every empty request in one bucket; those are rejected outright now.
 function getCacheKey(text: string, targetLang: string): string {
-  // Hash first 200 chars + target lang
-  const sample = text.slice(0, 200).trim();
-  let hash = 0;
-  for (let i = 0; i < sample.length; i++) {
-    hash = ((hash << 5) - hash) + sample.charCodeAt(i);
-    hash = hash & hash;
+  let h1 = 0;
+  let h2 = 5381;
+  for (let i = 0; i < text.length; i++) {
+    const char = text.charCodeAt(i);
+    h1 = (((h1 << 5) - h1) + char) | 0;
+    h2 = (((h2 << 5) + h2) ^ char) | 0;
   }
-  return `${hash.toString(36)}_${targetLang}`;
+  return `${(h1 >>> 0).toString(36)}_${(h2 >>> 0).toString(36)}_${text.length}_${targetLang}`;
 }
 
 interface TranslateRequest {
@@ -280,10 +287,21 @@ serve(async (req) => {
   try {
     const { text, targetLang, sourceLang }: TranslateRequest = await req.json();
 
-    if (!text || !targetLang) {
+    if (!text || !text.trim() || !targetLang) {
       return new Response(
         JSON.stringify({ error: 'Missing required fields: text, targetLang' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Emoji, digits and punctuation have nothing to translate. Sent upstream
+    // anyway, MyMemory answers a query like that out of its shared translation
+    // memory — an unrelated segment somebody else once submitted — and that came
+    // back looking like a translation of the caller's post.
+    if (!/\p{L}/u.test(text)) {
+      return new Response(
+        JSON.stringify({ translatedText: text }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 

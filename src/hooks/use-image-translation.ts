@@ -43,9 +43,10 @@ function resolveUserLanguage(): string {
 }
 
 function getCacheKey(imageUrl: string, targetLang: string): string {
-  // Use a hash-like approach for the URL to keep key short
-  const urlHash = imageUrl.slice(-50).replace(/[^a-zA-Z0-9]/g, '_');
-  return `${CACHE_PREFIX}${urlHash}:${targetLang}`;
+  // Whole URL. Keying on the last 50 characters collapsed any two images whose
+  // paths only differ earlier in the string into one entry, which served one
+  // post's extracted text as another's.
+  return `${CACHE_PREFIX}${imageUrl}:${targetLang}`;
 }
 
 function getFromSessionCache(key: string): TranslationResult | null {

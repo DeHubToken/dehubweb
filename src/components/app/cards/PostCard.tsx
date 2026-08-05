@@ -143,6 +143,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
     error: translateError,
     handleTranslate,
     handleShowOriginal,
+    isTooShort: nothingToTranslate,
   } = useTranslation(post.content);
 
   // Navigate to single post page when clicking non-interactive areas
@@ -441,7 +442,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           timestamp={post.createdAt}
           viewCount={post.views}
           tokenId={post.id}
-          translateControl={{
+          translateControl={nothingToTranslate ? undefined : {
             isTranslated,
             isLoading: isTranslateLoading,
             error: translateError,
