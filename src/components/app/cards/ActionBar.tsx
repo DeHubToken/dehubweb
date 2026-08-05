@@ -36,6 +36,11 @@ import { PostUtilityButtons } from './PostUtilityButtons';
 const SharePostToDmModal = lazy(() =>
   import('@/components/app/modals/SharePostToDmModal').then((m) => ({ default: m.SharePostToDmModal }))
 );
+// Only ever opened by the author of the post, so it stays out of the bundle
+// every card pays for.
+const ReactionInfoDrawer = lazy(() =>
+  import('./ReactionInfoDrawer').then((m) => ({ default: m.ReactionInfoDrawer }))
+);
 import { getVoteCache, setVoteCache, patchFeedCaches } from '@/lib/vote-cache';
 import { applyVoteStateToNFT } from '@/lib/engagement';
 import { trackPostLinkCopy } from '@/hooks/use-link-copy-count';
@@ -112,16 +117,17 @@ interface ActionBarProps {
   onTip?: () => void;
   /** Handler for see engagements action */
   onSeeEngagements?: () => void;
-  /** Handler for tapping the like count — opens the likers list. Omit to render
-   *  the count as plain text (e.g. surfaces with no comments sheet to open). */
-  onShowLikers?: () => void;
   /** Whether voting buttons should be disabled (e.g. mutation pending) */
   disabled?: boolean;
   /** Handler for share-as-image action (text posts only) */
   onShareAsImage?: () => Promise<void>;
   /** Numeric token ID for pin functionality */
   tokenId?: number;
-  /** Show pin button only for own posts */
+  /**
+   * Your own post. Shows the pin button, and puts the ⓘ in the reaction tray
+   * that opens the who-reacted-what breakdown — that list is the author's
+   * alone (the API enforces the same rule).
+   */
   isOwnPost?: boolean;
   /**
    * Listen for double-tap-to-like events for this post (default true).
@@ -199,7 +205,6 @@ export function ActionBar({
   tipCount,
   onTip,
   onSeeEngagements,
-  onShowLikers,
   onShareAsImage,
   disabled: externalDisabled = false,
   tokenId,
@@ -245,6 +250,7 @@ export function ActionBar({
     cachedVote?.reactionCounts ?? initialReactionCounts ?? {},
   );
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [reactionInfoOpen, setReactionInfoOpen] = useState(false);
   const [isSharingImage, setIsSharingImage] = useState(false);
   // Track when user voted locally so we don't let stale API refetches overwrite optimistic state
   const lastVoteTimeRef = useRef(cachedVote ? Date.now() : 0);
@@ -515,6 +521,11 @@ export function ActionBar({
   const numericPostId = postId ? parseInt(postId, 10) : NaN;
   const reactionsEnabled = !disableReactions && !hasExternalHandlers && !isNaN(numericPostId);
 
+  // The breakdown of who reacted what belongs to the author. The ⓘ only exists
+  // on your own posts; the API refuses the list to everyone else regardless.
+  const reactionInfoTokenId = tokenId ?? (isNaN(numericPostId) ? undefined : numericPostId);
+  const canViewReactionInfo = isOwnPost && reactionInfoTokenId !== undefined;
+
   const isTouchDevice = useIsTouchDevice();
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -780,10 +791,10 @@ export function ActionBar({
       </button>
 
       {/* Reactions — furthest right for easy thumb reach. Tap the thumb to
-          like/unlike, hold (or hover on desktop) to pick one of the nine. The
-          count beside it opens the likers list (it can't be nested inside the
-          vote button, so they're siblings in a wrapper that stays one flex
-          item). The wrapper is `relative` so the tray anchors to it. */}
+          like/unlike, hold (or hover on desktop) to pick one of the nine. On
+          your own posts the tray ends in an ⓘ that opens the breakdown of who
+          reacted what; the count itself is inert text, since who reacted is
+          not public. The wrapper is `relative` so the tray anchors to it. */}
       <span
         className={cn("relative flex items-center gap-0.5", isVoting && "opacity-50")}
         onMouseEnter={handleReactionAreaEnter}
@@ -795,6 +806,14 @@ export function ActionBar({
           onSelect={handleReaction}
           onClose={() => setPickerOpen(false)}
           align="right"
+          onShowInfo={
+            canViewReactionInfo
+              ? () => {
+                  setPickerOpen(false);
+                  setReactionInfoOpen(true);
+                }
+              : undefined
+          }
         />
         <motion.button
           onClick={(e) => {
@@ -847,17 +866,7 @@ export function ActionBar({
             ))}
           </span>
         )}
-        {onShowLikers ? (
-          <button
-            onClick={(e) => { e.stopPropagation(); onShowLikers(); }}
-            className="text-xs text-zinc-400 hover:text-white transition-colors"
-            aria-label="See who reacted to this"
-          >
-            {formatCount(localLikeCount)}
-          </button>
-        ) : (
-          <span className="text-xs text-zinc-400">{formatCount(localLikeCount)}</span>
-        )}
+        <span className="text-xs text-zinc-400">{formatCount(localLikeCount)}</span>
       </span>
     </>
   );
@@ -934,6 +943,16 @@ export function ActionBar({
       {canSendInDm && dmShareOpen && (
         <Suspense fallback={null}>
           <SharePostToDmModal open={dmShareOpen} onOpenChange={setDmShareOpen} tokenId={tokenId!} />
+        </Suspense>
+      )}
+
+      {canViewReactionInfo && reactionInfoOpen && (
+        <Suspense fallback={null}>
+          <ReactionInfoDrawer
+            open={reactionInfoOpen}
+            onOpenChange={setReactionInfoOpen}
+            tokenId={reactionInfoTokenId!}
+          />
         </Suspense>
       )}
     </div>

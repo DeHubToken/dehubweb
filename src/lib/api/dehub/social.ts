@@ -516,26 +516,54 @@ export interface PostLiker {
   avatarImageUrl?: string | null;
   badgeBalance?: number;
   isFollowing?: boolean;
+  /** Which of the nine reactions this person left. */
+  reaction?: PostReaction;
   likedAt?: string;
 }
 
+export interface PostLikersResponse {
+  result: boolean;
+  /**
+   * False for everyone but the post's owner/minter, and then `data` is empty
+   * by design rather than because nobody reacted — don't render "no reactions
+   * yet" off an empty list without checking this first.
+   */
+  canViewLikers: boolean;
+  data: PostLiker[];
+  /** Per-reaction totals for the whole post; null unless you own it. */
+  reactionCounts: ReactionCounts | null;
+  pagination: { page: number; limit: number; totalCount: number; hasMore: boolean };
+}
+
+/**
+ * The reaction roll-call for a post — author-only. The server decides: a
+ * non-owner gets an empty list back whatever it asks for, so the client gate
+ * is about not offering a dead door, not about keeping the secret.
+ */
 export async function getPostLikers(
   tokenId: string | number,
   page: number = 0,
-  limit: number = 20,
-): Promise<{ result: boolean; data: PostLiker[]; pagination: { page: number; limit: number; totalCount: number; hasMore: boolean } }> {
+  limit: number = 50,
+): Promise<PostLikersResponse> {
   return apiCall<any>("/api/post-likers", {
     params: { tokenId: String(tokenId), page, limit },
   });
 }
 
+/**
+ * Quote posts that reference this token.
+ *
+ * Must be /api/quotes, not /api/feed. The feed endpoint has no quotedTokenId
+ * filter and drops unknown query params silently, so asking it for quotes
+ * returned an unfiltered feed — the "quotes" tab was showing random posts.
+ */
 export async function getPostQuotes(
   tokenId: string | number,
   page: number = 1,
   limit: number = 20,
 ): Promise<{ result: DeHubNFT[]; pagination?: any }> {
-  return apiCall<any>("/api/feed", {
-    params: { quotedTokenId: String(tokenId), page, limit, status: 'minted' },
+  return apiCall<any>("/api/quotes", {
+    params: { tokenId: String(tokenId), page, limit },
   });
 }
 
