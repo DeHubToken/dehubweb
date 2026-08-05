@@ -348,7 +348,16 @@ export function useSharedTranslationControl() {
   };
 }
 
-const MIN_TEXT_LENGTH_FOR_TRANSLATION = 1;
+// There is nothing to translate unless the text carries at least one letter in
+// some script. A blank, emoji-only or punctuation-only body used to still reach
+// translate-text, and MyMemory answers a query like that with an unrelated
+// segment out of its shared translation memory — which showed up in the feed as
+// a stranger's caption appearing under a post that has no text at all.
+const TRANSLATABLE_TEXT_REGEX = /\p{L}/u;
+
+export function hasTranslatableText(text: string | null | undefined): boolean {
+  return !!text && TRANSLATABLE_TEXT_REGEX.test(text);
+}
 
 // Custom hook for translation logic (shared between components)
 // On-demand only: no auto-detection, translate-text is called when user clicks
@@ -364,11 +373,11 @@ export function useTranslation(text: string) {
   const userLangRef = useRef(userLang);
   useEffect(() => { userLangRef.current = userLang; }, [userLang]);
 
-  // Too short to bother translating
-  const isTooShort = text.length < MIN_TEXT_LENGTH_FOR_TRANSLATION;
+  // Nothing worth sending to the translator
+  const isTooShort = !hasTranslatableText(text);
 
   const handleTranslate = useCallback(async () => {
-    if (text.length < MIN_TEXT_LENGTH_FOR_TRANSLATION || isLoading) return;
+    if (!hasTranslatableText(text) || isLoading) return;
 
     const targetLang = userLangRef.current;
     const cacheKey = `${text}-${targetLang}`;
