@@ -535,6 +535,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
     error: translateError,
     handleTranslate,
     handleShowOriginal,
+    isTooShort: nothingToTranslate,
   } = useTranslation(descriptionText);
   const { isLoading: isTranslating, error: translationError, result: translationResult, translateImage, clearResult } = useImageTranslation();
 
@@ -940,7 +941,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           timestamp={post.timeAgo}
           viewCount={post.views}
           tokenId={post.id}
-          translateControl={{
+          translateControl={nothingToTranslate ? undefined : {
             isTranslated,
             isLoading: isTranslateLoading,
             error: translateError,
