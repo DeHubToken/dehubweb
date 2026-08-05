@@ -19,7 +19,7 @@ import { useBuyAlerts, type BuyAlertMessage } from '@/hooks/use-buy-alerts';
 import { BuyAlertCard } from './BuyAlertCard';
 import { AssistantReplyCard } from './AssistantReplyCard';
 import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
-import { useAssistantReplies, useAssistantReplyEngine } from '@/hooks/use-assistant-replies';
+import { isAssistantAddress } from '@/lib/assistant';
 import { dismissKeyboard } from '@/hooks/use-keyboard-open';
 import {
   DropdownMenu,
@@ -120,13 +120,9 @@ export function PublicChat({ onBack }: PublicChatProps) {
   // Convert API messages to local format
   const messages: Message[] = apiMessages.map(toLocalMessage);
 
-  // Local-only @assistant replies — sourced from a shared singleton store so
-  // SidebarChat sees the same replies. The engine fires once per source message
-  // even if multiple chat surfaces are mounted.
-  useAssistantReplyEngine(apiMessages);
-  const assistantReplies = useAssistantReplies();
-
-  // Filter messages based on search query and merge buy alerts + assistant replies
+  // Filter messages based on search query and merge buy alerts.
+  // Assistant replies are ordinary chat messages now — they arrive over the
+  // socket like everyone else's and only differ in how they are rendered.
   const filteredMessages = useMemo(() => {
     // Convert buy alerts to Message format for merging
     const buyAlertMessages: Message[] = buyAlerts.map((alert) => ({
@@ -138,18 +134,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
       type: 'buy_alert' as Message['type'],
     }));
 
-    // Convert assistant replies to Message format for merging
-    const assistantMessages: Message[] = assistantReplies.map((r) => ({
-      id: `assistant-reply-${r.id}`,
-      userId: 'assistant',
-      userName: 'assistant',
-      content: r.content,
-      timestamp: r.timestamp,
-      type: 'assistant_reply' as Message['type'],
-      replyTo: r.replyToName ? { id: '', content: '', senderName: r.replyToName } : undefined,
-    }));
-
-    const allMessages = [...messages, ...buyAlertMessages, ...assistantMessages].sort(
+    const allMessages = [...messages, ...buyAlertMessages].sort(
       (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
     );
 
@@ -158,7 +143,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
     return allMessages.filter(
       m => m.content.toLowerCase().includes(q) || m.userName.toLowerCase().includes(q)
     );
-  }, [messages, buyAlerts, assistantReplies, searchQuery]);
+  }, [messages, buyAlerts, searchQuery]);
 
   // Toggle search
   const handleToggleSearch = useCallback(() => {
@@ -188,8 +173,6 @@ export function PublicChat({ onBack }: PublicChatProps) {
       bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [filteredMessages.length]);
-
-  // (assistant auto-reply engine is mounted above via useAssistantReplyEngine)
 
   const handleReply = useCallback((message: Message) => {
     setReplyTo(message);
@@ -447,7 +430,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
                     onHide={hideBuyBot}
                   />
                 )
-              ) : message.id.startsWith('assistant-reply-') ? (
+              ) : isAssistantAddress(message.userId) ? (
                 <AssistantReplyCard
                   key={message.id}
                   content={message.content}
