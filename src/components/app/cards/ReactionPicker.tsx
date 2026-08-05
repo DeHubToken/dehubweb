@@ -17,6 +17,7 @@
 
 import { useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
+import { Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { REACTION_LIST, type PostReaction } from '@/lib/reactions';
 
@@ -31,6 +32,12 @@ interface ReactionPickerProps {
    * the far right, where a centered tray would overflow the card.
    */
   align?: 'left' | 'center' | 'right';
+  /**
+   * Opens the reaction breakdown. Passed only on your own posts — who reacted
+   * is the author's to see, so on anyone else's post the tray ends at the
+   * ninth emoji and there is no ⓘ to press.
+   */
+  onShowInfo?: () => void;
 }
 
 export function ReactionPicker({
@@ -39,6 +46,7 @@ export function ReactionPicker({
   onSelect,
   onClose,
   align = 'right',
+  onShowInfo,
 }: ReactionPickerProps) {
   const trayRef = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
@@ -124,6 +132,37 @@ export function ReactionPicker({
               <span aria-hidden="true">{reaction.emoji}</span>
             </button>
           ))}
+
+          {/* Author-only breakdown. Same pointerup handling as the reactions
+              above so a single hold-and-slide can land on it. */}
+          {onShowInfo && (
+            <>
+              <span aria-hidden="true" className="mx-0.5 h-5 w-px shrink-0 bg-white/15" />
+              <button
+                role="menuitem"
+                type="button"
+                aria-label="See who reacted"
+                title="See who reacted"
+                data-keep-round
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onShowInfo();
+                }}
+                onPointerUp={(e) => {
+                  e.stopPropagation();
+                  onShowInfo();
+                }}
+                className={cn(
+                  'group relative flex h-9 w-9 items-center justify-center rounded-full',
+                  'text-white/50 transition-[transform,background-color,color] duration-150 ease-out',
+                  'hover:-translate-y-0.5 hover:bg-white/10 hover:text-white active:translate-y-0 active:scale-95',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
+                )}
+              >
+                <Info className="h-[18px] w-[18px]" aria-hidden="true" />
+              </button>
+            </>
+          )}
         </motion.div>
       )}
     </AnimatePresence>
