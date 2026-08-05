@@ -223,14 +223,37 @@
          no flag glyphs, older Segoe UI Emoji misses recent codepoints). Google
          serves it as ~10 unicode-range subsets, so a browser downloads only the
          chunk for an emoji it can't already draw — and nothing at all on
-         Android/macOS, where the system font wins earlier in the stack. Same
-         non-blocking load as Exo. -->
-    <link
-      rel="preload"
-      as="style"
-      href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap"
-      onload="this.onload=null;this.rel='stylesheet'"
-    />
+         Android/macOS, where the system font wins earlier in the stack.
+         Deferred to idle-after-load rather than preloaded alongside Exo. On
+         Windows the subsets it actually picks are big — a real load of
+         dehub.io in Aug 2026 pulled 693 KB + 135 KB of woff2 — and spending
+         that during the load window costs bandwidth for glyphs that are, by
+         definition, never the largest contentful paint. `display=swap` already
+         means emoji paint in the platform font first and upgrade on arrival,
+         so deferring changes only WHEN the upgrade lands, not whether. -->
+    <script>
+      (function () {
+        var href = 'https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap';
+        function loadEmojiFont() {
+          var l = document.createElement('link');
+          l.rel = 'stylesheet';
+          l.href = href;
+          document.head.appendChild(l);
+        }
+        // Idle callback keeps it off the tail of the load event too, so it
+        // never competes with the app's own post-load work. The timeout is the
+        // guarantee it still happens on a permanently busy main thread.
+        function schedule() {
+          if ('requestIdleCallback' in window) {
+            requestIdleCallback(loadEmojiFont, { timeout: 3000 });
+          } else {
+            setTimeout(loadEmojiFont, 1200);
+          }
+        }
+        if (document.readyState === 'complete') schedule();
+        else window.addEventListener('load', schedule, { once: true });
+      })();
+    </script>
     <noscript>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" />
     </noscript>
