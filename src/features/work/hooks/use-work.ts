@@ -200,6 +200,92 @@ export function useCreateJob() {
   });
 }
 
+// ── Edit job ─────────────────────────────────────────────────
+/**
+ * Poster-only edit of an existing bounty. The copy fields (title, description,
+ * platform, target, deadline) are always safe to change; the money fields are
+ * only sent when the caller decided they're still editable — see
+ * `isBudgetEditable`. `total_budget` has to move with them or the escrow figure
+ * on the card and the detail page goes stale.
+ */
+export function useUpdateJob() {
+  const { walletAddress } = useAuth();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (params: {
+      id: string;
+      title: string;
+      description: string;
+      platform?: WorkPlatform | null;
+      target_url?: string | null;
+      deadline?: string | null;
+      budget?: {
+        currency: WorkCurrency;
+        price_per_unit: number;
+        max_units: number;
+      };
+    }) => {
+      if (!walletAddress) throw new Error('Not authenticated');
+
+      const patch: Record<string, unknown> = {
+        title: params.title,
+        description: params.description,
+        platform: params.platform || null,
+        target_url: params.target_url || null,
+        deadline: params.deadline || null,
+      };
+      if (params.budget) {
+        patch.currency = params.budget.currency;
+        patch.price_per_unit = params.budget.price_per_unit;
+        patch.max_units = params.budget.max_units;
+        patch.total_budget = params.budget.price_per_unit * params.budget.max_units;
+      }
+
+      const { data, error } = await withWalletHeader(
+        supabase.from(TBL_JOBS).update(patch as any).eq('id', params.id).select().maybeSingle(),
+        walletAddress
+      );
+      if (error) throw error;
+      // RLS filters the row out rather than erroring when the wallet isn't the
+      // poster, so an empty result is a permission failure, not a missing job.
+      if (!data) throw new Error('You can only edit bounties you posted');
+      return data as unknown as WorkJob;
+    },
+    onSuccess: (_, v) => {
+      qc.invalidateQueries({ queryKey: ['work-job', v.id] });
+      qc.invalidateQueries({ queryKey: ['work-jobs-browse'] });
+      qc.invalidateQueries({ queryKey: ['work-my-posted'] });
+      toast.success('Bounty updated');
+    },
+    onError: (e: any) => toast.error(e.message || 'Failed to update bounty'),
+  });
+}
+
+/**
+ * A bounty stays editable while it's still live. Completed, cancelled, expired
+ * and disputed jobs are the record of what was agreed, so they freeze — a
+ * dispute in particular is being read by an admin.
+ */
+export function isJobEditable(job: WorkJob): boolean {
+  return job.status === 'draft' || job.status === 'open' || job.status === 'in_progress';
+}
+
+/**
+ * Price, units and currency stop being editable the moment the bounty stops
+ * being a plain listing: once it's escrowed on-chain, once someone has applied
+ * or submitted proof, or once it has left `open`. Changing the terms under
+ * people who already committed work is the one edit that can't be undone.
+ */
+export function isBudgetEditable(job: WorkJob): boolean {
+  return (
+    job.status === 'draft' ||
+    (job.status === 'open' &&
+      !job.fund_tx_hash &&
+      job.application_count === 0 &&
+      job.submission_count === 0)
+  );
+}
+
 // ── Applications (contract jobs) ─────────────────────────────
 export function useJobApplications(jobId: string | undefined) {
   return useQuery({
