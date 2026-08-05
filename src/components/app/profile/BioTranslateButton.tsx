@@ -25,7 +25,9 @@ export function BioTranslateButton({ bio, onTranslated, onShowOriginal, isTransl
   const [isLoading, setIsLoading] = useState(false);
 
   const handleTranslate = useCallback(async () => {
-    const cacheKey = `${CACHE_PREFIX}${btoa(unescape(encodeURIComponent(bio.slice(0, 100))))}-${userLang}`;
+    // Whole bio, not the first 100 characters — two profiles that open the same
+    // way shared one entry and got each other's translation.
+    const cacheKey = `${CACHE_PREFIX}${btoa(unescape(encodeURIComponent(bio)))}-${userLang}`;
     const cached = sessionStorage.getItem(cacheKey);
     if (cached) {
       onTranslated(cached);

@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { ShimmerBorder } from '@/components/app/stories/ShimmerBorder';
-import { TranslatableText } from '@/components/app/TranslatableText';
+import { TranslatableText, hasTranslatableText } from '@/components/app/TranslatableText';
 import { BioTranslateButton } from '@/components/app/profile/BioTranslateButton';
 import { ProfileSocialLinks } from '@/components/app/profile/ProfileSocialLinks';
 import { MutualFollowers } from '@/components/app/profile/MutualFollowers';
@@ -421,7 +421,7 @@ export function ProfileHeader({
           
           <div className="flex items-center gap-2 mt-3 text-zinc-500 text-sm">
             <span>{t('profile.joined')} {profile.joinedDate}</span>
-            {profile.bio && !isViewingOwnProfile && (
+            {hasTranslatableText(profile.bio) && !isViewingOwnProfile && (
               <BioTranslateButton
                 bio={profile.bio}
                 isTranslated={!!translatedBio}
