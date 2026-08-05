@@ -13,7 +13,7 @@ import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { CommentsSection } from './CommentsSection';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface CommentsWrapperProps {
   open: boolean;
@@ -69,10 +69,68 @@ function useAdaptiveDrawerHeight(enabled: boolean) {
   return drawerHeight;
 }
 
+/** Can this element still take `deltaY` worth of scrolling in that direction? */
+function canAbsorb(el: Element, deltaY: number) {
+  const room = deltaY > 0
+    ? el.scrollHeight - el.clientHeight - el.scrollTop
+    : el.scrollTop;
+  if (room <= 1) return false;
+  if (el === document.scrollingElement) return true;
+  const overflowY = getComputedStyle(el).overflowY;
+  return overflowY === 'auto' || overflowY === 'scroll';
+}
+
+/**
+ * Hand the wheel back to the page once the comment list bottoms out.
+ *
+ * The dropdown scrolls internally, so without this the wheel dead-ends: the
+ * user reaches the last reply, keeps scrolling because they want the next post,
+ * and the feed sits still. Browsers latch a wheel gesture to the scroller it
+ * started on and only chain to the page once the gesture stops, which is the
+ * same dead end for anyone who scrolls in one continuous motion. So when
+ * nothing inside the dropdown can take the delta, scroll the page ourselves.
+ */
+function useWheelChaining(enabled: boolean) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!enabled || !el) return;
+
+    const onWheel = (e: WheelEvent) => {
+      // Pinch-zoom, and horizontal swipes the feed reads as tab switches.
+      if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY) || !e.deltaY) return;
+
+      let node: Element | null = e.target as Element;
+      while (node && !canAbsorb(node, e.deltaY)) {
+        node = node.parentElement;
+      }
+      // Nothing left to scroll anywhere, or the list itself can still move —
+      // either way the browser's own handling is correct.
+      if (!node || el.contains(node)) return;
+
+      // deltaMode is lines on Firefox/Windows and pages on some remotes.
+      const step = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? node.clientHeight : 1;
+      node.scrollTop += e.deltaY * step;
+      e.preventDefault();
+    };
+
+    // Non-passive: React registers its own wheel listener as passive, so the
+    // preventDefault above only lands on a listener we attach ourselves.
+    el.addEventListener('wheel', onWheel, { passive: false });
+    return () => el.removeEventListener('wheel', onWheel);
+  }, [enabled]);
+
+  return ref;
+}
+
 export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immersive = false, commentsDisabled = false }: CommentsWrapperProps) {
   const isTabletOrMobile = useIsTabletOrMobile();
   const adaptiveDrawerHeight = useAdaptiveDrawerHeight(isTabletOrMobile && immersive);
   const { isCollapsed } = useSidebarCollapse();
+  // Inline expansion only — the immersive drawer sits over fullscreen media and
+  // should keep the scroll to itself.
+  const wheelChainRef = useWheelChaining(open && !(isTabletOrMobile && immersive));
 
   // Only fullscreen/immersive surfaces use the bottom-sheet drawer. Feed cards
   // fall through to the inline expansion below on every breakpoint.
@@ -120,10 +178,15 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
           className="overflow-hidden"
         >
           <div
+            ref={wheelChainRef}
             data-comments-wrapper
             data-no-navigate
             onClick={(e) => e.stopPropagation()}
-            style={{ touchAction: 'pan-y', overscrollBehavior: 'contain' }}
+            // No `overscroll-behavior: contain` here on purpose: this section is
+            // part of the card, not an overlay, so scrolling past the last reply
+            // has to carry on into the feed the way a side panel does. Adding it
+            // back traps the wheel and the page reads as frozen.
+            style={{ touchAction: 'pan-y' }}
             // Mobile (<md): CommentsSection lays out as `h-full` with an
             // absolutely-positioned, scrollable list inside a flex-1 region, so
             // it needs a definite parent height — an `auto`-height wrapper
