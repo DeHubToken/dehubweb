@@ -1332,6 +1332,22 @@ html[data-theme='osaka'] [data-media-full] {
   box-shadow: none !important;
 }
 
+/* ...but only where the frame is actually a BED. A media wrapper hugs its
+   content: an image narrower than the feed column — a portrait photo, a phone
+   screenshot — leaves the wrapper's own box exposed either side of it, and the
+   fill above turns that leftover into a void-black letterbox slab beside the
+   photo. Every other theme leaves it transparent, so the column reads through.
+   The surfaces that genuinely need a dark backing all ship their own bg class
+   (VideoCard and LiveStreamCard `bg-black`, the Shorts viewer `bg-black/60`
+   and `bg-zinc-900`), which is the signal this arm keys off: carry a fill of
+   your own and you keep the void, carry none and the theme adds none. The
+   fill net in section 11 already exempts [data-media-full], so nothing
+   id-scoped comes along behind this and paints the gap back in. */
+html[data-theme='osaka'] [data-media-full]:not([class*='bg-']) {
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
 /* Overlay chips drawn ON TOP of media still follow the palette - that is what
    keeps a LIVE badge reading as --osaka-amber rather than Tailwind red. */
 html[data-theme='osaka'] [data-video-controls] {
