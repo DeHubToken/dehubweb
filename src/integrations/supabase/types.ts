@@ -3232,6 +3232,7 @@ export type Database = {
         Row: {
           amount: number
           chain_id: number
+          comment_id: string | null
           created_at: string
           id: string
           receiver_address: string
@@ -3242,6 +3243,7 @@ export type Database = {
         Insert: {
           amount: number
           chain_id?: number
+          comment_id?: string | null
           created_at?: string
           id?: string
           receiver_address: string
@@ -3252,6 +3254,7 @@ export type Database = {
         Update: {
           amount?: number
           chain_id?: number
+          comment_id?: string | null
           created_at?: string
           id?: string
           receiver_address?: string
@@ -3317,6 +3320,62 @@ export type Database = {
           stream_url?: string
         }
         Relationships: []
+      }
+      tv_chat_messages: {
+        Row: {
+          avatar_url: string | null
+          badge_balance: number | null
+          channel_id: string
+          content: string
+          created_at: string
+          display_name: string | null
+          id: string
+          image_url: string | null
+          message_type: string
+          reactions: Json | null
+          reply_to_id: string | null
+          username: string | null
+          wallet_address: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          badge_balance?: number | null
+          channel_id: string
+          content?: string
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          image_url?: string | null
+          message_type?: string
+          reactions?: Json | null
+          reply_to_id?: string | null
+          username?: string | null
+          wallet_address: string
+        }
+        Update: {
+          avatar_url?: string | null
+          badge_balance?: number | null
+          channel_id?: string
+          content?: string
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          image_url?: string | null
+          message_type?: string
+          reactions?: Json | null
+          reply_to_id?: string | null
+          username?: string | null
+          wallet_address?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tv_chat_messages_reply_to_id_fkey"
+            columns: ["reply_to_id"]
+            isOneToOne: false
+            referencedRelation: "tv_chat_messages"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_characters: {
         Row: {
