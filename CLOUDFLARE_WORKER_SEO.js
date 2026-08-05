@@ -23,6 +23,14 @@ const SUPABASE_FUNCTION_URL = `${SUPABASE_FN_BASE}/ssr-seo`;
 const DEHUB_LOGO = 'https://aigxuutjaqsywioxjefr.supabase.co/storage/v1/object/public/logo//new_logo_Dehub.jpg';
 const APP_URL = 'https://dehub.io';
 const BLOG_SHARE_IMAGE_BASE = 'https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/blog-share-image';
+// Share card for every edge-rendered page. DEHUB_LOGO is a 200-square, so
+// `summary_large_image` cards rendered it as a thumbnail rather than a banner;
+// this is the 1200x630 the format actually wants. Served from public/ (and so
+// from the ASSETS binding) on purpose — the previous per-route cards pointed at
+// Lovable CDN paths (`/__l5e/assets-v1/...`) that nothing serves since the
+// Cloudflare migration, and the SPA catch-all answered them 200 text/html, so
+// crawlers downloaded the React shell where a PNG should be and drew no image.
+const SHARE_IMAGE = `${APP_URL}/og/dehub-social-share.png`;
 
 // One canonical brand identity. Keep in sync with the Organization JSON-LD in
 // index.html and src/pages/Index.tsx. The deployed Supabase fn still emits a
@@ -190,7 +198,7 @@ function buildDocsHtml(route, meta, contentHtml) {
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escHtml(meta.title)}">
 <meta property="og:description" content="${escHtml(meta.description)}">
-<meta property="og:image" content="${DEHUB_LOGO}">
+<meta property="og:image" content="${SHARE_IMAGE}">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${JSON.stringify({
@@ -224,7 +232,7 @@ function buildDocsIndexHtml() {
 <meta property="og:site_name" content="DeHub">
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="DeHub Documentation">
-<meta property="og:image" content="${DEHUB_LOGO}">
+<meta property="og:image" content="${SHARE_IMAGE}">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@dehub_official">
 </head>
@@ -430,7 +438,7 @@ function buildBlogIndexHtml(manifest) {
 <meta property="og:site_name" content="DeHub">
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="DeHub Blog — News, Guides &amp; Product Updates">
-<meta property="og:image" content="${DEHUB_LOGO}">
+<meta property="og:image" content="${SHARE_IMAGE}">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -526,7 +534,7 @@ function buildSectionHtml(key, meta) {
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escHtml(meta.title)}">
 <meta property="og:description" content="${escHtml(meta.description)}">
-<meta property="og:image" content="${DEHUB_LOGO}">
+<meta property="og:image" content="${SHARE_IMAGE}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -620,6 +628,160 @@ const MARKETING_PAGES = {
     bodyHtml: `<p>A screen-by-screen walkthrough of the DeHub app: the home feed, video and shorts, messaging, the wallet, staking, governance and the creator tools.</p>
 <p><a href="${APP_URL}/guide" style="color:#9f9">Open the full visual guide</a> or start with the <a href="${APP_URL}/docs" style="color:#9f9">documentation</a>.</p>`,
   },
+
+  // The rest of SSR_STATIC_ROUTES, moved here from the Supabase fn's own
+  // STATIC_ROUTES map. The fn deploys on its own track (`supabase functions
+  // deploy ssr-seo`), not with the Cloudflare build, so edits to it sat unshipped
+  // — /features kept serving a product-tour blurb for weeks after the copy was
+  // corrected in the repo, because only the merge happened. Rendered here, the
+  // copy ships with the worker and can never drift from what was merged.
+  //
+  // Titles and descriptions are lifted from each page's SPA SEOHead so the two
+  // UA variants match. They did not before: /music billed itself as "DeHub Music
+  // — Web3 Songs & Radio" to crawlers and "Music — Listen & Discover on DeHub"
+  // to people, and /jobs, /bridge, /glossary and /top-100 diverged the same way.
+  // /creator, /prompt, /affiliate and /premium have no SEOHead of their own yet,
+  // so those four keep the fn's wording until the pages grow one.
+  'features': {
+    title: 'Feature Requests & Bug Reporting — DeHub',
+    description: "Submit feature requests, report bugs, and vote on community ideas to shape DeHub's roadmap. Track open, in-progress, and shipped features.",
+    heading: 'DeHub Feature Requests & Bug Reporting',
+    bodyHtml: `<p>The DeHub Features page is a community board: submit new feature ideas, report bugs, and vote on suggestions to help shape the roadmap.</p>
+<ul>
+<li><strong>Submit ideas &amp; bug reports</strong> — suggest features or report bugs with device details and attachments.</li>
+<li><strong>Community voting</strong> — vote on requests to help prioritise what gets built next.</li>
+<li><strong>Transparent roadmap</strong> — track requests across Open, Shipping and Shipped.</li>
+<li><strong>Discussion</strong> — comment on requests and work through them with the community and the core team.</li>
+</ul>`,
+  },
+  'creator': {
+    title: 'DeHub Creator Studio — AI Image, Video & Music',
+    description: 'Generate images, videos, songs and branded posters with the DeHub Creator Studio. One workspace for every AI tool a modern creator needs.',
+    heading: 'DeHub Creator Studio',
+    bodyHtml: `<p>The Creator Studio bundles image, video, music, voice and poster generation behind a single credit balance. Pick a model, describe what you want, and publish the result straight to the decentralized feed.</p>
+<ul>
+<li>Image generation with FLUX, Ideogram, Recraft and Nano Banana models.</li>
+<li>Video generation with Kling, Luma, Runway, Pika, Minimax and ByteDance.</li>
+<li>Song generation with Suno, plus voice cloning and text-to-speech with ElevenLabs.</li>
+<li>Branded poster templates built on the DeHub design system.</li>
+</ul>
+<p>See <a href="${APP_URL}/pricing" style="color:#9f9">Creator Studio pricing</a> for plans and monthly credits.</p>`,
+  },
+  'editor': {
+    title: 'DeHub Editor — In-Browser Video Editor',
+    description: 'Cut, trim, and export videos in your browser. Multi-track timeline, audio waveforms, effects, and one-click publish to DeHub.',
+    heading: 'DeHub Video Editor',
+    bodyHtml: `<p>The DeHub Video Editor is a multi-track timeline that runs entirely in the browser. Import clips from your device or the Creator Studio, add music, subtitles, transitions and text, then publish to the feed as a video post or Short.</p>
+<ul>
+<li>Multi-track timeline with drag-and-drop trimming and audio waveforms.</li>
+<li>Effects, transitions and adjustable colour filters.</li>
+<li>Auto-generated subtitles with translation to 90+ languages.</li>
+<li>Export to 1080p and publish in one click.</li>
+</ul>`,
+  },
+  'prompt': {
+    title: 'DeHub Prompt — Personalize Your Feed',
+    description: 'Tell DeHub what you want to see and shape a feed that actually matches your taste. Prompt-powered personalization for Web3 social.',
+    heading: 'DeHub Prompt',
+    bodyHtml: `<p>DeHub Prompt lets you type what you want to see — topics, creators, moods, chains — and reshapes the home feed in real time. Save prompts as tabs, switch between them, and refine as your interests change. No opaque algorithm, no engagement traps.</p>`,
+  },
+  'work': {
+    title: 'Bounties — Post & Hunt Paid Tasks | DeHub',
+    description: 'Browse open bounties on DeHub: social media tasks, clipping bounties and fixed-price contracts. Claim a bounty as a hunter and get paid in DHB or USDC.',
+    heading: 'DeHub Work — Bounties',
+    bodyHtml: `<p>DeHub Work is an on-chain marketplace for creator jobs. Post a bounty with a budget and criteria, receive submissions from creators worldwide, then release payment through the DeHubWork escrow contract on Base. Disputes are handled by community moderators.</p>
+<ul>
+<li><strong>Clipping</strong> — pay per verified view for short clips of streams or long-form video.</li>
+<li><strong>Social tasks</strong> — pay for high-quality engagement across posts.</li>
+<li><strong>Fixed-price contracts</strong> — hire creators for logos, video, translation and community work.</li>
+</ul>`,
+  },
+  'affiliate': {
+    title: 'DeHub Affiliate — Earn 20% Revenue Share',
+    description: 'Refer creators to DeHub and earn 20% of the revenue they generate, plus 5% from second-tier invites. Transparent on-chain payouts.',
+    heading: 'DeHub Affiliate Program',
+    bodyHtml: `<p>Every DeHub user gets a personal referral link. When someone signs up through it and spends on Creator Studio credits, premium subscriptions or ads, you earn <strong>20% of that revenue</strong> for the lifetime of the account. Second-tier invites earn another <strong>5%</strong>. Payouts are made in DHB and are visible on-chain.</p>`,
+  },
+  'premium': {
+    title: 'DeHub Extra — Premium Membership',
+    description: 'Unlock DeHub Extra: bigger uploads, priority AI credits, exclusive drops and creator perks across DeHub.',
+    heading: 'DeHub Extra',
+    bodyHtml: `<ul>
+<li>Larger video and image upload limits.</li>
+<li>Priority AI credits and faster queue times in the Creator Studio.</li>
+<li>Extra bookmark folders, saved prompts and profile customisation.</li>
+<li>Exclusive drops, badges and community events.</li>
+</ul>
+<p>DeHub Extra is billed monthly and unlocks across the whole network — social, video, music and TV. For Creator Studio plans instead, see <a href="${APP_URL}/pricing" style="color:#9f9">pricing</a>.</p>`,
+  },
+  'governance': {
+    title: 'Governance — Vote on Community Proposals',
+    description: "Participate in decentralized governance on DeHub. Submit proposals, vote with your staking badge weight, and shape the platform's future.",
+    heading: 'DeHub Governance',
+    bodyHtml: `<p>DHB holders shape the DeHub roadmap. Any staker can open a proposal — new features, moderation rules, treasury spend or partnerships — and the community votes with staked DHB weight. Results are tallied on-chain and executed by the core team on approved proposals.</p>`,
+  },
+  'leaderboard': {
+    title: 'Leaderboard — Top Creators & Earners',
+    description: "See who's leading on DeHub. Track top holders, biggest tippers, most followed creators, and trending accounts across all time periods.",
+    heading: 'DeHub Leaderboard',
+    bodyHtml: `<p>The leaderboard ranks DeHub's biggest creators, tippers and DHB stakers across BNB Chain and Base. Snapshots are taken daily, and the top ranks unlock silhouette badges, profile overlays and larger platform rewards.</p>`,
+  },
+  'top-100': {
+    title: 'Top Assets — Live Prices for Stocks, Commodities & Crypto',
+    description: 'Track live prices for gold, silver, oil, Tesla, Apple, Bitcoin, stocks, commodities and thousands of crypto assets on DeHub.',
+    heading: 'Top Assets on DeHub',
+    bodyHtml: `<p>Track live prices, 24h volume and sparkline charts for thousands of assets — crypto, equities and commodities — without leaving DeHub. Open any ticker for the full chart, add it to a watchlist, or share it straight to the feed as a post.</p>`,
+  },
+  'music': {
+    title: 'Music — Listen & Discover on DeHub',
+    description: 'Stream music, discover new artists, listen to live radio and watch music videos on DeHub — the decentralized open source media platform.',
+    heading: 'DeHub Music',
+    bodyHtml: `<p>DeHub Music hosts songs from independent Web3 artists — stream them free, tip in DHB, or collect a token-gated release. Build playlists, watch music videos, or tune into a 24/7 community radio station. Every play, tip and follow is recorded on-chain.</p>`,
+  },
+  'tv': {
+    title: 'Live TV — Free Channels From Around the World',
+    description: 'Watch free live TV channels from around the world on DeHub. News, sports, entertainment and more — streamed in the browser, no subscription needed.',
+    heading: 'DeHub TV',
+    bodyHtml: `<p>DeHub TV streams free live channels from around the world — news, sports and entertainment — alongside creator streams and curated shows. Picture-in-picture keeps playback going while you scroll, and you can tip in DHB straight from the player.</p>`,
+  },
+  'glossary': {
+    title: 'Glossary — Icons, Features & Web3 Terms',
+    description: "Learn what every icon, button and feature means on DeHub. A complete guide to the platform's UI, Web3 terms, staking badges and more.",
+    heading: 'DeHub Glossary',
+    bodyHtml: `<p>Plain-English definitions for everything you meet on DeHub — every icon and button in the interface, plus the Web3 vocabulary behind them: wallets, gas, staking badges, bridges, escrow, on-chain tipping and the DHB token. Written for creators, not engineers.</p>`,
+  },
+  'bridge': {
+    title: 'Bridge — Transfer DHB Cross-Chain',
+    description: 'Bridge your DHB tokens between Base and BNB Chain seamlessly on DeHub. Fast, secure cross-chain transfers with live transaction tracking.',
+    heading: 'DeHub Bridge',
+    bodyHtml: `<p>The DeHub Bridge moves DHB between BNB Chain and Base from inside the platform wallet, with live transaction tracking. Balances round down to two decimals to match on-chain settlement, and every transfer is verified before your balance updates.</p>`,
+  },
+  'agents': {
+    title: 'AI Agents — Build & Manage Bots',
+    description: 'Create and manage AI-powered agents on DeHub. Automate posting, engage with your audience, and integrate with the DeHub API.',
+    heading: 'DeHub Agents',
+    bodyHtml: `<p>DeHub Agents are configurable AI assistants that post on a schedule, reply to comments, moderate your community, curate feeds and report on growth. Start from a pre-built agent or build your own against the DeHub MCP server and API.</p>
+<p>See <a href="${APP_URL}/connect" style="color:#9f9">Connect</a> to wire DeHub into ChatGPT or Claude.</p>`,
+  },
+  'assistant': {
+    title: 'AI Assistant — Chat, Generate Images & Video',
+    description: "Chat with DeHub's AI assistant. Generate images, create videos, get web search results, and explore AI capabilities — all in one place.",
+    heading: 'DeHub Assistant',
+    bodyHtml: `<p>The DeHub Assistant is a chat interface into the whole Creator Studio. Ask it to draft a post, generate an image or video, translate captions, search the web or explain how the DHB token works — then publish the result without leaving the conversation.</p>`,
+  },
+  'creators': {
+    title: 'Become a Creator',
+    description: 'Apply to become a creator on DeHub — the open source, censorship resistant media platform.',
+    heading: 'Become a DeHub Creator',
+    bodyHtml: `<p>Apply for a creator account on DeHub and unlock uploads, monetization and the Creator Studio. Creators earn through pay-per-view, token-gated posts, tradable subscriptions, tips and ad-revenue sharing — all settled on-chain.</p>`,
+  },
+  'jobs': {
+    title: 'Careers — Join the DeHub Team',
+    description: 'Join the team building the future of decentralized media. Explore open positions at DeHub and help shape Web3 social.',
+    heading: 'Careers at DeHub',
+    bodyHtml: `<p>DeHub is a small, distributed team building a decentralized creator network. Open roles span engineering, design, growth, community and moderation. If you care about Web3 and creator tools, we want to hear from you.</p>
+<p>Looking for paid work rather than a role? See <a href="${APP_URL}/work" style="color:#9f9">DeHub bounties</a>.</p>`,
+  },
 };
 
 function buildMarketingHtml(key, meta) {
@@ -645,7 +807,7 @@ function buildMarketingHtml(key, meta) {
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escHtml(meta.title)}">
 <meta property="og:description" content="${escHtml(meta.description)}">
-<meta property="og:image" content="${DEHUB_LOGO}">
+<meta property="og:image" content="${SHARE_IMAGE}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
@@ -674,7 +836,7 @@ function buildGuidePageHtml(slug, meta) {
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escHtml(meta.title)}">
 <meta property="og:description" content="${escHtml(meta.description)}">
-<meta property="og:image" content="${DEHUB_LOGO}">
+<meta property="og:image" content="${SHARE_IMAGE}">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${JSON.stringify({
@@ -704,7 +866,7 @@ function buildFallbackHtml(pathname, canonicalUrl) {
     ? `Post #${postId} on DeHub`
     : 'DeHub — Open Source, User Owned & Censorship Resistant Media';
   const description = 'Open source, user owned and censorship resistant media.';
-  const image = DEHUB_LOGO;
+  const image = SHARE_IMAGE;
   // Canonical must never echo mirror hostnames or query strings.
   const url = `${APP_URL}${canonicalizePath(pathname)}`;
   return `<!DOCTYPE html>
@@ -1245,6 +1407,11 @@ async function handleRequest(request, env) {
   };
   const legalTarget = LEGAL_REDIRECTS[trimmedPath.toLowerCase()];
   if (legalTarget) return redirect301(`${APP_URL}${legalTarget}`);
+
+  // /radio is `<Navigate to="/music" replace />` in the SPA, but crawlers were
+  // handed a standalone "DeHub Radio" page by the Supabase fn — a URL that only
+  // exists for bots, describing a page no human can land on. Match the router.
+  if (trimmedPath.toLowerCase() === '/radio') return redirect301(`${APP_URL}/music`);
 
   const appTwin = trimmedPath.match(/^\/app\/(guides|docs\/blog)((?:\/.*)?)$/);
   if (appTwin) return redirect301(`${APP_URL}/${appTwin[1]}${appTwin[2] || ''}`);
