@@ -155,6 +155,7 @@ const LaunchpadCreatePage = React.lazy(() => import("./pages/app/LaunchpadCreate
 const LaunchpadCoinPage = React.lazy(() => import("./pages/app/LaunchpadCoinPage"));
 const WorkPostPage = React.lazy(() => import("./pages/app/WorkPostPage"));
 const WorkJobDetailPage = React.lazy(() => import("./pages/app/WorkJobDetailPage"));
+const WorkEditPage = React.lazy(() => import("./pages/app/WorkEditPage"));
 const WorkDisputesPage = React.lazy(() => import("./pages/app/WorkDisputesPage"));
 const CreatorEditorHost = React.lazy(() => import("./pages/CreatorEditorHost"));
 // Eager import — the referral lander is a new user's first touch of DeHub and
@@ -442,6 +443,7 @@ function AppContent() {
               <Route path="work/post" element={<Suspense fallback={<PageLoader />}><WorkPostPage /></Suspense>} />
               <Route path="work/disputes" element={<Suspense fallback={<PageLoader />}><WorkDisputesPage /></Suspense>} />
               <Route path="work/:jobId" element={<Suspense fallback={<PageLoader />}><WorkJobDetailPage /></Suspense>} />
+              <Route path="work/:jobId/edit" element={<Suspense fallback={<PageLoader />}><WorkEditPage /></Suspense>} />
 
               <Route path="communities/join/:code" element={<Suspense fallback={<PageLoader />}><CommunityInvitePage /></Suspense>} />
               <Route path="communities/:slug" element={<Suspense fallback={<PageLoader />}><CommunityPage /></Suspense>} />
@@ -460,6 +462,7 @@ function AppContent() {
             <Route path="/work/post" element={<Suspense fallback={<PageLoader />}><WorkPostPage /></Suspense>} />
             <Route path="/work/disputes" element={<Suspense fallback={<PageLoader />}><WorkDisputesPage /></Suspense>} />
             <Route path="/work/:jobId" element={<Suspense fallback={<PageLoader />}><WorkJobDetailPage /></Suspense>} />
+            <Route path="/work/:jobId/edit" element={<Suspense fallback={<PageLoader />}><WorkEditPage /></Suspense>} />
 
             {/* /affiliate alias (page itself is rendered by PersistentPageCache) */}
             <Route path="/affiliate" element={null} />
