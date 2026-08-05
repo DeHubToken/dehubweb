@@ -483,7 +483,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const { t } = useI18n();
   const [showAIChat, setShowAIChat] = useState(false);
   const [showComments, setShowComments] = useState(false);
-  const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'likers' | 'search' | undefined>(undefined);
+  const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
   useAutoOpenComments(setShowComments);
   const [showBountyDrawer, setShowBountyDrawer] = useState(false);
   const [showPPVDrawer, setShowPPVDrawer] = useState(false);
@@ -1889,10 +1889,6 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               onTip={() => setShowTipModal(true)}
               onSeeEngagements={() => {
                 setCommentsInitialTab('reposts');
-                setShowComments(true);
-              }}
-              onShowLikers={() => {
-                setCommentsInitialTab('likers');
                 setShowComments(true);
               }}
             />

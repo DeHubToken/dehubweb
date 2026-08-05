@@ -37,7 +37,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, recordCommentViews, getPostLikers, getPostQuotes, type ApiCommentResponse } from '@/lib/api/dehub';
+import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, recordCommentViews, getPostQuotes, type ApiCommentResponse } from '@/lib/api/dehub';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { useCommentTips } from '@/hooks/use-comment-tips';
 import { TipModal } from '@/components/app/modals/TipModal';
@@ -77,7 +77,7 @@ export interface Comment {
 interface CommentsSectionProps {
   tokenId: string;
   onClose: () => void;
-  initialTab?: 'replies' | 'quotes' | 'reposts' | 'likers' | 'search';
+  initialTab?: 'replies' | 'quotes' | 'reposts' | 'search';
   embedded?: boolean;
   /** Creator turned replies off. The composer is replaced with a notice, but
    *  existing comments stay listed — the server refuses new ones either way
@@ -451,7 +451,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const { user, isAuthenticated, walletAddress } = useAuth();
   const isMobile = useIsMobile();
   
-  const [activeTab, setActiveTab] = useState<'replies' | 'quotes' | 'reposts' | 'likers' | 'search'>(initialTab ?? 'replies');
+  const [activeTab, setActiveTab] = useState<'replies' | 'quotes' | 'reposts' | 'search'>(initialTab ?? 'replies');
   // The mount-time initial value alone doesn't cover a section that's already
   // open: tapping the like count while comments are expanded changes initialTab
   // without remounting, and the tab has to follow.
@@ -521,15 +521,6 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     queryFn: () => getPostReposters(tokenId),
     enabled: activeTab === 'reposts',
     staleTime: 60000,
-  });
-
-  // Fetch likers when likers tab is active (#12)
-  const { data: likersData, isLoading: isLoadingLikers } = useQuery({
-    queryKey: ['post-likers', tokenId],
-    queryFn: () => getPostLikers(tokenId),
-    enabled: activeTab === 'likers',
-    staleTime: 60000,
-    retry: false,
   });
 
   // Fetch quotes when quotes tab is active (#13)
@@ -1024,14 +1015,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const canPost = (newComment.trim() || voiceNote || commentImage) && !isSubmitting;
 
   // Drag-to-swipe for comments tab indicator (after all hooks)
-  type CommentsTab = 'replies' | 'quotes' | 'reposts' | 'likers' | 'search';
+  type CommentsTab = 'replies' | 'quotes' | 'reposts' | 'search';
   const commentsTabPositions = useRef<Partial<Record<CommentsTab, HTMLElement | null>>>({});
 
   const { isDragging: isCommentsDragging, indicatorRef: commentsIndicatorRef, handleDragStart: handleCommentsDragStart, handleDragMove: handleCommentsDragMove, handleDragEnd: handleCommentsDragEnd } = useDragTabIndicator({
     tabRect: commentsTabRect,
     tabLayerRef: commentsTabLayerRef,
     tabButtonPositions: commentsTabPositions,
-    tabValues: ['replies', 'quotes', 'reposts', 'likers', 'search'] as CommentsTab[],
+    tabValues: ['replies', 'quotes', 'reposts', 'search'] as CommentsTab[],
     activeTab,
     onTabChange: setActiveTab,
     isDraggingRef: commentsIsDraggingRef,
@@ -1083,7 +1074,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             />
           )}
           <div className="relative z-20 flex gap-1">
-            {(['replies', 'quotes', 'reposts', 'likers', 'search'] as const).map((tab) => (
+            {(['replies', 'quotes', 'reposts', 'search'] as const).map((tab) => (
               <button
                 key={tab}
                 ref={(el) => {
@@ -1103,7 +1094,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 )}
               >
                 <span className={cn("relative z-10", activeTab === tab && "text-white")}>
-                  {tab === 'replies' ? <MessageSquare className="w-[17px] h-[17px]" /> : tab === 'quotes' ? <Quote className="w-[17px] h-[17px]" /> : tab === 'reposts' ? <Repeat2 className="w-[22px] h-[22px]" /> : tab === 'likers' ? <ThumbsUp className="w-[17px] h-[17px]" /> : <Search className="w-[17px] h-[17px]" />}
+                  {tab === 'replies' ? <MessageSquare className="w-[17px] h-[17px]" /> : tab === 'quotes' ? <Quote className="w-[17px] h-[17px]" /> : tab === 'reposts' ? <Repeat2 className="w-[22px] h-[22px]" /> : <Search className="w-[17px] h-[17px]" />}
                 </span>
               </button>
             ))}
@@ -1267,57 +1258,6 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 className="text-zinc-500 text-sm text-center flex items-center justify-center h-full min-h-[200px]"
               >
                 No quotes yet. Be the first!
-              </motion.p>
-            )}
-          </div>
-        )}
-
-        {/* Likers Tab (#12) */}
-        {activeTab === 'likers' && (
-          <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">
-            {isLoadingLikers ? (
-              <div className="flex items-center justify-center py-8">
-                <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
-              </div>
-            ) : likersData?.data && likersData.data.length > 0 ? (
-              <div className="space-y-2">
-                {likersData.data.map((liker) => {
-                  const displayName = liker.displayName || liker.username || liker.address?.slice(0, 8) || 'Unknown';
-                  const avatarUrl = liker.avatarImageUrl
-                    ? (liker.avatarImageUrl.startsWith('http') ? liker.avatarImageUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${liker.avatarImageUrl}`)
-                    : undefined;
-                  return (
-                    <button
-                      key={liker.address}
-                      onClick={() => {
-                        if (liker.username) navigate(`/${liker.username.replace('@', '')}`);
-                        else if (liker.address) navigate(`/app/profile?id=${liker.address}`);
-                      }}
-                      className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
-                    >
-                      <Avatar className="w-10 h-10 rounded-lg">
-                        {avatarUrl ? <AvatarImage src={avatarUrl} alt={displayName} /> : null}
-                        <AvatarFallback className="bg-zinc-800 text-white rounded-lg text-sm">
-                          {displayName[0].toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <span className="font-semibold text-white text-sm truncate block">{displayName}</span>
-                        {liker.username && (
-                          <span className="text-zinc-500 text-xs truncate block">@{liker.username.replace('@', '')}</span>
-                        )}
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            ) : (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-zinc-500 text-sm text-center flex items-center justify-center h-full min-h-[200px]"
-              >
-                No likes yet.
               </motion.p>
             )}
           </div>

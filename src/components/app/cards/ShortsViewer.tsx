@@ -27,6 +27,7 @@ import {
 } from '@/lib/reactions';
 import { resolveMyReaction } from '@/lib/engagement';
 import { ReactionPicker } from './ReactionPicker';
+import { ReactionInfoDrawer } from './ReactionInfoDrawer';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { toast } from 'sonner';
 import { CommentsSection } from './CommentsSection';
@@ -152,7 +153,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
   const [showComments, setShowComments] = useState(false);
-  const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'likers' | 'search' | undefined>(undefined);
+  const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -188,6 +189,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [myReaction, setMyReaction] = useState<PostReaction | null>(null);
   const [localReactionCounts, setLocalReactionCounts] = useState<ReactionCounts>({});
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [reactionInfoOpen, setReactionInfoOpen] = useState(false);
 
   const inlineCommentRef = useRef<HTMLInputElement>(null);
   const mention = useMention({
@@ -214,6 +216,13 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
   const currentShort = shorts[currentIndex];
   const isOwnShort = !!walletAddress && currentShort?.creatorId?.toLowerCase() === walletAddress.toLowerCase();
+  // Who reacted what is the author's to see — the ⓘ in the reaction tray only
+  // exists on your own shorts (and the API refuses the list to anyone else).
+  const canViewReactionInfo = isOwnShort && !!currentShort?.id;
+  const showReactionInfo = () => {
+    setPickerOpen(false);
+    setReactionInfoOpen(true);
+  };
   const [showTipModal, setShowTipModal] = useState(false);
   const { data: tipCount = 0 } = usePostTipCount(currentShort?.id);
 
@@ -977,6 +986,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       onSelect={handleReaction}
                       onClose={() => setPickerOpen(false)}
                       align="right"
+                      onShowInfo={canViewReactionInfo ? showReactionInfo : undefined}
                     />
                     <motion.button
                       onClick={() => {
@@ -1163,6 +1173,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                       onSelect={handleReaction}
                       onClose={() => setPickerOpen(false)}
                       align="right"
+                      onShowInfo={canViewReactionInfo ? showReactionInfo : undefined}
                     />
                     <motion.button
                       onClick={() => {
@@ -1519,6 +1530,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           onClose();
         }}
       />
+
+      {canViewReactionInfo && reactionInfoOpen && (
+        <ReactionInfoDrawer
+          open={reactionInfoOpen}
+          onOpenChange={setReactionInfoOpen}
+          tokenId={currentShort.id}
+        />
+      )}
     </motion.div>
   );
 }
