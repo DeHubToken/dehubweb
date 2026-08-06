@@ -264,10 +264,10 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
               role: m.role,
               content: m.content
             })),
-            // Signed-in caller, so the agent can answer about this user's own
-            // account as well as public platform data.
+            // The token is what proves who is asking — the API verifies it and
+            // scopes the personal-data tools to that account.
             surface: 'assistant',
-            callerAddress: walletAddress || undefined,
+            dehubToken: localStorage.getItem('dehub_token') || undefined,
             isAuthenticated: !!walletAddress,
           }
         });
