@@ -12,6 +12,7 @@
 import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { cdnImage } from '@/lib/media-url';
 import { Sparkles, MoreVertical, Flag, Ban, EyeOff, Bell, Bookmark, Info } from 'lucide-react';
 import { useTranslation as useI18n } from 'react-i18next';
 import { cn } from '@/lib/utils';
@@ -154,9 +155,14 @@ export function LiveCard({ stream }: LiveCardProps) {
       <div className="relative aspect-video bg-black rounded-lg overflow-hidden" data-no-navigate>
         {stream.isLive && stream.thumbnail ? (
           <img
-            src={stream.thumbnail}
+            /* Live thumbnails come straight off the API as raw CDN paths, so
+               they never passed through the media-url builders. 720 covers the
+               aspect-video card at 2x. */
+            src={cdnImage(stream.thumbnail, { width: 720 })}
             alt=""
             className="w-full h-full object-cover rounded-lg"
+            loading="lazy"
+            decoding="async"
             onError={(e) => {
               (e.currentTarget as HTMLImageElement).src =
                 'https://images.unsplash.com/photo-1611162616475-46b635cb6868?w=480&h=270&fit=crop';
