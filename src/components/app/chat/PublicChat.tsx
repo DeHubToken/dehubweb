@@ -20,6 +20,7 @@ import { BuyAlertCard } from './BuyAlertCard';
 import { AssistantReplyCard } from './AssistantReplyCard';
 import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
 import { isAssistantAddress } from '@/lib/assistant';
+import { useAssistantReplies, useAssistantReplyEngine } from '@/hooks/use-assistant-replies';
 import { dismissKeyboard } from '@/hooks/use-keyboard-open';
 import {
   DropdownMenu,
@@ -120,9 +121,14 @@ export function PublicChat({ onBack }: PublicChatProps) {
   // Convert API messages to local format
   const messages: Message[] = apiMessages.map(toLocalMessage);
 
-  // Filter messages based on search query and merge buy alerts.
   // Assistant replies are ordinary chat messages now — they arrive over the
-  // socket like everyone else's and only differ in how they are rendered.
+  // socket like everyone else's and only differ in how they are rendered. The
+  // local engine below is a fallback for deployments where the API side is not
+  // live yet; it stands itself down as soon as a real one arrives.
+  useAssistantReplyEngine(apiMessages);
+  const localAssistantReplies = useAssistantReplies();
+
+  // Filter messages based on search query and merge buy alerts
   const filteredMessages = useMemo(() => {
     // Convert buy alerts to Message format for merging
     const buyAlertMessages: Message[] = buyAlerts.map((alert) => ({
@@ -134,7 +140,17 @@ export function PublicChat({ onBack }: PublicChatProps) {
       type: 'buy_alert' as Message['type'],
     }));
 
-    const allMessages = [...messages, ...buyAlertMessages].sort(
+    const localAssistantMessages: Message[] = localAssistantReplies.map((r) => ({
+      id: `assistant-reply-${r.id}`,
+      userId: 'assistant',
+      userName: 'assistant',
+      content: r.content,
+      timestamp: r.timestamp,
+      type: 'assistant_reply' as Message['type'],
+      replyTo: r.replyToName ? { id: '', content: '', senderName: r.replyToName } : undefined,
+    }));
+
+    const allMessages = [...messages, ...buyAlertMessages, ...localAssistantMessages].sort(
       (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
     );
 
@@ -143,7 +159,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
     return allMessages.filter(
       m => m.content.toLowerCase().includes(q) || m.userName.toLowerCase().includes(q)
     );
-  }, [messages, buyAlerts, searchQuery]);
+  }, [messages, buyAlerts, localAssistantReplies, searchQuery]);
 
   // Toggle search
   const handleToggleSearch = useCallback(() => {
@@ -430,7 +446,7 @@ export function PublicChat({ onBack }: PublicChatProps) {
                     onHide={hideBuyBot}
                   />
                 )
-              ) : isAssistantAddress(message.userId) ? (
+              ) : isAssistantAddress(message.userId) || message.id.startsWith('assistant-reply-') ? (
                 <AssistantReplyCard
                   key={message.id}
                   content={message.content}
