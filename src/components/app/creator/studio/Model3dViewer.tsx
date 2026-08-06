@@ -20,6 +20,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { Loader2, RotateCcw } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { releaseContext } from '@/lib/three/scene-helpers';
 
 /**
  * Google's hosted Draco decoder, the same one three's own examples use.
@@ -47,6 +48,13 @@ export function Model3dViewer({ url, className, autoRotate = true }: Model3dView
   const [progress, setProgress] = useState(0);
   /** Set by the scene so the reset button can call back into it. */
   const resetViewRef = useRef<(() => void) | null>(null);
+  /**
+   * Auto-rotate is read through a ref rather than being a dependency: in the
+   * dep array it would tear down the WebGL context and re-download the whole
+   * mesh every time the flag flipped.
+   */
+  const autoRotateRef = useRef(autoRotate);
+  autoRotateRef.current = autoRotate;
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -58,11 +66,22 @@ export function Model3dViewer({ url, className, autoRotate = true }: Model3dView
 
     let disposed = false;
 
-    const renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: true,
-      powerPreference: 'high-performance',
-    });
+    // A machine with WebGL disabled, blocklisted drivers, or no contexts left
+    // throws right here. Uncaught, that propagates out of the effect and takes
+    // down the whole page instead of just this panel.
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        alpha: true,
+        powerPreference: 'high-performance',
+      });
+    } catch (e) {
+      console.error('[3d] WebGL unavailable', e);
+      setError('3D preview is not available in this browser. The model can still be downloaded.');
+      setLoading(false);
+      return;
+    }
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(mount.clientWidth || 1, mount.clientHeight || 1);
     // r155+ names: outputColorSpace / SRGBColorSpace. The pre-r150 spelling
@@ -104,7 +123,7 @@ export function Model3dViewer({ url, className, autoRotate = true }: Model3dView
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.06;
-    controls.autoRotate = autoRotate;
+    controls.autoRotate = autoRotateRef.current;
     controls.autoRotateSpeed = 1.4;
     // Stop spinning as soon as it is being driven by hand; resuming would fight
     // the creator for control of the camera.
@@ -122,9 +141,11 @@ export function Model3dViewer({ url, className, autoRotate = true }: Model3dView
     const clock = new THREE.Clock();
 
     /** Fit the camera to the mesh, whatever scale the provider exported at. */
-    function frameModel(object: THREE.Object3D) {
+    function frameModel(object: THREE.Object3D): boolean {
       const box = new THREE.Box3().setFromObject(object);
-      if (box.isEmpty()) return;
+      // A GLB with no renderable geometry gives an empty box. Framing it would
+      // leave a silently blank canvas that reads as a broken viewer.
+      if (box.isEmpty()) return false;
 
       const size = box.getSize(new THREE.Vector3());
       const center = box.getCenter(new THREE.Vector3());
@@ -135,7 +156,11 @@ export function Model3dViewer({ url, className, autoRotate = true }: Model3dView
       object.position.sub(center);
 
       const maxDim = Math.max(size.x, size.y, size.z) || 1;
-      const fitDistance = (maxDim / 2) / Math.tan((camera.fov * Math.PI) / 360);
+      let fitDistance = (maxDim / 2) / Math.tan((camera.fov * Math.PI) / 360);
+      // camera.fov is the VERTICAL field of view, so on a portrait viewport the
+      // horizontal extent is narrower than the vertical one and a wide mesh gets
+      // clipped left and right. Back off by the aspect shortfall on phones.
+      if (camera.aspect < 1) fitDistance /= camera.aspect;
       // A little margin so the mesh is not flush against the frame edge.
       const distance = fitDistance * 1.6;
 
@@ -149,11 +174,12 @@ export function Model3dViewer({ url, className, autoRotate = true }: Model3dView
       controls.maxDistance = distance * 6;
       controls.update();
       controls.saveState();
+      return true;
     }
 
     resetViewRef.current = () => {
       controls.reset();
-      controls.autoRotate = autoRotate;
+      controls.autoRotate = autoRotateRef.current;
     };
 
     loader.load(
@@ -167,7 +193,11 @@ export function Model3dViewer({ url, className, autoRotate = true }: Model3dView
         }
         model = gltf.scene;
         scene.add(model);
-        frameModel(model);
+        if (!frameModel(model)) {
+          setError('This model came back empty — it has no geometry to display.');
+          setLoading(false);
+          return;
+        }
 
         if (gltf.animations?.length) {
           mixer = new THREE.AnimationMixer(model);
@@ -211,7 +241,10 @@ export function Model3dViewer({ url, className, autoRotate = true }: Model3dView
     renderer.setAnimationLoop(() => {
       const delta = clock.getDelta();
       mixer?.update(delta);
-      controls.update();
+      // Pass the delta: without it OrbitControls advances auto-rotation by a
+      // fixed step per frame, so the model spins twice as fast on a 120 Hz
+      // display as on a 60 Hz one.
+      controls.update(delta);
       renderer.render(scene, camera);
     });
 
@@ -232,14 +265,14 @@ export function Model3dViewer({ url, className, autoRotate = true }: Model3dView
       envRT.dispose();
       pmrem.dispose();
       dracoLoader.dispose();
-      renderer.dispose();
-      // forceContextLoss frees the GPU context immediately rather than waiting
-      // for the canvas to be garbage collected, which is what actually keeps a
-      // long session from exhausting the browser's context budget.
-      renderer.forceContextLoss();
+      // The house helper: it frees the GPU context immediately rather than
+      // waiting for the canvas to be collected — which is what keeps a long
+      // session from exhausting the browser's context budget — and swallows the
+      // throw some drivers raise when the context is already gone.
+      releaseContext(renderer);
       renderer.domElement.remove();
     };
-  }, [url, autoRotate]);
+  }, [url]);
 
   return (
     <div className={cn('relative h-full w-full', className)}>
