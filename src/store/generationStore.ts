@@ -74,7 +74,24 @@ type PersistedJob = Pick<
   | 'ticket'
 >;
 
-const STORAGE_KEY = 'dehub-creator-library-v1';
+/**
+ * The library is stored per identity.
+ *
+ * A single shared key meant prompts, results and in-flight tickets outlived a
+ * disconnect and were visible to whoever connected next on the same machine.
+ * Scoping by wallet also means switching accounts shows that account's work
+ * rather than the previous one's, without having to hook every one of
+ * AuthProvider's several sign-out paths.
+ */
+const STORAGE_PREFIX = 'dehub-creator-library-v1';
+
+function scopeKey(wallet: string | null | undefined): string {
+  return wallet ? `${STORAGE_PREFIX}:${wallet.toLowerCase()}` : `${STORAGE_PREFIX}:anon`;
+}
+
+/** Active storage key. Starts anonymous; setScope moves it once auth resolves. */
+let storageKey = scopeKey(null);
+
 const MAX_PERSISTED = 60;
 /**
  * localStorage is only a few megabytes per origin, and the Gemini image models
@@ -100,13 +117,18 @@ function isPersistableUrl(url: string | undefined): url is string {
  */
 const MAX_IN_MEMORY = 100;
 
-function trimJobs(jobs: GenerationJob[]): GenerationJob[] {
+function trimJobs(jobs: GenerationJob[], protectedId?: string | null): GenerationJob[] {
   if (jobs.length <= MAX_IN_MEMORY) return jobs;
   const kept: GenerationJob[] = [];
   const overflow: GenerationJob[] = [];
   for (const job of jobs) {
-    if (job.status === 'running' || kept.length < MAX_IN_MEMORY) kept.push(job);
-    else overflow.push(job);
+    // Never drop a render in flight, or the result the creator is looking at:
+    // for audio that would revoke the object URL out from under the player.
+    if (job.status === 'running' || job.id === protectedId || kept.length < MAX_IN_MEMORY) {
+      kept.push(job);
+    } else {
+      overflow.push(job);
+    }
   }
   for (const job of overflow) {
     if (job.kind === 'audio' && job.url?.startsWith('blob:')) {
@@ -123,10 +145,67 @@ function trimJobs(jobs: GenerationJob[]): GenerationJob[] {
 /** Abort controllers live outside state; they are not serialisable. */
 const controllers = new Map<string, AbortController>();
 
+/**
+ * Cross-tab claim on a render.
+ *
+ * Every tab loads the same persisted library and would otherwise resume every
+ * ticket in it, so three open tabs meant three pollers hammering one
+ * predictionId against a per-IP status budget they all share. A tab claims a
+ * render before polling it and refreshes that claim on every poll; if the
+ * owning tab is closed the claim goes stale and another tab takes over.
+ */
+const CLAIM_PREFIX = 'dehub-render-claim:';
+const CLAIM_STALE_MS = 45_000;
+const tabId = nanoid(8);
+
+function claimRender(predictionId: string): boolean {
+  if (typeof window === 'undefined') return true;
+  const key = CLAIM_PREFIX + predictionId;
+  try {
+    const raw = window.localStorage.getItem(key);
+    if (raw) {
+      const held = JSON.parse(raw) as { tabId?: string; at?: number };
+      const fresh = typeof held.at === 'number' && Date.now() - held.at < CLAIM_STALE_MS;
+      if (fresh && held.tabId !== tabId) return false;
+    }
+    window.localStorage.setItem(key, JSON.stringify({ tabId, at: Date.now() }));
+    return true;
+  } catch {
+    // Storage unavailable: fall back to polling. A duplicate poller is far
+    // better than nobody collecting a render that has been paid for.
+    return true;
+  }
+}
+
+function refreshClaim(predictionId: string) {
+  if (typeof window === 'undefined') return;
+  try {
+    window.localStorage.setItem(
+      CLAIM_PREFIX + predictionId,
+      JSON.stringify({ tabId, at: Date.now() }),
+    );
+  } catch {
+    /* storage unavailable */
+  }
+}
+
+function releaseClaim(predictionId: string | undefined) {
+  if (!predictionId || typeof window === 'undefined') return;
+  try {
+    const key = CLAIM_PREFIX + predictionId;
+    const raw = window.localStorage.getItem(key);
+    if (!raw) return;
+    const held = JSON.parse(raw) as { tabId?: string };
+    if (held.tabId === tabId) window.localStorage.removeItem(key);
+  } catch {
+    /* storage unavailable */
+  }
+}
+
 function loadPersisted(): GenerationJob[] {
   if (typeof window === 'undefined') return [];
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = window.localStorage.getItem(storageKey);
     if (!raw) return [];
     const rows = JSON.parse(raw) as PersistedJob[];
     if (!Array.isArray(rows)) return [];
@@ -183,7 +262,7 @@ function persist(jobs: GenerationJob[]) {
 
   for (const rows of attempts) {
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(rows));
+      window.localStorage.setItem(storageKey, JSON.stringify(rows));
       return;
     } catch {
       /* too big or storage unavailable; try a smaller payload */
@@ -217,6 +296,12 @@ interface GenerationState {
   resumeInterrupted: () => void;
 
   /**
+   * Point the library at a wallet's own storage. Call whenever the signed-in
+   * wallet changes, including to null on disconnect.
+   */
+  setScope: (wallet: string | null) => void;
+
+  /**
    * Reconnect to a render whose polling gave up. Free: the render was already
    * paid for and is very likely finished at the provider, so this must never
    * route back through the paywall.
@@ -247,7 +332,7 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
       createdAt: Date.now(),
       sourceImage,
     };
-    set((s) => ({ jobs: trimJobs([job, ...s.jobs]) }));
+    set((s) => ({ jobs: trimJobs([job, ...s.jobs], s.focusedId) }));
     return id;
   }
 
@@ -257,6 +342,9 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
 
   function settle(id: string, next: Partial<GenerationJob>) {
     controllers.delete(id);
+    // Hand the render back so another tab can pick it up if this one only
+    // stopped waiting. A finished render's claim is dead weight either way.
+    releaseClaim(get().jobs.find((j) => j.id === id)?.ticket?.predictionId);
     patch(id, { ...next, finishedAt: Date.now(), stage: '' });
     persist(get().jobs);
   }
@@ -305,7 +393,10 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
           onStage: (stage) => patch(id, { stage }),
           onQueued: (ticket) => {
             // Write the ticket to storage immediately. From here on the render
-            // is recoverable even if the tab closes mid-render.
+            // is recoverable even if the tab closes mid-render. Claim it too,
+            // so another tab reading the same library does not start a second
+            // poller against the same prediction.
+            claimRender(ticket.predictionId);
             patch(id, { ticket });
             persist(get().jobs);
           },
@@ -314,16 +405,52 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
       return id;
     },
 
+    setScope: (wallet) => {
+      const next = scopeKey(wallet);
+      if (next === storageKey) return;
+
+      // Flush the outgoing identity's work under its own key first.
+      persist(get().jobs);
+
+      // Its pollers belong to it, not to whoever is signing in. Abort them and
+      // drop the controllers; the aborted promises settle against job ids that
+      // are no longer in state, so their patches are no-ops.
+      for (const controller of controllers.values()) controller.abort();
+      controllers.clear();
+
+      storageKey = next;
+      for (const job of get().jobs) {
+        if (job.kind === 'audio' && job.url?.startsWith('blob:')) {
+          try {
+            URL.revokeObjectURL(job.url);
+          } catch {
+            /* already revoked */
+          }
+        }
+      }
+      set({ jobs: loadPersisted(), focusedId: null });
+      get().resumeInterrupted();
+    },
+
     resumeInterrupted: () => {
       for (const job of get().jobs) {
         if (job.status !== 'running' || !job.ticket || controllers.has(job.id)) continue;
+        // Another tab is already waiting on this render.
+        if (!claimRender(job.ticket.predictionId)) {
+          patch(job.id, { stage: 'Rendering in another tab' });
+          continue;
+        }
         const ctrl = new AbortController();
         controllers.set(job.id, ctrl);
+        const ticket = job.ticket;
         finish(
           job.id,
-          pollVideo(job.ticket, {
+          pollVideo(ticket, {
             signal: ctrl.signal,
-            onStage: (stage) => patch(job.id, { stage }),
+            onStage: (stage) => {
+              refreshClaim(ticket.predictionId);
+              patch(job.id, { stage });
+            },
           }),
         );
       }
@@ -332,14 +459,19 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
     retry: (id) => {
       const job = get().jobs.find((j) => j.id === id);
       if (!job?.ticket || controllers.has(id)) return;
+      const ticket = job.ticket;
+      claimRender(ticket.predictionId);
       const ctrl = new AbortController();
       controllers.set(id, ctrl);
       patch(id, { status: 'running', stage: 'Reconnecting', error: undefined });
       finish(
         id,
-        pollVideo(job.ticket, {
+        pollVideo(ticket, {
           signal: ctrl.signal,
-          onStage: (stage) => patch(id, { stage }),
+          onStage: (stage) => {
+            refreshClaim(ticket.predictionId);
+            patch(id, { stage });
+          },
         }),
       );
     },

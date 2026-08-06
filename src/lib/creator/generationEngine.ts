@@ -174,6 +174,29 @@ async function unwrap<T extends { error?: string }>(
   return res.data;
 }
 
+/**
+ * Data URLs above this are staged in storage before being sent to an edge
+ * function. Both a generated still handed over by "Animate this" and a large
+ * attachment arrive as base64, and inlining those would post a multi-megabyte
+ * JSON body on every generation.
+ */
+const MAX_INLINE_SOURCE_IMAGE_CHARS = 200_000;
+
+/** Upload a data URL to the shared AI bucket and return its public URL. */
+async function hostDataUrl(dataUrl: string): Promise<string> {
+  const res = await fetch(dataUrl);
+  const blob = await res.blob();
+  const ext = (blob.type.split('/')[1] || 'png').replace(/[^a-z0-9]/gi, '');
+  const path = `creator-sources/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const { error } = await supabase.storage.from('ai-media-uploads').upload(path, blob, {
+    contentType: blob.type || 'image/png',
+    upsert: false,
+  });
+  if (error) throw new Error(`Could not stage the source image: ${error.message}`);
+  const { data } = supabase.storage.from('ai-media-uploads').getPublicUrl(path);
+  return data.publicUrl;
+}
+
 /** Text to image, or image plus instruction to edited image. Resolves to a URL. */
 export async function generateImage(
   req: ImageRequest,
@@ -182,11 +205,20 @@ export async function generateImage(
   throwIfAborted(handlers.signal);
   handlers.onStage?.(req.sourceImage ? 'Applying the edit' : 'Painting the frame');
 
+  // Same staging as the video path: a big attachment or a generated still
+  // arrives as base64 and would otherwise be JSON-encoded into the request.
+  let sourceImage = req.sourceImage;
+  if (sourceImage?.startsWith('data:') && sourceImage.length > MAX_INLINE_SOURCE_IMAGE_CHARS) {
+    handlers.onStage?.('Preparing the reference');
+    sourceImage = await hostDataUrl(sourceImage);
+    throwIfAborted(handlers.signal);
+  }
+
   const res = await supabase.functions.invoke('generate-image', {
     body: {
       prompt: req.prompt,
       model: req.model,
-      ...(req.sourceImage ? { sourceImage: req.sourceImage } : {}),
+      ...(sourceImage ? { sourceImage } : {}),
       ...(req.aspectRatio ? { aspectRatio: req.aspectRatio } : {}),
     },
   });
@@ -256,29 +288,6 @@ export async function generateVideo(
   handlers.onQueued?.(ticket);
 
   return pollVideo(ticket, handlers);
-}
-
-/**
- * Data URLs above this go to storage before being sent to generate-video.
- * The Gemini image models return their result as base64, so "Animate this" on a
- * generated still would otherwise post a multi-megabyte JSON body to the edge
- * function on every render.
- */
-const MAX_INLINE_SOURCE_IMAGE_CHARS = 200_000;
-
-/** Upload a data URL to the shared AI bucket and return its public URL. */
-async function hostDataUrl(dataUrl: string): Promise<string> {
-  const res = await fetch(dataUrl);
-  const blob = await res.blob();
-  const ext = (blob.type.split('/')[1] || 'png').replace(/[^a-z0-9]/gi, '');
-  const path = `creator-sources/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-  const { error } = await supabase.storage.from('ai-media-uploads').upload(path, blob, {
-    contentType: blob.type || 'image/png',
-    upsert: false,
-  });
-  if (error) throw new Error(`Could not stage the source image: ${error.message}`);
-  const { data } = supabase.storage.from('ai-media-uploads').getPublicUrl(path);
-  return data.publicUrl;
 }
 
 /**
