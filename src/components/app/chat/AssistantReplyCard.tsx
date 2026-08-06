@@ -1,8 +1,10 @@
 /**
  * AssistantReplyCard
  * ==================
- * Local-only @assistant reply rendered inline in chat.
- * Not persisted to the chat API — purely a web-app side effect, similar to BuyAlertCard.
+ * How an @assistant reply is rendered in chat. The reply itself is a real
+ * message posted by the API under the assistant account, so it arrives over the
+ * socket like any other — this only changes how it looks, and everyone in the
+ * room sees the same thing.
  * Visual layout MUST match ChatMessage exactly (spacing, avatar size, timestamp format)
  * so it sits inline naturally with surrounding messages.
  */
