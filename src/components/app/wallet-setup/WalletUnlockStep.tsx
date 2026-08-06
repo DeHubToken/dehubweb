@@ -37,6 +37,7 @@ import {
   hasDeclinedBiometricOffer,
   declineBiometricOffer,
   clearBiometricOfferDecline,
+  hasBiometricUsableHere,
   PasskeyCancelledError,
   type PasskeyWrap,
 } from '@/lib/wallet-core/biometric-unlock';
@@ -121,9 +122,18 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       // The passkey layer states the failure but not the remedy, because only
       // here do we know whether this wallet has a password to fall back to.
       // Telling a biometrics-only user to "use your password" is a dead end.
+      //
+      // The most common failure here is an enrolled credential that lives on
+      // another device and didn't sync, so say what happens next rather than
+      // leaving "use your password" as the whole answer — otherwise this
+      // device stays password-only and the user is never told it needn't be.
+      const willOfferEnrolHere =
+        biometricAvailable === true && !hasBiometricUsableHere(userId) && !hasDeclinedBiometricOffer(userId);
       setError(
         hasPasswordWrap
-          ? `${message} Use your wallet password instead.`
+          ? willOfferEnrolHere
+            ? `${message} Unlock with your wallet password below — we'll offer to set biometrics up on this device right after.`
+            : `${message} Use your wallet password instead.`
           : `${message} This wallet has no password yet — sign in on a device where biometrics work and add one from Settings → Account Security.`,
       );
     } finally {
@@ -150,7 +160,15 @@ export function WalletUnlockStep({ userId, onComplete, onLogout }: WalletUnlockS
       // The one moment we hold the plaintext seed with the user's attention:
       // offer to make the next unlock a fingerprint instead of this. Asked once
       // per device — someone who said no must not be asked at every login.
-      if (biometricAvailable === true && wraps.length === 0 && !hasDeclinedBiometricOffer(userId)) {
+      //
+      // Gated on "biometrics have never worked on THIS device", not "this
+      // account has no wraps": wraps are account-wide, so enrolling on a phone
+      // used to suppress the offer on every other device the user owns,
+      // leaving them typing this password forever with nothing offering a way
+      // out. Someone whose passkey does sync here just enrols a second
+      // credential, which is harmless, and only if they chose the password
+      // over the biometric button already on screen.
+      if (biometricAvailable === true && !hasBiometricUsableHere(userId) && !hasDeclinedBiometricOffer(userId)) {
         setPendingSecret(derived.secret);
         setPendingPrivKey(derived.ethPrivateKey);
         setPassword('');

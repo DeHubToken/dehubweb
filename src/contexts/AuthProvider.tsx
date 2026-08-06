@@ -60,7 +60,11 @@ import {
   getAAProvider,
 } from '@/lib/smart-wallet';
 import { fetchWallet, saveWallet, clearWalletCache } from '@/lib/wallet-core/store';
-import { unlockWithBiometrics } from '@/lib/wallet-core/biometric-unlock';
+import { unlockWithBiometrics, hasBiometricUsableHere } from '@/lib/wallet-core/biometric-unlock';
+import {
+  WALLET_UNLOCK_INTERVAL_KEY,
+  DEFAULT_WALLET_UNLOCK_INTERVAL,
+} from '@/hooks/use-wallet-unlock-interval';
 import { clearPasskeyCache, deleteAllPasskeyWraps } from '@/lib/wallet-core/passkey-store';
 import { deriveFromSecret } from '@/lib/wallet-core/derive';
 import { encryptString, decryptString } from '@/lib/wallet-core/crypto';
@@ -588,6 +592,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // all; if the two ever disagree the dialog silently never opens and the
       // action just fails.
       if (!isSmartWalletSession()) return;
+
+      // How often this fires is the entire complaint about the built-in
+      // wallet, and until now nothing counted it: authLogger.info is
+      // console-only (lib/logger.ts drops info/debug before the network call),
+      // so the backend only ever saw actions that FAILED on a locked wallet —
+      // the tail, not the rate. warn is the cheapest level that actually
+      // ships, and this is one row per prompt.
+      const uid = localStorage.getItem('dehub_supabase_uid');
+      authLogger.warn('Wallet unlock prompt shown', {
+        // The question worth answering: are people typing a password because
+        // biometrics genuinely aren't available on the device, or because this
+        // device was never offered enrolment? Those need opposite fixes.
+        biometricUsableHere: uid ? hasBiometricUsableHere(uid) : null,
+        unlockInterval:
+          localStorage.getItem(WALLET_UNLOCK_INTERVAL_KEY) || DEFAULT_WALLET_UNLOCK_INTERVAL,
+        // createLogger's warn() has no user_address parameter, so carry it here
+        // — without it the rows can't be counted per person, which is the only
+        // way to tell "a few people posting a lot" from "everybody".
+        walletAddress: localStorage.getItem('dehub_wallet'),
+      });
+
       requestWalletUnlock();
     };
     window.addEventListener('dehub:wallet-unlock-required', handler);
