@@ -46,6 +46,8 @@ export function Model3dViewer({ url, className, autoRotate = true }: Model3dView
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [progress, setProgress] = useState(0);
+  /** Bumped to force a full scene rebuild after the GL context is restored. */
+  const [epoch, setEpoch] = useState(0);
   /** Set by the scene so the reset button can call back into it. */
   const resetViewRef = useRef<(() => void) | null>(null);
   /**
@@ -232,11 +234,20 @@ export function Model3dViewer({ url, className, autoRotate = true }: Model3dView
 
     // A lost context leaves a permanently blank canvas, so say so instead of
     // showing an empty box that looks like a failed generation.
+    //
+    // preventDefault on the loss event is what makes the browser willing to
+    // fire `webglcontextrestored` at all. When it does, none of three's GPU
+    // state survives, so recovering means rebuilding the whole scene — bumping
+    // the epoch re-runs this effect from scratch, which is exactly that.
+    // Without it the error overlay sat on top of a working canvas forever and
+    // swallowed every orbit and zoom.
     const onContextLost = (e: Event) => {
       e.preventDefault();
-      setError('The 3D view lost its graphics context. Reopen this result to try again.');
+      setError('The 3D view lost its graphics context. Trying to recover…');
     };
+    const onContextRestored = () => setEpoch((n) => n + 1);
     renderer.domElement.addEventListener('webglcontextlost', onContextLost);
+    renderer.domElement.addEventListener('webglcontextrestored', onContextRestored);
 
     renderer.setAnimationLoop(() => {
       const delta = clock.getDelta();
@@ -254,6 +265,7 @@ export function Model3dViewer({ url, className, autoRotate = true }: Model3dView
       renderer.setAnimationLoop(null);
       resizeObserver.disconnect();
       renderer.domElement.removeEventListener('webglcontextlost', onContextLost);
+      renderer.domElement.removeEventListener('webglcontextrestored', onContextRestored);
 
       mixer?.stopAllAction();
       controls.dispose();
@@ -272,7 +284,7 @@ export function Model3dViewer({ url, className, autoRotate = true }: Model3dView
       releaseContext(renderer);
       renderer.domElement.remove();
     };
-  }, [url]);
+  }, [url, epoch]);
 
   return (
     <div className={cn('relative h-full w-full', className)}>
