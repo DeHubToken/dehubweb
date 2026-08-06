@@ -427,6 +427,39 @@ function ImageGenerationLoader({ startTime }: { startTime: number }) {
   );
 }
 
+/**
+ * Human-readable status for the tools the agent is running.
+ * Falls back to the raw tool name so a newly added backend tool still reads
+ * sensibly here without a matching web release.
+ */
+const TOOL_LABELS: Record<string, string> = {
+  lookup_user: 'Looking up that profile',
+  user_posts: 'Reading their posts',
+  search: 'Searching DeHub',
+  get_feed: 'Checking the feed',
+  get_post: 'Opening that post',
+  get_followers: 'Checking followers',
+  get_leaderboard: 'Checking the leaderboard',
+  get_live_streams: 'Checking who is live',
+  get_platform_stats: 'Checking platform stats',
+  get_chat_history: 'Reading recent chat',
+  get_top_categories: 'Checking trending categories',
+  my_wallet: 'Checking your wallet',
+  my_earnings: 'Adding up your earnings',
+  my_stats: 'Checking your stats',
+  my_notifications: 'Checking your notifications',
+  my_library: 'Checking your library',
+  my_settings: 'Checking your settings',
+  my_engagement_history: 'Checking who you engage with',
+  web_search: 'Searching the web',
+};
+
+function describeTools(tools: string[]): string {
+  if (!tools.length) return '';
+  const label = TOOL_LABELS[tools[0]] || `Running ${tools[0].replace(/_/g, ' ')}`;
+  return tools.length > 1 ? `${label} (+${tools.length - 1} more)…` : `${label}…`;
+}
+
 export default function AssistantPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -445,6 +478,8 @@ export default function AssistantPage() {
   const [slashSelected, setSlashSelected] = useState(0);
   const [skillsBrowserOpen, setSkillsBrowserOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  /** Tools the agent is running right now — shown in place of "Thinking…". */
+  const [activeTools, setActiveTools] = useState<string[]>([]);
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
   useEffect(() => {
     if (!lightboxImage) return;
@@ -869,6 +904,8 @@ export default function AssistantPage() {
         userLanguage,
         userContext,
         dehubToken: localStorage.getItem('dehub_token') || undefined,
+        surface: 'assistant' as const,
+        callerAddress: walletAddress || undefined,
       };
 
       const streamingMsgId = (Date.now() + 1).toString();
@@ -877,6 +914,7 @@ export default function AssistantPage() {
 
       await streamChat({
         body: chatBody,
+        onTool: ({ status, tools }) => setActiveTools(status === 'running' ? tools : []),
         onDelta: (delta) => {
           streamedContent += delta;
           if (isFirstToken) {
@@ -904,6 +942,7 @@ export default function AssistantPage() {
             content: streamedContent || 'No response',
           };
           queueMessage(finalMessage);
+          setActiveTools([]);
           setIsLoading(false);
 
           // Speak the response via Dia TTS
@@ -918,6 +957,7 @@ export default function AssistantPage() {
             content: `❌ ${err?.message || 'Voice chat error'}`,
             isError: true,
           }]);
+          setActiveTools([]);
           setIsLoading(false);
           // Restart listening even on error
           if (voiceAssistant.isVoiceMode) {
@@ -1647,6 +1687,10 @@ export default function AssistantPage() {
           userLanguage,
           userContext,
           dehubToken: localStorage.getItem('dehub_token') || undefined,
+          // Full assistant surface: the agent gets the personal-data tools as
+          // well as the public ones, and answers at length.
+          surface: 'assistant' as const,
+          callerAddress: walletAddress || undefined,
         };
 
         const streamingMsgId = (Date.now() + 1).toString();
@@ -1655,6 +1699,11 @@ export default function AssistantPage() {
 
         await streamChat({
           body: chatBody,
+          onTool: ({ status, tools }) => {
+            // Lookups happen before any text arrives, so name what is being
+            // checked instead of leaving a bare spinner on screen.
+            setActiveTools(status === 'running' ? tools : []);
+          },
           onDelta: (text) => {
             streamedContent += text;
             if (isFirstToken) {
@@ -1683,6 +1732,7 @@ export default function AssistantPage() {
             }
           },
           onDone: () => {
+            setActiveTools([]);
             // Save to conversation history
             const finalMessage: Message = {
               id: streamingMsgId,
@@ -1723,6 +1773,7 @@ export default function AssistantPage() {
               content: userErrorMessage,
               isError: true,
             }]);
+            setActiveTools([]);
             setIsLoading(false);
           },
         });
@@ -2708,7 +2759,11 @@ export default function AssistantPage() {
                   />
                   <div className="bg-white/10 rounded-2xl px-4 py-3 flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin text-white/60" />
-                    <span className="text-sm text-white/60">{t('assistant.thinking')}</span>
+                    <span className="text-sm text-white/60">
+                      {activeTools.length > 0
+                        ? describeTools(activeTools)
+                        : t('assistant.thinking')}
+                    </span>
                   </div>
                 </motion.div>
               )}

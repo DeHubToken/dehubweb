@@ -6,16 +6,35 @@
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/general-ai-chat`;
 
+/** One tool call the assistant made while answering. */
+export interface ToolTraceEntry {
+  tool: string;
+  args: Record<string, unknown>;
+  ok: boolean;
+  ms: number;
+}
+
 interface StreamChatOptions {
   body: Record<string, any>;
   onDelta: (text: string) => void;
-  onMeta?: (meta: { modelUsed?: string; modelTier?: string; modelReason?: string; fallbackUsed?: boolean }) => void;
+  onMeta?: (meta: {
+    modelUsed?: string;
+    modelTier?: string;
+    modelReason?: string;
+    fallbackUsed?: boolean;
+    toolTrace?: ToolTraceEntry[];
+  }) => void;
+  /**
+   * Fired while the assistant is looking things up, before any text arrives —
+   * so the UI can say what it is doing instead of showing a bare spinner.
+   */
+  onTool?: (event: { status: 'running' | 'done'; tools: string[] }) => void;
   onDone: () => void;
   onError: (error: Error & { errorCode?: string; statusCode?: number }) => void;
   signal?: AbortSignal;
 }
 
-export async function streamChat({ body, onDelta, onMeta, onDone, onError, signal }: StreamChatOptions) {
+export async function streamChat({ body, onDelta, onMeta, onTool, onDone, onError, signal }: StreamChatOptions) {
   try {
     const resp = await fetch(CHAT_URL, {
       method: 'POST',
@@ -77,6 +96,12 @@ export async function streamChat({ body, onDelta, onMeta, onDone, onError, signa
             continue;
           }
 
+          // Tool-progress event from the agent loop
+          if (parsed.__tool) {
+            onTool?.(parsed.__tool);
+            continue;
+          }
+
           const content = parsed.choices?.[0]?.delta?.content as string | undefined;
           if (content) onDelta(content);
         } catch {
@@ -99,6 +124,7 @@ export async function streamChat({ body, onDelta, onMeta, onDone, onError, signa
         try {
           const parsed = JSON.parse(jsonStr);
           if (parsed.__meta) { onMeta?.(parsed.__meta); continue; }
+          if (parsed.__tool) { onTool?.(parsed.__tool); continue; }
           const content = parsed.choices?.[0]?.delta?.content as string | undefined;
           if (content) onDelta(content);
         } catch { /* ignore partial leftovers */ }

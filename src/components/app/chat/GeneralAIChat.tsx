@@ -263,7 +263,12 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
             messages: [...messages, userMessage].map(m => ({
               role: m.role,
               content: m.content
-            }))
+            })),
+            // Signed-in caller, so the agent can answer about this user's own
+            // account as well as public platform data.
+            surface: 'assistant',
+            callerAddress: walletAddress || undefined,
+            isAuthenticated: !!walletAddress,
           }
         });
 
