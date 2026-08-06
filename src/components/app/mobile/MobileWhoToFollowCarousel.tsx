@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { getSuggestedAccounts, getCachedSuggestedProfiles, type SuggestedAccount } from '@/lib/api/dehub';
-import { buildAvatarUrl } from '@/lib/media-url';
+import { buildAvatarUrl, deviceWidth } from '@/lib/media-url';
 import { useAuth } from '@/contexts/AuthContext';
 import { useReauthHandler } from '@/hooks/use-reauth-handler';
 import { useFollowedSuggestions } from '@/hooks/use-followed-suggestions';
@@ -96,7 +96,8 @@ export function MobileWhoToFollowCarousel() {
   const getAvatarUrl = (user: SuggestedAccount) => {
     const avatarPath = user.avatarImageUrl || user.avatarUrl;
     if (avatarPath && user.address) {
-      return buildAvatarUrl(user.address, avatarPath);
+      // Rendered at w-24 below, well above the default avatar size.
+      return buildAvatarUrl(user.address, avatarPath, deviceWidth(96));
     }
     return undefined;
   };

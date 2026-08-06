@@ -23,6 +23,17 @@ const cache = new Map<string, boolean>();
 /** Luminance spread below this (0–255) reads as a flat, contentless frame. */
 const UNIFORM_THRESHOLD = 12;
 
+/**
+ * Device-pixel width callers should request the poster at for this check.
+ *
+ * The classification draws onto a 32x18 canvas, so anything past that is
+ * decoded and thrown away. It matters more than it looks: this hook fetches
+ * with crossOrigin="anonymous", which is a separate HTTP cache entry from the
+ * <img>/<video poster> no-CORS request, so whatever size it asks for is
+ * downloaded IN ADDITION to the poster itself.
+ */
+export const BLANK_PROBE_WIDTH = 64;
+
 export function useBlankPoster(url?: string | null): boolean {
   const [blank, setBlank] = useState<boolean>(() => (url ? cache.get(url) ?? false : false));
 

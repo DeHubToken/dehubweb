@@ -118,12 +118,68 @@ export function cdnImage(
   return `${IMAGE_TRANSFORM_ORIGIN}/cdn-cgi/image/${params.join(',')}/${url}`;
 }
 
-// Defaults are DEVICE pixels sized for the largest place each kind renders, so
-// no call site gets a softer image than it does today:
-//   avatars — largest <Avatar> in the app is w-24 (96 CSS px) => 192 at 2x DPR
+// ── Sizing by what the element actually renders at ──────────────────────
+//
+// The first pass at this shipped one fixed width per media kind, each sized for
+// the LARGEST place that kind appears on a desktop viewport. That is device-
+// blind, and measuring dehub.io in Aug 2026 showed what it costs: a phone at
+// 375 CSS px pulled 1,555 KB of images and a 1280 px desktop pulled 1,666 KB —
+// near-identical payloads, because every device asks for the same URL. The
+// desktop can absorb that. A phone on a mobile radio cannot, which is why the
+// desktop got visibly faster and mobile barely moved.
+//
+// Concretely, on the mobile home feed: 30 video posters rendered into a 120 CSS
+// px reel tile, each fetched at width=1080 (29.0 KB vs 5.7 KB at width=240),
+// and 23 avatars rendered at 36 CSS px, each fetched at width=192 (5.6 KB vs
+// 1.3 KB at width=72).
+//
+// So callers now say how big the element is in CSS pixels and this works out
+// the device pixels, which is the only place DPR belongs. It cuts both ways:
+// the profile header avatar (w-24 sm:w-28) was UNDER-served at 192 on a 3x
+// phone and now gets 360.
+
+/**
+ * Widths are snapped to this ladder rather than passed through exactly. Every
+ * distinct width is a separate Cloudflare transform + cache object, so letting
+ * arbitrary viewport arithmetic reach the URL would shred the edge hit rate
+ * across the device population for pixels nobody can see.
+ */
+const WIDTH_LADDER = [64, 96, 128, 192, 256, 360, 480, 720, 1080, 1440, 1920];
+
+/**
+ * Device pixels needed to render `cssPx` crisply here, snapped up to the ladder.
+ *
+ * DPR is capped at 3: past that the extra pixels are well beyond what the eye
+ * resolves at phone viewing distance, and the byte cost is quadratic. Falls back
+ * to 2 when there is no window (the Cloudflare worker's bot prerender), which is
+ * the median of the real device population rather than a guess.
+ */
+export function deviceWidth(cssPx: number): number {
+  const dpr = typeof window === 'undefined' ? 2 : Math.min(window.devicePixelRatio || 1, 3);
+  const needed = cssPx * dpr;
+  return WIDTH_LADDER.find((w) => w >= needed) ?? WIDTH_LADDER[WIDTH_LADDER.length - 1];
+}
+
+/**
+ * Tailwind's `md` breakpoint, for call sites whose element has a responsive
+ * width (`w-[120px] md:w-[180px]`) and so cannot state one CSS size.
+ *
+ * Read at render, so it does not react to a resize across the breakpoint on its
+ * own. That is deliberate: the cost of being wrong is one slightly soft or
+ * slightly heavy image until the next render, and phones do not cross 768 px.
+ */
+export function isMdUp(): boolean {
+  return typeof window !== 'undefined' && window.innerWidth >= 768;
+}
+
+// Defaults for callers that don't state a size. These are the COMMON case, not
+// the largest one — the handful of genuinely large call sites pass their own
+// width (only four <Avatar> elements in the app render at 64 CSS px or more,
+// and two of those are static team photos).
+//   avatars — the default <Avatar> is h-10 w-10, i.e. 40 CSS px
 //   covers  — full-bleed profile banner
-//   images / feed-images — full-width feed media on a desktop viewport
-const DEFAULT_AVATAR_WIDTH = 192;
+//   images / feed-images — full-width feed media
+const DEFAULT_AVATAR_CSS_PX = 40;
 const DEFAULT_COVER_WIDTH = 1500;
 const DEFAULT_IMAGE_WIDTH = 1080;
 
@@ -165,8 +221,11 @@ export function buildAvatarCdnFallbackUrl(address: string, apiAvatarPath?: strin
 export function buildAvatarUrl(
   address: string,
   apiAvatarPath: string | undefined | null,
-  /** Device pixels. Defaults to the largest avatar the app renders (w-24 @2x). */
-  width: number = DEFAULT_AVATAR_WIDTH,
+  /**
+   * Device pixels — pass `deviceWidth(cssPx)` rather than a literal, so the
+   * value tracks the screen. Defaults to the app's standard h-10 w-10 avatar.
+   */
+  width: number = deviceWidth(DEFAULT_AVATAR_CSS_PX),
 ): string | undefined {
   return cdnImage(buildAvatarSourceUrl(address, apiAvatarPath), { width, fit: 'cover' });
 }
