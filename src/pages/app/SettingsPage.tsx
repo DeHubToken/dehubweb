@@ -90,7 +90,7 @@ import { updateProfile, getAccountInfo, type UpdateProfileData, type DeHubUser }
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import { getBlockListPaginated, unblockUser as apiUnblockUser, type BlockedUser, checkUsernameAvailability } from '@/lib/api/dehub';
 import { RESERVED_USERNAMES } from '@/lib/reserved-usernames';
-import { buildAvatarUrl, buildCoverUrl, bumpProfileImageVersion } from '@/lib/media-url';
+import { buildAvatarUrl, buildCoverUrl, bumpProfileImageVersion, deviceWidth } from '@/lib/media-url';
 import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
@@ -440,7 +440,8 @@ function ProfileSettings() {
     const address = userData.address || userData.wallet_address || '';
     const rawAvatarUrl = userData.avatarImageUrl || userData.avatarUrl || userData.avatar_url;
     const rawCoverUrl = userData.coverImageUrl || userData.coverUrl || userData.cover_url;
-    setAvatarPreview(buildAvatarUrl(address, rawAvatarUrl));
+    // Settings renders the preview at w-20, above the default avatar size.
+    setAvatarPreview(buildAvatarUrl(address, rawAvatarUrl, deviceWidth(80)));
     setCoverPreview(buildCoverUrl(address, rawCoverUrl));
   }, [profileData, authUser?.address]);
   

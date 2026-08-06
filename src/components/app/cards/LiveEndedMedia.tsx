@@ -16,6 +16,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Radio } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { cdnImage, deviceWidth, isMdUp } from '@/lib/media-url';
 
 // Tileable grayscale noise, ~200 bytes. stitchTiles keeps the tile seamless.
 // (Mirrors the texture used by VideoGlitchLoader so the two read as one system.)
@@ -97,10 +98,15 @@ export function LiveEndedMedia({
       {showCover ? (
         <>
           <img
-            src={thumbnail as string}
+            /* Straight off the API as a raw CDN path. LiveCard transforms the
+               still-live branch but handed this one the untransformed original,
+               and most live cards in a feed are past broadcasts — so the ended
+               state was where nearly all the live-thumbnail bytes actually went. */
+            src={cdnImage(thumbnail as string, { width: deviceWidth(isMdUp() ? 680 : 360) })}
             alt=""
             className="w-full h-full object-cover"
             loading="lazy"
+            decoding="async"
             draggable={false}
             onError={() => setImgFailed(true)}
           />

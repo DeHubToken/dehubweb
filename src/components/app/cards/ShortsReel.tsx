@@ -10,7 +10,7 @@
  * ```
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Play, ChevronRight, ThumbsUp, Eye } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
@@ -18,9 +18,16 @@ import { ShortsViewer } from './ShortsViewer';
 import { SwipeableCarousel } from '@/components/app/SwipeableCarousel';
 import type { ShortVideo } from '@/types/feed.types';
 import { AutoplayVideo } from '@/components/app/AutoplayVideo';
+import { cdnImage, deviceWidth, isMdUp } from '@/lib/media-url';
 
-// Module-level cache: survives unmount/remount, keeps images warm in browser memory
-const preloadedThumbnails = new Set<string>();
+/**
+ * Tile is `w-[120px] md:w-[180px]` below. Both the poster and the raw-image
+ * fallback are sized from it, so the reel stops pulling full-width feed
+ * posters for a thumbnail the width of a thumb.
+ */
+function tilePosterWidth(): number {
+  return deviceWidth(isMdUp() ? 180 : 120);
+}
 
 /** Small squared-off avatar with image error fallback */
 function ShortAvatar({ avatar, username }: { avatar?: string; username?: string }) {
@@ -30,7 +37,9 @@ function ShortAvatar({ avatar, username }: { avatar?: string; username?: string 
     <div className="w-5 h-5 rounded-md bg-zinc-700 flex-shrink-0 overflow-hidden">
       {showImg ? (
         <img
-          src={avatar}
+          /* 20 CSS px. This came straight off the API untransformed, so the
+             reel was pulling a full-size original per tile for a dot. */
+          src={cdnImage(avatar, { width: deviceWidth(20), fit: 'cover' })}
           alt=""
           className="w-full h-full object-cover"
           loading="lazy"
@@ -53,22 +62,20 @@ interface ShortsReelProps {
 export function ShortsReel({ shorts }: ShortsReelProps) {
   const [viewerOpen, setViewerOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const posterWidth = tilePosterWidth();
 
-  // Pre-warm thumbnail images in browser cache on first load
-  useEffect(() => {
-    for (const short of shorts) {
-      if (short.thumbnail && !preloadedThumbnails.has(short.thumbnail)) {
-        const img = new Image();
-        img.src = short.thumbnail;
-        preloadedThumbnails.add(short.thumbnail);
-      }
-      if (short.avatar && !preloadedThumbnails.has(short.avatar)) {
-        const img = new Image();
-        img.src = short.avatar;
-        preloadedThumbnails.add(short.avatar);
-      }
-    }
-  }, [shorts]);
+  // There used to be a "pre-warm thumbnails" effect here that ran `new Image()`
+  // over every short on mount. It was doing the opposite of its name:
+  //
+  //  - it warmed the RAW CDN url, while the tiles below render the TRANSFORMED
+  //    one, so nothing it downloaded was ever reused — a measured 10 full-size
+  //    originals (up to 1500x844) fetched and discarded per home-feed load;
+  //  - it fetched every tile eagerly, defeating the `loading="lazy"` on the
+  //    tiles themselves, in a horizontally-scrolling strip where most tiles
+  //    start offscreen.
+  //
+  // The tiles' own lazy loading is the warm-up. An in-viewport lazy image is
+  // fetched immediately, so the visible tiles are no slower for this.
 
   const handleShortClick = (index: number) => {
     setSelectedIndex(index);
@@ -106,10 +113,11 @@ export function ShortsReel({ shorts }: ShortsReelProps) {
                     className="w-full h-full group-hover:scale-105 transition-transform duration-300"
                     threshold={0.3}
                     playbackGroup="shorts-reel"
+                    posterWidth={posterWidth}
                   />
                 ) : (
                   <img
-                    src={short.thumbnail}
+                    src={cdnImage(short.thumbnail, { width: posterWidth })}
                     alt=""
                     className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
                     /* The reel scrolls horizontally, so most of its tiles start

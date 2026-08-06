@@ -58,8 +58,9 @@ import { useSyncedAudio } from '@/hooks/use-synced-audio';
 import { isTokenUnlocked, markTokenUnlocked } from '@/lib/unlocked-tokens-store';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { useTogglePin } from '@/hooks/use-pins';
-import { useBlankPoster } from '@/hooks/use-blank-poster';
+import { useBlankPoster, BLANK_PROBE_WIDTH } from '@/hooks/use-blank-poster';
 import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
+import { deviceWidth, isMdUp } from '@/lib/media-url';
 import {
   Drawer,
   DrawerContent,
@@ -545,13 +546,26 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   // Shorts thumbnails may live at shorts/{id}.jpg instead of the mapped
   // images/{id}.jpg (folder moved mid-history; the API path lies both ways) —
   // resolve to whichever actually exists so the poster isn't a 403 black box.
-  const thumbnail = useResolvedThumbnail(video.thumbnail);
+  // Feed media is the full column width: ~334 CSS px on a phone, ~680 on a
+  // desktop viewport. A 3x phone genuinely does need ~1080 here; a 1x desktop
+  // and a 2x phone do not, and were getting it anyway.
+  const thumbnail = useResolvedThumbnail(video.thumbnail, deviceWidth(isMdUp() ? 680 : 360));
 
   // Some video thumbnails are auto-captured from a black opening frame, so the
   // poster is a valid-but-blank black JPEG that renders as an empty black box
   // (worst on the immersive post page, where the video often isn't autoplaying).
   // Detect that and swap the flat poster for a neutral play-cover.
-  const posterBlank = useBlankPoster(!video.isAudio && video.videoUrl ? thumbnail : undefined);
+  //
+  // Deliberately a DIFFERENT, tiny variant rather than the poster above. The
+  // check decodes onto a 32x18 canvas, so it needs no more than that — and it
+  // requests with crossOrigin="anonymous", which the browser caches separately
+  // from the poster's no-CORS request. Sharing the poster URL therefore meant
+  // downloading the full poster a second time (29 KB) purely to sample it.
+  const posterProbe = useResolvedThumbnail(
+    !video.isAudio && video.videoUrl ? video.thumbnail : undefined,
+    BLANK_PROBE_WIDTH,
+  );
+  const posterBlank = useBlankPoster(posterProbe);
 
   // Synced audio overlay — plays a soundtrack over the video
   const { audioRef: syncedAudioRef, hasSoundtrack } = useSyncedAudio({
