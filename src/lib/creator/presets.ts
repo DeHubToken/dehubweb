@@ -8,7 +8,7 @@
  * tile is still one click from a result.
  */
 
-export type PresetKind = 'image' | 'video';
+export type PresetKind = 'image' | 'video' | '3d';
 
 export interface CreatorPreset {
   id: string;
@@ -27,6 +27,15 @@ export interface CreatorPreset {
   aspect?: string;
   /** Negative prompt, for models that accept one. */
   negative?: string;
+  /**
+   * The preset only works with an attached image.
+   *
+   * Set so the composer can refuse it rather than silently swapping in a
+   * different model at a different price, and so the prompt scaffold never
+   * ends up telling a text-only model to "reconstruct the attached image"
+   * when there is no attachment.
+   */
+  requiresImage?: boolean;
 }
 
 export const IMAGE_PRESETS: CreatorPreset[] = [
@@ -232,13 +241,122 @@ export const VIDEO_PRESETS: CreatorPreset[] = [
     model: 'runway-gen4',
     aspect: '16:9',
     negative: 'identity change, morphing face, warping',
+    requiresImage: true,
   },
 ];
 
-export const ALL_PRESETS: CreatorPreset[] = [...IMAGE_PRESETS, ...VIDEO_PRESETS];
+/**
+ * 3D presets.
+ *
+ * These read differently from the image and video ones on purpose. A mesh
+ * generator is not steered by lighting or lens language — it takes none of it —
+ * so the scaffolds here describe form, silhouette and material instead, and say
+ * what the mesh is *for*, since that is what decides poly budget and topology.
+ */
+export const MODEL3D_PRESETS: CreatorPreset[] = [
+  {
+    id: 'game-prop',
+    name: 'Game Prop',
+    kind: '3d',
+    group: 'Games',
+    template:
+      '{subject}, a single self-contained game prop, clean readable silhouette, even wall thickness, no floating parts, neutral surface materials, modelled in a neutral upright orientation against a plain background',
+    sample: 'a weathered iron lantern',
+    hint: 'Realtime-ready single object',
+    model: 'tripo-2.5',
+  },
+  {
+    id: 'character-figure',
+    name: 'Character Figure',
+    kind: '3d',
+    group: 'Characters',
+    template:
+      '{subject}, full body character in a neutral A-pose, arms clear of the torso, legs slightly apart, symmetrical proportions, no props held in hand, plain background, even diffuse lighting with no cast shadows',
+    sample: 'a stylised explorer in a heavy coat',
+    hint: 'Clean pose that rigs well later',
+    model: 'tripo-2.5',
+  },
+  {
+    id: 'product-scan',
+    name: 'Product Replica',
+    kind: '3d',
+    group: 'Commercial',
+    template:
+      '{subject}, accurate product replica, true proportions, crisp panel lines and parting seams, faithful surface materials and finish, upright and centred, plain background',
+    sample: 'a matte black ceramic coffee flask',
+    hint: 'Faithful copy of a real object',
+    model: 'rodin-hyper3d',
+  },
+  {
+    id: 'stylised-collectible',
+    name: 'Stylised Collectible',
+    kind: '3d',
+    group: 'Characters',
+    template:
+      '{subject}, chunky stylised collectible figurine, exaggerated proportions with an oversized head, simplified rounded forms, bold flat colour blocking, sitting flat on an implied base',
+    sample: 'a tiny astronaut hugging a helmet',
+    hint: 'Vinyl-toy proportions',
+    model: 'tripo-2.5',
+  },
+  {
+    id: 'hard-surface',
+    name: 'Hard Surface',
+    kind: '3d',
+    group: 'Games',
+    template:
+      '{subject}, hard-surface mechanical model, crisp bevelled edges, deliberate panel breaks and greebles, brushed metal and machined plastic, engineered look with no organic curves, plain background',
+    sample: 'a compact reconnaissance drone',
+    hint: 'Machined, panelled, mechanical',
+    model: 'rodin-hyper3d',
+  },
+  {
+    id: 'environment-asset',
+    name: 'Environment Piece',
+    kind: '3d',
+    group: 'Environments',
+    template:
+      '{subject}, a single environment asset modelled as one connected piece, grounded flat at its base, believable material wear and surface damage, no surrounding scenery or terrain',
+    sample: 'a collapsed stone archway',
+    hint: 'One set-dressing object, not a scene',
+    model: 'tripo-2.5',
+  },
+  {
+    id: 'photo-to-mesh',
+    name: 'Photo to Mesh',
+    kind: '3d',
+    group: 'Image to 3D',
+    template:
+      '{subject}. Reconstruct the attached image as a 3D object, holding its exact proportions, colours and surface materials. Infer the unseen back and underside plausibly from the visible form.',
+    sample: 'The object in the attached photo',
+    hint: 'Needs an attached image',
+    model: 'hunyuan3d-v2',
+    requiresImage: true,
+  },
+  {
+    id: 'quick-blockout',
+    name: 'Quick Blockout',
+    kind: '3d',
+    group: 'Drafts',
+    template:
+      '{subject}, simple low-poly blockout, primary masses only, no fine detail or small features, clean flat faces, neutral grey material',
+    sample: 'a modular sci-fi corridor section',
+    hint: 'Cheap draft to test an idea',
+    // Tripo, not TRELLIS: TRELLIS has no text-to-3D path, so a preset that
+    // supplies only text could never actually run on it.
+    model: 'tripo-2.5',
+  },
+];
+
+export const ALL_PRESETS: CreatorPreset[] = [
+  ...IMAGE_PRESETS,
+  ...VIDEO_PRESETS,
+  ...MODEL3D_PRESETS,
+];
 
 export function presetsFor(kind: PresetKind): CreatorPreset[] {
-  return kind === 'image' ? IMAGE_PRESETS : VIDEO_PRESETS;
+  if (kind === 'image') return IMAGE_PRESETS;
+  if (kind === 'video') return VIDEO_PRESETS;
+  return MODEL3D_PRESETS;
 }
 
 export function getPreset(id: string | null | undefined): CreatorPreset | undefined {
