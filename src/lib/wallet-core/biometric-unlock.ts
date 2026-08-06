@@ -43,6 +43,7 @@ export async function enrollBiometricUnlock(userId: string, secret: string): Pro
     payload,
     label: enrollment.label,
   });
+  markBiometricUsableHere(userId);
   return {
     credentialId: enrollment.credentialId,
     prfSalt: enrollment.prfSalt,
@@ -85,6 +86,7 @@ export async function unlockWithBiometrics(
       try {
         const secret = await decryptStringWithKeyMaterial(wrap.payload, keyMaterial);
         void touchPasskeyWrap(userId, wrap.credentialId);
+        markBiometricUsableHere(userId);
         return secret;
       } catch (err) {
         lastError = err;
@@ -98,9 +100,22 @@ export async function unlockWithBiometrics(
   }
 }
 
-/** Remove one enrolled device. */
+/**
+ * Remove one enrolled device.
+ *
+ * Clears this device's "biometrics work here" marker when nothing is left to
+ * unlock with, so the enrolment offer comes back instead of the account
+ * silently reverting to password-only with no way to be asked again.
+ */
 export async function removeBiometricUnlock(userId: string, credentialId: string): Promise<void> {
   await deletePasskeyWrap(userId, credentialId);
+  try {
+    const remaining = await loadPasskeyWraps(userId);
+    if (!remaining.length) forgetBiometricUsableHere(userId);
+  } catch {
+    // Couldn't confirm what's left — leaving the marker is the safe side; the
+    // user can still enrol from Settings.
+  }
 }
 
 // ── "Not now" memory ────────────────────────────────────────────────────────
@@ -140,5 +155,52 @@ export function clearBiometricOfferDecline(userId: string): void {
     const next = readDeclined().filter((id) => id !== userId);
     if (next.length) localStorage.setItem(OFFER_DECLINED_KEY, JSON.stringify(next));
     else localStorage.removeItem(OFFER_DECLINED_KEY);
+  } catch { /* ignore */ }
+}
+
+// ── "Biometrics have worked on this device" memory ──────────────────────────
+// Wraps live in user_wallet_passkeys, which is account-wide: enrolling on a
+// phone writes a row that a desktop browser can read but generally cannot use.
+// So "this account has a wrap" says nothing about whether biometrics work
+// HERE, and gating the enrolment offer on it left every later device stuck on
+// the password forever — never offered enrolment, while the unlock screen
+// still rendered a biometric button backed by a credential this device does
+// not hold.
+//
+// The wrap list can't answer the question either way, because passkeys do sync
+// within an ecosystem (iCloud Keychain, Google Password Manager) and WebAuthn
+// deliberately gives no way to enumerate what's present. The only honest
+// signal is whether biometrics have actually succeeded on this device, so
+// that's what we record — on enrolment or on a real unlock.
+
+const USABLE_HERE_KEY = "dehub_biometric_usable_here";
+
+function readUsableHere(): string[] {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(USABLE_HERE_KEY) || "[]");
+    return Array.isArray(parsed) ? parsed.filter((v): v is string => typeof v === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+/** True once biometrics have successfully enrolled or unlocked on this device. */
+export function hasBiometricUsableHere(userId: string): boolean {
+  return readUsableHere().includes(userId);
+}
+
+export function markBiometricUsableHere(userId: string): void {
+  try {
+    const next = [...new Set([...readUsableHere(), userId])].slice(-MAX_REMEMBERED_USERS);
+    localStorage.setItem(USABLE_HERE_KEY, JSON.stringify(next));
+  } catch { /* private mode — worst case they're offered enrolment again */ }
+}
+
+/** Drop the marker when the last credential is removed, so the offer returns. */
+export function forgetBiometricUsableHere(userId: string): void {
+  try {
+    const next = readUsableHere().filter((id) => id !== userId);
+    if (next.length) localStorage.setItem(USABLE_HERE_KEY, JSON.stringify(next));
+    else localStorage.removeItem(USABLE_HERE_KEY);
   } catch { /* ignore */ }
 }
