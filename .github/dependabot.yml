@@ -1,0 +1,48 @@
+version: 2
+
+# Dependabot raises alerts on this repo but, until this file existed, had no
+# instructions for fixing them — and automated security fixes are switched off
+# at the repo level — so ~67 advisories accumulated with zero fix PRs.
+#
+# This file exists to GROUP those security PRs, not to start a weekly
+# dependency treadmill: `open-pull-requests-limit: 0` switches off routine
+# version-update PRs while leaving security updates (and the grouping below)
+# fully active.
+#
+# Grouping matters more here than in most repos. The tree carries three npm
+# lockfiles and they are not interchangeable:
+#
+#   package-lock.json  what production installs from — the Workers Build for
+#                      `dehub-migration` runs `npm run build`
+#   pnpm-lock.yaml     CI typecheck only (`pnpm install --no-frozen-lockfile`),
+#                      and already drifted from package.json on main
+#   bun.lock           referenced by nothing in CI or deploy
+#
+# Dependabot scans the first two, so its alert count does track real production
+# exposure. bun.lock is not scanned and will drift silently — if it is not
+# actually needed, deleting it is the honest fix.
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    # 0 = no routine version-update PRs. Security updates are unaffected.
+    open-pull-requests-limit: 0
+    groups:
+      # One PR per batch of advisories rather than one per CVE — each one
+      # otherwise regenerates every lockfile above.
+      security-patches:
+        applies-to: security-updates
+        patterns:
+          - "*"
+        update-types:
+          - patch
+          - minor
+    ignore:
+      # Majors change behaviour and need their own tested PR. react-router 6→7
+      # is the live example: it carries a real open-redirect fix, but v7 is a
+      # breaking upgrade and must not land as an unattended bump.
+      - dependency-name: "*"
+        update-types:
+          - version-update:semver-major
