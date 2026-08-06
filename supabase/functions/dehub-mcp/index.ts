@@ -435,7 +435,7 @@ async function registerAgent(input: {
   const { count } = await supabase
     .from("ai_agents")
     .select("id", { count: "exact", head: true })
-    .eq("metadata->>human_owner", owner);
+    .eq("human_owner_wallet", owner);
 
   if ((count ?? 0) >= MAX_AGENTS_PER_OWNER) {
     return {
@@ -475,7 +475,11 @@ async function registerAgent(input: {
       name,
       description: bio,
       api_key: apiKey,
-      owner_wallet_address: walletAddress, // the agent's own wallet
+      // owner_wallet_address is the agent's own wallet — it signs as the agent
+      // and pays the agent's gas. Ownership is human_owner_wallet, which is
+      // what the RLS policies and /app/agents match on.
+      owner_wallet_address: walletAddress,
+      human_owner_wallet: owner,
       wallet_private_key: privateKey,
       is_active: true,
       metadata: {
