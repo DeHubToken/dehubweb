@@ -66,6 +66,12 @@ DROP POLICY IF EXISTS "Users can create agents" ON public.ai_agents;
 DROP POLICY IF EXISTS "Users can update their own agents" ON public.ai_agents;
 DROP POLICY IF EXISTS "Users can delete their own agents" ON public.ai_agents;
 
+-- The replacements too, so replaying this file is safe. It has already been run
+-- by hand against production, so a migration replay will hit existing objects.
+DROP POLICY IF EXISTS "Agents are publicly listable" ON public.ai_agents;
+DROP POLICY IF EXISTS "Owners can update their own agents" ON public.ai_agents;
+DROP POLICY IF EXISTS "Owners can delete their own agents" ON public.ai_agents;
+
 -- Listing agents is public: the home-feed stories resolve template agents to
 -- wallet addresses with no wallet header, and agent profiles are public on
 -- DeHub anyway. This is only safe because step 3 revokes the key columns from
