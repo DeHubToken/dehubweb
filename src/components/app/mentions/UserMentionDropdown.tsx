@@ -11,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { apiCall } from '@/lib/api/dehub/core';
 import { buildAvatarUrl } from '@/lib/media-url';
+import { isAssistantAddress } from '@/lib/assistant';
 import { Search, Loader2, AtSign } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -25,6 +26,8 @@ export interface MentionUser {
   followingCount?: number;
   isFollowing?: boolean;
   followsYou?: boolean;
+  /** The official AI account, which is pinned and badged rather than ranked. */
+  isAssistant?: boolean;
 }
 
 interface UserMentionDropdownProps {
@@ -119,8 +122,16 @@ export function UserMentionDropdown({
           followingCount: typeof u.followingCount === 'number' ? u.followingCount : (typeof u.followings === 'number' ? u.followings : undefined),
           isFollowing: u.isFollowing,
           followsYou: u.followsYou,
+          isAssistant: isAssistantAddress(u.address),
         }));
 
+        // Pin the assistant to the top of its own matches.
+        //
+        // Tagging it is how you ask the AI a question in a thread, so it should
+        // be the first hit rather than ranked among the users who happen to
+        // share a prefix. Done here because this drawer searches users_search,
+        // which ranks by follower count and knows nothing about the bot.
+        mapped.sort((a, b) => Number(b.isAssistant ?? false) - Number(a.isAssistant ?? false));
 
         setUsers(mapped);
         if (mapped.length > 0 && selectedIndex >= mapped.length) {
@@ -285,6 +296,11 @@ export function UserMentionDropdown({
                       {user.displayName || user.username}
                     </span>
                     {user.isVerified && <VerifiedBadge className="w-3.5 h-3.5 flex-shrink-0" />}
+                    {user.isAssistant && (
+                      <span className="px-1.5 py-0.5 rounded-md bg-white/[0.12] border border-white/[0.12] text-[10px] font-semibold text-white/75 leading-none flex-shrink-0">
+                        AI
+                      </span>
+                    )}
                     {user.followsYou && (
                       <span className="px-1.5 py-0.5 rounded-md bg-white/[0.08] border border-white/[0.08] text-[10px] font-medium text-white/60 leading-none flex-shrink-0">
                         Follows you
