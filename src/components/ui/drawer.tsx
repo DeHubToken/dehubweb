@@ -16,10 +16,31 @@ export function wasDrawerJustDismissed(withinMs = 400) {
 }
 
 /**
+ * Is a vaul Root actually above us? False inside a dormant sheet, so
+ * `DrawerContent` can withhold itself instead of portalling into nothing.
+ *
+ * The JSX walk below only ever sees the literal children written at the call
+ * site, so it cannot know that a component renders a `DrawerContent` — and a
+ * sheet body reached through a wrapper (`<Drawer><PPVDrawerContent /></Drawer>`)
+ * used to survive `withoutContent`, render with no Root above it, and throw
+ * "`DialogPortal` must be used within `Dialog`" out of vaul's Portal. That took
+ * out the whole subtree: every video post page rendered its error boundary,
+ * because the immersive creator bar mounts that sheet unconditionally.
+ *
+ * Guarding at `DrawerContent` closes the hole wherever the content is written,
+ * literal or wrapped, rather than trying to spot the wrappers from outside.
+ */
+const DrawerRootMounted = React.createContext(false);
+
+/**
  * vaul parts that only work inside a Root, because they read its context. If a
  * sheet puts any of these outside its `DrawerContent`, its Root has to stay
  * mounted; `DrawerContent` itself is exempt because a closed Root renders none
  * of it anyway.
+ *
+ * Only the literal children are walked, so a part reached through a wrapper
+ * component still escapes this check — `DrawerContent` is safe either way via
+ * `DrawerRootMounted`, the rest are written literally at every call site.
  */
 const CONTEXT_BOUND_PARTS: ReadonlySet<unknown> = new Set([
   DrawerPrimitive.Trigger,
@@ -101,7 +122,13 @@ const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, chi
   }, [phase]);
 
   if (phase === "dormant") {
-    return <>{withoutContent(children, DrawerContent)}</>;
+    // Explicitly false, not just the default: a dormant sheet nested inside a
+    // live one would otherwise inherit the outer Root's `true`.
+    return (
+      <DrawerRootMounted.Provider value={false}>
+        {withoutContent(children, DrawerContent)}
+      </DrawerRootMounted.Provider>
+    );
   }
 
   return (
@@ -115,7 +142,9 @@ const Drawer = ({ shouldScaleBackground = false, modal = true, onOpenChange, chi
       {...props}
       open={phase === "mounting" ? false : props.open}
     >
-      {children}
+      <DrawerRootMounted.Provider value={true}>
+        {children}
+      </DrawerRootMounted.Provider>
     </DrawerPrimitive.Root>
   );
 };
@@ -142,7 +171,13 @@ DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName;
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & { glass?: boolean; hideHandle?: boolean; noOverlay?: boolean; overlayClassName?: string }
->(({ className, children, glass = false, hideHandle = true, noOverlay = false, overlayClassName, ...props }, ref) => (
+>(({ className, children, glass = false, hideHandle = true, noOverlay = false, overlayClassName, ...props }, ref) => {
+  const rootMounted = React.useContext(DrawerRootMounted);
+  // No Root above us — this sheet is dormant (or the content escaped its
+  // Drawer entirely). Render nothing rather than portalling into no Dialog.
+  if (!rootMounted) return null;
+
+  return (
   <DrawerPortal>
     {/* Registers this sheet in the global overlay count while open, so the
         sticky feed navs / mobile header get out of the way (lib/overlay-open). */}
@@ -170,7 +205,8 @@ const DrawerContent = React.forwardRef<
       {children}
     </DrawerPrimitive.Content>
   </DrawerPortal>
-));
+  );
+});
 DrawerContent.displayName = "DrawerContent";
 
 const DrawerHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
