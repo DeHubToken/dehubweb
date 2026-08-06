@@ -15,9 +15,12 @@
 
 export const DEHUB_MCP_URL = "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/dehub-mcp";
 
+/** What defineTool accepts as structuredContent, so the handlers stay assignable. */
+type ToolPayload = Record<string, unknown>;
+
 interface McpToolResult {
   content?: { type: string; text?: string }[];
-  structuredContent?: unknown;
+  structuredContent?: ToolPayload;
   isError?: boolean;
 }
 
@@ -46,7 +49,7 @@ function parseStreamableResponse(raw: string): { result?: McpToolResult; error?:
 export async function callDeHubTool(
   name: string,
   args: Record<string, unknown>,
-): Promise<unknown> {
+): Promise<ToolPayload> {
   const response = await fetch(DEHUB_MCP_URL, {
     method: "POST",
     headers: {
@@ -75,17 +78,22 @@ export async function callDeHubTool(
   // than handing back an error object dressed as data.
   const body = result.structuredContent ?? safeParse(result.content?.[0]?.text);
   if (result.isError) {
-    const message = (body as { error?: string } | undefined)?.error;
+    const message = typeof body?.error === "string" ? body.error : undefined;
     throw new Error(message ?? "DeHub tool call failed");
   }
 
   return body ?? {};
 }
 
-function safeParse(text: string | undefined): unknown {
+function safeParse(text: string | undefined): ToolPayload | undefined {
   if (!text) return undefined;
   try {
-    return JSON.parse(text);
+    const parsed: unknown = JSON.parse(text);
+    // Tool bodies are objects. Anything scalar gets wrapped rather than cast,
+    // so the declared shape is actually the shape at runtime.
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed)
+      ? (parsed as ToolPayload)
+      : { value: parsed };
   } catch {
     return { text };
   }
