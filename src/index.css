@@ -628,9 +628,23 @@ body > div[style*="position: fixed"][style*="height: 0"] {
   display: none !important;
 }
 
-/* Immersive video mode - hide mobile header and remove top padding */
-body.immersive-video-mode header.lg\\:hidden {
-  display: none !important;
+/* Immersive video mode — on mobile the video owns the top of the screen, so the
+   chrome that would otherwise float over it steps aside.
+
+   The header rule used to target `header.lg\\:hidden`. In a stylesheet `\\` is an
+   escaped backslash, so that selector asked for a class literally containing one
+   and never matched anything: the fixed 44px header stayed over every video post
+   while the companion `main` rule below did apply. The header carries a data
+   attribute for exactly this kind of targeting — use that instead.
+
+   Scoped to mobile. On desktop `[data-feed-nav]` is the post page's own top bar
+   (AppLayout renders `<GlobalFeedNav postPage />` there), which must stay. */
+@media (max-width: 1023px) {
+  body.immersive-video-mode [data-mobile-header],
+  body.immersive-video-mode [data-feed-nav],
+  body.immersive-video-mode [data-home-tabs] {
+    display: none !important;
+  }
 }
 
 body.immersive-video-mode main {

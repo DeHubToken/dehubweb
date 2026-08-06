@@ -13,6 +13,7 @@ import { useState, useRef, useCallback, memo, useEffect, useId } from 'react';
 import { cn } from '@/lib/utils';
 import { useAutoOpenComments } from '@/hooks/use-auto-open-comments';
 import { useNavigate } from 'react-router-dom';
+import { useHandoffVideo } from '@/hooks/use-handoff-video';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useQueryClient } from '@tanstack/react-query';
 import { Eye, MoreVertical, ListPlus, Clock, Flag, Download, Ban, Sparkles, Play, Pause, Volume2, VolumeX, Maximize, Minimize, FastForward, Rewind, PictureInPicture2, Lock, Gift, Ticket, MessageCircle, Link2, MessageSquare, Info, Trash2, Gem, Repeat, Music, X, Bookmark, Pin, Pencil } from 'lucide-react';
@@ -43,7 +44,6 @@ import { QuotePostModal } from '../modals/QuotePostModal';
 import { TipModal } from '../modals/TipModal';
 import { CommentsWrapper } from './CommentsWrapper';
 import { LiveEndedMedia } from './LiveEndedMedia';
-import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { usePostTipCount } from '@/hooks/use-post-tip-count';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
@@ -71,6 +71,19 @@ import {
 import type { VideoItem } from '@/types/feed.types';
 import { VideoSubtitleOverlay } from '@/components/app/video/VideoSubtitleOverlay';
 import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoader';
+
+/**
+ * How far a touch may travel and still count as a tap on the player. Matches the
+ * threshold the card's gating overlays already use.
+ */
+const TAP_SLOP_PX = 10;
+
+/** A tap that landed on a real control, which owns it rather than the player. */
+function isControlTarget(target: EventTarget | null) {
+  return !!(target as HTMLElement | null)?.closest?.(
+    'button, a, input, textarea, [role="button"], [data-video-controls]',
+  );
+}
 
 // Use lg breakpoint (1024px) to determine if we show drawer vs inline
 function useIsTabletOrMobile() {
@@ -532,13 +545,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const [playbackRate, setPlaybackRate] = useState(() => getVideoPreferences().playbackRate);
   const [isLooping, setIsLooping] = useState(() => getVideoPreferences().isLooping);
   const [isFocused, setIsFocused] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  // Written by useHandoffVideo, which owns the element rather than React — the
+  // feed card and the post page share one <video> so opening a post doesn't
+  // restart the clip (lib/video-handoff).
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const lastTapRef = useRef<{ time: number; x: number }>({ time: 0, x: 0 });
   const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const controlsTimerRef = useRef<NodeJS.Timeout | null>(null);
   const isHoveringRef = useRef(false);
-  const isTouchDevice = useIsTouchDevice();
   
   // View tracking - fires view after watching threshold
   const { onTimeUpdate: trackView } = useVideoViewTracking(video.id);
@@ -1040,9 +1055,8 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     return () => window.removeEventListener('video-prefs-changed', handler);
   }, []);
 
-  const handleVideoError = useCallback((e: React.SyntheticEvent<HTMLVideoElement>) => {
-    const videoEl = e.currentTarget;
-    console.error('Video error:', video.videoUrl, videoEl.error?.message || 'Unknown error');
+  const handleVideoError = useCallback(() => {
+    console.error('Video error:', video.videoUrl, videoRef.current?.error?.message || 'Unknown error');
     setIsLoading(false);
     setHasError(true);
     setIsPlaying(false);
@@ -1066,6 +1080,31 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       setDuration(videoRef.current.duration);
     }
   }, []);
+
+  // Claims the shared <video> for this post into the slot rendered below, and
+  // keeps this card's props on it while this card is the one showing it.
+  const { attachSlot: attachVideoSlot, isActive: ownsVideoElement } = useHandoffVideo({
+    videoRef,
+    handoffKey: video.id,
+    src: mediaAttached ? video.videoUrl : undefined,
+    poster: thumbnail || undefined,
+    muted: isMuted,
+    loop: !!(video.isAd || isLooping),
+    preload: videoPreload,
+    className: `w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`,
+    onEnded: handleVideoEnded,
+    onError: handleVideoError,
+    onTimeUpdate: handleTimeUpdate,
+    onLoadedMetadata: handleLoadedMetadata,
+  });
+
+  // Handing the element to the post page has to hand the audio over with it.
+  // The playback manager tracks audio ownership per card instance, so the feed
+  // card stays the owner until it says otherwise — and the post page, arriving
+  // second, would be told to play muted while the card behind it held the sound.
+  useEffect(() => {
+    if (!ownsVideoElement) videoPlaybackManager.stop(instanceId);
+  }, [ownsVideoElement, instanceId]);
 
   const handleSeek = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const time = parseFloat(e.target.value);
@@ -1102,7 +1141,25 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     }
   }, [isPlaying, toggleFullscreen]);
 
+  /**
+   * Open the dedicated post page for this video, seeding the query cache so it
+   * paints immediately. The shared <video> moves with it — see useHandoffVideo.
+   */
+  const openPost = useCallback(() => {
+    if (wasDrawerJustDismissed()) return;
+    if (showBountyDrawer || showPPVDrawer || showLockedDrawer) return;
+    cacheVideoForNavigation(queryClient, video);
+    navigate(`/app/post/${video.id}`, { state: { fromFeed: true } });
+  }, [navigate, queryClient, video, showBountyDrawer, showPPVDrawer, showLockedDrawer]);
+
   const handleVideoAreaClick = useCallback((e: React.MouseEvent) => {
+    // In the feed the player is a preview: clicking it opens the post, the way
+    // a thumbnail does everywhere else. Scrubbing, seeking and tap-to-pause all
+    // still live on the post page, where the video is the point of the screen.
+    if (!isImmersive) {
+      if (!isControlTarget(e.target)) openPost();
+      return;
+    }
     const now = Date.now();
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -1126,16 +1183,49 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         clickTimeoutRef.current = null;
       }, 300);
     }
-  }, [handleDoubleTapSeek, handlePlayClick]);
+  }, [isImmersive, openPost, handleDoubleTapSeek, handlePlayClick]);
+
+  // Both the click and the touch handler are bound unconditionally on the player.
+  // `isTouchDevice` is a width check, not a capability one, so gating the click on
+  // it left a mouse in a narrow window with no handler at all — the player was
+  // completely inert there. handleTouchEnd preventDefaults on every path it acts
+  // on, so a touch never also arrives as a synthesized click.
+
+  /** Where a touch on the player started, to tell a tap from a scroll fling. */
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    touchStartRef.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
+  }, []);
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
     const touch = e.changedTouches[0];
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+
+    // A flick that scrolled the feed past this card is not a tap on it. Without
+    // this the touchend that ends a scroll landed as a tap and toggled playback.
+    const start = touchStartRef.current;
+    touchStartRef.current = null;
+    if (start && Math.hypot(touch.clientX - start.x, touch.clientY - start.y) > TAP_SLOP_PX) {
+      e.preventDefault(); // no compatibility click either
+      return;
+    }
+
+    if (isControlTarget(e.target)) return;
+
+    // Feed: a tap opens the post (see handleVideoAreaClick). preventDefault so
+    // the browser's synthesized click doesn't arrive after us and open it twice.
+    if (!isImmersive) {
+      e.preventDefault();
+      openPost();
+      return;
+    }
+
     const x = touch.clientX - rect.left;
     const y = touch.clientY - rect.top;
     const relativeX = x / rect.width; // 0 to 1
     const relativeY = y / rect.height; // 0 to 1
-    
+
     // Ignore touches in top-right corner (where controls are) - top 20% and right 40%
     if (relativeY < 0.20 && relativeX > 0.60) {
       return; // Let the button handle the touch natively
@@ -1168,7 +1258,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       }
       setTimeout(() => setSeekIndicator(null), 500);
     }
-  }, [isPlaying, handlePlayClick]);
+  }, [isPlaying, handlePlayClick, isImmersive, openPost]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -1248,15 +1338,10 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     // Allow text selection without navigating
     const selection = window.getSelection();
     if (selection && selection.toString().length > 0) return;
-    // Guard: don't navigate if any drawer is open, or was just dismissed by a
-    // scrim tap (whose ghost click would otherwise open the post).
-    if (wasDrawerJustDismissed()) return;
-    if (showBountyDrawer || showPPVDrawer || showLockedDrawer) return;
-    
-    // Cache the video data before navigation for instant display
-    cacheVideoForNavigation(queryClient, video);
-    navigate(`/app/post/${video.id}`, { state: { fromFeed: true } });
-  }, [navigate, video.id, queryClient, video, showBountyDrawer, showPPVDrawer, showLockedDrawer]);
+    // openPost carries the rest of the guards (an open drawer, or one just
+    // dismissed by a scrim tap whose ghost click would otherwise open the post).
+    openPost();
+  }, [openPost]);
   
   return (
     <div 
@@ -1405,8 +1490,9 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         data-no-navigate
         data-media-full
         className={`relative bg-black cursor-pointer group/thumb outline-none overflow-hidden transition-all duration-300 ${isImmersive ? 'rounded-none' : 'rounded-2xl'} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-screen rounded-none flex items-center justify-center' : (isImmersive && showComments ? 'aspect-[2/1]' : 'aspect-video')}`}
-        onClick={isTouchDevice ? undefined : (video.isAudio ? undefined : handleVideoAreaClick)}
-        onTouchEnd={isTouchDevice ? (video.isAudio ? undefined : handleTouchEnd) : undefined}
+        onClick={video.isAudio ? undefined : handleVideoAreaClick}
+        onTouchStart={video.isAudio ? undefined : handleTouchStart}
+        onTouchEnd={video.isAudio ? undefined : handleTouchEnd}
         onMouseEnter={() => {
           isHoveringRef.current = true;
           setShowControls(true);
@@ -1557,22 +1643,25 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
               hasError ? (
                 <img src={thumbnail} alt={video.title} className="w-full h-full object-cover" loading={aboveFold ? 'eager' : 'lazy'} fetchPriority={aboveFold ? 'high' : 'auto'} onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
               ) :
-              <video
-                ref={videoRef}
-                src={mediaAttached ? video.videoUrl : undefined}
-                poster={thumbnail || undefined}
-                muted={isMuted}
-                playsInline
-                loop={video.isAd || isLooping}
-
-                {...{"webkit-playsinline": ""}}
-                preload={videoPreload}
-                onEnded={handleVideoEnded}
-                onError={handleVideoError}
-                onTimeUpdate={handleTimeUpdate}
-                onLoadedMetadata={handleLoadedMetadata}
-                className={`w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`}
-              />
+              /* The <video> is not rendered here — useHandoffVideo puts the
+                 pooled element inside this slot, so it can move to the post page
+                 without being torn down and recreated. The poster sits behind it
+                 rather than on it: while the post page holds the element, this
+                 card's slot is empty, and an empty black box would show through
+                 the post layer on the canvas themes. */
+              <>
+                {thumbnail && (
+                  <img
+                    src={thumbnail}
+                    alt=""
+                    aria-hidden="true"
+                    className={`absolute inset-0 w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover'}`}
+                    loading={aboveFold ? 'eager' : 'lazy'}
+                    fetchPriority={aboveFold ? 'high' : 'auto'}
+                  />
+                )}
+                <div ref={attachVideoSlot} className="absolute inset-0 w-full h-full" />
+              </>
             ) : (
               /* No playable URL — a past live (or url-less video). Show the
                  cover image if there is one, otherwise a staticy TV screen.
