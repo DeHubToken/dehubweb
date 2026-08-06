@@ -38,6 +38,173 @@ interface GenerateImageRequest {
   aspectRatio?: string;
 }
 
+// ─── fal.ai image catalogue ──────────────────────────────────────────────────
+//
+// Unlike the Gemini and Grok paths above, these models DO take a real size
+// parameter — but the families disagree on how. Some take an `image_size` enum,
+// some an `aspect_ratio` string, and the edit endpoints split further between a
+// singular `image_url` and a plural `image_urls`. An unrecognised key is a 422,
+// not a silently ignored field, so each model declares its own shape.
+
+interface FalImageModel {
+  /** Endpoint for text-to-image. */
+  text: string;
+  /** Endpoint for image editing, when the family has one. */
+  edit?: string;
+  /** How this family expresses framing. */
+  sizing: 'image_size' | 'aspect_ratio';
+  /** Whether the edit endpoint takes `image_urls` (plural) rather than `image_url`. */
+  editUsesPlural?: boolean;
+  /** Fixed fields merged into every request for this model. */
+  extra?: Record<string, unknown>;
+}
+
+const FAL_IMAGE_MODELS: Record<string, FalImageModel> = {
+  'nano-banana-pro': {
+    text: 'fal-ai/nano-banana-pro',
+    edit: 'fal-ai/nano-banana-pro/edit',
+    sizing: 'aspect_ratio',
+    editUsesPlural: true,
+    extra: { resolution: '2K' },
+  },
+  'nano-banana-2': {
+    text: 'fal-ai/nano-banana-2',
+    edit: 'fal-ai/nano-banana-2/edit',
+    sizing: 'aspect_ratio',
+    editUsesPlural: true,
+    extra: { resolution: '2K' },
+  },
+  'seedream-v4.5': {
+    text: 'fal-ai/bytedance/seedream/v4.5/text-to-image',
+    edit: 'fal-ai/bytedance/seedream/v4.5/edit',
+    sizing: 'image_size',
+    editUsesPlural: true,
+  },
+  'flux-2-pro': {
+    text: 'fal-ai/flux-2-pro',
+    edit: 'fal-ai/flux-2-pro/edit',
+    sizing: 'image_size',
+  },
+  'flux-kontext-max': {
+    // Kontext is primarily an editor; text-to-image is a separate endpoint.
+    text: 'fal-ai/flux-pro/kontext/max/text-to-image',
+    edit: 'fal-ai/flux-pro/kontext/max',
+    sizing: 'aspect_ratio',
+  },
+  'recraft-v4.1': {
+    text: 'fal-ai/recraft/v4.1/text-to-image',
+    sizing: 'image_size',
+  },
+  'recraft-v4.1-vector': {
+    text: 'fal-ai/recraft/v4.1/text-to-vector',
+    sizing: 'image_size',
+  },
+  'ideogram-v3': {
+    text: 'fal-ai/ideogram/v3',
+    edit: 'fal-ai/ideogram/v3/remix',
+    sizing: 'image_size',
+    extra: { rendering_speed: 'BALANCED' },
+  },
+  'qwen-image': {
+    text: 'fal-ai/qwen-image',
+    edit: 'fal-ai/qwen-image-edit-plus',
+    sizing: 'image_size',
+  },
+  'grok-imagine': {
+    text: 'xai/grok-imagine-image',
+    edit: 'xai/grok-imagine-image/edit',
+    sizing: 'aspect_ratio',
+  },
+};
+
+/** DeHub's aspect strings mapped onto fal's `image_size` enum. */
+function toFalImageSize(aspect?: string, bannerFormat?: string): string {
+  const a =
+    aspect ??
+    (bannerFormat === 'landscape' ? '16:9' : bannerFormat === 'portrait' ? '9:16' : '1:1');
+  switch (a) {
+    case '16:9':
+    case '21:9':
+      return 'landscape_16_9';
+    case '4:3':
+    case '3:2':
+      return 'landscape_4_3';
+    case '9:16':
+      return 'portrait_16_9';
+    case '3:4':
+    case '2:3':
+    case '4:5':
+      return 'portrait_4_3';
+    default:
+      return 'square_hd';
+  }
+}
+
+/**
+ * Run a fal image model and return the finished image URL.
+ *
+ * Uses fal.run (synchronous) rather than queue.fal.run. An image lands in
+ * seconds, so blocking here preserves this function's one-call contract instead
+ * of pushing the whole image path onto the polled flow the video models use.
+ */
+async function generateWithFal(
+  model: string,
+  prompt: string,
+  sourceImage?: string,
+  bannerFormat?: string,
+  aspectRatio?: string,
+): Promise<string> {
+  const FAL_KEY = Deno.env.get('FAL_KEY');
+  if (!FAL_KEY) throw new Error('FAL_KEY is not configured');
+
+  const config = FAL_IMAGE_MODELS[model];
+  if (!config) throw new Error(`Unknown fal image model: ${model}`);
+
+  if (sourceImage && !config.edit) {
+    throw new Error(`${model} cannot edit an existing image. Pick another model.`);
+  }
+  const editing = !!sourceImage;
+  const appId = editing ? config.edit! : config.text;
+
+  const input: Record<string, unknown> = {
+    prompt,
+    num_images: 1,
+    ...(config.extra ?? {}),
+  };
+
+  if (config.sizing === 'aspect_ratio') {
+    // 'auto' on an edit keeps the source framing, which is almost always what
+    // someone editing a picture wants.
+    input.aspect_ratio = editing ? (aspectRatio ?? 'auto') : (aspectRatio ?? '1:1');
+  } else {
+    input.image_size = toFalImageSize(aspectRatio, bannerFormat);
+  }
+
+  if (editing) {
+    if (config.editUsesPlural) input.image_urls = [sourceImage];
+    else input.image_url = sourceImage;
+  }
+
+  console.log(`[fal-image] ${appId}`, JSON.stringify(input).substring(0, 300));
+
+  const res = await fetch(`https://fal.run/${appId}`, {
+    method: 'POST',
+    headers: { Authorization: `Key ${FAL_KEY}`, 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+
+  if (!res.ok) {
+    const text = await res.text();
+    console.error('[fal-image] error', res.status, text.substring(0, 500));
+    throw new Error(`Image generation failed (${res.status}). ${text.substring(0, 200)}`);
+  }
+
+  const data = (await res.json()) as { images?: { url?: string }[] };
+  const url = data.images?.[0]?.url;
+  if (!url) throw new Error('The model returned no image');
+  return url;
+}
+
 /**
  * Neither the Gemini image models nor Grok Aurora expose an output-size
  * parameter through this gateway, so framing is steered in the prompt. These
@@ -416,6 +583,25 @@ ART DIRECTION: ${enhancedUserRequest}`;
       { type: 'image_url', image_url: { url: sourceImage } },
       { type: 'text', text: contextualPrompt }
     ] : contextualPrompt;
+
+    // ── fal.ai catalogue ──────────────────────────────────────────────────
+    // Everything the Lovable gateway and xAI do not serve. These run on fal's
+    // synchronous endpoint rather than its queue: an image lands in seconds, so
+    // blocking keeps generateImage's contract (one call, one imageUrl) instead
+    // of forcing the whole image path to become polled like video.
+    if (FAL_IMAGE_MODELS[model]) {
+      const falResult = await generateWithFal(
+        model,
+        contextualPrompt,
+        sourceImage,
+        bannerFormat,
+        aspectRatio,
+      );
+      return new Response(
+        JSON.stringify({ imageUrl: falResult, text: '', success: true }),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
 
     // Use Grok Aurora for image generation if selected (but NOT for image editing)
     // Grok's grok-2-image API only supports text-to-image, not image editing
