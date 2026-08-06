@@ -15,6 +15,9 @@ const EXTENSIONS: Record<GenerationJob['kind'], { ext: string; mime: string }> =
   image: { ext: 'png', mime: 'image/png' },
   video: { ext: 'mp4', mime: 'video/mp4' },
   audio: { ext: 'mp3', mime: 'audio/mpeg' },
+  // Present so the record stays exhaustive. Meshes are rejected below — the
+  // timeline holds clips, and a GLB is not one.
+  model3d: { ext: 'glb', mime: 'model/gltf-binary' },
 };
 
 /** Turn a prompt into a short, filesystem-safe name. */
@@ -44,6 +47,13 @@ export async function sendJobToEditor(
 ): Promise<string | null> {
   if (!job.url) {
     toast.error('That generation has no asset to send yet.');
+    return null;
+  }
+
+  // The editor timeline has no 3D track. Importing a GLB would land an
+  // undecodable file in the media library and fail at playback rather than here.
+  if (job.kind === 'model3d') {
+    toast.error('3D models cannot go on the timeline. Download the mesh instead.');
     return null;
   }
 

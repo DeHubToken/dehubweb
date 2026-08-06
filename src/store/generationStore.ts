@@ -12,19 +12,25 @@
 import { create } from 'zustand';
 import { nanoid } from 'nanoid';
 import {
+  generate3d,
   generateAudio,
   generateImage,
   generateVideo,
   isAborted,
+  poll3d,
   pollVideo,
   type AudioRequest,
   type ImageRequest,
+  type Model3dRequest,
   type RenderTicket,
   type VideoRequest,
 } from '@/lib/creator/generationEngine';
 
 export type JobStatus = 'running' | 'done' | 'failed' | 'cancelled';
-export type JobKind = 'image' | 'video' | 'audio';
+export type JobKind = 'image' | 'video' | 'audio' | 'model3d';
+
+/** Kinds that queue upstream and hand back a resumable ticket. */
+const TICKETED_KINDS: readonly JobKind[] = ['video', 'model3d'];
 
 export interface GenerationJob {
   id: string;
@@ -50,6 +56,12 @@ export interface GenerationJob {
   /** Source image for edits and image-to-video, kept so the job can be re-run. */
   sourceImage?: string;
   /**
+   * Export format requested for a 3D job. Kept because the provider's URL does
+   * not always carry an extension, and guessing it from the URL mislabels an
+   * FBX download as .glb and tries to preview it in a GLB viewer.
+   */
+  exportFormat?: string;
+  /**
    * Set once the provider accepts a video render. Persisted so a reload can
    * rejoin a render in progress instead of abandoning one already paid for.
    */
@@ -68,6 +80,8 @@ type PersistedJob = Pick<
   | 'presetId'
   | 'aspect'
   | 'url'
+  | 'posterUrl'
+  | 'exportFormat'
   | 'createdAt'
   | 'finishedAt'
   | 'status'
@@ -211,21 +225,24 @@ function loadPersisted(): GenerationJob[] {
     if (!Array.isArray(rows)) return [];
     return rows
       .filter((r) => r && (isPersistableUrl(r.url) || (r.ticket && r.status !== 'done')))
-      .map((r) =>
-        r.ticket && r.status !== 'done'
-          ? // Anything with a live ticket comes back as running so it gets
-            // rejoined rather than presented as a dead failure.
-            { ...r, status: 'running' as const, stage: 'Reconnecting' }
-          : { ...r, status: 'done' as const, stage: '' },
-      );
+      .map((r) => {
+        if (!r.ticket || r.status === 'done') return { ...r, status: 'done' as const, stage: '' };
+        // Someone who pressed "Stop waiting" asked us to stop, so a cancelled
+        // render comes back cancelled — with its ticket, so the viewer offers
+        // Reconnect — rather than quietly resuming against their decision.
+        if (r.status === 'cancelled') return { ...r, status: 'cancelled' as const, stage: '' };
+        // Anything else with a live ticket comes back as running so it gets
+        // rejoined rather than presented as a dead failure.
+        return { ...r, status: 'running' as const, stage: 'Reconnecting' };
+      });
   } catch {
     return [];
   }
 }
 
 function toPersisted(j: GenerationJob): PersistedJob {
-  const { id, kind, prompt, resolvedPrompt, model, modelName, presetId, aspect, url, createdAt, finishedAt, status, ticket } = j;
-  return { id, kind, prompt, resolvedPrompt, model, modelName, presetId, aspect, url, createdAt, finishedAt, status, ticket };
+  const { id, kind, prompt, resolvedPrompt, model, modelName, presetId, aspect, url, posterUrl, exportFormat, createdAt, finishedAt, status, ticket } = j;
+  return { id, kind, prompt, resolvedPrompt, model, modelName, presetId, aspect, url, posterUrl, exportFormat, createdAt, finishedAt, status, ticket };
 }
 
 /**
@@ -237,7 +254,19 @@ function isResumable(j: GenerationJob): boolean {
   // Failed ones count too. Giving up on polling does not cancel the render, and
   // the ticket is the only handle on a result that is very likely sitting ready
   // at the provider. Dropping it would force the creator to pay a second time.
-  return (j.status === 'running' || j.status === 'failed') && j.kind === 'video' && !!j.ticket;
+  // Cancelled counts too. "Stop waiting" only stops us listening — the render
+  // continues at the provider and is already paid for, so dropping the ticket
+  // on cancel would leave a finished, collectible result unreachable forever.
+  return (
+    (j.status === 'running' || j.status === 'failed' || j.status === 'cancelled') &&
+    TICKETED_KINDS.includes(j.kind) &&
+    !!j.ticket
+  );
+}
+
+/** The poller that owns a job's ticket. Meshes and videos queue on different functions. */
+function pollerFor(kind: JobKind) {
+  return kind === 'model3d' ? poll3d : pollVideo;
 }
 
 function isStorableResult(j: GenerationJob): boolean {
@@ -288,6 +317,7 @@ interface GenerationState {
   startImage: (req: ImageRequest, meta: JobMeta) => string;
   startVideo: (req: VideoRequest, meta: JobMeta) => string;
   startAudio: (req: AudioRequest, meta: JobMeta) => string;
+  startModel3d: (req: Model3dRequest, meta: JobMeta) => string;
 
   /**
    * Rejoin any render that was still in flight when the page was last closed.
@@ -405,6 +435,29 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
       return id;
     },
 
+    startModel3d: (req, meta) => {
+      const id = open('model3d', req.model, meta, req.sourceImage);
+      if (req.exportFormat) patch(id, { exportFormat: req.exportFormat });
+      const ctrl = new AbortController();
+      controllers.set(id, ctrl);
+      finish(
+        id,
+        generate3d(req, {
+          signal: ctrl.signal,
+          onStage: (stage) => patch(id, { stage }),
+          onPreview: (posterUrl) => patch(id, { posterUrl }),
+          onQueued: (ticket) => {
+            // Same reasoning as video: a mesh takes minutes and has been paid
+            // for, so the ticket is written before any polling starts.
+            claimRender(ticket.predictionId);
+            patch(id, { ticket });
+            persist(get().jobs);
+          },
+        }),
+      );
+      return id;
+    },
+
     setScope: (wallet) => {
       const next = scopeKey(wallet);
       if (next === storageKey) return;
@@ -445,8 +498,9 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
         const ticket = job.ticket;
         finish(
           job.id,
-          pollVideo(ticket, {
+          pollerFor(job.kind)(ticket, {
             signal: ctrl.signal,
+            onPreview: (posterUrl) => patch(job.id, { posterUrl }),
             onStage: (stage) => {
               refreshClaim(ticket.predictionId);
               patch(job.id, { stage });
@@ -466,8 +520,9 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
       patch(id, { status: 'running', stage: 'Reconnecting', error: undefined });
       finish(
         id,
-        pollVideo(ticket, {
+        pollerFor(job.kind)(ticket, {
           signal: ctrl.signal,
+          onPreview: (posterUrl) => patch(id, { posterUrl }),
           onStage: (stage) => {
             refreshClaim(ticket.predictionId);
             patch(id, { stage });

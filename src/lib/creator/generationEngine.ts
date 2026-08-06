@@ -12,7 +12,7 @@
  */
 import { supabase } from '@/integrations/supabase/client';
 
-export type GenerationKind = 'image' | 'video' | 'audio';
+export type GenerationKind = 'image' | 'video' | 'audio' | 'model3d';
 
 export interface ImageRequest {
   prompt: string;
@@ -43,6 +43,23 @@ export interface AudioRequest {
   voiceId: string;
 }
 
+export interface Model3dRequest {
+  /** Optional for the image-only models, required for the text path. */
+  prompt?: string;
+  model: string;
+  /** Data URL or https URL of the reference image. */
+  sourceImage?: string;
+  /** Extra views of the same subject, for models that read more than one. */
+  referenceImageUrls?: string[];
+  negativePrompt?: string;
+  textureQuality?: 'none' | 'standard' | 'HD';
+  pbr?: boolean;
+  faceLimit?: number;
+  quad?: boolean;
+  seed?: number;
+  exportFormat?: 'glb' | 'usdz' | 'fbx' | 'obj' | 'stl';
+}
+
 /**
  * Everything needed to pick a render back up. Persisting this is what makes a
  * paid render survive a reload instead of being silently abandoned.
@@ -60,6 +77,12 @@ export interface GenerationHandlers {
   onStage?: (stage: string) => void;
   /** Fires as soon as the provider accepts the render, before any polling. */
   onQueued?: (ticket: RenderTicket) => void;
+  /**
+   * A poster/preview still the provider produced alongside the asset. Free —
+   * it comes back on the same status call — and it is what stops the library
+   * grid from being a wall of identical placeholder icons.
+   */
+  onPreview?: (url: string) => void;
   /** Aborts polling. The upstream render is not cancelled. */
   signal?: AbortSignal;
 }
@@ -182,8 +205,14 @@ async function unwrap<T extends { error?: string }>(
  */
 const MAX_INLINE_SOURCE_IMAGE_CHARS = 200_000;
 
-/** Upload a data URL to the shared AI bucket and return its public URL. */
-async function hostDataUrl(dataUrl: string): Promise<string> {
+/**
+ * Upload a data URL to the shared AI bucket and return its public URL.
+ *
+ * Exported because the 3D path has to stage its reference BEFORE the DHB
+ * transfer: no 3D endpoint accepts a data URL, so a staging failure after
+ * payment would burn the charge with nothing queued at the provider.
+ */
+export async function hostDataUrl(dataUrl: string): Promise<string> {
   const res = await fetch(dataUrl);
   const blob = await res.blob();
   const ext = (blob.type.split('/')[1] || 'png').replace(/[^a-z0-9]/gi, '');
@@ -291,18 +320,29 @@ export async function generateVideo(
 }
 
 /**
- * Poll an already-queued render to completion. Split out of generateVideo so a
- * reload can rejoin a render that is still running rather than abandoning
- * something the creator has already paid for.
+ * Shared queue poller.
+ *
+ * generate-video and generate-3d expose the same ticket contract, so the
+ * back-off, the transient-error tolerance and the "ask once before sleeping"
+ * behaviour are worth having in exactly one place. Only the edge function name
+ * and the key the finished asset arrives under differ.
  */
-export async function pollVideo(
+async function pollRender(
   ticket: RenderTicket,
-  handlers: GenerationHandlers = {},
+  handlers: GenerationHandlers,
+  config: {
+    functionName: 'generate-video' | 'generate-3d';
+    /** Key on the status body holding the finished asset URL. */
+    resultKey: 'videoUrl' | 'modelUrl';
+    /** Wording for the terminal-but-empty case. */
+    emptyMessage: string;
+    stageLabel: string;
+  },
 ): Promise<string> {
   throwIfAborted(handlers.signal);
 
   const began = ticket.startedAt || Date.now();
-  handlers.onStage?.('Rendering');
+  handlers.onStage?.(config.stageLabel);
 
   let interval = VIDEO_POLL_START_MS;
   let consecutiveErrors = 0;
@@ -320,7 +360,7 @@ export async function pollVideo(
     }
     firstAttempt = false;
 
-    const poll = await supabase.functions.invoke('generate-video', {
+    const poll = await supabase.functions.invoke(config.functionName, {
       body: {
         predictionId: ticket.predictionId,
         provider: ticket.provider,
@@ -341,24 +381,123 @@ export async function pollVideo(
     }
 
     consecutiveErrors = 0;
-    const status = poll.data as { status?: string; videoUrl?: string; error?: string } | null;
+    const status = poll.data as
+      | {
+          status?: string;
+          videoUrl?: string;
+          modelUrl?: string;
+          previewImageUrl?: string;
+          error?: string;
+        }
+      | null;
 
     if (status?.status === 'failed') throw new Error(status.error || 'The render failed');
     if (status?.status === 'succeeded') {
-      if (status.videoUrl) return status.videoUrl;
+      if (status.previewImageUrl) handlers.onPreview?.(status.previewImageUrl);
+      const url = status[config.resultKey];
+      if (url) return url;
       // Terminal but unreadable: the provider used an output shape the status
       // handler does not map. Fail now rather than polling a finished job for
       // the rest of the timeout.
-      throw new Error('The render finished but returned no playable video.');
+      throw new Error(config.emptyMessage);
     }
 
     // Ease off as the wait grows; most renders land in the first minute or two.
     const elapsed = Math.round((Date.now() - began) / 1000);
     if (elapsed > 60) interval = VIDEO_POLL_MAX_MS;
-    handlers.onStage?.(`Rendering (${elapsed}s)`);
+    handlers.onStage?.(`${config.stageLabel} (${elapsed}s)`);
   }
 
   throw new Error('The render timed out. It may still finish at the provider.');
+}
+
+/**
+ * Poll an already-queued video render to completion. Split out of generateVideo
+ * so a reload can rejoin a render that is still running rather than abandoning
+ * something the creator has already paid for.
+ */
+export function pollVideo(
+  ticket: RenderTicket,
+  handlers: GenerationHandlers = {},
+): Promise<string> {
+  return pollRender(ticket, handlers, {
+    functionName: 'generate-video',
+    resultKey: 'videoUrl',
+    emptyMessage: 'The render finished but returned no playable video.',
+    stageLabel: 'Rendering',
+  });
+}
+
+/** Poll an already-queued mesh to completion. Resumable for the same reason. */
+export function poll3d(ticket: RenderTicket, handlers: GenerationHandlers = {}): Promise<string> {
+  return pollRender(ticket, handlers, {
+    functionName: 'generate-3d',
+    resultKey: 'modelUrl',
+    emptyMessage: 'The mesh finished but returned no downloadable model.',
+    stageLabel: 'Sculpting',
+  });
+}
+
+/**
+ * Text or image to a 3D mesh. Queues the job, then polls until the mesh lands.
+ * Resolves to the finished model URL (GLB unless another export format was
+ * requested).
+ */
+export async function generate3d(
+  req: Model3dRequest,
+  handlers: GenerationHandlers = {},
+): Promise<string> {
+  throwIfAborted(handlers.signal);
+
+  // fal.ai fetches the reference over HTTP, so a base64 attachment has to be
+  // hosted first. Unlike the image and video paths there is no inline fallback:
+  // no 3D endpoint accepts a data URL, so anything base64 is staged regardless
+  // of size.
+  let sourceImage = req.sourceImage;
+  if (sourceImage?.startsWith('data:')) {
+    handlers.onStage?.('Preparing the reference');
+    sourceImage = await hostDataUrl(sourceImage);
+    throwIfAborted(handlers.signal);
+  }
+
+  handlers.onStage?.('Queueing the mesh');
+
+  const start = await supabase.functions.invoke('generate-3d', {
+    body: {
+      model: req.model,
+      ...(req.prompt ? { prompt: req.prompt } : {}),
+      ...(sourceImage ? { sourceImage } : {}),
+      ...(req.referenceImageUrls?.length ? { referenceImageUrls: req.referenceImageUrls } : {}),
+      ...(req.negativePrompt ? { negativePrompt: req.negativePrompt } : {}),
+      ...(req.textureQuality ? { textureQuality: req.textureQuality } : {}),
+      ...(req.pbr !== undefined ? { pbr: req.pbr } : {}),
+      ...(req.faceLimit ? { faceLimit: req.faceLimit } : {}),
+      ...(req.quad ? { quad: req.quad } : {}),
+      ...(req.seed !== undefined ? { seed: req.seed } : {}),
+      ...(req.exportFormat ? { exportFormat: req.exportFormat } : {}),
+    },
+  });
+
+  const queued = await unwrap<{
+    predictionId?: string;
+    provider?: string;
+    falAppId?: string;
+    modelUrl?: string;
+    error?: string;
+  }>(start, '3D generation failed');
+
+  if (queued.modelUrl) return queued.modelUrl;
+  if (!queued.predictionId) throw new Error('The mesh was not queued');
+
+  const ticket: RenderTicket = {
+    predictionId: queued.predictionId,
+    provider: queued.provider,
+    falAppId: queued.falAppId,
+    startedAt: Date.now(),
+  };
+  handlers.onQueued?.(ticket);
+
+  return poll3d(ticket, handlers);
 }
 
 /**
@@ -416,10 +555,14 @@ export async function generateAudio(
  * unchanged if the service is unavailable, so the button can never destroy what
  * someone typed.
  */
-export async function enhancePrompt(text: string, kind: 'image' | 'video'): Promise<string> {
+export async function enhancePrompt(text: string, kind: 'image' | 'video' | '3d'): Promise<string> {
   const trimmed = text.trim();
   if (!trimmed) return trimmed;
 
+  // '3d' rides the image mode: the edge function only knows the two, and a
+  // mesh prompt wants the same subject-and-material detail a still does, not
+  // the camera-move language the video mode adds. Sending an unknown mode
+  // would fall through to plain spellcheck and lose the assist entirely.
   const { data, error } = await supabase.functions.invoke('enhance-text', {
     body: { text: trimmed, mode: kind === 'video' ? 'prompt-video' : 'prompt-image' },
   });

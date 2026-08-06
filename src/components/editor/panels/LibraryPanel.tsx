@@ -7,7 +7,7 @@
  * from the timeline.
  */
 import { useCallback, useState } from 'react';
-import { AlertCircle, Film, ImageIcon, Loader2, Music2, Plus } from 'lucide-react';
+import { AlertCircle, Box, Film, ImageIcon, Loader2, Music2, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { useEditorQuota } from '@/hooks/use-editor-quota';
@@ -16,7 +16,10 @@ import { sendJobToEditor } from '@/lib/creator/sendToEditor';
 import { useEditorUiStore } from '@/store/editorUiStore';
 import { PanelHeading } from './DesignPanel';
 
-const KIND_ICON = { image: ImageIcon, video: Film, audio: Music2 } as const;
+// Must cover every JobKind. The studio and the editor share one queue, so a
+// mesh generated on /creator arrives here too, and a missing entry renders
+// `undefined` as a component and takes the whole panel down.
+const KIND_ICON = { image: ImageIcon, video: Film, audio: Music2, model3d: Box } as const;
 
 export function LibraryPanel() {
   const jobs = useGenerationStore((s) => s.jobs);
@@ -112,7 +115,7 @@ function JobTile({ job, sending, onSend, onCancel, onRetry }: JobTileProps) {
           type="button"
           onClick={() => {
             const ok =
-              job.kind !== 'video' ||
+              (job.kind !== 'video' && job.kind !== 'model3d') ||
               window.confirm(
                 'Stop waiting for this render? It has already been paid for and will keep rendering, but the result will not come back to you.',
               );
@@ -160,6 +163,20 @@ function JobTile({ job, sending, onSend, onCancel, onRetry }: JobTileProps) {
         />
       ) : job.kind === 'video' ? (
         <video src={job.url} muted playsInline preload="metadata" className="h-full w-full object-cover" />
+      ) : job.kind === 'model3d' ? (
+        job.posterUrl ? (
+          <img
+            src={job.posterUrl}
+            alt={job.prompt}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <span className="flex h-full w-full items-center justify-center">
+            <Box className="h-5 w-5 text-white/40" />
+          </span>
+        )
       ) : (
         <span className="flex h-full w-full items-center justify-center">
           <Music2 className="h-5 w-5 text-white/40" />
@@ -173,21 +190,42 @@ function JobTile({ job, sending, onSend, onCancel, onRetry }: JobTileProps) {
         <Icon className="h-2.5 w-2.5 text-white" />
       </span>
 
-      <button
-        type="button"
-        onClick={onSend}
-        disabled={sending}
-        title={`Add "${job.prompt}" to the timeline`}
-        className={cn(
-          'absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/90 via-black/25 to-transparent p-2 text-[10px] font-semibold text-white transition',
-          'opacity-0 focus-visible:opacity-100 group-hover:opacity-100',
-        )}
-      >
-        <span className="inline-flex items-center gap-1 rounded-full border border-white/25 bg-white/15 px-2.5 py-1 backdrop-blur">
-          {sending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Plus className="h-3 w-3" />}
-          {sending ? 'Adding' : 'Add to timeline'}
-        </span>
-      </button>
+      {/* The timeline has no 3D track, so a mesh gets an explanation rather than
+          an Add button that can only fail. It stays visible in this panel
+          because this is the shared library, and it is viewable on /creator. */}
+      {job.kind === 'model3d' ? (
+        // Still a real link, not a hover-only caption: on a phone there is no
+        // hover, and by keyboard a bare thumbnail is unreachable and unlabelled.
+        <a
+          href="/creator"
+          title={`View "${job.prompt}" on Creator`}
+          aria-label={`View 3D model "${job.prompt}" on Creator`}
+          className={cn(
+            'absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/90 via-black/25 to-transparent p-2 text-[10px] font-semibold text-white transition',
+            'opacity-0 focus-visible:opacity-100 group-hover:opacity-100',
+          )}
+        >
+          <span className="rounded-full border border-white/25 bg-white/15 px-2.5 py-1 backdrop-blur">
+            View on Creator
+          </span>
+        </a>
+      ) : (
+        <button
+          type="button"
+          onClick={onSend}
+          disabled={sending}
+          title={`Add "${job.prompt}" to the timeline`}
+          className={cn(
+            'absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/90 via-black/25 to-transparent p-2 text-[10px] font-semibold text-white transition',
+            'opacity-0 focus-visible:opacity-100 group-hover:opacity-100',
+          )}
+        >
+          <span className="inline-flex items-center gap-1 rounded-full border border-white/25 bg-white/15 px-2.5 py-1 backdrop-blur">
+            {sending ? <Loader2 className="h-3 w-3 animate-spin" /> : <Plus className="h-3 w-3" />}
+            {sending ? 'Adding' : 'Add to timeline'}
+          </span>
+        </button>
+      )}
     </div>
   );
 }

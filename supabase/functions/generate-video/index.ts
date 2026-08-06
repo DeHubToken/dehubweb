@@ -7,7 +7,17 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version',
 };
 
-// Premium video generation models via Replicate
+/**
+ * fal.ai model families.
+ *
+ * Each family names its inputs differently — Veo takes `generate_audio`, Kling
+ * takes `cfg_scale` and `negative_prompt`, Hailuo takes `prompt_optimizer`,
+ * Wan takes `num_frames`. Unknown keys are not ignored: fal 422s the request.
+ * So the family selects an explicit input builder instead of one shared spread.
+ */
+type FalFamily = 'seedance' | 'veo' | 'kling' | 'hailuo' | 'wan' | 'luma' | 'pixverse' | 'ltx';
+
+// Premium video generation models via Replicate and fal.ai
 const VIDEO_MODELS: Record<string, {
   id: string;
   name: string;
@@ -16,6 +26,7 @@ const VIDEO_MODELS: Record<string, {
   duration: string;
   version?: string;
   provider?: 'replicate' | 'fal';
+  falFamily?: FalFamily;
   falTextModel?: string;
   falImageModel?: string;
   falReferenceModel?: string;
@@ -70,6 +81,7 @@ const VIDEO_MODELS: Record<string, {
     supports: ['text-to-video', 'image-to-video'],
     duration: '4-15s',
     provider: 'fal',
+    falFamily: 'seedance',
     falTextModel: 'bytedance/seedance-2.0/text-to-video',
     falImageModel: 'bytedance/seedance-2.0/image-to-video',
     falReferenceModel: 'bytedance/seedance-2.0/reference-to-video',
@@ -81,9 +93,132 @@ const VIDEO_MODELS: Record<string, {
     supports: ['text-to-video', 'image-to-video'],
     duration: '4-15s',
     provider: 'fal',
+    falFamily: 'seedance',
     falTextModel: 'bytedance/seedance-2.0/fast/text-to-video',
     falImageModel: 'bytedance/seedance-2.0/fast/image-to-video',
     falReferenceModel: 'bytedance/seedance-2.0/fast/reference-to-video',
+  },
+
+  // ─── Expanded fal.ai catalogue ───
+  'veo-3.1': {
+    id: 'fal-ai/veo3.1',
+    name: 'Veo 3.1',
+    description: 'Google flagship, ultra-realistic with native audio',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '4-8s',
+    provider: 'fal',
+    falFamily: 'veo',
+    falTextModel: 'fal-ai/veo3.1',
+    falImageModel: 'fal-ai/veo3.1/image-to-video',
+  },
+  'veo-3.1-fast': {
+    id: 'fal-ai/veo3.1/fast',
+    name: 'Veo 3.1 Fast',
+    description: 'Faster, cheaper Veo 3.1',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '4-8s',
+    provider: 'fal',
+    falFamily: 'veo',
+    falTextModel: 'fal-ai/veo3.1/fast',
+    falImageModel: 'fal-ai/veo3.1/fast/image-to-video',
+  },
+  'kling-3.0': {
+    id: 'fal-ai/kling-video/v3/pro',
+    name: 'Kling 3.0 Pro',
+    description: 'Multi-shot with audio sync and long takes',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '3-15s',
+    provider: 'fal',
+    falFamily: 'kling',
+    falTextModel: 'fal-ai/kling-video/v3/pro/text-to-video',
+    falImageModel: 'fal-ai/kling-video/v3/pro/image-to-video',
+  },
+  'kling-3.0-standard': {
+    id: 'fal-ai/kling-video/v3/standard',
+    name: 'Kling 3.0 Standard',
+    description: 'Kling 3.0 on the lighter render tier',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '3-15s',
+    provider: 'fal',
+    falFamily: 'kling',
+    falTextModel: 'fal-ai/kling-video/v3/standard/text-to-video',
+    falImageModel: 'fal-ai/kling-video/v3/standard/image-to-video',
+  },
+  'hailuo-2.3': {
+    id: 'fal-ai/minimax/hailuo-2.3',
+    name: 'MiniMax Hailuo 2.3',
+    description: 'Natural physics and facial emotion',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '6s',
+    provider: 'fal',
+    falFamily: 'hailuo',
+    falTextModel: 'fal-ai/minimax/hailuo-2.3/pro/text-to-video',
+    falImageModel: 'fal-ai/minimax/hailuo-2.3/pro/image-to-video',
+  },
+  'hailuo-2.3-fast': {
+    id: 'fal-ai/minimax/hailuo-2.3-fast',
+    name: 'Hailuo 2.3 Fast',
+    description: 'Faster, cheaper Hailuo (image-to-video only)',
+    supports: ['image-to-video'],
+    duration: '6s',
+    provider: 'fal',
+    falFamily: 'hailuo',
+    falImageModel: 'fal-ai/minimax/hailuo-2.3-fast/pro/image-to-video',
+  },
+  'wan-2.6': {
+    id: 'wan/v2.6',
+    name: 'Wan 2.6',
+    description: 'Character-consistent video with synced audio',
+    supports: ['image-to-video'],
+    duration: '5-10s',
+    provider: 'fal',
+    falFamily: 'wan',
+    falImageModel: 'wan/v2.6/image-to-video',
+    falReferenceModel: 'wan/v2.6/reference-to-video',
+  },
+  'wan-2.5': {
+    id: 'fal-ai/wan-25-preview',
+    name: 'Wan 2.5',
+    description: 'Open-weight, stylised and experimental',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '5-10s',
+    provider: 'fal',
+    falFamily: 'wan',
+    falTextModel: 'fal-ai/wan-25-preview/text-to-video',
+    falImageModel: 'fal-ai/wan-25-preview/image-to-video',
+  },
+  'luma-ray2-flash': {
+    id: 'fal-ai/luma-dream-machine/ray-2-flash',
+    name: 'Luma Ray 2 Flash',
+    description: 'Dreamy Luma aesthetic on the budget tier',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '5s',
+    provider: 'fal',
+    falFamily: 'luma',
+    falTextModel: 'fal-ai/luma-dream-machine/ray-2-flash',
+    falImageModel: 'fal-ai/luma-dream-machine/ray-2-flash/image-to-video',
+  },
+  'pixverse-v5': {
+    id: 'fal-ai/pixverse/v5',
+    name: 'PixVerse V5',
+    description: 'Stylised and anime-leaning motion',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '5-8s',
+    provider: 'fal',
+    falFamily: 'pixverse',
+    falTextModel: 'fal-ai/pixverse/v5/text-to-video',
+    falImageModel: 'fal-ai/pixverse/v5/image-to-video',
+  },
+  'ltx-13b': {
+    id: 'fal-ai/ltxv-13b-098-distilled',
+    name: 'LTX Video 13B',
+    description: 'Cheapest per second, good for drafts',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '5-10s',
+    provider: 'fal',
+    falFamily: 'ltx',
+    falTextModel: 'fal-ai/ltxv-13b-098-distilled',
+    falImageModel: 'fal-ai/ltxv-13b-098-distilled/image-to-video',
   },
 };
 
@@ -239,6 +374,165 @@ function buildReplicateInput(
   }
 }
 
+// ─── fal.ai input builders ───
+
+interface FalInputOptions {
+  prompt: string;
+  sourceImage?: string;
+  duration: number;
+  aspectRatio: string;
+  negativePrompt?: string;
+  resolution?: string;
+  referenceImageUrls?: string[];
+  endFrameUrl?: string;
+  audioUrls?: string[];
+  videoUrls?: string[];
+  seed?: number;
+}
+
+/**
+ * Snap a requested duration onto the values a family actually accepts.
+ *
+ * Every one of these families types `duration` as a closed enum, so an
+ * in-between value is a 422 rather than a rounding. Snapping DOWN is
+ * deliberate: the creator has already been charged on the slider's value, and
+ * rounding up would render — and bill fal for — more than they paid for.
+ */
+function snapDuration(seconds: number, allowed: number[]): number {
+  const eligible = allowed.filter((a) => a <= seconds);
+  return eligible.length ? Math.max(...eligible) : Math.min(...allowed);
+}
+
+/** Pick the closest resolution a family supports, never exceeding the request. */
+function snapResolution(requested: string | undefined, allowed: string[], fallback: string): string {
+  if (requested && allowed.includes(requested)) return requested;
+  const order = ['360p', '480p', '512', '540p', '720p', '768', '1080p', '4k'];
+  const wantIdx = order.indexOf(requested ?? '');
+  if (wantIdx < 0) return fallback;
+  // Best supported option at or below what was asked for.
+  const below = allowed.filter((a) => order.indexOf(a) >= 0 && order.indexOf(a) <= wantIdx);
+  if (below.length) {
+    return below.reduce((best, a) => (order.indexOf(a) > order.indexOf(best) ? a : best));
+  }
+  return fallback;
+}
+
+function buildFalInput(family: FalFamily, o: FalInputOptions): Record<string, unknown> {
+  const {
+    prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution,
+    referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed,
+  } = o;
+
+  switch (family) {
+    // Unchanged from the original single-family implementation, so the two
+    // Seedance models keep behaving exactly as they did.
+    case 'seedance':
+      return {
+        prompt,
+        duration: Math.min(Math.max(duration, 4), 15),
+        aspect_ratio: aspectRatio,
+        resolution: resolution || '720p',
+        generate_audio: true,
+        ...(sourceImage && { image_url: sourceImage }),
+        ...(negativePrompt && { negative_prompt: negativePrompt }),
+        ...(endFrameUrl && { last_image_url: endFrameUrl }),
+        ...(referenceImageUrls?.length && { image_urls: referenceImageUrls }),
+        ...(audioUrls?.length && { audio_urls: audioUrls }),
+        ...(videoUrls?.length && { video_urls: videoUrls }),
+        ...(seed !== undefined && seed !== null && { seed }),
+      };
+
+    // duration is '4s' | '6s' | '8s'; aspect ratio is 16:9 or 9:16 only.
+    case 'veo':
+      return {
+        prompt,
+        duration: `${snapDuration(duration, [4, 6, 8])}s`,
+        aspect_ratio: aspectRatio === '9:16' ? '9:16' : '16:9',
+        resolution: snapResolution(resolution, ['720p', '1080p', '4k'], '720p'),
+        generate_audio: true,
+        ...(sourceImage && { image_url: sourceImage }),
+        ...(negativePrompt && { negative_prompt: negativePrompt }),
+        ...(seed !== undefined && seed !== null && { seed }),
+      };
+
+    // duration is a stringified integer 3-15. No resolution field.
+    case 'kling':
+      return {
+        prompt,
+        duration: String(Math.min(Math.max(duration, 3), 15)),
+        aspect_ratio: aspectRatio,
+        generate_audio: true,
+        cfg_scale: 0.5,
+        ...(sourceImage && { image_url: sourceImage }),
+        ...(negativePrompt && { negative_prompt: negativePrompt }),
+      };
+
+    // The pro tier takes neither duration nor resolution — sending either 422s.
+    case 'hailuo':
+      return {
+        prompt,
+        prompt_optimizer: true,
+        ...(sourceImage && { image_url: sourceImage }),
+      };
+
+    // duration is a stringified '5' | '10' | '15'; 2.6 has no 480p.
+    case 'wan':
+      return {
+        prompt,
+        duration: String(snapDuration(duration, [5, 10, 15])),
+        aspect_ratio: aspectRatio,
+        resolution: snapResolution(resolution, ['480p', '720p', '1080p'], '720p'),
+        enable_prompt_expansion: true,
+        ...(sourceImage && { image_url: sourceImage }),
+        ...(negativePrompt && { negative_prompt: negativePrompt }),
+        ...(audioUrls?.length && { audio_url: audioUrls[0] }),
+        ...(seed !== undefined && seed !== null && { seed }),
+      };
+
+    // duration is '5s' | '9s'. No 1:1, and no negative prompt.
+    case 'luma':
+      return {
+        prompt,
+        duration: `${snapDuration(duration, [5, 9])}s`,
+        aspect_ratio: aspectRatio === '1:1' ? '16:9' : aspectRatio,
+        resolution: snapResolution(resolution, ['540p', '720p', '1080p'], '720p'),
+        loop: false,
+        ...(sourceImage && { image_url: sourceImage }),
+      };
+
+    // duration is a stringified '5' | '8'; resolution starts at 360p.
+    case 'pixverse':
+      return {
+        prompt,
+        duration: String(snapDuration(duration, [5, 8])),
+        aspect_ratio: aspectRatio,
+        resolution: snapResolution(resolution, ['360p', '540p', '720p', '1080p'], '720p'),
+        ...(sourceImage && { image_url: sourceImage }),
+        ...(negativePrompt && { negative_prompt: negativePrompt }),
+        ...(seed !== undefined && seed !== null && { seed }),
+      };
+
+    // LTX has no duration field at all — length is num_frames at frame_rate.
+    // 121 frames at 24 fps is the model default, roughly five seconds.
+    case 'ltx': {
+      const frameRate = 24;
+      return {
+        prompt,
+        num_frames: Math.min(Math.max(Math.round(duration * frameRate) + 1, 9), 1441),
+        frame_rate: frameRate,
+        aspect_ratio: aspectRatio,
+        resolution: snapResolution(resolution, ['480p', '720p'], '720p'),
+        ...(sourceImage && { image_url: sourceImage }),
+        ...(negativePrompt && { negative_prompt: negativePrompt }),
+        ...(seed !== undefined && seed !== null && { seed }),
+      };
+    }
+
+    default:
+      return { prompt };
+  }
+}
+
 // ─── Main handler ───
 
 serve(async (req) => {
@@ -343,22 +637,21 @@ async function handleFalGeneration(
     appId = modelConfig.falTextModel || modelConfig.id;
   }
 
-  const parsedDuration = Math.min(Math.max(parseInt(duration) || 5, 4), 15);
+  const parsedDuration = Math.min(Math.max(parseInt(duration) || 5, 3), 15);
 
-  const input: Record<string, unknown> = {
+  const input = buildFalInput(modelConfig.falFamily ?? 'seedance', {
     prompt,
+    sourceImage,
     duration: parsedDuration,
-    aspect_ratio: aspectRatio,
-    resolution: resolution || '720p',
-    generate_audio: true,
-    ...(sourceImage && { image_url: sourceImage }),
-    ...(negativePrompt && { negative_prompt: negativePrompt }),
-    ...(endFrameUrl && { last_image_url: endFrameUrl }),
-    ...(referenceImageUrls && referenceImageUrls.length > 0 && { image_urls: referenceImageUrls }),
-    ...(audioUrls && audioUrls.length > 0 && { audio_urls: audioUrls }),
-    ...(videoUrls && videoUrls.length > 0 && { video_urls: videoUrls }),
-    ...(seed !== undefined && seed !== null && { seed }),
-  };
+    aspectRatio,
+    negativePrompt,
+    resolution,
+    referenceImageUrls,
+    endFrameUrl,
+    audioUrls,
+    videoUrls,
+    seed,
+  });
 
   console.log(`[fal.ai] Submitting to ${appId}`, JSON.stringify(input).substring(0, 500));
 

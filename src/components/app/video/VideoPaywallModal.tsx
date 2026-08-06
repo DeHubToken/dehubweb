@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Loader2, Video, AlertCircle, ChevronDown, Volume2, Upload, X, Image, Music, Film, Hash, Plus, Lightbulb } from 'lucide-react';
-import { VideoModel, VideoModelKey, VIDEO_MODELS, VIDEO_MODEL_OPTIONS, getVideoCostUsd, getVideoCostDhb } from '@/constants/video-models.constants';
+import { VideoModel, VideoModelKey, VIDEO_MODELS, VIDEO_MODEL_OPTIONS, getVideoCostUsd, getVideoCostDhb, snapVideoDuration } from '@/constants/video-models.constants';
 import { supabase } from '@/integrations/supabase/client';
 import dhbCoinImage from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
@@ -113,10 +113,11 @@ export function VideoPaywallModal({
   // Reset options when model changes. Duration and resolution fall back to the
   // caller's seed first, so a value the creator already chose upstream survives.
   useEffect(() => {
-    const min = model.minDuration ?? 1;
-    const max = model.maxDuration ?? 60;
     const seeded = initialDuration ?? model.defaultDuration ?? 5;
-    setDuration(Math.min(max, Math.max(min, seeded)));
+    // Snapping here as well as in the studio: this modal is the last thing to
+    // touch the duration before it is priced and charged, and several models
+    // only accept a closed set of lengths.
+    setDuration(snapVideoDuration(model, seeded));
     setResolution(initialResolution ?? '720p');
     setNegativePrompt('');
     // Release the preview URLs before dropping the items, otherwise every
@@ -455,18 +456,41 @@ export function VideoPaywallModal({
                     {isPerSecond && <span className="text-zinc-500 ml-1 text-[10px]">(${(model.perSecondCostUsd! * 2 * duration).toFixed(2)})</span>}
                   </span>
                 </div>
-                <Slider
-                  value={[duration]}
-                  onValueChange={([v]) => setDuration(v)}
-                  min={model.minDuration}
-                  max={model.maxDuration}
-                  step={1}
-                  className="py-1"
-                />
-                <div className="flex justify-between text-[10px] text-zinc-500">
-                  <span>{model.minDuration}s</span>
-                  <span>{model.maxDuration}s</span>
-                </div>
+                {model.allowedDurations?.length ? (
+                  // A slider would let someone land on a value this provider
+                  // rejects, after they had already been priced on it.
+                  <div className="flex gap-1.5">
+                    {model.allowedDurations.map((d) => (
+                      <button
+                        key={d}
+                        type="button"
+                        onClick={() => setDuration(d)}
+                        className={`px-2.5 py-1 text-xs font-medium rounded-lg transition-colors ${
+                          duration === d
+                            ? 'bg-purple-500/30 text-purple-300 border border-purple-500/40'
+                            : 'bg-zinc-700/50 text-zinc-400 border border-zinc-600/30 hover:bg-zinc-700'
+                        }`}
+                      >
+                        {d}s
+                      </button>
+                    ))}
+                  </div>
+                ) : (
+                  <>
+                    <Slider
+                      value={[duration]}
+                      onValueChange={([v]) => setDuration(v)}
+                      min={model.minDuration}
+                      max={model.maxDuration}
+                      step={1}
+                      className="py-1"
+                    />
+                    <div className="flex justify-between text-[10px] text-zinc-500">
+                      <span>{model.minDuration}s</span>
+                      <span>{model.maxDuration}s</span>
+                    </div>
+                  </>
+                )}
               </div>
             )}
 

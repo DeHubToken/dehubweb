@@ -66,6 +66,95 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
     tier: 'premium',
     baseCostUsd: 0.06,
   },
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Expanded catalogue, all on fal.ai.
+  //
+  // Prices were read off each model's own fal.ai page. Where fal bills per
+  // megapixel the figure below covers a single ~1 MP image, which is what the
+  // studio requests — keep the size defaults in generate-image in step with it,
+  // because a 4 MP output costs fal four times what this collects.
+  // ─────────────────────────────────────────────────────────────────────────
+  'nano-banana-pro': {
+    id: 'nano-banana-pro',
+    name: 'Nano Banana Pro',
+    description: 'Best-in-class text and diagrams',
+    emoji: '🍌',
+    tier: 'premium',
+    baseCostUsd: 0.15,
+  },
+  'nano-banana-2': {
+    id: 'nano-banana-2',
+    name: 'Nano Banana 2',
+    description: 'Fast, photoreal, very versatile',
+    emoji: '🍌',
+    tier: 'standard',
+    baseCostUsd: 0.08,
+  },
+  'seedream-v4.5': {
+    id: 'seedream-v4.5',
+    name: 'Seedream 4.5',
+    description: 'Precise control and transformations',
+    emoji: '🌊',
+    tier: 'standard',
+    baseCostUsd: 0.04,
+  },
+  'flux-2-pro': {
+    id: 'flux-2-pro',
+    name: 'FLUX.2 Pro',
+    description: 'Exceptional prompt adherence',
+    emoji: '⚡',
+    tier: 'standard',
+    baseCostUsd: 0.03,
+  },
+  'flux-kontext-max': {
+    id: 'flux-kontext-max',
+    name: 'FLUX Kontext Max',
+    description: 'Context-aware editing and style transfer',
+    emoji: '🎛️',
+    tier: 'premium',
+    baseCostUsd: 0.08,
+  },
+  'recraft-v4.1': {
+    id: 'recraft-v4.1',
+    name: 'Recraft V4.1',
+    description: 'Brand-grade illustration and layout',
+    emoji: '🎨',
+    tier: 'standard',
+    baseCostUsd: 0.035,
+  },
+  'recraft-v4.1-vector': {
+    id: 'recraft-v4.1-vector',
+    name: 'Recraft Vector',
+    description: 'True SVG logos and icons',
+    emoji: '📐',
+    tier: 'standard',
+    baseCostUsd: 0.08,
+  },
+  'ideogram-v3': {
+    id: 'ideogram-v3',
+    name: 'Ideogram V3',
+    description: 'Strongest typography in a poster',
+    emoji: '🔤',
+    tier: 'standard',
+    baseCostUsd: 0.06,
+  },
+  'qwen-image': {
+    id: 'qwen-image',
+    name: 'Qwen Image',
+    description: 'Cheapest solid all-rounder',
+    emoji: '🪶',
+    tier: 'fast',
+    baseCostUsd: 0.02,
+  },
+  'grok-imagine': {
+    id: 'grok-imagine',
+    name: 'Grok Imagine',
+    description: 'Expressive, high-contrast, bold',
+    emoji: '🔮',
+    tier: 'fast',
+    baseCostUsd: 0.02,
+  },
 };
 
 export const IMAGE_MODEL_OPTIONS = Object.values(IMAGE_MODELS);

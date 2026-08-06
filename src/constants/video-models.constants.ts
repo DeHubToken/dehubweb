@@ -21,6 +21,15 @@ export interface VideoModel {
   minDuration?: number;
   /** Max duration in seconds */
   maxDuration?: number;
+  /**
+   * Closed set of durations the provider accepts, when it is not a free range.
+   *
+   * Several fal families type `duration` as an enum, so an in-between value is
+   * rejected outright. Where this is set the UI offers exactly these values
+   * instead of a stepper — otherwise someone pays for 5 seconds of Veo and gets
+   * billed for a request the provider refuses, or silently rendered 4.
+   */
+  allowedDurations?: number[];
   /** Whether the model supports native audio generation */
   hasAudio?: boolean;
   /** Whether the model supports negative prompts */
@@ -257,6 +266,276 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
       '🔁 Lock a seed to iterate without randomness',
     ],
   },
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Expanded catalogue, all on fal.ai.
+  //
+  // Every price below was read off that model's own fal.ai page and expressed
+  // on the basis fal actually bills. Where fal bills per second the model
+  // carries perSecondCostUsd, so a 15s render is not sold at the 5s price.
+  // The shared 100% markup is applied on top by getVideoCostUsd.
+  // ─────────────────────────────────────────────────────────────────────────
+  'veo-3.1': {
+    id: 'veo-3.1',
+    name: 'Veo 3.1',
+    description: 'Google flagship, ultra-realistic with audio',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '4-8s',
+    tier: 'premium',
+    emoji: '🎥',
+    baseCostUsd: 2.0,
+    perSecondCostUsd: 0.4,
+    defaultDuration: 4,
+    minDuration: 4,
+    maxDuration: 8,
+    allowedDurations: [4, 6, 8],
+    hasAudio: true,
+    supportsResolution: true,
+    provider: 'fal',
+    aspectRatios: ['16:9', '9:16'],
+    tips: [
+      '🎥 The most convincing realism available, with native audio',
+      '🖼️ Attach an image to animate it',
+      '💸 Priced per second — 8s costs twice a 4s',
+      '📺 Worth running at 1080p',
+    ],
+  },
+  'veo-3.1-fast': {
+    id: 'veo-3.1-fast',
+    name: 'Veo 3.1 Fast',
+    description: 'Veo look, a quarter of the price',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '4-8s',
+    tier: 'standard',
+    emoji: '⚡',
+    baseCostUsd: 0.75,
+    perSecondCostUsd: 0.15,
+    defaultDuration: 4,
+    minDuration: 4,
+    maxDuration: 8,
+    allowedDurations: [4, 6, 8],
+    hasAudio: true,
+    supportsResolution: true,
+    provider: 'fal',
+    aspectRatios: ['16:9', '9:16'],
+    tips: [
+      '⚡ Where to start on Veo — iterate here, finish on 3.1',
+      '🖼️ Attach an image to animate it',
+      '🔊 Native audio included',
+    ],
+  },
+  'kling-3.0': {
+    id: 'kling-3.0',
+    name: 'Kling 3.0 Pro',
+    description: 'Multi-shot, audio sync, long takes',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '3-15s',
+    tier: 'premium',
+    emoji: '🎞️',
+    baseCostUsd: 0.84,
+    perSecondCostUsd: 0.168,
+    defaultDuration: 5,
+    minDuration: 3,
+    maxDuration: 15,
+    hasAudio: true,
+    supportsNegativePrompt: true,
+    provider: 'fal',
+    aspectRatios: ['16:9', '9:16', '1:1'],
+    tips: [
+      '🎞️ Holds a shot together over longer durations than most',
+      '🖼️ Attach an image to animate it',
+      '⏱️ Up to 15 seconds in one generation',
+      '🎯 Negative prompts work well here',
+    ],
+  },
+  'kling-3.0-standard': {
+    id: 'kling-3.0-standard',
+    name: 'Kling 3.0 Standard',
+    description: 'Same model, lighter render tier',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '3-15s',
+    tier: 'standard',
+    emoji: '🎬',
+    baseCostUsd: 0.63,
+    perSecondCostUsd: 0.126,
+    defaultDuration: 5,
+    minDuration: 3,
+    maxDuration: 15,
+    hasAudio: true,
+    supportsNegativePrompt: true,
+    provider: 'fal',
+    aspectRatios: ['16:9', '9:16', '1:1'],
+    tips: [
+      '🎬 Kling 3.0 at three quarters the price',
+      '🖼️ Attach an image to animate it',
+      '⏱️ Up to 15 seconds',
+    ],
+  },
+  'hailuo-2.3': {
+    id: 'hailuo-2.3',
+    name: 'MiniMax Hailuo 2.3',
+    description: 'Natural physics and facial emotion',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '6s',
+    tier: 'premium',
+    emoji: '🌀',
+    baseCostUsd: 0.49,
+    provider: 'fal',
+    aspectRatios: ['16:9', '9:16', '1:1'],
+    tips: [
+      '🌀 Best-in-class body mechanics and sense of weight',
+      '😀 Strong facial performance — good for characters',
+      '🖼️ Attach an image to animate it',
+    ],
+  },
+  'hailuo-2.3-fast': {
+    id: 'hailuo-2.3-fast',
+    name: 'Hailuo 2.3 Fast',
+    description: 'Quicker, cheaper Hailuo',
+    supports: ['image-to-video'],
+    duration: '6s',
+    tier: 'standard',
+    emoji: '💨',
+    baseCostUsd: 0.33,
+    provider: 'fal',
+    aspectRatios: ['16:9', '9:16', '1:1'],
+    tips: [
+      '💨 Same physics, faster turnaround',
+      '🖼️ Requires an image — attach one to animate',
+    ],
+  },
+  'wan-2.6': {
+    id: 'wan-2.6',
+    name: 'Wan 2.6',
+    description: 'Character-consistent with synced audio',
+    supports: ['image-to-video'],
+    duration: '5-10s',
+    tier: 'premium',
+    emoji: '🎭',
+    baseCostUsd: 0.5,
+    perSecondCostUsd: 0.1,
+    defaultDuration: 5,
+    minDuration: 5,
+    maxDuration: 15,
+    allowedDurations: [5, 10, 15],
+    hasAudio: true,
+    supportsResolution: true,
+    provider: 'fal',
+    aspectRatios: ['16:9', '9:16', '1:1'],
+    tips: [
+      '🎭 Holds a character’s identity across the whole clip',
+      '🖼️ Requires an image — attach one to animate',
+      '🔊 Audio is generated in sync',
+      '📺 720p or 1080p only on this one',
+    ],
+  },
+  'wan-2.5': {
+    id: 'wan-2.5',
+    name: 'Wan 2.5',
+    description: 'Open-weight, stylised and experimental',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '5-10s',
+    tier: 'standard',
+    emoji: '🌈',
+    baseCostUsd: 0.5,
+    perSecondCostUsd: 0.1,
+    defaultDuration: 5,
+    minDuration: 5,
+    maxDuration: 10,
+    allowedDurations: [5, 10],
+    supportsResolution: true,
+    supportsNegativePrompt: true,
+    provider: 'fal',
+    aspectRatios: ['16:9', '9:16', '1:1'],
+    tips: [
+      '🌈 Leans stylised rather than photoreal',
+      '🖼️ Attach an image to animate it',
+      '💰 480p is a third of the 1080p price',
+    ],
+  },
+  'luma-ray2-flash': {
+    id: 'luma-ray2-flash',
+    name: 'Luma Ray 2 Flash',
+    description: 'Dreamy Luma aesthetic, budget tier',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '5s',
+    tier: 'fast',
+    emoji: '✨',
+    baseCostUsd: 0.2,
+    defaultDuration: 5,
+    minDuration: 5,
+    maxDuration: 9,
+    allowedDurations: [5, 9],
+    provider: 'fal',
+    // Ray 2 accepts no 1:1 — offering it would 422 after payment.
+    aspectRatios: ['16:9', '9:16', '4:3', '3:4', '21:9', '9:21'],
+    tips: [
+      '✨ Great for abstract, surreal and nature scenes',
+      '🖼️ Attach an image to animate it',
+      '💰 A quarter the price of full Ray 2',
+    ],
+  },
+  'pixverse-v5': {
+    id: 'pixverse-v5',
+    name: 'PixVerse V5',
+    description: 'Stylised and anime-leaning motion',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '5-8s',
+    tier: 'standard',
+    emoji: '🎨',
+    baseCostUsd: 0.2,
+    defaultDuration: 5,
+    minDuration: 5,
+    maxDuration: 8,
+    allowedDurations: [5, 8],
+    supportsResolution: true,
+    supportsNegativePrompt: true,
+    provider: 'fal',
+    aspectRatios: ['16:9', '9:16', '1:1'],
+    tips: [
+      '🎨 The one to reach for on anime and illustrated looks',
+      '🖼️ Attach an image to animate it',
+      '⏱️ 8s costs double 5s',
+    ],
+  },
+  'ltx-13b': {
+    id: 'ltx-13b',
+    name: 'LTX Video 13B',
+    description: 'Cheapest per second, fast drafts',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '5-10s',
+    tier: 'fast',
+    emoji: '🪶',
+    baseCostUsd: 0.1,
+    perSecondCostUsd: 0.02,
+    defaultDuration: 5,
+    minDuration: 5,
+    maxDuration: 10,
+    supportsSeed: true,
+    supportsNegativePrompt: true,
+    provider: 'fal',
+    // LTX tops out at 720p, so no resolution chip — it would offer a 1080p
+    // this model cannot produce.
+    aspectRatios: ['16:9', '9:16', '1:1'],
+    tips: [
+      '🪶 By far the cheapest way to test an idea',
+      '🔁 Lock a seed and iterate on the same scene',
+      '🖼️ Attach an image to animate it',
+    ],
+  },
+};
+
+/**
+ * Nearest legal duration for a model, rounding down so nobody is charged for
+ * more than the provider will render. Free-range models are returned clamped.
+ */
+export const snapVideoDuration = (model: VideoModel, seconds: number): number => {
+  const allowed = model.allowedDurations;
+  if (!allowed?.length) {
+    return Math.min(model.maxDuration ?? seconds, Math.max(model.minDuration ?? seconds, seconds));
+  }
+  const eligible = allowed.filter((a) => a <= seconds);
+  return eligible.length ? Math.max(...eligible) : Math.min(...allowed);
 };
 
 export const VIDEO_MODEL_OPTIONS = Object.values(VIDEO_MODELS);
