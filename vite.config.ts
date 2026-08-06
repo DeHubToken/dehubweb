@@ -161,6 +161,8 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     target: ['es2020', 'safari14'],
+    // Gzip-size reporting over this many chunks exhausted the build heap.
+    reportCompressedSize: false,
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {
