@@ -53,7 +53,7 @@ const OG_CARD_ROUTES = new Set([
   'stages', 'guide', 'features', 'pricing',
   'creator', 'editor', 'prompt', 'work',
   'affiliate', 'premium', 'governance', 'leaderboard',
-  'top-100', 'music', 'radio', 'tv',
+  'top-100', 'music', 'tv',
   'glossary', 'bridge', 'agents', 'assistant',
   'creators', 'jobs',
 ]);
@@ -1446,6 +1446,22 @@ async function handleRequest(request, env) {
   };
   const legalTarget = LEGAL_REDIRECTS[trimmedPath.toLowerCase()];
   if (legalTarget) return redirect301(`${APP_URL}${legalTarget}`);
+
+  // Routes the SPA answers with <Navigate> (App.tsx). Bots never run that JS,
+  // so both resolved somewhere a human can never land: /radio is in
+  // SSR_STATIC_ROUTES, so it was proxied to the Supabase fn and served an
+  // indexable "DeHub Radio — 24/7 Web3 Stations" page that no browser ever
+  // sees, and /mcp isn't in SYSTEM_ROUTES, so it was read as a username and
+  // 404'd. 301 both to where a human actually ends up; the /app twins go too,
+  // since canonicalizePath collapses /app/radio onto /radio.
+  const SPA_REDIRECTS = {
+    '/radio': '/music',
+    '/app/radio': '/music',
+    '/mcp': '/connect',
+    '/app/mcp': '/connect',
+  };
+  const spaTarget = SPA_REDIRECTS[trimmedPath.toLowerCase()];
+  if (spaTarget) return redirect301(`${APP_URL}${spaTarget}`);
 
   // /radio is `<Navigate to="/music" replace />` in the SPA, but crawlers were
   // handed a standalone "DeHub Radio" page by the Supabase fn — a URL that only
