@@ -38,7 +38,7 @@ async function callDeHubTool(name, args) {
   if (!result) throw new Error("DeHub MCP returned no result");
   const body = result.structuredContent ?? safeParse(result.content?.[0]?.text);
   if (result.isError) {
-    const message = body?.error;
+    const message = typeof body?.error === "string" ? body.error : void 0;
     throw new Error(message ?? "DeHub tool call failed");
   }
   return body ?? {};
@@ -46,7 +46,8 @@ async function callDeHubTool(name, args) {
 function safeParse(text) {
   if (!text) return void 0;
   try {
-    return JSON.parse(text);
+    const parsed = JSON.parse(text);
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : { value: parsed };
   } catch {
     return { text };
   }
