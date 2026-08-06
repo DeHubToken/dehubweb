@@ -835,6 +835,14 @@ export default function SinglePostPage({ inOverlay = false }: SinglePostPageProp
     ? 'pt-[5.5rem] pb-24 lg:pt-14 lg:pb-8'
     : 'pt-3 pb-8 lg:pt-0';
 
+  // A video post hides that chrome on mobile instead of clearing it, so the media
+  // starts at the very top of the screen and runs the full width — the shape the
+  // immersive layout was always drawing, minus the 88px of nothing above it.
+  // Desktop keeps its clearance: the chrome it clears is still on screen.
+  const videoChromeClearance = inOverlay
+    ? 'pb-24 lg:pt-14 lg:pb-8'
+    : 'pb-8 lg:pt-0';
+
   // Determine content type and render appropriate card
   const renderContent = () => {
     // Only show loading if we have no data at all (not even cached)
@@ -902,8 +910,14 @@ export default function SinglePostPage({ inOverlay = false }: SinglePostPageProp
             portal, a transform animation, a body pointer-events fight and a
             second scroll container that everything else had to be re-wired to. */}
         {isMobileView ? (
-          <div data-post-page data-glass-page ref={inOverlay ? undefined : postRootRef} className={cn('flex flex-col bg-black', chromeClearance)}>
+          <div data-post-page data-glass-page ref={inOverlay ? undefined : postRootRef} className={cn('flex flex-col bg-black', videoChromeClearance)}>
             <div className="relative">
+              {/* Back sits on the video, YouTube-style. The mobile header and the
+                  home feed's nav pill are hidden over an immersive video (see
+                  `immersive-video-mode` in index.css), and the pill is what
+                  carried the overlay's back arrow — so the post has to bring its
+                  own, and this is the control that was built for it. */}
+              <ImmersiveVideoHeader onBack={goBack} />
               {renderContent()}
             </div>
             {showRelated && id && <RelatedVideosFeed currentVideoId={id} />}
