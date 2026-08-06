@@ -44,6 +44,8 @@ import { TipModal } from '@/components/app/modals/TipModal';
 import { toast } from 'sonner';
 import { incrementCommentCount } from '@/lib/comment-count-cache';
 import { useMention } from '@/hooks/use-mention';
+import { useAssistantPendingReply } from '@/hooks/use-assistant-pending-reply';
+import { mentionsAssistant, isAssistantAddress } from '@/lib/assistant';
 import { UserMentionDropdown } from '@/components/app/mentions';
 
 // ============================================================================
@@ -260,6 +262,13 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
               <BadgeIcon badgeBalance={comment.badgeBalance} username={comment.username} className="w-[9px] h-[9px] absolute -top-0.5 right-0" />
             </span>
           </button>
+          {/* The bot comments under a normal account, so without this it is
+              indistinguishable from a user who picked the handle. */}
+          {isAssistantAddress(comment.address) && (
+            <span className="px-1.5 py-0.5 rounded-md bg-white/[0.12] border border-white/[0.12] text-[10px] font-semibold text-white/75 leading-none flex-shrink-0">
+              AI
+            </span>
+          )}
           {comment.displayName && (
             <span data-war-readout className="text-zinc-500 text-xs truncate max-w-[100px]">@{comment.username}</span>
           )}
@@ -552,6 +561,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         return result;
       });
   }, [apiComments, optimisticComments, likeOverrides, deletedCommentIds, editOverrides]);
+
+  // Tagging @assistant produces a real comment, but only once the model has
+  // answered — several seconds after the post returns. This keeps a placeholder
+  // in the thread and polls until the reply lands.
+  const { isWaiting: isAssistantReplying, arm: armAssistantReply } = useAssistantPendingReply(
+    tokenId,
+    allComments,
+  );
 
   // Record comment views when visible (#9)
   const viewedIdsRef = useRef(new Set<number>());
@@ -1003,6 +1020,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
       await queryClient.refetchQueries({ queryKey: ['comments', tokenId] });
       incrementCommentCount(tokenId);
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
+      // The refetch above is always too early for a tagged assistant — it has
+      // to call the model first — so hand off to the poller.
+      if (mentionsAssistant(newComment)) armAssistantReply();
     } catch (err) {
       setOptimisticComments(prev => prev.filter(c => c.id !== tempId));
       toast.error('Failed to post comment');
@@ -1010,7 +1030,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     } finally {
       setIsSubmitting(false);
     }
-  }, [newComment, voiceNote, commentImage, isSubmitting, isAuthenticated, user, replyTo, tokenId, queryClient]);
+  }, [newComment, voiceNote, commentImage, isSubmitting, isAuthenticated, user, replyTo, tokenId, queryClient, armAssistantReply]);
 
   const canPost = (newComment.trim() || voiceNote || commentImage) && !isSubmitting;
 
@@ -1151,6 +1171,18 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
               <p className="text-zinc-500 text-sm py-6 text-center">Failed to load comments</p>
             ) : (
               <AnimatePresence mode="popLayout">
+                {isAssistantReplying && (
+                  <motion.div
+                    key="assistant-pending"
+                    initial={{ opacity: 0, y: 6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    className="flex items-center gap-2 px-4 py-3 text-sm text-zinc-400"
+                  >
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>DeHub Assistant is replying…</span>
+                  </motion.div>
+                )}
                 {filteredGroupedComments.length > 0 ? (
                   filteredGroupedComments.map(({ comment, replies }) => (
                     <div key={comment.id}>
@@ -1531,7 +1563,9 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 <textarea
                   ref={inputRef}
                   data-vaul-no-drag
-                  placeholder={replyTo ? `Reply to @${replyTo.username}...` : 'Add a reply...'}
+                  // Tagging the bot is invisible unless something says so —
+                  // this is the only discovery surface the thread has.
+                  placeholder={replyTo ? `Reply to @${replyTo.username}...` : 'Add a reply, or tag @assistant to ask'}
                   value={newComment}
                   onChange={(e) => {
                     setNewComment(e.target.value);
