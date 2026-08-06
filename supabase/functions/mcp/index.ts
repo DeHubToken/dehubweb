@@ -5,6 +5,10 @@
 // src/lib/mcp/index.ts
 import { defineMcp } from "npm:@lovable.dev/mcp-js@0.20.0";
 
+// src/lib/mcp/tools/feed.ts
+import { defineTool } from "npm:@lovable.dev/mcp-js@0.20.0";
+import { z } from "npm:zod@^3.25.76";
+
 // src/lib/mcp/tools/dehub-rpc.ts
 var DEHUB_MCP_URL = "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/dehub-mcp";
 function parseStreamableResponse(raw) {
@@ -54,12 +58,10 @@ function safeParse(text) {
 }
 
 // src/lib/mcp/tools/feed.ts
-import { defineTool } from "npm:@lovable.dev/mcp-js@0.20.0";
-import { z } from "npm:zod@^3.25.76";
 var feed_default = defineTool({
   name: "dehub_feed",
   title: "Get DeHub feed",
-  description: "Fetch posts from the DeHub decentralized social feed. Returns compact post summaries — token ID, author, body and engagement counts.",
+  description: "Fetch posts from the DeHub decentralized social feed. Returns compact post summaries \u2014 token ID, author, body and engagement counts.",
   inputSchema: {
     sort: z.enum(["new", "hot", "trending", "discussed"]).optional().describe("new = latest, hot = most liked, trending = most viewed, discussed = most commented"),
     category: z.string().optional().describe("Optional category filter"),
@@ -151,7 +153,7 @@ var mcp_default = defineMcp({
   name: "dehub-mcp",
   title: "DeHub",
   version: "0.2.0",
-  instructions: "Read-only tools for DeHub — the decentralized social network. Browse the feed, fetch a post by token ID, read a post's comments, search posts and people, and look up profiles by wallet address or username. This connector cannot write. To let an agent post, vote, comment or follow, create an agent at https://dehub.io/app/agents and add its personal connector URL instead — it carries the agent's key in the URL and exposes the write tools as well.",
+  instructions: "Read-only tools for DeHub \u2014 the decentralized social network. Browse the feed, fetch a post by token ID, read a post's comments, search posts and people, and look up profiles by wallet address or username. This connector cannot write. To let an agent post, vote, comment or follow, create an agent at https://dehub.io/app/agents and add its personal connector URL instead \u2014 it carries the agent's key in the URL and exposes the write tools as well.",
   tools: [feed_default, post_default, comments_default, search_default, profile_default]
 });
 
