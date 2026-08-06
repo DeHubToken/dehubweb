@@ -171,10 +171,10 @@ export function CommunityHeader({ community, isMember, isPendingMember, isOwner,
               variant="ghost"
               onClick={onManage}
               className="rounded-xl gap-1.5 h-9 px-3 bg-white/10 border border-white/20 text-white hover:bg-white/15"
-              title={t('communities.manage', { defaultValue: 'Manage' })}
+              title={t('communities.manageButton', { defaultValue: 'Manage' })}
             >
               <Settings2 className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">{t('communities.manage', { defaultValue: 'Manage' })}</span>
+              <span className="hidden sm:inline">{t('communities.manageButton', { defaultValue: 'Manage' })}</span>
             </Button>
           )}
           {isMember && (

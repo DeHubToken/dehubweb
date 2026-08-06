@@ -8,7 +8,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Check, ChevronDown, Crown, Loader2, Search, Shield, Undo2, User, UserX, X } from 'lucide-react';
+import { Check, ChevronDown, Crown, Loader2, Search, Shield, Undo2, User, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -23,7 +23,6 @@ import {
 import {
   useApproveMember,
   useCommunityAbilities,
-  useKickMember,
   useRejectMember,
   useUnbanMember,
 } from '@/hooks/use-community-admin';
@@ -197,7 +196,6 @@ function BannedRow({
   const { t } = useTranslation();
   const profile = useIndexedProfile(member, onIndex);
   const unbanMutation = useUnbanMember();
-  const kickMutation = useKickMember();
 
   const displayName = profile?.name || shortAddress(member.wallet_address);
   const vars = { communityId: community.id, wallet: member.wallet_address, displayName };
@@ -231,17 +229,11 @@ function BannedRow({
             {unbanMutation.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Undo2 className="w-3.5 h-3.5" />}
             {t('communities.manage.unban', { defaultValue: 'Unban' })}
           </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={() => kickMutation.mutate(vars)}
-            disabled={kickMutation.isPending}
-            title={t('communities.manage.removeFromCommunity', { defaultValue: 'Remove from community' })}
-            aria-label={t('communities.manage.removeFromCommunity', { defaultValue: 'Remove from community' })}
-            className="rounded-xl h-9 px-3 text-red-400 hover:bg-red-500/15 border border-white/[0.08]"
-          >
-            {kickMutation.isPending ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <UserX className="w-3.5 h-3.5" />}
-          </Button>
+          {/*
+            No "Remove" here on purpose. Kicking a banned member deletes the row
+            that IS the ban, so the weaker action would quietly undo the stronger
+            one and let them rejoin. Unban is the only way out of this list.
+          */}
         </div>
       )}
     </div>
