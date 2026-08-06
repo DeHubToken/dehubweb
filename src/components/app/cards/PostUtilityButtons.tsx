@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
 import { useTogglePin } from '@/hooks/use-pins';
+import { SaveToFolderDrawer } from '@/components/app/bookmarks/SaveToFolderDrawer';
 
 interface PostUtilityButtonsProps {
   postId?: string;
@@ -46,6 +47,11 @@ export function PostUtilityButtons({
   const [isPinned, setIsPinned] = useState(false);
   const togglePinMutation = useTogglePin();
   const { isBookmarked, isLoading: isBookmarkLoading, toggleBookmark } = useBookmarkPost(postId || '');
+  const [showFolderDrawer, setShowFolderDrawer] = useState(false);
+
+  // The folder picker needs a numeric token id. `tokenId` is the reliable
+  // source; postId is a string id that happens to be numeric on post cards.
+  const folderTokenId = tokenId ?? (postId && /^\d+$/.test(postId) ? Number(postId) : null);
 
   // Chip buttons live outside the ActionBar's stop-propagation wrapper (e.g.
   // over the fullscreen viewer's close-on-click backdrop), so they must stop
@@ -66,7 +72,9 @@ export function PostUtilityButtons({
       <motion.button
         onClick={(e) => {
           stopIfChip(e);
-          toggleBookmark();
+          // Offer the folder picker only on save, and only when we have a token
+          // id to file — un-bookmarking just removes it.
+          toggleBookmark(folderTokenId != null ? () => setShowFolderDrawer(true) : undefined);
         }}
         className={cn(
           isChip
@@ -110,6 +118,12 @@ export function PostUtilityButtons({
       >
         <Info className={iconSize} />
       </button>
+
+      <SaveToFolderDrawer
+        open={showFolderDrawer}
+        onOpenChange={setShowFolderDrawer}
+        tokenId={folderTokenId}
+      />
     </>
   );
 }

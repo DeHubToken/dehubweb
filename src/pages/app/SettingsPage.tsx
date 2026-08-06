@@ -59,6 +59,8 @@ import {
   Skull,
   Orbit,
   CloudMoon,
+  CloudRain,
+  Trees,
   Bug,
   Minus,
   Ban,
@@ -84,7 +86,7 @@ import { AuthGate } from '@/components/app/AuthGate';
 import { Search } from 'lucide-react';
 import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { updateProfile, getAccountInfo, type UpdateProfileData, type DeHubUser } from '@/lib/api/dehub';
+import { updateProfile, getAccountInfo, readPreference, type UpdateProfileData, type DeHubUser, type PushPreferences } from '@/lib/api/dehub';
 import type { ProfileData } from '@/hooks/use-dehub-profile';
 import { getBlockListPaginated, unblockUser as apiUnblockUser, type BlockedUser, checkUsernameAvailability } from '@/lib/api/dehub';
 import { RESERVED_USERNAMES } from '@/lib/reserved-usernames';
@@ -97,7 +99,7 @@ import { useWalletUnlockInterval, type WalletUnlockIntervalOption } from '@/hook
 import { WalletRecoveryTools } from '@/components/app/settings/WalletRecoveryTools';
 import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
 import { PROFILE_TAB_OPTIONS } from '@/components/app/profile/ProfileConstants';
-import { useDmSettings } from '@/hooks/use-dm-settings';
+import { useDmSettings, type WhoCanMessage } from '@/hooks/use-dm-settings';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { useAutoplay } from '@/contexts/AutoplayContext';
 import { useConnectionQuality, setLiteModePref } from '@/hooks/use-connection-quality';
@@ -126,6 +128,29 @@ const TAB_KEYS: Record<string, string> = {
   characters: 'settings.characters',
   support: 'settings.support',
 };
+
+/**
+ * DM access options, shared by the Privacy and Messages tabs so the two never
+ * drift. Mirrors mobile's three-state DM model (`DMSettingsSection`): open,
+ * existing-threads-only, and fully disabled.
+ */
+const DM_ACCESS_OPTIONS = (t: (key: string, fallback?: string) => string) => [
+  {
+    value: 'everyone',
+    label: t('settings.everyone', 'Everyone'),
+    description: t('settings.dmEveryoneHelp', 'Anyone on the platform can message you'),
+  },
+  {
+    value: 'no-new',
+    label: t('settings.noNewMessages', 'No new conversations'),
+    description: t('settings.noNewMessagesDesc', 'Keep your existing threads, but nobody new can start one'),
+  },
+  {
+    value: 'none',
+    label: t('settings.noOneClosed', 'No one'),
+    description: t('settings.noOneClosedDesc', 'Disable all incoming messages'),
+  },
+];
 
 const tabs = [
   { icon: User, value: 'profile', label: 'settings.profile' },
@@ -1002,6 +1027,11 @@ function NotificationSettings() {
     updatePrefMutation.mutate({ [key]: checked });
   };
 
+  // Reads through mobile's key names, falling back to web's legacy spellings
+  // (`follows`, `liveStreams`) for accounts saved before they were aligned.
+  const prefValue = (key: string, fallback = true) =>
+    readPreference(pushPrefs as PushPreferences | undefined, key, fallback);
+
   const isDisabled = prefsLoading || updatePrefMutation.isPending;
 
   return (
@@ -1056,7 +1086,7 @@ function NotificationSettings() {
             icon={ThumbsUp}
             title={t('settings.likes')}
             description={t('settings.likesDesc')}
-            defaultChecked={pushPrefs?.likes ?? true}
+            defaultChecked={prefValue('likes')}
             onCheckedChange={handleToggle('likes')}
             disabled={isDisabled}
           />
@@ -1064,7 +1094,7 @@ function NotificationSettings() {
             icon={MessageSquare}
             title={t('settings.comments')}
             description={t('settings.commentsDesc')}
-            defaultChecked={pushPrefs?.comments ?? true}
+            defaultChecked={prefValue('comments')}
             onCheckedChange={handleToggle('comments')}
             disabled={isDisabled}
           />
@@ -1072,15 +1102,15 @@ function NotificationSettings() {
             icon={Users}
             title={t('settings.newFollowers')}
             description={t('settings.newFollowersDesc')}
-            defaultChecked={pushPrefs?.follows ?? true}
-            onCheckedChange={handleToggle('follows')}
+            defaultChecked={prefValue('newFollowers')}
+            onCheckedChange={handleToggle('newFollowers')}
             disabled={isDisabled}
           />
           <SettingToggle
             icon={MessageSquare}
             title={t('settings.directMessages')}
             description={t('settings.directMessagesDesc')}
-            defaultChecked={pushPrefs?.directMessages ?? true}
+            defaultChecked={prefValue('directMessages')}
             onCheckedChange={handleToggle('directMessages')}
             disabled={isDisabled}
           />
@@ -1088,7 +1118,7 @@ function NotificationSettings() {
             icon={MessageSquare}
             title="Comment Replies"
             description="When someone replies to your comment"
-            defaultChecked={pushPrefs?.commentReplies ?? true}
+            defaultChecked={prefValue('commentReplies')}
             onCheckedChange={handleToggle('commentReplies')}
             disabled={isDisabled}
           />
@@ -1096,7 +1126,7 @@ function NotificationSettings() {
             icon={AtSign}
             title="Mentions"
             description="When someone mentions you in a post or comment"
-            defaultChecked={pushPrefs?.mentions ?? true}
+            defaultChecked={prefValue('mentions')}
             onCheckedChange={handleToggle('mentions')}
             disabled={isDisabled}
           />
@@ -1111,7 +1141,7 @@ function NotificationSettings() {
             icon={Coins}
             title="Tips Received"
             description="When someone sends you a DHB tip"
-            defaultChecked={pushPrefs?.tips ?? true}
+            defaultChecked={prefValue('tips')}
             onCheckedChange={handleToggle('tips')}
             disabled={isDisabled}
           />
@@ -1119,7 +1149,7 @@ function NotificationSettings() {
             icon={Handshake}
             title="New Subscribers"
             description="When someone subscribes to your plan"
-            defaultChecked={pushPrefs?.subscriptions ?? true}
+            defaultChecked={prefValue('subscriptions')}
             onCheckedChange={handleToggle('subscriptions')}
             disabled={isDisabled}
           />
@@ -1127,7 +1157,7 @@ function NotificationSettings() {
             icon={Coins}
             title="PPV Purchases"
             description="When someone purchases your pay-per-view content"
-            defaultChecked={pushPrefs?.ppvPurchases ?? true}
+            defaultChecked={prefValue('ppvPurchases')}
             onCheckedChange={handleToggle('ppvPurchases')}
             disabled={isDisabled}
           />
@@ -1142,7 +1172,7 @@ function NotificationSettings() {
             icon={Play}
             title="Livestream Start"
             description="When someone you follow starts a livestream"
-            defaultChecked={pushPrefs?.livestreamStart ?? true}
+            defaultChecked={prefValue('livestreamStart')}
             onCheckedChange={handleToggle('livestreamStart')}
             disabled={isDisabled}
           />
@@ -1150,7 +1180,7 @@ function NotificationSettings() {
             icon={Sparkles}
             title="Milestones"
             description="When you reach a follower or engagement milestone"
-            defaultChecked={pushPrefs?.milestones ?? true}
+            defaultChecked={prefValue('milestones')}
             onCheckedChange={handleToggle('milestones')}
             disabled={isDisabled}
           />
@@ -1159,7 +1189,7 @@ function NotificationSettings() {
             icon={Shield}
             title="Account Alerts"
             description="Security and account activity you should know about"
-            defaultChecked={pushPrefs?.accountAlerts ?? true}
+            defaultChecked={prefValue('accountAlerts')}
             onCheckedChange={handleToggle('accountAlerts')}
             disabled={isDisabled}
           />
@@ -1167,7 +1197,7 @@ function NotificationSettings() {
             icon={Bell}
             title="Announcements"
             description="Platform updates and important announcements"
-            defaultChecked={pushPrefs?.announcements ?? true}
+            defaultChecked={prefValue('announcements')}
             onCheckedChange={handleToggle('announcements')}
             disabled={isDisabled}
           />
@@ -1505,13 +1535,10 @@ function PrivacySettings() {
             </div>
             <SettingDrawerSelect
               value={whoCanMessage}
-              onValueChange={(value) => updateWhoCanMessage(value as 'everyone' | 'none')}
+              onValueChange={(value) => updateWhoCanMessage(value as WhoCanMessage)}
               disabled={isDmUpdating}
               title={t('settings.whoCanMessage', 'Who can message you')}
-              options={[
-                { value: 'everyone', label: t('settings.everyone', 'Everyone'), description: t('settings.everyoneDesc', 'Anyone on the platform can message you') },
-                { value: 'none', label: t('settings.noOne', 'No one'), description: t('settings.noOneDesc', 'Disable all incoming messages') },
-              ]}
+              options={DM_ACCESS_OPTIONS(t)}
             />
           </div>
 
@@ -2160,6 +2187,8 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
               { value: 'lavalamp', icon: Lamp, labelKey: 'settings.lavalamp', available: true },
               { value: 'winter', icon: Snowflake, labelKey: 'settings.winter', available: true },
               { value: 'war', icon: Crosshair, labelKey: 'settings.war', available: true },
+              { value: 'osaka', icon: CloudRain, labelKey: 'settings.osaka', available: true },
+              { value: 'jungle', icon: Trees, labelKey: 'settings.jungle', available: true },
               { value: 'island', icon: Palmtree, labelKey: 'settings.island', available: false },
               { value: 'hacker', icon: Terminal, labelKey: 'settings.hacker', available: false },
               { value: 'horror', icon: Skull, labelKey: 'settings.horror', available: false },
@@ -2724,13 +2753,10 @@ function MessagesSettings() {
             </div>
             <SettingDrawerSelect
               value={whoCanMessage}
-              onValueChange={(value) => updateWhoCanMessage(value as 'everyone' | 'none')}
+              onValueChange={(value) => updateWhoCanMessage(value as WhoCanMessage)}
               disabled={isDmUpdating}
               title={t('settings.allowDirectMessages', 'Allow direct messages')}
-              options={[
-                { value: 'everyone', label: t('settings.everyone', 'Everyone'), description: t('settings.dmEveryoneHelp', 'Anyone on the platform can message you') },
-                { value: 'none', label: t('settings.noOneClosed', 'No one'), description: t('settings.noOneClosedDesc', 'Disable all incoming messages') },
-              ]}
+              options={DM_ACCESS_OPTIONS(t)}
             />
           </div>
 
@@ -2791,8 +2817,10 @@ function MessagesSettings() {
           />
 
           <div className="bg-zinc-800/50 rounded-xl p-4 text-sm text-zinc-400">
+            {/* One line per state the API actually supports — "Followers" was
+                listed here but has never been a selectable option. */}
             <p className="mb-2"><strong className="text-white">{t('settings.everyone', 'Everyone')}:</strong> {t('settings.dmEveryoneHelp', 'Anyone on the platform can message you')}</p>
-            <p className="mb-2"><strong className="text-white">{t('settings.peopleIFollow', 'Followers')}:</strong> {t('settings.dmFollowingHelp', 'Only your followers can send you messages')}</p>
+            <p className="mb-2"><strong className="text-white">{t('settings.noNewMessages', 'No new conversations')}:</strong> {t('settings.dmNoNewHelp', 'Existing threads keep working; nobody new can start one')}</p>
             <p><strong className="text-white">{t('settings.noOneClosed', 'No one')}:</strong> {t('settings.dmClosedHelp', 'All incoming messages are disabled')}</p>
           </div>
         </div>

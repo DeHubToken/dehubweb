@@ -19,12 +19,14 @@ import {
   DrawerDescription,
 } from '@/components/ui/drawer';
 import { editPost } from '@/lib/api/dehub';
+import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
 export interface EditPostResult {
   name: string;
   description: string;
   categories: string[];
+  commentsDisabled: boolean;
 }
 
 interface EditPostModalProps {
@@ -34,6 +36,7 @@ interface EditPostModalProps {
   currentTitle?: string;
   currentDescription?: string;
   currentCategories?: string[];
+  currentCommentsDisabled?: boolean;
   onSuccess?: (edited: EditPostResult) => void;
 }
 
@@ -44,12 +47,14 @@ export function EditPostModal({
   currentTitle = '',
   currentDescription = '',
   currentCategories = [],
+  currentCommentsDisabled = false,
   onSuccess,
 }: EditPostModalProps) {
   const [name, setName] = useState(currentTitle);
   const [description, setDescription] = useState(currentDescription);
   const [categoryInput, setCategoryInput] = useState('');
   const [categories, setCategories] = useState<string[]>(currentCategories);
+  const [commentsDisabled, setCommentsDisabled] = useState(currentCommentsDisabled);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Sync with props when modal opens
@@ -58,9 +63,10 @@ export function EditPostModal({
       setName(currentTitle);
       setDescription(currentDescription);
       setCategories(currentCategories);
+      setCommentsDisabled(currentCommentsDisabled);
       setCategoryInput('');
     }
-  }, [open, currentTitle, currentDescription, currentCategories]);
+  }, [open, currentTitle, currentDescription, currentCategories, currentCommentsDisabled]);
 
   const handleAddCategory = () => {
     const trimmed = categoryInput.trim();
@@ -79,6 +85,7 @@ export function EditPostModal({
     if (name.trim() !== currentTitle) params.name = name.trim();
     if (description.trim() !== currentDescription) params.description = description.trim();
     if (JSON.stringify(categories) !== JSON.stringify(currentCategories)) params.category = categories;
+    if (commentsDisabled !== currentCommentsDisabled) params.commentsDisabled = commentsDisabled;
 
     if (Object.keys(params).length === 0) {
       toast.message('No changes to save');
@@ -99,7 +106,7 @@ export function EditPostModal({
       const result = await editPost(tokenId, params as any);
       if (result.result) {
         toast.success('Post updated successfully');
-        onSuccess?.({ name: name.trim(), description: description.trim(), categories });
+        onSuccess?.({ name: name.trim(), description: description.trim(), categories, commentsDisabled });
         onOpenChange(false);
       } else {
         toast.error('Failed to update post');
@@ -201,6 +208,42 @@ export function EditPostModal({
                 ))}
               </div>
             )}
+          </div>
+
+          {/* Comments */}
+          <div>
+            <label className="text-zinc-400 text-sm mb-2 block">Comments</label>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={!commentsDisabled}
+              onClick={() => setCommentsDisabled((v) => !v)}
+              className="w-full flex items-center justify-between gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] transition-colors text-left"
+            >
+              <span className="min-w-0">
+                <span className="block text-white text-sm font-medium">
+                  {commentsDisabled ? 'Comments are off' : 'Allow comments'}
+                </span>
+                <span className="block text-zinc-500 text-xs mt-0.5">
+                  {commentsDisabled
+                    ? 'Replies already posted stay visible — turning this back on restores them.'
+                    : 'Anyone who can see this post can reply to it.'}
+                </span>
+              </span>
+              <span
+                className={cn(
+                  'relative shrink-0 w-11 h-6 rounded-full transition-colors',
+                  commentsDisabled ? 'bg-zinc-700' : 'bg-emerald-500/80'
+                )}
+              >
+                <span
+                  className={cn(
+                    'absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform',
+                    commentsDisabled ? 'translate-x-0.5' : 'translate-x-[22px]'
+                  )}
+                />
+              </span>
+            </button>
           </div>
 
           {/* Actions */}

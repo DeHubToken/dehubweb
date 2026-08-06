@@ -170,6 +170,8 @@
     "lavalamp": "Lava Lamp",
     "winter": "Winter Drops",
     "war": "War",
+    "osaka": "Osaka",
+    "jungle": "Jungle",
     "themeColor": "Theme Color",
     "themeColorDesc": "Pick a custom color for this theme",
     "themeColorReset": "Reset",
@@ -258,7 +260,10 @@
     "note": "Note",
     "loginDescription": "Log in to access and manage your account settings.",
     "save": "Save",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "noNewMessages": "No new conversations",
+    "noNewMessagesDesc": "Keep your existing threads, but nobody new can start one",
+    "dmNoNewHelp": "Existing threads keep working; nobody new can start one"
   },
   "common": {
     "save": "Save",

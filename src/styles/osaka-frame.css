@@ -1,0 +1,342 @@
+/* ==========================================================================
+   OSAKA - core wet-glass system
+   ==========================================================================
+
+   This file is the vocabulary. osaka-theme.css is the binding.
+
+   Everything here is a primitive: a token, or a drawing system exposed as a
+   data-* hook. Nothing here decides which surface gets which treatment, and
+   nothing here sets a panel fill. Same separation War uses, for the same
+   reason: decoration inlined per surface means every new surface needs new
+   bespoke CSS and the theme can never get denser without a rewrite.
+
+   LOAD ORDER (main.tsx):
+     index.css  ->  osaka-frame.css  ->  osaka-theme.css
+   osaka-frame.css must come after index.css so its token redefinitions win the
+   tie against the shared canvas-theme block (both score 0,1,1), and before
+   osaka-theme.css so the bindings can consume the tokens.
+
+   THE IDEA
+
+   War is a machine: chamfers, brackets, hard 1px strokes, one accent, square
+   everything. Osaka is the opposite material and the chrome has to say so. It
+   is WET GLASS at night with a sign burning somewhere off-frame. So:
+
+     - Every corner is round. There is no chamfer, no hard corner, no tick.
+     - Every edge is a MENISCUS, not a hairline: a 1px ring that is brighter
+       at the top (where light catches the water's lip) and tinted at the
+       bottom (where it pools). See [data-osaka-wet].
+     - Light BLEEDS. Panels carry a soft top-edge wash as though a neon sign
+       sits just above them, off-screen.
+     - Nothing is fully opaque, because you are looking THROUGH something.
+
+   THE HOOKS
+
+     [data-osaka-wet]      the meniscus ring. The signature edge treatment.
+     [data-osaka-bleed]    top-edge neon wash, the "sign just off-frame" light.
+     [data-osaka-glow]     opt-in bloom on an accent stroke or glyph.
+     [data-osaka-sign]     neon-sign text: accent fill plus a tight halo.
+     [data-osaka-readout]  mono numerics. Never case-transformed.
+     [data-osaka-bead]     a droplet highlight, for small round controls.
+
+   TWO PSEUDO-ELEMENTS, TWO JOBS, so primitives compose instead of fighting:
+     ::before  the LIGHT layer  - bleeds and glows (paint)
+     ::after   the EDGE layer   - the meniscus ring (outline)
+
+   PALETTE LOCK. One accent, --osaka-neon. --osaka-cyan is a STROKE colour,
+   never a second accent and never a fill on its own. --osaka-amber is
+   semantic only: live, recording, destructive confirm.
+
+   This is the CSS half of a rule the WebGL half also obeys: the canvas carries
+   the full neon rainbow the reference photograph has, and the chrome carries
+   exactly one accent. Canvas gets the rainbow, chrome gets the lock. Without
+   that split a multi-coloured backdrop turns the UI into a fruit salad.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Animatable custom properties. Registration has to happen at the top level,
+   so these names are global rather than theme-scoped. They are osaka-prefixed
+   and read by nothing outside these two files. inherits:true is mandatory:
+   pseudo-elements read them off their originating element.
+   -------------------------------------------------------------------------- */
+@property --osaka-bloom {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+@property --osaka-sheen {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 0%;
+}
+
+/* ==========================================================================
+   1. TOKENS
+   ==========================================================================
+   Single source of truth. osaka-theme.css consumes these and must not
+   redeclare them, or the two files will drift.
+
+   AA CONTRAST. Panel fill composites to about rgb(15 12 25) (L 0.0072).
+   Measured against that surface:
+     mist  -> 15.1:1      haze  -> 7.4:1
+     neon  -> 7.6:1       cyan  -> 10.9:1      amber -> 9.4:1
+     veil  -> 3.1:1  (FAILS as text - strokes and disabled glyphs only)
+   ========================================================================== */
+
+html[data-theme='osaka'] {
+  /* -- palette ----------------------------------------------------------- */
+
+  /* THE accent. Sakura pink, the colour the signage in the reference photo
+     spends most of its light on. */
+  --osaka-neon: 255 111 181;
+  /* Stroke partner. Never a fill, never a text colour for anything but a
+     genuine second-state (see the palette-lock section of osaka-theme.css). */
+  --osaka-cyan: 111 227 255;
+
+  /* SEMANTIC ONLY, both of them. Never decoration, never "down 3%", never an
+     unread count. Two are needed rather than one because the accent is
+     already pink: mapping destructive onto pink too would make "delete" and
+     "the brand" the same colour, so warning and destructive split. */
+  --osaka-amber: 255 176 92; /* warning, live, recording */
+  --osaka-alert: 255 118 118; /* destructive only. 7.9:1 on the panel fill. */
+
+  /* Wet asphalt at night is never black; it is the sky, folded. Keep in sync
+     with SHADOW_TINT in components/app/OsakaBackground.tsx. */
+  --osaka-void: 10 8 18; /* page backdrop */
+  --osaka-slate: 17 14 28; /* panel fill */
+  --osaka-mist: 236 233 245; /* primary text */
+  --osaka-haze: 176 170 196; /* secondary text */
+  --osaka-veil: 108 102 130; /* strokes, disabled glyphs. NOT text. */
+
+  /* -- type -------------------------------------------------------------- */
+  /* System mono, not a webfont. The app already pays for one Google Fonts
+     request (Exo); a second for chrome numerics is not worth the LCP cost. */
+  --osaka-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas,
+    'Liberation Mono', monospace;
+
+  /* -- shape ------------------------------------------------------------- */
+  /* ONE radius scale, applied by role. Mixed radii are the fastest way to
+     make a rounded theme look accidental. */
+  --osaka-r-panel: 18px;
+  --osaka-r-card: 14px;
+  --osaka-r-input: 12px;
+  --osaka-r-chip: 999px;
+
+  /* -- the meniscus ------------------------------------------------------ */
+  /* The single most reused value in the theme. A 1px ring, plus a brighter
+     top lip, plus a neon pool at the bottom. Read as: light catching the top
+     of a bead of water, and the sign colour collecting underneath it. */
+  --osaka-edge:
+    inset 0 0 0 1px rgb(var(--osaka-mist) / 0.09),
+    inset 0 1.5px 0 rgb(var(--osaka-mist) / 0.16),
+    inset 0 -1px 0 rgb(var(--osaka-neon) / 0.14);
+
+  /* Same ring with the ambient drop shadow, for surfaces that genuinely float
+     over the canvas. */
+  --osaka-edge-lift:
+    var(--osaka-edge),
+    0 10px 34px rgb(4 2 10 / 0.5);
+
+  /* Tall side columns: the symmetric halo above only ever shows its left and
+     right edges, which reads as smudge strips down the gutters. Heavy negative
+     spread tucks it under the panel instead. Same fix as --glass-edge-panel. */
+  --osaka-edge-column:
+    var(--osaka-edge),
+    0 14px 28px -22px rgb(4 2 10 / 0.6);
+
+  /* -- light ------------------------------------------------------------- */
+  /* The "sign just off-frame" wash. Steeper and warmer than a generic sheen:
+     it has to read as a coloured light source above the panel, not as a grey
+     gradient. */
+  --osaka-bleed: linear-gradient(
+    178deg,
+    rgb(var(--osaka-neon) / 0.13) 0%,
+    rgb(var(--osaka-cyan) / 0.05) 26%,
+    rgb(var(--osaka-slate) / 0) 58%
+  );
+
+  /* Blur is the brief. "Like you're in a car and it blurs a bit when rain hits
+     the window" is a wide blur with the saturation pushed UP, because water
+     concentrates colour rather than washing it out. */
+  --osaka-blur: blur(26px) saturate(165%);
+}
+
+/* ==========================================================================
+   2. BRIDGE
+   ==========================================================================
+   These are the SHARED glass tokens from index.css, not Osaka tokens.
+   Remapping them here is what pulls every rule in index.css and
+   docs-glass.css that reads them into the Osaka palette. It is the single
+   highest-leverage block in the theme: roughly every glass surface in the app
+   is repainted by these nine lines.
+   ========================================================================== */
+
+html[data-theme='osaka'] {
+  --glass-tint: var(--osaka-slate);
+  /* Denser than the cosmic defaults. The canvas underneath is a lit alley, not
+     a dark nebula, so the same alpha would leave copy sitting on moving neon. */
+  --glass-thin: 0.62;
+  --glass-regular: 0.72;
+  --glass-raised: 0.8;
+  --glass-blur: var(--osaka-blur);
+
+  --glass-highlight: var(--osaka-bleed);
+  --glass-edge: var(--osaka-edge-lift);
+  --glass-edge-flat: var(--osaka-edge);
+  --glass-edge-panel: var(--osaka-edge-column);
+
+  /* !important is load-bearing, not laziness: index.css ships
+     `html, body { background-color: #000 !important }`, which otherwise wins
+     outright regardless of specificity. This backdrop is what the user sees on
+     the no-WebGL path and in the gap before the first video frame decodes, so
+     it has to be the alley's violet rather than a black hole. */
+  background-color: rgb(var(--osaka-void)) !important;
+}
+
+/* Canvas passthrough. #root ships `background-color: black` (index.css), which
+   permanently occludes the void backdrop - including on the no-WebGL fallback
+   path, where that backdrop is the only thing the user sees. */
+html[data-theme='osaka'] #root,
+html[data-theme='osaka'] body,
+html[data-theme='osaka'] #app-root,
+html[data-theme='osaka'] #app-root > div > main {
+  background-color: transparent !important;
+}
+
+/* --------------------------------------------------------------------------
+   No-media fallback.
+
+   The backplate and the soundtrack are deliberately NOT in the repo (see the
+   Sources block at the top of components/app/OsakaBackground.tsx), so a fresh
+   clone runs this theme with no video at all. That component flags the miss on
+   <html> and pulls its own canvas, leaving these three washes to carry it.
+
+   Treated as a legitimate second look rather than an error state: sign glow
+   bleeding up through a wet dark, warm low-right and sakura high-left, roughly
+   where the lanterns and the awning sit in the footage. Someone who never adds
+   the media should read this as the theme, not as something broken.
+   -------------------------------------------------------------------------- */
+html[data-theme='osaka'][data-osaka-media='absent'] {
+  background-image:
+    radial-gradient(58% 45% at 80% 84%, rgb(var(--osaka-amber) / 0.2) 0%, transparent 70%),
+    radial-gradient(52% 40% at 16% 12%, rgb(var(--osaka-neon) / 0.18) 0%, transparent 72%),
+    radial-gradient(72% 58% at 48% 46%, rgb(var(--osaka-cyan) / 0.1) 0%, transparent 78%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+}
+
+/* ==========================================================================
+   3. PRIMITIVES
+   ========================================================================== */
+
+/* -- the meniscus ring ----------------------------------------------------
+   Drawn on ::after so it composes with a bleed on ::before. Uses a ring rather
+   than a border so it never contributes to layout, and inherits the host's
+   radius so one hook works on a pill and a panel alike. */
+html[data-theme='osaka'] [data-osaka-wet] {
+  position: relative;
+}
+html[data-theme='osaka'] [data-osaka-wet]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: var(--osaka-edge);
+}
+
+/* -- top-edge neon wash --------------------------------------------------- */
+html[data-theme='osaka'] [data-osaka-bleed] {
+  position: relative;
+  isolation: isolate;
+}
+html[data-theme='osaka'] [data-osaka-bleed]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+  background: var(--osaka-bleed);
+}
+
+/* -- bloom ----------------------------------------------------------------
+   Opt-in, and deliberately tight. A wide soft halo on every accent is the
+   single fastest way to make a neon theme look cheap; this is a 6px core plus
+   a 14px falloff, which is what a small sign actually does to a wet lens. */
+html[data-theme='osaka'] [data-osaka-glow] {
+  box-shadow:
+    0 0 6px rgb(var(--osaka-neon) / 0.34),
+    0 0 14px rgb(var(--osaka-neon) / 0.16);
+}
+
+/* -- neon sign text -------------------------------------------------------
+   Reserved for genuinely sign-like moments (active nav label, primary CTA).
+   Never body copy: a text-shadow under a paragraph destroys its legibility at
+   exactly the sizes where legibility matters most. */
+html[data-theme='osaka'] [data-osaka-sign] {
+  color: rgb(var(--osaka-neon));
+  text-shadow:
+    0 0 8px rgb(var(--osaka-neon) / 0.42),
+    0 0 20px rgb(var(--osaka-neon) / 0.2);
+}
+
+/* -- mono numerics --------------------------------------------------------
+   NOT uppercased. text-transform is locale-sensitive (Turkish dotted and
+   dotless i) and wrecks user-authored strings; War learned this the same way. */
+html[data-theme='osaka'] [data-osaka-readout] {
+  font-family: var(--osaka-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+/* -- droplet highlight ----------------------------------------------------
+   For small round controls: a specular dot at the upper left, so a circular
+   button reads as a bead of water rather than a flat disc. */
+html[data-theme='osaka'] [data-osaka-bead] {
+  position: relative;
+  overflow: hidden;
+}
+html[data-theme='osaka'] [data-osaka-bead]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 32% 24%,
+    rgb(var(--osaka-mist) / 0.28) 0%,
+    rgb(var(--osaka-mist) / 0.06) 26%,
+    transparent 52%
+  );
+}
+
+/* ==========================================================================
+   4. DEGRADATION
+   ==========================================================================
+   Three environments get a reduced build. Each removes a specific cost and
+   keeps the theme legible rather than falling back to a different look.
+   ========================================================================== */
+
+/* Reduced transparency: backdrop-filter is the single most expensive thing
+   this theme asks for, and some users switch it off for legibility rather than
+   performance. Trading blur for opacity keeps the palette and loses the cost. */
+@media (prefers-reduced-transparency: reduce) {
+  html[data-theme='osaka'] {
+    --glass-thin: 0.94;
+    --glass-regular: 0.96;
+    --glass-raised: 0.98;
+    --glass-blur: none;
+    --osaka-blur: none;
+  }
+}
+
+/* Forced colours: hand the whole thing to the user agent. Every value in this
+   file is decorative, and none of it should survive a high-contrast mode. */
+@media (forced-colors: active) {
+  html[data-theme='osaka'] [data-osaka-glow],
+  html[data-theme='osaka'] [data-osaka-sign] {
+    box-shadow: none;
+    text-shadow: none;
+  }
+}

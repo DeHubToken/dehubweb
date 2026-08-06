@@ -462,6 +462,8 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
             onShareAsImage={handleShareAsImage}
             isLiked={post.isLiked}
             isDisliked={post.isDisliked}
+            myReaction={post.myReaction}
+            reactionCounts={post.reactionCounts}
             likeCount={post.stats.likes}
             commentCount={post.stats.comments}
             repostCount={post.stats.reposts}
@@ -482,6 +484,7 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
           onOpenChange={setShowComments}
           tokenId={post.id}
           initialTab={commentsInitialTab}
+          commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
         />
       </div>
 

@@ -27,6 +27,8 @@ interface CommentsWrapperProps {
    * breakpoint.
    */
   immersive?: boolean;
+  /** Creator turned replies off — swaps the composer for a notice. */
+  commentsDisabled?: boolean;
 }
 
 function useIsTabletOrMobile() {
@@ -67,7 +69,7 @@ function useAdaptiveDrawerHeight(enabled: boolean) {
   return drawerHeight;
 }
 
-export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immersive = false }: CommentsWrapperProps) {
+export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immersive = false, commentsDisabled = false }: CommentsWrapperProps) {
   const isTabletOrMobile = useIsTabletOrMobile();
   const adaptiveDrawerHeight = useAdaptiveDrawerHeight(isTabletOrMobile && immersive);
   const { isCollapsed } = useSidebarCollapse();
@@ -96,6 +98,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
               tokenId={tokenId}
               onClose={() => onOpenChange(false)}
               initialTab={initialTab}
+              commentsDisabled={commentsDisabled}
             />
           </div>
         </DrawerContent>
@@ -136,6 +139,7 @@ export function CommentsWrapper({ open, onOpenChange, tokenId, initialTab, immer
               tokenId={tokenId}
               onClose={() => onOpenChange(false)}
               initialTab={initialTab}
+              commentsDisabled={commentsDisabled}
             />
           </div>
         </motion.div>

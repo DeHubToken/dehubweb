@@ -15,7 +15,19 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { useVideoViewTracking } from '@/hooks/use-view-tracking';
 import { useAuth } from '@/contexts/AuthContext';
 import { useBookmarkPost } from '@/hooks/use-bookmarks';
-import { voteOnPost, getNFTComments, postComment, isFollowing as checkIsFollowing, updateTokenVisibility, type TokenVisibility, type ApiCommentResponse } from '@/lib/api/dehub';
+import { voteOnPost, reactToPost, getNFTComments, postComment, isFollowing as checkIsFollowing, updateTokenVisibility, type TokenVisibility, type ApiCommentResponse } from '@/lib/api/dehub';
+import {
+  applyReactionDelta,
+  isPositiveReaction,
+  reactionMeta,
+  resolveTopReaction,
+  seedReactionCounts,
+  type PostReaction,
+  type ReactionCounts,
+} from '@/lib/reactions';
+import { resolveMyReaction } from '@/lib/engagement';
+import { ReactionPicker } from './ReactionPicker';
+import { ReactionInfoDrawer } from './ReactionInfoDrawer';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { toast } from 'sonner';
 import { CommentsSection } from './CommentsSection';
@@ -141,7 +153,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [showPlayIndicator, setShowPlayIndicator] = useState<'play' | 'pause' | null>(null);
   const [showComments, setShowComments] = useState(false);
-  const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'likers' | 'search' | undefined>(undefined);
+  const [commentsInitialTab, setCommentsInitialTab] = useState<'replies' | 'quotes' | 'reposts' | 'search' | undefined>(undefined);
   const [shareSheetOpen, setShareSheetOpen] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
@@ -174,6 +186,10 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
   const [localDislikeCount, setLocalDislikeCount] = useState(0);
   const [isVoting, setIsVoting] = useState(false);
   const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
+  const [myReaction, setMyReaction] = useState<PostReaction | null>(null);
+  const [localReactionCounts, setLocalReactionCounts] = useState<ReactionCounts>({});
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [reactionInfoOpen, setReactionInfoOpen] = useState(false);
 
   const inlineCommentRef = useRef<HTMLInputElement>(null);
   const mention = useMention({
@@ -200,6 +216,13 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
 
   const currentShort = shorts[currentIndex];
   const isOwnShort = !!walletAddress && currentShort?.creatorId?.toLowerCase() === walletAddress.toLowerCase();
+  // Who reacted what is the author's to see — the ⓘ in the reaction tray only
+  // exists on your own shorts (and the API refuses the list to anyone else).
+  const canViewReactionInfo = isOwnShort && !!currentShort?.id;
+  const showReactionInfo = () => {
+    setPickerOpen(false);
+    setReactionInfoOpen(true);
+  };
   const [showTipModal, setShowTipModal] = useState(false);
   const { data: tipCount = 0 } = usePostTipCount(currentShort?.id);
 
@@ -310,15 +333,20 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
       setIsDisliked(cached.isDisliked);
       setLocalLikeCount(cached.likeCount);
       setLocalDislikeCount(cached.dislikeCount);
+      if (cached.myReaction !== undefined) setMyReaction(cached.myReaction);
+      if (cached.reactionCounts) setLocalReactionCounts(cached.reactionCounts);
     } else {
       setIsLiked(currentShort?.isLiked ?? false);
       setIsDisliked(currentShort?.isDisliked ?? false);
-      const likes = typeof currentShort?.likes === 'string' 
-        ? parseInt(currentShort.likes.replace(/[^0-9]/g, '')) || 0 
+      const likes = typeof currentShort?.likes === 'string'
+        ? parseInt(currentShort.likes.replace(/[^0-9]/g, '')) || 0
         : (currentShort?.likes as unknown as number) || 0;
       setLocalLikeCount(likes);
       setLocalDislikeCount(0);
+      setMyReaction(resolveMyReaction(currentShort as never));
+      setLocalReactionCounts((currentShort as never as { reactionCounts?: ReactionCounts })?.reactionCounts ?? seedReactionCounts(likes, 0));
     }
+    setPickerOpen(false);
     setShowComments(false);
     setCommentsInitialTab(undefined);
     setInlineCommentText('');
@@ -358,67 +386,121 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
     return () => { cancelled = true; };
   }, [currentShort?.creatorId, isAuthenticated]);
 
-  // Handle voting
-  const handleVote = useCallback(async (vote: boolean) => {
+  /**
+   * Cast, switch or toggle off a reaction on the current short.
+   *
+   * Counts track POLARITY, so swapping like → love moves only
+   * `reactionCounts` — see the same reasoning in ActionBar.handleReaction.
+   */
+  const handleReaction = useCallback(async (reaction: PostReaction) => {
     const tokenId = String(currentShort?.id);
-    
+
     if (!tokenId || tokenId === 'undefined' || isVoting) return;
-    
+
     if (!isAuthenticated) {
       openLoginModal();
       return;
     }
 
-    const isRemovingVote = (vote && isLiked) || (!vote && isDisliked);
-    const isSwitchingVote = (vote && isDisliked) || (!vote && isLiked);
+    const previous = myReaction;
+    const isRemovingVote = previous === reaction;
+    const next: PostReaction | null = isRemovingVote ? null : reaction;
 
-    setIsVoting(true);
-    
-    // Compute new optimistic state
-    let newLiked = isLiked;
-    let newDisliked = isDisliked;
+    const wasPositive = previous ? isPositiveReaction(previous) : false;
+    const wasNegative = previous ? !wasPositive : false;
+    const nextPositive = next ? isPositiveReaction(next) : false;
+    const nextNegative = next ? !nextPositive : false;
+
     let likeDelta = 0;
     let dislikeDelta = 0;
+    if (wasPositive && !nextPositive) likeDelta = -1;
+    if (!wasPositive && nextPositive) likeDelta = 1;
+    if (wasNegative && !nextNegative) dislikeDelta = -1;
+    if (!wasNegative && nextNegative) dislikeDelta = 1;
 
-    if (isRemovingVote) {
-      if (vote) { newLiked = false; likeDelta = -1; }
-      else { newDisliked = false; dislikeDelta = -1; }
-    } else if (isSwitchingVote) {
-      if (vote) { newLiked = true; newDisliked = false; likeDelta = 1; dislikeDelta = -1; setJustVoted('like'); }
-      else { newDisliked = true; newLiked = false; dislikeDelta = 1; likeDelta = -1; setJustVoted('dislike'); }
-    } else {
-      if (vote) { newLiked = true; likeDelta = 1; setJustVoted('like'); }
-      else { newDisliked = true; dislikeDelta = 1; setJustVoted('dislike'); }
-    }
+    const newLiked = nextPositive;
+    const newDisliked = nextNegative;
+    const newReactionCounts = applyReactionDelta(localReactionCounts, previous, next);
+
+    setIsVoting(true);
+    setPickerOpen(false);
+    if (!isRemovingVote) setJustVoted(nextPositive ? 'like' : 'dislike');
 
     // Apply optimistic UI
     setIsLiked(newLiked);
     setIsDisliked(newDisliked);
+    setMyReaction(next);
+    setLocalReactionCounts(newReactionCounts);
     setLocalLikeCount(prev => {
       const newCount = Math.max(0, prev + likeDelta);
       // Cache after computing final values
-      setVoteCache(tokenId, { isLiked: newLiked, isDisliked: newDisliked, likeCount: newCount, dislikeCount: Math.max(0, localDislikeCount + dislikeDelta) });
+      setVoteCache(tokenId, {
+        isLiked: newLiked,
+        isDisliked: newDisliked,
+        myReaction: next,
+        likeCount: newCount,
+        dislikeCount: Math.max(0, localDislikeCount + dislikeDelta),
+        reactionCounts: newReactionCounts,
+      });
       return newCount;
     });
     setLocalDislikeCount(prev => Math.max(0, prev + dislikeDelta));
-    
+
     setTimeout(() => setJustVoted(null), 400);
 
     try {
-      await voteOnPost({ tokenId: parseInt(tokenId, 10), voteType: vote ? 'for' : 'against' });
+      const numericId = parseInt(tokenId, 10);
+      if (reaction === 'like' || reaction === 'dislike') {
+        await voteOnPost({ tokenId: numericId, voteType: reaction === 'like' ? 'for' : 'against' });
+      } else {
+        await reactToPost({ tokenId: numericId, reaction });
+      }
     } catch (error) {
       // Revert on error
       setIsLiked(isLiked);
       setIsDisliked(isDisliked);
+      setMyReaction(previous);
+      setLocalReactionCounts(localReactionCounts);
       setLocalLikeCount(prev => Math.max(0, prev - likeDelta));
       setLocalDislikeCount(prev => Math.max(0, prev - dislikeDelta));
       // Clear stale cache on error
-      setVoteCache(tokenId, { isLiked, isDisliked, likeCount: Math.max(0, localLikeCount), dislikeCount: Math.max(0, localDislikeCount) });
-      toast.error('Failed to vote. Please try again.');
+      setVoteCache(tokenId, {
+        isLiked,
+        isDisliked,
+        myReaction: previous,
+        likeCount: Math.max(0, localLikeCount),
+        dislikeCount: Math.max(0, localDislikeCount),
+        reactionCounts: localReactionCounts,
+      });
+      toast.error('Failed to react. Please try again.');
     } finally {
       setIsVoting(false);
     }
-  }, [currentShort?.id, isVoting, isLiked, isDisliked, isAuthenticated, localLikeCount, localDislikeCount]);
+  }, [currentShort?.id, isVoting, isLiked, isDisliked, myReaction, localReactionCounts, isAuthenticated, localLikeCount, localDislikeCount]);
+
+  /** Tapping a thumb re-sends the held reaction of that polarity, which toggles it off. */
+  const handleVote = useCallback((vote: boolean) => {
+    const holdsSamePolarity = myReaction !== null && isPositiveReaction(myReaction) === vote;
+    const target: PostReaction = holdsSamePolarity ? myReaction! : (vote ? 'like' : 'dislike');
+    return handleReaction(target);
+  }, [handleReaction, myReaction]);
+
+  // Hold the thumbs-up to open the reaction tray (see ActionBar for the same gesture).
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const longPressFired = useRef(false);
+  const startLongPress = useCallback(() => {
+    longPressFired.current = false;
+    longPressTimer.current = setTimeout(() => {
+      longPressFired.current = true;
+      setPickerOpen(true);
+    }, 400);
+  }, []);
+  const cancelLongPress = useCallback(() => {
+    if (longPressTimer.current) { clearTimeout(longPressTimer.current); longPressTimer.current = null; }
+  }, []);
+  useEffect(() => cancelLongPress, [cancelLongPress]);
+
+  const leadReaction = myReaction ?? resolveTopReaction(localReactionCounts);
 
   // Lock body scroll when viewer is open, and flag the fullscreen state so the
   // top nav bars (home tab bar z-[110], mobile header z-[60]) drop beneath the
@@ -895,20 +977,47 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   </button>
 
                   {/* Like — furthest right, like feed cards */}
-                  <motion.button
-                    onClick={() => handleVote(true)}
-                    disabled={isVoting}
-                    className="flex items-center gap-1"
-                    animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                    aria-label="Like"
-                  >
-                    <ThumbsUp className={cn(
-                      "w-5 h-5 drop-shadow-lg",
-                      isLiked ? "fill-white text-white" : "text-white"
-                    )} />
-                    <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(localLikeCount)}</span>
-                  </motion.button>
+                  <span className="relative flex items-center">
+                    <ReactionPicker
+                      open={pickerOpen}
+                      current={myReaction}
+                      onSelect={handleReaction}
+                      onClose={() => setPickerOpen(false)}
+                      align="right"
+                      onShowInfo={canViewReactionInfo ? showReactionInfo : undefined}
+                    />
+                    <motion.button
+                      onClick={() => {
+                        // The click that ends a hold must not also cast a like.
+                        if (longPressFired.current) { longPressFired.current = false; return; }
+                        handleVote(true);
+                      }}
+                      onPointerDown={startLongPress}
+                      onPointerUp={cancelLongPress}
+                      onPointerLeave={cancelLongPress}
+                      onPointerCancel={cancelLongPress}
+                      onContextMenu={(e) => e.preventDefault()}
+                      disabled={isVoting}
+                      className="flex items-center gap-1 select-none touch-none"
+                      animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      aria-label={myReaction ? `${reactionMeta(myReaction).label} — hold to change your reaction` : 'Like — hold to react'}
+                      aria-haspopup="menu"
+                      aria-expanded={pickerOpen}
+                    >
+                      {leadReaction && leadReaction !== 'like' ? (
+                        <span className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
+                          {reactionMeta(leadReaction).emoji}
+                        </span>
+                      ) : (
+                        <ThumbsUp className={cn(
+                          "w-5 h-5 drop-shadow-lg",
+                          isLiked ? "fill-white text-white" : "text-white"
+                        )} />
+                      )}
+                      <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(localLikeCount)}</span>
+                    </motion.button>
+                  </span>
                 </div>
               </div>
             </>
@@ -1055,20 +1164,47 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
                   </button>
 
                   {/* Like — furthest right for easy thumb reach, like feed cards */}
-                  <motion.button
-                    onClick={() => handleVote(true)}
-                    disabled={isVoting}
-                    className="flex items-center gap-1"
-                    animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
-                    transition={{ duration: 0.3, ease: "easeOut" }}
-                    aria-label="Like"
-                  >
-                    <ThumbsUp className={cn(
-                      "w-5 h-5 drop-shadow-lg",
-                      isLiked ? "fill-white text-white" : "text-white"
-                    )} />
-                    <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(localLikeCount)}</span>
-                  </motion.button>
+                  <span className="relative flex items-center">
+                    <ReactionPicker
+                      open={pickerOpen}
+                      current={myReaction}
+                      onSelect={handleReaction}
+                      onClose={() => setPickerOpen(false)}
+                      align="right"
+                      onShowInfo={canViewReactionInfo ? showReactionInfo : undefined}
+                    />
+                    <motion.button
+                      onClick={() => {
+                        // The click that ends a hold must not also cast a like.
+                        if (longPressFired.current) { longPressFired.current = false; return; }
+                        handleVote(true);
+                      }}
+                      onPointerDown={startLongPress}
+                      onPointerUp={cancelLongPress}
+                      onPointerLeave={cancelLongPress}
+                      onPointerCancel={cancelLongPress}
+                      onContextMenu={(e) => e.preventDefault()}
+                      disabled={isVoting}
+                      className="flex items-center gap-1 select-none touch-none"
+                      animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                      aria-label={myReaction ? `${reactionMeta(myReaction).label} — hold to change your reaction` : 'Like — hold to react'}
+                      aria-haspopup="menu"
+                      aria-expanded={pickerOpen}
+                    >
+                      {leadReaction && leadReaction !== 'like' ? (
+                        <span className="w-5 h-5 flex items-center justify-center text-[1.05rem] leading-none drop-shadow-lg" aria-hidden="true">
+                          {reactionMeta(leadReaction).emoji}
+                        </span>
+                      ) : (
+                        <ThumbsUp className={cn(
+                          "w-5 h-5 drop-shadow-lg",
+                          isLiked ? "fill-white text-white" : "text-white"
+                        )} />
+                      )}
+                      <span className="text-xs font-medium text-white/70 drop-shadow-lg">{formatCount(localLikeCount)}</span>
+                    </motion.button>
+                  </span>
                 </div>
                 </div>
               </motion.div>
@@ -1122,7 +1258,7 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
             <div className="bg-zinc-900/50 rounded-2xl p-3 lg:p-4 mb-3 relative">
               <div className="absolute top-3 right-3 lg:top-4 lg:right-4 flex items-center gap-1.5">
                 <motion.button
-                  onClick={toggleBookmark}
+                  onClick={() => toggleBookmark()}
                   disabled={isBookmarkLoading}
                   className="w-8 h-8 bg-white/[0.08] hover:bg-white/15 rounded-lg flex items-center justify-center transition-colors"
                   animate={isBookmarked ? { scale: [1, 1.2, 1] } : {}}
@@ -1392,6 +1528,14 @@ export function ShortsViewer({ shorts, initialIndex, onClose, onLoadMore, hasMor
           onClose();
         }}
       />
+
+      {canViewReactionInfo && reactionInfoOpen && (
+        <ReactionInfoDrawer
+          open={reactionInfoOpen}
+          onOpenChange={setReactionInfoOpen}
+          tokenId={currentShort.id}
+        />
+      )}
     </motion.div>
   );
 }

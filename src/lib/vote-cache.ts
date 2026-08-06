@@ -11,12 +11,17 @@
  */
 
 import type { QueryClient, InfiniteData } from '@tanstack/react-query';
+import { applyVoteStateToNFT, type VoteState } from '@/lib/engagement';
+import type { PostReaction, ReactionCounts } from '@/lib/reactions';
 
 interface VoteCacheEntry {
   isLiked: boolean;
   isDisliked: boolean;
   likeCount: number;
   dislikeCount: number;
+  /** The viewer's reaction. Optional so plain like/dislike callers are unchanged. */
+  myReaction?: PostReaction | null;
+  reactionCounts?: ReactionCounts;
   timestamp: number;
 }
 
@@ -57,19 +62,18 @@ export function clearAllVoteCaches(): void {
  * NOTE: 'dehub-feed' is the real key family behind the Shorts/Images/Live
  * tabs (use-dehub-feed.ts) — the old 'dehub-videos'/'dehub-images' names
  * matched no query and silently patched nothing. Its pages carry `data`
- * instead of `items`; the walker below handles both. */
+ * instead of `items`; the walker below handles both.
+ * Same story for 'dehub-user-content' (use-dehub-profile.ts), which powers the
+ * profile tabs: it was listed here as 'profile-content', a key no query has
+ * ever used, so a vote cast on a profile never reached the home feed's cache
+ * and vice versa. */
 const FEED_KEYS: string[] = [
   'unified-feed',
   'dehub-feed',
-  'profile-content',
+  'dehub-user-content',
 ];
 
-interface VoteState {
-  isLiked: boolean;
-  isDisliked: boolean;
-  likeCount: number;
-  dislikeCount: number;
-}
+export type { VoteState };
 
 /**
  * Walk every page of every cached infinite query that matches our known feed
@@ -99,8 +103,23 @@ export function patchFeedCaches(
             if (itemId !== String(postId)) return item;
             changed = true;
 
-            // Clone & patch – handles all feed item shapes
+            // Raw API item (unified-feed pages, and the dehub-feed /
+            // dehub-user-content pages, hold unmapped NFTs): counts live in
+            // `totalVotes`, which applyVoteStateToNFT always writes. It has to
+            // CREATE that object when absent — the API omits it entirely on a
+            // post nobody has liked yet, so the old `if (item.totalVotes)`
+            // guard dropped the first like of every such post on the floor.
+            // The optimistic count then existed only in ActionBar's local
+            // state, and the post's own page — seeded from this very item —
+            // opened showing 0 likes.
+            if (item.tokenId !== undefined && item.type === undefined) {
+              return applyVoteStateToNFT(item, voteState);
+            }
+
+            // Mapped card shapes (VideoItem / ImagePost / TextPost)
             const patched = { ...item, isLiked: voteState.isLiked, isDisliked: voteState.isDisliked };
+            if ('myReaction' in voteState) patched.myReaction = voteState.myReaction ?? null;
+            if (voteState.reactionCounts) patched.reactionCounts = voteState.reactionCounts;
 
             // VideoItem shape
             if ('likeCount' in item) patched.likeCount = voteState.likeCount;

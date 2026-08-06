@@ -12,6 +12,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 import { getAccountInfo, getAccountByUsername } from '@/lib/api/dehub';
 import { extractAvatarPath } from '@/lib/media-url';
+import { escapeFilterValue } from '@/lib/postgrest-filter';
 
 export type FeatureCategory = 'ui_ux' | 'performance' | 'new_feature' | 'bug_fix' | 'integration' | 'other';
 export type FeatureStatus = 'open' | 'under_review' | 'planned' | 'in_progress' | 'completed' | 'shipped' | 'declined';
@@ -51,6 +52,32 @@ const CATEGORY_LABELS: Record<FeatureCategory, string> = {
   other: 'Other',
 };
 
+// Rows submitted before the category enum settled carried `feature`/`bug`.
+// They aren't in CATEGORY_LABELS, so they rendered a blank badge and were
+// invisible under every filter chip except "All".
+//
+// Both the backfill and the CHECK constraint that stops it recurring live in
+// supabase/migrations/20260728000000_normalize_feature_request_categories.sql,
+// so the DB can no longer serve these values. This map is kept as the read-side
+// belt to that braces: it's what makes normalizeCategory total, so an unknown
+// category (constraint dropped, a value added server-side ahead of a client
+// release) degrades to a sensible badge instead of a blank one.
+const LEGACY_CATEGORY_ALIASES: Record<string, FeatureCategory> = {
+  feature: 'new_feature',
+  bug: 'bug_fix',
+};
+
+export function normalizeCategory(category: string): FeatureCategory {
+  if (category in CATEGORY_LABELS) return category as FeatureCategory;
+  return LEGACY_CATEGORY_ALIASES[category] ?? 'other';
+}
+
+function normalizeRows(rows: FeatureRequest[]): FeatureRequest[] {
+  return rows.map((r) =>
+    r.category in CATEGORY_LABELS ? r : { ...r, category: normalizeCategory(r.category) }
+  );
+}
+
 const STATUS_LABELS: Record<FeatureStatus, string> = {
   open: 'Open',
   under_review: 'Under Review',
@@ -86,6 +113,17 @@ function setSessionCache(key: string, data: unknown) {
 
 const PAGE_SIZE = 15;
 
+// Every category a filter chip should match, including the legacy aliases that
+// fold into it — so picking "New Feature" also surfaces rows still stored as
+// `feature`.
+function categoryFilterValues(category: FeatureCategory): string[] {
+  const legacy = Object.entries(LEGACY_CATEGORY_ALIASES)
+    .filter(([, modern]) => modern === category)
+    .map(([old]) => old);
+  return [category, ...legacy];
+}
+
+
 export function useFeatureRequests(sort: FeatureSort, category: FeatureCategory | 'all', search: string) {
   return useInfiniteQuery({
     queryKey: ['feature-requests', sort, category, search],
@@ -95,11 +133,12 @@ export function useFeatureRequests(sort: FeatureSort, category: FeatureCategory 
         .select('*');
 
       if (category !== 'all') {
-        query = query.eq('category', category);
+        query = query.in('category', categoryFilterValues(category));
       }
 
       if (search.trim()) {
-        query = query.or(`title.ilike.%${search.trim()}%,description.ilike.%${search.trim()}%`);
+        const pattern = escapeFilterValue(`%${search.trim()}%`);
+        query = query.or(`title.ilike.${pattern},description.ilike.${pattern}`);
       }
 
       switch (sort) {
@@ -111,15 +150,16 @@ export function useFeatureRequests(sort: FeatureSort, category: FeatureCategory 
           break;
       }
 
-      // Exclude shipped/completed features from the main list
-      query = query.not('status', 'in', '("completed","shipped")');
+      // Exclude shipped/completed features from the main list — and declined
+      // ones, which are resolved too and would otherwise sit here forever.
+      query = query.not('status', 'in', '("completed","shipped","declined")');
 
       // Pagination
       query = query.range(pageParam, pageParam + PAGE_SIZE - 1);
 
       const { data, error } = await query;
       if (error) throw error;
-      return (data || []) as FeatureRequest[];
+      return normalizeRows((data || []) as FeatureRequest[]);
     },
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
@@ -131,15 +171,23 @@ export function useFeatureRequests(sort: FeatureSort, category: FeatureCategory 
   });
 }
 
-export function useTotalFeatureCount() {
+// `total` is every idea ever submitted (the header line); `open` is what the
+// Requests tab actually lists, counted with the same status filter the list
+// uses so the badge can't drift from the rows below it.
+export function useFeatureCounts() {
   return useQuery({
     queryKey: ['feature-requests-total-count'],
     queryFn: async () => {
-      const { count, error } = await supabase
-        .from('feature_requests')
-        .select('*', { count: 'exact', head: true });
-      if (error) throw error;
-      return count ?? 0;
+      const [totalRes, openRes] = await Promise.all([
+        supabase.from('feature_requests').select('*', { count: 'exact', head: true }),
+        supabase
+          .from('feature_requests')
+          .select('*', { count: 'exact', head: true })
+          .not('status', 'in', '("completed","shipped","declined")'),
+      ]);
+      if (totalRes.error) throw totalRes.error;
+      if (openRes.error) throw openRes.error;
+      return { total: totalRes.count ?? 0, open: openRes.count ?? 0 };
     },
     staleTime: 60_000,
     gcTime: 5 * 60_000,
@@ -157,7 +205,7 @@ export function useShippedFeatures() {
         .order('updated_at', { ascending: false });
 
       if (error) throw error;
-      const result = (data || []) as FeatureRequest[];
+      const result = normalizeRows((data || []) as FeatureRequest[]);
       setSessionCache(SHIPPED_CACHE_KEY, result);
       return result;
     },

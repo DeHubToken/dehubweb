@@ -2,6 +2,7 @@ import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import React, { useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Repeat2 } from 'lucide-react';
+import { resolveDislikeCount, resolveLikeCount } from '@/lib/engagement';
 import { Loader2, Plus, MessageCircle, Heart, ArrowUpRight, ThumbsUp, ThumbsDown, MessageSquare, Share2, Bookmark, Info, CornerDownRight, Image, Play, Pencil, Trash2, Pin } from 'lucide-react';
 import { useInfiniteQuery, useQueries, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
@@ -686,7 +687,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
           views: formatViews(post.views || 0).replace(' views', ''),
           uploadedAgo: formatTimeAgo(rawTimestamp),
           duration: '', durationSeconds: 0,
-          likeCount: post.totalVotes?.for || 0, dislikeCount: post.totalVotes?.against || 0,
+          likeCount: resolveLikeCount(post), dislikeCount: resolveDislikeCount(post),
           commentCount: post.commentCount || 0, repostCount: (post.totalReposts || 0) + (post.quotes || 0),
           isOwner: false, isUnlocked: false,
           creatorId: resolvedAddress,
@@ -699,7 +700,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
           verified: false, avatar,
           image: buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg',
           imageUrls: buildFeedImageUrls(post.imageUrls) || [buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg'],
-          caption: post.description || '', likes: post.totalVotes?.for || 0,
+          caption: post.description || '', likes: resolveLikeCount(post),
           comments: post.commentCount || 0, views: formatViews(post.views || 0).replace(' views', ''),
           timeAgo: formatTimeAgo(rawTimestamp),
           creatorId: resolvedAddress,
@@ -722,7 +723,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
           stats: {
             comments: post.commentCount || 0,
             reposts: (post.totalReposts || 0) + (post.quotes || 0),
-            likes: post.totalVotes?.for || 0,
+            likes: resolveLikeCount(post),
           },
         }} />
       )}

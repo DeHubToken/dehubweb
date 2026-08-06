@@ -19,18 +19,35 @@ import { ThumbsUp, ThumbsDown, MessageSquare, Share2, Repeat2, Quote, Link, Info
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
-import { voteOnPost } from '@/lib/api/dehub';
+import { voteOnPost, reactToPost } from '@/lib/api/dehub';
+import {
+  applyReactionDelta,
+  isPositiveReaction,
+  reactionMeta,
+  resolveTopReaction,
+  topReactions,
+  type PostReaction,
+  type ReactionCounts,
+} from '@/lib/reactions';
+import { ReactionPicker } from './ReactionPicker';
 import { useAuth } from '@/contexts/AuthContext';
 import { PostUtilityButtons } from './PostUtilityButtons';
 // Lazy so the DM/socket graph doesn't ride in the feed chunk — only loads when a user shares.
 const SharePostToDmModal = lazy(() =>
   import('@/components/app/modals/SharePostToDmModal').then((m) => ({ default: m.SharePostToDmModal }))
 );
+// Only ever opened by the author of the post, so it stays out of the bundle
+// every card pays for.
+const ReactionInfoDrawer = lazy(() =>
+  import('./ReactionInfoDrawer').then((m) => ({ default: m.ReactionInfoDrawer }))
+);
 import { getVoteCache, setVoteCache, patchFeedCaches } from '@/lib/vote-cache';
+import { applyVoteStateToNFT } from '@/lib/engagement';
 import { trackPostLinkCopy } from '@/hooks/use-link-copy-count';
 import { isPostReposted, markReposted, unmarkReposted } from '@/lib/repost-cache';
 import { getCommentCountDelta } from '@/lib/comment-count-cache';
 import { DOUBLE_TAP_LIKE_EVENT, type DoubleTapLikeEventDetail } from '@/hooks/use-double-tap-like';
+import { useIsTouchDevice } from '@/hooks/use-touch-device';
 import { Gem } from 'lucide-react';
 import {
   Drawer,
@@ -58,6 +75,20 @@ interface ActionBarProps {
   isLiked?: boolean;
   /** Whether the current user has disliked this item */
   isDisliked?: boolean;
+  /**
+   * Which of the nine reactions the viewer holds. `isLiked`/`isDisliked` stay
+   * the polarity rollup of it, so a post the viewer loved still reads as liked.
+   */
+  myReaction?: PostReaction | null;
+  /** Per-reaction totals — decides which icon leads on the card. */
+  reactionCounts?: ReactionCounts | null;
+  /**
+   * Hide the hold-to-react tray, leaving a plain like/dislike pair. Set by
+   * surfaces whose "posts" aren't posts (governance proposals, feature
+   * requests) — they route votes through onLike/onDislike, and /request_reaction
+   * has no row to write for them.
+   */
+  disableReactions?: boolean;
   /** Hide the dislike button (e.g., for images) */
   hideDislike?: boolean;
   /** Like count to display */
@@ -92,7 +123,11 @@ interface ActionBarProps {
   onShareAsImage?: () => Promise<void>;
   /** Numeric token ID for pin functionality */
   tokenId?: number;
-  /** Show pin button only for own posts */
+  /**
+   * Your own post. Shows the pin button, and puts the ⓘ in the reaction tray
+   * that opens the who-reacted-what breakdown — that list is the author's
+   * alone (the API enforces the same rule).
+   */
   isOwnPost?: boolean;
   /**
    * Listen for double-tap-to-like events for this post (default true).
@@ -155,6 +190,9 @@ export function ActionBar({
   showBorder = false,
   isLiked: initialIsLiked = false,
   isDisliked: initialIsDisliked = false,
+  myReaction: initialMyReaction = null,
+  reactionCounts: initialReactionCounts = null,
+  disableReactions = false,
   hideDislike = false,
   likeCount,
   dislikeCount,
@@ -205,6 +243,14 @@ export function ActionBar({
   const [localDislikeCount, setLocalDislikeCount] = useState(cachedVote ? cachedVote.dislikeCount : (dislikeCount ?? 0));
   const [isVoting, setIsVoting] = useState(false);
   const [justVoted, setJustVoted] = useState<'like' | 'dislike' | null>(null);
+  const [myReaction, setMyReaction] = useState<PostReaction | null>(
+    cachedVote?.myReaction !== undefined ? cachedVote.myReaction : initialMyReaction,
+  );
+  const [localReactionCounts, setLocalReactionCounts] = useState<ReactionCounts>(
+    cachedVote?.reactionCounts ?? initialReactionCounts ?? {},
+  );
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [reactionInfoOpen, setReactionInfoOpen] = useState(false);
   const [isSharingImage, setIsSharingImage] = useState(false);
   // Track when user voted locally so we don't let stale API refetches overwrite optimistic state
   const lastVoteTimeRef = useRef(cachedVote ? Date.now() : 0);
@@ -268,6 +314,24 @@ export function ActionBar({
     setLocalDislikeCount(dislikeCount ?? 0);
   }, [dislikeCount]);
 
+  useEffect(() => {
+    if (!hasExternalHandlers) {
+      if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
+      const cached = postId ? getVoteCache(postId) : null;
+      if (cached?.myReaction !== undefined) { setMyReaction(cached.myReaction); return; }
+    }
+    setMyReaction(initialMyReaction);
+  }, [initialMyReaction]);
+
+  useEffect(() => {
+    if (!hasExternalHandlers) {
+      if (Date.now() - lastVoteTimeRef.current < VOTE_GUARD_MS) return;
+      const cached = postId ? getVoteCache(postId) : null;
+      if (cached?.reactionCounts) { setLocalReactionCounts(cached.reactionCounts); return; }
+    }
+    setLocalReactionCounts(initialReactionCounts ?? {});
+  }, [initialReactionCounts]);
+
   // Propagate API-sourced like/dislike state to all feed caches
   // so old likes from previous sessions sync across all feeds
   useEffect(() => {
@@ -281,71 +345,89 @@ export function ActionBar({
     });
   }, [initialIsLiked, initialIsDisliked, postId]);
   
-  const handleVote = useCallback(async (vote: boolean) => {
+  /**
+   * Cast, switch or toggle off a reaction.
+   *
+   * Sending the reaction the viewer already holds is what REMOVES it — that's
+   * true of the server too, so the optimistic state and the eventual refetch
+   * agree without the client having to model a separate "unreact" call.
+   *
+   * `likeCount`/`dislikeCount` track POLARITY, not the individual reaction, so
+   * swapping like → love leaves both counts alone and only moves
+   * `reactionCounts`. Getting this wrong would make a post's like count jump
+   * every time somebody changed their mind.
+   */
+  const handleReaction = useCallback(async (reaction: PostReaction) => {
     if (!postId || isVoting || externalDisabled) return;
-    
+
     if (!isAuthenticated) {
       openLoginModal();
       return;
     }
 
+    const wantsPositive = isPositiveReaction(reaction);
     // When external handlers are provided (e.g. governance), skip local optimistic updates
     // since the parent mutation handles optimistic state via React Query cache
-    const hasExternalHandler = (vote && onLike) || (!vote && onDislike);
+    const hasExternalHandler = (wantsPositive && onLike) || (!wantsPositive && onDislike);
 
-    // If clicking the same vote again, it's a toggle (remove vote)
-    const isRemovingVote = (vote && isLiked) || (!vote && isDisliked);
-    // If switching from one vote to another
-    const isSwitchingVote = (vote && isDisliked) || (!vote && isLiked);
+    const previous = myReaction;
+    const isRemovingVote = previous === reaction;
+    const next: PostReaction | null = isRemovingVote ? null : reaction;
 
-    // Compute the final state ONCE upfront from current values (stable within this render)
-    let newLiked = isLiked, newDisliked = isDisliked;
-    let newLikeCount = localLikeCount, newDislikeCount = localDislikeCount;
+    const wasPositive = previous ? isPositiveReaction(previous) : false;
+    const wasNegative = previous ? !wasPositive : false;
+    const nextPositive = next ? isPositiveReaction(next) : false;
+    const nextNegative = next ? !nextPositive : false;
 
-    if (isRemovingVote) {
-      if (vote) { newLiked = false; newLikeCount = Math.max(0, newLikeCount - voteWeight); }
-      else { newDisliked = false; newDislikeCount = Math.max(0, newDislikeCount - voteWeight); }
-    } else if (isSwitchingVote) {
-      if (vote) { newLiked = true; newDisliked = false; newLikeCount += voteWeight; newDislikeCount = Math.max(0, newDislikeCount - voteWeight); }
-      else { newDisliked = true; newLiked = false; newDislikeCount += voteWeight; newLikeCount = Math.max(0, newLikeCount - voteWeight); }
-    } else {
-      if (vote) { newLiked = true; newLikeCount += voteWeight; }
-      else { newDisliked = true; newDislikeCount += voteWeight; }
-    }
+    let newLikeCount = localLikeCount;
+    let newDislikeCount = localDislikeCount;
+    if (wasPositive && !nextPositive) newLikeCount = Math.max(0, newLikeCount - voteWeight);
+    if (!wasPositive && nextPositive) newLikeCount += voteWeight;
+    if (wasNegative && !nextNegative) newDislikeCount = Math.max(0, newDislikeCount - voteWeight);
+    if (!wasNegative && nextNegative) newDislikeCount += voteWeight;
+
+    const newLiked = nextPositive;
+    const newDisliked = nextNegative;
+    const newReactionCounts = applyReactionDelta(localReactionCounts, previous, next);
 
     setIsVoting(true);
+    setPickerOpen(false);
     lastVoteTimeRef.current = Date.now();
 
     if (!hasExternalHandler) {
       // Only do local optimistic updates for regular posts (not governance)
       setIsLiked(newLiked);
       setIsDisliked(newDisliked);
+      setMyReaction(next);
       setLocalLikeCount(newLikeCount);
       setLocalDislikeCount(newDislikeCount);
-      if (!isRemovingVote) setJustVoted(vote ? 'like' : 'dislike');
+      setLocalReactionCounts(newReactionCounts);
+      if (!isRemovingVote) setJustVoted(nextPositive ? 'like' : 'dislike');
       setTimeout(() => setJustVoted(null), 400);
 
       // Sync global vote cache & all feed caches synchronously with computed values
-      const voteState = { isLiked: newLiked, isDisliked: newDisliked, likeCount: newLikeCount, dislikeCount: newDislikeCount };
+      const voteState = {
+        isLiked: newLiked,
+        isDisliked: newDisliked,
+        myReaction: next,
+        likeCount: newLikeCount,
+        dislikeCount: newDislikeCount,
+        reactionCounts: newReactionCounts,
+      };
       setVoteCache(postId, voteState);
       patchFeedCaches(queryClient, postId, voteState);
       // Also patch the single-post query cache so dedicated post pages reflect the vote immediately
       queryClient.setQueriesData<any>(
         { queryKey: ['single-post', postId] },
-        (old: any) => old ? {
-          ...old,
-          isLiked: newLiked,
-          isDisliked: newDisliked,
-          totalVotes: { for: newLikeCount, against: newDislikeCount },
-        } : old,
+        (old: any) => old ? applyVoteStateToNFT(old, voteState) : old,
       );
     }
 
     try {
-      // Use override if provided, otherwise default to voteOnPost
-      if (vote && onLike) {
+      // Use override if provided, otherwise hit the reaction endpoint
+      if (wantsPositive && onLike) {
         await onLike();
-      } else if (!vote && onDislike) {
+      } else if (!wantsPositive && onDislike) {
         await onDislike();
       } else {
         const numericId = parseInt(postId, 10);
@@ -353,16 +435,22 @@ export function ActionBar({
           console.warn('[ActionBar] Non-numeric postId used without override handler:', postId);
           return;
         }
-        await voteOnPost({ tokenId: numericId, voteType: vote ? 'for' : 'against' });
+        // Plain like/dislike keeps using the long-lived vote endpoint; anything
+        // else needs the reaction one. Same row either way on the server.
+        if (reaction === 'like' || reaction === 'dislike') {
+          await voteOnPost({ tokenId: numericId, voteType: reaction === 'like' ? 'for' : 'against' });
+        } else {
+          await reactToPost({ tokenId: numericId, reaction });
+        }
       }
-      // After successful vote, softly invalidate feeds so fresh isLiked/isDisliked
-      // arrives from API before the vote cache expires
+      // After a successful reaction, softly invalidate feeds so fresh
+      // isLiked/myReaction arrives from API before the vote cache expires
       if (!hasExternalHandler) {
         // Use a short delay so the backend has time to process the vote
         setTimeout(() => {
           queryClient.invalidateQueries({ queryKey: ['unified-feed'], refetchType: 'none' });
           queryClient.invalidateQueries({ queryKey: ['dehub-feed'], refetchType: 'none' });
-          queryClient.invalidateQueries({ queryKey: ['profile-content'], refetchType: 'none' });
+          queryClient.invalidateQueries({ queryKey: ['dehub-user-content'], refetchType: 'none' });
         }, 2000);
       }
     } catch (error: unknown) {
@@ -370,26 +458,43 @@ export function ActionBar({
         // Revert to pre-vote state on error (only for local optimistic updates)
         setIsLiked(isLiked);
         setIsDisliked(isDisliked);
+        setMyReaction(previous);
         setLocalLikeCount(localLikeCount);
         setLocalDislikeCount(localDislikeCount);
-        const revertState = { isLiked, isDisliked, likeCount: localLikeCount, dislikeCount: localDislikeCount };
+        setLocalReactionCounts(localReactionCounts);
+        const revertState = {
+          isLiked,
+          isDisliked,
+          myReaction: previous,
+          likeCount: localLikeCount,
+          dislikeCount: localDislikeCount,
+          reactionCounts: localReactionCounts,
+        };
         setVoteCache(postId, revertState);
         patchFeedCaches(queryClient, postId, revertState);
         queryClient.setQueriesData<any>(
           { queryKey: ['single-post', postId] },
-          (old: any) => old ? {
-            ...old,
-            isLiked,
-            isDisliked,
-            totalVotes: { for: localLikeCount, against: localDislikeCount },
-          } : old,
+          (old: any) => old ? applyVoteStateToNFT(old, revertState) : old,
         );
       }
-      toast.error('Failed to vote. Please try again.');
+      toast.error('Failed to react. Please try again.');
     } finally {
       setIsVoting(false);
     }
-  }, [postId, isVoting, externalDisabled, isLiked, isDisliked, localLikeCount, localDislikeCount, isAuthenticated, queryClient, onLike, onDislike]);
+  }, [postId, isVoting, externalDisabled, isLiked, isDisliked, myReaction, localLikeCount, localDislikeCount, localReactionCounts, isAuthenticated, queryClient, onLike, onDislike, voteWeight]);
+
+  /**
+   * Tapping the thumbs-up / thumbs-down.
+   *
+   * Re-sends whatever reaction of that polarity the viewer already holds, which
+   * the server reads as "toggle it off" — so tapping the thumb clears a 🔥 the
+   * same way it clears a 👍, instead of silently downgrading it to a plain like.
+   */
+  const handleVote = useCallback((vote: boolean) => {
+    const holdsSamePolarity = myReaction !== null && isPositiveReaction(myReaction) === vote;
+    const target: PostReaction = holdsSamePolarity ? myReaction! : (vote ? 'like' : 'dislike');
+    return handleReaction(target);
+  }, [handleReaction, myReaction]);
 
   // Listen for double-tap-to-like events dispatched by photo thumbnails / fullscreen viewer.
   // Instagram-style: double-tap always likes (never unlikes) and only for this post's ID.
@@ -408,6 +513,74 @@ export function ActionBar({
   }, [postId, isLiked, enableDoubleTapLike]);
 
   const hasVoted = isLiked || isDisliked;
+
+  // ── Reaction tray ─────────────────────────────────────────────────────────
+  // Only real posts get reactions: governance proposals and feature requests
+  // reuse this bar with non-numeric ids and their own vote mutations, and the
+  // reaction endpoint has no row to write for them.
+  const numericPostId = postId ? parseInt(postId, 10) : NaN;
+  const reactionsEnabled = !disableReactions && !hasExternalHandlers && !isNaN(numericPostId);
+
+  // The breakdown of who reacted what belongs to the author. The ⓘ only exists
+  // on your own posts; the API refuses the list to everyone else regardless.
+  const reactionInfoTokenId = tokenId ?? (isNaN(numericPostId) ? undefined : numericPostId);
+  const canViewReactionInfo = isOwnPost && reactionInfoTokenId !== undefined;
+
+  const isTouchDevice = useIsTouchDevice();
+  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Set when a hold opened the tray, so the click that ends the same press
+  // doesn't also cast a plain like.
+  const longPressFired = useRef(false);
+
+  const clearTimers = useCallback(() => {
+    if (longPressTimer.current) { clearTimeout(longPressTimer.current); longPressTimer.current = null; }
+    if (hoverTimer.current) { clearTimeout(hoverTimer.current); hoverTimer.current = null; }
+  }, []);
+
+  useEffect(() => clearTimers, [clearTimers]);
+
+  const startLongPress = useCallback(() => {
+    if (!reactionsEnabled) return;
+    longPressFired.current = false;
+    longPressTimer.current = setTimeout(() => {
+      longPressFired.current = true;
+      setPickerOpen(true);
+    }, 400);
+  }, [reactionsEnabled]);
+
+  const cancelLongPress = useCallback(() => {
+    if (longPressTimer.current) { clearTimeout(longPressTimer.current); longPressTimer.current = null; }
+  }, []);
+
+  // Mouse users get the tray on hover instead of a hold. The handlers sit on
+  // the wrapper that contains both the thumb and the tray, so travelling from
+  // one to the other doesn't count as leaving.
+  const handleReactionAreaEnter = useCallback(() => {
+    if (!reactionsEnabled || isTouchDevice) return;
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    hoverTimer.current = setTimeout(() => setPickerOpen(true), 450);
+  }, [reactionsEnabled, isTouchDevice]);
+
+  const handleReactionAreaLeave = useCallback(() => {
+    if (isTouchDevice) return;
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    hoverTimer.current = setTimeout(() => setPickerOpen(false), 220);
+  }, [isTouchDevice]);
+
+  /** The post's most-used reaction, which leads on the card ahead of the thumb. */
+  const topReaction = resolveTopReaction(localReactionCounts);
+  /** Viewer's own reaction wins over the post's; falls back to the plain thumb. */
+  const leadReaction = myReaction ?? topReaction;
+  /**
+   * Runners-up shown next to the count, so a post that is mostly 🔥 with some
+   * 😂 reads as both. like/dislike are excluded: each already has its own
+   * button and count in this row, and echoing them here would put a 👎 beside
+   * the like count of every post that has ever been disliked.
+   */
+  const reactionSummary = topReactions(localReactionCounts, 4)
+    .filter((key) => key !== 'like' && key !== 'dislike' && key !== leadReaction)
+    .slice(0, 2);
 
   const handleCopyLink = () => {
     const url = postId
@@ -611,21 +784,78 @@ export function ActionBar({
         <span className="text-xs text-zinc-400">{formatCount(commentCount)}</span>
       </button>
 
-      {/* Like — furthest right for easy thumb reach */}
-      <motion.button
-        onClick={() => handleVote(true)}
-        className={cn(
-          "flex items-center gap-0.5 transition-colors text-white",
-          isVoting && "opacity-50"
-        )}
-        aria-label="Like"
-        disabled={isVoting}
-        animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
-        transition={{ duration: 0.3, ease: "easeOut" }}
+      {/* Reactions — furthest right for easy thumb reach. Tap the thumb to
+          like/unlike, hold (or hover on desktop) to pick one of the nine. On
+          your own posts the tray ends in an ⓘ that opens the breakdown of who
+          reacted what; the count itself is inert text, since who reacted is
+          not public. The wrapper is `relative` so the tray anchors to it. */}
+      <span
+        className={cn("relative flex items-center gap-0.5", isVoting && "opacity-50")}
+        onMouseEnter={handleReactionAreaEnter}
+        onMouseLeave={handleReactionAreaLeave}
       >
-        <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />
+        <ReactionPicker
+          open={pickerOpen}
+          current={myReaction}
+          onSelect={handleReaction}
+          onClose={() => setPickerOpen(false)}
+          align="right"
+          onShowInfo={
+            canViewReactionInfo
+              ? () => {
+                  setPickerOpen(false);
+                  setReactionInfoOpen(true);
+                }
+              : undefined
+          }
+        />
+        <motion.button
+          onClick={(e) => {
+            e.stopPropagation();
+            // The click that ends a hold must not also cast a like.
+            if (longPressFired.current) { longPressFired.current = false; return; }
+            handleVote(true);
+          }}
+          onPointerDown={startLongPress}
+          onPointerUp={cancelLongPress}
+          onPointerLeave={cancelLongPress}
+          onPointerCancel={cancelLongPress}
+          // Holding an element on touch otherwise pops the OS text/callout menu.
+          onContextMenu={(e) => { if (reactionsEnabled) e.preventDefault(); }}
+          className="flex items-center transition-colors text-white select-none touch-none"
+          aria-label={
+            myReaction
+              ? `${reactionMeta(myReaction).label} — hold to change your reaction`
+              : 'Like — hold to react'
+          }
+          aria-haspopup={reactionsEnabled ? 'menu' : undefined}
+          aria-expanded={reactionsEnabled ? pickerOpen : undefined}
+          disabled={isVoting}
+          animate={justVoted === 'like' ? { scale: [1, 1.3, 1] } : {}}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+        >
+          {leadReaction && leadReaction !== 'like' ? (
+            <span
+              className="text-[1.05rem] leading-none w-5 h-5 flex items-center justify-center"
+              aria-hidden="true"
+            >
+              {reactionMeta(leadReaction).emoji}
+            </span>
+          ) : (
+            <ThumbsUp className={cn("w-5 h-5", isLiked && "fill-current")} />
+          )}
+        </motion.button>
+        {reactionSummary.length > 0 && (
+          <span className="flex items-center -space-x-1 mr-0.5" aria-hidden="true">
+            {reactionSummary.map((key) => (
+              <span key={key} className="text-[0.7rem] leading-none">
+                {reactionMeta(key).emoji}
+              </span>
+            ))}
+          </span>
+        )}
         <span className="text-xs text-zinc-400">{formatCount(localLikeCount)}</span>
-      </motion.button>
+      </span>
     </>
   );
 
@@ -701,6 +931,16 @@ export function ActionBar({
       {canSendInDm && dmShareOpen && (
         <Suspense fallback={null}>
           <SharePostToDmModal open={dmShareOpen} onOpenChange={setDmShareOpen} tokenId={tokenId!} />
+        </Suspense>
+      )}
+
+      {canViewReactionInfo && reactionInfoOpen && (
+        <Suspense fallback={null}>
+          <ReactionInfoDrawer
+            open={reactionInfoOpen}
+            onOpenChange={setReactionInfoOpen}
+            tokenId={reactionInfoTokenId!}
+          />
         </Suspense>
       )}
     </div>
