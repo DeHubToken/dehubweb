@@ -458,7 +458,11 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
           ...(reference ? { sourceImage: reference.url } : {}),
         },
         {
-          prompt: prompt.trim() || preset?.sample || 'Untitled',
+          // No 'Untitled' fallback here, unlike image and video: a mesh made
+          // from a photo alone legitimately has no prompt, and the placeholder
+          // would end up as the card caption and the thumbnail's alt text.
+          // Empty lets both fall through to 'Generated 3D model'.
+          prompt: prompt.trim() || preset?.sample || '',
           resolvedPrompt,
           modelName: MODEL3D_MODELS[model3dModel]?.name ?? model3dModel,
           presetId: presetId ?? undefined,

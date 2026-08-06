@@ -295,7 +295,11 @@ function ResultCard({ job, onOpen }: { job: GenerationJob; onOpen: () => void })
         ))}
 
       <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent p-2 pt-6 text-left">
-        <span className="line-clamp-1 text-[10px] font-medium text-white/85">{job.prompt}</span>
+        {/* A mesh made from a photo alone has no prompt, so name it by what it
+            is rather than leaving the caption blank. */}
+        <span className="line-clamp-1 text-[10px] font-medium text-white/85">
+          {job.prompt || (job.kind === 'model3d' ? 'From a reference image' : '')}
+        </span>
       </span>
       <span
         data-keep-dark
@@ -510,7 +514,9 @@ function ResultViewer({
           </div>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3">
-            <p className="text-[13px] leading-relaxed text-white/75">{job.prompt}</p>
+            <p className="text-[13px] leading-relaxed text-white/75">
+              {job.prompt || (job.kind === 'model3d' ? 'Reconstructed from a reference image.' : '')}
+            </p>
             {/* Guarded on content, not just difference: an image-only mesh run
                 has no prompt at all, and an empty expander is noise. */}
             {!!job.resolvedPrompt && job.resolvedPrompt !== job.prompt && (
