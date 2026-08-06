@@ -41,7 +41,10 @@ export function MobileBottomBar() {
   useCloseOnSurfaceSwitch(useCallback(() => setPanel(null), [setPanel]));
 
   const tabs = selectedClipIds.length > 0 ? [...RAIL_TABS, INSPECTOR_TAB] : RAIL_TABS;
-  const openTab = tabs.find((t) => t.id === panel);
+  // Look the header up in the full set, not the selection-dependent one: an
+  // inspector sheet left open after the selection clears would otherwise render
+  // with an empty title.
+  const openTab = [...RAIL_TABS, INSPECTOR_TAB].find((t) => t.id === panel);
 
   // The shared default of 'design' is right for the docked column but wrong
   // here: it would throw a sheet over three quarters of the screen the moment
