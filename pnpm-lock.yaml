@@ -14,6 +14,9 @@ importers:
       '@hookform/resolvers':
         specifier: ^3.10.0
         version: 3.10.0(react-hook-form@7.71.1(react@18.3.1))
+      '@lovable.dev/cloud-auth-js':
+        specifier: ^1.1.2
+        version: 1.1.2
       '@lovable.dev/mcp-js':
         specifier: ^0.20.0
         version: 0.20.0(vite@5.4.21(@types/node@22.19.7))(zod@3.25.76)
@@ -124,7 +127,7 @@ importers:
         version: 5.90.20(react@18.3.1)
       '@toruslabs/base-controllers':
         specifier: ^8.17.0
-        version: 8.17.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
+        version: 8.17.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
       '@types/dompurify':
         specifier: ^3.2.0
         version: 3.2.0
@@ -148,19 +151,19 @@ importers:
         version: 2.23.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       '@web3auth/account-abstraction-provider':
         specifier: ^9.7.0
-        version: 9.7.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
+        version: 9.7.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       '@web3auth/base':
         specifier: ^9.7.0
-        version: 9.7.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+        version: 9.7.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@web3auth/ethereum-provider':
         specifier: 9.7.0
-        version: 9.7.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
+        version: 9.7.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       '@web3auth/modal':
         specifier: 10.5.6
-        version: 10.5.6(@babel/runtime@7.28.6)(@coinbase/wallet-sdk@4.3.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(@sentry/core@9.47.1)(@solana/web3.js@1.98.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))(bufferutil@4.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.9.3)(utf-8-validate@5.0.10)(viem@2.44.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(zod@3.25.76)
+        version: 10.5.6(@babel/runtime@7.29.7)(@coinbase/wallet-sdk@4.3.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(@sentry/core@9.47.1)(@solana/web3.js@1.98.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))(bufferutil@4.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.9.3)(utf-8-validate@5.0.10)(viem@2.44.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(zod@3.25.76)
       '@web3auth/no-modal':
         specifier: 10.5.6
-        version: 10.5.6(@babel/runtime@7.28.6)(@coinbase/wallet-sdk@4.3.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(react@18.3.1)(typescript@5.9.3)(utf-8-validate@5.0.10)(viem@2.44.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(zod@3.25.76)
+        version: 10.5.6(@babel/runtime@7.29.7)(@coinbase/wallet-sdk@4.3.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(react@18.3.1)(typescript@5.9.3)(utf-8-validate@5.0.10)(viem@2.44.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(zod@3.25.76)
       agora-rtc-sdk-ng:
         specifier: ^4.24.2
         version: 4.24.2
@@ -194,6 +197,9 @@ importers:
       fuse.js:
         specifier: ^7.4.2
         version: 7.4.2
+      hash-wasm:
+        specifier: ^4.12.0
+        version: 4.12.0
       hls.js:
         specifier: ^1.6.15
         version: 1.6.15
@@ -258,8 +264,8 @@ importers:
         specifier: ^2.1.9
         version: 2.1.9(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react-router-dom:
-        specifier: ^6.30.1
-        version: 6.30.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^7.0.0
+        version: 7.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       recharts:
         specifier: ^2.15.4
         version: 2.15.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -303,6 +309,9 @@ importers:
       '@tailwindcss/typography':
         specifier: ^0.5.16
         version: 0.5.19(tailwindcss@3.4.19)
+      '@testing-library/dom':
+        specifier: ^10.4.1
+        version: 10.4.1
       '@testing-library/jest-dom':
         specifier: ^6.9.1
         version: 6.9.1
@@ -362,7 +371,10 @@ importers:
         version: 5.4.21(@types/node@22.19.7)
       vitest:
         specifier: ^3.2.4
-        version: 3.2.4(@types/debug@4.1.12)(@types/node@22.19.7)(jsdom@20.0.3(bufferutil@4.1.0)(utf-8-validate@5.0.10))
+        version: 3.2.4(@types/debug@4.1.13)(@types/node@22.19.7)(jsdom@20.0.3(bufferutil@4.1.0)(utf-8-validate@5.0.10))
+      wrangler:
+        specifier: ^4.112.0
+        version: 4.119.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
 
 packages:
 
@@ -388,16 +400,20 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@babel/code-frame@7.29.0':
-    resolution: {integrity: sha512-9NhCeYjq9+3uxgdtp20LSiJXJvN0FeCtNGpJxuMFZ1Kv3cWUNb6DOhJwUvcVCzKGR66cw4njwM6hrJLqgOwbcw==}
+  '@babel/code-frame@7.29.7':
+    resolution: {integrity: sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/helper-validator-identifier@7.28.5':
-    resolution: {integrity: sha512-qSs4ifwzKJSV39ucNjsvc6WVHs6b7S03sOh2OcHF9UHfVPqWWALUsNUVzhSBiItjRZoLHx7nIarVjqKVusUZ1Q==}
+  '@babel/helper-validator-identifier@7.29.7':
+    resolution: {integrity: sha512-qehxGkRj55h/ff8EMaJ+cYhyaKlHIxqYDn682wQD7RNp9UujOQsHog2uS0r2vzr4pW+sXf90NeeayjcNaX3fFg==}
     engines: {node: '>=6.9.0'}
 
   '@babel/runtime@7.28.6':
     resolution: {integrity: sha512-05WQkdpL9COIMz4LjTxGpPNCdlpyimKppYNoJ5Di5EUObifl8t4tuLuUBBZEpoLYOmfvIWrsp9fCl0HoPRVTdA==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.29.7':
+    resolution: {integrity: sha512-Nq8OhGWiZIZGV6hLHoyAKLLcJihP/xFeBMGJoUrxTX2psI8dCifzLhZISFb+VWS3wFMRDmCGw5R+dOySCqPLhw==}
     engines: {node: '>=6.9.0'}
 
   '@base-org/account@1.1.1':
@@ -408,6 +424,49 @@ packages:
 
   '@chaitanyapotti/register-service-worker@1.7.4':
     resolution: {integrity: sha512-+u78X4ljCleLy1okQMtYLTXGLHdFQcwai822xu3oHRTviKEIVkQTMNhCmbYTCiP24thY6AbH9g+c6p2LNU0pnA==}
+
+  '@cloudflare/kv-asset-handler@0.5.0':
+    resolution: {integrity: sha512-jxQYkj8dSIzc0cD6cMMNdOc1UVjqSqu8BZdor5s8cGjW2I8BjODt/kWPVdY+u9zj3ms75Q5qaZgnxUad83+eAg==}
+    engines: {node: '>=22.0.0'}
+
+  '@cloudflare/unenv-preset@2.16.1':
+    resolution: {integrity: sha512-ECxObrMfyTl5bhQf/lZCXwo5G6xX9IAUo+nDMKK4SZ8m4Jvvxp52vilxyySSWh2YTZz8+HQ07qGH/2rEom1vDw==}
+    peerDependencies:
+      unenv: 2.0.0-rc.24
+      workerd: '>1.20260305.0 <2.0.0-0'
+    peerDependenciesMeta:
+      workerd:
+        optional: true
+
+  '@cloudflare/workerd-darwin-64@1.20260801.1':
+    resolution: {integrity: sha512-wuJWbXpKvncJi1P0GKS+iYpN5tHdb7JPJJ/+6ZQe8zzovHHVMkLJPNBsgWpqeUhpM3g9qTwEKd2rglNKejuh5A==}
+    engines: {node: '>=16'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@cloudflare/workerd-darwin-arm64@1.20260801.1':
+    resolution: {integrity: sha512-kwoZiTpnhNrF3+APx84Q/oAqvJ3sU9yefGagwm/ASaH/2W19x0vghkW/r4qCoHCK0WW7EPugZ+aXjgPMRtlq1Q==}
+    engines: {node: '>=16'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@cloudflare/workerd-linux-64@1.20260801.1':
+    resolution: {integrity: sha512-r0vAxCZH+Jih9Unm1yoyiByPNWNgawcKciOHDm5Q37ZVGOkKLsT9AtLe3yLSaul76WrKqtf+JP2n0WW32VBLJg==}
+    engines: {node: '>=16'}
+    cpu: [x64]
+    os: [linux]
+
+  '@cloudflare/workerd-linux-arm64@1.20260801.1':
+    resolution: {integrity: sha512-zWgpdZtSozvIgzQNmQiDSF8yEOQJUkRAWNsDXXzAAoy+fCn8YUoSibj3mpFSbZRvbUldeBEaW6SCdC2VEMkhNQ==}
+    engines: {node: '>=16'}
+    cpu: [arm64]
+    os: [linux]
+
+  '@cloudflare/workerd-windows-64@1.20260801.1':
+    resolution: {integrity: sha512-2oQz+Ksu4ji6e/+ZoYX+tWQEcxAii2p7l+iR8kx48W1llMalaufAsmVxTlk+3/vrM7D3/2c0iK448e0UQTcIMg==}
+    engines: {node: '>=16'}
+    cpu: [x64]
+    os: [win32]
 
   '@coinbase/cdp-sdk@1.44.1':
     resolution: {integrity: sha512-O7sikX7gTZdF4xy9b0xAMPOKWk8z6E7an4EGVBukPdfChooBL15Zt6B8Wn5th/LC1V1nIf3J/tlTTQCJLkKZ6A==}
@@ -421,6 +480,10 @@ packages:
   '@coinbase/wallet-sdk@4.3.7':
     resolution: {integrity: sha512-z6e5XDw6EF06RqkeyEa+qD0dZ2ZbLci99vx3zwDY//XO8X7166tqKJrR2XlQnzVmtcUuJtCd5fCvr9Cu6zzX7w==}
 
+  '@cspotcode/source-map-support@0.8.1':
+    resolution: {integrity: sha512-IchNf6dN4tHoMFIn/7OE8LWZ19Y6q/67Bmf6vnGREv8RSbBVb9LPJxEcnwrcwX6ixSvaiGoomAUvu4YSxXrVgw==}
+    engines: {node: '>=12'}
+
   '@dimforge/rapier3d-compat@0.12.0':
     resolution: {integrity: sha512-uekIGetywIgopfD97oDL5PfeezkFpNhwlzlaEYNOA0N6ghdsOvh/HYjSMek5Q2O1PYvRSDFcqFVJl4r4ZBwOow==}
 
@@ -429,6 +492,9 @@ packages:
     engines: {bun: '>=1', deno: '>=2', node: '>=16'}
     peerDependencies:
       '@noble/ciphers': ^1.0.0
+
+  '@emnapi/runtime@1.11.3':
+    resolution: {integrity: sha512-Xz4Tpyki7XyrpbUK1jR1AhdAdaXyhhY4lZ3neLodmhpuWfy2PAQN5B46sAiU4liOXGLkHypn/qU+jvfWSCYYLA==}
 
   '@emotion/hash@0.9.2':
     resolution: {integrity: sha512-MyqliTZGuOm3+5ZRSaaBGP3USLw6+EGykkwZns2EPC5g8jJ4z9OrdZY9apkl3+UP9+sdz76YYkwCKP5gh8iY3g==}
@@ -451,6 +517,12 @@ packages:
     cpu: [ppc64]
     os: [aix]
 
+  '@esbuild/aix-ppc64@0.28.1':
+    resolution: {integrity: sha512-Svl7tq8k/08+p6CXPpRjQ1fKX+1odH/BQbb48fV6fj3CWHhsoIOoY87w1oHXm0qEpkIK3ZfVgp0hed3XBXzXMQ==}
+    engines: {node: '>=18'}
+    cpu: [ppc64]
+    os: [aix]
+
   '@esbuild/android-arm64@0.21.5':
     resolution: {integrity: sha512-c0uX9VAUBQ7dTDCjq+wdyGLowMdtR/GoC2U5IYk/7D1H1JYC0qseD7+11iMP2mRLN9RcCMRcjC4YMclCzGwS/A==}
     engines: {node: '>=12'}
@@ -465,6 +537,12 @@ packages:
 
   '@esbuild/android-arm64@0.27.7':
     resolution: {integrity: sha512-62dPZHpIXzvChfvfLJow3q5dDtiNMkwiRzPylSCfriLvZeq0a1bWChrGx/BbUbPwOrsWKMn8idSllklzBy+dgQ==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [android]
+
+  '@esbuild/android-arm64@0.28.1':
+    resolution: {integrity: sha512-34EGEbCIAgosYz6goLcopX6Mo7NyGv9tfwEM2/7Ce2VcVRk568iSvniGWcUXIy7wEDR1wzolcxcriFVrWYcwBg==}
     engines: {node: '>=18'}
     cpu: [arm64]
     os: [android]
@@ -487,6 +565,12 @@ packages:
     cpu: [arm]
     os: [android]
 
+  '@esbuild/android-arm@0.28.1':
+    resolution: {integrity: sha512-0k2F129Xdio1TdJfzJ8sy1Q47vUD2NnwdhiAf7drUN1EBTfPf4hsFCtmMgu/6m8JSzsBrlmVjudMBQqOfG8usQ==}
+    engines: {node: '>=18'}
+    cpu: [arm]
+    os: [android]
+
   '@esbuild/android-x64@0.21.5':
     resolution: {integrity: sha512-D7aPRUUNHRBwHxzxRvp856rjUHRFW1SdQATKXH2hqA0kAZb1hKmi02OpYRacl0TxIGz/ZmXWlbZgjwWYaCakTA==}
     engines: {node: '>=12'}
@@ -501,6 +585,12 @@ packages:
 
   '@esbuild/android-x64@0.27.7':
     resolution: {integrity: sha512-x5VpMODneVDb70PYV2VQOmIUUiBtY3D3mPBG8NxVk5CogneYhkR7MmM3yR/uMdITLrC1ml/NV1rj4bMJuy9MCg==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [android]
+
+  '@esbuild/android-x64@0.28.1':
+    resolution: {integrity: sha512-dbwY7ltSMDWsRatcRpCnES4F+im88OCUgGZjy52shC7GqHRE/cYlxNbB4Z4UpJswpcc4Qxd2oE/ufM0p61IKng==}
     engines: {node: '>=18'}
     cpu: [x64]
     os: [android]
@@ -523,6 +613,12 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
+  '@esbuild/darwin-arm64@0.28.1':
+    resolution: {integrity: sha512-TZbWkQY7kvTAXbXUT7uVACR5cMHsDiSz9z7ZKAX/RTq/WJEk3QyRr0wZpNhBDX+/0CtdqUIJlOiodQcta6tY3Q==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [darwin]
+
   '@esbuild/darwin-x64@0.21.5':
     resolution: {integrity: sha512-se/JjF8NlmKVG4kNIuyWMV/22ZaerB+qaSi5MdrXtd6R08kvs2qCN4C09miupktDitvh8jRFflwGFBQcxZRjbw==}
     engines: {node: '>=12'}
@@ -537,6 +633,12 @@ packages:
 
   '@esbuild/darwin-x64@0.27.7':
     resolution: {integrity: sha512-rYnXrKcXuT7Z+WL5K980jVFdvVKhCHhUwid+dDYQpH+qu+TefcomiMAJpIiC2EM3Rjtq0sO3StMV/+3w3MyyqQ==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@esbuild/darwin-x64@0.28.1':
+    resolution: {integrity: sha512-zfdzgK9ACBNZLI/CyHTOx81SyNbM6YXn7rxSgX97VjyiPl9W1i4Ka4fgKECEoFCKGpvBj5qArWIGgQjOwkgskQ==}
     engines: {node: '>=18'}
     cpu: [x64]
     os: [darwin]
@@ -559,6 +661,12 @@ packages:
     cpu: [arm64]
     os: [freebsd]
 
+  '@esbuild/freebsd-arm64@0.28.1':
+    resolution: {integrity: sha512-wG2EA8ENdEI0qhkSZMjfqrdY+ziCYCPMmtZjjIwOmXFjmyzEHn+UUxk5of+SYsjtfs3VpnlC7QLzSI5hY/rOAw==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [freebsd]
+
   '@esbuild/freebsd-x64@0.21.5':
     resolution: {integrity: sha512-J95kNBj1zkbMXtHVH29bBriQygMXqoVQOQYA+ISs0/2l3T9/kj42ow2mpqerRBxDJnmkUDCaQT/dfNXWX/ZZCQ==}
     engines: {node: '>=12'}
@@ -573,6 +681,12 @@ packages:
 
   '@esbuild/freebsd-x64@0.27.7':
     resolution: {integrity: sha512-jOBDK5XEjA4m5IJK3bpAQF9/Lelu/Z9ZcdhTRLf4cajlB+8VEhFFRjWgfy3M1O4rO2GQ/b2dLwCUGpiF/eATNQ==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [freebsd]
+
+  '@esbuild/freebsd-x64@0.28.1':
+    resolution: {integrity: sha512-i7dZ9vQgnvSCzi/rYCXNgtF/U+eKZNJBzu3eTQbRgHnM7tNSizLOkRFAl3qzVc/Op/u5YkHHa4pf/3DOYHthLQ==}
     engines: {node: '>=18'}
     cpu: [x64]
     os: [freebsd]
@@ -595,6 +709,12 @@ packages:
     cpu: [arm64]
     os: [linux]
 
+  '@esbuild/linux-arm64@0.28.1':
+    resolution: {integrity: sha512-yHs+0uc8+nvEAfAfxrWQKK5peSNzBc4PegcMO0EJ2hT71uA7vB8Ihg2e77R2P7SG5uYjPbHlLLmve4LLLRCf0g==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [linux]
+
   '@esbuild/linux-arm@0.21.5':
     resolution: {integrity: sha512-bPb5AHZtbeNGjCKVZ9UGqGwo8EUu4cLq68E95A53KlxAPRmUyYv2D6F0uUI65XisGOL1hBP5mTronbgo+0bFcA==}
     engines: {node: '>=12'}
@@ -609,6 +729,12 @@ packages:
 
   '@esbuild/linux-arm@0.27.7':
     resolution: {integrity: sha512-RkT/YXYBTSULo3+af8Ib0ykH8u2MBh57o7q/DAs3lTJlyVQkgQvlrPTnjIzzRPQyavxtPtfg0EopvDyIt0j1rA==}
+    engines: {node: '>=18'}
+    cpu: [arm]
+    os: [linux]
+
+  '@esbuild/linux-arm@0.28.1':
+    resolution: {integrity: sha512-qVXBOHQS+d5Y722GwJzJUtOLlX7km3CraOaGormF1pDtPd2C/l1SHRPgjLunLGe51Sh5YYWKMFDyV4SxgMQYTQ==}
     engines: {node: '>=18'}
     cpu: [arm]
     os: [linux]
@@ -631,6 +757,12 @@ packages:
     cpu: [ia32]
     os: [linux]
 
+  '@esbuild/linux-ia32@0.28.1':
+    resolution: {integrity: sha512-d1z4ZuP0ajrfz/FhGT4vv278rX8KnPPJx8i5+AtK7TYbx9Le9F1hyzurZpkEyjkGa9dUGhQow4C1NmeGvqxN2w==}
+    engines: {node: '>=18'}
+    cpu: [ia32]
+    os: [linux]
+
   '@esbuild/linux-loong64@0.21.5':
     resolution: {integrity: sha512-uHf1BmMG8qEvzdrzAqg2SIG/02+4/DHB6a9Kbya0XDvwDEKCoC8ZRWI5JJvNdUjtciBGFQ5PuBlpEOXQj+JQSg==}
     engines: {node: '>=12'}
@@ -645,6 +777,12 @@ packages:
 
   '@esbuild/linux-loong64@0.27.7':
     resolution: {integrity: sha512-a4POruNM2oWsD4WKvBSEKGIiWQF8fZOAsycHOt6JBpZ+JN2n2JH9WAv56SOyu9X5IqAjqSIPTaJkqN8F7XOQ5Q==}
+    engines: {node: '>=18'}
+    cpu: [loong64]
+    os: [linux]
+
+  '@esbuild/linux-loong64@0.28.1':
+    resolution: {integrity: sha512-M5sRjUVZrkm1OAPR3dlOYzNmN+loZKGVi1VUQGrwuqLcbR6qeAz+famMhjASeH3YVKvZz+zT1jlh/keC3Rj/lg==}
     engines: {node: '>=18'}
     cpu: [loong64]
     os: [linux]
@@ -667,6 +805,12 @@ packages:
     cpu: [mips64el]
     os: [linux]
 
+  '@esbuild/linux-mips64el@0.28.1':
+    resolution: {integrity: sha512-mRObBZeHh2OxcBFPWE/FjylkRgZdYuiTR3vaTozquCGOH14iP9oN4x4Ge81CoIDYQrXmIxpFumJBu5MtZpnQJQ==}
+    engines: {node: '>=18'}
+    cpu: [mips64el]
+    os: [linux]
+
   '@esbuild/linux-ppc64@0.21.5':
     resolution: {integrity: sha512-1hHV/Z4OEfMwpLO8rp7CvlhBDnjsC3CttJXIhBi+5Aj5r+MBvy4egg7wCbe//hSsT+RvDAG7s81tAvpL2XAE4w==}
     engines: {node: '>=12'}
@@ -681,6 +825,12 @@ packages:
 
   '@esbuild/linux-ppc64@0.27.7':
     resolution: {integrity: sha512-gRsL4x6wsGHGRqhtI+ifpN/vpOFTQtnbsupUF5R5YTAg+y/lKelYR1hXbnBdzDjGbMYjVJLJTd2OFmMewAgwlQ==}
+    engines: {node: '>=18'}
+    cpu: [ppc64]
+    os: [linux]
+
+  '@esbuild/linux-ppc64@0.28.1':
+    resolution: {integrity: sha512-slScBsMAb3GFDcdrCgLwZtPYRoH2H/youv10QiZyRjmsP48fznoveWytSgCI/R0ZcUgpc0ZhIUEx6LHts8yrfQ==}
     engines: {node: '>=18'}
     cpu: [ppc64]
     os: [linux]
@@ -703,6 +853,12 @@ packages:
     cpu: [riscv64]
     os: [linux]
 
+  '@esbuild/linux-riscv64@0.28.1':
+    resolution: {integrity: sha512-kw0owk1o0GFETUJyW0jc0G4Yzs0BHZn0JDZ8JRT088vjJYX777BAs1fDGxAC+q831qOs2DTC96mNsG2opdfyyQ==}
+    engines: {node: '>=18'}
+    cpu: [riscv64]
+    os: [linux]
+
   '@esbuild/linux-s390x@0.21.5':
     resolution: {integrity: sha512-zus5sxzqBJD3eXxwvjN1yQkRepANgxE9lgOW2qLnmr8ikMTphkjgXu1HR01K4FJg8h1kEEDAqDcZQtbrRnB41A==}
     engines: {node: '>=12'}
@@ -717,6 +873,12 @@ packages:
 
   '@esbuild/linux-s390x@0.27.7':
     resolution: {integrity: sha512-2k8go8Ycu1Kb46vEelhu1vqEP+UeRVj2zY1pSuPdgvbd5ykAw82Lrro28vXUrRmzEsUV0NzCf54yARIK8r0fdw==}
+    engines: {node: '>=18'}
+    cpu: [s390x]
+    os: [linux]
+
+  '@esbuild/linux-s390x@0.28.1':
+    resolution: {integrity: sha512-/lAIjX8aYFRByhh6L5rYtPEDRqa9de/4V/juOXcta5frjvzXO4/sqEtyytse0g3zZFuWu5cDN0MkLz2qRDD2Ag==}
     engines: {node: '>=18'}
     cpu: [s390x]
     os: [linux]
@@ -739,6 +901,12 @@ packages:
     cpu: [x64]
     os: [linux]
 
+  '@esbuild/linux-x64@0.28.1':
+    resolution: {integrity: sha512-u/anNYF2mmVOEDwLtnQ1wOr3EZ9sTNGLWrsYGYwHWzGA3Si84IOkHXlbWTD1NB+9/1lcnweYKO54uhxZydNzfA==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [linux]
+
   '@esbuild/netbsd-arm64@0.25.12':
     resolution: {integrity: sha512-xXwcTq4GhRM7J9A8Gv5boanHhRa/Q9KLVmcyXHCTaM4wKfIpWkdXiMog/KsnxzJ0A1+nD+zoecuzqPmCRyBGjg==}
     engines: {node: '>=18'}
@@ -747,6 +915,12 @@ packages:
 
   '@esbuild/netbsd-arm64@0.27.7':
     resolution: {integrity: sha512-b6pqtrQdigZBwZxAn1UpazEisvwaIDvdbMbmrly7cDTMFnw/+3lVxxCTGOrkPVnsYIosJJXAsILG9XcQS+Yu6w==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [netbsd]
+
+  '@esbuild/netbsd-arm64@0.28.1':
+    resolution: {integrity: sha512-oks0DYbLwWMmaakTsCb+zL4E+aHRVLom9IJZOAthMQEPiQmydXHkziYEsGYRx0uNV/IjEKGAV941JzH02pflqw==}
     engines: {node: '>=18'}
     cpu: [arm64]
     os: [netbsd]
@@ -769,6 +943,12 @@ packages:
     cpu: [x64]
     os: [netbsd]
 
+  '@esbuild/netbsd-x64@0.28.1':
+    resolution: {integrity: sha512-aeL6lAnN89Hz43Mlh1G8ARasbuoYvSITDEx0tHh5b7jJnHcssqgjy9Yx430GDpmCa6OyrKoS0aNRjKundRizGg==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [netbsd]
+
   '@esbuild/openbsd-arm64@0.25.12':
     resolution: {integrity: sha512-fF96T6KsBo/pkQI950FARU9apGNTSlZGsv1jZBAlcLL1MLjLNIWPBkj5NlSz8aAzYKg+eNqknrUJ24QBybeR5A==}
     engines: {node: '>=18'}
@@ -777,6 +957,12 @@ packages:
 
   '@esbuild/openbsd-arm64@0.27.7':
     resolution: {integrity: sha512-AFuojMQTxAz75Fo8idVcqoQWEHIXFRbOc1TrVcFSgCZtQfSdc1RXgB3tjOn/krRHENUB4j00bfGjyl2mJrU37A==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [openbsd]
+
+  '@esbuild/openbsd-arm64@0.28.1':
+    resolution: {integrity: sha512-MEFJe5C3R8pwXdZ5Y21oo6m7ePiS0d9pWucn99O/wvyJZChoIQKrQDxKrGeW8F5+T0okTHesAmDeiHDTIq0V/Q==}
     engines: {node: '>=18'}
     cpu: [arm64]
     os: [openbsd]
@@ -799,6 +985,12 @@ packages:
     cpu: [x64]
     os: [openbsd]
 
+  '@esbuild/openbsd-x64@0.28.1':
+    resolution: {integrity: sha512-i/ZLIOafE0Z8cI/XANJAixoJL/uRAoS2xOA3rb0xN+KK0K177cMAsQYkzHtBrtMXAKuAc7HGgcWiZ/sRC1Nxgw==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [openbsd]
+
   '@esbuild/openharmony-arm64@0.25.12':
     resolution: {integrity: sha512-rm0YWsqUSRrjncSXGA7Zv78Nbnw4XL6/dzr20cyrQf7ZmRcsovpcRBdhD43Nuk3y7XIoW2OxMVvwuRvk9XdASg==}
     engines: {node: '>=18'}
@@ -807,6 +999,12 @@ packages:
 
   '@esbuild/openharmony-arm64@0.27.7':
     resolution: {integrity: sha512-+KrvYb/C8zA9CU/g0sR6w2RBw7IGc5J2BPnc3dYc5VJxHCSF1yNMxTV5LQ7GuKteQXZtspjFbiuW5/dOj7H4Yw==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [openharmony]
+
+  '@esbuild/openharmony-arm64@0.28.1':
+    resolution: {integrity: sha512-ge+Z7EXFNt2BO1oAMsVpiQ8EwndV9i1xXerAeTIK7AtPs3bKFXQM7nlRxDSIUIMeueR1CNXxqztLzdNeReKBJg==}
     engines: {node: '>=18'}
     cpu: [arm64]
     os: [openharmony]
@@ -829,6 +1027,12 @@ packages:
     cpu: [x64]
     os: [sunos]
 
+  '@esbuild/sunos-x64@0.28.1':
+    resolution: {integrity: sha512-BEjgtECkL3vY+SaSQ6nzVfiALUeFxpawyp8Jmf5PtYhf1Ug40N1h/hxlhts+f1FvSvarEigdxS3BlSMI2PJLcQ==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [sunos]
+
   '@esbuild/win32-arm64@0.21.5':
     resolution: {integrity: sha512-Z0gOTd75VvXqyq7nsl93zwahcTROgqvuAcYDUr+vOv8uHhNSKROyU961kgtCD1e95IqPKSQKH7tBTslnS3tA8A==}
     engines: {node: '>=12'}
@@ -843,6 +1047,12 @@ packages:
 
   '@esbuild/win32-arm64@0.27.7':
     resolution: {integrity: sha512-7yRhbHvPqSpRUV7Q20VuDwbjW5kIMwTHpptuUzV+AA46kiPze5Z7qgt6CLCK3pWFrHeNfDd1VKgyP4O+ng17CA==}
+    engines: {node: '>=18'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@esbuild/win32-arm64@0.28.1':
+    resolution: {integrity: sha512-lCv9eK/H6ZJWbE7bh2nw54CZ9M2nupBxJcTsdk/QQnWkdSjKGuxmmH8/GWrlT1eMmZfn4dGcCjRte397WqfQXA==}
     engines: {node: '>=18'}
     cpu: [arm64]
     os: [win32]
@@ -865,6 +1075,12 @@ packages:
     cpu: [ia32]
     os: [win32]
 
+  '@esbuild/win32-ia32@0.28.1':
+    resolution: {integrity: sha512-zvb/mB2bSCoJOpoCBgYKKpX6YM6mJBlBUVUtVj41DlZJVEB6/0CKlRYxP5wWl1C1ILiCoAU5wZZ4q1P3qeS6Eg==}
+    engines: {node: '>=18'}
+    cpu: [ia32]
+    os: [win32]
+
   '@esbuild/win32-x64@0.21.5':
     resolution: {integrity: sha512-tQd/1efJuzPC6rCFwEvLtci/xNFcTZknmXs98FYDfGE4wP9ClFV98nyKrzJKVPMhdDnjzLhdUyMX4PsQAPjwIw==}
     engines: {node: '>=12'}
@@ -879,6 +1095,12 @@ packages:
 
   '@esbuild/win32-x64@0.27.7':
     resolution: {integrity: sha512-56hiAJPhwQ1R4i+21FVF7V8kSD5zZTdHcVuRFMW0hn753vVfQN8xlx4uOPT4xoGH0Z/oVATuR82AiqSTDIpaHg==}
+    engines: {node: '>=18'}
+    cpu: [x64]
+    os: [win32]
+
+  '@esbuild/win32-x64@0.28.1':
+    resolution: {integrity: sha512-bm4Mowrv+GXMlpWX++EcXw/iLyd1o3+bJkC2DkWXYVvgZCqD/bSj9ctZeAMC3cIxgjRVR2Dufaiu4YPxr5gW1A==}
     engines: {node: '>=18'}
     cpu: [x64]
     os: [win32]
@@ -1023,6 +1245,168 @@ packages:
     resolution: {integrity: sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ==}
     engines: {node: '>=18.18'}
 
+  '@img/colour@1.1.0':
+    resolution: {integrity: sha512-Td76q7j57o/tLVdgS746cYARfSyxk8iEfRxewL9h4OMzYhbW4TAcppl0mT4eyqXddh6L/jwoM75mo7ixa/pCeQ==}
+    engines: {node: '>=18'}
+
+  '@img/sharp-darwin-arm64@0.35.2':
+    resolution: {integrity: sha512-eEieHsMksAW4IiO5NzauESRl2D2qz3J/kwUxUrSfV06A93eEaRfMpHXyUb1mAqrR7i8U9A0GRqE9pjn6u1Jjpg==}
+    engines: {node: '>=20.9.0'}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@img/sharp-darwin-x64@0.35.2':
+    resolution: {integrity: sha512-BaktuGPCeHJMARpodR8jK4uKiZrPAy9WrfQW0sdI37clracq8Bp01AYS3SZgi5FS/y5twa9t4+LIuuxQjqRrWw==}
+    engines: {node: '>=20.9.0'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@img/sharp-freebsd-wasm32@0.35.2':
+    resolution: {integrity: sha512-YoAxdnd8hPUkvLHd3bWY+YA8nw3xM/RyRopYucNsWHVSan8NLVM3X2volsfoRDcXdUJPg6tXahSd7HXPK7lRnw==}
+    engines: {node: '>=20.9.0'}
+    os: [freebsd]
+
+  '@img/sharp-libvips-darwin-arm64@1.3.1':
+    resolution: {integrity: sha512-4V/M3roRMTYjiwZY9IOVQOE8OyeCxFAkYmyZDrZl51uOKjibm3oeEJ4WAmLxutAfzFbC9jqUiPs2gbnGflH+7g==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@img/sharp-libvips-darwin-x64@1.3.1':
+    resolution: {integrity: sha512-c0/DxItpJv2+dGhgycJBBgotdqruGYDvA79drdh0MD1dFpy7JzJ/PlXwi1H4rFf0eTy8tgbI91aHDnZIceY3jQ==}
+    cpu: [x64]
+    os: [darwin]
+
+  '@img/sharp-libvips-linux-arm64@1.3.1':
+    resolution: {integrity: sha512-JznefmcK9j1JKPz8AkQDh89kjojubyfOasWBPKfzMIhPwsgDy9evpE/naJTXXXmghS1iFwR8u/kTwh/I2/+GCw==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-libvips-linux-arm@1.3.1':
+    resolution: {integrity: sha512-aGGy9aWzXgHBG7HNyQPWorZthlp7+x6fDRoPAQbGO3ThcttuTyKIx3NuSHb6zb4gBNq6/yNn9f1cy9nFKS/Vmg==}
+    cpu: [arm]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-libvips-linux-ppc64@1.3.1':
+    resolution: {integrity: sha512-1EkwGNCZk6iWNCMWqrvdJ+r1j0PT1zIz60CNPhYnJlK/zyeWqlsPZIe+ocBVqPF8k/Ssee/NCk+tE9Ryrko6ng==}
+    cpu: [ppc64]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-libvips-linux-riscv64@1.3.1':
+    resolution: {integrity: sha512-Ilays+w2bXdnxzxtQdmXR62u8o8GYa3eL4+Gr+1KiE4xperMZUslRaVPJwwPkzlHEjGfXAfRVAa/7CYCtSqsBw==}
+    cpu: [riscv64]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-libvips-linux-s390x@1.3.1':
+    resolution: {integrity: sha512-VfBwVHQTbRoj4XlpA/KLZ7ltgMpz+4WSejFzQ+GnoImjo1PtEJ59QB2qR1xQEeRPYIkNrPIm2L4cICMvz4C2ew==}
+    cpu: [s390x]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-libvips-linux-x64@1.3.1':
+    resolution: {integrity: sha512-+c8ukgwU62DS54nCAjw7keOfHUkmr0B5QHEdcOqRnodF/MNXJbVI8Eopoj4B/0H8Asr65I+A4Amrn7a85/md6A==}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-libvips-linuxmusl-arm64@1.3.1':
+    resolution: {integrity: sha512-qlKb/pwbkAi1WMsJrYHk7CuDrd12s27U2QnRhFYUoJNrRCmkosMTttuRFat/DDB3IlDm5qE1TJgZ4JDnHX8Ldw==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@img/sharp-libvips-linuxmusl-x64@1.3.1':
+    resolution: {integrity: sha512-yO21HwoUVLN8Qa+/SBjQLMYwBWAVJjeGPNe+hc0OUeMeifEtJqu5a1c4HayE1nNpDih9y3/KkoltfkDodmKAlg==}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@img/sharp-linux-arm64@0.35.2':
+    resolution: {integrity: sha512-af12Pnd0ZGu2HfP8NayB0kk6eC/lrfbQE6HlR4jD+34wdJ1Vw9TF6TMn6ZvffT+WgqVsl0hRbmNvz2u/23VmwA==}
+    engines: {node: '>=20.9.0'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-linux-arm@0.35.2':
+    resolution: {integrity: sha512-SE4kzF2mepn6z+6E7L6lsV8FzuLL6IPQdyX8ZiwROAG/G8td+hP/m7FsFPwidtrF19gvajuC9l6TxAVcsA4S7A==}
+    engines: {node: '>=20.9.0'}
+    cpu: [arm]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-linux-ppc64@0.35.2':
+    resolution: {integrity: sha512-hYSBm7zcNtDCozCxQHYZJiu63b/bXsgRZuOxCIBZsStMM9Vap47iFHdbX4kCvQsblPB/k+clhELpdQJHQLSHvg==}
+    engines: {node: '>=20.9.0'}
+    cpu: [ppc64]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-linux-riscv64@0.35.2':
+    resolution: {integrity: sha512-qQt0Kc13+Hoan/Awq/qMSQw3L+RI1NCRPgD5cUJ/1WSSmIoysLOc72jlRM3E0OHN9Yr313jgeQ2T+zW+F03QFA==}
+    engines: {node: '>=20.9.0'}
+    cpu: [riscv64]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-linux-s390x@0.35.2':
+    resolution: {integrity: sha512-E4fLLfRPzDLlEeDaTzI98OFLcv++WL5ChLLMwPoVd0CIoZQqupBSNbOisPL5am9XsbQ9T84+iiMpUvbFtkunbA==}
+    engines: {node: '>=20.9.0'}
+    cpu: [s390x]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-linux-x64@0.35.2':
+    resolution: {integrity: sha512-gi0zFJJRLswfCZmHtJdikXPOc5u7qamSOS3NHedLqLd4W8Q0NqjdBr6TTRIgsfFjqfTsHFgdfvJ9LwqSgcHiAA==}
+    engines: {node: '>=20.9.0'}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@img/sharp-linuxmusl-arm64@0.35.2':
+    resolution: {integrity: sha512-siWbOW1u6HFnFLrp0waKyW7VEf7jYvcDWdrXEFa8AkdAQgEvuu5Fz8/Y70w9EeqAdwDtfU012BhEHHaDqvQNzg==}
+    engines: {node: '>=20.9.0'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [musl]
+
+  '@img/sharp-linuxmusl-x64@0.35.2':
+    resolution: {integrity: sha512-YBqMMcjDi4QGYiSn4vNOYBhmlC4z5AXqkOUUqI2e0AFA4urNv4ESgOgwNl3K+4etQhha0twXlzeF20bbULm9Yg==}
+    engines: {node: '>=20.9.0'}
+    cpu: [x64]
+    os: [linux]
+    libc: [musl]
+
+  '@img/sharp-wasm32@0.35.2':
+    resolution: {integrity: sha512-Mrv4JQNYVQ94xH+jzZ9r+gowleN8mv2FTgKT+PI6bx5C0G8TdNYndu161pg2i7uoBwxy2ImPMHrJOM2LZef7Bw==}
+    engines: {node: '>=20.9.0'}
+
+  '@img/sharp-webcontainers-wasm32@0.35.2':
+    resolution: {integrity: sha512-QNV27pxs9wpApEiCfvHM1RDoP1w1+2KrUWWDPEhEwg+latvOrfuhWrHWZKwdSFwU6jh3myjw/yOCRsUIuOft3g==}
+    engines: {node: '>=20.9.0'}
+    cpu: [wasm32]
+
+  '@img/sharp-win32-arm64@0.35.2':
+    resolution: {integrity: sha512-BiVRYc/t6/Vl3e1hBx0hugG4oN9Pydf4fgMSpxTQJmwGUg/YoXTWHiFeRymHfCZzifxu4F4rpk/I67D0LQ20wQ==}
+    engines: {node: '>=20.9.0'}
+    cpu: [arm64]
+    os: [win32]
+
+  '@img/sharp-win32-ia32@0.35.2':
+    resolution: {integrity: sha512-YYEhx9PImCC7T0tI8JDMi4DB9LwLCXCU5OWNYEXAxh5Q1ShKkyC6byxzoBJ3gEFDnH2lQckWuDe70G7mB2XJog==}
+    engines: {node: ^20.9.0}
+    cpu: [ia32]
+    os: [win32]
+
+  '@img/sharp-win32-x64@0.35.2':
+    resolution: {integrity: sha512-imoOyBcoM/iiUr4J6VPpCNjPnjvP/Gks95898yB8YqoGGYmHYbOyCuNv9FMhFgtaiHFGbHW8bxKqRV6VjtXThQ==}
+    engines: {node: '>=20.9.0'}
+    cpu: [x64]
+    os: [win32]
+
   '@jridgewell/gen-mapping@0.3.13':
     resolution: {integrity: sha512-2kkt/7niJ6MgEPxF0bYdQ6etZaA+fQvDcLKckhy1yIQOzaoKjBBjSj63/aLVjYE3qhRt5dvM+uUyfCg6UKCBbA==}
 
@@ -1035,6 +1419,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@jridgewell/trace-mapping@0.3.9':
+    resolution: {integrity: sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ==}
 
   '@lit-labs/ssr-dom-shim@1.5.1':
     resolution: {integrity: sha512-Aou5UdlSpr5whQe8AA/bZG0jMj96CoJIWbGfZ91qieWu5AWUMKw8VR/pAkQkJYvBNhmCcWnZlyyk5oze8JIqYA==}
@@ -1049,6 +1436,9 @@ packages:
 
   '@lit/reactive-element@2.1.2':
     resolution: {integrity: sha512-pbCDiVMnne1lYUIaYNN5wrwQXDtHaYtg7YEFPeW+hws6U47WeFvISGUWekPGKWOP1ygrs0ef0o1VJMk1exos5A==}
+
+  '@lovable.dev/cloud-auth-js@1.1.2':
+    resolution: {integrity: sha512-xz8ocewsgwkp8giau272/eWWU3XrchCg5uba4yQPPYtevHTXaVU3sD+fO1JjyPBHacVcOcwhmgUiU9TKHt63cg==}
 
   '@lovable.dev/mcp-js@0.20.0':
     resolution: {integrity: sha512-NYlJ5/2qIBtGlQPb/IoaNHprhGgR06x6JTtp8RmyMfVQ1yHjBWzt9G0rHuj0kepRbH3984RX9GRzc7/2+21KcA==}
@@ -1162,6 +1552,10 @@ packages:
   '@metamask/superstruct@3.2.1':
     resolution: {integrity: sha512-fLgJnDOXFmuVlB38rUN5SmU7hAFQcCjrg3Vrxz67KTY7YHFnSNEKvX4avmEBdOI0yTCxZjwMCFEqsC8k2+Wd3g==}
     engines: {node: '>=16.0.0'}
+
+  '@metamask/utils@11.11.0':
+    resolution: {integrity: sha512-0nF2CWjWQr/m0Y2t2lJnBTU1/CZPPTvKvcESLplyWe/tyeb8zFOi/FeneDmaFnML6LYRIGZU6f+xR0jKAIUZfw==}
+    engines: {node: ^18.18 || ^20.14 || >=22}
 
   '@metamask/utils@11.9.0':
     resolution: {integrity: sha512-wRnoSDD9jTWOge/+reFviJQANhS+uy8Y+OEwRanp5mQeGTjBFmK1r2cTOnei2UCZRV1crXHzeJVSFEoDDcgRbA==}
@@ -1307,6 +1701,15 @@ packages:
 
   '@phosphor-icons/webcomponents@2.1.5':
     resolution: {integrity: sha512-JcvQkZxvcX2jK+QCclm8+e8HXqtdFW9xV4/kk2aL9Y3dJA2oQVt+pzbv1orkumz3rfx4K9mn9fDoMr1He1yr7Q==}
+
+  '@poppinss/colors@4.1.6':
+    resolution: {integrity: sha512-H9xkIdFswbS8n1d6vmRd8+c10t2Qe+rZITbbDHHkQixH5+2x1FDGmi/0K+WgWiqQFKPSlIYB7jlH6Kpfn6Fleg==}
+
+  '@poppinss/dumper@0.6.5':
+    resolution: {integrity: sha512-NBdYIb90J7LfOI32dOewKI1r7wnkiH6m920puQ3qHUeZkxNkQiFnXVWoE6YtFSv6QOiPPf7ys6i+HWWecDz7sw==}
+
+  '@poppinss/exception@1.2.3':
+    resolution: {integrity: sha512-dCED+QRChTVatE9ibtoaxc+WkdzOSjYTKi/+uacHWIsfodVfpsueo3+DKpgU5Px8qXjgmXkSvhXvSCz3fnP9lw==}
 
   '@radix-ui/number@1.1.1':
     resolution: {integrity: sha512-MkKCwxlXTgz6CFoJx3pCwn07GKp36+aZyu/u2Ln2VrA5DcdyCZkASEDBTd8x5whTQQL5CiYf4prXKLcgQdv29g==}
@@ -1987,10 +2390,6 @@ packages:
       viem: 2.x
       wagmi: ^2.9.0
 
-  '@remix-run/router@1.23.2':
-    resolution: {integrity: sha512-Ic6m2U/rMjTkhERIa/0ZtXJP17QUi2CbWE7cqx4J58M8aA3QTfW+2UlQ4psvTX9IO1RfNVhK3pcpdjej7L+t2w==}
-    engines: {node: '>=14.0.0'}
-
   '@reown/appkit-common@1.7.8':
     resolution: {integrity: sha512-ridIhc/x6JOp7KbDdwGKY4zwf8/iK8EYBl+HtWrruutSLwZyVi5P8WaZa+8iajL6LcDcDF7LoyLwMTym7SRuwQ==}
 
@@ -2251,6 +2650,10 @@ packages:
 
   '@sentry/core@9.47.1':
     resolution: {integrity: sha512-KX62+qIt4xgy8eHKHiikfhz2p5fOciXd0Cl+dNzhgPFq8klq4MGMNaf148GB3M/vBqP4nw/eFvRMAayFCgdRQw==}
+    engines: {node: '>=18'}
+
+  '@sindresorhus/is@7.2.0':
+    resolution: {integrity: sha512-P1Cz1dWaFfR4IR+U13mqqiGsLFf1KbayybWwdd2vfctdV6hDpUkgCY0nKOLLTMSoRd/jJNjtbqzf13K8DCCXQw==}
     engines: {node: '>=18'}
 
   '@socket.io/component-emitter@3.1.2':
@@ -2651,6 +3054,9 @@ packages:
   '@solana/web3.js@1.98.4':
     resolution: {integrity: sha512-vv9lfnvjUsRiq//+j5pBdXig0IQdtzA0BRZ3bXEP4KaIyF1CcaydWqgyzQgfZMNIsWNWmG+AUHwPy4AHOD6gpw==}
 
+  '@speed-highlight/core@1.2.23':
+    resolution: {integrity: sha512-iRoq6i6JDJP6Mt2A5JaPvzw0pgYHH6k92ij+yXiTrB7T2y9N789aWE3EHWj/5ztlJBokcCBja3iYLVdu5wgnkg==}
+
   '@stripe/react-stripe-js@6.2.0':
     resolution: {integrity: sha512-GSCErjljZEQv9LaxP30xGOwstcMyyUzb5JyihXwvjOU95yrfhbiPG4K2KkwxYxn+WY0/AyHsRhPPoGRw7urBzg==}
     peerDependencies:
@@ -2985,6 +3391,9 @@ packages:
   '@types/connect@3.4.38':
     resolution: {integrity: sha512-K6uROf1LD88uDQqJCktA4yzL1YYAK6NgfsI0v/mTgyPKWsX1CnJ0XPSDhViejru1GcRkLWb8RlzFYJRqGUbaug==}
 
+  '@types/cookie@0.6.0':
+    resolution: {integrity: sha512-4Kh9a6B2bQciAhf7FSuMRRkUWecJgJu9nPnx3yzpsfXX/c50REIqpHY4C82bXP90qrLtXtkDxTZosYO3UpOwlA==}
+
   '@types/d3-array@3.2.2':
     resolution: {integrity: sha512-hOLWVbm7uRza0BYXpIIW5pxfrKe0W+D5lrFiAEYR+pb6w3N2SwSMaJbXdUfSEv+dT4MfHBLtn5js0LAWaO6otw==}
 
@@ -3014,6 +3423,9 @@ packages:
 
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
+
+  '@types/debug@4.1.13':
+    resolution: {integrity: sha512-KSVgmQmzMwPlmtljOomayoR89W4FynCAi3E8PPs7vmDVPe84hT+vGPKkJfThkmXs0x0jAaa9U8uW8bbfyS2fWw==}
 
   '@types/deep-eql@4.0.2':
     resolution: {integrity: sha512-c9h9dVVMigMPc4bwTvC5dxqtqJZwQPePsWjPlpSOnojbor6pGqdk541lfA7AqFQr5pB1BRdq0juY9db81BwyFw==}
@@ -3726,14 +4138,20 @@ packages:
   bip39@3.1.0:
     resolution: {integrity: sha512-c9kiwdk45Do5GL0vJMe7tS95VjCii65mYAH7DfWl3uW8AVzXKQVUm64i3hzVybBDMp9r7j9iNxR85+ul8MdN/A==}
 
+  blake3-wasm@2.1.5:
+    resolution: {integrity: sha512-F1+K8EbfOZE49dtoPtmxUQrpXaBIl3ICvasLh+nJta0xkz+9kF/7uet9fLnwKqhDrmj6g+6K3Tw9yQPUg2ka5g==}
+
   blakejs@1.2.1:
     resolution: {integrity: sha512-QXUSXI3QVc/gJME0dBpXrag1kbzOqCjCX8/b54ntNyW6sjtoqxqRk3LTmXzaJoh71zMsDCjM+47jS7XiwN/+fQ==}
 
-  bn.js@4.12.2:
-    resolution: {integrity: sha512-n4DSx829VRTRByMRGdjQ9iqsN0Bh4OolPsFnaZBLcbi8iXcB+kJ9s7EnRt4wILZNV3kPLHkRVfOc/HvhC3ovDw==}
+  bn.js@4.12.5:
+    resolution: {integrity: sha512-3aRg6/JxfffFD+OlOjOFR3Vo79l39ooBTFucxx+MT3dhCtzn3EmiUPQo+6/OZuI2jbXi3YKgmiTFBgChQMwIRQ==}
 
   bn.js@5.2.2:
     resolution: {integrity: sha512-v2YAxEmKaBLahNwE1mjp4WON6huMNeuDvagFZW+ASCuA/ku0bXR9hSMw0XpiqMoA3+rmnyck/tPRSFQkoC9Cuw==}
+
+  bn.js@5.2.5:
+    resolution: {integrity: sha512-Vq886eXykuP5E6HcKSSStP3bJgrE6In5WKxVUvJ8XGpWWYs2xZHWqUwzCtGgEtBcxyd57KBFDPFoUfNzdaHCNg==}
 
   body-parser@2.3.0:
     resolution: {integrity: sha512-2cGmJupaNgg+QUwVLAucDuWuoMZ6EX9iHDRswZ5lsNYEmwPaRknMPCLZz07yTzVq/83p4o/wzbDZbBrTvGGTIw==}
@@ -3956,6 +4374,10 @@ packages:
   cookie@0.7.2:
     resolution: {integrity: sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==}
     engines: {node: '>= 0.6'}
+
+  cookie@1.1.1:
+    resolution: {integrity: sha512-ei8Aos7ja0weRpFzJnEA9UHJ/7XQmqglbRwnf2ATjcB9Wq874VKH9kfjjirM6UhU2/E5fFYadylyhFldcqSidQ==}
+    engines: {node: '>=18'}
 
   copy-to-clipboard@3.3.3:
     resolution: {integrity: sha512-2KV8NhB5JqC3ky0r9PMCAZKbUHSwtEo4CwCs0KXgruG43gX5PMqDEBbVU4OUzw2MuAWUfsuFmWvEKG5QRfSnJA==}
@@ -4193,6 +4615,10 @@ packages:
   detect-browser@5.3.0:
     resolution: {integrity: sha512-53rsFbGdwMwlF7qvCt0ypLM5V5/Mbl0szB7GPN8y9NCcbknYOeVVXdrXEq+90IwAfrrzt6Hd+u2E2ntakICU8w==}
 
+  detect-libc@2.1.2:
+    resolution: {integrity: sha512-Btj2BOOO83o3WyH59e8MgXsxEQVcarkUOpEYrubB0urwnN10yQ364rsiByU11nZlqWYZm05i/of7io4mzihBtQ==}
+    engines: {node: '>=8'}
+
   detect-node-es@1.1.0:
     resolution: {integrity: sha512-ypdmJU/TbBby2Dxibuv7ZLW3Bs1QEmM7nHjEANfohJLvE0XVujisn1qPJcZxg+qDucsr+bP6fLD1rPS3AhJ7EQ==}
 
@@ -4289,6 +4715,9 @@ packages:
     resolution: {integrity: sha512-aN97NXWF6AWBTahfVOIrB/NShkzi5H7F9r1s9mD3cDj4Ko5f2qhhVoYMibXF7GlLveb/D2ioWay8lxI97Ven3g==}
     engines: {node: '>=0.12'}
 
+  error-stack-parser-es@1.0.5:
+    resolution: {integrity: sha512-5qucVt2XcuGMcEGgWI7i+yZpmpByQ8J1lHhcL7PwqCwu9FPP3VUXzT4ltHe5i2z9dePwEHcDVOAfSnHsOlCXRA==}
+
   es-define-property@1.0.1:
     resolution: {integrity: sha512-e3nRfgfUZ4rNGL232gUgX06QNyyez04KdjFrF+LTRoOXmrOgFKDg4BCdsjW8EnT69eqdYGmRpJwiPVYNrCaW3g==}
     engines: {node: '>= 0.4'}
@@ -4335,6 +4764,11 @@ packages:
 
   esbuild@0.27.7:
     resolution: {integrity: sha512-IxpibTjyVnmrIQo5aqNpCgoACA/dTKLTlhMHihVHhdkxKyPO1uBBthumT0rdHmcsk9uMonIWS0m4FljWzILh3w==}
+    engines: {node: '>=18'}
+    hasBin: true
+
+  esbuild@0.28.1:
+    resolution: {integrity: sha512-HrJrvZv5ayxBzPfwphOoNzkzOIIlifzk0KJrGK2c8R4+LKpMtpYLQeUdjnwjWv/LZlkH2laZk+4w78pi99D4Vw==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -4710,6 +5144,9 @@ packages:
     resolution: {integrity: sha512-Bb33KbowVTIj5s7Ked1OsqHUeCpz//tPwR+E2zJgJKo9Z5XolZ9b6bdUgjmYlwnWhoOQKoTd1TYToZGn5mAYOg==}
     engines: {node: '>= 0.8'}
 
+  hash-wasm@4.12.0:
+    resolution: {integrity: sha512-+/2B2rYLb48I/evdOIhP+K/DD2ca2fgBjp6O+GBEnCDk2e4rpeXIK8GvIyRPjTezgmWn9gmKwkQjjx6BtqDHVQ==}
+
   hash.js@1.1.7:
     resolution: {integrity: sha512-taOaskGt4z4SOANNseOviYDvjEJinIkRgmp7LbKP2YTTmVxWBl87s/uzK9r+44BclBSp2X7K1hqeNfz9JbBeXA==}
 
@@ -5048,6 +5485,10 @@ packages:
   keyvaluestorage-interface@1.0.0:
     resolution: {integrity: sha512-8t6Q3TclQ4uZynJY9IGr2+SsIGwK9JHcO6ootkHCGA0CrQCRy+VkouYNO2xicET6b9al7QKzpebNow+gkpCL8g==}
 
+  kleur@4.1.5:
+    resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
+    engines: {node: '>=6'}
+
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
@@ -5274,6 +5715,10 @@ packages:
   min-indent@1.0.1:
     resolution: {integrity: sha512-I9jwMn07Sy/IwOj3zVkVik2JTvgpaykDZEigL6Rx6N9LbMywwUSMtxET+7lVoDLLd3O3IXwJwvuuns8UB/HeAg==}
     engines: {node: '>=4'}
+
+  miniflare@5.20260801.0-alpha:
+    resolution: {integrity: sha512-AfMrnQbJg81ESsGkGhOkHBtwTqCG+mosR+3GE+qDrhF1I/ieIvgg3ICxNyBvgHBZ3iapy6cysBQHNPykkzrfgw==}
+    engines: {node: '>=22.0.0'}
 
   minimalistic-assert@1.0.1:
     resolution: {integrity: sha512-UtJcAD4yEaGtjPezWuO9wC4nwUnVH/8/Im3yEHQP4b67cXlD/Qr9hdITCU1xDbSEXg2XKNaP8jsReV7vQd00/A==}
@@ -5539,6 +5984,9 @@ packages:
   path-parse@1.0.7:
     resolution: {integrity: sha512-LDJzPVEEEPR+y48z93A0Ed0yXb8pAByGWo/k5YYdYgpY2/2EsOsksJrq7lOHxryrVOn1ejG6oAp8ahvOIQD8sw==}
 
+  path-to-regexp@6.3.0:
+    resolution: {integrity: sha512-Yhpw4T9C6hPpgPeA28us07OJeqZ5EzQTkbfwuhsUg0c237RomFoETJgmp2sa3F/41gfLE6G5cqcYwznmeEeOlQ==}
+
   path-to-regexp@8.4.2:
     resolution: {integrity: sha512-qRcuIdP69NPm4qbACK+aDogI5CBDMi1jKe0ry5rSQJz8JVLsC7jV8XpiJjGRLLol3N+R5ihGYcrPLTno6pAdBA==}
 
@@ -5738,6 +6186,14 @@ packages:
 
   preact@10.28.3:
     resolution: {integrity: sha512-tCmoRkPQLpBeWzpmbhryairGnhW9tKV6c6gr/w+RhoRoKEJwsjzipwp//1oCpGPOchvSLaAPlpcJi9MwMmoPyA==}
+
+  preact@10.29.8:
+    resolution: {integrity: sha512-ej2aVZ+vZ8WO7tvlQWRM9N63A0KzF9q4mWJfDUHgYaIofWY9hu74QdnQrjoPMmZi2/nZ5gN0bJCQF49xQqx09Q==}
+    peerDependencies:
+      preact-render-to-string: '>=5'
+    peerDependenciesMeta:
+      preact-render-to-string:
+        optional: true
 
   prelude-ls@1.2.1:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
@@ -5951,18 +6407,22 @@ packages:
       react: ^16.14.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
       react-dom: ^16.14.0 || ^17.0.0 || ^18.0.0 || ^19.0.0 || ^19.0.0-rc
 
-  react-router-dom@6.30.3:
-    resolution: {integrity: sha512-pxPcv1AczD4vso7G4Z3TKcvlxK7g7TNt3/FNGMhfqyntocvYKj+GCatfigGDjbLozC4baguJ0ReCigoDJXb0ag==}
-    engines: {node: '>=14.0.0'}
+  react-router-dom@7.0.0:
+    resolution: {integrity: sha512-2QAxXpwgQuh423C64oZiV2cCKPCNUgZxcvZaS8O0PAHPZ/z8kTq7YbGD4KTNZm6Yj66d+HAfGkWPp8MCpdtD+Q==}
+    engines: {node: '>=20.0.0'}
     peerDependencies:
-      react: '>=16.8'
-      react-dom: '>=16.8'
+      react: '>=18'
+      react-dom: '>=18'
 
-  react-router@6.30.3:
-    resolution: {integrity: sha512-XRnlbKMTmktBkjCLE8/XcZFlnHvr2Ltdr1eJX4idL55/9BbORzyZEaIkBFDhFGCEWBBItsVrDxwx3gnisMitdw==}
-    engines: {node: '>=14.0.0'}
+  react-router@7.0.0:
+    resolution: {integrity: sha512-1xf+yMVhUjAzZGY90ZnYJ9KVe1R8FggpugzRBkh+p6vl4cC1sHDe3nO+r5rxWTAgCMf8uN5hfoV2M7rLVTWPUA==}
+    engines: {node: '>=20.0.0'}
     peerDependencies:
-      react: '>=16.8'
+      react: '>=18'
+      react-dom: '>=18'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
 
   react-smooth@4.0.4:
     resolution: {integrity: sha512-gnGKTpYwqL0Iii09gHobNolvX4Kiq4PKx6eWBCYYix+8cdw+cGo3do906l1NBPKkSWx1DghC1dlWG9L2uGd61Q==}
@@ -6147,6 +6607,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
 
+  semver@7.8.5:
+    resolution: {integrity: sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA==}
+    engines: {node: '>=10'}
+    hasBin: true
+
   send@1.2.1:
     resolution: {integrity: sha512-1gnZf7DFcoIcajTjTwjwuDjzuz4PPcY2StKPlsGAQ1+YH20IRVrBaXSWmdjowTJ6u8Rc01PoYOGHXfP1mYcZNQ==}
     engines: {node: '>= 18'}
@@ -6157,6 +6622,9 @@ packages:
 
   set-blocking@2.0.0:
     resolution: {integrity: sha512-KiKBS8AnWGEyLzofFfmvKwpdPzqiy16LvQfK3yv/fVH7Bj13/wl3JSR1J+rfgRE9q7xUJK4qvgS8raSOeLUehw==}
+
+  set-cookie-parser@2.7.2:
+    resolution: {integrity: sha512-oeM1lpU/UvhTxw+g3cIfxXHyJRc/uidd3yK1P242gzHds0udQBYzs3y8j4gCCW+ZJ7ad0yctld8RYO+bdurlvw==}
 
   set-function-length@1.2.2:
     resolution: {integrity: sha512-pgRc4hJ4/sNjWCSS9AmnS40x3bNMDTknHgL5UaMBTMyJnU90EgWh1Rz+MC9eFu4BuN/UwZjKQuY/1v3rM7HMfg==}
@@ -6172,6 +6640,10 @@ packages:
 
   shallowequal@1.1.0:
     resolution: {integrity: sha512-y0m1JoUZSlPAjXVtPPW70aZWfIL/dSP7AFkRnniLCrK/8MDKog3TySTBmckD+RObVxH0v4Tox67+F14PdED2oQ==}
+
+  sharp@0.35.2:
+    resolution: {integrity: sha512-FVtFjtBCMiJS6yb5CX7Sop45WFMpeGw6oRKuJnXYgf/f1ms/D7LE/ZUSNxnW7rZ/dbslQWYkoqFHGPaDBtaK4w==}
+    engines: {node: '>=20.9.0'}
 
   shebang-command@2.0.0:
     resolution: {integrity: sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA==}
@@ -6315,6 +6787,10 @@ packages:
     resolution: {integrity: sha512-uV+TFRZdXsqXTL2pRvujROjdZQ4RAlBUS5BTh9IGm+jTqQntYThciG/qu57Gs69yjnVUSqdxF9YLmSnpupBW9A==}
     engines: {node: '>=14.0.0'}
 
+  supports-color@10.2.2:
+    resolution: {integrity: sha512-SS+jx45GF1QjgEXQx4NJZV9ImqmO2NPz5FNsIHrsDjh2YsHnawpan7SNQ1o8NuhrbHZy9AZhIoCUiCeaW/C80g==}
+    engines: {node: '>=18'}
+
   supports-color@7.2.0:
     resolution: {integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==}
     engines: {node: '>=8'}
@@ -6447,6 +6923,9 @@ packages:
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
 
+  turbo-stream@2.4.0:
+    resolution: {integrity: sha512-FHncC10WpBd2eOmGwpmQsWLDoK4cqsA/UT/GqNoaKOQnT8uzhtCbg3EoUDMvqpOSAI0S26mr0rkjzbOO6S3v1g==}
+
   type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
     engines: {node: '>= 0.8.0'}
@@ -6508,6 +6987,13 @@ packages:
 
   undici-types@7.22.0:
     resolution: {integrity: sha512-RKZvifiL60xdsIuC80UY0dq8Z7DbJUV8/l2hOVbyZAxBzEeQU4Z58+4ZzJ6WN2Lidi9KzT5EbiGX+PI/UGYuRw==}
+
+  undici@7.28.0:
+    resolution: {integrity: sha512-cRZYrTDwWznlnRiPjggAGxZXanty6M8RV1ff8Wm4LWXBp7/IG8v5DnOm74DtUBp9OONpK75YlPnIjQqX0dBDtA==}
+    engines: {node: '>=20.18.1'}
+
+  unenv@2.0.0-rc.24:
+    resolution: {integrity: sha512-i7qRCmY42zmCwnYlh9H2SvLEypEFGye5iRmEMKjcGi7zk9UquigRjFtTLz0TYqr0ZGLZhaMHl/foy1bZR+Cwlw==}
 
   unfetch@3.1.2:
     resolution: {integrity: sha512-L0qrK7ZeAudGiKYw6nzFjnJ2D5WHblUBwmHIqtPS6oKUd+Hcpk7/hKsSmcHsTlpd1TbTNsiRBUKRq3bHLNIqIw==}
@@ -6895,6 +7381,21 @@ packages:
     resolution: {integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==}
     engines: {node: '>=0.10.0'}
 
+  workerd@1.20260801.1:
+    resolution: {integrity: sha512-/g9JGTyqnHtoIscpBHqKD8swE2V4StBs2i69PmLiOhH45OP95jCFICl4F1hKlgN57rqfni5LiCitttoX5OOkVA==}
+    engines: {node: '>=16'}
+    hasBin: true
+
+  wrangler@4.119.0:
+    resolution: {integrity: sha512-ookClf+zly4DTc8pBMNrwGQzZKH8IpIYTXkjDw3XS7ZvBQ5mLYH6eOvfD5BEpk3U63zTbv91WRlo1UeRSKXa0g==}
+    engines: {node: '>=22.0.0'}
+    hasBin: true
+    peerDependencies:
+      '@cloudflare/workers-types': ^5.20260801.1
+    peerDependenciesMeta:
+      '@cloudflare/workers-types':
+        optional: true
+
   wrap-ansi@6.2.0:
     resolution: {integrity: sha512-r6lPcBGxZXlIcymEu7InxDMhdW0KDxpLgoFLcguasxCaJ/SOIZwINatK9KY/tf+ZrlywOKU0UDj3ATXUBfxJXA==}
     engines: {node: '>=8'}
@@ -6904,6 +7405,18 @@ packages:
 
   ws@7.5.10:
     resolution: {integrity: sha512-+dbF1tHwZpXcbOJdVOkzLDxZP1ailvSxM6ZweXTegylPny803bFhA+vqBYw4s31NSAk4S2Qz+AKXK9a4wkdjcQ==}
+    engines: {node: '>=8.3.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: ^5.0.2
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
+  ws@7.5.13:
+    resolution: {integrity: sha512-rsKI6xDBFVf4r/x8XyChGK04QR/XHroxs/jUcoWvtEZM8TPU/X/uIY9B1CsSzYws9ZJb/6bbBu7dPhFW00CAoA==}
     engines: {node: '>=8.3.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -6962,6 +7475,30 @@ packages:
       utf-8-validate:
         optional: true
 
+  ws@8.21.0:
+    resolution: {integrity: sha512-Vsp28b7DRcimFQvrqu2Wek3z1iYxDCWqHYB8Qsnk/S4RfaCQzPGPyBNuVjJV3cd6UiKtUtp6sNM77gWvzcCH+g==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
+  ws@8.21.2:
+    resolution: {integrity: sha512-54dMVAo4WIe6SKy3vBgN+9bJZqqQ8IMRevAkOLQALhi49qkkQDQfWdAZ8KQlXiEabw88ARXXdUrlvtbKQX+aKw==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+
   xml-name-validator@4.0.0:
     resolution: {integrity: sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==}
     engines: {node: '>=12'}
@@ -6998,6 +7535,12 @@ packages:
   yocto-queue@0.1.0:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
+
+  youch-core@0.3.3:
+    resolution: {integrity: sha512-ho7XuGjLaJ2hWHoK8yFnsUGy2Y5uDpqSTq1FkHLK4/oqKtyUU1AFbOOxY4IpC9f0fTLjwYbslUz0Po5BpD1wrA==}
+
+  youch@4.1.0-beta.10:
+    resolution: {integrity: sha512-rLfVLB4FgQneDr0dv1oddCVZmKjcJ6yX6mS4pU82Mq/Dt9a3cLZQ62pDBL4AUO+uVrCvtWz3ZFUL2HFAFJ/BXQ==}
 
   zod-to-json-schema@3.25.2:
     resolution: {integrity: sha512-O/PgfnpT1xKSDeQYSCfRI5Gy3hPf91mKVDuYLUHZJMiDFptvP41MSnWofm8dnCm0256ZNfZIM7DSzuSMAFnjHA==}
@@ -7104,15 +7647,17 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@babel/code-frame@7.29.0':
+  '@babel/code-frame@7.29.7':
     dependencies:
-      '@babel/helper-validator-identifier': 7.28.5
+      '@babel/helper-validator-identifier': 7.29.7
       js-tokens: 4.0.0
       picocolors: 1.1.1
 
-  '@babel/helper-validator-identifier@7.28.5': {}
+  '@babel/helper-validator-identifier@7.29.7': {}
 
   '@babel/runtime@7.28.6': {}
+
+  '@babel/runtime@7.29.7': {}
 
   '@base-org/account@1.1.1(@types/react@18.3.27)(bufferutil@4.1.0)(react@18.3.1)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@18.3.1))(utf-8-validate@5.0.10)(zod@3.25.76)':
     dependencies:
@@ -7160,6 +7705,29 @@ snapshots:
 
   '@chaitanyapotti/register-service-worker@1.7.4': {}
 
+  '@cloudflare/kv-asset-handler@0.5.0': {}
+
+  '@cloudflare/unenv-preset@2.16.1(unenv@2.0.0-rc.24)(workerd@1.20260801.1)':
+    dependencies:
+      unenv: 2.0.0-rc.24
+    optionalDependencies:
+      workerd: 1.20260801.1
+
+  '@cloudflare/workerd-darwin-64@1.20260801.1':
+    optional: true
+
+  '@cloudflare/workerd-darwin-arm64@1.20260801.1':
+    optional: true
+
+  '@cloudflare/workerd-linux-64@1.20260801.1':
+    optional: true
+
+  '@cloudflare/workerd-linux-arm64@1.20260801.1':
+    optional: true
+
+  '@cloudflare/workerd-windows-64@1.20260801.1':
+    optional: true
+
   '@coinbase/cdp-sdk@1.44.1(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)':
     dependencies:
       '@solana-program/system': 0.10.0(@solana/kit@5.5.1(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))
@@ -7184,16 +7752,17 @@ snapshots:
 
   '@coinbase/wallet-sdk@3.9.3':
     dependencies:
-      bn.js: 5.2.2
+      bn.js: 5.2.5
       buffer: 6.0.3
       clsx: 1.2.1
       eth-block-tracker: 7.1.0
       eth-json-rpc-filters: 6.0.1
       eventemitter3: 5.0.4
       keccak: 3.0.4
-      preact: 10.28.3
+      preact: 10.29.8
       sha.js: 2.4.12
     transitivePeerDependencies:
+      - preact-render-to-string
       - supports-color
 
   '@coinbase/wallet-sdk@4.3.6(@types/react@18.3.27)(bufferutil@4.1.0)(react@18.3.1)(typescript@5.9.3)(use-sync-external-store@1.4.0(react@18.3.1))(utf-8-validate@5.0.10)(zod@3.25.76)':
@@ -7229,11 +7798,20 @@ snapshots:
       - utf-8-validate
       - zod
 
+  '@cspotcode/source-map-support@0.8.1':
+    dependencies:
+      '@jridgewell/trace-mapping': 0.3.9
+
   '@dimforge/rapier3d-compat@0.12.0': {}
 
   '@ecies/ciphers@0.2.5(@noble/ciphers@1.3.0)':
     dependencies:
       '@noble/ciphers': 1.3.0
+
+  '@emnapi/runtime@1.11.3':
+    dependencies:
+      tslib: 2.8.1
+    optional: true
 
   '@emotion/hash@0.9.2': {}
 
@@ -7246,6 +7824,9 @@ snapshots:
   '@esbuild/aix-ppc64@0.27.7':
     optional: true
 
+  '@esbuild/aix-ppc64@0.28.1':
+    optional: true
+
   '@esbuild/android-arm64@0.21.5':
     optional: true
 
@@ -7253,6 +7834,9 @@ snapshots:
     optional: true
 
   '@esbuild/android-arm64@0.27.7':
+    optional: true
+
+  '@esbuild/android-arm64@0.28.1':
     optional: true
 
   '@esbuild/android-arm@0.21.5':
@@ -7264,6 +7848,9 @@ snapshots:
   '@esbuild/android-arm@0.27.7':
     optional: true
 
+  '@esbuild/android-arm@0.28.1':
+    optional: true
+
   '@esbuild/android-x64@0.21.5':
     optional: true
 
@@ -7271,6 +7858,9 @@ snapshots:
     optional: true
 
   '@esbuild/android-x64@0.27.7':
+    optional: true
+
+  '@esbuild/android-x64@0.28.1':
     optional: true
 
   '@esbuild/darwin-arm64@0.21.5':
@@ -7282,6 +7872,9 @@ snapshots:
   '@esbuild/darwin-arm64@0.27.7':
     optional: true
 
+  '@esbuild/darwin-arm64@0.28.1':
+    optional: true
+
   '@esbuild/darwin-x64@0.21.5':
     optional: true
 
@@ -7289,6 +7882,9 @@ snapshots:
     optional: true
 
   '@esbuild/darwin-x64@0.27.7':
+    optional: true
+
+  '@esbuild/darwin-x64@0.28.1':
     optional: true
 
   '@esbuild/freebsd-arm64@0.21.5':
@@ -7300,6 +7896,9 @@ snapshots:
   '@esbuild/freebsd-arm64@0.27.7':
     optional: true
 
+  '@esbuild/freebsd-arm64@0.28.1':
+    optional: true
+
   '@esbuild/freebsd-x64@0.21.5':
     optional: true
 
@@ -7307,6 +7906,9 @@ snapshots:
     optional: true
 
   '@esbuild/freebsd-x64@0.27.7':
+    optional: true
+
+  '@esbuild/freebsd-x64@0.28.1':
     optional: true
 
   '@esbuild/linux-arm64@0.21.5':
@@ -7318,6 +7920,9 @@ snapshots:
   '@esbuild/linux-arm64@0.27.7':
     optional: true
 
+  '@esbuild/linux-arm64@0.28.1':
+    optional: true
+
   '@esbuild/linux-arm@0.21.5':
     optional: true
 
@@ -7325,6 +7930,9 @@ snapshots:
     optional: true
 
   '@esbuild/linux-arm@0.27.7':
+    optional: true
+
+  '@esbuild/linux-arm@0.28.1':
     optional: true
 
   '@esbuild/linux-ia32@0.21.5':
@@ -7336,6 +7944,9 @@ snapshots:
   '@esbuild/linux-ia32@0.27.7':
     optional: true
 
+  '@esbuild/linux-ia32@0.28.1':
+    optional: true
+
   '@esbuild/linux-loong64@0.21.5':
     optional: true
 
@@ -7343,6 +7954,9 @@ snapshots:
     optional: true
 
   '@esbuild/linux-loong64@0.27.7':
+    optional: true
+
+  '@esbuild/linux-loong64@0.28.1':
     optional: true
 
   '@esbuild/linux-mips64el@0.21.5':
@@ -7354,6 +7968,9 @@ snapshots:
   '@esbuild/linux-mips64el@0.27.7':
     optional: true
 
+  '@esbuild/linux-mips64el@0.28.1':
+    optional: true
+
   '@esbuild/linux-ppc64@0.21.5':
     optional: true
 
@@ -7361,6 +7978,9 @@ snapshots:
     optional: true
 
   '@esbuild/linux-ppc64@0.27.7':
+    optional: true
+
+  '@esbuild/linux-ppc64@0.28.1':
     optional: true
 
   '@esbuild/linux-riscv64@0.21.5':
@@ -7372,6 +7992,9 @@ snapshots:
   '@esbuild/linux-riscv64@0.27.7':
     optional: true
 
+  '@esbuild/linux-riscv64@0.28.1':
+    optional: true
+
   '@esbuild/linux-s390x@0.21.5':
     optional: true
 
@@ -7379,6 +8002,9 @@ snapshots:
     optional: true
 
   '@esbuild/linux-s390x@0.27.7':
+    optional: true
+
+  '@esbuild/linux-s390x@0.28.1':
     optional: true
 
   '@esbuild/linux-x64@0.21.5':
@@ -7390,10 +8016,16 @@ snapshots:
   '@esbuild/linux-x64@0.27.7':
     optional: true
 
+  '@esbuild/linux-x64@0.28.1':
+    optional: true
+
   '@esbuild/netbsd-arm64@0.25.12':
     optional: true
 
   '@esbuild/netbsd-arm64@0.27.7':
+    optional: true
+
+  '@esbuild/netbsd-arm64@0.28.1':
     optional: true
 
   '@esbuild/netbsd-x64@0.21.5':
@@ -7405,10 +8037,16 @@ snapshots:
   '@esbuild/netbsd-x64@0.27.7':
     optional: true
 
+  '@esbuild/netbsd-x64@0.28.1':
+    optional: true
+
   '@esbuild/openbsd-arm64@0.25.12':
     optional: true
 
   '@esbuild/openbsd-arm64@0.27.7':
+    optional: true
+
+  '@esbuild/openbsd-arm64@0.28.1':
     optional: true
 
   '@esbuild/openbsd-x64@0.21.5':
@@ -7420,10 +8058,16 @@ snapshots:
   '@esbuild/openbsd-x64@0.27.7':
     optional: true
 
+  '@esbuild/openbsd-x64@0.28.1':
+    optional: true
+
   '@esbuild/openharmony-arm64@0.25.12':
     optional: true
 
   '@esbuild/openharmony-arm64@0.27.7':
+    optional: true
+
+  '@esbuild/openharmony-arm64@0.28.1':
     optional: true
 
   '@esbuild/sunos-x64@0.21.5':
@@ -7435,6 +8079,9 @@ snapshots:
   '@esbuild/sunos-x64@0.27.7':
     optional: true
 
+  '@esbuild/sunos-x64@0.28.1':
+    optional: true
+
   '@esbuild/win32-arm64@0.21.5':
     optional: true
 
@@ -7442,6 +8089,9 @@ snapshots:
     optional: true
 
   '@esbuild/win32-arm64@0.27.7':
+    optional: true
+
+  '@esbuild/win32-arm64@0.28.1':
     optional: true
 
   '@esbuild/win32-ia32@0.21.5':
@@ -7453,6 +8103,9 @@ snapshots:
   '@esbuild/win32-ia32@0.27.7':
     optional: true
 
+  '@esbuild/win32-ia32@0.28.1':
+    optional: true
+
   '@esbuild/win32-x64@0.21.5':
     optional: true
 
@@ -7460,6 +8113,9 @@ snapshots:
     optional: true
 
   '@esbuild/win32-x64@0.27.7':
+    optional: true
+
+  '@esbuild/win32-x64@0.28.1':
     optional: true
 
   '@eslint-community/eslint-utils@4.9.1(eslint@9.39.2(jiti@1.21.7))':
@@ -7591,7 +8247,7 @@ snapshots:
 
   '@hcaptcha/react-hcaptcha@1.17.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       '@hcaptcha/loader': 2.3.0
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
@@ -7615,6 +8271,112 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.3': {}
 
+  '@img/colour@1.1.0': {}
+
+  '@img/sharp-darwin-arm64@0.35.2':
+    optionalDependencies:
+      '@img/sharp-libvips-darwin-arm64': 1.3.1
+    optional: true
+
+  '@img/sharp-darwin-x64@0.35.2':
+    optionalDependencies:
+      '@img/sharp-libvips-darwin-x64': 1.3.1
+    optional: true
+
+  '@img/sharp-freebsd-wasm32@0.35.2':
+    dependencies:
+      '@img/sharp-wasm32': 0.35.2
+    optional: true
+
+  '@img/sharp-libvips-darwin-arm64@1.3.1':
+    optional: true
+
+  '@img/sharp-libvips-darwin-x64@1.3.1':
+    optional: true
+
+  '@img/sharp-libvips-linux-arm64@1.3.1':
+    optional: true
+
+  '@img/sharp-libvips-linux-arm@1.3.1':
+    optional: true
+
+  '@img/sharp-libvips-linux-ppc64@1.3.1':
+    optional: true
+
+  '@img/sharp-libvips-linux-riscv64@1.3.1':
+    optional: true
+
+  '@img/sharp-libvips-linux-s390x@1.3.1':
+    optional: true
+
+  '@img/sharp-libvips-linux-x64@1.3.1':
+    optional: true
+
+  '@img/sharp-libvips-linuxmusl-arm64@1.3.1':
+    optional: true
+
+  '@img/sharp-libvips-linuxmusl-x64@1.3.1':
+    optional: true
+
+  '@img/sharp-linux-arm64@0.35.2':
+    optionalDependencies:
+      '@img/sharp-libvips-linux-arm64': 1.3.1
+    optional: true
+
+  '@img/sharp-linux-arm@0.35.2':
+    optionalDependencies:
+      '@img/sharp-libvips-linux-arm': 1.3.1
+    optional: true
+
+  '@img/sharp-linux-ppc64@0.35.2':
+    optionalDependencies:
+      '@img/sharp-libvips-linux-ppc64': 1.3.1
+    optional: true
+
+  '@img/sharp-linux-riscv64@0.35.2':
+    optionalDependencies:
+      '@img/sharp-libvips-linux-riscv64': 1.3.1
+    optional: true
+
+  '@img/sharp-linux-s390x@0.35.2':
+    optionalDependencies:
+      '@img/sharp-libvips-linux-s390x': 1.3.1
+    optional: true
+
+  '@img/sharp-linux-x64@0.35.2':
+    optionalDependencies:
+      '@img/sharp-libvips-linux-x64': 1.3.1
+    optional: true
+
+  '@img/sharp-linuxmusl-arm64@0.35.2':
+    optionalDependencies:
+      '@img/sharp-libvips-linuxmusl-arm64': 1.3.1
+    optional: true
+
+  '@img/sharp-linuxmusl-x64@0.35.2':
+    optionalDependencies:
+      '@img/sharp-libvips-linuxmusl-x64': 1.3.1
+    optional: true
+
+  '@img/sharp-wasm32@0.35.2':
+    dependencies:
+      '@emnapi/runtime': 1.11.3
+    optional: true
+
+  '@img/sharp-webcontainers-wasm32@0.35.2':
+    dependencies:
+      '@img/sharp-wasm32': 0.35.2
+    optional: true
+
+  '@img/sharp-win32-arm64@0.35.2':
+    optional: true
+
+  '@img/sharp-win32-ia32@0.35.2':
+    optional: true
+
+  '@img/sharp-win32-x64@0.35.2':
+    optional: true
+
   '@jridgewell/gen-mapping@0.3.13':
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
@@ -7625,6 +8387,11 @@ snapshots:
   '@jridgewell/sourcemap-codec@1.5.5': {}
 
   '@jridgewell/trace-mapping@0.3.31':
+    dependencies:
+      '@jridgewell/resolve-uri': 3.1.2
+      '@jridgewell/sourcemap-codec': 1.5.5
+
+  '@jridgewell/trace-mapping@0.3.9':
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
@@ -7643,6 +8410,8 @@ snapshots:
   '@lit/reactive-element@2.1.2':
     dependencies:
       '@lit-labs/ssr-dom-shim': 1.5.1
+
+  '@lovable.dev/cloud-auth-js@1.1.2': {}
 
   '@lovable.dev/mcp-js@0.20.0(vite@5.4.21(@types/node@22.19.7))(zod@3.25.76)':
     dependencies:
@@ -7666,7 +8435,7 @@ snapshots:
   '@metamask/abi-utils@3.0.0':
     dependencies:
       '@metamask/superstruct': 3.2.1
-      '@metamask/utils': 11.9.0
+      '@metamask/utils': 11.11.0
     transitivePeerDependencies:
       - supports-color
 
@@ -7675,7 +8444,7 @@ snapshots:
   '@metamask/delegation-core@0.3.0':
     dependencies:
       '@metamask/abi-utils': 3.0.0
-      '@metamask/utils': 11.9.0
+      '@metamask/utils': 11.11.0
       '@noble/hashes': 1.8.0
     transitivePeerDependencies:
       - supports-color
@@ -7785,7 +8554,7 @@ snapshots:
 
   '@metamask/sdk@0.33.1(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       '@metamask/onboarding': 1.0.1
       '@metamask/providers': 16.1.0
       '@metamask/sdk-analytics': 0.0.5
@@ -7853,6 +8622,22 @@ snapshots:
 
   '@metamask/superstruct@3.2.1': {}
 
+  '@metamask/utils@11.11.0':
+    dependencies:
+      '@ethereumjs/tx': 4.2.0
+      '@metamask/superstruct': 3.2.1
+      '@noble/hashes': 1.8.0
+      '@scure/base': 1.2.6
+      '@types/debug': 4.1.13
+      '@types/lodash': 4.17.23
+      debug: 4.4.3
+      lodash: 4.17.23
+      pony-cause: 2.1.11
+      semver: 7.8.5
+      uuid: 9.0.1
+    transitivePeerDependencies:
+      - supports-color
+
   '@metamask/utils@11.9.0':
     dependencies:
       '@ethereumjs/tx': 4.2.0
@@ -7864,7 +8649,7 @@ snapshots:
       debug: 4.4.3
       lodash: 4.17.23
       pony-cause: 2.1.11
-      semver: 7.7.3
+      semver: 7.8.5
       uuid: 9.0.1
     transitivePeerDependencies:
       - supports-color
@@ -7872,9 +8657,9 @@ snapshots:
   '@metamask/utils@5.0.2':
     dependencies:
       '@ethereumjs/tx': 4.2.0
-      '@types/debug': 4.1.12
+      '@types/debug': 4.1.13
       debug: 4.4.3
-      semver: 7.7.3
+      semver: 7.8.5
       superstruct: 1.0.4
     transitivePeerDependencies:
       - supports-color
@@ -7902,7 +8687,7 @@ snapshots:
       '@types/debug': 4.1.12
       debug: 4.4.3
       pony-cause: 2.1.11
-      semver: 7.7.3
+      semver: 7.8.5
       uuid: 9.0.1
     transitivePeerDependencies:
       - supports-color
@@ -8043,6 +8828,18 @@ snapshots:
   '@phosphor-icons/webcomponents@2.1.5':
     dependencies:
       lit: 3.3.0
+
+  '@poppinss/colors@4.1.6':
+    dependencies:
+      kleur: 4.1.5
+
+  '@poppinss/dumper@0.6.5':
+    dependencies:
+      '@poppinss/colors': 4.1.6
+      '@sindresorhus/is': 7.2.0
+      supports-color: 10.2.2
+
+  '@poppinss/exception@1.2.3': {}
 
   '@radix-ui/number@1.1.1': {}
 
@@ -8766,8 +9563,6 @@ snapshots:
       - '@types/react'
       - babel-plugin-macros
       - typescript
-
-  '@remix-run/router@1.23.2': {}
 
   '@reown/appkit-common@1.7.8(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.22.4)':
     dependencies:
@@ -9502,6 +10297,8 @@ snapshots:
 
   '@sentry/core@9.47.1': {}
 
+  '@sindresorhus/is@7.2.0': {}
+
   '@socket.io/component-emitter@3.1.2': {}
 
   '@solana-program/system@0.10.0(@solana/kit@5.5.1(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))':
@@ -9784,7 +10581,7 @@ snapshots:
       '@solana/functional': 5.5.1(typescript@5.9.3)
       '@solana/rpc-subscriptions-spec': 5.5.1(typescript@5.9.3)
       '@solana/subscribable': 5.5.1(typescript@5.9.3)
-      ws: 8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      ws: 8.21.2(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     optionalDependencies:
       typescript: 5.9.3
     transitivePeerDependencies:
@@ -9985,6 +10782,8 @@ snapshots:
       - typescript
       - utf-8-validate
 
+  '@speed-highlight/core@1.2.23': {}
+
   '@stripe/react-stripe-js@6.2.0(@stripe/stripe-js@9.2.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@stripe/stripe-js': 9.2.0
@@ -10103,8 +10902,8 @@ snapshots:
 
   '@testing-library/dom@10.4.1':
     dependencies:
-      '@babel/code-frame': 7.29.0
-      '@babel/runtime': 7.28.6
+      '@babel/code-frame': 7.29.7
+      '@babel/runtime': 7.29.7
       '@types/aria-query': 5.0.4
       aria-query: 5.3.0
       dom-accessibility-api: 0.5.16
@@ -10133,13 +10932,13 @@ snapshots:
 
   '@tootallnate/once@2.0.0': {}
 
-  '@toruslabs/base-controllers@7.4.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+  '@toruslabs/base-controllers@7.4.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       '@ethereumjs/util': 9.1.0
       '@toruslabs/broadcast-channel': 11.0.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
-      '@toruslabs/http-helpers': 7.0.1(@babel/runtime@7.28.6)
-      '@web3auth/auth': 9.6.4(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@toruslabs/http-helpers': 7.0.1(@babel/runtime@7.29.7)
+      '@web3auth/auth': 9.6.4(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       async-mutex: 0.5.0
       bignumber.js: 9.3.1
       bowser: 2.13.1
@@ -10151,13 +10950,13 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@toruslabs/base-controllers@8.17.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)':
+  '@toruslabs/base-controllers@8.17.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       '@ethereumjs/util': 10.1.0
       '@toruslabs/broadcast-channel': 12.0.0(@sentry/core@9.47.1)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
-      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
-      '@web3auth/auth': 10.8.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
+      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
+      '@web3auth/auth': 10.8.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
       async-mutex: 0.5.0
       bignumber.js: 9.3.1
       bowser: 2.13.1
@@ -10174,9 +10973,9 @@ snapshots:
 
   '@toruslabs/broadcast-channel@11.0.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       '@toruslabs/eccrypto': 5.0.4
-      '@toruslabs/metadata-helpers': 6.0.0(@babel/runtime@7.28.6)
+      '@toruslabs/metadata-helpers': 6.0.0(@babel/runtime@7.29.7)
       loglevel: 1.9.2
       oblivious-set: 1.4.0
       socket.io-client: 4.8.3(bufferutil@4.1.0)(utf-8-validate@5.0.10)
@@ -10189,10 +10988,10 @@ snapshots:
 
   '@toruslabs/broadcast-channel@12.0.0(@sentry/core@9.47.1)(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
-      '@babel/runtime': 7.28.6
-      '@toruslabs/constants': 14.2.0(@babel/runtime@7.28.6)
+      '@babel/runtime': 7.29.7
+      '@toruslabs/constants': 14.2.0(@babel/runtime@7.29.7)
       '@toruslabs/eccrypto': 6.2.0
-      '@toruslabs/metadata-helpers': 7.0.2(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
+      '@toruslabs/metadata-helpers': 7.0.2(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
       base64url: 3.0.1
       loglevel: 1.9.2
       oblivious-set: 1.4.0
@@ -10204,30 +11003,30 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@toruslabs/bs58@1.0.0(@babel/runtime@7.28.6)':
+  '@toruslabs/bs58@1.0.0(@babel/runtime@7.29.7)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
 
-  '@toruslabs/constants@14.2.0(@babel/runtime@7.28.6)':
+  '@toruslabs/constants@14.2.0(@babel/runtime@7.29.7)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
 
-  '@toruslabs/constants@15.0.0(@babel/runtime@7.28.6)':
+  '@toruslabs/constants@15.0.0(@babel/runtime@7.29.7)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
 
-  '@toruslabs/customauth@21.3.2(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+  '@toruslabs/customauth@21.3.2(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       '@chaitanyapotti/register-service-worker': 1.7.4
       '@toruslabs/broadcast-channel': 12.0.0(@sentry/core@9.47.1)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
-      '@toruslabs/constants': 15.0.0(@babel/runtime@7.28.6)
+      '@toruslabs/constants': 15.0.0(@babel/runtime@7.29.7)
       '@toruslabs/eccrypto': 6.2.0
-      '@toruslabs/fetch-node-details': 15.0.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
-      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
-      '@toruslabs/metadata-helpers': 7.0.2(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
-      '@toruslabs/session-manager': 4.0.2(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
-      '@toruslabs/torus.js': 16.0.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
+      '@toruslabs/fetch-node-details': 15.0.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
+      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
+      '@toruslabs/metadata-helpers': 7.0.2(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
+      '@toruslabs/session-manager': 4.0.2(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
+      '@toruslabs/torus.js': 16.0.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
       base64url: 3.0.1
       bowser: 2.13.1
       deepmerge: 4.3.1
@@ -10248,16 +11047,16 @@ snapshots:
     dependencies:
       elliptic: 6.6.1
 
-  '@toruslabs/ethereum-controllers@8.15.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)(viem@2.44.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))':
+  '@toruslabs/ethereum-controllers@8.15.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)(viem@2.44.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       '@ethereumjs/common': 10.1.0
       '@ethereumjs/tx': 10.1.0
       '@ethereumjs/util': 10.1.0
       '@metamask/smart-accounts-kit': 0.3.0(viem@2.44.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))
-      '@toruslabs/base-controllers': 8.17.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
-      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
-      '@web3auth/auth': 10.8.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
+      '@toruslabs/base-controllers': 8.17.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
+      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
+      '@web3auth/auth': 10.8.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
       async-mutex: 0.5.0
       bignumber.js: 9.3.1
       bn.js: 5.2.2
@@ -10278,12 +11077,12 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@toruslabs/fetch-node-details@15.0.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)':
+  '@toruslabs/fetch-node-details@15.0.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)':
     dependencies:
-      '@babel/runtime': 7.28.6
-      '@toruslabs/constants': 15.0.0(@babel/runtime@7.28.6)
-      '@toruslabs/fnd-base': 15.0.0(@babel/runtime@7.28.6)
-      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
+      '@babel/runtime': 7.29.7
+      '@toruslabs/constants': 15.0.0(@babel/runtime@7.29.7)
+      '@toruslabs/fnd-base': 15.0.0(@babel/runtime@7.29.7)
+      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
       loglevel: 1.9.2
     transitivePeerDependencies:
       - '@sentry/core'
@@ -10292,60 +11091,60 @@ snapshots:
 
   '@toruslabs/ffjavascript@5.0.0': {}
 
-  '@toruslabs/fnd-base@15.0.0(@babel/runtime@7.28.6)':
+  '@toruslabs/fnd-base@15.0.0(@babel/runtime@7.29.7)':
     dependencies:
-      '@babel/runtime': 7.28.6
-      '@toruslabs/constants': 15.0.0(@babel/runtime@7.28.6)
+      '@babel/runtime': 7.29.7
+      '@toruslabs/constants': 15.0.0(@babel/runtime@7.29.7)
 
-  '@toruslabs/http-helpers@7.0.1(@babel/runtime@7.28.6)':
+  '@toruslabs/http-helpers@7.0.1(@babel/runtime@7.29.7)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       deepmerge: 4.3.1
       loglevel: 1.9.2
 
-  '@toruslabs/http-helpers@8.1.1(@babel/runtime@7.28.6)(@sentry/core@9.47.1)':
+  '@toruslabs/http-helpers@8.1.1(@babel/runtime@7.29.7)(@sentry/core@9.47.1)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       deepmerge: 4.3.1
       loglevel: 1.9.2
     optionalDependencies:
       '@sentry/core': 9.47.1
 
-  '@toruslabs/loglevel-sentry@8.1.0(@babel/runtime@7.28.6)':
+  '@toruslabs/loglevel-sentry@8.1.0(@babel/runtime@7.29.7)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       '@sentry/core': 9.47.1
       loglevel: 1.9.2
 
-  '@toruslabs/metadata-helpers@6.0.0(@babel/runtime@7.28.6)':
+  '@toruslabs/metadata-helpers@6.0.0(@babel/runtime@7.29.7)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       '@toruslabs/eccrypto': 5.0.4
-      '@toruslabs/http-helpers': 7.0.1(@babel/runtime@7.28.6)
+      '@toruslabs/http-helpers': 7.0.1(@babel/runtime@7.29.7)
       elliptic: 6.6.1
       ethereum-cryptography: 2.2.1
       json-stable-stringify: 1.3.0
     transitivePeerDependencies:
       - '@sentry/types'
 
-  '@toruslabs/metadata-helpers@7.0.2(@babel/runtime@7.28.6)(@sentry/core@9.47.1)':
+  '@toruslabs/metadata-helpers@7.0.2(@babel/runtime@7.29.7)(@sentry/core@9.47.1)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       '@toruslabs/eccrypto': 6.2.0
-      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
+      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
       elliptic: 6.6.1
       ethereum-cryptography: 3.2.0
       json-stable-stringify: 1.3.0
     transitivePeerDependencies:
       - '@sentry/core'
 
-  '@toruslabs/secure-pub-sub@1.1.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+  '@toruslabs/secure-pub-sub@1.1.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
-      '@babel/runtime': 7.28.6
-      '@toruslabs/constants': 14.2.0(@babel/runtime@7.28.6)
+      '@babel/runtime': 7.29.7
+      '@toruslabs/constants': 14.2.0(@babel/runtime@7.29.7)
       '@toruslabs/eccrypto': 5.0.4
-      '@toruslabs/http-helpers': 7.0.1(@babel/runtime@7.28.6)
-      '@toruslabs/metadata-helpers': 6.0.0(@babel/runtime@7.28.6)
+      '@toruslabs/http-helpers': 7.0.1(@babel/runtime@7.29.7)
+      '@toruslabs/metadata-helpers': 6.0.0(@babel/runtime@7.29.7)
       loglevel: 1.9.2
       socket.io-client: 4.8.3(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
@@ -10354,13 +11153,13 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@toruslabs/secure-pub-sub@3.0.2(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+  '@toruslabs/secure-pub-sub@3.0.2(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
-      '@babel/runtime': 7.28.6
-      '@toruslabs/constants': 14.2.0(@babel/runtime@7.28.6)
+      '@babel/runtime': 7.29.7
+      '@toruslabs/constants': 14.2.0(@babel/runtime@7.29.7)
       '@toruslabs/eccrypto': 6.2.0
-      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
-      '@toruslabs/metadata-helpers': 7.0.2(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
+      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
+      '@toruslabs/metadata-helpers': 7.0.2(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
       loglevel: 1.9.2
       socket.io-client: 4.8.3(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
@@ -10369,44 +11168,44 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@toruslabs/session-manager@3.2.0(@babel/runtime@7.28.6)':
+  '@toruslabs/session-manager@3.2.0(@babel/runtime@7.29.7)':
     dependencies:
-      '@toruslabs/constants': 14.2.0(@babel/runtime@7.28.6)
+      '@toruslabs/constants': 14.2.0(@babel/runtime@7.29.7)
       '@toruslabs/eccrypto': 5.0.4
-      '@toruslabs/http-helpers': 7.0.1(@babel/runtime@7.28.6)
-      '@toruslabs/metadata-helpers': 6.0.0(@babel/runtime@7.28.6)
+      '@toruslabs/http-helpers': 7.0.1(@babel/runtime@7.29.7)
+      '@toruslabs/metadata-helpers': 6.0.0(@babel/runtime@7.29.7)
     optionalDependencies:
       '@rollup/rollup-linux-x64-gnu': 4.56.0
     transitivePeerDependencies:
       - '@babel/runtime'
       - '@sentry/types'
 
-  '@toruslabs/session-manager@4.0.2(@babel/runtime@7.28.6)(@sentry/core@9.47.1)':
+  '@toruslabs/session-manager@4.0.2(@babel/runtime@7.29.7)(@sentry/core@9.47.1)':
     dependencies:
-      '@toruslabs/constants': 14.2.0(@babel/runtime@7.28.6)
+      '@toruslabs/constants': 14.2.0(@babel/runtime@7.29.7)
       '@toruslabs/eccrypto': 6.2.0
-      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
-      '@toruslabs/metadata-helpers': 7.0.2(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
+      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
+      '@toruslabs/metadata-helpers': 7.0.2(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
     optionalDependencies:
       '@rollup/rollup-linux-x64-gnu': 4.56.0
     transitivePeerDependencies:
       - '@babel/runtime'
       - '@sentry/core'
 
-  '@toruslabs/starkware-crypto@4.0.1(@babel/runtime@7.28.6)':
+  '@toruslabs/starkware-crypto@4.0.1(@babel/runtime@7.29.7)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       assert: 2.1.0
       bip39: 3.1.0
-      bn.js: 5.2.2
+      bn.js: 5.2.5
       elliptic: 6.6.1
       enc-utils: 3.0.0
       ethereum-cryptography: 2.2.1
       hash.js: 1.1.7
 
-  '@toruslabs/starkware-crypto@5.0.0(@babel/runtime@7.28.6)':
+  '@toruslabs/starkware-crypto@5.0.0(@babel/runtime@7.29.7)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       assert: 2.1.0
       bip39: 3.1.0
       bn.js: 5.2.2
@@ -10415,14 +11214,14 @@ snapshots:
       ethereum-cryptography: 3.2.0
       hash.js: 1.1.7
 
-  '@toruslabs/torus.js@16.0.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)':
+  '@toruslabs/torus.js@16.0.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)':
     dependencies:
-      '@babel/runtime': 7.28.6
-      '@toruslabs/bs58': 1.0.0(@babel/runtime@7.28.6)
-      '@toruslabs/constants': 15.0.0(@babel/runtime@7.28.6)
+      '@babel/runtime': 7.29.7
+      '@toruslabs/bs58': 1.0.0(@babel/runtime@7.29.7)
+      '@toruslabs/constants': 15.0.0(@babel/runtime@7.29.7)
       '@toruslabs/eccrypto': 6.2.0
-      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
-      bn.js: 5.2.2
+      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
+      bn.js: 5.2.5
       elliptic: 6.6.1
       ethereum-cryptography: 3.2.0
       json-stable-stringify: 1.3.0
@@ -10449,6 +11248,8 @@ snapshots:
     dependencies:
       '@types/node': 22.19.7
 
+  '@types/cookie@0.6.0': {}
+
   '@types/d3-array@3.2.2': {}
 
   '@types/d3-color@3.1.3': {}
@@ -10474,6 +11275,10 @@ snapshots:
   '@types/d3-timer@3.0.2': {}
 
   '@types/debug@4.1.12':
+    dependencies:
+      '@types/ms': 2.1.0
+
+  '@types/debug@4.1.13':
     dependencies:
       '@types/ms': 2.1.0
 
@@ -10771,6 +11576,7 @@ snapshots:
       - encoding
       - immer
       - ioredis
+      - preact-render-to-string
       - react
       - supports-color
       - uploadthing
@@ -10823,6 +11629,7 @@ snapshots:
       - fastestsmallesttextencoderdecoder
       - immer
       - ioredis
+      - preact-render-to-string
       - react
       - react-native
       - supports-color
@@ -11214,7 +12021,7 @@ snapshots:
       '@walletconnect/jsonrpc-utils': 1.0.8
       '@walletconnect/safe-json': 1.0.2
       events: 3.3.0
-      ws: 7.5.10(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      ws: 7.5.13(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
@@ -12015,15 +12822,15 @@ snapshots:
       '@walletconnect/window-getters': 1.0.1
       tslib: 1.14.1
 
-  '@web3auth/account-abstraction-provider@9.7.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)':
+  '@web3auth/account-abstraction-provider@9.7.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       '@ethereumjs/util': 9.1.0
-      '@toruslabs/base-controllers': 7.4.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
-      '@web3auth/auth': 9.6.4(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
-      '@web3auth/base': 9.7.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
-      '@web3auth/base-provider': 9.7.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
-      '@web3auth/ethereum-provider': 9.7.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
+      '@toruslabs/base-controllers': 7.4.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@web3auth/auth': 9.6.4(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@web3auth/base': 9.7.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@web3auth/base-provider': 9.7.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@web3auth/ethereum-provider': 9.7.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       ethers: 6.16.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       permissionless: 0.2.57(viem@2.44.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))
       viem: 2.44.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
@@ -12036,17 +12843,17 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@web3auth/auth@10.8.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)':
+  '@web3auth/auth@10.8.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       '@ethereumjs/util': 10.1.0
-      '@toruslabs/constants': 15.0.0(@babel/runtime@7.28.6)
-      '@toruslabs/customauth': 21.3.2(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@toruslabs/constants': 15.0.0(@babel/runtime@7.29.7)
+      '@toruslabs/customauth': 21.3.2(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@toruslabs/ffjavascript': 5.0.0
-      '@toruslabs/metadata-helpers': 7.0.2(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
-      '@toruslabs/secure-pub-sub': 3.0.2(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
-      '@toruslabs/session-manager': 4.0.2(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
-      '@toruslabs/starkware-crypto': 5.0.0(@babel/runtime@7.28.6)
+      '@toruslabs/metadata-helpers': 7.0.2(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
+      '@toruslabs/secure-pub-sub': 3.0.2(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@toruslabs/session-manager': 4.0.2(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
+      '@toruslabs/starkware-crypto': 5.0.0(@babel/runtime@7.29.7)
       '@toruslabs/tweetnacl-js': 1.0.4
       base64url: 3.0.1
       bip39: 3.1.0
@@ -12072,16 +12879,16 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@web3auth/auth@9.6.4(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+  '@web3auth/auth@9.6.4(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       '@ethereumjs/util': 9.1.0
-      '@toruslabs/constants': 14.2.0(@babel/runtime@7.28.6)
+      '@toruslabs/constants': 14.2.0(@babel/runtime@7.29.7)
       '@toruslabs/ffjavascript': 4.0.0
-      '@toruslabs/metadata-helpers': 6.0.0(@babel/runtime@7.28.6)
-      '@toruslabs/secure-pub-sub': 1.1.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
-      '@toruslabs/session-manager': 3.2.0(@babel/runtime@7.28.6)
-      '@toruslabs/starkware-crypto': 4.0.1(@babel/runtime@7.28.6)
+      '@toruslabs/metadata-helpers': 6.0.0(@babel/runtime@7.29.7)
+      '@toruslabs/secure-pub-sub': 1.1.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@toruslabs/session-manager': 3.2.0(@babel/runtime@7.29.7)
+      '@toruslabs/starkware-crypto': 4.0.1(@babel/runtime@7.29.7)
       '@toruslabs/tweetnacl-js': 1.0.4
       base64url: 3.0.1
       bip39: 3.1.0
@@ -12108,12 +12915,12 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@web3auth/base-provider@9.7.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+  '@web3auth/base-provider@9.7.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
-      '@babel/runtime': 7.28.6
-      '@toruslabs/base-controllers': 7.4.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
-      '@web3auth/auth': 9.6.4(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
-      '@web3auth/base': 9.7.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@babel/runtime': 7.29.7
+      '@toruslabs/base-controllers': 7.4.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@web3auth/auth': 9.6.4(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@web3auth/base': 9.7.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       json-rpc-random-id: 1.0.1
     transitivePeerDependencies:
       - '@sentry/types'
@@ -12121,13 +12928,13 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@web3auth/base@9.7.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
+  '@web3auth/base@9.7.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)':
     dependencies:
-      '@babel/runtime': 7.28.6
-      '@toruslabs/base-controllers': 7.4.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
-      '@toruslabs/constants': 14.2.0(@babel/runtime@7.28.6)
-      '@toruslabs/http-helpers': 7.0.1(@babel/runtime@7.28.6)
-      '@web3auth/auth': 9.6.4(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@babel/runtime': 7.29.7
+      '@toruslabs/base-controllers': 7.4.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@toruslabs/constants': 14.2.0(@babel/runtime@7.29.7)
+      '@toruslabs/http-helpers': 7.0.1(@babel/runtime@7.29.7)
+      '@web3auth/auth': 9.6.4(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       jwt-decode: 4.0.0
       loglevel: 1.9.2
       ts-custom-error: 3.3.1
@@ -12137,16 +12944,16 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@web3auth/ethereum-provider@9.7.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)':
+  '@web3auth/ethereum-provider@9.7.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       '@ethereumjs/util': 9.1.0
-      '@toruslabs/base-controllers': 7.4.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@toruslabs/base-controllers': 7.4.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@toruslabs/eccrypto': 5.0.4
-      '@toruslabs/http-helpers': 7.0.1(@babel/runtime@7.28.6)
-      '@web3auth/auth': 9.6.4(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
-      '@web3auth/base': 9.7.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
-      '@web3auth/base-provider': 9.7.0(@babel/runtime@7.28.6)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@toruslabs/http-helpers': 7.0.1(@babel/runtime@7.29.7)
+      '@web3auth/auth': 9.6.4(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@web3auth/base': 9.7.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@web3auth/base-provider': 9.7.0(@babel/runtime@7.29.7)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       assert: 2.1.0
       bignumber.js: 9.3.1
       bn.js: 5.2.2
@@ -12161,15 +12968,15 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@web3auth/modal@10.5.6(@babel/runtime@7.28.6)(@coinbase/wallet-sdk@4.3.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(@sentry/core@9.47.1)(@solana/web3.js@1.98.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))(bufferutil@4.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.9.3)(utf-8-validate@5.0.10)(viem@2.44.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(zod@3.25.76)':
+  '@web3auth/modal@10.5.6(@babel/runtime@7.29.7)(@coinbase/wallet-sdk@4.3.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(@sentry/core@9.47.1)(@solana/web3.js@1.98.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10))(bufferutil@4.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.9.3)(utf-8-validate@5.0.10)(viem@2.44.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(zod@3.25.76)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       '@hcaptcha/react-hcaptcha': 1.17.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@solana/web3.js': 1.98.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
-      '@toruslabs/base-controllers': 8.17.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
-      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
-      '@web3auth/auth': 10.8.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
-      '@web3auth/no-modal': 10.5.6(@babel/runtime@7.28.6)(@coinbase/wallet-sdk@4.3.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(react@18.3.1)(typescript@5.9.3)(utf-8-validate@5.0.10)(viem@2.44.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(zod@3.25.76)
+      '@toruslabs/base-controllers': 8.17.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
+      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
+      '@web3auth/auth': 10.8.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
+      '@web3auth/no-modal': 10.5.6(@babel/runtime@7.29.7)(@coinbase/wallet-sdk@4.3.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(react@18.3.1)(typescript@5.9.3)(utf-8-validate@5.0.10)(viem@2.44.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(zod@3.25.76)
       bowser: 2.13.1
       classnames: 2.5.1
       clsx: 2.1.1
@@ -12215,22 +13022,22 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@web3auth/no-modal@10.5.6(@babel/runtime@7.28.6)(@coinbase/wallet-sdk@4.3.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(react@18.3.1)(typescript@5.9.3)(utf-8-validate@5.0.10)(viem@2.44.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(zod@3.25.76)':
+  '@web3auth/no-modal@10.5.6(@babel/runtime@7.29.7)(@coinbase/wallet-sdk@4.3.7(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(react@18.3.1)(typescript@5.9.3)(utf-8-validate@5.0.10)(viem@2.44.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))(zod@3.25.76)':
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       '@ethereumjs/util': 9.1.0
       '@metamask/sdk': 0.33.1(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@segment/analytics-next': 1.81.1
       '@solana/wallet-standard-features': 1.3.0
       '@solana/web3.js': 1.98.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)
-      '@toruslabs/base-controllers': 8.17.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
-      '@toruslabs/bs58': 1.0.0(@babel/runtime@7.28.6)
-      '@toruslabs/constants': 15.0.0(@babel/runtime@7.28.6)
+      '@toruslabs/base-controllers': 8.17.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
+      '@toruslabs/bs58': 1.0.0(@babel/runtime@7.29.7)
+      '@toruslabs/constants': 15.0.0(@babel/runtime@7.29.7)
       '@toruslabs/eccrypto': 6.2.0
-      '@toruslabs/ethereum-controllers': 8.15.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)(viem@2.44.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))
-      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
-      '@toruslabs/loglevel-sentry': 8.1.0(@babel/runtime@7.28.6)
-      '@toruslabs/secure-pub-sub': 3.0.2(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      '@toruslabs/ethereum-controllers': 8.15.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)(viem@2.44.4(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76))
+      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
+      '@toruslabs/loglevel-sentry': 8.1.0(@babel/runtime@7.29.7)
+      '@toruslabs/secure-pub-sub': 3.0.2(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       '@toruslabs/tweetnacl-js': 1.0.4
       '@wallet-standard/app': 1.1.0
       '@wallet-standard/base': 1.1.0
@@ -12238,8 +13045,8 @@ snapshots:
       '@walletconnect/sign-client': 2.23.5(bufferutil@4.1.0)(typescript@5.9.3)(utf-8-validate@5.0.10)(zod@3.25.76)
       '@walletconnect/types': 2.23.5
       '@walletconnect/utils': 2.23.5(typescript@5.9.3)(zod@3.25.76)
-      '@web3auth/auth': 10.8.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
-      '@web3auth/ws-embed': 5.5.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
+      '@web3auth/auth': 10.8.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
+      '@web3auth/ws-embed': 5.5.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
       assert: 2.1.0
       bignumber.js: 9.3.1
       bn.js: 5.2.2
@@ -12289,13 +13096,13 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@web3auth/ws-embed@5.5.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)':
+  '@web3auth/ws-embed@5.5.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)':
     dependencies:
-      '@babel/runtime': 7.28.6
-      '@toruslabs/base-controllers': 8.17.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
-      '@toruslabs/constants': 15.0.0(@babel/runtime@7.28.6)
-      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.28.6)(@sentry/core@9.47.1)
-      '@web3auth/auth': 10.8.0(@babel/runtime@7.28.6)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
+      '@babel/runtime': 7.29.7
+      '@toruslabs/base-controllers': 8.17.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
+      '@toruslabs/constants': 15.0.0(@babel/runtime@7.29.7)
+      '@toruslabs/http-helpers': 8.1.1(@babel/runtime@7.29.7)(@sentry/core@9.47.1)
+      '@web3auth/auth': 10.8.0(@babel/runtime@7.29.7)(@sentry/core@9.47.1)(bufferutil@4.1.0)(color@5.0.3)(utf-8-validate@5.0.10)
       deepmerge: 4.3.1
       fast-deep-equal: 3.1.3
       loglevel: 1.9.2
@@ -12542,11 +13349,15 @@ snapshots:
     dependencies:
       '@noble/hashes': 1.8.0
 
+  blake3-wasm@2.1.5: {}
+
   blakejs@1.2.1: {}
 
-  bn.js@4.12.2: {}
+  bn.js@4.12.5: {}
 
   bn.js@5.2.2: {}
+
+  bn.js@5.2.5: {}
 
   body-parser@2.3.0:
     dependencies:
@@ -12781,6 +13592,8 @@ snapshots:
 
   cookie@0.7.2: {}
 
+  cookie@1.1.1: {}
+
   copy-to-clipboard@3.3.3:
     dependencies:
       toggle-selection: 1.0.6
@@ -12982,6 +13795,8 @@ snapshots:
 
   detect-browser@5.3.0: {}
 
+  detect-libc@2.1.2: {}
+
   detect-node-es@1.1.0: {}
 
   devlop@1.1.0:
@@ -13000,7 +13815,7 @@ snapshots:
 
   dom-helpers@5.2.1:
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       csstype: 3.2.3
 
   domexception@4.0.0:
@@ -13039,7 +13854,7 @@ snapshots:
 
   elliptic@6.6.1:
     dependencies:
-      bn.js: 4.12.2
+      bn.js: 4.12.5
       brorand: 1.1.0
       hash.js: 1.1.7
       hmac-drbg: 1.0.1
@@ -13089,6 +13904,8 @@ snapshots:
   engine.io-parser@5.2.3: {}
 
   entities@6.0.1: {}
+
+  error-stack-parser-es@1.0.5: {}
 
   es-define-property@1.0.1: {}
 
@@ -13202,6 +14019,35 @@ snapshots:
       '@esbuild/win32-arm64': 0.27.7
       '@esbuild/win32-ia32': 0.27.7
       '@esbuild/win32-x64': 0.27.7
+
+  esbuild@0.28.1:
+    optionalDependencies:
+      '@esbuild/aix-ppc64': 0.28.1
+      '@esbuild/android-arm': 0.28.1
+      '@esbuild/android-arm64': 0.28.1
+      '@esbuild/android-x64': 0.28.1
+      '@esbuild/darwin-arm64': 0.28.1
+      '@esbuild/darwin-x64': 0.28.1
+      '@esbuild/freebsd-arm64': 0.28.1
+      '@esbuild/freebsd-x64': 0.28.1
+      '@esbuild/linux-arm': 0.28.1
+      '@esbuild/linux-arm64': 0.28.1
+      '@esbuild/linux-ia32': 0.28.1
+      '@esbuild/linux-loong64': 0.28.1
+      '@esbuild/linux-mips64el': 0.28.1
+      '@esbuild/linux-ppc64': 0.28.1
+      '@esbuild/linux-riscv64': 0.28.1
+      '@esbuild/linux-s390x': 0.28.1
+      '@esbuild/linux-x64': 0.28.1
+      '@esbuild/netbsd-arm64': 0.28.1
+      '@esbuild/netbsd-x64': 0.28.1
+      '@esbuild/openbsd-arm64': 0.28.1
+      '@esbuild/openbsd-x64': 0.28.1
+      '@esbuild/openharmony-arm64': 0.28.1
+      '@esbuild/sunos-x64': 0.28.1
+      '@esbuild/win32-arm64': 0.28.1
+      '@esbuild/win32-ia32': 0.28.1
+      '@esbuild/win32-x64': 0.28.1
 
   escalade@3.2.0: {}
 
@@ -13617,6 +14463,8 @@ snapshots:
       safe-buffer: 5.2.1
       to-buffer: 1.2.2
 
+  hash-wasm@4.12.0: {}
+
   hash.js@1.1.7:
     dependencies:
       inherits: 2.0.4
@@ -13970,6 +14818,8 @@ snapshots:
 
   keyvaluestorage-interface@1.0.0: {}
 
+  kleur@4.1.5: {}
+
   levn@0.4.1:
     dependencies:
       prelude-ls: 1.2.1
@@ -14163,7 +15013,7 @@ snapshots:
 
   media-query-parser@2.0.2:
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
 
   media-typer@1.1.0: {}
 
@@ -14326,6 +15176,18 @@ snapshots:
       mime-db: 1.54.0
 
   min-indent@1.0.1: {}
+
+  miniflare@5.20260801.0-alpha(bufferutil@4.1.0)(utf-8-validate@5.0.10):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      sharp: 0.35.2
+      undici: 7.28.0
+      workerd: 1.20260801.1
+      ws: 8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      youch: 4.1.0-beta.10
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
 
   minimalistic-assert@1.0.1: {}
 
@@ -14615,6 +15477,8 @@ snapshots:
 
   path-parse@1.0.7: {}
 
+  path-to-regexp@6.3.0: {}
+
   path-to-regexp@8.4.2: {}
 
   pathe@2.0.3: {}
@@ -14778,6 +15642,8 @@ snapshots:
 
   preact@10.28.3: {}
 
+  preact@10.29.8: {}
+
   prelude-ls@1.2.1: {}
 
   pretty-format@27.5.1:
@@ -14894,7 +15760,7 @@ snapshots:
 
   react-i18next@15.7.4(i18next@25.8.10(typescript@5.9.3))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.9.3):
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       html-parse-stringify: 3.0.1
       i18next: 25.8.10(typescript@5.9.3)
       react: 18.3.1
@@ -14979,17 +15845,21 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  react-router-dom@6.30.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  react-router-dom@7.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      '@remix-run/router': 1.23.2
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      react-router: 6.30.3(react@18.3.1)
+      react-router: 7.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
 
-  react-router@6.30.3(react@18.3.1):
+  react-router@7.0.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      '@remix-run/router': 1.23.2
+      '@types/cookie': 0.6.0
+      cookie: 1.1.1
       react: 18.3.1
+      set-cookie-parser: 2.7.2
+      turbo-stream: 2.4.0
+    optionalDependencies:
+      react-dom: 18.3.1(react@18.3.1)
 
   react-smooth@4.0.4(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
@@ -15009,7 +15879,7 @@ snapshots:
 
   react-transition-group@4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      '@babel/runtime': 7.28.6
+      '@babel/runtime': 7.29.7
       dom-helpers: 5.2.1
       loose-envify: 1.4.0
       prop-types: 15.8.1
@@ -15250,6 +16120,8 @@ snapshots:
 
   semver@7.7.3: {}
 
+  semver@7.8.5: {}
+
   send@1.2.1:
     dependencies:
       debug: 4.4.3
@@ -15277,6 +16149,8 @@ snapshots:
 
   set-blocking@2.0.0: {}
 
+  set-cookie-parser@2.7.2: {}
+
   set-function-length@1.2.2:
     dependencies:
       define-data-property: 1.1.4
@@ -15295,6 +16169,38 @@ snapshots:
       to-buffer: 1.2.2
 
   shallowequal@1.1.0: {}
+
+  sharp@0.35.2:
+    dependencies:
+      '@img/colour': 1.1.0
+      detect-libc: 2.1.2
+      semver: 7.8.5
+    optionalDependencies:
+      '@img/sharp-darwin-arm64': 0.35.2
+      '@img/sharp-darwin-x64': 0.35.2
+      '@img/sharp-freebsd-wasm32': 0.35.2
+      '@img/sharp-libvips-darwin-arm64': 1.3.1
+      '@img/sharp-libvips-darwin-x64': 1.3.1
+      '@img/sharp-libvips-linux-arm': 1.3.1
+      '@img/sharp-libvips-linux-arm64': 1.3.1
+      '@img/sharp-libvips-linux-ppc64': 1.3.1
+      '@img/sharp-libvips-linux-riscv64': 1.3.1
+      '@img/sharp-libvips-linux-s390x': 1.3.1
+      '@img/sharp-libvips-linux-x64': 1.3.1
+      '@img/sharp-libvips-linuxmusl-arm64': 1.3.1
+      '@img/sharp-libvips-linuxmusl-x64': 1.3.1
+      '@img/sharp-linux-arm': 0.35.2
+      '@img/sharp-linux-arm64': 0.35.2
+      '@img/sharp-linux-ppc64': 0.35.2
+      '@img/sharp-linux-riscv64': 0.35.2
+      '@img/sharp-linux-s390x': 0.35.2
+      '@img/sharp-linux-x64': 0.35.2
+      '@img/sharp-linuxmusl-arm64': 0.35.2
+      '@img/sharp-linuxmusl-x64': 0.35.2
+      '@img/sharp-webcontainers-wasm32': 0.35.2
+      '@img/sharp-win32-arm64': 0.35.2
+      '@img/sharp-win32-ia32': 0.35.2
+      '@img/sharp-win32-x64': 0.35.2
 
   shebang-command@2.0.0:
     dependencies:
@@ -15451,6 +16357,8 @@ snapshots:
 
   superstruct@2.0.2: {}
 
+  supports-color@10.2.2: {}
+
   supports-color@7.2.0:
     dependencies:
       has-flag: 4.0.0
@@ -15524,7 +16432,7 @@ snapshots:
   tiny-secp256k1@1.1.7:
     dependencies:
       bindings: 1.5.0
-      bn.js: 4.12.2
+      bn.js: 4.12.5
       create-hmac: 1.1.7
       elliptic: 6.6.1
       nan: 2.25.0
@@ -15589,6 +16497,8 @@ snapshots:
 
   tslib@2.8.1: {}
 
+  turbo-stream@2.4.0: {}
+
   type-check@0.4.0:
     dependencies:
       prelude-ls: 1.2.1
@@ -15649,6 +16559,12 @@ snapshots:
   undici-types@6.21.0: {}
 
   undici-types@7.22.0: {}
+
+  undici@7.28.0: {}
+
+  unenv@2.0.0-rc.24:
+    dependencies:
+      pathe: 2.0.3
 
   unfetch@3.1.2: {}
 
@@ -15910,7 +16826,7 @@ snapshots:
       '@types/node': 22.19.7
       fsevents: 2.3.3
 
-  vitest@3.2.4(@types/debug@4.1.12)(@types/node@22.19.7)(jsdom@20.0.3(bufferutil@4.1.0)(utf-8-validate@5.0.10)):
+  vitest@3.2.4(@types/debug@4.1.13)(@types/node@22.19.7)(jsdom@20.0.3(bufferutil@4.1.0)(utf-8-validate@5.0.10)):
     dependencies:
       '@types/chai': 5.2.3
       '@vitest/expect': 3.2.4
@@ -15936,7 +16852,7 @@ snapshots:
       vite-node: 3.2.4(@types/node@22.19.7)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/debug': 4.1.12
+      '@types/debug': 4.1.13
       '@types/node': 22.19.7
       jsdom: 20.0.3(bufferutil@4.1.0)(utf-8-validate@5.0.10)
     transitivePeerDependencies:
@@ -15995,6 +16911,7 @@ snapshots:
       - fastestsmallesttextencoderdecoder
       - immer
       - ioredis
+      - preact-render-to-string
       - react-native
       - supports-color
       - uploadthing
@@ -16066,6 +16983,30 @@ snapshots:
 
   word-wrap@1.2.5: {}
 
+  workerd@1.20260801.1:
+    optionalDependencies:
+      '@cloudflare/workerd-darwin-64': 1.20260801.1
+      '@cloudflare/workerd-darwin-arm64': 1.20260801.1
+      '@cloudflare/workerd-linux-64': 1.20260801.1
+      '@cloudflare/workerd-linux-arm64': 1.20260801.1
+      '@cloudflare/workerd-windows-64': 1.20260801.1
+
+  wrangler@4.119.0(bufferutil@4.1.0)(utf-8-validate@5.0.10):
+    dependencies:
+      '@cloudflare/kv-asset-handler': 0.5.0
+      '@cloudflare/unenv-preset': 2.16.1(unenv@2.0.0-rc.24)(workerd@1.20260801.1)
+      blake3-wasm: 2.1.5
+      esbuild: 0.28.1
+      miniflare: 5.20260801.0-alpha(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      path-to-regexp: 6.3.0
+      unenv: 2.0.0-rc.24
+      workerd: 1.20260801.1
+    optionalDependencies:
+      fsevents: 2.3.3
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   wrap-ansi@6.2.0:
     dependencies:
       ansi-styles: 4.3.0
@@ -16075,6 +17016,11 @@ snapshots:
   wrappy@1.0.2: {}
 
   ws@7.5.10(bufferutil@4.1.0)(utf-8-validate@5.0.10):
+    optionalDependencies:
+      bufferutil: 4.1.0
+      utf-8-validate: 5.0.10
+
+  ws@7.5.13(bufferutil@4.1.0)(utf-8-validate@5.0.10):
     optionalDependencies:
       bufferutil: 4.1.0
       utf-8-validate: 5.0.10
@@ -16095,6 +17041,16 @@ snapshots:
       utf-8-validate: 5.0.10
 
   ws@8.19.0(bufferutil@4.1.0)(utf-8-validate@5.0.10):
+    optionalDependencies:
+      bufferutil: 4.1.0
+      utf-8-validate: 5.0.10
+
+  ws@8.21.0(bufferutil@4.1.0)(utf-8-validate@5.0.10):
+    optionalDependencies:
+      bufferutil: 4.1.0
+      utf-8-validate: 5.0.10
+
+  ws@8.21.2(bufferutil@4.1.0)(utf-8-validate@5.0.10):
     optionalDependencies:
       bufferutil: 4.1.0
       utf-8-validate: 5.0.10
@@ -16155,6 +17111,19 @@ snapshots:
       yargs-parser: 18.1.3
 
   yocto-queue@0.1.0: {}
+
+  youch-core@0.3.3:
+    dependencies:
+      '@poppinss/exception': 1.2.3
+      error-stack-parser-es: 1.0.5
+
+  youch@4.1.0-beta.10:
+    dependencies:
+      '@poppinss/colors': 4.1.6
+      '@poppinss/dumper': 0.6.5
+      '@speed-highlight/core': 1.2.23
+      cookie: 1.1.1
+      youch-core: 0.3.3
 
   zod-to-json-schema@3.25.2(zod@3.25.76):
     dependencies:
