@@ -13,8 +13,17 @@
  * the primary doubles as a cache warm for the real poster fetch.
  */
 import { useEffect, useState } from 'react';
+import { cdnImage } from '@/lib/media-url';
 
-const resolved = new Map<string, string>(); // primary URL → working URL
+const resolved = new Map<string, string>(); // raw primary URL → working TRANSFORMED URL
+
+/**
+ * Video posters render at anything from a 180px shorts tile to a full-width
+ * feed card, so this matches the media default in media-url.ts rather than
+ * trying to be clever. Cloudflare never upscales, so a smaller original is
+ * untouched.
+ */
+const POSTER_WIDTH = 1080;
 
 function probe(url: string): Promise<boolean> {
   return new Promise((res) => {
@@ -34,13 +43,23 @@ function shortsSibling(url: string): string | null {
 export async function resolveThumbnailUrl(url: string): Promise<string> {
   const cached = resolved.get(url);
   if (cached !== undefined) return cached;
-  const sibling = shortsSibling(url);
-  if (!sibling) {
+
+  // Probe the TRANSFORMED urls, not the raw ones. The sibling logic still runs
+  // on the raw path (that is where the images/ vs shorts/ folder lives), but
+  // what gets probed has to be what actually gets fetched, or the comment
+  // above stops being true — the probe would warm the raw object while the
+  // <img> then requests a different URL. Cloudflare propagates the origin's
+  // 403 for a missing source through the transform (verified against
+  // production), so onerror still fires and the fallback still triggers.
+  const primary = cdnImage(url, { width: POSTER_WIDTH });
+  const siblingRaw = shortsSibling(url);
+  if (!siblingRaw) {
     // Nothing to fall back to — don't spend a probe on it.
-    resolved.set(url, url);
-    return url;
+    resolved.set(url, primary);
+    return primary;
   }
-  const winner = (await probe(url)) ? url : (await probe(sibling)) ? sibling : url;
+  const sibling = cdnImage(siblingRaw, { width: POSTER_WIDTH });
+  const winner = (await probe(primary)) ? primary : (await probe(sibling)) ? sibling : primary;
   resolved.set(url, winner);
   return winner;
 }
@@ -51,7 +70,7 @@ export async function resolveThumbnailUrl(url: string): Promise<string> {
  */
 export function useResolvedThumbnail(url: string | undefined | null): string | undefined {
   const [current, setCurrent] = useState<string | undefined>(() =>
-    url ? resolved.get(url) ?? url : undefined,
+    url ? resolved.get(url) ?? cdnImage(url, { width: POSTER_WIDTH }) : undefined,
   );
 
   useEffect(() => {
@@ -59,7 +78,7 @@ export function useResolvedThumbnail(url: string | undefined | null): string | u
       setCurrent(undefined);
       return;
     }
-    setCurrent(resolved.get(url) ?? url);
+    setCurrent(resolved.get(url) ?? cdnImage(url, { width: POSTER_WIDTH }));
     let cancelled = false;
     void resolveThumbnailUrl(url).then((winner) => {
       if (!cancelled) setCurrent(winner);
