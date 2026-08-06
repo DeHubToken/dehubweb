@@ -8,14 +8,14 @@
   "mcp": {
     "server": {
       "name": "dehub-mcp",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "title": "DeHub"
     },
     "tools": [
       {
         "name": "dehub_feed",
         "title": "Get DeHub feed",
-        "description": "Fetch posts from the DeHub decentralized social feed.",
+        "description": "Fetch posts from the DeHub decentralized social feed. Returns compact post summaries — token ID, author, body and engagement counts.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -29,13 +29,18 @@
               "enum": [
                 "new",
                 "hot",
-                "trending"
+                "trending",
+                "discussed"
               ],
-              "description": "Sort order"
+              "description": "new = latest, hot = most liked, trending = most viewed, discussed = most commented"
             },
             "category": {
               "type": "string",
               "description": "Optional category filter"
+            },
+            "search": {
+              "type": "string",
+              "description": "Keyword to match against post titles and descriptions"
             },
             "limit": {
               "type": "integer",
@@ -57,7 +62,7 @@
       {
         "name": "dehub_post",
         "title": "Get DeHub post",
-        "description": "Fetch a single DeHub post by its token ID.",
+        "description": "Fetch a single DeHub post by its token ID, including author and engagement counts.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -81,9 +86,46 @@
         "outputSchema": null
       },
       {
+        "name": "dehub_comments",
+        "title": "Read post comments",
+        "description": "Read the comment thread on a DeHub post, with author, body and like count for each comment.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "token_id": {
+              "type": "string",
+              "minLength": 1,
+              "description": "The post's token ID"
+            },
+            "limit": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "description": "Max comments (1-50)"
+            },
+            "page": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Zero-based page number"
+            }
+          },
+          "required": [
+            "token_id"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
         "name": "dehub_search",
         "title": "Search DeHub",
-        "description": "Search DeHub posts, users, and videos.",
+        "description": "Search DeHub for posts (by title and description) and people (by username and display name).",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -102,16 +144,15 @@
               "enum": [
                 "all",
                 "posts",
-                "users",
-                "videos"
+                "users"
               ],
-              "description": "Result type filter"
+              "description": "Restrict results to posts or users"
             },
             "limit": {
               "type": "integer",
               "minimum": 1,
               "maximum": 50,
-              "description": "Max results (1-50)"
+              "description": "Max results per section (1-50)"
             }
           },
           "required": [
@@ -125,7 +166,7 @@
       {
         "name": "dehub_profile",
         "title": "Get DeHub profile",
-        "description": "Fetch a DeHub user profile by wallet address.",
+        "description": "Fetch a DeHub user profile by wallet address or username.",
         "annotations": {
           "readOnlyHint": true,
           "idempotentHint": true,
@@ -134,14 +175,14 @@
         "inputSchema": {
           "type": "object",
           "properties": {
-            "wallet_address": {
+            "user": {
               "type": "string",
               "minLength": 1,
-              "description": "Wallet address (0x...) to look up"
+              "description": "Wallet address (0x...) or username to look up"
             }
           },
           "required": [
-            "wallet_address"
+            "user"
           ],
           "additionalProperties": false,
           "$schema": "http://json-schema.org/draft-07/schema#"
