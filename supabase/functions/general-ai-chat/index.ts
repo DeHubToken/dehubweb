@@ -1352,6 +1352,11 @@ IMPORTANT FORMATTING RULES:
                 ? 'google/gemini-2.5-pro'
                 : 'google/gemini-2.5-flash';
 
+      // Identity travels as the user's DeHub token, which the API verifies.
+      // This function is publicly callable, so an address in the body proves
+      // nothing — trusting one would let anyone read anyone's private data by
+      // naming their wallet. `callerAddress` is accepted for logging only.
+      const userToken = dehubToken || null;
       const caller = callerAddress || userContext?.walletAddress || null;
       const agentPrompt = `${surface === 'chat' ? CHAT_SURFACE_PROMPT(maxReplyChars ?? 460) : ''}${systemPrompt}${TOOL_USE_PROMPT}`;
       const agentMessages = messages.map((m) => ({
@@ -1369,7 +1374,7 @@ IMPORTANT FORMATTING RULES:
           messages: agentMessages,
           systemPrompt: agentPrompt,
           surface,
-          caller,
+          userToken,
           model: agentModel,
           lovableApiKey,
           perplexityKey: perplexityKey || undefined,
@@ -1403,7 +1408,7 @@ IMPORTANT FORMATTING RULES:
           messages: agentMessages,
           systemPrompt: agentPrompt,
           surface,
-          caller,
+          userToken,
           model: agentModel,
           lovableApiKey,
           perplexityKey: perplexityKey || undefined,
