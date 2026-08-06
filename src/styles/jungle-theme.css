@@ -1,0 +1,942 @@
+/* ==========================================================================
+   JUNGLE - surface bindings
+   ==========================================================================
+
+   jungle-frame.css is the vocabulary; this file is where it lands on real app
+   surfaces. Nothing here invents a token.
+
+   HOUSE RULES ENFORCED HERE
+   ------------------------
+   1. PALETTE LOCK. One accent (--jungle-leaf-c). --jungle-gold is sunlight:
+      warning, live, and the single hero moment per screen. --jungle-alert is
+      destructive. Saturated Tailwind families are remapped by ROLE (section
+      12), because ~800 of them ship across the app and left alone they make
+      the "one accent" claim false.
+
+   2. THE SCENE MUST SURVIVE. This is the rule that replaced v1's "wood is
+      opaque", and it is the most important one in the file. The app is ~70%
+      panel by area; at v1's 0.90-0.97 alpha with the blur switched off, the
+      animated jungle behind the chrome was never actually visible, and the
+      theme collapsed into flat brown boxes. Surfaces now sit on the bridge's
+      alphas (0.74 feed / 0.84 panel) with a 9px blur, so a plank still reads
+      as solid timber but the canopy moves behind it and the light changes at
+      its edges.
+
+      Concretely: NO RULE IN THIS FILE MAY WRITE `backdrop-filter: none` OR
+      PIN A FILL ABOVE ~0.9. The only exceptions are portalled surfaces that
+      sit over arbitrary content (section 5), where legibility wins.
+
+   3. LIGHT COMES FROM THE GAP. Lit edges are --jungle-glint (warm grey), never
+      white; shadows are green-black, never neutral. Raised surfaces catch the
+      light on top; recessed ones (inputs, troughs, active tabs) invert it
+      exactly. That inversion is the whole depth language, and it is what makes
+      an active state readable without a glow.
+
+   4. CHROME IS CARVED, CONTENT IS FLAT. Grain, knots, moss and engraving go on
+      panels, navs and primary actions. [data-feed-item] repeats ~30x per
+      screen, so it gets soft grain and a bevel and nothing else. A knot
+      repeated thirty times is a stain, not a material.
+
+   5. CONTENT FIDELITY. [data-media-full], [data-video-controls] and
+      [data-keep-dark] are never tinted, filtered or recoloured. A wood theme
+      does not get to put grain on someone's uploaded photo.
+
+   6. AA CONTRAST. Every text value below was measured against the actual
+      composited surface, not the token in isolation. See the table in
+      jungle-frame.css section 1.
+
+   7. TEXT NEVER MOVES. Every decoration here is a background, an inset shadow
+      or a pseudo-element. Nothing adds a border, changes a padding or alters a
+      line box, so no rule can shift a character of copy off the alignment the
+      app already lays out.
+
+   Most core coverage arrives free: index.css already paints [data-feed-item],
+   [data-side-panel], [data-page-bento], [data-search-bento] and [data-feed-nav]
+   for every allowlisted canvas theme, and jungle is on that allowlist with its
+   own --glass-* bridge values. This file handles what that block cannot reach,
+   plus everything Jungle says differently.
+   ========================================================================== */
+
+/* ==========================================================================
+   1. CORE SURFACES
+   ==========================================================================
+   The bridge already gave these the wood fill, the fibre grain and the bevel.
+   Added here: the sawn END GRAIN down a plank's left edge, and the knot and
+   moss that only the largest pieces of timber get.
+   ========================================================================== */
+
+html[data-theme='jungle'] :is([data-side-panel], [data-page-bento], [data-search-bento]) {
+  position: relative;
+  border-radius: var(--jungle-r-panel) !important;
+}
+
+/* Side panels are the biggest single pieces of wood on screen, so they are the
+   only surfaces that get a knot AND lichen. One knot on two tall columns reads
+   as timber; the same knot on every card reads as a stain.
+
+   `isolation` is load-bearing: `z-index: -1` on the decoration below would
+   otherwise escape this element and paint behind the panel's own background,
+   and behind whatever ancestor forms the nearest stacking context. Isolating
+   traps it — panel background, then negative-z decoration, then content.
+
+   Lifting the CHILDREN with `position: relative` instead would be the obvious
+   alternative and is wrong: several panels ship `sticky` and `absolute`
+   children (section headers, scroll fades), and overriding their position
+   drops them out of the layout they were written for. */
+html[data-theme='jungle'] [data-side-panel] {
+  overflow: hidden;
+  isolation: isolate;
+}
+html[data-theme='jungle'] [data-side-panel]::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    /* the knot */
+    radial-gradient(7rem 4rem at 108% 12%, rgb(0 0 0 / 0.34) 0%, rgb(0 0 0 / 0.12) 46%, transparent 72%),
+    radial-gradient(4rem 2.4rem at 108% 12%, rgb(var(--jungle-heart) / 0.42) 0%, transparent 60%),
+    /* lichen creeping up from the bottom-left corner: the one place the
+       canvas's green is allowed onto the chrome */
+    radial-gradient(12rem 8rem at -6% 106%, rgb(var(--jungle-leaf-c) / 0.11) 0%, transparent 68%),
+    radial-gradient(6rem 4rem at 14% 98%, rgb(var(--jungle-leaf-c) / 0.07) 0%, transparent 64%);
+}
+
+/* Feed items: soft grain, a bevel, and a 3px sawn end-grain rail down the left
+   edge. That rail is the theme's whole signature in the feed — enough to say
+   "wood" thirty times without any of the thirty shouting.
+
+   NO LEFT-EDGE RAIL. There used to be a 3px coloured line down the left of
+   every card, brightening to the accent on hover. It is gone by request, and
+   it deserved to go: a coloured bar on the edge of a card is the visual
+   language of "this row is selected / unread / errored", so spending it on
+   decoration meant thirty cards all claiming a state none of them had. Hover
+   is now carried by the fill lifting alone, which is enough — the surface
+   visibly changes and nothing is asserted about the content.
+
+   The fill deliberately reads --glass-thin from the bridge rather than pinning
+   a number, so house rule 2 is enforced in ONE place. */
+html[data-theme='jungle'] [data-feed-item] {
+  position: relative;
+  border-radius: var(--jungle-r-card) !important;
+  background: var(--jungle-grain-soft), rgb(var(--jungle-bark) / var(--glass-thin)) !important;
+  box-shadow: var(--jungle-edge) !important;
+}
+
+html[data-theme='jungle'] [data-feed-item]:hover {
+  background: var(--jungle-grain-soft), rgb(var(--jungle-bark) / var(--glass-raised)) !important;
+  box-shadow: var(--jungle-edge) !important;
+}
+
+/* -- nested surfaces ------------------------------------------------------
+   A decorated surface that CONTAINS another decorated surface is a layout
+   wrapper, not a card, so it drops its own material and lets the inner one
+   carry it.
+
+   The dedicated post page is where this bites: SinglePostPage wraps its whole
+   middle column in a [data-feed-item] to pick up the feed's spacing hooks. Left
+   with wood it renders a plank inside a plank — a second background stacked in
+   front of the forest for no reason, with two bevels and two grains fighting at
+   every edge, and a full-height slab down the centre of the page that the side
+   panels don't have.
+
+   That wrapper is matched by its own [data-post-shell] hook, NOT by a :has()
+   test on its contents. It used to be `:has(:is([data-page-bento],
+   [data-comments-section]))`, which quietly stopped matching: a video, image or
+   text post fills the column with a card that carries neither hook, and the
+   comments section only exists in the DOM while its drawer is open. So the rule
+   matched nothing on the page it was written for, and would have flickered the
+   column's background on and off with the comments drawer if it had.
+
+   The [data-page-bento] arm below is the genuine nested case and stays. Neither
+   arm may include [data-poll-card]: a normal home-feed card containing a poll
+   would then lose its own material, the opposite of what is wanted. */
+html[data-theme='jungle'] [data-feed-item][data-post-shell],
+html[data-theme='jungle'] [data-feed-item][data-post-shell]:hover,
+html[data-theme='jungle'] [data-page-bento]:has([data-page-bento]) {
+  background: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border-color: transparent !important;
+}
+
+/* Interactive bentos: pressing a wooden panel should read as the panel being
+   lifted, not lit. Raised fill plus a warmer cut, no glow. */
+html[data-theme='jungle'] [data-page-bento].cursor-pointer:hover {
+  box-shadow:
+    var(--jungle-edge-lift),
+    inset 0 0 0 1px rgb(var(--jungle-leaf-c) / 0.24) !important;
+}
+html[data-theme='jungle'] [data-page-bento].cursor-pointer:active {
+  transform: translateY(1px);
+}
+
+/* ==========================================================================
+   2. FEED NAV
+   ==========================================================================
+   The one surface the whole app is composed around: a floating bar the feed
+   scrolls behind and is clipped by (hooks/use-feed-swallow-clip.ts). Two
+   constraints are load-bearing:
+
+     - The OUTER wrapper stays fully invisible. Any fill on it paints a
+       full-width box around the pill, which the design forbids and which would
+       break the swallow clip's rounded top corners.
+     - The pill's own top edge IS the cut-off line, so its lit lip has to be
+       the brightest edge in the top of the frame or the clip reads as a bug.
+
+   Under this theme the pill is a carved SIGNBOARD: the heaviest bevel on
+   screen, because it is the one piece of wood the user sees on every route.
+   ========================================================================== */
+
+html[data-theme='jungle'] [data-feed-nav-outer] {
+  background-color: transparent !important;
+}
+
+html[data-theme='jungle'] [data-feed-nav] {
+  border-radius: var(--jungle-r-panel) !important;
+  background: var(--jungle-grain), rgb(var(--jungle-bark) / 0.88) !important;
+  backdrop-filter: var(--jungle-blur) !important;
+  -webkit-backdrop-filter: var(--jungle-blur) !important;
+  box-shadow:
+    inset 0 1.5px 0 rgb(var(--jungle-glint) / 0.2),
+    inset 0 0 0 1px rgb(0 0 0 / 0.6),
+    inset 0 -2px 0 rgb(8 14 10 / 0.5),
+    0 12px 34px rgb(6 10 7 / 0.55) !important;
+}
+
+/* The active tab. Engraved rather than lit: the label sits INTO the board and
+   the recess behind it is what marks it — the theme's own active language
+   instead of a borrowed neon glow. */
+html[data-theme='jungle'] :is([data-feed-tab-btn], [data-tab-btn])[data-active='true'] {
+  color: rgb(var(--jungle-leaf-c)) !important;
+  text-shadow: 0 1px 0 rgb(0 0 0 / 0.75);
+}
+
+/* Inactive tabs stay legible at 8.3:1 rather than fading to husk, which fails
+   as text at 3.7:1. Hover warms toward bone. */
+html[data-theme='jungle'] :is([data-feed-tab-btn], [data-tab-btn])[data-active='false'] {
+  color: rgb(var(--jungle-sand)) !important;
+}
+html[data-theme='jungle'] :is([data-feed-tab-btn], [data-tab-btn])[data-active='false']:hover {
+  color: rgb(var(--jungle-bone)) !important;
+}
+
+/* The sliding indicator behind the active tab: a pressed-in recess in the
+   board. Carved edge (dark top, lit bottom) — the exact inverse of every
+   raised surface, which is what makes it read as depth rather than as a
+   coloured rectangle. */
+html[data-theme='jungle'] [data-glass-indicator] {
+  border-radius: var(--jungle-r-chip) !important;
+  background: rgb(var(--jungle-loam) / 0.78) !important;
+  box-shadow:
+    var(--jungle-edge-carved),
+    inset 0 0 0 1px rgb(var(--jungle-leaf-c) / 0.32) !important;
+}
+
+/* ==========================================================================
+   3. TABS + FILTER CHIPS  ("pills")
+   ==========================================================================
+   Small wooden tags. Explicit inline-flex centring is deliberate: several ship
+   an icon plus a label and rely on the app's own flex classes, and a couple of
+   routes render them as a bare <button> with padding only. Pinning the centring
+   means the label sits on the optical centre of the tag on EVERY route — the
+   thing that most visibly breaks when a theme changes a control's box.
+   ========================================================================== */
+
+html[data-theme='jungle'] [data-filter-chip] {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  line-height: 1.2;
+  border-radius: var(--jungle-r-chip) !important;
+  border-color: transparent !important;
+  background: var(--jungle-grain-soft), rgb(var(--jungle-timber) / 0.82) !important;
+  box-shadow: var(--jungle-edge) !important;
+  color: rgb(var(--jungle-sand)) !important;
+}
+
+html[data-theme='jungle'] [data-filter-chip]:hover {
+  color: rgb(var(--jungle-bone)) !important;
+  background: var(--jungle-grain-soft), rgb(var(--jungle-timber) / 0.95) !important;
+}
+
+/* Active: the tag is pressed into the board. Carved edge plus accent text, and
+   NO transform — a chip row that shifts on selection makes the whole row
+   jitter as the user tabs across it. */
+html[data-theme='jungle'] [data-filter-chip][data-active='true'] {
+  color: rgb(var(--jungle-leaf-c)) !important;
+  background: rgb(var(--jungle-loam) / 0.8) !important;
+  box-shadow:
+    var(--jungle-edge-carved),
+    inset 0 0 0 1px rgb(var(--jungle-leaf-c) / 0.36) !important;
+}
+
+/* The trough the tabs sit in. Carved, so the tabs read as sitting inside a
+   routed channel rather than floating on the panel. */
+html[data-theme='jungle'] [data-side-panel-tabs] {
+  border-radius: var(--jungle-r-chip) !important;
+  background: rgb(var(--jungle-loam) / 0.55) !important;
+  box-shadow: var(--jungle-edge-carved) !important;
+}
+
+/* ==========================================================================
+   4. MOBILE HEADER + BOTTOM NAV
+   ==========================================================================
+   Both are edge-anchored, so each gets only the edge that faces the content:
+   the header lights its bottom lip, the bottom nav its top. Ringing all four
+   sides of a surface that runs off-screen just draws a line down the viewport
+   edge.
+   ========================================================================== */
+
+html[data-theme='jungle'] [data-mobile-header] {
+  background: var(--jungle-grain), rgb(var(--jungle-bark) / 0.86) !important;
+  backdrop-filter: var(--jungle-blur) !important;
+  -webkit-backdrop-filter: var(--jungle-blur) !important;
+  border-color: transparent !important;
+  box-shadow:
+    inset 0 -1px 0 rgb(0 0 0 / 0.6),
+    inset 0 -2px 0 rgb(var(--jungle-husk) / 0.2) !important;
+}
+
+html[data-theme='jungle'] [data-mobile-header][data-scrolled='true'] {
+  background: var(--jungle-grain), rgb(var(--jungle-bark) / 0.94) !important;
+}
+
+html[data-theme='jungle'] [data-bottom-nav] {
+  background: var(--jungle-grain), rgb(var(--jungle-bark) / 0.9) !important;
+  backdrop-filter: var(--jungle-blur) !important;
+  -webkit-backdrop-filter: var(--jungle-blur) !important;
+  border-color: transparent !important;
+  box-shadow:
+    inset 0 1.5px 0 rgb(var(--jungle-glint) / 0.18),
+    inset 0 2.5px 0 rgb(0 0 0 / 0.32) !important;
+}
+
+html[data-theme='jungle'] [data-bottom-nav] [data-active='true'] {
+  color: rgb(var(--jungle-leaf-c)) !important;
+}
+
+/* ==========================================================================
+   5. PORTALLED SURFACES
+   ==========================================================================
+   Dropdowns, drawers, toasts and modals render OUTSIDE #app-root, so neither
+   the rules above nor index.css's glass block reach them. Without this section
+   the theme visibly stops the moment anything opens — the most common way a
+   theme reads as half-finished.
+
+   These are the ONE exception to house rule 2, and deliberately so: a menu
+   floats over arbitrary content (a photo, a video, a chart), so legibility has
+   to win over letting the scene through. They stay near-solid.
+   ========================================================================== */
+
+html[data-theme='jungle'] [data-radix-popper-content-wrapper] > * {
+  border-radius: var(--jungle-r-card) !important;
+  background: var(--jungle-grain), rgb(var(--jungle-bark) / 0.97) !important;
+  border-color: transparent !important;
+  box-shadow: var(--jungle-edge-lift) !important;
+  color: rgb(var(--jungle-bone)) !important;
+}
+
+/* Sheets: option menus, comment sheets, the AI chat. NOT the dedicated post
+   page's drawer, which is a full-screen page surface rather than a sheet.
+
+   [data-post-drawer] and [data-vaul-drawer] are the SAME node — SinglePostPage
+   puts data-post-drawer on <DrawerContent>, ui/drawer.tsx spreads it onto
+   DrawerPrimitive.Content, and vaul stamps data-vaul-drawer on that element.
+   index.css declares that node transparent for every canvas theme, and that
+   rule and this one are an EXACT (0,2,1) !important tie, so import order alone
+   decides: main.tsx pulls index.css first and this file at :63, so without the
+   exclusion this wins and paints a near-opaque, full-viewport plank behind the
+   whole post column on mobile. That is the "middle panel" — and it is why the
+   other canvas themes look fine: none of them declares [data-vaul-drawer], so
+   nothing contests index.css there.
+
+   Excluded rather than re-declared transparent, per the note in section 11:
+   one token kills the fill, the grain, the bevel and the rounded top together,
+   and it also stops vaul's injected `[data-vaul-drawer]::after
+   { background: inherit }` extending the fill 200% below the sheet. */
+html[data-theme='jungle'] [data-vaul-drawer]:not([data-post-drawer]) {
+  border-radius: var(--jungle-r-panel) var(--jungle-r-panel) 0 0 !important;
+  background: var(--jungle-grain), rgb(var(--jungle-bark) / 0.97) !important;
+  border-color: transparent !important;
+  box-shadow: var(--jungle-edge-lift) !important;
+}
+
+html[data-theme='jungle'] :is([data-post-modal], [data-login-modal]) {
+  border-radius: var(--jungle-r-panel) !important;
+  background: var(--jungle-grain), rgb(var(--jungle-bark) / 0.97) !important;
+  border-color: transparent !important;
+  box-shadow: var(--jungle-edge-lift) !important;
+}
+
+html[data-theme='jungle'] [data-sonner-toast] {
+  border-radius: var(--jungle-r-card) !important;
+  background: var(--jungle-grain), rgb(var(--jungle-bark) / 0.97) !important;
+  border-color: transparent !important;
+  box-shadow: var(--jungle-edge-lift) !important;
+  color: rgb(var(--jungle-bone)) !important;
+}
+
+/* Scrims. Tinted to loam rather than neutral black so the canopy colour
+   survives behind an open dialog. The blur covers the viewport ONCE while a
+   modal is open — not ~30 times per scroll — so it costs a single composited
+   layer, and without it a full-screen animated scene behind a dialog pulls the
+   eye straight off the dialog. */
+html[data-theme='jungle'] [data-radix-dialog-overlay],
+html[data-theme='jungle'] [data-vaul-overlay] {
+  background: rgb(var(--jungle-loam) / 0.76) !important;
+  backdrop-filter: blur(5px) !important;
+  -webkit-backdrop-filter: blur(5px) !important;
+}
+
+/* ==========================================================================
+   6. LIST ROWS, POLLS, COMMENTS
+   ==========================================================================
+   High-repetition surfaces. Same reasoning as feed items: soft grain, a bevel,
+   nothing else.
+   ========================================================================== */
+
+html[data-theme='jungle'] :is([data-notification-row], [data-poll-card], [data-comments-section]) {
+  border-radius: var(--jungle-r-card) !important;
+  border-color: transparent !important;
+  background: var(--jungle-grain-soft), rgb(var(--jungle-bark) / var(--glass-thin)) !important;
+  box-shadow: var(--jungle-edge) !important;
+}
+
+/* Unread/active row: the end-grain rail again, in the accent. Consistent with
+   the feed item, so "this one is live" means the same thing everywhere. */
+html[data-theme='jungle'] [data-notification-row][data-active='true'] {
+  background: var(--jungle-grain-soft), rgb(var(--jungle-timber) / 0.86) !important;
+  box-shadow:
+    var(--jungle-edge),
+    inset 3px 0 0 rgb(var(--jungle-leaf-c) / 0.68) !important;
+}
+
+/* ==========================================================================
+   7. CONTROLS
+   ==========================================================================
+   The primary action is the one hero moment per screen, and in this theme it
+   is SUNLIGHT: a gold plaque with dark engraved text and real thickness.
+   Everything else stays quiet, because a page where six things glow has no
+   primary action.
+
+   Every control pins its own centring — the fix for the class of bug where a
+   theme changes a button's box and the label ends up a pixel or two high.
+   ========================================================================== */
+
+html[data-theme='jungle'] [data-primary-cta] {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  line-height: 1.2;
+  border-radius: var(--jungle-r-chip) !important;
+  border-color: transparent !important;
+  background: linear-gradient(
+    180deg,
+    rgb(var(--jungle-gold)) 0%,
+    rgb(var(--jungle-gold) / 0.88) 52%,
+    rgb(var(--jungle-gold) / 0.76) 100%
+  ) !important;
+  /* Loam, not white. Gold at this luminance takes dark text far better —
+     9.2:1 here against 1.9:1 for white — and white-on-gold is the classic
+     unreadable warm CTA. */
+  color: rgb(var(--jungle-loam)) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(var(--jungle-glint) / 0.55),
+    inset 0 -1px 0 rgb(0 0 0 / 0.3),
+    0 4px 14px rgb(var(--jungle-gold) / 0.18),
+    0 2px 0 rgb(112 72 22 / 0.6) !important;
+  text-shadow: none !important;
+}
+
+html[data-theme='jungle'] [data-primary-cta]:hover {
+  box-shadow:
+    inset 0 1px 0 rgb(var(--jungle-glint) / 0.7),
+    inset 0 -1px 0 rgb(0 0 0 / 0.3),
+    0 6px 20px rgb(var(--jungle-gold) / 0.28),
+    0 2px 0 rgb(112 72 22 / 0.6) !important;
+}
+
+/* Tactile press. The 2px bottom edge above is the plaque's thickness, so the
+   press has to travel exactly that far and lose it, or the button appears to
+   sink through its own shadow. */
+html[data-theme='jungle'] [data-primary-cta]:active {
+  transform: translateY(2px);
+  box-shadow:
+    inset 0 1px 0 rgb(var(--jungle-glint) / 0.35),
+    inset 0 -1px 0 rgb(0 0 0 / 0.3),
+    0 2px 8px rgb(var(--jungle-gold) / 0.16) !important;
+}
+
+html[data-theme='jungle'] [data-follow-btn] {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.2;
+  border-radius: var(--jungle-r-chip) !important;
+  border-color: transparent !important;
+  background: var(--jungle-grain-soft), rgb(var(--jungle-timber) / 0.92) !important;
+  color: rgb(var(--jungle-leaf-c)) !important;
+  box-shadow:
+    var(--jungle-edge),
+    inset 0 0 0 1px rgb(var(--jungle-leaf-c) / 0.32) !important;
+}
+
+html[data-theme='jungle'] [data-follow-btn]:hover {
+  color: rgb(var(--jungle-bone)) !important;
+  box-shadow:
+    var(--jungle-edge),
+    inset 0 0 0 1px rgb(var(--jungle-leaf-c) / 0.52) !important;
+}
+html[data-theme='jungle'] [data-follow-btn]:active {
+  transform: translateY(1px);
+}
+
+/* -- inputs ---------------------------------------------------------------
+   An input is a groove ROUTED INTO the plank, so it takes --jungle-edge-carved
+   (dark top, lit bottom) — the exact inverse of every raised surface. That
+   inversion is what makes a form read as carved rather than as brown boxes.
+
+   VERTICAL CENTRING. `line-height: 1.2` on single-line inputs is doing real
+   work: several inputs ship a fixed height class (h-9, h-10, h-11) together
+   with an inherited line-height near 1.5, and a line box taller than the
+   content box is what makes typed text sit visibly high in the field. Pinning
+   it at 1.2 lets the browser centre the line box in the remaining space, which
+   is what a fixed-height control needs. textarea is excluded — it is
+   multi-line, and 1.2 there would crush the leading. */
+html[data-theme='jungle'] #app-root :is(input, textarea, select):not([data-keep-dark]) {
+  border-radius: var(--jungle-r-input) !important;
+  background: rgb(var(--jungle-loam) / 0.72) !important;
+  border-color: transparent !important;
+  box-shadow: var(--jungle-edge-carved) !important;
+  color: rgb(var(--jungle-bone)) !important;
+}
+
+html[data-theme='jungle']
+  #app-root
+  :is(input, select):not([type='checkbox']):not([type='radio']):not([type='range']):not(
+    [data-keep-dark]
+  ) {
+  line-height: 1.2 !important;
+}
+
+/* Focus is a ring, not a glow: a blooming input is genuinely harder to type in,
+   and this one has to survive sitting over a moving canopy. */
+html[data-theme='jungle'] #app-root :is(input, textarea, select):not([data-keep-dark]):focus,
+html[data-theme='jungle'] #app-root :is(input, textarea, select):not([data-keep-dark]):focus-visible {
+  outline: none !important;
+  box-shadow:
+    var(--jungle-edge-carved),
+    inset 0 0 0 1px rgb(var(--jungle-leaf-c) / 0.62),
+    0 0 0 3px rgb(var(--jungle-leaf-c) / 0.16) !important;
+}
+
+/* Placeholder at 4.7:1 on the input fill. --jungle-husk would be 3.7:1 and is
+   therefore not allowed to carry text, placeholders included. */
+html[data-theme='jungle'] #app-root ::placeholder {
+  color: rgb(var(--jungle-sand) / 0.7) !important;
+}
+
+/* Keyboard focus everywhere else. Never removed, only restyled. */
+html[data-theme='jungle'] #app-root *:focus-visible {
+  outline: 2px solid rgb(var(--jungle-leaf-c) / 0.8) !important;
+  outline-offset: 2px;
+}
+
+/* Checkboxes, radios and switches: small carved recesses that fill with leaf
+   green when set — the same active language as everything else. */
+html[data-theme='jungle'] #app-root [role='checkbox'][data-state='checked'],
+html[data-theme='jungle'] #app-root [role='switch'][data-state='checked'],
+html[data-theme='jungle'] #app-root [role='radio'][data-state='checked'] {
+  background-color: rgb(var(--jungle-leaf-c) / 0.92) !important;
+  border-color: transparent !important;
+  color: rgb(var(--jungle-loam)) !important;
+}
+html[data-theme='jungle'] #app-root [role='switch'][data-state='unchecked'],
+html[data-theme='jungle'] #app-root [role='checkbox'][data-state='unchecked'] {
+  background-color: rgb(var(--jungle-loam) / 0.8) !important;
+  box-shadow: var(--jungle-edge-carved) !important;
+  border-color: transparent !important;
+}
+
+/* Sliders: a routed channel with a wooden peg in it. */
+html[data-theme='jungle'] #app-root [role='slider'] {
+  background-color: rgb(var(--jungle-timber)) !important;
+  border-color: rgb(var(--jungle-husk) / 0.6) !important;
+  box-shadow:
+    inset 0 1px 0 rgb(var(--jungle-glint) / 0.25),
+    0 1px 3px rgb(0 0 0 / 0.5) !important;
+}
+
+/* ==========================================================================
+   8. SKELETONS
+   ==========================================================================
+   The first paint of every route. A grey pulse under a wood theme reads as a
+   broken image, so the placeholder is unfinished timber and the shimmer is a
+   shaft of light travelling across the grain.
+   ========================================================================== */
+
+html[data-theme='jungle'] #app-root .animate-pulse,
+html[data-theme='jungle'] #app-root [class*='skeleton'] {
+  background:
+    linear-gradient(
+      100deg,
+      rgb(var(--jungle-bark) / 0.8) 0%,
+      rgb(var(--jungle-gold) / 0.13) 45%,
+      rgb(var(--jungle-bark) / 0.8) 90%
+    ),
+    var(--jungle-grain-soft) !important;
+  background-size: 220% 100%, auto !important;
+  border-radius: var(--jungle-r-card) !important;
+  animation: jungle-shimmer 1.9s ease-in-out infinite !important;
+}
+
+@keyframes jungle-shimmer {
+  from {
+    background-position:
+      140% 0,
+      0 0;
+  }
+  to {
+    background-position:
+      -40% 0,
+      0 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme='jungle'] #app-root .animate-pulse,
+  html[data-theme='jungle'] #app-root [class*='skeleton'] {
+    animation: none !important;
+  }
+}
+
+/* ==========================================================================
+   9. MEDIA - content fidelity is protected (house rule 5)
+   ========================================================================== */
+
+html[data-theme='jungle'] :is([data-media-full], [data-video-controls], [data-keep-dark]),
+html[data-theme='jungle'] :is([data-media-full], [data-video-controls], [data-keep-dark]) * {
+  filter: none !important;
+  mix-blend-mode: normal !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+html[data-theme='jungle'] [data-keep-dark] {
+  background-color: rgb(var(--jungle-loam)) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* [data-media-full] gets the box-shadow reset but NOT the fill. Media wrappers
+   hug their content — an image narrower than the card leaves the wrapper's own
+   box exposed, and a solid fill turns that leftover into a letterboxed slab
+   beside the photo. The wrapper is a container, not a bed: anything that
+   genuinely needs a dark backing ships its own bg and opts in with
+   [data-keep-dark]. Same reasoning, and the same bug, as Osaka's. */
+html[data-theme='jungle'] [data-media-full] {
+  background-color: transparent !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+/* Overlay chips drawn ON TOP of media still follow the palette — that is what
+   keeps a LIVE badge reading as gold rather than as Tailwind red. */
+html[data-theme='jungle'] [data-video-controls] {
+  color: rgb(var(--jungle-bone)) !important;
+}
+
+/* ==========================================================================
+   10. THEME PICKER
+   ========================================================================== */
+
+html[data-theme='jungle'] [data-theme-option] {
+  border-radius: var(--jungle-r-card) !important;
+  border-color: transparent !important;
+  background: var(--jungle-grain-soft), rgb(var(--jungle-timber) / 0.78) !important;
+  box-shadow: var(--jungle-edge) !important;
+}
+
+html[data-theme='jungle'] [data-theme-option]:hover {
+  background: var(--jungle-grain-soft), rgb(var(--jungle-timber) / 0.92) !important;
+}
+
+/* Selected: carved in, ringed in leaf green. The app's markup puts a
+   `border-2 border-white` on the selected option; that is neutralised here so
+   the selection reads in the theme's language rather than as a white box. */
+html[data-theme='jungle'] [data-theme-option][data-active='true'] {
+  background: rgb(var(--jungle-loam) / 0.86) !important;
+  box-shadow:
+    var(--jungle-edge-carved),
+    inset 0 0 0 2px rgb(var(--jungle-leaf-c) / 0.66) !important;
+}
+
+/* The fade at the right edge of the scrolling theme strip is a `from-zinc-900`
+   gradient, which is a grey smear over wood. */
+html[data-theme='jungle'] [data-theme-picker-fade] {
+  background-image: linear-gradient(
+    to left,
+    rgb(var(--jungle-loam)) 0%,
+    rgb(var(--jungle-loam) / 0) 100%
+  ) !important;
+}
+
+/* ==========================================================================
+   11. UNTAGGED PAGES - the safety net
+   ==========================================================================
+   Not every route carries a data-* hook. Anything still painting a raw zinc or
+   neutral slab would punch a flat grey hole in the jungle, so those fills are
+   converted to timber wholesale. Scoped to #app-root and exempting media, per
+   house rule 5.
+
+   This is what makes "every page" true rather than "every page we remembered".
+   ========================================================================== */
+
+html[data-theme='jungle'] #app-root
+  :is(
+    [class*='bg-zinc-9'],
+    [class*='bg-zinc-8'],
+    [class*='bg-zinc-7'],
+    [class*='bg-neutral-9'],
+    [class*='bg-neutral-8'],
+    [class*='bg-gray-9'],
+    [class*='bg-slate-9'],
+    [class*='bg-black']
+  ):not([data-keep-dark]):not([data-media-full]):not([data-video-controls]):not(
+    [data-primary-cta]
+  ):not([data-feed-nav-outer]):not(main):not([data-post-overlay]):not(
+    [data-post-drawer]
+  ):not([data-glass-page]):not([data-live-shell]) {
+  background-color: rgb(var(--jungle-bark) / 0.86) !important;
+  background-image: var(--jungle-grain-soft) !important;
+}
+
+/* The exclusions above are not decoration. This net is scoped under #app-root,
+   so it carries an id and outranks a plain `html[data-theme] [data-hook]` rule
+   even when both are !important.
+     - [data-feed-nav-outer] left in paints a full-width slab behind the
+       floating nav bar: the one thing that layout explicitly forbids, and it
+       would give the feed swallow-clip a visible box to cut against.
+     - <main>, the post overlay, the mobile post drawer and [data-glass-page]
+       all ship `bg-black` deliberately (they must hide whatever is mounted
+       beneath them on the opaque themes) and are all declared transparent
+       elsewhere with no id, so this net used to win and paint a full-height
+       column down the middle of every dedicated post page.
+   The net is for untagged CONTENT slabs; page wrappers are not its business.
+   Both traps are documented in the Osaka file for the same reason. */
+
+/* Hairline borders across untagged pages become the routed groove colour.
+   [data-post-shell] is exempt for the id-specificity reason spelled out above:
+   the post page's column wrapper ships `border-white/[0.12]`, so this net
+   matches it and, being scoped under #app-root, outranks the
+   `border-color: transparent` in the nested-surfaces rule even though both are
+   !important. Left in, the column keeps a routed rounded outline with no plank
+   behind it — still a panel drawn down the middle of the page. */
+html[data-theme='jungle'] #app-root
+  :is([class*='border-zinc-'], [class*='border-neutral-'], [class*='border-white/']):not(
+    [data-keep-dark]
+  ):not([data-post-shell]) {
+  border-color: rgb(0 0 0 / 0.48) !important;
+}
+
+/* Dividers become rope. A plain 1px line between two planks is the one place
+   this theme most obviously reverts to a generic dark UI. */
+html[data-theme='jungle'] #app-root :is(hr, [role='separator']):not([data-keep-dark]) {
+  border-color: transparent !important;
+  background-color: transparent !important;
+  background-image:
+    repeating-linear-gradient(
+      68deg,
+      rgb(var(--jungle-husk) / 0.52) 0px,
+      rgb(var(--jungle-husk) / 0.52) 2px,
+      rgb(var(--jungle-husk) / 0.14) 2px,
+      rgb(var(--jungle-husk) / 0.14) 5px
+    ) !important;
+}
+
+/* ==========================================================================
+   12. PALETTE LOCK
+   ==========================================================================
+   ~800 saturated Tailwind utilities ship across the app. Left alone they make
+   the theme's "one accent" claim false. Remapped by ROLE:
+
+     accent / brand / positive -> --jungle-leaf-c  (8.1:1)
+     informational             -> --jungle-sand    (8.3:1, deliberately NOT a
+                                  colour: this theme has no cool accent, and
+                                  inventing a blue for "info" breaks the lock)
+     warning / live            -> --jungle-gold    (8.5:1)
+     destructive               -> --jungle-alert   (5.0:1)
+
+   Green and blue collapse onto the SAME token here, which is where this
+   differs from Osaka's mapping. Green is the accent in a jungle, so there is
+   no second colour left for "positive" to be; making success and brand
+   identical is the honest consequence of a one-accent green theme.
+   ========================================================================== */
+
+html[data-theme='jungle'] #app-root
+  :is(
+    [class*='text-emerald-'],
+    [class*='text-green-'],
+    [class*='text-teal-'],
+    [class*='text-lime-'],
+    [class*='text-pink-'],
+    [class*='text-fuchsia-'],
+    [class*='text-violet-'],
+    [class*='text-purple-']
+  ):not([data-keep-dark]) {
+  color: rgb(var(--jungle-leaf-c)) !important;
+}
+html[data-theme='jungle'] #app-root
+  :is(
+    [class*='bg-emerald-'],
+    [class*='bg-green-'],
+    [class*='bg-teal-'],
+    [class*='bg-lime-'],
+    [class*='bg-pink-'],
+    [class*='bg-fuchsia-'],
+    [class*='bg-violet-'],
+    [class*='bg-purple-']
+  ):not([data-keep-dark]):not([data-primary-cta]) {
+  background-color: rgb(var(--jungle-leaf-c) / 0.16) !important;
+}
+
+html[data-theme='jungle'] #app-root
+  :is([class*='text-blue-'], [class*='text-indigo-'], [class*='text-cyan-'], [class*='text-sky-']):not(
+    [data-keep-dark]
+  ) {
+  color: rgb(var(--jungle-sand)) !important;
+}
+html[data-theme='jungle'] #app-root
+  :is([class*='bg-blue-'], [class*='bg-indigo-'], [class*='bg-cyan-'], [class*='bg-sky-']):not(
+    [data-keep-dark]
+  ) {
+  background-color: rgb(var(--jungle-husk) / 0.2) !important;
+}
+
+html[data-theme='jungle'] #app-root
+  :is([class*='text-amber-'], [class*='text-yellow-'], [class*='text-orange-']):not([data-keep-dark]) {
+  color: rgb(var(--jungle-gold)) !important;
+}
+html[data-theme='jungle'] #app-root
+  :is([class*='bg-amber-'], [class*='bg-yellow-'], [class*='bg-orange-']):not([data-keep-dark]) {
+  background-color: rgb(var(--jungle-gold) / 0.16) !important;
+}
+
+html[data-theme='jungle'] #app-root
+  :is([class*='text-red-'], [class*='text-rose-']):not([data-keep-dark]) {
+  color: rgb(var(--jungle-alert)) !important;
+}
+html[data-theme='jungle'] #app-root
+  :is([class*='bg-red-'], [class*='bg-rose-']):not([data-keep-dark]) {
+  background-color: rgb(var(--jungle-alert) / 0.2) !important;
+}
+html[data-theme='jungle'] #app-root
+  :is([class*='border-red-'], [class*='border-rose-']):not([data-keep-dark]) {
+  border-color: rgb(var(--jungle-alert) / 0.55) !important;
+}
+
+/* ==========================================================================
+   13. TEXT COLOUR
+   ==========================================================================
+   Two roles only. The app's neutral text scale is remapped onto them so copy
+   sits at a measured contrast on wood instead of at whatever zinc step it
+   happened to ship with — zinc-400 on bark is 5.7:1, which passes, but
+   zinc-500 is 3.9:1, which does not.
+   ========================================================================== */
+
+html[data-theme='jungle'] #app-root
+  :is([class*='text-zinc-1'], [class*='text-zinc-2'], [class*='text-white'], [class*='text-neutral-1']):not(
+    [data-keep-dark]
+  ) {
+  color: rgb(var(--jungle-bone)) !important;
+}
+
+html[data-theme='jungle'] #app-root
+  :is(
+    [class*='text-zinc-3'],
+    [class*='text-zinc-4'],
+    [class*='text-zinc-5'],
+    [class*='text-zinc-6'],
+    [class*='text-neutral-4'],
+    [class*='text-neutral-5'],
+    [class*='text-gray-4']
+  ):not([data-keep-dark]) {
+  color: rgb(var(--jungle-sand)) !important;
+}
+
+/* Headings are engraved. The one blanket application of the carve treatment,
+   and it is safe because headings are large: the two 1px shadows that would
+   blur 13px body copy read as depth at 18px and up.
+
+   A hard shadow under text over a MOVING background is also doing legibility
+   work, not just decoration — it keeps the glyph edge stable as the canopy
+   shifts behind a translucent panel. */
+html[data-theme='jungle'] #app-root :is(h1, h2, h3):not([data-keep-dark]) {
+  text-shadow:
+    0 -1px 0 rgb(0 0 0 / 0.72),
+    0 1px 0 rgb(var(--jungle-glint) / 0.09);
+}
+
+/* ==========================================================================
+   14. RADIUS LOCK
+   ==========================================================================
+   Hand-cut wood has no hard corners, so square corners are softened to the
+   chip radius. [data-keep-square] opts out for anything that genuinely needs a
+   hard corner (progress rails, media letterboxes).
+
+   `rounded-full` is deliberately LEFT ALONE, which is where this theme parts
+   company with War's blanket squaring rule. That utility is load-bearing all
+   over the app: avatars, presence dots, badge counters, icon buttons and the
+   scroll-to-top control are all circles by design. Pulling them to 8px would
+   square off users' profile pictures and leave every status dot looking like a
+   rendering bug — a far worse outcome than a few pills coexisting with the
+   planks. The surfaces where a pill genuinely fights the material (chips, the
+   nav indicator, the CTA) are each pinned individually above, which is the
+   targeted version of the same intent.
+   ========================================================================== */
+
+html[data-theme='jungle'] #app-root
+  :is([class*='rounded-none'], [class*='rounded-sm']):not([data-keep-square]):not([data-media-full]) {
+  border-radius: var(--jungle-r-chip) !important;
+}
+
+/* ==========================================================================
+   15. DOCS + BLOG
+   ==========================================================================
+   These routes composite a full-page surface over the canvas via
+   docs-glass.css, which reads the same --glass-* bridge the app does. The
+   bridge already turns those surfaces into planks; only the accent and the
+   code style need binding, because docs ship their own.
+   ========================================================================== */
+
+html[data-theme='jungle'] .docs-root a:not([data-keep-dark]) {
+  color: rgb(var(--jungle-leaf-c)) !important;
+}
+
+html[data-theme='jungle'] .docs-root :is(h1, h2, h3) {
+  color: rgb(var(--jungle-bone)) !important;
+}
+
+html[data-theme='jungle'] .docs-root code:not(pre code) {
+  font-family: var(--jungle-mono);
+  background: rgb(var(--jungle-loam) / 0.8) !important;
+  color: rgb(var(--jungle-gold)) !important;
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / 0.45);
+}
+
+html[data-theme='jungle'] .docs-root pre {
+  background: rgb(var(--jungle-loam) / 0.9) !important;
+  border-radius: var(--jungle-r-card) !important;
+  box-shadow: var(--jungle-edge-carved) !important;
+}
+
+html[data-theme='jungle'] .docs-root blockquote {
+  border-left-color: rgb(var(--jungle-leaf-c) / 0.6) !important;
+  color: rgb(var(--jungle-sand)) !important;
+}

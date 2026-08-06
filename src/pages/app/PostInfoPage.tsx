@@ -11,6 +11,7 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { resolveDislikeCount, resolveLikeCount } from '@/lib/engagement';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, Copy, ExternalLink, ThumbsUp, ThumbsDown, Eye, MessageSquare, User, Loader2, Users, Tag, Hash, HandCoins, Plus, Globe, Lock, EyeOff, Pencil, Radio, Ticket, Coins } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -736,8 +737,8 @@ export default function PostInfoPage() {
   const chainInfo = getChainInfo(chainId);
   
   // Get stats with fallbacks
-  const likes = nftInfo.totalVotes?.for ?? nftInfo.like_count ?? 0;
-  const dislikes = nftInfo.totalVotes?.against ?? nftInfo.dislike_count ?? 0;
+  const likes = resolveLikeCount(nftInfo);
+  const dislikes = resolveDislikeCount(nftInfo);
   const views = nftInfo.views ?? nftInfo.view_count ?? 0;
   const comments = nftInfo.commentCount ?? nftInfo.comment_count ?? 0;
   const totalTips = nftInfo.minterUser?.receivedTips ?? 0;

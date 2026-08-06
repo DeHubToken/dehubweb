@@ -1,0 +1,457 @@
+/* ==========================================================================
+   WAR - the comments console
+   ==========================================================================
+
+   Reported symptom: the composer read as "two separate boxes on top of each
+   other". It was accurate. Three things were stacking rectangles:
+
+     1. war-theme.css section 6 recolours EVERY `bg-white/*` inside
+        [data-comments-section] to one flat cyan wash, so the composer shell,
+        its two icon buttons and the Post button all resolved to the same fill
+        behind the same hairline - four boxes reading as one confused slab.
+     2. That shell then sat inside the comments panel's own squared cyan ring
+        with a 16px gutter. Two concentric rectangles of identical weight read
+        as a doubled border, not as a field inside a panel.
+     3. On focus the textarea drew war-theme.css section 7's inset ring AND
+        the global 2px focus outline, both a pixel or two inside the shell's
+        own ring. That is a box inside a box inside a box, literally.
+
+   The fix is hierarchy, not more strokes:
+
+     - the thread and the composer are divided by an instrument bezel (a
+       hairline with a tick ruler hanging off it), not by a second rectangle;
+     - the field becomes a RECESSED well - darker than the surface it sits in,
+       chamfered, with an inner shadow - so it reads as cut INTO the panel
+       rather than stacked on top of it;
+     - the icon buttons lose their boxes and only draw a hairline on hover, so
+       the composer contains one box instead of four;
+     - Post becomes the single saturated element in the panel: an arrow-capped
+       cyan transmit key. Nothing else in the comments carries a fill, which is
+       what makes it read as the action without needing size or shadow.
+
+   Focus is the payoff: the well's hairline goes hot, a 3px cyan rail lights
+   the left edge, the bloom comes up and the prompt caret starts blinking.
+   That is why the textarea's own outline is removed below - the state moves
+   to the well, at far higher contrast than a 2px outline, rather than being
+   dropped.
+
+   NO CSS-INJECTED WORDS. Every mark here is a rule, a tick, a rail or an
+   ASCII caret, so nothing needs translating and nothing lands in the
+   accessibility tree as untranslated English.
+
+   SPECIFICITY. war-theme.css section 6 scores (0,3,1) with !important. Every
+   rule below matches that score and wins on source order, this file being
+   loaded last. The one selector that could not be beaten that way is the Post
+   button, which war-theme.css section 7 reaches through an ID;
+   [data-comment-send] was added to that rule's documented opt-out chain
+   rather than escalating here.
+
+   Loaded after war-coverage.css. Scoped entirely to html[data-theme='war'].
+   ========================================================================== */
+
+/* ==========================================================================
+   1. THE BEZEL
+   ==========================================================================
+   Ruler ticks hang down into the composer's top padding, which is why the
+   padding is raised over Tailwind's 12px.
+   ========================================================================== */
+html[data-theme='war'] [data-comments-section] [data-comment-composer] {
+  position: relative;
+  padding-top: 17px;
+  background-image:
+    repeating-linear-gradient(
+      to right,
+      rgb(var(--war-hud) / 0.45) 0 1px,
+      transparent 1px var(--war-ruler-major-step)
+    ),
+    repeating-linear-gradient(
+      to right,
+      rgb(var(--war-hud) / 0.22) 0 1px,
+      transparent 1px var(--war-ruler-step)
+    ),
+    linear-gradient(rgb(var(--war-hud) / 0.26) 0 0);
+  background-size:
+    100% var(--war-ruler-h),
+    100% var(--war-ruler-minor-h),
+    100% 1px;
+  background-position: left top;
+  background-repeat: no-repeat;
+}
+
+/* Replying-to indicator. Was a bordered pill sitting directly on top of the
+   composer shell - the most literal reading of "two boxes". A rail carries
+   "this is scoped to something" with no box at all. */
+html[data-theme='war'] [data-comments-section] [data-comment-reply-tag] {
+  padding-left: 10px;
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: inset 2px 0 0 rgb(var(--war-hud) / 0.85) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Readout, not label: the string ends in a user-authored @handle, and
+   text-transform on those is the Turkish dotless-i hazard war-frame.css
+   documents. Mono and tracking carry the role instead. */
+html[data-theme='war'] [data-comments-section] [data-comment-reply-tag] span {
+  font-family: var(--war-mono);
+  font-size: var(--war-readout-size);
+  letter-spacing: var(--war-readout-track);
+  text-transform: none;
+  color: rgb(var(--war-hud) / 0.88) !important;
+}
+
+/* ==========================================================================
+   2. THE WELL
+   ==========================================================================
+   The chamfer comes from [data-war-cut='sm'] on the element itself (set in
+   CommentsSection.tsx). The ring below is the surface's own; the pseudo only
+   draws the four corner diagonals. That is exactly the split war-frame.css
+   section 4 describes, and why the edge runs stay off - two parallel hairlines
+   a pixel apart read as a fat double border, which is the bug being fixed.
+   ========================================================================== */
+/* The chamfer, restated. war-frame.css already sets this on [data-war-cut],
+   but war-theme.css section 5 squares `*:not([data-keep-round])` inside every
+   portal at the same (0,3,1) score and loads later, so in the mobile comments
+   drawer - which vaul mounts on <body> - the fill was being squared while the
+   pseudo kept drawing the corner diagonals: four stray strokes floating across
+   square corners. Four attributes puts this at (0,4,1) and settles it in both
+   the in-tree and portalled cases. */
+@supports (corner-shape: bevel) {
+  html[data-theme='war']
+    [data-comments-section]
+    [data-comment-field][data-war-cut] {
+    border-radius: var(--war-cut) !important;
+    corner-shape: bevel;
+  }
+}
+
+html[data-theme='war'] [data-comments-section] [data-comment-field] {
+  padding-left: 26px !important;
+  background:
+    linear-gradient(
+      178deg,
+      rgb(var(--war-olive) / 0.22) 0%,
+      rgb(var(--war-void) / 0) 60%
+    ),
+    rgb(var(--war-void) / 0.66) !important;
+  border-color: transparent !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.26),
+    inset 0 2px 7px rgb(0 0 0 / 0.5) !important;
+  backdrop-filter: blur(8px) saturate(115%) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(115%) !important;
+  transition: box-shadow var(--war-lock);
+}
+
+html[data-theme='war'] [data-comments-section] [data-comment-field]:focus-within {
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.6),
+    inset 3px 0 0 rgb(var(--war-hud)),
+    inset 0 2px 7px rgb(0 0 0 / 0.42),
+    0 0 20px rgb(var(--war-hud) / 0.16) !important;
+}
+
+/* The chamfer hairline tracks the ring, so the cut corners arm with it. */
+html[data-theme='war'] [data-comments-section] [data-comment-field]::after {
+  --war-frame-line: rgb(var(--war-hud) / 0.26);
+}
+html[data-theme='war']
+  [data-comments-section]
+  [data-comment-field]:focus-within::after {
+  --war-frame-line: rgb(var(--war-hud) / 0.6);
+}
+
+/* Prompt caret. A textarea cannot host a pseudo-element, so it goes on the
+   well and the well pays for it with 26px of left padding. Two positions,
+   because the composer grows from a 40px bar to a 96px block on focus and
+   [data-expanded] is the component's own signal for that. */
+html[data-theme='war'] [data-comments-section] [data-comment-field]::before {
+  content: '>';
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--war-mono);
+  font-size: 12px;
+  line-height: 1;
+  color: rgb(var(--war-hud) / 0.42);
+  pointer-events: none;
+  transition: color var(--war-snap);
+}
+html[data-theme='war']
+  [data-comments-section]
+  [data-comment-field][data-expanded]::before {
+  top: 15px;
+  transform: none;
+}
+html[data-theme='war']
+  [data-comments-section]
+  [data-comment-field]:focus-within::before {
+  color: rgb(var(--war-hud));
+  text-shadow: var(--war-glow-text);
+  animation: war-comment-caret 1.1s steps(1, end) infinite;
+}
+
+/* Starts lit, so the reduced-motion reset at the end of index.css (which kills
+   the animation outright with !important) leaves a solid caret rather than a
+   dimmed one. */
+@keyframes war-comment-caret {
+  0%,
+  55% {
+    opacity: 1;
+  }
+  56%,
+  100% {
+    opacity: 0.25;
+  }
+}
+
+html[data-theme='war'] [data-comments-section] [data-comment-field] textarea {
+  color: rgb(var(--war-sand) / 0.96) !important;
+  caret-color: rgb(var(--war-hud));
+}
+
+/* The well owns focus. Without this the textarea paints war-theme.css section
+   7's inset ring and the global 2px focus outline a pixel or two inside the
+   well's own ring - cause 3 of the doubled-box report. */
+html[data-theme='war']
+  [data-comments-section]
+  [data-comment-field]
+  textarea:focus,
+html[data-theme='war']
+  [data-comments-section]
+  [data-comment-field]
+  textarea:focus-visible {
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* ==========================================================================
+   3. TOOLS AND THE TRANSMIT KEY
+   ========================================================================== */
+
+/* Bare at rest, hairlined on hover.
+
+   WHY THE #app-root BRANCH. The mic ships `hover:text-red-400`, and
+   war-theme.css section 12's palette lock matches on [class*="text-red-"] -
+   which a hover: utility satisfies AT REST. So the idle mic glyph was being
+   painted destructive-red by the very rule that exists to stop stray reds,
+   and that rule scopes on #app-root, putting it at (1,3,1) where no amount of
+   !important on a (0,3,1) selector can reach it. The second branch ties it and
+   wins on source order. The first branch still earns its place: the mobile
+   comments drawer mounts on <body>, outside #app-root, where the palette lock
+   never applies. Same pattern on the recording row below, for the same reason.
+
+   Hover resolves to cyan, not red: --war-alert is reserved for genuine live
+   state, and "the pointer is over the mic" is not one. The recording row is. */
+html[data-theme='war'] [data-comments-section] [data-comment-tool],
+html[data-theme='war'] #app-root [data-comments-section] [data-comment-tool] {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  color: rgb(var(--war-sand) / 0.6) !important;
+  transition:
+    color var(--war-snap),
+    background-color var(--war-snap),
+    box-shadow var(--war-snap);
+}
+html[data-theme='war'] [data-comments-section] [data-comment-tool]:hover,
+html[data-theme='war']
+  #app-root
+  [data-comments-section]
+  [data-comment-tool]:hover {
+  background: rgb(var(--war-hud) / 0.12) !important;
+  color: rgb(var(--war-hud)) !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.5) !important;
+}
+
+/* The only saturated fill in the whole comments panel. Safe to clip: it holds
+   one short label or one spinner and nothing that can overflow, which is the
+   test war-frame.css sets for when clip-path is allowed. */
+html[data-theme='war'] [data-comments-section] [data-comment-send] {
+  padding: 0 20px 0 12px !important;
+  background: rgb(var(--war-hud)) !important;
+  background-image: none !important;
+  color: rgb(var(--war-void)) !important;
+  border-color: transparent !important;
+  box-shadow: 0 0 18px rgb(var(--war-hud) / 0.3) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  font-family: var(--war-mono);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  clip-path: polygon(
+    0 0,
+    calc(100% - 9px) 0,
+    100% 50%,
+    calc(100% - 9px) 100%,
+    0 100%
+  );
+  transition:
+    background-color var(--war-snap),
+    box-shadow var(--war-snap);
+}
+html[data-theme='war']
+  [data-comments-section]
+  [data-comment-send]:hover:not(:disabled) {
+  box-shadow: 0 0 28px rgb(var(--war-hud) / 0.55) !important;
+}
+
+/* Disarmed: outlined and square. Dropping the arrow cap as well as the fill
+   makes the enabled state legible as a shape change rather than only a colour
+   shift, and an inset ring under clip-path would lose its stroke along the
+   diagonal anyway. */
+html[data-theme='war'] [data-comments-section] [data-comment-send]:disabled {
+  padding: 0 12px !important;
+  background: transparent !important;
+  color: rgb(var(--war-sand) / 0.38) !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-sand) / 0.2) !important;
+  clip-path: none;
+}
+
+/* An active capture is the one thing in this file allowed to reach for
+   --war-alert - but as a wash under a lit rail, not as the near-opaque slab
+   the palette lock turns `bg-red-500/10` into. Doubled selector for the reason
+   given above the tools. The dot and the timer text are left to the lock: it
+   already resolves them to --war-alert and to the AA-corrected lift of it, and
+   restating those here would only risk the two drifting apart. */
+html[data-theme='war'] [data-comments-section] [data-comment-recording],
+html[data-theme='war']
+  #app-root
+  [data-comments-section]
+  [data-comment-recording] {
+  background-color: rgb(var(--war-alert) / 0.12) !important;
+  background-image: none !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-alert-hot) / 0.45),
+    inset 3px 0 0 rgb(var(--war-alert-hot)) !important;
+}
+html[data-theme='war'] [data-comments-section] [data-comment-recording] span,
+html[data-theme='war'] [data-comments-section] [data-comment-recording] button {
+  font-family: var(--war-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+}
+
+/* Search field. Same well, same armed rail, so the panel's two inputs read as
+   one control family. */
+html[data-theme='war'] [data-comments-section] [data-comment-search] {
+  background: rgb(var(--war-void) / 0.62) !important;
+  border-color: transparent !important;
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.26) !important;
+  font-family: var(--war-mono);
+  letter-spacing: 0.04em;
+  color: rgb(var(--war-sand) / 0.96) !important;
+  transition: box-shadow var(--war-lock);
+}
+html[data-theme='war'] [data-comments-section] [data-comment-search]:focus,
+html[data-theme='war']
+  [data-comments-section]
+  [data-comment-search]:focus-visible {
+  outline: none !important;
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--war-hud) / 0.6),
+    inset 3px 0 0 rgb(var(--war-hud)),
+    0 0 18px rgb(var(--war-hud) / 0.14) !important;
+}
+
+/* ==========================================================================
+   4. THE THREAD
+   ==========================================================================
+   Rows had no separator at all, so a long thread was an undifferentiated
+   wall. A bottom hairline plus a hover rail is the same roster treatment the
+   notification list already gets, and it is deliberately NOT a bracket set:
+   war-frame.css caps brackets at chrome, and a scrolling column of them is
+   120 decorative marks on one screen.
+   ========================================================================== */
+html[data-theme='war'] [data-comments-section] [data-comment-id] {
+  padding-left: 8px;
+  padding-right: 8px;
+  box-shadow: inset 0 -1px 0 rgb(var(--war-hud) / 0.1);
+  transition:
+    background-color var(--war-snap),
+    box-shadow var(--war-snap);
+}
+/* Hover: wash and underline only. The left rail is gone by request — on a
+   comment it collided with the reply-tag rail, which is a real state. */
+html[data-theme='war'] [data-comments-section] [data-comment-id]:hover {
+  background-color: rgb(var(--war-hud) / 0.05);
+  box-shadow: inset 0 -1px 0 rgb(var(--war-hud) / 0.1);
+}
+
+/* Quotes / likers / reposts rows. Section 6 flattened these to the same cyan
+   slab as everything else; as roster rows they match the thread instead. */
+html[data-theme='war'] [data-comments-section] button[class*='bg-white/5'] {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  box-shadow: inset 0 -1px 0 rgb(var(--war-hud) / 0.12) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+html[data-theme='war']
+  [data-comments-section]
+  button[class*='bg-white/5']:hover {
+  background-color: rgb(var(--war-hud) / 0.08) !important;
+  box-shadow: inset 0 -1px 0 rgb(var(--war-hud) / 0.12) !important;
+}
+
+/* Empty states. Mono and wide tracking only - war-theme.css section 11 sets
+   `text-transform: none !important` on every p inside [data-comments-section]
+   under the heading "never case-transform user-authored content", and an
+   empty-state string sitting in the same box as user text is not worth making
+   that rule negotiable for. */
+html[data-theme='war'] [data-comments-section] p[class*='min-h-[200px]'] {
+  font-family: var(--war-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: rgb(var(--war-sand) / 0.45) !important;
+}
+
+/* Tab strip. The GlassIndicator behind these is already dressed by
+   war-nav.css; only the glyphs were left at stock zinc. Active state is
+   signalled by `text-white` on the inner span, which is the only hook the
+   component exposes. */
+html[data-theme='war'] [data-comment-tabs] button svg {
+  color: rgb(var(--war-sand) / 0.55);
+  transition:
+    color 160ms linear,
+    filter 160ms linear;
+}
+html[data-theme='war'] [data-comment-tabs] button:hover svg {
+  color: rgb(var(--war-hud) / 0.85);
+}
+html[data-theme='war'] [data-comment-tabs] button .text-white svg {
+  color: rgb(var(--war-hud)) !important;
+  filter: drop-shadow(0 0 6px rgb(var(--war-hud) / 0.7));
+}
+html[data-theme='war'] [data-comment-tabs] button span[class*='text-[11px]'] {
+  font-family: var(--war-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   5. DEGRADATION
+   ========================================================================== */
+@media (prefers-reduced-transparency: reduce) {
+  html[data-theme='war'] [data-comments-section] [data-comment-field],
+  html[data-theme='war'] [data-comments-section] [data-comment-search] {
+    background: rgb(var(--war-void) / 0.97) !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+/* clip-path is dropped in forced-colors mode, and a half-applied arrow cap on
+   a system-painted button is worse than no cap at all. */
+@media (forced-colors: active) {
+  html[data-theme='war'] [data-comments-section] [data-comment-send] {
+    clip-path: none;
+  }
+}

@@ -20,12 +20,12 @@
        * loading UI, so it paints pure black the whole time. That is
        * indistinguishable from a crash, and it is why the embed looked broken.
        *
-       * This reports an elapsed heartbeat and a readiness signal to the parent
-       * frame so the host can render a real loading readout. The frame is
+       * This reports a readiness signal to the parent frame so the host can
+       * take its loading readout down at the right moment. The frame is
        * sandboxed into an opaque origin, so postMessage is the only channel
        * available, and the target is left as "*" because an opaque origin
-       * cannot name its parent. Nothing sensitive crosses: an integer count of
-       * seconds, and one "ready" notice.
+       * cannot name its parent. Nothing sensitive crosses: one "ready" notice
+       * and, if the module throws, the error message.
        *
        * Everything here is PASSIVE. It reads the DOM the game builds and owns
        * no globals the game touches, so it cannot alter engine behaviour.
@@ -38,7 +38,6 @@
             /* no parent, or blocked: the game still runs */
           }
         };
-        var started = Date.now();
         var done = false;
 
         function finish(why) {
@@ -74,14 +73,16 @@
           }
         }, 250);
 
-        /* 3. A heartbeat regardless.
-         * Whatever else happens, the host gets an elapsed count every second so
-         * the readout always shows honest movement rather than a dead spinner.
-         * This is the piece that makes a long procedural bake legible. */
-        var beat = setInterval(function () {
-          if (done) return clearInterval(beat);
-          send('tick', String(Math.round((Date.now() - started) / 1000)));
-        }, 1000);
+        /* 3. NOTE ON THE HEARTBEAT THAT USED TO BE HERE.
+         * This sent an elapsed second count every second, which the host
+         * rendered as "T+012S". That is gone: the host now draws a percentage
+         * bar off its own clock, so it needs nothing per-second from in here,
+         * and a timer that only feeds a display nobody reads is just a wakeup.
+         * The bake still cannot be measured from out here, which is exactly why
+         * the host models it rather than reporting it.
+         *
+         * What is left is the part that could never be modelled: the moment the
+         * engine is actually up, and any error that stops it getting there. */
 
         window.addEventListener('error', function (e) {
           send('error', (e && e.message) || 'unknown error');

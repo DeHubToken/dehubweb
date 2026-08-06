@@ -119,9 +119,11 @@ html[data-theme='war'] [data-feed-item] {
   backdrop-filter: var(--glass-blur) !important;
   -webkit-backdrop-filter: var(--glass-blur) !important;
   border-color: transparent !important;
-  box-shadow:
-    inset 0 0 0 1px rgb(var(--war-hud) / 0.22),
-    inset 2px 0 0 rgb(var(--war-hud) / 0.34) !important;
+  /* No left-edge rail. Removed by request across every theme: a coloured bar
+     on a card's edge is the language of "selected / unread / errored", so
+     spending it as decoration on every card made each one claim a state it did
+     not have. The HUD ring carries the surface on its own. */
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.22) !important;
 }
 
 html[data-theme='war'] [data-page-bento].cursor-pointer:hover {
@@ -654,13 +656,14 @@ html[data-theme='war'] [data-post-modal]::after {
 }
 
 /* Menu / select / command rows: replace `focus:bg-accent` with a cyan armed
-   state plus the left rail that marks the active line on a HUD. */
+   state. The left rail that used to mark the active line is gone by request —
+   the fill and the accent text already say the row is armed, and the rail was
+   the same mark used for unread and error states elsewhere. */
 html[data-theme='war'] [data-radix-popper-content-wrapper] [data-highlighted],
 html[data-theme='war'] [data-radix-popper-content-wrapper] [data-state='checked'],
 html[data-theme='war'] [cmdk-item][data-selected='true'] {
   background-color: rgb(var(--war-hud) / 0.16) !important;
   color: rgb(var(--war-hud)) !important;
-  box-shadow: inset 2px 0 0 rgb(var(--war-hud)) !important;
 }
 
 /* Toast text and action buttons. */
@@ -794,11 +797,13 @@ html[data-theme='war'] :is([data-primary-cta], [data-follow-btn]):active {
 }
 
 /* The glass button variants (default / glass / secondary in ui/button.tsx) and
-   every hand-rolled copy of them. The three tagged roles are excluded because
+   every hand-rolled copy of them. The four tagged roles are excluded because
    this selector carries an ID and would otherwise outrank their own rules -
-   [data-primary-cta] in AuthGate is literally `variant="glass"`. */
+   [data-primary-cta] in AuthGate is literally `variant="glass"`, and
+   [data-comment-send] is the arrow-capped transmit key in war-coverage.css
+   section 15. */
 html[data-theme='war'] #app-root
-  :is(button, a, [role='button'])[class*="from-white/"]:not([data-glass-indicator]):not([data-keep-white]):not([data-primary-cta]):not([data-follow-btn]):not([data-filter-chip]) {
+  :is(button, a, [role='button'])[class*="from-white/"]:not([data-glass-indicator]):not([data-keep-white]):not([data-primary-cta]):not([data-follow-btn]):not([data-filter-chip]):not([data-comment-send]) {
   background: rgb(var(--war-gunmetal) / 0.5) !important;
   background-image: none !important;
   border-color: transparent !important;
@@ -809,7 +814,7 @@ html[data-theme='war'] #app-root
   transition: background-color 60ms linear, box-shadow 60ms linear;
 }
 html[data-theme='war'] #app-root
-  :is(button, a, [role='button'])[class*="from-white/"]:not([data-glass-indicator]):not([data-keep-white]):not([data-primary-cta]):not([data-follow-btn]):not([data-filter-chip]):hover {
+  :is(button, a, [role='button'])[class*="from-white/"]:not([data-glass-indicator]):not([data-keep-white]):not([data-primary-cta]):not([data-follow-btn]):not([data-filter-chip]):not([data-comment-send]):hover {
   background: rgb(var(--war-hud) / 0.1) !important;
   box-shadow:
     inset 0 0 0 1px rgb(var(--war-hud) / 0.6),
@@ -1621,3 +1626,191 @@ html[data-theme='war'] .docs-root :is(button, a):focus-visible {
    reset at index.css:3414 already forces `transition-duration: 0.01ms` and
    `animation-duration: 0.01ms` with !important, so any non-important override
    here would be dead code. */
+
+/* ==========================================================================
+   19. FILTER RETASK LOADER (FeedFilterLoader)
+   ==========================================================================
+   Chrome for the War variant of src/components/app/feeds/FeedFilterLoader.tsx:
+   the panel-sized loader that owns the feed column while a filter toggle's
+   request is in flight. Tokens inherit from html[data-theme='war'] - the
+   component only renders this variant under that theme, same as section 18.
+
+   Deliberately a cut-down of the boot panel, not a scaled copy:
+     - no canvas. The boot globe runs once per session; this fires every time
+       somebody tries a sort option, so it must not touch WebGL.
+     - no skip control, no track list, no percent readout. There is no known
+       duration to report, so the meter is indeterminate and the panel carries
+       four brackets, a sweep and two lines of copy.
+   ========================================================================== */
+[data-war-mini-boot] {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 260px;
+  padding: 30px 18px;
+  overflow: hidden;
+  background:
+    radial-gradient(
+      26rem 17rem at 50% 45%,
+      rgb(var(--war-olive) / 0.45),
+      transparent 72%
+    ),
+    rgb(var(--war-void) / 0.55);
+  box-shadow: var(--war-edge);
+}
+
+/* Same 1px/3px film as the boot panel, so the two read as one device. */
+[data-war-mini-boot]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgb(var(--war-hud) / 0.05) 0px,
+    rgb(var(--war-hud) / 0.05) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/* Half the boot panel's 34px brackets, on a 12px inset rather than 22px. */
+[data-war-mini-bracket] {
+  position: absolute;
+  width: 17px;
+  height: 17px;
+  border: 1px solid rgb(var(--war-hud) / 0.5);
+  pointer-events: none;
+}
+[data-war-mini-bracket='tl'] {
+  top: 12px;
+  left: 12px;
+  border-width: 1px 0 0 1px;
+}
+[data-war-mini-bracket='tr'] {
+  top: 12px;
+  right: 12px;
+  border-width: 1px 1px 0 0;
+}
+[data-war-mini-bracket='bl'] {
+  bottom: 12px;
+  left: 12px;
+  border-width: 0 0 1px 1px;
+}
+[data-war-mini-bracket='br'] {
+  bottom: 12px;
+  right: 12px;
+  border-width: 0 1px 1px 0;
+}
+
+/* Scan plane. The boot sequence sweeps its globe in a shader; here the same
+   idea costs one compositor-only animation on a 2px line. */
+[data-war-mini-sweep] {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(var(--war-hud) / 0.55),
+    transparent
+  );
+  animation: war-mini-sweep 2.1s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+/* `top` in percent, not a transform: the panel's height is content-driven
+   (min-height is a floor, not a fixed size), so a pixel translate would either
+   stop short or run past the bottom edge. One out-of-flow 2px element. */
+@keyframes war-mini-sweep {
+  0% {
+    top: 6%;
+    opacity: 0;
+  }
+  14% {
+    opacity: 1;
+  }
+  86% {
+    opacity: 1;
+  }
+  100% {
+    top: 94%;
+    opacity: 0;
+  }
+}
+
+[data-war-mini-frame] {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 320px;
+  text-align: center;
+}
+
+[data-war-mini-kicker] {
+  font-family: var(--war-mono);
+  font-size: 9px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgb(var(--war-sand) / 0.72);
+  margin-bottom: 8px;
+}
+
+[data-war-mini-title] {
+  font-family: var(--war-mono);
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgb(var(--war-hud));
+  line-height: 1.2;
+}
+
+/* Indeterminate meter: no progress is knowable here, so the cells run a
+   staggered wave (delay set per cell in the component) instead of filling. */
+[data-war-mini-bar] {
+  display: flex;
+  gap: 3px;
+  margin: 16px auto 10px;
+  max-width: 260px;
+}
+[data-war-mini-bar] > span {
+  flex: 1;
+  height: 8px;
+  background: rgb(var(--war-hud) / 0.1);
+  box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.2);
+  animation: war-mini-cell 1.35s linear infinite;
+}
+
+@keyframes war-mini-cell {
+  0%,
+  62%,
+  100% {
+    background: rgb(var(--war-hud) / 0.1);
+  }
+  18%,
+  34% {
+    background: rgb(var(--war-hud) / 0.85);
+  }
+}
+
+[data-war-mini-sub] {
+  font-family: var(--war-mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgb(var(--war-sand) / 0.72);
+}
+
+/* Same carve-out the shared spinner gets at index.css:3427: a frozen loader
+   reads as a hang, and "loading" is state, not decoration. The sweep stays
+   killed by the global reset - one marching meter is signal enough. */
+@media (prefers-reduced-motion: reduce) {
+  [data-war-mini-bar] > span {
+    animation-duration: 1.35s !important;
+    animation-iteration-count: infinite !important;
+  }
+}

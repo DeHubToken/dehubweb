@@ -7,6 +7,7 @@
  */
 
 import type { DeHubNFT } from '@/lib/api/dehub';
+import { resolveLikeCount } from '@/lib/engagement';
 import type { FeedItem, VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 
 // ============================================================================
@@ -201,7 +202,7 @@ export type DateFilterValue = DateFilterOption['value'];
 function getNFTSortValues(nft: DeHubNFT) {
   return {
     views: nft.views || nft.view_count || 0,
-    likes: nft.totalVotes?.for || nft.like_count || 0,
+    likes: resolveLikeCount(nft),
     comments: nft.commentCount || nft.comment_count || 0,
     createdAt: new Date(nft.createdAt || nft.created_at || 0).getTime(),
   };
@@ -266,7 +267,7 @@ interface TrendingScoreFields {
  * - Views weighted 0.1x (low signal, easily inflated)
  */
 export function calculateTrendingScore(item: TrendingScoreFields): number {
-  const likes = item.totalVotes?.for || item.like_count || 0;
+  const likes = resolveLikeCount(item);
   const views = item.views || item.view_count || 0;
   const comments = item.commentCount || item.comment_count || 0;
   

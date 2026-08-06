@@ -1,6 +1,7 @@
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import { SEOHead } from '@/components/SEOHead';
 import { useTranslation } from 'react-i18next';
+import { resolveDislikeCount, resolveLikeCount } from '@/lib/engagement';
 
 import { useNavigate, useLocation } from 'react-router-dom';
 import { AtSign, ChevronLeft, Loader2 } from 'lucide-react';
@@ -109,7 +110,7 @@ function PinnedPostItem({ pin }: { pin: any }) {
           views: formatViews(post.views || 0).replace(' views', ''),
           uploadedAgo: formatTimeAgo(rawTimestamp),
           duration: '', durationSeconds: 0,
-          likeCount: post.totalVotes?.for || 0, dislikeCount: post.totalVotes?.against || 0,
+          likeCount: resolveLikeCount(post), dislikeCount: resolveDislikeCount(post),
           commentCount: post.commentCount || 0, repostCount: (post.totalReposts || 0) + (post.quotes || 0),
           isOwner: false, isUnlocked: false,
           creatorId: resolvedAddress,
@@ -122,7 +123,7 @@ function PinnedPostItem({ pin }: { pin: any }) {
           verified: false, avatar,
           image: buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg',
           imageUrls: buildFeedImageUrls(post.imageUrls) || [buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg'],
-          caption: post.description || '', likes: post.totalVotes?.for || 0,
+          caption: post.description || '', likes: resolveLikeCount(post),
           comments: post.commentCount || 0, views: formatViews(post.views || 0).replace(' views', ''),
           timeAgo: formatTimeAgo(rawTimestamp),
           creatorId: resolvedAddress,
@@ -145,7 +146,7 @@ function PinnedPostItem({ pin }: { pin: any }) {
           stats: {
             comments: post.commentCount || 0,
             reposts: (post.totalReposts || 0) + (post.quotes || 0),
-            likes: post.totalVotes?.for || 0,
+            likes: resolveLikeCount(post),
           },
         }} />
       )}

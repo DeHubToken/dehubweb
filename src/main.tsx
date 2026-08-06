@@ -26,9 +26,42 @@ import "./styles/war-nav.css";
 // Closes the portal gap (modals/drawers/dropdowns/toasts sit outside #app-root)
 // and binds the war-frame primitives onto real app surfaces.
 import "./styles/war-coverage.css";
+// Rebuilds the comments composer as a HUD console. Must load after
+// war-theme.css: several of its rules tie that file's section 6 on specificity
+// and win only on source order.
+import "./styles/war-comments.css";
 // Last: the brand mark's phosphor treatment overrides the shared canvas-theme
 // filter that index.css puts on mobile-header images.
 import "./styles/war-logo.css";
+
+// Osaka theme chrome. Same two-file split as War, for the same reason:
+// osaka-frame.css owns the tokens and the wet-glass primitives (meniscus ring,
+// neon bleed, bloom, rain film); osaka-theme.css consumes them to dress every
+// app surface. Swapping these two leaves every var(--osaka-*) unresolved.
+// Scoped entirely to html[data-theme="osaka"], so both are inert under every
+// other theme, and independent of the War block above (mutually exclusive
+// scopes, so their relative order does not matter).
+import "./styles/osaka-frame.css";
+import "./styles/osaka-theme.css";
+
+// Jungle theme chrome. Same frame/theme split as War and Osaka, for the same
+// reason: jungle-frame.css owns the design tokens and the carved-wood
+// primitives (grain, routed bevels, engraving, knots, rope rules);
+// jungle-theme.css consumes them to dress every app surface. Swapping these
+// two leaves every var(--jungle-*) unresolved.
+//
+// jungle-coverage.css comes last of the three: it closes the portal gap
+// (modals/drawers/dropdowns sit outside #app-root), covers the routes that
+// carry no shared hook, and owns the cinematic hand-off into the game. Several
+// of its rules tie jungle-theme.css on specificity and win only on source
+// order.
+//
+// All three are scoped entirely to html[data-theme="jungle"], so they are
+// inert under every other theme and independent of the War and Osaka blocks
+// above (mutually exclusive scopes, so their relative order does not matter).
+import "./styles/jungle-frame.css";
+import "./styles/jungle-theme.css";
+import "./styles/jungle-coverage.css";
 
 clearChunkReloadFlag();
 installSupabaseInterceptor();

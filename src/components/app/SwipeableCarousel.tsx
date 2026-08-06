@@ -3,10 +3,22 @@
  * ==========================
  * Isolates horizontal touch and wheel events to prevent them from bubbling up
  * to parent containers (like HomePage tab switcher).
- * 
+ *
  * Wrap any horizontally scrollable carousel with this component
  * to prevent swipe conflicts on mobile and trackpad swipes on desktop.
- * 
+ *
+ * Two mechanisms, deliberately both:
+ *
+ *  - `data-no-swipe` is the primary. HomePage's tab swipe checks
+ *    `closest('[data-no-swipe]')` on *touchstart* and abandons the gesture for
+ *    that touch entirely, so the page can never steal a drag that began inside
+ *    a carousel.
+ *  - stopPropagation below is the backstop. On its own it was not enough: it
+ *    only engages once a touchmove has been seen crossing
+ *    `deltaX > 10 && deltaX > deltaY`, so a fast flick — or one that arcs
+ *    vertically before going sideways — could reach the tab handler first and
+ *    flick between Home/Shorts mid-carousel-drag.
+ *
  * @module components/app/SwipeableCarousel
  */
 
@@ -66,6 +78,7 @@ export const SwipeableCarousel = forwardRef<HTMLDivElement, SwipeableCarouselPro
     return (
       <div
         ref={ref}
+        data-no-swipe
         className={className}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}

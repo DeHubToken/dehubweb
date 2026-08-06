@@ -299,10 +299,11 @@ html[data-theme='war'] :is(
   letter-spacing: 0.04em;
 }
 
+/* Hover fill and accent text only — the left rail is gone by request, here and
+   in every other theme. See the note in war-theme.css section 5. */
 html[data-theme='war'] :is([role='menuitem'], [role='option']):is(:hover, [data-highlighted]) {
   background: rgb(var(--war-hud) / 0.16) !important;
   color: rgb(var(--war-hud)) !important;
-  box-shadow: inset 2px 0 0 rgb(var(--war-hud));
 }
 
 /* --------------------------------------------------------------------------
@@ -874,17 +875,13 @@ html[data-theme='war'] [data-war-game-boot] {
   );
 }
 
-html[data-theme='war'] [data-war-game-boot] [data-war-deploy-title] {
-  font-size: 12px;
-  min-height: 1.4em;
-}
-
-/* Indeterminate sweep: the engine reports which subsystem it is on but not a
-   percentage, so a real bar would be a lie. */
+/* Determinate fill. The width comes in inline from the launcher, which models
+   the bake against a clock rather than measuring it — the engine reports no
+   progress and cannot be made to. See lib/game-boot-progress. */
 html[data-theme='war'] [data-war-game-boot-bar] {
   position: relative;
   height: 3px;
-  margin: 14px 0 12px;
+  margin: 14px 0 10px;
   overflow: hidden;
   background: rgb(var(--war-hud) / 0.12);
 }
@@ -892,19 +889,23 @@ html[data-theme='war'] [data-war-game-boot-bar] {
 html[data-theme='war'] [data-war-game-boot-bar] > span {
   position: absolute;
   inset: 0 auto 0 0;
-  width: 34%;
+  width: 0;
   background: rgb(var(--war-hud));
   box-shadow: 0 0 10px rgb(var(--war-hud) / 0.7);
-  animation: war-boot-sweep 1.5s ease-in-out infinite;
+  /* Linear and slightly longer than the 120ms update, so consecutive steps
+     overlap into one continuous crawl instead of ticking. */
+  transition: width 200ms linear;
 }
 
-@keyframes war-boot-sweep {
-  0% {
-    transform: translateX(-110%);
-  }
-  100% {
-    transform: translateX(330%);
-  }
+/* The number is the readout now, so it is sized to be read from across a
+   desk rather than tucked under the bar as a caption. */
+html[data-theme='war'] [data-war-game-boot-pct] {
+  font-family: var(--war-mono);
+  font-size: 22px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  color: rgb(var(--war-hud));
 }
 
 /* The one interactive control on the readout. The panel is pointer-events:none
@@ -927,7 +928,9 @@ html[data-theme='war'] [data-war-game-boot-hide]:hover {
   box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.7);
 }
 
+/* Fault line only. Nothing is printed here during a normal boot. */
 html[data-theme='war'] [data-war-game-boot-note] {
+  margin-top: 10px;
   font-family: var(--war-mono);
   font-size: 10px;
   line-height: 1.6;
@@ -935,10 +938,10 @@ html[data-theme='war'] [data-war-game-boot-note] {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  /* The fill still has to move — it is the information. Only the tween goes,
+     so it steps rather than glides. */
   html[data-theme='war'] [data-war-game-boot-bar] > span {
-    animation: none;
-    width: 100%;
-    opacity: 0.5;
+    transition: none;
   }
 }
 

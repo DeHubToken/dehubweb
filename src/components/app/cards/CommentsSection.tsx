@@ -37,7 +37,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { getBadgeUrl } from '@/lib/staking-badges';
 import { BadgeIcon } from '@/components/app/BadgeIcon';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, recordCommentViews, getPostLikers, getPostQuotes, type ApiCommentResponse } from '@/lib/api/dehub';
+import { getNFTComments, postComment, toggleCommentLike, toggleCommentDislike, editComment, deleteComment, addCommentWithImage, addVoiceComment, uploadChatImage, getPostReposters, recordCommentViews, getPostQuotes, type ApiCommentResponse } from '@/lib/api/dehub';
 import { useFollowOverrides, toggleFollowFor } from '@/hooks/use-follow';
 import { toast } from 'sonner';
 import { incrementCommentCount } from '@/lib/comment-count-cache';
@@ -75,8 +75,12 @@ export interface Comment {
 interface CommentsSectionProps {
   tokenId: string;
   onClose: () => void;
-  initialTab?: 'replies' | 'quotes' | 'reposts' | 'likers' | 'search';
+  initialTab?: 'replies' | 'quotes' | 'reposts' | 'search';
   embedded?: boolean;
+  /** Creator turned replies off. The composer is replaced with a notice, but
+   *  existing comments stay listed — the server refuses new ones either way
+   *  (requestCommentFunc), so this is presentation, not the enforcement. */
+  commentsDisabled?: boolean;
 }
 
 // formatTimeAgo is now imported from @/lib/feed-utils
@@ -136,6 +140,24 @@ const SORT_OPTIONS = [
   { value: 'liked', label: 'Most Liked' },
 ];
 
+// Threading itself is unlimited — the server happily accepts a reply to a reply
+// at any depth. Only the visual indent is capped so a long chain doesn't walk
+// off the right edge on a narrow screen.
+const MAX_INDENT_DEPTH = 5;
+const INDENT_PX = 24;
+
+/** A reply plus how deep it sits under its root comment (1 = direct reply). */
+interface ThreadReply {
+  comment: Comment;
+  depth: number;
+}
+
+/** A root comment with every descendant flattened in reading order. */
+interface CommentThread {
+  comment: Comment;
+  replies: ThreadReply[];
+}
+
 // ============================================================================
 // SUB-COMPONENTS
 // ============================================================================
@@ -151,6 +173,8 @@ interface CommentItemProps {
   onDelete: (id: string) => void;
   onUserPress: (username: string) => void;
   isReply?: boolean;
+  /** Nesting depth: 0 = top-level, 1 = direct reply, 2 = reply-to-reply, … */
+  depth?: number;
   isOwnComment?: boolean;
 }
 
@@ -198,7 +222,7 @@ function VoiceNotePlayer({ voiceNote }: VoiceNotePlayerProps) {
   );
 }
 
-function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, onEdit, onDelete, onUserPress, isReply, isOwnComment }: CommentItemProps) {
+function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, onEdit, onDelete, onUserPress, isReply, depth = 0, isOwnComment }: CommentItemProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editText, setEditText] = useState(comment.text);
   const avatarUrl = comment.avatar;
@@ -210,7 +234,8 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className={cn("flex items-start gap-3 py-3", isReply && "ml-8")}
+      className="flex items-start gap-3 py-3"
+      style={depth > 0 ? { marginLeft: Math.min(depth, MAX_INDENT_DEPTH) * INDENT_PX } : undefined}
       data-comment-id={comment.id}
     >
       <button onClick={() => onUserPress(comment.username)} className="flex-shrink-0">
@@ -231,9 +256,9 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
             </span>
           </button>
           {comment.displayName && (
-            <span className="text-zinc-500 text-xs truncate max-w-[100px]">@{comment.username}</span>
+            <span data-war-readout className="text-zinc-500 text-xs truncate max-w-[100px]">@{comment.username}</span>
           )}
-          <span className="text-zinc-500 text-xs">{comment.timeAgo}</span>
+          <span data-war-readout className="text-zinc-500 text-xs">{comment.timeAgo}</span>
         </div>
         {isEditing ? (
           <div className="flex items-center gap-2 mt-1">
@@ -304,15 +329,14 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
               <ThumbsUp className={cn("w-4 h-4", comment.isLiked && "fill-current")} />
               {comment.likes > 0 && <span className="text-xs">{comment.likes}</span>}
             </button>
-            {!isReply && (
-              <button
-                onClick={() => onReply(comment.id)}
-                className="text-white hover:text-zinc-400 transition-colors"
-                aria-label="Reply"
-              >
-                <MessageSquare className="w-4 h-4" />
-              </button>
-            )}
+            {/* Every comment is replyable, replies included — threads nest without limit. */}
+            <button
+              onClick={() => onReply(comment.id)}
+              className="text-white hover:text-zinc-400 transition-colors"
+              aria-label="Reply"
+            >
+              <MessageSquare className="w-4 h-4" />
+            </button>
             {isOwnComment && !isEditing && (
               <>
                 <button
@@ -405,13 +429,19 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
 // MAIN COMPONENT
 // ============================================================================
 
-export function CommentsSection({ tokenId, onClose, initialTab, embedded = false }: CommentsSectionProps) {
+export function CommentsSection({ tokenId, onClose, initialTab, embedded = false, commentsDisabled = false }: CommentsSectionProps) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { user, isAuthenticated, walletAddress } = useAuth();
   const isMobile = useIsMobile();
   
-  const [activeTab, setActiveTab] = useState<'replies' | 'quotes' | 'reposts' | 'likers' | 'search'>(initialTab ?? 'replies');
+  const [activeTab, setActiveTab] = useState<'replies' | 'quotes' | 'reposts' | 'search'>(initialTab ?? 'replies');
+  // The mount-time initial value alone doesn't cover a section that's already
+  // open: tapping the like count while comments are expanded changes initialTab
+  // without remounting, and the tab has to follow.
+  useEffect(() => {
+    if (initialTab) setActiveTab(initialTab);
+  }, [initialTab]);
   const commentsIsDraggingRef = useRef(false);
   const { layerRef: commentsTabLayerRef, setRef: setCommentsTabRef, rect: commentsTabRect } = useTabIndicator(activeTab, undefined, commentsIsDraggingRef);
   const [searchQuery, setSearchQuery] = useState('');
@@ -476,15 +506,6 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     staleTime: 60000,
   });
 
-  // Fetch likers when likers tab is active (#12)
-  const { data: likersData, isLoading: isLoadingLikers } = useQuery({
-    queryKey: ['post-likers', tokenId],
-    queryFn: () => getPostLikers(tokenId),
-    enabled: activeTab === 'likers',
-    staleTime: 60000,
-    retry: false,
-  });
-
   // Fetch quotes when quotes tab is active (#13)
   const { data: quotesData, isLoading: isLoadingQuotes } = useQuery({
     queryKey: ['post-quotes', tokenId],
@@ -541,20 +562,60 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     return () => observer.disconnect();
   }, [apiComments]);
 
-  // Group comments: top-level and replies
-  const groupedComments = useMemo(() => {
-    const topLevel = allComments.filter(c => !c.replyToId);
-    const repliesMap = new Map<string, Comment[]>();
-    
-    allComments.filter(c => c.replyToId).forEach(reply => {
-      const existing = repliesMap.get(reply.replyToId!) || [];
-      repliesMap.set(reply.replyToId!, [...existing, reply]);
+  // Group comments into threads. Nesting is unbounded: a reply can have replies,
+  // which can have replies, and so on — each root carries every descendant
+  // flattened in reading order with its depth, so the list renders in one pass.
+  const groupedComments = useMemo<CommentThread[]>(() => {
+    const byId = new Map(allComments.map(c => [c.id, c]));
+    const childrenOf = new Map<string, Comment[]>();
+    const roots: Comment[] = [];
+
+    allComments.forEach(c => {
+      const parentId = c.replyToId;
+      // A reply whose parent isn't in this page (the API returns a flat window of
+      // comments, so an ancestor can fall outside it) is promoted to a root
+      // rather than dropped — losing it would hide real replies entirely.
+      if (parentId && parentId !== c.id && byId.has(parentId)) {
+        const siblings = childrenOf.get(parentId);
+        if (siblings) siblings.push(c);
+        else childrenOf.set(parentId, [c]);
+      } else {
+        roots.push(c);
+      }
     });
-    
-    return topLevel.map(comment => ({
-      comment,
-      replies: repliesMap.get(comment.id) || [],
-    }));
+
+    // Oldest-first within a thread, so a conversation reads top to bottom.
+    childrenOf.forEach(children =>
+      children.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime()),
+    );
+
+    const emitted = new Set<string>();
+    const collect = (parent: Comment, depth: number, out: ThreadReply[]) => {
+      for (const child of childrenOf.get(parent.id) || []) {
+        if (emitted.has(child.id)) continue; // guard against a malformed cycle
+        emitted.add(child.id);
+        out.push({ comment: child, depth });
+        collect(child, depth + 1, out);
+      }
+    };
+
+    const buildThread = (comment: Comment): CommentThread => {
+      emitted.add(comment.id);
+      const replies: ThreadReply[] = [];
+      collect(comment, 1, replies);
+      return { comment, replies };
+    };
+
+    const threads = roots.map(buildThread);
+
+    // Safety net: if bad data ever produced a parent cycle, none of its members
+    // would look like a root and the whole ring would disappear. Surface any
+    // comment the walk never reached as a top-level one instead of losing it.
+    allComments.forEach(c => {
+      if (!emitted.has(c.id)) threads.push(buildThread(c));
+    });
+
+    return threads;
   }, [allComments]);
 
   useEffect(() => {
@@ -674,10 +735,10 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       filtered = groupedComments.filter(
-        ({ comment, replies }) => 
-          comment.text.toLowerCase().includes(query) || 
+        ({ comment, replies }) =>
+          comment.text.toLowerCase().includes(query) ||
           comment.username.toLowerCase().includes(query) ||
-          replies.some(r => r.text.toLowerCase().includes(query) || r.username.toLowerCase().includes(query))
+          replies.some(({ comment: r }) => r.text.toLowerCase().includes(query) || r.username.toLowerCase().includes(query))
       );
     }
 
@@ -928,14 +989,14 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
   const canPost = (newComment.trim() || voiceNote || commentImage) && !isSubmitting;
 
   // Drag-to-swipe for comments tab indicator (after all hooks)
-  type CommentsTab = 'replies' | 'quotes' | 'reposts' | 'likers' | 'search';
+  type CommentsTab = 'replies' | 'quotes' | 'reposts' | 'search';
   const commentsTabPositions = useRef<Partial<Record<CommentsTab, HTMLElement | null>>>({});
 
   const { isDragging: isCommentsDragging, indicatorRef: commentsIndicatorRef, handleDragStart: handleCommentsDragStart, handleDragMove: handleCommentsDragMove, handleDragEnd: handleCommentsDragEnd } = useDragTabIndicator({
     tabRect: commentsTabRect,
     tabLayerRef: commentsTabLayerRef,
     tabButtonPositions: commentsTabPositions,
-    tabValues: ['replies', 'quotes', 'reposts', 'likers', 'search'] as CommentsTab[],
+    tabValues: ['replies', 'quotes', 'reposts', 'search'] as CommentsTab[],
     activeTab,
     onTabChange: setActiveTab,
     isDraggingRef: commentsIsDraggingRef,
@@ -958,7 +1019,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
     >
 
       {/* Tab Switcher - Left: Replies, Quotes, Search, Sort | Right: Like, Dislike, Bookmark, Share (desktop/tablet only) */}
-      <div className={cn("flex justify-between items-center gap-1", isMobile ? "mb-3" : "mb-3")}>
+      <div data-comment-tabs className={cn("flex justify-between items-center gap-1", isMobile ? "mb-3" : "mb-3")}>
         {/* Mobile close button removed — drawer dismisses via drag-down or tapping overlay */}
         {false && (
           <button
@@ -987,7 +1048,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             />
           )}
           <div className="relative z-20 flex gap-1">
-            {(['replies', 'quotes', 'reposts', 'likers', 'search'] as const).map((tab) => (
+            {(['replies', 'quotes', 'reposts', 'search'] as const).map((tab) => (
               <button
                 key={tab}
                 ref={(el) => {
@@ -1005,7 +1066,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 )}
               >
                 <span className={cn("relative z-10", activeTab === tab && "text-white")}>
-                  {tab === 'replies' ? <MessageSquare className="w-[17px] h-[17px]" /> : tab === 'quotes' ? <Quote className="w-[17px] h-[17px]" /> : tab === 'reposts' ? <Repeat2 className="w-[22px] h-[22px]" /> : tab === 'likers' ? <ThumbsUp className="w-[17px] h-[17px]" /> : <Search className="w-[17px] h-[17px]" />}
+                  {tab === 'replies' ? <MessageSquare className="w-[17px] h-[17px]" /> : tab === 'quotes' ? <Quote className="w-[17px] h-[17px]" /> : tab === 'reposts' ? <Repeat2 className="w-[22px] h-[22px]" /> : <Search className="w-[17px] h-[17px]" />}
                 </span>
               </button>
             ))}
@@ -1043,6 +1104,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           placeholder="Search comments & quotes..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
+          data-comment-search
           className="bg-white/[0.08] backdrop-blur-xl border-white/[0.12] text-white text-sm h-10 rounded-xl placeholder:text-zinc-500"
           autoFocus={activeTab === 'search'}
         />
@@ -1076,19 +1138,20 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                         onUserPress={handleUserPress}
                         isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
                       />
-                      {replies.map(reply => (
-                        <CommentItem 
+                      {replies.map(({ comment: reply, depth }) => (
+                        <CommentItem
                           key={reply.id}
                           comment={reply}
                           tokenId={tokenId}
-                          onLike={handleLike} 
-                          onDislike={handleDislike} 
-                          onReply={handleReply} 
-                          onShare={() => {}} 
+                          onLike={handleLike}
+                          onDislike={handleDislike}
+                          onReply={handleReply}
+                          onShare={() => {}}
                           onEdit={handleEditComment}
                           onDelete={handleDeleteComment}
                           onUserPress={handleUserPress}
                           isReply
+                          depth={depth}
                           isOwnComment={reply.address?.toLowerCase() === walletAddress?.toLowerCase()}
                         />
                       ))}
@@ -1150,57 +1213,6 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 className="text-zinc-500 text-sm text-center flex items-center justify-center h-full min-h-[200px]"
               >
                 No quotes yet. Be the first!
-              </motion.p>
-            )}
-          </div>
-        )}
-
-        {/* Likers Tab (#12) */}
-        {activeTab === 'likers' && (
-          <div className="absolute inset-0 overflow-y-auto pt-2 pb-2">
-            {isLoadingLikers ? (
-              <div className="flex items-center justify-center py-8">
-                <Loader2 className="w-5 h-5 text-zinc-500 animate-spin" />
-              </div>
-            ) : likersData?.data && likersData.data.length > 0 ? (
-              <div className="space-y-2">
-                {likersData.data.map((liker) => {
-                  const displayName = liker.displayName || liker.username || liker.address?.slice(0, 8) || 'Unknown';
-                  const avatarUrl = liker.avatarImageUrl
-                    ? (liker.avatarImageUrl.startsWith('http') ? liker.avatarImageUrl : `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/${liker.avatarImageUrl}`)
-                    : undefined;
-                  return (
-                    <button
-                      key={liker.address}
-                      onClick={() => {
-                        if (liker.username) navigate(`/${liker.username.replace('@', '')}`);
-                        else if (liker.address) navigate(`/app/profile?id=${liker.address}`);
-                      }}
-                      className="w-full flex items-center gap-3 p-3 rounded-xl bg-white/5 backdrop-blur-md border border-white/10 hover:bg-white/10 transition-colors text-left"
-                    >
-                      <Avatar className="w-10 h-10 rounded-lg">
-                        {avatarUrl ? <AvatarImage src={avatarUrl} alt={displayName} /> : null}
-                        <AvatarFallback className="bg-zinc-800 text-white rounded-lg text-sm">
-                          {displayName[0].toUpperCase()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div className="flex-1 min-w-0">
-                        <span className="font-semibold text-white text-sm truncate block">{displayName}</span>
-                        {liker.username && (
-                          <span className="text-zinc-500 text-xs truncate block">@{liker.username.replace('@', '')}</span>
-                        )}
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-            ) : (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="text-zinc-500 text-sm text-center flex items-center justify-center h-full min-h-[200px]"
-              >
-                No likes yet.
               </motion.p>
             )}
           </div>
@@ -1309,19 +1321,20 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                         onUserPress={handleUserPress}
                         isOwnComment={comment.address?.toLowerCase() === walletAddress?.toLowerCase()}
                       />
-                      {replies.map(reply => (
-                        <CommentItem 
+                      {replies.map(({ comment: reply, depth }) => (
+                        <CommentItem
                           key={reply.id}
                           comment={reply}
                           tokenId={tokenId}
-                          onLike={handleLike} 
-                          onDislike={handleDislike} 
-                          onReply={handleReply} 
-                          onShare={() => {}} 
+                          onLike={handleLike}
+                          onDislike={handleDislike}
+                          onReply={handleReply}
+                          onShare={() => {}}
                           onEdit={handleEditComment}
                           onDelete={handleDeleteComment}
                           onUserPress={handleUserPress}
                           isReply
+                          depth={depth}
                           isOwnComment={reply.address?.toLowerCase() === walletAddress?.toLowerCase()}
                         />
                       ))}
@@ -1342,14 +1355,25 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
         )}
       </div>
 
-        {/* New Comment Input - sticky at bottom, optimized for mobile space */}
-        <div className={cn(
+        {/* Composer, or a notice in its place when the creator turned replies
+            off. The list above stays as-is on purpose: disabling comments hides
+            no history, it only stops new ones. */}
+        {commentsDisabled ? (
+          <div data-comment-composer="off" className={cn("mt-auto", isMobile ? "pt-2 pb-1" : "pt-3")}>
+            <div className="flex items-center justify-center gap-2 rounded-xl bg-white/[0.03] border border-white/10 px-4 py-3">
+              <MessageSquare className="w-4 h-4 text-zinc-500 shrink-0" />
+              <span className="text-sm text-zinc-400">Comments are turned off for this post</span>
+            </div>
+          </div>
+        ) : (
+        <div data-comment-composer className={cn(
           "mt-auto",
           isMobile ? "pt-2 pb-1" : "pt-3"
         )}>
           {/* Reply indicator */}
           {replyTo && (
             <div
+              data-comment-reply-tag
               className={cn(
                 "flex items-center gap-1.5 px-3 bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-xl",
                 isMobile ? "mb-1 py-1.5" : "mb-2 py-2"
@@ -1424,7 +1448,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
           <div className={cn("flex flex-col gap-1.5", isMobile ? "pb-0 mt-1" : "pb-1 mt-[18px]")}>
             {isRecording ? (
               /* Recording indicator */
-              <div className="flex-1 flex items-center gap-2 bg-red-500/10 rounded-xl px-4 h-10">
+              <div data-comment-recording className="flex-1 flex items-center gap-2 bg-red-500/10 rounded-xl px-4 h-10">
                 <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
                 <span className="text-sm text-red-400 flex-1">{recordingTime}s / {MAX_VOICE_DURATION}s</span>
                 <button
@@ -1438,6 +1462,11 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             ) : (
             <div
                 data-vaul-no-drag
+                data-comment-field
+                data-expanded={isInputExpanded || undefined}
+                /* War dresses this as a chamfered HUD well; the hook is inert
+                   under every other theme. See war-coverage.css section 15. */
+                data-war-cut="sm"
                 className={cn(
                   "flex-1 flex backdrop-blur-xl border rounded-xl relative transition-all duration-200",
                   isInputExpanded
@@ -1526,6 +1555,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                 )}>
                   <button
                     onClick={() => imageInputRef.current?.click()}
+                    data-comment-tool="image"
                     className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-white transition-colors"
                     aria-label="Attach image"
                   >
@@ -1534,6 +1564,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                   {!voiceNote && (
                     <button
                       onClick={startRecording}
+                      data-comment-tool="mic"
                       className="w-8 h-8 flex-shrink-0 flex items-center justify-center bg-white/[0.08] backdrop-blur-xl border border-white/[0.12] rounded-lg text-zinc-400 hover:text-red-400 transition-colors"
                       aria-label="Record voice note"
                     >
@@ -1544,6 +1575,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
                     type="button"
                     onClick={() => { if (canPost) handlePostComment(); }}
                     disabled={!canPost}
+                    data-comment-send
                     className="h-8 px-3 rounded-lg text-xs font-medium transition-colors flex-shrink-0 bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30 text-white shadow-[0_4px_16px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.4),inset_0_-1px_0_rgba(255,255,255,0.1)] hover:from-white/30 hover:via-white/15 hover:to-white/10"
                   >
                     {isSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : 'Post'}
@@ -1553,6 +1585,7 @@ export function CommentsSection({ tokenId, onClose, initialTab, embedded = false
             )}
           </div>
         </div>
+        )}
     </motion.div>
   );
 }

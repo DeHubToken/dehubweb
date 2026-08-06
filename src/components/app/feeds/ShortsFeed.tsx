@@ -10,9 +10,12 @@ import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import { toast } from 'sonner';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
+import { resolveLikeCount } from '@/lib/engagement';
 import { usePersistedFeedFilter } from '@/hooks/use-persisted-feed-filter';
 import { RefreshCw, Play, Filter, Eye, Loader2 } from 'lucide-react';
 import { ShortsFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
+import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
+import { useFeedFilterTransition } from '@/hooks/use-feed-filter-transition';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { cn } from '@/lib/utils';
@@ -136,7 +139,7 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
     handle: nft.minterUsername || nft.mintername || nft.creator?.username || 'user',
     verified: nft.creator?.is_verified || false,
     avatar: avatarUrl || undefined,
-    likes: String(nft.totalVotes?.for || nft.like_count || 0),
+    likes: String(resolveLikeCount(nft)),
     thumbnail: getMediaUrl(nft.imageUrl) || getMediaUrl(nft.thumbnail_url) || '',
     videoUrl: getMediaUrl(nft.videoUrl) || getMediaUrl(nft.media_url) || (id ? `https://dehubcdn.ams3.cdn.digitaloceanspaces.com/videos/${id}.mp4` : ''),
     description: nft.description || nft.name || nft.title || '',
@@ -335,6 +338,15 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
   const [selectedIndex, setSelectedIndex] = useState(0);
   const loaderRef = useRef<HTMLDivElement>(null);
 
+  // Filter chips arm a loader on click so a sort switch never leaves the old
+  // results sitting there looking frozen (the feed query keeps previous data).
+  // The hook that owns it needs `isFetching` from the queries below, so a ref
+  // bridges the gap — a click can't land before the effect that fills it.
+  const beginFilterTransitionRef = useRef<() => void>(() => {});
+  const beginFilterTransition = useCallback(() => {
+    beginFilterTransitionRef.current();
+  }, []);
+
   const { walletAddress, isAuthenticated } = useAuth();
   const isFollowingMode = selectedSort.value === 'following';
 
@@ -348,8 +360,33 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
       toast.info('Log in to see followed creators');
       return;
     }
+    // Re-tapping the active chip changes nothing, so it must not flash a loader.
+    if (option.value === selectedSort.value) return;
+    beginFilterTransition();
     setSelectedSort(option);
-  }, [isAuthenticated, setSelectedSort]);
+  }, [isAuthenticated, selectedSort.value, setSelectedSort, beginFilterTransition]);
+
+  // Every other chip row goes through these, so each one arms the loader.
+  const selectCategory = useCallback((value: string | null) => {
+    beginFilterTransition();
+    setSelectedCategory(value);
+  }, [setSelectedCategory, beginFilterTransition]);
+  const selectDuration = useCallback((value: typeof DURATION_FILTERS[number]) => {
+    beginFilterTransition();
+    setSelectedDuration(value);
+  }, [setSelectedDuration, beginFilterTransition]);
+  const selectUploadDate = useCallback((value: DateFilterOption) => {
+    beginFilterTransition();
+    setSelectedUploadDate(value);
+  }, [setSelectedUploadDate, beginFilterTransition]);
+  const resetAllFilters = useCallback(() => {
+    beginFilterTransition();
+    // SORT_OPTIONS[1], not [0]: matches what this panel's reset has always done.
+    setSelectedSort(SORT_OPTIONS[1]);
+    setSelectedCategory(null);
+    setSelectedDuration(DURATION_FILTERS[0]);
+    setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
+  }, [setSelectedSort, setSelectedCategory, setSelectedDuration, setSelectedUploadDate, beginFilterTransition]);
 
   // Fetch categories from API
   const { data: apiCategories, isLoading: categoriesLoading } = useQuery({
@@ -375,6 +412,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     hasNextPage: hasNextPageDefault,
     isFetchingNextPage: isFetchingNextPageDefault,
     isLoading: isApiLoadingDefault,
+    isFetching: isApiFetchingDefault,
     isError: isErrorDefault,
     refetch: refetchDefault,
   } = useDeHubFeed({
@@ -391,6 +429,7 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
     hasNextPage: hasNextPageUnified,
     isFetchingNextPage: isFetchingNextPageUnified,
     isLoading: isApiLoadingUnified,
+    isFetching: isApiFetchingUnified,
     isError: isErrorUnified,
     refetch: refetchUnified,
   } = useUnifiedFeed({
@@ -409,8 +448,14 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
   const hasNextPage = isFollowingMode ? hasNextPageUnified : hasNextPageDefault;
   const isFetchingNextPage = isFollowingMode ? isFetchingNextPageUnified : isFetchingNextPageDefault;
   const isApiLoading = isFollowingMode ? isApiLoadingUnified : isApiLoadingDefault;
+  const isApiFetching = isFollowingMode ? isApiFetchingUnified : isApiFetchingDefault;
   const isError = isFollowingMode ? isErrorUnified : isErrorDefault;
   const refetch = isFollowingMode ? refetchUnified : refetchDefault;
+
+  const filterTransition = useFeedFilterTransition(isApiFetching);
+  useEffect(() => {
+    beginFilterTransitionRef.current = filterTransition.begin;
+  }, [filterTransition.begin]);
 
   // Refetch when refreshKey changes
   useEffect(() => {
@@ -455,8 +500,8 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   // Reset client-side filters
   const clearFilters = () => {
-    setSelectedDuration(DURATION_FILTERS[0]);
-    setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
+    selectDuration(DURATION_FILTERS[0]);
+    selectUploadDate(DATE_FILTER_OPTIONS[0]);
   };
 
   // Infinite scroll observer
@@ -524,7 +569,9 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
 
   const { isAutoRetrying } = useAutoRetryFeed({
     itemCount: allShorts.length,
-    isLoading: isApiLoading,
+    // An in-flight filter switch is not an empty feed — without this the retry
+    // loop fires against the results the user is already waiting for.
+    isLoading: isApiLoading || filterTransition.active,
     isError,
     refetch,
   });
@@ -555,19 +602,14 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
                 <CategoryFilterSection 
                   categories={categories} 
                   selectedCategory={selectedCategory} 
-                  onSelect={setSelectedCategory}
+                  onSelect={selectCategory}
                   isLoading={categoriesLoading}
                 />
-                <DurationFilterSection selected={selectedDuration} onSelect={setSelectedDuration} />
-                <UploadDateFilterSection selected={selectedUploadDate} onSelect={setSelectedUploadDate} />
+                <DurationFilterSection selected={selectedDuration} onSelect={selectDuration} />
+                <UploadDateFilterSection selected={selectedUploadDate} onSelect={selectUploadDate} />
                 {/* Reset filters - bottom right */}
                 <button
-                  onClick={() => {
-                    setSelectedSort(SORT_OPTIONS[1]);
-                    setSelectedCategory(null);
-                    setSelectedDuration(DURATION_FILTERS[0]);
-                    setSelectedUploadDate(DATE_FILTER_OPTIONS[0]);
-                  }}
+                  onClick={resetAllFilters}
                   className="absolute bottom-4 right-4 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
                   aria-label={t('filters.resetFilters')}
                 >
@@ -578,8 +620,12 @@ export function ShortsFeed({ showFilters = false, isRefreshing = false, refreshK
           )}
         </AnimatePresence>
 
-        {/* Shorts Grid or Empty State */}
-        {allShorts.length === 0 ? (
+        {/* Shorts Grid, filter loader or Empty State. The loader sits BELOW the
+            filter panel, not in place of the whole feed, so the chips the user
+            is working with stay on screen and clickable while the request runs. */}
+        {filterTransition.active ? (
+          <FeedFilterLoader className="mt-3" />
+        ) : allShorts.length === 0 ? (
           <EmptyState />
         ) : shorts.length === 0 && hasActiveFilters ? (
           <FilteredEmptyState />

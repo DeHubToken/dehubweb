@@ -32,6 +32,7 @@ import { AudioSpacesModal } from '@/components/app/spaces/AudioSpacesModal';
 import { MinimizedAIChats } from '@/components/app/MinimizedAIChats';
 
 import { PersistentPageCache, isCachedPageRoute } from './PersistentPageCache';
+import { FeedSkeleton } from './PageSkeletons';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { isHomePath } from '@/lib/home-path';
 import { GlobalFeedNav } from './GlobalFeedNav';
@@ -70,12 +71,29 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
     if (isPostModalOpen) setPostModalMounted(true);
   }, [isPostModalOpen]);
   useEffect(() => {
-    const idle = (cb: () => void) =>
-      'requestIdleCallback' in window ? requestIdleCallback(cb) : setTimeout(cb, 2000);
-    idle(() => {
+    // Preload on idle OR on the first pointerdown, whichever comes first. A
+    // click that beats requestIdleCallback (common right after load — the feed
+    // paints and the user immediately taps a post) used to pay the whole
+    // SinglePostPage network import inside the navigation, with the overlay's
+    // Suspense showing nothing the entire time. pointerdown fires a gesture
+    // ahead of click, so the import is already in flight when navigation lands.
+    let preloaded = false;
+    const preload = () => {
+      if (preloaded) return;
+      preloaded = true;
+      window.removeEventListener('pointerdown', preload, true);
       import('@/features/post/PostModal').catch(() => {});
       import('@/pages/app/SinglePostPage').catch(() => {});
-    });
+    };
+    const idleId = 'requestIdleCallback' in window
+      ? requestIdleCallback(preload)
+      : setTimeout(preload, 2000);
+    window.addEventListener('pointerdown', preload, { capture: true, passive: true });
+    return () => {
+      window.removeEventListener('pointerdown', preload, true);
+      if ('cancelIdleCallback' in window) cancelIdleCallback(idleId as number);
+      else clearTimeout(idleId as ReturnType<typeof setTimeout>);
+    };
   }, []);
   const { isCollapsed } = useSidebarCollapse();
   const location = useLocation();
@@ -261,6 +279,23 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
     }
   }, [location.pathname]);
 
+  // Post pages always open at the top — synchronously with the route change,
+  // NOT from inside SinglePostPage. That page is lazy: its own scroll-to-top
+  // can only run after the chunk import resolves, and on a cold click the
+  // window sat at the feed's offset the whole time — the overlay (anchored to
+  // the DOCUMENT top) appeared "pre-scrolled" mid-post, then jumped. The home
+  // position this discards was already flushed to sessionStorage by the
+  // capture-phase click handler above, so back-navigation still restores it.
+  // Runs before paint and re-runs per pathname, covering post → related-post
+  // hops too; a rAF re-assert catches engines that re-apply the old offset.
+  useLayoutEffect(() => {
+    if (!isPostRoute) return;
+    setScrollPosition(0);
+    const raf = requestAnimationFrame(() => setScrollPosition(0));
+    return () => cancelAnimationFrame(raf);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname, isPostRoute]);
+
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
   
   const navigatingFromHomeToPost = isPostRoute && isHomePath(prevPathRef.current);
@@ -328,7 +363,11 @@ function AppLayoutContent({ children }: AppLayoutContentProps) {
           {showHomePagePersisted && (
             <div ref={postOverlayRef} data-post-overlay className="absolute top-0 left-0 right-0 min-h-screen z-10 bg-black">
               <ErrorBoundary compact resetKey={location.pathname} label="Post">
-                <Suspense fallback={null}>
+                {/* Cold-click fallback: while the lazy chunk imports, paint a
+                    skeleton instead of nothing — a null fallback left the black
+                    overlay empty for the whole import, which read as the click
+                    doing nothing. (Already-loaded chunk skips this entirely.) */}
+                <Suspense fallback={<FeedSkeleton />}>
                   <SinglePostPage />
                 </Suspense>
               </ErrorBoundary>

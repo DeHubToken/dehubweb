@@ -191,11 +191,14 @@ const CachedPage = memo(function CachedPage({
     return false;
   }
   // resetToken is the pathname, which changes on EVERY navigation — letting it
-  // through unconditionally re-renders all ~30 cached pages per nav. Hidden
-  // pages ignore it; an errored hidden page still self-heals because becoming
-  // active re-renders it with the fresh token, resetting its ErrorBoundary.
-  const visible = next.isActive || next.forceVisible;
-  return !visible || prev.resetToken === next.resetToken;
+  // through unconditionally re-renders all ~30 cached pages per nav. Only the
+  // ACTIVE page takes the fresh token; hidden pages ignore it, and so does the
+  // forceVisible-but-inactive home sitting under the post overlay — feeding it
+  // every /app/post/:id pathname re-rendered the entire feed tree behind each
+  // post open and each post → related-post hop, which is exactly the jank this
+  // memo exists to prevent. An errored page still self-heals: becoming active
+  // re-renders it with the fresh token, resetting its ErrorBoundary.
+  return !next.isActive || prev.resetToken === next.resetToken;
 });
 
 // Pages that should always scroll to top when navigated to

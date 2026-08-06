@@ -9,6 +9,7 @@ import { useRef, useEffect, useCallback } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
 import { searchNFTs, getNFTInfo } from '@/lib/api/dehub';
+import { resolveDislikeCount, resolveLikeCount } from '@/lib/engagement';
 import { mapToTextPost, type UnifiedFeedItem } from '@/hooks/use-unified-feed';
 import { PostCard } from '@/components/app/cards/PostCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
@@ -52,8 +53,8 @@ function adToVideoItem(nft: any): VideoItem {
     creatorUsername: nft.mintername,
     isLiked: nft.isLiked,
     isDisliked: nft.isDisliked,
-    likeCount: nft.totalVotes?.for || 0,
-    dislikeCount: nft.totalVotes?.against || 0,
+    likeCount: resolveLikeCount(nft),
+    dislikeCount: resolveDislikeCount(nft),
     commentCount: nft.commentCount || nft.comment_count || 0,
     isAd: true,
   };

@@ -176,6 +176,9 @@ export interface DeHubNFT {
   // Moderation / visibility
   isHidden?: boolean;
   isDeleted?: boolean;
+  /** Creator turned replies off. Existing comments remain readable; only new
+   *  ones are refused, server-side in requestCommentFunc. */
+  commentsDisabled?: boolean;
 
   // Pay-per-view
   ppvBuyerCount?: number;

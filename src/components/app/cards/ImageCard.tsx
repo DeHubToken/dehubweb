@@ -134,24 +134,29 @@ function ImageSlide({
   }, [img]);
   return (
     <div
-      className="relative flex justify-start cursor-pointer select-none"
+      className="relative flex justify-start select-none"
       style={{ minHeight: ratio ? undefined : '200px' }}
-      onClick={(e) => {
-        e.stopPropagation();
-        onClick(e);
-      }}
     >
       {/* The image sizes itself: fills the card width when it's wide enough,
           otherwise caps at 600px tall and shrinks its own width — so a narrow /
           portrait image is just the image, hugged to the left, with no blurred
           side-fill. width/height attrs (from the cached ratio) reserve the box
-          up front so there's no layout shift on load. */}
+          up front so there's no layout shift on load.
+
+          The tap target is the <img> itself, not this wrapper. The wrapper is
+          always the full card width, so putting it there made the empty gutter
+          beside a portrait image open the fullscreen viewer — a click on
+          nothing. */}
       <img
         src={img}
         alt=""
         width={ratio ? Math.round(ratio * 1000) : undefined}
         height={ratio ? 1000 : undefined}
-        className="block w-auto h-auto max-w-full max-h-[600px] object-contain rounded-2xl"
+        onClick={(e) => {
+          e.stopPropagation();
+          onClick(e);
+        }}
+        className="block w-auto h-auto max-w-full max-h-[600px] object-contain rounded-2xl cursor-pointer"
         loading={aboveFold && idx === 0 ? 'eager' : 'lazy'}
         fetchPriority={aboveFold && idx === 0 ? 'high' : 'auto'}
         decoding={aboveFold && idx === 0 ? 'sync' : 'async'}
@@ -960,8 +965,10 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           }} 
           onRepost={handleRepost}
           onQuote={handleQuote}
-          isLiked={post.isLiked} 
+          isLiked={post.isLiked}
           isDisliked={post.isDisliked}
+          myReaction={post.myReaction}
+          reactionCounts={post.reactionCounts}
           likeCount={post.likes}
           commentCount={post.comments}
           repostCount={post.repostCount}
@@ -982,6 +989,7 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
           onOpenChange={setShowComments}
           tokenId={post.id}
           initialTab={commentsInitialTab}
+          commentsDisabled={!!(post as { commentsDisabled?: boolean }).commentsDisabled}
         />
       </div>
 
@@ -1009,6 +1017,8 @@ export const ImageCard = memo(function ImageCard({ post, aboveFold = false }: Im
         actions={{
           isLiked: post.isLiked,
           isDisliked: post.isDisliked,
+          myReaction: post.myReaction,
+          reactionCounts: post.reactionCounts,
           likeCount: post.likes,
           commentCount: post.comments,
           repostCount: post.repostCount,

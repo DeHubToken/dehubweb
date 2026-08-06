@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useInfiniteQuery, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getSavedPosts, getLikedPosts, getWatchHistory, clearWatchHistory, toggleSavePost, DeHubNFT, getMediaUrl, getNFTInfo } from '@/lib/api/dehub';
 import { useAuth } from '@/contexts/AuthContext';
+import { resolveDislikeCount, resolveLikeCount } from '@/lib/engagement';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
@@ -53,8 +54,8 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     creatorId: nft.minter,
     creatorUsername: nft.mintername,
     isLiked: nft.isLiked ?? false,
-    likeCount: nft.totalVotes?.for || nft.like_count || 0,
-    dislikeCount: nft.totalVotes?.against || 0,
+    likeCount: resolveLikeCount(nft),
+    dislikeCount: resolveDislikeCount(nft),
     commentCount: nft.commentCount || nft.comment_count || 0,
     isPPV: nft.is_ppv || nft.streamInfo?.isPayPerView || false,
     ppvPrice: nft.ppv_price || nft.streamInfo?.payPerViewAmount,
@@ -87,7 +88,7 @@ function mapNFTToImagePost(nft: DeHubNFT): ImagePost {
     imageUrls,
     title: nft.name || nft.title,
     description: nft.description,
-    likes: nft.totalVotes?.for || nft.like_count || 0,
+    likes: resolveLikeCount(nft),
     caption: nft.description || nft.name || '',
     comments: nft.commentCount || nft.comment_count || 0,
     views: formatViews(nft.views || nft.view_count).replace(' views', ''),
@@ -134,7 +135,7 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
     stats: {
       comments: nft.commentCount || nft.comment_count || 0,
       reposts: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),
-      likes: nft.totalVotes?.for || nft.like_count || 0,
+      likes: resolveLikeCount(nft),
     },
   };
 }
@@ -398,19 +399,26 @@ export function useBookmarkPost(tokenId: string | number) {
   const isBookmarked = override ?? derivedBookmarked;
 
   const toggleMutation = useMutation({
-    mutationFn: (_next: boolean) => toggleSavePost(tokenId),
-    onSuccess: () => {
+    mutationFn: (_vars: { next: boolean; onSaved?: () => void }) => toggleSavePost(tokenId),
+    onSuccess: (_data, { next, onSaved }) => {
       // Background refresh of the saved lists only — liked/history/ppv are
       // untouched by a save toggle, so don't tear those down.
       queryClient.invalidateQueries({ queryKey: ['bookmarks', 'saved'] });
+      // Only on the save half of the toggle — un-bookmarking shouldn't offer to
+      // file the post anywhere.
+      if (next) onSaved?.();
     },
-    onError: (_err, next) => {
+    onError: (_err, { next }) => {
       setOverride(!next);
       toast.error('Failed to update bookmark');
     },
   });
 
-  const toggleBookmark = () => {
+  /**
+   * @param onSaved Fired once the server confirms a *save* (never an un-save) —
+   *   used to open the "add to folder" drawer, matching mobile's FeedCard flow.
+   */
+  const toggleBookmark = (onSaved?: () => void) => {
     if (!isAuthenticated) {
       toast.error('Please log in to bookmark');
       return;
@@ -419,7 +427,7 @@ export function useBookmarkPost(tokenId: string | number) {
     const next = !isBookmarked;
     setOverride(next);
     toast.success(next ? 'Saved to bookmarks' : 'Removed from bookmarks');
-    toggleMutation.mutate(next);
+    toggleMutation.mutate({ next, onSaved });
   };
 
   return {

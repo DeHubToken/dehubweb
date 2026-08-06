@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jungle Trail</title>
+<style>
+  :root { color-scheme: dark; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #05070a; }
+  /* The canvas is the entire experience — no HUD, no overlay, nothing that
+     would remind you it is a program. */
+  #view { display: block; width: 100vw; height: 100vh; }
+  #boot {
+    position: fixed; inset: 0; display: grid; place-items: center;
+    font: 300 13px/1.7 ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: .22em; text-transform: uppercase; color: #6d7a63;
+    background: #05070a; pointer-events: none;
+  }
+</style>
+<!--
+  VENDORED CHANGE 1 of 2 — the import map points at a local copy of three.
+
+  Upstream resolves `three` from jsDelivr. That is right for a repo you clone
+  and serve yourself, and wrong here for three reasons: it makes a third-party
+  request from a user's session on every play, it fails on any network that
+  blocks the CDN, and it means a page on dehub.io can be broken by an outage
+  nobody here controls. The file in vendor/ is the same build the import map
+  named (three 0.170.0), just served from this origin.
+
+  Keep the version pinned. The game targets r170 specifically, and the parent
+  app is on 0.181 — which is exactly why this runs in an iframe rather than
+  being imported (see README.md next to this file). The two dependency trees
+  never meet.
+-->
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three.module.js",
+    "three/addons/": "./vendor/addons/"
+  }
+}
+</script>
+<!--
+  VENDORED CHANGE 2 of 2 — a progress bridge to the parent frame.
+
+  The game generates every mesh, texture and sound on the device at boot, and
+  renders nothing at all until that finishes. Upstream is fine with this:
+  standalone, you are looking at its own "jungle trail" boot card. Embedded,
+  the parent needs to tell "still building" from "dead", because a black
+  rectangle is what both look like — and getting that wrong is precisely how
+  the War launcher was first reported as broken.
+
+  The bridge is deliberately tiny and OUTSIDE the module: it observes public
+  DOM and globals rather than patching anything the engine owns. An earlier
+  attempt on the War build intercepted console to read the engine's own
+  progress logs, and that stopped the engine running at all.
+-->
+<script>
+(function () {
+  var done = false;
+
+  function send(type, text) {
+    try {
+      parent.postMessage({ source: 'jungle-game', type: type, text: text }, '*');
+    } catch (e) { /* no parent, or a parent that will not take messages */ }
+  }
+
+  /* NOTE ON THE HEARTBEAT THAT USED TO BE HERE.
+     This sent an elapsed second count every second, which the host rendered as
+     "T+012S". That is gone: the host now draws a percentage bar off its own
+     clock, so it needs nothing per-second from in here, and a timer that only
+     feeds a display nobody reads is just a wakeup. The bake still cannot be
+     measured from out here — it happens inside one synchronous constructor —
+     which is exactly why the host models it rather than reporting it.
+
+     What is left below is the part that could never be modelled: the moment the
+     engine is actually up, and any error that stops it getting there. */
+
+  /* Ready = the engine has constructed itself AND started its loop AND removed
+     its own boot card. All three, because `window.__game` is assigned before
+     begin() returns and the loop is what actually puts pixels up. */
+  var poll = setInterval(function () {
+    if (done) return;
+    var g = window.__game;
+    if (g && g.running && !document.getElementById('boot')) {
+      done = true;
+      clearInterval(poll);
+      send('ready', '');
+    }
+  }, 250);
+
+  /* A module that throws during evaluation never assigns __game, so without
+     this the parent would wait out its whole timeout on an error it could have
+     shown immediately. */
+  addEventListener('error', function (e) {
+    send('error', (e && e.message) || 'script error');
+  });
+  addEventListener('unhandledrejection', function (e) {
+    send('error', (e && e.reason && e.reason.message) || 'load failed');
+  });
+})();
+</script>
+</head>
+<body>
+<canvas id="view"></canvas>
+<div id="boot">jungle trail</div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

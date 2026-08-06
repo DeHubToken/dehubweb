@@ -17,8 +17,18 @@
  */
 import { builderStorageBase } from "@/lib/builder/api";
 
-/** sandbox flags: scripts + typical app needs, but NOT allow-same-origin. */
-export const BUILDER_IFRAME_SANDBOX = "allow-scripts allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox";
+/**
+ * sandbox flags: scripts + typical app needs, but NOT allow-same-origin.
+ *
+ * `allow-popups-to-escape-sandbox` is deliberately absent. With it, a window
+ * opened by a generated app was a FULLY UNSANDBOXED browsing context on the
+ * real origin of whatever it loaded — everything a convincing fake-ad or
+ * credential-phishing popup needs, launched from a dehub.io page. Without it,
+ * popups inherit these same flags: opaque origin, no storage, no same-origin
+ * access to anything. `allow-popups` itself stays so generated apps can still
+ * open their own links.
+ */
+export const BUILDER_IFRAME_SANDBOX = "allow-scripts allow-forms allow-modals allow-popups";
 
 const STORAGE_SHIM = `<script>(function(){
   function mk(){var m={};return{getItem:function(k){return Object.prototype.hasOwnProperty.call(m,k)?m[k]:null;},setItem:function(k,v){m[k]=String(v);},removeItem:function(k){delete m[k];},clear:function(){m={};},key:function(i){return Object.keys(m)[i]||null;},get length(){return Object.keys(m).length;}};}

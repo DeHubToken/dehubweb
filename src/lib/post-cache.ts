@@ -11,6 +11,7 @@ import { QueryClient } from '@tanstack/react-query';
 import type { DeHubNFT } from '@/lib/api/dehub';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 import { getVoteCache } from '@/lib/vote-cache';
+import { applyVoteStateToNFT } from '@/lib/engagement';
 
 /**
  * Parse a duration string (e.g., "1:23" or "1:02:34") back to seconds
@@ -179,15 +180,7 @@ function textPostToNFT(post: TextPost): Partial<DeHubNFT> {
 function applyVoteCache(postId: string, nft: Partial<DeHubNFT>): Partial<DeHubNFT> {
   const cached = getVoteCache(postId);
   if (!cached) return nft;
-  return {
-    ...nft,
-    isLiked: cached.isLiked,
-    isDisliked: cached.isDisliked,
-    totalVotes: {
-      for: cached.likeCount,
-      against: cached.dislikeCount,
-    },
-  };
+  return applyVoteStateToNFT(nft, cached);
 }
 
 /**
