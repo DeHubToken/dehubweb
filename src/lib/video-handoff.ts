@@ -117,8 +117,11 @@ function park(key: string) {
   // reclaim inside PARK_MS resumes where it left off instead of refetching.
   entry.el.remove();
   if (!parked.includes(key)) parked.push(key);
-  while (parked.length > MAX_PARKED) dispose(parked[0]);
+  // Timer first: pruning below may dispose this very entry, and dispose is what
+  // clears the timer. Setting it afterwards would leave one running on an entry
+  // already gone from the pool.
   entry.parkTimer = setTimeout(() => dispose(key), PARK_MS);
+  while (parked.length > MAX_PARKED) dispose(parked[0]);
 }
 
 /**
