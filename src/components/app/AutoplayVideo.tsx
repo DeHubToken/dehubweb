@@ -10,7 +10,7 @@
 import { useRef, useEffect, useState, memo } from 'react';
 import { cn } from '@/lib/utils';
 import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoader';
-import { useResolvedThumbnail } from '@/lib/thumbnail-fallback';
+import { useResolvedThumbnail, DEFAULT_POSTER_WIDTH } from '@/lib/thumbnail-fallback';
 
 interface AutoplayVideoProps {
   src: string;
@@ -30,6 +30,12 @@ interface AutoplayVideoProps {
    * mobile to ~30fps. Omit for the normal single-video behavior.
    */
   playbackGroup?: string;
+  /**
+   * Poster size in DEVICE pixels — pass `deviceWidth(cssPx)`. Defaults to a
+   * full-width feed poster, which is far more image than the small tiles this
+   * component also renders into need, so those should state their own size.
+   */
+  posterWidth?: number;
 }
 
 // ─── Playback group arbiter (module-level) ──────────────────────────────────
@@ -70,10 +76,11 @@ export const AutoplayVideo = memo(function AutoplayVideo({
   rootMargin = '100px',
   disabled = false,
   playbackGroup,
+  posterWidth = DEFAULT_POSTER_WIDTH,
 }: AutoplayVideoProps) {
   // Shorts thumbnails may live at shorts/{id}.jpg instead of the mapped
   // images/{id}.jpg — resolve to whichever exists so the poster isn't a 403.
-  const poster = useResolvedThumbnail(posterProp);
+  const poster = useResolvedThumbnail(posterProp, posterWidth);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isVisible, setIsVisible] = useState(false);

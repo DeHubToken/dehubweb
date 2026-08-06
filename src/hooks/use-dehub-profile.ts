@@ -10,7 +10,7 @@ import { useQuery, useInfiniteQuery, useQueryClient, keepPreviousData } from '@t
 import { useMemo, useEffect } from 'react';
 import i18n from 'i18next';
 import { getAccountInfo, getAccountByUsername, getAuthToken, getNFTInfo, type DeHubUser } from '@/lib/api/dehub';
-import { buildAvatarUrl, buildCoverUrl } from '@/lib/media-url';
+import { buildAvatarUrl, buildCoverUrl, deviceWidth } from '@/lib/media-url';
 import { mapToVideoItem, mapToImagePost, mapToTextPost, type UnifiedFeedItem } from './use-unified-feed';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 
@@ -80,8 +80,11 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
   // Get user address for canonical URL construction
   const address = user.address || user.wallet_address || '';
   
-  // Build canonical CDN URLs (strips statics/ or other prefixes)
-  const avatarUrl = buildAvatarUrl(address, rawAvatarUrl);
+  // Build canonical CDN URLs (strips statics/ or other prefixes).
+  // ProfileHeader renders this at w-24 sm:w-28 — the largest avatar the app
+  // has, and the one place the previous flat 192 was too SMALL rather than too
+  // large (a 3x screen wants 336 for it).
+  const avatarUrl = buildAvatarUrl(address, rawAvatarUrl, deviceWidth(112));
   const coverUrl = buildCoverUrl(address, rawCoverUrl);
 
   // Preserve raw arrays for list display (if available)

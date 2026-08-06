@@ -15,15 +15,29 @@
 import { useEffect, useState } from 'react';
 import { cdnImage } from '@/lib/media-url';
 
-const resolved = new Map<string, string>(); // raw primary URL → working TRANSFORMED URL
+/**
+ * Raw primary URL → the raw URL that actually resolves.
+ *
+ * Keyed and stored WITHOUT the transform, because which folder a poster lives
+ * in has nothing to do with what size it is being rendered at. Caching the
+ * transformed URL instead (as this did originally) meant the first caller's
+ * width was handed to every later one — so a 120 px reel tile and a full-width
+ * feed card could not coexist.
+ */
+const resolved = new Map<string, string>();
 
 /**
- * Video posters render at anything from a 180px shorts tile to a full-width
- * feed card, so this matches the media default in media-url.ts rather than
- * trying to be clever. Cloudflare never upscales, so a smaller original is
- * untouched.
+ * In-flight probes, so N cards sharing a poster — or one card asking for two
+ * sizes of it — cost one probe rather than N.
  */
-const POSTER_WIDTH = 1080;
+const inFlight = new Map<string, Promise<string>>();
+
+/**
+ * Fallback when a caller doesn't state a size. Video posters render anywhere
+ * from a 120 px reel tile to a full-width feed card, so callers that know
+ * their box should say so: `useResolvedThumbnail(url, deviceWidth(180))`.
+ */
+export const DEFAULT_POSTER_WIDTH = 1080;
 
 function probe(url: string): Promise<boolean> {
   return new Promise((res) => {
@@ -40,9 +54,21 @@ function shortsSibling(url: string): string | null {
   return m ? `${m[1]}shorts/${m[2]}.jpg` : null;
 }
 
-export async function resolveThumbnailUrl(url: string): Promise<string> {
+/** Resolve which raw URL exists, probing at `width` so the probe warms the
+ *  exact object the <img> will go on to request. */
+function resolveRaw(url: string, width: number): Promise<string> {
   const cached = resolved.get(url);
-  if (cached !== undefined) return cached;
+  if (cached !== undefined) return Promise.resolve(cached);
+
+  const existing = inFlight.get(url);
+  if (existing) return existing;
+
+  const siblingRaw = shortsSibling(url);
+  if (!siblingRaw) {
+    // Nothing to fall back to — don't spend a probe on it.
+    resolved.set(url, url);
+    return Promise.resolve(url);
+  }
 
   // Probe the TRANSFORMED urls, not the raw ones. The sibling logic still runs
   // on the raw path (that is where the images/ vs shorts/ folder lives), but
@@ -51,26 +77,40 @@ export async function resolveThumbnailUrl(url: string): Promise<string> {
   // <img> then requests a different URL. Cloudflare propagates the origin's
   // 403 for a missing source through the transform (verified against
   // production), so onerror still fires and the fallback still triggers.
-  const primary = cdnImage(url, { width: POSTER_WIDTH });
-  const siblingRaw = shortsSibling(url);
-  if (!siblingRaw) {
-    // Nothing to fall back to — don't spend a probe on it.
-    resolved.set(url, primary);
-    return primary;
-  }
-  const sibling = cdnImage(siblingRaw, { width: POSTER_WIDTH });
-  const winner = (await probe(primary)) ? primary : (await probe(sibling)) ? sibling : primary;
-  resolved.set(url, winner);
-  return winner;
+  const run = (async () => {
+    const winner = (await probe(cdnImage(url, { width })))
+      ? url
+      : (await probe(cdnImage(siblingRaw, { width })))
+        ? siblingRaw
+        : url;
+    resolved.set(url, winner);
+    inFlight.delete(url);
+    return winner;
+  })();
+  inFlight.set(url, run);
+  return run;
+}
+
+export async function resolveThumbnailUrl(
+  url: string,
+  width: number = DEFAULT_POSTER_WIDTH,
+): Promise<string> {
+  return cdnImage(await resolveRaw(url, width), { width });
 }
 
 /**
  * Returns the given thumbnail URL immediately, swapping to the shorts/
  * sibling if the primary turns out not to exist on the CDN.
+ *
+ * `width` is DEVICE pixels — pass `deviceWidth(cssPx)` so a reel tile asks for
+ * a reel-tile-sized poster instead of a full-width one.
  */
-export function useResolvedThumbnail(url: string | undefined | null): string | undefined {
+export function useResolvedThumbnail(
+  url: string | undefined | null,
+  width: number = DEFAULT_POSTER_WIDTH,
+): string | undefined {
   const [current, setCurrent] = useState<string | undefined>(() =>
-    url ? resolved.get(url) ?? cdnImage(url, { width: POSTER_WIDTH }) : undefined,
+    url ? cdnImage(resolved.get(url) ?? url, { width }) : undefined,
   );
 
   useEffect(() => {
@@ -78,15 +118,15 @@ export function useResolvedThumbnail(url: string | undefined | null): string | u
       setCurrent(undefined);
       return;
     }
-    setCurrent(resolved.get(url) ?? cdnImage(url, { width: POSTER_WIDTH }));
+    setCurrent(cdnImage(resolved.get(url) ?? url, { width }));
     let cancelled = false;
-    void resolveThumbnailUrl(url).then((winner) => {
-      if (!cancelled) setCurrent(winner);
+    void resolveRaw(url, width).then((winner) => {
+      if (!cancelled) setCurrent(cdnImage(winner, { width }));
     });
     return () => {
       cancelled = true;
     };
-  }, [url]);
+  }, [url, width]);
 
   return current;
 }
