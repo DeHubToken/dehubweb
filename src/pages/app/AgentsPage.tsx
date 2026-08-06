@@ -25,12 +25,6 @@ interface AIAgent {
   created_at: string;
 }
 
-// Never select('*') here: the row also carries wallet_private_key, and pulling
-// it into the client puts an agent's signing key in the page's memory and in
-// every devtools network log.
-const AGENT_COLUMNS =
-  'id, name, description, api_key, owner_wallet_address, is_active, last_active_at, created_at';
-
 const MCP_BASE = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/dehub-mcp`;
 
 /**
@@ -54,16 +48,20 @@ export default function AgentsPage() {
     queryKey: ['ai-agents', walletAddress],
     queryFn: async () => {
       if (!walletAddress) return [];
-      
-      const query = supabase
-        .from('ai_agents')
-        .select(AGENT_COLUMNS)
-        .order('created_at', { ascending: false });
+
+      // Not a table read. api_key is not selectable by client roles — with
+      // agents publicly listable so the home-feed stories can resolve them, a
+      // readable key column would be a public key dump. The RPC returns only
+      // the caller's own rows.
+      //
+      // Cast until types.ts is regenerated, same as the community RPCs.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const query = (supabase as any).rpc('get_my_agents');
 
       const { data, error } = await withWalletHeader(query, walletAddress);
-      
+
       if (error) throw error;
-      return data as AIAgent[];
+      return (data ?? []) as AIAgent[];
     },
     enabled: !!walletAddress,
   });
