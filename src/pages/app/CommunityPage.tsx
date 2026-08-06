@@ -10,7 +10,7 @@ import { Users, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useCommunity, useCommunityMembers, useIsCommunityMember, useJoinCommunity, useLeaveCommunity } from '@/hooks/use-communities';
-import { useCommunityAbilities } from '@/hooks/use-community-admin';
+import { useCommunityAbilities, isEffectivelyActive, isActivelyBanned } from '@/hooks/use-community-admin';
 import { CommunityManageSheet } from '@/components/app/communities/manage/CommunityManageSheet';
 import { CommunityHeader } from '@/components/app/communities/CommunityHeader';
 import { CommunityFeed } from '@/components/app/communities/CommunityFeed';
@@ -47,9 +47,12 @@ export default function CommunityPage() {
   const joinMutation = useJoinCommunity();
   const leaveMutation = useLeaveCommunity();
 
-  const isMember = !!membership && membership.status === 'active';
+  // Membership resolves through the same helper the permission mirror uses, so
+  // an elapsed timed ban reads as active here too -- the server already lets
+  // that member post again, and it reuses the row rather than re-inserting.
+  const isMember = isEffectivelyActive(membership);
   const isPendingMember = !!membership && membership.status === 'pending';
-  const isBanned = !!membership && membership.status === 'banned';
+  const isBanned = isActivelyBanned(membership);
   // Role alone no longer decides what an admin may do -- each control asks the
   // ability it actually needs, so a partially-privileged admin gets exactly the
   // subset of the panel the server would let them use.
