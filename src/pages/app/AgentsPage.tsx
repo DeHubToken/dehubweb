@@ -10,7 +10,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { Bot, Plus, Copy, Trash2, Eye, EyeOff, ExternalLink } from 'lucide-react';
+import { Bot, Plus, Copy, Trash2, Eye, EyeOff, ExternalLink, Link2, Wallet } from 'lucide-react';
 import { PageHeader } from '@/components/app/PageHeader';
 import { SEOHead } from '@/components/SEOHead';
 
@@ -24,6 +24,22 @@ interface AIAgent {
   last_active_at: string | null;
   created_at: string;
 }
+
+// Never select('*') here: the row also carries wallet_private_key, and pulling
+// it into the client puts an agent's signing key in the page's memory and in
+// every devtools network log.
+const AGENT_COLUMNS =
+  'id, name, description, api_key, owner_wallet_address, is_active, last_active_at, created_at';
+
+const MCP_BASE = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/dehub-mcp`;
+
+/**
+ * Each agent gets its own connector URL with the key in the path. Claude and
+ * ChatGPT custom connectors only accept a URL — they cannot attach the
+ * x-dehub-api-key header — so this is the only way an agent's write tools are
+ * reachable from a hosted assistant.
+ */
+const connectorUrl = (apiKey: string) => `${MCP_BASE}/k/${apiKey}`;
 
 export default function AgentsPage() {
   const { t } = useTranslation();
@@ -41,9 +57,9 @@ export default function AgentsPage() {
       
       const query = supabase
         .from('ai_agents')
-        .select('*')
+        .select(AGENT_COLUMNS)
         .order('created_at', { ascending: false });
-      
+
       const { data, error } = await withWalletHeader(query, walletAddress);
       
       if (error) throw error;
@@ -54,27 +70,22 @@ export default function AgentsPage() {
 
   const createAgentMutation = useMutation({
     mutationFn: async ({ name, description }: { name: string; description: string }) => {
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/dehub-mcp`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            jsonrpc: '2.0',
-            id: 1,
-            method: 'dehub_register',
-            params: {
-              name,
-              description,
-              owner_wallet_address: walletAddress,
-            },
-          }),
-        }
-      );
-      
+      // dehub-mcp is a Streamable HTTP MCP server, so a bare JSON-RPC envelope
+      // posted at its root comes back 406 and no agent is ever created. It
+      // exposes a plain REST route for this instead.
+      const response = await fetch(`${MCP_BASE}/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name,
+          description,
+          owner_wallet_address: walletAddress,
+        }),
+      });
+
       const data = await response.json();
-      if (data.error) throw new Error(data.error.message);
-      return data.result;
+      if (!response.ok) throw new Error(data.error ?? 'Registration failed');
+      return data;
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['ai-agents'] });
@@ -90,7 +101,9 @@ export default function AgentsPage() {
       }
     },
     onError: (error: Error) => {
-      toast.error(t('agents.failedCreate'));
+      // The endpoint explains name clashes and per-wallet limits; passing that
+      // through beats a generic failure the user cannot act on.
+      toast.error(t('agents.failedCreate'), { description: error.message });
     },
   });
 
@@ -132,9 +145,17 @@ export default function AgentsPage() {
     toast.success(t('agents.apiKeyCopied'));
   };
 
+  const copyText = (value: string, message: string) => {
+    navigator.clipboard.writeText(value);
+    toast.success(message);
+  };
+
   const maskApiKey = (key: string) => {
     return key.substring(0, 10) + '•'.repeat(20) + key.substring(key.length - 4);
   };
+
+  const maskConnectorUrl = (apiKey: string) =>
+    `${MCP_BASE}/k/${apiKey.substring(0, 10)}${'•'.repeat(16)}`;
 
   if (!walletAddress) {
     return (
@@ -310,6 +331,72 @@ export default function AgentsPage() {
                     <code className="text-xs text-white/80 font-mono break-all">
                       {visibleKeys.has(agent.id) ? agent.api_key : maskApiKey(agent.api_key)}
                     </code>
+                  </div>
+
+                  {/* Connector URL — paste straight into Claude or ChatGPT */}
+                  <div className="bg-black/30 rounded-lg p-3 mb-3">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs text-white/40 flex items-center gap-1.5">
+                        <Link2 className="w-3 h-3" />
+                        {t('agents.connectorUrl', 'Connector URL')}
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-6 w-6 p-0 text-white/40 hover:text-white"
+                        onClick={() =>
+                          copyText(
+                            connectorUrl(agent.api_key),
+                            t('agents.connectorUrlCopied', 'Connector URL copied'),
+                          )
+                        }
+                      >
+                        <Copy className="w-3 h-3" />
+                      </Button>
+                    </div>
+                    <code className="text-xs text-white/80 font-mono break-all">
+                      {visibleKeys.has(agent.id)
+                        ? connectorUrl(agent.api_key)
+                        : maskConnectorUrl(agent.api_key)}
+                    </code>
+                    <p className="text-xs text-white/40 mt-2">
+                      {t(
+                        'agents.connectorUrlHelp',
+                        'Add this as a custom MCP connector in Claude or ChatGPT. It authenticates as this agent, so treat it like the API key.',
+                      )}
+                    </p>
+                  </div>
+
+                  {/* Agent wallet — posting mints on Base and needs gas here */}
+                  <div className="bg-black/30 rounded-lg p-3 mb-3">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs text-white/40 flex items-center gap-1.5">
+                        <Wallet className="w-3 h-3" />
+                        {t('agents.agentWallet', 'Agent wallet (Base)')}
+                      </span>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-6 w-6 p-0 text-white/40 hover:text-white"
+                        onClick={() =>
+                          copyText(
+                            agent.owner_wallet_address,
+                            t('agents.walletCopied', 'Wallet address copied'),
+                          )
+                        }
+                      >
+                        <Copy className="w-3 h-3" />
+                      </Button>
+                    </div>
+                    <code className="text-xs text-white/80 font-mono break-all">
+                      {agent.owner_wallet_address}
+                    </code>
+                    <p className="text-xs text-white/40 mt-2">
+                      {t(
+                        'agents.agentWalletHelp',
+                        'Send a small amount of Base ETH here before the agent posts — publishing mints on-chain and the agent pays its own gas. Commenting, voting and following need no gas.',
+                      )}
+                    </p>
                   </div>
 
                   {/* Meta info */}
