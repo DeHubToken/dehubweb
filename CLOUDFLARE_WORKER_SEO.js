@@ -32,6 +32,51 @@ const BLOG_SHARE_IMAGE_BASE = 'https://aigxuutjaqsywioxjefr.supabase.co/function
 // crawlers downloaded the React shell where a PNG should be and drew no image.
 const SHARE_IMAGE = `${APP_URL}/og/dehub-social-share.png`;
 
+
+// Per-route share cards, rendered from the banner kit into public/og/ and
+// served by the ASSETS binding. Key = the canonical route path without its
+// leading slash; 'home' and 'fallback' are the two pages with no route of
+// their own. Before this, every /docs page, every product page and the blog
+// index shared one card, so a feed full of DeHub links showed one repeated
+// image. Anything absent here still falls back to SHARE_IMAGE, so adding a
+// route without its card is safe.
+const OG_CARD_ROUTES = new Set([
+  'home', 'fallback', 'blog', 'docs',
+  'docs/overview', 'docs/dapps', 'docs/games', 'docs/token/overview',
+  'docs/token/economics', 'docs/token/stake', 'docs/token/utility', 'docs/token/where-to-buy',
+  'docs/token/governance', 'docs/token/bridge', 'docs/roadmap', 'docs/faq',
+  'docs/team', 'docs/contact', 'docs/privacy', 'docs/terms',
+  'docs/terms-of-service', 'docs/advertising', 'docs/security', 'docs/featured-in',
+  'docs/brand-assets', 'docs/brand-guidelines', 'docs/donate', 'explore',
+  'videos', 'shorts', 'guides/best-decentralized-social-media', 'guides/best-web3-social-media-dapps',
+  'connect', 'connect/chatgpt', 'connect/claude', 'communities',
+  'stages', 'guide', 'features', 'pricing',
+  'creator', 'editor', 'prompt', 'work',
+  'affiliate', 'premium', 'governance', 'leaderboard',
+  'top-100', 'music', 'radio', 'tv',
+  'glossary', 'bridge', 'agents', 'assistant',
+  'creators', 'jobs',
+]);
+
+/** A route's own share card, or the shared one when it has none. */
+function shareImage(key) {
+  return OG_CARD_ROUTES.has(key) ? `${APP_URL}/og/${key.replace(/\//g, '-')}.jpg` : SHARE_IMAGE;
+}
+
+/** og:image + twitter block. Every card is a 1200x630 banner, so the size
+ *  hints and `summary_large_image` are unconditional — Facebook defers the
+ *  preview until it has scraped an image whose dimensions it wasn't told, and
+ *  `summary` renders a banner as a cropped thumbnail. */
+function shareMetaTags(key, alt) {
+  const img = shareImage(key);
+  return `<meta property="og:image" content="${img}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="${escHtml(alt)}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="${img}">`;
+}
+
 // One canonical brand identity. Keep in sync with the Organization JSON-LD in
 // index.html and src/pages/Index.tsx. The deployed Supabase fn still emits a
 // dead sameAs (@DeHubApp does not exist), so the homepage handler below
@@ -198,8 +243,7 @@ function buildDocsHtml(route, meta, contentHtml) {
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escHtml(meta.title)}">
 <meta property="og:description" content="${escHtml(meta.description)}">
-<meta property="og:image" content="${SHARE_IMAGE}">
-<meta name="twitter:card" content="summary">
+${shareMetaTags(`docs/${route}`, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${JSON.stringify({
   '@context': 'https://schema.org', '@type': 'TechArticle',
@@ -232,8 +276,7 @@ function buildDocsIndexHtml() {
 <meta property="og:site_name" content="DeHub">
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="DeHub Documentation">
-<meta property="og:image" content="${SHARE_IMAGE}">
-<meta name="twitter:card" content="summary">
+${shareMetaTags('docs', 'DeHub Documentation')}
 <meta name="twitter:site" content="@dehub_official">
 </head>
 <body style="background:#000;color:#eee;font-family:sans-serif;max-width:720px;margin:0 auto;padding:24px;line-height:1.6">
@@ -438,8 +481,7 @@ function buildBlogIndexHtml(manifest) {
 <meta property="og:site_name" content="DeHub">
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="DeHub Blog — News, Guides &amp; Product Updates">
-<meta property="og:image" content="${SHARE_IMAGE}">
-<meta name="twitter:card" content="summary">
+${shareMetaTags('blog', 'DeHub Blog — news, guides and product updates')}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 </head>
@@ -534,8 +576,7 @@ function buildSectionHtml(key, meta) {
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escHtml(meta.title)}">
 <meta property="og:description" content="${escHtml(meta.description)}">
-<meta property="og:image" content="${SHARE_IMAGE}">
-<meta name="twitter:card" content="summary_large_image">
+${shareMetaTags(key, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 </head>
@@ -807,8 +848,7 @@ function buildMarketingHtml(key, meta) {
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escHtml(meta.title)}">
 <meta property="og:description" content="${escHtml(meta.description)}">
-<meta property="og:image" content="${SHARE_IMAGE}">
-<meta name="twitter:card" content="summary_large_image">
+${shareMetaTags(key, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
 </head>
@@ -836,8 +876,7 @@ function buildGuidePageHtml(slug, meta) {
 <meta property="og:url" content="${canonicalUrl}">
 <meta property="og:title" content="${escHtml(meta.title)}">
 <meta property="og:description" content="${escHtml(meta.description)}">
-<meta property="og:image" content="${SHARE_IMAGE}">
-<meta name="twitter:card" content="summary_large_image">
+${shareMetaTags(`guides/${slug}`, meta.title)}
 <meta name="twitter:site" content="@dehub_official">
 <script type="application/ld+json">${JSON.stringify({
   '@context': 'https://schema.org', '@type': 'Article',
@@ -866,7 +905,7 @@ function buildFallbackHtml(pathname, canonicalUrl) {
     ? `Post #${postId} on DeHub`
     : 'DeHub — Open Source, User Owned & Censorship Resistant Media';
   const description = 'Open source, user owned and censorship resistant media.';
-  const image = SHARE_IMAGE;
+  const image = shareImage('fallback');
   // Canonical must never echo mirror hostnames or query strings.
   const url = `${APP_URL}${canonicalizePath(pathname)}`;
   return `<!DOCTYPE html>
@@ -880,9 +919,9 @@ function buildFallbackHtml(pathname, canonicalUrl) {
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">
   <meta property="og:image" content="${image}">
-  <meta property="og:image:width" content="200">
-  <meta property="og:image:height" content="200">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="${title}">
   <meta name="twitter:description" content="${description}">
   <meta name="twitter:image" content="${image}">
@@ -1807,6 +1846,30 @@ async function handleRequest(request, env) {
     // Profile titles from the deployed fn are CTA-first ("Join @x on DeHub
     // today!") — entity-led titles rank and read better in SERPs.
     html = html.replace(/Join @([A-Za-z0-9_.-]+) on DeHub today!/g, '@$1 on DeHub — posts, videos &amp; profile');
+
+
+    // The deployed fn points og:image at the 200-square logo, and for its own
+    // static routes at Lovable CDN paths (`/__l5e/assets-v1/...`) that nothing
+    // has served since the Cloudflare migration — the SPA catch-all answers
+    // those 200 text/html, so crawlers download the React shell where a PNG
+    // should be. Swap in the route's card. Entity routes are left alone: a post
+    // or profile resolves to its own media, which beats any generic card.
+    if (!isEntityRoute) {
+      const cardKey = pathname === '/' ? 'home' : canonicalizePath(pathname).replace(/^\/+/, '').toLowerCase();
+      const card = shareImage(cardKey);
+      if (card !== SHARE_IMAGE) {
+        html = html
+          .replace(/(<meta property="og:image(?::secure_url)?" content=")[^"]*(">)/g, `$1${card}$2`)
+          .replace(/(<meta name="twitter:image" content=")[^"]*(">)/g, `$1${card}$2`)
+          .replace(/(<meta property="og:image:width" content=")[^"]*(">)/g, '$11200$2')
+          .replace(/(<meta property="og:image:height" content=")[^"]*(">)/g, '$1630$2')
+          .replace(/(<meta property="og:image:type" content=")[^"]*(">)/g, '$1image/jpeg$2')
+          .replace(/(<meta name="twitter:card" content=")[^"]*(">)/g, '$1summary_large_image$2');
+        if (!html.includes('og:image:width')) {
+          html = html.replace('</head>', '<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"></head>');
+        }
+      }
+    }
 
     // Footer nav in the deployed fn's HTML links /app/* twins of canonical
     // pages; route internal link equity straight to the canonical URLs.
