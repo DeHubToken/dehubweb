@@ -49,6 +49,8 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.general-ai-chat]
     verify_jwt = false
+  [functions.generate-3d]
+    verify_jwt = false
   [functions.generate-image]
     verify_jwt = false
   [functions.generate-video]

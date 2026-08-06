@@ -6,9 +6,10 @@
  * result gives the actions that keep the work moving: animate a still, send it
  * to the timeline, run it again.
  */
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
 import {
   AlertCircle,
+  Box,
   Clapperboard,
   Download,
   Film,
@@ -37,18 +38,59 @@ const KIND_ICON = {
   image: ImageIcon,
   video: Film,
   audio: Music2,
+  model3d: Box,
 } as const;
+
+/**
+ * three.js is ~600 kB and only the 3D surfaces need it, so the viewer is split
+ * into its own chunk and fetched the first time a mesh result is opened.
+ */
+const Model3dViewer = lazy(() =>
+  import('./Model3dViewer').then((m) => ({ default: m.Model3dViewer })),
+);
+
+/** File extension for a finished job, used for downloads. */
+function extensionFor(job: GenerationJob): string {
+  switch (job.kind) {
+    case 'video':
+      return 'mp4';
+    case 'audio':
+      return 'mp3';
+    case 'model3d':
+      // The format the creator actually asked for wins. fal's URLs do not
+      // reliably carry an extension, so sniffing one mislabels an FBX as .glb.
+      return (
+        job.exportFormat ??
+        job.url?.match(/\.(glb|gltf|usdz|fbx|obj|stl)(?:\?|$)/i)?.[1]?.toLowerCase() ??
+        'glb'
+      );
+    default:
+      return 'png';
+  }
+}
+
+/** Only GLB/glTF render in the browser; the rest are download-only. */
+function isViewableMesh(job: GenerationJob): boolean {
+  if (!job.url) return false;
+  // Prefer the requested format over the URL: fal serves meshes with a query
+  // string and often no extension, so sniffing alone would mount the GLB viewer
+  // on an STL and show a parse error instead of the download panel.
+  const ext = extensionFor(job);
+  return ext === 'glb' || ext === 'gltf';
+}
 
 interface ResultsFeedProps {
   /** Signed-in wallet, needed so sent assets sync to cloud storage. */
   wallet: string | null;
   /** Called when the creator wants to animate a still. */
   onAnimate: (job: GenerationJob) => void;
+  /** Called when the creator wants to turn a still into a mesh. */
+  onModel3d: (job: GenerationJob) => void;
   /** Switches to the editor after a successful send. */
   onOpenEditor: () => void;
 }
 
-export function ResultsFeed({ wallet, onAnimate, onOpenEditor }: ResultsFeedProps) {
+export function ResultsFeed({ wallet, onAnimate, onModel3d, onOpenEditor }: ResultsFeedProps) {
   const jobs = useGenerationStore((s) => s.jobs);
   const focusedId = useGenerationStore((s) => s.focusedId);
   const focus = useGenerationStore((s) => s.focus);
@@ -58,10 +100,19 @@ export function ResultsFeed({ wallet, onAnimate, onOpenEditor }: ResultsFeedProp
   const finishedCount = jobs.filter((j) => j.status !== 'running').length;
   const runningCount = jobs.length - finishedCount;
 
+  /**
+   * Stable identity matters here. The viewer's focus-and-scroll-lock effect is
+   * keyed on this callback, and a running job re-renders this component on
+   * every poll tick — an inline arrow would give the effect a new dependency
+   * each time, re-running it and yanking focus back to the Close button while
+   * someone was orbiting a mesh or tabbing to Download.
+   */
+  const closeViewer = useCallback(() => focus(null), [focus]);
+
   // The viewer is plain markup inside the host's hidden wrapper, so switching
   // to /editor makes it invisible without unmounting it. Close it explicitly or
   // its body scroll lock stays applied to the editor.
-  useCloseOnSurfaceSwitch(useCallback(() => focus(null), [focus]));
+  useCloseOnSurfaceSwitch(closeViewer);
 
   return (
     <section className="w-full">
@@ -120,8 +171,9 @@ export function ResultsFeed({ wallet, onAnimate, onOpenEditor }: ResultsFeedProp
         <ResultViewer
           job={focused}
           wallet={wallet}
-          onClose={() => focus(null)}
+          onClose={closeViewer}
           onAnimate={onAnimate}
+          onModel3d={onModel3d}
           onOpenEditor={onOpenEditor}
         />
       )}
@@ -149,8 +201,10 @@ function ResultCard({ job, onOpen }: { job: GenerationJob; onOpen: () => void })
         <button
           type="button"
           onClick={() => {
+            // Video and 3D both queue upstream and are already paid for, so
+            // walking away throws away a result that will still be produced.
             const ok =
-              job.kind !== 'video' ||
+              (job.kind !== 'video' && job.kind !== 'model3d') ||
               window.confirm(
                 'Stop waiting for this render? It has already been paid for and will keep rendering, but the result will not come back to you.',
               );
@@ -219,9 +273,33 @@ function ResultCard({ job, onOpen }: { job: GenerationJob; onOpen: () => void })
           <Music2 className="h-6 w-6 text-white/40" />
         </span>
       )}
+      {/* Meshes use the provider's rendered still when there is one. Booting a
+          WebGL context per grid tile would exhaust the browser's context budget
+          long before the grid filled, so the live viewer is opening-only. */}
+      {job.kind === 'model3d' &&
+        (job.posterUrl ? (
+          <img
+            src={job.posterUrl}
+            alt={job.prompt || 'Generated 3D model'}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        ) : (
+          <span className="flex h-full w-full flex-col items-center justify-center gap-1.5 bg-gradient-to-br from-white/[0.07] to-transparent">
+            <Box className="h-6 w-6 text-white/40" />
+            <span className="text-[9px] font-medium uppercase tracking-[0.14em] text-white/35">
+              View in 3D
+            </span>
+          </span>
+        ))}
 
       <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 to-transparent p-2 pt-6 text-left">
-        <span className="line-clamp-1 text-[10px] font-medium text-white/85">{job.prompt}</span>
+        {/* A mesh made from a photo alone has no prompt, so name it by what it
+            is rather than leaving the caption blank. */}
+        <span className="line-clamp-1 text-[10px] font-medium text-white/85">
+          {job.prompt || (job.kind === 'model3d' ? 'From a reference image' : '')}
+        </span>
       </span>
       <span
         data-keep-dark
@@ -238,10 +316,18 @@ interface ResultViewerProps {
   wallet: string | null;
   onClose: () => void;
   onAnimate: (job: GenerationJob) => void;
+  onModel3d: (job: GenerationJob) => void;
   onOpenEditor: () => void;
 }
 
-function ResultViewer({ job, wallet, onClose, onAnimate, onOpenEditor }: ResultViewerProps) {
+function ResultViewer({
+  job,
+  wallet,
+  onClose,
+  onAnimate,
+  onModel3d,
+  onOpenEditor,
+}: ResultViewerProps) {
   const remove = useGenerationStore((s) => s.remove);
   const retry = useGenerationStore((s) => s.retry);
   const [sending, setSending] = useState(false);
@@ -307,7 +393,7 @@ function ResultViewer({ job, wallet, onClose, onAnimate, onOpenEditor }: ResultV
    */
   const handleDownload = useCallback(async () => {
     if (!job.url) return;
-    const filename = `dehub-${job.kind}-${job.id}.${job.kind === 'video' ? 'mp4' : job.kind === 'audio' ? 'mp3' : 'png'}`;
+    const filename = `dehub-${job.kind}-${job.id}.${extensionFor(job)}`;
     let href = job.url;
     let objectUrl: string | null = null;
     try {
@@ -370,6 +456,33 @@ function ResultViewer({ job, wallet, onClose, onAnimate, onOpenEditor }: ResultV
               <Music2 className="mx-auto h-7 w-7 text-white/40" />
               <audio src={job.url} controls className="mt-4 w-full" />
             </div>
+          ) : job.kind === 'model3d' ? (
+            job.url && isViewableMesh(job) ? (
+              <div className="h-[60dvh] max-h-[70dvh] w-full overflow-hidden rounded-xl bg-black/40 lg:h-[70dvh]">
+                <Suspense
+                  fallback={
+                    <div className="flex h-full w-full items-center justify-center">
+                      <Loader2 className="h-5 w-5 animate-spin text-white/60" />
+                    </div>
+                  }
+                >
+                  <Model3dViewer url={job.url} />
+                </Suspense>
+              </div>
+            ) : (
+              // An FBX/OBJ/USDZ export cannot be previewed here. Say so rather
+              // than showing an empty canvas that reads as a failed generation.
+              <div className="px-6 py-10 text-center">
+                <Box className="mx-auto h-7 w-7 text-white/40" />
+                <p className="mt-3 text-sm font-medium text-white/80">
+                  Ready to download
+                </p>
+                <p className="mx-auto mt-1 max-w-xs text-[13px] leading-relaxed text-white/45">
+                  This format does not preview in the browser. Download it and open it in your 3D
+                  tool — or generate as GLB next time to preview it here.
+                </p>
+              </div>
+            )
           ) : (
             <img
               src={job.url}
@@ -386,7 +499,7 @@ function ResultViewer({ job, wallet, onClose, onAnimate, onOpenEditor }: ResultV
                 {job.modelName}
               </p>
               <p className="mt-0.5 text-[11px] text-white/55">
-                {job.aspect} generation
+                {job.kind === 'model3d' ? '3D model' : `${job.aspect} generation`}
               </p>
             </div>
             <button
@@ -401,8 +514,12 @@ function ResultViewer({ job, wallet, onClose, onAnimate, onOpenEditor }: ResultV
           </div>
 
           <div className="min-h-0 flex-1 overflow-y-auto px-4 py-3">
-            <p className="text-[13px] leading-relaxed text-white/75">{job.prompt}</p>
-            {job.resolvedPrompt !== job.prompt && (
+            <p className="text-[13px] leading-relaxed text-white/75">
+              {job.prompt || (job.kind === 'model3d' ? 'Reconstructed from a reference image.' : '')}
+            </p>
+            {/* Guarded on content, not just difference: an image-only mesh run
+                has no prompt at all, and an empty expander is noise. */}
+            {!!job.resolvedPrompt && job.resolvedPrompt !== job.prompt && (
               <details className="mt-3">
                 <summary className="cursor-pointer text-[11px] font-medium text-white/45 transition hover:text-white/75">
                   Full prompt sent
@@ -415,32 +532,49 @@ function ResultViewer({ job, wallet, onClose, onAnimate, onOpenEditor }: ResultV
           <div className="grid gap-1.5 border-t border-white/10 p-3">
             {!failed && (
               <>
-                <button
-                  type="button"
-                  onClick={handleSend}
-                  disabled={sending}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3 py-2.5 text-[13px] font-semibold text-white backdrop-blur-xl transition hover:border-white/40 hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40"
-                >
-                  {sending ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Scissors className="h-4 w-4" />
-                  )}
-                  {sending ? 'Sending' : 'Edit in timeline'}
-                </button>
-
-                {job.kind === 'image' && (
+                {/* The timeline holds video, images and audio. A mesh is not a
+                    clip, so offering this for 3D would only ever fail. */}
+                {job.kind !== 'model3d' && (
                   <button
                     type="button"
-                    onClick={() => {
-                      onAnimate(job);
-                      onClose();
-                    }}
-                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-3 py-2.5 text-[13px] font-medium text-white/85 transition hover:border-white/30 hover:bg-white/[0.12] hover:text-white"
+                    onClick={handleSend}
+                    disabled={sending}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-3 py-2.5 text-[13px] font-semibold text-white backdrop-blur-xl transition hover:border-white/40 hover:bg-white/20 disabled:cursor-not-allowed disabled:opacity-40"
                   >
-                    <Film className="h-4 w-4" />
-                    Animate this
+                    {sending ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Scissors className="h-4 w-4" />
+                    )}
+                    {sending ? 'Sending' : 'Edit in timeline'}
                   </button>
+                )}
+
+                {job.kind === 'image' && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onAnimate(job);
+                        onClose();
+                      }}
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-3 py-2.5 text-[13px] font-medium text-white/85 transition hover:border-white/30 hover:bg-white/[0.12] hover:text-white"
+                    >
+                      <Film className="h-4 w-4" />
+                      Animate this
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onModel3d(job);
+                        onClose();
+                      }}
+                      className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-3 py-2.5 text-[13px] font-medium text-white/85 transition hover:border-white/30 hover:bg-white/[0.12] hover:text-white"
+                    >
+                      <Box className="h-4 w-4" />
+                      Make it 3D
+                    </button>
+                  </>
                 )}
 
                 <button
@@ -449,7 +583,7 @@ function ResultViewer({ job, wallet, onClose, onAnimate, onOpenEditor }: ResultV
                   className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-3 py-2.5 text-[13px] font-medium text-white/85 transition hover:border-white/30 hover:bg-white/[0.12] hover:text-white"
                 >
                   <Download className="h-4 w-4" />
-                  Download
+                  {job.kind === 'model3d' ? `Download .${extensionFor(job).toUpperCase()}` : 'Download'}
                 </button>
               </>
             )}

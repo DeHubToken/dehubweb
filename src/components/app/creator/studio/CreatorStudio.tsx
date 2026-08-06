@@ -11,6 +11,7 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
+  Box,
   Film,
   ImageIcon,
   Loader2,
@@ -32,30 +33,48 @@ import {
   VIDEO_MODELS,
   VIDEO_MODEL_OPTIONS,
   getVideoCostUsd,
+  snapVideoDuration,
   type VideoModelKey,
 } from '@/constants/video-models.constants';
+import {
+  MODEL3D_MODELS,
+  MODEL3D_MODEL_OPTIONS,
+  getModel3dCostUsd,
+  type Model3dModelKey,
+} from '@/constants/model3d-models.constants';
 import { ImagePaywallModal } from '@/components/app/image/ImagePaywallModal';
 import {
   VideoPaywallModal,
   type VideoGenerationOptions,
 } from '@/components/app/video/VideoPaywallModal';
+import {
+  Model3dPaywallModal,
+  type Model3dGenerationOptions,
+} from '@/components/app/model3d/Model3dPaywallModal';
 import { applyPreset, getPreset, type CreatorPreset } from '@/lib/creator/presets';
-import { enhancePrompt } from '@/lib/creator/generationEngine';
+import { enhancePrompt, hostDataUrl } from '@/lib/creator/generationEngine';
 import { useGenerationStore, type GenerationJob } from '@/store/generationStore';
 import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from '@/hooks/use-surface-switch';
 import { CounterChip, SelectChip, type ChipOption } from './StudioChip';
 import { PresetStrip } from './PresetStrip';
 import { ResultsFeed } from './ResultsFeed';
 
-type Mode = 'image' | 'video';
+type Mode = 'image' | 'video' | '3d';
 
 const IMAGE_ASPECTS = ['1:1', '4:5', '16:9', '9:16', '3:2', '2:3', '21:9'] as const;
 const MAX_IMAGE_BATCH = 4;
 const MAX_REFERENCE_BYTES = 20 * 1024 * 1024;
 
+/**
+ * A mesh has no aspect ratio, but the results feed sizes every card from one.
+ * Square is the honest choice for a turntable preview.
+ */
+const MODEL3D_ASPECT = '1:1';
+
 const MODES: { id: Mode; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'image', label: 'Image', icon: ImageIcon },
   { id: 'video', label: 'Video', icon: Film },
+  { id: '3d', label: '3D', icon: Box },
 ];
 
 /** Read a picked file as a data URL for the reference-image channel. */
@@ -81,6 +100,7 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
 
   const startImage = useGenerationStore((s) => s.startImage);
   const startVideo = useGenerationStore((s) => s.startVideo);
+  const startModel3d = useGenerationStore((s) => s.startModel3d);
   const runningCount = useGenerationStore((s) => s.jobs.filter((j) => j.status === 'running').length);
 
   const [mode, setMode] = useState<Mode>('image');
@@ -89,6 +109,7 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
 
   const [imageModel, setImageModel] = useState<ImageModelKey>('gemini-3-pro-image');
   const [videoModel, setVideoModel] = useState<VideoModelKey>('kling-2.6-pro');
+  const [model3dModel, setModel3dModel] = useState<Model3dModelKey>('tripo-2.5');
   const [imageAspect, setImageAspect] = useState<string>('1:1');
   const [videoAspect, setVideoAspect] = useState<string>('16:9');
   const [batch, setBatch] = useState(1);
@@ -98,7 +119,10 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
 
   const [imagePaywallOpen, setImagePaywallOpen] = useState(false);
   const [videoPaywallOpen, setVideoPaywallOpen] = useState(false);
+  const [model3dPaywallOpen, setModel3dPaywallOpen] = useState(false);
   const [attaching, setAttaching] = useState(false);
+  /** Hosting a 3D reference in storage, before the paywall opens. */
+  const [staging, setStaging] = useState(false);
   const [enhancing, setEnhancing] = useState(false);
   /** Pre-enhance text, so the wand is always undoable. */
   const [beforeEnhance, setBeforeEnhance] = useState<string | null>(null);
@@ -112,6 +136,7 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
     useCallback(() => {
       setImagePaywallOpen(false);
       setVideoPaywallOpen(false);
+      setModel3dPaywallOpen(false);
     }, []),
   );
   const surfaceEpoch = useSurfaceEpoch();
@@ -119,6 +144,7 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
   const preset = getPreset(presetId);
   const activeVideoModel = VIDEO_MODELS[videoModel];
   const activeImageModel = IMAGE_MODELS[imageModel];
+  const activeModel3d = MODEL3D_MODELS[model3dModel];
 
   /** Video models differ on what they accept; the rail follows the chosen one. */
   const videoAspects = activeVideoModel?.aspectRatios ?? ['16:9', '9:16', '1:1'];
@@ -129,29 +155,40 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
   useEffect(() => {
     const model = VIDEO_MODELS[videoModel];
     if (!model) return;
-    setDuration((d) =>
-      Math.min(model.maxDuration ?? 10, Math.max(model.minDuration ?? 5, model.defaultDuration ?? d)),
-    );
+    // snapVideoDuration also lands enum-duration models on a legal value, so
+    // switching from a 5s model to Veo does not leave an unrenderable 5.
+    setDuration((d) => snapVideoDuration(model, model.defaultDuration ?? d));
     const allowed = model.aspectRatios ?? ['16:9', '9:16', '1:1'];
     setVideoAspect((a) => (allowed.includes(a) ? a : allowed[0]));
   }, [videoModel]);
 
-  const aspect = mode === 'image' ? imageAspect : videoAspect;
+  const aspect = mode === 'image' ? imageAspect : mode === 'video' ? videoAspect : MODEL3D_ASPECT;
   const resolvedPrompt = useMemo(() => applyPreset(preset, prompt), [preset, prompt]);
 
   /** Applying a preset also adopts the model and aspect it was tuned for. */
   const pickPreset = useCallback((next: CreatorPreset | null) => {
+    if (next?.requiresImage && !reference) {
+      // Adopting its model anyway would swap in a different engine at a
+      // different price than the tile advertised.
+      toast.error(`${next.name} needs an attached image. Attach one first.`);
+      return;
+    }
     setPresetId(next?.id ?? null);
     if (!next) return;
     if (next.kind === 'image') {
       if (next.model && next.model in IMAGE_MODELS) setImageModel(next.model as ImageModelKey);
       if (next.aspect) setImageAspect(next.aspect);
-    } else {
+    } else if (next.kind === 'video') {
       if (next.model && next.model in VIDEO_MODELS) setVideoModel(next.model as VideoModelKey);
       if (next.aspect) setVideoAspect(next.aspect);
+    } else {
+      // 3D presets carry no aspect — a mesh has none.
+      if (next.model && next.model in MODEL3D_MODELS) {
+        setModel3dModel(next.model as Model3dModelKey);
+      }
     }
     textareaRef.current?.focus();
-  }, []);
+  }, [reference]);
 
   // Switching mode drops a preset that belongs to the other mode.
   const switchMode = useCallback(
@@ -220,6 +257,13 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
     } else if (job.kind === 'video') {
       setMode('video');
       if (job.model in VIDEO_MODELS) setVideoModel(job.model as VideoModelKey);
+    } else if (job.kind === 'model3d') {
+      setMode('3d');
+      // Put the original reference back BEFORE the model, or the legality
+      // effect sees an empty attachment and swaps in a text-only model at a
+      // different price than the one that was paid for.
+      if (job.sourceImage) setReference({ url: job.sourceImage, label: 'Original reference' });
+      if (job.model in MODEL3D_MODELS) setModel3dModel(job.model as Model3dModelKey);
     } else {
       setMode('image');
       if (job.model in IMAGE_MODELS) setImageModel(job.model as ImageModelKey);
@@ -228,9 +272,45 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
     textareaRef.current?.focus();
   }, []);
 
+  /** "Make it 3D" on a finished still: reload it as the reference for a mesh. */
+  const model3dFromJob = useCallback((job: GenerationJob) => {
+    if (!job.url) return;
+    setMode('3d');
+    setReference({ url: job.url, label: 'Generated still' });
+    setPrompt(job.prompt);
+    // Hunyuan3D is the image-only specialist and the cheapest honest choice for
+    // reconstructing something that already exists as a picture.
+    setModel3dModel('hunyuan3d-v2');
+    setPresetId('photo-to-mesh');
+    composerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    textareaRef.current?.focus();
+  }, []);
+
+  /**
+   * Keep the 3D model legal for what is attached. Several of them are
+   * image-only, so dropping the reference while one is selected would otherwise
+   * leave a Generate button that can only fail — after payment.
+   */
+  useEffect(() => {
+    if (mode !== '3d' || reference) return;
+    const model = MODEL3D_MODELS[model3dModel];
+    if (model && !model.supports.includes('text-to-3d')) setModel3dModel('tripo-2.5');
+    // Drop a preset that only makes sense with an attachment too. Leaving it
+    // would send "reconstruct the attached image" to a text-only model, at a
+    // price the preset never advertised.
+    setPresetId((id) => (getPreset(id)?.requiresImage ? null : id));
+  }, [mode, reference, model3dModel]);
+
   /** Guardrails that would otherwise only surface as a paid-for failure. */
   const blockingIssue = useMemo(() => {
-    if (!resolvedPrompt.trim()) return 'Describe what you want first.';
+    // A mesh from an attached photo needs no words, so the prompt is only
+    // required when there is nothing else to work from.
+    const needsPrompt = mode !== '3d' || !reference;
+    if (needsPrompt && !resolvedPrompt.trim()) {
+      return mode === '3d'
+        ? 'Describe the object, or attach an image of it.'
+        : 'Describe what you want first.';
+    }
     if (!isAuthenticated) return 'Sign in to generate.';
     if (mode === 'video') {
       const model = VIDEO_MODELS[videoModel];
@@ -242,17 +322,50 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
         return `${model.name} needs an image to animate. Attach one first.`;
       }
     }
+    if (mode === '3d') {
+      const model = MODEL3D_MODELS[model3dModel];
+      if (!model) return 'Pick a 3D model.';
+      if (!model.supports.includes('text-to-3d') && !reference) {
+        return `${model.name} needs an image to work from. Attach one first.`;
+      }
+    }
     return null;
-  }, [resolvedPrompt, isAuthenticated, mode, videoModel, reference]);
+  }, [resolvedPrompt, isAuthenticated, mode, videoModel, model3dModel, reference]);
 
-  const openPaywall = useCallback(() => {
+  const openPaywall = useCallback(async () => {
     if (blockingIssue) {
       toast.error(blockingIssue);
       return;
     }
-    if (mode === 'image') setImagePaywallOpen(true);
-    else setVideoPaywallOpen(true);
-  }, [blockingIssue, mode]);
+    if (mode === 'image') {
+      setImagePaywallOpen(true);
+      return;
+    }
+    if (mode === 'video') {
+      setVideoPaywallOpen(true);
+      return;
+    }
+
+    // No 3D endpoint accepts a data URL, so an attached reference has to be
+    // hosted before the mesh can be queued. Do it HERE, before the paywall
+    // opens — staging it after the transfer would mean an upload failure burned
+    // the DHB with nothing queued at the provider and no ticket to reconnect to.
+    if (reference?.url.startsWith('data:')) {
+      setStaging(true);
+      try {
+        const hosted = await hostDataUrl(reference.url);
+        setReference((r) => (r ? { ...r, url: hosted } : r));
+      } catch (e) {
+        toast.error(
+          e instanceof Error ? e.message : 'Could not upload that reference. Nothing was charged.',
+        );
+        return;
+      } finally {
+        setStaging(false);
+      }
+    }
+    setModel3dPaywallOpen(true);
+  }, [blockingIssue, mode, reference]);
 
   /** Called by the paywall once the DHB transfer confirms. */
   const runImage = useCallback(() => {
@@ -326,6 +439,41 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
     ],
   );
 
+  /** Called by the paywall once the DHB transfer confirms. */
+  const run3d = useCallback(
+    (options?: Model3dGenerationOptions) => {
+      setModel3dPaywallOpen(false);
+      startModel3d(
+        {
+          // Image-only runs legitimately carry no prompt.
+          ...(resolvedPrompt.trim() ? { prompt: resolvedPrompt } : {}),
+          model: model3dModel,
+          negativePrompt: preset?.negative,
+          textureQuality: options?.textureQuality,
+          pbr: options?.pbr,
+          faceLimit: options?.faceLimit,
+          quad: options?.quad,
+          seed: options?.seed,
+          exportFormat: options?.exportFormat,
+          ...(reference ? { sourceImage: reference.url } : {}),
+        },
+        {
+          // No 'Untitled' fallback here, unlike image and video: a mesh made
+          // from a photo alone legitimately has no prompt, and the placeholder
+          // would end up as the card caption and the thumbnail's alt text.
+          // Empty lets both fall through to 'Generated 3D model'.
+          prompt: prompt.trim() || preset?.sample || '',
+          resolvedPrompt,
+          modelName: MODEL3D_MODELS[model3dModel]?.name ?? model3dModel,
+          presetId: presetId ?? undefined,
+          aspect: MODEL3D_ASPECT,
+        },
+      );
+      toast.success('Mesh queued. It will appear below when it lands.');
+    },
+    [resolvedPrompt, model3dModel, preset, reference, prompt, presetId, startModel3d],
+  );
+
   const modelOptions: ChipOption<string>[] =
     mode === 'image'
       ? IMAGE_MODEL_OPTIONS.map((m) => ({
@@ -334,6 +482,18 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
           detail: m.description,
           meta: `$${getImageCostUsd(m).toFixed(2)}`,
         }))
+      : mode === '3d'
+      ? MODEL3D_MODEL_OPTIONS.map((m) => {
+          const needsImage = !m.supports.includes('text-to-3d');
+          return {
+            value: m.id,
+            label: m.name,
+            detail: m.description,
+            meta: `$${getModel3dCostUsd(m).toFixed(2)}`,
+            disabled: needsImage && !reference,
+            disabledReason: 'Needs an attached image',
+          };
+        })
       : VIDEO_MODEL_OPTIONS.map((m) => {
           const needsImage = !m.supports.includes('text-to-video');
           const rejectsImage = !m.supports.includes('image-to-video');
@@ -352,7 +512,11 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
   );
 
   const currentModelName =
-    mode === 'image' ? activeImageModel?.name ?? imageModel : activeVideoModel?.name ?? videoModel;
+    mode === 'image'
+      ? activeImageModel?.name ?? imageModel
+      : mode === '3d'
+        ? activeModel3d?.name ?? model3dModel
+        : activeVideoModel?.name ?? videoModel;
 
   return (
     <section className="px-3 pb-6 pt-5 sm:px-4">
@@ -419,7 +583,13 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
             <div className="min-w-0 flex-1">
               <p className="truncate text-[12px] font-medium text-white/85">{reference.label}</p>
               <p className="text-[11px] text-white/40">
-                {mode === 'image' ? 'Used as an edit reference' : 'First frame to animate'}
+                {mode === 'image'
+                  ? 'Used as an edit reference'
+                  : mode === '3d'
+                    ? activeModel3d?.usesPromptWithImage
+                      ? 'Object to reconstruct — your prompt guides it'
+                      : `Object to reconstruct — ${activeModel3d?.name ?? 'this model'} ignores the prompt`
+                    : 'First frame to animate'}
               </p>
             </div>
             <button
@@ -475,7 +645,7 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
             onKeyDown={(e) => {
               if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
                 e.preventDefault();
-                openPaywall();
+                void openPaywall();
               }
             }}
             rows={2}
@@ -484,7 +654,9 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
                 ? `${preset.name}: describe the subject, for example "${preset.sample}"`
                 : mode === 'image'
                   ? 'Describe the image you want'
-                  : 'Describe the shot you want'
+                  : mode === '3d'
+                    ? 'Describe the object to model, or attach a photo of it'
+                    : 'Describe the shot you want'
             }
             className="min-h-[3.25rem] w-full resize-y bg-transparent py-2 text-[15px] leading-relaxed text-white outline-none placeholder:text-white/35"
           />
@@ -525,20 +697,23 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
             <SelectChip
               label="Model"
               width="md"
-              value={mode === 'image' ? imageModel : videoModel}
+              value={mode === 'image' ? imageModel : mode === '3d' ? model3dModel : videoModel}
               options={modelOptions}
-              onChange={(v) =>
-                mode === 'image'
-                  ? setImageModel(v as ImageModelKey)
-                  : setVideoModel(v as VideoModelKey)
-              }
+              onChange={(v) => {
+                if (mode === 'image') setImageModel(v as ImageModelKey);
+                else if (mode === '3d') setModel3dModel(v as Model3dModelKey);
+                else setVideoModel(v as VideoModelKey);
+              }}
             />
-            <SelectChip
-              label="Aspect ratio"
-              value={aspect}
-              options={aspectOptions}
-              onChange={(v) => (mode === 'image' ? setImageAspect(v) : setVideoAspect(v))}
-            />
+            {/* A mesh has no framing, so the aspect chip is meaningless in 3D. */}
+            {mode !== '3d' && (
+              <SelectChip
+                label="Aspect ratio"
+                value={aspect}
+                options={aspectOptions}
+                onChange={(v) => (mode === 'image' ? setImageAspect(v) : setVideoAspect(v))}
+              />
+            )}
 
             {mode === 'image' && (
               <CounterChip
@@ -553,14 +728,29 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
 
             {mode === 'video' && (
               <>
-                <CounterChip
-                  label="seconds"
-                  singular="second"
-                  value={duration}
-                  min={activeVideoModel?.minDuration ?? 5}
-                  max={activeVideoModel?.maxDuration ?? 10}
-                  onChange={setDuration}
-                />
+                {/* Enum-duration models get a picker, not a stepper: their
+                    provider rejects the in-between values a stepper produces,
+                    and the creator has already been charged on this number. */}
+                {activeVideoModel?.allowedDurations?.length ? (
+                  <SelectChip
+                    label="Duration"
+                    value={String(duration)}
+                    options={activeVideoModel.allowedDurations.map((d) => ({
+                      value: String(d),
+                      label: `${d}s`,
+                    }))}
+                    onChange={(v) => setDuration(Number(v))}
+                  />
+                ) : (
+                  <CounterChip
+                    label="seconds"
+                    singular="second"
+                    value={duration}
+                    min={activeVideoModel?.minDuration ?? 5}
+                    max={activeVideoModel?.maxDuration ?? 10}
+                    onChange={setDuration}
+                  />
+                )}
                 {activeVideoModel?.supportsResolution && (
                   <SelectChip
                     label="Resolution"
@@ -583,18 +773,18 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
               unavailable and explains itself on activation instead. */}
           <button
             type="button"
-            onClick={openPaywall}
-            aria-disabled={!!blockingIssue}
+            onClick={() => void openPaywall()}
+            aria-disabled={!!blockingIssue || staging}
             aria-describedby={blockingIssue ? 'studio-blocking-reason' : undefined}
             className={cn(
               'inline-flex shrink-0 items-center gap-2 rounded-xl border px-5 py-2.5 text-[13px] font-bold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60',
-              blockingIssue
+              blockingIssue || staging
                 ? 'cursor-not-allowed border-white/20 bg-white/10 text-white/70'
                 : 'border-white/25 bg-white text-black hover:bg-white/90',
             )}
           >
-            <Sparkles className="h-4 w-4" />
-            Generate
+            {staging ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+            {staging ? 'Preparing' : 'Generate'}
           </button>
         </div>
 
@@ -610,7 +800,12 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
       </div>
 
       <div className="mt-7">
-        <ResultsFeed wallet={walletAddress} onAnimate={loadJob} onOpenEditor={onOpenEditor} />
+        <ResultsFeed
+          wallet={walletAddress}
+          onAnimate={loadJob}
+          onModel3d={model3dFromJob}
+          onOpenEditor={onOpenEditor}
+        />
       </div>
 
       {/* The epoch key exists to tear down the portal after a surface switch,
@@ -641,6 +836,19 @@ export function CreatorStudio({ onOpenEditor }: CreatorStudioProps) {
           onConfirm={runVideo}
           initialDuration={duration}
           initialResolution={resolution}
+        />
+      )}
+
+      {activeModel3d && (
+        <Model3dPaywallModal
+          key={model3dPaywallOpen ? 'model3d-open' : `model3d-${surfaceEpoch}`}
+          open={model3dPaywallOpen}
+          onOpenChange={setModel3dPaywallOpen}
+          model={activeModel3d}
+          selectedModelKey={model3dModel}
+          onModelChange={setModel3dModel}
+          onConfirm={run3d}
+          hasReference={!!reference}
         />
       )}
     </section>
