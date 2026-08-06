@@ -5,33 +5,70 @@
 // src/lib/mcp/index.ts
 import { defineMcp } from "npm:@lovable.dev/mcp-js@0.20.0";
 
+// src/lib/mcp/tools/dehub-rpc.ts
+var DEHUB_MCP_URL = "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/dehub-mcp";
+function parseStreamableResponse(raw) {
+  const trimmed = raw.trim();
+  if (!trimmed) throw new Error("DeHub MCP returned an empty response");
+  if (trimmed.startsWith("{")) return JSON.parse(trimmed);
+  const dataLines = trimmed.split(/\r?\n/).filter((line) => line.startsWith("data:")).map((line) => line.slice(5).trim()).filter(Boolean);
+  if (!dataLines.length) throw new Error("DeHub MCP returned no data frame");
+  return JSON.parse(dataLines[dataLines.length - 1]);
+}
+async function callDeHubTool(name, args) {
+  const response = await fetch(DEHUB_MCP_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json, text/event-stream"
+    },
+    body: JSON.stringify({
+      jsonrpc: "2.0",
+      id: 1,
+      method: "tools/call",
+      params: { name, arguments: args }
+    })
+  });
+  if (!response.ok) {
+    throw new Error(`DeHub MCP request failed with HTTP ${response.status}`);
+  }
+  const payload = parseStreamableResponse(await response.text());
+  if (payload.error) throw new Error(payload.error.message ?? "DeHub MCP error");
+  const result = payload.result;
+  if (!result) throw new Error("DeHub MCP returned no result");
+  const body = result.structuredContent ?? safeParse(result.content?.[0]?.text);
+  if (result.isError) {
+    const message = body?.error;
+    throw new Error(message ?? "DeHub tool call failed");
+  }
+  return body ?? {};
+}
+function safeParse(text) {
+  if (!text) return void 0;
+  try {
+    return JSON.parse(text);
+  } catch {
+    return { text };
+  }
+}
+
 // src/lib/mcp/tools/feed.ts
 import { defineTool } from "npm:@lovable.dev/mcp-js@0.20.0";
 import { z } from "npm:zod@^3.25.76";
-var MCP_URL = "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/dehub-mcp";
-async function rpc(method, params) {
-  const resp = await fetch(MCP_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params })
-  });
-  const data = await resp.json();
-  if (data.error) throw new Error(data.error.message ?? "DeHub MCP error");
-  return data.result;
-}
 var feed_default = defineTool({
   name: "dehub_feed",
   title: "Get DeHub feed",
-  description: "Fetch posts from the DeHub decentralized social feed.",
+  description: "Fetch posts from the DeHub decentralized social feed. Returns compact post summaries — token ID, author, body and engagement counts.",
   inputSchema: {
-    sort: z.enum(["new", "hot", "trending"]).optional().describe("Sort order"),
+    sort: z.enum(["new", "hot", "trending", "discussed"]).optional().describe("new = latest, hot = most liked, trending = most viewed, discussed = most commented"),
     category: z.string().optional().describe("Optional category filter"),
+    search: z.string().optional().describe("Keyword to match against post titles and descriptions"),
     limit: z.number().int().min(1).max(50).optional().describe("Max posts (1-50)"),
     offset: z.number().int().min(0).optional().describe("Pagination offset")
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: true },
   handler: async (input) => {
-    const result = await rpc("dehub_feed", input);
+    const result = await callDeHubTool("dehub_feed", input);
     return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
   }
 });
@@ -39,85 +76,71 @@ var feed_default = defineTool({
 // src/lib/mcp/tools/post.ts
 import { defineTool as defineTool2 } from "npm:@lovable.dev/mcp-js@0.20.0";
 import { z as z2 } from "npm:zod@^3.25.76";
-var MCP_URL2 = "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/dehub-mcp";
-async function rpc2(method, params) {
-  const resp = await fetch(MCP_URL2, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params })
-  });
-  const data = await resp.json();
-  if (data.error) throw new Error(data.error.message ?? "DeHub MCP error");
-  return data.result;
-}
 var post_default = defineTool2({
   name: "dehub_post",
   title: "Get DeHub post",
-  description: "Fetch a single DeHub post by its token ID.",
+  description: "Fetch a single DeHub post by its token ID, including author and engagement counts.",
   inputSchema: {
     token_id: z2.string().min(1).describe("The post's token ID")
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: true },
   handler: async (input) => {
-    const result = await rpc2("dehub_post", input);
+    const result = await callDeHubTool("dehub_post", input);
+    return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
+  }
+});
+
+// src/lib/mcp/tools/comments.ts
+import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@0.20.0";
+import { z as z3 } from "npm:zod@^3.25.76";
+var comments_default = defineTool3({
+  name: "dehub_comments",
+  title: "Read post comments",
+  description: "Read the comment thread on a DeHub post, with author, body and like count for each comment.",
+  inputSchema: {
+    token_id: z3.string().min(1).describe("The post's token ID"),
+    limit: z3.number().int().min(1).max(50).optional().describe("Max comments (1-50)"),
+    page: z3.number().int().min(0).optional().describe("Zero-based page number")
+  },
+  annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: true },
+  handler: async (input) => {
+    const result = await callDeHubTool("dehub_comments", input);
     return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
   }
 });
 
 // src/lib/mcp/tools/search.ts
-import { defineTool as defineTool3 } from "npm:@lovable.dev/mcp-js@0.20.0";
-import { z as z3 } from "npm:zod@^3.25.76";
-var MCP_URL3 = "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/dehub-mcp";
-async function rpc3(method, params) {
-  const resp = await fetch(MCP_URL3, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params })
-  });
-  const data = await resp.json();
-  if (data.error) throw new Error(data.error.message ?? "DeHub MCP error");
-  return data.result;
-}
-var search_default = defineTool3({
+import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@0.20.0";
+import { z as z4 } from "npm:zod@^3.25.76";
+var search_default = defineTool4({
   name: "dehub_search",
   title: "Search DeHub",
-  description: "Search DeHub posts, users, and videos.",
+  description: "Search DeHub for posts (by title and description) and people (by username and display name).",
   inputSchema: {
-    query: z3.string().min(1).describe("Search query"),
-    type: z3.enum(["all", "posts", "users", "videos"]).optional().describe("Result type filter"),
-    limit: z3.number().int().min(1).max(50).optional().describe("Max results (1-50)")
+    query: z4.string().min(1).describe("Search query"),
+    type: z4.enum(["all", "posts", "users"]).optional().describe("Restrict results to posts or users"),
+    limit: z4.number().int().min(1).max(50).optional().describe("Max results per section (1-50)")
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: true },
   handler: async (input) => {
-    const result = await rpc3("dehub_search", input);
+    const result = await callDeHubTool("dehub_search", input);
     return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
   }
 });
 
 // src/lib/mcp/tools/profile.ts
-import { defineTool as defineTool4 } from "npm:@lovable.dev/mcp-js@0.20.0";
-import { z as z4 } from "npm:zod@^3.25.76";
-var MCP_URL4 = "https://aigxuutjaqsywioxjefr.supabase.co/functions/v1/dehub-mcp";
-async function rpc4(method, params) {
-  const resp = await fetch(MCP_URL4, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params })
-  });
-  const data = await resp.json();
-  if (data.error) throw new Error(data.error.message ?? "DeHub MCP error");
-  return data.result;
-}
-var profile_default = defineTool4({
+import { defineTool as defineTool5 } from "npm:@lovable.dev/mcp-js@0.20.0";
+import { z as z5 } from "npm:zod@^3.25.76";
+var profile_default = defineTool5({
   name: "dehub_profile",
   title: "Get DeHub profile",
-  description: "Fetch a DeHub user profile by wallet address.",
+  description: "Fetch a DeHub user profile by wallet address or username.",
   inputSchema: {
-    wallet_address: z4.string().min(1).describe("Wallet address (0x...) to look up")
+    user: z5.string().min(1).describe("Wallet address (0x...) or username to look up")
   },
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: true },
   handler: async (input) => {
-    const result = await rpc4("dehub_profile", input);
+    const result = await callDeHubTool("dehub_profile", input);
     return { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result };
   }
 });
@@ -126,9 +149,9 @@ var profile_default = defineTool4({
 var mcp_default = defineMcp({
   name: "dehub-mcp",
   title: "DeHub",
-  version: "0.1.0",
-  instructions: "Tools for DeHub \u2014 the decentralized social network. Read the public feed, fetch individual posts by token ID, search posts/users/videos, and look up user profiles by wallet address. For write actions (post, vote, comment, follow), agents register at https://dehub.io/app/agents to obtain an API key.",
-  tools: [feed_default, post_default, search_default, profile_default]
+  version: "0.2.0",
+  instructions: "Read-only tools for DeHub — the decentralized social network. Browse the feed, fetch a post by token ID, read a post's comments, search posts and people, and look up profiles by wallet address or username. This connector cannot write. To let an agent post, vote, comment or follow, create an agent at https://dehub.io/app/agents and add its personal connector URL instead — it carries the agent's key in the URL and exposes the write tools as well.",
+  tools: [feed_default, post_default, comments_default, search_default, profile_default]
 });
 
 // lovable-mcp-supabase-entry.ts
