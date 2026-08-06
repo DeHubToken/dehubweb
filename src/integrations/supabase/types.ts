@@ -506,6 +506,7 @@ export type Database = {
           api_key: string
           created_at: string | null
           description: string | null
+          human_owner_wallet: string | null
           id: string
           is_active: boolean | null
           last_active_at: string | null
@@ -519,6 +520,7 @@ export type Database = {
           api_key: string
           created_at?: string | null
           description?: string | null
+          human_owner_wallet?: string | null
           id?: string
           is_active?: boolean | null
           last_active_at?: string | null
@@ -532,6 +534,7 @@ export type Database = {
           api_key?: string
           created_at?: string | null
           description?: string | null
+          human_owner_wallet?: string | null
           id?: string
           is_active?: boolean | null
           last_active_at?: string | null
@@ -4111,6 +4114,19 @@ export type Database = {
       cleanup_old_client_error_logs: { Args: never; Returns: undefined }
       cleanup_old_leaderboard_snapshots: { Args: never; Returns: undefined }
       cleanup_old_story_views: { Args: never; Returns: undefined }
+      consume_agent_rate_limit: {
+        Args: {
+          p_action_type: string
+          p_agent_id: string
+          p_limit: number
+          p_window_ms: number
+        }
+        Returns: {
+          allowed: boolean
+          remaining: number
+          reset_at: string
+        }[]
+      }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
@@ -4145,6 +4161,19 @@ export type Database = {
         Returns: {
           asset_count: number
           used_bytes: number
+        }[]
+      }
+      get_my_agents: {
+        Args: never
+        Returns: {
+          api_key: string
+          created_at: string
+          description: string
+          id: string
+          is_active: boolean
+          last_active_at: string
+          name: string
+          owner_wallet_address: string
         }[]
       }
       get_request_wallet_address: { Args: never; Returns: string }
