@@ -48,8 +48,16 @@ export interface AgentOptions {
   messages: Array<{ role: string; content: unknown }>;
   systemPrompt: string;
   surface: AgentSurface;
-  /** Wallet address of the asking user, or null when signed out. */
-  caller: string | null;
+  /**
+   * The asking user's DeHub access token, forwarded to the API so it can verify
+   * it and derive the caller itself.
+   *
+   * Deliberately a token and not an address: this function is publicly
+   * callable, so an address in the request body is attacker-controlled, and the
+   * personal-data tools would happily read whoever the attacker named. Only the
+   * API decides who is asking.
+   */
+  userToken: string | null;
   model: string;
   lovableApiKey: string;
   perplexityKey?: string;
@@ -112,13 +120,19 @@ export const WEB_SEARCH_TOOL: ToolCatalogEntry = {
 export async function executeDeHubTool(
   name: string,
   args: Record<string, unknown>,
-  caller: string | null,
+  userToken: string | null,
   surface: AgentSurface,
 ): Promise<unknown> {
   const res = await fetch(`${DEHUB_API_BASE}/assistant/tool`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'x-assistant-secret': SERVICE_SECRET },
-    body: JSON.stringify({ tool: name, args, caller, surface }),
+    headers: {
+      'Content-Type': 'application/json',
+      'x-assistant-secret': SERVICE_SECRET,
+      // The API verifies this and derives the caller from it. Absent or
+      // expired means the request is treated as signed out.
+      ...(userToken && { 'x-dehub-token': userToken }),
+    },
+    body: JSON.stringify({ tool: name, args, surface }),
   });
   if (!res.ok) return { error: `Tool call failed with status ${res.status}` };
   const body = await res.json();
@@ -162,7 +176,7 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
     messages,
     systemPrompt,
     surface,
-    caller,
+    userToken,
     model,
     lovableApiKey,
     perplexityKey,
@@ -247,7 +261,7 @@ export async function runAgentLoop(opts: AgentOptions): Promise<AgentResult> {
           output =
             name === 'web_search'
               ? await executeWebSearch(String(args.query || ''), perplexityKey)
-              : await executeDeHubTool(name, args, caller, surface);
+              : await executeDeHubTool(name, args, userToken, surface);
         } catch (err) {
           output = { error: err instanceof Error ? err.message : 'Tool threw' };
         }

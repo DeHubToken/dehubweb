@@ -44,7 +44,7 @@ export function streamAgentLoop(opts: AgentOptions): ReadableStream<Uint8Array> 
     messages,
     systemPrompt,
     surface,
-    caller,
+    userToken,
     model,
     lovableApiKey,
     perplexityKey,
@@ -187,7 +187,7 @@ export function streamAgentLoop(opts: AgentOptions): ReadableStream<Uint8Array> 
                 output =
                   c.name === 'web_search'
                     ? await executeWebSearch(String(args.query || ''), perplexityKey)
-                    : await executeDeHubTool(c.name, args, caller, surface);
+                    : await executeDeHubTool(c.name, args, userToken, surface);
               } catch (err) {
                 output = { error: err instanceof Error ? err.message : 'Tool threw' };
               }

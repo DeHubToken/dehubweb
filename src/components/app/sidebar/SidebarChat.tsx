@@ -27,6 +27,7 @@ import { useBuyAlerts, type BuyAlertMessage } from '@/hooks/use-buy-alerts';
 import { BuyAlertCard } from '../chat/BuyAlertCard';
 import { useBuyBotHidden } from '@/hooks/use-buy-bot-hidden';
 import { isAssistantAddress } from '@/lib/assistant';
+import { useAssistantReplies, useAssistantReplyEngine, type AssistantReply } from '@/hooks/use-assistant-replies';
 import { Sparkles } from 'lucide-react';
 import assistantAvatar from '@/assets/ai-assistant-avatar.png';
 
@@ -132,17 +133,25 @@ export function SidebarChat() {
   const buyAlerts = useBuyAlerts();
   const { isHidden: buyBotHidden, hide: hideBuyBot } = useBuyBotHidden();
 
-  // Merge livechat messages + buy alerts. Assistant replies are real chat
-  // messages from the API now, so they already arrive inside `messages`.
+  // Assistant replies are real chat messages from the API now, so they already
+  // arrive inside `messages`. The local engine is a fallback for deployments
+  // where the API side is not live yet, and stands down once a real one lands.
+  useAssistantReplyEngine(messages);
+  const localAssistantReplies = useAssistantReplies();
+
+  // Merge livechat messages + buy alerts + any local fallback replies
   type MergedItem =
     | { type: 'message'; data: typeof messages[0] }
-    | { type: 'buy_alert'; data: BuyAlertMessage };
+    | { type: 'buy_alert'; data: BuyAlertMessage }
+    | { type: 'assistant'; data: AssistantReply };
   const mergedItems: MergedItem[] = (() => {
     const items: MergedItem[] = [
       ...messages.map((m) => ({ type: 'message' as const, data: m })),
       ...buyAlerts.map((a) => ({ type: 'buy_alert' as const, data: a })),
+      ...localAssistantReplies.map((a) => ({ type: 'assistant' as const, data: a })),
     ];
-    const tsOf = (it: MergedItem) => new Date(it.data.created_at).getTime();
+    const tsOf = (it: MergedItem) =>
+      it.type === 'assistant' ? it.data.timestamp.getTime() : new Date(it.data.created_at).getTime();
     items.sort((a, b) => tsOf(a) - tsOf(b));
     return items;
   })();
@@ -326,12 +335,31 @@ export function SidebarChat() {
                   />
                 );
               }
-              if (isAssistantAddress(item.data.sender_address)) {
-                const r = item.data;
+              // Both shapes render identically: a real assistant message from
+              // the API, or a local fallback reply while the API side is not
+              // live. Normalise first so the markup stays single-source.
+              const assistantView =
+                item.type === 'assistant'
+                  ? {
+                      id: `assistant-${item.data.id}`,
+                      content: item.data.content,
+                      replyToName: item.data.replyToName,
+                      at: item.data.timestamp.toISOString(),
+                    }
+                  : isAssistantAddress(item.data.sender_address)
+                    ? {
+                        id: item.data.id,
+                        content: item.data.content,
+                        replyToName: item.data.reply_to?.sender_name,
+                        at: item.data.created_at,
+                      }
+                    : null;
+
+              if (assistantView) {
                 return (
                   <div
-                    key={r.id}
-                    data-message-id={r.id}
+                    key={assistantView.id}
+                    data-message-id={assistantView.id}
                     className="group relative"
                     style={{ paddingLeft: '10px', paddingRight: '10px' }}
                   >
@@ -343,10 +371,10 @@ export function SidebarChat() {
                         </AvatarFallback>
                       </Avatar>
                       <div className="min-w-0 flex-1">
-                        {r.reply_to && (
+                        {assistantView.replyToName && (
                           <div className="flex items-center gap-1 text-[10px] text-zinc-500 mb-0.5">
                             <CornerDownRight className="w-2.5 h-2.5" />
-                            <span className="font-medium">{r.reply_to.sender_name}</span>
+                            <span className="font-medium">{assistantView.replyToName}</span>
                           </div>
                         )}
                         <span className="inline-flex items-baseline gap-1.5">
@@ -354,14 +382,18 @@ export function SidebarChat() {
                           <span className="text-[8px] uppercase tracking-wide px-1 py-px rounded bg-primary/20 text-primary border border-primary/30">
                             AI
                           </span>
-                          <span className="text-zinc-600 text-[10px]">{formatTimeAgo(r.created_at)}</span>
+                          <span className="text-zinc-600 text-[10px]">{formatTimeAgo(assistantView.at)}</span>
                         </span>
-                        <p className="text-xs text-zinc-300 break-words whitespace-pre-wrap">{r.content}</p>
+                        <p className="text-xs text-zinc-300 break-words whitespace-pre-wrap">{assistantView.content}</p>
                       </div>
                     </div>
                   </div>
                 );
               }
+
+              // Unreachable — a local fallback reply always matched above.
+              if (item.type !== 'message') return null;
+
               const msg = item.data;
               const avatarUrl = buildAvatarUrl(msg.sender_address || '', msg.sender_avatar_url);
               const name = msg.sender_display_name || msg.sender_username || msg.sender_address?.slice(0, 8) || 'Anon';
