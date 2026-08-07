@@ -561,23 +561,47 @@ export default function HomePage() {
   /**
    * Handle when user selects an image from collage view.
    * Switches to feed view starting from that image.
+   *
+   * Memoised so the tap does not re-render every mounted feed on its way to
+   * the images tab (the feeds are memo()'d on their props).
    */
-  const handleImageSelected = (postId: string | null) => {
-    setSelectedImageId(postId);
+  const imagesGridScrollRef = useRef(0);
+  const restoreGridScrollRef = useRef(false);
+
+  const handleImageSelected = useCallback((postId: string | null) => {
     if (postId) {
-      // When an image is selected, switch out of collage mode
+      // Where the user was in the grid when they tapped. The feed takes over
+      // the page scroll from here, so this is the only chance to read it.
+      imagesGridScrollRef.current =
+        window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
       setShowImagesCollage(false);
     }
-  };
+    setSelectedImageId(postId);
+  }, []);
 
   /**
    * Handle returning from feed view back to collage view.
    */
   const handleBackToCollage = useCallback(() => {
+    restoreGridScrollRef.current = true;
     setSelectedImageId(null);
     setShowImagesCollage(true);
-    window.scrollTo({ top: 0, behavior: 'instant' });
   }, []);
+
+  // Put the grid back exactly where it was left. It only regains its height
+  // once it is displayed again, so the scroll has to land a frame after the
+  // commit that reveals it — setting it inline would clamp against a page that
+  // is still as short as the (now hidden) scroll view left it.
+  useEffect(() => {
+    if (!showImagesCollage || !restoreGridScrollRef.current) return;
+    restoreGridScrollRef.current = false;
+    const top = imagesGridScrollRef.current;
+    if (top <= 0) return;
+    const raf = requestAnimationFrame(() => {
+      window.scrollTo({ top, behavior: 'instant' as ScrollBehavior });
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [showImagesCollage]);
 
   // The images tab's scroll view has no exit of its own — the nav pill's left
   // slot becomes its back arrow, mirroring the post overlay. Publish the mode
