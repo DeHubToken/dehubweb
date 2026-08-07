@@ -24,6 +24,7 @@ import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
+import { getDocumentScrollTop, scrollDocumentTo } from '@/lib/document-scroll';
 import { setImagesFeedScrollView, IMAGES_BACK_TO_COLLAGE_EVENT } from '@/lib/images-feed-mode';
 import { setTabSwitchTime } from '@/lib/gesture-state';
 import { useFeedPrefetch, clearPrefetchState } from '@/hooks/use-feed-prefetch';
@@ -572,8 +573,7 @@ export default function HomePage() {
     if (postId) {
       // Where the user was in the grid when they tapped. The feed takes over
       // the page scroll from here, so this is the only chance to read it.
-      imagesGridScrollRef.current =
-        window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      imagesGridScrollRef.current = getDocumentScrollTop();
       setShowImagesCollage(false);
     }
     setSelectedImageId(postId);
@@ -592,15 +592,24 @@ export default function HomePage() {
   // once it is displayed again, so the scroll has to land a frame after the
   // commit that reveals it — setting it inline would clamp against a page that
   // is still as short as the (now hidden) scroll view left it.
+  //
+  // Twice, a frame apart: the grid's rows are aspect-square so its height is
+  // known without waiting on images, but the first write still lands while the
+  // browser is settling the height change and can come back clamped.
   useEffect(() => {
     if (!showImagesCollage || !restoreGridScrollRef.current) return;
     restoreGridScrollRef.current = false;
     const top = imagesGridScrollRef.current;
     if (top <= 0) return;
-    const raf = requestAnimationFrame(() => {
-      window.scrollTo({ top, behavior: 'instant' as ScrollBehavior });
+    let second = 0;
+    const first = requestAnimationFrame(() => {
+      scrollDocumentTo(top);
+      second = requestAnimationFrame(() => scrollDocumentTo(top));
     });
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(first);
+      cancelAnimationFrame(second);
+    };
   }, [showImagesCollage]);
 
   // The images tab's scroll view has no exit of its own — the nav pill's left
