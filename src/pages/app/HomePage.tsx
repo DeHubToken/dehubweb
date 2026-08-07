@@ -24,6 +24,7 @@ import { cn } from '@/lib/utils';
 import { usePullToRefresh } from '@/hooks/use-pull-to-refresh';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
+import { setImagesFeedScrollView, IMAGES_BACK_TO_COLLAGE_EVENT } from '@/lib/images-feed-mode';
 import { setTabSwitchTime } from '@/lib/gesture-state';
 import { useFeedPrefetch, clearPrefetchState } from '@/hooks/use-feed-prefetch';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
@@ -572,11 +573,32 @@ export default function HomePage() {
   /**
    * Handle returning from feed view back to collage view.
    */
-  const handleBackToCollage = () => {
+  const handleBackToCollage = useCallback(() => {
     setSelectedImageId(null);
     setShowImagesCollage(true);
     window.scrollTo({ top: 0, behavior: 'instant' });
-  };
+  }, []);
+
+  // The images tab's scroll view has no exit of its own — the nav pill's left
+  // slot becomes its back arrow, mirroring the post overlay. Publish the mode
+  // so the collapsed-desktop GlobalFeedNav can render the same arrow, and
+  // accept its back request (it can't call this handler directly).
+  const isImagesScrollView = activeTab === 'images' && !showImagesCollage;
+
+  useEffect(() => {
+    setImagesFeedScrollView(isImagesScrollView);
+    return () => setImagesFeedScrollView(false);
+  }, [isImagesScrollView]);
+
+  useEffect(() => {
+    window.addEventListener(IMAGES_BACK_TO_COLLAGE_EVENT, handleBackToCollage);
+    return () => window.removeEventListener(IMAGES_BACK_TO_COLLAGE_EVENT, handleBackToCollage);
+  }, [handleBackToCollage]);
+
+  // Both cases turn the settings slot into a back arrow. A post overlay wins:
+  // it sits on top of the images feed, so back must close it first.
+  const showNavBack = isPostOverlayActive || isImagesScrollView;
+  const handleNavBack = isPostOverlayActive ? handleOverlayBack : handleBackToCollage;
 
   /**
    * Reset scroll position when tab changes (but not when returning from post page).
@@ -845,11 +867,13 @@ export default function HomePage() {
             )}
             <div className="relative z-20 flex scrollbar-hide">
               {/* Settings Button - toggles current tab's filters.
-                  When a post overlay is open on top of the feed, this slot becomes a back button
-                  so the top nav bar feels seamless — the user never "leaves" the feed. */}
+                  When a post overlay is open on top of the feed — or the images
+                  tab has swapped its grid for the scroll view — this slot becomes
+                  a back button so the top nav bar feels seamless: the user never
+                  "leaves" the feed. */}
               <button
-                onClick={isPostOverlayActive
-                  ? handleOverlayBack
+                onClick={showNavBack
+                  ? handleNavBack
                   : () => window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }))}
                 className={cn(
                   "relative flex items-center justify-center px-3 h-[35px] rounded-xl transition-colors overflow-hidden",
@@ -857,9 +881,9 @@ export default function HomePage() {
                     ? "text-white"
                     : "text-zinc-400 hover:text-white hover:bg-white/5"
                 )}
-                aria-label={isPostOverlayActive ? "Back to feed" : "Feed settings"}
+                aria-label={isPostOverlayActive ? "Back to feed" : isImagesScrollView ? "Back to grid" : "Feed settings"}
               >
-                {hasActiveFilters && !isPostOverlayActive && (
+                {hasActiveFilters && !showNavBack && (
                   <div className={cn(
                     "absolute inset-0 translate-y-[0.6px] lg:translate-y-[0.25px] rounded-xl bg-gradient-to-br from-white/20 via-white/10 to-white/5 backdrop-blur-xl border border-white/30",
                     isLightTheme
@@ -868,7 +892,7 @@ export default function HomePage() {
                   )} />
                 )}
                 <AnimatePresence mode="wait" initial={false}>
-                  {isPostOverlayActive ? (
+                  {showNavBack ? (
                     <motion.div
                       key="back"
                       initial={{ rotate: -180, opacity: 0 }}
@@ -1001,7 +1025,6 @@ export default function HomePage() {
               refreshKey={refreshKey}
               selectedPostId={selectedImageId}
               onPostSelected={handleImageSelected}
-              onBackToCollage={handleBackToCollage}
             />
           </div>
         )}
