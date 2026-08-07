@@ -12,7 +12,7 @@ import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { toast } from 'sonner';
 import { useTranslation as useI18n } from 'react-i18next';
 import { useAutoRetryFeed } from '@/hooks/use-auto-retry-feed';
-import { ThumbsUp, ThumbsDown, MessageSquare, RefreshCw, ImageIcon, Grid3x3, Loader2, Ticket } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, MessageSquare, RefreshCw, ImageIcon, Loader2, Ticket } from 'lucide-react';
 import { ImagesFeedSkeleton } from '@/components/app/feeds/FeedSkeletons';
 import { FeedFilterLoader } from '@/components/app/feeds/FeedFilterLoader';
 import { useFeedFilterTransition } from '@/hooks/use-feed-filter-transition';
@@ -45,8 +45,6 @@ interface ImagesFeedProps {
   selectedPostId?: string | null;
   /** Callback to clear selected post and switch modes */
   onPostSelected?: (postId: string | null) => void;
-  /** Callback to return to collage view from feed */
-  onBackToCollage?: () => void;
 }
 
 // ============================================================================
@@ -224,16 +222,14 @@ interface EndlessScrollViewProps {
   isFetchingNextPage: boolean;
   hasNextPage: boolean;
   startFromId?: string | null;
-  onBackToCollage?: () => void;
 }
 
-function EndlessScrollView({ 
-  posts, 
-  loaderRef, 
-  isFetchingNextPage, 
+function EndlessScrollView({
+  posts,
+  loaderRef,
+  isFetchingNextPage,
   hasNextPage,
   startFromId,
-  onBackToCollage,
 }: EndlessScrollViewProps) {
   const { t } = useI18n();
   const scrollTargetRef = useRef<HTMLDivElement>(null);
@@ -273,17 +269,9 @@ function EndlessScrollView({
 
   return (
     <div data-feed-root className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3 relative">
-      {/* Back to Grid Button - Bottom center, above mobile nav */}
-      {onBackToCollage && (
-        <button
-          onClick={onBackToCollage}
-          className="fixed bottom-[72px] lg:bottom-8 left-1/2 -translate-x-1/2 lg:-translate-x-[calc(50%+30px)] z-20 p-3 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded-xl border border-white/10 shadow-lg hover:bg-black/60 transition-colors"
-          aria-label="Back to grid view"
-        >
-          <Grid3x3 className="w-5 h-5 text-white" />
-        </button>
-      )}
-      
+      {/* Returning to the grid is the nav pill's left slot (it swaps its
+          settings icon for a back arrow while this view is up), so there is no
+          floating button over the feed. */}
       <div ref={scrollTargetRef} />
       {orderedPosts.map((post, index) => (
         <div
@@ -323,7 +311,6 @@ export function ImagesFeed({
   refreshKey = 0,
   selectedPostId = null,
   onPostSelected,
-  onBackToCollage,
 }: ImagesFeedProps) {
   const { t } = useI18n();
   const { theme } = useAppTheme();
@@ -629,7 +616,6 @@ export function ImagesFeed({
           isFetchingNextPage={isFetchingNextPage}
           hasNextPage={hasNextPage ?? false}
           startFromId={selectedPostId}
-          onBackToCollage={onBackToCollage}
         />
       ) : (
         <CollageView 
