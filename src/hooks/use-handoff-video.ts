@@ -26,7 +26,8 @@ export interface UseHandoffVideoOptions {
   poster?: string;
   muted: boolean;
   loop: boolean;
-  preload: string;
+  /** Narrower than `string` on purpose — this is assigned straight to `el.preload`. */
+  preload: '' | 'none' | 'metadata' | 'auto';
   className: string;
   onEnded?: () => void;
   onError?: () => void;
