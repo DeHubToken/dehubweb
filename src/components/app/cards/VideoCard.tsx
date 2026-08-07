@@ -1343,12 +1343,35 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     openPost();
   }, [openPost]);
   
+  // One radius token rather than two competing utilities: fullscreen must stay
+  // square, and a `lg:` override would outrank the fullscreen `rounded-none` at
+  // desktop widths. Immersive media runs edge-to-edge on mobile, but on desktop
+  // it sits inset inside the post shell's rounded-2xl bento, where a square
+  // frame is the only hard rectangle in the column — ImageCard, which fills the
+  // same slot for image posts, has always rounded there.
+  const mediaRadius = isFullscreen
+    ? 'rounded-none'
+    : isImmersive
+      ? 'rounded-none lg:rounded-2xl'
+      : 'rounded-2xl';
+
+  // The immersive wrapper used to ship `bg-black lg:bg-transparent`. Every
+  // theme's untagged-slab net matches `[class*='bg-black']` and is scoped under
+  // #app-root, so it carries an id and outranked the `lg:` override at every
+  // width: the wrapper painted a slab across the video and the title block that
+  // then stopped dead, leaving a seam partway down the page — theme material on
+  // Osaka and Jungle, flat black over the canvas on Cosmic, Hazy and War. It has
+  // no surface of its own to draw. Behind it [data-post-page] is already black
+  // on the opaque themes, paper on light and transparent on every canvas theme,
+  // and the desktop branch has the post shell. Carrying no colour class is what
+  // keeps it unreachable by those nets, permanently — do not give it one again.
+  // Same fix, same reason, as [data-post-overlay-backdrop] in index.css.
   return (
-    <div 
+    <div
       data-video-card
       onClick={isImmersive ? undefined : handleCardClick}
       className={isImmersive
-        ? "bg-black lg:bg-transparent overflow-hidden isolate"
+        ? "overflow-hidden isolate"
         : "overflow-visible cursor-pointer isolate"
       }
     >
@@ -1489,7 +1512,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         tabIndex={0}
         data-no-navigate
         data-media-full
-        className={`relative bg-black cursor-pointer group/thumb outline-none overflow-hidden transition-all duration-300 ${isImmersive ? 'rounded-none' : 'rounded-2xl'} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-screen rounded-none flex items-center justify-center' : (isImmersive && showComments ? 'aspect-[2/1]' : 'aspect-video')}`}
+        className={`relative bg-black cursor-pointer group/thumb outline-none overflow-hidden transition-all duration-300 ${mediaRadius} ${isFullscreen ? 'fixed inset-0 z-[9999] w-screen h-screen flex items-center justify-center' : (isImmersive && showComments ? 'aspect-[2/1]' : 'aspect-video')}`}
         onClick={video.isAudio ? undefined : handleVideoAreaClick}
         onTouchStart={video.isAudio ? undefined : handleTouchStart}
         onTouchEnd={video.isAudio ? undefined : handleTouchEnd}
