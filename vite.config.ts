@@ -3,7 +3,8 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { mcpPlugin } from "@lovable.dev/mcp-js/stacks/supabase/vite";
-import { execSync } from "child_process";
+import { execSync, execFileSync } from "child_process";
+import { writeFileSync } from "fs";
 
 /**
  * Serve /war-game/* with `Access-Control-Allow-Origin: *` in dev and preview.
@@ -46,6 +47,91 @@ function blogManifestPlugin() {
       } catch (e) {
         console.warn('[blog-manifest] generation failed', e);
       }
+    },
+  };
+}
+
+const GITHUB_REPO = 'https://github.com/DeHubToken/dehubweb';
+
+/** `git ...` as a plain string, or '' if git isn't there / this isn't a checkout. */
+function git(args: string[]): string {
+  try {
+    // execFileSync, not execSync: no shell means no `%s` mangling in the
+    // --format arguments on Windows, where cmd.exe owns the percent sign.
+    return execFileSync('git', args, { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
+  } catch {
+    return '';
+  }
+}
+
+/**
+ * Identity of the build, as shown by the "new version available" toast.
+ *
+ * GitHub writes a merge commit's SUBJECT as "Merge pull request #N from
+ * owner/branch" and puts the PR *title* in the body — so the readable sentence
+ * and the PR number live in different places, and the subject alone would
+ * surface branch names to users. Squash merges do the opposite and put both in
+ * the subject as "title (#N)". Both shapes are handled; anything else (a direct
+ * commit) keeps its subject and links to the commit instead of a PR.
+ *
+ * Everything here degrades rather than throws. With no sha the toast disables
+ * itself (see lib/version-check), which is the right failure: silence beats a
+ * refresh prompt that can never be satisfied.
+ */
+function resolveBuildVersion() {
+  // Cloudflare Workers Builds exports the sha; git covers local builds and any
+  // CI that doesn't. The message always needs git — if only the env var is
+  // available the toast still works, just without its one-line summary.
+  const sha =
+    process.env.WORKERS_CI_COMMIT_SHA ||
+    process.env.CF_PAGES_COMMIT_SHA ||
+    git(['rev-parse', 'HEAD']);
+  const subject = git(['log', '-1', '--format=%s']);
+  const body = git(['log', '-1', '--format=%b']);
+
+  const merge = subject.match(/^Merge pull request #(\d+)/);
+  const squash = subject.match(/\(#(\d+)\)\s*$/);
+  const pr = (merge && merge[1]) || (squash && squash[1]) || '';
+
+  // Merge commits: first line of the body is the PR title. Fall back to the
+  // subject if a merge was made with an empty body.
+  const headline = merge ? body.split('\n')[0].trim() || subject : subject;
+
+  return {
+    id: sha.slice(0, 8),
+    // One line in a toast — long commit subjects get clipped rather than
+    // pushing the Refresh button off a phone screen.
+    note: headline.length > 140 ? `${headline.slice(0, 139)}…` : headline,
+    url: pr ? `${GITHUB_REPO}/pull/${pr}` : sha ? `${GITHUB_REPO}/commit/${sha}` : '',
+  };
+}
+
+/**
+ * Publishes the build identity two ways so a running tab can tell it has gone
+ * stale: compiled into the bundle as `__BUILD_ID__`, and written to
+ * dist/version.json for the client to poll.
+ *
+ * Only the ID is compiled in. The summary and link belong to whatever build is
+ * live NOW, not to the one the user happens to be running, so they are read
+ * from the fetched manifest instead.
+ */
+function buildVersionPlugin() {
+  const version = resolveBuildVersion();
+  return {
+    name: 'build-version',
+    config() {
+      if (!version.id) {
+        console.warn('[build-version] no commit sha resolved — the update toast stays off for this build');
+      }
+      return { define: { __BUILD_ID__: JSON.stringify(version.id) } };
+    },
+    // writeBundle, not emitFile: dist/ is already on disk here, and this keeps
+    // the plugin off Rollup's typed context (see scripts/check-entry-bundle.mjs
+    // for the same post-build-on-disk approach).
+    writeBundle(options: { dir?: string }) {
+      const outDir = options.dir || path.resolve(__dirname, 'dist');
+      writeFileSync(path.join(outDir, 'version.json'), JSON.stringify(version));
+      console.log(`[build-version] ${version.id || '(none)'} — ${version.note || '(no message)'}`);
     },
   };
 }
@@ -126,6 +212,7 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     react(),
     blogManifestPlugin(),
+    buildVersionPlugin(),
     preloadWalletChunkPlugin(),
     warGameCorsPlugin(),
     mcpPlugin(),
