@@ -11,6 +11,13 @@
   Cache-Control: public, max-age=0, must-revalidate
   Service-Worker-Allowed: /
 
+# Deploy manifest behind the "new version available" toast. Must never be
+# cached: a cached copy is indistinguishable from "you are already up to date",
+# which is the one answer this file exists to disprove. ~150 bytes, and an open
+# tab asks for it at most once a minute.
+/version.json
+  Cache-Control: no-store
+
 # Hashed build chunks are content-addressed — cache for a year. Without this
 # every repeat visit revalidates each chunk (ported from netlify.toml; was
 # lost in the Cloudflare migration and live assets served max-age=0).
