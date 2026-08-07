@@ -19,7 +19,8 @@ import { Separator } from '@/components/ui/separator';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import { getWalletDeepLink, isMobileDevice, isWalletInAppBrowser } from '@/lib/web3auth';
-import { WalletButton } from '@rainbow-me/rainbowkit';
+import { WalletButton, RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit';
+import '@rainbow-me/rainbowkit/styles.css';
 import dehubLogo from '@/assets/dehub-logo-white.png';
 import phantomLogo from '@/assets/phantom-logo.png';
 
@@ -55,6 +56,33 @@ interface LoginModalProps {
 }
 
 type LoginStep = 'main' | 'email' | 'email-waiting' | 'phone' | 'phone-code' | 'wallets' | 'wallet-create' | 'wallet-unlock';
+
+/**
+ * RainbowKit context, scoped to the login flow.
+ *
+ * This used to sit in WalletProviders, which wraps the entire app tree — so
+ * RainbowKit's connect-modal UI was parsed by every visitor before first paint,
+ * for a modal the app never opens (`WalletButton.Custom` below is RainbowKit's
+ * only consumer in the whole of src; there is no `useConnectModal`,
+ * `ConnectButton` or `useAccountModal` anywhere). LoginModal is already
+ * React.lazy and mounts on first open, so hosting the provider here puts the
+ * modal UI on the chunk that actually needs it.
+ *
+ * WagmiProvider is still above this, in WalletProviders — RainbowKitProvider
+ * requires it, and `wagmiConfig` genuinely is needed at first paint.
+ *
+ * Wraps the <Drawer>, never sits between <Drawer> and <DrawerContent>: vaul
+ * needs its Root and Content in a direct parent-child relationship or the
+ * portal throws "DialogPortal must be used within Dialog" and error-boundaries
+ * the page.
+ */
+function RainbowKitScope({ children }: { children: React.ReactNode }) {
+  return (
+    <RainbowKitProvider theme={darkTheme()} modalSize="compact">
+      {children}
+    </RainbowKitProvider>
+  );
+}
 
 export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   const {
@@ -684,33 +712,35 @@ export function LoginModal({ open, onOpenChange }: LoginModalProps) {
   // viewport. Falls back to full-viewport when those vars are unset (e.g.
   // routes without the app shell/sidebars).
   return (
-    <Drawer open={open} onOpenChange={handleClose}>
-      <DrawerContent
-        data-login-modal
-        hideHandle
-        className={cn(
-          "bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-hidden z-[200] flex flex-col max-h-[90dvh]",
-          !isMobile && "left-[var(--app-main-left,0px)] right-auto w-[var(--app-main-width,100vw)]",
-        )}
-        overlayClassName={cn(
-          // Unlike the drawer sheet itself (clipped to the middle panel
-          // above), the backdrop spans the full viewport — including both
-          // sidebars — and blurs everything outside the login flow to pull
-          // full attention onto it (mobile keeps its darker bg-black/80
-          // dim from DrawerOverlay's base classes).
-          "z-[200] login-modal-overlay backdrop-blur-xl",
-          !isMobile && "bg-black/40",
-        )}
-      >
-        <DrawerHeader className="px-6 pt-6 pb-4 shrink-0">
-          {headerContent}
-          <DrawerTitle className="text-base font-medium text-white mt-4 text-center">
-            {titleText}
-          </DrawerTitle>
-        </DrawerHeader>
-        {bodyContent}
-      </DrawerContent>
-    </Drawer>
+    <RainbowKitScope>
+      <Drawer open={open} onOpenChange={handleClose}>
+        <DrawerContent
+          data-login-modal
+          hideHandle
+          className={cn(
+            "bg-black/60 backdrop-blur-2xl saturate-[180%] border border-white/10 border-b-0 p-0 gap-0 rounded-t-2xl overflow-hidden z-[200] flex flex-col max-h-[90dvh]",
+            !isMobile && "left-[var(--app-main-left,0px)] right-auto w-[var(--app-main-width,100vw)]",
+          )}
+          overlayClassName={cn(
+            // Unlike the drawer sheet itself (clipped to the middle panel
+            // above), the backdrop spans the full viewport — including both
+            // sidebars — and blurs everything outside the login flow to pull
+            // full attention onto it (mobile keeps its darker bg-black/80
+            // dim from DrawerOverlay's base classes).
+            "z-[200] login-modal-overlay backdrop-blur-xl",
+            !isMobile && "bg-black/40",
+          )}
+        >
+          <DrawerHeader className="px-6 pt-6 pb-4 shrink-0">
+            {headerContent}
+            <DrawerTitle className="text-base font-medium text-white mt-4 text-center">
+              {titleText}
+            </DrawerTitle>
+          </DrawerHeader>
+          {bodyContent}
+        </DrawerContent>
+      </Drawer>
+    </RainbowKitScope>
   );
 }
 
