@@ -106,7 +106,10 @@ export function UserMentionDropdown({
           followerCount?: number;
           followingCount?: number;
         }> }>('/api/users_search', {
-          params: { q: searchQuery, page: 1, limit: 10 },
+          // `searchParam`, not `q` — the API reads that name and silently
+          // treats a missing one as an empty search, so this drawer was
+          // returning the same arbitrary users no matter what was typed.
+          params: { searchParam: searchQuery, page: 1, limit: 10 },
         });
 
         if (latestQueryRef.current !== searchQuery) return;

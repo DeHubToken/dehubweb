@@ -49,7 +49,8 @@ export async function getAccountByUsername(username: string, address?: string): 
   // 3. Search fallback — strict match only
   try {
     const searchResponse = await apiCall<{ result: DeHubUser[] } | PaginatedResponse<DeHubUser>>("/api/users_search", {
-      params: { q: cleanUsername, page: 1, limit: 10 },
+      // `searchParam`, not `q` — see searchUsers below.
+      params: { searchParam: cleanUsername, page: 1, limit: 10 },
     });
 
     const candidates = Array.isArray((searchResponse as any)?.result)
@@ -165,7 +166,10 @@ export interface SearchUsersParams {
 
 export async function searchUsers(params: SearchUsersParams): Promise<PaginatedResponse<DeHubUser>> {
   const response = await apiCall<{ result: DeHubUser[] } | PaginatedResponse<DeHubUser>>("/api/users_search", {
-    params: { q: params.q, page: params.page, limit: params.limit },
+    // The API reads `searchParam`. Sending `q` left it undefined, and an empty
+    // search there is not an error — it returns an unfiltered page of users, so
+    // every caller got plausible-looking results that ignored the query.
+    params: { searchParam: params.q, page: params.page, limit: params.limit },
   });
   
   // API returns { result: [...] } but we need { data: [...] }
