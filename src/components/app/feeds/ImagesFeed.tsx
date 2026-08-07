@@ -7,7 +7,7 @@
  * @module components/app/feeds/ImagesFeed
  */
 
-import { useRef, useMemo, useEffect, useCallback } from 'react';
+import { useRef, useMemo, useState, useEffect, useCallback } from 'react';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { toast } from 'sonner';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -31,6 +31,59 @@ import type { ImagePost } from '@/types/feed.types';
 
 /** Number of pages to pre-fetch for random mode cross-page shuffling */
 const RANDOM_PREFETCH_PAGES = 5;
+
+// Opening the feed used to hang because every ImageCard in the loaded set
+// mounted in one commit — each is a carousel, a comments wrapper and its own
+// tip-count query, so sixty cards meant sixty requests fired at once behind a
+// blocking render. The list is grown a few cards per frame instead: the tapped
+// post is on screen in the first commit and the rest arrive underneath it while
+// the user is already looking at what they asked for.
+const MOUNT_INITIAL = 3;
+const MOUNT_STEP = 4;
+
+/**
+ * Infinite-scroll sentinel observer, one per caller.
+ *
+ * The collage and the scroll view are both mounted once the feed has been
+ * opened, so they cannot share an observer — the second sentinel to render
+ * would take it and leave the first view unable to page.
+ */
+function useInfiniteLoaderRef(
+  hasNextPage: boolean | undefined,
+  fetchNextPage: () => Promise<unknown>,
+  isFetchingRef: React.MutableRefObject<boolean>,
+): React.RefCallback<HTMLDivElement> {
+  // Read through refs so the callback identity never changes: a new identity
+  // would detach and re-attach the observer on every render of the feed.
+  const hasNextPageRef = useRef(hasNextPage);
+  hasNextPageRef.current = hasNextPage;
+  const fetchNextPageRef = useRef(fetchNextPage);
+  fetchNextPageRef.current = fetchNextPage;
+
+  const observerRef = useRef<IntersectionObserver | null>(null);
+
+  return useCallback((node: HTMLDivElement | null) => {
+    if (observerRef.current) {
+      observerRef.current.disconnect();
+      observerRef.current = null;
+    }
+    if (!node) return;
+
+    observerRef.current = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPageRef.current && !isFetchingRef.current) {
+          isFetchingRef.current = true;
+          fetchNextPageRef.current().finally(() => {
+            isFetchingRef.current = false;
+          });
+        }
+      },
+      { threshold: 0.1, rootMargin: '400px' },
+    );
+
+    observerRef.current.observe(node);
+  }, [isFetchingRef]);
+}
 
 // ============================================================================
 // TYPES
@@ -248,6 +301,28 @@ function EndlessScrollView({
     ];
   }, [posts, startFromId]);
   
+  // Grow the mounted window a few cards per frame (see MOUNT_INITIAL), and
+  // never shrink it: tapping a second tile only rotates `orderedPosts`, and
+  // the keys are post ids, so React moves the existing cards instead of
+  // rebuilding them. Resetting the window here would throw away sixty live
+  // cards and re-run all their queries to show the same posts again.
+  const [mountedCount, setMountedCount] = useState(MOUNT_INITIAL);
+  useEffect(() => {
+    if (mountedCount >= orderedPosts.length) return;
+    const raf = requestAnimationFrame(() => {
+      setMountedCount((c) => Math.min(orderedPosts.length, c + MOUNT_STEP));
+    });
+    return () => cancelAnimationFrame(raf);
+  }, [mountedCount, orderedPosts.length]);
+
+  const visiblePosts = useMemo(
+    () => orderedPosts.slice(0, mountedCount),
+    [orderedPosts, mountedCount],
+  );
+  // The sentinel must not exist while the window is still filling, or it sits
+  // three cards below the fold and pages the API on every entry.
+  const fullyMounted = mountedCount >= orderedPosts.length;
+
   // Scroll to top when entering feed view from collage
   useEffect(() => {
     if (startFromId) {
@@ -273,7 +348,7 @@ function EndlessScrollView({
           settings icon for a back arrow while this view is up), so there is no
           floating button over the feed. */}
       <div ref={scrollTargetRef} />
-      {orderedPosts.map((post, index) => (
+      {visiblePosts.map((post, index) => (
         <div
           key={post.id}
           data-feed-item
@@ -283,19 +358,21 @@ function EndlessScrollView({
           <ImageCard post={post} />
         </div>
       ))}
-      
+
       {/* Infinite scroll loader */}
-      <div ref={loaderRef} className="py-4 flex justify-center">
-        {isFetchingNextPage && (
-          <div className="flex items-center gap-2 text-zinc-400">
-            <Loader2 className="w-5 h-5 animate-spin" />
-            <span className="text-sm">{t('common.loadingMore')}</span>
-          </div>
-        )}
-        {!hasNextPage && posts.length > 0 && (
-          <p className="text-zinc-500 text-sm">You've reached the end 🎉</p>
-        )}
-      </div>
+      {fullyMounted && (
+        <div ref={loaderRef} className="py-4 flex justify-center">
+          {isFetchingNextPage && (
+            <div className="flex items-center gap-2 text-zinc-400">
+              <Loader2 className="w-5 h-5 animate-spin" />
+              <span className="text-sm">{t('common.loadingMore')}</span>
+            </div>
+          )}
+          {!hasNextPage && posts.length > 0 && (
+            <p className="text-zinc-500 text-sm">You've reached the end 🎉</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -316,7 +393,6 @@ export function ImagesFeed({
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
   const hasAnimated = useRef(false);
-  const loaderRef = useRef<HTMLDivElement>(null);
   const isFetchingRef = useRef(false); // Synchronous fetch guard to prevent race conditions
   
   // Filter states - default to "Latest" - persisted to sessionStorage
@@ -450,43 +526,9 @@ export function ImagesFeed({
     onPostSelected?.(postId);
   };
 
-  // Infinite scroll observer - uses callback ref to handle DOM element changes
-  // when switching between collage and feed views
-  const hasNextPageRef = useRef(hasNextPage);
-  hasNextPageRef.current = hasNextPage;
-  
-  const fetchNextPageRef = useRef(fetchNextPage);
-  fetchNextPageRef.current = fetchNextPage;
+  const collageLoaderRef = useInfiniteLoaderRef(hasNextPage, fetchNextPage, isFetchingRef);
+  const feedLoaderRef = useInfiniteLoaderRef(hasNextPage, fetchNextPage, isFetchingRef);
 
-  const observerRef = useRef<IntersectionObserver | null>(null);
-  
-  const loaderCallbackRef = useCallback((node: HTMLDivElement | null) => {
-    // Store on the existing ref so children still see it
-    (loaderRef as React.MutableRefObject<HTMLDivElement | null>).current = node;
-
-    // Disconnect previous observer
-    if (observerRef.current) {
-      observerRef.current.disconnect();
-      observerRef.current = null;
-    }
-
-    if (!node) return;
-
-    observerRef.current = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasNextPageRef.current && !isFetchingRef.current) {
-          isFetchingRef.current = true;
-          fetchNextPageRef.current().finally(() => {
-            isFetchingRef.current = false;
-          });
-        }
-      },
-      { threshold: 0.1, rootMargin: '400px' }
-    );
-
-    observerRef.current.observe(node);
-  }, [loaderRef]);
-  
   // Only animate after first render (when switching views)
   const shouldAnimate = hasAnimated.current;
   hasAnimated.current = true;
@@ -496,7 +538,17 @@ export function ImagesFeed({
   
   // Determine if we should show collage or feed
   // Show feed if: collage is off, OR user clicked an image from collage
-  const showFeedView = !showCollage || selectedPostId;
+  const showFeedView = !!(!showCollage || selectedPostId);
+
+  // Once the scroll view has been opened both views stay mounted and swap by
+  // `display`. Going back then costs nothing — the grid keeps its DOM, its
+  // decoded images and its scroll height instead of rebuilding every tile — and
+  // re-opening the feed skips the card mount entirely. The scroll view is still
+  // mounted lazily, so a user who never taps a tile never pays for it.
+  const [feedEverOpened, setFeedEverOpened] = useState(showFeedView);
+  useEffect(() => {
+    if (showFeedView) setFeedEverOpened(true);
+  }, [showFeedView]);
 
   // Empty state component
   const EmptyState = () => (
@@ -609,22 +661,29 @@ export function ImagesFeed({
           and clickable while the request runs. */}
       {filterTransition.active ? (
         <FeedFilterLoader className="mt-3" />
-      ) : showFeedView ? (
-        <EndlessScrollView 
-          posts={imagePosts} 
-          loaderRef={loaderCallbackRef}
-          isFetchingNextPage={isFetchingNextPage}
-          hasNextPage={hasNextPage ?? false}
-          startFromId={selectedPostId}
-        />
       ) : (
-        <CollageView 
-          posts={imagePosts} 
-          onImageClick={handleImageClick}
-          loaderRef={loaderCallbackRef}
-          isFetchingNextPage={isFetchingNextPage}
-          hasNextPage={hasNextPage ?? false}
-        />
+        <>
+          {feedEverOpened && (
+            <div style={{ display: showFeedView ? 'block' : 'none' }}>
+              <EndlessScrollView
+                posts={imagePosts}
+                loaderRef={feedLoaderRef}
+                isFetchingNextPage={isFetchingNextPage}
+                hasNextPage={hasNextPage ?? false}
+                startFromId={selectedPostId}
+              />
+            </div>
+          )}
+          <div style={{ display: showFeedView ? 'none' : 'block' }}>
+            <CollageView
+              posts={imagePosts}
+              onImageClick={handleImageClick}
+              loaderRef={collageLoaderRef}
+              isFetchingNextPage={isFetchingNextPage}
+              hasNextPage={hasNextPage ?? false}
+            />
+          </div>
+        </>
       )}
     </div>
   );
