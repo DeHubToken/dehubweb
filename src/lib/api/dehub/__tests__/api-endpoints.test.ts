@@ -215,7 +215,10 @@ describe("users.ts (new)", () => {
     mockOk({ data: [], total: 0, page: 1, limit: 20, has_more: false });
     await searchUsers({ q: "test" });
     expect(mockFetch.mock.calls[0][0]).toContain("/api/users_search");
-    expect(mockFetch.mock.calls[0][0]).toContain("q=test");
+    // `searchParam` is the name the API reads. It used to send `q`, which the
+    // API ignored — and an empty search there returns an unfiltered page
+    // rather than an error, so the bug looked like working search.
+    expect(mockFetch.mock.calls[0][0]).toContain("searchParam=test");
   });
 
   it("getUserComments calls GET /api/users/{address}/comments", async () => {
