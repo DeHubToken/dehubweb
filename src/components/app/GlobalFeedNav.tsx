@@ -21,6 +21,7 @@ import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useAnyOverlayOpen } from '@/lib/overlay-open';
+import { useImagesFeedScrollView, requestImagesBackToCollage } from '@/lib/images-feed-mode';
 
 const HOME_STATE_STORAGE_KEY = 'home-feed-state';
 const HOME_TAB_SWITCH_EVENT = 'switch-home-tab';
@@ -210,11 +211,18 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
 
   const { setFiltersPortalElement } = useGlobalFeedNav() ?? {};
 
+  // The images tab's scroll view exits through this slot too — same back arrow
+  // as the post overlay, since the collapsed sidebar hides HomePage's own pill.
+  const imagesScrollView = useImagesFeedScrollView();
+
   const handleSettingsClick = useCallback(() => {
-    if (isHomePage) {
-      window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }));
+    if (!isHomePage) return;
+    if (imagesScrollView) {
+      requestImagesBackToCollage();
+      return;
     }
-  }, [isHomePage, activeTab]);
+    window.dispatchEvent(new CustomEvent('home-tab-reclick', { detail: activeTab }));
+  }, [isHomePage, activeTab, imagesScrollView]);
 
   return (
     <div data-feed-nav-outer className={cn(
@@ -270,9 +278,11 @@ export function GlobalFeedNav({ postPage = false }: { postPage?: boolean } = {})
               <button
                 onClick={handleSettingsClick}
                 className="relative flex items-center justify-center px-3 py-2.5 rounded-xl transition-colors text-zinc-400 hover:text-white hover:bg-white/5"
-                aria-label="Feed settings"
+                aria-label={imagesScrollView ? "Back to grid" : "Feed settings"}
               >
-                <Settings2 className="relative z-10 w-4 h-4" />
+                {imagesScrollView
+                  ? <ArrowLeft className="relative z-10 w-4 h-4" />
+                  : <Settings2 className="relative z-10 w-4 h-4" />}
               </button>
             )}
             {feedTabs.map((tab) => {
