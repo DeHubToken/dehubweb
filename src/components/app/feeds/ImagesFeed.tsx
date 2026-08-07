@@ -7,7 +7,7 @@
  * @module components/app/feeds/ImagesFeed
  */
 
-import { useRef, useMemo, useState, useEffect, useCallback } from 'react';
+import { Fragment, useRef, useMemo, useState, useEffect, useCallback } from 'react';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { toast } from 'sonner';
 import { useTranslation as useI18n } from 'react-i18next';
@@ -20,6 +20,8 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
 import { ImageCard } from '@/components/app/cards';
+import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
+import { useServedAds } from '@/hooks/use-ad-serving';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { SORT_OPTIONS, DATE_FILTER_OPTIONS, CONTENT_TYPE_FILTERS, type SortOption, type DateFilterOption, type ContentTypeFilters } from '@/lib/feed-utils';
@@ -286,7 +288,15 @@ function EndlessScrollView({
 }: EndlessScrollViewProps) {
   const { t } = useI18n();
   const scrollTargetRef = useRef<HTMLDivElement>(null);
-  
+
+  // One sponsored slot, directly under the post the user opened — the same
+  // placement the post pages give it through the Related*Feed rails. Served off
+  // the 'home' surface because the images tab is a home feed tab (it has no URL
+  // of its own, it renders at /app), so it draws on inventory that already
+  // exists rather than needing a new surface taught to the ads-serve function.
+  const { data: servedAdList = [] } = useServedAds('home', { count: 1 });
+  const servedAd = servedAdList[0] ?? null;
+
   // Reorder posts to start from selected image
   const orderedPosts = useMemo(() => {
     if (!startFromId) return posts;
@@ -349,14 +359,20 @@ function EndlessScrollView({
           floating button over the feed. */}
       <div ref={scrollTargetRef} />
       {visiblePosts.map((post, index) => (
-        <div
-          key={post.id}
-          data-feed-item
-          className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3"
-          style={index >= 3 ? { contentVisibility: 'auto', containIntrinsicSize: 'auto 0 auto 640px' } : undefined}
-        >
-          <ImageCard post={post} />
-        </div>
+        <Fragment key={post.id}>
+          <div
+            data-feed-item
+            className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3"
+            style={index >= 3 ? { contentVisibility: 'auto', containIntrinsicSize: 'auto 0 auto 640px' } : undefined}
+          >
+            <ImageCard post={post} />
+          </div>
+          {index === 0 && servedAd && (
+            <div data-feed-item className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
+              <SponsoredAdCard ad={servedAd} />
+            </div>
+          )}
+        </Fragment>
       ))}
 
       {/* Infinite scroll loader */}
