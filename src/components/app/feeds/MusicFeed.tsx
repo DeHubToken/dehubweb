@@ -52,6 +52,10 @@ const MUSIC_SUB_TABS: { icon?: typeof Music; customIcon?: string; label: string;
 const CAROUSEL_INITIAL_VISIBLE = 6; // Initial visible items in carousel
 const CAROUSEL_LOAD_MORE = 6; // Load more items when scrolling
 const VIDEOS_PAGE_SIZE = 10; // Page size for videos tab - small for fast initial load
+// Page size for the "All" tab carousels. Only CAROUSEL_INITIAL_VISIBLE items
+// render up front and the rest are revealed on horizontal scroll, so fetching
+// 50 rows per carousel only cost mount latency.
+const CAROUSEL_PAGE_SIZE = 12;
 
 // ============================================================================
 // HELPERS
@@ -682,27 +686,29 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
   const { data: carouselVideosData, isLoading: isLoadingCarouselVideos } = useQuery({
     queryKey: ['music-videos-carousel', walletAddress],
     queryFn: async () => {
-      // Fetch API music videos
-      const response = await searchNFTs({
-        category: 'Music',
-        postType: 'video',
-        unit: 50,
-        sortMode: 'popular',
-      });
-      
-      // Fetch manually tagged music tokens
-      const manualTokenPromises = MANUAL_MUSIC_TOKEN_IDS.map(tokenId => 
-        getNFTInfo(String(tokenId)).catch(() => null)
-      );
-      const manualTokens = (await Promise.all(manualTokenPromises)).filter(Boolean) as DeHubNFT[];
-      
-      // Merge: manual tokens first (so they appear at the front), then API results
-      // Filter out any duplicates (same tokenId) and blocked creators
-      const apiTokenIds = new Set(manualTokens.map(t => t.tokenId));
-      const filteredApiResults = (response.data || [])
-        .filter((nft: DeHubNFT) => !isBlockedCreator(nft, blockedAddresses) && !apiTokenIds.has(nft.tokenId));
-      
-      return [...manualTokens.filter(nft => !isBlockedCreator(nft, blockedAddresses)), ...filteredApiResults];
+      // The manual tokens do not depend on the search results, so both go out
+      // together — awaiting the search first left the nft_info calls sitting
+      // idle for the whole search round trip.
+      const [response, manualTokens] = await Promise.all([
+        searchNFTs({
+          category: 'Music',
+          postType: 'video',
+          unit: CAROUSEL_PAGE_SIZE,
+          sortMode: 'popular',
+        }),
+        Promise.all(
+          MANUAL_MUSIC_TOKEN_IDS.map(tokenId => getNFTInfo(String(tokenId)).catch(() => null))
+        ).then(tokens => tokens.filter(Boolean) as DeHubNFT[]),
+      ]);
+
+      // Merge: manual tokens first (so they appear at the front), then API
+      // results with duplicates removed. Blocked creators are filtered on
+      // render, not here, so a late-arriving block list still applies.
+      const manualTokenIds = new Set(manualTokens.map(t => t.tokenId));
+      const apiResults = (response.data || [])
+        .filter((nft: DeHubNFT) => !manualTokenIds.has(nft.tokenId));
+
+      return [...manualTokens, ...apiResults];
     },
     staleTime: 5 * 60 * 1000,
   });
@@ -712,17 +718,17 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
     queryKey: ['music-audio-uploads', walletAddress],
     queryFn: async () => {
       const [audioRes, feedAudioRes] = await Promise.all([
-        searchNFTs({ postType: 'audio', unit: 50, sortMode: 'new' }).catch(() => ({ data: [] })),
-        searchNFTs({ postType: 'feed-audio', unit: 50, sortMode: 'new' }).catch(() => ({ data: [] })),
+        searchNFTs({ postType: 'audio', unit: CAROUSEL_PAGE_SIZE, sortMode: 'new' }).catch(() => ({ data: [] })),
+        searchNFTs({ postType: 'feed-audio', unit: CAROUSEL_PAGE_SIZE, sortMode: 'new' }).catch(() => ({ data: [] })),
       ]);
-      // Merge and dedupe by tokenId
+      // Merge and dedupe by tokenId. Blocked creators are filtered on render.
       const seen = new Set<string | number>();
       const merged: DeHubNFT[] = [];
       for (const nft of [...(audioRes.data || []), ...(feedAudioRes.data || [])]) {
         const tid = nft.tokenId || nft.id || nft.token_id;
         if (seen.has(tid)) continue;
         seen.add(tid);
-        if (!isBlockedCreator(nft, blockedAddresses)) merged.push(nft);
+        merged.push(nft);
       }
       return merged;
     },
@@ -731,23 +737,25 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
 
   const audioUploads = useMemo(() => {
     if (!audioUploadsData) return [];
-    return audioUploadsData.map((nft, index) => {
-      const item = mapNFTToVideoItem(nft, index);
-      return { ...item, isAudio: true };
-    });
-  }, [audioUploadsData]);
+    return audioUploadsData
+      .filter(nft => !isBlockedCreator(nft, blockedAddresses))
+      .map((nft, index) => {
+        const item = mapNFTToVideoItem(nft, index);
+        return { ...item, isAudio: true };
+      });
+  }, [audioUploadsData, blockedAddresses]);
 
   // Shuffle and map to VideoItem for carousel - randomized on each mount
   const carouselVideos = useMemo(() => {
     if (!carouselVideosData) return [];
     // Fisher-Yates shuffle
-    const shuffled = [...carouselVideosData];
+    const shuffled = carouselVideosData.filter(nft => !isBlockedCreator(nft, blockedAddresses));
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
     }
     return shuffled.map((nft, index) => mapNFTToVideoItem(nft, index));
-  }, [carouselVideosData]);
+  }, [carouselVideosData, blockedAddresses]);
 
   const getEmptyLabel = () => {
     switch (activeSubTab) {
@@ -786,7 +794,7 @@ export function MusicFeed({ showFilters = false, isRefreshing = false }: MusicFe
           <AllSection 
             radioStations={radioStations} 
             musicVideos={carouselVideos}
-            totalVideoCount={carouselVideosData?.length || 0}
+            totalVideoCount={carouselVideos.length}
             isLoadingVideos={isLoadingCarouselVideos}
             audioUploads={audioUploads}
             isLoadingAudio={isLoadingAudio}
