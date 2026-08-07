@@ -6,6 +6,19 @@
 !.env.example
 !.env.development.example
 
+# bun.lock is a Lovable sandbox artifact, not this repo's lockfile, and it must
+# not come back. Cloudflare Workers Builds picks a package manager by which
+# lockfile it finds, and bun.lock outranks the two we actually maintain — so the
+# deploy ran `bun install` against it. Dependabot updates package.json,
+# package-lock.json and pnpm-lock.yaml and leaves bun.lock alone, so #127 desynced
+# it and every build from that commit on failed in zero seconds, before compiling
+# anything. Five merges sat on main undeployed until it was found.
+#
+# It was never safe even in sync: 131 of its entries resolve from
+# europe-west4-npm.pkg.dev/lovable-core-prod/sandbox-npm-cache, a private
+# registry the build has no access to.
+bun.lock
+
 # Untracked local artifacts (removed from repo pre-open-source)
 /e.js
 /live.js
