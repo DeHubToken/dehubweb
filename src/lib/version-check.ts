@@ -38,8 +38,14 @@ export type BuildVersion = {
 const RUNNING_ID = typeof __BUILD_ID__ === 'string' ? __BUILD_ID__ : '';
 
 const MANIFEST_URL = '/version.json';
-/** Gap between polls in a visible tab. */
-const POLL_MS = 15 * 60_000;
+/**
+ * Gap between polls in a visible tab, and — since the first tick is a full
+ * interval after boot — the worst-case delay before a desktop tab hears about a
+ * deploy. A tab that is switched away from and back finds out sooner, because
+ * the visibility check fires immediately; at 15 minutes a desktop tab nobody
+ * touches was effectively waiting on that tab switch instead.
+ */
+const POLL_MS = 3 * 60_000;
 /** Floor between two network checks, so tab-switching can't turn into a spam loop. */
 const MIN_GAP_MS = 60_000;
 const NOTIFIED_KEY = 'version-notified-id';
