@@ -1,5 +1,6 @@
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { SEOHead } from '@/components/SEOHead';
@@ -32,6 +33,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { MountOnVisible } from '@/components/util/MountOnVisible';
+import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 
 const accent = '#e5e7eb';
 const hot = '#ff2c91';
@@ -225,6 +227,16 @@ export default function CreatorPage() {
    */
   const headerRef = useRef<HTMLDivElement>(null);
   const [headerHeight, setHeaderHeight] = useState(60);
+
+  /**
+   * The composer is sticky for the whole page, so everything below it scrolls
+   * under it and gets swallowed at its top edge. The studio clips its own
+   * preset strip and results feed; this covers the rest of the page. Two
+   * containers rather than one because the studio renders its own tail — they
+   * share a cut element, so the line is continuous across both.
+   */
+  const belowComposerRef = useRef<HTMLDivElement>(null);
+  useFeedSwallowClip(belowComposerRef, '[data-creator-composer]', [], { allThemes: true });
   useEffect(() => {
     const el = headerRef.current;
     if (!el) return;
@@ -402,6 +414,11 @@ export default function CreatorPage() {
 
         <CreatorStudio onOpenEditor={() => navigate('/editor')} stickyTop={headerHeight} />
 
+        {/* Swallowed by the composer, same as the studio's own feed above.
+            Left unindented deliberately — this wrapper exists only to give the
+            clip a single box to cut, and re-indenting the whole lower page for
+            it would bury the change. */}
+        <div ref={belowComposerRef}>
         <MountOnVisible minHeight={240} rootMargin="800px">
         <section className="grid gap-3 px-3 pb-4 sm:px-4 md:grid-cols-2">
 
@@ -560,6 +577,7 @@ export default function CreatorPage() {
           <FeatureStrip icon={ArrowUpRight} title="Connected to DeHub" copy="Jump from a tool into assistant, editor, TV, agents or settings." />
         </section>
         </MountOnVisible>
+        </div>
       </main>
     </>
   );
@@ -893,7 +911,10 @@ function CommunityGallery() {
 
 
 
-      {lightbox && (
+      {/* Portalled to <body>: the gallery sits inside the swallow-clip wrapper,
+          and a clip-path on an ancestor clips fixed-position descendants too,
+          which would carve this down to the composer's cut line. */}
+      {lightbox && createPortal(
         <div
           className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-md"
           onClick={() => setLightbox(null)}
@@ -925,7 +946,8 @@ function CommunityGallery() {
               />
             )}
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </section>
   );

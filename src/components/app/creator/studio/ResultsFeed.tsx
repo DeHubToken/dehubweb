@@ -7,6 +7,7 @@
  * to the timeline, run it again.
  */
 import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
   AlertCircle,
   Box,
@@ -418,7 +419,11 @@ function ResultViewer({
 
   const failed = job.status === 'failed' || job.status === 'cancelled';
 
-  return (
+  // Portalled to <body> rather than rendered in place. The results feed sits
+  // inside /creator's swallow-clip wrapper, and a clip-path on an ancestor
+  // clips fixed-position descendants too — left here, the viewer would be
+  // carved down to the composer's cut line instead of filling the screen.
+  return createPortal(
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-3 backdrop-blur-md sm:p-6"
       role="dialog"
@@ -634,6 +639,7 @@ function ResultViewer({
           </div>
         </aside>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
