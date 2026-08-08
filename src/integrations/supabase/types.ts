@@ -570,6 +570,66 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_credit_ledger: {
+        Row: {
+          created_at: string
+          delta_dhb: number
+          id: string
+          metadata: Json | null
+          model_id: string | null
+          reason: string
+          ref: string | null
+          wallet_address: string
+        }
+        Insert: {
+          created_at?: string
+          delta_dhb: number
+          id?: string
+          metadata?: Json | null
+          model_id?: string | null
+          reason: string
+          ref?: string | null
+          wallet_address: string
+        }
+        Update: {
+          created_at?: string
+          delta_dhb?: number
+          id?: string
+          metadata?: Json | null
+          model_id?: string | null
+          reason?: string
+          ref?: string | null
+          wallet_address?: string
+        }
+        Relationships: []
+      }
+      ai_credits: {
+        Row: {
+          balance_dhb: number
+          created_at: string
+          lifetime_granted_dhb: number
+          lifetime_spent_dhb: number
+          updated_at: string
+          wallet_address: string
+        }
+        Insert: {
+          balance_dhb?: number
+          created_at?: string
+          lifetime_granted_dhb?: number
+          lifetime_spent_dhb?: number
+          updated_at?: string
+          wallet_address: string
+        }
+        Update: {
+          balance_dhb?: number
+          created_at?: string
+          lifetime_granted_dhb?: number
+          lifetime_spent_dhb?: number
+          updated_at?: string
+          wallet_address?: string
+        }
+        Relationships: []
+      }
       ai_messages: {
         Row: {
           attached_image: string | null
@@ -4104,6 +4164,30 @@ export type Database = {
           p_viewer_wallet: string
         }
         Returns: Json
+      }
+      ai_credit_grant: {
+        Args: {
+          p_dhb: number
+          p_metadata?: Json
+          p_reason: string
+          p_ref?: string
+          p_wallet: string
+        }
+        Returns: number
+      }
+      ai_credit_refund: {
+        Args: { p_dhb: number; p_ref: string; p_wallet: string }
+        Returns: number
+      }
+      ai_credit_spend: {
+        Args: {
+          p_dhb: number
+          p_metadata?: Json
+          p_model_id: string
+          p_ref: string
+          p_wallet: string
+        }
+        Returns: number
       }
       bulk_insert_category_log: { Args: { entries: Json }; Returns: number }
       claim_xl_cashback_slot: {
