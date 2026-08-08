@@ -2490,6 +2490,39 @@ export type Database = {
         }
         Relationships: []
       }
+      post_translations: {
+        Row: {
+          created_at: string
+          hit_count: number
+          last_used_at: string
+          provider: string
+          source_lang: string | null
+          target_lang: string
+          text_hash: string
+          translated_text: string
+        }
+        Insert: {
+          created_at?: string
+          hit_count?: number
+          last_used_at?: string
+          provider: string
+          source_lang?: string | null
+          target_lang: string
+          text_hash: string
+          translated_text: string
+        }
+        Update: {
+          created_at?: string
+          hit_count?: number
+          last_used_at?: string
+          provider?: string
+          source_lang?: string | null
+          target_lang?: string
+          text_hash?: string
+          translated_text?: string
+        }
+        Relationships: []
+      }
       ppv_purchases: {
         Row: {
           amount: number
@@ -4371,6 +4404,10 @@ export type Database = {
       record_anonymous_views: {
         Args: { p_token_ids: string[]; p_viewer_hash: string }
         Returns: number
+      }
+      touch_post_translation: {
+        Args: { p_target_lang: string; p_text_hash: string }
+        Returns: undefined
       }
       upsert_phone_otp: {
         Args: { p_code_hash: string; p_phone: string; p_ttl_ms: number }
