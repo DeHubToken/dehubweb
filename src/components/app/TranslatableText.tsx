@@ -71,6 +71,18 @@ interface TranslatableTextProps {
   as?: 'p' | 'span' | 'div' | 'h1' | 'h2' | 'h3';
   /** When true, hides the translate/show-original controls (text still gets translated if auto-translated via parent) */
   hideControls?: boolean;
+  /**
+   * Translate without being asked. Defaults to true, which is right for public
+   * content and wrong for anything private.
+   *
+   * This component is the way auto-translate leaks: a call site that opts its
+   * own useTranslation call out of auto still gets auto-translation if it
+   * renders text through here, because this calls the hook itself. That is
+   * exactly what happened to direct-message image captions. Pass auto={false}
+   * for private content — and note this component renders no controls of its
+   * own, so the call site must provide the manual trigger.
+   */
+  auto?: boolean;
 }
 
 /**
@@ -577,11 +589,12 @@ export function useTranslation(text: string, auto: boolean = true) {
 /**
  * TranslatableText - single text element with translation
  */
-export function TranslatableText({ 
-  text, 
+export function TranslatableText({
+  text,
   className,
   as: Component = 'span',
   hideControls = false,
+  auto = true,
 }: TranslatableTextProps) {
   const sharedCtx = useContext(SharedTranslationContext);
   const {
@@ -594,7 +607,7 @@ export function TranslatableText({
     isTooShort,
     handleTranslate,
     handleShowOriginal,
-  } = useTranslation(text);
+  } = useTranslation(text, auto);
 
   // Listen to shared context signals — auto-translate/show-original when a sibling triggers
   const [lastTranslateSignal, setLastTranslateSignal] = useState(0);
