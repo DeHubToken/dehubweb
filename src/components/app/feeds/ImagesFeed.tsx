@@ -19,6 +19,7 @@ import { useFeedFilterTransition } from '@/hooks/use-feed-filter-transition';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GlassFilterRow } from '@/components/app/feeds/GlassFilterRow';
+import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import { ImageCard } from '@/components/app/cards';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
 import { useServedAds } from '@/hooks/use-ad-serving';
@@ -117,7 +118,6 @@ function SortFilterSection({ selected, onSelect }: { selected: SortOption; onSel
           activeKey={selected.label}
           onSelect={(key) => { const o = SORT_OPTIONS.find(x => x.label === key); if (o) onSelect(o); }}
         />
-        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none z-20" />
       </div>
     </div>
   );
@@ -134,7 +134,6 @@ function UploadDateFilterSection({ selected, onSelect }: { selected: DateFilterO
           activeKey={selected.label}
           onSelect={(key) => { const o = DATE_FILTER_OPTIONS.find(x => x.label === key); if (o) onSelect(o); }}
         />
-        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none z-20" />
       </div>
     </div>
   );
@@ -150,11 +149,12 @@ function ContentTypeFilterSection({
   const { t } = useI18n();
   const { theme } = useAppTheme();
   const isLightTheme = theme === 'light';
+  const { ref: fadeRef, style: fadeStyle } = useScrollFadeMask<HTMLDivElement>();
   return (
     <div className="flex flex-col gap-2">
       <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.contentType')}</span>
       <div className="relative">
-        <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1">
+        <div ref={fadeRef} className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={fadeStyle}>
           {CONTENT_TYPE_FILTERS.map((filter) => (
             <button
               key={filter.value}
@@ -178,7 +178,6 @@ function ContentTypeFilterSection({
             </button>
           ))}
         </div>
-        <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none" />
       </div>
     </div>
   );
@@ -415,6 +414,7 @@ export function ImagesFeed({
   const [selectedSort, setSelectedSort] = usePersistedFeedFilter<SortOption>('images', 'sort', SORT_OPTIONS[0]);
   const [selectedUploadDate, setSelectedUploadDate] = usePersistedFeedFilter<DateFilterOption>('images', 'date', DATE_FILTER_OPTIONS[0]);
   const [contentFilters, toggleContentFilter, resetContentFilters] = usePersistedContentFilters('images');
+  const { ref: fadeRef, style: fadeStyle } = useScrollFadeMask<HTMLDivElement>();
 
   // Filter chips arm a loader on click so a sort switch never leaves the old
   // results sitting there looking frozen (the feed query keeps previous data).
@@ -635,7 +635,7 @@ export function ImagesFeed({
               <div className="flex flex-col gap-2">
                 <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.contentType')}</span>
                 <div className="relative">
-                  <div className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1">
+                  <div ref={fadeRef} className="flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap pl-1 pr-6 py-1" style={fadeStyle}>
                     {CONTENT_TYPE_FILTERS.map((filter) => (
                       <button
                         key={filter.value}
@@ -656,13 +656,12 @@ export function ImagesFeed({
                       </button>
                     ))}
                   </div>
-                  <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-black to-transparent pointer-events-none" />
                 </div>
               </div>
               {/* Reset filters - bottom right */}
               <button
                 onClick={resetAllFilters}
-                className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
+                className="absolute z-50 bottom-3 right-3 sm:bottom-4 sm:right-4 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
                 aria-label={t('filters.resetFilters')}
               >
                 <RefreshCw className="w-3.5 h-3.5" />

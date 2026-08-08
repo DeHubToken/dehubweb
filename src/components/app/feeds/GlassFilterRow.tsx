@@ -8,6 +8,7 @@
 import { useRef, useState, useCallback, useLayoutEffect, useEffect, useMemo } from 'react';
 import { cn } from '@/lib/utils';
 import { GlassIndicator } from './GlassIndicator';
+import { useScrollFadeMask } from './useScrollFadeMask';
 
 interface GlassFilterRowProps<T extends string> {
   items: { key: T; label: React.ReactNode }[];
@@ -32,6 +33,9 @@ export function GlassFilterRow<T extends string>({
   const btnRefs = useRef<Partial<Record<T, HTMLElement | null>>>({});
   const scrollRef = useRef<HTMLDivElement>(null);
   const [rect, setRect] = useState({ x: 0, y: 0, width: 0, height: 0, ready: false });
+  // Overflowing edges dissolve the row instead of being covered by a painted
+  // gradient — see useScrollFadeMask.
+  const { style: fadeStyle } = useScrollFadeMask(scrollRef);
 
   const activeSet = useMemo(() => new Set(activeKeys ?? (activeKey != null ? [activeKey] : [])), [activeKey, activeKeys]);
   const indicatorKey = activeKeys?.[0] ?? activeKey;
@@ -69,8 +73,10 @@ export function GlassFilterRow<T extends string>({
 
   return (
     <div className={cn('relative overflow-visible', className)}>
-      {/* Overlay layer for indicator - sits above scroll row so shadow is never clipped */}
-      <div ref={layerRef} className="absolute inset-0 overflow-visible pointer-events-none z-30">
+      {/* Overlay layer for indicator - sits above scroll row so shadow is never clipped.
+          Carries the same edge fade as the row so the pill of a half-scrolled
+          chip dissolves with its label instead of spilling out of the panel. */}
+      <div ref={layerRef} className="absolute inset-0 overflow-visible pointer-events-none z-30" style={fadeStyle}>
         <GlassIndicator rect={rect} borderRadius={borderRadius} />
       </div>
       {/* Scrollable button row. data-no-swipe so dragging the chips sideways
@@ -80,7 +86,7 @@ export function GlassFilterRow<T extends string>({
         ref={scrollRef}
         data-no-swipe
         className="relative z-40 flex gap-1.5 overflow-x-auto overflow-y-visible scrollbar-hide whitespace-nowrap px-2 py-1"
-        style={{ touchAction: 'pan-x' }}
+        style={{ touchAction: 'pan-x', ...fadeStyle }}
       >
         {items.map((item) => {
           const isActive = activeSet.has(item.key);
