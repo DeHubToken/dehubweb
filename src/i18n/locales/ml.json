@@ -1375,7 +1375,11 @@
     "unstake_failed": "അൺസ്റ്റേക്ക് പരാജയപ്പെട്ടു",
     "unstake_request_removed": "നിങ്ങളുടെ അൺസ്റ്റേക്ക് അഭ്യർത്ഥന നീക്കം ചെയ്തു.",
     "unstake_request_submitted": "പിൻവലിക്കൽ അഭ്യർത്ഥന സമർപ്പിച്ചു! ✅",
-    "waiting_for_confirmation": "സ്ഥിരീകരണത്തിനായി കാത്തിരിക്കുന്നു..."
+    "waiting_for_confirmation": "സ്ഥിരീകരണത്തിനായി കാത്തിരിക്കുന്നു...",
+    "new_version_available": "പുതിയ പതിപ്പ് ലഭ്യമാണ്",
+    "refresh_to_pick_up_the_latest_changes": "ഏറ്റവും പുതിയ മാറ്റങ്ങൾ എടുക്കാൻ പുതുക്കുക.",
+    "refresh": "പുതുക്കുക",
+    "what_changed": "എന്താണ് മാറിയത്"
   },
   "prompt": {
     "seoTitle": "നിങ്ങളുടെ ഫീഡ് പ്രോംപ്റ്റ് ചെയ്യുക — DeHub",

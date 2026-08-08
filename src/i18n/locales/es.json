@@ -1367,7 +1367,11 @@
     "notification_settings_updated": "Ajustes de notificaciones actualizados",
     "password_updated": "¡Contraseña actualizada!",
     "quote_for_shorts_coming_soon": "¡Citar cortos llegará pronto!",
-    "repost_from_comments_coming_soon": "¡Repostear desde los comentarios llegará pronto!"
+    "repost_from_comments_coming_soon": "¡Repostear desde los comentarios llegará pronto!",
+    "new_version_available": "Nueva versión disponible",
+    "refresh_to_pick_up_the_latest_changes": "Actualiza para ver los últimos cambios.",
+    "refresh": "Actualizar",
+    "what_changed": "Qué ha cambiado"
   },
   "staking": {
     "title": "Staking",

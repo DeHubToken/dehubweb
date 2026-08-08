@@ -1375,7 +1375,11 @@
     "unstake_failed": "La retirada ha fallat",
     "unstake_request_removed": "La teva sol·licitud de retirada s'ha eliminat.",
     "unstake_request_submitted": "Sol·licitud de retirada enviada! ✅",
-    "waiting_for_confirmation": "Esperant la confirmació..."
+    "waiting_for_confirmation": "Esperant la confirmació...",
+    "new_version_available": "Nova versió disponible",
+    "refresh_to_pick_up_the_latest_changes": "Actualitza per rebre els canvis més recents.",
+    "refresh": "Actualitza",
+    "what_changed": "Què ha canviat?"
   },
   "prompt": {
     "seoTitle": "Demana al teu feed — DeHub",

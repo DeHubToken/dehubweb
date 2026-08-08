@@ -1379,7 +1379,11 @@
     "unstake_failed": "Uttaget misslyckades",
     "unstake_request_removed": "Din uttagsbegäran har tagits bort.",
     "unstake_request_submitted": "Uttagsbegäran skickad! ✅",
-    "waiting_for_confirmation": "Väntar på bekräftelse..."
+    "waiting_for_confirmation": "Väntar på bekräftelse...",
+    "new_version_available": "Ny version tillgänglig",
+    "refresh_to_pick_up_the_latest_changes": "Uppdatera för att hämta de senaste ändringarna.",
+    "refresh": "Uppdatera",
+    "what_changed": "Vad har ändrats"
   },
   "prompt": {
     "seoTitle": "Styr ditt flöde — DeHub",

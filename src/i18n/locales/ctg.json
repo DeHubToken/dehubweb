@@ -1443,7 +1443,11 @@
     "please_connect_your_wallet": "Please connect your wallet",
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
-    "transaction_failed": "Transaction failed"
+    "transaction_failed": "Transaction failed",
+    "new_version_available": "নতুন সংস্করণ উপলব্ধ",
+    "refresh_to_pick_up_the_latest_changes": "সর্বশেষ পরিবর্তনগুলি নিতে রিফ্রেশ করুন।",
+    "refresh": "রিফ্রেশ",
+    "what_changed": "কি পরিবর্তন হইছে"
   },
   "prompt": {
     "seoTitle": "তুমার ফিডরে সাজাও — DeHub",

@@ -1379,7 +1379,11 @@
     "unstake_failed": "अनस्टेक अयशस्वी",
     "unstake_request_removed": "तुमची अनस्टेक विनंती काढून टाकली आहे.",
     "unstake_request_submitted": "पैसे काढण्याची विनंती सबमिट झाली! ✅",
-    "waiting_for_confirmation": "पुष्टीची प्रतीक्षा आहे..."
+    "waiting_for_confirmation": "पुष्टीची प्रतीक्षा आहे...",
+    "new_version_available": "नवीन आवृत्ती उपलब्ध",
+    "refresh_to_pick_up_the_latest_changes": "नवीनतम बदल पिकअप करण्यासाठी रीफ्रेश करा.",
+    "refresh": "रीफ्रेश करा",
+    "what_changed": "काय बदल झाला?"
   },
   "prompt": {
     "seoTitle": "तुमचे फीड प्रॉम्प्ट करा — DeHub",

@@ -1367,7 +1367,11 @@
     "unstake_failed": "Դուրսբերումը ձախողվեց",
     "unstake_request_removed": "Ձեր դուրսբերման հայտը հեռացվել է։",
     "unstake_request_submitted": "Դուրսբերման հայտն ուղարկված է! ✅",
-    "waiting_for_confirmation": "Սպասում ենք հաստատմանը..."
+    "waiting_for_confirmation": "Սպասում ենք հաստատմանը...",
+    "new_version_available": "Հասանելի է նոր տարբերակը",
+    "refresh_to_pick_up_the_latest_changes": "Թարմացրեք ՝ վերջին փոփոխությունները վերցնելու համար ։",
+    "refresh": "Թարմացնել",
+    "what_changed": "Ինչ է փոխվել"
   },
   "prompt": {
     "seoTitle": "Ստեղծեք Ձեր լրահոսը — DeHub",

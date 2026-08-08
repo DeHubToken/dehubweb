@@ -1379,7 +1379,11 @@
     "unstake_failed": "Повлачење није успело",
     "unstake_request_removed": "Ваш захтев за повлачење је уклоњен.",
     "unstake_request_submitted": "Захтев за повлачење послат! ✅",
-    "waiting_for_confirmation": "Чекање потврде..."
+    "waiting_for_confirmation": "Чекање потврде...",
+    "new_version_available": "Доступна је нова верзија",
+    "refresh_to_pick_up_the_latest_changes": "Освежите страницу да бисте преузели најновије промене.",
+    "refresh": "Освежи",
+    "what_changed": "Шта се променило"
   },
   "prompt": {
     "seoTitle": "Prilagodite svoj feed — DeHub",

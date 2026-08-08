@@ -1269,7 +1269,11 @@
     "please_connect_your_wallet": "Please connect your wallet",
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
-    "transaction_failed": "Transaction failed"
+    "transaction_failed": "Transaction failed",
+    "new_version_available": "Versi anyar tersedia",
+    "refresh_to_pick_up_the_latest_changes": "Refresh para makuha ang pinakabagong pagbabago.",
+    "refresh": "Refresh",
+    "what_changed": "Apa sing owah"
   },
   "prompt": {
     "seoTitle": "Tell your feed — DeHub",

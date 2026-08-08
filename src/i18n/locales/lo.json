@@ -1375,7 +1375,11 @@
     "unstake_failed": "ຖອນສະເຕກລົ້ມເຫຼວ",
     "unstake_request_removed": "ຄຳຮ້ອງຂໍຖອນສະເຕກຂອງທ່ານຖືກລຶບອອກແລ້ວ.",
     "unstake_request_submitted": "ສົ່ງຄຳຮ້ອງຂໍຖອນແລ້ວ! ✅",
-    "waiting_for_confirmation": "ກຳລັງລໍຖ້າການຢືນຢັນ..."
+    "waiting_for_confirmation": "ກຳລັງລໍຖ້າການຢືນຢັນ...",
+    "new_version_available": "ຮຸ່ນໃໝ່ທີ່ມີຢູ່",
+    "refresh_to_pick_up_the_latest_changes": "Refresh ເພື່ອຮັບເອົາການປ່ຽນແປງຫຼ້າສຸດ.",
+    "refresh": "ໂຫຼດໃໝ່",
+    "what_changed": "ສິ່ງທີ່ໄດ້ປ່ຽນແປງ"
   },
   "prompt": {
     "seoTitle": "ປ້ອນຂໍ້ມູນໃສ່ຟີດຂອງທ່ານ — DeHub",

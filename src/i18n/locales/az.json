@@ -1375,7 +1375,11 @@
     "unstake_failed": "Çıxarış alınmadı",
     "unstake_request_removed": "Çıxarış sorğunuz silindi.",
     "unstake_request_submitted": "Çıxarış sorğusu göndərildi! ✅",
-    "waiting_for_confirmation": "Təsdiq gözlənilir..."
+    "waiting_for_confirmation": "Təsdiq gözlənilir...",
+    "new_version_available": "Yeni versiya mövcuddur",
+    "refresh_to_pick_up_the_latest_changes": "Ən son dəyişiklikləri almaq üçün yeniləyin.",
+    "refresh": "Yenilə",
+    "what_changed": "Nə dəyişdi?"
   },
   "prompt": {
     "seoTitle": "DeHub-da lentinizi tənzimləyin — DeHub",

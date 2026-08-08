@@ -1415,7 +1415,11 @@
     "unstake_failed": "Вывад не выкананы",
     "unstake_request_removed": "Ваш запыт на вывад выдалены.",
     "unstake_request_submitted": "Запыт на вывад адпраўлены! ✅",
-    "waiting_for_confirmation": "Чаканне пацверджання..."
+    "waiting_for_confirmation": "Чаканне пацверджання...",
+    "new_version_available": "Даступная новая версія",
+    "refresh_to_pick_up_the_latest_changes": "Абнавіць, каб падбіраць апошнія змены.",
+    "refresh": "Абнавіць",
+    "what_changed": "Што змянілася"
   },
   "prompt": {
     "seoTitle": "Сфармуйце сваю стужку — DeHub",

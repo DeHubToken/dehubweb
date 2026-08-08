@@ -925,7 +925,11 @@
     "unstake_failed": "Onttrekking misluk",
     "unstake_request_removed": "Jou onttrekkingsversoek is verwyder.",
     "unstake_request_submitted": "Onttrekkingsversoek ingedien! ✅",
-    "waiting_for_confirmation": "Wag vir bevestiging..."
+    "waiting_for_confirmation": "Wag vir bevestiging...",
+    "new_version_available": "Nuwe weergawe beskikbaar",
+    "refresh_to_pick_up_the_latest_changes": "Verfris om die nuutste veranderinge op te tel.",
+    "refresh": "Verfris",
+    "what_changed": "Wat het verander"
   },
   "feed": {
     "home": "Tuis",

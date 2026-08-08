@@ -1405,7 +1405,11 @@
     "unstake_failed": "لغو استیک ناموفق بود",
     "unstake_request_removed": "درخواست لغو استیک شما حذف شد.",
     "unstake_request_submitted": "درخواست برداشت ثبت شد! ✅",
-    "waiting_for_confirmation": "در انتظار تأیید..."
+    "waiting_for_confirmation": "در انتظار تأیید...",
+    "new_version_available": "نسخه جدید موجود است",
+    "refresh_to_pick_up_the_latest_changes": "برای دریافت آخرین تغییرات، صفحه را رفرش کنید.",
+    "refresh": "تازه کردن",
+    "what_changed": "چه چیزی تغییر کرد"
   },
   "prompt": {
     "seoTitle": "فید خود را درخواست کنید — DeHub",
