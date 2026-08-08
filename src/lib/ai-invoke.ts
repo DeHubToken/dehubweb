@@ -33,7 +33,11 @@ export function dehubAuthHeaders(): Record<string, string> {
  * return before the debit when a predictionId is present — but they still have
  * to authenticate.
  */
-export function invokeAi<T = unknown>(
+// `T` defaults to `any` to match supabase.functions.invoke exactly. This is a
+// drop-in for it at 11 existing call sites, and defaulting to `unknown` would
+// make every one of them a type error over data they already destructure.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function invokeAi<T = any>(
   name: string,
   options: { body?: unknown; headers?: Record<string, string> } = {},
 ) {
