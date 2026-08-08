@@ -11,6 +11,7 @@
  * each one gets an explicit builder rather than a shared spread.
  */
 import { rateLimitByIp } from '../_shared/auth.ts';
+import { chargeForJob } from '../_shared/ai-credit-guard.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -290,11 +291,6 @@ Deno.serve(async (req) => {
       return await handleStatusCheck(body.predictionId, body.falAppId);
     }
 
-    // Meshes are slower and dearer than an image, so the hourly submission
-    // budget sits nearer the video allowance than the image one.
-    const limited = await rateLimitByIp(req, 'generate-3d', { limit: 10, windowMs: 60 * 60 * 1000 });
-    if (limited) return limited;
-
     // ─── New generation ───
     const request = body as Generate3dRequest;
     const { prompt, model, sourceImage } = request;
@@ -324,10 +320,27 @@ Deno.serve(async (req) => {
     const appId = mode === 'image-to-3d' ? config.falImageModel : config.falTextModel;
     if (!appId) throw new Error(`${config.name} has no endpoint for ${mode}`);
 
+    // Texturing is billed by the provider as a multiplier, so the quote has to
+    // see the quality the caller actually asked for.
+    const charged = await chargeForJob(req, {
+      kind: 'model3d',
+      modelId: model,
+      actionType: 'generate-3d',
+      rateLimit: { limit: 20, windowMs: 60 * 60 * 1000 },
+      quality: request.textureQuality ?? 'standard',
+    });
+    if (!charged.ok) return charged.response;
+
     const input = buildFalInput(model, appId, request, sourceImage);
     console.log(`[3d] Submitting to ${appId}`, JSON.stringify(input).substring(0, 400));
 
-    const submitted = await falSubmit(FAL_KEY, appId, input);
+    let submitted;
+    try {
+      submitted = await falSubmit(FAL_KEY, appId, input);
+    } catch (providerError) {
+      await charged.refund();
+      throw providerError;
+    }
     console.log(`[3d] Queued: ${submitted.request_id}`);
 
     const response: Generate3dResponse = {

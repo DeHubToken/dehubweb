@@ -7,6 +7,7 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { invokeAi } from '@/lib/ai-invoke';
 import { toast } from 'sonner';
 
 interface UseVoiceAssistantOptions {
@@ -110,7 +111,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
 
   // Transcribe audio via Whisper (fal-ai-tools)
   const transcribeAudio = useCallback(async (audioUrl: string): Promise<string> => {
-    const { data, error } = await supabase.functions.invoke('fal-ai-tools', {
+    const { data, error } = await invokeAi('fal-ai-tools', {
       body: { tool: 'whisper', audio_url: audioUrl },
     });
 
@@ -137,7 +138,7 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
     // Truncate for TTS (Dia has limits)
     const truncated = cleanText.substring(0, 1500);
 
-    const { data, error } = await supabase.functions.invoke('fal-ai-tools', {
+    const { data, error } = await invokeAi('fal-ai-tools', {
       body: { tool: 'dia-tts', text: truncated },
     });
 

@@ -34,6 +34,7 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { supabase } from '@/integrations/supabase/client';
+import { invokeAi } from '@/lib/ai-invoke';
 import { SEOHead } from '@/components/SEOHead';
 import { MarkdownText } from '@/lib/markdown';
 
@@ -1154,7 +1155,7 @@ export default function AssistantPage() {
   // Poll for video generation status
   const pollVideoStatus = useCallback(async (predictionId: string, messageId: string, provider?: string, falAppId?: string) => {
     try {
-      const { data, error } = await supabase.functions.invoke('generate-video', {
+      const { data, error } = await invokeAi('generate-video', {
         body: { predictionId, provider, falAppId }
       });
 
@@ -1213,7 +1214,7 @@ export default function AssistantPage() {
     setIsVideoLoading(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke('generate-video', {
+      const { data, error } = await invokeAi('generate-video', {
         body: {
           prompt,
           model,
@@ -1303,7 +1304,7 @@ export default function AssistantPage() {
         .filter(m => m.id !== 'initial')
         .map(m => ({ role: m.role, content: m.content }));
 
-      const { data, error } = await supabase.functions.invoke('generate-image', {
+      const { data, error } = await invokeAi('generate-image', {
         body: {
           prompt,
           sourceImage: sourceImage || undefined,
@@ -1366,7 +1367,7 @@ export default function AssistantPage() {
 
   const pollAiToolStatus = useCallback(async (requestId: string, appId: string, messageId: string, toolKey: string, statusUrl?: string, responseUrl?: string) => {
     try {
-      const { data, error } = await supabase.functions.invoke('fal-ai-tools', {
+      const { data, error } = await invokeAi('fal-ai-tools', {
         body: { requestId, appId, statusUrl, responseUrl }
       });
 
@@ -1437,7 +1438,7 @@ export default function AssistantPage() {
         body.lyrics = (pendingAiToolRequest as any).lyrics;
       }
 
-      const { data, error } = await supabase.functions.invoke('fal-ai-tools', { body });
+      const { data, error } = await invokeAi('fal-ai-tools', { body });
 
       if (error) throw error;
 
