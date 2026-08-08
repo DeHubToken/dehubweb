@@ -9,44 +9,60 @@ import { useState, useEffect, useCallback } from 'react';
 import { toast } from 'sonner';
 import i18n, { loadLanguage } from '@/i18n';
 import { useUserPreferences } from '@/contexts/UserPreferencesContext';
+import {
+  LANGUAGE_STORAGE_KEY,
+  applyResolvedLanguage,
+  resolveLanguage,
+  subscribeToLanguage,
+} from '@/lib/user-language-store';
 
-const STORAGE_KEY = 'user-preferred-language';
+const STORAGE_KEY = LANGUAGE_STORAGE_KEY;
+
+/**
+ * The side effects that go with that language — <html lang> and the i18n
+ * bundle. Same reasoning: one app, one run, however many components ask.
+ */
+let bootstrap: Promise<void> | null = null;
+
+function bootstrapLanguage(): Promise<void> {
+  if (bootstrap) return bootstrap;
+  bootstrap = (async () => {
+    const lang = resolveLanguage();
+
+    // Keep <html lang="..."> in sync for SEO/accessibility audits
+    document.documentElement.lang = lang;
+
+    // Always ensure i18n is synced to the correct language.
+    // Re-check i18n.language AFTER the async load in case the module-level
+    // initializer in i18n/index.ts already called changeLanguage while we awaited.
+    if (lang !== 'en' && i18n.language !== lang) {
+      const ok = await loadLanguage(lang);
+      if (ok && i18n.language !== lang) {
+        await i18n.changeLanguage(lang);
+      }
+    }
+  })();
+  return bootstrap;
+}
 
 export function useUserLanguage() {
-  const [language, setLanguage] = useState<string>('en');
+  // Correct on the very first render — see the store's resolveLanguage.
+  const [language, setLanguage] = useState(resolveLanguage);
   const [isLoading, setIsLoading] = useState(true);
   // Persist the language choice to the signed-in account (per-user sync).
   const prefs = useUserPreferences();
 
   useEffect(() => {
-    const initLanguage = async () => {
-      // Check localStorage first
-      const cached = localStorage.getItem(STORAGE_KEY);
-      const lang = cached || navigator.language?.split('-')[0] || 'en';
-      
-      if (!cached) {
-        localStorage.setItem(STORAGE_KEY, lang);
-      }
-      
-      setLanguage(lang);
-      
-      // Keep <html lang="..."> in sync for SEO/accessibility audits
-      document.documentElement.lang = lang;
-      
-      // Always ensure i18n is synced to the correct language.
-      // Re-check i18n.language AFTER the async load in case the module-level
-      // initializer in i18n/index.ts already called changeLanguage while we awaited.
-      if (lang !== 'en' && i18n.language !== lang) {
-        const ok = await loadLanguage(lang);
-        if (ok && i18n.language !== lang) {
-          await i18n.changeLanguage(lang);
-        }
-      }
-      
-      setIsLoading(false);
-    };
-    
-    initLanguage();
+    // Follow a language the preferences bridge adopts after hydration, and pick
+    // up one that landed between this render and this subscribe.
+    const unsubscribe = subscribeToLanguage(setLanguage);
+    setLanguage(resolveLanguage());
+
+    let cancelled = false;
+    bootstrapLanguage().finally(() => {
+      if (!cancelled) setIsLoading(false);
+    });
+    return () => { cancelled = true; unsubscribe(); };
   }, []);
 
   const setPreferredLanguage = useCallback(async (lang: string) => {
@@ -56,6 +72,7 @@ export function useUserLanguage() {
       return;
     }
     localStorage.setItem(STORAGE_KEY, lang);
+    applyResolvedLanguage(lang);
     // Persist to the account and await it BEFORE the reload, or the write would
     // be lost when the page tears down.
     if (prefs) {
