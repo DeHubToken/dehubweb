@@ -237,6 +237,9 @@ export function EditPostModal({
                 )}
               >
                 <span
+                  /* A knob, not a white badge — War's plain-white-surface net
+                     dimmed it to 16% HUD cyan and it vanished into the track. */
+                  data-keep-white
                   className={cn(
                     'absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform',
                     commentsDisabled ? 'translate-x-0.5' : 'translate-x-[22px]'

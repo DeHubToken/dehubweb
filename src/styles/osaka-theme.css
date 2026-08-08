@@ -1053,7 +1053,10 @@ html[data-theme='osaka'] [data-switch-track] {
   background-color: rgb(var(--osaka-mist) / 0.14) !important;
 }
 html[data-theme='osaka'] [data-switch-track][data-state='checked'] {
-  background-color: rgb(var(--osaka-neon) / 0.6) !important;
+  /* 0.6 neon over the panel left the void thumb at 3.46:1 — legible, but the
+     weakest "on" state of any theme. At 0.9 the lit track carries the state
+     from across the page and the knob reads at 6.45:1. */
+  background-color: rgb(var(--osaka-neon) / 0.9) !important;
 }
 html[data-theme='osaka'] [data-switch-thumb] {
   border-radius: var(--osaka-r-chip) !important;
@@ -1530,7 +1533,17 @@ html[data-theme='osaka'] #app-root
       [data-inline-popover], [data-notification-row],
       [data-comments-wrapper], [data-comments-wrapper] *,
       [data-reaction-tray], [data-reaction-tray] *,
-      [data-avatar-fallback]
+      [data-avatar-fallback],
+      /* Controls, not chips. This net carries `#app-root`, so it outranks
+         `html[data-theme='osaka'] [data-switch-thumb]` above on specificity
+         even though both are `!important` — it repainted every switch knob
+         inside a bento to the same 6% wash as its own track and the toggles
+         stopped reading as toggles. The other two nets in this file already
+         exclude these hooks; this one was missed. */
+      [data-switch-track], [data-switch-thumb],
+      [data-select-trigger],
+      [data-slider-track], [data-slider-range], [data-slider-thumb],
+      [role='checkbox'], [role='radio']
     )
   ) {
   background-color: rgb(var(--osaka-mist) / 0.06) !important;

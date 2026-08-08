@@ -975,16 +975,24 @@ html[data-theme='war'] [data-assistant-input] textarea::placeholder {
   color: rgb(var(--war-sand) / 0.72) !important;
 }
 
-/* Switch: a hard two-state toggle. Both track and thumb square (the thumb is a
-   non-button <span>, which a `button` rule can never reach). */
-html[data-theme='war'] [role='switch'] {
+/* Switch: a hard two-state toggle. Both track and thumb square.
+   Keyed to the switch's own hooks, not `[role='switch']`: EditPostModal's
+   comments toggle puts that role on the whole full-width ROW and nests its own
+   track and knob inside, so `[role='switch']` filled the row with HUD cyan and
+   `[role='switch'] > span` painted both the label block and the green track
+   void — the control lost its on-state colour entirely. The hooks only ever
+   land on the real Radix parts. */
+html[data-theme='war'] [data-switch-track] {
   border-radius: 0 !important;
-  background-color: rgb(var(--war-hud) / 0.16) !important;
+  /* 0.16 was too dim a channel for a void thumb to show against — 1.49:1, so
+     the off state read as an empty rectangle. 0.34 lights the channel enough
+     to silhouette the marker without competing with the checked state. */
+  background-color: rgb(var(--war-hud) / 0.34) !important;
 }
-html[data-theme='war'] [role='switch'][data-state='checked'] {
+html[data-theme='war'] [data-switch-track][data-state='checked'] {
   background-color: rgb(var(--war-hud) / 0.85) !important;
 }
-html[data-theme='war'] [role='switch'] > span {
+html[data-theme='war'] [data-switch-thumb] {
   border-radius: 0 !important;
   background-color: rgb(var(--war-void)) !important;
 }
