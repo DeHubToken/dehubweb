@@ -29,6 +29,7 @@ import { searchNFTs, getNFTInfo, getBlockList, type DeHubNFT } from '@/lib/api/d
 import { MANUAL_MUSIC_TOKEN_IDS } from '@/constants/music.constants';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
+import { resolveViewCount } from '@/lib/engagement';
 import { getCuratedCarouselStations, type RadioStation } from '@/lib/api/radio-browser';
 import { useAuth } from '@/contexts/AuthContext';
 import { videoPlaybackManager } from '@/lib/video-playback-manager';
@@ -113,7 +114,7 @@ function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
     channel: nft.minterDisplayName || nft.mintername || nft.creator?.username || 'Anonymous',
     verified: nft.creator?.is_verified || false,
     channelAvatar: avatarUrl || undefined,
-    views: formatViews(nft.views || nft.view_count || 0),
+    views: formatViews(resolveViewCount(nft)),
     uploadedAgo: formatTimeAgo(nft.createdAt || nft.created_at),
     duration: formatDuration(duration),
     videoUrl: isAudioPost ? undefined : buildVideoUrl(tokenId),

@@ -1,12 +1,14 @@
 /**
  * Anonymous views API
  * ===================
- * Client for the `anon-views` Supabase edge function — the backend for views
- * from visitors with no DeHub session, since api.dehub.io requires a JWT on its
- * own view endpoints.
+ * Client for the `anon-views` Supabase edge function — where views from
+ * visitors with no DeHub session are recorded, since api.dehub.io requires a
+ * JWT on its own view endpoints.
  *
- * Both the write path (view-tracker) and the read path (anon view counts merged
- * into displayed totals) go through here.
+ * Write path only. Reading these counts separately is what made a post's view
+ * number paint low and then jump: the edge function forwards deduped views to
+ * the DeHub API, so `totalViews` on the post already includes them and there is
+ * nothing left to merge client-side.
  */
 
 import { getAnonViewerId } from '@/lib/anon-view-id';
@@ -78,29 +80,3 @@ export function recordAnonViewsBeacon(tokenIds: string[]): boolean {
   }
 }
 
-/**
- * Fetch anonymous view totals for a set of posts. Returns a map of token id to
- * count; posts with no anonymous views are absent from the map, so callers
- * should treat a missing key as zero. Returns an empty map on failure.
- */
-export async function fetchAnonViewCounts(tokenIds: string[]): Promise<Record<string, number>> {
-  if (tokenIds.length === 0) return {};
-
-  try {
-    const query = new URLSearchParams({ token_ids: tokenIds.join(',') });
-    const response = await fetch(`${ANON_VIEWS_URL}?${query.toString()}`, {
-      headers: { 'Accept': 'application/json' },
-    });
-
-    if (!response.ok) {
-      console.error('[AnonViews] count fetch failed:', response.status);
-      return {};
-    }
-
-    const body = await response.json();
-    return (body?.counts as Record<string, number>) || {};
-  } catch (error) {
-    console.error('[AnonViews] count fetch error:', error);
-    return {};
-  }
-}

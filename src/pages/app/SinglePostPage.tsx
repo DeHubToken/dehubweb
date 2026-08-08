@@ -20,6 +20,7 @@ import {
   resolveDislikeCount,
   resolveMyReaction,
   resolveReactionCounts,
+  resolveViewCount,
   applyVoteStateToNFT,
   mergeViewerState,
 } from '@/lib/engagement';
@@ -86,7 +87,7 @@ function getContentType(post: DeHubNFT): 'video' | 'image' | 'post' | 'live' {
  * Transform API NFT data to VideoItem format
  */
 function toVideoItem(nft: DeHubNFT): VideoItem {
-  const views = formatViews(nft.views || 0).replace(' views', '');
+  const views = formatViews(resolveViewCount(nft)).replace(' views', '');
   const title = nft.title || nft.name || '';
   const description = nft.description && nft.description !== title ? nft.description : undefined;
   const rawTimestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
@@ -171,7 +172,7 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
  * Transform API NFT data to ImagePost format
  */
 function toImagePost(nft: DeHubNFT): ImagePost {
-  const views = formatViews(nft.views || 0).replace(' views', '');
+  const views = formatViews(resolveViewCount(nft)).replace(' views', '');
   
   // Canonical image resolution (matches feed normalization)
   const primaryImage = buildImageUrl(nft.tokenId, nft.imageUrl) || '/placeholder.svg';
@@ -240,7 +241,7 @@ function toImagePost(nft: DeHubNFT): ImagePost {
  * Transform API NFT data to TextPost format
  */
 function toTextPost(nft: DeHubNFT): TextPost {
-  const views = formatViews(nft.views || 0).replace(' views', '');
+  const views = formatViews(resolveViewCount(nft)).replace(' views', '');
   const rawTimestamp = nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at;
   const timestamp = rawTimestamp && !/^(just now|\d+[smhdwy]|\d+mo)$/i.test(String(rawTimestamp).trim()) ? rawTimestamp : undefined;
   
@@ -368,7 +369,7 @@ function toLiveStream(nft: DeHubNFT): LiveStream {
     avatar,
     title: nft.title || nft.name || 'Live Stream',
     game: nft.description || '',
-    viewers: formatViews(nft.views || 0).replace(' views', ''),
+    viewers: formatViews(resolveViewCount(nft)).replace(' views', ''),
     thumbnail: buildImageUrl(nft.tokenId, nft.imageUrl) || '',
     tags: [],
     isLive: deriveIsLive(nft),

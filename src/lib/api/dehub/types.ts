@@ -94,8 +94,16 @@ export interface DeHubNFT {
   minterAvatarUrl?: string;
   creator?: DeHubUser;
   owner?: DeHubUser;
+  /**
+   * Signed-in viewers only. Read `totalViews` instead for anything a viewer
+   * sees — see resolveViewCount in lib/engagement.
+   */
   views?: number;
   view_count?: number;
+  /** Every viewer, signed in or not. The count to display. */
+  totalViews?: number;
+  /** Viewers with no session. Served for completeness; nothing displays it. */
+  anonViews?: number;
   commentCount?: number;
   comment_count?: number;
   totalVotes?: { for?: number; against?: number };

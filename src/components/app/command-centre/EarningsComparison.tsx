@@ -29,6 +29,7 @@ import { Loader2, Info } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { getAccountInfo, getMyPosts, getDHBPrice } from '@/lib/api/dehub';
 import { cn } from '@/lib/utils';
+import { resolveViewCount } from '@/lib/engagement';
 
 /**
  * Per-1000-view creator payout, in USD, before tax.
@@ -129,7 +130,7 @@ export function EarningsComparison() {
 
   const posts = postsData?.result ?? [];
   const totalViews = useMemo(
-    () => posts.reduce((sum, p) => sum + Number(p.views ?? p.view_count ?? 0), 0),
+    () => posts.reduce((sum, p) => sum + resolveViewCount(p), 0),
     [posts]
   );
   const postCount = posts.length;

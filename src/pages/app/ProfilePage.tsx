@@ -36,6 +36,7 @@ import { PostCard } from '@/components/app/cards/PostCard';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { formatTimeAgo, formatViews } from '@/lib/feed-utils';
+import { resolveViewCount } from '@/lib/engagement';
 import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl } from '@/lib/media-url';
 import { ProfileHeader } from '@/components/app/profile/ProfileHeader';
 import { ProfileTabContent } from '@/components/app/profile/ProfileTabContent';
@@ -106,7 +107,7 @@ function PinnedPostItem({ pin }: { pin: any }) {
           title: post.title || post.name || '',
           channel: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',
           channelAvatar: avatar, verified: false,
-          views: formatViews(post.views || 0).replace(' views', ''),
+          views: formatViews(resolveViewCount(post)).replace(' views', ''),
           uploadedAgo: formatTimeAgo(rawTimestamp),
           duration: '', durationSeconds: 0,
           likeCount: post.totalVotes?.for || 0, dislikeCount: post.totalVotes?.against || 0,
@@ -123,7 +124,7 @@ function PinnedPostItem({ pin }: { pin: any }) {
           image: buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg',
           imageUrls: buildFeedImageUrls(post.imageUrls) || [buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg'],
           caption: post.description || '', likes: post.totalVotes?.for || 0,
-          comments: post.commentCount || 0, views: formatViews(post.views || 0).replace(' views', ''),
+          comments: post.commentCount || 0, views: formatViews(resolveViewCount(post)).replace(' views', ''),
           timeAgo: formatTimeAgo(rawTimestamp),
           creatorId: resolvedAddress,
           creatorUsername: post.minterUsername || creatorObj?.username,
@@ -134,7 +135,7 @@ function PinnedPostItem({ pin }: { pin: any }) {
         <PostCard post={{
           id: String(post.tokenId), type: 'post',
           createdAt: rawTimestamp || '',
-          views: formatViews(post.views || 0).replace(' views', ''),
+          views: formatViews(resolveViewCount(post)).replace(' views', ''),
           author: {
             id: resolvedAddress,
             name: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',
