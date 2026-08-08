@@ -2392,6 +2392,30 @@ export type Database = {
         }
         Relationships: []
       }
+      phone_otp_codes: {
+        Row: {
+          attempts: number
+          code_hash: string
+          created_at: string
+          expires_at: string
+          phone: string
+        }
+        Insert: {
+          attempts?: number
+          code_hash: string
+          created_at?: string
+          expires_at: string
+          phone: string
+        }
+        Update: {
+          attempts?: number
+          code_hash?: string
+          created_at?: string
+          expires_at?: string
+          phone?: string
+        }
+        Relationships: []
+      }
       pinned_communities: {
         Row: {
           community_id: string
@@ -4211,6 +4235,13 @@ export type Database = {
           reset_at: string
         }[]
       }
+      consume_phone_otp: {
+        Args: { p_code_hash: string; p_max_attempts: number; p_phone: string }
+        Returns: {
+          reason: string
+          valid: boolean
+        }[]
+      }
       delete_email: {
         Args: { message_id: number; queue_name: string }
         Returns: boolean
@@ -4261,6 +4292,7 @@ export type Database = {
         }[]
       }
       get_request_wallet_address: { Args: never; Returns: string }
+      get_user_id_by_phone: { Args: { p_phone: string }; Returns: string }
       increment_category_count: { Args: { p_name: string }; Returns: undefined }
       increment_stage_listens: {
         Args: { p_space_id: string }
@@ -4339,6 +4371,10 @@ export type Database = {
       record_anonymous_views: {
         Args: { p_token_ids: string[]; p_viewer_hash: string }
         Returns: number
+      }
+      upsert_phone_otp: {
+        Args: { p_code_hash: string; p_phone: string; p_ttl_ms: number }
+        Returns: undefined
       }
     }
     Enums: {
