@@ -5,9 +5,12 @@ import { startVersionWatch } from '@/lib/version-check';
 
 /**
  * Sonner wraps almost all of its own styling in `:where()`, so a utility class
- * overrides it for free. The exception is the close button — its rule carries
- * real specificity and a plain class loses to it, so every property it sets is
- * overridden with `!` below.
+ * overrides it for free. The exception is the close button, and only partly: its
+ * geometry comes from a `:where()` rule like everything else, but its theme rules
+ * re-set `background`, `border-color` and `color` at real specificity — the
+ * widest being `[data-sonner-toaster][data-theme='dark'] [data-sonner-toast]
+ * [data-close-button]`. Only properties from those rules take `!` below. See
+ * CLOSE_CLASSES.
  *
  * The toast's own buttons dodge that fight entirely by living inside the
  * description rather than in sonner's `action`/`cancel` slots; see BUTTON_CLASSES.
@@ -66,13 +69,39 @@ const BUTTON_CLASSES = [
 ].join(' ');
 
 /**
- * Sonner paints the close button `var(--normal-bg)` on `var(--normal-text)`,
- * which against the glass toast is a grey disc with an X the same grey as the
- * disc. Give it the toast's own palette so the icon is actually visible.
+ * Sonner hangs the close button off the toast's top-LEFT corner — `left: 0` plus
+ * `translate(-35%, -35%)`, so most of it sits outside the toast entirely — and
+ * paints it `var(--normal-bg)` on `var(--normal-text)`, a grey disc with an X the
+ * same grey as the disc. Both are undone here: it moves inside, into the
+ * top-right corner, and loses the disc so only the X is left.
+ *
+ * Geometry needs no `!`. Sonner's `left`/`top`/`transform`/`height`/`width`/
+ * `border` all come from a `:where()`-wrapped rule with zero specificity, so
+ * plain utilities beat them: `left-auto` releases the `left: 0` that `right-2`
+ * would otherwise lose to, and `transform-none` drops the translate that pushed
+ * it out past the corner.
+ *
+ * The corner is measured off the content, not the border. The button is 28px
+ * with sonner's 12px X centred in it, so an 8px offset lands the X's own corner
+ * exactly on the toast's 16px padding — flush with the edge the title and
+ * buttons line up against. The box stays 28px rather than sonner's 20px purely
+ * for the tap target; with no disc, nothing about it is visible.
+ *
+ * Only `background` and `color` need `!`: they are the theme-rule properties this
+ * still sets. `border-color` is on that list too but is not fought — `border-0`
+ * takes the width to zero, which leaves nothing for a colour to paint. Checked in
+ * both themes, since the toaster reads `system` and can resolve either way.
+ *
+ * `transition-colors` replaces a transition list covering background and
+ * border-colour, neither of which changes any more, with one for the colour that
+ * does. The focus ring is sonner's own 2px, recoloured — its black-at-20% is
+ * invisible on the glass, and with the disc gone it is the only affordance left.
  */
 const CLOSE_CLASSES = [
-  '!bg-white/10 !border-white/20 !text-white',
-  'hover:!bg-white/20 hover:!border-white/30',
+  'left-auto right-2 top-2 h-7 w-7 transform-none border-0',
+  '!bg-transparent !text-white/60',
+  'transition-colors hover:!bg-transparent hover:!text-white',
+  'focus-visible:shadow-[0_0_0_2px_rgba(255,255,255,0.6)]',
 ].join(' ');
 
 /**
