@@ -373,8 +373,10 @@ export default function CreatorPage() {
           </header>
         </div>
 
-        <CreatorStudio onOpenEditor={() => navigate('/editor')} stickyTop={headerHeight} />
-
+        {/* Both horizontal rails sit above the composer: the composer parks
+            under the header for the rest of the page once it scrolls past, so
+            anything below it is content you browse with the bar in hand, not
+            the shelf you pick a starting point from. */}
         <section className="px-3 py-4 sm:px-4">
           <SwipeableCarousel className="flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory scroll-pl-3 scroll-pr-3">
             {heroCards.map((card) => (
@@ -397,6 +399,8 @@ export default function CreatorPage() {
         <section className="px-3 pb-4 sm:px-4">
           <ModelMarquee />
         </section>
+
+        <CreatorStudio onOpenEditor={() => navigate('/editor')} stickyTop={headerHeight} />
 
         <MountOnVisible minHeight={240} rootMargin="800px">
         <section className="grid gap-3 px-3 pb-4 sm:px-4 md:grid-cols-2">
