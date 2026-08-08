@@ -7,6 +7,8 @@ import { supabase } from '@/integrations/supabase/client';
 import dhbCoinImage from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAiCredits } from '@/hooks/use-ai-credits';
+import { payAsYouGo, useSpendableDhb } from '@/lib/ai-payg';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
 
@@ -38,7 +40,9 @@ export function AiToolPaywallModal({
   const [isPaying, setIsPaying] = useState(false);
 
   const { walletAddress } = useAuth();
-  const { balanceDhb, isLoading: profileLoading } = useAiCredits();
+  const { balanceDhb, isLoading: profileLoading, refresh } = useAiCredits();
+  const { walletDhb, isLoading: isWalletLoading } = useSpendableDhb();
+  const navigate = useNavigate();
   // Credit balance, not the wallet's on-chain holding — the generate function
   // charges credit, and holding DHB is not the same as having topped it up.
   const userBalance = balanceDhb;
@@ -72,6 +76,11 @@ export function AiToolPaywallModal({
   const costDhb = dhbPrice ? getToolCostDhb(model, dhbPrice) : 0;
   const isBalanceLoading = profileLoading;
   const hasEnoughBalance = userBalance >= costDhb;
+  const shortfall = Math.max(0, costDhb - userBalance);
+  // Three states: enough credit, enough DHB to pay for this one job, or
+  // neither — in which case offering a payment would only fail.
+  const canPayAsYouGo = !hasEnoughBalance && walletDhb >= shortfall;
+  const needsTokens = !hasEnoughBalance && !canPayAsYouGo && !isWalletLoading;
 
   const formatDhb = (amount: number) => {
     if (amount >= 1000000) return `${(amount / 1000000).toFixed(2)}M`;
@@ -83,14 +92,20 @@ export function AiToolPaywallModal({
     if (costDhb <= 0) return;
     setIsPaying(true);
     try {
-      // No transfer here any more. fal-ai-tools debits the DHB credit balance
-      // itself, so signing one here as well would charge twice.
-      if (userBalance < costDhb) {
-        toast.error(
-          `Not enough credit. This costs ${formatDhb(costDhb)} DHB and you have ${formatDhb(userBalance)}.`
-        );
-        setIsPaying(false);
-        return;
+      // Credit first; pay-as-you-go for the shortfall when there is not enough.
+      // fal-ai-tools debits the balance itself, so paying here tops up rather
+      // than charging a second time for the same run.
+      if (!hasEnoughBalance) {
+        if (needsTokens) {
+          toast.dismiss('ai-tool-payment');
+          onOpenChange(false);
+          navigate('/app/buy');
+          setIsPaying(false);
+          return;
+        }
+        toast.loading(`Paying ${formatDhb(shortfall)} DHB...`, { id: 'ai-tool-payment' });
+        await payAsYouGo(shortfall);
+        refresh();
       }
 
       toast.dismiss('ai-tool-payment');
@@ -288,7 +303,7 @@ export function AiToolPaywallModal({
             variant="glass"
             className="flex-1 font-medium"
             onClick={handlePayAndExecute}
-            disabled={loading || isBalanceLoading || !hasEnoughBalance || isProcessing || isPaying}
+            disabled={loading || isBalanceLoading || isWalletLoading || isProcessing || isPaying}
           >
             {isPaying ? (
               <>
