@@ -2,12 +2,15 @@
  * Translate Text Edge Function
  * ============================
  * Uses free translation APIs (MyMemory) for translations with AI fallback.
- * Falls back to Gemini when free APIs fail.
  *
- * Three layers sit in front of the providers, cheapest first:
+ * Two caches then four providers, cheapest first. Every provider returns null
+ * rather than throwing, so a dead tier falls through to the next:
  *   L1  in-isolate Map      — free, but dies with the isolate and is not shared
  *   L2  post_translations   — one round trip, shared by every isolate, permanent
- *   ..  provider            — costs money
+ *   P1  MyMemory            — free, capped, skipped above 500 chars
+ *   P2  Gemini direct       — GEMINI_API_KEY
+ *   P3  fal / OpenRouter    — FAL_KEY, routed to a non-Google model on purpose
+ *   P4  Lovable gateway     — legacy route, currently 402 out of credits
  *
  * L2 is what makes translating a whole feed affordable: without it the bill
  * scales with viewers rather than with distinct (text, language) pairs.
@@ -417,6 +420,78 @@ async function translateWithGemini(
 }
 
 /**
+ * fal, via its OpenRouter router endpoint.
+ *
+ * Sits between Gemini and the Lovable gateway because FAL_KEY is already
+ * provisioned for this project (generate-image, generate-video and generate-3d
+ * all use it) and the gateway is currently returning 402.
+ *
+ * Deliberately routed to a non-Google model. This tier only runs when the Gemini
+ * call has already failed, and a fallback that asks a different vendor for the
+ * same family of model shares whatever just broke — a retired id, a bad key, a
+ * Google outage. Claude Haiku is independent of all three and strong on the
+ * long tail of languages this app configures.
+ *
+ * fal-ai/any-llm would be the more obvious endpoint and is documented as
+ * deprecated; openrouter/router is the current one.
+ */
+async function translateWithFal(
+  text: string,
+  targetLang: string
+): Promise<TranslateResponse | null> {
+  const FAL_KEY = Deno.env.get('FAL_KEY');
+  if (!FAL_KEY) return null;
+
+  try {
+    console.log('Attempting translation with fal (openrouter/router)');
+
+    const targetLanguageName = langNameMap[targetLang] || targetLang;
+
+    const response = await fetch('https://fal.run/openrouter/router', {
+      method: 'POST',
+      headers: {
+        Authorization: `Key ${FAL_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'anthropic/claude-haiku-4.5',
+        system_prompt: TRANSLATOR_SYSTEM_PROMPT(targetLanguageName),
+        prompt: text,
+        temperature: 0.1,
+        max_tokens: 2000,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.log(`fal returned status: ${response.status}, error: ${errorText}`);
+      return null;
+    }
+
+    const data = await response.json();
+    const translatedText = typeof data.output === 'string' ? data.output.trim() : '';
+
+    if (!translatedText) {
+      console.log('fal returned empty response');
+      return null;
+    }
+
+    console.log('Translation successful from fal');
+
+    return {
+      translatedText,
+      detectedLanguage: {
+        language: 'auto',
+        confidence: 0.9,
+      },
+    };
+  } catch (error) {
+    console.log('fal failed:', error instanceof Error ? error.message : 'Unknown error');
+    return null;
+  }
+}
+
+/**
  * Lovable AI Translation - gateway fallback for when GEMINI_API_KEY is absent
  */
 async function translateWithAI(
@@ -557,11 +632,23 @@ serve(async (req) => {
       );
     }
 
-    // Paid fallback: Gemini direct, then the Lovable gateway if no key is set
+    // Paid fallbacks, in order of cost: Gemini direct, then fal, then the
+    // Lovable gateway. Each returns null rather than throwing, so a dead tier
+    // falls through to the next instead of failing the request.
     result = await translateWithGemini(text, targetLang);
     if (result) {
       rememberInIsolate(cacheKey, result);
       await writeCachedTranslation(textHash, targetLang, result, 'gemini');
+      return new Response(
+        JSON.stringify(result),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    result = await translateWithFal(text, targetLang);
+    if (result) {
+      rememberInIsolate(cacheKey, result);
+      await writeCachedTranslation(textHash, targetLang, result, 'fal');
       return new Response(
         JSON.stringify(result),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
