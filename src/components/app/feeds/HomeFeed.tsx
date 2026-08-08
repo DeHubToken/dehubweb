@@ -42,6 +42,7 @@ import {
   type ContentTypeFilters, 
   type PostTypeFilterValue 
 } from '@/lib/feed-utils';
+import { resolveViewCount } from '@/lib/engagement';
 
 // Card components
 import {
@@ -712,7 +713,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
         comments: formatCount(item.commentCount || 0),
         shares: '0',
         repostCount: ((item as any).totalReposts || (item as any).reposts || 0) + ((item as any).quotes || 0),
-        views: formatCount(item.views || 0),
+        views: formatCount(resolveViewCount(item)),
         creatorUsername: item.minterUsername || 'user',
         creatorId: minterAddress,
         displayName: item.minterDisplayName || undefined,
@@ -742,7 +743,7 @@ export function HomeFeed({ shuffleKey, isRefreshing, showFilters = false, pinned
     if (!pinnedPost) return null;
     
     const id = String(pinnedPost.tokenId);
-    const views = pinnedPost.views || pinnedPost.view_count || 0;
+    const views = resolveViewCount(pinnedPost);
     const timeAgo = pinnedPost.createdAt ? formatTimeAgo(pinnedPost.createdAt) : 'Just now';
     
     const nftPostType = pinnedPost.postType || 'video';
