@@ -14,7 +14,6 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ChatInput } from './ChatInput';
 import { SharedPostEmbed } from './SharedPostEmbed';
 import { extractPostTokenId, stripPostLinks } from '@/lib/post-link';
-import { TranslatableText } from '../TranslatableText';
 import { useTranslation } from '../TranslatableText';
 import { useMessages, useSendMessage, useDeleteConversation, useCreateAndStart, messagesKeys, registerOpenConversation, createTransientBlobUrl } from '@/hooks/use-messages';
 import { useAuth } from '@/contexts/AuthContext';
@@ -341,8 +340,17 @@ const MessageBubble = memo(function MessageBubble({
                       className="max-w-full max-h-64 rounded-lg object-cover cursor-zoom-in"
                       onClick={() => onOpenImage?.(getMediaUrl(primaryMediaUrl)!)}
                     />
+                    {/* Driven by the same opted-out hook as a text message, not
+                        by <TranslatableText>. That component calls
+                        useTranslation(text) with auto defaulting to true, so
+                        rendering the caption through it sent private DM captions
+                        to the translator on mount — around the deliberate
+                        auto=false above. textContent is message.content here:
+                        isPostShare can only be true for msgType 'msg'. */}
                     {message.content && (
-                      <TranslatableText text={message.content} className="text-sm mt-1" as="p" />
+                      <p dir="auto" className="text-sm mt-1 break-words whitespace-pre-wrap text-left">
+                        {isTranslated ? translatedText : message.content}
+                      </p>
                     )}
                   </>
                 ) : (
@@ -399,7 +407,11 @@ const MessageBubble = memo(function MessageBubble({
 
         <div className={`text-xs text-zinc-500 mt-1 flex items-center gap-1 ${isOwnMessage ? 'justify-end' : ''}`}>
           <span>{formatDistanceToNow(new Date(message.createdAt), { addSuffix: true })}</span>
-          {!isTooShort && message.msgType === 'msg' && !message.isDeleted && (
+          {/* Image captions get the control too. They had none: the gate was
+              msgType === 'msg', so a caption was auto-translated on mount and
+              could not be put back. */}
+          {!isTooShort && !message.isDeleted &&
+            (message.msgType === 'msg' || (message.msgType === 'media' && !!message.content)) && (
             <button
               type="button"
               onClick={isTranslated ? handleShowOriginal : handleTranslate}
