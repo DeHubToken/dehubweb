@@ -3384,6 +3384,21 @@ export type Database = {
         }
         Relationships: []
       }
+      translation_spend_daily: {
+        Row: {
+          day: string
+          paid_calls: number
+        }
+        Insert: {
+          day: string
+          paid_calls?: number
+        }
+        Update: {
+          day?: string
+          paid_calls?: number
+        }
+        Relationships: []
+      }
       trending_categories: {
         Row: {
           id: string
@@ -4247,6 +4262,7 @@ export type Database = {
         Returns: number
       }
       bulk_insert_category_log: { Args: { entries: Json }; Returns: number }
+      claim_paid_translation: { Args: { p_cap: number }; Returns: boolean }
       claim_xl_cashback_slot: {
         Args: { p_subscription_id: string; p_xl_price_id: string }
         Returns: boolean
