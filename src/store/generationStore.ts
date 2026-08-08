@@ -12,13 +12,15 @@
 import { create } from 'zustand';
 import { nanoid } from 'nanoid';
 import {
+  audioTaskOf,
   generate3d,
-  generateAudio,
   generateImage,
   generateVideo,
   isAborted,
   poll3d,
+  pollDub,
   pollVideo,
+  runAudioTask,
   type AudioRequest,
   type ImageRequest,
   type Model3dRequest,
@@ -29,8 +31,15 @@ import {
 export type JobStatus = 'running' | 'done' | 'failed' | 'cancelled';
 export type JobKind = 'image' | 'video' | 'audio' | 'model3d';
 
-/** Kinds that queue upstream and hand back a resumable ticket. */
-const TICKETED_KINDS: readonly JobKind[] = ['video', 'model3d'];
+/**
+ * Kinds that queue upstream and hand back a resumable ticket.
+ *
+ * Audio is in the list for dubbing alone — the only audio task that takes
+ * minutes and is charged for up front. Everything else audio does returns
+ * inline and never sets a ticket, and `isResumable` requires one, so the rest
+ * are unaffected by being listed here.
+ */
+const TICKETED_KINDS: readonly JobKind[] = ['video', 'model3d', 'audio'];
 
 export interface GenerationJob {
   id: string;
@@ -66,9 +75,23 @@ export interface GenerationJob {
    * rejoin a render in progress instead of abandoning one already paid for.
    */
   ticket?: RenderTicket;
+  /**
+   * Transcription result. The only job kind whose output is words rather than
+   * a file, so it has no `url` and the card renders this instead.
+   */
+  transcript?: string;
+  /** Speaker-labelled turns, when diarisation found more than one voice. */
+  segments?: { speaker: string | null; text: string; start: number | null }[];
 }
 
-/** Persisted shape. Object URLs cannot survive a reload, so audio is skipped. */
+/**
+ * Persisted shape.
+ *
+ * Object URLs cannot survive a reload, so audio RESULTS are skipped — with one
+ * exception. A transcript is text: it survives perfectly well, it is the one
+ * audio output somebody comes back for, and losing it on refresh was the whole
+ * reason to carry it separately from `url`.
+ */
 type PersistedJob = Pick<
   GenerationJob,
   | 'id'
@@ -86,6 +109,8 @@ type PersistedJob = Pick<
   | 'finishedAt'
   | 'status'
   | 'ticket'
+  | 'transcript'
+  | 'segments'
 >;
 
 /**
@@ -224,7 +249,9 @@ function loadPersisted(): GenerationJob[] {
     const rows = JSON.parse(raw) as PersistedJob[];
     if (!Array.isArray(rows)) return [];
     return rows
-      .filter((r) => r && (isPersistableUrl(r.url) || (r.ticket && r.status !== 'done')))
+      .filter(
+        (r) => r && (isPersistableUrl(r.url) || !!r.transcript || (r.ticket && r.status !== 'done')),
+      )
       .map((r) => {
         if (!r.ticket || r.status === 'done') return { ...r, status: 'done' as const, stage: '' };
         // Someone who pressed "Stop waiting" asked us to stop, so a cancelled
@@ -241,8 +268,12 @@ function loadPersisted(): GenerationJob[] {
 }
 
 function toPersisted(j: GenerationJob): PersistedJob {
-  const { id, kind, prompt, resolvedPrompt, model, modelName, presetId, aspect, url, posterUrl, exportFormat, createdAt, finishedAt, status, ticket } = j;
-  return { id, kind, prompt, resolvedPrompt, model, modelName, presetId, aspect, url, posterUrl, exportFormat, createdAt, finishedAt, status, ticket };
+  const { id, kind, prompt, resolvedPrompt, model, modelName, presetId, aspect, url, posterUrl, exportFormat, createdAt, finishedAt, status, ticket, transcript, segments } = j;
+  // A blob: URL is dead the moment the tab reloads, and writing one back means
+  // a card that renders a player pointed at nothing. Transcripts have no such
+  // problem, which is why the row is kept and only the URL is dropped.
+  const durableUrl = url?.startsWith('blob:') ? undefined : url;
+  return { id, kind, prompt, resolvedPrompt, model, modelName, presetId, aspect, url: durableUrl, posterUrl, exportFormat, createdAt, finishedAt, status, ticket, transcript, segments };
 }
 
 /**
@@ -264,13 +295,19 @@ function isResumable(j: GenerationJob): boolean {
   );
 }
 
-/** The poller that owns a job's ticket. Meshes and videos queue on different functions. */
+/** The poller that owns a job's ticket. Each kind queues on its own function. */
 function pollerFor(kind: JobKind) {
-  return kind === 'model3d' ? poll3d : pollVideo;
+  if (kind === 'model3d') return poll3d;
+  if (kind === 'audio') return pollDub;
+  return pollVideo;
 }
 
 function isStorableResult(j: GenerationJob): boolean {
-  return j.status === 'done' && j.kind !== 'audio' && isPersistableUrl(j.url);
+  if (j.status !== 'done') return false;
+  // Audio results are object URLs that die with the tab, so only a transcript
+  // is worth keeping from an audio job.
+  if (j.kind === 'audio') return !!j.transcript;
+  return isPersistableUrl(j.url);
 }
 
 function persist(jobs: GenerationJob[]) {
@@ -532,15 +569,33 @@ export const useGenerationStore = create<GenerationState>((set, get) => {
     },
 
     startAudio: (req, meta) => {
-      const id = open('audio', 'elevenlabs', meta);
+      // The task id, not a provider name: the library shows nine different
+      // audio tools and 'elevenlabs' on all of them said nothing about which
+      // one made a given clip.
+      const id = open('audio', audioTaskOf(req), meta);
       const ctrl = new AbortController();
       controllers.set(id, ctrl);
       finish(
         id,
-        generateAudio(req, {
+        runAudioTask(req, {
           signal: ctrl.signal,
           onStage: (stage) => patch(id, { stage }),
-        }).then((r) => URL.createObjectURL(r.blob)),
+          // Only dubbing ever fires this. Same reasoning as video and 3D: the
+          // ticket is written before any polling, so a dub that has been paid
+          // for survives the tab closing.
+          onQueued: (ticket) => {
+            claimRender(ticket.predictionId);
+            patch(id, { ticket });
+            persist(get().jobs);
+          },
+        }).then((result) => {
+          if (result.transcript) {
+            patch(id, { transcript: result.transcript, segments: result.segments });
+          }
+          // Transcription has no file to point at, and the card renders the
+          // text instead. Everything else resolves to an object URL.
+          return result.url ?? '';
+        }),
       );
       return id;
     },
