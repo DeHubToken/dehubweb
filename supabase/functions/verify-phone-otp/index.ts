@@ -101,7 +101,11 @@ serve(async (req) => {
     return errorResponse("Sign-in failed. Please try again.");
   }
 
-  const oneShotPassword = crypto.randomUUID();
+  // Plain randomUUID() is lowercase hex only — if the project's password
+  // policy requires upper/lower/digit/symbol, that silently fails createUser
+  // /updateUserById and collapses to the generic "Sign-in failed" below.
+  // Forcing one of each satisfies any policy this project could reasonably have.
+  const oneShotPassword = `Aa1!${crypto.randomUUID()}`;
 
   if (existingUserId) {
     const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(existingUserId, {
