@@ -88,6 +88,16 @@ serve(async (req) => {
   // reject it as a malformed recipient.
   const recipient = phone.startsWith("+") ? phone : `+${phone}`;
 
+  // Every character below has to exist in the GSM-7 alphabet. One character
+  // outside it (an em dash, a curly quote, an accent) flips the whole message
+  // to UCS-2, where a fragment holds 70 characters instead of 160. This text is
+  // 87 characters with a six-digit code: in GSM-7 that is one fragment, in
+  // UCS-2 it is two. CloudTalk bills per fragment, and several destinations
+  // reject multi-part messages outright, so keep it plain ASCII.
+  const message =
+    `${otp} is your DeHub verification code. It expires shortly. ` +
+    `Don't share it with anyone.`;
+
   let response: Response;
   try {
     response = await fetch(CLOUDTALK_SMS_URL, {
@@ -99,7 +109,7 @@ serve(async (req) => {
       body: JSON.stringify({
         recipient,
         sender,
-        message: `${otp} is your DeHub verification code. It expires shortly — don't share it with anyone.`,
+        message,
       }),
     });
   } catch (error) {
