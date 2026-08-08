@@ -540,6 +540,21 @@ html[data-theme='jungle'] #app-root [role='checkbox'][data-state='unchecked'] {
   border-color: transparent !important;
 }
 
+/* The peg in that recess. The track above was themed but the thumb never was,
+   so it fell through to the untagged-slab net and came out as bark — the exact
+   colour of the plank behind it, 1.09:1 against its own unchecked groove. Sand
+   for the peg in the dark groove, loam for it on the lit leaf-green track, so
+   the knob stays the opposite value to whatever it sits on. */
+html[data-theme='jungle'] #app-root [data-switch-thumb] {
+  background-color: rgb(var(--jungle-sand)) !important;
+}
+html[data-theme='jungle']
+  #app-root
+  [data-switch-track][data-state='checked']
+  [data-switch-thumb] {
+  background-color: rgb(var(--jungle-loam)) !important;
+}
+
 /* Sliders: a routed channel with a wooden peg in it. */
 html[data-theme='jungle'] #app-root [role='slider'] {
   background-color: rgb(var(--jungle-timber)) !important;
