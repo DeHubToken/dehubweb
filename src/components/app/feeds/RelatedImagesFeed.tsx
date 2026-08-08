@@ -15,6 +15,7 @@ import { mapNFTToImagePost } from '@/hooks/use-dehub-feed';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl } from '@/lib/media-url';
 import { formatTimeAgo, formatViews } from '@/lib/feed-utils';
+import { resolveViewCount } from '@/lib/engagement';
 import type { VideoItem } from '@/types/feed.types';
 import { VideoCard } from '@/components/app/cards/VideoCard';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
@@ -52,7 +53,7 @@ function adToVideoItem(nft: any): VideoItem {
     channel: nft.minterDisplayName || nft.mintername || 'Unknown',
     channelAvatar: buildAvatarUrl(nft.minter, extractAvatarPath(nft)) || '/placeholder.svg',
     verified: false,
-    views: formatViews(nft.views || 0),
+    views: formatViews(resolveViewCount(nft)),
     uploadedAgo: formatTimeAgo(timestamp),
     creatorId: nft.minter,
     creatorUsername: nft.mintername,

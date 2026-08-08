@@ -31,6 +31,7 @@ import { SORT_OPTIONS, DATE_FILTER_OPTIONS, applySorting, filterByDate, getApiSo
 import type { ShortVideo } from '@/types/feed.types';
 import { useSidebarCollapse } from '@/contexts/SidebarCollapseContext';
 import { AutoplayVideo } from '@/components/app/AutoplayVideo';
+import { resolveViewCount } from '@/lib/engagement';
 
 // ============================================================================
 // CONSTANTS
@@ -118,7 +119,7 @@ function mapToShortVideo(nft: any, index: number): ShortVideo & { durationSecond
   const durationSeconds = typeof nft.videoDuration === 'number' 
     ? nft.videoDuration 
     : parseDurationToSeconds(nft.duration || '0:00');
-  const viewCount = nft.views || nft.view_count || 0;
+  const viewCount = resolveViewCount(nft);
   const minterAddress = nft.minter || nft.creator?.id || nft.creator?.address || '';
   
   // Try all possible avatar fields - same pattern as leaderboard/profile

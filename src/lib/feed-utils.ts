@@ -8,6 +8,7 @@
 
 import type { DeHubNFT } from '@/lib/api/dehub';
 import type { FeedItem, VideoItem, ImagePost, TextPost } from '@/types/feed.types';
+import { resolveViewCount } from '@/lib/engagement';
 
 // ============================================================================
 // CONTENT ORDERING PATTERN (50-item cycle for Home Feed)
@@ -200,7 +201,7 @@ export type DateFilterValue = DateFilterOption['value'];
  */
 function getNFTSortValues(nft: DeHubNFT) {
   return {
-    views: nft.views || nft.view_count || 0,
+    views: resolveViewCount(nft),
     likes: nft.totalVotes?.for || nft.like_count || 0,
     comments: nft.commentCount || nft.comment_count || 0,
     createdAt: new Date(nft.createdAt || nft.created_at || 0).getTime(),
@@ -248,6 +249,7 @@ interface TrendingScoreFields {
   totalVotes?: { for?: number; against?: number };
   like_count?: number;
   views?: number;
+  totalViews?: number;
   view_count?: number;
   commentCount?: number;
   comment_count?: number;
@@ -267,7 +269,7 @@ interface TrendingScoreFields {
  */
 export function calculateTrendingScore(item: TrendingScoreFields): number {
   const likes = item.totalVotes?.for || item.like_count || 0;
-  const views = item.views || item.view_count || 0;
+  const views = resolveViewCount(item);
   const comments = item.commentCount || item.comment_count || 0;
   
   // Weighted engagement: comments are high signal, views are low signal

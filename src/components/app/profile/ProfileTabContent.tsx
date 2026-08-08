@@ -21,6 +21,7 @@ import type { DeHubNFT } from '@/lib/api/dehub';
 import { useUserPins } from '@/hooks/use-pins';
 import { buildImageUrl, buildFeedImageUrls, buildAvatarUrl, extractAvatarPath, buildVideoUrl } from '@/lib/media-url';
 import { formatTimeAgo, formatViews } from '@/lib/feed-utils';
+import { resolveViewCount } from '@/lib/engagement';
 import type { TextPost, ImagePost, VideoItem } from '@/types/feed.types';
 import type { OptimisticPost } from '@/hooks/use-optimistic-posts';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
@@ -683,7 +684,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
           title: post.title || post.name || '',
           channel: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',
           channelAvatar: avatar, verified: false,
-          views: formatViews(post.views || 0).replace(' views', ''),
+          views: formatViews(resolveViewCount(post)).replace(' views', ''),
           uploadedAgo: formatTimeAgo(rawTimestamp),
           duration: '', durationSeconds: 0,
           likeCount: post.totalVotes?.for || 0, dislikeCount: post.totalVotes?.against || 0,
@@ -700,7 +701,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
           image: buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg',
           imageUrls: buildFeedImageUrls(post.imageUrls) || [buildImageUrl(post.tokenId, post.imageUrl) || '/placeholder.svg'],
           caption: post.description || '', likes: post.totalVotes?.for || 0,
-          comments: post.commentCount || 0, views: formatViews(post.views || 0).replace(' views', ''),
+          comments: post.commentCount || 0, views: formatViews(resolveViewCount(post)).replace(' views', ''),
           timeAgo: formatTimeAgo(rawTimestamp),
           creatorId: resolvedAddress,
           creatorUsername: post.minterUsername || creatorObj?.username,
@@ -711,7 +712,7 @@ function PinnedPostCard({ pin }: { pin: any }) {
         <PostCard post={{
           id: String(post.tokenId), type: 'post',
           createdAt: rawTimestamp || '',
-          views: formatViews(post.views || 0).replace(' views', ''),
+          views: formatViews(resolveViewCount(post)).replace(' views', ''),
           author: {
             id: resolvedAddress,
             name: post.minterDisplayName || post.minterUsername || creatorObj?.display_name || 'Unknown',

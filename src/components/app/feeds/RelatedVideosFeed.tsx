@@ -17,6 +17,7 @@ import { VideoCard } from '@/components/app/cards/VideoCard';
 import { SponsoredAdCard } from '@/components/app/cards/SponsoredAdCard';
 import { useServedAds } from '@/hooks/use-ad-serving';
 import { formatDuration, formatTimeAgo, formatViews } from '@/lib/feed-utils';
+import { resolveViewCount } from '@/lib/engagement';
 import type { VideoItem } from '@/types/feed.types';
 
 const AD_POST_ID = '2008';
@@ -49,7 +50,7 @@ function toVideoItem(nft: any): VideoItem {
     channel: nft.minterDisplayName || nft.mintername || 'Unknown',
     channelAvatar: buildAvatarUrl(nft.minter, extractAvatarPath(nft)) || '/placeholder.svg',
     verified: false,
-    views: formatViews(nft.views || 0),
+    views: formatViews(resolveViewCount(nft)),
     uploadedAgo: formatTimeAgo(timestamp),
     creatorId: nft.minter,
     creatorUsername: nft.mintername,

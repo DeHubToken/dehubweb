@@ -1,34 +1,28 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { parseDisplayViewCount } from '@/hooks/use-anon-view-counts';
-import { recordAnonViews, fetchAnonViewCounts } from '@/lib/anon-views-api';
+import { recordAnonViews } from '@/lib/anon-views-api';
+import { resolveViewCount } from '@/lib/engagement';
 
-describe('parseDisplayViewCount', () => {
-  it('parses plain counts', () => {
-    expect(parseDisplayViewCount('0 views')).toBe(0);
-    expect(parseDisplayViewCount('7')).toBe(7);
-    expect(parseDisplayViewCount('342 views')).toBe(342);
+describe('resolveViewCount', () => {
+  it('prefers totalViews, which counts everyone', () => {
+    expect(resolveViewCount({ totalViews: 1200, views: 900 })).toBe(1200);
   });
 
-  it('expands K/M/B suffixes back to numbers', () => {
-    expect(parseDisplayViewCount('1.2K views')).toBe(1200);
-    expect(parseDisplayViewCount('3.5M views')).toBe(3_500_000);
-    expect(parseDisplayViewCount('2B')).toBe(2_000_000_000);
+  it('falls back to views when a response predates totalViews', () => {
+    // Undercounts by the signed-out half, which is what shipped before —
+    // better than rendering nothing off a cached or older payload.
+    expect(resolveViewCount({ views: 900 })).toBe(900);
+    expect(resolveViewCount({ view_count: 42 })).toBe(42);
   });
 
-  it('handles thousands separators and lowercase suffixes', () => {
-    expect(parseDisplayViewCount('1,234 views')).toBe(1234);
-    expect(parseDisplayViewCount('1.5k views')).toBe(1500);
+  it('treats a zero total as a real answer, not a missing one', () => {
+    expect(resolveViewCount({ totalViews: 0, views: 900 })).toBe(0);
   });
 
-  it('passes numbers straight through', () => {
-    expect(parseDisplayViewCount(4096)).toBe(4096);
-  });
-
-  it('returns null for values it cannot read, so callers keep the original', () => {
-    expect(parseDisplayViewCount(undefined)).toBeNull();
-    expect(parseDisplayViewCount('')).toBeNull();
-    expect(parseDisplayViewCount('no views yet')).toBeNull();
-    expect(parseDisplayViewCount(NaN)).toBeNull();
+  it('returns 0 for anything unusable', () => {
+    expect(resolveViewCount(null)).toBe(0);
+    expect(resolveViewCount(undefined)).toBe(0);
+    expect(resolveViewCount({})).toBe(0);
+    expect(resolveViewCount({ totalViews: NaN })).toBe(0);
   });
 });
 
@@ -73,7 +67,6 @@ describe('anon views API', () => {
 
   it('makes no request for an empty batch', async () => {
     expect(await recordAnonViews([])).toBeNull();
-    expect(await fetchAnonViewCounts([])).toEqual({});
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -83,16 +76,5 @@ describe('anon views API', () => {
 
     fetchMock.mockRejectedValue(new Error('offline'));
     expect(await recordAnonViews(['1'])).toBeNull();
-  });
-
-  it('returns the counts map, and an empty map on failure', async () => {
-    fetchMock.mockResolvedValue({
-      ok: true,
-      json: async () => ({ success: true, counts: { '12': 5 } }),
-    });
-    expect(await fetchAnonViewCounts(['12', '34'])).toEqual({ '12': 5 });
-
-    fetchMock.mockRejectedValue(new Error('offline'));
-    expect(await fetchAnonViewCounts(['12'])).toEqual({});
   });
 });
