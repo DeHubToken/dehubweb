@@ -17,6 +17,8 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+import { checkRateLimit, requireDeHubAuth, serviceClient } from '../_shared/auth.ts';
+
 /**
  * Kept in step with MAX_SPEECH_CHARS in audio-models.constants.ts.
  *
@@ -46,6 +48,30 @@ function num(value: unknown, min: number, max: number, fallback: number): number
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
+  }
+
+  // Authenticate before spending an ElevenLabs character budget. This endpoint
+  // was open to anyone with the URL: no auth, no rate limit, no payment check,
+  // while AudioPaywallModal collected DHB on the client and was simply
+  // trusted. Calling this directly skipped the modal entirely.
+  //
+  // It deliberately does NOT debit AI credit. Audio still settles through that
+  // modal's own on-chain transfer, so charging here as well would bill twice.
+  // Moving audio onto the credit ledger needs the billable `units` derived
+  // server-side first — today the client supplies them, so a caller could
+  // claim one unit for a ten-minute track.
+  const auth = await requireDeHubAuth(req);
+  if (!auth.ok) return auth.response;
+
+  const limited = await checkRateLimit(serviceClient(), auth.wallet, 'elevenlabs-tts', {
+    limit: 120,
+    windowMs: 60 * 60 * 1000,
+  });
+  if (!limited.allowed) {
+    return new Response(
+      JSON.stringify({ error: 'Rate limit exceeded. Try again shortly.' }),
+      { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+    );
   }
 
   try {

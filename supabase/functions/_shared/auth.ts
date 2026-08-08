@@ -29,18 +29,30 @@ export function jsonResponse(data: unknown, status = 200): Response {
 }
 
 /**
- * Verify a caller's DeHub identity: GET /api/account_info/{address} with the token
- * as a Bearer credential. api.dehub.io returns 2xx only when the token is valid and
- * bound to that wallet. Network failure is treated as invalid (fail-closed).
+ * Resolve the address a token actually belongs to, or null.
+ *
+ * This used to fetch `GET /account_info/{address}` and treat a 200 as proof
+ * the token was good. That route is a public profile endpoint with no guard —
+ * it answers 200 for any token, any address, and for no Authorization header
+ * at all — so the check always passed. Combined with taking the wallet from
+ * the caller's own `x-wallet-address` header, it meant any caller could act as
+ * any address they knew, and addresses are public.
+ *
+ * `/auth/verify` is guarded and returns the address off the verified token, so
+ * callers can stop believing the header.
  */
-export async function validateDeHubToken(token: string, address: string): Promise<boolean> {
+export async function resolveDeHubAddress(token: string): Promise<string | null> {
   try {
-    const res = await fetch(`${DEHUB_API_BASE}/api/account_info/${address}`, {
+    const res = await fetch(`${DEHUB_API_BASE}/api/auth/verify`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    return res.ok;
+    if (!res.ok) return null;
+    const data = await res.json();
+    const address = typeof data?.address === "string" ? data.address.toLowerCase() : "";
+    return /^0x[a-f0-9]{40}$/.test(address) ? address : null;
   } catch {
-    return false;
+    // Fail closed: an unreachable auth service must not authenticate anyone.
+    return null;
   }
 }
 
@@ -49,24 +61,40 @@ export type AuthResult =
   | { ok: false; response: Response };
 
 /**
- * Require a valid DeHub token + wallet on the request. On success returns the
- * lowercased wallet address; on failure returns a ready-to-send 401 response.
+ * Require a valid DeHub token. On success returns the wallet the token
+ * actually belongs to; on failure a ready-to-send 401.
+ *
+ * The returned wallet comes from the verified token, NOT from the
+ * x-wallet-address header. That header is still read, but only to detect a
+ * mismatch — anything keyed on identity (spending a balance, reading private
+ * data) must use `wallet` from this result. Trusting the header is what let
+ * one account spend another's credit.
  */
 export async function requireDeHubAuth(req: Request): Promise<AuthResult> {
-  const wallet = req.headers.get("x-wallet-address")?.toLowerCase() || "";
   const token = req.headers.get("x-dehub-token") || "";
-  if (!wallet || !token) {
+  if (!token) {
     return {
       ok: false,
-      response: jsonResponse(
-        { error: "Authentication required: x-wallet-address and x-dehub-token headers." },
-        401,
-      ),
+      response: jsonResponse({ error: "Authentication required: x-dehub-token header." }, 401),
     };
   }
-  if (!(await validateDeHubToken(token, wallet))) {
+
+  const wallet = await resolveDeHubAddress(token);
+  if (!wallet) {
     return { ok: false, response: jsonResponse({ error: "Invalid or expired DeHub token." }, 401) };
   }
+
+  // A claimed address that disagrees with the token is either a stale client
+  // or someone probing. Refuse rather than quietly acting as the real owner,
+  // so the caller cannot discover whose token they are holding.
+  const claimed = req.headers.get("x-wallet-address")?.toLowerCase();
+  if (claimed && claimed !== wallet) {
+    return {
+      ok: false,
+      response: jsonResponse({ error: "Token does not belong to the supplied wallet." }, 403),
+    };
+  }
+
   return { ok: true, wallet, token };
 }
 

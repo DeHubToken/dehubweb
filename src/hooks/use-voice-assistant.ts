@@ -7,7 +7,7 @@
 
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { invokeAi } from '@/lib/ai-invoke';
+import { invokeAi, isInsufficientCredit } from '@/lib/ai-invoke';
 import { toast } from 'sonner';
 
 interface UseVoiceAssistantOptions {
@@ -21,6 +21,8 @@ interface UseVoiceAssistantOptions {
   onStatusChange?: (status: VoiceStatus) => void;
   /** Whether the chat is currently processing */
   isChatLoading?: boolean;
+  /** Called when the server refuses the charge, so voice mode can stop. */
+  onPaymentRequired?: () => void;
 }
 
 export type VoiceStatus = 
@@ -51,7 +53,7 @@ interface UseVoiceAssistantReturn {
 }
 
 export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAssistantReturn {
-  const { onTranscript, onSpeakStart, onSpeakEnd, onStatusChange, isChatLoading } = options;
+  const { onTranscript, onSpeakStart, onSpeakEnd, onStatusChange, isChatLoading, onPaymentRequired } = options;
 
   const [isVoiceMode, setIsVoiceMode] = useState(false);
   const [status, setStatus] = useState<VoiceStatus>('idle');
@@ -72,16 +74,18 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
 
   // Keep refs in sync
   const onTranscriptRef = useRef(onTranscript);
+  const onPaymentRequiredRef = useRef(onPaymentRequired);
   const onSpeakStartRef = useRef(onSpeakStart);
   const onSpeakEndRef = useRef(onSpeakEnd);
   const onStatusChangeRef = useRef(onStatusChange);
 
   useEffect(() => {
     onTranscriptRef.current = onTranscript;
+    onPaymentRequiredRef.current = onPaymentRequired;
     onSpeakStartRef.current = onSpeakStart;
     onSpeakEndRef.current = onSpeakEnd;
     onStatusChangeRef.current = onStatusChange;
-  }, [onTranscript, onSpeakStart, onSpeakEnd, onStatusChange]);
+  }, [onTranscript, onPaymentRequired, onSpeakStart, onSpeakEnd, onStatusChange]);
 
   const updateStatus = useCallback((s: VoiceStatus) => {
     setStatus(s);
@@ -321,6 +325,14 @@ export function useVoiceAssistant(options: UseVoiceAssistantOptions): UseVoiceAs
           }
         } catch (err) {
           console.error('[VoiceAssistant] Transcription error:', err);
+          // Running out of credit is not a transcription failure, and
+          // restarting the mic would only burn another round trip into the
+          // same refusal. Hand it up so the caller can stop and say why.
+          if (isInsufficientCredit(err)) {
+            onPaymentRequiredRef.current?.();
+            resolve();
+            return;
+          }
           toast.error('Transcription failed');
           if (voiceModeRef.current) {
             startListening();
