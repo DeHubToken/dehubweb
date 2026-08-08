@@ -304,12 +304,31 @@ Rules:
 - If text contains slang or informal language, translate it naturally
 - Translate ALL of the text, do not skip any part`;
 
+// Ordered newest-first, and tried in order until one answers.
+//
+// A single hardcoded id is what broke this on the first deploy: the function
+// inherited `gemini-2.5-flash-lite` from the gateway config it replaced, and
+// Google had already stopped serving that id to new API consumers — every long
+// translation 404'd with "no longer available to new users". 2.5 shuts down
+// outright in October 2026, and the generation before it was retired the same
+// way in June, so this will happen again.
+//
+// Walking a list costs one wasted 404 on one cold start when the head of the
+// list is retired, instead of failing every request until somebody edits this
+// file. The working index is remembered for the isolate's lifetime.
+const GEMINI_MODELS = [
+  'gemini-3.5-flash-lite',
+  'gemini-3.1-flash-lite',
+  'gemini-2.5-flash-lite',
+];
+let geminiModelIndex = 0;
+
 /**
  * Gemini, called directly.
  *
- * This used to go through ai.gateway.lovable.dev, which resells the same
- * gemini-2.5-flash-lite at a markup. Same model, same prompt, so output is
- * unchanged — only the billing route moves, onto GEMINI_API_KEY.
+ * This used to go through ai.gateway.lovable.dev, which resells the same class
+ * of model at a markup. Same prompt, so output is unchanged — only the billing
+ * route moves, onto GEMINI_API_KEY.
  *
  * The gateway stays wired as a fallback below, so an unset or rejected
  * GEMINI_API_KEY degrades to the old path instead of failing the request.
@@ -321,62 +340,80 @@ async function translateWithGemini(
   const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
   if (!GEMINI_API_KEY) return null;
 
-  try {
-    console.log('Attempting translation with Gemini (direct)');
+  const targetLanguageName = langNameMap[targetLang] || targetLang;
+  const body = JSON.stringify({
+    systemInstruction: {
+      parts: [{ text: TRANSLATOR_SYSTEM_PROMPT(targetLanguageName) }],
+    },
+    contents: [{ role: 'user', parts: [{ text }] }],
+    generationConfig: {
+      temperature: 0.1,
+      maxOutputTokens: 2000,
+    },
+  });
 
-    const targetLanguageName = langNameMap[targetLang] || targetLang;
+  for (let i = geminiModelIndex; i < GEMINI_MODELS.length; i++) {
+    const model = GEMINI_MODELS[i];
 
-    const response = await fetch(
-      'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-goog-api-key': GEMINI_API_KEY,
-        },
-        body: JSON.stringify({
-          systemInstruction: {
-            parts: [{ text: TRANSLATOR_SYSTEM_PROMPT(targetLanguageName) }],
+    try {
+      console.log(`Attempting translation with Gemini (direct), model ${model}`);
+
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-goog-api-key': GEMINI_API_KEY,
           },
-          contents: [{ role: 'user', parts: [{ text }] }],
-          generationConfig: {
-            temperature: 0.1,
-            maxOutputTokens: 2000,
-          },
-        }),
+          body,
+        }
+      );
+
+      // Only a missing model is worth retrying down the list. A 401, 429 or 5xx
+      // says nothing about the model id, and walking the whole list on those
+      // would turn one rejected request into three.
+      if (response.status === 404) {
+        console.log(`Gemini model ${model} unavailable (404), trying next`);
+        continue;
       }
-    );
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.log(`Gemini returned status: ${response.status}, error: ${errorText}`);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.log(`Gemini returned status: ${response.status}, error: ${errorText}`);
+        return null;
+      }
+
+      const data = await response.json();
+      const translatedText = data.candidates?.[0]?.content?.parts
+        ?.map((p: { text?: string }) => p.text ?? '')
+        .join('')
+        .trim();
+
+      if (!translatedText) {
+        console.log(`Gemini returned empty response (model ${model})`);
+        return null;
+      }
+
+      // Skip the dead ids on subsequent calls in this isolate.
+      geminiModelIndex = i;
+      console.log(`Translation successful from Gemini (direct), model ${model}`);
+
+      return {
+        translatedText,
+        detectedLanguage: {
+          language: 'auto',
+          confidence: 0.9,
+        },
+      };
+    } catch (error) {
+      console.log('Gemini failed:', error instanceof Error ? error.message : 'Unknown error');
       return null;
     }
-
-    const data = await response.json();
-    const translatedText = data.candidates?.[0]?.content?.parts
-      ?.map((p: { text?: string }) => p.text ?? '')
-      .join('')
-      .trim();
-
-    if (!translatedText) {
-      console.log('Gemini returned empty response');
-      return null;
-    }
-
-    console.log('Translation successful from Gemini (direct)');
-
-    return {
-      translatedText,
-      detectedLanguage: {
-        language: 'auto',
-        confidence: 0.9,
-      },
-    };
-  } catch (error) {
-    console.log('Gemini failed:', error instanceof Error ? error.message : 'Unknown error');
-    return null;
   }
+
+  console.log('Gemini: every model id in GEMINI_MODELS returned 404');
+  return null;
 }
 
 /**
