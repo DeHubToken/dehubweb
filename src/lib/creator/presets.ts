@@ -8,7 +8,9 @@
  * tile is still one click from a result.
  */
 
-export type PresetKind = 'image' | 'video' | '3d';
+import type { AudioTask } from '@/constants/audio-models.constants';
+
+export type PresetKind = 'image' | 'video' | '3d' | 'audio';
 
 export interface CreatorPreset {
   id: string;
@@ -36,6 +38,14 @@ export interface CreatorPreset {
    * when there is no attachment.
    */
   requiresImage?: boolean;
+  /**
+   * Audio presets only: which task the preset belongs to.
+   *
+   * Audio is nine tools rather than one, and a music brief is useless under the
+   * sound-effect tool. The strip filters on this so each task shows only its
+   * own scaffolds.
+   */
+  audioTask?: AudioTask;
 }
 
 export const IMAGE_PRESETS: CreatorPreset[] = [
@@ -347,15 +357,160 @@ export const MODEL3D_PRESETS: CreatorPreset[] = [
   },
 ];
 
+/**
+ * Audio presets.
+ *
+ * Different again from the other three. A voice model is not steered by
+ * lighting, lens or material language — the speech scaffolds shape *delivery*,
+ * and they do it with the inline performance tags v3 reads, which is the one
+ * thing that reliably changes a read. The sound and music scaffolds name the
+ * source, the space and the recording, because that is what those two models
+ * actually respond to.
+ *
+ * `{subject}` is the creator's own line, exactly as in every other kind — so a
+ * speech preset wraps the words to be spoken rather than replacing them.
+ */
+export const AUDIO_PRESETS: CreatorPreset[] = [
+  {
+    id: 'narrator-warm',
+    name: 'Warm Narrator',
+    kind: 'audio',
+    audioTask: 'speech',
+    group: 'Voiceover',
+    template: '[warm] [measured] {subject}',
+    sample: 'And that is how the whole thing began.',
+    hint: 'Unhurried documentary read',
+  },
+  {
+    id: 'ad-energetic',
+    name: 'Ad Read',
+    kind: 'audio',
+    audioTask: 'speech',
+    group: 'Voiceover',
+    template: '[excited] [upbeat] {subject}',
+    sample: 'Three days only — everything must go!',
+    hint: 'Bright, high-energy commercial',
+  },
+  {
+    id: 'trailer-voice',
+    name: 'Trailer Voice',
+    kind: 'audio',
+    audioTask: 'speech',
+    group: 'Voiceover',
+    template: '[dramatic] [slowly] [deep] {subject}',
+    sample: 'In a world where nothing is quite what it seems.',
+    hint: 'Big, slow, cinematic',
+  },
+  {
+    id: 'asmr-whisper',
+    name: 'Close Whisper',
+    kind: 'audio',
+    audioTask: 'speech',
+    group: 'Voiceover',
+    template: '[whispers] [softly] {subject}',
+    sample: 'Stay very still. Listen.',
+    hint: 'Intimate, quiet, close-mic',
+  },
+  {
+    id: 'explainer-clear',
+    name: 'Explainer',
+    kind: 'audio',
+    audioTask: 'speech',
+    group: 'Voiceover',
+    template: '[clear] [friendly] [natural pace] {subject}',
+    sample: 'There are three things worth knowing here.',
+    hint: 'Neutral, easy to follow',
+  },
+  {
+    id: 'sfx-impact',
+    name: 'Impact',
+    kind: 'audio',
+    audioTask: 'sfx',
+    group: 'Sound',
+    template:
+      '{subject}, single decisive impact, tight transient, short natural tail, close-miked, clean and dry with no music',
+    sample: 'a heavy wooden door slamming shut',
+    hint: 'One sharp hit, no tail',
+  },
+  {
+    id: 'sfx-ambience',
+    name: 'Ambience Bed',
+    kind: 'audio',
+    audioTask: 'sfx',
+    group: 'Sound',
+    template:
+      '{subject}, continuous evenly-textured background ambience, no sudden events or standout details, consistent level throughout, suitable for seamless looping',
+    sample: 'a quiet cafe interior, distant chatter and cups',
+    hint: 'Seamless background loop',
+  },
+  {
+    id: 'sfx-ui',
+    name: 'Interface',
+    kind: 'audio',
+    audioTask: 'sfx',
+    group: 'Sound',
+    template:
+      '{subject}, very short clean synthetic interface sound, crisp and modern, minimal reverb, no background noise',
+    sample: 'a soft confirmation chime',
+    hint: 'Tiny, clean UI blip',
+  },
+  {
+    id: 'music-lofi',
+    name: 'Lo-fi Bed',
+    kind: 'audio',
+    audioTask: 'music',
+    group: 'Music',
+    template:
+      '{subject}, slow lo-fi hip hop, dusty drum loop, warm Rhodes chords, soft vinyl crackle, mellow and unobtrusive, sits under a voiceover without competing',
+    sample: 'a rainy late-night study beat',
+    hint: 'Under-dialogue background',
+  },
+  {
+    id: 'music-cinematic',
+    name: 'Cinematic Build',
+    kind: 'audio',
+    audioTask: 'music',
+    group: 'Music',
+    template:
+      '{subject}, orchestral cinematic build, sparse piano opening, strings entering gradually, low percussion swell into a full resolve, wide and epic',
+    sample: 'a slow reveal turning triumphant',
+    hint: 'Starts small, ends huge',
+  },
+  {
+    id: 'music-upbeat',
+    name: 'Upbeat Promo',
+    kind: 'audio',
+    audioTask: 'music',
+    group: 'Music',
+    template:
+      '{subject}, bright upbeat pop instrumental, driving four-on-the-floor kick, plucked synths, handclaps, confident and commercial, steady energy throughout',
+    sample: 'a product launch montage',
+    hint: 'Bright, driving, commercial',
+  },
+  {
+    id: 'music-tension',
+    name: 'Tension',
+    kind: 'audio',
+    audioTask: 'music',
+    group: 'Music',
+    template:
+      '{subject}, sparse tense underscore, low sustained drone, irregular ticking pulse, dissonant string harmonics, restrained and unresolved',
+    sample: 'something is about to go wrong',
+    hint: 'Unsettled, never resolves',
+  },
+];
+
 export const ALL_PRESETS: CreatorPreset[] = [
   ...IMAGE_PRESETS,
   ...VIDEO_PRESETS,
   ...MODEL3D_PRESETS,
+  ...AUDIO_PRESETS,
 ];
 
 export function presetsFor(kind: PresetKind): CreatorPreset[] {
   if (kind === 'image') return IMAGE_PRESETS;
   if (kind === 'video') return VIDEO_PRESETS;
+  if (kind === 'audio') return AUDIO_PRESETS;
   return MODEL3D_PRESETS;
 }
 

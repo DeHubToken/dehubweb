@@ -13,6 +13,7 @@ import {
   Box,
   Clapperboard,
   Download,
+  FileText,
   Film,
   ImageIcon,
   Loader2,
@@ -269,11 +270,21 @@ function ResultCard({ job, onOpen }: { job: GenerationJob; onOpen: () => void })
           className="h-full w-full object-cover"
         />
       )}
-      {job.kind === 'audio' && (
-        <span className="flex h-full w-full items-center justify-center">
-          <Music2 className="h-6 w-6 text-white/40" />
-        </span>
-      )}
+      {job.kind === 'audio' &&
+        (job.transcript ? (
+          // A wall of identical music notes told you nothing about which tile
+          // was the transcript you wanted, so it shows its own opening line.
+          <span className="flex h-full w-full flex-col justify-center gap-1 overflow-hidden p-2.5 text-left">
+            <FileText className="h-4 w-4 shrink-0 text-white/40" />
+            <span className="line-clamp-3 text-[11px] leading-snug text-white/55">
+              {job.transcript}
+            </span>
+          </span>
+        ) : (
+          <span className="flex h-full w-full items-center justify-center">
+            <Music2 className="h-6 w-6 text-white/40" />
+          </span>
+        ))}
       {/* Meshes use the provider's rendered still when there is one. Booting a
           WebGL context per grid tile would exhaust the browser's context budget
           long before the grid filled, so the live viewer is opening-only. */}
@@ -393,6 +404,20 @@ function ResultViewer({
    * link is same-origin and the filename sticks.
    */
   const handleDownload = useCallback(async () => {
+    // A transcript has no asset to fetch — it is already in hand, so it is
+    // written straight out as a text file rather than downloaded from anywhere.
+    if (!job.url && job.transcript) {
+      const blob = new Blob([job.transcript], { type: 'text/plain;charset=utf-8' });
+      const objectUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = objectUrl;
+      link.download = `dehub-transcript-${job.id}.txt`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(objectUrl), 30_000);
+      return;
+    }
     if (!job.url) return;
     const filename = `dehub-${job.kind}-${job.id}.${extensionFor(job)}`;
     let href = job.url;
@@ -456,6 +481,49 @@ function ResultViewer({
               playsInline
               className="max-h-[70dvh] w-auto max-w-full rounded-xl"
             />
+          ) : job.kind === 'audio' && job.transcript ? (
+            // Transcription is the one job whose result is words rather than a
+            // file. It gets a readable column instead of a player pointed at
+            // nothing.
+            <div className="max-h-[70dvh] w-full max-w-2xl overflow-y-auto px-5 py-8">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <span className="inline-flex items-center gap-2 text-[13px] font-semibold text-white/70">
+                  <FileText className="h-4 w-4" />
+                  Transcript
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    void navigator.clipboard
+                      .writeText(job.transcript ?? '')
+                      .then(() => toast.success('Transcript copied.'))
+                      .catch(() => toast.error('Could not copy the transcript.'));
+                  }}
+                  className="rounded-lg border border-white/15 bg-white/[0.06] px-2.5 py-1.5 text-[12px] font-medium text-white/75 transition hover:border-white/30 hover:bg-white/[0.12] hover:text-white"
+                >
+                  Copy
+                </button>
+              </div>
+
+              {job.segments?.length ? (
+                <div className="space-y-3">
+                  {job.segments.map((seg, i) => (
+                    <div key={i}>
+                      {seg.speaker && (
+                        <p className="text-[11px] font-semibold uppercase tracking-wide text-white/40">
+                          {seg.speaker.replace(/^speaker_?/i, 'Speaker ')}
+                        </p>
+                      )}
+                      <p className="text-[14px] leading-relaxed text-white/85">{seg.text}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="whitespace-pre-wrap text-[14px] leading-relaxed text-white/85">
+                  {job.transcript}
+                </p>
+              )}
+            </div>
           ) : job.kind === 'audio' ? (
             <div className="w-full max-w-md px-4 py-10 text-center">
               <Music2 className="mx-auto h-7 w-7 text-white/40" />
@@ -538,8 +606,9 @@ function ResultViewer({
             {!failed && (
               <>
                 {/* The timeline holds video, images and audio. A mesh is not a
-                    clip, so offering this for 3D would only ever fail. */}
-                {job.kind !== 'model3d' && (
+                    clip, and a transcript has no file at all, so offering this
+                    for either would only ever fail. */}
+                {job.kind !== 'model3d' && !!job.url && (
                   <button
                     type="button"
                     onClick={handleSend}
@@ -588,7 +657,11 @@ function ResultViewer({
                   className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-3 py-2.5 text-[13px] font-medium text-white/85 transition hover:border-white/30 hover:bg-white/[0.12] hover:text-white"
                 >
                   <Download className="h-4 w-4" />
-                  {job.kind === 'model3d' ? `Download .${extensionFor(job).toUpperCase()}` : 'Download'}
+                  {job.kind === 'model3d'
+                    ? `Download .${extensionFor(job).toUpperCase()}`
+                    : job.url
+                      ? 'Download'
+                      : 'Download .TXT'}
                 </button>
               </>
             )}

@@ -27,6 +27,7 @@ import {
   Film,
   ImageIcon,
   Loader2,
+  Music2,
   Paperclip,
   Sparkles,
   Wand2,
@@ -65,16 +66,44 @@ import {
   Model3dPaywallModal,
   type Model3dGenerationOptions,
 } from '@/components/app/model3d/Model3dPaywallModal';
+import { AudioPaywallModal } from '@/components/app/audio/AudioPaywallModal';
+import {
+  AUDIO_LANGUAGES,
+  AUDIO_TASKS,
+  AUDIO_TASK_OPTIONS,
+  DEFAULT_VOICE_SETTINGS,
+  MAX_AUDIO_UPLOAD_BYTES,
+  MAX_SPEECH_CHARS,
+  MUSIC_DEFAULT_SECONDS,
+  MUSIC_MAX_SECONDS,
+  MUSIC_MIN_SECONDS,
+  SFX_AUTO_DURATION,
+  SFX_MAX_SECONDS,
+  TTS_MODELS,
+  TTS_MODEL_OPTIONS,
+  billableUnits,
+  getAudioCostUsd,
+  isAudioTask,
+  type AudioTask,
+  type TtsModelKey,
+} from '@/constants/audio-models.constants';
 import { applyPreset, getPreset, type CreatorPreset } from '@/lib/creator/presets';
-import { enhancePrompt, hostDataUrl } from '@/lib/creator/generationEngine';
+import {
+  DEFAULT_VOICE_ID,
+  enhancePrompt,
+  hostDataUrl,
+  type AudioRequest,
+} from '@/lib/creator/generationEngine';
 import { useGenerationStore, type GenerationJob } from '@/store/generationStore';
 import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from '@/hooks/use-surface-switch';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
-import { CounterChip, SelectChip, type ChipOption } from './StudioChip';
+import { CounterChip, SelectChip, ToggleChip, type ChipOption } from './StudioChip';
 import { PresetStrip } from './PresetStrip';
 import { ResultsFeed } from './ResultsFeed';
+import { VoiceDesignDrawer } from './VoiceDesignDrawer';
+import { StudioVoicePicker } from './StudioVoicePicker';
 
-type Mode = 'image' | 'video' | '3d';
+type Mode = 'image' | 'video' | 'audio' | '3d';
 type Resolution = '480p' | '720p' | '1080p';
 type Reference = { url: string; label: string } | null;
 type ByMode<T> = Record<Mode, T>;
@@ -89,9 +118,13 @@ const MAX_REFERENCE_BYTES = 20 * 1024 * 1024;
  */
 const MODEL3D_ASPECT = '1:1';
 
+/** Audio has no framing either, and the results grid still needs one per card. */
+const AUDIO_ASPECT = '1:1';
+
 const MODES: { id: Mode; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
   { id: 'image', label: 'Image', icon: ImageIcon },
   { id: 'video', label: 'Video', icon: Film },
+  { id: 'audio', label: 'Audio', icon: Music2 },
   { id: '3d', label: '3D', icon: Box },
 ];
 
@@ -121,13 +154,29 @@ interface StudioSnapshot {
   batch: number;
   duration: number;
   resolution: Resolution;
+  audioTask: AudioTask;
+  ttsModel: TtsModelKey;
+  voiceId: string;
+  /** Stability / similarity / style / speed, as chosen on the voice chips. */
+  stability: number;
+  similarity: number;
+  style: number;
+  speed: number;
+  musicSeconds: number;
+  instrumental: boolean;
+  sfxSeconds: number;
+  promptInfluence: number;
+  loopSfx: boolean;
+  dubTargetLang: string;
+  /** Speech language override. Empty means let the model infer it. */
+  speechLang: string;
 }
 
 const DEFAULT_SNAPSHOT: StudioSnapshot = {
   mode: 'video',
-  prompts: { image: '', video: '', '3d': '' },
-  presetIds: { image: null, video: null, '3d': null },
-  references: { image: null, video: null, '3d': null },
+  prompts: { image: '', video: '', audio: '', '3d': '' },
+  presetIds: { image: null, video: null, audio: null, '3d': null },
+  references: { image: null, video: null, audio: null, '3d': null },
   imageModel: 'gemini-3-pro-image',
   videoModel: 'seedance-2.5',
   model3dModel: 'tripo-2.5',
@@ -136,6 +185,20 @@ const DEFAULT_SNAPSHOT: StudioSnapshot = {
   batch: 1,
   duration: 5,
   resolution: '720p',
+  audioTask: 'speech',
+  ttsModel: 'eleven_multilingual_v2',
+  voiceId: DEFAULT_VOICE_ID,
+  stability: DEFAULT_VOICE_SETTINGS.stability,
+  similarity: DEFAULT_VOICE_SETTINGS.similarity,
+  style: DEFAULT_VOICE_SETTINGS.style,
+  speed: DEFAULT_VOICE_SETTINGS.speed,
+  musicSeconds: MUSIC_DEFAULT_SECONDS,
+  instrumental: true,
+  sfxSeconds: SFX_AUTO_DURATION,
+  promptInfluence: 0.3,
+  loopSfx: false,
+  dubTargetLang: 'es',
+  speechLang: '',
 };
 
 /** A reference small enough to be worth writing to localStorage. */
@@ -148,7 +211,7 @@ function persistableReference(ref: Reference): Reference {
 }
 
 function isMode(v: unknown): v is Mode {
-  return v === 'image' || v === 'video' || v === '3d';
+  return v === 'image' || v === 'video' || v === 'audio' || v === '3d';
 }
 
 /** Restore the cached workspace, discarding anything that no longer type-checks. */
@@ -171,9 +234,13 @@ function readSnapshot(): StudioSnapshot {
       return {
         image: o.image ?? fallback.image,
         video: o.video ?? fallback.video,
+        audio: o.audio ?? fallback.audio,
         '3d': o['3d'] ?? fallback['3d'],
       };
     };
+    /** Clamp a cached number back into range; a stale one out of range is junk. */
+    const clamp = (v: unknown, min: number, max: number, fallback: number): number =>
+      typeof v === 'number' && Number.isFinite(v) ? Math.min(max, Math.max(min, v)) : fallback;
     // A model that has since been retired from the catalogue must not come
     // back as a selection — every downstream price and guardrail reads it.
     const pick = <T extends string>(v: unknown, registry: Record<string, unknown>, fallback: T): T =>
@@ -198,10 +265,123 @@ function readSnapshot(): StudioSnapshot {
         saved.resolution === '480p' || saved.resolution === '720p' || saved.resolution === '1080p'
           ? saved.resolution
           : DEFAULT_SNAPSHOT.resolution,
+      audioTask: isAudioTask(saved.audioTask) ? saved.audioTask : DEFAULT_SNAPSHOT.audioTask,
+      ttsModel: pick(saved.ttsModel, TTS_MODELS, DEFAULT_SNAPSHOT.ttsModel),
+      // Not validated against the voice library: it is fetched asynchronously
+      // and a cloned voice the creator made is just as legitimate as a stock
+      // one. A voice that has since been deleted fails loudly at generation
+      // rather than being silently swapped for someone else's.
+      voiceId: typeof saved.voiceId === 'string' && saved.voiceId ? saved.voiceId : DEFAULT_SNAPSHOT.voiceId,
+      stability: clamp(saved.stability, 0, 1, DEFAULT_SNAPSHOT.stability),
+      similarity: clamp(saved.similarity, 0, 1, DEFAULT_SNAPSHOT.similarity),
+      style: clamp(saved.style, 0, 1, DEFAULT_SNAPSHOT.style),
+      speed: clamp(saved.speed, 0.7, 1.2, DEFAULT_SNAPSHOT.speed),
+      musicSeconds: clamp(
+        saved.musicSeconds,
+        MUSIC_MIN_SECONDS,
+        MUSIC_MAX_SECONDS,
+        DEFAULT_SNAPSHOT.musicSeconds,
+      ),
+      instrumental: typeof saved.instrumental === 'boolean' ? saved.instrumental : DEFAULT_SNAPSHOT.instrumental,
+      // 0 is meaningful here — it is "let the model choose" — so the floor is 0
+      // rather than the provider's half-second minimum.
+      sfxSeconds: clamp(saved.sfxSeconds, 0, SFX_MAX_SECONDS, DEFAULT_SNAPSHOT.sfxSeconds),
+      promptInfluence: clamp(saved.promptInfluence, 0, 1, DEFAULT_SNAPSHOT.promptInfluence),
+      loopSfx: typeof saved.loopSfx === 'boolean' ? saved.loopSfx : DEFAULT_SNAPSHOT.loopSfx,
+      dubTargetLang:
+        typeof saved.dubTargetLang === 'string' && saved.dubTargetLang
+          ? saved.dubTargetLang
+          : DEFAULT_SNAPSHOT.dubTargetLang,
+      speechLang: typeof saved.speechLang === 'string' ? saved.speechLang : DEFAULT_SNAPSHOT.speechLang,
     };
   } catch {
     return DEFAULT_SNAPSHOT;
   }
+}
+
+/**
+ * Read the playable length of an upload, for the two tasks billed per minute.
+ *
+ * Resolves to null rather than rejecting when the browser cannot decode it —
+ * an exotic container is not a reason to block a generation, and
+ * `billableUnits` treats an unknown length as one minute, which is the smallest
+ * honest guess rather than a free pass.
+ */
+function readMediaDuration(file: File): Promise<number | null> {
+  return new Promise((resolve) => {
+    const url = URL.createObjectURL(file);
+    const el = document.createElement('video');
+    const done = (value: number | null) => {
+      URL.revokeObjectURL(url);
+      resolve(value);
+    };
+    el.preload = 'metadata';
+    el.onloadedmetadata = () => {
+      const seconds = el.duration;
+      done(Number.isFinite(seconds) && seconds > 0 ? seconds : null);
+    };
+    el.onerror = () => done(null);
+    el.src = url;
+    // A file that never fires either event would leave Generate stuck behind a
+    // promise that never settles.
+    setTimeout(() => done(null), 10_000);
+  });
+}
+
+/**
+ * Turn a written scene into the per-line input the dialogue endpoint takes.
+ *
+ * The format is "Name: line", one speaker per line, which is how anybody
+ * already writes a script — so there is nothing to learn and no separate
+ * speaker-assignment UI to fill in first.
+ *
+ * Names map to voices by ORDER of first appearance, not by identity: the first
+ * distinct speaker gets the chosen voice and the rest fall to the stock cast
+ * below. Round-robin over a fixed list is what makes a two-hander sound like
+ * two people without asking anyone to paste voice ids in.
+ *
+ * A line with no "Name:" prefix is not dropped — it continues the speaker who
+ * last spoke, which is what a wrapped paragraph in a pasted script means.
+ */
+const DIALOGUE_CAST = [
+  '9BWtsMINqrJLrRacOk9x', // Aria
+  'CwhRBWXzGAHq8TQ4Fs17', // Roger
+  'EXAVITQu4vr4xnSDxMaL', // Sarah
+  'FGY2WhTYpPnrIDTdsKH5', // Laura
+  'IKne3meq5aSn9XLyUdCD', // Charlie
+  'JBFqnCBsd6RMkjVDRZzb', // George
+];
+
+function parseDialogue(script: string, primaryVoiceId: string): { text: string; voiceId: string }[] {
+  const lines = script.split('\n').map((l) => l.trim()).filter(Boolean);
+  const voiceByName = new Map<string, string>();
+  const out: { text: string; voiceId: string }[] = [];
+
+  for (const line of lines) {
+    // A colon inside the spoken line itself must not be read as a speaker, so
+    // the name is bounded: no colons, and short enough to be a name.
+    const match = line.match(/^([^:]{1,32}):\s*(.+)$/);
+    if (!match) {
+      if (out.length) out[out.length - 1].text += ` ${line}`;
+      continue;
+    }
+    const [, rawName, text] = match;
+    const name = rawName.trim().toLowerCase();
+    if (!voiceByName.has(name)) {
+      // The first speaker gets the voice actually chosen on the chip; the rest
+      // take the stock cast, skipping it so nobody is doubled up.
+      const next =
+        voiceByName.size === 0
+          ? primaryVoiceId
+          : DIALOGUE_CAST.filter((v) => v !== primaryVoiceId)[
+              (voiceByName.size - 1) % Math.max(1, DIALOGUE_CAST.filter((v) => v !== primaryVoiceId).length)
+            ];
+      voiceByName.set(name, next || primaryVoiceId);
+    }
+    out.push({ text, voiceId: voiceByName.get(name) as string });
+  }
+
+  return out;
 }
 
 /** Read a picked file as a data URL for the reference-image channel. */
@@ -277,6 +457,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
   const startImage = useGenerationStore((s) => s.startImage);
   const startVideo = useGenerationStore((s) => s.startVideo);
   const startModel3d = useGenerationStore((s) => s.startModel3d);
+  const startAudio = useGenerationStore((s) => s.startAudio);
   const runningCount = useGenerationStore((s) => s.jobs.filter((j) => j.status === 'running').length);
 
   // One read of the cache, on mount, shared by every slice below.
@@ -297,6 +478,35 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
   const [batch, setBatch] = useState(restored.batch);
   const [duration, setDuration] = useState(restored.duration);
   const [resolution, setResolution] = useState<Resolution>(restored.resolution);
+
+  // ── Audio workspace ───────────────────────────────────────────────────────
+  const [audioTask, setAudioTask] = useState<AudioTask>(restored.audioTask);
+  const [ttsModel, setTtsModel] = useState<TtsModelKey>(restored.ttsModel);
+  const [voiceId, setVoiceId] = useState<string>(restored.voiceId);
+  const [stability, setStability] = useState(restored.stability);
+  const [similarity, setSimilarity] = useState(restored.similarity);
+  const [style, setStyle] = useState(restored.style);
+  const [speed, setSpeed] = useState(restored.speed);
+  const [musicSeconds, setMusicSeconds] = useState(restored.musicSeconds);
+  const [instrumental, setInstrumental] = useState(restored.instrumental);
+  const [sfxSeconds, setSfxSeconds] = useState(restored.sfxSeconds);
+  const [promptInfluence, setPromptInfluence] = useState(restored.promptInfluence);
+  const [loopSfx, setLoopSfx] = useState(restored.loopSfx);
+  const [dubTargetLang, setDubTargetLang] = useState(restored.dubTargetLang);
+  const [speechLang, setSpeechLang] = useState(restored.speechLang);
+  const [voiceDesignOpen, setVoiceDesignOpen] = useState(false);
+  const [audioPaywallOpen, setAudioPaywallOpen] = useState(false);
+  /**
+   * The upload the four transformation tasks work from.
+   *
+   * Deliberately NOT in the snapshot: a File cannot be serialised, and the
+   * reference channel next to it holds data URLs for images only. Losing the
+   * attachment on reload is the honest outcome — the alternative is a composer
+   * that says a file is attached when nothing is.
+   */
+  const [audioFile, setAudioFile] = useState<{ file: File; seconds: number | null } | null>(null);
+
+  const activeAudioTask = AUDIO_TASKS[audioTask];
 
   const prompt = prompts[mode];
   const presetId = presetIds[mode];
@@ -335,6 +545,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
   const [beforeEnhance, setBeforeEnhance] = useState<ByMode<string | null>>({
     image: null,
     video: null,
+    audio: null,
     '3d': null,
   });
 
@@ -368,6 +579,8 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       setImagePaywallOpen(false);
       setVideoPaywallOpen(false);
       setModel3dPaywallOpen(false);
+      setAudioPaywallOpen(false);
+      setVoiceDesignOpen(false);
     }, []),
   );
   const surfaceEpoch = useSurfaceEpoch();
@@ -390,6 +603,9 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       references: {
         image: persistableReference(references.image),
         video: persistableReference(references.video),
+        // Audio's attachment is a File held outside this record, so its
+        // reference slot is always empty. Kept for the shape.
+        audio: null,
         '3d': persistableReference(references['3d']),
       },
       imageModel,
@@ -400,6 +616,20 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       batch,
       duration,
       resolution,
+      audioTask,
+      ttsModel,
+      voiceId,
+      stability,
+      similarity,
+      style,
+      speed,
+      musicSeconds,
+      instrumental,
+      sfxSeconds,
+      promptInfluence,
+      loopSfx,
+      dubTargetLang,
+      speechLang,
     };
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
@@ -420,6 +650,20 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     batch,
     duration,
     resolution,
+    audioTask,
+    ttsModel,
+    voiceId,
+    stability,
+    similarity,
+    style,
+    speed,
+    musicSeconds,
+    instrumental,
+    sfxSeconds,
+    promptInfluence,
+    loopSfx,
+    dubTargetLang,
+    speechLang,
   ]);
 
   // ── Sticky composer ───────────────────────────────────────────────────────
@@ -510,7 +754,14 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     setResolution((r) => (allowedResolutions.includes(r) ? r : (allowedResolutions[allowedResolutions.length - 1] as Resolution)));
   }, [videoModel]);
 
-  const aspect = mode === 'image' ? imageAspect : mode === 'video' ? videoAspect : MODEL3D_ASPECT;
+  const aspect =
+    mode === 'image'
+      ? imageAspect
+      : mode === 'video'
+        ? videoAspect
+        : mode === 'audio'
+          ? AUDIO_ASPECT
+          : MODEL3D_ASPECT;
   const resolvedPrompt = useMemo(() => applyPreset(preset, prompt), [preset, prompt]);
 
   /** Applying a preset also adopts the model and aspect it was tuned for. */
@@ -529,6 +780,15 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     } else if (next.kind === 'video') {
       if (next.model && next.model in VIDEO_MODELS) setVideoModel(next.model as VideoModelKey);
       if (next.aspect) setVideoAspect(next.aspect);
+    } else if (next.kind === 'audio') {
+      // Audio presets carry a task rather than a model, and the strip only ever
+      // shows the active task's own — so this is a no-op in practice. It stays
+      // as the guarantee that picking a tile can never leave the composer on a
+      // task the scaffold was not written for.
+      if (next.audioTask) setAudioTask(next.audioTask);
+      // The speech scaffolds lean on v3's inline performance tags, which no
+      // other model reads: on Multilingual v2 they would be spoken aloud.
+      if (next.audioTask === 'speech') setTtsModel('eleven_v3');
     } else {
       // 3D presets carry no aspect — a mesh has none.
       if (next.model && next.model in MODEL3D_MODELS) {
@@ -578,6 +838,28 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     [mode, setPrompt],
   );
 
+  /**
+   * The audio tasks that transform an upload take a media file, not an image,
+   * and hold it as a File rather than a data URL — a 100 MB recording read into
+   * base64 is a third larger again and would be encoded into the request body
+   * instead of posted as multipart.
+   */
+  const attachAudioFile = useCallback(async (file: File) => {
+    if (file.size > MAX_AUDIO_UPLOAD_BYTES) {
+      toast.error('That file is over 100 MB. Use a shorter or smaller one.');
+      return;
+    }
+    setAttaching(true);
+    try {
+      // Read the length up front: it is what the two metered tasks are priced
+      // on, and the paywall must show the number it is about to charge.
+      const seconds = await readMediaDuration(file);
+      setAudioFile({ file, seconds });
+    } finally {
+      setAttaching(false);
+    }
+  }, []);
+
   const attachFile = useCallback(async (file: File) => {
     if (!file.type.startsWith('image/')) {
       toast.error('Attach an image to use as a reference.');
@@ -615,13 +897,24 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
         ? 'video'
         : job.kind === 'model3d'
           ? '3d'
-          : 'image';
+          : job.kind === 'audio'
+            ? 'audio'
+            : 'image';
 
     setMode(target);
     setPromptFor(target, job.prompt);
     setPresetFor(target, job.presetId ?? null);
 
-    if (job.kind === 'image' && job.status === 'done' && job.url) {
+    if (job.kind === 'audio') {
+      // The job records which of the nine tools made it, so reloading a failed
+      // run comes back on the right one rather than defaulting to speech.
+      if (isAudioTask(job.model)) setAudioTask(job.model);
+      // The upload it worked from cannot be restored — a File is not persisted
+      // and a blob URL is dead by now — so the media tasks come back needing a
+      // fresh attachment. Clearing it is what makes that obvious rather than
+      // leaving a stale filename in the composer.
+      setAudioFile(null);
+    } else if (job.kind === 'image' && job.status === 'done' && job.url) {
       setReferenceFor('video', { url: job.url, label: 'Generated still' });
       setVideoModel('runway-gen4');
       setPresetFor('video', 'animate-still');
@@ -676,10 +969,12 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
    * A mesh from an attached photo needs no words, so the prompt is only
    * required when there is nothing else to work from.
    */
-  const promptMissing = useMemo(
-    () => (mode !== '3d' || !reference) && !resolvedPrompt.trim(),
-    [mode, reference, resolvedPrompt],
-  );
+  const promptMissing = useMemo(() => {
+    // Four of the audio tasks work entirely from an upload and have no text
+    // box at all, so an empty prompt is the normal state rather than a gap.
+    if (mode === 'audio') return activeAudioTask.promptRole !== 'none' && !resolvedPrompt.trim();
+    return (mode !== '3d' || !reference) && !resolvedPrompt.trim();
+  }, [mode, reference, resolvedPrompt, activeAudioTask]);
 
   /** Guardrails that would otherwise only surface as a paid-for failure. */
   const blockingIssue = useMemo(() => {
@@ -707,8 +1002,175 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
         return `${model.name} needs an image to work from. Attach one first.`;
       }
     }
+    if (mode === 'audio') {
+      if (activeAudioTask.needsMedia && !audioFile) {
+        return `${activeAudioTask.label} needs a file to work from. Attach one first.`;
+      }
+      if (activeAudioTask.usesVoice && !voiceId) return 'Pick a voice first.';
+      // Caught here rather than at the edge function: two of these tasks are
+      // charged for before the call, so an over-length script must fail while
+      // it is still free to say no.
+      if (activeAudioTask.promptRole !== 'none' && resolvedPrompt.length > MAX_SPEECH_CHARS) {
+        return `That is ${resolvedPrompt.length.toLocaleString()} characters. The limit is ${MAX_SPEECH_CHARS.toLocaleString()}.`;
+      }
+      if (audioTask === 'dialogue' && !parseDialogue(resolvedPrompt, voiceId).length) {
+        return 'Write the scene as "Name: line", one speaker per line.';
+      }
+    }
     return null;
-  }, [isAuthenticated, mode, imageModel, videoModel, model3dModel, reference]);
+  }, [
+    isAuthenticated,
+    mode,
+    imageModel,
+    videoModel,
+    model3dModel,
+    reference,
+    activeAudioTask,
+    audioFile,
+    voiceId,
+    resolvedPrompt,
+    audioTask,
+  ]);
+
+  /** Billable units and the label the paywall shows for them. */
+  const audioUnits = useMemo(
+    () =>
+      billableUnits(
+        activeAudioTask,
+        audioTask === 'music' ? musicSeconds : (audioFile?.seconds ?? null),
+      ),
+    [activeAudioTask, audioTask, musicSeconds, audioFile],
+  );
+
+  const audioQuantityLabel = useMemo(() => {
+    if (audioTask === 'music') return `${musicSeconds}s track`;
+    const seconds = audioFile?.seconds;
+    if (seconds == null) return 'Length unknown — billed as 1 min';
+    const mins = Math.floor(seconds / 60);
+    const rest = Math.round(seconds % 60);
+    return mins ? `${mins}m ${rest}s` : `${rest}s`;
+  }, [audioTask, musicSeconds, audioFile]);
+
+  /**
+   * Queue the chosen audio task.
+   *
+   * Called directly for the six free tools, and by the paywall's onConfirm for
+   * the three paid ones — which is why it takes no arguments and reads the
+   * composer's own state: the settings were all chosen before the transfer, so
+   * there is nothing for the modal to hand back.
+   */
+  const runAudio = useCallback(() => {
+    setAudioPaywallOpen(false);
+
+    const voiceTuning = {
+      stability,
+      similarity,
+      style,
+      speakerBoost: DEFAULT_VOICE_SETTINGS.speakerBoost,
+      speed,
+    };
+
+    let request: AudioRequest;
+    switch (audioTask) {
+      case 'dialogue':
+        request = {
+          task: 'dialogue',
+          inputs: parseDialogue(resolvedPrompt, voiceId),
+          voiceSettings: voiceTuning,
+        };
+        break;
+      case 'sfx':
+        request = {
+          task: 'sfx',
+          text: resolvedPrompt,
+          // 0 is "let the model choose", and the engine leaves the field off
+          // entirely for it — sending a zero is a validation error upstream.
+          durationSeconds: sfxSeconds || undefined,
+          promptInfluence,
+          loop: loopSfx,
+        };
+        break;
+      case 'music':
+        request = {
+          task: 'music',
+          prompt: resolvedPrompt,
+          lengthSeconds: musicSeconds,
+          instrumental,
+        };
+        break;
+      case 'voice-changer':
+        if (!audioFile) return;
+        request = {
+          task: 'voice-changer',
+          file: audioFile.file,
+          voiceId,
+          voiceSettings: voiceTuning,
+        };
+        break;
+      case 'dubbing':
+        if (!audioFile) return;
+        request = { task: 'dubbing', file: audioFile.file, targetLang: dubTargetLang };
+        break;
+      case 'transcribe':
+        if (!audioFile) return;
+        request = { task: 'transcribe', file: audioFile.file, diarize: true };
+        break;
+      case 'isolate':
+        if (!audioFile) return;
+        request = { task: 'isolate', file: audioFile.file };
+        break;
+      default:
+        request = {
+          task: 'speech',
+          text: resolvedPrompt,
+          voiceId,
+          modelId: ttsModel,
+          languageCode: speechLang || undefined,
+          voiceSettings: voiceTuning,
+        };
+    }
+
+    startAudio(request, {
+      // The media tasks have no prompt, so the filename is the only honest
+      // caption for the card — 'Untitled' on all four told you nothing.
+      prompt: prompt.trim() || preset?.sample || audioFile?.file.name || activeAudioTask.label,
+      resolvedPrompt,
+      modelName:
+        audioTask === 'speech'
+          ? (TTS_MODELS[ttsModel]?.name ?? activeAudioTask.label)
+          : activeAudioTask.label,
+      presetId: presetId ?? undefined,
+      aspect: AUDIO_ASPECT,
+    });
+
+    toast.success(
+      audioTask === 'dubbing'
+        ? 'Dub queued. It keeps running if you leave the page.'
+        : 'Generation started.',
+    );
+  }, [
+    audioTask,
+    activeAudioTask,
+    resolvedPrompt,
+    prompt,
+    preset,
+    presetId,
+    voiceId,
+    ttsModel,
+    speechLang,
+    stability,
+    similarity,
+    style,
+    speed,
+    sfxSeconds,
+    promptInfluence,
+    loopSfx,
+    musicSeconds,
+    instrumental,
+    dubTargetLang,
+    audioFile,
+    startAudio,
+  ]);
 
   const openPaywall = useCallback(async () => {
     if (promptMissing) {
@@ -725,6 +1187,20 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
     }
     if (mode === 'video') {
       setVideoPaywallOpen(true);
+      return;
+    }
+    if (mode === 'audio') {
+      // Voice design is not a generation job — it produces three takes to
+      // audition and keeps whichever one is wanted, so it opens its own drawer
+      // rather than going through the queue.
+      if (audioTask === 'voice-design') {
+        setVoiceDesignOpen(true);
+        return;
+      }
+      // Six of the nine cost a fraction of a cent and skip the paywall
+      // entirely; only music, the voice changer and dubbing settle on chain.
+      if (activeAudioTask.paid) setAudioPaywallOpen(true);
+      else runAudio();
       return;
     }
 
@@ -747,7 +1223,17 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       }
     }
     setModel3dPaywallOpen(true);
-  }, [promptMissing, openComposer, blockingIssue, mode, reference, setReferenceFor]);
+  }, [
+    promptMissing,
+    openComposer,
+    blockingIssue,
+    mode,
+    reference,
+    setReferenceFor,
+    audioTask,
+    activeAudioTask,
+    runAudio,
+  ]);
 
   /** Called by the paywall once the DHB transfer confirms. */
   const runImage = useCallback(() => {
@@ -881,6 +1367,13 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
             disabledReason: 'Needs an attached image',
           };
         })
+      : mode === 'audio'
+      ? TTS_MODEL_OPTIONS.map((m) => ({
+          value: m.id,
+          label: m.name,
+          detail: m.description,
+          meta: `${m.languages} langs`,
+        }))
       : VIDEO_MODEL_OPTIONS.map((m) => {
           const needsImage = !m.supports.includes('text-to-video');
           const rejectsImage = !m.supports.includes('image-to-video');
@@ -894,6 +1387,19 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
           };
         });
 
+  /** The nine audio tools, priced where they cost anything. */
+  const audioTaskOptions: ChipOption<string>[] = AUDIO_TASK_OPTIONS.map((t) => ({
+    value: t.id,
+    label: t.label,
+    detail: t.description,
+    meta: t.paid ? `from $${getAudioCostUsd(t, 1).toFixed(2)}` : 'Free',
+  }));
+
+  const languageOptions: ChipOption<string>[] = AUDIO_LANGUAGES.map((l) => ({
+    value: l.code,
+    label: l.label,
+  }));
+
   const aspectOptions: ChipOption<string>[] = (mode === 'image' ? [...IMAGE_ASPECTS] : videoAspects).map(
     (a) => ({ value: a, label: a }),
   );
@@ -903,7 +1409,12 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       ? activeImageModel?.name ?? imageModel
       : mode === '3d'
         ? activeModel3d?.name ?? model3dModel
-        : activeVideoModel?.name ?? videoModel;
+        : mode === 'audio'
+          ? // The heading reads "Start creating with X", so it names the tool
+            // rather than the engine — nobody picked "Eleven v3" to clean up a
+            // recording, and eight of the nine tasks have no model chip at all.
+            activeAudioTask.label
+          : activeVideoModel?.name ?? videoModel;
 
   const placeholder = preset
     ? `${preset.name}: describe the subject, for example "${preset.sample}"`
@@ -911,7 +1422,9 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       ? 'Describe the image you want'
       : mode === '3d'
         ? 'Describe the object to model, or attach a photo of it'
-        : 'Describe the shot you want';
+        : mode === 'audio'
+          ? activeAudioTask.placeholder
+          : 'Describe the shot you want';
 
   const generateDisabled = promptMissing || !!blockingIssue || staging;
   const undoEnhance = beforeEnhance[mode];
@@ -1060,26 +1573,54 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                 />
               )}
 
-              <button
-                type="button"
-                onClick={() => fileRef.current?.click()}
-                disabled={attaching}
-                aria-label="Attach a reference image"
-                className="hidden h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white/70 transition hover:bg-white/[0.10] hover:text-white disabled:opacity-40 sm:inline-flex"
-              >
-                {attaching ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Paperclip className="h-4 w-4" />
-                )}
-              </button>
+              {(mode !== 'audio' || activeAudioTask.needsMedia) && (
+                <button
+                  type="button"
+                  onClick={() => fileRef.current?.click()}
+                  disabled={attaching}
+                  aria-label={mode === 'audio' ? 'Attach a recording' : 'Attach a reference image'}
+                  className="hidden h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white/70 transition hover:bg-white/[0.10] hover:text-white disabled:opacity-40 sm:inline-flex"
+                >
+                  {attaching ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Paperclip className="h-4 w-4" />
+                  )}
+                </button>
+              )}
 
               {enhanceButton(true)}
               {generateButton(true)}
             </div>
           ) : (
             <>
-              {reference && (
+              {mode === 'audio' && audioFile && (
+                <div className="mb-2 flex items-center gap-2.5 rounded-xl border border-white/10 bg-black/40 p-2">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white/[0.08]">
+                    <Music2 className="h-5 w-5 text-white/50" />
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-[12px] font-medium text-white/85">
+                      {audioFile.file.name}
+                    </p>
+                    <p className="text-[11px] text-white/40">
+                      {audioFile.seconds == null
+                        ? 'Length could not be read — billed as one minute'
+                        : `${audioQuantityLabel}${activeAudioTask.paid ? ' — billed on this' : ''}`}
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setAudioFile(null)}
+                    aria-label="Remove attached file"
+                    className="rounded-full p-1.5 text-white/50 transition hover:bg-white/10 hover:text-white"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
+
+              {mode !== 'audio' && reference && (
                 <div className="mb-2 flex items-center gap-2.5 rounded-xl border border-white/10 bg-black/40 p-2">
                   <img
                     src={reference.url}
@@ -1110,38 +1651,61 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
               )}
 
               <div className="flex items-start gap-2">
-                <button
-                  type="button"
-                  onClick={() => fileRef.current?.click()}
-                  disabled={attaching}
-                  aria-label="Attach a reference image"
-                  className="mt-0.5 shrink-0 rounded-xl border border-white/15 bg-white/[0.06] p-2.5 text-white/70 transition hover:border-white/30 hover:bg-white/[0.12] hover:text-white disabled:opacity-40"
-                >
-                  {attaching ? (
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  ) : (
-                    <Paperclip className="h-4 w-4" />
-                  )}
-                </button>
-
-                <label htmlFor="studio-prompt" className="sr-only">
-                  Prompt
-                </label>
-                <textarea
-                  id="studio-prompt"
-                  ref={textareaRef}
-                  value={prompt}
-                  onChange={(e) => editPrompt(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-                      e.preventDefault();
-                      void openPaywall();
+                {/* Sound effects, music and voice design have nothing to attach
+                    — offering a paperclip there is a control that can only
+                    produce an error. */}
+                {(mode !== 'audio' || activeAudioTask.needsMedia) && (
+                  <button
+                    type="button"
+                    onClick={() => fileRef.current?.click()}
+                    disabled={attaching}
+                    aria-label={
+                      mode === 'audio' ? 'Attach a recording' : 'Attach a reference image'
                     }
-                  }}
-                  rows={2}
-                  placeholder={placeholder}
-                  className="min-h-[3.25rem] w-full resize-y bg-transparent py-2 text-[15px] leading-relaxed text-white outline-none placeholder:text-white/35"
-                />
+                    className="mt-0.5 shrink-0 rounded-xl border border-white/15 bg-white/[0.06] p-2.5 text-white/70 transition hover:border-white/30 hover:bg-white/[0.12] hover:text-white disabled:opacity-40"
+                  >
+                    {attaching ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Paperclip className="h-4 w-4" />
+                    )}
+                  </button>
+                )}
+
+                {activeAudioTask.promptRole === 'none' && mode === 'audio' ? (
+                  // Nothing to type for these four: the upload IS the input, so
+                  // the box is replaced by what to do rather than left empty
+                  // with a placeholder nobody can act on.
+                  <p className="flex min-h-[3.25rem] flex-1 items-center text-[14px] text-white/45">
+                    {audioFile
+                      ? `Ready — ${activeAudioTask.label.toLowerCase()} this recording.`
+                      : 'Attach a recording to start.'}
+                  </p>
+                ) : (
+                  <>
+                    <label htmlFor="studio-prompt" className="sr-only">
+                      Prompt
+                    </label>
+                    <textarea
+                      id="studio-prompt"
+                      ref={textareaRef}
+                      value={prompt}
+                      onChange={(e) => editPrompt(e.target.value)}
+                      onKeyDown={(e) => {
+                        // Enter submits everywhere else, but a dialogue script
+                        // is written across lines — so plain Enter has to stay
+                        // a newline there.
+                        if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                          e.preventDefault();
+                          void openPaywall();
+                        }
+                      }}
+                      rows={audioTask === 'dialogue' && mode === 'audio' ? 4 : 2}
+                      placeholder={placeholder}
+                      className="min-h-[3.25rem] w-full resize-y bg-transparent py-2 text-[15px] leading-relaxed text-white outline-none placeholder:text-white/35"
+                    />
+                  </>
+                )}
               </div>
 
               {undoEnhance !== null && (
@@ -1166,27 +1730,225 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
                 <ModeToggle mode={mode} onChange={switchMode} />
 
                 <div className="flex min-w-0 flex-1 gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                  <SelectChip
-                    label="Model"
-                    width="md"
-                    searchable
-                    searchPlaceholder="Search models…"
-                    value={mode === 'image' ? imageModel : mode === '3d' ? model3dModel : videoModel}
-                    options={modelOptions}
-                    onChange={(v) => {
-                      if (mode === 'image') setImageModel(v as ImageModelKey);
-                      else if (mode === '3d') setModel3dModel(v as Model3dModelKey);
-                      else setVideoModel(v as VideoModelKey);
-                    }}
-                  />
-                  {/* A mesh has no framing, so the aspect chip is meaningless in 3D. */}
-                  {mode !== '3d' && (
+                  {/* Audio leads with the tool, not the engine: which of the
+                      nine is running decides every other chip on the rail. */}
+                  {mode === 'audio' && (
+                    <SelectChip
+                      label="Tool"
+                      width="md"
+                      value={audioTask}
+                      options={audioTaskOptions}
+                      onChange={(v) => setAudioTask(v as AudioTask)}
+                    />
+                  )}
+
+                  {/* Only speech picks a voice model. Sound effects, music and
+                      the transformations each run on one fixed endpoint, so a
+                      model chip there would be a control over nothing. */}
+                  {(mode !== 'audio' || audioTask === 'speech') && (
+                    <SelectChip
+                      label="Model"
+                      width="md"
+                      searchable
+                      searchPlaceholder="Search models…"
+                      value={
+                        mode === 'image'
+                          ? imageModel
+                          : mode === '3d'
+                            ? model3dModel
+                            : mode === 'audio'
+                              ? ttsModel
+                              : videoModel
+                      }
+                      options={modelOptions}
+                      onChange={(v) => {
+                        if (mode === 'image') setImageModel(v as ImageModelKey);
+                        else if (mode === '3d') setModel3dModel(v as Model3dModelKey);
+                        else if (mode === 'audio') setTtsModel(v as TtsModelKey);
+                        else setVideoModel(v as VideoModelKey);
+                      }}
+                    />
+                  )}
+                  {/* A mesh has no framing and neither does a sound, so the
+                      aspect chip is meaningless in both. */}
+                  {mode !== '3d' && mode !== 'audio' && (
                     <SelectChip
                       label="Aspect ratio"
                       value={aspect}
                       options={aspectOptions}
                       onChange={(v) => (mode === 'image' ? setImageAspect(v) : setVideoAspect(v))}
                     />
+                  )}
+
+                  {mode === 'audio' && (
+                    <>
+                      {activeAudioTask.usesVoice && (
+                        <StudioVoicePicker
+                          value={voiceId}
+                          onChange={setVoiceId}
+                          onDesignVoice={() => {
+                            setAudioTask('voice-design');
+                            focusComposer();
+                          }}
+                        />
+                      )}
+
+                      {(audioTask === 'speech' || audioTask === 'dialogue') && (
+                        <>
+                          <SelectChip
+                            label="Delivery"
+                            value={String(stability)}
+                            display={
+                              stability <= 0.35 ? 'Expressive' : stability >= 0.7 ? 'Consistent' : 'Natural'
+                            }
+                            options={[
+                              {
+                                value: '0.3',
+                                label: 'Expressive',
+                                detail: 'Varies take to take, more emotion',
+                              },
+                              { value: '0.5', label: 'Natural', detail: 'The safe middle' },
+                              {
+                                value: '0.75',
+                                label: 'Consistent',
+                                detail: 'Repeatable, flatter delivery',
+                              },
+                            ]}
+                            onChange={(v) => setStability(Number(v))}
+                          />
+                          <SelectChip
+                            label="Style"
+                            value={String(style)}
+                            display={style <= 0.1 ? 'None' : style >= 0.6 ? 'Heavy' : 'Some'}
+                            options={[
+                              { value: '0', label: 'None', detail: 'Neutral read, most stable' },
+                              { value: '0.3', label: 'Some', detail: 'A little exaggeration' },
+                              {
+                                value: '0.7',
+                                label: 'Heavy',
+                                detail: 'Strong delivery — can destabilise',
+                              },
+                            ]}
+                            onChange={(v) => setStyle(Number(v))}
+                          />
+                        </>
+                      )}
+
+                      {/* v3 paces itself from the tags and the punctuation, and
+                          rejects a speed multiplier outright. */}
+                      {audioTask === 'speech' && TTS_MODELS[ttsModel]?.supportsSpeed && (
+                        <SelectChip
+                          label="Pace"
+                          value={String(speed)}
+                          display={speed < 1 ? 'Slower' : speed > 1 ? 'Faster' : 'Normal'}
+                          options={[
+                            { value: '0.85', label: 'Slower' },
+                            { value: '1', label: 'Normal' },
+                            { value: '1.15', label: 'Faster' },
+                          ]}
+                          onChange={(v) => setSpeed(Number(v))}
+                        />
+                      )}
+
+                      {audioTask === 'speech' && (
+                        <SelectChip
+                          label="Language"
+                          searchable
+                          searchPlaceholder="Search languages…"
+                          value={speechLang}
+                          display={
+                            AUDIO_LANGUAGES.find((l) => l.code === speechLang)?.label ?? 'Auto'
+                          }
+                          options={[
+                            {
+                              value: '',
+                              label: 'Auto',
+                              detail: 'Read the language from the text',
+                            },
+                            ...languageOptions,
+                          ]}
+                          onChange={setSpeechLang}
+                        />
+                      )}
+
+                      {audioTask === 'sfx' && (
+                        <>
+                          <SelectChip
+                            label="Length"
+                            value={String(sfxSeconds)}
+                            display={sfxSeconds ? `${sfxSeconds}s` : 'Auto'}
+                            options={[
+                              { value: '0', label: 'Auto', detail: 'Let the model choose' },
+                              { value: '2', label: '2s' },
+                              { value: '5', label: '5s' },
+                              { value: '10', label: '10s' },
+                              { value: '22', label: '22s' },
+                              { value: '30', label: '30s', detail: 'Maximum' },
+                            ]}
+                            onChange={(v) => setSfxSeconds(Number(v))}
+                          />
+                          <SelectChip
+                            label="Follow prompt"
+                            value={String(promptInfluence)}
+                            display={
+                              promptInfluence >= 0.7
+                                ? 'Literally'
+                                : promptInfluence <= 0.2
+                                  ? 'Loosely'
+                                  : 'Balanced'
+                            }
+                            options={[
+                              { value: '0.1', label: 'Loosely', detail: 'More creative licence' },
+                              { value: '0.3', label: 'Balanced' },
+                              { value: '0.8', label: 'Literally', detail: 'Stick to the words' },
+                            ]}
+                            onChange={(v) => setPromptInfluence(Number(v))}
+                          />
+                          <ToggleChip
+                            label="Loop"
+                            active={loopSfx}
+                            onClick={() => setLoopSfx((v) => !v)}
+                          />
+                        </>
+                      )}
+
+                      {audioTask === 'music' && (
+                        <>
+                          <SelectChip
+                            label="Length"
+                            value={String(musicSeconds)}
+                            display={`${musicSeconds}s`}
+                            options={[10, 30, 60, 90, 120, 180, 240, 300]
+                              .filter((s) => s >= MUSIC_MIN_SECONDS && s <= MUSIC_MAX_SECONDS)
+                              .map((s) => ({
+                                value: String(s),
+                                label: s >= 60 ? `${s / 60}m` : `${s}s`,
+                                // Priced per 10s, so the rail shows what each
+                                // length costs before the paywall opens.
+                                meta: `$${getAudioCostUsd(activeAudioTask, s / 10).toFixed(2)}`,
+                              }))}
+                            onChange={(v) => setMusicSeconds(Number(v))}
+                          />
+                          <ToggleChip
+                            label="Instrumental"
+                            active={instrumental}
+                            onClick={() => setInstrumental((v) => !v)}
+                          />
+                        </>
+                      )}
+
+                      {audioTask === 'dubbing' && (
+                        <SelectChip
+                          label="Dub into"
+                          searchable
+                          searchPlaceholder="Search languages…"
+                          value={dubTargetLang}
+                          display={AUDIO_LANGUAGES.find((l) => l.code === dubTargetLang)?.label}
+                          options={languageOptions}
+                          onChange={setDubTargetLang}
+                        />
+                      )}
+                    </>
                   )}
 
                   {mode === 'image' && (
@@ -1262,20 +2024,28 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
       </div>
 
       <section ref={studioTailRef} className="px-3 pb-6 sm:px-4">
+        {/* One input for both channels. The accept list and the handler follow
+            the mode, so the picker offers recordings on the audio tasks that
+            take one and pictures everywhere else. */}
         <input
           ref={fileRef}
           type="file"
-          accept="image/*"
+          accept={mode === 'audio' ? (activeAudioTask.mediaAccept ?? 'audio/*') : 'image/*'}
           hidden
           onChange={(e) => {
             const file = e.target.files?.[0];
-            if (file) void attachFile(file);
+            if (file) void (mode === 'audio' ? attachAudioFile(file) : attachFile(file));
             e.target.value = '';
           }}
         />
 
         <div className="mt-5">
-          <PresetStrip kind={mode} activeId={presetId} onPick={pickPreset} />
+          <PresetStrip
+            kind={mode}
+            activeId={presetId}
+            onPick={pickPreset}
+            audioTask={audioTask}
+          />
         </div>
 
         <div className="mt-7">
@@ -1330,6 +2100,32 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
             hasReference={!!reference}
           />
         )}
+
+        {/* Only ever opened for music, the voice changer and dubbing — the
+            other six tools call runAudio directly. */}
+        <AudioPaywallModal
+          key={audioPaywallOpen ? 'audio-open' : `audio-${surfaceEpoch}`}
+          open={audioPaywallOpen}
+          onOpenChange={setAudioPaywallOpen}
+          spec={activeAudioTask}
+          units={audioUnits}
+          quantityLabel={audioQuantityLabel}
+          onConfirm={runAudio}
+        />
+
+        <VoiceDesignDrawer
+          key={voiceDesignOpen ? 'voice-design-open' : `voice-design-${surfaceEpoch}`}
+          open={voiceDesignOpen}
+          onOpenChange={setVoiceDesignOpen}
+          description={resolvedPrompt}
+          onSaved={(savedVoiceId) => {
+            // Adopt the new voice straight away and drop back to speech: the
+            // whole point of designing one was to use it.
+            setVoiceId(savedVoiceId);
+            setAudioTask('speech');
+            setVoiceDesignOpen(false);
+          }}
+        />
       </section>
     </>
   );
