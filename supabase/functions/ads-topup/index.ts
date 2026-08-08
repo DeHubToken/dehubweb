@@ -21,6 +21,17 @@ const DHB_BNB = '0x680D3113caf77B61b510f332D5Ef4cf5b41A761D';
 // Same treasury the AI credits + PPV paywalls pay into. Override via secret.
 const TREASURY = (Deno.env.get('ADS_TREASURY_ADDRESS') || '0xbf3039b0bb672b268e8384e30d81b1e6a8a43b2c').toLowerCase();
 
+/**
+ * How recent a transfer must be to be claimable as an ads top-up.
+ *
+ * The treasury is shared with AI credit, PPV unlocks and governance, and this
+ * lookup scans from block zero — so without a window any historical DHB the
+ * advertiser ever sent to that address could be claimed as ad balance,
+ * including their own past PPV unlocks and AI generation payments. Idempotency
+ * per tx hash does not help: each of those hashes is only claimed once.
+ */
+const CLAIM_WINDOW_MS = 60 * 60 * 1000;
+
 interface AlchemyTransfer {
   hash: string;
   value: number;
@@ -42,6 +53,10 @@ async function fetchTransfers(rpcUrl: string, fromAddress: string, contractAddre
         toAddress: TREASURY,
         contractAddresses: [contractAddress],
         category: ['erc20'],
+        // Required for metadata.blockTimestamp — the freshness check below has
+        // nothing to read without it and would pass everything.
+        withMetadata: true,
+        order: 'desc',
       }],
     }),
   });
@@ -117,6 +132,17 @@ Deno.serve(async (req) => {
     const dhbAmount = Number(match.value);
     if (!Number.isFinite(dhbAmount) || dhbAmount <= 0) {
       return jsonResponse({ error: 'Invalid transfer amount' }, 400);
+    }
+
+    // Reject anything outside the claim window. A missing timestamp counts as
+    // unclaimable rather than fresh, so a provider that stops returning
+    // metadata fails closed instead of opening the whole history.
+    const minedAt = match.metadata?.blockTimestamp ? Date.parse(match.metadata.blockTimestamp) : NaN;
+    if (!Number.isFinite(minedAt)) {
+      return jsonResponse({ error: 'Could not establish when that transfer was mined.' }, 400);
+    }
+    if (Date.now() - minedAt > CLAIM_WINDOW_MS) {
+      return jsonResponse({ error: 'That transfer is too old to claim. Send a new one.' }, 400);
     }
 
     const price = await getDhbPriceUsd();
