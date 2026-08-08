@@ -6,18 +6,9 @@ import { AiToolModel, AiToolCategory, getToolCostUsd, getToolCostDhb, getToolsBy
 import { supabase } from '@/integrations/supabase/client';
 import dhbCoinImage from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
-import { useDeHubProfile } from '@/hooks/use-dehub-profile';
+import { useAiCredits } from '@/hooks/use-ai-credits';
 import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
-import { Interface } from 'ethers';
-import { writeContractAA, getWalletAddress, getERC20Balance, switchChain, parseTxError } from '@/lib/contracts/aa-utils';
-import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import type { ChainId } from '@/components/app/ChainSelector';
-
-const DEHUB_AI_TREASURY = '0xbf3039b0bb672b268e8384e30d81b1e6a8a43b2c';
-const erc20TransferInterface = new Interface([
-  'function transfer(address to, uint256 amount) returns (bool)',
-]);
 
 interface AiToolPaywallModalProps {
   open: boolean;
@@ -47,8 +38,10 @@ export function AiToolPaywallModal({
   const [isPaying, setIsPaying] = useState(false);
 
   const { walletAddress } = useAuth();
-  const { data: profile, isLoading: profileLoading } = useDeHubProfile({ userId: walletAddress || undefined, enabled: !!walletAddress });
-  const userBalance = profile?.badgeBalance ?? 0;
+  const { balanceDhb, isLoading: profileLoading } = useAiCredits();
+  // Credit balance, not the wallet's on-chain holding — the generate function
+  // charges credit, and holding DHB is not the same as having topped it up.
+  const userBalance = balanceDhb;
 
   const categoryInfo = CATEGORY_LABELS[category];
   const categoryModels = getToolsByCategory(category);
@@ -69,7 +62,7 @@ export function AiToolPaywallModal({
     } catch (err) {
       console.error('Error fetching DHB price:', err);
       setError('Failed to fetch DHB price. Using fallback.');
-      setDhbPrice(0.0006191);
+      setDhbPrice(0.001);
     } finally {
       setLoading(false);
     }
@@ -90,50 +83,22 @@ export function AiToolPaywallModal({
     if (costDhb <= 0) return;
     setIsPaying(true);
     try {
-      const signerAddress = await getWalletAddress();
-      const amountWei = toWei(costDhb, DHB_TOKEN.decimals);
-
-      const baseConfig = getChainConfig(BASE_CHAIN_ID);
-      const bnbConfig = getChainConfig(BNB_CHAIN_ID);
-      const [baseBalance, bnbBalance] = await Promise.all([
-        getERC20Balance(baseConfig.dhbToken, signerAddress, BASE_CHAIN_ID).catch(() => BigInt(0)),
-        getERC20Balance(bnbConfig.dhbToken, signerAddress, BNB_CHAIN_ID).catch(() => BigInt(0)),
-      ]);
-
-      let payChainId: ChainId;
-      if (baseBalance >= amountWei) {
-        payChainId = BASE_CHAIN_ID;
-      } else if (bnbBalance >= amountWei) {
-        payChainId = BNB_CHAIN_ID;
-      } else {
-        const baseDhb = Number(baseBalance) / 1e18;
-        const bnbDhb = Number(bnbBalance) / 1e18;
+      // No transfer here any more. fal-ai-tools debits the DHB credit balance
+      // itself, so signing one here as well would charge twice.
+      if (userBalance < costDhb) {
         toast.error(
-          `Insufficient DHB. Need ${formatDhb(costDhb)} DHB (Base: ${formatDhb(baseDhb)}, BNB: ${formatDhb(bnbDhb)})`
+          `Not enough credit. This costs ${formatDhb(costDhb)} DHB and you have ${formatDhb(userBalance)}.`
         );
         setIsPaying(false);
         return;
       }
 
-      const chainConfig = getChainConfig(payChainId);
-      await switchChain(payChainId);
-
-      toast.loading('Processing payment...', { id: 'ai-tool-payment' });
-      const result = await writeContractAA(
-        chainConfig.dhbToken,
-        erc20TransferInterface,
-        'transfer',
-        [DEHUB_AI_TREASURY, amountWei],
-        { context: `AI ${categoryInfo.label} payment`, chainId: payChainId }
-      );
-      await result.wait(1);
-      toast.success(`Payment confirmed! Processing ${categoryInfo.label.toLowerCase()}...`, { id: 'ai-tool-payment' });
+      toast.dismiss('ai-tool-payment');
       onConfirm();
     } catch (err: unknown) {
-      console.error('[AiToolPaywall] Payment failed:', err);
-      const msg = parseTxError(err);
+      console.error('[AiToolPaywall] Tool setup failed:', err);
       toast.dismiss('ai-tool-payment');
-      toast.error(msg || 'Payment failed.');
+      toast.error(err instanceof Error ? err.message : 'Could not start the tool.');
     } finally {
       setIsPaying(false);
     }

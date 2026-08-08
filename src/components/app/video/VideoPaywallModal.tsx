@@ -6,20 +6,11 @@ import { VideoModel, VideoModelKey, VIDEO_MODELS, VIDEO_MODEL_OPTIONS, getVideoC
 import { supabase } from '@/integrations/supabase/client';
 import dhbCoinImage from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
-import { useDeHubProfile } from '@/hooks/use-dehub-profile';
+import { useAiCredits } from '@/hooks/use-ai-credits';
 import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
-import { Interface } from 'ethers';
-import { writeContractAA, getWalletAddress, getERC20Balance, switchChain, parseTxError } from '@/lib/contracts/aa-utils';
-import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import type { ChainId } from '@/components/app/ChainSelector';
 import { Slider } from '@/components/ui/slider';
 import { ScrollArea } from '@/components/ui/scroll-area';
-
-const DEHUB_AI_TREASURY = '0xbf3039b0bb672b268e8384e30d81b1e6a8a43b2c';
-const erc20TransferInterface = new Interface([
-  'function transfer(address to, uint256 amount) returns (bool)',
-]);
 
 export interface VideoGenerationOptions {
   duration?: number;
@@ -107,8 +98,11 @@ export function VideoPaywallModal({
   const videoInputRef = useRef<HTMLInputElement>(null);
 
   const { walletAddress } = useAuth();
-  const { data: profile, isLoading: profileLoading } = useDeHubProfile({ userId: walletAddress || undefined, enabled: !!walletAddress });
-  const userBalance = profile?.badgeBalance ?? 0;
+  // The balance that matters is DHB credit, not the wallet's on-chain holding —
+  // generate-video charges credit, and holding DHB is not the same as having
+  // topped it up.
+  const { balanceDhb, isLoading: profileLoading } = useAiCredits();
+  const userBalance = balanceDhb;
 
   // Reset options when model changes. Duration and resolution fall back to the
   // caller's seed first, so a value the creator already chose upstream survives.
@@ -175,7 +169,7 @@ export function VideoPaywallModal({
     } catch (err) {
       console.error('Error fetching DHB price:', err);
       setError('Failed to fetch DHB price. Using fallback.');
-      setDhbPrice(0.0006191);
+      setDhbPrice(0.001);
     } finally {
       setLoading(false);
     }
@@ -285,61 +279,26 @@ export function VideoPaywallModal({
         setIsUploading(false);
       }
 
-      const signerAddress = await getWalletAddress();
-      const amountWei = toWei(costDhb, DHB_TOKEN.decimals);
-
-      const baseConfig = getChainConfig(BASE_CHAIN_ID);
-      const bnbConfig = getChainConfig(BNB_CHAIN_ID);
-      // Treat a flaky RPC as a zero balance rather than aborting, matching
-      // ImagePaywallModal. Since the reorder, an abort here would strand
-      // attachments that have already been uploaded.
-      const [baseBalance, bnbBalance] = await Promise.all([
-        getERC20Balance(baseConfig.dhbToken, signerAddress, BASE_CHAIN_ID).catch(() => BigInt(0)),
-        getERC20Balance(bnbConfig.dhbToken, signerAddress, BNB_CHAIN_ID).catch(() => BigInt(0)),
-      ]);
-
-      let payChainId: ChainId;
-      if (baseBalance >= amountWei) {
-        payChainId = BASE_CHAIN_ID;
-      } else if (bnbBalance >= amountWei) {
-        payChainId = BNB_CHAIN_ID;
-      } else {
-        const baseDhb = Number(baseBalance) / 1e18;
-        const bnbDhb = Number(bnbBalance) / 1e18;
+      // No transfer here any more. generate-video debits the DHB credit
+      // balance itself, so signing one here as well would charge twice.
+      if (balanceDhb < costDhb) {
         // The upload phase claims this toast id and sonner loading toasts never
         // auto-dismiss, so an early return has to clear it or a spinner is left
         // running forever.
         toast.dismiss('video-gen-payment');
-        toast.error(`Insufficient DHB. Need ${formatDhb(costDhb)} DHB (Base: ${formatDhb(baseDhb)}, BNB: ${formatDhb(bnbDhb)})`);
+        toast.error(
+          `Not enough credit. This costs ${formatDhb(costDhb)} DHB and you have ${formatDhb(balanceDhb)}.`
+        );
         setIsPaying(false);
         return;
       }
 
-      const chainConfig = getChainConfig(payChainId);
-      await switchChain(payChainId);
-
-      toast.loading('Processing payment...', { id: 'video-gen-payment' });
-      const result = await writeContractAA(
-        chainConfig.dhbToken,
-        erc20TransferInterface,
-        'transfer',
-        [DEHUB_AI_TREASURY, amountWei],
-        { context: 'AI video generation payment', chainId: payChainId }
-      );
-      // wait() resolves with status 0 for a REVERTED transaction rather than
-      // throwing, so ignoring the receipt would hand out a free generation
-      // whenever the transfer failed on chain.
-      const receipt = await result.wait(1);
-      if (receipt?.status !== 1) {
-        throw new Error('The DHB transfer did not go through. Nothing has been charged.');
-      }
-      toast.success('Payment confirmed! Generating video...', { id: 'video-gen-payment' });
+      toast.dismiss('video-gen-payment');
       onConfirm(options);
     } catch (err: unknown) {
-      console.error('[VideoPaywall] Payment failed:', err);
-      const msg = parseTxError(err);
+      console.error('[VideoPaywall] Generation setup failed:', err);
       toast.dismiss('video-gen-payment');
-      toast.error(msg || 'Payment failed.');
+      toast.error(err instanceof Error ? err.message : 'Could not start the generation.');
     } finally {
       setIsPaying(false);
       setIsUploading(false);

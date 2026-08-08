@@ -1,5 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { type StripeEnv, verifyWebhook } from "../_shared/stripe.ts";
+import { planGrantDhb } from "../_shared/ai-plans.ts";
 
 let _supabase: ReturnType<typeof createClient> | null = null;
 function getSupabase() {
@@ -115,6 +116,70 @@ async function handleSubscriptionDeleted(subscription: any, env: StripeEnv) {
     .eq("environment", env);
 }
 
+/**
+ * Grant the plan's monthly DHB allowance.
+ *
+ * Hung off invoice.paid rather than subscription.created so renewals grant too
+ * — an allowance that only ever landed once would be a one-off, not a plan.
+ * The invoice id is the idempotency key, so Stripe re-delivering a webhook (it
+ * does) cannot pay the allowance twice.
+ */
+async function handleInvoicePaid(invoice: any, env: StripeEnv) {
+  const line = invoice.lines?.data?.[0];
+  const priceId = resolvePriceId(line);
+  const seats = Number(line?.quantity ?? 1);
+  const grantDhb = planGrantDhb(priceId, seats);
+
+  if (!grantDhb) {
+    console.log("No AI allowance for price:", priceId);
+    return;
+  }
+
+  const subscriptionId = typeof invoice.subscription === "string"
+    ? invoice.subscription
+    : invoice.subscription?.id;
+
+  let wallet: string | undefined =
+    invoice.subscription_details?.metadata?.walletAddress ||
+    invoice.metadata?.walletAddress;
+
+  // Renewal invoices often carry no metadata, so fall back to the row the
+  // subscription handlers already wrote.
+  if (!wallet && subscriptionId) {
+    const { data } = await getSupabase()
+      .from("premium_subscriptions")
+      .select("wallet_address")
+      .eq("stripe_subscription_id", subscriptionId)
+      .eq("environment", env)
+      .maybeSingle();
+    wallet = data?.wallet_address as string | undefined;
+  }
+
+  if (!wallet) {
+    console.error("No wallet for paid invoice", invoice.id);
+    return;
+  }
+
+  const { error } = await getSupabase().rpc("ai_credit_grant", {
+    p_wallet: wallet.toLowerCase(),
+    p_dhb: grantDhb,
+    p_reason: "plan_grant",
+    p_ref: invoice.id,
+    p_metadata: { priceId, seats, subscriptionId, environment: env },
+  });
+
+  if (error) {
+    if (String(error.message || "").includes("CREDIT_ALREADY_APPLIED")) {
+      console.log("Allowance already granted for invoice", invoice.id);
+      return;
+    }
+    console.error("Failed to grant AI allowance:", error);
+    return;
+  }
+
+  console.log(`Granted ${grantDhb} DHB to ${wallet} for ${priceId} (${invoice.id})`);
+}
+
 async function handleWebhook(req: Request, env: StripeEnv) {
   const event = await verifyWebhook(req, env);
 
@@ -127,6 +192,9 @@ async function handleWebhook(req: Request, env: StripeEnv) {
       break;
     case "customer.subscription.deleted":
       await handleSubscriptionDeleted(event.data.object, env);
+      break;
+    case "invoice.paid":
+      await handleInvoicePaid(event.data.object, env);
       break;
     default:
       console.log("Unhandled event:", event.type);

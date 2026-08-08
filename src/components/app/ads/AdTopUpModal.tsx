@@ -63,7 +63,7 @@ export function AdTopUpModal({ open, onOpenChange }: AdTopUpModalProps) {
       } catch {
         if (!cancelled) {
           setPriceError('Live price unavailable — using fallback.');
-          setDhbPrice(0.0006191);
+          setDhbPrice(0.001);
         }
       } finally {
         if (!cancelled) setLoadingPrice(false);
