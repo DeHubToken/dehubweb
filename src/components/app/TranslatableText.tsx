@@ -324,6 +324,13 @@ export function setAutoTranslateEnabled(enabled: boolean): void {
   }
 }
 
+// A translation that came back as the text it was given did not translate
+// anything — the body was already in the reader's language. Compared loosely
+// because providers normalise trailing whitespace.
+function isNoOpTranslation(translated: string, original: string): boolean {
+  return translated.trim() === original.trim();
+}
+
 // Minimum text length for AI detection (avoid detecting single words)
 const MIN_TEXT_LENGTH_FOR_DETECTION = 15;
 
@@ -430,7 +437,11 @@ export function hasTranslatableText(text: string | null | undefined): boolean {
 
 // Custom hook for translation logic (shared between components)
 // On-demand only: no auto-detection, translate-text is called when user clicks
-export function useTranslation(text: string) {
+/**
+ * @param auto  Translate without being asked. Public content should; private
+ *              content must not — see the auto-translate effect below.
+ */
+export function useTranslation(text: string, auto: boolean = true) {
   const { language: userLang } = useUserLanguage();
   const [isTranslated, setIsTranslated] = useState(false);
   const [translatedText, setTranslatedText] = useState('');
@@ -453,6 +464,10 @@ export function useTranslation(text: string) {
     
     if (translationCache.has(cacheKey)) {
       const cached = translationCache.get(cacheKey)!;
+      if (isNoOpTranslation(cached.translated, text)) {
+        setSourceLang(cached.sourceLang);
+        return;
+      }
       setTranslatedText(cached.translated);
       setSourceLang(cached.sourceLang);
       setIsTranslated(true);
@@ -482,7 +497,21 @@ export function useTranslation(text: string) {
       const translated = data.translatedText;
       const detected = data.detectedLanguage?.language || 'unknown';
 
+      // Cache either way — a post already in the reader's language is a settled
+      // answer, and not storing it means auto-translate asks again on every
+      // mount for the rest of the session.
       cacheTranslation(cacheKey, { translated, sourceLang: detected });
+
+      // Nothing changed, so do not claim anything did. The server returns the
+      // body untouched when the text is already in the target language, and
+      // flipping to the translated state on that put a "Show original" control
+      // on a change that never happened — on a feed whose posts match the
+      // reader's language, which is most of them, every post looked translated
+      // and none of them were.
+      if (data.sameLanguage === true || isNoOpTranslation(translated, text)) {
+        setSourceLang(detected);
+        return;
+      }
 
       setTranslatedText(translated);
       setSourceLang(detected);
@@ -510,8 +539,16 @@ export function useTranslation(text: string) {
   // on by default and opting out is remembered. A reader who has pressed "show
   // original" on this text is not overridden — autoDone is set either way, and
   // the manual controls stay exactly as they were.
+  //
+  // Call sites opt out with auto=false, and private content must. Translating
+  // sends the body to a third party, and the free tier is MyMemory — a SHARED
+  // translation memory, which is why an unrelated segment somebody else once
+  // submitted can come back out of it. A reader choosing to translate one
+  // message accepts that; doing it silently to every message they receive does
+  // not, and a direct message is not ours to upload on their behalf.
   const autoDoneRef = useRef<string | null>(null);
   useEffect(() => {
+    if (!auto) return;
     if (!autoTranslateEnabled()) return;
     if (isTooShort) return;
 
@@ -522,7 +559,7 @@ export function useTranslation(text: string) {
     void handleTranslate();
     // handleTranslate is intentionally absent: see above.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [text, userLang, isTooShort]);
+  }, [text, userLang, isTooShort, auto]);
 
   return {
     userLang,
