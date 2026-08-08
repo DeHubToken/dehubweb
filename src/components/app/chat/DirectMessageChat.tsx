@@ -218,7 +218,11 @@ const MessageBubble = memo(function MessageBubble({
     isTooShort,
     handleTranslate,
     handleShowOriginal,
-  } = useTranslation(textContent);
+    // Direct messages stay on-demand. Auto-translating would ship every private
+    // message a user receives to a third-party translator without them asking,
+    // and the free tier is a shared translation memory. The translate control is
+    // still here for anyone who wants it.
+  } = useTranslation(textContent, false);
 
   return (
     <div
