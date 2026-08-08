@@ -5,7 +5,7 @@
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import type { DeHubNFT } from '@/lib/api/dehub';
-import { resolveDislikeCount, resolveLikeCount, resolveMyReaction, resolveReactionCounts } from '@/lib/engagement';
+import { resolveDislikeCount, resolveLikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
 import type { VideoItem, ImagePost, TextPost, FeedItem } from '@/types/feed.types';
 
 function detectPostType(nft: DeHubNFT): 'video' | 'image' | 'text' {
@@ -35,7 +35,7 @@ function mapNFTToVideoItem(nft: DeHubNFT): VideoItem {
     channel: nft.minterDisplayName || nft.minterUsername || nft.mintername || 'Unknown Creator',
     channelAvatar,
     verified: false,
-    views: formatViews(nft.views || nft.view_count),
+    views: formatViews(resolveViewCount(nft)),
     uploadedAgo: formatTimeAgo(nft.createdAt || nft.created_at),
     creatorId: nft.minter,
     creatorUsername: nft.minterUsername || nft.mintername,
@@ -81,7 +81,7 @@ function mapNFTToImagePost(nft: DeHubNFT): ImagePost {
     likes: resolveLikeCount(nft),
     caption: nft.description || nft.name || '',
     comments: nft.commentCount || nft.comment_count || 0,
-    views: formatViews(nft.views || nft.view_count).replace(' views', ''),
+    views: formatViews(resolveViewCount(nft)).replace(' views', ''),
     timeAgo: formatTimeAgo(nft.createdAt || nft.created_at),
     creatorId: nft.minter,
     creatorUsername: nft.minterUsername || nft.mintername,
@@ -125,7 +125,7 @@ function mapNFTToTextPost(nft: DeHubNFT): TextPost {
     },
     content: nft.description || nft.name || '',
     createdAt: nft.createdAt || nft.created_at || (nft as any).mintedAt || (nft as any).minted_at || (nft as any).updatedAt || (nft as any).updated_at || '',
-    views: formatViews(nft.views || nft.view_count).replace(' views', ''),
+    views: formatViews(resolveViewCount(nft)).replace(' views', ''),
     stats: {
       comments: nft.commentCount || nft.comment_count || 0,
       reposts: (nft.totalReposts || nft.reposts || 0) + (nft.quotes || 0),

@@ -89,6 +89,37 @@ export function resolveLikeCount(source: CountSource | null | undefined): number
   return source.totalVotes?.for ?? toCount(source.likes) ?? toCount(source.like_count) ?? 0;
 }
 
+/**
+ * The count-bearing view fields on an API-shaped post object.
+ *
+ * `views` means signed-in viewers only. Views from visitors with no session
+ * used to live in a separate store and were added on by the client after the
+ * card had already painted, which is why counts jumped a moment after load.
+ * The API now folds both halves into `totalViews`, so there is one number to
+ * read and nothing to merge.
+ */
+export interface ViewCountSource {
+  /** Every viewer, signed in or not. Preferred. */
+  totalViews?: number | null;
+  /** Signed-in viewers only — the fallback while a response predates totalViews. */
+  views?: number | null;
+  view_count?: number | null;
+}
+
+/**
+ * Canonical view count for any API-shaped post object: the number a viewer
+ * should see.
+ *
+ * Falls back to `views` so a cached or older response still renders something
+ * sensible — undercounting by the signed-out half, which is what shipped
+ * before, rather than showing nothing.
+ */
+export function resolveViewCount(source: ViewCountSource | null | undefined): number {
+  if (!source) return 0;
+  const value = source.totalViews ?? source.views ?? source.view_count;
+  return typeof value === 'number' && Number.isFinite(value) ? value : 0;
+}
+
 /** Canonical dislike count for any API-shaped post object. */
 export function resolveDislikeCount(source: CountSource | null | undefined): number {
   if (!source) return 0;

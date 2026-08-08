@@ -52,6 +52,7 @@ import { transferFractions } from '@/lib/contracts/fraction-transfer';
 import { DHB_TOKEN, BASE_CHAIN_ID } from '@/lib/contracts/dhb-token';
 import type { ChainId } from '@/components/app/ChainSelector';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
+import { resolveViewCount } from '@/lib/engagement';
 
 // FractionMarketplace Component
 interface FractionMarketplaceProps {
@@ -741,7 +742,7 @@ export default function PostInfoPage() {
   // Get stats with fallbacks
   const likes = nftInfo.totalVotes?.for ?? nftInfo.like_count ?? 0;
   const dislikes = nftInfo.totalVotes?.against ?? nftInfo.dislike_count ?? 0;
-  const views = nftInfo.views ?? nftInfo.view_count ?? 0;
+  const views = resolveViewCount(nftInfo);
   const comments = nftInfo.commentCount ?? nftInfo.comment_count ?? 0;
   const totalTips = nftInfo.minterUser?.receivedTips ?? 0;
   const likeRatio = likes + dislikes > 0 ? Math.round((likes / (likes + dislikes)) * 100) : 100;

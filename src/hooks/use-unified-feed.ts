@@ -12,7 +12,7 @@ import { useInfiniteQuery, useQuery, keepPreviousData, type QueryClient } from '
 import { getAuthToken, isTokenExpired, ensureFreshToken, DEHUB_CDN_BASE, type DeHubNFT, getBlockList, getNFTInfo } from '@/lib/api/dehub';
 import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, extractAvatarPath } from '@/lib/media-url';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
-import { resolveLikeCount, resolveDislikeCount, resolveMyReaction, resolveReactionCounts } from '@/lib/engagement';
+import { resolveLikeCount, resolveDislikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
 import { useAuth } from '@/contexts/AuthContext';
@@ -78,7 +78,10 @@ export interface UnifiedFeedItem {
   postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio' | 'feed-audio';
   status?: string;
   category?: string[];
+  /** Signed-in viewers only — read totalViews via resolveViewCount instead. */
   views: number;
+  /** Every viewer, signed in or not. The count to display. */
+  totalViews?: number;
   totalVotes?: {
     for: number;
     against: number;
@@ -239,7 +242,7 @@ export function mapToVideoItem(item: UnifiedFeedItem, index: number): VideoItem 
     channel: item.minterDisplayName || item.minterUsername || item.mintername || 'Unknown Creator',
     channelAvatar,
     verified: false,
-    views: formatViews(item.views),
+    views: formatViews(resolveViewCount(item)),
     uploadedAgo: formatTimeAgo(item.createdAt),
     status: item.status,
     creatorId: item.minter,
@@ -310,7 +313,7 @@ export function mapToImagePost(item: UnifiedFeedItem, index: number): ImagePost 
     likes: resolveLikeCount(item),
     caption: item.description || item.name || '',
     comments: item.commentCount || 0,
-    views: formatViews(item.views).replace(' views', ''),
+    views: formatViews(resolveViewCount(item)).replace(' views', ''),
     timeAgo: formatTimeAgo(item.createdAt),
     status: item.status,
     creatorId: item.minter,
@@ -381,7 +384,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     rawName,
     rawDescription,
     createdAt: item.createdAt,
-    views: formatViews(item.views).replace(' views', ''),
+    views: formatViews(resolveViewCount(item)).replace(' views', ''),
     status: item.status,
     stats: {
       comments: item.commentCount || 0,

@@ -19,7 +19,7 @@ import {
   type SearchNFTsParams,
   type LiveStream as ApiLiveStream,
 } from '@/lib/api/dehub';
-import { resolveDislikeCount, resolveLikeCount, resolveMyReaction, resolveReactionCounts } from '@/lib/engagement';
+import { resolveDislikeCount, resolveLikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
 import { buildAvatarUrl, buildFeedImageUrls } from '@/lib/media-url';
 import { parseSoundtrackTag } from '@/hooks/use-unified-feed';
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
@@ -140,7 +140,7 @@ export function mapNFTToVideoItem(nft: DeHubNFT, index: number): VideoItem {
   const verified = nft.creator?.is_verified || false;
 
   // Get view count from various fields
-  const viewCount = nft.views || nft.view_count;
+  const viewCount = resolveViewCount(nft);
 
   // Get created date from various fields
   const createdAt = nft.createdAt || nft.created_at;
@@ -248,7 +248,7 @@ export function mapNFTToImagePost(nft: DeHubNFT, index: number): ImagePost {
   // Get stats
   const likes = resolveLikeCount(nft);
   const comments = nft.commentCount || nft.comment_count || 0;
-  const viewCount = nft.views || nft.view_count || 0;
+  const viewCount = resolveViewCount(nft);
 
   // Get created date
   const createdAt = nft.createdAt || nft.created_at;
@@ -324,7 +324,7 @@ export function mapNFTToLiveStream(nft: DeHubNFT, index: number): LiveStream {
     buildAvatarUrl(minterAddress, nft.creator?.avatar_url) ||
     'user';
 
-  const viewCount = nft.views || nft.view_count || 0;
+  const viewCount = resolveViewCount(nft);
   const category = Array.isArray(nft.category) ? nft.category[0] : nft.category;
 
   // Get creator ID and username for profile navigation

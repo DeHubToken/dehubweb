@@ -45,6 +45,7 @@ import valorantCategory from '@/assets/valorant-category.png';
 import leagueCategory from '@/assets/league-category.png';
 import apexCategory from '@/assets/apex-category.png';
 import justchattingCategory from '@/assets/justchatting-category.png';
+import { resolveViewCount } from '@/lib/engagement';
 
 // ============================================================================
 // TYPES
@@ -678,7 +679,7 @@ export function VideosFeed({ showFilters = false, isRefreshing = false, refreshK
         comments: formatCount(item.commentCount || 0),
         shares: '0',
         repostCount: ((item as any).totalReposts || (item as any).reposts || 0) + ((item as any).quotes || 0),
-        views: formatCount(item.views || 0),
+        views: formatCount(resolveViewCount(item)),
         creatorUsername: item.minterUsername || 'user',
         creatorId: minterAddress,
         displayName: item.minterDisplayName || undefined,
