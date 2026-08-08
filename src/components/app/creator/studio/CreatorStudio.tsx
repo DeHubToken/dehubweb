@@ -69,6 +69,7 @@ import { applyPreset, getPreset, type CreatorPreset } from '@/lib/creator/preset
 import { enhancePrompt, hostDataUrl } from '@/lib/creator/generationEngine';
 import { useGenerationStore, type GenerationJob } from '@/store/generationStore';
 import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from '@/hooks/use-surface-switch';
+import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { CounterChip, SelectChip, type ChipOption } from './StudioChip';
 import { PresetStrip } from './PresetStrip';
 import { ResultsFeed } from './ResultsFeed';
@@ -347,6 +348,19 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const composerRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const studioTailRef = useRef<HTMLElement>(null);
+
+  /**
+   * Swallow: the preset strip and results feed are cut off at the composer's
+   * top edge as they scroll under it, tracing its rounded corners and then
+   * running full width just below them — the same treatment the home feed gets
+   * from its nav pill. Without it the feed slides behind the glass and
+   * re-emerges in the gutters either side of the bar.
+   *
+   * `allThemes` because /creator is a standalone dark surface rather than one
+   * of the app's glass themes, so the hook's theme gate would never open.
+   */
+  useFeedSwallowClip(studioTailRef, '[data-creator-composer]', [], { allThemes: true });
 
   // Paywalls are Radix dialogs, portalled outside the host's hidden wrapper.
   useCloseOnSurfaceSwitch(
@@ -985,8 +999,27 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
           ride along when it parks, leaving a transparent strip between the
           header and the composer with the page scrolling through it. */}
       <div className="sticky z-40 px-3 sm:px-4" style={{ top: stickyTop }}>
+        {/* Lag guard. The clip is written on the main thread; a hard fling
+            scrolls the compositor ahead of it, so for a frame a card's top edge
+            flashes in the shoulders either side of the pill. This strip is
+            anchored to the sticky wrapper, which never lags, and is painted the
+            page's own background — invisible at rest, and it swallows the
+            flash. Flat paint is only safe here because /creator's backdrop is a
+            known solid colour; over a textured surface this would have to be
+            frost instead. It sits BEHIND the pill so the glass and the rounded
+            cut are untouched. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-6 bg-[#090a0b]"
+        />
+
+        {/* The swallow clip's cut element: its top edge is the cut line and its
+            own corner radius is what the clip traces. Keep it the only surface
+            inside the sticky wrapper, and keep that wrapper transparent — a
+            background there would paint a box around the pill. */}
         <div
           ref={composerRef}
+          data-creator-composer
           className={cn(
             'rounded-2xl border transition-[padding,background-color,box-shadow] duration-200',
             collapsed
@@ -1228,7 +1261,7 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
         </div>
       </div>
 
-      <section className="px-3 pb-6 sm:px-4">
+      <section ref={studioTailRef} className="px-3 pb-6 sm:px-4">
         <input
           ref={fileRef}
           type="file"
