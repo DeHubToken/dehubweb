@@ -107,9 +107,20 @@ serve(async (req) => {
   // Forcing one of each satisfies any policy this project could reasonably have.
   const oneShotPassword = `Aa1!${crypto.randomUUID()}`;
 
+  // signInWithPassword({ phone, password }) 422s with phone_provider_disabled:
+  // GoTrue gates the "phone" grant type behind a configured SMS provider
+  // regardless of grant type, same as the OTP path this function exists to
+  // route around. There's no equivalent gate on email/password — Email OTP
+  // already works elsewhere in this app — so the account signs in through a
+  // synthetic, deterministic email instead. `phone` is still set on the user
+  // for get_user_id_by_phone to find it next time; it just never signs in.
+  const syntheticEmail = `p${phone.replace(/[^0-9]/g, "")}@phone.dehub.internal`;
+
   if (existingUserId) {
     const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(existingUserId, {
       password: oneShotPassword,
+      email: syntheticEmail,
+      email_confirm: true,
     });
     if (updateError) {
       console.error("verify-phone-otp: updateUserById failed", updateError);
@@ -119,6 +130,8 @@ serve(async (req) => {
     const { error: createError } = await supabaseAdmin.auth.admin.createUser({
       phone,
       phone_confirm: true,
+      email: syntheticEmail,
+      email_confirm: true,
       password: oneShotPassword,
     });
     if (createError) {
@@ -131,7 +144,7 @@ serve(async (req) => {
     auth: { persistSession: false },
   });
   const { data: signInData, error: signInError } = await anonClient.auth.signInWithPassword({
-    phone,
+    email: syntheticEmail,
     password: oneShotPassword,
   });
   if (signInError || !signInData?.session) {
