@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Loader2, Video, AlertCircle, ChevronDown, Volume2, Upload, X, Image, Music, Film, Hash, Plus, Lightbulb } from 'lucide-react';
-import { VideoModel, VideoModelKey, VIDEO_MODELS, VIDEO_MODEL_OPTIONS, getVideoCostUsd, getVideoCostDhb, snapVideoDuration } from '@/constants/video-models.constants';
+import { VideoModel, VideoModelKey, VIDEO_MODELS, VIDEO_MODEL_OPTIONS, getVideoCostUsd, getVideoCostDhb, getVideoResolutions, snapVideoDuration } from '@/constants/video-models.constants';
 import { supabase } from '@/integrations/supabase/client';
 import dhbCoinImage from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
@@ -500,11 +500,14 @@ export function VideoPaywallModal({
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-zinc-400">Resolution</span>
                   <div className="flex gap-1.5">
-                    {(['480p', '720p', '1080p'] as const).map((res) => (
+                    {/* Only what this model renders. Seedance 2.5 stops at
+                        720p, and offering 1080p there takes payment for a
+                        resolution the provider quietly downgrades. */}
+                    {getVideoResolutions(model).map((res) => (
                       <button
                         key={res}
                         type="button"
-                        onClick={() => setResolution(res)}
+                        onClick={() => setResolution(res as '480p' | '720p' | '1080p')}
                         className={`px-2.5 py-1 text-xs font-medium rounded-lg transition-colors ${
                           resolution === res
                             ? 'bg-purple-500/30 text-purple-300 border border-purple-500/40'

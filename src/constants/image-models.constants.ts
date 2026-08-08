@@ -10,7 +10,19 @@ export interface ImageModel {
   tier: 'premium' | 'standard' | 'fast';
   /** Base cost in USD (before markup) */
   baseCostUsd: number;
+  /**
+   * Whether the model can take an attached image as an edit reference.
+   *
+   * Defaults to true. The ones set false have no edit endpoint at all, so
+   * generate-image rejects the request — which, without this, only happened
+   * after the DHB had already been spent.
+   */
+  supportsEdit?: boolean;
 }
+
+/** Whether a reference image can be handed to this model. */
+export const imageModelSupportsEdit = (model: ImageModel): boolean =>
+  model.supportsEdit !== false;
 
 /**
  * Markup percentage for image generation (100% = 2x cost)
@@ -115,6 +127,26 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
     tier: 'premium',
     baseCostUsd: 0.08,
   },
+  'flux-2-flex': {
+    id: 'flux-2-flex',
+    name: 'FLUX.2 Flex',
+    description: 'Tunable steps and guidance for fine control',
+    emoji: '🎚️',
+    tier: 'standard',
+    // $0.05 per megapixel, rounded up — the studio requests a single one.
+    baseCostUsd: 0.05,
+    supportsEdit: false,
+  },
+  'z-image-turbo': {
+    id: 'z-image-turbo',
+    name: 'Z-Image Turbo',
+    description: 'Near-instant drafts at the lowest price here',
+    emoji: '🪄',
+    tier: 'fast',
+    // $0.005 per megapixel; rounded up to stay clear of the rounding boundary.
+    baseCostUsd: 0.006,
+    supportsEdit: false,
+  },
   'recraft-v4.1': {
     id: 'recraft-v4.1',
     name: 'Recraft V4.1',
@@ -122,6 +154,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
     emoji: '🎨',
     tier: 'standard',
     baseCostUsd: 0.035,
+    supportsEdit: false,
   },
   'recraft-v4.1-vector': {
     id: 'recraft-v4.1-vector',
@@ -130,6 +163,7 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
     emoji: '📐',
     tier: 'standard',
     baseCostUsd: 0.08,
+    supportsEdit: false,
   },
   'ideogram-v3': {
     id: 'ideogram-v3',

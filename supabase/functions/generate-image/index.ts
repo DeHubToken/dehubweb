@@ -91,6 +91,17 @@ const FAL_IMAGE_MODELS: Record<string, FalImageModel> = {
     edit: 'fal-ai/flux-pro/kontext/max',
     sizing: 'aspect_ratio',
   },
+  // No edit endpoint on either of these two — generateWithFal rejects a
+  // reference image before it reaches fal, and the composer greys them out
+  // while one is attached.
+  'flux-2-flex': {
+    text: 'fal-ai/flux-2-flex',
+    sizing: 'image_size',
+  },
+  'z-image-turbo': {
+    text: 'fal-ai/z-image/turbo',
+    sizing: 'image_size',
+  },
   'recraft-v4.1': {
     text: 'fal-ai/recraft/v4.1/text-to-image',
     sizing: 'image_size',

@@ -15,7 +15,16 @@ const corsHeaders = {
  * Wan takes `num_frames`. Unknown keys are not ignored: fal 422s the request.
  * So the family selects an explicit input builder instead of one shared spread.
  */
-type FalFamily = 'seedance' | 'veo' | 'kling' | 'hailuo' | 'wan' | 'luma' | 'pixverse' | 'ltx';
+type FalFamily =
+  | 'seedance'
+  | 'seedance25'
+  | 'veo'
+  | 'kling'
+  | 'hailuo'
+  | 'wan'
+  | 'luma'
+  | 'pixverse'
+  | 'ltx';
 
 // Premium video generation models via Replicate and fal.ai
 const VIDEO_MODELS: Record<string, {
@@ -30,7 +39,26 @@ const VIDEO_MODELS: Record<string, {
   falTextModel?: string;
   falImageModel?: string;
   falReferenceModel?: string;
+  /**
+   * Drop `generate_audio` from the family's input.
+   *
+   * Kling 2.5 Turbo predates Kling's audio track and has no such field, so the
+   * shared kling builder would 422 it on every request.
+   */
+  falOmitAudio?: boolean;
 }> = {
+  'seedance-2.5': {
+    id: 'bytedance/seedance-2.5',
+    name: 'Seedance 2.5',
+    description: 'ByteDance flagship — 30s takes, unified multimodal input',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '4-30s',
+    provider: 'fal',
+    falFamily: 'seedance25',
+    falTextModel: 'bytedance/seedance-2.5/text-to-video',
+    falImageModel: 'bytedance/seedance-2.5/image-to-video',
+    falReferenceModel: 'bytedance/seedance-2.5/reference-to-video',
+  },
   'kling-2.6-pro': {
     id: 'kwaivgi/kling-v2.6',
     name: 'Kling 2.6 Pro',
@@ -143,6 +171,18 @@ const VIDEO_MODELS: Record<string, {
     falFamily: 'kling',
     falTextModel: 'fal-ai/kling-video/v3/standard/text-to-video',
     falImageModel: 'fal-ai/kling-video/v3/standard/image-to-video',
+  },
+  'kling-2.5-turbo': {
+    id: 'fal-ai/kling-video/v2.5-turbo/pro',
+    name: 'Kling 2.5 Turbo Pro',
+    description: 'Fluid motion and tight prompt precision, no audio track',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '5s or 10s',
+    provider: 'fal',
+    falFamily: 'kling',
+    falOmitAudio: true,
+    falTextModel: 'fal-ai/kling-video/v2.5-turbo/pro/text-to-video',
+    falImageModel: 'fal-ai/kling-video/v2.5-turbo/pro/image-to-video',
   },
   'hailuo-2.3': {
     id: 'fal-ai/minimax/hailuo-2.3',
@@ -388,6 +428,8 @@ interface FalInputOptions {
   audioUrls?: string[];
   videoUrls?: string[];
   seed?: number;
+  /** Suppress `generate_audio` for tiers that have no such field. */
+  omitAudio?: boolean;
 }
 
 /**
@@ -420,7 +462,7 @@ function snapResolution(requested: string | undefined, allowed: string[], fallba
 function buildFalInput(family: FalFamily, o: FalInputOptions): Record<string, unknown> {
   const {
     prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution,
-    referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed,
+    referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed, omitAudio,
   } = o;
 
   switch (family) {
@@ -455,13 +497,33 @@ function buildFalInput(family: FalFamily, o: FalInputOptions): Record<string, un
         ...(seed !== undefined && seed !== null && { seed }),
       };
 
-    // duration is a stringified integer 3-15. No resolution field.
+    /**
+     * Seedance 2.5. Same shape as 2.0 with three differences that each 422 if
+     * they are got wrong: the ceiling is 30s rather than 15, the end frame is
+     * `end_image_url` rather than `last_image_url`, and there is no
+     * `negative_prompt` field at all.
+     */
+    case 'seedance25':
+      return {
+        prompt,
+        duration: Math.min(Math.max(duration, 4), 30),
+        aspect_ratio: aspectRatio,
+        resolution: snapResolution(resolution, ['480p', '720p'], '720p'),
+        generate_audio: true,
+        ...(sourceImage && { image_url: sourceImage }),
+        ...(endFrameUrl && { end_image_url: endFrameUrl }),
+        ...(referenceImageUrls?.length && { image_urls: referenceImageUrls }),
+        ...(seed !== undefined && seed !== null && { seed }),
+      };
+
+    // duration is a stringified integer 3-15. No resolution field. The 2.5
+    // Turbo tier has no audio track, hence omitAudio.
     case 'kling':
       return {
         prompt,
         duration: String(Math.min(Math.max(duration, 3), 15)),
         aspect_ratio: aspectRatio,
-        generate_audio: true,
+        ...(omitAudio ? {} : { generate_audio: true }),
         cfg_scale: 0.5,
         ...(sourceImage && { image_url: sourceImage }),
         ...(negativePrompt && { negative_prompt: negativePrompt }),
@@ -637,7 +699,11 @@ async function handleFalGeneration(
     appId = modelConfig.falTextModel || modelConfig.id;
   }
 
-  const parsedDuration = Math.min(Math.max(parseInt(duration) || 5, 3), 15);
+  // 30 is Seedance 2.5's ceiling and the highest any family here accepts. Every
+  // builder clamps or snaps to its own model's range below, so this outer bound
+  // only has to avoid truncating the longest of them — it used to cap at 15,
+  // which silently billed a 30s Seedance 2.5 render as a 15s one.
+  const parsedDuration = Math.min(Math.max(parseInt(duration) || 5, 3), 30);
 
   const input = buildFalInput(modelConfig.falFamily ?? 'seedance', {
     prompt,
@@ -651,6 +717,7 @@ async function handleFalGeneration(
     audioUrls,
     videoUrls,
     seed,
+    omitAudio: modelConfig.falOmitAudio,
   });
 
   console.log(`[fal.ai] Submitting to ${appId}`, JSON.stringify(input).substring(0, 500));
