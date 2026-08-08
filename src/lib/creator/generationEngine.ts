@@ -38,9 +38,127 @@ export interface VideoRequest {
   seed?: number;
 }
 
-export interface AudioRequest {
+/**
+ * Voice knobs, shared by speech, dialogue and the voice changer.
+ *
+ * Named for what they do rather than mirroring the provider's field names —
+ * `similarity_boost` and friends are translated in the edge functions, so the
+ * wire format is not spread across the client.
+ */
+export interface VoiceTuning {
+  stability?: number;
+  similarity?: number;
+  style?: number;
+  speakerBoost?: boolean;
+  /** 0.7-1.2. Silently dropped for v3, which paces itself. */
+  speed?: number;
+}
+
+/**
+ * Text to speech.
+ *
+ * `task` is optional and defaults to speech, which is what keeps the editor's
+ * voiceover button — `generateAudio({ text, voiceId })` — working untouched.
+ */
+export interface SpeechRequest {
+  task?: 'speech';
   text: string;
   voiceId: string;
+  modelId?: string;
+  /** Overrides the language the model would infer from the text. */
+  languageCode?: string;
+  seed?: number;
+  outputFormat?: string;
+  voiceSettings?: VoiceTuning;
+}
+
+export interface DialogueRequest {
+  task: 'dialogue';
+  /** One entry per line of the scene, in order, each with its speaker's voice. */
+  inputs: { text: string; voiceId: string }[];
+  outputFormat?: string;
+  seed?: number;
+  voiceSettings?: VoiceTuning;
+}
+
+export interface SfxRequest {
+  task: 'sfx';
+  text: string;
+  /** Omit or 0 to let the model choose a natural length. */
+  durationSeconds?: number;
+  promptInfluence?: number;
+  loop?: boolean;
+  outputFormat?: string;
+}
+
+export interface MusicRequest {
+  task: 'music';
+  prompt: string;
+  lengthSeconds: number;
+  instrumental?: boolean;
+  outputFormat?: string;
+}
+
+export interface VoiceChangerRequest {
+  task: 'voice-changer';
+  file: File;
+  voiceId: string;
+  removeNoise?: boolean;
+  outputFormat?: string;
+  voiceSettings?: VoiceTuning;
+}
+
+export interface DubRequest {
+  task: 'dubbing';
+  file: File;
+  targetLang: string;
+  sourceLang?: string;
+  numSpeakers?: number;
+}
+
+export interface TranscribeRequest {
+  task: 'transcribe';
+  file: File;
+  diarize?: boolean;
+  languageCode?: string;
+}
+
+export interface IsolateRequest {
+  task: 'isolate';
+  file: File;
+  outputFormat?: string;
+}
+
+export type AudioRequest =
+  | SpeechRequest
+  | DialogueRequest
+  | SfxRequest
+  | MusicRequest
+  | VoiceChangerRequest
+  | DubRequest
+  | TranscribeRequest
+  | IsolateRequest;
+
+/** Which tool ran, for the job card. Speech is the default for a bare request. */
+export function audioTaskOf(req: AudioRequest): string {
+  return req.task ?? 'speech';
+}
+
+/**
+ * What an audio task produces.
+ *
+ * Two shapes rather than one because transcription is the odd one out: it is
+ * the only task here whose result is words, not sound, and forcing it to
+ * pretend otherwise would mean handing back an empty blob for the player to
+ * choke on.
+ */
+export interface AudioTaskResult {
+  /** Object URL of the finished clip, for every task except transcription. */
+  url?: string;
+  /** Plain-text transcript, transcription only. */
+  transcript?: string;
+  /** Speaker-labelled turns, when diarisation found more than one voice. */
+  segments?: { speaker: string | null; text: string; start: number | null }[];
 }
 
 export interface Model3dRequest {
@@ -511,42 +629,385 @@ export async function generate3d(
  * voiceover failed with 'Unexpected response from the voice service'.
  */
 export async function generateAudio(
-  req: AudioRequest,
+  req: SpeechRequest,
   handlers: GenerationHandlers = {},
 ): Promise<{ blob: Blob }> {
   throwIfAborted(handlers.signal);
   handlers.onStage?.('Synthesising the voice');
 
-  const { data: session } = await supabase.auth.getSession();
-  const token = session?.session?.access_token ?? SUPABASE_ANON_KEY;
-
-  const response = await fetch(`${SUPABASE_URL}/functions/v1/elevenlabs-tts`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      apikey: SUPABASE_ANON_KEY,
-      Authorization: `Bearer ${token}`,
+  const blob = await callAudioFunction(
+    'elevenlabs-tts',
+    {
+      text: req.text,
+      voiceId: req.voiceId || DEFAULT_VOICE_ID,
+      modelId: req.modelId,
+      languageCode: req.languageCode,
+      seed: req.seed,
+      outputFormat: req.outputFormat,
+      voiceSettings: req.voiceSettings,
     },
-    body: JSON.stringify({ text: req.text, voiceId: req.voiceId || DEFAULT_VOICE_ID }),
-    signal: handlers.signal,
-  });
-
-  if (!response.ok) {
-    let message = `Voice generation failed (${response.status})`;
-    try {
-      const body = (await response.json()) as { error?: string };
-      if (body?.error) message = body.error;
-    } catch {
-      /* non-JSON error body */
-    }
-    throw new Error(message);
-  }
-
-  const blob = await response.blob();
-  if (!blob.size) throw new Error('The voice service returned an empty clip');
+    handlers,
+    'Voice generation failed',
+  );
 
   throwIfAborted(handlers.signal);
   return { blob };
+}
+
+// ── Audio tasks ─────────────────────────────────────────────────────────────
+
+/** Supabase auth headers. Falls back to the anon key when nobody is signed in. */
+async function functionHeaders(): Promise<Record<string, string>> {
+  const { data: session } = await supabase.auth.getSession();
+  const token = session?.session?.access_token ?? SUPABASE_ANON_KEY;
+  return { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${token}` };
+}
+
+/** Lift the edge function's own `error` out of a failed response. */
+async function readFunctionError(response: Response, fallback: string): Promise<string> {
+  try {
+    const body = (await response.json()) as { error?: string };
+    if (body?.error) return body.error;
+  } catch {
+    /* non-JSON error body */
+  }
+  return `${fallback} (${response.status})`;
+}
+
+/**
+ * Call an audio function that answers with raw bytes.
+ *
+ * Same reason generateAudio has always used fetch rather than
+ * supabase.functions.invoke: functions-js only builds a Blob for a couple of
+ * content types and hands everything else back as mojibake text. A FormData
+ * body is passed through untouched so the browser can set its own multipart
+ * boundary — setting Content-Type by hand here is what breaks file uploads.
+ */
+async function callAudioFunction(
+  fn: string,
+  body: Record<string, unknown> | FormData,
+  handlers: GenerationHandlers,
+  fallbackError: string,
+): Promise<Blob> {
+  const isForm = body instanceof FormData;
+  const response = await fetch(`${SUPABASE_URL}/functions/v1/${fn}`, {
+    method: 'POST',
+    headers: {
+      ...(await functionHeaders()),
+      ...(isForm ? {} : { 'Content-Type': 'application/json' }),
+    },
+    body: isForm ? body : JSON.stringify(body),
+    signal: handlers.signal,
+  });
+
+  if (!response.ok) throw new Error(await readFunctionError(response, fallbackError));
+
+  const blob = await response.blob();
+  if (!blob.size) throw new Error('The audio service returned an empty clip');
+  return blob;
+}
+
+/** Call an audio function that answers with JSON. */
+async function callAudioJson<T>(
+  fn: string,
+  body: Record<string, unknown> | FormData,
+  handlers: GenerationHandlers,
+  fallbackError: string,
+): Promise<T> {
+  const isForm = body instanceof FormData;
+  const response = await fetch(`${SUPABASE_URL}/functions/v1/${fn}`, {
+    method: 'POST',
+    headers: {
+      ...(await functionHeaders()),
+      ...(isForm ? {} : { 'Content-Type': 'application/json' }),
+    },
+    body: isForm ? body : JSON.stringify(body),
+    signal: handlers.signal,
+  });
+
+  if (!response.ok) throw new Error(await readFunctionError(response, fallbackError));
+  return (await response.json()) as T;
+}
+
+const DUB_POLL_MS = 8_000;
+/**
+ * Dubbing is minutes, not seconds, and is charged for up front — so the
+ * deadline is generous. Giving up here does not cancel the dub: the ticket is
+ * persisted, so Reconnect collects it afterwards rather than charging twice.
+ */
+const DUB_TIMEOUT_MS = 20 * 60 * 1000;
+
+/**
+ * Wait for a dub, then fetch it. Resolves to an object URL, matching the video
+ * and mesh pollers so the store can treat all three the same way.
+ */
+export async function pollDub(ticket: RenderTicket, handlers: GenerationHandlers = {}): Promise<string> {
+  const started = ticket.startedAt || Date.now();
+  // The provider's language code rides along on the ticket: collecting the
+  // audio needs it, and a resumed poll has nothing else to read it from.
+  const targetLang = ticket.provider || 'en';
+  let consecutiveErrors = 0;
+
+  for (;;) {
+    throwIfAborted(handlers.signal);
+    if (Date.now() - started > DUB_TIMEOUT_MS) {
+      throw new Error('The dub is taking longer than expected. Reconnect to collect it.');
+    }
+
+    await sleep(DUB_POLL_MS, handlers.signal);
+
+    let status: { status?: string; error?: string | null };
+    try {
+      status = await callAudioJson<{ status?: string; error?: string | null }>(
+        'elevenlabs-dub',
+        { action: 'status', dubbingId: ticket.predictionId },
+        handlers,
+        'Could not read the dub status',
+      );
+      consecutiveErrors = 0;
+    } catch (e) {
+      if (isAborted(e)) throw e;
+      // A blip must not throw away a dub that has been paid for.
+      consecutiveErrors += 1;
+      if (consecutiveErrors >= MAX_CONSECUTIVE_POLL_ERRORS) throw e;
+      continue;
+    }
+
+    if (status.status === 'failed') {
+      throw new Error(status.error || 'The dub failed at the provider.');
+    }
+    if (status.status !== 'dubbed') {
+      handlers.onStage?.('Dubbing');
+      continue;
+    }
+
+    handlers.onStage?.('Collecting the dub');
+    const blob = await callAudioFunction(
+      'elevenlabs-dub',
+      { action: 'result', dubbingId: ticket.predictionId, targetLang },
+      handlers,
+      'Could not fetch the dubbed audio',
+    );
+    return URL.createObjectURL(blob);
+  }
+}
+
+/**
+ * Run any audio task and resolve to whatever it produces.
+ *
+ * The paid tasks (music, voice changer, dubbing) are called only after the DHB
+ * paywall has settled, exactly like image, video and 3D — payment is not
+ * handled anywhere in this module.
+ */
+export async function runAudioTask(
+  req: AudioRequest,
+  handlers: GenerationHandlers = {},
+): Promise<AudioTaskResult> {
+  throwIfAborted(handlers.signal);
+
+  switch (req.task) {
+    case 'dialogue': {
+      handlers.onStage?.('Performing the scene');
+      const blob = await callAudioFunction(
+        'elevenlabs-dialogue',
+        {
+          inputs: req.inputs,
+          outputFormat: req.outputFormat,
+          seed: req.seed,
+          voiceSettings: req.voiceSettings,
+        },
+        handlers,
+        'Dialogue generation failed',
+      );
+      return { url: URL.createObjectURL(blob) };
+    }
+
+    case 'sfx': {
+      handlers.onStage?.('Designing the sound');
+      const blob = await callAudioFunction(
+        'elevenlabs-sound-effects',
+        {
+          text: req.text,
+          durationSeconds: req.durationSeconds,
+          promptInfluence: req.promptInfluence,
+          loop: req.loop,
+          outputFormat: req.outputFormat,
+        },
+        handlers,
+        'Sound effect generation failed',
+      );
+      return { url: URL.createObjectURL(blob) };
+    }
+
+    case 'music': {
+      handlers.onStage?.('Composing');
+      const blob = await callAudioFunction(
+        'elevenlabs-music',
+        {
+          prompt: req.prompt,
+          lengthSeconds: req.lengthSeconds,
+          instrumental: req.instrumental,
+          outputFormat: req.outputFormat,
+        },
+        handlers,
+        'Music generation failed',
+      );
+      return { url: URL.createObjectURL(blob) };
+    }
+
+    case 'voice-changer': {
+      handlers.onStage?.('Re-performing the take');
+      const form = new FormData();
+      form.append('file', req.file, req.file.name || 'input.mp3');
+      form.append('voiceId', req.voiceId);
+      if (req.removeNoise === false) form.append('removeNoise', 'false');
+      if (req.outputFormat) form.append('outputFormat', req.outputFormat);
+      if (req.voiceSettings?.stability !== undefined) {
+        form.append('stability', String(req.voiceSettings.stability));
+      }
+      if (req.voiceSettings?.similarity !== undefined) {
+        form.append('similarity', String(req.voiceSettings.similarity));
+      }
+      if (req.voiceSettings?.style !== undefined) {
+        form.append('style', String(req.voiceSettings.style));
+      }
+      if (req.voiceSettings?.speakerBoost === false) form.append('speakerBoost', 'false');
+
+      const blob = await callAudioFunction(
+        'elevenlabs-voice-changer',
+        form,
+        handlers,
+        'Voice conversion failed',
+      );
+      return { url: URL.createObjectURL(blob) };
+    }
+
+    case 'isolate': {
+      handlers.onStage?.('Cleaning the recording');
+      const form = new FormData();
+      form.append('file', req.file, req.file.name || 'input.mp3');
+      if (req.outputFormat) form.append('outputFormat', req.outputFormat);
+      const blob = await callAudioFunction(
+        'elevenlabs-audio-isolation',
+        form,
+        handlers,
+        'Could not clean that recording',
+      );
+      return { url: URL.createObjectURL(blob) };
+    }
+
+    case 'transcribe': {
+      handlers.onStage?.('Transcribing');
+      const form = new FormData();
+      form.append('file', req.file, req.file.name || 'input.mp3');
+      if (req.diarize === false) form.append('diarize', 'false');
+      if (req.languageCode) form.append('languageCode', req.languageCode);
+
+      const data = await callAudioJson<{
+        text?: string;
+        segments?: { speaker: string | null; text: string; start: number | null }[];
+      }>('elevenlabs-transcribe', form, handlers, 'Transcription failed');
+
+      const transcript = (data.text ?? '').trim();
+      if (!transcript) throw new Error('No speech was found in that recording.');
+      return { transcript, segments: data.segments ?? [] };
+    }
+
+    case 'dubbing': {
+      handlers.onStage?.('Uploading');
+      const form = new FormData();
+      form.append('file', req.file, req.file.name || 'input.mp4');
+      form.append('targetLang', req.targetLang);
+      if (req.sourceLang) form.append('sourceLang', req.sourceLang);
+      if (req.numSpeakers) form.append('numSpeakers', String(req.numSpeakers));
+
+      const started = await callAudioJson<{ dubbingId?: string }>(
+        'elevenlabs-dub',
+        form,
+        handlers,
+        'Could not start the dub',
+      );
+      if (!started.dubbingId) throw new Error('The dubbing service did not return a job id');
+
+      // Hand the ticket back before any polling, so a reload can rejoin a dub
+      // that has already been charged for. `provider` carries the target
+      // language, which collecting the audio needs.
+      const ticket: RenderTicket = {
+        predictionId: started.dubbingId,
+        provider: req.targetLang,
+        startedAt: Date.now(),
+      };
+      handlers.onQueued?.(ticket);
+      handlers.onStage?.('Dubbing');
+
+      return { url: await pollDub(ticket, handlers) };
+    }
+
+    default: {
+      const { blob } = await generateAudio(req as SpeechRequest, handlers);
+      return { url: URL.createObjectURL(blob) };
+    }
+  }
+}
+
+/**
+ * Voice design. Returns three takes as playable object URLs, none of which
+ * exist at the provider until one is saved.
+ */
+export interface DesignedVoicePreview {
+  generatedVoiceId: string;
+  url: string;
+  durationSecs: number | null;
+}
+
+export async function designVoice(
+  description: string,
+  previewText?: string,
+): Promise<DesignedVoicePreview[]> {
+  const data = await callAudioJson<{
+    previews?: { generatedVoiceId?: string; audioBase64?: string; mediaType?: string; durationSecs?: number | null }[];
+  }>(
+    'elevenlabs-voice-design',
+    { description, previewText },
+    {},
+    'Voice design failed',
+  );
+
+  return (data.previews ?? [])
+    .filter((p) => p.generatedVoiceId && p.audioBase64)
+    .map((p) => ({
+      generatedVoiceId: p.generatedVoiceId as string,
+      url: base64ToObjectUrl(p.audioBase64 as string, p.mediaType || 'audio/mpeg'),
+      durationSecs: p.durationSecs ?? null,
+    }));
+}
+
+/** Keep a designed take as a real voice on the account. */
+export async function saveDesignedVoice(
+  generatedVoiceId: string,
+  name: string,
+  description?: string,
+): Promise<{ voiceId: string; name: string }> {
+  return callAudioJson<{ voiceId: string; name: string }>(
+    'elevenlabs-voice-design',
+    { action: 'save', generatedVoiceId, name, description },
+    {},
+    'Could not save that voice',
+  );
+}
+
+/**
+ * Base64 to a playable URL.
+ *
+ * Decoded to bytes rather than handed straight to <audio> as a data: URI: a
+ * ten-second preview is a couple of hundred kilobytes of base64, and three of
+ * them inline is enough string to make the composer stutter while it re-renders.
+ */
+function base64ToObjectUrl(base64: string, mediaType: string): string {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+  return URL.createObjectURL(new Blob([bytes], { type: mediaType }));
 }
 
 /**
@@ -555,14 +1016,18 @@ export async function generateAudio(
  * unchanged if the service is unavailable, so the button can never destroy what
  * someone typed.
  */
-export async function enhancePrompt(text: string, kind: 'image' | 'video' | '3d'): Promise<string> {
+export async function enhancePrompt(
+  text: string,
+  kind: 'image' | 'video' | '3d' | 'audio',
+): Promise<string> {
   const trimmed = text.trim();
   if (!trimmed) return trimmed;
 
-  // '3d' rides the image mode: the edge function only knows the two, and a
-  // mesh prompt wants the same subject-and-material detail a still does, not
-  // the camera-move language the video mode adds. Sending an unknown mode
-  // would fall through to plain spellcheck and lose the assist entirely.
+  // '3d' and 'audio' both ride the image mode: the edge function only knows the
+  // two, and a mesh prompt, a sound-effect brief and a music brief all want the
+  // same subject-and-texture detail a still does, not the camera-move language
+  // the video mode adds. Sending an unknown mode would fall through to plain
+  // spellcheck and lose the assist entirely.
   const { data, error } = await supabase.functions.invoke('enhance-text', {
     body: { text: trimmed, mode: kind === 'video' ? 'prompt-video' : 'prompt-image' },
   });
