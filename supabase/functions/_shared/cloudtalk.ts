@@ -23,6 +23,21 @@ export function maskPhone(phone: string): string {
   return phone.length > 4 ? `${phone.slice(0, 3)}***${phone.slice(-2)}` : "***";
 }
 
+/**
+ * The one and only OTP text. It lives here because both senders need it
+ * identical, and because it has a constraint that is invisible at the call
+ * site: every character must exist in the GSM-7 alphabet. A single character
+ * outside it (an em dash, a curly quote, an accent) switches the whole message
+ * to UCS-2, where a fragment holds 70 characters instead of 160. At 87
+ * characters this is one GSM-7 fragment; under UCS-2 the same text is two.
+ * CloudTalk bills messaging per fragment out of prepaid credit, so an
+ * unnoticed em dash doubles what every login costs. Keep this plain ASCII.
+ */
+export function otpSmsMessage(code: string): string {
+  return `${code} is your DeHub verification code. It expires shortly. ` +
+    `Don't share it with anyone.`;
+}
+
 export type SendSmsResult = { ok: true } | { ok: false; status?: number; detail: string };
 
 export async function sendCloudTalkSms(
