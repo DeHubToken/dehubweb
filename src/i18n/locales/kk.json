@@ -1300,7 +1300,11 @@
     "please_connect_your_wallet": "Please connect your wallet",
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
-    "transaction_failed": "Transaction failed"
+    "transaction_failed": "Transaction failed",
+    "new_version_available": "Жаңа нұсқа қол жетімді",
+    "refresh_to_pick_up_the_latest_changes": "Соңғы өзгерістерді алу үшін жаңартыңыз.",
+    "refresh": "Жаңарту",
+    "what_changed": "Өзгерген нәрсе"
   },
   "bookmarks": {
     "title": "Your Bookmarks",

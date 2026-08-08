@@ -1379,7 +1379,11 @@
     "unstake_failed": "A kivonás sikertelen",
     "unstake_request_removed": "A kivonási kérelmed eltávolítva.",
     "unstake_request_submitted": "Kivonási kérelem elküldve! ✅",
-    "waiting_for_confirmation": "Várakozás a megerősítésre..."
+    "waiting_for_confirmation": "Várakozás a megerősítésre...",
+    "new_version_available": "Új verzió érhető el",
+    "refresh_to_pick_up_the_latest_changes": "Frissíts a legújabb módosításokért.",
+    "refresh": "Frissítés",
+    "what_changed": "Mi változott?"
   },
   "prompt": {
     "seoTitle": "Ösztönözd a hírfolyamodat — DeHub",

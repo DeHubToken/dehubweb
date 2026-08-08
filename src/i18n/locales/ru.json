@@ -1300,7 +1300,11 @@
     "please_connect_your_wallet": "Please connect your wallet",
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
-    "transaction_failed": "Transaction failed"
+    "transaction_failed": "Transaction failed",
+    "new_version_available": "Доступна новая версия",
+    "refresh_to_pick_up_the_latest_changes": "Обновите, чтобы получить последние изменения.",
+    "refresh": "Обновить",
+    "what_changed": "Что изменилось"
   },
   "prompt": {
     "seoTitle": "Настройте свою ленту — DeHub",

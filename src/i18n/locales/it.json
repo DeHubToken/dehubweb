@@ -1296,7 +1296,11 @@
     "please_connect_your_wallet": "Collega il tuo portafoglio",
     "insufficient_balance": "Saldo insufficiente",
     "transaction_submitted": "Transazione inviata!",
-    "transaction_failed": "Transazione fallita"
+    "transaction_failed": "Transazione fallita",
+    "new_version_available": "Nuova versione disponibile",
+    "refresh_to_pick_up_the_latest_changes": "Aggiorna per visualizzare le ultime modifiche.",
+    "refresh": "Aggiorna",
+    "what_changed": "Cosa è cambiato"
   },
   "prompt": {
     "seoTitle": "Personalizza il tuo feed — DeHub",

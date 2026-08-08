@@ -1367,7 +1367,11 @@
     "unstake_failed": "Steikkauksen purku epäonnistui",
     "unstake_request_removed": "Steikkauksen purkupyyntösi on poistettu.",
     "unstake_request_submitted": "Nostopyyntö lähetetty! ✅",
-    "waiting_for_confirmation": "Odotetaan vahvistusta..."
+    "waiting_for_confirmation": "Odotetaan vahvistusta...",
+    "new_version_available": "Uusi versio saatavilla",
+    "refresh_to_pick_up_the_latest_changes": "Päivitä noutaaksesi viimeisimmät muutokset.",
+    "refresh": "Päivitä",
+    "what_changed": "Mikä muuttui"
   },
   "prompt": {
     "seoTitle": "Ohjaa syötteesi – DeHub",

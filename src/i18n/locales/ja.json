@@ -1377,7 +1377,11 @@
     "unstake_failed": "アンステークに失敗しました",
     "unstake_request_removed": "アンステークのリクエストを削除しました。",
     "unstake_request_submitted": "出金リクエストを送信しました！✅",
-    "waiting_for_confirmation": "確認を待っています..."
+    "waiting_for_confirmation": "確認を待っています...",
+    "new_version_available": "新しいバージョンがあります",
+    "refresh_to_pick_up_the_latest_changes": "更新すると最新の変更が反映されます。",
+    "refresh": "更新",
+    "what_changed": "変更点"
   },
   "prompt": {
     "seoTitle": "フィードをプロンプト — DeHub",

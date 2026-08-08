@@ -1269,7 +1269,11 @@
     "please_connect_your_wallet": "Please connect your wallet",
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
-    "transaction_failed": "Transaction failed"
+    "transaction_failed": "Transaction failed",
+    "new_version_available": "Ọhụrụ version dị",
+    "refresh_to_pick_up_the_latest_changes": "Mee ka ọ dị ọhụrụ iji bulie mgbanwe ndị kachasị ọhụrụ.",
+    "refresh": "Ịhụchalụ",
+    "what_changed": "Gịnị gbanwere"
   },
   "prompt": {
     "seoTitle": "Nye nri gị—DeHub",

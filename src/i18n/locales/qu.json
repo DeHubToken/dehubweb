@@ -1406,7 +1406,10 @@
     "unstake_failed": "Hurquy mana atikurqachu",
     "unstake_request_removed": "Hurquy mañakuyniyki qichusqa.",
     "unstake_request_submitted": "Hurquy mañakuy apachisqa! ✅",
-    "waiting_for_confirmation": "Takyachiyta suyachkan..."
+    "waiting_for_confirmation": "Takyachiyta suyachkan...",
+    "new_version_available": "Musuq versión nisqa kan",
+    "refresh_to_pick_up_the_latest_changes": "Qhipa tikraykunata hapinaykipaq musuqyachiy.",
+    "what_changed": "Imataq tikrakurqa"
   },
   "prompt": {
     "seoTitle": "Yanapaqniykita tapukuy — DeHub",

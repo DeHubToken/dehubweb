@@ -1309,7 +1309,10 @@
     "please_connect_your_wallet": "សូមភ្ជាប់កាបូបរបស់អ្នក",
     "insufficient_balance": "សមតុល្យមិនគ្រប់គ្រាន់",
     "transaction_submitted": "ប្រតិបត្តិការត្រូវបានដាក់ស្នើ!",
-    "transaction_failed": "ប្រតិបត្តិការបរាជ័យ"
+    "transaction_failed": "ប្រតិបត្តិការបរាជ័យ",
+    "new_version_available": "កំណែថ្មីអាចរកបាន",
+    "refresh": "រីហ្វ្រែស",
+    "what_changed": "អ្វីដែលបានផ្លាស់ប្តូរ"
   },
   "prompt": {
     "seoTitle": "រំលេចចំណីរបស់អ្នក — DeHub",

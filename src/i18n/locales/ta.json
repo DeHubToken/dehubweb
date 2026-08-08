@@ -1379,7 +1379,11 @@
     "unstake_failed": "அன்ஸ்டேக் தோல்வியடைந்தது",
     "unstake_request_removed": "உங்கள் அன்ஸ்டேக் கோரிக்கை நீக்கப்பட்டது.",
     "unstake_request_submitted": "பணமெடுப்புக் கோரிக்கை சமர்ப்பிக்கப்பட்டது! ✅",
-    "waiting_for_confirmation": "உறுதிப்படுத்தலுக்காகக் காத்திருக்கிறது..."
+    "waiting_for_confirmation": "உறுதிப்படுத்தலுக்காகக் காத்திருக்கிறது...",
+    "new_version_available": "புதிய பதிப்பு கிடைக்கிறது",
+    "refresh_to_pick_up_the_latest_changes": "சமீபத்திய மாற்றங்களைப் பிக்அப் செய்ய புதுப்பிக்கவும்.",
+    "refresh": "புதுப்பிக்கவும்",
+    "what_changed": "என்ன மாறியது"
   },
   "prompt": {
     "seoTitle": "உங்கள் ஊட்டத்தில் தூண்டுங்கள் — DeHub",

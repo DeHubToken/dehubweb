@@ -246,7 +246,11 @@
     "unstake_failed": "Retragerea a eșuat",
     "unstake_request_removed": "Cererea ta de retragere a fost eliminată.",
     "unstake_request_submitted": "Cerere de retragere trimisă! ✅",
-    "waiting_for_confirmation": "Se așteaptă confirmarea..."
+    "waiting_for_confirmation": "Se așteaptă confirmarea...",
+    "new_version_available": "Este disponibilă o versiune nouă",
+    "refresh_to_pick_up_the_latest_changes": "Reîmprospătează pentru a prelua cele mai recente modificări.",
+    "refresh": "Reîmprospătează",
+    "what_changed": "Ce s-a schimbat"
   },
   "feed": {
     "home": "Acasă",

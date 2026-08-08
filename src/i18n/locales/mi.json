@@ -1375,7 +1375,11 @@
     "unstake_failed": "I rahua te tangohanga",
     "unstake_request_removed": "Kua tangohia tō tono tangohanga.",
     "unstake_request_submitted": "Kua tukuna te tono tangohanga! ✅",
-    "waiting_for_confirmation": "E tatari ana ki te whakaūnga..."
+    "waiting_for_confirmation": "E tatari ana ki te whakaūnga...",
+    "new_version_available": "He putanga hou e wātea ana",
+    "refresh_to_pick_up_the_latest_changes": "Whakahoutia ki te tango i nga huringa hou.",
+    "refresh": "Whakahoutia",
+    "what_changed": "He aha te huringa"
   },
   "prompt": {
     "seoTitle": "Whakahauhia to whangai — DeHub",

@@ -1269,7 +1269,11 @@
     "please_connect_your_wallet": "Please connect your wallet",
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
-    "transaction_failed": "Transaction failed"
+    "transaction_failed": "Transaction failed",
+    "new_version_available": "নতুন সংস্করণ উপলব্ধ",
+    "refresh_to_pick_up_the_latest_changes": "সর্বশেষ পরিবর্তনগুলি পিকআপ করতে রিফ্রেশ করুন ।",
+    "refresh": "রিফ্রেশ করুন",
+    "what_changed": "কী পরিবর্তন হয়েছে"
   },
   "prompt": {
     "seoTitle": "আপনার ফিড প্রম্পট করুন — DeHub",

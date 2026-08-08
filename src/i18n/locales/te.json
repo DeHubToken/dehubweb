@@ -1273,7 +1273,11 @@
     "please_connect_your_wallet": "Please connect your wallet",
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
-    "transaction_failed": "Transaction failed"
+    "transaction_failed": "Transaction failed",
+    "new_version_available": "కొత్త వెర్షన్ అందుబాటులో ఉంది",
+    "refresh_to_pick_up_the_latest_changes": "తాజా మార్పులను పికప్ చేసుకోవడానికి రిఫ్రెష్ చేయండి.",
+    "refresh": "రిఫ్రెష్ చేయండి",
+    "what_changed": "ఏమి మార్చబడింది"
   },
   "prompt": {
     "seoTitle": "మీ ఫీడ్‌ను ప్రాంప్ట్ చేయండి — DeHub",

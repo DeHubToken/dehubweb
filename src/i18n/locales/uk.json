@@ -731,7 +731,11 @@
     "unstake_failed": "Помилка виведення",
     "unstake_request_removed": "Ваш запит на виведення видалено.",
     "unstake_request_submitted": "Запит на виведення надіслано! ✅",
-    "waiting_for_confirmation": "Очікування підтвердження..."
+    "waiting_for_confirmation": "Очікування підтвердження...",
+    "new_version_available": "Доступна нова версія",
+    "refresh_to_pick_up_the_latest_changes": "Оновіть, щоб отримати останні зміни.",
+    "refresh": "Оновити",
+    "what_changed": "Що змінилося"
   },
   "feed": {
     "home": "Головна",

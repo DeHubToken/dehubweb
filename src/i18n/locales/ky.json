@@ -1367,7 +1367,11 @@
     "unstake_failed": "Чыгаруу ишке ашкан жок",
     "unstake_request_removed": "Чыгаруу сурамыңыз алынып салынды.",
     "unstake_request_submitted": "Чыгаруу сурамы жөнөтүлдү! ✅",
-    "waiting_for_confirmation": "Ырастоо күтүлүүдө..."
+    "waiting_for_confirmation": "Ырастоо күтүлүүдө...",
+    "new_version_available": "Жаңы версия жеткиликтүү",
+    "refresh_to_pick_up_the_latest_changes": "Акыркы өзгөртүүлөрдү алуу үчүн жаңылаңыз.",
+    "refresh": "Жаңыртуу",
+    "what_changed": "Эмне өзгөрдү"
   },
   "prompt": {
     "seoTitle": "Сиздин тасмаңызга суроо бериңиз — DeHub",

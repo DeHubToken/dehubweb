@@ -1309,7 +1309,11 @@
     "please_connect_your_wallet": "Please connect your wallet",
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
-    "transaction_failed": "Transaction failed"
+    "transaction_failed": "Transaction failed",
+    "new_version_available": "ဗားရှင်းအသစ် ရရှိနိုင်ပါသည်",
+    "refresh_to_pick_up_the_latest_changes": "နောက်ဆုံးပေါ်ပြောင်းလဲမှုများကိုရယူရန် refresh လုပ်ပါ ။",
+    "refresh": "လန်းဆန်းစေပါ",
+    "what_changed": "ဘာပြောင်းသွားသည်"
   },
   "prompt": {
     "seoTitle": "သင်၏ဖိဒ်ကို ပြောပြပါ — DeHub",

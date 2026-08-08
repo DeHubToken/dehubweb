@@ -1269,7 +1269,11 @@
     "please_connect_your_wallet": "Please connect your wallet",
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
-    "transaction_failed": "Transaction failed"
+    "transaction_failed": "Transaction failed",
+    "new_version_available": "ಹೊಸ ಆವೃತ್ತಿ ಲಭ್ಯವಿದೆ",
+    "refresh_to_pick_up_the_latest_changes": "ಇತ್ತೀಚಿನ ಬದಲಾವಣೆಗಳನ್ನು ಪಿಕಪ್ ಮಾಡಲು ರಿಫ್ರೆಶ್ ಮಾಡಿ.",
+    "refresh": "ರಿಫ್ರೆಶ್ ಮಾಡಿ",
+    "what_changed": "ಏನು ಬದಲಾಯಿತು"
   },
   "prompt": {
     "seoTitle": "ನಿಮ್ಮ ಫೀಡ್ ಅನ್ನು ಪ್ರಾಂಪ್ಟ್ ಮಾಡಿ — DeHub",

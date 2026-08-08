@@ -1419,7 +1419,11 @@
     "unstake_failed": "अनस्टेक असफल",
     "unstake_request_removed": "आपके अनस्टेक अनुरोध हटगे।",
     "unstake_request_submitted": "निकासी अनुरोध जमा होगे! ✅",
-    "waiting_for_confirmation": "पुष्टि के अगोरा हे..."
+    "waiting_for_confirmation": "पुष्टि के अगोरा हे...",
+    "new_version_available": "नवा संस्करन मिलत हे",
+    "refresh_to_pick_up_the_latest_changes": "नवीनतम समायोजन बर तैयार हो जा ।",
+    "refresh": "ताजा करव",
+    "what_changed": "जऊन ह बदल गे हवय"
   },
   "prompt": {
     "seoTitle": "अपन फ़ीड ल संकेत देवव — DeHub",

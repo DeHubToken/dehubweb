@@ -1379,7 +1379,11 @@
     "unstake_failed": "提取失败",
     "unstake_request_removed": "您的提取请求已被移除。",
     "unstake_request_submitted": "提取请求已提交！✅",
-    "waiting_for_confirmation": "等待确认中..."
+    "waiting_for_confirmation": "等待确认中...",
+    "new_version_available": "有新版本可用",
+    "refresh_to_pick_up_the_latest_changes": "刷新以获取最新更改。",
+    "refresh": "刷新",
+    "what_changed": "发生了什么变化"
   },
   "prompt": {
     "seoTitle": "提示你的内容 — DeHub",
