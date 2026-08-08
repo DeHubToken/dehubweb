@@ -1392,7 +1392,11 @@
     "unstake_failed": "Yechish amalga oshmadi",
     "unstake_request_removed": "Yechish so'rovingiz olib tashlandi.",
     "unstake_request_submitted": "Yechish so'rovi yuborildi! ✅",
-    "waiting_for_confirmation": "Tasdiq kutilmoqda..."
+    "waiting_for_confirmation": "Tasdiq kutilmoqda...",
+    "new_version_available": "Yangi versiya mavjud",
+    "refresh_to_pick_up_the_latest_changes": "So'nggi o'zgarishlarni ko'rish uchun yangilang.",
+    "refresh": "Yangilash",
+    "what_changed": "Nima o'zgardi"
   },
   "bookmarks": {
     "title": "Your Bookmarks",

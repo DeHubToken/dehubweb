@@ -1376,7 +1376,11 @@
     "unstake_failed": "Yíyọ kúrò kùnà",
     "unstake_request_removed": "A ti yọ ìbéèrè yíyọ kúrò rẹ kúrò.",
     "unstake_request_submitted": "A ti fi ìbéèrè ìyọkúrò sílẹ̀! ✅",
-    "waiting_for_confirmation": "Ó ń dúró de ìjẹ́rìí..."
+    "waiting_for_confirmation": "Ó ń dúró de ìjẹ́rìí...",
+    "new_version_available": "Ẹya tuntun ti o wa",
+    "refresh_to_pick_up_the_latest_changes": "Tútù láti gba àwọn àtúnṣe tuntun.",
+    "refresh": "Ìmúpadàbọ̀sípò",
+    "what_changed": "Ohun tí ó yí padà"
   },
   "prompt": {
     "seoTitle": "Se ohun tí o fẹ́ kà — DeHub",

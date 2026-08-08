@@ -1309,7 +1309,11 @@
     "please_connect_your_wallet": "कृपया आफ्नो वालेट जडान गर्नुहोस्",
     "insufficient_balance": "अपर्याप्त ब्यालेन्स",
     "transaction_submitted": "कारोबार पेश गरियो!",
-    "transaction_failed": "कारोबार असफल भयो"
+    "transaction_failed": "कारोबार असफल भयो",
+    "new_version_available": "नयाँ संस्करण उपलब्ध छ",
+    "refresh_to_pick_up_the_latest_changes": "भर्खरका परिवर्तनहरू लिन रिफ्रेस गर्नुहोस् ।",
+    "refresh": "रिफ्रेस गर्नुहोस्",
+    "what_changed": "के परिवर्तन भयो"
   },
   "prompt": {
     "seoTitle": "आफ्नो फिड प्रम्प्ट गर्नुहोस् — DeHub",

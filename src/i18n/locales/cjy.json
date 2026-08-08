@@ -1313,7 +1313,10 @@
     "please_connect_your_wallet": "Please connect your wallet",
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
-    "transaction_failed": "Transaction failed"
+    "transaction_failed": "Transaction failed",
+    "new_version_available": "新版本可用",
+    "refresh_to_pick_up_the_latest_changes": "刷新以获取最新更改。",
+    "refresh": "刷新"
   },
   "prompt": {
     "seoTitle": "提示你的动态 — DeHub",

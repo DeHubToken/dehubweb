@@ -16,6 +16,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip
 import { Languages, RotateCcw, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
+import { autoTranslateEnabled, setAutoTranslateEnabled } from '@/lib/auto-translate-setting';
 import { useUserLanguage, LANGUAGE_NAMES } from '@/hooks/use-user-language';
 import { recordTickerSearch } from '@/lib/ticker-search-tracker';
 import { clientNavigate } from '@/lib/client-navigate';
@@ -305,24 +306,10 @@ function cacheTranslation(key: string, value: CachedTranslation) {
   schedulePersist();
 }
 
-// Auto-translate is on unless the reader has turned it off. Stored rather than
-// defaulted per session so the choice survives a reload, and read at call time
-// rather than cached in a module constant so a change applies without a refresh.
-const AUTO_TRANSLATE_KEY = 'dehub-auto-translate';
-export function autoTranslateEnabled(): boolean {
-  try {
-    return localStorage.getItem(AUTO_TRANSLATE_KEY) !== 'off';
-  } catch {
-    return true;
-  }
-}
-export function setAutoTranslateEnabled(enabled: boolean): void {
-  try {
-    localStorage.setItem(AUTO_TRANSLATE_KEY, enabled ? 'on' : 'off');
-  } catch {
-    // Storage disabled; the setting just will not persist.
-  }
-}
+// The auto-translate setting now lives in lib/auto-translate-setting, so the
+// new-version toast can read it without dragging this module onto the entry
+// chunk. Re-exported here because this was its import path.
+export { autoTranslateEnabled, setAutoTranslateEnabled };
 
 // A translation that came back as the text it was given did not translate
 // anything — the body was already in the reader's language. Compared loosely

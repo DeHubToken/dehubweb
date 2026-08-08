@@ -1375,7 +1375,11 @@
     "unstake_failed": "Panuse eemaldamine ebaõnnestus",
     "unstake_request_removed": "Sinu panuse eemaldamise taotlus on eemaldatud.",
     "unstake_request_submitted": "Väljamaksetaotlus esitatud! ✅",
-    "waiting_for_confirmation": "Kinnituse ootamine..."
+    "waiting_for_confirmation": "Kinnituse ootamine...",
+    "new_version_available": "Saadaval on uus versioon",
+    "refresh_to_pick_up_the_latest_changes": "Värskenda viimaste muudatuste pealevõtmiseks.",
+    "refresh": "Värskenda",
+    "what_changed": "Mis muutus"
   },
   "prompt": {
     "seoTitle": "Kohandage oma voogu — DeHub",

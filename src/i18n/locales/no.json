@@ -1367,7 +1367,11 @@
     "unstake_failed": "Uttak mislyktes",
     "unstake_request_removed": "Uttaksforespørselen din er fjernet.",
     "unstake_request_submitted": "Uttaksforespørsel sendt inn! ✅",
-    "waiting_for_confirmation": "Venter på bekreftelse..."
+    "waiting_for_confirmation": "Venter på bekreftelse...",
+    "new_version_available": "Ny versjon tilgjengelig",
+    "refresh_to_pick_up_the_latest_changes": "Oppdater for å få med deg de siste endringene.",
+    "refresh": "Oppdater",
+    "what_changed": "Hva som endret seg"
   },
   "prompt": {
     "seoTitle": "Be om feeden din — DeHub",

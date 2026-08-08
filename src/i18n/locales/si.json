@@ -1415,7 +1415,11 @@
     "unstake_failed": "ආපසු ගැනීම අසාර්ථකයි",
     "unstake_request_removed": "ඔබේ ආපසු ගැනීමේ ඉල්ලීම ඉවත් කර ඇත.",
     "unstake_request_submitted": "ආපසු ගැනීමේ ඉල්ලීම ඉදිරිපත් විය! ✅",
-    "waiting_for_confirmation": "තහවුරු වන තුරු රැඳී සිටිමින්..."
+    "waiting_for_confirmation": "තහවුරු වන තුරු රැඳී සිටිමින්...",
+    "new_version_available": "නව අනුවාදය තිබේ",
+    "refresh_to_pick_up_the_latest_changes": "නවතම වෙනස්කම් ලබා ගැනීමට නැවුම් කරන්න.",
+    "refresh": "නැවුම් කරන්න",
+    "what_changed": "වෙනස් වූ දේ"
   },
   "prompt": {
     "seoTitle": "ඔබේ සංග්‍රහය ආරම්භ කරන්න — DeHub",

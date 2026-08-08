@@ -1375,7 +1375,11 @@
     "unstake_failed": "Tërheqja dështoi",
     "unstake_request_removed": "Kërkesa jote për tërheqje u hoq.",
     "unstake_request_submitted": "Kërkesa për tërheqje u dërgua! ✅",
-    "waiting_for_confirmation": "Duke pritur konfirmimin..."
+    "waiting_for_confirmation": "Duke pritur konfirmimin...",
+    "new_version_available": "Versioni i ri i disponueshëm",
+    "refresh_to_pick_up_the_latest_changes": "Përditëso për të marrë ndryshimet më të fundit.",
+    "refresh": "Përditëso",
+    "what_changed": "Çfarë ndryshoi"
   },
   "prompt": {
     "seoTitle": "Kërkesa jote — DeHub",

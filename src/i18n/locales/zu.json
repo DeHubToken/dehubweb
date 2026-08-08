@@ -1406,7 +1406,11 @@
     "unstake_failed": "Ukuhoxisa kuhlulekile",
     "unstake_request_removed": "Isicelo sakho sokuhoxisa sisusiwe.",
     "unstake_request_submitted": "Isicelo sokuhoxisa sithunyelwe! ✅",
-    "waiting_for_confirmation": "Ilinde ukuqinisekiswa..."
+    "waiting_for_confirmation": "Ilinde ukuqinisekiswa...",
+    "new_version_available": "Uhlobo olusha olutholakalayo",
+    "refresh_to_pick_up_the_latest_changes": "Vuselela ukuze uthole izinguquko zakamuva.",
+    "refresh": "Vuselela",
+    "what_changed": "Yini eshintshile"
   },
   "prompt": {
     "seoTitle": "Yenza i-feed yakho — DeHub",

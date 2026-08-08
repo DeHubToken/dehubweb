@@ -1200,7 +1200,11 @@
     "unstake_failed": "Výber zlyhal",
     "unstake_request_removed": "Vaša žiadosť o výber bola odstránená.",
     "unstake_request_submitted": "Žiadosť o výber odoslaná! ✅",
-    "waiting_for_confirmation": "Čaká sa na potvrdenie..."
+    "waiting_for_confirmation": "Čaká sa na potvrdenie...",
+    "new_version_available": "Nová verzia k dispozícii",
+    "refresh_to_pick_up_the_latest_changes": "Obnovte a vyzdvihnite najnovšie zmeny.",
+    "refresh": "Obnoviť",
+    "what_changed": "Čo sa zmenilo"
   },
   "postOptions": {
     "options": "Možnosti",

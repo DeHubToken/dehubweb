@@ -335,7 +335,11 @@
     "unstake_failed": "Rút stake thất bại",
     "unstake_request_removed": "Yêu cầu rút stake của bạn đã được gỡ bỏ.",
     "unstake_request_submitted": "Đã gửi yêu cầu rút! ✅",
-    "waiting_for_confirmation": "Đang chờ xác nhận..."
+    "waiting_for_confirmation": "Đang chờ xác nhận...",
+    "new_version_available": "Đã có phiên bản mới",
+    "refresh_to_pick_up_the_latest_changes": "Làm mới để nhận các thay đổi mới nhất.",
+    "refresh": "Làm mới",
+    "what_changed": "Điều gì đã thay đổi"
   },
   "feed": {
     "home": "Home",

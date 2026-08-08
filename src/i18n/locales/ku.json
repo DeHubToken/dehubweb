@@ -1375,7 +1375,10 @@
     "unstake_failed": "Vekişandin têk çû",
     "unstake_request_removed": "Daxwaza te ya vekişandinê hat rakirin.",
     "unstake_request_submitted": "Daxwaza vekişandinê hat şandin! ✅",
-    "waiting_for_confirmation": "Li benda pesendkirinê..."
+    "waiting_for_confirmation": "Li benda pesendkirinê...",
+    "new_version_available": "Guhertoya nû heye",
+    "refresh_to_pick_up_the_latest_changes": "Ji bo dîtina guhertinên herî dawî, wêneyê nûve bike.",
+    "what_changed": "Çi guherî"
   },
   "prompt": {
     "seoTitle": "فیدەکەت پرۆمۆت بکە — DeHub",

@@ -1405,7 +1405,11 @@
     "unstake_failed": "Το unstake απέτυχε",
     "unstake_request_removed": "Το αίτημα unstake αφαιρέθηκε.",
     "unstake_request_submitted": "Το αίτημα ανάληψης υποβλήθηκε! ✅",
-    "waiting_for_confirmation": "Αναμονή επιβεβαίωσης..."
+    "waiting_for_confirmation": "Αναμονή επιβεβαίωσης...",
+    "new_version_available": "Διατίθεται νέα έκδοση",
+    "refresh_to_pick_up_the_latest_changes": "Ανανεώστε για να λάβετε τις τελευταίες αλλαγές.",
+    "refresh": "Ανανέωση",
+    "what_changed": "Τι άλλαξε"
   },
   "prompt": {
     "seoTitle": "Προτρέψτε τη ροή σας — DeHub",

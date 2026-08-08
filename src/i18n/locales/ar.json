@@ -1379,7 +1379,11 @@
     "unstake_failed": "فشل السحب",
     "unstake_request_removed": "تمت إزالة طلب السحب الخاص بك.",
     "unstake_request_submitted": "تم إرسال طلب السحب! ✅",
-    "waiting_for_confirmation": "في انتظار التأكيد..."
+    "waiting_for_confirmation": "في انتظار التأكيد...",
+    "new_version_available": "الإصدار الجديد متاح",
+    "refresh_to_pick_up_the_latest_changes": "حدِّث لاستلام أحدث التغييرات.",
+    "refresh": "تحديث",
+    "what_changed": "ما الذي تغير"
   },
   "prompt": {
     "seoTitle": "وجّه موجزك — DeHub",

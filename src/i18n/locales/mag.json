@@ -1375,7 +1375,10 @@
     "unstake_failed": "अनस्टेक फेल हो गेलई",
     "unstake_request_removed": "तोहर अनस्टेक अनुरोध हटा देल गेलई।",
     "unstake_request_submitted": "निकासी अनुरोध जमा हो गेलई! ✅",
-    "waiting_for_confirmation": "पुष्टि के इंतजार हे..."
+    "waiting_for_confirmation": "पुष्टि के इंतजार हे...",
+    "new_version_available": "नया संस्करण उपलब्ध",
+    "refresh_to_pick_up_the_latest_changes": "त्वरित उपयोग के लिए अंतिम परिणाम ।",
+    "what_changed": "के बदल देलकै?"
   },
   "prompt": {
     "seoTitle": "अहाँ के Feed मांगा — DeHub",

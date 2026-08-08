@@ -529,7 +529,11 @@
     "unstake_failed": "Wypłata nie powiodła się",
     "unstake_request_removed": "Twoja prośba o wypłatę została usunięta.",
     "unstake_request_submitted": "Prośba o wypłatę wysłana! ✅",
-    "waiting_for_confirmation": "Oczekiwanie na potwierdzenie..."
+    "waiting_for_confirmation": "Oczekiwanie na potwierdzenie...",
+    "new_version_available": "Dostępna nowa wersja",
+    "refresh_to_pick_up_the_latest_changes": "Odśwież, aby zobaczyć najnowsze zmiany.",
+    "refresh": "Odśwież",
+    "what_changed": "Co się zmieniło"
   },
   "postOptions": {
     "options": "Opcje",

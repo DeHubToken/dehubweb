@@ -1375,7 +1375,11 @@
     "unstake_failed": "Cirewa ta gaza",
     "unstake_request_removed": "An cire buƙatar cirewarka.",
     "unstake_request_submitted": "An aika buƙatar cirewa! ✅",
-    "waiting_for_confirmation": "Ana jiran tabbatarwa..."
+    "waiting_for_confirmation": "Ana jiran tabbatarwa...",
+    "new_version_available": "Sabon sigar samuwa",
+    "refresh_to_pick_up_the_latest_changes": "Sabunta don ɗaukar sabbin canje-canje.",
+    "refresh": "Sabuntawa",
+    "what_changed": "Abin da ya canza"
   },
   "prompt": {
     "seoTitle": "Fadakar da abincinka - DeHub",

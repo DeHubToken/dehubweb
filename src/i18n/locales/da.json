@@ -1379,7 +1379,11 @@
     "unstake_failed": "Unstake mislykkedes",
     "unstake_request_removed": "Din unstake-anmodning er fjernet.",
     "unstake_request_submitted": "Udbetalingsanmodning indsendt! ✅",
-    "waiting_for_confirmation": "Venter på bekræftelse..."
+    "waiting_for_confirmation": "Venter på bekræftelse...",
+    "new_version_available": "Ny version tilgængelig",
+    "refresh_to_pick_up_the_latest_changes": "Opdater for at hente de seneste ændringer.",
+    "refresh": "Opdater",
+    "what_changed": "Hvad ændrede sig"
   },
   "prompt": {
     "seoTitle": "Styr dit feed — DeHub",

@@ -1375,7 +1375,11 @@
     "unstake_failed": "Unstake gagal",
     "unstake_request_removed": "Permintaan unstake Anda telah dihapus.",
     "unstake_request_submitted": "Permintaan penarikan terkirim! ✅",
-    "waiting_for_confirmation": "Menunggu konfirmasi..."
+    "waiting_for_confirmation": "Menunggu konfirmasi...",
+    "new_version_available": "Versi baru tersedia",
+    "refresh_to_pick_up_the_latest_changes": "Segarkan untuk mengambil perubahan terbaru.",
+    "refresh": "Segarkan",
+    "what_changed": "Apa yang berubah"
   },
   "prompt": {
     "seoTitle": "Prompt feed Anda — DeHub",

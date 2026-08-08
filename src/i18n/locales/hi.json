@@ -1233,7 +1233,11 @@
     "unstake_failed": "अनस्टेक विफल",
     "unstake_request_removed": "आपका अनस्टेक अनुरोध हटा दिया गया है।",
     "unstake_request_submitted": "निकासी अनुरोध सबमिट हो गया! ✅",
-    "waiting_for_confirmation": "पुष्टि की प्रतीक्षा में..."
+    "waiting_for_confirmation": "पुष्टि की प्रतीक्षा में...",
+    "new_version_available": "नया संस्करण उपलब्ध है",
+    "refresh_to_pick_up_the_latest_changes": "ताज़ा बदलाव पिक-अप करने के लिए रिफ़्रेश करें।",
+    "refresh": "रीफ़्रेश करें",
+    "what_changed": "क्या बदल गया"
   },
   "postOptions": {
     "options": "Options",

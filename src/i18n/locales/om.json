@@ -1425,7 +1425,11 @@
     "unstake_failed": "Baasuun hin milkoofne",
     "unstake_request_removed": "Gaaffiin baasii kee haqameera.",
     "unstake_request_submitted": "Gaaffiin baasii galfameera! ✅",
-    "waiting_for_confirmation": "Mirkaneessa eegaa jira..."
+    "waiting_for_confirmation": "Mirkaneessa eegaa jira...",
+    "new_version_available": "Version haaraan ni argama",
+    "refresh_to_pick_up_the_latest_changes": "Jijjiirama haaraa fudhachuuf haaromsi.",
+    "refresh": "Haaromsi",
+    "what_changed": "Maaltu jijjiirame"
   },
   "prompt": {
     "seoTitle": "Nyaata keessan kakaasi — DeHub",
