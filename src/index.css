@@ -944,38 +944,39 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
    most visible on the themes with the most opaque fills (jungle, osaka), which
    is why it reads as a bug there first, but it is present everywhere.
 
-   WHERE IT SHOWS: the dedicated post page. SinglePostPage wraps its whole
-   column in a [data-feed-item] and then fills it with [data-page-bento]s, so
-   the page rendered a slab inside a slab — two fills, two rings and two blurs
-   stacked in front of whatever the theme's actual background is.
+   WHERE IT SHOWS: a page-level bento used as a layout wrapper and then filled
+   with more bentos — two fills, two rings and two blurs stacked in front of
+   whatever the theme's actual background is.
 
-   SCOPE: deliberately narrow. The inner list is only the hooks that are
-   genuinely page-level structures. [data-poll-card] is NOT in it — a normal
-   feed card containing a poll must keep its own material, which is the
-   opposite of what is wanted here.
+   SCOPE: deliberately narrow, and narrower than it used to be. The inner list
+   is only the hooks that are genuinely page-level structures. [data-poll-card]
+   is NOT in it — a normal feed card containing a poll must keep its own
+   material, which is the opposite of what is wanted here.
+
+   [data-post-shell] USED TO BE STRIPPED HERE AND IS NOT ANY MORE. It tagged the
+   dedicated post page's wrapper as a "column" on the reading that the wrapper
+   spanned the whole middle column. It does not: it holds the post and its poll
+   and nothing else — the related feeds and the live chat are siblings outside
+   it — so it is one bento around one post, the same shape HomeFeed wraps every
+   card in, down to an identical className. Stripping it made the dedicated post
+   page the only surface in the app showing a post with no bento at all. The
+   full-height slab that was actually being reported is painted by the mobile
+   vaul sheet and by [data-post-overlay-backdrop], and both are still handled
+   where they are painted.
+
+   [data-comments-section] USED TO BE IN THE :has() AND IS NOT ANY MORE. Replies
+   are not a drawer on a feed card — CommentsWrapper expands them INSIDE the
+   bento on every breakpoint — so the guard fired on any card whose replies were
+   open and took that card's fill, blur and ring with them, on the home feed as
+   much as here. A card losing its material because a section inside it expanded
+   is not nested glass, it is the card flickering.
 
    The :has() also raises specificity above the three rules above, so this wins
-   without needing to be more !important than they are.
-
-   THE :has() GUARD NEVER MATCHED THE POST PAGE. It was written for the case
-   described above and it does not catch it: the column is filled by a
-   VideoCard / ImageCard / PostCard, none of which carries [data-page-bento],
-   and [data-comments-section] only exists in the DOM while its drawer is open.
-   So the rule matched nothing at rest on the one page it was written for — and
-   had it matched, the column would have gained and lost its background as the
-   comments drawer opened, which is a worse bug than the one being fixed. The
-   column now says what it is with [data-post-shell] instead of being inferred
-   from its contents; the :has() arm stays for the genuine nested-bento case.
-
-   `:not([data-keep-dark])` on that arm is a specificity lift, not a filter —
-   same trick, and same reason, as the [data-page-bento] rules further down.
-   Without it the arm sits at (0,3,1) and loses to the @supports and
-   prefers-reduced-transparency blocks below, which re-assert a solid fill on
-   [data-feed-item] and would put the slab straight back. */
+   without needing to be more !important than they are — and above the @supports
+   and prefers-reduced-transparency blocks below, which re-assert a solid fill
+   on [data-feed-item]. */
 html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"])
-  [data-feed-item][data-post-shell]:not([data-keep-dark]),
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"])
-  :is([data-feed-item], [data-page-bento]):has(:is([data-page-bento], [data-comments-section])) {
+  :is([data-feed-item], [data-page-bento]):has([data-page-bento]) {
   background: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
@@ -1344,36 +1345,14 @@ html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data
   text-shadow: 0 1px 3px rgb(0 0 0 / 0.6), 0 0 8px rgb(0 0 0 / 0.35);
 }
 
-/* Same halo inside the dedicated post page's column. [data-post-shell] keeps
-   [data-feed-item] for the spacing and typography hooks that hang off it, so
-   the `[data-feed-item] *` exclusion above assumes a frosted backing — and that
-   backing is exactly what the nested-surfaces rule now strips. Without this,
-   the post body would be the only bare copy in the app with neither a surface
-   nor a halo, sitting straight on the canvas. Surfaces nested inside the column
-   (poll card, comments, media) keep their own backing and their crisp text via
-   the :not() below.
-
-   Deliberately NOT scoped under `#app-root main` like the block above. On
-   mobile this page renders inside a Vaul drawer, which portals to <body> —
-   outside #app-root entirely — so a scoped rule would apply on desktop and
-   silently do nothing on the surface where the copy is largest and the canvas
-   is most of the screen. [data-post-shell] exists only on this page, so the
-   unscoped selector reaches nothing else.
-
-   `[data-glass-page] *` is also absent from the exclusion list below, and that
-   omission is load-bearing: the post page's own root carries [data-glass-page]
-   (SinglePostPage tags it so the safety nets leave its bg-black alone), so the
-   whole column is a [data-glass-page] descendant. Copying the list above
-   verbatim would have excluded every line of copy on the page and made this
-   rule a no-op — which is precisely the failure it exists to prevent. */
-html:is([data-theme="cosmic"], [data-theme="hazy"], [data-theme="swarms"], [data-theme="lavalamp"], [data-theme="winter"], [data-theme="war"], [data-theme="osaka"], [data-theme="jungle"]) [data-post-shell]
-  :is(.text-white, [class*="text-white/"], [class*="text-zinc-2"], [class*="text-zinc-3"], [class*="text-zinc-4"], [class*="text-zinc-5"], [class*="text-zinc-6"]):not(:where(
-    [data-side-panel] *, [data-page-bento] *,
-    [data-feed-nav] *, [data-mobile-header] *,
-    [data-video-controls], [data-video-controls] *, [data-media-full] *
-  )) {
-  text-shadow: 0 1px 3px rgb(0 0 0 / 0.6), 0 0 8px rgb(0 0 0 / 0.35);
-}
+/* (The dedicated post page used to need a second copy of that halo, keyed on
+   [data-post-shell]. It existed only because the nested-surfaces rule stripped
+   that wrapper's glass, leaving the post body as the one piece of copy in the
+   app with neither a surface nor a shadow. The wrapper is a normal feed bento
+   again, so its copy sits on a frosted backing and is covered by the
+   `[data-feed-item] *` exclusion above — exactly like the same post read on the
+   home feed. Re-adding the halo would give the post page a text shadow the home
+   feed does not have, which is the difference this was meant to remove.) */
 
 /* Frosting unavailable → nearly-solid smoke so text stays readable over the
    moving canvas. */
