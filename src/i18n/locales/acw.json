@@ -1269,7 +1269,11 @@
     "please_connect_your_wallet": "Please connect your wallet",
     "insufficient_balance": "Insufficient balance",
     "transaction_submitted": "Transaction submitted!",
-    "transaction_failed": "Transaction failed"
+    "transaction_failed": "Transaction failed",
+    "new_version_available": "نسخة جديدة متاحة",
+    "refresh_to_pick_up_the_latest_changes": "أعد التحميل لالتقاط أحدث التغييرات.",
+    "refresh": "تحديث",
+    "what_changed": "شنو اللي تغير"
   },
   "prompt": {
     "seoTitle": "جهز صفحتك الرئيسية — DeHub",

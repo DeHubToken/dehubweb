@@ -1375,7 +1375,10 @@
     "unstake_failed": "ان سٹیک ناکام",
     "unstake_request_removed": "تہاڈی ان سٹیک درخواست ہٹا ݙتی گئی ہے۔",
     "unstake_request_submitted": "واپسی درخواست جمع تھی گئی! ✅",
-    "waiting_for_confirmation": "تصدیق دا انتظار..."
+    "waiting_for_confirmation": "تصدیق دا انتظار...",
+    "new_version_available": "نسخہ نیا دستیاب ہے",
+    "refresh_to_pick_up_the_latest_changes": "Refresh کریں تاکہ تازہ ترین تبدیلیاں حاصل ہوں۔",
+    "what_changed": "کیا بدل گیا"
   },
   "prompt": {
     "seoTitle": "اپنڑا فیڈ پرامپٹ کیو— DeHub",

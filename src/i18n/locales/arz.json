@@ -1375,7 +1375,11 @@
     "unstake_failed": "السحب فشل",
     "unstake_request_removed": "طلب السحب بتاعك اتشال.",
     "unstake_request_submitted": "طلب السحب اتبعت! ✅",
-    "waiting_for_confirmation": "مستنيين التأكيد..."
+    "waiting_for_confirmation": "مستنيين التأكيد...",
+    "new_version_available": "الإصدار الجديد متاح",
+    "refresh_to_pick_up_the_latest_changes": "حدِّث لاستلام أحدث التغييرات.",
+    "refresh": "تحديث",
+    "what_changed": "ما الذي تغير"
   },
   "prompt": {
     "seoTitle": "اطلب ما تريد — DeHub",

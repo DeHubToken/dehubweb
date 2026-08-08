@@ -1379,7 +1379,11 @@
     "unstake_failed": "המשיכה נכשלה",
     "unstake_request_removed": "בקשת המשיכה שלך הוסרה.",
     "unstake_request_submitted": "בקשת המשיכה נשלחה! ✅",
-    "waiting_for_confirmation": "ממתין לאישור..."
+    "waiting_for_confirmation": "ממתין לאישור...",
+    "new_version_available": "גרסה חדשה זמינה",
+    "refresh_to_pick_up_the_latest_changes": "יש לרענן כדי לאסוף את השינויים האחרונים.",
+    "refresh": "רענון",
+    "what_changed": "מה השתנה"
   },
   "prompt": {
     "seoTitle": "הגדר את הפיד שלך — DeHub",

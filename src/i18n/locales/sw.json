@@ -1376,7 +1376,11 @@
     "unstake_failed": "Utoaji umeshindwa",
     "unstake_request_removed": "Ombi lako la utoaji limeondolewa.",
     "unstake_request_submitted": "Ombi la utoaji limewasilishwa! ✅",
-    "waiting_for_confirmation": "Inasubiri uthibitisho..."
+    "waiting_for_confirmation": "Inasubiri uthibitisho...",
+    "new_version_available": "Toleo jipya linapatikana",
+    "refresh_to_pick_up_the_latest_changes": "Fungua upya ili uchukue mabadiliko ya hivi karibuni.",
+    "refresh": "Onyesha upya",
+    "what_changed": "Kilichobadilika"
   },
   "prompt": {
     "seoTitle": "Weka ishara kwenye malisho yako — DeHub",

@@ -1379,7 +1379,11 @@
     "unstake_failed": "Échec de l'unstaking",
     "unstake_request_removed": "Votre demande d'unstaking a été supprimée.",
     "unstake_request_submitted": "Demande de retrait envoyée ! ✅",
-    "waiting_for_confirmation": "En attente de confirmation..."
+    "waiting_for_confirmation": "En attente de confirmation...",
+    "new_version_available": "Nouvelle version disponible",
+    "refresh_to_pick_up_the_latest_changes": "Actualisez pour prendre connaissance des dernières modifications.",
+    "refresh": "Actualiser",
+    "what_changed": "Ce qui a changé"
   },
   "prompt": {
     "seoTitle": "Alimentez votre fil d'actualité — DeHub",

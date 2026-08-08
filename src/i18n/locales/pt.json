@@ -1379,7 +1379,11 @@
     "unstake_failed": "Falha na retirada",
     "unstake_request_removed": "Sua solicitação de retirada foi removida.",
     "unstake_request_submitted": "Solicitação de retirada enviada! ✅",
-    "waiting_for_confirmation": "Aguardando confirmação..."
+    "waiting_for_confirmation": "Aguardando confirmação...",
+    "new_version_available": "Nova versão disponível",
+    "refresh_to_pick_up_the_latest_changes": "Atualize para recolher as alterações mais recentes.",
+    "refresh": "Recarregar",
+    "what_changed": "O que mudou"
   },
   "prompt": {
     "seoTitle": "Solicite seu feed — DeHub",

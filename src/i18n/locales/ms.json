@@ -515,7 +515,11 @@
     "unstake_failed": "Unstake gagal",
     "unstake_request_removed": "Permintaan unstake anda telah dialih keluar.",
     "unstake_request_submitted": "Permintaan pengeluaran dihantar! ✅",
-    "waiting_for_confirmation": "Menunggu pengesahan..."
+    "waiting_for_confirmation": "Menunggu pengesahan...",
+    "new_version_available": "Versi baharu tersedia",
+    "refresh_to_pick_up_the_latest_changes": "Muat semula untuk mengambil perubahan terkini.",
+    "refresh": "Muat semula",
+    "what_changed": "Apa yang berubah"
   },
   "feed": {
     "home": "Laman Utama",

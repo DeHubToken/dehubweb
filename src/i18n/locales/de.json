@@ -1375,7 +1375,11 @@
     "unstake_failed": "Unstake fehlgeschlagen",
     "unstake_request_removed": "Deine Unstake-Anfrage wurde entfernt.",
     "unstake_request_submitted": "Auszahlungsanfrage eingereicht! ✅",
-    "waiting_for_confirmation": "Warten auf Bestätigung..."
+    "waiting_for_confirmation": "Warten auf Bestätigung...",
+    "new_version_available": "Neue Version verfügbar",
+    "refresh_to_pick_up_the_latest_changes": "Aktualisieren, um die neuesten Änderungen abzurufen.",
+    "refresh": "Aktualisieren",
+    "what_changed": "Was sich geändert hat"
   },
   "prompt": {
     "seoTitle": "Deinen Feed anstoßen — DeHub",

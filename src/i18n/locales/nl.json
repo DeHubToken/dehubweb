@@ -722,7 +722,11 @@
     "unstake_failed": "Unstaken mislukt",
     "unstake_request_removed": "Je unstake-verzoek is verwijderd.",
     "unstake_request_submitted": "Opnameverzoek ingediend! ✅",
-    "waiting_for_confirmation": "Wachten op bevestiging..."
+    "waiting_for_confirmation": "Wachten op bevestiging...",
+    "new_version_available": "Nieuwe versie beschikbaar",
+    "refresh_to_pick_up_the_latest_changes": "Vernieuw om de laatste wijzigingen op te halen.",
+    "refresh": "Vernieuwen",
+    "what_changed": "Wat is er veranderd"
   },
   "postOptions": {
     "options": "Opties",

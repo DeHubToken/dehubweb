@@ -1348,7 +1348,11 @@
     "unstake_failed": "Tsy nahomby ny fisintonana",
     "unstake_request_removed": "Nesorina ny fangatahanao fisintonana.",
     "unstake_request_submitted": "Voalefa ny fangatahana fisintonana! ✅",
-    "waiting_for_confirmation": "Miandry fanamafisana..."
+    "waiting_for_confirmation": "Miandry fanamafisana...",
+    "new_version_available": "Endrika vaovao azo ampiasaina",
+    "refresh_to_pick_up_the_latest_changes": "Azonao atao ny manova fotoana vitsivitsy amin'ity politika ity.",
+    "refresh": "Avereno zahana",
+    "what_changed": "Ny niova"
   },
   "aiChat": {
     "title": "Assistant",

@@ -1375,7 +1375,11 @@
     "unstake_failed": "解除質押失敗",
     "unstake_request_removed": "你嘅解除質押請求已經移除。",
     "unstake_request_submitted": "提取請求已提交！✅",
-    "waiting_for_confirmation": "等緊確認..."
+    "waiting_for_confirmation": "等緊確認...",
+    "new_version_available": "有新版本",
+    "refresh_to_pick_up_the_latest_changes": "重新整理就可以攞到最新嘅變更。",
+    "refresh": "刷新",
+    "what_changed": "有咩改變咗"
   },
   "prompt": {
     "seoTitle": "提示你的訂閱 — DeHub",
