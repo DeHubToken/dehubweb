@@ -1912,8 +1912,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         </div>
       )}
 
-      {/* Info & Actions */}
-      <div className={`pt-3${isImmersive ? ' px-3' : ''}`}>
+      {/* Info & Actions.
+          The immersive `px-3` is for MOBILE, where the media runs edge-to-edge
+          and the copy under it needs its own gutter. At `lg` the immersive card
+          sits inside the post page's `p-3` bento with the media inset by that
+          padding, so keeping px-3 there indented the title and action bar 12px
+          further than the video above them — the one place this layout didn't
+          line up with the home feed card. Drop it back to the bento's gutter. */}
+      <div className={`pt-3${isImmersive ? ' px-3 lg:px-0' : ''}`}>
         {/* Creator info with action buttons - mobile/tablet immersive view only (hidden on desktop where SinglePostPage renders DesktopCreatorInfo) */}
         {isImmersive && (
           <div className="lg:hidden">
