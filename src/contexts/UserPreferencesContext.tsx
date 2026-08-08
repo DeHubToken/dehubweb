@@ -55,8 +55,9 @@ import { supabase } from '@/integrations/supabase/client';
 import type { Json } from '@/integrations/supabase/types';
 import { withWalletHeader } from '@/lib/supabase-wallet-client';
 import i18n, { loadLanguage } from '@/i18n';
+import { LANGUAGE_STORAGE_KEY, applyResolvedLanguage } from '@/lib/user-language-store';
 
-const LANGUAGE_LS_KEY = 'user-preferred-language';
+const LANGUAGE_LS_KEY = LANGUAGE_STORAGE_KEY;
 const BUY_BOT_LS_KEY = 'dehub_hide_buy_bot';
 
 function readLS(key: string): string | null {
@@ -401,6 +402,10 @@ function LocalStoragePrefBridge() {
       const lang = typeof v === 'string' && v ? v : 'en';
       try { localStorage.setItem(LANGUAGE_LS_KEY, lang); } catch { /* ignore */ }
       document.documentElement.lang = lang;
+      // Retarget everything already reading the language — otherwise a feed
+      // rendered before preferences hydrated keeps translating into whatever
+      // language this device happened to have.
+      applyResolvedLanguage(lang);
       // Switch live without a reload; localStorage is already set so a later
       // reload fully applies even if the runtime switch is partial.
       if (i18n.language !== lang) {

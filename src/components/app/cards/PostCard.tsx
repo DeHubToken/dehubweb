@@ -412,8 +412,12 @@ export const PostCard = memo(function PostCard({ post }: PostCardProps) {
         {(() => {
           const rawDisplay = isTranslated ? translatedText : post.content;
           const displayText = rawDisplay && hasCommunityLink(rawDisplay) ? stripCommunityLinks(rawDisplay) : rawDisplay;
+          // auto={false}: the useTranslation above owns this post's translation
+          // and `displayText` is already its output. Left on, TranslatableText
+          // ran a second translation of the same body — and once the first one
+          // landed, a third of the translated text.
           return displayText?.trim() ? (
-            <TranslatableText text={displayText} className="text-white/90 text-sm sm:text-base" as="p" />
+            <TranslatableText text={displayText} className="text-white/90 text-sm sm:text-base" as="p" auto={false} />
           ) : null;
         })()}
 
