@@ -266,6 +266,47 @@ const langNameMap: Record<string, string> = {
   'zu': 'Zulu',
 };
 
+// MyMemory signals "these are the same language" as a 403 rather than a field,
+// and puts the message in both responseDetails and translatedText. Match on the
+// message rather than the status alone, since 403 also covers unrelated refusals.
+function isSameLanguageRefusal(data: {
+  responseStatus?: number | string;
+  responseDetails?: string;
+  responseData?: { translatedText?: string };
+}): boolean {
+  const haystack = `${data.responseDetails ?? ''} ${data.responseData?.translatedText ?? ''}`;
+  return haystack.toUpperCase().includes('TWO DISTINCT LANGUAGES');
+}
+
+/**
+ * Cheap same-language probe for text MyMemory will not translate.
+ *
+ * Bodies over 500 characters skip MyMemory entirely, so the refusal above never
+ * fires for them and a long post in the reader's own language would go to a paid
+ * model to be returned unchanged. Sending only a prefix is enough: the answer is
+ * about which language the text is in, not about translating it.
+ *
+ * Fails open — an unreachable probe returns false and the paid tiers run, which
+ * is the behaviour without this function at all.
+ */
+async function isAlreadyInTargetLanguage(text: string, targetLang: string): Promise<boolean> {
+  try {
+    const probe = text.slice(0, 200);
+    const target = langCodeMap[targetLang] || targetLang;
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(probe)}&langpair=${encodeURIComponent(`autodetect|${target}`)}`;
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    const response = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeout);
+
+    if (!response.ok) return false;
+    return isSameLanguageRefusal(await response.json());
+  } catch (_e) {
+    return false;
+  }
+}
+
 /**
  * MyMemory Translation API - Free, 1000 words/day
  * https://mymemory.translated.net/doc/spec.php
@@ -302,7 +343,26 @@ async function translateWithMyMemory(
     }
 
     const data = await response.json();
-    
+
+    // MyMemory refuses a same-language pair with 403 "PLEASE SELECT TWO
+    // DISTINCT LANGUAGES". Asked to autodetect, that refusal is not a failure —
+    // it is MyMemory telling us it detected the source AS the target, i.e. the
+    // reader already speaks the language this text is written in.
+    //
+    // Treating it as a generic error is expensive now that the feed translates
+    // itself: every English post read by an English speaker fell through to a
+    // paid model to be "translated" into the language it was already in, which
+    // on an English-majority feed is most of the traffic. Verified against the
+    // live API — an English body with langpair `autodetect|en` returns exactly
+    // this.
+    if (isSameLanguageRefusal(data)) {
+      console.log('MyMemory: text is already in the target language');
+      return {
+        translatedText: text,
+        detectedLanguage: { language: targetLang, confidence: 1.0 },
+      };
+    }
+
     if (data.responseStatus !== 200) {
       console.log(`MyMemory response status: ${data.responseStatus}, message: ${data.responseDetails}`);
       return null;
@@ -696,6 +756,23 @@ serve(async (req) => {
       await writeCachedTranslation(textHash, targetLang, result, 'mymemory');
       return new Response(
         JSON.stringify(result),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Long bodies never reached MyMemory, so the same-language refusal it
+    // returns has not been seen for them. Ask before paying: a post already in
+    // the reader's language is the single most common thing the feed will ask
+    // to translate, and it is the one case where the correct answer is free.
+    if (text.length > 500 && (await isAlreadyInTargetLanguage(text, targetLang))) {
+      const sameLanguage: TranslateResponse = {
+        translatedText: text,
+        detectedLanguage: { language: targetLang, confidence: 1.0 },
+      };
+      rememberInIsolate(cacheKey, sameLanguage);
+      await writeCachedTranslation(textHash, targetLang, sameLanguage, 'same-language');
+      return new Response(
+        JSON.stringify(sameLanguage),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
