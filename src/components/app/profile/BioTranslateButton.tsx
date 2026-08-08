@@ -8,7 +8,6 @@
 import { useState, useCallback } from 'react';
 import { RotateCcw, Loader2, Languages } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { dehubAuthHeaders } from '@/lib/ai-invoke';
 import { useUserLanguage } from '@/hooks/use-user-language';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 
@@ -39,9 +38,6 @@ export function BioTranslateButton({ bio, onTranslated, onShowOriginal, isTransl
     try {
       const { data, error } = await supabase.functions.invoke('translate-text', {
         body: { text: bio, targetLang: userLang },
-        // Cache and MyMemory stay public; the AI fallback needs a wallet to
-        // bill abuse to, so send the token whenever there is one.
-        headers: dehubAuthHeaders(),
       });
 
       if (error || !data?.translatedText) return;
