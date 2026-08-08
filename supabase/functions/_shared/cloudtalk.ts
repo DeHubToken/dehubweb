@@ -30,8 +30,8 @@ export function maskPhone(phone: string): string {
  * outside it (an em dash, a curly quote, an accent) switches the whole message
  * to UCS-2, where a fragment holds 70 characters instead of 160. At 87
  * characters this is one GSM-7 fragment; under UCS-2 the same text is two.
- * CloudTalk bills per fragment, and several destinations reject multi-part
- * messages outright, so keep this plain ASCII.
+ * CloudTalk bills messaging per fragment out of prepaid credit, so an
+ * unnoticed em dash doubles what every login costs. Keep this plain ASCII.
  */
 export function otpSmsMessage(code: string): string {
   return `${code} is your DeHub verification code. It expires shortly. ` +
