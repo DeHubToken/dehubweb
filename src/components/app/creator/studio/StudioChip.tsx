@@ -8,8 +8,8 @@
  * Shape rule for the studio: chips and pills are fully rounded, controls are
  * rounded-xl, panels are rounded-2xl.
  */
-import { useCallback, useState } from 'react';
-import { Check, ChevronDown, Minus, Plus } from 'lucide-react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Check, ChevronDown, Minus, Plus, Search } from 'lucide-react';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
 import { useCloseOnSurfaceSwitch, useSurfaceEpoch } from '@/hooks/use-surface-switch';
@@ -40,6 +40,13 @@ interface SelectChipProps<T extends string> {
   disabled?: boolean;
   /** Popover width. Model lists need more room than aspect ratios. */
   width?: 'sm' | 'md';
+  /**
+   * Add a filter box above the list. Worth it once the catalogue is long
+   * enough that finding a named model means scrolling and reading.
+   */
+  searchable?: boolean;
+  /** Placeholder for the filter box. */
+  searchPlaceholder?: string;
 }
 
 export function SelectChip<T extends string>({
@@ -50,6 +57,8 @@ export function SelectChip<T extends string>({
   display,
   disabled,
   width = 'sm',
+  searchable = false,
+  searchPlaceholder = 'Search…',
 }: SelectChipProps<T>) {
   const current = options.find((o) => o.value === value);
 
@@ -59,6 +68,22 @@ export function SelectChip<T extends string>({
   const close = useCallback(() => setOpen(false), []);
   useCloseOnSurfaceSwitch(close);
   const epoch = useSurfaceEpoch();
+
+  const searchRef = useRef<HTMLInputElement>(null);
+  const [query, setQuery] = useState('');
+  // A stale filter would hide the list on the next open.
+  useEffect(() => {
+    if (!open) setQuery('');
+  }, [open]);
+
+  const visible = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return options;
+    // Match the value too, so "seedance-2.5" finds it as readily as "Seedance".
+    return options.filter((o) =>
+      `${o.label} ${o.detail ?? ''} ${o.value}`.toLowerCase().includes(q),
+    );
+  }, [options, query]);
 
   return (
     <Popover key={epoch} open={open} onOpenChange={setOpen}>
@@ -71,15 +96,46 @@ export function SelectChip<T extends string>({
       <PopoverContent
         align="start"
         sideOffset={8}
+        // Radix parks focus on the panel itself, so a filter box would sit
+        // there needing a second click before it could be typed into.
+        onOpenAutoFocus={
+          searchable
+            ? (e) => {
+                e.preventDefault();
+                requestAnimationFrame(() => searchRef.current?.focus());
+              }
+            : undefined
+        }
         className={cn(
           'max-h-[min(22rem,60vh)] overflow-y-auto rounded-2xl border-white/10 bg-zinc-950/95 p-1.5 text-white shadow-[0_8px_32px_rgba(0,0,0,0.5)] backdrop-blur-xl',
           width === 'md' ? 'w-80' : 'w-56',
         )}
       >
-        <p className="px-2.5 pb-1.5 pt-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">
-          {label}
-        </p>
-        {options.map((option) => (
+        <div className="sticky top-0 z-10 -mx-1.5 -mt-1.5 mb-0.5 bg-zinc-950/95 px-4 pb-1.5 pt-2.5 backdrop-blur-xl">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40">
+            {label}
+          </p>
+          {searchable && (
+            <div className="relative mt-1.5">
+              <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-white/35" />
+              <input
+                ref={searchRef}
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={searchPlaceholder}
+                aria-label={`Search ${label.toLowerCase()}`}
+                className="w-full rounded-lg border border-white/15 bg-white/[0.06] py-1.5 pl-8 pr-2.5 text-[13px] text-white outline-none transition placeholder:text-white/35 focus:border-white/35 focus:bg-white/[0.10]"
+              />
+            </div>
+          )}
+        </div>
+        {visible.length === 0 && (
+          <p className="px-2.5 py-6 text-center text-[12px] text-white/40">
+            Nothing matches “{query.trim()}”.
+          </p>
+        )}
+        {visible.map((option) => (
           <button
             key={option.value}
             type="button"
