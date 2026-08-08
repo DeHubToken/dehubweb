@@ -1324,8 +1324,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
-   * Phone login step 1: send a 6-digit OTP via Supabase Auth (SMS provider
-   * must be configured in the Supabase dashboard — Twilio/MessageBird/etc).
+   * Phone login step 1: send a 6-digit OTP via the request-phone-otp edge
+   * function. Not supabase.auth.signInWithOtp — the native Phone provider
+   * needs Authentication -> Hooks -> Send SMS enabled to route through
+   * CloudTalk, and that toggle isn't reachable from this project's
+   * management surface, so request-phone-otp/verify-phone-otp do the same
+   * job directly (see their source for the full explanation).
    */
   const connectWithSMS = async (phone: string) => {
     const previousSource = readConnectionSource();
@@ -1341,11 +1345,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         clearWagmiStorage();
       } catch { /* ignore */ }
 
-      const { error } = await supabase.auth.signInWithOtp({
-        phone,
-        options: { shouldCreateUser: true },
+      const { data, error } = await supabase.functions.invoke('request-phone-otp', {
+        body: { phone },
       });
       if (error) throw error;
+      if (data?.error) throw new Error(data.error);
       toast.success('Verification code sent — check your phone');
     } catch (error: any) {
       console.error('Phone login error:', error);
@@ -1360,21 +1364,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   /**
-   * Phone login step 2: verify the OTP. On success the wallet phase is
-   * resolved and the modal advances to create/unlock.
+   * Phone login step 2: verify the OTP via verify-phone-otp, which hands back
+   * a real session (see connectWithSMS for why this isn't
+   * supabase.auth.verifyOtp). On success the wallet phase is resolved and the
+   * modal advances to create/unlock.
    */
   const verifyPhoneOtp = async (phone: string, code: string) => {
     setIsConnecting(true);
     supaLoginHandledRef.current = true;
     try {
-      const { data, error } = await supabase.auth.verifyOtp({
-        phone,
-        token: code.trim(),
-        type: 'sms',
+      const { data, error } = await supabase.functions.invoke('verify-phone-otp', {
+        body: { phone, code: code.trim() },
       });
       if (error) throw error;
-      const uid = data?.session?.user?.id ?? data?.user?.id;
-      if (!uid) throw new Error('Verification failed. Please try again.');
+      if (data?.error) throw new Error(data.error);
+      const session = data?.session;
+      if (!session?.access_token || !session?.refresh_token) {
+        throw new Error('Verification failed. Please try again.');
+      }
+      const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
+        access_token: session.access_token,
+        refresh_token: session.refresh_token,
+      });
+      const uid = sessionData?.session?.user?.id;
+      if (sessionError || !uid) throw new Error(sessionError?.message || 'Verification failed. Please try again.');
       await proceedToWalletPhase(uid);
     } catch (error: any) {
       console.error('Phone OTP verification error:', error);
