@@ -259,7 +259,14 @@ export default function CreatorPage() {
       {/* Page metadata lives in CreatorEditorHost: /creator and /editor stay
           co-mounted, so a Helmet here would keep applying while this page is
           hidden and would overwrite the editor's title. */}
-      <main className="min-h-screen text-white overflow-x-hidden" style={{ backgroundColor: '#090a0b' }}>
+      {/* overflow-x-CLIP, not hidden. `hidden` on one axis computes the other
+          from `visible` to `auto`, which quietly made this element a scroll
+          container — one that never scrolls, because the page scrolls on
+          `body`. Every `position: sticky` inside then had no scrollport to
+          react to and simply rode the content off the top of the screen, the
+          header included. `clip` contains the same horizontal overflow while
+          leaving overflow-y `visible`, so sticky resolves against `body`. */}
+      <main className="min-h-screen overflow-x-clip text-white" style={{ backgroundColor: '#090a0b' }}>
         <h1 className="sr-only">DeHub Creator Studio</h1>
 
         <div ref={headerRef} className="sticky top-0 z-50">
