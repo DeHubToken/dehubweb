@@ -197,8 +197,6 @@ function SortFilterSection({
     return filtered;
   }, [categories, categorySearch]);
 
-  const rowFadeMask = '[mask-image:linear-gradient(to_right,black_calc(100%_-_24px),transparent)] [-webkit-mask-image:linear-gradient(to_right,black_calc(100%_-_24px),transparent)]';
-
   return (
     <div className="relative flex flex-col gap-4">
       {/* Sort Options */}
@@ -206,7 +204,6 @@ function SortFilterSection({
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.sort')}</span>
         <div className="relative">
           <GlassFilterRow
-            className={rowFadeMask}
             items={SORT_OPTIONS.map((o) => ({ key: o.label, label: t(`filters.${o.value === 'most-viewed' ? 'mostViewed' : o.value === 'most-liked' ? 'mostLiked' : o.value === 'most-comments' ? 'mostComments' : o.value}`, o.label) }))}
             activeKey={selectedSort.label}
             onSelect={(key) => { const o = SORT_OPTIONS.find(x => x.label === key); if (o) onSortSelect(o); }}
@@ -228,7 +225,6 @@ function SortFilterSection({
         />
         <div className="relative">
           <GlassFilterRow
-            className={rowFadeMask}
             items={[
               { key: 'all', label: t('filters.all') },
               ...filteredCategories.map((cat) => ({ key: cat.id, label: cat.name })),
@@ -256,7 +252,6 @@ function SortFilterSection({
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.uploadDate')}</span>
         <div className="relative">
           <GlassFilterRow
-            className={rowFadeMask}
             items={DATE_FILTER_OPTIONS.map((o) => ({ key: o.value, label: o.label }))}
             activeKey={selectedDate.value}
             onSelect={(key) => { const o = DATE_FILTER_OPTIONS.find(x => x.value === key); if (o) onDateSelect(o); }}
@@ -271,7 +266,6 @@ function SortFilterSection({
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.postType')}</span>
         <div className="relative">
           <GlassFilterRow
-            className={rowFadeMask}
             items={POST_TYPE_FILTERS.map((o) => ({ key: o.value, label: t(`filters.${o.value === 'all' ? 'all' : o.value === 'video' ? 'videos' : o.value === 'feed-images' ? 'images' : o.value === 'feed-audio' ? 'audio' : 'text'}`, o.label) }))}
             activeKey={selectedPostType}
             onSelect={(key) => onPostTypeSelect(key as PostTypeFilterValue)}
@@ -286,7 +280,6 @@ function SortFilterSection({
         <span className="text-xs text-zinc-500 uppercase tracking-wider">{t('filters.contentAccess')}</span>
         <div className="relative">
           <GlassFilterRow
-            className={rowFadeMask}
             items={CONTENT_TYPE_FILTERS.map((filter) => ({ key: filter.value, label: t(`filters.${filter.value === 'w2e' ? 'bounty' : filter.value}`, filter.label) }))}
             activeKeys={CONTENT_TYPE_FILTERS.filter((filter) => contentFilters[filter.value]).map((filter) => filter.value)}
             onSelect={(key) => onContentFilterToggle(key as keyof ContentTypeFilters)}
@@ -296,10 +289,11 @@ function SortFilterSection({
         </div>
       </div>
 
-      {/* Reset filters - bottom right */}
+      {/* Reset filters - bottom right. z-50 keeps it above the scroll rows
+          (z-40), which overlap it and otherwise swallow the tap. */}
       <button
-        onClick={onReset}
-        className="absolute bottom-0 right-0 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
+        onClick={() => { setCategorySearch(''); onReset(); }}
+        className="absolute z-50 bottom-0 right-0 p-1.5 rounded-lg text-zinc-500 hover:text-white hover:bg-zinc-800 transition-colors"
         aria-label={t('filters.resetFilters')}
       >
         <RefreshCw className="w-3.5 h-3.5" />
