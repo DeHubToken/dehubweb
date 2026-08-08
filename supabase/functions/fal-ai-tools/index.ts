@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { rateLimitByIp } from "../_shared/auth.ts";
+import { chargeForJob } from "../_shared/ai-credit-guard.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -214,9 +214,6 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  const limited = await rateLimitByIp(req, 'fal-ai-tools', { limit: 20, windowMs: 60 * 60 * 1000 });
-  if (limited) return limited;
-
   try {
     const FAL_KEY = Deno.env.get('FAL_KEY');
     if (!FAL_KEY) throw new Error('FAL_KEY is not configured');
@@ -260,35 +257,50 @@ serve(async (req) => {
     const input = toolConfig.buildInput(params);
     console.log(`[fal-tools] ${toolConfig.name}: ${JSON.stringify(input).substring(0, 200)}`);
 
-    if (toolConfig.async) {
-      // Queue-based async execution
-      const submission = await falQueueSubmit(FAL_KEY, toolConfig.appId, input);
-      console.log(`[fal-tools] ${toolConfig.name} queued: ${submission.request_id}`);
-      console.log(`[fal-tools] status_url: ${submission.status_url}, response_url: ${submission.response_url}`);
+    // The status-check branch above returns before this point, so polling an
+    // in-flight job is never charged twice.
+    const charged = await chargeForJob(req, {
+      kind: 'tool',
+      modelId: tool,
+      actionType: 'fal-ai-tools',
+      rateLimit: { limit: 40, windowMs: 60 * 60 * 1000 },
+    });
+    if (!charged.ok) return charged.response;
 
-      return new Response(JSON.stringify({
-        status: 'starting',
-        requestId: submission.request_id,
-        appId: toolConfig.appId,
-        statusUrl: submission.status_url,
-        responseUrl: submission.response_url,
-        tool,
-      }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    } else {
-      // Synchronous execution
-      const resultData = await falRun(FAL_KEY, toolConfig.appId, input);
-      const result = toolConfig.extractResult(resultData);
-      console.log(`[fal-tools] ${toolConfig.name} completed`);
+    try {
+      if (toolConfig.async) {
+        // Queue-based async execution
+        const submission = await falQueueSubmit(FAL_KEY, toolConfig.appId, input);
+        console.log(`[fal-tools] ${toolConfig.name} queued: ${submission.request_id}`);
+        console.log(`[fal-tools] status_url: ${submission.status_url}, response_url: ${submission.response_url}`);
 
-      return new Response(JSON.stringify({
-        status: 'succeeded',
-        tool,
-        ...result,
-      }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+        return new Response(JSON.stringify({
+          status: 'starting',
+          requestId: submission.request_id,
+          appId: toolConfig.appId,
+          statusUrl: submission.status_url,
+          responseUrl: submission.response_url,
+          tool,
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      } else {
+        // Synchronous execution
+        const resultData = await falRun(FAL_KEY, toolConfig.appId, input);
+        const result = toolConfig.extractResult(resultData);
+        console.log(`[fal-tools] ${toolConfig.name} completed`);
+
+        return new Response(JSON.stringify({
+          status: 'succeeded',
+          tool,
+          ...result,
+        }), {
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+    } catch (providerError) {
+      await charged.refund();
+      throw providerError;
     }
   } catch (error) {
     console.error('[fal-tools] Error:', error);

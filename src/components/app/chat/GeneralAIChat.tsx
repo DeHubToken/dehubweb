@@ -18,6 +18,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { supabase } from '@/integrations/supabase/client';
+import { invokeAi } from '@/lib/ai-invoke';
 import { useAuth } from '@/contexts/AuthContext';
 import { MarkdownText } from '@/lib/markdown';
 import { PostModal } from '@/features/post';
@@ -228,7 +229,7 @@ export function GeneralAIChat({ isOpen, onClose }: GeneralAIChatProps) {
       const isImageRequest = isCreativeLogo || requiresImageGeneration(currentInput, !!currentAttachedImage);
       
       if (isImageRequest) {
-        const { data, error } = await supabase.functions.invoke('generate-image', {
+        const { data, error } = await invokeAi('generate-image', {
           body: {
             prompt: wantsDeHubBrand ? buildDeHubBrandPrompt(currentInput) : currentInput,
             sourceImage: effectiveSourceImage || undefined,

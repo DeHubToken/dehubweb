@@ -38,6 +38,17 @@ interface Plan {
   annualPriceId: string;
 }
 
+/**
+ * Allowances are DHB, and the numbers below have to match AI_PLANS in
+ * supabase/functions/_shared/ai-plans.ts — that file is what actually grants
+ * the credit when an invoice is paid.
+ *
+ * The previous copy ("3,500 credits/mo = 1,750 Nano Banana Pro Generations")
+ * was inherited from a competitor whose credit unit is not ours. Nothing ever
+ * granted it, which was lucky: at our cost basis that is $525 of retail sold
+ * for £129. These figures are rebuilt from what we pay providers, at the
+ * gateway peg of 1,000 DHB = $1 of generation.
+ */
 const plans: Plan[] = [
   {
     id: 'ultra',
@@ -48,9 +59,9 @@ const plans: Plan[] = [
     tagline: 'Best value',
     headline: 'For creators building AI projects',
     breakdown: [
-      '3,500 credits/mo.',
-      '= 1,750 Nano Banana Pro Generations',
-      '~ 155 Seedance 2.0 videos',
+      '130,000 DHB credit/mo',
+      '= 433 Nano Banana Pro images  ·  ~ 41 Seedance 2.0 videos',
+      'Credit is DHB — spend it, or top up with your own',
     ],
     monthly: 129,
     annual: 99,
@@ -85,9 +96,9 @@ const plans: Plan[] = [
     tagline: '',
     headline: 'For agencies and small teams to create faster',
     breakdown: [
-      '2,500 credits in total/mo',
-      '= 1,250 Nano Banana Pro images  ·  ~ 111 Seedance 2.0 videos',
-      '1,250 credits per seat/mo',
+      '88,000 DHB credit per seat/mo',
+      '= 293 Nano Banana Pro images  ·  ~ 28 Seedance 2.0 videos',
+      'Pooled across the workspace',
     ],
     monthly: 79,
     annual: 65,
@@ -138,9 +149,9 @@ const plans: Plan[] = [
     tagline: '',
     headline: 'Designed for growing creative teams',
     breakdown: [
-      '15,000 credits/mo',
-      '= 7,500 Nano Banana Pro images  ·  ~ 667 Seedance 2.0 videos',
-      '3,000 credits per seat/mo',
+      '210,000 DHB credit per seat/mo',
+      '= 700 Nano Banana Pro images  ·  ~ 67 Seedance 2.0 videos',
+      'Pooled across the workspace',
     ],
     monthly: 215,
     annual: 150,

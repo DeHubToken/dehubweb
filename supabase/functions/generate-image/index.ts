@@ -5,7 +5,7 @@ import {
   pickLayoutForFormat,
 } from '../_shared/dehub-brand-composite.ts';
 import { DEHUB_LOGO_DATA_URI } from '../_shared/dehub-logo.ts';
-import { rateLimitByIp } from '../_shared/auth.ts';
+import { chargeForJob } from '../_shared/ai-credit-guard.ts';
 import { buildSpecFromPrompt, renderTemplateBanner, formatFromPosterSize } from '../_shared/dehub-template-banner.ts';
 
 const serve = (handler: (req: Request) => Response | Promise<Response>) => Deno.serve(handler);
@@ -234,14 +234,7 @@ const ASPECT_FRAMING: Record<string, string> = {
   '21:9': 'Compose for an ultra-wide 21:9 cinemascope frame.',
 };
 
-serve(async (req) => {
-  if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
-  }
-
-  const limited = await rateLimitByIp(req, 'generate-image', { limit: 30, windowMs: 60 * 60 * 1000 });
-  if (limited) return limited;
-
+const handleGenerateImage = async (req: Request): Promise<Response> => {
   try {
     let { prompt, sourceImage, logoImage, headline: requestHeadline, conversationHistory = [], model = 'gemini-2.5-flash', bannerRenderer, bannerFormat, aspectRatio } = await req.json() as GenerateImageRequest;
 
@@ -812,4 +805,28 @@ ART DIRECTION: ${enhancedUserRequest}`;
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
+};
+
+serve(async (req) => {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  // Peek at the payload to price the job. The clone leaves the original body
+  // readable by the handler, so nothing below this point had to change.
+  const peek = await req.clone().json().catch(() => ({})) as { model?: string };
+
+  const charged = await chargeForJob(req, {
+    kind: 'image',
+    modelId: peek.model || 'gemini-2.5-flash',
+    actionType: 'generate-image',
+    rateLimit: { limit: 60, windowMs: 60 * 60 * 1000 },
+  });
+  if (!charged.ok) return charged.response;
+
+  const response = await handleGenerateImage(req);
+  // Anything short of a success hands the credit back — a refusal or a provider
+  // outage must not be billable.
+  if (!response.ok) await charged.refund();
+  return response;
 });
