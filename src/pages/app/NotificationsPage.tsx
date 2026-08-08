@@ -26,13 +26,13 @@ import { formatDistanceToNow } from 'date-fns';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
 import { Link, useNavigate } from 'react-router-dom';
 import notificationsIcon from '@/assets/icons/notifications-icon.png';
-import { useQueries, useQueryClient } from '@tanstack/react-query';
+import { useQueries, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { buildAvatarUrl, extractAvatarPath } from '@/lib/media-url';
 import { supabase } from '@/integrations/supabase/client';
 import { seedProfileCache } from '@/lib/profile-cache-seed';
 import { SEOHead } from '@/components/SEOHead';
-import { DEHUB_CDN_BASE, getNFTInfo, getFollowRequests, approveFollowRequest, rejectFollowRequest } from '@/lib/api/dehub';
+import { DEHUB_CDN_BASE, getNFTInfo, getFollowRequests, approveFollowRequest, rejectFollowRequest, getInAppPref, type NotificationKey } from '@/lib/api/dehub';
 import { mapNFTToFeedItem } from '@/lib/nft-to-feed-item';
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
@@ -239,20 +239,54 @@ const tabs: { labelKey: string; value: NotificationTypeFilter; icon: React.Eleme
   { labelKey: 'notifications.live', value: 'livestreams', icon: Zap },
 ];
 
-// Map tab filter to notification types
+// Map tab filter to notification types.
+//
+// A tab can mix types from both sources: the DeHub API (snake_case types the
+// backend stores) and the Supabase `custom_notifications` table (feature
+// requests, governance, communities, stores). API_BACKED_TYPES below marks
+// which of them the API can filter on, so each tab can ask the server for its
+// own rows instead of relying on them landing in the first page of an
+// unfiltered feed.
 const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   all: null,
   likes: ['like', 'comment_like', 'feature_request_like', 'governance_vote'],
-  follows: ['following', 'follow_request', 'followRequest', 'follow-request'],
+  follows: ['following', 'follow_request', 'follow_request_accepted', 'followRequest', 'follow-request'],
   comments: ['comment', 'comment_reply', 'mention', 'feature_request_comment', 'governance_comment'],
   reposts: ['repost', 'quote'],
   features: ['feature_request_like', 'feature_request_comment'],
   communities: ['community_join'],
-  stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected'],
+  stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased'],
   subscriptions: ['subscription', 'ppv_purchase'],
-  tips: ['tip'],
+  tips: ['tip', 'bounty_available', 'bounty_claimed'],
   livestreams: ['livestream_start'],
 };
+
+/**
+ * Types the DeHub API stores and can filter on via `?types=`. Everything else in
+ * filterTypeMap comes from Supabase and is matched client-side only.
+ *
+ * Kept as an explicit list rather than derived: sending a name the API does not
+ * know makes it drop the filter and return an unfiltered page, which would
+ * quietly undo the narrowing for any tab that mixes the two sources.
+ */
+const API_BACKED_TYPES = new Set([
+  'like', 'comment_like', 'comment', 'comment_reply', 'mention',
+  'following', 'follow_request', 'follow_request_accepted',
+  'repost', 'quote',
+  'tip', 'bounty_available', 'bounty_claimed',
+  'subscription', 'ppv_purchase',
+  'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased',
+  'livestream_start', 'video_milestone',
+  'video_removal', 'account_warning', 'system',
+]);
+
+/** The subset of a tab's types the API can filter on, or undefined for no server filter. */
+function apiTypesForTab(tab: NotificationTypeFilter): string[] | undefined {
+  const allowed = filterTypeMap[tab];
+  if (!allowed) return undefined;
+  const apiTypes = allowed.filter((t) => API_BACKED_TYPES.has(t));
+  return apiTypes.length ? apiTypes : undefined;
+}
 
 function getNotificationIcon(type: string, reaction?: PostReaction) {
   switch (type) {
@@ -280,11 +314,17 @@ function getNotificationIcon(type: string, reaction?: PostReaction) {
       return <Users className="w-4 h-4 text-white/70" />;
     case 'following':
     case 'follow_request':
+    case 'follow_request_accepted':
     case 'followRequest':
     case 'follow-request':
       return <UserPlus className="w-4 h-4 text-white/70" />;
+    case 'bounty_available':
+    case 'bounty_claimed':
+      return <Gem className="w-4 h-4 text-white/70" />;
     case 'video_milestone':
       return <Trophy className="w-4 h-4 text-white/70" />;
+    case 'account_warning':
+      return <AlertTriangle className="w-4 h-4 text-white/70" />;
     case 'livestream_start':
       return <Zap className="w-4 h-4 text-white/70" />;
     case 'video_removal':
@@ -479,14 +519,23 @@ function getNotificationContent(
     const title = (notification as any)._customReferenceTitle || notification.tokenTitle;
     return title ? `${actorName} purchased your listing "${title}"` : `${actorName} purchased your listing`;
   }
-  if ((notification.type as string) === 'fraction_offer') {
-    return (notification as any).content || `${actorName} made an offer on your fractions`;
-  }
-  if ((notification.type as string) === 'fraction_offer_accepted') {
-    return (notification as any).content || `Your fraction offer was accepted`;
-  }
-  if ((notification.type as string) === 'fraction_offer_rejected') {
-    return (notification as any).content || `Your fraction offer was rejected`;
+  // Fraction rows written before the API learned to describe them carry the
+  // placeholder "You have a new notification", so treat that as no content.
+  const fractionTypes = ['fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased'];
+  if (fractionTypes.includes(notification.type as string)) {
+    const apiContent = (notification as any).content;
+    const usableContent = apiContent && apiContent !== 'You have a new notification' ? apiContent : null;
+    if (usableContent) return usableContent;
+    switch (notification.type as string) {
+      case 'fraction_offer':
+        return `${actorName} made an offer on your fractions`;
+      case 'fraction_offer_accepted':
+        return `${actorName} accepted your fraction offer`;
+      case 'fraction_offer_rejected':
+        return `${actorName} declined your fraction offer`;
+      default:
+        return `${actorName} bought fractions of your post`;
+    }
   }
 
   // Backend-aggregated follow
@@ -620,11 +669,23 @@ function getNavigationLink(notification: DeHubNotification): string | null {
     case 'tip':
     case 'video_milestone':
       return notification.tokenId ? `/app/post/${notification.tokenId}${commentSuffix}` : null;
+    // Every remaining post-bound type lands on the post it refers to. Without
+    // these the rows rendered fine but were inert on click.
+    case 'repost':
+    case 'quote':
+    case 'bounty_available':
+    case 'bounty_claimed':
+    case 'fraction_offer':
+    case 'fraction_offer_accepted':
+    case 'fraction_offer_rejected':
+    case 'fraction_purchased':
+      return notification.tokenId ? `/app/post/${notification.tokenId}` : null;
     case 'following':
-      return notification.actorAddress 
-        ? `/${notification.actorAddress}` 
-        : notification.actorUsername 
-          ? `/${notification.actorUsername}` 
+    case 'follow_request_accepted':
+      return notification.actorAddress
+        ? `/${notification.actorAddress}`
+        : notification.actorUsername
+          ? `/${notification.actorUsername}`
           : null;
     case 'follow_request':
       // Follow requests don't navigate — they have inline accept/reject buttons
@@ -1185,19 +1246,56 @@ export default function NotificationsPage() {
     return () => window.removeEventListener('open-followers-drawer', handler);
   }, []);
   
-  // Notification preference toggles (local state for now)
-  const [notificationPrefs, setNotificationPrefs] = useState({
-    likes: true,
-    comments: true,
-    follows: true,
-    tips: true,
-    subscriptions: true,
-    livestreams: true,
-  });
-  
   const queryClient = useQueryClient();
-  // Fetch all notifications and filter client-side by type
-  const { notifications: dehubNotifications, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } = useNotifications();
+
+  // Notification preference toggles. These were local useState, so the sheet
+  // remembered a choice until you navigated away and then silently forgot it —
+  // nothing was ever persisted. They now read and write the same account-level
+  // preferences as Settings → Notifications.
+  const notifPrefsKey = ['account-notification-preferences', pageWalletAddress?.toLowerCase() ?? null];
+
+  const { data: notificationPrefs } = useQuery({
+    queryKey: notifPrefsKey,
+    queryFn: () => import('@/lib/api/dehub').then(m => m.getAccountNotificationPreferences(pageWalletAddress!)),
+    enabled: isAuthenticated && !!pageWalletAddress,
+    staleTime: 5 * 60_000,
+  });
+
+  const updateNotifPref = useMutation({
+    mutationFn: ({ key, value }: { key: NotificationKey; value: boolean }) =>
+      import('@/lib/api/dehub').then(m => m.updateInAppNotificationPref(key, value)),
+    onMutate: async ({ key, value }) => {
+      await queryClient.cancelQueries({ queryKey: notifPrefsKey });
+      const prev = queryClient.getQueryData(notifPrefsKey);
+      queryClient.setQueryData(notifPrefsKey, (old: any) => ({
+        ...old,
+        inApp: { ...(old?.inApp ?? {}), [key]: value },
+      }));
+      return { prev };
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.prev) queryClient.setQueryData(notifPrefsKey, context.prev);
+      toast.error('Failed to update notification settings');
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: notifPrefsKey }),
+  });
+
+  const prefToggle = (key: NotificationKey) => ({
+    checked: getInAppPref(notificationPrefs, key),
+    onCheckedChange: (checked: boolean) => updateNotifPref.mutate({ key, value: checked }),
+  });
+
+  // Unfiltered feed. Drives the per-tab unread badges and the browser
+  // notification hand-off, both of which need to see every type. On the All tab
+  // this is the same query key as the list below, so it costs no extra request.
+  const { notifications: unfilteredNotifications } = useNotifications();
+
+  // The list itself. Ask the API for just this tab's types; the client-side
+  // filter below still runs, because it also covers the Supabase-backed types
+  // and it keeps the list correct against an API that predates `types`.
+  const activeApiTypes = useMemo(() => apiTypesForTab(activeTab), [activeTab]);
+  const { notifications: dehubNotifications, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useNotifications(undefined, activeApiTypes, { notifyOnNew: false });
   const { data: unreadCount } = useUnreadNotificationCount();
   const markAllAsRead = useMarkAllNotificationsAsRead();
   const markAsRead = useMarkNotificationAsRead();
@@ -1214,21 +1312,31 @@ export default function NotificationsPage() {
     return stored ? parseInt(stored, 10) : 0;
   });
   
-  // Merge DeHub + custom notifications, sorted by date (memoized to prevent re-triggering enrichment)
-  // Filter out notifications where the actor is the current user (e.g. backend sends DM notif to sender)
-  const allNotifications = useMemo(
-    () => {
-      return [...dehubNotifications, ...customNotifications]
-        .filter(n => {
-          // Filter out notifications before the "clear all" timestamp
-          if (clearedAtTs && new Date(n.createdAt).getTime() <= clearedAtTs) return false;
-          // Filter out self-notifications
-          if (!pageWalletAddress || !n.actorAddress) return true;
-          return n.actorAddress.toLowerCase() !== pageWalletAddress.toLowerCase();
-        })
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  // Rows the user should never see: cleared before the "clear all" mark, or
+  // raised by their own action (the backend sends the sender a DM notification).
+  const isVisibleNotification = useCallback(
+    (n: DeHubNotification) => {
+      if (clearedAtTs && new Date(n.createdAt).getTime() <= clearedAtTs) return false;
+      if (!pageWalletAddress || !n.actorAddress) return true;
+      return n.actorAddress.toLowerCase() !== pageWalletAddress.toLowerCase();
     },
-    [dehubNotifications, customNotifications, pageWalletAddress, clearedAtTs]
+    [pageWalletAddress, clearedAtTs]
+  );
+
+  const byNewestFirst = (a: DeHubNotification, b: DeHubNotification) =>
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+
+  // Merge DeHub + custom notifications, sorted by date (memoized to prevent re-triggering enrichment)
+  const allNotifications = useMemo(
+    () => [...dehubNotifications, ...customNotifications].filter(isVisibleNotification).sort(byNewestFirst),
+    [dehubNotifications, customNotifications, isVisibleNotification]
+  );
+
+  // Same merge over the unfiltered feed, used only for the tab badges so they
+  // keep counting every type while the list itself is narrowed to one tab.
+  const countableNotifications = useMemo(
+    () => [...unfilteredNotifications, ...customNotifications].filter(isVisibleNotification),
+    [unfilteredNotifications, customNotifications, isVisibleNotification]
   );
   
   // Batch-avatar enrichment for fresh profile pictures
@@ -1491,12 +1599,15 @@ export default function NotificationsPage() {
   // Get total unread count (DeHub + custom)
   const totalUnread = (unreadCount?.total ?? 0) + (customUnreadCount ?? 0);
   
-  // Get count per tab (count matching notification types in current data)
+  // Get count per tab. Counted over the unfiltered feed so the badges stay
+  // meaningful on every tab, not just the active one. Still bounded by how many
+  // pages have loaded — the API has no per-type unread count — so a tab badge
+  // can undercount where the All badge (a server total) does not.
   const getTabCount = (tabValue: NotificationTypeFilter): number => {
     if (tabValue === 'all') return totalUnread;
     const allowedTypes = filterTypeMap[tabValue];
     if (!allowedTypes) return 0;
-    return allNotifications.filter(n => !n.read && allowedTypes.includes(n.type)).length;
+    return countableNotifications.filter(n => !n.read && allowedTypes.includes(n.type)).length;
   };
 
   return (
@@ -1602,8 +1713,7 @@ export default function NotificationsPage() {
                           </div>
                         </div>
                         <Switch 
-                          checked={notificationPrefs.likes}
-                          onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, likes: checked }))}
+                          {...prefToggle('likes')}
                         />
                       </label>
                       
@@ -1618,8 +1728,7 @@ export default function NotificationsPage() {
                           </div>
                         </div>
                         <Switch 
-                          checked={notificationPrefs.comments}
-                          onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, comments: checked }))}
+                          {...prefToggle('comments')}
                         />
                       </label>
                       
@@ -1634,8 +1743,7 @@ export default function NotificationsPage() {
                           </div>
                         </div>
                         <Switch 
-                          checked={notificationPrefs.follows}
-                          onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, follows: checked }))}
+                          {...prefToggle('newFollowers')}
                         />
                       </label>
                       
@@ -1650,8 +1758,7 @@ export default function NotificationsPage() {
                           </div>
                         </div>
                         <Switch 
-                          checked={notificationPrefs.tips}
-                          onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, tips: checked }))}
+                          {...prefToggle('tips')}
                         />
                       </label>
                       
@@ -1666,8 +1773,7 @@ export default function NotificationsPage() {
                           </div>
                         </div>
                         <Switch 
-                          checked={notificationPrefs.subscriptions}
-                          onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, subscriptions: checked }))}
+                          {...prefToggle('subscriptions')}
                         />
                       </label>
                       
@@ -1682,8 +1788,7 @@ export default function NotificationsPage() {
                           </div>
                         </div>
                         <Switch 
-                          checked={notificationPrefs.livestreams}
-                          onCheckedChange={(checked) => setNotificationPrefs(p => ({ ...p, livestreams: checked }))}
+                          {...prefToggle('livestreamStart')}
                         />
                       </label>
                     </div>
