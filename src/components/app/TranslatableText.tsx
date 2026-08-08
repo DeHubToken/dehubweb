@@ -16,7 +16,6 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip
 import { Languages, RotateCcw, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
-import { dehubAuthHeaders } from '@/lib/ai-invoke';
 import { useUserLanguage, LANGUAGE_NAMES } from '@/hooks/use-user-language';
 import { recordTickerSearch } from '@/lib/ticker-search-tracker';
 import { clientNavigate } from '@/lib/client-navigate';
@@ -248,12 +247,81 @@ export function renderTextWithLinks(text: string): ReactNode[] {
 // lib/language-detection-cache.ts).
 const MAX_TRANSLATION_CACHE = 500;
 const translationCache = new Map<string, { translated: string; sourceLang: string }>();
-function cacheTranslation(key: string, value: { translated: string; sourceLang: string }) {
+
+// ...and mirrored into localStorage, so it also survives a reload.
+//
+// Session-only caching was survivable when a translation cost one deliberate
+// button press. Now that the feed translates itself, a reload used to mean
+// re-requesting every post on screen — which is free for the user but is a
+// paid call for us on any post the shared server cache has since evicted, and
+// a visible re-flicker either way. Persisting it makes a refresh cost nothing.
+const TRANSLATION_STORE_KEY = 'dehub-translation-cache-v1';
+// Well under the ~5MB localStorage budget: post bodies are large, and this
+// shares that budget with everything else the app keeps there.
+const MAX_PERSISTED_TRANSLATIONS = 300;
+
+type CachedTranslation = { translated: string; sourceLang: string };
+
+function loadPersistedTranslations(): void {
+  try {
+    const raw = localStorage.getItem(TRANSLATION_STORE_KEY);
+    if (!raw) return;
+    const entries = JSON.parse(raw) as [string, CachedTranslation][];
+    if (!Array.isArray(entries)) return;
+    // Oldest first, so the in-memory eviction order matches what was stored.
+    for (const [key, value] of entries.slice(-MAX_TRANSLATION_CACHE)) {
+      if (typeof value?.translated === 'string') translationCache.set(key, value);
+    }
+  } catch {
+    // A corrupt or oversized blob is not worth failing a render over; the cache
+    // simply starts empty and refills.
+  }
+}
+loadPersistedTranslations();
+
+// Writing on every hit would serialise the whole map per translated post during
+// a scroll. Coalesce into one write per tick instead.
+let persistTimer: ReturnType<typeof setTimeout> | null = null;
+function schedulePersist(): void {
+  if (persistTimer) return;
+  persistTimer = setTimeout(() => {
+    persistTimer = null;
+    try {
+      const entries = Array.from(translationCache.entries()).slice(-MAX_PERSISTED_TRANSLATIONS);
+      localStorage.setItem(TRANSLATION_STORE_KEY, JSON.stringify(entries));
+    } catch {
+      // Quota exceeded or storage disabled (private mode, embedded webview).
+      // The in-memory cache still works for this session.
+    }
+  }, 1000);
+}
+
+function cacheTranslation(key: string, value: CachedTranslation) {
   if (translationCache.size >= MAX_TRANSLATION_CACHE) {
     const oldest = translationCache.keys().next().value;
     if (oldest !== undefined) translationCache.delete(oldest);
   }
   translationCache.set(key, value);
+  schedulePersist();
+}
+
+// Auto-translate is on unless the reader has turned it off. Stored rather than
+// defaulted per session so the choice survives a reload, and read at call time
+// rather than cached in a module constant so a change applies without a refresh.
+const AUTO_TRANSLATE_KEY = 'dehub-auto-translate';
+export function autoTranslateEnabled(): boolean {
+  try {
+    return localStorage.getItem(AUTO_TRANSLATE_KEY) !== 'off';
+  } catch {
+    return true;
+  }
+}
+export function setAutoTranslateEnabled(enabled: boolean): void {
+  try {
+    localStorage.setItem(AUTO_TRANSLATE_KEY, enabled ? 'on' : 'off');
+  } catch {
+    // Storage disabled; the setting just will not persist.
+  }
 }
 
 // Minimum text length for AI detection (avoid detecting single words)
@@ -398,9 +466,6 @@ export function useTranslation(text: string) {
       console.log('[Translate] Invoking translate-text, targetLang:', targetLang, 'text:', text.substring(0, 40));
       const { data, error: fnError } = await supabase.functions.invoke('translate-text', {
         body: { text, targetLang },
-        // Cache and MyMemory stay public; the AI fallback needs a wallet to
-        // bill abuse to, so send the token whenever there is one.
-        headers: dehubAuthHeaders(),
       });
 
       console.log('[Translate] Response:', { data, fnError });
@@ -434,6 +499,30 @@ export function useTranslation(text: string) {
   const handleShowOriginal = useCallback(() => {
     setIsTranslated(false);
   }, []);
+
+  // Auto-translate.
+  //
+  // Fires once per (text, language) rather than per render: handleTranslate's
+  // identity changes when isLoading flips, so keying the effect on it directly
+  // would re-enter the moment the request settles.
+  //
+  // Reading a post the reader cannot read is the failure this removes, so it is
+  // on by default and opting out is remembered. A reader who has pressed "show
+  // original" on this text is not overridden — autoDone is set either way, and
+  // the manual controls stay exactly as they were.
+  const autoDoneRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!autoTranslateEnabled()) return;
+    if (isTooShort) return;
+
+    const key = `${text}-${userLang}`;
+    if (autoDoneRef.current === key) return;
+    autoDoneRef.current = key;
+
+    void handleTranslate();
+    // handleTranslate is intentionally absent: see above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [text, userLang, isTooShort]);
 
   return {
     userLang,

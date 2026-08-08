@@ -18,7 +18,7 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { rateLimitByIp, requireDeHubAuth } from "../_shared/auth.ts";
+import { rateLimitByIp } from "../_shared/auth.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -132,6 +132,45 @@ async function writeCachedTranslation(
 // 'en', 'en-US' and 'EN' are the same target as far as skipping work goes.
 function baseLang(code: string | undefined): string {
   return (code ?? '').toLowerCase().split(/[-_]/)[0];
+}
+
+// Ceiling on paid calls per UTC day, across every caller.
+//
+// The wallet gate that used to sit in front of the paid tiers is gone, so this
+// is the only thing standing between a script and the fal balance. It is not a
+// per-user quota and is not trying to be fair — it is a blast radius. Whatever
+// goes wrong, the day's loss is bounded and tomorrow starts clean.
+//
+// Sized well above real traffic on purpose. Only a (text, language) pair that
+// misses both caches gets this far, so steady-state usage is roughly "new posts
+// × languages actually being read", not "views". If this trips during normal
+// use the cache is not working and that is the bug to chase, not this number.
+const DAILY_PAID_TRANSLATION_CAP = Number(
+  Deno.env.get('TRANSLATION_DAILY_CAP') ?? '20000',
+);
+
+/**
+ * Reserves one paid call against today's budget. Returns false when the day is
+ * spent.
+ *
+ * Fails OPEN: if the counter cannot be reached the translation proceeds. A
+ * broken counter should not take the feature down, and the providers have their
+ * own limits underneath. The reverse — failing closed — would mean one bad
+ * migration silently stops every translation on the site.
+ */
+async function claimPaidTranslation(): Promise<boolean> {
+  try {
+    const { data, error } = await db.rpc('claim_paid_translation', {
+      p_cap: DAILY_PAID_TRANSLATION_CAP,
+    });
+    if (error) {
+      console.log('Spend counter unavailable, allowing:', error.message);
+      return true;
+    }
+    return data !== false;
+  } catch (_e) {
+    return true;
+  }
 }
 
 interface TranslateRequest {
@@ -277,8 +316,29 @@ async function translateWithMyMemory(
       return null;
     }
     
-    // If the translated text is identical to the input (case-insensitive), MyMemory couldn't translate
-    if (translatedText.trim().toLowerCase() === text.trim().toLowerCase()) {
+    const detected = data.responseData.detectedLanguage;
+    const unchanged = translatedText.trim().toLowerCase() === text.trim().toLowerCase();
+
+    // Identical output has two very different causes, and telling them apart is
+    // the single biggest cost lever now that the feed translates itself.
+    //
+    // If MyMemory detected the source as the language we asked for, the text was
+    // ALREADY in that language and coming back unchanged is the correct answer.
+    // Treating that as a miss is what used to happen, and it sent every English
+    // post read by an English speaker to a paid model to be "translated" into
+    // the language it was already in. On an English-majority feed that is most
+    // of the traffic.
+    //
+    // Without a detection to lean on, unchanged output really is a failure and
+    // still falls through.
+    if (unchanged) {
+      if (detected && baseLang(detected) === baseLang(targetLang)) {
+        console.log('MyMemory: text is already in the target language');
+        return {
+          translatedText: text,
+          detectedLanguage: { language: detected, confidence: 1.0 },
+        };
+      }
       console.log('MyMemory returned same text as input, falling back to AI');
       return null;
     }
@@ -561,7 +621,15 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  const limited = await rateLimitByIp(req, 'translate-text', { limit: 300, windowMs: 60 * 60 * 1000 });
+  // 300/hour was sized for a button somebody pressed on one post at a time. The
+  // feed now asks for every post it renders, so a normal scrolling session is
+  // hundreds of requests — nearly all of them cache hits that cost nothing but
+  // still count here. At the old limit ordinary reading tripped the limiter and
+  // translation just stopped working part-way down the page.
+  //
+  // Raising this does not raise the spend: what costs money is a cache miss
+  // reaching a paid tier, and that is bounded separately by the daily cap.
+  const limited = await rateLimitByIp(req, 'translate-text', { limit: 3000, windowMs: 60 * 60 * 1000 });
   if (limited) return limited;
 
   try {
@@ -632,42 +700,50 @@ serve(async (req) => {
       );
     }
 
-    // Everything above here is free (cache, then MyMemory) and stays open to
-    // signed-out readers, because translating a feed post is a public feature.
+    // Everything below here costs money.
     //
-    // Everything below costs money, so it needs an owner to bill the abuse to.
-    // This endpoint runs on an IP limit alone, and a third paid provider was
-    // just added behind it — 300 requests an hour per IP across Gemini, fal
-    // and the gateway, from anyone holding the URL. Requiring a wallet for the
-    // paid tiers keeps the public feature working while giving the spend a name.
-    const auth = await requireDeHubAuth(req);
-    if (!auth.ok) {
+    // This used to require a wallet. That gate is gone: translating the feed is
+    // a public reading feature, and gating it made signed-out readers — the
+    // people most likely to need a translation — the only ones who could not
+    // have one. It also protected nothing. requireDeHubAuth resolves its token
+    // by calling an unguarded public endpoint, so any caller can present any
+    // wallet; it cost real users a feature and cost an attacker one extra HTTP
+    // request.
+    //
+    // What actually bounds the damage is a ceiling on spend, so that is what
+    // guards it now. Abuse can waste the day's budget; it cannot empty an
+    // account. Legitimate traffic never approaches the cap because the two
+    // cache layers above absorb it — only a distinct (text, language) pair that
+    // has never been seen reaches this line.
+    if (!(await claimPaidTranslation())) {
+      console.warn('Daily paid translation cap reached, refusing paid tiers');
       return new Response(
         JSON.stringify({
-          error: 'Sign in to translate this — the free translator could not handle it.',
-          code: 'AUTH_REQUIRED_FOR_AI_TRANSLATION',
+          error: 'Translation is busy right now, try again later.',
+          code: 'TRANSLATION_BUDGET_EXHAUSTED',
         }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       );
     }
 
-    // Paid fallbacks, in order of cost: Gemini direct, then fal, then the
-    // Lovable gateway. Each returns null rather than throwing, so a dead tier
-    // falls through to the next instead of failing the request.
-    result = await translateWithGemini(text, targetLang);
+    // Paid fallbacks. fal leads because it is the tier with credit on it — the
+    // Gemini key is currently 429 RESOURCE_EXHAUSTED and the gateway is a
+    // metered reseller. Reorder by moving these blocks; each returns null
+    // rather than throwing, so a dead tier falls through to the next.
+    result = await translateWithFal(text, targetLang);
     if (result) {
       rememberInIsolate(cacheKey, result);
-      await writeCachedTranslation(textHash, targetLang, result, 'gemini');
+      await writeCachedTranslation(textHash, targetLang, result, 'fal');
       return new Response(
         JSON.stringify(result),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    result = await translateWithFal(text, targetLang);
+    result = await translateWithGemini(text, targetLang);
     if (result) {
       rememberInIsolate(cacheKey, result);
-      await writeCachedTranslation(textHash, targetLang, result, 'fal');
+      await writeCachedTranslation(textHash, targetLang, result, 'gemini');
       return new Response(
         JSON.stringify(result),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
