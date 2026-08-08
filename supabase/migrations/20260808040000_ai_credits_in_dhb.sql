@@ -159,7 +159,9 @@ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public AS $$
 BEGIN
   -- Same ref as the spend it reverses, under reason 'refund', so a retried
   -- failure handler cannot pay the same job back twice.
-  RETURN ai_credit_grant(p_wallet, p_dhb, 'refund', p_ref, NULL);
+  -- p_metadata left to its default rather than passed as a bare NULL, which
+  -- would need a cast to resolve if the function is ever overloaded.
+  RETURN ai_credit_grant(p_wallet, p_dhb, 'refund', p_ref);
 END; $$;
 
 COMMENT ON FUNCTION public.ai_credit_refund(text, numeric, text) IS
