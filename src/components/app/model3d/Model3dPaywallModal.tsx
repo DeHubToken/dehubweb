@@ -33,6 +33,8 @@ import { supabase } from '@/integrations/supabase/client';
 import dhbCoinImage from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAiCredits } from '@/hooks/use-ai-credits';
+import { payAsYouGo, useSpendableDhb } from '@/lib/ai-payg';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export interface Model3dGenerationOptions {
@@ -81,7 +83,9 @@ export function Model3dPaywallModal({
   const { walletAddress } = useAuth();
   // Credit balance, not the wallet's on-chain holding — the generate function
   // charges credit, and holding DHB is not the same as having topped it up.
-  const { balanceDhb, isLoading: profileLoading } = useAiCredits();
+  const { balanceDhb, isLoading: profileLoading, refresh } = useAiCredits();
+  const { walletDhb, isLoading: isWalletLoading } = useSpendableDhb();
+  const navigate = useNavigate();
   const userBalance = balanceDhb;
 
   // Reset the options whenever the model changes; they are not all portable
@@ -123,6 +127,11 @@ export function Model3dPaywallModal({
   const costUsd = getModel3dCostUsd(model, textureQuality);
   const costDhb = dhbPrice ? getModel3dCostDhb(model, dhbPrice, textureQuality) : 0;
   const hasEnoughBalance = userBalance >= costDhb;
+  const shortfall = Math.max(0, costDhb - userBalance);
+  // Three states: enough credit, enough DHB to pay for this one job, or
+  // neither — in which case offering a payment would only fail.
+  const canPayAsYouGo = !hasEnoughBalance && walletDhb >= shortfall;
+  const needsTokens = !hasEnoughBalance && !canPayAsYouGo && !isWalletLoading;
 
   const formatDhb = (amount: number) => {
     if (amount >= 1_000_000) return `${(amount / 1_000_000).toFixed(2)}M`;
@@ -150,15 +159,20 @@ export function Model3dPaywallModal({
     try {
       const options = buildOptions();
 
-      // No transfer here any more. generate-3d debits the DHB credit balance
-      // itself, so signing one here as well would charge twice.
-      if (userBalance < costDhb) {
-        toast.dismiss('model3d-gen-payment');
-        toast.error(
-          `Not enough credit. This costs ${formatDhb(costDhb)} DHB and you have ${formatDhb(userBalance)}.`,
-        );
-        setIsPaying(false);
-        return;
+      // Credit first; pay-as-you-go for the shortfall when there is not enough.
+      // generate-3d debits the balance itself, so paying here tops up rather
+      // than charging a second time for the same mesh.
+      if (!hasEnoughBalance) {
+        if (needsTokens) {
+          toast.dismiss('model3d-gen-payment');
+          onOpenChange(false);
+          navigate('/app/buy');
+          setIsPaying(false);
+          return;
+        }
+        toast.loading(`Paying ${formatDhb(shortfall)} DHB...`, { id: 'model3d-gen-payment' });
+        await payAsYouGo(shortfall);
+        refresh();
       }
 
       toast.dismiss('model3d-gen-payment');
@@ -508,7 +522,7 @@ export function Model3dPaywallModal({
             variant="glass"
             className="flex-1 font-medium h-10"
             onClick={handlePayAndGenerate}
-            disabled={loading || profileLoading || !hasEnoughBalance || isGenerating || isPaying}
+            disabled={loading || profileLoading || isWalletLoading || isGenerating || isPaying}
           >
             {isPaying ? (
               <>
