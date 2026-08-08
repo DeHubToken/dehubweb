@@ -5,7 +5,6 @@ import { supabase } from '@/integrations/supabase/client';
 import { SEOHead } from '@/components/SEOHead';
 import { PricingSection } from '@/components/pricing/PricingSection';
 import SwipeableCarousel from '@/components/app/SwipeableCarousel';
-import { CreatorComposerBar } from '@/components/app/creator/CreatorComposerBar';
 import { CreatorStudio } from '@/components/app/creator/studio/CreatorStudio';
 import { ModelMarquee } from '@/components/app/creator/ModelMarquee';
 import anthropicLogo from '@/assets/ai-logos/anthropic.png';
@@ -219,6 +218,23 @@ export default function CreatorPage() {
   const [activeNav, setActiveNav] = useState<typeof navItems[number]>('Explore');
   const [bannerDismissed, setBannerDismissed] = useState(false);
 
+  /**
+   * The studio composer parks directly under this header once it scrolls past,
+   * so it needs the header's live height — dismissing the promo banner changes
+   * it by 32px, and a hard-coded offset would leave a gap or a clipped bar.
+   */
+  const headerRef = useRef<HTMLDivElement>(null);
+  const [headerHeight, setHeaderHeight] = useState(60);
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const measure = () => setHeaderHeight(el.getBoundingClientRect().height);
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   const visibleTools = useMemo(
     () => activeCategory === 'All' ? tools : tools.filter(tool => tool.category === activeCategory),
     [activeCategory]
@@ -246,7 +262,7 @@ export default function CreatorPage() {
       <main className="min-h-screen text-white overflow-x-hidden" style={{ backgroundColor: '#090a0b' }}>
         <h1 className="sr-only">DeHub Creator Studio</h1>
 
-        <div className="sticky top-0 z-50">
+        <div ref={headerRef} className="sticky top-0 z-50">
         {!bannerDismissed && (
           <div className="relative flex h-8 items-center justify-center px-10 text-center text-[12px] font-black uppercase tracking-[0.08em] text-black" style={metallicStyle}>
             <span>Launch creative campaigns faster with DeHub AI tools</span>
@@ -350,7 +366,7 @@ export default function CreatorPage() {
           </header>
         </div>
 
-        <CreatorStudio onOpenEditor={() => navigate('/editor')} />
+        <CreatorStudio onOpenEditor={() => navigate('/editor')} stickyTop={headerHeight} />
 
         <section className="px-3 py-4 sm:px-4">
           <SwipeableCarousel className="flex gap-3 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory scroll-pl-3 scroll-pr-3">
@@ -533,7 +549,6 @@ export default function CreatorPage() {
           <FeatureStrip icon={ArrowUpRight} title="Connected to DeHub" copy="Jump from a tool into assistant, editor, TV, agents or settings." />
         </section>
         </MountOnVisible>
-        <CreatorComposerBar />
       </main>
     </>
   );

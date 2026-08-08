@@ -36,6 +36,13 @@ export interface VideoModel {
   supportsNegativePrompt?: boolean;
   /** Whether the model supports resolution selection */
   supportsResolution?: boolean;
+  /**
+   * Resolutions this model actually renders, when it is not the usual trio.
+   *
+   * Seedance 2.5 tops out at 720p, so offering 1080p would take payment for a
+   * resolution the provider silently downgrades. Unset means 480p/720p/1080p.
+   */
+  resolutions?: string[];
   /** Provider for the model (defaults to 'replicate') */
   provider?: 'replicate' | 'fal';
   /** Whether the model supports reference images (character/style consistency) */
@@ -80,7 +87,48 @@ export const getVideoCostDhb = (model: VideoModel, dhbPriceUsd: number, duration
   return costUsd / dhbPriceUsd;
 };
 
+/** The resolutions a model offers, falling back to the common trio. */
+export const getVideoResolutions = (model: VideoModel | undefined): string[] =>
+  model?.resolutions ?? ['480p', '720p', '1080p'];
+
 export const VIDEO_MODELS: Record<string, VideoModel> = {
+  'seedance-2.5': {
+    id: 'seedance-2.5',
+    name: 'Seedance 2.5',
+    description: 'ByteDance flagship — 30s takes, best prompt adherence',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '4-30s',
+    tier: 'premium',
+    emoji: '🌊',
+    // fal bills this one by token: (h × w × duration × 24) / 1024 at $0.0214
+    // per 1000. At 720p 16:9 that works out to ~$0.473/s, which is what the
+    // studio requests by default. 480p is roughly half, but the composer is
+    // charged on the ceiling so a resolution switch can never go underwater.
+    baseCostUsd: 2.365,
+    perSecondCostUsd: 0.473,
+    defaultDuration: 5,
+    minDuration: 4,
+    maxDuration: 30,
+    hasAudio: true,
+    // The 2.5 schema has no negative_prompt field, and fal 422s unknown keys.
+    supportsNegativePrompt: false,
+    supportsResolution: true,
+    resolutions: ['480p', '720p'],
+    provider: 'fal',
+    supportsReferenceImages: true,
+    maxReferenceImages: 9,
+    supportsEndFrame: true,
+    supportsSeed: true,
+    aspectRatios: ['16:9', '9:16', '1:1', '4:3', '3:4', '21:9'],
+    tips: [
+      '🌊 The strongest all-rounder here — start on this one',
+      '⏱️ Up to 30 seconds in a single pass, twice Seedance 2.0',
+      '🖼️ Attach an image to animate it, or set a start and end frame',
+      '👤 Reference images hold a character or product across the clip',
+      '🔊 Audio is generated jointly with the picture, so lip sync lands',
+      '📺 720p is the ceiling — 480p halves the cost',
+    ],
+  },
   'kling-2.6-pro': {
     id: 'kling-2.6-pro',
     name: 'Kling 2.6 Pro',
@@ -369,6 +417,31 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
       '🎬 Kling 3.0 at three quarters the price',
       '🖼️ Attach an image to animate it',
       '⏱️ Up to 15 seconds',
+    ],
+  },
+  'kling-2.5-turbo': {
+    id: 'kling-2.5-turbo',
+    name: 'Kling 2.5 Turbo Pro',
+    description: 'Fluid motion and tight prompt precision, no audio',
+    supports: ['text-to-video', 'image-to-video'],
+    duration: '5s or 10s',
+    tier: 'standard',
+    emoji: '🌪️',
+    // $0.35 for 5s, then $0.07 per extra second — the same $0.07/s throughout.
+    baseCostUsd: 0.35,
+    perSecondCostUsd: 0.07,
+    defaultDuration: 5,
+    minDuration: 5,
+    maxDuration: 10,
+    allowedDurations: [5, 10],
+    supportsNegativePrompt: true,
+    provider: 'fal',
+    aspectRatios: ['16:9', '9:16', '1:1'],
+    tips: [
+      '🌪️ Smoothest motion of the cheap tiers',
+      '🖼️ Attach an image to animate it',
+      '🔇 No audio on this one — use Kling 3.0 or Seedance if you need it',
+      '🎯 Negative prompts are honoured',
     ],
   },
   'hailuo-2.3': {
