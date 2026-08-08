@@ -2,6 +2,11 @@ import { apiCall } from './core';
 import type { DeHubUser, DeHubNFT } from './types';
 import type { PostReaction } from '@/lib/reactions';
 
+/**
+ * Every type the API can send. This used to list only thirteen of them, so the
+ * rest reached the UI as unhandled strings and every read of them needed an
+ * `as any` — which is how several ended up with no icon and no click target.
+ */
 export type NotificationType =
   | 'like'
   | 'comment'
@@ -10,21 +15,33 @@ export type NotificationType =
   | 'mention'
   | 'following'
   | 'follow_request'
+  | 'follow_request_accepted'
+  | 'repost'
+  | 'quote'
   | 'tip'
   | 'subscription'
   | 'ppv_purchase'
+  | 'bounty_available'
+  | 'bounty_claimed'
+  | 'fraction_offer'
+  | 'fraction_offer_accepted'
+  | 'fraction_offer_rejected'
+  | 'fraction_purchased'
   | 'video_milestone'
   | 'livestream_start'
-  | 'video_removal';
+  | 'video_removal'
+  | 'account_warning'
+  | 'system';
 
-export type NotificationCategory = 
+export type NotificationCategory =
   | 'engagement'
   | 'social'
   | 'monetization'
   | 'content'
+  | 'messages'
   | 'system';
 
-export type NotificationPostType = 'video' | 'feed-images' | 'feed-simple';
+export type NotificationPostType = 'video' | 'short' | 'feed-images' | 'feed-simple' | 'feed-audio';
 
 export interface DeHubNotification {
   _id: string;
@@ -95,14 +112,21 @@ interface NotificationsApiResponse {
 
 interface UnreadCountApiResponse {
   total: number;
-  byCategory: {
-    engagement: number;
-    social: number;
-    monetization: number;
-    content: number;
-    system: number;
-  };
+  byCategory: UnreadCountByCategory;
 }
+
+/** One entry per NotificationCategory — keep the two in step or indexing by a
+ *  notification's own category stops type-checking. */
+export type UnreadCountByCategory = Record<NotificationCategory, number>;
+
+const EMPTY_UNREAD_BY_CATEGORY: UnreadCountByCategory = {
+  engagement: 0,
+  social: 0,
+  monetization: 0,
+  content: 0,
+  messages: 0,
+  system: 0,
+};
 
 /** Normalize API type strings to our canonical snake_case types */
 function normalizeNotificationType(rawType: string): NotificationType {
@@ -157,18 +181,26 @@ export async function getNotifications(
   page: number = 1,
   limit: number = 30,
   category?: NotificationCategory,
-  unreadOnly: boolean = false
+  unreadOnly: boolean = false,
+  types?: string[]
 ): Promise<{ items: DeHubNotification[]; totalCount: number; hasMore: boolean }> {
-  const params: Record<string, string | number> = { 
-    page, 
+  const params: Record<string, string | number> = {
+    page,
     limit,
     unreadOnly: unreadOnly.toString(),
   };
-  
+
   if (category) {
     params.category = category;
   }
-  
+
+  // Server-side type filter. The API validates the list and ignores names it
+  // does not know, so sending types it has never heard of (the Supabase-backed
+  // ones) degrades to an unfiltered page rather than an empty one.
+  if (types?.length) {
+    params.types = types.join(',');
+  }
+
   const response = await apiCall<NotificationsApiResponse | { result: RawNotification[] } | RawNotification[]>("/api/notification", {
     params,
     requiresAuth: true,
@@ -206,29 +238,19 @@ export async function getNotifications(
 
 export interface UnreadNotificationCount {
   total: number;
-  byCategory: {
-    engagement: number;
-    social: number;
-    monetization: number;
-    content: number;
-    system: number;
-  };
+  byCategory: UnreadCountByCategory;
 }
 
 export async function getUnreadNotificationCount(): Promise<UnreadNotificationCount> {
   const response = await apiCall<UnreadCountApiResponse>("/api/notification/unread-count", {
     requiresAuth: true,
   });
-  
+
   return {
     total: response?.total || 0,
-    byCategory: response?.byCategory || {
-      engagement: 0,
-      social: 0,
-      monetization: 0,
-      content: 0,
-      system: 0,
-    },
+    // Merged rather than substituted: older deployments omit `messages`, and a
+    // missing key would make every read of it undefined instead of zero.
+    byCategory: { ...EMPTY_UNREAD_BY_CATEGORY, ...(response?.byCategory ?? {}) },
   };
 }
 

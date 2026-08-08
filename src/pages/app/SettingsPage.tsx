@@ -99,7 +99,7 @@ import { useWalletUnlockInterval, type WalletUnlockIntervalOption } from '@/hook
 import { WalletRecoveryTools } from '@/components/app/settings/WalletRecoveryTools';
 import { BiometricUnlockSettings } from '@/components/app/settings/BiometricUnlockSettings';
 import { ActiveSessions } from '@/components/app/settings/ActiveSessions';
-import { getPref, CATEGORY_OF, type NotificationKey } from '@/lib/api/dehub';
+import { getInAppPref, type NotificationKey } from '@/lib/api/dehub';
 import { getQuietHours, QH_ENABLED_KEY, QH_START_KEY, QH_END_KEY } from '@/lib/quiet-hours';
 import { PROFILE_TAB_OPTIONS } from '@/components/app/profile/ProfileConstants';
 import { useDmSettings, type WhoCanMessage } from '@/hooks/use-dm-settings';
@@ -997,13 +997,21 @@ function SupportSettings() {
 
 function NotificationSettings() {
   const { t } = useTranslation();
-  const { isAuthenticated } = useAuthContext();
+  const { isAuthenticated, walletAddress } = useAuthContext();
   const { isEnabled: browserNotifsEnabled, setEnabled: setBrowserNotifsEnabled } = useBrowserNotifications();
 
-  const { data: pushPrefs, isLoading: prefsLoading } = useQuery({
-    queryKey: ['push-preferences'],
-    queryFn: () => import('@/lib/api/dehub').then(m => m.getPushPreferences()),
-    enabled: isAuthenticated,
+  // Reads the account document, which is the store the notification service
+  // actually consults. See the note above getAccountNotificationPreferences —
+  // these toggles used to write to the push-preferences collection, which is
+  // only ever read for quiet hours and digest mode, so none of them did
+  // anything. Quiet hours on web is separate and localStorage-backed
+  // (QuietHoursSection below), so nothing here still needs that endpoint.
+  const prefsKey = ['account-notification-preferences', walletAddress?.toLowerCase() ?? null];
+
+  const { data: notifPrefs, isLoading: prefsLoading } = useQuery({
+    queryKey: prefsKey,
+    queryFn: () => import('@/lib/api/dehub').then(m => m.getAccountNotificationPreferences(walletAddress!)),
+    enabled: isAuthenticated && !!walletAddress,
     // Mutations invalidate this key, so a long staleTime is safe — 60s was
     // refetching on nearly every tab return.
     staleTime: 5 * 60_000,
@@ -1013,24 +1021,21 @@ function NotificationSettings() {
 
   const updatePrefMutation = useMutation({
     mutationFn: ({ key, value }: { key: NotificationKey; value: boolean }) =>
-      import('@/lib/api/dehub').then(m => m.updatePushPreferences(m.buildPrefPatch(key, value))),
+      import('@/lib/api/dehub').then(m => m.updateInAppNotificationPref(key, value)),
     onMutate: async ({ key, value }) => {
-      await queryClient.cancelQueries({ queryKey: ['push-preferences'] });
-      const prev = queryClient.getQueryData(['push-preferences']);
-      // Merge into the right category rather than spreading a flat key over the
-      // top of the object, which never matched the server's shape.
-      const cat = CATEGORY_OF[key];
-      queryClient.setQueryData(['push-preferences'], (old: any) => ({
+      await queryClient.cancelQueries({ queryKey: prefsKey });
+      const prev = queryClient.getQueryData(prefsKey);
+      queryClient.setQueryData(prefsKey, (old: any) => ({
         ...old,
-        [cat]: { ...(old?.[cat] ?? {}), [key]: value },
+        inApp: { ...(old?.inApp ?? {}), [key]: value },
       }));
       return { prev };
     },
     onError: (_err, _vars, context) => {
-      if (context?.prev) queryClient.setQueryData(['push-preferences'], context.prev);
+      if (context?.prev) queryClient.setQueryData(prefsKey, context.prev);
       toast.error(t('settings.failedUpdateProfile'));
     },
-    onSettled: () => queryClient.invalidateQueries({ queryKey: ['push-preferences'] }),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: prefsKey }),
   });
 
   const handleToggle = (key: NotificationKey) => (checked: boolean) => {
@@ -1091,7 +1096,7 @@ function NotificationSettings() {
             icon={ThumbsUp}
             title={t('settings.likes')}
             description={t('settings.likesDesc')}
-            defaultChecked={getPref(pushPrefs, 'likes')}
+            defaultChecked={getInAppPref(notifPrefs, 'likes')}
             onCheckedChange={handleToggle('likes')}
             disabled={isDisabled}
           />
@@ -1099,7 +1104,7 @@ function NotificationSettings() {
             icon={MessageSquare}
             title={t('settings.comments')}
             description={t('settings.commentsDesc')}
-            defaultChecked={getPref(pushPrefs, 'comments')}
+            defaultChecked={getInAppPref(notifPrefs, 'comments')}
             onCheckedChange={handleToggle('comments')}
             disabled={isDisabled}
           />
@@ -1107,7 +1112,7 @@ function NotificationSettings() {
             icon={Users}
             title={t('settings.newFollowers')}
             description={t('settings.newFollowersDesc')}
-            defaultChecked={getPref(pushPrefs, 'newFollowers')}
+            defaultChecked={getInAppPref(notifPrefs, 'newFollowers')}
             onCheckedChange={handleToggle('newFollowers')}
             disabled={isDisabled}
           />
@@ -1123,7 +1128,7 @@ function NotificationSettings() {
             icon={MessageSquare}
             title="Comment Replies"
             description="When someone replies to your comment"
-            defaultChecked={getPref(pushPrefs, 'commentReplies')}
+            defaultChecked={getInAppPref(notifPrefs, 'commentReplies')}
             onCheckedChange={handleToggle('commentReplies')}
             disabled={isDisabled}
           />
@@ -1131,7 +1136,7 @@ function NotificationSettings() {
             icon={AtSign}
             title="Mentions"
             description="When someone mentions you in a post or comment"
-            defaultChecked={getPref(pushPrefs, 'mentions')}
+            defaultChecked={getInAppPref(notifPrefs, 'mentions')}
             onCheckedChange={handleToggle('mentions')}
             disabled={isDisabled}
           />
@@ -1146,7 +1151,7 @@ function NotificationSettings() {
             icon={Coins}
             title="Tips Received"
             description="When someone sends you a DHB tip"
-            defaultChecked={getPref(pushPrefs, 'tips')}
+            defaultChecked={getInAppPref(notifPrefs, 'tips')}
             onCheckedChange={handleToggle('tips')}
             disabled={isDisabled}
           />
@@ -1154,7 +1159,7 @@ function NotificationSettings() {
             icon={Handshake}
             title="New Subscribers"
             description="When someone subscribes to your plan"
-            defaultChecked={getPref(pushPrefs, 'subscriptions')}
+            defaultChecked={getInAppPref(notifPrefs, 'subscriptions')}
             onCheckedChange={handleToggle('subscriptions')}
             disabled={isDisabled}
           />
@@ -1162,7 +1167,7 @@ function NotificationSettings() {
             icon={Coins}
             title="PPV Purchases"
             description="When someone purchases your pay-per-view content"
-            defaultChecked={getPref(pushPrefs, 'ppvPurchases')}
+            defaultChecked={getInAppPref(notifPrefs, 'ppvPurchases')}
             onCheckedChange={handleToggle('ppvPurchases')}
             disabled={isDisabled}
           />
@@ -1177,7 +1182,7 @@ function NotificationSettings() {
             icon={Play}
             title="Livestream Start"
             description="When someone you follow starts a livestream"
-            defaultChecked={getPref(pushPrefs, 'livestreamStart')}
+            defaultChecked={getInAppPref(notifPrefs, 'livestreamStart')}
             onCheckedChange={handleToggle('livestreamStart')}
             disabled={isDisabled}
           />
@@ -1185,7 +1190,7 @@ function NotificationSettings() {
             icon={Sparkles}
             title="Milestones"
             description="When you reach a follower or engagement milestone"
-            defaultChecked={getPref(pushPrefs, 'milestones')}
+            defaultChecked={getInAppPref(notifPrefs, 'milestones')}
             onCheckedChange={handleToggle('milestones')}
             disabled={isDisabled}
           />
@@ -1194,7 +1199,7 @@ function NotificationSettings() {
             icon={Shield}
             title="Account Alerts"
             description="Security and account activity you should know about"
-            defaultChecked={getPref(pushPrefs, 'accountAlerts')}
+            defaultChecked={getInAppPref(notifPrefs, 'accountAlerts')}
             onCheckedChange={handleToggle('accountAlerts')}
             disabled={isDisabled}
           />
@@ -1202,7 +1207,7 @@ function NotificationSettings() {
             icon={Bell}
             title="Announcements"
             description="Platform updates and important announcements"
-            defaultChecked={getPref(pushPrefs, 'announcements')}
+            defaultChecked={getInAppPref(notifPrefs, 'announcements')}
             onCheckedChange={handleToggle('announcements')}
             disabled={isDisabled}
           />

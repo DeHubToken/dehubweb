@@ -21,23 +21,35 @@ import { useBrowserNotifications, getLastSeenTimestamp, setLastSeenTimestamp } f
 // Query keys for cache management
 export const notificationKeys = {
   all: ['notifications'] as const,
-  list: (category?: NotificationCategory) => [...notificationKeys.all, 'list', category] as const,
+  list: (category?: NotificationCategory, types?: string[]) =>
+    [...notificationKeys.all, 'list', category, types?.length ? [...types].sort().join(',') : null] as const,
   unreadCount: () => [...notificationKeys.all, 'unreadCount'] as const,
 };
 
 /**
  * Hook to fetch notifications with infinite scroll
  * @param category - Optional category filter (engagement, social, monetization, content, system)
+ * @param types - Optional exact-type filter backing the per-type tabs. Applied
+ *   server-side, so a tab no longer depends on its rows happening to fall inside
+ *   the first page of an unfiltered feed.
+ * @param options.notifyOnNew - Whether newly arrived unread rows raise a browser
+ *   notification. Defaults to true for an unfiltered feed. Set it false on a
+ *   second instance so a page that runs both a filtered and an unfiltered query
+ *   does not announce the same row twice.
  */
-export function useNotifications(category?: NotificationCategory) {
+export function useNotifications(
+  category?: NotificationCategory,
+  types?: string[],
+  options?: { notifyOnNew?: boolean },
+) {
   const { isAuthenticated } = useAuth();
   const { showNotification } = useBrowserNotifications();
   const prevIdsRef = useRef<Set<string>>(new Set());
 
   const query = useInfiniteQuery({
-    queryKey: notificationKeys.list(category),
+    queryKey: notificationKeys.list(category, types),
     queryFn: async ({ pageParam = 1 }) => {
-      return getNotifications(pageParam, 30, category, false);
+      return getNotifications(pageParam, 30, category, false, types);
     },
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.hasMore) {
@@ -56,8 +68,15 @@ export function useNotifications(category?: NotificationCategory) {
     .flatMap((page) => page?.items || [])
     .filter((item): item is DeHubNotification => Boolean(item && item.id)) || [];
 
+  // Never announce from a filtered feed: it returns a different slice of the
+  // same data, so with a tab active every row absent from the previously seen
+  // set looks "new" — switching to Tips would fire a desktop notification per
+  // tip already sitting in the list.
+  const notifyOnNew = (options?.notifyOnNew ?? true) && !types?.length;
+
   // Trigger browser notifications for newly arrived unread items
   useEffect(() => {
+    if (!notifyOnNew) return;
     if (!notifications.length) return;
     const lastSeen = getLastSeenTimestamp();
     const isFirstLoad = prevIdsRef.current.size === 0;
@@ -78,7 +97,7 @@ export function useNotifications(category?: NotificationCategory) {
     prevIdsRef.current = new Set(notifications.map(n => n.id));
     // Update last seen to now
     setLastSeenTimestamp(Date.now());
-  }, [notifications, showNotification]);
+  }, [notifications, showNotification, notifyOnNew]);
 
   return {
     notifications,
@@ -184,7 +203,7 @@ export function useMarkAllNotificationsAsRead() {
       const previousCount = queryClient.getQueryData<UnreadNotificationCount>(notificationKeys.unreadCount());
       queryClient.setQueryData<UnreadNotificationCount>(notificationKeys.unreadCount(), {
         total: 0,
-        byCategory: { engagement: 0, social: 0, monetization: 0, content: 0, system: 0 },
+        byCategory: { engagement: 0, social: 0, monetization: 0, content: 0, messages: 0, system: 0 },
       });
       return { previousCount };
     },
