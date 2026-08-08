@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   getPref,
+  getInAppPref,
   buildPrefPatch,
   unwrapPreferences,
   CATEGORY_OF,
@@ -104,5 +105,31 @@ describe('category map', () => {
     for (const [key, cat] of Object.entries(CATEGORY_OF)) {
       expect(live[cat]).toHaveProperty(key);
     }
+  });
+});
+
+/**
+ * The per-type toggles read the account document, not the push-preferences
+ * collection above. Those are two different stores: only the account one is
+ * consulted when deciding whether a notification row gets created.
+ */
+describe('getInAppPref', () => {
+  it('treats a missing key as enabled', () => {
+    expect(getInAppPref(undefined, 'likes')).toBe(true);
+    expect(getInAppPref({}, 'likes')).toBe(true);
+    expect(getInAppPref({ inApp: {} }, 'likes')).toBe(true);
+  });
+
+  it('reads an explicit false', () => {
+    expect(getInAppPref({ inApp: { likes: false } }, 'likes')).toBe(false);
+    expect(getInAppPref({ inApp: { likes: false } }, 'comments')).toBe(true);
+  });
+
+  it('lets the master switch win over a per-type true', () => {
+    expect(getInAppPref({ inAppEnabled: false, inApp: { likes: true } }, 'likes')).toBe(false);
+  });
+
+  it('ignores the push block, which mobile owns separately', () => {
+    expect(getInAppPref({ inApp: { tips: true }, push: { tips: false } }, 'tips')).toBe(true);
   });
 });

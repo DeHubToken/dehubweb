@@ -1,4 +1,5 @@
 import { apiCall } from './core';
+import { updateProfile } from './users';
 
 export interface PushDevice {
   deviceId: string;
@@ -173,5 +174,67 @@ export async function resetPushPreferences(): Promise<{ result: boolean }> {
   return apiCall<{ result: boolean }>("/api/push/preferences/reset", {
     method: "POST",
     requiresAuth: true,
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Per-type delivery preferences
+// ---------------------------------------------------------------------------
+//
+// These live on the account document, NOT in the push-preferences collection
+// the endpoints above talk to. The notification service reads
+// `accounts.notificationPreferences` to decide whether a row gets created at
+// all, and never reads the push-preferences collection for per-type toggles —
+// that one is consulted only for quiet hours and digest mode.
+//
+// Web used to drive its Settings toggles through /api/push/preferences, so
+// every one of them was a no-op: it wrote to a store nothing checks, and the
+// one-way sync in update_profile overwrote it wholesale the next time the user
+// saved anything on mobile. Mobile has always written here. Same store now.
+
+/** The account document's notification block. Keys match NotificationKey exactly. */
+export interface AccountNotificationPreferences {
+  inAppEnabled?: boolean;
+  pushEnabled?: boolean;
+  inApp?: Partial<Record<NotificationKey, boolean>>;
+  push?: Partial<Record<NotificationKey, boolean>>;
+}
+
+/**
+ * Read the signed-in user's preferences. The API only returns this block when
+ * you ask for your own profile; for anyone else's it is stripped server-side.
+ */
+export async function getAccountNotificationPreferences(
+  address: string,
+): Promise<AccountNotificationPreferences> {
+  const response = await apiCall<{ result?: { notificationPreferences?: AccountNotificationPreferences } }>(
+    `/api/account_info/${encodeURIComponent(address)}`,
+    { requiresAuth: true },
+  );
+  return response?.result?.notificationPreferences ?? {};
+}
+
+/** Read one in-app toggle. Absent means on — the server treats `!== false` as enabled. */
+export function getInAppPref(
+  prefs: AccountNotificationPreferences | undefined,
+  key: NotificationKey,
+): boolean {
+  if (prefs?.inAppEnabled === false) return false;
+  return prefs?.inApp?.[key] ?? true;
+}
+
+/**
+ * Write one in-app toggle.
+ *
+ * update_profile applies this block as dot-notation $set ops, so a single-key
+ * patch is a genuine partial update — no read-modify-write, and no risk of
+ * clobbering the `push` block that mobile manages with its own switches.
+ */
+export async function updateInAppNotificationPref(
+  key: NotificationKey,
+  value: boolean,
+): Promise<{ result: boolean }> {
+  return updateProfile({
+    notificationPreferences: JSON.stringify({ inApp: { [key]: value } }),
   });
 }
