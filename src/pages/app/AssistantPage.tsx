@@ -35,6 +35,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { supabase } from '@/integrations/supabase/client';
 import { invokeAi, dehubAuthHeaders } from '@/lib/ai-invoke';
+import { useAiCredits } from '@/hooks/use-ai-credits';
 import { SEOHead } from '@/components/SEOHead';
 import { MarkdownText } from '@/lib/markdown';
 
