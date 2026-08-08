@@ -10,6 +10,7 @@
 // note it only fires while the Phone provider is enabled.
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { Webhook } from "npm:standardwebhooks@1.0.0";
+import { otpSmsMessage } from "../_shared/cloudtalk.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -88,15 +89,9 @@ serve(async (req) => {
   // reject it as a malformed recipient.
   const recipient = phone.startsWith("+") ? phone : `+${phone}`;
 
-  // Every character below has to exist in the GSM-7 alphabet. One character
-  // outside it (an em dash, a curly quote, an accent) flips the whole message
-  // to UCS-2, where a fragment holds 70 characters instead of 160. This text is
-  // 87 characters with a six-digit code: in GSM-7 that is one fragment, in
-  // UCS-2 it is two. CloudTalk bills per fragment, and several destinations
-  // reject multi-part messages outright, so keep it plain ASCII.
-  const message =
-    `${otp} is your DeHub verification code. It expires shortly. ` +
-    `Don't share it with anyone.`;
+  // Shared with request-phone-otp so the two senders cannot drift, and so the
+  // GSM-7 constraint documented there is stated in exactly one place.
+  const message = otpSmsMessage(otp);
 
   let response: Response;
   try {

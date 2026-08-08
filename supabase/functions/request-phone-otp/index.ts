@@ -10,7 +10,12 @@ import {
   callerIp,
   checkRateLimit,
 } from "../_shared/auth.ts";
-import { getCloudTalkCredentials, sendCloudTalkSms, maskPhone } from "../_shared/cloudtalk.ts";
+import {
+  getCloudTalkCredentials,
+  sendCloudTalkSms,
+  maskPhone,
+  otpSmsMessage,
+} from "../_shared/cloudtalk.ts";
 
 // supabase-js's functions.invoke() only surfaces a body on 2xx responses —
 // a non-2xx collapses to a generic "Edge Function returned a non-2xx status
@@ -96,11 +101,7 @@ serve(async (req) => {
     return errorResponse("Could not generate a verification code. Please try again.");
   }
 
-  const sms = await sendCloudTalkSms(
-    creds,
-    phone,
-    `${code} is your DeHub verification code. It expires shortly — don't share it with anyone.`,
-  );
+  const sms = await sendCloudTalkSms(creds, phone, otpSmsMessage(code));
   if (!sms.ok) {
     console.error("request-phone-otp: CloudTalk send failed", {
       to: maskPhone(phone),
