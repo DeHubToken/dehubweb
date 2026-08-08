@@ -11,6 +11,7 @@
  * functions only after the transfer confirms.
  */
 import { supabase } from '@/integrations/supabase/client';
+import { invokeAi } from '@/lib/ai-invoke';
 
 export type GenerationKind = 'image' | 'video' | 'audio' | 'model3d';
 
@@ -361,7 +362,7 @@ export async function generateImage(
     throwIfAborted(handlers.signal);
   }
 
-  const res = await supabase.functions.invoke('generate-image', {
+  const res = await invokeAi('generate-image', {
     body: {
       prompt: req.prompt,
       model: req.model,
@@ -397,7 +398,7 @@ export async function generateVideo(
 
   handlers.onStage?.('Queueing the render');
 
-  const start = await supabase.functions.invoke('generate-video', {
+  const start = await invokeAi('generate-video', {
     body: {
       prompt: req.prompt,
       model: req.model,
@@ -580,7 +581,7 @@ export async function generate3d(
 
   handlers.onStage?.('Queueing the mesh');
 
-  const start = await supabase.functions.invoke('generate-3d', {
+  const start = await invokeAi('generate-3d', {
     body: {
       model: req.model,
       ...(req.prompt ? { prompt: req.prompt } : {}),

@@ -17,6 +17,10 @@ project_id = "aigxuutjaqsywioxjefr"
     verify_jwt = false
   [functions.agora-token]
     verify_jwt = false
+  # Auth is the DeHub token in x-dehub-token, not a Supabase JWT, so the
+  # platform check stays off and requireDeHubAuth does the work.
+  [functions.ai-credits]
+    verify_jwt = false
   [functions.auth-email-hook]
     verify_jwt = false
   [functions.blog-share-image]

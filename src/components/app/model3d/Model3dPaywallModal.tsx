@@ -32,17 +32,8 @@ import {
 import { supabase } from '@/integrations/supabase/client';
 import dhbCoinImage from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
-import { useDeHubProfile } from '@/hooks/use-dehub-profile';
+import { useAiCredits } from '@/hooks/use-ai-credits';
 import { toast } from 'sonner';
-import { Interface } from 'ethers';
-import { writeContractAA, getWalletAddress, getERC20Balance, switchChain, parseTxError } from '@/lib/contracts/aa-utils';
-import { DHB_TOKEN, toWei, getChainConfig, BASE_CHAIN_ID, BNB_CHAIN_ID } from '@/lib/contracts/dhb-token';
-import type { ChainId } from '@/components/app/ChainSelector';
-
-const DEHUB_AI_TREASURY = '0xbf3039b0bb672b268e8384e30d81b1e6a8a43b2c';
-const erc20TransferInterface = new Interface([
-  'function transfer(address to, uint256 amount) returns (bool)',
-]);
 
 export interface Model3dGenerationOptions {
   textureQuality?: TextureQuality;
@@ -88,11 +79,10 @@ export function Model3dPaywallModal({
   const [exportFormat, setExportFormat] = useState<'glb' | 'usdz' | 'fbx' | 'obj' | 'stl'>('glb');
 
   const { walletAddress } = useAuth();
-  const { data: profile, isLoading: profileLoading } = useDeHubProfile({
-    userId: walletAddress || undefined,
-    enabled: !!walletAddress,
-  });
-  const userBalance = profile?.badgeBalance ?? 0;
+  // Credit balance, not the wallet's on-chain holding — the generate function
+  // charges credit, and holding DHB is not the same as having topped it up.
+  const { balanceDhb, isLoading: profileLoading } = useAiCredits();
+  const userBalance = balanceDhb;
 
   // Reset the options whenever the model changes; they are not all portable
   // between families and a stale face limit on a model that ignores it is just
@@ -121,7 +111,7 @@ export function Model3dPaywallModal({
     } catch (err) {
       console.error('Error fetching DHB price:', err);
       setError('Failed to fetch DHB price. Using fallback.');
-      setDhbPrice(0.0006191);
+      setDhbPrice(0.001);
     } finally {
       setLoading(false);
     }
@@ -160,59 +150,23 @@ export function Model3dPaywallModal({
     try {
       const options = buildOptions();
 
-      const signerAddress = await getWalletAddress();
-      const amountWei = toWei(costDhb, DHB_TOKEN.decimals);
-
-      const baseConfig = getChainConfig(BASE_CHAIN_ID);
-      const bnbConfig = getChainConfig(BNB_CHAIN_ID);
-      // A flaky RPC reads as a zero balance rather than aborting, matching the
-      // image and video paywalls.
-      const [baseBalance, bnbBalance] = await Promise.all([
-        getERC20Balance(baseConfig.dhbToken, signerAddress, BASE_CHAIN_ID).catch(() => BigInt(0)),
-        getERC20Balance(bnbConfig.dhbToken, signerAddress, BNB_CHAIN_ID).catch(() => BigInt(0)),
-      ]);
-
-      let payChainId: ChainId;
-      if (baseBalance >= amountWei) {
-        payChainId = BASE_CHAIN_ID;
-      } else if (bnbBalance >= amountWei) {
-        payChainId = BNB_CHAIN_ID;
-      } else {
-        const baseDhb = Number(baseBalance) / 1e18;
-        const bnbDhb = Number(bnbBalance) / 1e18;
+      // No transfer here any more. generate-3d debits the DHB credit balance
+      // itself, so signing one here as well would charge twice.
+      if (userBalance < costDhb) {
         toast.dismiss('model3d-gen-payment');
         toast.error(
-          `Insufficient DHB. Need ${formatDhb(costDhb)} DHB (Base: ${formatDhb(baseDhb)}, BNB: ${formatDhb(bnbDhb)})`,
+          `Not enough credit. This costs ${formatDhb(costDhb)} DHB and you have ${formatDhb(userBalance)}.`,
         );
         setIsPaying(false);
         return;
       }
 
-      const chainConfig = getChainConfig(payChainId);
-      await switchChain(payChainId);
-
-      toast.loading('Processing payment...', { id: 'model3d-gen-payment' });
-      const result = await writeContractAA(
-        chainConfig.dhbToken,
-        erc20TransferInterface,
-        'transfer',
-        [DEHUB_AI_TREASURY, amountWei],
-        { context: 'AI 3D model generation payment', chainId: payChainId },
-      );
-      // wait() resolves with status 0 for a REVERTED transaction rather than
-      // throwing, so skipping the receipt would hand out a free generation
-      // every time the transfer failed on chain.
-      const receipt = await result.wait(1);
-      if (receipt?.status !== 1) {
-        throw new Error('The DHB transfer did not go through. Nothing has been charged.');
-      }
-      toast.success('Payment confirmed! Building your model...', { id: 'model3d-gen-payment' });
+      toast.dismiss('model3d-gen-payment');
       onConfirm(options);
     } catch (err: unknown) {
-      console.error('[Model3dPaywall] Payment failed:', err);
-      const msg = parseTxError(err);
+      console.error('[Model3dPaywall] Generation setup failed:', err);
       toast.dismiss('model3d-gen-payment');
-      toast.error(msg || 'Payment failed.');
+      toast.error(err instanceof Error ? err.message : 'Could not start the generation.');
     } finally {
       setIsPaying(false);
     }

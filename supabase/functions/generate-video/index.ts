@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import Replicate from "https://esm.sh/replicate@0.25.2";
 import { rateLimitByIp } from "../_shared/auth.ts";
+import { chargeForJob } from "../_shared/ai-credit-guard.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -630,9 +631,6 @@ serve(async (req) => {
     }
 
     // ─── New generation ───
-    const limited = await rateLimitByIp(req, 'generate-video', { limit: 10, windowMs: 60 * 60 * 1000 });
-    if (limited) return limited;
-
     const { prompt, model, sourceImage, duration = '5s', aspectRatio = '16:9', negativePrompt, resolution, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed } = body as GenerateVideoRequest;
 
     if (!prompt) throw new Error('Prompt is required');
@@ -654,11 +652,29 @@ serve(async (req) => {
       );
     }
 
+    // Authenticate, price and debit. Charged after validation so a rejected
+    // request never costs anything, and before the provider so a render cannot
+    // be started for free.
+    const charged = await chargeForJob(req, {
+      kind: 'video',
+      modelId: model,
+      actionType: 'generate-video',
+      rateLimit: { limit: 20, windowMs: 60 * 60 * 1000 },
+      durationSeconds: parseInt(String(duration), 10) || undefined,
+    });
+    if (!charged.ok) return charged.response;
+
     // Route to provider
-    if (modelConfig.provider === 'fal') {
-      return await handleFalGeneration(modelConfig, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed);
+    try {
+      const response = modelConfig.provider === 'fal'
+        ? await handleFalGeneration(modelConfig, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed)
+        : await handleReplicateGeneration(modelConfig, model, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, seed);
+      if (!response.ok) await charged.refund();
+      return response;
+    } catch (providerError) {
+      await charged.refund();
+      throw providerError;
     }
-    return await handleReplicateGeneration(modelConfig, model, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, seed);
 
   } catch (error) {
     console.error('Error in generate-video:', error);

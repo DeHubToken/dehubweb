@@ -64,7 +64,7 @@ export function VoiceCreditPurchaseModal({
       else throw new Error('Failed to get DHB price');
     } catch {
       setError('Failed to fetch DHB price. Using fallback.');
-      setDhbPrice(0.0006191);
+      setDhbPrice(0.001);
     } finally {
       setLoading(false);
     }
