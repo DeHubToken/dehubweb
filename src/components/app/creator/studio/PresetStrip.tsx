@@ -9,15 +9,33 @@ import { useMemo } from 'react';
 import { Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { presetsFor, type CreatorPreset, type PresetKind } from '@/lib/creator/presets';
+import type { AudioTask } from '@/constants/audio-models.constants';
 
 interface PresetStripProps {
   kind: PresetKind;
   activeId: string | null;
   onPick: (preset: CreatorPreset | null) => void;
+  /**
+   * Audio only: which of the nine tools is selected.
+   *
+   * Audio presets are per-task — a music brief means nothing under the
+   * sound-effect tool — so the strip narrows to the active one. Several tasks
+   * (dubbing, transcription, cleanup) have no presets at all and correctly
+   * show an empty strip.
+   */
+  audioTask?: AudioTask;
 }
 
-export function PresetStrip({ kind, activeId, onPick }: PresetStripProps) {
-  const presets = useMemo(() => presetsFor(kind), [kind]);
+export function PresetStrip({ kind, activeId, onPick, audioTask }: PresetStripProps) {
+  const presets = useMemo(() => {
+    const all = presetsFor(kind);
+    if (kind !== 'audio') return all;
+    return all.filter((p) => p.audioTask === audioTask);
+  }, [kind, audioTask]);
+
+  // Nothing to offer for this task. The heading alone, with a Clear button for
+  // a preset that is no longer in the list, reads as broken.
+  if (!presets.length) return null;
 
   return (
     <div className="w-full">
