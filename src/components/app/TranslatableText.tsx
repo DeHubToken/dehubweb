@@ -16,6 +16,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip
 import { Languages, RotateCcw, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
+import { dehubAuthHeaders } from '@/lib/ai-invoke';
 import { useUserLanguage, LANGUAGE_NAMES } from '@/hooks/use-user-language';
 import { recordTickerSearch } from '@/lib/ticker-search-tracker';
 import { clientNavigate } from '@/lib/client-navigate';
@@ -397,6 +398,9 @@ export function useTranslation(text: string) {
       console.log('[Translate] Invoking translate-text, targetLang:', targetLang, 'text:', text.substring(0, 40));
       const { data, error: fnError } = await supabase.functions.invoke('translate-text', {
         body: { text, targetLang },
+        // Cache and MyMemory stay public; the AI fallback needs a wallet to
+        // bill abuse to, so send the token whenever there is one.
+        headers: dehubAuthHeaders(),
       });
 
       console.log('[Translate] Response:', { data, fnError });
