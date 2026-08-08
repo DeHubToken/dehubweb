@@ -40,6 +40,7 @@ import { useStreamLiveStatus } from '@/hooks/use-stream-live-status';
 import { buildAvatarUrl, extractAvatarPath, buildImageUrl, buildFeedImageUrls, buildVideoUrl } from '@/lib/media-url';
 import { PageHeader } from '@/components/app/PageHeader';
 import { VideoCard } from '@/components/app/cards/VideoCard';
+import { CardHeader } from '@/components/app/cards/CardHeader';
 import { ImageCard } from '@/components/app/cards/ImageCard';
 import { PostCard } from '@/components/app/cards/PostCard';
 import { LiveStreamCard } from '@/components/app/cards/LiveStreamCard';
@@ -143,6 +144,10 @@ function toVideoItem(nft: DeHubNFT): VideoItem {
     status: nft.status,
     creatorId: resolvedAddress,
     creatorUsername: nft.minterUsername || nft.mintername || creatorObj?.username || ownerObj?.username,
+    // Same source the feed normalizer reads (use-unified-feed). Without it the
+    // creator row on this page rendered no staking badge while the identical row
+    // on the home feed did.
+    creatorBadgeBalance: (nft as any).minterUser?.badgeBalance ?? (nft as any).badgeBalance,
     isLiked: nft.isLiked ?? false,
     isDisliked: nft.isDisliked ?? false,
     myReaction: resolveMyReaction(nft),
@@ -509,7 +514,17 @@ function ImmersiveVideoHeader({
 }
 
 /**
- * Desktop creator info bar - shows avatar, display name, handle, and action buttons
+ * Desktop creator row for a video post.
+ *
+ * This is deliberately the SAME markup the home feed's VideoCard renders above
+ * its player — `CardHeader` plus the Sparkles/MoreVertical pair — rather than a
+ * second hand-rolled avatar+name block. The hand-rolled one drifted: a 40px
+ * square avatar against the feed's 36px, no badge icon, no profile hover card,
+ * `mb-4` where the feed uses CardHeader's own `pb-3`, and a lucide-free inline
+ * check instead of the feed's CheckCircle. It also lived OUTSIDE the bento, so
+ * the card visibly started at the video and the creator sat on the bare canvas
+ * with no glass behind it — the "bento doesn't wrap the username" report. It is
+ * rendered inside the bento now, so one frosted card holds the whole post.
  */
 interface DesktopCreatorInfoProps {
   channel?: string;
@@ -517,6 +532,7 @@ interface DesktopCreatorInfoProps {
   creatorUsername?: string;
   creatorId?: string;
   verified?: boolean;
+  badgeBalance?: number;
   onAIClick?: () => void;
   onMenuClick?: () => void;
 }
@@ -527,81 +543,40 @@ function DesktopCreatorInfo({
   creatorUsername,
   creatorId,
   verified = false,
+  badgeBalance,
   onAIClick,
   onMenuClick,
 }: DesktopCreatorInfoProps) {
-  const navigate = useNavigate();
-
-  const handleProfileClick = () => {
-    if (creatorUsername) {
-      const cleanUsername = creatorUsername.replace('@', '');
-      navigate(`/${cleanUsername}`);
-    } else if (creatorId) {
-      navigate(`/app/profile?id=${creatorId}`);
-    }
-  };
-
-  const isClickable = !!(creatorId || creatorUsername);
-
   if (!channel) return null;
 
   return (
-    <div className="flex items-center justify-between mb-4">
-      <button
-        onClick={handleProfileClick}
-        disabled={!isClickable}
-        className={`flex items-center gap-3 text-left ${isClickable ? 'cursor-pointer hover:opacity-80 transition-opacity' : 'cursor-default'}`}
-      >
-        <div className="w-10 h-10 rounded-md shrink-0 overflow-hidden bg-zinc-700 flex items-center justify-center">
-          {channelAvatar && channelAvatar !== '/placeholder.svg' ? (
-            <img 
-              src={channelAvatar} 
-              alt={channel}
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                (e.target as HTMLImageElement).style.display = 'none';
-                const parent = (e.target as HTMLImageElement).parentElement;
-                if (parent) {
-                  const fallback = document.createElement('span');
-                  fallback.className = 'text-white font-medium text-sm';
-                  fallback.textContent = (channel || '?').charAt(0).toUpperCase();
-                  parent.appendChild(fallback);
-                }
-              }}
-            />
-          ) : (
-            <span className="text-white font-medium text-sm">{(channel || '?').charAt(0).toUpperCase()}</span>
-          )}
-        </div>
-        <div className="flex flex-col min-w-0">
-          <div className="flex items-center gap-1.5 min-w-0">
-            <span className="font-semibold text-white text-sm truncate max-w-[160px] sm:max-w-none leading-tight">{channel}</span>
-            {verified && (
-              <svg className="w-4 h-4 text-white shrink-0" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-              </svg>
-            )}
-          </div>
-          {creatorUsername && (
-            <span className="text-zinc-500 text-xs truncate max-w-[160px] sm:max-w-none">@{creatorUsername.replace('@', '')}</span>
-          )}
-        </div>
-      </button>
-      
-      {/* Action buttons */}
+    <div className="flex items-start justify-between">
+      <CardHeader
+        username={channel}
+        handle={creatorUsername}
+        avatarSeed={channelAvatar || ''}
+        verified={verified}
+        contentType="video"
+        creatorId={creatorId}
+        creatorUsername={creatorUsername}
+        badgeBalance={badgeBalance}
+      />
+
+      {/* Action buttons — same icons at the same 23.5px the feed card uses. */}
       <div className="flex items-center gap-1">
         <button
           onClick={onAIClick}
-          className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
+          className="text-zinc-400 hover:text-white transition-colors"
           aria-label="Ask AI about this video"
         >
-          <Sparkles className="w-5 h-5" />
+          <Sparkles className="w-[23.5px] h-[23.5px]" />
         </button>
-        <button 
+        <button
           onClick={onMenuClick}
-          className="w-8 h-8 flex items-center justify-center text-zinc-400 hover:text-white transition-colors"
+          className="text-zinc-400 hover:text-white transition-colors -mr-0.5"
+          aria-label="Post options"
         >
-          <MoreVertical className="w-5 h-5" />
+          <MoreVertical className="w-[23.5px] h-[23.5px]" />
         </button>
       </div>
     </div>
@@ -928,17 +903,23 @@ export default function SinglePostPage({ inOverlay = false }: SinglePostPageProp
           <div data-post-page ref={inOverlay ? undefined : postRootRef} className="flex flex-col">
             <div className={cn('px-2 sm:px-3', chromeClearance)}>
               <div className="w-full">
-                {/* Creator info for desktop */}
-                <DesktopCreatorInfo
-                  channel={videoData.channel}
-                  channelAvatar={videoData.channelAvatar}
-                  creatorUsername={videoData.creatorUsername}
-                  creatorId={videoData.creatorId}
-                  verified={videoData.verified}
-                  onAIClick={() => setShowDesktopAIChat(true)}
-                  onMenuClick={() => setShowDesktopOptionsDrawer(true)}
-                />
+                {/* One bento around the whole post — creator row included — with
+                    the exact className HomeFeed wraps every feed card in, so the
+                    canvas themes' shared [data-feed-item] glass frosts it
+                    identically on both surfaces. The creator row used to sit
+                    above this div, which left the card starting mid-post at the
+                    video's top edge. */}
                 <div data-feed-item className="rounded-2xl border border-white/[0.12] bg-white/[0.03] p-3">
+                  <DesktopCreatorInfo
+                    channel={videoData.channel}
+                    channelAvatar={videoData.channelAvatar}
+                    creatorUsername={videoData.creatorUsername}
+                    creatorId={videoData.creatorId}
+                    verified={videoData.verified}
+                    badgeBalance={videoData.creatorBadgeBalance}
+                    onAIClick={() => setShowDesktopAIChat(true)}
+                    onMenuClick={() => setShowDesktopOptionsDrawer(true)}
+                  />
                   {renderContent()}
                   {id && parseInt(id, 10) > 0 && <PollCard tokenId={parseInt(id, 10)} />}
                 </div>
