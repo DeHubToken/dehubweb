@@ -18,7 +18,7 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import { rateLimitByIp, requireDeHubAuth } from "../_shared/auth.ts";
+import { rateLimitByIp } from "../_shared/auth.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -629,25 +629,6 @@ serve(async (req) => {
       return new Response(
         JSON.stringify(result),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Everything above here is free (cache, then MyMemory) and stays open to
-    // signed-out readers, because translating a feed post is a public feature.
-    //
-    // Everything below costs money, so it needs an owner to bill the abuse to.
-    // This endpoint runs on an IP limit alone, and a third paid provider was
-    // just added behind it — 300 requests an hour per IP across Gemini, fal
-    // and the gateway, from anyone holding the URL. Requiring a wallet for the
-    // paid tiers keeps the public feature working while giving the spend a name.
-    const auth = await requireDeHubAuth(req);
-    if (!auth.ok) {
-      return new Response(
-        JSON.stringify({
-          error: 'Sign in to translate this — the free translator could not handle it.',
-          code: 'AUTH_REQUIRED_FOR_AI_TRANSLATION',
-        }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
       );
     }
 
