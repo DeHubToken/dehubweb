@@ -9,15 +9,24 @@
  * go to the DeHub API; only signed-out ones land here, so the two halves never
  * double-count the same person.
  *
+ * Dedup happens here, not there. A signed-out viewer is identified by a salted
+ * SHA-256 of the client-supplied device id plus the request IP — the device id
+ * alone is clearable, the IP alone is shared by everyone behind a NAT, and the
+ * salt makes the hash useless to anyone who obtains the table. The raw IP is
+ * never stored. That hash cannot go into the DeHub API's own dedup, which is a
+ * Redis set of wallet addresses, which is why this half is deduped separately.
+ *
+ * Once deduped, the surviving views are FORWARDED to the DeHub API, which folds
+ * them into the post's `totalViews`. That is the number the apps render. Clients
+ * used to fetch this store separately and add it on at display time, which is
+ * why a post's view count painted low and then jumped a moment later.
+ *
  * Endpoints (verify_jwt = false — anonymous by definition):
  *   POST /            { tokenIds: string[], deviceId: string } → { recorded }
  *   GET  /?token_ids=1,2,3                                     → { counts: {} }
  *
- * Dedup is one view per viewer per post per UTC day, enforced by a unique index
- * in record_anonymous_views. The viewer identity is a salted SHA-256 of the
- * client-supplied device id plus the request IP: the device id alone is
- * clearable, the IP alone is shared by everyone behind a NAT, and the salt makes
- * the hash useless to anyone who obtains the table. The raw IP is never stored.
+ * The GET is kept for inspecting the signed-out half directly; nothing in the
+ * apps calls it any more.
  */
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -36,6 +45,13 @@ const MAX_TOKENS_PER_REQUEST = 50;
 // Token ids are numeric strings in the DeHub API. Rejecting anything else keeps
 // junk out of the totals table, which is keyed by token_id.
 const TOKEN_ID_PATTERN = /^\d{1,20}$/;
+
+const DEHUB_API_BASE = Deno.env.get('DEHUB_API_BASE') || 'https://api.dehub.io';
+
+// The DeHub API refuses to count a view it cannot attribute, so the forward is
+// abandoned rather than retried if it takes longer than this. The view is
+// already recorded here either way.
+const FORWARD_TIMEOUT_MS = 5000;
 
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -91,6 +107,49 @@ async function hashViewer(deviceId: string, ip: string): Promise<string> {
   return Array.from(new Uint8Array(digest))
     .map((b) => b.toString(16).padStart(2, '0'))
     .join('');
+}
+
+/**
+ * Hand the newly-recorded views to the DeHub API, where they land in the post's
+ * `totalViews` — the count the apps display.
+ *
+ * Best-effort by design. A failure here loses those views from the displayed
+ * total, but the ledger row is already written, so nothing is double-counted on
+ * a later request and the totals table still holds the truth for a re-import.
+ * The viewer's own request must never fail because of this.
+ */
+async function forwardToDeHub(tokenIds: string[]): Promise<void> {
+  if (tokenIds.length === 0) return;
+
+  const serviceKey = Deno.env.get('VIEW_SERVICE_KEY');
+  if (!serviceKey) {
+    console.error('[anon-views] VIEW_SERVICE_KEY is not set — views recorded but not forwarded');
+    return;
+  }
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), FORWARD_TIMEOUT_MS);
+
+  try {
+    const response = await fetch(`${DEHUB_API_BASE}/api/view/anonymous`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'x-service-key': serviceKey,
+      },
+      body: JSON.stringify({ tokenIds: tokenIds.map(Number) }),
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      console.error(`[anon-views] forward failed: ${response.status}`, await response.text());
+    }
+  } catch (error) {
+    console.error('[anon-views] forward error:', error);
+  } finally {
+    clearTimeout(timer);
+  }
 }
 
 function normalizeTokenIds(raw: unknown): string[] {
@@ -169,6 +228,8 @@ Deno.serve(async (req) => {
 
       const viewerHash = await hashViewer(deviceId, getClientIp(req));
 
+      // Returns the ids that survived dedup, not just how many — the forward
+      // below needs to name them.
       const { data, error } = await supabase.rpc('record_anonymous_views', {
         p_token_ids: tokenIds,
         p_viewer_hash: viewerHash,
@@ -179,10 +240,12 @@ Deno.serve(async (req) => {
         return errorResponse('Failed to record views', 500);
       }
 
-      const recorded = Number(data) || 0;
-      console.log(`[anon-views] recorded ${recorded}/${tokenIds.length} anonymous views`);
+      const newIds = Array.isArray(data) ? (data as string[]) : [];
+      console.log(`[anon-views] recorded ${newIds.length}/${tokenIds.length} anonymous views`);
 
-      return json({ success: true, recorded, submitted: tokenIds.length });
+      await forwardToDeHub(newIds);
+
+      return json({ success: true, recorded: newIds.length, submitted: tokenIds.length });
     }
 
     return errorResponse('Method not allowed', 405);
