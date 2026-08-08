@@ -142,7 +142,8 @@ html[data-theme='war'] [class*='!bg-white'] > div {
    ribbons, leaderboard rank medallions. Section 1 only matches the /10 and /5
    opacity variants, so an unqualified .bg-white slipped through and kept a
    white fill, which is glaring on this theme even before the text is read. */
-html[data-theme='war'] :is(.bg-white, .bg-zinc-50, .bg-neutral-50) {
+html[data-theme='war']
+  :is(.bg-white, .bg-zinc-50, .bg-neutral-50):not([data-keep-white]) {
   background-color: rgb(var(--war-hud) / 0.16) !important;
   color: rgb(var(--war-hud)) !important;
   box-shadow: inset 0 0 0 1px rgb(var(--war-hud) / 0.55);

@@ -220,6 +220,16 @@ All colors MUST be HSL.
     width: 100%;
     background-color: black;
   }
+
+  /* The switch thumb's default fill. It lives here rather than as a
+     `bg-zinc-900` utility on the component because every theme with an
+     untagged-slab net matches `bg-zinc-*` by substring and repaints the thumb
+     to the surrounding panel's material — the knob then vanishes into its own
+     track. Carrying no colour class makes the thumb unmatchable; themes that
+     want a different knob override this on `[data-switch-thumb]`. */
+  [data-switch-thumb] {
+    background-color: rgb(24 24 27);
+  }
 }
 
 @layer utilities {
@@ -1909,14 +1919,21 @@ html[data-theme="light"] .text-zinc-500 {
 
 /* Radix switches are styled dark-first (white track, near-black thumb),
    which disappears on paper. Remap: unchecked track = visible grey wash,
-   checked track = ink, thumb = paper in both states. */
-html[data-theme="light"] button[role="switch"][data-state="unchecked"] {
-  background-color: rgba(0, 0, 0, 0.18) !important;
+   checked track = ink, thumb = paper in both states.
+   Keyed to the switch's own hooks, not `[role='switch']`: EditPostModal's
+   comments toggle puts that role on the whole full-width ROW, so
+   `button[role="switch"] > span` filled its label block with paper and flushed
+   the green track to paper along with it. The hooks only ever land on the real
+   Radix parts. */
+html[data-theme="light"] [data-switch-track][data-state="unchecked"] {
+  /* 0.18 put a paper thumb on a near-paper wash — 1.52:1, so the knob was only
+     findable by its shadow. 0.32 keeps the wash quiet and clears 2:1. */
+  background-color: rgba(0, 0, 0, 0.32) !important;
 }
-html[data-theme="light"] button[role="switch"][data-state="checked"] {
+html[data-theme="light"] [data-switch-track][data-state="checked"] {
   background-color: var(--ink) !important;
 }
-html[data-theme="light"] button[role="switch"] > span {
+html[data-theme="light"] [data-switch-thumb] {
   background-color: var(--paper) !important;
 }
 
