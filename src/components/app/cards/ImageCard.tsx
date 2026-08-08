@@ -27,7 +27,7 @@ import { ActionBar } from './ActionBar';
 import { CommentsWrapper } from './CommentsWrapper';
 import { PostMetadata } from './PostMetadata';
 import { PPVDrawerContent } from './PPVDrawerContent';
-import { useTranslation, LANGUAGE_NAMES, renderTextWithLinks } from '../TranslatableText';
+import { useTranslation, LANGUAGE_NAMES, renderTextWithLinks, splitTranslatedTitleAndBody } from '../TranslatableText';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
 import { ReportModal } from '../modals/ReportModal';
@@ -339,14 +339,17 @@ function FeedDescription({
   const [expanded, setExpanded] = useState(false);
   const MAX_LENGTH = 150;
   
-  // Parse translated text back into title/description
+  // Parse translated text back into title/description.
+  //
+  // The old version took parts[0] as the title and fell back to the ORIGINAL
+  // description whenever the rest came back empty. On a translation that lost
+  // its blank line that put the entire post in the title — which renders
+  // unclamped here, while the description is capped at MAX_LENGTH — so pressing
+  // translate on a long post expanded it to full length and left the body
+  // untranslated underneath. See splitTranslatedTitleAndBody.
   const [displayTitle, displayDescription] = useMemo(() => {
     if (isTranslated && translatedText) {
-      const parts = translatedText.split('\n\n');
-      if (title && description) {
-        return [parts[0] || title, parts.slice(1).join('\n\n') || description];
-      }
-      return title ? [translatedText, undefined] : [undefined, translatedText];
+      return splitTranslatedTitleAndBody(translatedText, title, description);
     }
     return [title, description];
   }, [isTranslated, translatedText, title, description]);
