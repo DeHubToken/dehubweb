@@ -5,9 +5,9 @@ import { startVersionWatch } from '@/lib/version-check';
 
 /**
  * Sonner wraps almost all of its own styling in `:where()`, so a utility class
- * overrides it for free. The exception is the close button — its rule carries
- * real specificity and a plain class loses to it, so every property it sets is
- * overridden with `!` below.
+ * overrides it for free. The exception is the close button's background and
+ * colour, which come from a theme rule at real specificity — those two need `!`
+ * below, and nothing else here does.
  *
  * The toast's own buttons dodge that fight entirely by living inside the
  * description rather than in sonner's `action`/`cancel` slots; see BUTTON_CLASSES.
@@ -66,13 +66,30 @@ const BUTTON_CLASSES = [
 ].join(' ');
 
 /**
- * Sonner paints the close button `var(--normal-bg)` on `var(--normal-text)`,
- * which against the glass toast is a grey disc with an X the same grey as the
- * disc. Give it the toast's own palette so the icon is actually visible.
+ * Strip the close button back to the glyph. Sonner's own X is already just two
+ * 1.5px `currentColor` strokes in a 12px svg — the disc around it is all in the
+ * button: a 20px circle with a border, a background, and a
+ * `translate(-35%, -35%)` that hangs it off the toast's corner like a badge.
+ *
+ * So: no radius, no border, no background, no transform, and pinned 12px from
+ * the top and right edges. The 20px box is kept — it is the hit target, and
+ * since the 12px glyph is centred in it, an equal inset on the box is an equal
+ * inset on the X.
+ *
+ * Only `background` and `color` need `!`. Sonner sets those from
+ * `[data-sonner-toaster][data-theme=dark] [data-sonner-toast] [data-close-button]`,
+ * which no plain class can outrank — but an `!important` declaration outranks
+ * every non-important one whatever its specificity, so these also cover the
+ * `:hover` variants of those rules without having to repeat themselves.
+ * Everything else on the button comes from a `:where()` rule at zero
+ * specificity and simply loses to a utility class.
  */
 const CLOSE_CLASSES = [
-  '!bg-white/10 !border-white/20 !text-white',
-  'hover:!bg-white/20 hover:!border-white/30',
+  'left-auto right-3 top-3 transform-none',
+  'rounded-none border-0 !bg-transparent',
+  '!text-black',
+  // The disc was the hover affordance; without it the glyph needs its own.
+  'opacity-70 transition-opacity hover:opacity-100',
 ].join(' ');
 
 /**
