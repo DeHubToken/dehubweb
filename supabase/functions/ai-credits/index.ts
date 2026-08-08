@@ -31,9 +31,25 @@ const DHB_BNB = '0x680D3113caf77B61b510f332D5Ef4cf5b41A761D';
 const TREASURY = (Deno.env.get('AI_TREASURY_ADDRESS')
   || '0xbf3039b0bb672b268e8384e30d81b1e6a8a43b2c').toLowerCase();
 
+/**
+ * How recent an on-chain transfer must be to be claimable as credit.
+ *
+ * This is load-bearing, not a tidiness rule. The AI treasury is the same
+ * address ads top-ups, PPV unlocks, governance and — until this release — the
+ * old per-generation AI payments all paid into. Without a window, any of those
+ * historical transfers could be replayed as a credit top-up, so a creator who
+ * had already received a hundred generations under the old pay-per-image flow
+ * could claim every one of those payments back as spendable credit.
+ *
+ * An hour is far longer than the flow needs (transfer, index, claim) and short
+ * enough that nothing already spent is still in range.
+ */
+const CLAIM_WINDOW_MS = 60 * 60 * 1000;
+
 interface AlchemyTransfer {
   hash: string;
   value: number;
+  metadata?: { blockTimestamp?: string };
 }
 
 async function fetchTransfers(
@@ -55,6 +71,10 @@ async function fetchTransfers(
         toAddress: TREASURY,
         contractAddresses: [contractAddress],
         category: ['erc20'],
+        // Required for metadata.blockTimestamp — without it the freshness
+        // check below has nothing to read and would pass everything.
+        withMetadata: true,
+        order: 'desc',
       }],
     }),
   });
@@ -156,6 +176,22 @@ Deno.serve(async (req) => {
       const dhbAmount = Number(match.value);
       if (!Number.isFinite(dhbAmount) || dhbAmount <= 0) {
         return jsonResponse({ error: 'Invalid transfer amount' }, 400);
+      }
+
+      // Reject anything outside the claim window. See CLAIM_WINDOW_MS — the
+      // treasury has years of unrelated DHB coming into it and none of it is
+      // credit. A missing timestamp is treated as unclaimable rather than
+      // fresh, so a provider that stops returning metadata fails closed.
+      const minedAt = match.metadata?.blockTimestamp
+        ? Date.parse(match.metadata.blockTimestamp)
+        : NaN;
+      if (!Number.isFinite(minedAt)) {
+        return jsonResponse({ error: 'Could not establish when that transfer was mined.' }, 400);
+      }
+      if (Date.now() - minedAt > CLAIM_WINDOW_MS) {
+        return jsonResponse({
+          error: 'That transfer is too old to claim as credit. Send a new one.',
+        }, 400);
       }
 
       const { data, error } = await serviceClient().rpc('ai_credit_grant', {

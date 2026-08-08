@@ -7,6 +7,8 @@ import { supabase } from '@/integrations/supabase/client';
 import dhbCoinImage from '@/assets/dehub-coin.png';
 import { useAuth } from '@/contexts/AuthContext';
 import { useAiCredits } from '@/hooks/use-ai-credits';
+import { payAsYouGo, useSpendableDhb } from '@/lib/ai-payg';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { dhbText } from '@/lib/dhb-toast';
 import { Slider } from '@/components/ui/slider';
@@ -101,7 +103,9 @@ export function VideoPaywallModal({
   // The balance that matters is DHB credit, not the wallet's on-chain holding —
   // generate-video charges credit, and holding DHB is not the same as having
   // topped it up.
-  const { balanceDhb, isLoading: profileLoading } = useAiCredits();
+  const { balanceDhb, isLoading: profileLoading, refresh } = useAiCredits();
+  const { walletDhb, isLoading: isWalletLoading } = useSpendableDhb();
+  const navigate = useNavigate();
   const userBalance = balanceDhb;
 
   // Reset options when model changes. Duration and resolution fall back to the
@@ -180,6 +184,11 @@ export function VideoPaywallModal({
   const costDhb = dhbPrice ? getVideoCostDhb(model, dhbPrice, isPerSecond ? duration : undefined) : 0;
   const isBalanceLoading = profileLoading;
   const hasEnoughBalance = userBalance >= costDhb;
+  const shortfall = Math.max(0, costDhb - userBalance);
+  // Three states: enough credit, enough DHB to pay for this one job, or
+  // neither — in which case offering a payment would only fail.
+  const canPayAsYouGo = !hasEnoughBalance && walletDhb >= shortfall;
+  const needsTokens = !hasEnoughBalance && !canPayAsYouGo && !isWalletLoading;
 
   const hasAdvancedFeatures = model.supportsReferenceImages || model.supportsEndFrame || model.supportsAudioInput || model.supportsVideoInput || model.supportsSeed;
 
@@ -279,18 +288,23 @@ export function VideoPaywallModal({
         setIsUploading(false);
       }
 
-      // No transfer here any more. generate-video debits the DHB credit
-      // balance itself, so signing one here as well would charge twice.
-      if (balanceDhb < costDhb) {
-        // The upload phase claims this toast id and sonner loading toasts never
-        // auto-dismiss, so an early return has to clear it or a spinner is left
-        // running forever.
-        toast.dismiss('video-gen-payment');
-        toast.error(
-          `Not enough credit. This costs ${formatDhb(costDhb)} DHB and you have ${formatDhb(balanceDhb)}.`
-        );
-        setIsPaying(false);
-        return;
+      // Credit first; pay-as-you-go for the shortfall when there is not enough.
+      // generate-video debits the balance itself, so paying here tops up — it
+      // is never a second charge for the same job.
+      if (!hasEnoughBalance) {
+        if (needsTokens) {
+          // The upload phase claims this toast id and sonner loading toasts
+          // never auto-dismiss, so an early return has to clear it or a
+          // spinner is left running forever.
+          toast.dismiss('video-gen-payment');
+          onOpenChange(false);
+          navigate('/app/buy');
+          setIsPaying(false);
+          return;
+        }
+        toast.loading(`Paying ${formatDhb(shortfall)} DHB...`, { id: 'video-gen-payment' });
+        await payAsYouGo(shortfall);
+        refresh();
       }
 
       toast.dismiss('video-gen-payment');
@@ -828,7 +842,7 @@ export function VideoPaywallModal({
             variant="glass"
             className="flex-1 font-medium h-10"
             onClick={handlePayAndGenerate}
-            disabled={loading || isBalanceLoading || !hasEnoughBalance || isGenerating || isPaying || isUploading}
+            disabled={loading || isBalanceLoading || isWalletLoading || isGenerating || isPaying || isUploading}
           >
             {isUploading ? (
               <>
