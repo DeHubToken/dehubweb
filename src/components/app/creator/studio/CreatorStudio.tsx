@@ -948,30 +948,43 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
   );
 
   return (
-    <section className="px-3 pb-6 pt-5 sm:px-4">
-      <div className="mb-4 flex items-end justify-between gap-3">
-        <div className="min-w-0">
-          <h2 className="text-2xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-3xl">
-            Start creating with {currentModelName}
-          </h2>
-          <p className="mt-1.5 max-w-xl text-sm text-white/45">
-            Describe a scene, character, mood or style. Results land below and carry straight into
-            the editor.
-          </p>
-        </div>
+    /**
+     * A fragment, not one <section>, and deliberately so.
+     *
+     * A sticky element is bounded by its parent's box: wrapped in a section
+     * that ends after the results feed, the composer unstuck the moment that
+     * section scrolled past. Returning the pieces as siblings makes <main> the
+     * composer's parent, so it stays parked for the length of the page.
+     */
+    <>
+      <section className="px-3 pb-4 pt-5 sm:px-4">
+        <div className="flex items-end justify-between gap-3">
+          <div className="min-w-0">
+            <h2 className="text-2xl font-black uppercase leading-[1.05] tracking-tight text-white sm:text-3xl">
+              Start creating with {currentModelName}
+            </h2>
+            <p className="mt-1.5 max-w-xl text-sm text-white/45">
+              Describe a scene, character, mood or style. Results land below and carry straight
+              into the editor.
+            </p>
+          </div>
 
-        {runningCount > 0 && (
-          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1.5 text-[12px] font-medium text-white/75 backdrop-blur-xl">
-            <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            {runningCount} running
-          </span>
-        )}
-      </div>
+          {runningCount > 0 && (
+            <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1.5 text-[12px] font-medium text-white/75 backdrop-blur-xl">
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              {runningCount} running
+            </span>
+          )}
+        </div>
+      </section>
 
       {/* Marks where the composer sits in normal flow — see the observer above. */}
       <div ref={sentinelRef} aria-hidden className="h-px w-full" />
 
-      <div className="sticky z-40" style={{ top: stickyTop }}>
+      {/* Horizontal padding only. Padding or a margin on the top edge would
+          ride along when it parks, leaving a transparent strip between the
+          header and the composer with the page scrolling through it. */}
+      <div className="sticky z-40 px-3 sm:px-4" style={{ top: stickyTop }}>
         <div
           ref={composerRef}
           className={cn(
@@ -1215,75 +1228,77 @@ export function CreatorStudio({ onOpenEditor, stickyTop = 60 }: CreatorStudioPro
         </div>
       </div>
 
-      <input
-        ref={fileRef}
-        type="file"
-        accept="image/*"
-        hidden
-        onChange={(e) => {
-          const file = e.target.files?.[0];
-          if (file) void attachFile(file);
-          e.target.value = '';
-        }}
-      />
-
-      <div className="mt-5">
-        <PresetStrip kind={mode} activeId={presetId} onPick={pickPreset} />
-      </div>
-
-      <div className="mt-7">
-        <ResultsFeed
-          wallet={walletAddress}
-          onAnimate={loadJob}
-          onModel3d={model3dFromJob}
-          onOpenEditor={onOpenEditor}
+      <section className="px-3 pb-6 sm:px-4">
+        <input
+          ref={fileRef}
+          type="file"
+          accept="image/*"
+          hidden
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) void attachFile(file);
+            e.target.value = '';
+          }}
         />
-      </div>
 
-      {/* The epoch key exists to tear down the portal after a surface switch,
-          but it must not fire while a modal is open: remounting mid-payment
-          would reset the in-flight guard and allow a second charge. Freezing
-          the key while open keeps both properties. */}
-      {activeImageModel && (
-        <ImagePaywallModal
-          key={imagePaywallOpen ? 'image-open' : `image-${surfaceEpoch}`}
-          open={imagePaywallOpen}
-          onOpenChange={setImagePaywallOpen}
-          model={activeImageModel}
-          selectedModelKey={imageModel}
-          onModelChange={setImageModel}
-          onConfirm={runImage}
-          quantity={batch}
-        />
-      )}
+        <div className="mt-5">
+          <PresetStrip kind={mode} activeId={presetId} onPick={pickPreset} />
+        </div>
 
-      {activeVideoModel && (
-        <VideoPaywallModal
-          key={videoPaywallOpen ? 'video-open' : `video-${surfaceEpoch}`}
-          open={videoPaywallOpen}
-          onOpenChange={setVideoPaywallOpen}
-          model={activeVideoModel}
-          selectedModelKey={videoModel}
-          onModelChange={setVideoModel}
-          onConfirm={runVideo}
-          initialDuration={duration}
-          initialResolution={resolution}
-        />
-      )}
+        <div className="mt-7">
+          <ResultsFeed
+            wallet={walletAddress}
+            onAnimate={loadJob}
+            onModel3d={model3dFromJob}
+            onOpenEditor={onOpenEditor}
+          />
+        </div>
 
-      {activeModel3d && (
-        <Model3dPaywallModal
-          key={model3dPaywallOpen ? 'model3d-open' : `model3d-${surfaceEpoch}`}
-          open={model3dPaywallOpen}
-          onOpenChange={setModel3dPaywallOpen}
-          model={activeModel3d}
-          selectedModelKey={model3dModel}
-          onModelChange={setModel3dModel}
-          onConfirm={run3d}
-          hasReference={!!reference}
-        />
-      )}
-    </section>
+        {/* The epoch key exists to tear down the portal after a surface switch,
+            but it must not fire while a modal is open: remounting mid-payment
+            would reset the in-flight guard and allow a second charge. Freezing
+            the key while open keeps both properties. */}
+        {activeImageModel && (
+          <ImagePaywallModal
+            key={imagePaywallOpen ? 'image-open' : `image-${surfaceEpoch}`}
+            open={imagePaywallOpen}
+            onOpenChange={setImagePaywallOpen}
+            model={activeImageModel}
+            selectedModelKey={imageModel}
+            onModelChange={setImageModel}
+            onConfirm={runImage}
+            quantity={batch}
+          />
+        )}
+
+        {activeVideoModel && (
+          <VideoPaywallModal
+            key={videoPaywallOpen ? 'video-open' : `video-${surfaceEpoch}`}
+            open={videoPaywallOpen}
+            onOpenChange={setVideoPaywallOpen}
+            model={activeVideoModel}
+            selectedModelKey={videoModel}
+            onModelChange={setVideoModel}
+            onConfirm={runVideo}
+            initialDuration={duration}
+            initialResolution={resolution}
+          />
+        )}
+
+        {activeModel3d && (
+          <Model3dPaywallModal
+            key={model3dPaywallOpen ? 'model3d-open' : `model3d-${surfaceEpoch}`}
+            open={model3dPaywallOpen}
+            onOpenChange={setModel3dPaywallOpen}
+            model={activeModel3d}
+            selectedModelKey={model3dModel}
+            onModelChange={setModel3dModel}
+            onConfirm={run3d}
+            hasReference={!!reference}
+          />
+        )}
+      </section>
+    </>
   );
 }
 
