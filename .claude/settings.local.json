@@ -7,7 +7,8 @@
       "Bash(findstr:*)",
       "Bash(npm install:*)",
       "WebFetch(domain:api.dehub.io)",
-      "Bash(python3:*)"
+      "Bash(python3:*)",
+      "mcp__Claude_Code_Remote__add_repo"
     ]
   }
 }
