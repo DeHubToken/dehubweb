@@ -306,12 +306,16 @@ function CommentItem({ comment, tokenId, onLike, onDislike, onReply, onShare, on
           </div>
         ) : (
           <>
+            {/* auto={false}: the `translation` hook above already translates
+                this comment and its output is what gets rendered here. Left on,
+                every comment in the thread was translated twice. */}
             {comment.text && (
-              <TranslatableText 
-                text={translation.isTranslated ? translation.translatedText : comment.text} 
-                className="text-zinc-300 text-sm leading-relaxed break-words" 
-                as="p" 
-                hideControls 
+              <TranslatableText
+                text={translation.isTranslated ? translation.translatedText : comment.text}
+                className="text-zinc-300 text-sm leading-relaxed break-words"
+                as="p"
+                hideControls
+                auto={false}
               />
             )}
             {comment.imageUrl && (

@@ -32,7 +32,7 @@ import { PostMetadata } from './PostMetadata';
 import { PPVDrawerContent } from './PPVDrawerContent';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
 import { VerifyUnlockButton } from './VerifyUnlockButton';
-import { TranslatableText, SharedTranslationProvider, useTranslation } from '../TranslatableText';
+import { TranslatableText, SharedTranslationProvider, useTranslation, splitTranslatedTitleAndBody } from '../TranslatableText';
 import { hasCommunityLink, stripCommunityLinks } from '@/components/app/communities/CommunityLinkEmbed';
 import { useTranslation as useI18n } from 'react-i18next';
 import { PostAIChat } from './PostAIChat';
@@ -437,27 +437,32 @@ function ExpandableDescription({ description: rawDescription, isImmersive }: Exp
     return () => ro.disconnect();
   }, [isImmersive, description]);
 
+  // auto={false} throughout: VideoCard translates title+description itself and
+  // passes the result in. Left on, each of these re-translated text that had
+  // already been translated — three requests per video instead of one.
   if (!isImmersive) {
     // Non-immersive: simple 1-line truncation
     return (
-      <TranslatableText 
-        text={description} 
+      <TranslatableText
+        text={description}
         className="text-zinc-400 text-sm mb-2 line-clamp-1"
-        as="p" 
+        as="p"
+        auto={false}
       />
     );
   }
 
   return (
     <div className="mb-2">
-      <div 
+      <div
         ref={containerRef}
         className={isExpanded ? '' : 'line-clamp-4'}
       >
-        <TranslatableText 
-          text={description} 
+        <TranslatableText
+          text={description}
           className="text-zinc-400 text-sm"
-          as="p" 
+          as="p"
+          auto={false}
         />
       </div>
       {needsExpansion && !isExpanded && (
@@ -591,8 +596,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     videoRef: videoRef as React.RefObject<HTMLVideoElement>,
   });
 
-  // Translation hook for video text content
-  const videoText = [video.title, video.description].filter(Boolean).join('\n\n');
+  // Translation hook for video text content.
+  //
+  // Only the text that actually gets rendered — a description that merely
+  // repeats the title is not shown, and sending it anyway meant paying to
+  // translate the title twice and then splitting the answer back into a
+  // duplicated heading.
+  const ownDescription = video.description && video.description !== video.title ? video.description : undefined;
+  const videoText = [video.title, ownDescription].filter(Boolean).join('\n\n');
   const {
     isTranslated: isVideoTranslated,
     translatedText: videoTranslatedText,
@@ -1956,21 +1967,34 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         )}
         <SharedTranslationProvider>
           {(() => {
-            // Split translated text back into title + description
-            let translatedTitle = video.title;
-            let translatedDesc = video.description || '';
+            // Split translated text back into title + description. When the
+            // separator did not survive translation the whole body lands in the
+            // description, which is the half that clamps and has a "See more" —
+            // putting it in the unclamped title made translate behave like an
+            // expand button. See splitTranslatedTitleAndBody.
+            let shownTitle: string | undefined = video.title;
+            let shownDesc: string | undefined = ownDescription;
+
             if (isVideoTranslated && videoTranslatedText) {
-              const parts = videoTranslatedText.split('\n\n');
-              translatedTitle = parts[0] || video.title;
-              translatedDesc = parts.slice(1).join('\n\n') || video.description || '';
+              [shownTitle, shownDesc] = splitTranslatedTitleAndBody(
+                videoTranslatedText,
+                video.title,
+                ownDescription,
+              );
             }
+
             return (
               <>
-                <TranslatableText text={isVideoTranslated ? translatedTitle : video.title} className="text-white text-sm font-medium mb-1" as="h3" hideControls />
-                {video.description && video.description !== video.title && (
-                  <ExpandableDescription 
-                    description={isVideoTranslated ? translatedDesc : video.description} 
-                    isImmersive={isImmersive} 
+                {/* auto={false}: the card's own useTranslation above already
+                    translated this text and hands the result down. Left on, this
+                    asked the edge function to translate the translation. */}
+                {shownTitle && (
+                  <TranslatableText text={shownTitle} className="text-white text-sm font-medium mb-1" as="h3" hideControls auto={false} />
+                )}
+                {shownDesc && (
+                  <ExpandableDescription
+                    description={shownDesc}
+                    isImmersive={isImmersive}
                   />
                 )}
               </>

@@ -14,7 +14,6 @@ import { Mail, Check } from 'lucide-react';
 import { toast } from 'sonner';
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip';
 import { Languages, RotateCcw, Loader2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/integrations/supabase/client';
 import { useUserLanguage, LANGUAGE_NAMES } from '@/hooks/use-user-language';
 import { recordTickerSearch } from '@/lib/ticker-search-tracker';
@@ -343,6 +342,111 @@ function isNoOpTranslation(translated: string, original: string): boolean {
   return translated.trim() === original.trim();
 }
 
+// ============================================================================
+// Auto-translate scheduling
+//
+// Auto-translation decorates the page; it must never compete with loading it.
+// Left unscheduled, every card that mounts fires its own request during the
+// initial render pass, so opening the feed meant a dozen-plus translate calls
+// racing the feed query, the avatars and the media for the same connections —
+// on a phone that is most of the reason the page felt slow to appear.
+//
+// So nothing queued here starts until the page has actually finished loading,
+// and after that only a few run at a time, during idle. Anything the reader
+// asks for by pressing the button skips this entirely and goes out immediately.
+// ============================================================================
+
+const AUTO_TRANSLATE_CONCURRENCY = 3;
+
+type QueuedJob = { run: () => Promise<unknown>; cancelled: boolean };
+
+const autoQueue: QueuedJob[] = [];
+let inFlightAuto = 0;
+let drainScheduled = false;
+
+let pageLoaded = typeof document === 'undefined' || document.readyState === 'complete';
+if (!pageLoaded) {
+  window.addEventListener('load', () => {
+    pageLoaded = true;
+    drainAutoQueue();
+  }, { once: true });
+}
+
+function whenIdle(cb: () => void): void {
+  const ric = (window as { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => void })
+    .requestIdleCallback;
+  // The timeout matters: on a page that never goes idle, translations should
+  // still land rather than wait forever.
+  if (typeof ric === 'function') ric(cb, { timeout: 2000 });
+  else setTimeout(cb, 200);
+}
+
+function drainAutoQueue(): void {
+  if (!pageLoaded || drainScheduled) return;
+  if (inFlightAuto >= AUTO_TRANSLATE_CONCURRENCY || autoQueue.length === 0) return;
+
+  drainScheduled = true;
+  whenIdle(() => {
+    drainScheduled = false;
+    while (inFlightAuto < AUTO_TRANSLATE_CONCURRENCY) {
+      const job = autoQueue.shift();
+      if (!job) break;
+      // Cards scroll out of an infinite feed faster than a queue drains; a job
+      // whose component is gone should cost nothing.
+      if (job.cancelled) continue;
+      inFlightAuto++;
+      job.run()
+        .catch(() => {})
+        .then(() => {
+          inFlightAuto--;
+          drainAutoQueue();
+        });
+    }
+    if (autoQueue.length > 0) drainAutoQueue();
+  });
+}
+
+/** Queue an auto-translation. Returns a cancel function for unmount. */
+function queueAutoTranslate(run: () => Promise<unknown>): () => void {
+  const job: QueuedJob = { run, cancelled: false };
+  autoQueue.push(job);
+  drainAutoQueue();
+  return () => { job.cancelled = true; };
+}
+
+// The same (text, language) pair is routinely asked for by more than one
+// component at once — a card owns the translate control while the component
+// rendering its body asks for the same text, and a repost shows the same body
+// twice on one screen. Sharing the promise makes those one request instead of
+// several identical ones landing on the edge function within a frame.
+type TranslateResult = {
+  translatedText?: string;
+  detectedLanguage?: { language: string };
+  sameLanguage?: boolean;
+};
+
+const inFlightRequests = new Map<string, Promise<TranslateResult>>();
+
+function requestTranslation(text: string, targetLang: string): Promise<TranslateResult> {
+  const key = `${text}-${targetLang}`;
+  const existing = inFlightRequests.get(key);
+  if (existing) return existing;
+
+  const request = (async () => {
+    const { data, error } = await supabase.functions.invoke('translate-text', {
+      body: { text, targetLang },
+    });
+    if (error) throw error;
+    return (data ?? {}) as TranslateResult;
+  })();
+
+  inFlightRequests.set(key, request);
+  // Settled either way — a failure must not pin the key and make every later
+  // attempt at this text replay the same rejection.
+  request.catch(() => {}).then(() => { inFlightRequests.delete(key); });
+  return request;
+}
+
 // Minimum text length for AI detection (avoid detecting single words)
 const MIN_TEXT_LENGTH_FOR_DETECTION = 15;
 
@@ -465,15 +569,30 @@ export function useTranslation(text: string, auto: boolean = true) {
   const userLangRef = useRef(userLang);
   useEffect(() => { userLangRef.current = userLang; }, [userLang]);
 
+  // Whether a request is out, tracked in a ref rather than read off `isLoading`.
+  //
+  // The state value is a snapshot of the render the callback was created in, so
+  // guarding on it rejected any second call made before React re-rendered —
+  // including the one auto-translate makes when the reader's language resolves
+  // a beat after mount. That request never went out and nothing ever retried
+  // it, which is why auto-translate did nothing at all for anyone not reading
+  // in the language the hook happened to start with.
+  const inFlightRef = useRef(false);
+
+  // Guards a late response against a reader who has since pressed "show
+  // original" or scrolled the component away.
+  const mountedRef = useRef(true);
+  useEffect(() => () => { mountedRef.current = false; }, []);
+
   // Nothing worth sending to the translator
   const isTooShort = !hasTranslatableText(text);
 
   const handleTranslate = useCallback(async () => {
-    if (!hasTranslatableText(text) || isLoading) return;
+    if (!hasTranslatableText(text) || inFlightRef.current) return;
 
     const targetLang = userLangRef.current;
     const cacheKey = `${text}-${targetLang}`;
-    
+
     if (translationCache.has(cacheKey)) {
       const cached = translationCache.get(cacheKey)!;
       if (isNoOpTranslation(cached.translated, text)) {
@@ -486,21 +605,15 @@ export function useTranslation(text: string, auto: boolean = true) {
       return;
     }
 
+    inFlightRef.current = true;
     setIsLoading(true);
     setError(null);
 
     try {
-      console.log('[Translate] Invoking translate-text, targetLang:', targetLang, 'text:', text.substring(0, 40));
-      const { data, error: fnError } = await supabase.functions.invoke('translate-text', {
-        body: { text, targetLang },
-      });
+      const data = await requestTranslation(text, targetLang);
 
-      console.log('[Translate] Response:', { data, fnError });
-
-      if (fnError) throw fnError;
-
-      if (!data || !data.translatedText) {
-        console.error('[Translate] No translatedText in response:', data);
+      if (!data.translatedText) {
+        if (!mountedRef.current) return;
         setError('Translation unavailable');
         setTimeout(() => setError(null), 3000);
         return;
@@ -521,21 +634,24 @@ export function useTranslation(text: string, auto: boolean = true) {
       // reader's language, which is most of them, every post looked translated
       // and none of them were.
       if (data.sameLanguage === true || isNoOpTranslation(translated, text)) {
-        setSourceLang(detected);
+        if (mountedRef.current) setSourceLang(detected);
         return;
       }
 
+      if (!mountedRef.current) return;
       setTranslatedText(translated);
       setSourceLang(detected);
       setIsTranslated(true);
     } catch (err) {
       console.error('[Translate] Translation failed:', err);
+      if (!mountedRef.current) return;
       setError('Translation unavailable');
       setTimeout(() => setError(null), 3000);
     } finally {
-      setIsLoading(false);
+      inFlightRef.current = false;
+      if (mountedRef.current) setIsLoading(false);
     }
-  }, [text, isLoading]);
+  }, [text]);
 
   const handleShowOriginal = useCallback(() => {
     setIsTranslated(false);
@@ -543,9 +659,14 @@ export function useTranslation(text: string, auto: boolean = true) {
 
   // Auto-translate.
   //
+  // Deferred, never immediate: the work is queued behind the page load and run
+  // a few at a time while the browser is idle (see queueAutoTranslate). The
+  // reader gets the page first and the translation a moment later, instead of
+  // the page waiting behind a burst of translate calls it did not ask for.
+  //
   // Fires once per (text, language) rather than per render: handleTranslate's
-  // identity changes when isLoading flips, so keying the effect on it directly
-  // would re-enter the moment the request settles.
+  // identity changes with `text`, so keying the effect on it directly would
+  // re-enter whenever a translation swapped the text out from under it.
   //
   // Reading a post the reader cannot read is the failure this removes, so it is
   // on by default and opting out is remembered. A reader who has pressed "show
@@ -559,6 +680,9 @@ export function useTranslation(text: string, auto: boolean = true) {
   // message accepts that; doing it silently to every message they receive does
   // not, and a direct message is not ours to upload on their behalf.
   const autoDoneRef = useRef<string | null>(null);
+  const translateRef = useRef(handleTranslate);
+  useEffect(() => { translateRef.current = handleTranslate; }, [handleTranslate]);
+
   useEffect(() => {
     if (!auto) return;
     if (!autoTranslateEnabled()) return;
@@ -568,9 +692,15 @@ export function useTranslation(text: string, auto: boolean = true) {
     if (autoDoneRef.current === key) return;
     autoDoneRef.current = key;
 
-    void handleTranslate();
-    // handleTranslate is intentionally absent: see above.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Already known — the cache survives a reload, so this is the common case on
+    // a refresh. No request to schedule, and waiting for idle would only show
+    // the reader a paragraph they cannot read before swapping it out.
+    if (translationCache.has(key)) {
+      void translateRef.current();
+      return;
+    }
+
+    return queueAutoTranslate(() => translateRef.current());
   }, [text, userLang, isTooShort, auto]);
 
   return {
@@ -640,23 +770,59 @@ export function TranslatableText({
     sharedCtx?.requestOriginal();
   };
 
+  // Rendered as the requested element and nothing else.
+  //
+  // This used to sit inside an AnimatePresence/motion.div pair for a 150ms
+  // cross-fade, which cost two things. Every post body, comment and chat line
+  // in an infinite feed carried its own framer-motion instance — the animation
+  // library is not free per node, and this is the most-repeated node in the
+  // app. And the wrapper div broke `line-clamp` on the containers that clamp
+  // this text, because the clamp applies to the element's own line boxes and a
+  // block child is not one. The key still restarts the fade on a translate
+  // toggle; the fade is now a CSS animation on the element itself.
   return (
-    <>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={isTranslated ? 'translated' : 'original'}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.15 }}
-        >
-          <Component className={cn("whitespace-pre-wrap", className)}>
-            {renderTextWithLinks(isTranslated ? translatedText : text)}
-          </Component>
-        </motion.div>
-      </AnimatePresence>
-    </>
+    <Component
+      key={isTranslated ? 'translated' : 'original'}
+      className={cn("whitespace-pre-wrap animate-in fade-in duration-150", className)}
+    >
+      {renderTextWithLinks(isTranslated ? translatedText : text)}
+    </Component>
   );
+}
+
+/**
+ * Split a translation that was requested as `title\n\n body` back into the two
+ * halves it was joined from.
+ *
+ * Cards translate their title and body in one call to halve the request count,
+ * which means guessing where the join was on the way back — and a translator is
+ * under no obligation to keep a blank line. When the separator does not survive,
+ * a naive `split('\n\n')[0]` hands the WHOLE body back as the title, and the
+ * title renders unclamped while the body is capped at a couple of hundred
+ * characters. That is how pressing translate on a long post silently expanded
+ * it to full length instead of translating it: the button behaved like "show
+ * more".
+ *
+ * With the separator gone there is no way to know where the title ended, so the
+ * whole translation goes to the body — the half that is clamped and has an
+ * expand control. Nothing is lost: the body text already opens with the title.
+ */
+export function splitTranslatedTitleAndBody(
+  translated: string,
+  title?: string,
+  body?: string,
+): [string | undefined, string | undefined] {
+  if (!title) return [undefined, translated];
+  if (!body) return [translated, undefined];
+
+  const separator = translated.indexOf('\n\n');
+  if (separator === -1) return [undefined, translated];
+
+  const translatedTitle = translated.slice(0, separator).trim();
+  const translatedBody = translated.slice(separator + 2).trim();
+  if (!translatedTitle || !translatedBody) return [undefined, translated];
+
+  return [translatedTitle, translatedBody];
 }
 
 /**
