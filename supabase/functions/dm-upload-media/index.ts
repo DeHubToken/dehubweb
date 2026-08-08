@@ -16,13 +16,27 @@ function jsonResponse(data: Record<string, unknown>, status = 200): Response {
 /**
  * Validate a DeHub JWT by calling the account_info endpoint.
  */
+/**
+ * Check a token really belongs to `address`.
+ *
+ * This used to probe `GET /account_info/{address}` and accept any 200. That
+ * route is a public profile endpoint with no guard — 200 for any token, and
+ * for no token at all — so the check passed for everyone and any caller could
+ * act as any address they knew. `/auth/verify` is guarded and answers with the
+ * address the token actually belongs to, so the claim can be compared against
+ * something the caller does not control.
+ */
 async function validateDeHubToken(token: string, address: string): Promise<boolean> {
   try {
-    const res = await fetch(`https://api.dehub.io/api/account_info/${address}`, {
+    const res = await fetch("https://api.dehub.io/api/auth/verify", {
       headers: { Authorization: `Bearer ${token}` },
     });
-    return res.ok;
+    if (!res.ok) return false;
+    const data = await res.json();
+    return typeof data?.address === "string"
+      && data.address.toLowerCase() === address.toLowerCase();
   } catch {
+    // Fail closed: an unreachable auth service must not authenticate anyone.
     return false;
   }
 }

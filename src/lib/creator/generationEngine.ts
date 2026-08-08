@@ -11,7 +11,7 @@
  * functions only after the transfer confirms.
  */
 import { supabase } from '@/integrations/supabase/client';
-import { invokeAi } from '@/lib/ai-invoke';
+import { invokeAi, dehubAuthHeaders } from '@/lib/ai-invoke';
 
 export type GenerationKind = 'image' | 'video' | 'audio' | 'model3d';
 
@@ -661,7 +661,13 @@ export async function generateAudio(
 async function functionHeaders(): Promise<Record<string, string>> {
   const { data: session } = await supabase.auth.getSession();
   const token = session?.session?.access_token ?? SUPABASE_ANON_KEY;
-  return { apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${token}` };
+  return {
+    apikey: SUPABASE_ANON_KEY,
+    Authorization: `Bearer ${token}`,
+    // The paid audio functions authenticate on the DeHub token rather than the
+    // Supabase session, so it has to travel with these too.
+    ...dehubAuthHeaders(),
+  };
 }
 
 /** Lift the edge function's own `error` out of a failed response. */

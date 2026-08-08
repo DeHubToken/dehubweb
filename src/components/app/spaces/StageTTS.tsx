@@ -3,6 +3,7 @@ import { Volume2, Send, Loader2, Search, Play, Square, Mic, MicOff } from 'lucid
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { dehubAuthHeaders } from '@/lib/ai-invoke';
 import { toast } from 'sonner';
 import { useStage } from '@/contexts/StageContext';
 import { useAuth } from '@/contexts/AuthContext';
@@ -151,6 +152,8 @@ export function StageTTS() {
             'Content-Type': 'application/json',
             apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
             Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            // elevenlabs-tts authenticates on the DeHub token, not this one.
+            ...dehubAuthHeaders(),
           },
           body: JSON.stringify({ text: text.trim(), voiceId: selectedVoice }),
         }

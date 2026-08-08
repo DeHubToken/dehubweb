@@ -34,7 +34,8 @@ import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { supabase } from '@/integrations/supabase/client';
-import { invokeAi } from '@/lib/ai-invoke';
+import { invokeAi, dehubAuthHeaders } from '@/lib/ai-invoke';
+import { useAiCredits } from '@/hooks/use-ai-credits';
 import { SEOHead } from '@/components/SEOHead';
 import { MarkdownText } from '@/lib/markdown';
 
@@ -71,8 +72,6 @@ import { useAIConversation } from '@/hooks/use-ai-conversation';
 import { streamChat } from '@/lib/stream-chat';
 import { useVoiceAssistant } from '@/hooks/use-voice-assistant';
 import { VoiceAssistantOverlay } from '@/components/app/assistant/VoiceAssistantOverlay';
-import { useVoiceCredits } from '@/hooks/use-voice-credits';
-import { VoiceCreditPurchaseModal } from '@/components/app/assistant/VoiceCreditPurchaseModal';
 import { AiToolProcessingSkeleton } from '@/components/app/assistant/AiToolProcessingSkeleton';
 import { useAssistantUserContext } from '@/hooks/use-assistant-user-context';
 import { LiquidGlassBubble } from '@/components/ui/liquid-glass-bubble';
@@ -684,25 +683,29 @@ export default function AssistantPage() {
   // User context for AI assistant personalization
   const userContext = useAssistantUserContext();
 
-  // Voice credits (prepaid bundles)
-  const voiceCredits = useVoiceCredits(walletAddress);
-  const [voiceCreditModalOpen, setVoiceCreditModalOpen] = useState(false);
-  const voiceCreditDeductRef = useRef(voiceCredits.deductCredit);
+  /**
+   * Voice runs on the DHB credit balance like everything else.
+   *
+   * It used to keep its own prepaid counter in localStorage — forgeable in
+   * devtools, per-device, and gone on a cache clear. Now that fal-ai-tools
+   * charges the balance itself (Whisper 60 + Dia 80 = 140 DHB an exchange),
+   * that counter was gating the same exchange a second time, so someone with
+   * credit could still be told they had none.
+   */
+  const { balanceDhb: voiceBalanceDhb, refresh: refreshVoiceBalance } = useAiCredits();
   const voiceStopRef = useRef<(() => void) | null>(null);
-  useEffect(() => { voiceCreditDeductRef.current = voiceCredits.deductCredit; }, [voiceCredits.deductCredit]);
 
   // Voice Assistant hook (Whisper STT + Dia TTS via fal.ai)
   const voiceAssistant = useVoiceAssistant({
     onTranscript: (text) => {
-      // Deduct a voice credit per exchange
-      const hasCredit = voiceCreditDeductRef.current();
-      if (!hasCredit) {
-        voiceStopRef.current?.();
-        toast.error('Voice credits exhausted — purchase more to continue');
-        setVoiceCreditModalOpen(true);
-        return;
-      }
       voiceTranscriptHandlerRef.current?.(text);
+    },
+    onPaymentRequired: () => {
+      // The server refused the charge mid-conversation. Stop rather than let
+      // the mic keep listening into a session that cannot answer.
+      voiceStopRef.current?.();
+      refreshVoiceBalance();
+      toast.error('Out of DHB credit — top up to keep talking.');
     },
     isChatLoading: isLoading,
   });
@@ -779,6 +782,8 @@ export default function AssistantPage() {
             'Content-Type': 'application/json',
             apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
             Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+            // elevenlabs-tts authenticates on the DeHub token, not this one.
+            ...dehubAuthHeaders(),
           },
           body: JSON.stringify({ text: cleanText, voiceId: elevenLabsVoiceId }),
         }
@@ -2861,8 +2866,10 @@ export default function AssistantPage() {
                       <button
                         type="button"
                         onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : () => {
-                          if (!voiceCredits.hasCredits) {
-                            setVoiceCreditModalOpen(true);
+                          // 140 DHB an exchange; refuse to open the mic with
+                          // nothing to pay the first one with.
+                          if (voiceBalanceDhb < 140) {
+                            toast.error('Voice chat costs 140 DHB an exchange. Top up to start.');
                             return;
                           }
                           voiceAssistant.startVoiceMode();
@@ -3036,8 +3043,8 @@ export default function AssistantPage() {
                   <button
                     type="button"
                     onClick={voiceAssistant.isVoiceMode ? voiceAssistant.stopVoiceMode : () => {
-                      if (!voiceCredits.hasCredits) {
-                        setVoiceCreditModalOpen(true);
+                      if (voiceBalanceDhb < 140) {
+                        toast.error('Voice chat costs 140 DHB an exchange. Top up to start.');
                         return;
                       }
                       voiceAssistant.startVoiceMode();
@@ -3115,17 +3122,7 @@ export default function AssistantPage() {
         recordingDuration={voiceAssistant.recordingDuration}
         onStop={voiceAssistant.stopVoiceMode}
         onStopSpeaking={voiceAssistant.stopSpeaking}
-        remainingCredits={voiceCredits.credits}
-      />
-
-      {/* Voice Credit Purchase Modal */}
-      <VoiceCreditPurchaseModal
-        open={voiceCreditModalOpen}
-        onOpenChange={setVoiceCreditModalOpen}
-        currentCredits={voiceCredits.credits}
-        onPurchaseComplete={(bundleSize) => {
-          voiceCredits.addCredits(bundleSize);
-        }}
+        remainingCredits={Math.floor(voiceBalanceDhb / 140)}
       />
 
       <PostModal
