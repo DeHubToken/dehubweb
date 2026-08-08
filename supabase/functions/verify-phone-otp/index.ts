@@ -93,8 +93,15 @@ serve(async (req) => {
   }
 
   // Code was correct — find or create the auth user for this phone.
+  // auth.users.phone is stored without the leading "+" (send-sms-hook has to
+  // add it back for CloudTalk for the same reason) — get_user_id_by_phone and
+  // createUser/updateUserById's phone field all need the stripped form to
+  // actually match what Supabase persisted, or every call here 404s the
+  // existing row and collides with it on createUser instead.
+  const supabasePhone = phone.replace(/^\+/, "");
+
   const { data: existingUserId, error: lookupError } = await supabaseAdmin.rpc("get_user_id_by_phone", {
-    p_phone: phone,
+    p_phone: supabasePhone,
   });
   if (lookupError) {
     console.error("verify-phone-otp: get_user_id_by_phone failed", lookupError);
@@ -128,7 +135,7 @@ serve(async (req) => {
     }
   } else {
     const { error: createError } = await supabaseAdmin.auth.admin.createUser({
-      phone,
+      phone: supabasePhone,
       phone_confirm: true,
       email: syntheticEmail,
       email_confirm: true,
