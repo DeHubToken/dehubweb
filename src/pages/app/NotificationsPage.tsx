@@ -46,6 +46,7 @@ import { PostCard } from '@/components/app/cards/PostCard';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { FeedItem } from '@/types/feed.types';
 import { REACTION_VERBS, reactionMeta, type PostReaction } from '@/lib/reactions';
+import { getNotificationFilterLabel, type NotificationTypeFilter } from '@/lib/notification-filter-labels';
 
 // ============================================================================
 // NotificationPostCards — fetches full NFT data and renders real feed cards
@@ -224,19 +225,17 @@ function bundleNotifications(notifications: DeHubNotification[], enrichedAvatars
 }
 
 // Notification type tabs
-type NotificationTypeFilter = 'all' | 'likes' | 'follows' | 'comments' | 'reposts' | 'subscriptions' | 'tips' | 'livestreams' | 'stores' | 'features';
-
-const tabs: { labelKey: string; value: NotificationTypeFilter; icon: React.ElementType }[] = [
-  { labelKey: 'notifications.title', value: 'all', icon: Bell },
-  { labelKey: 'notifications.likes', value: 'likes', icon: ThumbsUp },
-  { labelKey: 'notifications.follows', value: 'follows', icon: UserPlus },
-  { labelKey: 'notifications.comments', value: 'comments', icon: MessageSquareText },
-  { labelKey: 'notifications.reposts', value: 'reposts', icon: Repeat2 },
-  { labelKey: 'notifications.features', value: 'features', icon: Lightbulb },
-  { labelKey: 'notifications.stores', value: 'stores', icon: Store },
-  { labelKey: 'notifications.subscriptions', value: 'subscriptions', icon: Users },
-  { labelKey: 'notifications.tips', value: 'tips', icon: Gem },
-  { labelKey: 'notifications.livestreams', value: 'livestreams', icon: Zap },
+const tabs: { value: NotificationTypeFilter; icon: React.ElementType }[] = [
+  { value: 'all', icon: Bell },
+  { value: 'likes', icon: ThumbsUp },
+  { value: 'follows', icon: UserPlus },
+  { value: 'comments', icon: MessageSquareText },
+  { value: 'reposts', icon: Repeat2 },
+  { value: 'features', icon: Lightbulb },
+  { value: 'stores', icon: Store },
+  { value: 'subscriptions', icon: Users },
+  { value: 'tips', icon: Gem },
+  { value: 'livestreams', icon: Zap },
 ];
 
 // Map tab filter to notification types.
@@ -1609,9 +1608,11 @@ export default function NotificationsPage() {
     return countableNotifications.filter(n => !n.read && allowedTypes.includes(n.type)).length;
   };
 
-  const activeTabLabel = t(
-    tabs.find((tab) => tab.value === activeTab)?.labelKey ?? 'notifications.title'
+  const translateFilterLabel = (filter: NotificationTypeFilter) => getNotificationFilterLabel(
+    filter,
+    (key, defaultLabel) => t(key, { defaultValue: defaultLabel }),
   );
+  const activeTabLabel = translateFilterLabel(activeTab);
 
   return (
     // data-notifications-page scopes the light-mode remaps in index.css; the
@@ -1841,7 +1842,7 @@ export default function NotificationsPage() {
                             tabButtonPositions.current[tab.value] = el;
                           }}
                           onClick={() => handleTabClick(tab.value)}
-                          aria-label={t(tab.labelKey)}
+                          aria-label={translateFilterLabel(tab.value)}
                           aria-pressed={activeTab === tab.value}
                           className={`relative z-40 flex-shrink-0 sm:flex-shrink sm:flex-1 w-[53px] h-[53px] sm:w-auto sm:h-auto sm:py-2.5 flex items-center justify-center rounded-xl transition-colors duration-200 ${
                             activeTab === tab.value
@@ -1864,7 +1865,7 @@ export default function NotificationsPage() {
                         </button>
                       </TooltipTrigger>
                       <TooltipContent side="bottom" sideOffset={8} className="hidden sm:block">
-                        {t(tab.labelKey)}
+                        {translateFilterLabel(tab.value)}
                       </TooltipContent>
                     </Tooltip>
                   );
