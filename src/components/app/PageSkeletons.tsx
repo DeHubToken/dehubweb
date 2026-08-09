@@ -2,16 +2,37 @@
  * Page Skeletons
  * ==============
  * Lightweight skeleton screens shown on first load of each page.
- * Each skeleton matches the actual page layout precisely.
+ *
+ * Split of responsibilities: the page's STRUCTURAL chrome — nav pills, tab
+ * bentos, sticky headers, sidebars — still renders as skeleton, because that is
+ * what holds the layout still across the boot HTML → Suspense fallback → real
+ * component handoff. The CONTENT area does not: a stack of grey blocks
+ * pretending to be posts reads as a broken page, so it shows the animated DeHub
+ * mark instead (ContentLoader below). Content is the part whose shape we can't
+ * know anyway.
+ *
  * Liquid glass aesthetic: bg-white/[0.06] shimmer, border-white/[0.08] outlines.
  */
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
+import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 
 const SK = "bg-white/[0.06]";
 const SK_LIGHT = "bg-black/10";
+
+/**
+ * Content-area stand-in: the animated DeHub mark, centred in whatever box the
+ * page's chrome leaves for it.
+ *
+ * The mark fades in on a 250 ms delay (see index.css `.dehub-loader-mark`), so
+ * a page whose data is already cached still shows nothing at all rather than
+ * blipping a loader — the same flash guard the route-level fallback relies on.
+ */
+function ContentLoader({ minHeight = '46vh' }: { minHeight?: string }) {
+  return <DeHubPageLoader minHeight={minHeight} />;
+}
 
 
 // ─── Home Feed ──────────────────────────────────────────────────────────────
@@ -46,42 +67,8 @@ export function FeedSkeleton() {
   return (
     <div className="min-w-0 flex-1">
       <FeedTabBarSkeleton />
-      <div className="p-2 sm:p-3 pt-0 sm:pt-0 space-y-3">
-        {/* Mixed feed cards */}
-        {[0, 1, 2, 3].map((i) => (
-          <div key={i} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
-            <div className="flex items-center gap-3 pb-3">
-              <Skeleton className={`w-9 h-9 rounded-md flex-shrink-0 ${SK}`} />
-              <div className="space-y-1.5 flex-1">
-                <Skeleton className={`h-4 w-28 rounded ${SK}`} />
-                <Skeleton className={`h-3 w-16 rounded ${SK}`} />
-              </div>
-              <Skeleton className={`h-7 w-7 rounded-md ${SK}`} />
-            </div>
-            {i === 1 ? (
-              <div className="space-y-2">
-                <Skeleton className={`h-4 w-full rounded ${SK}`} />
-                <Skeleton className={`h-4 w-5/6 rounded ${SK}`} />
-                <Skeleton className={`h-4 w-2/3 rounded ${SK}`} />
-              </div>
-            ) : i === 2 ? (
-              <div className="grid grid-cols-2 gap-1.5">
-                <Skeleton className={`aspect-square rounded-lg ${SK}`} />
-                <Skeleton className={`aspect-square rounded-lg ${SK}`} />
-                <Skeleton className={`aspect-square rounded-lg ${SK}`} />
-                <Skeleton className={`aspect-square rounded-lg ${SK}`} />
-              </div>
-            ) : (
-              <Skeleton className={`w-full aspect-video rounded-lg ${SK}`} />
-            )}
-            <div className="flex items-center gap-4 pt-3">
-              <Skeleton className={`h-8 w-14 rounded-xl ${SK}`} />
-              <Skeleton className={`h-8 w-14 rounded-xl ${SK}`} />
-              <Skeleton className={`h-8 w-14 rounded-xl ${SK}`} />
-              <Skeleton className={`h-8 w-14 rounded-xl ml-auto ${SK}`} />
-            </div>
-          </div>
-        ))}
+      <div className="p-2 sm:p-3 pt-0 sm:pt-0">
+        <ContentLoader minHeight="60vh" />
       </div>
     </div>
   );
@@ -92,44 +79,7 @@ export function FeedSkeleton() {
  * sticky tab bar above it is already mounted by HomePage.
  */
 export function FeedBodySkeleton() {
-  return (
-    <div className="space-y-3">
-      {[0, 1, 2, 3].map((i) => (
-        <div key={i} className="rounded-xl border border-white/[0.12] bg-white/[0.03] p-3">
-          <div className="flex items-center gap-3 pb-3">
-            <Skeleton className={`w-9 h-9 rounded-md flex-shrink-0 ${SK}`} />
-            <div className="space-y-1.5 flex-1">
-              <Skeleton className={`h-4 w-28 rounded ${SK}`} />
-              <Skeleton className={`h-3 w-16 rounded ${SK}`} />
-            </div>
-            <Skeleton className={`h-7 w-7 rounded-md ${SK}`} />
-          </div>
-          {i === 1 ? (
-            <div className="space-y-2">
-              <Skeleton className={`h-4 w-full rounded ${SK}`} />
-              <Skeleton className={`h-4 w-5/6 rounded ${SK}`} />
-              <Skeleton className={`h-4 w-2/3 rounded ${SK}`} />
-            </div>
-          ) : i === 2 ? (
-            <div className="grid grid-cols-2 gap-1.5">
-              <Skeleton className={`aspect-square rounded-lg ${SK}`} />
-              <Skeleton className={`aspect-square rounded-lg ${SK}`} />
-              <Skeleton className={`aspect-square rounded-lg ${SK}`} />
-              <Skeleton className={`aspect-square rounded-lg ${SK}`} />
-            </div>
-          ) : (
-            <Skeleton className={`w-full aspect-video rounded-lg ${SK}`} />
-          )}
-          <div className="flex items-center gap-4 pt-3">
-            <Skeleton className={`h-8 w-14 rounded-xl ${SK}`} />
-            <Skeleton className={`h-8 w-14 rounded-xl ${SK}`} />
-            <Skeleton className={`h-8 w-14 rounded-xl ${SK}`} />
-            <Skeleton className={`h-8 w-14 rounded-xl ml-auto ${SK}`} />
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+  return <ContentLoader minHeight="60vh" />;
 }
 
 /** Left desktop sidebar shell — mirrors real DesktopSidebar geometry exactly */
@@ -263,24 +213,9 @@ export function ExploreSkeleton() {
         </div>
       </div>
 
-      {/* Content cards */}
-      <div className="p-2 sm:p-3 pt-0 space-y-3">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="rounded-xl border border-white/[0.08] bg-transparent p-3 space-y-3">
-            <div className="flex items-center gap-3">
-              <Skeleton className={`w-9 h-9 rounded-md flex-shrink-0 ${SK}`} />
-              <div className="space-y-1.5 flex-1">
-                <Skeleton className={`h-4 w-28 ${SK}`} />
-                <Skeleton className={`h-3 w-16 ${SK}`} />
-              </div>
-            </div>
-            <Skeleton className={`h-48 w-full rounded-lg ${SK}`} />
-            <div className="flex gap-4 pt-1">
-              <Skeleton className={`h-8 w-16 rounded-xl ${SK}`} />
-              <Skeleton className={`h-8 w-16 rounded-xl ${SK}`} />
-            </div>
-          </div>
-        ))}
+      {/* Content */}
+      <div className="p-2 sm:p-3 pt-0">
+        <ContentLoader />
       </div>
     </div>
   );
@@ -328,18 +263,7 @@ export function ProfileSkeleton() {
       </div>
 
       {/* Content */}
-      {Array.from({ length: 2 }).map((_, i) => (
-        <div key={i} className="rounded-xl border border-white/[0.08] bg-transparent p-3 space-y-3">
-          <div className="flex items-center gap-3">
-            <Skeleton className={`w-9 h-9 rounded-md flex-shrink-0 ${SK}`} />
-            <div className="space-y-1.5 flex-1">
-              <Skeleton className={`h-4 w-28 ${SK}`} />
-              <Skeleton className={`h-3 w-16 ${SK}`} />
-            </div>
-          </div>
-          <Skeleton className={`h-40 w-full rounded-lg ${SK}`} />
-        </div>
-      ))}
+      <ContentLoader minHeight="38vh" />
     </div>
   );
 }
@@ -364,26 +288,11 @@ export function MessagesSkeleton() {
           <Skeleton className={`h-10 w-full rounded-xl ${SK}`} />
         </div>
 
-        {/* Public chat pinned row */}
-        <div className="flex items-center gap-3 p-4">
-          <Skeleton className={`w-12 h-12 rounded-xl ${SK}`} />
-          <div className="flex-1 space-y-1.5">
-            <Skeleton className={`h-4 w-28 ${SK}`} />
-            <Skeleton className={`h-3 w-40 ${SK}`} />
-          </div>
+        {/* Conversation list — the bento above is full-height, so the mark
+            centres in the remaining space rather than needing its own box. */}
+        <div className="flex-1 min-h-0 flex items-center justify-center">
+          <ContentLoader minHeight="100%" />
         </div>
-
-        {/* Conversation rows */}
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="flex items-center gap-3 px-4 py-3">
-            <Skeleton className={`w-12 h-12 rounded-xl ${SK}`} />
-            <div className="flex-1 space-y-1.5">
-              <Skeleton className={`h-4 w-32 ${SK}`} />
-              <Skeleton className={`h-3 w-48 ${SK}`} />
-            </div>
-            <Skeleton className={`h-3 w-10 ${SK}`} />
-          </div>
-        ))}
       </div>
     </div>
   );
@@ -423,16 +332,8 @@ export function NotificationsSkeleton() {
       </div>
 
       {/* Notification rows */}
-      <div className="px-3 sm:px-4 space-y-1">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className="flex items-center gap-3 py-3">
-            <Skeleton className={`w-10 h-10 rounded-xl ${SK}`} />
-            <div className="flex-1 space-y-1.5">
-              <Skeleton className={`h-4 w-3/4 ${SK}`} />
-              <Skeleton className={`h-3 w-24 ${SK}`} />
-            </div>
-          </div>
-        ))}
+      <div className="px-3 sm:px-4">
+        <ContentLoader />
       </div>
     </div>
   );
@@ -445,7 +346,6 @@ export function LeaderboardSkeleton() {
   const { theme } = useAppTheme();
   const isLight = theme === 'light';
   const bentoClass = isLight ? 'bg-zinc-50 border border-zinc-200' : 'bg-zinc-900';
-  const rowBorder = isLight ? 'border-zinc-200' : 'border-zinc-800/50';
   const sk = isLight ? 'bg-zinc-200' : SK;
 
   return (
@@ -480,17 +380,7 @@ export function LeaderboardSkeleton() {
 
       {/* Table Bento */}
       <div className={cn('rounded-2xl overflow-hidden', bentoClass)}>
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div key={i} className={cn('flex items-center gap-3 px-4 sm:px-6 py-3 last:border-b-0 border-b', rowBorder)}>
-            <Skeleton className={cn('w-7 h-7 rounded-lg', sk)} />
-            <Skeleton className={cn('w-10 h-10 rounded-md', sk)} />
-            <div className="flex-1 space-y-1.5">
-              <Skeleton className={cn('h-4 w-28', sk)} />
-              <Skeleton className={cn('h-3 w-20', sk)} />
-            </div>
-            <Skeleton className={cn('h-4 w-16', sk)} />
-          </div>
-        ))}
+        <ContentLoader minHeight="42vh" />
       </div>
     </div>
   );
@@ -523,32 +413,8 @@ export function SettingsSkeleton() {
       </div>
 
       {/* Content Bento */}
-      <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6 space-y-6">
-        {/* Cover photo placeholder */}
-        <Skeleton className={`w-full h-32 rounded-xl ${SK}`} />
-        {/* Avatar + name */}
-        <div className="flex items-center gap-4 -mt-4">
-          <Skeleton className={`w-20 h-20 rounded-full ${SK}`} />
-          <div className="space-y-2">
-            <Skeleton className={`h-4 w-32 ${SK}`} />
-            <Skeleton className={`h-3 w-48 ${SK}`} />
-          </div>
-        </div>
-        {/* Form fields */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-2">
-            <Skeleton className={`h-4 w-24 ${SK}`} />
-            <Skeleton className={`h-10 w-full rounded-lg ${SK}`} />
-          </div>
-          <div className="space-y-2">
-            <Skeleton className={`h-4 w-20 ${SK}`} />
-            <Skeleton className={`h-10 w-full rounded-lg ${SK}`} />
-          </div>
-        </div>
-        <div className="space-y-2">
-          <Skeleton className={`h-4 w-12 ${SK}`} />
-          <Skeleton className={`h-20 w-full rounded-lg ${SK}`} />
-        </div>
+      <div className="bg-zinc-900 rounded-2xl p-4 sm:p-6">
+        <ContentLoader minHeight="42vh" />
       </div>
     </div>
   );
@@ -593,25 +459,7 @@ export function FeaturesSkeleton() {
       </div>
 
       {/* Feature request cards */}
-      <div className="space-y-3">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="bg-zinc-900 rounded-2xl p-4 space-y-3">
-            <div className="flex items-center gap-3">
-              <Skeleton className={`w-9 h-9 rounded-md ${SK}`} />
-              <div className="space-y-1.5 flex-1">
-                <Skeleton className={`h-4 w-40 ${SK}`} />
-                <Skeleton className={`h-3 w-20 ${SK}`} />
-              </div>
-            </div>
-            <Skeleton className={`h-4 w-full ${SK}`} />
-            <Skeleton className={`h-4 w-3/4 ${SK}`} />
-            <div className="flex gap-3 pt-1">
-              <Skeleton className={`h-8 w-16 rounded-xl ${SK}`} />
-              <Skeleton className={`h-8 w-16 rounded-xl ${SK}`} />
-            </div>
-          </div>
-        ))}
-      </div>
+      <ContentLoader minHeight="38vh" />
     </div>
   );
 }
@@ -636,20 +484,7 @@ export function GridSkeleton() {
         </div>
       </div>
       {/* Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-        {Array.from({ length: 9 }).map((_, i) => (
-          <div key={i} className="space-y-2">
-            <Skeleton className={`aspect-video rounded-xl ${SK}`} />
-            <div className="flex items-center gap-2">
-              <Skeleton className={`w-8 h-8 rounded-md ${SK}`} />
-              <div className="flex-1 space-y-1">
-                <Skeleton className={`h-3 w-3/4 ${SK}`} />
-                <Skeleton className={`h-2 w-1/2 ${SK}`} />
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+      <ContentLoader minHeight="46vh" />
     </div>
   );
 }
@@ -668,10 +503,8 @@ export function GenericPageSkeleton() {
             <Skeleton className={`h-4 w-48 ${SK}`} />
           </div>
         </div>
-        <Skeleton className={`h-4 w-full ${SK}`} />
-        <Skeleton className={`h-4 w-3/4 mt-2 ${SK}`} />
       </div>
-      <Skeleton className={`h-64 w-full rounded-xl ${SK}`} />
+      <ContentLoader />
     </div>
   );
 }

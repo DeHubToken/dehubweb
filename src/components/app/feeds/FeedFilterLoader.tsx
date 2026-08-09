@@ -10,9 +10,10 @@
  *  - War theme: a panel-sized cut-down of the boot sequence (WarPreloader).
  *    Deliberately CSS-only — no THREE.js, no second WebGL context. The boot
  *    globe plays once per session; this can fire a dozen times while somebody
- *    tries out sort options, so it has to stay cheap.
- *  - Everything else: a single glass card with a ring spinner, matching the
- *    monochrome system (no colour, no bespoke chrome).
+ *    tries out sort options, so it has to stay cheap. Kept as-is — it is the
+ *    war theme's own chrome, not a generic spinner.
+ *  - Everything else: a single glass card carrying the animated DeHub mark,
+ *    the same wait the rest of the app shows for a whole view.
  *
  * The loader REPLACES the list rather than overlaying it. Unmounting ~30 feed
  * cards is what removes the render stall people were reading as a freeze; an
@@ -22,6 +23,7 @@
 
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { cn } from '@/lib/utils';
+import { DeHubLoader } from '@/components/app/DeHubLoader';
 
 /** Cells in the indeterminate meter. Purely decorative; no progress is known. */
 const MINI_CELL_COUNT = 22;
@@ -57,11 +59,10 @@ export function FeedFilterLoader({
         className,
       )}
     >
-      <span
-        aria-hidden="true"
-        className="h-8 w-8 animate-spin rounded-full border-2 border-white/[0.12] border-t-white/70"
-      />
-      <p className="text-xs uppercase tracking-[0.18em] text-zinc-400">{label}</p>
+      <DeHubLoader size={56} />
+      {/* text-zinc-400 rather than an opacity utility: `.dehub-loader-mark`
+          animates opacity, which would override it. */}
+      <p className="dehub-loader-mark text-xs uppercase tracking-[0.18em] text-zinc-400">{label}</p>
     </div>
   );
 }

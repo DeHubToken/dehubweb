@@ -24,6 +24,28 @@
           var t = localStorage.getItem('dehub.theme') || 'system';
           if (t === 'christmas') t = 'winter'; // legacy name migration
           d.dataset.theme = t;
+
+          // color-scheme is what the browser paints the CANVAS with — the
+          // backdrop it shows for a document before that document's own styles
+          // have painted, plus the scrollbars and the overscroll/rubber-band
+          // area. Left undeclared it computes to `normal`, i.e. light, i.e.
+          // WHITE, which is the flash on reload: nothing in the app's CSS can
+          // prevent it, because it happens before any stylesheet applies. Eight
+          // of the eleven themes (cosmic/hazy/swarms/lavalamp/winter/war/osaka/
+          // jungle) make body AND #app-root `transparent !important` so their
+          // canvas shows through, leaving <html> as the only thing that paints
+          // — so on those the white canvas stays visible for the whole of that
+          // window rather than being covered by an opaque body.
+          d.style.colorScheme = t === 'light' ? 'light' : 'dark';
+
+          // Paint the theme's own backdrop NOW, at head-parse time, rather than
+          // waiting for the render-blocking stylesheet that normally carries it.
+          // Values mirror the settled `background-color` of <html> per theme —
+          // keep them in sync with index.css if a theme's backdrop changes.
+          var BG = { light: '#f9f8f4', osaka: '#0a0812', jungle: '#16110c' };
+          d.style.setProperty('--boot-bg', BG[t] || '#000');
+          d.style.setProperty('--boot-fg', t === 'light' ? '#09090b' : '#fff');
+
           d.dataset.dimLights = localStorage.getItem('dehub.dimLights') === '1' ? 'true' : 'false';
           var s = Number(localStorage.getItem('dehub.dimStrength'));
           if (!(s > 0)) s = 50;
@@ -32,6 +54,11 @@
         } catch (e) { /* never block boot */ }
       })();
     </script>
+    <!-- Belt and braces for the line above: if the inline script is stripped
+         (the Lovable mirror hosts do this) the meta still gets the browser off
+         its white canvas default. The script wins where both run, because it
+         can tell the light theme apart. -->
+    <meta name="color-scheme" content="dark light" />
     <title>DeHub — Open Source, User Owned Social Media</title>
     <meta name="description" content="DeHub is the open source, user-owned and censorship-resistant social platform for Web3 creators and communities.">
     <meta name="author" content="DeHub" />
@@ -258,11 +285,16 @@
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap" />
     </noscript>
 
-    <!-- Critical CSS — prevents white flash -->
+    <!-- Critical CSS — prevents the pre-stylesheet flash.
+         Colours come from --boot-bg / --boot-fg, set per theme by the head
+         script above, so this no longer hard-codes #000 for all eleven themes:
+         that made the light theme flash BLACK on every reload, the same bug in
+         the other direction. The fallbacks in var() cover the stripped-script
+         case. -->
     <style>
       *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-      html, body { height: 100%; width: 100%; background-color: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-      #root { height: 100%; min-height: 100dvh; }
+      html, body { height: 100%; width: 100%; background-color: var(--boot-bg, #000); color: var(--boot-fg, #fff); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+      #root { height: 100%; min-height: 100dvh; background-color: var(--boot-bg, #000); }
     </style>
   
   

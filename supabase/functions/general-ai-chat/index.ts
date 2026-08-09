@@ -3,6 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2.89.0";
 import { rateLimitByIp } from "../_shared/auth.ts";
 import { agentConfigured, runAgentLoop, type AgentSurface } from "../_shared/assistant-agent.ts";
 import { streamAgentLoop, teeStreamText } from "../_shared/assistant-agent-stream.ts";
+import { LCS_ASSISTANT_KNOWLEDGE } from "../_shared/dehub-platform-knowledge.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -1134,6 +1135,8 @@ When users ask "why are tokens minting?" or about token minting - DHB uses a bur
 - **Gas Fees Covered for Platform Wallets**: The platform covers all gas costs for users who signed up through the platform (Web3Auth wallets). Users who connected their own external wallet (e.g. MetaMask, Coinbase Wallet) are responsible for their own gas fees.
 - **Public Leaderboards**: All creator earnings are blockchain-verified and transparent
 - **Multi-Chain**: Built on L1s and EVM L2s for speed and reliability
+
+${LCS_ASSISTANT_KNOWLEDGE}
 
 ## Platform Values
 - **Censorship Resistance**: Guaranteed forever through decentralisation
