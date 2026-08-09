@@ -7,7 +7,7 @@ export interface SolanaMintStatus {
 }
 
 export async function getSolanaStatus(): Promise<SolanaMintStatus> {
-  return apiCall<SolanaMintStatus>('/solana/status');
+  return apiCall<SolanaMintStatus>('/api/solana/status');
 }
 
 export async function confirmSolanaMint(params: {
@@ -15,7 +15,7 @@ export async function confirmSolanaMint(params: {
   mintAddress: string;
   txSignature: string;
 }): Promise<{ success: boolean; tokenId: number; mintAddress: string }> {
-  return apiCall('/solana/confirm-mint', {
+  return apiCall('/api/solana/confirm-mint', {
     method: 'POST',
     body: params,
   });
