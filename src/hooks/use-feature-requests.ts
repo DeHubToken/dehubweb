@@ -28,6 +28,7 @@ export interface FeatureRequest {
   author_username: string | null;
   author_avatar: string | null;
   image_url: string | null;
+  shipped_url?: string | null;
   vote_count: number;
   like_count: number;
   dislike_count: number;
@@ -290,7 +291,9 @@ const shippedNotifications = () =>
 export interface ShippedFeatureNotice {
   id: string;
   title: string;
+  description: string;
   category: FeatureCategory;
+  shipped_url: string | null;
   updated_at: string;
 }
 
@@ -312,7 +315,7 @@ export function useUnnotifiedShippedFeatures() {
         const [shippedRes, notifiedRes] = await Promise.all([
           supabase
             .from('feature_requests')
-            .select('id, title, category, updated_at')
+            .select('id, title, description, category, shipped_url, updated_at')
             .eq('author_wallet_address', wallet)
             .in('status', ['completed', 'shipped']),
           shippedNotifications()
