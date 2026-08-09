@@ -7,12 +7,13 @@ import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
 import { useDragTabIndicator } from '@/hooks/use-drag-tab-indicator';
 import { useTranslation } from 'react-i18next';
-import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, UsersRound, ShoppingBag, Lightbulb } from 'lucide-react';
+import { Settings, ThumbsUp, MessageSquareText, Gem, Users, Bell, Check, Loader2, UserPlus, Trophy, AlertTriangle, Video, Zap, Trash2, MailOpen, Mail, Repeat2, Star, X as XIcon, Store, ShoppingBag, Lightbulb } from 'lucide-react';
 import { AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { 
   useNotifications, 
   useUnreadNotificationCount, 
@@ -223,20 +224,19 @@ function bundleNotifications(notifications: DeHubNotification[], enrichedAvatars
 }
 
 // Notification type tabs
-type NotificationTypeFilter = 'all' | 'likes' | 'follows' | 'comments' | 'reposts' | 'subscriptions' | 'tips' | 'livestreams' | 'communities' | 'stores' | 'features';
+type NotificationTypeFilter = 'all' | 'likes' | 'follows' | 'comments' | 'reposts' | 'subscriptions' | 'tips' | 'livestreams' | 'stores' | 'features';
 
 const tabs: { labelKey: string; value: NotificationTypeFilter; icon: React.ElementType }[] = [
-  { labelKey: 'notifications.all', value: 'all', icon: Bell },
+  { labelKey: 'notifications.title', value: 'all', icon: Bell },
   { labelKey: 'notifications.likes', value: 'likes', icon: ThumbsUp },
   { labelKey: 'notifications.follows', value: 'follows', icon: UserPlus },
   { labelKey: 'notifications.comments', value: 'comments', icon: MessageSquareText },
   { labelKey: 'notifications.reposts', value: 'reposts', icon: Repeat2 },
   { labelKey: 'notifications.features', value: 'features', icon: Lightbulb },
-  { labelKey: 'notifications.communities', value: 'communities', icon: UsersRound },
   { labelKey: 'notifications.stores', value: 'stores', icon: Store },
-  { labelKey: 'notifications.subs', value: 'subscriptions', icon: Users },
+  { labelKey: 'notifications.subscriptions', value: 'subscriptions', icon: Users },
   { labelKey: 'notifications.tips', value: 'tips', icon: Gem },
-  { labelKey: 'notifications.live', value: 'livestreams', icon: Zap },
+  { labelKey: 'notifications.livestreams', value: 'livestreams', icon: Zap },
 ];
 
 // Map tab filter to notification types.
@@ -254,7 +254,6 @@ const filterTypeMap: Record<NotificationTypeFilter, string[] | null> = {
   comments: ['comment', 'comment_reply', 'mention', 'feature_request_comment', 'governance_comment'],
   reposts: ['repost', 'quote'],
   features: ['feature_request_like', 'feature_request_comment'],
-  communities: ['community_join'],
   stores: ['store_order', 'fraction_offer', 'fraction_offer_accepted', 'fraction_offer_rejected', 'fraction_purchased'],
   subscriptions: ['subscription', 'ppv_purchase'],
   tips: ['tip', 'bounty_available', 'bounty_claimed'],
@@ -1610,6 +1609,10 @@ export default function NotificationsPage() {
     return countableNotifications.filter(n => !n.read && allowedTypes.includes(n.type)).length;
   };
 
+  const activeTabLabel = t(
+    tabs.find((tab) => tab.value === activeTab)?.labelKey ?? 'notifications.title'
+  );
+
   return (
     // data-notifications-page scopes the light-mode remaps in index.css; the
     // portaled settings sheet / actors drawer carry the same attribute
@@ -1622,8 +1625,8 @@ export default function NotificationsPage() {
         <div data-page-bento className="bg-zinc-900 rounded-2xl px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <BrandIcon src={notificationsIcon} alt="Notifications" className="w-9 h-9 object-contain" />
-              <h1 className="font-bold text-white text-lg">{t('notifications.title')}</h1>
+              <BrandIcon src={notificationsIcon} alt={activeTabLabel} className="w-9 h-9 object-contain" />
+              <h1 className="font-bold text-white text-lg" aria-live="polite">{activeTabLabel}</h1>
               {totalUnread > 0 && (
                 <span className="px-2 py-0.5 text-xs font-medium bg-red-500 text-white rounded-lg">
                   {totalUnread > 99 ? '99+' : totalUnread}
@@ -1649,7 +1652,11 @@ export default function NotificationsPage() {
               )}
               <Sheet>
                 <SheetTrigger asChild>
-                  <button className="p-2 rounded-xl hover:bg-zinc-800 transition-colors">
+                  <button
+                    type="button"
+                    aria-label={t('notifications.settings')}
+                    className="p-2 rounded-xl hover:bg-zinc-800 transition-colors"
+                  >
                     <Settings className="w-5 h-5 text-zinc-400" />
                   </button>
                 </SheetTrigger>
@@ -1825,32 +1832,41 @@ export default function NotificationsPage() {
                 {tabs.map((tab) => {
                   const count = getTabCount(tab.value);
                   return (
-                    <button
-                      key={tab.value}
-                      ref={(el) => {
-                        setNotifTabRef(tab.value)(el);
-                        tabButtonPositions.current[tab.value] = el;
-                      }}
-                      onClick={() => handleTabClick(tab.value)}
-                      className={`relative z-40 flex-shrink-0 sm:flex-shrink sm:flex-1 w-[53px] h-[53px] sm:w-auto sm:h-auto sm:py-2.5 flex items-center justify-center rounded-xl transition-colors duration-200 ${
-                        activeTab === tab.value
-                          ? 'text-white'
-                          : 'text-zinc-400 hover:text-white'
-                      }`}
-                    >
-                      <span className="relative z-10">
-                        <tab.icon className={tab.value === 'reposts' ? 'w-[26.5px] h-[26.5px]' : 'w-[22.5px] h-[22.5px]'} />
-                        {count > 0 && (
-                          <span className={`absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-1 flex items-center justify-center text-[10px] font-bold rounded-full leading-none transition-colors duration-200 ${
+                    <Tooltip key={tab.value}>
+                      <TooltipTrigger asChild>
+                        <button
+                          type="button"
+                          ref={(el) => {
+                            setNotifTabRef(tab.value)(el);
+                            tabButtonPositions.current[tab.value] = el;
+                          }}
+                          onClick={() => handleTabClick(tab.value)}
+                          aria-label={t(tab.labelKey)}
+                          aria-pressed={activeTab === tab.value}
+                          className={`relative z-40 flex-shrink-0 sm:flex-shrink sm:flex-1 w-[53px] h-[53px] sm:w-auto sm:h-auto sm:py-2.5 flex items-center justify-center rounded-xl transition-colors duration-200 ${
                             activeTab === tab.value
-                              ? 'bg-white/20 text-white'
-                              : 'bg-red-500 text-white'
-                          }`}>
-                            {count > 99 ? '99+' : count}
+                              ? 'text-white'
+                              : 'text-zinc-400 hover:text-white'
+                          }`}
+                        >
+                          <span className="relative z-10" aria-hidden="true">
+                            <tab.icon className={tab.value === 'reposts' ? 'w-[26.5px] h-[26.5px]' : 'w-[22.5px] h-[22.5px]'} />
+                            {count > 0 && (
+                              <span className={`absolute -top-1.5 -right-2.5 min-w-[16px] h-[16px] px-1 flex items-center justify-center text-[10px] font-bold rounded-full leading-none transition-colors duration-200 ${
+                                activeTab === tab.value
+                                  ? 'bg-white/20 text-white'
+                                  : 'bg-red-500 text-white'
+                              }`}>
+                                {count > 99 ? '99+' : count}
+                              </span>
+                            )}
                           </span>
-                        )}
-                      </span>
-                    </button>
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent side="bottom" sideOffset={8} className="hidden sm:block">
+                        {t(tab.labelKey)}
+                      </TooltipContent>
+                    </Tooltip>
                   );
                 })}
               </div>
