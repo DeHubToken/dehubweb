@@ -238,7 +238,10 @@ function FeatureCard({
   }, [showMenu]);
 
   return (
-    <div className="overflow-visible relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3">
+    <div
+      id={`feature-${feature.id}`}
+      className="overflow-visible relative rounded-xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] p-3 scroll-mt-52"
+    >
       {/* Header with three-dot menu */}
       <div className="flex items-start">
         <CardHeader
@@ -889,6 +892,12 @@ export default function FeaturesPage() {
       setInitialCategory('bug_fix');
       setDrawerOpen(true);
       setSearchParams({}, { replace: true });
+      return;
+    }
+
+    const requestedTab = searchParams.get('tab');
+    if (requestedTab === 'requests' || requestedTab === 'shipping' || requestedTab === 'shipped') {
+      setActiveTab(requestedTab);
     }
   }, [searchParams, setSearchParams]);
 
@@ -896,6 +905,15 @@ export default function FeaturesPage() {
   const features = useMemo(() => featuresData?.pages.flat() ?? [], [featuresData]);
   const { data: shippedFeatures, isLoading: isLoadingShipped } = useShippedFeatures();
   const { data: inProgressFeatures, isLoading: isLoadingInProgress } = useInProgressFeatures();
+
+  useEffect(() => {
+    const featureId = searchParams.get('feature');
+    if (activeTab !== 'shipped' || !featureId || !shippedFeatures?.some((feature) => feature.id === featureId)) return;
+
+    requestAnimationFrame(() => {
+      document.getElementById(`feature-${featureId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }, [activeTab, searchParams, shippedFeatures]);
 
   const { data: userVotes } = useUserVotes();
   const voteMutation = useVoteFeatureRequest();
