@@ -2,9 +2,14 @@
  * Active session management.
  *
  * Ported from mobile's `services/session.service.ts` so both clients drive the
- * same `/auth/sessions` endpoints — a session revoked on one client disappears
- * on the other. The shapes below intentionally match mobile's `Session`
- * interface field-for-field; do not diverge them without changing both.
+ * same session endpoints — a session revoked on one client disappears on the
+ * other. The shapes below intentionally match mobile's `Session` interface
+ * field-for-field; do not diverge them without changing both.
+ *
+ * Paths carry the `/api` prefix. Mobile's axios client is configured with a
+ * base URL that already ends in `/api`, so its calls read `/auth/sessions`;
+ * apiCall() here resolves against the bare origin, so the same string would
+ * hit `https://api.dehub.io/auth/sessions` and 404 on every request.
  */
 import { apiCall, getRefreshToken } from './core';
 
@@ -21,14 +26,14 @@ export interface Session {
 }
 
 export async function fetchSessions(): Promise<Session[]> {
-  const res = await apiCall<{ status: boolean; sessions: Session[] }>('/auth/sessions', {
+  const res = await apiCall<{ status: boolean; sessions: Session[] }>('/api/auth/sessions', {
     requiresAuth: true,
   });
   return res?.sessions ?? [];
 }
 
 export async function revokeSession(deviceId: string): Promise<void> {
-  await apiCall(`/auth/sessions/${encodeURIComponent(deviceId)}`, {
+  await apiCall(`/api/auth/sessions/${encodeURIComponent(deviceId)}`, {
     method: 'DELETE',
     requiresAuth: true,
   });
@@ -43,7 +48,7 @@ export async function revokeOtherSessions(): Promise<number> {
   const refreshToken = getRefreshToken();
   if (!refreshToken) throw new Error('No refresh token available');
   const res = await apiCall<{ status: boolean; revokedCount: number }>(
-    '/auth/sessions/revoke-others',
+    '/api/auth/sessions/revoke-others',
     {
       method: 'POST',
       body: { refreshToken },
