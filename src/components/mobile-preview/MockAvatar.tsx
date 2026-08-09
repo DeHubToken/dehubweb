@@ -24,7 +24,7 @@ export function MockAvatar({ name, size = 'md', className }: MockAvatarProps) {
   return (
     <div
       className={cn(
-        'rounded-full flex items-center justify-center text-white font-bold flex-shrink-0',
+        'rounded-lg flex items-center justify-center text-white font-bold flex-shrink-0',
         COLORS[colorIndex],
         sizeClasses[size],
         className

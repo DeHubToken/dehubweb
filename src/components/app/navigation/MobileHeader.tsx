@@ -15,24 +15,30 @@ import { useAnyOverlayOpen } from '@/lib/overlay-open';
 import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { WarLogo } from '@/components/app/war/WarLogoLazy';
+// The centred slot is narrow, so this bar wears the bare mark rather than the
+// wordmark. Same asset the collapsed desktop rail uses; it is a white PNG, and
+// the light theme's `header … img[alt="dehub"]` rule inverts it to ink on paper
+// — so it must NOT be swapped for the black mark here the way the rail does it,
+// or light mode would invert a black mark back to white.
+import dehubMark from '@/assets/dehub-logo-compact.png';
 
 const HeaderLogo = memo(function HeaderLogo({ onClick }: { onClick: (e: React.MouseEvent) => void }) {
   const { theme } = useAppTheme();
   return (
-    <button onClick={onClick} className="block cursor-pointer">
+    <button onClick={onClick} className="block cursor-pointer" aria-label="dehub home">
       {theme === 'war' ? (
         // Fixed width here rather than w-auto: the hologram is a canvas, which
         // has no intrinsic aspect ratio to derive a width from.
-        <WarLogo src="/dehub-header-logo.png" alt="dehub" className="h-7 w-[93px]" />
+        <WarLogo src={dehubMark} alt="dehub" className="h-7 w-[33px]" />
       ) : (
         <img
-          src="/dehub-header-logo.png"
+          src={dehubMark}
           alt="dehub"
-          className="h-7 md:h-7 w-auto"
+          className="h-7 w-auto"
           loading="eager"
           decoding="async"
           fetchPriority="high"
-          width={93}
+          width={33}
           height={28}
         />
       )}
@@ -128,32 +134,11 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
 
   return (
     <header data-mobile-header data-scrolled={scrolled ? 'true' : 'false'} className={`lg:hidden fixed top-0 left-0 right-0 ${anyOverlayOpen ? 'z-[40]' : 'z-[60]'} px-4 h-11 flex items-center justify-between pointer-events-auto transition-transform duration-300 ease-in-out ${(!navVisible && !isOpen && !anyOverlayOpen) ? '-translate-y-full' : 'translate-y-0'} ${isOpen ? 'bg-transparent' : 'bg-black'}`}>
-      <div className="flex items-center gap-3 ml-[-8px]">
-        <HeaderLogo onClick={handleLogoClick} />
-      </div>
-      
-      <div className="flex items-center gap-3">
-        
-        {/* Notifications Button - only visible when logged in.
-            When the post overlay is opened from the feed, keep the DEHUB header exactly as it was. */}
-        {isAuthenticated && (
-          <button
-            onClick={() => navigate('/app/notifications')}
-            className={`relative flex items-center justify-center transition-colors ${isNotificationsActive ? 'text-white' : 'text-zinc-400'}`}
-            aria-label="Notifications"
-          >
-            <Bell className="w-[26px] h-[26px]" />
-            {totalNotifUnread > 0 && (
-              <span className="absolute -top-1.5 -right-2 min-w-[18px] h-[18px] px-[4px] bg-red-500 text-white text-[10px] font-bold rounded-md flex items-center justify-center leading-none">
-                {totalNotifUnread > 99 ? '99+' : totalNotifUnread}
-              </span>
-            )}
-          </button>
-        )}
-
-        {/* Direct post-page URL access: back button replaces the menu/settings toggle.
-            When opened as an overlay from the feed, the feed's tab bar already hosts a back button,
-            so we keep the normal menu/avatar here to preserve the "you never left the feed" feel. */}
+      {/* Profile — left slot.
+          Direct post-page URL access: back button replaces the menu/settings toggle.
+          When opened as an overlay from the feed, the feed's tab bar already hosts a back button,
+          so we keep the normal menu/avatar here to preserve the "you never left the feed" feel. */}
+      <div className="flex items-center">
         {isAuthenticated ? (
           <Drawer open={isOpen} onOpenChange={onToggle}>
 
@@ -169,6 +154,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
                         src={buildAvatarUrl(user.address, user.avatarImageUrl)}
                         alt={`${user.displayName || user.username}'s avatar`}
                         className="object-cover"
+                        loading="eager"
                       />
                     )}
                     <AvatarFallback className="bg-zinc-700 text-white text-xs font-medium">
@@ -178,7 +164,7 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
                 </button>
               ) : (
                 <button
-                  className="p-2 rounded-full transition-colors mr-[-16.5px]"
+                  className="p-2 rounded-lg transition-colors -ml-2"
                   aria-label="Toggle menu"
                 >
                   <Menu className="w-[31px] h-[31px] text-white" />
@@ -194,10 +180,36 @@ export function MobileHeader({ isOpen, onToggle, children }: MobileHeaderProps) 
         ) : (
           <button
             onClick={handleMenuClick}
-            className="p-2 rounded-full transition-colors mr-[-16.5px]"
+            className="p-2 rounded-lg transition-colors -ml-2"
             aria-label="Log in"
           >
             <Menu className="w-[31px] h-[31px] text-white" />
+          </button>
+        )}
+      </div>
+
+      {/* dehub mark — centred on the bar itself, not between the side slots, so
+          it stays put whether or not the notification bell is rendered (it is
+          signed-in only) and whichever left control is showing. */}
+      <div className="absolute inset-y-0 left-1/2 -translate-x-1/2 flex items-center">
+        <HeaderLogo onClick={handleLogoClick} />
+      </div>
+
+      {/* Notifications — right slot, only visible when logged in.
+          When the post overlay is opened from the feed, keep the DEHUB header exactly as it was. */}
+      <div className="flex items-center">
+        {isAuthenticated && (
+          <button
+            onClick={() => navigate('/app/notifications')}
+            className={`relative flex items-center justify-center transition-colors ${isNotificationsActive ? 'text-white' : 'text-zinc-400'}`}
+            aria-label="Notifications"
+          >
+            <Bell className="w-[26px] h-[26px]" />
+            {totalNotifUnread > 0 && (
+              <span className="absolute -top-1.5 -right-2 min-w-[18px] h-[18px] px-[4px] bg-red-500 text-white text-[10px] font-bold rounded-md flex items-center justify-center leading-none">
+                {totalNotifUnread > 99 ? '99+' : totalNotifUnread}
+              </span>
+            )}
           </button>
         )}
       </div>

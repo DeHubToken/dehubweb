@@ -177,7 +177,7 @@ const ProfileAvatar = memo(function ProfileAvatar({ address }: { address: string
   const avatarUrl = profile?.avatarUrl;
 
   return (
-    <div className="w-9 h-9 rounded-full bg-white/[0.08] flex items-center justify-center overflow-hidden flex-shrink-0">
+    <div className="w-9 h-9 rounded-lg bg-white/[0.08] flex items-center justify-center overflow-hidden flex-shrink-0">
       {avatarUrl ? (
         <img src={avatarUrl} alt="" loading="lazy" className="w-full h-full object-cover" />
       ) : (
