@@ -23,6 +23,7 @@ import { PasswordStrengthMeter } from '@/components/app/wallet-setup/PasswordStr
 import { checkLegacyAccount, type LegacyAccountMatch } from '@/lib/wallet-core/legacy-detect';
 import { getWalletProtection } from '@/lib/wallet-core/protection';
 import { PasskeyCancelledError } from '@/lib/wallet-core/biometric-unlock';
+import { SettingsRow } from '@/components/app/settings/SettingsRow';
 
 const inputClass = 'h-12 bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl';
 
@@ -391,31 +392,23 @@ export function WalletRecoveryTools() {
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <KeyRound className="w-5 h-5 text-zinc-500" />
-          <div>
-            <p className="text-white font-medium">Export Private Key</p>
-            <p className="text-zinc-500 text-sm">Back up your wallet{hasMultipleOldAccounts ? ' — required to keep access if you switch accounts below' : ''}</p>
-          </div>
-        </div>
-        <Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-md" onClick={() => setExportOpen(true)}>
+      <SettingsRow
+        icon={<KeyRound />}
+        title="Export Private Key"
+        description={<>Back up your wallet{hasMultipleOldAccounts ? ' — required to keep access if you switch accounts below' : ''}</>}
+        action={<Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl" onClick={() => setExportOpen(true)}>
           Export
-        </Button>
-      </div>
+        </Button>}
+      />
       {hasMultipleOldAccounts && (
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Repeat className="w-5 h-5 text-zinc-500" />
-          <div>
-            <p className="text-white font-medium">Switch to a different old account</p>
-            <p className="text-zinc-500 text-sm">Had two old accounts (e.g. one via Google, one via email)? Swap which one is active</p>
-          </div>
-        </div>
-        <Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-md" onClick={() => setSwitchOpen(true)}>
+      <SettingsRow
+        icon={<Repeat />}
+        title="Switch to a different old account"
+        description="Had two old accounts (e.g. one via Google, one via email)? Swap which one is active"
+        action={<Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl" onClick={() => setSwitchOpen(true)}>
           Switch
-        </Button>
-      </div>
+        </Button>}
+      />
       )}
       <ExportPrivateKeyDialog open={exportOpen} onOpenChange={setExportOpen} />
       {hasMultipleOldAccounts && <SwitchOldAccountDialog open={switchOpen} onOpenChange={setSwitchOpen} />}

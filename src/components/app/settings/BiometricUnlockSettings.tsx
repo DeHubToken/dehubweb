@@ -29,6 +29,7 @@ import {
   PasskeyCancelledError,
 } from '@/lib/wallet-core/biometric-unlock';
 import { PasswordStrengthMeter } from '@/components/app/wallet-setup/PasswordStrengthMeter';
+import { SettingsRow } from '@/components/app/settings/SettingsRow';
 
 const inputClass = 'h-12 bg-white/10 border-white/10 text-white placeholder:text-white/40 rounded-xl';
 
@@ -289,29 +290,23 @@ export function BiometricUnlockSettings() {
   return (
     <>
       <div className="space-y-3">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <Fingerprint className="w-5 h-5 text-zinc-500 shrink-0" />
-            <div>
-              <p className="text-white font-medium">Biometric unlock</p>
-              <p className="text-zinc-500 text-sm">
-                {wraps.length === 0
-                  ? 'Unlock your wallet with your fingerprint or face instead of a password'
-                  : `${wraps.length} device${wraps.length === 1 ? '' : 's'} can unlock this wallet with biometrics`}
-              </p>
-            </div>
-          </div>
-          {thisDeviceCouldEnroll && (
+        <SettingsRow
+          icon={<Fingerprint />}
+          title="Biometric unlock"
+          description={wraps.length === 0
+            ? 'Unlock your wallet with your fingerprint or face instead of a password'
+            : `${wraps.length} device${wraps.length === 1 ? '' : 's'} can unlock this wallet with biometrics`}
+          action={thisDeviceCouldEnroll ? (
             <Button
               variant="outline"
               size="sm"
-              className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-md shrink-0"
+              className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl shrink-0"
               onClick={() => setEnrollOpen(true)}
             >
               Add device
             </Button>
-          )}
-        </div>
+          ) : undefined}
+        />
 
         {wraps.length > 0 && (
           <ul className="space-y-2 pl-8">
