@@ -116,9 +116,9 @@ export function MyStoreTab({ createListingOpen = false, onCreateListingClose, cr
         {/* Content on top */}
         <div className="relative z-10 p-4 flex items-center gap-3">
           {activeStore?.avatar_url ? (
-            <img src={activeStore.avatar_url} className="w-14 h-14 rounded-full object-cover border-2 border-white/10 shrink-0" alt="" />
+            <img src={activeStore.avatar_url} className="w-14 h-14 rounded-lg object-cover border-2 border-white/10 shrink-0" alt="" />
           ) : (
-            <div className="w-14 h-14 rounded-full bg-black/40 border-2 border-white/10 flex items-center justify-center text-lg font-bold text-white shrink-0">
+            <div className="w-14 h-14 rounded-lg bg-black/40 border-2 border-white/10 flex items-center justify-center text-lg font-bold text-white shrink-0">
               {(activeStore?.name || 'S')[0].toUpperCase()}
             </div>
           )}

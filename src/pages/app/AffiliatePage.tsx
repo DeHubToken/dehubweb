@@ -459,7 +459,7 @@ function AffiliateRow({ entry, viewerWallet }: { entry: AffiliateReferralEntry; 
       to={to}
       className="flex items-center gap-3 p-3 rounded-xl bg-white/[0.03] border border-white/10 hover:bg-white/[0.06] transition-colors"
     >
-      <Avatar className="w-10 h-10 rounded-full shrink-0">
+      <Avatar className="w-10 h-10 shrink-0">
         {profile?.avatarUrl ? <AvatarImage src={profile.avatarUrl} alt={name} /> : null}
         <AvatarFallback className="bg-white/10 text-white text-sm">
           {(name || "?")[0]?.toUpperCase()}

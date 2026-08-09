@@ -347,7 +347,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
                   <img 
                     src={assistantAvatar} 
                     alt="" 
-                    className="w-7 h-7 rounded-full shrink-0 mt-0.5"
+                    className="w-7 h-7 rounded-lg shrink-0 mt-0.5"
                   />
                 )}
                 {message.role === 'user' ? (
@@ -371,7 +371,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
               <img 
                 src={assistantAvatar} 
                 alt="" 
-                className="w-7 h-7 rounded-full shrink-0"
+                className="w-7 h-7 rounded-lg shrink-0"
               />
               <div className="bg-white/10 rounded-2xl px-4 py-3 flex items-center gap-2">
                 <Loader2 className="w-4 h-4 animate-spin text-white/60" />
@@ -490,7 +490,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
           <DrawerHeader className="border-b border-white/10 pb-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <img src={assistantAvatar} alt="" className="w-8 h-8 rounded-full" />
+                <img src={assistantAvatar} alt="" className="w-8 h-8 rounded-lg" />
                 <DrawerTitle className="text-white text-base">{t('aiChat.title')}</DrawerTitle>
               </div>
               <div className="flex items-center gap-1">
@@ -557,7 +557,7 @@ export function PostAIChat({ isOpen, onClose, postContext }: PostAIChatProps) {
           <div className="p-3 border-b border-white/10 shrink-0">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <img src={assistantAvatar} alt="" className="w-7 h-7 rounded-full" />
+                <img src={assistantAvatar} alt="" className="w-7 h-7 rounded-lg" />
                 <span className="text-white text-sm font-medium truncate max-w-[200px]">{t('aiChat.title')}</span>
               </div>
               <div className="flex items-center gap-0.5">
