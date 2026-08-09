@@ -263,7 +263,13 @@ export async function ensureFreshToken(): Promise<string> {
   throw new AuthenticationError('Session expired. Please sign in again.');
 }
 
-// Base API call function - calls DeHub API directly
+// Base API call function - calls DeHub API directly.
+//
+// `endpoint` resolves against the bare origin, so it must include the `/api`
+// prefix. Mobile's axios client sets a base URL ending in `/api` and therefore
+// writes paths without it; copying one of those strings across verbatim
+// produces a URL that 404s on every call, which surfaces as a generic "failed
+// to load" toast rather than anything pointing at the path.
 export async function apiCall<T>(
   endpoint: string,
   options: {
