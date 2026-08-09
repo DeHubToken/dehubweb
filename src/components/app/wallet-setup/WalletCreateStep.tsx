@@ -235,16 +235,16 @@ export function WalletCreateStep({ userId, onComplete }: WalletCreateStepProps) 
     setBusy(true);
     try {
       const assessment = await assessPassword(password);
-      if (!assessment.longEnough) {
-        setError(`Password must be at least ${MIN_PASSWORD_LENGTH} characters`);
-        return;
-      }
       if (assessment.breached === true) {
         setError('This password has appeared in a data breach — choose a different one');
         return;
       }
       if (!assessment.acceptable) {
-        setError('Choose a stronger password (mix letters, numbers, and symbols)');
+        // Reuse the meter's own wording rather than a second, vaguer sentence.
+        // The two used to disagree — the meter asked for 12 characters while
+        // submit replied "mix letters, numbers, and symbols" — which reads as
+        // the rules changing on you at the last step.
+        setError(assessment.warnings[0] ?? 'Choose a stronger password');
         return;
       }
     } finally {
