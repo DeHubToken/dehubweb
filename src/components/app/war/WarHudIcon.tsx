@@ -116,6 +116,79 @@ const GLYPHS: ReadonlyArray<readonly [string, LucideIcon]> = [
   ['wand', Wand2],
 ];
 
+type ThemeIconKey =
+  | 'home' | 'posts' | 'images' | 'videos' | 'subscriptions' | 'audio'
+  | 'live' | 'fractions' | 'pinned' | 'search' | 'messages' | 'bookmarks'
+  | 'wand' | 'communities' | 'careers' | 'features' | 'glossary'
+  | 'governance' | 'trophy' | 'notifications' | 'settings' | 'stages'
+  | 'assistant' | 'lock' | 'profile';
+
+/**
+ * Raster icon replacements shared by every non-War themed page.
+ *
+ * Like GLYPHS, matching uses the unhashed part of Vite's asset URL. Keeping
+ * this in BrandIcon means a page opts into every themed set once; page
+ * components never grow theme branches or import twenty-four variants.
+ */
+const THEME_ICON_KEYS: ReadonlyArray<readonly [string, ThemeIconKey]> = [
+  ['home-3d-icon', 'home'],
+  ['comment-3d-icon', 'posts'],
+  ['image-frame-3d-icon', 'images'],
+  ['filmstrip-3d-icon', 'videos'],
+  ['subs-3d-icon', 'subscriptions'],
+  ['audio-3d-icon', 'audio'],
+  ['live-3d-icon', 'live'],
+  ['fractions-3d-icon', 'fractions'],
+  ['star-3d-icon', 'pinned'],
+  ['search-3d-icon', 'search'],
+  ['search-icon', 'search'],
+  ['messages-3d-icon', 'messages'],
+  ['messages-icon', 'messages'],
+  ['chat-bubble', 'messages'],
+  ['bookmark-3d-icon', 'bookmarks'],
+  ['bookmark-icon', 'bookmarks'],
+  ['wand', 'wand'],
+  ['communities-title-icon', 'communities'],
+  ['careers-briefcase', 'careers'],
+  ['features-lightbulb', 'features'],
+  ['glossary-icon', 'glossary'],
+  ['governance-shield', 'governance'],
+  ['trophy-icon', 'trophy'],
+  ['notifications-icon', 'notifications'],
+  ['settings-icon', 'settings'],
+  ['stages-mic-icon', 'stages'],
+  ['ai-sparkle-icon', 'assistant'],
+  ['ai-star-icon', 'assistant'],
+  ['lock-3d', 'lock'],
+  ['padlock', 'lock'],
+  ['profile-icon', 'profile'],
+  ['dehub-originals', 'videos'],
+];
+
+const FULL_RASTER_THEMES = new Set(['hazy', 'swarms', 'winter', 'osaka', 'jungle']);
+const SYSTEM_REFRESHED_KEYS = new Set<ThemeIconKey>([
+  'wand', 'communities', 'careers', 'features', 'glossary', 'governance',
+  'trophy', 'notifications', 'settings', 'stages', 'assistant', 'lock', 'profile',
+]);
+
+export function resolveThemeIconKey(src: string): ThemeIconKey | null {
+  for (const [stem, key] of THEME_ICON_KEYS) {
+    if (src.includes(stem)) return key;
+  }
+  return null;
+}
+
+/** Return a public, cacheable WebP URL when this theme owns the icon. */
+export function resolveThemeIconAsset(src: string, theme: string): string | null {
+  const key = resolveThemeIconKey(src);
+  if (!key) return null;
+  if (FULL_RASTER_THEMES.has(theme)) return `/theme-icons/${theme}/${key}.webp`;
+  if (theme === 'system' && SYSTEM_REFRESHED_KEYS.has(key)) {
+    return `/theme-icons/system/${key}.webp`;
+  }
+  return null;
+}
+
 /*
  * DELIBERATELY NOT MAPPED, even though they are images of a similar size:
  *
@@ -202,7 +275,8 @@ export function BrandIcon({ src, alt = '', className, ...imgProps }: BrandIconPr
     );
   }
 
-  return <img src={src} alt={alt} className={className} {...imgProps} />;
+  const themedSrc = resolveThemeIconAsset(src, theme) ?? src;
+  return <img src={themedSrc} alt={alt} className={className} {...imgProps} />;
 }
 
 export default WarHudIcon;
