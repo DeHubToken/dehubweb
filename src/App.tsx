@@ -346,7 +346,7 @@ function AppContent() {
             path="/app/builder"
             element={
               <ErrorBoundary compact label="Builder">
-                <Suspense fallback={null}>
+                <Suspense fallback={<PageLoader />}>
                   <BuilderPage />
                 </Suspense>
               </ErrorBoundary>
@@ -357,7 +357,7 @@ function AppContent() {
             path="/app/builder/preview/:id"
             element={
               <ErrorBoundary compact label="Builder preview">
-                <Suspense fallback={null}>
+                <Suspense fallback={<PageLoader />}>
                   <BuilderPreviewPage />
                 </Suspense>
               </ErrorBoundary>
@@ -453,7 +453,7 @@ function AppContent() {
               <Route path="post/:postId/info" element={<Suspense fallback={<PageLoader />}><PostInfoPage /></Suspense>} />
               {/* Launchpad — hidden, no nav links, reachable by URL only */}
               <Route path="launchpad" element={<Suspense fallback={<PageLoader />}><LaunchpadPage /></Suspense>}>
-                <Route path="create" element={<Suspense fallback={null}><LaunchpadCreatePage /></Suspense>} />
+                <Route path="create" element={<Suspense fallback={<PageLoader />}><LaunchpadCreatePage /></Suspense>} />
               </Route>
               <Route path="launchpad/:mintId" element={<Suspense fallback={<PageLoader />}><LaunchpadCoinPage /></Suspense>} />
             </Route>
@@ -474,7 +474,7 @@ function AppContent() {
 
             {/* Launchpad — public URL alias (hidden, no nav links) */}
             <Route path="/launchpad" element={<Suspense fallback={<PageLoader />}><LaunchpadPage /></Suspense>}>
-              <Route path="create" element={<Suspense fallback={null}><LaunchpadCreatePage /></Suspense>} />
+              <Route path="create" element={<Suspense fallback={<PageLoader />}><LaunchpadCreatePage /></Suspense>} />
             </Route>
             <Route path="/launchpad/:mintId" element={<Suspense fallback={<PageLoader />}><LaunchpadCoinPage /></Suspense>} />
 
