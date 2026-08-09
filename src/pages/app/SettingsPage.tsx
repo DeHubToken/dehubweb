@@ -1628,7 +1628,7 @@ function PrivacySettings() {
               <Shield className="w-5 h-5 text-zinc-500" />
               <div>
                 <p className="text-white font-medium">{t('settings.walletUnlockInterval', 'Wallet unlock prompt')}</p>
-                <p className="text-zinc-500 text-sm">{t('settings.walletUnlockIntervalDesc', 'How long a wallet action like tipping or transferring stays unlocked before we ask again')}</p>
+                <p className="text-zinc-500 text-sm">{t('settings.walletUnlockIntervalDesc', 'How long your wallet stays unlocked for posting, tipping and transfers before we ask for your password again. Survives refreshes; logging out always locks it.')}</p>
               </div>
             </div>
             <SettingDrawerSelect

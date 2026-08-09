@@ -331,6 +331,18 @@ export async function getWalletAddress(opts?: { silent?: boolean }): Promise<str
     if (account.address) return account.address;
   }
 
+  // Nothing in memory — but the unlock may just be sitting in the vault,
+  // unread because this is the first signing attempt since a reload. Restoring
+  // it costs one IDB read; NOT doing it is what made "post right after signup"
+  // ask for the password a second time. Do this before any prompt.
+  try {
+    const w3a = await getOrInitWeb3Auth();
+    if (w3a.connected && w3a.provider) {
+      const accounts = await w3a.provider.request({ method: 'eth_accounts' }) as string[];
+      if (accounts?.length) return accounts[0];
+    }
+  } catch { /* fall through to the prompt below */ }
+
   throw opts?.silent
     ? new Error(noSigningProviderMessage())
     : requestUnlockForSigning();

@@ -12,20 +12,25 @@
  * The Smart Account address is identical to the old flow for the same key
  * (same EOA → same Safe), and the DeHub backend auth contract is unchanged.
  *
- * Decrypted key material lives ONLY in this module's in-memory variable —
- * never in sessionStorage/localStorage. Any script running on this origin
- * (a compromised npm dependency, an XSS payload) can read sessionStorage
- * directly, so a plaintext key there is a single point of failure; keeping
- * it JS-memory-only means it's gone the instant the page navigates or
- * reloads, at the cost of needing a fresh unlock after a refresh. The
- * encrypted seed at rest is protected by Argon2id + the user's wallet
- * password.
+ * Decrypted key material is never written to sessionStorage/localStorage. Any
+ * script running on this origin (a compromised npm dependency, an XSS payload)
+ * can read Web Storage directly, so a plaintext key there is a single point of
+ * failure.
+ *
+ * It IS persisted across page loads, as AES-GCM ciphertext under an
+ * unexportable CryptoKey held in IndexedDB (see wallet-core/key-vault.ts).
+ * Before that, the key was memory-only and every refresh — including the
+ * in-app hard navigation new accounts hit right after signup — silently
+ * relocked the wallet, so "unlock once" in the Settings copy was never true
+ * and people were retyping a 12-character password to send a post. The unlock
+ * now lasts until logout, bounded by the user's auto-lock interval.
  */
 
 import type { IProvider } from "@web3auth/base";
 import type { AccountAbstractionProvider } from "@web3auth/account-abstraction-provider";
 import { supabase } from "@/integrations/supabase/client";
 import { getWalletUnlockIntervalMs } from "@/hooks/use-wallet-unlock-interval";
+import { saveVaultSession, readVaultSession, clearVaultSession } from "@/lib/wallet-core/key-vault";
 
 const CHAIN_NAMESPACES = { EIP155: "eip155" } as const;
 
@@ -79,13 +84,18 @@ const AA_CHAIN_CONFIGS: Record<number, {
 const BASE_CHAIN = AA_CHAIN_CONFIGS[8453];
 
 // ── Module state ────────────────────────────────────────────────────────────
-// The decrypted key itself is intentionally NOT in this list — it lives only
-// in the sessionPrivKey variable below, never in Web Storage.
-const UNLOCKED_AT_KEY = "dehub_wallet_unlocked_at"; // sessionStorage: ms timestamp of last unlock, no secret
+// The decrypted key itself is intentionally NOT in Web Storage. It lives in the
+// sessionPrivKey variable below, plus — so it survives a reload — as ciphertext
+// in the IndexedDB vault. Only the timestamp below is stored in the clear.
+//
+// localStorage rather than sessionStorage: sessionStorage is per-tab and dies
+// with the tab, which would put the sync lock state out of step with a vault
+// that outlives it, and would report "locked" in a second tab that is not.
+const UNLOCKED_AT_KEY = "dehub_wallet_unlocked_at"; // ms timestamp of last unlock, no secret
 
 let sessionPrivKey: string | null = null; // hex, no 0x prefix
 let eoaProvider: IProvider | null = null;
-let eoaProviderPromise: Promise<IProvider> | null = null;
+let hydrationPromise: Promise<IProvider | null> | null = null; // vault → provider, in flight
 let storedAAProvider: AccountAbstractionProvider | null = null;
 let pendingAASetupPromise: Promise<AccountAbstractionProvider | null> | null = null;
 const storedChainAAProviders = new Map<number, AccountAbstractionProvider>();
@@ -166,21 +176,59 @@ async function buildProviderFromPrivKey(privKeyNo0x: string): Promise<IProvider>
   return pkProvider as unknown as IProvider;
 }
 
+function readUnlockedAt(): number | null {
+  try {
+    const raw = localStorage.getItem(UNLOCKED_AT_KEY);
+    const parsed = raw ? parseInt(raw, 10) : NaN;
+    return Number.isFinite(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+/** True once the unlock is older than the user's configured auto-lock interval. */
+function unlockExpired(unlockedAt: number | null): boolean {
+  const intervalMs = getWalletUnlockIntervalMs();
+  if (intervalMs === null) return false; // "Never" — no auto-lock timer
+  if (unlockedAt === null) return true;
+  return Date.now() - unlockedAt > intervalMs;
+}
+
 /**
  * Activate a wallet session from a decrypted private key (post-unlock/create).
- * Builds the EOA provider and keeps the key in memory ONLY — a page refresh
- * clears it, same as closing the tab, and the user unlocks again on demand.
+ * Builds the EOA provider, then hands the key to the IndexedDB vault so the
+ * next page load can pick it up without asking for the password again.
+ *
+ * The vault write is deliberately not awaited: it is an optimisation on the
+ * NEXT load, and making the caller wait on IDB would put a disk round-trip in
+ * front of the "Signing you in…" button for no benefit this load.
  */
 export async function activateWalletKey(privKey: string): Promise<IProvider> {
   const hex = normalizePrivKey(privKey);
   sessionPrivKey = hex;
-  // Only a timestamp, never the key itself — sessionStorage is world-readable
-  // to any script on the origin, so the raw key must never land there.
-  try { sessionStorage.setItem(UNLOCKED_AT_KEY, String(Date.now())); } catch { /* private mode */ }
+  const unlockedAt = Date.now();
+  // Only a timestamp, never the key itself — Web Storage is world-readable to
+  // any script on the origin, so the raw key must never land there. The key
+  // goes to the vault below, encrypted under an unexportable handle.
+  try { localStorage.setItem(UNLOCKED_AT_KEY, String(unlockedAt)); } catch { /* private mode */ }
   eoaProvider = await buildProviderFromPrivKey(hex);
-  eoaProviderPromise = null;
+  hydrationPromise = null;
+
+  const address = await addressFromProvider(eoaProvider);
+  if (address) void saveVaultSession(hex, address, unlockedAt);
+
   announceLockChange();
   return eoaProvider;
+}
+
+/** The EOA address a provider will sign with, or null if it won't say. */
+async function addressFromProvider(provider: IProvider): Promise<string | null> {
+  try {
+    const accounts = await provider.request({ method: "eth_accounts" }) as string[];
+    return accounts?.[0] ?? null;
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -197,26 +245,40 @@ function announceLockChange(): void {
 }
 
 /**
- * True when a decrypted key is available AND the user's configured
- * wallet-unlock interval (Settings → Account Security) hasn't elapsed since
- * they last entered their wallet password. Logging into DeHub never needs
- * this — only signing a wallet action (tip, transfer) does. Past the
- * configured window, auto-locks and returns false so the existing
- * dehub:wallet-unlock-required flow re-prompts for the password.
+ * True when a decrypted key is available in THIS page's memory AND the user's
+ * configured auto-lock interval (Settings → Account Security) hasn't elapsed.
+ * Logging into DeHub never needs this — only signing a wallet action does.
+ *
+ * Note this is the strict, synchronous reading: immediately after a reload it
+ * is false even though the vault holds a perfectly good unlock, because
+ * restoring from IDB is async and this is called from render paths. Anything
+ * deciding whether to PROMPT must consult isUnlockAvailable() instead, or it
+ * will ask for a password that isn't needed. This one is for callers that need
+ * to know whether they can sign right this instant.
  */
 export function isWalletUnlocked(): boolean {
   if (!sessionPrivKey) return false;
 
-  const intervalMs = getWalletUnlockIntervalMs();
-  if (intervalMs === null) return true; // "Never" — no auto-lock timer
+  if (unlockExpired(readUnlockedAt())) {
+    lockWallet();
+    return false;
+  }
+  return true;
+}
 
-  let unlockedAt: number | null = null;
-  try {
-    const raw = sessionStorage.getItem(UNLOCKED_AT_KEY);
-    unlockedAt = raw ? parseInt(raw, 10) : null;
-  } catch { /* ignore */ }
-
-  if (unlockedAt === null || Date.now() - unlockedAt > intervalMs) {
+/**
+ * True when an unlock exists that this page either has or can rehydrate from
+ * the vault without asking the user for anything.
+ *
+ * Kept synchronous on purpose: it reads only the plaintext timestamp, so the
+ * UI can render "unlocked" on first paint after a refresh instead of flashing
+ * a lock affordance for however long the IDB read takes.
+ */
+export function isUnlockAvailable(): boolean {
+  if (sessionPrivKey) return isWalletUnlocked();
+  const unlockedAt = readUnlockedAt();
+  if (unlockedAt === null) return false;
+  if (unlockExpired(unlockedAt)) {
     lockWallet();
     return false;
   }
@@ -229,26 +291,85 @@ export function getEoaProvider(): IProvider | null {
 }
 
 /**
- * Return the live EOA provider if this page load already unlocked one.
- * There is no cross-refresh restoration anymore — the key never persists
- * outside JS memory, so a refresh always comes back locked (null) and the
- * caller falls back to the existing dehub:wallet-unlock-required prompt.
+ * Return the EOA provider for this session, rehydrating it from the vault if
+ * this page load hasn't got one yet.
+ *
+ * Returns null when there is genuinely nothing to restore — no vault record, an
+ * unlock past the auto-lock interval, or a record for a different address —
+ * and the caller falls back to the dehub:wallet-unlock-required prompt.
  */
 export async function restoreWalletSession(): Promise<IProvider | null> {
   if (eoaProvider) return eoaProvider;
-  if (eoaProviderPromise) return eoaProviderPromise;
-  return null;
+  // Shared so the handful of callers that race on first paint (the AuthProvider
+  // effect, aa-utils resolving a signer, the AA warm-up) do one IDB read and
+  // one provider build between them.
+  if (hydrationPromise) return hydrationPromise;
+
+  const unlockedAt = readUnlockedAt();
+  if (unlockedAt === null) return null;
+  if (unlockExpired(unlockedAt)) {
+    // The interval lapsed while the page was closed. Clear rather than leave a
+    // record that every later call has to re-reject.
+    lockWallet();
+    return null;
+  }
+
+  hydrationPromise = (async (): Promise<IProvider | null> => {
+    try {
+      const stored = await readVaultSession(expectedVaultAddress());
+      if (!stored) return null;
+      if (unlockExpired(stored.unlockedAt)) {
+        lockWallet();
+        return null;
+      }
+      const hex = normalizePrivKey(stored.privKeyHex);
+      const provider = await buildProviderFromPrivKey(hex);
+      sessionPrivKey = hex;
+      eoaProvider = provider;
+      // The vault's timestamp is authoritative — a tab that restores must not
+      // silently extend the window the user configured.
+      try { localStorage.setItem(UNLOCKED_AT_KEY, String(stored.unlockedAt)); } catch { /* ignore */ }
+      announceLockChange();
+      return provider;
+    } catch (e) {
+      console.warn("[SmartWallet] Could not restore persisted unlock:", e);
+      return null;
+    } finally {
+      hydrationPromise = null;
+    }
+  })();
+
+  return hydrationPromise;
 }
 
-/** Wipe all key material and providers (logout / lock). */
+/**
+ * The address the vault record must belong to, from the ciphertext cache the
+ * store keeps for returning users. Undefined when this browser has no cached
+ * wallet, in which case the vault read skips the check — there is nothing to
+ * disagree with.
+ */
+function expectedVaultAddress(): string | undefined {
+  try {
+    const raw = localStorage.getItem("dehub_wallet_enc");
+    if (!raw) return undefined;
+    return JSON.parse(raw)?.ethAddress || undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/** Wipe all key material and providers (logout / lock), vault included. */
 export function lockWallet(): void {
   sessionPrivKey = null;
   eoaProvider = null;
-  eoaProviderPromise = null;
+  hydrationPromise = null;
   storedAAProvider = null;
   pendingAASetupPromise = null;
   storedChainAAProviders.clear();
-  try { sessionStorage.removeItem(UNLOCKED_AT_KEY); } catch { /* ignore */ }
+  try { localStorage.removeItem(UNLOCKED_AT_KEY); } catch { /* ignore */ }
+  // Fire-and-forget: the in-memory key is already gone, so the wallet is locked
+  // from this instant whether or not the IDB delete lands.
+  void clearVaultSession();
   announceLockChange();
 }
 
