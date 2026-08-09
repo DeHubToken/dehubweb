@@ -81,8 +81,8 @@ export interface AudioTaskSpec {
   tips?: string[];
 }
 
-/** Markup percentage (100% = 2x cost), matching image, video and 3D. */
-export const AUDIO_GENERATION_MARKUP = 1.0;
+/** Markup percentage (20% = 1.2x cost), matching image, video and 3D. */
+export const AUDIO_GENERATION_MARKUP = 0.2;
 
 export const AUDIO_TASKS: Record<AudioTask, AudioTaskSpec> = {
   speech: {
