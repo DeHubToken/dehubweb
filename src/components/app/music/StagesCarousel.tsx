@@ -45,7 +45,7 @@ function StageCard({ space, onClick }: { space: AudioSpace; onClick: () => void 
       {/* Host info */}
       <div className="flex items-center gap-3 mb-3">
         <div className="relative">
-          <div className="w-10 h-10 rounded-full ring-2 ring-white/20 overflow-hidden">
+          <div className="w-10 h-10 rounded-lg ring-2 ring-white/20 overflow-hidden">
             {(() => {
               const resolvedAvatar = buildAvatarUrl(space.host_wallet_address || '', space.host_avatar)
                 || buildAvatarCdnFallbackUrl(space.host_wallet_address || '');

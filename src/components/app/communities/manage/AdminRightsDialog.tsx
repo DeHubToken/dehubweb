@@ -145,7 +145,7 @@ function AdminRightsForm({ community, membership, target, onOpenChange }: AdminR
   return (
     <>
       <DialogHeader className="flex-row items-center gap-3 space-y-0 text-left pr-8">
-        <div className="w-9 h-9 rounded-full bg-white/[0.08] flex items-center justify-center overflow-hidden flex-shrink-0">
+        <div className="w-9 h-9 rounded-lg bg-white/[0.08] flex items-center justify-center overflow-hidden flex-shrink-0">
           {avatarUrl ? (
             <img src={avatarUrl} alt="" className="w-full h-full object-cover" />
           ) : (

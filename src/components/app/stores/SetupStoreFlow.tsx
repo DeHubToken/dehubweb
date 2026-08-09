@@ -97,7 +97,7 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
       {/* Avatar upload */}
       <div
         onClick={() => fileRef.current?.click()}
-        className="relative w-20 h-20 rounded-full overflow-hidden bg-white/10 border border-white/10 cursor-pointer group"
+        className="relative w-20 h-20 rounded-lg overflow-hidden bg-white/10 border border-white/10 cursor-pointer group"
       >
         {avatarUrl ? (
           <img src={avatarUrl} className="w-full h-full object-cover" alt="" />
@@ -106,7 +106,7 @@ export function SetupStoreFlow({ onComplete, onCancel }: SetupStoreFlowProps) {
             <Store className="w-8 h-8 text-zinc-500" />
           </div>
         )}
-        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-full">
+        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
           {uploading ? <Loader2 className="w-5 h-5 animate-spin text-primary-foreground" /> : <Camera className="w-5 h-5 text-primary-foreground" />}
         </div>
       </div>
