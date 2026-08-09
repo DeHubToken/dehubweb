@@ -1502,10 +1502,6 @@ html[data-theme="minimal"] [data-search-bento] input {
   border: 1px solid hsl(0 0% 100% / 0.10) !important;
 }
 
-/* Theme picker horizontal scroll fade — black in minimal mode (bg is black, not zinc-900) */
-html[data-theme="minimal"] [data-theme-picker-fade] {
-  background-image: linear-gradient(to left, #000 0%, transparent 100%) !important;
-}
 
 
 
@@ -2640,10 +2636,6 @@ html[data-theme="light"] .border-zinc-800 {
   border-color: var(--hairline-strong) !important;
 }
 
-/* Theme picker horizontal scroll fade. */
-html[data-theme="light"] [data-theme-picker-fade] {
-  background-image: linear-gradient(to left, var(--paper) 0%, transparent 100%) !important;
-}
 
 /* Feed items: transparent with hairline separators. */
 html[data-theme="light"] [data-feed-item] {

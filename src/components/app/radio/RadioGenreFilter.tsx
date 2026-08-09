@@ -23,7 +23,6 @@ export function RadioGenreFilter({ activeGenre, onGenreChange }: RadioGenreFilte
         onSelect={(key) => onGenreChange(key as RadioGenreId)}
         buttonClassName="px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm"
       />
-      <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-20" />
     </div>
   );
 }

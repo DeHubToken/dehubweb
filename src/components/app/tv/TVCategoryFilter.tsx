@@ -24,12 +24,11 @@ export function TVCategoryFilter({
 }: TVCategoryFilterProps) {
   return (
     <div className="relative">
-      {/* Right edge fade */}
-      <div className="pointer-events-none absolute right-0 top-0 h-full w-12 bg-gradient-to-l from-black to-transparent z-10" />
-      
-      <SwipeableCarousel>
-        <div className="flex gap-2 overflow-x-auto scrollbar-hide pr-8">
-          {countries.map((cat) => (
+      {/* The scroll classes live on the carousel itself so it is the element
+          that overflows — the edge fade measures the scroller it is applied
+          to, and the wrapper never scrolled. */}
+      <SwipeableCarousel fadeEdges className="flex gap-2 overflow-x-auto scrollbar-hide pr-8">
+        {countries.map((cat) => (
             <button
               key={cat.id}
               onClick={() => onCountryChange(cat.id)}
@@ -50,8 +49,7 @@ export function TVCategoryFilter({
                 </span>
               )}
             </button>
-          ))}
-        </div>
+        ))}
       </SwipeableCarousel>
     </div>
   );
