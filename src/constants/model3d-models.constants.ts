@@ -12,7 +12,7 @@
  * ── On `baseCostUsd` ─────────────────────────────────────────────────────────
  * fal.ai does not publish a per-generation price on the 3D model pages the way
  * it does for video, so these are deliberately CONSERVATIVE (rounded up)
- * estimates. They set what a creator is charged, at the shared 100% markup, so
+ * estimates. They set what a creator is charged, at the shared 20% markup, so
  * erring high means the platform is never underwater on a generation. Reconcile
  * them against a real fal.ai invoice after the first week of traffic and adjust
  * — a number that is too high is a pricing decision, a number that is too low
@@ -68,8 +68,8 @@ export interface Model3dModel {
   tips?: string[];
 }
 
-/** Markup percentage (100% = 2x cost), matching image and video generation. */
-export const MODEL3D_GENERATION_MARKUP = 1.0;
+/** Markup percentage (20% = 1.2x cost), matching image and video generation. */
+export const MODEL3D_GENERATION_MARKUP = 0.2;
 
 /**
  * Final USD cost with markup.
