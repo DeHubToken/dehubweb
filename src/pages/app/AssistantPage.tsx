@@ -2359,7 +2359,7 @@ export default function AssistantPage() {
                       <img 
                         src={assistantAvatar} 
                         alt="" 
-                        className="w-7 h-7 rounded-full shrink-0 mt-0.5"
+                        className="w-7 h-7 rounded-lg shrink-0 mt-0.5"
                       />
                     )}
                     {message.role === 'assistant' && message.audioUrl ? (
@@ -2761,7 +2761,7 @@ export default function AssistantPage() {
                   <img 
                     src={assistantAvatar} 
                     alt="" 
-                    className="w-7 h-7 rounded-full shrink-0"
+                    className="w-7 h-7 rounded-lg shrink-0"
                   />
                   <div className="bg-white/10 rounded-2xl px-4 py-3 flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin text-white/60" />

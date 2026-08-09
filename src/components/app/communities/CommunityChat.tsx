@@ -698,7 +698,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                       <img
                         src={assistantAvatar}
                         alt="AI Admin"
-                        className="w-7 h-7 rounded-full shrink-0 mt-0.5"
+                        className="w-7 h-7 rounded-lg shrink-0 mt-0.5"
                       />
                       <div className="min-w-0 flex-1">
                         <span className="inline-flex items-baseline gap-1.5">
@@ -935,7 +935,7 @@ export function CommunityChat({ communityId, community, membership, isMember }: 
                 animate={{ opacity: 1, y: 0 }}
                 className="flex items-start gap-2 px-3"
               >
-                <img src={assistantAvatar} alt="AI Admin" className="w-7 h-7 rounded-full shrink-0 mt-0.5" />
+                <img src={assistantAvatar} alt="AI Admin" className="w-7 h-7 rounded-lg shrink-0 mt-0.5" />
                 <div className="mt-1 rounded-2xl border border-white/[0.12] bg-white/[0.03] backdrop-blur-[24px] px-3 py-2 inline-flex items-center gap-1.5 text-white/80 text-xs">
                   <Sparkles className="w-3 h-3 animate-pulse" />
                   <span className="inline-flex gap-0.5">

@@ -107,7 +107,7 @@ export default function CommunityInvitePage() {
 
         <div className="p-3.5 space-y-3">
           <div className="flex items-center gap-3">
-            <div className="w-14 h-14 rounded-full bg-white/[0.08] flex items-center justify-center overflow-hidden flex-shrink-0 -mt-10 border border-white/10">
+            <div className="w-14 h-14 rounded-lg bg-white/[0.08] flex items-center justify-center overflow-hidden flex-shrink-0 -mt-10 border border-white/10">
               {preview.avatar_url ? (
                 <img src={preview.avatar_url} alt="" className="w-full h-full object-cover" />
               ) : (

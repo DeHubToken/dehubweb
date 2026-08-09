@@ -38,7 +38,7 @@ function shortAddress(address: string): string {
 
 function Avatar({ url }: { url?: string }) {
   return (
-    <div className="w-9 h-9 rounded-full bg-white/[0.08] flex items-center justify-center overflow-hidden flex-shrink-0">
+    <div className="w-9 h-9 rounded-lg bg-white/[0.08] flex items-center justify-center overflow-hidden flex-shrink-0">
       {url ? (
         <img src={url} alt="" className="w-full h-full object-cover" />
       ) : (

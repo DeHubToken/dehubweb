@@ -293,12 +293,12 @@ export const DocsChatBot = () => {
             >
               {message.role === 'user' ? (
                 <div
-                  className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-muted"
+                  className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-muted"
                 >
                   <User className="w-4 h-4 text-foreground" />
                 </div>
               ) : (
-                <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+                <div className="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0">
                   <img src={robotAvatar} alt="Assistant" className="w-full h-full object-cover" />
                 </div>
               )}
@@ -316,7 +316,7 @@ export const DocsChatBot = () => {
           ))}
           {isLoading && messages[messages.length - 1]?.role === 'user' && (
             <div className="flex gap-3">
-              <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0">
+              <div className="w-8 h-8 rounded-lg overflow-hidden flex-shrink-0">
                 <img src={robotAvatar} alt="Assistant" className="w-full h-full object-cover" />
               </div>
               <div className="bg-muted rounded-2xl rounded-bl-md px-4 py-2.5">

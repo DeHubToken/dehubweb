@@ -179,7 +179,7 @@ export function MemberActionsDialog({
           ) : (
             <div className="space-y-3">
               <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-3.5">
-                <div className="w-9 h-9 rounded-full bg-white/[0.08] flex items-center justify-center overflow-hidden flex-shrink-0">
+                <div className="w-9 h-9 rounded-lg bg-white/[0.08] flex items-center justify-center overflow-hidden flex-shrink-0">
                   {avatarUrl ? (
                     <img src={avatarUrl} alt="" className="w-full h-full object-cover" />
                   ) : (

@@ -83,7 +83,7 @@ function LiveStageCard({
       </div>
 
       <div className="flex items-center gap-3 mb-3">
-        <div className="w-10 h-10 rounded-full ring-2 ring-white/20 overflow-hidden shrink-0">
+        <div className="w-10 h-10 rounded-lg ring-2 ring-white/20 overflow-hidden shrink-0">
           {avatar ? (
             <img src={avatar} alt="" className="w-full h-full object-cover" />
           ) : (

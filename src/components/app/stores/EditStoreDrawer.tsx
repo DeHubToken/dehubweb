@@ -103,7 +103,7 @@ export function EditStoreDrawer({ store, open, onClose }: Props) {
               <Label className="text-zinc-300 text-xs mb-1.5 block">Avatar</Label>
               <div
                 onClick={() => avatarInputRef.current?.click()}
-                className="relative w-16 h-16 rounded-full overflow-hidden bg-white/10 border border-white/10 cursor-pointer group"
+                className="relative w-16 h-16 rounded-lg overflow-hidden bg-white/10 border border-white/10 cursor-pointer group"
               >
                 {avatarUrl ? (
                   <img src={avatarUrl} className="w-full h-full object-cover" alt="" />
@@ -112,7 +112,7 @@ export function EditStoreDrawer({ store, open, onClose }: Props) {
                     <Store className="w-6 h-6 text-zinc-500" />
                   </div>
                 )}
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-full">
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center rounded-lg">
                   {uploadingAvatar ? <Loader2 className="w-4 h-4 animate-spin text-white" /> : <Camera className="w-4 h-4 text-white" />}
                 </div>
               </div>
