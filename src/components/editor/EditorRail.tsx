@@ -21,6 +21,7 @@ import { DesignPanel } from './panels/DesignPanel';
 import { TextPanel } from './panels/TextPanel';
 import { GeneratePanel } from './panels/GeneratePanel';
 import { LibraryPanel } from './panels/LibraryPanel';
+import { DeHubPageLoader } from '@/components/app/DeHubLoader';
 
 // The media panel pulls in IndexedDB and cloud-asset plumbing; keep it out of
 // the initial editor chunk since Design is the panel that opens first.
@@ -37,7 +38,7 @@ export function PanelBody({ panel }: { panel: EditorPanel }) {
       return <DesignPanel />;
     case 'assets':
       return (
-        <Suspense fallback={<p className="p-4 text-[12px] text-white/40">Loading free assets...</p>}>
+        <Suspense fallback={<DeHubPageLoader minHeight="40vh" />}>
           <FreeAssetsPanel />
         </Suspense>
       );
@@ -51,9 +52,7 @@ export function PanelBody({ panel }: { panel: EditorPanel }) {
       return <Inspector />;
     case 'media':
       return (
-        <Suspense
-          fallback={<p className="p-4 text-[12px] text-white/40">Loading your media…</p>}
-        >
+        <Suspense fallback={<DeHubPageLoader minHeight="40vh" />}>
           <MediaPanel />
         </Suspense>
       );
