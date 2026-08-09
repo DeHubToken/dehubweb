@@ -78,6 +78,13 @@ import { VideoGlitchLoader } from '@/components/app/video/VideoGlitchLoader';
  */
 const TAP_SLOP_PX = 10;
 
+/**
+ * How long the player's controls stay up after the interaction that revealed
+ * them — a hover, a pointer move, or (in the feed) a click or tap on the media.
+ * Any further interaction re-arms the window rather than shortening it.
+ */
+const CONTROLS_HIDE_MS = 2000;
+
 /** A tap that landed on a real control, which owns it rather than the player. */
 function isControlTarget(target: EventTarget | null) {
   return !!(target as HTMLElement | null)?.closest?.(
@@ -812,7 +819,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
     if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
     controlsTimerRef.current = setTimeout(() => {
       if (!isHoveringRef.current) setShowControls(false);
-    }, 2000);
+    }, CONTROLS_HIDE_MS);
   }, []);
 
   // Cleanup controls timer on unmount
@@ -1164,11 +1171,15 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   }, [navigate, queryClient, video, showBountyDrawer, showPPVDrawer, showLockedDrawer]);
 
   const handleVideoAreaClick = useCallback((e: React.MouseEvent) => {
-    // In the feed the player is a preview: clicking it opens the post, the way
-    // a thumbnail does everywhere else. Scrubbing, seeking and tap-to-pause all
-    // still live on the post page, where the video is the point of the screen.
+    // In the feed the media is the content, not a link to it: a click reveals
+    // this player's own controls (play, scrubber, subtitles, mute, fullscreen)
+    // and they fade out again after CONTROLS_HIDE_MS. Opening the post is the
+    // bento's job — see handleCardClick — exactly as it is for every other
+    // post type. A click that landed on a control still runs through here by
+    // bubbling, and re-arming on it is deliberate: the panel must not be
+    // pulled out from under someone midway through using it.
     if (!isImmersive) {
-      if (!isControlTarget(e.target)) openPost();
+      showControlsBriefly();
       return;
     }
     const now = Date.now();
@@ -1194,7 +1205,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
         clickTimeoutRef.current = null;
       }, 300);
     }
-  }, [isImmersive, openPost, handleDoubleTapSeek, handlePlayClick]);
+  }, [isImmersive, showControlsBriefly, handleDoubleTapSeek, handlePlayClick]);
 
   // Both the click and the touch handler are bound unconditionally on the player.
   // `isTouchDevice` is a width check, not a capability one, so gating the click on
@@ -1207,6 +1218,14 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     const touch = e.touches[0];
     touchStartRef.current = touch ? { x: touch.clientX, y: touch.clientY } : null;
+    // A touch is not a hover. Tapping a control deliberately skips
+    // preventDefault (see handleTouchEnd) so the button still gets its
+    // synthesized click — but that same compatibility sequence includes a
+    // mouseenter, which latches isHoveringRef on a device that can never send
+    // the mouseleave to clear it. showControlsBriefly() keeps the controls up
+    // while hovering, so a stale `true` here means a later tap reveals them
+    // permanently. Clearing it at the start of every touch keeps that honest.
+    isHoveringRef.current = false;
   }, []);
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
@@ -1222,13 +1241,22 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       return;
     }
 
-    if (isControlTarget(e.target)) return;
+    if (isControlTarget(e.target)) {
+      // The control owns the tap — no preventDefault, or the synthesized click
+      // that actually activates the button never arrives. Re-arm the hide timer
+      // though: using a control counts as activity, so the panel shouldn't
+      // vanish 2s after the tap that opened it while a finger is still on it.
+      showControlsBriefly();
+      return;
+    }
 
-    // Feed: a tap opens the post (see handleVideoAreaClick). preventDefault so
-    // the browser's synthesized click doesn't arrive after us and open it twice.
+    // Feed: a tap reveals the controls (see handleVideoAreaClick) rather than
+    // opening the post. preventDefault so the browser's synthesized click
+    // doesn't arrive after us — harmless here, but it would land on the
+    // container and run the whole reveal a second time.
     if (!isImmersive) {
       e.preventDefault();
-      openPost();
+      showControlsBriefly();
       return;
     }
 
@@ -1269,7 +1297,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
       }
       setTimeout(() => setSeekIndicator(null), 500);
     }
-  }, [isPlaying, handlePlayClick, isImmersive, openPost]);
+  }, [isPlaying, handlePlayClick, isImmersive, showControlsBriefly]);
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -1531,13 +1559,13 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           isHoveringRef.current = true;
           setShowControls(true);
           if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
-          controlsTimerRef.current = setTimeout(() => setShowControls(false), 2000);
+          controlsTimerRef.current = setTimeout(() => setShowControls(false), CONTROLS_HIDE_MS);
         }}
         onMouseMove={() => {
           if (!isHoveringRef.current) return;
           setShowControls(true);
           if (controlsTimerRef.current) clearTimeout(controlsTimerRef.current);
-          controlsTimerRef.current = setTimeout(() => setShowControls(false), 2000);
+          controlsTimerRef.current = setTimeout(() => setShowControls(false), CONTROLS_HIDE_MS);
         }}
         onMouseLeave={() => {
           isHoveringRef.current = false;
@@ -1813,17 +1841,24 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
           </div>
         )}
 
-        {/* Progress bar at bottom */}
-        {duration > 0 && showControls && (
+        {/* Transport bar at bottom. Gated on showControls alone, not on
+            duration: in Lite mode preload is 'none' and autoplay is off, so
+            duration stays 0 until something calls play() — gating the whole bar
+            on it left the one control that can start the clip unreachable from
+            the feed, where a tap now reveals controls instead of opening the
+            post. The scrubber and timestamps still wait for real metadata. */}
+        {showControls && (
           <div data-video-controls className="absolute bottom-0 left-0 right-0 px-2 pb-3 pt-6 bg-gradient-to-t from-black/80 to-transparent z-10">
 
             <div className="flex items-center gap-2">
               <button
                 onClick={(e) => { e.stopPropagation(); handlePlayClick(); }}
+                aria-label={isPlaying ? 'Pause' : 'Play'}
                 className="h-6 w-6 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 flex items-center justify-center shrink-0"
               >
                 {isPlaying ? <Pause className="h-3 w-3 text-white fill-current" /> : <Play className="h-3 w-3 text-white fill-current ml-0.5" />}
               </button>
+              {duration > 0 && <>
               <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(currentTime)}</span>
               <input
                 type="range"
@@ -1849,6 +1884,7 @@ export const VideoCard = memo(function VideoCard({ video, isImmersive = false, d
                 }}
               />
               <span className="px-1.5 py-0.5 bg-black/40 backdrop-blur-[24px] saturate-[180%] rounded border border-white/10 text-white text-xs min-w-[36px] text-center">{formatTime(duration)}</span>
+              </>}
             </div>
           </div>
         )}
