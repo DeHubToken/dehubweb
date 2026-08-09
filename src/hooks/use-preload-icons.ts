@@ -1,12 +1,15 @@
 /**
  * 3D Icon Preloader
  * =================
- * Preloads ALL 3D icon assets at module-load time (before any component renders).
- * This eliminates the flash/flicker when navigating between pages that use these icons.
+ * Preloads the shared 3D assets at module-load time and the selected theme's
+ * custom WebPs after that theme resolves. This eliminates page-to-page icon
+ * flicker without downloading all six material sets up front.
  * 
  * Icons are preloaded immediately when this module is first imported (in App.tsx),
  * NOT inside useEffect, so they're cached by the browser before any page renders.
  */
+import { useEffect } from 'react';
+import { useAppTheme } from '@/contexts/ThemeContext';
 
 // ── Page header icons ──
 import aiStarIcon from '@/assets/icons/ai-star-icon.png';
@@ -124,11 +127,40 @@ if (typeof window !== 'undefined') {
 }
 
 /**
- * Hook kept for backwards compatibility. The actual preloading happens
- * at module level above, so this is effectively a no-op.
+ * Preload the active theme's remaining icon set while the browser is idle.
+ * Visible icons still load immediately through BrandIcon.
  */
 export function usePreloadIcons() {
-  // No-op: preloading already happened at module level
+  const { theme } = useAppTheme();
+
+  useEffect(() => {
+    const fullThemes = ['hazy', 'swarms', 'winter', 'osaka', 'jungle'];
+    const pageKeys = [
+      'wand', 'communities', 'careers', 'features', 'glossary', 'governance',
+      'trophy', 'notifications', 'settings', 'stages', 'assistant', 'lock', 'profile',
+    ];
+    const profileKeys = [
+      'home', 'posts', 'images', 'videos', 'subscriptions', 'audio', 'live',
+      'fractions', 'pinned', 'search', 'messages', 'bookmarks',
+    ];
+    const keys = fullThemes.includes(theme)
+      ? [...pageKeys, ...profileKeys]
+      : theme === 'system'
+        ? pageKeys
+        : [];
+    if (keys.length === 0) return;
+
+    const preload = () => keys.forEach((key) => {
+      const img = new Image();
+      img.src = `/theme-icons/${theme}/${key}.webp`;
+    });
+    if (typeof requestIdleCallback === 'function') {
+      const id = requestIdleCallback(preload, { timeout: 2000 });
+      return () => cancelIdleCallback(id);
+    }
+    const id = window.setTimeout(preload, 800);
+    return () => window.clearTimeout(id);
+  }, [theme]);
 }
 
 // ── Re-export all icon paths for consistent usage across components ──
