@@ -23,18 +23,37 @@
  */
 
 import { ReactNode, useRef, useCallback, forwardRef } from 'react';
+import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 
 interface SwipeableCarouselProps {
   children: ReactNode;
   className?: string;
   onScroll?: () => void;
+  /**
+   * Dissolve the row at an edge that has items scrolled out of view, as the
+   * hint that there is more to swipe to. Opt-in: it replaces the painted
+   * `from-black`/`from-zinc-900` strips these carousels used to wear, which had
+   * to guess the colour behind them and showed up as a block on any surface
+   * that wasn't exactly that colour.
+   */
+  fadeEdges?: boolean;
 }
 
 export const SwipeableCarousel = forwardRef<HTMLDivElement, SwipeableCarouselProps>(
-  function SwipeableCarousel({ children, className, onScroll }, ref) {
+  function SwipeableCarousel({ children, className, onScroll, fadeEdges = false }, ref) {
     const touchStartX = useRef<number | null>(null);
     const touchStartY = useRef<number | null>(null);
     const isHorizontalSwipe = useRef<boolean>(false);
+    const scrollRef = useRef<HTMLDivElement>(null);
+    const { style: fadeStyle } = useScrollFadeMask(scrollRef, fadeEdges);
+
+    // The carousel div is both the scroller we measure and whatever ref the
+    // caller passed in (MusicFeed and StoriesBar drive their own paging off it).
+    const setRefs = useCallback((node: HTMLDivElement | null) => {
+      scrollRef.current = node;
+      if (typeof ref === 'function') ref(node);
+      else if (ref) ref.current = node;
+    }, [ref]);
 
     const handleTouchStart = useCallback((e: React.TouchEvent) => {
       touchStartX.current = e.touches[0].clientX;
@@ -77,9 +96,10 @@ export const SwipeableCarousel = forwardRef<HTMLDivElement, SwipeableCarouselPro
 
     return (
       <div
-        ref={ref}
+        ref={setRefs}
         data-no-swipe
         className={className}
+        style={fadeStyle}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}

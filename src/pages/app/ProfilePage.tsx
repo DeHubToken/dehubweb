@@ -43,6 +43,7 @@ import { ProfileTabContent } from '@/components/app/profile/ProfileTabContent';
 import { ProfileSkeleton } from '@/components/app/profile/ProfileSkeleton';
 import { ProfileOptionsContent } from '@/components/app/profile/ProfileOptionsDrawer';
 import { parseDefaultProfileTab, type TabValue } from '@/components/app/profile/ProfileConstants';
+import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import type { SubscriptionPlan } from '@/lib/api/dehub';
 
 /**
@@ -240,6 +241,12 @@ export default function ProfilePage() {
   }, [isMobile]);
 
   const { layerRef: tabsIndicatorLayerRef, setRef: setTabRef, rect: tabIndicator, onScroll: handleTabsScroll } = useTabIndicator(activeTab);
+  // Still dropped while stuck, matching the painted strip this replaced. The
+  // reason for dropping it is gone though — a mask paints no surface, so there
+  // is no fade-to-transparent sliver for scrolled posts to bleed through any
+  // more. Drop the `!isTabsStuck` gate (and the sentinel above) if the
+  // scroll affordance is wanted in the stuck state too.
+  const { ref: tabsFadeRef, style: tabsFadeStyle } = useScrollFadeMask<HTMLDivElement>(undefined, !isTabsStuck);
   const [tabTransition, setTabTransition] = useState(false);
 
   // Drag-to-swipe state for profile tab indicator
@@ -572,8 +579,9 @@ export default function ProfilePage() {
               />
             )}
             <div
+              ref={tabsFadeRef}
               className="relative z-20 flex overflow-x-auto scrollbar-hide"
-              style={{ touchAction: 'pan-x', WebkitOverflowScrolling: 'touch', willChange: 'scroll-position' } as React.CSSProperties}
+              style={{ touchAction: 'pan-x', WebkitOverflowScrolling: 'touch', willChange: 'scroll-position', ...tabsFadeStyle } as React.CSSProperties}
               onScroll={handleTabsScroll}
             >
               {data.PROFILE_TABS.map((tab) => {
@@ -598,14 +606,6 @@ export default function ProfilePage() {
               })}
             </div>
           </div>
-          {/* Side-scroll fade — its fade-to-transparent right end is the clear
-              sliver scrolled posts bleed through. Only meaningful before the
-              pill anchors, so drop it while stuck: the right edge then reverts
-              to the pill's own surface (solid in the default theme, uniform
-              glass in the glass themes) with no see-through sliver. */}
-          {!isTabsStuck && (
-            <div className="absolute right-0 top-0 bottom-0 w-10 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none rounded-r-xl z-10" />
-          )}
         </div>
         </div>
 

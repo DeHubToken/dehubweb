@@ -409,8 +409,8 @@ function MusicVideosCarousel({ videos, totalCount, isLoading, onSeeAll }: {
         <p className="text-zinc-500 text-sm">No music videos yet</p>
       ) : (
         <div className="relative">
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black to-transparent pointer-events-none z-10" />
-          <SwipeableCarousel 
+          <SwipeableCarousel
+            fadeEdges
             ref={scrollRef}
             onScroll={handleScroll}
             className="flex gap-3 overflow-x-auto scrollbar-hide pr-8"
@@ -462,8 +462,8 @@ function AudioUploadsCarousel({ audioItems, isLoading }: { audioItems: VideoItem
         <p className="text-zinc-500 text-sm">No audio uploads yet</p>
       ) : (
         <div className="relative">
-          <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black to-transparent pointer-events-none z-10" />
           <SwipeableCarousel
+            fadeEdges
             ref={scrollRef}
             onScroll={handleScroll}
             className="flex gap-3 overflow-x-auto scrollbar-hide pr-8"
