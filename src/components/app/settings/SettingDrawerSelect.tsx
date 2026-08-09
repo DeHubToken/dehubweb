@@ -55,7 +55,7 @@ export function SettingDrawerSelect({
     <Drawer open={open} onOpenChange={(v) => { setOpen(v); if (!v) setSearch(''); }}>
       <DrawerTrigger asChild disabled={disabled}>
         <button
-          className={`flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-zinc-800 border border-zinc-700 text-white text-sm min-w-[120px] hover:bg-zinc-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${className}`}
+          className={`flex h-9 max-w-[10rem] items-center justify-between gap-2 rounded-xl border border-zinc-700 bg-zinc-800 px-3 text-sm text-white transition-colors hover:bg-zinc-700 disabled:cursor-not-allowed disabled:opacity-50 sm:max-w-[13rem] ${className}`}
           disabled={disabled}
         >
           <span className="truncate">{displayLabel}</span>

@@ -81,6 +81,7 @@ import { LiquidGlassBubble2 } from '@/components/ui/liquid-glass-bubble-2';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
 import { SettingDrawerSelect } from '@/components/app/settings/SettingDrawerSelect';
+import { SettingsRow } from '@/components/app/settings/SettingsRow';
 import { useAuth } from '@/contexts/AuthContext';
 import { AuthGate } from '@/components/app/AuthGate';
 import { Search } from 'lucide-react';
@@ -1456,15 +1457,11 @@ function PrivacySettings() {
             defaultChecked
             comingSoon
           />
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Users className="w-5 h-5 text-zinc-500" />
-              <div>
-                <p className="text-white font-medium">{t('settings.followVisibility')}</p>
-                <p className="text-zinc-500 text-sm">{t('settings.followVisibilityDesc')}</p>
-              </div>
-            </div>
-            <SettingDrawerSelect
+          <SettingsRow
+            icon={<Users />}
+            title={t('settings.followVisibility')}
+            description={t('settings.followVisibilityDesc')}
+            action={<SettingDrawerSelect
               value={
                 hideFollowerCounts ? 'hidden' : 
                 showFollowersFollowing ? 'public' : 
@@ -1486,8 +1483,8 @@ function PrivacySettings() {
                 { value: 'counts-only', label: t('settings.numbersOnly'), description: t('settings.numbersOnlyDesc') },
                 { value: 'hidden', label: t('settings.hiddenOption'), description: t('settings.hiddenOptionDesc') },
               ]}
-            />
-          </div>
+            />}
+          />
           <SettingToggle
             icon={Globe}
             title={t('settings.searchEngineIndexing')}
@@ -1502,15 +1499,11 @@ function PrivacySettings() {
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.postVisibility')}</h3>
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Eye className="w-5 h-5 text-zinc-500" />
-              <div>
-                <p className="text-white font-medium">{t('settings.defaultPostVisibility')}</p>
-                <p className="text-zinc-500 text-sm">{t('settings.defaultPostVisibilityDesc')}</p>
-              </div>
-            </div>
-            <SettingDrawerSelect
+          <SettingsRow
+            icon={<Eye />}
+            title={t('settings.defaultPostVisibility')}
+            description={t('settings.defaultPostVisibilityDesc')}
+            action={<SettingDrawerSelect
               value={defaultPostVisibility}
               onValueChange={(value) => handlePostVisibilityChange(value as 'public' | 'private')}
               disabled={isUpdating || isLoading || isUpdatingVisibility}
@@ -1519,8 +1512,8 @@ function PrivacySettings() {
                 { value: 'public', label: t('settings.public'), description: t('settings.publicDesc') },
                 { value: 'private', label: t('settings.private'), description: t('settings.privateDesc') },
               ]}
-            />
-          </div>
+            />}
+          />
           <div className="bg-zinc-800/50 rounded-xl p-4 text-sm text-zinc-400">
             <p><strong className="text-white">{t('settings.note')}:</strong> {t('settings.postVisibilityNote')}</p>
           </div>
@@ -1532,33 +1525,25 @@ function PrivacySettings() {
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.messages', 'Messages')}</h3>
         <div className="space-y-4">
           {/* Who Can Message */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <MessageCircle className="w-5 h-5 text-zinc-500" />
-              <div>
-                <p className="text-white font-medium">{t('settings.whoCanMessage', 'Who can message you')}</p>
-                <p className="text-zinc-500 text-sm">{t('settings.whoCanMessageDesc', 'Control who can send you direct messages')}</p>
-              </div>
-            </div>
-            <SettingDrawerSelect
+          <SettingsRow
+            icon={<MessageCircle />}
+            title={t('settings.whoCanMessage', 'Who can message you')}
+            description={t('settings.whoCanMessageDesc', 'Control who can send you direct messages')}
+            action={<SettingDrawerSelect
               value={whoCanMessage}
               onValueChange={(value) => updateWhoCanMessage(value as WhoCanMessage)}
               disabled={isDmUpdating}
               title={t('settings.whoCanMessage', 'Who can message you')}
               options={DM_ACCESS_OPTIONS(t)}
-            />
-          </div>
+            />}
+          />
 
           {/* Message Fee */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <img src={dehubCoin} alt="DHB" className="w-6 h-6" />
-              <div>
-                <p className="text-white font-medium">{t('settings.messageFee', 'Message fee')}</p>
-                <p className="text-zinc-500 text-sm">{t('settings.messageFeeDesc', 'Require a minimum token amount')}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
+          <SettingsRow
+            icon={<img src={dehubCoin} alt="" />}
+            title={t('settings.messageFee', 'Message fee')}
+            description={t('settings.messageFeeDesc', 'Require a minimum token amount')}
+            action={<div className="flex items-center gap-2">
               <Input
                 type="number"
                 min={0}
@@ -1589,8 +1574,8 @@ function PrivacySettings() {
                   {isDmUpdating ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Save'}
                 </Button>
               )}
-            </div>
-          </div>
+            </div>}
+          />
 
           {/* Do Not Disturb */}
           <SettingToggle
@@ -1611,27 +1596,19 @@ function PrivacySettings() {
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.accountSecurity')}</h3>
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Shield className="w-5 h-5 text-zinc-500" />
-              <div>
-                <p className="text-white font-medium">{t('settings.twoFactorAuth')}</p>
-                <p className="text-zinc-500 text-sm">{t('settings.twoFactorAuthDesc')}</p>
-              </div>
-            </div>
-            <Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-md" onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))}>
+          <SettingsRow
+            icon={<Shield />}
+            title={t('settings.twoFactorAuth')}
+            description={t('settings.twoFactorAuthDesc')}
+            action={<Button variant="outline" size="sm" className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl" onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))}>
               {t('settings.enable')}
-            </Button>
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Shield className="w-5 h-5 text-zinc-500" />
-              <div>
-                <p className="text-white font-medium">{t('settings.walletUnlockInterval', 'Wallet unlock prompt')}</p>
-                <p className="text-zinc-500 text-sm">{t('settings.walletUnlockIntervalDesc', 'How long your wallet stays unlocked for posting, tipping and transfers before we ask for your password again. Survives refreshes; logging out always locks it.')}</p>
-              </div>
-            </div>
-            <SettingDrawerSelect
+            </Button>}
+          />
+          <SettingsRow
+            icon={<Shield />}
+            title={t('settings.walletUnlockInterval', 'Wallet unlock prompt')}
+            description={t('settings.walletUnlockIntervalDesc', 'How long your wallet stays unlocked for posting, tipping and transfers before we ask for your password again. Survives refreshes; logging out always locks it.')}
+            action={<SettingDrawerSelect
               value={walletUnlockInterval}
               onValueChange={(value) => setWalletUnlockInterval(value as WalletUnlockIntervalOption)}
               title={t('settings.walletUnlockInterval', 'Wallet unlock prompt')}
@@ -1642,8 +1619,8 @@ function PrivacySettings() {
                 { value: '6h', label: t('settings.walletUnlock6h', 'After 6 hours') },
                 { value: '24h', label: t('settings.walletUnlock24h', 'After 24 hours (standard)') },
               ]}
-            />
-          </div>
+            />}
+          />
           <BiometricUnlockSettings />
           <WalletRecoveryTools />
         </div>
@@ -1655,23 +1632,19 @@ function PrivacySettings() {
       {/* Extract Data */}
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.yourData')}</h3>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Download className="w-5 h-5 text-zinc-500" />
-            <div>
-              <p className="text-white font-medium">{t('settings.extractData')}</p>
-              <p className="text-zinc-500 text-sm">{t('settings.extractDataDesc')}</p>
-            </div>
-          </div>
-          <Button 
+        <SettingsRow
+          icon={<Download />}
+          title={t('settings.extractData')}
+          description={t('settings.extractDataDesc')}
+          action={<Button
             variant="outline" 
             size="sm" 
-            className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-md"
+            className="bg-zinc-800 border-zinc-700 text-white hover:bg-zinc-700 rounded-xl"
             onClick={() => toast.info(t('settings.comingSoon', 'Coming soon'))}
           >
             {t('settings.download')}
-          </Button>
-        </div>
+          </Button>}
+        />
       </div>
 
       {/* Blocked Users */}
@@ -1824,16 +1797,14 @@ function DimLightsToggle() {
   const { dimLights, setDimLights, dimStrength, setDimStrength } = useAppTheme();
   return (
     <div>
-      <label className="flex items-center justify-between cursor-pointer">
-        <div className="flex items-center gap-3">
-          <Lamp className="w-5 h-5 text-zinc-500" />
-          <div>
-            <p className="text-white font-medium">{t('settings.dimLights', 'Dim Lights')}</p>
-            <p className="text-zinc-500 text-sm">{t('settings.dimLightsDesc', 'Reduce blue light exposure')}</p>
-          </div>
-        </div>
-        <Switch checked={dimLights} onCheckedChange={setDimLights} />
-      </label>
+      <SettingsRow
+        as="label"
+        className="cursor-pointer"
+        icon={<Lamp />}
+        title={t('settings.dimLights', 'Dim Lights')}
+        description={t('settings.dimLightsDesc', 'Reduce blue light exposure')}
+        action={<Switch checked={dimLights} onCheckedChange={setDimLights} />}
+      />
 
       {/* Strength slider — animatedly pops up once Dim Lights is switched on. */}
       <div
@@ -1868,16 +1839,14 @@ function AutoPlayToggle() {
   const { t } = useTranslation();
   const { autoplayEnabled, setAutoplayEnabled } = useAutoplay();
   return (
-    <label className="flex items-center justify-between cursor-pointer">
-      <div className="flex items-center gap-3">
-        <Play className="w-5 h-5 text-zinc-500" />
-        <div>
-          <p className="text-white font-medium">{t('settings.autoPlay')}</p>
-          <p className="text-zinc-500 text-sm">{t('settings.autoPlayDesc')}</p>
-        </div>
-      </div>
-      <Switch checked={autoplayEnabled} onCheckedChange={setAutoplayEnabled} />
-    </label>
+    <SettingsRow
+      as="label"
+      className="cursor-pointer"
+      icon={<Play />}
+      title={t('settings.autoPlay')}
+      description={t('settings.autoPlayDesc')}
+      action={<Switch checked={autoplayEnabled} onCheckedChange={setAutoplayEnabled} />}
+    />
   );
 }
 
@@ -1885,21 +1854,17 @@ function DataSaverToggle() {
   const { t } = useTranslation();
   const { pref } = useConnectionQuality();
   return (
-    <label className="flex items-center justify-between cursor-pointer">
-      <div className="flex items-center gap-3">
-        <Gauge className="w-5 h-5 text-zinc-500" />
-        <div>
-          <p className="text-white font-medium">{t('settings.dataSaver', 'Data Saver')}</p>
-          <p className="text-zinc-500 text-sm">
-            {t('settings.dataSaverDesc', 'Stop videos autoplaying and preloading to save data. Turns on automatically on slow connections.')}
-          </p>
-        </div>
-      </div>
-      <Switch
+    <SettingsRow
+      as="label"
+      className="cursor-pointer"
+      icon={<Gauge />}
+      title={t('settings.dataSaver', 'Data Saver')}
+      description={t('settings.dataSaverDesc', 'Stop videos autoplaying and preloading to save data. Turns on automatically on slow connections.')}
+      action={<Switch
         checked={pref === 'on'}
         onCheckedChange={(v) => setLiteModePref(v ? 'on' : 'auto')}
-      />
-    </label>
+      />}
+    />
   );
 }
 
@@ -1907,16 +1872,14 @@ function ShowAnimationsToggle() {
   const { t } = useTranslation();
   const { animationsEnabled, setAnimationsEnabled } = useAnimations();
   return (
-    <label className="flex items-center justify-between cursor-pointer">
-      <div className="flex items-center gap-3">
-        <Sparkles className="w-5 h-5 text-zinc-500" />
-        <div>
-          <p className="text-white font-medium">{t('settings.showAnimations')}</p>
-          <p className="text-zinc-500 text-sm">{t('settings.showAnimationsDesc')}</p>
-        </div>
-      </div>
-      <Switch checked={animationsEnabled} onCheckedChange={setAnimationsEnabled} />
-    </label>
+    <SettingsRow
+      as="label"
+      className="cursor-pointer"
+      icon={<Sparkles />}
+      title={t('settings.showAnimations')}
+      description={t('settings.showAnimationsDesc')}
+      action={<Switch checked={animationsEnabled} onCheckedChange={setAnimationsEnabled} />}
+    />
   );
 }
 
@@ -1924,18 +1887,14 @@ function ShortsEnabledToggle() {
   const { t } = useTranslation();
   const { shortsEnabled, setShortsEnabled } = useShortsEnabled();
   return (
-    <label className="flex items-center justify-between cursor-pointer">
-      <div className="flex items-center gap-3">
-        <Film className="w-5 h-5 text-zinc-500" />
-        <div>
-          <p className="text-white font-medium">{t('settings.shortsEnabled', 'Shorts')}</p>
-          <p className="text-zinc-500 text-sm">
-            {t('settings.shortsEnabledDesc', 'Show the Shorts feed tab and Shorts carousels on Home.')}
-          </p>
-        </div>
-      </div>
-      <Switch checked={shortsEnabled} onCheckedChange={setShortsEnabled} />
-    </label>
+    <SettingsRow
+      as="label"
+      className="cursor-pointer"
+      icon={<Film />}
+      title={t('settings.shortsEnabled', 'Shorts')}
+      description={t('settings.shortsEnabledDesc', 'Show the Shorts feed tab and Shorts carousels on Home.')}
+      action={<Switch checked={shortsEnabled} onCheckedChange={setShortsEnabled} />}
+    />
   );
 }
 
@@ -2246,31 +2205,23 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.language')}</h3>
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Globe className="w-5 h-5 text-zinc-500" />
-              <div>
-                <p className="text-white font-medium">{t('settings.language')}</p>
-                <p className="text-zinc-500 text-sm">{t('settings.languageDesc')}</p>
-              </div>
-            </div>
-            <LanguageSelector />
-          </div>
+          <SettingsRow
+            icon={<Globe />}
+            title={t('settings.language')}
+            description={t('settings.languageDesc')}
+            action={<LanguageSelector />}
+          />
         </div>
       </div>
 
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.layout')}</h3>
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <LayoutGrid className="w-5 h-5 text-zinc-500" />
-              <div>
-                <p className="text-white font-medium">{t('settings.feedLayout')}</p>
-                <p className="text-zinc-500 text-sm">{t('settings.feedLayoutDesc')}</p>
-              </div>
-            </div>
-            <SettingDrawerSelect
+          <SettingsRow
+            icon={<LayoutGrid />}
+            title={t('settings.feedLayout')}
+            description={t('settings.feedLayoutDesc')}
+            action={<SettingDrawerSelect
               value={isCollapsed ? 'compact' : 'comfortable'}
               onValueChange={(val) => setCollapsed(val === 'compact')}
               title={t('settings.feedLayout')}
@@ -2278,17 +2229,13 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
                 { value: 'comfortable', label: t('settings.comfortable'), description: t('settings.comfortableDesc') },
                 { value: 'compact', label: t('settings.compact'), description: t('settings.compactDesc') },
               ]}
-            />
-          </div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <LayoutGrid className="w-5 h-5 text-zinc-500" />
-              <div>
-                <p className="text-white font-medium">{t('settings.defaultProfileTab', 'Default profile tab')}</p>
-                <p className="text-zinc-500 text-sm">{t('settings.defaultProfileTabDesc', 'Choose which tab visitors see first on your profile')}</p>
-              </div>
-            </div>
-            <SettingDrawerSelect
+            />}
+          />
+          <SettingsRow
+            icon={<LayoutGrid />}
+            title={t('settings.defaultProfileTab', 'Default profile tab')}
+            description={t('settings.defaultProfileTabDesc', 'Choose which tab visitors see first on your profile')}
+            action={<SettingDrawerSelect
               value={defaultProfileTab}
               onValueChange={(value) => updateSettings({ default_profile_tab: value })}
               disabled={isUpdating || isLoading}
@@ -2297,8 +2244,8 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
                 value: o.value,
                 label: t(`profile.tabs.${o.value}`, o.label),
               }))}
-            />
-          </div>
+            />}
+          />
         </div>
       </div>
 
@@ -2350,15 +2297,11 @@ function ContentSettings() {
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.postSettings')}</h3>
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Globe className="w-5 h-5 text-zinc-500" />
-              <div>
-                <p className="text-white font-medium">{t('settings.defaultPostVisibility')}</p>
-                <p className="text-zinc-500 text-sm">{t('settings.whoCanSeeDefault')}</p>
-              </div>
-            </div>
-            <SettingDrawerSelect
+          <SettingsRow
+            icon={<Globe />}
+            title={t('settings.defaultPostVisibility')}
+            description={t('settings.whoCanSeeDefault')}
+            action={<SettingDrawerSelect
               value={postVisibility}
               onValueChange={() => toast.info(t('settings.comingSoon', 'Coming soon'))}
               title={t('settings.defaultPostVisibility')}
@@ -2367,8 +2310,8 @@ function ContentSettings() {
                 { value: 'followers', label: t('settings.followers'), description: t('settings.followersDesc') },
                 { value: 'private', label: t('settings.private'), description: t('settings.privateDesc') },
               ]}
-            />
-          </div>
+            />}
+          />
           <SettingToggle
             icon={FileText}
             title={t('settings.autoSaveDrafts')}
@@ -2524,21 +2467,20 @@ function SettingToggle({
 }) {
   const { t } = useTranslation();
   return (
-    <label className={`flex items-center justify-between ${disabled ? '' : 'cursor-pointer'}`}>
-      <div className="flex items-center gap-3">
-        <Icon className="w-5 h-5 text-zinc-500" />
-        <div>
-          <p className="text-white font-medium">{title}</p>
-          <p className="text-zinc-500 text-sm">{description}</p>
-        </div>
-      </div>
-      <Switch
+    <SettingsRow
+      as="label"
+      icon={<Icon />}
+      title={title}
+      description={description}
+      className={disabled ? undefined : 'cursor-pointer'}
+      disabled={disabled}
+      action={<Switch
         defaultChecked={defaultChecked}
         checked={onCheckedChange ? defaultChecked : undefined}
         onCheckedChange={comingSoon ? () => toast.info(t('settings.comingSoon', 'Coming soon')) : onCheckedChange}
         disabled={disabled}
-      />
-    </label>
+      />}
+    />
   );
 }
 
@@ -2753,33 +2695,25 @@ function MessagesSettings() {
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.directMessageAccess')}</h3>
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <MessageCircle className="w-5 h-5 text-zinc-500" />
-              <div>
-                <p className="text-white font-medium">{t('settings.allowDirectMessages', 'Allow direct messages')}</p>
-                <p className="text-zinc-500 text-sm">{t('settings.controlDMs', 'Control who can send you DMs')}</p>
-              </div>
-            </div>
-            <SettingDrawerSelect
+          <SettingsRow
+            icon={<MessageCircle />}
+            title={t('settings.allowDirectMessages', 'Allow direct messages')}
+            description={t('settings.controlDMs', 'Control who can send you DMs')}
+            action={<SettingDrawerSelect
               value={whoCanMessage}
               onValueChange={(value) => updateWhoCanMessage(value as WhoCanMessage)}
               disabled={isDmUpdating}
               title={t('settings.allowDirectMessages', 'Allow direct messages')}
               options={DM_ACCESS_OPTIONS(t)}
-            />
-          </div>
+            />}
+          />
 
           {/* Message Fee */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Coins className="w-5 h-5 text-zinc-500" />
-              <div>
-                <p className="text-white font-medium">{t('settings.messageFee', 'Message fee')}</p>
-                <p className="text-zinc-500 text-sm">{t('settings.messageFeeDesc', 'Require a minimum DHB tip to message you')}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
+          <SettingsRow
+            icon={<Coins />}
+            title={t('settings.messageFee', 'Message fee')}
+            description={t('settings.messageFeeDesc', 'Require a minimum DHB tip to message you')}
+            action={<div className="flex items-center gap-2">
               <Input
                 type="number"
                 min={0}
@@ -2810,8 +2744,8 @@ function MessagesSettings() {
                   {isDmUpdating ? <Loader2 className="w-3 h-3 animate-spin" /> : 'Save'}
                 </Button>
               )}
-            </div>
-          </div>
+            </div>}
+          />
 
           {/* Free DM Access List */}
           <FreeAccessListSection />
