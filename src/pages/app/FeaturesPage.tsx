@@ -14,6 +14,7 @@ import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTabIndicator } from '@/hooks/use-tab-indicator';
 import { GlassIndicator } from '@/components/app/feeds/GlassIndicator';
+import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 import { Search, Plus, X, Loader2, Sparkles, CheckCircle2, MessageCircle, Send, Trash2, MoreVertical, Pencil, ImagePlus } from 'lucide-react';
 import featuresLightbulb from '@/assets/features-lightbulb.png';
 import { TranslatableText, SharedTranslationProvider, useSharedTranslationControl } from '@/components/app/TranslatableText';
@@ -871,6 +872,7 @@ export default function FeaturesPage() {
   const [sort, setSort] = useState<FeatureSort>('most_voted');
   const [category, setCategory] = useState<FeatureCategory | 'all'>('all');
   const { layerRef: featuresCatLayerRef, setRef: setFeaturesCatRef, rect: featuresCatRect, onScroll: onFeaturesCatScroll } = useTabIndicator(category);
+  const { ref: featuresCatFadeRef, style: featuresCatFadeStyle } = useScrollFadeMask<HTMLDivElement>();
   const { layerRef: featuresSortLayerRef, setRef: setFeaturesSortRef, rect: featuresSortRect, onScroll: onFeaturesSortScroll } = useTabIndicator(sort);
   const [searchInput, setSearchInput] = useState('');
   const search = useDebouncedValue(searchInput, 300);
@@ -1036,10 +1038,14 @@ export default function FeaturesPage() {
           <>
             {/* Category Pills */}
             <div className="relative mb-3">
-              <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
               <div ref={featuresCatLayerRef} className="relative" style={{ overflowX: 'clip', overflowClipMargin: '8px' }}>
                 <GlassIndicator rect={featuresCatRect} borderRadius="0.5rem" />
-                <div className="relative z-20 flex gap-2 overflow-x-auto scrollbar-invisible pb-1" onScroll={onFeaturesCatScroll}>
+                <div
+                  ref={featuresCatFadeRef}
+                  className="relative z-20 flex gap-2 overflow-x-auto scrollbar-invisible pb-1"
+                  style={featuresCatFadeStyle}
+                  onScroll={onFeaturesCatScroll}
+                >
                   {CATEGORIES.map((cat) => (
                     <button
                       key={cat.id}

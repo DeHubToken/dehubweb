@@ -19,16 +19,20 @@ const FADE_PX = 24;
  * that fits, or one scrolled to its end, is never clipped.
  *
  * Pass the scroller's existing ref when the caller already has one; otherwise
- * use the returned `ref`.
+ * use the returned `ref`. Set `enabled` to false to opt a scroller out — it
+ * then measures nothing and returns no style.
  */
-export function useScrollFadeMask<T extends HTMLElement>(externalRef?: RefObject<T | null>) {
+export function useScrollFadeMask<T extends HTMLElement>(
+  externalRef?: RefObject<T | null>,
+  enabled = true,
+) {
   const internalRef = useRef<T>(null);
   const ref = externalRef ?? internalRef;
   const [edges, setEdges] = useState({ start: false, end: false });
 
   const measure = useCallback(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || !enabled) return;
 
     const max = el.scrollWidth - el.clientWidth;
     const next = { start: false, end: false };
@@ -43,7 +47,7 @@ export function useScrollFadeMask<T extends HTMLElement>(externalRef?: RefObject
     }
 
     setEdges(prev => (prev.start === next.start && prev.end === next.end ? prev : next));
-  }, [ref]);
+  }, [ref, enabled]);
 
   // Runs after every render so chips arriving later (categories loading, a
   // search narrowing the list) re-measure without the caller wiring up deps.
@@ -51,7 +55,7 @@ export function useScrollFadeMask<T extends HTMLElement>(externalRef?: RefObject
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || !enabled) return;
 
     let frame = 0;
     const schedule = () => {
@@ -70,15 +74,15 @@ export function useScrollFadeMask<T extends HTMLElement>(externalRef?: RefObject
       window.removeEventListener('resize', schedule);
       observer.disconnect();
     };
-  }, [ref, measure]);
+  }, [ref, measure, enabled]);
 
   const style = useMemo<CSSProperties | undefined>(() => {
-    if (!edges.start && !edges.end) return undefined;
+    if (!enabled || (!edges.start && !edges.end)) return undefined;
     const start = edges.start ? FADE_PX : 0;
     const end = edges.end ? FADE_PX : 0;
     const mask = `linear-gradient(to right, transparent 0px, #000 ${start}px, #000 calc(100% - ${end}px), transparent 100%)`;
     return { maskImage: mask, WebkitMaskImage: mask };
-  }, [edges]);
+  }, [edges, enabled]);
 
   return { ref, style };
 }
