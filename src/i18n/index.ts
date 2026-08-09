@@ -9,6 +9,7 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 
 import en from './locales/en.json';
+import { humanizeTranslationKey } from './missing-key-fallback';
 
 const STORAGE_KEY = 'user-preferred-language';
 
@@ -307,6 +308,7 @@ i18n.use(initReactI18next).init({
   },
   lng: 'en', // start with English, then switch after lazy load
   fallbackLng: 'en',
+  parseMissingKeyHandler: humanizeTranslationKey,
   interpolation: { escapeValue: false },
 });
 
