@@ -14,6 +14,10 @@ const NAV_LABEL_KEYS: Record<string, string> = {
   Messages: 'nav.messages', Assistant: 'nav.assistant', Leaderboard: 'nav.leaderboard',
   Bookmarks: 'nav.bookmarks', Settings: 'nav.settings', Profile: 'nav.profile', Blog: 'nav.blog',
   'Command': 'nav.command', 'Command Centre': 'nav.commandCentre', Wallet: 'nav.wallet', Docs: 'nav.docs', 'Feature Requests': 'nav.featureRequests', Staking: 'nav.staking', Governance: 'nav.governance', Communities: 'nav.communities', Events: 'nav.events', Careers: 'nav.careers', Glossary: 'nav.glossary', Guide: 'nav.guide', Stats: 'nav.stats',
+  // Borrows the drawer's key rather than minting a `nav.` twin: `sidebar.logOut`
+  // is already translated in all 110 locales, and the two controls should not be
+  // able to drift into saying different things.
+  'Log out': 'sidebar.logOut',
 };
 
 interface SidebarNavItemProps {
