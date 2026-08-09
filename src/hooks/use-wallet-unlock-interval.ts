@@ -5,13 +5,15 @@
  * (tipping, transfers, etc.) before an unlock is required again. Enforced in
  * lib/smart-wallet.ts's isWalletUnlocked().
  *
- * Scope, precisely: this only suppresses RE-prompts inside a page session that
- * already unlocked once. It cannot make signing in free of an unlock — the
- * DeHub session token is minted by a wallet signature, so establishing a
- * session needs the key by definition — and because the decrypted key is
- * memory-only (see lib/smart-wallet.ts), a page reload always starts locked
- * regardless of this setting. Biometric unlock is what makes those unavoidable
- * prompts cheap; this setting decides how often they happen.
+ * Scope, precisely: the window runs from the last time the user actually
+ * entered their password (or used biometrics) and now spans page loads, because
+ * the key is kept in the IndexedDB vault rather than in page memory. "Never"
+ * means until logout.
+ *
+ * It was previously per-page-session, which made every value here a promise the
+ * app didn't keep: a refresh — or the hard navigation the username modal used
+ * to do right after signup — relocked the wallet no matter what was chosen, and
+ * a new account got asked for its password again minutes after setting it.
  */
 import { useState, useCallback } from 'react';
 
