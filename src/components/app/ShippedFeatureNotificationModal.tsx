@@ -10,10 +10,11 @@
 
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, CheckCircle2 } from 'lucide-react';
+import { X, CheckCircle2, ArrowUpRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUnnotifiedShippedFeatures, useMarkShippedNotified, CATEGORY_LABELS } from '@/hooks/use-feature-requests';
+import { getShippedFeatureDestination } from '@/lib/feature-shipped-destination';
 
 export function ShippedFeatureNotificationModal() {
   const { isAuthenticated, walletAddress, requiresUsername } = useAuth();
@@ -41,9 +42,9 @@ export function ShippedFeatureNotificationModal() {
     markNotified.mutate(shippedItems.map((f) => f.id));
   };
 
-  const handleViewShipped = () => {
+  const handleViewShipped = (destination: string) => {
     handleDismiss();
-    navigate('/app/features');
+    navigate(destination);
   };
 
   const isPlural = shippedItems.length > 1;
@@ -70,6 +71,8 @@ export function ShippedFeatureNotificationModal() {
               <CheckCircle2 className="w-5 h-5 text-white/80" />
             </div>
             <button
+              type="button"
+              aria-label="Close shipped request notification"
               onClick={handleDismiss}
               className="text-zinc-500 hover:text-white transition-colors p-1"
             >
@@ -85,26 +88,35 @@ export function ShippedFeatureNotificationModal() {
 
             <div className="flex flex-col gap-2 mb-5 max-h-48 overflow-y-auto">
               {shippedItems.map((item) => (
-                <div
+                <button
+                  type="button"
                   key={item.id}
-                  className="flex items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2.5"
+                  onClick={() => handleViewShipped(getShippedFeatureDestination(item))}
+                  className="group flex w-full items-center gap-2 rounded-xl border border-white/[0.08] bg-white/[0.03] px-3 py-2.5 text-left transition-colors hover:bg-white/[0.07] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
                 >
                   <span className="text-white text-sm font-medium leading-snug flex-1 min-w-0">{item.title}</span>
                   <span className="text-[10px] font-medium px-2 py-0.5 rounded-lg whitespace-nowrap shrink-0 bg-white/10 text-white/60">
                     {CATEGORY_LABELS[item.category]}
                   </span>
-                </div>
+                  <ArrowUpRight className="h-4 w-4 shrink-0 text-zinc-500 transition-colors group-hover:text-white" aria-hidden="true" />
+                </button>
               ))}
             </div>
 
             <div className="flex items-center gap-2">
               <button
-                onClick={handleViewShipped}
+                type="button"
+                onClick={() => handleViewShipped(
+                  isPlural
+                    ? '/app/features?tab=shipped'
+                    : getShippedFeatureDestination(shippedItems[0])
+                )}
                 className="flex-1 px-4 py-2.5 rounded-xl text-sm font-semibold bg-white text-black hover:bg-zinc-200 transition-all"
               >
-                Check it out
+                {isPlural ? 'View shipped requests' : 'Check it out'}
               </button>
               <button
+                type="button"
                 onClick={handleDismiss}
                 className="px-4 py-2.5 rounded-xl text-sm font-medium text-zinc-400 hover:text-white transition-colors"
               >
