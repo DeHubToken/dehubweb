@@ -8,6 +8,12 @@
 
 export const MIN_PASSWORD_LENGTH = 12;
 
+// Past this length, character variety stops carrying useful information: a
+// 20-character all-lowercase passphrase has a far bigger search space than
+// "Appleboy123!", and the old rule accepted the second while rejecting the
+// first. Length alone qualifies here.
+export const PASSPHRASE_LENGTH = 20;
+
 // A tiny set of obviously-bad passwords / patterns. Not exhaustive — the HIBP
 // check is the real corpus; this just gives instant local feedback.
 const COMMON = new Set([
@@ -24,17 +30,30 @@ const COMMON = new Set([
   "welcome1",
 ]);
 
+export interface PasswordRequirement {
+  label: string;
+  met: boolean;
+}
+
 export interface PasswordAssessment {
   score: 0 | 1 | 2 | 3 | 4;
   label: string;
+  /** Every reason this password would be rejected, not just the first. */
   warnings: string[];
   classCount: number;
   longEnough: boolean;
   breached: boolean | null; // null = not checked / check failed (fail-open)
   acceptable: boolean;
+  /** Live checklist for the meter — the rules, stated up front, always visible. */
+  requirements: PasswordRequirement[];
 }
 
-const LABELS = ["Very weak", "Weak", "Fair", "Good", "Strong"] as const;
+// Scores 0–1 are REJECTED, 2–4 are accepted. Keeping the accept threshold at a
+// fixed point on the scale is what lets the meter show it: the old scale mixed
+// the two, so a 4-character password scored 2/4 with two lit bars and read as
+// halfway there, when in fact submit would bounce it.
+const LABELS = ["Too weak", "Too weak", "Okay", "Good", "Strong"] as const;
+export const MIN_ACCEPTABLE_SCORE = 2;
 
 function classCount(pw: string): number {
   let c = 0;
@@ -58,19 +77,32 @@ export function assessLocal(pw: string): PasswordAssessment {
   const warnings: string[] = [];
   const classes = classCount(pw);
   const longEnough = pw.length >= MIN_PASSWORD_LENGTH;
+  const isPassphrase = pw.length >= PASSPHRASE_LENGTH;
+  const trivial = looksTrivial(pw);
+  const variedEnough = classes >= 2 || isPassphrase;
 
-  let score = 0;
-  if (pw.length >= MIN_PASSWORD_LENGTH) score += 1;
-  if (pw.length >= 16) score += 1;
-  if (classes >= 2) score += 1;
-  if (classes >= 3) score += 1;
+  const acceptable = !trivial && longEnough && variedEnough;
 
-  if (looksTrivial(pw)) {
-    score = Math.min(score, 1);
-    warnings.push("This is a common or predictable password");
-  }
+  // Every blocker, in the order a user would fix them. The old code pushed at
+  // most one and rendered only warnings[0], so a password that was both short
+  // AND predictable told you about the predictability and hid the length rule.
+  if (trivial) warnings.push("This is a common or predictable password");
   if (!longEnough) warnings.push(`Use at least ${MIN_PASSWORD_LENGTH} characters`);
-  else if (classes < 2) warnings.push("Mix upper/lowercase, numbers, and symbols");
+  else if (!variedEnough) {
+    warnings.push(`Add a number or symbol, or make it ${PASSPHRASE_LENGTH}+ characters`);
+  }
+
+  let score: number;
+  if (!acceptable) {
+    // Anything that will be rejected stays in the bottom band, whatever else it
+    // has going for it. Two lit bars must never appear under a password submit
+    // is about to refuse.
+    score = pw.length === 0 ? 0 : 1;
+  } else {
+    score = 2;
+    if (pw.length >= 16 || classes >= 3) score = 3;
+    if (isPassphrase || (pw.length >= 16 && classes >= 3)) score = 4;
+  }
 
   const clamped = Math.max(0, Math.min(4, score)) as 0 | 1 | 2 | 3 | 4;
   return {
@@ -80,7 +112,11 @@ export function assessLocal(pw: string): PasswordAssessment {
     classCount: classes,
     longEnough,
     breached: null,
-    acceptable: longEnough && classes >= 2 && !looksTrivial(pw),
+    acceptable,
+    requirements: [
+      { label: `${MIN_PASSWORD_LENGTH} characters or more`, met: longEnough },
+      { label: `A number or symbol — or ${PASSPHRASE_LENGTH}+ characters`, met: variedEnough },
+    ],
   };
 }
 
@@ -122,10 +158,17 @@ export async function isBreached(pw: string): Promise<boolean | null> {
 export async function assessPassword(pw: string): Promise<PasswordAssessment> {
   const local = assessLocal(pw);
   const breached = await isBreached(pw);
+  // Breach only hard-blocks when the check actually ran and came back positive.
+  const acceptable = local.acceptable && breached !== true;
   return {
     ...local,
     breached,
-    // Breach only hard-blocks when the check actually ran and came back positive.
-    acceptable: local.acceptable && breached !== true,
+    acceptable,
+    // Keep the score honest about the verdict: a breached password is rejected,
+    // so it must not keep the "Strong" it earned on length and variety alone.
+    score: acceptable ? local.score : (Math.min(local.score, 1) as 0 | 1),
+    warnings: breached === true
+      ? [...local.warnings, "This password has appeared in a data breach"]
+      : local.warnings,
   };
 }

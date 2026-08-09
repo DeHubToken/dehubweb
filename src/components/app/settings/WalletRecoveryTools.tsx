@@ -231,8 +231,8 @@ function SwitchOldAccountDialog({ open, onOpenChange }: { open: boolean; onOpenC
     setBusy(true);
     try {
       const assessment = await assessPassword(password);
-      if (!assessment.longEnough) { setError(`Password must be at least ${MIN_PASSWORD_LENGTH} characters`); return; }
-      if (!assessment.acceptable) { setError('Choose a stronger password'); return; }
+      // Same wording as the meter above the field — see WalletCreateStep.
+      if (!assessment.acceptable) { setError(assessment.warnings[0] ?? 'Choose a stronger password'); return; }
       await switchActiveWallet(migratedKey, password);
       close(false);
     } catch (err) {
