@@ -53,6 +53,7 @@ import {
   activateWalletKey,
   restoreWalletSession,
   isWalletUnlocked,
+  isUnlockAvailable,
   lockWallet,
   setupAAProvider,
   setAAProvider,
@@ -388,6 +389,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.removeItem('dehub_user');
       setUser(null);
       setWalletAddress(null);
+      // Destroy the previous identity's key material as well. The unlock now
+      // outlives the page, so a signed-in-as-somebody-else browser would
+      // otherwise still be holding a usable key for the account it just
+      // dropped. The vault read has its own address check as a backstop, but
+      // that only engages once fetchWallet below has re-cached an address —
+      // clearing here means there is no window at all.
+      lockWallet();
+      clearWalletCache();
     }
     setSupabaseUserId(userId);
     setConnectionSource('web3auth');
@@ -614,7 +623,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         // createLogger's warn() has no user_address parameter, so carry it here
         // — without it the rows can't be counted per person, which is the only
         // way to tell "a few people posting a lot" from "everybody".
+        //
+        // Note this is the SMART ACCOUNT address, which does not join to
+        // user_wallets.eth_address (the EOA). Carry the Supabase id too, or
+        // linking a log row back to an account means a round-trip through the
+        // DeHub profile API to translate one address into the other.
         walletAddress: localStorage.getItem('dehub_wallet'),
+        supabaseUserId: uid,
+        // Which of the two reasons this was: the auto-lock interval genuinely
+        // elapsed, or we had nothing to restore. Without this the rows can't
+        // distinguish a setting working as configured from a bug dropping the
+        // key, and those need opposite fixes.
+        reason: localStorage.getItem('dehub_wallet_unlocked_at') ? 'expired-or-unrestorable' : 'no-prior-unlock',
+        path: window.location.pathname,
       });
 
       requestWalletUnlock();
@@ -630,12 +651,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user, walletAddress]);
 
-  // On page restore, the AA provider is gone even though the tab key session
-  // may be valid. Re-setup in the background so tips/txs work immediately.
+  // On page restore, neither the key nor the AA provider is in memory even
+  // though the unlock is still good. Rehydrate both in the background so the
+  // first tip/post/tx after a refresh signs straight away instead of stopping
+  // to ask for a password the user already gave us.
+  //
+  // isUnlockAvailable rather than isWalletUnlocked: the strict check is false
+  // until the vault read lands, which is exactly the window this effect exists
+  // to close.
   useEffect(() => {
     if (!user || connectionSource !== 'web3auth') return;
     if (getAAProvider()) return;
-    if (!isWalletUnlocked()) return; // locked — unlock happens on demand
+    if (!isUnlockAvailable()) return; // genuinely locked — unlock happens on demand
 
     restoreWalletSession().then(async (provider) => {
       if (!provider) return;
@@ -1590,8 +1617,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Smart-wallet sessions: silent re-sign if the key session is still live.
     if (connectionSource === 'web3auth' || savedSource === 'web3auth') {
       try {
-        if (!isWalletUnlocked()) {
-          // Locked — a UI unlock is required; the next tx attempt triggers it.
+        // Rehydrate from the vault before concluding anything: after a reload
+        // the key is not in memory yet, and treating that as "locked" here is
+        // what turned an ordinary token refresh into a password prompt.
+        if (!isWalletUnlocked() && !await restoreWalletSession()) {
+          // Genuinely locked — a UI unlock is required; the next tx attempt
+          // triggers it too, but prompting here saves the user a dead click.
           window.dispatchEvent(new Event('dehub:wallet-unlock-required'));
           return false;
         }

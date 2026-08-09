@@ -9,6 +9,7 @@
 
 import { BrandIcon } from '@/components/app/war/WarHudIcon';
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
 import { updateProfile, checkUsernameAvailability } from '@/lib/api/dehub';
@@ -38,6 +39,7 @@ function useDebounce<T>(value: T, delay: number): T {
 
 export function UsernameRequiredModal() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { requiresUsername, disconnect, refreshUser, setRequiresUsername, walletAddress } = useAuth();
   const [username, setUsername] = useState('');
@@ -171,12 +173,19 @@ export function UsernameRequiredModal() {
       await queryClient.invalidateQueries({ queryKey: ['dehub-user-content'] });
       
       setRequiresUsername(false);
-      
-      // Navigate to home feed if not already there (avoid staying on settings after profile creation)
+
+      // Navigate to home feed if not already there (avoid staying on settings
+      // after profile creation).
+      //
+      // Router navigate, NOT window.location.href: this fires seconds after a
+      // brand-new account set its wallet password, and a document navigation
+      // tears down the whole JS context. That used to drop the just-unlocked
+      // key, so the first post — a couple of minutes later — asked for the
+      // password all over again. Nothing here needs a full page load.
       if (window.location.pathname !== '/app') {
-        window.location.href = '/app';
+        navigate('/app');
       }
-      
+
       toast.success('Profile created successfully!');
     } catch (err) {
       console.error('Failed to update profile:', err);
