@@ -177,6 +177,7 @@ import { useAppTheme, DEFAULT_THEME_HUES } from '@/contexts/ThemeContext';
 import { THEME_COLOR, isSpecialThemeColor } from '@/lib/theme-color';
 import { extractBrandColors } from '@/lib/brand-colors';
 import { DeHubPageLoader } from '@/components/app/DeHubLoader';
+import { useScrollFadeMask } from '@/components/app/feeds/useScrollFadeMask';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('profile');
@@ -2168,6 +2169,7 @@ function ThemeColorPicker({ theme }: { theme: string }) {
 function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: string) => void }) {
   const { t } = useTranslation();
   const { isCollapsed, setCollapsed } = useSidebarCollapse();
+  const { ref: themePickerFadeRef, style: themePickerFadeStyle } = useScrollFadeMask<HTMLDivElement>();
   const [feedLayout, setFeedLayout] = useState('comfortable');
   const { defaultProfileTab, updateSettings, isUpdating, isLoading } = usePrivacySettings();
   return (
@@ -2181,9 +2183,10 @@ function AppearanceSettings({ theme, setTheme }: { theme: string; setTheme: (v: 
       <div>
         <h3 className="font-medium text-zinc-400 text-sm mb-4">{t('settings.theme')}</h3>
         <div className="relative">
-          <div data-theme-picker-fade className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-zinc-900 to-transparent pointer-events-none z-10" />
-          
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
+          {/* The strip that used to sit here had to be recoloured per theme in
+              three separate stylesheets — a grey smear over wood in jungle, a
+              black bar in minimal. The mask has no colour to get wrong. */}
+          <div ref={themePickerFadeRef} style={themePickerFadeStyle} className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
             {[
               { value: 'system', icon: Monitor, labelKey: 'settings.system', available: true },
               { value: 'light', icon: Sun, labelKey: 'settings.light', available: true },

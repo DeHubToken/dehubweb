@@ -136,8 +136,7 @@ export const LeaderboardCarousel = memo(function LeaderboardCarousel() {
         </button>
       </div>
       <div className="relative">
-        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-black/40 to-transparent pointer-events-none z-10" />
-        <SwipeableCarousel className="flex gap-2 overflow-x-auto scrollbar-hide pr-8">
+        <SwipeableCarousel fadeEdges className="flex gap-2 overflow-x-auto scrollbar-hide pr-8">
           {entries.map((entry, i) => (
             <LeaderboardCard
               key={entry.account}

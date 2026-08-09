@@ -668,15 +668,6 @@ html[data-theme='jungle'] [data-theme-option][data-active='true'] {
     inset 0 0 0 2px rgb(var(--jungle-leaf-c) / 0.66) !important;
 }
 
-/* The fade at the right edge of the scrolling theme strip is a `from-zinc-900`
-   gradient, which is a grey smear over wood. */
-html[data-theme='jungle'] [data-theme-picker-fade] {
-  background-image: linear-gradient(
-    to left,
-    rgb(var(--jungle-loam)) 0%,
-    rgb(var(--jungle-loam) / 0) 100%
-  ) !important;
-}
 
 /* ==========================================================================
    11. UNTAGGED PAGES - the safety net

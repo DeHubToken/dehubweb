@@ -28,7 +28,7 @@ describe('feed filter row edge fade', () => {
     // scrolled to its end — is never clipped.
     expect(hook).toContain('maskImage');
     expect(hook).toContain('WebkitMaskImage');
-    expect(hook).toContain('if (!edges.start && !edges.end) return undefined;');
+    expect(hook).toMatch(/if \(!enabled \|\| \(!edges\.start && !edges\.end\)\) return undefined;/);
   });
 });
 

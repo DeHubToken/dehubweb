@@ -314,11 +314,7 @@ export function StoriesBar({ users, isLoading: externalLoading, shorts = [] }: S
       )}
       <div className="text-center">
         <div className="relative">
-          {/* Right fade gradient to signal more stories */}
-          <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none" />
-          
-          
-          <SwipeableCarousel ref={scrollContainerRef} className="flex gap-1.5 overflow-x-auto scrollbar-hide px-2">
+          <SwipeableCarousel fadeEdges ref={scrollContainerRef} className="flex gap-1.5 overflow-x-auto scrollbar-hide px-2">
             {/* Create Story/Live Button */}
             <Drawer open={isOpen} onOpenChange={setIsOpen}>
               <div onClick={() => setIsOpen(true)}>
