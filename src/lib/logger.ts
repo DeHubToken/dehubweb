@@ -95,8 +95,18 @@ export async function logToBackend(data: LogData) {
     // Skip backend call for info/debug — console-only
     if (data.level === 'info' || data.level === 'debug') return;
 
-    // Queue for batched flush
-    LOG_QUEUE.push({ ...data, user_address: data.user_address ?? signedInWallet() });
+    // Queue for batched flush.
+    //
+    // client_time is stamped HERE, not at insert. client_error_logs.created_at
+    // is the row's insert time, and these flush in 30s batches — so every entry
+    // in a batch lands on the same created_at and the order they actually
+    // happened in is lost. Debugging a report of "it asked me twice, two
+    // minutes apart" against four rows sharing one timestamp is guesswork.
+    LOG_QUEUE.push({
+        ...data,
+        user_address: data.user_address ?? signedInWallet(),
+        metadata: { ...(data.metadata || {}), client_time: new Date().toISOString() },
+    });
     ensureFlushTimer();
 }
 

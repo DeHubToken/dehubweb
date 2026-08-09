@@ -14,6 +14,7 @@ import {
   activateWalletKey,
   lockWallet,
   isWalletUnlocked,
+  isUnlockAvailable,
   WALLET_LOCK_CHANGED_EVENT,
 } from '@/lib/smart-wallet';
 import { isSmartWalletSession } from '@/lib/connection-source';
@@ -30,7 +31,9 @@ import { WALLET_UNLOCK_INTERVAL_KEY } from '@/hooks/use-wallet-unlock-interval';
 const KEY = '0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d';
 
 /** What the hook computes on every sync. */
-const readLocked = () => isSmartWalletSession() && !isWalletUnlocked();
+const readLocked = () => isSmartWalletSession() && !isUnlockAvailable();
+
+const UNLOCKED_AT = 'dehub_wallet_unlocked_at';
 
 beforeEach(() => {
   localStorage.clear();
@@ -54,10 +57,41 @@ describe('locked predicate', () => {
     expect(readLocked()).toBe(false);
   });
 
-  it('is true for a built-in-wallet session with no key in memory', () => {
-    // The state after every reload, and after every auto-lock.
+  it('is true for a built-in-wallet session that has never unlocked', () => {
     localStorage.setItem('dehub_connection_source', 'web3auth');
     expect(readLocked()).toBe(true);
+  });
+
+  it('is FALSE right after a reload, while the key is still only in the vault', () => {
+    // The regression this whole change exists to prevent. Post-reload the key
+    // is not in memory yet, but a live unlock is recorded and the vault can
+    // supply it without asking the user for anything — so the composer must not
+    // paint "Unlock to post", and nothing may raise an unlock prompt.
+    localStorage.setItem('dehub_connection_source', 'web3auth');
+    localStorage.setItem(UNLOCKED_AT, String(Date.now()));
+
+    expect(readLocked()).toBe(false);
+    // The strict reading still says "cannot sign this instant", which is what
+    // callers that need a key right now must keep seeing.
+    expect(isWalletUnlocked()).toBe(false);
+  });
+
+  it('is true again once the recorded unlock is older than the interval', () => {
+    localStorage.setItem('dehub_connection_source', 'web3auth');
+    localStorage.setItem(WALLET_UNLOCK_INTERVAL_KEY, '15m');
+    localStorage.setItem(UNLOCKED_AT, String(Date.now() - 20 * 60 * 1000));
+
+    expect(readLocked()).toBe(true);
+    // ...and the stale record is cleared rather than left to be re-rejected.
+    expect(localStorage.getItem(UNLOCKED_AT)).toBeNull();
+  });
+
+  it('survives a reload indefinitely when the interval is "never"', () => {
+    localStorage.setItem('dehub_connection_source', 'web3auth');
+    localStorage.setItem(WALLET_UNLOCK_INTERVAL_KEY, 'never');
+    localStorage.setItem(UNLOCKED_AT, String(Date.now() - 30 * 24 * 60 * 60 * 1000));
+
+    expect(readLocked()).toBe(false);
   });
 
   it('is true when the tag was lost but the session is still a built-in one', () => {
@@ -103,7 +137,7 @@ describe('lock-change event', () => {
 
     const seen = vi.fn();
     window.addEventListener(WALLET_LOCK_CHANGED_EVENT, seen);
-    sessionStorage.setItem('dehub_wallet_unlocked_at', String(Date.now() - 20 * 60 * 1000));
+    localStorage.setItem(UNLOCKED_AT, String(Date.now() - 20 * 60 * 1000));
 
     expect(isWalletUnlocked()).toBe(false);
     expect(seen).toHaveBeenCalled();
