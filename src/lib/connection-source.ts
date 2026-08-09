@@ -126,3 +126,60 @@ export function healConnectionSource(): ConnectionSource | null {
   writeConnectionSource('web3auth');
   return 'web3auth';
 }
+
+/**
+ * The last COMPLETED smart-wallet login on this browser: which Supabase
+ * identity it was for, and the session address it ran under — the Safe smart
+ * account when the auth signature went through the AA provider, the EOA when
+ * it fell back to the bare key.
+ *
+ * Deliberately NOT cleared by clearAuthSession, because outliving the session
+ * keys is its entire job. The zombie-session cleanup and a rejected token
+ * refresh both wipe dehub_wallet and dehub_supabase_uid, and this record is
+ * then the only thing letting the next login for the same identity check the
+ * backend's linked address against something this browser has actually seen —
+ * the check that lets login finish without a wallet signature (see
+ * completeLoginWithoutUnlock in AuthProvider). It holds only public data, a
+ * uid and an address; the same pair a live session keeps in the clear anyway.
+ * Explicit sign-out clears it, where "this browser forgets me" is the point.
+ */
+const LAST_SESSION_KEY = 'dehub_last_session';
+
+export interface LastSession {
+  uid: string;
+  address: string;
+}
+
+export function writeLastSession(uid: string, address: string): void {
+  try {
+    localStorage.setItem(LAST_SESSION_KEY, JSON.stringify({ uid, address: address.toLowerCase() }));
+  } catch {
+    /* private mode — the next login simply falls back to signing */
+  }
+}
+
+export function readLastSession(): LastSession | null {
+  const raw = readKey(LAST_SESSION_KEY);
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as Partial<LastSession> | null;
+    if (typeof parsed?.uid !== 'string' || typeof parsed?.address !== 'string') return null;
+    return { uid: parsed.uid, address: parsed.address.toLowerCase() };
+  } catch {
+    return null;
+  }
+}
+
+/** The last completed login's session address, only if that login was `uid`'s. */
+export function readLastSessionAddress(uid: string): string | null {
+  const last = readLastSession();
+  return last && last.uid === uid ? last.address : null;
+}
+
+export function clearLastSession(): void {
+  try {
+    localStorage.removeItem(LAST_SESSION_KEY);
+  } catch {
+    /* ignore */
+  }
+}
