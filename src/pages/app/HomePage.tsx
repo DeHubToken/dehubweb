@@ -32,6 +32,7 @@ import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { clearPersistedFeedFilters } from '@/hooks/use-persisted-feed-filter';
 import { SORT_OPTIONS } from '@/lib/feed-utils';
 import { SEOHead } from '@/components/SEOHead';
+import { HomeIntro } from '@/components/app/HomeIntro';
 import { useGlobalFeedNav } from '@/contexts/GlobalFeedNavContext';
 
 
@@ -980,6 +981,18 @@ export default function HomePage() {
         <div ref={homeFiltersRef} className="contents" />
       </div>
       </div>
+
+      {/* Signed-out only: the prose the "dehub" brand term has to land on.
+          dehub.net 301s into this URL, and a 301 only carries a ranking if the
+          destination holds the query — the feed alone gave crawlers ~149 words.
+          Sits AFTER the sticky tab bar (a sibling, so its top-11/lg:top-0 offsets
+          and the hide-on-scroll transform are untouched) and before the feed
+          container, so it never enters the pull-to-refresh region. Returns null
+          when signed in, so the existing community's feed is unchanged.
+          Root only: this one instance also serves /app, /videos and /shorts, and
+          "/" is both the canonical indexable URL and the 301 target — the others
+          are noindex app chrome (see shouldServeSSR in the worker). */}
+      {location.pathname === '/' && <HomeIntro />}
 
       {/* Feed Content - Pull-to-refresh only works within this container */}
       <div 
