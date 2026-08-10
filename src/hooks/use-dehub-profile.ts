@@ -25,6 +25,9 @@ export interface ProfileData {
   avatarUrl?: string;
   coverUrl?: string;
   joinedDate: string;
+  /** Raw ISO creation timestamp. joinedDate is a localized display string and
+   *  cannot be used for arithmetic, e.g. the new-member window. */
+  createdAt?: string;
   following: number;
   followers: number;
   postsCount: number;
@@ -114,6 +117,7 @@ export function mapUserToProfile(user: DeHubUser): ProfileData {
     avatarUrl,
     coverUrl,
     joinedDate: joinDate,
+    createdAt: createdAt || undefined,
     following: followingCount,
     followers: followerCount,
     postsCount: user.post_count || user.uploads || 0,

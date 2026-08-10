@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { UserAvatar } from '@/components/app/UserAvatar';
 import { VerifiedBadge } from '@/components/app/VerifiedBadge';
+import { NewMemberBadge } from '@/components/app/NewMemberBadge';
 import { ShimmerBorder } from '@/components/app/stories/ShimmerBorder';
 import { TranslatableText, hasTranslatableText } from '@/components/app/TranslatableText';
 import { BioTranslateButton } from '@/components/app/profile/BioTranslateButton';
@@ -380,6 +381,9 @@ export function ProfileHeader({
                 {profile.handle}
               </button>
               {profile.verified && <VerifiedBadge className="w-5 h-5" />}
+              <NewMemberBadge
+                account={{ address: profile.walletAddress, createdAt: profile.createdAt }}
+              />
               {!isViewingOwnProfile && apiProfile?.followsYou && (
                 <span className="text-xs px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-400">
                   Follows you

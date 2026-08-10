@@ -96,6 +96,7 @@ import { useDebouncedValue } from '@/hooks/use-debounced-value';
 import { useAuth as useAuthContext } from '@/contexts/AuthContext';
 import { useCoinPlacement } from '@/hooks/use-coin-placement';
 import { usePrivacySettings } from '@/hooks/use-privacy-settings';
+import { useProfilePreferences, useUpdateProfilePreferences } from '@/hooks/use-profile-preferences';
 import { useWalletUnlockInterval, type WalletUnlockIntervalOption } from '@/hooks/use-wallet-unlock-interval';
 import { WalletRecoveryTools } from '@/components/app/settings/WalletRecoveryTools';
 import { BiometricUnlockSettings } from '@/components/app/settings/BiometricUnlockSettings';
@@ -1318,6 +1319,9 @@ function QuietHoursSection() {
 function PrivacySettings() {
   const { t } = useTranslation();
   const { showFollowersFollowing, hideFollowerCounts, isPrivate, defaultPostVisibility, updateSettings, isUpdating, isLoading } = usePrivacySettings();
+  const { walletAddress: myWallet } = useAuth();
+  const { data: profilePreferences } = useProfilePreferences(myWallet);
+  const updateProfilePreferences = useUpdateProfilePreferences();
   const { whoCanMessage, messageFee, doNotDisturb, isUpdating: isDmUpdating, updateWhoCanMessage, updateMessageFee, updateDoNotDisturb } = useDmSettings();
   const { option: walletUnlockInterval, setOption: setWalletUnlockInterval } = useWalletUnlockInterval();
   const [feeInput, setFeeInput] = useState('');
@@ -1456,6 +1460,22 @@ function PrivacySettings() {
             description={t('settings.publicProfileDesc')}
             defaultChecked
             comingSoon
+          />
+          <SettingsRow
+            as="label"
+            icon={<Sparkles />}
+            title={t('settings.newMemberBadge', 'Show "New" badge')}
+            description={t(
+              'settings.newMemberBadgeDesc',
+              'Let others see that you recently joined, so they can welcome you. Shows for your first 30 days.',
+            )}
+            action={<Switch
+              checked={!profilePreferences?.hideNewMemberBadge}
+              onCheckedChange={(checked) =>
+                updateProfilePreferences.mutate({ hideNewMemberBadge: !checked })
+              }
+              disabled={!myWallet || updateProfilePreferences.isPending}
+            />}
           />
           <SettingsRow
             icon={<Users />}
