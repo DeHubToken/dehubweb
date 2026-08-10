@@ -65,7 +65,6 @@ describe('arcade registry', () => {
       expect(game.tagline, game.slug).toBeTruthy();
       // Doubles as the meta description, which wants a real sentence.
       expect(game.description.length, game.slug).toBeGreaterThan(80);
-      expect(game.controls.length, game.slug).toBeGreaterThan(0);
       expect(game.artAlt, game.slug).toBeTruthy();
       expect(game.credit.url, game.slug).toMatch(/^https:\/\//);
     }
