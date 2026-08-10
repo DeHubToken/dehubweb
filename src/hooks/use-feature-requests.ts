@@ -13,6 +13,19 @@ import { toast } from 'sonner';
 import { getAccountInfo, getAccountByUsername } from '@/lib/api/dehub';
 import { extractAvatarPath } from '@/lib/media-url';
 import { escapeFilterValue } from '@/lib/postgrest-filter';
+import { MAX_FEATURE_ATTACHMENTS } from '@/lib/feature-attachments';
+
+/**
+ * True when a write failed only because the column has not reached this
+ * database yet. PostgREST reports it from its schema cache (PGRST204); Postgres
+ * reports it directly (42703) when the cache is stale in the other direction.
+ */
+function isMissingColumn(error: unknown, column: string): boolean {
+  const e = error as { code?: string; message?: string } | null;
+  if (!e) return false;
+  if (e.code !== 'PGRST204' && e.code !== '42703') return false;
+  return typeof e.message === 'string' && e.message.includes(column);
+}
 
 export type FeatureCategory = 'ui_ux' | 'performance' | 'new_feature' | 'bug_fix' | 'integration' | 'other';
 export type FeatureStatus = 'open' | 'under_review' | 'planned' | 'in_progress' | 'completed' | 'shipped' | 'declined';
@@ -28,6 +41,8 @@ export interface FeatureRequest {
   author_username: string | null;
   author_avatar: string | null;
   image_url: string | null;
+  /** Every attachment; `image_url` mirrors the first. Read via featureAttachments(). */
+  image_urls?: string[] | null;
   shipped_url?: string | null;
   vote_count: number;
   like_count: number;
@@ -373,22 +388,26 @@ export function useSubmitFeatureRequest() {
   const { walletAddress, user } = useAuth();
 
   return useMutation({
-    mutationFn: async ({ title, description, category, mediaFile }: { title: string; description: string; category: FeatureCategory; mediaFile?: File | null }) => {
+    mutationFn: async ({ title, description, category, mediaFiles }: { title: string; description: string; category: FeatureCategory; mediaFiles?: File[] | null }) => {
       if (!walletAddress) throw new Error('Not authenticated');
 
-      let imageUrl: string | null = null;
+      const files = (mediaFiles ?? []).slice(0, MAX_FEATURE_ATTACHMENTS);
+      const imageUrls: string[] = [];
 
-      // Upload media file if provided
-      if (mediaFile) {
-        const ext = mediaFile.name.split('.').pop()?.toLowerCase() || 'bin';
-        const filePath = `${walletAddress.toLowerCase()}/${Date.now()}.${ext}`;
+      // Sequential rather than parallel: the filename is stamped with Date.now(),
+      // and concurrent uploads of same-extension files collide on it.
+      for (const [index, file] of files.entries()) {
+        const ext = file.name.split('.').pop()?.toLowerCase() || 'bin';
+        const filePath = `${walletAddress.toLowerCase()}/${Date.now()}-${index}.${ext}`;
         const { error: uploadError } = await supabase.storage
           .from('feature-media')
-          .upload(filePath, mediaFile, { contentType: mediaFile.type, upsert: false });
+          .upload(filePath, file, { contentType: file.type, upsert: false });
         if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`);
         const { data: urlData } = supabase.storage.from('feature-media').getPublicUrl(filePath);
-        imageUrl = urlData.publicUrl;
+        imageUrls.push(urlData.publicUrl);
       }
+
+      const imageUrl = imageUrls[0] ?? null;
 
       // Resolve avatar: auth context → wallet lookup → username lookup
       let avatarPath = user?.avatarImageUrl || null;
@@ -409,20 +428,43 @@ export function useSubmitFeatureRequest() {
         }
       }
 
-      const { data, error } = await supabase
-        .from('feature_requests')
-        .insert({
-          title: title.trim(),
-          description: description.trim(),
-          category,
-          image_url: imageUrl,
-          author_wallet_address: walletAddress.toLowerCase(),
-          author_username: user?.username || null,
-          author_avatar: avatarPath,
-        })
-        .select()
-        .single()
-        .setHeader('x-wallet-address', walletAddress.toLowerCase());
+      const row = {
+        title: title.trim(),
+        description: description.trim(),
+        category,
+        image_url: imageUrl,
+        author_wallet_address: walletAddress.toLowerCase(),
+        author_username: user?.username || null,
+        author_avatar: avatarPath,
+      };
+
+      // image_urls postdates the generated types, so the payload is widened to
+      // the row shape the database actually accepts.
+      type FeatureRequestInsert = typeof row & { image_urls?: string[] };
+      const insert = (payload: FeatureRequestInsert) =>
+        supabase
+          .from('feature_requests')
+          .insert(payload)
+          .select()
+          .single()
+          .setHeader('x-wallet-address', walletAddress.toLowerCase());
+
+      const { data, error } = await insert(
+        imageUrls.length > 0 ? { ...row, image_urls: imageUrls } : row,
+      );
+
+      // The board must keep accepting reports even where image_urls has not been
+      // migrated in yet: retry on the single-attachment shape rather than losing
+      // the submission. image_url already holds the first upload, so only the
+      // extra attachments are dropped, and the toast says so.
+      if (error && isMissingColumn(error, 'image_urls')) {
+        const retry = await insert(row);
+        if (retry.error) throw retry.error;
+        if (imageUrls.length > 1) {
+          toast.warning('Only the first attachment was saved — attachments are still rolling out');
+        }
+        return retry.data;
+      }
 
       if (error) throw error;
       return data;
