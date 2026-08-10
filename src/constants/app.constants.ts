@@ -31,6 +31,7 @@ import {
   Vault,
   Map,
   BarChart3,
+  Gamepad2,
 } from 'lucide-react';
 import type { NavItem, User as UserType, TrendingTopic, SearchTab } from '@/types/app.types';
 
@@ -56,6 +57,7 @@ export const NAV_ITEMS: NavItem[] = [
   { icon: Users, label: 'Affiliate', path: '/affiliate' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
   { icon: Store, label: 'Stores', path: '/app/stores' },
+  { icon: Gamepad2, label: 'Arcade', path: '/arcade' },
   { icon: Scroll, label: 'Glossary', path: '/app/glossary' },
   { icon: Map, label: 'Guide', path: '/guide' },
   { icon: BarChart3, label: 'Stats', path: '/stats' },

@@ -1,16 +1,22 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 /**
- * A percentage readout for the two vendored games' boot.
- * ======================================================
+ * A percentage readout for a vendored game's boot.
+ * ================================================
  *
  * WHERE THE NUMBER COMES FROM, AND WHY IT IS NOT MEASURED
  * -------------------------------------------------------
- * Neither engine reports progress, and neither can be made to. Both build the
- * whole world inside one synchronous stretch of module evaluation — War in its
- * boot sequence, Jungle inside `new Game(...)` — so there is no point during
- * the bake at which anything could be counted, let alone posted out. The one
- * signal either frame can send is "still alive" and then "ready".
+ * Neither of the two engines this was written for reports progress, and
+ * neither can be made to. Both build the whole world inside one synchronous
+ * stretch of module evaluation — War in its boot sequence, Jungle inside
+ * `new Game(...)` — so there is no point during the bake at which anything
+ * could be counted, let alone posted out. The one signal either frame can send
+ * is "still alive" and then "ready".
+ *
+ * A game that DOES have a real loading screen of its own (King's Gambit counts
+ * its figures as they land) should not be hidden behind this. The Arcade
+ * player gives those a short tau and retires the panel on the frame's load
+ * event, so the model only ever covers the gap before first paint.
  *
  * So this models the wait instead of measuring it: an exponential approach that
  * is fastest at the start and never reaches the end on its own. Two properties

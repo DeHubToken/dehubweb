@@ -3,7 +3,7 @@
   Cross-Origin-Embedder-Policy: unsafe-none
   Cross-Origin-Resource-Policy: cross-origin
   X-Frame-Options: SAMEORIGIN
-  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' https: blob: data:; worker-src 'self' blob:; frame-src 'self' https://verify.walletconnect.com https://verify.walletconnect.org; base-uri 'self'; form-action 'self'; object-src 'none'; connect-src 'self' https://aigxuutjaqsywioxjefr.supabase.co wss://aigxuutjaqsywioxjefr.supabase.co https://api.dehub.io wss://api.dehub.io https://*.publicnode.com https://bsc-dataseed.binance.org https://bsc-dataseed1.binance.org https://data-seed-prebsc-1-s2.binance.org https://api.pimlico.io https://api.bscscan.com https://testnet.bscscan.com https://s2.coinmarketcap.com https://dehubcdn.ams3.cdn.digitaloceanspaces.com https://cdn.dehub.io https://*.walletconnect.com https://*.walletconnect.org
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; media-src 'self' https: blob: data:; worker-src 'self' blob: data:; frame-src 'self' https://verify.walletconnect.com https://verify.walletconnect.org; base-uri 'self'; form-action 'self'; object-src 'none'; connect-src 'self' https://r2-pub.rork.com https://aigxuutjaqsywioxjefr.supabase.co wss://aigxuutjaqsywioxjefr.supabase.co https://api.dehub.io wss://api.dehub.io https://*.publicnode.com https://bsc-dataseed.binance.org https://bsc-dataseed1.binance.org https://data-seed-prebsc-1-s2.binance.org https://api.pimlico.io https://api.bscscan.com https://testnet.bscscan.com https://s2.coinmarketcap.com https://dehubcdn.ams3.cdn.digitaloceanspaces.com https://cdn.dehub.io https://*.walletconnect.com https://*.walletconnect.org
 
 # The service worker must never be long-cached, or clients get stuck on an old
 # SW that can't pick up new caching logic. Always revalidate. Scope stays root.
@@ -85,6 +85,42 @@
 # storage, cookies and the parent DOM. This header keeps the sandbox strict
 # instead. It is safe here because these are public static game assets with no
 # credentials and nothing user specific.
-/war-game/*
+# The rules are split at assets/ rather than written as one `/war-game/*`,
+# which is what this was. Everything under assets/ is content-hashed by Vite,
+# so a year of `immutable` is right for those — but index.html is NOT hashed
+# and is the exact file the iframe asks for by name, so the blanket rule pinned
+# it too and a re-vendored game would not have reached an existing visitor
+# until 2027. Splitting the paths (rather than adding a narrower override) is
+# deliberate: overlapping `_headers` rules combine, and two Cache-Control lines
+# for one file is not a state worth reasoning about.
+/war-game/assets/*
   Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=31536000, immutable
+
+/war-game/index.html
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=0, must-revalidate
+
+# The chess game is framed the same way, so it needs the same header for the
+# same reason — its entry is a module script and an opaque-origin frame fetches
+# those in CORS mode with `Origin: null`.
+#
+# It also fetches its armies (~44 MB of glTF and audio) from r2-pub.rork.com at
+# runtime, which is why `connect-src` above lists that host. None of that is
+# served from here; see public/chess-game/README.md.
+/chess-game/assets/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=31536000, immutable
+
+/chess-game/index.html
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=0, must-revalidate
+
+/chess-game/favicon.png
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=604800
+
+# Arcade card art. Unhashed, so the convention for everything else in /public
+# applies: CHANGE THE FILENAME when the capture changes.
+/arcade/*
   Cache-Control: public, max-age=31536000, immutable

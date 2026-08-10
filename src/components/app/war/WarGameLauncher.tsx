@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAppTheme } from '@/contexts/ThemeContext';
 import { scheduleBackgroundResume, setBackgroundPaused } from '@/lib/background-gate';
 import { useBootProgress } from '@/lib/game-boot-progress';
+import { isIntegratedGpu, probeGpu, readRenderer } from '@/lib/game-gpu';
 
 /**
  * War theme game launcher.
@@ -209,41 +210,6 @@ const BUNDLED_GAME_URL = '/war-game/index.html';
  * before anything can be shown at all.
  */
 /**
- * Read the GPU's unmasked renderer string, or '' when the browser withholds it.
- *
- * Costs a throwaway GL context, so callers should do this once.
- */
-function readRenderer(): string {
-  if (typeof document === 'undefined') return '';
-  try {
-    const canvas = document.createElement('canvas');
-    const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
-    if (!gl) return '';
-    const info = gl.getExtension('WEBGL_debug_renderer_info');
-    const name = info
-      ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL) ?? '')
-      : '';
-    (gl.getExtension('WEBGL_lose_context') as { loseContext(): void } | null)?.loseContext();
-    return name;
-  } catch {
-    return '';
-  }
-}
-
-/**
- * Integrated graphics, by renderer string.
- *
- * These share system memory and have a fraction of a discrete card's fill rate,
- * which is exactly what this game leans on: roughly 1.8M triangles, shadow
- * cascades and a full post chain.
- */
-function isIntegratedGpu(renderer: string): boolean {
-  return /iris|uhd graphics|hd graphics|intel\(r\) graphics|vega \d|radeon graphics|adreno|mali|apple gpu|llvmpipe|swiftshader/i.test(
-    renderer,
-  );
-}
-
-/**
  * Pick the engine's quality preset.
  *
  * The game reads ?q= and defaults to "ultra" when absent: renderScale 1.0,
@@ -304,48 +270,33 @@ interface Capability {
  * not by system memory.
  */
 function checkCapability(): Capability {
-  if (typeof document === 'undefined') {
-    return { ok: true, reason: '', detail: '' };
-  }
+  // One probe, one throwaway context — see lib/game-gpu. The detection is
+  // shared with the Jungle launcher and the Arcade; only the wording below is
+  // this game's.
+  const gpu = probeGpu();
 
-  const canvas = document.createElement('canvas');
-  const gl = canvas.getContext('webgl2') as WebGL2RenderingContext | null;
-
-  if (!gl) {
-    const gl1 = canvas.getContext('webgl');
+  if (!gpu.webgl2) {
     return {
       ok: false,
       reason: 'WEBGL2 UNAVAILABLE',
-      detail: gl1
+      detail: gpu.webgl
         ? 'This browser reports WebGL 1 only. The game requires WebGL 2. Updating the browser or the graphics driver usually resolves it.'
         : 'No WebGL context at all. Hardware acceleration is most likely disabled in the browser settings.',
     };
   }
 
-  // Unmasked renderer is the only reliable way to spot a software fallback.
-  // It is gated behind an extension and some browsers withhold it, in which
-  // case the check simply passes rather than blocking a machine that may
-  // actually be fine.
-  let renderer = '';
-  const info = gl.getExtension('WEBGL_debug_renderer_info');
-  if (info) {
-    renderer = String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL) ?? '');
-  }
-
-  // Free the probe context immediately: contexts are a scarce resource and the
-  // game is about to ask for its own.
-  gl.getExtension('WEBGL_lose_context')?.loseContext();
-
-  const soft = /swiftshader|llvmpipe|software|basic render|microsoft basic/i;
-  if (renderer && soft.test(renderer)) {
+  // An unknown renderer passes: the extension that exposes it is withheld by
+  // some browsers, and blocking on "could not tell" would lock out machines
+  // that are actually fine.
+  if (gpu.software) {
     return {
       ok: false,
       reason: 'SOFTWARE RENDERING',
-      detail: `The GPU is not being used (${renderer}). The game would run at a few frames per second. Enable hardware acceleration in the browser settings, then restart it.`,
+      detail: `The GPU is not being used (${gpu.renderer}). The game would run at a few frames per second. Enable hardware acceleration in the browser settings, then restart it.`,
     };
   }
 
-  return { ok: true, reason: '', detail: renderer };
+  return { ok: true, reason: '', detail: gpu.renderer };
 }
 
 /**
