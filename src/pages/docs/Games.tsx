@@ -69,6 +69,20 @@ const Games = () => {
                     arcade.dehub.net
                   </a>
                 </div>
+
+                {/* The titles above live on arcade.dehub.net, a separate
+                    property. These three run in this app, at /arcade — a
+                    reader on this page is looking for games and would
+                    otherwise never learn they exist. Internal link, so it is
+                    a Link-shaped <a> to a same-origin route rather than a new
+                    tab. */}
+                <div className="mt-6 pt-4 border-t border-border">
+                  <h4 className="text-lg font-semibold text-foreground mb-2">{t('games.inAppTitle')}</h4>
+                  <p className="text-foreground/90 mb-3">{t('games.inAppDesc')}</p>
+                  <a href="/arcade" className="text-primary hover:text-primary/80 underline font-semibold">
+                    {t('games.inAppCta')}
+                  </a>
+                </div>
               </div>
             </div>
           </TabsContent>

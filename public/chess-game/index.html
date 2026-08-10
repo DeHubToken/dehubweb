@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- `viewport-fit=cover` lets the hall fill a notched screen edge to edge AND
+         is what makes `env(safe-area-inset-*)` resolve to real pixels — without
+         it iOS reports every inset as 0 and the interface hides under the
+         cutout and the home bar. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>King's Gambit — Medieval 3D Chess</title>
+    <meta name="description" content="Cinematic 3D chess in a torch-lit castle hall. Play a computer opponent or a friend." />
+    <meta name="theme-color" content="#05060a" />
+
+    <!-- DEHUB PATCH (3 of 3) — see README.md beside this file.
+
+         Upstream carries a full share card here, absolute to the standalone
+         deploy at g9111r67kl6tq85g540sd-web.rork.live. On dehub.io this
+         document is never the thing anyone shares: it is loaded inside a
+         sandboxed iframe by /arcade/kings-gambit, and that page carries its own
+         canonical URL, title and OG image. Leaving the block in would point
+         every unfurl of the arcade at another company's domain and at a banner
+         we do not serve, so it is dropped rather than rewritten.
+
+         `<meta name="robots">` keeps the frame document itself out of search
+         results — the arcade page is the indexable surface. -->
+    <meta name="robots" content="noindex" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Absolute `/favicon.png` would resolve to dehub.io's, not the game's, so
+         the icon is relative to the mount point. `icon.png` (a 2.5 MB
+         apple-touch-icon) is not vendored: an iframe never shows one. -->
+    <link rel="icon" type="image/png" href="./favicon.png" />
+    <script type="module" crossorigin src="/chess-game/assets/index-CyOseX35.js"></script>
+    <link rel="stylesheet" crossorigin href="/chess-game/assets/index-D9e53Fix.css">
+  </head>
+
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

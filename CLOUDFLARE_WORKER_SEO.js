@@ -662,6 +662,46 @@ const MARKETING_PAGES = {
     bodyHtml: `<p>Stages are live audio rooms on DeHub: join a conversation as a listener, come up on stage to speak, or host your own room. Finished stages stay available as recordings.</p>
 <p><a href="${APP_URL}/stages" style="color:#9f9">See live and recorded Stages</a>.</p>`,
   },
+  // The Arcade. Titles and descriptions mirror the SPA's SEOHead strings so
+  // the bot and human variants never diverge, and each game gets its own page
+  // rather than being folded into the grid: they are separately linkable, they
+  // are what somebody actually searches for, and one shared page for three
+  // games would be a soft duplicate of all three.
+  'arcade': {
+    title: 'Arcade | DeHub',
+    description: 'Play games in your browser on DeHub — cinematic 3D chess, a procedurally generated shooter and a rainforest walk. No install, no download, open source.',
+    heading: 'DeHub Arcade',
+    bodyHtml: `<p>Games that run in the browser tab. Nothing to install, nothing to buy — every one is open source and served from DeHub itself.</p>
+<ul>
+<li><a href="${APP_URL}/arcade/kings-gambit" style="color:#9f9">King's Gambit</a> — cinematic 3D chess with three rigged civilisations, four battlegrounds and three engine strengths.</li>
+<li><a href="${APP_URL}/arcade/claude-of-duty" style="color:#9f9">Claude of Duty</a> — a first-person shooter that generates every mesh, texture and sound on your machine as it loads.</li>
+<li><a href="${APP_URL}/arcade/jungle-trail" style="color:#9f9">Jungle Trail</a> — a walk through a procedurally generated rainforest, with no score and no timer.</li>
+</ul>`,
+  },
+  'arcade/kings-gambit': {
+    title: "King's Gambit | DeHub Arcade",
+    description: "Play King's Gambit on DeHub — cinematic 3D chess where three rigged civilisations march, strike and fall across a marble board. Free, in your browser, no install.",
+    heading: "King's Gambit — Cinematic 3D Chess",
+    bodyHtml: `<p>Chess with an army behind every piece. Three rigged civilisations — the Ivory Kingdom, the Sun Empire and the Grande Armée — march, strike and fall across a marble board in four battlegrounds.</p>
+<p>Full rules including castling, en passant and promotion; three engine strengths; a two-player hotseat; and an AI vs AI mode you can just sit and watch.</p>
+<p><a href="${APP_URL}/arcade/kings-gambit" style="color:#9f9">Play King's Gambit</a> or <a href="${APP_URL}/arcade" style="color:#9f9">see the whole arcade</a>.</p>`,
+  },
+  'arcade/claude-of-duty': {
+    title: 'Claude of Duty | DeHub Arcade',
+    description: 'Play Claude of Duty on DeHub — a browser first-person shooter that ships no art at all and generates every mesh, texture and sound on your machine. Free, no install.',
+    heading: 'Claude of Duty — A Browser FPS With No Assets',
+    bodyHtml: `<p>A first-person shooter that ships no art at all: every mesh, texture and sound is generated in JavaScript on your machine while the level loads.</p>
+<p>It is also hidden inside the War theme, where an arrow key offers to deploy you.</p>
+<p><a href="${APP_URL}/arcade/claude-of-duty" style="color:#9f9">Play Claude of Duty</a> or <a href="${APP_URL}/arcade" style="color:#9f9">see the whole arcade</a>.</p>`,
+  },
+  'arcade/jungle-trail': {
+    title: 'Jungle Trail | DeHub Arcade',
+    description: 'Walk Jungle Trail on DeHub — a first-person walk through a procedurally generated rainforest with weather and a day cycle. No score, no timer, no install.',
+    heading: 'Jungle Trail — A Procedural Rainforest Walk',
+    bodyHtml: `<p>A first-person walk through a procedurally generated rainforest — a hundred thousand plants, weather and a day cycle, all grown on your machine before the first frame. No score, no timer, nothing to beat.</p>
+<p>It is also hidden inside the Jungle theme, where the background you are already looking at pushes forward and becomes the game.</p>
+<p><a href="${APP_URL}/arcade/jungle-trail" style="color:#9f9">Walk the trail</a> or <a href="${APP_URL}/arcade" style="color:#9f9">see the whole arcade</a>.</p>`,
+  },
   'guide': {
     title: 'DeHub Guide — Visual Walkthrough of the App',
     description: 'A visual walkthrough of DeHub: feeds, messaging, wallet, staking, governance and more. See every screen and learn how the decentralized social platform works.',
@@ -955,6 +995,11 @@ const SYSTEM_ROUTES = [
   // 'blog' is reserved: a user registered that handle, and without this every
   // /blog/<anything> minted an indexable "Join @blog" profile page.
   'blog',
+  // Same class of bug again: without this, /arcade/kings-gambit reads as the
+  // deep path of a user called @arcade, canonicalizes to /arcade, and the
+  // profile renderer answers a "Join @arcade" page to every crawler. Each game
+  // has a real edge page below (MARKETING_PAGES).
+  'arcade',
 ];
 
 
@@ -977,6 +1022,11 @@ const SSR_STATIC_ROUTES = new Set([
   'affiliate', 'premium', 'governance', 'leaderboard', 'top-100',
   'music', 'radio', 'tv', 'glossary', 'bridge', 'agents',
   'assistant', 'creators', 'jobs',
+  // Listed for canonicalizePath, not for the Supabase fn: /app/arcade is a
+  // real SPA route and without this it self-canonicalizes, indexing as a
+  // duplicate of /arcade. The page itself is rendered from MARKETING_PAGES,
+  // which is checked before the fn is ever consulted (same as 'features').
+  'arcade',
   // /guides/* is handled entirely at the edge (GUIDE_PAGES + blog manifest),
   // never proxied to the Supabase fn — its STATIC_ROUTES allowlist is stale.
   //
