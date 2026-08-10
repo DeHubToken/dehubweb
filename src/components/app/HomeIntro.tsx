@@ -84,11 +84,20 @@ const LINKS: { to: string; label: string }[] = [
   { to: '/guides/what-is-dehub', label: 'What is DeHub?' },
 ];
 
-/** Design-system tokens (.agents/skills/dehub-poster, "Design-system anchors"). */
+/** Design-system tokens — matched against the reference boards in
+ *  .agents/skills/dehub-poster/assets/reference/, not just the SKILL.md prose. */
 const CANVAS = 'radial-gradient(120% 90% at 50% -10%, #15181e, #0a0b0d 55%, #060708)';
-const DOT_GRID = 'radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px)';
+/** Blueprint grid: ruled lines with brighter dots at the intersections. */
+const GRID_LINES =
+  'linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)';
+const GRID_DOTS = 'radial-gradient(rgba(255,255,255,0.09) 1px, transparent 1.4px)';
+/** Soft off-axis key light — the drapery/light-shaft wash on the boards. */
+const KEY_LIGHT =
+  'radial-gradient(90% 120% at 12% 0%, rgba(255,255,255,0.10), rgba(255,255,255,0.02) 38%, transparent 68%)';
+/** Brushed-metal display fill. Angled with a bright hotspot past the midpoint,
+ *  so the headline reads as lit steel rather than a flat vertical ramp. */
 const CHROME_TEXT =
-  'linear-gradient(180deg, #ffffff 0%, #e6e9ed 38%, #9aa0a9 62%, #c4c9d0 100%)';
+  'linear-gradient(100deg, #6f747c 0%, #9aa0a9 26%, #ffffff 52%, #eef1f4 63%, #a8aeb7 82%, #7b818a 100%)';
 
 export function HomeIntro() {
   const { isAuthenticated, openLoginModal } = useAuth();
@@ -143,13 +152,25 @@ export function HomeIntro() {
       className="relative mx-2 mb-3 overflow-hidden rounded-2xl border border-white/10 sm:mx-3 lg:mx-3"
       style={{ background: CANVAS }}
     >
-      {/* Blueprint dot grid — the design system's "digital blueprint" motif. */}
+      {/* Blueprint grid: ruled lines on a 28px pitch with brighter intersection
+          dots, as on the reference boards — not dots alone. */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0"
-        style={{ backgroundImage: DOT_GRID, backgroundSize: '28px 28px' }}
+        style={{
+          backgroundImage: `${GRID_DOTS}, ${GRID_LINES}`,
+          backgroundSize: '28px 28px, 28px 28px, 28px 28px',
+        }}
       />
-      {/* Thin inset frame, 24px radius / 18px inset per the statement template. */}
+      {/* Off-axis key light. */}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0" style={{ background: KEY_LIGHT }} />
+      {/* Brand grain plate (240px tile) — every DeHub surface carries it. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.14] mix-blend-overlay"
+        style={{ backgroundImage: 'url(/brand-kit/brand/grain.png)', backgroundSize: '240px 240px' }}
+      />
+      {/* Thin inset frame, 18px radius per the statement template. */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-[10px] rounded-[18px] border border-white/[0.07] sm:inset-[14px]"
@@ -223,8 +244,10 @@ export function HomeIntro() {
                 i === active ? 'opacity-100 translate-y-0' : 'pointer-events-none opacity-0 translate-y-5'
               )}
             >
+              {/* Oversized chrome headline, then the subtitle a step down in
+                  size and weight — the AFFILIATES / LIVE NOW IN BETA lockup. */}
               <p
-                className="font-exo text-2xl font-black uppercase leading-[1.1] tracking-[0.04em] sm:text-3xl"
+                className="font-exo text-[32px] font-black uppercase leading-[0.95] tracking-[0.02em] sm:text-[54px]"
                 style={{
                   backgroundImage: CHROME_TEXT,
                   WebkitBackgroundClip: 'text',
@@ -233,10 +256,19 @@ export function HomeIntro() {
                 }}
               >
                 {s.title}
-                <br />
+              </p>
+              <p
+                className="font-exo mt-1 text-[22px] font-medium uppercase leading-[1.05] tracking-[0.06em] sm:text-[34px]"
+                style={{
+                  backgroundImage: CHROME_TEXT,
+                  WebkitBackgroundClip: 'text',
+                  backgroundClip: 'text',
+                  color: 'transparent',
+                }}
+              >
                 {s.subtitle}
               </p>
-              <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/55">{s.description}</p>
+              <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/55">{s.description}</p>
             </div>
           ))}
         </div>
@@ -299,11 +331,20 @@ export function HomeIntro() {
               </Link>
             ))}
           </nav>
-          {/* Wordmark bottom-left / `// dehub.io` chip bottom-right — the
-              statement template's footer lockup. Real asset, never redrawn. */}
-          <div className="flex items-center gap-3">
-            <img src={dehubWordmark} alt="DeHub" width={78} height={18} className="h-[18px] w-auto opacity-70" loading="lazy" decoding="async" />
-            <span className="font-mono text-[10px] uppercase tracking-[0.16em] text-zinc-600">// dehub.io</span>
+          {/* Footer lockup — on both reference boards these are BOXED chips
+              (glass fill, 1px border, 12px radius), not bare text: wordmark
+              plate, //dehub.io chip, and a `// type = "…"` stamp. Real asset,
+              never redrawn. */}
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="rounded-xl border border-white/15 bg-white/[0.07] px-3 py-1.5 backdrop-blur-sm">
+              <img src={dehubWordmark} alt="DeHub" width={70} height={17} className="h-[17px] w-auto" loading="lazy" decoding="async" />
+            </span>
+            <span className="rounded-xl border border-white/15 bg-white/[0.04] px-3 py-1.5 font-mono text-[11px] text-zinc-400">
+              //dehub.io
+            </span>
+            <span className="rounded-xl border border-white/15 bg-white/[0.04] px-3 py-1.5 font-mono text-[11px] text-zinc-400">
+              // type = &ldquo;welcome&rdquo;
+            </span>
           </div>
         </div>
       </div>
