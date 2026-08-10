@@ -64,9 +64,11 @@ export interface VideoModel {
 }
 
 /**
- * Markup percentage for video generation (100% = 2x cost)
+ * Markup percentage for video generation (20% = 1.2x cost). Display only —
+ * the server quotes the real charge from supabase/functions/_shared/ai-pricing.ts,
+ * so keep the two in step by hand.
  */
-export const VIDEO_GENERATION_MARKUP = 1.0; // 100% markup
+export const VIDEO_GENERATION_MARKUP = 0.2; // 20% markup
 
 /**
  * Calculate the final cost in USD with markup
@@ -100,12 +102,11 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '4-30s',
     tier: 'premium',
     emoji: '🌊',
-    // fal bills this one by token: (h × w × duration × 24) / 1024 at $0.0214
-    // per 1000. At 720p 16:9 that works out to ~$0.473/s, which is what the
-    // studio requests by default. 480p is roughly half, but the composer is
-    // charged on the ceiling so a resolution switch can never go underwater.
-    baseCostUsd: 2.365,
-    perSecondCostUsd: 0.473,
+    // kie.ai's 720p rate, where this now renders. 480p is roughly half, but
+    // the composer is charged on the ceiling so a resolution switch can never
+    // go underwater.
+    baseCostUsd: 1.575,
+    perSecondCostUsd: 0.315,
     defaultDuration: 5,
     minDuration: 4,
     maxDuration: 30,
@@ -257,14 +258,16 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '4-15s',
     tier: 'premium',
     emoji: '🌊',
-    baseCostUsd: 1.55,
-    perSecondCostUsd: 0.31,
+    // kie.ai's 720p rate, where this now renders.
+    baseCostUsd: 0.825,
+    perSecondCostUsd: 0.165,
     defaultDuration: 5,
     minDuration: 4,
     maxDuration: 15,
     hasAudio: true,
     supportsNegativePrompt: true,
     supportsResolution: true,
+    resolutions: ['480p', '720p'],
     provider: 'fal',
     supportsReferenceImages: true,
     maxReferenceImages: 9,
@@ -279,7 +282,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
       '🎬 Set start + end frames for controlled transitions',
       '🎨 Upload a video to restyle it with a new prompt',
       '🔁 Lock a seed to iterate without randomness',
-      '📺 1080p for maximum quality, 480p for speed',
+      '📺 720p is the ceiling — 480p for speed',
     ],
   },
   'seedance-2.0-fast': {
@@ -316,12 +319,15 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
   },
 
   // ─────────────────────────────────────────────────────────────────────────
-  // Expanded catalogue, all on fal.ai.
+  // Expanded catalogue.
   //
-  // Every price below was read off that model's own fal.ai page and expressed
-  // on the basis fal actually bills. Where fal bills per second the model
-  // carries perSecondCostUsd, so a 15s render is not sold at the 5s price.
-  // The shared 100% markup is applied on top by getVideoCostUsd.
+  // Every price below is the rate of the provider the job actually runs on —
+  // kie.ai where generate-video routes there (Veo, Kling, Seedance, Wan),
+  // fal.ai for the rest — expressed on the basis that provider bills. Where
+  // billing is per second the model carries perSecondCostUsd, so a 15s render
+  // is not sold at the 5s price; the Veos are flat per video on kie, so they
+  // deliberately carry no perSecondCostUsd. The shared 20% markup is applied
+  // on top by getVideoCostUsd.
   // ─────────────────────────────────────────────────────────────────────────
   'veo-3.1': {
     id: 'veo-3.1',
@@ -331,20 +337,21 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '4-8s',
     tier: 'premium',
     emoji: '🎥',
-    baseCostUsd: 2.0,
-    perSecondCostUsd: 0.4,
+    // kie.ai bills Veo flat per video, so there is no perSecondCostUsd here.
+    baseCostUsd: 1.275,
     defaultDuration: 4,
     minDuration: 4,
     maxDuration: 8,
     allowedDurations: [4, 6, 8],
     hasAudio: true,
     supportsResolution: true,
+    resolutions: ['720p', '1080p'],
     provider: 'fal',
     aspectRatios: ['16:9', '9:16'],
     tips: [
       '🎥 The most convincing realism available, with native audio',
       '🖼️ Attach an image to animate it',
-      '💸 Priced per second — 8s costs twice a 4s',
+      '💸 One flat price whatever the length — 8s costs the same as 4s',
       '📺 Worth running at 1080p',
     ],
   },
@@ -356,14 +363,15 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '4-8s',
     tier: 'standard',
     emoji: '⚡',
-    baseCostUsd: 0.75,
-    perSecondCostUsd: 0.15,
+    // kie.ai bills Veo flat per video, so there is no perSecondCostUsd here.
+    baseCostUsd: 0.325,
     defaultDuration: 4,
     minDuration: 4,
     maxDuration: 8,
     allowedDurations: [4, 6, 8],
     hasAudio: true,
     supportsResolution: true,
+    resolutions: ['720p', '1080p'],
     provider: 'fal',
     aspectRatios: ['16:9', '9:16'],
     tips: [
@@ -380,8 +388,9 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '3-15s',
     tier: 'premium',
     emoji: '🎞️',
-    baseCostUsd: 0.84,
-    perSecondCostUsd: 0.168,
+    // kie.ai's pro-with-audio rate, where this now renders.
+    baseCostUsd: 0.675,
+    perSecondCostUsd: 0.135,
     defaultDuration: 5,
     minDuration: 3,
     maxDuration: 15,
@@ -404,8 +413,9 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '3-15s',
     tier: 'standard',
     emoji: '🎬',
-    baseCostUsd: 0.63,
-    perSecondCostUsd: 0.126,
+    // kie.ai's std-with-audio rate, where this now renders.
+    baseCostUsd: 0.5,
+    perSecondCostUsd: 0.1,
     defaultDuration: 5,
     minDuration: 3,
     maxDuration: 15,
@@ -427,9 +437,9 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '5s or 10s',
     tier: 'standard',
     emoji: '🌪️',
-    // $0.35 for 5s, then $0.07 per extra second — the same $0.07/s throughout.
-    baseCostUsd: 0.35,
-    perSecondCostUsd: 0.07,
+    // kie.ai's rate: $0.21 for 5s at the same $0.042/s throughout.
+    baseCostUsd: 0.21,
+    perSecondCostUsd: 0.042,
     defaultDuration: 5,
     minDuration: 5,
     maxDuration: 10,
@@ -485,8 +495,9 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '5-10s',
     tier: 'premium',
     emoji: '🎭',
-    baseCostUsd: 0.5,
-    perSecondCostUsd: 0.1,
+    // kie.ai's 1080p ceiling — 720p renders cost us a third less than this.
+    baseCostUsd: 0.525,
+    perSecondCostUsd: 0.105,
     defaultDuration: 5,
     minDuration: 5,
     maxDuration: 15,
@@ -510,6 +521,7 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     duration: '5-10s',
     tier: 'standard',
     emoji: '🌈',
+    // kie.ai's 1080p ceiling — 720p renders cost us 40% less than this.
     baseCostUsd: 0.5,
     perSecondCostUsd: 0.1,
     defaultDuration: 5,
@@ -517,13 +529,13 @@ export const VIDEO_MODELS: Record<string, VideoModel> = {
     maxDuration: 10,
     allowedDurations: [5, 10],
     supportsResolution: true,
+    resolutions: ['720p', '1080p'],
     supportsNegativePrompt: true,
     provider: 'fal',
     aspectRatios: ['16:9', '9:16', '1:1'],
     tips: [
       '🌈 Leans stylised rather than photoreal',
       '🖼️ Attach an image to animate it',
-      '💰 480p is a third of the 1080p price',
     ],
   },
   'luma-ray2-flash': {

@@ -19,35 +19,61 @@
 /** Sale price of one DHB, matching the fiat gateway peg. */
 export const DHB_USD_PEG = 0.001;
 
-/** 100% markup over provider cost, applied to every generation type. */
-export const MARKUP = 1.0;
+/**
+ * 20% markup over provider cost, applied to every generation type.
+ *
+ * Was 100%. The thinner margin only works because provider cost is now the
+ * kie.ai rate wherever kie serves the model (see the tables below): kie
+ * undercuts fal by 20-70% on those entries, so the sticker price falls on
+ * both axes at once. Entries still bought from fal/Replicate keep their old
+ * cost basis and get cheaper for the creator via the margin cut alone.
+ *
+ * At 20% there is no headroom for charging below cost: any entry here must be
+ * the CEILING of what the routed provider can bill for that model across the
+ * options the composer exposes (the resolution rule — see the kie-priced
+ * video entries).
+ */
+export const MARKUP = 0.2;
 
 export type JobKind = 'image' | 'video' | 'model3d' | 'tool';
 export type TextureQuality = 'none' | 'standard' | 'HD';
 
-/** Provider cost per image, in USD. */
+/**
+ * Provider cost per image, in USD.
+ *
+ * The four entries marked `kie` are what kie.ai bills at the tier the
+ * generation function requests (2K for the nano-bananas, basic/2K for
+ * Seedream, 1K for Flux); the rest are still fal/gateway rates.
+ */
 export const IMAGE_COST_USD: Record<string, number> = {
   'z-image-turbo': 0.006,
   'gemini-3.1-flash-image': 0.01,
   'gemini-2.5-flash': 0.02,
   'qwen-image': 0.02,
   'grok-imagine': 0.02,
-  'flux-2-pro': 0.03,
+  'flux-2-pro': 0.025, // kie: $0.025 at 1K (fal was $0.03)
   'recraft-v4.1': 0.035,
-  'seedream-v4.5': 0.04,
+  'seedream-v4.5': 0.0325, // kie: $0.0325 flat (fal was $0.04)
   'flux-2-flex': 0.05,
   'grok-2-image': 0.06,
   'ideogram-v3': 0.06,
   'gemini-3-pro-image': 0.08,
-  'nano-banana-2': 0.08,
+  'nano-banana-2': 0.06, // kie: $0.06 at 2K (fal was $0.08)
   'flux-kontext-max': 0.08,
   'recraft-v4.1-vector': 0.08,
-  'nano-banana-pro': 0.15,
+  'nano-banana-pro': 0.09, // kie: $0.09 at 1K/2K (fal was $0.15)
 };
 
 /**
  * Provider cost per video. `perSecond` bills by duration where the provider
  * does; the rest charge a flat rate whatever the length.
+ *
+ * Entries marked `kie` are kie.ai's rate at the most expensive tier the
+ * composer can reach on the kie route — 720p for the Seedances (the kie path
+ * snaps them there), 1080p for Veo and Wan, audio-on for Kling — so a cheaper
+ * pick widens the margin and an expensive one can never invert it. The two
+ * Veos are the big win: kie bills them flat per video, so their `perSecond`
+ * is gone and an 8-second render costs the same as a 4-second one.
  */
 export const VIDEO_COST_USD: Record<string, { base: number; perSecond?: number }> = {
   'ltx-video': { base: 0.085 },
@@ -55,22 +81,22 @@ export const VIDEO_COST_USD: Record<string, { base: number; perSecond?: number }
   'luma-ray2-flash': { base: 0.2 },
   'pixverse-v5': { base: 0.2 },
   'minimax-video': { base: 0.22 },
+  'kling-2.5-turbo': { base: 0.21, perSecond: 0.042 }, // kie (fal was 0.07/s)
+  'veo-3.1-fast': { base: 0.325 }, // kie: flat per video, 1080p ceiling (fal was 0.15/s)
   'hailuo-2.3-fast': { base: 0.33 },
-  'kling-2.5-turbo': { base: 0.35, perSecond: 0.07 },
   'hailuo-2.3': { base: 0.49 },
+  'kling-3.0-standard': { base: 0.5, perSecond: 0.1 }, // kie, audio on (fal was 0.126/s)
   'runway-gen4': { base: 0.5 },
-  'wan-2.5': { base: 0.5, perSecond: 0.1 },
-  'wan-2.6': { base: 0.5, perSecond: 0.1 },
-  'kling-3.0-standard': { base: 0.63, perSecond: 0.126 },
+  'wan-2.5': { base: 0.5, perSecond: 0.1 }, // routed to kie; 1080p ceiling matches the old fal rate
+  'wan-2.6': { base: 0.525, perSecond: 0.105 }, // kie 1080p ceiling (720p costs us 0.07/s)
   'luma-ray2': { base: 0.65 },
   'seedance-1.5-pro': { base: 0.65 },
-  'veo-3.1-fast': { base: 0.75, perSecond: 0.15 },
+  'kling-3.0': { base: 0.675, perSecond: 0.135 }, // kie pro, audio on (fal was 0.168/s)
   'seedance-2.0-fast': { base: 0.8, perSecond: 0.16 },
-  'kling-3.0': { base: 0.84, perSecond: 0.168 },
+  'seedance-2.0': { base: 0.825, perSecond: 0.165 }, // kie 720p (fal was 0.31/s)
   'kling-2.6-pro': { base: 1.1 },
-  'seedance-2.0': { base: 1.55, perSecond: 0.31 },
-  'veo-3.1': { base: 2.0, perSecond: 0.4 },
-  'seedance-2.5': { base: 2.365, perSecond: 0.473 },
+  'veo-3.1': { base: 1.275 }, // kie: flat per video, 1080p ceiling (fal was 0.40/s)
+  'seedance-2.5': { base: 1.575, perSecond: 0.315 }, // kie 720p (fal was 0.473/s)
 };
 
 /**

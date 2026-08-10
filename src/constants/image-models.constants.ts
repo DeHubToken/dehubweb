@@ -25,9 +25,11 @@ export const imageModelSupportsEdit = (model: ImageModel): boolean =>
   model.supportsEdit !== false;
 
 /**
- * Markup percentage for image generation (100% = 2x cost)
+ * Markup percentage for image generation (20% = 1.2x cost). Display only —
+ * the server quotes the real charge from supabase/functions/_shared/ai-pricing.ts,
+ * so keep the two in step by hand.
  */
-export const IMAGE_GENERATION_MARKUP = 1.0; // 100% markup
+export const IMAGE_GENERATION_MARKUP = 0.2; // 20% markup
 
 /**
  * Calculate the final cost in USD with markup
@@ -93,7 +95,8 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
     description: 'Best-in-class text and diagrams',
     emoji: '🍌',
     tier: 'premium',
-    baseCostUsd: 0.15,
+    // kie.ai rate at 2K, matching where generate-image now runs it.
+    baseCostUsd: 0.09,
   },
   'nano-banana-2': {
     id: 'nano-banana-2',
@@ -101,7 +104,8 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
     description: 'Fast, photoreal, very versatile',
     emoji: '🍌',
     tier: 'standard',
-    baseCostUsd: 0.08,
+    // kie.ai rate at 2K, matching where generate-image now runs it.
+    baseCostUsd: 0.06,
   },
   'seedream-v4.5': {
     id: 'seedream-v4.5',
@@ -109,7 +113,8 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
     description: 'Precise control and transformations',
     emoji: '🌊',
     tier: 'standard',
-    baseCostUsd: 0.04,
+    // kie.ai flat rate, matching where generate-image now runs it.
+    baseCostUsd: 0.0325,
   },
   'flux-2-pro': {
     id: 'flux-2-pro',
@@ -117,7 +122,8 @@ export const IMAGE_MODELS: Record<string, ImageModel> = {
     description: 'Exceptional prompt adherence',
     emoji: '⚡',
     tier: 'standard',
-    baseCostUsd: 0.03,
+    // kie.ai rate at 1K, matching where generate-image now runs it.
+    baseCostUsd: 0.025,
   },
   'flux-kontext-max': {
     id: 'flux-kontext-max',

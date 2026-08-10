@@ -1,6 +1,6 @@
 /**
  * fal.ai AI Tools Configuration
- * All tools use DHB pay-per-use with 100% markup
+ * All tools use DHB pay-per-use with 20% markup
  */
 
 export interface AiToolModel {
@@ -22,9 +22,9 @@ export interface AiToolModel {
 export type AiToolCategory = 'music' | 'tts' | 'background-removal' | 'upscale' | 'speech-to-text';
 
 /**
- * Markup percentage (100% = 2x cost)
+ * Markup percentage (20% = 1.2x cost)
  */
-export const AI_TOOLS_MARKUP = 1.0;
+export const AI_TOOLS_MARKUP = 0.2;
 
 export const getToolCostUsd = (model: AiToolModel): number => {
   return model.baseCostUsd * (1 + AI_TOOLS_MARKUP);
