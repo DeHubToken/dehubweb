@@ -34,7 +34,7 @@ function GameCard({ game }: { game: ArcadeGame }) {
   return (
     <div
       data-feed-item
-      className="group overflow-hidden rounded-2xl bg-zinc-900 ring-1 ring-white/[0.06] transition-colors hover:ring-white/[0.14]"
+      className="group flex flex-col overflow-hidden rounded-2xl bg-zinc-900 ring-1 ring-white/[0.06] transition-colors hover:ring-white/[0.14]"
     >
       <Link to={`/arcade/${game.slug}`} className="block focus:outline-none focus-visible:ring-2 focus-visible:ring-white/40">
         <div className="relative aspect-video overflow-hidden bg-black">
@@ -58,21 +58,16 @@ function GameCard({ game }: { game: ArcadeGame }) {
         </div>
       </Link>
 
-      <div className="space-y-3 p-4">
+      {/* flex-1 + mt-auto below: every card in a grid row stretches to the same
+          height, and the button row rides the bottom edge, so the Play buttons
+          line up across the row no matter how long each description runs. */}
+      <div className="flex flex-1 flex-col gap-3 p-4">
         <p className="text-xs leading-relaxed text-zinc-400">{game.description}</p>
 
-        <ul className="space-y-1">
-          {game.controls.map((line) => (
-            <li key={line} className="text-[11px] leading-relaxed text-zinc-500">
-              {line}
-            </li>
-          ))}
-        </ul>
-
-        <div className="flex items-center justify-between gap-3 pt-1">
+        <div className="mt-auto flex items-center justify-between gap-3 pt-1">
           <Link
             to={`/arcade/${game.slug}`}
-            className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-semibold text-black transition-opacity hover:opacity-90"
+            className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-xs font-semibold text-black transition-opacity hover:opacity-90"
           >
             <Play className="h-3.5 w-3.5" />
             {game.action}
@@ -137,7 +132,9 @@ export default function ArcadePage() {
       </div>
 
       <div ref={contentRef} className="mx-auto max-w-4xl px-2 pb-24 pt-2 sm:px-3">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        {/* All three games share one row on desktop, so the equal-height cards
+            put every Play button on the same baseline. */}
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
           {ARCADE_GAMES.map((game) => (
             <GameCard key={game.slug} game={game} />
           ))}
