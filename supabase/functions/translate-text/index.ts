@@ -19,6 +19,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { rateLimitByIp } from "../_shared/auth.ts";
+import { languageNameFor } from "../_shared/language-names.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -227,44 +228,10 @@ const langCodeMap: Record<string, string> = {
   'auto': 'autodetect',
 };
 
-// Map language codes to full names for AI translation
-const langNameMap: Record<string, string> = {
-  'en': 'English',
-  'es': 'Spanish',
-  'fr': 'French',
-  'de': 'German',
-  'it': 'Italian',
-  'pt': 'Portuguese',
-  'ru': 'Russian',
-  'ja': 'Japanese',
-  'ko': 'Korean',
-  'zh': 'Chinese',
-  'ar': 'Arabic',
-  'hi': 'Hindi',
-  'ms': 'Malay',
-  'tr': 'Turkish',
-  'ro': 'Romanian',
-  'bn': 'Bengali',
-  'id': 'Indonesian',
-  'vi': 'Vietnamese',
-  'th': 'Thai',
-  'nl': 'Dutch',
-  'pl': 'Polish',
-  'uk': 'Ukrainian',
-  'tl': 'Tagalog',
-  'fa': 'Persian',
-  'arz': 'Egyptian Arabic',
-  'ary': 'Moroccan Arabic (Darija)',
-  'pcm': 'Nigerian Pidgin',
-  'ha': 'Hausa',
-  'yo': 'Yoruba',
-  'ig': 'Igbo',
-  'af': 'Afrikaans',
-  'qu': 'Quechua',
-  'am': 'Amharic',
-  'sw': 'Swahili',
-  'zu': 'Zulu',
-};
+// Names for the AI prompt now come from ../_shared/language-names.ts, which
+// covers every code the pickers can produce. The 35-entry map that used to sit
+// here is the reason the cache held Spanish filed under Mesopotamian Arabic:
+// any code it lacked went into the prompt raw, and the model guessed.
 
 // MyMemory signals "these are the same language" as a 403 rather than a field,
 // and puts the message in both responseDetails and translatedText. Match on the
@@ -424,8 +391,28 @@ Rules:
 - Output ONLY the translated text
 - No explanations, quotes, labels, or extra text
 - Preserve formatting, line breaks, emojis, and special characters
+- Keep URLs, @mentions, #hashtags and $tags exactly as written
 - If text contains slang or informal language, translate it naturally
-- Translate ALL of the text, do not skip any part`;
+- Translate ALL of the text, do not skip any part
+- If there is nothing to translate (only links, tags, numbers, emoji, or a name), or the text is already in ${targetLanguageName}, return the input EXACTLY as given
+- Never refuse and never ask for clarification: your entire output must work as a drop-in replacement for the input`;
+
+// A model that decides it cannot translate says so INSTEAD of translating, and
+// before this guard existed that prose was cached and rendered as the post's
+// translation — "I don't see any text to translate in your message. You've
+// only provided a URL link…" sat in the feed as if the author wrote it. These
+// phrases are about the translation request itself, which is why none of them
+// plausibly appear inside a real translation of somebody's post.
+//
+// A false positive here costs one untranslated post; a false negative is
+// served from the cache indefinitely. Matched against every paid tier's
+// output before it is accepted.
+const REFUSAL_PATTERN =
+  /no text (?:provided|to translate)|nothing to translate|text to translate in your|asked me to translate|provide the text|share the text|cannot translate|can't translate|not a recognized (?:language|code)|need clarification|don't see any text|only provided (?:a|an|the)/i;
+
+function looksLikeRefusal(output: string): boolean {
+  return REFUSAL_PATTERN.test(output);
+}
 
 // Ordered newest-first, and tried in order until one answers.
 //
@@ -458,12 +445,11 @@ let geminiModelIndex = 0;
  */
 async function translateWithGemini(
   text: string,
-  targetLang: string
+  targetLanguageName: string
 ): Promise<TranslateResponse | null> {
   const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
   if (!GEMINI_API_KEY) return null;
 
-  const targetLanguageName = langNameMap[targetLang] || targetLang;
   const body = JSON.stringify({
     systemInstruction: {
       parts: [{ text: TRANSLATOR_SYSTEM_PROMPT(targetLanguageName) }],
@@ -471,7 +457,9 @@ async function translateWithGemini(
     contents: [{ role: 'user', parts: [{ text }] }],
     generationConfig: {
       temperature: 0.1,
-      maxOutputTokens: 2000,
+      // 2000 silently truncated long posts, and a truncation that gets cached
+      // is served truncated forever.
+      maxOutputTokens: 4000,
     },
   });
 
@@ -518,6 +506,11 @@ async function translateWithGemini(
         return null;
       }
 
+      if (looksLikeRefusal(translatedText)) {
+        console.log(`Gemini answered with a refusal, not a translation (model ${model})`);
+        return null;
+      }
+
       // Skip the dead ids on subsequent calls in this isolate.
       geminiModelIndex = i;
       console.log(`Translation successful from Gemini (direct), model ${model}`);
@@ -557,15 +550,13 @@ async function translateWithGemini(
  */
 async function translateWithFal(
   text: string,
-  targetLang: string
+  targetLanguageName: string
 ): Promise<TranslateResponse | null> {
   const FAL_KEY = Deno.env.get('FAL_KEY');
   if (!FAL_KEY) return null;
 
   try {
     console.log('Attempting translation with fal (openrouter/router)');
-
-    const targetLanguageName = langNameMap[targetLang] || targetLang;
 
     const response = await fetch('https://fal.run/openrouter/router', {
       method: 'POST',
@@ -578,7 +569,9 @@ async function translateWithFal(
         system_prompt: TRANSLATOR_SYSTEM_PROMPT(targetLanguageName),
         prompt: text,
         temperature: 0.1,
-        max_tokens: 2000,
+        // 2000 silently truncated long posts, and a truncation that gets
+        // cached is served truncated forever.
+        max_tokens: 4000,
       }),
     });
 
@@ -593,6 +586,11 @@ async function translateWithFal(
 
     if (!translatedText) {
       console.log('fal returned empty response');
+      return null;
+    }
+
+    if (looksLikeRefusal(translatedText)) {
+      console.log('fal answered with a refusal, not a translation');
       return null;
     }
 
@@ -616,12 +614,10 @@ async function translateWithFal(
  */
 async function translateWithAI(
   text: string,
-  targetLang: string
+  targetLanguageName: string
 ): Promise<TranslateResponse | null> {
   try {
     console.log('Attempting translation with Lovable AI');
-
-    const targetLanguageName = langNameMap[targetLang] || targetLang;
 
     const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
     if (!LOVABLE_API_KEY) {
@@ -642,7 +638,7 @@ async function translateWithAI(
           { role: 'user', content: text },
         ],
         temperature: 0.1,
-        max_tokens: 2000,
+        max_tokens: 4000,
       }),
     });
 
@@ -657,6 +653,11 @@ async function translateWithAI(
 
     if (!translatedText) {
       console.log('Lovable AI returned empty response');
+      return null;
+    }
+
+    if (looksLikeRefusal(translatedText)) {
+      console.log('Lovable AI answered with a refusal, not a translation');
       return null;
     }
 
@@ -706,7 +707,18 @@ serve(async (req) => {
     // anyway, MyMemory answers a query like that out of its shared translation
     // memory — an unrelated segment somebody else once submitted — and that came
     // back looking like a translation of the caller's post.
-    if (!/\p{L}/u.test(text)) {
+    //
+    // URLs, @mentions, #hashtags and $tags count as untranslatable too, even
+    // though they contain letters: a post that is only "https://dehub.io/…" got
+    // past the letter check, and the model's reply — "I don't see any text to
+    // translate in your message. You've only provided a URL link…" — was cached
+    // and rendered in the feed as the post's translation. Tags are judged, not
+    // stripped from what gets sent: when real prose surrounds them, the FULL
+    // text still goes to the provider, which is told to keep them as written.
+    const prose = text
+      .replace(/https?:\/\/\S+|www\.\S+/gi, ' ')
+      .replace(/[@#$][\p{L}\p{N}_.-]+/gu, ' ');
+    if (!/\p{L}/u.test(prose)) {
       return new Response(
         JSON.stringify({ translatedText: text }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -792,6 +804,26 @@ serve(async (req) => {
     // account. Legitimate traffic never approaches the cap because the two
     // cache layers above absorb it — only a distinct (text, language) pair that
     // has never been seen reaches this line.
+
+    // A code the name map does not know cannot be prompted for. It used to be
+    // passed through raw — "Translate to acm" — and the model's guess went into
+    // the permanent cache: Spanish filed as Mesopotamian Arabic, Kabyle as
+    // Sanaani Arabic. Refusing is strictly better: an untranslated post
+    // recovers by itself the day the map gains the code; a wrong-language cache
+    // row is served until somebody deletes it by hand. Checked before claiming
+    // budget so a hopeless request does not spend a paid slot.
+    const targetLanguageName = languageNameFor(targetLang);
+    if (!targetLanguageName) {
+      console.warn(`No prompt name for target language '${targetLang}', refusing paid tiers`);
+      return new Response(
+        JSON.stringify({
+          error: 'Translation is not available for this language yet.',
+          code: 'UNSUPPORTED_TARGET_LANGUAGE',
+        }),
+        { status: 503, headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+      );
+    }
+
     if (!(await claimPaidTranslation())) {
       console.warn('Daily paid translation cap reached, refusing paid tiers');
       return new Response(
@@ -807,7 +839,7 @@ serve(async (req) => {
     // Gemini key is currently 429 RESOURCE_EXHAUSTED and the gateway is a
     // metered reseller. Reorder by moving these blocks; each returns null
     // rather than throwing, so a dead tier falls through to the next.
-    result = await translateWithFal(text, targetLang);
+    result = await translateWithFal(text, targetLanguageName);
     if (result) {
       rememberInIsolate(cacheKey, result);
       await writeCachedTranslation(textHash, targetLang, result, 'fal');
@@ -817,7 +849,7 @@ serve(async (req) => {
       );
     }
 
-    result = await translateWithGemini(text, targetLang);
+    result = await translateWithGemini(text, targetLanguageName);
     if (result) {
       rememberInIsolate(cacheKey, result);
       await writeCachedTranslation(textHash, targetLang, result, 'gemini');
@@ -827,7 +859,7 @@ serve(async (req) => {
       );
     }
 
-    result = await translateWithAI(text, targetLang);
+    result = await translateWithAI(text, targetLanguageName);
     if (result) {
       rememberInIsolate(cacheKey, result);
       await writeCachedTranslation(textHash, targetLang, result, 'lovable-gateway');
