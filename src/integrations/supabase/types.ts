@@ -1074,12 +1074,14 @@ export type Database = {
           banner_url: string | null
           created_at: string
           creator_wallet_address: string
+          default_permissions: Json
           description: string | null
           id: string
           is_private: boolean
           member_count: number
           name: string
           rules: Json | null
+          slow_mode_seconds: number
           slug: string
           ticker_chain_id: string | null
           ticker_contract_address: string | null
@@ -1092,12 +1094,14 @@ export type Database = {
           banner_url?: string | null
           created_at?: string
           creator_wallet_address: string
+          default_permissions?: Json
           description?: string | null
           id?: string
           is_private?: boolean
           member_count?: number
           name: string
           rules?: Json | null
+          slow_mode_seconds?: number
           slug: string
           ticker_chain_id?: string | null
           ticker_contract_address?: string | null
@@ -1110,12 +1114,14 @@ export type Database = {
           banner_url?: string | null
           created_at?: string
           creator_wallet_address?: string
+          default_permissions?: Json
           description?: string | null
           id?: string
           is_private?: boolean
           member_count?: number
           name?: string
           rules?: Json | null
+          slow_mode_seconds?: number
           slug?: string
           ticker_chain_id?: string | null
           ticker_contract_address?: string | null
@@ -1125,6 +1131,47 @@ export type Database = {
         }
         Relationships: []
       }
+      community_admin_log: {
+        Row: {
+          action: string
+          actor_wallet_address: string
+          community_id: string
+          created_at: string
+          detail: Json
+          id: string
+          target_message_id: string | null
+          target_wallet_address: string | null
+        }
+        Insert: {
+          action: string
+          actor_wallet_address: string
+          community_id: string
+          created_at?: string
+          detail?: Json
+          id?: string
+          target_message_id?: string | null
+          target_wallet_address?: string | null
+        }
+        Update: {
+          action?: string
+          actor_wallet_address?: string
+          community_id?: string
+          created_at?: string
+          detail?: Json
+          id?: string
+          target_message_id?: string | null
+          target_wallet_address?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_admin_log_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       community_chat_messages: {
         Row: {
           avatar_url: string | null
@@ -1133,9 +1180,12 @@ export type Database = {
           content: string
           created_at: string
           display_name: string | null
+          edited_at: string | null
           id: string
           image_url: string | null
           message_type: string
+          pinned_at: string | null
+          pinned_by: string | null
           reactions: Json | null
           reply_to_id: string | null
           username: string | null
@@ -1148,9 +1198,12 @@ export type Database = {
           content?: string
           created_at?: string
           display_name?: string | null
+          edited_at?: string | null
           id?: string
           image_url?: string | null
           message_type?: string
+          pinned_at?: string | null
+          pinned_by?: string | null
           reactions?: Json | null
           reply_to_id?: string | null
           username?: string | null
@@ -1163,9 +1216,12 @@ export type Database = {
           content?: string
           created_at?: string
           display_name?: string | null
+          edited_at?: string | null
           id?: string
           image_url?: string | null
           message_type?: string
+          pinned_at?: string | null
+          pinned_by?: string | null
           reactions?: Json | null
           reply_to_id?: string | null
           username?: string | null
@@ -1288,27 +1344,101 @@ export type Database = {
           },
         ]
       }
+      community_invite_links: {
+        Row: {
+          code: string
+          community_id: string
+          created_at: string
+          created_by: string
+          expires_at: string | null
+          id: string
+          max_uses: number | null
+          name: string | null
+          requires_approval: boolean
+          revoked_at: string | null
+          uses: number
+        }
+        Insert: {
+          code: string
+          community_id: string
+          created_at?: string
+          created_by: string
+          expires_at?: string | null
+          id?: string
+          max_uses?: number | null
+          name?: string | null
+          requires_approval?: boolean
+          revoked_at?: string | null
+          uses?: number
+        }
+        Update: {
+          code?: string
+          community_id?: string
+          created_at?: string
+          created_by?: string
+          expires_at?: string | null
+          id?: string
+          max_uses?: number | null
+          name?: string | null
+          requires_approval?: boolean
+          revoked_at?: string | null
+          uses?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_invite_links_community_id_fkey"
+            columns: ["community_id"]
+            isOneToOne: false
+            referencedRelation: "communities"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       community_members: {
         Row: {
+          ban_reason: string | null
+          banned_until: string | null
           community_id: string
+          custom_title: string | null
           id: string
           joined_at: string
+          moderated_at: string | null
+          moderated_by: string | null
+          muted_until: string | null
+          permissions: Json
+          promoted_by: string | null
           role: string
           status: string
           wallet_address: string
         }
         Insert: {
+          ban_reason?: string | null
+          banned_until?: string | null
           community_id: string
+          custom_title?: string | null
           id?: string
           joined_at?: string
+          moderated_at?: string | null
+          moderated_by?: string | null
+          muted_until?: string | null
+          permissions?: Json
+          promoted_by?: string | null
           role?: string
           status?: string
           wallet_address: string
         }
         Update: {
+          ban_reason?: string | null
+          banned_until?: string | null
           community_id?: string
+          custom_title?: string | null
           id?: string
           joined_at?: string
+          moderated_at?: string | null
+          moderated_by?: string | null
+          muted_until?: string | null
+          permissions?: Json
+          promoted_by?: string | null
           role?: string
           status?: string
           wallet_address?: string
@@ -1461,6 +1591,7 @@ export type Database = {
           name: string
           posted_post_id: string | null
           preserved: boolean
+          provenance: Json | null
           size_bytes: number
           storage_path: string
           thumbnail_path: string | null
@@ -1479,6 +1610,7 @@ export type Database = {
           name: string
           posted_post_id?: string | null
           preserved?: boolean
+          provenance?: Json | null
           size_bytes?: number
           storage_path: string
           thumbnail_path?: string | null
@@ -1497,6 +1629,7 @@ export type Database = {
           name?: string
           posted_post_id?: string | null
           preserved?: boolean
+          provenance?: Json | null
           size_bytes?: number
           storage_path?: string
           thumbnail_path?: string | null
@@ -1779,6 +1912,7 @@ export type Database = {
           dislike_count: number
           id: string
           image_url: string | null
+          image_urls: string[] | null
           like_count: number
           shipped_url: string | null
           status: string
@@ -1797,6 +1931,7 @@ export type Database = {
           dislike_count?: number
           id?: string
           image_url?: string | null
+          image_urls?: string[] | null
           like_count?: number
           shipped_url?: string | null
           status?: string
@@ -1815,6 +1950,7 @@ export type Database = {
           dislike_count?: number
           id?: string
           image_url?: string | null
+          image_urls?: string[] | null
           like_count?: number
           shipped_url?: string | null
           status?: string
@@ -2490,6 +2626,27 @@ export type Database = {
           title_text?: string
           updated_at?: string
           wallet_address?: string
+        }
+        Relationships: []
+      }
+      post_link_copies: {
+        Row: {
+          created_at: string
+          id: string
+          token_id: number
+          wallet_address: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          token_id: number
+          wallet_address?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          token_id?: number
+          wallet_address?: string | null
         }
         Relationships: []
       }
@@ -4274,6 +4431,182 @@ export type Database = {
       cleanup_old_client_error_logs: { Args: never; Returns: undefined }
       cleanup_old_leaderboard_snapshots: { Args: never; Returns: undefined }
       cleanup_old_story_views: { Args: never; Returns: undefined }
+      community_approve_member: {
+        Args: { _community_id: string; _target: string }
+        Returns: undefined
+      }
+      community_assert: {
+        Args: { _community_id: string; _perm: string }
+        Returns: string
+      }
+      community_ban_member: {
+        Args: {
+          _community_id: string
+          _reason?: string
+          _target: string
+          _until?: string
+        }
+        Returns: undefined
+      }
+      community_create_invite: {
+        Args: {
+          _community_id: string
+          _expires_at?: string
+          _max_uses?: number
+          _name?: string
+          _requires_approval?: boolean
+        }
+        Returns: {
+          code: string
+          community_id: string
+          created_at: string
+          created_by: string
+          expires_at: string | null
+          id: string
+          max_uses: number | null
+          name: string | null
+          requires_approval: boolean
+          revoked_at: string | null
+          uses: number
+        }
+        SetofOptions: {
+          from: "*"
+          to: "community_invite_links"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      community_delete: { Args: { _community_id: string }; Returns: undefined }
+      community_delete_message: {
+        Args: { _message_id: string }
+        Returns: undefined
+      }
+      community_is_active_member: {
+        Args: { _community_id: string; _wallet: string }
+        Returns: boolean
+      }
+      community_join_via_invite: { Args: { _code: string }; Returns: string }
+      community_kick_member: {
+        Args: { _community_id: string; _target: string }
+        Returns: undefined
+      }
+      community_log: {
+        Args: {
+          _action: string
+          _actor: string
+          _community_id: string
+          _detail?: Json
+          _message_id?: string
+          _target?: string
+        }
+        Returns: undefined
+      }
+      community_mute_member: {
+        Args: { _community_id: string; _target: string; _until?: string }
+        Returns: undefined
+      }
+      community_permission: {
+        Args: { _community_id: string; _perm: string; _wallet: string }
+        Returns: boolean
+      }
+      community_pin_message: {
+        Args: { _message_id: string; _pinned: boolean }
+        Returns: undefined
+      }
+      community_preview_invite: { Args: { _code: string }; Returns: Json }
+      community_privileged: { Args: never; Returns: boolean }
+      community_purge_member_messages: {
+        Args: { _community_id: string; _target: string }
+        Returns: number
+      }
+      community_reject_member: {
+        Args: { _community_id: string; _target: string }
+        Returns: undefined
+      }
+      community_revoke_invite: {
+        Args: { _invite_id: string }
+        Returns: undefined
+      }
+      community_role_of: {
+        Args: { _community_id: string; _wallet: string }
+        Returns: string
+      }
+      community_set_member_role: {
+        Args: {
+          _community_id: string
+          _custom_title?: string
+          _permissions?: Json
+          _role: string
+          _target: string
+        }
+        Returns: undefined
+      }
+      community_target_guard: {
+        Args: { _actor: string; _community_id: string; _target: string }
+        Returns: {
+          ban_reason: string | null
+          banned_until: string | null
+          community_id: string
+          custom_title: string | null
+          id: string
+          joined_at: string
+          moderated_at: string | null
+          moderated_by: string | null
+          muted_until: string | null
+          permissions: Json
+          promoted_by: string | null
+          role: string
+          status: string
+          wallet_address: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "community_members"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
+      community_transfer_ownership: {
+        Args: { _community_id: string; _new_owner: string }
+        Returns: undefined
+      }
+      community_unban_member: {
+        Args: { _community_id: string; _target: string }
+        Returns: undefined
+      }
+      community_unmute_member: {
+        Args: { _community_id: string; _target: string }
+        Returns: undefined
+      }
+      community_update_settings: {
+        Args: { _community_id: string; _patch: Json }
+        Returns: {
+          avatar_url: string | null
+          banner_url: string | null
+          created_at: string
+          creator_wallet_address: string
+          default_permissions: Json
+          description: string | null
+          id: string
+          is_private: boolean
+          member_count: number
+          name: string
+          rules: Json | null
+          slow_mode_seconds: number
+          slug: string
+          ticker_chain_id: string | null
+          ticker_contract_address: string | null
+          ticker_pair_address: string | null
+          ticker_symbol: string | null
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "communities"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       consume_agent_rate_limit: {
         Args: {
           p_action_type: string
@@ -4341,6 +4674,13 @@ export type Database = {
           last_active_at: string
           name: string
           owner_wallet_address: string
+        }[]
+      }
+      get_post_link_copy_counts: {
+        Args: { p_token_ids: number[] }
+        Returns: {
+          copies: number
+          token_id: number
         }[]
       }
       get_request_wallet_address: { Args: never; Returns: string }
@@ -4426,6 +4766,10 @@ export type Database = {
       }
       touch_post_translation: {
         Args: { p_target_lang: string; p_text_hash: string }
+        Returns: undefined
+      }
+      track_post_link_copy: {
+        Args: { p_token_id: number; p_wallet?: string }
         Returns: undefined
       }
       upsert_phone_otp: {
