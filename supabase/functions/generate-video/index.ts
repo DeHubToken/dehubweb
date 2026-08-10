@@ -2,6 +2,14 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import Replicate from "https://esm.sh/replicate@0.25.2";
 import { rateLimitByIp } from "../_shared/auth.ts";
 import { chargeForJob } from "../_shared/ai-credit-guard.ts";
+import {
+  kieKey,
+  kieUsableUrl,
+  kieCreateTask,
+  kieTaskStatus,
+  kieVeoGenerate,
+  kieVeoStatus,
+} from "../_shared/kie.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -596,6 +604,293 @@ function buildFalInput(family: FalFamily, o: FalInputOptions): Record<string, un
   }
 }
 
+// ─── kie.ai routing ───
+//
+// kie.ai resells most of this catalogue below fal's rates, and the cost
+// tables in _shared/ai-pricing.ts assume the models below actually run
+// there. Routing is best-effort: any job kie cannot take (inline data:
+// inputs, audio/video tracks, an unsupported sub-mode) and any kie submit
+// failure falls through to the declared fal/Replicate provider, so kie can
+// only ever lower the bill, never break a render. Like fal, kie 422s unknown
+// keys, so every family builds its own input shape.
+
+/** The three ratios every kie video model here accepts. */
+function kieAspect(aspectRatio: string): string {
+  return ['16:9', '9:16', '1:1'].includes(aspectRatio) ? aspectRatio : '16:9';
+}
+
+/**
+ * Map a studio model + options onto a kie jobs-API task, or null when this
+ * particular job cannot ride kie and must use the standard provider.
+ */
+function buildKieVideoTask(
+  model: string,
+  o: FalInputOptions,
+): { model: string; input: Record<string, unknown> } | null {
+  const { prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, referenceImageUrls, endFrameUrl } = o;
+
+  switch (model) {
+    // One kie model covers both tiers; `mode` picks the render quality.
+    // Sound stays on to match the fal behaviour (and the audio-on price in
+    // the cost table). The 3.0 schema has no negative_prompt field.
+    case 'kling-3.0':
+    case 'kling-3.0-standard': {
+      if (referenceImageUrls?.length) return null;
+      return {
+        model: 'kling-3.0/video',
+        input: {
+          prompt,
+          sound: true,
+          duration: String(Math.min(Math.max(duration, 3), 15)),
+          aspect_ratio: kieAspect(aspectRatio),
+          mode: model === 'kling-3.0' ? 'pro' : 'std',
+          multi_shots: false,
+          multi_prompt: [],
+          ...(sourceImage && { image_urls: [sourceImage] }),
+        },
+      };
+    }
+
+    // Text and image are separate kie models, and the image one takes no
+    // aspect ratio — framing follows the source image.
+    case 'kling-2.5-turbo': {
+      if (referenceImageUrls?.length) return null;
+      const dur = String(snapDuration(duration, [5, 10]));
+      if (sourceImage) {
+        return {
+          model: 'kling/v2-5-turbo-image-to-video-pro',
+          input: {
+            prompt,
+            image_url: sourceImage,
+            duration: dur,
+            cfg_scale: 0.5,
+            ...(negativePrompt && { negative_prompt: negativePrompt }),
+          },
+        };
+      }
+      return {
+        model: 'kling/v2-5-turbo-text-to-video-pro',
+        input: {
+          prompt,
+          duration: dur,
+          aspect_ratio: kieAspect(aspectRatio),
+          cfg_scale: 0.5,
+          ...(negativePrompt && { negative_prompt: negativePrompt }),
+        },
+      };
+    }
+
+    // Resolution snaps to 720p: kie's 2.0 schema lists 1080p/4k but only
+    // prices 480p/720p, and the cost table charges the 720p rate. Neither
+    // schema has a negative_prompt field.
+    case 'seedance-2.0':
+    case 'seedance-2.5': {
+      const is25 = model === 'seedance-2.5';
+      return {
+        model: is25 ? 'bytedance/seedance-2-5' : 'bytedance/seedance-2',
+        input: {
+          prompt,
+          duration: Math.min(Math.max(duration, 4), is25 ? 30 : 15),
+          resolution: snapResolution(resolution, ['480p', '720p'], '720p'),
+          aspect_ratio: aspectRatio,
+          generate_audio: true,
+          ...(sourceImage && { first_frame_url: sourceImage }),
+          ...(endFrameUrl && { last_frame_url: endFrameUrl }),
+          ...(referenceImageUrls?.length && { reference_image_urls: referenceImageUrls }),
+        },
+      };
+    }
+
+    // Text and image are separate kie models; the image one reads framing
+    // from the source, so only the text route takes aspect_ratio.
+    case 'wan-2.5': {
+      if (referenceImageUrls?.length) return null;
+      const dur = String(snapDuration(duration, [5, 10]));
+      const res = snapResolution(resolution, ['720p', '1080p'], '720p');
+      if (sourceImage) {
+        return {
+          model: 'wan/2-5-image-to-video',
+          input: {
+            prompt,
+            image_url: sourceImage,
+            duration: dur,
+            resolution: res,
+            enable_prompt_expansion: true,
+            ...(negativePrompt && { negative_prompt: negativePrompt }),
+          },
+        };
+      }
+      return {
+        model: 'wan/2-5-text-to-video',
+        input: {
+          prompt,
+          duration: dur,
+          aspect_ratio: kieAspect(aspectRatio),
+          resolution: res,
+          enable_prompt_expansion: true,
+          ...(negativePrompt && { negative_prompt: negativePrompt }),
+        },
+      };
+    }
+
+    // kie serves 2.6 as image-to-video only; reference-to-video stays on fal.
+    case 'wan-2.6': {
+      if (!sourceImage || referenceImageUrls?.length) return null;
+      return {
+        model: 'wan/2-6-image-to-video',
+        input: {
+          prompt,
+          image_urls: [sourceImage],
+          duration: String(snapDuration(duration, [5, 10, 15])),
+          resolution: snapResolution(resolution, ['720p', '1080p'], '720p'),
+        },
+      };
+    }
+
+    default:
+      return null;
+  }
+}
+
+/**
+ * Veo rides kie's dedicated endpoint pair rather than the jobs API, and it is
+ * the biggest saving in the catalogue: kie bills a flat rate per video where
+ * fal billed per second. Field casing is kie's, verbatim: `imageUrls` and
+ * `generationType` are camelCase while `aspect_ratio` is not.
+ */
+async function handleKieVeoGeneration(
+  key: string,
+  model: string,
+  prompt: string,
+  sourceImage: string | undefined,
+  duration: number,
+  aspectRatio: string,
+  resolution?: string,
+): Promise<Response> {
+  const body: Record<string, unknown> = {
+    prompt,
+    model: model === 'veo-3.1' ? 'veo3' : 'veo3_fast',
+    aspect_ratio: aspectRatio === '9:16' ? '9:16' : '16:9',
+    resolution: snapResolution(resolution, ['720p', '1080p'], '720p'),
+    duration: snapDuration(duration, [4, 6, 8]),
+    // Never let kie substitute a different model: it bills differently and
+    // the creator picked Veo.
+    enableFallback: false,
+    ...(sourceImage
+      ? { imageUrls: [sourceImage], generationType: 'FIRST_AND_LAST_FRAMES_2_VIDEO' }
+      : { generationType: 'TEXT_2_VIDEO' }),
+  };
+
+  console.log('[kie-veo] Submitting', JSON.stringify(body).substring(0, 500));
+  const taskId = await kieVeoGenerate(key, body);
+  console.log(`[kie-veo] Task started: ${taskId}`);
+
+  const response: VideoGenerationResponse = {
+    status: 'starting',
+    predictionId: taskId,
+    provider: 'kie-veo',
+  };
+  return new Response(JSON.stringify(response), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
+/**
+ * Try to start this render on kie. Null means "use the standard provider" —
+ * either the job is not kie-eligible or the submit failed, and the caller
+ * falls through to fal/Replicate either way.
+ */
+async function tryKieGeneration(
+  model: string,
+  o: FalInputOptions,
+): Promise<Response | null> {
+  const key = kieKey();
+  if (!key) return null;
+
+  // kie fetches every input by URL, so inline data: payloads stay on fal.
+  const inputUrls = [o.sourceImage, o.endFrameUrl, ...(o.referenceImageUrls ?? [])];
+  if (!inputUrls.every(kieUsableUrl)) return null;
+
+  // No kie model here takes an audio or video track input, and on Seedance
+  // those tracks change kie's billing formula. They ride fal.
+  if (o.audioUrls?.length || o.videoUrls?.length) return null;
+
+  try {
+    if (model === 'veo-3.1' || model === 'veo-3.1-fast') {
+      return await handleKieVeoGeneration(
+        key, model, o.prompt, o.sourceImage, o.duration, o.aspectRatio, o.resolution,
+      );
+    }
+
+    const task = buildKieVideoTask(model, o);
+    if (!task) return null;
+
+    console.log(`[kie] Submitting ${task.model}`, JSON.stringify(task.input).substring(0, 500));
+    const taskId = await kieCreateTask(key, task.model, task.input);
+    console.log(`[kie] Task started: ${taskId}`);
+
+    const response: VideoGenerationResponse = {
+      status: 'starting',
+      predictionId: taskId,
+      provider: 'kie',
+    };
+    return new Response(JSON.stringify(response), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  } catch (e) {
+    console.warn(`[kie] ${model} submit failed — using the standard provider:`, (e as Error).message);
+    return null;
+  }
+}
+
+// ─── kie status checks ───
+
+async function handleKieStatusCheck(taskId: string): Promise<Response> {
+  const key = kieKey();
+  if (!key) throw new Error('KIE_API_KEY is not configured');
+
+  const s = await kieTaskStatus(key, taskId);
+  let status: VideoGenerationResponse['status'];
+  if (s.state === 'success') {
+    // A success without a URL is a failure the creator can see, not a hang.
+    status = s.resultUrls[0] ? 'succeeded' : 'failed';
+  } else if (s.state === 'fail') {
+    status = 'failed';
+  } else if (s.state === 'waiting' || s.state === 'queuing') {
+    status = 'starting';
+  } else {
+    status = 'processing';
+  }
+
+  const response: VideoGenerationResponse = {
+    status,
+    videoUrl: status === 'succeeded' ? s.resultUrls[0] : undefined,
+    predictionId: taskId,
+    provider: 'kie',
+    ...(status === 'failed' && { error: s.failMsg || 'Video generation failed on kie.ai' }),
+  };
+  return new Response(JSON.stringify(response), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
+async function handleKieVeoStatusCheck(taskId: string): Promise<Response> {
+  const key = kieKey();
+  if (!key) throw new Error('KIE_API_KEY is not configured');
+
+  const s = await kieVeoStatus(key, taskId);
+  const response: VideoGenerationResponse = {
+    status: s.status,
+    videoUrl: s.videoUrl,
+    predictionId: taskId,
+    provider: 'kie-veo',
+    ...(s.status === 'failed' && { error: s.error }),
+  };
+  return new Response(JSON.stringify(response), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
+}
+
 // ─── Main handler ───
 
 serve(async (req) => {
@@ -624,6 +919,12 @@ serve(async (req) => {
 
       const provider = body.provider || 'replicate';
 
+      if (provider === 'kie') {
+        return await handleKieStatusCheck(body.predictionId);
+      }
+      if (provider === 'kie-veo') {
+        return await handleKieVeoStatusCheck(body.predictionId);
+      }
       if (provider === 'fal') {
         return await handleFalStatusCheck(body.predictionId, body.falAppId);
       }
@@ -664,11 +965,27 @@ serve(async (req) => {
     });
     if (!charged.ok) return charged.response;
 
-    // Route to provider
+    // Route to provider. kie gets first refusal on the models it serves —
+    // the cost tables assume those jobs land there — and anything it cannot
+    // or will not take runs on the model's declared provider as before.
     try {
-      const response = modelConfig.provider === 'fal'
-        ? await handleFalGeneration(modelConfig, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed)
-        : await handleReplicateGeneration(modelConfig, model, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, seed);
+      const kieResponse = await tryKieGeneration(model, {
+        prompt,
+        sourceImage,
+        duration: Math.min(Math.max(parseInt(duration) || 5, 3), 30),
+        aspectRatio,
+        negativePrompt,
+        resolution,
+        referenceImageUrls,
+        endFrameUrl,
+        audioUrls,
+        videoUrls,
+        seed,
+      });
+      const response = kieResponse
+        ?? (modelConfig.provider === 'fal'
+          ? await handleFalGeneration(modelConfig, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, referenceImageUrls, endFrameUrl, audioUrls, videoUrls, seed)
+          : await handleReplicateGeneration(modelConfig, model, prompt, sourceImage, duration, aspectRatio, negativePrompt, resolution, seed));
       if (!response.ok) await charged.refund();
       return response;
     } catch (providerError) {

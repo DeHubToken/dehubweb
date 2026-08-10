@@ -7,6 +7,7 @@ import {
 import { DEHUB_LOGO_DATA_URI } from '../_shared/dehub-logo.ts';
 import { chargeForJob } from '../_shared/ai-credit-guard.ts';
 import { buildSpecFromPrompt, renderTemplateBanner, formatFromPosterSize } from '../_shared/dehub-template-banner.ts';
+import { kieKey, kieUsableUrl, kieCreateTask, kieWaitForResult } from '../_shared/kie.ts';
 
 const serve = (handler: (req: Request) => Response | Promise<Response>) => Deno.serve(handler);
 
@@ -127,6 +128,116 @@ const FAL_IMAGE_MODELS: Record<string, FalImageModel> = {
     sizing: 'aspect_ratio',
   },
 };
+
+// ─── kie.ai image catalogue ──────────────────────────────────────────────────
+//
+// The models fal also serves but kie sells cheaper (the cost tables in
+// _shared/ai-pricing.ts are the kie rates for these four). kie's jobs API is
+// async even for images, so generateWithKie polls it to completion to keep
+// this function's one-call contract. Like fal, every family names its edit
+// input differently, so each declares its field rather than sharing a spread.
+
+interface KieImageModel {
+  /** jobs-API model id for text-to-image. */
+  text: string;
+  /** jobs-API model id for edits, when the family has one. */
+  edit?: string;
+  /** Which field carries the source image on the edit model. */
+  editField?: 'image_input' | 'image_urls' | 'input_urls';
+  /** Aspect ratios the model accepts. Anything else maps to a close cousin. */
+  aspects: string[];
+  /** 'auto' keeps the source framing on an edit, for the models that take it. */
+  supportsAutoAspect?: boolean;
+  /** Fixed fields merged into every request — the tier the price table assumes. */
+  extra?: Record<string, unknown>;
+}
+
+const KIE_IMAGE_MODELS: Record<string, KieImageModel> = {
+  'nano-banana-pro': {
+    text: 'nano-banana-pro',
+    edit: 'nano-banana-pro',
+    editField: 'image_input',
+    aspects: ['1:1', '2:3', '3:2', '3:4', '4:3', '4:5', '5:4', '9:16', '16:9', '21:9'],
+    supportsAutoAspect: true,
+    extra: { resolution: '2K', output_format: 'png' },
+  },
+  'nano-banana-2': {
+    text: 'nano-banana-2',
+    edit: 'nano-banana-2',
+    editField: 'image_input',
+    aspects: ['1:1', '2:3', '3:2', '3:4', '4:3', '4:5', '5:4', '9:16', '16:9', '21:9'],
+    supportsAutoAspect: true,
+    extra: { resolution: '2K', output_format: 'png' },
+  },
+  'seedream-v4.5': {
+    text: 'seedream/4.5-text-to-image',
+    edit: 'seedream/4.5-edit',
+    editField: 'image_urls',
+    aspects: ['1:1', '4:3', '3:4', '16:9', '9:16', '2:3', '3:2', '21:9'],
+    extra: { quality: 'basic' },
+  },
+  'flux-2-pro': {
+    text: 'flux-2/pro-text-to-image',
+    edit: 'flux-2/pro-image-to-image',
+    editField: 'input_urls',
+    aspects: ['1:1', '4:3', '3:4', '16:9', '9:16', '3:2', '2:3'],
+    extra: { resolution: '1K' },
+  },
+};
+
+/** Best aspect a kie model can honour for what was asked. */
+function toKieAspect(
+  config: KieImageModel,
+  editing: boolean,
+  aspect?: string,
+  bannerFormat?: string,
+): string {
+  const requested =
+    aspect ??
+    (bannerFormat === 'landscape' ? '16:9' : bannerFormat === 'portrait' ? '9:16' : undefined);
+  // An edit with no explicit framing should keep the source's, matching what
+  // 'auto' means on the fal path.
+  if (!requested) return editing && config.supportsAutoAspect ? 'auto' : '1:1';
+  if (config.aspects.includes(requested)) return requested;
+  if (requested === '4:5') return config.aspects.includes('3:4') ? '3:4' : '1:1';
+  if (requested === '21:9') return '16:9';
+  return '1:1';
+}
+
+/** Run a kie image model to completion and return the finished image URL. */
+async function generateWithKie(
+  model: string,
+  prompt: string,
+  sourceImage?: string,
+  bannerFormat?: string,
+  aspectRatio?: string,
+): Promise<string> {
+  const key = kieKey();
+  if (!key) throw new Error('KIE_API_KEY is not configured');
+
+  const config = KIE_IMAGE_MODELS[model];
+  if (!config) throw new Error(`Unknown kie image model: ${model}`);
+
+  const editing = !!sourceImage;
+  if (editing && !config.edit) {
+    throw new Error(`${model} cannot edit an existing image on kie`);
+  }
+
+  const input: Record<string, unknown> = {
+    prompt,
+    aspect_ratio: toKieAspect(config, editing, aspectRatio, bannerFormat),
+    ...(config.extra ?? {}),
+  };
+  if (editing) input[config.editField!] = [sourceImage];
+
+  const modelId = editing ? config.edit! : config.text;
+  console.log(`[kie-image] ${modelId}`, JSON.stringify(input).substring(0, 300));
+
+  const taskId = await kieCreateTask(key, modelId, input);
+  // Stay inside the function's wall clock with room for the response to make
+  // it back out; images typically land in well under thirty seconds.
+  return await kieWaitForResult(key, taskId, { timeoutMs: 110_000 });
+}
 
 /** DeHub's aspect strings mapped onto fal's `image_size` enum. */
 function toFalImageSize(aspect?: string, bannerFormat?: string): string {
@@ -587,6 +698,30 @@ ART DIRECTION: ${enhancedUserRequest}`;
       { type: 'image_url', image_url: { url: sourceImage } },
       { type: 'text', text: contextualPrompt }
     ] : contextualPrompt;
+
+    // ── kie.ai catalogue ──────────────────────────────────────────────────
+    // The cheap lane for the models kie also serves — the price tables in
+    // _shared/ai-pricing.ts assume these jobs land here. kie fetches inputs
+    // by URL, so a data: source image stays on fal, and a kie failure falls
+    // straight through to the fal path below rather than failing a job the
+    // creator has already paid for.
+    if (KIE_IMAGE_MODELS[model] && kieKey() && kieUsableUrl(sourceImage)) {
+      try {
+        const kieResult = await generateWithKie(
+          model,
+          contextualPrompt,
+          sourceImage,
+          bannerFormat,
+          aspectRatio,
+        );
+        return new Response(
+          JSON.stringify({ imageUrl: kieResult, text: '', success: true }),
+          { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
+        );
+      } catch (e) {
+        console.warn('[kie-image] failed, falling back to fal:', (e as Error).message);
+      }
+    }
 
     // ── fal.ai catalogue ──────────────────────────────────────────────────
     // Everything the Lovable gateway and xAI do not serve. These run on fal's
