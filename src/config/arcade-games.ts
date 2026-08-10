@@ -85,8 +85,6 @@ export interface ArcadeGame {
   artAlt: string;
   /** Theme that also surfaces this game via its own launcher, if any. */
   theme?: 'war' | 'jungle';
-  /** Short, honest control hints, shown on the card back and the player. */
-  controls: string[];
   credit: ArcadeGameCredit;
   /**
    * Resolve the frame URL, including any engine settings. Called once, when
@@ -176,11 +174,6 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     action: 'Play',
     art: '/arcade/kings-gambit.webp',
     artAlt: "Two armies of sculpted 3D chess figures facing each other across a lit board in King's Gambit",
-    controls: [
-      'Click a figure, then click where it should go',
-      'Queue up to five moves while the engine thinks',
-      'F flips the board · C hides the interface',
-    ],
     credit: {
       name: "King's Gambit",
       url: 'https://github.com/alexngdev99/rork-medieval-3d-chess',
@@ -216,11 +209,6 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     art: '/arcade/claude-of-duty.webp',
     artAlt: 'First-person view down a weapon across the procedurally generated terrain of Claude of Duty',
     theme: 'war',
-    controls: [
-      'WASD to move · mouse to look',
-      'Click to lock the pointer, Escape to release',
-      'Escape again to leave the game',
-    ],
     credit: {
       name: 'Claude of Duty',
       url: 'https://github.com/mshumer/Claude-of-Duty',
@@ -265,11 +253,6 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     art: '/arcade/jungle-trail.webp',
     artAlt: 'A path through dense procedurally generated rainforest canopy in Jungle Trail',
     theme: 'jungle',
-    controls: [
-      'WASD to walk · mouse to look',
-      'Shift to run · Space to jump',
-      'Escape to leave the trail',
-    ],
     credit: {
       name: 'Jungle Trail',
       url: 'https://github.com/StarKnightt/jungle-trail',
