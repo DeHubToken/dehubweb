@@ -267,7 +267,12 @@ const translationCache = new Map<string, { translated: string; sourceLang: strin
 // re-requesting every post on screen — which is free for the user but is a
 // paid call for us on any post the shared server cache has since evicted, and
 // a visible re-flicker either way. Persisting it makes a refresh cost nothing.
-const TRANSLATION_STORE_KEY = 'dehub-translation-cache-v1';
+// v2: v1 was populated while the server could cache a model's refusal prose or
+// a wrong-language guess as the "translation", and this cache is checked before
+// the server is ever re-asked — so on affected devices the bad text would
+// outlive every server-side fix. Bumping the key is the only way to reach it.
+const TRANSLATION_STORE_KEY = 'dehub-translation-cache-v2';
+const LEGACY_TRANSLATION_STORE_KEYS = ['dehub-translation-cache-v1'];
 // Well under the ~5MB localStorage budget: post bodies are large, and this
 // shares that budget with everything else the app keeps there.
 const MAX_PERSISTED_TRANSLATIONS = 300;
@@ -276,6 +281,8 @@ type CachedTranslation = { translated: string; sourceLang: string };
 
 function loadPersistedTranslations(): void {
   try {
+    // Poisoned generations don't deserve the storage they sit in.
+    for (const key of LEGACY_TRANSLATION_STORE_KEYS) localStorage.removeItem(key);
     const raw = localStorage.getItem(TRANSLATION_STORE_KEY);
     if (!raw) return;
     const entries = JSON.parse(raw) as [string, CachedTranslation][];
