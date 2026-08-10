@@ -1265,6 +1265,9 @@ CREATE POLICY "Users can join communities"
     )
   );
 
+-- Self-drop as well as dropping the superseded names above: without it a
+-- re-run of this migration fails on the policy it created itself.
+DROP POLICY IF EXISTS "View community members" ON public.community_members;
 CREATE POLICY "View community members"
   ON public.community_members FOR SELECT
   USING (
@@ -1292,6 +1295,7 @@ DROP POLICY IF EXISTS "Users can update own community chat messages" ON public.c
 DROP POLICY IF EXISTS "Owners and admins can delete community chat messages" ON public.community_chat_messages;
 DROP POLICY IF EXISTS "Users can delete own community chat messages" ON public.community_chat_messages;
 
+DROP POLICY IF EXISTS "View community chat messages" ON public.community_chat_messages;
 CREATE POLICY "View community chat messages"
   ON public.community_chat_messages FOR SELECT
   USING (
@@ -1299,6 +1303,7 @@ CREATE POLICY "View community chat messages"
     OR public.community_is_active_member(community_id, public.get_request_wallet_address())
   );
 
+DROP POLICY IF EXISTS "Members can update community chat messages" ON public.community_chat_messages;
 CREATE POLICY "Members can update community chat messages"
   ON public.community_chat_messages FOR UPDATE
   USING (public.community_is_active_member(community_id, public.get_request_wallet_address()))
