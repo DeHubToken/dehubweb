@@ -381,6 +381,15 @@ html {
   100% { transform: translateX(400%); }
 }
 
+/* Story-slide progress pill on the signed-out home welcome panel
+   (components/app/HomeIntro.tsx), mirroring the mobile app's ProgressPill.
+   Applied via motion-safe: — a reduced-motion viewer gets no auto-advance, and
+   the pill's inline width already resolves to 100% for the active slide. */
+@keyframes dehub-pill {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
 /* Medal shine animation for leaderboard */
 .medal-shine-container {
   position: relative;
