@@ -39,6 +39,16 @@
 
 import { isWeakHardware, probeGpu, readRenderer } from '@/lib/game-gpu';
 
+/**
+ * Provenance bookkeeping, NOT page copy.
+ *
+ * This is deliberately not rendered anywhere. Attribution is satisfied in the
+ * repo — the full licence text sits at the root and each vendored build's
+ * README records its upstream and pinned commit — and the games are expected to
+ * change substantially, so a card that named a specific upstream project would
+ * go stale and misattribute. What this is still for: keeping each game tied to
+ * the licence file we actually ship, which `src/test/arcade.test.ts` asserts.
+ */
 export interface ArcadeGameCredit {
   /** Upstream project name, as its authors write it. */
   name: string;
@@ -46,7 +56,7 @@ export interface ArcadeGameCredit {
   url: string;
   /** SPDX-ish short name. Every game here is MIT so far. */
   licence: string;
-  /** Full licence text in the repo, so the credit can link to what we shipped. */
+  /** Full licence text in the repo. The test checks this file exists. */
   licenceFile: string;
 }
 

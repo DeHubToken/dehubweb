@@ -135,7 +135,6 @@ export default function ArcadeGamePage() {
           gamePlatform: 'Web browser',
           operatingSystem: 'Any',
           playMode: 'SinglePlayer',
-          license: game.credit.url,
           offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
         }}
       />
