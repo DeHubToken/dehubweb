@@ -107,6 +107,8 @@
     "publicProfileDesc": "Make your profile visible to everyone",
     "followVisibility": "Follow Visibility",
     "followVisibilityDesc": "Control how others see your social stats",
+    "newMemberBadge": "Show \"New\" badge",
+    "newMemberBadgeDesc": "Let others see that you recently joined, so they can welcome you. Shows for your first 30 days.",
     "publicOption": "Public",
     "publicOptionDesc": "Numbers visible and clickable",
     "numbersOnly": "Numbers only",
