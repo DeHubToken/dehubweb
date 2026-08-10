@@ -3,6 +3,7 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 import { scheduleBackgroundResume, setBackgroundPaused } from '@/lib/background-gate';
 import { useBootProgress } from '@/lib/game-boot-progress';
 import { isIntegratedGpu, probeGpu, readRenderer } from '@/lib/game-gpu';
+import { useGameExitRequest } from '@/lib/game-exit-request';
 
 /**
  * War theme game launcher.
@@ -423,6 +424,12 @@ function WarGameOverlay({ onExit }: { onExit: () => void }) {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [onExit]);
+
+  // "Leave game" inside the engine's own pause menu (ESC). It matters most on
+  // this path: a keydown inside the frame never reaches this document, so while
+  // the game holds the pointer the listener above cannot see Escape at all and
+  // the overlay's own exit button cannot be aimed at. The message can.
+  useGameExitRequest('war-game', onExit);
 
   return (
     <div data-war-game-overlay role="dialog" aria-modal="true" aria-label="Combat zone">
