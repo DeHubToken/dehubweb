@@ -107,6 +107,14 @@ export interface ArcadeGame {
    * the player just reveals the frame and lets the game speak for itself.
    */
   readySource?: string;
+  /**
+   * `postMessage({ source })` value the frame uses to ask to be closed, from a
+   * button inside its own settings or pause menu. Every game here has one,
+   * because the host's corner link cannot be clicked while a pointer lock is
+   * held — see lib/game-exit-request. Same name as `readySource` where a game
+   * has both; kept separate so a game can have one bridge without the other.
+   */
+  exitSource?: string;
   /** Extra `allow` permissions beyond the baseline. */
   allow: string;
   /** Preflight for this engine specifically. */
@@ -188,6 +196,7 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     // better than anything modelled out here, so the host's bar is only there
     // to cover the gap before the frame's first paint — hence the short tau.
     bootTauMs: 6000,
+    exitSource: 'chess-game',
     // Pointer lock is not requested: the board is driven by clicks and an orbit
     // drag, and grabbing the cursor would only make it harder to aim at a square.
     allow: 'fullscreen; autoplay',
@@ -242,6 +251,7 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     // crash, which is exactly how it was first reported.
     bootTauMs: 22000,
     readySource: 'war-game',
+    exitSource: 'war-game',
     allow: 'pointer-lock; fullscreen; gamepad; autoplay',
     checkCapability: () => requireHardwareWebgl('The game', true),
   },
@@ -283,6 +293,7 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     // and nothing else, and this bar is modelled against a clock instead.
     bootTauMs: 14000,
     readySource: 'jungle-game',
+    exitSource: 'jungle-game',
     allow: 'pointer-lock; fullscreen; autoplay',
     // WebGL 1 is enough here: the engine targets r170 and does not require a
     // WebGL2 context.

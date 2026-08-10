@@ -53,8 +53,9 @@ as a fourth patch under `patches/` if it happens.
 
 ```bash
 git clone https://github.com/alexngdev99/rork-medieval-3d-chess.git
-cd rork-medieval-3d-chess/web
-git apply ../../dehubweb/public/chess-game/patches/*.patch   # see below
+cd rork-medieval-3d-chess
+git apply ../dehubweb/public/chess-game/patches/*.patch   # see below; paths are web/…
+cd web
 npm install
 npx vite build --base=/chess-game/ --sourcemap false
 ```
@@ -67,7 +68,7 @@ of them, and the first two alone are 2.9 MB.
 The `--base=/chess-game/` flag is required: without it the built asset URLs are
 absolute to `/` and 404 when served from this subpath.
 
-## The three local patches
+## The four local patches
 
 They live in `patches/` so re-vendoring is mechanical. Each is also commented in
 place in the patched file, so anyone reading the upstream source in a checkout
@@ -106,6 +107,18 @@ Upstream's `<head>` carries og/twitter tags absolute to its own deploy at
 `/arcade/kings-gambit` is the shareable, indexable surface and carries its own
 metadata — so the block is dropped, `noindex` is added, and the icon reference is
 made relative so it does not resolve to dehub.io's favicon.
+
+### `04-host-exit.patch` — a way out from inside the game
+
+The host paints an exit control over the frame, and it is not always reachable:
+the arcade player is a full-viewport surface and a player who has just opened
+settings is looking at the game's own panel, not at our chrome. So the settings
+panel grows a "Close the game" button that posts
+`{ source: 'chess-game', type: 'exit' }` to the parent, which is the only channel
+an opaque-origin frame has. The host listens in `src/lib/game-exit-request.ts`.
+
+The button is only rendered when `window.parent !== window`, so upstream's
+standalone deploy — where there is nothing to return to — is unaffected.
 
 Google Fonts (Cinzel, Crimson Pro) is left as upstream ships it. The app already
 loads Google Fonts and the CSP already allows it, so self-hosting here would be
