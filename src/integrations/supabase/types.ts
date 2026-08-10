@@ -2490,6 +2490,27 @@ export type Database = {
         }
         Relationships: []
       }
+      post_link_copies: {
+        Row: {
+          created_at: string
+          id: string
+          token_id: number
+          wallet_address: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          token_id: number
+          wallet_address?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          token_id?: number
+          wallet_address?: string | null
+        }
+        Relationships: []
+      }
       post_translations: {
         Row: {
           created_at: string
@@ -4340,6 +4361,13 @@ export type Database = {
           owner_wallet_address: string
         }[]
       }
+      get_post_link_copy_counts: {
+        Args: { p_token_ids: number[] }
+        Returns: {
+          copies: number
+          token_id: number
+        }[]
+      }
       get_request_wallet_address: { Args: never; Returns: string }
       get_user_id_by_phone: { Args: { p_phone: string }; Returns: string }
       increment_category_count: { Args: { p_name: string }; Returns: undefined }
@@ -4423,6 +4451,10 @@ export type Database = {
       }
       touch_post_translation: {
         Args: { p_target_lang: string; p_text_hash: string }
+        Returns: undefined
+      }
+      track_post_link_copy: {
+        Args: { p_token_id: number; p_wallet?: string }
         Returns: undefined
       }
       upsert_phone_otp: {
