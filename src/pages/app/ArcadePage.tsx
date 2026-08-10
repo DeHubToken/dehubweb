@@ -17,7 +17,7 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ExternalLink, Gamepad2, Play, Sparkles } from 'lucide-react';
+import { Gamepad2, Play, Sparkles } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { ARCADE_GAMES, type ArcadeGame } from '@/config/arcade-games';
@@ -85,23 +85,6 @@ function GameCard({ game }: { game: ArcadeGame }) {
             </span>
           ) : null}
         </div>
-
-        {/* Credit is not decoration. These are third-party MIT projects and the
-            licences we ship are at the repo root; the least the page can do is
-            name the authors and link where the code came from. */}
-        <p className="border-t border-white/[0.06] pt-3 text-[11px] text-zinc-500">
-          <a
-            href={game.credit.url}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="inline-flex items-center gap-1 text-zinc-400 underline-offset-2 hover:underline"
-          >
-            {game.credit.name}
-            <ExternalLink className="h-2.5 w-2.5" />
-          </a>
-          {' · '}
-          {game.credit.licence}
-        </p>
       </div>
     </div>
   );
