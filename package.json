@@ -9,6 +9,7 @@
     "build": "NODE_OPTIONS=--max-old-space-size=8192 vite build && node scripts/check-entry-bundle.mjs",
     "build:dev": "NODE_OPTIONS=--max-old-space-size=8192 vite build --mode development",
     "lint": "eslint .",
+    "check:db": "node scripts/check-supabase-drift.mjs",
     "preview": "vite preview",
     "test:agora": "node scripts/test-agora-credentials.mjs"
   },
