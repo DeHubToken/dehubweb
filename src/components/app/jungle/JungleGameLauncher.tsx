@@ -3,6 +3,7 @@ import { useAppTheme } from '@/contexts/ThemeContext';
 import { scheduleBackgroundResume, setBackgroundPaused } from '@/lib/background-gate';
 import { setJunglePhase, setJunglePush } from '@/lib/jungle-cinematic';
 import { useBootProgress } from '@/lib/game-boot-progress';
+import { isWeakHardware, probeGpu } from '@/lib/game-gpu';
 
 /**
  * Jungle theme game launcher.
@@ -201,36 +202,6 @@ function LauncherInner() {
 const BUNDLED_GAME_URL = '/jungle-game/index.html';
 
 /**
- * Read the GPU's unmasked renderer string, or '' when the browser withholds it.
- * Costs a throwaway GL context, so callers should do this once.
- */
-function readRenderer(): string {
-  if (typeof document === 'undefined') return '';
-  try {
-    const canvas = document.createElement('canvas');
-    const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
-    if (!gl) return '';
-    const info = gl.getExtension('WEBGL_debug_renderer_info');
-    const name = info ? String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL) ?? '') : '';
-    (gl.getExtension('WEBGL_lose_context') as { loseContext(): void } | null)?.loseContext();
-    return name;
-  } catch {
-    return '';
-  }
-}
-
-/**
- * Integrated graphics, by renderer string. These share system memory and have a
- * fraction of a discrete card's fill rate, which is what this game leans on:
- * 100k procedural plants, shadow cascades and a full post chain.
- */
-function isIntegratedGpu(renderer: string): boolean {
-  return /iris|uhd graphics|hd graphics|intel\(r\) graphics|vega \d|radeon graphics|adreno|mali|apple gpu|llvmpipe|swiftshader/i.test(
-    renderer,
-  );
-}
-
-/**
  * Build the game URL.
  *
  * Settings go in the HASH, not the query string — that is where this engine
@@ -251,15 +222,9 @@ function isIntegratedGpu(renderer: string): boolean {
 function buildGameUrl(): string {
   const base = (import.meta.env.VITE_JUNGLE_GAME_URL as string | undefined) || BUNDLED_GAME_URL;
 
-  if (typeof navigator === 'undefined') return base;
-
-  const coarse =
-    typeof window.matchMedia === 'function' && window.matchMedia('(pointer: coarse)').matches;
-  const small = Math.min(window.innerWidth, window.innerHeight) < 700;
-  const renderer = readRenderer();
-  const weak = coarse || small || (!!renderer && isIntegratedGpu(renderer));
-
-  return weak ? `${base}#tier=low` : base;
+  // Small screen, touch device or integrated graphics — see isWeakHardware for
+  // why core count is not part of that decision.
+  return isWeakHardware() ? `${base}#tier=low` : base;
 }
 
 interface Capability {
@@ -281,14 +246,11 @@ interface Capability {
  * limited by the GPU, the driver, or hardware acceleration being switched off.
  */
 function checkCapability(): Capability {
-  if (typeof document === 'undefined') return { ok: true, reason: '', detail: '' };
+  // One probe, one throwaway context, released immediately — contexts are
+  // scarce and this page already holds one for the canopy. See lib/game-gpu.
+  const gpu = probeGpu();
 
-  const canvas = document.createElement('canvas');
-  const gl = (canvas.getContext('webgl2') || canvas.getContext('webgl')) as
-    | WebGLRenderingContext
-    | null;
-
-  if (!gl) {
+  if (!gpu.webgl) {
     return {
       ok: false,
       reason: 'NO WEBGL',
@@ -297,26 +259,16 @@ function checkCapability(): Capability {
     };
   }
 
-  // Unmasked renderer is the only reliable way to spot a software fallback. It
-  // is gated behind an extension and some browsers withhold it, in which case
-  // the check simply passes rather than blocking a machine that may be fine.
-  let renderer = '';
-  const info = gl.getExtension('WEBGL_debug_renderer_info');
-  if (info) renderer = String(gl.getParameter(info.UNMASKED_RENDERER_WEBGL) ?? '');
-
-  // Free the probe context immediately: contexts are scarce and the game is
-  // about to ask for its own, on a page that already has one for the canopy.
-  (gl.getExtension('WEBGL_lose_context') as { loseContext(): void } | null)?.loseContext();
-
-  if (renderer && /swiftshader|llvmpipe|software|basic render|microsoft basic/i.test(renderer)) {
+  // An unknown renderer passes rather than blocking a machine that may be fine.
+  if (gpu.software) {
     return {
       ok: false,
       reason: 'SOFTWARE RENDERING',
-      detail: `The GPU is not being used (${renderer}). The walk would run at a few frames per second. Enable hardware acceleration in the browser settings, then restart it.`,
+      detail: `The GPU is not being used (${gpu.renderer}). The walk would run at a few frames per second. Enable hardware acceleration in the browser settings, then restart it.`,
     };
   }
 
-  return { ok: true, reason: '', detail: renderer };
+  return { ok: true, reason: '', detail: gpu.renderer };
 }
 
 /**

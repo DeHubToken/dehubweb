@@ -3,7 +3,7 @@ import { useScrollDirection } from '@/hooks/use-scroll-direction';
 import { useKeyboardOpen } from '@/hooks/use-keyboard-open';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { isHomePath } from '@/lib/home-path';
-import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck, Scroll, Map, Wand2, Loader2, BarChart3 } from 'lucide-react';
+import { Home, MessageSquare, Plus, User, Search, Trophy, Bookmark, Settings, LayoutDashboard, Sparkles, Bell, Wallet, BookOpen, FileText, Lightbulb, Briefcase, Mic, Users, CalendarDays, Vault, ShieldCheck, Scroll, Map, Wand2, Loader2, BarChart3, Gamepad2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { preloadRoute } from '@/lib/route-preload';
 // Lazy: the composer pulls minting/wallet contract code — a static import
@@ -53,6 +53,7 @@ const SCROLL_NAV_ITEMS = [
   { icon: FileText, label: 'Blog', path: '/docs/blog' },
   { icon: Briefcase, label: 'Careers', path: '/app/jobs' },
   { icon: Scroll, label: 'Glossary', path: '/app/glossary' },
+  { icon: Gamepad2, label: 'Arcade', path: '/arcade' },
   { icon: Users, label: 'Communities', path: '/app/communities' },
 ];
 
