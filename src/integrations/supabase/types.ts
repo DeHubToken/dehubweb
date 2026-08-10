@@ -1780,7 +1780,6 @@ export type Database = {
           id: string
           image_url: string | null
           like_count: number
-          shipped_url: string | null
           status: string
           title: string
           updated_at: string
@@ -1798,7 +1797,6 @@ export type Database = {
           id?: string
           image_url?: string | null
           like_count?: number
-          shipped_url?: string | null
           status?: string
           title: string
           updated_at?: string
@@ -1816,7 +1814,6 @@ export type Database = {
           id?: string
           image_url?: string | null
           like_count?: number
-          shipped_url?: string | null
           status?: string
           title?: string
           updated_at?: string
