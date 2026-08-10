@@ -1,4 +1,12 @@
 // deno-lint-ignore-file no-explicit-any
+//
+// On-demand transcript translation. Two callers, two contracts:
+//   - use-video-subtitles sends { tokenId, lang }: the translation is cached
+//     on video_transcripts.translations and returned in the response body.
+//   - StageTranscriptDrawer sends { stageId, language }: the result is
+//     persisted to stage_transcript_translations (processing → ready/failed)
+//     and the drawer follows along via polling + realtime, so that path
+//     answers immediately and finishes in the background.
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { languageNameFor } from '../_shared/language-names.ts';
 
@@ -122,25 +130,240 @@ async function chunkViaGateway(numbered: string, langName: string): Promise<stri
   return parsed?.translations ?? [];
 }
 
-async function translateChunk(segments: Segment[], langName: string): Promise<string[]> {
-  const numbered = segments.map((s, i) => `${i + 1}. ${s.text}`).join('\n');
-  let out = await chunkViaFal(numbered, langName, segments.length);
+async function translateChunk(items: Array<{ text: string }>, langName: string): Promise<string[]> {
+  const numbered = items.map((s, i) => `${i + 1}. ${s.text}`).join('\n');
+  let out = await chunkViaFal(numbered, langName, items.length);
   if (!out) out = await chunkViaGateway(numbered, langName);
   // Nothing back at all is a failure, not a chunk of blanks — without this, an
   // empty answer padded out to the original lines and was PERSISTED as the
   // translation by the caller, which cannot tell that apart from success.
-  if (out.length === 0 && segments.length > 0) {
+  if (out.length === 0 && items.length > 0) {
     throw new Error('provider returned no translations');
   }
   // Pad/truncate to match
-  while (out.length < segments.length) out.push(segments[out.length].text);
-  return out.slice(0, segments.length);
+  while (out.length < items.length) out.push(items[out.length].text);
+  return out.slice(0, items.length);
+}
+
+/* ────────────────────────── Stage transcripts ────────────────────────── */
+
+interface StageSegment { speaker?: string; text: string; start?: number; end?: number }
+interface StageChapter { title?: string; start?: number; end?: number }
+
+// ElevenLabs Scribe stamps stage_transcripts.source_language with three-letter
+// codes ('eng', 'tur'); the drawer's picker speaks two-letter ones. Map the
+// codes Scribe actually emits so "translate English to English" can
+// short-circuit to a copy. A code missing here just translates for real —
+// wasteful, never wrong.
+const SCRIBE_TO_PICKER: Record<string, string> = {
+  eng: 'en', spa: 'es', fra: 'fr', fre: 'fr', deu: 'de', ger: 'de',
+  ita: 'it', por: 'pt', rus: 'ru', tur: 'tr', jpn: 'ja', kor: 'ko',
+  zho: 'zh', chi: 'zh', ara: 'ar', hin: 'hi', ind: 'id',
+};
+
+// Stage segments are whole speaker turns, not subtitle lines — a single turn
+// can run to a thousand characters, so sixty per call would sail past the fal
+// max_tokens cap and fail every chunk. Pack by character budget instead,
+// sized so even a translation into CJK stays inside the cap.
+const STAGE_CHUNK_MAX_CHARS = 4000;
+
+function packItems(items: Array<{ text: string }>): Array<Array<{ text: string }>> {
+  const packs: Array<Array<{ text: string }>> = [];
+  let cur: Array<{ text: string }> = [];
+  let chars = 0;
+  for (const item of items) {
+    if (cur.length && (cur.length >= CHUNK_SIZE || chars + item.text.length > STAGE_CHUNK_MAX_CHARS)) {
+      packs.push(cur);
+      cur = [];
+      chars = 0;
+    }
+    cur.push(item);
+    chars += item.text.length;
+  }
+  if (cur.length) packs.push(cur);
+  return packs;
+}
+
+// A lone speaker turn can outgrow a whole chunk by itself (a solo stage
+// diarizes into one enormous segment). Translate it in sentence pieces and
+// stitch the pieces back together.
+async function translateLongText(text: string, langName: string): Promise<string> {
+  const pieces: Array<{ text: string }> = [];
+  let cur = '';
+  for (const part of text.split(/(?<=[.!?…。！？])\s+/)) {
+    if (cur && cur.length + part.length + 1 > STAGE_CHUNK_MAX_CHARS) {
+      pieces.push({ text: cur });
+      cur = part;
+    } else {
+      cur = cur ? `${cur} ${part}` : part;
+    }
+  }
+  if (cur) pieces.push({ text: cur });
+  const out: string[] = [];
+  for (const pack of packItems(pieces)) {
+    out.push(...await translateChunk(pack, langName));
+  }
+  return out.join(' ');
+}
+
+async function translateStage(stageId: string, language: string): Promise<Response> {
+  const langCode = language.toLowerCase().slice(0, 16);
+  if (!langCode) {
+    return new Response(JSON.stringify({ error: 'language required' }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+  const langName = languageNameFor(langCode);
+  if (!langName) {
+    return new Response(JSON.stringify({ error: `unsupported language '${langCode}'` }), {
+      status: 400,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+
+  const db = admin();
+  const { data: row, error: rowErr } = await db
+    .from('stage_transcripts')
+    .select('stage_id, status, segments, summary, chapters, source_language, privacy')
+    .eq('stage_id', stageId)
+    .maybeSingle();
+  if (rowErr) throw rowErr;
+  if (!row || row.status !== 'ready') {
+    return new Response(JSON.stringify({ error: 'transcript not ready' }), {
+      status: 409,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+  // Translations land in a world-readable table, and this function runs as
+  // service role with no way to tell the host from anyone else — translating a
+  // private transcript would republish it for everyone. Public and members
+  // transcripts are exactly what an anonymous reader can already see.
+  if (row.privacy === 'private') {
+    return new Response(JSON.stringify({ error: 'transcript is private' }), {
+      status: 403,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+
+  const { data: existing, error: existingErr } = await db
+    .from('stage_transcript_translations')
+    .select('status, updated_at')
+    .eq('stage_id', stageId)
+    .eq('language', langCode)
+    .maybeSingle();
+  if (existingErr) throw existingErr;
+  if (existing?.status === 'ready') {
+    return new Response(JSON.stringify({ ok: true, status: 'ready', cached: true }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+  if (existing?.status === 'processing') {
+    // A fresh processing row is another caller's live run — leave it be. A
+    // stale one is a crashed run, and nothing would ever retry it otherwise:
+    // the drawer only re-invokes when the row is missing or failed.
+    const age = Date.now() - new Date(existing.updated_at).getTime();
+    if (age < 10 * 60 * 1000) {
+      return new Response(JSON.stringify({ ok: true, status: 'processing' }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+  }
+
+  const segments: StageSegment[] = Array.isArray(row.segments) ? row.segments : [];
+  const summary: string | null = row.summary ?? null;
+  const chapters: StageChapter[] = Array.isArray(row.chapters) ? row.chapters : [];
+
+  // Same language as the recording → copy, don't machine-translate en→en.
+  const sourceRaw = String(row.source_language ?? '').toLowerCase();
+  const sourceCode = SCRIBE_TO_PICKER[sourceRaw] ?? sourceRaw.split(/[-_]/)[0];
+  if (sourceCode && sourceCode === langCode.split(/[-_]/)[0]) {
+    await db.from('stage_transcript_translations').upsert({
+      stage_id: stageId,
+      language: langCode,
+      status: 'ready',
+      segments,
+      summary,
+      chapters,
+      error: null,
+    }, { onConflict: 'stage_id,language' });
+    return new Response(JSON.stringify({ ok: true, status: 'ready', sameAsSource: true }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+
+  // The row goes in before we answer so the drawer's very next poll sees
+  // 'processing'; the translation itself finishes in the background.
+  await db.from('stage_transcript_translations').upsert({
+    stage_id: stageId,
+    language: langCode,
+    status: 'processing',
+    error: null,
+  }, { onConflict: 'stage_id,language' });
+
+  const work = (async () => {
+    try {
+      // Segments, summary lines and chapter titles ride the same numbered-line
+      // protocol, then get split back apart by position.
+      const summaryLines = summary ? summary.split('\n') : [];
+      const items = [
+        ...segments.map((s) => ({ text: s.text ?? '' })),
+        ...summaryLines.map((text) => ({ text })),
+        ...chapters.map((c) => ({ text: c.title ?? '' })),
+      ];
+
+      const texts: string[] = [];
+      for (const pack of packItems(items)) {
+        if (pack.length === 1 && pack[0].text.length > STAGE_CHUNK_MAX_CHARS) {
+          texts.push(await translateLongText(pack[0].text, langName));
+        } else {
+          texts.push(...await translateChunk(pack, langName));
+        }
+      }
+      // Unlike the video path there is no caller to hand a degraded result to —
+      // whatever lands in this row is served as the translation from then on,
+      // so a failed chunk fails the whole run (translateChunk throws) rather
+      // than persisting untranslated lines as if they were a translation.
+
+      const segTexts = texts.slice(0, segments.length);
+      const sumTexts = texts.slice(segments.length, segments.length + summaryLines.length);
+      const chapTexts = texts.slice(segments.length + summaryLines.length);
+
+      await db.from('stage_transcript_translations').update({
+        status: 'ready',
+        segments: segments.map((s, i) => ({ ...s, text: segTexts[i] ?? s.text })),
+        summary: summary ? sumTexts.join('\n') : null,
+        chapters: chapters.map((c, i) => ({ ...c, title: chapTexts[i] || c.title })),
+        error: null,
+      }).eq('stage_id', stageId).eq('language', langCode);
+    } catch (e) {
+      await db.from('stage_transcript_translations').update({
+        status: 'failed',
+        error: String((e as Error).message || e).slice(0, 500),
+      }).eq('stage_id', stageId).eq('language', langCode);
+    }
+  })();
+
+  // @ts-ignore - EdgeRuntime is provided in Deno deploy
+  if (typeof EdgeRuntime !== 'undefined') EdgeRuntime.waitUntil(work);
+  else await work;
+
+  return new Response(JSON.stringify({ ok: true, status: 'processing' }), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
 }
 
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
   try {
-    const { tokenId, lang } = await req.json();
+    const body = await req.json();
+    // The stage drawer's contract delivers results through
+    // stage_transcript_translations rather than the response body. Everything
+    // below this branch is the video subtitle path.
+    if (body?.stageId) {
+      return await translateStage(String(body.stageId), String(body.language ?? body.lang ?? ''));
+    }
+    const { tokenId, lang } = body ?? {};
     if (!tokenId || !lang) {
       return new Response(JSON.stringify({ error: 'tokenId and lang required' }), {
         status: 400,
