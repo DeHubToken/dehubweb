@@ -125,11 +125,20 @@ const HOME_INTRO_LINKS = [
   ['/guides/what-is-dehub', 'What is DeHub?'],
 ];
 
+// Story slides — mirror SLIDES in src/components/app/HomeIntro.tsx, which in
+// turn mirror the mobile app's screens/auth/OnboardingScreen.tsx. All three are
+// always mounted in the SPA (stacked and cross-faded, never conditionally
+// rendered), so all three belong here too.
+const HOME_INTRO_SLIDES = [
+  ['The Social Media We All Deserve', 'Instantly monetize, never get deplatformed, keep up to 99% of revenue and create free from censorship or platform manipulation.'],
+  ['The App For Everyone', 'No algorithms that favor one side of the argument. Everyone is amplified equally and fairly with open source code.'],
+  ['You Will Own Everything, And Be Happy', 'The ownership economy means your data, assets and audience are yours forever. Even the DeHub network is owned by its users, you.'],
+];
+
 const HOME_INTRO_HTML = `<section style="max-width:600px;margin:24px auto;text-align:left">
-<h2 style="font-size:16px">Welcome to DeHub</h2>
-<p>DeHub is a decentralised social network and mobile app where creators own their content, their audience and their earnings. Every post is minted on-chain, the feed is chronological rather than algorithmic, and nothing you publish can be quietly demonetised or removed by a platform owner. It has been in development since 2021 and is free to join — sign in with an email or social account and a gas-sponsored wallet is created for you automatically.</p>
-<p>The platform combines things that usually live in separate apps: a social feed with video, shorts, images and music; live streaming with on-chain tipping; end-to-end encrypted messaging; user-run communities; a multi-chain wallet; and an AI assistant. Creators monetise directly through pay-per-view posts, tokenised subscriptions that holders can resell, ad-revenue sharing and watch-to-earn rewards paid in DHB, the platform&rsquo;s own currency. Viewers earn for their attention rather than only supplying it.</p>
-<p>DeHub is built and maintained in the open — the source is on GitHub, contract activity is publicly auditable, and holders vote on proposals through on-chain governance. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app; those are unrelated products that share the name.</p>
+<h2 style="font-size:16px">Welcome to DeHub — the open-source, user-owned social platform</h2>
+${HOME_INTRO_SLIDES.map(([h, p]) => `<h3 style="font-size:14px">${h}</h3>\n<p>${p}</p>`).join('\n')}
+<p>DeHub is a decentralised social network and mobile app, in development since 2021, where every post is minted on-chain and creators keep their audience, their content and their revenue. It combines a chronological feed, live streaming, end-to-end encrypted messaging, user-run communities, a multi-chain wallet and watch-to-earn rewards paid in DHB. If you arrived looking for a different DeHub, this is not DePaul University&rsquo;s student portal, Rowan&rsquo;s DEHub or the deHUB Access door-entry app.</p>
 <p><a href="${APP_URL}/guide" style="color:#9f9">Take the tour</a></p>
 <nav aria-label="Learn more about DeHub"><ul style="list-style:none;padding:0;margin:0">${
   HOME_INTRO_LINKS.map(([href, label]) =>
