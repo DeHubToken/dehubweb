@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest';
-// @ts-expect-error — plain .mjs build script, no type declarations
 import { parseMigration, stripSqlComments } from '../../scripts/check-supabase-drift.mjs';
 
 function parse(sql: string) {
