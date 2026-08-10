@@ -45,28 +45,25 @@ function GameCard({ game }: { game: ArcadeGame }) {
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
           <div className="pointer-events-none absolute inset-x-0 bottom-0 p-4">
             <h2 className="text-lg font-semibold leading-tight text-white">{game.title}</h2>
-            <p className="mt-0.5 text-xs text-zinc-300">{game.tagline}</p>
           </div>
         </div>
       </Link>
 
       {/* flex-1 + mt-auto below: every card in a grid row stretches to the same
-          height, and the button row rides the bottom edge, so the Play buttons
-          line up across the row. The registry keeps the descriptions to a
-          matching length, so that alignment holds without the stretch having to
-          absorb a ragged block of copy. */}
+          height, and the button rides the bottom edge, so the Play buttons line
+          up across the row. The registry keeps the descriptions to a matching
+          length, so that alignment holds without the stretch having to absorb a
+          ragged block of copy. */}
       <div className="flex flex-1 flex-col gap-3 p-4">
         <p className="text-xs leading-relaxed text-zinc-400">{game.description}</p>
 
-        <div className="mt-auto flex items-center pt-1">
-          <Link
-            to={`/arcade/${game.slug}`}
-            className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-xs font-semibold text-black transition-opacity hover:opacity-90"
-          >
-            <Play className="h-3.5 w-3.5" />
-            {game.action}
-          </Link>
-        </div>
+        <Link
+          to={`/arcade/${game.slug}`}
+          className="mt-auto flex w-full items-center justify-center gap-2 rounded-lg bg-white px-4 py-2 text-xs font-semibold text-black transition-opacity hover:opacity-90"
+        >
+          <Play className="h-3.5 w-3.5" />
+          {game.action}
+        </Link>
       </div>
     </div>
   );
