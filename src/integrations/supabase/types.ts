@@ -1912,6 +1912,7 @@ export type Database = {
           dislike_count: number
           id: string
           image_url: string | null
+          image_urls: string[] | null
           like_count: number
           shipped_url: string | null
           status: string
@@ -1930,6 +1931,7 @@ export type Database = {
           dislike_count?: number
           id?: string
           image_url?: string | null
+          image_urls?: string[] | null
           like_count?: number
           shipped_url?: string | null
           status?: string
@@ -1948,6 +1950,7 @@ export type Database = {
           dislike_count?: number
           id?: string
           image_url?: string | null
+          image_urls?: string[] | null
           like_count?: number
           shipped_url?: string | null
           status?: string
