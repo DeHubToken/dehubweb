@@ -38,10 +38,12 @@ describe('getConversations', () => {
     expect(result.items).toEqual([]);
   });
 
+  // Only the search path parses a response envelope; without a query the
+  // listing is served by getContacts off the JWT address.
   it('handles result.items format', async () => {
     mockFetch({ result: { items: [{ id: 'c1' }, { id: 'c2' }], hasMore: true } });
     const { getConversations } = await import('@/lib/api/dehub/dm');
-    const result = await getConversations(0, 20);
+    const result = await getConversations(0, 20, 'alice');
     expect(result.items).toHaveLength(2);
     expect(result.hasMore).toBe(true);
   });
@@ -49,7 +51,7 @@ describe('getConversations', () => {
   it('handles result array format', async () => {
     mockFetch({ result: [{ id: 'c1' }] });
     const { getConversations } = await import('@/lib/api/dehub/dm');
-    const result = await getConversations(0, 20);
+    const result = await getConversations(0, 20, 'alice');
     expect(result.items).toHaveLength(1);
   });
 
@@ -95,13 +97,23 @@ describe('getMessages', () => {
 // ── createConversation ──
 
 describe('createConversation', () => {
-  it('creates virtual conversation without API call', async () => {
-    const spy = mockFetch({});
+  it('creates the conversation server-side and returns its id', async () => {
+    mockFetch({ status: true, data: { _id: 'dm-42' } });
+    const { createConversation } = await import('@/lib/api/dehub/dm');
+    const result = await createConversation('0xRecipient', { username: 'bob' });
+    expect(fetchUrl()).toContain('/api/dm/create');
+    expect(result.id).toBe('dm-42');
+    expect(result.otherUser?.username).toBe('bob');
+  });
+
+  // The socket can still deliver once it reconnects, so a failed create degrades
+  // to a local placeholder rather than blocking the compose screen.
+  it('falls back to a virtual conversation when the API rejects', async () => {
+    mockFetch({ message: 'nope' }, 500);
     const { createConversation } = await import('@/lib/api/dehub/dm');
     const result = await createConversation('0xRecipient', { username: 'bob' });
     expect(result.id).toBe('new_0xRecipient');
     expect(result.otherUser?.username).toBe('bob');
-    expect(spy).not.toHaveBeenCalled();
   });
 });
 
@@ -130,10 +142,20 @@ describe('deleteConversation', () => {
   it('calls POST /api/dm/delete-messages', async () => {
     mockFetch({ success: true });
     const { deleteConversation } = await import('@/lib/api/dehub/dm');
-    await deleteConversation('conv-1');
+    await deleteConversation('conv-1', '0xABC');
     expect(fetchUrl()).toContain('/api/dm/delete-messages');
     const body = JSON.parse(fetchOpts()?.body as string);
-    expect(body.conversationId).toBe('conv-1');
+    expect(body.dmId).toBe('conv-1');
+    expect(body.address).toBe('0xabc');
+  });
+
+  // A conversation that only exists client-side has nothing to delete remotely.
+  it('skips the API for virtual conversations', async () => {
+    const spy = mockFetch({ success: true });
+    const { deleteConversation } = await import('@/lib/api/dehub/dm');
+    const result = await deleteConversation('new_0xRecipient');
+    expect(result.success).toBe(true);
+    expect(spy).not.toHaveBeenCalled();
   });
 });
 
@@ -168,14 +190,54 @@ describe('searchUsersForDM', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('searches /api/search with accounts type', async () => {
+  it('searches /api/dm/search', async () => {
     mockFetch({ result: { accounts: [{ address: '0x1', username: 'alice' }] } });
     const { searchUsersForDM } = await import('@/lib/api/dehub/dm');
     const result = await searchUsersForDM('alice');
-    expect(fetchUrl()).toContain('/api/search');
-    expect(fetchUrl()).toContain('type=accounts');
+    expect(fetchUrl()).toContain('/api/dm/search');
+    expect(fetchUrl()).toContain('q=alice');
     expect(result.items).toHaveLength(1);
     expect(result.items[0].username).toBe('alice');
+  });
+
+  // People type the handle the way it is displayed. The stored username has no
+  // sigil, so a forwarded "@" matched nothing and looked like a missing user.
+  it('strips a leading @ from the handle before searching', async () => {
+    mockFetch({ result: { accounts: [{ address: '0x1', username: 'cryptorr' }] } });
+    const { searchUsersForDM } = await import('@/lib/api/dehub/dm');
+    const result = await searchUsersForDM('@cryptorr');
+    expect(fetchUrl()).toContain('q=cryptorr');
+    expect(fetchUrl()).not.toContain('%40');
+    expect(result.items[0].username).toBe('cryptorr');
+  });
+
+  it('measures the minimum length against the stripped handle', async () => {
+    const spy = mockFetch({});
+    const { searchUsersForDM } = await import('@/lib/api/dehub/dm');
+    const result = await searchUsersForDM('@a');
+    expect(result.items).toEqual([]);
+    expect(spy).not.toHaveBeenCalled();
+  });
+});
+
+// ── normalizeUserSearchQuery ──
+
+describe('normalizeUserSearchQuery', () => {
+  it('strips sigils and surrounding whitespace', async () => {
+    const { normalizeUserSearchQuery } = await import('@/lib/api/dehub/dm');
+    expect(normalizeUserSearchQuery('  @alice ')).toBe('alice');
+    expect(normalizeUserSearchQuery('@@alice')).toBe('alice');
+    expect(normalizeUserSearchQuery('alice')).toBe('alice');
+    expect(normalizeUserSearchQuery('@')).toBe('');
+    expect(normalizeUserSearchQuery(null)).toBe('');
+    expect(normalizeUserSearchQuery(undefined)).toBe('');
+  });
+
+  // A handle can legitimately contain an @ later on (email-style names), so only
+  // the leading sigil goes.
+  it('leaves an interior @ alone', async () => {
+    const { normalizeUserSearchQuery } = await import('@/lib/api/dehub/dm');
+    expect(normalizeUserSearchQuery('@al@ce')).toBe('al@ce');
   });
 });
 
