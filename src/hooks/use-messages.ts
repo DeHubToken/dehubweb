@@ -19,6 +19,7 @@ import {
   markConversationAsRead,
   deleteConversation,
   searchUsersForDM,
+  normalizeUserSearchQuery,
   blockConversation,
   unblockConversation,
   createGroup,
@@ -862,7 +863,10 @@ export function useDeleteConversation() {
 
 export function useUserSearchForDM(query: string) {
   const { isAuthenticated } = useAuth();
-  const debouncedQuery = query.trim();
+  // Normalised here too, not just in the API call: the `enabled` gate below
+  // counts characters, and a raw "@ab" would otherwise pass a two-character
+  // check on a one-character search term.
+  const debouncedQuery = normalizeUserSearchQuery(query);
 
   return useQuery({
     queryKey: messagesKeys.userSearch(debouncedQuery),

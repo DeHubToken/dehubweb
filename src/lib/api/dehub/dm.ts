@@ -647,13 +647,24 @@ export async function markConversationAsRead(conversationId: string): Promise<{ 
 
 // ─── User search ──────────────────────────────────────────────────────────────
 
+/**
+ * Handles are written `@name` everywhere in the product, so that is what people
+ * type into the recipient search — but `/api/dm/search` matches the stored
+ * username, which has no `@`. Sending the sigil through matched nothing and read
+ * as "that user doesn't exist". Stripped here rather than at the input so every
+ * caller (and the query key that caches the result) agrees on one form.
+ */
+export function normalizeUserSearchQuery(query: string | null | undefined): string {
+  return (query ?? '').trim().replace(/^@+/, '').trim();
+}
+
 export async function searchUsersForDM(
   query: string,
   page: number = 0,
   limit: number = 10
 ): Promise<{ items: DeHubUser[]; hasMore: boolean }> {
-  const trimmedQuery = query?.trim();
-  if (!trimmedQuery || trimmedQuery.length < 2) return { items: [], hasMore: false };
+  const trimmedQuery = normalizeUserSearchQuery(query);
+  if (trimmedQuery.length < 2) return { items: [], hasMore: false };
 
   console.log('[DM API] searchUsersForDM called', { query: trimmedQuery });
 
