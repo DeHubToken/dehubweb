@@ -4,6 +4,7 @@ import { scheduleBackgroundResume, setBackgroundPaused } from '@/lib/background-
 import { setJunglePhase, setJunglePush } from '@/lib/jungle-cinematic';
 import { useBootProgress } from '@/lib/game-boot-progress';
 import { isWeakHardware, probeGpu } from '@/lib/game-gpu';
+import { useGameExitRequest } from '@/lib/game-exit-request';
 
 /**
  * Jungle theme game launcher.
@@ -416,6 +417,12 @@ function JungleGameOverlay({ onExit }: { onExit: () => void }) {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [onExit]);
+
+  // "Leave the trail" inside the engine's own Escape panel. The keydown handler
+  // above only ever sees Escape when this document has focus, which it does not
+  // while the walk holds the pointer — so the in-frame button is the reliable
+  // way out, not a convenience.
+  useGameExitRequest('jungle-game', onExit);
 
   return (
     <div data-jungle-game-overlay role="dialog" aria-modal="true" aria-label="Jungle trail">
