@@ -16,9 +16,30 @@
     letter-spacing: .22em; text-transform: uppercase; color: #6d7a63;
     background: #05070a; pointer-events: none;
   }
+
+  /* VENDORED CHANGE 3 of 3 (styles) — the Escape panel. Borrows #boot's type
+     so it reads as part of the same quiet world rather than as browser chrome,
+     and it is `display:none` until Escape asks for it, so the note above about
+     the canvas being the entire experience still holds for anyone just walking. */
+  #esc {
+    position: fixed; inset: 0; display: none; place-items: center;
+    background: rgba(5, 7, 10, .72); backdrop-filter: blur(3px);
+    font: 300 13px/1.7 ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: .22em; text-transform: uppercase; color: #9fae93;
+  }
+  #esc[data-open="1"] { display: grid; }
+  #esc .panel { display: grid; gap: 14px; justify-items: center; padding: 26px 34px; }
+  #esc button {
+    font: inherit; letter-spacing: inherit; text-transform: inherit;
+    min-width: 15rem; padding: 12px 20px; cursor: pointer; color: #cfdcc4;
+    background: rgba(12, 18, 12, .82); border: 1px solid rgba(160, 190, 150, .28);
+    border-radius: 2px; transition: background .18s, border-color .18s, color .18s;
+  }
+  #esc button:hover { background: rgba(24, 34, 22, .92); border-color: rgba(190, 220, 180, .5); color: #eaf3e2; }
+  #esc .hint { font-size: 11px; color: #5f6d57; }
 </style>
 <!--
-  VENDORED CHANGE 1 of 2 — the import map points at a local copy of three.
+  VENDORED CHANGE 1 of 3 — the import map points at a local copy of three.
 
   Upstream resolves `three` from jsDelivr. That is right for a repo you clone
   and serve yourself, and wrong here for three reasons: it makes a third-party
@@ -41,7 +62,7 @@
 }
 </script>
 <!--
-  VENDORED CHANGE 2 of 2 — a progress bridge to the parent frame.
+  VENDORED CHANGE 2 of 3 — a progress bridge to the parent frame.
 
   The game generates every mesh, texture and sound on the device at boot, and
   renders nothing at all until that finishes. Upstream is fine with this:
@@ -104,6 +125,75 @@
 <body>
 <canvas id="view"></canvas>
 <div id="boot">jungle trail</div>
+
+<!--
+  VENDORED CHANGE 3 of 3 — an Escape panel, so there is a way out from inside.
+
+  Unlike the other two games, upstream has no settings or pause menu to add a
+  close button to: the stylesheet above says so in as many words, and Escape
+  does nothing here but hand the mouse back. That is right standalone — you
+  close the tab. Embedded it is not: dehub.io frames this in an iframe
+  sandboxed WITHOUT `allow-same-origin`, so a keydown in here never reaches the
+  host document and the host's own exit control cannot be aimed at while the
+  walk holds the pointer. Without this the only way out was the browser's back
+  button.
+
+  So this is the smallest menu that answers the question. It is hidden until
+  Escape is pressed, it is created only when embedded, and nothing under `src/`
+  is touched — the engine does not know it exists.
+-->
+<div id="esc" aria-hidden="true">
+  <div class="panel" role="dialog" aria-modal="true" aria-label="Paused">
+    <button id="esc-resume" type="button">Keep walking</button>
+    <button id="esc-leave" type="button">Leave the trail</button>
+    <div class="hint">Esc to go back</div>
+  </div>
+</div>
+
+<script>
+(function () {
+  /* Standalone there is nothing to return to, so the panel stays inert and the
+     experience is exactly upstream's. */
+  if (window.parent === window) return;
+
+  var panel = document.getElementById('esc');
+  var open = false;
+
+  function show(next) {
+    open = next;
+    panel.setAttribute('data-open', open ? '1' : '0');
+    panel.setAttribute('aria-hidden', open ? 'false' : 'true');
+    /* Focus the safe choice, so a keyboard player who opened this by accident
+       can Enter their way straight back into the walk. */
+    if (open) document.getElementById('esc-resume').focus();
+  }
+
+  /* Escape is the browser's own gesture for releasing pointer lock, and the
+     keydown still arrives — so by the time this runs the mouse is already free
+     and the panel is clickable. Pressing it again closes the panel, which makes
+     the key a toggle rather than a one-way door. The engine's own re-lock is on
+     a canvas click, and these buttons are not the canvas, so clicking here does
+     not silently grab the pointer back. */
+  addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    show(!open);
+  });
+
+  document.getElementById('esc-resume').addEventListener('click', function () {
+    show(false);
+  });
+
+  document.getElementById('esc-leave').addEventListener('click', function () {
+    try {
+      /* Give the mouse back before leaving: a lock that outlives the frame
+         leaves the host page with a captured cursor and no way to explain it. */
+      if (document.pointerLockElement) document.exitPointerLock();
+      parent.postMessage({ source: 'jungle-game', type: 'exit' }, '*');
+    } catch (err) { /* a host that has gone away is not worth surfacing */ }
+  });
+})();
+</script>
+
 <script type="module" src="./src/main.js"></script>
 </body>
 </html>

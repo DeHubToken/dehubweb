@@ -24,11 +24,12 @@
  * and how the vendored builds pay for it.
  */
 
-import { useEffect, useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Gamepad2 } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { useBootProgress } from '@/lib/game-boot-progress';
+import { useGameExitRequest } from '@/lib/game-exit-request';
 import { scheduleBackgroundResume, setBackgroundPaused } from '@/lib/background-gate';
 import { ARCADE_SANDBOX, getArcadeGame } from '@/config/arcade-games';
 
@@ -60,6 +61,7 @@ function NotInTheArcade({ slug }: { slug: string | undefined }) {
 
 export default function ArcadeGamePage() {
   const { slug } = useParams<{ slug: string }>();
+  const navigate = useNavigate();
   const game = getArcadeGame(slug);
 
   // Resolved once per game. Re-running buildUrl on a render would change the
@@ -96,6 +98,14 @@ export default function ArcadeGamePage() {
     const timer = window.setTimeout(() => setReady(true), BOOT_CAP_MS);
     return () => window.clearTimeout(timer);
   }, [ready]);
+
+  // The close button inside the game's own settings/pause menu. It is the exit
+  // that works while a pointer lock is (or has just been) held, when the host's
+  // corner link is unaimable — see lib/game-exit-request.
+  useGameExitRequest(
+    game?.exitSource,
+    useCallback(() => navigate('/arcade'), [navigate]),
+  );
 
   useEffect(() => {
     // The game owns the viewport; stop the document scrolling behind it.
@@ -135,7 +145,6 @@ export default function ArcadeGamePage() {
           gamePlatform: 'Web browser',
           operatingSystem: 'Any',
           playMode: 'SinglePlayer',
-          license: game.credit.url,
           offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
         }}
       />

@@ -23,9 +23,9 @@ matters for a 38-file, ~12k-line dependency.
 harness and 660 KB of screenshots are not needed to play the game, and they
 would ship to every visitor of the site.
 
-## The two local changes
+## The three local changes
 
-Both are in `index.html` and both are commented in place:
+All three are in `index.html` and all are commented in place:
 
 1. **The import map points at `./vendor/three.module.js`** instead of jsDelivr.
    Same build (three 0.170.0), served from this origin — no third-party request
@@ -39,13 +39,23 @@ Both are in `index.html` and both are commented in place:
    inside one synchronous constructor. The launcher's percentage bar is modelled
    against a clock instead (`src/lib/game-boot-progress.ts`).
 
+3. **An Escape panel.** Upstream has no menu of any kind — the stylesheet says
+   so in as many words, and Escape only hands the mouse back. Standalone that is
+   right; embedded it left no way out at all, because a keydown in the frame
+   never reaches the host document and the host's exit control cannot be aimed
+   at while the walk holds the pointer. The panel is hidden until Escape is
+   pressed, is only wired up when `window.parent !== window`, and offers exactly
+   two choices: keep walking, or leave. Leaving releases the pointer lock and
+   posts `{ source: 'jungle-game', type: 'exit' }` to the parent — see
+   `src/lib/game-exit-request.ts`.
+
 Nothing under `src/` is modified. Re-vendoring is therefore a straight copy:
 
 ```bash
 git clone https://github.com/StarKnightt/jungle-trail.git
 ```
 
-Then replace `src/` here with upstream's `src/`, and re-apply nothing — the two
+Then replace `src/` here with upstream's `src/`, and re-apply nothing — all three
 changes above live only in `index.html`.
 
 ## Quality

@@ -9,7 +9,7 @@
  * so they are asserted here instead.
  */
 
-import { existsSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { ARCADE_GAMES, ARCADE_SANDBOX, getArcadeGame } from '@/config/arcade-games';
@@ -96,6 +96,83 @@ describe('arcade assets', () => {
   it('ships the licence each credit names', () => {
     for (const game of ARCADE_GAMES) {
       expect(existsSync(repo(game.credit.licenceFile)), game.credit.licenceFile).toBe(true);
+    }
+  });
+});
+
+describe('arcade exit bridge', () => {
+  // The close button lives inside each game's own settings/pause menu and its
+  // only channel to the host is postMessage — an opaque-origin frame has no
+  // other. Three things have to line up for that to work, across a vendored
+  // build the compiler never sees: the registry's `exitSource`, the string the
+  // game posts, and the fact that the button is gated on being embedded. A
+  // mismatch is silent — the button just does nothing — so it is asserted here.
+  const GAME_ENTRY: Record<string, string> = {
+    'kings-gambit': 'chess-game/assets',
+    'claude-of-duty': 'war-game/assets',
+    // Vendored as source, so the panel lives in the page itself.
+    'jungle-trail': 'jungle-game/index.html',
+  };
+
+  it('gives every game an exit source', () => {
+    for (const game of ARCADE_GAMES) {
+      expect(game.exitSource, game.slug).toBeTruthy();
+    }
+  });
+
+  it('ships a vendored game that posts the exact source the host listens for', () => {
+    for (const game of ARCADE_GAMES) {
+      const target = repo('public', GAME_ENTRY[game.slug]);
+      const files = statSync(target).isDirectory()
+        ? readdirSync(target).map((f) => resolve(target, f))
+        : [target];
+      const haystack = files.map((f) => readFileSync(f, 'utf8')).join('\n');
+
+      // Quote style is whatever the minifier felt like — the chess build emits
+      // backticks and the war build double quotes — so match any of the three.
+      // And assert on a boolean rather than with `toContain`, because a failed
+      // `toContain` against a 1.6 MB bundle prints the entire bundle.
+      const q = "['\"`]";
+      const posts = new RegExp(`source:\\s*${q}${game.exitSource}${q}`).test(haystack);
+      const asExit = new RegExp(`type:\\s*${q}exit${q}`).test(haystack);
+      // Gated on being framed, so upstream's standalone deploy — which has
+      // nothing to return to — never grows a dead button.
+      const gated = haystack.includes('window.parent');
+
+      expect(posts, `${game.slug} posts source "${game.exitSource}"`).toBe(true);
+      expect(asExit, `${game.slug} posts type "exit"`).toBe(true);
+      expect(gated, `${game.slug} gates the button on being embedded`).toBe(true);
+    }
+  });
+});
+
+describe('arcade readiness bridge', () => {
+  it('keeps the bridge in the entry document of every game that declares one', () => {
+    // Regression guard, and it has already earned its place. Two of the
+    // vendored games carry a hand-written readiness script in their own
+    // index.html — a *page* change, not a source patch, so a rebuild does not
+    // reproduce it. Copying a fresh `dist/index.html` over the vendored one
+    // deletes it, and the only symptom is a boot readout that runs to its
+    // three-minute cap over a game that is already playable. That is a slow,
+    // easily-missed failure; this is a fast one.
+    for (const game of ARCADE_GAMES) {
+      if (!game.readySource) continue;
+      const html = readFileSync(repo('public', GAME_DIRS[game.slug], 'index.html'), 'utf8');
+      expect(html, `${game.slug} index.html posts its ready source`).toContain(game.readySource);
+      expect(html, `${game.slug} index.html still has a bridge`).toContain('postMessage');
+    }
+  });
+
+  it('points each entry document at a bundle that exists', () => {
+    // The other half of the same hazard: the hash in `<script src>` is edited
+    // by hand when a game is re-vendored, so a typo or a forgotten edit leaves
+    // the frame asking for a chunk that is not there — a blank game.
+    for (const game of ARCADE_GAMES) {
+      const dir = GAME_DIRS[game.slug];
+      const html = readFileSync(repo('public', dir, 'index.html'), 'utf8');
+      for (const ref of html.matchAll(/(?:src|href)="\/([^"]+\.(?:js|css))"/g)) {
+        expect(existsSync(repo('public', ref[1])), `${dir} references ${ref[1]}`).toBe(true);
+      }
     }
   });
 });

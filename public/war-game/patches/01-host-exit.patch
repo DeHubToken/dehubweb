@@ -1,0 +1,51 @@
+diff --git a/src/ui/menu.js b/src/ui/menu.js
+index bc7763b..b09df56 100644
+--- a/src/ui/menu.js
++++ b/src/ui/menu.js
+@@ -2,6 +2,32 @@ import { el, setText, setStyle, clamp, damp, ease } from './util.js';
+ 
+ const PRESETS = ['low', 'medium', 'high', 'ultra'];
+ 
++// DEHUB PATCH — see public/war-game/README.md in the dehubweb repo.
++//
++// A way out of the game, for when the game is embedded in a host page.
++//
++// dehub.io frames this build in an iframe sandboxed WITHOUT `allow-same-origin`,
++// so the frame is an opaque origin: it cannot touch the host's DOM and the host
++// cannot touch this one. `postMessage` is the only channel between them.
++//
++// The host does paint its own exit control over the frame, and on this game it
++// is close to unusable: the game holds a pointer lock, so there is no cursor to
++// aim with, and a keydown inside this frame never reaches the host document, so
++// the host cannot even see Escape. The reliable way out is a button in the menu
++// the player is already looking at once Escape has freed the mouse.
++//
++// Standalone, `window.parent === window` and there is nothing to return to, so
++// the button is never created — upstream's own deploy is unaffected.
++const EMBEDDED = typeof window !== 'undefined' && window.parent !== window;
++
++function requestHostExit() {
++  try {
++    window.parent.postMessage({ source: 'war-game', type: 'exit' }, '*');
++  } catch {
++    // A host that has gone away is not an error worth surfacing mid-game.
++  }
++}
++
+ /**
+  * Pause / settings menu.
+  *
+@@ -87,6 +113,13 @@ export class PauseMenu {
+       this.ctx.config.invertY = false;
+       this.setQuality('ultra');
+     });
++    // DEHUB PATCH. Last in the row, after Resume and Defaults: the destructive
++    // one goes furthest from the button a player reaches for by reflex.
++    if (EMBEDDED) {
++      const leave = el('button', 'ow-btn', btns, 'Leave Game');
++      leave.type = 'button';
++      leave.addEventListener('click', requestHostExit);
++    }
+     el('div', 'hint', inner, 'ESC RESUME · WASD MOVE · SHIFT SPRINT · R RELOAD · F USE');
+ 
+     this.open = false;
