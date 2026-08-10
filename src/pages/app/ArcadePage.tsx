@@ -17,20 +17,12 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Gamepad2, Play, Sparkles } from 'lucide-react';
+import { Gamepad2, Play } from 'lucide-react';
 import { SEOHead } from '@/components/SEOHead';
 import { useFeedSwallowClip } from '@/hooks/use-feed-swallow-clip';
 import { ARCADE_GAMES, type ArcadeGame } from '@/config/arcade-games';
 
-/** Copy for the "also lives in the <x> theme" line, keyed by theme id. */
-const THEME_LABEL: Record<string, string> = {
-  war: 'War theme',
-  jungle: 'Jungle theme',
-};
-
 function GameCard({ game }: { game: ArcadeGame }) {
-  const { t } = useTranslation();
-
   return (
     <div
       data-feed-item
@@ -60,11 +52,13 @@ function GameCard({ game }: { game: ArcadeGame }) {
 
       {/* flex-1 + mt-auto below: every card in a grid row stretches to the same
           height, and the button row rides the bottom edge, so the Play buttons
-          line up across the row no matter how long each description runs. */}
+          line up across the row. The registry keeps the descriptions to a
+          matching length, so that alignment holds without the stretch having to
+          absorb a ragged block of copy. */}
       <div className="flex flex-1 flex-col gap-3 p-4">
         <p className="text-xs leading-relaxed text-zinc-400">{game.description}</p>
 
-        <div className="mt-auto flex items-center justify-between gap-3 pt-1">
+        <div className="mt-auto flex items-center pt-1">
           <Link
             to={`/arcade/${game.slug}`}
             className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2 text-xs font-semibold text-black transition-opacity hover:opacity-90"
@@ -72,13 +66,6 @@ function GameCard({ game }: { game: ArcadeGame }) {
             <Play className="h-3.5 w-3.5" />
             {game.action}
           </Link>
-
-          {game.theme ? (
-            <span className="inline-flex items-center gap-1.5 text-[11px] text-zinc-500">
-              <Sparkles className="h-3 w-3" />
-              {t('arcade.alsoIn', { theme: THEME_LABEL[game.theme] ?? game.theme })}
-            </span>
-          ) : null}
         </div>
       </div>
     </div>

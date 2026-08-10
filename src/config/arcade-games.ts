@@ -75,7 +75,13 @@ export interface ArcadeGame {
   title: string;
   /** One line, card-sized. */
   tagline: string;
-  /** A paragraph. Doubles as the meta description for /arcade/<slug>. */
+  /**
+   * One sentence, and deliberately kept to roughly the same length as every
+   * other entry's — the cards sit in one grid row, so a description that runs
+   * two lines longer than its neighbours is visible as a ragged block even
+   * though the buttons still line up. Keep new entries in the same band.
+   * Doubles as the meta description for /arcade/<slug>.
+   */
   description: string;
   /** Verb for the card's button — these are different kinds of game. */
   action: string;
@@ -83,8 +89,6 @@ export interface ArcadeGame {
   art: string;
   /** Alt text for the art. */
   artAlt: string;
-  /** Theme that also surfaces this game via its own launcher, if any. */
-  theme?: 'war' | 'jungle';
   credit: ArcadeGameCredit;
   /**
    * Resolve the frame URL, including any engine settings. Called once, when
@@ -170,7 +174,7 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     title: "King's Gambit",
     tagline: 'Cinematic 3D chess. Three civilisations, one board.',
     description:
-      "Chess with an army behind every piece. Three rigged civilisations — the Ivory Kingdom, the Sun Empire and the Grande Armée — march, strike and fall across a marble board in four battlegrounds. Full rules including castling, en passant and promotion, three engine strengths, a two-player hotseat, and an AI vs AI mode you can just sit and watch.",
+      'Chess with an army behind every piece. Three rigged civilisations march, strike and fall across a marble board in four battlegrounds, at three engine strengths.',
     action: 'Play',
     art: '/arcade/kings-gambit.webp',
     artAlt: "Two armies of sculpted 3D chess figures facing each other across a lit board in King's Gambit",
@@ -204,11 +208,10 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     title: 'Claude of Duty',
     tagline: 'A browser FPS with every asset generated at boot.',
     description:
-      'A first-person shooter that ships no art at all: every mesh, texture and sound is generated in JavaScript on your machine while the level loads. Also reachable from inside the War theme, where an arrow key offers to deploy you.',
+      'A first-person shooter that ships no art at all: every mesh, texture, weapon and sound is generated in JavaScript on your machine while the level loads.',
     action: 'Deploy',
     art: '/arcade/claude-of-duty.webp',
     artAlt: 'First-person view down a weapon across the procedurally generated terrain of Claude of Duty',
-    theme: 'war',
     credit: {
       name: 'Claude of Duty',
       url: 'https://github.com/mshumer/Claude-of-Duty',
@@ -248,11 +251,10 @@ export const ARCADE_GAMES: ArcadeGame[] = [
     title: 'Jungle Trail',
     tagline: 'Walk a rainforest that is built the moment you arrive.',
     description:
-      'A first-person walk through a procedurally generated rainforest — a hundred thousand plants, weather and a day cycle, all grown on your machine before the first frame. No score, no timer, nothing to beat. Also reachable from inside the Jungle theme, where the background you are already looking at pushes forward and becomes the game.',
+      'A first-person walk through a procedurally generated rainforest — a hundred thousand plants, weather and a day cycle, all grown on your machine as you arrive.',
     action: 'Walk in',
     art: '/arcade/jungle-trail.webp',
     artAlt: 'A path through dense procedurally generated rainforest canopy in Jungle Trail',
-    theme: 'jungle',
     credit: {
       name: 'Jungle Trail',
       url: 'https://github.com/StarKnightt/jungle-trail',
