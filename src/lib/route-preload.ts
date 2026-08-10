@@ -89,6 +89,19 @@ const PRELOADERS: Record<string, Preloader | Preloader[]> = {
     () => import('@/pages/app/LaunchpadPage'),
     () => import('@/pages/app/LaunchpadCoinPage'),
   ],
+  // The grid warms the player as its companion: the only way into a game is
+  // through a card, so the player chunk is already cached by the time one is
+  // clicked. The game's own bundle is a separate origin-level iframe fetch and
+  // is deliberately NOT warmed — that is megabytes for a page the visitor may
+  // only be browsing.
+  '/arcade': [
+    () => import('@/pages/app/ArcadePage'),
+    () => import('@/pages/ArcadeGamePage'),
+  ],
+  '/app/arcade': [
+    () => import('@/pages/app/ArcadePage'),
+    () => import('@/pages/ArcadeGamePage'),
+  ],
   '/app/affiliate': () => import('@/pages/app/AffiliatePage'),
   '/affiliate': () => import('@/pages/app/AffiliatePage'),
   '/app/top-100': () => import('@/pages/app/Top100CryptosPage'),

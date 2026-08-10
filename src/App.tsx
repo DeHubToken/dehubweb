@@ -168,6 +168,11 @@ const PricingPage = React.lazy(() => import("./pages/PricingPage"));
 const ConnectPage = React.lazy(() => import("./pages/ConnectPage"));
 const ConnectChatGPTPage = React.lazy(() => import("./pages/ConnectChatGPTPage"));
 const ConnectClaudePage = React.lazy(() => import("./pages/ConnectClaudePage"));
+// The arcade player is a standalone full-viewport surface (no AppLayout): the
+// games take the whole window and two of them take the pointer, so the header
+// and sidebars would be in the way rather than useful. Its own chunk, like the
+// theme launchers', so the iframe plumbing never rides along in a page bundle.
+const ArcadeGamePage = React.lazy(() => import("./pages/ArcadeGamePage"));
 
 
 
@@ -388,6 +393,13 @@ function AppContent() {
           <Route path="/connect/claude" element={<Suspense fallback={<PageLoader />}><ConnectClaudePage /></Suspense>} />
           <Route path="/mcp" element={<Navigate to="/connect" replace />} />
 
+          {/* Arcade player. Two segments, so it outranks the /:username
+              catch-all inside AppLayout below and never has to be ordered
+              against it — but it lives out here rather than in the layout
+              because the game owns the viewport. The /arcade grid itself DOES
+              sit in the layout (see the cached pages below). */}
+          <Route path="/arcade/:slug" element={<Suspense fallback={<PageLoader />}><ArcadeGamePage /></Suspense>} />
+
 
 
           {/* Single shared AppLayout — header/sidebar mount ONCE and persist across all app routes */}
@@ -409,6 +421,7 @@ function AppContent() {
             <Route path="/app">
               <Route index element={null} />
               <Route path="affiliate" element={null} />
+              <Route path="arcade" element={null} />
               
               <Route path="explore" element={null} />
               <Route path="profile" element={null} />
@@ -488,6 +501,10 @@ function AppContent() {
                 a search result landed on the /:username catch-all (dehub.io/music
                 rendered the empty profile of the user "@music"). */}
             <Route path="/explore" element={null} />
+            {/* The arcade grid. Bare /arcade is the canonical URL the sitemap
+                and the nav both point at; /app/arcade is the twin every other
+                section has. Both are backed by one cached page. */}
+            <Route path="/arcade" element={null} />
             <Route path="/stages" element={null} />
             <Route path="/videos" element={null} />
             <Route path="/shorts" element={null} />

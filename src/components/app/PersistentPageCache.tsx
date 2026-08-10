@@ -61,6 +61,7 @@ const StoresPage = lazyWithRetry(() => import('@/pages/app/StoresPage'));
 const WorkPage = lazyWithRetry(() => import('@/pages/app/WorkPage'));
 const AffiliatePage = lazyWithRetry(() => import('@/pages/app/AffiliatePage'));
 const AdsPage = lazyWithRetry(() => import('@/pages/app/AdsPage'));
+const ArcadePage = lazyWithRetry(() => import('@/pages/app/ArcadePage'));
 
 
 // Pages that get cached (mount-once, hide with CSS)
@@ -106,6 +107,7 @@ const CACHED_PAGES: CachedPageConfig[] = [
   { key: 'work', path: ['/app/work', '/work'], component: WorkPage, skeleton: GenericPageSkeleton },
   { key: 'affiliate', path: ['/app/affiliate', '/affiliate'], component: AffiliatePage, skeleton: GenericPageSkeleton },
   { key: 'ads', path: '/app/ads', component: AdsPage, skeleton: GenericPageSkeleton },
+  { key: 'arcade', path: ['/arcade', '/app/arcade'], component: ArcadePage, skeleton: GridSkeleton },
   { key: 'profile', path: '/app/profile', component: ProfilePage, skeleton: ProfileSkeleton },
 ];
 

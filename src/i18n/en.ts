@@ -637,6 +637,12 @@ export const en = {
     streetTitle: 'Street Slayer',
     streetDesc: 'Rid the streets of the greedy banking mafia and save the club at all cost in this endless fighter that\'s free for all, yet comes with full play and earn for Lean Chad Fight Club (LCFC) holders. LCFC are our genesis NFT mint partners and the first of many coming to the DeHub ecosystem.',
     playArcade: 'Play all these games and more at our arcade:',
+    inAppTitle: 'Games inside DeHub itself',
+    inAppDesc: 'Three open source games run in the app with nothing to install: '
+      + "King's Gambit (cinematic 3D chess), Claude of Duty (a browser shooter that generates "
+      + 'every asset on your machine as it loads) and Jungle Trail (a walk through a '
+      + 'procedurally generated rainforest). Two of them also hide inside the War and Jungle themes.',
+    inAppCta: 'Open the DeHub arcade',
     featuresTitle: 'Key Features',
     feature1: 'Barrier free play and win to earn',
     feature2: 'Classic arcade mini games, tournaments & top tier independent/indi games',
