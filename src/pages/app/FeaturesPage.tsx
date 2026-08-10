@@ -50,6 +50,12 @@ import {
   type FeatureStatus,
   type FeatureRequest,
 } from '@/hooks/use-feature-requests';
+import {
+  featureAttachments,
+  isVideoAttachment,
+  MAX_FEATURE_ATTACHMENTS,
+  MAX_FEATURE_ATTACHMENT_BYTES,
+} from '@/lib/feature-attachments';
 import { z } from 'zod';
 import { useFeatureRequestComments, useSubmitComment, useDeleteComment } from '@/hooks/use-feature-request-comments';
 import { UserMentionDropdown } from '@/components/app/mentions';
@@ -92,6 +98,50 @@ const STATUS_BADGE_STYLES: Partial<Record<FeatureStatus, string>> = {
   in_progress: 'bg-violet-400/15 text-violet-300/90 border-violet-300/25',
   declined: 'bg-red-400/15 text-red-300/90 border-red-300/25',
 };
+
+/**
+ * A request's attachments. One fills the card the way a single attachment
+ * always has; several tile so a multi-screenshot bug report stays scannable
+ * without pushing the vote controls off screen.
+ */
+function FeatureAttachments({ feature }: { feature: FeatureRequest }) {
+  const urls = featureAttachments(feature);
+  if (urls.length === 0) return null;
+
+  if (urls.length === 1) {
+    const url = urls[0];
+    return (
+      <div data-media-full className="rounded-xl overflow-hidden border border-white/10">
+        {isVideoAttachment(url) ? (
+          <video src={url} className="w-full max-h-64 object-contain bg-black" controls />
+        ) : (
+          <img src={url} alt="Attachment" className="w-full max-h-64 object-contain bg-black/30" loading="lazy" />
+        )}
+      </div>
+    );
+  }
+
+  return (
+    <div data-media-full className="grid grid-cols-2 gap-1.5">
+      {urls.map((url, index) => (
+        <div key={url} className="rounded-xl overflow-hidden border border-white/10 aspect-video bg-black/30">
+          {isVideoAttachment(url) ? (
+            <video src={url} className="w-full h-full object-cover" controls preload="metadata" />
+          ) : (
+            <a href={url} target="_blank" rel="noopener noreferrer" className="block w-full h-full">
+              <img
+                src={url}
+                alt={`Attachment ${index + 1} of ${urls.length}`}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
+            </a>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function StatusBadge({ status }: { status: FeatureStatus }) {
   const style = STATUS_BADGE_STYLES[status];
@@ -373,16 +423,8 @@ function FeatureCard({
             <TranslatableText text={feature.title} className="text-white font-semibold text-sm leading-tight" as="h3" hideControls />
             <TranslatableText text={feature.description} className="text-zinc-400 text-sm leading-relaxed" as="p" />
 
-            {/* Attached media */}
-            {feature.image_url && (
-              <div data-media-full className="rounded-xl overflow-hidden border border-white/10">
-                {feature.image_url.match(/\.(mp4|mov|webm|ogg)$/i) ? (
-                  <video src={feature.image_url} className="w-full max-h-64 object-contain bg-black" controls />
-                ) : (
-                  <img src={feature.image_url} alt="Attachment" className="w-full max-h-64 object-contain bg-black/30" loading="lazy" />
-                )}
-              </div>
-            )}
+            {/* Attached media — one full-width, several as a grid */}
+            <FeatureAttachments feature={feature} />
 
         {/* Category + status badges - liquid glass style */}
         <div className="flex items-center gap-2 flex-wrap">
@@ -557,8 +599,7 @@ function SubmitFeatureDrawer({
   const [description, setDescription] = useState('');
   const [deviceDetails, setDeviceDetails] = useState('');
   const [category, setCategory] = useState<FeatureCategory>(initialCategory || 'new_feature');
-  const [mediaFile, setMediaFile] = useState<File | null>(null);
-  const [mediaPreview, setMediaPreview] = useState<string | null>(null);
+  const [attachments, setAttachments] = useState<{ file: File; preview: string }[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -572,24 +613,59 @@ function SubmitFeatureDrawer({
   const submitMutation = useSubmitFeatureRequest();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    // Max 20MB
-    if (file.size > 20 * 1024 * 1024) {
-      setErrors(prev => ({ ...prev, media: 'File must be under 20MB' }));
-      return;
+    const picked = Array.from(e.target.files ?? []);
+    // Re-picking the same file after removing it fires no change event unless the
+    // input is cleared, so reset it on every pass rather than only on submit.
+    if (fileInputRef.current) fileInputRef.current.value = '';
+    if (picked.length === 0) return;
+
+    const oversized = picked.filter(f => f.size > MAX_FEATURE_ATTACHMENT_BYTES);
+    const room = MAX_FEATURE_ATTACHMENTS - attachments.length;
+    const accepted = picked
+      .filter(f => f.size <= MAX_FEATURE_ATTACHMENT_BYTES)
+      .slice(0, Math.max(room, 0));
+
+    if (accepted.length > 0) {
+      setAttachments(prev => [
+        ...prev,
+        ...accepted.map(file => ({ file, preview: URL.createObjectURL(file) })),
+      ]);
     }
-    setMediaFile(file);
-    setMediaPreview(URL.createObjectURL(file));
+
+    // One message, whichever limit bit: a partial accept is easy to miss.
+    const message = oversized.length > 0
+      ? 'Each file must be under 20MB'
+      : accepted.length < picked.length
+        ? `Up to ${MAX_FEATURE_ATTACHMENTS} attachments`
+        : null;
+    setErrors(prev => {
+      const { media, ...rest } = prev;
+      return message ? { ...rest, media: message } : rest;
+    });
+  };
+
+  const removeAttachment = (index: number) => {
+    setAttachments(prev => {
+      const target = prev[index];
+      if (target) URL.revokeObjectURL(target.preview);
+      return prev.filter((_, i) => i !== index);
+    });
     setErrors(prev => { const { media, ...rest } = prev; return rest; });
   };
 
-  const removeMedia = () => {
-    setMediaFile(null);
-    if (mediaPreview) URL.revokeObjectURL(mediaPreview);
-    setMediaPreview(null);
+  const clearAttachments = () => {
+    setAttachments(prev => {
+      prev.forEach(a => URL.revokeObjectURL(a.preview));
+      return [];
+    });
     if (fileInputRef.current) fileInputRef.current.value = '';
   };
+
+  // Previews are object URLs; unmounting the drawer without this leaks them.
+  useEffect(() => () => {
+    attachments.forEach(a => URL.revokeObjectURL(a.preview));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSubmit = () => {
     const result = featureSchema.safeParse({ title, description, category });
@@ -606,14 +682,19 @@ function SubmitFeatureDrawer({
       ? `${result.data.description}\n\n📱 Device & OS: ${deviceDetails.trim()}`
       : result.data.description;
     submitMutation.mutate(
-      { title: result.data.title, description: fullDescription, category: result.data.category as FeatureCategory, mediaFile },
+      {
+        title: result.data.title,
+        description: fullDescription,
+        category: result.data.category as FeatureCategory,
+        mediaFiles: attachments.map(a => a.file),
+      },
       {
         onSuccess: () => {
           setTitle('');
           setDescription('');
           setDeviceDetails('');
           setCategory('new_feature');
-          removeMedia();
+          clearAttachments();
           onOpenChange(false);
         },
       }
@@ -705,37 +786,52 @@ function SubmitFeatureDrawer({
 
           {/* Media Upload */}
           <div>
-            <label className="text-zinc-400 text-xs font-medium mb-1 block">Attach Image or Video (optional)</label>
+            <label className="text-zinc-400 text-xs font-medium mb-1 block">
+              Attach Images or Videos (optional)
+              <span className="text-zinc-600 font-normal"> — up to {MAX_FEATURE_ATTACHMENTS}</span>
+            </label>
             <input
               ref={fileInputRef}
               type="file"
               accept="image/*,video/*"
+              multiple
               onChange={handleFileChange}
               className="hidden"
             />
-            {mediaPreview ? (
-              <div className="relative rounded-xl overflow-hidden border border-white/10 bg-zinc-900">
-                {mediaFile?.type.startsWith('video/') ? (
-                  <video src={mediaPreview} className="w-full max-h-48 object-contain" controls />
-                ) : (
-                  <img src={mediaPreview} alt="Preview" className="w-full max-h-48 object-contain" />
-                )}
-                <button
-                  type="button"
-                  onClick={removeMedia}
-                  className="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full bg-black/60 text-white hover:bg-black/80 transition-colors"
-                >
-                  <X className="w-4 h-4" />
-                </button>
+            {attachments.length > 0 && (
+              <div className="grid grid-cols-3 gap-2 mb-2">
+                {attachments.map((attachment, index) => (
+                  <div
+                    key={attachment.preview}
+                    className="relative aspect-square rounded-xl overflow-hidden border border-white/10 bg-zinc-900"
+                  >
+                    {attachment.file.type.startsWith('video/') ? (
+                      <video src={attachment.preview} className="w-full h-full object-cover" muted />
+                    ) : (
+                      <img src={attachment.preview} alt={`Attachment ${index + 1}`} className="w-full h-full object-cover" />
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => removeAttachment(index)}
+                      aria-label={`Remove attachment ${index + 1}`}
+                      className="absolute top-1 right-1 w-6 h-6 flex items-center justify-center rounded-full bg-black/70 text-white hover:bg-black/90 transition-colors"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
               </div>
-            ) : (
+            )}
+            {attachments.length < MAX_FEATURE_ATTACHMENTS && (
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
                 className="w-full h-24 rounded-xl border border-dashed border-white/10 bg-zinc-900/50 flex flex-col items-center justify-center gap-1.5 text-zinc-500 hover:text-zinc-300 hover:border-white/20 transition-colors"
               >
                 <ImagePlus className="w-5 h-5" />
-                <span className="text-xs">Click to upload</span>
+                <span className="text-xs">
+                  {attachments.length === 0 ? 'Click to upload' : 'Add another'}
+                </span>
               </button>
             )}
             {errors.media && <span className="text-red-400 text-[11px] mt-1 block">{errors.media}</span>}
