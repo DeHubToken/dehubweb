@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, Loader2, Paintbrush, Crop, Scissors, Image as ImageIcon } from 'lucide-react';
+import { X, Mic, Square, Trash2, Play, Pause, Upload, Music, Loader2, Paintbrush, Crop, Scissors, Image as ImageIcon, FileText } from 'lucide-react';
 import nailIcon from '@/assets/icons/nail-icon.png';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Progress } from '@/components/ui/progress';
@@ -13,6 +13,7 @@ import { CropRotateEditor } from './CropRotateEditor';
 import { AudioTrimmer } from './AudioTrimmer';
 import { VideoTrimmer } from './VideoTrimmer';
 import { generateFilterCSS } from '@/lib/filters';
+import { formatAttachmentSize, getAttachmentLabel } from '@/lib/attachments';
 
 interface PostMediaPreviewProps {
   media: MediaFile[];
@@ -956,6 +957,29 @@ export function PostMediaPreview({
                         </button>
                       ))}
                     </div>
+                  </div>
+                ) : m.type === 'file' ? (
+                  /* ==================== DOCUMENT ATTACHMENT ==================== */
+                  <div className="relative w-[220px] sm:w-[260px] rounded-2xl overflow-hidden bg-zinc-900 border border-white/10 p-3 flex items-center gap-3">
+                    <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                      <FileText className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm text-white truncate" title={m.file.name}>
+                        {m.file.name}
+                      </p>
+                      <p className="text-xs text-white/50">
+                        {getAttachmentLabel(m.file.name)} · {formatAttachmentSize(m.file.size)}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => onRemove(index)}
+                      className="flex-shrink-0 p-1.5 bg-black/70 hover:bg-black rounded-xl transition-colors"
+                      aria-label={`Remove ${m.file.name}`}
+                    >
+                      <X className="w-4 h-4 text-white" />
+                    </button>
                   </div>
                 ) : null}
               </div>

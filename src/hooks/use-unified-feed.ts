@@ -14,6 +14,7 @@ import { buildAvatarUrl, buildImageUrl, buildVideoUrl, buildFeedImageUrls, extra
 import { formatDuration, formatViews, formatTimeAgo } from '@/lib/feed-utils';
 import { resolveLikeCount, resolveDislikeCount, resolveMyReaction, resolveReactionCounts, resolveViewCount } from '@/lib/engagement';
 import type { VideoItem, ImagePost, TextPost } from '@/types/feed.types';
+import type { PostAttachment } from '@/lib/attachments';
 import { BLOCKED_POST_IDS } from '@/constants/post.constants';
 import { useAuth } from '@/contexts/AuthContext';
 
@@ -45,7 +46,7 @@ export interface UnifiedFeedParams {
   limit?: number;
   sortBy?: 'views' | 'likes' | 'createdAt' | 'tips' | 'comments' | 'random' | 'score';
   sortOrder?: 'asc' | 'desc';
-  postType?: 'all' | 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio' | 'feed-audio';
+  postType?: 'all' | 'video' | 'feed-images' | 'feed-simple' | 'feed-file' | 'live' | 'audio' | 'feed-audio';
   status?: 'minted' | 'signed' | 'all' | 'pending' | 'failed';
   search?: string;
   owner?: string;
@@ -72,10 +73,12 @@ export interface UnifiedFeedItem {
   description?: string;
   imageUrl: string;
   imageUrls?: string[];
+  /** Documents on a feed-file post. */
+  attachments?: PostAttachment[];
   videoUrl?: string;
   minter: string;
   owner?: string;
-  postType: 'video' | 'feed-images' | 'feed-simple' | 'live' | 'audio' | 'feed-audio';
+  postType: 'video' | 'feed-images' | 'feed-simple' | 'feed-file' | 'live' | 'audio' | 'feed-audio';
   status?: string;
   category?: string[];
   /** Signed-in viewers only — read totalViews via resolveViewCount instead. */
@@ -399,6 +402,7 @@ export function mapToTextPost(item: UnifiedFeedItem, index: number): TextPost {
     isQuotePost: !!(item as any).isQuotePost,
     quotedPost: (item as any).quotedPost || null,
     categories: Array.isArray(item.category) ? item.category : item.category ? [item.category] : [],
+    attachments: item.attachments?.length ? item.attachments : undefined,
   };
 }
 
